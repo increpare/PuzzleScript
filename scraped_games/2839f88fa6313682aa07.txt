@@ -1,0 +1,116 @@
+title Duplex
+author Jack Lance
+
+
+
+
+========
+OBJECTS
+========
+
+Player
+darkblue
+
+background
+lightblue
+
+food
+red
+
+lava
+lightgreen
+
+wall
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+X=wall
+F = food
+L=lava
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+food, lava
+Player, wall
+
+======
+RULES
+======
+
+[> player|food] -> [player|player]
+[> player| lava] -> restart
+
+==============
+WINCONDITIONS
+==============
+
+no food
+
+
+=======
+LEVELS
+=======
+
+message WINCONDTION: no food
+
+XXXXXX
+XP...X
+X....X
+X....X
+X...FX
+XXXXXX
+
+message [> player|food] -> [player|player]
+
+XXXXXX
+XPFFFX
+XFFFFX
+XFFFFX
+XFFFFX
+XXXXXX
+
+message [> player| poison] -> restart
+
+XXXXXX
+XP...X
+XLL..X
+X...LX
+XFL..X
+XXXXXX
+
+
+XXXXXXX
+XXF.FXX
+XF...FX
+X..L..X
+XF..PFX
+XXF.FXX
+XXXXXXX
+
+XXXXXXX
+XXF.FXX
+XF...FX
+X..P..X
+XF..LFX
+XXF.FXX
+XXXXXXX
+
+XXXXXXX
+X....PX
+X.FFF.X
+X.FLF.X
+X.FFF.X
+XX....X
+XXXXXXX

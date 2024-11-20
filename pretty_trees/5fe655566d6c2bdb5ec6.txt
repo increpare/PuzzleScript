@@ -1,0 +1,1354 @@
+ps_game
+  objects_section
+    object_data
+      object_name	playeridle
+      legend_key	d
+      colors
+        color	arkblue
+        color	brown
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['0' '1' '1' '1' '0']
+        ['.' '0' '.' '0' '.']
+      
+
+    object_data
+      object_name	playercarrying
+      legend_key	d
+      colors
+        color	arkblue
+        color	brown
+    object_data
+      object_name	1.0..
+      legend_key	1
+      colors
+        color	000.
+    object_data
+      object_name	1000.
+      legend_key	0
+      colors
+        color	0000
+    object_data
+      object_name	.0.0.
+      legend_key	b
+      colors
+        color	oxidle
+    object_data
+      object_name	brown
+      legend_key	d
+      colors
+        color	arkbrown
+        color	lightbrown
+    object_data
+      object_name	11111
+      legend_key	1
+      colors
+        color	2001
+    object_data
+      object_name	10201
+      legend_key	1
+      colors
+        color	0021
+    object_data
+      object_name	11111
+      legend_key	b
+      colors
+        color	oxsummoned
+    object_data
+      object_name	brown
+      legend_key	d
+      colors
+        color	arkbrown
+        color	purple
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '2' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	boxcarried
+      legend_key	b
+      colors
+        color	rown
+    object_data
+      object_name	darkbrown
+      legend_key	l
+      colors
+        color	ightbrown
+        color	purple
+    object_data
+      object_name	11111
+      legend_key	1
+      colors
+        color	2331
+    object_data
+      object_name	13231
+      legend_key	1
+      colors
+        color	3321
+    object_data
+      object_name	11111
+      legend_key	b
+      colors
+        color	oxthrownup
+    object_data
+      object_name	brown
+      legend_key	d
+      colors
+        color	arkbrown
+        color	purple
+    object_data
+      object_name	.111.
+      legend_key	.
+      colors
+        color	101.
+    object_data
+      object_name	.111.
+      legend_key	.
+      colors
+        color	222.
+    object_data
+      object_name	..2..
+      legend_key	b
+      colors
+        color	oxthrowndown
+    object_data
+      object_name	brown
+      legend_key	d
+      colors
+        color	arkbrown
+        color	purple
+    object_data
+      object_name	..2..
+      legend_key	.
+      colors
+        color	222.
+    object_data
+      object_name	.111.
+      legend_key	.
+      colors
+        color	101.
+    object_data
+      object_name	.111.
+      legend_key	b
+      colors
+        color	oxthrownleft
+    object_data
+      object_name	brown
+      legend_key	d
+      colors
+        color	arkbrown
+        color	purple
+    object_data
+      object_name	.....
+      legend_key	1
+      colors
+        color	112.
+    object_data
+      object_name	10122
+      legend_key	1
+      colors
+        color	112.
+    object_data
+      object_name	.....
+      legend_key	b
+      colors
+        color	oxthrownright
+    object_data
+      object_name	brown
+      legend_key	d
+      colors
+        color	arkbrown
+        color	purple
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '2' '1' '1' '1']
+        ['2' '2' '1' '0' '1']
+        ['.' '2' '1' '1' '1']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	plainwall
+      legend_key	g
+      colors
+        color	rey
+        color	darkgrey
+      sprite
+        ['0' '0' '1' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '1' '0' '0']
+    object_data
+      object_name	background
+      legend_key	y
+      colors
+        color	ellow
+    object_data
+      object_name	castup
+      legend_key	t
+      colors
+        color	ransparent
+    object_data
+      object_name	castdown
+      legend_key	t
+      colors
+        color	ransparent
+    object_data
+      object_name	castleft
+      legend_key	t
+      colors
+        color	ransparent
+    object_data
+      object_name	castright
+      legend_key	t
+      colors
+        color	ransparent
+    object_data
+      object_name	target
+      legend_key	d
+      colors
+        color	arkred
+        color	black
+      sprite
+        ['.' '.' '1' '.' '.']
+        ['.' '1' '0' '1' '.']
+        ['1' '0' '0' '0' '1']
+        ['.' '1' '0' '1' '.']
+        ['.' '.' '1' '.' '.']
+    object_data
+      object_name	door
+      legend_key	w
+      colors
+        color	hite
+  legend_section
+    legend_data
+      p
+      object_name	playeridle
+    legend_data
+      b
+      object_name	boxidle
+    legend_data
+      #
+      object_name	plainwall
+    legend_data
+      .
+      object_name	background
+    legend_data
+      t
+      object_name	target
+    legend_data
+      @
+      object_name	boxidle
+      legend_operation
+        object_name	target
+    legend_data
+      d
+      object_name	door
+    legend_data
+      wall
+      object_name	plainwall
+    legend_data
+      player
+      object_name	playeridle
+      legend_operation
+        object_name	playercarrying
+    legend_data
+      box
+      object_name	boxidle
+      legend_operation
+        object_name	boxsummoned
+      legend_operation
+        object_name	boxcarried
+    legend_data
+      magic
+      object_name	castup
+      legend_operation
+        object_name	castdown
+      legend_operation
+        object_name	castleft
+      legend_operation
+        object_name	castright
+    legend_data
+      blocker
+      object_name	wall
+      legend_operation
+        object_name	box
+    legend_data
+      boxthrown
+      object_name	boxthrownup
+      legend_operation
+        object_name	boxthrowndown
+      legend_operation
+        object_name	boxthrownleft
+      legend_operation
+        object_name	boxthrownright
+  collisionlayers_section
+    layer_data
+      object_name	background
+    layer_data
+      object_name	target
+    layer_data
+      object_name	wall
+      object_name	player
+    layer_data
+      object_name	box
+      object_name	magic
+    layer_data
+      object_name	boxthrown
+      object_name	door
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          up
+          rule_part
+            rule_content
+              action
+              playeridle
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              action
+              playeridle
+            cell_border
+            rule_content	c
+            rule_content	a
+            rule_content	s
+            rule_content	t
+            rule_content	u
+            rule_content	p
+          command
+            command_keyword	again
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              action
+              playeridle
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              action
+              playeridle
+            cell_border
+            rule_content	c
+            rule_content	a
+            rule_content	s
+            rule_content	t
+            rule_content	d
+            rule_content	o
+            rule_content	w
+            rule_content	n
+          command
+            command_keyword	again
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content
+              action
+              playeridle
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              action
+              playeridle
+            cell_border
+            rule_content	c
+            rule_content	a
+            rule_content	s
+            rule_content	t
+            rule_content	l
+            rule_content	e
+            rule_content	f
+            rule_content	t
+          command
+            command_keyword	again
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content
+              action
+              playeridle
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              action
+              playeridle
+            cell_border
+            rule_content	c
+            rule_content	a
+            rule_content	s
+            rule_content	t
+            rule_content	r
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              playeridle
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	i
+            rule_content	d
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              action
+              playeridle
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	c
+            rule_content	a
+            rule_content	r
+            rule_content	r
+            rule_content	i
+            rule_content	e
+            rule_content	d
+          command
+            command_keyword	again
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content	castup
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	i
+            rule_content	d
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	s
+            rule_content	u
+            rule_content	m
+            rule_content	m
+            rule_content	o
+            rule_content	n
+            rule_content	e
+            rule_content	d
+          command
+            command_keyword	again
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	castdown
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	i
+            rule_content	d
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	s
+            rule_content	u
+            rule_content	m
+            rule_content	m
+            rule_content	o
+            rule_content	n
+            rule_content	e
+            rule_content	d
+          command
+            command_keyword	again
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content	castleft
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	i
+            rule_content	d
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	s
+            rule_content	u
+            rule_content	m
+            rule_content	m
+            rule_content	o
+            rule_content	n
+            rule_content	e
+            rule_content	d
+          command
+            command_keyword	again
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content	castright
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	i
+            rule_content	d
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	s
+            rule_content	u
+            rule_content	m
+            rule_content	m
+            rule_content	o
+            rule_content	n
+            rule_content	e
+            rule_content	d
+          command
+            command_keyword	again
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content	castup
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          rule_part
+            rule_content
+              >
+              castup
+            cell_border
+          command
+            command_keyword	again
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	castdown
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          rule_part
+            rule_content
+              >
+              castdown
+            cell_border
+          command
+            command_keyword	again
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content	castleft
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          rule_part
+            rule_content
+              >
+              castleft
+            cell_border
+          command
+            command_keyword	again
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content	castright
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          rule_part
+            rule_content
+              >
+              castright
+            cell_border
+          command
+            command_keyword	again
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content	castup
+            cell_border
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          rule_part
+            rule_content	|
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          command
+            command_keyword	again
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	castdown
+            cell_border
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          rule_part
+            rule_content	|
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          command
+            command_keyword	again
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content	castleft
+            cell_border
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          rule_part
+            rule_content	|
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          command
+            command_keyword	again
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content	castright
+            cell_border
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          rule_part
+            rule_content	|
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	boxsummoned
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              >
+              boxsummoned
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              boxsummoned
+            cell_border
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	boxcarried
+            cell_border
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rigid
+          rule_part
+            rule_content
+              moving
+              player
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	c
+            rule_content	a
+            rule_content	r
+            rule_content	r
+            rule_content	i
+            rule_content	e
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              moving
+              player
+            cell_border
+            rule_content	m
+            rule_content	o
+            rule_content	v
+            rule_content	i
+            rule_content	n
+            rule_content	g
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	c
+            rule_content	a
+            rule_content	r
+            rule_content	r
+            rule_content	i
+            rule_content	e
+            rule_content	d
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              boxcarried
+            cell_border
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          command
+            command_keyword	cancel
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content
+              action
+              playercarrying
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	c
+            rule_content	a
+            rule_content	r
+            rule_content	r
+            rule_content	i
+            rule_content	e
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              action
+              playercarrying
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	t
+            rule_content	h
+            rule_content	r
+            rule_content	o
+            rule_content	w
+            rule_content	n
+            rule_content	u
+            rule_content	p
+          command
+            command_keyword	again
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              action
+              playercarrying
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	c
+            rule_content	a
+            rule_content	r
+            rule_content	r
+            rule_content	i
+            rule_content	e
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              action
+              playercarrying
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	t
+            rule_content	h
+            rule_content	r
+            rule_content	o
+            rule_content	w
+            rule_content	n
+            rule_content	d
+            rule_content	o
+            rule_content	w
+            rule_content	n
+          command
+            command_keyword	again
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content
+              action
+              playercarrying
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	c
+            rule_content	a
+            rule_content	r
+            rule_content	r
+            rule_content	i
+            rule_content	e
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              action
+              playercarrying
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	t
+            rule_content	h
+            rule_content	r
+            rule_content	o
+            rule_content	w
+            rule_content	n
+            rule_content	l
+            rule_content	e
+            rule_content	f
+            rule_content	t
+          command
+            command_keyword	again
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content
+              action
+              playercarrying
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	c
+            rule_content	a
+            rule_content	r
+            rule_content	r
+            rule_content	i
+            rule_content	e
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              action
+              playercarrying
+            cell_border
+            rule_content	b
+            rule_content	o
+            rule_content	x
+            rule_content	t
+            rule_content	h
+            rule_content	r
+            rule_content	o
+            rule_content	w
+            rule_content	n
+            rule_content	r
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	boxthrown
+            rule_content	]
+            rule_content	[
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	c
+            rule_content	a
+            rule_content	r
+            rule_content	r
+            rule_content	y
+            rule_content	i
+            rule_content	n
+            rule_content	g
+          ->
+          rule_part
+            rule_content	boxthrown
+            rule_content	]
+            rule_content	[
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	i
+            rule_content	d
+            rule_content	l
+            rule_content	e
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content	boxthrownup
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              >
+              boxthrownup
+            cell_border
+          command
+            command_keyword	again
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	boxthrowndown
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              >
+              boxthrowndown
+            cell_border
+          command
+            command_keyword	again
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content	boxthrownleft
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              >
+              boxthrownleft
+            cell_border
+          command
+            command_keyword	again
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content	boxthrownright
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              >
+              boxthrownright
+            cell_border
+          command
+            command_keyword	again
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content	boxthrownup
+            cell_border
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	boxidle
+            cell_border
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          command
+            command_keyword	again
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	boxthrowndown
+            cell_border
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	boxidle
+            cell_border
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          command
+            command_keyword	again
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content	boxthrownleft
+            cell_border
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	boxidle
+            cell_border
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          command
+            command_keyword	again
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content	boxthrownright
+            cell_border
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	boxidle
+            cell_border
+            rule_content	b
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	boxcarried
+            rule_content	]
+            rule_content	[
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	i
+            rule_content	d
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	boxcarried
+            rule_content	]
+            rule_content	[
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	c
+            rule_content	a
+            rule_content	r
+            rule_content	r
+            rule_content	y
+            rule_content	i
+            rule_content	n
+            rule_content	g
+          
+
+  winconditions_section
+    condition_data
+      all
+      object_name	target
+      on
+      object_name	box
+  levels_section
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#']
+ ['#' 'p' 't' '.' '.' 'b' '#']
+ ['#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'p' '.' '.' 'b' '.' '.' 't' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '#' '#' '#' '#']
+ ['#' '.' '.' '#' '#' '#' '#']
+ ['#' 'p' '.' '.' '.' 'b' '#']
+ ['#' '#' '.' '#' '#' '#' '#']
+ ['#' '#' 't' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#']
+ ['#' 't' '.' 'b' '.' 't' '#']
+ ['#' '.' '.' '.' '.' '.' '#']
+ ['#' 'b' '.' 'p' '.' 'b' '#']
+ ['#' '.' '.' '.' '.' '.' '#']
+ ['#' 't' '.' 'b' '.' 't' '#']
+ ['#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' 'p' '#']
+ ['#' '.' 'b' '#' '.' '.' '#']
+ ['#' '.' '#' 't' '.' '.' '#']
+ ['#' 't' '.' '.' '#' '.' '#']
+ ['#' '.' '.' '.' 'b' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '#' '#' '#' '#']
+ ['#' '#' '#' '@' '.' 't' '#' '#' '#']
+ ['#' '#' 't' '.' '.' '.' '@' '#' '#']
+ ['#' '.' '.' '.' 'p' '.' '.' '.' '#']
+ ['#' '#' '@' '.' '.' '.' 't' '#' '#']
+ ['#' '#' '#' 't' '.' '@' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]

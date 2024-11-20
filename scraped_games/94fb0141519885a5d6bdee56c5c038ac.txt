@@ -1,0 +1,148 @@
+title PS Paint
+author Zithral
+homepage www.puzzlescript.net
+
+norepeat_action
+
+========
+OBJECTS
+========
+
+Background .
+gray
+
+ActivePen
+gray
+00.00
+0...0
+.....
+0...0
+00.00
+
+InactivePen
+gray
+0...0
+.....
+.....
+.....
+0...0
+
+ActiveCursor
+gray
+00.00
+0...0
+.....
+0...0
+00.00
+
+InactiveCursor
+gray
+0...0
+.....
+.....
+.....
+0...0
+
+
+
+(blackwhitelightgray/greygray/greydarkgray/greyreddarkredlightredbrowndarkbrownlightbrownorangeyellowgreendarkgreenlightgreenbluelightbluedarkbluepurplepinktransparent)
+
+k
+black
+
+d
+darkgray
+
+l
+lightgray
+
+w
+white
+
+r
+red
+
+o
+orange
+
+y
+yellow
+
+g
+green
+
+b
+blue
+
+p
+purple
+
+
+=======
+LEGEND
+=======
+
+@ = w and ActivePen
++ = k and InactiveCursor
+
+Color = k or d or l or w or r or o or y or g or b or p
+
+Player = ActivePen or ActiveCursor
+
+Inactive = InactivePen or InactiveCursor
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Color
+Inactive
+Player
+
+======
+RULES
+======
+
+[ action ActivePen ] [ InactiveCursor ] -> [ InactivePen ] [ ActiveCursor ]
+[ action ActiveCursor Color ] [ InactivePen ] -> [ InactiveCursor Color ] [ ActivePen Color ]
+
+[ > ActivePen | Color ] -> [ | Color ActivePen]
+[ > ActiveCursor | Color | Color | Color ] -> [ | Color | Color | Color ActiveCursor ]
+[ moving Player ] -> [ stationary Player ]
+
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwww@wwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+.................
+.wwwlllrrroooyyy.
+.wwwlllrrroooyyy.
+.wwwlllrrroooyyy.
+.kkkdddpppbbbggg.
+.k+kdddpppbbbggg.
+.kkkdddpppbbbggg.
+.................
+

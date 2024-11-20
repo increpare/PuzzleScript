@@ -1,0 +1,283 @@
+title Eschoban
+author Franklin P. Dyer
+again_interval 0.1
+
+========
+OBJECTS
+========
+
+Background .
+#330000 #220000
+00010
+10000
+00100
+01000
+00001
+
+Wall x
+#663300 #996633
+11111
+00000
+11111
+00000
+11111
+
+Slope1 1
+#663300 #996633
+....1
+...00
+..111
+.0000
+11111
+
+Slope2 2
+#663300 #996633
+11111
+.0000
+..111
+...00
+....1
+
+Slope3 3
+#663300 #996633
+11111
+0000.
+111..
+00...
+1....
+
+Slope4 4
+#663300 #996633
+1....
+00...
+111..
+0000.
+11111
+
+Player1 p
+Black #ffcc99 Darkblue Blue
+.000.
+.111.
+33333
+.222.
+.2.2.
+
+Player2
+Black #ffcc99 Darkblue Blue
+..3..
+01322
+0132.
+01322
+..3..
+
+Player3
+Black #ffcc99 Darkblue Blue
+.2.2.
+.222.
+33333
+.111.
+.000.
+
+Player4
+Black #ffcc99 Darkblue Blue
+..3..
+22310
+.2310
+22310
+..3..
+
+Crate1 a
+#ff9933
+00000
+0...0
+0.0.0
+0...0
+00000
+
+Crate2 b
+#ff9933
+00000
+0...0
+0.0.0
+0...0
+00000
+
+Crate3 c
+#ff9933
+00000
+0...0
+0.0.0
+0...0
+00000
+
+Crate4 d
+#ff9933
+00000
+0...0
+0.0.0
+0...0
+00000
+
+Target o
+#006633
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Spikes !
+Gray
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+
+=======
+LEGEND
+=======
+
+Solid = Wall or Crate1 or Crate2 or Crate3 or Crate4
+Crate = Crate1 or Crate2 or Crate3 or Crate4
+Slope = Slope1 or Slope2 or Slope3 or Slope4
+Player = Player1 or Player2 or Player3 or Player4
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Spikes
+Wall, Player, Crate
+Slope
+
+======
+RULES
+======
+[> Player|Crate] -> [> Player|> Crate]
+
+startloop
+LATE UP[Player1 Slope1|No Wall] -> [Slope1|Player2]
+LATE LEFT[Player2 Slope2|No Wall] -> [Slope2|Player3]
+LATE DOWN[Player3 Slope3|No Wall] -> [Slope3|Player4]
+LATE RIGHT[Player4 Slope4|No Wall] -> [Slope4|Player1]
+LATE UP[Player1 Slope4|No Wall] -> [Slope4|Player4]
+LATE RIGHT[Player4 Slope3|No Wall] -> [Slope3|Player3]
+LATE DOWN[Player3 Slope2|No Wall] -> [Slope2|Player2]
+LATE LEFT[Player2 Slope1|No Wall] -> [Slope1|Player1]
+[> Player|Spikes] -> [|Spikes]
+endloop
+
+UP[> Player1] -> [Player1]
+[LEFT Player2] -> [Player2]
+[RIGHT Player2] -> [Player2]
+[UP Player3] -> [Player3]
+[DOWN Player3] -> [Player3]
+[LEFT Player4] -> [Player4]
+[RIGHT Player4] -> [Player4]
+
+startloop
+DOWN[Player1|No Solid] -> [> Player1|No Solid] again 
+RIGHT[Player2|No Solid] -> [> Player2|No Solid] again 
+UP[Player3|No Solid] -> [> Player3|No Solid] again 
+LEFT[Player4|No Solid] -> [> Player4|No Solid] again 
+DOWN[Crate1|No Solid] -> [> Crate1|No Solid] again 
+RIGHT[Crate2|No Solid] -> [> Crate2|No Solid] again 
+UP[Crate3|No Solid] -> [> Crate3|No Solid] again 
+LEFT[Crate4|No Solid] -> [> Crate4|No Solid] again 
+[> Player|Spikes] -> [|Spikes]
+endloop
+
+==============
+WINCONDITIONS
+==============
+
+All target on crate
+
+=======
+LEVELS
+=======
+
+message Move with the arrow keys.
+message Push the box onto the target.
+
+.....
+.....
+xpaox
+xxxxx
+
+.....xx
+.....ox
+.....bx
+......x
+xp...1x
+xxxxxxx
+
+xxxxxxx
+x3...2x
+x.....x
+xbx...x
+x....ox
+x.p..1x
+xxxxxxx
+
+xxxxxxxxxxxxxxxxxx
+x.......2xo.c....x
+........1x.......x
+.................x
+.....x3..........x
+xp..1xxxx....2x41x
+xxxxxxxxxxxx.1xxxx
+xxxxxxxxxxxxxxxxxx
+
+
+xxxxxxxxxxxxxxxxxxxx
+x3....2xx....2x3oc.x
+x.......x.xx.......x
+x4.px...x.2x.......x
+xxxxxd.....x...xx41x
+xo......x..xd.xxxxxx
+xo....xxx41x...x3.2x
+x.......2xxx..ox...x
+x............bxxd..x
+x.............xx...x
+x4.....xx......x...x
+xx.....2x...x41x...x
+x......1x4..xxxx...x
+xxxxxxxxxx.........x
+xo................1x
+xxxxxxxxxxxxxxxxxxxx
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxo
+x............................x
+x............................x
+x............................x
+x............................x
+x............................x
+x............................x
+x............................x
+x............................x
+x............................x
+x............................x
+x...xxxx.....................x
+x.xxx3.xxxx..................x
+x........xo..................x
+x.xxxxxx.xx.xd...............x
+x..!......x..................x
+x.........x..................x
+x.x.xxxxx.x..................x
+x......2x.x..................x
+xd...xx.x.xxx................x
+x..x.2x.x..2x................x
+xo.x..x.....x................x
+x.....x......................x
+xp.1x...!....................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+message You win!

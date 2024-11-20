@@ -1,0 +1,259 @@
+title magnetic
+author nick cavazos
+background_color DARKBLUE
+(scanline)
+========
+OBJECTS
+========
+Background
+GRAY darkgray
+10010
+01000
+00110
+11001
+01010
+
+Player
+white Yellow
+..1..
+.101.
+11001
+.111.
+..1..
+
+Target
+DarkRed Red
+.111.
+1.1.1
+1.1.1
+1.1.1
+.111.
+
+Pill
+Darkblue White Gray
+00000
+01220
+11122
+01220
+00000
+
+Wall
+Black DarkBlue
+11111
+00000
+00000
+00000
+11111
+
+NewPlayer
+DarkBlue Red
+00100
+01010
+10001
+01010
+00100
+
+IPlayer
+Black
+.....
+.....
+.....
+.....
+.....
+
+Shift
+black
+.....
+.....
+.....
+.....
+.....
+
+ShiftB
+black
+00000
+.....
+.....
+.....
+.....
+
+PTarget
+#ff9b99 #eb605e White
+.000.
+02220
+02120
+02220
+.000.
+
+Block
+#ff9b99 #f28785 #eb605e
+00000
+10001
+10001
+20002
+22222
+
+pulled_left
+black
+.....
+.....
+.....
+.....
+.....
+
+pulled_right
+black
+.....
+.....
+.....
+.....
+.....
+
+pulled_up
+black
+.....
+.....
+.....
+.....
+.....
+
+pulled_down
+black
+.....
+.....
+.....
+.....
+.....
+
+conflict
+black
+.....
+.....
+.....
+.....
+.....
+=======
+LEGEND
+=======
+. = Background
+@ = Player and Shift
+T = Target
+$ = Pill
+# = Wall
+% = NewPlayer
+P = PTarget
+! = Block
+
+status = pulled_left or pulled_right or pulled_up or pulled_up or pulled_down or conflict
+
+
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Target
+Shift
+ShiftB
+Status
+PTarget
+Wall, Player, NewPlayer, IPlayer, Block, Pill 
+
+
+======
+RULES
+======
+(late [ player target ] -> [ pill target player ])
+([ pill |...| pill ] -> [ > pill |...|  pill ])
+(late [ pill | pill ] -> [ | pill ])
+
+[ > player | block ] -> [ > player | > block ]
+
+([ pill |...| player ] -> [ > pill |...| player ])
+[ > player ] [shift ] -> [ > player ] [ > shift ]
+
+[ pill | block ] -> [ | block ]
+
+Up [ no status pill |...| player ] -> [ pulled_up pill |...| player ]
+Down [ status pill |...| player ] -> [ conflict pill |...| player ]
+Down [no status pill |...| player ] -> [pulled_down pill |...| player ]
+Left [ status pill |...| player ] -> [ conflict pill |...| player ]
+Left [ no status pill |...| player ] -> [ pulled_left pill |...| player ]
+Right [ status pill |...| player ] -> [ conflict pill |...| player ]
+Right [ no status pill |...| player ] -> [ pulled_right pill |...| player ]
+
+Up [ no status pill |...| block ] -> [ pulled_up pill |...| block ]
+Down [ status pill |...| block ] -> [ conflict pill |...| block ]
+Down [no status pill |...| block ] -> [pulled_down pill |...| block ]
+Left [ status pill |...| block ] -> [ conflict pill |...| block ]
+Left [ no status pill |...| block ] -> [ pulled_left pill |...| block ]
+Right [ status pill |...| block ] -> [ conflict pill |...| block ]
+Right [ no status pill |...| block ] -> [ pulled_right pill |...| block ]
+
+[ pill pulled_up ] -> [ up pill ]
+[ pill pulled_down ] -> [ down pill ]
+[ pill pulled_left ] -> [ left pill ]
+[ pill pulled_right ] -> [ right pill ]
+[ pill conflict ] -> [ stationary pill ]
+
+[status] -> []
+
+==============
+WINCONDITIONS
+==============
+All Pill on PTarget
+
+=======
+LEVELS
+=======
+
+message the pill likes you!
+###############
+..............#
+..............#
+..............#
+$...@.......P.#
+..............#
+..............#
+..............#
+###############
+
+message the pill likes blocks!
+###############
+..............#
+....@.........#
+..............#
+$...P...!.....#
+..............#
+..............#
+..............#
+###############
+
+message the pill will get STUCK between two targets!
+###############
+..............#
+....!.........#
+..............#
+$...P..@......#
+..............#
+....!.........#
+..............#
+###############
+
+
+message get the pill to the target!
+
+###############
+....!.........#
+..............#
+....@.!.!.!...#
+$...........P.#
+......!.!.!...#
+..............#
+....!.........#
+###############

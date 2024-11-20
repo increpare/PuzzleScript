@@ -1,0 +1,472 @@
+OBJECTS
+
+Background#222
+#BBBBBB#CCCCCC01110
+12221
+12221
+12221
+01110
+
+walldarkgrey
+wu#22200000
+.....
+.....
+.....
+.....
+
+wd#222.....
+.....
+.....
+.....
+00000
+
+wl#2220....
+0....
+0....
+0....
+0....
+
+wr#222
+....0....0
+....0....0
+....0bu
+darkbrownlightbrown darkbrown
+......212.
+.111..111.
+.....bl
+darkbrownlightbrown darkbrown
+......211.
+.111..211.
+.....br
+darkbrownlightbrown darkbrown
+......112.
+.111..112.
+.....bd
+darkbrownlightbrown darkbrown
+......111.
+.111..212.
+.....gu
+blackgreen darkblue
+......212.
+.111..111.
+.....gl
+blackgreen darkblue
+......211.
+.111..211.
+.....gr
+blackgreen darkblue
+......112.
+.111..112.
+.....gd
+blackgreen darkblue.....
+.111.
+.111.
+.212.
+.....
+
+autransparent
+adtransparent
+altransparent
+artransparent
+agtransparent
+vttransparent
+httransparent
+spikesdarkgrey.....
+..0..
+.0.0.
+..0..
+.....
+
+rured
+grey..1..
+.111...0..
+..0....0..
+rrred grey.....
+...1.
+00011
+...1.
+.....
+
+rdred
+grey..0..
+..0....0..
+.111...1..
+rlred grey.....
+.1...
+11000
+.1...
+.....
+
+goalgreen
+tagtransparent
+tut1transparent
+tut2transparent
+blood1red..0..
+...0.
+00...
+.0..0
+.0...
+
+blood2red
+...0....0.
+.0..00..0.
+.0...blood3
+red..0..
+0.0.0...0.
+.0......0.
+blood4red.0...
+...0.
+0.0..
+..0.0
+..0..
+
+blood5red..0..
+.0..0
+.0.0.
+0....
+.0...
+
+su1#9999FF.000.
+.....
+.....
+.....
+.....
+
+sl1#9999FF.....
+0....
+0....
+0....
+.....
+
+sd1#9999FF.....
+.....
+.....
+.....
+.000.
+
+sr1#9999FF.....
+....0
+....0
+....0
+.....
+
+s1#9999FF.....
+.000.
+.000.
+.000.
+.....
+
+su2#FF9999.000.
+.....
+.....
+.....
+.....
+
+sl2#FF9999.....
+0....
+0....
+0....
+.....
+
+sd2#FF9999.....
+.....
+.....
+.....
+.000.
+
+sr2#FF9999.....
+....0
+....0
+....0
+.....
+
+s2#FF9999.....
+.000.
+.000.
+.000.
+.....
+
+temptransparent
+togg1transparent
+togg2transparent
+staytransparent
+endspottransparent
+noarrowtransparent
+bullstransparent
+bulls2transparent
+endspot2transparent
+
+
+
+LEGEND
+
+. = Background
+# = Wall
+blood = blood1 or blood2 or blood3 or blood4 or blood5
+bx = bu or br or bd or bl
+player = bx
+gx = gu or gr or gd or gl
+ax = au or al or ad or ar
+rx = ru or rl or rd or rr
+sx1 = su1 or sd1 or sl1 or sr1
+s = spikes
+1 = bu
+2 = bd
+3 = bl
+4 = br
+5 = gu
+6 = gd
+7 = gl
+8 = gr
+! = wu
+@ = wd
+$ = wl
+% = wr
+~ = s or wu
+- = tut1
+_ = tut2
+^ = su1 or wu
+& = sl1 or wl
+* = sr1 or wr
++ = sd1 or wd
+: = su2 or wu
+; = sl2 or wl
+" = sr2 or wr
+' = sd2 or wd
+\ = su1 or wr
+[ = s1
+] = s1 or s
+{ = s2
+} = s2 or s
+? = gl or wu
+/ = s1 or s or wu
+e = s1 or wu
+> = endspot
+< = 8 or wu
+x = noarrow or wall
+y = bulls or wall
+q = s1 or spikes or wd
+w = s1 or wd
+r = endspot2 or s
+
+COLLISIONLAYERS
+
+Background
+blood1
+blood2
+blood3
+blood4
+blood5
+tag
+ag
+au
+al
+ar
+ad
+s1
+s2
+bx
+Wall
+wu
+wd
+wl
+wr
+sl1
+sr1
+sd1
+su1
+sl2
+sr2
+su2
+sd2
+gx
+goal
+spikes
+rx
+ht
+vt
+tut1
+tut2
+temp
+togg1
+togg2
+stay
+endspot
+noarrow
+bulls
+bulls2
+endspot2
+
+RULES
+
+late [ bx tut1 ] -> [ bx ] 
+late [ bx tut2 ] -> [ bx ] 
+up [ no wall | wall ] -> [ |wallwd ] 
+down [ no wall | wall ] -> [ |wallwu ] 
+right [ no wall | wall ] -> [ |wallwl ] 
+left [ no wall | wall ] -> [ |wallwr ] 
+down [ |wu ] -> [ wd | wu ] 
+up [ |wd ] -> [ wu | wd ] 
+right [ |wl ] -> [ wr | wl ] 
+left [ |wr ] -> [ wl | wr ] 
+[ ax ] -> [  ] 
+[ bx ] -> [ bx au ad al ar ] 
+[ noarrow][actionbx ] -> [ noarrow][bx ] 
+[ action bu ] -> [ action bu ru ] 
+[ action bl ] -> [ action bl rl ] 
+[ action bd ] -> [ action bd rd ] 
+[ action br ] -> [ action br rr ] 
+up [ au no wu no gx | nowd ] -> [ au | au ] 
+down [ ad no wd no gx | nowu ] -> [ ad | ad ] 
+left [ al no wl no gx | nowr ] -> [ al | al ] 
+right [ ar no wr no gx | nowl ] -> [ ar | ar ] 
+[ tag][stationaryru ] -> [ tag][upru ] 
+[ tag][stationaryrl ] -> [ tag][leftrl ] 
+[ tag][stationaryrd ] -> [ tag][downrd ] 
+[ tag][stationaryrr ] -> [ tag][rightrr ] 
+[ au gx ] -> [ au gd ] 
+[ al gx ] -> [ al gr ] 
+[ ar gx ] -> [ ar gl ] 
+[ ad gx ] -> [ ad gu ] 
+[ ag][gu ] -> [ ag][upgu ] 
+[ ag][gl ] -> [ ag][leftgl ] 
+[ ag][gr ] -> [ ag][rightgr ] 
+[ ag][gd ] -> [ ag][downgd ] 
+[ up gx wu ] -> [ stationary gx wu ] 
+[ left gx wl ] -> [ stationary gx wl ] 
+[ right gx wr ] -> [ stationary gx wr ] 
+[ down gx wd ] -> [ stationary gx wd ] 
+[ left bx ] -> [ left bl ] 
+[ right bx ] -> [ right br ] 
+[ down bx ] -> [ down bd ] 
+[ up bx ] -> [ up bu ] 
+[ ag ] -> [  ] 
+[ tag ] -> [ ag ] again 
+[ moving player ] -> [ tag moving player ] again 
+[ action player ] -> [ tag action player ] again 
+[ up bx wu ] -> [ stationary bx wu ] 
+[ left bx wl ] -> [ stationary bx wl ] 
+[ right bx wr ] -> [ stationary bx wr ] 
+[ down bx wd ] -> [ stationary bx wd ] 
+[ > bx | rx ] -> [ stationary bx | rx ] 
+[ moving gx stay ] -> [ stationary gx stay ] 
+[ moving gx ] -> 
+[ moving bx ] -> 
+[ moving rx ] -> 
+[ > gx |  | <gx ] -> [ |randomblood |  ] 
+vertical [ > gx |  ] -> [ > gx | vt ] 
+horizontal [ > gx |  ] -> [ > gx | ht ] 
+vertical [ > gx | ht ] -> [ |randombloodht ] 
+horizontal [ > gx | vt ] -> [ |randombloodvt ] 
+[ ht ] -> [  ] 
+[ v t ] -> [  ] 
+[ up rx su1 ] -> [ up rx su1 togg1 ] 
+[ left rx sl1 ] -> [ left rx sl1 togg1 ] 
+[ down rx sd1 ] -> [ down rx sd1 togg1 ] 
+[ right rx sr1 ] -> [ right rx sr1 togg1 ] 
+[ s1 spikes][togg1 ] -> [ s1 temp][togg1 ] 
+[ s1 no spikes no temp][togg1 ] -> [ s1 spikes][togg1 ] 
+[ up rx su2 ] -> [ up rx su2 togg2 ] 
+[ left rx sl2 ] -> [ left rx sl2 togg2 ] 
+[ down rx sd2 ] -> [ down rx sd2 togg2 ] 
+[ right rx sr2 ] -> [ right rx sr2 togg2 ] 
+[ s2 spikes][togg2 ] -> [ s2 temp][togg2 ] 
+[ s2 no spikes no temp][togg2 ] -> [ s2 spikes][togg2 ] 
+[ togg1][bulls2 ] -> [ togg1][ ] 
+[ togg1][bulls ] -> [ togg1][bulls2 ] 
+[ temp ] -> [  ] 
+[ togg1 ] -> [  ] 
+[ togg2 ] -> [  ] 
+[ up rx wu ] -> [ wu ] 
+[ left rx wl ] -> [ wl ] 
+[ right rx wr ] -> [ wr ] 
+[ down rx wd ] -> [ wd ] 
+late [ bx s ] -> [ s random blood stay ] 
+late [ bx gx ] -> [ gx random blood stay ] 
+late [ gx s ] -> [ s random blood ] 
+late [ gx rx ] -> [ random blood ] 
+
+
+WINCONDITIONS
+
+all endspot2 on blood
+all endspot on player
+no gx
+
+LEVELS
+
+#######
+#.@.s>#
+#%s%!.#
+#1%%@!#
+#%!.s.#
+#s.!!.#
+x######
+
+####
+##7#
+##$#
+#4%#
+#%s#
+#.@#
+x###
+
+#####
+#8@.#
+#8!%#
+###$#
+#!!%#
+#4!.#
+x####
+
+########
+#.@@@@.#
+#@@6@@.#
+#4.!..7#
+########
+
+########
+
+#!!!...#
+#$.....#
+#4..%#7#
+#....!.#
+#.....%#
+#....@@#
+########
+
+#######
+
+#4@].*#
+#!6/!.#
+y######
+
+#############
+#6!!!/![!e!!#
+#!!4!??7???*#
+#######7#####
+#############
+
+#######
+
+#5s...#
+#!:!^$#
+#$..%$#
+#$..*$#
+#&3.%]#
+#$.."}#
+#;..{[#
+#@@'+.#
+#######
+
+########
+#^%5@..#
+#.%!^].#
+#].&..##
+#.2$]*##
+#...6.##
+########
+
+#############
+#4.........r#
+#############

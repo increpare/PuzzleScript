@@ -1,0 +1,681 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	.
+      colors
+        color	lightblue
+        color	white
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '1']
+        ['1' '1' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '1' '1']
+    object_data
+      object_name	Path
+      legend_key	,
+      colors
+        color	#fffefe
+        color	#ffcccc
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '1' '0' '0']
+        ['1' '0' '0' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	Alert
+      legend_key	!
+      colors
+        color	white
+        color	lightgreen
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '1' '0' '0']
+        ['1' '0' '0' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	AlertActive
+      legend_key	w
+      colors
+        color	hite
+        color	lightgray
+    object_data
+      object_name	11011
+      legend_key	1
+      colors
+        color	0001
+    object_data
+      object_name	00100
+      legend_key	1
+      colors
+        color	0001
+    object_data
+      object_name	11011
+      legend_key	G
+      colors
+        color	oal
+    object_data
+      object_name	G
+      legend_key	g
+      colors
+        color	ray
+        color	darkblue
+    object_data
+      object_name	.....
+      legend_key	.
+      colors
+        color	000.
+    object_data
+      object_name	01110
+      legend_key	1
+      colors
+        color	1111
+    object_data
+      object_name	.111.
+      legend_key	W
+      colors
+        color	all
+    object_data
+      object_name	#
+      legend_key	r
+      colors
+        color	ed
+        color	darkred
+    object_data
+      object_name	00010
+      legend_key	1
+      colors
+        color	1111
+    object_data
+      object_name	01000
+      legend_key	1
+      colors
+        color	1111
+    object_data
+      object_name	00010
+      legend_key	E
+      colors
+        color	lectric
+    object_data
+      object_name	Z
+      legend_key	y
+      colors
+        color	ellow
+        color	lightblue
+    object_data
+      object_name	10001
+      legend_key	0
+      colors
+        color	1010
+    object_data
+      object_name	00100
+      legend_key	0
+      colors
+        color	1010
+    object_data
+      object_name	10001
+      legend_key	W
+      colors
+        color	ater
+    object_data
+      object_name	W
+      legend_key	b
+      colors
+        color	lue
+        color	#6666ff
+      sprite
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['1' '1' '0' '1' '1']
+        ['0' '1' '1' '1' '0']
+    object_data
+      object_name	Piranhas
+      legend_key	b
+      colors
+        color	lue
+    object_data
+      object_name	#6666ff
+      legend_key	l
+      colors
+        color	ightblue
+        color	orange
+      sprite
+        ['0' '0' '1' '3' '0']
+        ['0' '0' '1' '3' '3']
+        ['0' '3' '1' '2' '2']
+        ['1' '3' '3' '1' '1']
+        ['0' '2' '2' '1' '0']
+    object_data
+      object_name	Elecwater
+      legend_key	b
+      colors
+        color	lue
+        color	#6677ff
+    object_data
+      object_name	00100
+      legend_key	0
+      colors
+        color	0100
+    object_data
+      object_name	01110
+      legend_key	1
+      colors
+        color	1011
+    object_data
+      object_name	01110
+      legend_key	O
+      colors
+        color	range
+    object_data
+      object_name	Q
+      legend_key	o
+      colors
+        color	range
+        color	green
+    object_data
+      object_name	00111
+      legend_key	0
+      colors
+        color	0100
+    object_data
+      object_name	00000
+      legend_key	0
+      colors
+        color	0000
+    object_data
+      object_name	00000
+      legend_key	F
+      colors
+        color	risk
+    object_data
+      object_name	F
+      legend_key	b
+      colors
+        color	rown
+    object_data
+      object_name	yellow
+      legend_key	p
+      colors
+        color	ink
+        color	Blue
+    object_data
+      object_name	.000.
+      legend_key	.
+      colors
+        color	111.
+    object_data
+      object_name	22222
+      legend_key	.
+      colors
+        color	333.
+    object_data
+      object_name	.3.3.
+      legend_key	S
+      colors
+        color	oap
+    object_data
+      object_name	Y
+      legend_key	p
+      colors
+        color	urple
+        color	pink
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '1' '0']
+        ['0' '1' '0' '1' '0']
+        ['0' '1' '1' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Bubbles
+      legend_key	w
+      colors
+        color	hite
+        color	lightblue
+      sprite
+        ['.' '.' '.' '.' '1']
+        ['0' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['1' '.' '.' '.' '0']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	SubmergedFrisk
+      legend_key	b
+      colors
+        color	rown
+    object_data
+      object_name	yellow
+      legend_key	p
+      colors
+        color	ink
+        color	lightblue
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['2' '2' '2' '2' '2']
+        ['3' '3' '3' '3' '3']
+    object_data
+      object_name	FriskOrng
+      legend_key	b
+      colors
+        color	rown
+    object_data
+      object_name	orange
+      legend_key	r
+      colors
+        color	ed
+        color	green
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['2' '2' '2' '2' '2']
+        ['.' '3' '3' '3' '.']
+        ['.' '3' '.' '3' '.']
+    object_data
+      object_name	Randler
+      legend_key	?
+      colors
+        color	gray
+        color	black
+      sprite
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+      
+
+  legend_section
+    legend_data
+      Player
+      object_name	Frisk
+      legend_operation
+        object_name	FriskOrng
+      legend_operation
+        object_name	SubmergedFrisk
+    legend_data
+      Tile
+      object_name	Path
+      legend_operation
+        object_name	Alert
+      legend_operation
+        object_name	Wall
+      legend_operation
+        object_name	Electric
+      legend_operation
+        object_name	Water
+      legend_operation
+        object_name	Orange
+      legend_operation
+        object_name	Soap
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Path
+    layer_data
+      object_name	Goal
+      object_name	Alert
+    layer_data
+      object_name	AlertActive
+      object_name	Water
+    layer_data
+      object_name	Piranhas
+      object_name	Elecwater
+    layer_data
+      object_name	Orange
+      object_name	Soap
+    layer_data
+      object_name	Bubbles
+      object_name	Randler
+    layer_data
+      object_name	Player
+    layer_data
+      object_name	Wall
+      object_name	Electric
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              Alert
+          ->
+          rule_part
+            rule_content
+              Player
+              AlertActive
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              AlertActive
+              no
+              Player
+          ->
+          rule_part
+            rule_content	Alert
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Frisk
+              Water
+          ->
+          rule_part
+            rule_content
+              SubmergedFrisk
+              Water
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              SubmergedFrisk
+              no
+              Water
+          ->
+          rule_part
+            rule_content
+              Frisk
+              no
+              Water
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Frisk
+              Orange
+          ->
+          rule_part
+            rule_content
+              FriskOrng
+              Orange
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          rule_part
+            rule_content	Piranhas
+          ->
+          rule_part
+            rule_content	Water
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	E
+            rule_content	l
+            rule_content	e
+            rule_content	c
+            rule_content	t
+            rule_content	r
+            rule_content	i
+            rule_content	c
+          ->
+          rule_part
+            rule_content
+              <
+              Player
+            cell_border
+            rule_content	E
+            rule_content	l
+            rule_content	e
+            rule_content	c
+            rule_content	t
+            rule_content	r
+            rule_content	i
+            rule_content	c
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              FriskOrng
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              <
+              FriskOrng
+            cell_border
+            rule_content	P
+            rule_content	i
+            rule_content	r
+            rule_content	a
+            rule_content	n
+            rule_content	h
+            rule_content	a
+            rule_content	s
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	E
+            rule_content	l
+            rule_content	e
+            rule_content	c
+            rule_content	w
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              <
+              Player
+            cell_border
+            rule_content	E
+            rule_content	l
+            rule_content	e
+            rule_content	c
+            rule_content	w
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	r
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          rule_part
+            rule_content	Water
+            cell_border
+            rule_content	E
+            rule_content	l
+            rule_content	e
+            rule_content	c
+            rule_content	t
+            rule_content	r
+            rule_content	i
+            rule_content	c
+          ->
+          rule_part
+            rule_content	Elecwater
+            cell_border
+            rule_content	E
+            rule_content	l
+            rule_content	e
+            rule_content	c
+            rule_content	t
+            rule_content	r
+            rule_content	i
+            rule_content	c
+          
+
+        rule_data
+          rule_part
+            rule_content	Bubbles
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	Bubbles
+            cell_border
+            rule_content	>
+            rule_content	F
+            rule_content	r
+            rule_content	i
+            rule_content	s
+            rule_content	k
+          
+
+        rule_data
+          rule_part
+            rule_content	Bubbles
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	S
+            rule_content	o
+            rule_content	a
+            rule_content	p
+          ->
+          rule_part
+            rule_content	Bubbles
+            rule_content	>
+            rule_content	F
+            rule_content	r
+            rule_content	i
+            rule_content	s
+            rule_content	k
+            cell_border
+            rule_content	S
+            rule_content	o
+            rule_content	a
+            rule_content	p
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	Randler
+          ->
+          rule_part
+            rule_content
+              random
+              Tile
+          
+
+  winconditions_section
+    condition_data
+      all
+      object_name	Player
+      on
+      object_name	Goal
+  levels_section
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['F' '.' '.' 'G']]
+    level_data	None
+    level_data	[['.' ',' '#' ',' ',' ',' '#' ',' '.' '.']
+ ['F' ',' '#' ',' '#' ',' ',' ',' '.' 'G']
+ ['.' ',' ',' ',' '#' ',' '#' ',' '.' '.']]
+    level_data	None
+    level_data	[['.' ',' ',' '!' ',' ',' '.']
+ ['f' ',' ',' '!' ',' ',' 'G']
+ ['.' ',' ',' '!' ',' ',' '.']]
+    level_data	None
+    level_data	[['.' '.' ',' ',' ',' ',' '#' '.' '.']
+ ['f' '.' '#' ',' 'z' ',' '#' '.' '.']
+ ['.' '.' 'Z' ',' '#' ',' 'z' '.' '.']
+ ['.' '.' '#' ',' 'z' ',' ',' '.' 'g']
+ ['.' '.' '#' ',' ',' ',' '#' '.' '.']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['.' '.' ',' ',' 'w' 'w' 'z' 'w' 'w' 'w' 'w' 'w']
+ ['f' '.' ',' ',' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w']
+ ['.' '.' ',' ',' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w']
+ ['#' '#' '#' '#' '#' '#' '#' '#' 'z' 'w' 'w' 'w']
+ ['.' '.' ',' 'w' 'w' ',' 'w' ',' 'Q' ',' ',' ',']
+ ['g' '.' ',' 'w' ',' ',' ',' ',' ',' 'Q' ',' ',']
+ ['.' '.' ',' ',' ',' 'w' ',' 'w' ',' ',' 'Q' ',']]
+    level_data	None
+    level_data	[['f' '.' ',' ',' 'y' 'y' 'y' 'y' 'y' 'y' '#']]
+    level_data	[['.' '.' ',' ',' 'y' '#' 'y' 'y' 'y' 'y' ',']
+ ['#' '#' '#' '#' '#' '#' 'y' '#' '#' '#' 'q']
+ ['g' '.' ',' 'y' 'y' 'y' 'y' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['f']
+ ['.']
+ [',']
+ ['?']
+ [',']
+ ['.']
+ ['g']]
+    level_data	[['.' '.' '.' ',' ',' '?' '?' ',' ',' '.' '.' '.']
+ ['.' '.' '.' ',' ',' ',' '?' ',' ',' '.' '.' '.']
+ ['.' 'f' '.' ',' ',' '?' ',' ',' ',' '.' 'g' '.']
+ ['.' '.' '.' ',' ',' ',' '?' ',' ',' '.' '.' '.']
+ ['.' '.' '.' ',' ',' '?' '?' ',' ',' '.' '.' '.']]

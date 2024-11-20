@@ -1,0 +1,1580 @@
+title Color Totems
+author Jeff Schubbe
+homepage www.puzzlescript.net
+youtube 3zd6QvtJzEg
+noaction
+require_player_movement
+run_rules_on_level_start true
+
+========
+OBJECTS
+========
+
+Background
+Grey DarkGrey
+01001
+00110
+01001
+10010
+01100
+
+
+Target
+DarkBlue
+.000.
+00.00
+0.0.0
+00.00
+.000.
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+WallR
+#AA0000 #660000
+00010
+11111
+01000
+11111
+00010
+
+WallG
+#00AA00 #006600
+00010
+11111
+01000
+11111
+00010
+
+WallB
+#0000AA #000066
+00010
+11111
+01000
+11111
+00010
+
+WallC
+#00AAAA #006666
+00010
+11111
+01000
+11111
+00010
+
+WallY
+#AAAA00 #666600
+00010
+11111
+01000
+11111
+00010
+
+WallM
+#AA00AA #660066
+00010
+11111
+01000
+11111
+00010
+
+WallBl
+#333333 #111111
+00010
+11111
+01000
+11111
+00010
+
+WallW
+#DDDDDD #999999
+00010
+11111
+01000
+11111
+00010
+
+PlayerC
+#00AAAA White
+.000.
+.101.
+00000
+.000.
+.0.0.
+
+PlayerY
+#AAAA00 White
+.000.
+.101.
+00000
+.000.
+.0.0.
+
+PlayerM
+#AA00AA White
+.000.
+.101.
+00000
+.000.
+.0.0.
+
+PlayerR
+#AA0000 White
+.000.
+.101.
+00000
+.000.
+.0.0.
+
+PlayerG
+#00AA00 White
+.000.
+.101.
+00000
+.000.
+.0.0.
+
+PlayerB
+#0000AA White
+.000.
+.101.
+00000
+.000.
+.0.0.
+
+PlayerBl
+#111111 White
+.000.
+.101.
+00000
+.000.
+.0.0.
+
+PlayerW
+White Purple
+.000.
+.101.
+00000
+.000.
+.0.0.
+
+CoinC
+#00FFFF
+.....
+..0..
+.000.
+.000.
+..0..
+
+CoinY
+#FFFF00
+.....
+..0..
+.000.
+.000.
+..0..
+
+CoinM
+#FF00FF
+.....
+..0..
+.000.
+.000.
+..0..
+
+CoinR
+#FF0000
+.....
+..0..
+.000.
+.000.
+..0..
+
+CoinG
+#00FF00
+.....
+..0..
+.000.
+.000.
+..0..
+
+CoinB
+#0000FF
+.....
+..0..
+.000.
+.000.
+..0..
+
+CoinBl
+#111111
+.....
+..0..
+.000.
+.000.
+..0..
+
+CoinW
+White
+.....
+..0..
+.000.
+.000.
+..0..
+
+PadC
+#D0D0A0 #00CCCC
+11011
+10101
+01010
+10101
+11011
+
+PadY
+#D0D0A0 #CCCC00
+11011
+10101
+01010
+10101
+11011
+
+PadM
+#D0D0A0 #CC00CC
+11011
+10101
+01010
+10101
+11011
+
+PadR
+#D0D0A0 #CC0000
+11011
+10101
+01010
+10101
+11011
+
+PadG
+#D0D0A0 #00CC00
+11011
+10101
+01010
+10101
+11011
+
+PadB
+#D0D0A0 #0000CC
+11011
+10101
+01010
+10101
+11011
+
+PadC_2
+#D0D0A0 #00FFFF
+11011
+10101
+01010
+10101
+11011
+
+PadY_2
+#D0D0A0 #FFFF00
+11011
+10101
+01010
+10101
+11011
+
+PadM_2
+#D0D0A0 #FF00FF
+11011
+10101
+01010
+10101
+11011
+
+PadR_2
+#D0D0A0 #FF0000
+11011
+10101
+01010
+10101
+11011
+
+PadG_2
+#D0D0A0 #00FF00
+11011
+10101
+01010
+10101
+11011
+
+PadB_2
+#D0D0A0 #0000FF
+11011
+10101
+01010
+10101
+11011
+
+LtdPadC
+#111111 #00CCCC
+11011
+10101
+01010
+10101
+11011
+
+LtdPadY
+#111111 #CCCC00
+11011
+10101
+01010
+10101
+11011
+
+LtdPadM
+#111111 #CC00CC
+11011
+10101
+01010
+10101
+11011
+
+LtdPadR
+#111111 #CC0000
+11011
+10101
+01010
+10101
+11011
+
+LtdPadG
+#111111 #00CC00
+11011
+10101
+01010
+10101
+11011
+
+LtdPadB
+#111111 #0000CC
+11011
+10101
+01010
+10101
+11011
+
+LtdPadW
+#111111 white
+11011
+10101
+01010
+10101
+11011
+
+EmptyPad
+#111111
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+TotemC
+#D0D0A0 #009999
+..0..
+.010.
+.101.
+.111.
+.111.
+
+TotemY
+#D0D0A0 #999900
+..0..
+.010.
+.101.
+.111.
+.111.
+
+TotemM
+#D0D0A0 #990099
+..0..
+.010.
+.101.
+.111.
+.111.
+
+TotemR
+#D0D0A0 #990000
+..0..
+.010.
+.101.
+.111.
+.111.
+
+TotemG
+#D0D0A0 #009900
+..0..
+.010.
+.101.
+.111.
+.111.
+
+TotemB
+#D0D0A0 #000099
+..0..
+.010.
+.101.
+.111.
+.111.
+
+Toggle_OFF
+Black
+
+Toggle_ON
+White
+
+=======
+LEGEND
+=======
+
+Player = PlayerC or PlayerY or PlayerM or PlayerR or PlayerG or PlayerB or PlayerBl or PlayerW
+Coin = CoinC or CoinY or CoinM or CoinR or CoinG or CoinB or CoinBl or CoinW
+Pad = PadC or PadY or PadM or PadR or PadG or PadB or PadC_2 or PadY_2 or PadM_2 or PadR_2 or PadG_2 or PadB_2 or LtdPadC or LtdPadY or LtdPadM or LtdPadR or LtdPadG or LtdPadB or LtdPadW or EmptyPad
+Totem = TotemC or TotemY or TotemM or TotemR or TotemG or TotemB (or TotemC_2 or TotemY_2 or TotemM_2 or TotemR_2 or TotemG_2)
+Toggle = Toggle_ON or Toggle_OFF
+MagicWall = WallR or WallG or WallB or WallC or WallY or WallM or WallBl or WallW
+
+. = Background
+# = Wall
++ = WallR
+t = WallG
+{ = WallB
+u = WallC
+i = WallY
+} = WallM
+e = WallBl
+~ = WallW
+C = PlayerC
+Y = PlayerY
+M = PlayerM
+R = PlayerR
+G = PlayerG
+B = PlayerB
+1 = PlayerBl
+2 = PlayerW
+a = CoinC
+s = CoinY
+d = CoinM
+f = CoinR
+j = CoinG
+k = CoinB
+3 = CoinBl
+4 = CoinW
+5 = LtdPadC
+6 = LtdPadY
+7 = LtdPadM
+8 = LtdPadR
+9 = LtdPadG
+0 = LtdPadB
+[ = LtdPadW
+? = EmptyPad
+z = PadC
+x = PadY
+p = PadM
+n = PadR
+q = PadG
+w = PadB
+! = TotemC and Toggle_OFF
+@ = TotemY and Toggle_OFF
+$ = TotemM and Toggle_OFF
+% = TotemR and Toggle_OFF
+* = TotemG and Toggle_OFF
+& = TotemB and Toggle_OFF
+
+
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+EndLevel 77468102
+EndGame 74511709
+(EndGame 76745503)
+sfx0 33224703
+sfx1 1923901
+sfx2 22361100
+sfx3 39276506
+ShowMessage 41625102
+StartLevel 85170302
+undo 49525905
+
+================
+COLLISIONLAYERS
+================
+
+Toggle
+Background
+Target, Coin, Pad, MagicWall
+Player, Wall, Totem
+
+======
+RULES
+======
+
+(
+=======
+RED PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR PadR ] -> [ PlayerBl PadR_2 ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG PadR ] -> [ PlayerY PadR_2 ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB PadR ] -> [ PlayerM PadR_2 ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC PadR ] -> [ PlayerW PadR_2 ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM PadR ] -> [ PlayerB PadR_2 ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY PadR ] -> [ PlayerG PadR_2 ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl PadR ] -> [ PlayerR PadR_2 ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW PadR ] -> [ PlayerC PadR_2 ] sfx0
+
+(color pad reverts to original function)
+(2 pad objects needed so that each pad will *toggle* color)
+[ < Player PadR_2 ] -> [ < Player PadR ]
+
+
+(
+=======
+GREEN PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR PadG ] -> [ PlayerY PadG_2 ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG PadG ] -> [ PlayerBl PadG_2 ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB PadG ] -> [ PlayerC PadG_2 ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC PadG ] -> [ PlayerB PadG_2 ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM PadG ] -> [ PlayerW PadG_2 ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY PadG ] -> [ PlayerR PadG_2 ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl PadG ] -> [ PlayerG PadG_2 ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW PadG ] -> [ PlayerM PadG_2 ] sfx0
+
+(reset pad)
+[ < Player PadG_2 ] -> [ < Player PadG ]
+
+
+(
+=======
+BLUE PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR PadB ] -> [ PlayerM PadB_2 ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG PadB ] -> [ PlayerC PadB_2 ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB PadB ] -> [ PlayerBl PadB_2 ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC PadB ] -> [ PlayerG PadB_2 ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM PadB ] -> [ PlayerR PadB_2 ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY PadB ] -> [ PlayerW PadB_2 ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl PadB ] -> [ PlayerB PadB_2 ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW PadB ] -> [ PlayerY PadB_2 ] sfx0
+
+(reset pad)
+[ < Player PadB_2 ] -> [ < Player PadB ]
+
+
+(
+=======
+CYAN PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR PadC ] -> [ PlayerW PadC_2 ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG PadC ] -> [ PlayerB PadC_2 ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB PadC ] -> [ PlayerG PadC_2 ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC PadC ] -> [ PlayerBl PadC_2 ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM PadC ] -> [ PlayerY PadC_2 ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY PadC ] -> [ PlayerM PadC_2 ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl PadC ] -> [ PlayerC PadC_2 ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW PadC ] -> [ PlayerR PadC_2 ] sfx0
+
+(reset pad)
+[ < Player PadC_2 ] -> [ < Player PadC ]
+
+
+(
+=======
+YELLOW PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR PadY ] -> [ PlayerG PadY_2 ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG PadY ] -> [ PlayerR PadY_2 ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB PadY ] -> [ PlayerW PadY_2 ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC PadY ] -> [ PlayerM PadY_2 ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM PadY ] -> [ PlayerC PadY_2 ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY PadY ] -> [ PlayerBl PadY_2 ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl PadY ] -> [ PlayerY PadY_2 ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW PadY ] -> [ PlayerB PadY_2 ] sfx0
+
+(reset pad)
+[ < Player PadY_2 ] -> [ < Player PadY ]
+
+
+(
+=======
+MAGENTA PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR PadM ] -> [ PlayerB PadM_2 ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG PadM ] -> [ PlayerW PadM_2 ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB PadM ] -> [ PlayerR PadM_2 ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC PadM ] -> [ PlayerY PadM_2 ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM PadM ] -> [ PlayerBl PadM_2 ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY PadM ] -> [ PlayerC PadM_2 ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl PadM ] -> [ PlayerM PadM_2 ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW PadM ] -> [ PlayerG PadM_2 ] sfx0
+
+(reset pad)
+[ < Player PadM_2 ] -> [ < Player PadM ]
+
+
+
+
+(late [ Player | TotemB | ... | CoinBl ] -> [ Player | TotemB | ... | CoinB ] sfx1)
+(late [ Player | Toggle_OFF | TotemB | ... | CoinBl ] -> [ Player | Toggle_ON | TotemB | ... | CoinB ] sfx1)
+
+(late [ Player | Toggle| TotemB | ... | CoinB ] -> [ Player | Toggle | TotemB | ... | CoinBl ] sfx1)
+
+(late [ Player | TotemB | ... | CoinBl ] -> [ Player | TotemB | ... | CoinB ] sfx1)
+
+(late [ Player | TotemB ] -> [ Player | TotemB_2 ]
+late [ Player | TotemB_2 ] -> [ Player | TotemB ])
+
+(late [ Player | TotemB_2 ] -> [ Player | TotemB ] sfx1)
+
+([ < Player | TotemB_2 ] -> [ < Player | TotemB ])
+
+(late [ Player | TotemB_2 | ... | CoinB ] -> [ Player | TotemB_2 | ... | CoinBl ] sfx1)
+
+
+
+
+
+(PICKUPS)
+
+late [ PlayerC CoinC ] -> [ PlayerC No CoinC ] sfx2
+late [ PlayerY CoinY ] -> [ PlayerY No CoinY ] sfx2
+late [ PlayerM CoinM ] -> [ PlayerM No CoinM ] sfx2
+late [ PlayerR CoinR ] -> [ PlayerR No CoinR ] sfx2
+late [ PlayerG CoinG ] -> [ PlayerG No CoinG ] sfx2
+late [ PlayerB CoinB ] -> [ PlayerB No CoinB ] sfx2
+late [ PlayerBl CoinBl ] -> [ PlayerBl No CoinBl ] sfx2
+late [ PlayerW CoinW ] -> [ PlayerW No CoinW ] sfx2
+
+(MAGIC WALLS)
+[ > Player No PlayerR No PlayerY No PlayerM No PlayerW | WallR ] -> [ Player No PlayerR No PlayerY No PlayerM No PlayerW | WallR ]
+[ > Player No PlayerG No PlayerC No PlayerY No PlayerW | WallG ] -> [ Player No PlayerG No PlayerC No PlayerY No PlayerW | WallG ]
+[ > Player No PlayerB No PlayerC No PlayerM No PlayerW | WallB ] -> [ Player No PlayerB No PlayerC No PlayerM No PlayerW | WallB ]
+[ > Player No PlayerC No PlayerW | WallC ] -> [ Player No PlayerC | WallC ]
+[ > Player No PlayerY No PlayerW | WallY ] -> [ Player No PlayerY | WallY ]
+[ > Player No PlayerM No PlayerW | WallM ] -> [ Player No PlayerM | WallM ]
+[ > Player No PlayerBl | WallBl ] -> [ Player No PlayerBl | WallBl ]
+[ > Player No PlayerW | WallW ] -> [ Player No PlayerW | WallW ]
+
+
+(
+=====================
+*******************
+LIMITED PADS
+*******************
+=====================
+)
+
+
+(
+=======
+RED PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR LtdPadR ] -> [ PlayerBl EmptyPad ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG LtdPadR ] -> [ PlayerY EmptyPad ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB LtdPadR ] -> [ PlayerM EmptyPad ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC LtdPadR ] -> [ PlayerW EmptyPad ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM LtdPadR ] -> [ PlayerB EmptyPad ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY LtdPadR ] -> [ PlayerG EmptyPad ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl LtdPadR ] -> [ PlayerR EmptyPad ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW LtdPadR ] -> [ PlayerC EmptyPad ] sfx0
+
+
+
+(
+=======
+GREEN PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR LtdPadG ] -> [ PlayerY EmptyPad ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG LtdPadG ] -> [ PlayerBl EmptyPad ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB LtdPadG ] -> [ PlayerC EmptyPad ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC LtdPadG ] -> [ PlayerB EmptyPad ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM LtdPadG ] -> [ PlayerW EmptyPad ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY LtdPadG ] -> [ PlayerR EmptyPad ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl LtdPadG ] -> [ PlayerG EmptyPad ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW LtdPadG ] -> [ PlayerM EmptyPad ] sfx0
+
+
+
+(
+=======
+BLUE PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR LtdPadB ] -> [ PlayerM EmptyPad ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG LtdPadB ] -> [ PlayerC EmptyPad ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB LtdPadB ] -> [ PlayerBl EmptyPad ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC LtdPadB ] -> [ PlayerG EmptyPad ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM LtdPadB ] -> [ PlayerR EmptyPad ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY LtdPadB ] -> [ PlayerW EmptyPad ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl LtdPadB ] -> [ PlayerB EmptyPad ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW LtdPadB ] -> [ PlayerY EmptyPad ] sfx0
+
+
+
+(
+=======
+CYAN PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR LtdPadC ] -> [ PlayerW EmptyPad ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG LtdPadC ] -> [ PlayerB EmptyPad ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB LtdPadC ] -> [ PlayerG EmptyPad ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC LtdPadC ] -> [ PlayerBl EmptyPad ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM LtdPadC ] -> [ PlayerY EmptyPad ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY LtdPadC ] -> [ PlayerM EmptyPad ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl LtdPadC ] -> [ PlayerC EmptyPad ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW LtdPadC ] -> [ PlayerR EmptyPad ] sfx0
+
+
+
+(
+=======
+YELLOW PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR LtdPadY ] -> [ PlayerG EmptyPad ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG LtdPadY ] -> [ PlayerR EmptyPad ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB LtdPadY ] -> [ PlayerW EmptyPad ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC LtdPadY ] -> [ PlayerM EmptyPad ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM LtdPadY ] -> [ PlayerC EmptyPad ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY LtdPadY ] -> [ PlayerBl EmptyPad ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl LtdPadY ] -> [ PlayerY EmptyPad ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW LtdPadY ] -> [ PlayerB EmptyPad ] sfx0
+
+
+
+(
+=======
+MAGENTA PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR LtdPadM ] -> [ PlayerB EmptyPad ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG LtdPadM ] -> [ PlayerW EmptyPad ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB LtdPadM ] -> [ PlayerR EmptyPad ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC LtdPadM ] -> [ PlayerY EmptyPad ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM LtdPadM ] -> [ PlayerBl EmptyPad ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY LtdPadM ] -> [ PlayerC EmptyPad ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl LtdPadM ] -> [ PlayerM EmptyPad ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW LtdPadM ] -> [ PlayerG EmptyPad ] sfx0
+
+
+
+(
+=======
+White PAD
+=======
+)
+
+(player is RED before touching pad)
+late [ PlayerR LtdPadW ] -> [ PlayerC EmptyPad ] sfx0
+
+(player is GREEN before touching pad)
+late [ PlayerG LtdPadW ] -> [ PlayerM EmptyPad ] sfx0
+
+(player is BLUE before touching pad)
+late [ PlayerB LtdPadW ] -> [ PlayerY EmptyPad ] sfx0
+
+(player is CYAN before touching pad)
+late [ PlayerC LtdPadW ] -> [ PlayerR EmptyPad ] sfx0
+
+(player is MAGENTA before touching pad)
+late [ PlayerM LtdPadW ] -> [ PlayerG EmptyPad ] sfx0
+
+(player is YELLOW before touching pad)
+late [ PlayerY LtdPadW ] -> [ PlayerB EmptyPad ] sfx0
+
+(player is BLACK before touching pad)
+late [ PlayerBl LtdPadW ] -> [ PlayerW EmptyPad ] sfx0
+
+(player is WHITE before touching pad)
+late [ PlayerW LtdPadW ] -> [ PlayerBl EmptyPad ] sfx0
+
+
+
+(
+=======
+RED TOTEM
+=======
+)
+
+(player is RED --- adds the totem's color)
+
+late [ PlayerR | TotemR | ... | CoinB ] -> [ PlayerR | TotemR | ... | CoinM ] sfx1
+late [ PlayerR | TotemR | ... | CoinG ] -> [ PlayerR | TotemR | ... | CoinY ] sfx1
+late [ PlayerR | TotemR | ... | CoinC ] -> [ PlayerR | TotemR | ... | CoinW ] sfx1
+late [ PlayerR | TotemR | ... | CoinBl ] -> [ PlayerR | TotemR | ... | CoinR ] sfx1
+
+late [ PlayerY | TotemR | ... | CoinB ] -> [ PlayerY | TotemR | ... | CoinM ] sfx1
+late [ PlayerY | TotemR | ... | CoinG ] -> [ PlayerY | TotemR | ... | CoinY ] sfx1
+late [ PlayerY | TotemR | ... | CoinC ] -> [ PlayerY | TotemR | ... | CoinW ] sfx1
+late [ PlayerY | TotemR | ... | CoinBl ] -> [ PlayerY | TotemR | ... | CoinR ] sfx1
+
+late [ PlayerM | TotemR | ... | CoinB ] -> [ PlayerM | TotemR | ... | CoinM ] sfx1
+late [ PlayerM | TotemR | ... | CoinG ] -> [ PlayerM | TotemR | ... | CoinY ] sfx1
+late [ PlayerM | TotemR | ... | CoinC ] -> [ PlayerM | TotemR | ... | CoinW ] sfx1
+late [ PlayerM | TotemR | ... | CoinBl ] -> [ PlayerM | TotemR | ... | CoinR ] sfx1
+
+late [ PlayerW | TotemR | ... | CoinB ] -> [ PlayerW | TotemR | ... | CoinM ] sfx1
+late [ PlayerW | TotemR | ... | CoinG ] -> [ PlayerW | TotemR | ... | CoinY ] sfx1
+late [ PlayerW | TotemR | ... | CoinC ] -> [ PlayerW | TotemR | ... | CoinW ] sfx1
+late [ PlayerW | TotemR | ... | CoinBl ] -> [ PlayerW | TotemR | ... | CoinR ] sfx1
+
+(player is NOT RED --- removes the totem's color)
+
+late [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinM ] -> [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinB ] sfx3
+late [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinY ] -> [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinG ] sfx3
+late [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinW ] -> [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinC ] sfx3
+late [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinR ] -> [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinBl ] sfx3
+
+
+(
+=======
+GREEN TOTEM
+=======
+)
+
+(player is GREEN --- adds the totem's color)
+
+late [ PlayerG | TotemG | ... | CoinR ] -> [ PlayerG | TotemG | ... | CoinY ] sfx1
+late [ PlayerG | TotemG | ... | CoinB ] -> [ PlayerG | TotemG | ... | CoinC ] sfx1
+late [ PlayerG | TotemG | ... | CoinM ] -> [ PlayerG | TotemG | ... | CoinW ] sfx1
+late [ PlayerG | TotemG | ... | CoinBl ] -> [ PlayerG | TotemG | ... | CoinG ] sfx1
+
+late [ PlayerC | TotemG | ... | CoinR ] -> [ PlayerC | TotemG | ... | CoinY ] sfx1
+late [ PlayerC | TotemG | ... | CoinB ] -> [ PlayerC | TotemG | ... | CoinC ] sfx1
+late [ PlayerC | TotemG | ... | CoinM ] -> [ PlayerC | TotemG | ... | CoinW ] sfx1
+late [ PlayerC | TotemG | ... | CoinBl ] -> [ PlayerC | TotemG | ... | CoinG ] sfx1
+
+late [ PlayerY | TotemG | ... | CoinR ] -> [ PlayerY | TotemG | ... | CoinY ] sfx1
+late [ PlayerY | TotemG | ... | CoinB ] -> [ PlayerY | TotemG | ... | CoinC ] sfx1
+late [ PlayerY | TotemG | ... | CoinM ] -> [ PlayerY | TotemG | ... | CoinW ] sfx1
+late [ PlayerY | TotemG | ... | CoinBl ] -> [ PlayerY | TotemG | ... | CoinG ] sfx1
+
+late [ PlayerW | TotemG | ... | CoinR ] -> [ PlayerW | TotemG | ... | CoinY ] sfx1
+late [ PlayerW | TotemG | ... | CoinB ] -> [ PlayerW | TotemG | ... | CoinC ] sfx1
+late [ PlayerW | TotemG | ... | CoinM ] -> [ PlayerW | TotemG | ... | CoinW ] sfx1
+late [ PlayerW | TotemG | ... | CoinBl ] -> [ PlayerW | TotemG | ... | CoinG ] sfx1
+
+(player is NOT GREEN --- removes the totem's color)
+
+late [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinY ] -> [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinR ] sfx3
+late [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinC ] -> [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinB ] sfx3
+late [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinW ] -> [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinM ] sfx3
+late [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinG ] -> [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinBl ] sfx3
+
+
+(
+=======
+BLUE TOTEM
+=======
+)
+
+(player is BLUE --- adds the totem's color)
+
+late [ PlayerB | TotemB | ... | CoinR ] -> [ PlayerB | TotemB | ... | CoinM ] sfx1
+late [ PlayerB | TotemB | ... | CoinG ] -> [ PlayerB | TotemB | ... | CoinC ] sfx1
+late [ PlayerB | TotemB | ... | CoinY ] -> [ PlayerB | TotemB | ... | CoinW ] sfx1
+late [ PlayerB | TotemB | ... | CoinBl ] -> [ PlayerB | TotemB | ... | CoinB ] sfx1
+
+late [ PlayerC | TotemB | ... | CoinR ] -> [ PlayerC | TotemB | ... | CoinM ] sfx1
+late [ PlayerC | TotemB | ... | CoinG ] -> [ PlayerC | TotemB | ... | CoinC ] sfx1
+late [ PlayerC | TotemB | ... | CoinY ] -> [ PlayerC | TotemB | ... | CoinW ] sfx1
+late [ PlayerC | TotemB | ... | CoinBl ] -> [ PlayerC | TotemB | ... | CoinB ] sfx1
+
+late [ PlayerM | TotemB | ... | CoinR ] -> [ PlayerM | TotemB | ... | CoinM ] sfx1
+late [ PlayerM | TotemB | ... | CoinG ] -> [ PlayerM | TotemB | ... | CoinC ] sfx1
+late [ PlayerM | TotemB | ... | CoinY ] -> [ PlayerM | TotemB | ... | CoinW ] sfx1
+late [ PlayerM | TotemB | ... | CoinBl ] -> [ PlayerM | TotemB | ... | CoinB ] sfx1
+
+late [ PlayerW | TotemB | ... | CoinR ] -> [ PlayerW | TotemB | ... | CoinM ] sfx1
+late [ PlayerW | TotemB | ... | CoinG ] -> [ PlayerW | TotemB | ... | CoinC ] sfx1
+late [ PlayerW | TotemB | ... | CoinY ] -> [ PlayerW | TotemB | ... | CoinW ] sfx1
+late [ PlayerW | TotemB | ... | CoinBl ] -> [ PlayerW | TotemB | ... | CoinB ] sfx1
+
+(player is NOT BLUE --- removes the totem's color)
+
+late [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinM ] -> [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinR ] sfx3
+late [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinC ] -> [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinG ] sfx3
+late [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinW ] -> [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinY ] sfx3
+late [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinB ] -> [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinBl ] sfx3
+
+
+(NOTE: Cyan, Yellow, and Magenta Totems didn't actually make sense and are not currently used.)
+
+(
+(
+=======
+CYAN TOTEM
+=======
+)
+
+(player is CYAN --- adds the totem's color)
+
+late [ PlayerC | TotemC toggle_OFF | ... | CoinB ] -> [ PlayerC | TotemC toggle_ON | ... | CoinM ] sfx1 again
+late [ PlayerC | TotemC toggle_OFF | ... | CoinG ] -> [ PlayerC | TotemC toggle_ON | ... | CoinY ] sfx1 again
+late [ PlayerC | TotemC toggle_OFF | ... | CoinC ] -> [ PlayerC | TotemC toggle_ON | ... | CoinW ] sfx1 again
+late [ PlayerC | TotemC toggle_OFF | ... | CoinBl ] -> [ PlayerC | TotemC toggle_ON | ... | CoinR ] sfx1 again
+
+(player is NOT CYAN --- removes the totem's color)
+
+late [ Player No PlayerC | TotemC toggle_OFF | ... | CoinM ] -> [ Player No PlayerC | TotemC toggle_ON | ... | CoinB ] sfx3 again
+late [ Player No PlayerC | TotemC toggle_OFF | ... | CoinY ] -> [ Player No PlayerC | TotemC toggle_ON | ... | CoinG ] sfx3 again
+late [ Player No PlayerC | TotemC toggle_OFF | ... | CoinW ] -> [ Player No PlayerC | TotemC toggle_ON | ... | CoinC ] sfx3 again
+late [ Player No PlayerC | TotemC toggle_OFF | ... | CoinR ] -> [ Player No PlayerC | TotemC toggle_ON | ... | CoinBl ] sfx3 again
+
+
+(
+=======
+YELLOW TOTEM
+=======
+)
+
+(player is YELLOW --- adds the totem's color)
+
+late [ PlayerY | TotemY toggle_OFF | ... | CoinB ] -> [ PlayerY | TotemY toggle_ON | ... | CoinM ] sfx1 again
+late [ PlayerY | TotemY toggle_OFF | ... | CoinG ] -> [ PlayerY | TotemY toggle_ON | ... | CoinY ] sfx1 again
+late [ PlayerY | TotemY toggle_OFF | ... | CoinC ] -> [ PlayerY | TotemY toggle_ON | ... | CoinW ] sfx1 again
+late [ PlayerY | TotemY toggle_OFF | ... | CoinBl ] -> [ PlayerY | TotemY toggle_ON | ... | CoinR ] sfx1 again
+
+(player is NOT YELLOW --- removes the totem's color)
+
+late [ Player No PlayerY | TotemY toggle_OFF | ... | CoinM ] -> [ Player No PlayerY | TotemY toggle_ON | ... | CoinB ] sfx3 again
+late [ Player No PlayerY | TotemY toggle_OFF | ... | CoinY ] -> [ Player No PlayerY | TotemY toggle_ON | ... | CoinG ] sfx3 again
+late [ Player No PlayerY | TotemY toggle_OFF | ... | CoinW ] -> [ Player No PlayerY | TotemY toggle_ON | ... | CoinC ] sfx3 again
+late [ Player No PlayerY | TotemY toggle_OFF | ... | CoinR ] -> [ Player No PlayerY | TotemY toggle_ON | ... | CoinBl ] sfx3 again
+
+
+(
+=======
+MAGENTA TOTEM
+=======
+)
+
+(player is MAGENTA --- adds the totem's color)
+
+late [ PlayerM | TotemM toggle_OFF | ... | CoinB ] -> [ PlayerM | TotemM toggle_ON | ... | CoinM ] sfx1 again
+late [ PlayerM | TotemM toggle_OFF | ... | CoinG ] -> [ PlayerM | TotemM toggle_ON | ... | CoinY ] sfx1 again
+late [ PlayerM | TotemM toggle_OFF | ... | CoinC ] -> [ PlayerM | TotemM toggle_ON | ... | CoinW ] sfx1 again
+late [ PlayerM | TotemM toggle_OFF | ... | CoinBl ] -> [ PlayerM | TotemM toggle_ON | ... | CoinR ] sfx1 again
+
+(player is NOT MAGENTA --- removes the totem's color)
+
+late [ Player No PlayerM | TotemM toggle_OFF | ... | CoinM ] -> [ Player No PlayerM | TotemM toggle_ON | ... | CoinB ] sfx3 again
+late [ Player No PlayerM | TotemM toggle_OFF | ... | CoinY ] -> [ Player No PlayerM | TotemM toggle_ON | ... | CoinG ] sfx3 again
+late [ Player No PlayerM | TotemM toggle_OFF | ... | CoinW ] -> [ Player No PlayerM | TotemM toggle_ON | ... | CoinC ] sfx3 again
+late [ Player No PlayerM | TotemM toggle_OFF | ... | CoinR ] -> [ Player No PlayerM | TotemM toggle_ON | ... | CoinBl ] sfx3 again
+)
+
+(Helps with neat Totem effect delay)
+(This effect actually does not work as intended)
+([toggle_on]->[toggle_off])
+
+
+==============
+WINCONDITIONS
+==============
+
+No Coin
+Some Player On Target
+
+=======
+LEVELS
+=======
+
+(############
+###..##..###
+###&.##.*###
+###ffjjkk###
+###tt{{++###
+###wnzpqw###
+###nq##nq}}}
+###qw##wpii}
+###nqwxnqui}
+###qnzpqwui}
+###{{++ttui}
+uuuqnpqnqui}
+u}}zx##qnui}
+u}inq##wzii}
+u}iqwqznq}}}
+u}i++tt{{###
+u}iwqwnpq###
+u}}zx##np###
+uuuxnqnqx###
+###3#1o#3###
+###{####t###
+###a####f###
+############
+
+############
+###..##..###
+###&.##.*###
+###ffjjkk###
+###tt{{++###
+###wnzpqw###
+###nqxqnq}}}
+###qwnzwpii}
+###nqwxnqui}
+###qnzpqwui}
+###{{++ttui}
+uuuqnpqnqui}
+u}}zxwpqnui}
+u}inqnxwzii}
+u}iqwqznq}}}
+u}i++tt{{###
+u}iwqwnpq###
+u}}zxzqnp###
+uuuxnqnqx###
+###3#o1#3###
+############
+
+o1e++uuuutxttt[
+eeei+u7+ut+t5+}
+e8+++uu+ut+t++}
+e}it++u+ut+t++}
+e9tt}+u+ut+t9+}
+e}i}}++++++}}}}
+e}}}iiiiituuuuu
+e{0#i###it++++9
+e7{{{#iiituuuuu
+i++u{{{{{{{{{{{
+i{+uueeeet}}}}e
+i{++ue##ee[{+}e
+i{{+ue##ut+{+}e
+i}}}}}}}ut+++}e
+iiiiiii0uuuuuu4)
+
+(333333333333333333
+333333333333333333
+333133333333333333
+333q3n3w3333333333
+33333333333%333333
+333z3x3p3333333333
+333333333&33333333
+3333%333333333&333
+333333333333333333
+33333*3333*3333333
+333333333333333333
+333333333333%33333
+333333&33333333333
+333333333333333333
+
+#####34fkj333+33
+#.o.1.s~da33333t
+#n....6...333{33
+#33q3n3w33%3333u
+#333333333333i33
+#33z3x3p3333333}
+#333333333333e33)
+
+message Golem gather stone
+message 1/18
+
+######o######
+#.....1.....#
+#...........#
+#3..3...3..3#
+#.33.....33.#
+#.33.....33.#
+#3..3...3..3#
+#############
+
+message Golem want shiny
+message 2/18
+
+#############
+#333.###.333#
+o1...s.x....#
+#333.###.333#
+#############
+
+message "Golem change color!"
+message 3/18
+
+##############
+###ff#ff3#3###
+###nnn.#nnn###
+#3.nn####nn.3#
+#.##.nffn.##.#
+#3##3nffn3##3#
+#n..n####n..n#
+#....##o1....#
+##############
+
+message "Dark zone has less color!"
+message 4/18
+
+#############
+#sss.###.sss#
+o1..63636...#
+#sss.###.sss#
+#############
+
+message 5/18
+
+##############
+###ff#ff3#3###
+###888.#888###
+#3.88####88.3#
+#.##.8ff8.##.#
+#3##38ff83##3#
+#8..8####8..8#
+#....##o1....#
+##############
+
+message Golem add color
+message 6/18
+
+################
+####.9.0.#.3.###
+###.7.9.0#3.3.##
+##.d.7#a.##3.3.#
+#.0.d.#.a###3.3#
+#8.0.##5.####3.#
+#.8.###.5###.7.#
+#.6####8.##.6.7#
+#6.s###.8#.5.6.#
+#.s.9##9.#4.5.##
+##.9.8#.90.4.###
+###.81#...0.####
+#####o##########
+
+message "These color primitive, just like Golem!"
+message 7/18
+
+#############
+#kkk.###.ddd#
+o1..q890n...#
+#kkk.###.ddd#
+#############
+
+message "Golem want MORE shiny!"
+message Golem use Totem
+message 8/18
+
+################
+####...333..####
+###....333...###
+##.....###....##
+##.....333.....#
+###3#3333%33#33#
+o183#333%333#33#
+###3#33%3333#33#
+##.....333.....#
+##.....###....##
+###....333...###
+####...333..####
+################
+
+message "Color in Golem flow through Totem"
+message 9/18
+
+#######o#######
+#######1#######
+####33#7#33####
+####33%.&33####
+####33%.&33####
+####33%.&33####
+#..#33%.&33#..#
+#.%#kk...ff#&.#
+#..####p####..#
+##f.........k##
+###############
+
+message Totem giveth, Totem taketh
+message 10/18
+
+######o#####
+#....#1#...#
+#.&..*..%..#
+#..&..*..%.#
+#.*..%..&..#
+#..*..%..&.#
+#.%..&..*..#
+#..%..&..*.#
+#.as.kj.fd.#
+############
+
+message 11/18
+
+######o#####
+#.....1....#
+#..........#
+#..%asdj&..#
+#..j....j..#
+#..s..9.d..#
+#..d.0..s..#
+#..a....a..#
+#..*adsj%..#
+#..........#
+#..........#
+############
+
+message 12/18
+
+##########
+###......#
+###&.&&..#
+##..k..k.#
+##.......#
+##.kkkkk.#
+##x*&**&&#
+##ffffff.#
+##ffffff.#
+##%%%%%%.#
+o18......#
+##########
+
+message 13/18
+
+######################
+###a..#.........#..###
+##a...#.&......##...##
+#a..aa#aa..%a.##.....#
+#...aa.aa.aaa##......#
+#5##.%....aa%#0....d.#
+o1#.44...aa449.6..&d.#
+###.44.%.aa4%#9....d.#
+##........aa4##......#
+#a..aa.44.aaa.##.....#
+##a.aa.44...a..##...##
+###a............#..###
+######################
+
+(
+######################
+###d..#.........#..###
+##d...#........##...##
+#d..dd#dd..%..##.....#
+#...dd#dd.dd.##......#
+#7##.%....dd%#9......#
+o1#.fff..dd.890.8.&k.#
+###.fff%.ddf%#9....f.#
+##.....f.....##......#
+#d..dd....dd..##.....#
+##d.dd.f..dd...##...##
+###d............#..###
+######################
+)
+
+
+message "Shiny bright!"
+message 14/18
+
+#############
+####......###
+###........##
+##...%.*....#
+##...jsff&..#
+##..*kfdd...#
+##...ajkk%..#
+#0..%ajkk...#
+#9....&.*...#
+#8#........##
+o1##......###
+#############
+
+message Golem go through wall
+message 15/18
+
+############
+#3#33##3j3j#
+o1e..tt....#
+#3#33#t3j3j#
+####eeqe####
+
+message 16/18
+
+############
+###..##..###
+###&.##.*###
+###ffjjkk###
+###tt{{++###
+###wnzpqw###
+###nq##nq}}}
+###qw##wpii}
+###nqwxnqui}
+###qnzpqwui}
+###{{++ttui}
+uuuqnpqnqui}
+u}}zx##qnui}
+u}inq##wzii}
+u}iqwqznq}}}
+u}i++tt{{###
+u}iwqwnpq###
+u}}zx##np###
+uuuxnqnqx###
+###3#1o#3###
+###{####t###
+###a####f###
+############
+
+message 17/18
+
+o1e++uuuutxttt[
+eeei+u7+ut+t5+}
+e8+++uu+ut+t++}
+e}it++u+ut+t++}
+e9tt}+u+ut+t9+}
+e}i}}++++++}}}}
+e}}}iiiiituuuuu
+e{0#i###it++++9
+e7{{{#iiituuuuu
+i++u{{{{{{{{{{{
+i{+uueeeet}}}}e
+i{++ue##ee[{+}e
+i{{+ue##ut+{+}e
+i}}}}}}}ut+++}e
+iiiiiii0uuuuuu4
+
+message "So many SHINY!!"
+message "18/18"
+
+#############o#############
+#+##.........1.........##{#
+###..&jjj.........dddd..###
+##..&jjjjj.......dddddd..##
+#..&jjjjjjj.....dddddddd..#
+#.&jjjjjjjjj...dddddddddd.#
+#.jjjj%%jjjj...dddd%%dddd.#
+#.jjjj%%jjjj...dddd%%dddd.#
+#.jjjjjjjjjj...*ddddddddd.#
+#..jjjjjjjj.....*ddddddd..#
+#...jjjjjj...#...*ddddd...#
+#....jjjj...5i6...*ddd....#
+#..........#u8t#..........#
+#....sss*...7}9...aaaa....#
+#...sssss*...#...aaaaaa...#
+#..sssssss*.....aaaaaaaa..#
+#.sssssssss*...aaaaaaaaaa.#
+#.ssss%%ssss...aaaa%%aaaa.#
+#.ssss%%ssss...aaaa%%aaaa.#
+#.ssssssssss...aaaaaaaaa&.#
+#..ssssssss.....aaaaaaa&..#
+##..ssssss.......aaaaa&..##
+###..ssss.........aaa&..###
+#~##...................##e#
+###########################
+
+message "Golem rest now..."

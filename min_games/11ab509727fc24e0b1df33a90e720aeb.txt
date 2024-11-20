@@ -1,0 +1,201 @@
+OBJECTS
+
+BackgroundLIGHTGRAY WHITE00010
+01000
+00001
+00100
+00000
+
+Trigger1LIGHTGRAY WHITE00010
+01000
+00001
+00100
+00000
+
+WallBLACK DARKGRAY
+0000001110
+0000011001
+00000PlayerL
+DARKBROWNORANGE
+BLUEBLACK BROWN
+.000..110.
+22222.222.
+.3.3.PlayerR
+DARKBROWNORANGE
+BLUEBLACK BROWN
+.000..011.
+22222.222.
+.3.3.YellowBlock
+YELLOWORANGE WHITE
+0222210002
+1000210002
+11110BlueBlock
+BLUEDARKBLUE LIGHTBLUE
+0222210002
+1000210002
+11110RedBlock
+REDDARKRED LIGHTRED
+0222210002
+1000210002
+11110PurpleBlock
+PURPLEDARKGRAY BLUE
+0222210002
+1000210002
+11110GreenBlock
+GREENDARKGREEN LIGHTGREEN
+0222210002
+1000210002
+11110OrangeBlock
+ORANGEBROWN YELLOW
+0222210002
+1000210002
+11110YellowTarget
+YELLOW.....
+.000..0.0.
+.000......
+BlueTargetBLUE
+......000.
+.0.0..000.
+.....RedTarget
+RED.....
+.000..0.0.
+.000......
+PurpleTargetPURPLE
+......000.
+.0.0..000.
+.....GreenTarget
+GREEN.....
+.000..0.0.
+.000......
+OrangeTargetORANGE.....
+.000.
+.0.0.
+.000.
+.....
+
+
+
+LEGEND
+
+. = Background
+# = Wall
+* = Trigger1
+P = PlayerR
+A = RedBlock
+B = PurpleBlock
+C = BlueBlock
+D = GreenBlock
+E = YellowBlock
+F = OrangeBlock
+0 = RedTarget
+1 = PurpleTarget
+2 = BlueTarget
+3 = GreenTarget
+4 = YellowTarget
+5 = OrangeTarget
+Block = A or B or C or D or E or F
+Player = PlayerL or PlayerR
+Trigger = Trigger1
+
+COLLISIONLAYERS
+
+Background
+Trigger
+0, 1
+2, 3
+4, 5
+Player, Wall
+A, B
+C, D
+E, F
+
+RULES
+
+[ left Player ] -> [ left PlayerL ] 
+[ right Player ] -> [ right PlayerR ] 
+[ Player Trigger1 ] -> [ Player Background ] 
+[ < Player | 0noBlock ] -> [ < Player | <A0 ] 
+[ < Player | 1noBlock ] -> [ < Player | <B1 ] 
+[ < Player | 2noBlock ] -> [ < Player | <C2 ] 
+[ < Player | 3noBlock ] -> [ < Player | <D3 ] 
+[ < Player | 4noBlock ] -> [ < Player | <E4 ] 
+[ < Player | 5noBlock ] -> [ < Player | <F5 ] 
+[ > Player | Block ] -> [ > Player | >Block ] 
+[ > Block | Block ] -> [ > Block | >Block ] 
+late [ A 0 ] -> [ 0 ] 
+late [ B 1 ] -> [ 1 ] 
+late [ C 2 ] -> [ 2 ] 
+late [ D 3 ] -> [ 3 ] 
+late [ E 4 ] -> [ 4 ] 
+late [ F 5 ] -> [ 5 ] 
+
+
+WINCONDITIONS
+
+No Block
+
+LEVELS
+
+#########
+#.......#
+#.p.a.0.#
+#.......#
+#########
+
+########
+#####2.#
+#..#5..#
+#p.##f.#
+#.a##.##
+#.....0#
+########
+
+#######
+#...5.#
+###f#.#
+#.5...#
+#.#f###
+#...5p#
+###.###
+###5###
+#######
+
+########
+
+#...c.2#
+#5####.#
+#.####.#
+#f##...#
+#.##.#.#
+#p#0.a.#
+########
+
+########
+
+#0.2.4.#
+#p1.3f5#
+########
+
+#########
+#...f.5.#
+#...###.#
+#.p.###.#
+#...###.#
+#...a.0.#
+#########
+
+##########
+####.....#
+####.#.#2#
+#0.#.#.#c#
+#.pa.5...#
+#..#######
+##########
+
+#######
+
+##...##
+#0ap5.#
+#.#.c.#
+#...2.#
+#######

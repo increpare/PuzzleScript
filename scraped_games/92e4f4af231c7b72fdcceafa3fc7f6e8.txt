@@ -1,0 +1,778 @@
+title Snakeskin
+author HugoBDesigner
+homepage hugobdesigner.blogspot.com
+run_rules_on_level_start
+noundo
+noaction
+background_color #80ffc0
+text_color #008080
+
+========
+OBJECTS
+========
+
+Background 
+Green
+
+Wall
+Brown
+
+Marker
+Transparent
+
+Marker2
+Transparent
+
+MarkerUp
+Transparent
+
+MarkerDown
+Transparent
+
+MarkerLeft
+Transparent
+
+MarkerRight
+Transparent
+
+EmptyTile
+Red #80ffc0
+01110
+10101
+11011
+10101
+01110
+
+PlayerUp
+#3fbf00 #3fff00 #808000 #80ff40 #800000
+.3.4.
+12341
+11311
+01110
+.000.
+
+PlayerDown
+#3fbf00 #3fff00 #808000 #80ff40 #800000
+.000.
+01110
+11311
+14321
+.4.3.
+
+PlayerLeft
+#3fbf00 #3fff00 #808000 #80ff40 #800000
+.110.
+32110
+.3310
+44110
+.110.
+
+PlayerRight
+#3fbf00 #3fff00 #808000 #80ff40 #800000
+.011.
+01123
+0133.
+01144
+.011.
+
+Spawned
+Transparent
+
+Fruit1
+#80ff00 #ff6040 #ff4040 #bf0000
+...0.
+.11..
+.123.
+.333.
+.....
+
+Fruit2
+#ffff00 #804000 #bfbf00
+....0
+1..00
+.2002
+..22.
+.....
+
+Fruit3
+#00ff80 #80ff3f #a0ff80 #3fff3f
+.....
+0....
+.12..
+.312.
+.333.
+
+RottenFruit1
+#5f6000 #804000 #806000 #801f00 #4f2f10
+...0.
+.11..
+.123.
+1433.
+..1..
+
+RottenFruit2
+#801f00 #804000 #806000 #4f2f10
+....0
+1..20
+.1201
+..31.
+...0.
+
+RottenFruit3
+#5f6000 #804000 #4f2f10 #801f00 #806000
+.....
+0.1..
+.12..
+.134.
+.311.
+
+Grass1
+#5fbf00 #00bf20
+01000
+00000
+00100
+01001
+00000
+
+Grass2
+#5fbf00 #00bf20
+00010
+01000
+10000
+00000
+00001
+
+Grass3
+#5fbf00 #00bf20
+00010
+10000
+00000
+00001
+00100
+
+SwampGrassTemp
+DarkBlue
+
+SwampGrass1
+#408000 #00605f #20603f
+01220
+22222
+22122
+21221
+02220
+
+SwampGrass2
+#408000 #20603f #00605f #008040
+01120
+12111
+21111
+11111
+01113
+
+SwampGrass3
+#408000 #20603f #00605f
+01120
+21111
+11111
+11112
+01210
+
+Rock1
+#804000 #801f00 #bf8040
+01102
+10201
+20010
+22122
+10102
+
+Rock2
+#804000 #801f00 #bf8040
+21011
+10221
+12120
+00001
+12122
+
+Rock3
+#804000 #801f00 #bf8040
+12211
+22100
+10001
+00122
+12101
+
+RockUp1
+#801f00
+00.00
+.....
+.....
+.....
+.....
+
+RockUp2
+#801f00
+000.0
+.....
+.....
+.....
+.....
+
+RockUp3
+#801f00
+.000.
+.....
+.....
+.....
+.....
+
+RockDown1
+#801f00
+.....
+.....
+.....
+.....
+00.00
+
+RockDown2
+#801f00
+.....
+.....
+.....
+.....
+000.0
+
+RockDown3
+#801f00
+.....
+.....
+.....
+.....
+.000.
+
+RockLeft1
+#801f00
+0....
+0....
+.....
+0....
+0....
+
+RockLeft2
+#801f00
+0....
+0....
+0....
+.....
+0....
+
+RockLeft3
+#801f00
+.....
+0....
+0....
+0....
+.....
+
+RockRight1
+#801f00
+....0
+....0
+.....
+....0
+....0
+
+RockRight2
+#801f00
+....0
+....0
+....0
+.....
+....0
+
+RockRight3
+#801f00
+.....
+....0
+....0
+....0
+.....
+
+GrassUp1
+#3fbf00
+00.00
+.....
+.....
+.....
+.....
+
+GrassUp2
+#3fbf00
+0.0.0
+.....
+.....
+.....
+.....
+
+GrassUp3
+#3fbf00
+00000
+.....
+.....
+.....
+.....
+
+GrassDown1
+#3fbf00
+.....
+.....
+.....
+.....
+00.00
+
+GrassDown2
+#3fbf00
+.....
+.....
+.....
+.....
+0.0.0
+
+GrassDown3
+#3fbf00
+.....
+.....
+.....
+.....
+00000
+
+GrassLeft1
+#3fbf00
+0....
+0....
+.....
+0....
+0....
+
+GrassLeft2
+#3fbf00
+0....
+.....
+0....
+.....
+0....
+
+GrassLeft3
+#3fbf00
+0....
+0....
+0....
+0....
+0....
+
+GrassRight1
+#3fbf00
+....0
+....0
+.....
+....0
+....0
+
+GrassRight2
+#3fbf00
+....0
+.....
+....0
+.....
+....0
+
+GrassRight3
+#3fbf00
+....0
+....0
+....0
+....0
+....0
+
+BodyUp1
+#bf803f #ffbf80 #cf9090 #ffbf3f
+.0.0.
+01230
+01130
+21310
+.002.
+
+BodyUp2
+#bf803f #ffbf80 #cf9090 #ffbf3f
+.2.0.
+03012
+23312
+01130
+.020.
+
+BodyUp3
+#bf803f #ffbf80 #cf9090 #ffbf3f
+.0.2.
+23010
+21130
+03312
+.020.
+
+BodyDown1
+#bf803f #ffbf80 #cf9090 #ffbf3f
+.200.
+01312
+03110
+03210
+.0.0.
+
+BodyDown2
+#bf803f #ffbf80 #cf9090 #ffbf3f
+.020.
+03110
+21332
+21030
+.0.2.
+
+BodyDown3
+#bf803f #ffbf80 #cf9090 #ffbf3f
+.020.
+21330
+03112
+01032
+.2.0.
+
+BodyLeft1
+#bf803f #ffbf80 #cf9090 #ffbf3f
+.000.
+03312
+.2130
+01110
+.002.
+
+BodyLeft2
+#bf803f #ffbf80 #cf9090 #ffbf3f
+.220.
+01130
+.0312
+23310
+.020.
+
+BodyLeft3
+#bf803f #ffbf80 #cf9090 #ffbf3f
+.002.
+21310
+.0132
+03130
+.220.
+
+BodyRight1
+#bf803f #ffbf80 #cf9090 #ffbf3f
+.200.
+01110
+0312.
+21330
+.000.
+
+BodyRight2
+#bf803f #ffbf80 #cf9090 #ffbf3f
+.020.
+01332
+2130.
+03110
+.022.
+
+BodyRight3
+#bf803f #ffbf80 #cf9090 #ffbf3f
+.022.
+03130
+2310.
+01312
+.200.
+
+=======
+LEGEND
+=======
+
+. = Background
+x = EmptyTile
+* = SwampGrassTemp
+# = Wall
+P = PlayerRight
+B = PlayerRight AND SwampGrassTemp
+
+RockUp = RockUp1 OR RockUp2 OR RockUp3
+RockDown = RockDown1 OR RockDown2 OR RockDown3
+RockLeft = RockLeft1 OR RockLeft2 OR RockLeft3
+RockRight = RockRight1 OR RockRight2 OR RockRight3
+
+GrassUp = GrassUp1 OR GrassUp2 OR GrassUp3
+GrassDown = GrassDown1 OR GrassDown2 OR GrassDown3
+GrassLeft = GrassLeft1 OR GrassLeft2 OR GrassLeft3
+GrassRight = GrassRight1 OR GrassRight2 OR GrassRight3
+
+BodyUp = BodyUp1 OR BodyUp2 OR BodyUp3
+BodyDown = BodyDown1 OR BodyDown2 OR BodyDown3
+BodyLeft = BodyLeft1 OR BodyLeft2 OR BodyLeft3
+BodyRight = BodyRight1 OR BodyRight2 OR BodyRight3
+
+Fruit = Fruit1 OR Fruit2 OR Fruit3
+RottenFruit = RottenFruit1 OR RottenFruit2 OR RottenFruit3
+Grass = Grass1 OR Grass2 OR Grass3
+SwampGrass = SwampGrass1 OR SwampGrass2 OR SwampGrass3
+Rock = Rock1 OR Rock2 OR Rock3
+Body = BodyUp OR BodyDown OR BodyLeft OR BodyRight
+Player = PlayerUp OR PlayerDown OR PlayerLeft OR PlayerRight
+MarkerDir = MarkerUp OR MarkerDown OR MarkerLeft OR MarkerRight
+
+=======
+SOUNDS
+=======
+SFX0 99635107 (Player walking)
+SFX1 32785307 (Player walking on skin)
+SFX2 86472702 (Player eating)
+SFX3 5689108  (Rotten fruit)
+
+CloseMessage 19386900
+StartGame 19386900
+EndLevel 70491703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+EmptyTile
+Grass
+Wall
+Rock
+RockUp
+RockDown
+RockLeft
+RockRight
+GrassUp
+GrassDown
+GrassLeft
+GrassRight
+SwampGrass, SwampGrassTemp
+Body
+Fruit
+RottenFruit
+Spawned
+Marker
+Marker2
+MarkerUp
+MarkerDown
+MarkerLeft
+MarkerRight
+Player
+
+======
+RULES
+======
+
+(Decorations)
+[Background No Grass No Wall No EmptyTile] -> [Background Random Grass]
+UP[Wall No RockUp | No Wall] -> [Wall Random RockUp | ]
+DOWN[Wall No RockDown | No Wall] -> [Wall Random RockDown | ]
+LEFT[Wall No RockLeft | No Wall] -> [Wall Random RockLeft | ]
+RIGHT[Wall No RockRight | No Wall] -> [Wall Random RockRight | ]
+UP[Wall | Grass No GrassDown] -> [Wall | Grass Random GrassDown]
+DOWN[Wall | Grass No GrassUp] -> [Wall | Grass Random GrassUp]
+LEFT[Wall | Grass No GrassRight] -> [Wall | Grass Random GrassRight]
+RIGHT[Wall | Grass No GrassLeft] -> [Wall | Grass Random GrassLeft]
+[Wall No Rock] -> [Wall Random Rock]
+[SwampGrassTemp] -> [Random SwampGrass]
+[EmptyTile Grass] -> [EmptyTile]
+[EmptyTile Background] -> []
+
+(Player Movement)
+[> Player | Wall] -> [Player | Wall]
+[Moving Player][RottenFruit] -> [Player][RottenFruit]
+[Up Player] -> [Up PlayerUp]
+[Down Player] -> [Down PlayerDown]
+[Left Player] -> [Left PlayerLeft]
+[Right Player] -> [Right PlayerRight]
+[> Player | No Fruit No Body] -> [> Player | ]SFX0
+[> Player | No Fruit Body] -> [> Player | Body]SFX1
+
+(Eating fruits)
+[> Player Body | Fruit Spawned] -> [> Player | Fruit Spawned]
+UP[Up Player | Fruit Spawned] -> [Random BodyUp | Player]SFX2
+DOWN[Down Player | Fruit Spawned] -> [Random BodyDown | Player]SFX2
+LEFT[Left Player | Fruit Spawned] -> [Random BodyLeft | Player]SFX2
+RIGHT[Right Player | Fruit Spawned] -> [Random BodyRight | Player]SFX2
+
+(Swamp grass doesn't take skin)
+[SwampGrass Body] -> [SwampGrass]
+
+(Spawn a random fruit. We tweak the random spawn algorithm so that
+it has a 1/3rd of a chance of spawning next to a dead end and 1/3rd
+of a chance of spawning at the dead end itself, if there's any,
+so that players don't have to keep going in circles forever before
+they're able to fill a small gap they've made.)
+[Background No Fruit No RottenFruit No Wall No EmptyTile No Player No Body] -> [Background Marker]
+UP[Marker | Marker] -> [Marker MarkerUp | Marker]
+DOWN[Marker | Marker] -> [Marker MarkerDown | Marker]
+LEFT[Marker | Marker] -> [Marker MarkerLeft | Marker]
+RIGHT[Marker | Marker] -> [Marker MarkerRight | Marker]
+
+(Get only the corners)
+[MarkerUp MarkerDown Marker] -> []
+[MarkerUp MarkerLeft Marker] -> []
+[MarkerUp MarkerRight Marker] -> []
+[MarkerLeft MarkerRight Marker] -> []
+[MarkerDown MarkerLeft Marker] -> []
+[MarkerDown MarkerRight Marker] -> []
+
+(Get empty tiles adjacent to corners - we want to fill in the corners themselves, after all)
+[Marker | Background No Fruit No RottenFruit No Wall No EmptyTile No Player No Body No Marker] -> [Marker | Background Marker2]
+Random[Marker] -> [Marker2]
+[Marker] -> []
+(Pick a couple arbitrary other tiles as well - we don't want too much of corners)
+RANDOM[Background No Fruit No RottenFruit No Wall No EmptyTile No Player No Body No Marker] -> [Background Marker2]
+RANDOM[Background No Fruit No RottenFruit No Wall No EmptyTile No Player No Body No Marker] -> [Background Marker2]
+
+RANDOM[Marker2] -> [Marker]
+[Marker2] -> []
+[MarkerDir] -> []
+
+RANDOM[Marker] -> [Random Fruit]
+[Marker] -> []
+
+[RottenFruit][Fruit] -> [RottenFruit][]
+(Remove duplicates)
+[Fruit Spawned][Fruit No Spawned] -> [Fruit Spawned][]
+(Assert fruit is the only one)
+[Fruit No Spawned] -> [Fruit Spawned]
+
+(Assert that the game is won if only land left is swamp)
+[Fruit] -> [Fruit Marker2]
+[Background No Wall No Player No Body No SwampGrass] -> [Background No Wall No Player No Body No SwampGrass Marker]
+[Marker][Marker2] -> [][]
+[Marker] -> []
+[Fruit Marker2] -> []
+
+
+(
+	If fruit is surrounded by skin, it'll rot
+	In other words, if the player cannot see
+    they're in a trapping situation, make it
+    blatantly obvious for them :P
+)
+
+[Fruit No Marker | No Wall No Body] -> [Fruit Marker | ]
+[Fruit SwampGrass] -> [Fruit SwampGrass Marker]
+[Fruit1 No Marker] -> [RottenFruit1]SFX3
+[Fruit2 No Marker] -> [RottenFruit2]SFX3
+[Fruit3 No Marker] -> [RottenFruit3]SFX3
+[Marker] -> []
+
+
+==============
+WINCONDITIONS
+==============
+
+No Fruit
+No RottenFruit
+
+=======     
+LEVELS
+=======
+
+message Every time you eat fruit, you leave some skin behind
+message Your goal is to cover the board with your skin
+message Note: you can leave skin on top of skin. You can walk over your skin
+message Fruits won't spawn over skin. If fruit is surrounded by skin, it'll rot
+
+message CHAPTER 1/3
+message "Shedding your skin"
+
+#########
+#.......#
+#.......#
+#.P.....#
+#.......#
+#.......#
+#########
+
+#####xx
+#...#xx
+#...###
+#.....#
+#.p...#
+#.....#
+#######
+
+######x
+#....##
+#.....#
+#..p..#
+#.....#
+##....#
+x######
+
+message CHAPTER 2/3
+message "Blocked-off"
+
+#######
+#.....#
+#..p..#
+#..#..#
+#.....#
+#.....#
+#######
+
+x#######x
+##.....##
+#...p...#
+#..###..#
+#..#x#..#
+#..###..#
+#.......#
+##.....##
+x#######x
+
+x#######x
+##.....#x
+#......#x
+#...#..##
+#..#p...#
+#....#..#
+#.......#
+####....#
+xxx######
+
+message CHAPTER 3/3
+message "Get out of my swamp"
+
+message Skin gets dissolved if shed on top of swamp grass
+
+#######
+#.....#
+#.***.#
+#.*p*.#
+#.***.#
+#.....#
+#######
+
+#########
+#...#...#
+#...*...#
+#.......#
+##*.b.*##
+#.......#
+#...*...#
+#...#...#
+#########
+
+x#####xxxx
+##...#####
+#...*.*..#
+#..p..##.#
+#.*.*..*.#
+#..#...###
+##*#....#x
+x#.#.#..##
+x#.#.#.*.#
+x#.*.##..#
+x#####x###

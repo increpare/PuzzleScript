@@ -1,0 +1,445 @@
+title Push Space
+homepage pushspace.io
+
+background_color #292929
+key_repeat_interval 0.2
+norepeat_action
+
+========
+OBJECTS
+========
+
+( Player A/Blue
+#059CC0 wall
+#025B70 player
+#037590
+#27A6C4
+#4DB5CD floor
+)
+
+APlayerOn
+#025B70
+00000
+00000
+00.00
+00000
+00000
+
+APlayerOff
+transparent
+
+ATarget
+#025B70
+.....
+.....
+..0..
+.....
+.....
+
+AFloor
+#4DB5CD
+
+AWall
+#059CC0
+
+
+( Player B/Orange
+#FF7F00 wall 
+#B55A00 player
+#E87300
+#FF952C
+#FFAC5B floor
+)
+
+BPlayerOn
+#B55A00
+00000
+00000
+00.00
+00000
+00000
+
+BPlayerOff
+transparent
+
+BTarget
+#B55A00
+.....
+.....
+..0..
+.....
+.....
+
+BFloor
+#FFAC5B
+
+BWall
+#FF7F00
+
+( Utility objects )
+
+Background ( Should never be seen. )
+black
+
+ABlack
+#292929
+
+BBlack
+#292929
+
+=======
+LEGEND
+=======
+
+APlayer = APlayerOn or APlayerOff
+BPlayer = BPlayerOn or BPlayerOff
+
+Player = APlayerOn or BPlayerOn
+PlayerOff = APlayerOff or BPlayerOff
+Floor = AFloor or BFloor
+Wall = AWall or BWall
+Target = ATarget or BTarget
+Black = ABlack or BBlack
+
+(
+It seems strange that everything is organized as APlayer then BPlayer yet
+the starting player is B.
+
+Also what's the motivation for picking some of the symbols? Like BPlayer is B but APlayer is T? Also a mix of
+symbols and a letter for the targets. Would be nice if there was a clear pattern so it was easy to make and understand
+maps. Something like A -> 1 and B -> 2 as targets in their own worlds. If their target is in the other's world then
+A -> ! or B -> @.
+)
+. = BFloor
+B = BFloor and BPlayerOn
++ = BFloor and BTarget
+* = BFloor and ATarget
+
+# = BWall
+T = BWall and APlayerOff
+P = BWall and BTarget
+$ = BWall and ATarget
+
+X = BBlack
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+AWall, APlayer, ABlack
+BWall, BPlayer, BBlack
+Target
+
+======
+RULES
+======
+
+( the starting player can be alone in a level )
+( in this case, we want to prevent them from using the action button )
+[ action BPlayerOn ] [ APlayerOff ] -> [ BPlayerOn ] [ action APlayerOff ]
+[ action BPlayerOn ] -> [ BPlayerOn ]
+
+( restore the action if the player is not alone )
+[ action APlayerOff ] [ BPlayerOn ] -> [ APlayerOff ] [ action BPlayerOn ]
+
+( when the player presses 'x', switch paradigms )
+
+[ action APlayerOn ] [ ABlack ] -> [ action APlayerOn ] [ BBlack ]
+[ action APlayerOn ] [ AWall ] -> [ action APlayerOn ] [ BFloor ]
+[ action APlayerOn ] [ AFloor ] -> [ action APlayerOn ] [ BWall ]
+[ action APlayerOn ] [ BPlayerOff ] -> [ APlayerOff ] [ BPlayerOn ]
+[ action BPlayerOn ] [ BBlack ] -> [ action BPlayerOn ] [ ABlack ]
+[ action BPlayerOn ] [ BWall ] -> [ action BPlayerOn ] [ AFloor ]
+[ action BPlayerOn ] [ BFloor ] -> [ action BPlayerOn ] [ AWall ]
+[ action BPlayerOn ] [ APlayerOff ] -> [ BPlayerOff ] [ APlayerOn ]
+
+( players can push walls, and inactive players within )
+( this group loops endlessly if your first move is to push a wall )
+rigid [ > Player | Wall ] -> [ > Player | > Wall ]
++ rigid [ > Player | PlayerOff ] -> [ > Player | > PlayerOff ]
+
+( after walls are moved, ensure either a floor or wall is in every cell )
+late [ APlayerOn ] [ Floor Wall ] -> [ APlayerOn ] [ Wall ]
+late [ APlayerOn ] [ no Floor no Wall no Black] -> [ APlayerOn ] [ AFloor ]
+late [ BPlayerOn ] [ Floor Wall ] -> [ BPlayerOn ] [ Wall ]
+late [ BPlayerOn ] [ no Floor no Wall no Black] -> [ BPlayerOn ] [ BFloor ]
+
+==============
+WINCONDITIONS
+==============
+
+all APlayer on ATarget
+all BPlayer on BTarget
+
+=======
+LEVELS
+=======
+
+( All the player needs to do is push. )
+( The first level has no 'message' screen. )
+
+##.+
+.##.
+B#..
+
+( Solutions )
+( All the player needs to do is use the action. )
+message
+
+$#.+
+##..
+T#.B
+
+( Solutions )
+( All the player needs to do is ferry. )
+( The black border and 'z' marker trigger an undo reminder. )
+message
+
+$##P
+#B.#
+T###
+
+( Solutions )
+( Reinforce the ferrying mechanic since it's critical to future levels. )
+message
+
+######$
+#.#####
+..###..
+B.##T.+
+
+( Solutions )
+( reinforce AGAIN the ferrying mechanic, since it is just so goddamn crucial ^o^// )
+message
+
+$..+
+#.#.
+#...
+#...
+..##
+B.T#
+
+( Solutions )
+( The first non-trivial level. Options are limited and a one-push ferry seems to be )
+( the simplest solution. )
+message
+
+T.#+
+..#.
+B$..
+
+( Solutions )
+( Provide more space so they'll have to think, but there's an easy solution if they see it. )
+message
+
+B#T..
+.#.#.
+###..
+..#+$
+
+( Solutions )
+( A straightfoward level for soon after the tutorial. The goal is to reinforce )
+( the mechanics of the game. Various solutions involve ferrying one player to )
+( its target and then it ferrying the other. )
+message
+
+T.+#
+.###
+#...
+*B#.
+
+( Solutions )
+(ww sd w d sdss s aaddwwaw)
+( this is too easy, but I wish it wasn't. It demonstrates a sokoban )
+( one-way gadget, the three blocks in the middle that must be moved )
+( but also demonstrates how difficult it is to stop a player in this )
+( variant. My design goal is for purple to have to cross the screen )
+( in order to unlock the gadget, but purple seems to be able to unlock it )
+( from the right in any case! Moar thinking! )
+
+( in any case this kind of works as a simple level )
+( B unlocks A, and then A has to ferry B back across the level )
+
+( unlocking )
+message
+
+####.#.###$#
+####.#...##.
++B..#.##.#..
+.##...##...T
+
+( Solutions )
+( this level is meant to teach the player to )
+( dig out the walls, as in the solution to leap )
+( frog. What do you think? )
+message
+
+##..##.+$
+BT..##..#
+....##..#
+
+( Solutions )
+( The starting point of this map was a a checkerboard type feel as it seemed )
+( that it would reveal some fundamental mechanics of the game for new players. )
+( Like chess, decided to go with 'white on the right' for the corners, which )
+( happens to require the player to plan their moves since a player cannot )
+( enable its target square on its own, each must have the other do it. )
+
+P.T.#.
+.#.#.#
+#.#.#.
+.#.#.#
+#.#B#*
+
+( Solutions )
+(daawdaawdwaw addssdsds)
+(addwwssaawdsdwawd daasswwddsawasdsa saaaawwww wddddsss) (symetrical!)
+( daasswwddsawasdsa addwwssaawdsdwawd wddddsss saaaawwww) (the dual!)
+( the original level, based off Stephen Lavelle's sokoban level )
+( it is just "good luck" that this level actually has an interesting )
+( solution. We need to reproduce this "feel" )
+message
+
+####.*
+#..#..
+#..###
+##B..#
+#..T.#
+#+.###
+####..
+
+( Solutions )
+(
+Currently each color only has to reach a single target so having multiples just gives more options.
+The difficulty must then be the same or easier, except for the confusion factor. An option is to
+have all players have to reach a target which may make multiple players and targets an option.
+Another interesting thing that this level illustrates is how the color imbalance affects the game.
+The most powerful player in a zone is the one that can move freely, and it can trivially assist the
+other player to cross given a single block to ferry them in.
+)
+message
+
+...#......
+###..#####
+T#...###$#
+##.B..####
+.#....####
+###..#####
+.##..##..+
+
+( Solutions )
+( this is a sokoban level restructured so that )
+( the moveable wall bits must be in the sokoban )
+( solution spots in order for the level to be solved )
+( I wonder if it is possible to translate an arbitrary )
+( sokoban level into an instance of push space? )
+message
+
+xxxx##x
+x+.#..#
+x.##B.#
+x####.$
+#...#.x
+#.x.#.x
+#....Tx
+x##xxxx
+
+( Solutions )
+( One black square. )
+message
+
+...X+
+.#.T$
+..#B.
+.#.#.
+.....
+
+( Solutions )
+(dssawsaawdddww saaw ssaaaawwwddsswwaasssdddsdwwsaaaawdawwddssasddsdwaaww ddsdw)
+(dwsssaaaawwwwddssddwasaaawwddswaassdddwd ww)
+( An experiment on levels with a mesh of single-block passages. They make )
+( for complicated levels because you can't easily move back through areas )
+( that have been travelled through. )
+message
+
+B.#...#.+
+X#X.X.X#X
+X.X#X#X.X
+T.##.###$
+
+( Solutions )
+(dsswwd dddwwssd dddsswwd dddwwssd dd)
+( This level is inspired by a desire for non-rectangular worlds and simple )
+( black squares. )
+message
+
+XX.XX
+X#.#X
+.#T#.
+.XBX.
+.+#$.
+XX.XX
+
+( Solutions )
+(sw d ww a sswaassd d)
+(sww asd dssa s aa s da)
+( A checkerboard like level with black squares. The player must navigate )
+( a pinch, swap the players, and avoid some trap space. )
+message
+
+B..#*.
+#.X.#X
+.X.#X+
+.#....
+X.X#T.
+.X....
+
+( Solutions )
+(dddssasdd a sdsaawdw da saawwwsssddww d)
+( An experiment with a different kind of obstacle.. the dreaded circle. Can you defeat it?? )
+message
+
+XX.#X.X
+X......
+##XX#T#
+#.XXXB.
+P.XXX.X
+#..#$#.
+.......
+##XXXXX
+
+( Solutions )
+( d wwaaaassssdsawwwwwddddssssdsaaaadddwwwww a ssssdsaadwwwwwaaaassssds aasawwsdddwd)
+( a wwaaaasssswwwwddddssssdsaaa d ddwwwdwwassssdsaadwwwwwaaaasss aasawwsdddwd a)
+
+( One player must brake the other out of prison... and stay? )
+message
+
+...B..*
+.X#X#X.
+.###.#.
+.X.+.X.
+.#.T##.
+.X#X#X.
+.......
+
+( Solutions )
+(aaassssssddw aa w d wdww d sss d dwwwwaaa aawwww dddsssssssaaaaaawwwwwwdddddasssa)
+message
+
+x#Txxxx
+x..#xxx
++###xxx
+..#x..x
+#.#.#..
+xx.#.#B
+xx..$xx
+
+( Solutions )
+( sss waaaaddsawdddsa wasdwwwassds waaaa s ddaawaw ss)

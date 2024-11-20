@@ -1,0 +1,211 @@
+title naborciM
+author Connorses [ Based on levels by D. Skinner ]
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+GREEN LIGHTGREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+darkblue
+00000
+0...0
+0.0.0
+0...0
+00000
+
+Wall
+DARKBROWN BROWN
+00010
+11111
+01000
+11111
+00010
+
+PlayerA
+Blue white Orange black
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+PlayerB
+lightblue white yellow darkgrey
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange
+.....
+.000.
+.000.
+.000.
+.....
+
+
+=======
+LEGEND
+=======
+
+Player = PlayerA or PlayerB
+
+. = target
+# = Wall
+P = PlayerA and target
+* = background
+@ = Crate
+O = crate and target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ no wall no crate | > PlayerA | Crate ] -> [    |  <  PlayerA | < Crate  ]
+
+
+==============
+WINCONDITIONS
+==============
+
+no Target on Crate
+
+=======
+LEVELS
+=======
+
+message !snoitalutargnoc
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+message level 01 of 01
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 9 of 01
+
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 8 of 01
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+
+message level 7 of 01
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 6 of 01
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+
+message level 5 of 01
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 4 of 01
+
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+
+message level 3 of 01
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 2 of 01
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+message level 1 of 01

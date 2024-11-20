@@ -1,0 +1,587 @@
+title    Hey you! Stop blocking the laser!
+(Hey you! Stop reading the “Hey you! Stop blocking the laser!” code!
+
+ …or keep reading. I’m a comment, not a cop.
+ This work is licensed under CC-BY-SA 4.0:
+ https://creativecommons.org/licenses/by-sa/4.0/)
+
+author                    sfiera
+homepage                  sfiera.net
+again_interval            0.1
+run_rules_on_level_start
+noaction
+
+========
+OBJECTS
+========
+
+Background .
+Gray
+
+Grass :
+Green
+
+Wall #
+DarkBlue
+
+(This guy is a total dweeb.)
+NormalPlayer !
+Black Blue Brown White LightBlue
+.000.
+43243
+34234
+.111.
+.111.
+
+(Sometimes overlaid by GlassPlayerActive, which makes the glasses glow.
+ This is just a palette swap, so the colors are repeated.)
+GlassPlayer @
+LightBlue LightBlue LightBlue White White
+.000.
+43243
+34234
+.111.
+.111.
+
+ActiveGlassPlayer
+Pink
+..0..
+0.00.
+.00.0
+..0..
+..0..
+
+(Red means stop!)
+LaserPlayer $
+DarkRed DarkRed DarkRed LightRed Red
+.000.
+43243
+34234
+.111.
+.111.
+
+(Is the player a crash dummy now?
+ The "weak" color is yellow, but the eyes are probably enough indication.)
+WeakPlayer %
+Blue Blue Brown DarkBlue Yellow
+.000.
+43243
+34234
+.111.
+.111.
+
+NormalPill 1
+Blue
+.....
+..0..
+.000.
+..0..
+.....
+
+GlassPill 2
+LightBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+LaserPill 4
+Pink
+.....
+..0..
+.000.
+..0..
+.....
+
+WeakPill 5
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+LaserH
+Red
+.....
+.....
+00000
+.....
+.....
+
+LaserV
+Red
+..0..
+..0..
+..0..
+..0..
+..0..
+
+ProjectorL L
+Black Red DarkRed DarkBlue
+00033
+22203
+11103
+22203
+00033
+
+ProjectorU U
+Black Red DarkRed DarkBlue
+02120
+02120
+02120
+30003
+33333
+
+ProjectorR R
+Black Red DarkRed DarkBlue
+33000
+30222
+30111
+30222
+33000
+
+ProjectorD D
+Black Red DarkRed DarkBlue
+33333
+30003
+02120
+02120
+02120
+
+Target O
+DarkRed Black
+00000
+01110
+01110
+01110
+00000
+
+ActiveTarget
+Red
+.....
+.000.
+.000.
+.000.
+.....
+
+LUMirror ◿
+LightBlue
+.....
+....0
+...00
+..000
+.0000
+
+URMirror ◺
+LightBlue
+.....
+0....
+00...
+000..
+0000.
+
+RDMirror ◸
+LightBlue
+0000.
+000..
+00...
+0....
+.....
+
+DLMirror ◹
+LightBlue
+.0000
+..000
+...00
+....0
+.....
+
+Prism +
+LightBlue
+
+ActivePrism
+Pink
+..0..
+..0..
+00000
+..0..
+..0..
+
+WeakWall X
+DarkBlue Yellow
+00000
+01010
+00100
+01010
+00000
+
+Explosion
+Yellow
+
+=======
+LEGEND
+=======
+
+Player     = NormalPlayer or GlassPlayer or LaserPlayer or WeakPlayer
+Pill       = NormalPill   or GlassPill   or LaserPill   or WeakPill
+Opaque     = Wall or NormalPlayer
+Mirror     = LUMirror or URMirror or RDMirror or DLMirror or Prism
+Reflector  = Mirror or GlassPlayer
+Weak       = WeakWall or WeakPlayer
+Active     = ActiveTarget or ActivePrism or ActiveGlassPlayer
+Decoration = Active or Explosion
+
+ProjectorH = ProjectorL or ProjectorR
+ProjectorV = ProjectorU or ProjectorD
+Projector  = ProjectorH or ProjectorV or LaserPlayer
+Laser      = LaserH or LaserV
+Solid      = Opaque or Projector or Reflector or Target or Weak
+
+NoEnterL   = Opaque or URMirror or RDMirror or ProjectorV or ProjectorR
+NoEnterU   = Opaque or RDMirror or DLMirror or ProjectorH or ProjectorD
+NoEnterR   = Opaque or DLMirror or LUMirror or ProjectorV or ProjectorL
+NoEnterD   = Opaque or LUMirror or URMirror or ProjectorH or ProjectorU
+
+NoExitL    = NoEnterL or Target
+NoExitU    = NoEnterU or Target
+NoExitR    = NoEnterR or Target
+NoExitD    = NoEnterD or Target
+
+=======
+SOUNDS
+=======
+
+Player    move      12130107
+Mirror    move      55615307
+Explosion create    3904502
+Pill      destroy   83117103
+          endlevel  17621503
+          startgame 40734708
+          endgame   96107708
+          undo      31053906
+          restart   31053906
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Grass       (only in final level)
+LaserH      (underneath mirrors so they look right)
+LaserV      (can & often does overlap with LaserH)
+Pill        (visible over lasers)
+Solid       (most things)
+Decoration  (visible over solid things)
+
+======
+RULES
+======
+
+(The only non-late rule: push single blocks.)
+[> Player | Mirror] -> [> Player | > Mirror]
+
+(A player changes to match an eaten pill.)
+late [Player NormalPill] -> [NormalPlayer]
+late [Player GlassPill ] -> [GlassPlayer]
+late [Player LaserPill ] -> [LaserPlayer]
+late [Player WeakPill  ] -> [WeakPlayer]
+
+(Reinitialize lasers. Start from projectors.
+ Projectors generate lasers pointing in all direction.
+ However, they restrict the directions that lasers can exit in.)
+late [Laser] -> []
+late [Projector] -> [Projector LaserH LaserV]
+
+(Lasers propagate horizontally and vertically as far as possible.
+ If there's a mirror, the other orientation is added.
+ There's a separate trait for tracking whether a laser can enter or leave;
+ a laser can leave anything it can enter, except for a target.
+ All of this happens in a single rule group.)
+  late left  [LaserH no NoExitL | no NoEnterR] -> [LaserH | LaserH]
++ late up    [LaserV no NoExitU | no NoEnterD] -> [LaserV | LaserV]
++ late right [LaserH no NoExitR | no NoEnterL] -> [LaserH | LaserH]
++ late down  [LaserV no NoExitD | no NoEnterU] -> [LaserV | LaserV]
++ late [Laser Reflector] -> [LaserH LaserV Reflector]
+
+(Reinitialize activity indicators.
+ Targets, prisms, and glass players are active if there's a laser on them.)
+late [Active] -> []
+late [Laser Target     ] -> [Laser ActiveTarget      Target]
+late [Laser Prism      ] -> [Laser ActivePrism       Prism]
+late [Laser GlassPlayer] -> [Laser ActiveGlassPlayer GlassPlayer]
+
+(Lasers destroy weak objects (including a weak player).
+ Show the explosion, then run an "again" tick to then hide it.)
+late [Explosion] -> []
+late [Laser Weak] -> [Laser Explosion] again
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Active  (Basic win condition.)
+no Explosion          (Allow the "again" tick to run before winning.)
+some Player           (Weak player can't win if they explode.)
+
+=======
+LEVELS
+=======
+
+Message "Hey you! Stop blocking the laser!"
+
+(01 Step One)
+
+#O###O#
+#.....#
+R+.!.◿#
+#######
+
+Message "Quit it!"
+
+(02 Spinblocking)
+
+####OO#
+#+◸...#
+#◸....L
+#..#..#
+#◺+..◿#
+#+◺!◿+#
+#######
+
+(03 Over, easy)
+
+###D###
+#.....O
+O..!..#
+#.◸+◿.#
+#.....#
+###O###
+
+(04 The Bends & the Means)
+
+###O####
+##..◺..#
+##.◸!◹.#
+#...+..L
+#......#
+###O#O##
+
+(05 Back-handed)
+
+######
+#....#
+#.◺O.#
+#..D.#
+#.◸..#
+#.+!##
+######
+
+(06 Pinwheel)
+
+####O##
+#.....#
+#..◸..#
+O.◺+◹.O
+#.!◿..#
+#.....#
+##U####
+
+Message "Careful with that laser, buddy!"
+
+(07 Ex-marks)
+
+#######
+#...#O#
+#.+.#X#
+#...X.#
+O.!.X◿#
+#...###
+##U####
+
+(08 Atria)
+
+#########
+#...#...#
+#.◸.#.+.#
+#...X...#
+#O#X#X#O#
+#...X!..L
+#.◺.#...#
+#...#...#
+#########
+
+(09 Hook, Line, Floater)
+
+##D#####
+#..#####
+O!+..###
+##.#.###
+#..X.◹.#
+#..X...#
+##O#O###
+
+Message "Don't eat that!"
+
+(10 Pill Bug)
+
+##D##
+#...#
+O.2.O
+#...#
+#.!.#
+#...#
+##O##
+
+(11 Skullduggery)
+
+#######
+#.....#
+#.◹.◸.#
+#O.#.##
+##.@.L#
+#######
+
+(12 Ablation)
+
+##D###
+#....#
+O.@◿◹#
+##.◺.O
+###..#
+O....#
+#XXXX#
+######
+
+(13 Kaiju Krunch)
+
+#####
+OX@X#
+#X◹X#
+R...O
+#XX◿#
+OXXX#
+#####
+
+Message "You gotta stop reflecting those lasers, kid!"
+
+(14 Red Pill)
+
+##O##
+#...#
+O.4.O
+#...#
+R.@.#
+#...#
+##O##
+
+(15 I am Louis XIV)
+
+###O###
+#$.◿..#
+O.◹.◺.O
+#..◸..#
+###O###
+
+(16 Block-a-Block)
+
+#######
+O$.#..O
+#.....#
+##◺◸◿.#
+##....#
+#######
+
+(17 Ten Thousand Red Dragons)
+
+#######
+O....O#
+#.◸.◹.#
+#.◺$◿.#
+#O....O
+#######
+
+(18 Eight Kings)
+
+#OOOOO#
+O+....O
+O.+.+.O
+O.+$+.O
+O.+.+.O
+O....+O
+#OOOOO#
+
+Message "Here, this will get rid of the problem!"
+
+(19 Tough Pill to Swallow
+
+ Goals:
+ - Make it impossible to finish the level without getting the pill.
+ - Make it really easy and tempting to get the pill immediately.
+ - Punish the player for doing so by having them immediately explode.
+ - Clarify what happened by having other explosions as they walk up.
+ - Have very few options, so that the level isn't actually difficult.)
+
+#O#####
+O.+5..O
+#.#.◹.#
+#.#.#.#
+#◺X.X.#
+###$###
+###U###
+
+(20 Reticle)
+
+#######
+#.....#
+#.◿.◺.#
+#.....L
+#.◹%◸.#
+#.....#
+###O###
+
+(21 Little Piggy)
+
+#########
+#.......#
+#.◸.%.◹.#
+#..#O#..#
+#.+###+.#
+#.......#
+####U####
+
+(22 Pill Popper)
+
+###########
+#...##...##
+#.+..X2◹..#
+#.4.OR....#
+##X#####X##
+#....LO.1.#
+#..◺.#..+.#
+##%..##...#
+###########
+
+Message "Scram!"
+
+(23 Demo Man
+
+ Goals:
+ - Destroy the entire building as the player leaves.
+ - Make it impossible to deviate from the path (two layers thick).
+ - Have the level end when the player stops blocking the laser :)
+
+:::::::::::::
+:XXXX#O#XXXX:
+:X..++!+◿..X:
+:X..+◹+◸+..X:
+:X..◿+.◿◸+.X:
+:X..◸◿.+◿..X:
+:X..◿+.◸+..X:
+:X+++◿.◸◹..X:
+:X..◸◹.+◺.+X:
+:+..+◺.◹◹.++:
+:XXXXX.XXXXX:
+::::::.::::::
+::::::U::::::

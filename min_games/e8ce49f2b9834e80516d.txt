@@ -1,0 +1,385 @@
+OBJECTS
+
+Background.
+BLACKWall
+#DARKGRAY
+00.000.0.0
+.000.0.0.0
+00.00Player
+STRANSPARENT
+SelectorWHITE
+00.000...0
+.....0...0
+00.00RedBlock R
+#990000BlueBlock B
+#000099GreenBlock G
+#009900YellowBlock Y
+#888800PurpleBlock P
+#660066OrangeBlock O
+#994400PinkBlock I
+PINKBrownBlock
+W#222200
+RedPad#990000.....
+..0..
+.000.
+..0..
+.....
+
+BluePad#000099.....
+..0..
+.000.
+..0..
+.....
+
+GreenPad#009900.....
+..0..
+.000.
+..0..
+.....
+
+YellowPad#888800.....
+..0..
+.000.
+..0..
+.....
+
+PurplePad#660066.....
+..0..
+.000.
+..0..
+.....
+
+OrangePad#994400.....
+..0..
+.000.
+..0..
+.....
+
+PinkPadPINK.....
+..0..
+.000.
+..0..
+.....
+
+BrownPad#222200.....
+..0..
+.000.
+..0..
+.....
+
+QueueLocationTRANSPARENT
+QueueHeadTRANSPARENT
+EnqueueHeadTRANSPARENT
+TakerTRANSPARENT
+FillerTRANSPARENT
+WaitingFillerTRANSPARENT
+FillerTakerLocationTRANSPARENT
+ModeGenTRANSPARENT
+WaitingGenTRANSPARENT
+SendModeTRANSPARENT
+SendModePermTRANSPARENT
+ReceiveModeTRANSPARENT
+ReceiveModePermTRANSPARENT
+
+LEGEND
+
+@ = Wall or Player or QueueLocation
+H = Wall or QueueLocation
+x = SendMode or Wall
+z = ReceiveMode or ModeGen or Wall
+? = WaitingGen or Wall
++ = SendModePerm
+- = ReceiveModePerm
+Block = RedBlock or BlueBlock or GreenBlock or YellowBlock or OrangeBlock or PurpleBlock or PinkBlock or BrownBlock
+Pad = RedPad or BluePad or GreenPad or YellowPad or OrangePad or PurplePad or PinkPad or BrownPad
+Head = QueueHead or EnqueueHead
+F = Filler or Wall
+! = Taker or Wall
+a = Filler or FillerTakerLocation or Wall
+[ = RedPad
+{ = BluePad
+] = GreenPad
+} = YellowPad
+: = PurplePad
+; = OrangePad
+' = PinkPad
+" = BrownPad
+
+COLLISIONLAYERS
+
+Background
+QueueHead
+EnqueueHead
+QueueLocation
+Wall
+RedBlock, BlueBlock
+GreenBlock, YellowBlock
+PurpleBlock, OrangeBlock
+PinkBlock, BrownBlock
+RedPad, BluePad
+GreenPad, YellowPad
+PurplePad, OrangePad
+PinkPad, BrownPad
+Selector
+Filler
+WaitingFiller
+Taker
+FillerTakerLocation
+ModeGen
+WaitingGen
+SendMode
+ReceiveMode
+SendModePerm
+ReceiveModePerm
+Player
+
+RULES
+
+vertical [ > Player ] -> [ Player ] 
+[ > Player | ... | Head ] -> [ |... | PlayerHead ] 
+[ > Player | ... | NoHead ] -> [ Player | ... |  ] 
+[ SendModePerm][actionPlayer][SelectorBlock][Filler ] -> [ SendModePerm][actionPlayer][WallSelector][RIGHTFillerBlock ] 
+[ ReceiveModePerm][actionPlayer][Selector][TakerBlock ] -> [ ReceiveModePerm][actionPlayer][SelectorBlock][RIGHTTakerWall ] 
+[ RedBlock RedPad ] -> [ RedBlock ] 
+[ BlueBlock BluePad ] -> [ BlueBlock ] 
+[ GreenBlock GreenPad ] -> [ GreenBlock ] 
+[ YellowBlock YellowPad ] -> [ YellowBlock ] 
+[ PurpleBlock PurplePad ] -> [ PurpleBlock ] 
+[ OrangeBlock OrangePad ] -> [ OrangeBlock ] 
+[ PinkBlock PinkPad ] -> [ PinkBlock ] 
+[ BrownBlock BrownPad ] -> [ BrownBlock ] 
+horizontal [ QueueLocation | ... | SendMode ] -> [ QueueLocation QueueHead | ... | SendMode ] 
+[ SendMode][PlayerNoHead][QueueLocation ] -> [ SendMode][][QueueLocationPlayer ] 
+[ SendMode][ReceiveModePerm ] -> [ ][SendModePerm ] 
+[ SendMode ] -> [  ] 
+horizontal [ QueueLocation | ... | ReceiveMode ] -> [ QueueLocation EnqueueHead | ... | ReceiveMode ] 
+[ ReceiveMode][PlayerNoHead][QueueLocation ] -> [ ReceiveMode][][QueueLocationPlayer ] 
+[ ReceiveMode][SendModePerm ] -> [ ][ReceiveModePerm ] 
+[ ReceiveMode ] -> [  ] 
+[ action Player Head ] -> [ RIGHT Player RIGHT Head ] 
+late down [ QueueHead | NoBlock ] -> [ | ] 
+late down [ EnqueueHead | Wall ] -> [ |Wall ] 
+late horizontal [ Player No Head | ... | Head ] -> [ |... | PlayerHead ] 
+late down [ Player | NoSelector ] -> [ Player | Selector ] 
+late down [ No Player | Selector ] -> [ | ] 
+late [ Selector Wall ] -> [ Wall ] 
+late up [ Filler Wall | NoWall ] -> [ Wall | Filler ] 
+late down [ Filler | ... | Filler ] -> [ Filler | ... | WaitingFiller ] 
+late up [ Taker Wall | NoTaker ] -> [ Wall | Taker ] 
+late [ Taker No Block][ModeGen ] -> [ ][SendMode ] again 
+late up [ Filler Wall | Wall][WaitingGen]up[FillerTakerLocation | Block][WaitingFiller ] -> [ Wall | Wall][ModeGenReceiveMode][ | BlockTaker][Filler ] again 
+
+
+WINCONDITIONS
+
+No Pad
+
+LEVELS
+
+#@###H#x
+#RR##BB#
+########
++.......
+########
+##{[{[##
+##F#####
+
+#@###H#x
+#RB##GR#
+########
++.......
+########
+##[]{[##
+##F#####
+
+########
+##RBRB##
+##!#####
+-.......
+#@###H#z
+#..##..#
+########
+........
+########
+##{[{[##
+##F#####
+
+########
+##RGBY##
+##!#####
+-.......
+#@###H#z
+#..##..#
+########
+........
+########
+##][}{##
+##F#####
+
+##########
+##RGRROR##
+##!#######
+-.........
+#@####H##z
+#...##...#
+##########
+..........
+##########
+##[;[[][##
+##F#######
+
+##########
+##RRGORR##
+##!#######
+-.........
+#@####H##z
+#...##...#
+##########
+..........
+##########
+##[;[[][##
+##F#######
+
+##########
+##RGBYOP##
+##!#######
+-.........
+#@####H##z
+#...##...#
+##########
+..........
+##########
+##[;]{}:##
+##F#######
+
+##########
+##RGBYOP##
+##!#######
+-.........
+#@####H##z
+#...##...#
+##########
+..........
+##########
+##[];:{}##
+##F#######
+
+############
+##RGGBBYYR##
+##!#########
+-...........
+#@#####H###z
+#....##....#
+############
+............
+############
+##........##
+##a#########
+............
+#H#####H###?
+#....##....#
+############
+............
+############
+##]][[}}{{##
+##F#########
+
+############
+##RRGGBBYY##
+##!#########
+-...........
+#@#####H###z
+#....##....#
+############
+............
+############
+##........##
+##a#########
+............
+#H#####H###?
+#....##....#
+############
+............
+############
+##[}[}]{]{##
+##F#########
+
+############
+##GRRRRRRB##
+##!#########
+-...........
+#@#####H###z
+#....##....#
+############
+............
+############
+##........##
+##a#########
+............
+#H#####H###?
+#....##....#
+############
+............
+############
+##{[[[[[[]##
+##F#########
+
+############
+##RGBYOPIW##
+##!#########
+-...........
+#@#####H###z
+#....##....#
+############
+............
+############
+##........##
+##a#########
+............
+#H#####H###?
+#....##....#
+############
+............
+############
+##";:']{}[##
+##F#########
+
+############
+##RGBYOPIW##
+##!#########
+-...........
+#@#####H###z
+#....##....#
+############
+............
+############
+##........##
+##a#########
+............
+#H#####H###?
+#....##....#
+############
+............
+############
+##"]{};:'[##
+##F#########
+
+############
+##RGBYOPIW##
+##!#########
+-...........
+#@#####H###z
+#....##....#
+############
+............
+############
+##........##
+##a#########
+............
+#H#####H###?
+#....##....#
+############
+............
+############
+##";:]'{}[##
+##F#########

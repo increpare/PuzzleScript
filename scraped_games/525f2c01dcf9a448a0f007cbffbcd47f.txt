@@ -1,0 +1,278 @@
+title Algorithm-Generated Sokoban Levels
+author Max
+
+========
+OBJECTS
+========
+
+Background
+#493929 #432
+11111
+01111
+11101
+11111
+10111
+
+Wall
+#8a7 #787
+00010
+11111
+01000
+11111
+00010
+
+Block
+#888 #555 #444
+11111
+10002
+10002
+10002
+12222
+
+
+BlockTop
+#444 #333 #222
+11111
+10002
+10002
+10002
+12222
+
+Player
+black orange red blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Empty
+#131313 #111
+11111
+11111
+10111
+11111
+11110
+
+
+Flag
+yellow white
+01111
+01111
+01111
+0....
+0....
+
+=======
+LEGEND
+=======
+
+. = Background
+x = Block
+p = Player
+# = Wall
+O = Empty
+* = Flag
+
+stopblock = Wall or Block or Flag
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Empty
+Wall
+BlockTop
+Block
+Flag
+Player
+
+======
+RULES
+======
+
+[ > player | Wall ] -> [ player | Wall ]
+[ > player | Empty no BlockTop ] -> [ player | Empty ]
+[ > player | Block ] -> [ > player | > Block ]
+[ > Block | StopBlock ] -> cancel
+
+late [ Block Empty no BlockTop ] -> [ BlockTop ]
+late [ Player Block ] -> cancel
+
+
+==============
+WINCONDITIONS
+==============
+
+Some Player
+some Flag
+all Player on Flag
+
+=======
+LEVELS
+=======
+
+Message 1 of 20
+PxOOO.
+x#....
+.O..x.
+x...OO
+.x#.OO
+x...#*
+
+Message 2 of 20
+Px...O
+.xOxO.
+.#O.Ox
+x#...O
+..xO#O
+#O..#*
+
+Message 3 of 20
+PO#..#
+..xxx.
+xxOO..
+...Ox.
+....O#
+#OO.O*
+
+Message 4 of 20
+P..x.#
+xx.#O.
+.xOx.x
+OOxOxx
+.x.OOO
+O#.O#*
+
+Message 5 of 20
+PxO.xO
+.xxO#.
+.OxOxO
+#O.#..
+.xO###
+..O..*
+
+Message 6 of 20
+P.x..#
+xx#O.#
+.xO.x.
+.O.O..
+Ox#.#O
+.xOOx*
+
+Message 7 of 20
+P.#O.O
+.x.O#x
+xx..x.
+...OO.
+#Oxx#O
+.OOO#*
+
+Message 8 of 20
+P#.Ox.
+.Ox#..
+.....x
+..O.O.
+#.x.x.
+#.O#O*
+
+Message 9 of 20
+Px...O
+Ox.Ox.
+O.xx.O
+##.OOO
+.x..OO
+O.OO#*
+
+Message 10 of 20
+PxO..O
+xxOxxx
+.OO.O.
+xO..OO
+.xxOOO
+OOO.x*
+
+Message 11 of 20
+P.x...
+..x.#x
+#xO.x.
+...OO.
+#..O.O
+....#*
+
+Message 12 of 20
+P....O
+.x#.O.
+..O.#.
+x....O
+..xx#O
+#...x*
+
+Message 13 of 20
+P..O.x
+..x.x.
+.xxOOx
+x..xOO
+OO#.O#
+.#x.O*
+
+Message 14 of 20
+P.x..#
+..x.xO
+OOOxO.
+O..x..
+x#OOO#
+...OO*
+
+Message 15 of 20
+P#..xO
+.x.#OO
+xx.xO.
+.O.O..
+Ox.OOO
+Ox.#x*
+
+Message 16 of 20
+P.#OOO
+.x.xOx
+xx..xO
+..O.OO
+OO..#O
+.x.#.*
+
+Message 17 of 20
+Px.OxO
+.x#x#x
+#.....
+OxOxOO
+xOx.##
+.Ox..*
+
+Message 18 of 20
+P..x.#
+xOx#.O
+O..O..
+Ox#x.O
+x.x.x.
+.OOO#*
+
+Message 19 of 20
+P..O..
+O..x..
+xO.O.x
+.xx..O
+.xOOO#
+..O#O*
+
+Message 20 of 20
+P..O..
+xxOOx#
+..xOx.
+xOO.OO
+Oxx.#.
+O.OO#*

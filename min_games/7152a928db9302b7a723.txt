@@ -1,0 +1,309 @@
+OBJECTS
+
+BackgroundWhite00000
+00000
+00000
+00000
+00000
+
+TargetDarkBlue.....
+.000.
+.0.0.
+.000.
+.....
+
+WallLightGrey00000
+00000
+00000
+00000
+00000
+
+NormalPlayerGray DarkGray..0..
+.111.
+01.10
+.111.
+..0..
+
+BrokenPlayerGray DarkGray..0..
+.111.
+01.10
+...1.
+..0..
+
+SorxCrateLightRed00000
+0...0
+0...0
+0...0
+00000
+
+AubiCrateLightBlue00000
+0...0
+0...0
+0...0
+00000
+
+SorxxCrateRed LightRed00000
+00000
+00000
+00000
+00000
+
+AubiiCrateBlue LightBlue.000.
+00000
+00000
+00000
+.000.
+
+AubiCorner1Blue....0
+.....
+.....
+.....
+.....
+
+AubiCorner2Blue.....
+.....
+.....
+.....
+....0
+
+AubiCorner3Blue.....
+.....
+.....
+.....
+0....
+
+AubiCorner4Blue0....
+.....
+.....
+.....
+.....
+
+
+
+LEGEND
+
+Crate = SorxCrate or AubiCrate or SorxxCrate or AubiiCrate
+Player = NormalPlayer or BrokenPlayer
+Obstacle = Player or Crate or Wall
+AubiCorner = AubiCorner1 or AubiCorner2 or AubiCorner3 or AubiCorner4
+. = Background
+# = Wall
+P = NormalPlayer
+q = BrokenPlayer
+r = SorxCrate
+b = AubiCrate
+x = SorxxCrate
+i = AubiiCrate
+O = Target
+
+COLLISIONLAYERS
+
+Background
+Target
+Player, Wall
+SorxxCrate, SorxCrate
+AubiiCrate, AubiCrate
+AubiCorner1
+AubiCorner2
+AubiCorner3
+AubiCorner4
+
+RULES
+
+[ > NormalPlayer][BrokenPlayer ] -> [ > NormalPlayer][<BrokenPlayer ] 
+startloop
+[ > Player | AubiCrate ] -> [ > Player | >AubiCrate ] 
+[ > Player | AubiiCrate ] -> [ > Player | >AubiiCrate ] 
++ rigid [ moving AubiiCrate | AubiiCrate ] -> [ moving AubiiCrate | movingAubiiCrate ] 
++ [ > Crate | AubiiCrate ] -> [ > Crate | >AubiiCrate ] 
+[ > Crate | AubiCrate ] -> [ > Crate | >AubiCrate ] 
+endloop
+late [ AubiCrate | SorxxCrate ] -> [ SorxCrate | SorxxCrate ] 
+late [ SorxCrate | AubiiCrate ] -> [ AubiCrate | AubiiCrate ] 
+[ AubiCorner |  ] -> [ | ] 
+late [ AubiCorner |  ] -> [ | ] 
+late RIGHT [ AubiiCrate | AubiiCrate ] -> [ AubiiCrate AubiCorner1 AubiCorner2 | AubiiCrateAubiCorner3AubiCorner4 ] 
+late DOWN [ AubiiCrate | AubiiCrate ] -> [ AubiiCrate AubiCorner2 AubiCorner3 | AubiiCrateAubiCorner1AubiCorner4 ] 
+
+
+WINCONDITIONS
+
+All Target on Player
+
+LEVELS
+
+#########
+#...o...#
+#..bbb..#
+#.bb.bb.#
+#bb...bb#
+#..i.i..#
+#.i#i#i.#
+#..ipi..#
+#########
+
+#########
+#p..i####
+#..ii..##
+#..ibii.#
+#ii..bii#
+#.iibi..#
+##..iio##
+####i.###
+#########
+
+#########
+#...o...#
+#.......#
+#x.....x#
+#.b...b.#
+#..r.x..#
+#...b...#
+#..xpr..#
+#########
+
+#######
+#.....#
+#..p..#
+#..i..#
+#.....#
+#r.r.r#
+#.r.r.#
+#r.r.r#
+#.r.r.#
+#r.o.r#
+#######
+
+#######
+#..P.x#
+#.i.i.#
+#i.i.b#
+#.i.x.#
+#..i.O#
+#######
+
+#########
+#...P...#
+#..i.i..#
+#...i...#
+#.x.x.x.#
+#..r.r.r#
+#.r.r.r.#
+#x.x.xOx#
+#########
+
+#######
+
+#.pb..#
+#r#b..#
+#.Or..#
+#xrxi.#
+#..i..#
+#...i.#
+#######
+
+##########
+
+#........#
+#........#
+#..xrxx..#
+#..x..xp.#
+#..biox..#
+#..x.ib..#
+#..bi.x..#
+#..xxrx..#
+#........#
+#........#
+##########
+
+#############
+#.....x.x.x.#
+#....r.b.r.x#
+#.ip..x.x.o.#
+#......b.r..#
+#.....x.x.x.#
+#############
+
+##########
+#........#
+#........#
+#..ixbi..#
+#..b..x..#
+#..x.ox..#
+#..x..b..#
+#..ibxi..#
+#........#
+#p.......#
+##########
+
+###########
+
+##....r####
+#...rr..###
+#r.rr....##
+#xoxr.r...#
+####rrx...#
+#.........#
+#.ii..i.p.#
+#.........#
+###########
+
+#########
+#...#####
+#.o.#####
+#ix.#####
+#..r#####
+#.b.x...#
+#.o.x.p.#
+#x..r..b#
+##i######
+#...#####
+#.p.#####
+#...#####
+#########
+
+#############
+#o....#....p#
+#....b#b....#
+#...i.#.b...#
+#..b.....b..#
+#####.X.#####
+#....b..b..o#
+#...b.#b....#
+#.....#.....#
+#p....#.....#
+#############
+
+################
+#.............p#
+#............i.#
+#.iiiiiiiiiiii.#
+#..i.........i.#
+#..i.iii.iii.i.#
+#..i.i.bbb.i.i.#
+#..i.i.iii.i.i.#
+#..i.i.ioi.i.i.#
+#..i.i.bbb.i.i.#
+#..ibiiiiiiibi.#
+#..ibb.bbb.bbi.#
+#..iiiii.iiiii.#
+#..............#
+################
+
+###########
+#..x#.....#
+#...r...i.#
+#..i#..rx.#
+#b#b#..rx.#
+#p#p#..r..#
+#######r###
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#....rxxxx#
+#xxxr.ro..#
+#.o.r.r...#
+#.........#
+###########

@@ -1,0 +1,139 @@
+OBJECTS
+
+Blackground#555555
+#777777#222222
+2011120001
+2000120000
+22222Whiteground
+#DDDDEE#FFFFFF #CCCCDD00111
+00001
+20000
+20000
+22222
+
+PathAllDarkBlue.000.
+00000
+00000
+00000
+.000.
+
+PathHorizDarkBlue.....
+00000
+00000
+00000
+.....
+
+PathVertDarkBlue.000.
+.000.
+.000.
+.000.
+.000.
+
+PathCornSDDarkBlue.....
+..000
+.0000
+.0000
+.000.
+
+PathCornSADarkBlue.....
+000..
+0000.
+0000.
+.000.
+
+PathCornWDDarkBlue.000.
+.0000
+.0000
+..000
+.....
+
+PathCornWADarkBlue
+.000.0000.
+0000.000..
+.....Wall
+#110000#1a0000 #010000
+2011120001
+2000120000
+22222PlayerFront
+grayBlack Blue
+.000..222.
+.1.1.00000
+01010PlayerLeft
+grayBlack Blue
+.000..200.
+...0.00000
+01010PlayerRight
+grayBlack Blue
+.000..002.
+.0...00000
+01010PlayerBack
+grayBlack Blue.000.
+.000.
+.0.0.
+00000
+01010
+
+HeartsSwitch#FF0000
+#FFAAAA#DD0000 #00000023131
+33333
+33333
+23330
+22322
+
+DiamondSwitch#00FF00
+#AAFFAA#00DD00 #00000020311
+23331
+33333
+23330
+22322
+
+LancerSwitch#0000FF
+#AAAAFF#0000DD #00000020311
+23331
+33333
+23030
+22222
+
+
+LEGEND
+
+Background = Blackground or Whiteground
+. = Whiteground
+# = Wall
+Player = PlayerFront or PlayerLeft or PlayerRight or PlayerBack
+P = PlayerRight
+Path = PathAll or PathHoriz or PathVert or PathCornSD or PathCornSA or PathCornWD or PathCornWA
+Switch = HeartsSwitch or DiamondSwitch or LancerSwitch
+- = PathHoriz
+
+COLLISIONLAYERS
+
+Background
+Path
+Player
+Wall, Switch
+
+RULES
+
+[ right Player ] -> [ right PlayerRight ] 
+[ up Player ] -> [ up PlayerBack ] 
+[ left Player ] -> [ left PlayerLeft ] 
+[ down Player ] -> [ down PlayerFront ] 
+[ > Player | SwitchPath | PathAll ] -> [ > Player | >Switch | PathAll ] 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+##############
+
+#............#
+#......#.....#
+#............#
+#.P..........#
+#............#
+#............#
+##############

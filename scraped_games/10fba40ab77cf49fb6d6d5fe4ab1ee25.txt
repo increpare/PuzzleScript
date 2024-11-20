@@ -1,0 +1,394 @@
+title Power Problems
+author Savage
+homepage www.tinyurl.com/vcscodeclub
+background_color grey
+text_color yellow
+noaction
+
+========
+OBJECTS
+========
+
+Background
+white grey
+00100
+00100
+11111
+00100
+00100
+
+back2
+lightblue
+
+back3
+gray
+
+back4
+green
+
+back5
+yellow
+
+Wall
+darkgray black grey
+11111
+10001
+10201
+10001
+11111
+
+wall2
+blue
+
+Target
+grey black
+00000
+01010
+01010
+01010
+00000
+
+target2
+gray white green red
+00000
+01010
+01010
+01010
+00000
+
+Player
+brown green black darkblue
+.222.
+.000.
+11111
+.111.
+.3.3.
+
+Item
+grey yellow white
+.020.
+02100
+21111
+00110
+.010.
+
+item3
+grey darkgray black yellow
+.010.
+01200
+12222
+00330
+.030.
+
+Item2
+red white
+.000.
+00000
+01110
+00000
+.000.
+
+item4
+green white
+.000.
+00100
+01110
+00100
+.000.
+
+item5
+yellow
+..0..
+.00..
+00000
+..00.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+! = back2
+@ = back3
+& = back4
+* = back5
+# = Wall
+$ = wall2
+o = Target
+1 = target2
+P = Player
+i = item
+- = Item2
+u = item3
++ = item4
+c = item5
+
+=========
+SOUNDS
+=========
+
+item move 56340707
+item3 move 56340707
+endlevel 90164703
+closemessage 40118306
+
+================
+COLLISIONLAYERS
+================
+
+Background
+back2, back3, back4, back5
+Target, target2
+Player, Wall, wall2, Item, item2, item3, item4, item5
+
+======
+RULES
+======
+
+[ > player| item ] -> [ > player| > item ]
+[ > player| item3 ] -> [ > player| > item3 ]
+[ > item3| item2 ] -> [| item2 ]
+[ > item| item2 ] -> [| item2 ]
+[ > player| item4 ] -> [ > player| Item ]
+[ > item3| item5 ] -> [ item | ]
+
+==============
+WINCONDITIONS
+==============
+
+All item on Target
+all item3 on target2
+
+=======
+LEVELS
+=======
+
+message Job 1
+message $0 "This is your training"
+message Put the battery in the outlet.
+
+#######
+#o.i.p#
+#######
+
+message They match.
+
+#########
+#.......#
+#u##.##i#
+#1##p##o#
+#########
+
+message Put them in in the right places.
+
+#############
+#######.....#
+#######.iii.#
+#1oo1o1....p#
+#######.uuu.#
+#######.....#
+#############
+
+
+message Ok, I Got It
+message Job 2
+message $1000 "Dont touch the diamond"
+message "Wrong person..."
+
+############
+#.i..o##..##
+#.####.....#
+#.i.....#.##
+#.####..#.##
+#.#######o##
+#pi........#
+#.#.###i#.##
+#.i.#o..#.##
+#.....#o#.##
+#####.....o#
+############
+
+message Im Getting Better Or Its Getting Easier
+message Job 3
+message $2500 "Do it right"
+
+################
+#p.............#
+#..............#
+#...........iii#
+#..............#
+#......i....iii#
+#......i.......#
+#.i.i..i...i...#
+#ii.ii.ii.ii...#
+#..............#
+#..............#
+#...........ooo#
+#...........ooo#
+#oooooooooooooo#
+################
+
+message Job 4
+message Ummmm... No
+message $5000 "You have to"
+
+#######################
+##..oo#..............##
+#...###.i.i.i...###..##
+#.....#.iiiii.##..o#..#
+#..#......i.......#o#.#
+####..###.#..###....#.#
+#o#####o#.#..#o..i..o.#
+#.......#..#.#...#..#.#
+#..#.#.....#.#......#.#
+#..#.#..###...#.....#.#
+#.......#o....#.....#.#
+##....#######o#.....#p#
+#######################
+
+message Time To Recharge I Guess
+message Job 5
+message $10000 "Recharge em..."
+message "QUICKER!!!"
+
+###########
+#.u.1##..##
+#.###.....#
+#.u....#.##
+#.###..#.##
+#p...###.##
+#.u.u...u1#
+#u##.#.#1##
+#....1.#.##
+#1#......1#
+###########
+
+message Job 6
+message You can finally afford your own home...
+message One Problem.
+message Power Problems...
+message $0 "Its my house."
+
+$$$$$$$$$$$$$$
+$p$.....$1111$
+$.......$....$
+$$$..i..$....$
+$o$.....$....$
+$o$$$.$$$....$
+$.......u....$
+$...i...u....$
+$...i.u.u....$
+$...i........$
+$.........$$$$
+$..........oo$
+$$$$$$$$$$$$$$
+
+$$$$$$$$$$
+$p...u..1$
+$$$$$$$..$
+$1.1.1...$
+$........$
+$.uiuiuii$
+$........$
+$.o.o.o.o$
+$$$$$$$$$$
+
+$$$$$$$$$$$$$$
+$..........p1$
+$.u......$.$$$
+$ii......$.$$$
+$..$..$....o$$
+$.$$..$..i.1$$
+$o$...$..u.o$$
+$$....$..i.1$$
+$....$...u..$$
+$...$.....u.$$
+$o..1$..ioio$$
+$$$$$$$$$$$$$$
+
+message Job 7
+message I want a car now
+message $15000 "Deal?"
+
+################
+#####.#...#...##
+#####....#...#.#
+#####.......#..#
+###.i..#...#...#
+##..#.....#....#
+#p.##........#.#
+##..#..........#
+###.u......#..o#
+#####...#...#..#
+#####.......1#.#
+#####.....#...##
+################
+
+message How do I do that?
+message Job 8
+message $20000 "I will pay lots cus you dont know how."
+
+#########
+#...p...#
+#.-...+.#
+#...u...#
+#.......#
+#.......#
+#...o...#
+#########
+
+message Job 9
+message You can afford a car now!!!
+message One problem...
+message Power Problems...
+
+!!!!!!!!!!!.....
+!!$$$$!!!!!.i.+.
+!!$oo$!!!!!.....
+!$..u.u!!!!.....
+!$$..$$!!!!....p
+!!#!!#!!!!!.....
+!!!!!!!!!!!....-
+!!!!!!!!!!!....1
+
+message Job 10
+message $100,000 "..."
+
+###############
+#p.....#....oo#
+#.ucuc......oo#
+#.ucuc.#....oo#
+#.ucuc.#....oo#
+#.ucuc........#
+#......#......#
+###############
+
+message Last Job
+message Fixing the house
+
+!!!!!@@@!!!!***
+!!!!@@@@@!!!***
+!!!@@@@@@@!!***
+!!@@@@@@@@@!!!!
+!!!$$$$$$$!!!!!
+!!!$o...o$!!!!!
+!!!$....+$!!!!!
+!!!$.....$!!!!!
+!!!$.c.u.p!!!!!
+&&&&&&&&&&&&&&&
+
+message You fixed it!
+
+!!!!!@@@!!!!***
+!!!!@@@@@!!!***
+!!!@@@@@@@!!***
+!!@@@@@@@@@!!!!
+!!!$$$$$$$!!!!!
+!!!$!!*!!$!!!!!
+!!!$!!!!!$!!!!!
+!!!$!!!!!$!!!!!
+!!!$ocup!$!!!!!
+&&&&&&&&&&&&&&&
+
+message YOU WIN!!!

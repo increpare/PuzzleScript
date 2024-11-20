@@ -1,0 +1,275 @@
+title Step-over sequence mazes [pre-2010]
+author Andrea Gilbert 
+homepage http://www.clickmazes.com/step123/new-step.htm
+
+========
+OBJECTS
+========
+
+Background
+black
+
+pA
+red
+..0..
+.000.
+00.00
+.000.
+..0..
+
+pB 
+blue
+..0..
+.000.
+00.00
+.000.
+..0..
+
+pC
+yellow
+..0..
+.000.
+00.00
+.000.
+..0..
+
+goal
+white
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+vA
+red
+..0..
+..0..
+..0..
+..0..
+..0..
+
+hA
+red
+.....
+.....
+00000
+.....
+.....
+
+vB
+blue
+..0..
+..0..
+..0..
+..0..
+..0..
+
+hB
+blue
+.....
+.....
+00000
+.....
+.....
+
+vC
+yellow
+..0..
+..0..
+..0..
+..0..
+..0..
+
+hC
+yellow
+.....
+.....
+00000
+.....
+.....
+
+vXe
+darkgrey
+.000.
+.000.
+.000.
+.000.
+.000.
+
+hXe
+darkgrey
+.....
+00000
+00000
+00000
+.....
+
+xX 
+darkgrey
+.....
+.000.
+.000.
+.000.
+.....
+
+xRB 
+red blue
+.....
+.0.1.
+.0.1.
+.....
+.....
+
+xRBY 
+red blue yellow
+.....
+0.1.2
+0.1.2
+.....
+.....
+
+void
+transparent
+freestep
+transparent
+s2
+transparent
+s3
+transparent
+
+=======
+LEGEND
+=======
+
+. = void
+o = freestep
+a = hA
+1 = vA
+b = hB
+2 = vB
+c = hC
+3 = vC
+- = hXe
+! = vXe
++ = xX
+* = xRB
+% = xRBY
+g = goal
+p = pA and s3
+q = pA and s2
+sN = s3 or s2
+wall = vXe or hXe or xX or xRB or xRBY
+stepA = vA or hA 
+stepB = vB or hB
+stepC = vC or hC
+notA = stepB or stepC or wall or void
+notB = stepA or stepC or wall or void
+notC = stepA or stepB or wall or void
+Grid = void or stepA or stepB or stepC or wall or freestep
+Player = pA or pB or pC
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================      
+
+Background
+Grid
+sN
+Player
+Goal 
+
+======
+RULES
+======
+
+[ > pA | notA ] -> cancel
+[ > pB | notB ] -> cancel
+[ > pC | notC ] -> cancel
+
+[ > pA sN | stepA | ] -> [ | stepA | pB sN ]
+[ > pB s2 | stepB | ] -> [ | stepB | pA s2 ]
+[ > pB s3 | stepB | ] -> [ | stepB | pC s3 ]
+[ > pC sN | stepC | ] -> [ | stepC | pA sN ]
+
+[ > player sN | freestep | ] -> [ | freestep | player sN ]
+late [ Player Goal ] -> [ Player ] 
+
+==============
+WINCONDITIONS
+==============
+
+No Goal
+
+=======
+LEVELS
+=======
+
+Message To the white diamond 
+
+Message Step over the lines in the correct colour sequence
+
+Message 4x4-RB No.1 (2007)
+
+.............
+..+-+-+-+-+..
+..!.2.o.1.!..
+..+o+b+a+b+..
+.q1.1.2.o.!..
+..+b+b+a+b+..
+..!.1.o.2.2g.
+..+o+b+a+o+..
+..!.o.2.1.!..
+..+-+-+-+-+..
+......*......
+
+
+Message 4x4-RBY No.1 (2004)
+
+.............
+..+-+-+-+-+..
+..!.1.2.3.!..
+..+c+c+c+a+..
+.p1.2.3.2.!..
+..+c+a+a+a+..
+..!.3.2.3.3g.
+..+a+c+c+b+..
+..!.2.1.1.!..
+..+-+-+-+-+..
+......%......
+
+Message 4x4-RBY No.2 (2004)
+
+.............
+..+-+-+-+-+..
+..!.2.3.1.!..
+..+a+a+b+b+..
+..!.3.2.3.3g.
+..+b+a+a+a+..
+.p1.1.3.2.!..
+..+b+b+b+b+..
+..!.3.1.3.!..
+..+-+-+-+-+..
+......%......
+
+Message 5x5-RBY No.1 (2004)
+
+...............
+..+-+-+-+-+-+..
+..!.2.3.1.2.!..
+..+a+a+a+c+c+..
+..!.2.1.2.1.!..
+..+c+c+c+c+a+..
+.p1.2.2.3.2.3g.
+..+a+a+b+a+b+..
+..!.2.3.1.3.!..
+..+a+c+a+b+c+..
+..!.3.2.3.1.!..
+..+-+-+-+-+-+..
+.......%.......
+
+Message Thank you for playing :)

@@ -1,0 +1,1175 @@
+title Drop Kick
+author Aaron Steed
+homepage www.robotacid.com
+
+key_repeat_interval 0.23
+again_interval 0.1
+noaction
+background_color Black
+text_color Yellow
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#e5b679
+
+LightBlock
+#f1dab7
+
+LightAngle
+#f1dab7
+00000
+.0000
+..000
+...00
+....0
+
+LightUnder
+#f1dab7
+0....
+00...
+000..
+0000.
+00000
+
+WallTop 
+#d32112 #820e00 #d34900 #9da3c7 
+02222
+11110
+11111
+11111
+11111
+
+WallLit 
+#d32112 #820e00 #d34900 #9da3c7 
+21111
+21111
+21111
+21111
+01111
+
+WallTopLit 
+#d32112 #820e00 #d34900 #9da3c7 
+22222
+21111
+21111
+21111
+01111
+
+WallBase
+#820e00
+
+Spawner 
+#ffffff #820e00 #d32112 #b7b7b7 #000000
+22222
+22222
+20002
+01410
+34443
+
+
+SpawnSwitch
+#ff8df9 #ac1efa #a62514 #ffffff
+.....
+.....
+.301.
+.001.
+20012
+
+SpawnSwitchDown
+#ff8df9 #ac1efa #a62514 #c93700 
+.....
+.....
+.....
+.....
+20012
+
+SpringRight 
+#ffffff #820e00 #d32112 #b7b7b7 
+22220
+22210
+22210
+22210
+22223
+
+SpringRightOn
+#ffffff #820e00 #d32112 #b7b7b7 
+22222
+22211
+22211
+22211
+22222
+
+SpringRightArm 
+#ffffff #820e00 #d32112 #b7b7b7
+0....
+0.3.3
+03.3.
+0.3.3
+3....
+
+SpringLeft 
+#ffffff #820e00 #d32112 #b7b7b7 
+02222
+01222
+01222
+01222
+32222
+
+SpringLeftOn
+#ffffff #820e00 #d32112 #b7b7b7 
+22222
+11222
+11222
+11222
+22222
+
+SpringLeftArm 
+#ffffff #820e00 #d32112 #b7b7b7 
+....0
+3.3.0
+.3.30
+3.3.0
+....3
+
+BreakWall
+#ffd600 #ffa30d #b76800 #979594 
+10101
+00002
+10101
+00002
+12121
+
+BreakDebris1
+#ffd600 #ffa30d #b76800 #979594 
+10101
+0.0.2
+10.01
+0.0.2
+12121
+
+BreakDebris2
+#ffd600 #ffa30d #b76800 #979594 
+.0.0.
+0.0.2
+.0.0.
+0.0.2
+.2.2.
+
+BreakDebris3
+#ffd600 #ffa30d #b76800 #979594 
+.0.0.
+0...2
+.....
+0...2
+.2.2.
+
+SpikeUp
+#d32112 #820e00 #ffffff #9da3c7 
+..3..
+..2..
+.223.
+.223.
+10201
+
+Mine
+#d32112 #878787 #ffffff #9da3c7 
+..2..
+.223.
+22231
+.331.
+..1..
+
+Blood1
+#d21d00 #ffe02c #ffc700 #c87700 
+0.0.0
+.000.
+00000
+.000.
+0.0.0
+
+Blood2
+#d21d00 #ffe02c #ffc700 #c87700 
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Blood3
+#d21d00 #ffe02c #ffc700 #c87700 
+.....
+.....
+..0..
+.....
+.....
+
+Blood4
+#d21d00 #ffe02c #ffc700 #c87700 
+.....
+.....
+.....
+.....
+.....
+
+PlayerGround
+#000000 #e72119 #ffffff #ff0000 
+.000.
+.202.
+.000.
+.111.
+.0.0.
+
+PlayerFall
+#000000 #e72119 #ffffff #ff0000 
+.000.
+.202.
+.000.
+01110
+.....
+
+PlayerJumpStart
+#000000 #e72119 #ffffff #ff0000 
+.000.
+.202.
+.111.
+.0.0.
+.....
+
+PlayerJump
+#000000 #e72119 #ffffff #ff0000 
+.000.
+.202.
+.111.
+.0.0.
+.....
+
+PlayerKickRight
+#000000 #e72119 #ffffff #ff0000 
+000..
+002..
+11100
+.00..
+.....
+
+PlayerKickRightBack
+#000000 #e72119 #ffffff #ff0000  
+.000.
+.200.
+0111.
+.0...
+.....
+
+PlayerKickRightBackWait
+#000000 #e72119 #ffffff #ff0000  
+.000.
+.200.
+0111.
+.0...
+.....
+
+PlayerKickLeft
+ #000000 #e72119 #ffffff #ff0000 
+..000
+..200
+00111
+..00.
+.....
+
+PlayerKickLeftBack
+#000000 #e72119 #ffffff #ff0000 
+.000.
+.002.
+.1110
+...0.
+.....
+
+PlayerKickLeftBackWait
+#000000 #e72119 #ffffff #ff0000 
+.000.
+.002.
+.1110
+...0.
+.....
+
+Rock
+#d32112 #ffa30d #ff8126 #c93700 
+.233.
+22233
+32333
+33333
+.333.
+
+AGem
+#ff8df9 #ac1efa #ffffff #ff0000 
+..0..
+.221.
+02211
+11101
+.111.
+
+BGem
+#00f2ff #3a8eee #ffffff #ff0000 
+.001.
+02201
+02011
+10101
+.111.
+
+CGem
+#8dffb6 #00b402 #ffffff #ff0000 
+.000.
+02201
+12111
+.101.
+..1..
+
+GemDebris1
+#ffffff #0739f5 #1f0f42 #ffffff
+.0.0.
+00.00
+..0..
+00.00
+.0.0.
+
+GemDebris2
+#ffffff #0739f5 #1f0f42 #ffffff 
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Collect
+White
+
+MoveWait
+pink
+
+Exit
+#000000 #ffe02c #ffc700 #c87700 
+.000.
+00000
+00010
+00000
+00000
+
+Switch
+#ffd600 #ffa30d #a62514 #c93700 
+.....
+.....
+.001.
+.001.
+20012
+
+GateClosed
+#ffd600 #ffa30d #a62514 #c93700 
+33333
+30012
+31.12
+21112
+22222
+
+GateOpen
+#ffd600 #ffa30d #a62514 #c93700 
+3.3.3
+.....
+3...2
+.....
+2.2.2
+
+GateClosing
+Pink
+
+MoveUp
+#ffffff 
+.000.
+00.00
+0...0
+.....
+0...0
+
+MoveRight
+#ffffff
+0.00.
+...00
+....0
+...00
+0.00.
+
+MoveDown
+#ffffff 
+0...0
+.....
+0...0
+00.00
+.000.
+
+MoveLeft
+#ffffff 
+.00.0
+00...
+0....
+00...
+.00.0
+
+
+King
+#ffd600 #ffffff #000000 #ac1efa #3a8eee #00b402
+4.3.5
+00000
+21212
+22222
+.2.2.
+
+Abacus
+#d32112 #ffa30d #ff8126 #c93700 
+21112
+32333
+33333
+.333.
+.....
+
+AbacusTrack
+#e5865a #820e00 #f1dab7 #9da3c7 
+.....
+00000
+.....
+22222
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = WallBase
+h = WallTop
+n = WallLit
+r = WallTopLit
+@ = PlayerGround
+o = Rock
+a = SpikeUp
+e = SpawnSwitch
+f = Switch
+g = GateOpen
+j = Mine
+k = BreakWall
+x = AGem
+y = BGem
+z = CGem
+s = AGem and LightBlock
+t = AGem and LightAngle
+u = AGem and LightUnder
+b = BGem and LightBlock
+l = Rock and LightBlock
+p = SpringRight
+q = SpringLeft
+m = King
+w = Spawner
+c = LightBlock
+d = LightAngle
+i = LightUnder
+! = BreakWall and LightBlock
+? = BreakWall and LightAngle
+8 = Abacus and AbacusTrack
+9 = Abacus and AbacusTrack and LightBlock
+
+
+
+Gem = AGem or BGem or CGem
+Crate = Rock or Gem or King or Abacus
+
+Player = PlayerGround or PlayerJump or PlayerKickLeft or PlayerKickRight or PlayerKickLeftBack or PlayerKickRightBack or PlayerKickLeftBackWait or PlayerKickRightBackWait or PlayerFall or PlayerJumpStart
+Wall = WallTop or WallBase or WallLit or WallTopLit
+Spring = SpringRight or SpringRightArm or SpringRightOn or SpringLeft or SpringLeftArm or SpringLeftOn
+Gate = GateOpen or GateClosed
+Item = Player or Wall or Crate or GateClosed or BreakWall or Gem or Spring or Spawner or Abacus
+Spike = SpikeUp or Mine
+Blood = Blood1 or Blood2 or Blood3 or Blood4
+Debris = BreakDebris1 or BreakDebris2 or BreakDebris3 or GemDebris1 or GemDebris2
+Move = MoveUp or MoveRight or MoveLeft or MoveDown
+MoveVert = MoveUp or MoveDown
+MoveHoriz = MoveLeft or MoveRight
+Switches = SpawnSwitch or Switch or SpawnSwitchDown
+PlayerMove = PlayerJump or PlayerGround
+Light = LightBlock or LightAngle or LightUnder
+
+=======
+SOUNDS
+=======
+
+sfx0 8545502 (kick crate)
+sfx1 81312905 (jump)
+sfx2 35565101 (kick)
+sfx3 31029704 (kick wall)
+sfx4 31651909 (death)
+sfx5 83279102 (gate)
+Crate MOVE 29447307
+sfx6 42954502 (break wall)
+sfx7 9025907 (hit wall)
+sfx8 7194508 (gem collect)
+sfx9 70068703 (spring)
+
+
+================
+COLLISIONLAYERS
+================
+
+Move
+GateClosing
+Background
+Light
+AbacusTrack
+MoveWait
+Spike, Exit, Switches, GateOpen
+Item
+Blood, Debris
+Collect
+
+======
+RULES
+======
+
+(prep Abacus)
+horizontal [AbacusTrack | No AbacusTrack] -> [AbacusTrack | AbacusTrack]
+
+(debris)
+
+[BreakDebris3] -> []
+[BreakDebris2] -> [BreakDebris3] again
+[BreakDebris1] -> [BreakDebris2] again
+
+[GemDebris2] -> [] again
+[GemDebris1] -> [GemDebris2] again
+
+
+(KING - needs to run before the player to use their move inputs)
+(bit buggy as I couldn't figure out how to stop failed player inputs before I converted them)
+right [moving PlayerMove] [King | ... | Gem] [Stationary King] -> [moving PlayerMove][King | ... | Gem] [right King]
+right [moving PlayerMove] [King No Switches| ... | No Gem] [Stationary King] -> [moving PlayerMove] [King No Switches| ... | No Gem] [left King]
+[> King | Crate] -> [> King|> Crate]
+
+
+(PLAYER)
+(A chunk of the original code is Terry's from a game he did ages ago.
+I could probably have refactored this so there wouldn't be so many
+hacks, but it runs mostly okay, so, eh.)
+
+(input)
+right [right PlayerJump] -> [PlayerKickRightBackWait] sfx2
+left [left PlayerJump] -> [PlayerKickLeftBackWait] sfx2
+up [up PlayerJump] -> [PlayerJump]
+down [down PlayerJump] -> [PlayerFall] again
+
+(jump)
+up [PlayerJumpStart | No Item] -> [ | PlayerJump]
+[PlayerJumpStart] -> [PlayerJump]
+random up [Up PlayerGround | No Item] -> [ | PlayerJumpStart] again sfx1
+
+(falling)
+random down [PlayerFall | No Item] -> [ | PlayerFall] again
+random down [PlayerFall | Item] -> [PlayerGround | Item]
+late down [PlayerGround | No Item] -> [PlayerFall | ] again
+
+(flying kick)
+right [PlayerKickRight | Crate] -> [PlayerKickRight | Crate MoveRight] sfx0
+right [PlayerKickRight | BreakWall] -> [PlayerFall | BreakDebris1] again sfx6
+right [PlayerKickRight | Item] -> [PlayerFall | Item] again sfx3
+random right [PlayerKickRight | No Item] -> [ | PlayerKickRight] again
+[PlayerKickRightBack] -> [PlayerKickRight] again
+[PlayerKickRightBackWait] -> [PlayerKickRightBack] again
+left [PlayerKickLeft | Crate] -> [PlayerKickLeft | Crate MoveLeft] sfx0
+left [PlayerKickLeft | BreakWall] -> [PlayerFall | BreakDebris1] again sfx6
+left [PlayerKickLeft | Item] -> [PlayerFall | Item] again sfx3
+random left [PlayerKickLeft | No Item] -> [ | PlayerKickLeft] again
+[PlayerKickLeftBack] -> [PlayerKickLeft] again
+[PlayerKickLeftBackWait] -> [PlayerKickLeftBack] again
+
+(SPRINGS)
+
+right [SpringRightOn | SpringRightArm] -> [SpringRight |]
+right [SpringRight | Crate Move | No Item] -> [SpringRightOn | SpringRightArm | Crate MoveRight] again sfx9
+right [SpringRight | Crate No Move | No Item] -> [SpringRightOn | SpringRightArm | Crate MoveRight] again sfx9
+
+left [SpringLeftOn | SpringLeftArm] -> [SpringLeft |]
+left [SpringLeft | Crate Move | No Item] -> [SpringLeftOn | SpringLeftArm | Crate MoveLeft] again sfx9
+left [SpringLeft | Crate No Move | No Item] -> [SpringLeftOn | SpringLeftArm | Crate MoveLeft] again sfx9
+
+(GATES)
+
+late [Item Switch] [GateOpen] -> [Item Switch] [GateOpen GateClosing]
+late [No Item Switch] [GateClosing] -> [Switch] []
+late [GateClosing GateOpen] -> [GateClosed] sfx5
+late [No Item Switch] [GateClosed] -> [Switch] [GateOpen] sfx5
+
+
+(SPAWNER)
+
+late [No Item SpawnSwitchDown] -> [No Item SpawnSwitch]
+late down [Item SpawnSwitch] [Spawner | No Item] -> [Item SpawnSwitch] [Spawner | AGem ] sfx8
+late [Item SpawnSwitch] -> [Item SpawnSwitchDown]
+
+(CRATES)
+
+(push)
+horizontal [> Player | Crate] -> [> Player | > Crate]
+
+(ABACUS)
+[Abacus MoveVert] -> [Abacus No MoveVert]
+
+(falling)
+
+random down[Crate MoveDown | No Item] -> [ | Crate MoveDown] again
+random down [Crate MoveDown | Item] -> [Crate | Item] again
+late down [Crate No Move| No Item] -> [Crate MoveDown | ] again
+
+(stop abacus)
+late [Abacus MoveVert] -> [Abacus No MoveVert]
+
+(flying)
+right [Crate MoveRight | Crate No MoveRight] -> [Crate MoveDown | Crate MoveRight] again
+right [Crate MoveRight | BreakWall] -> [Crate MoveDown | BreakDebris1] again sfx6
+right [Crate MoveRight | Item] -> [Crate MoveDown | Item] again sfx7
+random right [Crate MoveRight | No Item] -> [ | Crate MoveRight] again
+
+left [Crate MoveLeft | Crate No MoveLeft] -> [Crate MoveDown | Crate MoveLeft] again
+left [Crate MoveLeft | BreakWall] -> [Crate MoveDown | BreakDebris1] again sfx6
+left [Crate MoveLeft | Item] -> [Crate MoveDown | Item] again sfx7
+random left [Crate MoveLeft | No Item] -> [ | Crate MoveLeft] again
+
+
+(GEMS)
+
+(force waiting till no movement occurs - necessary for 4+ match)
+(I spent 3 hours trying to get this to work and it kept refusing to do so,
+hence I just turn the entire fucking background pink to do the job)
+late [Move][Background No MoveWait] -> [Move][Background MoveWait]
+
+(gem combos - marking "collect" avoids greedy verification)
+late [AGem No MoveWait | AGem No MoveWait | AGem No MoveWait] -> [AGem Collect | AGem Collect | AGem Collect]
+late [BGem No MoveWait | BGem No MoveWait | BGem No MoveWait] -> [BGem Collect | BGem Collect | BGem Collect]
+late [CGem No MoveWait | CGem No MoveWait | CGem No MoveWait] -> [CGem Collect | CGem Collect | CGem Collect]
+
+late [AGem Collect] -> [GemDebris1] sfx8 again
+late [BGem Collect] -> [GemDebris1] sfx8 again
+late [CGem Collect] -> [GemDebris1] sfx8 again
+
+(clear waiting flag)
+late [No Move][Background MoveWait] -> [No move][Background]
+
+(SPIKES + DEATH)
+
+[Blood4|Blood3] -> [|]
+[Blood3|] -> [Blood3 | Blood4] again
+[Blood2|] -> [Blood2 | Blood3] again
+[Blood1|] -> [Blood1 | Blood2] again
+late [Player Spike] -> [Blood1 Spike] again sfx4
+late [King Move] [Gem] -> [King Move] [GemDebris1] sfx8 again
+late [King Spike] -> [Blood1 Spike] again sfx4
+
+(clear orphaned move)
+late [No Crate Move] -> [No Crate No Move]
+
+==============
+WINCONDITIONS
+==============
+
+No Gem
+No Move
+No MoveWait
+No Debris
+No Blood1
+No Blood2
+No Blood3
+No King
+
+=======      
+LEVELS
+=======
+
+(LEVEL WORKSHOP)
+
+
+(
+
+
+cut weaker levels from the start because Stephen got bored
+
+
+#.dccccccccn
+#..dcccccrh#
+#...dcccci.#
+#h...dcscci#
+#.....hhhdcn
+#...o.....dn
+#...h..x..o#
+#.@.#..x.oo#
+#hhh#hhhhhh#
+
+#...dcccccn
+#....dccccn
+#...x@tcccn
+#...hhhdccn
+#....x..dcn
+#..hhhhh.dn
+#.........#
+#hhhhhhhhh#
+
+##dcccsccn
+##.dccsccn
+##..dclccn
+##h..hhdcn
+###...#.dn
+#@o...#hx#
+#hhhhh##h#
+
+(convoluted switch - faux difficulty from extending the task)
+
+#cccccccccn.dccccn
+#cccccccscn.odcccn
+#dccccchhdnhh.dccn
+#.dccsci..#...hdr#
+#..dhhdci.#...o..#
+#......dsi#..hhhh#
+#gg....hhdnh.....#
+#................#
+#.hh......hhh....#
+#.##..@..f###..hh#
+#h##hhhhhh###hh###
+
+(switch intro)
+
+#ccccccccccn
+#ccscccccccn
+#hhhhdcccccn
+#.....dcccr#
+#......dscn#
+#.......hh##
+#h...g..####
+#..o.g..####
+#hhhhg.x####
+#.@.f..h####
+#hhhhhh#####
+
+(trying out stuff from here on......)
+
+########w####
+##........###
+##...e.m..###
+##..hhhhh.###
+#.....#.....#
+#.....#..@..#
+#.....#.hhh.#
+#.....#.....#
+#aaaaa#aaaaa#
+#############
+
+#.y.y.y.y.#
+#.xyx.xyx.#
+#.hhh.hhh.#
+#.........#
+#gg.....gg#
+#.........#
+#.x..f@.x.#
+#hhhhhhhhh#
+
+
+#........wdccccc..#
+#............ccc..#
+#....o...x...occ..#
+#..#.888888888.#..#
+##...............##
+#..@...........e..#
+#####.#.#.#.#.#####
+###aaaaaaaaaaaaa###
+###hhhhhhhhhhhhh###)
+
+
+(THE GAME ----------------------------------)
+
+MESSAGE I must defeat the King of Dotcom tower.
+
+(you can kick)
+
+#dcccccccccccn
+#.dccccccccccn
+#..dscccccsccn
+#x..hdccccrdsn
+#x..#.dcccn.tn
+#hhh#..dhh#hh#
+#.......######
+#.....hh######
+#.....########
+#...hh########
+#.@.##########
+#hhh##########
+
+MESSAGE His gems are no match for my flying kick...
+
+MESSAGE AAAIIIAAAARRRGGGHHH!!!
+
+(you can push)
+
+#..dccccccccccn
+#.h.hdhdhdhdhdn
+#.x...x...x.@.#
+#hhhhhhhhhhhhh#
+
+MESSAGE z to undo
+
+####dsccccccn
+#@.x.hdscsccn
+#hhh.#.hdhdcn
+###x.......tn
+###hhhhhhhhh#
+
+MESSAGE r to restart
+
+(rocks intro)
+
+###dccsscn
+#...dchhcn
+#.x..dcccn
+#hh...hhh#
+###...####
+###....o@#
+###hhhhhh#
+
+(this one is easy, but I feel it may catch some people out)
+
+#...dcccccccn
+#....dccccccn
+#....otlccccn
+#.x..hhhdcccn
+#.x.@...odlln
+#hhhhhhhhhhh#
+
+(increpare style - can be broken at the start)
+
+#.dccccccccn
+#..dcccclccn
+#...dcccsccn
+#..x.drhhhh#
+#..o.......#
+#hhhhh.....#
+#.......o..#
+#.@..h..x..#
+#hhhh#hhhhh#
+
+(spawner intro)
+######w##
+#.......#
+#.......#
+#.....o.#
+#.e.@.x.#
+#hhhhhhh#
+
+#..dccccccn
+#..xdccbccn
+#h.y.dcscr#
+#..y.@dsci#
+#hhhhhhhhh#
+
+(abacus intro)
+##.x...8dccn
+##.8.....dcn
+##...8.x..tn
+##h..hhhhhh#
+##...#######
+##.....8@###
+##hhhhhhh###
+
+#.dcccccscn
+#..dcccclcn
+#x..tccclcn
+#hh.odcclcn
+###hhhdcrdn
+#.@.o..di.#
+#hhhhhhhhh#
+
+(springs intro)
+
+#dccccccn
+#.dcccccn
+#..tccscq
+#..hdcrh#
+p.x..di.#
+#hhhh.diq
+#......dn
+#.o..@..#
+#hhhhhhh#
+
+#dccccccccccn
+#.tscccccsscn
+#.hhhdccrhhdn
+#.....tci...#
+#....hhhdi..#
+#.xx.....tu.#
+#.hhh...hhh.#
+#.....@.....#
+#hhhhhhhhhhh#
+
+(abacus confidence)
+#...dcccn
+#....tccn
+#.x..8dcn
+#.8..x.dn
+#..@.8..#
+#hhhhhhh#
+
+####dccccn##
+####.dsccn##
+#@8...tccn##
+#hh8.88dcn##
+###..8..dn##
+###..h..x###
+###hh#hhh###
+
+##w###w##
+#...o...#
+#...x...#
+#...h...#
+#.@.e.o.#
+#hhhhhhh#
+
+#..dccccn
+#.o.tclcn
+p.8.8d9cn
+#.x.o.tcq
+#.8.8.8dn
+#...@...#
+#hhhhhhh#
+
+(2 cols)
+
+#dccccccccccccn
+#.tcbcscbcscbcn
+#.rdrdrdrdrdrdn
+#......@......#
+#hhhhhhhhhhhhh#
+
+(match 4 intro)
+
+#dccccccccccccn
+#.hdcccsccccrdn
+#.#.dscscsccn.#
+#....rdrdrdci.#
+#h..@......dcr#
+##hhhhhhhhhhh##
+
+#....dccn
+#.x.x.tcn
+#.8.8.8dn
+#.8.8.8.#
+#...@...#
+#hhhhhhh#
+
+#...dcccccccn
+#...ydcclcccn
+#...o.dcscccn
+#...y..dlcccn
+#...o...tcccn
+#...y...odccn
+#...o.@.x.dcn
+#hhhhhhhhhhh#
+
+(break blocks)
+
+#.d!clccn
+#..tc!ccn
+#..kdlccn
+#..x.?ccn
+#..k.odcn
+#..x.k.dn
+#..k@o..#
+#hhhhhhh#
+
+#.dcccccccn
+#..dccccbcn
+#...dsccbcn
+#.o..tcc!!n
+#.o..kdcccn
+#kk....dbcn
+#....x..?!n
+#.o..k...dn
+#kk....@..#
+#hhhhhhhhh#
+
+#....dccccn
+#.oyo.tlscn
+#.yoy.otlcn
+#.kkk.kk?cn
+#........dn
+#....@....#
+#hhhhhhhhh#
+
+(match 5 junction - easy once you know)
+
+#dcccndcccccccn
+#.dccn.tscccccn
+#..dcn.hhdccrdn
+#.x.di..#.dcn.#
+#.h..di....h#.#
+#.....di@..x..#
+#hhh...hhhhhhh#
+####.x.########
+####hhh########
+
+(3-cols, all pushing)
+##.....dcccccccn#
+##......dccccccn#
+#....o..@dclccci#
+#.h..y..y.dbccrdn
+#....x..x..tcci.#
+#h...z..z..zdccr#
+##hhhhhhhhhhhhh##
+
+(springs)
+
+#.dcccccccn
+#..dccccccn
+p.xydcccccn
+#hhh.dccccn
+#.....dbscq
+p.xy...hhh#
+#hhh......#
+#....@....#
+#hhhhhhhhh#
+
+#dbcbcbcbcn
+#.tbscsbscn
+#.hhhdrhhdn
+#.........#
+#gg.....gg#
+#.........#
+#.xf...@x.#
+#hhhhhhhhh#
+
+(dropping them to the floor is easiest)
+#..x.x.tccn
+#..8.8.8dcn
+#.8.8.8.8dn
+#..8.8.8..#
+#.8.8.8.8.#
+#..8.8.8..#
+#.8.8.8.8.#
+#....@....#
+#hhhhhhhhh#
+
+(spikes intro)
+
+###.tcccbcn##
+#...ydccsci.#
+#..@x.dcbcci#
+#.hhh..drhhdn
+#...........#
+#haaaaaaaaah#
+#############
+
+#...dcccccccn
+#.oxodccccccn
+#.hhh.dcccccn
+#.....gdslscn
+#....gg.hhhdn
+p.o.@.......#
+#hhhh.......#
+#...........q
+#.....o.f.hh#
+#...hhhhhh###
+#hhh#########
+
+(spikes)
+
+###.dcccccccccccn##
+###..dccccccccccn##
+###..otlcccslsccn##
+##..hhhhhdrhhhhdi##
+#...............di#
+#.@.aaaaa.aaaaa.od#
+#hhh#####h#####hhh#
+
+(possibly a slog)
+####w#w#w####
+##.........##
+##.........##
+##..@.x.x..##
+#...8.8.8...#
+#.....e.....#
+#hhhhhhhhhhh#
+
+(not sure how hard - took me a while to figure out, but probably trivial)
+
+##.dcscccbcccn#
+##..dbcccscccn#
+##...tcccbcccn#
+##...ydccscccn#
+##...x.dcbcccn#
+#....y.@dsccci#
+#...hhhhhhhdcc#
+#hhh#######hhh#
+
+(a bit tedious, not sure whether to cut or keep in for novelty)
+
+#...dcccccn
+#...ytbcccn
+#...xytcccn
+#...yxydccn
+#.@.xyx.dcn
+#.hhhhhhhdn
+#.#######.#
+#h#######h#
+
+message I can feel him nearby...
+
+#......@dcccccn
+p.....x8xdccccn
+#....x8.8xdcccq
+p...x8...8xdccn
+#..x8.....8xdcq
+p.x8.......8xdn
+#.8.........8.#
+#.............#
+#hhhhhhhhhhhhh#
+
+(multiple solutions - usually a 5 & 3)
+
+#..dccccccccn
+#...?c!c!cccn
+#k.kx?s!s!c!n
+#...kx?s!cccn
+#k.kxkx?s!c!n
+#...k.k.?cccn
+#.@......dccn
+#hhhhhhhhhhh#
+
+message He's here!
+
+(boss fight)
+########w####
+##........###
+##...e.m..###
+##..hhhhh.###
+#.....#.....#
+#.....#..@..#
+#.....#.hhh.#
+#.....#.....#
+#aaaaa#aaaaa#
+#############
+
+MESSAGE I have crushed his saga!
+
+MESSAGE No candy for you King Dotcom!
+
+MESSAGE He's no longer be-jewelled 'cause I popped his cap!
+
+MESSAGE I panelled his... de pon?
+
+MESSAGE ...
+
+MESSAGE Right. I'm off down the pub.
+
+

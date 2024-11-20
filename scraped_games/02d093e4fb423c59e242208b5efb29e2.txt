@@ -1,0 +1,153 @@
+title Stuffle
+author bregehr
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Wall
+#8a8e91 #7c8184 #82888c
+11000
+02210
+22002
+10001
+02112
+
+wallL
+#696e72
+....0
+....0
+....0
+....0
+....0
+
+wallU
+#9ba1a5
+00000
+.....
+.....
+.....
+.....
+
+wallR
+#c4cace
+0....
+0....
+0....
+0....
+0....
+
+wallD
+#5a5f63
+.....
+.....
+.....
+.....
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall and wallL and wallU and wallR and wallD
+
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+wallborder = wallL or wallU or wallD or wallU
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+wallL
+wallD
+wallU
+wallR
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+down [wall| no wall] -> [wall wallD |]
+up [wall| no wall] -> [wall wallU |]
+left [wall| no wall] -> [wall wallR |]
+right [wall| no wall] -> [wall wallL|]
+[wallborder no Wall] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######

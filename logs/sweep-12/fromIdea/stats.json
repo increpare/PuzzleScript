@@ -57,7 +57,7 @@
         },
         {
             "code": "title Mechanimal: Simplified Demake\nauthor OpenAI\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\n#ddeeff #aabbcc\n11111\n10101\n11111\n10101\n11111\n\nWall\n#223344 #112233\n11111\n10001\n10001\n10001\n11111\n\nPlayer\n#ffcc00 #ffffff #cc88ff #ddaaff\n.111.\n.1001\n12221\n.222.\n.....\n\nPart\n#666666 #999999\n.....\n.111.\n.111.\n.....\n.....\n\nMechanimal\n#44ee44 #88ee88\n.....\n.111.\n.101.\n.111.\n.....\n\nTarget\n#ff2200\n.....\n..0..\n.....\n.....\n\nBuiltMechanimal\n#2222ff #eeeeff #aabbff\n.222.\n.222.\n22222\n.222.\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\na = Part\nb = Mechanimal\nO = Target\nM = BuiltMechanimal\n\n=======\nSOUNDS\n=======\n\nPart MOVE 36005880\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Part, Mechanimal, BuiltMechanimal\n\n======\nRULES\n======\n\n[ > Player | Part ] -> [ > Player | > Part ]\n\n[ > Mechanimal | Part ] -> [ BuiltMechanimal | > Part ]\n\n[ > Player | Mechanimal ] -> [ > Player | > Mechanimal ]\n\n==============\nWINCONDITIONS\n==============\n\nall Target on BuiltMechanimal\n\n=======\nLEVELS\n=======\n\nmessage Help the Mechanimal reach its destination!\n#########\n#.......#\n#.O.b...#\n##....a.#\n#..P....#\n#.......#\n#########\n\nmessage Combine parts to create a path!\n#########\n#.......#\n#..O....#\n#..a....#\n#..b....#\n#.P.....#\n#########\n\nmessage Use your creations wisely!\n#########\n#.......#\n#....b..#\n#.O.#.a.#\n#...#...#\n#P......#\n#########\n\n",
-            "fitness": 39262,
+            "fitness": 32104,
             "compiledIters": [
                 9
             ],
@@ -66,7 +66,7 @@
         },
         {
             "code": "title Olive Odyssey\nauthor PuzzleScript Fan\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\n#556B2F\n\nOlive\ngreen\n..0..\n.000.\n.000.\n.000.\n..0..\n\nRecipeBook\nblack brown\n..0..\n.0.0.\n.0.0.\n.0.0.\n..0..\n\nPlayer\norange\n..0..\n.000.\n.0.0.\n.000.\n..0..\n\nPot\ngray\n.....\n.000.\n0...0\n0...0\n.000.\n\nDish\n#DAA520\n.....\n.....\n..0..\n.....\n.....\n\n=======\nLEGEND\n=======\n. = Background\nP = Player\nO = Olive\nR = RecipeBook\nT = Pot\nD = Dish\n\n======\nSOUNDS\n======\n\n================\nCOLLISIONLAYERS\n================\nBackground\nPlayer, Olive, RecipeBook, Pot, Dish\n\n======\nRULES\n======\n[> P | O] -> [> P | ]\n[right R | P] -> [R | > P]\n[ P | T | no D ] -> [ P | D | T ]\n\n==============\nWINCONDITIONS\n==============\n\nsome D\n\n=======\nLEVELS\n=======\n\nmessage Place the olive in the pot to create a dish!\n\n......\n..OT..\n......\n..PO..\n..R...\n\nmessage Level 2: Find, collect, and cook!\n\n....O..\nO..P...\n..T....\nR....O.\n.......\n\nmessage Level 3: Use your recipe book wisely!\n\n..O.P..\n......\n..TR...\n.......\nO......\n\n",
-            "fitness": 252,
+            "fitness": 10,
             "compiledIters": [
                 4,
                 5,
@@ -149,7 +149,7 @@
         },
         {
             "code": "title Dungeon Dimensions Demake\nauthor assistant\n\n========\nOBJECTS\n========\n\nBackground\ndarkgrey\n\nWall\ngray\n00000\n00000\n00000\n00000\n00000\n\nPlayer\nblack white\n.111.\n.111.\n.000.\n.111.\n.1.1.\n\nEnemy\nred\n.000.\n.000.\n00000\n.000.\n.0.0.\n\nPortal\npurple gray\n.....\n.000.\n.010.\n.000.\n.....\n\nAlternateBackground\ndarkblue\n\nAlternateWall\nblue gray\n00000\n11111\n01010\n11111\n00000\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\n@ = AlternateWall\nP = Player\nE = Enemy\nO = Portal\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nAlternateBackground\nPortal\nWall\nAlternateWall\nPlayer, Enemy\n\n======\nRULES\n======\n\n[ Player | Portal ] -> [ AlternateBackground Player | Portal ] \n[ Player | Enemy ] -> [ Player | Background ] \n\n[ > Player | Wall ] -> cancel\n[ > Player | AlternateWall ] -> cancel\n\n==============\nWINCONDITIONS\n==============\n\nno Enemy\n\n=======\nLEVELS\n=======\n\n#########\n#.......#\n#...E...#\n#.P...O.#\n#.......#\n#########\n\n.#######.\n.#.@..#.#\n.#O##E.##\n##.#..#.#\n#.P..##.#\n#######.#\n",
-            "fitness": 4,
+            "fitness": 15,
             "compiledIters": [
                 8
             ],
@@ -174,7 +174,7 @@
         },
         {
             "code": "title Tile Tactics Demake\nauthor AI\n\n========\nOBJECTS\n========\n\nBackground\nblack\n.....\n.....\n.....\n.....\n.....\n\nGrass\ngreen\n.....\n.0.0.\n.....\n.0.0.\n.....\n\nForest\ngreen darkgreen\n.....\n.....\n.111.\n.....\n.....\n\nMountain\ngray darkgray\n.....\n.....\n.111.\n.....\n.....\n\nSoldier\nyellow black\n.....\n..0..\n.111.\n..0..\n.....\n\nEnemy\nred black\n.....\n..0..\n.111.\n..0..\n.....\n\nRock\ngray\n.....\n.....\n.000.\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nG = Grass\nF = Forest\nM = Mountain\nP = Soldier\nE = Enemy\nR = Rock\n\nTerrain = Grass or Forest or Mountain\n\nPlayer = Soldier\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTerrain\nRock\nPlayer, Enemy\n\n======\nRULES\n======\n\n[ > P | ] -> [ | > P ]\n[ P | E ] -> [ P | ]\n[ E | P ] -> [ | P ]\n\n==============\nWINCONDITIONS\n==============\n\nno Enemy\n\n=======\nLEVELS\n=======\n\nmessage Use strategic tile placement to win!\n\nGRRRRRG\nR.....R\nR..P..R\nR..E..R\nR.....R\nGRRRRRG\n\nGFFFFFG\nF.....F\nF..P.EF\nF.....F\nFMFMFMF\nGFFFFFG\n\nMMGGFFG\nMF....F\nM.....F\nM..PE.F\nM.....F\nGRRRRRG\n",
-            "fitness": 12,
+            "fitness": 0,
             "compiledIters": [
                 7,
                 8
@@ -231,7 +231,7 @@
         },
         {
             "code": "title Railway Riddle\nauthor GameDesignerPro\nhomepage none\n\n========\nOBJECTS\n========\nBackground\n#bbbbbb\n\nPlayer\n#ffcc00\n..0..\n..0..\n..0..\n..0..\n..0..\n\nTrackHorizontal\n#000000\n.....\n00000\n.....\n.....\n.....\n\nTrackVertical\n#000000\n..0..\n..0..\n..0..\n..0..\n.....\n\nTrackCorner\n#000000\n....0\n..000\n..0..\n.....\n.....\n\nTown\n#00ff00\n..0..\n..000\n..000\n..0..\n.....\n\nObstacle\n#ff0000\n.....\n.000.\n.000.\n.000.\n.....\n\n========\nLEGEND\n========\n. = Background\nP = Player\nH = TrackHorizontal\nTV = TrackVertical\nC = TrackCorner\nT = Town\nX = Obstacle\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\nBackground\nPlayer\nTrackHorizontal, TrackVertical, TrackCorner\nTown, Obstacle\n\n======\nRULES\n======\n[right P | Background no T no X] -> [ > P | H ]\n[left P | Background no T no X] -> [ < P | H ]\n[up P | Background no T no X] -> [ ^ P | TV ]\n[down P | Background no T no X] -> [ v P | C ]\n\n[P T] -> [P T]\n\n==============\nWINCONDITIONS\n==============\nall P on T\n\n=======\nLEVELS\n=======\nmessage Connect the Towns!\nT..........\n....X......\n.....P.....\n....X......\n........T..\n\nmessage Navigate the obstacles!\nT...X......\n....X......\n..X.P......\n....X......\n.......T...\n\nmessage Another challenge awaits!\nT.....X....\n..X...X....\n..X...P..X.\n..X...X....\n......T..X.\n",
-            "fitness": 23,
+            "fitness": 1,
             "compiledIters": [
                 3,
                 4,
@@ -276,7 +276,7 @@
         },
         {
             "code": "title Tile Tactics Demake\nauthor Your Name\n\n========\nOBJECTS\n========\n\nBackground\nDarkGreen LightGreen\n11111\n11111\n11111\n11111\n11111\n\nSoldier\nYellow Orange\n.....\n..0..\n.111.\n..0..\n.....\n\nObjective\nRed\n.....\n.0.0.\n.000.\n.0.0.\n.....\n\nWall\nGray\n00000\n00000\n00000\n00000\n00000\n\nWater\nBlue\n00000\n00000\n00000\n00000\n00000\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Soldier\nO = Objective\n# = Wall\n~ = Water\nplayer = Soldier\n\n=======\nSOUNDS\n=======\n\n# Soldier MOVE (placeholder sound references)\n# Soldier WIN  (placeholder sound references)\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nObjective\nWall, Water\nSoldier\n\n======\nRULES\n======\n\n[ > Soldier | Objective ] -> [ > Soldier | > Objective ]\n[ Soldier | Water ] -> [ Soldier | Water ]\n\n==============\nWINCONDITIONS\n==============\n\nall Objective on Soldier\n\n=======\nLEVELS\n=======\n\nmessage Simple Positioning\n#######\n#.....#\n#..O..#\n#..P..#\n#.....#\n#######\n\nmessage Using Obstacles\n#######\n#.....#\n#O###.#\n#..P..#\n#.....#\n#######\n\nmessage Avoid Water\n#######\n#..O..#\n#~.~.~#\n#..P..#\n#~.~.~#\n#######\n\n",
-            "fitness": 55,
+            "fitness": 5,
             "compiledIters": [
                 6
             ],
@@ -287,7 +287,7 @@
         },
         {
             "code": "title Crops & Knights\nauthor YourName\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nlightgreen\n\nPlayer\nblue\n..0..\n.000.\n00.00\n..0..\n.....\n\nSoil\nbrown\n.....\n.....\n..0..\n.....\n.....\n\nSeed\nyellow\n.....\n..0..\n.....\n.....\n.....\n\nSprout\nyellowgreen\n.....\n.....\n..0..\n.....\n.....\n\nCrop\ngreen\n.....\n..0..\n.....\n.....\n.....\n\nCastle\ndarkgray\n.000.\n0...0\n0...0\n0...0\n.000.\n\nWall\ndarkbrown lightbrown\n11111\n11111\n11111\n11111\n11111\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\ns = Soil\nd = Seed\nr = Sprout\nc = Crop\n# = Wall\nH = Castle\n\n=========\nSOUNDS\n=========\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nCastle, Wall\nPlayer, Soil, Seed, Sprout, Crop\n\n======\nRULES\n======\n\n[ Player | Soil ] -> [ Player | Seed ] \n[ Player | Seed ] -> [ Player | Sprout ]\n[ Player | Sprout ] -> [ Player | Crop ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Castle on Crop\n\n=======\nLEVELS\n=======\n\nmessage Level 0: Grow crops on the castle!\n\n#.##H..####\n##......d.#\n#d..P..c..H\n##........#\n#...###..##\n\nmessage Level 1: Continue your farming strategy!\n\n#.##...c####\n##...d.....#\n##.#r..#...#\n#H..d.c##.P#\n#####...####\n\nmessage Level 2: Protect the castle!\n\n######\n#d..H#\n#r.Pd#\n##...#\n######\n\nmessage Level 3: More crops, more power!\n\n#H#c##H##cH#\n##...r.d...#\n##...P.....#\n#rrrr.c#rrrr\n#####..#####\n\nmessage Level 4: Tactics and growth!\n\n#####\n#d..#\n#HPr#\n#...#\n#####\n\nmessage Level 5: Balance the growth!\n\n######\n#H.d.#\n#..P.#\n#..r.#\n######\n\nmessage Level 6: Defend with produce!\n\n######\n#P.dH#\n#..r.#\n#...d#\n######\n\nmessage Level 7: Strategy wins wars!\n\n######\n#Hd.P#\n##..r#\n#..d.#\n######\n\n",
-            "fitness": 12098,
+            "fitness": 94,
             "compiledIters": [
                 3,
                 4,
@@ -308,7 +308,7 @@
         },
         {
             "code": "title Pirate Plunge\nauthor You\n\n========\nOBJECTS\n========\n\nBackground\nblue\n.....\n.....\n.....\n.....\n.....\n\nPlayer\nwhite\n..0..\n.000.\n.0.0.\n.000.\n..0..\n\nTreasure\nyellow\n..0..\n.000.\n.000.\n.000.\n..0..\n\nBuccaneer\nred\n..0..\n.000.\n.000.\n.000.\n..0..\n\nSea\nlightblue\n.....\n.....\n.....\n.....\n.....\n\nIsland\ngreen\n.....\n.....\n.....\n.....\n.....\n\nShiftingSea\nlightblue\n.....\n.....\n.....\n.....\n.....\n\nWall\nblack\n#####\n#####\n#####\n#####\n#####\n\n=======\nLEGEND\n=======\n\n. = Sea\nP = Player\nT = Treasure\nB = Buccaneer\nS = ShiftingSea\nI = Island\n# = Wall\n\n=======\nSOUNDS\n=======\n# Sounds are commented out to avoid parsing errors\n# SFX0 00000000\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nSea, Island, ShiftingSea\nTreasure\nPlayer, Buccaneer\nWall\n\n======\nRULES\n======\n\n[> Player | Sea] -> [> Player | Sea]\n[< Player | Sea] -> [< Player | Sea]\n[^ Player | Sea] -> [^ Player | Sea]\n[v Player | Sea] -> [v Player | Sea]\n\nRANDOM [> Buccaneer | Sea] -> [> Buccaneer | Sea]\nRANDOM [< Buccaneer | Sea] -> [< Buccaneer | Sea]\n\n[Player | Treasure] -> [Player | Sea]\n\nRANDOM [ShiftingSea] -> [Island]\nRANDOM [Island] -> [Sea]\n\n==============\nWINCONDITIONS\n==============\n\nNo Treasure\n\n=======\nLEVELS\n=======\n\n#######\n#...T.#\n#..I..#\n#P.S.I#\n#..S..#\n#B...T#\n#######\n",
-            "fitness": 31,
+            "fitness": 150,
             "compiledIters": [
                 7
             ],
@@ -337,7 +337,7 @@
         },
         {
             "code": "title Haunted Hues\nauthor YourName\nhomepage YourHomepage\n\n========\nOBJECTS\n========\n\nBackground\nlightgrey grey\n11111\n11111\n11111\n11111\n11111\n\nWall\nblack darkgrey\n00000\n00000\n00000\n00000\n00000\n\nPlayer\nred orange white\n.111.\n.100.\n.111.\n..1..\n.....\n\nColorTileLocked\ndarkgrey grey\n.....\n..0..\n.000.\n..0..\n.....\n\nColorTileUnlocked\nyellow yellow\n.....\n..0..\n.000.\n..0..\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nL = ColorTileLocked\nU = ColorTileUnlocked\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nWall\nColorTileUnlocked, ColorTileLocked\nPlayer\n\n======\nRULES\n======\n\n[ P | L ] -> [ P | U ]\n\n==============\nWINCONDITIONS\n==============\n\nno L\n\n=======\nLEVELS\n=======\n\n##########\n#........#\n#..####..#\n#..#UL#..#\n#..#LUP..#\n#..####..#\n#........#\n##########\n\n",
-            "fitness": 46,
+            "fitness": 2,
             "compiledIters": [
                 1,
                 2,
@@ -350,7 +350,7 @@
         },
         {
             "code": "title Dimension Flip: Dungeon Dimensions\nauthor Your Name\nhomepage Your Homepage\n\n========\nOBJECTS\n========\n\nBackground\nlightblue\n\nWall\ndarkgrey\n\nPlayer\nyellow\n.000.\n.000.\n00000\n.000.\n.0.0.\n\nPlayerInAlt\npink\n.000.\n.000.\n00000\n.000.\n.0.0.\n\nPortal\npurple white\n.....\n..0..\n.010.\n..0..\n.....\n\nEnemy\nred\n.....\n.0.0.\n.000.\n.0.0.\n.....\n\nEnemyInAlt\ndarkred\n.....\n.0.0.\n.000.\n.0.0.\n.....\n\nAltWall\ndarkgreen\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\n% = AltWall\n@ = Player\nA = PlayerInAlt\nP = Portal\nE = Enemy\nF = EnemyInAlt\n\n=======\nSOUNDS\n=======\n\nsfx0 50020005 (Portal Activate)\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPortal, Wall, AltWall\nPlayer, PlayerInAlt, Enemy, EnemyInAlt\n\n======\nRULES\n======\n\n[ > Player | Portal ] -> [ PlayerInAlt | Portal ] sfx0\n[ > PlayerInAlt | Portal ] -> [ Player | Portal ] sfx0\n\n[ PlayerInAlt | AltWall ] -> [ PlayerInAlt | AltWall ] \n\n[ Player | Enemy ] -> restart\n[ PlayerInAlt | EnemyInAlt ] -> restart\n\n==============\nWINCONDITIONS\n==============\n\nAll Player on Portal\n\n=======\nLEVELS\n=======\n\nmessage Welcome to Dimension Flip! Use portals to switch dimensions.\n##########\n#....E...#\n#....#...#\n#P...@...P#\n#....#...#\n#....E...#\n##########\n\nmessage Guide the player to the portal.\n##########\n#...F....#\n#...%....#\n#P...A...#\n#...%....#\n#...F....#\n##########\n",
-            "fitness": 3,
+            "fitness": 0,
             "compiledIters": [
                 6
             ],
@@ -361,7 +361,7 @@
         },
         {
             "code": "title Mechanimal: Assembly Adventure\nauthor YourName\nhomepage www.example.com\n\n========\nOBJECTS\n========\n\nBackground\nLIGHTBLUE LIGHTGREEN\n11111\n01111\n11101\n11111\n10111\n\nPlayer\nBLACK ORANGE WHITE BLUE\n.000.\n.111.\n22222\n.333.\n.3.3.\n\nPart\nDARKGRAY\n.....\n.000.\n..0..\n.000.\n.....\n\nMechanimal\nYELLOW\n..0..\n.000.\n.0.0.\n.000.\n..0..\n\nWater\nLIGHTBLUE\n.....\n.....\n.000.\n.....\n.....\n\nBlock\nORANGE\n00000\n0...0\n0...0\n0...0\n00000\n\nTarget\nRED PINK\n.....\n..1..\n.1.1.\n..1..\n.....\n\nWall\nGRAY\n00000\n00000\n00000\n00000\n00000\n\n=======\nLEGEND\n=======\n\nP = Player\nM = Mechanimal\nW = Water\nB = Block\n. = Background\nX = Target\no = Part\n# = Wall\n\n=======\nSOUNDS\n=======\n\nsfx0 12345678\nsfx1 87654321\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nWater, Target, Wall\nPlayer, Part, Mechanimal, Block\n\n======\nRULES\n======\n\n[ > Player | Part ] -> [ > Player | > Part ] sfx0\n\n[ Player | Part | Part ] -> [ Player | Mechanimal | ] sfx1\n\n[ > Player | Mechanimal ] -> [ > Player | > Mechanimal ]\n\n[ > Mechanimal | Block ] -> [ > Mechanimal | > Block ]\n\n[ Mechanimal | Water ] -> [ Mechanimal | Water ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Target on Mechanimal\n\n=======\nLEVELS\n=======\n\n#########\n#.......#\n#..P....#\n#..o.o..#\n#..W....#\n#..B.X..#\n#########\n\n",
-            "fitness": 800,
+            "fitness": 382,
             "compiledIters": [
                 2
             ],

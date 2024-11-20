@@ -1,0 +1,294 @@
+OBJECTS
+
+BackgroundBLACK
+PlayerBLACK
+OneBLUE RED00000
+00000
+00100
+00000
+00000
+
+TwoBLUE RED00000
+01000
+00000
+00010
+00000
+
+ThreeBLUE RED00000
+01000
+00100
+00010
+00000
+
+FourBLUE RED00000
+01010
+00000
+01010
+00000
+
+FiveBLUE RED00000
+01010
+00100
+01010
+00000
+
+SixBLUE RED00000
+01010
+01010
+01010
+00000
+
+SevenBLUE RED00000
+01010
+01110
+01010
+00000
+
+EightBLUE RED00000
+01110
+01010
+01110
+00000
+
+OneMTRANSPARENT
+FourMTRANSPARENT
+SevenMTRANSPARENT
+DeleterTRANSPARENT
+
+
+
+LEGEND
+
+. = Background
+1 = One
+2 = Two
+3 = Three
+4 = Four
+5 = Five
+6 = Six
+7 = Seven
+8 = Eight
+@ = Player
+Tile = One or Two or Three or Four or Five or Six or Seven or Eight
+
+COLLISIONLAYERS
+
+Background
+Player, Tile
+OneM, FourM
+SevenM, Deleter
+
+RULES
+
+[ < Player | Tile ] -> [ Tile | Player ] 
+RIGHT [ One | Two | Three ] -> [ OneM | Two | Three ] 
+RIGHT [ Four | Five | Six ] -> [ FourM | Five | Six ] 
+RIGHT [ Seven | Eight | Player ] -> [ SevenM | Eight | Player ] 
+DOWN [ OneM | FourM | SevenM ] -> [ Deleter | Deleter | Deleter ] 
+[ Deleter | ... | Tile ] -> [ Deleter | ... |  ] 
+[ OneM ] -> [ One ] 
+[ FourM ] -> [ Four ] 
+[ SevenM ] -> [ Seven ] 
+
+
+WINCONDITIONS
+
+NO Tile
+
+LEVELS
+
+2@3
+146
+758
+
+23@
+148
+765
+
+385
+217
+4@6
+
+@51
+837
+426
+
+@61
+387
+542
+
+172
+384
+56@
+
+@81
+324
+567
+
+712
+48@
+356
+
+148
+@75
+326
+
+@85
+463
+721
+
+461
+7@2
+835
+
+546
+732
+18@
+
+574
+813
+62@
+
+536
+74@
+812
+
+248
+71@
+563
+
+134
+@56
+278
+
+642
+35@
+187
+
+286
+@75
+341
+
+15@
+728
+346
+
+@73
+862
+451
+
+762
+5@8
+341
+
+635
+@27
+418
+
+823
+145
+7@6
+
+613
+485
+@72
+
+687
+143
+@52
+
+76@
+513
+248
+
+256
+743
+81@
+
+174
+265
+38@
+
+385
+462
+@17
+
+415
+7@3
+628
+
+375
+28@
+146
+
+817
+53@
+624
+
+51@
+687
+234
+
+5@1
+234
+867
+
+781
+453
+62@
+
+@65
+278
+341
+
+647
+125
+@83
+
+314
+25@
+876
+
+5@6
+137
+284
+
+285
+471
+63@
+
+654
+321
+8@7
+
+865
+1@7
+243
+
+135
+@84
+726
+
+643
+2@5
+781
+
+157
+@82
+364
+
+8@1
+647
+352
+
+163
+7@4
+852
+
+178
+532
+46@
+
+431
+726
+85@

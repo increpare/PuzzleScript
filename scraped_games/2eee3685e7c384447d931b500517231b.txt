@@ -1,0 +1,639 @@
+title Boolean Bloom 0.37
+author vexorian
+homepage vexorian.com
+(require_player_movement)
+again_interval 0.1
+run_rules_on_level_start
+(debug
+verbose_logging)
+
+========
+OBJECTS
+========
+
+Background
+#446E14 #497715
+00000
+01000
+00000
+00010
+00000
+
+Background2
+black
+
+Wall
+#D6920A #926407
+01000
+11111
+00010
+00010
+11111
+
+PlayerFront
+#291F30 #FF8E65 #8488D3 #8DDB34
+.000.
+.111.
+02220
+03230
+.0.0.
+
+PlayerFrontSkip1
+#291F30 #FF8E65 #8488D3 #8DDB34
+.000.
+.111.
+02220
+03230
+.0.0.
+
+PlayerFrontSkip0
+#291F30 #FF8E65 #8488D3 #8DDB34
+.000.
+.111.
+02220
+03230
+.0.0.
+
+
+
+PlayerRight
+#291F30 #FF8E65 #8488D3 #8DDB34
+.000.
+.011.
+02220
+02230
+.0.0.
+
+PlayerLeft
+#291F30 #FF8E65  #8488D3 #8DDB34
+.000.
+.110.
+02220
+03220
+.0.0.
+
+
+Goal
+#C93600 #A12B00
+01010
+1...1
+0...0
+1...1
+01010
+
+Button
+#CFD3C1
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+Block
+#A9AC9D #CFD3C1 #878A7E #3C2E47
+.111.
+10103
+11023
+10203
+.333.
+
+
+Door
+#574368
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+ClosedDoor
+#3C2E47
+.0.0.
+00000
+.0.0.
+00000
+.0.0.
+
+
+NegaDoor
+Blue White
+11111
+11001
+11111
+10011
+11111
+
+ClosedNegaDoor
+Blue Black
+11111
+10011
+11111
+11001
+11111
+
+Trap
+#574368
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+ClosedTrap
+#3C2E47
+.0.0.
+00000
+.0.0.
+00000
+.0.0.
+
+
+NegaTrap
+Blue
+.....
+.0...
+.0.0.
+...0.
+.....
+
+ClosedNegaTrap
+Blue Black
+11111
+11101
+10101
+10111
+11111
+
+PlantHeadRight
+#ED3F00 #8ddb34 #f8c868 Pink #3C2E47 #3C2E47 ( #FF6026 )
+.55..
+5005.
+13204
+4004.
+.44..
+
+PlantHeadRightOff
+#ED3F00 #8ddb34 #f8c868 Pink #3C2E47 #3C2E47 ( #FF6026 )
+.55..
+5005.
+13204
+4004.
+.44..
+
+
+PlantHeadLeft
+#ED3F00 #8ddb34 #f8c868 Pink #3C2E47 #3C2E47 ( #FF6026 )
+..55.
+.5005
+40231
+.4004
+..44.
+
+PlantHeadLeftOff
+#ED3F00 #8ddb34 #f8c868 Pink #3C2E47 #3C2E47 ( #FF6026 )
+..55.
+.5005
+40231
+.4004
+..44.
+
+
+
+PlantHeadUp
+#ED3F00 #8ddb34 #f8c868 Pink #3C2E47 #3C2E47 ( #FF6026 )
+..5..
+.505.
+50204
+50304
+.414.
+
+PlantHeadUpOff
+#ED3F00 #8ddb34 #f8c868 Pink #3C2E47 #3C2E47 ( #FF6026 )
+..5..
+.505.
+50204
+50304
+.414.
+
+PlantHeadDown
+#ED3F00 #8ddb34 #f8c868 Pink #3C2E47 #3C2E47 ( #FF6026 )
+.514.
+50304
+50204
+.504.
+..4..
+
+PlantHeadDownOff
+#ED3F00 #8ddb34 #f8c868 Pink #3C2E47 #3C2E47 ( #FF6026 )
+.514.
+50304
+50204
+.504.
+..4..
+
+
+
+PlantHorizontal
+#6AA427 #3C2E47 #8ddb34
+..2..
+22022
+00000
+10111
+.1...
+
+PlantVertical
+#6AA427 #3C2E47 #8ddb34
+.201.
+2001.
+.201.
+.2001
+.201.
+
+GoalTic0
+transparent
+
+GoalTic1
+transparent
+
+OpenMarker
+transparent
+
+WallBottomBorder
+#3C2E47
+.....
+.....
+.....
+.....
+00000
+
+WallRightBorder
+#3C2E47
+....0
+....0
+....0
+....0
+....0
+
+WallTopBorder
+#f8c868 
+00000
+.....
+.....
+.....
+.....
+
+WallLeftBorder
+#f8c868 
+0....
+0....
+0....
+0....
+0....
+
+
+=======
+LEGEND
+=======
+P = PlayerFront and Background
+# = Wall 
+. = Background
+: = Background2
+X = Button and Background
+o = Block and Background
+D = Door and Background
+N = NegaDoor
+T = Trap and Background
+M = NegaTrap
+> = PlantHeadRight and Background
+< = PlantHeadLeft and Background
+v = PlantHeadDown and Background
+^ = PlantHeadUp and Background
+
+@ = Goal and Background
+% = Goal and Block and Background
+
+Player = PlayerFront or PlayerRight or PlayerLeft or PlayerFrontSkip1 or PlayerFrontSkip0
+WithCollision = Player or Wall or Block or PlantHeadRight or PlantHorizontal or PlantVertical or PlantHeadRightOff or PlantHeadLeft or PlantHeadLeftOff or PlantHeadUp or PlantHeadUpOff or PlantHeadDown or PlantHeadDownOff
+Closed = ClosedDoor or ClosedNegaDoor or ClosedTrap or ClosedNegaTrap
+DoorOrTrap = Door or NegaDoor or Trap or NegaTrap
+WithCollisionOrClosed = WithCollision or Closed
+
+Flower = PlantHeadRight or PlantHeadRightOff or PlantHeadLeft or PlantHeadLeftOff or PlantHeadUp or PlantHeadUpOff or PlantHeadDown or PlantHeadDownOff
+
+Pusher = Player or Block
+Heavy = Player or Block or Flower or PlantHorizontal or PlantVertical
+
+=======
+SOUNDS
+=======
+
+SFX0 5276507 (growth)
+SFX1 13577907 (push plant)
+SFX2 6565307 (push rock)
+SFX3 73560700 (goal)
+SFX4 9898706 (ungoal)
+SFX5 80397904 (door)
+SFX6 64824904 (no door)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Background2
+Button
+Door, NegaDoor, Trap, NegaTrap
+WithCollisionOrClosed 
+Goal
+GoalTic0
+GoalTic1
+OpenMarker
+WallLeftBorder
+WallBottomBorder
+WallRightBorder
+WallTopBorder
+
+======
+RULES
+======
+
+left [ > Player no PlayerLeft  ] -> [ > PlayerLeft ]
+right [ > Player no PlayerRight ] -> [ > PlayerRight ]
+vertical [ > Player no PlayerFront ] -> [ > PlayerFront ]
+
+
+[ > Pusher | Block ] -> [ > Pusher | > Block ] SFX2
+left [ > Pusher | PlantHeadRight | PlantHorizontal ] -> [  | Pusher | PlantHeadRight ] SFX1
+right [ > Pusher | PlantHeadLeft | PlantHorizontal ] -> [  | Pusher | PlantHeadLeft ] SFX1
+up [ > Pusher | PlantHeadDown | PlantVertical ] -> [  | Pusher | PlantHeadDown ] SFX1
+down [ > Pusher | PlantHeadUp | PlantVertical ] -> [  | Pusher | PlantHeadUp ] SFX1
+
+
+( Nega-door logic :)
+late [ ClosedNegaDoor] -> []
+late [ NegaDoor No WithCollision ] -> [ NegaDoor ClosedNegaDoor ]
+late [ ClosedNegaDoor ][ Button No Heavy ] -> [][ Button ]
+
+( Door logic :)
+late [ ClosedDoor ] -> []
+late [ Door No ClosedDoor No WithCollision ][ Button No Heavy ] -> [ Door ClosedDoor ][ Button ]
+
+( Trap logic :)
+late [ ClosedTrap ] -> []
+late [ Trap No ClosedTrap No WithCollision ][ Button Heavy ] -> [ Trap ClosedTrap][ Button Heavy ]
+
+( Nega-Trap logic:  )
+late [ ClosedNegaTrap ] -> []
+late [ NegaTrap No WithCollision ] -> [ NegaTrap ClosedNegaTrap ]
+late [ ClosedNegaTrap ][ Button Heavy ] -> [  ][ Button Heavy ]
+
+
+( Door SFX)
+late [ OpenMarker Closed ] -> [ Closed ] sfx5
+late [ DoorOrTrap No Closed No OpenMarker] -> [ DoorOrTrap OpenMarker ] sfx6
+
+(Some tweeks to plant growth race conditions so that they are smarter)
+
+( Prioritize plant entering goal: )
+
+late right [ PlantHeadRight No Goal | Goal No WithCollisionOrClosed ] -> [ PlantHorizontal | PlantHeadRightOff Goal ]
+late left [ PlantHeadLeft No Goal | Goal No WithCollisionOrClosed ] -> [ PlantHorizontal | PlantHeadLeftOff Goal ]
+late up [ PlantHeadUp No Goal | Goal No WithCollisionOrClosed ] -> [ PlantVertical | PlantHeadUpOff Goal ]
+late down [ PlantHeadDown No Goal | Goal No WithCollisionOrClosed ] -> [ PlantVertical | PlantHeadDownOff Goal ]
+
+
+
+
+(Plant growth)
+
+late right [ PlantHeadRight |  No WithCollisionOrClosed ] -> [ PlantHorizontal | PlantHeadRightOff ]
+late [ PlantHeadRightOff ] -> [ PlantHeadRight ] again SFX0
+
+late left [ PlantHeadLeft |  No WithCollisionOrClosed ] -> [ PlantHorizontal | PlantHeadLeftOff ]
+late [ PlantHeadLeftOff ] -> [ PlantHeadLeft ] again SFX0
+
+late up [ PlantHeadUp |  No WithCollisionOrClosed ] -> [ PlantVertical | PlantHeadUpOff ]
+late [ PlantHeadUpOff ] -> [ PlantHeadUp ] again SFX0
+
+late down [ PlantHeadDown |  No WithCollisionOrClosed ] -> [ PlantVertical | PlantHeadDownOff ]
+late [ PlantHeadDownOff ] -> [ PlantHeadDown ] again SFX0
+
+
+
+(Goals)
+
+late [ GoalTic0 No Flower ] -> [  ]
+late [ GoalTic1 No Flower ] -> [  ] SFX4
+
+
+late [ GoalTic0 Goal Flower No GoalTic1 ] -> [ GoalTic0 GoalTic1 Goal Flower ] SFX3
+late [ Goal Flower ] -> [ GoalTic0 Goal Flower ] again
+
+(Decorating walls)
+down [ wall | no wall ] -> [ wall WallBottomBorder | ]
+right [ wall | no wall ] -> [ wall WallRightBorder | ]
+left [ wall | no wall ] -> [ wall WallLeftBorder | ]
+up [ wall | no wall ] -> [ wall WallTopBorder | ]
+
+( skip )
+
+[ action Player no PlayerFrontSkip0  no PlayerFrontSkip1 ] -> [ PlayerFrontSkip0 ] sfx4
+
+[ action PlayerFrontSkip0  ] -> [ PlayerFrontSkip1 ] sfx4
+[ action PlayerFrontSkip1  ] -> win
+
+
+==============
+WINCONDITIONS
+==============
+
+All Goal on GoalTic1
+
+=======
+LEVELS
+=======
+
+(::::::::::::::::::::::
+:###################@:
+:######.............#:
+:######....t........#:
+:#............t.....#:
+:#.....#>....<#.....#:
+:#.........t....tt..#:
+:#>..o.o.op..........#:
+:#..................#:
+:#........###########:
+:#x..^....Do......@<#:
+:####################:
+::::::::::::::::::::::)
+
+
+
+Message Welcome Gardener
+Message Please make sure all flowers stay in the assigned locations.
+Message Use direction keys to move, press U to undo and R to restart.
+Message Press X three times in a row to skip the level.
+
+Message 1
+::::::::::::::
+:############:
+:#..........#:
+:#>...oo.@..#:
+:#....oo....#:
+:#..........#:
+:#>@P.o.....#:
+:#..........#:
+:############:
+::::::::::::::
+
+Message 2
+
+::::::::::::::::::::::
+:###################::
+:########.........##::
+:#....###....P.#..##::
+:#>...D.D@.#.ooo..##::
+:#....###....#x#..##::
+:########.........##::
+:###################::
+::::::::::::::::::::::
+
+
+Message 3
+::::::::::::::
+:############:
+:#......v...#:
+:#..........#:
+:#..#@..o..<#:
+:#..........#:
+:#......P.@.#:
+:#...###....#:
+:#...vv#.#^.#:
+:#.#.ooo.####:
+:#...@@.#####:
+:############:
+::::::::::::::
+
+
+Message 4
+:::::::::::::::::::
+:#################:
+:########...#..v.#:
+:########...T..o.#:
+:##.........#.o@##:
+:##.........#...##:
+:###.####.P.######:
+:#>..oo.D......@.#:
+:###..#.D....#...#:
+:####...#..X.#...#:
+:#################:
+:::::::::::::::::::
+
+
+
+(::::::::::::::::::::
+:##################:
+:#>...@...d.......#:
+:###########......#:
+:#................#:
+:#>.@@...oo..<##px#:
+:#............##.x#:
+:#............##..#:
+:##################:
+::::::::::::::::::::)
+
+Message 5
+::::::::::::::::::::
+:##################:
+:########.#########:
+:#>......o@.......#:
+:########.##.P....#:
+:#.....@......o..<#:
+:#>.@@...oo..<##..#:
+:#............##..#:
+:#............##@.#:
+:###############^##:
+:##################:
+::::::::::::::::::::
+
+
+Message 6
+::::::::::::::::::::
+:##################:
+:#..........##..@##:
+:#.....#.#..v....##:
+:#>..o##....o..#.##:
+:#.....##....##.o##:
+:#......o.P.......#:
+:##X#...........^##:
+:##X#...^..#D######:
+:##X###.#.##.######:
+:#####..o..#.######:
+:#######^###@######:
+:##################:
+::::::::::::::::::::
+
+
+Message 7
+:::::::::::::::::
+:###############:
+:#.........v...#:
+:#......P......#:
+:#.%<#.........#:
+:#.%<#.....o..<#:
+:##.##..o....@.#:
+:##.##>.o.@....#:
+:##.##@.o<#....#:
+:##@##....#..^.#:
+:##^####.#######:
+:###############:
+:::::::::::::::::
+
+
+Message 8
+:::::::::::::::::::::::::
+:#######################:
+:###...o...#############:
+:#....#.#.##############:
+:#>.o@#^#..v.#.....#.o.#:
+:#....###..o.#.P...#...#:
+:###>.D.D@...T.....D...#:
+:#....###..o.T.....#.@.#:
+:########..@.#.#x#.#.^.#:
+:#######################:
+:::::::::::::::::::::::::
+
+
+(
+::::::::::::::::::::
+:##################:
+:#.P........##..@##:
+:#.....#.#..v....##:
+:#>..o##....o..#.##:
+:#.....##....##.o##:
+:#>o.@..o.........#:
+:#>o.@......@...^##:
+:#>o.@..^..########:
+:##.###.#.#########:
+:##.##..o..########:
+:##.####^##########:
+:##################:
+::::::::::::::::::::
+)
+
+
+Message 9
+::::::::::::::::::::::
+:####################:
+:#T.....@........D.<#:
+:#X#...@.........D.<#:
+:#T...@..........D.<#:
+:###>..oo....@..<####:
+:#>...o..o......<####:
+:#>..o..@.o.....<####:
+:#>.o..P...o....<####:
+:####################:
+::::::::::::::::::::::
+
+Message Well done!
+

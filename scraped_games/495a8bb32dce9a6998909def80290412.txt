@@ -1,0 +1,919 @@
+title Al's Egg Roll
+author Ali Nikkhah
+
+run_rules_on_level_start
+
+again_interval 0.11
+
+========
+OBJECTS
+========
+
+Background
+Brown DarkBrown
+10010
+01000
+00000
+00101
+01000
+
+GroundTR
+Brown
+....0
+.....
+.....
+.....
+.....
+
+GroundTL
+Brown
+0....
+.....
+.....
+.....
+.....
+
+GroundBR
+Brown
+.....
+.....
+.....
+.....
+....0
+
+GroundBL
+Brown
+.....
+.....
+.....
+.....
+0....
+
+GroundU
+#5555ff #aaaaff #7a4b27 #8d5725
+23232
+32323
+00000
+00110
+10000
+
+GroundR
+#5555ff #aaaaff #7a4b27 #8d5725
+00032
+01123
+00032
+00123
+10032
+
+GroundD
+#5555ff #aaaaff #7a4b27 #8d5725
+00001
+01100
+00000
+23232
+32323
+
+GroundL
+#5555ff #aaaaff #7a4b27 #8d5725
+32001
+23100
+32000
+23110
+32000
+
+Wall 
+#d09050 #c08040
+.0.0.
+01010
+.0.0.
+01010
+.0.0.
+
+NormalBaby
+#fda green #00008c
+..1..
+..0..
+02020
+.222.
+.2.2.
+
+Water
+#5555ff #aaaaff
+00001
+01100
+00000
+00110
+10000
+
+WaterTR
+#5555ff
+....0
+.....
+.....
+.....
+.....
+
+WaterTL
+#5555ff
+0....
+.....
+.....
+.....
+.....
+
+WaterBR
+#5555ff
+.....
+.....
+.....
+.....
+....0
+
+WaterBL
+#5555ff
+.....
+.....
+.....
+.....
+0....
+
+Egg1
+White #808080 #909090 #a0a0a0 #c0c0c0 #e0e0e0 #f0f0f0
+.00..
+0064.
+66531
+5542.
+.43..
+
+CrackedEgg1
+White #808080 #909090 #a0a0a0 #c0c0c0 #e0e0e0 #f0f0f0 Black
+.00..
+0764.
+66731
+5542.
+.43..
+
+Egg2 
+White #808080 #909090 #a0a0a0 #c0c0c0 #e0e0e0 #f0f0f0
+.005.
+66642
+55431
+.432.
+..3..
+
+CrackedEgg2
+White #808080 #909090 #a0a0a0 #c0c0c0 #e0e0e0 #f0f0f0 Black
+.005.
+66672
+55731
+.432.
+..3..
+
+Egg3
+White #808080 #909090 #a0a0a0 #c0c0c0 #e0e0e0 #f0f0f0
+..06.
+.6653
+55542
+.4431
+..32.
+
+CrackedEgg3
+White #808080 #909090 #a0a0a0 #c0c0c0 #e0e0e0 #f0f0f0 Black
+..06.
+.6653
+55742
+.4471
+..32.
+
+Egg4
+White #808080 #909090 #a0a0a0 #c0c0c0 #e0e0e0 #f0f0f0
+..0..
+.065.
+66542
+55431
+.432.
+
+CrackedEgg4
+White #808080 #909090 #a0a0a0 #c0c0c0 #e0e0e0 #f0f0f0 Black
+..0..
+.065.
+66742
+57431
+.432.
+
+Done
+White Orange
+.....
+.000.
+.010.
+.000.
+.....
+
+Ruined
+White Orange
+.0...
+..00.
+.0110
+...1.
+1...0
+
+Raw
+White Yellow
+..00.
+.0110
+00100
+.00..
+.....
+
+Spoiled
+White Yellow
+..00.
+..010
+.0.0.
+.....
+...0.
+
+Stone
+Grey LightGrey
+.100.
+10000
+00000
+00000
+.000.
+
+Herd
+Red Black DarkRed
+11111
+10201
+12121
+10201
+11111
+
+BlockedU
+Blue
+.....
+.....
+.....
+.....
+.....
+
+BlockedR
+Blue
+.....
+.....
+.....
+.....
+.....
+
+BlockedD
+Blue
+.....
+.....
+.....
+.....
+.....
+
+BlockedL
+Blue
+.....
+.....
+.....
+.....
+.....
+
+Step
+Red
+.....
+.....
+.....
+.....
+.....
+
+N1
+Black
+..0..
+.00..
+..0..
+..0..
+.000.
+
+N2
+Black
+000..
+...0.
+.00..
+0....
+0000.
+
+N3
+Black
+000..
+...0.
+.00..
+...0.
+000..
+
+N4
+Black
+...0.
+..00.
+.0.0.
+00000
+...0.
+
+N5
+Black
+0000.
+0....
+000..
+...0.
+000..
+
+N6
+Black
+.00..
+0....
+000..
+0..0.
+.00..
+
+N7
+Black
+0000.
+...0.
+..0..
+.0...
+0....
+
+N8
+Black
+.00..
+0..0.
+.00..
+0..0.
+.00..
+
+N9
+Black
+.00..
+0..0.
+.000.
+...0.
+.00..
+
+N0
+Black
+.00..
+0..0.
+0..0.
+0..0.
+.00..
+
+=======
+LEGEND
+=======
+
+Player = NormalBaby
+CrackedEgg = CrackedEgg1 or CrackedEgg2 or CrackedEgg3 or CrackedEgg4
+Egg = Egg1 or Egg2 or Egg3 or Egg4 or CrackedEgg
+MovableObstacle = NormalBaby or Egg
+Obstacle = Wall or Stone
+AnyObstacle = MovableObstacle or Obstacle
+Movable = Stone or Egg or Player
+Open = Raw or Done
+
+GroundH = GroundU or GroundD
+GroundV = GroundR or GroundL
+HalfGround = GroundH or GroundV
+
+BlockLabel = BlockedU or BlockedR or BlockedD or BlockedL
+
+. = Background
+# = Wall
++ = NormalBaby
+> = Egg1
+v = Egg2
+< = Egg3
+^ = Egg4
+} = Egg1 and Herd
+U = Egg2 and Herd
+{ = Egg3 and Herd
+A = Egg4 and Herd
+D = Stone
+H = Herd
+S = Stone and Herd
+W = Water
+- = GroundU
+] = GroundR
+_ = GroundD
+[ = GroundL
+1 = N1 and water
+2 = N2 and water
+3 = N3 and water
+4 = N4 and water
+5 = N5 and water
+6 = N6 and water
+7 = N7 and water
+8 = N8 and water
+9 = N9 and water
+0 = N0 and water
+
+=======
+SOUNDS
+=======
+
+sfx0 41755904
+sfx1 20238103
+sfx2 5011108
+sfx3 12573108
+sfx4 25163107
+sfx5 58187103
+
+================
+COLLISIONLAYERS
+================
+
+Background
+WaterTR
+WaterTL
+WaterBR
+WaterBL
+Herd
+Done, Raw, Spoiled, Ruined
+Step
+Water, GroundU, GroundR, GroundD, GroundL
+GroundTR
+GroundTL
+GroundBR
+GroundBL
+Wall, Egg1, Egg2, Egg3, Egg4, CrackedEgg1, CrackedEgg2, CrackedEgg3, CrackedEgg4, Stone
+Player
+
+BlockedU
+BlockedR
+BlockedD
+BlockedL
+
+N1, N2, N3, N4, N5, N6, N7, N8, N9, N0
+
+======
+RULES
+======
+
+[ Background no Water no Wall ] -> [ Background WaterTR WaterTL WaterBR WaterBL ]
+[ Water | Background no Water ] -> [ Water GroundTR GroundTL GroundBR GroundBL | Background ]
+
+up    [ Background no Water | Background no Water ] -> [ Background no WaterTR no WaterTL | Background no WaterBR no WaterBL ]
+right [ Background no Water | Background no Water ] -> [ Background no WaterTR no WaterBR | Background no WaterTL no WaterBL ]
+
+up    [ Water | Water ] -> [ Water no GroundTR no GroundTL | Water no GroundBR no GroundBL ]
+right [ Water | Water ] -> [ Water no GroundTR no GroundBR | Water no GroundTL no GroundBL ]
+
+late [ Egg Water ] -> [ Raw Water ] sfx2 message Lost
+late right [ Egg no Egg1 GroundL | Water ] -> [ Raw GroundL | Water ] sfx2 message Lost
+late down  [ Egg no Egg2 GroundU | Water ] -> [ Raw GroundU | Water ] sfx2 message Lost
+late left  [ Egg no Egg3 GroundR | Water ] -> [ Raw GroundR | Water ] sfx2 message Lost
+late up    [ Egg no Egg4 GroundD | Water ] -> [ Raw GroundD | Water ] sfx2 message Lost
+
+[ Player Step ] -> [ Player ]
+[ Player | Step ] -> [ > Player | Step ] again
+
+[ stationary Player HalfGround ] -> [ HalfGround ] message Drowned
+[ > Player | Herd ] -> [ Step > Player | Herd ] again
+
+vertical   [ > Player | GroundH ] -> [ Step > Player | GroundH ] again
+horizontal [ > Player | GroundV ] -> [ Step > Player | GroundV ] again
+
+vertical   [ > Player | GroundV | no Water ] -> [ > Player | GroundV | Step ] again
+horizontal [ > Player | GroundH | no Water ] -> [ > Player | GroundH | Step ] again
+
+vertical   [ > Player | GroundV | Water ] -> [ Step > Player | GroundV | Water ] again
+horizontal [ > Player | GroundH | Water ] -> [ Step > Player | GroundH | Water ] again
+
+[ > Player | Water ] -> [ stationary Player | Water ]
+[ > Player | Stone | no Stone ] -> [ > Player | > Stone | no Stone ]
+
+(
+startloop
+
+[ > AnyObstacle | stationary Egg ] -> [ > AnyObstacle | > Egg ]
+
+endloop)
+
+[ BlockLabel ] -> []
+
+(
+[ horizontal Player ] [ BlockedU blockedD ] -> [ horizontal Player ] []
+[ vertical   Player ] [ BlockedR blockedL ] -> [ vertical   Player ] [])
+
+up    [ Obstacle | Egg ] -> [ Obstacle | BlockedD Egg ]
+right [ Obstacle | Egg ] -> [ Obstacle | BlockedL Egg ]
+down  [ Obstacle | Egg ] -> [ Obstacle | BlockedU Egg ]
+left  [ Obstacle | Egg ] -> [ Obstacle | BlockedR Egg ]
+
+startloop
+
+up    [ > Egg blockedR blockedU no BlockedL | Obstacle ] -> [ left  Egg blockedR blockedU | Obstacle ]
+up    [ > Egg blockedL blockedU no BlockedR | Obstacle ] -> [ right Egg blockedL blockedU | Obstacle ]
+
+right [ > Egg blockedU blockedR no BlockedD | Obstacle ] -> [ down  Egg blockedU blockedR | Obstacle ]
+right [ > Egg blockedD blockedR no BlockedU | Obstacle ] -> [ up    Egg blockedD blockedR | Obstacle ]
+
+down  [ > Egg blockedR blockedD no BlockedL | Obstacle ] -> [ left  Egg blockedR blockedD | Obstacle ]
+down  [ > Egg blockedL blockedD no BlockedR | Obstacle ] -> [ right Egg blockedL blockedD | Obstacle ]
+
+left  [ > Egg blockedU blockedL no BlockedD | Obstacle ] -> [ down  Egg blockedU blockedL | Obstacle ]
+left  [ > Egg blockedD blockedL no BlockedU | Obstacle ] -> [ up    Egg blockedD blockedL | Obstacle ]
+
+[ > AnyObstacle | stationary Egg ] -> [ > AnyObstacle | > Egg ]
+
+endloop
+
+[ Egg BlockedU no BlockedR no BlockedL ] -> [ Egg ]
+[ Egg BlockedD no BlockedR no BlockedL ] -> [ Egg ]
+[ Egg BlockedR no BlockedU no BlockedD ] -> [ Egg ]
+[ Egg BlockedL no BlockedU no BlockedD ] -> [ Egg ]
+
+startloop
+
+[ > Egg | perpendicular Egg no BlockLabel ] -> [ stationary Egg | Egg ]
+[ > Egg | Obstacle ] -> [ stationary Egg | Obstacle ]
+[ > Egg | stationary Egg ] -> [ stationary Egg | stationary Egg ]
+
+endloop
+
+up    [ left  Egg4 blockedR blockedU no BlockedL | Obstacle ] -> [ left  Egg3 blockedR blockedU | Obstacle ]
+up    [ right Egg4 blockedL blockedU no BlockedR | Obstacle ] -> [ right Egg1 blockedL blockedU | Obstacle ]
+
+right [ down  Egg1 blockedU blockedR no BlockedD | Obstacle ] -> [ down  Egg2 blockedU blockedR | Obstacle ]
+right [ up    Egg1 blockedD blockedR no BlockedU | Obstacle ] -> [ up    Egg4 blockedD blockedR | Obstacle ]
+
+down  [ left  Egg2 blockedR blockedD no BlockedL | Obstacle ] -> [ left  Egg3 blockedR blockedD | Obstacle ]
+down  [ right Egg2 blockedL blockedD no BlockedR | Obstacle ] -> [ right Egg1 blockedL blockedD | Obstacle ]
+
+left  [ down  Egg3 blockedU blockedL no BlockedD | Obstacle ] -> [ down  Egg2 blockedU blockedL | Obstacle ]
+left  [ up    Egg3 blockedD blockedL no BlockedU | Obstacle ] -> [ up    Egg4 blockedD blockedL | Obstacle ]
+
+startloop
+
+[ > AnyObstacle | stationary Egg ] -> [ > AnyObstacle | > Egg ]
+
+endloop
+
+startloop
+
+Vertical   [ > Egg1 | stationary AnyObstacle ] -> [ stationary CrackedEgg1 | stationary AnyObstacle ]
+Horizontal [ > Egg2 | stationary AnyObstacle ] -> [ stationary CrackedEgg2 | stationary AnyObstacle ]
+Vertical   [ > Egg3 | stationary AnyObstacle ] -> [ stationary CrackedEgg3 | stationary AnyObstacle ]
+Horizontal [ > Egg4 | stationary AnyObstacle ] -> [ stationary CrackedEgg4 | stationary AnyObstacle ]
+
+Horizontal [ > Egg1 | stationary AnyObstacle ] -> [ stationary Egg1 | stationary AnyObstacle ]
+Vertical   [ > Egg2 | stationary AnyObstacle ] -> [ stationary Egg2 | stationary AnyObstacle ]
+Horizontal [ > Egg3 | stationary AnyObstacle ] -> [ stationary Egg3 | stationary AnyObstacle ]
+Vertical   [ > Egg4 | stationary AnyObstacle ] -> [ stationary Egg4 | stationary AnyObstacle ]
+
+[ > CrackedEgg no Herd | stationary AnyObstacle ] -> [ < Raw no Herd | stationary AnyObstacle ] sfx1 message Ruined
+
+[ > CrackedEgg Herd Done | stationary AnyObstacle ] -> [ < Raw Herd | stationary AnyObstacle ] sfx1 message Ruined
+
+[ > CrackedEgg Herd no Done | stationary AnyObstacle ] -> [ < Done Herd | stationary AnyObstacle ] sfx3
+
+Vertical   [ > Egg1 | < Open ] -> [ stationary CrackedEgg1 | stationary Open ]
+Horizontal [ > Egg2 | < Open ] -> [ stationary CrackedEgg2 | stationary Open ]
+Vertical   [ > Egg3 | < Open ] -> [ stationary CrackedEgg3 | stationary Open ]
+Horizontal [ > Egg4 | < Open ] -> [ stationary CrackedEgg4 | stationary Open ]
+
+Horizontal [ > Egg1 | < Open ] -> [ stationary Egg1 | stationary Open ]
+Vertical   [ > Egg2 | < Open ] -> [ stationary Egg2 | stationary Open ]
+Horizontal [ > Egg3 | < Open ] -> [ stationary Egg3 | stationary Open ]
+Vertical   [ > Egg4 | < Open ] -> [ stationary Egg4 | stationary Open ]
+
+[ > CrackedEgg no Herd | < Open ] -> [ < Raw | stationary Open ] sfx1 message Ruined
+[ > CrackedEgg Herd Ruined | < Open ] -> [ < Raw Herd | stationary Open ] sfx1 message Ruined
+[ > CrackedEgg Herd | < Open ] -> [ < Done Herd | stationary Open ] sfx3
+
+endloop
+
+startloop
+
+[ Player | < Open ] -> [ stationary Player | stationary Open ]
+[ Stone | < Open ] -> [ < Stone | stationary Open ]
+[ Stone | < Stone ] -> [ < Stone | stationary Stone ]
+[ Player | < Stone ] -> [ stationary Player | stationary Stone ]
+
+endloop
+
+[ stationary Player | Step ] -> [ < Player | ]
+[ stationary Player Step ] -> [ Player ]
+
+[ > AnyObstacle | stationary AnyObstacle ] -> [ stationary AnyObstacle | stationary AnyObstacle ]
+[ > Player | stationary AnyObstacle ] -> [ stationary Player | stationary  AnyObstacle ]
+
+[ > Movable | Done ] -> [ > Movable | Ruined ] message Ruined
+late [ Stone Water ] -> [ Water ]
+
+[ moving Egg ] -> [ moving Egg ] sfx4
+[ moving Player Herd ] -> [ moving Player Herd ] sfx5
+
+[ stationary Player Herd ] -> [ Herd ] message Burned
+
+==============
+WINCONDITIONS
+============== 
+
+no Egg
+no Raw
+no Ruined
+no Spoiled
+
+=======
+LEVELS
+=======
+
+wwwwwwww
+wwwwwwww
+ww....ww
+ww+^.h#w
+ww....ww
+w1wwwwww
+wwwwwwww
+
+wwwwwwwww
+wwwwwwwww
+www...www
+ww.....ww
+ww+>#h.ww
+ww.....ww
+www...www
+w2wwwwwww
+wwwwwwwww
+
+wwwwwwwwwwww
+wwwwwwwwwwww
+wwwwww#wwwww
+wwww..v.h#ww
+www..hh#wwww
+ww.....wwwww
+ww+>^..wwwww
+ww.....wwwww
+www...wwwwww
+w3wwwwwwwwww
+wwwwwwwwwwww
+
+wwwwwwwwwwwww
+wwwwwwwwwwwww
+www.#w....www
+ww.........ww
+ww.#h+^>hh#ww
+ww.........ww
+www.#w....www
+w4wwwwwwwwwww
+wwwwwwwwwwwww
+
+wwwwwwwwwwwww
+wwwwwwwwwwwww
+ww.....wwwwww
+ww.....wwwwww
+ww#hh^d.wwwww
+ww....w.+..ww
+wwwww.d^...ww
+wwwwww.h...ww
+wwwwww.....ww
+w5wwwwwwwww6w
+wwwwwwwwwwwww
+
+wwwwwwwwwwww
+wwwwwwwwwwww
+www......www
+www.shhh.www
+ww+^hhhh.www
+www.hhhs.www
+www......www
+w7wwwwwwwwww
+wwwwwwwwwwww
+
+wwwwwwwwwwww
+wwwwwwwwwwww
+ww........ww
+ww.+^vhs..ww
+ww....w...ww
+wwwwwww...ww
+w8wwwwwwwwww
+wwwwwwwwwwww
+
+wwwwwwwwwwww
+wwwwwwwwwwww
+wwwww.....ww
+ww..w..h..ww
+ww+>^.hh#.ww
+ww..w...wwww
+w9wwwwwwwwww
+wwwwwwwwwwww
+
+wwwwwwwww
+wwww..www
+ww...d.ww
+ww.}A..ww
+ww.A}.www
+ww+...www
+10wwwwwww
+wwwwwwwww
+
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwww..www
+wwwwwwwwww...d.ww
+wwwwwwww.>>hh..ww
+ww........>hh.www
+ww+>h^#.ww....www
+ww.#....wwwwwwwww
+ww...wwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+11wwwwww12wwwwwww
+wwwwwwwwwwwwwwwww
+
+wwwwwwwwwwwww
+wwwwwwwwwwwww
+ww.###.wwwwww
+ww.vvv.hhh#ww
+ww.}}a#wwwwww
+ww.}aa#wwwwww
+ww+....wwwwww
+13wwwwwwwwwww
+wwwwwwwwwwwww
+
+wwwwwwwwwwwww
+wwwwwwwwwwwww
+ww.###.wwwwww
+ww.vvv.hhh#ww
+ww.a}a#wwwwww
+ww.}a}#wwwwww
+ww.a}a#wwwwww
+ww+....wwwwww
+14wwwwwwwwwww
+wwwwwwwwwwwww
+
+(is this even solvable)
+(wwwwwwwww
+ww.#.###w
+ww.h.>+.w
+ww.h.<^.w
+w##..h..w
+w......ww
+w...wwwww
+wwwwwwwww)
+
+wwwwwwwwwwww
+wwwwwwwwwwww
+ww.+......ww
+ww..hvh.w.ww
+ww..>.v.w.ww
+ww..h>h.w.ww
+ww.....d..ww
+www......www
+15wwwwwwwwww
+wwwwwwwwwwww
+
+wwwwwwwwwwww
+wwwwwwwwwwww
+ww........ww
+ww..hvh.w.ww
+ww..v.v.w.ww
+ww.+hvhdw.ww
+ww........ww
+16wwwwwwwwww
+wwwwwwwwwwww
+
+(wwwwwwwww
+ww.#.###w
+ww.h.>+.w
+ww.h.<^.w
+w##..h..w
+w......ww
+w...w..ww
+wwwwwwwww
+
+wwwwwwwww
+ww.#.###w
+ww.h.>+.w
+w..h.<^.w
+w.#..h..w
+w......ww
+w...wwwww
+wwwwwwwww)
+
+wwwwwwwwwww
+wwwwwwwwwww
+www.#.###ww
+www.h.>+.ww
+ww##h.<^.ww
+ww....h..ww
+ww......www
+17wwwwwwwww
+wwwwwwwwwww
+
+wwwwwwwwwwww
+wwwwwwwwwwww
+ww.#...wwwww
+ww#+...wwwww
+ww..<..wwwww
+ww.....wwwww
+ww.....ha#ww
+18wwwwwwwwww
+wwwwwwwwwwww
+
+wwwwwwwww
+wwwwwwwww
+ww+....ww
+ww.d...ww
+ww..>..ww
+ww...w.ww
+wwww..h#w
+19wwww##w
+wwwwwwwww
+
+wwwwwwwwww
+wwwwwwwwww
+ww....wwww
+ww.+..w#.w
+ww.d.>.h.w
+ww.d.>.h.w
+ww.....www
+wwwwwwwwww
+w20wwwwwww
+wwwwwwwwww
+
+wwwwwwwwwwwww
+wwwwwwwwwwwww
+wwww....h.www
+wwww....h#www
+ww.>.dw..hwww
+ww.>.dw..hwww
+ww.>.dw..hwww
+ww.>.d....www
+ww+...wwwwwww
+21wwwwwwwwwww
+wwwwwwwwwwwww
+
+wwwwwwwwww
+wwwwwwwwww
+www....www
+ww..ss..ww
+ww.s+>s.ww
+ww.s<vs.ww
+ww..ss..ww
+www....www
+w22wwwwwww
+wwwwwwwwww
+
+wwwwwwwwwww
+wwwwwwwwwww
+www.....www
+ww..sss..ww
+ww.s>>>s.ww
+ww.s>>>s.ww
+ww.s>+>s.ww
+ww..sss..ww
+www.....www
+w23wwwwwwww
+wwwwwwwwwww
+
+wwwwwwwwwwww
+wwwwwwwwwwww
+wwww......ww
+wwwwh.....ww
+www.#.#...ww
+ww.s..h#..ww
+ww.s..h^^.ww
+ww.s..h^^.ww
+www.#..^^.ww
+wwwwh..^^.ww
+wwww.....+ww
+w24wwwwwwwww
+wwwwwwwwwwww
+
+wwwwwwwwwwwww
+wwwwwwwwwwwww
+ww+.....wwwww
+ww.>>>>..wwww
+ww.>.d....www
+ww.>d.#.#..ww
+ww.>.#h.h#.ww
+ww....h.h..ww
+www..#hh...ww
+wwww..#..h#ww
+wwwww......ww
+w25wwwwwwwwww
+wwwwwwwwwwwww
+
+message Thank you for playing!
+
+(wwwwwwwww
+wwwwwwwww
+ww.....ww
+ww.....ww
+ww.....ww
+ww.....ww
+ww.....ww
+wwwwwwwww
+wwwwwwwww)

@@ -1,0 +1,132 @@
+OBJECTS
+
+BackgroundLIGHTGREEN gray11111
+01111
+11101
+11111
+10111
+
+TargetDarkBlue.....
+.000.
+.0.0.
+.000.
+.....
+
+WallBROWN DARKBROWN00010
+11111
+01000
+11111
+00010
+
+PlayerBlack
+OrangeWhite Blue.000.
+.111.
+22222
+.333.
+.3.3.
+
+CrateOrange Yellow
+0...00...0
+0...00...0
+00000TreeApple
+BROWNGREEN RED
+.111.12121
+.101...0..
+..0..TreeKaputt
+BROWNGREEN BLACK
+.111.12121
+.101...0..
+..0..TreeHarvest
+BROWNGREEN white.111.
+12121
+.101.
+..0..
+..0..
+
+
+
+LEGEND
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+K = TreeKaputt
+H = TreeHarvest
+A = TreeApple
+@ = Crate or Target
+& = Crate or TreeHarvest
+% = Crate or TreeKaputt
+O = Target
+
+COLLISIONLAYERS
+
+Background
+Target
+TreeKaputt
+TreeHarvest, TreeApple
+Player
+Wall, Crate
+
+RULES
+
+[ > Player | Crate ] -> [ > Player | >Crate ] 
+[ > Crate | TreeHarvest ] -> [ > Crate | TreeKaputt ] 
+[ > Crate | TreeApple ] -> [ > Crate | TreeHarvest ] 
+
+
+WINCONDITIONS
+
+All Target on Crate
+NO TreeApple
+NO TreeKaputt
+
+LEVELS
+
+##############
+
+#............#
+#............#
+#.....O......#
+#....#.#.....#
+#.....A......#
+#.....*......#
+#.....P......#
+#............#
+##############
+
+##############
+
+#............#
+#............#
+#....#A#.....#
+#....A.O.....#
+#....#A#.....#
+#....#*......#
+#.....P......#
+#............#
+##############
+
+##############
+
+#............#
+#............#
+#....#A###...#
+#..*A..OO#...#
+#....#A###...#
+#.....*......#
+#.....P......#
+#............#
+##############
+
+##############
+
+#...###....O.#
+#...A...A.#..#
+#..#.#A.#.#..#
+#.*A.....A..A#
+#..#.#A##.#..#
+#.....*...##O#
+#.....P....###
+######.......#
+##############

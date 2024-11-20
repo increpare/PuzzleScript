@@ -1,0 +1,254 @@
+OBJECTS
+
+BackgroundLightGreen Green
+1111111011
+1010111011
+11111BackFlowers
+GreenPurple Yellow10001
+00100
+01210
+00100
+10001
+
+TargetRED LightRed.0.0.
+01010
+01110
+.010.
+..0..
+
+WallRed DarkGreen00000
+00100
+01010
+00100
+00000
+
+DespairWallDarkBrown DarkBlue00000
+00100
+01010
+00100
+00000
+
+NewDespairWallDarkRed DarkBlue00000
+00100
+01010
+00100
+00000
+
+PlayerBlue
+LightRedYellow DarkBlue.333.
+.323.
+20002
+.111.
+.000.
+
+OldHopeWhite Pink11111
+11011
+10101
+11011
+11111
+
+NewHopeWhite LightRed11111
+11011
+10101
+11011
+11111
+
+CratePink White.0.0.
+01010
+01110
+.010.
+..0..
+
+OldDespairBlack DarkBlue01010
+10101
+01010
+10101
+01010
+
+AltOldDespairBlack DarkBlue10101
+01010
+10101
+01010
+10101
+
+NewDespairDarkBlue DarkGray01010
+10101
+01010
+10101
+01010
+
+AltNewDespairDarkBlue DarkGray10101
+01010
+10101
+01010
+10101
+
+
+
+LEGEND
+
+. = Background
+f = BackFlowers
+# = Wall
+P = Player
+* = Crate
+@ = Crate or Target
+O = Target
+X = OldDespair
+Z = AltOldDespair
+H = OldHope
+Despair = OldDespair or NewDespair or AltOldDespair or AltNewDespair
+Hope = OldHope or NewHope
+Blocker = Despair or Crate or Target or Wall or Player or DespairWall or NewDespairWall or Hope
+HopeBlocker = Crate or Target or Wall or DespairWall or NewDespairWall or Hope
+
+COLLISIONLAYERS
+
+Background
+Target
+BackFlowers, Hope
+Player
+Wall, Crate
+Despair, NewDespair
+DespairWall, NewDespairWall
+
+RULES
+
+[ NewDespair ] -> [ OldDespair ] 
+[ AltNewDespair ] -> [ AltOldDespair ] 
+[ NewDespairWall ] -> [ DespairWall ] 
+[ NewHope ] -> [ OldHope ] 
+late [ OldDespair | NoBlocker ] -> [ OldDespair | AltNewDespair ] 
+late [ AltOldDespair | NoBlocker ] -> [ AltOldDespair | NewDespair ] 
+late [ OldDespair | Wall ] -> [ OldDespair | NewDespairWall ] 
+late [ DespairWall | Wall ] -> [ DespairWall | NewDespairWall ] 
+late [ OldHope | NoHopeBlocker ] -> [ OldHope | NewHope ] 
+[ > Player | Crate ] -> [ > Player | >Crate ] 
+[ > Crate | Blocker ] -> [ Crate | Blocker ] 
+late [ Target | Despair ] -> [ Target |  ] 
+late [ Despair Target ] -> [ Target ] 
+late [ Crate | Despair ] -> [ Crate |  ] 
+late [ Hope Despair ] -> [ Hope ] 
+late [ Hope | DespairWall ] -> [ Hope | Wall ] 
+late [ Hope | NewDespairWall ] -> [ Hope | Wall ] 
+
+
+WINCONDITIONS
+
+Some Player on Target
+
+LEVELS
+
+######
+
+#...x#
+#.ff.#
+#.ff.#
+#o..P#
+######
+
+#########
+#x.f...f#
+#.#.....#
+#.p.f#..#
+#.#..#f.#
+#xzf...o#
+#########
+
+#########
+#x......#
+#...#...#
+#p..*..##
+#...#...#
+#x.....o#
+#########
+
+########
+
+#.#zx#p#
+#....*.#
+#......#
+#o#*.#.#
+########
+
+###########
+#.........#
+#.*#.o.####
+#..*###...#
+#.......*.#
+#......#..#
+####...####
+#x.......p#
+###########
+
+###########
+#o........#
+####.##.#.#
+#.....*.#.#
+#.#.###.#.#
+#.#....*..#
+#.#*.#.##.#
+#x#...p#z.#
+###########
+
+###########
+#...o...zx#
+#.#.....#z#
+#...#.#...#
+#.........#
+#..**.**..#
+#z........#
+#xz......p#
+###########
+
+###########
+#....o....#
+#..#####..#
+#.#.....#.#
+#...*p*...#
+#....*....#
+#...###...#
+#x.......x#
+###########
+
+###########
+#........H#
+#.......p.#
+#x........#
+#zx.......#
+#xzx......#
+#zxzx.....#
+#ozxzx....#
+###########
+
+###########
+#....p....#
+###.#*#.###
+#x.......x#
+###.*.*.###
+#HH*.....x#
+###.#.#.###
+#x.......o#
+###########
+
+############
+#......zxzx#
+#.##.##.####
+#......*...#
+#.*p.#.#.#o#
+#...*.*.*#.#
+####.###...#
+#H.........#
+############
+
+##################
+#..*.#H#o........#
+#...*..#######.#.#
+#.##.#########.#*#
+#.#.....*....#.#.#
+#H#...#.p..#z.*H*#
+###...#.#*##...#.#
+#...##z.....#*.xz#
+#.*.......*...xzx#
+#x...#.*....#xzxz#
+##################

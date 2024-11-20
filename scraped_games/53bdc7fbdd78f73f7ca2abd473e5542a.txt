@@ -1,0 +1,1042 @@
+title Inswaption
+author Edalcmagal
+homepage www.puzzlescript.net
+background_color darkgreen
+text_color pink
+realtime_interval 1.5
+
+
+
+========
+OBJECTS
+========
+Outlineup
+blue darkgreen
+00000
+11111
+11111
+11111
+11111
+Outlinedown
+blue darkgreen
+11111
+11111
+11111
+11111
+00000
+
+Outlineright
+blue darkgreen
+11110
+11110
+11110
+11110
+11110
+
+Outlineleft
+blue darkgreen
+01111
+01111
+01111
+01111
+01111
+
+UpRight
+darkgreen blue
+00001
+00000
+00000
+00000
+00000
+UpLeft
+darkgreen blue
+10000
+00000
+00000
+00000
+00000
+DownRight
+darkgreen blue
+00000
+00000
+00000
+00000
+00001
+DownLeft
+darkgreen blue
+00000
+00000
+00000
+00000
+10000
+
+Background
+darkgreen #396253
+01000
+00000
+10000
+00010
+00000
+Background2
+darkgreen #477043
+00010
+00000
+00001
+00000
+00100
+Target
+DarkBlue purple pink
+..1..
+.202.
+10101
+.202.
+..1..
+
+(Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010)
+
+Wall
+orange yellow darkbrown
+01110
+12221
+12021
+12221
+01110
+
+Player
+white blue black grey purple
+..1..
+.141.
+03130
+.232.
+.2.2.
+ClosedDoor
+Red DarkRed black
+.....
+.000.
+.200.
+.000.
+.000.
+
+
+
+
+MarkerUp
+transparent
+00000
+00000
+00000
+00000
+00000
+MarkerDown
+transparent
+00000
+00000
+00000
+00000
+00000
+MarkerLeft
+transparent
+00000
+00000
+00000
+00000
+00000
+MarkerRight
+transparent
+00000
+00000
+00000
+00000
+00000
+Marker1
+transparent
+00000
+00000
+00000
+00000
+00000
+MarkerStart
+transparent
+00000
+00000
+00000
+00000
+00000
+MarkerStop
+transparent
+00000
+00000
+00000
+00000
+00000
+Fill
+black
+.....
+.....
+..0..
+.....
+.....
+Fill2
+black
+.....
+.....
+..0..
+.....
+.....
+MarkerAgain
+transparent
+00000
+00000
+00000
+00000
+00000
+MarkerPathCount1
+transparent
+.....
+.....
+.....
+.....
+.....
+MarkerAlreadyFound
+transparent
+.....
+.....
+.....
+.....
+.....
+Marker2
+black
+.....
+.....
+.....
+.....
+.....
+
+Box
+pink purple
+.....
+..0..
+.010.
+..0..
+.....
+
+
+NewTarget
+DarkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+MarkerMoveUp
+transparent blue
+.....
+.....
+.....
+.....
+.....
+MarkerMoveDown
+transparent yellow
+.....
+.....
+.....
+.....
+.....
+MarkerMoveLeft
+transparent purple
+.....
+.....
+.....
+.....
+.....
+MarkerMoveRight
+transparent black
+.....
+.....
+.....
+.....
+.....
+Teleporter
+purple pink
+.010.
+10001
+10001
+10001
+.010.
+
+Marker3
+transparent
+.....
+.....
+.....
+.....
+.....
+Marker4
+transparent
+.....
+.....
+.....
+.....
+.....
+Marker5
+transparent
+.....
+.....
+.....
+.....
+.....
+Marker6
+transparent
+.....
+.....
+.....
+.....
+.....
+Marker7(markerstart teleporter)
+transparent
+.....
+.....
+.....
+.....
+.....
+Marker8(markerstop teleporter)
+transparent
+.....
+.....
+.....
+.....
+.....
+Loop
+transparent blue
+.....
+.....
+.....
+.....
+.....
+Loop2
+transparent red
+.....
+.....
+.....
+.....
+.....
+MarkerChange
+transparent green
+.....
+.....
+.....
+.....
+.....
+MarkerChange2
+transparent darkgreen
+.....
+.....
+.....
+.....
+.....
+Key
+yellow brown
+.00..
+.00..
+..0..
+.010.
+.000.
+
+ImmovableWallVert
+#3690ff blue 
+11011
+11111
+10111
+11101
+11111
+ImmovableWallVert2
+#3690ff blue
+11111
+11011
+11111
+10111
+11101
+
+ImmovableWallHor
+#3690ff blue
+11111
+11101
+01111
+11011
+11111
+ImmovableWallHor2
+#3690ff blue
+11111
+11110
+10111
+11101
+11111
+
+
+Enabler
+darkred
+00000
+00000
+00000
+00000
+00000
+LEGEND
+=======
+
+. = Background
+; = Background2
+# = Wall and Background
+P = Player and Background
+
+O = Target and Background
+D = ClosedDoor and Background
+B = Box and Background
+
+N = NewTarget
+K = Key and Background
+
+Q = ClosedDoor and Target
+J = Box and Target
+
+E=Enabler
+ImmovableWall = ImmovableWallVert or ImmovableWallHor or ImmovableWallVert2 or ImmovableWallHor2
+
+1=Outlineup
+2=Outlinedown
+3=Outlineright
+4=Outlineleft
+5=UpRight
+6=UpLeft
+7=DownRight
+8=DownLeft
+
+MarkerMove = MarkerMoveUp or MarkerMoveDown or MarkerMoveLeft or MarkerMoveRight
+I = ImmovableWallVert
+S = ImmovableWallHor
+
+L = Teleporter
+
+Stuff = Wall or Box or ClosedDoor or Key or Player
+Stuff2 = Stuff
+Everything = Wall or Box or ClosedDoor or Key or Player
+Boundary = Outlineup or Outlinedown or Outlineright or Outlineleft or ImmovableWall
+
+U = Enabler and Key
+G = Enabler and Box
+T = Enabler and Target
+] = Enabler and Key and Target
+[ = Enabler and Box and Target
+} = Enabler and ClosedDoor
+{ = Enabler and ClosedDoor and Target
+
+w = Player and Background2
+x = box and Background2
+y = key and Background2
+z = ClosedDoor and Background2
+v = Target and Background2
+h = Wall and Background2
+?=Loop
+!=Loop2
+=======
+SOUNDS
+======= 
+sfx0 81093904
+
+sfx1 7079301
+
+sfx2 21713307
+
+sfx3 87272103
+
+sfx4 83058700
+
+sfx5 86641306
+
+================
+COLLISIONLAYERS
+================
+Background
+Background2
+(Background,Background2)
+Teleporter
+Enabler
+Fill
+Fill2
+MarkerAgain,MarkerPathCount1
+MarkerStart
+MarkerStop
+MarkerAlreadyFound,MarkerUp,MarkerDown,MarkerRight,MarkerLeft
+Target
+Wall
+ClosedDoor
+Player
+Key
+Box
+Marker1
+Marker2
+Marker3
+Marker4
+Marker5
+Marker6
+Marker7
+Marker8
+NewTarget
+MarkerMoveUp
+MarkerMoveDown 
+MarkerMoveLeft
+MarkerMoveRight
+Outlineup,Outlinedown,Outlineright,Outlineleft,UpRight,UpLeft,DownRight,DownLeft,ImmovableWall
+Loop
+Loop2
+MarkerChange
+MarkerChange2
+
+======
+RULES
+======
+
+
+[> Player][Loop]->[> Player][Loop2]
+[action Player][Loop]->[action Player][Loop2]
+
+random[Teleporter no MarkerStart no MarkerStop]->[Teleporter MarkerStart]
+random[Teleporter no MarkerStart no MarkerStop]->[Teleporter MarkerStop]
+
+[ImmovableWallVert no MarkerChange][Loop]->[ImmovableWallVert MarkerChange][Loop]
+[ImmovableWallVert2 no MarkerChange][Loop]->[ImmovableWallVert2 MarkerChange][Loop]
+[ImmovableWallHor no MarkerChange][Loop]->[ImmovableWallHor MarkerChange][Loop]
+[ImmovableWallHor2 no MarkerChange][Loop]->[ImmovableWallHor2 MarkerChange][Loop]
+[Background no MarkerChange][Loop]->[Background MarkerChange][Loop]
+[Background2 no MarkerChange2][Loop]->[Background2 MarkerChange2][Loop]
+
+
+[ImmovableWallVert MarkerChange]->[ImmovableWallVert2 no MarkerChange]
+[ImmovableWallVert2  MarkerChange]->[ImmovableWallVert no MarkerChange]
+[ImmovableWallHor  MarkerChange]->[ImmovableWallHor2 no MarkerChange]
+[ImmovableWallHor2  MarkerChange]->[ImmovableWallHor no MarkerChange]
+[Background MarkerChange]->[Background2 no MarkerChange]
+[Background2 MarkerChange2]->[Background no MarkerChange2]
+([Background|no Background2]->[Background|Background2]
++[Background2|no Background]->[Background2|Background]
+)
+
+[> Player|Boundary]->[Player|Boundary]
+[> Player|Wall]->[Player|Wall]
+[> Player|Stuff|Wall]->[Player|Stuff|Wall]
+[> Player|Stuff|Boundary]->[Player|Stuff|Boundary]
+[> Player|Box no Wall no ClosedDoor]->[> Player|> Box]
+[> Player|Key no Wall no ClosedDoor]->[> Player|> Key]
+[> Player|ClosedDoor]->[Player|ClosedDoor]
+[> Stuff|stationary Player]->[Stuff|stationary Player]
+
+[> Stuff no Wall no ClosedDoor no Player|Stuff no Wall no ClosedDoor no Player]->[> Stuff|> Stuff]
+
+[> Stuff|stationary Player]->[Stuff|stationary Player]
+
+[> Everything|Boundary]->[Everything|Boundary]
+[> Key Box| ClosedDoor]->[stationary Key Box| ClosedDoor]
+[> Stuff no Key|stationary Stuff]->[stationary Stuff|stationary Stuff]
+[> Stuff no Player|stationary Stuff no Player no ClosedDoor]->[stationary Stuff|stationary Stuff]
+[> Key|Wall]->[Key|Wall]
+[> Box|Wall]->[Box|Wall]
+[> Box|ClosedDoor]->[Box|ClosedDoor]
+[> Key|ClosedDoor]->[|]sfx4
+[> Player|stationary stuff no Player]->[Player|stationary stuff]
+[> Player|Teleporter]->[> Player|> Teleporter]
+
+[stationary Player]->[Player] 
+random[Teleporter no MarkerStart no MarkerStop]->[Teleporter MarkerStart]
+random[Teleporter no MarkerStart no MarkerStop]->[Teleporter MarkerStop]
+(put this here to make teleport trigger before spread)
+(late[Teleporter MarkerStart Key][Teleporter MarkerStop]->[Teleporter MarkerStart ][Teleporter MarkerStop Marker4]
+late[Teleporter MarkerStart Box][Teleporter MarkerStop]->[Teleporter MarkerStart ][Teleporter MarkerStop Marker2]
+late[Teleporter MarkerStart ClosedDoor][Teleporter MarkerStop]->[Teleporter MarkerStart ][Teleporter MarkerStop Marker3]
+late[Teleporter MarkerStart Wall][Teleporter MarkerStop]->[Teleporter MarkerStart ][Teleporter MarkerStop Marker1]
+
+late[Teleporter MarkerStop Key][Teleporter MarkerStart]->[Teleporter MarkerStop ][Teleporter MarkerStart Marker4]
+late[Teleporter MarkerStop Box][Teleporter MarkerStart]->[Teleporter MarkerStop ][Teleporter MarkerStart Marker2]
+late[Teleporter MarkerStop ClosedDoor][Teleporter MarkerStart]->[Teleporter MarkerStop ][Teleporter MarkerStart Marker3]
+late[Teleporter MarkerStop Wall][Teleporter MarkerStart]->[Teleporter MarkerStop ][Teleporter MarkerStart Marker1]
+
+late[ Marker1 Marker2 Marker3]->[Wall ClosedDoor Box]
++late[ Marker1 Marker2 Marker4]->[Wall  Key Box]
++late[ Marker1 Marker3 Marker4]->[Wall]
++late[ Marker2 Marker3 Marker4]->[Box]
++late[ Marker1 Marker2]->[Wall Box]
++late[ Marker1 Marker3]->[Wall ClosedDoor]
++late[ Marker1 Marker4]->[Wall Key]
++late[ Marker2 Marker3]->[ ClosedDoor Box]
++late[ Marker2 Marker4]->[ Key Box]
++late[ Marker3 Marker4]->[](closed door and key)
++late[ Marker1]->[Wall]
++late[ Marker2]->[Box]
++late[ Marker3]->[ClosedDoor]
++late[ Marker4]->[Key])
+
+(Wall 1 Box 2 Door 3 Key 4)
+late[Wall|Wall][Loop2]->[Wall Marker1|Wall Marker1][Loop2]
+late[Box|Box][Loop2]->[Box Marker2|Box Marker2][Loop2]
+late[ClosedDoor|ClosedDoor][Loop2]->[ClosedDoor Marker3|ClosedDoor Marker3][Loop2]
+late[Key|Key][Loop2]->[Key Marker4|Key Marker4][Loop2]
+late[Player Enabler|Player Enabler][Loop2]->[Player Enabler Marker5|Player Enabler Marker5][Loop2]
+
+late [Wall|Key][Loop2]->[Wall Marker4|Key Marker1][Loop2]
+late [Box|Wall][Loop2]->[Box Marker1|Wall Marker2][Loop2]
+late [Box|Key][Loop2]->[Box Marker4|Key Marker2][Loop2]
+late [ClosedDoor|Wall][Loop2]->[ClosedDoor Marker1|Wall Marker3][Loop2]
+late [ClosedDoor|Box][Loop2]->[ClosedDoor Marker2|Box Marker3][Loop2]
+late [ClosedDoor|Key][Loop2]->[ClosedDoor Marker4|Key Marker3][Loop2]
+late [Wall|Player Enabler][Loop2]->[Wall Marker5|Player Enabler Marker1][Loop2]
+late [Box|Player Enabler][Loop2]->[Box Marker5|Player Enabler Marker2][Loop2]
+late [ClosedDoor|Player Enabler][Loop2]->[ClosedDoor Marker5|Player Enabler Marker3][Loop2]
+late[Key|Player Enabler][Loop2]->[Key Marker5|Player Enabler Marker4][Loop2]
+
+late[Player no Enabler][Loop2]->[Player Marker5][Loop2]
+
+(teleporters functioning as wildcards)
+(
+late [Wall|Teleporter]->[Wall|Teleporter MarkerMoveUp]
+late [Box|Teleporter]->[Box|Teleporter MarkerMoveDown]
+late [Key|Teleporter]->[Key|Teleporter MarkerMoveLeft]
+late [ClosedDoor|Teleporter]->[ClosedDoor|Teleporter MarkerMoveRight]
+late [Teleporter MarkerMove|Teleporter]->[Teleporter MarkerMove|Teleporter MarkerMove]
+late [Teleporter MarkerMove|Stuff]->[Teleporter MarkerMove|Stuff MarkerMove]
+late [Stuff MarkerMoveUp]->[Stuff Marker1]
+late [Stuff MarkerMoveDown]->[Stuff Marker2]
+late [Stuff MarkerMoveLeft]->[Stuff Marker4]
+late [Stuff MarkerMoveRight]->[Stuff Marker3]
+late [MarkerMove]->[]
+)
+
+(teleporters functioning as spreaders)
+late[Stuff no Player|Teleporter MarkerStart][Loop2]->[Stuff Marker7|Teleporter MarkerStart][Loop2]
+late[Stuff no Player|Teleporter MarkerStop][Loop2]->[Stuff Marker8|Teleporter MarkerStop][Loop2]
+late [Wall|Teleporter MarkerStart][Stuff Marker8][Loop2]->[Wall|Teleporter MarkerStart][Stuff Marker1 Marker8][Loop2]
+late [Box|Teleporter MarkerStart][Stuff Marker8][Loop2]->[Box|Teleporter MarkerStart][Stuff Marker2 Marker8][Loop2]
+late [ClosedDoor|Teleporter MarkerStart][Stuff Marker8][Loop2]->[ClosedDoor|Teleporter MarkerStart][Stuff Marker3 Marker8][Loop2]
+late [Key|Teleporter MarkerStart][Stuff Marker8][Loop2]->[Key|Teleporter MarkerStart][Stuff Marker4 Marker8][Loop2]
+late [Wall|Teleporter MarkerStop][Stuff Marker7][Loop2]->[Wall|Teleporter MarkerStop][Stuff Marker7 Marker1][Loop2]
+late [Box|Teleporter MarkerStop][Stuff Marker7][Loop2]->[Box|Teleporter MarkerStop][Stuff Marker7 Marker2][Loop2]
+late [ClosedDoor|Teleporter MarkerStop][Stuff Marker7][Loop2]->[ClosedDoor|Teleporter MarkerStop][Stuff Marker7 Marker3][Loop2]
+late [Key|Teleporter MarkerStop][Stuff Marker7][Loop2]->[Key|Teleporter MarkerStop][Stuff Marker7 Marker4][Loop2]
+
+
+
+
+late[Stuff Marker1 Marker2 Marker3 Marker5]->[Marker1 Marker2 Marker3 Marker5]
++late[Stuff Marker1 Marker2 Marker4 Marker5]->[Marker1 Marker2 Marker4 Marker5]
++late[Stuff Marker2 Marker3 Marker4 Marker5]->[Marker2 Marker3 Marker4 Marker5]
++late[Stuff Marker1 Marker2 Marker3]->[Marker1 Marker2 Marker3]
++late[Stuff Marker1 Marker2 Marker4]->[Marker1 Marker2 Marker4]
++late[Stuff Marker1 Marker2 Marker5]->[Marker1 Marker2 Marker5]
++late[Stuff Marker1 Marker3 Marker4]->[ Marker1 Marker3 Marker4]
++late[Stuff Marker1 Marker3 Marker5]->[ Marker1 Marker3 Marker5]
++late[Stuff Marker2 Marker3 Marker4]->[Marker2 Marker3 Marker4]
++late[Stuff Marker2 Marker3 Marker5]->[Marker2 Marker3 Marker5]
++late[Stuff Marker1 Marker2]->[Marker1 Marker2]
++late[Stuff Marker1 Marker3]->[Marker1 Marker3]
++late[Stuff Marker1 Marker4]->[Marker1 Marker4]
++late[Stuff Marker1 Marker5]->[Marker1 Marker5]
++late[Stuff Marker2 Marker3]->[ Marker2 Marker3]
++late[Stuff Marker2 Marker4]->[ Marker2 Marker4]
++late[Stuff Marker2 Marker5]->[ Marker2 Marker5]
++late[Stuff Marker3 Marker4]->[]sfx4
++late[Stuff Marker3 Marker5]->[Marker3 Marker5]
++late[Stuff Marker4 Marker5]->[Marker4 Marker5]
++late[Stuff Marker1]->[Marker1]
++late[Stuff Marker2]->[Marker2]
++late[Stuff Marker3]->[Marker3]
++late[Stuff Marker4]->[Marker4]
++late[Stuff Marker5]->[Marker5]
++late[ Marker1 Marker2 Marker3 Marker5]->[Wall ClosedDoor Player Box]
++late[ Marker1 Marker2 Marker4 Marker5]->[Wall  Player Key Box]
++late[ Marker1 Marker3 Marker4 Marker5]->[Wall Player ]sfx4
++late[ Marker2 Marker3 Marker4 Marker5]->[ Player Box]sfx4
++late[ Marker1 Marker2 Marker3]->[Wall ClosedDoor Box]
++late[ Marker1 Marker2 Marker4]->[Wall  Key Box]
++late[ Marker1 Marker2 Marker5]->[Wall  Player Box]
++late[ Marker1 Marker3 Marker4]->[Wall]sfx4
++late[ Marker1 Marker3 Marker5]->[Wall ClosedDoor Player]
++late[ Marker2 Marker3 Marker4]->[Box]sfx4
++late[ Marker2 Marker3 Marker5]->[Player]
++late[ Marker1 Marker2]->[Wall Box]
++late[ Marker1 Marker3]->[Wall ClosedDoor]
++late[ Marker1 Marker4]->[Wall Key]
++late[ Marker1 Marker5]->[Wall Player]
++late[ Marker2 Marker3]->[ClosedDoor Box]
++late[ Marker2 Marker4]->[Key Box]
++late[ Marker2 Marker5]->[Player Box]
++late[ Marker3 Marker4]->[]sfx4
++late[ Marker3 Marker5]->[ClosedDoor Player]
++late[ Marker4 Marker5]->[Player Key]
++late[ Marker1]->[Wall]
++late[ Marker2]->[Box]
++late[ Marker3]->[ClosedDoor]
++late[ Marker4]->[Key]
++late[Marker5]->[Player]
+
+late[ClosedDoor Key]->[] sfx4
+(remove this if teleport should trigger before spread)
+
+()
+
++late[ Marker1 Marker2 Marker3 Marker5]->[Wall ClosedDoor Player Box]
++late[ Marker1 Marker2 Marker4 Marker5]->[Wall  Player Key Box]
++late[ Marker1 Marker3 Marker4 Marker5]->[Wall Player ]sfx4
++late[ Marker2 Marker3 Marker4 Marker5]->[ Player Box]sfx4
++late[ Marker1 Marker2 Marker3]->[Wall ClosedDoor Box]
++late[ Marker1 Marker2 Marker4]->[Wall  Key Box]
++late[ Marker1 Marker2 Marker5]->[Wall  Player Box]
++late[ Marker1 Marker3 Marker4]->[Wall]sfx4
++late[ Marker1 Marker3 Marker5]->[Wall ClosedDoor Player]
++late[ Marker2 Marker3 Marker4]->[Box]sfx4
++late[ Marker2 Marker3 Marker5]->[Player]
++late[ Marker1 Marker2]->[Wall Box]
++late[ Marker1 Marker3]->[Wall ClosedDoor]
++late[ Marker1 Marker4]->[Wall Key]
++late[ Marker1 Marker5]->[Wall Player]
++late[ Marker2 Marker3]->[ClosedDoor Box]
++late[ Marker2 Marker4]->[Key Box]
++late[ Marker2 Marker5]->[Player Box]
++late[ Marker3 Marker4]->[]sfx4
++late[ Marker3 Marker5]->[ClosedDoor Player]
++late[ Marker4 Marker5]->[Player Key]
++late[ Marker1]->[Wall]
++late[ Marker2]->[Box]
++late[ Marker3]->[ClosedDoor]
++late[ Marker4]->[Key]
++late[Marker5]->[Player]
+
+late random[Player Teleporter][Teleporter no Player]->[Teleporter][Teleporter Player]
+(late random[Stuff Teleporter][Teleporter no Stuff no Player]->[Teleporter][Teleporter Stuff]
+late random[Player Teleporter][Teleporter no Stuff]->[Teleporter][Teleporter Player]
+late random[Player Teleporter][Teleporter Stuff]->[Stuff Teleporter][Player Teleporter]
+late random[Stuff Teleporter MarkerStart][Stuff2 Teleporter MarkerStop]->[Stuff2 Teleporter MarkerStart][Stuff Teleporter MarkerStop](need to make it so it teleports multiple things on same tile))
+
+
+late[Marker1]->[]
+late[Marker2]->[]
+late[Marker3]->[]
+late[Marker4]->[]
+late[Marker5]->[]
+late[Marker6]->[]
+late[Marker7]->[]
+late[Marker8]->[]
+
+
+
+
+
+late [Target Box]->[Target Box Marker1]
+late [Target no Box][Marker1]->[Target][]
+late random [Marker1]->[] sfx3
+late [Marker1]->[]
+late[Loop2]->[Loop]
+==============
+WINCONDITIONS
+==============
+
+All Target on Box
+
+=======
+LEVELS
+=======
+
+
+message A-1 - Simple Task
+#222222#(basic push and targetfill mechanic)
+3.;i;.;4
+3;?i.x.4
+3.;.;.;4
+3;.o.ss4
+3.w.;.;4
+3;.;.;.4
+#111111#
+
+message A-2 - A Necessary Headache
+72222222228(main swap mechanic introduction)
+3#ssssssss4
+3?;.;;;..;4
+3op#.;.b;.4
+3.;.;.;..;4
+3#ssssssss4
+51111111116
+
+
+
+message A-3 - Doors and Keys
+722222228(door and key introduction)
+3;p;i;.;4
+3?y.i.v.4
+3;.;i;;;4
+3.;.i.;.4
+3sdsssds4
+3.;b;.;.4
+3;;;.;k;4
+3sssssss4
+511111116
+
+message A-4 - Efficiency
+72222228(deeper training into swap manipulation and swap mechanic)
+3?;.hov4
+3;.;.;o4
+3.;.h.h4
+3;.x.;.4
+3.w.;.;4
+3;.;.;.4
+51111116
+
+
+message A-5 - Deception
+722222228(deeper training into swap mechanic and key-door interaction)
+3sbs.;.;4
+3?v.;i;.4
+3;.i.;.;4
+3sds;k;.4
+3;.;.;..4
+3sdssdss4
+3;;kw..;4
+3.;.;.;.4
+511111116
+
+
+message A-6 - The Lesson
+722222228(deeper lesson about spreading objects, and maybe the player realizes he can't push BoxKey into a Door)
+3;p;i;o;4
+3?y.i.v.4
+3;.;i;o;4
+3.;.i.;.4
+3sdsssds4
+3.;.;.;.4
+3;b;.;k;4
+3.;.;.;.4
+511111116
+
+message A-7 - Stability
+722222228(deeper lesson about spreading objects, and maybe the player realizes he can't push BoxKey into a Door 2)
+3;.;.i.;4
+3?;.iji.4
+3wb;.yvv4
+3.;.iqi.4
+3;.;.i.;4
+511111116
+
+
+
+
+message B-1 - Stubborn
+72222228(final training about simple swap manipulation)
+3?;.hov4
+3;.;.vo4
+3.;.h.h4
+3;.x.;.4
+3.w.;.;4
+3;.;.;.4
+51111116
+
+
+message B-2 - Conversion
+7222222228(training)
+3?;.;iv.v4
+3;dx.io;o4
+3.w.;i;.;4
+3;.;.zk;.4
+3.;.;i;.;4
+3;.;.i.;.4
+5111111116
+
+message B-3 - Waste of Space
+722222222228(training into spatial thinking and calculation)
+3?;.;.;.;.;4
+3;.;.;.;.;.4
+3.;.;.;.;.;4
+3;.;.y.;.;.4
+3.w.;.zd;.;4
+3;.;.;dz.;.4
+3.;.;b;.;.;4
+3;.;o;o;o;o4
+511111111116
+
+message B-4 - Hydra
+7222222228(different type of puzzle, something fresh)
+3?;.;.;.;4
+3;.;.;bx.4
+3.wk;.xb;4
+3;.;.;.z.4
+3.;.;.;.;4
+3;.vovovo4
+5111111116
+
+message B-5 - Not Enough Time
+722222228(calculation)
+3ixbxbxo4
+3ibsssb;4
+3ixi;ix.4
+3wd;.;b;4
+3.i.;.z.4
+3;i;kss;4
+3?;.;.;.4
+511111116
+
+
+message C-1 - Mutation
+7222222228(new mechanic, field where player acts as an object)
+3?y.;.vi;4
+3;.;.ie;.4
+3.isssei;4
+3iseeeei.4
+3eeessss;4
+3esss;.;.4
+3ei.;.;.;4
+3x.;.;.;.4
+3p;.;.;.;4
+3;.;.;.;.4
+5111111116
+
+
+message C-2 - A Return to the Basics
+72222228(interesting, seems really basic but requires some calculation or luck)
+3?;.;dv4
+3;.;.z.4
+3.y.;d;4
+3;p;.z.4
+3.x.;d;4
+3;.;.z.4
+51111116
+
+message C-3 - Claustrophobia
+7222222228(introduction to crazy player behavior as now it can be in the same tile as other objects)
+3?;.;isss4
+3;.yoivii4
+3.;.;i.ii4
+3;.w.ex.i4
+3.;.;s;ii4
+3;...isss4
+3.;.;.;.;4
+5111111116
+
+
+message C-4 - Endoctrination
+7222222228(major level about swap manipulation)
+3?;.;ivov4
+3;b;.iovo4
+3.;d;izdz4
+3;p;.i.;.4
+3.;.;dy.;4
+3;.;.i.;.4
+3.;.;i;o;4
+5111111116
+
+
+
+message C-5 - Hallway
+722222222228(player-as-object training)
+3e;.e.;e;;e4
+3;?e.;e;.e;4
+3sss;e;.e.;4
+3x.;sssssss4
+3eee;ovovow4
+3x.;sssssss4
+3sss;.;.;.;4
+3e;;e;.e.;e4
+3.;e;.e.;e;4
+511111111116
+
+
+
+message C-6 - Beep Beep Beep Beep
+722222228
+3isisiso4
+3sisisio4
+3ssssssv4
+3ixbxbxo4
+3ibsssb;4
+3ixi;ix.4
+3wd;?;b;4
+3.i.;.z.4
+3;i;kss;4
+3.;.;.;.4
+511111116
+
+
+
+message * - Family
+722222222228
+3e;.e.;e;;e4
+3;?e.;e;.e;4
+3sss;e;.e.;4
+3x.;sssssss4
+3eeewovovov4
+3x.;sssssss4
+3sss;.;.;.;4
+3e;;e;.e.;e4
+3.;e;.e.;e;4
+511111111116
+
+message ** - The Fortress
+722222222228
+3;?;.;sssss4
+3.;.;.ibssi4
+3;.;.;dydvi4
+3.;.;.;iysi4
+3z.;.;dydvi4
+3eeew.;iysi4
+3z.;.;dydvi4
+3.;.;.;iysi4
+3;.;.;dydvi4
+3.;.;.ibssi4
+3;.;.;sssss4
+511111111116
+
+message *** - One of Each
+722222228(simple but very difficult - very hard to beat by luck)
+3?;.i.;.4
+3;b;i;.;4
+3.;.i.;.4
+3;pe#;kv4
+3.;.i.;.4
+3;d;i;.;4
+3.;.i.;.4
+511111116
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

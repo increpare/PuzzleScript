@@ -1,0 +1,1125 @@
+title Ball Bros
+author Mark Richardson
+again_interval 0.1
+key_repeat_interval 0.2
+norepeat_action
+run_rules_on_level_start
+(verbose_logging)
+
+
+========
+OBJECTS
+========
+
+Background
+#555
+
+Player
+Transparent
+
+Raise
+Transparent
+
+Lower
+Transparent
+
+Tint
+Transparent
+
+Wall
+#DDD
+
+Exit1
+#AAA #888 #222
+...00
+.0011
+.0111
+02211
+01122
+
+Exit2
+#AAA #888 #222
+00...
+1200.
+1210.
+21110
+21110
+
+Exit3
+#AAA #888 #222
+01112
+01112
+.0121
+.0021
+...00
+
+Exit4
+#AAA #888 #222
+22110
+11220
+1110.
+1100.
+00...
+
+Exit5
+#AAA #888 #222
+.000.
+02120
+01210
+02120
+.000.
+
+Ball1A
+#8EE #0CC #099
+...01
+.0011
+.0111
+00111
+01111
+
+Ball2A
+#8EE #0CC #099
+12...
+1122.
+1112.
+11122
+11112
+
+Ball3A
+#8EE #0CC #099
+01111
+00111
+.0111
+.0011
+...01
+
+Ball4A
+#8EE #0CC #099
+11112
+11122
+1112.
+1122.
+12...
+
+Ball5A
+#E8E #C0C #909
+.012.
+00122
+01112
+00122
+.012.
+
+Ball1I
+#477 #066 #044
+...01
+.0011
+.0111
+00111
+01111
+
+Ball2I
+#477 #066 #044
+12...
+1122.
+1112.
+11122
+11112
+
+Ball3I
+#477 #066 #044
+01111
+00111
+.0111
+.0011
+...01
+
+Ball4I
+#477 #066 #044
+11112
+11122
+1112.
+1122.
+12...
+
+Ball5I
+#747 #606 #404
+.012.
+00122
+01112
+00122
+.012.
+
+Win1A
+#000
+...00
+.00..
+.0...
+0....
+0....
+
+Win2A
+#000
+00...
+..00.
+...0.
+....0
+....0
+
+Win3A
+#000
+0....
+0....
+.0...
+.00..
+...00
+
+Win4A
+#000
+....0
+....0
+...0.
+..00.
+00...
+
+Win5A
+#000
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Win1B
+#000
+...00
+.0000
+.00..
+00...
+00...
+
+Win2B
+#000
+00...
+0000.
+..00.
+...00
+...00
+
+Win3B
+#000
+00...
+00...
+.00..
+.0000
+...00
+
+Win4B
+#000
+...00
+...00
+..00.
+0000.
+00...
+
+Win5B
+#000
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Win1C
+#000
+...00
+.0000
+.0000
+0000.
+000..
+
+Win2C
+#000
+00...
+0000.
+0000.
+.0000
+..000
+
+Win3C
+#000
+000..
+0000.
+.0000
+.0000
+...00
+
+Win4C
+#000
+..000
+.0000
+0000.
+0000.
+00...
+
+Win5C
+#000
+.000.
+00.00
+0...0
+00.00
+.000.
+
+Win1D
+#000
+...00
+.0000
+.0000
+00000
+0000.
+
+Win2D
+#000
+00...
+0000.
+0000.
+00000
+.0000
+
+Win3D
+#000
+0000.
+00000
+.0000
+.0000
+...00
+
+Win4D
+#000
+.0000
+00000
+0000.
+0000.
+00...
+
+Win5D
+#000
+.000.
+00000
+00.00
+00000
+.000.
+
+Win1E
+#000
+...00
+.0000
+.0000
+00000
+00000
+
+Win2E
+#000
+00...
+0000.
+0000.
+00000
+00000
+
+Win3E
+#000
+00000
+00000
+.0000
+.0000
+...00
+
+Win4E
+#000
+00000
+00000
+0000.
+0000.
+00...
+
+Win5E
+#000
+.000.
+00000
+00000
+00000
+.000.
+
+Crate
+#EE8 #CC0 #990
+00001
+01112
+01112
+01112
+12222
+
+GateCX
+#EA6 #C84 #A62
+.....
+.001.
+.012.
+.122.
+.....
+
+GateCU
+#EA6 #C84 #A62
+.012.
+.012.
+.012.
+.122.
+.....
+
+GateCD
+#EA6 #C84 #A62
+.....
+.001.
+.012.
+.012.
+.012.
+
+GateCL
+#EA6 #C84 #A62
+.....
+0001.
+1112.
+2222.
+.....
+
+GateCR
+#EA6 #C84 #A62
+.....
+.0000
+.0111
+.1222
+.....
+
+GateCUD
+#EA6 #C84 #A62
+.012.
+.012.
+.012.
+.012.
+.012.
+
+GateCUL
+#EA6 #C84 #A62
+.012.
+0012.
+1112.
+2222.
+.....
+
+GateCUR
+#EA6 #C84 #A62
+.012.
+.0110
+.0111
+.1222
+.....
+
+GateCDL
+#EA6 #C84 #A62
+.....
+0001.
+1112.
+2112.
+.012.
+
+GateCDR
+#EA6 #C84 #A62
+.....
+.0000
+.0111
+.0122
+.012.
+
+GateCLR
+#EA6 #C84 #A62
+.....
+00000
+11111
+22222
+.....
+
+GateOX
+#753 #642 #531
+.....
+.001.
+.012.
+.122.
+.....
+
+GateOU
+#753 #642 #531
+.012.
+.012.
+.012.
+.122.
+.....
+
+GateOD
+#753 #642 #531
+.....
+.001.
+.012.
+.012.
+.012.
+
+GateOL
+#753 #642 #531
+.....
+0001.
+1112.
+2222.
+.....
+
+GateOR
+#753 #642 #531
+.....
+.0000
+.0111
+.1222
+.....
+
+GateOUD
+#753 #642 #531
+.012.
+.012.
+.012.
+.012.
+.012.
+
+GateOUL
+#753 #642 #531
+.012.
+0012.
+1112.
+2222.
+.....
+
+GateOUR
+#753 #642 #531
+.012.
+.0110
+.0111
+.1222
+.....
+
+GateODL
+#753 #642 #531
+.....
+0001.
+1112.
+2112.
+.012.
+
+GateODR
+#753 #642 #531
+.....
+.0000
+.0111
+.0122
+.012.
+
+GateOLR
+#753 #642 #531
+.....
+00000
+11111
+22222
+.....
+
+EmitterU
+#FFF #555 #AAA
+.101.
+.222.
+.222.
+.222.
+.....
+
+EmitterD
+#FFF #555 #AAA
+.....
+.222.
+.222.
+.222.
+.101.
+
+EmitterL
+#FFF #555 #AAA
+.....
+1222.
+0222.
+1222.
+.....
+
+EmitterR
+#FFF #555 #AAA
+.....
+.2221
+.2220
+.2221
+.....
+
+ReceiverW
+#FFF #000 #AAA
+..2..
+.212.
+21012
+.212.
+..2..
+
+ReceiverY
+#FF0 #000 #AAA
+..2..
+.212.
+21012
+.212.
+..2..
+
+ReceiverC
+#0FF #000 #AAA
+..2..
+.212.
+21012
+.212.
+..2..
+
+ReceiverM
+#F0F #000 #AAA
+..2..
+.212.
+21012
+.212.
+..2..
+
+ReceiverR
+#F00 #000 #AAA
+..2..
+.212.
+21012
+.212.
+..2..
+
+ReceiverG
+#0F0 #000 #AAA
+..2..
+.212.
+21012
+.212.
+..2..
+
+ReceiverB
+#00F #000 #AAA
+..2..
+.212.
+21012
+.212.
+..2..
+
+LaserWH
+#FFF
+.....
+.....
+00000
+.....
+.....
+
+LaserYH
+#FF0
+.....
+.....
+00000
+.....
+.....
+
+LaserMH
+#F0F
+.....
+.....
+00000
+.....
+.....
+
+LaserCH
+#0FF
+.....
+.....
+00000
+.....
+.....
+
+LaserRH
+#F00
+.....
+.....
+00000
+.....
+.....
+
+LaserGH
+#0F0
+.....
+.....
+00000
+.....
+.....
+
+LaserBH
+#00F
+.....
+.....
+00000
+.....
+.....
+
+LaserKH
+Transparent
+
+LaserWV
+#FFF
+..0..
+..0..
+..0..
+..0..
+..0..
+
+LaserYV
+#FF0
+..0..
+..0..
+..0..
+..0..
+..0..
+
+LaserMV
+#F0F
+..0..
+..0..
+..0..
+..0..
+..0..
+
+LaserCV
+#0FF
+..0..
+..0..
+..0..
+..0..
+..0..
+
+LaserRV
+#F00
+..0..
+..0..
+..0..
+..0..
+..0..
+
+LaserGV
+#0F0
+..0..
+..0..
+..0..
+..0..
+..0..
+
+LaserBV
+#00F
+..0..
+..0..
+..0..
+..0..
+..0..
+
+LaserKV
+Transparent
+
+
+=======
+LEGEND
+=======
+
+. = Background
+█ = Wall
+┌ = Exit1
+┐ = Exit2
+└ = Exit3
+┘ = Exit4
+□ = Exit5
+╭ = Ball1A
+╮ = Ball2A
+╰ = Ball3A
+╯ = Ball4A
+○ = Ball5I and Player
+■ = Crate
+▫ = GateCX
+╨ = GateCU
+╥ = GateCD
+╡ = GateCL
+╞ = GateCR
+║ = GateCUD
+╝ = GateCUL
+╚ = GateCUR
+╗ = GateCDL
+╔ = GateCDR
+═ = GateCLR
+╫ = GateCUD and Wall
+╪ = GateCLR and Wall
+↑ = EmitterU and Wall
+↓ = EmitterD and Wall
+← = EmitterL and Wall
+→ = EmitterR and Wall
+W = ReceiverW and Wall
+Y = ReceiverY and Wall
+C = ReceiverC and Wall
+M = ReceiverM and Wall
+R = ReceiverR and Wall
+G = ReceiverG and Wall
+B = ReceiverB and Wall
+
+Exit = Exit1 or Exit2 or Exit3 or Exit4 or Exit5
+Ball1 = Ball1A or Ball1I
+Ball2 = Ball2A or Ball2I
+Ball3 = Ball3A or Ball3I
+Ball4 = Ball4A or Ball4I
+Ball5 = Ball5A or Ball5I
+BallB = Ball1 or Ball2 or Ball3 or Ball4
+BallS = Ball5
+BallA = Ball1A or Ball2A or Ball3A or Ball4A or Ball5A
+BallI = Ball1I or Ball2I or Ball3I or Ball4I or Ball5I
+Ball = BallA or BallI
+WinA = Win1A or Win2A or Win3A or Win4A or Win5A
+WinB = Win1B or Win2B or Win3B or Win4B or Win5B
+WinC = Win1C or Win2C or Win3C or Win4C or Win5C
+WinD = Win1D or Win2D or Win3D or Win4D or Win5D
+WinE = Win1E or Win2E or Win3E or Win4E or Win5E
+WinX = WinA or WinB or WinC or WinD or WinE
+GateC = GateCX or GateCU or GateCD or GateCL or GateCR or GateCUD or GateCUL or GateCUR or GateCDL or GateCDR or GateCLR
+GateO = GateOX or GateOU or GateOD or GateOL or GateOR or GateOUD or GateOUL or GateOUR or GateODL or GateODR or GateOLR
+GateU = GateCU or GateCUD or GateCUL or GateCUR or GateOU or GateOUD or GateOUL or GateOUR
+GateD = GateCD or GateCUD or GateCDL or GateCDR or GateOD or GateOUD or GateODL or GateODR
+GateL = GateCL or GateCUL or GateCDL or GateCLR or GateOL or GateOUL or GateODL or GateOLR
+GateR = GateCR or GateCUR or GateCDR or GateCLR or GateOR or GateOUR or GateODR or GateOLR
+Gate = GateC or GateO
+Emitter = EmitterU or EmitterD or EmitterL or EmitterR
+Receiver = ReceiverW or ReceiverY or ReceiverC or ReceiverM or ReceiverR or ReceiverG or ReceiverB
+LaserV = LaserWV or LaserYV or LaserMV or LaserCV or LaserRV or LaserGV or LaserBV
+LaserH = LaserWH or LaserYH or LaserMH or LaserCH or LaserRH or LaserGH or LaserBH
+Laser = LaserV or LaserH or LaserKH or LaserKV
+
+ObstacleB = Wall or BallS or Crate
+ObstacleS = Wall or BallB or GateC
+ObstacleC = ObstacleS or Crate
+ObstacleG = Ball or Crate
+ObstacleL = Wall or GateC
+
+
+=======
+SOUNDS
+=======
+
+Crate Move    16843907 (Crate pushed)
+GateO Create  38401102 (Gate lowered)
+GateC Create  27634705 (Gate raised)
+WinA  Create  86341302 (Balls in exits)
+WinE  Destroy 38401102 (Level won)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Tint
+Exit, Gate
+Emitter, Receiver, Laser
+Ball, Crate
+Player, WinX, Raise, Lower
+
+======
+RULES
+======
+
+(Switch balls)
+[action Player][Ball]->[action Player][action Ball]
+[action Player]->[Player]
+[action Ball1A]->[Ball1I]
+[action Ball2A]->[Ball2I]
+[action Ball3A]->[Ball3I]
+[action Ball4A]->[Ball4I]
+[action Ball5A]->[Ball5I]
+[action Ball1I]->[Ball1A]
+[action Ball2I]->[Ball2A]
+[action Ball3I]->[Ball3A]
+[action Ball4I]->[Ball4A]
+[action Ball5I]->[Ball5A]
+
+(Move)
+[> Player][BallA]->[> Player][> BallA]
+[> Player]->[Player]
+[> Ball5A|Crate]->[> Ball5A|> Crate]
+[> Crate|ObstacleC]->[Crate|ObstacleC]
+[> BallB|ObstacleB]->[BallB|ObstacleB]
+[> BallS|ObstacleS]->[BallS|ObstacleS]
+[stationary BallA|moving BallA]->[stationary BallA|stationary BallA]
+
+(Emit lasers)
+late [Laser]->[]
+late up    [EmitterU|]->[EmitterU|LaserWV]
+late down  [EmitterD|]->[EmitterD|LaserWV]
+late left  [EmitterL|]->[EmitterL|LaserWH]
+late right [EmitterR|]->[EmitterR|LaserWH]
+
+(Depress gates)
+late [Gate]->[Raise Gate]
+late [Raise Gate ObstacleG]->[Lower Gate ObstacleG]
+
+startloop
+(Lower gates)
+
+  late up   [Lower GateU|Gate]->[Lower GateU|Lower Gate]
++ late down [Lower GateD|Gate]->[Lower GateD|Lower Gate]
++ late left [Lower GateL|Gate]->[Lower GateL|Lower Gate]
++ late right[Lower GateR|Gate]->[Lower GateR|Lower Gate]
+late [Lower GateCX ]->[Lower GateOX ]
+late [Lower GateCU ]->[Lower GateOU ]
+late [Lower GateCD ]->[Lower GateOD ]
+late [Lower GateCL ]->[Lower GateOL ]
+late [Lower GateCR ]->[Lower GateOR ]
+late [Lower GateCUD]->[Lower GateOUD]
+late [Lower GateCUL]->[Lower GateOUL]
+late [Lower GateCUR]->[Lower GateOUR]
+late [Lower GateCDL]->[Lower GateODL]
+late [Lower GateCDR]->[Lower GateODR]
+late [Lower GateCLR]->[Lower GateOLR]
+
+(Move lasers)
+  late [LaserWH Crate]->[LaserYH Crate]
++ late [LaserMH Crate]->[LaserRH Crate]
++ late [LaserCH Crate]->[LaserGH Crate]
++ late [LaserBH Crate]->[LaserKH Crate]
++ late [LaserWV Crate]->[LaserYV Crate]
++ late [LaserMV Crate]->[LaserRV Crate]
++ late [LaserCV Crate]->[LaserGV Crate]
++ late [LaserBV Crate]->[LaserKV Crate]
+
++ late [LaserWH BallS]->[LaserMH BallS]
++ late [LaserYH BallS]->[LaserRH BallS]
++ late [LaserCH BallS]->[LaserBH BallS]
++ late [LaserGH BallS]->[LaserKH BallS]
++ late [LaserWV BallS]->[LaserMV BallS]
++ late [LaserYV BallS]->[LaserRV BallS]
++ late [LaserCV BallS]->[LaserBV BallS]
++ late [LaserGV BallS]->[LaserKV BallS]
+
++ late [Laser Ball1][no Laser Ball4]->[Laser Ball1][Tint Laser Ball4]
++ late [Laser Ball2][no Laser Ball3]->[Laser Ball2][Tint Laser Ball3]
++ late [Laser Ball3][no Laser Ball2]->[Laser Ball3][Tint Laser Ball2]
++ late [Laser Ball4][no Laser Ball1]->[Laser Ball4][Tint Laser Ball1]
+
++ late [Tint LaserWH]->[LaserCH]
++ late [Tint LaserYH]->[LaserGH]
++ late [Tint LaserMH]->[LaserBH]
++ late [Tint LaserRH]->[LaserKH]
++ late [Tint LaserWV]->[LaserCV]
++ late [Tint LaserYV]->[LaserGV]
++ late [Tint LaserMV]->[LaserBV]
++ late [Tint LaserRV]->[LaserKV]
++ late [Tint Laser  ]->[Laser  ]
+
++ late horizontal [LaserH no BallB|         no Laser no ObstacleL]->[LaserH      |LaserH]
++ late vertical   [LaserV no BallB|         no Laser no ObstacleL]->[LaserV      |LaserV]
++ late horizontal [LaserH    BallB|no BallB no Laser no ObstacleL]->[LaserH BallB|LaserH]
++ late vertical   [LaserV    BallB|no BallB no Laser no ObstacleL]->[LaserV BallB|LaserV]
+
+(Activate receivers)
+late vertical   [ReceiverW|LaserWV]->[Lower ReceiverW|LaserWV]
+late vertical   [ReceiverY|LaserYV]->[Lower ReceiverY|LaserYV]
+late vertical   [ReceiverM|LaserMV]->[Lower ReceiverM|LaserMV]
+late vertical   [ReceiverC|LaserCV]->[Lower ReceiverC|LaserCV]
+late vertical   [ReceiverR|LaserRV]->[Lower ReceiverR|LaserRV]
+late vertical   [ReceiverG|LaserGV]->[Lower ReceiverG|LaserGV]
+late vertical   [ReceiverB|LaserBV]->[Lower ReceiverB|LaserBV]
+late horizontal [ReceiverW|LaserWH]->[Lower ReceiverW|LaserWH]
+late horizontal [ReceiverY|LaserYH]->[Lower ReceiverY|LaserYH]
+late horizontal [ReceiverM|LaserMH]->[Lower ReceiverM|LaserMH]
+late horizontal [ReceiverC|LaserCH]->[Lower ReceiverC|LaserCH]
+late horizontal [ReceiverR|LaserRH]->[Lower ReceiverR|LaserRH]
+late horizontal [ReceiverG|LaserGH]->[Lower ReceiverG|LaserGH]
+late horizontal [ReceiverB|LaserBH]->[Lower ReceiverB|LaserBH]
+late up    [Lower Receiver|Raise GateD]->[Lower Receiver|Lower GateD]
+late down  [Lower Receiver|Raise GateU]->[Lower Receiver|Lower GateU]
+late left  [Lower Receiver|Raise GateR]->[Lower Receiver|Lower GateR]
+late right [Lower Receiver|Raise GateL]->[Lower Receiver|Lower GateL]
+
+endloop
+
+(Raise gates)
+late [Raise GateOX ]->[Raise GateCX ]
+late [Raise GateOU ]->[Raise GateCU ]
+late [Raise GateOD ]->[Raise GateCD ]
+late [Raise GateOL ]->[Raise GateCL ]
+late [Raise GateOR ]->[Raise GateCR ]
+late [Raise GateOUD]->[Raise GateCUD]
+late [Raise GateOUL]->[Raise GateCUL]
+late [Raise GateOUR]->[Raise GateCUR]
+late [Raise GateODL]->[Raise GateCDL]
+late [Raise GateODR]->[Raise GateCDR]
+late [Raise GateOLR]->[Raise GateCLR]
+
+(Invalidate lasers cut off by gates)
+late [GateC Laser]->again
+
+(Animate win)
+[Win1E Ball1I]->[]
+[Win2E Ball2I]->[]
+[Win3E Ball3I]->[]
+[Win4E Ball4I]->[]
+[Win5E Ball5I]->[]again
+[Win1D]->[Win1E]
+[Win2D]->[Win2E]
+[Win3D]->[Win3E]
+[Win4D]->[Win4E]
+[Win5D]->[Win5E]again
+[Win1C]->[Win1D]
+[Win2C]->[Win2D]
+[Win3C]->[Win3D]
+[Win4C]->[Win4D]
+[Win5C]->[Win5D]again
+[Win1B]->[Win1C]
+[Win2B]->[Win2C]
+[Win3B]->[Win3C]
+[Win4B]->[Win4C]
+[Win5B]->[Win5C]again
+[Win1A]->[Win1B]
+[Win2A]->[Win2B]
+[Win3A]->[Win3B]
+[Win4A]->[Win4B]
+[Win5A]->[Win5B]again
+
+(Check win)
+late [Exit no WinX]->[Raise Exit]
+late [Raise Exit Ball]->[Lower Exit Ball]
+late [Raise Exit][Lower Exit]->[Raise Exit][Exit]
+late [Lower Exit1 Ball1]->[Exit1 Ball1I Win1A]
+late [Lower Exit2 Ball2]->[Exit2 Ball2I Win2A]
+late [Lower Exit3 Ball3]->[Exit3 Ball3I Win3A]
+late [Lower Exit4 Ball4]->[Exit4 Ball4I Win4A]
+late [Lower Exit5 Ball5]->[Exit5 Ball5I Win5A]again
+late [Raise]->[]
+late [Lower]->[]
+
+
+==============
+WINCONDITIONS
+==============
+
+no Ball
+
+
+=======
+LEVELS
+=======
+
+██████████████
+█.╭╮..╥...┌┐.█
+█.╰╯..║.■.└┘.█
+█....╔╝.■....█
+█.○..╨.....□.█
+██████████████
+
+██████████████
+█╭╮████╥██████
+█╰╯....║...┌┐█
+█.○....║..□└┘█
+█▫▫████╫██████
+█......║.....█
+█......║.....█
+███████╨██████
+██████████████
+
+██████████████
+█┌┐□███.╥..███
+█└┘..█..║.■.██
+█....╥■■╨....█
+██.■.║..█..╭╮█
+███..╨.███○╰╯█
+██████████████
+
+███████████
+█╭╮....■▫.█
+█╰╯▫■▫....█
+█.▫○.■▫...█
+█.■.▫▫..■.█
+█.▫.■..▫.▫█
+█.■.▫▫■□■.█
+█.▫...▫▫┌┐█
+█...■▫.▫└┘█
+███████████
+
+█████████████████
+█.╭╮.╥...╥...╥┌┐█
+█.╰╯.║.■.║...║└┘█
+→....║...║...Y███
+█..○.║...║...║.□█
+█....╨...╨...╨..█
+█████████████████
+
+...╔═══════╗.....
+███╫███████╫█████
+█┌┐║...╥...║.╭╮.█
+█└┘║...║...║.╰╯.█
+█..║...║...║....←
+███C...║...║.○..█
+█□.╨...╨...║....█
+███████████╫█████
+...........╨.....
+
+██████████████
+██████.....┌┐█
+██████.■...└┘█
+█.╭╮.█╞═╗█████
+█.╰╯....G█╞╗.█
+→..........R□█
+█.○.....B█╞╝.█
+█....█╞═╝█████
+███■██...█████
+███......█████
+██████████████
+
+█████████████████
+███████████████□█
+█╭╮╞═══G══════G╡█
+→╰╯..■..■...■...█
+█○..╞═════G════╡█
+██████████████┌┐█
+██████████████└┘█
+█████████████████
+
+████╔╪╪╪╪╪╪╪╗
+█┌┐█╫█□█████╫
+█└┘█╫╞═╪╪╗██╫
+█...║.○╞═c..╫
+→...║....║..m
+█╭╮█╫████╫█.█
+█╰╯█╚╪╪╪╪╝█.█
+█..████████.█
+█...........█
+█████████████
+
+██↓↓↓↓████
+█╭╮...↓███
+█╰╯.■..┌┐█
+█......└┘█
+█.╥.╥.╥███
+█C╝Y╝M╝╥██
+█╥.╥○╥.║□█
+█╝B╝G╝R╝██
+██████████
+
+message ♪        Contratulations!         ♪                                 ♪ You just completed the world's  ♪ most complex vending machine.  ♪                                  ♪         Enjoy your candy!!        ♪

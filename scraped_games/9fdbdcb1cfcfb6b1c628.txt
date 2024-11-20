@@ -1,0 +1,337 @@
+title I'm Sick Today
+author Ben Porter
+homepage bp.io
+run_rules_on_level_start
+noaction
+noundo
+color_palette famicom
+(youtube sH_FX6-W4xI (under the skin - micachu))
+
+========
+OBJECTS
+========
+
+Background
+#001 #000
+11111
+01111
+11101
+11111
+10111
+
+WallStart
+White
+.....
+.....
+.....
+.....
+.....
+
+Wall_S
+DarkGreen #010 #050
+00000
+20202
+00000
+11111
+11111
+
+Wall
+DarkGreen #050
+01110
+11011
+01110
+10101
+00100
+
+GermStain1
+#010
+.....
+.0...
+.....
+...0.
+.....
+
+GermStain2
+#010
+.....
+...0.
+.0...
+...0.
+.....
+
+GermStain3
+#010
+.....
+..0..
+....0
+.0...
+.....
+
+InfectedPlayer
+White Green
+..1..
+.111.
+..1..
+.1.1.
+.....
+
+CuredPlayer
+Orange
+..0..
+.000.
+..0..
+.0.0.
+.....
+
+Infected
+White Green
+..1..
+.111.
+..1..
+.1.1.
+.....
+
+Dead
+DarkGreen #400
+..1..
+01011
+10001
+01011
+1..1.
+
+Person
+Orange Grey
+..0..
+.111.
+..1..
+.1.1.
+.....
+
+Person2
+Orange Grey
+..0..
+.111.
+..1..
+.1.1.
+.....
+
+Doctor
+Orange White
+..0..
+.111.
+..1..
+.1.1.
+.....
+
+Bed
+White Brown
+.....
+.....
+00000
+11111
+1...1
+
+BedWithInfected
+White Brown Green
+.....
+22222
+00000
+11111
+1...1
+
+=======
+LEGEND
+=======
+
+. = Background
+# = WallStart
+P = InfectedPlayer
+@ = Person
+D = Doctor
+B = Bed
+
+Walls = Wall or Wall_S or WallStart
+Collidable = Walls or Person or Infected or Dead or Doctor or Bed or BedWithInfected
+GermStain = GermStain1 or GermStain2 or GermStain3
+
+Player = InfectedPlayer or CuredPlayer
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+GermStain
+Player, Walls, Infected, Dead, Person, Person2, Doctor, Bed, BedWithInfected
+
+======
+RULES
+======
+
+(Spread Infection)
+late [InfectedPlayer | Person] -> [Infected | InfectedPlayer]
+late [Infected | Person] -> [Infected | Infected] 
+late [Infected] -> [Dead]
+
+(Cure Infection)
+late [InfectedPlayer | Doctor] -> [CuredPlayer | Doctor]
+
+(Leave Germ Stains)
+[> InfectedPlayer | No Collidable] -> [random GermStain | InfectedPlayer]
+
+(Doctors walk towards patient)
+[Doctor | ... | stationary InfectedPlayer] -> [> Doctor | ... | InfectedPlayer]
+
+(Go To Bed)
+[> Player | Bed] -> [ | BedWithInfected]
+[BedWithInfected] [Person] -> [BedWithInfected] [Person2]
+
+(Build proper walls)
+DOWN [WallStart | No Walls] -> [Wall_S | No Walls]
+[WallStart] -> [Wall]
+
+==============
+WINCONDITIONS
+==============
+
+No Person
+
+=======
+LEVELS
+=======
+
+message I'm sick today *cough*
+
+######
+#@...#
+#....#
+###@##
+#....#
+#P...#
+######
+
+##########
+#@.......#
+#....#...#
+###@###..#
+#.....@..#
+#P...#...#
+##########
+
+##########
+#@.......#
+#...@#...#
+###@###..#
+#.....@..#
+#P...#...#
+##########
+
+message I better go to the doctor *cough*
+
+#######@#######
+#D..........P.#
+###############
+
+######
+#@..D#
+#....#
+###@##
+#....#
+#P...#
+######
+
+######.
+#@..@#.
+#...@#.
+##@####
+#....D#
+#P...D#
+#######
+
+##########
+#@..D....#
+#...@#...#
+#.#@###..#
+#.....@..#
+#P.......#
+##########
+
+message These hospitals seem crowded.
+
+######
+#@@@@#
+#@@@@#
+###.##
+#....#
+#P...#
+######
+
+########
+#@@@@..#
+#@...#.#
+###.##.#
+#@@@@#.#
+#@@@@#.#
+###.##.#
+#......#
+#P.....#
+########
+
+######D#####
+######.#####
+#@@@@....@@#
+#@@@#...#.@#
+###.#####.@#
+#.....@@@.@#
+#P..@@@.@@@#
+############
+
+############
+#@@@@@@@@@@#
+#@DDDDDDDD@#
+#@@@@@@@@D@#
+#DDDDDDDDD@#
+#@@@@@@@@@@#
+#@DDDDDDDDD#
+#@@@@@@@@@@#
+#@DDDDDDDD@#
+#@@@@@@@@D@#
+##DDDDDDDD@#
+#@@@@@@@@@@#
+#.########.#
+#P.........#
+#.########.#
+#@@@@@@@@@@#
+#@DDDDDDDDD#
+#@@@@@@@@@@#
+#DDDDDDDDD@#
+#@@@@@@@@@@#
+#@DDDDDDDDD#
+#@@@@@@@@@@#
+#@DDDDDDDD@#
+#@@@@@@@@D@#
+#DDDDDDDDD@#
+#@@@@@@@@@@#
+############
+
+############
+#D.D......@#
+#..........#
+#.........D#
+#..........#
+#P........D#
+############
+
+message Maybe I'll just go back to bed.
+
+#########
+#P...B#@#
+#########
+
+message *snore* *splutter* *cough*
+
+

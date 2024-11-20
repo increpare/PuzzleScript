@@ -1,0 +1,654 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	W
+      colors
+        color	hite
+    object_data
+      object_name	Cursor
+      legend_key	R
+      colors
+        color	ed
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '.' '0' '0']
+    object_data
+      object_name	Laying
+      legend_key	R
+      colors
+        color	ed
+        color	Blue
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['.' '1' '1' '1' '.']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '.' '0' '0']
+    object_data
+      object_name	FaultR
+      legend_key	#
+      colors
+        color	ECC
+      sprite
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+    object_data
+      object_name	FaultL
+      legend_key	#
+      colors
+        color	ECC
+      sprite
+        ['0' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+    object_data
+      object_name	FaultU
+      legend_key	#
+      colors
+        color	ECC
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	FaultD
+      legend_key	#
+      colors
+        color	ECC
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	DominoR
+      legend_key	B
+      colors
+        color	lue
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '0']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	DominoL
+      legend_key	B
+      colors
+        color	lue
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['0' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	DominoU
+      legend_key	B
+      colors
+        color	lue
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	DominoD
+      legend_key	B
+      colors
+        color	lue
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Monomino
+      legend_key	B
+      colors
+        color	lack
+      
+
+  legend_section
+    legend_data
+      Player
+      object_name	Cursor
+      legend_operation
+        object_name	Laying
+    legend_data
+      Domino
+      object_name	DominoR
+      legend_operation
+        object_name	DominoL
+      legend_operation
+        object_name	DominoD
+      legend_operation
+        object_name	DominoU
+      legend_operation
+        object_name	Monomino
+    legend_data
+      Fault
+      object_name	FaultR
+      legend_operation
+        object_name	FaultL
+      legend_operation
+        object_name	FaultD
+      legend_operation
+        object_name	FaultU
+    legend_data
+      RThing
+      object_name	DominoR
+      legend_operation
+        object_name	FaultR
+    legend_data
+      LThing
+      object_name	DominoL
+      legend_operation
+        object_name	FaultL
+    legend_data
+      UThing
+      object_name	DominoU
+      legend_operation
+        object_name	FaultU
+    legend_data
+      DThing
+      object_name	DominoD
+      legend_operation
+        object_name	FaultD
+    legend_data
+      FaultV
+      object_name	FaultU
+      legend_operation
+        object_name	FaultD
+    legend_data
+      FaultH
+      object_name	FaultL
+      legend_operation
+        object_name	FaultR
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      @
+      object_name	Cursor
+    legend_data
+      M
+      object_name	Monomino
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	LThing
+    layer_data
+      object_name	RThing
+    layer_data
+      object_name	UThing
+    layer_data
+      object_name	DThing
+    layer_data
+      object_name	Monomino
+    layer_data
+      object_name	Player
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Cursor
+              no
+              Domino
+          ->
+          rule_part
+            rule_content	Laying
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Laying
+          ->
+          rule_part
+            rule_content	Cursor
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Cursor
+              Domino
+          ->
+          rule_part
+            rule_content
+              Cursor
+              Action
+              Domino
+          
+
+        rule_data
+          Right
+          rule_part
+            rule_content
+              Action
+              DominoR
+            cell_border
+            rule_content	D
+            rule_content	o
+            rule_content	m
+            rule_content	i
+            rule_content	n
+            rule_content	o
+            rule_content	L
+          ->
+          rule_part
+            rule_content	|
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          Left
+          rule_part
+            rule_content
+              Action
+              DominoL
+            cell_border
+            rule_content	D
+            rule_content	o
+            rule_content	m
+            rule_content	i
+            rule_content	n
+            rule_content	o
+            rule_content	R
+          ->
+          rule_part
+            rule_content	|
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          Down
+          rule_part
+            rule_content
+              Action
+              DominoD
+            cell_border
+            rule_content	D
+            rule_content	o
+            rule_content	m
+            rule_content	i
+            rule_content	n
+            rule_content	o
+            rule_content	U
+          ->
+          rule_part
+            rule_content	|
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          Up
+          rule_part
+            rule_content
+              Action
+              DominoU
+            cell_border
+            rule_content	D
+            rule_content	o
+            rule_content	m
+            rule_content	i
+            rule_content	n
+            rule_content	o
+            rule_content	D
+          ->
+          rule_part
+            rule_content	|
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          Right
+          rule_part
+            rule_content
+              >
+              Laying
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	D
+            rule_content	o
+            rule_content	m
+            rule_content	i
+            rule_content	n
+            rule_content	o
+          ->
+          rule_part
+            rule_content	DominoR
+            cell_border
+            rule_content	D
+            rule_content	o
+            rule_content	m
+            rule_content	i
+            rule_content	n
+            rule_content	o
+            rule_content	L
+            rule_content	C
+            rule_content	u
+            rule_content	r
+            rule_content	s
+            rule_content	o
+            rule_content	r
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          Left
+          rule_part
+            rule_content
+              >
+              Laying
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	D
+            rule_content	o
+            rule_content	m
+            rule_content	i
+            rule_content	n
+            rule_content	o
+          ->
+          rule_part
+            rule_content	DominoL
+            cell_border
+            rule_content	D
+            rule_content	o
+            rule_content	m
+            rule_content	i
+            rule_content	n
+            rule_content	o
+            rule_content	R
+            rule_content	C
+            rule_content	u
+            rule_content	r
+            rule_content	s
+            rule_content	o
+            rule_content	r
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          Up
+          rule_part
+            rule_content
+              >
+              Laying
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	D
+            rule_content	o
+            rule_content	m
+            rule_content	i
+            rule_content	n
+            rule_content	o
+          ->
+          rule_part
+            rule_content	DominoU
+            cell_border
+            rule_content	D
+            rule_content	o
+            rule_content	m
+            rule_content	i
+            rule_content	n
+            rule_content	o
+            rule_content	D
+            rule_content	C
+            rule_content	u
+            rule_content	r
+            rule_content	s
+            rule_content	o
+            rule_content	r
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          Down
+          rule_part
+            rule_content
+              >
+              Laying
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	D
+            rule_content	o
+            rule_content	m
+            rule_content	i
+            rule_content	n
+            rule_content	o
+          ->
+          rule_part
+            rule_content	DominoD
+            cell_border
+            rule_content	D
+            rule_content	o
+            rule_content	m
+            rule_content	i
+            rule_content	n
+            rule_content	o
+            rule_content	U
+            rule_content	C
+            rule_content	u
+            rule_content	r
+            rule_content	s
+            rule_content	o
+            rule_content	r
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Laying
+          ->
+          command
+            command_keyword	Cancel
+          
+
+        rule_data
+          late
+          Left
+          rule_part
+            rule_content
+              no
+              LThing
+            cell_border
+          ->
+          rule_part
+            rule_content	FaultL
+            cell_border
+          
+
+        rule_data
+          late
+          Right
+          rule_part
+            rule_content
+              no
+              RThing
+            cell_border
+          ->
+          rule_part
+            rule_content	FaultR
+            cell_border
+          
+
+        rule_data
+          late
+          Up
+          rule_part
+            rule_content
+              no
+              UThing
+            cell_border
+          ->
+          rule_part
+            rule_content	FaultU
+            cell_border
+          
+
+        rule_data
+          late
+          Down
+          rule_part
+            rule_content
+              no
+              DThing
+            cell_border
+          ->
+          rule_part
+            rule_content	FaultD
+            cell_border
+          
+
+        rule_data
+          late
+          Horizontal
+          rule_part
+            rule_content	FaultU
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	F
+            rule_content	a
+            rule_content	u
+            rule_content	l
+            rule_content	t
+            rule_content	U
+          ->
+          rule_part
+            rule_content	|
+          
+
+        rule_data
+          late
+          Horizontal
+          rule_part
+            rule_content	FaultD
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	F
+            rule_content	a
+            rule_content	u
+            rule_content	l
+            rule_content	t
+            rule_content	D
+          ->
+          rule_part
+            rule_content	|
+          
+
+        rule_data
+          late
+          Vertical
+          rule_part
+            rule_content	FaultR
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	F
+            rule_content	a
+            rule_content	u
+            rule_content	l
+            rule_content	t
+            rule_content	R
+          ->
+          rule_part
+            rule_content	|
+          
+
+        rule_data
+          late
+          Vertical
+          rule_part
+            rule_content	FaultL
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	F
+            rule_content	a
+            rule_content	u
+            rule_content	l
+            rule_content	t
+            rule_content	L
+          ->
+          rule_part
+            rule_content	|
+          
+
+  winconditions_section
+    condition_data
+      no
+      object_name	Fault
+    condition_data
+      all
+      object_name	Background
+      on
+      object_name	Domino
+  levels_section
+    level_data	[['@' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.']]
+    level_data	[['@' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' 'M' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.']]
+    level_data	[['@' '.' '.' '.' '.' '.']]
+    level_data	[['.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.']]
+    level_data	None

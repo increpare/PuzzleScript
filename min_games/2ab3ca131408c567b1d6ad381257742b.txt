@@ -1,0 +1,178 @@
+OBJECTS
+
+Background#757D82 DARKGRAY11111
+11011
+10001
+11011
+11111
+
+WallDARKBLUE #22303F00000
+01110
+01110
+01110
+00000
+
+GreenPlayerLIGHTGREEN WHITE.000.
+00000
+01010
+00000
+.0.0.
+
+RedPlayerRED WHITE.000.
+00000
+01010
+00000
+.0.0.
+
+LeftArmLIGHTGREEN0....
+0....
+.....
+.....
+.....
+
+RightArmLIGHTGREEN....0
+....0
+.....
+.....
+.....
+
+MoveCrateORANGE BROWN00000
+01110
+01110
+01110
+00000
+
+FixedCrateORANGE BROWN00000
+01110
+01110
+01110
+00000
+
+BlueCrateLIGHTBLUE BLUE00000
+01110
+01110
+01110
+00000
+
+FixedDotDARKBLUE.....
+.....
+..0..
+.....
+.....
+
+PathHorizTRANSPARENT
+PathVertTRANSPARENT
+FlagTRANSPARENT
+
+
+LEGEND
+
+. = Background
+P = GreenPlayer
+R = RedPlayer
+# = Wall
+M = MoveCrate
+F = FixedCrate or FixedDot
+Crate = MoveCrate or FixedCrate
+Path = PathHoriz or PathVert
+Arm = LeftArm or RightArm
+Player = GreenPlayer or RedPlayer
+
+COLLISIONLAYERS
+
+Background
+Player, Crate
+Wall, RedPlayer
+PathHoriz
+PathVert
+BlueCrate
+Arm
+FixedDot
+Flag
+
+RULES
+
+[ > GreenPlayer | MoveCrate ] -> [ > GreenPlayer | >MoveCrate ] 
+[ < RedPlayer | MoveCrate ] -> [ < RedPlayer | <MoveCrate ] 
+late right [ Crate | Crate | Crate ] -> [ Crate PathHoriz | CratePathHoriz | CratePathHoriz ] 
+late down [ Crate | Crate | Crate ] -> [ Crate PathVert | CratePathVert | CratePathVert ] 
+late right [ no Crate | CratePathHoriz | CratePathHoriz | noCrate ] -> [ |Crate | Crate |  ] 
+late down [ no Crate | CratePathVert | CratePathVert | noCrate ] -> [ |Crate | Crate |  ] 
+late right [ no Crate | CratePathHoriz | noCrate ] -> [ |Crate |  ] 
+late down [ no Crate | CratePathVert | noCrate ] -> [ |Crate |  ] 
+late [ Path no Crate ] -> [  ] 
+late [ Path ] -> [ Path BlueCrate ] 
+late [ BlueCrate no Path ] -> [  ] 
+late random [ no Crate ] -> [ Flag ] 
+late [ Flag no Crate][CratenoPath ] -> [ ][CrateFlag ] 
+late [ Flag no Crate ] -> 
+late [ Arm ] -> [  ] 
+late right [ no Arm | Player | noArm][FlagnoCrate ] -> [ RightArm | Player | LeftArm][Flag ] 
+late [ Flag ] -> [  ] 
+
+
+WINCONDITIONS
+
+all Crate on Path
+
+LEVELS
+
+#########
+###m.m###
+###...###
+#.......#
+#.m.p.m.#
+#.......#
+###...###
+###mm.###
+#########
+
+#########
+###m.m###
+#.......#
+#...p...#
+#.......#
+#...m...#
+#..m.m..#
+###...###
+#########
+
+#########
+#...#...#
+#..m.m..#
+#.#.p.#.#
+###.#.###
+#.#...#.#
+#..m.m..#
+#...#...#
+#########
+
+#########
+#########
+#..###..#
+#..m...m#
+#..mp.f.#
+#..m...m#
+#..###..#
+#########
+#########
+
+#########
+###...###
+##..m..##
+#..f.f..#
+#.m.p.m.#
+##.f.f.##
+##..m..##
+###...###
+#########
+
+#################
+#...f.f.#...#.#.#
+#..m....#..m....#
+#...#m..#...#m..#
+#.......#.m.....#
+##m#.#####.#.#f##
+#...m...#...m...#
+#.p..#..#.p..#..#
+#################

@@ -1,0 +1,239 @@
+title Tractor Beam Sokoban9
+author Franklin P. Dyer
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+PlayerWall
+Gray
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+PickedUp
+Purple Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Sensor
+Transparent
+
+On
+Transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall and Sensor
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+/ = Playerwall
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Sensor, On
+Background
+Target
+Player, Wall, Crate, PickedUp
+PlayerWall
+
+======
+RULES
+======
+
+[On] -> [Sensor]
+[Sensor][PickedUp] -> [On][PickedUp]
+
+[> Player|Wall] -> cancel
+[> Player|PlayerWall] -> cancel
+[> Player|Crate] -> cancel
+
+UP[ Action Player |...| Crate ][Sensor] -> [  Player |...| PickedUp  ][Sensor]
+DOWN[ Action Player |...| Crate ][Sensor] -> [ Player |...| PickedUp  ][Sensor]
+LEFT[ Action Player |...| Crate ][Sensor] -> [  Player |...| PickedUp  ][Sensor]
+RIGHT[ Action Player |...| Crate ][Sensor] -> [ Player |...| PickedUp  ][Sensor]
+
+[Action Player][PickedUp] -> [Player][Crate]
+
+[Moving Player][PickedUp] -> [Moving Player][Moving PickedUp]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Press x to emit a tractor beam to pick up crates.
+message The sensor checks up, left, down, and then right.
+message There are certain barriers that only crates can pass by.
+
+message level 1 of 10
+
+####..
+#.O#..
+#//###
+#@P..#
+#..*.#
+#..###
+####..
+
+message level 2 of 10
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 10
+
+..####...
+###..####
+#../..*.#
+#.#/.#*.#
+#.O.O#P.#
+#########
+
+message level 4 of 10
+
+########
+#//....#
+#/O@@*P#
+#//....#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#../..#
+.#.O*O.#
+##/*P*/#
+#..O*O.#
+#.../..#
+########
+
+message level 6 of 10
+
+######.#####
+#.../###...#
+#.**/....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#######
+#//.//#
+#/O*O/#
+#.*O*.#
+#.O*O.#
+#/*O*/#
+#//P//#
+#######
+
+message level 8 of 10
+
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O./##
+#P**/#
+##/..#
+.##/.#
+..##O#
+...###
+
+message level 10 of 10
+
+......#####
+......#O..#
+......#O#.#
+#######O#/#
+#.P.*.*.*.#
+#.#/#/#.###
+#.......#..
+#########..
+
+message congratulations!

@@ -1,0 +1,2124 @@
+title Flash Point: Fire Rescue
+author Mark Richardson
+again_interval 0.05
+key_repeat_interval 0.5
+norepeat_action
+noundo
+realtime_interval 0.25
+run_rules_on_level_start
+(verbose_logging)
+
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+(State)
+Last
+Transparent
+
+Turn1
+Transparent
+
+Turn2
+Transparent
+
+(Floor)
+Outside
+#0A0
+
+Inside
+#00A
+
+Excluded
+#00A
+
+Elevator
+#444
+
+Air
+#5AF
+
+(Letters)
+A
+#FFF
+..00.
+.0..0
+.0000
+.0..0
+.0..0
+
+C
+#FFF
+..00.
+.0..0
+.0...
+.0..0
+..00.
+
+D
+#FFF
+.000.
+.0..0
+.0..0
+.0..0
+.000.
+
+E
+#FFF
+.0000
+.0...
+.000.
+.0...
+.0000
+
+I
+#FFF
+.000.
+..0..
+..0..
+..0..
+.000.
+
+K
+#FFF
+.0..0
+.0.0.
+.00..
+.0.0.
+.0..0
+
+L
+#FFF
+.0...
+.0...
+.0...
+.0...
+.0000
+
+O
+#FFF
+..00.
+.0..0
+.0..0
+.0..0
+..00.
+
+P
+#FFF
+.000.
+.0..0
+.000.
+.0...
+.0...
+
+R
+#FFF
+.000.
+.0..0
+.000.
+.0..0
+.0..0
+
+S
+#FFF
+..000
+.0...
+..00.
+....0
+.000.
+
+T
+#FFF
+00000
+..0..
+..0..
+..0..
+..0..
+
+W
+#FFF
+0...0
+0...0
+0.0.0
+0.0.0
+.0.0.
+
+X
+#FFF
+.0..0
+.0..0
+..00.
+.0..0
+.0..0
+
+Y
+#FFF
+.0..0
+.0..0
+..000
+....0
+..00.
+
+(House)
+HouseIcon8
+#000 #EEE #5AF
+.....
+.....
+..222
+.2222
+22222
+
+HouseIcon9
+#000 #EEE #5AF
+.....
+.....
+22...
+222..
+2222.
+
+HouseIcon5
+#000 #EEE #5AF
+.1111
+.1001
+.1001
+.1001
+.....
+
+HouseIcon6
+#000 #EEE #5AF
+111..
+001..
+001..
+111..
+.....
+
+House1
+#F00
+00000
+00000
+00000
+.....
+.....
+
+House2
+#F80
+00000
+00000
+00000
+.....
+.....
+
+House3
+#FF0
+00000
+00000
+00000
+.....
+.....
+
+House4
+#8F0
+00000
+00000
+00000
+.....
+.....
+
+House5
+#0F0
+00000
+00000
+00000
+.....
+.....
+
+Damage1
+#000
+....0
+....0
+....0
+....0
+....0
+
+Damage2
+#000
+...00
+...00
+...00
+...00
+...00
+
+Damage3
+#000
+..000
+..000
+..000
+..000
+..000
+
+Damage4
+#000
+.0000
+.0000
+.0000
+.0000
+.0000
+
+Damage5
+#000
+00000
+00000
+00000
+00000
+00000
+
+(Grid layer)
+GridO
+#555
+.....
+.....
+.....
+.....
+.....
+
+GridV
+#555
+..0..
+..0..
+..0..
+..0..
+..0..
+
+GridH
+#555
+.....
+.....
+00000
+.....
+.....
+
+GridX
+#555
+..0..
+..0..
+00000
+..0..
+..0..
+
+GridD
+#555
+.....
+.....
+00000
+..0..
+..0..
+
+GridL
+#555
+..0..
+..0..
+000..
+..0..
+..0..
+
+GridR
+#555
+..0..
+..0..
+..000
+..0..
+..0..
+
+GridU
+#555
+..0..
+..0..
+00000
+.....
+.....
+
+GridDL
+#555
+.....
+.....
+000..
+..0..
+..0..
+
+GridDR
+#555
+.....
+.....
+..000
+..0..
+..0..
+
+GridUL
+#555
+..0..
+..0..
+000..
+.....
+.....
+
+GridUR
+#555
+..0..
+..0..
+..000
+.....
+.....
+
+(Mode selection)
+Mode1
+#0F0 #0A0 #050
+..2..
+..1..
+..012
+.....
+.....
+
+Mode2
+#0F0 #0A0 #050
+.....
+.....
+21012
+.....
+.....
+
+Mode3
+#0F0 #0A0 #050
+..2..
+..1..
+210..
+.....
+.....
+
+Mode4
+#0F0 #0A0 #050
+..2..
+..1..
+..0..
+..1..
+..2..
+
+Mode
+#0F0 #0A0 #050
+.....
+.....
+.....
+.....
+.....
+
+Mode6
+#0F0 #0A0 #050
+..2..
+..1..
+..0..
+..1..
+..2..
+
+Mode7
+#0F0 #0A0 #050
+.....
+.....
+..012
+..1..
+..2..
+
+Mode8
+#0F0 #0A0 #050
+.....
+.....
+21012
+.....
+.....
+
+Mode9
+#0F0 #0A0 #050
+.....
+.....
+210..
+..1..
+..2..
+
+(Mode)
+Player
+#FF0 #AA0 #550
+.....
+.....
+.....
+.....
+.....
+
+Cursor51
+Transparent
+
+Cursor52
+Transparent
+
+Cursor53
+Transparent
+
+Cursor54
+Transparent
+
+Cursor11
+#FF0 #AA0 #550
+..2..
+..1..
+..012
+.....
+.....
+
+Cursor21
+#FF0 #AA0 #550
+.....
+.....
+21012
+.....
+.....
+
+Cursor31
+#FF0 #AA0 #550
+..2..
+..1..
+210..
+.....
+.....
+
+Cursor41
+#FF0 #AA0 #550
+..2..
+..1..
+..0..
+..1..
+..2..
+
+Cursor61
+#FF0 #AA0 #550
+..2..
+..1..
+..0..
+..1..
+..2..
+
+Cursor71
+#FF0 #AA0 #550
+.....
+.....
+..012
+..1..
+..2..
+
+Cursor81
+#FF0 #AA0 #550
+.....
+.....
+21012
+.....
+.....
+
+Cursor91
+#FF0 #AA0 #550
+.....
+.....
+210..
+..1..
+..2..
+
+Cursor12
+#FF0 #AA0 #550
+..1..
+..0..
+..121
+.....
+.....
+
+Cursor22
+#FF0 #AA0 #550
+.....
+.....
+10121
+.....
+.....
+
+Cursor32
+#FF0 #AA0 #550
+..1..
+..2..
+101..
+.....
+.....
+
+Cursor42
+#FF0 #AA0 #550
+..1..
+..0..
+..1..
+..2..
+..1..
+
+Cursor62
+#FF0 #AA0 #550
+..1..
+..2..
+..1..
+..0..
+..1..
+
+Cursor72
+#FF0 #AA0 #550
+.....
+.....
+..101
+..2..
+..1..
+
+Cursor82
+#FF0 #AA0 #550
+.....
+.....
+12101
+.....
+.....
+
+Cursor92
+#FF0 #AA0 #550
+.....
+.....
+121..
+..0..
+..1..
+
+Cursor13
+#FF0 #AA0 #550
+..0..
+..1..
+..210
+.....
+.....
+
+Cursor23
+#FF0 #AA0 #550
+.....
+.....
+01210
+.....
+.....
+
+Cursor33
+#FF0 #AA0 #550
+..0..
+..1..
+012..
+.....
+.....
+
+Cursor43
+#FF0 #AA0 #550
+..0..
+..1..
+..2..
+..1..
+..0..
+
+Cursor63
+#FF0 #AA0 #550
+..0..
+..1..
+..2..
+..1..
+..0..
+
+Cursor73
+#FF0 #AA0 #550
+.....
+.....
+..210
+..1..
+..0..
+
+Cursor83
+#FF0 #AA0 #550
+.....
+.....
+01210
+.....
+.....
+
+Cursor93
+#FF0 #AA0 #550
+.....
+.....
+012..
+..1..
+..0..
+
+Cursor14
+#FF0 #AA0 #550
+..1..
+..2..
+..101
+.....
+.....
+
+Cursor24
+#FF0 #AA0 #550
+.....
+.....
+12101
+.....
+.....
+
+Cursor34
+#FF0 #AA0 #550
+..1..
+..0..
+121..
+.....
+.....
+
+Cursor44
+#FF0 #AA0 #550
+..1..
+..2..
+..1..
+..0..
+..1..
+
+Cursor64
+#FF0 #AA0 #550
+..1..
+..0..
+..1..
+..2..
+..1..
+
+Cursor74
+#FF0 #AA0 #550
+.....
+.....
+..121
+..0..
+..1..
+
+Cursor84
+#FF0 #AA0 #550
+.....
+.....
+10121
+.....
+.....
+
+Cursor94
+#FF0 #AA0 #550
+.....
+.....
+101..
+..2..
+..1..
+
+(Fire)
+Flare
+Transparent
+
+Smoke1
+#555 #888 #BBB
+..000
+111..
+.222.
+00..0
+1..11
+
+Smoke2
+#555 #888 #BBB
+11..1
+222..
+0..00
+..111
+.000.
+
+Smoke3
+#555 #888 #BBB
+22..2
+..000
+.111.
+000..
+1..11
+
+Smoke4
+#555 #888 #BBB
+.000.
+111..
+00..0
+..111
+2..22
+
+Smoke5
+#555 #888 #BBB
+11..1
+0..00
+.111.
+..222
+000..
+
+Fire1
+#F00 #F50 #FA0
+.0.0.
+.101.
+02120
+01210
+.000.
+
+Fire2
+#F00 #F50 #FA0
+...0.
+.001.
+01120
+01210
+.000.
+
+Fire3
+#F00 #F50 #FA0
+.0...
+.100.
+02110
+01210
+.000.
+
+Fire4
+#F00 #F50 #FA0
+.....
+.000.
+01110
+01210
+.000.
+
+Explosion
+Transparent
+
+Shockwave
+#A00 #F00 #F50 #FA0
+.000.
+01210
+02320
+01210
+.000.
+
+Ruin
+#931 #720 #888
+20120
+12012
+01210
+21012
+02101
+
+(Mode Icons)
+UseDoor8
+#A50 #FD0
+.....
+.....
+.....
+.....
+00000
+
+UseDoor
+#A50 #FD0
+00000
+00000
+00010
+00000
+00000
+
+Axe8
+#FFF #F00 #931 #A50
+33333
+.....
+.....
+.....
+.1110
+
+Axe
+#FFF #F00 #931
+..110
+..2..
+..2..
+..2..
+..2..
+
+Spray8
+#931 #88F #66F
+..0..
+.....
+.....
+.....
+..221
+
+Spray
+#AAF #88F #66F #BA4
+...10
+..101
+..01.
+30...
+33...
+
+Spray4
+#AAF #88F #66F #BA4
+.....
+.....
+.....
+.....
+....3
+
+Spray6
+#AAF #88F #66F #BA4
+1....
+2....
+2....
+.....
+.....
+
+Spray2
+#BA4 #FF0
+0....
+.....
+.....
+.....
+..11.
+
+Spray1
+#BA4
+....0
+.....
+.....
+.....
+.....
+
+Walk
+#555 #FF0 #BA4
+..10.
+..111
+..11.
+11..1
+....1
+
+Walk4
+#FFF #FF0 #BA4
+.....
+.....
+.....
+....1
+....1
+
+Walk6
+#FFF #FF0 #BA4
+.....
+2....
+.....
+.....
+.....
+
+Walk2
+#FFF #FF0 #BA4
+....1
+.....
+.....
+.....
+.....
+
+Walk3
+#FFF #FF0 #BA4
+1....
+.....
+.....
+.....
+.....
+
+Carry
+Transparent
+
+(Turn Indicator)
+TurnOn
+#0F0 #0A0 #050 #F00
+.....
+.....
+.111.
+.1.1.
+.111.
+
+TurnOff
+#0F0 #0A0 #050 #F00
+.....
+.....
+.222.
+.2.2.
+.222.
+
+TurnUse
+#0F0 #0A0 #050 #F00
+.....
+.....
+.000.
+.0.0.
+.000.
+
+TurnAdd
+#0F0 #0A0 #050 #F00
+.....
+.....
+.222.
+.202.
+.222.
+
+TurnBad
+#0F0 #0A0 #050 #F00
+.....
+.....
+.333.
+.3.3.
+.333.
+
+(Walls)
+WallH
+#EEE #AAA
+1....
+00...
+000..
+0000.
+00000
+
+WallV
+#EEE #AAA
+10000
+.0000
+..000
+...00
+....0
+
+WallDL
+#EEE #AAA
+1....
+01...
+001..
+0001.
+00001
+
+WallDR
+#EEE #AAA
+1....
+.1...
+..1..
+...1.
+....1
+
+WallUL
+#EEE #AAA
+10000
+01000
+00100
+00010
+00001
+
+WallUR
+#EEE #AAA
+10000
+.1000
+..100
+...10
+....1
+
+WallDLR
+#EEE #AAA
+1....
+01...
+001..
+0001.
+00001
+
+WallDLU
+#EEE #AAA
+10000
+00000
+00000
+00000
+00000
+
+WallDRU
+#EEE #AAA
+10000
+.1000
+..100
+...10
+....1
+
+WallLRU
+#EEE #AAA
+10000
+00000
+00000
+00000
+00000
+
+WallDLRU
+#EEE #AAA
+10000
+01000
+00100
+00010
+00001
+
+WallH4
+#EEE #AAA
+.1111
+..000
+...00
+....0
+.....
+
+WallV8
+#EEE #AAA
+.....
+1....
+10...
+100..
+1000.
+
+ThinWallH
+#07E #05A
+1....
+00...
+000..
+0000.
+00000
+
+ThinWallV
+#07E #05A
+10000
+.0000
+..000
+...00
+....0
+
+ThinWallDLR
+#07E #05A
+1....
+01...
+001..
+0001.
+00001
+
+ThinWallDLU
+#07E #05A
+10000
+00000
+00000
+00000
+00000
+
+ThinWallDRU
+#07E #05A
+10000
+.1000
+..100
+...10
+....1
+
+ThinWallLRU
+#07E #05A
+10000
+00000
+00000
+00000
+00000
+
+ThinWallH4
+#07E #05A
+.1111
+..000
+...00
+....0
+.....
+
+ThinWallV8
+#07E #05A
+.....
+1....
+10...
+100..
+1000.
+
+FireWallH
+#666 #888
+1....
+00...
+000..
+0000.
+00000
+
+FireWallV
+#666 #888
+10000
+.0000
+..000
+...00
+....0
+
+FireWallDL
+#666 #888
+1....
+01...
+001..
+0001.
+00001
+
+FireWallDR
+#666 #888
+1....
+.1...
+..1..
+...1.
+....1
+
+FireWallUL
+#666 #888
+10000
+01000
+00100
+00010
+00001
+
+FireWallUR
+#666 #888 #EEE
+10000
+21000
+22100
+22210
+22221
+
+FireWallDLU
+#666 #888
+00000
+00000
+00000
+00000
+00000
+
+FireWallDRU
+#666 #888
+10000
+01000
+00100
+00010
+00001
+
+FireWallH4
+#666 #888
+.1111
+..000
+...00
+....0
+.....
+
+FireWallV8
+#666 #888
+.....
+1....
+10...
+100..
+1000.
+
+(Doors)
+DoorHClosed5
+#A50 #000 #FD0
+0....
+00...
+000..
+0000.
+00000
+
+DoorHClosed4
+#A50 #000 #FD0
+.0000
+..000
+...02
+....0
+.....
+
+DoorHOpened5
+#A50 #000 #FD0
+0....
+.0...
+..0..
+...0.
+....0
+
+DoorHOpened4
+#A50 #000 #FD0
+.....
+.....
+.....
+.....
+.....
+
+DoorHBroken5
+#A50 #000 #FD0
+.....
+..1..
+...1.
+....1
+.....
+
+DoorHBroken4
+#A50 #000 #FD0
+.....
+.1...
+..1..
+...1.
+.....
+
+DoorVClosed5
+#A50 #000 #FD0
+00000
+.0000
+..000
+...00
+....0
+
+DoorVClosed8
+#A50 #000 #FD0
+.....
+0....
+00...
+000..
+0020.
+
+DoorVOpened5
+#A50 #000 #FD0
+0....
+.0...
+..0..
+...0.
+....0
+
+DoorVOpened8
+#A50 #000 #FD0
+.....
+.....
+.....
+.....
+.....
+
+DoorVBroken5
+#A50 #000 #FD0
+.....
+.....
+.1...
+..1..
+...1.
+
+DoorVBroken8
+#A50 #000 #FD0
+.....
+.1...
+..1..
+...1.
+.....
+
+Crack
+#000
+0...0
+.00.0
+.0.0.
+..00.
+00..0
+
+FireDoorVClosed5
+#AAA #888
+00100
+.0010
+..001
+...00
+....0
+
+FireDoorVClosed8
+#AAA #888
+.....
+0....
+00...
+100..
+0100.
+
+FireDoorVOpened5
+#AAA #888
+0....
+.0...
+..0..
+...0.
+....0
+
+FireDoorVOpened8
+#AAA #888
+.....
+.....
+.....
+.....
+.....
+
+(People)
+Firefighter
+#FF0 #EE0 #CC0
+.000.
+01210
+02020
+01210
+.000.
+
+PlayerNew
+Transparent
+
+PersonPendingTrue
+Transparent
+
+PersonPendingFalse
+Transparent
+
+PersonAlertTrue
+#0FF
+.000.
+0...0
+..00.
+.....
+..0..
+
+PersonAlertFalse
+#0FF
+.000.
+0...0
+..00.
+.....
+..0..
+
+PersonNew
+Transparent
+
+PersonGoal
+#A00 #500
+....0
+....1
+....0
+....1
+....0
+
+PersonTalk
+Transparent
+
+PersonGhost
+#553528 #2E1706
+.11..
+1111.
+1001.
+0000.
+.00..
+
+PersonAlive
+#FFA07A #8B4513
+.11..
+1111.
+1001.
+0000.
+.00..
+
+PersonDead
+#AAA #888 #666
+.01..
+0011.
+1122.
+.12..
+.12..
+
+(Phases)
+Phase1Next
+Transparent
+
+Phase1Done
+Transparent
+
+Phase2Init
+Transparent
+
+Phase2Next
+Transparent
+
+Phase2Done
+Transparent
+
+Phase3Next
+Transparent
+
+Phase3Done
+Transparent
+
+(Water)
+WaterD1
+#AAF #88F #66F
+..0..
+..0..
+..0..
+.101.
+.101.
+
+WaterD2
+#AAF #88F #66F
+.101.
+.202.
+21112
+.....
+.....
+
+WaterL1
+#AAF #88F #66F
+.....
+11...
+00000
+11...
+.....
+
+WaterL2
+#AAF #88F #66F
+..2..
+..121
+..100
+..121
+..2..
+
+WaterR1
+#AAF #88F #66F
+.....
+...11
+00000
+...11
+.....
+
+WaterR2
+#AAF #88F #66F
+..2..
+121..
+001..
+121..
+..2..
+
+WaterU1
+#AAF #88F #66F
+.101.
+.101.
+..0..
+..0..
+..0..
+
+WaterU2
+#AAF #88F #66F
+.....
+.....
+21112
+.202.
+.101.
+
+WaterO
+#AAF #88F #66F
+2.2.2
+.101.
+20002
+.101.
+2.2.2
+
+
+=======
+LEGEND
+=======
+
+Floor = Outside or Inside or Excluded or Elevator or Air
+WalkFloor = Outside or Inside or Elevator
+FireFloor = Outside or Elevator or Air
+RuinFloor = Inside or Excluded or Elevator
+Letter = A or C or D or E or I or K or L or O or P or R or S or T or W or X or Y
+HouseIcon = HouseIcon5 or HouseIcon6 or HouseIcon8 or HouseIcon9
+House = HouseIcon or House1 or House2 or House3 or House4 or House5
+GridCell = GridO
+GridLine = GridH or GridV
+GridNode = GridX or GridD or GridL or GridR or GridU or GridDL or GridDR or GridUL or GridUR
+Grid = GridCell or GridLine or GridNode
+Fire = Fire1 or Fire2 or Fire3 or Fire4
+Smoke = Smoke1 or Smoke2 or Smoke3 or Smoke4  or Smoke5
+Heat = Smoke or Fire
+Turn = TurnOn or TurnOff or TurnUse or TurnAdd or TurnBad
+NTurn = Turn1 or Turn2
+Damage = Damage1 or Damage2 or Damage3 or Damage4 or Damage5
+ModeIcon = UseDoor or Axe or Spray or Walk or Carry or Fire
+ModeIconDeco = UseDoor8 or Axe8 or Spray1 or Spray2 or Spray4 or Spray6 or Spray8 or Walk2 or Walk3 or Walk4 or Walk6
+ThinWall = ThinWallH or ThinWallV or ThinWallDLR or ThinWallDLU or ThinWallDRU or ThinWallLRU
+Wall = WallH or WallV or WallDL or WallDR or WallUL or WallUR or WallDLR or WallDLU or WallDRU or WallLRU or WallDLRU
+FireWall = FireWallH or FireWallV or FireWallDR or FireWallUR or FireWallDL or FireWallUL or FireWallDLU or FireWallDRU
+FireDoor = FireDoorVClosed5 or FireDoorVOpened5
+DoorClosed = DoorHClosed5 or DoorVClosed5 or FireDoorVClosed5
+DoorOpened = DoorHOpened5 or DoorVOpened5 or FireDoorVOpened5
+DoorBroken = DoorHBroken5 or DoorVBroken5
+Door = DoorClosed or DoorOpened or DoorBroken
+HDeco = WallH4 or ThinWallH4 or FireWallH4 or DoorHClosed4 or DoorHOpened4 or DoorHBroken4
+VDeco = WallV8 or ThinWallV8 or FireWallV8 or DoorVClosed8 or DoorVOpened8 or DoorVBroken8 or FireDoorVClosed8 or FireDoorVOpened8
+ModeX = Mode1 or Mode2 or Mode3 or Mode4 or Mode or Mode6 or Mode7 or Mode8 or Mode9
+PersonPending = PersonPendingTrue or PersonPendingFalse
+PersonAlert = PersonAlertTrue or PersonAlertFalse
+Cursor = Cursor11 or Cursor21 or Cursor31 or Cursor41 or Cursor51 or Cursor61 or Cursor71 or Cursor81 or Cursor91 or Cursor12 or Cursor22 or Cursor32 or Cursor42 or Cursor52 or Cursor62 or Cursor72 or Cursor82 or Cursor92 or Cursor13 or Cursor23 or Cursor33 or Cursor43 or Cursor53 or Cursor63 or Cursor73 or Cursor83 or Cursor93 or Cursor14 or Cursor24 or Cursor34 or Cursor44 or Cursor54 or Cursor64 or Cursor74 or Cursor84 or Cursor94
+Phase1 = Phase1Next or Phase1Done
+Phase2 = Phase2Init or Phase2Next or Phase2Done
+Phase3 = Phase3Next or Phase3Done
+Phase = Phase1 or Phase2 or Phase3
+Water = WaterD1 or WaterD2 or WaterL1 or WaterL2 or WaterR1 or WaterR2 or WaterU1 or WaterU2 or WaterO
+
+Obstruction = Wall or ThinWall or FireWall or DoorClosed
+Carryable = PersonAlive
+DamageSource = Crack or DoorHBroken5 or DoorVBroken5
+
+. = Background
+┼ = GridX
+─ = GridH
+│ = GridV
+┬ = GridD
+┤ = GridL
+├ = GridR
+┴ = GridU
+┐ = GridDL
+┌ = GridDR
+┘ = GridUL
+└ = GridUR
+═ = GridH and WallH
+║ = GridV and WallV
+╪ = GridX and WallH
+╫ = GridX and WallV
+╗ = GridX and WallDL
+╔ = GridX and WallDR
+╝ = GridX and WallUL
+╚ = GridX and WallUR
+╦ = GridX and WallDLR
+╣ = GridX and WallDLU
+╠ = GridX and WallDRU
+╩ = GridX and WallLRU
+╬ = GridX and WallDLRU
+╧ = GridH and DoorHClosed5
+╤ = GridH and WallH and Crack
+╢ = GridV and DoorVClosed5
+╟ = GridV and WallV and Crack
+- = GridH and ThinWallH
+| = GridV and ThinWallV
+* = GridO and Outside
+$ = GridO and Outside and PlayerNew
+# = GridO and Inside
+! = GridO and Inside and Fire1
+@ = GridO and Inside and Smoke1
+? = GridO and Inside and PersonNew
+/ = GridO and Excluded
+\ = GridO and Elevator and PlayerNew
+~ = GridO and Air
+{ = PersonPendingTrue
+} = PersonPendingFalse
+H = HouseIcon5
+1 = House1
+2 = House2
+3 = House3
+4 = House4
+5 = House5 and Damage1
+% = PersonGhost
+& = PersonGhost and PersonGoal and PersonTalk
+, = PersonGhost and Last
+" = TurnOn
+' = TurnOff
+` = TurnOff and Last
+6 = Turn1 and UseDoor
+7 = Turn2 and Axe
+8 = Turn1 and Spray
+9 = Turn1 and Walk and Mode
+0 = Carry
+_ = Fire1
+b = Phase1Next
+
+
+=======
+SOUNDS
+=======
+
+StartLevel          22127108 (Start)
+sfx3                50402700 (Mode selection)
+sfx5                44798700 (Mode action)
+sfx0                68848302 (Cancel Turn)
+DoorOpened  create  48747304 (Open door)
+DoorClosed  create  19108904 (Close door)
+sfx2                43578308 (Spray fire)
+sfx1                96679105 (Person rescued)
+PersonDead  create  58572102 (Person lost)
+Flare       create  76287302 (Flare up)
+Explosion   create  44138102 (Flare up explodes)
+Crack       create   7273508 (Wall cracked)
+DoorBroken  create   7273508 (Wall destroyed)
+ThinWall    destroy  7273508 (Thin wall destroyed)
+Ruin        create  27909108 (House collapses)
+sfx6                10448508 (Firefighter burned)
+EndLevel            83024708 (Goal met)
+sfx4                21697908 (Goal lost)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor, Letter, House, PersonGhost
+GridCell, GridLine, GridNode, PersonGoal, Last
+Wall, ThinWall, FireWall, Door, Firefighter, ModeX, PersonTalk
+Smoke, Fire, Turn, Damage, ModeIcon, ModeIconDeco, Crack
+VDeco, PersonAlive, PersonDead, PersonNew, NTurn, PersonAlert
+HDeco, Player, PlayerNew, PersonPending
+Cursor, Phase, Flare, Explosion, Shockwave, Ruin, Water
+
+
+======
+RULES
+======
+
+(========== Initialise ==========)
+(Initialise Floor)
+[Floor|Grid no Wall no Door no Floor]->[Floor|Grid Floor]
+  right[Floor|Grid no Floor]->[Floor|Grid Floor]
++ down [Floor|Grid no Floor]->[Floor|Grid Floor]
+
+(Initialise Elevator)
+vertical  [Elevator|WallH]->[Elevator|FireWallH]
+right[WallV|Elevator|DoorVClosed5]->[FireWallV|Elevator|FireDoorVClosed5]
+down[WallDLR|FireWallV       |WallDLRU|FireWallV       |WallLRU]->[FireWallDR|FireWallV       |FireWallDRU|FireWallV       |FireWallUR]
+down[WallDL |FireDoorVClosed5|WallDLU |FireDoorVClosed5|WallUL ]->[FireWallDL|FireDoorVClosed5|FireWallDLU|FireDoorVClosed5|FireWallUL]
+
+(Initialise Graphics)
+down[|UseDoor||Axe||Spray||Walk||Carry||Fire|]->[UseDoor8|UseDoor|Axe8|Axe|Spray8|Spray|Spray2|Walk|Walk2|Carry||Fire|]
+right[|Spray |]->[Spray4|Spray |Spray6]
+right[|Spray2|]->[Spray1|Spray2|      ]
+right[|Walk  |]->[Walk4 |Walk  |Walk6 ]
+right[|Walk2 |]->[      |Walk2 |Walk3 ]
+down [|HouseIcon5]->[HouseIcon8|HouseIcon5]
+right[HouseIcon8|]->[HouseIcon8|HouseIcon9]
+right[HouseIcon5|]->[HouseIcon5|HouseIcon6]
+
+(Place New Player)
+random[PlayerNew]->[Firefighter Player Cursor51]
+[PlayerNew]->[]
+
+(========== Alert Phase ==========)
+(Count Persons and Alerts)
+[Phase3Next]->[up Phase3Done]
+[PersonAlive]->[action PersonAlive]
+[PersonAlert]->[action PersonAlert]
+[up    Phase3][action PersonAlive Carry ]->[down  Phase3][PersonAlive Carry ]
+[up    Phase3][action PersonAlive Inside]->[down  Phase3][PersonAlive Inside]
+[down  Phase3][action PersonAlive Inside]->[left  Phase3][PersonAlive Inside]
+[up    Phase3][action PersonAlert Inside]->[down  Phase3][PersonAlert Inside]
+[down  Phase3][action PersonAlert Inside]->[left  Phase3][PersonAlert Inside]
+[left  Phase3][action PersonAlert Inside]->[right Phase3][PersonAlert Inside]
+[action PersonAlive]->[PersonAlive]
+[action PersonAlert]->[PersonAlert]
+
+(Add Alerts)
+random[up    Phase3][Inside GridCell no Firefighter no Carryable no PersonAlert]->[down  Phase3][Inside GridCell PersonNew]
+random[down  Phase3][Inside GridCell no Firefighter no Carryable no PersonAlert]->[left  Phase3][Inside GridCell PersonNew]
+random[left  Phase3][Inside GridCell no Firefighter no Carryable no PersonAlert]->[right Phase3][Inside GridCell PersonNew]
+[moving Phase3]->[stationary Phase3]
+startloop
+random[PersonNew no PersonPending][PersonPending]->[PersonNew PersonPending][]
+endloop
+[PersonNew PersonPending Heat]->[PersonNew PersonPending]
+[PersonNew PersonPendingTrue ]->[PersonAlertTrue ]
+[PersonNew PersonPendingFalse]->[PersonAlertFalse]
+[PersonNew                   ]->[                ]
+[Phase3Done][TurnAdd]->[Phase3Done][TurnOn]
+[Phase3Done][Ruin]->[][Ruin]
+[Phase3Done][Fire Mode][Walk][Firefighter]->[Phase1Next][Fire][Walk Mode][Firefighter Player Cursor51]checkpoint
+
+(========== Fire Phase ==========)
+random[Phase2Init][Inside GridCell]->[Phase2Done][Inside GridCell Flare]checkpoint
+[Phase2]->[Phase2Done]
+[Phase2][Flare no Heat]->[Phase2Next][Smoke1               ]again
+[Phase2][Flare Smoke  ]->[Phase2Next][Fire1                ]again
+[Phase2][Flare Fire   ]->[Phase2Next][Fire action Explosion]again
+[|action Explosion|]->[Shockwave|action Explosion|Shockwave]
+[action Explosion]->[Explosion]
+
+(Burn Person)
+right[PersonAlertFalse Fire]                        ->[Fire]
+right[PersonAlertTrue  Fire][PersonGhost Last      ]->[Fire][PersonDead Last      ]
+right[PersonAlertTrue  Fire][PersonGhost|PersonDead]->[Fire][PersonDead|PersonDead]
+right[PersonAlive      Fire][PersonGhost Last      ]->[Fire][PersonDead Last      ]
+right[PersonAlive      Fire][PersonGhost|PersonDead]->[Fire][PersonDead|PersonDead]
+
+(Burn Player)
+right[Firefighter Fire][Carry PersonAlive][PersonGhost Last      ]->[Firefighter Fire][Carry][PersonDead Last      ]
+right[Firefighter Fire][Carry PersonAlive][PersonGhost|PersonDead]->[Firefighter Fire][Carry][PersonDead|PersonDead]
+right[Firefighter Fire]->[Fire]sfx6
+
+(Extinguish Outside Fires)
+[Phase2][FireFloor GridCell Fire]->[Phase2][FireFloor GridCell]
+
+(Expand Shockwave)
+[Phase2][Shockwave GridCell no Fire]->[Phase2Next][GridCell Fire1       ]again
+[Phase2][Shockwave DoorHClosed5    ]->[Phase2Next][       DoorHBroken5  ]again
+[Phase2][Shockwave DoorVClosed5    ]->[Phase2Next][       DoorVBroken5  ]again
+[Phase2][Shockwave FireWall        ]->[Phase2    ][                     ]
+[Phase2][Shockwave FireDoorVClosed5]->[Phase2    ][                     ]
+[Phase2][Shockwave WallH Crack     ]->[Phase2Next][action DoorHBroken5  ]again
+[Phase2][Shockwave WallV Crack     ]->[Phase2Next][action DoorVBroken5  ]again
+[Phase2][Shockwave Wall            ]->[Phase2Next][action Crack Wall    ]again
+[Phase2][Shockwave ThinWall        ]->[Phase2Next][action Crack ThinWall]again
+[Phase2][Explosion|...|Shockwave   ]->[Phase2Next][Explosion|...|> Shockwave]again
+
+(Flashover)
+[Phase2Done][GridCell Smoke|no Obstruction|Fire]->[Phase2Next][GridCell Fire||Fire]again
+
+(Next Phase)
+[Phase2Done][Explosion]->[Phase2Done][]
+[Phase2Done]->[Phase3Next]again
+
+(========== Player Phase ==========)
+(Prevent Invalid Actions)
+[> Player Firefighter][TurnBad]->[Player Firefighter][TurnBad]sfx0
+
+(Door Mode)
+[UseDoor Mode][> Player Firefighter|DoorBroken]->[UseDoor Mode][Player Firefighter|DoorBroken]sfx0
+[UseDoor Mode][> Player Firefighter|no Door]->[UseDoor Mode][Player Firefighter|]sfx0
+[UseDoor Mode][> Player Firefighter][TurnUse]->[UseDoor Mode][> Player Firefighter][TurnOff]
+[UseDoor Mode][Walk][> Player Firefighter|DoorHClosed5]->[UseDoor][Walk Mode][Player Firefighter|DoorHOpened5]
+[UseDoor Mode][Walk][> Player Firefighter|DoorHOpened5]->[UseDoor][Walk Mode][Player Firefighter|DoorHClosed5]
+[UseDoor Mode][Walk][> Player Firefighter|DoorVClosed5]->[UseDoor][Walk Mode][Player Firefighter|DoorVOpened5]
+[UseDoor Mode][Walk][> Player Firefighter|DoorVOpened5]->[UseDoor][Walk Mode][Player Firefighter|DoorVClosed5]
+[UseDoor Mode][Walk][> Player Firefighter|FireDoorVClosed5]->[UseDoor][Walk Mode][Player Firefighter|FireDoorVOpened5]
+[UseDoor Mode][Walk][> Player Firefighter|FireDoorVOpened5]->[UseDoor][Walk Mode][Player Firefighter|FireDoorVClosed5]
+
+(Axe Mode)
+[Axe Mode][> Player Firefighter|no Wall no ThinWall]->[Axe Mode][Player Firefighter|]sfx0
+[Axe Mode][> Player Firefighter][TurnUse]->[Axe Mode][> Player Firefighter][TurnOff]
+[Axe Mode][> Player Firefighter|Crack WallH]->[Axe Mode][Player Firefighter|action DoorHBroken5  ]
+[Axe Mode][> Player Firefighter|Crack WallV]->[Axe Mode][Player Firefighter|action DoorVBroken5  ]
+[Axe Mode][> Player Firefighter|      Wall ]->[Axe Mode][Player Firefighter|action Crack Wall    ]
+[Axe Mode][> Player Firefighter|  ThinWall ]->[Axe Mode][Player Firefighter|action Crack ThinWall]
+
+(Spray Mode)
+[Spray Mode][> Player Firefighter|Obstruction]->[Spray Mode][Player Firefighter|Obstruction]sfx0
+[Spray Mode][> Player Firefighter||no Heat]->[Spray Mode][Player Firefighter||]sfx0
+[Spray Mode][> Player Firefighter][TurnUse]->[Spray Mode][> Player Firefighter][TurnOff]
+[Firefighter||WaterO Smoke]->[Firefighter Cursor51||      ]
+[Firefighter||WaterO Fire ]->[Firefighter Cursor51||Smoke1]
+[Water|Water GridCell]->[|WaterO GridCell]again
+up   [WaterU1|]->[WaterU1|WaterU2]again
+down [WaterD1|]->[WaterD1|WaterD2]again
+left [WaterL1|]->[WaterL1|WaterL2]again
+right[WaterR1|]->[WaterR1|WaterR2]again
+up   [Spray Mode][> Player Cursor Firefighter|]->[Spray Mode][Player Firefighter|WaterU1]sfx2 again
+down [Spray Mode][> Player Cursor Firefighter|]->[Spray Mode][Player Firefighter|WaterD1]sfx2 again
+left [Spray Mode][> Player Cursor Firefighter|]->[Spray Mode][Player Firefighter|WaterL1]sfx2 again
+right[Spray Mode][> Player Cursor Firefighter|]->[Spray Mode][Player Firefighter|WaterR1]sfx2 again
+
+(Walk Mode)
+[Walk Mode][> Player Firefighter| Obstruction]->[Walk Mode][Player Firefighter| Obstruction]sfx0
+[Walk Mode][> Player Firefighter||Obstruction]->[Walk Mode][Player Firefighter||Obstruction]sfx0
+[Walk Mode][> Player Firefighter||Fire       ]->[Walk Mode][Player Firefighter||Fire       ]sfx0
+[Walk Mode][> Player Firefighter||no WalkFloor]->[Walk Mode][Player Firefighter||]sfx0
+[Walk Mode][> Player Firefighter||][TurnUse]->[Walk Mode][> Player Firefighter||][TurnOff]
+[Walk Mode][> Player Cursor Firefighter||]->[Walk Mode][||Player Cursor Firefighter]
+
+(Carry Mode)
+[Carry Mode action Player Carryable][Firefighter Carryable]->[Carry Mode Player Carryable][Firefighter Carryable]sfx0
+[Carry Mode action Player no Carryable][Firefighter no Carryable]->[Carry Mode Player][Firefighter]sfx0
+[Carry Mode action Player Cursor Carryable][Walk][Firefighter]->[Carry][Walk Mode][Player Firefighter Cursor Carryable]
+[Carry Mode action Player Cursor][Walk][Firefighter Carryable]->[Carry Carryable][Walk Mode][Player Cursor Firefighter]
+
+(Wait Mode)
+[Fire Mode action Player Cursor][Phase1]->[Fire Mode][Phase2Init]again
+
+(Investigate Alert)
+[Firefighter PersonAlertTrue ]->[Firefighter PersonAlive]message Person located!
+[Firefighter PersonAlertFalse]->[Firefighter]message False alarm. There's no one here.
+
+(Rescue Person)
+right[Firefighter Outside][Carry PersonAlive][no PersonGhost|PersonGhost]->[Firefighter Outside][Carry][|PersonAlive]sfx1 message Person rescued, transferred to EMT.
+right[Firefighter Elevator|FireDoorVClosed5][Carry PersonAlive][no PersonGhost|PersonGhost]->[Firefighter Elevator|FireDoorVClosed5][Carry][|PersonAlive]sfx1 message Person rescued, transferred to EMT.
+
+(Action/Selection Toggle)
+[action Player Cursor Firefighter][Mode]->[Firefighter][Player Cursor Mode]sfx3
+[action Player Cursor Mode][TurnBad]->[Player Cursor Mode][TurnBad]sfx0
+[action Player Cursor Mode][Firefighter]->[Mode][Player Cursor Firefighter]sfx5
+
+(Measure Door Turns)
+[Turn2 UseDoor]->[Turn1 UseDoor]
+[Firefighter|FireDoor][Turn1 UseDoor]->[Firefighter|FireDoor][Turn2 UseDoor]
+(Measure Walk Turns)
+down[Turn2 Walk||Carry no Carryable]->[Turn1 Walk||Carry          ]
+down[Turn1 Walk||Carry    Carryable]->[Turn2 Walk||Carry Carryable]
+(Mode Selection)
+[TurnUse]->[TurnOn ]
+[TurnBad]->[TurnOff]
+[TurnAdd]->[TurnOff]
+[> Player Cursor Mode ModeIcon||ModeIcon]->[ModeIcon||Player Cursor Mode ModeIcon]
+[> Player]->[Player]
+(1 Turn Mode)
+right[Turn1 Mode][no Turn|Turn]                 ->[Turn1 Mode][|down Turn]
+right[Turn2 Mode][no Turn|Turn|Turn]            ->[Turn2 Mode][|down Turn|down Turn]
+right[Fire  Mode][Turn|Turn|Turn|Turn|Turn Last]->[Fire  Mode][up Turn|up Turn|up Turn|up Turn|up Turn Last]
+right[down TurnOn|stationary TurnOn]->[stationary TurnOn|down TurnOn]
+right[stationary TurnOff|up TurnOff]->[up TurnOff|stationary TurnOff]
+[up   TurnOn ]->[TurnOn ]
+[up   TurnOff]->[TurnAdd]
+[down TurnOn ]->[TurnUse]
+[down TurnOff]->[TurnBad]
+
+(========== House Damage ==========)
+(Collapse)
+[Ruin]->[action Ruin]
+[action Ruin|no Ruin RuinFloor]->[action Ruin|Ruin RuinFloor]again
+[action Ruin|no Ruin Wall     ]->[action Ruin|Ruin Wall     ]again
+[action Ruin|no Ruin ThinWall ]->[action Ruin|Ruin ThinWall ]again
+[action Ruin|no Ruin FireWall ]->[action Ruin|Ruin FireWall ]again
+[action Ruin|no Ruin Door     ]->[action Ruin|Ruin Door     ]again
+[action Ruin|no Ruin FireDoor ]->[action Ruin|Ruin FireDoor ]again
+[action Ruin]->[Ruin]
+[Ruin Firefighter]->[Ruin]
+random right[Ruin][PersonGhost|PersonDead]->[Ruin][PersonDead|PersonDead]
+right[Ruin][PersonGhost Last]->[Ruin][PersonDead Last]
+[Ruin][Player]->[Ruin][]
+[Ruin][Phase1]->[Ruin][]
+
+(Apply Damage)
+right[action DamageSource][          Damage1]->[DamageSource][        Damage2]
+right[action DamageSource][          Damage2]->[DamageSource][        Damage3]
+right[action DamageSource][          Damage3]->[DamageSource][        Damage4]
+right[action DamageSource][          Damage4]->[DamageSource][        Damage5]
+right[action DamageSource][no Damage|Damage5]->[DamageSource][Damage1|Damage5]
+random[Damage5|Damage5|Damage5|Damage5|Damage5][PersonTalk][Inside]->[Damage5|Damage5|Damage5|Damage5|Damage5][][Inside Ruin]again
+left[Crack ThinWallH|ThinWallH4]->[|]
+up  [Crack ThinWallV|ThinWallV8]->[|]
+
+(========== Decoration ==========)
+(Wall and Door Decoration)
+left[WallH           |]->[WallH           |WallH4          ]
+left[WallDL          |]->[WallDL          |WallH4          ]
+left[WallUL          |]->[WallUL          |WallH4          ]
+left[WallDLR         |]->[WallDLR         |WallH4          ]
+left[WallDLU         |]->[WallDLU         |WallH4          ]
+left[WallLRU         |]->[WallLRU         |WallH4          ]
+left[WallDLRU        |]->[WallDLRU        |WallH4          ]
+left[ThinWallH       |]->[ThinWallH       |ThinWallH4      ]
+left[FireWallH       |]->[FireWallH       |FireWallH4      ]
+left[FireWallUL      |]->[FireWallUL      |FireWallH4      ]
+left[FireWallDL      |]->[FireWallDL      |FireWallH4      ]
+left[FireWallUR      |]->[FireWallUR      |WallH4          ]
+left[FireWallDR      |]->[FireWallDR      |WallH4          ]
+left[FireWallDLU     |]->[FireWallDLU     |FireWallH4      ]
+left[FireWallDRU     |]->[FireWallDRU     |WallH4          ]
+left[DoorHClosed5    |]->[DoorHClosed5    |DoorHClosed4    ]
+left[DoorHOpened5    |]->[DoorHOpened5    |DoorHOpened4    ]
+left[DoorHBroken5    |]->[DoorHBroken5    |DoorHBroken4    ]
+up  [WallV           |]->[WallV           |WallV8          ]
+up  [WallUL          |]->[WallUL          |WallV8          ]
+up  [WallUR          |]->[WallUR          |WallV8          ]
+up  [WallDLU         |]->[WallDLU         |WallV8          ]
+up  [WallDRU         |]->[WallDRU         |WallV8          ]
+up  [WallLRU         |]->[WallLRU         |WallV8          ]
+up  [WallDLRU        |]->[WallDLRU        |WallV8          ]
+up  [ThinWallV       |]->[ThinWallV       |ThinWallV8      ]
+up  [FireWallV       |]->[FireWallV       |FireWallV8      ]
+up  [FireWallUL      |]->[FireWallUL      |FireWallV8      ]
+up  [FireWallUR      |]->[FireWallUR      |FireWallV8      ]
+up  [FireWallDLU     |]->[FireWallDLU     |FireWallV8      ]
+up  [FireWallDRU     |]->[FireWallDRU     |FireWallV8      ]
+up  [DoorVClosed5    |]->[DoorVClosed5    |DoorVClosed8    ]
+up  [DoorVOpened5    |]->[DoorVOpened5    |DoorVOpened8    ]
+up  [DoorVBroken5    |]->[DoorVBroken5    |DoorVBroken8    ]
+up  [FireDoorVClosed5|]->[FireDoorVClosed5|FireDoorVClosed8]
+up  [FireDoorVOpened5|]->[FireDoorVOpened5|FireDoorVOpened8]
+
+(Thin Wall Deco)
+[ThinWallH WallH4]->[ThinWallH ThinWallH4]
+[ThinWallV WallV8]->[ThinWallV ThinWallV8]
+right[ThinWallH|WallDLR|ThinWallH]->[ThinWallH|ThinWallDLR|ThinWallH]
+right[ThinWallH|WallLRU|ThinWallH]->[ThinWallH|ThinWallLRU|ThinWallH]
+down [ThinWallV|WallDLU|ThinWallV]->[ThinWallV|ThinWallDLU|ThinWallV]
+down [ThinWallV|WallDRU|ThinWallV]->[ThinWallV|ThinWallDRU|ThinWallV]
+
+(Fire Decoration)
+[GridLine Heat]->[GridLine]
+[GridNode Heat]->[GridNode]
+[Fire |no Heat no Obstruction no DoorClosed|Fire]->[Fire |Fire1 |Fire]
+[Smoke|no Heat no Obstruction no DoorClosed|Heat]->[Smoke|Smoke1|Heat]
+
+[GridLine Fire |GridNode no Heat no Obstruction]->[Fire  GridLine|Fire1  GridNode]
+[GridLine Smoke|GridNode no Heat no Obstruction]->[Smoke GridLine|Smoke1 GridNode]
+[no Heat|GridNode Heat|no Heat]->[|GridNode|]
+
+[Heat]->[action Heat]
+[action Fire ]->[random Fire ]
+[action Smoke]->[random Smoke]
+
+(Mode Decoration)
+[GridLine ModeX]->[GridLine]
+[GridNode ModeX]->[GridNode]
+down [|Mode |]->[Mode8|Mode |Mode2]
+right[|Mode8|]->[Mode7|Mode8|Mode9]
+right[|Mode |]->[Mode4|Mode |Mode6]
+right[|Mode2|]->[Mode1|Mode2|Mode3]
+
+(Cursor Decoration)
+[Cursor no Player]->[]
+[Cursor Player]->[action Cursor Player]
+[action Cursor51]->[Cursor52]
+[action Cursor52]->[Cursor53]
+[action Cursor53]->[Cursor54]
+[action Cursor54]->[Cursor51]
+down [|Cursor51|]->[Cursor81|Cursor51|Cursor21]
+down [|Cursor52|]->[Cursor82|Cursor52|Cursor22]
+down [|Cursor53|]->[Cursor83|Cursor53|Cursor23]
+down [|Cursor54|]->[Cursor84|Cursor54|Cursor24]
+right[|Cursor81|]->[Cursor71|Cursor81|Cursor91]
+right[|Cursor51|]->[Cursor41|Cursor51|Cursor61]
+right[|Cursor21|]->[Cursor11|Cursor21|Cursor31]
+right[|Cursor82|]->[Cursor72|Cursor82|Cursor92]
+right[|Cursor52|]->[Cursor42|Cursor52|Cursor62]
+right[|Cursor22|]->[Cursor12|Cursor22|Cursor32]
+right[|Cursor83|]->[Cursor73|Cursor83|Cursor93]
+right[|Cursor53|]->[Cursor43|Cursor53|Cursor63]
+right[|Cursor23|]->[Cursor13|Cursor23|Cursor33]
+right[|Cursor84|]->[Cursor74|Cursor84|Cursor94]
+right[|Cursor54|]->[Cursor44|Cursor54|Cursor64]
+right[|Cursor24|]->[Cursor14|Cursor24|Cursor34]
+
+(========== Game Over ==========)
+right[PersonAlive|PersonAlive|PersonAlive|PersonAlive|PersonAlive|PersonAlive|PersonAlive|PersonAlive|PersonAlive|PersonAlive]->message All reported persons have been rescued. You've given a heroic effort!
+[PersonDead PersonGoal PersonTalk]->[PersonDead PersonGoal PersonTalk]sfx4 message Unacceptable casualties! You are a disgrace to the service!
+
+
+==============
+WINCONDITIONS
+==============
+
+some PersonAlive on PersonGoal
+no PersonGhost
+some Firefighter on FireFloor
+
+
+=======
+LEVELS
+=======
+
+message ♪This is an unofficial, digital,  ♪single-player conversion of the  ♪           board game            ♪                                 ♪    Flash Point: Fire Rescue     ♪        by Kevin Lanzing         ♪produced by Indie Boards & Cards 
+
+message Monday
+
+message Structure fire, persons reported. Free standing domicile. Enact search and resuce operation. Be quick, structure collapse is imminent.
+
+message Locate victims and carry them out of the building.
+
+┌─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐...........
+│*│*│*│*│*│*│$│*│*│*│}H.12345..b
+├─╔═╪═╪═╦═╪═╦╧╪═╪═╗─┤}%%%%%%&%%,
+│*║#│#│#╢#│#║#│#│#║*│}"""""''''`
+├─╫─┼─┼─╫─┼─╫─┼─┼─╫─┤}┌─┐.......
+│*║#│!│!║?│#╢#│#│#║*│}│6│DOOR...
+├─╫─┼─╔═╩═╪═╩═╦═╪╧╣─┤{├─┤.......
+│$╢#│!╢!│!│!│#║#│#║*│{│7│AXE....
+├─╫─┼─╫─┼─┼─┼─╫─┼─╫─┤{├─┤.......
+│*║#│#║#│!│#│#╢#│#╢$│{│8│SPRAY..
+├─╠═╪═╩═╪╧╪═╦═╩═╦═╣─┤{├─┤.......
+│*║?│#│#│#│#║!│!║?║*│{│9│WALK...
+├─╫─┼─┼─┼─┼─╫─┼─╫─╫─┤{├─┤.......
+│*║#│#│#│#│#╢!│#╢#║*│{│0│CARRY..
+├─╚═╪═╪╧╪═╪═╩═╪═╩═╝─┤{├─┤.......
+│*│*│*│$│*│*│*│*│*│*│{│_│WAIT...
+└─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘.└─┘.......
+
+message All reported persons are accounted for.  Evacuate immediately.  Well done!
+
+message Tuesday
+
+message Structure fire, persons reported. Free standing domicile. Enact search and resuce operation. Be quick, structure collapse is imminent.
+
+┌─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐...........
+│*│*│*│*│*│*│*│*│*│*│}H.12345..b
+├─╔═╪═╪═╦═╪═╦═╪═╪═╗─┤}%%%%%%&%%,
+│*║#│#│#║#│#╢#│#│#║*│}"""""''''`
+├─╫─┼─┼─╠═╪═╣─┼─┼─╫─┤}┌─┐.......
+│*║#│!│!║?│#║#│#│#║*│}│6│DOOR...
+├─╠═══┼─╫─┼─╫─┼─┼─╫─┤{├─┤.......
+│$╢#│!│!║!│!╢#│#│#║*│{│7│AXE....
+├─╫─┼─┼─╚═╪╧╩╧╦═╪═╣─┤{├─┤.......
+│*║#│#│#│!│#│#╢#│#║*│{│8│SPRAY..
+├─╠═╪═╪╧╦═╪═╪╧╣─┼─╫─┤{├─┤.......
+│*║?│#│#║#│#│!║!│?║*│{│9│WALK...
+├─╫─┼─┼─╫─┼─┼─╫─┼─╫─┤{├─┤.......
+│*║#│#│#║#│#│!║#│#║*│{│0│CARRY..
+├─╚═╪═╪╧╩═╪═╪═╩═╪═╝─┤{├─┤.......
+│*│*│*│$│*│*│*│*│*│*│{│_│WAIT...
+└─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘.└─┘.......
+
+message All reported persons are accounted for.  Evacuate immediately.  Well done!
+
+message Wednesday
+
+message Fire lert in Multiple terraced domiciles. Persons reported. Enact search and resuce operation. Be quick, structure collapse is imminent.
+
+┌─╫─┬─┬─╫─┬─╫─┬─┬─╫─┐...........
+│*║/│/│/║/│/║/│/│/║*│}H.12345..b
+├─╠═╪═╪═╬═╪═╬═╪═╪═╣─┤}%%%%%%&%%,
+│*║#│#│#║#│#║#│#│#║*│}"""""''''`
+├─╫─┼─┼─╫─┼─╫─┼─┼─╫─┤}┌─┐.......
+│*║#│!│!║?│#║#│#│#╢$│}│6│DOOR...
+├─╫─┼─┼─╠═╪╧╣─┼─┼─╫─┤{├─┤.......
+│$╢#│!│!╢!│!╢#│#│#║*│{│7│AXE....
+├─╠═╪═╪═╬═╪═╬═╪═╪═╣─┤{├─┤.......
+│$╢#│#│#╢!│#╢#│#│#║*│{│8│SPRAY..
+├─╫─┼─┼─╠═╪╧╣─┼─┼─╫─┤{├─┤.......
+│*║?│#│#║#│#║!│!│?╢$│{│9│WALK...
+├─╫─┼─┼─╫─┼─╫─┼─┼─╫─┤{├─┤.......
+│*║#│#│#║#│#║!│#│#║*│{│0│CARRY..
+├─╠═╪═╪═╬═╪═╬═╪═╪═╣─┤{├─┤.......
+│*║/│/│/║/│/║/│/│/║*│{│_│WAIT...
+└─╫─┴─┴─╫─┴─╫─┴─┴─╫─┘.└─┘.......
+
+message All reported persons are accounted for.  Evacuate immediately.  Well done!
+
+message Thursday
+
+message Fire alert in high rise office. Persons reported. Utilise fire safe elevator to access floor.
+
+message Carry victims to the elevator. Close the door to travel to the lobby and rescue them.
+
+┌─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐...........
+│~│~│~│~│~│~│~│~│~│~│}H.12345..b
+├─╔═╦═╪═╦═╪═╪═╦═╪═╗─┤}%%%%%%&%%,
+│~║#|#│#╢#│#│#╢#│#║~│}"""""''''`
+├─╠-╣─┼─╠╧╦═╗─╫─┼─╫─┤}┌─┐.......
+│~║#|!│!║?║\╢#║#│#║~│}│6│DOOR...
+├─╠-╣─┼─╠-╬═╣─╫─┼─╫─┤{├─┤.......
+│~║#|!│!║!║\╢#║#│#║~│{│7│AXE....
+├─╠═╬═╪═╬╧╩═╝─╠═╪═╣─┤{├─┤.......
+│~║#|#│#╢!│#│#╢#│#║~│{│8│SPRAY..
+├─╠-╣─┼─╠═╪╧╪═╣─┼─╫─┤{├─┤.......
+│~║?|#│#║#│#│!║!│?║~│{│9│WALK...
+├─╠-╩-╦-╣─┼─┼─╫─┼─╫─┤{├─┤.......
+│~║#│#|#║#│#│!║#│#║~│{│0│CARRY..
+├─╚═╪═╩═╩═╪═╪═╩═╪═╝─┤{├─┤.......
+│~│~│~│~│~│~│~│~│~│~│{│_│WAIT...
+└─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘.└─┘.......
+
+message All reported persons are accounted for.  Evacuate immediately.  Well done!
+
+message Friday
+
+message I'm taking the rest of the week off...

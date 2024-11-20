@@ -1,0 +1,435 @@
+title Weird Dave
+author HugoBDesigner
+homepage hugobdesigner.blogspot.com
+run_rules_on_level_start
+noaction
+
+========
+OBJECTS
+========
+
+Void
+Transparent
+
+Background
+Transparent
+
+BackTexture
+DarkBlue
+
+Wall
+#606060 #404040
+00111
+11001
+01110
+11000
+00101
+
+PlayerT
+#804000 #FFC080 #004080
+.000.
+11111
+00100
+12121
+11111
+
+PlayerL
+#FFC080 #408000 #800000
+.0...
+.0.12
+00112
+00112
+001.2
+
+PlayerC
+#800000 #408000 #C0FF80
+00100
+01210
+02220
+01210
+01110
+
+PlayerR
+#FFC080 #800000 #408000
+...0.
+12.0.
+12200
+12200
+1.200
+
+PlayerB
+#004080 #804000
+00000
+00.00
+00.00
+00.00
+11.11
+
+PlayerSnake
+#80FF00
+.000.
+00000
+00000
+00000
+.000.
+
+PlayerSnakeHeadDeco
+#008000 #80FF00 Black Red
+0000.
+12120
+11110
+11310
+0030.
+
+TopLine
+#008000
+.000.
+.....
+.....
+.....
+.....
+
+BottomLine
+#008000
+.....
+.....
+.....
+.....
+.000.
+
+LeftLine
+#008000
+.....
+0....
+0....
+0....
+.....
+
+RightLine
+#008000
+.....
+....0
+....0
+....0
+.....
+
+SnakeTopLeft
+#80FF00
+0....
+.....
+.....
+.....
+.....
+
+SnakeBottomLeft
+#80FF00
+.....
+.....
+.....
+.....
+0....
+
+SnakeTopRight
+#80FF00
+....0
+.....
+.....
+.....
+.....
+
+SnakeBottomRight
+#80FF00
+.....
+.....
+.....
+.....
+....0
+
+
+TopLeftCornerDark
+#008000
+0....
+.....
+.....
+.....
+.....
+
+TopRightCornerDark
+#008000
+....0
+.....
+.....
+.....
+.....
+
+BottomLeftCornerDark
+#008000
+.....
+.....
+.....
+.....
+0....
+
+BottomRightCornerDark
+#008000
+.....
+.....
+.....
+.....
+....0
+
+
+PlayerSparkle
+Purple Pink
+..0..
+.101.
+00000
+.101.
+..0..
+
+
+Crate
+DarkBrown Orange
+00000
+01110
+01110
+01110
+00000
+
+Target
+Yellow Pink Blue
+0...0
+..1..
+.121.
+..1..
+0...0
+
+CrateTarget
+Orange DarkBrown Blue
+01110
+12221
+12221
+12221
+01110
+
+CantMoveUp
+Transparent
+
+CantMoveDown
+Transparent
+
+CantMoveLeft
+Transparent
+
+CantMoveRight
+Transparent
+
+Marker1
+Transparent
+
+Marker2
+Transparent
+
+=======
+LEGEND
+=======
+
+PlayerSnakeHead = PlayerSnake AND PlayerSnakeHeadDeco
+Player = PlayerT OR PlayerL OR PlayerC OR PlayerR OR PlayerB OR PlayerSnake OR  PlayerSparkle
+CantMove = CantMoveUp OR CantMoveDown OR CantMoveLeft OR CantMoveRight
+Collidable = Wall
+Pushable = Crate OR CrateTarget
+Marker = Marker1 OR Marker2
+SnakeDeco = SnakeTopLeft OR TopLeftCornerDark OR TopLine OR SnakeTopRight OR TopRightCornerDark OR LeftLine OR RightLine OR SnakeBottomLeft OR BottomLeftCornerDark OR BottomLine OR SnakeBottomRight OR BottomRightCornerDark OR PlayerSnakeHeadDeco
+
+
+x = Background AND Void
+. = Background
+# = Wall
+T = PlayerT
+L = PlayerL
+C = PlayerC
+R = PlayerR
+B = PlayerB
+S = PlayerSnake
+H = PlayerSnakeHead
+$ = PlayerSparkle
+* = Crate
+@ = Crate AND Target
+O = Target
+
+=======
+SOUNDS
+=======
+EndLevel 81640500
+SFX0 51970907 (Regular walk)
+SFX1 15917907 (Push walk)
+SFX2 25755107 (Multiple push walk)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BackTexture, Void
+Target
+Player, Wall, Crate, CrateTarget
+
+SnakeTopLeft
+TopLeftCornerDark
+TopLine
+SnakeTopRight
+TopRightCornerDark
+LeftLine
+RightLine
+SnakeBottomLeft
+BottomLeftCornerDark
+BottomLine
+SnakeBottomRight
+BottomRightCornerDark
+PlayerSnakeHeadDeco
+
+CantMoveUp
+CantMoveDown
+CantMoveLeft
+CantMoveRight
+Marker1
+Marker2
+
+======
+RULES
+======
+(Reset some stuff)
+[CantMove] -> []
+[Marker] -> []
+[CrateTarget] -> [Crate Target]
+[No Void No BackTexture] -> [BackTexture]
+
+(Snake decorations)
+RIGHT[PlayerSnake | No Player] -> [PlayerSnake | Marker1]
+DOWN[PlayerSnake | Marker1] -> [PlayerSnake | Marker1 TopLeftCornerDark]
+DOWN[Marker1 | PlayerSnake] -> [BottomLeftCornerDark | PlayerSnake]
+RIGHT[No Player | PlayerSnake] -> [Marker2 | PlayerSnake]
+DOWN[PlayerSnake | Marker2] -> [PlayerSnake | Marker1 TopRightCornerDark]
+DOWN[Marker2 | PlayerSnake] -> [BottomRightCornerDark | PlayerSnake]
+[Marker] -> []
+
+DOWN[No Player | PlayerSnake] -> [ | PlayerSnake TopLine]
+UP[No Player | PlayerSnake] -> [ | PlayerSnake BottomLine]
+RIGHT[No Player | PlayerSnake] -> [ | PlayerSnake LeftLine]
+LEFT[No Player | PlayerSnake] -> [ | PlayerSnake RightLine]
+
+RIGHT[PlayerSnake | PlayerSnake] -> [PlayerSnake SnakeBottomRight SnakeTopRight | PlayerSnake SnakeBottomLeft SnakeTopLeft]
+DOWN[PlayerSnake | PlayerSnake] -> [PlayerSnake SnakeBottomLeft SnakeBottomRight | PlayerSnake SnakeTopLeft SnakeTopRight]
+
+RIGHT[TopLine | TopLine] -> [TopLine TopRightCornerDark | TopLine TopLeftCornerDark]
+RIGHT[BottomLine | BottomLine] -> [BottomLine BottomRightCornerDark | BottomLine BottomLeftCornerDark]
+DOWN[LeftLine | LeftLine] -> [LeftLine BottomLeftCornerDark | LeftLine TopLeftCornerDark]
+DOWN[RightLine | RightLine] -> [RightLine BottomRightCornerDark | RightLine TopRightCornerDark]
+
+[MOVING Player][SnakeDeco] -> [MOVING Player][MOVING SnakeDeco]
+
+
+(Predetermines if objects can be pushed in any given direction)
+UP[Pushable | Collidable] -> [Pushable CantMoveUp | Collidable]
+DOWN[Pushable | Collidable] -> [Pushable CantMoveDown | Collidable]
+LEFT[Pushable | Collidable] -> [Pushable CantMoveLeft | Collidable]
+RIGHT[Pushable | Collidable] -> [Pushable CantMoveRight | Collidable]
+startloop
+	UP[Pushable | CantMoveUp] -> [Pushable CantMoveUp | CantMoveUp]
+	DOWN[Pushable | CantMoveDown] -> [Pushable CantMoveDown | CantMoveDown]
+	LEFT[Pushable | CantMoveLeft] -> [Pushable CantMoveLeft | CantMoveLeft]
+	RIGHT[Pushable | CantMoveRight] -> [Pushable CantMoveRight | CantMoveRight]
+endloop
+
+UP[> Player | CantMoveUp] -> [Player CantMoveUp | CantMoveUp]
+DOWN[> Player | CantMoveDown] -> [Player CantMoveDown | CantMoveDown]
+LEFT[> Player | CantMoveLeft] -> [Player CantMoveLeft | CantMoveLeft]
+RIGHT[> Player | CantMoveRight] -> [Player CantMoveRight | CantMoveRight]
+
+[MOVING Player][STATIONARY Player] -> [MOVING Player][MOVING Player]
+[> Player | Collidable] -> [Player CantMoveUp | Collidable]
+[Player CantMove][Player] -> [Player CantMove][Player CantMoveUp]
+[MOVING Player CantMove] -> cancel
+
+(Handle Movement)
+[> Player | Pushable] -> [> Player | > Pushable]
+[> Pushable | Pushable] -> [> Pushable | > Pushable]
+
+(Sound effects)
+[> Pushable | > Pushable] -> [> Pushable Marker2 | > Pushable Marker2]
+[> Player | Pushable] -> [> Player Marker1 | Pushable]
+[> Player | Pushable Marker2] -> [> Player Marker2 | Pushable Marker2]
+[Player Marker1][Player] -> [Player Marker1][Player Marker1]
+[Player Marker2][Player] -> [Player Marker2][Player Marker2]
+
+[> Player No Marker] -> [> Player]SFX0 (Regular walk)
+[> Player Marker1 No Marker2] -> [> Player Marker1]SFX1 (Push walk)
+[> Player Marker1 Marker2] -> [> Player Marker1 Marker2]SFX2 (Multiple push walk)
+
+(Endgame)
+LATE[Crate Target] -> [CrateTarget]
+
+
+==============
+WINCONDITIONS
+==============
+
+ALL Target ON Crate
+
+=======
+LEVELS
+=======
+
+message 'Tis but a proof o' concept
+
+xxx#######xx
+####.....###
+#..........#
+#..T..**...#
+#.LCR.**...#
+#..B.......#
+##........##
+x#######.##x
+xxxxxx#...#x
+xxxxxx#...#x
+xxxxxx#...#x
+xxxxxx#.o.#x
+xxxxxx#####x
+
+message An oddly-shaped snake
+
+xxxx#######xxxx
+xx###.....###xx
+x##.........##x
+x#....SSH....#x
+##...SS......##
+#....S..*.o...#
+#....S........#
+#....SSSSS....#
+#........S....#
+#...SS...S....#
+##..SSS..S...##
+x#....SSSS...#x
+x##.........##x
+xx###.....###xx
+xxxx#######xxxx
+
+
+message Sparkles
+
+xxxx#######xxxx
+xx###.....###xx
+x##.........##x
+x#...........#x
+##..$....$...##
+#.............#
+#.............#
+#.........$...#
+#.....$.......#
+#.............#
+##...........##
+x#.....$.....#x
+x##.........##x
+xx###...*o###xx
+xxxx#######xxxx

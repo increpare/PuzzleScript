@@ -1,0 +1,252 @@
+title Rolling-block colour-zone mazes
+author Andrea Gilbert
+homepage http://www.clickmazes.com/roll/new-roll.htm
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Wall
+white white
+00010
+11111
+01000
+11111
+00010
+
+cellA
+#cc0000 #990000
+01010
+10101
+01010
+10101
+01010
+
+cellB
+#3333ff #6666ff
+01010
+10101
+01010
+10101
+01010
+
+cellC
+#ffcc00 #e6b800
+01010
+10101
+01010
+10101
+01010
+
+cellD
+#33cc33 #29a329
+01010
+10101
+01010
+10101
+01010
+
+goal
+white
+.....
+..0..
+.000.
+..0..
+.....
+
+p1
+black
+00000
+00000
+00.00
+00000
+00000
+
+p2
+black
+00000
+00000
+00.00
+00000
+00000
+
+
+=======
+LEGEND
+=======
+
+a = cellA
+b = cellB
+c = cellC
+d = cellD
+. = Wall
+p = p1 and p2 and cellA
+q = p1 and p2 and cellC
+w = p1 and p2 and cellB
+* = goal and cellB
+
+grid = cellA or cellB or cellC or cellD
+notA = cellB or cellC or cellD or wall
+notB = cellA or cellC or cellD or wall
+notC = cellA or cellB or cellD or wall
+notD = cellA or cellB or cellC or wall
+player = p1 or p2
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+background
+grid, wall
+goal
+p1
+p2
+
+======
+RULES
+======
+
+(cancel some obviously illegal moves)
+(the rest will be caught by late checks)
+[ > player | wall ] -> cancel
+[ > p1 p2 grid | grid | wall ] -> cancel
+[ > p1 p2 grid | cellA | notA ] -> cancel
+[ > p1 p2 grid | cellB | notB ] -> cancel
+[ > p1 p2 grid | cellC | notC ] -> cancel
+[ > p1 p2 grid | cellD | notD ] -> cancel
+
+(roll-over-from-vertical)
+[ > p1 p2 grid | grid | grid ] -> [ grid | p1 grid | p2 grid ]
+(roll-up-to-vertical)
+[ > p1 grid | p2 grid | grid ] -> [ grid | grid | p1 p2 grid ]
+[ > p2 grid | p1 grid | grid ] -> [ grid | grid | p2 p1 grid ]
+(side roll)
+[ > p1 grid | grid ] [ > p2 grid | grid ] -> [ grid | p1 grid ] [ grid | p2 grid ]
+
+(if block ends up spanning two zones - cancel)
+late [ p1 cellA | p2 notA ] -> cancel
+late [ p1 cellB | p2 notB ] -> cancel
+late [ p1 cellC | p2 notC ] -> cancel
+late [ p1 cellD | p2 notD ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+All player on goal
+
+=======
+LEVELS
+=======
+
+Message A black block made of two black cubes stuck together sits on a coloured grid
+
+Message Roll the block to the white cross keeping the block within one colour-zone at all times
+
+Message 5x5 No.1 
+
+.......
+.aabbb.
+.abbbb.
+.ab*ab.
+.aaaab.
+.aapbb.
+.......
+
+Message 5x5 No.2 
+
+.......
+.cccbb.
+.acccb.
+.ac*bb.
+.aabba.
+.aapaa.
+.......
+
+Message 5x5 No.3 
+
+.......
+.bbccc.
+.dbbcc.
+.db*ac.
+.ddaac.
+.ddpaa.
+.......
+
+Message 6x6 No.1 
+
+........
+.paaab*.
+.daabbb.
+.ddcccb.
+.ddbcca.
+.dbbcaa.
+.bbbaaa.
+........
+
+Message 6x6 No.2 
+
+........
+.pabbb*.
+.aaacbb.
+.acccdd.
+.bccddd.
+.bbaaad.
+.bbbaaa.
+........
+
+Message 6x6 No.3 
+
+........
+.wbbcbb.
+.cbbbbb.
+.babbdb.
+.bbbbba.
+.dbbcbb.
+.bbabb*.
+........
+
+Message 7x7 No.1 
+
+.........
+.aacbbbb.
+.apccb*d.
+.acccbdd.
+.abacddc.
+.abaaddc.
+.bbaaacc.
+.bbbaccc.
+.........
+
+Message 7x7 No.2 
+
+.........
+.adcccba.
+.adddcba.
+.apadc*b.
+.bbadccc.
+.cbadddc.
+.cbaaadd.
+.cbbbaaa.
+.........
+
+Message 7x7 No.3 
+
+.........
+.wbbabbb.
+.bbcbdbb.
+.bdbbbbc.
+.bbbbbab.
+.abbdbbb.
+.bcbbabb.
+.bbbbbc*.
+.........
+
+Message Thank you for playing :)

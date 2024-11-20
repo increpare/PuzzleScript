@@ -1,0 +1,180 @@
+OBJECTS
+
+Background.lightblue white11111
+01111
+11101
+11111
+10111
+
+Path,#fffefe #ffcccc11011
+10001
+00100
+10001
+11011
+
+Alert!white lightgreen11011
+10001
+00100
+10001
+11011
+
+AlertActivewhite lightgray
+1101110001
+0010010001
+11011Goal
+Ggray darkblue
+......000.
+0111011111
+.111.Wall
+#red darkred
+0001011111
+0100011111
+00010Electric
+Zyellow lightblue
+1000101010
+0010001010
+10001Water
+Wblue #6666ff00100
+00100
+01110
+11011
+01110
+
+Piranhasblue
+#6666fflightblue orange00130
+00133
+03122
+13311
+02210
+
+Elecwaterblue #6677ff
+0010000100
+0111011011
+01110Orange
+Qorange green
+0011100100
+0000000000
+00000Frisk
+Fbrown
+yellowpink Blue
+.000..111.
+22222.333.
+.3.3.Soap
+Ypurple pink00000
+00110
+01010
+01100
+00000
+
+Bubbleswhite lightblue....1
+0....
+.000.
+1...0
+11111
+
+SubmergedFriskbrown
+yellowpink lightblue.....
+.000.
+.111.
+22222
+33333
+
+FriskOrngbrown
+orangered green.000.
+.111.
+22222
+.333.
+.3.3.
+
+Randler?gray black01110
+00010
+00100
+00000
+00100
+
+
+
+LEGEND
+
+Player = Frisk or FriskOrng or SubmergedFrisk
+Tile = Path or Alert or Wall or Electric or Water or Orange or Soap
+
+COLLISIONLAYERS
+
+Background
+Path
+Goal, Alert
+AlertActive, Water
+Piranhas, Elecwater
+Orange, Soap
+Bubbles, Randler
+Player
+Wall, Electric
+
+RULES
+
+late [ Player Alert ] -> [ Player AlertActive ] 
+late [ AlertActive no Player ] -> [ Alert ] 
+late [ Frisk Water ] -> [ SubmergedFrisk Water ] 
+late [ SubmergedFrisk no Water ] -> [ Frisk no Water ] 
+late [ Frisk Orange ] -> [ FriskOrng Orange ] 
+[ Piranhas ] -> [ Water ] 
+[ > Player | Electric ] -> [ < Player | Electric ] 
+[ > FriskOrng | Water ] -> [ < FriskOrng | Piranhas ] 
+[ > Player | Elecwater ] -> [ < Player | Elecwater ] 
+[ Water | Electric ] -> [ Elecwater | Electric ] 
+[ Bubbles | Player ] -> [ Bubbles | >Frisk ] 
+[ Bubbles ] -> [  ] 
+[ > Player | Soap ] -> [ Bubbles>Frisk | Soap ] again 
+[ Randler ] -> [ random Tile ] 
+
+
+WINCONDITIONS
+
+all Player on Goal
+
+LEVELS
+
+F..G
+
+.,#,,,#,..
+F,#,#,,,.G
+.,,,#,#,..
+
+.,,!,,.
+f,,!,,G
+.,,!,,.
+
+..,,,,#..
+f.#,z,#..
+..Z,#,z..
+..#,z,,.g
+..#,,,#..
+
+..,,wwzwwwww
+f.,,wwwwwwww
+..,,wwwwwwww
+########zwww
+..,ww,w,Q,,,
+g.,w,,,,,Q,,
+..,,,w,w,,Q,
+
+f.,,yyyyyy#
+
+..,,y#yyyy,
+######y###q
+g.,yyyy####
+
+f
+.
+,
+?
+,
+.
+g
+
+...,,??,,...
+...,,,?,,...
+.f.,,?,,,.g.
+...,,,?,,...
+...,,??,,...

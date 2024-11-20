@@ -1,0 +1,67 @@
+OBJECTS
+
+Background.
+GreenFinish
+ORed DarkRed
+0000001110
+01..001..0
+00000Wall
+#Brown DarkBrown
+0000001110
+01..001..0
+00000Crate
+CBrown DarkBrown.....
+.000.
+.0001
+.0001
+..111
+
+Player@Orange Blue.000.
+01010
+00000
+00000
+.000.
+
+Timer#309800
+
+
+
+LEGEND
+
+Solid = Player or Wall or Crate
+
+COLLISIONLAYERS
+
+Background
+Timer
+Finish
+Player
+Wall, Crate
+
+RULES
+
+[ Finish ] -> [ action Finish ] 
+random [ action Finish][Timer ] -> [ Finish][ ] 
+random [ action Finish][Wall ] -> [ Wall][actionFinish ] 
+[ action Finish][noTimer ] -> [ action Finish][Timer ] 
+[ > Player | noSolid ] -> [ |>Player ] 
++ [ > Player | Crate | noSolidnoFinish ] -> [ |>Player | Crate ] 
+[ |>PlayerFinish | Wall ] -> [ Finish | Wall | Player ] 
+[ > Player | Wall ] -> [ Wall | Player ] 
+random [ Player Finish][Wall ] -> [ Player][Finish ] 
+[ Player finish ] -> win 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+C################c
+#.#...c#o.ccc.#..#
+##c....c..###.#..#
+##c.@#..#.###....#
+##c....c..###.#..#
+#.#...c##.ccc.#..#
+c################c

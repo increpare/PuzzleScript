@@ -1,0 +1,811 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	#
+      colors
+        color	757D82
+        color	DARKGRAY
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '1' '0' '1' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	Wall
+      legend_key	D
+      colors
+        color	ARKBLUE
+        color	#22303F
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	GreenPlayer
+      legend_key	L
+      colors
+        color	IGHTGREEN
+        color	WHITE
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	RedPlayer
+      legend_key	R
+      colors
+        color	ED
+        color	WHITE
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	LeftArm
+      legend_key	L
+      colors
+        color	IGHTGREEN
+      sprite
+        ['0' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	RightArm
+      legend_key	L
+      colors
+        color	IGHTGREEN
+      sprite
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	MoveCrate
+      legend_key	O
+      colors
+        color	RANGE
+        color	BROWN
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	FixedCrate
+      legend_key	O
+      colors
+        color	RANGE
+        color	BROWN
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	BlueCrate
+      legend_key	L
+      colors
+        color	IGHTBLUE
+        color	BLUE
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	FixedDot
+      legend_key	D
+      colors
+        color	ARKBLUE
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	PathHoriz
+      legend_key	T
+      colors
+        color	RANSPARENT
+    object_data
+      object_name	PathVert
+      legend_key	T
+      colors
+        color	RANSPARENT
+    object_data
+      object_name	Flag
+      legend_key	T
+      colors
+        color	RANSPARENT
+      
+
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      P
+      object_name	GreenPlayer
+    legend_data
+      R
+      object_name	RedPlayer
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      M
+      object_name	MoveCrate
+    legend_data
+      F
+      object_name	FixedCrate
+      legend_operation
+        object_name	FixedDot
+    legend_data
+      Crate
+      object_name	MoveCrate
+      legend_operation
+        object_name	FixedCrate
+    legend_data
+      Path
+      object_name	PathHoriz
+      legend_operation
+        object_name	PathVert
+    legend_data
+      Arm
+      object_name	LeftArm
+      legend_operation
+        object_name	RightArm
+    legend_data
+      Player
+      object_name	GreenPlayer
+      legend_operation
+        object_name	RedPlayer
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Player
+      object_name	Crate
+    layer_data
+      object_name	Wall
+      object_name	RedPlayer
+    layer_data
+      object_name	PathHoriz
+    layer_data
+      object_name	PathVert
+    layer_data
+      object_name	BlueCrate
+    layer_data
+      object_name	Arm
+    layer_data
+      object_name	FixedDot
+    layer_data
+      object_name	Flag
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              GreenPlayer
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	v
+            rule_content	e
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              >
+              GreenPlayer
+            cell_border
+            rule_content	>
+            rule_content	M
+            rule_content	o
+            rule_content	v
+            rule_content	e
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          
+
+        rule_data
+          rule_part
+            rule_content
+              <
+              RedPlayer
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	v
+            rule_content	e
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              <
+              RedPlayer
+            cell_border
+            rule_content	<
+            rule_content	M
+            rule_content	o
+            rule_content	v
+            rule_content	e
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content	Crate
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              Crate
+              PathHoriz
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	P
+            rule_content	a
+            rule_content	t
+            rule_content	h
+            rule_content	H
+            rule_content	o
+            rule_content	r
+            rule_content	i
+            rule_content	z
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	P
+            rule_content	a
+            rule_content	t
+            rule_content	h
+            rule_content	H
+            rule_content	o
+            rule_content	r
+            rule_content	i
+            rule_content	z
+          
+
+        rule_data
+          late
+          down
+          rule_part
+            rule_content	Crate
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              Crate
+              PathVert
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	P
+            rule_content	a
+            rule_content	t
+            rule_content	h
+            rule_content	V
+            rule_content	e
+            rule_content	r
+            rule_content	t
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	P
+            rule_content	a
+            rule_content	t
+            rule_content	h
+            rule_content	V
+            rule_content	e
+            rule_content	r
+            rule_content	t
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content
+              no
+              Crate
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	P
+            rule_content	a
+            rule_content	t
+            rule_content	h
+            rule_content	H
+            rule_content	o
+            rule_content	r
+            rule_content	i
+            rule_content	z
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	P
+            rule_content	a
+            rule_content	t
+            rule_content	h
+            rule_content	H
+            rule_content	o
+            rule_content	r
+            rule_content	i
+            rule_content	z
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+          
+
+        rule_data
+          late
+          down
+          rule_part
+            rule_content
+              no
+              Crate
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	P
+            rule_content	a
+            rule_content	t
+            rule_content	h
+            rule_content	V
+            rule_content	e
+            rule_content	r
+            rule_content	t
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	P
+            rule_content	a
+            rule_content	t
+            rule_content	h
+            rule_content	V
+            rule_content	e
+            rule_content	r
+            rule_content	t
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content
+              no
+              Crate
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	P
+            rule_content	a
+            rule_content	t
+            rule_content	h
+            rule_content	H
+            rule_content	o
+            rule_content	r
+            rule_content	i
+            rule_content	z
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+          
+
+        rule_data
+          late
+          down
+          rule_part
+            rule_content
+              no
+              Crate
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	P
+            rule_content	a
+            rule_content	t
+            rule_content	h
+            rule_content	V
+            rule_content	e
+            rule_content	r
+            rule_content	t
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Path
+              no
+              Crate
+          ->
+          rule_part
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	Path
+          ->
+          rule_part
+            rule_content
+              Path
+              BlueCrate
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              BlueCrate
+              no
+              Path
+          ->
+          rule_part
+          
+
+        rule_data
+          late
+          random
+          rule_part
+            rule_content
+              no
+              Crate
+          ->
+          rule_part
+            rule_content	Flag
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Flag
+              no
+              Crate
+            rule_content	]
+            rule_content	[
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	n
+            rule_content	o
+            rule_content	P
+            rule_content	a
+            rule_content	t
+            rule_content	h
+          ->
+          rule_part
+            rule_content	]
+            rule_content	[
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	F
+            rule_content	l
+            rule_content	a
+            rule_content	g
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Flag
+              no
+              Crate
+          ->
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	Arm
+          ->
+          rule_part
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content
+              no
+              Arm
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	A
+            rule_content	r
+            rule_content	m
+            rule_content	]
+            rule_content	[
+            rule_content	F
+            rule_content	l
+            rule_content	a
+            rule_content	g
+            rule_content	n
+            rule_content	o
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content	RightArm
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+            rule_content	A
+            rule_content	r
+            rule_content	m
+            rule_content	]
+            rule_content	[
+            rule_content	F
+            rule_content	l
+            rule_content	a
+            rule_content	g
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	Flag
+          ->
+          rule_part
+          
+
+  winconditions_section
+    condition_data
+      all
+      object_name	Crate
+      on
+      object_name	Path
+  levels_section
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' 'm' '.' 'm' '#' '#' '#']
+ ['#' '#' '#' '.' '.' '.' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' 'm' '.' 'p' '.' 'm' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '#' 'm' 'm' '.' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' 'm' '.' 'm' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' 'p' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' 'm' '.' '.' '.' '#']
+ ['#' '.' '.' 'm' '.' 'm' '.' '.' '#']
+ ['#' '#' '#' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '.' '.' 'm' '.' 'm' '.' '.' '#']
+ ['#' '.' '#' '.' 'p' '.' '#' '.' '#']
+ ['#' '#' '#' '.' '#' '.' '#' '#' '#']
+ ['#' '.' '#' '.' '.' '.' '#' '.' '#']
+ ['#' '.' '.' 'm' '.' 'm' '.' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '#' '#' '#' '.' '.' '#']
+ ['#' '.' '.' 'm' '.' '.' '.' 'm' '#']
+ ['#' '.' '.' 'm' 'p' '.' 'f' '.' '#']
+ ['#' '.' '.' 'm' '.' '.' '.' 'm' '#']
+ ['#' '.' '.' '#' '#' '#' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '.' '.' 'm' '.' '.' '#' '#']
+ ['#' '.' '.' 'f' '.' 'f' '.' '.' '#']
+ ['#' '.' 'm' '.' 'p' '.' 'm' '.' '#']
+ ['#' '#' '.' 'f' '.' 'f' '.' '#' '#']
+ ['#' '#' '.' '.' 'm' '.' '.' '#' '#']
+ ['#' '#' '#' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' 'f' '.' 'f' '.' '#' '.' '.' '.' '#' '.' '#' '.' '#']
+ ['#' '.' '.' 'm' '.' '.' '.' '.' '#' '.' '.' 'm' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '#' 'm' '.' '.' '#' '.' '.' '.' '#' 'm' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#' '.' 'm' '.' '.' '.' '.' '.' '#']
+ ['#' '#' 'm' '#' '.' '#' '#' '#' '#' '#' '.' '#' '.' '#' 'f' '#' '#']
+ ['#' '.' '.' '.' 'm' '.' '.' '.' '#' '.' '.' '.' 'm' '.' '.' '.' '#']
+ ['#' '.' 'p' '.' '.' '#' '.' '.' '#' '.' 'p' '.' '.' '#' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]

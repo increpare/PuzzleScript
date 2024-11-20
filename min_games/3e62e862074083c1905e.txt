@@ -1,0 +1,88 @@
+OBJECTS
+
+backgroundlightblue
+wblue
+w_Lblue
+lightblue00000
+0100010001
+0111000000
+w_Rblue
+lightblue00000
+0001010001
+0111000000
+w_Dblue lightblue00000
+01010
+01010
+00100
+00100
+
+wallbrown
+playergreen00000
+0.0.0
+00000
+0...0
+00000
+
+
+
+LEGEND
+
+. = background
+# = wall
+p = player
+water = w or w_L or w_R or w_D
+solid = wall or w
+
+COLLISIONLAYERS
+
+background
+wall
+water, w_L
+w_R, w_D
+player
+
+RULES
+
+[ water ] -> [ stationary w ] 
+down [ water | nowallnowater ] -> [ down w_D |  ] again 
+down [ w_D | wall ] -> [ stationary w | wall ] again 
+right [ water | w_D ] -> [ right w_R | w_D ] again 
+right [ w_D | water ] -> [ w_D | leftw_L ] again 
+right [ w | w_r ] -> [ right w_r | w_r ] again 
+right [ w_l | w ] -> [ w_l | leftw_l ] again 
+down [ w_D | w ] -> [ w_d | right w ] 
+right [ right w | w ] -> [ left w | w ] 
+horizontal [ solid | w | nosolid ] -> [ solid | >w |  ] 
+random horizontal [ no solid | stationary w | nosolid ] -> [ |>w |  ] 
+[ action player wall ] -> [ player ] again 
+late down [ water | nowallnowater ] -> [ water |  ] again 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+##..........###
+#wwwwwwwwwwww##
+#wwwwwwwwwwww##
+#wwwwwwwwwwww##
+#www#wwwwwww###
+##w#wwwwwwww###
+####www#wwww#.#
+#..#www##ww##.#
+#p.###.#####..#
+#....#.###....#
+#.............#
+##..#...#....##
+#.##....#...#.#
+#........###..#
+#.............#
+#.....#......##
+##...###...####
+##........#..##
+##.........#.##
+##...........##
+#.###......##.#
+#....#######..#

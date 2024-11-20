@@ -1,0 +1,1592 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	#
+      colors
+        color	9A00C2
+        color	#5200C2
+    object_data
+      object_name	11011
+      legend_key	1
+      colors
+        color	0101
+    object_data
+      object_name	01110
+      legend_key	1
+      colors
+        color	0101
+    object_data
+      object_name	11011
+      legend_key	C
+      colors
+        color	ornerwall
+    object_data
+      object_name	#FFB591
+      legend_key	#
+      colors
+        color	FF5501
+        color	#A83700
+    object_data
+      object_name	00001
+      legend_key	0
+      colors
+        color	1212
+    object_data
+      object_name	02022
+      legend_key	0
+      colors
+        color	1212
+    object_data
+      object_name	12222
+      legend_key	H
+      colors
+        color	oriwall
+    object_data
+      object_name	#FFB591
+      legend_key	#
+      colors
+        color	FF5501
+        color	#A83700
+    object_data
+      object_name	00000
+      legend_key	1
+      colors
+        color	0122
+    object_data
+      object_name	21012
+      legend_key	2
+      colors
+        color	2101
+    object_data
+      object_name	22222
+      legend_key	V
+      colors
+        color	ertwall
+    object_data
+      object_name	#FFB591
+      legend_key	#
+      colors
+        color	FF5501
+        color	#A83700
+    object_data
+      object_name	01222
+      legend_key	0
+      colors
+        color	0122
+    object_data
+      object_name	01012
+      legend_key	0
+      colors
+        color	2102
+    object_data
+      object_name	02212
+      legend_key	P
+      colors
+        color	layer
+    object_data
+      object_name	Brown
+      legend_key	P
+      colors
+        color	ink
+        color	White
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['.' '0' '0' '1' '1']
+        ['.' '0' '0' '1' '1']
+        ['.' '2' '2' '2' '.']
+        ['0' '2' '2' '2' '0']
+    object_data
+      object_name	Exit
+      legend_key	t
+      colors
+        color	ransparent
+    object_data
+      object_name	Everyslider
+      legend_key	#
+      colors
+        color	BCF818
+    object_data
+      object_name	#58D858
+      legend_key	#
+      colors
+        color	006800
+        color	Black
+      sprite
+        ['0' '0' '2' '0' '1']
+        ['0' '1' '3' '1' '2']
+        ['2' '3' '3' '3' '3']
+        ['0' '1' '3' '1' '2']
+        ['1' '2' '3' '2' '2']
+    object_data
+      object_name	Horislider
+      legend_key	#
+      colors
+        color	38C0FC
+    object_data
+      object_name	#0088FC
+      legend_key	#
+      colors
+        color	0000FC
+        color	Black
+      sprite
+        ['0' '0' '0' '0' '1']
+        ['0' '1' '1' '1' '2']
+        ['2' '3' '3' '3' '3']
+        ['0' '1' '1' '1' '2']
+        ['1' '2' '2' '2' '2']
+    object_data
+      object_name	Vertslider
+      legend_key	#
+      colors
+        color	FCFF00
+    object_data
+      object_name	#FCB800
+      legend_key	#
+      colors
+        color	503000
+        color	Black
+    object_data
+      object_name	00201
+      legend_key	0
+      colors
+        color	1312
+    object_data
+      object_name	01312
+      legend_key	0
+      colors
+        color	1312
+    object_data
+      object_name	12322
+      legend_key	B
+      colors
+        color	lock
+    object_data
+      object_name	#FCA048
+      legend_key	#
+      colors
+        color	FC3800
+        color	#AC1000
+      sprite
+        ['0' '0' '0' '0' '1']
+        ['0' '1' '1' '1' '2']
+        ['0' '1' '2' '1' '2']
+        ['0' '1' '1' '1' '2']
+        ['1' '2' '2' '2' '2']
+    object_data
+      object_name	Righteleport
+      legend_key	W
+      colors
+        color	hite
+    object_data
+      object_name	#FC78FC
+      legend_key	#
+      colors
+        color	94008C
+        color	Black
+      sprite
+        ['0' '3' '0' '0' '1']
+        ['0' '3' '3' '1' '2']
+        ['0' '1' '3' '3' '2']
+        ['0' '3' '3' '1' '2']
+        ['1' '3' '2' '2' '2']
+    object_data
+      object_name	Downteleport
+      legend_key	W
+      colors
+        color	hite
+    object_data
+      object_name	#FC78FC
+      legend_key	#
+      colors
+        color	94008C
+        color	Black
+      sprite
+        ['0' '0' '0' '0' '1']
+        ['3' '3' '1' '3' '3']
+        ['0' '3' '3' '3' '2']
+        ['0' '1' '3' '1' '2']
+        ['1' '2' '2' '2' '2']
+    object_data
+      object_name	Lefteleport
+      legend_key	W
+      colors
+        color	hite
+    object_data
+      object_name	#FC78FC
+      legend_key	#
+      colors
+        color	94008C
+        color	Black
+      sprite
+        ['0' '0' '1' '3' '1']
+        ['0' '1' '3' '3' '2']
+        ['0' '3' '3' '1' '2']
+        ['0' '1' '3' '3' '2']
+        ['1' '2' '2' '3' '2']
+    object_data
+      object_name	Upteleport
+      legend_key	W
+      colors
+        color	hite
+    object_data
+      object_name	#FC78FC
+      legend_key	#
+      colors
+        color	94008C
+        color	Black
+      sprite
+        ['0' '0' '0' '0' '1']
+        ['0' '1' '3' '1' '2']
+        ['0' '3' '3' '3' '2']
+        ['3' '3' '1' '3' '3']
+        ['1' '2' '2' '2' '2']
+    object_data
+      object_name	Rightpusher
+      legend_key	W
+      colors
+        color	hite
+    object_data
+      object_name	#00E8E4
+      legend_key	#
+      colors
+        color	0088FC
+        color	Black
+      sprite
+        ['0' '3' '0' '0' '1']
+        ['0' '3' '3' '1' '2']
+        ['0' '3' '3' '3' '2']
+        ['0' '3' '3' '1' '2']
+        ['1' '3' '2' '2' '2']
+    object_data
+      object_name	Downpusher
+      legend_key	W
+      colors
+        color	hite
+    object_data
+      object_name	#00E8E4
+      legend_key	#
+      colors
+        color	0088FC
+        color	Black
+      sprite
+        ['0' '0' '0' '0' '1']
+        ['3' '3' '3' '3' '3']
+        ['0' '3' '3' '3' '2']
+        ['0' '1' '3' '1' '2']
+        ['1' '2' '2' '2' '2']
+    object_data
+      object_name	Leftpusher
+      legend_key	W
+      colors
+        color	hite
+    object_data
+      object_name	#00E8E4
+      legend_key	#
+      colors
+        color	0088FC
+        color	Black
+      sprite
+        ['0' '0' '1' '3' '1']
+        ['0' '1' '3' '3' '2']
+        ['0' '3' '3' '3' '2']
+        ['0' '1' '3' '3' '2']
+        ['1' '2' '2' '3' '2']
+    object_data
+      object_name	Uppusher
+      legend_key	W
+      colors
+        color	hite
+    object_data
+      object_name	#00E8E4
+      legend_key	#
+      colors
+        color	0088FC
+        color	Black
+      sprite
+        ['0' '0' '0' '0' '1']
+        ['0' '1' '3' '1' '2']
+        ['0' '3' '3' '3' '2']
+        ['3' '3' '3' '3' '3']
+        ['1' '2' '2' '2' '2']
+    object_data
+      object_name	Selector
+      legend_key	W
+      colors
+        color	hite
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '.' '0' '0']
+    object_data
+      object_name	Fakeselector
+      legend_key	W
+      colors
+        color	hite
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '.' '0' '0']
+    object_data
+      object_name	Xselector
+      legend_key	W
+      colors
+        color	hite
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '0' '.' '.']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '.' '0' '0']
+    object_data
+      object_name	Barnaby
+      legend_key	#
+      colors
+        color	503000
+    object_data
+      object_name	#905F25
+      legend_key	#
+      colors
+        color	FC3800
+        color	Black
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '3' '0' '3' '.']
+        ['0' '0' '0' '2' '0']
+        ['1' '0' '0' '0' '1']
+    object_data
+      object_name	Void
+      legend_key	B
+      colors
+        color	lack
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Marker
+      legend_key	T
+      colors
+        color	ransparent
+      
+
+
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Cornerwall
+    legend_data
+      H
+      object_name	Horiwall
+    legend_data
+      I
+      object_name	Vertwall
+    legend_data
+      *
+      object_name	Block
+    legend_data
+      p
+      object_name	Player
+    legend_data
+      e
+      object_name	Exit
+    legend_data
+      +
+      object_name	Everyslider
+    legend_data
+      -
+      object_name	Horislider
+    legend_data
+      |
+      object_name	Vertslider
+    legend_data
+      6
+      object_name	Righteleport
+    legend_data
+      8
+      object_name	Upteleport
+    legend_data
+      4
+      object_name	Lefteleport
+    legend_data
+      5
+      object_name	Downteleport
+    legend_data
+      d
+      object_name	Rightpusher
+    legend_data
+      w
+      object_name	Uppusher
+    legend_data
+      a
+      object_name	Leftpusher
+    legend_data
+      s
+      object_name	Downpusher
+    legend_data
+      O
+      object_name	Selector
+    legend_data
+      X
+      object_name	Xselector
+    legend_data
+      b
+      object_name	Barnaby
+    legend_data
+      0
+      object_name	Void
+    legend_data
+      Wall
+      object_name	Cornerwall
+      legend_operation
+        object_name	Horiwall
+      legend_operation
+        object_name	Vertwall
+    legend_data
+      Horipushable
+      object_name	Horislider
+      legend_operation
+        object_name	Everyslider
+      legend_operation
+        object_name	Selector
+      legend_operation
+        object_name	Xselector
+    legend_data
+      Vertpushable
+      object_name	Vertslider
+      legend_operation
+        object_name	Everyslider
+      legend_operation
+        object_name	Selector
+      legend_operation
+        object_name	Xselector
+    legend_data
+      Anypushable
+      object_name	Horislider
+      legend_operation
+        object_name	Vertslider
+      legend_operation
+        object_name	Everyslider
+      legend_operation
+        object_name	Selector
+      legend_operation
+        object_name	Xselector
+    legend_data
+      Anypusher
+      object_name	Uppusher
+      legend_operation
+        object_name	Leftpusher
+      legend_operation
+        object_name	Rightpusher
+      legend_operation
+        object_name	Downpusher
+    legend_data
+      Anyteleport
+      object_name	Upteleport
+      legend_operation
+        object_name	Lefteleport
+      legend_operation
+        object_name	Righteleport
+      legend_operation
+        object_name	Downteleport
+    legend_data
+      Obstacle
+      object_name	Wall
+      legend_operation
+        object_name	Anyteleport
+      legend_operation
+        object_name	Anypushable
+      legend_operation
+        object_name	Player
+    legend_data
+      Pusher
+      object_name	Anypusher
+      legend_operation
+        object_name	Player
+      legend_operation
+        object_name	Anypushable
+    legend_data
+      Anyotherpusher
+      object_name	Anypusher
+      legend_operation
+        object_name	Anypushable
+  collisionlayers_section
+    layer_data
+      object_name	Marker
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Exit
+    layer_data
+      object_name	Barnaby
+      object_name	Void
+    layer_data
+      object_name	Player
+      object_name	Cornerwall
+    layer_data
+      object_name	Horiwall
+      object_name	Vertwall
+    layer_data
+      object_name	Everyslider
+      object_name	Horislider
+    layer_data
+      object_name	Vertslider
+      object_name	Block
+    layer_data
+      object_name	Righteleport
+      object_name	Upteleport
+    layer_data
+      object_name	Lefteleport
+      object_name	Downteleport
+    layer_data
+      object_name	Rightpusher
+      object_name	Uppusher
+    layer_data
+      object_name	Leftpusher
+      object_name	Downpusher
+    layer_data
+      object_name	Selector
+      object_name	Xselector
+    layer_data
+      object_name	Fakeselector
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	X
+            rule_content	s
+            rule_content	e
+            rule_content	l
+            rule_content	e
+            rule_content	c
+            rule_content	t
+            rule_content	o
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              Stationary
+              Player
+            cell_border
+            rule_content	S
+            rule_content	t
+            rule_content	a
+            rule_content	t
+            rule_content	i
+            rule_content	o
+            rule_content	n
+            rule_content	a
+            rule_content	r
+            rule_content	y
+            rule_content	X
+            rule_content	s
+            rule_content	e
+            rule_content	l
+            rule_content	e
+            rule_content	c
+            rule_content	t
+            rule_content	o
+            rule_content	r
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	S
+            rule_content	e
+            rule_content	l
+            rule_content	e
+            rule_content	c
+            rule_content	t
+            rule_content	o
+            rule_content	r
+          ->
+          rule_part
+            rule_content	|
+            rule_content	S
+            rule_content	t
+            rule_content	a
+            rule_content	t
+            rule_content	i
+            rule_content	o
+            rule_content	n
+            rule_content	a
+            rule_content	r
+            rule_content	y
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	F
+            rule_content	a
+            rule_content	k
+            rule_content	e
+            rule_content	s
+            rule_content	e
+            rule_content	l
+            rule_content	e
+            rule_content	c
+            rule_content	t
+            rule_content	o
+            rule_content	r
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Fakeselector
+              no
+              Player
+          ->
+          rule_part
+            rule_content	Selector
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Stationary
+              Player
+            rule_content	]
+            rule_content	[
+            rule_content	R
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+            rule_content	p
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	Player
+            rule_content	]
+            rule_content	[
+            rule_content	R
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+            rule_content	R
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+            rule_content	p
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Stationary
+              Player
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            rule_content	o
+            rule_content	w
+            rule_content	n
+            rule_content	p
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	Player
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            rule_content	o
+            rule_content	w
+            rule_content	n
+            rule_content	D
+            rule_content	o
+            rule_content	w
+            rule_content	n
+            rule_content	p
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Stationary
+              Player
+            rule_content	]
+            rule_content	[
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+            rule_content	p
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	Player
+            rule_content	]
+            rule_content	[
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+            rule_content	p
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Stationary
+              Player
+            rule_content	]
+            rule_content	[
+            rule_content	U
+            rule_content	p
+            rule_content	p
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	Player
+            rule_content	]
+            rule_content	[
+            rule_content	U
+            rule_content	p
+            rule_content	U
+            rule_content	p
+            rule_content	p
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          rule_part
+            rule_content
+              moving
+              Pusher
+          ->
+          rule_part
+            rule_content
+              moving
+              Pusher
+              Marker
+          
+
+    rule_block
+      rule_block_loop
+        startloop
+        
+
+        rule_data
+          Horizontal
+          rule_part
+            rule_content	Marker
+            rule_content	>
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	t
+            rule_content	i
+            rule_content	o
+            rule_content	n
+            rule_content	a
+            rule_content	r
+            rule_content	y
+            rule_content	H
+            rule_content	o
+            rule_content	r
+            rule_content	i
+            rule_content	p
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	Marker
+            rule_content	>
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	>
+            rule_content	H
+            rule_content	o
+            rule_content	r
+            rule_content	i
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          
+
+        rule_data
+          Vertical
+          rule_part
+            rule_content	Marker
+            rule_content	>
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	t
+            rule_content	i
+            rule_content	o
+            rule_content	n
+            rule_content	a
+            rule_content	r
+            rule_content	y
+            rule_content	V
+            rule_content	e
+            rule_content	r
+            rule_content	t
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	Marker
+            rule_content	>
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	>
+            rule_content	V
+            rule_content	e
+            rule_content	r
+            rule_content	t
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          
+
+        rule_data
+          rule_part
+            rule_content	Marker
+            rule_content	>
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	M
+            rule_content	a
+            rule_content	r
+            rule_content	k
+            rule_content	e
+            rule_content	r
+            rule_content	>
+            rule_content	A
+            rule_content	n
+            rule_content	y
+            rule_content	p
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              >
+              Pusher
+            cell_border
+            rule_content	M
+            rule_content	a
+            rule_content	r
+            rule_content	k
+            rule_content	e
+            rule_content	r
+            rule_content	>
+            rule_content	A
+            rule_content	n
+            rule_content	y
+            rule_content	p
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          
+
+        rule_data
+          Horizontal
+          rule_part
+            rule_content	Marker
+            rule_content	>
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	V
+            rule_content	e
+            rule_content	r
+            rule_content	t
+            rule_content	i
+            rule_content	c
+            rule_content	a
+            rule_content	l
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	Pusher
+            cell_border
+            rule_content	V
+            rule_content	e
+            rule_content	r
+            rule_content	t
+            rule_content	i
+            rule_content	c
+            rule_content	a
+            rule_content	l
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          Vertical
+          rule_part
+            rule_content	Marker
+            rule_content	>
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	H
+            rule_content	o
+            rule_content	r
+            rule_content	i
+            rule_content	z
+            rule_content	o
+            rule_content	n
+            rule_content	t
+            rule_content	a
+            rule_content	l
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	Pusher
+            cell_border
+            rule_content	H
+            rule_content	o
+            rule_content	r
+            rule_content	i
+            rule_content	z
+            rule_content	o
+            rule_content	n
+            rule_content	t
+            rule_content	a
+            rule_content	l
+            rule_content	P
+            rule_content	u
+            rule_content	s
+            rule_content	h
+            rule_content	e
+            rule_content	r
+          
+
+        endloop
+        
+
+    rule_block
+      rule_block_once
+    rule_block
+      rule_block_once
+        rule_data
+          Right
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	R
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+            rule_content	e
+            rule_content	l
+            rule_content	e
+            rule_content	p
+            rule_content	o
+            rule_content	r
+            rule_content	t
+            cell_border
+            rule_content	N
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	R
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+            rule_content	e
+            rule_content	l
+            rule_content	e
+            rule_content	p
+            rule_content	o
+            rule_content	r
+            rule_content	t
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          Down
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	D
+            rule_content	o
+            rule_content	w
+            rule_content	n
+            rule_content	t
+            rule_content	e
+            rule_content	l
+            rule_content	e
+            rule_content	p
+            rule_content	o
+            rule_content	r
+            rule_content	t
+            cell_border
+            rule_content	N
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	D
+            rule_content	o
+            rule_content	w
+            rule_content	n
+            rule_content	t
+            rule_content	e
+            rule_content	l
+            rule_content	e
+            rule_content	p
+            rule_content	o
+            rule_content	r
+            rule_content	t
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          Left
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+            rule_content	e
+            rule_content	l
+            rule_content	e
+            rule_content	p
+            rule_content	o
+            rule_content	r
+            rule_content	t
+            cell_border
+            rule_content	N
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+            rule_content	e
+            rule_content	l
+            rule_content	e
+            rule_content	p
+            rule_content	o
+            rule_content	r
+            rule_content	t
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          Up
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	U
+            rule_content	p
+            rule_content	t
+            rule_content	e
+            rule_content	l
+            rule_content	e
+            rule_content	p
+            rule_content	o
+            rule_content	r
+            rule_content	t
+            cell_border
+            rule_content	N
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	U
+            rule_content	p
+            rule_content	t
+            rule_content	e
+            rule_content	l
+            rule_content	e
+            rule_content	p
+            rule_content	o
+            rule_content	r
+            rule_content	t
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content	Player
+          ->
+          rule_part
+            rule_content	Player
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	Barnaby
+          ->
+          rule_part
+            rule_content
+              Barnaby
+              Exit
+          
+
+        rule_data
+          rule_part
+            rule_content	Marker
+          ->
+          rule_part
+          
+
+  winconditions_section
+    condition_data
+      All
+      object_name	player
+      on
+      object_name	exit
+  levels_section
+    level_data	None
+    level_data	[['#' 'H' 'H' 'H' 'H' 'H' 'H' '#' 'E' '#' 'H' 'H' 'H' 'H' 'H' 'H' '#']]
+    level_data	[['I' '.' '.' '.' '.' '*' '.' '.' '.' '.' '.' '*' '.' '.' '.' '.' 'I']
+ ['I' '.' '.' '.' '.' '.' '-' '|' '-' '|' '-' '.' '.' '.' '.' '.' 'I']
+ ['I' '|' '.' '.' '.' '.' '.' '+' '.' '+' '.' '.' '.' '.' '.' '|' 'I']
+ ['I' '|' '.' '*' '.' '.' '*' '.' '|' '.' '*' '.' '.' '*' '.' '|' 'I']
+ ['I' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'I']
+ ['I' '.' '*' '.' '*' '.' '-' '.' '+' '.' '-' '.' '*' '.' '*' '.' 'I']
+ ['I' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'I']
+ ['I' '|' '.' '*' '.' '.' '*' '.' '|' '.' '*' '.' '.' '*' '.' '|' 'I']
+ ['I' '|' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '|' 'I']
+ ['I' '.' '.' '.' '.' '-' '-' '.' 'p' '.' '-' '-' '.' '.' '.' '.' 'I']
+ ['#' 'H' 'H' 'H' 'H' 'H' 'H' 'H' 'H' 'H' 'H' 'H' 'H' 'H' 'H' 'H' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'E' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '.' '.' '.' '*' '.' '.' '.' '.' '*' '*' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '*' '*' '.' '.' '.' '.' '*' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '-' '-' '-' '-' '-' '|' '-' '-' '-' '.' '.' '*' '|' 'i']
+ ['#' '.' '.' '*' '.' '.' '.' '.' '+' '|' '.' '.' '*' '*' '*' '|' '#']
+ ['i' '|' '.' '-' '.' '.' '.' '.' '.' '+' '.' '.' '.' '.' '.' '|' 'i']
+ ['i' '|' '+' '.' '*' '*' '.' '.' '.' '.' '.' '.' '*' '.' '.' '.' 'i']
+ ['#' '|' '*' '*' '.' '.' '*' '*' '*' '*' '.' '.' '.' '.' '*' '.' '#']
+ ['i' '|' '.' '.' '|' '.' '.' '*' '*' '*' '.' '.' '*' '.' '-' '.' 'i']
+ ['i' '|' '.' '*' '.' '+' '|' '.' '.' '*' '.' '.' '-' '|' '*' '.' 'i']
+ ['i' '.' '.' '*' '.' '*' '.' '.' 'p' '-' '.' '.' '*' '.' '-' '.' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '*' '.' '.' '*' '.' '.' '*' '.' '.' '.' '.' '*' '.' '.' '.' 'i']
+ ['i' '.' '.' '|' '*' '.' '*' '.' '.' '.' '|' '|' '.' '.' '*' '.' 'i']
+ ['i' '.' '|' '+' '*' '*' '*' '*' '*' '*' '+' '+' '*' '*' '.' '.' 'i']
+ ['#' '.' '.' '|' '.' '.' '.' '.' '.' '.' '|' '.' '.' '.' '*' '.' '#']
+ ['i' '.' '*' '.' '.' '.' '.' '.' '*' '*' '+' '*' '.' '*' '.' '.' 'i']
+ ['i' '.' '.' '*' '*' '*' '*' '.' '.' '*' '|' '.' '.' '-' '-' '.' 'i']
+ ['#' '.' '*' '.' '.' '.' '.' '*' '.' '*' '|' '*' '.' '-' '-' '.' '#']
+ ['i' '.' '.' '*' '+' '+' '.' '*' '.' '.' '.' 'd' '|' '*' '.' '.' 'i']
+ ['i' '.' '.' '.' '|' '|' '.' '.' '*' '.' '.' '*' '.' '+' '.' '.' 'i']
+ ['i' '.' '.' '*' '.' '.' '*' '.' 'p' '*' '.' '*' '.' '+' '.' '*' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '.' '.' '.' '.' '.' '+' '-' '+' '+' '+' '+' '+' 's' '.' 'i']
+ ['i' '.' '.' '.' '.' '*' '.' '.' '.' '.' '*' '.' '*' '.' '-' '|' 'i']
+ ['i' '.' '.' '*' '*' '.' '*' '*' '*' '.' '.' '.' '-' '.' '.' '.' 'i']
+ ['#' '.' '*' '.' '.' '.' '.' '.' '.' '*' '*' '*' '*' '.' '*' '|' '#']
+ ['i' '.' '*' '.' '-' '.' '*' '*' '.' '-' '.' '.' '.' '.' '*' '.' 'i']
+ ['i' '.' '*' '.' '*' '|' '.' '.' '*' '.' '-' '.' '.' '*' '.' '.' 'i']
+ ['#' '|' '*' '.' '*' '|' '*' '.' '.' '*' '*' '*' '*' '.' '.' '.' '#']
+ ['i' '|' 'a' '|' 'a' '|' 'a' '.' '-' '-' '-' '-' '.' '.' '.' '.' 'i']
+ ['i' '.' '*' '.' '*' '.' '*' '*' '*' '*' '.' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '.' '.' 'p' '*' '.' '-' '-' '-' '-' '.' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '.' '.' '.' '.' '.' '*' '.' '.' '.' '.' '.' '-' '-' '.' 'i']
+ ['i' '.' '*' '.' '.' '.' '.' '.' '*' '.' '|' '.' '-' '.' '*' '.' 'i']
+ ['i' '*' '.' '*' '.' '|' '.' '|' '.' '*' '.' '.' '.' '*' '.' '.' 'i']
+ ['#' '*' '.' '*' '*' '|' '*' '.' '|' '.' '*' '*' '*' '.' '.' '|' '#']
+ ['i' '*' '.' '*' 's' 's' '*' '.' '.' '|' '.' '.' '*' '.' '.' '.' 'i']
+ ['i' '.' '|' '-' '-' '-' '+' '.' '.' '.' '*' '.' '*' '.' '.' '.' 'i']
+ ['#' '.' '|' '*' '.' '.' '*' '*' '*' '.' '*' '.' '*' '.' '*' '*' '#']
+ ['i' '.' '+' '*' '.' '.' '.' '*' '*' '*' '*' '.' '-' '-' '+' '.' 'i']
+ ['i' '*' '|' '*' '*' '*' '*' '*' '*' '*' '*' '.' '+' '-' '-' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '.' '.' 'p' '*' '.' '.' '.' '.' '.' '.' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '.' '.' '*' '.' '.' 's' '.' '.' '.' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '-' '-' '-' 's' '-' '-' '-' '-' '-' '-' '|' 'a' 'i']
+ ['i' '.' '.' '.' '.' '.' '.' '-' '.' '.' '.' '.' '.' '*' '+' '.' 'i']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '|' '.' '#']
+ ['i' '.' '.' '.' '.' '.' '.' '*' '.' '.' '.' '.' '.' '.' '|' '.' 'i']
+ ['i' 'd' '-' '-' '-' '|' '*' '*' '*' '*' '*' '*' '*' '*' '|' '*' 'i']
+ ['#' '*' '*' '*' '*' '.' '*' '.' '*' '.' '.' '.' '*' '*' '|' '.' '#']
+ ['i' '.' '.' '.' '.' '.' '-' '.' '.' '.' '.' '.' '.' '*' '|' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '*' '*' '*' '*' '*' '*' '|' '+' '-' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '.' '.' 'p' '*' '.' '.' '.' '.' 'w' '.' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '-' '-' 's' '-' '-' '-' '-' '.' '.' '*' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '-' '.' '.' '.' '*' '+' '.' '*' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '+' 'd' 'd' '|' '.' '*' '.' '.' '*' '*' '.' 'i']
+ ['#' '*' '*' '.' '.' '+' '-' '.' '.' '*' '.' '.' '*' '.' '.' '*' '#']
+ ['i' '.' 'd' '|' '.' '+' '.' '.' '-' '.' '.' '.' '.' '.' '.' '*' 'i']
+ ['i' '.' '.' '.' '.' '+' '.' '.' 'w' '.' '.' '.' '.' '.' '*' '.' 'i']
+ ['#' '.' '.' '.' '.' '+' '.' '.' '.' '.' '.' '.' '.' '*' '.' '.' '#']
+ ['i' '*' '*' '.' '-' '-' '+' '-' '-' '-' '-' '-' '.' '*' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '.' '.' 'p' '.' '.' '.' '.' '*' '.' '.' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '.' '.' '.' '.' '.' '*' '.' '*' '.' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '*' '*' '.' '.' '*' '.' '8' '.' '*' '.' '.' '*' '*' '.' 'i']
+ ['i' '*' '.' '.' '*' '.' '.' '|' '.' '|' '.' '.' '.' '*' '*' '.' 'i']
+ ['#' '.' '.' '5' '.' '.' '.' '+' '*' '+' '.' '.' '.' '*' '*' '.' '#']
+ ['i' '.' '*' '.' '*' '.' '.' '|' '*' '|' '.' '.' '.' '*' '*' '.' 'i']
+ ['i' '8' 'd' '|' '.' '.' '.' '-' '-' '-' '-' '.' '.' '.' '.' '.' 'i']
+ ['#' '.' '*' '.' '*' '*' '*' 'w' '*' 'w' 'w' '.' '.' '.' '.' '.' '#']
+ ['i' '.' '*' '.' '*' '.' '4' '.' '.' '*' '.' '.' '.' '*' '*' '.' 'i']
+ ['i' '.' '*' '*' '*' '.' '4' '.' '.' '*' '.' '.' '.' '*' '*' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '4' '.' 'p' '*' '.' '.' '.' '.' '.' '.' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '.' '.' '.' '.' '*' 's' 's' 's' '.' '.' '-' 's' '.' '.' 'i']
+ ['i' '|' '-' '-' '-' '-' '+' '-' '-' '+' '.' '.' '.' '-' '.' '.' 'i']
+ ['i' '.' '*' '*' '5' '.' '.' '6' '.' '4' '.' '.' '*' '.' '.' '.' 'i']
+ ['#' '8' '.' '*' '.' '.' '*' '*' '.' '*' '*' '*' '.' '.' '.' '.' '#']
+ ['i' '.' '.' '*' '*' '*' '.' '4' '.' '6' '.' '*' '.' '.' '.' '.' 'i']
+ ['i' '.' '*' '.' '4' '.' '.' '*' '.' '*' '.' '*' '*' '8' '*' '*' 'i']
+ ['#' '8' '.' '8' '.' '5' '.' '*' '.' '*' '.' '.' '-' '-' '-' '.' '#']
+ ['i' '.' '4' '.' '6' '.' '5' '*' '8' '*' '.' '.' '.' '.' 's' '.' 'i']
+ ['i' '6' '.' '8' '.' '5' '.' '*' '.' '*' '.' '.' '-' '+' '-' '.' 'i']
+ ['i' '.' '4' '.' '4' '.' '*' '*' 'p' '*' '.' '.' '.' '.' '.' '*' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '*' '.' '.' '.' '.' '*' '.' '*' '.' '*' '.' '.' '.' '.' 'i']
+ ['i' '.' 'd' '|' '.' '.' '.' '.' '-' '.' '.' '.' '*' '*' '*' '*' 'i']
+ ['i' '.' '.' '+' '*' '.' '.' '*' '.' '*' '*' '*' '.' '.' '.' '.' 'i']
+ ['#' '.' '.' '|' '.' '.' '*' '.' '-' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['i' '.' '.' '|' '.' '.' '*' 'd' '|' '*' '.' '.' '.' '*' '*' '.' 'i']
+ ['i' '.' '*' '|' '.' '.' '*' '*' '.' '*' '*' '*' '*' '.' '.' '.' 'i']
+ ['#' '8' '.' '-' '+' '-' '-' '-' '.' '*' 'd' 'd' 'd' '+' '+' '+' '#']
+ ['i' '.' '*' '|' '.' '.' '*' '*' '8' '*' '*' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '*' '*' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '.' '.' 'p' '.' '.' '.' '.' '*' '*' '*' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '.' '.' '.' '*' '*' '*' 's' '*' '*' '*' '*' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '*' '.' '.' '-' '-' '-' '+' '-' '.' '*' '.' '.' 'i']
+ ['i' '.' '.' '*' '.' '+' '-' '-' '-' '-' '.' '.' '.' '.' '*' '.' 'i']
+ ['#' '.' '.' '*' '.' '.' '-' '-' '-' '+' '-' '-' '.' '.' '*' '.' '#']
+ ['i' '.' '.' '*' '.' '-' '+' '-' '-' '+' '-' '-' '.' '.' '*' '.' 'i']
+ ['i' '.' '.' '*' '.' '.' '-' '-' '-' '+' '-' '-' '.' '.' '*' '.' 'i']
+ ['#' '.' '.' '.' '*' '.' '.' '.' '-' '.' '.' '.' '.' '*' '.' '.' '#']
+ ['i' '.' '.' '.' '.' '.' '.' '*' '.' '*' '.' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '*' 's' '*' 's' '*' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '-' '-' 'p' '-' '-' '.' '.' '.' '.' '.' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '.' '*' 's' '.' 'x' '-' '-' '.' '.' 's' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '-' '.' '.' '.' '*' '.' '.' '|' '.' '.' '.' '.' 'i']
+ ['i' '*' '8' '*' '|' '.' '.' '.' '.' '*' '*' '+' '*' '.' '.' '.' 'i']
+ ['#' '.' '.' '.' '|' '-' '-' '-' '-' '-' '-' 'a' '.' '|' '.' '.' '#']
+ ['i' '.' '.' '4' '.' '.' '+' '.' '*' '5' '*' '*' '*' '.' '.' '.' 'i']
+ ['i' '.' '.' '4' '.' '.' '+' '.' '.' '+' '.' '.' '-' '-' '.' '.' 'i']
+ ['#' '.' '.' '4' '.' '.' '+' '.' '.' '+' '.' '*' '*' 'w' '8' '8' '#']
+ ['i' '.' '.' '.' '*' '*' '.' '*' '*' '*' '.' '*' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' 'x' '.' '-' '.' 'x' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' 'x' '.' 'p' '.' 'x' '.' '.' '.' '.' '.' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '.' '.' '.' '.' '.' 'x' 'x' 'x' '.' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '.' '.' '.' '*' '*' '*' '*' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '*' '*' '*' '.' '.' '.' '4' '.' '.' '.' 'i']
+ ['#' '*' '*' '*' '*' '*' '.' '.' '.' '.' '.' '*' '*' '.' '.' '.' '#']
+ ['i' '.' '.' '.' '.' '.' '.' '*' '*' '*' '*' '.' '.' '*' '.' '*' 'i']
+ ['i' '.' '.' '*' '.' '.' '.' '.' '-' '.' '.' '.' '.' '4' '.' '.' 'i']
+ ['#' '*' '.' '*' '*' '*' '*' '*' '*' '.' '*' '.' '*' '.' '.' '.' '#']
+ ['i' '.' '.' '.' '.' '.' '+' '.' '4' '.' '*' '.' '*' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '.' '*' '*' '.' '.' '.' '.' '.' '-' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '.' '.' 'p' '*' '.' '.' '*' '*' 'w' '*' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '.' '6' '.' '6' '.' '6' '.' '6' '.' '4' '.' '4' '.' '.' 'i']
+ ['i' '.' '6' '.' '6' '.' '4' '.' '4' '.' '4' '.' '6' '.' '4' '.' 'i']
+ ['i' '8' '.' '5' '.' '8' '.' '8' '.' '5' '.' '8' '.' '5' '.' '8' 'i']
+ ['#' '.' '4' '.' '4' '.' '6' '.' '4' '.' '5' '.' '4' '.' '4' '.' '#']
+ ['i' '5' '.' '5' '.' '8' '.' '8' '.' '5' '.' '4' '.' '6' '.' '8' 'i']
+ ['i' '.' '6' '.' '4' '.' '4' '.' '4' '.' '6' '.' '8' '.' '6' '.' 'i']
+ ['#' '8' '.' '5' '.' '5' '.' '5' '.' '5' '.' '8' '.' '8' '.' '5' '#']
+ ['i' '.' '4' '.' '6' '.' '6' '.' '4' '.' '6' '.' '6' '.' '6' '.' 'i']
+ ['i' '5' '.' '8' '.' '8' '.' '8' '.' '8' '.' '8' '.' '5' '.' '8' 'i']
+ ['i' '.' '6' '.' '4' '.' '4' '.' 'p' '.' '6' '.' '6' '.' '6' '.' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '+' '.' '.' '.' '-' '-' 's' '-' '-' 's' '-' '-' 's' '-' 'i']
+ ['i' '.' '+' '.' '.' '*' '*' '*' '|' '*' '.' 'x' '.' '.' 'x' '.' 'i']
+ ['i' '.' '*' '*' '*' '.' '.' '*' '|' '*' '.' 'o' '.' '.' 'o' '.' 'i']
+ ['#' '8' '.' '.' '*' '*' '*' '.' '|' '*' '.' 'o' '.' '.' 'o' '.' '#']
+ ['i' '.' '|' '|' '.' '*' '.' '.' 'x' '*' '*' '*' '+' '.' '*' '.' 'i']
+ ['i' '*' 'o' 'o' '8' '*' '.' '.' 'o' '.' '.' '*' '.' '*' '*' '*' 'i']
+ ['#' '.' '|' '|' '.' '*' '.' '.' 'o' '.' '.' '*' '.' '*' '.' '.' '#']
+ ['i' '*' '*' '.' '*' '*' '*' '.' '*' '.' '*' '*' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'i']
+ ['i' '.' '.' '.' '.' '*' '.' '.' 'p' '.' '.' '*' '.' '.' '.' '.' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['#' 'h' 'h' 'h' 'h' '#' 'h' '#' 'e' '#' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	[['i' '.' '.' '.' '.' '.' '.' '*' '.' '4' '.' '.' '.' '.' '.' '.' 'i']
+ ['i' '*' '*' '.' '.' '.' '*' '.' '*' '.' '*' '*' '*' '*' '.' '.' 'i']
+ ['i' '.' '.' '|' 'o' '|' '.' '.' '*' '.' '*' '.' '.' '*' '.' '*' 'i']
+ ['#' '8' '.' 'x' '*' 'x' '*' '.' '.' '|' '.' '.' '-' 'o' '-' '.' '#']
+ ['i' '.' '4' 'o' '.' 'o' '.' '*' '.' 'x' '*' '*' '*' '*' '.' '*' 'i']
+ ['i' '*' '.' '.' '.' '.' '.' '*' '.' 'o' '.' '.' '-' 'o' '-' '.' 'i']
+ ['#' '.' '.' '.' '.' '.' '.' '*' '5' 'x' '*' '*' '*' '*' '.' '*' '#']
+ ['i' '.' '.' '.' '.' '.' '.' '*' '.' '|' '6' '.' '-' 'o' '-' '.' 'i']
+ ['i' '.' '-' '-' '+' '-' '.' '4' '.' '.' '*' '*' '.' '*' '.' '*' 'i']
+ ['i' '.' '.' 'w' '.' 'w' '.' '*' 'p' '*' '*' '.' '.' '.' '.' '.' 'i']
+ ['#' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' 'h' '#' 'h' 'h' 'h' 'h' '#']]
+    level_data	None
+    level_data	[['0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0']]
+    level_data	[['0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0']
+ ['0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0']
+ ['0' '0' '0' '0' '0' '#' 'h' 'h' '#' 'h' 'h' '#' '0' '0' '0' '0' '0']
+ ['0' '0' '0' '0' '0' 'i' '.' '.' '.' '.' '.' 'i' '0' '0' '0' '0' '0']
+ ['0' '0' '0' '0' '0' 'i' '.' '.' 'b' '.' '.' 'i' '0' '0' '0' '0' '0']
+ ['0' '0' '0' '0' '0' 'i' '.' '.' '.' '.' '.' 'i' '0' '0' '0' '0' '0']
+ ['0' '0' '0' '0' '0' 'i' '.' '.' '.' '.' '.' 'i' '0' '0' '0' '0' '0']
+ ['0' '0' '0' '0' '0' '#' 'h' '#' '.' '#' 'h' '#' '0' '0' '0' '0' '0']
+ ['0' '0' '0' '0' '0' '0' '0' 'i' '.' 'i' '0' '0' '0' '0' '0' '0' '0']
+ ['0' '0' '0' '0' '0' '0' '0' 'i' 'p' 'i' '0' '0' '0' '0' '0' '0' '0']
+ ['0' '0' '0' '0' '0' '0' '0' '#' 'h' '#' '0' '0' '0' '0' '0' '0' '0']]
+    level_data	None

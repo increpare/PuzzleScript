@@ -1,0 +1,156 @@
+title  Swap the block!
+author Amber
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+red darkred
+11111
+10001
+10.01
+10001
+11111
+
+Wall
+Green DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black BLUE White Blue
+.000.
+.111.
+22222
+.222.
+.3.3.
+
+
+
+Crate
+black green 
+00000
+0...0
+0...0
+0...0
+00000
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+ EndGame  36226100
+ EndLevel 28040703  
+ Restart 79017901
+ StartGame  21002106 
+ Startlevel  60142708
+ TitleScreen 66959903
+ 
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, 
+
+======
+RULES
+======
+
+[ >  Player | Crate] ->  [ Crate    |  Player ]
+ 
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+#######
+#..o..#
+#.....#
+#.....#
+#..*..#
+#.....#
+#p....#
+####### 
+
+MESSAGE "GOOD JOB!"
+ 
+#######
+#p...o#
+#..*..#
+#.....#
+#..*..#
+#..p..#
+#....o#
+#######
+
+MESSAGE "KEEP GOING"
+
+########
+#o.....#
+#.*.o..#
+#.....##
+#.*....#
+#....*.#
+#o.p.pp#
+########
+
+MESSAGE "DID YOU RAGE QUIT?"
+
+########
+#.p.*.p#
+##.....#
+#..*...#
+#o...o.#
+#.*..###
+#..o*pp#
+########
+
+MESSAGE "WAS THAT A BIT TOO HARD? Hehehe
+
+#########
+#...oo.p#
+#p.*....#
+#......*#
+###..po.#
+#..o*...#
+#*.....p#
+#p..#.*o#
+#########
+

@@ -1,0 +1,397 @@
+OBJECTS
+
+Background#C6C5C500000
+00000
+00000
+00000
+00000
+
+
+
+
+Placer#5C5B5B00000
+00000
+00000
+00000
+00000
+
+Spawn#5C5B5B #00000000000
+00000
+00100
+00000
+00000
+
+Wall#484848
+0000000000
+0000000000
+00000Player
+#000000.....
+..0...000.
+..0.......
+BlockWhite#FFFFFF #CDCDCD00000
+01110
+01110
+01110
+00000
+
+BlockRed#FF0000 #B7040400000
+01110
+01110
+01110
+00000
+
+BlockYellow#FFFF00 #E4DA1D00000
+01110
+01110
+01110
+00000
+
+BlockBlue#0037FF #0632D000000
+01110
+01110
+01110
+00000
+
+BlockOrange#FFA701 #FF8D0000000
+01110
+01110
+01110
+00000
+
+BlockGreen#1DD700 #1AC00000000
+01110
+01110
+01110
+00000
+
+BlockPurple#A100E1 #8A05BE00000
+01110
+01110
+01110
+00000
+
+Digit1#000000.....
+.....
+.....
+.....
+.....
+
+Digit10#000000.....
+.....
+.....
+.....
+.....
+
+Digit100#000000.....
+.....
+.....
+.....
+.....
+
+Digit1000#000000.....
+.....
+.....
+.....
+.....
+
+Digit10000#000000.....
+.....
+.....
+.....
+.....
+
+Time1#000000.....
+.....
+.....
+.....
+.....
+
+Time10#000000.....
+.....
+.....
+.....
+.....
+
+1#FFFFFF #000000.11..
+..1..
+..1..
+..1..
+.111.
+
+2#FFFFFF #000000.111.
+....1
+..11.
+.1...
+.1111
+
+3#FFFFFF #000000.111.
+....1
+..11.
+....1
+.111.
+
+4#FFFFFF #000000.1.1.
+.1.1.
+.1111
+...1.
+...1.
+
+5#FFFFFF #000000.1111
+.1...
+.111.
+....1
+.111.
+
+6#FFFFFF #000000..11.
+.1...
+.111.
+.1..1
+..11.
+
+7#FFFFFF #000000.1111
+....1
+...1.
+..1..
+..1..
+
+8#FFFFFF #000000..11.
+.1..1
+..11.
+.1..1
+..11.
+
+9#FFFFFF #000000..11.
+.1..1
+..111
+....1
+..11.
+
+0#FFFFFF #000000..11.
+.1..1
+.1..1
+.1..1
+..11.
+
+Add100Black0....
+.....
+.....
+.....
+.....
+
+Add1000Black00...
+.....
+.....
+.....
+.....
+
+Add2000Black00...
+0....
+.....
+.....
+.....
+
+Add10000Black000..
+.....
+.....
+.....
+.....
+
+Add200Black....0
+.....
+.....
+.....
+.....
+
+Add500Black.....
+0....
+.....
+.....
+.....
+
+Add5000Black
+.....00...
+..........
+.....Addend
+NTransparent
+
+
+
+LEGEND
+
+. = Background
+* = Placer
+@ = Player
+# = Wall
+R = BlockRed
+Y = BlockYellow
+B = BlockBlue
+O = BlockOrange
+G = BlockGreen
+P = BlockPurple
+W = BlockWhite
+S = Spawn
+A = Digit10000
+D = Digit1000
+I = Digit100
+_ = Digit10
+T = Digit1
+M = Time10
+E = Time1
+Add = Add100 or Add200 or Add500 or Add1000 or Add5000 or Add10000 or Add2000
+Numbers = 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9 or 0
+BlockPrime = BlockBlue or BlockYellow or BlockRed
+BlockSec = BlockOrange or BlockGreen or BlockPurple
+
+COLLISIONLAYERS
+
+Background
+Placer, Spawn
+Numbers, A
+D, I
+_, T
+M, E
+Addend
+Add
+BlockPrime
+BlockSec, BlockWhite
+Player, Wall
+
+RULES
+
+UP [ M | . ] -> [ M | 3 ] 
+UP [ E | . ] -> [ E | 0 ] 
+[ S ] -> [ @* ] 
+Vertical [ A | .][D | .][I | .][_ | .][T | . ] -> [ A | 0][D | 0][I | 0][_ | 0][T | 0 ] 
+startLoop
+vertical [ action Player | BlockRed | BlockOrange | BlockYellow | BlockGreen | BlockBlue | BlockPurple ] -> [ action Player | BlockWhite | Placer | BlockWhite | Placer | BlockWhite | PlacerAdd2000 ] 
+horizontal [ action Player | BlockRed | BlockOrange | BlockYellow | BlockGreen | BlockBlue | BlockPurple ] -> [ action Player | BlockWhite | Placer | BlockWhite | Placer | BlockWhite | PlacerAdd2000 ] 
+[ action Player | BlockWhite | BlockPrime ] -> [ action Player | Placer | PlacerAdd100 ] 
+[ action Player | BlockWhite | BlockSec ] -> [ action Player | Placer | PlacerAdd200 ] 
+[ action Player | BlockPrime | BlockWhite ] -> [ action Player | Placer | PlacerAdd100 ] 
+[ action Player | BlockSec | BlockWhite ] -> [ action Player | Placer | PlacerAdd200 ] 
+[ action Player | BlockWhite | BlockWhite ] -> [ action Player | Placer | PlacerAdd500 ] 
+[ action Player | BlockRed | BlockBlue ] -> [ action Player | BlockPurple | PlacerAdd100 ] 
+[ action Player | BlockBlue | BlockRed ] -> [ action Player | BlockPurple | PlacerAdd100 ] 
+[ action Player | BlockBlue | BlockYellow ] -> [ action Player | BlockGreen | PlacerAdd100 ] 
+[ action Player | BlockYellow | BlockBlue ] -> [ action Player | BlockGreen | PlacerAdd100 ] 
+[ action Player | BlockYellow | BlockRed ] -> [ action Player | BlockOrange | PlacerAdd100 ] 
+[ action Player | BlockRed | BlockYellow ] -> [ action Player | BlockOrange | PlacerAdd100 ] 
+[ action Player | BlockOrange | BlockBlue ] -> [ action Player | BlockWhite | PlacerAdd200 ] 
+[ action Player | BlockGreen | BlockRed ] -> [ action Player | BlockWhite | PlacerAdd200 ] 
+[ action Player | BlockPurple | BlockYellow ] -> [ action Player | BlockWhite | PlacerAdd200 ] 
+[ action Player | BlockBlue | BlockOrange ] -> [ action Player | BlockWhite | PlacerAdd200 ] 
+[ action Player | BlockRed | BlockGreen ] -> [ action Player | BlockWhite | PlacerAdd200 ] 
+[ action Player | BlockYellow | BlockPurple ] -> [ action Player | BlockWhite | PlacerAdd200 ] 
+endLoop
+[ * ] -> [ random BlockPrime ] 
+UP [ action player][M | 5][E | 0 ] -> [ player][M | 4][E | 9 ] 
++ UP [ action player][M | 4][E | 0 ] -> [ player][M | 3][E | 9 ] 
++ UP [ action player][M | 3][E | 0 ] -> [ player][M | 2][E | 9 ] 
++ UP [ action player][M | 2][E | 0 ] -> [ player][M | 1][E | 9 ] 
++ UP [ action player][M | 1][E | 0 ] -> [ player][M | 0][E | 9 ] 
++ UP [ action player][E | 9 ] -> [ player][E | 8 ] 
++ UP [ action player][E | 8 ] -> [ player][E | 7 ] 
++ UP [ action player][E | 7 ] -> [ player][E | 6 ] 
++ UP [ action player][E | 6 ] -> [ player][E | 5 ] 
++ UP [ action player][E | 5 ] -> [ player][E | 4 ] 
++ UP [ action player][E | 4 ] -> [ player][E | 3 ] 
++ UP [ action player][E | 3 ] -> [ player][E | 2 ] 
++ UP [ action player][E | 2 ] -> [ player][E | 1 ] 
++ UP [ action player][E | 1 ] -> [ player][E | 0 ] 
+startLoop
+random late [ Addend no Add][AddnoAddend ] -> [ Addend Add][ ] 
+late [ 0 |  |  | Add100 ] -> [ 1 |  |  |  ] 
+late [ 1 |  |  | Add100 ] -> [ 2 |  |  |  ] 
+late [ 2 |  |  | Add100 ] -> [ 3 |  |  |  ] 
+late [ 3 |  |  | Add100 ] -> [ 4 |  |  |  ] 
+late [ 4 |  |  | Add100 ] -> [ 5 |  |  |  ] 
+late [ 5 |  |  | Add100 ] -> [ 6 |  |  |  ] 
+late [ 6 |  |  | Add100 ] -> [ 7 |  |  |  ] 
+late [ 7 |  |  | Add100 ] -> [ 8 |  |  |  ] 
+late [ 8 |  |  | Add100 ] -> [ 9 |  |  |  ] 
+late [ 9 |  |  | Add100 ] -> [ 0 |  |  | Add1000Addend ] 
+late [ 0 |  |  | Add200 ] -> [ 2 |  |  |  ] 
+late [ 1 |  |  | Add200 ] -> [ 3 |  |  |  ] 
+late [ 2 |  |  | Add200 ] -> [ 4 |  |  |  ] 
+late [ 3 |  |  | Add200 ] -> [ 5 |  |  |  ] 
+late [ 4 |  |  | Add200 ] -> [ 6 |  |  |  ] 
+late [ 5 |  |  | Add200 ] -> [ 7 |  |  |  ] 
+late [ 6 |  |  | Add200 ] -> [ 8 |  |  |  ] 
+late [ 7 |  |  | Add200 ] -> [ 9 |  |  |  ] 
+late [ 8 |  |  | Add200 ] -> [ 0 |  |  | Add1000Addend ] 
+late [ 9 |  |  | Add200 ] -> [ 1 |  |  | Add1000Addend ] 
+late [ 0 |  |  | Add500 ] -> [ 5 |  |  |  ] 
+late [ 1 |  |  | Add500 ] -> [ 6 |  |  |  ] 
+late [ 2 |  |  | Add500 ] -> [ 7 |  |  |  ] 
+late [ 3 |  |  | Add500 ] -> [ 8 |  |  |  ] 
+late [ 4 |  |  | Add500 ] -> [ 9 |  |  |  ] 
+late [ 5 |  |  | Add500 ] -> [ 0 |  |  | Add1000Addend ] 
+late [ 6 |  |  | Add500 ] -> [ 1 |  |  | Add1000Addend ] 
+late [ 7 |  |  | Add500 ] -> [ 2 |  |  | Add1000Addend ] 
+late [ 8 |  |  | Add500 ] -> [ 3 |  |  | Add1000Addend ] 
+late [ 9 |  |  | Add500 ] -> [ 4 |  |  | Add1000Addend ] 
+late [ 0 |  |  |  | Add1000 ] -> [ 1 |  |  |  |  ] 
+late [ 1 |  |  |  | Add1000 ] -> [ 2 |  |  |  |  ] 
+late [ 2 |  |  |  | Add1000 ] -> [ 3 |  |  |  |  ] 
+late [ 3 |  |  |  | Add1000 ] -> [ 4 |  |  |  |  ] 
+late [ 4 |  |  |  | Add1000 ] -> [ 5 |  |  |  |  ] 
+late [ 5 |  |  |  | Add1000 ] -> [ 6 |  |  |  |  ] 
+late [ 6 |  |  |  | Add1000 ] -> [ 7 |  |  |  |  ] 
+late [ 7 |  |  |  | Add1000 ] -> [ 8 |  |  |  |  ] 
+late [ 8 |  |  |  | Add1000 ] -> [ 9 |  |  |  |  ] 
+late [ 9 |  |  |  | Add1000 ] -> [ 0 |  |  |  | Add10000Addend ] 
+late [ 0 |  |  |  | Add2000 ] -> [ 2 |  |  |  |  ] 
+late [ 1 |  |  |  | Add2000 ] -> [ 3 |  |  |  |  ] 
+late [ 2 |  |  |  | Add2000 ] -> [ 4 |  |  |  |  ] 
+late [ 3 |  |  |  | Add2000 ] -> [ 5 |  |  |  |  ] 
+late [ 4 |  |  |  | Add2000 ] -> [ 6 |  |  |  |  ] 
+late [ 5 |  |  |  | Add2000 ] -> [ 7 |  |  |  |  ] 
+late [ 6 |  |  |  | Add2000 ] -> [ 8 |  |  |  |  ] 
+late [ 7 |  |  |  | Add2000 ] -> [ 9 |  |  |  |  ] 
+late [ 8 |  |  |  | Add2000 ] -> [ 0 |  |  |  | Add10000Addend ] 
+late [ 9 |  |  |  | Add2000 ] -> [ 1 |  |  |  | Add10000Addend ] 
+late [ 0 |  |  |  | Add5000 ] -> [ 5 |  |  |  |  ] 
+late [ 1 |  |  |  | Add5000 ] -> [ 6 |  |  |  |  ] 
+late [ 2 |  |  |  | Add5000 ] -> [ 7 |  |  |  |  ] 
+late [ 3 |  |  |  | Add5000 ] -> [ 8 |  |  |  |  ] 
+late [ 4 |  |  |  | Add5000 ] -> [ 9 |  |  |  |  ] 
+late [ 5 |  |  |  | Add5000 ] -> [ 0 |  |  |  | Add10000Addend ] 
+late [ 6 |  |  |  | Add5000 ] -> [ 1 |  |  |  | Add10000Addend ] 
+late [ 7 |  |  |  | Add5000 ] -> [ 2 |  |  |  | Add10000Addend ] 
+late [ 8 |  |  |  | Add5000 ] -> [ 3 |  |  |  | Add10000Addend ] 
+late [ 9 |  |  |  | Add5000 ] -> [ 4 |  |  |  | Add10000Addend ] 
+late [ 0 |  |  |  |  | Add10000 ] -> [ 1 |  |  |  |  |  ] 
+late [ 1 |  |  |  |  | Add10000 ] -> [ 2 |  |  |  |  |  ] 
+late [ 2 |  |  |  |  | Add10000 ] -> [ 3 |  |  |  |  |  ] 
+late [ 3 |  |  |  |  | Add10000 ] -> [ 4 |  |  |  |  |  ] 
+late [ 4 |  |  |  |  | Add10000 ] -> [ 5 |  |  |  |  |  ] 
+late [ 5 |  |  |  |  | Add10000 ] -> [ 6 |  |  |  |  |  ] 
+late [ 6 |  |  |  |  | Add10000 ] -> [ 7 |  |  |  |  |  ] 
+late [ 7 |  |  |  |  | Add10000 ] -> [ 8 |  |  |  |  |  ] 
+late [ 8 |  |  |  |  | Add10000 ] -> [ 9 |  |  |  |  |  ] 
+late [ 9 |  |  |  |  | Add10000 ] -> [ 9 | 9 | 9 | 9 | 9 |  ] 
+endLoop
+[ M | 0][E | 0][player ] -> [ M | 0][E | 0][noplayer ] 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+00000N.......
+...........me
+#############
+#***********#
+#***********#
+#***********#
+#***********#
+#***********#
+#*****s*****#
+#***********#
+#***********#
+#***********#
+#***********#
+#***********#
+#############

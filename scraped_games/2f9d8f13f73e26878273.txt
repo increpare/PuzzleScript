@@ -1,0 +1,710 @@
+title Forest Road
+author Mark Richardson
+key_repeat_interval 0.3
+norepeat_action
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+Background
+#0A0 #0C0
+00000
+00100
+10000
+00000
+00001
+
+Grass
+Transparent
+
+Tree
+#842 #080 #060
+.222.
+21112
+.212.
+..0..
+..0..
+
+Refuel
+Red DarkRed DarkGray
+.....
+.00.2
+.100.
+.000.
+.000.
+
+House
+Red Orange LightBlue Black
+.000.
+00000
+11111
+12131
+11131
+
+DryTruck
+Yellow Black Gray LightBlue
+00.02
+030..
+00000
+11011
+11.11
+
+WetTruck
+Yellow Black Gray LightBlue
+.....
+00.02
+030..
+00000
+.....
+
+WaterO
+#00A #007 #00D
+.002.
+00100
+10002
+02000
+.000.
+
+WaterU
+#00A #007 #00D
+00020
+00100
+10002
+02000
+.000.
+
+WaterD
+#00A #007 #00D
+.002.
+00100
+10002
+02000
+00001
+
+WaterL
+#00A #007 #00D
+0002.
+00100
+10002
+02000
+0000.
+
+WaterR
+#00A #007 #00D
+.0020
+00100
+10002
+02000
+.0001
+
+WaterUL
+#00A #007 #00D
+00020
+00100
+10002
+02000
+0000.
+
+WaterUR
+#00A #007 #00D
+00020
+00100
+10002
+02000
+.0001
+
+WaterDL
+#00A #007 #00D
+0002.
+00100
+10002
+02000
+00001
+
+WaterDR
+#00A #007 #00D
+.0020
+00100
+10002
+02000
+00001
+
+WaterX
+#00A #007 #00D
+00020
+00100
+10002
+02000
+00001
+
+MountainO
+DarkGray Gray
+.11..
+1001.
+10110
+10101
+11001
+
+MountainL
+DarkGray Gray
+011..
+1001.
+10110
+10101
+11001
+
+MountainR
+DarkGray Gray
+.1100
+10010
+10110
+10101
+11001
+
+MountainLR
+DarkGray Gray
+01100
+10010
+10110
+10101
+11001
+
+RoadO
+#333 #DDB
+.000.
+00000
+00000
+00000
+.000.
+
+RoadU
+#333 #DDB
+00100
+00000
+00000
+00000
+.000.
+
+RoadD
+#333 #DDB
+.000.
+00000
+00000
+00000
+00100
+
+RoadL
+#333 #DDB
+0000.
+00000
+10000
+00000
+0000.
+
+RoadR
+#333 #DDB
+.0000
+00000
+00001
+00000
+.0000
+
+RoadUD
+#333 #DDB
+00100
+00000
+00000
+00000
+00100
+
+RoadUL
+#333 #DDB
+00100
+00000
+10000
+00000
+0000.
+
+RoadUR
+#333 #DDB
+00100
+00000
+00001
+00000
+.0000
+
+RoadDL
+#333 #DDB
+0000.
+00000
+10000
+00000
+00100
+
+RoadDR
+#333 #DDB
+.0000
+00000
+00001
+00000
+00100
+
+RoadLR
+#333 #DDB
+00000
+00000
+10001
+00000
+00000
+
+RoadUDL
+#333 #DDB
+00100
+00000
+10000
+00000
+00100
+
+RoadUDR
+#333 #DDB
+00100
+00000
+00001
+00000
+00100
+
+RoadULR
+#333 #DDB
+00100
+00000
+10001
+00000
+00000
+
+RoadDLR
+#333 #DDB
+00000
+00000
+10001
+00000
+00100
+
+RoadUDLR
+#333 #DDB
+00100
+00000
+10001
+00000
+00100
+
+TracksH
+Brown
+.....
+00000
+.....
+00000
+.....
+
+TracksV
+Brown
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+
+TracksX
+Brown
+.0.0.
+00000
+.0.0.
+00000
+.0.0.
+
+HUD
+Black
+
+Full
+White Gray
+.....
+.000.
+.01..
+.0...
+.....
+
+Empty
+White Gray
+.....
+.000.
+.01..
+.000.
+.....
+
+Guage
+White
+.....
+.....
+00000
+.....
+.....
+
+Fuel5
+Red
+00000
+.....
+.....
+.....
+.....
+
+Fuel4
+Red
+.....
+00000
+.....
+.....
+.....
+
+Fuel3
+Red
+.....
+.....
+00000
+.....
+.....
+
+Fuel2
+Red
+.....
+.....
+.....
+00000
+.....
+
+Fuel1
+Red
+.....
+.....
+.....
+.....
+00000
+
+Player
+Transparent
+
+=======
+LEGEND
+=======
+
+. = Grass
+M = MountainO
+W = WaterO
+T = Tree and Grass
+Q = Refuel and RoadO
+R = Refuel and Grass
++ = RoadO
+H = House
+P = Player and RoadO
+# = HUD
+F = HUD and Full
+S = HUD and Refuel
+E = HUD and Empty
+- = HUD and Guage
+3 = HUD and Guage and Fuel3
+
+Water    = WaterX or WaterU or WaterD or WaterL or WaterR or WaterUL or WaterUR or WaterDL or WaterDR or WaterO
+Fuel     = Fuel1 or Fuel2 or Fuel3 or Fuel4 or Fuel5
+Fuel123  = Fuel1 or Fuel2 or Fuel3
+Fuel45   = Fuel4 or Fuel5
+Road     = RoadO or RoadU or RoadD or RoadL or RoadR or RoadUD or RoadUL or RoadUR or RoadDL or RoadDR or RoadLR or RoadUDL or RoadUDR or RoadULR or RoadDLR or RoadUDLR
+Tracks   = TracksH or TracksV or TracksX
+Mountain = MountainO or MountainL or MountainR or MountainLR
+Truck    = DryTruck or WetTruck
+Marking  = Guage or Empty or Full
+
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Grass, Water, Road
+Tracks
+Player, Tree, Mountain, House, HUD
+Marking
+Truck, Refuel, Fuel
+
+
+======
+RULES
+======
+
+( Decorate water )
+up    [ WaterO  | Water ] -> [ WaterU  | Water ]
+down  [ WaterO  | Water ] -> [ WaterD  | Water ]
+down  [ WaterU  | Water ] -> [ WaterX  | Water ]
+left  [ WaterO  | Water ] -> [ WaterL  | Water ]
+left  [ WaterU  | Water ] -> [ WaterUL | Water ]
+left  [ WaterD  | Water ] -> [ WaterDL | Water ]
+right [ WaterO  | Water ] -> [ WaterR  | Water ]
+right [ WaterU  | Water ] -> [ WaterUR | Water ]
+right [ WaterD  | Water ] -> [ WaterDR | Water ]
+right [ WaterL  | Water ] -> [ WaterX  | Water ]
+right [ WaterUL | Water ] -> [ WaterX  | Water ]
+right [ WaterDL | Water ] -> [ WaterX  | Water ]
+
+(Decorate mountains)
+up    [ MountainO | Mountain ] -> [ MountainLR | Mountain ]
+left  [ MountainO | Mountain ] -> [ MountainL  | Mountain ]
+right [ MountainO | Mountain ] -> [ MountainR  | Mountain ]
+right [ MountainL | Mountain ] -> [ MountainLR | Mountain ]
+
+(Check win conditions)
+[ House | Road ] -> [ House | down Road ]
+startloop
+random [ down Road ] -> [ up Road ]
+[ up Road | Road ] -> [ up Road | up Road ]
+[ up Road ] [ House ] -> [ up Road ] [ down House ]
+[ up Road | down House ] -> [ up Road | up House ]
+[ down House ] [ up House ] -> [ down House ] [ House ]
+[ up House ] [ Fuel ] [ Player ] -> [ up House ] [ ] [ stationary Player ] win
+[ > House ] -> [ House ]
+[ up Road ] -> [ Road ]
+endloop
+
+(Check lose conditions)
+right [ Fuel123 | Empty ] -> cancel
+      [ Fuel no Guage   ] -> cancel
+
+(Watch for player activity)
+[      > Player ] -> [      > Player Guage ]
+[ action Player ] -> [ action Player Guage ]
+
+(Clear tree: costs 2 fuel)
+[ > Player Guage | Tree ] -> [ Player Full | action Tree ]
+down [ action Tree  ] [ Fuel5 ]   -> [ ]   [ Fuel3 ]
+down [ action Tree  ] [ Fuel4 ]   -> [ ]   [ Fuel2 ]
+down [ action Tree  ] [ Fuel3 ]   -> [ ]   [ Fuel1 ]
+down [ action Tree  ] [ Fuel2 | ] -> [ ] [ | Fuel5 ]
+down [ action Tree  ] [ Fuel1 | ] -> [ ] [ | Fuel4 ]
+
+(Lay road: costs 1 fuel, which is deducted as "drive on road".)
+[ action Player Guage no Road ] -> [ Player Empty RoadO ]
+
+(Decorate roads)
+      [ Road Tracks ]    -> [ Road ]
+      [ Road    ]        -> [ RoadO    ]
+up    [ RoadO   | Road ] -> [ RoadU    | Road ]
+down  [ RoadO   | Road ] -> [ RoadD    | Road ]
+down  [ RoadU   | Road ] -> [ RoadUD   | Road ]
+left  [ RoadO   | Road ] -> [ RoadL    | Road ]
+left  [ RoadU   | Road ] -> [ RoadUL   | Road ]
+left  [ RoadD   | Road ] -> [ RoadDL   | Road ]
+left  [ RoadUD  | Road ] -> [ RoadUDL  | Road ]
+right [ RoadO   | Road ] -> [ RoadR    | Road ]
+right [ RoadU   | Road ] -> [ RoadUR   | Road ]
+right [ RoadD   | Road ] -> [ RoadDR   | Road ]
+right [ RoadL   | Road ] -> [ RoadLR   | Road ]
+right [ RoadUD  | Road ] -> [ RoadUDR  | Road ]
+right [ RoadUL  | Road ] -> [ RoadULR  | Road ]
+right [ RoadDL  | Road ] -> [ RoadDLR  | Road ]
+right [ RoadUDL | Road ] -> [ RoadUDLR | Road ]
+
+(Make tracks)
+horizontal [ > Player   Grass no Tracks  ] -> [ > Player   Grass TracksH ]
+horizontal [ > Player   Grass    TracksV ] -> [ > Player   Grass TracksX ]
+vertical   [ > Player   Grass no Tracks  ] -> [ > Player   Grass TracksV ]
+vertical   [ > Player   Grass    TracksH ] -> [ > Player   Grass TracksX ]
+horizontal [ > Player | Grass no Tracks  ] -> [ > Player | Grass TracksH ]
+horizontal [ > Player | Grass    TracksV ] -> [ > Player | Grass TracksX ]
+vertical   [ > Player | Grass no Tracks  ] -> [ > Player | Grass TracksV ]
+vertical   [ > Player | Grass    TracksH ] -> [ > Player | Grass TracksX ]
+
+(Cancel if no player activity)
+late [ Player Guage ] -> cancel
+late [ Guage no HUD ] [ Player no Marking ] -> [ ] [ Player Empty ]
+
+(Drive on road: costs 1 fuel)
+late down [ Player Empty Road  ] [ Fuel5 ]   -> [ Player Road  ]   [ Fuel4 ]
+late down [ Player Empty Road  ] [ Fuel4 ]   -> [ Player Road  ]   [ Fuel3 ]
+late down [ Player Empty Road  ] [ Fuel3 ]   -> [ Player Road  ]   [ Fuel2 ]
+late down [ Player Empty Road  ] [ Fuel2 ]   -> [ Player Road  ]   [ Fuel1 ]
+late down [ Player Empty Road  ] [ Fuel1 | ] -> [ Player Road  ] [ | Fuel5 ]
+(Drive on grass: costs 3 fuel)
+late down [ Player Empty Grass ] [ Fuel5 ]   -> [ Player Grass ]   [ Fuel2 ]
+late down [ Player Empty Grass ] [ Fuel4 ]   -> [ Player Grass ]   [ Fuel1 ]
+late down [ Player Empty Grass ] [ Fuel3 | ] -> [ Player Grass ] [ | Fuel5 ]
+late down [ Player Empty Grass ] [ Fuel2 | ] -> [ Player Grass ] [ | Fuel4 ]
+late down [ Player Empty Grass ] [ Fuel1 | ] -> [ Player Grass ] [ | Fuel3 ]
+(Drive on water: costs 5 fuel)
+late down [ Player Empty Water ] [ Fuel5 | ] -> [ Player Water ] [ | Fuel5 ]
+late down [ Player Empty Water ] [ Fuel4 | ] -> [ Player Water ] [ | Fuel4 ]
+late down [ Player Empty Water ] [ Fuel3 | ] -> [ Player Water ] [ | Fuel3 ]
+late down [ Player Empty Water ] [ Fuel2 | ] -> [ Player Water ] [ | Fuel2 ]
+late down [ Player Empty Water ] [ Fuel1 | ] -> [ Player Water ] [ | Fuel1 ]
+late      [ Player Marking     ]             -> [ Player       ] (Only necessary for win condition)
+
+(Refuel)
+late    [ Player Refuel ] [ Fuel ] -> [ Player Refuel ] [ Fuel3 ]
+late up [ Player Refuel ] [ Fuel3 Guage | Guage ] -> [ Player Refuel ] [ Guage | Guage Fuel3 ]
+late    [ Player Refuel ] -> [ Player ]
+
+(Draw truck)
+late [ Truck ] -> [ ]
+late [ Player    Water ] -> [ Player Water WetTruck ]
+late [ Player no Water ] -> [ Player       DryTruck ]
+
+
+==============
+WINCONDITIONS
+==============
+
+(All houses connected by one continuous road)
+
+
+=======
+LEVELS
+=======
+
+message Connect all building by road.  Watch your fuel!
+
+message Amber Trail
+
+.H....T###
++P....T#3F
+TTTTT.T#-#
+TTTTT.T#-#
+T..R..T#-S
+T.TTTTT#-#
+T.TTTTT#-#
+T....++#-E
+T....H.###
+
+message Buttercup Fields
+
+.H....T###
++P.T...#3F
+.T...T.#-#
+..T....#-#
+T...T.T#-S
+...T...#-#
+.....R.#-#
+.T...+H#-E
+...T.+.###
+
+message Castle Wood
+
+TTTTTTTTTTTTT###
++PTTTTTTTTTQ+#3F
+HRTTTTTTTTTTH#-#
+..TT.WW...T..#-#
+M...WWWT.....#-S
+MM.TMW...T...#-#
+MM....RT...T.#-#
+MMM..........#-E
+MMM..T....T..###
+
+message Domino Mountain
+
+THTTTTRTTTTTRTTT###
++PTTTTTTTTTTTTTT#3F
+TTTTTTRTTTTTRTTT#-#
+MMMMMMMMMMMMTTTT#-#
+MMMMMMMMMMMMMTTT#-S
+MMMMMMMMMMMMTTTT#-#
+TTTTTTRTTTTTRTTT#-#
++QTTTTTTTTTTTTTT#-E
+THTTTTRTTTTTTTTT###
+
+message Ether Peak
+
+.....MMMMMMM.....###
+....M.......M....###
+...M..MM.MM..M...###
+..M..MR....M.RM..#3F
+..M.M..MMMR.M.M..#-#
+..M.M.M...M.M.M..#-#
+++R.M...H...M..++#-S
+.HM.M.M.P.M.M.MH.#-#
+..M.M..MMM..M.M..#-#
+..M..M....RM..M..#-E
+...M.RMM.MM..M...###
+....M.......M....###
+.....MMMMMMM.....###
+
+message Fortesque Island
+
+.+...........###
+HP.TTTWWWWW..#3F
+..TTTWWW.WWW.#-#
+..TTTWW...WW.#-#
+..TTTWW.H.WW.#-S
+..TTTWWR..WW.#-#
+..TTTWWW.WWW.#-#
+H+RTTTWWWWW..#-E
+.+...........###
+
+message Greenacres
+
+.H....TTT.H.###
++P.....R..++###
+M.WW........#3F
+M.WW.......T#-#
+M...........#-#
+M...........#-S
+...........T#-#
+...........T#-#
+M.R........T#-E
+++.......R++###
+.H.T....T.H.###
+
+message Hunter Valley
+
+.H.MM.W.MMMM###
++P....W.RMMM###
+T...M.WW.MMM###
+...MM..W.MM.#3F
+.T.M..WW.MM.#-#
+..MM.WW..M..#-#
+..M..W..MM..#-S
+.MMRWW..M..T#-#
+.MM.WR.MM...#-#
+MMM.W.MM....#-E
+MMM.W..M.TT.###
+MMM.WW...R++###
+MMM..W.M..H.###
+
+message Isolda's Retreat
+
+TTTMMMTTT###
+TTMRRRMTT###
+TTTM.MTTT#3F
+TTTTTTTTT#-#
+THTTTTTHT#-#
++PTTTTT++#-S
+TTTTTTTTT#-#
+TTTTTTTTT#-#
+TTTTTTTTT#-E
+TTTT+HTTT###
+TTTT+TTTT###
+
+message Journey's End
+
+................###
+.HHRHHRHH.HHRHH.###
+.HH.HH.HHRHH.HH.#3F
++P..............#-#
+.HH.HH.HH.HH.HHR#-#
+.HH.HH.HH.HHRHH.#-S
+.....R..........#-#
+.HH.HH.HH.HH.HH.#-#
+RHH.HHRHH.HH.HH.#-E
+................###
+WWWWWWWWWWWWWWWW###

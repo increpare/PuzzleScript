@@ -36,15 +36,15 @@
             "skipped": false
         },
         {
-            "code": "Title: Block Pusher\nAuthor: PuzzleScript Game Designer\n\n===========\nOBJECTS\n===========\n\nBackground\ntransparent\n\nPlayer\nblue\n.....\n..0..\n.000.\n..0..\n.....\n\nBlock\nred\n.....\n.....\n.000.\n.....\n.....\n\nTarget\ngreen\n.....\n..0..\n.....\n.....\n\nBlockOnTarget\nyellow\n.....\n..0..\n.000.\n.....\n\nWall\ngrey\n#####\n#####\n#####\n#####\n#####\n\n===========\nLEGEND\n===========\n\n. = Background\nP = Player\nB = Block\nT = Target\nU = BlockOnTarget\n# = Wall\n\n===========\nSOUNDS\n===========\n\nSFX2\n\n===========\nCOLLISIONLAYERS\n===========\n\nBackground\nTarget\nPlayer, Block, BlockOnTarget\nWall\n\n===========\nRULES\n===========\n\n[> Player | Block] -> [> Player | > Block] SFX2\n\n[Block | Target] -> [BlockOnTarget | Target]\n\n[BlockOnTarget | Target] -> [BlockOnTarget | Target]\n\n===========\nWINCONDITIONS\n===========\n\nAll BlockOnTarget on Target\n\n===========\nLEVELS\n===========\n\n#######\n#.....#\n#..T..#\n#..B..#\n#..P..#\n#######\n\n#######\n#.....#\n#..T..#\n#..B.#P\n#.....#\n#######\n\n#######\n#..T..#\n#..B..#\n#..P..#\n#.....#\n#######\n\n",
-            "fitness": null,
+            "code": "Title: Block Pusher\nAuthor: PuzzleScript Game Designer\n\n===========\nOBJECTS\n===========\n\nBackground\ntransparent\n\nPlayer\nblue\n.....\n..0..\n.000.\n..0..\n.....\n\nBlock\nred\n.....\n.....\n.000.\n.....\n.....\n\nTarget\ngreen\n.....\n..0..\n.....\n.....\n\nBlockOnTarget\nyellow\n.....\n..0..\n.000.\n.....\n\nWall\ngrey\n#####\n#####\n#####\n#####\n#####\n\n===========\nLEGEND\n===========\n\n. = Background\nP = Player\nB = Block\nT = Target\nU = BlockOnTarget\n# = Wall\n\n===========\nSOUNDS\n===========\n\nSFX2\n\n===========\nCOLLISIONLAYERS\n===========\n\nBackground\nTarget\nPlayer, Block, BlockOnTarget\nWall\n\n===========\nRULES\n===========\n\n[> Player | Block] -> [> Player | > Block] SFX2\n\n[Block | Target] -> [BlockOnTarget | Target]\n\n[BlockOnTarget | Target] -> [BlockOnTarget | Target]\n\n===========\nWINCONDITIONS\n===========\n\nAll BlockOnTarget on Target\n\n===========\nLEVELS\n===========\n\n#######\n#.....#\n#..T..#\n#..B..#\n#..P..#\n#######\n\n#######\n#.....#\n#..T..#\n#..B..#\n#..P..#\n#.....#\n#..T..#\n#######\n\n#######\n#.....#\n#..T..#\n#..B..#\n#..P..#\n#..T..#\n#######\n",
+            "fitness": 0,
             "compiledIters": [
                 6,
-                7,
-                8,
-                9
+                7
             ],
-            "solvedIters": [],
+            "solvedIters": [
+                7
+            ],
             "skipped": false
         },
         {
@@ -56,7 +56,7 @@
         },
         {
             "code": "Title: Treasure Hunt\nAuthor: You\nHomepage: https://www.puzzlescript.net\n\n===========\nOBJECTS\n===========\n\nBackground\nLIGHTGREEN\n00000\n00000\n00000\n00000\n00000\n\nPlayer\nORANGE\n.....\n..0..\n.000.\n..0..\n.....\n\nWall\nBLUE\n.....\n.....\n.....\n.....\n.....\n\nTreasure\nYELLOW\n.....\n..0..\n.000.\n..0..\n.....\n\nGoal\nRED\n.....\n..0..\n.0.0.\n..0..\n.....\n\n===========\n\nLEGEND\n===========\n\n.=Background\nP=Player\nW=Wall\nT=Treasure\nG=Goal\n#=Wall\n\n===========\n\nSOUNDS\n===========\n\n===========\n\nCOLLISIONLAYERS\n===========\n\nBackground\nWall\nTreasure, Goal\nPlayer\n\n===========\n\nRULES\n===========\n\n[ > Player | Treasure ] -> [ > Player | ]\n[ > Player | Goal ] -> [ > Player | Goal win ]\n\n===========\n\nWINCONDITIONS\n===========\n\nNo Treasure\n\n===========\n\nLEVELS\n===========\n\n#######\n#.....#\n#.T.#.#\n#.W.#.#\n#..P.G#\n#######\n\n#######\n#T....#\n#.....#\n#..W..#\n#G.P..#\n#######\n\n#######\n#WTPW.#\n#W.PG.#\n#W..#.#\n#######\n",
-            "fitness": 12,
+            "fitness": 0,
             "compiledIters": [
                 8
             ],
@@ -78,7 +78,7 @@
         },
         {
             "code": "Title: Treasure Hunter\n\nAuthor: Your Name\n\nHomepage: http://www.example.com\n\n========\nOBJECTS\n========\n\nBackground\nlightgray\n00000\n00000\n00000\n00000\n00000\n\nPlayer\nRed\n.....\n..0..\n.000.\n..0..\n.....\n\nWall\nDarkGray\n.....\n.....\n.....\n.....\n.....\n\nTreasure\nYellow\n.000.\n.0.0.\n00000\n.0.0.\n.000.\n\nGoal\nGreen\n.....\n.000.\n.0.0.\n.000.\n.....\n\n========\nLEGEND\n========\n\n. = Background\nP = Player\n# = Wall\nT = Treasure\nG = Goal\n\n========\nSOUNDS\n========\n\nPlayer Move 1\n\n========\nCOLLISIONLAYERS\n========\n\nBackground\nPlayer\nWall\nTreasure\nGoal\n\n========\nRULES\n========\n\n[ > Player | Treasure ] -> [ Goal | Player ]\n[ Player | Goal ] -> [ Player | Goal ]\n\n========\nWINCONDITIONS\n========\n\nNo Treasure\n\n========\nLEVELS\n========\n\n#####\n#...#\n#P.T#\n#...#\n##### \n\n#######\n#.....#\n#.#.#.#\n#.#.T.#\n#P#.#G#\n#.....#\n#######\n\n#########\n#..T..#.#\n#.#.##..#\n#...##..#\n#.P..G###\n#...T...#\n#########\n",
-            "fitness": 50,
+            "fitness": 163,
             "compiledIters": [
                 8
             ],
@@ -208,7 +208,7 @@
         },
         {
             "code": "===========\nOBJECTS\n===========\nBackground\nWHITE\n\nWall\nBLACK\n\nPlayer\nBLUE\n\nBox\nRED\n\nTarget\nYELLOW\n\n============\nLEGEND\n============\n. = Background\n# = Wall\nP = Player\nB = Box\nT = Target\n\n=======\nSOUNDS\n=======\n\n===============\nCOLLISIONLAYERS\n===============\nBackground\nPlayer, Box\nWall, Target\n\n========\nRULES\n========\n[Player | Box] -> [ > Player | > Box] \n\n========\nWINCONDITIONS\n========\nAll Box on Target\n\n=======\nLEVELS\n=======\n#####\n#...#\n#.T.#\n#BTP#\n#...#\n#####\n\n######\n#.T..#\n#..B.#\n#P.T.#\n#.T..#\n######\n\n",
-            "fitness": 45,
+            "fitness": 22,
             "compiledIters": [
                 3,
                 4
@@ -343,7 +343,7 @@
         },
         {
             "code": "title Energy Flow\nauthor OpenAI\n\n========\nOBJECTS\n========\n\nBackground\nLightGray\n.....\n.....\n.....\n.....\n.....\n\nPlayer\nOrange\n..... \n..0.. \n.000. \n..0.. \n..... \n\nBattery\nYellow Black\n.....\n.1.1.\n11111\n.1.1.\n.....\n\nCharger\nGreen LightGreen\n..... \n..0.. \n.000. \n..0.. \n.....\n\nObstacle\nBlue\n.....\n.0...\n.0.0.\n.0...\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\nB = Battery\nC = Charger\nO = Obstacle\n\n=======\nSOUNDS\n=======\n\nsfx1 0\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nBattery, Charger\nPlayer\nObstacle\n\n======\nRULES\n======\n\n[ > Player | Charger ] -> [ Player Charger | Player ] sfx1\n\n(left)\n[ left Player | Obstacle ] -> [ Player | Obstacle ]\n[ left Player | Player ] -> [ Player | Player ]\n\n(right)\n[ right Player | Obstacle ] -> [ Player | Obstacle ]\n[ right Player | Player ] -> [ Player | Player ]\n\n(up)\n[ up Player | Obstacle ] -> [ Player | Obstacle ]\n[ up Player | Player ] -> [ Player | Player ]\n\n(down)\n[ down Player | Obstacle ] -> [ Player | Obstacle ]\n[ down Player | Player ] -> [ Player | Player ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Charger on Player\n\n=======\nLEVELS\n=======\n\nmessage Level 1: Charge all chargers!\n.......\n.P.OOBO\n.......\n..O.O..\n.......\n.C...C.\n.......\n\nmessage Level 2: Avoid the obstacles!\n.......\n..O.O..\n.P...B.\n..O.O..\n.C...C.\n..O.O..\n.......\n\nmessage Level 3: Use the batteries wisely!\n.......\n.C...C.\n.O.O.O.\n.BP..B.\n.O.O.O.\n.C...C.\n.......\n\nmessage Level 4: Plan your moves!\n.......\n.C.O.C.\n.O.O.O.\n..P....\n.O.O.O.\n.BO..B.\n.......\n",
-            "fitness": 51,
+            "fitness": 5,
             "compiledIters": [
                 6,
                 7,
@@ -373,7 +373,7 @@
         },
         {
             "code": "title Blocked Path\nauthor YourName\n\n========\nOBJECTS\n========\n\nBackground\nlightgrey\n\nWall\ndarkgrey\n\nPlayer\ngreen\n\nTarget\nred\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nT = Target\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nWall\nTarget\nPlayer\n\n======\nRULES\n======\n\n[ > Player | No Player | Target ] -> [ Player | Player | Target ]\n\n==============\nWINCONDITIONS\n==============\n\nSome Player on Target\n\n=======\nLEVELS\n=======\n\nmessage Welcome to Blocked Path!\n##########\n#........#\n#..####..#\n#..#..#..#\n#..#P.#..#\n#..#..#..#\n#..##....#\n#....T...#\n##########\n",
-            "fitness": 13,
+            "fitness": 21,
             "compiledIters": [
                 2,
                 3,
@@ -393,7 +393,7 @@
         },
         {
             "code": "title Star Collector\nauthor Your Name\nhomepage example.com\n\n========\nOBJECTS\n========\n\nBackground\nLightBlue\n.....\n.....\n.....\n.....\n.....\n\nPlayer\nYellow\n.....\n..0..\n.000.\n..0..\n.....\n\nWall\nDarkGray\n.....\n.000.\n.000.\n.000.\n.....\n\nStar\nYellow\n.....\n..0..\n.....\n..0..\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\n# = Wall\n* = Star\n\n=======\nSOUNDS\n=======\n\nsfx0 12345678 (This is a placeholder sound ID)\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nStar, Wall, Player\n\n======\nRULES\n======\n\n[> Player | Star] -> [> Player | ] sfx0\n\n==============\nWINCONDITIONS\n==============\n\nNo Star\n\n=======\nLEVELS\n=======\n\n#..*..#\n#.P.*.#\n#..*..#\n#######\n\n",
-            "fitness": 12,
+            "fitness": 37,
             "compiledIters": [
                 8
             ],
@@ -426,7 +426,7 @@
         },
         {
             "code": "title Colorful Conveyors\nauthor Game Designer\nhomepage www.mypuzzle.com\n\n========\nOBJECTS\n========\n\nBackground\nLightGrey\n.....\n.....\n.....\n.....\n.....\n\nWall\nGrey DarkGrey\n00000\n01110\n01110\n01110\n00000\n\nPlayer\nBlue LightBlue\n.....\n..0..\n.010.\n..0..\n.....\n\nRedCrate\nRed DarkRed\n.....\n..0..\n.111.\n..0..\n.....\n\nGreenCrate\nGreen DarkGreen\n.....\n..0..\n.111.\n..0..\n.....\n\nRedTarget\nDarkRed Red\n.....\n..0..\n.111.\n..0..\n\nGreenTarget\nDarkGreen Green\n.....\n..0..\n.111.\n..0..\n\nConveyorL\nYellow\n000..\n000..\n.....\n.....\n.....\n\nConveyorR\nYellow\n..000\n..000\n.....\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nR = RedCrate\nG = GreenCrate\nX = RedTarget\nY = GreenTarget\n\nConveyor = ConveyorL or ConveyorR\nTarget = RedTarget or GreenTarget\nCrate = RedCrate or GreenCrate\n\n=======\nSOUNDS\n=======\n\nSFX0 36772507\nSFX1 27089102\nSFX2 98765432\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Crate\nConveyor\n\n======\nRULES\n======\n\n[ > Player | Crate ] -> [ > Player | > Crate ]\n[ > Crate | ConveyorR ] -> [ ConveyorR | > Crate ]\n[ < Crate | ConveyorL ] -> [ ConveyorL | < Crate ]\n\n==============\nWINCONDITIONS\n==============\n\nAll RedCrate on RedTarget\nAll GreenCrate on GreenTarget\n\n=======\nLEVELS\n=======\n\n#######\n#.....#\n#..P..#\n#.R.G.#\n#..X..#\n#..Y..#\n#######\n\nmessage Align the crates to the targets!\n\n#######\n#.....#\n#..P..#\n#.RYG.#\n#..X..#\n#..Y..#\n#######\n\n",
-            "fitness": 5758,
+            "fitness": 1689,
             "compiledIters": [
                 4,
                 5,
@@ -441,7 +441,7 @@
         },
         {
             "code": "title Star Collector\nauthor YourName\n\n========\nOBJECTS\n========\n\nBackground\nwhite\n\nWall\nblack\n00000\n00000\n00000\n00000\n00000\n\nPlayer\ngreen\n..0..\n.000.\n.000.\n.000.\n.....\n\nStar\nyellow\n.....\n..0..\n.000.\n..0..\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\n* = Star\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer, Star\nWall\n\n======\nRULES\n======\n\n[ > Player | Star ] -> [ > Player | ]\n\n==============\nWINCONDITIONS\n==============\n\nNO Star\n\n=======\nLEVELS\n=======\n\n#####\n#...#\n#.*.#\n#P*.#\n#####\n",
-            "fitness": 1,
+            "fitness": 4,
             "compiledIters": [
                 3
             ],
@@ -488,7 +488,7 @@
         },
         {
             "code": "title Treasure Hunt\nauthor Code AI\n\n// A simple puzzle game where the player must collect all treasures and reach the exit.\n\n========\nOBJECTS\n========\n\nBackground\nlightblue\n.....\n.....\n.....\n.....\n.....\n\nWall\nbrown darkbrown\n.....\n.....\n.....\n.....\n.....\n\nPlayer\nblue lightblue darkblue\n.....\n..0..\n.111.\n..0..\n.....\n\nTreasure\nyellow\n.....\n..0..\n.000.\n..0..\n.....\n\nExit\ngreen\n.....\n.....\n..0..\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nT = Treasure\nE = Exit\n\n========\nSOUNDS\n========\n\nSFX0 18389420 (treasure collected sound)\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nWall\nTreasure\nPlayer\nExit\n\n======\nRULES\n======\n\n[ > Player | Treasure ] -> [ > Player | ] SFX0\n\n[ Player Exit ] -> [ Player Exit ] win\n\n==============\nWINCONDITIONS\n==============\n\nno Treasure\n\n=======\nLEVELS\n=======\n\n#######\n#.#.#.#\n#.TPT.#\n#.#.#.#\n###.###\n#.E...#\n#######\n\n########\n#..T..T#\n#.#.#.#.\n#T#P.#.T\n#...###.\n#..T..#.\n#.###.#.\n#.#.E.#.\n########\n\nmessage Congratulations! You collected all the treasures and reached the exit!\n\n",
-            "fitness": 148,
+            "fitness": 107,
             "compiledIters": [
                 6
             ],
@@ -506,7 +506,7 @@
         },
         {
             "code": "========\nOBJECTS\n========\n\nBackground\nlightgrey\n00000\n00000\n00000\n00000\n00000\n\nStar\nblack yellow\n..0..\n.010.\n00100\n.010.\n..0..\n\nPlayer\nblue\n..0..\n.000.\n00000\n.000.\n..0..\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\n* = Star\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer, Star\n\n======\nRULES\n======\n\n[ Player | Star ] -> [ Player | ]\n\n==============\nWINCONDITIONS\n==============\n\nno Star\n\n=======\nLEVELS\n=======\n\n..........\n...*......\n..........\n.....P....\n..........\n..........\n",
-            "fitness": 21,
+            "fitness": 14,
             "compiledIters": [
                 5
             ],
@@ -517,7 +517,7 @@
         },
         {
             "code": "title Color Maze\nauthor Your Name\nhomepage http://www.example.com\n\n========\nOBJECTS\n========\n\nBackground\nblack\n\nWall\ngray darkgray\n00000\n11111\n11111\n11111\n00000\n\nPlayer\nwhite yellow\n..0..\n.000.\n..0..\n.....\n.....\n\nRedCrate\nred\n.....\n..0..\n.000.\n..0..\n.....\n\nGreenCrate\ngreen\n.....\n..0..\n.000.\n..0..\n.....\n\nRedTarget\npink\n.....\n.....\n..0..\n.....\n.....\n\nGreenTarget\nlightgreen\n.....\n.....\n..0..\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nR = RedCrate\nG = GreenCrate\nT = RedTarget\nY = GreenTarget\n\nCrate = R or G\nTarget = T or Y\n\n=======\nSOUNDS\n=======\n\nCrate MOVE 36772507\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nWall\nCrate\nPlayer\n\n======\nRULES\n======\n\n[ > Player | Crate ] -> [ > Player | > Crate ]\n\n==============\nWINCONDITIONS\n==============\n\nAll R on T\nAll G on Y\n\n=======\nLEVELS\n=======\n\nmessage Welcome to Color Maze!\n\n#######\n#R....Y#\n#..P..G#\n#....T.#\n#....Y.#\n#######\n\n#######\n#....RY#\n#..P..G#\n#...T..#\n#...Y..#\n#######\n",
-            "fitness": 711320,
+            "fitness": 547,
             "compiledIters": [
                 5,
                 6
@@ -549,7 +549,7 @@
         },
         {
             "code": "title Simple Sokoban\nauthor Your Name\n\n========\nOBJECTS\n========\n\nBackground\nWHITE\n00000\n00000\n00000\n00000\n00000\n\nWall\nBROWN DARKBROWN\n11111\n11111\n11111\n11111\n11111\n\nPlayer\nBLUE LIGHTBLUE\n..0..\n.010.\n..0..\n..0..\n.....\n\nCrate\nORANGE\n.....\n.000.\n.0.0.\n.000.\n.....\n\nTarget\nGREEN\n.....\n.....\n..0..\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nC = Crate\nO = Target\n@ = Crate and Target\n\n=======\nSOUNDS\n=======\n\nCrate MOVE 36772507\nEndLevel 5602230\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nCrate, Player, Wall\n\n======\nRULES\n======\n\n[ > Player | Crate ] -> [ > Player | > Crate ]\n[ Crate | Target ] -> [ @ | Background ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Target on Crate\n\n=======\nLEVELS\n=======\n\n#####\n#..O#\n#.#C#\n#CO.#\n#P..#\n#####\n\n#######\n#.....#\n#..#..#\n#.C.O.#\n#..PC.#\n#...O.#\n#######\n\n########\n#O..#..#\n#..C...#\n#..#..O#\n#...#..#\n#.P....#\n########\n\nmessage Level 1: Place the crates on the targets!\nmessage Congratulations, you completed all levels!\n\n",
-            "fitness": 409,
+            "fitness": 864,
             "compiledIters": [
                 2,
                 3
@@ -561,7 +561,7 @@
         },
         {
             "code": "title Maze Explorer\nauthor YourName\n\n========\nOBJECTS\n========\n\nBackground\nblack\n\nWall\ngray darkgray\n11111\n11111\n11111\n11111\n11111\n\nPlayer\nlightgreen darkgreen\n.000.\n.1.1.\n.000.\n.1.1.\n.000.\n\nGoal\nyellow\n.....\n..0..\n.000.\n..0..\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nG = Goal\n\n=======\nSOUNDS\n=======\n\nEndLevel 12345678\nEndGame 87654321\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nGoal\nPlayer, Wall\n\n======\nRULES\n======\n\n[ P | G ] -> [ P | G ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Goal on Player\n\n=======\nLEVELS\n=======\n\n#######\n#..P..#\n#.###.#\n#.....#\n#.###.#\n#..G..#\n#######\n\n#######\n#P....#\n#....##\n#.###.#\n#.....#\n##..G.#\n#######\n\n#######\n#..G..#\n#.###.#\n#.....#\n#.###.#\n#..P..#\n#######\n",
-            "fitness": 13,
+            "fitness": 16,
             "compiledIters": [
                 2
             ],
@@ -572,7 +572,7 @@
         },
         {
             "code": "title Simple Maze Adventure\nauthor YourName\n\n========\nOBJECTS\n========\n\nBackground\nlightblue\n\nWall\nblack white\n00000\n11111\n11111\n11111\n00000\n\nPlayer\nblack green\n.000.\n.111.\n..1..\n..1..\n.....\n\nGoal\nyellow\n.....\n..0..\n..0..\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nG = Goal\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nGoal\nPlayer, Wall\n\n======\nRULES\n======\n\n[ Player | Wall ] -> [ Player | Wall ]\n[ > Player | Background ] -> [ > Player | ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Player on Goal\n\n=======\nLEVELS\n=======\n\n#######\n#..P..#\n#.###.#\n#.#...#\n#G###.#\n#######\n\n#######\n#P....#\n###.#.#\n#...#.#\n#.###G#\n#######\n",
-            "fitness": 115,
+            "fitness": 679,
             "compiledIters": [
                 2
             ],
@@ -615,7 +615,7 @@
         },
         {
             "code": "title Maze Runner\nauthor YourName\n\n========\nOBJECTS\n========\n\nBackground\nlightgray\n\nWall\ndarkgray\n\nPlayer\nblue\n.000.\n.0.0.\n00000\n.0.0.\n.000.\n\nGoal\nyellow\n.....\n.....\n..0..\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nG = Goal\n\n=========\nSOUNDS\n=========\n\nstartgame 53401705\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nGoal\nPlayer, Wall\n\n======\nRULES\n======\n\n[ > Player | Wall ] -> [ Player | Wall ]\n\n==============\nWINCONDITIONS\n==============\n\nSome Player on Goal\n\n=======\nLEVELS\n=======\n\nmessage Welcome to Maze Runner! Reach the golden goal.\n\n######\n#P...#\n#.##.#\n#..#.#\n#..G.#\n######\n\n",
-            "fitness": 6,
+            "fitness": 8,
             "compiledIters": [
                 4
             ],
@@ -626,7 +626,7 @@
         },
         {
             "code": "title Block Pusher\nauthor PuzzleScriptCreator\n\n========\nOBJECTS\n========\n\nBackground\nwhite\n\nWall\ngray\n.....\n.....\n.....\n.....\n.....\n\nPlayer\nred\n..0..\n.000.\n..0..\n.....\n.....\n\nBlock\nblue darkblue\n.....\n.000.\n.000.\n.000.\n.....\n\nTarget\ngreen\n.....\n..0..\n..0..\n.000.\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nB = Block\nT = Target\n\n=======\nSOUNDS\n=======\n\n=========== \nCOLLISIONLAYERS \n===========\n\nBackground\nTarget\nWall\nBlock\nPlayer\n\n======\nRULES\n======\n\n[> Player | Block | no Wall] -> [> Player | > Block | no Wall]\n[> Player | no Block | no Wall] -> [> Player | no Block | no Wall]\n\n==============\nWINCONDITIONS\n==============\n\nAll Block on Target\n\n=======\nLEVELS\n=======\n\n########\n#......#\n#..BTP.#\n#......#\n########\n\n########\n#......#\n#..BTP.#\n#..B...#\n#..T...#\n########\n\n##########\n#........#\n#..B.BTP.#\n#......T.#\n##########\n",
-            "fitness": 4617,
+            "fitness": 5448,
             "compiledIters": [
                 8
             ],
@@ -681,7 +681,7 @@
         },
         {
             "code": "title Simple Sokoban\nauthor Your Name\n\n========\nOBJECTS\n========\n\nBackground\nLightBlue Black\n11111\n11111\n11111\n11111\n11111\n\nWall\nGrey DarkGrey\n11111\n11111\n11111\n11111\n11111\n\nPlayer\nYellow Black White Blue\n.000.\n.111.\n22222\n.333.\n.3.3.\n\nCrate\nOrange Brown\n.000.\n.111.\n11111\n.000.\n.0.0.\n\nTarget\nDarkGreen\n.....\n..0..\n..0..\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\n* = Crate\nO = Target\n@ = Crate and Target\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nWall, Player, Crate\n\n======\nRULES\n======\n\n[ > Player | Crate ] -> [ > Player | > Crate ]\n\n==============\nWINCONDITIONS\n==============\n\nAll Crate on Target\n\n=======\nLEVELS\n=======\n\n#########\n#.......#\n#.O.O...#\n#.P.*...#\n#.*.....#\n#.......#\n#########\n\n#########\n#.......#\n#.#O#O#.#\n#.*.*.*.#\n#.*P*...#\n#.#.#.#.#\n#.......#\n#########\n\n#########\n#.......#\n#..O....#\n#..O.*..#\n#..P*...#\n#..O*O..#\n#.......#\n#########\n",
-            "fitness": 1000001,
+            "fitness": 4540,
             "compiledIters": [
                 7,
                 8,
@@ -692,7 +692,7 @@
         },
         {
             "code": "title Maze Explorer\nauthor YourName\n\n========\nOBJECTS\n========\n\nBackground\nlightgreen\n.....\n.....\n.....\n.....\n.....\n\nWall\ndarkgrey\n.....\n.....\n.....\n.....\n.....\n\nPlayer\nblue\n.....\n..0..\n.000.\n..0..\n.....\n\nGoal\nyellow\n.....\n.....\n..0..\n.....\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nG = Goal\n\n=========\nSOUNDS\n=========\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer, Goal\nWall\n\n======\nRULES\n======\n\n[right Player | ] -> [> Player | ]\n[left Player | ] -> [< Player | ]\n[up Player | ] -> [^ Player | ]\n[down Player | ] -> [v Player | ]\n\nlate [ Player Wall ] -> restart\n\n==============\nWINCONDITIONS\n==============\n\nSome Player on Goal\n\n=======\nLEVELS\n=======\n\n######\n#....#\n#..#P#\n#..#.#\n#..G.#\n######\n\n######\n#P.#.#\n#.##.#\n.#...#\n#.##.#\n#..G.#\n######\n\n######\n#P...#\n#..###\n#.#..#\n#..G.#\n######\n\n",
-            "fitness": 13,
+            "fitness": 4,
             "compiledIters": [
                 2,
                 3,
@@ -705,7 +705,7 @@
         },
         {
             "code": "title Crate Pusher\nauthor Game Developer\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nLightGreen\n\nWall\nDarkGrey\n\nPlayer\nBlue Orange Black White\n.000.\n.111.\n.222.\n.333.\n.3.3.\n\nCrate\nOrange\n00000\n0...0\n0...0\n0...0\n00000\n\nTarget\nDarkBlue\n.....\n.000.\n.0.0.\n.000.\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\n* = Crate\nO = Target\n@ = Crate and Target\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Crate\n\n======\nRULES\n======\n\n[> Player | Crate] -> [> Player | > Crate]\n\n==============\nWINCONDITIONS\n==============\n\nAll Crate on Target\n\n=======\nLEVELS\n=======\n\n#####\n#...#\n#.*O#\n#...#\n#P..#\n#####\n\n######\n#....#\n#.O@.#\n#.*..#\n#..P.#\n######\n\n#######\n#.....#\n#.*.O.#\n#.O@*.#\n#..P..#\n#######\n",
-            "fitness": 15568,
+            "fitness": 844,
             "compiledIters": [
                 2
             ],
@@ -716,7 +716,7 @@
         },
         {
             "code": "title Sokoban Example\nauthor ExampleAuthor\n\n========\nOBJECTS\n========\n\nBackground\nLightBlue\n00000\n00000\n00000\n00000\n00000\n\nWall\nDarkGrey Grey\n11111\n11111\n11111\n11111\n11111\n\nPlayer\nYellow Black\n..0..\n.010.\n00100\n.010.\n..0..\n\nCrate\nBrown Brown\n.....\n.111.\n.111.\n.111.\n.....\n\nTarget\nDarkGreen Green\n.....\n..0..\n.000.\n..0..\n.....\n\nCrateOnTarget\nDarkGreen LightGreen\n.....\n.101.\n.111.\n.101.\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\nC = Crate\nT = Target\nO = CrateOnTarget\n\n=======\nSOUNDS\n=======\n\nCrate MOVE 34391103\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Crate, CrateOnTarget\n\n======\nRULES\n======\n\n[ > Player | Crate ] -> [ > Player | > Crate ]\n[ Crate | Target ] -> [ CrateOnTarget | Target ]\n[ Player | CrateOnTarget ] -> [ > Player | > Crate ]\n\n==============\nWINCONDITIONS\n==============\n\nAll CrateOnTarget on Target\n\n=======\nLEVELS\n=======\n\n#######\n#.....#\n#..P..#\n#.CTC.#\n#####.#\n\n",
-            "fitness": 4,
+            "fitness": 3,
             "compiledIters": [
                 3
             ],
@@ -727,7 +727,7 @@
         },
         {
             "code": "title Box Pusher\nauthor PuzzleScriptExample\n\n========\nOBJECTS\n========\n\nBackground\ngreen darkgreen\n11111\n11111\n11111\n11111\n11111\n\nWall\nbrown darkbrown\n00000\n11111\n00000\n11111\n00000\n\nPlayer\nblue white\n.....\n..0..\n.111.\n..0..\n.....\n\nCrate\norange white\n.....\n.....\n.111.\n.....\n.....\n\nTarget\nred\n.....\n..0..\n.....\n..0..\n.....\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\n* = Crate\nO = Target\n@ = Crate and Target\n\n=======\nSOUNDS\n=======\n\nCrate MOVE 7325177\nendLevel 58190277\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Crate\n\n======\nRULES\n======\n\n[ > Player | Crate ] -> [ > Player | > Crate ] \n\n============== \nWINCONDITIONS\n==============\n\nall Crate on Target\n\n=======\nLEVELS\n=======\n\n#####\n#...#\n#.O.#\n#.*P#\n#...#\n#####\n\n########\n#......#\n#.**O#.#\n#..PO..#\n########\n\n",
-            "fitness": 794,
+            "fitness": 620,
             "compiledIters": [
                 2,
                 3

@@ -1,0 +1,188 @@
+OBJECTS
+
+background1.darkgrey
+background2darkblue
+player@lightgreen green
+00.0.001..
+.11000.0..
+..0..wall #
+browndarkbrown brown22222
+20001
+20001
+10001
+11111
+
+wall2£brown darkgrey0001.
+111..
+00...
+0....
+.....
+
+crate*orange orange
+11.1110001
+.0.0.10001
+11.11target
+oblue..0..
+..0..
+00000
+..0..
+..0..
+
+muptransparent
+mudtransparent
+multransparent
+murtransparent
+m1transparent
+m2transparent
+
+
+
+LEGEND
+
+background = background1 or background2
+mu = mup or mud or mul or mur
+solid = wall or crate
+& = target or crate
+
+COLLISIONLAYERS
+
+background1, background2
+target
+player, wall
+wall2, crate
+m1
+m2
+mup
+mud
+mul
+mur
+
+RULES
+
+[ background1 | background1 ] -> [ background1 | background2 ] 
++ [ background2 | background2 ] -> [ background2 | background1 ] 
+left [ up player | nom1 ] -> [ up player | upm1 ] (move northwest) 
+right [ down player | nom1 ] -> [ down player | downm1 ] (move southeast) 
+up [ right player | nom1 ] -> [ right player | rightm1 ] (move northeast) 
+down [ left player | nom1 ] -> [ left player | leftm1 ] (move southwest) 
+[ > m1 |  ] -> [ |m1 ] (Move and check positon 1) 
+[ m1 wall ] -> [ wall ] 
+left [ up player][m1crate | nom2 ] -> [ up player][m1crate | upm2 ] (<--push northwest) 
+right [ down player][m1crate | nom2 ] -> [ down player][m1crate | downm2 ] (<--push southeast) 
+down [ left player][m1crate | nom2 ] -> [ left player][m1crate | leftm2 ] (<-- push southwest) 
+up [ right player][m1crate | nom2 ] -> [ right player][m1crate | rightm2 ] (<-- push northeast) 
+[ > m2 |  ] -> [ |m2 ] (Move and check position 2) 
+[ m1][m2wall ] -> [ ][wall ] 
+[ m1][m2crate ] -> [ ][crate ] 
+[ crate m1][m2 ] -> [ m1][crate ] (update positions for diagonal) 
+[ player][m1 ] -> [ ][stationaryplayer ] 
+up [ moving player | crate | nosolid ] -> [ moving player mup | crate |  ] 
+down [ moving player | crate | nosolid ] -> [ moving player mud | crate |  ] 
+left [ moving player | crate | nosolid ] -> [ moving player mul | crate |  ] 
+right [ moving player | crate | nosolid ] -> [ moving player mur | crate |  ] 
+[ up player mul mup ] -> [ stationary player ] 
+[ down player mur mud ] -> [ stationary player ] 
+[ left player mud mul ] -> [ stationary player ] 
+[ right player mup mur ] -> [ stationary player ] 
+up [ up player | solid ] -> [ up player left m1 | solid ] 
+down [ down player | solid ] -> [ down player right m1 | solid ] 
+left [ left player | solid ] -> [ left player down m1 | solid ] 
+right [ right player | solid ] -> [ right player up m1 | solid ] 
+random [ > m1 |  ] -> [ |>m1 ] (Move and check position 1 orthogonally, but only once) 
+[ m1 wall ] -> [ wall ] 
+[ > m1 crate ] -> [ > m1>m2crate ] 
+[ > m2 |  ] -> [ |m2 ] (Move and check position 2 orthogonally) 
+[ m1][m2wall ] -> [ ][wall ] 
+[ m1][m2crate ] -> [ ][crate ] 
+[ crate m1][m2 ] -> [ m1][crate ] (update positions for orthogonal movement) 
+[ player][m1 ] -> [ ][stationaryplayer ] 
+left [ up player | solid ] -> [ up player up m1 | solid ] 
+right [ down player | solid ] -> [ down player down m1 | solid ] 
+down [ left player | solid ] -> [ left player left m1 | solid ] 
+up [ right player | solid ] -> [ right player right m1 | solid ] 
+random [ > m1 |  ] -> [ |>m1 ] (Move and check position 1 orthogonally, but only once) 
+[ m1 wall ] -> [ wall ] 
+[ > m1 crate ] -> [ > m1>m2crate ] 
+[ > m2 |  ] -> [ |m2 ] (Move and check position 2 orthogonally) 
+[ m1][m2wall ] -> [ ][wall ] 
+[ m1][m2crate ] -> [ ][crate ] 
+[ crate m1][m2 ] -> [ m1][crate ] (update positions for orthogonal movement) 
+[ player][m1 ] -> [ ][stationaryplayer ] 
+[ player ] -> [ stationary player ] (prevents extra move due to flagging) 
+
+
+WINCONDITIONS
+
+all target on crate
+
+LEVELS
+
+###########
+#####.#####
+####.##.###
+###.##.o.##
+##.##...###
+#.##.*.##.#
+###...##.##
+##.@.##.###
+###.##.####
+#####.#####
+###########
+
+#########
+####.####
+###...###
+##..*..##
+#..@....#
+##..o..##
+###...###
+####.####
+#########
+
+############
+
+###o#.######
+##*.*..###o#
+#..o..#.#.##
+##.#.###*###
+#######...##
+########.#@#
+############
+
+###########
+##.o.....##
+#######*.##
+########.##
+########.##
+########.##
+########@##
+########.##
+###########
+
+########
+
+#o..####
+#.o.####
+#...*..#
+###*...#
+###..@.#
+###....#
+########
+
+########
+#..o&..#
+#..&o*.#
+#...*..#
+#.@....#
+#......#
+########
+
+#########
+#.......#
+#.....@.#
+#...&o..#
+#..*#&..#
+#.o.*...#
+#.*o....#
+#.......#
+#########

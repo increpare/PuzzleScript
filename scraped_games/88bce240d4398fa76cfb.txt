@@ -1,0 +1,568 @@
+title Elements
+author FunATuns and KingOfAwesome
+homepage www.puzzlescript.net
+youtube qv5fLLxvg-0
+
+
+========
+OBJECTS
+========
+
+fi
+black
+
+gi
+black
+
+ii
+black
+
+Background
+#FFFFFF
+00000
+00000
+00000
+00000
+00000
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+fire
+Orange red black
+.....
+..0..
+.010.
+01212
+01110
+
+ice
+lightblue blue black
+.....
+..000
+.0110
+01212
+01110
+
+grass
+green lightgreen black
+..1..
+.101.
+10202
+.111.
+.....
+
+ash
+gray black yellow
+.....
+.....
+..1..
+.1212
+10001
+
+moss
+green #06BA00 blue
+.....
+.....
+..1..
+.1212
+10001
+
+sand
+yellow orange #D6D600
+.....
+.020.
+02000
+00101
+20200
+
+tree
+brown green black lightgreen
+11311
+33113
+11131
+.0202
+.000.
+
+cloud
+gray blue
+.000.
+00000
+00101
+.000.
+.....
+
+zap
+yellow #E3E314 black
+01110
+.0212
+0110.
+..010
+.000.
+
+animal
+brown black #613F00
+.....
+.2222
+02000
+00121
+2.0.0
+
+mud
+brown black #613F00
+.....
+.2...
+..02.
+.2101
+22222
+
+magic
+pink purple black
+00000
+01111
+01212
+01111
+00000
+
+flower
+yellow green lightgreen black
+.0.0.
+..00.
+..22.
+.2313
+21112
+
+
+
+dino
+lightred orange black
+001..
+1....
+01010
+00212
+1.0.0
+
+obsidin
+black gray red
+.111.
+10001
+10001
+10202
+10001
+
+stone
+gray black lightgray
+.....
+..000
+.0020
+20121
+02000
+
+air 
+lightgray yellow
+0.0.0
+.0.0.
+..1.1
+.0.0.
+0.0.0
+
+darkness
+black red
+00000
+00000
+00111
+00000
+00000
+
+time
+white black yellow
+.111.
+10001
+10202
+10001
+.111.
+
+demon
+orange red darkred black
+0...0
+00111
+.1313
+21111
+2.2.2
+
+mossmonster
+lightgreen blue darkblue black
+.....
+00111
+01313
+21111
+2.2.2
+
+grassmon
+yellow lightgreen green black
+0.0.0
+11111
+.1313
+21111
+2.2.2
+
+metal
+lightgray gray black
+...00
+..010
+00110
+01212
+.0000
+
+steak
+red brown yellow
+.111.
+1001.
+21201
+10001
+.111.
+
+wood
+brown #664100 #C77E00 blue 
+11022
+11022
+11323
+11022
+11022
+
+bigmonster
+brown grey black darkbrown white
+00000
+00202
+.0202
+30000
+3.3.3
+
+bat 
+black darkgrey red
+..0.0
+00000
+11202
+11000
+1...1
+
+garbage
+gray black lightgrey darkgrey
+.203.
+20003
+.203.
+.2131
+.203.
+
+sun
+yellow orange black
+1.1.1
+.000.
+10202
+.000.
+1.1.1
+(Human Section)
+
+warrior
+gray lightgrey brown orange lightbrown darkgrey
+.5551
+.3331
+00000
+05552
+.5.5.
+
+aztecsword
+brown black yellow
+..100
+.1000
+.0001
+.0212
+0....
+
+sword
+lightgrey grey brown
+....0
+...01
+2201.
+.22..
+2.2..
+
+wizard
+red brown lightbrown blue darkblue 
+33330
+43221
+43333
+.3331
+.3.31
+
+human
+red brown darkbrown blue
+.222.
+.111.
+00000
+.333.
+.3.3.
+
+(Reptile section)
+reptile1
+lightblue lightgreen black
+.01..
+1....
+0101.
+00202
+0.0.0
+
+reptile2
+green lightgreen #09CC02 black
+..1.1
+.1121
+.2313
+.1112
+00.00
+
+reptile31
+brown lightbrown yellow #DB9E58
+..2.2
+.1311
+01311
+01113
+0.0.0
+
+reptile32
+brown lightbrown yellow black #DB9E58
+.2.14
+11141
+41313
+14111
+.0.0.
+
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = fire
+' = ice
+t = grass
+O = Target
+f = fi
+g = gi
+i = ii
+& = garbage
+reptiles = reptile1 or reptile2 or reptile31
+element = ice or fire or grass or ash or sand or tree or cloud or zap or animal or mud or flower or magic or reptiles or dino or obsidin or stone or air or darkness or time or demon or mossmonster or grassmon or human or steak or metal or wizard or sword or wood or aztecsword or warrior or bigmonster or bat or moss or sun or reptile32
+
+
+=======
+SOUNDS
+=======
+cloud create 16284108
+time create 94745308
+dino create 85976708
+zap Create 23573708
+sand create 54516708
+ash create 15372508
+animal create 62777709
+tree create 76598108
+obsidin create 97944308
+stone create 18031308
+air create 71158108
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, gi, ii, fi, wall, garbage
+Player, element
+
+======
+RULES
+======
+(push elements)
+[ >  Player | element ] -> [  >  Player | > element ]
+
+[> grass | fire | ice] -> [||magic]
+
+[> element | wall] -> [element|wall]
+
+[> element | garbage] -> [|garbage]
+
+[> player | garbage] -> [player|garbage]message I came from a far a way place where when you put somthing into me... it disepears! 
+
+[ii no player] -> [ii ice]
+[fi no player] -> [fi fire]
+[gi no player] -> [gi grass]
+
+[> ash | ice] -> [|sand]
+[> ice | ash] -> [|sand]
+
+[> grass | fire] -> [|ash]
+[> fire | grass] -> [|ash]
+
+[> tree | fire] -> [|ash]
+[> fire | tree] -> [|ash]
+
+[> grass | ice] -> [|tree]
+[> ice | grass] -> [|tree]
+
+[> fire| ice] -> [|cloud] 
+[> ice | fire] -> [|cloud] 
+
+[> fire| cloud] -> [|zap]
+[> cloud | fire] -> [|zap]
+
+[> zap | tree] -> [|animal]
+[> tree | zap] -> [|animal]
+
+[> sand | ice] -> [|mud]
+[> ice | sand] -> [|mud]
+
+[> grass| cloud] -> [|flower]
+[> cloud | grass] -> [|flower]
+
+[> mud| flower] -> [|tree]
+[> flower | mud] -> [|tree]
+
+[> animal | tree] -> [|mud]
+[> tree | animal] -> [|mud]
+
+[> zap | ice] -> [|random reptiles]
+[> ice | zap] -> [|random reptiles]
+
+[> zap | sand] -> [|random reptiles]
+[> sand | zap] -> [|random reptiles]
+
+[> reptiles | fire] -> [|dino] 
+[> fire | reptiles] -> [|dino] 
+
+[> mud| fire] -> [|obsidin]
+[> fire | mud] -> [|obsidin]
+
+[> sand| fire] -> [|obsidin]
+[> fire | sand] -> [|obsidin]
+
+[> mud| grass] -> [|stone]
+[> grass| mud] -> [|stone]
+
+[> sand| grass] -> [|stone]
+[> grass | sand] -> [|stone]
+
+[> cloud| ice] -> [|air]
+[> ice | cloud] -> [|air]
+
+[> animal| fire] -> [|demon]
+[> fire | animal] -> [|demon]
+
+[> demon| ice] -> [|mossmonster]
+[> ice | demon] -> [|mossmonster]
+
+[> demon| tree] -> [|grassmon]
+[> tree | demon] -> [|grassmon]
+
+[> fire | stone] -> [|metal]
+[> stone | fire] -> [|metal]
+
+[> grass | stone] -> [|moss]
+[> stone | grass] -> [|moss]
+
+[> magic | human] -> [|wizard]
+[> human | magic] -> [|wizard]
+
+[> tree | stone] -> [|wood]
+[> stone | tree] -> [|wood]
+
+[> metal | wood] -> [|sword]
+[> wood | metal] -> [|sword]
+
+[> sword | obsidin] -> [|aztecsword]
+[> obsidin | sword] -> [|aztecsword]
+
+[> time | animal] -> [|human]
+[> animal | time] -> [|human]
+
+[> human | sword] -> [|warrior]
+[> sword | human] -> [|warrior]
+
+[> obsidin | air] -> [|darkness]
+[> air | obsidin] -> [|darkness]
+
+[> darkness | fire] -> [|time] 
+[> fire |  darkness] -> [|time]
+
+[> air | fire] -> [|sun] 
+[> fire | air] -> [|sun]
+
+[> darkness | animal] -> [|bat]
+[> animal | darkness] -> [|bat]
+
+right [ reptile31 |] -> [ reptile31|reptile32]
+
+[> reptile31|reptile32]->[> reptile31|> reptile32]
+[^ reptile31|reptile32]->[^ reptile31|^ reptile32]
+[v reptile31|reptile32]->[v reptile31|v reptile32]
+
+
+[> reptile32|reptile31]->[> reptile32|> reptile31]
+[^ reptile32|reptile31]->[^ reptile32|^ reptile31]
+[v reptile32|reptile31]->[v reptile32|v reptile31]
+
+[> mossmonster | grassmon | demon] -> [||bigmonster]
+[> demon | mossmonster | grassmon] -> [||bigmonster]
+[> demon | grassmon | mossmonster] -> [||bigmonster]
+[> grassmon | mossmonster | demon] -> [||bigmonster]
+[> mossmonster | demon | grassmon] -> [||bigmonster]
+[> grassmon | demon | mossmonster] -> [||bigmonster]
+
+==============
+WINCONDITIONS
+==============
+
+
+
+=======
+LEVELS
+=======
+
+#######################
+#&....................#
+#.....................#
+#.....................#
+#....f.............i..#
+#......p..............#
+#.....................#
+#.........g...........#
+#.....................#
+#.....................#
+#######################
+
+
+
+
+

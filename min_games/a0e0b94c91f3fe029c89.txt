@@ -1,0 +1,461 @@
+OBJECTS
+
+Background#9A00C2 #5200C2
+1101110101
+0111010101
+11011Cornerwall
+#FFB591#FF5501 #A83700
+0000101212
+0202201212
+12222Horiwall
+#FFB591#FF5501 #A83700
+0000010122
+2101222101
+22222Vertwall
+#FFB591#FF5501 #A83700
+0122200122
+0101202102
+02212Player
+BrownPink White.111.
+.0011
+.0011
+.222.
+02220
+
+Exittransparent
+Everyslider#BCF818
+#58D858#006800 Black00201
+01312
+23333
+01312
+12322
+
+Horislider#38C0FC
+#0088FC#0000FC Black00001
+01112
+23333
+01112
+12222
+
+Vertslider#FCFF00
+#FCB800#503000 Black
+0020101312
+0131201312
+12322Block
+#FCA048#FC3800 #AC100000001
+01112
+01212
+01112
+12222
+
+RighteleportWhite
+#FC78FC#94008C Black03001
+03312
+01332
+03312
+13222
+
+DownteleportWhite
+#FC78FC#94008C Black00001
+33133
+03332
+01312
+12222
+
+LefteleportWhite
+#FC78FC#94008C Black00131
+01332
+03312
+01332
+12232
+
+UpteleportWhite
+#FC78FC#94008C Black00001
+01312
+03332
+33133
+12222
+
+RightpusherWhite
+#00E8E4#0088FC Black03001
+03312
+03332
+03312
+13222
+
+DownpusherWhite
+#00E8E4#0088FC Black00001
+33333
+03332
+01312
+12222
+
+LeftpusherWhite
+#00E8E4#0088FC Black00131
+01332
+03332
+01332
+12232
+
+UppusherWhite
+#00E8E4#0088FC Black00001
+01312
+03332
+33333
+12222
+
+SelectorWhite00.00
+0...0
+.....
+0...0
+00.00
+
+FakeselectorWhite00.00
+0...0
+.....
+0...0
+00.00
+
+XselectorWhite00.00
+0...0
+..0..
+0...0
+00.00
+
+Barnaby#503000
+#905F25#FC3800 Black.0.0.
+.000.
+.303.
+00020
+10001
+
+VoidBlack00000
+00000
+00000
+00000
+00000
+
+MarkerTransparent
+
+
+
+LEGEND
+
+. = Background
+# = Cornerwall
+H = Horiwall
+I = Vertwall
+* = Block
+p = Player
+e = Exit
++ = Everyslider
+- = Horislider
+| = Vertslider
+6 = Righteleport
+8 = Upteleport
+4 = Lefteleport
+5 = Downteleport
+d = Rightpusher
+w = Uppusher
+a = Leftpusher
+s = Downpusher
+O = Selector
+X = Xselector
+b = Barnaby
+0 = Void
+Wall = Cornerwall or Horiwall or Vertwall
+Horipushable = Horislider or Everyslider or Selector or Xselector
+Vertpushable = Vertslider or Everyslider or Selector or Xselector
+Anypushable = Horislider or Vertslider or Everyslider or Selector or Xselector
+Anypusher = Uppusher or Leftpusher or Rightpusher or Downpusher
+Anyteleport = Upteleport or Lefteleport or Righteleport or Downteleport
+Obstacle = Wall or Anyteleport or Anypushable or Player
+Pusher = Anypusher or Player or Anypushable
+Anyotherpusher = Anypusher or Anypushable
+
+COLLISIONLAYERS
+
+Marker
+Background
+Exit
+Barnaby, Void
+Player, Cornerwall
+Horiwall, Vertwall
+Everyslider, Horislider
+Vertslider, Block
+Righteleport, Upteleport
+Lefteleport, Downteleport
+Rightpusher, Uppusher
+Leftpusher, Downpusher
+Selector, Xselector
+Fakeselector
+
+RULES
+
+[ > Player | Xselector ] -> [ Stationary Player | StationaryXselector ] 
+[ > Player | Selector ] -> [ |StationaryPlayerFakeselector ] 
+[ Fakeselector no Player ] -> [ Selector ] 
+[ Stationary Player][Rightpusher ] -> [ Player][RightRightpusher ] 
+[ Stationary Player][Downpusher ] -> [ Player][DownDownpusher ] 
+[ Stationary Player][Leftpusher ] -> [ Player][LeftLeftpusher ] 
+[ Stationary Player][Uppusher ] -> [ Player][UpUppusher ] 
+[ moving Pusher ] -> [ moving Pusher Marker ] 
+startloop
+Horizontal [ Marker>Pusher | stationaryHoripushable ] -> [ Marker>Pusher | >HoriPushable ] 
+Vertical [ Marker>Pusher | stationaryVertPushable ] -> [ Marker>Pusher | >VertPushable ] 
+[ Marker>Pusher | noMarker>Anypushable ] -> [ > Pusher | Marker>Anypushable ] 
+Horizontal [ Marker>Pusher | VerticalPusher ] -> [ Pusher | VerticalPusher ] 
+Vertical [ Marker>Pusher | HorizontalPusher ] -> [ Pusher | HorizontalPusher ] 
+endloop
+Right [ > Player | Righteleport | NoObstacle ] -> [ |Righteleport | Player ] 
+Down [ > Player | Downteleport | NoObstacle ] -> [ |Downteleport | Player ] 
+Left [ > Player | Lefteleport | NoObstacle ] -> [ |Lefteleport | Player ] 
+Up [ > Player | Upteleport | NoObstacle ] -> [ |Upteleport | Player ] 
+[ Player ] -> [ Player ] again 
+[ Barnaby ] -> [ Barnaby Exit ] 
+[ Marker ] -> [  ] 
+
+
+WINCONDITIONS
+
+All player on exit
+
+LEVELS
+
+#HHHHHH#E#HHHHHH#
+
+I....*.....*....I
+I.....-|-|-.....I
+I|.....+.+.....|I
+I|.*..*.|.*..*.|I
+I...............I
+I.*.*.-.+.-.*.*.I
+I...............I
+I|.*..*.|.*..*.|I
+I|.............|I
+I....--.p.--....I
+#HHHHHHHHHHHHHHH#
+
+#hhhh#h#E#h#hhhh#
+
+i....*....**....i
+i....**....*....i
+i..-----|---..*|i
+#..*....+|..***|#
+i|.-.....+.....|i
+i|+.**......*...i
+#|**..****....*.#
+i|..|..***..*.-.i
+i|.*.+|..*..-|*.i
+i..*.*..p-..*.-.i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i*..*..*....*...i
+i..|*.*...||..*.i
+i.|+******++**..i
+#..|......|...*.#
+i.*.....**+*.*..i
+i..****..*|..--.i
+#.*....*.*|*.--.#
+i..*++.*...d|*..i
+i...||..*..*.+..i
+i..*..*.p*.*.+.*i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i......+-+++++s.i
+i....*....*.*.-|i
+i..**.***...-...i
+#.*......****.*|#
+i.*.-.**.-....*.i
+i.*.*|..*.-..*..i
+#|*.*|*..****...#
+i|a|a|a.----....i
+i.*.*.****......i
+i.......p*.----.i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i......*.....--.i
+i.*.....*.|.-.*.i
+i*.*.|.|.*...*..i
+#*.**|*.|.***..|#
+i*.*ss*..|..*...i
+i.|---+...*.*...i
+#.|*..***.*.*.**#
+i.+*...****.--+.i
+i*|********.+--.i
+i.......p*......i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i...*..s........i
+i...---s------|ai
+i......-.....*+.i
+#.............|.#
+i......*......|.i
+id---|********|*i
+#****.*.*...**|.#
+i.....-......*|.i
+i.....******|+-.i
+i.......p*....w.i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i--s----..*.....i
+i..-...*+.*.....i
+i....+dd|.*..**.i
+#**..+-..*..*..*#
+i.d|.+..-......*i
+i....+..w.....*.i
+#....+.......*..#
+i**.--+-----.*..i
+i...............i
+i.......p....*..i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i......*.*......i
+i.**..*.8.*..**.i
+i*..*..|.|...**.i
+#..5...+*+...**.#
+i.*.*..|*|...**.i
+i8d|...----.....i
+#.*.***w*ww.....#
+i.*.*.4..*...**.i
+i.***.4..*...**.i
+i.....4.p*......i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i.....*sss..-s..i
+i|----+--+...-..i
+i.**5..6.4..*...i
+#8.*..**.***....#
+i..***.4.6.*....i
+i.*.4..*.*.**8**i
+#8.8.5.*.*..---.#
+i.4.6.5*8*....s.i
+i6.8.5.*.*..-+-.i
+i.4.4.**p*.....*i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i.*....*.*.*....i
+i.d|....-...****i
+i..+*..*.***....i
+#..|..*.-.......#
+i..|..*d|*...**.i
+i.*|..**.****...i
+#8.-+---.*ddd+++#
+i.*|..**8**.....i
+i...**..........i
+i.......p....***i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i....***s****...i
+i...*..---+-.*..i
+i..*.+----....*.i
+#..*..---+--..*.#
+i..*.-+--+--..*.i
+i..*..---+--..*.i
+#...*...-....*..#
+i......*.*......i
+i.....*s*s*.....i
+i.....--p--.....i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i..*s.x--..s....i
+i...-...*..|....i
+i*8*|....**+*...i
+#...|------a.|..#
+i..4..+.*5***...i
+i..4..+..+..--..i
+#..4..+..+.**w88#
+i...**.***.*....i
+i.....x.-.x.....i
+i.....x.p.x.....i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i......xxx......i
+i........****...i
+i.....***...4...i
+#*****.....**...#
+i......****..*.*i
+i..*....-....4..i
+#*.******.*.*...#
+i.....+.4.*.*...i
+i......**.....-.i
+i.......p*..**w*i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i..6.6.6.6.4.4..i
+i.6.6.4.4.4.6.4.i
+i8.5.8.8.5.8.5.8i
+#.4.4.6.4.5.4.4.#
+i5.5.8.8.5.4.6.8i
+i.6.4.4.4.6.8.6.i
+#8.5.5.5.5.8.8.5#
+i.4.6.6.4.6.6.6.i
+i5.8.8.8.8.8.5.8i
+i.6.4.4.p.6.6.6.i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i.+...--s--s--s-i
+i.+..***|*.x..x.i
+i.***..*|*.o..o.i
+#8..***.|*.o..o.#
+i.||.*..x***+.*.i
+i*oo8*..o..*.***i
+#.||.*..o..*.*..#
+i**.***.*.**....i
+i...............i
+i....*..p..*....i
+#hhhh#hhhhh#hhhh#
+
+#hhhh#h#e#h#hhhh#
+
+i......*.4......i
+i**...*.*.****..i
+i..|o|..*.*..*.*i
+#8.x*x*..|..-o-.#
+i.4o.o.*.x****.*i
+i*.....*.o..-o-.i
+#......*5x****.*#
+i......*.|6.-o-.i
+i.--+-.4..**.*.*i
+i..w.w.*p**.....i
+#hhhh#hhhhh#hhhh#
+
+00000000000000000
+
+00000000000000000
+00000000000000000
+00000#hh#hh#00000
+00000i.....i00000
+00000i..b..i00000
+00000i.....i00000
+00000i.....i00000
+00000#h#.#h#00000
+0000000i.i0000000
+0000000ipi0000000
+0000000#h#0000000

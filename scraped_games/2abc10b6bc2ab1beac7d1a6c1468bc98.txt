@@ -1,0 +1,580 @@
+title Elimination
+author Mrquaotta
+homepage www.puzzlescript.net
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+
+Background
+Gray DarkGray
+11111
+01111
+11101
+11111
+10111
+
+Target1
+Purple
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target2
+Green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+WallBlank
+DarkBlue
+00000
+00000
+00000
+00000
+00000
+
+WallU
+DarkRed
+00000
+.....
+.....
+.....
+.....
+
+WallD
+DarkRed
+.....
+.....
+.....
+.....
+00000
+
+WallL
+DarkRed
+0....
+0....
+0....
+0....
+0....
+
+WallR
+DarkRed
+....0
+....0
+....0
+....0
+....0
+
+WallUD
+DarkRed DarkBlue
+00000
+11111
+11111
+11111
+00000
+
+WallLR
+DarkRed DarkBlue
+01110
+01110
+01110
+01110
+01110
+
+WallCornerUL
+DarkRed
+0....
+.....
+.....
+.....
+.....
+
+WallCornerUR
+DarkRed
+....0
+.....
+.....
+.....
+.....
+
+WallCornerDL
+DarkRed
+.....
+.....
+.....
+.....
+0....
+
+WAllCornerDR
+DarkRed
+.....
+.....
+.....
+.....
+....0
+
+WallCornerULR
+DarkRed
+0...0
+.....
+.....
+.....
+.....
+
+WallCornerDLR
+DarkRed
+.....
+.....
+.....
+.....
+0...0
+
+WallCornerLUD
+DarkRed
+0....
+.....
+.....
+.....
+0....
+
+WallCornerRUD
+DarkRed
+....0
+.....
+.....
+.....
+....0
+
+PlayerNorm
+DarkBlue Orange DarkBrown Black
+..1..
+.222.
+12221
+10001
+.0.0.
+
+PlayerL
+DarkBlue Orange DarkBrown Black
+..1..
+.222.
+.221.
+.001.
+.0.0.
+
+PlayerR
+DarkBlue Orange DarkBrown Black
+..1..
+.222.
+.122.
+.100.
+.0.0.
+
+Crate1
+Purple #c299ff
+11000
+1...0
+0...0
+0...1
+00011
+
+Crate2
+Green LightGreen
+11000
+1...0
+0...0
+0...1
+00011
+
+Crate3
+Blue LightBlue
+11000
+1...0
+0...0
+0...1
+00011
+
+CrateTarget1
+Blue Purple LightBlue
+22000
+21110
+01.10
+01112
+00022
+
+CrateTarget2
+Blue Green LightBlue
+22000
+21110
+01.10
+01112
+00022
+
+Temp
+Transparent
+
+Temp2
+Transparent
+
+Detect
+Transparent
+
+=======
+LEGEND
+=======
+
+. = Background and Detect
+# = WallBlank
+p = PlayerNorm
+* = Crate1
+@ = Crate2
+% = Crate3
+O = Target1
+& = Target2
+
+Player = PlayerNorm or PlayerL or PlayerR
+Moveable = Crate1 or Crate2 or Crate3 or CrateTarget1 or CrateTarget2
+Object = PlayerNorm or Moveable or Target1 or Target2
+WallCorner = WallCornerDL or WallCornerDR or WallCornerUL or WallCornerUR or WallCornerDLR or WallCornerULR 
+
+
+
+=======
+SOUNDS
+=======
+
+Player Move 36772507
+Moveable CantMove 92127902
+Crate1 Create 4458903
+Crate2 Create 4458903
+sfx0 34463902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target1 Target2, Temp, Temp2
+Player, PlayerL, PlayerR, Crate1, Crate2, Crate3, CrateTarget1, CrateTarget2, WallBlank, WallUD, WallLR
+WallU
+WallD
+WallL
+WallR
+WallCorner
+WallCornerLUD, WallCornerRUD
+Detect
+
+======
+RULES
+======
+
+[ no Detect Object ] -> [ Detect Object ]
+
+Down [ Detect | WallBlank | Detect ] -> [ Detect | WallUD | Detect ]
+Right [ Detect | WAllBlank | Detect ] -> [ Detect | WallLR | Detect ]
+Down [ WallLR | Detect ] -> [ WallD WallLR | Detect ]
+Up [ WallLR | Detect ] -> [ WallU WallLR | Detect ]
+Right [ WallUD | Detect ] -> [ WallR WallUD | Detect ]
+Left [ WallUD | Detect ] -> [ WallL WallUD | Detect ]
+
+Down [ WallBlank | Detect ] -> [ WallD WallBlank | Detect ]
+Up [ WallBlank | Detect ] -> [ WallU WallBlank | Detect ]
+Left [ WallBlank | Detect ] -> [ WallL WallBlank | Detect ]
+Right [ WallBlank | Detect ] -> [ WallR WallBlank | Detect ]
+
+Down [ WallBlank | WallL ] -> [ WallCornerDL WallBlank | WallL ]
+Down [ WallBlank | WallR ] -> [ WallCornerDR WallBlank | WallR ]
+Up [ WallBlank | WallL ] -> [ WallCornerUL WallBlank | WallL ]
+Up [ WallBlank | WallR ] -> [ WallCornerUR WAllBlank | WallR ]
+
+Down [ WallBlank | WallLR ] -> [ WallCornerDLR WAllBlank | WallLR ]
+Up [ WallBlank | WallLR ] -> [ WallCornerULR WallBlank | WallLR ]
+Left [ WallBlank | WallUD ] -> [ WallCornerLUD WallBlank | WallUD ]
+Right [ WallBlank | WallUD ] -> [ WallCornerRUD WallBlank | WallUD ]
+
+
+[ Left Player ] -> [ Left PlayerL ]
+[ Right Player ] -> [ Right PlayerR ]
+[ Right PlayerR ] -> [ Right PlayerR ]
+[ Vertical PlayerL ] -> [ Vertical PlayerNorm ]
+[ Vertical PlayerR ] -> [ Vertical PlayerNorm ]
+[ Moving Player ] -> [ Moving Player ] again
+[ > Player | Moveable ] -> [ > Player | > Moveable ]
+[ Crate3 Target1 ] -> [ CrateTarget1 ]
+[ Crate3 Target2 ] -> [ CrateTarget2 ]
+[ CrateTarget1 Target1 ] -> [ CrateTarget1 Temp ]
+[ CrateTarget1 Target2 ] -> [ CrateTarget1 Temp2 ]
+[ CrateTarget2 Target1 ] -> [ CrateTarget2 Temp ]
+[ CrateTarget2 Target2 ] -> [ CrateTarget2 Temp2 ]
+Late [ CrateTarget1 | Temp ] [ Player Temp ] -> [ CrateTarget1 | Target1 ] [ Player Target1 ]
+Late [ CrateTarget1 | Temp2 ] [ Player Temp2 ] -> [ CrateTarget1 | Target2 ] [ Player Target2 ]
+Late [ CrateTarget2 | Temp ] [ Player Temp ] -> [ CrateTarget2 | Target1 ] [ Player Target1 ]
+Late [ CrateTarget2 | Temp2 ] [ Player Temp2 ] -> [ CrateTarget2 | Target2 ] [ Player Target2 ]
+Late [ Crate1 Target1 ] [ no Crate2 Target1 ] -> [ Crate1 Target1 ] [ Crate1 Target1 ]
+Late [ Crate1 Target1 ] -> [ Crate1 ]
+Late [ Crate2 Target2 ] [ no Crate1 Target2 ] -> [ Crate2 Target2 ] [ Crate2 Target2 ]
+Late [ Crate2 Target2 ] -> [ Crate2 ]
+[ Crate1 | Crate1 | Crate1 ] -> [ | | ] sfx0
+[ Crate2 | Crate2 | Crate2 ] -> [ | | ] sfx0
+[ Crate3 | Crate3 | Crate3 ] -> [ | | ] sfx0
+[ CrateTarget1 | Crate3 | Crate3 ] -> [ Target1 | | ] sfx0
+[ Crate3 | CrateTarget1 | Crate3 ] -> [ | Target1 | ] sfx0
+[ Crate3 | Crate3 | CrateTarget1 ] -> [ | | Target1 ] sfx0
+[ Crate3 | CrateTarget1 | CrateTarget1 ] -> [ | Target1 | Target1 ] sfx0
+[ CrateTarget1 | Crate3 | CrateTarget1 ] -> [ Target1 | | Target1 ] sfx0
+[ CrateTarget1 | CrateTarget1 | Crate3 ] -> [ Target1 | Target1 | ] sfx0
+[ Crate3 | CrateTarget1 | CrateTarget2 ] -> [ | Target1 | Target2 ] sfx0
+[ Crate3 | CrateTarget2 | CrateTarget1 ] -> [ | Target2 | Target1 ] sfx0
+[ CrateTarget1 | Crate3 | CrateTarget2 ] -> [ Target1 | | Target2 ] sfx0
+[ CrateTarget2 | Crate3 | CrateTarget1 ] -> [ Target2 | | Target1 ] sfx0
+[ CrateTarget1 | CrateTarget2 | Crate3 ] -> [ Target1 | Target2 | ] sfx0
+[ CrateTarget2 | CrateTarget1 | Crate3 ] -> [ Target2 | Target1 | ] sfx0
+[ CrateTarget1 | CrateTarget1 | CrateTarget1 ] -> [ Target1 | Target1 | Target1 ] sfx0
+[ CrateTarget1 | CrateTarget1 | CrateTarget2 ] -> [ Target1 | Target1 | Target2 ] sfx0
+[ CrateTarget1 | CrateTarget2 | CrateTarget1 ] -> [ Target1 | Target2 | Target1 ] sfx0
+[ CrateTarget2 | CrateTarget1 | CrateTarget1 ] -> [ Target2 | Target1 | Target1 ] sfx0
+[ CrateTarget1 | CrateTarget2 | CrateTarget2 ] -> [ Target1 | Target2 | Target2 ] sfx0
+[ CrateTarget2 | CrateTarget1 | CrateTarget2 ] -> [ Target2 | Target1 | Target2 ] sfx0
+[ CrateTarget2 | CrateTarget2 | CrateTarget1 ] -> [ Target2 | Target2 | Target1 ] sfx0
+[ CrateTarget2 | CrateTarget2 | CrateTarget2 ] -> [ Target2 | Target2 | Target2 ] sfx0
+[ CrateTarget2 | Crate3 | Crate3 ] -> [ Target2 | | ] sfx0
+[ Crate3 | CrateTarget2 | Crate3 ] -> [ | Target2 | ] sfx0
+[ Crate3 | Crate3 | CrateTarget2 ] -> [ | | Target2 ] sfx0
+[ Crate3 | CrateTarget2 | CrateTarget2 ] -> [ | Target2 | Target2 ] sfx0
+[ CrateTarget2 | Crate3 | CrateTarget2 ] -> [ Target2 | | Target2 ] sfx0
+[ CrateTarget2 | CrateTarget2 | Crate3 ] -> [ Target2 | Target2 | ] sfx0
+
+
+==============
+WINCONDITIONS
+==============
+
+No Target1
+No Target2
+No Crate1
+No Crate2
+No Crate3
+
+=======
+LEVELS
+=======
+
+Message Level 1
+######
+#p...#
+####.#
+####*#
+####.#
+####*#
+####*#
+######
+
+Message Level 2
+#######
+##....#
+#..*#.#
+#.*.*.#
+##.p.##
+#######
+
+Message Level 3
+#####
+#.p.#
+#.*.#
+##**#
+#...#
+#...#
+#####
+
+Message Level 4
+###########
+###..p....#
+#**..@..@.#
+######*.###
+######..###
+######..###
+######@####
+###########
+
+Message Level 5
+############
+###........#
+#*@.p#**@@.#
+###......###
+###..#...###
+############
+
+Message Level 6
+###########
+####.....##
+####..p@.*#
+#....*@####
+#.#*...####
+#@...######
+###########
+
+Message Level 7
+###########
+#....######
+#.##.######
+#.##.##...#
+#.*..@....#
+#.#p@##.*.#
+#@#..##...#
+#*#########
+###########
+
+Message Level 8
+#########
+#....##@#
+#..@*##*#
+##.*.##.#
+##.p....#
+##.#.#@.#
+##...#..#
+#########
+
+Message Level 9
+########
+###..###
+#..oo..#
+#..o...#
+#p*#####
+#..#####
+########
+
+Message Level 10
+#########
+###*#...#
+#..o..&.#
+#p*o..&.#
+#..@..&.#
+###@#...#
+#########
+
+Message Level 11
+########
+#@#..#*#
+#.#..#.#
+#.#.@#.#
+#.#oo#.#
+#..p@*.#
+#......#
+########
+
+Message Level 12
+#########
+####*####
+####@####
+##.....##
+##.*.*.##
+#..#&#..#
+#.p&@&..#
+##.#&#.##
+##.....##
+#########
+
+Message Level 13
+##########
+#######..#
+#######..#
+#....&*..#
+#...*&@..#
+#######p.#
+####*@...#
+##########
+
+Message Level 14
+###########
+#.........#
+#..p%.....#
+##.##.##.##
+##.##.#%..#
+#*@*%.#@*@#
+##.......##
+###########
+
+Message Level 15
+###########
+#####....##
+#....@.*.##
+#....@p*.##
+#.%########
+#..########
+#.%########
+#......####
+#......####
+#####..*@%#
+#####..####
+###########
+
+Message Level 16
+#######
+##..###
+##.%###
+##p.###
+#**o%##
+##.####
+##.o.##
+##.%.##
+##...##
+#######
+
+Message Level 17
+#######
+####%##
+###...#
+#.o.p.#
+#.o.*.#
+###.#.#
+###.#.#
+###.%.#
+##..%.#
+##....#
+####*##
+#######
+
+Message Level 18
+###########
+#######*###
+#######...#
+#..####*..#
+#..o&.op.%#
+#..####.###
+#...@.%&%.#
+#.........#
+#######@###
+###########
+
+Message Level 19
+##########
+#......###
+#.&.p%.@@#
+#.&..%.###
+#.&..@.###
+#.&..%.@@#
+#......###
+##########
+
+Message Level 20
+#########
+####*####
+#..o&o..#
+#..#*#..#
+##&#@#&##
+#...@...#
+#..p%.*.#
+###%#%#.#
+###.....#
+#########
+
+Message Congratulations! You Win!
+
+

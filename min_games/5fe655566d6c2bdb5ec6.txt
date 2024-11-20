@@ -1,0 +1,175 @@
+OBJECTS
+
+playeridledarkblue brown..0..
+.000.
+.000.
+01110
+.0.0.
+
+
+playercarryingdarkblue brown
+1.0..1000.
+1000.00000
+.0.0.boxidle
+browndarkbrown lightbrown
+1111112001
+1020110021
+11111boxsummoned
+browndarkbrown purple.....
+.111.
+.121.
+.111.
+.....
+
+boxcarriedbrown
+darkbrownlightbrown purple
+1111112331
+1323113321
+11111boxthrownup
+browndarkbrown purple
+.111..101.
+.111..222.
+..2..boxthrowndown
+browndarkbrown purple
+..2...222.
+.111..101.
+.111.boxthrownleft
+browndarkbrown purple
+.....1112.
+101221112.
+.....boxthrownright
+browndarkbrown purple.....
+.2111
+22101
+.2111
+.....
+
+plainwallgrey darkgrey00100
+11111
+10000
+11111
+00100
+
+backgroundyellow
+castuptransparent
+castdowntransparent
+castlefttransparent
+castrighttransparent
+targetdarkred black..1..
+.101.
+10001
+.101.
+..1..
+
+doorwhite
+
+LEGEND
+
+p = playeridle
+b = boxidle
+# = plainwall
+. = background
+t = target
+@ = boxidle or target
+d = door
+wall = plainwall
+player = playeridle or playercarrying
+box = boxidle or boxsummoned or boxcarried
+magic = castup or castdown or castleft or castright
+blocker = wall or box
+boxthrown = boxthrownup or boxthrowndown or boxthrownleft or boxthrownright
+
+COLLISIONLAYERS
+
+background
+target
+wall, player
+box, magic
+boxthrown, door
+
+RULES
+
+up [ action playeridle | noblocker ] -> [ action playeridle | castup ] again 
+down [ action playeridle | noblocker ] -> [ action playeridle | castdown ] again 
+left [ action playeridle | noblocker ] -> [ action playeridle | castleft ] again 
+right [ action playeridle | noblocker ] -> [ action playeridle | castright ] again 
+[ action playeridle | boxidle ] -> [ action playeridle | boxcarried ] again 
+up [ castup | boxidle ] -> [ |boxsummoned ] again 
+down [ castdown | boxidle ] -> [ |boxsummoned ] again 
+left [ castleft | boxidle ] -> [ |boxsummoned ] again 
+right [ castright | boxidle ] -> [ |boxsummoned ] again 
+up [ castup | nowall ] -> [ > castup |  ] again 
+down [ castdown | nowall ] -> [ > castdown |  ] again 
+left [ castleft | nowall ] -> [ > castleft |  ] again 
+right [ castright | nowall ] -> [ > castright |  ] again 
+up [ castup | wall ] -> [ |wall ] again 
+down [ castdown | wall ] -> [ |wall ] again 
+left [ castleft | wall ] -> [ |wall ] again 
+right [ castright | wall ] -> [ |wall ] again 
+[ boxsummoned | ... | player ] -> [ > boxsummoned | ... | player ] again 
+[ > boxsummoned | player ] -> [ boxcarried | player ] again 
+rigid [ moving player | boxcarried ] -> [ moving player | movingboxcarried ] 
+[ > boxcarried | wall ] -> cancel 
+up [ action playercarrying | boxcarried ] -> [ action playercarrying | boxthrownup ] again 
+down [ action playercarrying | boxcarried ] -> [ action playercarrying | boxthrowndown ] again 
+left [ action playercarrying | boxcarried ] -> [ action playercarrying | boxthrownleft ] again 
+right [ action playercarrying | boxcarried ] -> [ action playercarrying | boxthrownright ] again 
+[ boxthrown][playercarrying ] -> [ boxthrown][playeridle ] 
+up [ boxthrownup | noblocker ] -> [ > boxthrownup |  ] again 
+down [ boxthrowndown | noblocker ] -> [ > boxthrowndown |  ] again 
+left [ boxthrownleft | noblocker ] -> [ > boxthrownleft |  ] again 
+right [ boxthrownright | noblocker ] -> [ > boxthrownright |  ] again 
+up [ boxthrownup | blocker ] -> [ boxidle | blocker ] again 
+down [ boxthrowndown | blocker ] -> [ boxidle | blocker ] again 
+left [ boxthrownleft | blocker ] -> [ boxidle | blocker ] again 
+right [ boxthrownright | blocker ] -> [ boxidle | blocker ] again 
+[ boxcarried][playeridle ] -> [ boxcarried][playercarrying ] 
+
+
+WINCONDITIONS
+
+all target on box
+
+LEVELS
+
+#######
+#pt..b#
+#######
+
+#########
+#p..b..t#
+#########
+
+#######
+#..####
+#..####
+#p...b#
+##.####
+##t####
+#######
+
+#######
+#t.b.t#
+#.....#
+#b.p.b#
+#.....#
+#t.b.t#
+#######
+
+#######
+#....p#
+#.b#..#
+#.#t..#
+#t..#.#
+#...b.#
+#######
+
+#########
+####.####
+###@.t###
+##t...@##
+#...p...#
+##@...t##
+###t.@###
+####.####
+#########

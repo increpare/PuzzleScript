@@ -1,0 +1,474 @@
+title Sticky Cubes
+author PuzzleScriptGamer
+homepage puzzlescriptgamer.wordpress.com
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+CubeN
+ORANGE
+
+CubeU
+ORANGE
+
+CubeD
+ORANGE
+
+CubeL
+ORANGE
+
+CubeR
+ORANGE
+
+CubeG
+ORANGE GREEN
+00000
+01010
+01000
+01110
+00000
+
+BPlayer
+BLUE BLACK DARKBLUE
+.000.
+00100
+01110
+00100
+20002
+
+BPlayerB
+DARKBLUE
+00000
+.000.
+.....
+.....
+.....
+
+RPlayer
+RED BLACK DARKRED
+.000.
+00100
+01110
+00100
+20002
+
+RPlayerB
+DARKRED
+00000
+.000.
+.....
+.....
+.....
+
+YPlayer
+YELLOW BLACK ORANGE
+.000.
+00100
+01110
+00100
+20002
+
+YPlayerB
+ORANGE
+00000
+.000.
+.....
+.....
+.....
+
+GPlayer
+LIGHTGREEN BLACK GREEN
+.000.
+00100
+01110
+00100
+20002
+
+GPlayerB
+GREEN
+00000
+.000.
+.....
+.....
+.....
+
+Background
+LIGHTGREY
+
+BWall
+GREY
+
+BorderD
+BROWN
+00000
+00000
+.....
+.....
+.....
+
+BorderW
+DARKGREY
+00000
+00000
+.....
+.....
+.....
+
+Target
+Black
+.....
+.....
+.....
+..0..
+.000.
+
+TargetB
+BLACK
+..0..
+.....
+.....
+.....
+.....
+
+Fire
+RED
+.....
+.....
+.....
+.0.0.
+.000.
+
+FireB
+RED
+.0.0.
+.....
+.....
+.....
+.....
+
+Magnet
+ORANGE
+.....
+.....
+.....
+.000.
+.0.0.
+
+MagnetB
+ORANGE
+.000.
+.....
+.....
+.....
+.....
+
+Water
+BLUE
+.....
+.....
+.....
+.000.
+..0..
+
+WaterB
+BLUE
+.000.
+.....
+.....
+.....
+.....
+
+Earth
+GREEN
+.....
+.....
+.....
+.0.0.
+.0...
+
+EarthB
+GREEN
+.000.
+.....
+.....
+.....
+.....
+
+Crate
+ORANGE
+.....
+.....
+.....
+.0.0.
+..0..
+
+CrateB
+ORANGE
+.0.0.
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+p = BPlayer
+# = BWall
+c = CubeN
+. = Background
+t = Target
+f = Fire
+m = Magnet
+w = Water
+e = Earth
+r = Crate
+
+Wall = CubeG or BWall
+Border = BorderD or BorderW or FireB or WaterB or MagnetB or BPlayerB or RPlayerB or YPlayerB or TargetB or EarthB or GPlayerB or CrateB
+Player = BPlayer or RPlayer or YPlayer or GPlayer
+Block = Wall or Player
+Cube = CubeN or CubeU or CubeD or CubeL or CubeR
+CubeM = CubeU or CubeD or CubeL or CubeR
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Border
+Target, Fire, Magnet, Water, Earth, Crate
+Player, Cube, Wall
+
+======
+RULES
+======
+
+(Sliding Cubes)
+UP [CubeU|NO Wall] -> [> CubeU|NO Wall] AGAIN
+DOWN [CubeD|NO Wall] -> [> CubeD|NO Wall] AGAIN
+LEFT [CubeL|NO Wall] -> [> CubeL|NO Wall] AGAIN
+RIGHT [CubeR|NO Wall] -> [> CubeR|NO Wall] AGAIN
+[> Player][CubeM] -> [> Player][CubeN]
+
+(Burning Cubes)
+[ACTION RPlayer|Cube] -> [ACTION RPlayer| ]
+
+(Cube Plate Detection)
+[> Player|Crate] -> [STATIONARY Player|Crate]
+
+(Moving/Siding/Pulling Cubes)
+[> Player|Cube] -> [> Player|> Cube]
+UP [> GPlayer|Cube] -> [> GPlayer|> CubeU] AGAIN
+DOWN [> GPlayer|Cube] -> [> GPlayer|> CubeD] AGAIN
+LEFT [> GPlayer|Cube] -> [> GPlayer|> CubeL] AGAIN
+RIGHT [> GPlayer|Cube] -> [> GPlayer|> CubeR] AGAIN
+[< YPlayer|Cube] -> [< YPlayer|< Cube]
+[MOVING Cube|Cube] -> [MOVING Cube|MOVING Cube]
+
+(Wall Detection)
+[> Cube|Wall] -> [STATIONARY Cube|Wall]
+[Moving Cube|STATIONARY Cube] -> [STATIONARY Cube|STATIONARY Cube]
+
+(Magnet Plate Detection)
+[> Cube|Magnet] -> [STATIONARY Cube|Magnet]
+[> Cube|STATIONARY Cube] -> [STATIONARY Cube|STATIONARY Cube]
+
+(Transforming)
+LATE [Player Fire] -> [RPlayer Fire]
+LATE [Player Water] -> [BPlayer Water]
+LATE [Player Magnet] -> [YPlayer Magnet]
+LATE [Player Earth] -> [GPlayer Earth]
+
+(Fire Plate Detection)
+LATE [Cube Fire] -> [Fire]
+
+(Earth Plate Detection)
+LATE [Cube Earth] -> [CubeG Earth]
+
+(3D Effect)
+LATE [Border] -> []
+LATE DOWN [Fire| ] -> [Fire|FireB]
+LATE DOWN [Magnet| ] -> [Magnet|MagnetB]
+LATE DOWN [Water| ] -> [Water|WaterB]
+LATE DOWN [Earth| ] -> [Earth|EarthB]
+LATE DOWN [Crate| ] -> [Crate|CrateB]
+LATE DOWN [Target| ] -> [Target|TargetB]
+LATE DOWN [Cube|NO Cube] -> [Cube|BorderD]
+LATE DOWN [Wall|NO Wall] -> [Wall|BorderW]
+LATE DOWN [BPlayer| ] -> [BPlayer|BPlayerB]
+LATE DOWN [GPlayer| ] -> [GPlayer|GPlayerB]
+LATE DOWN [RPlayer| ] -> [RPlayer|RPlayerB]
+LATE DOWN [YPlayer| ] -> [YPlayer|YPlayerB]
+LATE DOWN [CubeG|NO Cube] -> [CubeG|BorderD]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Cube
+
+=======
+LEVELS
+=======
+
+MESSAGE Fill all the + signs with cubes.
+MESSAGE Cubes stick to each other.
+
+##############
+#............#
+#......c..c..#
+#...#........#
+#ccc#...c..c.#
+#c.c#........#
+#...#..ttt...#
+#.p.#..t#t...#
+#...#...#....#
+##############
+
+MESSAGE Touch a fire plate to destroy cubes with X.
+
+##############
+#..c#........#
+#f.c.........#
+#..c...c.....#
+#..c....t.t..#
+#..c....ttt..#
+#..c....t.t..#
+#..c...c.....#
+#p.c#........#
+##############
+
+MESSAGE Touch a magnet plate to pull cubes.
+
+##############
+######..######
+#.....ttccc..#
+#....c..#c#..#
+#..m.c..#.#..#
+#cc##c..#....#
+#..#.c..#..cc#
+#..#.c###..cf#
+#.p..c.....c.#
+##############
+
+MESSAGE Fire plates destroy cubes.
+
+##############
+#..#..#c#....#
+#..c...c.....#
+#..c...c.....#
+#..c..fctt...#
+#..c..fctt...#
+#..c...c.....#
+#..c...c.....#
+#p.#..#c#....#
+##############
+
+MESSAGE Magnet plates dismantle cubes.
+MESSAGE Water plates reset your powerup.
+
+##############
+#.....##.....#
+#.cc..mw.....#
+#.ccm.##.....#
+#.....##.ttt.#
+#.....##.....#
+#.....##m....#
+#............#
+#p....##.....#
+##############
+
+##############
+#......#.....#
+#......#.....#
+#.cccc.#.ttt.#
+#.cccc.#.t.t.#
+#..mm..#.ttt.#
+#......#.....#
+#......w.....#
+#p.....#.....#
+##############
+
+################
+#p.........#ttt#
+#..........#ttt#
+#..cccccc......#
+#..cccccc......#
+#..ccfccc..#ttt#
+#..cccccc..#ttt#
+#w.........m...#
+#..........#...#
+################
+
+MESSAGE Earth plates allow you to push cubes acrost the room.
+
+################
+#pe.c.....#....#
+#.e.#..........#
+#####...cc.....#
+#.t............#
+#tt............#
+#..............#
+#..............#
+#........#.....#
+################
+
+MESSAGE Push cubes onto earth plates to root them.
+
+################
+#pe.###.....ttt#
+#.e.cc....e....#
+#.e.cc.........#
+######.........#
+#..............#
+#t.............#
+#t.c.e......cc.#
+#........#.....#
+################
+
+MESSAGE Cube plates only allow cubes to pass.
+
+################
+#p.......r...tt#
+#..ccc...r...t##
+#........r...tt#
+#.....cc.#######
+#........#######
+#......e.#######
+#.cc.....#######
+#........#######
+################
+
+################
+#p......#......#
+#..cccc.#...c..#
+#..cccc.r....tt#
+#.......r....t##
+#.......r....tt#
+#...m...#......#
+#w......#.cmc..#
+#.......#......#
+################
+
+MESSAGE Congrats!
+
+(################
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+################
+
+

@@ -1,0 +1,380 @@
+title Stand Off
+author Mark Richardson
+again_interval 0.05
+norepeat_action
+(verbose_logging)
+
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Wall
+#555 #444
+01110
+10001
+10001
+10001
+01110
+
+Window
+#555 #444 #cff
+01110
+12221
+12221
+12221
+01110
+
+BrokenWindow
+#555 #444 #cff #9bb #000
+01110
+12321
+13431
+12321
+01110
+
+Exit
+#555 #444
+01110
+1...1
+1...1
+1...1
+0...0
+
+Player
+#642 #963
+.000.
+01110
+01010
+00100
+.000.
+
+GunMode
+#963 #c84
+.000.
+01110
+01010
+00100
+.000.
+
+BadGuy
+#b31 #f00
+.000.
+01110
+01010
+00100
+.000.
+
+Crate
+#642 #963
+.....
+.111.
+.100.
+.100.
+.....
+
+GunU
+#963 #fd9 #aaa
+.....
+..2..
+..2..
+..1..
+..0..
+
+GunD
+#963 #fd9 #aaa
+..0..
+..1..
+..2..
+..2..
+.....
+
+GunL
+#963 #fd9 #aaa
+.....
+.....
+.2210
+.....
+.....
+
+GunR
+#963 #fd9 #aaa
+.....
+.....
+0122.
+.....
+.....
+
+Bullet
+#888 #444
+.....
+..1..
+.101.
+..1..
+.....
+
+Corpse
+#f00 #a00
+.1...
+..01.
+1000.
+..0.1
+1.1..
+
+LoS
+Transparent
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
++ = Window
+P = Player
+B = BadGuy
+C = Crate
+X = Exit
+
+Gun = GunU or GunD or GunL or GunR
+Obstacle = Wall or Window or BrokenWindow or BadGuy or Crate
+Shroud = Wall or BadGuy or Crate or Gun or Exit or Bullet
+
+
+=======
+SOUNDS
+=======
+
+Gun Create          80432507
+Gun Destroy         74204901
+Crate Move          58388907
+Bullet Create       38215704
+BrokenWindow Create 99929700
+Corpse Create       95969308
+EndLevel            44184703
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Window, BrokenWindow, Player, BadGuy, Crate, Gun, Corpse
+Exit, GunMode, LoS, Bullet
+
+
+======
+RULES
+======
+
+(Move bullet)
+[stationary Bullet|...|Player]->[> Bullet|...|Player]again
+[stationary Bullet|...|Corpse]->[> Bullet|...|Corpse]again
+[> Bullet|Player]->[|Corpse]
+[> Bullet|Corpse]->[|Corpse]
+
+(Toggle mode)
+[action Player GunMode]->[Player]
+[action Player]->[Player GunMode]
+
+(Holster gun)
+[> Player GunMode|Gun]->[Player|]
+
+(Draw gun)
+      [> Player GunMode|   Obstacle]->cancel
+up    [> Player GunMode|no Obstacle]->[Player|GunU]
+down  [> Player GunMode|no Obstacle]->[Player|GunD]
+left  [> Player GunMode|no Obstacle]->[Player|GunL]
+right [> Player GunMode|no Obstacle]->[Player|GunR]
+
+(Validate number of guns)
+random [stationary Gun]->[up   Gun]
+random [stationary Gun]->[down Gun]
+random [stationary Gun]->cancel
+[moving Gun]->[Gun]
+
+(Move player)
+[> Player|Crate|Obstacle]->cancel
+[> Player|Crate]->[> Player|> Crate]
+[> Player|stationary Obstacle]->cancel
+[> Player][stationary Gun]->[> Player][> Gun]
+[> Gun|Obstacle]->[|Obstacle]
+
+(Remove gun from exit)
+late[Gun Exit]->[Exit]
+
+(Bad guys shoot)
+late[Player|BadGuy]->[Player Bullet|BadGuy]
+late[Player Bullet]->[Corpse]
+late[Corpse Bullet]->[Corpse]
+late[Player|no Shroud]->[Player|LoS]
+late[Player|...|LoS|no Shroud]->[Player|...|LoS|LoS]
+late[Player|...|LoS|BadGuy]->[Player|...|Bullet|BadGuy]again
+late[LoS]->[]
+late[Bullet Window]->[Bullet BrokenWindow]
+late[Corpse GunMode]->[Corpse]
+
+
+==============
+WINCONDITIONS
+==============
+
+any Exit on Player
+
+
+=======
+LEVELS
+=======
+
+message Don't let them varmints point a gun at ya unless yer pointin' one at them too.
+message Press X 'n' an arrow to draw or holster one o' yer two guns.
+
+##########
+#...#.+..#
+#.P.#.#..#
+#...#.+..#
+#...#.#..#
+#...#B+..X
+#...#.#..#
+#........#
+#........#
+#...#....#
+##########
+
+#############
+#......B....#
+X...........#
+#...........#
+#...#B..#...#
+#........B..#
+#B..........#
+#...B.......#
+#...#...#..B#
+#...........#
+#.P.........#
+#.......B...#
+#############
+
+.##########X##.
+.#....#B#....#.
+.#.CC.#.#....#.
+.#....#.#....#.
+##...##.##...##
+#....#...#....#
+#B...........B#
+#....#...#....#
+##...##.##...##
+.#....#.#....#.
+.#.P..#.#....#.
+.#....#B#....#.
+.#############.
+
+#############
+#.B....#.B..#
+#......#....#
+#......#...P#
+#......#....#
+#...#..#....#
+#B..#.......#
+#...#.......#
+###C###...###
+#.....+.....#
+#.....+.....#
+#.....+B...B#
+#########X###
+
+#################
+#B..B...#B......#
+#.......#.......#
+#+......#.......#
+X..............B#
+#+......#.......#
+#.....C.#B.....B#
+#B......#.......#
+####.#######.####
+#.......#......B#
+#...C...#.......#
+#.......#.......#
+#...............#
+#.......#.....C.#
+#.P.....#.......#
+#......B#...B...#
+#################
+
+#####X#X#####
+#...#B#B#...#
+#...#+#+#...X
+#...C....C..#
+###C..C.C.###
+XB+....C..+BX
+###.C...C.###
+XB+..C....+BX
+###C..C..C###
+#...C...C...#
+#.P.#+#+#...#
+#...#B#B#...#
+#####X#X#####
+
+#####X#####
+#B.......B#
+#B........#
+#........B#
+#B........#
+#..C...C.B#
+#...P.....#
+#.........#
+#..B.B.B..#
+###########
+
+#################
+#......#.#......#
+#.....B#.#B.....#
+#B....++.++.....#
+#...##+...+##...#
+#...#.......#.#.#
+#...C...P...C...#
+#.#.#.......#.#.#
+#...##+...+##...#
+#B....++.++....B#
+#.....B#.#B..C..#
+#......#.#......#
+########X########
+
++++++++X+++++++
++B...+...+...B+
++B...+...+...B+
++B...+...+...B+
++B...+...+...B+
++B...+...+...B+
++++..+...+..+++
+.+.....+.....+.
+.+.C.+...+.C.+.
+.+.C.+...+.C.+.
+.+.C.+...+.C.+.
+.+.C.+...+.C.+.
+.+.P.+...+...+.
+.++++++B++++++.
+
+.....#######.....
+...###..B..###...
+..##.........##..
+.##..B.....B..##.
+.#.............#.
+##.B.........B.##
+#.....P...C.....#
+#...............#
+#B......B......B#
+#...............#
+#.....C.....#...#
+##.B..........B##
+.#........#.X..#.
+.##..B.......B##.
+..##.......B.##..
+...###..B..###...
+.....#######.....
+
+message Man, am I glad to be outta that town.

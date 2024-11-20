@@ -1,0 +1,216 @@
+title Escaping Limbo
+author Doublepancake
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background 
+white   
+
+Wall 
+black
+
+Player 
+#3582ff
+.....
+.000.
+.000.
+.000.
+.....
+
+Goal
+#0b4fbc
+.....
+.000.
+.000.
+.000.
+.....
+
+Stone
+#46484c black
+11111
+10001
+10001
+10001
+11111
+
+grate
+lightgrey
+
+pinkdoor
+#fc2fa3
+
+pinkbutton
+#fc2fa3 #d6087d
+11111
+10001
+10001
+10001
+11111
+
+pinkx
+#f9e0ef
+
+orangedoor
+#ff9d2d
+
+orangebutton
+#ed8107 #ff9d2d
+00000
+01110
+01110
+01110
+00000
+
+orangex
+#ffe0bc
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = Goal
+H = stone
+: = grate
+a = pinkbutton
+b = pinkdoor
+0 = pinkx
+c = orangebutton
+d = orangedoor
+x = orangex
+door = orangedoor or pinkdoor
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+pinkx, orangex
+grate
+Goal, pinkbutton, orangebutton
+Player, Wall, Stone, pinkdoor, orangedoor
+
+======
+RULES     
+======      
+(Moveable stones)
+[> player | stone] -> [> player | > stone]
+[> stone | stone] -> [> stone | > stone]
+[> stone | grate] -> cancel
+[> stone | door] -> cancel
+
+(Doors and buttons)
+late [stone pinkbutton] [pinkdoor] -> [stone pinkbutton] [pinkx]
+late [no stone pinkbutton] [pinkx] -> [no stone pinkbutton] [pinkdoor]
+late [stone orangebutton] [orangedoor] -> [stone orangebutton] [orangex]
+late [no stone orangebutton] [orangex] -> [no stone orangebutton] [orangedoor]
+
+
+==============
+WINCONDITIONS
+==============    
+
+all player on goal
+
+=======     
+LEVELS
+=======
+
+...
+.p.
+...
+...
+...
+...
+.g.
+...
+
+#####...
+#####.g.
+#####...
+#####...
+#####...
+........
+.p......
+........
+
+...######
+.g.######
+...######
+...######
+.........
+.........
+.........
+######...
+######...
+######...
+.........
+.p.......
+.........
+
+...##...
+.p.##.g.
+...##...
+...###.#
+hhh###h#
+........
+........
+........
+
+#####...#
+#####.p.#
+#####.h.#
+#####...#
+#####:::#
+####.h.h.
+...:hh.hh
+.g.:h..h.
+...:.hhh.
+
+.........
+.p.h....a
+.........
+######...
+....b....
+.g..b....
+....b....
+
+######::...######
+...###.....b.....
+.p.###.a...b...g.
+...###.....b.....
+...###::...######
+...:.:::...######
+.h.:...:...######
+...:.:.:...######
+.....:.:...######
+...:::.....######
+...:::.....######
+
+...d.....:::::::::
+.g.d.p...:h..:..a:
+...d.....:::...:::
+####::::::::::::::
+####:..c:...::::::
+####:.:::.:.::::::
+####:..bb.:...h:::
+####::::::::::::::
+
+###########....:...
+###########....:.a.
+###########..:.....
+...d...b.....::::::
+.g.d.h.b.p...::::a:
+...d...b...::::::.:
+###########::::::.:
+###########::c...h:
+###########::::::::

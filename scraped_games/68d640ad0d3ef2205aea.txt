@@ -1,0 +1,383 @@
+title Something
+author arrogant.gamer
+homepage www.arrogantgamer.com
+norepeat_action
+
+========
+OBJECTS
+========
+
+( Purple )
+
+APlayerOn
+red
+00000
+0.0.0
+00.00
+0.0.0
+00000
+
+APlayerOff
+red
+00000
+0.0.0
+00.00
+0.0.0
+00000
+
+ATarget
+red
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+AFloor
+darkred
+
+AWall
+transparent
+
+( Brown )
+
+BPlayerOn
+#00f
+00000
+00.00
+0.0.0
+00.00
+00000
+
+BPlayerOff
+#00f
+00000
+00.00
+0.0.0
+00.00
+00000
+
+BTarget
+#00f
+.....
+..0..
+.0.0.
+..0..
+.....
+
+BFloor
+blue
+
+BWall
+transparent
+
+( utility objects )
+
+Background
+gray
+
+
+=======
+LEGEND
+=======
+
+APlayer = APlayerOn or APlayerOff
+BPlayer = BPlayerOn or BPlayerOff
+
+Player = APlayerOn or BPlayerOn
+PlayerOff = APlayerOff or BPlayerOff
+Floor = AFloor or BFloor
+Wall = AWall or BWall
+Target = ATarget or BTarget
+
+# = BWall
+P = BWall
+T = BWall and APlayerOff
+$ = BWall and ATarget
+
+. = BFloor
+B = BFloor and BPlayerOn
+* = BFloor and ATarget
++ = BFloor and BTarget
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+AWall, APlayer
+BWall, BPlayer
+Target
+
+======
+RULES
+======
+
+( when the player presses 'x', switch paradigms )
+
+[ action APlayerOn ] [ AWall ] -> [ action APlayerOn ] [ BFloor ]
+[ action APlayerOn ] [ AFloor ] -> [ action APlayerOn ] [ BWall ]
+[ action APlayerOn ] [ BPlayerOff ] -> [ APlayerOff ] [ BPlayerOn ]
+[ action BPlayerOn ] [ BWall ] -> [ action BPlayerOn ] [ AFloor ]
+[ action BPlayerOn ] [ BFloor ] -> [ action BPlayerOn ] [ AWall ]
+[ action BPlayerOn ] [ APlayerOff ] -> [ BPlayerOff ] [ APlayerOn ]
+
+
+( players can push walls, and inactive players within )
+rigid [ > Player | Wall ] -> [ > Player | > Wall ]
++ rigid [ > Player | PlayerOff ] -> [ > Player | > PlayerOff ]
+
+
+( after walls are moved, ensure either a floor or wall is in every cell )
+late [ APlayerOn ] [ Floor Wall ] -> [ APlayerOn ] [ Wall ]
+late [ APlayerOn ] [ no Floor no Wall ] -> [ APlayerOn ] [ AFloor ]
+late [ BPlayerOn ] [ Floor Wall ] -> [ BPlayerOn ] [ Wall ]
+late [ BPlayerOn ] [ no Floor no Wall ] -> [ BPlayerOn ] [ BFloor ]
+
+
+==============
+WINCONDITIONS
+==============
+
+all APlayer on ATarget
+all BPlayer on BTarget
+
+=======
+LEVELS
+=======
+
+$#.+
+##..
+T#.B
+
++.#$
+##.#
+..##
+.#..
+B.#T
+
+( TODO compare the levels that "work", find out why )
+
+( there needs to be a "P" somewhere in the level, where a wall would be )
+( this is how the controls get sent to the different folk )
+
+( this next level has an interesting twist: the purple goal needs to be )
+( constructed by grey, because it is in a purple wall )
+
+#####
+*#.B#
+..T.#
+##.+#
+P####
+
+( this level demonstrates a simple "transfer" )
+( the purple dude can't get to the other purple area )
+( without help. )
+
+( this seems to be the central mechanic: ferrying )
+
+$##....+
+###.....
+####....
+....####
+....####
+B...##PT
+
+( here is a simpler level derived from the previous two levels )
+( maybe this could be interesting if it the purple target was )
+( on the left side... )
+
+( ferrying, building )
+
+( at the moment this is very simple, but if we could find some )
+( way to have the grey target on the left, so that grey has )
+( to build purple a target, and then purple has to ferry grey )
+( that would be cool )
+
+##....##..
+T#.B..##..
+.#....##*.
+###..####P
+###..##..+
+
+
+( a more involved level )
+( design notes: I started with an impossible situation )
+( then added something to make it possible, then added something )
+( to make it a little harder. It was a lot of back and forth to get )
+( it to this point )
+
+#..##..#$
+##.#####.
+#.T..###+
+#.......#
+#.B..###.
+######P#.
+
+( GOOD LEVELS )
+
+( UGH I felt pretty clever about these, but they both contain )
+( rather trivial unintended solutions. It is too easy to just break the )
+( level down, rather than solve it. Maybe that's fun too!? )
+
+( the unintended soultion involves peeling a strip off the left )
+( side of the center area, and building a bridge )
+( alternatively the dark coloured block can just build a tunnel )
+( for the ilght coloured block )
+
+( THESE TWO LEVELS ) ( are too similar )
+
+( bridging: grey builds a bridge for purple )
+( this one seems to be the poorest of them: )
+( it doesn't make use of the block at the top or digging )
+
+( ...#......
+###..#####
+T##..###$#
+##.B.#####
+.#...#####
+###..###.P
+.##.##...+ )( possibly remove the single block here )
+
+( ie .##..##..+ )
+
+( a variation on the level, with an unintended solution )
+( which of these two is "more interesting"? It would be )
+( cool to include both, since they are similar but have )
+( quite different solutions... the first requires planning )
+( ahead, and the second requires clever block breaking )
+
+( digging: grey pushes purple into a situation where it can )
+( break enough blocks free of the wall )
+
+...#......
+###..#####
+T#...###$#
+##.B..####
+.#....####
+###..####P
+.##..##..+ ( I like this one better )
+
+
+( this is too easy, but I wish it wasn't. It demonstrates a sokoban )
+( one-way gadget, the three blocks in the middle that must be moved )
+( but also demonstrates how difficult it is to stop a player in this )
+( variant. My design goal is for purple to have to cross the screen )
+( in order to unlock the gadget, but purple seems to be able to unlock it )
+( from the right in any case! Moar thinking! )
+
+( in any case this kind of works as a simple level )
+( grey unlocks purple, and then purple has to ferry )
+( grey back across the level )
+
+( unlocking )
+
+P###.#.###$#
+####.#...##.
++B..#.##.#..
+.##...##...T
+
+( the original level, based off Stephen Lavelle's sokoban level )
+( it is just "good luck" that this level actually has an interesting )
+( solution. We need to reproduce this "feel" )
+
+( this is more complex version of that first level: grey )
+( builds the purple goal )
+
+####.*
+#..#..
+#..###
+##B..#
+#..T.#
+#+.###
+P###..
+
+message "Show's over: go home!"
+
+( END GOOD LEVELS )
+
+( I tried to make some levels where you have classic Sokoban parts, )
+( like elbows and locks of various kinds. It turns out they all fall )
+( apart. This is because: )
+
+( once the purple dude is inside a room, if the room is small, then the )
+( purple dude can just explode it. If the room is large, then it won't )
+( work as a lock, elbow, or what have you. )
+
+( still working on discovering "the nature" of interesting puzzles in this space )
+
+( elbow: easily broken )
+
+##B##.....
+##T##.....
+#......*..
+#..##.....
+####P.....
+
+( a lock that would be impossible in Sokoban, but is too easy to solve here )
+
+##B#P
+##T##
+##.*#
+#...#
+#..##
+#####
+
+
+
+( observation: draw a smooth curve that intersects itself at least once, and that )
+( ends where it started. The figure should now have at least two )
+( distinct areas. Colour one of them white and the other black. )
+( Instead of a smooth curve, use right angles. Now you have a level! )
+
+( a simple level demonstrating this technique )
+( If we think about this level in terms of a graph, with each "room" )
+( being a node, and each wall as an edge, then it is a bipartite graph. )
+
+( this level has no moveable blocks )
+
+$##...##P
+#T#...###
+###...###
+...###...
+...###.B.
+###.....+
+
+( examples with no solution )
+
+( This is a level whose shape cannot be achieved in the way described )
+( above, but whose graph is still bipartite. In this level, purple )
+( will need a "tunnel" to get to the goal )
+
+P#####.....
+#$####.....
+####T#.....
+######.....
+......#####
+......#####
+.B....##...
+......##.+.
+......##...
+
+( here I've nested two bipartite planar graphs )
+
+...##############
+...##############
+...##############
+###..............
+###..............
+###..P#####......
+###..#$####......
+###..####T#......
+###..######......
+###........#####.
+###........#####.
+###...B....#####.
+###........#####.
+###........#####.
+###..............

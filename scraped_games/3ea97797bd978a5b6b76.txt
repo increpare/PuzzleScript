@@ -1,0 +1,242 @@
+Author Connorses [Loneship Games]
+Title Pong
+key_repeat_interval 0.04
+realtime_interval 0.06
+background_color darkbrown
+========
+OBJECTS
+========
+background
+black
+player1
+white
+..000
+..000
+..000
+..000
+..000
+player2
+white
+000..
+000..
+000..
+000..
+000..
+UL
+white
+DL
+white
+UR
+white
+DR
+white
+
+wall
+white
+
+goal1
+black
+00000
+00000
+00.00
+00000
+00000
+goal2
+black
+00000
+0.000
+00000
+000.0
+00000
+spawn
+black
+00000
+00000
+00000
+00000
+00000
+0
+white
+..00.
+.0.0.
+.0.0.
+.0.0.
+.00..
+1
+white
+..0..
+.00..
+..0..
+..0..
+..0..
+2
+white
+..0..
+...0.
+...0.
+..0..
+.000.
+3
+white
+.000.
+..0..
+.0...
+...0.
+.00..
+4
+white
+...0.
+.0.0.
+.000.
+...0.
+...0.
+5
+white
+.000.
+.0...
+..0..
+...0.
+.00..
+6
+white
+..00.
+.0...
+.00..
+.0.0.
+..0..
+7
+white
+.00..
+...0.
+..0..
+.0...
+.0...
+8
+white
+..0..
+.0.0.
+..0..
+.0.0.
+..00.
+9
+white
+..0..
+.0.0.
+..00.
+...0.
+..0..
+
+u
+transparent
+d
+transparent
+
+=======
+LEGEND
+=======
+player = player1 or player2
+ball = UL or DR or UR or DL
+. = background
+# = wall
+] = player1
+[ = player2
+} = goal1
+{ = goal2
+o = spawn and 4
+s = spawn and 0
+R = 0 and goal1
+L = 0 and goal2
+number = 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9 or 0
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+background
+goal1,goal2
+player,wall,u,d
+number
+spawn
+ball
+======
+RULES
+======
+[spawn 0|spawn 0] -> [spawn random ball|spawn]
+right [stationary player] [spawn number|number no d] -> [player] [spawn number|number d]
+
+right [no d|d 0] -> [d| 9]
+right [d|d 0] -> [ |0]
+
+[d 1] -> [0]
+[d 2] -> [1]
+[d 3] -> [2]
+[d 4] -> [3]
+[d 5] -> [4]
+[d 6] -> [5]
+[d 7] -> [6]
+[d 8] -> [7]
+[d 9] -> [8]
+
+[number|u 9] -> [u number| 0]
+[u 8] -> [9]
+[u 7] -> [8]
+[u 6] -> [7]
+[u 5] -> [6]
+[u 4] -> [5]
+[u 3] -> [4]
+[u 2] -> [3]
+[u 1] -> [2]
+[u 0] -> [1]
+
+left [stationary player] [stationary UL|player1] -> [player] [UR|player1]
+left [stationary player] [stationary DL|player1] -> [player] [DR|player1]
+
+right [stationary player] [stationary UR|player2] -> [player] [UL|player2]
+right [stationary player] [stationary DR|player2] -> [player] [DL|player2]
+
+up   [stationary player] [stationary UL|wall] -> [player] [DL|wall]
+down [stationary player] [stationary DL|wall] -> [player] [UL|wall]
+up   [stationary player] [stationary UR|wall] -> [player] [DR|wall]
+down [stationary player] [stationary DR|wall] -> [player] [UR|wall]
+
+up   [stationary player] [stationary UL|no wall] -> [player] [ |left UL]
+down [stationary player] [stationary DL|no wall] -> [player] [ |left DL]
+up   [stationary player] [stationary UR|no wall] -> [player] [ |right UR]
+down [stationary player] [stationary DR|no wall] -> [player] [ |right DR]
+
+[horizontal player1] -> [player1]
+[vertical player2] -> [player2]
+[left player2] -> [down player2]
+[right player2] -> [up player2]
+
+right [ball goal1] [spawn| ] [number goal1] -> [goal1] [spawn 4|0] [number goal1 u]
+right [ball goal2] [spawn| ] [number goal2] -> [goal2] [spawn 4|0] [number goal2 u]
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+..0L...........................0R..
+...................................
+###################################
+}.................................{
+}.................................{
+}.................................{
+}.................................{
+}.................................{
+}.................................{
+}]...............................[{
+}]...............os..............[{
+}]...............................[{
+}.................................{
+}.................................{
+}.................................{
+}.................................{
+}.................................{
+}.................................{
+###################################

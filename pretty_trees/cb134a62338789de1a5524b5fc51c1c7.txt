@@ -1,0 +1,2300 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	b
+      colors
+        color	lack
+    object_data
+      object_name	Grass
+      legend_key	L
+      colors
+        color	IGHTGREEN
+    object_data
+      object_name	Water
+      legend_key	#
+      colors
+        color	ADD8E6
+    object_data
+      object_name	Player
+      legend_key	b
+      colors
+        color	rown
+    object_data
+      object_name	#493c2b
+      legend_key	#
+      colors
+        color	000000
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '1' '1' '1' '.']
+        ['0' '1' '1' '1' '0']
+        ['0' '2' '2' '2' '0']
+        ['.' '2' '.' '2' '.']
+    object_data
+      object_name	TreeTip
+      legend_key	#
+      colors
+        color	44891A
+    object_data
+      object_name	brown
+      legend_key	#
+      colors
+        color	54992A
+        color	#64A93A
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '3' '.' '.']
+    object_data
+      object_name	tree
+      legend_key	#
+      colors
+        color	44891A
+    object_data
+      object_name	brown
+      legend_key	#
+      colors
+        color	54992A
+        color	#64A93A
+      sprite
+        ['.' '2' '3' '2' '.']
+        ['0' '2' '2' '2' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '1' '1' '1' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	stump
+      legend_key	b
+      colors
+        color	rown
+        color	LIGHTBROWN
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	LogH
+      legend_key	b
+      colors
+        color	rown
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	LogV
+      legend_key	b
+      colors
+        color	rown
+        color	LIGHTBROWN
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	BridgeH
+      legend_key	b
+      colors
+        color	rown
+        color	#ADD8E6
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	BridgeV
+      legend_key	b
+      colors
+        color	rown
+    object_data
+      object_name	#ADD8E6
+      legend_key	y
+      colors
+        color	ellow
+        color	#BDE8F6
+      sprite
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '0' '0' '1']
+    object_data
+      object_name	Stone
+      legend_key	l
+      colors
+        color	ightgrey
+        color	grey
+      sprite
+        ['.' '.' '0' '0' '0']
+        ['0' '0' '0' '1' '1']
+        ['0' '0' '0' '0' '1']
+        ['0' '1' '1' '1' '1']
+        ['1' '1' '1' '1' '.']
+    object_data
+      object_name	SunkenStone
+      legend_key	L
+      colors
+        color	IGHTGRAY
+    object_data
+      object_name	grey
+      legend_key	#
+      colors
+        color	ADD8E6
+        color	#9DC8E6
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '0' '0']
+        ['2' '0' '0' '1' '1']
+        ['3' '0' '0' '0' '1']
+        ['3' '3' '3' '3' '3']
+    object_data
+      object_name	Momentum
+      legend_key	T
+      colors
+        color	RANSPARENT
+    object_data
+      object_name	Beach
+      legend_key	y
+      colors
+        color	ellow
+        color	#BDE8F6
+    object_data
+      object_name	00000
+      legend_key	1
+      colors
+        color	1111
+    object_data
+      object_name	.....
+      legend_key	.
+      colors
+        color	....
+    object_data
+      object_name	.....
+      legend_key	B
+      colors
+        color	irchTop
+    object_data
+      object_name	white
+      legend_key	#
+      colors
+        color	44891A
+    object_data
+      object_name	#54992A
+      legend_key	#
+      colors
+        color	64A93A
+        color	#74B94A
+      sprite
+        ['4' '4' '4' '4' '4']
+        ['4' '4' '4' '4' '4']
+        ['3' '3' '3' '3' '3']
+        ['2' '2' '2' '2' '2']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	BirchTopLeft
+      legend_key	w
+      colors
+        color	hite
+    object_data
+      object_name	#44891A
+      legend_key	#
+      colors
+        color	54992A
+        color	#64A93A
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '2']
+        ['.' '.' '.' '.' '2']
+        ['.' '.' '.' '.' '2']
+        ['.' '.' '.' '.' '1']
+    object_data
+      object_name	BirchTopRight
+      legend_key	w
+      colors
+        color	hite
+    object_data
+      object_name	#44891A
+      legend_key	#
+      colors
+        color	54992A
+        color	#64A93A
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['2' '.' '.' '.' '.']
+        ['2' '.' '.' '.' '.']
+        ['2' '.' '.' '.' '.']
+        ['1' '.' '.' '.' '.']
+    object_data
+      object_name	BirchTrunkTop
+      legend_key	w
+      colors
+        color	hite
+    object_data
+      object_name	#337819
+      legend_key	D
+      colors
+        color	ARKGRAY
+        color	grey
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['.' '0' '0' '3' '.']
+        ['.' '0' '2' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '3' '0' '0' '.']
+    object_data
+      object_name	BirchTrunkBottom
+      legend_key	w
+      colors
+        color	hite
+    object_data
+      object_name	green
+      legend_key	D
+      colors
+        color	ARKGRAY
+        color	grey
+      sprite
+        ['.' '0' '2' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '3' '.']
+        ['.' '2' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	BirchStump
+      legend_key	w
+      colors
+        color	hite
+        color	YELLOW
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	BirchLogVTop
+      legend_key	w
+      colors
+        color	hite
+    object_data
+      object_name	#337819
+      legend_key	D
+      colors
+        color	ARKGRAY
+        color	grey
+    object_data
+      object_name	.010.
+      legend_key	.
+      colors
+        color	000.
+    object_data
+      object_name	.000.
+      legend_key	.
+      colors
+        color	000.
+    object_data
+      object_name	.000.
+      legend_key	B
+      colors
+        color	irchLogVBottom
+    object_data
+      object_name	white
+      legend_key	#
+      colors
+        color	337819
+    object_data
+      object_name	DARKGRAY
+      legend_key	g
+      colors
+        color	rey
+        color	YELLOW
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '4' '4' '4' '.']
+    object_data
+      object_name	BirchLogHLeft
+      legend_key	w
+      colors
+        color	hite
+    object_data
+      object_name	#337819
+      legend_key	D
+      colors
+        color	ARKGRAY
+        color	grey
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	BirchLogHRight
+      legend_key	w
+      colors
+        color	hite
+    object_data
+      object_name	#337819
+      legend_key	D
+      colors
+        color	ARKGRAY
+        color	grey
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '1']
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	BirchBridgeVTop
+      legend_key	w
+      colors
+        color	hite
+    object_data
+      object_name	DARKGRAY
+      legend_key	g
+      colors
+        color	rey
+    object_data
+      object_name	#ADD8E6
+      legend_key	y
+      colors
+        color	ellow
+        color	#BDE8F6
+      sprite
+        ['3' '0' '0' '0' '3']
+        ['3' '0' '0' '1' '3']
+        ['3' '2' '0' '0' '3']
+        ['3' '0' '0' '0' '3']
+        ['3' '0' '2' '0' '3']
+    object_data
+      object_name	BirchBridgeVBottom
+      legend_key	w
+      colors
+        color	hite
+    object_data
+      object_name	DARKGRAY
+      legend_key	g
+      colors
+        color	rey
+    object_data
+      object_name	#ADD8E6
+      legend_key	y
+      colors
+        color	ellow
+        color	#BDE8F6
+      sprite
+        ['3' '0' '0' '0' '3']
+        ['3' '0' '0' '1' '3']
+        ['3' '0' '0' '0' '3']
+        ['3' '0' '1' '0' '3']
+        ['3' '2' '0' '0' '3']
+    object_data
+      object_name	BirchBridgeHLeft
+      legend_key	w
+      colors
+        color	hite
+    object_data
+      object_name	DARKGRAY
+      legend_key	g
+      colors
+        color	rey
+    object_data
+      object_name	#ADD8E6
+      legend_key	y
+      colors
+        color	ellow
+        color	#BDE8F6
+      sprite
+        ['3' '3' '3' '3' '3']
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '2' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['3' '3' '3' '3' '3']
+    object_data
+      object_name	BirchBridgeHRight
+      legend_key	w
+      colors
+        color	hite
+    object_data
+      object_name	DARKGRAY
+      legend_key	g
+      colors
+        color	rey
+    object_data
+      object_name	#ADD8E6
+      legend_key	y
+      colors
+        color	ellow
+        color	#BDE8F6
+      sprite
+        ['3' '3' '3' '3' '3']
+        ['2' '0' '0' '0' '0']
+        ['0' '0' '0' '1' '0']
+        ['0' '2' '0' '0' '0']
+        ['3' '3' '3' '3' '3']
+  legend_section
+    legend_data
+      ~
+      object_name	water
+    legend_data
+      .
+      object_name	Background
+      legend_operation
+        object_name	Grass
+    legend_data
+      P
+      object_name	Player
+      legend_operation
+        object_name	Grass
+    legend_data
+      T
+      object_name	tree
+      legend_operation
+        object_name	Grass
+    legend_data
+      o
+      object_name	stone
+      legend_operation
+        object_name	Grass
+    legend_data
+      I
+      object_name	BirchTrunkBottom
+      legend_operation
+        object_name	grass
+    legend_data
+      Log
+      object_name	LogV
+      legend_operation
+        object_name	LogH
+    legend_data
+      BirchLogH
+      object_name	BirchLogHLeft
+      legend_operation
+        object_name	BirchLogHRight
+    legend_data
+      BirchLogV
+      object_name	BirchLogVTop
+      legend_operation
+        object_name	BirchLogVBottom
+    legend_data
+      BirchLog
+      object_name	BirchLogV
+      legend_operation
+        object_name	BirchLogH
+    legend_data
+      BirchBridgeH
+      object_name	BirchBridgeHLeft
+      legend_operation
+        object_name	BirchBridgeHRight
+    legend_data
+      BirchBridgeV
+      object_name	BirchBridgeVTop
+      legend_operation
+        object_name	BirchBridgeVBottom
+    legend_data
+      Bridge
+      object_name	BridgeV
+      legend_operation
+        object_name	BridgeH
+      legend_operation
+        object_name	BirchBridgeVTop
+      legend_operation
+        object_name	BirchBridgeVBottom
+      legend_operation
+        object_name	BirchBridgeHLeft
+      legend_operation
+        object_name	BirchBridgeHRight
+    legend_data
+      Obstacle
+      object_name	Log
+      legend_operation
+        object_name	Tree
+      legend_operation
+        object_name	Stone
+      legend_operation
+        object_name	SunkenStone
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Grass
+    layer_data
+      object_name	Water
+    layer_data
+      object_name	Beach
+    layer_data
+      object_name	SunkenStone
+    layer_data
+      object_name	Stump
+    layer_data
+      object_name	Bridge
+      object_name	BirchStump
+    layer_data
+      object_name	Player
+      object_name	Tree
+    layer_data
+      object_name	Log
+      object_name	Stone
+    layer_data
+      object_name	BirchTrunkBottom
+      object_name	BirchLog
+    layer_data
+      object_name	Momentum
+      object_name	TreeTip
+    layer_data
+      object_name	BirchTrunkTop
+      object_name	BirchTop
+    layer_data
+      object_name	BirchTopRight
+      object_name	BirchTopLeft
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	s
+            rule_content	t
+            rule_content	o
+            rule_content	n
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	>
+            rule_content	s
+            rule_content	t
+            rule_content	o
+            rule_content	n
+            rule_content	e
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              stone
+              water
+          ->
+          rule_part
+            rule_content
+              water
+              SunkenStone
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	w
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	w
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	S
+            rule_content	u
+            rule_content	n
+            rule_content	k
+            rule_content	e
+            rule_content	n
+            rule_content	S
+            rule_content	t
+            rule_content	o
+            rule_content	n
+            rule_content	e
+          ->
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	S
+            rule_content	u
+            rule_content	n
+            rule_content	k
+            rule_content	e
+            rule_content	n
+            rule_content	S
+            rule_content	t
+            rule_content	o
+            rule_content	n
+            rule_content	e
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              player
+              bridge
+          ->
+          command
+            command_keyword	checkpoint
+          
+
+        rule_data
+          vertical
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	l
+            rule_content	o
+            rule_content	g
+            rule_content	V
+          ->
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	>
+            rule_content	l
+            rule_content	o
+            rule_content	g
+            rule_content	V
+          
+
+        rule_data
+          horizontal
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	l
+            rule_content	o
+            rule_content	g
+            rule_content	H
+          ->
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	>
+            rule_content	l
+            rule_content	o
+            rule_content	g
+            rule_content	H
+          
+
+        rule_data
+          vertical
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	t
+            rule_content	r
+            rule_content	e
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	s
+            rule_content	t
+            rule_content	u
+            rule_content	m
+            rule_content	p
+            cell_border
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+          
+
+        rule_data
+          horizontal
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	t
+            rule_content	r
+            rule_content	e
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	s
+            rule_content	t
+            rule_content	u
+            rule_content	m
+            rule_content	p
+            cell_border
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	T
+            rule_content	r
+            rule_content	u
+            rule_content	n
+            rule_content	k
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	S
+            rule_content	t
+            rule_content	u
+            rule_content	m
+            rule_content	p
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+            rule_content	T
+            rule_content	o
+            rule_content	p
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	T
+            rule_content	r
+            rule_content	u
+            rule_content	n
+            rule_content	k
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	S
+            rule_content	t
+            rule_content	u
+            rule_content	m
+            rule_content	p
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+            rule_content	T
+            rule_content	o
+            rule_content	p
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	T
+            rule_content	r
+            rule_content	u
+            rule_content	n
+            rule_content	k
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	S
+            rule_content	t
+            rule_content	u
+            rule_content	m
+            rule_content	p
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+            rule_content	R
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	T
+            rule_content	r
+            rule_content	u
+            rule_content	n
+            rule_content	k
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	S
+            rule_content	t
+            rule_content	u
+            rule_content	m
+            rule_content	p
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+            rule_content	R
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+          
+
+        rule_data
+          vertical
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	l
+            rule_content	o
+            rule_content	g
+            rule_content	H
+          ->
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	>
+            rule_content	l
+            rule_content	o
+            rule_content	g
+            rule_content	H
+          
+
+        rule_data
+          horizontal
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	l
+            rule_content	o
+            rule_content	g
+            rule_content	V
+          ->
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	>
+            rule_content	l
+            rule_content	o
+            rule_content	g
+            rule_content	V
+          
+
+        rule_data
+          horizontal
+          rule_part
+            rule_content	LogV
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          ->
+          rule_part
+            rule_content
+              >
+              LogV
+            cell_border
+          
+
+        rule_data
+          horizontal
+          rule_part
+            rule_content
+              >
+              LogV
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+            cell_border
+          ->
+          rule_part
+            rule_content
+              >
+              LogV
+            cell_border
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          command
+            command_keyword	again
+          
+
+        rule_data
+          vertical
+          rule_part
+            rule_content	LogH
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          ->
+          rule_part
+            rule_content
+              >
+              LogH
+            cell_border
+          
+
+        rule_data
+          vertical
+          rule_part
+            rule_content
+              >
+              LogH
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+            cell_border
+          ->
+          rule_part
+            rule_content
+              >
+              LogH
+            cell_border
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          command
+            command_keyword	again
+          
+
+        rule_data
+          vertical
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	>
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+          
+
+        rule_data
+          +
+          horizontal
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	>
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+          
+
+        rule_data
+          +
+          rigid
+          horizontal
+          rule_part
+            rule_content	BirchLogVTop
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          ->
+          rule_part
+            rule_content
+              >
+              BirchLogVTop
+            cell_border
+          
+
+        rule_data
+          +
+          rigid
+          horizontal
+          rule_part
+            rule_content
+              >
+              BirchLogVTop
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+            cell_border
+          ->
+          rule_part
+            rule_content
+              >
+              BirchLogVTop
+            cell_border
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          command
+            command_keyword	again
+          
+
+        rule_data
+          +
+          rigid
+          horizontal
+          rule_part
+            rule_content	BirchLogVBottom
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          ->
+          rule_part
+            rule_content
+              >
+              BirchLogVBottom
+            cell_border
+          
+
+        rule_data
+          +
+          rigid
+          horizontal
+          rule_part
+            rule_content
+              >
+              BirchLogVBottom
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+            cell_border
+          ->
+          rule_part
+            rule_content
+              >
+              BirchLogVBottom
+            cell_border
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          command
+            command_keyword	again
+          
+
+        rule_data
+          +
+          rigid
+          up
+          rule_part
+            rule_content
+              Moving
+              BirchLogVBottom
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+            rule_content	T
+            rule_content	o
+            rule_content	p
+          ->
+          rule_part
+            rule_content
+              Moving
+              BirchLogVBottom
+            cell_border
+            rule_content	M
+            rule_content	O
+            rule_content	V
+            rule_content	I
+            rule_content	N
+            rule_content	G
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+            rule_content	T
+            rule_content	o
+            rule_content	p
+          
+
+        rule_data
+          +
+          rigid
+          down
+          rule_part
+            rule_content
+              Moving
+              BirchLogVTop
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+          ->
+          rule_part
+            rule_content
+              Moving
+              BirchLogVTop
+            cell_border
+            rule_content	M
+            rule_content	O
+            rule_content	V
+            rule_content	I
+            rule_content	N
+            rule_content	G
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+          
+
+        rule_data
+          horizontal
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	>
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+          
+
+        rule_data
+          +
+          vertical
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	>
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+          
+
+        rule_data
+          +
+          rigid
+          vertical
+          rule_part
+            rule_content	BirchLogHLeft
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          ->
+          rule_part
+            rule_content
+              >
+              BirchLogHLeft
+            cell_border
+          
+
+        rule_data
+          +
+          rigid
+          vertical
+          rule_part
+            rule_content
+              >
+              BirchLogHLeft
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+            cell_border
+          ->
+          rule_part
+            rule_content
+              >
+              BirchLogHLeft
+            cell_border
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          command
+            command_keyword	again
+          
+
+        rule_data
+          +
+          rigid
+          vertical
+          rule_part
+            rule_content	BirchLogHRight
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          ->
+          rule_part
+            rule_content
+              >
+              BirchLogHRight
+            cell_border
+          
+
+        rule_data
+          +
+          rigid
+          vertical
+          rule_part
+            rule_content
+              >
+              BirchLogHRight
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	O
+            rule_content	b
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	c
+            rule_content	l
+            rule_content	e
+            cell_border
+          ->
+          rule_part
+            rule_content
+              >
+              BirchLogHRight
+            cell_border
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          command
+            command_keyword	again
+          
+
+        rule_data
+          +
+          rigid
+          right
+          rule_part
+            rule_content
+              Moving
+              BirchLogHLeft
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+            rule_content	R
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+          ->
+          rule_part
+            rule_content
+              Moving
+              BirchLogHLeft
+            cell_border
+            rule_content	M
+            rule_content	O
+            rule_content	V
+            rule_content	I
+            rule_content	N
+            rule_content	G
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+            rule_content	R
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+          
+
+        rule_data
+          +
+          rigid
+          left
+          rule_part
+            rule_content
+              Moving
+              BirchLogHRight
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+          ->
+          rule_part
+            rule_content
+              Moving
+              BirchLogHRight
+            cell_border
+            rule_content	M
+            rule_content	O
+            rule_content	V
+            rule_content	I
+            rule_content	N
+            rule_content	G
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Momentum
+              Obstacle
+          ->
+          rule_part
+            rule_content	Obstacle
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Momentum
+              Obstacle
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	m
+            rule_content	e
+            rule_content	n
+            rule_content	t
+            rule_content	u
+            rule_content	m
+          ->
+          rule_part
+            rule_content	Obstacle
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              water
+              logV
+          ->
+          rule_part
+            rule_content	bridgeV
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              water
+              logH
+          ->
+          rule_part
+            rule_content	bridgeH
+          
+
+        rule_data
+          late
+          down
+          rule_part
+            rule_content
+              water
+              BirchLogVTop
+            cell_border
+            rule_content	w
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	r
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	V
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+          ->
+          rule_part
+            rule_content	BirchBridgeVTop
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	B
+            rule_content	r
+            rule_content	i
+            rule_content	d
+            rule_content	g
+            rule_content	e
+            rule_content	V
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content
+              water
+              BirchLogHLeft
+            cell_border
+            rule_content	w
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	r
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	L
+            rule_content	o
+            rule_content	g
+            rule_content	H
+            rule_content	R
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+          ->
+          rule_part
+            rule_content	BirchBridgeHLeft
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	B
+            rule_content	r
+            rule_content	i
+            rule_content	d
+            rule_content	g
+            rule_content	e
+            rule_content	H
+            rule_content	R
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	TreeTip
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	t
+            rule_content	r
+            rule_content	e
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content	tree
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	T
+            rule_content	r
+            rule_content	e
+            rule_content	e
+            rule_content	T
+            rule_content	i
+            rule_content	p
+          ->
+          rule_part
+            rule_content	tree
+            cell_border
+            rule_content	T
+            rule_content	r
+            rule_content	e
+            rule_content	e
+            rule_content	T
+            rule_content	i
+            rule_content	p
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	Grass
+            cell_border
+            rule_content	w
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	r
+            rule_content	n
+            rule_content	o
+            rule_content	b
+            rule_content	e
+            rule_content	a
+            rule_content	c
+            rule_content	h
+          ->
+          rule_part
+            rule_content	Grass
+            cell_border
+            rule_content	w
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            rule_content	r
+            rule_content	b
+            rule_content	e
+            rule_content	a
+            rule_content	c
+            rule_content	h
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content	BirchTrunkBottom
+            cell_border
+            cell_border
+          ->
+          rule_part
+            rule_content	BirchTrunkBottom
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	T
+            rule_content	r
+            rule_content	u
+            rule_content	n
+            rule_content	k
+            rule_content	T
+            rule_content	o
+            rule_content	p
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	T
+            rule_content	o
+            rule_content	p
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	BirchTop
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	T
+            rule_content	r
+            rule_content	u
+            rule_content	n
+            rule_content	k
+            rule_content	T
+            rule_content	o
+            rule_content	p
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	T
+            rule_content	r
+            rule_content	u
+            rule_content	n
+            rule_content	k
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+          ->
+          rule_part
+            rule_content	|
+            cell_border
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content	BirchTop
+            cell_border
+          ->
+          rule_part
+            rule_content	BirchTop
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	T
+            rule_content	o
+            rule_content	p
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content	BirchTopLeft
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	T
+            rule_content	o
+            rule_content	p
+          ->
+          rule_part
+            rule_content	|
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content	BirchTop
+            cell_border
+          ->
+          rule_part
+            rule_content	BirchTop
+            cell_border
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	T
+            rule_content	o
+            rule_content	p
+            rule_content	R
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content	BirchTopRight
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	B
+            rule_content	i
+            rule_content	r
+            rule_content	c
+            rule_content	h
+            rule_content	T
+            rule_content	o
+            rule_content	p
+          ->
+          rule_part
+            rule_content	|
+          
+
+  winconditions_section
+  levels_section
+    level_data	[['~' '~' '~' ... '~' '~' '~']
+ ['~' '~' '~' ... '~' '~' '~']
+ ['~' '~' '~' ... '~' '~' '~']
+ ...
+ ['~' '~' '~' ... '~' '~' '~']
+ ['~' '~' '~' ... '~' '~' '~']
+ ['~' '~' '~' ... '~' '~' '~']]

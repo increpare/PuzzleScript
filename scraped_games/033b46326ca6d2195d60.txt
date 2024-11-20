@@ -1,0 +1,247 @@
+title Stepping Stones
+author Franklin P. Dyer
+key_repeat_interval 1
+
+========
+OBJECTS
+========
+
+Background -
+#ffff99 #ffff66 
+00010
+00000
+10000
+00000
+00100
+
+Water .
+#0c92f6 #2a75ae
+00010
+00001
+10000
+01000
+00100
+
+Rock o
+#869098 #43494d
+.111.
+10001
+10001
+10001
+.111.
+
+Stepstone &
+#0c92f6 #2a75ae #32434f #50869a
+00010
+02221
+12320
+02220
+00100
+
+Player @
+#d2b48c #3c7245 #0f3076
+..0..
+.111.
+11111
+.222.
+.2.2.
+
+Goal !
+Gray Darkgray
+11011
+10001
+00000
+10001
+10101
+
+BoatUp
+Brown Darkbrown
+..0..
+.010.
+01110
+01110
+.000.
+
+BoatDown
+Brown Darkbrown
+.000.
+01110
+01110
+.010.
+..0..
+
+BoatRight
+Brown Darkbrown
+.00..
+0110.
+01110
+0110.
+.00..
+
+BoatLeft
+Brown Darkbrown
+..00.
+.0110
+01110
+.0110
+..00.
+
+Whirl1
+Darkblue Lightblue
+.1..1
+..1.1
+...00
+11000
+..000
+
+Whirl2
+Darkblue Lightblue
+.1...
+.1..1
+00.1.
+000..
+00011
+
+Whirl3
+Darkblue Lightblue
+000..
+00011
+00...
+1.1..
+1..1.
+
+Whirl4
+Darkblue Lightblue
+11000
+..000
+.1.00
+1..1.
+...1.
+
+=======
+LEGEND
+=======
+
+^ = BoatUp and Water
+v = BoatDown and Water
+> = BoatRight and Water
+< = BoatLeft and Water
+1 = Whirl1 and Water
+2 = Whirl2 and Water
+3 = Whirl3 and Water
+4 = Whirl4 and Water
+
+Boat = BoatUp or BoatDown or BoatLeft or BoatRight
+Boatable = Rock or Player
+WhirlPool = Whirl1 or Whirl2 or Whirl3 or Whirl4
+
+=======
+SOUNDS
+=======
+
+Rock Move 93481107
+Boat Move 26708902
+Startlevel 51887108
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Water, Stepstone, Goal
+Boat, WhirlPool
+Rock, Player
+
+======
+RULES
+======
+
+[> Player|Water No Boat] -> cancel
+[> Player|WhirlPool] -> [|Whirlpool]
+[> Player|Rock] -> [> Player|> Rock]
+
+[Stationary BoatUp] -> [UP BoatUp] again
+[Stationary BoatDown] -> [DOWN BoatDown] again
+[Stationary BoatLeft] -> [LEFT BoatLeft] again
+[Stationary BoatRight] -> [RIGHT BoatRight] again
+[> Boat Boatable] -> [> Boat > Boatable]
+[> Boat|No Water] -> [Boat|No Water]
+LEFT[> Boatable|Boat] -> [> Boatable|BoatLeft]
+RIGHT[> Boatable|Boat] -> [> Boatable|BoatRight]
+UP[> Boatable|Boat] -> [> Boatable|BoatUp]
+DOWN[> Boatable|Boat] -> [> Boatable|BoatDown]
+
+[> Player|Rock] -> [> Player|> Rock]
+LATE[Rock Water No Boat] -> [Stepstone]
+
+==============
+WINCONDITIONS
+==============
+
+All player on goal
+
+=======
+LEVELS
+=======
+
+message Try to reach the GOAL.
+message Push ROCKS onto WATER to create a STEPPING STONE.
+
+!----
+-----
+.....
+--o--
+----@
+
+.......
+.!-.--.
+.--.--.
+....--.
+.---o-.
+.----@.
+.......
+
+message You can also cross water by BOAT.
+
+........
+.@...-!.
+.-<..--.
+.-...--.
+........
+
+message WHIRLPOOLS are dangerous.
+
+................
+.!-12.----.----.
+.--43.-o--.----.
+........&&.--o-.
+........&&.----.
+.....----&.----.
+.....o----&----.
+.&&&&ooo--&----.
+.....-@--.......
+................
+
+message ROCKS can also go on BOATS.
+
+............
+.--@---..-!.
+.-<...-.---.
+.----o-.....
+.....--.....
+............
+
+............
+.--@---.--!.
+.-<...-..--.
+.---o--.....
+....--......
+............
+
+...............
+........---....
+......-.-o--...
+.--&.&-@-<.---.
+.!-...---..-o-.
+......------...
+...............

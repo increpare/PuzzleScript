@@ -1,0 +1,153 @@
+title Sokoban Dungeon
+author Joseph King
+homepage www.puzzlescript.net
+Again_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+GRay
+Skeleton
+LIghtGRay
+.000.
+.0.0.
+00000
+.0.0.
+.0.0.
+skeledust
+Lightgray
+..0..
+0....
+....0
+.0...
+...0.
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+Burst
+red blue white
+.000.
+02202
+00100
+01.00
+.000.
+Exit x
+Brown
+.000.
+0...0
+0...0
+0...0
+0...0
+Exitlocked
+Brown darkbrown
+.000.
+01110
+01110
+01110
+01110
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+S = skeleton  
+Z = exit and skeleton
+obstacle = wall or skeleton or crate
+w = skeleton and target
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+Skeleton MOVE 2489558
+
+================
+COLLISIONLAYERS 
+================
+
+Background
+Target, Burst, skeledust, Exit, exitlocked
+Player, Skeleton, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[Skeleton| ...|Player] -> [> skeleton | ...| player] again 
+[> Skeleton | PLayer ] -> [burst | Skeleton ]
+late [Burst] ->  restart 
+[> Crate|skeleton]-> [Skeledust|Crate]
+[exitlocked] [crate target] -> [Exit] [Crate target]
+[exit] [Crate no target] ->[exitlocked] [Crate no target]
+[player exitlocked|no obstacle] -> [Exitlocked| player]message It's locked.
+
+============== 
+WINCONDITIONS
+==============
+
+All Player on exit 
+
+=======
+LEVELS
+=======
+Message How did i get stuck in here?
+############
+############
+############
+#x..p*....o#
+############
+############
+Message Ahh! Skeletons!
+.s.........w
+...#########
+...#########
+....*.p...x#
+............
+############
+Message Great. The skeleton is blocking the exit
+.............
+.......o.....
+.............
+...####z###*.
+...####.###..
+.............
+...........p.
+.............

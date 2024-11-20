@@ -1,0 +1,4246 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	#
+      colors
+        color	C6C5C5
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+      
+
+
+
+    object_data
+      object_name	Placer
+      legend_key	#
+      colors
+        color	5C5B5B
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Spawn
+      legend_key	#
+      colors
+        color	5C5B5B
+        color	#000000
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Wall
+      legend_key	#
+      colors
+        color	484848
+    object_data
+      object_name	00000
+      legend_key	0
+      colors
+        color	0000
+    object_data
+      object_name	00000
+      legend_key	0
+      colors
+        color	0000
+    object_data
+      object_name	00000
+      legend_key	P
+      colors
+        color	layer
+    object_data
+      object_name	#000000
+      legend_key	.
+      colors
+        color	....
+    object_data
+      object_name	..0..
+      legend_key	.
+      colors
+        color	000.
+    object_data
+      object_name	..0..
+      legend_key	.
+      colors
+        color	....
+    object_data
+      object_name	BlockWhite
+      legend_key	#
+      colors
+        color	FFFFFF
+        color	#CDCDCD
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	BlockRed
+      legend_key	#
+      colors
+        color	FF0000
+        color	#B70404
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	BlockYellow
+      legend_key	#
+      colors
+        color	FFFF00
+        color	#E4DA1D
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	BlockBlue
+      legend_key	#
+      colors
+        color	0037FF
+        color	#0632D0
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	BlockOrange
+      legend_key	#
+      colors
+        color	FFA701
+        color	#FF8D00
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	BlockGreen
+      legend_key	#
+      colors
+        color	1DD700
+        color	#1AC000
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	BlockPurple
+      legend_key	#
+      colors
+        color	A100E1
+        color	#8A05BE
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Digit1
+      legend_key	#
+      colors
+        color	000000
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Digit10
+      legend_key	#
+      colors
+        color	000000
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Digit100
+      legend_key	#
+      colors
+        color	000000
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Digit1000
+      legend_key	#
+      colors
+        color	000000
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Digit10000
+      legend_key	#
+      colors
+        color	000000
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Time1
+      legend_key	#
+      colors
+        color	000000
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Time10
+      legend_key	#
+      colors
+        color	000000
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	1
+      legend_key	#
+      colors
+        color	FFFFFF
+        color	#000000
+      sprite
+        ['.' '1' '1' '.' '.']
+        ['.' '.' '1' '.' '.']
+        ['.' '.' '1' '.' '.']
+        ['.' '.' '1' '.' '.']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	2
+      legend_key	#
+      colors
+        color	FFFFFF
+        color	#000000
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['.' '.' '.' '.' '1']
+        ['.' '.' '1' '1' '.']
+        ['.' '1' '.' '.' '.']
+        ['.' '1' '1' '1' '1']
+    object_data
+      object_name	3
+      legend_key	#
+      colors
+        color	FFFFFF
+        color	#000000
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['.' '.' '.' '.' '1']
+        ['.' '.' '1' '1' '.']
+        ['.' '.' '.' '.' '1']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	4
+      legend_key	#
+      colors
+        color	FFFFFF
+        color	#000000
+      sprite
+        ['.' '1' '.' '1' '.']
+        ['.' '1' '.' '1' '.']
+        ['.' '1' '1' '1' '1']
+        ['.' '.' '.' '1' '.']
+        ['.' '.' '.' '1' '.']
+    object_data
+      object_name	5
+      legend_key	#
+      colors
+        color	FFFFFF
+        color	#000000
+      sprite
+        ['.' '1' '1' '1' '1']
+        ['.' '1' '.' '.' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '.' '.' '.' '1']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	6
+      legend_key	#
+      colors
+        color	FFFFFF
+        color	#000000
+      sprite
+        ['.' '.' '1' '1' '.']
+        ['.' '1' '.' '.' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '.' '.' '1']
+        ['.' '.' '1' '1' '.']
+    object_data
+      object_name	7
+      legend_key	#
+      colors
+        color	FFFFFF
+        color	#000000
+      sprite
+        ['.' '1' '1' '1' '1']
+        ['.' '.' '.' '.' '1']
+        ['.' '.' '.' '1' '.']
+        ['.' '.' '1' '.' '.']
+        ['.' '.' '1' '.' '.']
+    object_data
+      object_name	8
+      legend_key	#
+      colors
+        color	FFFFFF
+        color	#000000
+      sprite
+        ['.' '.' '1' '1' '.']
+        ['.' '1' '.' '.' '1']
+        ['.' '.' '1' '1' '.']
+        ['.' '1' '.' '.' '1']
+        ['.' '.' '1' '1' '.']
+    object_data
+      object_name	9
+      legend_key	#
+      colors
+        color	FFFFFF
+        color	#000000
+      sprite
+        ['.' '.' '1' '1' '.']
+        ['.' '1' '.' '.' '1']
+        ['.' '.' '1' '1' '1']
+        ['.' '.' '.' '.' '1']
+        ['.' '.' '1' '1' '.']
+    object_data
+      object_name	0
+      legend_key	#
+      colors
+        color	FFFFFF
+        color	#000000
+      sprite
+        ['.' '.' '1' '1' '.']
+        ['.' '1' '.' '.' '1']
+        ['.' '1' '.' '.' '1']
+        ['.' '1' '.' '.' '1']
+        ['.' '.' '1' '1' '.']
+    object_data
+      object_name	Add100
+      legend_key	B
+      colors
+        color	lack
+      sprite
+        ['0' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Add1000
+      legend_key	B
+      colors
+        color	lack
+      sprite
+        ['0' '0' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Add2000
+      legend_key	B
+      colors
+        color	lack
+      sprite
+        ['0' '0' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Add10000
+      legend_key	B
+      colors
+        color	lack
+      sprite
+        ['0' '0' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Add200
+      legend_key	B
+      colors
+        color	lack
+      sprite
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Add500
+      legend_key	B
+      colors
+        color	lack
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Add5000
+      legend_key	B
+      colors
+        color	lack
+    object_data
+      object_name	.....
+      legend_key	0
+      colors
+        color	0...
+    object_data
+      object_name	.....
+      legend_key	.
+      colors
+        color	....
+    object_data
+      object_name	.....
+      legend_key	A
+      colors
+        color	ddend
+    object_data
+      object_name	N
+      legend_key	T
+      colors
+        color	ransparent
+      
+
+
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      *
+      object_name	Placer
+    legend_data
+      @
+      object_name	Player
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      R
+      object_name	BlockRed
+    legend_data
+      Y
+      object_name	BlockYellow
+    legend_data
+      B
+      object_name	BlockBlue
+    legend_data
+      O
+      object_name	BlockOrange
+    legend_data
+      G
+      object_name	BlockGreen
+    legend_data
+      P
+      object_name	BlockPurple
+    legend_data
+      W
+      object_name	BlockWhite
+    legend_data
+      S
+      object_name	Spawn
+    legend_data
+      A
+      object_name	Digit10000
+    legend_data
+      D
+      object_name	Digit1000
+    legend_data
+      I
+      object_name	Digit100
+    legend_data
+      _
+      object_name	Digit10
+    legend_data
+      T
+      object_name	Digit1
+    legend_data
+      M
+      object_name	Time10
+    legend_data
+      E
+      object_name	Time1
+    legend_data
+      Add
+      object_name	Add100
+      legend_operation
+        object_name	Add200
+      legend_operation
+        object_name	Add500
+      legend_operation
+        object_name	Add1000
+      legend_operation
+        object_name	Add5000
+      legend_operation
+        object_name	Add10000
+      legend_operation
+        object_name	Add2000
+    legend_data
+      Numbers
+      object_name	1
+      legend_operation
+        object_name	2
+      legend_operation
+        object_name	3
+      legend_operation
+        object_name	4
+      legend_operation
+        object_name	5
+      legend_operation
+        object_name	6
+      legend_operation
+        object_name	7
+      legend_operation
+        object_name	8
+      legend_operation
+        object_name	9
+      legend_operation
+        object_name	0
+    legend_data
+      BlockPrime
+      object_name	BlockBlue
+      legend_operation
+        object_name	BlockYellow
+      legend_operation
+        object_name	BlockRed
+    legend_data
+      BlockSec
+      object_name	BlockOrange
+      legend_operation
+        object_name	BlockGreen
+      legend_operation
+        object_name	BlockPurple
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Placer
+      object_name	Spawn
+    layer_data
+      object_name	Numbers
+      object_name	A
+    layer_data
+      object_name	D
+      object_name	I
+    layer_data
+      object_name	_
+      object_name	T
+    layer_data
+      object_name	M
+      object_name	E
+    layer_data
+      object_name	Addend
+    layer_data
+      object_name	Add
+    layer_data
+      object_name	BlockPrime
+    layer_data
+      object_name	BlockSec
+      object_name	BlockWhite
+    layer_data
+      object_name	Player
+      object_name	Wall
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          UP
+          rule_part
+            rule_content	M
+            cell_border
+            rule_content	.
+          ->
+          rule_part
+            rule_content	M
+            cell_border
+            rule_content	3
+          
+
+        rule_data
+          UP
+          rule_part
+            rule_content	E
+            cell_border
+            rule_content	.
+          ->
+          rule_part
+            rule_content	E
+            cell_border
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content	S
+          ->
+          rule_part
+            rule_content	@
+            rule_content	*
+          
+
+        rule_data
+          Vertical
+          rule_part
+            rule_content	A
+            cell_border
+            rule_content	.
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            cell_border
+            rule_content	.
+            rule_content	]
+            rule_content	[
+            rule_content	I
+            cell_border
+            rule_content	.
+            rule_content	]
+            rule_content	[
+            rule_content	_
+            cell_border
+            rule_content	.
+            rule_content	]
+            rule_content	[
+            rule_content	T
+            cell_border
+            rule_content	.
+          ->
+          rule_part
+            rule_content	A
+            cell_border
+            rule_content	0
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            cell_border
+            rule_content	0
+            rule_content	]
+            rule_content	[
+            rule_content	I
+            cell_border
+            rule_content	0
+            rule_content	]
+            rule_content	[
+            rule_content	_
+            cell_border
+            rule_content	0
+            rule_content	]
+            rule_content	[
+            rule_content	T
+            cell_border
+            rule_content	0
+          
+
+    rule_block
+      rule_block_loop
+        startLoop
+        
+
+        rule_data
+          vertical
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	R
+            rule_content	e
+            rule_content	d
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	O
+            rule_content	r
+            rule_content	a
+            rule_content	n
+            rule_content	g
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	Y
+            rule_content	e
+            rule_content	l
+            rule_content	l
+            rule_content	o
+            rule_content	w
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	G
+            rule_content	r
+            rule_content	e
+            rule_content	e
+            rule_content	n
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	B
+            rule_content	l
+            rule_content	u
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	P
+            rule_content	u
+            rule_content	r
+            rule_content	p
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          horizontal
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	R
+            rule_content	e
+            rule_content	d
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	O
+            rule_content	r
+            rule_content	a
+            rule_content	n
+            rule_content	g
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	Y
+            rule_content	e
+            rule_content	l
+            rule_content	l
+            rule_content	o
+            rule_content	w
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	G
+            rule_content	r
+            rule_content	e
+            rule_content	e
+            rule_content	n
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	B
+            rule_content	l
+            rule_content	u
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	P
+            rule_content	u
+            rule_content	r
+            rule_content	p
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	P
+            rule_content	r
+            rule_content	i
+            rule_content	m
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	S
+            rule_content	e
+            rule_content	c
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	P
+            rule_content	r
+            rule_content	i
+            rule_content	m
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	S
+            rule_content	e
+            rule_content	c
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	R
+            rule_content	e
+            rule_content	d
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	B
+            rule_content	l
+            rule_content	u
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	P
+            rule_content	u
+            rule_content	r
+            rule_content	p
+            rule_content	l
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	B
+            rule_content	l
+            rule_content	u
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	R
+            rule_content	e
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	P
+            rule_content	u
+            rule_content	r
+            rule_content	p
+            rule_content	l
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	B
+            rule_content	l
+            rule_content	u
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	Y
+            rule_content	e
+            rule_content	l
+            rule_content	l
+            rule_content	o
+            rule_content	w
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	G
+            rule_content	r
+            rule_content	e
+            rule_content	e
+            rule_content	n
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	Y
+            rule_content	e
+            rule_content	l
+            rule_content	l
+            rule_content	o
+            rule_content	w
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	B
+            rule_content	l
+            rule_content	u
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	G
+            rule_content	r
+            rule_content	e
+            rule_content	e
+            rule_content	n
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	Y
+            rule_content	e
+            rule_content	l
+            rule_content	l
+            rule_content	o
+            rule_content	w
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	R
+            rule_content	e
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	O
+            rule_content	r
+            rule_content	a
+            rule_content	n
+            rule_content	g
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	R
+            rule_content	e
+            rule_content	d
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	Y
+            rule_content	e
+            rule_content	l
+            rule_content	l
+            rule_content	o
+            rule_content	w
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	O
+            rule_content	r
+            rule_content	a
+            rule_content	n
+            rule_content	g
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	O
+            rule_content	r
+            rule_content	a
+            rule_content	n
+            rule_content	g
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	B
+            rule_content	l
+            rule_content	u
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	G
+            rule_content	r
+            rule_content	e
+            rule_content	e
+            rule_content	n
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	R
+            rule_content	e
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	P
+            rule_content	u
+            rule_content	r
+            rule_content	p
+            rule_content	l
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	Y
+            rule_content	e
+            rule_content	l
+            rule_content	l
+            rule_content	o
+            rule_content	w
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	B
+            rule_content	l
+            rule_content	u
+            rule_content	e
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	O
+            rule_content	r
+            rule_content	a
+            rule_content	n
+            rule_content	g
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	R
+            rule_content	e
+            rule_content	d
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	G
+            rule_content	r
+            rule_content	e
+            rule_content	e
+            rule_content	n
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	Y
+            rule_content	e
+            rule_content	l
+            rule_content	l
+            rule_content	o
+            rule_content	w
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	P
+            rule_content	u
+            rule_content	r
+            rule_content	p
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	W
+            rule_content	h
+            rule_content	i
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	c
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          
+
+        endLoop
+        
+
+    rule_block
+      rule_block_once
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content	*
+          ->
+          rule_part
+            rule_content
+              random
+              BlockPrime
+          
+
+        rule_data
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	M
+            cell_border
+            rule_content	5
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	0
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	M
+            cell_border
+            rule_content	4
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	9
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	M
+            cell_border
+            rule_content	4
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	0
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	M
+            cell_border
+            rule_content	3
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	9
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	M
+            cell_border
+            rule_content	3
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	0
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	M
+            cell_border
+            rule_content	2
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	9
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	M
+            cell_border
+            rule_content	2
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	0
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	M
+            cell_border
+            rule_content	1
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	9
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	M
+            cell_border
+            rule_content	1
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	0
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	M
+            cell_border
+            rule_content	0
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	9
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	9
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	8
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	8
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	7
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	7
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	6
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	6
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	5
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	5
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	4
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	4
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	3
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	3
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	2
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	2
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	1
+          
+
+        rule_data
+          +
+          UP
+          rule_part
+            rule_content
+              action
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	1
+          ->
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	0
+          
+
+    rule_block
+      rule_block_loop
+        startLoop
+        
+
+        rule_data
+          random
+          late
+          rule_part
+            rule_content
+              Addend
+              no
+              Add
+            rule_content	]
+            rule_content	[
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	n
+            rule_content	o
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              Addend
+              Add
+            rule_content	]
+            rule_content	[
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	2
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	5
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	e
+            rule_content	n
+            rule_content	d
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	0
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	1
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	2
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	3
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	4
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	5
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	6
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	7
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	8
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	9
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	A
+            rule_content	d
+            rule_content	d
+            rule_content	1
+            rule_content	0
+            rule_content	0
+            rule_content	0
+            rule_content	0
+          ->
+          rule_part
+            rule_content	9
+            cell_border
+            rule_content	9
+            cell_border
+            rule_content	9
+            cell_border
+            rule_content	9
+            cell_border
+            rule_content	9
+            cell_border
+          
+
+        endLoop
+        
+
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content	M
+            cell_border
+            rule_content	0
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	0
+            rule_content	]
+            rule_content	[
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	M
+            cell_border
+            rule_content	0
+            rule_content	]
+            rule_content	[
+            rule_content	E
+            cell_border
+            rule_content	0
+            rule_content	]
+            rule_content	[
+            rule_content	n
+            rule_content	o
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          
+
+  winconditions_section
+  levels_section
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['0' '0' '0' '0' '0' 'N' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'm' 'e']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '#']
+ ['#' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '#']
+ ['#' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '#']
+ ['#' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '#']
+ ['#' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '#']
+ ['#' '*' '*' '*' '*' '*' 's' '*' '*' '*' '*' '*' '#']
+ ['#' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '#']
+ ['#' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '#']
+ ['#' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '#']
+ ['#' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '#']
+ ['#' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '*' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]

@@ -1,0 +1,233 @@
+OBJECTS
+
+Background#6bb745
+#45b758#93b74510201
+00000
+20102
+00000
+10201
+
+Base#ad914a #937b3e
+0100010000
+0000100010
+00100Base_Top
+#ad914a#937b3e Yellow
+2222210000
+0000100010
+00100Base_Bottom
+#ad914a#937b3e #8d712a01000
+10000
+22222
+.....
+.....
+
+Base_Left#ad914a
+#937b3eDarkBrown #8d712a31000
+30000
+20001
+20010
+20100
+
+Base_Right#ad914a
+#937b3eYellow Lightbrown01002
+10002
+00003
+00013
+00103
+
+Base_Top_Left#ad914a
+#937b3e#8d712a
+YellowLightbrown DarkBrown...43
+.2200
+20001
+20010
+50100
+
+Base_Top_Right#ad914a
+#937b3eYellow LightBrown22...
+1022.
+00002
+00012
+00103
+
+Base_Bottom_Left#ad914a
+#937b3eDarkBrown #8d712a21000
+.2000
+..233
+.....
+.....
+
+Base_Bottom_Right#ad914a
+#937b3eLightBrown #8d712a01002
+1002.
+332..
+.....
+.....
+
+Peg#937b3e #ad914a.001.
+.001.
+.001.
+.001.
+.001.
+
+Peg_Top#937b3e #ad914a.11..
+.001.
+.001.
+.001.
+.001.
+
+Peg_Bottom#937b3e
+#ad914aDarkBrown Yellow
+.001..001.
+.201..201.
+.231.StartMarker
+TransparentFinishMarker
+TransparentFullBlock
+DarkRedRed LightRed
+2222211111
+1111111111
+00000FullBlock_Left
+DarkRedRed LightRed
+.222201111
+0111100111
+.0000FullBlock_Right
+DarkRedRed LightRed
+2222.11122
+1111211112
+0000.HalfBlock_Left
+DarkRedRed LightRed
+...22..011
+..001..001
+...00HalfBlock_Right
+DarkRedRed LightRed22...
+122..
+122..
+112..
+00...
+
+EmptyBlockTransparent
+PlayerLightBlue..0..
+..0..
+0.0.0
+.000.
+..0..
+
+
+
+
+LEGEND
+
+. = Background
+# = Base
+! = Peg
+S = StartMarker or Player
+F = FinishMarker
+0 = FullBlock or Peg
+@ = FullBlock
+{ = Halfblock_Left
+} = Halfblock_Right
+_ = EmptyBlock
+AnyBase = Base or Base_Top or Base_Bottom or Base_Left or Base_Right or Base_Top_Left or Base_Top_Right or Base_Bottom_Left or Base_Bottom_Right
+AnyPeg = Peg or Peg_Top or Peg_Bottom
+AnyMarker = StartMarker or FinishMarker
+AnyFullBlock = FullBlock or FullBlock_Left or FullBlock_Right
+HalfBlock = HalfBlock_Left or HalfBlock_Right
+Block = AnyFullBlock or HalfBlock or EmptyBlock
+
+COLLISIONLAYERS
+
+Background
+AnyBase
+AnyPeg, AnyMarker
+Block
+Player
+
+RULES
+
+horizontal [ > Player no Block | ... | AnyMarker ] -> [ |... | PlayerAnyMarker ] 
+startloop
+down [ < Player no Block | ... | Block ] -> [ < Player | ... | <Block ] 
+down [ action Player no Block | ... | Block ] -> [ < Player | ... | <Block ] 
+down [ > Player Block ] -> [ > Player>Block ] 
+down [ action Player Block ] -> [ > Player>Block ] 
+down [ > Player | ... | Block | noBlocknoAnyBase ] -> [ > Player | ... | >Block |  ] 
+down [ Block | ... | verticalBlock ] -> [ Block | ... | Block ] 
+horizontal [ > Player Block | ... | AnyMarker ] -> [ > Player>Block | ... | AnyMarker ] 
+horizontal [ Block | movingBlock ] -> [ moving Block | movingBlock ] 
+vertical [ > Block |  ] -> [ |Block ] 
+horizontal [ > Player>Block | noBlock ] -> [ |>PlayerBlock ] 
++ horizontal [ no Player>Block | noBlock ] -> [ |Block ] 
+horizontal [ > Player AnyMarker ] -> [ Player AnyMarker ] 
+endloop
+[ > Player ] -> [ Player ] 
+down [ AnyFullBlock | HalfBlock ] -> cancel 
+down [ AnyFullBlock | EmptyBlock ] -> cancel 
+down [ HalfBlock | EmptyBlock ] -> cancel 
+down [ FinishMarker |  |  | Block ] -> win 
+late right [ no Block | FullBlock ] -> [ |FullBlock_Left ] 
+late right [ EmptyBlock | FullBlock ] -> [ EmptyBlock | FullBlock_Left ] 
+late right [ FullBlock | noBlock ] -> [ FullBlock_Right |  ] 
+late right [ FullBlock | EmptyBlock ] -> [ FullBlock_Right | EmptyBlock ] 
+late down [ no AnyPeg | Peg ] -> [ |Peg_Top ] 
+late down [ Peg | noAnyPeg ] -> [ Peg_Bottom |  ] 
+late down [ no AnyBase | Base ] -> [ |Base_Top ] 
+late down [ Base | noAnyBase ] -> [ Base_Bottom |  ] 
+late right [ no AnyBase | Base ] -> [ |Base_Left ] 
+late right [ Base | noAnyBase ] -> [ Base_Right |  ] 
+late right [ no AnyBase | Base_Top ] -> [ |Base_Top_Left ] 
+late right [ Base_Top | noAnyBase ] -> [ Base_Top_Right |  ] 
+late right [ no AnyBase | Base_Bottom ] -> [ |Base_Bottom_Left ] 
+late right [ Base_Bottom | noAnyBase ] -> [ Base_Bottom_Right |  ] 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+...........
+
+...S...F...
+...........
+...!...!...
+..{0}..!...
+.#########.
+.#########.
+...........
+
+...............
+...S...F...F...
+...............
+...!...!...!...
+..{0}..!...!...
+..@0@..!...!...
+.#############.
+.#############.
+...............
+
+.....................
+....S.....F.....F....
+.....................
+....!.....!.....!....
+...{0}....!.....!....
+.._@0@_...!.....!....
+..{@0@}...!.....!....
+..@@0@@...!.....!....
+.###################.
+.###################.
+.....................
+
+...........................
+
+.....S.......F.......F.....
+...........................
+.....!.......!.......!.....
+....{0}......!.......!.....
+..._@0@_.....!.......!.....
+...{@0@}.....!.......!.....
+.._@@0@@_....!.......!.....
+..{@@0@@}....!.......!.....
+.#########################.
+.#########################.
+...........................

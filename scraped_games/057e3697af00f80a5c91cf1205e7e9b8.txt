@@ -1,0 +1,221 @@
+title Zombie Pitfall
+author astrophics
+homepage www.puzzlescript.net
+
+realtime_interval 0.1
+again_interval 0.2
+
+========
+OBJECTS
+========
+
+Background 
+#8c8a8a
+
+Target
+#2d2d2d #0f0f0f Black
+.000.
+01110
+11111
+12221
+.222.
+
+Temp
+BLACK
+.....
+.....
+.....
+.....
+.....
+
+Wall
+#6b6b6b #3d3d3d #282828
+10000
+21110
+21110
+21110
+22221
+
+Dirt
+#3d3d3d #282828
+10001
+01000
+10010
+00000
+00010
+
+PlayerActive
+DARKBLUE Brown 
+..1..
+.000.
+00000
+10001
+.0.0.
+
+Player1
+DARKBLUE Brown 
+.....
+..1..
+.000.
+.101.
+.....
+
+Player2
+DARKBLUE Brown 
+.....
+..1..
+.101.
+..0..
+.....
+
+Player3
+DARKBLUE Brown 
+.....
+.....
+..0..
+.....
+.....
+
+Player4
+DARKBLUE Brown 
+.....
+.....
+.....
+.....
+.....
+
+ZombieActive 
+Purple GREEN 
+..1..
+.000.
+00000
+10001
+.0.0.
+
+Zombie1
+Purple GREEN 
+.....
+..1..
+.000.
+.101.
+.....
+
+Zombie2
+Purple GREEN 
+.....
+..1..
+.101.
+..0..
+.....
+
+Zombie3
+Purple GREEN 
+.....
+.....
+..0..
+.....
+.....
+
+Crate 
+#7f6636 #5b4926 #382c14
+10000
+21110
+21110
+21110
+22221
+
+Void
+Black
+
+=======
+LEGEND
+=======
+. = Background
+, = Void
+# = Wall
+W = Wall
+D = Dirt
+P = PlayerActive
+Z = ZombieActive
+* = Crate
+@ = Crate
+O = Target
+T = Temp
+
+Zombie = ZombieActive or Zombie1 or Zombie2 or Zombie3
+Player = PlayerActive or Player1 or Player2 or Player3 or Player4
+
+=======
+SOUNDS
+=======
+sfx0 40281107
+sfx1 76602908
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Void
+Target, Temp
+Player, Wall, Zombie, Dirt, Crate
+
+======
+RULES     
+======     
+
+[ Player4 ] -> restart
+[ Player3 ] -> [ Player4 ] again 
+[ Player2 ] -> [ Player3 ] again 
+[ Player1 ] -> [ Player2 ] again  
+[ Zombie3 ] -> [ ]
+[ Zombie2 ] -> [ Zombie3 ] again 
+[ Zombie1 ] -> [ Zombie2 ] again 
+
+(target shit)
+down [ Target | no Temp ] -> [ Target | Temp ]
+
+(zombie shit)
+[ ZombieActive | ... | moving Player ] -> [ > ZombieActive | ... | moving Player ]
+down [ ZombieActive | Temp ] -> [ Zombie1 | Temp ] again sfx1
+
+(player shit)
+[ > Player | Crate ] -> [ Player | > Crate ]
+[ > Player | Dirt ] -> [ > Player | ] sfx0
+down [ PlayerActive | Temp ] -> [ Player1 | Temp ] again sfx1
+
+==============
+WINCONDITIONS
+==============
+
+No Zombie   
+
+=======     
+LEVELS
+=======
+
+#####
+#.z.#
+#.o.#
+#...#
+#p..#
+#####
+
+#####
+#.z.#
+#...#
+#ddd#
+#dod#
+#pdd#
+#####
+
+#########
+#dz...zd#
+#d.....d#
+#d.....d#
+#dd.o.dd#
+#dd.p.dd#
+#########
+
+
+

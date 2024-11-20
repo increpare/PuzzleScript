@@ -1,0 +1,419 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	#
+      colors
+        color	0e193f
+        color	#202a4c
+    object_data
+      object_name	#20324a
+      legend_key	#
+      colors
+        color	1f3649
+        color	#00003d
+      sprite
+        ['0' '0' '0' '0' '4']
+        ['1' '3' '2' '1' '0']
+        ['0' '4' '0' '0' '0']
+        ['1' '0' '1' '1' '1']
+        ['0' '0' '0' '3' '2']
+    object_data
+      object_name	End
+      legend_key	d
+      colors
+        color	arkbrown
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '0' '.' '0']
+        ['0' '0' '.' '0' '0']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	Grass
+      legend_key	L
+      colors
+        color	IGHTGREEN
+        color	GREEN
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '1']
+        ['1' '1' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '1' '1']
+    object_data
+      object_name	Brick
+      legend_key	b
+      colors
+        color	rown
+        color	DARKBROWN
+    object_data
+      object_name	00010
+      legend_key	1
+      colors
+        color	1111
+    object_data
+      object_name	01000
+      legend_key	1
+      colors
+        color	1111
+    object_data
+      object_name	00010
+      legend_key	P
+      colors
+        color	layerWithoutKeyorSuv
+    object_data
+      object_name	purple
+      legend_key	w
+      colors
+        color	hite
+        color	blue
+    object_data
+      object_name	..1..
+      legend_key	0
+      colors
+        color	0000
+    object_data
+      object_name	02220
+      legend_key	0
+      colors
+        color	2220
+    object_data
+      object_name	00000
+      legend_key	P
+      colors
+        color	layerWithKey
+    object_data
+      object_name	purple
+      legend_key	w
+      colors
+        color	hite
+        color	blue
+      sprite
+        ['.' '.' '1' '.' '.']
+        ['2' '2' '2' '2' '2']
+        ['2' '0' '0' '0' '2']
+        ['2' '0' '0' '0' '2']
+        ['2' '2' '2' '2' '2']
+    object_data
+      object_name	PlayerWithSuv
+      legend_key	o
+      colors
+        color	range
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Lock
+      legend_key	b
+      colors
+        color	lack
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Key
+      legend_key	b
+      colors
+        color	lack
+      sprite
+        ['.' '0' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Suv
+      legend_key	b
+      colors
+        color	rown
+        color	gray
+    object_data
+      object_name	.111.
+      legend_key	1
+      colors
+        color	1111
+    object_data
+      object_name	11111
+      legend_key	.
+      colors
+        color	.0..
+    object_data
+      object_name	..0..
+      legend_key	B
+      colors
+        color	k
+    object_data
+      object_name	transparent
+      legend_key	T
+      colors
+        color	ile1
+    object_data
+      object_name	#587ba2
+      legend_key	#
+      colors
+        color	4f6e92
+    object_data
+      object_name	#7895b6
+      legend_key	#
+      colors
+        color	354961
+        color	#425a78
+      sprite
+        ['2' '1' '1' '1' '1']
+        ['2' '0' '0' '0' '3']
+        ['2' '0' '0' '0' '3']
+        ['2' '0' '0' '0' '3']
+        ['4' '4' '4' '4' '3']
+    object_data
+      object_name	Tile2
+      legend_key	#
+      colors
+        color	396959
+    object_data
+      object_name	#335f50
+      legend_key	#
+      colors
+        color	12261b
+        color	#447f6c
+      sprite
+        ['1' '1' '1' '1' '2']
+        ['3' '0' '0' '2' '2']
+        ['3' '0' '2' '2' '2']
+        ['3' '2' '2' '2' '2']
+        ['2' '2' '2' '2' '2']
+    object_data
+      object_name	Ad
+      legend_key	b
+      colors
+        color	rown
+      
+
+
+  legend_section
+    legend_data
+      Player
+      object_name	PlayerWithKey
+      legend_operation
+        object_name	PlayerWithSuv
+      legend_operation
+        object_name	PlayerWithoutKeyorSuv
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      g
+      object_name	Grass
+    legend_data
+      p
+      object_name	PlayerWithoutKeyorSuv
+    legend_data
+      k
+      object_name	Key
+    legend_data
+      1
+      object_name	Key
+      legend_operation
+        object_name	Grass
+    legend_data
+      2
+      object_name	Lock
+      legend_operation
+        object_name	Grass
+    legend_data
+      l
+      object_name	Lock
+    legend_data
+      #
+      object_name	Brick
+    legend_data
+      a
+      object_name	End
+      legend_operation
+        object_name	Grass
+    legend_data
+      s
+      object_name	PlayerWithoutKeyorSuv
+      legend_operation
+        object_name	Grass
+    legend_data
+      3
+      object_name	Suv
+    legend_data
+      4
+      object_name	Bk
+      legend_operation
+        object_name	Grass
+    legend_data
+      5
+      object_name	Tile1
+    legend_data
+      6
+      object_name	Suv
+      legend_operation
+        object_name	Grass
+    legend_data
+      i
+      object_name	Tile2
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Grass
+    layer_data
+      object_name	Key
+    layer_data
+      object_name	End
+    layer_data
+      object_name	Bk
+    layer_data
+      object_name	Suv
+    layer_data
+      object_name	Tile1
+    layer_data
+      object_name	Tile2
+    layer_data
+      object_name	Player
+      object_name	Lock
+    layer_data
+      object_name	Brick
+      object_name	Ad
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              PlayerWithKey
+            cell_border
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          rule_part
+            rule_content	PlayerWithoutKeyorSuv
+            cell_border
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              PlayerWithSuv
+            cell_border
+            rule_content	B
+            rule_content	k
+          ->
+          rule_part
+            rule_content	PlayerWithoutKeyorSuv
+            cell_border
+            rule_content	K
+            rule_content	e
+            rule_content	y
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Player
+              Key
+          ->
+          rule_part
+            rule_content	PlayerWithKey
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Player
+              Suv
+          ->
+          rule_part
+            rule_content	PlayerWithSuv
+          
+
+  winconditions_section
+    condition_data
+      all
+      object_name	Player
+      on
+      object_name	End
+  levels_section
+    level_data	[['g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g'
+  'g' 'g']]
+    level_data	[['g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g'
+  'g' 'g']
+ ['g' 'g' 'g' 'g' 's' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' '1' 'g'
+  'g' 'g']
+ ['g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g'
+  'g' 'g']
+ ['#' '#' '#' '#' 'g' 'g' 'g' 'g' 'g' '#' '#' '#' '#' 'g' 'g' 'g' 'g' 'g'
+  'g' 'g']
+ ['#' '5' '5' '5' 'g' 'g' 'g' 'g' 'g' 'g' '4' '4' '#' 'g' 'g' '#' '#' '#'
+  '#' '#']
+ ['#' '5' '5' '5' 'g' 'g' 'g' 'g' 'g' '#' '#' '#' '#' 'g' 'g' 'g' '2' '2'
+  'g' 'a']
+ ['#' '#' '#' '#' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' '#' '#' '#'
+  '#' '#']
+ ['g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g'
+  'g' 'g']
+ ['2' '2' '2' '2' '2' '2' '2' '2' '2' '2' '2' '2' '2' '2' '2' '2' '2' '2'
+  '2' '2']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.']
+ ['.' '.' '#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '#' '.' '.' '.' '.'
+  '.' '.']
+ ['.' '.' '#' '#' '.' '.' '.' '.' '#' '.' '.' '.' '.' '#' '.' '.' '.' '.'
+  '.' '.']
+ ['.' '.' '.' '#' '.' '.' '.' '.' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.'
+  '.' '.']
+ ['.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.']
+ ['.' '.' '.' '#' '.' '.' '3' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.']
+ ['.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '3' '.'
+  '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '#' '.'
+  '.' '#']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g' 'g'
+  'g' 'g']]
+    level_data	[['p' '.' 'k' ... 'g' 'g' 'g']
+ ['#' '#' '#' ... '#' '#' '#']
+ ['.' '.' '.' ... 'g' 'g' '#']
+ ...
+ ['#' '.' '#' ... '#' '#' '#']
+ ['#' '.' '.' ... 'g' 'a' '#']
+ ['#' '#' '#' ... '#' '#' '#']]
+    level_data	[['#' '#' '#' '.' '#' '#' '#' '.' '.' '#' '.' '#' '#' '#' '.' '#' '#' '#'
+  '.' '.' '#' '5' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' 'g'
+  'g' 'g' 'g' 'g']]
+    level_data	[['.' '#' '.' ... 'a' 'g' 'g']
+ ['#' '#' '#' ... 'g' 'g' 'g']
+ ['.' '.' '.' ... 'g' '#' '#']
+ ...
+ ['.' '.' '.' ... '5' '5' '5']
+ ['.' '.' '.' ... '.' '.' '5']
+ ['l' 'l' 'l' ... '5' '5' '.']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' 'l' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '.' '#' '.' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.']]
+    level_data	[['#' 'l' 'l' ... '#' '#' '#']
+ ['#' 'l' '.' ... '#' '.' '.']
+ ['#' 'l' '.' ... '.' '.' '.']
+ ...
+ ['.' '.' '#' ... 'g' 'g' '#']
+ ['.' '.' '.' ... '#' '#' 'g']
+ ['#' '#' '#' ... '2' 'g' 'a']]
+    level_data	None

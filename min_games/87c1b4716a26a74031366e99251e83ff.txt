@@ -1,0 +1,88 @@
+OBJECTS
+
+BackgroundWhite
+EndPointGreen
+PlayerForwardBlack00000
+00000
+0....
+00000
+00000
+
+PlayerBackBlack00000
+00000
+....0
+00000
+00000
+
+PlayerUpBlack00.00
+00.00
+0...0
+00000
+00000
+
+PlayerDownBlack00000
+00000
+0...0
+00.00
+00.00
+
+WallGray
+WallBlockBlack Grey01111
+01111
+01111
+01111
+00001
+
+BlockOrange00000
+0.0.0
+00000
+0.0.0
+00000
+
+
+
+
+LEGEND
+
+Player = PlayerForward or PlayerBack or PlayerUp or PlayerDown
+Movable = Player or Block
+PlayerObstacle = Wall or WallBlock
+BlockObstacle = Player or Wall or WallBlock or EndPoint
+. = Background
+# = Wall
+@ = WallBlock
+a = PlayerUp
+b = PlayerDown
+c = PlayerForward
+d = PlayerBack
+O = Block
+E = EndPoint
+
+COLLISIONLAYERS
+
+Background
+EndPoint
+Player, Wall
+WallBlock, Block
+
+RULES
+
+[ > PlayerDown | Movable ] -> [ > PlayerDown | vMovable ] 
+[ > PlayerForward | Movable ] -> [ > PlayerForward | >Movable ] 
+[ > PlayerUp | Movable ] -> [ > PlayerUp | ^Movable ] 
+[ > PlayerBack | Movable ] -> [ > PlayerBack | <Movable ] 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+######
+
+#...d#
+#...c#
+#....#
+#...b#
+######

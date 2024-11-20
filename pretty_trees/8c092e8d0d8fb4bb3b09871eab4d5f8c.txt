@@ -1,0 +1,1079 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	L
+      colors
+        color	ightBlue
+    object_data
+      object_name	Wall
+      legend_key	D
+      colors
+        color	arkGrey
+    object_data
+      object_name	Player
+      legend_key	B
+      colors
+        color	lack
+    object_data
+      object_name	Orange
+      legend_key	W
+      colors
+        color	hite
+        color	Blue
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['2' '2' '2' '2' '2']
+        ['.' '3' '3' '3' '.']
+        ['.' '3' '.' '3' '.']
+    object_data
+      object_name	PlayerOff1
+      legend_key	B
+      colors
+        color	lack
+    object_data
+      object_name	Orange
+      legend_key	W
+      colors
+        color	hite
+        color	Blue
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	PlayerOff2
+      legend_key	B
+      colors
+        color	lack
+    object_data
+      object_name	Orange
+      legend_key	W
+      colors
+        color	hite
+        color	Blue
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	Duplicator
+      legend_key	P
+      colors
+        color	ink
+    object_data
+      object_name	Button1
+      legend_key	R
+      colors
+        color	ed
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	DoorFrameV1
+      legend_key	R
+      colors
+        color	ed
+        color	DarkGrey
+      sprite
+        ['1' '0' '0' '0' '1']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['1' '0' '0' '0' '1']
+    object_data
+      object_name	DoorFrameH1
+      legend_key	R
+      colors
+        color	ed
+        color	DarkGrey
+      sprite
+        ['1' '.' '.' '.' '1']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['1' '.' '.' '.' '1']
+    object_data
+      object_name	DoorClosed1
+      legend_key	R
+      colors
+        color	ed
+        color	DarkGrey
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	DoorOpen1
+      legend_key	R
+      colors
+        color	ed
+        color	DarkGrey
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Button2
+      legend_key	B
+      colors
+        color	lue
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	DoorFrameV2
+      legend_key	B
+      colors
+        color	lue
+        color	DarkGrey
+      sprite
+        ['1' '0' '0' '0' '1']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['1' '0' '0' '0' '1']
+    object_data
+      object_name	DoorFrameH2
+      legend_key	B
+      colors
+        color	lue
+        color	DarkGrey
+      sprite
+        ['1' '.' '.' '.' '1']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['1' '.' '.' '.' '1']
+    object_data
+      object_name	DoorClosed2
+      legend_key	B
+      colors
+        color	lue
+        color	DarkGrey
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	DoorOpen2
+      legend_key	B
+      colors
+        color	lue
+        color	DarkGrey
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Button3
+      legend_key	G
+      colors
+        color	reen
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	DoorFrameV3
+      legend_key	G
+      colors
+        color	reen
+        color	DarkGrey
+      sprite
+        ['1' '0' '0' '0' '1']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['1' '0' '0' '0' '1']
+    object_data
+      object_name	DoorFrameH3
+      legend_key	G
+      colors
+        color	reen
+        color	DarkGrey
+      sprite
+        ['1' '.' '.' '.' '1']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['1' '.' '.' '.' '1']
+    object_data
+      object_name	DoorClosed3
+      legend_key	G
+      colors
+        color	reen
+        color	DarkGrey
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	DoorOpen3
+      legend_key	G
+      colors
+        color	reen
+        color	DarkGrey
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Crate
+      legend_key	O
+      colors
+        color	range
+        color	Yellow
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Goal
+      legend_key	B
+      colors
+        color	rown
+    object_data
+      object_name	TutDuplicator
+      legend_key	P
+      colors
+        color	ink
+    object_data
+      object_name	DoorTest1
+      legend_key	B
+      colors
+        color	lack
+    object_data
+      object_name	DoorTest2
+      legend_key	B
+      colors
+        color	lack
+    object_data
+      object_name	DoorTest3
+      legend_key	B
+      colors
+        color	lack
+      
+
+
+  legend_section
+    legend_data
+      Off
+      object_name	PlayerOff1
+      legend_operation
+        object_name	PlayerOff2
+    legend_data
+      Pusher
+      object_name	Crate
+      legend_operation
+        object_name	Player
+      legend_operation
+        object_name	Off
+    legend_data
+      Goaler
+      object_name	Player
+      legend_operation
+        object_name	Off
+    legend_data
+      Button
+      object_name	Button1
+      legend_operation
+        object_name	Button2
+      legend_operation
+        object_name	Button3
+    legend_data
+      DoorFrame
+      object_name	DoorFrameV1
+      legend_operation
+        object_name	DoorFrameH1
+      legend_operation
+        object_name	DoorFrameV2
+      legend_operation
+        object_name	DoorFrameH2
+      legend_operation
+        object_name	DoorFrameV3
+      legend_operation
+        object_name	DoorFrameH3
+    legend_data
+      DoorClosed
+      object_name	DoorClosed1
+      legend_operation
+        object_name	DoorClosed2
+      legend_operation
+        object_name	DoorClosed3
+    legend_data
+      DoorOpen
+      object_name	DoorOpen1
+      legend_operation
+        object_name	DoorOpen2
+      legend_operation
+        object_name	DoorOpen3
+    legend_data
+      DoorTest
+      object_name	DoorTest1
+      legend_operation
+        object_name	DoorTest2
+      legend_operation
+        object_name	DoorTest3
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      P
+      object_name	Player
+    legend_data
+      *
+      object_name	Duplicator
+    legend_data
+      ,
+      object_name	TutDuplicator
+    legend_data
+      1
+      object_name	Button1
+    legend_data
+      Q
+      object_name	DoorFrameV1
+      legend_operation
+        object_name	DoorClosed1
+    legend_data
+      A
+      object_name	DoorFrameH1
+      legend_operation
+        object_name	DoorClosed1
+    legend_data
+      2
+      object_name	Button2
+    legend_data
+      W
+      object_name	DoorFrameV2
+      legend_operation
+        object_name	DoorClosed2
+    legend_data
+      S
+      object_name	DoorFrameH2
+      legend_operation
+        object_name	DoorClosed2
+    legend_data
+      3
+      object_name	Button3
+    legend_data
+      E
+      object_name	DoorFrameV3
+      legend_operation
+        object_name	DoorClosed3
+    legend_data
+      D
+      object_name	DoorFrameH3
+      legend_operation
+        object_name	DoorClosed3
+    legend_data
+      C
+      object_name	Crate
+    legend_data
+      G
+      object_name	Goal
+  collisionlayers_section
+    layer_data
+      object_name	DoorTest
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	DoorFrame
+    layer_data
+      object_name	Goal
+      object_name	DoorOpen
+    layer_data
+      object_name	Button
+      object_name	DoorClosed
+    layer_data
+      object_name	Player
+      object_name	Off
+    layer_data
+      object_name	Wall
+      object_name	Crate
+    layer_data
+      object_name	Duplicator
+      object_name	TutDuplicator
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	>
+            rule_content	C
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Pusher
+            cell_border
+            rule_content	D
+            rule_content	o
+            rule_content	o
+            rule_content	r
+            rule_content	C
+            rule_content	l
+            rule_content	o
+            rule_content	s
+            rule_content	e
+            rule_content	d
+          ->
+          rule_part
+            rule_content	Pusher
+            cell_border
+            rule_content	D
+            rule_content	o
+            rule_content	o
+            rule_content	r
+            rule_content	C
+            rule_content	l
+            rule_content	o
+            rule_content	s
+            rule_content	e
+            rule_content	d
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	T
+            rule_content	u
+            rule_content	t
+            rule_content	D
+            rule_content	u
+            rule_content	p
+            rule_content	l
+            rule_content	i
+            rule_content	c
+            rule_content	a
+            rule_content	t
+            rule_content	o
+            rule_content	r
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	O
+            rule_content	f
+            rule_content	f
+            rule_content	1
+          None
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	D
+            rule_content	u
+            rule_content	p
+            rule_content	l
+            rule_content	i
+            rule_content	c
+            rule_content	a
+            rule_content	t
+            rule_content	o
+            rule_content	r
+            rule_content	]
+            rule_content	[
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	O
+            rule_content	f
+            rule_content	f
+            rule_content	1
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	O
+            rule_content	f
+            rule_content	f
+            rule_content	2
+            rule_content	]
+            rule_content	[
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	O
+            rule_content	f
+            rule_content	f
+            rule_content	1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	D
+            rule_content	u
+            rule_content	p
+            rule_content	l
+            rule_content	i
+            rule_content	c
+            rule_content	a
+            rule_content	t
+            rule_content	o
+            rule_content	r
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	O
+            rule_content	f
+            rule_content	f
+            rule_content	1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            rule_content	]
+            rule_content	[
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	O
+            rule_content	f
+            rule_content	f
+            rule_content	1
+            rule_content	]
+            rule_content	[
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	O
+            rule_content	f
+            rule_content	f
+            rule_content	2
+          ->
+          rule_part
+            rule_content	PlayerOff2
+            rule_content	]
+            rule_content	[
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	]
+            rule_content	[
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	O
+            rule_content	f
+            rule_content	f
+            rule_content	1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            rule_content	]
+            rule_content	[
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	O
+            rule_content	f
+            rule_content	f
+            rule_content	1
+          ->
+          rule_part
+            rule_content	PlayerOff1
+            rule_content	]
+            rule_content	[
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            rule_content	]
+            rule_content	[
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	O
+            rule_content	f
+            rule_content	f
+            rule_content	2
+          ->
+          rule_part
+            rule_content	PlayerOff2
+            rule_content	]
+            rule_content	[
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content	DoorOpen1
+          ->
+          rule_part
+            rule_content
+              DoorOpen1
+              DoorTest1
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content
+              Button1
+              Pusher
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            rule_content	o
+            rule_content	o
+            rule_content	r
+            rule_content	T
+            rule_content	e
+            rule_content	s
+            rule_content	t
+            rule_content	1
+          ->
+          rule_part
+            rule_content
+              Button1
+              Pusher
+            rule_content	]
+            rule_content	[
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content
+              DoorOpen1
+              DoorTest1
+          ->
+          rule_part
+            rule_content	DoorClosed1
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content
+              Button1
+              Pusher
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            rule_content	o
+            rule_content	o
+            rule_content	r
+            rule_content	C
+            rule_content	l
+            rule_content	o
+            rule_content	s
+            rule_content	e
+            rule_content	d
+            rule_content	1
+          ->
+          rule_part
+            rule_content
+              Button1
+              Pusher
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            rule_content	o
+            rule_content	o
+            rule_content	r
+            rule_content	O
+            rule_content	p
+            rule_content	e
+            rule_content	n
+            rule_content	1
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content	DoorOpen2
+          ->
+          rule_part
+            rule_content
+              DoorOpen2
+              DoorTest2
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content
+              Button2
+              Pusher
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            rule_content	o
+            rule_content	o
+            rule_content	r
+            rule_content	T
+            rule_content	e
+            rule_content	s
+            rule_content	t
+            rule_content	2
+          ->
+          rule_part
+            rule_content
+              Button2
+              Pusher
+            rule_content	]
+            rule_content	[
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content
+              DoorOpen2
+              DoorTest2
+          ->
+          rule_part
+            rule_content	DoorClosed2
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content
+              Button2
+              Pusher
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            rule_content	o
+            rule_content	o
+            rule_content	r
+            rule_content	C
+            rule_content	l
+            rule_content	o
+            rule_content	s
+            rule_content	e
+            rule_content	d
+            rule_content	2
+          ->
+          rule_part
+            rule_content
+              Button2
+              Pusher
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            rule_content	o
+            rule_content	o
+            rule_content	r
+            rule_content	O
+            rule_content	p
+            rule_content	e
+            rule_content	n
+            rule_content	2
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content	DoorOpen3
+          ->
+          rule_part
+            rule_content
+              DoorOpen3
+              DoorTest3
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content
+              Button3
+              Pusher
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            rule_content	o
+            rule_content	o
+            rule_content	r
+            rule_content	T
+            rule_content	e
+            rule_content	s
+            rule_content	t
+            rule_content	3
+          ->
+          rule_part
+            rule_content
+              Button3
+              Pusher
+            rule_content	]
+            rule_content	[
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content
+              DoorOpen3
+              DoorTest3
+          ->
+          rule_part
+            rule_content	DoorClosed3
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content
+              Button3
+              Pusher
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            rule_content	o
+            rule_content	o
+            rule_content	r
+            rule_content	C
+            rule_content	l
+            rule_content	o
+            rule_content	s
+            rule_content	e
+            rule_content	d
+            rule_content	3
+          ->
+          rule_part
+            rule_content
+              Button3
+              Pusher
+            rule_content	]
+            rule_content	[
+            rule_content	D
+            rule_content	o
+            rule_content	o
+            rule_content	r
+            rule_content	O
+            rule_content	p
+            rule_content	e
+            rule_content	n
+            rule_content	3
+          
+
+        rule_data
+          Late
+          rule_part
+            rule_content
+              Pusher
+              DoorClosed
+          ->
+          rule_part
+            rule_content	DoorClosed
+          
+
+  winconditions_section
+    condition_data
+      All
+      object_name	Goal
+      on
+      object_name	Goaler
+  levels_section
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'p' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' 'q' '.' '.' '.' 'g' '.' '#']
+ ['#' '.' 'c' '.' '1' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'p' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' 'w' '.' '.' '.' 'g' '.' '#']
+ ['#' '.' ',' '.' '2' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' 'p' '.' '.' '#' '.' '.' '.' '.'
+  '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.'
+  '.' '#']
+ ['#' '.' '.' 'g' '.' '.' 'w' 'q' '.' '.' 'c' '.' '.' 'q' '.' '.' '*' '.'
+  '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '#' '.' '2' '.' '1' '.' '#' '.' '.' '.' '.'
+  '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.'
+  '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' 'p' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '*' '.' '.' 'q' '.' '.' '.' 'c' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '1' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' 'a' '#' '#' '#' '#' '#' 's' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '#' '#' 'd' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' 'g' '.' '.' '#']
+ ['#' '.' '2' '.' '3' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#']
+ ['#' 'p' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.'
+  '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '*' '.' '.' '#' '#' '.' '.' '.' '.'
+  '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '.' '.' 'g' '.'
+  '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '1' '2' '3' '.' '#' '#' '.' '.' '.' '.'
+  '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.'
+  '.' '#']
+ ['#' '#' '#' 'a' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' 's' '#'
+  '#' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#' '#' '#' '#' 'd' '#'
+  '#' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.'
+  '.' '#']
+ ['#' '.' '.' '.' '.' '.' 'e' '.' '.' 'c' '.' '.' 'q' 'w' '.' '.' '.' '.'
+  '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.'
+  '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.'
+  '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'p' '.' '.' '#' 'g' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '#' 'd' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '1' '.' '.' 'c' 'c' '.' '.' '.' '.' '#']
+ ['#' '.' 'c' '.' 'c' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' 'a' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '3' '.' '.' '.' '#']
+ ['#' '.' '.' '1' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]

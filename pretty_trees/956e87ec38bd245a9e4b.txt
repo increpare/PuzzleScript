@@ -1,0 +1,6341 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	G
+      colors
+        color	rey
+        color	DarkGrey
+      sprite
+        ['0' '1' '0' '0' '1']
+        ['0' '0' '1' '1' '0']
+        ['0' '1' '0' '0' '1']
+        ['1' '0' '0' '1' '0']
+        ['0' '1' '1' '0' '0']
+    object_data
+      object_name	Target
+      legend_key	D
+      colors
+        color	arkBlue
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '0' '.' '0']
+        ['0' '0' '.' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Wall
+      legend_key	B
+      colors
+        color	ROWN
+        color	DARKBROWN
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+    object_data
+      object_name	WallR
+      legend_key	#
+      colors
+        color	AA0000
+        color	#660000
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+    object_data
+      object_name	WallG
+      legend_key	#
+      colors
+        color	00AA00
+        color	#006600
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+    object_data
+      object_name	WallB
+      legend_key	#
+      colors
+        color	0000AA
+        color	#000066
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+    object_data
+      object_name	WallC
+      legend_key	#
+      colors
+        color	00AAAA
+        color	#006666
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+    object_data
+      object_name	WallY
+      legend_key	#
+      colors
+        color	AAAA00
+        color	#666600
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+    object_data
+      object_name	WallM
+      legend_key	#
+      colors
+        color	AA00AA
+        color	#660066
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+    object_data
+      object_name	WallBl
+      legend_key	#
+      colors
+        color	333333
+        color	#111111
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+    object_data
+      object_name	WallW
+      legend_key	#
+      colors
+        color	DDDDDD
+        color	#999999
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+    object_data
+      object_name	PlayerC
+      legend_key	#
+      colors
+        color	00AAAA
+        color	White
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	PlayerY
+      legend_key	#
+      colors
+        color	AAAA00
+        color	White
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	PlayerM
+      legend_key	#
+      colors
+        color	AA00AA
+        color	White
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	PlayerR
+      legend_key	#
+      colors
+        color	AA0000
+        color	White
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	PlayerG
+      legend_key	#
+      colors
+        color	00AA00
+        color	White
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	PlayerB
+      legend_key	#
+      colors
+        color	0000AA
+        color	White
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	PlayerBl
+      legend_key	#
+      colors
+        color	111111
+        color	White
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	PlayerW
+      legend_key	W
+      colors
+        color	hite
+        color	Purple
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	CoinC
+      legend_key	#
+      colors
+        color	00FFFF
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	CoinY
+      legend_key	#
+      colors
+        color	FFFF00
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	CoinM
+      legend_key	#
+      colors
+        color	FF00FF
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	CoinR
+      legend_key	#
+      colors
+        color	FF0000
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	CoinG
+      legend_key	#
+      colors
+        color	00FF00
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	CoinB
+      legend_key	#
+      colors
+        color	0000FF
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	CoinBl
+      legend_key	#
+      colors
+        color	111111
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	CoinW
+      legend_key	W
+      colors
+        color	hite
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	PadC
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#00CCCC
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	PadY
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#CCCC00
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	PadM
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#CC00CC
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	PadR
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#CC0000
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	PadG
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#00CC00
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	PadB
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#0000CC
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	PadC_2
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#00FFFF
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	PadY_2
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#FFFF00
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	PadM_2
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#FF00FF
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	PadR_2
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#FF0000
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	PadG_2
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#00FF00
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	PadB_2
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#0000FF
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	LtdPadC
+      legend_key	#
+      colors
+        color	111111
+        color	#00CCCC
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	LtdPadY
+      legend_key	#
+      colors
+        color	111111
+        color	#CCCC00
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	LtdPadM
+      legend_key	#
+      colors
+        color	111111
+        color	#CC00CC
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	LtdPadR
+      legend_key	#
+      colors
+        color	111111
+        color	#CC0000
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	LtdPadG
+      legend_key	#
+      colors
+        color	111111
+        color	#00CC00
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	LtdPadB
+      legend_key	#
+      colors
+        color	111111
+        color	#0000CC
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	LtdPadW
+      legend_key	#
+      colors
+        color	111111
+        color	white
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	EmptyPad
+      legend_key	#
+      colors
+        color	111111
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '.' '0' '.']
+        ['0' '.' '0' '.' '0']
+        ['.' '0' '.' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	TotemC
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#009999
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	TotemY
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#999900
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	TotemM
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#990099
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	TotemR
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#990000
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	TotemG
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#009900
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	TotemB
+      legend_key	#
+      colors
+        color	D0D0A0
+        color	#000099
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	Toggle_OFF
+      legend_key	B
+      colors
+        color	lack
+    object_data
+      object_name	Toggle_ON
+      legend_key	W
+      colors
+        color	hite
+  legend_section
+    legend_data
+      Player
+      object_name	PlayerC
+      legend_operation
+        object_name	PlayerY
+      legend_operation
+        object_name	PlayerM
+      legend_operation
+        object_name	PlayerR
+      legend_operation
+        object_name	PlayerG
+      legend_operation
+        object_name	PlayerB
+      legend_operation
+        object_name	PlayerBl
+      legend_operation
+        object_name	PlayerW
+    legend_data
+      Coin
+      object_name	CoinC
+      legend_operation
+        object_name	CoinY
+      legend_operation
+        object_name	CoinM
+      legend_operation
+        object_name	CoinR
+      legend_operation
+        object_name	CoinG
+      legend_operation
+        object_name	CoinB
+      legend_operation
+        object_name	CoinBl
+      legend_operation
+        object_name	CoinW
+    legend_data
+      Pad
+      object_name	PadC
+      legend_operation
+        object_name	PadY
+      legend_operation
+        object_name	PadM
+      legend_operation
+        object_name	PadR
+      legend_operation
+        object_name	PadG
+      legend_operation
+        object_name	PadB
+      legend_operation
+        object_name	PadC_2
+      legend_operation
+        object_name	PadY_2
+      legend_operation
+        object_name	PadM_2
+      legend_operation
+        object_name	PadR_2
+      legend_operation
+        object_name	PadG_2
+      legend_operation
+        object_name	PadB_2
+      legend_operation
+        object_name	LtdPadC
+      legend_operation
+        object_name	LtdPadY
+      legend_operation
+        object_name	LtdPadM
+      legend_operation
+        object_name	LtdPadR
+      legend_operation
+        object_name	LtdPadG
+      legend_operation
+        object_name	LtdPadB
+      legend_operation
+        object_name	LtdPadW
+      legend_operation
+        object_name	EmptyPad
+    legend_data
+      Totem
+      object_name	TotemC
+      legend_operation
+        object_name	TotemY
+      legend_operation
+        object_name	TotemM
+      legend_operation
+        object_name	TotemR
+      legend_operation
+        object_name	TotemG
+      legend_operation
+        object_name	TotemB
+    legend_data
+      Toggle
+      object_name	Toggle_ON
+      legend_operation
+        object_name	Toggle_OFF
+    legend_data
+      MagicWall
+      object_name	WallR
+      legend_operation
+        object_name	WallG
+      legend_operation
+        object_name	WallB
+      legend_operation
+        object_name	WallC
+      legend_operation
+        object_name	WallY
+      legend_operation
+        object_name	WallM
+      legend_operation
+        object_name	WallBl
+      legend_operation
+        object_name	WallW
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      +
+      object_name	WallR
+    legend_data
+      t
+      object_name	WallG
+    legend_data
+      {
+      object_name	WallB
+    legend_data
+      u
+      object_name	WallC
+    legend_data
+      i
+      object_name	WallY
+    legend_data
+      }
+      object_name	WallM
+    legend_data
+      e
+      object_name	WallBl
+    legend_data
+      ~
+      object_name	WallW
+    legend_data
+      C
+      object_name	PlayerC
+    legend_data
+      Y
+      object_name	PlayerY
+    legend_data
+      M
+      object_name	PlayerM
+    legend_data
+      R
+      object_name	PlayerR
+    legend_data
+      G
+      object_name	PlayerG
+    legend_data
+      B
+      object_name	PlayerB
+    legend_data
+      1
+      object_name	PlayerBl
+    legend_data
+      2
+      object_name	PlayerW
+    legend_data
+      a
+      object_name	CoinC
+    legend_data
+      s
+      object_name	CoinY
+    legend_data
+      d
+      object_name	CoinM
+    legend_data
+      f
+      object_name	CoinR
+    legend_data
+      j
+      object_name	CoinG
+    legend_data
+      k
+      object_name	CoinB
+    legend_data
+      3
+      object_name	CoinBl
+    legend_data
+      4
+      object_name	CoinW
+    legend_data
+      5
+      object_name	LtdPadC
+    legend_data
+      6
+      object_name	LtdPadY
+    legend_data
+      7
+      object_name	LtdPadM
+    legend_data
+      8
+      object_name	LtdPadR
+    legend_data
+      9
+      object_name	LtdPadG
+    legend_data
+      0
+      object_name	LtdPadB
+    legend_data
+      [
+      object_name	LtdPadW
+    legend_data
+      ?
+      object_name	EmptyPad
+    legend_data
+      z
+      object_name	PadC
+    legend_data
+      x
+      object_name	PadY
+    legend_data
+      p
+      object_name	PadM
+    legend_data
+      n
+      object_name	PadR
+    legend_data
+      q
+      object_name	PadG
+    legend_data
+      w
+      object_name	PadB
+    legend_data
+      !
+      object_name	TotemC
+      legend_operation
+        object_name	Toggle_OFF
+    legend_data
+      @
+      object_name	TotemY
+      legend_operation
+        object_name	Toggle_OFF
+    legend_data
+      $
+      object_name	TotemM
+      legend_operation
+        object_name	Toggle_OFF
+    legend_data
+      %
+      object_name	TotemR
+      legend_operation
+        object_name	Toggle_OFF
+    legend_data
+      *
+      object_name	TotemG
+      legend_operation
+        object_name	Toggle_OFF
+    legend_data
+      &
+      object_name	TotemB
+      legend_operation
+        object_name	Toggle_OFF
+    legend_data
+      O
+      object_name	Target
+  collisionlayers_section
+    layer_data
+      object_name	Toggle
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Target
+      object_name	Coin
+    layer_data
+      object_name	Pad
+      object_name	MagicWall
+    layer_data
+      object_name	Player
+    layer_data
+      object_name	Wall
+      object_name	Totem
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              PadR
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              PadR_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              PadR
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              PadR_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              PadR
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              PadR_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              PadR
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              PadR_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              PadR
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              PadR_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              PadR
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              PadR_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              PadR
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              PadR_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              PadR
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              PadR_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              <
+              Player
+              PadR_2
+          ->
+          rule_part
+            rule_content
+              <
+              Player
+              PadR
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              PadG
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              PadG_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              PadG
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              PadG_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              PadG
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              PadG_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              PadG
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              PadG_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              PadG
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              PadG_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              PadG
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              PadG_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              PadG
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              PadG_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              PadG
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              PadG_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              <
+              Player
+              PadG_2
+          ->
+          rule_part
+            rule_content
+              <
+              Player
+              PadG
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              PadB
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              PadB_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              PadB
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              PadB_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              PadB
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              PadB_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              PadB
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              PadB_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              PadB
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              PadB_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              PadB
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              PadB_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              PadB
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              PadB_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              PadB
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              PadB_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              <
+              Player
+              PadB_2
+          ->
+          rule_part
+            rule_content
+              <
+              Player
+              PadB
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              PadC
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              PadC_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              PadC
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              PadC_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              PadC
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              PadC_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              PadC
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              PadC_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              PadC
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              PadC_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              PadC
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              PadC_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              PadC
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              PadC_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              PadC
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              PadC_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              <
+              Player
+              PadC_2
+          ->
+          rule_part
+            rule_content
+              <
+              Player
+              PadC
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              PadY
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              PadY_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              PadY
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              PadY_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              PadY
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              PadY_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              PadY
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              PadY_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              PadY
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              PadY_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              PadY
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              PadY_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              PadY
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              PadY_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              PadY
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              PadY_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              <
+              Player
+              PadY_2
+          ->
+          rule_part
+            rule_content
+              <
+              Player
+              PadY
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              PadM
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              PadM_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              PadM
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              PadM_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              PadM
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              PadM_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              PadM
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              PadM_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              PadM
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              PadM_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              PadM
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              PadM_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              PadM
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              PadM_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              PadM
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              PadM_2
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              <
+              Player
+              PadM_2
+          ->
+          rule_part
+            rule_content
+              <
+              Player
+              PadM
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              CoinC
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              No
+              CoinC
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              CoinY
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              No
+              CoinY
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              CoinM
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              No
+              CoinM
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              CoinR
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              No
+              CoinR
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              CoinG
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              No
+              CoinG
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              CoinB
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              No
+              CoinB
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              CoinBl
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              No
+              CoinBl
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              CoinW
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              No
+              CoinW
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+              No
+              PlayerR
+              No
+              PlayerY
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	R
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerR
+              No
+              PlayerY
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	R
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+              No
+              PlayerG
+              No
+              PlayerC
+              No
+              PlayerY
+              No
+              PlayerW
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	G
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerG
+              No
+              PlayerC
+              No
+              PlayerY
+              No
+              PlayerW
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	G
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+              No
+              PlayerB
+              No
+              PlayerC
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	B
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerB
+              No
+              PlayerC
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	B
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+              No
+              PlayerC
+              No
+              PlayerW
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	C
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerC
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	C
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+              No
+              PlayerY
+              No
+              PlayerW
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	Y
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerY
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	Y
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	M
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerM
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	M
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+              No
+              PlayerBl
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerBl
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	B
+            rule_content	l
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+              No
+              PlayerW
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	W
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerW
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+            rule_content	W
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              LtdPadR
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              LtdPadR
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              LtdPadR
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              LtdPadR
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              LtdPadR
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              LtdPadR
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              LtdPadR
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              LtdPadR
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              LtdPadG
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              LtdPadG
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              LtdPadG
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              LtdPadG
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              LtdPadG
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              LtdPadG
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              LtdPadG
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              LtdPadG
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              LtdPadB
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              LtdPadB
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              LtdPadB
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              LtdPadB
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              LtdPadB
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              LtdPadB
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              LtdPadB
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              LtdPadB
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              LtdPadC
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              LtdPadC
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              LtdPadC
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              LtdPadC
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              LtdPadC
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              LtdPadC
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              LtdPadC
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              LtdPadC
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              LtdPadY
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              LtdPadY
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              LtdPadY
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              LtdPadY
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              LtdPadY
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              LtdPadY
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              LtdPadY
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              LtdPadY
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              LtdPadM
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              LtdPadM
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              LtdPadM
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              LtdPadM
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              LtdPadM
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              LtdPadM
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              LtdPadM
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              LtdPadM
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerR
+              LtdPadW
+          ->
+          rule_part
+            rule_content
+              PlayerC
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerG
+              LtdPadW
+          ->
+          rule_part
+            rule_content
+              PlayerM
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerB
+              LtdPadW
+          ->
+          rule_part
+            rule_content
+              PlayerY
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerC
+              LtdPadW
+          ->
+          rule_part
+            rule_content
+              PlayerR
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerM
+              LtdPadW
+          ->
+          rule_part
+            rule_content
+              PlayerG
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerY
+              LtdPadW
+          ->
+          rule_part
+            rule_content
+              PlayerB
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerBl
+              LtdPadW
+          ->
+          rule_part
+            rule_content
+              PlayerW
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              PlayerW
+              LtdPadW
+          ->
+          rule_part
+            rule_content
+              PlayerBl
+              EmptyPad
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerR
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          ->
+          rule_part
+            rule_content	PlayerR
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerR
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          ->
+          rule_part
+            rule_content	PlayerR
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerR
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          ->
+          rule_part
+            rule_content	PlayerR
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerR
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content	PlayerR
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          ->
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          ->
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          ->
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          ->
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          ->
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          ->
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          ->
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          ->
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          ->
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerR
+              No
+              PlayerY
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerR
+              No
+              PlayerY
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerR
+              No
+              PlayerY
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerR
+              No
+              PlayerY
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerR
+              No
+              PlayerY
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerR
+              No
+              PlayerY
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerR
+              No
+              PlayerY
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerR
+              No
+              PlayerY
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	R
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerG
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          ->
+          rule_part
+            rule_content	PlayerG
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerG
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          ->
+          rule_part
+            rule_content	PlayerG
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerG
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          ->
+          rule_part
+            rule_content	PlayerG
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerG
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content	PlayerG
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          ->
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          ->
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          ->
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          ->
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          ->
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          ->
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content	PlayerY
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          ->
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          ->
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          ->
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerG
+              No
+              PlayerC
+              No
+              PlayerY
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerG
+              No
+              PlayerC
+              No
+              PlayerY
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerG
+              No
+              PlayerC
+              No
+              PlayerY
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerG
+              No
+              PlayerC
+              No
+              PlayerY
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerG
+              No
+              PlayerC
+              No
+              PlayerY
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerG
+              No
+              PlayerC
+              No
+              PlayerY
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerG
+              No
+              PlayerC
+              No
+              PlayerY
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerG
+              No
+              PlayerC
+              No
+              PlayerY
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	G
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerB
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          ->
+          rule_part
+            rule_content	PlayerB
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerB
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          ->
+          rule_part
+            rule_content	PlayerB
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerB
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          ->
+          rule_part
+            rule_content	PlayerB
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerB
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content	PlayerB
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          ->
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          ->
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          ->
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content	PlayerC
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          ->
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          ->
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          ->
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content	PlayerM
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          ->
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          ->
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          ->
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          ->
+          rule_part
+            rule_content	PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerB
+              No
+              PlayerC
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	M
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerB
+              No
+              PlayerC
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	R
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerB
+              No
+              PlayerC
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	C
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerB
+              No
+              PlayerC
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	G
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerB
+              No
+              PlayerC
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	W
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerB
+              No
+              PlayerC
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	Y
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          late
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerB
+              No
+              PlayerC
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+          ->
+          rule_part
+            rule_content
+              Player
+              No
+              PlayerB
+              No
+              PlayerC
+              No
+              PlayerM
+              No
+              PlayerW
+            cell_border
+            rule_content	T
+            rule_content	o
+            rule_content	t
+            rule_content	e
+            rule_content	m
+            rule_content	B
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	i
+            rule_content	n
+            rule_content	B
+            rule_content	l
+          command
+            sound
+              sound_id	3
+          
+
+  winconditions_section
+    condition_data
+      No
+      object_name	Coin
+    condition_data
+      Some
+      object_name	Player
+      On
+      object_name	Target
+  levels_section
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' 'o' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '.' '.' '.' '.' '.' '1' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '3' '.' '.' '3' '.' '.' '.' '3' '.' '.' '3' '#']
+ ['#' '.' '3' '3' '.' '.' '.' '.' '.' '3' '3' '.' '#']
+ ['#' '.' '3' '3' '.' '.' '.' '.' '.' '3' '3' '.' '#']
+ ['#' '3' '.' '.' '3' '.' '.' '.' '3' '.' '.' '3' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '3' '3' '3' '.' '#' '#' '#' '.' '3' '3' '3' '#']
+ ['o' '1' '.' '.' '.' 's' '.' 'x' '.' '.' '.' '.' '#']
+ ['#' '3' '3' '3' '.' '#' '#' '#' '.' '3' '3' '3' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' 'f' 'f' '#' 'f' 'f' '3' '#' '3' '#' '#' '#']
+ ['#' '#' '#' 'n' 'n' 'n' '.' '#' 'n' 'n' 'n' '#' '#' '#']
+ ['#' '3' '.' 'n' 'n' '#' '#' '#' '#' 'n' 'n' '.' '3' '#']
+ ['#' '.' '#' '#' '.' 'n' 'f' 'f' 'n' '.' '#' '#' '.' '#']
+ ['#' '3' '#' '#' '3' 'n' 'f' 'f' 'n' '3' '#' '#' '3' '#']
+ ['#' 'n' '.' '.' 'n' '#' '#' '#' '#' 'n' '.' '.' 'n' '#']
+ ['#' '.' '.' '.' '.' '#' '#' 'o' '1' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 's' 's' 's' '.' '#' '#' '#' '.' 's' 's' 's' '#']
+ ['o' '1' '.' '.' '6' '3' '6' '3' '6' '.' '.' '.' '#']
+ ['#' 's' 's' 's' '.' '#' '#' '#' '.' 's' 's' 's' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' 'f' 'f' '#' 'f' 'f' '3' '#' '3' '#' '#' '#']
+ ['#' '#' '#' '8' '8' '8' '.' '#' '8' '8' '8' '#' '#' '#']
+ ['#' '3' '.' '8' '8' '#' '#' '#' '#' '8' '8' '.' '3' '#']
+ ['#' '.' '#' '#' '.' '8' 'f' 'f' '8' '.' '#' '#' '.' '#']
+ ['#' '3' '#' '#' '3' '8' 'f' 'f' '8' '3' '#' '#' '3' '#']
+ ['#' '8' '.' '.' '8' '#' '#' '#' '#' '8' '.' '.' '8' '#']
+ ['#' '.' '.' '.' '.' '#' '#' 'o' '1' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '9' '.' '0' '.' '#' '.' '3' '.' '#' '#' '#']
+ ['#' '#' '#' '.' '7' '.' '9' '.' '0' '#' '3' '.' '3' '.' '#' '#']
+ ['#' '#' '.' 'd' '.' '7' '#' 'a' '.' '#' '#' '3' '.' '3' '.' '#']
+ ['#' '.' '0' '.' 'd' '.' '#' '.' 'a' '#' '#' '#' '3' '.' '3' '#']
+ ['#' '8' '.' '0' '.' '#' '#' '5' '.' '#' '#' '#' '#' '3' '.' '#']
+ ['#' '.' '8' '.' '#' '#' '#' '.' '5' '#' '#' '#' '.' '7' '.' '#']
+ ['#' '.' '6' '#' '#' '#' '#' '8' '.' '#' '#' '.' '6' '.' '7' '#']
+ ['#' '6' '.' 's' '#' '#' '#' '.' '8' '#' '.' '5' '.' '6' '.' '#']
+ ['#' '.' 's' '.' '9' '#' '#' '9' '.' '#' '4' '.' '5' '.' '#' '#']
+ ['#' '#' '.' '9' '.' '8' '#' '.' '9' '0' '.' '4' '.' '#' '#' '#']
+ ['#' '#' '#' '.' '8' '1' '#' '.' '.' '.' '0' '.' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' 'o' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'k' 'k' 'k' '.' '#' '#' '#' '.' 'd' 'd' 'd' '#']
+ ['o' '1' '.' '.' 'q' '8' '9' '0' 'n' '.' '.' '.' '#']
+ ['#' 'k' 'k' 'k' '.' '#' '#' '#' '.' 'd' 'd' 'd' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '.' '.' '3' '3' '3' '.' '.' '#' '#' '#' '#']
+ ['#' '#' '#' '.' '.' '.' '.' '3' '3' '3' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '#' '#' '#' '.' '.' '.' '.' '#' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '3' '3' '3' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '3' '#' '3' '3' '3' '3' '%' '3' '3' '#' '3' '3' '#']
+ ['o' '1' '8' '3' '#' '3' '3' '3' '%' '3' '3' '3' '#' '3' '3' '#']
+ ['#' '#' '#' '3' '#' '3' '3' '%' '3' '3' '3' '3' '#' '3' '3' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '3' '3' '3' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '#' '#' '#' '.' '.' '.' '.' '#' '#']
+ ['#' '#' '#' '.' '.' '.' '.' '3' '3' '3' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '.' '.' '3' '3' '3' '.' '.' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' 'o' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '1' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '3' '3' '#' '7' '#' '3' '3' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '3' '3' '%' '.' '&' '3' '3' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '3' '3' '%' '.' '&' '3' '3' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '3' '3' '%' '.' '&' '3' '3' '#' '#' '#' '#']
+ ['#' '.' '.' '#' '3' '3' '%' '.' '&' '3' '3' '#' '.' '.' '#']
+ ['#' '.' '%' '#' 'k' 'k' '.' '.' '.' 'f' 'f' '#' '&' '.' '#']
+ ['#' '.' '.' '#' '#' '#' '#' 'p' '#' '#' '#' '#' '.' '.' '#']
+ ['#' '#' 'f' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'k' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' 'o' '#' '#' '#' '#' '#']]
+    level_data	[['#' '.' '.' '.' '.' '#' '1' '#' '.' '.' '.' '#']
+ ['#' '.' '&' '.' '.' '*' '.' '.' '%' '.' '.' '#']
+ ['#' '.' '.' '&' '.' '.' '*' '.' '.' '%' '.' '#']
+ ['#' '.' '*' '.' '.' '%' '.' '.' '&' '.' '.' '#']
+ ['#' '.' '.' '*' '.' '.' '%' '.' '.' '&' '.' '#']
+ ['#' '.' '%' '.' '.' '&' '.' '.' '*' '.' '.' '#']
+ ['#' '.' '.' '%' '.' '.' '&' '.' '.' '*' '.' '#']
+ ['#' '.' 'a' 's' '.' 'k' 'j' '.' 'f' 'd' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' 'o' '#' '#' '#' '#' '#']]
+    level_data	[['#' '.' '.' '.' '.' '.' '1' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '%' 'a' 's' 'd' 'j' '&' '.' '.' '#']
+ ['#' '.' '.' 'j' '.' '.' '.' '.' 'j' '.' '.' '#']
+ ['#' '.' '.' 's' '.' '.' '9' '.' 'd' '.' '.' '#']
+ ['#' '.' '.' 'd' '.' '0' '.' '.' 's' '.' '.' '#']
+ ['#' '.' '.' 'a' '.' '.' '.' '.' 'a' '.' '.' '#']
+ ['#' '.' '.' '*' 'a' 'd' 's' 'j' '%' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '&' '.' '&' '&' '.' '.' '#']
+ ['#' '#' '.' '.' 'k' '.' '.' 'k' '.' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '.' 'k' 'k' 'k' 'k' 'k' '.' '#']
+ ['#' '#' 'x' '*' '&' '*' '*' '&' '&' '#']
+ ['#' '#' 'f' 'f' 'f' 'f' 'f' 'f' '.' '#']
+ ['#' '#' 'f' 'f' 'f' 'f' 'f' 'f' '.' '#']
+ ['#' '#' '%' '%' '%' '%' '%' '%' '.' '#']
+ ['o' '1' '8' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#']
+ ['#' '#' '#' 'a' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.'
+  '.' '#' '#' '#']
+ ['#' '#' 'a' '.' '.' '.' '#' '.' '&' '.' '.' '.' '.' '.' '.' '#' '#' '.'
+  '.' '.' '#' '#']
+ ['#' 'a' '.' '.' 'a' 'a' '#' 'a' 'a' '.' '.' '%' 'a' '.' '#' '#' '.' '.'
+  '.' '.' '.' '#']
+ ['#' '.' '.' '.' 'a' 'a' '.' 'a' 'a' '.' 'a' 'a' 'a' '#' '#' '.' '.' '.'
+  '.' '.' '.' '#']
+ ['#' '5' '#' '#' '.' '%' '.' '.' '.' '.' 'a' 'a' '%' '#' '0' '.' '.' '.'
+  '.' 'd' '.' '#']
+ ['o' '1' '#' '.' '4' '4' '.' '.' '.' 'a' 'a' '4' '4' '9' '.' '6' '.' '.'
+  '&' 'd' '.' '#']
+ ['#' '#' '#' '.' '4' '4' '.' '%' '.' 'a' 'a' '4' '%' '#' '9' '.' '.' '.'
+  '.' 'd' '.' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '.' '.' '.' 'a' 'a' '4' '#' '#' '.' '.' '.'
+  '.' '.' '.' '#']
+ ['#' 'a' '.' '.' 'a' 'a' '.' '4' '4' '.' 'a' 'a' 'a' '.' '#' '#' '.' '.'
+  '.' '.' '.' '#']
+ ['#' '#' 'a' '.' 'a' 'a' '.' '4' '4' '.' '.' '.' 'a' '.' '.' '#' '#' '.'
+  '.' '.' '#' '#']
+ ['#' '#' '#' 'a' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.'
+  '.' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#']
+ ['#' '#' '.' '.' '.' '%' '.' '*' '.' '.' '.' '.' '#']
+ ['#' '#' '.' '.' '.' 'j' 's' 'f' 'f' '&' '.' '.' '#']
+ ['#' '#' '.' '.' '*' 'k' 'f' 'd' 'd' '.' '.' '.' '#']
+ ['#' '#' '.' '.' '.' 'a' 'j' 'k' 'k' '%' '.' '.' '#']
+ ['#' '0' '.' '.' '%' 'a' 'j' 'k' 'k' '.' '.' '.' '#']
+ ['#' '9' '.' '.' '.' '.' '&' '.' '*' '.' '.' '.' '#']
+ ['#' '8' '#' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#']
+ ['o' '1' '#' '#' '.' '.' '.' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '3' '#' '3' '3' '#' '#' '3' 'j' '3' 'j' '#']
+ ['o' '1' 'e' '.' '.' 't' 't' '.' '.' '.' '.' '#']
+ ['#' '3' '#' '3' '3' '#' 't' '3' 'j' '3' 'j' '#']
+ ['#' '#' '#' '#' 'e' 'e' 'q' 'e' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '.' '.' '#' '#' '.' '.' '#' '#' '#']
+ ['#' '#' '#' '&' '.' '#' '#' '.' '*' '#' '#' '#']
+ ['#' '#' '#' 'f' 'f' 'j' 'j' 'k' 'k' '#' '#' '#']
+ ['#' '#' '#' 't' 't' '{' '{' '+' '+' '#' '#' '#']
+ ['#' '#' '#' 'w' 'n' 'z' 'p' 'q' 'w' '#' '#' '#']
+ ['#' '#' '#' 'n' 'q' '#' '#' 'n' 'q' '}' '}' '}']
+ ['#' '#' '#' 'q' 'w' '#' '#' 'w' 'p' 'i' 'i' '}']
+ ['#' '#' '#' 'n' 'q' 'w' 'x' 'n' 'q' 'u' 'i' '}']
+ ['#' '#' '#' 'q' 'n' 'z' 'p' 'q' 'w' 'u' 'i' '}']
+ ['#' '#' '#' '{' '{' '+' '+' 't' 't' 'u' 'i' '}']
+ ['u' 'u' 'u' 'q' 'n' 'p' 'q' 'n' 'q' 'u' 'i' '}']
+ ['u' '}' '}' 'z' 'x' '#' '#' 'q' 'n' 'u' 'i' '}']
+ ['u' '}' 'i' 'n' 'q' '#' '#' 'w' 'z' 'i' 'i' '}']
+ ['u' '}' 'i' 'q' 'w' 'q' 'z' 'n' 'q' '}' '}' '}']
+ ['u' '}' 'i' '+' '+' 't' 't' '{' '{' '#' '#' '#']
+ ['u' '}' 'i' 'w' 'q' 'w' 'n' 'p' 'q' '#' '#' '#']
+ ['u' '}' '}' 'z' 'x' '#' '#' 'n' 'p' '#' '#' '#']
+ ['u' 'u' 'u' 'x' 'n' 'q' 'n' 'q' 'x' '#' '#' '#']
+ ['#' '#' '#' '3' '#' '1' 'o' '#' '3' '#' '#' '#']
+ ['#' '#' '#' '{' '#' '#' '#' '#' 't' '#' '#' '#']
+ ['#' '#' '#' 'a' '#' '#' '#' '#' 'f' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['o' '1' 'e' '+' '+' 'u' 'u' 'u' 'u' 't' 'x' 't' 't' 't' '[']
+ ['e' 'e' 'e' 'i' '+' 'u' '7' '+' 'u' 't' '+' 't' '5' '+' '}']
+ ['e' '8' '+' '+' '+' 'u' 'u' '+' 'u' 't' '+' 't' '+' '+' '}']
+ ['e' '}' 'i' 't' '+' '+' 'u' '+' 'u' 't' '+' 't' '+' '+' '}']
+ ['e' '9' 't' 't' '}' '+' 'u' '+' 'u' 't' '+' 't' '9' '+' '}']
+ ['e' '}' 'i' '}' '}' '+' '+' '+' '+' '+' '+' '}' '}' '}' '}']
+ ['e' '}' '}' '}' 'i' 'i' 'i' 'i' 'i' 't' 'u' 'u' 'u' 'u' 'u']
+ ['e' '{' '0' '#' 'i' '#' '#' '#' 'i' 't' '+' '+' '+' '+' '9']
+ ['e' '7' '{' '{' '{' '#' 'i' 'i' 'i' 't' 'u' 'u' 'u' 'u' 'u']
+ ['i' '+' '+' 'u' '{' '{' '{' '{' '{' '{' '{' '{' '{' '{' '{']
+ ['i' '{' '+' 'u' 'u' 'e' 'e' 'e' 'e' 't' '}' '}' '}' '}' 'e']
+ ['i' '{' '+' '+' 'u' 'e' '#' '#' 'e' 'e' '[' '{' '+' '}' 'e']
+ ['i' '{' '{' '+' 'u' 'e' '#' '#' 'u' 't' '+' '{' '+' '}' 'e']
+ ['i' '}' '}' '}' '}' '}' '}' '}' 'u' 't' '+' '+' '+' '}' 'e']
+ ['i' 'i' 'i' 'i' 'i' 'i' 'i' '0' 'u' 'u' 'u' 'u' 'u' 'u' '4']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' 'o' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '+' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '1' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '#' '#' '{' '#']
+ ['#' '#' '#' '.' '.' '&' 'j' 'j' 'j' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  'd' 'd' 'd' 'd' '.' '.' '#' '#' '#']
+ ['#' '#' '.' '.' '&' 'j' 'j' 'j' 'j' 'j' '.' '.' '.' '.' '.' '.' '.' 'd'
+  'd' 'd' 'd' 'd' 'd' '.' '.' '#' '#']
+ ['#' '.' '.' '&' 'j' 'j' 'j' 'j' 'j' 'j' 'j' '.' '.' '.' '.' '.' 'd' 'd'
+  'd' 'd' 'd' 'd' 'd' 'd' '.' '.' '#']
+ ['#' '.' '&' 'j' 'j' 'j' 'j' 'j' 'j' 'j' 'j' 'j' '.' '.' '.' 'd' 'd' 'd'
+  'd' 'd' 'd' 'd' 'd' 'd' 'd' '.' '#']
+ ['#' '.' 'j' 'j' 'j' 'j' '%' '%' 'j' 'j' 'j' 'j' '.' '.' '.' 'd' 'd' 'd'
+  'd' '%' '%' 'd' 'd' 'd' 'd' '.' '#']
+ ['#' '.' 'j' 'j' 'j' 'j' '%' '%' 'j' 'j' 'j' 'j' '.' '.' '.' 'd' 'd' 'd'
+  'd' '%' '%' 'd' 'd' 'd' 'd' '.' '#']
+ ['#' '.' 'j' 'j' 'j' 'j' 'j' 'j' 'j' 'j' 'j' 'j' '.' '.' '.' '*' 'd' 'd'
+  'd' 'd' 'd' 'd' 'd' 'd' 'd' '.' '#']
+ ['#' '.' '.' 'j' 'j' 'j' 'j' 'j' 'j' 'j' 'j' '.' '.' '.' '.' '.' '*' 'd'
+  'd' 'd' 'd' 'd' 'd' 'd' '.' '.' '#']
+ ['#' '.' '.' '.' 'j' 'j' 'j' 'j' 'j' 'j' '.' '.' '.' '#' '.' '.' '.' '*'
+  'd' 'd' 'd' 'd' 'd' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' 'j' 'j' 'j' 'j' '.' '.' '.' '5' 'i' '6' '.' '.' '.'
+  '*' 'd' 'd' 'd' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' 'u' '8' 't' '#' '.' '.'
+  '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' 's' 's' 's' '*' '.' '.' '.' '7' '}' '9' '.' '.' '.'
+  'a' 'a' 'a' 'a' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' 's' 's' 's' 's' 's' '*' '.' '.' '.' '#' '.' '.' '.' 'a'
+  'a' 'a' 'a' 'a' 'a' '.' '.' '.' '#']
+ ['#' '.' '.' 's' 's' 's' 's' 's' 's' 's' '*' '.' '.' '.' '.' '.' 'a' 'a'
+  'a' 'a' 'a' 'a' 'a' 'a' '.' '.' '#']
+ ['#' '.' 's' 's' 's' 's' 's' 's' 's' 's' 's' '*' '.' '.' '.' 'a' 'a' 'a'
+  'a' 'a' 'a' 'a' 'a' 'a' 'a' '.' '#']
+ ['#' '.' 's' 's' 's' 's' '%' '%' 's' 's' 's' 's' '.' '.' '.' 'a' 'a' 'a'
+  'a' '%' '%' 'a' 'a' 'a' 'a' '.' '#']
+ ['#' '.' 's' 's' 's' 's' '%' '%' 's' 's' 's' 's' '.' '.' '.' 'a' 'a' 'a'
+  'a' '%' '%' 'a' 'a' 'a' 'a' '.' '#']
+ ['#' '.' 's' 's' 's' 's' 's' 's' 's' 's' 's' 's' '.' '.' '.' 'a' 'a' 'a'
+  'a' 'a' 'a' 'a' 'a' 'a' '&' '.' '#']
+ ['#' '.' '.' 's' 's' 's' 's' 's' 's' 's' 's' '.' '.' '.' '.' '.' 'a' 'a'
+  'a' 'a' 'a' 'a' 'a' '&' '.' '.' '#']
+ ['#' '#' '.' '.' 's' 's' 's' 's' 's' 's' '.' '.' '.' '.' '.' '.' '.' 'a'
+  'a' 'a' 'a' 'a' '&' '.' '.' '#' '#']
+ ['#' '#' '#' '.' '.' 's' 's' 's' 's' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  'a' 'a' 'a' '&' '.' '.' '#' '#' '#']
+ ['#' '~' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '#' '#' 'e' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None

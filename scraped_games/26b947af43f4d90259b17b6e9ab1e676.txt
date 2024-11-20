@@ -1,0 +1,1608 @@
+title  Paint^2
+author Katelyn Delta
+homepage www.puzzlescript.net
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+storytrigger
+black
+
+storyend
+black
+
+voicetrigger
+black
+
+Background 
+#BBBBBB
+
+DarkBackground
+#999999
+
+WintileCurtain
+black
+
+block
+transparent
+
+Skeleton
+white #999999
+.....
+.....
+.000.
+.101.
+.0.0.
+
+corrupted
+black #444444 #333333 #999999
+33233
+23333
+30002
+31013
+30003
+
+corrupteddeath
+black #444444 #333333 #999999
+33233
+23333
+30002
+31013
+30003
+
+fragment1
+black #999999
+11111
+11000
+11011
+11111
+11110
+
+fragment2
+black #999999
+11011
+11011
+11111
+01000
+11111
+
+fragment3
+black #999999
+11101
+10111
+10111
+11111
+10111
+
+weakMoveFloor
+#555555 #888888
+00000
+01110
+01110
+01110
+00000
+
+
+weakRedMoveFloor
+#553333 #770000
+00000
+01110
+01110
+01110
+00000
+
+weakBlueMoveFloor
+#333355 #000077
+00000
+01110
+01110
+01110
+00000
+
+strongMoveFloor
+#151515 #888888 #555555
+00000
+01210
+02220
+01210
+00000
+
+strongRedMoveFloor
+#150000 #770000 #550000
+00000
+01210
+02220
+01210
+00000
+
+strongBlueMoveFloor
+#000015 #000077 #000055
+00000
+01210
+02220
+01210
+00000
+
+strongpurplemovefloor
+#150015 #770077 #550055
+00000
+01210
+02220
+01210
+00000
+
+Null 
+BLACK
+
+LightWintile
+#BBBBBB #00FF00
+00001
+00010
+10100
+01000
+00000
+
+DarkWintile
+#999999 #00FF00
+00001
+00010
+10100
+01000
+00000
+
+VLaser
+#00FF99
+..0..
+..0..
+..0..
+..0..
+..0..
+
+HLaser
+#00FF99
+.....
+.....
+00000
+.....
+.....
+
+Lasertower
+black #00FF99 #999999
+20002
+20102
+20102
+20002
+00000
+
+DeadLasertower
+black #FF0000 #999999
+20002
+20102
+20102
+20002
+00000
+
+Void
+#050505 #090909
+01010
+10101
+01010
+10101
+01010
+
+Stagewall
+#444444 #333333
+11111
+01000
+01000
+11111
+00010
+
+DarkStagewall
+#222222 #151515
+11111
+01000
+01000
+11111
+00010
+
+RedBitWall
+#222222 black #111111 #FF0000 #DD0000
+22222
+20302
+23432
+20302
+22222
+
+BlueBitWall
+#222222 black #111111 #0000FF #0000DD
+22222
+20302
+23432
+20302
+22222
+
+EmptyBitWall
+#222222 black #111111
+22222
+20102
+21112
+20102
+22222
+
+PurpleStagewall
+#550055 #380038
+11111
+01000
+01000
+11111
+00010
+
+RedStagewall
+#550000 #380000
+11111
+01000
+01000
+11111
+00010
+
+BlueStagewall
+#000055 #000038
+11111
+01000
+01000
+11111
+00010
+
+
+StartP1
+White #666666
+.....
+.000.
+.101.
+.000.
+.....
+
+PaintP1
+White #666666
+.....
+.000.
+.101.
+.000.
+.....
+
+P1
+#000000 WHITE #666666
+00000
+01110
+02120
+01110
+00000
+
+RedP1
+#000000 #CC0000 #666666 
+00000
+01110
+02120
+01110
+00000
+
+
+BlueP1
+#000000 #0000CC #666666
+00000
+01110
+02120
+01110
+00000
+
+PurpleP1
+#000000 #CC00CC #666666 
+00000
+01110
+02120
+01110
+00000
+RedPaint
+#FF0000 #CC0000 
+.0.0.
+0...0
+0.1.0
+0...0
+.0.0.
+
+BluePaint
+#0000FF #0000CC #000099
+.0.0.
+0...0
+0.1.0
+0...0
+.0.0.
+
+WhitePaint
+#FFFFFF #EEEEEE
+.0.0.
+0...0
+0.1.0
+0...0
+.0.0.
+
+StrongCrate
+#333333 WHITE #BBBBBB
+00000
+01210
+02220
+01210
+00000
+
+WeakCrate
+#606060 WHITE
+00000
+01110
+01110
+01110
+00000
+
+RedWeakCrate
+#605050 #FF0000 
+00000
+01110
+01110
+01110
+00000
+
+BlueWeakCrate
+#505060 #0000FF
+00000
+01110
+01110
+01110
+00000
+
+PurpleCrate
+#330033 #DD00DD #990099
+00000
+01210
+02220
+01210
+00000
+
+StrongRedCrate
+#330000 #FF0000 #BB0000
+00000
+01210
+02220
+01210
+00000
+
+StrongBlueCrate
+#000033 #0000FF #0000BB
+00000
+01210
+02220
+01210
+00000
+
+PaintDummy
+White #666666
+.....
+.000.
+.101.
+.000.
+.....
+
+Dummy
+#000000 WHITE #666666
+00000
+01110
+02120
+01110
+00000
+
+RedDummy
+#000000 #CC0000 #666666 
+00000
+01110
+02120
+01110
+00000
+
+BlueDummy
+#000000 #0000CC #666666 
+00000
+01110
+02120
+01110
+00000
+
+PurpleDummy
+#000000 #CC00CC #666666 #BB00BB
+00000
+01110
+02120
+01110
+00000
+
+LightButton
+#888888 #AAAAAA
+.....
+.000.
+.010.
+.000.
+.....
+
+DarkButton
+#666666 #999999
+11111
+10001
+10101
+10001
+11111
+
+
+VDoor
+#707070 #444444
+00100
+00100
+00100
+00100
+00100
+
+VOpenDoor
+#707070
+0...0
+0...0
+0...0
+0...0
+0...0
+
+HDoor
+#707070 #444444
+00000
+00000
+11111
+00000
+00000
+
+HOpenDoor
+#666666
+00000
+.....
+.....
+.....
+00000
+
+DownWall
+#282828 #151515 #999999
+22222
+21002
+21112
+20102
+22222
+
+UpWall
+#282828 #151515 #999999 black
+21002
+21112
+20102
+23332
+22222
+
+RCPaintFloor
+#BBBBBB #FFFFFF #DDDDDD
+00000
+01210
+02120
+01210
+00000
+
+RCRedPaintFloor
+#BBBBBB #FF3B3B #FF7F7F #B66767
+33333
+32123
+31213
+32123
+33333
+
+RCBluePaintFloor
+#BBBBBB  #3B3BFF #7F7FFF #6767B6
+33333
+32123
+31213
+32123
+33333
+
+NRCPaintFloor
+#999999 #FFFFFF #DDDDDD
+00000
+01210
+02120
+01210
+00000
+
+NRCRedPaintFloor
+#BBBBBB #FF3B3B #FF7F7F #999999
+33333
+32123
+31213
+32123
+33333
+
+NRCBluePaintFloor
+#BBBBBB  #3B3BFF #7F7FFF #999999
+33333
+32123
+31213
+32123
+33333
+
+BorderUpgrade 
+black
+00000
+0...0
+0...0
+0...0
+00000
+
+PaintbrushUpgrade
+#553300 #0000CC #CC0000 White
+.....
+.112.
+.122.
+.000.
+..0..
+
+RedBit
+#FF0000 #DD0000
+.....
+..1..
+.101.
+..1..
+.....
+
+BlueBit
+#0000FF #0000DD
+.....
+..1..
+.101.
+..1..
+.....
+
+YellowBit
+#FFFF00 #DDDD00
+.....
+..1..
+.101.
+..1..
+.....
+GoldenDoor
+#EECC00 #CCAA00
+00100
+00100
+00100
+00100
+00100
+
+OpenGoldenDoor
+#EECC00 
+0...0
+0...0
+0...0
+0...0
+0...0
+
+temp
+white 
+
+elder
+White #666666 black
+.....
+.222.
+.000.
+.101.
+.000.
+
+elder2
+White #666666 #DDDDDD
+.....
+.222.
+.000.
+.101.
+.000.
+
+shrub
+#4E4E4E #6F6F6F #7F7F7F
+00121
+11001
+00110
+21210
+02012
+
+skipblock
+transparent
+
+block2
+transparent
+
+crateblock
+transparent
+
+crateblock2
+transparent
+
+crateskipblock
+transparent
+
+=======
+LEGEND
+=======
+. = Background
+, = DarkBackground
+☺ = PaintP1 and DarkBackground
+♦ = Void and RedWeakCrate
+♣ = void and BlueWeakCrate
+♂ = WeakCrate and LightButton
+↕ = WintileCurtain and LightWintile 
+⌂ = redbit and DarkBackground 
+Ç = bluebit and DarkBackground 
+â = voicetrigger 
+ä = GoldenDoor
+à = OpenGoldenDoor and DarkBackground
+å = corrupteddeath (134)
+ü = storytrigger
+é = storyend
+☻ = DarkWintile
+♥ = DarkButton
+• = weakMoveFloor and void
+◘ = weakRedMoveFloor and void
+○ = weakBlueMoveFloor and void
+∟ = strongMoveFloor and void
+↔ = strongRedMoveFloor and void
+▲ = strongBlueMoveFloor and void
+▼ = strongpurplemovefloor and void 
+◙ = Skeleton
+► = elder
+☼ = elder2
+‼ = corrupted
+¶ = fragment1
+§ = fragment2
+▬ = fragment3
+◄ = shrub
+O = Void 
+# = Null
+$ = StageWall
+C = BlueStagewall
+R = RedStagewall
+L = PurpleStagewall
+↨ = NRCPaintFloor
+↑ = NRCRedPaintFloor
+↓ = NRCBluePaintFloor
+fragments = fragment1 or fragment2 or fragment3
+Player = StartP1 or PaintP1 or P1 or RedP1 or BlueP1 or PurpleP1 or RedPaint or BluePaint or WhitePaint
+SolidPlayer = StartP1 or PaintP1 or P1 or RedP1 or BlueP1 or PurpleP1
+Crate = StrongCrate or StrongRedCrate or StrongBlueCrate or PurpleCrate or WeakCrate or RedWeakCrate or BlueWeakCrate
+Whitecrate = StrongCrate or WeakCrate
+Bluecrate = StrongBlueCrate or BlueWeakCrate
+Redcrate = StrongRedCrate or RedWeakCrate
+Wall = DarkStagewall or Stagewall or Null
+Button = LightButton or DarkButton
+Wintile = LightWintile or DarkWintile
+movefloor = weakMoveFloor or strongMoveFloor
+redmovefloor = weakRedMoveFloor or strongRedMoveFloor
+bluemovefloor = weakBlueMoveFloor or strongBlueMoveFloor
+anymovefloor = weakMoveFloor or weakRedMoveFloor or weakBlueMoveFloor or strongMoveFloor or strongRedMoveFloor or strongBlueMoveFloor or strongpurplemovefloor
+anydummy = paintdummy or dummy or RedDummy or BlueDummy or PurpleDummy
+1 = StartP1
+2 = PaintP1
+3 = P1
+4 = RedP1
+5 = BlueP1
+6 = PurpleP1
+7 = RedPaint
+8 = BluePaint
+9 = WhitePaint
+% = StrongCrate
+& = StrongRedCrate
+* = StrongBlueCrate
+- = PurpleCrate
+X = VDoor
+← = VOpenDoor
+H = HDoor
+B = LightButton
+P = PaintbrushUpgrade
+U = BorderUpgrade
+W = LightWintile
+T = VLaser
+Y = HLaser
+M = Lasertower
+D = DeadLasertower
+Q = DownWall
+Z = UpWall
+F = WeakCrate
+A = RedWeakCrate
+S = BlueWeakCrate
+_ = RCPaintFloor
++ = RCRedPaintFloor
+! = RCBluePaintFloor
+; = RedBit
+: = BlueBit
+' = YellowBit and DarkBackground
+{ = RedBitWall
+} = BlueBitWall
+\ = EmptyBitWall
+E = DarkStagewall and DarkBackground
+Paintfloor = RCPaintFloor or NRCPaintFloor
+RedPaintfloor = RCRedPaintFloor or NRCRedPaintFloor
+BluePaintFloor = RCBluePaintFloor or NRCBluePaintFloor
+obs = crate or wall or Stagewall or UpWall or VDoor or HDoor or GoldenDoor or OpenGoldenDoor 
+floorobs = DarkBackground or movefloor or redmovefloor or bluemovefloor or strongMoveFloor or strongRedMoveFloor or strongBlueMoveFloor or strongpurplemovefloor
+trueBFobs = DarkBackground or movefloor or redmovefloor or strongpurplemovefloor
+trueRFobs = DarkBackground or movefloor or bluemovefloor or strongpurplemovefloor
+trueRCobs = wall or Stagewall or VDoor or HDoor or crateblock or GoldenDoor or OpenGoldenDoor or Bluecrate or PurpleCrate 
+trueBCobs = wall or Stagewall or VDoor or HDoor or crateblock or GoldenDoor or OpenGoldenDoor or Redcrate or PurpleCrate 
+
+=======
+SOUNDS
+=======
+
+SolidPlayer MOVE 30432307
+Skeleton move 96574304
+RedCrate move 97003107
+bluecrate move 97003107
+PurpleP1 Create 41423109
+PurpleP1 Move 41423109
+WhiteCrate Move 16506107
+PurpleCrate Create 41423109
+UpWall create 90607301
+VLaser create 77490101
+HLaser create 77490101
+null create 32475908
+endgame 27839509
+sfx0 86136506
+sfx1 53542103
+sfx2 39349109
+sfx3 16255106
+sfx4 46318708
+sfx5 48007100
+sfx6 5626703
+sfx7 41899702
+sfx8 74733703
+sfx9 39612508
+================
+COLLISIONLAYERS
+================
+Background
+Void shrub
+DarkBackground MoveFloor RedMoveFloor BlueMoveFloor strongMoveFloor strongRedMoveFloor strongBlueMoveFloor strongpurplemovefloor
+storytrigger storyend voicetrigger
+temp
+DownWall PaintFloor RedPaintFloor BluePaintFloor
+RedBit, BlueBit, YellowBit
+button, darkbutton, wintile, DarkWintile, BorderUpgrade, PaintbrushUpgrade, VOpenDoor, HOpenDoor, VLaser, HLaser
+StartP1, PaintP1, p1, RedP1, BlueP1, PurpleP1, Stagewall, RedBitWall, BlueBitWall, EmptyBitWall, PurpleStagewall, RedStagewall, BlueStagewall, Wall, WhiteCrate, RedCrate, BlueCrate, PurpleCrate, PaintDummy, Dummy, BlueDummy, RedDummy, PurpleDummy, VDoor, HDoor, Lasertower, UpWall DeadLasertower, WeakCrate, RedWeakCrate, BlueWeakCrate, Skeleton, elder, elder2, corrupted, corrupteddeath, fragments, GoldenDoor, OpenGoldenDoor
+WhitePaint, BluePaint, RedPaint, 
+WintileCurtain
+block
+block2
+crateblock
+crateblock2
+skipblock
+crateskipblock
+======
+RULES     
+======     
+[SolidPlayer]->[SolidPlayer Temp]
+
+[> SolidPlayer | Skeleton ] -> [ > SolidPlayer | > Skeleton ]
+late [crate Vlaser] [DownWall] -> [crate] [UpWall]
+late [SolidPlayer Vlaser] [DownWall] -> [SolidPlayer] [UpWall]
+late [UpWall] [VLaser] [Lasertower] -> [UpWall] [] [DeadLasertower]
+late [UpWall] [DownWall] -> [UpWall] [UpWall]
+late [DeadLasertower] [Lasertower] -> [DeadLasertower] [DeadLasertower]
+late [DeadLasertower] [VLaser] -> [DeadLasertower] []
+late [Lasertower |...| | Lasertower] -> [Lasertower |...| VLaser | Lasertower]
+late [Lasertower |...| | VLaser] -> [Lasertower |...| VLaser | VLaser]
+
+[> PurpleP1 Button |no crate| VOpenDoor] -> [button| PurpleP1 | VOpenDoor]
+[> PurpleP1 button |no crate| hopenDoor] -> [button| PurpleP1 | hopenDoor]
+[> PurpleP1 Button |crate| VOpenDoor] -> cancel
+[> PurpleP1 button |crate| hopenDoor] -> cancel
+[> SolidPlayer | PurpleCrate Button |no crate| VOpenDoor] -> [|SolidPlayer button| PurpleCrate | VOpenDoor]
+[> SolidPlayer | PurpleCrate button |no crate| hopenDoor] -> [|SolidPlayer button| PurpleCrate | hopenDoor]
+[> SolidPlayer | PurpleCrate Button |crate| VOpenDoor] -> cancel
+[> SolidPlayer | PurpleCrate button |crate| hopenDoor] -> cancel
+[> SolidPlayer no PurpleP1 button | crate no PurpleCrate | VOpenDoor] -> cancel 
+[> SolidPlayer no PurpleP1 button | crate no PurpleCrate | HOpenDoor] -> cancel
+
+late [SolidPlayer Void no MoveFloor no RedMoveFloor no BlueMoveFloor no strongpurplemovefloor] -> cancel
+ 
+[ > PurpleP1 || No Crate no Wall no HDoor no VDoor no Lasertower no DeadLasertower no corrupted no fragments no void] -> [ || PurpleP1]
+[ > PurpleP1 |anymovefloor| void no anymovefloor] -> [|PurpleP1 anymovefloor|void]
+[ > PurpleP1 |void| anymovefloor] -> [|void|PurpleP1 anymovefloor]
+[ > PurpleP1 |DarkBackground| anymovefloor] -> [|DarkBackground|PurpleP1 anymovefloor]
+
+[ > SolidPlayer no PurpleP1 | BlueCrate  ] -> [ > SolidPlayer | > BlueCrate  ]    
+[ > SolidPlayer no PurpleP1 | RedCrate  ] -> [ > SolidPlayer | > RedCrate  ] 
+
+[ > RedP1 | Redcrate] [Bluecrate no crateskipblock |trueBCobs |no obs] -> [> RedP1 | > Redcrate] [|trueBCobs|Bluecrate crateskipblock]
+[ > RedP1 ] [ BlueCrate no crateskipblock no crateblock| no obs no SolidPlayer ] -> [> RedP1  ] [ | Bluecrate crateblock]
+
+[ > RedP1 | Redcrate] [bluemovefloor no skipblock |trueBFobs |no floorobs] -> [> RedP1 | > Redcrate] [|trueBFobs|bluemovefloor skipblock]
+[ > RedP1 ] [ bluemovefloor no skipblock no block| no floorobs ] -> [> RedP1  ] [ | bluemovefloor block]
+
+[ > BlueP1 | Bluecrate] [Redcrate no crateskipblock |trueRCobs|no obs] -> [> BlueP1 | > Bluecrate] [|trueRCobs|Redcrate crateskipblock]
+[ > BlueP1 ] [ Redcrate no crateskipblock no crateblock| no obs no SolidPlayer] -> [> BlueP1  ] [ | Redcrate crateblock]
+
+[ > BlueP1 | Bluecrate] [redmovefloor no skipblock |trueRFobs|no floorobs] -> [> BlueP1 | > Bluecrate] [|trueRFobs|redmovefloor skipblock]
+[ > BlueP1 ] [ redmovefloor no skipblock no block| no floorobs ] -> [> BlueP1  ] [ | redmovefloor block]
+
+[ > RedP1 ] [Bluecrate no crateskipblock no crateblock] -> [ > RedP1 ] [ > Bluecrate ]
+[ > BlueP1 ] [ RedCrate no crateskipblock no crateblock] -> [ > BlueP1  ] [ > RedCrate ]
+[ > RedP1 ] [ BlueMoveFloor no skipblock no block] -> [ > RedP1  ] [ > BlueMoveFloor ]
+[ > BlueP1 ] [ RedMoveFloor no skipblock no block] -> [ > BlueP1  ] [ > RedMoveFloor ]
+
+[ > SolidPlayer| RedCrate ] [ BlueCrate no crateskipblock no crateblock2 | SolidPlayer] -> [ > SolidPlayer|> redcrate] [> BlueCrate crateblock2| > SolidPlayer ]
+[ > SolidPlayer| RedCrate ] [ BlueCrate no crateskipblock no crateblock2 | no obs no SolidPlayer] -> [ > SolidPlayer|> redcrate] [| BlueCrate crateblock2 ]
+[ > SolidPlayer| BlueCrate] [ RedCrate  no crateskipblock no crateblock2 | SolidPlayer] -> [ > SolidPlayer|> BlueCrate] [ > RedCrate crateblock2| > SolidPlayer]
+[ > SolidPlayer| BlueCrate] [ RedCrate  no crateskipblock no crateblock2 | no obs no SolidPlayer] -> [ > SolidPlayer|> BlueCrate] [| RedCrate crateblock2]
+[ > SolidPlayer| RedCrate ] [ BlueMoveFloor no skipblock no block2| no floorobs] -> [ > SolidPlayer|> redcrate] [ | BlueMoveFloor block2]
+[ > SolidPlayer| BlueCrate] [ RedMoveFloor  no skipblock no block2| no floorobs] -> [ > SolidPlayer|> BlueCrate] [|  RedMoveFloor block2 ]
+
+[ > RedP1 | Redcrate] [Bluecrate no crateskipblock no crateblock no crateblock2 |obs no Bluecrate|no obs] -> [> RedP1 | > Redcrate] [|obs|Bluecrate crateskipblock]
+[ > RedP1 | Redcrate] [bluemovefloor no skipblock no block no block2|floorobs no bluemovefloor|no floorobs] -> [> RedP1 | > Redcrate] [|floorobs|bluemovefloor skipblock]
+[ > BlueP1 | Bluecrate] [Redcrate no crateskipblock no crateblock no crateblock2|obs no Redcrate|no obs] -> [> BlueP1 | > Bluecrate] [|obs|Redcrate crateskipblock]
+[ > BlueP1 | Bluecrate] [redmovefloor no skipblock no block no block2|floorobs no redmovefloor|no floorobs] -> [> BlueP1 | > Bluecrate] [|floorobs|redmovefloor skipblock]
+
+
+[skipblock] -> []
+[block] -> []
+[block2] -> [] 
+[crateskipblock] -> []
+[crateblock] -> []
+[crateblock2] -> [] 
+
+[ > SolidPlayer no PurpleP1| WhiteCrate  ] -> [ > SolidPlayer | > WhiteCrate  ]  
+
+[ > SolidPlayer no PurpleP1| PurpleCrate | no crate no wall no Stagewall no UpWall no VDoor no HDoor no Lasertower no DeadLasertower] -> [> SolidPlayer || > PurpleCrate]
+[ > SolidPlayer no PurpleP1| PurpleCrate | Stagewall | no crate no wall no Stagewall no UpWall no VDoor no HDoor no Lasertower no DeadLasertower] -> [> SolidPlayer || Stagewall | PurpleCrate]
+[ > SolidPlayer no PurpleP1| PurpleCrate | UpWall | no crate no wall no Stagewall no VDoor no HDoor no Lasertower no DeadLasertower] -> [> SolidPlayer || UpWall | PurpleCrate]
+[ > SolidPlayer no PurpleP1| PurpleCrate | Crate no PurpleCrate| No Crate No Wall No Stagewall no UpWall no VDoor no HDoor no Lasertower no DeadLasertower] -> [|> SolidPlayer |Crate| PurpleCrate]
+[ > SolidPlayer no PurpleP1| PurpleCrate |PurpleCrate| No Crate No Wall No Stagewall no UpWall no VDoor no HDoor no Lasertower no DeadLasertower] -> [| SolidPlayer |PurpleCrate| PurpleCrate]
+[ > SolidPlayer no PurpleP1| PurpleCrate | DarkStagewall | no crate no wall no DarkStagewall no UpWall no VDoor no HDoor no Lasertower no DeadLasertower] -> [> SolidPlayer || DarkStagewall | PurpleCrate]
+
+
+ 
+up [ Action PaintP1 | Background] -> [PaintDummy | RedPaint Background] sfx0
+up [ Action p1 | Background] -> [ dummy | RedPaint Background] sfx0
+up [ Action RedP1 | Background] -> [ RedDummy | RedPaint Background] sfx0
+up [ Action BlueP1 | Background] -> [ BlueDummy | RedPaint Background] sfx0
+up [ Action PurpleP1 | Background] -> [ PurpleDummy | RedPaint Background] sfx0
+
+[action RedPaint WeakCrate] -> [RedPaint RedWeakCrate] sfx2
+[action RedPaint WhiteCrate] -> [RedPaint StrongRedCrate] sfx2
+[action Redpaint BlueWeakCrate] -> [RedPaint BlueWeakCrate] sfx3
+[action RedPaint StrongBlueCrate] -> [RedPaint PurpleCrate] sfx2
+[action RedPaint Dummy] -> [RedPaint RedDummy] sfx2
+[Action RedPaint BlueDummy] -> [ RedPaint PurpleDummy] sfx2
+[action RedPaint no crate no anydummy strongMoveFloor] -> [ RedPaint strongRedMoveFloor] sfx2
+[action RedPaint no crate no anydummy weakMoveFloor] -> [ RedPaint weakRedMoveFloor] sfx2
+[action RedPaint no crate no anydummy weakblueMoveFloor] -> [RedPaint weakblueMoveFloor] sfx3
+[action RedPaint no crate no anydummy strongblueMoveFloor] -> [RedPaint strongpurpleMoveFloor] sfx2
+[action RedPaint no crate no anydummy RCPaintFloor] -> [ RedPaint RCRedPaintFloor] sfx2
+[action RedPaint] -> [BluePaint] sfx0
+
+[action BluePaint WeakCrate] -> [BluePaint BlueWeakCrate] sfx2
+[action Bluepaint StrongCrate] -> [BluePaint StrongBlueCrate] sfx2
+[action BluePaint RedWeakCrate] -> [BluePaint RedWeakCrate] sfx3
+[action BluePaint StrongRedCrate] -> [BluePaint PurpleCrate] sfx2
+[action BluePaint Dummy] -> [ BluePaint BlueDummy] sfx2
+[Action BluePaint RedDummy] -> [ BluePaint PurpleDummy] sfx2
+[action BluePaint no crate no anydummy weakMoveFloor] -> [BluePaint weakBlueMoveFloor] sfx2
+[action BluePaint no crate no anydummy weakRedMoveFloor] -> [BluePaint weakRedMoveFloor] sfx3
+[action BluePaint no crate no anydummy strongredMoveFloor] -> [BluePaint strongpurpleMoveFloor] sfx2
+[action BluePaint no crate no anydummy strongMoveFloor] -> [BluePaint strongBlueMoveFloor] sfx2
+[action BluePaint no crate no anydummy RCPaintFloor] -> [ BluePaint RCBluePaintFloor] sfx2
+
+[Action BluePaint] [Dummy] -> [] [p1] sfx0
+[Action BluePaint] [RedDummy] -> [] [RedP1] sfx0
+[Action BluePaint] [BlueDummy] -> [] [BlueP1] sfx0
+[Action BluePaint] [PurpleDummy] -> [] [PurpleP1] sfx0
+[action BluePaint] [PaintDummy] -> [] [PaintP1] sfx0
+
+
+
+late [BlueWeakCrate PaintFloor] -> [WeakCrate PaintFloor] sfx6
+late [RedWeakCrate PaintFloor] -> [WeakCrate PaintFloor] sfx6
+late [StrongRedCrate PaintFloor] -> [StrongCrate PaintFloor]  sfx6
+late [StrongBlueCrate PaintFloor] -> [StrongCrate PaintFloor] sfx6
+late [PurpleCrate PaintFloor] -> [StrongCrate PaintFloor] sfx6
+late [SolidPlayer no StartP1 no PaintP1 no P1 Paintfloor] -> [P1 Paintfloor] sfx6
+late [BlueDummy PaintFloor] -> [Dummy PaintFloor] 
+late [RedDummy PaintFloor] -> [Dummy PaintFloor] 
+
+late [BlueWeakCrate RedPaintFloor] -> [RedWeakCrate RedPaintFloor] sfx2
+late [WeakCrate RedPaintFloor] -> [RedWeakCrate RedPaintFloor] sfx2
+late [StrongCrate RedPaintFloor] -> [StrongRedCrate RedPaintFloor] sfx2
+late [StrongBlueCrate RedPaintFloor] -> [StrongRedCrate RedPaintFloor] sfx2
+late [PurpleCrate RedPaintFloor] -> [StrongRedCrate RedPaintFloor] sfx2
+late [SolidPlayer no StartP1 no PaintP1 no RedP1 RedPaintFloor] -> [RedP1 RedPaintFloor] sfx2
+
+late [RedWeakCrate BluePaintFloor] -> [BlueWeakCrate BluePaintFloor] sfx2
+late [WeakCrate BluePaintFloor] -> [BlueWeakCrate BluePaintFloor] sfx2
+late [StrongCrate BluePaintFloor] -> [StrongBlueCrate BluePaintFloor] sfx2
+late [StrongRedCrate BluePaintFloor] -> [StrongBlueCrate BluePaintFloor] sfx2
+late [PurpleCrate BluePaintFloor] -> [StrongBlueCrate BluePaintFloor] sfx2
+late [SolidPlayer no StartP1 no PaintP1 no BlueP1 BluePaintFloor] -> [BlueP1 BluePaintFloor] sfx2
+
+late [Crate button] [VDoor] -> [Crate button] [VOpendoor]
+late [SolidPlayer button] [VDoor] -> [SolidPlayer button] [VOpendoor]
+late [anydummy button] [VDoor] -> [anydummy button] [VOpendoor]
+late [Button no crate no SolidPlayer no anydummy] [VOpenDoor] -> [Button] [VDoor]
+
+late [Crate button] [HDoor] -> [Crate button] [ HOpendoor]
+late [SolidPlayer button] [HDoor] -> [SolidPlayer button] [ HOpendoor]
+late [anydummy button] [HDoor] -> [anydummy button] [ HOpendoor]
+late [Button no crate no SolidPlayer no anydummy] [HOpenDoor] -> [Button] [HDoor]
+
+
+
+late [WeakCrate no anymovefloor void] -> [weakMoveFloor void] sfx7
+late [RedWeakCrate no anymovefloor void] -> [weakRedMoveFloor void] sfx7
+late [BlueWeakCrate no anymovefloor void] -> [weakBlueMoveFloor void] sfx7
+late [StrongCrate no anymovefloor void] -> [strongMoveFloor void] sfx7
+late [StrongRedCrate no anymovefloor void] -> [strongRedMoveFloor void] sfx7
+late [StrongBlueCrate no anymovefloor void] -> [strongBlueMoveFloor void] sfx7
+late [PurpleCrate no anymovefloor void] -> [strongpurplemovefloor void] sfx7
+
+
+
+late [StartP1 PaintbrushUpgrade] -> [PaintP1] sfx1 message Press x to Paint.
+late [PaintP1 BorderUpgrade] -> [P1] sfx4 message Press x to PAINT.
+
+late [SolidPlayer RedBit] -> [SolidPlayer] sfx5
+late [SolidPlayer BlueBit] -> [SolidPlayer] sfx5
+late [SolidPlayer BlueBit] [no GoldenDoor] -> [SolidPlayer] [] sfx5
+
+late [Background no DarkBackground no MoveFloor no RedMoveFloor no BlueMoveFloor no void] [DarkBackground] -> [Background DarkBackground] [DarkBackground]
+
+late [MoveFloor] -> [MoveFloor void]
+late [RedMoveFloor] -> [RedMoveFloor void]
+late [BlueMoveFloor] -> [BlueMoveFloor void]
+
+late [ SolidPlayer Temp ] -> CANCEL
+late [ Temp ] -> [ ]
+
+late [SolidPlayer | corrupted] -> win 
+late [corrupteddeath] -> [Null] 
+
+late [SolidPlayer wintile no WintileCurtain] -> sfx8
+late [SolidPlayer wintile WintileCurtain] -> sfx7
+late [storytrigger] -> again
+late [storyend] -> win
+late [voicetrigger] -> sfx9
+late [SolidPlayer YellowBit][GoldenDoor] -> [SolidPlayer][OpenGoldenDoor] sfx9
+==============
+WINCONDITIONS
+==============
+
+any Wintile on SolidPlayer
+No RedPaint
+no BluePaint
+no WhitePaint
+
+=======     
+LEVELS
+=======
+
+(intro)
+
+#e☻e#################
+eexeeeeeeeeeeeee#####
+e,,,e,,,,,,,,,,e#####
+e,♥,e,,,,,,,,,,e#####
+e,,,e,,,,,,,,,,e#####
+eoooeeeoooee,,,e#####
+eoooe#eoooee,,,e#####
+eoooeeeoooee,,,e#####
+eoooooooooee,,,e#####
+eoooooooooee,,,e##eee
+eoooooooooee,,,ee#e♥e
+eeeeeeeoooe,,,,,eeeee
+###e,,,∟∟∟e,,↨,,o-f,e
+###☺,f,∟∟∟e,,,,,e,,,e
+###e,,,∟∟∟eeeeeeeeeee
+###eeeeeeee##########
+
+(
+
+message Press X to begin.
+
+$$$$$$$$$$$
+$$$$$#$$$$$
+$$$$###$$$$
+$$$$###$$$$
+$$$$↕↕↕$$$$
+$$$$...$$$$
+◄◄◄$...$◄◄◄
+◄◄◄$►.☼$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$.1.$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+
+message We wish you luck.
+message Bring the color back.
+
+#$w$#
+$$←$$
+$...$
+$...$
+$...$
+$$♂$$
+$...$
+$...$
+$...$
+$$1$$
+
+(hub1)
+
+$$$$\x\$$$$
+r.........c
+h.........h
+c.........l
+c.........l
+w.........h
+r.........r
+$$$$$1$$$$$
+
+(blue/red)
+
+##$$$$$$
+##$b...$
+##$...a$
+##$....$
+#$$$$$$$
+$$.....$
+wh..s..1
+$$.....$
+#$$$$$$$
+
+########$w$###
+$$$$$$$$$x$$$#
+$.....$.....$#
+$..f..$.....$#
+$..s..$.....1#
+$.bsb.$..a..$#
+$.....$.....$#
+$$$$$$$$$$$$$#
+
+#$$$$$####
+#$.p.$####
+#$◙◙◙$$$$$
+#$......fw
+#$....f.$$
+#$......$#
+#$$$1$$$$#
+
+###$$$####
+###$f$####
+###$.$####
+#$$$.$$$##
+#$.....$##
+#$.....$$$
+#2.....h.w
+#$..f..$$$
+#$.....$##
+#$$$$$$$##
+#$f...b$##
+#$$$$$$$##
+
+$$$$$$$$$$$#
+$.........$$
+2....f....hw
+$.........$$
+$$$$$$$$$$$#
+$fff.b..bb$#
+$fff.bb..b$#
+$$$$$$$$$$$#
+
+$$$$$$$$$$$#
+$.........$$
+2....f....hw
+$.........$$
+$$$$$$$$$$$#
+$fff.bb.b.$#
+$fff..b.bb$#
+$$$$$$$$$$$#
+
+###########
+###########
+##$$$$$$$##
+##2..;..w##
+##$$$$$$$##
+###########
+###########
+
+(hub1B)
+
+$$$${x\$$$$
+r.........c
+2.........h
+c.........l
+c.........l
+h.........w
+r.........r
+$$$$$x$$$$$
+
+(strongcrates)
+
+###$$$####
+###$b$####
+##$$$$$###
+##$...$$##
+##2.%.hw##
+##$...$$##
+##$$$$$###
+
+$$$$$$$#
+$...b.$#
+$$$$$$$#
+$.....$#
+$..-..$$
+2.....hw
+$..f..$$
+$.....$#
+$$$$$$$#
+
+$$$$$$$#
+$...$b$#
+$..f$$$$
+2.....hw
+$..%$$$$
+$....b$#
+$$$$$$$#
+
+#$w$#####
+$$x$$$$$$
+$...-&.b$
+2...$$$$$
+$...-*.b$
+$$$$$$$$$
+
+$$$$$$$$$$$$$
+$.%.........$
+$.........b.$
+$.%.........$
+$$$$$$$$$$$$$
+##$.......$##
+#$$.......$##
+#wh...f...$##
+#$$.......$##
+##$.......$##
+##$$$$2$$$$##
+
+#$$$$$$$$$$$
+#$bf..b..fb$
+#$$$$$$$$$$$
+$$.........$
+wh....%....2
+$$.........$
+#$$$$$$$$$$$
+
+###########
+###########
+##$$$$$$$##
+##w..:..2##
+##$$$$$$$##
+###########
+###########
+
+(Hub1C)
+
+$$$${w}$$$$
+r.........c
+h.........2
+c.........l
+c.........l
+h.........h
+r.........r
+$$$$$x$$$$$
+
+#$#$#.#$#$#
+r#.#.#.#.#c
+#.#.#.#.#.#
+c#.#.#.#.#l
+#.#.#.#.#.#
+h#.#.é.#.#h
+#.#.#.#.#.#
+$#$#$#$#$#$
+
+é
+
+$$$$$$$$$$$
+$$$$$#$$$$$
+$$$$#é#$$$$
+$$$$###$$$$
+$$$$↕↕↕$$$$
+$$$$...$$$$
+◄◄◄$...$◄◄◄
+◄◄◄$►.☼$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+
+message Think they'll make it?
+message If not, there's always next in line.
+message I just wish I could go home.
+
+$$$$$$$$$$$
+$$$$$#$$$$$
+$$$$#é#$$$$
+$$$$###$$$$
+$$$$↕↕↕$$$$
+$$$$...$$$$
+◄◄◄$...$◄◄◄
+◄◄◄$►.☼$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+
+é
+
+####☻####
+#e#e#e#e#
+e#,#,#,#e
+#,#,#,#,#
+e#,#,#,#e
+#,#,#,#,#
+e#,#,#,#e
+#,#,é,#,#
+e#,#,#,#e
+#e#e#e#e#
+
+(Hallway)
+
+###e☻e###
+eeeexeeee
+e♥,,,,,♥e
+e,,,,,,,e
+e,,a,s,,e
+e,,,,,,,e
+e,,,,a,,e
+e,,,,,,,e
+e,,,,,,♥e
+eeee☺eeee
+
+(Hub2)
+
+↨eee\x\eeee
+ee,,,,,,,oe
+h,,,,,,,,,h
+e,,,,,,,,oe
+e,,,,,,,,oe
+h,,,,,,,,,☻
+ee,,,,,,,oe
+↨eeee☺eeeee
+
+(Moving Floors)
+
+######eeeeeee####
+eeeeeeeooooee####
+e,,,,,eooooeeee##
+e,,,,,e•ooo,,,e##
+☺,,f,,,•ooo,,,☻##
+e,,,,,e•ooo,,,e##
+e,,,,,eooooeeee##
+eeeeeeeooooee####
+######eeeeeee####
+
+eeeeeeeeeeeee#
+e,,,ooooo,,,e#
+e,f,ooooo,,,ee
+☺,f,ooooo,♥,h☻
+e,f,ooooo,,,ee
+e,,,ooooo,,,e#
+eeeeeeeeeeeee#
+
+eeeeeeee####
+e,,ooooe####
+☻,,ooooe####
+e,,ooooe####
+eeeeoooe####
+###eoooeeeee
+###eoooe,,,e
+eeeeeoee,f,e
+e,,,,•,,,,,e
+☺,,,•••,,,,e
+e,,,,,,,,,,e
+eeeeeeeeeeee
+
+####eeee
+####e,,e
+####e,-e
+####e,,e
+####e,,e
+eeeee,,e
+e,,,e,,e
+☻,,,e,,e
+e§,,eeee
+e¶,‼▬,e#
+e,,▬§,☺#
+e,,,,,e#
+eeeeeee#
+
+message that paintbrush you have...
+message haha, good luck.
+
+####eeee
+####e,,e
+####e,-e
+####e,,e
+####e,,e
+eeeee,,e
+e,,,e,,e
+☻,,,e,,e
+e§,,eeee
+e¶☺å▬,e#
+e,,▬§,,#
+e,,,,,e#
+eeeeeee#
+
+#eeeeeeeeeeeeee
+#eooooee,,,,,,e
+eeooooee,,,,,,e
+☻h,,,o,,,,ee,,e
+ee,♥,o,,,,ee,,e
+#eeeeoeeeeee,,e
+#eeeeoeeeeee,,e
+#e,,,o,,,,,,,,e
+#e,%,o,f,,,,,,☺
+#e,,,o,,,,,,,,e
+#eeeeeeeeeeeeee
+
+###eeeeeee
+###e,,,,,e
+###e,,,,,e
+###e,,,,,e
+###eooo•oe
+###eooo•oe
+eeeeoooooe
+eooooooooe
+eooooooooe
+eooeoooooe
+eooeo•oooe
+eooeo•oooe
+eooeoooooe
+eooe,,,,,e
+☻ooe,%,a,☺
+eooe,,,,,e
+eeeeeeeeee
+
+###########
+###########
+##eeeeeee##
+##☻,,ç,,☺##
+##eeeeeee##
+###########
+###########
+
+(hub2B)
+
+↨eee\x}eeee
+ee,,,,,,,oe
+h,,,,,,,,,☺
+e,,,,,,,,oe
+e,,,,,,,,oe
+☻,,,,,,,,,h
+ee,,,,,,,oe
+↨eeeexeeeee
+
+message To be continued...
+
+(paintpads)
+
+(#eeeeeeeee
+#e,,,,,,,e
+ee,,,,,,,e
+☻h,↨,,,f,☺
+ee,,,,,,,e
+#e,,,,,,,e
+#eeeeeeeee
+##e♥♥,aae#
+##e♥♥,sse#
+##eeeeeee#
+
+#eeeeeeeeee
+#e,,,,,,,,e
+ee,,,,,,,,e
+☻h,↨,,,,f,☺
+ee,,,,,,,,e
+#e,,,,,,,,e
+#eeeeeeeeee
+##e♥,♥,aae#
+##e♥,♥,sse#
+##eeeeeeee#
+
+↨eee{☻}eeee
+ee,,,,,,,oe
+☺,,,,,,,,,h
+e,,,,,,,,oe
+e,,,,,,,,oe
+h,,,,,,,,,h
+ee,,,,,,,oe
+↨eeeexeeeee
+
+#e#e#☻#e#e#
+e#,#,#,#,#e
+#,#,#,#,#,#
+e#,#,#,#,#e
+#,#,#,#,#o#
+h#,#,é,#,#h
+#e#,#,#,#o#
+_#e#e#e#e#e
+
+é
+
+$$$$$$$$$$$
+$$$$$#$$$$$
+$$$$#é#$$$$
+$$$$###$$$$
+$$$$↕↕↕$$$$
+$$$$...$$$$
+◄◄◄$...$◄◄◄
+◄◄◄$►.☼$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+
+message You know, we should really tell them.
+message Again with this? Nobody would try if we did.
+message I know...
+
+$$$$$$$$$$$
+$$$$$#$$$$$
+$$$$#é#$$$$
+$$$$###$$$$
+$$$$↕↕↕$$$$
+$$$$...$$$$
+◄◄◄$...$◄◄◄
+◄◄◄$►.☼$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+◄◄◄$...$◄◄◄
+
+é
+
+#e#e#################
+e#x#e#e#e#e#e#e######
+#,#,#,#,#,#,#,#e#####
+e#♥#e#,#,#,#,#,######
+#,#,#,#,#,#,#,#e#####
+e#o#e#e#o#e#,#,######
+#o#o###o#o#e#,#e#####
+e#o#e#e#o#e#,#,######
+#o#o#o#o#oée#,#e#####
+e#o#o#o#o#e#,#,###e#e
+#o#o#o#o#o#e#,#e###♥#
+e#e#e#e#o#e#,#,#e#e#e
+###e#,#∟#∟#,#↨#,#-#,#
+####,#,#∟#e#,#,#e#,#e
+###e#,#∟#∟#e#e#e#e#e#
+####e#e#e#e##########
+
+#e☻e#################
+eexeeeeeeeeeeeee#####
+e,,,e,,,,,,,,,,e#####
+e,♥,e,,,,,,,,,,e#####
+e,,,e,,,,,,,,,,e#####
+eoooeeeoooee,,,e#####
+eoooe#eoooee,,,e#####
+eoooeeeoooee,,,e#####
+eoooooooooee,,,e#####
+eoooooooooee,,,e##eee
+eoooooooooee,,,ee#e♥e
+eeeeeeeoooe,,,,,eeeee
+###e,,,∟∟∟e,,↨,,o-f,e
+###e,f,∟∟∟e,,,,,e,,,e
+###e,,,∟∟∟eeeeeeeeeee
+###ee☺eeeee##########
+
+######e☻e####
+##eeeeexee###
+##e,,e,,,e###
+##e,♥e,,,e###
+##e,,e,,,e###
+##eeeee,ee###
+######eoe####
+##eeeeeoe####
+##eoooooe####
+##eoeeeoe####
+eeeoe#eoe####
+☻hhoe#eoe####
+eeeee#eoe####
+######e◘e####
+####eee◘e####
+####e,,,e####
+####e,%,e####
+####e,,,e####
+####ee☺ee####
+
+##e☻e##
+##exe##
+eeexeee
+e,,,,,e
+e,♥,♥,e
+e,,,,,e
+ee,o,ee
+#eeoee#
+#eoooe#
+#eeoee#
+ee,o,ee
+e,,,,,e
+e,fff,e
+e,,,,,e
+eee3eee
+
+######e☻e######
+######exe######
+eeeeeeexeeeeeee
+e,,,,e,,,e,,,,e
+e,↨,,e,♥,e,,↨,e
+e,,,,e,↨,e,,,,e
+e,,f,e,♥,e,f,,e
+e,,,,e,,,e,,,,e
+eeeeeee3eeeeeee
+
+(unused levels)
+
+(misc)
+
+(###e☻e##############
+eeeexeeeeeeeeeeee###
+e,,,,,,,e♥,,,,,♥e###
+e,,,,,,,e,,,,,,,e###
+e,,,,f,,e,,a,s,,e###
+e,,,,,,,e,,,,,,,e###
+e,,f,,,,e,,,,a,,e###
+e,,,,,,,e,,,,,,,e###
+e,,,,,,,e,,,,,,♥e###
+eeee☺eeeeeeeeeeee###
+
+(really good)
+
+#e☻e#################
+eexeeeeeeeeeeeee#####
+e,,,e,,,,,,,,,,e#####
+e,♥,e,,,,,,,,,,e#####
+e,,,e,,,,,,,,,,e#####
+eoooeeeoooee,,,e#####
+eoooe#eoooee,,,e#####
+eoooeeeoooee,,,e#####
+eoooooooooee,,,e#####
+eoooooooooee,,,e##eee
+eoooooooooee,,,ee#e♥e
+eeeeeeeoooe,,,,,eeeee
+###e,,,∟∟∟e,,↨,,o-f,e
+###☺,f,∟∟∟e,,,,,e,,,e
+###e,,,∟∟∟eeeeeeeeeee
+###eeeeeeee##########
+
+######e☻e######
+######exe######
+eeeeeeexeeeeeee
+e,,,,e,,,e,,,,e
+e,↨,,e,♥,e,,↨,e
+e,,,,e,↨,e,,,,e
+e,,f,e,♥,e,f,,e
+e,,,,e,,,e,,,,e
+eeeeeee3eeeeeee

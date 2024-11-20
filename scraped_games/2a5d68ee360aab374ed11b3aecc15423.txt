@@ -1,0 +1,890 @@
+title Rippler's Tower
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#DB4A00
+
+Tile
+LightGray
+
+Stone
+Gray
+
+Temp
+Black
+
+Void
+Black
+
+Cursor
+Transparent
+
+Wall
+LightGray DarkGray Gray
+10001
+11111
+22122
+11111
+12221
+
+Player
+darkgray black
+.000.
+.111.
+00100
+.000.
+00.00
+
+Skeleton
+Black Gray LightGray
+.222.
+.020.
+11111
+.222.
+11.11
+
+Wizard
+Purple Yellow Black
+.0000
+.121.
+00000
+.010.
+00100
+
+Slime
+Green LightGreen
+.111.
+.010.
+11111
+.111.
+11.11
+
+Acid
+LightGreen Green
+.11.1
+1010.
+.1011
+1110.
+1.111
+
+Snake
+Green LightBrown Black
+.000.
+02020
+00100
+.111.
+1111.
+
+Mage
+Red Orange Black
+.0000
+.121.
+00000
+.010.
+00100
+
+Sensor
+Black DarkGray White
+01010
+10101
+01210
+10101
+01010
+
+Python
+Purple LightBrown Yellow
+.000.
+02020
+00100
+.111.
+1111.
+
+Snowman
+White Black Orange Brown
+.000.
+01010
+.020.
+30003
+00000
+
+Snow
+LightBlue White
+.11.1
+1010.
+.1011
+1110.
+1.111
+
+Spellcaster
+DarkBlue Blue White Black
+.0000
+.232.
+00000
+.010.
+00100
+
+Spell
+Blue LightBlue
+.000.
+01.10
+0.0.0
+01.10
+.000.
+
+Exit
+Black LightGray DarkGray
+...11
+..112
+.1122
+11222
+12222
+
+Crate
+Brown LightBrown
+01110
+11001
+10101
+10011
+01110
+
+Button
+Red DarkRed Gray
+.000.
+00000
+10001
+21112
+.222.
+
+Box
+DarkBrown Brown
+01110
+11001
+10101
+10011
+01110
+
+PressedButton
+DarkRed DarkGray
+.....
+.000.
+00000
+10001
+.111.
+
+SnowGhost
+DarkBlue LightBlue LightBrown
+.000.
+01010
+.020.
+10001
+00000
+
+WalkingCrate
+Brown LightBrown Black LightGreen
+01110
+23232
+10101
+10011
+01110
+
+AngryCrate
+DarkBrown Brown Black Red
+01110
+23232
+10101
+10011
+01110
+
+CottonMouth
+DarkBlue LightBlue Black
+.000.
+02020
+00100
+.111.
+1111.
+
+Squid
+LightRed Black Pink
+..0..
+.000.
+.101.
+0.0.0
+..0..
+
+Octopus
+Blue DarkBlue
+.000.
+.101.
+.000.
+0.0.0
+..0..
+
+Skull
+LightGray DarkGray
+.000.
+01010
+00000
+.010.
+.010.
+
+Wall2
+DarkGray Gray LightGray White
+32023
+23032
+00000
+21012
+12021
+
+Demon
+Red Black DarkRed
+.00.0
+1010.
+.00..
+..002
+.22.2
+
+ArchDemon
+DarkRed White Black
+.00.0
+1010.
+.00..
+..002
+.22.2
+
+DireSkeletonTop
+LightGray Gray Black
+.000.
+00000
+02020
+.000.
+01110
+
+DireSkeletonBottom
+LightGray Gray
+0.0.0 
+01110
+.000.
+.0.0.
+00.00
+
+DireSnakeTop
+Green LightBrown Black
+..020
+.000.
+00000
+00010
+0011.
+
+DireSnakeBottom
+Green LightBrown
+.0111
+...11
+...11
+.1111
+1111.
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+♦ = Skeleton
+♣ = Wizard
+♥ = Slime
+♪ = Snake
+# = Wall and Stone
+0 = Void
+, = Tile
+' = Stone
+E = Wall and Exit
+H = Crate and Stone
+♫ = Mage
+X = Sensor and Stone
+☃ = Snowman
+◘ = SpellCaster
+n = Button
+J = Box and Stone
+$ = SnowGhost
+I = WalkingCrate
+A = AngryCrate
+• = Python
+○ = CottonMouth
+㊙ = Squid
+L = Octopus
+☠ = Skull
+Z = Wall2
+% = Demon
+& = ArchDemon
+O = DireSkeletonTop
+¥ = DireSkeletonBottom
+F = DireSnakeTop
+| = DireSnakeBottom
+
+
+
+Enemy = Wizard or Skeleton or Slime or Snake or Mage or Python or SnowGhost or AngryCrate or SpellCaster or Spell or CottonMouth or Skull or Demon or ArchDemon or DireSkeletonTop or DireSkeletonBottom or DireSnakeTop or DireSnakeBottom
+
+Cube = Crate or WalkingCrate or AngryCrate
+
+underWaterCephlapodsConsistingOfEightOrMoreTentacles = Squid or Octopus
+
+Solid = Player or Skeleton or Wizard or Wall or Slime or Snake or Crate or Acid or Mage or Python or Snowman or Spellcaster or Box or SnowGhost or WalkingCrate or AngryCrate or CottonMouth or Squid or Octopus or Skull or Wall2 or Demon or ArchDemon or DireSkeletonTop or DireSkeletonBottom or DireSnakeTop or DireSnakeBottom
+
+DireSkeleton = DireSkeletonBottom or DireSkeletonTop
+
+DireSnake = DireSnakeBottom or DireSnakeTop
+
+=======
+SOUNDS
+=======
+
+SFX1 19359709
+
+SFX2 68253504
+
+SFX3 92712109
+
+SFX4 37704302
+
+SFX5 30504307
+
+SFX6 55042108
+
+SFX7 87474748
+
+SFX8 4681708
+
+SFX9 86400507
+
+SFX10 85056308
+
+(cat noise
+83207508
+
+alien
+90437908
+
+robot
+50093308
+
+metal spring
+81221308
+
+squid
+85056308
+
+eerie 1
+94715708
+
+eerie 2
+82959508
+
+pokemon-esque noise
+70217108
+
+static
+97984308
+
+ominous hum
+76554508
+
+frog noise
+25969902
+)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+Stone, Tile
+
+Snow, Spell
+
+Temp
+
+Button, PressedButton
+
+Player, Skeleton, Wizard, Wall, Slime, Snake, Crate, Acid, Mage, Python, Snowman, Spellcaster, Box, SnowGhost, WalkingCrate, AngryCrate, CottonMouth, Squid, Octopus, Skull, Wall2, Demon, ArchDemon,  DireSkeletonTop, DireSkeletonBottom, DireSnakeTop, DireSnakeBottom
+
+Void
+
+Exit
+
+Sensor
+
+Cursor
+======
+RULES
+======
+
+[ Skeleton | ... | Player ] -> [ > Skeleton | ... | Player ] SFX2
+
+[ Slime | ... | Player ] -> [ > Slime | ... | Player ] SFX3
+[ < Slime | No Acid ] -> [ < Slime | Acid ]
+
+[ Wizard | ... | Player ] -> [ > Wizard | ... | Player ]
+late [ Wizard | ... | Player ] -> [ Temp | ... | Wizard ]
+late [ Temp ] -> [ Player ] SFX1
+
+[ Enemy | Player ] -> Restart
+
+[ Player | Exit ] -> Win SFX7
+
+[ > Player | Crate ] -> [ > Player | > Crate ] SFX5
+
+[ stationary Snake ] -> [randomDir Snake ]
+[ Snake | ... | Player ] -> [ > Snake | ... | Player ] SFX4
+
+
+[ Mage | ... | Player ] -> [ > Mage | ... | Player ] SFX6
+[ < Mage | No Mage ] -> [ < Mage | Mage ]
+
+[ Sensor | ... | Player ] -> [< Python | ... | Player ]
+[ stationary Python ] -> [randomDir Python ]
+[ Python | ... | Player ] -> [ > Python  | ... | Player ] SFX4
+
+[ stationary Snowman ] -> [randomDir Snowman ] SFX9
+[ < Snowman | No Snow ] -> [ < Snowman | Snow ]
+
+[ Player | Cursor ] -> [ > Player | ]
+[ > Player | Snow | ] -> [ > Player | | Cursor ] again
+[ Cursor  No Snow ] -> [ No Snow ]
+
+[ Button Cube ] -> [ PressedButton Cube ]
+[ PressedButton ] [ Box ] -> [ PressedButton ] [] SFX8
+
+[ SnowGhost | ... | Player ] -> [ > SnowGhost | ... | Player ] SFX9
+[ stationary SnowGhost ] -> [randomDir SnowGhost ]
+[ < SnowGhost | No Snow ] -> [ < SnowGhost | Snow ]
+
+[ stationary WalkingCrate ] -> [randomDir WalkingCrate ]
+
+[ stationary AngryCrate ] -> [randomDir AngryCrate ] SFX4
+[ AngryCrate | ... | Player ] -> [ > AngryCrate | ... | Player ] SFX4
+
+[ SpellCaster | ... | Player ] -> [ > SpellCaster | ... | Player ] SFX9
+[ stationary SpellCaster ] -> [randomDir SpellCaster ]
+[ < SpellCaster | No Spell ] -> [ < SpellCaster | Spell ]
+
+[ stationary CottonMouth ] -> [randomDir CottonMouth ]
+[ CottonMouth | ... | Player ] -> [ > CottonMouth | ... | Player ]
+late [ CottonMouth | ... | Player ] -> [ Temp | ... | CottonMouth ]
+late [ Temp ] -> [ Player ] SFX1
+
+[ stationary underWaterCephlapodsConsistingOfEightOrMoreTentacles ] -> [ randomDir underWaterCephlapodsConsistingOfEightOrMoreTentacles ] SFX10
+
+[ Skull | ... | Player ] -> [ > Skull | ... | Player ]
+[ > Skull | no Solid ] -> [ | > Skull ] again
+[ > Skull | Wall ] -> [ Skull | Wall ]
+
+[ > Player ] [ Demon ] -> [ > Player ] [ > Demon ]
+[ > Demon | Crate ] -> [ > Demon | > Crate ] SFX5
+
+[ > Player ] [ ArchDemon ] -> [ Player ] [ ArchDemon]
+[ > ArchDemon | Crate ] -> [ > ArchDemon | > Crate ] SFX5
+
+rigid [ DireSkeleton | ... | Player ] -> [ > DireSkeleton | ... | Player ]
++ rigid [ moving DireSkeleton | DireSkeleton ] -> [ moving DireSkeleton | moving DireSkeleton ]
+
+rigid [ DireSnake | ... | Player ] -> [ > DireSnake | ... | Player ]
++ rigid [ moving DireSnake | DireSnake ] -> [ moving DireSnake | moving DireSnake ]
+[stationary DireSnakeTop] -> [randomDir DireSnakeTop]
++ rigid [ moving DireSnake | DireSnake ] -> [ moving DireSnake | moving DireSnake ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+(Skeletons are easily evaded, but just as easy to walk into)
+
+##########00000000000000
+#''''''''###############
+#......................#
+#.P...............♦....E
+#......................#
+#''''''''###############
+##########00000000000000
+
+(The simplest route is not the right one, but sometimes you need to make the least amount of steps possible)
+
+#########
+#......♦#
+#P......E
+#..♦###.#
+#.......#
+#########
+
+(Don't imprison Mr. Skelly!)
+
+###########
+#..#.P....#
+#..''...#E#
+#♦.#H.....#
+#..#'.....#
+###########
+
+(Sometimes the best strategy is to do nothing... or at least for only one turn)
+
+000######000
+00##...♦##00
+0##......##0
+#E.♦.....P##
+0##......##0
+00##....##00
+000######000
+
+(These boxes are too heavy, man)
+
+############
+#.♦........#
+#..####.JJ.#
+#....E#...P#
+############
+
+(Sometimes there are many solutions to a level)
+
+00##############
+00#............#
+###.......♦.H..#
+#E............P#
+#E.............#
+###......♦..H..#
+00#............#
+00##############
+
+(Whos that one in the back?)
+
+###e########
+#h'''h'h'hI#
+#''jhh'hh'h#
+#''h'h'''j'#
+#'hh''jhh''#
+#h''hhh'h'h#
+###h'h'''###
+#####''#####
+#'h'''''h''#
+#'...p....'#
+#'........'#
+#h''''''''h#
+############
+
+(Remember, least amount of steps...)
+
+0#################
+0#H'♦J#''J'''''''#
+0#'J..........P.'#
+0#'.............'#
+0#'J'JJH....J...'#
+0#H'H'JHJ.......'#
+0#J'''HJ''''''''J#
+0##J'J############
+00#'H'#00000000000
+00#'''#00000000000
+###J'J#00000000000
+#''''#000000000000
+#'JJ'#000000000000
+#''EJ#000000000000
+######000000000000
+
+(Wizards!)
+
+#################
+#'''''''#'''''''#
+#'.....'#'....♣'#
+#'.....'#'.....'E
+#'P....'#'.....'#
+#'''''''#'''''''#
+#################
+
+(Think of what your actions will cause...)
+
+##E########
+#....#....#
+#....#.♣..#
+#H#..#....#
+#♣#..#...♣#
+###########
+0#...#....#
+0#...#..♣.#
+0#.P.#....#
+0#...#....#
+0##########
+
+(Focus on getting the skeletons out of the way)
+
+0000#######
+0000#....♦#
+0000#.#.#.#
+#E#0#.#.#.#
+#.###.#.#.#
+#.♦..H.H..#
+#.###.#.#P#
+#E#0#.#.#.#
+0000#.#.#.#
+0000#.....#
+0000#######
+
+(Move the middle box by moving the others)
+
+0000000000000####E#
+0000000000000#....#
+0000000000000#....#
+00000#####000#....#
+00000#'J'#000#..♣.#
+00000#'''#000######
+00000##'##000000000
+00000#'''#000000000
+######HHH#00#######
+#........#00#.♦...#
+#.P......#00#..♦♣.#
+#........#00#.♦..♦#
+#........#00#######
+##########000000000
+
+(Ellipsis...)
+
+00########
+00#......#
+00#.P.♦..#
+00#.....♦#
+####.....#
+#JEJJJ..♦#
+#....J...#
+#.♣..J.♦.#
+#♦...J...#
+##########
+
+(Think of the path you're making when dealing with slimes)
+
+##############
+#''''''''''''E
+#'..JH....♥.'#
+#'..HJ......H#
+#'..........J#
+#'..J.......'#
+#......HJ...'#
+#P.JH''JH''''#
+##############
+
+(Or think of the barricades...)
+
+#####E###########
+#.......#.......#
+#.............P.#
+#.......#.......#
+#.♥.....#.......#
+##..♦..##########
+#♦..♦..♦#00000000
+#.♦..♦..#00000000
+#♦.♦.♦.♦#00000000
+#########00000000
+
+(Just hope it doesn't wander into you)
+
+######################
+#''''''''''''''''''''#
+#'.........♪........'#
+#'P.................'E
+#''''''''''''''''''''#
+######################
+
+(Undoing a turn and redoing it will elicit a new movement from snakes)
+
+0#E#
+0#.#
+0#.#
+0#.#
+0#.#
+0#.#
+0#.#
+##.#
+#P.#
+##.#
+0#♪#
+0###
+
+("You shall not pass! Now make sure to not teleport him, Wizard...")
+
+##############000000000000000000
+#''''''''''''#000000000000000000
+#''''''''''''###################
+#........♣.....................E
+#.P...♫........................E
+#''''''''''''###################
+#''''''''''''#000000000000000000
+##############000000000000000000
+
+(Make sure the skeletons are far apart so they don't double team you)
+
+################
+#'''♫♫♫♫♫''''''#
+#.....♦.......'#
+e.........H.P..#
+#...♦.........'#
+#'''♫♫♫♫♫''''''#
+################
+
+(They're really just snakes but only move when you're in their line of sight)
+
+################E#
+#JJ#.............E
+#JJ#.............#
+####.............#
+#...X........X...#
+#................#
+#...X........X...#
+#.............####
+#.P...........#JJ#
+#.............#JJ#
+##################
+
+(Snowman! Now with a cool unicode character! :)
+
+##########
+#JJ......#
+#....P...#
+#JJ...J..#
+#J.J.....#
+#......JJ#
+#J......J#
+#...☃....#
+#JJ.....J#
+####E#####
+
+(Yay more snowmen! Actually, they're kinda getting in the way now...)
+
+##################
+#..#..........#.p#
+#....♪......☃.#..#
+#..#....##....#..#
+#..#...####...#..#
+#..#....##....#..#
+#..#.☃......♪....#
+#..#..........#..#
+#ee###############
+
+(I can now destroy those boxes!)
+
+#########
+##P....##
+e.#'H''.#
+#JN#.#'.#
+#.'.♥.'.#
+#.'#.#'.#
+#.'''''.#
+##.....##
+#########
+
+(Be practical; and make sure that the slime isnt too close to the exit)
+
+###################
+##...............##
+#...##########....#
+#...###########..♣#
+###############...#
+#####♥........#...#
+#####♦...........##
+##..#♦........#####
+#...#♦........#####
+#...####E##########
+#..p###########...#
+#....##########...#
+##...............##
+###################
+
+(Hmm...)
+
+00000000000####00000
+00##########''###000
+0##..H.'''''''''#000
+##..########''#'####
+#......#0#.♦#'#'#..#
+#......#0#'''#'NJ..E
+##.P...###''''''#..#
+0##....H''''''''####
+00#######''''####000
+00000000######000000 
+
+(Who's the tall guy in the back?)
+
+############0
+#p.#.#o#♦#.#0
+#..#♦#¥#.#♦#0
+#h.#j#j#j#j##
+#..........je
+#..........je
+#n.#j#j#j#j##
+#..#.#♦#.#♦#0
+#..#♦#.#♦#.#0
+############0
+
+(Those skulls move pretty quick)
+
+###############00000
+#.☠.J.........##0000
+#☠..J.....N....#0000
+#.☠.J..........#0000
+############'''#0000
+0000#'H'''H'''P#0000
+0000#''H'''''''#0000
+0000#''''○'H'''#####
+0000#H'''''''''J...#
+0000#'''H'''H''J...E
+0000##'''''''''J...#
+00000###############
+
+###########
+#....#....#
+#.p..#.%..#
+#...h#...h#
+#....#....#
+#....#...N#
+#j...#j...#
+#..j.#..j.#
+###E#######
+
+0###############0
+##p............##
+#...............#
+#..###########..#
+#..#.........#..#
+#..#.........#..#
+#..##.....♥..#..#
+#..#e..☠........#
+#..##...☠....#..#
+#..#.........#..#
+#..#.........#..#
+#..###########..#
+#...............#
+##.............##
+0###############0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

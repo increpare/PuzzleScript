@@ -1,0 +1,110 @@
+title Piedra
+author Enzo
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#27AE60
+
+Target
+#27AE60
+
+Wall
+#C0C0C0
+
+Player
+#F5CBA7
+
+Crate
+#E5E7E9
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Empujar una piedra cuesta arriba
+####o####
+#.......#
+#.......#
+#.......#
+#...*...#
+#.......#
+#.......#
+#.......#
+####p####
+message Esfuerzo en vano
+####o####
+#....#..#
+#.......#
+#..##...#
+#.....#.#
+#...*...#
+#.#.....#
+#.......#
+####p####
+message Labor sin frutos
+####o####
+#..#....#
+#.....#.#
+#...#...#
+#...##.##
+#..##..##
+#.......#
+##..*.#.#
+####p####
+message Tiempo perdido
+####o####
+#..#....#
+#....#.##
+#.......#
+#..##.#.#
+#.......#
+#.#.....#
+#...*.#.#
+####p####
+
+

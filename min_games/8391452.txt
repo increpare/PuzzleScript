@@ -1,0 +1,215 @@
+OBJECTS
+
+BackgroundGREEN
+WallBROWN
+DARKBROWNLIGHTBROWN
+0222210000
+0000010000
+11111Player
+BLACKBLUE RED
+.111..000.
+00200.000.
+.0.0.SoldierU
+OrangeBLUE DARKBROWN
+..2...111.
+.111...1..
+.2.2.SoldierL
+OrangeBLUE DARKBROWN
+..0...111.
+.101...1..
+.22..SoldierR
+OrangeBLUE DARKBROWN
+..0...111.
+.101...1..
+..22.SoldierD
+OrangeBLUE DARKBROWN
+..0...111.
+.010...1..
+.2.2.Tombstone
+DARKGREYLIGHTGREEN GREY..2..
+.002.
+.002.
+.002.
+.101.
+
+OutsideBLACK
+HoleBLACK GREEN10001
+00000
+00000
+00000
+10001
+
+MarkRED
+......0.0.
+..0...0.0.
+.....Crate
+DARKBLUEBLUE DARKRED11111
+01012
+00102
+01010
+20202
+
+ClosedDoorBROWN DARKBROWN00000
+01010
+01010
+01010
+01010
+
+OpenDoorBROWN DARKBROWN
+0000001.10
+0...00...0
+0...0TempDoor
+BLACKSwitch1
+GREYLIGHTBLUE DARKBLUE
+......1...
+.0.....0..
+.222.Switch2
+GREYLIGHTBLUE DARKBLUE
+........1.
+...0...0..
+.222.Sentinel
+REDLIGHTRED BROWN.1...
+.0001
+.020.
+1000.
+...1.
+
+
+
+LEGEND
+
+. = Background
+~ = Outside
+O = Hole
+# = Wall
+P = Player
+^ = SoldierU
+< = SoldierL
+> = SoldierR
+Y = SoldierD
++ = Crate
+H = ClosedDoor
+" = OpenDoor
+S = Switch1
+B = Sentinel
+Soldier = SoldierU or SoldierL or SoldierR or SoldierD
+Opaque = Wall or ClosedDoor
+Switch = Switch1 or Switch2
+Pusher = Player or Soldier
+BlockDoor = Crate or Soldier
+
+COLLISIONLAYERS
+
+Background
+Tombstone
+Outside
+OpenDoor, TempDoor
+Player
+Wall, Hole
+Soldier, Crate
+ClosedDoor, Switch1
+Switch2, Sentinel
+Mark
+
+RULES
+
+[ Player | NoOpaque ] -> [ Player | Mark ] 
+[ Player | ... | Mark | NoOpaque ] -> [ Player | ... | Mark | Mark ] 
+[ Action Player | Switch][OpenDoorNoBlockDoor ] -> [ Action Player | Switch][TempDoor ] 
+[ Action Player | Switch][ClosedDoor ] -> [ Action Player | Switch][OpenDoor ] 
+[ TempDoor ] -> [ ClosedDoor ] 
+[ Action Player | Switch1 ] -> [ Action Player | TempDoor ] again 
+[ Action Player | Switch2 ] -> [ Action Player | Switch1 ] again 
+[ TempDoor ] -> [ Switch2 ] 
+[ Sentinel Mark | ... | MOVINGPlayer ] -> [ > Sentinel | ... | MOVINGPlayer ] 
+late [ Sentinel | Player ] -> [ Sentinel | Tombstone ] 
+UP [ SoldierU Mark | ... | Player ] -> [ > SoldierU | ... | Player ] again 
+UP [ Action Player | SoldierU ] -> [ Player | Tombstone ] 
+late UP [ SoldierU | Player ] -> [ SoldierU | Tombstone ] 
+LEFT [ SoldierL Mark | ... | Player ] -> [ > SoldierL | ... | Player ] again 
+LEFT [ Action Player | SoldierL ] -> [ Player | Tombstone ] 
+late LEFT [ SoldierL | Player ] -> [ SoldierL | Tombstone ] 
+RIGHT [ SoldierR Mark | ... | Player ] -> [ > SoldierR | ... | Player ] again 
+RIGHT [ Action Player | SoldierR ] -> [ Player | Tombstone ] 
+late RIGHT [ SoldierR | Player ] -> [ SoldierR | Tombstone ] 
+DOWN [ SoldierD Mark | ... | Player ] -> [ > SoldierD | ... | Player ] again 
+DOWN [ Action Player | SoldierD ] -> [ Player | Tombstone ] 
+late DOWN [ SoldierD | Player ] -> [ SoldierD | Tombstone ] 
+[ > Pusher | Crate ] -> [ > Pusher | >Crate ] 
+[ > Player ] -> again 
+late [ Mark ] -> [  ] 
+
+
+WINCONDITIONS
+
+No Soldier
+
+LEVELS
+
+~#####~~~~~~~
+
+~#y#y###~~~~~
+~#.....######
+~#.#....<...#
+##O#O#.##.#O#
+#p....>##.#.#
+###O#O.##...#
+~~#.#..##.#^#
+~~#^.^....###
+~~#########~~
+
+###~########
+#y#~#>.....#
+#.###.#p+.##
+#..y..#.++.#
+#.o.+.#...##
+#.o...######
+#...o.#~~~~~
+###...#~~~~~
+~~#####~~~~~
+
+~~~~~~#####~~
+~~~~~~#...###
+#####~#h#+".#
+#..y###...#.#
+#.#h#s#.....#
+#p.......####
+#.#o##...h<#~
+#.......####~
+#########~~~~
+
+####~~~~~~~
+#..###~~~~~
+#..#y#~~~~~
+#....#~#~~~
+##h#.#~####
+~#.#"###..#
+~#+#.#s#..#
+~#........#
+~#p#h#.##.#
+~#.....##^#
+~##########
+
+~~~###~~~~~
+
+####y#####~
+#.......S#~
+#..#.##+###
+##..h..."<#
+~#.#.######
+~#+....p.#~
+~#.....+.#~
+~####s#..#~
+~~~~######~
+
+~~~~~~~~###~~~~
+
+~~~~~~###y#~~~~
+~~~~###s#h##~~~
+~~###......#~~~
+~~#>h......####
+~~###........s#
+~~#p#b.....#.##
+###.####.#...#~
+#b.......#b..#~
+##############~

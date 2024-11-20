@@ -1,0 +1,122 @@
+OBJECTS
+
+Background#def6ff
+#e8fffc00000
+0010101000
+0001000000
+Wall#001942 #220078
+1110011000
+1110011000
+11100Player
+#ffe4e0black
+#ffd44722222
+2000221012
+2000200000
+RBox1Red
+black00000
+0111001110
+0111000000
+RBox2Red black
+0010001110
+1101101110
+00100Ice
+White#00aceb
+#f5faff20000
+2212001210
+0112200002
+Holeblack
+orange.....
+..0...010.
+..0.......
+
+LEGEND
+
+. = Background
+P = Player
+W = Wall
+R = RBox1
+x = RBox2
+0 = Ice
+h = hole
+Box = RBox1 or RBox2
+Object = Box or Player or Wall
+
+COLLISIONLAYERS
+
+Background
+Player
+Wall, RBox1
+RBox2, Ice
+hole
+
+RULES
+
+[ > Player | RBox1 ] -> [ > Player | >RBox1 ] 
+[ RBox2 | RBox1 ] -> [ RBox2 |  ] 
+[ > Player | Ice ] -> [ Player |  ] 
+[ > Player | Hole ] -> [ |Hole ] 
+
+
+WINCONDITIONS
+
+no RBox1
+
+LEVELS
+
+wwwwwwww
+w...0..w
+w...0..w
+wpr.0.xw
+w...0..w
+w...0..w
+wwwwwwww
+
+.......
+
+wwwwwwwww
+wh..p..hw
+ww0w0w0ww
+w...r...w
+ww0www0ww
+w0000000w
+w...w...w
+w0.www.0w
+w.00000.w
+wh.0x0.hw
+wwwwwwwww
+
+........
+
+wwwwwwwwwww
+wp..w0000ww
+w.r.w0...hw
+w.00w0.w.ww
+w.00...w.hw
+wwww0w0w0ww
+w.w00w0..ww
+w00w00w...w
+wx.0000...w
+wwwwwwwwwww
+
+..........
+
+wwwwwwwwwwwwwwwww
+wp.w.....w000w..w
+w.r..00000000w..w
+w..w00w0w0..0000w
+w....w00www0ww00w
+w0000w00w0000000w
+wwwwww00w00...00w
+w0.....0w..wwww0w
+w00wwwwww.0w0000w
+w000..00w00w0..0w
+wwwwww0000000..0w
+w0...000wwwwwwwww
+w00000000000w000w
+w0000wwww000.0..w
+w00...00w0..w0w0w
+www00...0000w0.0w
+w0..00000000w00xw
+wwwwwwwwwwwwwwwww
+
+................

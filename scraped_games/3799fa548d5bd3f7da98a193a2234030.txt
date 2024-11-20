@@ -1,0 +1,697 @@
+title Overreaction
+author Le Slo
+homepage www.puzzlescript.net
+
+again_interval 0.05
+
+run_rules_on_level_start
+
+zoomscreen 11x11
+
+norepeat_action
+
+background_color #3C2A26
+text_color #c3617e
+========
+OBJECTS
+========
+
+one
+transparent
+
+two
+transparent
+
+three
+transparent
+
+four
+transparent
+
+five
+transparent
+
+six
+transparent
+
+seven
+transparent
+
+eight
+transparent
+
+nine
+transparent
+
+ten
+transparent
+
+eleven
+transparent
+
+(one
+#3e30c2
+.....
+.....
+..0..
+.....
+.....
+
+two
+#3e30c2
+.....
+.0...
+.....
+...0.
+.....
+
+three
+#3e30c2
+.....
+.0...
+..0..
+...0.
+.....
+
+four
+#3e30c2
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+five
+#3e30c2
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+six
+#3e30c2
+.....
+.0.0.
+.0.0.
+.0.0.
+.....
+
+seven
+#3e30c2
+.....
+.0.0.
+.000.
+.0.0.
+.....
+
+eight
+#3e30c2
+.....
+.000.
+.0.0.
+.000.
+.....
+
+nine
+#3e30c2
+.....
+.000.
+.000.
+.000.
+.....
+
+ten
+#3e30c2
+..0..
+.000.
+.000.
+.000.
+.....
+
+eleven
+#3e30c2
+..0..
+.000.
+0000.
+.000.
+..0..)
+
+notclose
+transparent
+
+opening
+#5a4353 #3c2a26 #3a251f
+.00..
+.1000
+22100
+2221.
+..22.
+
+closing
+#5a4353 #3c2a26 #3a251f
+.00..
+.1000
+22100
+2221.
+..22.
+
+close
+#3C2A26 #5a4353 #3a251f
+01111
+20001
+20001
+20001
+22220
+
+door
+#3C2A26 #5a4353 #3a251f
+.11..
+....1
+1...1
+1....
+..11.
+
+lastC
+transparent
+
+lastO
+transparent
+
+tiltTR
+#69618a #94a1c2 #c0bbc9 #5a4353
+....3
+.....
+.....
+.....
+.....
+
+tiltBL
+#69618a #94a1c2 #c0bbc9 #3a251f
+.....
+.....
+.....
+.....
+3....
+
+tiltT
+#69618a #94a1c2 #c0bbc9 #5a4353
+33333
+.....
+.....
+.....
+.....
+
+tiltR
+#69618a #94a1c2 #c0bbc9 #5a4353
+....3
+....3
+....3
+....3
+....3
+
+tiltB
+#69618a #94a1c2 #c0bbc9 #3a251f
+.....
+.....
+.....
+.....
+33333
+
+tiltL
+#69618a #94a1c2 #c0bbc9 #3a251f
+3....
+3....
+3....
+3....
+3....
+
+wallT
+#69618a #94a1c2 #c0bbc9 #4c4866
+33333
+.....
+.....
+.....
+.....
+
+wallR
+#69618a #94a1c2 #c0bbc9 #4c4866
+....3
+....3
+....3
+....3
+....3
+
+wallTR
+#4c4866
+....0
+.....
+.....
+.....
+.....
+
+lightTR
+#69618a
+....0
+.....
+.....
+.....
+.....
+
+wallTB
+#69618a #94a1c2 #c0bbc9 #547192
+33333
+.....
+.....
+.....
+.....
+
+wallRB
+#69618a #94a1c2 #c0bbc9 #547192
+....3
+....3
+....3
+....3
+....3
+
+wallTRB
+#547192
+....0
+.....
+.....
+.....
+.....
+
+lightTRB
+#94a1c2
+....0
+.....
+.....
+.....
+.....
+
+Background
+#69618a #69618a
+11111
+01111
+11101
+11111
+10111
+
+Badground
+#94a1c2 #94a1c2
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#3C2A26 #5C5A66
+00000
+00000
+00000
+00000
+00000
+
+PlayerR
+#efb0c9 #c3617e #b44b67
+.000.
+.110.
+22110
+.222.
+.2.2.
+
+PlayerA
+#b6d5df #71a5c8 #4766ac
+.000.
+.110.
+22110
+.222.
+.2.2.
+
+Crate
+#69618a #94a1c2 #c0bbc9 #4c4866
+.....
+.222.
+3112.
+3112.
+333..
+
+CrateWin
+#eefae6 #4c4866 #c7f1ec #c7f1ec
+.....
+.000.
+1230.
+1220.
+111..
+
+shR
+#4c4866
+.....
+.....
+.....
+....0
+.....
+
+shC
+#4c4866
+.....
+000..
+000..
+0000.
+000..
+
+shT
+#4c4866
+0.0..
+.....
+.....
+.....
+.....
+
+
+Error01
+#9194c2
+.....
+.....
+..0..
+.....
+.....
+
+Error02
+#9194c2 #8385c2
+.....
+.0.0.
+..1..
+.0.0.
+.....
+
+Error03
+#8385c2 #7973c2
+.....
+.0.0.
+..1..
+.0.0.
+.....
+
+Error04
+#7973c2 #8385c2
+.....
+.0.0.
+..1..
+.0.0.
+.....
+
+Error05
+#8385c2 #9194c2
+.....
+.0.0.
+..1..
+.0.0.
+.....
+
+Error06
+#9194c2
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+viewH
+transparent
+
+viewV
+transparent
+
+move
+transparent
+
+start
+transparent
+
+save
+transparent
+
+ending
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = PlayerA and start and target
+* = Crate
+@ = Crate and Target
+O = Target
+b = Badground
+x = target and Badground
+
+1 = target and one    
+2 = target and two    
+3 = target and three  
+4 = target and four   
+5 = target and five   
+6 = target and six    
+7 = target and seven  
+8 = target and eight  
+9 = target and nine   
+n = target and ten    
+l = target and eleven 
+
+a = door   and one    and save
+d = door   and two    and save and close
+e = door   and three  and save and close
+f = door   and four   and save and close
+g = door   and five   and save and close
+h = door   and six    and save and close
+i = door   and seven  and save and close
+j = door   and eight  and save and close
+k = door   and nine   and save and close and ending
+m = door   and ten    and save
+q = door   and eleven and save and close
+
+r = one and Crate and target
+s = seven and crate and target
+t = target and Badground and eight
+
+doorState = lastC or lastO
+player = playerA or PlayerR
+collision = crate or wall or player or close
+view = viewH or viewV
+shadows = shR or shC or shT
+tilt = tiltT or tiltR or tiltB or tiltL
+error = Error01 or Error02 or Error03 or Error04 or Error05 or Error06
+doorAnim = closing or opening
+numbers = one or two or three or four or five or six or seven or eight or nine or ten or eleven
+
+=======
+SOUNDS
+=======
+
+endgame 50637708
+startlevel 52912908
+
+player create 62618508
+Error01 create 26675908
+CrateWin create 382100
+undo 81144708
+restart 3948108
+(Error create 52637502)
+(Error01 create 5056508)
+
+showmessage 21799308
+
+endlevel 25735508
+Crate MOVE 36772507
+sfx2 17983508
+sfx1 85425108
+sfx0 95879708
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Badground
+ending
+numbers
+save
+doorState
+error
+shadows
+start
+wallT, wallTB
+wallR, wallRB
+wallTR, wallTRB
+lightTR, lightTRB
+viewH
+viewV
+move
+door
+Target
+Player, Wall, Crate
+CrateWin
+close
+notclose
+doorAnim
+tiltBL
+tiltTR
+tiltB
+tiltL
+tiltT
+tiltR
+
+(numbers)
+
+======
+RULES
+======
+
+up[start][no wall | wall] -> [start][wallT | wall]
+right[start][no wall | wall] -> [start][wallR | wall]
+
+up[start][no wall Badground| wall] -> [start][wallTB Badground| wall]
+right[start][no wall Badground| wall] -> [start][wallRB Badground| wall]
+
+down[start][wall | no wall] -> [start][wall tiltB| ]
+left[start][wall | no wall] -> [start][wall tiltL | ]
+up[start][wall | no wall] -> [start][wall tiltT | ]
+right[start][wall | no wall] -> [start][wall tiltR | ]
+
+down[tiltR | no tiltR wall] -> [tiltR | tiltTR wall]
+up[tiltL | no tiltL wall] -> [tiltL | tiltBL wall]
+
+right[no wall | tiltT] -> [lightTR | tiltT]
+up[no wall | tiltR] -> [lightTR | tiltR]
+right[no wall| wallT] -> [wallTR | wallT]
+
+right[no wall Badground| tiltT] -> [lightTRB Badground| tiltT]
+up[no wall Badground| tiltR] -> [lightTRB Badground| tiltR]
+right[no wall Badground| wallTB] -> [wallTRB Badground| wallTB]
+right[no wall Badground| wallT] -> [wallTRB Badground| wallT]
+
+[player save] -> [player] checkpoint
+[player ending] -> [player] message All that, just for this.
+
+[start] -> []
+
+[view] -> []
+[move] -> []
+[notclose] -> []
+[doorState] -> []
+[doorAnim] -> []
+
+[action PlayerA] -> [PlayerR]
+[action PlayerR] -> [playerA]
+
+[Error06] -> []
+[Error05] -> [Error06]
+[Error04] -> [Error05]
+[Error03] -> [Error04]
+[Error02] -> [Error03]
+[Error01] -> [Error02]
+
+[ > Player | Badground] -> [player | Badground Error01]
+[ >  Player | Crate] -> [ Player | Crate  ]
+[ >  Player | Wall ] -> [   Player |  Wall  ]
+[ >  Player | close ] -> [   Player | close]
+
+
+
+late [PlayerR] -> [PlayerR viewH viewV]
+horizontal late[player | no collision] -> [Player | viewH]
+vertical late[player | no collision] -> [player | viewV]
+horizontal late[viewH | no viewH no collision]->[ viewH | viewH]
+vertical late[viewV | no viewV no collision]->[ viewV | viewV]
+
+horizontal late[viewH | crate no move][PlayerA]->[ crate move | ][PlayerA] again sfx1
+vertical late[viewV | crate no move][PlayerA]->[ crate move| ][PlayerA] again sfx1
+
+horizontal late[viewH | crate no move | no collision][PlayerR]->[  | |crate move][PlayerR] again sfx1
+vertical late[viewV | crate no move | no collision][PlayerR]->[| | crate move][PlayerR] again sfx1
+
+late[shadows] -> []
+late[player] -> [player shC]
+right late [ | shC] -> [shR | shC]
+up late [ | shC] -> [shT | shC]
+
+late[crateWin no crate] -> []
+late[crate target no cratewin] -> [crate target CrateWin]
+
+(--------------------------------------(OPEN DOOR)--------------)
+
+late[door no close] -> [door lastO]
+late[door close] -> [door lastC close]
+
+late[move][door close] -> [move][door close notclose]
+late[door close no notclose] -> [door]
+late[target one    no CrateWin][door one    ] ->[target one    ][door one     close]
+late[target two    no CrateWin][door two    ] ->[target two    ][door two     close]
+late[target three  no CrateWin][door three  ] ->[target three  ][door three   close]
+late[target four   no CrateWin][door four   ] ->[target four   ][door four    close]
+late[target five   no CrateWin][door five   ] ->[target five   ][door five    close]
+late[target six    no CrateWin][door six    ] ->[target six    ][door six     close]
+late[target seven  no CrateWin][door seven  ] ->[target seven  ][door seven   close]
+late[target eight  no CrateWin][door eight  ] ->[target eight  ][door eight   close]
+late[target nine   no CrateWin][door nine   ] ->[target nine   ][door nine    close]
+late[target ten    no CrateWin][door ten    ] ->[target ten    ][door ten     close]
+late[target eleven no CrateWin][door eleven ] ->[target eleven ][door eleven  close]
+
+late[door no close lastC] -> [door lastC opening] sfx2
+late[door close lastO] -> [door close lastO closing] sfx0
+
+late[error] -> again
+late[doorAnim] -> again
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+No move
+
+=======
+LEVELS
+=======
+
+#################################
+######..*b9..####################
+######.*.b.9.#.......############
+######*..b..9#...b...############
+######b.bbbbb#..bbb..############
+######...#...#.bbtbb.############
+##...k.......#..bbb..############
+##.*.#...#....#*#b#*#############
+####b########.j.......###...#####
+####p...#.#.#########.##.77.#####
+#######.##.##########..i....b...#
+####*...#.#.###e..######bb.bb.s.#
+#####m#######.**#.*.*.##....b...#
+####...#..##..3*#.4.4.#..**.#####
+####...#..##.33##.###.#h#...#####
+####.*##..##...##.4.4.#*6########
+#####*.m..####d##.*.*.#*.6#######
+########.*###..####f###*..6######
+######.##*###2..###..##*...6#####
+####.r..#*###*#.####.######.#####
+####.r...m#..*..###...#g....#####
+####a######.#*###.5*.*5.#########
+####.#.**#...2###.5*#*5.#########
+####.#..*q.##.###...#...#########
+####.l...########################
+#################################
+

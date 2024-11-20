@@ -1,0 +1,318 @@
+OBJECTS
+
+Backgrounddarkblue
+ScarfTilelightgray white00000
+01110
+01110
+01110
+00000
+
+ScarfCutTilelightgray white00000
+00000
+00000
+00000
+00000
+
+StarTilelightgray white00000
+01110
+01010
+01110
+00000
+
+NotTilelightgrey white
+......000.
+.0.0..000.
+.....HeroGrey
+darkgreydarkgreen grey21212
+00000
+00000
+11111
+11111
+
+RedHerored
+blackdarkred yellow31313
+00000
+00000
+22222
+22222
+
+RedHeroBackred
+blackdarkred yellow31313
+00000
+00000
+00000
+22222
+
+RedScarfStarred yellow.....
+.000.
+.0.0.
+.000.
+.....
+
+StarGreygrey.....
+.....
+..0..
+.....
+.....
+
+Staryellow.....
+.....
+..0..
+.....
+.....
+
+RedScarfred yellow.....
+.000.
+.000.
+.000.
+.....
+
+RedScarfTailred yellow.....
+.000.
+.0.0.
+.000.
+.....
+
+RedGrowtransparent
+RedDroptransparent
+RedPicktransparent
+RedPick2transparent
+RedPick3transparent
+ToLeftred.....
+0....
+0....
+0....
+.....
+
+ToRightred.....
+....0
+....0
+....0
+.....
+
+ToUpred.000.
+.....
+.....
+.....
+.....
+
+ToDownred.....
+.....
+.....
+.....
+.000.
+
+Tailtransparent
+Checkblue
+Bordergrey
+ToDeletetransparent
+
+
+
+LEGEND
+
+. = Background
+p = RedHero
+b = RedHeroBack
+t = StarTile
++ = ScarfTile
+- = StarGrey
+\ = NotTile
+/ = ScarfCutTile
+0 = RedScarf
+1 = ToUp
+2 = ToRight
+3 = ToDown
+4 = ToLeft
+@ = RedScarfStar or ToRight
+o = HeroGrey
+9 = ToLeft or RedScarf
+8 = ToDown or RedScarf
+7 = ToRight or RedScarf
+6 = ToUp or RedScarf
+5 = ToRight or RedScarfTail
+c = Check
+# = Border
+Player = RedHero or RedHeroBack
+RedHeros = RedHero or RedHeroBack
+Heros = RedHeros
+Stars = StarGrey
+RedScarfs = RedScarf or RedScarfTail or RedScarfStar
+Scarfs = RedScarfs
+Obstacles = Player or Scarfs or Border
+Directions = ToUp or ToDown or ToLeft or ToRight
+r = RedGrow
+
+COLLISIONLAYERS
+
+Background
+RedGrow
+RedDrop, RedPick
+RedPick2, RedPick3
+Check
+StarTile, StarGrey
+ScarfTile, HeroGrey
+NotTile, ScarfCutTile
+ToLeft, ToRight
+ToUp, ToDown
+RedHero
+RedHeroBack, RedScarf
+RedScarfTail, RedScarfStar
+Border
+ToDelete
+Star
+Tail
+
+RULES
+
+[ > Heros | Border ] -> cancel 
+[ Check ] -> [  ] 
+[ Star ] -> [  ] 
+[ Directions no Heros no Scarfs ] -> [  ] 
+[ > RedHero | RedScarfs ] -> cancel 
+[ > RedHeroBack | RedScarfs ] -> cancel 
+[ > RedHeroBack ] -> [ > RedHero ] 
+up [ > Player ] -> [ > RedHeroBack ] 
+[ up RedHeros | noObstacles ] -> [ ToUp up RedHeros |  ] 
+[ down RedHeros | noObstacles ] -> [ ToDown down RedHeros |  ] 
+[ left RedHeros | noObstacles ] -> [ ToLeft left RedHeros |  ] 
+[ right RedHeros | noObstacles ] -> [ ToRight right RedHeros |  ] 
+[ up RedHeros | noRedScarfs ] -> [ ToUp up RedHeros |  ] 
+[ down RedHeros | noRedScarfs ] -> [ ToDown down RedHeros |  ] 
+[ left RedHeros | noRedScarfs ] -> [ ToLeft left RedHeros |  ] 
+[ right RedHeros | noRedScarfs ] -> [ ToRight right RedHeros |  ] 
+[ ToUp Scarfs ] -> [ ToUp up Scarfs ] 
+[ ToDown Scarfs ] -> [ ToDown down Scarfs ] 
+[ ToLeft Scarfs ] -> [ ToLeft left Scarfs ] 
+[ ToRight Scarfs ] -> [ ToRight right Scarfs ] 
+[ > RedScarfTail StarTile | noStarTile ] -> [ > RedScarfTail StarTile | RedPick ] 
+[ > RedScarfTail no StarTile | StarTile ] -> [ > RedScarfTail | StarTileRedPick2 ] 
+[ ToUp Scarfs ] -> [ ToUp up Scarfs ] 
+[ ToDown Scarfs ] -> [ ToDown down Scarfs ] 
+[ ToLeft Scarfs ] -> [ ToLeft left Scarfs ] 
+[ ToRight Scarfs ] -> [ ToRight right Scarfs ] 
+late down [ Directions RedScarfStar | ToUpnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
+late down [ Directions RedScarf | ToUpnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
+late up [ Directions RedScarfStar | ToDownnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
+late up [ Directions RedScarf | ToDownnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
+late right [ Directions RedScarfStar | ToLeftnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
+late right [ Directions RedScarf | ToLeftnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
+late left [ Directions RedScarfStar | ToRightnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
+late left [ Directions RedScarf | ToRightnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
+late [ Directions RedScarfStar | DirectionsnoRedScarfs][RedHerosStarTile ] -> [ Directions RedScarfStar | DirectionsRedScarfStar][RedHerosStarTile ] 
+late [ Directions RedScarf | DirectionsnoRedScarfs][RedHerosStarTile ] -> [ Directions RedScarf | DirectionsRedScarfStar][RedHerosStarTile ] 
+late [ Directions RedScarfStar | DirectionsnoRedScarfs][RedHerosScarfTile ] -> [ Directions RedScarfStar | DirectionsRedScarf][RedHerosScarfTile ] 
+late [ Directions RedScarf | DirectionsnoRedScarfs][RedHerosScarfTile ] -> [ Directions RedScarf | DirectionsRedScarf][RedHerosScarfTile ] 
+late [ RedHeros | DirectionsnoRedScarfs][RedHerosScarfTile ] -> [ RedHeros | DirectionsRedScarf][RedHerosScarfTile ] 
+late [ RedHeros | DirectionsnoRedScarfs][RedHerosStarTile ] -> [ RedHeros | DirectionsRedScarfStar][RedHerosStarTile ] 
+late [ StarGrey RedScarfStar ] -> [ StarGrey RedScarfStar Star ] 
+late [ StarGrey RedScarfTail ] -> [ StarGrey RedScarfTail Star ] 
+
+
+WINCONDITIONS
+
+all StarGrey on Star
+all RedScarfStar on Star
+all HeroGrey on Heros
+no Heros on NotTile
+no Scarfs on NotTile
+
+LEVELS
+
+##########
+#78....o.#
+#.7p.....#
+#........#
+##########
+
+##########
+#........#
+#o######.#
+#78#...#.#
+##7p####.#
+.##......#
+..########
+
+#############
+#.......-...#
+#777po......#
+#.........t.#
+#############
+
+##########
+#tttttttt#
+#777p...t#
+#tttttt.t#
+#t......t#
+#t.tttttt#
+#t..-...o#
+#tttttttt#
+##########
+
+############
+#.......-.t#
+#777po....+#
+#.......-.t#
+############
+
+###########
+#.78.+....#
+#..7p+.t..#
+#o..-+.-..#
+###########
+
+######
+
+#----#
+#-78t#
+#-.7p#
+#----#
+######
+
+######
+
+#----#
+#---t#
+#--8p#
+#--76#
+######
+
+#########
+#78.....#
+#.7b\.\.#
+#..\\.\\#
+#....o..#
+#..\\.\\#
+#########
+
+######
+
+#78\o#
+#.7b\#
+#.##.#
+#.//.#
+######
+
+########
+
+#.78#\o#
+#..7b\\#
+#/####+#
+#///+++#
+########
+
+#######
+#.-t-.#
+#.....#
+#.78.+#
+#..7p.#
+#.-t-.#
+#######
+
+#######
+#.-t-.#
+#.....#
+#/78.+#
+#..7p.#
+#.-t-.#
+#######

@@ -1,0 +1,246 @@
+title Password
+author Lucas Svangard
+
+========
+OBJECTS
+========
+00
+grey white
+00000
+01110
+01010
+01010
+01110
+
+
+11
+grey white
+01100
+00100
+00100
+00100
+00100
+
+22
+grey white
+01110
+00010
+01110
+01000
+01110
+
+33
+grey  white
+01110
+00010
+00110
+00010
+01110
+
+44
+grey white
+01010
+01010
+01110
+00010
+00010
+
+55
+grey white
+01110
+01000
+01110
+00010
+01110
+
+66
+grey white
+01110
+01000
+01110
+01010
+01110
+
+77
+grey white
+01110
+00010
+00010
+00010
+00010
+
+88
+grey white
+01110
+01010
+01110
+01010
+01110
+
+99
+grey white
+01110
+01010
+01110
+00010
+00010
+
+background
+grey darkgrey
+00000
+11111
+00000
+11111
+00000
+
+44spec
+grey white
+01010
+01010
+01110
+00010
+00010
+
+66spec
+grey white
+01110
+01000
+01110
+01010
+01110
+
+0spec
+grey  white white white green
+00000
+01110
+01010
+01010
+01110
+
+
+
+
+
+
+
+wall
+lightgrey
+
+mark
+lightgreen
+
+Player
+blue
+
+=======
+LEGEND
+=======
+. = background 
+1 = 11
+2 =22
+3 = 33
+4= 44
+5=55
+6=66
+7=77
+0 = 00
+8=88
+9=99
+p =player
+# = wall
+
+} = 0spec
+& = 66spec
+¤ = 44spec
+s = mark
+
+=======
+SOUNDS
+=======
+
+player move 69682307
+================
+COLLISIONLAYERS
+================
+background
+99 88 77 66 55 44 33 22 11 0spec 66spec 44spec   00
+player wall mark
+
+======
+RULES
+======
+[ > Player | mark ] -> [ > Player | > mark ]
+
+
+
+
+==============
+WINCONDITIONS
+==============
+some mark on 0spec
+some mark on 44spec
+some mark on 66spec
+=======
+LEVELS
+
+=======
+
+message Put in the password by puting the green boxes on the right numbers.
+..............
+..............
+.....1.1.1....
+..............
+.....2.2.2....
+..............
+.....3.3.3....
+..............
+.....¤.4.4....
+...............
+.....5.5.5....
+..............
+.....6.&.6....
+..............
+.....7.7.7....
+.................
+.....8.8.8....
+...............
+.....9.9.9....
+..............
+.....0.0.}....
+..............
+.....s.s.s..p.
+..............
+
+
+message Yay you started the game
+
+...............
+#...#.....#....
+....#.p.#......
+.#........#....
+
+message Yay you won the game
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+........5.......2...1..

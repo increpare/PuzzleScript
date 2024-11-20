@@ -1,0 +1,162 @@
+OBJECTS
+
+BackgroundGREEN LIGHTGREEN11111
+01111
+11101
+11111
+10111
+
+Targetdarkblue00000
+0...0
+0.0.0
+0...0
+00000
+
+WallDARKBROWN BROWN00010
+11111
+01000
+11111
+00010
+
+PlayerABlue
+whiteOrange black.000.
+.111.
+22222
+.333.
+.3.3.
+
+PlayerBlightblue
+whiteyellow darkgrey.000.
+.111.
+22222
+.333.
+.3.3.
+
+CrateOrange.....
+.000.
+.000.
+.000.
+.....
+
+
+
+
+LEGEND
+
+Player = PlayerA or PlayerB
+. = target
+# = Wall
+P = PlayerA or target
+* = background
+@ = Crate
+O = crate or target
+
+COLLISIONLAYERS
+
+Background
+Target
+Player
+Wall, Crate
+
+RULES
+
+[ action PlayerA ] -> [ PlayerB ] 
+[ action PlayerB ] -> [ PlayerA ] 
+[ no wall no crate | <PlayerB | Crate ] -> [ |<PlayerB | <Crate ] 
+
+
+WINCONDITIONS
+
+no Target on Crate
+
+LEVELS
+
+......#####
+
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+..######
+
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+#######
+
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+######.#####
+
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+########
+
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+..####...
+
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..

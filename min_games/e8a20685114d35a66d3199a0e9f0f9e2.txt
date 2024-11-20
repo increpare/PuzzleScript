@@ -1,0 +1,197 @@
+OBJECTS
+
+BackgroundBlack
+DirtBrown Darkbrown01000
+00001
+00100
+10000
+00010
+
+MudDarkbrown Brown01000
+00001
+00100
+10000
+00010
+
+TargetDarkblue
+WallLightgray Gray00010
+11111
+01000
+11111
+00010
+
+Steellightgray Gray
+1000000010
+0010001000
+00001DGuy
+BrownRed Orange
+.000..222.
+11111.111.
+.0.0.UGuy
+BrownRed Orange
+.000..000.
+11011.111.
+.0.0.LGuy
+BrownRed Orange
+.000..200.
+1110..111.
+.0..0RGuy
+BrownRed Orange.000.
+.002.
+.0111
+.111.
+0..0.
+
+IndicatorDarkgreen
+RockGray Darkgray.001.
+0001.
+00001
+00011
+.111.
+
+Gem1Lightblue Blue..0..
+.111.
+00000
+.111.
+..0..
+
+Gem2Lightblue Blue
+..1...000.
+11111.000.
+..1..Explosion
+OrangeRed Yellow.101.
+10201
+02020
+10201
+.101.
+
+CornerLblack0....
+.....
+.....
+.....
+.....
+
+CornerRblack....0
+.....
+.....
+.....
+.....
+
+SlipLeftRed..0..
+.0...
+00000
+.0...
+..0..
+
+SlipRightBlue..0..
+...0.
+00000
+...0.
+..0..
+
+
+
+LEGEND
+
+. = Background
+/ = Dirt
+\ = Mud
+# = Wall or SlipLeft
++ = Steel
+P = DGuy
+* = Rock or SlipLeft
+@ = Rock or SlipLeft or Target
+O = Target
+$ = Gem1 or SlipLeft
+Player = DGuy or UGuy or LGuy or RGuy
+Corner = CornerL or CornerR
+Gem = Gem1 or Gem2
+Faller = Rock or Gem
+PlaceCorners = Wall or Mud
+Slippery = Rock or Gem or PlaceCorners
+Flat = Steel or Dirt
+Solid = Flat or Slippery or Player
+SlipMark = SlipLeft or SlipRight
+Diggable = Dirt or Mud or Gem
+Structural = Wall or Steel
+
+COLLISIONLAYERS
+
+Background
+Indicator
+Target
+Player, Wall
+Steel, Rock
+Gem, Explosion
+Dirt, Mud
+CornerL
+CornerR
+SlipMark
+
+RULES
+
+left [ PlaceCorners | noStructural ] -> [ PlaceCorners CornerL |  ] 
+right [ PlaceCorners | noStructural ] -> [ PlaceCorners CornerR |  ] 
+up [ PlaceCorners Corner | Structural ] -> [ PlaceCorners | Structural ] 
+[ Player no SlipMark ] -> [ Player left Background ] 
+startloop
+[ left Background | stationaryBackground ] -> [ left Background | rightBackground ] 
+[ right Background | stationaryBackground ] -> [ right Background | leftBackground ] 
+endloop
+[ Gem1 right Background ] -> [ Gem2 ] 
+[ Player no SlipMark ] -> [ Player SlipRight ] 
+[ moving Background ] -> [ stationary Background ] 
+[ right Player ] -> [ right RGuy ] 
+[ left Player ] -> [ left LGuy ] 
+[ down Player ] -> [ down DGuy ] 
+[ up Player ] -> [ up UGuy ] 
+[ Faller][PlayerSlipLeft ] -> [ down Faller][PlayerSlipLeft ] 
+down [ > Faller | SlipRightSlippery ] -> [ > Faller^Background | SlipRightSlippery ] 
+down [ > Faller | SlipLeftSlippery ] -> [ > Faller v Background | SlipLeftSlippery ] 
+horizontal [ > Background | Solid ] -> [ action Background | Solid ] 
+horizontal [ > Background |  ] -> [ > Background | downBackground ] 
+down [ > Background | Solid ] -> [ action Background | Solid ] 
+[ action Background | horizontalBackground ] -> [ action Background | actionBackground ] 
+down [ > Faller^Background | SlipRightSlippery ] -> [ ^ Faller | SlipLeftSlippery ] 
+down [ > Faller v Background | SlipLeftSlippery ] -> [ v Faller | SlipRightSlippery ] 
+[ > Faller | Solid ] -> [ Faller | Solid ] 
+[ Player SlipLeft ] -> [ Player SlipRight ] 
+[ action Player no Indicator ] -> [ Player Indicator ] 
+[ action Player Indicator ] -> [ Player SlipLeft ] 
+[ > Player SlipRight ] -> [ > Player SlipLeft ] 
+horizontal [ > Player | Rock ] -> [ > Player | >Rock ] 
+[ > Player no Indicator | Diggable ] -> [ > Player |  ] 
+[ > Player Indicator | Diggable ] -> [ Player |  ] 
+[ > Player SlipMark ] -> [ > Player>SlipMark ] (info moves with player) 
+[ > Faller SlipMark ] -> [ > Faller>SlipMark ] (slip info moves with fallers) 
+late [ Indicator no Solid ] -> [  ] 
+late [ Player SlipLeft][Gem1noIndicator ] -> [ Player SlipLeft][Gem2Indicator ] 
+late [ Player SlipLeft][Gem2noIndicator ] -> [ Player SlipLeft][Gem1Indicator ] 
+late [ Gem Indicator ] -> [ Gem ] 
+late [ Player SlipLeft ] -> again 
+
+
+WINCONDITIONS
+
+All Target on Rock
+Some Target
+
+LEVELS
+
+#######
+#.....#
+#..$..#
+#..$..#
+#..$.p#
+#o.$..#
+#..$..#
+#.....#
+#######
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######

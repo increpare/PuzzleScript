@@ -1,0 +1,174 @@
+title Stand
+author Connorses
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background 
+GREEN  
+
+
+Target1
+DarkBlue Blue
+.....
+00000
+01110
+00000
+.....
+
+Target2
+Darkgreen lightgreen
+.....
+00000
+01110
+00000
+.....
+
+Wall1 
+BROWN
+
+Wall2
+Brown
+00000
+00000
+00000
+00000
+.....
+
+Player 
+lightblue   
+.000.
+00000
+.0.0.
+.....
+.....
+
+Crate 
+Brown lightbrown darkbrown
+11111
+12201
+12021
+10221
+11111
+
+
+BigCrate
+Black grey
+01001
+10010
+00100
+01001
+10010
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall1
+% = Wall2
+P = Player
+* = Crate
++ = BigCrate
+@ = Crate and Target1
+O = Target1
+
+=======
+SOUNDS
+=======
+Target2 Destroy 24978900
+Target2 Create 44909500
+StartGame 89777708
+EndLevel 23510908
+EndGame  84025508
+Player Move 81570907
+Crate Move 89017902
+BigCrate Move 73907102
+================
+COLLISIONLAYERS
+================
+
+
+Background
+Target1, Target2
+Player, Wall1, Wall2 Crate, BigCrate
+
+======
+RULES     
+======     
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ >  Crate  | Crate ] -> [  >  Crate  | > Crate  ]
+[ > Player | BigCrate] -> [ Player | > BigCrate ]
+late [Target1 Player] -> [Target2 Player]
+late [Target2 no Player] -> [Target1]
+
+==============
+WINCONDITIONS
+==============
+
+No Target1
+
+=======     
+LEVELS
+=======
+
+
+.......
+.......
+..#o#..
+..%%%..
+.......
+...p...
+Message Ah yes, um, stand on the light to progress.
+...........
+###%%%%#%##
+###....%o##
+#%%.##...##
+#p..#######
+######%%%%#
+#%%%##...o#
+#p..%%.####
+###....####
+%%%%%%%%%%%
+...........
+
+.#%%%%%%%#.
+.#p......#.
+.#.......#.
+.#%.....o#.
+.#....#..#.
+.#%%%%%%%#.
+.#p......#.
+.#.......#.
+.#....o..#.
+.#...#...#.
+.#########.
+
+...#p......
+...%#...p..
+.#..%%%#..o
+.#.....#..o
+.#.....#..o
+p#....%%..o
+%%........o
+.....%%#..o
+p......%#..
+..#%%%.p#..
+..#.p...##.
+
+Message OH, I nearly forgot to tell you, you'll have to stand on all of them at once. Yup.
+
+%....###%%.
+p.##.%%%..o
+####.....#.
+%%%%%%%%%%%
+%.....%#..o
+p.###..%.#.
+######...#.
+%%%%%%%%%%%
+.......###%
+o#.%.#.%%%p
+.#...#.....
+Message Part 1 complete!

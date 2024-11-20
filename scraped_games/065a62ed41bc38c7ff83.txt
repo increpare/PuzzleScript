@@ -1,0 +1,335 @@
+title L.A.S.E.R.
+author Franklin P. Dyer
+run_rules_on_level_start on
+key_repeat_interval 1
+youtube 4cg1jXGZpjc
+========
+OBJECTS
+========
+
+Background .
+#ecaeae
+
+Wall /
+#380707 #3c1616
+10000
+01000
+00100
+00010
+00001
+
+Player @
+#6d1b1b Red
+.000.
+.101.
+00000
+.000.
+.0.0.
+
+Box o
+#742d2d
+00000
+00.00
+0...0
+00.00
+00000
+
+Target +
+#511d1d
+.....
+..0..
+.000.
+..0..
+.....
+
+Horizap
+#f26363
+.....
+.....
+00000
+.....
+.....
+
+Vertzap
+#f26363
+..0..
+..0..
+..0..
+..0..
+..0..
+
+LaserRight >
+#850e0e #a31616
+00...
+000..
+01000
+000..
+00...
+
+LaserLeft <
+#850e0e #a31616
+...00
+..000
+00010
+..000
+...00
+
+LaserUp ^
+#850e0e #a31616
+..0..
+..0..
+.000.
+.010.
+00000
+
+LaserDown v
+#850e0e #a31616
+00000
+.010.
+.000.
+..0..
+..0..
+
+=======
+LEGEND
+=======
+
+# = Wall
+& = Box and Target
+
+Laser = LaserUp or LaserDown or LaserLeft or LaserRight
+Obstacle = Wall or Laser or Box
+Zap = Horizap or Vertzap
+
+=======
+SOUNDS
+=======
+
+SFX0 69003702
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Horizap
+Vertzap
+Wall, Player, Laser, Box
+
+======
+RULES
+======
+
+[Player Zap] -> [Zap] SFX0
+
+[Zap] -> []
+
+[> Player|Laser] -> [> Player|> Laser]
+[> Player|Box] -> [> Player|> Box]
+
+LATE RIGHT[LaserRight|No Horizap No Obstacle] -> [LaserRight|Horizap]
+LATE LEFT[LaserLeft|No Horizap No Obstacle] -> [LaserLeft|Horizap]
+LATE UP[LaserUp|No Vertzap No Obstacle] -> [LaserUp|Vertzap]
+LATE DOWN[LaserDown|No Vertzap No Obstacle] -> [LaserDown|Vertzap]
+LATE HORIZONTAL[Horizap|No Horizap No Obstacle] -> [Horizap|Horizap]
+LATE VERTICAL[Vertzap|No Vertzap No Obstacle] -> [Vertzap|Vertzap]
+
+==============
+WINCONDITIONS
+==============
+
+All target on box
+No player on zap
+Some player
+
+=======
+LEVELS
+=======
+
+message Stage 1 of 3: Beginner
+message Push the boxes so that every target is covered up.
+message Don't let the lasers zap you.
+
+/////
+/+../
+/.o./
+/..@/
+/////
+
+//////
+/@..+/
+/.oo//
+/...</
+/.o.//
+/...+/
+//////
+
+///////
+/..v../
+/.o.../
+/...///
+/....+/
+/@..o+/
+///////
+
+///////
+/+./.+/
+/..v../
+/..o../
+/..o../
+/..@../
+///////
+
+///////
+/.+.../
+>.....<
+/...o./
+/.o.o./
+/@..../
+///////
+
+////
+/.@/
+/o</
+/../
+/+./
+////
+
+message Stage 2 of 3: Intermediate
+
+////////
+/+..v../
+/.....+/
+/....../
+/.o...</
+/.oo.../
+/@....+/
+////////
+
+////////
+//.v..//
+/.o././/
+/./..+./
+/...</./
+//./.../
+//@...//
+////////
+
+/////////
+//..+.../
+/>+...../
+/././/.//
+/....oo@/
+///./.../
+///...///
+/////////
+
+//////////
+////....//
+/./.o...//
+/..+oo..</
+/.///.////
+/...+...//
+/@./..^o//
+/////..///
+//////////
+
+/////////
+//../..//
+/>+ooo+./
+/.../..</
+//o.o..//
+//@....//
+/////////
+
+///v////
+//...///
+//.o.+//
+/.ooo../
+/..o.+.<
+//.@.///
+////////
+
+/////v////
+///+..////
+//../+////
+/.@.o..///
+/.o.o..///
+//o/./.../
+//.......<
+///../////
+////^/////
+
+///////v//
+/..//..+./
+/.o......<
+/..///.../
+//@//+.o//
+/../+oo.//
+/>.....///
+/.....////
+//////////
+
+message Stage 3 of 3: Expert
+
+/////////
+/+..v..@/
+/....o../
+/.....o./
+/>.....</
+/....o../
+/......./
+/+..^.../
+/////////
+
+////////
+/.....+/
+/.....</
+//./+../
+//o//o//
+/...@../
+////////
+
+//////
+//.../
+//..</
+//.o./
+/.+++/
+/.oo@/
+///../
+//////
+
+///////////
+////.////./
+///..///.</
+//.o....../
+/...@o./../
+///oo///../
+///../++../
+///.//&////
+//......<//
+//.....////
+///////////
+
+//////////v//
+///........</
+///././/...//
+/......//.../
+/@oooo+.//o./
+/../....//.+/
+//..//^./.o./
+///..////+o+/
+////......../
+/////////..//
+/////////////
+
+//////v//
+///.././/
+/.o...../
+/.+.o/../
+///+@/o//
+/.+.o/../
+/.o...../
+//////../
+/////////

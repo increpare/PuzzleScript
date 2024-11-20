@@ -1,0 +1,626 @@
+title lava flow
+author Rosden Shadow [Mark Signorelli]
+homepage rosden.itch.io
+
+noaction
+run_rules_on_level_Start
+
+background_color #423D39
+
+text_color #FFD9E0
+
+again_interval 0.2
+========
+OBJECTS
+========
+
+Background
+#7F7CA1 #705C84(#E57ED5 #CC5285)
+11111
+10001
+10101
+10001
+11111
+(
+00101
+01110
+11011
+01111
+10110)
+(
+11101
+00101
+11111
+10100
+10111)
+
+
+nomove
+#FFEED9 #536673
+.....
+.000.
+.010.
+.000.
+.....
+
+Target
+#FFD9E0 #423D39
+.....
+.010.
+.0.1.
+.000.
+.....
+
+Wall
+#A2C1BE #7C94A1  #7F7CA1 #705C84
+21110
+21110
+22221
+23232
+32323
+
+overwall
+#A2C1BE #7C94A1  #7F7CA1 #705C84
+.....
+.....
+.....
+10000
+21110
+
+
+eatwall
+#C1A2A5 #845C5C #5B4846 #423D39
+21110
+21110
+22221
+23232
+32323
+
+overeatwall
+#C1A2A5 #845C5C #5B4846 #423D39
+.....
+.....
+.....
+10000
+21110
+
+Playerright
+#C3C3D9 #AFA2C1 #7F7CA1 #705C84
+.000.
+11202
+11313
+11110
+.1.1.
+
+playerleft
+#C3C3D9 #AFA2C1 #7F7CA1 #705C84
+.000.
+20211
+31311
+01111
+.1.1.
+
+deadplayer
+#333333 #231F26
+.000.
+11100
+11110
+11110
+.1.1.
+
+
+emp0Crate
+#FFFFFF #CCCCCC #999999 #666666
+21100
+21110
+22110
+32223
+.333.
+
+overempcrate
+#FFFFFF #CCCCCC #999999 #666666
+.....
+.....
+.....
+.....
+.000.
+
+emp1Crate
+#FFFFFF #CCCCCC #999999 #666666  #E57ED5 #845C7A
+21400
+25540
+22510
+32223
+.333.
+
+
+Crate
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+21100
+21110
+22110
+32223
+.333.
+
+overcrate
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+.....
+.....
+.....
+.....
+.000.
+
+orb
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+21001
+21101
+22111
+32223
+.333.
+
+overorb
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+.....
+.....
+.....
+.....
+.111.
+
+orbwall
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+21110
+22110
+22221
+23232
+32323
+
+overorbwall
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+.....
+.....
+.....
+10000
+21100
+
+
+end
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+21100
+21110
+22110
+32223
+.333.
+
+endx
+#D9FFF8 #AAE0F2 #7EA1E5 #5C6684
+21100
+21110
+22110
+32223
+.333.
+
+overicewall
+#D9FFF8 #AAE0F2 #7EA1E5
+.....
+.....
+.....
+11010
+01101
+
+icewall
+#D9FFF8 #AAE0F2 #7EA1E5
+10110
+01011
+10101
+21212
+12121
+
+
+lava1
+#E5C17E #DB7F55 #B32D2D
+10101
+21010
+12101
+21210
+12121
+
+lava2
+#E5C17E #DB7F55 #B32D2D
+12121
+01212
+10121
+01012
+10101
+
+lavani
+transparent
+
+cloner
+#E5C17E #DB7F55 #B32D2D #73342E
+.100.
+.210.
+.221.
+.332.
+.....
+
+swapcrate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+swapwall
+black
+.....
+.....
+.....
+.....
+.....
+
+thefloor
+#423D39
+00000
+00000
+00000
+00000
+00000
+
+thefloorx
+#423D39
+00000
+00000
+00000
+00000
+00000
+
+eend
+#423D39
+00000
+00000
+00000
+00000
+00000
+(
+checkempty
+black
+.....
+.....
+.....
+.....
+.....
+
+checkblock
+black
+.....
+.....
+.....
+.....
+.....
+)
+
+cre
+transparent
+cre2
+transparent
+cre3
+transparent
+
+noice
+transparent
+nospa
+transparent
+
+nospax
+transparent
+
+spa
+transparent
+
+switcrate
+black
+.....
+.....
+.....
+.....
+.....
+
+switcrate2
+black
+.....
+.....
+.....
+.....
+.....
+
+arrow
+black
+.....
+.....
+.0.0.
+.000.
+..0..
+
+arrow2
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+
+arrowx
+black
+.....
+.....
+.....
+.....
+.....
+
+arrowx2
+black
+.....
+.....
+.....
+.....
+.....
+
+winend
+#FFD9E0
+0000.
+00000
+00000
+00000
+.0000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+$ = eatwall
+% = icewall
+P = Playerright
+* = crate
+&= orbwall
+
+l=lava1
+O = orb
+n = nomove
+a = arrow2 and wall
+e=end
+t = end and target and eend
+w=end and winend
+
+c=cloner
+-=thefloor
+x=thefloorx
+
+empcrate = emp0Crate or emp1Crate
+feel=overwall or overcrate or overempcrate or overeatwall or overicewall or overorb or overorbwall
+pushable=crate or cloner or swapcrate  or switcrate or switcrate2 or empCrate
+win=crate or wall
+
+theemx= crate 
+player=playerright or playerleft
+
+blocker = wall or crate  or nomove or arrow or eatwall or icewall or orb or orbwall or thefloor or thefloorx
+
+arrowk = arrow or arrow2 or arrowx or arrowx2
+
+lava=lava1 or lava2
+
+remove= eatwall or lava
+=======
+SOUNDS
+=======
+
+pushable MOVE 36772507
+
+EndLevel 74089700
+
+player MOVE 68988304
+sfx0 52836103
+sfx1 45427502
+
+sfx2 29503700
+sfx3 81951902
+
+sfx4 92023109
+
+sfx5 58176104
+
+sfx6 16056303
+
+sfx7 47422300
+================
+COLLISIONLAYERS
+================
+
+Background
+lava
+Target
+nomove
+Player, Wall, pushable,swapwall,thefloor,thefloorx,eatwall,icewall,deadplayer,orb,orbwall
+
+arrow, arrow2, arrowx, arrowx2
+
+cre
+cre2
+cre3
+noice
+nospa
+nospax
+spa
+lavani
+winend
+eend
+end, endx
+feel
+
+
+======
+RULES
+======
+
+[feel]->[]
+([ >  Player no eend | crate | no blocker ] -> [  >  Player | > crate |  > crate])
+
+[ >  Player| pushable ] -> [  >  Player | > pushable]
+
+[> player|orb]->[ player|cre] sfx7
+
+
+late[cre|]->[cre|cre2]
+late[cre2|]->[cre2 cre3|cre3]
+
+
+late[cre3 remove]->[cre3]
+
+late[cre]->[]
+late[cre2]->[]
+late[cre3]->[]
+
+[> player|eatwall]->[> player| ]
+
+late[empcrate|crate]->[emp1Crate|crate]
+
+[> crate|Target]->[> crate|target] sfx2
+
+[ left Playerright] -> [ left playerleft]
+[ right Playerleft] -> [ right playerright]
+
+[endx] ->[thefloor] sfx2
+[end | thefloor]-> [endx |thefloor]
+
+late[icewall|lava]->[|lava] sfx4
+
+late[player no spa]->[player spa]
+
+late[spa no player][lava no nospax| no blocker]->[spa ][lava|nospa]
+
+late[spa no player][no blocker no lava nospa][lava1]->[spa ][lava1 nospax][lava1]
+late[spa no player][no blocker no lava nospa][lava2]->[spa ][lava2 nospax][lava2]
+
+
+late[spa no player][lava1]->[spa][lavani]
+late[spa no player][lava2]->[spa ][lava1]
+late[lavani]->[lava2]
+
+
+late[spa no player]->[]
+late[nospa]->[]
+late[nospax]->[]
+
+late[noice]->[]
+
+late[orbwall][icewall]->[orbwall noice][icewall]
+
+late[orbwall no noice]->[orb] sfx6
+
+late[player lava]->[deadplayer lava] sfx5
+
+late up [wall| ]-> [wall|overwall]
+late up [orbwall| ]-> [orbwall|overorbwall]
+
+late up [orb| ]-> [orb|overorb]
+late up [icewall| ]-> [icewall|overicewall]
+late up [theemx| ]-> [theemx|overcrate]
+
+(late up [crate2| ]-> [crate2|overcrate2])
+
+late up [empcrate| ]-> [empcrate|overempcrate]
+
+late up [end| ]-> [end|overcrate]
+late up [endx| ]-> [endx|overcrate]
+
+late up [eatwall| ]-> [eatwall|overeatwall]
+
+
+[]-> again 
+(
+[arrow]->[arrowx2]
+[arrow2]->[arrowx]
+
+[arrowx]->[arrow]
+[arrowx2]->[arrow2])
+==============
+WINCONDITIONS
+==============
+
+no orbwall
+no orb
+
+no winend
+=======
+LEVELS
+=======
+
+message Collect all the orbs
+
+message level 1 of 7
+---------
+---------
+-$$$$$$$-
+$$$$O$$$$
+$$$$$$$$$
+$%%%%%%%$
+$$$$$$$$$
+$O$$$$$O$
+$$$$$$$$$
+-$$$P..L-
+---------
+
+(message level 2 of 7
+---------
+---------
+-$$$$$$$-
+$$$$O$$$$
+$$l$$$l$$
+$$l$$$l$$
+$$l$$$l$$
+$$$$$$$$$
+$O$$P$$O$
+-$$$$$$$-
+---------)
+
+(---------
+-$$$$$$$-
+$$$$$$$$$
+$$$$%%$$$
+$$$$%%$$$
+$$%$$$$$$
+$$$$&$$$$
+$$&$$$%$$
+$$$$$$$$$
+$$%$P$$$$
+-$$$...L-)
+
+(---------
+-###O###-
+##$...$##
+#$$$.$$$#
+#$$$$$$$#
+#$$$$$$$#
+#$$$$$$$#
+#$$$$$$$$
+#$$$.$$$$
+##$.P$$$$
+-###.$$$-)
+
+xxxxxxxxxxxxxx
+-eeeeeeeeeeee-
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+wewewewwweweew
+wewewetweewwew
+weweweeweeweww
+eweweewwweweew
+eeeeeeeeeeeeee
+eeeeeeeeeeeeee
+-eeeeeeeeeeee-
+
+

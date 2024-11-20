@@ -1,0 +1,281 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	W
+      colors
+        color	hite
+    object_data
+      object_name	EndPoint
+      legend_key	G
+      colors
+        color	reen
+    object_data
+      object_name	PlayerForward
+      legend_key	B
+      colors
+        color	lack
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '.' '.' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	PlayerBack
+      legend_key	B
+      colors
+        color	lack
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '.' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	PlayerUp
+      legend_key	B
+      colors
+        color	lack
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	PlayerDown
+      legend_key	B
+      colors
+        color	lack
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '.' '0' '0']
+        ['0' '0' '.' '0' '0']
+    object_data
+      object_name	Wall
+      legend_key	G
+      colors
+        color	ray
+    object_data
+      object_name	WallBlock
+      legend_key	B
+      colors
+        color	lack
+        color	Grey
+      sprite
+        ['0' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '1']
+        ['0' '0' '0' '0' '1']
+    object_data
+      object_name	Block
+      legend_key	O
+      colors
+        color	range
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '.' '0' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '.' '0' '.' '0']
+        ['0' '0' '0' '0' '0']
+      
+
+
+  legend_section
+    legend_data
+      Player
+      object_name	PlayerForward
+      legend_operation
+        object_name	PlayerBack
+      legend_operation
+        object_name	PlayerUp
+      legend_operation
+        object_name	PlayerDown
+    legend_data
+      Movable
+      object_name	Player
+      legend_operation
+        object_name	Block
+    legend_data
+      PlayerObstacle
+      object_name	Wall
+      legend_operation
+        object_name	WallBlock
+    legend_data
+      BlockObstacle
+      object_name	Player
+      legend_operation
+        object_name	Wall
+      legend_operation
+        object_name	WallBlock
+      legend_operation
+        object_name	EndPoint
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      @
+      object_name	WallBlock
+    legend_data
+      a
+      object_name	PlayerUp
+    legend_data
+      b
+      object_name	PlayerDown
+    legend_data
+      c
+      object_name	PlayerForward
+    legend_data
+      d
+      object_name	PlayerBack
+    legend_data
+      O
+      object_name	Block
+    legend_data
+      E
+      object_name	EndPoint
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	EndPoint
+    layer_data
+      object_name	Player
+      object_name	Wall
+    layer_data
+      object_name	WallBlock
+      object_name	Block
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              PlayerDown
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	v
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              >
+              PlayerDown
+            cell_border
+            rule_content	v
+            rule_content	M
+            rule_content	o
+            rule_content	v
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              PlayerForward
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	v
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              >
+              PlayerForward
+            cell_border
+            rule_content	>
+            rule_content	M
+            rule_content	o
+            rule_content	v
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              PlayerUp
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	v
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              >
+              PlayerUp
+            cell_border
+            rule_content	^
+            rule_content	M
+            rule_content	o
+            rule_content	v
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              PlayerBack
+            cell_border
+            rule_content	M
+            rule_content	o
+            rule_content	v
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              >
+              PlayerBack
+            cell_border
+            rule_content	<
+            rule_content	M
+            rule_content	o
+            rule_content	v
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          
+
+  winconditions_section
+  levels_section
+    level_data	[['#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '.' '.' '.' 'd' '#']
+ ['#' '.' '.' '.' 'c' '#']
+ ['#' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' 'b' '#']
+ ['#' '#' '#' '#' '#' '#']]

@@ -1,0 +1,525 @@
+title Frogbike: Magnet Hero
+author Ian
+homepage ianfitzpatrick.com
+
+color_palette c64
+realtime_interval 0.4
+text_color #90b0b1
+noaction
+
+========
+OBJECTS
+========
+Background
+#c0ebe3
+00000
+00000
+00000
+00000
+00000
+
+Player
+#298781 #232b35 #4c5e67
+00.00
+.101.
+01010
+00200
+00.00
+
+Wall
+#232b35
+00000
+00000
+00000
+00000
+00000
+
+Wall2
+#6e878c
+00000
+00000
+00000
+00000
+00000
+
+Wall3
+#90b0b1
+00000
+00000
+00000
+00000
+00000
+
+Wall2MagnetDown
+#6e878c #9cbfbe
+00000
+00000
+00000
+00000
+11111
+
+Wall2MagnetUp
+#6e878c #9cbfbe
+11111
+00000
+00000
+00000
+00000
+
+
+Wall2MagnetRight
+#6e878c #9cbfbe
+00001
+00001
+00001
+00001
+00001
+
+Wall2MagnetLeft
+#6e878c #9cbfbe
+10000
+10000
+10000
+10000
+10000
+
+MagnetLeft
+#7a618f #9cbfbe
+.....
+1000.
+1000.
+1000.
+1000.
+
+MagnetRight
+#7a618f #9cbfbe
+.....
+.0001
+.0001
+.0001
+.0001
+
+MagnetLeftRight
+#7a618f #9cbfbe
+.....
+10001
+10001
+10001
+10001
+
+MagnetUp
+#7a618f #9cbfbe
+.....
+.1111
+.0000
+.0000
+.0000
+
+MagnetDown
+#7a618f #9cbfbe
+.....
+.0000
+.0000
+.0000
+.1111
+
+BlockLeft
+#536162 #9cbfbe
+.....
+1000.
+1000.
+1000.
+1000.
+
+BlockRight
+#536162 #9cbfbe
+.....
+.0001
+.0001
+.0001
+.0001
+
+BlockUp
+#536162 #9cbfbe
+.....
+.1111
+.0000
+.0000
+.0000
+
+BlockDown
+#536162 #9cbfbe
+.....
+.0000
+.0000
+.0000
+.1111
+
+BlockLeftRight
+#536162 #9cbfbe
+.....
+.101.
+.101.
+.101.
+.101.
+
+
+Exit
+blue
+00000
+00000
+00000
+00000
+00000
+
+
+
+=======
+LEGEND
+=======
+.  = Background
+█  = Wall3
+%  = MagnetLeft
+*  = MagnetRight
+-  = MagnetLeftRight
+@  = MagnetUp
+!  = MagnetDown
+L  = BlockLeft
+R  = BlockRight 
+U  = BlockUp
+D  = BlockDown
+W  = BlockLeftRight
+#  = Wall
+&  = Wall2
+I  = Wall2MagnetUp
+H  = Wall2MagnetDown
+J  = Wall2MagnetLeft
+F  = Wall2MagnetRight
+P  = Player
+X  = Exit
+
+=======
+SOUNDS
+=======
+======
+Player Move 42480307
+Player CantMove 20989704
+BlockLeft Move 3976303
+BlockRight Move 3976303
+BlockDown Move 3976303
+BlockUp Move 3976303
+BlockLeftRight Move 3976303
+MagnetLeft Move 9296507
+MagnetRight Move 9296507
+MagnetUp Move 9296507
+MagnetDown Move 9296507
+MagnetLeftRight Move 9296507
+EndLevel 91140703
+
+================
+COLLISIONLAYERS
+================
+Background
+Exit
+Player, Wall, Wall2, Wall3, MagnetLeft, MagnetRight, MagnetUp, MagnetDown, MagnetLeftRight, BlockLeft, BlockRight, BlockUp, BlockDown, BlockLeftRight, Wall2MagnetUp, Wall2MagnetDown, Wall2MagnetLeft, Wall2MagnetRight
+
+======
+RULES
+======
+(Magnet Movements)
+[ > Player | MagnetRight ] -> [ > Player | > MagnetRight ]
+[ > Player | MagnetLeft ] -> [ > Player | > MagnetLeft ]
+[ > Player | MagnetLeftRight ] -> [ > Player | > MagnetLeftRight ]
+[ > Player | MagnetUp ] -> [ > Player | > MagnetUp ]
+[ > Player | MagnetDown ] -> [ > Player | > MagnetDown ]
+
+
+(Left Magnet / Right Magnet Interaction)
+RIGHT [ MagnetRight | MagnetLeft ] -> [ MagnetRight | > MagnetLeft ]
+RIGHT [ MagnetRight | MagnetLeftRight ] -> [ MagnetRight | > MagnetLeftRight ]
+RIGHT [ MagnetLeftRight | MagnetLeft ] -> [ MagnetLeftRight | > MagnetLeft ]
+RIGHT [ MagnetLeftRight | MagnetRight ] -> [ MagnetLeftRight | > MagnetRight ]
+RIGHT [ MagnetLeftRight | MagnetLeftRight ] -> [ MagnetLeftRight | > MagnetLeftRight ]
+
+LEFT [ MagnetLeft | MagnetRight ] -> [ MagnetLeft | > MagnetRight ]
+LEFT [ MagnetLeft | MagnetLeftRight ] -> [ MagnetLeft | > MagnetLeftRight ]
+LEFT [ MagnetLeftRight | MagnetLeft ] -> [ MagnetLeftRight | > MagnetLeft ]
+LEFT [ MagnetLeftRight | MagnetRight ] -> [ MagnetLeftRight | > MagnetRight ]
+LEFT [ MagnetLeftRight | MagnetLeftRight ] -> [ MagnetLeftRight | > MagnetLeftRight ]
+
+(Up Magnet / Down Magnet Interaction)
+UP [ MagnetUp | MagnetDown ] -> [ MagnetUp | > MagnetDown ]
+DOWN [ MagnetDown | MagnetUp ] -> [ MagnetDown | > MagnetUp ]
+
+(---------------------------------------------------------------------------)
+
+(Left Block / Right Block Interaction)
+RIGHT [ BlockRight | BlockLeft ] -> [ BlockRight | > BlockLeft ]
+RIGHT [ BlockRight | BlockLeftRight ] -> [ BlockRight | > BlockLeftRight ]
+RIGHT [ BlockLeftRight | BlockLeft ] -> [ BlockLeftRight | > BlockLeft ]
+RIGHT [ BlockLeftRight | BlockRight ] -> [ BlockLeftRight | > BlockRight ]
+RIGHT [ BlockLeftRight | BlockLeftRight ] -> [ BlockLeftRight | > BlockLeftRight ] 
+
+LEFT [ BlockLeft | BlockRight ] -> [ BlockLeft | > BlockRight ]
+LEFT [ BlockLeft | BlockLeftRight ] -> [ BlockLeft | > BlockLeftRight ]
+LEFT [ BlockLeftRight | BlockLeft ] -> [ BlockLeftRight | > BlockLeft ]
+LEFT [ BlockLeftRight | BlockRight ] -> [ BlockLeftRight | > BlockRight ]
+LEFT [ BlockLeftRight | BlockLeftRight ] -> [ BlockLeftRight | > BlockLeftRight ]
+
+(Up Block / Down Block Interaction)
+UP [ BlockUp | BlockDown ] -> [ BlockUp | > BlockDown ]
+DOWN [ BlockDown | BlockUp ] -> [ BlockDown | > BlockUp ]
+
+(---------------------------------------------------------------------------)
+(Magnet to Block Interaction RIGHT)
+RIGHT [ MagnetRight | BlockLeft ] -> [ MagnetRight | > BlockLeft ]
+RIGHT [ MagnetRight | BlockLeftRight ] -> [ MagnetRight | > BlockLeftRight ]
+RIGHT [ MagnetLeftRight | BlockLeft ] -> [ MagnetLeftRight | > BlockLeft ]
+RIGHT [ MagnetLeftRight | BlockLeftRight ] -> [ MagnetLeftRight | > BlockLeftRight ]
+
+(Magnet to Block Interaction LEFT)
+LEFT [ MagnetLeft | BlockRight ] -> [ MagnetLeft | > BlockRight ]
+LEFT [ MagnetLeft | BlockLeftRight ] -> [ MagnetLeft | > BlockLeftRight ]
+LEFT [ MagnetLeftRight | BlockLeft ] -> [ MagnetLeftRight | > BlockLeft ]
+LEFT [ MagnetLeftRight | BlockRight ] -> [ MagnetLeftRight | > BlockRight ]
+LEFT [ MagnetLeftRight | BlockLeftRight ] -> [ MagnetLeftRight | > BlockLeftRight ]
+
+(Magnet to Block Interaction Up Down)
+UP [ MagnetUp | BlockDown ] -> [ MagnetUp | > BlockDown ]
+DOWN [ MagnetDown | BlockUp ] -> [ MagnetDown | > BlockUp ]
+
+(---------------------------------------------------------------------------)
+(Block to Magnet Interaction RIGHT)
+RIGHT [ BlockRight | MagnetLeft ] -> [ BlockRight | > MagnetLeft ]
+RIGHT [ BlockRight | MagnetLeftRight ] -> [ BlockRight | > MagnetLeftRight ]
+RIGHT [ BlockLeftRight | MagnetLeft ] -> [ BlockLeftRight | > MagnetLeft ]
+
+(Block to Magnet Interaction LEFT)
+LEFT [ BlockLeft | MagnetRight ] -> [ BlockLeft | > MagnetRight ]
+LEFT [ BlockLeft | MagnetLeftRight ] -> [ BlockLeft | > MagnetLeftRight ]
+LEFT [ BlockLeftRight | MagnetRight ] -> [ BlockLeftRight | > MagnetRight ]
+
+(Block to Magnet Interaction Up Down)
+UP [ BlockUp | MagnetDown ] -> [ BlockUp | > MagnetDown ]
+DOWN [ BlockDown | MagnetUp ] -> [ BlockDown | > MagnetUp ]
+
+(---------------------------------------------------------------------------)
+(Magnetic Wall to Magnet)
+UP [ Wall2MagnetUp | MagnetDown ] -> [ Wall2MagnetUp | > MagnetDown ]
+DOWN [ Wall2MagnetDown | MagnetUp ] -> [ Wall2MagnetDown | > MagnetUp ]
+
+RIGHT [ Wall2MagnetRight | MagnetLeft ] -> [ Wall2MagnetRight | > MagnetLeft ]
+RIGHT [ Wall2MagnetRight | MagnetLeftRight ] -> [ Wall2MagnetRight | > MagnetLeft ]
+
+LEFT [ Wall2MagnetLeft | MagnetRight ] -> [ Wall2MagnetLeft | > MagnetRight ]
+LEFT [ Wall2MagnetLeft | MagnetLeftRight ] -> [ Wall2MagnetLeft | > MagnetLeft ]
+
+
+
+==============
+WINCONDITIONS
+==============
+Some player on exit
+
+
+=======
+LEVELS
+=======
+
+Message Welcome, Frogbike...
+Message ...time to figure out the basics.
+
+######x#####
+#&&&&&.&&&&#
+#&██...███&#
+#&█..█████&#
+#&..r...██&#
+#&███...██&#
+#&███...██&#
+#&████%..█&#
+#&████...█&#
+#&████...█&#
+#&██████d█&#
+#&█.@....█&#
+#&█......█&#
+#&█████..█&#
+#&.*..l...&#
+#&...█...█&#
+#&.&&&&&&&&#
+##p#########
+
+Message Woah! These magnets are repelling each other...
+Message ...wait, can ANY magnet repel ANY other magnet or what? Hmm...
+
+#########x###
+#&&&&&&&&.&&#
+#&███████.█&#
+#&█████.█.█&#
+#&█████...█&#
+#&█..██..██&#
+#&█.*██d███&#
+#&█..██.███&#
+#&█..██.███&#
+#&█..██.███&#
+#&█.@██.███&#
+#&█..██.███&#
+#&█....l...&#
+#&█......██&#
+#&█......██&#
+#&█████...█&#
+#&&&&&&&&p&&#
+
+Message Okay okay okay, you get it now...
+Message ...the magnet's POLES have to TOUCH to repel.
+
+#################
+#&&&&&&&&&&&&&&&#
+#&██████.......&#
+#&█....█.......&#
+#&█...@█.......&#
+#&█...r...█u███&#
+#&████....█...█&#
+#&█.██....█.%.█&#
+x...██....█...█&#
+#&..██....█...█&#
+#&█d██....█...█&#
+#&█..!....█...█&#
+#&█.......█████&#
+#&█............&#
+#&&&&&&.&&&&&&&&#
+#######p#########
+
+Message Man, those GREY magnets are lazy...
+Message ...it's almost like the only way you can move a GREY magnet is with a PURPLE magnet.
+
+#################
+#&&&&&&&&&&&&&&&#
+#&..█........██&#
+#&.....█████.██&#
+#&.....███.█.██&#
+#&.....*..d..██&#
+#&...█████.█.██&#
+#&...█████.█.██&#
+#&..u@.......██&#
+#&...........██&#
+#&..██.......██&#
+#&████████...██&#
+#&............█&#
+#&..███████...█&#
+#&......!.██..█&#
+#&...........l.&#
+#&.&&&&&&&&&&x&&#
+##p##############
+
+Message You are pretty awesome Frogbike, well done...
+Message ...now let the real trials begin!
+
+#######x#####
+#&&&&&&.&&&&#
+#&...██.███&#
+#&.@.w.l...&#
+#&...█.████&#
+#&..█......&#
+#&..█.█████&#
+#&...d.%.██&#
+#&.......██&#
+#&..█.█..██&#
+#&..███....&#
+#&....r....&#
+#&...█@█.██&#
+#&...█..d*.&#
+#&.........&#
+#&...█.....&#
+#&.&&&&&&&&&#
+##p##########
+
+Message Frogbike, you made it, good job...
+Message ...just a little farther now.
+
+#################
+#&&&&&&&&&&&&&&&#
+#&............█&#
+#&...l.█......█&#
+#&...!██...█@.█&#
+#&...r......l..&#
+#&█.....-...█.█&#
+#&██....█..██.█&#
+#&██.█.█.█.██.█&#
+#&█..wuwdwuw.w.&#
+#&█..█...█.██.█&#
+#&...██..████.█&#
+#&...█....███.█&#
+#&.r.......██...x
+#&█!....██..███&#
+#&█....████....&#
+#&&&&&&&&&&&&.&&#
+#############p###
+
+Message So, so, close Frogbike....
+Message ...don't give up now!
+
+#######x#########
+#&&&&&&.&&&&&&&&#
+#&.███.l.███...&#
+#&.....l.......&#
+#&..█..█.█.█r..&#
+#&.d!d.█.%.█..█&#
+#&.....█.*.█...&#
+#&.....█.@.█...&#
+#&.....█...*u.█&#
+#&██.█████.█...&#
+p...w.w.w.w....&#
+#&...█████.█...&#
+#&.............&#
+#&.............&#
+#&&&&&&&&&&&&&&&#
+#################
+
+Message Wow, only one level left...
+Message ...how hard could it be?
+Message Let's do this Frogbike.
+
+############################################
+#&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&#
+#&████████.████████.██████████████████████&#
+#&█..........██████.█████████████......███&#
+#&█.!.%......█...............████*██.*.███&#
+#&████████.█.█...██.████████.███..██...███&#
+#&██████..d█.█....!..........███...w.█████&#
+#&██████.....█.████d███████..███.███.██...&#
+#&██████.....█...██..........██..███......&#
+#&██████..l..█.█..█.███████..██..███.....█&#
+#&██████.....█.██...█x...██.███...w..███.█&#
+#&██████.....█.████.██...██.███.███...██.█&#
+#&██████...█.█....r...l..██.███.███....w..&#
+#&████████d█.████.█...█████.███.███...██.█&#
+#&...........████.█....*..█.███.███...██.█&#
+#&...........████.█u████.██.███.████...w..&#
+#&.@.........l██....%.......███.████.....█&#
+#&.███.......████......████.███.████....%█&#
+#&u.r........████.....█████.███......██..█&#
+#&.█.███████.██████████████.███..██████..█&#
+#&█..@...........................██████.██&#
+#&████..██...█████████████..██...........█&#
+#&&&&&&.&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&#
+#######p####################################
+
+Message You did it Frogbike...
+Message ...all levels completed!
+Message Now, it's time for some housekeeping...
+Message ...let's answer the big question.
+Message q: Why is this game called "Frogbike"?
+Message a: Well, if you stare at 5x5 pixel sprite long enough...
+Message ..you start to see things.
+Message Our hero started life as a frog...
+Message ...but after spending some time with it...
+Message It's little froggy ears started to resemble...
+Message HANDLE BARS.
+Message It's little froggy legs started to look like...
+Message TIRES.
+Message And what was now seen, could not be unseen again.
+Message Like a stereogram picture from the 90s...
+Message ...FROGBIKE suddenly came into focus.
+Message You and Frogbike have come this far together...
+Message ...don't question it.
+Message Anyway, GREAT JOB, THE END.

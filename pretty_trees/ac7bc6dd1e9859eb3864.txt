@@ -1,0 +1,1454 @@
+ps_game
+  objects_section
+    object_data
+      object_name	background1
+      legend_key	.
+      colors
+        color	darkgrey
+    object_data
+      object_name	background2
+      legend_key	d
+      colors
+        color	arkblue
+    object_data
+      object_name	player
+      legend_key	@
+      colors
+        color	lightgreen
+        color	green
+    object_data
+      object_name	00.0.
+      legend_key	0
+      colors
+        color	01..
+    object_data
+      object_name	.1100
+      legend_key	0
+      colors
+        color	.0..
+    object_data
+      object_name	..0..
+      legend_key	w
+      colors
+        color	all
+        color	#
+    object_data
+      object_name	brown
+      legend_key	d
+      colors
+        color	arkbrown
+        color	brown
+      sprite
+        ['2' '2' '2' '2' '2']
+        ['2' '0' '0' '0' '1']
+        ['2' '0' '0' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	wall2
+      legend_key	£
+      colors
+        color	brown
+        color	darkgrey
+      sprite
+        ['0' '0' '0' '1' '.']
+        ['1' '1' '1' '.' '.']
+        ['0' '0' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	crate
+      legend_key	*
+      colors
+        color	orange
+        color	orange
+    object_data
+      object_name	11.11
+      legend_key	1
+      colors
+        color	0001
+    object_data
+      object_name	.0.0.
+      legend_key	1
+      colors
+        color	0001
+    object_data
+      object_name	11.11
+      legend_key	t
+      colors
+        color	arget
+    object_data
+      object_name	o
+      legend_key	b
+      colors
+        color	lue
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	mup
+      legend_key	t
+      colors
+        color	ransparent
+    object_data
+      object_name	mud
+      legend_key	t
+      colors
+        color	ransparent
+    object_data
+      object_name	mul
+      legend_key	t
+      colors
+        color	ransparent
+    object_data
+      object_name	mur
+      legend_key	t
+      colors
+        color	ransparent
+    object_data
+      object_name	m1
+      legend_key	t
+      colors
+        color	ransparent
+    object_data
+      object_name	m2
+      legend_key	t
+      colors
+        color	ransparent
+      
+
+
+  legend_section
+    legend_data
+      background
+      object_name	background1
+      legend_operation
+        object_name	background2
+    legend_data
+      mu
+      object_name	mup
+      legend_operation
+        object_name	mud
+      legend_operation
+        object_name	mul
+      legend_operation
+        object_name	mur
+    legend_data
+      solid
+      object_name	wall
+      legend_operation
+        object_name	crate
+    legend_data
+      &
+      object_name	target
+      legend_operation
+        object_name	crate
+  collisionlayers_section
+    layer_data
+      object_name	background1
+      object_name	background2
+    layer_data
+      object_name	target
+    layer_data
+      object_name	player
+      object_name	wall
+    layer_data
+      object_name	wall2
+      object_name	crate
+    layer_data
+      object_name	m1
+    layer_data
+      object_name	m2
+    layer_data
+      object_name	mup
+    layer_data
+      object_name	mud
+    layer_data
+      object_name	mul
+    layer_data
+      object_name	mur
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content	background1
+            cell_border
+            rule_content	b
+            rule_content	a
+            rule_content	c
+            rule_content	k
+            rule_content	g
+            rule_content	r
+            rule_content	o
+            rule_content	u
+            rule_content	n
+            rule_content	d
+            rule_content	1
+          ->
+          rule_part
+            rule_content	background1
+            cell_border
+            rule_content	b
+            rule_content	a
+            rule_content	c
+            rule_content	k
+            rule_content	g
+            rule_content	r
+            rule_content	o
+            rule_content	u
+            rule_content	n
+            rule_content	d
+            rule_content	2
+          
+
+        rule_data
+          +
+          rule_part
+            rule_content	background2
+            cell_border
+            rule_content	b
+            rule_content	a
+            rule_content	c
+            rule_content	k
+            rule_content	g
+            rule_content	r
+            rule_content	o
+            rule_content	u
+            rule_content	n
+            rule_content	d
+            rule_content	2
+          ->
+          rule_part
+            rule_content	background2
+            cell_border
+            rule_content	b
+            rule_content	a
+            rule_content	c
+            rule_content	k
+            rule_content	g
+            rule_content	r
+            rule_content	o
+            rule_content	u
+            rule_content	n
+            rule_content	d
+            rule_content	1
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content
+              up
+              player
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	m
+            rule_content	1
+          ->
+          rule_part
+            rule_content
+              up
+              player
+            cell_border
+            rule_content	u
+            rule_content	p
+            rule_content	m
+            rule_content	1
+          (move northwest)
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content
+              down
+              player
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	m
+            rule_content	1
+          ->
+          rule_part
+            rule_content
+              down
+              player
+            cell_border
+            rule_content	d
+            rule_content	o
+            rule_content	w
+            rule_content	n
+            rule_content	m
+            rule_content	1
+          (move southeast)
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content
+              right
+              player
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	m
+            rule_content	1
+          ->
+          rule_part
+            rule_content
+              right
+              player
+            cell_border
+            rule_content	r
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+            rule_content	m
+            rule_content	1
+          (move northeast)
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              left
+              player
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	m
+            rule_content	1
+          ->
+          rule_part
+            rule_content
+              left
+              player
+            cell_border
+            rule_content	l
+            rule_content	e
+            rule_content	f
+            rule_content	t
+            rule_content	m
+            rule_content	1
+          (move southwest)
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              m1
+            cell_border
+          ->
+          rule_part
+            rule_content	|
+            rule_content	m
+            rule_content	1
+          (Move and check positon 1)
+          
+
+        rule_data
+          rule_part
+            rule_content
+              m1
+              wall
+          ->
+          rule_part
+            rule_content	wall
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content
+              up
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	1
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	m
+            rule_content	2
+          ->
+          rule_part
+            rule_content
+              up
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	1
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	u
+            rule_content	p
+            rule_content	m
+            rule_content	2
+          (<--push northwest)
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content
+              down
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	1
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	m
+            rule_content	2
+          ->
+          rule_part
+            rule_content
+              down
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	1
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	d
+            rule_content	o
+            rule_content	w
+            rule_content	n
+            rule_content	m
+            rule_content	2
+          (<--push southeast)
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              left
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	1
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	m
+            rule_content	2
+          ->
+          rule_part
+            rule_content
+              left
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	1
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	l
+            rule_content	e
+            rule_content	f
+            rule_content	t
+            rule_content	m
+            rule_content	2
+          (<-- push southwest)
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content
+              right
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	1
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	m
+            rule_content	2
+          ->
+          rule_part
+            rule_content
+              right
+              player
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	1
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	r
+            rule_content	i
+            rule_content	g
+            rule_content	h
+            rule_content	t
+            rule_content	m
+            rule_content	2
+          (<-- push northeast)
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              m2
+            cell_border
+          ->
+          rule_part
+            rule_content	|
+            rule_content	m
+            rule_content	2
+          (Move and check position 2)
+          
+
+        rule_data
+          rule_part
+            rule_content	m1
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	2
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          rule_part
+            rule_content	]
+            rule_content	[
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          
+
+        rule_data
+          rule_part
+            rule_content	m1
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	2
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content	]
+            rule_content	[
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          
+
+        rule_data
+          rule_part
+            rule_content
+              crate
+              m1
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	2
+          ->
+          rule_part
+            rule_content	m1
+            rule_content	]
+            rule_content	[
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          (update positions for diagonal)
+          
+
+        rule_data
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	1
+          ->
+          rule_part
+            rule_content	]
+            rule_content	[
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	t
+            rule_content	i
+            rule_content	o
+            rule_content	n
+            rule_content	a
+            rule_content	r
+            rule_content	y
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content
+              moving
+              player
+            cell_border
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              moving
+              player
+              mup
+            cell_border
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              moving
+              player
+            cell_border
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              moving
+              player
+              mud
+            cell_border
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content
+              moving
+              player
+            cell_border
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              moving
+              player
+              mul
+            cell_border
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content
+              moving
+              player
+            cell_border
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              moving
+              player
+              mur
+            cell_border
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+            cell_border
+          
+
+        rule_data
+          rule_part
+            rule_content
+              up
+              player
+              mul
+              mup
+          ->
+          rule_part
+            rule_content
+              stationary
+              player
+          
+
+        rule_data
+          rule_part
+            rule_content
+              down
+              player
+              mur
+              mud
+          ->
+          rule_part
+            rule_content
+              stationary
+              player
+          
+
+        rule_data
+          rule_part
+            rule_content
+              left
+              player
+              mud
+              mul
+          ->
+          rule_part
+            rule_content
+              stationary
+              player
+          
+
+        rule_data
+          rule_part
+            rule_content
+              right
+              player
+              mup
+              mur
+          ->
+          rule_part
+            rule_content
+              stationary
+              player
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content
+              up
+              player
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              up
+              player
+              left
+              m1
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              down
+              player
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              down
+              player
+              right
+              m1
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content
+              left
+              player
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              left
+              player
+              down
+              m1
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content
+              right
+              player
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              right
+              player
+              up
+              m1
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          
+
+        rule_data
+          random
+          rule_part
+            rule_content
+              >
+              m1
+            cell_border
+          ->
+          rule_part
+            rule_content	|
+            rule_content	>
+            rule_content	m
+            rule_content	1
+          (Move and check position 1 orthogonally, but only once)
+          
+
+        rule_data
+          rule_part
+            rule_content
+              m1
+              wall
+          ->
+          rule_part
+            rule_content	wall
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              m1
+              crate
+          ->
+          rule_part
+            rule_content
+              >
+              m1
+            rule_content	>
+            rule_content	m
+            rule_content	2
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              m2
+            cell_border
+          ->
+          rule_part
+            rule_content	|
+            rule_content	m
+            rule_content	2
+          (Move and check position 2 orthogonally)
+          
+
+        rule_data
+          rule_part
+            rule_content	m1
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	2
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          rule_part
+            rule_content	]
+            rule_content	[
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          
+
+        rule_data
+          rule_part
+            rule_content	m1
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	2
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content	]
+            rule_content	[
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          
+
+        rule_data
+          rule_part
+            rule_content
+              crate
+              m1
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	2
+          ->
+          rule_part
+            rule_content	m1
+            rule_content	]
+            rule_content	[
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          (update positions for orthogonal movement)
+          
+
+        rule_data
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	1
+          ->
+          rule_part
+            rule_content	]
+            rule_content	[
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	t
+            rule_content	i
+            rule_content	o
+            rule_content	n
+            rule_content	a
+            rule_content	r
+            rule_content	y
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          left
+          rule_part
+            rule_content
+              up
+              player
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              up
+              player
+              up
+              m1
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          
+
+        rule_data
+          right
+          rule_part
+            rule_content
+              down
+              player
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              down
+              player
+              down
+              m1
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              left
+              player
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              left
+              player
+              left
+              m1
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          
+
+        rule_data
+          up
+          rule_part
+            rule_content
+              right
+              player
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          ->
+          rule_part
+            rule_content
+              right
+              player
+              right
+              m1
+            cell_border
+            rule_content	s
+            rule_content	o
+            rule_content	l
+            rule_content	i
+            rule_content	d
+          
+
+        rule_data
+          random
+          rule_part
+            rule_content
+              >
+              m1
+            cell_border
+          ->
+          rule_part
+            rule_content	|
+            rule_content	>
+            rule_content	m
+            rule_content	1
+          (Move and check position 1 orthogonally, but only once)
+          
+
+        rule_data
+          rule_part
+            rule_content
+              m1
+              wall
+          ->
+          rule_part
+            rule_content	wall
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              m1
+              crate
+          ->
+          rule_part
+            rule_content
+              >
+              m1
+            rule_content	>
+            rule_content	m
+            rule_content	2
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              m2
+            cell_border
+          ->
+          rule_part
+            rule_content	|
+            rule_content	m
+            rule_content	2
+          (Move and check position 2 orthogonally)
+          
+
+        rule_data
+          rule_part
+            rule_content	m1
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	2
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          rule_part
+            rule_content	]
+            rule_content	[
+            rule_content	w
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          
+
+        rule_data
+          rule_part
+            rule_content	m1
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	2
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          ->
+          rule_part
+            rule_content	]
+            rule_content	[
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          
+
+        rule_data
+          rule_part
+            rule_content
+              crate
+              m1
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	2
+          ->
+          rule_part
+            rule_content	m1
+            rule_content	]
+            rule_content	[
+            rule_content	c
+            rule_content	r
+            rule_content	a
+            rule_content	t
+            rule_content	e
+          (update positions for orthogonal movement)
+          
+
+        rule_data
+          rule_part
+            rule_content	player
+            rule_content	]
+            rule_content	[
+            rule_content	m
+            rule_content	1
+          ->
+          rule_part
+            rule_content	]
+            rule_content	[
+            rule_content	s
+            rule_content	t
+            rule_content	a
+            rule_content	t
+            rule_content	i
+            rule_content	o
+            rule_content	n
+            rule_content	a
+            rule_content	r
+            rule_content	y
+            rule_content	p
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          rule_part
+            rule_content	player
+          ->
+          rule_part
+            rule_content
+              stationary
+              player
+          (prevents extra move due to flagging)
+          
+
+  winconditions_section
+    condition_data
+      all
+      object_name	target
+      on
+      object_name	crate
+  levels_section
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '.' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '#' '#' '.' '#' '#' '#']
+ ['#' '#' '#' '.' '#' '#' '.' 'o' '.' '#' '#']
+ ['#' '#' '.' '#' '#' '.' '.' '.' '#' '#' '#']
+ ['#' '.' '#' '#' '.' '*' '.' '#' '#' '.' '#']
+ ['#' '#' '#' '.' '.' '.' '#' '#' '.' '#' '#']
+ ['#' '#' '.' '@' '.' '#' '#' '.' '#' '#' '#']
+ ['#' '#' '#' '.' '#' '#' '.' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '.' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '#' '#' '#' '#']
+ ['#' '#' '#' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '.' '.' '*' '.' '.' '#' '#']
+ ['#' '.' '.' '@' '.' '.' '.' '.' '#']
+ ['#' '#' '.' '.' 'o' '.' '.' '#' '#']
+ ['#' '#' '#' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' 'o' '#' '.' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '*' '.' '*' '.' '.' '#' '#' '#' 'o' '#']
+ ['#' '.' '.' 'o' '.' '.' '#' '.' '#' '.' '#' '#']
+ ['#' '#' '.' '#' '.' '#' '#' '#' '*' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '.' '#' '@' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '.' 'o' '.' '.' '.' '.' '.' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '*' '.' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '.' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '.' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '.' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '@' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '.' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' 'o' '.' '.' '#' '#' '#' '#']
+ ['#' '.' 'o' '.' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '*' '.' '.' '#']
+ ['#' '#' '#' '*' '.' '.' '.' '#']
+ ['#' '#' '#' '.' '.' '@' '.' '#']
+ ['#' '#' '#' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' 'o' '&' '.' '.' '#']
+ ['#' '.' '.' '&' 'o' '*' '.' '#']
+ ['#' '.' '.' '.' '*' '.' '.' '#']
+ ['#' '.' '@' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '@' '.' '#']
+ ['#' '.' '.' '.' '&' 'o' '.' '.' '#']
+ ['#' '.' '.' '*' '#' '&' '.' '.' '#']
+ ['#' '.' 'o' '.' '*' '.' '.' '.' '#']
+ ['#' '.' '*' 'o' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]

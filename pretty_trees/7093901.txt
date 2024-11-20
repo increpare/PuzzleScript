@@ -1,0 +1,714 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	Y
+      colors
+        color	ELLOW
+        color	BLACK
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '1' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '1' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	Wall
+      legend_key	B
+      colors
+        color	rown
+        color	grey
+      sprite
+        ['.' '.' '.' '0' '1']
+        ['0' '1' '1' '0' '1']
+        ['0' '1' '1' '0' '0']
+        ['.' '0' '1' '1' '0']
+        ['.' '.' '0' '0' '.']
+    object_data
+      object_name	PlayerRight
+      legend_key	O
+      colors
+        color	RANGE
+    object_data
+      object_name	YELLOW
+      legend_key	B
+      colors
+        color	LUE
+        color	RED
+    object_data
+      object_name	00000
+      legend_key	.
+      colors
+        color	0010
+    object_data
+      object_name	30100
+      legend_key	3
+      colors
+        color	3000
+    object_data
+      object_name	.33.0
+      legend_key	P
+      colors
+        color	layerLeft
+    object_data
+      object_name	Orange
+      legend_key	Y
+      colors
+        color	ellow
+        color	Red
+    object_data
+      object_name	00000
+      legend_key	0
+      colors
+        color	100.
+    object_data
+      object_name	00102
+      legend_key	0
+      colors
+        color	0022
+    object_data
+      object_name	0.22.
+      legend_key	P
+      colors
+        color	layerUp
+    object_data
+      object_name	Orange
+      legend_key	Y
+      colors
+        color	ellow
+        color	Red
+    object_data
+      object_name	..0..
+      legend_key	.
+      colors
+        color	010.
+    object_data
+      object_name	00100
+      legend_key	0
+      colors
+        color	0000
+    object_data
+      object_name	0.2.0
+      legend_key	P
+      colors
+        color	layerDown
+    object_data
+      object_name	Orange
+      legend_key	y
+      colors
+        color	ellow
+        color	Red
+      sprite
+        ['0' '.' '2' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['.' '0' '1' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	Planet
+      legend_key	P
+      colors
+        color	ink
+    object_data
+      object_name	BLUE
+      legend_key	L
+      colors
+        color	ightblue
+        color	White
+    object_data
+      object_name	.101.
+      legend_key	1
+      colors
+        color	0021
+    object_data
+      object_name	02120
+      legend_key	1
+      colors
+        color	2001
+    object_data
+      object_name	.101.
+      legend_key	A
+      colors
+        color	lien
+    object_data
+      object_name	Green
+      legend_key	L
+      colors
+        color	ightgreen
+        color	RED
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '1' '0' '.']
+        ['0' '2' '1' '2' '0']
+        ['0' '1' '1' '1' '0']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	AsteroidM
+      legend_key	B
+      colors
+        color	rown
+        color	White
+      sprite
+        ['.' '.' '.' '0' '1']
+        ['0' '1' '1' '0' '1']
+        ['0' '1' '1' '0' '0']
+        ['.' '0' '1' '1' '0']
+        ['.' '.' '0' '0' '.']
+    object_data
+      object_name	Astronaut
+      legend_key	W
+      colors
+        color	hite
+    object_data
+      object_name	#625b5b
+      legend_key	#
+      colors
+        color	2e2e2e
+        color	#d8d5d5
+    object_data
+      object_name	3.111
+      legend_key	3
+      colors
+        color	.121
+    object_data
+      object_name	3.000
+      legend_key	.
+      colors
+        color	3.0.
+    object_data
+      object_name	..0.0
+      legend_key	C
+      colors
+        color	orpse
+    object_data
+      object_name	White
+      legend_key	#
+      colors
+        color	625b5b
+    object_data
+      object_name	#2e2e2e
+      legend_key	#
+      colors
+        color	d8d5d5
+        color	RED
+      sprite
+        ['3' '.' '0' '1' '1']
+        ['3' '.' '1' '4' '1']
+        ['3' '.' '0' '0' '0']
+        ['.' '3' '.' '4' '.']
+        ['.' '.' '4' '.' '.']
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      P
+      object_name	PlayerRight
+    legend_data
+      T
+      object_name	Planet
+    legend_data
+      A
+      object_name	Alien
+    legend_data
+      C
+      object_name	AsteroidM
+    legend_data
+      N
+      object_name	Astronaut
+    legend_data
+      Player
+      object_name	PlayerUp
+      legend_operation
+        object_name	PlayerDown
+      legend_operation
+        object_name	PlayerRight
+      legend_operation
+        object_name	PlayerLeft
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Planet
+    layer_data
+      object_name	Astronaut
+      object_name	Corpse
+    layer_data
+      object_name	PlayerLeft
+    layer_data
+      object_name	PlayerRight
+      object_name	PlayerUp
+    layer_data
+      object_name	PlayerDown
+      object_name	Wall
+    layer_data
+      object_name	Alien
+      object_name	AsteroidM
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              STATIONARY
+              Alien
+          ->
+          rule_part
+            rule_content
+              RANDOMDIR
+              Alien
+          
+
+        rule_data
+          rule_part
+            rule_content	Alien
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              >
+              Alien
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Alien
+            cell_border
+            rule_content	A
+            rule_content	l
+            rule_content	i
+            rule_content	e
+            rule_content	n
+          ->
+          rule_part
+            rule_content
+              No
+              Alien
+            cell_border
+            rule_content	N
+            rule_content	o
+            rule_content	A
+            rule_content	l
+            rule_content	i
+            rule_content	e
+            rule_content	n
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	W
+            rule_content	a
+            rule_content	l
+            rule_content	l
+          ->
+          rule_part
+            rule_content	Wall
+            cell_border
+            rule_content	N
+            rule_content	O
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Alien
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	Alien
+            cell_border
+            rule_content	N
+            rule_content	O
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          command
+            sound
+              sound_id	0
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	A
+            rule_content	s
+            rule_content	t
+            rule_content	e
+            rule_content	r
+            rule_content	o
+            rule_content	i
+            rule_content	d
+            rule_content	M
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	>
+            rule_content	A
+            rule_content	s
+            rule_content	t
+            rule_content	e
+            rule_content	r
+            rule_content	o
+            rule_content	i
+            rule_content	d
+            rule_content	M
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Alien
+            cell_border
+            rule_content	A
+            rule_content	s
+            rule_content	t
+            rule_content	e
+            rule_content	r
+            rule_content	o
+            rule_content	i
+            rule_content	d
+            rule_content	M
+          ->
+          rule_part
+            rule_content
+              >
+              Alien
+            cell_border
+            rule_content	>
+            rule_content	A
+            rule_content	s
+            rule_content	t
+            rule_content	e
+            rule_content	r
+            rule_content	o
+            rule_content	i
+            rule_content	d
+            rule_content	M
+          
+
+        rule_data
+          rule_part
+            rule_content
+              LEFT
+              Player
+          ->
+          rule_part
+            rule_content
+              LEFT
+              PlayerLeft
+          
+
+        rule_data
+          rule_part
+            rule_content
+              RIGHT
+              Player
+          ->
+          rule_part
+            rule_content
+              RIGHT
+              PlayerRight
+          
+
+        rule_data
+          rule_part
+            rule_content
+              UP
+              Player
+          ->
+          rule_part
+            rule_content
+              UP
+              PlayerUp
+          
+
+        rule_data
+          rule_part
+            rule_content
+              DOWN
+              Player
+          ->
+          rule_part
+            rule_content
+              DOWN
+              PlayerDown
+          
+
+        rule_data
+          rule_part
+            rule_content
+              ACTION
+              Player
+              Astronaut
+          ->
+          rule_part
+            rule_content
+              Player
+              NO
+              Astronaut
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Alien
+            cell_border
+            rule_content	A
+            rule_content	s
+            rule_content	t
+            rule_content	r
+            rule_content	o
+            rule_content	n
+            rule_content	a
+            rule_content	u
+            rule_content	t
+          ->
+          rule_part
+            rule_content	Alien
+            cell_border
+            rule_content	C
+            rule_content	o
+            rule_content	r
+            rule_content	p
+            rule_content	s
+            rule_content	e
+          command
+            sound
+              sound_id	0
+          
+
+  winconditions_section
+    condition_data
+      Some
+      object_name	Player
+      ON
+      object_name	Planet
+    condition_data
+      NO
+      object_name	Astronaut
+    condition_data
+      NO
+      object_name	Corpse
+  levels_section
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '.' '.' '.' '#' '#' 'n' '#' '#' '#']
+ ['#' '.' 'p' '.' '#' '.' '.' '#' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' 't' '.' '#']
+ ['#' '.' '.' '#' '#' '.' '#' '.' '.' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '#' '.' '#']
+ ['#' '#' '#' 'a' '.' '#' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' 'p' '#' '.' '.' '#' 'n' '#']
+ ['#' '.' '.' '.' '.' '#' '.' '#' '.' '.' '#']
+ ['#' '#' 'c' '#' '#' '.' '.' '#' '#' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '.' '.' '#' '.' '.' '.' '#' '.' '#']
+ ['#' '#' '#' '#' '.' '.' '#' '.' '.' '#' '#']
+ ['#' '#' 'a' '.' '.' '.' '.' '#' '.' 't' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' 't' '#' 'p' '.' '.' '.' '#' '#']
+ ['#' '.' '.' '#' '#' '.' '.' '#' '.' '.' '#']
+ ['#' '#' '.' '.' '#' '#' '#' '#' '#' 'c' '#']
+ ['#' '#' '.' 'c' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '#' '.' '.' '.' '.' '.' '#' '.' '#']
+ ['#' '.' '.' '.' 'n' '#' '.' '.' '.' '#' '#']
+ ['#' '.' 'a' '.' '#' '#' '#' '.' '.' 'a' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' 'p' '.' '.' '.' '#' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '.' '#' '.' 'c' '.' '.' '#' '.' '#']
+ ['#' '.' '#' '#' '.' '#' '#' '#' '#' '.' '.' '#']
+ ['#' '.' 'a' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '#' '#' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '#' '#' '.' '.' '.' '.' '#' '#' '.' '#']
+ ['#' '.' '.' '.' 'c' '.' '.' '.' '.' '.' '.' '#']
+ ['#' 't' '.' '.' '#' '#' '.' 'n' '#' '.' 'a' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' 'p' '.' '.' 'c' '.' '.' '#' '#' '#' '#' '.' 'a' '#']
+ ['#' '#' '.' '#' '#' 'c' '#' '#' '#' '.' '#' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '.' '.' '.' '#' '#' '.' 'c' '.' '#']
+ ['#' '.' '#' '#' '.' '.' '.' 'c' 'c' '.' '.' '.' 'c' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '#' '.' '.' '.' '#']
+ ['#' '.' 't' '.' '#' '#' '#' '#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '#' 'c' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '.' '#' '#' '.' 'c' '.' '#']
+ ['#' '#' '#' '.' '.' '.' '.' '.' 'n' '#' '#' 'a' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '.' '.' '.' '.' '.' '.' 'n' '#' '#' '#' '#' '#']
+ ['#' 'a' '.' '.' '.' '.' '.' '.' '#' '#' '#' '#' '#' '.' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '.' '.' '#' '.' '#' '.' '.' '#']
+ ['#' '#' '.' '.' '.' '#' '.' '.' '#' '.' '.' 'c' 'c' '.' '#']
+ ['#' '.' '.' '.' '#' '#' '#' '.' '.' '#' 'c' '#' '.' '.' '#']
+ ['#' '#' 'c' 'c' '.' '#' '.' '#' '.' '.' '.' '.' '#' '.' '#']
+ ['#' '#' '.' 'c' '#' '#' '.' '.' '#' '#' '.' '#' '#' '.' '#']
+ ['#' '.' 'c' '.' '#' '#' '#' '.' 't' '#' '#' '#' '.' '.' '#']
+ ['#' '#' '.' '.' '#' '.' '.' '.' '#' 'a' 'c' '.' '.' '.' '#']
+ ['#' '.' 'c' '#' '.' 'c' '.' '.' '.' '#' '#' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '#' '#' '.' '#' '.' '.' '#' '.' '#' '#']
+ ['#' '#' '.' '.' '#' '#' '#' '#' '.' 'p' '.' 'c' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['.' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.' '.' '.'
+  '.']
+ ['.' '.' '#' '#' '.' 'n' '.' '.' '.' '.' 'a' '#' '.' '.' '.' '#' '#' '.'
+  '.']
+ ['.' '#' 'p' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '#'
+  '.']
+ ['.' '#' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.' '#'
+  '.']
+ ['#' '.' 'c' '#' '.' '.' '.' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.'
+  '#']
+ ['#' 'c' '.' '#' '.' '.' '#' '.' '.' '.' '.' '.' '.' '#' '.' '#' '.' '.'
+  '#']
+ ['#' '.' '#' '#' '.' '.' '#' 'n' '.' '#' '#' '#' '.' '#' '.' '#' 'c' '.'
+  '#']
+ ['#' '.' '.' '#' '.' '.' '#' '#' '#' '.' '.' '#' '.' '#' '.' '#' '.' 'c'
+  '#']
+ ['#' '.' '.' '#' '.' '.' '#' '.' '#' 't' '.' '.' '.' '#' '.' '#' '.' '.'
+  '#']
+ ['#' '.' 'c' '#' '.' '.' '.' '.' '#' '.' '.' '#' '.' '#' '.' '#' '.' 'c'
+  '#']
+ ['#' '#' '.' '#' '.' '.' '#' '.' '#' '#' '#' '#' '.' '#' '.' '#' 'c' '.'
+  '#']
+ ['#' '.' '.' '#' '.' '.' '#' '.' '.' '.' '.' '.' '.' '#' '.' '#' '.' '.'
+  '#']
+ ['#' '.' '.' '.' '#' '.' '.' '#' '#' '#' '#' '#' '#' 'a' '.' '#' '.' '.'
+  '#']
+ ['.' '#' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.' '#'
+  '.']
+ ['.' '#' 'n' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '#'
+  '.']
+ ['.' '.' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '.'
+  '.']
+ ['.' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.' '.' '.'
+  '.']]
+    level_data	None
+    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.']
+ ['.' '.' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c'
+  'c' 'c' 'c' '.' '.']
+ ['.' 'c' '.' '.' '.' '.' '.' 'a' '.' '.' '.' 't' '.' '.' '.' 'a' '.' '.'
+  '.' '.' '.' 'c' '.']
+ ['.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' 'c' '.']
+ ['.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' 'c' '.']
+ ['.' 'c' '.' 'a' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' 'a' '.' 'c' '.']
+ ['.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' 'c' '.']
+ ['.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' 'c' '.']
+ ['.' '.' 'c' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' 'c' 'c' '.' '.']
+ ['.' '.' '.' '.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  'c' '.' '.' '.' '.']
+ ['.' '.' '.' '.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  'c' '.' '.' '.' '.']
+ ['.' '.' '.' '.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  'c' '.' '.' '.' '.']
+ ['.' '.' '.' '.' 'c' '.' '.' 'a' '.' '.' '.' '.' '.' '.' '.' 'a' '.' '.'
+  'c' '.' '.' '.' '.']
+ ['.' '.' '.' '.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  'c' '.' '.' '.' '.']
+ ['.' '.' '.' '.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  'c' '.' '.' '.' '.']
+ ['.' '.' '.' '.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  'c' '.' '.' '.' '.']
+ ['.' '.' '.' '.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  'c' '.' '.' '.' '.']
+ ['.' 'c' 'c' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' 'c' 'c' 'c' '.']
+ ['.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' 'c' '.']
+ ['.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'n' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' 'c' '.']
+ ['.' 'c' 'a' '.' '.' '.' 'n' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'n' '.'
+  '.' '.' 'a' 'c' '.']
+ ['.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' 'c' '.']
+ ['.' 'c' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'p' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' 'c' '.']
+ ['.' '.' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c' 'c'
+  'c' 'c' 'c' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.']]
+    level_data	None

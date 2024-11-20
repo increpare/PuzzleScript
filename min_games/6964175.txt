@@ -1,0 +1,201 @@
+OBJECTS
+
+BackgroundBlack
+Wall-DarkGrey.....
+.....
+0...0
+.....
+.....
+
+VBorder|DarkGrey
+..0.......
+..........
+..0..Colour1 1
+RedLightGrey
+Black.000.
+0001000000
+00000.000.
+C1P!Red
+LightGreyBlack
+.000.00010
+0000000000
+.000.Colour2 2
+GreenLightGrey
+Black.000.
+0001000000
+00000.000.
+C2P@Green
+LightGreyBlack
+.000.00010
+0000000000
+.000.Colour3 3
+BlueLightGrey Black
+.000.00010
+0000000000
+.000.C3P #
+BlueLightGrey Black
+.000.00010
+0000000000
+.000.Colour4 4
+YellowLightGrey
+Black.000.
+0001000000
+00000.000.
+C4P$Yellow
+LightGreyBlack
+.000.00010
+0000000000
+.000.Playera
+BlackPlayerb
+BlackReleased
+GreyhasN
+BlackRemove
+Blacknp1
+nBlack
+..........
+..........
+.....np2
+mBlack
+..........
+..........
+.....LoseFlag
+RedPieceGen
+BlackDigit1
+White..0..
+.00....0..
+..0...000.
+Digit2White
+.00..0..0.
+..0...0...
+0000.Digit3
+White000..
+...0..00..
+...0.000..
+Digit4White
+..0...00..
+0.0..0000.
+..0..Digit5
+White0000.
+0....000..
+...0.000..
+Digit6White
+.00..0....
+000..0..0.
+.00..Digit7
+White0000.
+...0...0..
+.0...0....
+Digit8White
+.00..0..0.
+.00..0..0.
+.00..Digit9
+9White
+.00..0..0.
+.000....0.
+.00..Digit0 0
+White.00..
+0..0.0..0.
+0..0..00..
+IncBlack
+
+LEGEND
+
+. = Background
+a = Playera
+b = Playerb
+x = PieceGen
++ = Inc
+Player = Playera or Playerb
+Piece = Colour1 or Colour2 or Colour3 or Colour4
+Preview = C1P or C2P or C3P or C4P
+Np = Np1 or Np2
+Border = Wall or VBorder
+Score = Digit1 or Digit2 or Digit3 or Digit4 or Digit5 or Digit6 or Digit7 or Digit8 or Digit9 or Digit0
+
+COLLISIONLAYERS
+
+Background
+Wall
+Released, LoseFlag
+VBorder
+Player, Np
+Piece, Preview
+Score, Inc
+hasN
+Remove, PieceGen
+
+RULES
+
+Right [ Colour1 | Colour1 ] -> [ Colour1 hasN | Colour1hasN ] 
+Vertical [ Colour1 hasN | Colour1 ] -> [ Colour1 Remove | Colour1Remove ] 
+[ Colour1 Remove | Colour1 ] -> [ Colour1 Remove | Colour1Remove ] 
+[ Colour1 | Colour1 | Colour1 ] -> [ Colour1 Remove | Colour1Remove | Colour1Remove ] 
+Right [ Colour2 | Colour2 ] -> [ Colour2 hasN | Colour2hasN ] 
+Vertical [ Colour2 hasN | Colour2 ] -> [ Colour2 Remove | Colour2Remove ] 
+[ Colour2 Remove | Colour2 ] -> [ Colour2 Remove | Colour2Remove ] 
+[ Colour2 | Colour2 | Colour2 ] -> [ Colour2 Remove | Colour2Remove | Colour2Remove ] 
+Right [ Colour3 | Colour3 ] -> [ Colour3 hasN | Colour3hasN ] 
+Vertical [ Colour3 hasN | Colour3 ] -> [ Colour3 Remove | Colour3Remove ] 
+[ Colour3 Remove | Colour3 ] -> [ Colour3 Remove | Colour3Remove ] 
+[ Colour3 | Colour3 | Colour3 ] -> [ Colour3 Remove | Colour3Remove | Colour3Remove ] 
+Right [ Colour4 | Colour4 ] -> [ Colour4 hasN | Colour4hasN ] 
+Vertical [ Colour4 hasN | Colour4 ] -> [ Colour4 Remove | Colour4Remove ] 
+[ Colour4 Remove | Colour4 ] -> [ Colour4 Remove | Colour4Remove ] 
+[ Colour4 | Colour4 | Colour4 ] -> [ Colour4 Remove | Colour4Remove | Colour4Remove ] 
+[ Piece Remove][Playera][Inc ] -> [ ][Playera][leftInc ] 
+[ Piece Remove][Playera ] -> [ ][Playera ] 
+[ Piece Remove][LoseFlag ] -> [ ][LoseFlag ] 
+[ hasN ] -> [  ] 
+Down [ > Player Piece ] -> [ > Player Released Piece ] 
+Down [ Player Released Piece | NoPiece ] -> [ Player | >Piece ] 
+Down [ > Player ] -> [ Player ] 
+[ Released ] -> [  ] 
+Down [ Piece No Player No NP | NoPieceNoPreviewNoScore ] -> [ |>Piece ] again 
+[ Action Playera | Playerb ] -> [ > Playera | vPlayerb ] 
+[ Moving Player Piece ] -> [ Moving Player Moving Piece ] 
+[ > Player | Border ] -> cancel 
+Up [ Preview | NoPieceNoPreview ] -> [ |Preview ] again 
+[ NP C1P ] -> [ NP Colour1 ] 
+[ NP C2P ] -> [ NP Colour2 ] 
+[ NP C3P ] -> [ NP Colour3 ] 
+[ NP C4P ] -> [ NP Colour4 ] 
+[ Playera no Piece][NP1Piece ] -> [ Playera Piece][NP1 ] 
+[ Playerb no Piece][NP2Piece ] -> [ Playerb Piece][NP2 ] 
+[ PieceGen No Preview ] -> [ PieceGen Random Preview ] again 
+[ Piece Border ] -> [ LoseFlag ] again 
+[ LoseFlag][Border ] -> [ LoseFlag][ ] 
+[ LoseFlag][Player ] -> [ LoseFlag][ ] 
+[ LoseFlag][NoPiece ] -> [ LoseFlag][RandomPiece ] 
+left [ > inc | score ] -> [ > inc | >score ] 
+left [ > digit9 | score ] -> [ digit0 | >score ] 
+left [ > digit9 | border ] -> [ digit0 | border ] 
+left [ > digit0 ] -> [ digit1 ] 
+left [ > digit1 ] -> [ digit2 ] 
+left [ > digit2 ] -> [ digit3 ] 
+left [ > digit3 ] -> [ digit4 ] 
+left [ > digit4 ] -> [ digit5 ] 
+left [ > digit5 ] -> [ digit6 ] 
+left [ > digit6 ] -> [ digit7 ] 
+left [ > digit7 ] -> [ digit8 ] 
+left [ > digit8 ] -> [ digit9 ] 
+
+
+WINCONDITIONS
+
+No Piece
+No Preview
+
+LEVELS
+
+nm|..ab..|
+..|......|
+..|------|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+..|......|
+xx|000000+
+
+.........

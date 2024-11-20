@@ -1,0 +1,134 @@
+title Crafting Table
+author bregehr
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+stonemarker
+#636363 #6b6a6a #7c7b7b #5e5d5d
+01023
+20003
+01203
+20113
+33333
+
+woodmarker
+#d1a151 #a58042 #826432
+12212
+20001
+20001
+10002
+12121
+
+
+Wall
+#2f421f
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+stone
+#727272 #828282 #606060
+.111.
+20001
+20001
+20001
+.222.
+
+wood
+#b7955f #93794e
+...00
+.0000
+00001
+0011.
+11...
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+o = stone
+@ = stone and stonemarker
+$ = stone and woodmarker
+* = stonemarker
+& = wood and woodmarker
+` = wood and stonemarker
+% = woodmarker
+- = wood
+markers = stonemarker or woodmarker
+pushable = stone or wood
+
+
+=======
+SOUNDS
+=======
+
+stone MOVE 18757107
+
+================
+COLLISIONLAYERS
+================
+
+Background
+markers
+Player, Wall, pushable
+
+======
+RULES
+======
+
+[ >  Player | pushable] -> [  >  Player | > pushable  ]
+[> pushable | pushable] -> [> pushable | > pushable ]
+
+==============
+WINCONDITIONS
+==============
+
+All stone on stonemarker
+all wood on woodmarker
+
+=======
+LEVELS
+=======
+
+#######
+#p.o.*#
+#######
+
+#####
+#*.*#
+#.p.#
+#ooo#
+#...#
+#.*.#
+#####
+
+########
+###..###
+#......#
+#p-*%o.#
+#......#
+########
+
+#######
+#.....#
+#.`$*.#
+#.@$`.#
+#.p.o.#
+#.....#
+#######

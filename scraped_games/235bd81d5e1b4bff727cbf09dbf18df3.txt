@@ -1,0 +1,523 @@
+title Two-faced
+author Le Slo
+homepage www.puzzlescript.net
+
+run_rules_on_level_start
+
+background_color #7d7086
+
+========
+OBJECTS
+========
+
+Background
+#7d7086 #7d7086 #7d7086 #7d7086
+01213
+33201
+10123
+23101
+01211
+
+BG01
+#65001a #6F2100
+00100
+10001
+11111
+10001
+00100
+
+BG02
+#65001a #6F2100
+01110
+00100
+10101
+00100
+01110
+
+TargetH
+#41bac6
+.....
+.000.
+.0.0.
+.000.
+.....
+
+TargetV
+#325d5c
+.....
+.000.
+.0.0.
+.000.
+.....
+
+
+Wall
+#7d7086 #92839d #696177
+11111
+10001
+12001
+12201
+11111
+
+playerT
+#158489 #015357 #51A7AB #E37921 #f1974D #b65A0E
+.111.
+23442
+25342
+25342
+25342
+
+playerB
+#51A7AB #E37921 #158489 #015357 #f1974D #b65A0E
+05140
+05140
+05140
+05510
+.333.
+
+playerL
+#158489 #51A7AB #015357 #E37921 #f1974D #b65A0E
+.1111
+23444
+25333
+25555
+.1111
+
+playerR
+#51A7AB #158489 #E37921 #015357 #f1974D #b65A0E
+0000.
+44443
+22243
+55523
+0000.
+
+
+crateH
+#158489 #51A7AB #E37921 #f1974D #096A6E
+.111.
+10001
+14201
+14401
+.111.
+
+crateV
+#158489 #015357 #E37921 #f1974D #096A6E
+.111.
+10001
+14201
+14401
+.111.
+
+crateWH
+#158489 #51A7AB #53f911 #f1974D #096A6E
+.111.
+10001
+14201
+14401
+.111.
+
+crateWV
+#158489 #015357 #53f911 #f1974D #096A6E
+.111.
+10001
+14201
+14401
+.111.
+
+crateNWV
+#158489 #51A7AB #ff3921 #f1974D #096A6E
+.111.
+10001
+14201
+14401
+.111.
+
+crateNWH
+#158489 #015357 #ff3921 #f1974D #096A6E
+.111.
+10001
+14201
+14401
+.111.
+
+auxTR
+transparent
+
+auxTL
+transparent
+
+auxTT
+transparent
+
+auxTB
+transparent
+
+auxBG
+transparent
+
+auxWL
+transparent
+
+auxM
+transparent
+
+auxNM
+transparent
+
+auxFP
+transparent
+
+auxCantMove
+transparent
+
+auxCanDestroy
+transparent
+
+auxWall
+transparent
+
+auxMultiban
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+T = PlayerT
+B = PlayerB
+L = playerL
+R = playerR
+* = CrateH
+@ = CrateH
+O = TargetH
+h = TargetV
+1 = crateH
+2 = crateV
+3 = BG01
+
+target = TargetH or TargetV
+Walls = wall or auxWall
+
+Player = PlayerT or PlayerL or PlayerR or PlayerB
+aux = auxTR or auxTL or auxTT or auxTB or auxCantMove
+crate = crateH or CrateV
+
+collisionH = wall or crateV
+collisionV = wall or crateH
+
+collisionT = collisionH or collisionV
+=======
+SOUNDS
+=======
+
+sfx0 89010100
+sfx1 2270102
+
+sfx2 87697304
+
+sfx3 36772504
+
+cancel 36772504
+
+showmessage 11590508
+
+endlevel 61273508
+
+startgame 71301508
+
+restart 36395708
+
+
+================
+COLLISIONLAYERS
+================
+
+
+Background
+bg01, BG02
+auxBG, auxWL
+auxCanDestroy, auxMultiban
+aux
+auxWall
+Target
+Player
+Wall, Crate
+crateWH, crateWV, crateNWH, crateNWV
+auxM
+auxNM
+auxFP
+
+======
+RULES
+======
+
+startLoop
+
+[ Bg01 | no auxBG NO WALL] -> [bg01  | bg02 auxbg]
+[ Bg02 | no auxBG no wall] -> [bg02  | bg01 auxbg]
+
+endLoop
+
+
+
+([ ^  Player | ^ Player | no wall] 			-> [ ^ Player | ^ Player auxM | auxM]
+[ v  Player | v Player | no wall] 	-> [  Player | Player auxM | auxM]
+[ <  Player | < Player | no wall] 	-> [  Player | Player auxM | auxM]
+[ >  Player | > Player | no wall] 	-> [  Player | Player auxM | auxM]
+
+[ ^  Player | ^ Player | wall] 			-> [  Player auxCantMove| Player auxCantMove| wall]
+[ v  Player | v Player  | 		wall] 	-> [  Player auxCantMove| Player auxCantMove| wall]
+[ <  Player | < Player  | 		 wall] 	-> [  Player auxCantMove| Player auxCantMove| wall]
+[ >  Player | > Player | 	wall] 	-> [  Player auxCantMove| Player auxCantMove| wall])
+
+[> Player | ] -> [> Player | auxFP]
+
+horizontal[ >  PlayerT | CrateV ] -> [ > PlayerT | CrateV auxWall]
+horizontal[ >  PlayerB | CrateV ] -> [ > PlayerB | CrateV auxWall]
+horizontal[ >  PlayerL | CrateV ] -> [ > PlayerL | > CrateV]
+horizontal[ >  PlayerR | CrateV ] -> [ > PlayerR | > CrateV]
+
+vertical[ >  PlayerT | CrateV ] -> [ > PlayerT | > CrateV]
+vertical[ >  PlayerB | CrateV ] -> [ > PlayerB | > CrateV]
+vertical[ >  PlayerL | CrateV ] -> [ > PlayerL | CrateV auxWall]
+vertical[ >  PlayerR | CrateV ] -> [ > PlayerR | CrateV auxWall]
+
+horizontal[ >  PlayerT | CrateH ] -> [ > PlayerT | > CrateH]
+horizontal[ >  PlayerB | CrateH ] -> [ > PlayerB | > CrateH]
+horizontal[ >  PlayerL | CrateH ] -> [ > PlayerL | CrateH auxWall]
+horizontal[ >  PlayerR | CrateH ] -> [ > PlayerR | CrateH auxWall]
+
+vertical[ >  PlayerT | CrateH ] -> [ > PlayerT | CrateH auxWall]
+vertical[ >  PlayerB | CrateH ] -> [ > PlayerB | CrateH auxWall]
+vertical[ >  PlayerL | CrateH ] -> [ > PlayerL | > CrateH]
+vertical[ >  PlayerR | CrateH ] -> [ > PlayerR | > CrateH]
+
+
+startLoop
+
+[> Crate | crate no auxMultiban] -> [> Crate  | > Crate auxMultiban]
+[> Crate | wall] -> [ Crate auxWall|  wall] 
+
+
+endLoop
+
+startLoop
+
+[> Crate | Crate auxWall] -> [ Crate auxWall|  Crate ] 
+
+endLoop
+
+horizontal[ >  Player | auxMultiban ] -> [  Player |  auxWall auxMultiban]
+vertical[ >  Player | auxMultiban ] -> [  Player |  auxWall auxMultiban]
+
+[walls auxFP][> crate] -> [walls auxFP] [crate]
+[collisionT auxFP| walls auxFP] -> [collisionT auxWall auxFP| walls auxFP]
+
+[ >  Player| Wall ] -> cancel
+[ >  Player | Wall ] -> cancel 
+
+
+(Siguiente posicion a lo ancho)
+horizontal[ >  PlayerT | no Walls ] -> [  PlayerT | auxM]
+horizontal[ >  PlayerB | no Walls ] -> [ PlayerB | auxM]
+vertical[ >  PlayerL | no Walls ] -> [ PlayerL | auxM]
+vertical[ >  PlayerR | no Walls ] -> [ PlayerR | auxM]
+
+horizontal[ >  PlayerT | Walls ] -> [ PlayerT auxNM| Walls]
+horizontal[ >  PlayerB | Walls ] -> [ PlayerB auxNM| Walls]
+vertical[ >  PlayerL | Walls ] -> [ PlayerL auxNM| Walls]
+vertical[ >  PlayerR | Walls ] -> [ PlayerR auxNM| Walls]
+
+(Siguiente posición a lo estrecho)
+
+up[ >  Player | > Player | no walls] 			-> [  Player | Player auxM| auxM]
+down[ >  Player | > Player | no walls] 	-> [  Player | Player auxM| auxM]
+left[ >  Player | > Player | no walls] 	-> [  Player | Player auxM | auxM]
+right[ >  Player | > Player | no walls] 	-> [  Player | Player auxM | auxM]
+
+up[ >  Player | > Player | 	walls] 			-> [  Player auxM| Player auxM| walls] sfx3
+down[ >  Player | > Player | 		walls] 	-> [  Player auxM| Player auxM| walls] sfx3
+left[ >  Player | > Player | 		 walls] 	-> [  Player auxM| Player auxM| walls] sfx3
+right[ >  Player | > Player | 	walls] 	-> [  Player auxM| Player auxM| walls] sfx3
+
+
+([auxNM player |auxNM player]-> [player auxCantMove | player auxCantMove])
+([auxNM] [auxNM] [player]-> [] [] [player auxCantMove])
+
+
+(choque estrecho)
+[auxM auxNM] [player no auxM no auxNM] -> [auxM auxNM] [player auxM] sfx3
+(Choque ancho)
+[auxNM player | auxNM player] -> [auxM auxNM player | auxM auxNM player] sfx3
+
+(Movimiento ancho y estrecho)
+[auxM | auxM] [player no AuxM no auxNM] -> [auxM | auxM] [player auxNM] 
+
+(GIRO)
+
+[no auxNM no auxM player] -> [auxM player] sfx2
+
+
+[auxNM] -> []
+
+
+[ player] -> [ ] 
+
+up [auxM | auxM] -> [playerB | playerT]
+right [auxM | auxM] -> [playerL | playerR]
+
+
+
+[aux] -> []
+[auxM] -> []
+[auxNM] -> []
+
+[> player] -> [player]
+
+
+
+[auxFP] -> []
+[auxMultiban] -> []
+[auxWall] -> []
+
+(right [ >  PlayerT | no Wall ] -> [  PlayerT | auxTR  ]
+left [ >  PlayerT | no Wall ] -> [  PlayerT | auxTL  ]
+
+down[ auxTR | no Wall] -> [ | auxTB]
+down[ auxTL | no Wall] -> [ | auxTB]
+
+[player] -> []
+
+left[auxTR | ] [no auxTB] -> [PlayerR | playerL] []
+right[auxTL | ] [no auxTB]-> [PlayerL | playerR] []
+
+left[auxTR | ] [no auxTB] -> [PlayerR | playerL] []
+right[auxTL | ] [no auxTB]-> [PlayerL | playerR] [])
+
+late [crateH TargetH no crateWH] -> [crateH TargetH crateWH] sfx0
+late [crateV TargetV no crateWV] -> [crateV TargetV crateWV] sfx0
+
+late [no crateH crateWH] -> [no crateH no crateWH]
+late [no crateV crateWV] -> [no crateV no crateWV]
+
+late [crateV TargetH no crateNWH] -> [crateV TargetH crateNWH] sfx1
+late [crateH TargetV no crateNWV] -> [crateH TargetV crateNWV] sfx1
+
+late [no crateV crateNWH] -> [no crateV no crateNWH]
+late [no crateH crateNWV] -> [no crateH no crateNWV]
+
+
+==============
+WINCONDITIONS
+==============
+
+All TargetH on CrateH
+All TargetV on CrateV
+
+=======
+LEVELS
+=======
+
+message 1/9
+
+...#########...
+...#3......#...
+####...t...###.
+#....1.b...o.##
+##.o.....1....#
+.###..#2#..####
+...#..#.#..#...
+...#..#h#..#...
+...#########...
+
+
+message 2/9
+
+
+#########...
+#3......#...
+#...t...###.
+#...b...o.##
+#.....1....#
+#...2...####
+#..#.#..#...
+#..#h#..#...
+#########...
+
+message 3/9
+
+##########
+#3.......#
+#..1..#2.#
+#....###.#
+#....##..#
+#.#.#o...#
+#..#..t1.#
+#...#.b..#
+#2.......#
+##########
+
+message 4/9
+
+###########
+#3........#
+#....#t...#
+#.h1..b2o.#
+#....#....#
+#.........#
+###########
+
+message 5/9
+
+#########
+#3....oh#
+#.t21.###
+#.b12.###
+#.....ho#
+#########
+
+message 6/9
+
+#########
+#3.1..o.#
+#.t1.o..#
+#.b1o...#
+#..1.o..#
+#..1..o.#
+#########
+
+message 7/9
+
+########
+#3.1..o#
+#.t1.o.#
+#.b1o..#
+#..1.o.#
+#..1..o#
+########
+
+message 8/9
+
+....#####
+....#3..#
+#####...#
+#.......#
+#.1212..#
+#.hoho..#
+#lr#....#
+#########
+
+message 9/9
+
+.##########
+##3..#.##.#
+#.........#
+##.#.1.1..#
+#h.o......#
+##.#.#.t..#
+#....2.b..#
+#....#....#
+###....##.#
+..#########

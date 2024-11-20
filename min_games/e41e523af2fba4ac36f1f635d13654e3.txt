@@ -1,0 +1,300 @@
+OBJECTS
+
+Dark+Black
+0000000000
+0000000000
+00000BackgroundSolid
+.#EEEEEE
+0000000000
+0000000000
+00000InstructionT
+T#EEEEEE #dce2e5
+0010001110
+1010100100
+00100InstructionK
+K#EEEEEE #dce2e5
+0010001000
+1111001000
+00100InstructionD
+D#EEEEEE #dce2e5
+0010000010
+0111100010
+00100InstructionI
+I#EEEEEE #dce2e5
+0010000100
+0010000100
+00100Instruction1
+1#EEEEEE #dce2e5
+0110000100
+0010000100
+01110Instruction2
+2#EEEEEE #dce2e5
+1111000001
+0111010000
+11111Instruction3
+3#EEEEEE #dce2e5
+0111010001
+0011110001
+01110Wall
+##d7b7a200000
+00000
+00000
+00000
+00000
+
+PlayerV$#d5bd7d..0..
+..0..
+..0..
+..0..
+..0..
+
+StickV|#e3cc8e..0..
+..0..
+..0..
+..0..
+..0..
+
+PlayerH~#d5bd7d.....
+.....
+00000
+.....
+.....
+
+StickH-#e3cc8e
+..........
+00000.....
+.....FloatA
+A#ffb1c5
+.000.00000
+0000000000
+.000.FloatB
+BWHITE
+.000.00000
+0000000000
+.000.FloatC
+C#d0dc6e
+.000.00000
+0000000000
+.000.FixedA
+X#ffb1c5
+.000.00000
+0000000000
+.000.FixedB
+YWHITE
+.000.00000
+0000000000
+.000.FixedC
+Z#d0dc6e.000.
+00000
+00000
+00000
+.000.
+
+
+
+
+LEGEND
+
+Background = BackgroundSolid or InstructionT or InstructionI or InstructionK or InstructionD or Instruction1 or Instruction2 or Instruction3
+Stick = StickV or StickH
+Player = PlayerV or PlayerH
+Float = FloatA or FloatB or FloatC
+FloatAB = FloatA or FloatB
+FloatAC = FloatA or FloatC
+FloatBC = FloatB or FloatC
+Fixed = FixedA or FixedB or FixedC
+Dango = Float or Fixed
+Body = Player or Fixed
+AxisV = PlayerV or StickV
+AxisH = PlayerH or StickH
+Axis = Player or Stick
+
+COLLISIONLAYERS
+
+Background
+Stick
+Player
+Wall, Dango
+Fixed, Dark
+
+RULES
+
+[ Moving Player][Stick ] -> [ Moving Player][MovingStick ] 
+[ Moving Player][Fixed ] -> [ Moving Player][MovingFixed ] 
+[ Horizontal StickV Dango ] -> [ Horizontal StickV Horizontal Dango ] 
+[ Vertical StickH Dango ] -> [ Vertical StickH Vertical Dango ] 
+[ > Axis | Wall ] -> Cancel 
+Horizontal [ > AxisV | StationaryFloat ] -> Cancel (push by side) 
+Vertical [ > PlayerV | StationaryFloat ] -> Cancel (push by root) 
+Vertical [ > AxisH | StationaryFloat ] -> Cancel (push by side) 
+Horizontal [ > PlayerH | StationaryFloat ] -> Cancel (push by root) 
+[ > Dango | >Dango | >Dango | Dango ] -> cancel 
+late Vertical [ PlayerV | FloatCStickV ] -> [ PlayerV | FixedCStickV ] 
+late Vertical [ FixedC | FloatBStickV ] -> [ FixedC | FixedBStickV ] 
+late Vertical [ FixedB | FloatAStickV ] -> [ FixedB | FixedAStickV ] 
+late Horizontal [ PlayerH | FloatCStickH ] -> [ PlayerH | FixedCStickH ] 
+late Horizontal [ FixedC | FloatBStickH ] -> [ FixedC | FixedBStickH ] 
+late Horizontal [ FixedB | FloatAStickH ] -> [ FixedB | FixedAStickH ] 
+Vertical [ > PlayerV | StickV | StationaryFloatAB ] -> 
+Vertical [ > FixedC | StickV | StationaryFloatAC ] -> 
+Vertical [ > FixedB | StickV | StationaryFloatBC ] -> 
+Horizontal [ > PlayerH | StickH | StationaryFloatAB ] -> 
+Horizontal [ > FixedC | StickH | StationaryFloatAC ] -> 
+Horizontal [ > FixedB | StickH | StationaryFloatBC ] -> 
+Vertical [ > Player | StickV | StickV | StickV | StationaryFloat ] -> 
+Horizontal [ > Player | StickH | StickH | StickH | StationaryFloat ] -> 
+Vertical [ > PlayerV | StickV | FloatC ] -> 
+Vertical [ > FixedC | StickV | FloatB ] -> 
+Vertical [ > FixedB | StickV | FloatA ] -> 
+Horizontal [ > PlayerH | StickH | FloatC ] -> 
+Horizontal [ > FixedC | StickH | FloatB ] -> 
+Horizontal [ > FixedB | StickH | FloatA ] -> 
+
+
+WINCONDITIONS
+
+No Float
+
+LEVELS
+
+###############
+
+#.............#
+#......a.1....#
+#.............#
+#....T........#
+#....I.b.2....#
+#....I........#
+#.............#
+#......c.3....#
+#.............#
+#......|K1....#
+#....2D|......#
+#......|K3....#
+#......$......#
+#.............#
+###############
+
+###############
+
+#.............#
+#.............#
+#.........cK3.#
+#.............#
+#......bK2....#
+#.............#
+#...aK1.......#
+#.............#
+#.............#
+#......|K1....#
+#....2D|......#
+#......|K3....#
+#......$......#
+#.............#
+###############
+
++++++++++++++++
+
++++++#####+++++
++++++#...#+++++
++++++#.#.#+++++
++++++#.c.#+++++
++++++#...#+++++
++++++#.b.#+++++
++++++#...#+++++
++++++#.a.#+++++
++++++#.|.#+++++
++++++#.|.#+++++
++++++##|.#+++++
+++++++#$.#+++++
+++++++####+++++
++++++++++++++++
++++++++++++++++
+
++++++++++++++++
+
++++#########+++
++++##.#.#.##+++
++++#b.....b#+++
++++#.......#+++
++++#..|.|..#+++
++++#..|c|..#+++
++++#..|c|..#+++
++++#..$.$..#+++
++++#.a...a.#+++
++++#.......#+++
++++#.......#+++
++++#.......#+++
++++#.......#+++
++++#########+++
++++++++++++++++
+
+++###########++
+
+++#.........#++
+++#.........#++
+++#...bac...#++
+++#...acb...#++
+###...cba...###
+#.............#
+#.............#
+#.............#
+#.....|||.....#
+###...|||...###
+++#...|||...#++
+++#...$$$...#++
+++#.........#++
+++#.........#++
+++###########++
+
++++++#####+++++
+
++++###..a###+++
+++##.......##++
++##...c.....##+
++#......|....#+
+##......|b...##
+#.......|.....#
+#.......$.....#
+#.....$.......#
+#.....|.......#
+##...b|......##
++#....|......#+
++##.....c...##+
+++##.......##++
++++###a..###+++
++++++#####+++++
+
++++++++++++++++
++#############+
++#...........#+
++#.....|.....#+
++#..#..|..b.##+
++#.....|.....#+
++#.....$....b#+
++#.---~......#+
++#...........#+
++#...........#+
++#..c.c......#+
++#...........#+
++#..a.a......#+
++#############+
++++++++++++++++
+
+##############+
+
+#............##
+#........a....#
+#.............#
+#......|c.....#
+#...a..|.b....#
+#..b...|......#
+#..c...$......#
+#..---~.~---..#
+#......$...c..#
+#......|..b.a.#
+#......|......#
+#....c.|......#
+#.....b.......#
+##...a........#
++##############

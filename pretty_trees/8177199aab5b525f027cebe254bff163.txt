@@ -1,0 +1,1440 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	#
+      colors
+        color	6bb745
+    object_data
+      object_name	#45b758
+      legend_key	#
+      colors
+        color	93b745
+      sprite
+        ['1' '0' '2' '0' '1']
+        ['0' '0' '0' '0' '0']
+        ['2' '0' '1' '0' '2']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '2' '0' '1']
+    object_data
+      object_name	Base
+      legend_key	#
+      colors
+        color	ad914a
+        color	#937b3e
+    object_data
+      object_name	01000
+      legend_key	1
+      colors
+        color	0000
+    object_data
+      object_name	00001
+      legend_key	0
+      colors
+        color	0010
+    object_data
+      object_name	00100
+      legend_key	B
+      colors
+        color	ase_Top
+    object_data
+      object_name	#ad914a
+      legend_key	#
+      colors
+        color	937b3e
+        color	Yellow
+    object_data
+      object_name	22222
+      legend_key	1
+      colors
+        color	0000
+    object_data
+      object_name	00001
+      legend_key	0
+      colors
+        color	0010
+    object_data
+      object_name	00100
+      legend_key	B
+      colors
+        color	ase_Bottom
+    object_data
+      object_name	#ad914a
+      legend_key	#
+      colors
+        color	937b3e
+        color	#8d712a
+      sprite
+        ['0' '1' '0' '0' '0']
+        ['1' '0' '0' '0' '0']
+        ['2' '2' '2' '2' '2']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Base_Left
+      legend_key	#
+      colors
+        color	ad914a
+    object_data
+      object_name	#937b3e
+      legend_key	D
+      colors
+        color	arkBrown
+        color	#8d712a
+      sprite
+        ['3' '1' '0' '0' '0']
+        ['3' '0' '0' '0' '0']
+        ['2' '0' '0' '0' '1']
+        ['2' '0' '0' '1' '0']
+        ['2' '0' '1' '0' '0']
+    object_data
+      object_name	Base_Right
+      legend_key	#
+      colors
+        color	ad914a
+    object_data
+      object_name	#937b3e
+      legend_key	Y
+      colors
+        color	ellow
+        color	Lightbrown
+      sprite
+        ['0' '1' '0' '0' '2']
+        ['1' '0' '0' '0' '2']
+        ['0' '0' '0' '0' '3']
+        ['0' '0' '0' '1' '3']
+        ['0' '0' '1' '0' '3']
+    object_data
+      object_name	Base_Top_Left
+      legend_key	#
+      colors
+        color	ad914a
+    object_data
+      object_name	#937b3e
+      legend_key	#
+      colors
+        color	8d712a
+    object_data
+      object_name	Yellow
+      legend_key	L
+      colors
+        color	ightbrown
+        color	DarkBrown
+      sprite
+        ['.' '.' '.' '4' '3']
+        ['.' '2' '2' '0' '0']
+        ['2' '0' '0' '0' '1']
+        ['2' '0' '0' '1' '0']
+        ['5' '0' '1' '0' '0']
+    object_data
+      object_name	Base_Top_Right
+      legend_key	#
+      colors
+        color	ad914a
+    object_data
+      object_name	#937b3e
+      legend_key	Y
+      colors
+        color	ellow
+        color	LightBrown
+      sprite
+        ['2' '2' '.' '.' '.']
+        ['1' '0' '2' '2' '.']
+        ['0' '0' '0' '0' '2']
+        ['0' '0' '0' '1' '2']
+        ['0' '0' '1' '0' '3']
+    object_data
+      object_name	Base_Bottom_Left
+      legend_key	#
+      colors
+        color	ad914a
+    object_data
+      object_name	#937b3e
+      legend_key	D
+      colors
+        color	arkBrown
+        color	#8d712a
+      sprite
+        ['2' '1' '0' '0' '0']
+        ['.' '2' '0' '0' '0']
+        ['.' '.' '2' '3' '3']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Base_Bottom_Right
+      legend_key	#
+      colors
+        color	ad914a
+    object_data
+      object_name	#937b3e
+      legend_key	L
+      colors
+        color	ightBrown
+        color	#8d712a
+      sprite
+        ['0' '1' '0' '0' '2']
+        ['1' '0' '0' '2' '.']
+        ['3' '3' '2' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Peg
+      legend_key	#
+      colors
+        color	937b3e
+        color	#ad914a
+      sprite
+        ['.' '0' '0' '1' '.']
+        ['.' '0' '0' '1' '.']
+        ['.' '0' '0' '1' '.']
+        ['.' '0' '0' '1' '.']
+        ['.' '0' '0' '1' '.']
+    object_data
+      object_name	Peg_Top
+      legend_key	#
+      colors
+        color	937b3e
+        color	#ad914a
+      sprite
+        ['.' '1' '1' '.' '.']
+        ['.' '0' '0' '1' '.']
+        ['.' '0' '0' '1' '.']
+        ['.' '0' '0' '1' '.']
+        ['.' '0' '0' '1' '.']
+    object_data
+      object_name	Peg_Bottom
+      legend_key	#
+      colors
+        color	937b3e
+    object_data
+      object_name	#ad914a
+      legend_key	D
+      colors
+        color	arkBrown
+        color	Yellow
+    object_data
+      object_name	.001.
+      legend_key	.
+      colors
+        color	001.
+    object_data
+      object_name	.201.
+      legend_key	.
+      colors
+        color	201.
+    object_data
+      object_name	.231.
+      legend_key	S
+      colors
+        color	tartMarker
+    object_data
+      object_name	Transparent
+      legend_key	F
+      colors
+        color	inishMarker
+    object_data
+      object_name	Transparent
+      legend_key	F
+      colors
+        color	ullBlock
+    object_data
+      object_name	DarkRed
+      legend_key	R
+      colors
+        color	ed
+        color	LightRed
+    object_data
+      object_name	22222
+      legend_key	1
+      colors
+        color	1111
+    object_data
+      object_name	11111
+      legend_key	1
+      colors
+        color	1111
+    object_data
+      object_name	00000
+      legend_key	F
+      colors
+        color	ullBlock_Left
+    object_data
+      object_name	DarkRed
+      legend_key	R
+      colors
+        color	ed
+        color	LightRed
+    object_data
+      object_name	.2222
+      legend_key	0
+      colors
+        color	1111
+    object_data
+      object_name	01111
+      legend_key	0
+      colors
+        color	0111
+    object_data
+      object_name	.0000
+      legend_key	F
+      colors
+        color	ullBlock_Right
+    object_data
+      object_name	DarkRed
+      legend_key	R
+      colors
+        color	ed
+        color	LightRed
+    object_data
+      object_name	2222.
+      legend_key	1
+      colors
+        color	1122
+    object_data
+      object_name	11112
+      legend_key	1
+      colors
+        color	1112
+    object_data
+      object_name	0000.
+      legend_key	H
+      colors
+        color	alfBlock_Left
+    object_data
+      object_name	DarkRed
+      legend_key	R
+      colors
+        color	ed
+        color	LightRed
+    object_data
+      object_name	...22
+      legend_key	.
+      colors
+        color	.011
+    object_data
+      object_name	..001
+      legend_key	.
+      colors
+        color	.001
+    object_data
+      object_name	...00
+      legend_key	H
+      colors
+        color	alfBlock_Right
+    object_data
+      object_name	DarkRed
+      legend_key	R
+      colors
+        color	ed
+        color	LightRed
+      sprite
+        ['2' '2' '.' '.' '.']
+        ['1' '2' '2' '.' '.']
+        ['1' '2' '2' '.' '.']
+        ['1' '1' '2' '.' '.']
+        ['0' '0' '.' '.' '.']
+    object_data
+      object_name	EmptyBlock
+      legend_key	T
+      colors
+        color	ransparent
+    object_data
+      object_name	Player
+      legend_key	L
+      colors
+        color	ightBlue
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['0' '.' '0' '.' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+      
+
+
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Base
+    legend_data
+      !
+      object_name	Peg
+    legend_data
+      S
+      object_name	StartMarker
+      legend_operation
+        object_name	Player
+    legend_data
+      F
+      object_name	FinishMarker
+    legend_data
+      0
+      object_name	FullBlock
+      legend_operation
+        object_name	Peg
+    legend_data
+      @
+      object_name	FullBlock
+    legend_data
+      {
+      object_name	Halfblock_Left
+    legend_data
+      }
+      object_name	Halfblock_Right
+    legend_data
+      _
+      object_name	EmptyBlock
+    legend_data
+      AnyBase
+      object_name	Base
+      legend_operation
+        object_name	Base_Top
+      legend_operation
+        object_name	Base_Bottom
+      legend_operation
+        object_name	Base_Left
+      legend_operation
+        object_name	Base_Right
+      legend_operation
+        object_name	Base_Top_Left
+      legend_operation
+        object_name	Base_Top_Right
+      legend_operation
+        object_name	Base_Bottom_Left
+      legend_operation
+        object_name	Base_Bottom_Right
+    legend_data
+      AnyPeg
+      object_name	Peg
+      legend_operation
+        object_name	Peg_Top
+      legend_operation
+        object_name	Peg_Bottom
+    legend_data
+      AnyMarker
+      object_name	StartMarker
+      legend_operation
+        object_name	FinishMarker
+    legend_data
+      AnyFullBlock
+      object_name	FullBlock
+      legend_operation
+        object_name	FullBlock_Left
+      legend_operation
+        object_name	FullBlock_Right
+    legend_data
+      HalfBlock
+      object_name	HalfBlock_Left
+      legend_operation
+        object_name	HalfBlock_Right
+    legend_data
+      Block
+      object_name	AnyFullBlock
+      legend_operation
+        object_name	HalfBlock
+      legend_operation
+        object_name	EmptyBlock
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	AnyBase
+    layer_data
+      object_name	AnyPeg
+      object_name	AnyMarker
+    layer_data
+      object_name	Block
+    layer_data
+      object_name	Player
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          horizontal
+          rule_part
+            rule_content
+              >
+              Player
+              no
+              Block
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	A
+            rule_content	n
+            rule_content	y
+            rule_content	M
+            rule_content	a
+            rule_content	r
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content	|
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	A
+            rule_content	n
+            rule_content	y
+            rule_content	M
+            rule_content	a
+            rule_content	r
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          
+
+    rule_block
+      rule_block_loop
+        startloop
+        
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              <
+              Player
+              no
+              Block
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          rule_part
+            rule_content
+              <
+              Player
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	<
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              action
+              Player
+              no
+              Block
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          rule_part
+            rule_content
+              <
+              Player
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	<
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              >
+              Player
+              Block
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            rule_content	>
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              action
+              Player
+              Block
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            rule_content	>
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	n
+            rule_content	o
+            rule_content	A
+            rule_content	n
+            rule_content	y
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	>
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            cell_border
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	Block
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	v
+            rule_content	e
+            rule_content	r
+            rule_content	t
+            rule_content	i
+            rule_content	c
+            rule_content	a
+            rule_content	l
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          rule_part
+            rule_content	Block
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          
+
+        rule_data
+          horizontal
+          rule_part
+            rule_content
+              >
+              Player
+              Block
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	A
+            rule_content	n
+            rule_content	y
+            rule_content	M
+            rule_content	a
+            rule_content	r
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            rule_content	>
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            cell_border
+            rule_content	.
+            rule_content	.
+            rule_content	.
+            cell_border
+            rule_content	A
+            rule_content	n
+            rule_content	y
+            rule_content	M
+            rule_content	a
+            rule_content	r
+            rule_content	k
+            rule_content	e
+            rule_content	r
+          
+
+        rule_data
+          horizontal
+          rule_part
+            rule_content	Block
+            cell_border
+            rule_content	m
+            rule_content	o
+            rule_content	v
+            rule_content	i
+            rule_content	n
+            rule_content	g
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          rule_part
+            rule_content
+              moving
+              Block
+            cell_border
+            rule_content	m
+            rule_content	o
+            rule_content	v
+            rule_content	i
+            rule_content	n
+            rule_content	g
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          
+
+        rule_data
+          vertical
+          rule_part
+            rule_content
+              >
+              Block
+            cell_border
+          ->
+          rule_part
+            rule_content	|
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          
+
+        rule_data
+          horizontal
+          rule_part
+            rule_content
+              >
+              Player
+            rule_content	>
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          rule_part
+            rule_content	|
+            rule_content	>
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          
+
+        rule_data
+          +
+          horizontal
+          rule_part
+            rule_content
+              no
+              Player
+            rule_content	>
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          rule_part
+            rule_content	|
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          
+
+        rule_data
+          horizontal
+          rule_part
+            rule_content
+              >
+              Player
+              AnyMarker
+          ->
+          rule_part
+            rule_content
+              Player
+              AnyMarker
+          
+
+        endloop
+        
+
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+          ->
+          rule_part
+            rule_content	Player
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	AnyFullBlock
+            cell_border
+            rule_content	H
+            rule_content	a
+            rule_content	l
+            rule_content	f
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          command
+            command_keyword	cancel
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	AnyFullBlock
+            cell_border
+            rule_content	E
+            rule_content	m
+            rule_content	p
+            rule_content	t
+            rule_content	y
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          command
+            command_keyword	cancel
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	HalfBlock
+            cell_border
+            rule_content	E
+            rule_content	m
+            rule_content	p
+            rule_content	t
+            rule_content	y
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          command
+            command_keyword	cancel
+          
+
+        rule_data
+          down
+          rule_part
+            rule_content	FinishMarker
+            cell_border
+            cell_border
+            cell_border
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          command
+            command_keyword	win
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content
+              no
+              Block
+            cell_border
+            rule_content	F
+            rule_content	u
+            rule_content	l
+            rule_content	l
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          rule_part
+            rule_content	|
+            rule_content	F
+            rule_content	u
+            rule_content	l
+            rule_content	l
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	_
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content	EmptyBlock
+            cell_border
+            rule_content	F
+            rule_content	u
+            rule_content	l
+            rule_content	l
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          rule_part
+            rule_content	EmptyBlock
+            cell_border
+            rule_content	F
+            rule_content	u
+            rule_content	l
+            rule_content	l
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+            rule_content	_
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content	FullBlock
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          rule_part
+            rule_content	FullBlock_Right
+            cell_border
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content	FullBlock
+            cell_border
+            rule_content	E
+            rule_content	m
+            rule_content	p
+            rule_content	t
+            rule_content	y
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          ->
+          rule_part
+            rule_content	FullBlock_Right
+            cell_border
+            rule_content	E
+            rule_content	m
+            rule_content	p
+            rule_content	t
+            rule_content	y
+            rule_content	B
+            rule_content	l
+            rule_content	o
+            rule_content	c
+            rule_content	k
+          
+
+        rule_data
+          late
+          down
+          rule_part
+            rule_content
+              no
+              AnyPeg
+            cell_border
+            rule_content	P
+            rule_content	e
+            rule_content	g
+          ->
+          rule_part
+            rule_content	|
+            rule_content	P
+            rule_content	e
+            rule_content	g
+            rule_content	_
+            rule_content	T
+            rule_content	o
+            rule_content	p
+          
+
+        rule_data
+          late
+          down
+          rule_part
+            rule_content	Peg
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	A
+            rule_content	n
+            rule_content	y
+            rule_content	P
+            rule_content	e
+            rule_content	g
+          ->
+          rule_part
+            rule_content	Peg_Bottom
+            cell_border
+          
+
+        rule_data
+          late
+          down
+          rule_part
+            rule_content
+              no
+              AnyBase
+            cell_border
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+            rule_content	_
+            rule_content	T
+            rule_content	o
+            rule_content	p
+          
+
+        rule_data
+          late
+          down
+          rule_part
+            rule_content	Base
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	A
+            rule_content	n
+            rule_content	y
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+          ->
+          rule_part
+            rule_content	Base_Bottom
+            cell_border
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content
+              no
+              AnyBase
+            cell_border
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+            rule_content	_
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content	Base
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	A
+            rule_content	n
+            rule_content	y
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+          ->
+          rule_part
+            rule_content	Base_Right
+            cell_border
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content
+              no
+              AnyBase
+            cell_border
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+            rule_content	_
+            rule_content	T
+            rule_content	o
+            rule_content	p
+          ->
+          rule_part
+            rule_content	|
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+            rule_content	_
+            rule_content	T
+            rule_content	o
+            rule_content	p
+            rule_content	_
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content	Base_Top
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	A
+            rule_content	n
+            rule_content	y
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+          ->
+          rule_part
+            rule_content	Base_Top_Right
+            cell_border
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content
+              no
+              AnyBase
+            cell_border
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+            rule_content	_
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+          ->
+          rule_part
+            rule_content	|
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+            rule_content	_
+            rule_content	B
+            rule_content	o
+            rule_content	t
+            rule_content	t
+            rule_content	o
+            rule_content	m
+            rule_content	_
+            rule_content	L
+            rule_content	e
+            rule_content	f
+            rule_content	t
+          
+
+        rule_data
+          late
+          right
+          rule_part
+            rule_content	Base_Bottom
+            cell_border
+            rule_content	n
+            rule_content	o
+            rule_content	A
+            rule_content	n
+            rule_content	y
+            rule_content	B
+            rule_content	a
+            rule_content	s
+            rule_content	e
+          ->
+          rule_part
+            rule_content	Base_Bottom_Right
+            cell_border
+          
+
+  winconditions_section
+  levels_section
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
+    level_data	[['.' '.' '.' 'S' '.' '.' '.' 'F' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '!' '.' '.' '.' '!' '.' '.' '.']
+ ['.' '.' '{' '0' '}' '.' '.' '!' '.' '.' '.']
+ ['.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.']
+ ['.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' 'S' '.' '.' '.' 'F' '.' '.' '.' 'F' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '!' '.' '.' '.' '!' '.' '.' '.' '!' '.' '.' '.']
+ ['.' '.' '{' '0' '}' '.' '.' '!' '.' '.' '.' '!' '.' '.' '.']
+ ['.' '.' '@' '0' '@' '.' '.' '!' '.' '.' '.' '!' '.' '.' '.']
+ ['.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.']
+ ['.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
+    level_data	None
+    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.']
+ ['.' '.' '.' '.' 'S' '.' '.' '.' '.' '.' 'F' '.' '.' '.' '.' '.' 'F' '.'
+  '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.']
+ ['.' '.' '.' '.' '!' '.' '.' '.' '.' '.' '!' '.' '.' '.' '.' '.' '!' '.'
+  '.' '.' '.']
+ ['.' '.' '.' '{' '0' '}' '.' '.' '.' '.' '!' '.' '.' '.' '.' '.' '!' '.'
+  '.' '.' '.']
+ ['.' '.' '_' '@' '0' '@' '_' '.' '.' '.' '!' '.' '.' '.' '.' '.' '!' '.'
+  '.' '.' '.']
+ ['.' '.' '{' '@' '0' '@' '}' '.' '.' '.' '!' '.' '.' '.' '.' '.' '!' '.'
+  '.' '.' '.']
+ ['.' '.' '@' '@' '0' '@' '@' '.' '.' '.' '!' '.' '.' '.' '.' '.' '!' '.'
+  '.' '.' '.']
+ ['.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '.']
+ ['.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.']]
+    level_data	None
+    level_data	None
+    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '.' '.' '.']]
+    level_data	[['.' '.' '.' '.' '.' 'S' '.' '.' '.' '.' '.' '.' '.' 'F' '.' '.' '.' '.'
+  '.' '.' '.' 'F' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '!' '.' '.' '.' '.' '.' '.' '.' '!' '.' '.' '.' '.'
+  '.' '.' '.' '!' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '{' '0' '}' '.' '.' '.' '.' '.' '.' '!' '.' '.' '.' '.'
+  '.' '.' '.' '!' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '_' '@' '0' '@' '_' '.' '.' '.' '.' '.' '!' '.' '.' '.' '.'
+  '.' '.' '.' '!' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '{' '@' '0' '@' '}' '.' '.' '.' '.' '.' '!' '.' '.' '.' '.'
+  '.' '.' '.' '!' '.' '.' '.' '.' '.']
+ ['.' '.' '_' '@' '@' '0' '@' '@' '_' '.' '.' '.' '.' '!' '.' '.' '.' '.'
+  '.' '.' '.' '!' '.' '.' '.' '.' '.']
+ ['.' '.' '{' '@' '@' '0' '@' '@' '}' '.' '.' '.' '.' '!' '.' '.' '.' '.'
+  '.' '.' '.' '!' '.' '.' '.' '.' '.']
+ ['.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' '#' '.']
+ ['.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' '#' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '.' '.' '.']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None

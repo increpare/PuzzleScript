@@ -1,0 +1,140 @@
+title Every Three Steps You Hit a Wall Out of Nowhere
+author Sky Chan
+homepage https://skyychann.itch.io
+
+========
+OBJECTS
+========
+
+Background 
+grey
+
+Target 
+darkgreen
+.....
+.....
+..0..
+.....
+.....
+
+Wall 
+darkblue
+00000
+00000
+00.00
+00000
+00000
+
+Player1
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Player2
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Player3
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Player4
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Player5
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Goal
+yellow
+.0000
+.0000
+.0000
+.0...
+0000.
+
+=======
+LEGEND
+=======
+
+Player = Player1 or Player2 or Player3 or Player4 or Player5
+
+. = Background
+# = Wall
+p = Player2
+o = Target
+g = goal
+
+=======
+SOUNDS
+=======
+sfx0 31208307
+sfx1 43425507
+sfx2 97896507
+sfx3 12421307
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, Goal
+Player1, Player2, Player3, Player4, Player5, Wall
+
+======
+RULES     
+======
+[ > Player4 | | no Player ] -> [ > Player1 | | Wall ] sfx0
+[ > Player3 ] -> [ > Player4 ] sfx1
+[ > Player2 ] -> [ > Player3 ] sfx2
+[ > Player1 ] -> [ > Player2 ] sfx3
+
+[ > Player | Wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+All Player on Goal
+All Target on Wall     
+
+=======     
+LEVELS
+=======
+
+##########
+#..#.....#
+#..#.#...#
+#....#...#
+#.####...#
+#p#....#.#
+###g.....#
+##########
+
+##########
+#oo#.....#
+#..#.#...#
+#....#...#
+#.####...#
+#p#...ooo#
+###g.....#
+##########

@@ -1,0 +1,168 @@
+title Brush Runner
+author Danny Christie
+homepage www.playfulsystems.com
+========
+OBJECTS
+========
+
+Background
+black
+00000
+00000
+00000
+00000
+00000
+
+Wall
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+
+Player
+Brown White
+11...
+110..
+.000.
+..000
+...00
+
+RedBlock
+Red
+00000
+00000
+00000
+00000
+00000
+
+RedTarget
+Red
+.....
+.....
+..0..
+.....
+.....
+
+BlueBlock
+Blue
+00000
+00000
+00000
+00000
+00000
+
+BlueTarget
+Blue
+.....
+.....
+..0..
+.....
+.....
+
+GreenBlock
+Green
+00000
+00000
+00000
+00000
+00000
+
+GreenTarget
+Green
+.....
+.....
+..0..
+.....
+.....
+
+YellowBlock
+Yellow
+00000
+00000
+00000
+00000
+00000
+
+YellowTarget
+Yellow
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+W = Wall
+R = RedBlock
+B = BlueBlock
+G = GreenBlock
+Y = YellowBlock
+E = RedTarget
+L = BlueTarget
+N = GreenTarget
+O = YellowTarget
+
+=======
+SOUNDS
+=======
+
+Player MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+RedBlock, BlueBlock, GreenBlock, YellowBlock
+RedTarget, BlueTarget, GreenTarget, YellowTarget
+Player, Wall
+
+======
+RULES
+======
+
+[ Left Player No RedBlock ] -> [ Left Player RedBlock ]
+
+[ Right Player No GreenBlock ] -> [ Right Player GreenBlock ]
+
+[ Up Player No BlueBlock ] -> [ Up Player BlueBlock ]
+
+[ Down Player No YellowBlock ] -> [ Down Player YellowBlock ]
+
+==============
+WINCONDITIONS
+==============
+
+All RedTarget on RedBlock
+
+All GreenTarget on GreenBlock
+
+All BlueTarget on BlueBlock
+
+All YellowTarget on YellowBlock
+
+=======
+LEVELS
+=======
+wwwwwwwwwww
+wo........w
+w.......e.w
+w...o.....w
+w.........w
+w....p....w
+w..n......w
+w.......l.w
+w....e....w
+wl......n.w
+wwwwwwwwwww
+
+
+

@@ -1,0 +1,464 @@
+title Miner Guy
+author Dennis M.
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+gray
+00000
+00000
+00000
+00000
+00000
+
+Bomb
+blackwhiteyellow
+...1.
+..1..
+.000.
+00000
+.000.
+
+bomb2
+blackwhiteyellowred
+...3.
+..2..
+.000.
+00000
+.000.
+
+Bomb3
+blackwhiteyellow
+.1...
+..1..
+.000.
+00000
+.000.
+
+bomb4
+blackwhiteyellowred
+.3...
+..2..
+.000.
+00000
+.000.
+
+explo1
+whiteredyellow
+00000
+00001
+00012
+00122
+01222
+explo2
+whiteredyellow
+01222
+00122
+00012
+00001
+00000
+
+explo3
+whiteredyellow
+22210
+22100
+21000
+10000
+00000
+explo4
+whiteredyellow
+00000
+10000
+21000
+22100
+22210
+
+explocion
+redyellow
+..0..
+.010.
+01110
+.010.
+..0..
+
+Target1
+whiteRed
+0...0
+.111.
+.101.
+.111.
+0...0
+
+Target2
+whitelightgray
+0...0
+.111.
+.1.1.
+.111.
+0...0
+
+HUD1
+whiteblack
+10000
+00000
+00000
+00000
+00000
+
+HUD2
+whiteblack
+00001
+00000
+00000
+00000
+00000
+
+HUD3
+whiteblack
+00000
+00000
+00000
+00000
+10000
+
+HUD4
+whiteblack
+00000
+00000
+00000
+00000
+00001
+
+Rock
+BROWNBlack
+00000
+01110
+00010
+00110
+00000
+
+Rock2
+greyblack
+11111
+10111
+10101
+10001
+11111
+
+PlayerRight 
+blackdarkblueRedlightredlightgreybrown
+55...
+33444
+2225.
+11.5.
+00...
+
+PlayerDown
+blackdarkblueRedLightredlightgreybrown
+.555.
+.333.
+24442
+22522
+.050.
+
+PlayerLeft
+blackdarkblueRedLightredlightgreybrown
+...55
+44433
+.5222
+.5.11
+...00
+
+PlayerUp
+blackdarkredRedLightredlightgreybrown
+.555.
+.333.
+22222
+21112
+.0.0.
+
+PlayerDead
+blackdarkblueRedLightredlightgreybrown
+..22.
+53215
+5321.
+53215
+..22.
+Cristal
+white
+.....
+00000
+.000.
+..0..
+.....
+
+Topacio
+Red lightgray
+.....
+01110
+00000
+00000
+.....
+
+
+=======
+LEGEND
+=======
+1 = PlayerDown
+2 = PlayerLeft
+3 = PlayerRight
+4 = PlayerUp
+Player = PlayerDown or PlayerRight or PlayerLeft or PlayerUp
+. = Background
+# = rock
+* = Cristal
+@ = Cristal and Target1 
+O = Target1
+t = Target2
+Q = Topacio and Target2
+R = Topacio
+B = bomb
+5 = Rock2
+6 = bomb2
+7 = explocion
+8 = Bomb3
+9 = bomb4
+· = HUD1
+$ = HUD2
+% = HUD3
+& = HUD4
+/ = explo1
+a = explo2
+s = explo3
+d = explo4
+n = PlayerDead
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target1, Target2,  HUD1, hud2, hud3, hud4
+explo1, explo2, explo3, explo4
+Player, PlayerRight,PlayerDown, PlayerLeft, PlayerUp, Rock, Cristal, Topacio, bomb, rock2, bomb2, explocion, bomb3, bomb4, PlayerDead
+
+
+======
+RULES
+======
+
+(bomba1 choca con pared y explota)
+
+[Playerup| bomb |  | rock2] [HUD1][HUD2][HUD3][HUD4 ] -> [  | Playerup | bomb2 | rock2 ] [explo1][explo4][explo2][explo3]
+
+late [player] [bomb2|rock2] -> [Player] [ explocion|rock2] 
+
+[> player | explocion] -> [PlayerDead | ] message You died!
+
+
+[ explocion | Rock2 ][explo1][explo4][explo2][explo3] -> [ | ][HUD1][HUD2][HUD3][HUD4 ]
+
+
+(bomba3 choca con pared y explota)
+
+[Playerdown | bomb3 |  | rock2] [HUD1][HUD2][HUD3][HUD4 ] -> [  | PlayerUp | bomb4 | rock2 ] [explo1][explo4][explo2][explo3]
+
+late [player] [bomb4|rock2] -> [Player] [ explocion|rock2]
+
+[> player | explocion] -> [PlayerDead | ]  message You died!
+
+
+
+[ explocion | Rock2 ] [explo1][explo4][explo2][explo3] -> [ | ] [HUD1][HUD2][HUD3][HUD4 ]
+
+
+(movimientos de personaje y cristales)
+
+RIGHT [ right PlayerRight | Cristal ] -> [ right PlayerRight |  right Cristal ]
+RIGHT [ right PlayerRight | Topacio ] -> [ right PlayerRight |  right Topacio ]
+DOWN [ down PlayerDown | Cristal ] -> [ down PlayerDown | down Cristal ]
+DOWN [ down PlayerDown | Topacio ] -> [ down PlayerDown | down Topacio ]
+left [ left PlayerLeft | Cristal ] -> [ left PlayerLeft | left Cristal ]
+Left [ left PlayerLeft | Topacio ] -> [ left PlayerLeft | left Topacio ]
+UP [ up PlayerUp | Cristal ] -> [ up PlayerUp | up Cristal ]
+UP [ up PlayerUp | Topacio ] -> [ up PlayerUp | up Topacio ]
+
+(personaje mueve bomba)
+
+RIGHT [ right PlayerRight | Bomb ] -> [ right PlayerRight |  right Bomb ]
+
+DOWN [ down PlayerDown | Bomb ] -> [ down PlayerDown | down Bomb ]
+
+left [ left PlayerLeft | Bomb ] -> [ left PlayerLeft | left Bomb ]
+
+UP [ up PlayerUp | Bomb ] -> [ up PlayerUp | up Bomb]
+
+(personaje mueve bomba3)
+
+RIGHT [ right PlayerRight | Bomb3 ] -> [ right PlayerRight |  right Bomb3 ]
+
+DOWN [ down PlayerDown | Bomb3 ] -> [ down PlayerDown | down Bomb3 ]
+
+left [ left PlayerLeft | Bomb3 ] -> [ left PlayerLeft | left Bomb3 ]
+
+UP [ up PlayerUp | Bomb3 ] -> [ up PlayerUp | up Bomb3]
+
+(personaje mueve bomba de una vez, similar al comando de abajo)
+
+left [ > PlayerUp | Bomb ] -> [ left PlayerLeft | left Bomb ]
+left [> Playerright | Bomb ] -> [ left PlayerLeft | left Bomb]
+left [> PlayerDown | Bomb ] -> [ left PlayerLeft | left Bomb]
+
+right [> PlayerDown |Bomb ] -> [ right PlayerRight | right Bomb]
+right [> PlayerLeft | Bomb ] -> [ right PlayerRight | right Bomb]
+right [> PlayerUp | Bomb] -> [ right PlayerRight | right Bomb]
+
+
+up [> PlayerRight | Bomb] -> [up PlayerUp | up Bomb]
+up [> PlayerDown | Bomb] -> [up PlayerUp | up Bomb]
+up [> PlayerLeft | Bomb] -> [up PlayerUp | up Bomb]
+
+down [> PlayerRight | Bomb ] -> [down PlayerDown | down Bomb]
+down [> PlayerUp | Bomb ] -> [down PlayerDown | down Bomb]
+down [> PlayerLeft | Bomb ] -> [down PlayerDown | down Bomb]
+
+(personaje mueve bomba3 de una vez, similar al comando de abajo)
+
+left [ > PlayerUp | Bomb3 ] -> [ left PlayerLeft | left Bomb3 ]
+left [> Playerright | Bomb3 ] -> [ left PlayerLeft | left Bomb3]
+left [> PlayerDown | Bomb3 ] -> [ left PlayerLeft | left Bomb3]
+
+right [> PlayerDown |Bomb3 ] -> [ right PlayerRight | right Bomb3]
+right [> PlayerLeft | Bomb3 ] -> [ right PlayerRight | right Bomb3]
+right [> PlayerUp | Bomb3] -> [ right PlayerRight | right Bomb3]
+
+
+up [> PlayerRight | Bomb3] -> [up PlayerUp | up Bomb3]
+up [> PlayerDown | Bomb3] -> [up PlayerUp | up Bomb3]
+up [> PlayerLeft | Bomb3] -> [up PlayerUp | up Bomb3]
+
+down [> PlayerRight | Bomb3 ] -> [down PlayerDown | down Bomb3]
+down [> PlayerUp | Bomb3 ] -> [down PlayerDown | down Bomb3]
+down [> PlayerLeft | Bomb3 ] -> [down PlayerDown | down Bomb3]
+
+
+(movimientos que al estar en distinta posición mueva la piedra de una vez.)
+
+left [ > PlayerUp | Topacio ] -> [ left PlayerLeft | left topacio ]
+left [> Playerright | Topacio ] -> [ left PlayerLeft | left Topacio]
+left [> PlayerDown | Topacio ] -> [ left PlayerLeft | left Topacio]
+
+left [ > PlayerUp | Cristal ] -> [ left PlayerLeft | left Cristal ]
+left [> Playerright | Cristal ] -> [ left PlayerLeft | left Cristal ]
+left [> PlayerDown | Cristal ] -> [ left PlayerLeft | left Cristal ]
+
+right [> PlayerDown | topacio ] -> [ right PlayerRight | right Topacio]
+right [> PlayerLeft | Topacio ] -> [ right PlayerRight | right Topacio]
+right [> PlayerUp | Topacio ] -> [ right PlayerRight | right Topacio]
+
+right [> PlayerDown | Cristal ] -> [ right PlayerRight | right Cristal]
+right [> PlayerLeft | Cristal ] -> [ right PlayerRight | right Cristal]
+right [> PlayerUp | Cristal] -> [ right PlayerRight | right Cristal]
+
+up [> PlayerRight | Topacio] -> [up PlayerUp | up Topacio]
+up [> PlayerDown | Topacio] -> [up PlayerUp | up Topacio]
+up [> PlayerLeft | Topacio] -> [up PlayerUp | up Topacio]
+
+up [> PlayerRight | Cristal] -> [up PlayerUp | up Cristal]
+up [> PlayerDown | Cristal] -> [up PlayerUp | up Cristal]
+up [> PlayerLeft | Cristal] -> [up PlayerUp | up Cristal]
+
+down [> PlayerRight | Topacio ] -> [down PlayerDown | down Topacio]
+down [> PlayerUp | Topacio ] -> [down PlayerDown | down Topacio]
+down [> PlayerLeft | Topacio ] -> [down PlayerDown | down Topacio]
+
+down [> PlayerRight | Cristal ] -> [down PlayerDown | down Cristal]
+down [> PlayerUp | Cristal ] -> [down PlayerDown | down Cristal]
+down [> PlayerLeft | Cristal ] -> [down PlayerDown | down Cristal]
+
+(cambios de imagen del personaje al moverse)
+
+right [ > PlayerDown ] -> [ right PlayerRight] SFX1
+right [ >  PlayerLeft ] -> [ right PlayerRight ] SFX1
+right [ >  PlayerUp ] -> [right PlayerRight ] SFX1 
+
+left [ >  PlayerRight] -> [ left PlayerLeft] SFX1
+left [ >  PlayerDown] -> [ left PlayerLeft] SFX1
+left [ >  PlayerUp ] -> [ left PlayerLeft] SFX1
+
+up [ >  PlayerRight ] -> [up PlayerUp ] SFX1
+up [ >   PlayerDown ] -> [up PlayerUp ] SFX1
+up [ >  PlayerLeft ] -> [up PlayerUp ] SFX1
+
+down [ > PlayerRight ] -> [down PlayerDown] SFX1
+down [ > PlayerLeft ] -> [down PlayerDown ] SFX1
+down [ >  PlayerUp  ] -> [down PlayerDown  ] SFX1
+
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target2 on Cristal  
+all Target1 on Topacio
+
+=======
+LEVELS
+=======
+message Lets start!
+
+#o##t#
+#.##.#
+#.##.#
+#r##*#
+#....#
+#....#
+#.1..#
+######
+
+message Next round
+
+#########
+#o..#...#
+#..##.r.#
+#.##....#
+#.....###
+#......t#
+####..###
+#..#....#
+#.*.....#
+#.....#1#
+#########
+
+message Careful with bombs!
+
+###############
+#..#...o...#..#
+#.b#.##5##.#..#
+#..#.......#..#
+#.............#
+###.###.###.###
+#.............#
+#.....#.#.....#
+#.*....1....r.#
+#.....#.#.....#
+#.............#
+###.###.###.###
+#.............#
+####.......#..#
+#·$#.##5##.#8.#
+#%&#...t...#..#
+###############
+
+message You won! for now..
+

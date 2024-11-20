@@ -1,0 +1,441 @@
+OBJECTS
+
+BackgroundLIGHTGREEN GREEN11111
+01111
+11101
+11111
+10111
+
+DecoLIGHTGREEN GREEN11101
+11111
+11111
+01111
+11111
+
+TargetDarkBlue.....
+.000.
+.0.0.
+.000.
+.....
+
+WallBROWN DARKBROWN00010
+11111
+01000
+11111
+00010
+
+PlayerUP1Black
+OrangeWhite Blue1..31
+21112
+20002
+.000.
+.3...
+
+PlayerUP2Black
+OrangeWhite Blue13..1
+21112
+20002
+.000.
+...3.
+
+PlayerDP1Black
+OrangeWhite Blue...3.
+.000.
+20002
+21112
+13..1
+
+PlayerDP2Black
+OrangeWhite Blue.3...
+.000.
+20002
+21112
+1..31
+
+PlayerLP1Black
+OrangeWhite Blue122..
+3100.
+.100.
+.1003
+122..
+
+PlayerLP2Black
+OrangeWhite Blue122..
+.1003
+.100.
+3100.
+122..
+
+PlayerRP1Black
+OrangeWhite Blue..221
+3001.
+.001.
+.0013
+..221
+
+PlayerRP2Black
+OrangeWhite Blue..221
+.0013
+.001.
+3001.
+..221
+
+PlayerUW1Black
+OrangeWhite Blue1..3.
+2111.
+20002
+.0002
+.3..1
+
+PlayerUW2Black
+OrangeWhite Blue.3..1
+.1112
+20002
+2000.
+1..3.
+
+PlayerDW1Black
+OrangeWhite Blue1..3.
+2000.
+20002
+.1112
+.3..1
+
+PlayerDW2Black
+OrangeWhite Blue.3..1
+.0002
+20002
+2111.
+1..3.
+
+PlayerLW1Black
+OrangeWhite Blue..221
+3100.
+.100.
+.1003
+122..
+
+PlayerLW2Black
+OrangeWhite Blue122..
+.1003
+.100.
+3100.
+..221
+
+PlayerRW1Black
+OrangeWhite Blue..221
+3001.
+.001.
+.0013
+122..
+
+PlayerRW2Black
+OrangeWhite Blue
+122...0013
+.001.3001.
+..221PlayerUS
+BlackWhite Orange
+......222.
+10001.000.
+.....PlayerDS
+BlackWhite Orange
+......000.
+10001.222.
+.....PlayerLS
+BlackWhite Orange
+..1...200.
+.200..200.
+..1..PlayerRS
+BlackWhite Orange..1..
+.002.
+.002.
+.002.
+..1..
+
+CrateLightbrown Yellow00000
+0...0
+0...0
+0...0
+00000
+
+IceLightblue
+TarDarkgray
+IronBlack.000.
+0...0
+0...0
+0...0
+.000.
+
+BalloonWhite.000.
+0...0
+0...0
+0...0
+.000.
+
+AgainURed.....
+.....
+..0..
+.....
+.....
+
+AgainDDarkred.....
+.....
+..0..
+.....
+.....
+
+
+LEGEND
+
+. = Background
+# = Wall
+> = PlayerRS
+v = PlayerDS
+< = PlayerLS
+^ = PlayerUS
+* = Crate
+@ = Crate or Target
+O = Target
+~ = Ice
+- = Tar
+1 = Crate or Ice
+2 = Crate or Tar
+3 = Target or Ice
+4 = Target or Tar
+5 = Crate or Tar or Target
+6 = Crate or Ice or Target
+7 = PlayerUS or Ice
+, = Deco
+A = Iron
+B = Balloon
+PlayerU1 = PlayerUP1 or PlayerUW1
+PlayerU2 = PlayerUP2 or PLayerUW2 or PlayerUS
+PlayerD1 = PlayerDP1 or PlayerDW1
+PlayerD2 = PlayerDP2 or PLayerDW2 or PlayerDS
+PlayerL1 = PlayerLP1 or PlayerLW1
+PlayerL2 = PlayerLP2 or PLayerLW2 or PlayerLS
+PlayerR1 = PlayerRP1 or PlayerRW1
+PlayerR2 = PlayerRP2 or PLayerRW2 or PlayerRS
+PlayerU = PlayerU1 or PlayerU2
+PlayerD = PlayerD1 or PlayerD2
+PlayerL = PlayerL1 or PlayerL2
+PlayerR = PlayerR1 or PlayerR2
+Player = PlayerU or PlayerD or PlayerL or PlayerR
+Solid = Crate or Wall or Player or Iron or Balloon
+Filler = Crate or Iron or Balloon
+Player1 = PlayerU1 or PlayerD1 or PlayerL1 or PlayerR1
+Player2 = PlayerU2 or PlayerD2 or PlayerL2 or PlayerR2
+Blocker = Crate or Wall or Player or Iron
+IronBlocker = Player or Wall
+
+COLLISIONLAYERS
+
+Background
+Deco
+Ice, Tar
+Target
+Player
+Wall, Crate
+Iron, Balloon
+AgainU
+AgainD
+
+RULES
+
+[ up PlayerU Tar ] -> cancel 
+[ down PlayerD Tar ] -> cancel 
+[ right PlayerR Tar ] -> cancel 
+[ left PlayerL Tar ] -> cancel 
+[ down PlayerU Tar ] -> cancel 
+[ up PlayerD Tar ] -> cancel 
+[ left PlayerR Tar ] -> cancel 
+[ right PlayerL Tar ] -> cancel 
+[ left PlayerU Ice ] -> cancel 
+[ right PlayerU Ice ] -> cancel 
+[ left PlayerD Ice ] -> cancel 
+[ right PlayerD Ice ] -> cancel 
+[ up PlayerL Ice ] -> cancel 
+[ down PlayerL Ice ] -> cancel 
+[ up PlayerR Ice ] -> cancel 
+[ down PlayerR Ice ] -> cancel 
+[ right Player2 Background ] -> [ right PlayerRW1 ] 
+[ right Player1 Background ] -> [ right PlayerRW2 ] 
+[ left Player2 Background ] -> [ left PlayerLW1 ] 
+[ left Player1 Background ] -> [ left PlayerLW2 ] 
+[ down Player2 Background ] -> [ down PlayerDW1 ] 
+[ down Player1 Background ] -> [ down PlayerDW2 ] 
+[ up Player2 Background ] -> [ up PlayerUW1 ] 
+[ up Player1 Background ] -> [ up PlayerUW2 ] 
+[ > PlayerRW1 | Solid ] -> [ > PlayerRP1 | Solid ] 
+[ > PlayerRW2 | Solid ] -> [ > PlayerRP2 | Solid ] 
+[ > PlayerLW1 | Solid ] -> [ > PlayerLP1 | Solid ] 
+[ > PlayerLW2 | Solid ] -> [ > PlayerLP2 | Solid ] 
+[ > PlayerUW1 | Solid ] -> [ > PlayerUP1 | Solid ] 
+[ > PlayerUW2 | Solid ] -> [ > PlayerUP2 | Solid ] 
+[ > PlayerDW1 | Solid ] -> [ > PlayerDP1 | Solid ] 
+[ > PlayerDW2 | Solid ] -> [ > PlayerDP2 | Solid ] 
+[ > Player | Filler ] -> [ > Player | >Filler ] 
+[ no Background ] -> [ Background ] 
+[ > Solid ] -> [ > Solid>Background ] 
+[ > Background |  ] -> [ Background |  ] 
+[ > PlayerRW1>Background ] -> [ > PlayerRP1 Background ] 
+[ > PlayerRW2>Background ] -> [ > PlayerRP2 Background ] 
+[ > PlayerLW1>Background ] -> [ > PlayerLP1 Background ] 
+[ > PlayerLW2>Background ] -> [ > PlayerLP2 Background ] 
+[ > PlayerUW1>Background ] -> [ > PlayerUP1 Background ] 
+[ > PlayerUW2>Background ] -> [ > PlayerUP2 Background ] 
+[ > PlayerDW1>Background ] -> [ > PlayerDP1 Background ] 
+[ > PlayerDW2>Background ] -> [ > PlayerDP2 Background ] 
+startloop
+[ > Solid | stationaryBalloon ] -> [ > Solid | >Balloon ] 
+[ > Iron | stationaryFiller ] -> [ > Iron | >Filler ] 
+endloop
+[ AgainD no Iron ] -> [  ] 
+down [ down Iron no AgainD | noIronBlocker ] -> [ down Iron down AgainD |  ] 
+[ Iron AgainD | noIronBlocker ] -> [ down Iron down AgainD |  ] 
+down [ > Iron AgainD | Iron | noIronBlocker ] -> [ > Iron>AgainD | >Iron>AgainD |  ] 
+down [ > Iron AgainD | FillernoIron | Blocker ] -> [ Iron | Filler | Blocker ] 
+[ stationary AgainD ] -> [  ] 
+down [ > AgainD | IronBlocker ] -> [ |IronBlocker ] 
+[ down AgainD ] -> again 
+startloop
+[ > Solid | stationaryBalloon ] -> [ > Solid | >Balloon ] 
+[ > Iron | stationaryFiller ] -> [ > Iron | >Filler ] 
+endloop
+[ AgainU no Balloon ] -> [  ] 
+up [ up Balloon no AgainU | noBlocker ] -> [ up Balloon up AgainU |  ] 
+[ Balloon AgainU | noCratenoBlocker ] -> [ up Balloon up AgainU |  ] 
+up [ > Balloon AgainU | Balloon | noBlocker ] -> [ > Balloon>AgainU | >Balloon>AgainU |  ] 
+[ stationary AgainU ] -> [  ] 
+up [ > AgainU | Blocker ] -> [ |Blocker ] 
+[ up AgainU ] -> again 
+[ > Player Tar | Wall ] -> cancel 
+[ > Player Tar][>Solid | Wall ] -> cancel 
+[ > Player Tar][>Balloon | Crate ] -> cancel 
+[ > Player Tar][>Crate | Iron ] -> cancel 
+[ > Player Tar][>Balloon | Iron ] -> cancel 
+[ > Player Tar][>Crate | Crate ] -> cancel 
+[ > Player no Ice no Tar ] -> [ > Player ] 
+[ > Player Ice ] -> [ > Player Ice ] 
+[ > Player Tar ] -> [ > Player Tar ] 
+
+
+WINCONDITIONS
+
+All Target on Filler
+No AgainU
+No AgainD
+some target
+some player
+
+LEVELS
+
+#########
+
+#.~~~~~.#
+#.~~1~~o#
+#o~~1~~.#
+#>~~~~~.#
+#########
+
+######-
+#vo..##
+#-2-2-#
+##..o.#
+-######
+
+#######
+#o.~.o#
+#.~1~.#
+#~1~1~#
+#.~1~<#
+#o.~.o#
+#######
+
+########
+
+##.--.##
+#.o-2o.#
+#-2-#---
+#--#-2--
+#.o2-o.#
+##^--.##
+########
+
+########
+
+##.--.##
+#.o-2o.#
+#-2-~--#
+#--~-2-#
+#.o2-o.#
+##^--.##
+########
+
+########
+
+##.--.##
+#.o-2o.#
+#-2~~--#
+#--~~2-#
+#.o2-o.#
+##^--.##
+########
+
+v###-~~-~.
+.~~~~~~-~.
+.#-~31~~#.
+.#~####~#.
+.#~~13~-#.
+.~-~~~~~~.
+.~-~~-###.
+
+#,,#..
+,~3,.<
+,~~#,#
+,6~~~,
+,~~1~,
+,~~#,#
+#,,,..
+
+#######.
+
+#..#..#.
+>a*...#.
+#.....#.
+#,,,####
+#...2oo#
+#...####
+#####...
+
+####..#
+#,.,o.#
+#,.,o.#
+##,#b##
+#,.,b.#
+#,.,..<
+#######
+
+########-####
+
+.,.....**...,
+##a#####-##,#
+~#*#........#
+~#b#.b##.b..#
+##o#.#...#.##
+..3..#.a##.#~
+.#o#.#.a.#.#~
+.#a#.b...b.#~
+.#*#.......#~
+.#b#########~
+..^#~~~~~~~~~
+
+#####4#
+
+#,.,#4#
+#,a,#4#
+#,.,#-#
+#,.,*-#
+#,b#,,#
+#,...^#
+####,,#

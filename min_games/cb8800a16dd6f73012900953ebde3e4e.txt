@@ -1,0 +1,295 @@
+OBJECTS
+
+BackgroundDarkblue
+TargetBlack
+......000.
+.0.0..000.
+.....Wall
+LightblueBlue Purple
+0000101112
+0111201112
+12222Player
+PinkRed
+LightgreenGreen Darkgreen
+3222324042
+20.1224142
+32223Crate
+OrangeBrown Lightbrown00001
+00011
+00111
+01111
+11111
+
+CrateSpotBrown Orange
+......001.
+.011..111.
+.....Match
+LightblueBlue
+PurpleLightgreen Green
+0030100312
+3334401422
+12422Blue
+BluePurple Black
+0000102011
+0212101121
+11111Red
+RedDarkred Black
+0000100021
+0212102111
+11111Yellow
+YellowLightbrown Black
+0000100221
+0011102211
+11111Green
+LightgreenGreen Black00001
+02211
+00111
+01221
+11111
+
+PinPink.....
+.....
+..0..
+.....
+.....
+
+FlowPurple.000.
+0...0
+0...0
+0...0
+.000.
+
+LaserUWhite.0.0.
+..0..
+.....
+.....
+.....
+
+LaserLWhite.....
+0....
+.0...
+0....
+.....
+
+LaserDWhite.....
+.....
+.....
+..0..
+.0.0.
+
+LaserRWhite.....
+....0
+...0.
+....0
+.....
+
+RayUWhite.0.0.
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+
+RayLWhite.....
+00000
+.....
+00000
+.....
+
+RayDWhite.0.0.
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+
+RayRWhite
+.....00000
+.....00000
+.....Fragile
+GreyDarkgrey Black
+0020101211
+2212201211
+11211Large
+LightgreyGrey Black00001
+01211
+02221
+01211
+11111
+
+HoleBlack
+
+
+
+LEGEND
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate or Target
+O = Target
+1 = Blue
+2 = Red
+3 = Yellow
+4 = Green
+5 = Match
+A = Blue or Pin
+B = Red or Pin
+C = Yellow or Pin
+D = Green or Pin
+E = Match or Pin
+% = Fragile
++ = Large
+^ = LaserU or Fragile
+< = LaserL or Fragile
+v = LaserD or Fragile
+> = LaserR or Fragile
+_ = Hole
+Color = Blue or Red or Yellow or Green or Match
+Block = Crate or Color or Fragile or Large
+Midlayer = Block or Player or Wall
+Laserproof = Color or Crate or Large or Wall
+Laser = LaserU or LaserL or LaserD or LaserR
+Ray = RayU or RayL or RayD or RayR
+
+COLLISIONLAYERS
+
+Flow
+Background
+Hole
+Target
+Player
+Wall, Block
+CrateSpot
+Laser
+Pin
+RayU
+RayL
+RayD
+RayR
+
+RULES
+
+[ > Player | BlocknoPin ] -> [ > Player | >Block ] (standard sokobanning... pin is usually only used on ane specific color of block in sokofun, but this opens up more design opportunities. artistic license? you can always just restrict yourself to placing pins only on blue sokolor blocks) 
+late [ CrateSpot no Crate ] -> [  ] 
+late [ Crate Target ] -> [ Crate Target CrateSpot ] (render the inverted part of the crate) 
+[ > Player | Hole ] -> [ Player | Hole ] (you don't get to go down there) 
+[ > Crate | Hole ] -> [ Crate | Hole ] 
+[ > Color | Hole ] -> [ Color | Hole ] (some blocks simply cannot be pushed into a hole in the original sokofun) 
+late [ Fragile Hole ] -> [ Hole ] (cracked blocks fall into holes without filling them) 
+late [ Laser Hole ] -> [ Hole ] (laser emitters also fall into holes. it's important that lasers are not allowed to fire the turn they fall into a hole) 
+late [ Large Hole ] -> [  ] (large blocks turn holes into floor after falling in) 
+[ Laser>Midlayer ] -> [ > Laser>Midlayer ] (lasers move with their mounts) 
+[ > Player | Ray ] -> [ Player | Ray ] (you can't move into a ray, only the ray can move into you) 
+[ > Player Ray ] -> [ Player Ray ] (once you're in a ray, you're trapped!) 
+late [ Ray ] -> [  ] (rays are re-fired each turn) 
+late up [ LaserU |  ] -> [ LaserU | RayU ] 
+late left [ LaserL |  ] -> [ LaserL | RayL ] 
+late down [ LaserD |  ] -> [ LaserD | RayD ] 
+late right [ LaserR |  ] -> [ LaserR | RayR ] (fire rays from laser emitters) 
+startloop
+late [ Ray Fragile ] -> [ Ray ] (rays destroy fragile blocks) 
+late [ Ray Laserproof ] -> [ Laserproof ] (rays cannot be on top of laserproof objects) 
+late up [ RayU | noLaserproof ] -> [ RayU | RayU ] 
+late left [ RayL | noLaserproof ] -> [ RayL | RayL ] 
+late down [ RayD | noLaserproof ] -> [ RayD | RayD ] 
+late right [ RayR | noLaserproof ] -> [ RayR | RayR ] (rays try to advance) 
+endloop
+late [ Laser no Midlayer ] -> [  ] (laser emitters must be mounted on something. again, i am allowing for more freedom than was in the original game by letting the emitter be mounted on any midlayer object.) 
+late up [ no LaserU no RayU | RayU ] -> [ | ] 
+late left [ no LaserL no RayL | RayL ] -> [ | ] 
+late down [ no LaserD no RayD | RayD ] -> [ | ] 
+late right [ no LaserR no RayR | RayR ] -> [ | ] (clean up rays from destroyed laser emitters) 
+late [ Player Ray ] -> [ Player Ray ] (sound plays if player moved into a ray) 
+[ Flow ] -> [  ] ("flow" is recalculated each turn) 
+random [ > Block][Blue ] -> [ > Block][BlueFlow ] 
+random [ > Block][Red ] -> [ > Block][RedFlow ] 
+random [ > Block][Yellow ] -> [ > Block][YellowFlow ] 
+random [ > Block][Green ] -> [ > Block][GreenFlow ] 
+random [ > Block][Match ] -> [ > Block][MatchFlow ] (flow is spawned on a random color block for each color in the level. this check is only started when a block is pushed, as to eliminate unneeded checks... still wonder if this could be reduced to 1 rule) 
+[ Flow>Block ] -> [ > Flow>Block ] (flow moves with moving blocks, so that it can not be left behind and turn what should be a winning push into a mysterious "nothing is happening!" scenario) 
+late [ Flow Blue | Blue ] -> [ Flow Blue | FlowBlue ] 
+late [ Flow Red | Red ] -> [ Flow Red | FlowRed ] 
+late [ Flow Yellow | Yellow ] -> [ Flow Yellow | FlowYellow ] 
+late [ Flow Green | Green ] -> [ Flow Green | FlowGreen ] 
+late [ Flow Match | Match ] -> [ Flow Match | FlowMatch ] (flow "spreads" to adjacent blocks of same color. this repeats until it has no more blocks to spread to. game wins when all blocks on the map can be flowed to from an arbitrary flow placement, i.e. all blocks of the same color are touching) 
+
+
+WINCONDITIONS
+
+All Target on Crate
+All Color on Flow
+No Player on Ray
+
+LEVELS
+
+..####..
+
+###.1###
+#3.1.2.#
+#.3p4.2#
+###4.###
+..####..
+
+########
+
+##..p.##
+##.3..##
+###.#1##
+##.1#.##
+##..3.##
+#3....1#
+########
+
+.#####
+
+.#p#5#
+.#5#.#
+.#.#.#
+.#.#.#
+##.#.#
+#..#.#
+#....#
+###..#
+..####
+
+#########
+#.......#
+#.55555.#
+#.5...5.#
+#..._...#
+##e#%#e##
+#...+...#
+#...p...#
+#########
+
+#########
+
+#...p...#
+#.##5##.#
+#>......#
+##.....##
+#.......#
+#...5...#
+#...#...#
+#.......#
+#########
+
+....#####
+....#.5.#
+#####___#
+#...%%%%#
+#p>5%%%%#
+#...%%%%#
+#.#.%%+.#
+#.^...+.#
+#########
+
+#########
+
+#...#...#
+#.*...*.#
+##.#.#.##
+#..#.#..#
+#..o@o..#
+###.p.###
+..#####..

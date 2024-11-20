@@ -1,0 +1,545 @@
+title Akari 2
+author Cantaloupe
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Wall
+BROWN
+00000
+00000
+00000
+00000
+00000
+
+Glass
+WHITE LIGHTBLUE
+11111
+01111
+11101
+11111
+10111
+
+GlassH
+WHITE LIGHTBLUE
+11111
+01010
+10101
+01010
+10111
+
+GlassV
+WHITE LIGHTBLUE
+10101
+01011
+10101
+11011
+10101
+
+PlayerN
+DARKBROWN DARKGREEN BLACK
+..0..
+.111.
+01110
+02220
+.2.2.
+
+PlayerE
+DARKBROWN DARKGREEN BLACK
+..0..
+.101.
+.011.
+.202.
+..2..
+
+PlayerS
+DARKBROWN DARKGREEN BLACK
+..0..
+.101.
+01110
+02220
+.2.2.
+
+PlayerW
+DARKBROWN DARKGREEN BLACK
+..0..
+.101.
+.110.
+.202.
+..2..
+
+PlayerHoldingN
+DARKBROWN DARKGREEN BLACK
+..0..
+01110
+01110
+.222.
+.2.2.
+
+PlayerHoldingE
+DARKBROWN DARKGREEN BLACK
+..0..
+.101.
+.011.
+.200.
+..2..
+
+PlayerHoldingS
+DARKBROWN DARKGREEN BLACK
+..0..
+.101.
+01110
+.020.
+.2.2.
+
+PlayerHoldingW
+DARKBROWN DARKGREEN BLACK
+..0..
+.101.
+.110.
+.002.
+..2..
+
+LampActiveNotHeld
+GREY LIGHTBLUE WHITE
+.222.
+20102
+21012
+20102
+.222.
+
+LampActiveHeld
+#7D7D7D #90C2CC WHITE
+.222.
+20102
+21012
+20102
+.222.
+
+LampDeadNotHeld
+GREY #505050
+.....
+.010.
+.101.
+.010.
+.....
+
+LampDeadHeld
+#7D7D7D #404040
+.....
+.010.
+.101.
+.010.
+.....
+
+LightN
+WHITE
+.000.
+.000.
+.000.
+.000.
+.000.
+
+LightE
+WHITE
+.....
+00000
+00000
+00000
+.....
+
+LightS
+WHITE
+.000.
+.000.
+.000.
+.000.
+.000.
+
+LightW
+WHITE
+.....
+00000
+00000
+00000
+.....
+
+LightHitN
+WHITE
+.....
+.....
+.....
+.000.
+.000.
+
+LightHitE
+WHITE
+.....
+00...
+00...
+00...
+.....
+
+LightHitS
+WHITE
+.000.
+.000.
+.....
+.....
+.....
+
+LightHitW
+WHITE
+.....
+...00
+...00
+...00
+.....
+
+ZeroNotDone
+DARKGREY RED
+00000
+01110
+01010
+01110
+00000
+
+ZeroDone
+LIGHTGREY RED
+00000
+01110
+01010
+01110
+00000
+
+OneNotDone
+DARKGREY RED
+00000
+00100
+00100
+00100
+00000
+
+OneDone
+LIGHTGREY RED
+00000
+00100
+00100
+00100
+00000
+
+TwoNotDone
+DARKGREY RED
+00000
+01100
+00100
+00110
+00000
+
+TwoDone
+LIGHTGREY RED
+00000
+01100
+00100
+00110
+00000
+
+ThreeNotDone
+DARKGREY RED
+00000
+01110
+00110
+01110
+00000
+
+ThreeDone
+LIGHTGREY RED
+00000
+01110
+00110
+01110
+00000
+
+FourNotDone
+DARKGREY RED
+00000
+01010
+01110
+00010
+00000
+
+FourDone
+LIGHTGREY RED
+00000
+01010
+01110
+00010
+00000
+
+CounterZero
+TRANSPARENT
+CounterOne
+TRANSPARENT
+CounterTwo
+TRANSPARENT
+CounterThree
+TRANSPARENT
+CounterFour
+TRANSPARENT
+
+CountedN
+TRANSPARENT
+CountedE
+TRANSPARENT
+CountedS
+TRANSPARENT
+CountedW
+TRANSPARENT
+
+=======
+LEGEND
+=======
+
+
+
+. = Background
+# = Wall
+% = Glass
+P = PlayerS
+L = LampActiveNotHeld
+0 = ZeroNotDone
+1 = OneNotDone
+2 = TwoNotDone
+3 = ThreeNotDone
+4 = FourNotDone
+
+PlayerNotHolding = PlayerN or PlayerE or PlayerS or PlayerW
+PlayerHolding = PlayerHoldingN or PlayerHoldingE or PlayerHoldingS or PlayerHoldingW
+Player = PlayerNotHolding or PlayerHolding
+
+LampActive = LampActiveNotHeld or LampActiveHeld
+LampDead = LampDeadNotHeld or LampDeadHeld
+LampNotHeld = LampActiveNotHeld or LampDeadNotHeld
+LampHeld = LampActiveHeld or LampDeadHeld
+
+
+Light = LightN or LightE or LightS or LightW
+LightHit = LightHitN or LightHitE or LightHitS or LightHitW
+Counter = CounterZero or CounterOne or CounterTwo or CounterThree or CounterFour
+Counted = CountedN or CountedE or CountedS or CountedW
+
+Zero  = ZeroNotDone  or ZeroDone
+One   = OneNotDone   or OneDone
+Two   = TwoNotDone   or TwoDone
+Three = ThreeNotDone or ThreeDone
+Four  = FourNotDone  or FourDone
+ReceptorNotDone = ZeroNotDone or OneNotDone or TwoNotDone or ThreeNotDone or FourNotDone
+Receptor = Zero or One or Two or Three or Four
+
+AllGlass = Glass or GlassH or GlassV
+BlocksLight = Wall or LampDead or Receptor or Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+LightN, LightHitN
+LightE, LightHitE
+LightS, LightHitS
+LightW, LightHitW
+Player, Wall, AllGlass, LampActive, LampDead, Receptor
+
+CountedN
+CountedE
+CountedS
+CountedW
+Counter
+
+======
+RULES
+======
+
+UP    [> PlayerNotHolding] -> [> PlayerN]
+RIGHT [> PlayerNotHolding] -> [> PlayerE]
+DOWN  [> PlayerNotHolding] -> [> PlayerS]
+LEFT  [> PlayerNotHolding] -> [> PlayerW]
+
+(picking up lamp)
+UP    [action PlayerN | LampActiveNotHeld] -> [PlayerHoldingN | LampActiveHeld]
+RIGHT [action PlayerE | LampActiveNotHeld] -> [PlayerHoldingE | LampActiveHeld]
+DOWN  [action PlayerS | LampActiveNotHeld] -> [PlayerHoldingS | LampActiveHeld]
+LEFT  [action PlayerW | LampActiveNotHeld] -> [PlayerHoldingW | LampActiveHeld]
+UP    [action PlayerN | LampDeadNotHeld] -> [PlayerHoldingN | LampDeadHeld]
+RIGHT [action PlayerE | LampDeadNotHeld] -> [PlayerHoldingE | LampDeadHeld]
+DOWN  [action PlayerS | LampDeadNotHeld] -> [PlayerHoldingS | LampDeadHeld]
+LEFT  [action PlayerW | LampDeadNotHeld] -> [PlayerHoldingW | LampDeadHeld]
+
+(dropping lamp)
+UP    [action PlayerHoldingN | LampActiveHeld] -> [PlayerN | LampActiveNotHeld]
+RIGHT [action PlayerHoldingE | LampActiveHeld] -> [PlayerE | LampActiveNotHeld]
+DOWN  [action PlayerHoldingS | LampActiveHeld] -> [PlayerS | LampActiveNotHeld]
+LEFT  [action PlayerHoldingW | LampActiveHeld] -> [PlayerW | LampActiveNotHeld]
+UP    [action PlayerHoldingN | LampDeadHeld] -> [PlayerN | LampDeadNotHeld]
+RIGHT [action PlayerHoldingE | LampDeadHeld] -> [PlayerE | LampDeadNotHeld]
+DOWN  [action PlayerHoldingS | LampDeadHeld] -> [PlayerS | LampDeadNotHeld]
+LEFT  [action PlayerHoldingW | LampDeadHeld] -> [PlayerW | LampDeadNotHeld]
+
+[> PlayerHolding | STATIONARY BlocksLight no LampHeld] -> [PlayerHolding | BlocksLight]
+[> PlayerHolding | LampActiveNotHeld] -> [PlayerHolding | LampActiveNotHeld]
+[MOVING PlayerHolding | LampHeld] -> [MOVING PlayerHolding | MOVING LampHeld]
+[> LampHeld | STATIONARY BlocksLight] -> [LampHeld | BlocksLight]
+[MOVING PlayerHolding | STATIONARY LampHeld] -> [STATIONARY PlayerHolding | LampHeld]
+
+(casting lights)
+(first pass, checking for lamps that should be dead)
+late [Light] -> []
+late [LightHit] -> []
+  late UP    [LampActive | no BlocksLight] -> [LampActive | LightN]
++ late RIGHT [LampActive | no BlocksLight] -> [LampActive | LightE]
++ late DOWN  [LampActive | no BlocksLight] -> [LampActive | LightS]
++ late LEFT  [LampActive | no BlocksLight] -> [LampActive | LightW]
++ late       [LampActiveNotHeld Light]     -> [LampDeadNotHeld]
++ late       [LampActiveHeld    Light]     -> [LampDeadHeld]
+
+  late UP    [LightN | no BlocksLight] -> [LightN | LightN]
++ late RIGHT [LightE | no BlocksLight] -> [LightE | LightE]
++ late DOWN  [LightS | no BlocksLight] -> [LightS | LightS]
++ late LEFT  [LightW | no BlocksLight] -> [LightW | LightW]
++ late       [LampActiveNotHeld Light] -> [LampDeadNotHeld]
++ late       [LampActiveHeld    Light] -> [LampDeadHeld]
+
+(second pass, actual lightcasting)
+late [Light]    -> []
+late [LightHit] -> []
+  late UP    [LampActive | no BlocksLight] -> [LampActive | LightN]
++ late RIGHT [LampActive | no BlocksLight] -> [LampActive | LightE]
++ late DOWN  [LampActive | no BlocksLight] -> [LampActive | LightS]
++ late LEFT  [LampActive | no BlocksLight] -> [LampActive | LightW]
++ late UP    [LampActive | BlocksLight] -> [LampActive | BlocksLight LightHitN]
++ late RIGHT [LampActive | BlocksLight] -> [LampActive | BlocksLight LightHitE]
++ late DOWN  [LampActive | BlocksLight] -> [LampActive | BlocksLight LightHitS]
++ late LEFT  [LampActive | BlocksLight] -> [LampActive | BlocksLight LightHitW]
+
+  late UP    [LightN | no BlocksLight] -> [LightN | LightN]
++ late RIGHT [LightE | no BlocksLight] -> [LightE | LightE]
++ late DOWN  [LightS | no BlocksLight] -> [LightS | LightS]
++ late LEFT  [LightW | no BlocksLight] -> [LightW | LightW]
+  late UP    [LightN | BlocksLight] -> [LightN | BlocksLight LightHitN]
++ late RIGHT [LightE | BlocksLight] -> [LightE | BlocksLight LightHitE]
++ late DOWN  [LightS | BlocksLight] -> [LightS | BlocksLight LightHitS]
++ late LEFT  [LightW | BlocksLight] -> [LightW | BlocksLight LightHitW]
+
+(glass)
+late [AllGlass LightN] -> [GlassV]
+late [AllGlass LightE] -> [GlassH]
+late [AllGlass LightS] -> [GlassV]
+late [AllGlass LightW] -> [GlassH]
+
+(counting lights hitting receptors)
+late [Receptor] -> [Receptor CounterZero]
+
+late UP    [CounterZero | LightS no CountedS] -> [CounterOne | LightS CountedS]
+late RIGHT [CounterZero | LightW no CountedW] -> [CounterOne | LightW CountedW]
+late DOWN  [CounterZero | LightN no CountedN] -> [CounterOne | LightN CountedN]
+late LEFT  [CounterZero | LightE no CountedE] -> [CounterOne | LightE CountedE]
+late UP    [CounterZero | LampActive no CountedS] -> [CounterOne | LampActive CountedS]
+late RIGHT [CounterZero | LampActive no CountedW] -> [CounterOne | LampActive CountedW]
+late DOWN  [CounterZero | LampActive no CountedN] -> [CounterOne | LampActive CountedN]
+late LEFT  [CounterZero | LampActive no CountedE] -> [CounterOne | LampActive CountedE]
+
+late UP    [CounterOne | LightS no CountedS] -> [CounterTwo | LightS CountedS]
+late RIGHT [CounterOne | LightW no CountedW] -> [CounterTwo | LightW CountedW]
+late DOWN  [CounterOne | LightN no CountedN] -> [CounterTwo | LightN CountedN]
+late LEFT  [CounterOne | LightE no CountedE] -> [CounterTwo | LightE CountedE]
+late UP    [CounterOne | LampActive no CountedS] -> [CounterTwo | LampActive CountedS]
+late RIGHT [CounterOne | LampActive no CountedW] -> [CounterTwo | LampActive CountedW]
+late DOWN  [CounterOne | LampActive no CountedN] -> [CounterTwo | LampActive CountedN]
+late LEFT  [CounterOne | LampActive no CountedE] -> [CounterTwo | LampActive CountedE]
+
+late UP    [CounterTwo | LightS no CountedS] -> [CounterThree | LightS CountedS]
+late RIGHT [CounterTwo | LightW no CountedW] -> [CounterThree | LightW CountedW]
+late DOWN  [CounterTwo | LightN no CountedN] -> [CounterThree | LightN CountedN]
+late LEFT  [CounterTwo | LightE no CountedE] -> [CounterThree | LightE CountedE]
+late UP    [CounterTwo | LampActive no CountedS] -> [CounterThree | LampActive CountedS]
+late RIGHT [CounterTwo | LampActive no CountedW] -> [COunterThree | LampActive CountedW]
+late DOWN  [CounterTwo | LampActive no CountedN] -> [CounterThree | LampActive CountedN]
+late LEFT  [CounterTwo | LampActive no CountedE] -> [CounterThree | LampActive CountedE]
+
+late UP    [CounterThree | LightS no CountedS] -> [CounterFour | LightS CountedS]
+late RIGHT [CounterThree | LightW no CountedW] -> [CounterFour | LightW CountedW]
+late DOWN  [CounterThree | LightN no CountedN] -> [CounterFour | LightN CountedN]
+late LEFT  [CounterThree | LightE no CountedE] -> [CounterFour | LightE CountedE]
+late UP    [CounterThree | LampActive no CountedS] -> [CounterFour | LampActive CountedS]
+late RIGHT [CounterThree | LampActive no CountedW] -> [CounterFour | LampActive CountedW]
+late DOWN  [CounterThree | LampActive no CountedN] -> [CounterFour | LampActive CountedN]
+late LEFT  [CounterThree | LampActive no CountedE] -> [CounterFour | LampActive CountedE]
+
+(updating receptors)
+late [Zero  CounterZero]  -> [ZeroDone]
+late [One   CounterOne]   -> [OneDone]
+late [Two   CounterTwo]   -> [TwoDone]
+late [Three CounterThree] -> [ThreeDone]
+late [Four  CounterFour]  -> [FourDone]
+late [Zero  Counter] -> [ZeroNotDone]
+late [One   Counter] -> [OneNotDone]
+late [Two   Counter] -> [TwoNotDone]
+late [Three Counter] -> [ThreeNotDone]
+late [Four  Counter] -> [FourNotDone]
+late [Counted] -> []
+
+==============
+WINCONDITIONS
+==============
+
+no ReceptorNotDone
+
+=======
+LEVELS
+=======
+...1...
+.......
+.......
+1P.L..0
+.......
+.......
+...1...
+
+
+message <action> to grip a lamp
+.......
+..l....
+.l#l#..
+..lp...
+..#.4..
+.......
+.......
+
+...3.
+2.P..
+.....
+#.#1.
+..l..
+.l#l.
+
+...1...
+.P.....
+..#%#..
+0.%l%.0
+..#%#..
+.......
+...0...

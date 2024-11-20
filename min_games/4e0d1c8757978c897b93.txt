@@ -1,0 +1,241 @@
+OBJECTS
+
+backgroundgrey
+TargetDarkBlue.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall#313131
+PlayerBlack
+OrangeWhite
+Blue.000.
+.111.22222
+.333..3.3.
+pumpkingreen
+blackorange #d05502..0..
+23232
+23232
+23232
+23232
+
+splashorange.0.0.
+..00.
+00000
+.000.
+.0..0
+
+grass,darkgreen
+gravegrey darkgrey
+.......0..
+.111..010.
+.000.animatepumpkin
+ogreen
+blackorange #d05502..0..
+23232
+23232
+23232
+23232
+
+pumpkintempletwhite.....
+.....
+.....
+.....
+.....
+
+animatePlayerBlack
+OrangeWhite Blue.000.
+.111.
+22222
+.333.
+.3.3.
+
+statplayer'Black
+OrangeWhite Blue
+.000..111.
+22222.333.
+.3.3.BlockL
+alightgrey #21abfe00000
+01000
+11110
+01000
+00000
+
+movingblockLlightgrey #21abfe
+0000001000
+1111001000
+00000BlockR
+dlightgrey #21abfe00000
+00010
+01111
+00010
+00000
+
+movingblockRlightgrey #21abfe
+0000000010
+0111100010
+00000BlockU
+wlightgrey #21abfe00100
+01110
+00100
+00100
+00000
+
+movingblockUlightgrey #21abfe
+0010001110
+0010000100
+00000BlockD
+slightgrey #21abfe00000
+00100
+00100
+01110
+00100
+
+movingblockDlightgrey #21abfe
+0000000100
+0010001110
+00100ghost
+gwhite black.000.
+01010
+00000
+00100
+0.0.0
+
+
+LEGEND
+
+¨ = grave
+. = Background
+# = Wall
+P = Player
+0 = pumpkin
+å = animateplayer or grass
+ä = animatepumpkin or grass
+PlayerObs = pumpkin or wall or blockL or blockR or BlockU or BlockD or movingblockL or movingblockR or movingblockU or movingblockD or ghost or splash
+BlockObs = pumpkin or wall or blockL or blockR or BlockU or BlockD or ghost
++ = pumpkintemplet or grass
+
+COLLISIONLAYERS
+
+Background
+grass, splash
+Target
+Player
+Wall, pumpkin
+BlockL, BlockR, BlockU
+blockD, movingblockL, movingblockR
+movingblockU, movingblockd, ghost
+pumpkintemplet, animatepumpkin, statplayer
+grave, animateplayer
+
+RULES
+
+[ > Player | noPlayerObs ] -> [ |>player ] 
+[ player | pumpkin ] -> [ player | splash ] 
+left [ MovingblockL | ghost | noBlockObs ] -> [ |ghost | MovingBlockL ] 
++ left [ MovingblockL | noBlockObs ] -> [ |>MovingblockL ] 
+[ movingblockL ] -> [ BlockL ] 
+right [ MovingblockR | ghost | noBlockObs ] -> [ |ghost | MovingBlockR ] 
++ right [ MovingblockR | noBlockObs ] -> [ |>MovingblockR ] 
+[ movingblockR ] -> [ BlockR ] 
+up [ MovingblockU | ghost | noBlockObs ] -> [ |ghost | MovingBlockU ] 
++ up [ MovingblockU | noBlockObs ] -> [ |>MovingblockU ] 
+[ movingblockU ] -> [ BlockU ] 
+down [ MovingblockD | ghost | noBlockObs ] -> [ |ghost | MovingBlockD ] 
++ down [ MovingblockD | noBlockObs ] -> [ |>MovingblockD ] 
+[ movingblockD ] -> [ BlockD ] 
+[ BlockL | pumpkin ] -> [ BlockL | splash ] 
+[ BlockR | pumpkin ] -> [ BlockR | splash ] 
+[ BlockU | pumpkin ] -> [ BlockU | splash ] 
+[ BlockD | pumpkin ] -> [ BlockD | splash ] 
+[ animateplayer | ... | animatepumpkin ] -> [ > animateplayer | ... | animatepumpkin ] 
+[ pumpkintemplet | animateplayer | pumpkintemplet ] -> [ animatepumpkin | statplayer | animatepumpkin ] again 
+[ animatepumpkin | statplayer | pumpkintemplet ] -> [ animatepumpkin | statplayer | animatepumpkin ] again 
+[ animatepumpkin | statplayer | nopumpkintemplet ] -> win 
+left [ > player | stationaryBlockL ] -> [ player | >MovingBlockL ] 
++ right [ > player | stationaryBlockR ] -> [ player | >MovingBlockR ] 
++ up [ > player | stationaryBlockU ] -> [ player | >MovingBlockU ] 
++ down [ > player | stationaryBlockD ] -> [ player | >MovingBlockD ] 
+
+
+WINCONDITIONS
+
+some splash
+no pumpkin
+
+LEVELS
+
+,,,,,,,,,
+,,¨+¨,¨,,
+,,ä,+,,å,
+,,¨+¨,¨,,
+,,,,,,,,,
+
+#######
+#0..#p#
+#.....#
+#..#..#
+#######
+
+######
+##0..#
+###..#
+##...#
+#...##
+#...p#
+#.#..#
+#....#
+######
+
+############
+
+#.0#...#0..#
+#..........#
+#.#P....#..#
+##.........#
+#..#..#....#
+#.#...##...#
+############
+
+#########
+#....#..#
+#...#p..#
+#.......#
+#...#...#
+#0.g.a..#
+#########
+
+##########
+##0#.....#
+##.#.....#
+#...a...p#
+##########
+
+###########
+
+#.........#
+#w........#
+#p........#
+##.########
+#......#..#
+#.........#
+#.........#
+#.........#
+#.........#
+#.#.......#
+#........##
+#.....0.###
+###########
+
+######0#######
+#....#.#.....#
+#.....g......#
+#......#.....#
+#..#..p.....##
+#......a.....#
+#.......#....#
+#.....w......#
+#......#...#.#
+#.#...##.....#
+##############

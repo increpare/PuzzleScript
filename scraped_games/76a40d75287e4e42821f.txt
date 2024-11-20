@@ -1,0 +1,289 @@
+Title Grunt work of the revolution
+color_palette 7
+run_rules_on_level_start
+========
+OBJECTS
+========
+
+background . 
+darkgrey
+
+(crowd objects.  All of these are treated equally, and only exist for visual appeal)
+play o
+red
+
+p1 
+red darkred
+1....
+0.1..
+..0.1
+.1..0
+.0...
+
+p2
+red darkred
+..1..
+..0.1
+....0
+1..1.
+0..0.
+
+p3
+red darkred
+....0
+.0..1
+.1.0.
+...1.
+.....
+
+p4
+red darkred
+.0...
+.1.0.
+...1.
+0..0.
+1..1.
+
+punder
+red darkred
+.....
+.....
+..0..
+..1..
+.....
+
+marker
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+wall #
+blue blue
+11111
+10001
+10001
+10001
+11111
+
+wallbot
+darkblue
+00000
+.....
+.....
+.....
+.....
+
+(Statue objects)
+statue
+#bbbbbb #779977 #ffffff #ff0000 
+..1..
+.012.
+.010.
+.000.
+.111.
+
+foundation
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+(fallen statues)
+statueR 
+#bbbbbb #779977 #ffffff #99bb99 
+.....
+300..
+1133.
+1012.
+..0..
+
+statueL 
+#bbbbbb #779977 #ffffff #99bb99 
+.....
+..003
+33311
+.2101
+..0..
+
+statueu 
+#bbbbbb #779977 #ffffff #99bb99 
+.3...
+..3..
+.111.
+.000.
+.000.
+
+statued 
+#bbbbbb #779977 #ffffff #99bb99 
+.111.
+.002.
+.010.
+.010.
+..1..
+
+newstatue Y
+#bbbbbb #997777 #ffffff #ff0000 
+..1..
+.012.
+.010.
+.000.
+.111.
+
+level1 1 (this is just to make level one easier)
+black
+=======
+LEGEND
+=======
+X = statue and foundation
+player = p1 or p2 or p3 or p4 
+toppled = statuel or statuer or statued or statueu
+statues = wall or statue or newstatue or toppled
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+level1
+marker
+background
+foundation
+wallbot
+toppled
+punder
+play player wall newstatue statue 
+======
+RULES
+======
+[level1][toppled] -> win
+
+[play] -> [random player](in editor, i can just block in areas of crowd.)
+
+(ensures statue topples nicely)
+Right [> player|statue|no player no wall] -> [|player|statuer]
+Left [> player|statue|no player no wall] -> [|player|statuel]
+Down [> player|statue|no player no wall] -> [|player|statued]
+Up [> player|statue|no player no wall] -> [|player|statueu]
+
+(the crowd pushes the new statue)
+[> player|newstatue] -> [> player| > newstatue]
+[> newstatue | player] -> [newstatue|player] (without hurting others, of course)
+
+(the crowd moves normally when unconstrained, but if pressed against a wall it will "squish" and can be halved in size temporarily this way.  This was to make the gameplay more loose and less precise.  Precision is not what happens in a riot.)
+[> player no punder|no statues no player] ->[|random player] (punder indicates if the crowd is compressed or spread)
+[> player no punder|player no punder] -> [|random player punder]
+[> player punder] -> [random player > punder](if squished and moving, the squish moves instead)
+[> punder|statues] -> [punder|statues]
+
+(controls graphics and letting the crowd uncompress)
+late[punder no player] -> [random player]
+[player marker] -> [random player no marker]
+[marker] -> [no marker]
+
+down[wall|no wall] -> [wall|wallbot](automatic aesthetics)
+late[player no marker] -> [player marker](ditto)
+
+==============
+WINCONDITIONS
+==============
+all foundation on newstatue
+=======
+LEVELS
+=======
+message Topple the old government!
+###########
+#1oo#######
+#.oo#######
+#..####...#
+#..#....x.#
+#..#.##...#
+#....######
+###########
+###########
+
+message Set up the new one!
+
+###########
+#ooo......#
+#oy.......#
+#ooo......#
+#oooo....##
+#oooo..x.##
+#ooo.....##
+#.....#####
+###########
+
+###########
+#oooo######
+#oooo######
+#oooo##...#
+#ooy....x.#
+#oooo##...#
+#oooo######
+#oooo######
+###########
+
+###########
+#ooooooo..#
+#ooooooo..#
+#oo#oo.#..#
+#o.#.x.#..#
+#..#...#..#
+#..y......#
+#.........#
+###########
+
+###########
+#.........#
+#....y....#
+#oooo###..#
+#oooo#.x..#
+#oooo#....#
+#oooo#..###
+#oooo#..###
+#oooo######
+###########
+
+###########
+#oo..##...#
+#oox......#
+#oooo##...#
+#oooo##.y.#
+#######...#
+###########
+
+###########
+#ooooooooo#
+#oooooooyo#
+#ooooooooo#
+#...#######
+#.........#
+#.......x.#
+#.........#
+###########
+
+###########
+#oo########
+#oo####ooo#
+#oo###oooo#
+#ooooooxoo#
+#oo###oooo#
+#oy####ooo#
+#..########
+###########
+
+#############
+#ooo#...#ooo#
+#oyo#....oxo#
+#ooo#...#ooo#
+##o###.###o##
+#ooo#...#ooo#
+#ooo....#ooo#
+#ooo#...#ooo#
+#############

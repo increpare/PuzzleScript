@@ -1,0 +1,639 @@
+title GDD301 Demo Game
+author Edward T. Reyes
+homepage www.playfulsystems.com
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+black
+black
+00000
+00000
+00000
+00000
+00000
+
+Darkness
+black
+00000
+00000
+00000
+00000
+00000
+
+DarkWall
+black
+00000
+00000
+00000
+00000
+00000
+
+DarkInviz
+black
+00000
+00000
+00000
+00000
+00000
+
+InvizWall
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+eyez
+transparent white black #F08A8A
+00100
+01130
+31211
+03110
+00100
+
+eyeBlink
+black white darkblue #F08A8A
+00100
+01130
+31211
+03110
+00100
+
+blink1
+black white black #F08A8A
+00000
+00100
+31211
+00100
+00000
+
+blink2
+black white black #F08A8A
+00000
+00000
+31211
+00000
+00000
+
+blink3
+black white black #F08A8A
+00000
+00000
+00000
+00000
+00000
+
+Floor1a
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Floor2a
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Floor3a
+lightgray red
+11110
+10001
+11110
+10010
+10001
+
+Floor1b
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Floor2b
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Floor3b
+lightgray red
+10001
+10001
+10001
+10001
+01110
+
+Floor1c
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Floor2c
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Floor3c
+lightgray red
+11110
+10001
+10001
+10001
+10001
+
+Wall
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+Wall1
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+Wall2
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+Wall3
+red
+00000
+00000
+00000
+00000
+00000
+
+Wall4
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+Player
+darkblue red
+00000
+01010
+11111
+01110
+00100
+
+Player2
+darkblue green
+00000
+01010
+11111
+01110
+00100
+
+darkPlayer
+darkgray gray
+00000
+01010
+11111
+01110
+00100
+
+darkPlayer2
+darkgray gray
+00000
+01010
+11111
+01110
+00100
+
+Button1
+black gray darkgray red
+02220
+21112
+21312
+21112
+02220
+
+Button2
+black gray darkgray green
+02220
+21112
+21312
+21112
+02220
+
+DarkButton1
+black
+00000
+00000
+00000
+00000
+00000
+
+DarkButton2
+black
+00000
+00000
+00000
+00000
+00000
+
+falseButtone
+black gray darkgray lightgray
+02220
+21112
+21312
+21112
+02220
+
+falseB1
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+falseButtone2
+black gray darkgray lightgray
+02220
+21112
+21312
+21112
+02220
+falseB2
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+falseButtone3
+black gray darkgray lightgray
+02220
+21112
+21312
+21112
+02220
+
+falseB3
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Crate
+orange brown darkbrown
+21112
+10001
+10001
+10001
+21112
+
+Crate2
+orange brown darkbrown
+21112
+10001
+10001
+10001
+21112
+
+NotCrate
+orange
+00000
+00000
+00000
+00000
+00000
+
+nc1
+orange darkbrown
+00011
+00011
+00000
+00000
+00000
+
+nc2
+orange darkbrown
+00001
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+z = black
+, = Darkness
+` = DarkWall
+' = DarkInviz
+- = InvizWall
+0 = eyez
+o = eyeBlink
+\ = blink1
+/ = blink2
+_ = blink3
+d = DarkButton1
+k = DarkButton2
+P = Player
+t = Player2
+q = darkPlayer
+y = darkPlayer2
+1 = Floor1a
+2 = Floor2a
+3 = Floor3a
+4 = Floor1b
+5 = Floor2b
+6 = Floor3b
+7 = Floor1c
+8 = Floor2c
+9 = Floor3c
+W = Wall
+v = Wall1
+a = Wall2
+l = Wall3
+I = Wall4
+c = Crate
++ = Crate2
+< = NotCrate
+* = nc1
+^ = nc2
+B = Button1
+u = Button2
+@ = falseButtone
+# = falseButtone2
+% = falseButtone3
+& = falseB1
+~ = falseB2
+} = falseB3
+
+
+=======
+SOUNDS
+=======
+
+Player MOVE 36772507
+Player CantMove 4123412
+CloseMessage 10779106
+ShowMessage 88044706
+Floor3a create 90755302 
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Darkness, black
+Floor1a,Floor2a,Floor3a,Floor1b,Floor2b,Floor3b,Floor1c,Floor2c,Floor3c
+Button1, Button2, DarkButton1, DarkButton2, falseButtone, falseButtone2, falseButtone3,falseB1, falseB2, falseB3
+Player, Player2, Wall, Wall1, Wall2, Wall3, Wall4, InvizWall, DarkInviz, DarkWall, Crate, Crate2, NotCrate, nc1, nc2, eyez, eyeBlink, blink1, blink2, blink3, darkPlayer, darkPlayer2
+
+
+======
+RULES
+======
+[ > Player ] [ Player2] -> [ > Player ] [ > Player2 ] 
+[ action Player ] [ Player2 ] -> [ > Player ] [  < Player2 ]
+
+[Wall4] -> [Wall] again
+[Wall3] -> [Wall4] again
+[Wall2] -> [Wall3] again
+[Wall1] -> [Wall2] again
+
+[Floor3a] -> [Background] again
+[Floor2a] -> [Floor3a] again
+[Floor1a] -> [Floor2a] again
+
+[Floor3b] -> [Background] again
+[Floor2b] -> [Floor3b] again
+[Floor1b] -> [Floor2b] again
+
+[Floor3c] -> [Background] again
+[Floor2c] -> [Floor3c] again
+[Floor1c] -> [Floor2c] again
+
+[nc2] -> [Crate2]
+[nc1] -> [nc2] 
+[NotCrate] -> [nc1] 
+[Crate2] -> [NotCrate]
+
+[> Player] [eyez] ->  [Player] [Button2] 
+[> Player2] [eyez] ->  [Player2] [Button1] 
+
+[Darkness] -> [Background]
+[DarkWall] -> [Wall]
+
+[darkPlayer] -> [Player]
+[darkPlayer2] -> [Player2]
+
+[blink3] -> [black] 
+[blink2] -> [blink3] 
+[blink1] -> [blink2] 
+[eyeBlink] -> [blink1] 
+
+[> Player | falseButtone] [falseB1] -> [ Player |] [falseButtone2]
+[> Player | falseButtone2] [falseB2] -> [ Player |] [falseButtone3]
+[> Player | falseButtone3] [falseB3] [InvizWall] [InvizWall] -> [ Player |] [Button1] [] []
+
+
+(push)
+([ > Player | Crate ] -> [ > Player | > Crate ])
+([ > Player | Crate | Crate] -> [ > Player | > Crate | > Crate])
+([ > Player | Crate | Crate | Crate ] -> [ Player | | | ])
+([ action Player | Crate ] -> [ Player | > Crate])
+
+
+
+==============
+WINCONDITIONS
+==============
+All Button1 On Player
+All Button2 On Player2
+=======
+LEVELS
+=======
+
+MESSAGE Welcome to my game! Match your blocks with the corresponding buttons!
+
+wwwwwww
+w.b.u.w
+w.....w
+w.....w
+w.p.t.w
+w.....w
+wwwwwww
+
+MESSAGE Use crates to seperate your players!
+
+wwwwwwwww
+w..B.u..w
+w.......w
+w...c...w
+w...p...w
+w...t...w
+wwwwwwwww
+
+MESSAGE That was pretty easy, lets try something tougher!
+
+wwwwwwwww
+wb......w
+w..cccc.w
+w...cuc.w
+w.....c.w
+wt...ccpw
+wwwwwwwww
+
+MESSAGE Try thi   s
+MESSAGE           s
+MESSAGE          s
+MESSAGE       s
+MESSAGE s 1
+
+zzzzzzzzz
+zzzzzzzzz
+zzzzzzzzz
+zzzzqzzzz
+zzzzzzzzz
+zzzzzzzzz
+zzzzzzzzz
+
+MESSAGE
+
+wwwwwwwwww
+w.......uw
+w........w
+w.......tw
+w......c.w
+w.....p..w
+w.B......w
+w.c......w
+w........w
+wwwwwwwwww
+
+MESSAGE Welcome to my game! Match your blocks with the corresponding buttons!
+
+vvvvvvv
+v.b.u.v
+v.....v
+v.p.t.v
+v.147.v
+v.....v
+vvvvvvv
+
+MESSAGE Try three!
+
+zzzzzwwwwwwwwwwwwwwwzzzzz
+zzzzzwp.....wt.....wzzzzz
+zzzzzw..bc..w....c.wzzzzz
+zzzzzw......wu.....wzzzzz
+zzozzwwwwwwwwwwwwwwwzzozz
+zzzzzw.c...........wzzzzz
+zzzzzw......c......wzzzzz
+zzzzzw.u..........twzzzzz
+zzzzzwwwwwwwwwwwwwwwzzzzz
+
+MESSAGE H  ow E  xciting L  ets P  lay!
+MESSAGE              _.             .
+
+ozzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzoz
+zzzzzzozzzzzzzzzzz
+zzzzwwwwwwwwwwzzzz
+zzzzwq......}wzzzz
+zzozw+++.+++.wzzoz
+zzzzw.@+.+~+.wzzzz
+zozzw.+......wzzzz
+zzzzw.+.+.+++wzzzz
+zzzzw.+.+.+u-wzzoz
+zzzzw...+&+-ywzzzz
+zzzowwwwwwwwwwzzzz
+zzzzzzzzzzzzzzozzz
+zozzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzozzzz
+zzzzzozzzzzzzzzzzz
+
+MESSAGE
+
+lll369lll
+369llllll
+369ll369l
+llllol369
+l369lllll
+lllqlylll
+369ll369l
+
+MESSAGE - .... . --. .- -- . .. ... -. --- - .... --- .-.. -.--
+
+w`w`www``
+w0..--.0`
+w.-.---.w
+`.-.....w
+w..--.-.`
+w-.p-t..w
+```www`ww
+
+MESSAGE
+MESSAGE
+MESSAGE
+MESSAGE
+
+6+l9`w3w``o
++w++.--.b`+
+lw.-.---9w_
+l`.-..o..wl
+.w3.--.-.`l
+.6o.q9t..w_
+u``9w+w`w6_
+.99999999._
+
+MESSAGE
+
+vvbvuvv
+v14717v
+v41477v
+v1p4t7v
+v41471v
+v74174v
+vvvvvvv
+
+MESSAGE Thank you for playing!
+
+o

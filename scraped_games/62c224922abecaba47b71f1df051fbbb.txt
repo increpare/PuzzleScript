@@ -1,0 +1,1244 @@
+title Pivotal
+author Thordur Agust
+homepage www.puzzlescript.net
+run_rules_on_level_start
+realtime_interval 0.1
+
+========
+OBJECTS
+========
+
+background
+#E1E1E1
+00000
+00000
+00000
+00000
+00000
+
+blackness
+#272727
+00000
+00000
+00000
+00000
+00000
+
+message1
+#292929
+00000
+00000
+00000
+00000
+00000
+
+message2
+#292929
+00000
+00000
+00000
+00000
+00000
+
+message3
+#292929
+00000
+00000
+00000
+00000
+00000
+
+message4
+#292929
+00000
+00000
+00000
+00000
+00000
+
+exitOpen1
+black white
+.000.
+00100
+01010
+01000
+.011.
+
+exitOpen2
+black white
+.000.
+01100
+10010
+10100
+.000.
+
+exitOpen3
+black white
+.110.
+00010
+01010
+00100
+.000.
+
+
+exitOpen4
+black white
+.000.
+00101
+01001
+00110
+.000.
+
+exitClosed
+grey lightgrey
+.000.
+00100
+01010
+01000
+.011.
+
+
+wall
+#808080
+00000
+00000
+00000
+00000
+00000
+
+net
+#808080
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+player
+#808080
+.....
+.000.
+.0.0.
+.000.
+.....
+
+redSquareNeutral
+red (#E5454E #860418)
+00000
+00000
+00.00
+00000
+00000
+
+redSquareN
+red #E5454E #860418
+00000
+00010
+00.00
+00000
+00000
+
+redSquareE
+red #E5454E #860418
+00000
+00000
+00.00
+00010
+00000
+
+redSquareS
+red #E5454E #860418
+00000
+00000
+00.00
+01000
+00000
+
+redSquareW
+red #E5454E #860418
+00000
+01000
+00.00
+00000
+00000
+
+orangeSquareNeutral
+orange
+00000
+00000
+00.00
+00000
+00000
+
+orangeSquareN
+orange #FFAA51 #CB6804
+00000
+00010
+00.00
+00000
+00000
+
+orangeSquareE
+orange #FFAA51 #CB6804
+00000
+00000
+00.00
+00010
+00000
+
+orangeSquareS
+orange #FFAA51 #CB6804
+00000
+00000
+00.00
+01000
+00000
+
+orangeSquareW
+orange #FFAA51 #CB6804
+00000
+01000
+00.00
+00000
+00000
+
+
+
+badSquareIntersection
+#FF393E
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+badSquareLocation
+white
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+minusX_5
+white
+.....
+.....
+.....
+.....
+00000
+
+minusX_4
+white
+.....
+.....
+.....
+.....
+.0000
+
+minusX_3
+white
+.....
+.....
+.....
+.....
+..000
+
+minusX_2
+white
+.....
+.....
+.....
+.....
+...00
+
+minusX_1
+white
+.....
+.....
+.....
+.....
+....0
+
+X_0
+white
+.....
+.....
+.....
+.....
+.....
+
+X_1
+white
+0....
+.....
+.....
+.....
+.....
+
+X_2
+white
+00...
+.....
+.....
+.....
+.....
+
+X_3
+white
+000..
+.....
+.....
+.....
+.....
+
+X_4
+white
+0000.
+.....
+.....
+.....
+.....
+
+X_5
+white
+00000
+.....
+.....
+.....
+.....
+
+
+minusY_5
+black
+....0
+....0
+....0
+....0
+....0
+
+minusY_4
+black
+....0
+....0
+....0
+....0
+.....
+
+minusY_3
+black
+....0
+....0
+....0
+.....
+.....
+
+minusY_2
+black
+....0
+....0
+.....
+.....
+.....
+
+minusY_1
+black
+....0
+.....
+.....
+.....
+.....
+
+Y_0
+black
+.....
+.....
+.....
+.....
+.....
+
+Y_1
+black
+.....
+.....
+.....
+.....
+0....
+
+Y_2
+black
+.....
+.....
+.....
+0....
+0....
+
+Y_3
+black
+.....
+.....
+0....
+0....
+0....
+
+Y_4
+black
+.....
+0....
+0....
+0....
+0....
+
+Y_5
+black
+0....
+0....
+0....
+0....
+0....
+
+playerConnected
+transparent
+
+redSquareConnected
+transparent
+
+orangeSquareConnected
+yellow
+
+redSquareNewLocation
+green
+
+orangeSquareNewLocation
+blue
+
+redSquareOldLocation
+blue
+
+orangeSquareOldLocation
+transparent
+
+triedToMove
+transparent
+
+fillStartRed
+transparent
+
+firstFillRed
+transparent
+
+fillStartOrange
+transparent
+
+firstFillOrange
+transparent
+
+noOrangeFill
+green
+
+noBadIntersection
+blue
+
+exitOpened
+transparent
+
+paint
+blue
+
+=======
+LEGEND
+=======
+
+. = background
+o = blackness
+○ = message1
+e = exitOpen1
+✹ = exitOpen1 and blackness
+€ = exitOpen1 and redSquareNeutral
+₤ = exitOpen1 and orangeSquareNeutral
+# = wall
+n = net
+P = player
+1 = redSquareNeutral and background
+2 = orangeSquareNeutral and background
+9 = redSquareNeutral and blackness
+8 = orangeSquareNeutral and blackness
+s = player and redSquareNeutral
+$ = player and orangeSquareNeutral
+∇ = net and redSquareNeutral
+∆ = net and orangeSquareNeutral
+
+redSquare = redSquareNeutral or redSquareN or redSquareE or redSquareS or redSquareW
+orangeSquare = orangeSquareNeutral or orangeSquareN or orangeSquareE or orangeSquareS or orangeSquareW
+
+EXIT = exitOpen1 or exitOpen2 or exitOpen3 or exitOpen4
+SQUARE = redSquare or orangeSquare
+CONNECTED = redSquareConnected or orangeSquareConnected or playerConnected
+
+PLUSXAXIS = X_0 or X_1 or X_2 or X_3 or X_4 or X_5
+MINUSXAXIS = minusX_5 or minusX_4 or minusX_3 or minusX_2 or minusX_1 or X_0
+PLUSYAXIS = Y_0 or Y_1 or Y_2 or Y_3 or Y_4 or Y_5
+MINUSYAXIS = minusY_5 or minusY_4 or minusY_3 or minusY_2 or minusY_1 or Y_0
+
+XAXIS = MINUSXAXIS or PLUSXAXIS
+YAXIS = MINUSYAXIS or PLUSYAXIS
+
+=======
+SOUNDS
+=======
+SFX0 74148104
+SFX1 7481104
+SFX2 41871504
+SFX3 67202304
+SFX4 1066707
+CANCEL 91871504
+badSquareIntersection CREATE 91871504
+ENDLEVEL 78855309
+SFX5 96107103
+SFX6 30480703
+SFX7 62293703
+SFX8 81871504
+SFX9 9270700
+
+================
+COLLISIONLAYERS
+================
+
+background
+blackness
+paint
+redSquare
+orangeSquare
+message1, message2, message3, message4
+EXIT, exitClosed
+player, wall, net 
+minusX_5, minusX_4, minusX_3, minusX_2, minusX_1, X_0, X_1, X_2, X_3, X_4, X_5
+minusY_5, minusY_4, minusY_3, minusY_2, minusY_1, Y_0, Y_1, Y_2, Y_3, Y_4, Y_5
+redSquareConnected
+orangeSquareConnected
+playerConnected
+redSquareNewLocation
+orangeSquareNewLocation
+redSquareOldLocation
+orangeSquareOldLocation
+badSquareLocation, badSquareIntersection
+triedToMove
+fillStartRed, firstFillRed, fillStartOrange, firstFillOrange
+noOrangeFill
+noBadIntersection
+exitOpened
+
+======
+RULES
+======
+[ action player ][ badSquareIntersection ] -> CANCEL
+[ action player blackness ] -> CANCEL
+
+[ > player | no SQUARE ] -> [ player triedToMove | ]
+
+
+[ > player | message1 ] -> [ > player | left message1 ] message I feel like something should be here but I don't really know what so I will just give you an account of how I got the idea for this game.
++ [ > player | message2 ] -> [ > player | left message2 ] message Earlier this year I was helping my uncle move to a new appartment. While discussing with my brother about what way you could implement furniture moving in a video game, he mentioned the moving sofa problem, a mathematical problem involving somekind of a two dimensional form with the maximal area that can still move in a right angled corridor.
++ [ > player | message3 ] -> [ > player | left message3 ] message Having done stuff in puzzlescript I thought of an idea where you would stand on top of some shapes and rotate them.
++ [ > player | message4 ] -> [ > player | left message4 ] message And that's how I got the idea! Sorry that this wasn't more profound :p
+
+left [ left message1 | ] -> [ | message2 ]
+left [ left message2 | ] -> [ | message3 ]
+left [ left message3 | ] -> [ | message4 ]
+left [ left message4 | ] -> [ | ]
+
+[ moving player no triedToMove ][ badSquareIntersection ] -> [ moving player ][]
+[ moving player no triedToMove ][ badSquareLocation ] -> [ moving player ][]
+
+random [] -> [ noOrangeFill ]
+random [] -> [ noBadIntersection ]
+
+([ > player | SQUARE ] -> SFX8)
+up [ player | ] -> [ player | X_0 Y_1 ]
+down [ player | ] -> [ player | X_0 minusY_1 ]
+right [ player | ] -> [ player | X_1 Y_0 ]
+left [ player | ] -> [ player | minusX_1 Y_0 ]
+
+
+up [ XAXIS Y_0 | ] -> [ XAXIS Y_0 | XAXIS Y_1 ]
+up [ XAXIS Y_1 | ] -> [ XAXIS Y_1 | XAXIS Y_2 ]
+up [ XAXIS Y_2 | ] -> [ XAXIS Y_2 | XAXIS Y_3 ]
+up [ XAXIS Y_3 | ] -> [ XAXIS Y_3 | XAXIS Y_4 ]
+up [ XAXIS Y_4 | ] -> [ XAXIS Y_4 | XAXIS Y_5 ]
+
+down [ XAXIS Y_0 | ] -> [ XAXIS Y_0 | XAXIS minusY_1 ]
+down [ XAXIS minusY_1 | ] -> [ XAXIS minusY_1 | XAXIS minusY_2 ]
+down [ XAXIS minusY_2 | ] -> [ XAXIS minusY_2 | XAXIS minusY_3 ]
+down [ XAXIS minusY_3 | ] -> [ XAXIS minusY_3 | XAXIS minusY_4 ]
+down [ XAXIS minusY_4 | ] -> [ XAXIS minusY_4 | XAXIS minusY_5 ]
+
+right [ X_0 YAXIS | ] -> [ X_0 YAXIS | X_1 YAXIS ]
+right [ X_1 YAXIS | ] -> [ X_1 YAXIS | X_2 YAXIS ]
+right [ X_2 YAXIS | ] -> [ X_2 YAXIS | X_3 YAXIS ]
+right [ X_3 YAXIS | ] -> [ X_3 YAXIS | X_4 YAXIS ]
+right [ X_4 YAXIS | ] -> [ X_4 YAXIS | X_5 YAXIS ]
+
+left [ X_0 YAXIS | ] -> [ X_0 YAXIS | minusX_1 YAXIS ]
+left [ minusX_1 YAXIS | ] -> [ minusX_1 YAXIS | minusX_2 YAXIS ]
+left [ minusX_2 YAXIS | ] -> [ minusX_2 YAXIS | minusX_3 YAXIS ]
+left [ minusX_3 YAXIS | ] -> [ minusX_3 YAXIS | minusX_4 YAXIS ]
+left [ minusX_4 YAXIS | ] -> [ minusX_4 YAXIS | minusX_5 YAXIS ]
+
+[ action player redSquareN | redSquareN ] -> [ action player redSquareN | redSquareN redSquareConnected ](hmmmm)
+[ action player redSquare | redSquare ] -> [ action player redSquare | redSquare redSquareConnected ]
+[ action player orangeSquare | orangeSquare ] -> [ action player orangeSquare | orangeSquare orangeSquareConnected ]
+
+startloop
+[ redSquare redSquareConnected | redSquare ] -> [ redSquare redSquareConnected | redSquare redSquareConnected ]
+[ orangeSquare orangeSquareConnected | orangeSquare ] -> [ orangeSquare orangeSquareConnected | orangeSquare orangeSquareConnected ]
+endloop
+
+[ action player ][ redSquare redSquareConnected X_0 Y_1 ][ X_1 Y_0 ] -> [ action player ][ redSquareOldLocation X_0 Y_1 ][ redSquareNewLocation X_1 Y_0 ]
+[ action player ][ redSquare redSquareConnected X_1 Y_0 ][ X_0 minusY_1 ] -> [ action player ][ redSquareOldLocation X_1 Y_0 ][ redSquareNewLocation X_0 minusY_1 ]
+[ action player ][ redSquare redSquareConnected X_0 minusY_1 ][ minusX_1 Y_0 ] -> [ action player ][ redSquareOldLocation X_0 minusY_1 ][ redSquareNewLocation minusX_1 Y_0 ]
+[ action player ][ redSquare redSquareConnected minusX_1 Y_0 ][ X_0 Y_1 ] -> [ action player ][ redSquareOldLocation minusX_1 Y_0 ][ redSquareNewLocation X_0 Y_1 ]
+
+[ action player ][ redSquare redSquareConnected X_1 Y_1 ][ X_1 minusY_1 ] -> [ action player ][ redSquareOldLocation X_1 Y_1 ][ redSquareNewLocation X_1 minusY_1 ]
+[ action player ][ redSquare redSquareConnected X_1 minusY_1 ][ minusX_1 minusY_1 ] -> [ action player ][ redSquareOldLocation X_1 minusY_1 ][ redSquareNewLocation minusX_1 minusY_1 ]
+[ action player ][ redSquare redSquareConnected minusX_1 minusY_1 ][ minusX_1 Y_1 ] -> [ action player ][ redSquareOldLocation minusX_1 minusY_1 ][ redSquareNewLocation minusX_1 Y_1 ]
+[ action player ][ redSquare redSquareConnected minusX_1 Y_1 ][ X_1 Y_1 ] -> [ action player ][ redSquareOldLocation minusX_1 Y_1 ][ redSquareNewLocation X_1 Y_1 ]
+
+[ action player ][ redSquare redSquareConnected X_2 Y_1 ][ X_1 minusY_2 ] -> [ action player ][ redSquareOldLocation X_2 Y_1 ][ redSquareNewLocation X_1 minusY_2 ]
+[ action player ][ redSquare redSquareConnected X_1 minusY_2 ][ minusX_2 minusY_1 ] -> [ action player ][ redSquareOldLocation X_1 minusY_2 ][ redSquareNewLocation minusX_2 minusY_1 ]
+[ action player ][ redSquare redSquareConnected minusX_2 minusY_1 ][ minusX_1 Y_2 ] -> [ action player ][ redSquareOldLocation minusX_2 minusY_1 ][ redSquareNewLocation minusX_1 Y_2 ]
+[ action player ][ redSquare redSquareConnected minusX_1 Y_2 ][ X_2 Y_1 ] -> [ action player ][ redSquareOldLocation minusX_1 Y_2 ][ redSquareNewLocation X_2 Y_1 ]
+
+[ action player ][ redSquare redSquareConnected X_3 Y_1 ][ X_1 minusY_3 ] -> [ action player ][ redSquareOldLocation X_3 Y_1 ][ redSquareNewLocation X_1 minusY_3 ]
+[ action player ][ redSquare redSquareConnected X_1 minusY_3 ][ minusX_3 minusY_1 ] -> [ action player ][ redSquareOldLocation X_1 minusY_3 ][ redSquareNewLocation minusX_3 minusY_1 ]
+[ action player ][ redSquare redSquareConnected minusX_3 minusY_1 ][ minusX_1 Y_3 ] -> [ action player ][ redSquareOldLocation minusX_3 minusY_1 ][ redSquareNewLocation minusX_1 Y_3 ]
+[ action player ][ redSquare redSquareConnected minusX_1 Y_3 ][ X_3 Y_1 ] -> [ action player ][ redSquareOldLocation minusX_1 Y_3 ][ redSquareNewLocation X_3 Y_1 ]
+
+[ action player ][ redSquare redSquareConnected X_4 Y_1 ][ X_1 minusY_4 ] -> [ action player ][ redSquareOldLocation X_4 Y_1 ][ redSquareNewLocation X_1 minusY_4 ]
+[ action player ][ redSquare redSquareConnected X_1 minusY_4 ][ minusX_4 minusY_1 ] -> [ action player ][ redSquareOldLocation X_1 minusY_4 ][ redSquareNewLocation minusX_4 minusY_1 ]
+[ action player ][ redSquare redSquareConnected minusX_4 minusY_1 ][ minusX_1 Y_4 ] -> [ action player ][ redSquareOldLocation minusX_4 minusY_1 ][ redSquareNewLocation minusX_1 Y_4 ]
+[ action player ][ redSquare redSquareConnected minusX_1 Y_4 ][ X_4 Y_1 ] -> [ action player ][ redSquareOldLocation minusX_1 Y_4 ][ redSquareNewLocation X_4 Y_1 ]
+
+[ action player ][ redSquare redSquareConnected X_5 Y_1 ][ X_1 minusY_5 ] -> [ action player ][ redSquareOldLocation X_5 Y_1 ][ redSquareNewLocation X_1 minusY_5 ]
+[ action player ][ redSquare redSquareConnected X_1 minusY_5 ][ minusX_5 minusY_1 ] -> [ action player ][ redSquareOldLocation X_1 minusY_5 ][ redSquareNewLocation minusX_5 minusY_1 ]
+[ action player ][ redSquare redSquareConnected minusX_5 minusY_1 ][ minusX_1 Y_5 ] -> [ action player ][ redSquareOldLocation minusX_5 minusY_1 ][ redSquareNewLocation minusX_1 Y_5 ]
+[ action player ][ redSquare redSquareConnected minusX_1 Y_5 ][ X_5 Y_1 ] -> [ action player ][ redSquareOldLocation minusX_1 Y_5 ][ redSquareNewLocation X_5 Y_1 ]
+
+[ action player ][ redSquare redSquareConnected X_0 Y_2 ][ X_2 Y_0 ] -> [ action player ][ redSquareOldLocation X_0 Y_2 ][ redSquareNewLocation X_2 Y_0 ]
+[ action player ][ redSquare redSquareConnected X_2 Y_0 ][ X_0 minusY_2 ] -> [ action player ][ redSquareOldLocation X_2 Y_0 ][ redSquareNewLocation X_0 minusY_2 ]
+[ action player ][ redSquare redSquareConnected X_0 minusY_2 ][ minusX_2 Y_0 ] -> [ action player ][ redSquareOldLocation X_0 minusY_2 ][ redSquareNewLocation minusX_2 Y_0 ]
+[ action player ][ redSquare redSquareConnected minusX_2 Y_0 ][ X_0 Y_2 ] -> [ action player ][ redSquareOldLocation minusX_2 Y_0 ][ redSquareNewLocation X_0 Y_2 ]
+
+[ action player ][ redSquare redSquareConnected X_1 Y_2 ][ X_2 minusY_1 ] -> [ action player ][ redSquareOldLocation X_1 Y_2 ][ redSquareNewLocation X_2 minusY_1 ]
+[ action player ][ redSquare redSquareConnected X_2 minusY_1 ][ minusX_1 minusY_2 ] -> [ action player ][ redSquareOldLocation X_2 minusY_1 ][ redSquareNewLocation minusX_1 minusY_2 ]
+[ action player ][ redSquare redSquareConnected minusX_1 minusY_2 ][ minusX_2 Y_1 ] -> [ action player ][ redSquareOldLocation minusX_1 minusY_2 ][ redSquareNewLocation minusX_2 Y_1 ]
+[ action player ][ redSquare redSquareConnected minusX_2 Y_1 ][ X_1 Y_2 ] -> [ action player ][ redSquareOldLocation minusX_2 Y_1 ][ redSquareNewLocation X_1 Y_2 ]
+
+[ action player ][ redSquare redSquareConnected X_2 Y_2 ][ X_2 minusY_2 ] -> [ action player ][ redSquareOldLocation X_2 Y_2 ][ redSquareNewLocation X_2 minusY_2 ]
+[ action player ][ redSquare redSquareConnected X_2 minusY_2 ][ minusX_2 minusY_2 ] -> [ action player ][ redSquareOldLocation X_2 minusY_2 ][ redSquareNewLocation minusX_2 minusY_2 ]
+[ action player ][ redSquare redSquareConnected minusX_2 minusY_2 ][ minusX_2 Y_2 ] -> [ action player ][ redSquareOldLocation minusX_2 minusY_2 ][ redSquareNewLocation minusX_2 Y_2 ]
+[ action player ][ redSquare redSquareConnected minusX_2 Y_2 ][ X_2 Y_2 ] -> [ action player ][ redSquareOldLocation minusX_2 Y_2 ][ redSquareNewLocation X_2 Y_2 ]
+
+[ action player ][ redSquare redSquareConnected X_3 Y_2 ][ X_2 minusY_3 ] -> [ action player ][ redSquareOldLocation X_3 Y_2 ][ redSquareNewLocation X_2 minusY_3 ]
+[ action player ][ redSquare redSquareConnected X_2 minusY_3 ][ minusX_3 minusY_2 ] -> [ action player ][ redSquareOldLocation X_2 minusY_3 ][ redSquareNewLocation minusX_3 minusY_2 ]
+[ action player ][ redSquare redSquareConnected minusX_3 minusY_2 ][ minusX_2 Y_3 ] -> [ action player ][ redSquareOldLocation minusX_3 minusY_2 ][ redSquareNewLocation minusX_2 Y_3 ]
+[ action player ][ redSquare redSquareConnected minusX_2 Y_3 ][ X_3 Y_2 ] -> [ action player ][ redSquareOldLocation minusX_2 Y_3 ][ redSquareNewLocation X_3 Y_2 ]
+
+[ action player ][ redSquare redSquareConnected X_4 Y_2 ][ X_2 minusY_4 ] -> [ action player ][ redSquareOldLocation X_4 Y_2 ][ redSquareNewLocation X_2 minusY_4 ]
+[ action player ][ redSquare redSquareConnected X_2 minusY_4 ][ minusX_4 minusY_2 ] -> [ action player ][ redSquareOldLocation X_2 minusY_4 ][ redSquareNewLocation minusX_4 minusY_2 ]
+[ action player ][ redSquare redSquareConnected minusX_4 minusY_2 ][ minusX_2 Y_4 ] -> [ action player ][ redSquareOldLocation minusX_4 minusY_2 ][ redSquareNewLocation minusX_2 Y_4 ]
+[ action player ][ redSquare redSquareConnected minusX_2 Y_4 ][ X_4 Y_2 ] -> [ action player ][ redSquareOldLocation minusX_2 Y_4 ][ redSquareNewLocation X_4 Y_2 ]
+
+[ action player ][ redSquare redSquareConnected X_5 Y_2 ][ X_2 minusY_5 ] -> [ action player ][ redSquareOldLocation X_5 Y_2 ][ redSquareNewLocation X_2 minusY_5 ]
+[ action player ][ redSquare redSquareConnected X_2 minusY_5 ][ minusX_5 minusY_2 ] -> [ action player ][ redSquareOldLocation X_2 minusY_5 ][ redSquareNewLocation minusX_5 minusY_2 ]
+[ action player ][ redSquare redSquareConnected minusX_5 minusY_2 ][ minusX_2 Y_5 ] -> [ action player ][ redSquareOldLocation minusX_5 minusY_2 ][ redSquareNewLocation minusX_2 Y_5 ]
+[ action player ][ redSquare redSquareConnected minusX_2 Y_5 ][ X_5 Y_2 ] -> [ action player ][ redSquareOldLocation minusX_2 Y_5 ][ redSquareNewLocation X_5 Y_2 ]
+
+[ action player ][ redSquare redSquareConnected X_0 Y_3 ][ X_3 Y_0 ] -> [ action player ][ redSquareOldLocation X_0 Y_3 ][ redSquareNewLocation X_3 Y_0 ]
+[ action player ][ redSquare redSquareConnected X_3 Y_0 ][ X_0 minusY_3 ] -> [ action player ][ redSquareOldLocation X_3 Y_0 ][ redSquareNewLocation X_0 minusY_3 ]
+[ action player ][ redSquare redSquareConnected X_0 minusY_3 ][ minusX_3 Y_0 ] -> [ action player ][ redSquareOldLocation X_0 minusY_3 ][ redSquareNewLocation minusX_3 Y_0 ]
+[ action player ][ redSquare redSquareConnected minusX_3 Y_0 ][ X_0 Y_3 ] -> [ action player ][ redSquareOldLocation minusX_3 Y_0 ][ redSquareNewLocation X_0 Y_3 ]
+
+[ action player ][ redSquare redSquareConnected X_1 Y_3 ][ X_3 minusY_1 ] -> [ action player ][ redSquareOldLocation X_1 Y_3 ][ redSquareNewLocation X_3 minusY_1 ]
+[ action player ][ redSquare redSquareConnected X_3 minusY_1 ][ minusX_1 minusY_3 ] -> [ action player ][ redSquareOldLocation X_3 minusY_1 ][ redSquareNewLocation minusX_1 minusY_3 ]
+[ action player ][ redSquare redSquareConnected minusX_1 minusY_3 ][ minusX_3 Y_1 ] -> [ action player ][ redSquareOldLocation minusX_1 minusY_3 ][ redSquareNewLocation minusX_3 Y_1 ]
+[ action player ][ redSquare redSquareConnected minusX_3 Y_1 ][ X_1 Y_3 ] -> [ action player ][ redSquareOldLocation minusX_3 Y_1 ][ redSquareNewLocation X_1 Y_3 ]
+
+[ action player ][ redSquare redSquareConnected X_2 Y_3 ][ X_3 minusY_2 ] -> [ action player ][ redSquareOldLocation X_2 Y_3 ][ redSquareNewLocation X_3 minusY_2 ]
+[ action player ][ redSquare redSquareConnected X_3 minusY_2 ][ minusX_2 minusY_3 ] -> [ action player ][ redSquareOldLocation X_3 minusY_2 ][ redSquareNewLocation minusX_2 minusY_3 ]
+[ action player ][ redSquare redSquareConnected minusX_2 minusY_3 ][ minusX_3 Y_2 ] -> [ action player ][ redSquareOldLocation minusX_2 minusY_3 ][ redSquareNewLocation minusX_3 Y_2 ]
+[ action player ][ redSquare redSquareConnected minusX_3 Y_2 ][ X_2 Y_3 ] -> [ action player ][ redSquareOldLocation minusX_3 Y_2 ][ redSquareNewLocation X_2 Y_3 ]
+
+[ action player ][ redSquare redSquareConnected X_3 Y_3 ][ X_3 minusY_3 ] -> [ action player ][ redSquareOldLocation X_3 Y_3 ][ redSquareNewLocation X_3 minusY_3 ]
+[ action player ][ redSquare redSquareConnected X_3 minusY_3 ][ minusX_3 minusY_3 ] -> [ action player ][ redSquareOldLocation X_3 minusY_3 ][ redSquareNewLocation minusX_3 minusY_3 ]
+[ action player ][ redSquare redSquareConnected minusX_3 minusY_3 ][ minusX_3 Y_3 ] -> [ action player ][ redSquareOldLocation minusX_3 minusY_3 ][ redSquareNewLocation minusX_3 Y_3 ]
+[ action player ][ redSquare redSquareConnected minusX_3 Y_3 ][ X_3 Y_3 ] -> [ action player ][ redSquareOldLocation minusX_3 Y_3 ][ redSquareNewLocation X_3 Y_3 ]
+
+[ action player ][ redSquare redSquareConnected X_4 Y_3 ][ X_3 minusY_4 ] -> [ action player ][ redSquareOldLocation X_4 Y_3 ][ redSquareNewLocation X_3 minusY_4 ]
+[ action player ][ redSquare redSquareConnected X_3 minusY_4 ][ minusX_4 minusY_3 ] -> [ action player ][ redSquareOldLocation X_3 minusY_4 ][ redSquareNewLocation minusX_4 minusY_3 ]
+[ action player ][ redSquare redSquareConnected minusX_4 minusY_3 ][ minusX_3 Y_4 ] -> [ action player ][ redSquareOldLocation minusX_4 minusY_3 ][ redSquareNewLocation minusX_3 Y_4 ]
+[ action player ][ redSquare redSquareConnected minusX_3 Y_4 ][ X_4 Y_3 ] -> [ action player ][ redSquareOldLocation minusX_3 Y_4 ][ redSquareNewLocation X_4 Y_3 ]
+
+[ action player ][ redSquare redSquareConnected X_5 Y_3 ][ X_3 minusY_5 ] -> [ action player ][ redSquareOldLocation X_5 Y_3 ][ redSquareNewLocation X_3 minusY_5 ]
+[ action player ][ redSquare redSquareConnected X_3 minusY_5 ][ minusX_5 minusY_3 ] -> [ action player ][ redSquareOldLocation X_3 minusY_5 ][ redSquareNewLocation minusX_5 minusY_3 ]
+[ action player ][ redSquare redSquareConnected minusX_5 minusY_3 ][ minusX_3 Y_5 ] -> [ action player ][ redSquareOldLocation minusX_5 minusY_3 ][ redSquareNewLocation minusX_3 Y_5 ]
+[ action player ][ redSquare redSquareConnected minusX_3 Y_5 ][ X_5 Y_3 ] -> [ action player ][ redSquareOldLocation minusX_3 Y_5 ][ redSquareNewLocation X_5 Y_3 ]
+
+[ action player ][ redSquare redSquareConnected X_0 Y_4 ][ X_4 Y_0 ] -> [ action player ][ redSquareOldLocation X_0 Y_4 ][ redSquareNewLocation X_4 Y_0 ]
+[ action player ][ redSquare redSquareConnected X_4 Y_0 ][ X_0 minusY_4 ] -> [ action player ][ redSquareOldLocation X_4 Y_0 ][ redSquareNewLocation X_0 minusY_4 ]
+[ action player ][ redSquare redSquareConnected X_0 minusY_4 ][ minusX_4 Y_0 ] -> [ action player ][ redSquareOldLocation X_0 minusY_4 ][ redSquareNewLocation minusX_4 Y_0 ]
+[ action player ][ redSquare redSquareConnected minusX_4 Y_0 ][ X_0 Y_4 ] -> [ action player ][ redSquareOldLocation minusX_4 Y_0 ][ redSquareNewLocation X_0 Y_4 ]
+
+[ action player ][ redSquare redSquareConnected X_1 Y_4 ][ X_4 minusY_1 ] -> [ action player ][ redSquareOldLocation X_1 Y_4 ][ redSquareNewLocation X_4 minusY_1 ]
+[ action player ][ redSquare redSquareConnected X_4 minusY_1 ][ minusX_1 minusY_4 ] -> [ action player ][ redSquareOldLocation X_4 minusY_1 ][ redSquareNewLocation minusX_1 minusY_4 ]
+[ action player ][ redSquare redSquareConnected minusX_1 minusY_4 ][ minusX_4 Y_1 ] -> [ action player ][ redSquareOldLocation minusX_1 minusY_4 ][ redSquareNewLocation minusX_4 Y_1 ]
+[ action player ][ redSquare redSquareConnected minusX_4 Y_1 ][ X_1 Y_4 ] -> [ action player ][ redSquareOldLocation minusX_4 Y_1 ][ redSquareNewLocation X_1 Y_4 ]
+
+[ action player ][ redSquare redSquareConnected X_2 Y_4 ][ X_4 minusY_2 ] -> [ action player ][ redSquareOldLocation X_2 Y_4 ][ redSquareNewLocation X_4 minusY_2 ]
+[ action player ][ redSquare redSquareConnected X_4 minusY_2 ][ minusX_2 minusY_4 ] -> [ action player ][ redSquareOldLocation X_4 minusY_2 ][ redSquareNewLocation minusX_2 minusY_4 ]
+[ action player ][ redSquare redSquareConnected minusX_2 minusY_4 ][ minusX_4 Y_2 ] -> [ action player ][ redSquareOldLocation minusX_2 minusY_4 ][ redSquareNewLocation minusX_4 Y_2 ]
+[ action player ][ redSquare redSquareConnected minusX_4 Y_2 ][ X_2 Y_4 ] -> [ action player ][ redSquareOldLocation minusX_4 Y_2 ][ redSquareNewLocation X_2 Y_4 ]
+
+[ action player ][ redSquare redSquareConnected X_3 Y_4 ][ X_4 minusY_3 ] -> [ action player ][ redSquareOldLocation X_3 Y_4 ][ redSquareNewLocation X_4 minusY_3 ]
+[ action player ][ redSquare redSquareConnected X_4 minusY_3 ][ minusX_3 minusY_4 ] -> [ action player ][ redSquareOldLocation X_4 minusY_3 ][ redSquareNewLocation minusX_3 minusY_4 ]
+[ action player ][ redSquare redSquareConnected minusX_3 minusY_4 ][ minusX_4 Y_3 ] -> [ action player ][ redSquareOldLocation minusX_3 minusY_4 ][ redSquareNewLocation minusX_4 Y_3 ]
+[ action player ][ redSquare redSquareConnected minusX_4 Y_3 ][ X_3 Y_4 ] -> [ action player ][ redSquareOldLocation minusX_4 Y_3 ][ redSquareNewLocation X_3 Y_4 ]
+
+[ action player ][ redSquare redSquareConnected X_4 Y_4 ][ X_4 minusY_4 ] -> [ action player ][ redSquareOldLocation X_4 Y_4 ][ redSquareNewLocation X_4 minusY_4 ]
+[ action player ][ redSquare redSquareConnected X_4 minusY_4 ][ minusX_4 minusY_4 ] -> [ action player ][ redSquareOldLocation X_4 minusY_4 ][ redSquareNewLocation minusX_4 minusY_4 ]
+[ action player ][ redSquare redSquareConnected minusX_4 minusY_4 ][ minusX_4 Y_4 ] -> [ action player ][ redSquareOldLocation minusX_4 minusY_4 ][ redSquareNewLocation minusX_4 Y_4 ]
+[ action player ][ redSquare redSquareConnected minusX_4 Y_4 ][ X_4 Y_4 ] -> [ action player ][ redSquareOldLocation minusX_4 Y_4 ][ redSquareNewLocation X_4 Y_4 ]
+
+[ action player ][ redSquare redSquareConnected X_5 Y_4 ][ X_4 minusY_5 ] -> [ action player ][ redSquareOldLocation X_5 Y_4 ][ redSquareNewLocation X_4 minusY_5 ]
+[ action player ][ redSquare redSquareConnected X_4 minusY_5 ][ minusX_5 minusY_4 ] -> [ action player ][ redSquareOldLocation X_4 minusY_5 ][ redSquareNewLocation minusX_5 minusY_4 ]
+[ action player ][ redSquare redSquareConnected minusX_5 minusY_4 ][ minusX_4 Y_5 ] -> [ action player ][ redSquareOldLocation minusX_5 minusY_4 ][ redSquareNewLocation minusX_4 Y_5 ]
+[ action player ][ redSquare redSquareConnected minusX_4 Y_5 ][ X_5 Y_4 ] -> [ action player ][ redSquareOldLocation minusX_4 Y_5 ][ redSquareNewLocation X_5 Y_4 ]
+
+[ action player ][ redSquare redSquareConnected X_0 Y_5 ][ X_5 Y_0 ] -> [ action player ][ redSquareOldLocation X_0 Y_5 ][ redSquareNewLocation X_5 Y_0 ]
+[ action player ][ redSquare redSquareConnected X_5 Y_0 ][ X_0 minusY_5 ] -> [ action player ][ redSquareOldLocation X_5 Y_0 ][ redSquareNewLocation X_0 minusY_5 ]
+[ action player ][ redSquare redSquareConnected X_0 minusY_5 ][ minusX_5 Y_0 ] -> [ action player ][ redSquareOldLocation X_0 minusY_5 ][ redSquareNewLocation minusX_5 Y_0 ]
+[ action player ][ redSquare redSquareConnected minusX_5 Y_0 ][ X_0 Y_5 ] -> [ action player ][ redSquareOldLocation minusX_5 Y_0 ][ redSquareNewLocation X_0 Y_5 ]
+
+[ action player ][ redSquare redSquareConnected X_1 Y_5 ][ X_5 minusY_1 ] -> [ action player ][ redSquareOldLocation X_1 Y_5 ][ redSquareNewLocation X_5 minusY_1 ]
+[ action player ][ redSquare redSquareConnected X_5 minusY_1 ][ minusX_1 minusY_5 ] -> [ action player ][ redSquareOldLocation X_5 minusY_1 ][ redSquareNewLocation minusX_1 minusY_5 ]
+[ action player ][ redSquare redSquareConnected minusX_1 minusY_5 ][ minusX_5 Y_1 ] -> [ action player ][ redSquareOldLocation minusX_1 minusY_5 ][ redSquareNewLocation minusX_5 Y_1 ]
+[ action player ][ redSquare redSquareConnected minusX_5 Y_1 ][ X_1 Y_5 ] -> [ action player ][ redSquareOldLocation minusX_5 Y_1 ][ redSquareNewLocation X_1 Y_5 ]
+
+[ action player ][ redSquare redSquareConnected X_2 Y_5 ][ X_5 minusY_2 ] -> [ action player ][ redSquareOldLocation X_2 Y_5 ][ redSquareNewLocation X_5 minusY_2 ]
+[ action player ][ redSquare redSquareConnected X_5 minusY_2 ][ minusX_2 minusY_5 ] -> [ action player ][ redSquareOldLocation X_5 minusY_2 ][ redSquareNewLocation minusX_2 minusY_5 ]
+[ action player ][ redSquare redSquareConnected minusX_2 minusY_5 ][ minusX_5 Y_2 ] -> [ action player ][ redSquareOldLocation minusX_2 minusY_5 ][ redSquareNewLocation minusX_5 Y_2 ]
+[ action player ][ redSquare redSquareConnected minusX_5 Y_2 ][ X_2 Y_5 ] -> [ action player ][ redSquareOldLocation minusX_5 Y_2 ][ redSquareNewLocation X_2 Y_5 ]
+
+[ action player ][ redSquare redSquareConnected X_3 Y_5 ][ X_5 minusY_3 ] -> [ action player ][ redSquareOldLocation X_3 Y_5 ][ redSquareNewLocation X_5 minusY_3 ]
+[ action player ][ redSquare redSquareConnected X_5 minusY_3 ][ minusX_3 minusY_5 ] -> [ action player ][ redSquareOldLocation X_5 minusY_3 ][ redSquareNewLocation minusX_3 minusY_5 ]
+[ action player ][ redSquare redSquareConnected minusX_3 minusY_5 ][ minusX_5 Y_3 ] -> [ action player ][ redSquareOldLocation minusX_3 minusY_5 ][ redSquareNewLocation minusX_5 Y_3 ]
+[ action player ][ redSquare redSquareConnected minusX_5 Y_3 ][ X_3 Y_5 ] -> [ action player ][ redSquareOldLocation minusX_5 Y_3 ][ redSquareNewLocation X_3 Y_5 ]
+
+[ action player ][ redSquare redSquareConnected X_4 Y_5 ][ X_5 minusY_4 ] -> [ action player ][ redSquareOldLocation X_4 Y_5 ][ redSquareNewLocation X_5 minusY_4 ]
+[ action player ][ redSquare redSquareConnected X_5 minusY_4 ][ minusX_4 minusY_5 ] -> [ action player ][ redSquareOldLocation X_5 minusY_4 ][ redSquareNewLocation minusX_4 minusY_5 ]
+[ action player ][ redSquare redSquareConnected minusX_4 minusY_5 ][ minusX_5 Y_4 ] -> [ action player ][ redSquareOldLocation minusX_4 minusY_5 ][ redSquareNewLocation minusX_5 Y_4 ]
+[ action player ][ redSquare redSquareConnected minusX_5 Y_4 ][ X_4 Y_5 ] -> [ action player ][ redSquareOldLocation minusX_5 Y_4 ][ redSquareNewLocation X_4 Y_5 ]
+
+[ action player ][ redSquare redSquareConnected X_5 Y_5 ][ X_5 minusY_5 ] -> [ action player ][ redSquareOldLocation X_5 Y_5 ][ redSquareNewLocation X_5 minusY_5 ]
+[ action player ][ redSquare redSquareConnected X_5 minusY_5 ][ minusX_5 minusY_5 ] -> [ action player ][ redSquareOldLocation X_5 minusY_5 ][ redSquareNewLocation minusX_5 minusY_5 ]
+[ action player ][ redSquare redSquareConnected minusX_5 minusY_5 ][ minusX_5 Y_5 ] -> [ action player ][ redSquareOldLocation minusX_5 minusY_5 ][ redSquareNewLocation minusX_5 Y_5 ]
+[ action player ][ redSquare redSquareConnected minusX_5 Y_5 ][ X_5 Y_5 ] -> [ action player ][ redSquareOldLocation minusX_5 Y_5 ][ redSquareNewLocation X_5 Y_5 ]
+
+
+[ action player ][ orangeSquare orangeSquareConnected X_0 Y_1 ][ X_1 Y_0 ] -> [ action player ][ orangeSquareOldLocation X_0 Y_1 ][ orangeSquareNewLocation X_1 Y_0 ]
+[ action player ][ orangeSquare orangeSquareConnected X_1 Y_0 ][ X_0 minusY_1 ] -> [ action player ][ orangeSquareOldLocation X_1 Y_0 ][ orangeSquareNewLocation X_0 minusY_1 ]
+[ action player ][ orangeSquare orangeSquareConnected X_0 minusY_1 ][ minusX_1 Y_0 ] -> [ action player ][ orangeSquareOldLocation X_0 minusY_1 ][ orangeSquareNewLocation minusX_1 Y_0 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_1 Y_0 ][ X_0 Y_1 ] -> [ action player ][ orangeSquareOldLocation minusX_1 Y_0 ][ orangeSquareNewLocation X_0 Y_1 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_1 Y_1 ][ X_1 minusY_1 ] -> [ action player ][ orangeSquareOldLocation X_1 Y_1 ][ orangeSquareNewLocation X_1 minusY_1 ]
+[ action player ][ orangeSquare orangeSquareConnected X_1 minusY_1 ][ minusX_1 minusY_1 ] -> [ action player ][ orangeSquareOldLocation X_1 minusY_1 ][ orangeSquareNewLocation minusX_1 minusY_1 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_1 minusY_1 ][ minusX_1 Y_1 ] -> [ action player ][ orangeSquareOldLocation minusX_1 minusY_1 ][ orangeSquareNewLocation minusX_1 Y_1 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_1 Y_1 ][ X_1 Y_1 ] -> [ action player ][ orangeSquareOldLocation minusX_1 Y_1 ][ orangeSquareNewLocation X_1 Y_1 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_2 Y_1 ][ X_1 minusY_2 ] -> [ action player ][ orangeSquareOldLocation X_2 Y_1 ][ orangeSquareNewLocation X_1 minusY_2 ]
+[ action player ][ orangeSquare orangeSquareConnected X_1 minusY_2 ][ minusX_2 minusY_1 ] -> [ action player ][ orangeSquareOldLocation X_1 minusY_2 ][ orangeSquareNewLocation minusX_2 minusY_1 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_2 minusY_1 ][ minusX_1 Y_2 ] -> [ action player ][ orangeSquareOldLocation minusX_2 minusY_1 ][ orangeSquareNewLocation minusX_1 Y_2 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_1 Y_2 ][ X_2 Y_1 ] -> [ action player ][ orangeSquareOldLocation minusX_1 Y_2 ][ orangeSquareNewLocation X_2 Y_1 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_3 Y_1 ][ X_1 minusY_3 ] -> [ action player ][ orangeSquareOldLocation X_3 Y_1 ][ orangeSquareNewLocation X_1 minusY_3 ]
+[ action player ][ orangeSquare orangeSquareConnected X_1 minusY_3 ][ minusX_3 minusY_1 ] -> [ action player ][ orangeSquareOldLocation X_1 minusY_3 ][ orangeSquareNewLocation minusX_3 minusY_1 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_3 minusY_1 ][ minusX_1 Y_3 ] -> [ action player ][ orangeSquareOldLocation minusX_3 minusY_1 ][ orangeSquareNewLocation minusX_1 Y_3 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_1 Y_3 ][ X_3 Y_1 ] -> [ action player ][ orangeSquareOldLocation minusX_1 Y_3 ][ orangeSquareNewLocation X_3 Y_1 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_4 Y_1 ][ X_1 minusY_4 ] -> [ action player ][ orangeSquareOldLocation X_4 Y_1 ][ orangeSquareNewLocation X_1 minusY_4 ]
+[ action player ][ orangeSquare orangeSquareConnected X_1 minusY_4 ][ minusX_4 minusY_1 ] -> [ action player ][ orangeSquareOldLocation X_1 minusY_4 ][ orangeSquareNewLocation minusX_4 minusY_1 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_4 minusY_1 ][ minusX_1 Y_4 ] -> [ action player ][ orangeSquareOldLocation minusX_4 minusY_1 ][ orangeSquareNewLocation minusX_1 Y_4 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_1 Y_4 ][ X_4 Y_1 ] -> [ action player ][ orangeSquareOldLocation minusX_1 Y_4 ][ orangeSquareNewLocation X_4 Y_1 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_5 Y_1 ][ X_1 minusY_5 ] -> [ action player ][ orangeSquareOldLocation X_5 Y_1 ][ orangeSquareNewLocation X_1 minusY_5 ]
+[ action player ][ orangeSquare orangeSquareConnected X_1 minusY_5 ][ minusX_5 minusY_1 ] -> [ action player ][ orangeSquareOldLocation X_1 minusY_5 ][ orangeSquareNewLocation minusX_5 minusY_1 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_5 minusY_1 ][ minusX_1 Y_5 ] -> [ action player ][ orangeSquareOldLocation minusX_5 minusY_1 ][ orangeSquareNewLocation minusX_1 Y_5 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_1 Y_5 ][ X_5 Y_1 ] -> [ action player ][ orangeSquareOldLocation minusX_1 Y_5 ][ orangeSquareNewLocation X_5 Y_1 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_0 Y_2 ][ X_2 Y_0 ] -> [ action player ][ orangeSquareOldLocation X_0 Y_2 ][ orangeSquareNewLocation X_2 Y_0 ]
+[ action player ][ orangeSquare orangeSquareConnected X_2 Y_0 ][ X_0 minusY_2 ] -> [ action player ][ orangeSquareOldLocation X_2 Y_0 ][ orangeSquareNewLocation X_0 minusY_2 ]
+[ action player ][ orangeSquare orangeSquareConnected X_0 minusY_2 ][ minusX_2 Y_0 ] -> [ action player ][ orangeSquareOldLocation X_0 minusY_2 ][ orangeSquareNewLocation minusX_2 Y_0 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_2 Y_0 ][ X_0 Y_2 ] -> [ action player ][ orangeSquareOldLocation minusX_2 Y_0 ][ orangeSquareNewLocation X_0 Y_2 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_1 Y_2 ][ X_2 minusY_1 ] -> [ action player ][ orangeSquareOldLocation X_1 Y_2 ][ orangeSquareNewLocation X_2 minusY_1 ]
+[ action player ][ orangeSquare orangeSquareConnected X_2 minusY_1 ][ minusX_1 minusY_2 ] -> [ action player ][ orangeSquareOldLocation X_2 minusY_1 ][ orangeSquareNewLocation minusX_1 minusY_2 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_1 minusY_2 ][ minusX_2 Y_1 ] -> [ action player ][ orangeSquareOldLocation minusX_1 minusY_2 ][ orangeSquareNewLocation minusX_2 Y_1 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_2 Y_1 ][ X_1 Y_2 ] -> [ action player ][ orangeSquareOldLocation minusX_2 Y_1 ][ orangeSquareNewLocation X_1 Y_2 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_2 Y_2 ][ X_2 minusY_2 ] -> [ action player ][ orangeSquareOldLocation X_2 Y_2 ][ orangeSquareNewLocation X_2 minusY_2 ]
+[ action player ][ orangeSquare orangeSquareConnected X_2 minusY_2 ][ minusX_2 minusY_2 ] -> [ action player ][ orangeSquareOldLocation X_2 minusY_2 ][ orangeSquareNewLocation minusX_2 minusY_2 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_2 minusY_2 ][ minusX_2 Y_2 ] -> [ action player ][ orangeSquareOldLocation minusX_2 minusY_2 ][ orangeSquareNewLocation minusX_2 Y_2 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_2 Y_2 ][ X_2 Y_2 ] -> [ action player ][ orangeSquareOldLocation minusX_2 Y_2 ][ orangeSquareNewLocation X_2 Y_2 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_3 Y_2 ][ X_2 minusY_3 ] -> [ action player ][ orangeSquareOldLocation X_3 Y_2 ][ orangeSquareNewLocation X_2 minusY_3 ]
+[ action player ][ orangeSquare orangeSquareConnected X_2 minusY_3 ][ minusX_3 minusY_2 ] -> [ action player ][ orangeSquareOldLocation X_2 minusY_3 ][ orangeSquareNewLocation minusX_3 minusY_2 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_3 minusY_2 ][ minusX_2 Y_3 ] -> [ action player ][ orangeSquareOldLocation minusX_3 minusY_2 ][ orangeSquareNewLocation minusX_2 Y_3 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_2 Y_3 ][ X_3 Y_2 ] -> [ action player ][ orangeSquareOldLocation minusX_2 Y_3 ][ orangeSquareNewLocation X_3 Y_2 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_4 Y_2 ][ X_2 minusY_4 ] -> [ action player ][ orangeSquareOldLocation X_4 Y_2 ][ orangeSquareNewLocation X_2 minusY_4 ]
+[ action player ][ orangeSquare orangeSquareConnected X_2 minusY_4 ][ minusX_4 minusY_2 ] -> [ action player ][ orangeSquareOldLocation X_2 minusY_4 ][ orangeSquareNewLocation minusX_4 minusY_2 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_4 minusY_2 ][ minusX_2 Y_4 ] -> [ action player ][ orangeSquareOldLocation minusX_4 minusY_2 ][ orangeSquareNewLocation minusX_2 Y_4 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_2 Y_4 ][ X_4 Y_2 ] -> [ action player ][ orangeSquareOldLocation minusX_2 Y_4 ][ orangeSquareNewLocation X_4 Y_2 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_5 Y_2 ][ X_2 minusY_5 ] -> [ action player ][ orangeSquareOldLocation X_5 Y_2 ][ orangeSquareNewLocation X_2 minusY_5 ]
+[ action player ][ orangeSquare orangeSquareConnected X_2 minusY_5 ][ minusX_5 minusY_2 ] -> [ action player ][ orangeSquareOldLocation X_2 minusY_5 ][ orangeSquareNewLocation minusX_5 minusY_2 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_5 minusY_2 ][ minusX_2 Y_5 ] -> [ action player ][ orangeSquareOldLocation minusX_5 minusY_2 ][ orangeSquareNewLocation minusX_2 Y_5 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_2 Y_5 ][ X_5 Y_2 ] -> [ action player ][ orangeSquareOldLocation minusX_2 Y_5 ][ orangeSquareNewLocation X_5 Y_2 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_0 Y_3 ][ X_3 Y_0 ] -> [ action player ][ orangeSquareOldLocation X_0 Y_3 ][ orangeSquareNewLocation X_3 Y_0 ]
+[ action player ][ orangeSquare orangeSquareConnected X_3 Y_0 ][ X_0 minusY_3 ] -> [ action player ][ orangeSquareOldLocation X_3 Y_0 ][ orangeSquareNewLocation X_0 minusY_3 ]
+[ action player ][ orangeSquare orangeSquareConnected X_0 minusY_3 ][ minusX_3 Y_0 ] -> [ action player ][ orangeSquareOldLocation X_0 minusY_3 ][ orangeSquareNewLocation minusX_3 Y_0 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_3 Y_0 ][ X_0 Y_3 ] -> [ action player ][ orangeSquareOldLocation minusX_3 Y_0 ][ orangeSquareNewLocation X_0 Y_3 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_1 Y_3 ][ X_3 minusY_1 ] -> [ action player ][ orangeSquareOldLocation X_1 Y_3 ][ orangeSquareNewLocation X_3 minusY_1 ]
+[ action player ][ orangeSquare orangeSquareConnected X_3 minusY_1 ][ minusX_1 minusY_3 ] -> [ action player ][ orangeSquareOldLocation X_3 minusY_1 ][ orangeSquareNewLocation minusX_1 minusY_3 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_1 minusY_3 ][ minusX_3 Y_1 ] -> [ action player ][ orangeSquareOldLocation minusX_1 minusY_3 ][ orangeSquareNewLocation minusX_3 Y_1 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_3 Y_1 ][ X_1 Y_3 ] -> [ action player ][ orangeSquareOldLocation minusX_3 Y_1 ][ orangeSquareNewLocation X_1 Y_3 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_2 Y_3 ][ X_3 minusY_2 ] -> [ action player ][ orangeSquareOldLocation X_2 Y_3 ][ orangeSquareNewLocation X_3 minusY_2 ]
+[ action player ][ orangeSquare orangeSquareConnected X_3 minusY_2 ][ minusX_2 minusY_3 ] -> [ action player ][ orangeSquareOldLocation X_3 minusY_2 ][ orangeSquareNewLocation minusX_2 minusY_3 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_2 minusY_3 ][ minusX_3 Y_2 ] -> [ action player ][ orangeSquareOldLocation minusX_2 minusY_3 ][ orangeSquareNewLocation minusX_3 Y_2 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_3 Y_2 ][ X_2 Y_3 ] -> [ action player ][ orangeSquareOldLocation minusX_3 Y_2 ][ orangeSquareNewLocation X_2 Y_3 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_3 Y_3 ][ X_3 minusY_3 ] -> [ action player ][ orangeSquareOldLocation X_3 Y_3 ][ orangeSquareNewLocation X_3 minusY_3 ]
+[ action player ][ orangeSquare orangeSquareConnected X_3 minusY_3 ][ minusX_3 minusY_3 ] -> [ action player ][ orangeSquareOldLocation X_3 minusY_3 ][ orangeSquareNewLocation minusX_3 minusY_3 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_3 minusY_3 ][ minusX_3 Y_3 ] -> [ action player ][ orangeSquareOldLocation minusX_3 minusY_3 ][ orangeSquareNewLocation minusX_3 Y_3 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_3 Y_3 ][ X_3 Y_3 ] -> [ action player ][ orangeSquareOldLocation minusX_3 Y_3 ][ orangeSquareNewLocation X_3 Y_3 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_4 Y_3 ][ X_3 minusY_4 ] -> [ action player ][ orangeSquareOldLocation X_4 Y_3 ][ orangeSquareNewLocation X_3 minusY_4 ]
+[ action player ][ orangeSquare orangeSquareConnected X_3 minusY_4 ][ minusX_4 minusY_3 ] -> [ action player ][ orangeSquareOldLocation X_3 minusY_4 ][ orangeSquareNewLocation minusX_4 minusY_3 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_4 minusY_3 ][ minusX_3 Y_4 ] -> [ action player ][ orangeSquareOldLocation minusX_4 minusY_3 ][ orangeSquareNewLocation minusX_3 Y_4 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_3 Y_4 ][ X_4 Y_3 ] -> [ action player ][ orangeSquareOldLocation minusX_3 Y_4 ][ orangeSquareNewLocation X_4 Y_3 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_5 Y_3 ][ X_3 minusY_5 ] -> [ action player ][ orangeSquareOldLocation X_5 Y_3 ][ orangeSquareNewLocation X_3 minusY_5 ]
+[ action player ][ orangeSquare orangeSquareConnected X_3 minusY_5 ][ minusX_5 minusY_3 ] -> [ action player ][ orangeSquareOldLocation X_3 minusY_5 ][ orangeSquareNewLocation minusX_5 minusY_3 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_5 minusY_3 ][ minusX_3 Y_5 ] -> [ action player ][ orangeSquareOldLocation minusX_5 minusY_3 ][ orangeSquareNewLocation minusX_3 Y_5 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_3 Y_5 ][ X_5 Y_3 ] -> [ action player ][ orangeSquareOldLocation minusX_3 Y_5 ][ orangeSquareNewLocation X_5 Y_3 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_0 Y_4 ][ X_4 Y_0 ] -> [ action player ][ orangeSquareOldLocation X_0 Y_4 ][ orangeSquareNewLocation X_4 Y_0 ]
+[ action player ][ orangeSquare orangeSquareConnected X_4 Y_0 ][ X_0 minusY_4 ] -> [ action player ][ orangeSquareOldLocation X_4 Y_0 ][ orangeSquareNewLocation X_0 minusY_4 ]
+[ action player ][ orangeSquare orangeSquareConnected X_0 minusY_4 ][ minusX_4 Y_0 ] -> [ action player ][ orangeSquareOldLocation X_0 minusY_4 ][ orangeSquareNewLocation minusX_4 Y_0 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_4 Y_0 ][ X_0 Y_4 ] -> [ action player ][ orangeSquareOldLocation minusX_4 Y_0 ][ orangeSquareNewLocation X_0 Y_4 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_1 Y_4 ][ X_4 minusY_1 ] -> [ action player ][ orangeSquareOldLocation X_1 Y_4 ][ orangeSquareNewLocation X_4 minusY_1 ]
+[ action player ][ orangeSquare orangeSquareConnected X_4 minusY_1 ][ minusX_1 minusY_4 ] -> [ action player ][ orangeSquareOldLocation X_4 minusY_1 ][ orangeSquareNewLocation minusX_1 minusY_4 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_1 minusY_4 ][ minusX_4 Y_1 ] -> [ action player ][ orangeSquareOldLocation minusX_1 minusY_4 ][ orangeSquareNewLocation minusX_4 Y_1 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_4 Y_1 ][ X_1 Y_4 ] -> [ action player ][ orangeSquareOldLocation minusX_4 Y_1 ][ orangeSquareNewLocation X_1 Y_4 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_2 Y_4 ][ X_4 minusY_2 ] -> [ action player ][ orangeSquareOldLocation X_2 Y_4 ][ orangeSquareNewLocation X_4 minusY_2 ]
+[ action player ][ orangeSquare orangeSquareConnected X_4 minusY_2 ][ minusX_2 minusY_4 ] -> [ action player ][ orangeSquareOldLocation X_4 minusY_2 ][ orangeSquareNewLocation minusX_2 minusY_4 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_2 minusY_4 ][ minusX_4 Y_2 ] -> [ action player ][ orangeSquareOldLocation minusX_2 minusY_4 ][ orangeSquareNewLocation minusX_4 Y_2 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_4 Y_2 ][ X_2 Y_4 ] -> [ action player ][ orangeSquareOldLocation minusX_4 Y_2 ][ orangeSquareNewLocation X_2 Y_4 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_3 Y_4 ][ X_4 minusY_3 ] -> [ action player ][ orangeSquareOldLocation X_3 Y_4 ][ orangeSquareNewLocation X_4 minusY_3 ]
+[ action player ][ orangeSquare orangeSquareConnected X_4 minusY_3 ][ minusX_3 minusY_4 ] -> [ action player ][ orangeSquareOldLocation X_4 minusY_3 ][ orangeSquareNewLocation minusX_3 minusY_4 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_3 minusY_4 ][ minusX_4 Y_3 ] -> [ action player ][ orangeSquareOldLocation minusX_3 minusY_4 ][ orangeSquareNewLocation minusX_4 Y_3 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_4 Y_3 ][ X_3 Y_4 ] -> [ action player ][ orangeSquareOldLocation minusX_4 Y_3 ][ orangeSquareNewLocation X_3 Y_4 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_4 Y_4 ][ X_4 minusY_4 ] -> [ action player ][ orangeSquareOldLocation X_4 Y_4 ][ orangeSquareNewLocation X_4 minusY_4 ]
+[ action player ][ orangeSquare orangeSquareConnected X_4 minusY_4 ][ minusX_4 minusY_4 ] -> [ action player ][ orangeSquareOldLocation X_4 minusY_4 ][ orangeSquareNewLocation minusX_4 minusY_4 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_4 minusY_4 ][ minusX_4 Y_4 ] -> [ action player ][ orangeSquareOldLocation minusX_4 minusY_4 ][ orangeSquareNewLocation minusX_4 Y_4 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_4 Y_4 ][ X_4 Y_4 ] -> [ action player ][ orangeSquareOldLocation minusX_4 Y_4 ][ orangeSquareNewLocation X_4 Y_4 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_5 Y_4 ][ X_4 minusY_5 ] -> [ action player ][ orangeSquareOldLocation X_5 Y_4 ][ orangeSquareNewLocation X_4 minusY_5 ]
+[ action player ][ orangeSquare orangeSquareConnected X_4 minusY_5 ][ minusX_5 minusY_4 ] -> [ action player ][ orangeSquareOldLocation X_4 minusY_5 ][ orangeSquareNewLocation minusX_5 minusY_4 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_5 minusY_4 ][ minusX_4 Y_5 ] -> [ action player ][ orangeSquareOldLocation minusX_5 minusY_4 ][ orangeSquareNewLocation minusX_4 Y_5 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_4 Y_5 ][ X_5 Y_4 ] -> [ action player ][ orangeSquareOldLocation minusX_4 Y_5 ][ orangeSquareNewLocation X_5 Y_4 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_0 Y_5 ][ X_5 Y_0 ] -> [ action player ][ orangeSquareOldLocation X_0 Y_5 ][ orangeSquareNewLocation X_5 Y_0 ]
+[ action player ][ orangeSquare orangeSquareConnected X_5 Y_0 ][ X_0 minusY_5 ] -> [ action player ][ orangeSquareOldLocation X_5 Y_0 ][ orangeSquareNewLocation X_0 minusY_5 ]
+[ action player ][ orangeSquare orangeSquareConnected X_0 minusY_5 ][ minusX_5 Y_0 ] -> [ action player ][ orangeSquareOldLocation X_0 minusY_5 ][ orangeSquareNewLocation minusX_5 Y_0 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_5 Y_0 ][ X_0 Y_5 ] -> [ action player ][ orangeSquareOldLocation minusX_5 Y_0 ][ orangeSquareNewLocation X_0 Y_5 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_1 Y_5 ][ X_5 minusY_1 ] -> [ action player ][ orangeSquareOldLocation X_1 Y_5 ][ orangeSquareNewLocation X_5 minusY_1 ]
+[ action player ][ orangeSquare orangeSquareConnected X_5 minusY_1 ][ minusX_1 minusY_5 ] -> [ action player ][ orangeSquareOldLocation X_5 minusY_1 ][ orangeSquareNewLocation minusX_1 minusY_5 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_1 minusY_5 ][ minusX_5 Y_1 ] -> [ action player ][ orangeSquareOldLocation minusX_1 minusY_5 ][ orangeSquareNewLocation minusX_5 Y_1 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_5 Y_1 ][ X_1 Y_5 ] -> [ action player ][ orangeSquareOldLocation minusX_5 Y_1 ][ orangeSquareNewLocation X_1 Y_5 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_2 Y_5 ][ X_5 minusY_2 ] -> [ action player ][ orangeSquareOldLocation X_2 Y_5 ][ orangeSquareNewLocation X_5 minusY_2 ]
+[ action player ][ orangeSquare orangeSquareConnected X_5 minusY_2 ][ minusX_2 minusY_5 ] -> [ action player ][ orangeSquareOldLocation X_5 minusY_2 ][ orangeSquareNewLocation minusX_2 minusY_5 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_2 minusY_5 ][ minusX_5 Y_2 ] -> [ action player ][ orangeSquareOldLocation minusX_2 minusY_5 ][ orangeSquareNewLocation minusX_5 Y_2 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_5 Y_2 ][ X_2 Y_5 ] -> [ action player ][ orangeSquareOldLocation minusX_5 Y_2 ][ orangeSquareNewLocation X_2 Y_5 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_3 Y_5 ][ X_5 minusY_3 ] -> [ action player ][ orangeSquareOldLocation X_3 Y_5 ][ orangeSquareNewLocation X_5 minusY_3 ]
+[ action player ][ orangeSquare orangeSquareConnected X_5 minusY_3 ][ minusX_3 minusY_5 ] -> [ action player ][ orangeSquareOldLocation X_5 minusY_3 ][ orangeSquareNewLocation minusX_3 minusY_5 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_3 minusY_5 ][ minusX_5 Y_3 ] -> [ action player ][ orangeSquareOldLocation minusX_3 minusY_5 ][ orangeSquareNewLocation minusX_5 Y_3 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_5 Y_3 ][ X_3 Y_5 ] -> [ action player ][ orangeSquareOldLocation minusX_5 Y_3 ][ orangeSquareNewLocation X_3 Y_5 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_4 Y_5 ][ X_5 minusY_4 ] -> [ action player ][ orangeSquareOldLocation X_4 Y_5 ][ orangeSquareNewLocation X_5 minusY_4 ]
+[ action player ][ orangeSquare orangeSquareConnected X_5 minusY_4 ][ minusX_4 minusY_5 ] -> [ action player ][ orangeSquareOldLocation X_5 minusY_4 ][ orangeSquareNewLocation minusX_4 minusY_5 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_4 minusY_5 ][ minusX_5 Y_4 ] -> [ action player ][ orangeSquareOldLocation minusX_4 minusY_5 ][ orangeSquareNewLocation minusX_5 Y_4 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_5 Y_4 ][ X_4 Y_5 ] -> [ action player ][ orangeSquareOldLocation minusX_5 Y_4 ][ orangeSquareNewLocation X_4 Y_5 ]
+
+[ action player ][ orangeSquare orangeSquareConnected X_5 Y_5 ][ X_5 minusY_5 ] -> [ action player ][ orangeSquareOldLocation X_5 Y_5 ][ orangeSquareNewLocation X_5 minusY_5 ]
+[ action player ][ orangeSquare orangeSquareConnected X_5 minusY_5 ][ minusX_5 minusY_5 ] -> [ action player ][ orangeSquareOldLocation X_5 minusY_5 ][ orangeSquareNewLocation minusX_5 minusY_5 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_5 minusY_5 ][ minusX_5 Y_5 ] -> [ action player ][ orangeSquareOldLocation minusX_5 minusY_5 ][ orangeSquareNewLocation minusX_5 Y_5 ]
+[ action player ][ orangeSquare orangeSquareConnected minusX_5 Y_5 ][ X_5 Y_5 ] -> [ action player ][ orangeSquareOldLocation minusX_5 Y_5 ][ orangeSquareNewLocation X_5 Y_5 ]
+
+
+[ redSquare redSquareNewLocation ] -> [ redSquare redSquareNewLocation badSquareIntersection ]
+[ wall redSquareNewLocation ] -> [ wall redSquareNewLocation badSquareIntersection ]
+
+[ orangeSquare orangeSquareNewLocation ] -> [ orangeSquare orangeSquareNewLocation badSquareIntersection ]
+[ wall orangeSquareNewLocation ] -> [ wall orangeSquareNewLocation badSquareIntersection ]
+
+[ orangeSquare redSquareNewLocation ] -> [ orangeSquare redSquareNewLocation badSquareIntersection ]
+[ redSquare orangeSquareNewLocation ] -> [ redSquare orangeSquareNewLocation badSquareIntersection ]
+
+[ redSquareNewLocation no badSquareIntersection ][ badSquareIntersection ] -> [ redSquareNewLocation badSquareLocation ][ badSquareIntersection ]
+[ orangeSquareNewLocation no badSquareIntersection ][ badSquareIntersection ] -> [ orangeSquareNewLocation badSquareLocation ][ badSquareIntersection ]
+
+[ badSquareIntersection ][ noBadIntersection ] -> [ badSquareIntersection ][]
+
+[ redSquareOldLocation ][ player redSquareN ][ badSquareIntersection ] -> [ redSquareN ][ player redSquareN ][ badSquareIntersection ]
+[ redSquareOldLocation ][ player redSquareE ][ badSquareIntersection ] -> [ redSquareE ][ player redSquareE ][ badSquareIntersection ]
+[ redSquareOldLocation ][ player redSquareS ][ badSquareIntersection ] -> [ redSquareS ][ player redSquareS ][ badSquareIntersection ]
+[ redSquareOldLocation ][ player redSquareW ][ badSquareIntersection ] -> [ redSquareW ][ player redSquareW ][ badSquareIntersection ]
+[ orangeSquareOldLocation ][ player orangeSquareN ][ badSquareIntersection ] -> [ orangeSquareN ][ player orangeSquareN ][ badSquareIntersection ]
+[ orangeSquareOldLocation ][ player orangeSquareE ][ badSquareIntersection ] -> [ orangeSquareE ][ player orangeSquareE ][ badSquareIntersection ]
+[ orangeSquareOldLocation ][ player orangeSquareS ][ badSquareIntersection ] -> [ orangeSquareS ][ player orangeSquareS ][ badSquareIntersection ]
+[ orangeSquareOldLocation ][ player orangeSquareW ][ badSquareIntersection ] -> [ orangeSquareW ][ player orangeSquareW ][ badSquareIntersection ]
+
+[ redSquareOldLocation ][ noBadIntersection ] -> [][ noBadIntersection ]
+[ orangeSquareOldLocation ][ noBadIntersection ] -> [][ noBadIntersection ]
+
+random [ redSquare no redSquareConnected | redSquareNewLocation ][ noBadIntersection ] -> [ redSquare no redSquareConnected | redSquareNewLocation ][ noBadIntersection ] SFX9
+random [ orangeSquare no orangeSquareConnected | orangeSquareNewLocation ][ noBadIntersection ] -> [ orangeSquare no orangeSquareConnected | orangeSquareNewLocation ][ noBadIntersection ] SFX9
+
+[ CONNECTED no player ] -> CANCEL 
+[ CONNECTED ] -> []
+
+[ stationary player no triedToMove ][ stationary exitOpen1 ] -> [ player ][ action exitOpen2 ]
+[ stationary player no triedToMove ][ stationary exitOpen2 ] -> [ player ][ action exitOpen3 ]
+[ stationary player no triedToMove ][ stationary exitOpen3 ] -> [ player ][ action exitOpen4 ]
+[ stationary player no triedToMove ][ stationary exitOpen4 ] -> [ player ][ action exitOpen1 ]
+
+[ action player redSquareN ][ redSquareNewLocation ][ noBadIntersection ] -> [ action player redSquareN ][ redSquareE ][ noBadIntersection ]
+[ action player redSquareE ][ redSquareNewLocation ][ noBadIntersection ] -> [ action player redSquareE ][ redSquareS ][ noBadIntersection ]
+[ action player redSquareS ][ redSquareNewLocation ][ noBadIntersection ] -> [ action player redSquareS ][ redSquareW ][ noBadIntersection ]
+[ action player redSquareW ][ redSquareNewLocation ][ noBadIntersection ] -> [ action player redSquareW ][ redSquareN ][ noBadIntersection ]
+
+[ action player redSquareN ][ noBadIntersection ] -> [ player redSquareE ][ noBadIntersection ]
+[ action player redSquareE ][ noBadIntersection ] -> [ player redSquareS ][ noBadIntersection ]
+[ action player redSquareS ][ noBadIntersection ] -> [ player redSquareW ][ noBadIntersection ]
+[ action player redSquareW ][ noBadIntersection ] -> [ player redSquareN ][ noBadIntersection ]
+
+[ action player orangeSquareN ][ orangeSquareNewLocation ][ noBadIntersection ] -> [ action player orangeSquareN ][ orangeSquareE ][ noBadIntersection ]
+[ action player orangeSquareE ][ orangeSquareNewLocation ][ noBadIntersection ] -> [ action player orangeSquareE ][ orangeSquareS ][ noBadIntersection ]
+[ action player orangeSquareS ][ orangeSquareNewLocation ][ noBadIntersection ] -> [ action player orangeSquareS ][ orangeSquareW ][ noBadIntersection ]
+[ action player orangeSquareW ][ orangeSquareNewLocation ][ noBadIntersection ] -> [ action player orangeSquareW ][ orangeSquareN ][ noBadIntersection ]
+
+[ action player orangeSquareN ][ noBadIntersection ] -> [ player orangeSquareE ][ noBadIntersection ]
+[ action player orangeSquareE ][ noBadIntersection ] -> [ player orangeSquareS ][ noBadIntersection ]
+[ action player orangeSquareS ][ noBadIntersection ] -> [ player orangeSquareW ][ noBadIntersection ]
+[ action player orangeSquareW ][ noBadIntersection ] -> [ player orangeSquareN ][ noBadIntersection ]
+
+startloop
+random [ redSquare no redSquareConnected ] -> [ redSquare redSquareConnected fillStartRed ]
+[ redSquare fillStartRed | redSquare no redSquareConnected ] -> [ redSquare fillStartRed | redSquare redSquareConnected ]
+[ redSquare redSquareConnected | redSquare no redSquareConnected ] -> [ redSquare redSquareConnected | redSquare redSquareConnected ]
+endloop
+
+startloop
+random [ orangeSquare no orangeSquareConnected ] -> [ orangeSquare orangeSquareConnected fillStartOrange ]
+[ orangeSquare fillStartOrange | orangeSquare no orangeSquareConnected ] -> [ orangeSquare fillStartOrange | orangeSquare orangeSquareConnected ]
+[ orangeSquare orangeSquareConnected | orangeSquare no orangeSquareConnected ] -> [ orangeSquare orangeSquareConnected | orangeSquare orangeSquareConnected ]
+endloop
+
+[ noOrangeFill ][ fillStartOrange ] -> [][ fillStartOrange ]
+
+random [ fillStartRed ] -> [ firstFillRed ]
+random [ fillStartRed no firstFillRed ][ firstFillRed ] -> [ fillStartRed ][]
+[ firstFillRed ][ noOrangeFill ][ exitClosed ] -> [][][ exitOpen1 exitOpened ]
+random [ fillStartRed no firstFillRed ][ EXIT ] -> [][ exitClosed ]
+
+random [ fillStartOrange ] -> [ firstFillOrange ]
+random [ fillStartOrange no firstFillOrange ][ firstFillOrange ] -> [ fillStartOrange ][]
+[ firstFillOrange ][ firstFillRed ][ exitClosed ] -> [][][ exitOpen1 exitOpened ]
+random [ fillStartOrange no firstFillOrange ][ EXIT ] -> [][ exitClosed ]
+
+[ player | SQUARE ] -> [ player | SQUARE playerConnected ]
+[ redSquareN playerConnected | redSquare ] -> [ redSquareN playerConnected | redSquareN playerConnected ]
+[ redSquareE playerConnected | redSquare ] -> [ redSquareE playerConnected | redSquareE playerConnected ]
+[ redSquareS playerConnected | redSquare ] -> [ redSquareS playerConnected | redSquareS playerConnected ]
+[ redSquareW playerConnected | redSquare ] -> [ redSquareW playerConnected | redSquareW playerConnected ]
+[ orangeSquareN playerConnected | orangeSquare ] -> [ orangeSquareN playerConnected | orangeSquareN playerConnected ]
+[ orangeSquareE playerConnected | orangeSquare ] -> [ orangeSquareE playerConnected | orangeSquareE playerConnected ]
+[ orangeSquareS playerConnected | orangeSquare ] -> [ orangeSquareS playerConnected | orangeSquareS playerConnected ]
+[ orangeSquareW playerConnected | orangeSquare ] -> [ orangeSquareW playerConnected | orangeSquareW playerConnected ]
+
+
+late [ noOrangeFill ] -> []
+late [ noBadIntersection ] -> []
+late [ fillStartRed ] -> []
+late [ firstFillRed ] -> []
+late [ fillStartOrange ] -> []
+late [ firstFillOrange ] -> []
+late [ triedToMove ] -> []
+late [ player CONNECTED ] -> [ player ]
+
+late [ redSquareNewLocation ] -> []
+late [ orangeSquareNewLocation ] -> []
+
+late [ redSquare orangeSquare ] -> CANCEL
+
+late [ SQUARE wall ] -> CANCEL
+
+late [ CONNECTED ] -> []
+late [ XAXIS ] -> []
+late [ YAXIS ] -> []
+
+late [ exitOpen1 exitOpened ] -> [ exitOpen1 ] SFX6
+
+late [ redSquareNeutral ] -> [ redSquareN ]
+late [ orangeSquareNeutral ] -> [ orangeSquareN ]
+==============
+WINCONDITIONS
+==============
+All player on EXIT
+
+=======
+LEVELS
+=======
+message Welcome to the revolution!
+##########
+##########
+##ooooo○##
+##o1111o##
+##o1..1o##
+##o1.11o##
+##os.€.o##
+##oooooo##
+##########
+##########
+
+message use the x button
+##############
+#s1...#.....##
+#.....#......#
+#.....#..oo..#
+#........o...#
+#........oe.##
+#######ooo####
+##############
+
+###########
+#ooooooooo#
+#ooooooooo#
+#oos....oo#
+#oo1....oo#
+#oo1....oo#
+#oo.....oo#
+#ooooooooo#
+#oo.....oo#
+#oo..e..oo#
+#oo.....oo#
+#ooooooooo#
+#ooooooooo#
+###########
+
+oooooooooo
+oooooooooo
+oooooooooo
+ooo...eooo
+ooo....ooo
+ooo#..#ooo
+oo##..##oo
+ooo....ooo
+oo#....#oo
+oo#....#oo
+oo#s111#oo
+oo######oo
+oooooooooo
+oooooooooo
+
+oooooooo
+oooooooo
+oo1..2oo
+oo1..2oo
+oos..2oo
+oooooooo
+oooo✹ooo
+oooooooo
+
+########
+#oooooo#
+#o1..2o#
+#o1..2o#
+#os..2o#
+#oooooo#
+####✹###
+########
+
+oooooooo
+ooooo##o
+oooos✹#o
+o.2.91oo
+o.2o.ooo
+oooooooo
+oooooooo
+
+ooooooooooo
+ooooooooooo
+ooo#2..sooo
+oo✹o2oo1ooo
+oooo.oo1ooo
+oooo....ooo
+oooo....ooo
+ooooooo#ooo
+ooooooooooo
+ooooooooooo
+
+ooooooooo
+oooooo#oo
+oos11neoo
+oo222..oo
+oooooo#oo
+ooooooooo
+
+ooooooooooooooo
+ooooooooooooooo
+ooooooooooooooo
+ooo.......ooooo
+ooos11ooo...#oo
+ooo222ooo.ne#oo
+ooo.......ooooo
+ooooooooooooooo
+ooooooooooooooo
+ooooooooooooooo
+
+oooooooooo
+ooo#####oo
+ooo.....oo
+ooo.....oo
+o✹o...1.oo
+ooo..111oo
+ooo$221.oo
+ooo#####oo
+oooooooooo
+
+ooooooooooooooooooo
+ooooooooooooooooooo
+ooooooooooooooooooo
+ooo.....##.#...oooo
+ooo........2.#.oooo
+ooos111....2...oo✹o
+ooo.....####...oooo
+ooooooooooooooooooo
+ooooooooooooooooooo
+ooooooooooooooooooo
+
+ooooooooooo
+ooooooooooo
+ooo..1..ooo
+ooo.....ooo
+ooo.....ooo
+ooos1..e#oo
+ooooooo##oo
+ooooooooooo
+ooooooooooo
+
+oooooooooooooo
+oooooooooooooo
+oooooooooooooo
+ooos1..####ooo
+ooo....ooooooo
+ooo.......eooo
+ooo....ooooooo
+ooo..11####ooo
+oooooooooooooo
+oooooooooooooo
+oooooooooooooo
+
+ooooooooooooooo
+ooooooooooooooo
+ooooooooooooooo
+ooooooooooooooo
+ooo11...#...eoo
+ooo.....ooooooo
+ooo....1ooooooo
+ooo.....ooooooo
+ooos1...ooooooo
+ooooooooooooooo
+ooooooooooooooo
+ooooooooooooooo
+
+ooooooooooooooo
+ooooooooooooooo
+ooooooooooooooo
+ooooooooooooooo
+ooo11...#...eoo
+ooo.....ooooooo
+ooo.....ooooooo
+ooo.....ooooooo
+ooo.1.1sooooooo
+ooooooooooooooo
+ooooooooooooooo
+ooooooooooooooo
+
+ooooooooooooo
+oooooo✹oooooo
+ooooooooooooo
+ooo.11#.11ooo
+ooo...#...ooo
+ooo..2$2..ooo
+ooooooooooooo
+ooooooooooooo
+ooooooooooooo
+
+ooooooooo
+ooooooooo
+o#s1...#o
+o#...n1✹o
+o#..2..#o
+o#.....#o
+o#..∇..#o
+o#######o
+ooooooooo
+
+oooo#######oooo
+oooo#######oooo
+oooo.......oooo
+oooos11....oooo
+oooon......oooo
+oo✹o..#2#..oooo
+oooo...2.1.oooo
+oooo..#2#1.oooo
+oooo.n.....oooo
+ooooooooooooooo
+ooooooooooooooo
+ooooooooooooooo
+ooooooooooooooo
+
+oooooooooooooooo
+ooooooooooooo✹oo
+oooooooooooooooo
+ooos1..2###..ooo
+ooo11..2.....ooo
+ooo.......n..ooo
+ooo.........#ooo
+ooo22...#####ooo
+oooooooooooooooo
+oooooooooooooooo
+oooooooooooooooo
+
+message Thank you for playing :)!

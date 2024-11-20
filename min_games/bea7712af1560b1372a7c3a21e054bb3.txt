@@ -1,0 +1,128 @@
+OBJECTS
+
+BackgroundLIGHTGREEN GREEN11111
+01111
+11101
+11111
+10111
+
+TargetNeutral#0a0a0a.....
+.000.
+.0.0.
+.000.
+.....
+
+TargetTowardsOrange.....
+.000.
+.0.0.
+.000.
+.....
+
+TargetAwayBlue.....
+.000.
+.0.0.
+.000.
+.....
+
+WallBROWN DARKBROWN
+0001011111
+0100011111
+00010Player
+BlackRed Blue.000.
+.020.
+.....
+00000
+01010
+
+PlayerDecoyBlack
+OrangeWhite Blue
+.000..202.
+...0.00000
+01010EyeballAway
+WhitelightBlue lightRed
+.000.00100
+0111020102
+.202.EyeballTowards
+Whiteorange Red.000.
+00100
+01110
+20102
+.202.
+
+PlayerDoorYellow Black10001
+10101
+11111
+00000
+01010
+
+EyeballDoorYellow
+Black10001
+0010001110
+0010010001
+
+
+LEGEND
+
+. = Background
+: = TargetNeutral
+% = TargetTowards
+$ = TargetAway
+Target = TargetNeutral or TargetTowards or TargetAway
+# = Wall
+P = Player
+Q = PlayerDecoy
+O = EyeballTowards
+i = EyeballAway
+Eyeball = EyeballAway or EyeballTowards
+G = PlayerDoor
+H = EyeballDoor
+
+COLLISIONLAYERS
+
+Background
+Target
+Player
+Wall, EyeballTowards
+EyeballAway, PlayerDecoy
+PlayerDoor, EyeballDoor
+
+RULES
+
+[ EyeballTowards | ... | PlayerDecoy ] -> [ > EyeballTowards | ... | PlayerDecoy ] 
+[ EyeballAway | ... | PlayerDecoy ] -> [ < EyeballAway | ... | PlayerDecoy ] 
+[ EyeballTowards | ... | Player ] -> [ > EyeballTowards | ... | Player ] 
+[ EyeballAway | ... | Player ] -> [ < EyeballAway | ... | Player ] 
+[ > Player | PlayerDecoy ] -> [ Player | >PlayerDecoy ] 
+[ > Player | PlayerDoor |  ] -> [ |PlayerDoor | Player ] 
+[ > Eyeball | EyeballDoor |  ] -> [ |EyeballDoor | Eyeball ] 
+
+
+WINCONDITIONS
+
+all TargetNeutral on Eyeball
+all TargetTowards on EyeballTowards
+all TargetAway on EyeballAway
+
+LEVELS
+
+#########
+#.......#
+#.......#
+#...#.P.#
+#.O###..#
+#.......#
+#...##..#
+#...:...#
+#########
+
+###########
+
+#.........#
+#.........#
+#..P.#....#
+#...###i..#
+#.........#
+#....##...#
+#....:....#
+#.........#
+###########

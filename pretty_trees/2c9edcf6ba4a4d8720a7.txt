@@ -1,0 +1,246 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	.
+      colors
+        color	lightbrown
+    object_data
+      object_name	Player
+      legend_key	r
+      colors
+        color	ed
+        color	lightred
+      sprite
+        ['.' '1' '1' '0' '.']
+        ['1' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Marker
+      legend_key	t
+      colors
+        color	ransparent
+    object_data
+      object_name	Check
+      legend_key	&
+      colors
+        color	brown
+    object_data
+      object_name	.....
+      legend_key	.
+      colors
+        color	000.
+    object_data
+      object_name	.0...
+      legend_key	.
+      colors
+        color	000.
+    object_data
+      object_name	.....
+      legend_key	B
+      colors
+        color	ud
+    object_data
+      object_name	red
+      legend_key	g
+      colors
+        color	reen
+        color	lightgreen
+    object_data
+      object_name	.....
+      legend_key	.
+      colors
+        color	....
+    object_data
+      object_name	...2.
+      legend_key	.
+      colors
+        color	..1.
+    object_data
+      object_name	...1.
+      legend_key	P
+      colors
+        color	lant
+    object_data
+      object_name	red
+      legend_key	g
+      colors
+        color	reen
+        color	lightgreen
+    object_data
+      object_name	..0..
+      legend_key	.
+      colors
+        color	020.
+    object_data
+      object_name	..01.
+      legend_key	.
+      colors
+        color	.11.
+    object_data
+      object_name	...1.
+      legend_key	W
+      colors
+        color	all
+        color	#
+    object_data
+      object_name	darkgrey
+      legend_key	E
+      colors
+        color	nd
+    object_data
+      object_name	W
+      legend_key	b
+      colors
+        color	rown
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+      
+
+  legend_section
+    legend_data
+      Collidable
+      object_name	Wall
+      legend_operation
+        object_name	Plant
+    legend_data
+      P
+      object_name	Player
+      legend_operation
+        object_name	Marker
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	End
+    layer_data
+      object_name	Check
+    layer_data
+      object_name	Marker
+    layer_data
+      object_name	Bud
+    layer_data
+      object_name	Player
+    layer_data
+      object_name	Wall
+      object_name	Plant
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	N
+            rule_content	o
+            rule_content	C
+            rule_content	o
+            rule_content	l
+            rule_content	l
+            rule_content	i
+            rule_content	d
+            rule_content	a
+            rule_content	b
+            rule_content	l
+            rule_content	e
+          ->
+          rule_part
+            rule_content	|
+            rule_content	>
+            rule_content	P
+            rule_content	l
+            rule_content	a
+            rule_content	y
+            rule_content	e
+            rule_content	r
+          command
+            sound
+              sound_id	7
+          
+
+        rule_data
+          rule_part
+            rule_content	Player
+          ->
+          rule_part
+            rule_content
+              Marker
+              Player
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Bud
+              Player
+          ->
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          rule_part
+            rule_content	Bud
+          ->
+          rule_part
+            rule_content	Plant
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Marker
+              no
+              Player
+          ->
+          rule_part
+            rule_content	Bud
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Player
+              Check
+          ->
+          rule_part
+            rule_content	Player
+          command
+            command_keyword	checkpoint
+          command
+            sound
+              sound_id	1
+          
+
+  winconditions_section
+    condition_data
+      Some
+      object_name	Player
+    condition_data
+      All
+      object_name	Player
+      on
+      object_name	End
+  levels_section
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
+    level_data	[['.' '.' '.' ... '.' '.' '.']
+ ['.' '.' '.' ... '.' '.' '.']
+ ['.' '.' '.' ... '.' '.' '.']
+ ...
+ ['.' '.' '.' ... '.' '.' '.']
+ ['.' '.' '.' ... '.' '.' '.']
+ ['.' '.' '.' ... '.' '.' '.']]

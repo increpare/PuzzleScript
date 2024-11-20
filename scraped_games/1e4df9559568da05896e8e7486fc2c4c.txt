@@ -1,0 +1,599 @@
+title Spring
+run_rules_on_level_start
+background_color #043804
+text_color #7b7
+again_interval 0.001
+norepeat_action
+========
+OBJECTS
+========
+
+Background 1
+black
+
+unlit 
+#78D448
+
+nlit 
+#58BBE0
+
+it !
+#EFC040
+
+spring
+#109010 #041904
+.000.
+00000
+01010
+00000
+.000.
+
+winter ?
+#1010B0 #101030
+.000.
+00000
+01010
+00000
+.000.
+
+bunnyd  ,
+#745004  black pink white
+..3..
+.000.
+.000.
+.101.
+..2..
+
+bunnyl <
+#745004  black pink white 
+.....
+.100.
+20003
+.100.
+.....
+
+bunnyu .
+#745004  black pink white
+..2..
+.101.
+.000.
+.000.
+..3..
+
+bunnyr >
+#745004  black pink white
+.....
+.001.
+30002
+.001.
+.....
+
+block w
+ #043804
+
+crat 7
+#745004 #C47004
+.000.
+01110
+01110
+01110
+.000.
+
+glass q
+#745004 #C47004 white
+.000.
+02110
+02120
+01120
+.000.
+
+flower
+#043804 #109010
+.....
+..1..
+.101.
+..1..
+.....
+
+water o
+blue 
+
+ice p
+lightblue 
+
+door e
+#109010 #043804
+00011
+00001
+00000
+00001
+00011
+
+drowned
+blue #745004 
+00000
+00100
+01110
+00100
+00000
+
+nodoor
+transparent
+
+start
+transparent
+
+vert
+transparent
+
+moved
+transparent
+
+nomoved
+transparent
+
+
+
+eaten
+transparent
+
+watermark
+transparent
+
+winning
+transparent
+
+
+leftm
+transparent
+
+rightm
+transparent
+
+upm
+transparent
+
+downm
+transparent
+
+
+=======
+LEGEND
+=======
+
+
+bunny = bunnyl or bunnyr or bunnyd or bunnyu
+aqua = water or ice
+cre = spring or block or crat or glass or door or bunny or ice 
+crate = crat or block or glass or aqua
+flow = flower 
+a = flower and nlit
+i = spring and start
+l= nlit
+player = spring
+floor = unlit or nlit
+m = upm or leftm or downm or rightm
+
+
+=======
+SOUNDS
+=======
+
+SFX1 80425104
+SFX2 16467501
+SFX3 80127507
+SFX4 73784102
+SFX5 3862504
+SFX6 16917301
+SFX7 92204307
+SFX8 54283103
+
+================
+COLLISIONLAYERS
+================
+
+Background
+vert
+nodoor,
+watermark
+floor, ice
+moved, nomoved
+flow, eaten
+player, glass, crat, block, door, bunny, water
+winning
+start, drowned
+it,winter
+m
+
+
+======
+RULES
+======
+
+
+right [winter no moved| floor] -> [|winter moved nlit] again
+right [winter no moved| water] -> [|winter moved ice] again
+right [winter no moved| block] -> right [winter no moved winning| block]
+
+[start watermark] -> restart
+[drowned][start] -> [drowned][start watermark]
+
+[action spring no unlit no flower no aqua] -> [spring flower] SFX1
+[action spring flower] -> [spring eaten]
+
+[floor] -> []
+
+[> spring | crat| no cre no aqua flower] -> [|spring|crat] SFX3
+[> spring | crat| no cre no aqua] -> [|spring|crat] SFX7
+
+[vert] -> []
+[eaten]->[]
+[nomoved] -> []
+
+late [spring ice] -> [spring ice watermark]
+late [no spring ice watermark] -> [water watermark] SFX2
+
+late [bunny watermark] -> [drowned] SFX6
+
+late up [bunnyu no moved |no cre flower] -> [|bunnyu moved eaten] SFX3 
+late left [bunnyl no moved |no cre flower] -> [|bunnyl moved eaten] SFX3 
+late right [bunnyr no moved |no cre flower] -> [|bunnyr moved eaten] SFX3 
+late down [bunnyd no moved |no cre flower] -> [|bunnyd moved eaten] SFX3
+
+
+late up [bunnyu no moved |no cre no flower] -> [|bunnyu moved] 
+late left [bunnyl no moved |no cre no flower] -> [|bunnyl moved] 
+late right [bunnyr no moved |no cre no flower] -> [|bunnyr moved] 
+late down [bunnyd no moved |no cre no flower] -> [|bunnyd moved] 
+
+late right [|nodoor  player][eaten] -> [player|door][eaten]
+late [nodoor][eaten] -> [door][eaten]
+
+late [spring] -> [spring nomoved]
+late [nomoved spring][moved] -> [spring][moved]
+late [moved]->[] again
+
+late [no block no aqua] -> [nlit]
+late [nodoor floor] -> [nodoor unlit]
+late [start floor] -> [start unlit]
+
+late [flow nlit] -> [flow unlit]
+late [flow |nlit] -> [flow|unlit]
+late [flow |ice] -> [flow |water watermark]
+late vertical [flower|] -> [flower|vert]
+late horizontal [vert|nlit] -> [vert|unlit]
+late horizontal [vert|ice] -> [vert|water watermark]
+
+[m] -> []
+[bunnyu] -> [bunnyu upm]
+[bunnyd] -> [bunnyd downm]
+[bunnyl] -> [bunnyl leftm]
+[bunnyr] -> [bunnyr rightm]
+late up [nomoved][bunnyu | cre] -> [nomoved][bunnyr|cre]
+late right [nomoved][bunnyr|cre] -> [nomoved][bunnyd| cre]
+late down [nomoved][bunnyd| cre] -> [nomoved][bunnyl| cre]
+late left [nomoved][bunnyl| cre] -> [nomoved][bunnyu| cre]
+late up [nomoved][bunnyu | cre] -> [nomoved][bunnyr|cre]
+late right [nomoved][bunnyr|cre] -> [nomoved][bunnyd| cre]
+late down [nomoved][bunnyd| cre] -> [nomoved][bunnyl| cre]
+late left [nomoved][bunnyl| cre] -> [nomoved][bunnyu| cre]
+late up [nomoved][bunnyu | cre] -> [nomoved][bunnyr|cre]
+late right [nomoved][bunnyr|cre] -> [nomoved][bunnyd| cre]
+late down [nomoved][bunnyd| cre] -> [nomoved][bunnyl| cre]
+late left [nomoved][bunnyl| cre] -> [nomoved][bunnyu| cre]
+late up [nomoved][bunnyu no upm| cre] -> [nomoved][bunnyr|cre]
+late right [nomoved][bunnyr no rightm|cre] -> [nomoved][bunnyd| cre]
+late down [nomoved][bunnyd no downm| cre] -> [nomoved][bunnyl| cre]
+late left [nomoved][bunnyl no leftm| cre] -> [nomoved][bunnyu| cre]
+
+late [door] -> [nodoor vert unlit]
+late [nodoor vert floor no player][nlit] -> [door][nlit]
+late [nodoor vert floor no player][ice] -> [door][ice]
+late [nodoor floor no player][nlit] -> [door][nlit]
+late [nodoor floor no player][ice] -> [door][ice]
+late [nodoor vert] -> [nodoor] SFX8
+
+late [drowned][spring nodoor] -> [drowned][spring nodoor watermark]
+late [drowned][start] -> [drowned][start watermark]
+late [spring nodoor no watermark nomoved] -> [spring nodoor no watermark nomoved winning]
+
+
+
+
+
+
+
+
+==============
+WINCONDITIONS
+==============
+some winning
+=======
+LEVELS
+=======
+
+
+
+message This is going to be the best year ever!
+
+
+message [X TO PLANT OR UN-PLANT]
+
+
+w11111w
+w11111w
+i11111e
+w11111w
+w11111w
+
+
+message I know I've said the same thing for the past 4,518,620,189 years...
+
+message ...But that doesn't mean it can't be true!
+
+message [NESTS WITH EGGS CANNOT BE PUSHED]
+wq11111e
+wqqqq1qw
+w11111qw
+i1qqqqqw
+
+
+
+
+message Look at all these bird eggs that will soon be gorgeous little baby birds.
+
+message I can't wait to meet and be friends with them all!
+
+message [NESTS WITHOUT EGGS CAN BE PUSHED]
+wlqlw
+ilqle
+wlqlw
+wl7lw
+wl7lw
+wl7lw
+
+message Ooh look, what an adorable bunny!
+
+message Wait!
+
+message Bunny, no!
+
+message Please don't eat my garden!
+
+wwwwwww
+www.www
+ww111ww
+wi1a1ew
+ww111ww
+www1www
+wwwwwww
+
+message I can't stay mad at bunnies.
+
+message They're way too cute!
+
+wqqqqqww
+ilqlllqw
+wlllqlqw
+wqqqllqw
+wqlllqle
+wqlqqllw
+wqllllqw
+wwqqqqqw
+
+
+w1p111ww
+w?o!!!!w
+w1p1ppww
+i1ppp1ww
+w11111ww
+
+message WHAT!?!?
+
+message What the heck was that???
+
+message [ICE MELTS INTO WATER]
+
+message [SPRING CAN WALK ON ICE, BUT NOT ON WATER]
+
+w1p111w
+w1p111e
+w1p1ppw
+i1ppp1w
+w11111w
+
+message Maybe it's another type of animal I can meet!
+
+
+
+message [BUNNIES ALWAYS ROTATE CLOCKWISE UPON HITTING A WALL]
+
+wwwwwwwwwww
+wwww111wwww
+ww111111.ww
+wi1w1w1w1ew
+ww1111111ww
+wwww111wwww
+wwwwwwwwwww
+
+message I thought I already knew all 9,361,245 species...
+
+message I don't know how I could have missed one!
+
+wlllllllw
+wlppppplw
+wlp77lple
+ilpl77plw
+wlppppplw
+wlllllllw
+
+message It must be rare, probably even endangered.
+
+message I barely even got a chance to see one, though...
+
+message I have to try to save it!
+
+wppwppppww
+wpppppppww
+wpppppwp1e
+wpwpppppww
+ipppppppww
+wpppppppww
+wpppwpppww
+
+message Please come back mystery animal!
+
+message I can give you love and affection!
+
+wwqqqqww
+wlll1llw
+ill11llw
+wlqqqqlw
+wl111lle
+w111111w
+wwqqwqww
+
+message Where did it go!?
+
+message [ICE IS COLD, SO BUNNIES WON'T WALK ON IT]
+
+message [WATER IS DEEP, SO BUNNIES WILL DROWN IN IT]
+
+wwwwwwwww
+ww111p1ww
+ww111p1ww
+wi111p1ew
+ww111p1ww
+ww.11p1ww
+wwwwwwwww
+
+message I didn't get a good glimpse of it...
+
+message but I bet it was adorable!
+
+wlplpllww
+wlplpppww
+wlpllllew
+wlpppppww
+wlllllpww
+ipppplpww
+wlllplpww
+wpplplpww
+
+message Maybe it's a relative of a mountain bluebird or indigo bunting?
+
+message Tweet Twe-twee-ee-tweet Twee-tweet Tweet!
+
+wwwwwwwwww
+wi11111,ww
+ww1w1111ww
+ww111111ww
+wwww1111ww
+ww111111ww
+ww1111w1ew
+wwwwwwwwww
+
+message Did it go this way?
+
+message Oh no.
+
+message I think I'm lost.
+
+wwwqwwwqwww
+wwwlllllwww
+wwwlllllwww
+ippl7l7lple
+wwwlllllwww
+wwwllll<www
+wwwqwwwqwww
+
+message I can't be lost! I'm going to run behind schedule!
+
+message I've never been behind schedule in the entire history of the world!
+
+i11p11e
+w1ppp1w
+wpppppw
+wpp1ppw
+wpp1ppw
+wpppppw
+w1ppp1w
+w11p11w
+
+
+message Bunny, please be still!
+
+message I don't have time for this!
+
+wwwwwwwww
+ww1111,ww
+ww1w111ww
+wi11111ew
+ww111w1ww
+ww11111ww
+wwwwwwwww
+
+message I have no idea where it went now, but at least I know where I am...
+
+message I'll hopefully be able to meet it someday!
+
+message Maybe it could also lead me to even more new species I've never seen!
+
+message I wonder how many of them there are!
+
+
+
+wwwwwwwwww
+wwww1lwwww
+www11llwww
+ww11.111ww
+willplllew
+wwlllllwww
+wwwlllwwww
+wwww1wwwww
+wwwwwwwwww
+
+message That animal that made me lose focus...
+
+message I think it didn't really look like any animal I've seen before...
+
+
+i1wpppppwww
+w1pplllppww
+wpp>llllppw
+wplll7lllpw
+wpllqlqllpw
+wplll7lllpw
+wpplllllppw
+wwpplllpp1w
+wwwpppppw1e
+
+message Come to think of it...
+
+message It... It...
+
+wwwwwwwwwwwww
+wi1111111<1ww
+wwww111111www
+ww11111ww11ww
+ww11ww11111ww
+www111111wwww
+ww1111111<1ew
+wwwwwwwwwwwww
+
+
+message ...it kind of looked like me!
+
+wwwpppppppppwww
+wwwp>llllllpwww
+wwwplllllllpwww
+wwwplll7lllpwww
+i11pllqlqllp11e
+wwwplll7lllpwww
+wwwplllllllpwww
+wwwplllllllpwww
+wwwpppppppppwww
+
+message END OF PART ONE
+
+

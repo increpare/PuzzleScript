@@ -1,0 +1,510 @@
+title Grandma's Christmas Kisses
+author Julianna Shevchenko
+homepage www.puzzlescript.net
+
+background_color white
+text_color green
+
+youtube 9DlD7-TykIU
+zoomscreen 8x8
+
+
+========
+OBJECTS
+========
+
+Temp
+Black
+.....
+.....
+.....
+.....
+.....
+
+Background
+#B0926E #C9A578
+10111
+00000
+11101
+00000
+11011
+
+Background2
+#B0926E #C9A578
+00000
+11101
+00000
+11011
+00000
+
+Grandson
+Black Orange lightgreen Red
+.....
+.000.
+.111.
+22222
+.0.0.
+
+Player
+Grey Orange White lightbrown darkbrown
+.000.
+.010.
+30303
+.333.
+.4.4.
+
+Mom
+Black Orange White Brown
+.000.
+00100
+20202
+.222.
+.3.3.
+
+Dad
+Black Orange green Red
+.000.
+.111.
+22222
+.000.
+.0.0.
+
+Uncle
+Black Orange #003200 darkgray
+.003.
+.111.
+22222
+.000.
+.0.0.
+
+Banner1
+lightbrown Red #967C63
+01111
+21111
+22111
+22211
+22222
+
+BannerX
+White Black #967C63
+00000
+01010
+00100
+01010
+22222
+
+BannerM
+Green Black #967C63
+01010
+10101
+10001
+10001
+22222
+
+BannerA
+Red Black #967C63
+00100
+01010
+11111
+10001
+22222
+
+BannerS
+White Black #967C63
+01110
+01100
+00110
+01110
+22222
+
+Banner2
+lightbrown Green #967C63
+11110
+11112
+11122
+11222
+22222
+
+Rug1
+Red White
+....1
+...10
+..100
+.1000
+10000
+
+Rug2
+Red White
+11111
+00000
+00000
+00000
+00000
+
+Rug3
+Red White
+1....
+01...
+001..
+0001.
+00001
+
+Rug4
+Red White
+10000
+10000
+10000
+10000
+10000
+
+Rug5
+Red White
+00000
+00000
+00000
+00000
+00000
+
+Rug6
+Red White
+00001
+00001
+00001
+00001
+00001
+
+Rug7
+Red White
+10000
+.1000
+..100
+...10
+....1
+
+Rug8
+Red White
+00000
+00000
+00000
+00000
+11111
+
+Rug9
+Red White
+00001
+0001.
+001..
+01...
+1....
+
+Gift
+Blue White
+.....
+.....
+.1.1.
+.010.
+.010.
+
+Tree1
+lightbrown Green lightgreen Brown
+....0
+...22
+..221
+.2211
+....3
+
+Tree2
+lightbrown Green lightgreen Brown
+0....
+11...
+111..
+1111.
+3....
+
+
+Wall
+#967C63
+00000
+00000
+00000
+00000
+00000
+
+Target1
+RED green
+..11.
+..111
+00...
+00...
+.....
+
+Target2
+RED green
+..1..
+.11..
+111..
+...00
+...00
+
+=======
+LEGEND
+=======
+
+. = Background
+, = Background2
+1 = Banner1
+2 = Banner2
+3 = BannerX
+4 = BannerM
+5 = BannerA
+6 = BannerS
+
+f = Rug1
+n = Rug2
+b = Rug3
+j = Rug4
+c = Rug5
+x = Rug6
+z = Rug7
+l = Rug8
+k = Rug9
+
+
+p = Player
+s = Grandson
+m = Mom
+d = Dad
+u = Uncle
+r = Tree1
+e = Tree2
+g = gift
+w = Wall
+t = Target1
+a = Target2
+
+=========
+SOUNDS
+=========
+
+EndLevel 829507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Background2, Temp
+Rug1, Rug2, Rug3, Rug4, Rug5, Rug6, Rug7, Rug8, Rug9
+Player, Wall, Tree1, Tree2, Grandson, Banner1, BannerX, BannerM, BannerA, BannerS, Banner2, Gift, Mom, Dad, Uncle
+Target1, Target2
+
+
+======
+RULES
+======
+
+[ > Player ] [ Grandson ] -> [ > Player ] [ > Grandson ]
+
+[ > Player | Gift ] -> [ > Player | > Gift ]
+[ < Player | Gift ] -> [ < Player | < Gift ]
+
+late [Player | Mom] -> message Is my boy giving you trouble? Maybe you can lure him out with an early Christmas present.
+
+[ Gift | ... | Grandson ] -> [ Temp | ... | ]
+[ Temp ] -> [ Grandson ]
+
+
+[stationary Uncle] -> [randomDir Uncle]
+[Uncle|Gift] -> [< Uncle|Gift]
+[Uncle|Target1] -> [< Uncle|Target1]
+[Uncle|Target2] -> [< Uncle|Target2]
+([Player|...|Uncle] -> [Player|...| < Uncle]) 
+late [Player | Uncle] -> message Mom, why don't you go sit down over by the Christmas tree? Leave the poor boy in peace.
+late [Player | Uncle] -> again
+[Player | Uncle] -> restart
+
+[stationary Dad] -> [randomDir Dad]
+[Dad|Gift] -> [< Dad|Gift]
+[Dad|Target1] -> [< Dad|Target1]
+[Dad|Target2] -> [< Dad|Target2]
+([Player|...|Dad] -> [Player|...| < Dad]) 
+late [Player | Dad] -> message Mom, stop harassing the boy! He's a grown man now, and he doesn't want your kisses.
+late [Player | Dad] -> again
+[Player | Dad] -> restart
+
+==============
+WINCONDITIONS
+==============
+All Grandson on Target1
+All Player on Target2
+
+=======
+LEVELS
+=======
+
+message Level 1 of 10: Your grandson thinks he's too grown up for kisses! Corner him under the mistletoe.
+
+w1212w
+w,,atw
+w....w
+w,,,,w
+w...sw
+w,,,,w
+w.p..w
+wwwwww
+
+message Level 2 of 10: Where did that boy run off to?
+
+www134562www
+wre......rew
+w,,,,,,,,,,w
+w.......s..w
+w,,,,,fnnb,w
+w..re.jccx.w
+w,,,w,jccx,w
+w...w.zllk.w
+w,,,w,,,,,,w
+w.p.w....atw
+wwwwwwwwwwww
+
+message Level 3 of 10: L is for LOVE! Also left. You always need to be on the left... It's easier on grandma's artifical hip.
+
+www134562www
+wat..re....w
+w,,,,,,,,,,w
+w.fnnnnnnbpw
+w,jccccccx,w
+w.jccwwccx.w
+w,jccccccx,w
+wszllllllk.w
+w,,,,,,,,,,w
+wre......rew
+wwwwwwwwwwww
+
+message Level 4 of 10: Your son is a meanie who doesn't want you to get any Christmas kisses. Avoid him at all costs!
+
+wwwwww134562w
+wres.w....atw
+w,,,,w,,,,,,w
+w...d.......w
+w,,,,fnnnnb,w
+w12..jccccx.w
+w,,,,jccccx,w
+w....zllllk.w
+w,,,,,,,,,,,w
+w..re....p..w
+wwwwwwwwwwwww
+
+message Level 5 of 10: Sonny seems to have locked himself in his room to get out of family time. Maybe his mom knows how to lure him out?
+
+w134562wwwww
+w..m...w...w
+w,fnnb,w,,,w
+w.jccx.ws..w
+w,jccx,wwwww
+w.zllk.w..pw
+w,,,,,,w,,,w
+ww1at2ww...w
+w,,,,,,,,,,w
+wreg.......w
+wwwwwwwwwwww
+
+message Level 6 of 10: Why is so hard for Grandma to get some sugar?
+
+wwwwww134562wwwwwww
+w...w..m....w...rew
+w,,,wfnnnnnb,,,,,,w
+w.s.wzlllllk..d...w
+wwwwwwww,,,,,,,,,,w
+wp.........w....atw
+w,fb,,,,,,,w134562w
+w.jx.w.....w......w
+w,jx,w,fnnnnnb,,,,w
+w.zk.w.zlllllk.grew
+wwwwwwwwwwwwwwwwwww
+
+message Level 7 of 10: Your son managed to get his brothers on his side. So much for Christmas spirit of giving...
+
+www134562wwwwwwwwwww
+wre,,,,,,w,fnb,w,,,w
+w........w.jcx.w...w
+w,,,,,,,,w,zlk,w,,,w
+w...u....wre...w...w
+w,,,,,,,,www,,,watww
+w........w........uw
+w134562,,,,,,,,,,,,w
+w.fnnb.....ww1...2ww
+w,jccx,,,,,w,,,,,,,w
+w.jccxu....w.fnnnb.w
+w,zllk,,,,,w,jcccx,w
+ww....w....w.jcccx.w
+wre,,,,,,,,,,jcccx,w
+w............jcccxdw
+w,,,,,,,,,,,,zlllk,w
+w...p....rew...s...w
+wwwwwwwwwwwwwwwwwwww
+
+message Level 8 of 10: Who put the mistletoe in the wine cellar? Squeezing through tight places is hard on grandma's hip.
+
+wwwwwwwwwwww134562ww
+w,,at,,,,,w,,,,,,,,w
+w.w..w..w.w.fnnnnbdw
+w,w,,w,,w,w,jccccx,w
+w.........wsjccccx.w
+ww1,2w1,2ww,jccccx,w
+wrefnnnb..w.zllllk.w
+w,,jcccx,,wre,,,,rew
+w.ujcccx..ww1....2ww
+w,,zlllk,,,,,,,,,,,w
+w..................w
+w,,,ww1,,2wwww,,,,,w
+w...w..fnnnnbw.....w
+w,,,w,,jccccxw,,,,,w
+w....u.jccccxw...p.w
+w,,,w,,jccccxw,,,,,w
+w...w..zllllkw.re..w
+wwwwwwwwwwwwwwwwwwww
+
+message Level 9 of 10: This is Christmas! Time for all the family to get together! Yet everyone is in separate rooms.
+
+w134562wwwwww134562w
+wat,,,rew,,,w,,,,,,w
+w.......w.s.w.fnnb.w
+w,,,,,,,w,,,w,jccx,w
+w...u...wwwww.jccx.w
+w,,,,,,,,fnbw,jccx,w
+wre......jcxw.zllk.w
+ww134562wjcx,,,,,,,w
+w.....rewjcx....u..w
+w,,,,,,,wjcxw134562w
+w.u.w...wjcxw......w
+w,,,w,,,wjcxw,wwww,w
+w...w...wjcxw..m...w
+w,,,w,,,,jcxw,wwww,w
+w...w....jcx....d..w
+w,,,,,,,wzlk,,wwww,w
+wreg....w.p.w......w
+wwwwwwwwwwwwwwwwwwww
+
+message Level 10 of 10: It's almost sonny's bedtime. Give him one last goodnight kiss...
+
+wwwwwwwwwwwwwwwwwwww
+w,,,w,,,,watwgrew,,w
+w.s.w.u..w..wgggw..w
+w,,,w,,,,w,,wgggw,,w
+wwwww....w..wgggw..w
+w,,,,,,,,w1,21m21,2w
+w.fnnnnnnnnnnnnnb..w
+w,jcccccccccccccx,,w
+w.jcccccccccccccx..w
+w,zlllllllllllllk,,w
+w121..21..212w.....w
+w,,fb,ww,,fb,w,,,,,w
+w..jx.ww..jx.w.....w
+w,,jx,ww,,jx,w,,,,,w
+w..jxuwwd.jx.w.....w
+w,,zk,ww,,zk,w,,,,,w
+w..re.ww.gre.w...p.w
+wwwwwwwwwwwwwwwwwwww
+
+message Thanks for playing! Merry Christmas!

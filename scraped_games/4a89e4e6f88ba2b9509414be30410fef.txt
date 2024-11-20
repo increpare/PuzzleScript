@@ -1,0 +1,116 @@
+title Cuddlefish
+author Dr. Em          .
+homepage oneforeachhand.com
+norepeat_action
+run_rules_on_level_start
+========
+OBJECTS
+========
+
+
+Background  (special, automatically placed in its own layer)
+GREEN darkblue
+11111
+01111
+11101
+11111
+10111
+
+
+Player    (Required by game)
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+HappyFish
+Purple White Pink
+...00
+..000
+.0010
+2020.
+2020.
+
+LonelyFish
+Blue White LightBlue
+...00
+..000
+.0010
+2020.
+2020.
+
+ScaredFish
+Yellow White LIGHTBROWN
+...00
+..000
+.0010
+2020.
+2020.
+
+AngryFish
+Red White LightRed
+...00
+..000
+.0010
+2020.
+2020.
+
+Shark
+GRAY
+.....
+.....
+..0..
+.000.
+00000
+
+=======
+LEGEND
+=======
+Fish = HappyFish or ScaredFish or AngryFish or LonelyFish
+. = Background
+P = Player
+F = HappyFish
+S = Shark
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Fish, ScaredFish, AngryFish, LonelyFish, Shark
+Player 
+
+======
+RULES
+======
+
+
+[ action Player no Fish no Shark| Fish] -> [Player LonelyFish | no Fish]
+[ Fish | ... | Fish] -> [HappyFish | ... | HappyFish]
+[ Fish | ... | Shark] -> [ ScaredFish | ... | Shark]
+[ Fish | Fish ] -> [AngryFish | AngryFish ]
+
+==============
+WINCONDITIONS
+==============
+
+No ScaredFish
+No AngryFish
+No LonelyFish
+=======
+LEVELS
+=======
+
+....FF.
+S..F...
+.......
+...S..F
+......F
+.P.F..F
+

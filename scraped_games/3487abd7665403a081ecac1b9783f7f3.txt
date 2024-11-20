@@ -1,0 +1,617 @@
+title KidsCoding
+author Syd
+
+realtime_interval 0.6
+
+run_rules_on_level_start
+
+verbose_logging
+
+========
+OBJECTS
+========
+
+Background
+DARKGREY
+
+Grass ~
+lightgreen
+
+Carrot 
+ORANGE GREEN
+.....
+...1.
+..1..
+..0..
+.....
+
+GardenHide H
+DARKGREY
+GardenMarker
+DARKGREY
+GardenFiller =
+transparent
+(green)
+
+
+Go G
+WHITE
+.00..
+0..0.
+0....
+0.00.
+.00..
+
+GoO
+WHITE
+.....
+.0...
+0.0..
+0.0..
+.0...
+
+Del X
+WHITE
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+Move
+RED
+..0..
+...0.
+00..0
+...0.
+..0..
+
+TurnR
+Blue
+000..
+..0..
+0...0
+.0.0.
+..0..
+
+TurnL
+BLUE
+..0..
+.0.0.
+0...0
+..0..
+000..
+
+LoopB
+YELLOW
+00000
+0....
+0..0.
+00..0
+...0.
+LoopF
+YELLOW
+.0...
+0..00
+.0..0
+....0
+00000
+(loop ids)
+L1
+transparent
+L2
+transparent
+L3
+transparent
+
+IPlace i
+WHITE
+000..
+00...
+0.0..
+...0.
+....0
+
+ElBack :
+transparent
+(lightblue)
+
+Itrack _
+Transparent
+CtrackGold 1
+lightgrey
+CtrackSilver 2
+grey
+CtrackBronze 3
+Darkgrey
+
+
+SetUp
+transparent
+(lightBlue)
+StartRun
+transparent
+(purple)
+Run
+transparent
+(purple)
+Wait
+transparent
+(pink)
+EndRun
+transparent
+(red)
+
+tree T
+green darkgreen brown
+.001.
+00011
+.011.
+..2..
+..2..
+
+RabbitS
+grey black pink lightbrown
+.0.0.
+.202.
+.010.
+03330
+03330
+RabbitN
+grey black pink lightbrown white
+.0.0.
+.000.
+.000.
+03330
+03430
+RabbitE
+grey black pink lightbrown white
+.0...
+.02..
+.001.
+.033.
+40330
+RabbitW
+grey black pink lightbrown white
+...0.
+..20.
+.100.
+.330.
+03304
+
+RScopy
+transparent
+RNcopy
+transparent
+REcopy
+transparent
+RWcopy
+transparent
+
+Help ?
+White
+.00..
+0..0.
+..0..
+.....
+..0..
+
+Player
+ORANGE
+
+(digits from   Jere Majava  )
+one
+BLACK
+..0..
+.00..
+..0..
+.000.
+.....
+two
+BLACK
+..00.
+.000.
+.0...
+.000.
+.....
+three
+BLACK
+.000.
+..00.
+...0.
+.000.
+.....
+four
+BLACK
+.0...
+.0.0.
+.000.
+...0.
+.....
+five
+BLACK
+.00..
+.000.
+...0.
+.000.
+.....
+six
+BLACK
+.000.
+.00..
+.0.0.
+.000.
+.....
+seven
+BLACK
+.000.
+...0.
+..0..
+.0...
+.....
+eight
+BLACK
+.000.
+.000.
+.0.0.
+.000.
+.....
+nine
+BLACK
+.000.
+.0.0.
+..00.
+.000.
+.....
+zero
+BLACK
+.000.
+.0.0.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Iplace and Itrack
+
+M = Move and elBack
+R = TurnR and elBack
+L = TurnL and elBack
+B = LoopB and elBack
+F = LoopF and elBack
+
+code = Move or TurnL or TurnR or LoopB or LoopF
+doElement = Go or Del
+element = code or doElement
+LoopId = L1 or L2 or L3
+
+Ctrack = CtrackGold or CtrackSilver or CtrackBronze
+
+rabbit = RabbitN or RabbitS or RabbitE or RabbitW
+N = RabbitN and grass
+S = RabbitS and grass
+E = RabbitE and grass
+W = RabbitW and grass
+RabbitCopy = RNcopy or RScopy or REcopy or RWcopy
+
+$ = carrot and grass
+OKmove = carrot or grass
+veg = carrot or tree
+garden = grass or veg or GardenFiller
+SG = veg or rabbit
+GC = SG or GardenFiller or RabbitCopy
+GM = GardenMarker
+Z = GM and H
+Q = Z and SetUP 
+
+running = StartRun or Run or Wait or EndRun
+
+number = one or two or three or four or five or six or seven or eight or nine or zero
+
+=======
+SOUNDS
+=======
+
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+grass
+gardenFiller, veg
+rabbit, rabbitCopy
+GardenHide Itrack, Ctrack, ElBack, help
+player, GardenMarker
+Iplace, running, SetUp
+code, Element, GoO
+number
+loopId
+
+
+======
+RULES
+======
+
+(setup)
+[SetUp][Grass no SG] -> [SetUp][Grass GardenFiller]
+right[SetUp H|||||GC] -> [H GC|SetUp||||GC]
+[setUp][RabbitN H] -> [setUp][RNcopy H]
+[setUp][RabbitS H] -> [setUp][RScopy H]
+[setUp][RabbitE H] -> [setUp][REcopy H]
+[setUp][RabbitW H] -> [setUp][RWcopy H]
+right[Go | no GoO] -> [Go | GoO]
+[SetUp] -> []
+
+(RUNNING)
+(catch key presses)
+[Run][> player] -> [Run][player]
+[Run][action player] -> [EndRun][player]
+(move)
+right[RabbitE | OKmove][Run Move] -> [ | OKmove RabbitE][Wait Move]
+left[RabbitW | OKmove][Run Move] -> [ | OKmove RabbitW][Wait Move]
+up[RabbitN | OKmove][Run Move] -> [ | OKmove RabbitN][Wait Move]
+down[RabbitS | OKmove][Run Move] -> [ | OKmove RabbitS][Wait Move]
+(if can not move then halt)
+[Rabbit | no OKmove][Run Move] -> [ Rabbit | ][Wait Move]
+(turn Right clockwise)
+[RabbitE][Run TurnR] -> [RabbitS][Wait TurnR]
+[RabbitS][Run TurnR] -> [RabbitW][Wait TurnR]
+[RabbitW][Run TurnR] -> [RabbitN][Wait TurnR]
+[RabbitN][Run TurnR] -> [RabbitE][Wait TurnR]
+(turn Left anticlockwise)
+[RabbitE][Run TurnL] -> [RabbitN][Wait TurnL]
+[RabbitN][Run TurnL] -> [RabbitW][Wait TurnL]
+[RabbitW][Run TurnL] -> [RabbitS][Wait TurnL]
+[RabbitS][Run TurnL] -> [RabbitE][Wait TurnL]
+(looping)
+(set up this loop)
+[Run LoopB L1 no number][LoopF L1 number] -> [wait LoopB L1 number][LoopF L1 number]
+[Run LoopB L2 no number][LoopF L2 number] -> [wait LoopB L2 number][LoopF L2 number]
+[Run LoopB L3 no number][LoopF L3 number] -> [wait LoopB L3 number][LoopF L3 number]
+(when get to a loop end jump back to beginning otherwise move forward)
+(remove Iplace)
+down[Run LoopF LoopId | Iplace] -> [Run LoopF LoopId | ]
+[Run LoopF L1][LoopB L1 number] -> [LoopF L1][Run LoopB L1 number]
+[Run LoopF L2][LoopB L2 number] -> [LoopF L2][Run LoopB L2 number]
+[Run LoopF L3][LoopB L3 number] -> [LoopF L3][Run LoopB L3 number]
+[Run LoopF] -> [wait LoopF]
+
+(decease count)
+[Run LoopB LoopId two] -> [wait LoopB LoopId]
+[Run LoopB LoopId three] -> [wait LoopB LoopId two]
+[Run LoopB LoopId four] -> [wait LoopB LoopId three]
+[Run LoopB LoopId five] -> [wait LoopB LoopId four]
+[Run LoopB LoopId six] -> [wait LoopB LoopId five]
+[Run LoopB LoopId seven] -> [wait LoopB LoopId six]
+[Run LoopB LoopId eight] -> [wait LoopB LoopId seven]
+[Run LoopB LoopId nine] -> [wait LoopB LoopId eight]
+
+
+(check if RABBIT got CARROT)
+[Rabbit Carrot] -> [Rabbit]
+
+(if Run stoped or no more code then tidy up)
+[EndRun][carrot grass] -> [EndRun][carrot grass] (message Your instructions have finished but not ALL the carrots have gone)
+(    reset loop counters)
+[EndRun][LoopB Number] -> [EndRun][LoopB]
+(    copy save garden to visable one)
+[EndRun][GM] -> [EndRun][GM EndRun]
+[EndRun][GC Grass] -> [EndRun][Grass]
+right[EndRun H GC|||||] -> [H GC|EndRun||||GC]
+[EndRun][RNcopy Grass] -> [EndRun][RabbitN Grass]
+[EndRun][RScopy Grass] -> [EndRun][RabbitS Grass]
+[EndRun][REcopy Grass] -> [EndRun][RabbitE Grass]
+[EndRun][RWcopy Grass] -> [EndRun][RabbitW Grass]
+[EndRun] -> []
+
+
+(get ready for next code on next realtimg interval)
+(  move on if more code)
+random right[Wait | code] -> [Wait | Run Code]
+(  if no more code then stop Running)
+right[Wait | no Code] -> [EndRun | ] 
+[EndRun][carrot grass] -> [EndRun][carrot grass] message Your instructions have finished but not ALL the carrots have gone
+(  remove Iplace if more code)
+down[Wait | Iplace] -> [ | ]
+[wait] -> []
+(  replace Iplace below run)
+down[Run | no Iplace] -> [Run | Iplace]
+down[EndRun | no Iplace] -> [EndRun | Iplace]
+
+(if putting loop in code then select loop iterations)
+(    stop vertical movement)
+[LoopF ElBack][vertical player] -> [LoopF ElBack][player]
+(    if ACTION on number use it)
+[LoopF ElBack LoopId][action player number][Iplace] -> [LoopF ElBack LoopId][player][Iplace LoopF number LoopId]
+(    if number used tidy up)
+[LoopF number Itrack][LoopF ElBack |...| number] -> [[LoopF number Itrack][LoopF ElBack |...| ]
+right[LoopF ElBack | no number][LoopF number Itrack][player] -> [LoopB ElBack player | ][LoopF number Itrack][]
+(    stop moving off end of user line)
+right[right player | number][LoopF ElBack] -> [ | player number][LoopF ElBack]
+left[left player | number][LoopF ElBack] -> [ | player number][LoopF ElBack]
+(    stop player actioning LoopF)
+[action player loopF] -> [player loopF]
+
+
+(END RUNNING)
+
+
+(if DOWN pressed when on coding track go to first code element 
+OTHERWISE go downwards to next coding element)
+up[ElBack | no ElBack][down player Itrack] -> [ElBack player | no ElBack][Itrack]
+down[down player Element | ... | Element] -> [Element | ... | Element player]
+
+(if UP pressed when on coding elements go to Insert track on insert 
+OTHERWISE go upwards to next coding element)
+up[up player ElBack | no ElBack][Iplace] -> [ElBack | no ElBack][Iplace player]
+up[up player Element | ... | Element ElBack] -> [Element | ... | Element ElBack player]
+
+(if LEFT or RIGHT pressed when on code track then move taking insert
+         OTHERWISE on code elements LEFT to help but lose RIGHT)
+right[right player Iplace Itrack | Itrack] -> [ Itrack | player Iplace Itrack]
+left[left player Iplace Itrack | Itrack] -> [ Itrack | player Iplace Itrack]
+(HELP selected)
+right[Help | left player Iplace] -> [Help | player Iplace] message Move this arrow left & right to place your sequence of instruction
+right[Help | left player Move] -> [Help | player Move] message Moves Rabbit forwards in direction the Rabbit is facing.   The rabbit can not move off the green grass and is stopped by trees.
+right[Help | left player TurnR] -> [Help | player TurnR] message Turns Rabbit to right (clockwise) a quarter turn 
+right[Help | left player TurnL] -> [Help | player TurnL] message Turns Rabbit to left (anti-clockwise) a quarter turn
+right[Help | left player LoopB] -> [Help | player LoopB] message Repeats a sequence of commands a set number of times.  You select thenumber of times the repeat occures.   Upto 3 loops, which can be nested as required.
+right[Help | left player LoopF] -> [Help | player LoopF] message Select the number repeats of this loop.
+right[Help | left player Del] -> [Help | player Del] message Deletes command above arrow (both beginning & and of loop are deleted), instructions are packed upto the left after delections
+right[Help | left player Go] -> [Help | player Go] message Gets Rabbit to follow the sequence of command.  You can halt the sequence by pressing X
+
+
+(ACTION on code element puts it on code track {above insert} and moves insert to right)
+(    if code already in place above insert then need to shuffle code right)
+up[Iplace | code][action player ElBack code] -> [Iplace | right code][action player ElBack code]
+(    If LoopF to insert then also shuuffle code)
+up[Iplace LoopF | code] -> [Iplace LoopF | right code]
+(    do shuffle)
+right[> code | stationary code] -> [> code | > code]
+(    copy code to Itrack then into Ctrack)
+right[Iplace | ][action player ElBack code] -> [code | Iplace][player ElBack code]
+(   ACTION on LoopB find a free loop number and remember this for next real time interval by changing LoopB to LoopF at player)
+[Itrack LoopB] -> [Itrack LoopB L1]
+[Itrack LoopB L1][Ctrack L1] -> [Itrack LoopB L2][Ctrack L1]
+[Itrack LoopB L2][Ctrack L2] -> [Itrack LoopB L3][Ctrack L2]
+[Itrack LoopB L3][Ctrack L3] -> [Itrack LoopB][Ctrack L3]
+[Itrack LoopB no LoopId] -> [Itrack] message Sorry max 3 loops
+right[player loopB||||||||][Itrack LoopB LoopId] -> [player loopF LoopId |one|two|three|four|five|six|seven|eight][Itrack LoopB LoopId]
+
+late up [Itrack code | ] -> [Itrack | code]
+late up [Itrack number | ] -> [Itrack | number]
+late up [Itrack loopId | ] -> [Itrack | LoopId]
+
+(ACTION on Delete removes code above insert)
+(   if loop then find other end of this loop and delete it)
+up[Iplace | LoopB L1][action player Del][LoopF L1 number] -> [Iplace | ][player Del][]
+up[Iplace | LoopB L2][action player Del][LoopF L2 number] -> [Iplace | ][player Del][]
+up[Iplace | LoopB L3][action player Del][LoopF L3 number] -> [Iplace | ][player Del][]
+up[Iplace | LoopF L1 number][action player Del][LoopB L1 Ctrack] -> [Iplace | ][player Del][Ctrack]
+up[Iplace | LoopF L2 number][action player Del][LoopB L2 Ctrack] -> [Iplace | ][player Del][Ctrack]
+up[Iplace | LoopF L3 number][action player Del][LoopB L3 Ctrack] -> [Iplace | ][player Del][Ctrack]
+(   for any other code delete it )
+up[Iplace | code][action player Del] -> [Iplace | ][player Del]
+
+(regaurdless if deleting or not then shuffles code left if any gap)
+right[Ctrack no code | code] -> [Ctrack | < code]
+right[< code | code] -> [< code | < code]
+
+(ACTION on GO starts rabbit moving)
+[action player Go] -> [player Go StartRun]
+left[Iplace | Itrack][startRun] -> [ | Iplace Itrack][startRun] again
+up[Iplace | ][StartRun] ->[Iplace | Run][]
+
+(if code moving then move any numbers & Ids with it)
+[horizontal code number] -> [horizontal code horizontal number]
+[horizontal code LoopId] -> [horizontal code horizontal LoopId]
+
+(Lose any other movement)
+[> player] -> [player]
+
+==============
+WINCONDITIONS
+==============
+
+no carrot on Grass
+
+=======
+LEVELS
+=======
+
+Message You set up the sequence of command to instruct the Ribbit to collect ALL the carrots.
+Message Select command from the vertical list which places them on the horizontal track.  When you selct Go the Rabbit will move acording to your instructions.
+message First moving forwards
+.................
+.112233333333333.
+?P______________.
+.......QHHHH=====
+.......QHHHH=E$$=
+?M.....QHHHH=====
+.:.....QHHHH=====
+.:.....QHHHH.....
+?G...............
+
+message Well done.     In the next garden a TURN is required
+.................
+.111112233333333.
+.P______________.
+.......QHHHH=====
+?L.....QHHHH=E$$=
+.M.....QHHHH===$=
+?R.....QHHHH===$=
+.:.....QHHHH.....
+?X...............
+.G...............
+
+message Well done.     A loop can be used to repeat a group of commands a set number of times
+
+.................
+.111112233333333.
+.P______________.
+.......QHHHH=====
+.L.....QHHHH=E$$=
+.M.....QHHHH=$=$=
+.R.....QHHHH=$$$=
+?B.....QHHHH.....
+.X.....QHHHH.....
+.G...............
+
+message You have got all the basics now.     The next one is a bit harder, can you completed it in 9 commands.
+
+.................
+.111111111223333.
+?P______________.
+.......QHHHH$$$==
+?L.....QHHHH$t$==
+?M.....QHHHH$$E$$
+?R.....QHHHH==$t$
+?B.....QHHHH==$$$
+?X.....QHHHH.....
+?G...............
+
+message Need to think for the next one, can you completed it in 8 commands.
+
+.................
+.111111112233333.
+.P______________.
+.......QHHHH$$$$$
+?L.....QHHHH$t$t$
+?M.....QHHHH$$E$$
+?R.....QHHHH$t$t$
+?B.....QHHHH$$$$$
+?X.....QHHHH.....
+?G...............
+
+message Last one from Google, can you completed it in 8 commands.
+
+.................
+.111111112233333.
+?P______________.
+.......QHHHH=$$$=
+?L.....QHHHH$~~~$
+?M.....QHHHH$~E~$
+?R.....QHHHH$~~~$
+?B.....QHHHH=$$$=
+?X.....QHHHH.....
+?G...............
+
+message An extra one.   More gardens to come in next release
+
+.................
+.111111122333333.
+?P______________.
+.......QHHHH=$$$=
+?L.....QHHHH=$E$=
+?M.....QHHHH=$$$=
+?R.....QHHHH.....
+?B.....QHHHH.....
+?X.....QHHHH.....
+?G...............
+

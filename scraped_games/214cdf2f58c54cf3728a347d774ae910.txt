@@ -1,0 +1,321 @@
+title The Beginning, The End
+author Parachor
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+Black
+00000
+00000
+00000
+00000
+00000
+
+Player
+White
+00.00
+0...0
+.....
+0...0
+00.00
+
+Red
+#ff4732 #ff1a00 #cc1400 #990f00
+01111
+12322
+13202
+11012
+22223
+
+Orange
+#ff9a32 #ff8100 #cc6700 #994d00
+01111
+12322
+13202
+11012
+22223
+
+Yellow
+#ffee4c #ffe700 #ccb800 #998a00
+01111
+12322
+13202
+11012
+22223
+
+Green
+#32ff93 #00ff78 #00cc60 #009948
+01111
+12322
+13202
+11012
+22223
+
+Blue
+#32b2ff #009fff #007fcc #005f99
+01111
+12322
+13202
+11012
+22223
+
+Purple
+#ca32ff #bd00ff #9700cc #710099
+01111
+12322
+13202
+11012
+22223
+
+LetterA
+Transparent
+
+LetterC
+Transparent
+
+LetterE
+Transparent
+
+LetterN
+Transparent
+
+LetterS
+Transparent
+
+LetterT
+Transparent
+
+Marker
+Transparent
+
+Singleton
+Transparent
+
+Popular
+Transparent
+
+Empty
+Transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+! = Player and Red
+@ = Player and Orange
+# = Player and Yellow
+$ = Player and Green
+% = Player and Blue
+& = Player and Purple
+R = Red
+O = Orange
+Y = Yellow
+G = Green
+B = Blue
+P = Purple
+A = LetterA
+C = LetterC
+E = LetterE
+N = LetterN
+S = LetterS
+T = LetterT
+
+Blocks = Red or Orange or Yellow or Green or Blue or Purple
+Letter = LetterA or LetterC or LetterE or LetterN or LetterS or LetterT
+
+=======
+SOUNDS
+=======
+
+Player move 69405107
+endlevel 99636708
+restart 92555303
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Blocks, Letter
+Marker
+Empty
+Singleton, Popular
+Player
+
+======
+RULES
+======
+
+[ ACTION Player Popular Red ] -> [ Player Popular Red Marker ]
+[ Red Marker | Red ] -> [ Red Marker | Red Marker ]
+[ ACTION Player Popular Orange ] -> [ Player Popular Orange Marker ]
+[ Orange Marker | Orange ] -> [ Orange Marker | Orange Marker ]
+[ ACTION Player Popular Yellow ] -> [ Player Popular Yellow Marker ]
+[ Yellow Marker | Yellow ] -> [ Yellow Marker | Yellow Marker ]
+[ ACTION Player Popular Green ] -> [ Player Popular Green Marker ]
+[ Green Marker | Green ] -> [ Green Marker | Green Marker ]
+[ ACTION Player Popular Blue ] -> [ Player Popular Blue Marker ]
+[ Blue Marker | Blue ] -> [ Blue Marker | Blue Marker ]
+[ ACTION Player Popular Purple ] -> [ Player Popular Purple Marker ]
+[ Purple Marker | Purple ] -> [ Purple Marker | Purple Marker ]
+[ Blocks Marker ] -> []
+DOWN [ Blocks | No Blocks ] -> [ | Blocks ]
+[ Popular ] -> []
+[ Singleton ] -> []
+[ Red | Red ] -> [ Popular Red | Popular Red ]
+[ Orange | Orange ] -> [ Popular Orange | Popular Orange ]
+[ Yellow | Yellow ] -> [ Popular Yellow | Popular Yellow ]
+[ Green | Green ] -> [ Popular Green | Popular Green ]
+[ Blue | Blue ] -> [ Popular Blue | Popular Blue ]
+[ Purple | Purple ] -> [ Popular Purple | Popular Purple ]
+LATE [ Blocks No Popular ] -> [ Singleton Blocks ]
+DOWN [ No Blocks | No Blocks | No Blocks | No Blocks | No Blocks | No Blocks | No Blocks | No Blocks | No Blocks | No Blocks ] -> [ Empty | Empty | Empty | Empty | Empty | Empty | Empty | Empty | Empty | Empty ]
+[ Empty ] -> [ RIGHT Empty ]
+RIGHT [ RIGHT Empty | Blocks ] -> [ Blocks | Empty ] again
+
+==============
+WINCONDITIONS
+==============
+
+No Blocks
+
+=======
+LEVELS
+=======
+
+RBBRRRRBRR 
+RBBBRRRRRB 
+BRRBRBBBRB 
+BRRRBBBBRB 
+RRBBRBRRBR 
+RBRRBRBRRB 
+BBBRRRBBBR 
+RRBR%RRRBB 
+BRRBRBBRRR 
+BBRRRRBBBR
+
+BBBRBBBRBR 
+BRBRBRRRBB
+RRRBRBRRRB
+RRBBRBRBBR
+RBRRBRBRR%
+RBBBRBBBBB
+BRBRBRRBBR
+RBBRRBBRBR
+BRBRBRBRBB
+BRRBBRBRRR
+
+RBRGBRGBRB
+RBGRRGRBRB
+BRG!GGRGGG
+RBRBBRGBRB
+RGGGGBRBRB
+BBBBBRBGBG
+RGRGRBGBGR
+BGRGBRGRBR
+GRBRRGBRGB
+BRGBBGRGRR
+
+BBBGRBRGBG
+BGBGRBRBGB
+RBGRBRGBRB
+GRBRBGBGBG
+GRGGRBRRBR
+RGRBR$BGGB
+RBRGBBRRRB
+BBGBRRRGBG
+RGRGBGBBGR
+RGRBRRGRGB
+
+RRRRBRBRYG
+RYGYRBBRBB
+BYGYGBRBYR
+GRBRGYBYBY
+YYRGRBRGRG
+BYRGYGBRYY
+BRYBRGYRBG
+YGBRGBGGYG
+%YYGYRGRBB
+RGBYGRYRGG
+
+GBRGBGGBYR
+RYGYBYGYYR
+RYRRYGYRGY
+GRYRRGYRGB
+BGYBYYBGBB
+YBRBRGBGRR
+YBGYRYRYGR
+BGBGBYRBGY
+GRBYRRBYRB
+GBGGYG$YGG
+
+RYPBYPYYRG
+PYGBYBYGBY
+PRGRBRPYPY
+RYBRYYPYRP
+RGBGGRGGRP
+BYGYPBBRPY
+RYGRBRYPBY
+BRPBYRPGRG
+GPYRPBRB#G
+RPBPYYGBYR
+
+GGPRPYGRPG
+YGGRPYRBRG
+YPGPBGGYRP
+GRYRBBBGYB
+PRYRYBBGGB
+GBBPRGYBPG
+GPBRRPPBRG
+YPRBYBPYBR
+YB#BPBRRRY
+RRBRBGGBBG
+
+PYOYGYGGRB
+BYRRPRPGRB
+GGGRPRYBYY
+GGGPGGYBYY
+RRBPPYOOOG
+PYBYYRBBGG
+BR@BOYYRPB
+OPOGBRPGPG
+OYRGBPRGBP
+PRBYYOPPYP
+
+YPYGYPGOYP
+RYYGBYPPOY
+BBPOBYOPBY
+BPYOPPOYOP
+GYRPGBBGOR
+YPYRGBR$BY
+RGRPOYROOY
+BBYORYOGYR
+GYRYGGOPOO
+GBPROOBYBB
+
+OOOYYYGGGP
+OPOOOYGYGG
+OPOYYYYYYG
+OPPBYBYGGG
+OOPBBBYYYG
+POPPPBYBBG
+PPPRBBBBGG
+P!RRRRRBRR
+PPRBBBBBBR
+GPRRRRRRRR
+
+AANEECASSE
+SATACAESSS
+EAEECATNSN
+EEETTSSSNN
+CTATNCNSNA
+CETTNNNNAA
+TCCCECTTNA
+NCNNENCCCA
+NNNCSTCTTT
+TCATACCTCS
+

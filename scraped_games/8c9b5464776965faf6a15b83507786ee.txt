@@ -1,0 +1,372 @@
+title Match Flow
+author edderiofer
+homepage http://edderiofer.blogspot.com
+run_rules_on_level_start
+background_color #000
+again_interval 0
+key_repeat_interval 0.15
+noaction
+
+========
+OBJECTS
+========
+
+background
+grey
+
+square
+darkgrey lightred
+00000
+00000
+00100
+00000
+00000
+
+block
+darkgrey #303030
+00000
+00100
+01110
+00100
+00000
+
+connectedl
+lightblue
+.....
+.....
+000..
+.....
+.....
+
+connectedr
+lightblue
+.....
+.....
+..000
+.....
+.....
+
+connectedu
+lightblue
+..0..
+..0..
+..0..
+.....
+.....
+
+connectedd
+lightblue
+.....
+.....
+..0..
+..0..
+..0..
+
+player
+pink
+
+vwall
+black
+
+iwall
+transparent
+
+winning
+transparent
+
+endpointcounter
+transparent
+
+connected
+transparent
+
+switch
+transparent
+
+
+fsquare
+black lightred
+00000
+00000
+00100
+00000
+00000
+
+deactivator
+red
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+overload
+red
+.....
+.....
+..0..
+.....
+.....
+
+ksquare
+darkgrey lightred
+00000
+00000
+00100
+00000
+00000
+
+
+
+dosquare
+darkgrey lightred
+00000
+00000
+00100
+00000
+00000
+
+
+=======
+LEGEND
+=======
+
+con = connectedu or connectedl or connectedr or connectedd or connected or overload
+squares = square or fsquare or ksquare or dosquare
+msquare = square or block or dosquare
+wall = iwall or vwall
+q = player
+s = square
+k = ksquare
+. = background
+# = vwall
+x = deactivator
+@ = square and deactivator
+f = fsquare
+b = block
+i = switch
+j = dosquare
+% = iwall
+
+
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+switch
+player, wall, msquare, fsquare, ksquare
+connectedl
+connectedr
+connectedu
+connectedd
+overload
+deactivator
+winning, endpointcounter, connected
+
+======
+RULES
+======
+
+(Move blocks around)
+[> player|msquare] -> [> player | > msquare]
+
+(Setup for winning checks)
+[player] -> [player winning]
+[con] -> []
+
+(Checks to make sure there aren't any desquares)
+
+late [winning][square deactivator] -> [][square deactivator]
+
+(Checks to make sure that all squares form a single connected mass)
+late random [squares no deactivator] -> [squares connected]
+late [squares connected|squares no connected no deactivator] -> [squares connected|squares connected]
+late [winning][squares no connected] -> [][squares]
+
+(Renders connection)
+late up [squares no deactivator|squares no deactivator] -> [squares connectedu|squares connectedd]
+late right [squares no deactivator|squares no deactivator] -> [squares connectedr|squares connectedl]
+
+(Renders overloading)
+late [connectedu connectedr connectedl] -> [connectedu connectedr connectedl overload]
+late [connectedu connectedr connectedd] -> [connectedu connectedr connectedd overload]
+late [connectedu connectedd connectedl] -> [connectedu connectedd connectedl overload]
+late [connectedd connectedr connectedl] -> [connectedd connectedr connectedl overload]
+
+(Unrenders deactivation)
+late [square deactivator con] -> [square deactivator no con]
+
+(Checks to make sure there's no overloading)
+late [winning][overload] -> [][overload]
+
+(Last level check)
+late [winning][dosquare] -> [][dosquare]
+late [dosquare i] -> win
+
+(Winning check)
+late [winning] -> win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+MESSAGE [With great thanks to Jack Lance, and no apologies to Ziad Antar.]
+
+MESSAGE I was hired by some researchers.
+
+#...#
+fs..f
+#.s.#
+#..s#
+#.q.#
+
+MESSAGE I have to connect up all their giant electronics towers.
+
+##f###
+#..s..
+f.....
+#ss...
+#...q.
+#.....
+
+MESSAGE Towers can only supply so much energy. I can't leave any of them overloaded, so no branching.
+
+##f###
+#..s..
+f.s...
+#ssss.
+#.s.q.
+#.....
+
+MESSAGE Once I'm done with this place, it's back home I go.
+
+#f###f#
+..s.s..
+.f.s.f.
+..s.s..
+...q...
+
+MESSAGE Why the hell are these broken towers in the way?
+
+f.f
+...
+sss
+.b.
+.q.
+
+MESSAGE They should have been thrown out long ago.
+
+f.f
+...
+bbb
+.s.
+.q.
+
+MESSAGE Ugh, interference from the floor above.
+
+#...#
+#...#
+f.x.f
+#sxs#
+#.s.#
+#s.s#
+#.q.#
+
+MESSAGE What sort of thing would generate so much interference, but only in one spot?
+
+.......
+..s.s..
+.f.f.f.
+.xs.s..
+.f.f.f.
+..s.sx.
+.f.f.f.
+..s.s..
+...q...
+
+MESSAGE Too many towers! This place must be run by incompetent nincompoops!
+
+#.....#
+f@xxs.f
+f.@bs.f
+f.xsx.f
+f.sb@.f
+f.sxx@f
+#..q..#
+
+MESSAGE Right, just one more.
+
+.......
+.fffff.
+.f...f.
+.f...f.
+.f.s.f.
+.ff.ff.
+...q...
+
+MESSAGE Oh no, I'm trapped!
+
+.......
+.fffff.
+.f...f.
+.f.%.f.
+.f%q%f.
+.ffkff.
+.......
+
+MESSAGE ---THE END---
+
+MESSAGE ---BONUS LEVEL---
+
+#.....#
+#x@x@x#
+f.....f
+fs.sxsf
+f.sss.f
+fsxs.sf
+f.....f
+#x@x@x#
+#..q..#
+
+MESSAGE [If you're reading this, either you solved that last level, or you're looking at the game in the editor.]
+
+MESSAGE [If it's the former, great! If it's the latter, go back and solve it, you cheat.]
+
+MESSAGE ---EPILOGUE---
+
+MESSAGE Zzz... Blagh, these towers have invaded my dreams!
+
+MESSAGE And I'm still stuck in here.
+
+.......
+.fffff.
+.f...f.
+.f.%.f.
+.f%q%f.
+.ffkff.
+.......
+.......
+
+MESSAGE Oh wait, I can just push the tower out.
+
+.......
+.fffff.
+.f...f.
+.f...f.
+.f.q.f.
+.ffjff.
+.......
+...i...
+
+MESSAGE ---THE TRUE END---

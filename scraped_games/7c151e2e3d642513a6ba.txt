@@ -1,0 +1,363 @@
+title Pac-Slide V0.3
+author Dark Samus
+realtime_interval 0.4
+youtube EKUNLZIA1o8
+text_color blue
+color_palette 1
+noundo
+noaction
+========
+OBJECTS
+========
+PacmanU
+Yellow
+0...0
+00.00
+00000
+00000
+.000.
+PacmanD
+Yellow
+.000.
+00000
+00000
+00.00
+0...0
+PacmanL
+Yellow
+0000.
+.0000
+..000
+.0000
+0000.
+PacmanR
+Yellow
+.0000
+0000.
+000..
+0000.
+.0000
+
+PacmanS
+Yellow
+.000.
+00000
+00000
+00000
+.000.
+Pellet (Pellet)
+#FFE251
+.....
+.....
+..0..
+.....
+.....
+BackGround
+Black
+Wall1
+Blue
+00000
+0....
+0....
+0....
+0...0
+Wall2
+Blue
+0...0
+0....
+0....
+0....
+00000
+Wall3
+Blue
+00000
+....0
+....0
+....0
+0...0
+Wall4
+Blue
+0...0
+....0
+....0
+....0
+00000
+Wall5
+Blue
+00000
+.....
+.....
+.....
+00000
+Wall6
+Blue
+0...0
+0...0
+0...0
+0...0
+0...0
+Wall7
+Blue
+0...0
+.....
+.....
+.....
+0...0
+Wall8
+Blue
+00000
+0...0
+0...0
+0...0
+0...0
+Wall9
+Blue
+0...0
+0...0
+0...0
+0...0
+00000
+Wall10
+Blue
+00000
+0....
+0....
+0....
+00000
+Wall11
+Blue
+00000
+....0
+....0
+....0
+00000
+
+Pinky
+Pink LightBlue White
+00000
+21012
+21012
+00000
+0.0.0
+LatePinky
+LightGreen Green White
+00000
+11011
+02020
+20202
+0.0.0
+DeadPac
+Grey
+.000.
+00000
+00000
+00000
+.000.
+DeadGhost
+Grey Black White
+00000
+11011
+02020
+20202
+0.0.0
+Blinky
+Red LightBlue White
+00000
+21012
+21012
+00000
+0.0.0
+PowerPellet
+#F5E29E
+.....
+..0..
+.000.
+..0..
+.....
+ScaredGhost
+LightBlue Blue White
+00000
+11011
+02020
+20202
+0.0.0
+
+
+
+=======
+LEGEND
+=======
+7 = Wall1
+1 = Wall2
+9 = Wall3
+3 = Wall4
+4 = Wall5
+5 = Wall6
+6 = Wall7
+- = Wall8
++ = Wall9
+/ = Wall10
+* = Wall11
+Wall = Wall1 or Wall2 or Wall3 or Wall4 or Wall5 or Wall6 or Wall7 or Wall8 or Wall9 or Wall10 or Wall11
+P = PacmanS
+Player = PacmanS or PacmanL or PacmanR or PacmanU or PacmanD
+. = Background
+@ = Pellet
+~ = Pinky
+MovePac = PacmanL or PacmanR or PacmanU or PacmanD
+` = Blinky
+X = PowerPellet
+Ghost = Blinky or Pinky
+L = ScaredGhost
+=======
+SOUNDS
+=======
+SFX0 27088100
+Sfx1 94612307
+SFX2 85642909
+SFX3 98551306
+SFX4 66991303
+SFX5 4642502
+SFX6 18285103
+================
+COLLISIONLAYERS
+================
+background
+Pellet, DeadGhost, PowerPellet, ScaredGhost
+pacmanl, pacmanr, pacmanu, pacmand, pacmans, Wall, Pinky, LatePinky, Deadpac
+Blinky
+======
+RULES
+======
+
+[Player PowerPellet] [Ghost] -> [Player] [ScaredGhost] SFX6
+[Player PowerPellet] [LatePinky] -> [Player] [ScaredGhost]
+[Player ScaredGhost] -> [Player DeadGhost] SFX5
+[> Player | LatePinky] -> [ > Player | DeadGhost] SFX5
+[Ghost] [DeadPac] -> [] [DeadPac]
+[Blinky Player] -> [Blinky DeadPac]
+[Down Player] -> [Down PacmanD]
+[PacmanD] -> [Down PacmanD] SFX2 again
+[Up Player] -> [Up PacmanU]
+[PacmanU] -> [Up PacmanU] SFX2 again
+[Left Player] -> [Left PacmanL]
+[PacmanL] -> [Left PacmanL] SFX2 again
+[Right Player] -> [Right PacmanR]
+[PacmanR] -> [Right PacmanR] SFX2 again
+[> Player | Wall] -> [PacmanS | Wall] SFX1
+[ Player Pellet ] [LatePinky] -> [Player Pellet] [Pinky] SFX4 
+[ Player Pellet ] -> [Player] SFX0
+[Stationary Pinky | ... | MovePac] -> [PacmanS | ... |Stationary LatePinky] SFX3
+[Stationary Blinky | ... | Player] -> [> Blinky |... | Player]
+==============
+WINCONDITIONS
+==============
+No Pellet
+=======
+LEVELS
+=======
+
+MESSAGE Welcome to Pac-Slide!
+MESSAGE Collect all of the Pellets to continue!
+
+74444449
+5p.@@..5
+5@....@5
+5@....@5
+5..@@..5
+14444443
+
+744444444449
+5@@..@@...@5
+6*@.......@5
+5.@.@@../*.5
+5..-.......5
+5..5@......5
+5p.5...@@@.5
+144644444443
+
+746444449
+5.+.....5
+5..@@@./6
+5..@@@..5
+5..@@@..5
+6*......5
+5p.-..-.5
+144644643
+
+MESSAGE Oh look, Pinky... how great...
+MESSAGE Whenever you get into her line of sight, she will switch places with you.
+MESSAGE However, she won't do it again until you collect another Pellet.
+MESSAGE While she can't teleport, you can try to eat her while you can.
+
+7444444444444464449
+5.............5@@@5
+5.............5@~@5
+5@........@@..14446
+6*@............@@@5
+5.@............@@@5
+5.@.744444444444446
+5...5.............5
+5.p.5.............5
+1444644444444444443
+
+74444444449
+5.@@...@@.5
+5./*.../*.5
+5....@....5
+5....~....5
+5./*.@./*.5
+5p@@...@@.5
+14444444443
+
+MESSAGE Pinky can be helpful in some situations. Be careful though. This requires some trial and error.
+
+74444444444449
+5.......@....5
+5@..@@@@@@..@5
+5@./444444*.@5
+5@..@@@~@@..@5
+5............5
+64444444444446
+64444444444446
+5....@@@@....5
+5...@@@@@@...5
+5../444444*..5
+5...@@@@@@...5
+5p...@@@@....5
+14444444444443
+
+MESSAGE Blinky is even worse. He will try to attack you directly.
+MESSAGE He can go through walls, and will try to kill you.
+MESSAGE However, you can try to eat him by eating a power pellet.
+
+744444444449
+5.........@5
+5p...@@@..@5
+5..........5
+5....@@@.`.5
+144444444443
+
+744444444644444444449
+5@......@+.........@5
+6*........@........@5
+5.@..-..@.@.........5
+5....5..@.@.........5
+5..p.5...........`.x5
+144446444444444444443
+
+MESSAGE 2 Ghosts?!
+MESSAGE You should be fine though, just use stategy.
+MESSAGE Also,
+MESSAGE Power Pellets don't effect Pinky at all. Just wait until she doesn't have power, and can't teleport to eat her.
+
+74444444444464449
+5...........5@@@5
+5..@@....x..5~..5
+5...........+@..5
+5..-@........@..5
+5..5@........@..5
+5p.5@@`@@....@..5
+14464444444444443
+
+MESSAGE Thanks for playing the DEMO version of Pac-Slide! This game is sure to be updated in the future.

@@ -1,0 +1,133 @@
+title ZigZag Ice
+author Pichusuperlover
+homepage www.puzzlescript.net
+require_player_movement
+noaction
+
+========
+OBJECTS
+========
+
+Background
+white
+
+
+Wall
+brown
+
+Ice
+lightblue
+
+MiddleIce
+blue
+
+IceMelted
+blue
+
+PlayerV
+red
+
+TempPlayerV
+red
+
+PlayerH
+orange
+
+TempPlayerH
+orange
+
+=======
+LEGEND
+=======
+
+Player = PlayerV or PlayerH
+TempPlayer = TempPlayerV or TempPlayerH
+
+. = Background
+# = Wall
+H = PlayerH and ice
+J = PlayerH
+P = PlayerV and ice
+O = PlayerV
+* = Ice
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Ice, MiddleIce
+Wall, Player, TempPlayer, IceMelted
+
+======
+RULES
+======
+
+[ vertical PlayerH ] -> cancel
+[ horizontal PlayerV ] -> cancel
+[ PlayerV ] -> [ TempPlayerH ]
+[ PlayerH ] -> [ TempPlayerV ]
+late [ TempPlayerV ] -> [ PlayerV ]
+late [ TempPlayerH ] -> [ PlayerH ]
+
+[ TempPlayer Ice ] -> [ TempPlayer MiddleIce ]
+late [ MiddleIce ] -> [ IceMelted ]
+
+==============
+WINCONDITIONS
+==============
+
+No Ice
+
+=======
+LEVELS
+=======
+
+########
+##****##
+#******#
+#******#
+#******#
+#******#
+#H*#**##
+########
+
+######
+#****#
+#*..*#
+#*J.*#
+#****#
+######
+
+########
+#..J*.*#
+#..**..#
+#.*....#
+########
+
+########
+####**##
+###****#
+###****#
+##**#**#
+#******#
+#******#
+#H*****#
+####**##
+########
+
+###########
+#.*.*.*.*.#
+#*.*.*.*.*#
+#.*.*.*.*.#
+#*.*.*.*.*#
+#.*.*.*.*.#
+#*.*.*.*.*#
+#.*.*.*.*.#
+#*.*.*.*.*#
+#J*.*.*.*.#
+###########
