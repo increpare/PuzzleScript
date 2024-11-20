@@ -1,0 +1,115 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	lightgreen
+        color	green
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '1']
+        ['1' '1' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '1' '1']
+    object_data
+      object_name	Wall
+      
+
+      colors
+        color	brown
+        color	darkbrown
+      
+
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+    object_data
+      object_name	Player
+      
+
+      colors
+        color	black
+        color	orange
+        color	white
+        color	blue
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['2' '2' '2' '2' '2']
+        ['.' '3' '3' '3' '.']
+        ['.' '3' '.' '3' '.']
+    object_data
+      object_name	Sumo
+      
+
+      colors
+        color	pink
+        color	white
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '0' '.' '0' '.']
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      P
+      object_name	Player
+    legend_data
+      S
+      object_name	Sumo
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Player
+    layer_data
+      object_name	Wall
+      object_name	Sumo
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+          rule_part
+            rule_content	Sumo
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+          rule_part
+            rule_content
+              >
+              Sumo
+          
+
+  winconditions_section
+  levels_section
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' 'P' '.' '.' 'S' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']]

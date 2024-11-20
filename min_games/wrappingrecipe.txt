@@ -1,0 +1,42 @@
+OBJECTS
+
+Wrap
+Black
+
+Background
+White
+
+Player
+Blue
+
+
+LEGEND
+
+. = Background
+~ = Wrap
+@ = Player
+
+COLLISIONLAYERS
+
+Background
+Wrap
+Player
+
+RULES
+
+[ Wrap | < Player | ... |  | Wrap ] -> [ Wrap |  | ... | Player | Wrap ] 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+~~~~~~~
+~.....~
+~.....~
+~..@..~
+~.....~
+~.....~
+~~~~~~~

@@ -1,0 +1,66 @@
+OBJECTS
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Sumo
+pink white
+..0..
+00000
+.000.
+.111.
+.0.0.
+
+
+LEGEND
+
+. = Background
+# = Wall
+P = Player
+S = Sumo
+
+COLLISIONLAYERS
+
+Background
+Player
+Wall, Sumo
+
+RULES
+
+[ > Player ] [ Sumo ] -> [ > Player ] [ > Sumo ] 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+########
+#......#
+#......#
+#.P..S.#
+#......#
+#......#
+########

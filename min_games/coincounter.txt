@@ -1,0 +1,413 @@
+OBJECTS
+
+Background
+lightblue
+
+wall
+darkbrown
+
+t
+transparent
+
+tl
+transparent
+
+tr
+transparent
+
+m
+transparent
+
+bl
+transparent
+
+br
+transparent
+
+b
+transparent
+
+corner
+transparent
+
+on
+blue
+
+off
+darkbrown
+
+one1
+transparent
+
+two2
+transparent
+
+three3
+transparent
+
+four4
+transparent
+
+five5
+transparent
+
+six6
+transparent
+
+seven7
+transparent
+
+eight8
+transparent
+
+nine9
+transparent
+
+zero0
+transparent
+
+player
+green
+
+coin
+#ff0
+.....
+.000.
+.0.0.
+.000.
+.....
+
+ending
+transparent
+
+tens
+transparent
+
+carry
+transparent
+
+fiver
+#ff0
+..0..
+.000.
+00.00
+.000.
+..0..
+
+star
+#ff0 yellow orange
+0.0.0
+.121.
+02.20
+.121.
+0.0.0
+
+hund
+transparent
+
+won
+transparent
+
+last
+transparent
+
+fakecoin
+#ff0
+.....
+.000.
+.0.0.
+.000.
+.....
+
+
+LEGEND
+
+c = corner
+l = tl
+r = tr
+w = bl
+e = br
+seg = t or l or r or m or w or e or b
+num = zero or one or two or three or four or five or six or seven or eight or nine
+p = player
+k = coin
+. = background
+x = wall
+! = t or coin
+@ = l or coin
+# = r or coin
+$ = m or coin
+% = w or coin
+^ = e or coin
+& = b or coin
+* = c or coin
+{ = t or fiver
+} = l or fiver
+; = r or fiver
+: = m or fiver
+' = w or fiver
+" = e or fiver
+, = b or fiver
+/ = c or fiver
+f = fiver
+? = tens or wall
+- = fakecoin
+j = star
+` = hund
+z = ending
+~ = last
+
+COLLISIONLAYERS
+
+Background
+seg
+corner
+num
+on
+off
+coin, fiver
+star
+player, wall
+ending
+tens
+carry
+won
+hund
+last
+fakecoin
+
+RULES
+
+[ last ] [ action player ] -> win 
+[ last ] [ moving player ] -> win 
+up [ tens | notens ] -> [ tens | tens ] 
+down [ tens | notens ] -> [ tens | tens ] 
+[ > player | off ] -> [ stationary player | off ] 
+late [ player off ] -> [ off ] 
+late [ player coin ] -> again 
+late [ player fiver ] -> again 
+late [ player star ] -> again 
+[ player coin ] [ zero no tens ] -> [ player ] [ one ] 
+[ player coin ] [ one no tens ] -> [ player ] [ two ] 
+[ player coin ] [ two no tens ] -> [ player ] [ three ] 
+[ player coin ] [ three no tens ] -> [ player ] [ four ] 
+[ player coin ] [ four no tens ] -> [ player ] [ five ] 
+[ player coin ] [ five no tens ] -> [ player ] [ six ] 
+[ player coin ] [ six no tens ] -> [ player ] [ seven ] 
+[ player coin ] [ seven no tens ] -> [ player ] [ eight ] 
+[ player coin ] [ eight no tens ] -> [ player ] [ nine ] 
+[ player coin ] [ nine no tens ] -> [ player ] [ zero carry ] 
+[ player fiver ] [ zero no tens ] -> [ player ] [ five ] 
+[ player fiver ] [ one no tens ] -> [ player ] [ six ] 
+[ player fiver ] [ two no tens ] -> [ player ] [ seven ] 
+[ player fiver ] [ three no tens ] -> [ player ] [ eight ] 
+[ player fiver ] [ four no tens ] -> [ player ] [ nine ] 
+[ player fiver ] [ five no tens ] -> [ player ] [ zero carry ] 
+[ player fiver ] [ six no tens ] -> [ player ] [ one carry ] 
+[ player fiver ] [ seven no tens ] -> [ player ] [ two carry ] 
+[ player fiver ] [ eight no tens ] -> [ player ] [ three carry ] 
+[ player fiver ] [ nine no tens ] -> [ player ] [ four carry ] 
+[ carry no tens ] [ zero tens ] -> [  ] [ one tens ] 
+[ carry no tens ] [ one tens ] -> [  ] [ two tens ] 
+[ carry no tens ] [ two tens ] -> [  ] [ three tens ] 
+[ carry no tens ] [ three tens ] -> [  ] [ four tens ] 
+[ carry no tens ] [ four tens ] -> [  ] [ five tens ] 
+[ carry no tens ] [ five tens ] -> [  ] [ six tens ] 
+[ carry no tens ] [ six tens ] -> [  ] [ seven tens ] 
+[ carry no tens ] [ seven tens ] -> [  ] [ eight tens ] 
+[ carry no tens ] [ eight tens ] -> [  ] [ nine tens ] 
+[ carry no tens ] [ nine tens ] -> [  ] [ zero tens carry ] 
+[ hund ] -> [ hund off ] 
+[ tens carry ] [ hund off ] -> [ tens carry ] [ hund on ] 
+[ player won ] -> win 
+[ star player ] [ tens carry ] -> [ player won ] [ tens no carry ] again 
+[ carry no tens ] -> [  ] 
+[ seg no on ] -> [ seg on ] 
+[ seg off ] -> [ seg ] 
+[ m no tens ] [ zero no tens ] -> [ m off ] [ zero ] 
+[ l no tens ] [ one no tens ] -> [ l off ] [ one ] 
+[ w no tens ] [ one no tens ] -> [ w off ] [ one ] 
+[ m no tens ] [ one no tens ] -> [ m off ] [ one ] 
+[ t no tens ] [ one no tens ] -> [ t off ] [ one ] 
+[ b no tens ] [ one no tens ] -> [ b off ] [ one ] 
+[ l no tens ] [ two no tens ] -> [ l off ] [ two ] 
+[ e no tens ] [ two no tens ] -> [ e off ] [ two ] 
+[ l no tens ] [ three no tens ] -> [ l off ] [ three ] 
+[ w no tens ] [ three no tens ] -> [ w off ] [ three ] 
+[ b no tens ] [ four no tens ] -> [ b off ] [ four ] 
+[ w no tens ] [ four no tens ] -> [ w off ] [ four ] 
+[ t no tens ] [ four no tens ] -> [ t off ] [ four ] 
+[ r no tens ] [ five no tens ] -> [ r off ] [ five ] 
+[ w no tens ] [ five no tens ] -> [ w off ] [ five ] 
+[ r no tens ] [ six no tens ] -> [ r off ] [ six ] 
+[ l no tens ] [ seven no tens ] -> [ l off ] [ seven ] 
+[ w no tens ] [ seven no tens ] -> [ w off ] [ seven ] 
+[ m no tens ] [ seven no tens ] -> [ m off ] [ seven ] 
+[ b no tens ] [ seven no tens ] -> [ b off ] [ seven ] 
+[ w no tens ] [ nine no tens ] -> [ w off ] [ nine ] 
+[ seg tens ] [ zero tens ] -> [ seg off tens ] [ zero tens ] 
+[ l tens ] [ one tens ] -> [ l off tens ] [ one tens ] 
+[ w tens ] [ one tens ] -> [ w off tens ] [ one tens ] 
+[ m tens ] [ one tens ] -> [ m off tens ] [ one tens ] 
+[ t tens ] [ one tens ] -> [ t off tens ] [ one tens ] 
+[ b tens ] [ one tens ] -> [ b off tens ] [ one tens ] 
+[ l tens ] [ two tens ] -> [ l off tens ] [ two tens ] 
+[ e tens ] [ two tens ] -> [ e off tens ] [ two tens ] 
+[ l tens ] [ three tens ] -> [ l off tens ] [ three tens ] 
+[ w tens ] [ three tens ] -> [ w off tens ] [ three tens ] 
+[ b tens ] [ four tens ] -> [ b off tens ] [ four tens ] 
+[ w tens ] [ four tens ] -> [ w off tens ] [ four tens ] 
+[ t tens ] [ four tens ] -> [ t off tens ] [ four tens ] 
+[ r tens ] [ five tens ] -> [ r off tens ] [ five tens ] 
+[ w tens ] [ five tens ] -> [ w off tens ] [ five tens ] 
+[ r tens ] [ six tens ] -> [ r off tens ] [ six tens ] 
+[ l tens ] [ seven tens ] -> [ l off tens ] [ seven tens ] 
+[ w tens ] [ seven tens ] -> [ w off tens ] [ seven tens ] 
+[ m tens ] [ seven tens ] -> [ m off tens ] [ seven tens ] 
+[ b tens ] [ seven tens ] -> [ b off tens ] [ seven tens ] 
+[ w tens ] [ nine tens ] -> [ w off tens ] [ nine tens ] 
+[ hund on ] [ seg off ] -> [ hund on ] [ seg on ] 
+[ hund on ] [ m on ] -> [ hund on ] [ m off ] 
+[ on off ] -> [ off ] 
+[ corner no off ] -> [ corner off ] 
+[ corner on ] -> [ corner ] 
+[ corner off | segon ] -> [ corner on | segon ] 
+
+
+WINCONDITIONS
+
+no coin
+no fiver
+all ending on player
+
+LEVELS
+
+x-xxxxxxxxx
+xxxctcxctcx
+xxxlxrxlxrx
+xxxcmcxcmcx
+xxxwxexwxex
+xxxcbcxcbcx
+xjx???xxxxx
+xxxxxxxxxxx
+xp0k0.k..kz
+xxxxxxxxxxx
+
+xxxxxxxxxxxxxxx
+xxxxxxxctc....z
+xxxxxxxlxrxxxxx
+xxxxxxxcmcxxxxx
+xxxxxxxwxexxxxx
+p.3k.k.cbcxxxxx
+xxxxxxxxxxxxxxx
+
+xxxxxxzx
+x?xxxx.x
+x......x
+x.xxxxxx
+xckctckx
+xrxlxrxx
+xcxc$cxx
+xexwxexx
+xckcbckx
+xxxxxx.x
+p05....x
+xxxxxxxx
+
+x?xxxx?zx
+xxxxxxx0x
+xcx*!*x.x
+xrxlxrx.x
+xcx*$*x.x
+xexwxex.x
+xcx*&*1px
+xxxxxxx.x
+
+xx???xxxx?x
+z.ctc.c!c.x
+x.lxrx@x#.x
+x.cmcxc$c.x
+x9wxexwx^1x
+x.cbc.cbc.x
+xxxxxxxxxpx
+
+x????xxxxxx
+z.ctcfctc.p
+x.lxrxlx#.x
+x.cmcxcm*.x
+x2wxexwx^4x
+x.cbcfcbc.x
+xxxxxxxxxxx
+
+x????xxxxx
+xctc3ctcxx
+x@xrx}xrxx
+xc$cxc:c7p
+xwx^xwx".x
+xc&cxc,c.x
+xxxxxxxxzx
+
+x????xxxpx
+xctc6ctc.x
+x}x;x@x#.x
+xcmcxc$c1x
+x'x"xwx^.x
+xc,c.c&c.x
+xxxxxxxxzx
+
+xx???xxxxpx
+x..k91.k..x
+x.ctcxctc.x
+xklxrxlxrkx
+x.cmcxcmc.x
+xkwxexwxekx
+x.cbcxcbc.x
+x..k...k..x
+xzxxxxxxxxx
+
+xpxxxxxxxxx
+xkxxxxxxxxx
+x`xctcxctcx
+x`xlxrxlxrx
+x`xcmcxcmcx
+x`xwxexwxex
+x`xcbcxcbcx
+xjx???xxxxx
+xxxxxxxxxxx
+x.9.9.....z
+xxxxxxxxxxx
+
+xxx???xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx???xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx???.ctcxxxxxxxxxxxxxxxxxxxxxxxx
+xxx???xlxrxxxxxxxxxxxxxxxxxxxxxxxx
+xxx???xcmc..z.xxx.ctc..z.xxx.ctc.x
+xxx???xwxe.xx.xxxxlxr.xx.xxxxlxr.x
+xxx???xcbc.xx.xxxxcmc.xx.xxxxcmc.x
+xxx???xxxxzxx.xxxxwxe.xx.xxxxwxe.x
+xxx???xxxx.xx.xxx.cbc.xx.xxx.cbc.x
+xxxctc.ctc.xxxxxxxxxxzxxxxxxxxxx.x
+xxxl?rxlxr.xxxxxxxxxxxxxxxxxxxxxzx
+xxxcmcxcmc.xxxxxxxxxxxxxxxxxxxxx.x
+xxxw?exwxe.xxxxxx.....xxxxxxctcx.x
+xxxcbc.cbc.xxxx..xxxxx..xxxxlxrx.x
+xxx???xxxxzxxx.xxxxxxxxx.xxxcmcx.x
+xxx???xxxx.xxx.xx.xxx.xx.xxxwxex.x
+x..........xx.xxx.xxx.xxx.xxcbc..x
+x.xxx?xctc.xx.xxx.x.x.xxx.xxxxxx.x
+x.x?x?xlxr.xx.xxxxx~xxxxx.xxxxxxzx
+x.xxx?xcmc.xx.xx..xxx..xx.xxxxxx.x
+x.x?x?xwxe.xx.xx.......xx.x......x
+x.xxx?xcbc.xx..xx.....xx.xx.xxxxxx
+x..........xxx.xxx...xxx.xxx.ctc.x
+xzx???xxxxxxxxx..xxxxx..xxxxxlxrxx
+x.x???xxxxxxxxxxx.....xxxxxxxcmcxx
+xxxctcxctcxxxxxxxxxxxxxxxxxxxwxexx
+xxxl?rxlxrxxxxxxxxxxxxxxxxxx.cbc.x
+xxxcmcxcmcxxxxxxxxxxxxxxxxxxxxxx.x
+xxxw?exwxexxxxxxxxctc....z.......x
+xxxcbcxcbcxxxxxxxxlxrxxxxxxxxxxxxx
+xpx???xxxxxxxxxxxxcmcxxxxxxxxxxxxx
+xxx???xxxxxxxxxxxxwxexxxxxxxxxxxxx
+0...0.....z.......cbcxxxxxxxxxxxxx
+xxx???xxxxxxxxxxxxxxxxxxxxxxxxxxxx

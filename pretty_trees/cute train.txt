@@ -1,0 +1,1333 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	lightgreen
+        color	green
+      
+
+      sprite
+        ['0' '1' '0' '0' '0']
+        ['0' '0' '1' '1' '0']
+        ['1' '0' '0' '1' '0']
+        ['1' '0' '1' '0' '0']
+        ['0' '1' '0' '0' '1']
+    object_data
+      object_name	Water
+      
+
+      colors
+        color	blue
+        color	white
+        color	lightblue
+      
+
+      sprite
+        ['2' '0' '0' '1' '0']
+        ['0' '2' '0' '0' '2']
+        ['1' '2' '0' '2' '0']
+        ['0' '0' '2' '2' '0']
+        ['0' '2' '0' '0' '2']
+    object_data
+      object_name	Water2
+      
+
+      colors
+        color	blue
+        color	white
+        color	lightblue
+      
+
+      sprite
+        ['0' '2' '0' '0' '0']
+        ['2' '0' '2' '1' '0']
+        ['0' '0' '2' '0' '2']
+        ['0' '1' '0' '2' '2']
+        ['2' '0' '2' '0' '0']
+    object_data
+      object_name	Gerald
+      
+
+      colors
+        color	blue
+        color	black
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '0' '0' '1']
+        ['0' '1' '1' '1' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Mountain
+      
+
+      colors
+        color	darkbrown
+        color	darkbrown
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '1' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '.']
+        ['1' '1' '0' '0' '1']
+    object_data
+      object_name	Forest
+      
+
+      colors
+        color	darkgreen
+        color	brown
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	Beach
+      
+
+      colors
+        color	yellow
+        color	white
+      
+
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['0' '1' '0' '0' '0']
+        ['0' '0' '0' '0' '1']
+        ['0' '0' '1' '0' '0']
+        ['1' '0' '0' '0' '0']
+    object_data
+      object_name	Player
+      
+
+      colors
+        color	yellow
+        color	black
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '0' '0' '1']
+        ['0' '1' '1' '1' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	GhostVTrack
+      
+
+      colors
+        color	yellow
+      
+
+    object_data
+      object_name	GhostHTrack
+      
+
+      colors
+        color	yellow
+      
+
+    object_data
+      object_name	GhostURTrack
+      
+
+      colors
+        color	yellow
+      
+
+    object_data
+      object_name	GhostULTrack
+      
+
+      colors
+        color	yellow
+      
+
+    object_data
+      object_name	GhostDLTrack
+      
+
+      colors
+        color	yellow
+      
+
+    object_data
+      object_name	GhostDRTrack
+      
+
+      colors
+        color	yellow
+      
+
+    object_data
+      object_name	VTrack
+      
+
+      colors
+        color	grey
+        color	darkbrown
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+    object_data
+      object_name	HTrack
+      
+
+      colors
+        color	grey
+        color	darkbrown
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '1' '.' '.']
+        ['.' '.' '1' '.' '.']
+        ['.' '.' '1' '.' '.']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Structs
+      
+
+      colors
+        color	black
+        color	darkbrown
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	URTrack
+      
+
+      colors
+        color	grey
+        color	darkbrown
+      
+
+      sprite
+        ['.' '.' '.' '0' '0']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '1' '.' '.']
+        ['0' '.' '.' '1' '.']
+        ['0' '.' '.' '.' '1']
+    object_data
+      object_name	ULTrack
+      
+
+      colors
+        color	grey
+        color	darkbrown
+      
+
+      sprite
+        ['0' '0' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '1' '0' '.']
+        ['.' '1' '.' '.' '0']
+        ['1' '.' '.' '.' '0']
+    object_data
+      object_name	DLTrack
+      
+
+      colors
+        color	grey
+        color	darkbrown
+      
+
+      sprite
+        ['1' '.' '.' '.' '0']
+        ['.' '1' '.' '.' '0']
+        ['.' '.' '1' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['0' '0' '.' '.' '.']
+    object_data
+      object_name	DRTrack
+      
+
+      colors
+        color	grey
+        color	darkbrown
+      
+
+      sprite
+        ['0' '.' '.' '.' '1']
+        ['0' '.' '.' '1' '.']
+        ['.' '0' '1' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '0' '0']
+    object_data
+      object_name	UTrain
+      
+
+      colors
+        color	red
+        color	black
+        color	darkred
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	RTrain
+      
+
+      colors
+        color	red
+        color	black
+        color	darkred
+      
+
+      sprite
+        ['0' '0' '0' '0' '.']
+        ['0' '0' '0' '1' '0']
+        ['0' '1' '0' '1' '0']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '.']
+    object_data
+      object_name	LTrain
+      
+
+      colors
+        color	red
+        color	black
+        color	darkred
+      
+
+      sprite
+        ['.' '0' '0' '0' '0']
+        ['0' '1' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
+        ['0' '1' '0' '0' '0']
+        ['.' '0' '0' '0' '0']
+    object_data
+      object_name	DTrain
+      
+
+      colors
+        color	red
+        color	black
+        color	darkred
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Cart
+      
+
+      colors
+        color	red
+        color	black
+        color	darkred
+      
+
+      sprite
+        ['2' '2' '2' '2' '2']
+        ['2' '1' '1' '1' '2']
+        ['2' '1' '1' '1' '2']
+        ['2' '1' '1' '1' '2']
+        ['2' '2' '2' '2' '2']
+    object_data
+      object_name	Smoke1
+      
+
+      colors
+        color	white
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '.' '0' '.']
+        ['0' '.' '0' '.' '0']
+        ['.' '0' '.' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	Smoke2
+      
+
+      colors
+        color	white
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Smoke3
+      
+
+      colors
+        color	white
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Switch
+      
+
+      colors
+        color	red
+        color	black
+      
+
+      sprite
+        ['.' '.' '.' '0' '.']
+        ['.' '.' '1' '.' '.']
+        ['.' '1' '.' '.' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '.' '.' '.' '.']
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      ^
+      object_name	Mountain
+    legend_data
+      %
+      object_name	Forest
+    legend_data
+      ~
+      object_name	Water
+    legend_data
+      ,
+      object_name	Beach
+    legend_data
+      |
+      object_name	VTrack
+    legend_data
+      -
+      object_name	HTrack
+    legend_data
+      r
+      object_name	URTrack
+    legend_data
+      ¬
+      object_name	ULTrack
+    legend_data
+      l
+      object_name	DRTrack
+    legend_data
+      j
+      object_name	DLTrack
+    legend_data
+      X
+      object_name	VTrack
+      legend_operation
+        object_name	Structs
+    legend_data
+      Z
+      object_name	HTrack
+      legend_operation
+        object_name	Structs
+    legend_data
+      Q
+      object_name	ULTrack
+      legend_operation
+        object_name	Structs
+    legend_data
+      P
+      object_name	Player
+    legend_data
+      T
+      object_name	VTrack
+      legend_operation
+        object_name	UTrain
+    legend_data
+      C
+      object_name	VTrack
+      legend_operation
+        object_name	Cart
+    legend_data
+      [
+      object_name	HTrack
+      legend_operation
+        object_name	RTrain
+    legend_data
+      ]
+      object_name	HTrack
+      legend_operation
+        object_name	Cart
+    legend_data
+      /
+      object_name	Switch
+    legend_data
+      1
+      object_name	GhostHTrack
+      legend_operation
+        object_name	URTrack
+    legend_data
+      !
+      object_name	HTrack
+      legend_operation
+        object_name	GhostURTrack
+    legend_data
+      2
+      object_name	HTrack
+      legend_operation
+        object_name	GhostDRTrack
+    legend_data
+      3
+      object_name	HTrack
+      legend_operation
+        object_name	GhostULTrack
+    legend_data
+      4
+      object_name	GhostHTrack
+      legend_operation
+        object_name	DLTrack
+    legend_data
+      5
+      object_name	GhostVTrack
+      legend_operation
+        object_name	URTrack
+    legend_data
+      6
+      object_name	GhostVTrack
+      legend_operation
+        object_name	DRTrack
+    legend_data
+      7
+      object_name	GhostVTrack
+      legend_operation
+        object_name	ULTrack
+    legend_data
+      8
+      object_name	GhostVTrack
+      legend_operation
+        object_name	DLTrack
+    legend_data
+      _
+      object_name	Beach
+      legend_operation
+        object_name	HTrack
+    legend_data
+      WaterR
+      object_name	Water
+      legend_operation
+        object_name	Water2
+    legend_data
+      Ghost
+      object_name	GhostHTrack
+      legend_operation
+        object_name	GhostVTrack
+      legend_operation
+        object_name	GhostULTrack
+      legend_operation
+        object_name	GhostURTrack
+      legend_operation
+        object_name	GhostDLTrack
+      legend_operation
+        object_name	GhostDRTrack
+    legend_data
+      Track
+      object_name	HTrack
+      legend_operation
+        object_name	VTrack
+      legend_operation
+        object_name	ULTrack
+      legend_operation
+        object_name	URTrack
+      legend_operation
+        object_name	DLTrack
+      legend_operation
+        object_name	DRTrack
+    legend_data
+      Train
+      object_name	UTrain
+      legend_operation
+        object_name	DTrain
+      legend_operation
+        object_name	LTrain
+      legend_operation
+        object_name	RTrain
+    legend_data
+      Vehicle
+      object_name	Train
+      legend_operation
+        object_name	Cart
+    legend_data
+      Mover
+      object_name	Vehicle
+      legend_operation
+        object_name	Player
+    legend_data
+      G
+      object_name	Gerald
+      legend_operation
+        object_name	Structs
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Beach
+    layer_data
+      object_name	GhostVTrack
+      object_name	GhostHTrack
+      object_name	GhostURTrack
+    layer_data
+      object_name	GhostULTrack
+      object_name	GhostDLTrack
+      object_name	GhostDRTrack
+    layer_data
+      object_name	Structs
+    layer_data
+      object_name	VTrack
+    layer_data
+      object_name	HTrack
+      object_name	URTrack
+      object_name	ULTrack
+    layer_data
+      object_name	DLTrack
+      object_name	DRTrack
+      object_name	Switch
+    layer_data
+      object_name	Water
+      object_name	Water2
+    layer_data
+      object_name	Mountain
+      object_name	Forest
+      object_name	Player
+    layer_data
+      object_name	UTrain
+      object_name	RTrain
+      object_name	LTrain
+    layer_data
+      object_name	DTrain
+      object_name	Cart
+      object_name	Gerald
+    layer_data
+      object_name	Smoke1
+      object_name	Smoke2
+      object_name	Smoke3
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content	WaterR
+          ->
+          rule_part
+            rule_content
+              action
+              WaterR
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              WaterR
+          ->
+          rule_part
+            rule_content
+              random
+              WaterR
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+              no
+              Structs
+            cell_border
+            rule_content	Cart
+          rule_part
+            rule_content	Train
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	Cart
+          rule_part
+            rule_content
+              action
+              Train
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Structs
+              Mover
+          rule_part
+            rule_content	Train
+          ->
+          rule_part
+            rule_content
+              Structs
+              Mover
+          rule_part
+            rule_content
+              action
+              Train
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Train
+          ->
+          rule_part
+            rule_content
+              action
+              Train
+              Smoke1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              UTrain
+          ->
+          rule_part
+            rule_content
+              up
+              UTrain
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              DTrain
+          ->
+          rule_part
+            rule_content
+              down
+              DTrain
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              RTrain
+          ->
+          rule_part
+            rule_content
+              right
+              RTrain
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              LTrain
+          ->
+          rule_part
+            rule_content
+              left
+              LTrain
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              Mover
+              Structs
+          ->
+          rule_part
+            rule_content
+              Mover
+              Structs
+          command
+            command_keyword	again
+          (repeat if the train is still on structs)
+          
+
+        rule_data
+          rule_part
+            rule_content	Cart
+            cell_border
+            rule_content	moving
+            rule_content	Train
+          ->
+          rule_part
+            rule_content
+              >
+              Cart
+            cell_border
+            rule_content	moving
+            rule_content	Train
+          
+
+        rule_data
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	moving
+            rule_content	Cart
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	moving
+            rule_content	Cart
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content
+              Structs
+              no
+              Gerald
+              no
+              Cart
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	Structs
+          None
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Gerald
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	Gerald
+          None
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+            cell_border
+            rule_content	Gerald
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	Gerald
+          None
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              >
+              UTrain
+            cell_border
+            rule_content	URTrack
+          ->
+          rule_part
+            rule_content
+              >
+              RTrain
+            cell_border
+            rule_content	URTrack
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              >
+              UTrain
+            cell_border
+            rule_content	ULTrack
+          ->
+          rule_part
+            rule_content
+              >
+              LTrain
+            cell_border
+            rule_content	ULTrack
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              >
+              RTrain
+            cell_border
+            rule_content	ULTrack
+          ->
+          rule_part
+            rule_content
+              >
+              DTrain
+            cell_border
+            rule_content	ULTrack
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              >
+              RTrain
+            cell_border
+            rule_content	DLTrack
+          ->
+          rule_part
+            rule_content
+              >
+              UTrain
+            cell_border
+            rule_content	DLTrack
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              >
+              DTrain
+            cell_border
+            rule_content	DRTrack
+          ->
+          rule_part
+            rule_content
+              >
+              RTrain
+            cell_border
+            rule_content	DRTrack
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              >
+              DTrain
+            cell_border
+            rule_content	DLTrack
+          ->
+          rule_part
+            rule_content
+              >
+              LTrain
+            cell_border
+            rule_content	DLTrack
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              >
+              LTrain
+            cell_border
+            rule_content	URTrack
+          ->
+          rule_part
+            rule_content
+              >
+              DTrain
+            cell_border
+            rule_content	URTrack
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              >
+              LTrain
+            cell_border
+            rule_content	DRTrack
+          ->
+          rule_part
+            rule_content
+              >
+              UTrain
+            cell_border
+            rule_content	DRTrack
+          
+
+        rule_data
+          rule_part
+            rule_content	Smoke3
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content	Smoke2
+          ->
+          rule_part
+            rule_content	Smoke3
+          
+
+        rule_data
+          rule_part
+            rule_content	Smoke1
+          ->
+          rule_part
+            rule_content	Smoke2
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Player
+              Switch
+          ->
+          rule_part
+            rule_content
+              Player
+              action
+              Switch
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Switch
+          rule_part
+            rule_content
+              Ghost
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              action
+              Switch
+          rule_part
+            rule_content
+              Ghost
+              Vehicle
+          command
+            sound
+              sound_id	3
+          (play blocking sound if switch tracks are covered while switching)
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              Switch
+          rule_part
+            rule_content
+              Ghost
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              action
+              Switch
+          rule_part
+            rule_content
+              action
+              Ghost
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              GhostHTrack
+              URTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              HTrack
+              GhostURTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              HTrack
+              action
+              GhostURTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              GhostHTrack
+              URTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              GhostHTrack
+              DRTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              HTrack
+              GhostDRTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              HTrack
+              action
+              GhostDRTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              GhostHTrack
+              DRTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              GhostHTrack
+              ULTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              HTrack
+              GhostULTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              HTrack
+              action
+              GhostULTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              GhostHTrack
+              ULTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              GhostHTrack
+              DLTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              HTrack
+              GhostDLTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              HTrack
+              action
+              GhostDLTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              GhostHTrack
+              DLTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              GhostVTrack
+              URTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              VTrack
+              GhostURTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              VTrack
+              action
+              GhostURTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              GhostVTrack
+              URTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              GhostVTrack
+              DRTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              VTrack
+              GhostDRTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              VTrack
+              action
+              GhostDRTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              GhostVTrack
+              DRTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              GhostVTrack
+              ULTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              VTrack
+              GhostULTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              VTrack
+              action
+              GhostULTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              GhostVTrack
+              ULTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              GhostVTrack
+              DLTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              VTrack
+              GhostDLTrack
+          
+
+        rule_data
+          rule_part
+            rule_content
+              VTrack
+              action
+              GhostDLTrack
+              no
+              Vehicle
+          ->
+          rule_part
+            rule_content
+              GhostVTrack
+              DLTrack
+          
+
+  winconditions_section
+  levels_section
+    level_data	None
+    level_data	[['~' '~' '~' ... '~' '~' '~']
+ ['~' '~' '~' ... '~' '~' '~']
+ ['~' '~' '~' ... '~' '~' '~']
+ ...
+ ['^' '^' '^' ... '~' '~' '~']
+ ['^' '^' '^' ... '^' '~' '~']
+ ['^' '^' '^' ... '^' '~' '~']]

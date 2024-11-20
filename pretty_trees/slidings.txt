@@ -1,0 +1,506 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	#d8a96c
+        color	#e5b679
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	Target
+      
+
+      colors
+        color	DarkBlue
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Wall
+      
+
+      colors
+        color	#88bbbb
+        color	#448888
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '1']
+        ['1' '1' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '1' '1']
+    object_data
+      object_name	OverWall
+      
+
+      colors
+        color	#88bbbb
+        color	#448888
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '1']
+        ['1' '1' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '1' '1']
+    object_data
+      object_name	Count
+      
+
+      colors
+        color	#88bbbb
+        color	#448888
+        color	White
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['0' '2' '2' '2' '1']
+        ['1' '2' '2' '2' '1']
+        ['1' '2' '2' '2' '1']
+        ['1' '0' '1' '1' '1']
+    object_data
+      object_name	CountEnd
+      
+
+      colors
+        color	#88bbbb
+        color	#448888
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '1']
+        ['1' '1' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '1' '1']
+    object_data
+      object_name	Player
+      
+
+      colors
+        color	#88ff22
+        color	#44ff00
+        color	#11cc00
+      
+
+      sprite
+        ['.' '1' '1' '2' '.']
+        ['1' '0' '0' '1' '2']
+        ['1' '0' '0' '1' '2']
+        ['2' '1' '1' '2' '2']
+        ['.' '2' '2' '2' '.']
+    object_data
+      object_name	PlayerHasMoved
+      
+
+      colors
+        color	#ffe02c
+        color	#ffc700
+        color	#c87700
+      
+
+      sprite
+        ['.' '1' '1' '2' '.']
+        ['1' '0' '0' '1' '2']
+        ['1' '0' '0' '1' '2']
+        ['2' '1' '1' '2' '2']
+        ['.' '2' '2' '2' '.']
+    object_data
+      object_name	DeadPlayer
+      
+
+      colors
+        color	#ffe02c
+        color	#ffc700
+        color	#c87700
+      
+
+      sprite
+        ['.' '1' '1' '2' '.']
+        ['1' '0' '0' '1' '2']
+        ['1' '0' '0' '1' '2']
+        ['2' '1' '1' '2' '2']
+        ['.' '2' '2' '2' '.']
+    object_data
+      object_name	BallA
+      
+
+      colors
+        color	#999999
+        color	#777777
+        color	#444444
+      
+
+      sprite
+        ['.' '1' '1' '2' '.']
+        ['1' '0' '0' '1' '2']
+        ['1' '0' '0' '1' '2']
+        ['2' '1' '1' '2' '2']
+        ['.' '2' '2' '2' '.']
+    object_data
+      object_name	BallB
+      
+
+      colors
+        color	#999999
+        color	#777777
+        color	#444444
+      
+
+      sprite
+        ['.' '1' '1' '2' '.']
+        ['1' '0' '0' '1' '2']
+        ['1' '0' '0' '1' '2']
+        ['2' '1' '1' '2' '2']
+        ['.' '2' '2' '2' '.']
+    object_data
+      object_name	BallC
+      
+
+      colors
+        color	#999999
+        color	#777777
+        color	#444444
+      
+
+      sprite
+        ['.' '1' '1' '2' '.']
+        ['1' '0' '0' '1' '2']
+        ['1' '0' '0' '1' '2']
+        ['2' '1' '1' '2' '2']
+        ['.' '2' '2' '2' '.']
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      A
+      object_name	BallA
+    legend_data
+      B
+      object_name	BallB
+    legend_data
+      C
+      object_name	BallC
+    legend_data
+      D
+      object_name	BallB
+      legend_operation
+        object_name	OverWall
+    legend_data
+      E
+      object_name	BallC
+      legend_operation
+        object_name	OverWall
+    legend_data
+      P
+      object_name	Player
+    legend_data
+      O
+      object_name	Target
+    legend_data
+      m
+      object_name	Count
+    legend_data
+      n
+      object_name	CountEnd
+    legend_data
+      Item
+      object_name	Player
+      legend_operation
+        object_name	Wall
+      legend_operation
+        object_name	BallA
+      legend_operation
+        object_name	BallB
+      legend_operation
+        object_name	BallC
+      legend_operation
+        object_name	Count
+      legend_operation
+        object_name	CountEnd
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Target
+    layer_data
+      object_name	Player
+    layer_data
+      object_name	Wall
+      object_name	BallA
+    layer_data
+      object_name	BallB
+      object_name	BallC
+    layer_data
+      object_name	Count
+      object_name	CountEnd
+    layer_data
+      object_name	DeadPlayer
+      object_name	PlayerHasMoved
+    layer_data
+      object_name	OverWall
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Item
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	Item
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	No
+            rule_content	Item
+          ->
+          rule_part
+            cell_border
+            rule_content
+              >
+              Player
+          command
+            command_keyword	again
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+          ->
+          rule_part
+            rule_content	PlayerHasMoved
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Player
+          rule_part
+            rule_content	BallA
+          rule_part
+            rule_content	BallB
+          rule_part
+            rule_content	BallC
+          ->
+          rule_part
+            rule_content	BallC
+          rule_part
+            rule_content	Player
+          rule_part
+            rule_content	BallA
+          rule_part
+            rule_content	BallB
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Player
+              OverWall
+          rule_part
+            rule_content	BallA
+          rule_part
+            rule_content	BallB
+          rule_part
+            rule_content	BallC
+          ->
+          rule_part
+            rule_content
+              BallC
+              OverWall
+          rule_part
+            rule_content	Player
+          rule_part
+            rule_content	BallA
+          rule_part
+            rule_content	BallB
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	PlayerHasMoved
+          rule_part
+            rule_content	Wall
+            cell_border
+            rule_content	CountEnd
+            cell_border
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content	DeadPlayer
+          rule_part
+            rule_content	Wall
+            cell_border
+            rule_content	Wall
+            cell_border
+            rule_content	Wall
+          
+
+        rule_data
+          rule_part
+            rule_content	DeadPlayer
+          ->
+          rule_part
+            rule_content	DeadPlayer
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          rule_part
+            rule_content	DeadPlayer
+          ->
+          command
+            command_keyword	restart
+          
+
+        rule_data
+          rule_part
+            rule_content	PlayerHasMoved
+          rule_part
+            rule_content	Count
+            cell_border
+            rule_content	CountEnd
+          ->
+          rule_part
+            rule_content	Player
+          rule_part
+            rule_content	CountEnd
+            cell_border
+            rule_content	Wall
+          
+
+        rule_data
+          rule_part
+            rule_content	PlayerHasMoved
+          ->
+          rule_part
+            rule_content	Player
+          
+
+  winconditions_section
+    condition_data
+      All
+      object_name	Player
+      on
+      object_name	Target
+  levels_section
+    level_data	None
+    level_data	[['#' 'm' 'm' 'm' 'n' '#']
+ ['#' 'P' 'A' '.' '.' '#']
+ ['#' '.' '.' 'O' '.' '#']
+ ['D' '#' '#' '#' '#' 'E']]
+    level_data	None
+    level_data	[['#' 'm' 'm' 'm' 'm' 'n']
+ ['#' '.' 'O' '.' '.' '#']
+ ['#' 'P' '#' '#' '#' '#']
+ ['#' 'A' '#' '#' '#' '#']
+ ['D' '#' '#' '#' '#' 'E']]
+    level_data	None
+    level_data	[['#' 'm' 'm' 'm' 'm' 'n' '#']
+ ['#' 'P' 'A' 'O' '.' '.' '#']
+ ['#' '#' '.' '.' '.' '.' '#']
+ ['D' '#' '#' '#' '#' '#' 'E']]
+    level_data	None
+    level_data	[['#' 'm' 'm' 'm' 'm' 'm' 'n']
+ ['#' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' 'O' '.' '.' '#']
+ ['#' 'P' 'A' '#' '#' '#' '#']
+ ['D' '#' '#' '#' '#' '#' 'E']]
+    level_data	None
+    level_data	[['#' '#' 'm' 'm' 'm' 'm' 'm' 'm' 'm' 'n']
+ ['#' '#' '.' '.' 'O' '.' '.' 'P' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' 'A' '#']
+ ['D' '#' '#' '#' '#' '#' '#' '#' '#' 'E']]
+    level_data	None
+    level_data	[['#' 'm' 'm' 'm' 'm' 'm' 'm' 'm' 'n']
+ ['#' 'P' '.' 'A' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' 'O' '#' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' 'B' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' 'E']]
+    level_data	None
+    level_data	[['#' 'm' 'm' 'm' 'm' 'm' 'm' 'm']
+ ['#' '.' 'O' '.' '#' 'P' '.' 'm']
+ ['#' '.' '.' '.' '#' 'A' 'B' 'n']
+ ['#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' 'E']]
+    level_data	None
+    level_data	[['#' 'm' 'm' 'm' 'm' 'm' 'n']
+ ['#' '.' '.' '.' '.' 'P' '#']
+ ['#' 'A' '.' 'O' '.' '.' '#']
+ ['#' 'B' '.' '.' '.' '.' '#']
+ ['#' '.' 'C' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' 'm' 'm' 'm' 'm' 'm' 'm' 'm']
+ ['#' '#' '.' '.' 'P' '.' '.' 'm']
+ ['#' '#' '.' '.' '.' '.' '.' 'm']
+ ['#' '#' '.' '.' 'O' '.' '.' 'n']
+ ['#' '#' 'A' '.' '.' '.' '.' '#']
+ ['#' '#' '.' '.' '.' '.' 'B' '#']
+ ['#' '#' '#' '#' '#' '#' '#' 'E']]
+    level_data	None
+    level_data	[['#' 'm' 'm' 'm' 'm' 'm' 'm' 'm']
+ ['#' '#' '#' '.' '.' '#' '#' 'm']
+ ['#' '#' '.' '.' '.' 'P' '#' 'm']
+ ['#' '.' '.' 'O' '.' '.' '.' 'n']
+ ['#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '.' 'A' '.' '.' '#' '#']
+ ['#' '#' '#' '.' '.' '#' '#' '#']
+ ['D' '#' '#' '#' '#' '#' '#' 'E']]
+    level_data	None
+    level_data	[['m' 'm' 'm' 'm' 'm' 'm' 'm' 'm']
+ ['m' '.' 'P' '.' '.' '.' '.' 'm']
+ ['m' '.' '.' '.' 'O' '.' '.' 'm']
+ ['#' 'A' '.' '.' '.' '.' 'n' 'm']
+ ['D' '#' '#' '#' '#' '#' '#' 'E']]

@@ -1,0 +1,2051 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	#989898
+        color	#C8C8C8
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Goal
+      
+
+      colors
+        color	Brown
+        color	Yellow
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Wall
+      
+
+      colors
+        color	Darkgrey
+        color	#222222
+      
+
+      sprite
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	Fighter
+      (Warrior sounds better in-game, but I want different abbreviations for the classes in the editor.)
+      
+
+      colors
+        color	#FF4444
+        color	Pink
+        color	DarkBrown
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '2' '.' '2' '.']
+    object_data
+      object_name	Wizard
+      
+
+      colors
+        color	#2266FF
+        color	Pink
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Thief
+      
+
+      colors
+        color	#66DD66
+        color	Pink
+        color	DarkBrown
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	Priest
+      
+
+      colors
+        color	#FFFFAA
+        color	Pink
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Bard
+      
+
+      colors
+        color	#8800FF
+        color	#884400
+        color	#444444
+      
+
+      sprite
+        ['.' '2' '2' '2' '.']
+        ['.' '1' '1' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	Druid
+      
+
+      colors
+        color	#FF8800
+        color	Pink
+        color	DarkBrown
+      
+
+      sprite
+        ['.' '2' '1' '2' '.']
+        ['.' '1' '1' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	SFighter
+      
+
+      colors
+        color	#880000
+        color	Pink
+        color	DarkBrown
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '2' '.' '2' '.']
+    object_data
+      object_name	SWizard
+      
+
+      colors
+        color	#000088
+        color	Pink
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	SThief
+      
+
+      colors
+        color	#006600
+        color	Pink
+        color	DarkBrown
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	SPriest
+      
+
+      colors
+        color	#B8B800
+        color	Pink
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	SBard
+      
+
+      colors
+        color	#440088
+        color	#884400
+        color	#444444
+      
+
+      sprite
+        ['.' '2' '2' '2' '.']
+        ['.' '1' '1' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	SDruid
+      
+
+      colors
+        color	#884400
+        color	Pink
+        color	DarkBrown
+      
+
+      sprite
+        ['.' '2' '1' '2' '.']
+        ['.' '1' '1' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Crate
+      
+
+      colors
+        color	Orange
+        color	#552200
+      
+
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	YellowSwitch
+      
+
+      colors
+        color	Yellow
+        color	Black
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	YellowOpen
+      
+
+      colors
+        color	Yellow
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+    object_data
+      object_name	YellowDoor
+      
+
+      colors
+        color	Yellow
+        color	#AA7722
+      
+
+      sprite
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '1']
+        ['0' '1' '0' '1' '0']
+    object_data
+      object_name	PurpleSwitch
+      
+
+      colors
+        color	#6611CC
+        color	Black
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	PurpleDoor
+      
+
+      colors
+        color	#6611CC
+        color	#220088
+      
+
+      sprite
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '1']
+        ['0' '1' '0' '1' '0']
+    object_data
+      object_name	PurpleOpen
+      
+
+      colors
+        color	#6611CC
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+    object_data
+      object_name	MonsterDoor
+      
+
+      colors
+        color	DarkGrey
+        color	#222222
+        color	Red
+      
+
+      sprite
+        ['2' '1' '0' '0' '2']
+        ['2' '2' '1' '2' '2']
+        ['2' '0' '2' '1' '2']
+        ['2' '0' '0' '1' '2']
+        ['2' '1' '1' '1' '2']
+    object_data
+      object_name	Warpball
+      
+
+      colors
+        color	Blue
+      
+
+    object_data
+      object_name	ShadowDoor
+      
+
+      colors
+        color	Purple
+      
+
+    object_data
+      object_name	Goblin
+      
+
+      colors
+        color	Green
+        color	DarkBrown
+        color	DarkGreen
+      
+
+      sprite
+        ['0' '.' '2' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '0' '.' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '.' '1' '.']
+    object_data
+      object_name	Dying
+      
+
+      colors
+        color	White
+      
+
+    object_data
+      object_name	Saved
+      
+
+      colors
+        color	#D8D800
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	HasSavedDoor
+      
+
+      colors
+        color	Yellow
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Corpse
+      
+
+      colors
+        color	#CCC
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	Note
+      
+
+      colors
+        color	#8800FF
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '0' '.']
+        ['.' '0' '0' '.' '.']
+        ['.' '0' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+  legend_section
+    legend_data
+      Player
+      object_name	Fighter
+      legend_operation
+        object_name	Wizard
+      legend_operation
+        object_name	Thief
+      legend_operation
+        object_name	Priest
+      legend_operation
+        object_name	Bard
+      legend_operation
+        object_name	Druid
+    legend_data
+      SPlayer
+      object_name	Swizard
+      legend_operation
+        object_name	Sthief
+      legend_operation
+        object_name	SFighter
+      legend_operation
+        object_name	SPriest
+      legend_operation
+        object_name	SBard
+      legend_operation
+        object_name	SDruid
+    legend_data
+      Hero
+      object_name	Player
+      legend_operation
+        object_name	Splayer
+    legend_data
+      Healer
+      object_name	Priest
+      legend_operation
+        object_name	SPriest
+    legend_data
+      ClosedDoor
+      object_name	PurpleDoor
+      legend_operation
+        object_name	YellowDoor
+      legend_operation
+        object_name	MonsterDoor
+    legend_data
+      OpenDoor
+      object_name	YellowOpen
+      legend_operation
+        object_name	PurpleOpen
+    legend_data
+      Switch
+      object_name	PurpleSwitch
+      legend_operation
+        object_name	YellowSwitch
+    legend_data
+      Monster
+      object_name	Goblin
+    legend_data
+      Moveable
+      object_name	Crate
+      legend_operation
+        object_name	SPlayer
+      legend_operation
+        object_name	Monster
+    legend_data
+      Static
+      object_name	Wall
+      legend_operation
+        object_name	ClosedDoor
+    legend_data
+      Weighing
+      object_name	Crate
+      legend_operation
+        object_name	Hero
+      legend_operation
+        object_name	Monster
+      legend_operation
+        object_name	Wall
+    legend_data
+      Vulnerable
+      object_name	Hero
+      legend_operation
+        object_name	Monster
+    legend_data
+      Invulnerable
+      object_name	Crate
+      legend_operation
+        object_name	Static
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      F
+      object_name	Fighter
+    legend_data
+      W
+      object_name	Wizard
+    legend_data
+      T
+      object_name	Thief
+    legend_data
+      P
+      object_name	Priest
+    legend_data
+      B
+      object_name	Bard
+    legend_data
+      D
+      object_name	Druid
+    legend_data
+      1
+      object_name	SFighter
+    legend_data
+      2
+      object_name	SThief
+    legend_data
+      3
+      object_name	SWizard
+    legend_data
+      4
+      object_name	SPriest
+    legend_data
+      5
+      object_name	SBard
+    legend_data
+      6
+      object_name	SDruid
+    legend_data
+      *
+      object_name	Crate
+    legend_data
+      G
+      object_name	Goal
+    legend_data
+      [
+      object_name	YellowDoor
+    legend_data
+      ]
+      object_name	PurpleDoor
+    legend_data
+      {
+      object_name	YellowSwitch
+    legend_data
+      }
+      object_name	PurpleSwitch
+    legend_data
+      O
+      object_name	Goblin
+    legend_data
+      M
+      object_name	MonsterDoor
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Warpball
+      object_name	Dying
+    layer_data
+      object_name	Goal
+    layer_data
+      object_name	Switch
+      object_name	OpenDoor
+    layer_data
+      object_name	ShadowDoor
+      object_name	HasSavedDoor
+    layer_data
+      object_name	ClosedDoor
+      object_name	Hero
+    layer_data
+      object_name	Crate
+      object_name	Wall
+    layer_data
+      object_name	Monster
+      object_name	Corpse
+    layer_data
+      object_name	Saved
+    layer_data
+      object_name	Note
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content	Saved
+          rule_part
+            rule_content	Goal
+          ->
+          rule_part
+          rule_part
+            rule_content	HasSavedDoor
+          (Remembering whether we saved someone last round by temporarily changing some door to a HasSavedDoor. This is purely for sound effects purposes.)
+          
+
+        rule_data
+          rule_part
+            rule_content	Corpse
+          ->
+          command
+            command_keyword	Restart
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Fighter
+            cell_border
+            rule_content	Moveable
+          ->
+          rule_part
+            rule_content
+              >
+              Fighter
+            cell_border
+            rule_content
+              >
+              Moveable
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Moveable
+            cell_border
+            rule_content	Moveable
+          rule_part
+            rule_content	Fighter
+          ->
+          rule_part
+            rule_content
+              >
+              Moveable
+            cell_border
+            rule_content
+              >
+              Moveable
+          rule_part
+            rule_content	Fighter
+          (Fighters push.)
+          
+
+        rule_data
+          rule_part
+            rule_content
+              <
+              Thief
+            cell_border
+            rule_content	Moveable
+          ->
+          rule_part
+            rule_content
+              <
+              Thief
+            cell_border
+            rule_content
+              <
+              Moveable
+          (Thieves pull.)
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Wizard
+          ->
+          rule_part
+            rule_content	Wizard
+            rule_content
+              >
+              Warpball
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Warpball
+            cell_border
+            rule_content	no
+            rule_content
+              Moveable
+              no
+              Static
+          ->
+          rule_part
+            cell_border
+            rule_content
+              >
+              Warpball
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Warpball
+            cell_border
+            rule_content	Static
+          rule_part
+            rule_content	Wizard
+          ->
+          rule_part
+            cell_border
+            rule_content	Static
+          rule_part
+            rule_content
+              >
+              Wizard
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Warpball
+            cell_border
+            rule_content	Moveable
+          rule_part
+            rule_content	Wizard
+          ->
+          rule_part
+            cell_border
+            rule_content	Wizard
+            rule_content	Sfx0
+          rule_part
+            rule_content	Moveable
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Warpball
+          rule_part
+            rule_content	Wizard
+          ->
+          rule_part
+          rule_part
+            rule_content
+              >
+              Wizard
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Druid
+            cell_border
+            rule_content	Crate
+          ->
+          rule_part
+            rule_content	Druid
+            cell_border
+            rule_content	Wall
+            rule_content	Sfx8
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Druid
+            cell_border
+            rule_content	Monster
+          ->
+          rule_part
+            rule_content	Druid
+            cell_border
+            rule_content	Wall
+            rule_content	Sfx8
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Druid
+            cell_border
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content	Druid
+            cell_border
+            rule_content	Crate
+            rule_content	Sfx8
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Druid
+            cell_border
+            rule_content	Healer
+          ->
+          rule_part
+            rule_content	Druid
+            cell_border
+            rule_content	Healer
+            rule_content	Saved
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Druid
+            cell_border
+            rule_content	Hero
+          ->
+          rule_part
+            rule_content	Druid
+            cell_border
+            rule_content	Hero
+            rule_content	Warpball
+          
+
+        rule_data
+          rule_part
+            rule_content	Warpball
+            cell_border
+            rule_content	Healer
+          ->
+          rule_part
+            rule_content	Saved
+            cell_border
+            rule_content	Healer
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Warpball
+              Hero
+          ->
+          rule_part
+            rule_content
+              Wall
+              Sfx8
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Bard
+              no
+              Note
+          ->
+          rule_part
+            rule_content
+              >
+              Note
+            rule_content
+              >
+              Bard
+            rule_content	WarpBall
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Note
+          rule_part
+            rule_content	Note
+          ->
+          rule_part
+            rule_content
+              >
+              Note
+          rule_part
+            rule_content
+              >
+              Note
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Note
+              Moveable
+            cell_border
+            rule_content	no
+            rule_content
+              Static
+              no
+              Moveable
+              no
+              Bard
+          ->
+          rule_part
+            cell_border
+            rule_content	Moveable
+            rule_content	Sfx7
+          
+
+        rule_data
+          +
+          rule_part
+            rule_content
+              >
+              Note
+              Bard
+              WarpBall
+            cell_border
+            rule_content	no
+            rule_content
+              Static
+              no
+              Moveable
+              no
+              Bard
+          ->
+          rule_part
+            cell_border
+            rule_content	Bard
+          
+
+        rule_data
+          rule_part
+            rule_content	WarpBall
+          ->
+          command
+            command_keyword	Cancel
+          
+
+        rule_data
+          rule_part
+            rule_content	Note
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Fighter
+          rule_part
+            rule_content	SThief
+          ->
+          rule_part
+            rule_content	SFighter
+          rule_part
+            rule_content
+              Thief
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Thief
+          rule_part
+            rule_content	SWizard
+          ->
+          rule_part
+            rule_content	SThief
+          rule_part
+            rule_content
+              Wizard
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Wizard
+          rule_part
+            rule_content	SPriest
+          ->
+          rule_part
+            rule_content	SWizard
+          rule_part
+            rule_content
+              Priest
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Priest
+          rule_part
+            rule_content	SBard
+          ->
+          rule_part
+            rule_content	SPriest
+          rule_part
+            rule_content
+              Bard
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Bard
+          rule_part
+            rule_content	SDruid
+          ->
+          rule_part
+            rule_content	SBard
+          rule_part
+            rule_content
+              Druid
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Druid
+          rule_part
+            rule_content	SFighter
+          ->
+          rule_part
+            rule_content	SDruid
+          rule_part
+            rule_content
+              Fighter
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Fighter
+          rule_part
+            rule_content	SWizard
+          ->
+          rule_part
+            rule_content	SFighter
+          rule_part
+            rule_content
+              Wizard
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Thief
+          rule_part
+            rule_content	SPriest
+          ->
+          rule_part
+            rule_content	SThief
+          rule_part
+            rule_content
+              Priest
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Wizard
+          rule_part
+            rule_content	SBard
+          ->
+          rule_part
+            rule_content	SWizard
+          rule_part
+            rule_content
+              Bard
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Priest
+          rule_part
+            rule_content	SDruid
+          ->
+          rule_part
+            rule_content	SPriest
+          rule_part
+            rule_content
+              Druid
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Bard
+          rule_part
+            rule_content	SFighter
+          ->
+          rule_part
+            rule_content	SBard
+          rule_part
+            rule_content
+              Fighter
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Druid
+          rule_part
+            rule_content	SThief
+          ->
+          rule_part
+            rule_content	SDruid
+          rule_part
+            rule_content
+              Thief
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Fighter
+          rule_part
+            rule_content	SPriest
+          ->
+          rule_part
+            rule_content	SFighter
+          rule_part
+            rule_content
+              Priest
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Thief
+          rule_part
+            rule_content	SBard
+          ->
+          rule_part
+            rule_content	SThief
+          rule_part
+            rule_content
+              Bard
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Wizard
+          rule_part
+            rule_content	SDruid
+          ->
+          rule_part
+            rule_content	SWizard
+          rule_part
+            rule_content
+              Druid
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Priest
+          rule_part
+            rule_content	SFighter
+          ->
+          rule_part
+            rule_content	SPriest
+          rule_part
+            rule_content
+              Fighter
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Bard
+          rule_part
+            rule_content	SThief
+          ->
+          rule_part
+            rule_content	SBard
+          rule_part
+            rule_content
+              Thief
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Druid
+          rule_part
+            rule_content	SWizard
+          ->
+          rule_part
+            rule_content	SDruid
+          rule_part
+            rule_content
+              Wizard
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Fighter
+          rule_part
+            rule_content	SBard
+          ->
+          rule_part
+            rule_content	SFighter
+          rule_part
+            rule_content
+              Bard
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Thief
+          rule_part
+            rule_content	SDruid
+          ->
+          rule_part
+            rule_content	SThief
+          rule_part
+            rule_content
+              Druid
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Wizard
+          rule_part
+            rule_content	SFighter
+          ->
+          rule_part
+            rule_content	SWizard
+          rule_part
+            rule_content
+              Fighter
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Priest
+          rule_part
+            rule_content	SThief
+          ->
+          rule_part
+            rule_content	SPriest
+          rule_part
+            rule_content
+              Thief
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Bard
+          rule_part
+            rule_content	SWizard
+          ->
+          rule_part
+            rule_content	SBard
+          rule_part
+            rule_content
+              Wizard
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Druid
+          rule_part
+            rule_content	SPriest
+          ->
+          rule_part
+            rule_content	SDruid
+          rule_part
+            rule_content
+              Priest
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Fighter
+          rule_part
+            rule_content	SDruid
+          ->
+          rule_part
+            rule_content	SFighter
+          rule_part
+            rule_content
+              Druid
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Thief
+          rule_part
+            rule_content	SFighter
+          ->
+          rule_part
+            rule_content	SThief
+          rule_part
+            rule_content
+              Fighter
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Wizard
+          rule_part
+            rule_content	SThief
+          ->
+          rule_part
+            rule_content	SWizard
+          rule_part
+            rule_content
+              Thief
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Priest
+          rule_part
+            rule_content	SWizard
+          ->
+          rule_part
+            rule_content	SPriest
+          rule_part
+            rule_content
+              Wizard
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Bard
+          rule_part
+            rule_content	SPriest
+          ->
+          rule_part
+            rule_content	SBard
+          rule_part
+            rule_content
+              Priest
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Druid
+          rule_part
+            rule_content	SBard
+          ->
+          rule_part
+            rule_content	SDruid
+          rule_part
+            rule_content
+              Bard
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              no
+              Note
+            cell_border
+            rule_content	no
+            rule_content	Note
+            cell_border
+            rule_content	Bard
+          ->
+          rule_part
+            rule_content
+              ^
+              Note
+            cell_border
+            rule_content
+              ^
+              Note
+            cell_border
+            rule_content	Bard
+          
+
+        rule_data
+          rule_part
+            rule_content
+              no
+              Note
+            cell_border
+            rule_content	Bard
+          ->
+          rule_part
+            rule_content
+              ^
+              Note
+            cell_border
+            rule_content	Bard
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Note
+            cell_border
+            rule_content	no
+            rule_content	Note
+            cell_border
+            rule_content	no
+            rule_content	Note
+          ->
+          rule_part
+            rule_content	Note
+            cell_border
+            rule_content	Note
+            cell_border
+            rule_content	Note
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Note
+            cell_border
+            rule_content	no
+            rule_content	Note
+          ->
+          rule_part
+            rule_content	Note
+            cell_border
+            rule_content	Note
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Note
+          ->
+          rule_part
+            rule_content	Note
+          
+
+        rule_data
+          prefix	Late
+          rule_part
+            rule_content	Goblin
+            cell_border
+            rule_content	Vulnerable
+          ->
+          rule_part
+            rule_content	Goblin
+            cell_border
+            rule_content	Dying
+            rule_content	Vulnerable
+          
+
+        rule_data
+          prefix	Late
+          rule_part
+            rule_content
+              Dying
+              Healer
+          ->
+          rule_part
+            rule_content
+              Saved
+              Healer
+          
+
+        rule_data
+          prefix	Late
+          rule_part
+            rule_content	Healer
+            cell_border
+            rule_content	Dying
+            rule_content	Hero
+          ->
+          rule_part
+            rule_content	Healer
+            cell_border
+            rule_content	Saved
+            rule_content	Hero
+          
+
+        rule_data
+          prefix	Late
+          rule_part
+            rule_content
+              Dying
+              Monster
+          ->
+          rule_part
+            rule_content	Sfx5
+          
+
+        rule_data
+          prefix	Late
+          rule_part
+            rule_content
+              Dying
+              Hero
+          ->
+          rule_part
+            rule_content
+              Corpse
+              Sfx6
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              Weighing
+              YellowSwitch
+          rule_part
+            rule_content	YellowDoor
+          ->
+          rule_part
+            rule_content
+              Weighing
+              YellowSwitch
+          rule_part
+            rule_content	ShadowDoor
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              YellowSwitch
+              no
+              Weighing
+          rule_part
+            rule_content	YellowOpen
+          ->
+          rule_part
+            rule_content	YellowSwitch
+          rule_part
+            rule_content
+              YellowDoor
+              sfx2
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              YellowSwitch
+              no
+              Weighing
+          rule_part
+            rule_content	ShadowDoor
+          ->
+          rule_part
+            rule_content	YellowSwitch
+          rule_part
+            rule_content	YellowDoor
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	ShadowDoor
+          ->
+          rule_part
+            rule_content
+              YellowOpen
+              sfx3
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              Weighing
+              PurpleSwitch
+          rule_part
+            rule_content	PurpleDoor
+          ->
+          rule_part
+            rule_content
+              Weighing
+              PurpleSwitch
+          rule_part
+            rule_content	ShadowDoor
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              PurpleSwitch
+              no
+              Weighing
+          rule_part
+            rule_content	PurpleOpen
+          ->
+          rule_part
+            rule_content	PurpleSwitch
+          rule_part
+            rule_content
+              PurpleDoor
+              sfx2
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              PurpleSwitch
+              no
+              Weighing
+          rule_part
+            rule_content	ShadowDoor
+          ->
+          rule_part
+            rule_content	PurpleSwitch
+          rule_part
+            rule_content	PurpleDoor
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	ShadowDoor
+          ->
+          rule_part
+            rule_content
+              PurpleOpen
+              sfx3
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	MonsterDoor
+          ->
+          rule_part
+            rule_content	ShadowDoor
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	ShadowDoor
+          rule_part
+            rule_content	Monster
+          ->
+          rule_part
+            rule_content	MonsterDoor
+          rule_part
+            rule_content	Monster
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	ShadowDoor
+          ->
+          rule_part
+            rule_content	sfx3
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	HasSavedDoor
+          rule_part
+            rule_content	Healer
+          ->
+          rule_part
+            rule_content	Goal
+          rule_part
+            rule_content
+              Healer
+              WarpBall
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Saved
+          rule_part
+            rule_content
+              Healer
+              no
+              WarpBall
+          ->
+          rule_part
+            rule_content
+              Saved
+              sfx4
+          rule_part
+            rule_content	Healer
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	HasSavedDoor
+          ->
+          rule_part
+            rule_content	Goal
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	WarpBall
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              Note
+              no
+              Moveable
+          ->
+          rule_part
+          
+
+  winconditions_section
+    condition_data
+      All
+      object_name	Hero
+      on
+      object_name	Goal
+    condition_data
+      All
+      object_name	Goal
+      on
+      object_name	Hero
+  levels_section
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '.' 'F' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '*' '*' 'G'
+  '#']
+ ['#' '*' '*' '*' '#' '.' '.' '.' '*' '*' '*' '*' '*' '.' '#' '.' '.' '*'
+  '#']
+ ['#' '.' 'G' '.' '#' '.' '.' '.' '*' '.' '.' '.' '*' '.' '#' '2' '.' '.'
+  '#']
+ ['#' '#' '#' '#' '#' '.' '.' '.' '*' '.' '.' '.' '*' '.' '#' '#' '#' '#'
+  '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '*' '.' '.' '.' '*' '.' '.' '.' '.' '.'
+  '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '*' '.' '.' '.' '*' '.' '.' '.' '.' '.'
+  '#']
+ ['#' '#' '#' '#' '#' '.' '.' '*' '*' '.' '.' '*' '*' '.' '#' '#' '#' '#'
+  '#']
+ ['#' '*' '.' '.' '#' '.' '*' '*' '*' '.' '*' '*' '*' '.' '#' '.' '.' 'G'
+  '#']
+ ['#' '*' 'G' '*' '#' '.' '.' '*' '.' '.' '.' '*' '.' '.' '#' '.' 'O' '.'
+  '#']
+ ['#' '3' '.' '*' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '4' '.' '.'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '{' '#' '.' '.' '.' '.' '{' '#' '.' '.' '.' '#']
+ ['#' '.' '#' '.' '*' '#' 'B' '.' '[' '.' 'G' '.' '#']
+ ['#' '*' '#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' 'B' '.' '.' '*' '*' '*' '*' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '#' '#' '#' '#' '#' '#' '.' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' 'G' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' 'O' '.' '.' 'B' '.' '.' 'O' 'M' '.' 'G' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'G' '#' '.' 'F' '.' '{' '.' '.' 'O' '.' '#']
+ ['#' '.' '[' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' 'G' '#' '.' '5' '.' '{' '.' '.' 'O' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '[' '[' '[' '[' '[' '[' '[' '#' '#' '#']
+ ['#' '#' '[' '#' '#' '#' '#' '#' '[' '#' '#' '#']
+ ['#' '#' '[' '#' '#' '[' '[' '[' '[' '{' '*' '#']
+ ['#' '.' '.' '.' '#' '[' '#' '#' '#' '#' '#' '#']
+ ['#' '.' 'T' '.' '#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '5' '.' 'G' '.' 'G' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '*' 'G' '{' '#' '#' '#' '#']
+ ['#' '#' '#' '.' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '[' 'W' '#' '#']
+ ['#' '#' '#' '.' '#' '.' '5' '#']
+ ['#' '*' 'G' '*' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' 'G' '#' 'G' '#']
+ ['#' '.' '#' '*' '.' '.' '#' '[' '#']
+ ['#' '.' '*' '*' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '{' '4' '{' 'B' '{' '.' '#']
+ ['#' '.' '.' '.' '{' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '*' '.' '{' '.' '.' '{' '.' '*' '*' '{' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'B' '2' '1' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '[' '#']
+ ['#' '.' 'G' '.' '.' 'G' '.' '.' 'G' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '[' '.' '{' '.' '2' '.' '#' '.' 'D' '.' '#']
+ ['#' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.' '#']
+ ['#' '.' '.' '.' '.' 'G' '.' 'G' '.' '.' '#' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '#' '#' '#' '#' '{' '{' '{' '#']
+ ['#' '.' 'D' '.' '#' '#' '.' '.' '.' '{' '{' '{' '#']
+ ['#' '.' '.' '.' '#' '#' '.' '#' '#' '{' '{' '{' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '1' '.' '#' '.' '.' '#' '#' 'G' '.' 'G' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '#' '[' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'O' '*' '.' '.' '.' '.' '{' '.' '.' '.' '3' '#']
+ ['#' '#' '.' '#' '#' '#' '#' '.' '#' '#' '#' '#' '#']
+ ['#' '#' '.' '#' '#' '#' 'O' '.' 'O' '#' '#' 'G' '#']
+ ['#' '#' '.' '#' '#' '#' '#' '.' '#' '#' '#' '.' '#']
+ ['#' '#' 'D' '[' '.' '.' '.' '.' '#' '#' '#' 'G' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '4' '.' '.' '#' '#' 'G' '.' '#']
+ ['#' 'O' '.' '.' 'F' '.' '.' 'O' 'M' '#' '.' 'G' '#']
+ ['#' '#' '#' '#' '.' '6' '.' '.' '#' '#' 'G' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '5' '.' '}' '}' '}' '.' ']' ']' ']' ']' ']' '.' '#']
+ ['#' '.' '.' '.' '}' '}' '}' '.' ']' 'G' '.' 'G' ']' '.' '#']
+ ['#' '.' 'D' '.' '}' '}' '}' '.' ']' ']' ']' ']' ']' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'G' '#' '#' '#' '#' '#' 'W' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'G' '#' '#' '#' '#' '#' '6' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' 'O' '.' 'G' '.' 'G' '#']
+ ['#' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'B' '.' '6' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' 'G' '.' '#' '.' '}' '.' '.' '.' '.' '.' '{' '[' 'O' '#']
+ ['#' '.' '.' '.' '#' '.' 'F' '.' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' 'G' '.' ']' '.' '4' '.' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '5' '.' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' 'G' '.' '#' '.' '}' '.' '.' '.' '.' '.' '{' '[' 'O' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' 'M' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'G' '.' 'G' 'M' '#' 'F' '.' '2' '#' '#' '#' 'O' '#']
+ ['#' '.' '.' '.' '#' 'M' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' 'G' '.' 'G' 'M' '#' '3' '.' '6' '#' '#' '#' 'O' '#']
+ ['#' '#' '#' '#' '#' 'M' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '6' '#' '#' '#' '#' '#' '#' 'B' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '#' '#' '#' '#' '#' '#' '#' '.' '4' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#' '#' '1' '#']
+ ['#' 'G' '.' 'G' '.' 'G' '.' 'G' '#' '#' 'O' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '#' 'O' '.' 'O' '#' '.' '.' '.' 'G' '#']
+ ['#' '.' '.' '#' '#' 'W' '.' '.' '.' '1' '#' '#' '.' '.' '#']
+ ['#' '.' '.' '#' 'O' '.' '.' 'O' '.' '.' 'O' '#' '.' 'G' '#']
+ ['#' '4' '.' '#' '.' '.' 'O' 'G' 'O' '.' '.' '#' '.' '.' '#']
+ ['#' '.' '.' '#' 'O' '.' '.' 'O' '.' '.' 'O' '#' '.' 'G' '#']
+ ['#' '.' '.' '#' '#' '2' '.' '.' '.' '6' '#' '#' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '#' 'O' '.' 'O' '#' '.' '.' '.' 'G' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#']
+ ['#' '.' 'F' '.' '*' '.' '.' '.' '.' '#' 'G' '.' 'G' '#' '.' '.' '.' '.'
+  '*' '.' '4' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '.'
+  '#' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#'
+  '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '.' '#' '#' '#' '#' '#' 'O' '#' '#' '#' '#' '#' '.'
+  '#' '#' '#' '#' '#']
+ ['#' '.' '.' '#' '#' 'O' '#' '.' '.' '#' '.' '.' '.' '#' '.' '.' '#' 'O'
+  '#' '#' '.' '.' '#']
+ ['#' '.' '2' '.' '*' '.' '.' '.' '.' '#' 'G' '.' 'G' '#' '.' '.' '.' '.'
+  '*' '.' '5' '.' '#']
+ ['#' '.' '.' '#' '#' 'O' '#' '.' '.' '*' '.' '.' '.' '#' '.' '.' '#' 'O'
+  '#' '#' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '.' '#' '#' '#' '#' '.' '.' '.' '#' '#' '#' '#' '.'
+  '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '#' '.' '.' '*' 'O' '.' '*' '#' '#'
+  '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '#' '#' '.' '#' '#' '#' '#' '#' '#' '#' '.' '.' '.'
+  '#' '.' '.' '.' '#']
+ ['#' '.' '3' '.' '#' '#' '#' '.' '#' '#' 'G' '.' 'G' '#' '#' '.' '.' '.'
+  '#' '.' '6' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '1' '.' '4' '.' '.' '.' '.' '.' '.' 'G' '.' 'G' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '2' '.' 'B' '.' '.' '.' '.' '.' '.' 'G' '.' 'G' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '3' '.' '6' '.' '.' '.' '.' '.' '.' 'G' '.' 'G' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None

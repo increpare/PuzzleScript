@@ -1,0 +1,1667 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	#999999
+        color	#aaaaaa
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '1']
+        ['1' '1' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '1' '1']
+    object_data
+      object_name	Wall
+      
+
+      colors
+        color	Black
+        color	#111111
+      
+
+      sprite
+        ['1' '0' '0' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '0' '0' '1']
+    object_data
+      object_name	Player
+      
+
+      colors
+        color	Black
+        color	Orange
+        color	Green
+        color	Blue
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['2' '2' '2' '2' '2']
+        ['.' '3' '3' '3' '.']
+        ['.' '3' '.' '3' '.']
+    object_data
+      object_name	ScrollBG
+      
+
+      colors
+        color	#d2a669
+        color	#e2bb82
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '1']
+        ['1' '1' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '1' '1']
+    object_data
+      object_name	ScrollLeft
+      
+
+      colors
+        color	#d2a669
+        color	#e2bb82
+        color	Brown
+        color	Black
+      
+
+      sprite
+        ['3' '3' '3' '2' '1']
+        ['3' '3' '3' '3' '2']
+        ['3' '3' '3' '2' '1']
+        ['3' '3' '3' '3' '2']
+        ['3' '3' '3' '2' '1']
+    object_data
+      object_name	ScrollRight
+      
+
+      colors
+        color	#d2a669
+        color	#e2bb82
+        color	Brown
+        color	Black
+      
+
+      sprite
+        ['1' '2' '3' '3' '3']
+        ['2' '3' '3' '3' '3']
+        ['1' '2' '3' '3' '3']
+        ['2' '3' '3' '3' '3']
+        ['1' '2' '3' '3' '3']
+    object_data
+      object_name	ScrollTop
+      
+
+      colors
+        color	#d2a669
+        color	#e2bb82
+        color	Brown
+        color	Black
+      
+
+      sprite
+        ['3' '3' '3' '3' '3']
+        ['3' '3' '3' '3' '3']
+        ['3' '3' '3' '3' '3']
+        ['2' '3' '2' '3' '2']
+        ['1' '2' '1' '2' '1']
+    object_data
+      object_name	ScrollBottom
+      
+
+      colors
+        color	#d2a669
+        color	#e2bb82
+        color	Brown
+        color	Black
+      
+
+      sprite
+        ['1' '2' '1' '2' '1']
+        ['2' '3' '2' '3' '2']
+        ['3' '3' '3' '3' '3']
+        ['3' '3' '3' '3' '3']
+        ['3' '3' '3' '3' '3']
+    object_data
+      object_name	ArrowL
+      
+
+      colors
+        color	Red
+        color	Black
+      
+
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '1' '1']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '1' '1' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	ArrowU
+      
+
+      colors
+        color	Blue
+        color	Black
+      
+
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '0' '0' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '1' '0' '1' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	ArrowD
+      
+
+      colors
+        color	Green
+        color	Black
+      
+
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '1' '0' '1' '1']
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '0' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	ArrowR
+      
+
+      colors
+        color	Purple
+        color	Black
+      
+
+      sprite
+        ['1' '1' '0' '1' '1']
+        ['1' '1' '1' '0' '1']
+        ['0' '0' '0' '0' '0']
+        ['1' '1' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+    object_data
+      object_name	CandyR
+      
+
+      colors
+        color	Red
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	CandyG
+      
+
+      colors
+        color	Green
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	CandyB
+      
+
+      colors
+        color	Blue
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	CandyI
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Drop1
+      
+
+      colors
+        color	Red
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Drop2
+      
+
+      colors
+        color	Red
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Drop3
+      
+
+      colors
+        color	Red
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Drop4
+      
+
+      colors
+        color	Red
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Candy0
+      
+
+      colors
+        color	Gray
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Candy1
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Candy2
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	Candy3
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Candy4
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Candy5
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	ClearMarker
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	NinjaR
+      
+
+      colors
+        color	Red
+        color	YELLOW
+        color	BLACK
+      
+
+      sprite
+        ['.' '2' '2' '2' '.']
+        ['.' '0' '0' '0' '.']
+        ['2' '2' '2' '2' '2']
+        ['.' '2' '2' '2' '.']
+        ['.' '2' '.' '2' '.']
+    object_data
+      object_name	NinjaG
+      
+
+      colors
+        color	Green
+        color	YELLOW
+        color	BLACK
+      
+
+      sprite
+        ['.' '2' '2' '2' '.']
+        ['.' '0' '0' '0' '.']
+        ['2' '2' '2' '2' '2']
+        ['.' '2' '2' '2' '.']
+        ['.' '2' '.' '2' '.']
+    object_data
+      object_name	NinjaB
+      
+
+      colors
+        color	Blue
+        color	YELLOW
+        color	BLACK
+      
+
+      sprite
+        ['.' '2' '2' '2' '.']
+        ['.' '0' '0' '0' '.']
+        ['2' '2' '2' '2' '2']
+        ['.' '2' '2' '2' '.']
+        ['.' '2' '.' '2' '.']
+    object_data
+      object_name	NinjaI
+      
+
+      colors
+        color	Purple
+        color	YELLOW
+        color	BLACK
+      
+
+      sprite
+        ['.' '2' '2' '2' '.']
+        ['.' '0' '0' '0' '.']
+        ['2' '2' '2' '2' '2']
+        ['.' '2' '2' '2' '.']
+        ['.' '2' '.' '2' '.']
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      P
+      object_name	Player
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      S
+      object_name	ScrollBG
+    legend_data
+      {
+      object_name	ScrollLeft
+    legend_data
+      }
+      object_name	ScrollRight
+    legend_data
+      [
+      object_name	ScrollTop
+    legend_data
+      ]
+      object_name	ScrollBottom
+    legend_data
+      N
+      object_name	ScrollBG
+      legend_operation
+        object_name	Drop1
+    legend_data
+      M
+      object_name	ScrollBG
+      legend_operation
+        object_name	Drop2
+    legend_data
+      /
+      object_name	ScrollBG
+      legend_operation
+        object_name	Drop3
+    legend_data
+      \
+      object_name	ScrollBG
+      legend_operation
+        object_name	Drop4
+    legend_data
+      Q
+      object_name	ArrowL
+    legend_data
+      W
+      object_name	ArrowU
+    legend_data
+      E
+      object_name	ArrowD
+    legend_data
+      T
+      object_name	ArrowR
+    legend_data
+      R
+      object_name	CandyR
+    legend_data
+      G
+      object_name	CandyG
+    legend_data
+      B
+      object_name	CandyB
+    legend_data
+      I
+      object_name	CandyI
+    legend_data
+      1
+      object_name	CandyR
+      legend_operation
+        object_name	ScrollBG
+    legend_data
+      2
+      object_name	CandyG
+      legend_operation
+        object_name	ScrollBG
+    legend_data
+      3
+      object_name	CandyB
+      legend_operation
+        object_name	ScrollBG
+    legend_data
+      4
+      object_name	CandyI
+      legend_operation
+        object_name	ScrollBG
+    legend_data
+      H
+      object_name	NinjaR
+    legend_data
+      J
+      object_name	NinjaG
+    legend_data
+      K
+      object_name	NinjaB
+    legend_data
+      L
+      object_name	NinjaI
+    legend_data
+      Candy
+      object_name	CandyR
+      legend_operation
+        object_name	CandyG
+      legend_operation
+        object_name	CandyB
+      legend_operation
+        object_name	CandyI
+      legend_operation
+        object_name	Candy0
+      legend_operation
+        object_name	Candy1
+      legend_operation
+        object_name	Candy2
+      legend_operation
+        object_name	Candy3
+      legend_operation
+        object_name	Candy4
+      legend_operation
+        object_name	Candy5
+    legend_data
+      CandyF
+      object_name	CandyR
+      legend_operation
+        object_name	CandyG
+      legend_operation
+        object_name	CandyB
+      legend_operation
+        object_name	CandyI
+    legend_data
+      Enemy
+      object_name	NinjaR
+      legend_operation
+        object_name	NinjaG
+      legend_operation
+        object_name	NinjaB
+      legend_operation
+        object_name	NinjaI
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	ClearMarker
+    layer_data
+      object_name	ScrollBG
+    layer_data
+      object_name	Drop1
+      object_name	Drop2
+    layer_data
+      object_name	Drop3
+      object_name	Drop4
+    layer_data
+      object_name	ArrowL
+      object_name	ArrowU
+    layer_data
+      object_name	ArrowD
+      object_name	ArrowR
+    layer_data
+      object_name	Player
+      object_name	Wall
+    layer_data
+      object_name	CandyR
+      object_name	CandyG
+    layer_data
+      object_name	CandyB
+      object_name	CandyI
+    layer_data
+      object_name	ScrollLeft
+      object_name	ScrollRight
+    layer_data
+      object_name	ScrollTop
+      object_name	ScrollBottom
+    layer_data
+      object_name	Candy0
+      object_name	Candy1
+    layer_data
+      object_name	Candy2
+      object_name	Candy3
+    layer_data
+      object_name	Candy4
+      object_name	Candy5
+    layer_data
+      object_name	NinjaR
+      object_name	NinjaG
+    layer_data
+      object_name	NinjaB
+      object_name	NinjaI
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content	Candy5
+          ->
+          rule_part
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	Candy4
+          ->
+          rule_part
+            rule_content	Candy5
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	Candy3
+          ->
+          rule_part
+            rule_content	Candy4
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	Candy2
+          ->
+          rule_part
+            rule_content	Candy3
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	Candy1
+          ->
+          rule_part
+            rule_content	Candy2
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	Candy0
+          ->
+          rule_part
+            rule_content	Candy1
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content
+              ScrollBG
+              CandyR
+            cell_border
+            rule_content	ScrollBG
+            rule_content	CandyR
+            cell_border
+            rule_content	ScrollBG
+            rule_content	CandyR
+          ->
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyR
+            cell_border
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyR
+            cell_border
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyR
+          
+
+        rule_data
+          rule_part
+            rule_content
+              ScrollBG
+              CandyG
+            cell_border
+            rule_content	ScrollBG
+            rule_content	CandyG
+            cell_border
+            rule_content	ScrollBG
+            rule_content	CandyG
+          ->
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyG
+            cell_border
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyG
+            cell_border
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyG
+          
+
+        rule_data
+          rule_part
+            rule_content
+              ScrollBG
+              CandyB
+            cell_border
+            rule_content	ScrollBG
+            rule_content	CandyB
+            cell_border
+            rule_content	ScrollBG
+            rule_content	CandyB
+          ->
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyB
+            cell_border
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyB
+            cell_border
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyB
+          
+
+        rule_data
+          rule_part
+            rule_content
+              ScrollBG
+              CandyI
+            cell_border
+            rule_content	ScrollBG
+            rule_content	CandyI
+            cell_border
+            rule_content	ScrollBG
+            rule_content	CandyI
+          ->
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyI
+            cell_border
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyI
+            cell_border
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyI
+          
+
+        rule_data
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyR
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	...
+            cell_border
+            rule_content	NinjaR
+          ->
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyR
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	...
+            cell_border
+            rule_content	NinjaR
+            rule_content	ClearMarker
+          
+
+        rule_data
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyB
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	...
+            cell_border
+            rule_content	NinjaB
+          ->
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyB
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	...
+            cell_border
+            rule_content	NinjaB
+            rule_content	ClearMarker
+          
+
+        rule_data
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyG
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	...
+            cell_border
+            rule_content	NinjaG
+          ->
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyG
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	...
+            cell_border
+            rule_content	NinjaG
+            rule_content	ClearMarker
+          
+
+        rule_data
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyI
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	...
+            cell_border
+            rule_content	NinjaI
+          ->
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              CandyI
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	...
+            cell_border
+            rule_content	NinjaI
+            rule_content	ClearMarker
+          
+
+        rule_data
+          rule_part
+            rule_content
+              ScrollBG
+              ClearMarker
+              Candy
+          ->
+          rule_part
+            rule_content
+              ScrollBG
+              Candy0
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content
+              ClearMarker
+              Enemy
+          ->
+          rule_part
+            rule_content	Candy0
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              CandyF
+              ScrollBG
+            cell_border
+            rule_content
+              no
+              Candy
+              ScrollBG
+          ->
+          rule_part
+            rule_content	ScrollBG
+            cell_border
+            rule_content	CandyF
+            rule_content	ScrollBG
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	Candy
+          rule_part
+            rule_content
+              Drop1
+              no
+              Candy
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+          rule_part
+            rule_content
+              Candy
+              Drop1
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	Candy
+          rule_part
+            rule_content
+              Drop2
+              no
+              Candy
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+          rule_part
+            rule_content
+              Candy
+              Drop2
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	Candy
+          rule_part
+            rule_content
+              Drop3
+              no
+              Candy
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+          rule_part
+            rule_content
+              Candy
+              Drop3
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	Candy
+          rule_part
+            rule_content
+              Drop4
+              no
+              Candy
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+          rule_part
+            rule_content
+              Candy
+              Drop4
+          command
+            command_keyword	again
+          
+
+  winconditions_section
+    condition_data
+      No
+      object_name	Candy
+    condition_data
+      No
+      object_name	Enemy
+  levels_section
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '#' '#' '#' 'r' '#' '#' '#' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '#' '.' '.' '.' '.' '.' '#' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '#' '.' '.' '.' '.' '.' '#' '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'p' '.' '.' '.' '.' '.' 'r' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '.' '.' '.' '.' '.' '#' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '.' '.' '.' '.' '.' '#' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '#' '#' 'r' '#' '#' '#' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '#' '.' '.' '.' '.' '.' '#' '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'r' '.' '.' 'p' '.' '.' 'b' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '.' '.' '.' '.' '.' '#' '#']
+ ['{' '1' 's' 's' '3' '}' '#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' '1' 's' 's' '3' '}' '#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' 'p' '.' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' 'r' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' '1' '1' 's' '1' '}' '#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' 'r' '.' 'r' '.' 'r' '.' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' '#' '.' 'p' '.' '#' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'b' '.' 'b' '.' 'b' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' 'r' '.' '.' '.' 'p' '.' '.' '.' 'r' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '#' '#' '.' '.' '.' '#' '#' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '#' '.' '.' '#' '.' '.' '#' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' 'r' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' '#' 'r' '#' 'b' '#' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' 'b' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '#' '.' '.' '#' '.' '.' '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '#' '#' '.' '.' '.' '#' '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'b' '.' '.' '.' '.' '.' '.' '.' 'b' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '#' '#' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '#' '#' '.' '.' '.' 'p' '.' '#' '#' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' '.' '.' 'b' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'r' '#' '#' '#' 'r' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'b' '#' '.' '.' '.' '#' 'b' '.' '#']
+ ['{' '3' '1' '3' '1' '}' '#' '.' '.' '#' '.' '.' '.' '#' '.' '.' '#']
+ ['{' '1' '1' '3' '1' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' 'p' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '#' '.' '.' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' 'r' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' '#' 'b' '#' 'g' '#' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' 'b' '.' '.' '.' '.' '#']
+ ['{' 's' '1' '1' 's' '}' '#' '.' '.' '.' '.' '#' '.' '.' '.' '.' '#']
+ ['{' '1' '3' '2' '3' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' '1' '3' '2' '3' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '#' 'r' '#' 'g' '#' 'b' '#' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '#' '.' '#' '.' '#' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' 'p' '.' '.' 'b' 'r' 'g' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '#' '.' '#' '.' '#' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '#' 'g' '#' 'b' '#' 'r' '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' 'g' '#' 'i' '.' '.' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' 'g' '.' '.' '.' '.' '.' 'i' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '#' '.' '.' 'p' '.' '.' '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'b' '.' '.' '.' '.' '.' 'r' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' 'b' '#' 'r' '.' '.' '.' '#']
+ ['{' '1' '3' '2' '4' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' 'p' '.' '.' 'r' '.' '.' 'i' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' 'r' 'b' 'r' '.' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' 'r' 'b' 'g' 'b' 'r' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' 'r' 'b' 'g' 'i' 'g' 'b' 'r' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'r' 'b' 'g' 'b' 'r' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' 'r' 'b' 'r' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'i' '.' '.' 'r' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' '#' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' 'p' '.' '.' 'r' '.' '.' 'h' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '#' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' '1' '1' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' 'p' '.' 'r' '.' '.' '.' '.' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '#' '#' '#' '.' '.' '.' '#' '#' '#' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '#' '#' '#' '.' '.' '.' '#' '#' '#' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '#' '#' '.' '.' '.' '#' '#' '#' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '#' '#' '.' '.' '.' '#' '#' '#' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '#' '#' '.' 'h' '.' '#' '#' '#' '#']
+ ['{' 's' '1' '1' 's' '}' '#' '#' '#' '#' '.' '.' '.' '#' '#' '#' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' 'h' '.' '.' 'p' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' '.' 'r' '.' '.' '.' 'h' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' 'r' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'r' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' 'h' '#' '.' 'r' '.' '#' 'h' '#' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '#' '#' '#' '.' 'r' '.' '#' '#' '#' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' 'r' '.' 'p' '.' 'r' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '#' '#' '.' 'r' '.' '#' '#' '#' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' 'h' '#' '.' 'r' '.' '#' 'h' '#' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '#' '#' '.' '.' '.' '#' '#' '#' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' 'b' '#' '#' 'r' '#' '#' 'b' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' 'h' '#' '#' 'h' '#' '#' 'h' '#' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' 'r' '.' 'r' '.' 'r' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'r' '.' 'p' '.' 'r' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' 'h' '.' '.' '.' '.' '#']
+ ['{' 's' '3' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' 'r' '.' '.' '.' '.' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' 'r' 'b' 'r' '.' '.' '.' '.' '#' '#' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' 'r' '.' '.' 'k' '.' '.' '.' '#' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' 'p' '.' 'b' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '.' '.' '.' 'k' '.' '.' 'r' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '#' '.' '.' '.' '.' 'r' 'b' 'r' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '#' '#' '.' '.' '.' '.' 'r' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' 'r' '.' '.' '.' '.' '.' '.' '.' 'b' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '#' '#' '#' 'h' '#' '#' '#' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '#' 'b' '.' '.' '.' 'r' '#' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '#' '.' 'r' '.' 'b' '.' '#' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' 'k' '.' '.' 'p' '.' '.' 'k' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '#' '.' 'b' '.' 'r' '.' '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '#' 'r' '.' '.' '.' 'b' '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '#' '#' '#' 'h' '#' '#' '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'b' '.' '.' '.' '.' '.' '.' '.' 'r' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' 'r' '.' '.' '.' '.' '.' '.' '.' 'b' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' 'r' 'h' 'h' 'h' 'r' '.' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' 'h' 'b' 'b' 'b' 'h' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' 'r' '.' '.' '.' '.' '.' '.' '.' 'b' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' '.' '.' 'p' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'r' '.' '.' '.' '.' '.' '.' '.' 'b' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'k' 'r' 'r' 'r' 'k' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'b' 'k' 'k' 'k' 'b' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'r' '.' '.' '.' '.' '.' '.' '.' 'b' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' 'b' '.' '.' '.' '.' '.' '.' '.' 'b' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' 'k' '.' '.' 'h' '.' '.' 'k' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' 'b' '.' '.' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' 'r' '.' '.' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' 'h' 'b' 'r' 'p' 'r' 'b' 'h' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' 'r' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' 'b' '.' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'k' '.' '.' 'h' '.' '.' 'k' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'b' '.' '.' '.' '.' '.' '.' '.' 'b' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' 'g' '.' '.' '.' 'g' '.' '.' '.' 'g' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' 'p' '.' '.' 'b' '.' '.' '.' '.' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '#' '#' '#' '.' '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' 'k' 'r' 'r' 'r' 'k' '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' 'b' '#' '#' '#' '#' '#' 'b' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '#' '#' '#' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '#' '.' '#' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' 'b' '.' 'b' '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'g' '.' '.' '.' 'g' '.' '.' '.' 'g' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' 'j' '.' '#' '.' 'l' '.' '.' '.'
+  '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' '.' '#' '#' '#' '#' '#' '.' '.'
+  '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'g' '#' 'g' '.' '.' '.' 'i' '#' 'i' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '#' '#' '#' '.' '.' '.' '#' '#' '#' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'g' '#' 'g' '.' '.' '.' 'i' '#' 'i' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' 'p' '.' '.' '.' '.' '.'
+  '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' 'g' 'i' 'g' '.' '.' '.' '.'
+  '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' '.' 'g' '.' '.' '.' '.' '.'
+  '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '#' '#' '#' '.' '.' '.' '#' '#' '#' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'j' 'r' 'r' 'r' 'j' '.' 'l' 'b' 'b' 'b' 'l'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '#' '#' '#' '#' 'p' '#' '#' '#' '#' '#'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '#' '#' '#' '.' '.' '.' '#' '#' '#' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '#' '.' '#' '.' '.' '.' '#' '.' '#' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' 'g' '.' '.' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'g' '.' '.' '.' 'g' 'i' 'g' '.' '.' '.' 'g'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'i' 'g' '.' 'g' 'i' 'g' 'i' 'g' '.' 'g' 'i'
+  '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.'
+  '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '#' '#' 'k' '#' '#' '#' 'g' '.' '#' '.'
+  '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '#' 'b' '.' '.' '#' 'g' '#' '.' '#'
+  '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '#' '#' '.' '.' '.' 'j' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'b' '.' 'r' '#' '.' '#' '.' '.' '#' 'i' '#'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'r' '.' '#' '#' 'r' '#' '#' '.' '#' '.' '#'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'g' '.' '#' 'i' '#' '.' '#' '.' '.' '.' '#'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'i' '.' '.' 'p' '#' '.' '.' '.' '#' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '#' '#' '.' '#' '.' '.' '#' '#' 'l' '#'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '#' '.' 'h' '.' '#' 'b' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '#' '#' '#' '#' '.' '#' '.'
+  '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '#' '#' 'r' 'r' '.' 'b' 'b' '#' '#' '.'
+  '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '#' 'r' '.' '.' '.' '.' '.' 'b' '#'
+  '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'r' '.' '.' '.' 'h' '.' '.' '.' 'b' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'r' '.' '.' 'j' '#' 'l' '.' '.' 'b' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'p' '.' '.' 'k' '#' '#' '#' 'k' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'g' '.' '.' 'l' '#' 'j' '.' '.' 'i' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'g' '.' '.' '.' 'h' '.' '.' '.' 'i' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '#' 'g' '.' '.' '.' '.' '.' 'i' '#' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '#' '#' 'g' 'g' '.' 'i' 'i' '#' '#' '.'
+  '#']
+ ['{' '1' '3' '2' '4' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' 'g' 'b' '.' '.' '.' 'p' '.' '.' '.' 'b' 'r'
+  '#']
+ ['#' '[' '[' '[' '[' '#' '#' 'g' 'b' '.' '.' '.' '.' '.' '.' '.' 'b' 'r'
+  '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '#' '#' '#' '.' '.' 'g' '.' '.' '#' '#'
+  '#' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' 'r' '#' 'r' '.' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' 'b' 'b' 'b' '.' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'r' '.' '.' 'b' '#' 'r' '#' 'b' '.' '.' 'r'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' 'b' 'b' 'b' '.' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' 'r' '#' 'r' '.' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '#' '#' '#' '.' '.' 'g' '.' '.' '#' '#' '#'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'r' 'i' '.' '.' '.' '.' '.' '.' '.' 'i' 'g'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'r' 'i' '.' '.' '.' '.' '.' '.' '.' 'i' 'g'
+  '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' 'r' '.' 'r' '.' 'r' '.' '.' '.'
+  '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' '.' 'r' 'r' 'r' 'r' 'r' '.' '.'
+  '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' 'r' 'r' 'r' 'r' 'r' '.' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'h' '#' '#' '#' '#' '#' 'h' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '#' '#' '.' '#' '.' '#' '#' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '#' '#' '#' '#' '#' '#' '#' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '#' '#' '.' '.' '.' '#' '#' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '#' '.' '#' '#' '#' '.' '#' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '#' '#' '#' '#' '#' '#' '#' '.' '.'
+  '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'p' '.' '.' '#' '#' '#' '#' '#' '.' '.' '.'
+  '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' 'g' '.' '.' '.' '.' 'i' '.' '.'
+  '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' 'g' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' '.' 'g' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' 'j' '.' '.' '.' 'b' 'g' 'b' '.'
+  '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'p' '.' 'l' '.' 'r' '#' '#' '#' '#' '#'
+  'r' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'r' '.' 'k' '.' '#' '#' '#' '.' '#' '.'
+  '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' 'r' '.' 'h' 'b' '#' '#' '#' '.' '#' '.'
+  '#' 'b' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' 'j' 'i' '#' '#' '#' '#' '#' '#'
+  '#' 'i' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' 'l' 'b' '#' '#' '.' '.' '.' '#'
+  '#' 'b' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' 'k' '.' '#' '#' '#' '#' '#' '#'
+  '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' 'h' '.' 'r' '#' '#' '#' '#' '#'
+  'r' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' 'r' 'i' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' 'i' 'r' '.' '.' 'g' '.' 'i' '.' 'r'
+  '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' 'r' 'i' '.' '.' 'i' 'g' 'b' 'r'
+  'b' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'i' 'r' '.' '.' 'r' 'b' 'g' 'i' 'r'
+  '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'r' 'i' '.' '.' '#' '#' '#' '#' '#'
+  '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'i' 'r' '.' '#' '.' '#' '#' '#' '.'
+  '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'r' 'i' '.' '#' '#' '.' '#' '.' '#'
+  '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'i' 'r' '.' '#' '#' '#' '#' '#' '#'
+  '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'r' 'i' '.' '#' '.' '.' '.' '.' '.'
+  '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'i' 'r' '.' '#' '#' '.' '.' '.' '#'
+  '#' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' 'p' '.' 'r' 'i' '.' '.' '#' '#' '#' '#' '#'
+  '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' 'r' '.' '.' '.' '.' 'g' 'g' 'g' '.' '.' '.'
+  '.' 'r' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' '.' '.' 'g' '.' 'g' '.' '.' '.'
+  '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' 'i' '#' '#' '#' '#' '#' '#' '#'
+  'i' '.' '.' '#']
+ ['{' '1' '3' '3' '4' '}' '#' '.' '.' '#' '#' '.' '#' '#' '#' '.' '#' '#'
+  '.' '.' '#']
+ ['{' '3' '1' '1' '4' '}' '#' '.' '.' '#' '#' '#' '.' '#' '.' '#' '#' '#'
+  '.' '.' '#']
+ ['{' '1' '3' '3' '2' '}' '#' 'i' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '.' 'i' '#']
+ ['{' '3' '1' '1' '2' '}' '#' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '.' '.' '#']
+ ['{' '1' '3' '3' '4' '}' '#' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#' '#'
+  '.' '.' '#']
+ ['{' '3' '1' '1' '4' '}' '#' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#' '#'
+  '.' '.' '#']
+ ['{' '1' '3' '3' '2' '}' '#' '.' '.' '#' '#' '#' '.' '.' '.' '#' '#' '#'
+  '.' '.' '#']
+ ['{' '3' '1' '1' '2' '}' '#' 'p' '.' 'i' '#' '#' '#' '#' '#' '#' '#' 'i'
+  '.' 'r' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#']
+ ['#' 'q' 'w' 'e' 't' '#' '#' '.' '.' '.' '.' '.' '.' 'p' '.' '.' '.' '.'
+  '.' '.' '#']
+ ['#' '[' '[' '[' '[' '#' '#' '.' '.' '.' 'r' 'r' 'r' 'r' 'r' 'r' 'r' '.'
+  '.' '.' '#']
+ ['{' 'n' 'm' '/' '\\' '}' '#' '.' '.' 'r' 'r' '.' '.' 'r' '.' '.' 'r'
+  'r' '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'r' 'r' '.' '.' 'r' '.' '.' 'r' 'r'
+  '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'r' 'r' 'r' 'r' 'r' 'r' 'r' 'r' 'r'
+  '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'r' 'r' 'r' 'r' 'r' 'r' 'r' 'r' 'r'
+  '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'r' 'r' 'r' 'r' 'r' 'r' 'r' 'r' 'r'
+  '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'r' 'r' 'r' '.' '.' '.' 'r' 'r' 'r'
+  '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' 'r' 'r' '.' 'r' 'r' 'r' '.' 'r' 'r'
+  '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' 'r' 'r' 'r' 'r' 'r' 'r' 'r' '.'
+  '.' '.' '#']
+ ['{' 's' 's' 's' 's' '}' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '#']
+ ['#' ']' ']' ']' ']' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None

@@ -22,7 +22,7 @@ objects_section: section_delimiter? "OBJECTS" NEWLINES section_delimiter? object
 legend_section: section_delimiter? "LEGEND" NEWLINES section_delimiter? legend_data+
 sounds_section: section_delimiter? "SOUNDS" NEWLINES section_delimiter? sound_data+
 collisionlayers_section: section_delimiter? "COLLISIONLAYERS" NEWLINES section_delimiter? layer_data+
-rules_section: section_delimiter? "RULES" NEWLINES section_delimiter? rule_data+
+rules_section: section_delimiter? "RULES" NEWLINES section_delimiter? rule_block+
 winconditions_section: section_delimiter? "WINCONDITIONS"i NEWLINES section_delimiter? condition_data+ // Accept no win conditions
 levels_section: section_delimiter? "LEVELS" NEWLINES section_delimiter? level_data+
 
@@ -63,15 +63,27 @@ sound: "sfx"i sound_id
 layer_data: ((object_name ("," | " "))* object_name ","*)?
           | NEWLINES_OR_COMMENTS
 
+STARTLOOP: "startloop"i
+ENDLOOP: "endloop"i
+
 // Rule Data
-rule_data: "+"? (prefix | rule_part)+ "->" (command | rule_part)* message? COMMENT? NEWLINE
-         | "startloop"i rule_data+ "endloop"i NEWLINE
+rule_data: PLUS? (prefix | rule_part)+ THEN (command | rule_part)* message? COMMENT? NEWLINE
          | NEWLINES_OR_COMMENTS
 
-message: "message"i STRING*
+THEN: "->"
+PLUS: "+"
 
-rule_part: "[" (rule_content? "|"*)+ "]"
-// RULE_PART: "[ > Player | Crate ]"
+rule_block_once: rule_data+
+rule_block_loop: STARTLOOP NEWLINE rule_data+ ENDLOOP NEWLINE
+
+rule_block: rule_block_once
+          | rule_block_loop
+
+message: "message"i STRING+
+
+rule_part: "[" (rule_content? cell_border*)+ "]"
+
+cell_border: "|"
 
 rule_content: DIRECTIONAL? ID+
 
@@ -82,8 +94,12 @@ command: command_keyword
        | sound
 
 // Condition Data
-condition_data: condition_id+
+condition_data: QUANT object_name (ON object_name)?
               | NEWLINES_OR_COMMENTS
+
+ON: "on"i
+QUANT: "all"i | "some"i | "no"i
+
 
 // Level Data
 // level_data: (levelline NEWLINE)+ COMMENT? NEWLINE
@@ -92,12 +108,12 @@ condition_data: condition_id+
 //           | NEWLINE
 // level_data: "dummy"
 
-level_data: LEVELLINES
-          | "message "i STRING+
+level_data: levellines
+          | message
           | NEWLINES_OR_COMMENTS
 
 // levellines: (levelline NEWLINE)+
-LEVELLINES: /((?<!message)[a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±]+\n)+/
+levellines: /((?<!message)[a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±]+\n)+/
 
 NEWLINES_OR_COMMENTS: (NEWLINE | COMMENT)+
 
@@ -133,7 +149,13 @@ prelude_keyword: "title" | "author" | "homepage" | "color_palette" | "again_inte
                | "text_color" | "throttle_movement" | "verbose_logging" | "youtube" | "zoomscreen"
 
 legend_keyword: "or"i | "and"i
-command_keyword: "again"i | "cancel"i | "checkpoint"i | "restart"i | "win"i
+// command_keyword: "again"i | "cancel"i | "checkpoint"i | "restart"i | "win"i
+command_keyword: AGAIN | CANCEL | CHECKPOINT | RESTART | WIN
 
+AGAIN: "again"i
+CANCEL: "cancel"i
+CHECKPOINT: "checkpoint"i
+RESTART: "restart"i
+WIN: "win"i
 
 // ID: /[a-z0-9.A-Z#_+]+/

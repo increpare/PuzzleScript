@@ -1,0 +1,2482 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	blue
+        color	#204ec5
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	smrocks
+      legend_key	k
+      
+
+      colors
+        color	brown
+        color	darkbrown
+      
+
+      sprite
+        ['.' '1' '.' '1' '.']
+        ['1' '0' '1' '0' '1']
+        ['.' '1' '.' '1' '.']
+        ['1' '0' '1' '0' '1']
+        ['.' '1' '.' '1' '.']
+    object_data
+      object_name	teleport
+      legend_key	T
+      
+
+      colors
+        color	lightblue
+        color	blue
+        color	darkblue
+      
+
+      sprite
+        ['1' '0' '1' '0' '1']
+        ['0' '1' '2' '1' '0']
+        ['1' '2' '2' '2' '1']
+        ['0' '1' '2' '1' '0']
+        ['1' '0' '1' '0' '1']
+    object_data
+      object_name	Target
+      
+
+      colors
+        color	darkblue
+        color	transparent
+      
+
+      sprite
+        ['0' '1' '1' '1' '0']
+        ['1' '.' '0' '.' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '.' '0' '.' '1']
+        ['0' '1' '1' '1' '0']
+    object_data
+      object_name	Wall
+      
+
+      colors
+        color	green
+        color	lightgreen
+        color	#2d6d0c
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	wallalt
+      legend_key	"
+      
+
+      colors
+        color	green
+        color	lightgreen
+        color	#2d6d0c
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	wallalt2
+      legend_key	'
+      
+
+      colors
+        color	green
+        color	lightgreen
+        color	#2d6d0c
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	coast_u
+      
+
+      colors
+        color	lightblue
+      
+
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	coast_d
+      
+
+      colors
+        color	lightblue
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	coast_l
+      
+
+      colors
+        color	lightblue
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	coast_r
+      
+
+      colors
+        color	lightblue
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	endhand
+      legend_key	x
+      
+
+      colors
+        color	pink
+      
+
+      sprite
+        ['0' '.' '0' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '0' '.' '0']
+    object_data
+      object_name	Player
+      
+
+      colors
+        color	brown
+        color	orange
+        color	yellow
+        color	lightblue
+      
+
+      sprite
+        ['2' '.' '2' '.' '2']
+        ['2' '.' '2' '.' '2']
+        ['2' '2' '2' '2' '2']
+        ['.' '.' '1' '.' '.']
+        ['.' '3' '1' '3' '.']
+    object_data
+      object_name	underplayer
+      
+
+      colors
+        color	lightblue
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	magnet
+      
+
+      colors
+        color	lightblue
+        color	blue
+      
+
+      sprite
+        ['.' '0' '0' '0' '0']
+        ['0' '.' '.' '.' '.']
+        ['0' '.' '0' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	flowers
+      
+
+      colors
+        color	darkgreen
+        color	brown
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '1' '.' '.']
+        ['.' '.' '1' '.' '.']
+    object_data
+      object_name	hinge
+      legend_key	H
+      
+
+      colors
+        color	orange
+        color	green
+        color	darkgray
+      
+
+      sprite
+        ['1' '0' '0' '0' '1']
+        ['0' '2' '2' '2' '0']
+        ['0' '2' '2' '2' '0']
+        ['0' '2' '2' '2' '0']
+        ['1' '0' '0' '0' '1']
+    object_data
+      object_name	door_l
+      legend_key	L
+      
+
+      colors
+        color	pink
+        color	darkgray
+        color	transparent
+      
+
+      sprite
+        ['.' '2' '.' '2' '.']
+        ['0' '0' '0' '0' '.']
+        ['1' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '.']
+        ['.' '2' '.' '2' '.']
+    object_data
+      object_name	door_r
+      legend_key	R
+      
+
+      colors
+        color	pink
+        color	darkgray
+        color	transparent
+      
+
+      sprite
+        ['.' '2' '.' '2' '.']
+        ['.' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '1']
+        ['.' '0' '0' '0' '0']
+        ['.' '2' '.' '2' '.']
+    object_data
+      object_name	door_u
+      legend_key	U
+      
+
+      colors
+        color	pink
+        color	darkgray
+        color	transparent
+      
+
+      sprite
+        ['.' '0' '1' '0' '.']
+        ['2' '0' '1' '0' '2']
+        ['.' '0' '1' '0' '.']
+        ['2' '0' '1' '0' '2']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	door_d
+      legend_key	D
+      
+
+      colors
+        color	pink
+        color	darkgray
+        color	transparent
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['2' '0' '1' '0' '2']
+        ['.' '0' '1' '0' '.']
+        ['2' '0' '1' '0' '2']
+        ['.' '0' '1' '0' '.']
+    object_data
+      object_name	door_dl
+      legend_key	1
+      
+
+      colors
+        color	pink
+        color	darkgray
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['0' '1' '0' '.' '.']
+        ['1' '0' '.' '.' '.']
+    object_data
+      object_name	door_dr
+      legend_key	2
+      
+
+      colors
+        color	pink
+        color	darkgray
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '.' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '.' '0' '1' '0']
+        ['.' '.' '.' '0' '1']
+    object_data
+      object_name	door_ul
+      legend_key	3
+      
+
+      colors
+        color	pink
+        color	darkgray
+      
+
+      sprite
+        ['1' '0' '.' '.' '.']
+        ['0' '1' '0' '.' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '.' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	door_ur
+      legend_key	4
+      
+
+      colors
+        color	pink
+        color	darkgray
+      
+
+      sprite
+        ['.' '.' '.' '0' '1']
+        ['.' '.' '0' '1' '0']
+        ['.' '0' '1' '0' '.']
+        ['.' '0' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	ul
+      
+
+      colors
+        color	orange
+      
+
+      sprite
+        ['0' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	ur
+      
+
+      colors
+        color	orange
+      
+
+      sprite
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	dl
+      
+
+      colors
+        color	orange
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+    object_data
+      object_name	dr
+      
+
+      colors
+        color	orange
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '0']
+    object_data
+      object_name	wu
+      
+
+      colors
+        color	green
+        color	lightgreen
+      
+
+      sprite
+        ['1' '0' '1' '0' '1']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	wd
+      
+
+      colors
+        color	green
+        color	lightgreen
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['1' '0' '1' '0' '1']
+    object_data
+      object_name	wl
+      
+
+      colors
+        color	green
+        color	lightgreen
+      
+
+      sprite
+        ['1' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['1' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['1' '.' '.' '.' '.']
+    object_data
+      object_name	wr
+      
+
+      colors
+        color	green
+        color	lightgreen
+      
+
+      sprite
+        ['.' '.' '.' '.' '1']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '1']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '1']
+    object_data
+      object_name	suck_d
+      
+
+      colors
+        color	lightblue
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	suck_u
+      
+
+      colors
+        color	lightblue
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	suck_r
+      
+
+      colors
+        color	lightblue
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	suck_l
+      
+
+      colors
+        color	lightblue
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	temp
+      
+
+      colors
+        color	transparent
+      
+
+    object_data
+      object_name	A
+      
+
+      colors
+        color	transparent
+      
+
+    object_data
+      object_name	S
+      
+
+      colors
+        color	lightblue
+      
+
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['0' '.' '0' '.' '0']
+        ['.' '0' '.' '0' '.']
+        ['0' '.' '0' '.' '0']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	nopull
+      
+
+      colors
+        color	transparent
+      
+
+    object_data
+      object_name	spawned
+      
+
+      colors
+        color	transparent
+      
+
+    object_data
+      object_name	ip1
+      legend_key	§
+      
+
+      colors
+        color	#ffff05
+        color	#ffa33b
+      
+
+      sprite
+        ['0' '.' '0' '.' '0']
+        ['0' '.' '0' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '1' '.' '.']
+        ['.' '.' '1' '.' '.']
+    object_data
+      object_name	ip2
+      legend_key	±
+      
+
+      colors
+        color	#8e4833
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+    object_data
+      object_name	ip3
+      legend_key	`
+      
+
+      colors
+        color	#8e4833
+        color	#dbc297
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['1' '.' '1' '.' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	ip4
+      legend_key	~
+      
+
+      colors
+        color	#8e4833
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+    object_data
+      object_name	5
+      
+
+      colors
+        color	#ffa33b
+        color	#dbc297
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '.' '0' '1' '1']
+    object_data
+      object_name	6
+      
+
+      colors
+        color	#8e4833
+        color	#dbc297
+      
+
+      sprite
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '1']
+    object_data
+      object_name	7
+      
+
+      colors
+        color	#8e4833
+        color	#dbc297
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '1']
+    object_data
+      object_name	8
+      
+
+      colors
+        color	#8e4833
+        color	#dbc297
+      
+
+      sprite
+        ['0' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['1' '.' '.' '.' '.']
+    object_data
+      object_name	9
+      
+
+      colors
+        color	#ffa33b
+        color	#dbc297
+      
+
+      sprite
+        ['.' '.' '0' '.' '1']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	0
+      
+
+      colors
+        color	#dbc297
+        color	white
+      
+
+      sprite
+        ['0' '.' '.' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '.' '0']
+        ['.' '.' '.' '.' '1']
+        ['.' '.' '.' '.' '1']
+    object_data
+      object_name	bla
+      legend_key	!
+      
+
+      colors
+        color	#dbc297
+        color	white
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '0']
+        ['1' '1' '1' '0' '0']
+    object_data
+      object_name	blo
+      legend_key	@
+      
+
+      colors
+        color	#dbc297
+      
+
+      sprite
+        ['0' '0' '.' '.' '.']
+        ['0' '0' '0' '.' '.']
+        ['0' '0' '0' '.' '.']
+        ['0' '.' '0' '0' '.']
+        ['.' '.' '0' '0' '.']
+      
+
+
+    object_data
+      object_name	ble
+      legend_key	£
+      
+
+      colors
+        color	white
+      
+
+      sprite
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '0' '0']
+        ['.' '.' '.' '0' '0']
+    object_data
+      object_name	ble1
+      legend_key	$
+      
+
+      colors
+        color	white
+        color	#dbc297
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '1']
+        ['0' '0' '0' '1' '1']
+    object_data
+      object_name	ble2
+      legend_key	\
+      
+
+      colors
+        color	#dbc297
+        color	white
+      
+
+      sprite
+        ['.' '.' '0' '0' '.']
+        ['1' '.' '0' '0' '.']
+        ['1' '0' '0' '0' '.']
+        ['1' '0' '0' '0' '.']
+        ['1' '0' '0' '.' '.']
+      
+
+    object_data
+      object_name	ble3
+      legend_key	Y
+      
+
+      colors
+        color	white
+        color	#dbc297
+      
+
+      sprite
+        ['.' '.' '.' '0' '0']
+        ['.' '.' '.' '0' '0']
+        ['.' '.' '.' '.' '1']
+        ['.' '.' '.' '.' '1']
+        ['.' '.' '.' '.' '1']
+    object_data
+      object_name	ble4
+      legend_key	&
+      
+
+      colors
+        color	white
+        color	#dbc297
+      
+
+      sprite
+        ['0' '0' '1' '1' '1']
+        ['1' '.' '1' '1' '1']
+        ['1' '.' '.' '1' '1']
+        ['1' '.' '.' '1' '1']
+        ['1' '.' '.' '1' '1']
+    object_data
+      object_name	ble5
+      legend_key	*
+      
+
+      colors
+        color	white
+      
+
+      sprite
+        ['0' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	ble6
+      legend_key	-
+      
+
+      colors
+        color	#dbc297
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '0' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	ble7
+      legend_key	?
+      
+
+      colors
+        color	#dbc297
+      
+
+      sprite
+        ['0' '.' '.' '0' '0']
+        ['0' '.' '0' '0' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      P
+      object_name	Player
+    legend_data
+      M
+      object_name	magnet
+    legend_data
+      O
+      object_name	Target
+    legend_data
+      walls
+      object_name	wall
+      legend_operation
+        object_name	wallalt
+      legend_operation
+        object_name	wallalt2
+    legend_data
+      ortho
+      object_name	door_u
+      legend_operation
+        object_name	door_d
+      legend_operation
+        object_name	door_l
+      legend_operation
+        object_name	door_r
+    legend_data
+      diagonal
+      object_name	door_ul
+      legend_operation
+        object_name	door_ur
+      legend_operation
+        object_name	door_dl
+      legend_operation
+        object_name	door_dr
+    legend_data
+      Door
+      object_name	ortho
+      legend_operation
+        object_name	diagonal
+    legend_data
+      doorpart
+      object_name	door
+      legend_operation
+        object_name	hinge
+    legend_data
+      obstacle
+      object_name	walls
+      legend_operation
+        object_name	player
+      legend_operation
+        object_name	hinge
+      legend_operation
+        object_name	magnet
+      legend_operation
+        object_name	door
+      legend_operation
+        object_name	smrocks
+    legend_data
+      thick
+      object_name	wall
+      legend_operation
+        object_name	hinge
+      legend_operation
+        object_name	magnet
+      legend_operation
+        object_name	door
+      legend_operation
+        object_name	teleport
+    legend_data
+      fixture
+      object_name	wall
+      legend_operation
+        object_name	hinge
+    legend_data
+      pixel
+      object_name	ul
+      legend_operation
+        object_name	ur
+      legend_operation
+        object_name	dl
+      legend_operation
+        object_name	dr
+    legend_data
+      walltype
+      object_name	wall
+      legend_operation
+        object_name	wallalt
+      legend_operation
+        object_name	wallalt2
+    legend_data
+      fillwalltype
+      object_name	wall
+      legend_operation
+        object_name	hinge
+    legend_data
+      suck
+      object_name	suck_u
+      legend_operation
+        object_name	suck_d
+      legend_operation
+        object_name	suck_l
+      legend_operation
+        object_name	suck_r
+    legend_data
+      coast
+      object_name	coast_u
+      legend_operation
+        object_name	coast_d
+      legend_operation
+        object_name	coast_l
+      legend_operation
+        object_name	coast_r
+    legend_data
+      verge
+      object_name	wl
+      legend_operation
+        object_name	wr
+      legend_operation
+        object_name	wu
+      legend_operation
+        object_name	wd
+    legend_data
+      decoration
+      object_name	coast
+      legend_operation
+        object_name	verge
+    legend_data
+      %
+      object_name	flowers
+      legend_operation
+        object_name	wall
+    legend_data
+      image
+      object_name	ip1
+      legend_operation
+        object_name	ip2
+      legend_operation
+        object_name	ip3
+      legend_operation
+        object_name	ip4
+      legend_operation
+        object_name	5
+      legend_operation
+        object_name	6
+      legend_operation
+        object_name	7
+      legend_operation
+        object_name	8
+      legend_operation
+        object_name	9
+      legend_operation
+        object_name	0
+      legend_operation
+        object_name	bla
+      legend_operation
+        object_name	blo
+      legend_operation
+        object_name	ble
+      legend_operation
+        object_name	ble1
+      legend_operation
+        object_name	ble2
+      legend_operation
+        object_name	ble3
+      legend_operation
+        object_name	ble4
+      legend_operation
+        object_name	ble5
+      legend_operation
+        object_name	ble6
+      legend_operation
+        object_name	ble7
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	coast_u
+    layer_data
+      object_name	coast_d
+    layer_data
+      object_name	coast_l
+    layer_data
+      object_name	coast_r
+    layer_data
+      object_name	A
+    layer_data
+      object_name	Target
+    layer_data
+      object_name	S
+    layer_data
+      object_name	underplayer
+    layer_data
+      object_name	teleport
+    layer_data
+      object_name	endhand
+    layer_data
+      object_name	Player
+      object_name	Wall
+    layer_data
+      object_name	wallalt
+      object_name	wallalt2
+    layer_data
+      object_name	magnet
+      object_name	hinge
+    layer_data
+      object_name	door
+      object_name	smrocks
+    layer_data
+      object_name	flowers
+    layer_data
+      object_name	ul
+    layer_data
+      object_name	ur
+    layer_data
+      object_name	dl
+    layer_data
+      object_name	dr
+    layer_data
+      object_name	wu
+    layer_data
+      object_name	wd
+    layer_data
+      object_name	wl
+    layer_data
+      object_name	wr
+    layer_data
+      object_name	temp
+    layer_data
+      object_name	suck_u
+    layer_data
+      object_name	suck_d
+    layer_data
+      object_name	suck_l
+    layer_data
+      object_name	suck_r
+    layer_data
+      object_name	nopull
+    layer_data
+      object_name	spawned
+    layer_data
+      object_name	image
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              player
+              teleport
+              no
+              spawned
+            cell_border
+            rule_content	...
+            cell_border
+            rule_content	teleport
+          ->
+          rule_part
+            rule_content	teleport
+            cell_border
+            rule_content	...
+            cell_border
+            rule_content
+              player
+              teleport
+              spawned
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          rule_part
+            rule_content
+              teleport
+              magnet
+          ->
+          rule_part
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          rule_part
+            rule_content	decoration
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content	underplayer
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content	A
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content	temp
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content	suck
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content	nopull
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	walls
+            cell_border
+          ->
+          rule_part
+            rule_content	walls
+            cell_border
+            rule_content	coast_l
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	walls
+            cell_border
+          ->
+          rule_part
+            rule_content	walls
+            cell_border
+            rule_content	coast_r
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	walls
+            cell_border
+          ->
+          rule_part
+            rule_content	walls
+            cell_border
+            rule_content	coast_u
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	walls
+            cell_border
+          ->
+          rule_part
+            rule_content	walls
+            cell_border
+            rule_content	coast_d
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	walls
+            cell_border
+            rule_content	no
+            rule_content	walltype
+          ->
+          rule_part
+            rule_content
+              walls
+              wu
+            cell_border
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	walls
+            cell_border
+            rule_content	no
+            rule_content	walltype
+          ->
+          rule_part
+            rule_content
+              walls
+              wd
+            cell_border
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	walls
+            cell_border
+            rule_content	no
+            rule_content	walltype
+          ->
+          rule_part
+            rule_content
+              walls
+              wl
+            cell_border
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	walls
+            cell_border
+            rule_content	no
+            rule_content	walltype
+          ->
+          rule_part
+            rule_content
+              walls
+              wr
+            cell_border
+          
+
+        rule_data
+          rule_part
+            rule_content	pixel
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              magnet
+            cell_border
+            rule_content	door
+          ->
+          command
+            command_keyword	cancel
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	magnet
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content
+              >
+              magnet
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              magnet
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	magnet
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          +
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	player
+          
+
+        rule_data
+          +
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	player
+          
+
+        rule_data
+          rule_part
+            rule_content
+              player
+              no
+              spawned
+          rule_part
+            rule_content	spawned
+          ->
+          rule_part
+            rule_content	player
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content	magnet
+          ->
+          rule_part
+            rule_content
+              magnet
+              suck_u
+              suck_d
+              suck_l
+              suck_r
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	suck_d
+            cell_border
+            rule_content	no
+            rule_content	thick
+          ->
+          rule_part
+            rule_content	suck_d
+            cell_border
+            rule_content	suck_d
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	suck_u
+            cell_border
+            rule_content	no
+            rule_content	thick
+          ->
+          rule_part
+            rule_content	suck_u
+            cell_border
+            rule_content	suck_u
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	suck_r
+            cell_border
+            rule_content	no
+            rule_content	thick
+          ->
+          rule_part
+            rule_content	suck_r
+            cell_border
+            rule_content	suck_r
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	suck_l
+            cell_border
+            rule_content	no
+            rule_content	thick
+          ->
+          rule_part
+            rule_content	suck_l
+            cell_border
+            rule_content	suck_l
+          
+
+        rule_data
+          rule_part
+            rule_content	S
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	suck_d
+            cell_border
+            rule_content	door
+            cell_border
+            rule_content	no
+            rule_content	suck_u
+          ->
+          rule_part
+            rule_content	suck_d
+            cell_border
+            rule_content
+              down
+              door
+              S
+            cell_border
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	suck_u
+            cell_border
+            rule_content	door
+            rule_content	S
+            cell_border
+            rule_content	no
+            rule_content	suck_d
+          ->
+          rule_part
+            rule_content	suck_u
+            cell_border
+            rule_content
+              stationary
+              door
+              S
+            cell_border
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	suck_u
+            cell_border
+            rule_content
+              door
+              no
+              S
+            cell_border
+            rule_content	no
+            rule_content	suck_d
+          ->
+          rule_part
+            rule_content	suck_u
+            cell_border
+            rule_content
+              up
+              door
+              S
+            cell_border
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	suck_r
+            cell_border
+            rule_content	door
+            rule_content	S
+            cell_border
+            rule_content	no
+            rule_content	suck_l
+          ->
+          rule_part
+            rule_content	suck_r
+            cell_border
+            rule_content
+              stationary
+              door
+              S
+            cell_border
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	suck_r
+            cell_border
+            rule_content
+              door
+              no
+              S
+            cell_border
+            rule_content	no
+            rule_content	suck_l
+          ->
+          rule_part
+            rule_content	suck_r
+            cell_border
+            rule_content
+              right
+              door
+              S
+            cell_border
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	suck_l
+            cell_border
+            rule_content	door
+            rule_content	S
+            cell_border
+            rule_content	no
+            rule_content	suck_r
+          ->
+          rule_part
+            rule_content	suck_l
+            cell_border
+            rule_content
+              stationary
+              door
+              S
+            cell_border
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	suck_l
+            cell_border
+            rule_content
+              door
+              no
+              S
+            cell_border
+            rule_content	no
+            rule_content	suck_r
+          ->
+          rule_part
+            rule_content	suck_l
+            cell_border
+            rule_content
+              left
+              door
+              S
+            cell_border
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content
+              door
+              no
+              S
+          ->
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content
+              >
+              door
+          
+
+        rule_data
+          rule_part
+            rule_content	s
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	suck_d
+            cell_border
+            rule_content	door
+          ->
+          rule_part
+            rule_content	suck_d
+            cell_border
+            rule_content	door
+            rule_content	S
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	suck_u
+            cell_border
+            rule_content	door
+          ->
+          rule_part
+            rule_content	suck_u
+            cell_border
+            rule_content	door
+            rule_content	S
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	suck_r
+            cell_border
+            rule_content	door
+          ->
+          rule_part
+            rule_content	suck_r
+            cell_border
+            rule_content	door
+            rule_content	S
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	suck_l
+            cell_border
+            rule_content	door
+          ->
+          rule_part
+            rule_content	suck_l
+            cell_border
+            rule_content	door
+            rule_content	S
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              up
+              door_l
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_dl
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              up
+              door_r
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_dr
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              down
+              door_l
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_ul
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              down
+              door_r
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_ur
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              left
+              door_u
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_ur
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              left
+              door_d
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_dr
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              right
+              door_u
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_ul
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              right
+              door_d
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_dl
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              up
+              door_ul
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_l
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              up
+              door_ur
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_r
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              up
+              door_dl
+              no
+              S
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_d
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              up
+              door_dr
+              no
+              S
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_d
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              down
+              door_ul
+              no
+              S
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_u
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              down
+              door_ur
+              no
+              S
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_u
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              down
+              door_dl
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_l
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              down
+              door_dr
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_r
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              left
+              door_ul
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_u
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              left
+              door_ur
+              no
+              S
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_r
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              left
+              door_dl
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_d
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              left
+              door_dr
+              no
+              S
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_r
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              right
+              door_ul
+              no
+              S
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_l
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              right
+              door_ur
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_u
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              right
+              door_dl
+              no
+              S
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_l
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              right
+              door_dr
+            cell_border
+            rule_content	no
+            rule_content	obstacle
+          ->
+          rule_part
+            cell_border
+            rule_content	door_d
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              moving
+              door
+          ->
+          rule_part
+            rule_content	door
+          
+
+        rule_data
+          prefix	late
+          prefix	up
+          rule_part
+            rule_content	door_ul
+            cell_border
+          ->
+          rule_part
+            rule_content	door_ul
+            cell_border
+            rule_content	dl
+          
+
+        rule_data
+          prefix	late
+          prefix	left
+          rule_part
+            rule_content	door_ul
+            cell_border
+          ->
+          rule_part
+            rule_content	door_ul
+            cell_border
+            rule_content	ur
+          
+
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content	door_dl
+            cell_border
+          ->
+          rule_part
+            rule_content	door_dl
+            cell_border
+            rule_content	ul
+          
+
+        rule_data
+          prefix	late
+          prefix	left
+          rule_part
+            rule_content	door_dl
+            cell_border
+          ->
+          rule_part
+            rule_content	door_dl
+            cell_border
+            rule_content	dr
+          
+
+        rule_data
+          prefix	late
+          prefix	up
+          rule_part
+            rule_content	door_ur
+            cell_border
+          ->
+          rule_part
+            rule_content	door_ur
+            cell_border
+            rule_content	dr
+          
+
+        rule_data
+          prefix	late
+          prefix	right
+          rule_part
+            rule_content	door_ur
+            cell_border
+          ->
+          rule_part
+            rule_content	door_ur
+            cell_border
+            rule_content	ul
+          
+
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content	door_dr
+            cell_border
+          ->
+          rule_part
+            rule_content	door_dr
+            cell_border
+            rule_content	ur
+          
+
+        rule_data
+          prefix	late
+          prefix	right
+          rule_part
+            rule_content	door_dr
+            cell_border
+          ->
+          rule_part
+            rule_content	door_dr
+            cell_border
+            rule_content	dl
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              thick
+              suck
+          ->
+          rule_part
+            rule_content	thick
+          
+
+        rule_data
+          rule_part
+            rule_content	player
+          ->
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              magnet
+              suck
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content	player
+            cell_border
+          ->
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	underplayer
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              magnet
+              target
+          ->
+          rule_part
+            rule_content	teleport
+          command
+            sound
+              sound_id	5
+          
+
+  winconditions_section
+    condition_data
+      all
+      object_name	player
+      on
+      object_name	endhand
+  levels_section
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '%' '#' '%' '#' '#']
+ ['#' '%' '#' '#' '.' '.' '.' '#' '#' '#' '#' '%' '#' '#' '%']
+ ['#' '#' '#' '#' '.' 'm' '.' '#' '#' '#' '#' '#' '#' '%' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '.' '.' '.' '#' '#' '#' '.' '.' '.' '.' '.' '#' '#']
+ ['#' '#' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '#' '#']
+ ['#' '#' '#' 'h' 'l' '.' '.' '#' '#' '.' '.' '.' '.' '#' '#']
+ ['#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#']
+ ['#' '#' '#' '.' '.' '.' '.' '#' 'h' 'l' '.' '.' '.' '#' '#']
+ ['#' '#' '#' '.' '.' '.' '.' '.' '#' '.' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '.' '#' '#' '#' '#' '#']
+ ['#' '#' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' 't' '.' '.' '.' '.' '#' '.' '.' '.' '.' 'o' '.' '#']
+ ['#' '.' '.' '.' 'x' '.' '.' '#' '.' '.' 'p' '.' '.' '.' '#']
+ ['#' '#' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '%' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '%' '#' '#' '.' '#' '#' '.' '2' '.' '.' '.' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '.' '#' '#' '.' '1' 'h' '#' '.' '#' '#']
+ ['#' '.' '.' '.' '.' '#' '#' '.' '.' '#' '#' 'h' '.' '#' '#' '.' '#' '#']
+ ['#' '.' 'p' '.' '.' 'h' 'h' '.' '.' '#' '#' '#' '.' '#' '#' '.' '#' '#']
+ ['#' '.' '.' '.' '.' 'u' '.' '3' '#' '#' '#' '#' '.' '#' '.' '.' '.' '#']
+ ['#' 'h' 'l' '#' '#' '.' '#' '#' '#' '#' '#' '#' '.' '#' '.' 'x' '.' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' 'o' '.' '#' '.' 't' '.' '.' '.' '#' '#' '#' '#' '#']
+ ['#' '.' '.' 'm' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#' '%' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#'
+  '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  '#' '#' '#' '#' '#']
+ ['#' '#' '.' '.' '#' '#' '.' '.' '.' 'k' 'k' 'k' 'k' 'k' '.' '.' '.' '#'
+  '#' '.' '.' '#' '#']
+ ['#' '.' '.' '.' '.' '#' '.' '.' '.' 'k' '.' '.' '.' 'k' '.' '.' '.' '#'
+  '.' '.' '.' '.' '#']
+ ['#' '.' 't' '.' '.' '#' '.' '.' '.' 'k' '.' 't' '.' 'k' '.' '.' '.' '#'
+  '.' '.' 'x' '.' '#']
+ ['#' '.' '.' '.' '.' '#' '.' '.' '.' 'k' 'k' '.' 'k' 'k' '.' '.' '.' '#'
+  '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '#' '.' '.' '.' '.' '2' 'd' '1' '.' '.' '.' '.' '#'
+  '.' '.' '.' '.' '#']
+ ['#' '.' '.' 'o' '.' '#' '.' '.' '.' 'k' 'r' 'h' 'l' 'k' '.' '.' '.' '#'
+  '.' 't' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '#' '.' '.' '.' 'k' '.' '.' '.' 'k' '.' '.' '.' '#'
+  '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '#' '#' '.' '.' 'm' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  '.' '.' '.' '.' '#']
+ ['#' '.' 'h' 'l' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '#' '#' '.' '.' '.' '.' 'p' '.' '.' '.' '.' '.' '.' '#'
+  '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#'
+  '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#']]
+    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' 'x' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' 'p' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
+    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '§' '±' '`' '~' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '5' '6' '7' '8' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '9' '0' '!' '@' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '£' '$' '\\' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' 'Y' '&' '*' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '-' '?' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
+    level_data	None

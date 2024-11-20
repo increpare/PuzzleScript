@@ -1,0 +1,710 @@
+OBJECTS
+
+Background
+#999999 #aaaaaa
+11111
+01111
+11101
+11111
+10111
+
+Wall
+Black #111111
+10001
+01010
+00100
+01010
+10001
+
+Player
+Black Orange Green Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ScrollBG
+#d2a669 #e2bb82
+11111
+01111
+11101
+11111
+10111
+
+ScrollLeft
+#d2a669 #e2bb82 Brown Black
+33321
+33332
+33321
+33332
+33321
+
+ScrollRight
+#d2a669 #e2bb82 Brown Black
+12333
+23333
+12333
+23333
+12333
+
+ScrollTop
+#d2a669 #e2bb82 Brown Black
+33333
+33333
+33333
+23232
+12121
+
+ScrollBottom
+#d2a669 #e2bb82 Brown Black
+12121
+23232
+33333
+33333
+33333
+
+ArrowL
+Red Black
+11011
+10111
+00000
+10111
+11011
+
+ArrowU
+Blue Black
+11011
+10001
+01010
+11011
+11011
+
+ArrowD
+Green Black
+11011
+11011
+01010
+10001
+11011
+
+ArrowR
+Purple Black
+11011
+11101
+00000
+11101
+11011
+
+CandyR
+Red
+.000.
+00000
+00000
+00000
+.000.
+
+CandyG
+Green
+.000.
+00000
+00000
+00000
+.000.
+
+CandyB
+Blue
+.000.
+00000
+00000
+00000
+.000.
+
+CandyI
+Purple
+.000.
+00000
+00000
+00000
+.000.
+
+Drop1
+Red
+.....
+.....
+.....
+.....
+.....
+
+Drop2
+Red
+.....
+.....
+.....
+.....
+.....
+
+Drop3
+Red
+.....
+.....
+.....
+.....
+.....
+
+Drop4
+Red
+.....
+.....
+.....
+.....
+.....
+
+Candy0
+Gray
+.000.
+00000
+00000
+00000
+.000.
+
+Candy1
+White
+.000.
+00000
+00000
+00000
+.000.
+
+Candy2
+White
+..0..
+.000.
+00000
+.000.
+..0..
+
+Candy3
+White
+.....
+.000.
+.000.
+.000.
+.....
+
+Candy4
+White
+.....
+..0..
+.000.
+..0..
+.....
+
+Candy5
+White
+.....
+.....
+..0..
+.....
+.....
+
+ClearMarker
+White
+.....
+.....
+.....
+.....
+.....
+
+NinjaR
+Red YELLOW BLACK
+.222.
+.000.
+22222
+.222.
+.2.2.
+
+NinjaG
+Green YELLOW BLACK
+.222.
+.000.
+22222
+.222.
+.2.2.
+
+NinjaB
+Blue YELLOW BLACK
+.222.
+.000.
+22222
+.222.
+.2.2.
+
+NinjaI
+Purple YELLOW BLACK
+.222.
+.000.
+22222
+.222.
+.2.2.
+
+
+LEGEND
+
+. = Background
+P = Player
+# = Wall
+S = ScrollBG
+{ = ScrollLeft
+} = ScrollRight
+[ = ScrollTop
+] = ScrollBottom
+N = ScrollBG or Drop1
+M = ScrollBG or Drop2
+/ = ScrollBG or Drop3
+\ = ScrollBG or Drop4
+Q = ArrowL
+W = ArrowU
+E = ArrowD
+T = ArrowR
+R = CandyR
+G = CandyG
+B = CandyB
+I = CandyI
+1 = CandyR or ScrollBG
+2 = CandyG or ScrollBG
+3 = CandyB or ScrollBG
+4 = CandyI or ScrollBG
+H = NinjaR
+J = NinjaG
+K = NinjaB
+L = NinjaI
+Candy = CandyR or CandyG or CandyB or CandyI or Candy0 or Candy1 or Candy2 or Candy3 or Candy4 or Candy5
+CandyF = CandyR or CandyG or CandyB or CandyI
+Enemy = NinjaR or NinjaG or NinjaB or NinjaI
+
+COLLISIONLAYERS
+
+Background
+ClearMarker
+ScrollBG
+Drop1, Drop2
+Drop3, Drop4
+ArrowL, ArrowU
+ArrowD, ArrowR
+Player, Wall
+CandyR, CandyG
+CandyB, CandyI
+ScrollLeft, ScrollRight
+ScrollTop, ScrollBottom
+Candy0, Candy1
+Candy2, Candy3
+Candy4, Candy5
+NinjaR, NinjaG
+NinjaB, NinjaI
+
+RULES
+
+[ Candy5 ] -> [  ] again 
+[ Candy4 ] -> [ Candy5 ] again 
+[ Candy3 ] -> [ Candy4 ] again 
+[ Candy2 ] -> [ Candy3 ] again 
+[ Candy1 ] -> [ Candy2 ] again 
+[ Candy0 ] -> [ Candy1 ] again 
+[ ScrollBG CandyR | ScrollBGCandyR | ScrollBGCandyR ] -> [ ScrollBG ClearMarker CandyR | ScrollBG ClearMarker CandyR | ScrollBG ClearMarker CandyR ] 
+[ ScrollBG CandyG | ScrollBGCandyG | ScrollBGCandyG ] -> [ ScrollBG ClearMarker CandyG | ScrollBG ClearMarker CandyG | ScrollBG ClearMarker CandyG ] 
+[ ScrollBG CandyB | ScrollBGCandyB | ScrollBGCandyB ] -> [ ScrollBG ClearMarker CandyB | ScrollBG ClearMarker CandyB | ScrollBG ClearMarker CandyB ] 
+[ ScrollBG CandyI | ScrollBGCandyI | ScrollBGCandyI ] -> [ ScrollBG ClearMarker CandyI | ScrollBG ClearMarker CandyI | ScrollBG ClearMarker CandyI ] 
+[ ScrollBG ClearMarker CandyR ] [ Player | ... | NinjaR ] -> [ ScrollBG ClearMarker CandyR ] [ Player | ... | NinjaRClearMarker ] 
+[ ScrollBG ClearMarker CandyB ] [ Player | ... | NinjaB ] -> [ ScrollBG ClearMarker CandyB ] [ Player | ... | NinjaBClearMarker ] 
+[ ScrollBG ClearMarker CandyG ] [ Player | ... | NinjaG ] -> [ ScrollBG ClearMarker CandyG ] [ Player | ... | NinjaGClearMarker ] 
+[ ScrollBG ClearMarker CandyI ] [ Player | ... | NinjaI ] -> [ ScrollBG ClearMarker CandyI ] [ Player | ... | NinjaIClearMarker ] 
+[ ScrollBG ClearMarker Candy ] -> [ ScrollBG Candy0 ] again 
+[ ClearMarker Enemy ] -> [ Candy0 ] 
+down [ CandyF ScrollBG | no Candy ScrollBG ] -> [ ScrollBG | CandyFScrollBG ] again 
+left [ Action Player | Candy ] [ Drop1 no Candy ] -> [ Action Player |  ] [ Candy Drop1 ] again 
+up [ Action Player | Candy ] [ Drop2 no Candy ] -> [ Action Player |  ] [ Candy Drop2 ] again 
+down [ Action Player | Candy ] [ Drop3 no Candy ] -> [ Action Player |  ] [ Candy Drop3 ] again 
+right [ Action Player | Candy ] [ Drop4 no Candy ] -> [ Action Player |  ] [ Candy Drop4 ] again 
+
+
+WINCONDITIONS
+
+No Candy
+No Enemy
+
+LEVELS
+
+###############
+#qwet#####r####
+#[[[[###.....##
+{nm/\}##.....##
+{ssss}#p.....r#
+{ssss}##.....##
+{ssss}##.....##
+{ssss}####r####
+#]]]]##########
+
+###############
+#qwet##.......#
+#[[[[##.......#
+{nm/\}##.....##
+{ssss}#r..p..b#
+{ssss}##.....##
+{1ss3}#.......#
+{1ss3}#.......#
+#]]]]##########
+
+###############
+#qwet##.......#
+#[[[[##.p.....#
+{nm/\}#.......#
+{ssss}#...r...#
+{ssss}#.......#
+{ssss}#.......#
+{11s1}#.......#
+#]]]]##########
+
+#################
+#######.........#
+#######..r.r.r..#
+#qwet##.........#
+#[[[[##.........#
+{nm/\}#..#.p.#..#
+{ssss}#.........#
+{ssss}#.........#
+{ssss}#..b.b.b..#
+{ssss}#.........#
+#]]]]############
+
+#################
+#######r...p...r#
+#######.##...##.#
+#qwet##.#..#..#.#
+#[[[[##....r....#
+{nm/\}#..#r#b#..#
+{ssss}#....b....#
+{ssss}#.#..#..#.#
+{ssss}#.##...##.#
+{ssss}#b.......b#
+#]]]]############
+
+#################
+#######.........#
+#########.....###
+#qwet####...p.###
+#[[[[##.........#
+{nm/\}#....b....#
+{ssss}#..r###r..#
+{ssss}#.b#...#b.#
+{3131}#..#...#..#
+{1131}#.........#
+#]]]]############
+
+#################
+#######.........#
+#######.p.......#
+#qwet##....#....#
+#[[[[##....r....#
+{nm/\}#..#b#g#..#
+{ssss}#....b....#
+{s11s}#....#....#
+{1323}#.........#
+{1323}#.........#
+#]]]]############
+
+#################
+#######.........#
+#######.#r#g#b#.#
+#qwet##..#.#.#..#
+#[[[[##.........#
+{nm/\}#p..brg...#
+{ssss}#.........#
+{ssss}#..#.#.#..#
+{ssss}#.#g#b#r#.#
+{ssss}#.........#
+#]]]]############
+
+#################
+#######.........#
+#######...g#i...#
+#qwet##.........#
+#[[[[##.g.....i.#
+{nm/\}#.#..p..#.#
+{ssss}#.b.....r.#
+{ssss}#.........#
+{ssss}#...b#r...#
+{1324}#.........#
+#]]]]############
+
+#################
+#######.........#
+#######.p..r..i.#
+#qwet##...rbr...#
+#[[[[##..rbgbr..#
+{nm/\}#.rbgigbr.#
+{ssss}#..rbgbr..#
+{ssss}#...rbr...#
+{ssss}#.i..r....#
+{ssss}#.........#
+#]]]]############
+
+#################
+#######.........#
+#######.........#
+#qwet##.........#
+#[[[[##....#....#
+{nm/\}#.p..r..h.#
+{ssss}#....#....#
+{ssss}#.........#
+{ssss}#.........#
+{s11s}#.........#
+#]]]]############
+
+#################
+#######.........#
+#######.p.r.....#
+#qwet##.........#
+#[[[[#####...####
+{nm/\}####...####
+{ssss}####...####
+{ssss}####...####
+{ssss}####.h.####
+{s11s}####...####
+#]]]]############
+
+#################
+#######.........#
+#######....h..p.#
+#qwet##.........#
+#[[[[##.........#
+{nm/\}#...r...h.#
+{ssss}#....r....#
+{ssss}#.........#
+{ssss}#.r.......#
+{ssss}#.........#
+#]]]]############
+
+#################
+##########...####
+########h#.r.#h##
+#qwet#####.r.####
+#[[[[##.........#
+{nm/\}#..r.p.r..#
+{ssss}#.........#
+{ssss}####.r.####
+{ssss}##h#.r.#h##
+{ssss}####...####
+#]]]]############
+
+#################
+########b##r##b##
+########h##h##h##
+#qwet##.........#
+#[[[[##.........#
+{nm/\}#..r.r.r..#
+{ssss}#.........#
+{ssss}#..r.p.r..#
+{ssss}#....h....#
+{s3ss}#.........#
+#]]]]############
+
+#################
+#######.r....####
+#######rbr....###
+#qwet##.r..k...##
+#[[[[##.........#
+{nm/\}#..p.b....#
+{ssss}#.........#
+{ssss}##...k..r.#
+{ssss}###....rbr#
+{ssss}####....r.#
+#]]]]############
+
+#################
+#######r.......b#
+#######.###h###.#
+#qwet##.#b...r#.#
+#[[[[##.#.r.b.#.#
+{nm/\}#.k..p..k.#
+{ssss}#.#.b.r.#.#
+{ssss}#.#r...b#.#
+{ssss}#.###h###.#
+{ssss}#b.......r#
+#]]]]############
+
+#################
+#######r.......b#
+#######..rhhhr..#
+#qwet##..hbbbh..#
+#[[[[##r.......b#
+{nm/\}#....p....#
+{ssss}#r.......b#
+{ssss}#..krrrk..#
+{ssss}#..bkkkb..#
+{ssss}#r.......b#
+#]]]]############
+
+#################
+#######b.......b#
+#######.k..h..k.#
+#qwet##....b....#
+#[[[[##....r....#
+{nm/\}#.hbrprbh.#
+{ssss}#....r....#
+{ssss}#....b....#
+{ssss}#.k..h..k.#
+{ssss}#b.......b#
+#]]]]############
+
+#################
+#######g...g...g#
+#######.p..b....#
+#qwet##...###...#
+#[[[[##..krrrk..#
+{nm/\}#.b#####b.#
+{ssss}#...###...#
+{ssss}#...#.#...#
+{ssss}#...b.b...#
+{ssss}#g...g...g#
+#]]]]############
+
+###################
+#qwet##...........#
+#[[[[##...j.#.l...#
+{nm/\}#...#####...#
+{ssss}#.....#.....#
+{ssss}#...........#
+{ssss}#...........#
+{ssss}#...........#
+{ssss}#.g#g...i#i.#
+{ssss}#.###...###.#
+{ssss}#.g#g...i#i.#
+{ssss}#.....p.....#
+#]]]]##############
+
+###################
+#qwet##....gig....#
+#[[[[##.....g.....#
+{nm/\}#...........#
+{ssss}#.###...###.#
+{ssss}#jrrrj.lbbbl#
+{ssss}######p######
+{ssss}#.###...###.#
+{ssss}#.#.#...#.#.#
+{ssss}#.....g.....#
+{ssss}#g...gig...g#
+{ssss}#ig.gigig.gi#
+#]]]]##############
+
+###################
+#qwet##.........#.#
+#[[[[##.##k###g.#.#
+{nm/\}#.#b..#g#.#.#
+{ssss}#..##...j...#
+{ssss}#b.r#.#..#i##
+{ssss}#r.##r##.#.##
+{ssss}#g.#i#.#...##
+{ssss}#i..p#...#..#
+{ssss}####.#..##l##
+{ssss}#..#.h.#b...#
+{ssss}#....####.#.#
+#]]]]##############
+
+###################
+#qwet##...........#
+#[[[[##.##rr.bb##.#
+{nm/\}#.#r.....b#.#
+{ssss}#.r...h...b.#
+{ssss}#.r..j#l..b.#
+{ssss}#p..k###k...#
+{ssss}#.g..l#j..i.#
+{ssss}#.g...h...i.#
+{ssss}#.#g.....i#.#
+{ssss}#.##gg.ii##.#
+{1324}#...........#
+#]]]]##############
+
+###################
+#qwet##gb...p...br#
+#[[[[##gb.......br#
+{nm/\}####..g..####
+{ssss}#....r#r....#
+{ssss}#....bbb....#
+{ssss}#r..b#r#b..r#
+{ssss}#....bbb....#
+{ssss}#....r#r....#
+{ssss}####..g..####
+{ssss}#ri.......ig#
+{ssss}#ri.......ig#
+#]]]]##############
+
+###################
+#qwet##...........#
+#[[[[##...r.r.r...#
+{nm/\}#...rrrrr...#
+{ssss}#...rrrrr...#
+{ssss}#..h#####h..#
+{ssss}#..##.#.##..#
+{ssss}#..#######..#
+{ssss}#..##...##..#
+{ssss}#..#.###.#..#
+{ssss}#..#######..#
+{ssss}#p..#####...#
+#]]]]##############
+
+#####################
+#qwet##...g....i....#
+#[[[[##...g.........#
+{nm/\}#...g.........#
+{ssss}#...j...bgb...#
+{ssss}#.p.l.r#####r.#
+{ssss}#.r.k.###.#.#.#
+{ssss}#.r.hb###.#.#b#
+{ssss}#...ji#######i#
+{ssss}#...lb##...##b#
+{ssss}#...k.#######.#
+{ssss}#...h.r#####r.#
+#]]]]################
+
+#####################
+#qwet##..ri.........#
+#[[[[##..ir..g.i.r..#
+{nm/\}#..ri..igbrb..#
+{ssss}#..ir..rbgir..#
+{ssss}#..ri..#####..#
+{ssss}#..ir.#.###.#.#
+{ssss}#..ri.##.#.##.#
+{ssss}#..ir.#######.#
+{ssss}#..ri.#.....#.#
+{ssss}#..ir.##...##.#
+{ssss}#p.ri..#####..#
+#]]]]################
+
+#####################
+#qwet##r....ggg....r#
+#[[[[##.....g.g.....#
+{nm/\}#..i#######i..#
+{1334}#..##.###.##..#
+{3114}#..###.#.###..#
+{1332}#i.#########.i#
+{3112}#..#########..#
+{1334}#..##.....##..#
+{3114}#..##.....##..#
+{1332}#..###...###..#
+{3112}#p.i#######i.r#
+#]]]]################
+
+#####################
+#qwet##......p......#
+#[[[[##...rrrrrrr...#
+{nm/\}#..rr..r..rr..#
+{ssss}#..rr..r..rr..#
+{ssss}#..rrrrrrrrr..#
+{ssss}#..rrrrrrrrr..#
+{ssss}#..rrrrrrrrr..#
+{ssss}#..rrr...rrr..#
+{ssss}#..rr.rrr.rr..#
+{ssss}#...rrrrrrr...#
+{ssss}#.............#
+#]]]]################

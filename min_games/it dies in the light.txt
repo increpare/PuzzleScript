@@ -1,0 +1,231 @@
+OBJECTS
+
+BackgroundNeutral
+LIGHTGray Gray
+11011
+10101
+01110
+10101
+11011
+
+BackgroundDark
+Black
+
+Wall
+Lightblue Blue
+00010
+11111
+01000
+11111
+00010
+
+LivePlayer
+Black LightRed White Blue
+.000.
+.111.
+12321
+.232.
+.222.
+
+Corpse
+LightGrey
+.000.
+.0.0.
+0.0.0
+..0..
+.0.0.
+
+Crate
+Orange LightBrown Brown
+.222.
+21012
+20102
+21012
+.222.
+
+GoldCrate
+White Yellow Orange
+.222.
+21012
+20002
+21012
+.222.
+
+GlassCrate
+White
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Prism
+LightBlue White
+.000.
+00110
+00010
+00000
+.000.
+
+ActivePrism
+LightBlue White Yellow
+.000.
+02120
+01110
+02120
+.000.
+
+Glass
+White
+00000
+0...0
+0...0
+0...0
+00000
+
+BeamVert
+White Yellow
+.101.
+.101.
+.101.
+.101.
+.101.
+
+BeamHor
+White Yellow
+.....
+11111
+00000
+11111
+.....
+
+BeamCross
+White Yellow
+.101.
+11011
+00000
+11011
+.101.
+
+Shadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+TempShadow
+Purple
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+
+LEGEND
+
+. = BackgroundNeutral
+# = Wall
+P = LivePlayer
+C = Crate
+G = GoldCrate
+S = Shadow
+X = Prism
+O = Glass
+Background = BackgroundNeutral or BackgroundDark
+Player = LivePlayer or Corpse
+Light = BeamVert or BeamHor or BeamCross
+Hlight = BeamHor or BeamCross
+Vlight = BeamVert or BeamCross
+Opaque = Player or Crate or Wall or GoldCrate
+Pushable = Crate or GoldCrate or Prism or GlassCrate
+
+COLLISIONLAYERS
+
+Background
+BeamVert
+BeamHor, BeamCross
+Shadow, TempShadow
+Player
+Corpse, Wall
+Crate, GoldCrate
+GlassCrate, Prism
+ActivePrism, Glass
+
+RULES
+
+[ > Corpse ] -> RESTART 
+[ Light ] -> [  ] 
+[ ActivePrism ] -> [ Prism ] 
+[ > Player | Pushable ] -> [ > Player | > Pushable ] 
+late HORIZONTAL [ GoldCrate | noOpaque no Light ] -> [ GoldCrate | BeamHor ] 
+late VERTICAL [ GoldCrate | noOpaque no Light ] -> [ GoldCrate | BeamVert ] 
+late VERTICAL [ GoldCrate | no Opaque BeamHor ] -> [ GoldCrate | BeamCross ] 
+late HORIZONTAL [ Hlight | noOpaque no Light ] -> [ Hlight | BeamHor ] 
++ late HORIZONTAL [ Hlight | no Opaque BeamVert ] -> [ Hlight | BeamCross ] 
++ late VERTICAL [ Vlight | noOpaque no Light ] -> [ Vlight | BeamVert ] 
++ late VERTICAL [ Vlight | no Opaque BeamHor ] -> [ Vlight | BeamCross ] 
++ late [ Light Prism ] -> [ BeamCross ActivePrism ] 
+late [ Shadow Pushable ] -> [ Pushable ] 
+late [ TempShadow ] -> [ Shadow ] 
+late [ Shadow | noLight no Wall no Pushable no Glass no Shadow ] -> [ shadow | Tempshadow ] again 
+late [ Shadow ] -> [ Shadow BackgroundDark ] 
+late [ TempShadow ] -> [ TempShadow BackgroundDark ] 
+late [ no Shadow no TempShadow ] -> [ no Shadow BackgroundNeutral ] 
+late [ Shadow Player ] -> [ Shadow Corpse ] 
+
+
+WINCONDITIONS
+
+no Shadow
+
+LEVELS
+
+......####.
+..#####ss#.
+###ssssss#.
+#..ssscss##
+#..#s#s#ss#
+#.g#s#ssss#
+#p.#s#ssss#
+#..css#sss#
+###########
+
+........########.
+........#...#.C#.
+...######...GC.##
+...#..CsssssO.C.#
+...#P.Csss#sO.CC#
+...#..Csss#sO#..#
+########ss#s....#
+#ssssssOss#s#####
+#sssssssss###....
+#########s#......
+........###......
+
+##########
+###G#G#G##
+##P......#
+#G.......#
+##..C....#
+#G.......#
+##..C....#
+#G.......#
+##......S#
+##########
+
+........########
+........#......#
+#########..#o#.#
+#........gooxo.#
+#g#####c#.sso#s#
+#.ssssss#.ss.ss#
+##soooss#.ss##s#
+##c.p.c###ss#ss#
+##.....#ssss#ss#
+#...g.......#ss#
+#########.xx#ss#
+........##sssss#
+.........#######

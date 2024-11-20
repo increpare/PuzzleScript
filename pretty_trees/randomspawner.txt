@@ -1,0 +1,168 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      (special, automatically placed in its own layer)
+      
+
+      colors
+        color	green
+        color	darkgreen
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '1']
+        ['1' '1' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '1' '1']
+    object_data
+      object_name	Spawner
+      (Name)
+      
+
+      colors
+        color	yellow
+      (Color)
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Player
+      (Required by game)
+      
+
+      colors
+        color	pink
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	RedRobot
+      
+
+      colors
+        color	gray
+        color	black
+        color	red
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '2' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
+    object_data
+      object_name	GreenRobot
+      
+
+      colors
+        color	gray
+        color	black
+        color	lightgreen
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '2' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
+    object_data
+      object_name	BlueRobot
+      
+
+      colors
+        color	gray
+        color	black
+        color	lightblue
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '2' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
+  legend_section
+    legend_data
+      Robot
+      object_name	RedRobot
+      legend_operation
+        object_name	GreenRobot
+      legend_operation
+        object_name	BlueRobot
+    legend_data
+      Obstacle
+      object_name	Player
+      legend_operation
+        object_name	Robot
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      P
+      object_name	Player
+    legend_data
+      *
+      object_name	Robot
+    legend_data
+      O
+      object_name	Spawner
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Spawner
+    layer_data
+      object_name	Player
+      object_name	Robot
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              stationary
+              Robot
+          ->
+          rule_part
+            rule_content
+              randomDir
+              Robot
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Spawner
+              no
+              Obstacle
+          ->
+          rule_part
+            rule_content
+              Spawner
+              random
+              Robot
+          
+
+  winconditions_section
+  levels_section
+    level_data	[['.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' 'O' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.']
+ ['.' 'P' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.']]

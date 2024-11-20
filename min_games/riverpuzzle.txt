@@ -1,0 +1,165 @@
+OBJECTS
+
+Grass
+#559922 GREEN
+11111
+01111
+11101
+11111
+10111
+
+Player
+Yellow
+00.00
+0...0
+.....
+0...0
+00.00
+
+Water1
+#3333ff #5555ff #7777ff
+00121
+10100
+12001
+10010
+01000
+
+Water2
+#3333ff #5555ff #7777ff
+10000
+00010
+00121
+01100
+10001
+
+Carrot
+ORANGE #55cc00
+11111
+.000.
+.000.
+.000.
+..0..
+
+Fox
+ORANGE WHITE BLACK
+.2.2.
+00000
+12021
+.111.
+..2..
+
+Rabbit
+WHITE #ff88bb
+00.00
+.0.0.
+.000.
+.101.
+.000.
+
+EmptyBoat
+BROWN DARKBROWN
+.000.
+01110
+01110
+01110
+00000
+
+Platform
+GREY
+.....
+.....
+.....
+.....
+.....
+
+
+LeftB
+BLUE
+.....
+.....
+.....
+.....
+.....
+
+RightB
+RED
+.....
+.....
+.....
+.....
+.....
+
+Dude
+BLACK
+..0..
+00000
+..0..
+.0.0.
+0...0
+
+Dock
+YELLOW
+.....
+.....
+.....
+.....
+.....
+
+
+LEGEND
+
+. = Grass or LeftB
+, = Grass or RightB
+~ = Water1 or LeftB
+^ = Water1 or RightB
+P = Player or LeftB
+C = Carrot or Platform or LeftB
+F = Fox or Platform or LeftB
+R = Rabbit or Platform or LeftB
+_ = EmptyBoat or LeftB or Water1
+* = Platform or RightB
+[ = Dude or Dock or LeftB
+] = Dock or RightB
+Water = Water1 or Water2
+Background = Grass or Water1 or Water2
+Object = Rabbit or Fox or Carrot
+Bank = LeftB or RightB
+
+COLLISIONLAYERS
+
+Background
+EmptyBoat
+Platform, Dock
+LeftB, RightB
+Carrot, Rabbit
+Fox, Dude
+Player
+
+RULES
+
+[ action Player Object Platform ] [ EmptyBoat no Object ] -> [ Player Platform ] [ EmptyBoat Object ] 
+[ action Player Object EmptyBoat LeftB ] [ Platform no Object LeftB ] -> [ Player EmptyBoat LeftB ] [ Platform Object LeftB ] 
+[ action Player Object EmptyBoat RightB ] [ Platform no Object RightB ] -> [ Player EmptyBoat RightB ] [ Platform Object RightB ] 
+late [ RightB Dude ] [ LeftB Rabbit ] [ LeftB Fox ] -> [ RightB Dude ] [ LeftB ] [ LeftB Fox ] 
+late [ RightB Dude ] [ LeftB Carrot ] [ LeftB Rabbit ] -> [ RightB Dude ] [ LeftB ] [ LeftB Rabbit ] 
+late [ LeftB Dude ] [ RightB Rabbit ] [ RightB Fox ] -> [ LeftB Dude ] [ RightB ] [ RightB Fox ] 
+late [ LeftB Dude ] [ RightB Carrot ] [ RightB Rabbit ] -> [ LeftB Dude ] [ RightB ] [ RightB Rabbit ] 
+[ Water ] -> [ random Water ] 
+[ action Player Dude | EmptyBoatObject | ... |  | Dock ] -> [  |  | ... | EmptyBoatObject | Player Dude Dock ] 
+[ action Player Dude | EmptyBoat no Object | ... |  | Dock ] -> [  |  | ... | EmptyBoat | Player Dude Dock ] 
+[ RightB Platform Rabbit ] [ RightB Platform Fox ] [ RightB Platform Carrot ] -> win 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+.....~~~^^,,,,,
+.....~~~^^,,,,,
+...F.~~~^^,*,,,
+..RP[_~~^^],*,,
+...C.~~~~^,*,,,
+.....~~~^^,,,,,
+.....~~~^^,,,,,

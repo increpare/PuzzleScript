@@ -1,0 +1,77 @@
+OBJECTS
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BigBlock
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+LEGEND
+
+. = Background
+# = Wall
+P = Player
+* = BigBlock
+@ = BigBlock or Target
+O = Target
+
+COLLISIONLAYERS
+
+Background
+Target
+Player
+Wall, BigBlock
+
+RULES
+
+[ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
+[ moving BigBlock | BigBlock ] -> [ moving BigBlock | movingBigBlock ] 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+.#######.
+#.......#
+#..***..#
+#..p*...#
+#.......#
+.#######.

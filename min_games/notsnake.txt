@@ -1,0 +1,41 @@
+OBJECTS
+
+Background
+blue
+
+Player
+lightblue
+
+Trail
+purple
+
+
+LEGEND
+
+. = Background
+P = Player
+O = Trail
+
+COLLISIONLAYERS
+
+Background
+Trail
+Player
+
+RULES
+
+[ > Player | NoTrail ] -> [ Trail | Player ] 
+[ > Player | Trail ] -> [  | Player ] 
+
+
+WINCONDITIONS
+
+no Trail
+
+LEVELS
+
+OOOOOOOO
+OOOOOOOO
+O..POO.O
+OOOOOOOO
+OOOOOOOO

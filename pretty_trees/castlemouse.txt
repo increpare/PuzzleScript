@@ -1,0 +1,2454 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	Black
+      
+
+    object_data
+      object_name	Wall
+      
+
+      colors
+        color	Brown
+        color	DarkBrown
+      
+
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+    object_data
+      object_name	Floor
+      
+
+      colors
+        color	#888855
+        color	#885588
+      
+
+      sprite
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['1' '1' '0' '1' '1']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '1' '0' '0']
+    object_data
+      object_name	Hole
+      
+
+      colors
+        color	Black
+        color	#222222
+        color	Brown
+      
+
+      sprite
+        ['2' '1' '1' '1' '2']
+        ['1' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '0']
+    object_data
+      object_name	Marker
+      
+
+      colors
+        color	Red
+      
+
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '.' '0' '0']
+    object_data
+      object_name	MMarker
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '.' '0' '0']
+    object_data
+      object_name	CMarker
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '.' '0' '0']
+    object_data
+      object_name	DMarker
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '.' '0' '0']
+    object_data
+      object_name	EMarker
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '.' '0' '0']
+    object_data
+      object_name	Mouse
+      
+
+      colors
+        color	LightGrey
+        color	Black
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '1' '.' '1' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '.' '1' '.' '.']
+    object_data
+      object_name	UpMovingMouse
+      
+
+      colors
+        color	LightGrey
+        color	Black
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '1' '.' '1' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '.' '1' '.' '.']
+    object_data
+      object_name	LeftMovingMouse
+      
+
+      colors
+        color	LightGrey
+        color	Black
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '1' '.' '1' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '.' '1' '.' '.']
+    object_data
+      object_name	RightMovingMouse
+      
+
+      colors
+        color	LightGrey
+        color	Black
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '1' '.' '1' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '.' '1' '.' '.']
+    object_data
+      object_name	DownMovingMouse
+      
+
+      colors
+        color	LightGrey
+        color	Black
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '1' '.' '1' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['.' '.' '1' '.' '.']
+    object_data
+      object_name	Cat
+      
+
+      colors
+        color	White
+        color	Green
+        color	Pink
+        color	Grey
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
+        ['3' '0' '2' '0' '3']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	RightMovingCat
+      
+
+      colors
+        color	White
+        color	Green
+        color	Pink
+        color	Grey
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
+        ['3' '0' '2' '0' '3']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	LeftMovingCat
+      
+
+      colors
+        color	White
+        color	Green
+        color	Pink
+        color	Grey
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
+        ['3' '0' '2' '0' '3']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	UpMovingCat
+      
+
+      colors
+        color	White
+        color	Green
+        color	Pink
+        color	Grey
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
+        ['3' '0' '2' '0' '3']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	DownMovingCat
+      
+
+      colors
+        color	White
+        color	Green
+        color	Pink
+        color	Grey
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
+        ['3' '0' '2' '0' '3']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Dog
+      
+
+      colors
+        color	DarkBrown
+        color	Black
+      
+
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['0' '1' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '1' '1' '0']
+    object_data
+      object_name	UpMovingDog
+      
+
+      colors
+        color	DarkBrown
+        color	Black
+      
+
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['0' '1' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '1' '1' '0']
+    object_data
+      object_name	DownMovingDog
+      
+
+      colors
+        color	DarkBrown
+        color	Black
+      
+
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['0' '1' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '1' '1' '0']
+    object_data
+      object_name	LeftMovingDog
+      
+
+      colors
+        color	DarkBrown
+        color	Black
+      
+
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['0' '1' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '1' '1' '0']
+    object_data
+      object_name	RightMovingDog
+      
+
+      colors
+        color	DarkBrown
+        color	Black
+      
+
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['0' '1' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '1' '1' '0']
+    object_data
+      object_name	Elephant
+      
+
+      colors
+        color	LightGrey
+        color	Black
+        color	#eeeeee
+        color	Grey
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['3' '1' '3' '0' '0']
+        ['3' '2' '3' '3' '0']
+        ['3' '0' '0' '0' '0']
+        ['.' '0' '.' '.' '0']
+    object_data
+      object_name	UpMovingElephant
+      
+
+      colors
+        color	LightGrey
+        color	Black
+        color	#eeeeee
+        color	Grey
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['3' '1' '3' '0' '0']
+        ['3' '2' '3' '3' '0']
+        ['3' '0' '0' '0' '0']
+        ['.' '0' '.' '.' '0']
+    object_data
+      object_name	DownMovingElephant
+      
+
+      colors
+        color	LightGrey
+        color	Black
+        color	#eeeeee
+        color	Grey
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['3' '1' '3' '0' '0']
+        ['3' '2' '3' '3' '0']
+        ['3' '0' '0' '0' '0']
+        ['.' '0' '.' '.' '0']
+    object_data
+      object_name	LeftMovingElephant
+      
+
+      colors
+        color	LightGrey
+        color	Black
+        color	#eeeeee
+        color	Grey
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['3' '1' '3' '0' '0']
+        ['3' '2' '3' '3' '0']
+        ['3' '0' '0' '0' '0']
+        ['.' '0' '.' '.' '0']
+    object_data
+      object_name	RightMovingElephant
+      
+
+      colors
+        color	LightGrey
+        color	Black
+        color	#eeeeee
+        color	Grey
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['3' '1' '3' '0' '0']
+        ['3' '2' '3' '3' '0']
+        ['3' '0' '0' '0' '0']
+        ['.' '0' '.' '.' '0']
+  legend_section
+    legend_data
+      X
+      object_name	Background
+    legend_data
+      .
+      object_name	Floor
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      E
+      object_name	Elephant
+      legend_operation
+        object_name	Floor
+      legend_operation
+        object_name	Marker
+    legend_data
+      D
+      object_name	Dog
+      legend_operation
+        object_name	Floor
+      legend_operation
+        object_name	Marker
+    legend_data
+      C
+      object_name	Cat
+      legend_operation
+        object_name	Floor
+      legend_operation
+        object_name	Marker
+    legend_data
+      M
+      object_name	Mouse
+      legend_operation
+        object_name	Floor
+      legend_operation
+        object_name	Marker
+    legend_data
+      3
+      object_name	Elephant
+      legend_operation
+        object_name	Floor
+    legend_data
+      2
+      object_name	Dog
+      legend_operation
+        object_name	Floor
+    legend_data
+      1
+      object_name	Cat
+      legend_operation
+        object_name	Floor
+    legend_data
+      0
+      object_name	Mouse
+      legend_operation
+        object_name	Floor
+    legend_data
+      H
+      object_name	Hole
+      legend_operation
+        object_name	Floor
+    legend_data
+      Player
+      object_name	Marker
+    legend_data
+      Obstacle
+      object_name	Wall
+      legend_operation
+        object_name	Hole
+    legend_data
+      VerticalMovingElephant
+      object_name	UpMovingElephant
+      legend_operation
+        object_name	DownMovingElephant
+    legend_data
+      HorizontalMovingElephant
+      object_name	LeftMovingElephant
+      legend_operation
+        object_name	RightMovingElephant
+    legend_data
+      MovingElephant
+      object_name	VerticalMovingElephant
+      legend_operation
+        object_name	HorizontalMovingElephant
+    legend_data
+      VerticalMovingDog
+      object_name	UpMovingDog
+      legend_operation
+        object_name	DownMovingDog
+    legend_data
+      HorizontalMovingDog
+      object_name	LeftMovingDog
+      legend_operation
+        object_name	RightMovingDog
+    legend_data
+      MovingDog
+      object_name	VerticalMovingDog
+      legend_operation
+        object_name	HorizontalMovingDog
+    legend_data
+      VerticalMovingCat
+      object_name	UpMovingCat
+      legend_operation
+        object_name	DownMovingCat
+    legend_data
+      HorizontalMovingCat
+      object_name	LeftMovingCat
+      legend_operation
+        object_name	RightMovingCat
+    legend_data
+      MovingCat
+      object_name	VerticalMovingCat
+      legend_operation
+        object_name	HorizontalMovingCat
+    legend_data
+      VerticalMovingMouse
+      object_name	UpMovingMouse
+      legend_operation
+        object_name	DownMovingMouse
+    legend_data
+      HorizontalMovingMouse
+      object_name	LeftMovingMouse
+      legend_operation
+        object_name	RightMovingMouse
+    legend_data
+      MovingMouse
+      object_name	VerticalMovingMouse
+      legend_operation
+        object_name	HorizontalMovingMouse
+    legend_data
+      MoveMarker
+      object_name	MMarker
+      legend_operation
+        object_name	CMarker
+      legend_operation
+        object_name	DMarker
+      legend_operation
+        object_name	EMarker
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Floor
+    layer_data
+      object_name	Hole
+    layer_data
+      object_name	Mouse
+    layer_data
+      object_name	MovingMouse
+      object_name	Cat
+    layer_data
+      object_name	MovingCat
+      object_name	Dog
+    layer_data
+      object_name	MovingDog
+      object_name	Elephant
+    layer_data
+      object_name	MovingElephant
+      object_name	Wall
+    layer_data
+      object_name	Marker
+      object_name	MoveMarker
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              Marker
+              Mouse
+          ->
+          rule_part
+            rule_content	MMarker
+            rule_content
+              >
+              Mouse
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Marker
+              Cat
+          ->
+          rule_part
+            rule_content	CMarker
+            rule_content
+              >
+              Cat
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Marker
+              Dog
+          ->
+          rule_part
+            rule_content	DMarker
+            rule_content
+              >
+              Dog
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Marker
+              Elephant
+          ->
+          rule_part
+            rule_content	EMarker
+            rule_content
+              >
+              Elephant
+          
+
+    rule_block
+      rule_block_loop
+        startLoop
+        
+
+        rule_data
+          rule_part
+            rule_content
+              UP
+              Elephant
+          ->
+          rule_part
+            rule_content
+              UP
+              UpMovingElephant
+          
+
+        rule_data
+          rule_part
+            rule_content
+              DOWN
+              Elephant
+          ->
+          rule_part
+            rule_content
+              DOWN
+              DownMovingElephant
+          
+
+        rule_data
+          rule_part
+            rule_content
+              LEFT
+              Elephant
+          ->
+          rule_part
+            rule_content
+              LEFT
+              LeftMovingElephant
+          
+
+        rule_data
+          rule_part
+            rule_content
+              RIGHT
+              Elephant
+          ->
+          rule_part
+            rule_content
+              RIGHT
+              RightMovingElephant
+          
+
+        rule_data
+          rule_part
+            rule_content	UpMovingElephant
+          ->
+          rule_part
+            rule_content
+              Up
+              UpMovingElephant
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	LeftMovingElephant
+          ->
+          rule_part
+            rule_content
+              Left
+              LeftMovingElephant
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	RightMovingElephant
+          ->
+          rule_part
+            rule_content
+              Right
+              RightMovingElephant
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	DownMovingElephant
+          ->
+          rule_part
+            rule_content
+              Down
+              DownMovingElephant
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content	Stationary
+            rule_content	Dog
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content	right
+            rule_content	Dog
+            cell_border
+            rule_content	SFX3
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content	Stationary
+            rule_content	Dog
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content	left
+            rule_content	Dog
+            cell_border
+            rule_content	SFX3
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content	Stationary
+            rule_content	Dog
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content	up
+            rule_content	Dog
+            cell_border
+            rule_content	SFX3
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content	Stationary
+            rule_content	Dog
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content	down
+            rule_content	Dog
+            cell_border
+            rule_content	SFX3
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	VerticalMovingElephant
+            cell_border
+            rule_content	Stationary
+            rule_content	Dog
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	VerticalMovingElephant
+            cell_border
+            rule_content	right
+            rule_content	Dog
+            cell_border
+            rule_content	SFX3
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	VerticalMovingElephant
+            cell_border
+            rule_content	Stationary
+            rule_content	Dog
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	VerticalMovingElephant
+            cell_border
+            rule_content	left
+            rule_content	Dog
+            cell_border
+            rule_content	SFX3
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	HorizontalMovingElephant
+            cell_border
+            rule_content	Stationary
+            rule_content	Dog
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	HorizontalMovingElephant
+            cell_border
+            rule_content	up
+            rule_content	Dog
+            cell_border
+            rule_content	SFX3
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	HorizontalMovingElephant
+            cell_border
+            rule_content	Stationary
+            rule_content	Dog
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	HorizontalMovingElephant
+            cell_border
+            rule_content	down
+            rule_content	Dog
+            cell_border
+            rule_content	SFX3
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingElephant
+            cell_border
+            rule_content	Cat
+            cell_border
+          ->
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content	Cat
+            cell_border
+            rule_content	SFX5
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingElephant
+            cell_border
+            rule_content	Mouse
+          ->
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content	Mouse
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingElephant
+            cell_border
+            rule_content	Dog
+            cell_border
+            rule_content	Obstacle
+            cell_border
+          ->
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content	Dog
+            cell_border
+            rule_content	Obstacle
+            cell_border
+            rule_content	SFX3
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingElephant
+            cell_border
+            rule_content	Dog
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content
+              >
+              Dog
+            cell_border
+            rule_content	SFX3
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingElephant
+            cell_border
+            rule_content	Obstacle
+            cell_border
+          ->
+          rule_part
+            rule_content	Elephant
+            cell_border
+            rule_content	Obstacle
+            cell_border
+            rule_content	SFX2
+          
+
+        rule_data
+          rule_part
+            rule_content
+              UP
+              Dog
+          ->
+          rule_part
+            rule_content
+              UP
+              UpMovingDog
+          
+
+        rule_data
+          rule_part
+            rule_content
+              DOWN
+              Dog
+          ->
+          rule_part
+            rule_content
+              DOWN
+              DownMovingDog
+          
+
+        rule_data
+          rule_part
+            rule_content
+              LEFT
+              Dog
+          ->
+          rule_part
+            rule_content
+              LEFT
+              LeftMovingDog
+          
+
+        rule_data
+          rule_part
+            rule_content
+              RIGHT
+              Dog
+          ->
+          rule_part
+            rule_content
+              RIGHT
+              RightMovingDog
+          
+
+        rule_data
+          rule_part
+            rule_content	UpMovingDog
+          ->
+          rule_part
+            rule_content
+              Up
+              UpMovingDog
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	LeftMovingDog
+          ->
+          rule_part
+            rule_content
+              Left
+              LeftMovingDog
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	RightMovingDog
+          ->
+          rule_part
+            rule_content
+              Right
+              RightMovingDog
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	DownMovingDog
+          ->
+          rule_part
+            rule_content
+              Down
+              DownMovingDog
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content	Stationary
+            rule_content	Cat
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content	right
+            rule_content	Cat
+            cell_border
+            rule_content	SFX4
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content	Stationary
+            rule_content	Cat
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content	left
+            rule_content	Cat
+            cell_border
+            rule_content	SFX4
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content	Stationary
+            rule_content	Cat
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content	up
+            rule_content	Cat
+            cell_border
+            rule_content	SFX4
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content	Stationary
+            rule_content	Cat
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content	down
+            rule_content	Cat
+            cell_border
+            rule_content	SFX4
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	VerticalMovingDog
+            cell_border
+            rule_content	Stationary
+            rule_content	Cat
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	VerticalMovingDog
+            cell_border
+            rule_content	right
+            rule_content	Cat
+            cell_border
+            rule_content	SFX4
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	VerticalMovingDog
+            cell_border
+            rule_content	Stationary
+            rule_content	Cat
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	VerticalMovingDog
+            cell_border
+            rule_content	left
+            rule_content	Cat
+            cell_border
+            rule_content	SFX4
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	HorizontalMovingDog
+            cell_border
+            rule_content	Stationary
+            rule_content	Cat
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	HorizontalMovingDog
+            cell_border
+            rule_content	up
+            rule_content	Cat
+            cell_border
+            rule_content	SFX4
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	HorizontalMovingDog
+            cell_border
+            rule_content	Stationary
+            rule_content	Cat
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	HorizontalMovingDog
+            cell_border
+            rule_content	down
+            rule_content	Cat
+            cell_border
+            rule_content	SFX4
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingDog
+            cell_border
+            rule_content	Mouse
+            cell_border
+          ->
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content	Mouse
+            cell_border
+            rule_content	SFX3
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingDog
+            cell_border
+            rule_content	Elephant
+          ->
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content	Elephant
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingDog
+            cell_border
+            rule_content	Cat
+            cell_border
+            rule_content	Obstacle
+            cell_border
+          ->
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content	Cat
+            cell_border
+            rule_content	Obstacle
+            cell_border
+            rule_content	SFX4
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingDog
+            cell_border
+            rule_content	Cat
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content
+              >
+              Cat
+            cell_border
+            rule_content	SFX4
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingDog
+            cell_border
+            rule_content	Obstacle
+            cell_border
+          ->
+          rule_part
+            rule_content	Dog
+            cell_border
+            rule_content	Obstacle
+            cell_border
+            rule_content	SFX2
+          
+
+        rule_data
+          rule_part
+            rule_content
+              UP
+              Cat
+          ->
+          rule_part
+            rule_content
+              UP
+              UpMovingCat
+          
+
+        rule_data
+          rule_part
+            rule_content
+              DOWN
+              Cat
+          ->
+          rule_part
+            rule_content
+              DOWN
+              DownMovingCat
+          
+
+        rule_data
+          rule_part
+            rule_content
+              LEFT
+              Cat
+          ->
+          rule_part
+            rule_content
+              LEFT
+              LeftMovingCat
+          
+
+        rule_data
+          rule_part
+            rule_content
+              RIGHT
+              Cat
+          ->
+          rule_part
+            rule_content
+              RIGHT
+              RightMovingCat
+          
+
+        rule_data
+          rule_part
+            rule_content	UpMovingCat
+          ->
+          rule_part
+            rule_content
+              Up
+              UpMovingCat
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	LeftMovingCat
+          ->
+          rule_part
+            rule_content
+              Left
+              LeftMovingCat
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	RightMovingCat
+          ->
+          rule_part
+            rule_content
+              Right
+              RightMovingCat
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	DownMovingCat
+          ->
+          rule_part
+            rule_content
+              Down
+              DownMovingCat
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content	Stationary
+            rule_content	Mouse
+            cell_border
+            rule_content	No
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content	right
+            rule_content	Mouse
+            cell_border
+            rule_content	SFX1
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content	Stationary
+            rule_content	Mouse
+            cell_border
+            rule_content	No
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content	left
+            rule_content	Mouse
+            cell_border
+            rule_content	SFX1
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content	Stationary
+            rule_content	Mouse
+            cell_border
+            rule_content	No
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content	up
+            rule_content	Mouse
+            cell_border
+            rule_content	SFX1
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content	Stationary
+            rule_content	Mouse
+            cell_border
+            rule_content	No
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content	down
+            rule_content	Mouse
+            cell_border
+            rule_content	SFX1
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	VerticalMovingCat
+            cell_border
+            rule_content	Stationary
+            rule_content	Mouse
+            cell_border
+            rule_content	No
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content	VerticalMovingCat
+            cell_border
+            rule_content	right
+            rule_content	Mouse
+            cell_border
+            rule_content	SFX1
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	VerticalMovingCat
+            cell_border
+            rule_content	Stationary
+            rule_content	Mouse
+            cell_border
+            rule_content	No
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content	VerticalMovingCat
+            cell_border
+            rule_content	left
+            rule_content	Mouse
+            cell_border
+            rule_content	SFX1
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	HorizontalMovingCat
+            cell_border
+            rule_content	Stationary
+            rule_content	Mouse
+            cell_border
+            rule_content	No
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content	HorizontalMovingCat
+            cell_border
+            rule_content	up
+            rule_content	Mouse
+            cell_border
+            rule_content	SFX1
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	HorizontalMovingCat
+            cell_border
+            rule_content	Stationary
+            rule_content	Mouse
+            cell_border
+            rule_content	No
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content	HorizontalMovingCat
+            cell_border
+            rule_content	down
+            rule_content	Mouse
+            cell_border
+            rule_content	SFX1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingCat
+            cell_border
+            rule_content	Elephant
+            cell_border
+          ->
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content	Elephant
+            cell_border
+            rule_content	SFX4
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingCat
+            cell_border
+            rule_content	Dog
+          ->
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content	Dog
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingCat
+            cell_border
+            rule_content	Mouse
+            cell_border
+            rule_content	Wall
+            cell_border
+          ->
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content	Mouse
+            cell_border
+            rule_content	Wall
+            cell_border
+            rule_content	SFX1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingCat
+            cell_border
+            rule_content	Mouse
+            cell_border
+            rule_content	No
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content
+              >
+              Mouse
+            cell_border
+            rule_content	SFX1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingCat
+            cell_border
+            rule_content	Obstacle
+            cell_border
+          ->
+          rule_part
+            rule_content	Cat
+            cell_border
+            rule_content	Obstacle
+            cell_border
+            rule_content	SFX2
+          
+
+        rule_data
+          rule_part
+            rule_content
+              UP
+              Mouse
+          ->
+          rule_part
+            rule_content
+              UP
+              UpMovingMouse
+          
+
+        rule_data
+          rule_part
+            rule_content
+              DOWN
+              Mouse
+          ->
+          rule_part
+            rule_content
+              DOWN
+              DownMovingMouse
+          
+
+        rule_data
+          rule_part
+            rule_content
+              LEFT
+              Mouse
+          ->
+          rule_part
+            rule_content
+              LEFT
+              LeftMovingMouse
+          
+
+        rule_data
+          rule_part
+            rule_content
+              RIGHT
+              Mouse
+          ->
+          rule_part
+            rule_content
+              RIGHT
+              RightMovingMouse
+          
+
+        rule_data
+          rule_part
+            rule_content	UpMovingMouse
+          ->
+          rule_part
+            rule_content
+              Up
+              UpMovingMouse
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	LeftMovingMouse
+          ->
+          rule_part
+            rule_content
+              Left
+              LeftMovingMouse
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	RightMovingMouse
+          ->
+          rule_part
+            rule_content
+              Right
+              RightMovingMouse
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	DownMovingMouse
+          ->
+          rule_part
+            rule_content
+              Down
+              DownMovingMouse
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content	Stationary
+            rule_content	Elephant
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content	right
+            rule_content	Elephant
+            cell_border
+            rule_content	SFX5
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content	Stationary
+            rule_content	Elephant
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content	left
+            rule_content	Elephant
+            cell_border
+            rule_content	SFX5
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content	Stationary
+            rule_content	Elephant
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content	up
+            rule_content	Elephant
+            cell_border
+            rule_content	SFX5
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content	Stationary
+            rule_content	Elephant
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content	down
+            rule_content	Elephant
+            cell_border
+            rule_content	SFX5
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	VerticalMovingMouse
+            cell_border
+            rule_content	Stationary
+            rule_content	Elephant
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	VerticalMovingMouse
+            cell_border
+            rule_content	right
+            rule_content	Elephant
+            cell_border
+            rule_content	SFX5
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	VerticalMovingMouse
+            cell_border
+            rule_content	Stationary
+            rule_content	Elephant
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	VerticalMovingMouse
+            cell_border
+            rule_content	left
+            rule_content	Elephant
+            cell_border
+            rule_content	SFX5
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	HorizontalMovingMouse
+            cell_border
+            rule_content	Stationary
+            rule_content	Elephant
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	HorizontalMovingMouse
+            cell_border
+            rule_content	up
+            rule_content	Elephant
+            cell_border
+            rule_content	SFX5
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	HorizontalMovingMouse
+            cell_border
+            rule_content	Stationary
+            rule_content	Elephant
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	HorizontalMovingMouse
+            cell_border
+            rule_content	down
+            rule_content	Elephant
+            cell_border
+            rule_content	SFX5
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingMouse
+            cell_border
+            rule_content	Dog
+            cell_border
+          ->
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content	Dog
+            cell_border
+            rule_content	SFX1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingMouse
+            cell_border
+            rule_content	Cat
+          ->
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content	Cat
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingMouse
+            cell_border
+            rule_content	Elephant
+            cell_border
+            rule_content	Wall
+            cell_border
+          ->
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content	Elephant
+            cell_border
+            rule_content	Wall
+            cell_border
+            rule_content	SFX5
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingMouse
+            cell_border
+            rule_content	Elephant
+            cell_border
+            rule_content	No
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content
+              >
+              Elephant
+            cell_border
+            rule_content	SFX5
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingMouse
+            cell_border
+            rule_content	Wall
+            cell_border
+          ->
+          rule_part
+            rule_content	Mouse
+            cell_border
+            rule_content	Wall
+            cell_border
+            rule_content	SFX2
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              MovingMouse
+            cell_border
+            rule_content	Hole
+            cell_border
+          ->
+          rule_part
+            rule_content
+              No
+              MovingMouse
+            cell_border
+            rule_content	Hole
+            cell_border
+            rule_content	SFX0
+          
+
+        endloop
+        
+
+    rule_block
+      rule_block_once
+    rule_block
+      rule_block_once
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Mouse
+          rule_part
+            rule_content	MMarker
+          ->
+          rule_part
+            rule_content
+              Mouse
+              Marker
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Cat
+          rule_part
+            rule_content	CMarker
+          ->
+          rule_part
+            rule_content
+              Cat
+              Marker
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Dog
+          rule_part
+            rule_content	DMarker
+          ->
+          rule_part
+            rule_content
+              Dog
+              Marker
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Elephant
+          rule_part
+            rule_content	EMarker
+          ->
+          rule_part
+            rule_content
+              Elephant
+              Marker
+          rule_part
+          
+
+  winconditions_section
+    condition_data
+      No
+      object_name	MovingMouse
+    condition_data
+      No
+      object_name	Mouse
+  levels_section
+    level_data	None
+    level_data	[['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  '#' '#' 'X']
+ ['X' '#' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.' '.' '#'
+  '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  '#' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' 'M' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.'
+  '.' '#' 'X']
+ ['X' '#' '#' 'H' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.' '.'
+  '.' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.'
+  '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.'
+  '.' '#' 'X']
+ ['X' '#' '.' '.' '#' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#'
+  '#' '#' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' 'X']
+ ['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X']]
+    level_data	None
+    level_data	[['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '#' '#' '.' '.' '.' '.' '#' '#' '#' '.' '#' '#' '#'
+  '.' '.' '.' '.' '#' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '#' '#' '.' '.' '.' '.' '#' 'H' '#' '.' '.' '.' '.'
+  '.' '.' '.' '.' '#' '#' '#' 'X']
+ ['X' '#' '.' 'M' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '#' '#' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#'
+  '#' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '#' '#' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '#' '#' '.' '.' '.' '.' '.' '.' '.' '#' '#' '#' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '#' '#' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.'
+  '#' '#' '#' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '.' '.'
+  '.' '#' '#' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '#' '#' '.' '.' '#' '#' '.' '.' '.' '.' '.' '.' '.'
+  '.' '#' '#' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '#' '.' '.'
+  '.' '.' '.' '#' '#' '#' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '#' '.' '.'
+  '.' '.' '#' '#' '#' '#' '#' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' 'X']
+ ['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X']]
+    level_data	None
+    level_data	[['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.'
+  '.' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '#' 'X']
+ ['X' '#' '#' 'H' '.' '.' '.' '.' '.' '0' '.' '.' '.' '.' '.' '#' '.' '.'
+  '.' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '0' '.' '.' '.' '.' '.' 'H'
+  '#' '#' 'X']
+ ['X' '#' 'C' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  '#' '#' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' 'X']
+ ['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X']]
+    level_data	None
+    level_data	[['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '#' '#' '.' '#' '#' '#' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '#' '#' '.' '.' '#' 'H' '#' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '#' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '0' '.' '.' '.' '0' '#'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '#' 'H' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '#' '#' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '0' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' 'H' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#' '.'
+  '.' '.' '.' '.' '#' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '#' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '0' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' 'C' '.' '.' '.' '.' '.' '.' '.' '#' 'H' '#' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '#' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' 'X']
+ ['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X']]
+    level_data	None
+    level_data	[['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '1' '#' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '#' 'H' '.' '.' '.' '.' '0' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '#'
+  'X']
+ ['X' '#' '.' 'D' '.' '.' '.' '.' '.' '.' '0' '.' '.' '.' '.' 'H' '#' '#'
+  'X']
+ ['X' '#' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  'X']
+ ['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X']]
+    level_data	None
+    level_data	[['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '#' '#' '#' 'X']
+ ['X' '#' '#' 'H' '.' '.' '.' '.' '.' '.' '.' '0' '.' '0' '.' '.' '.' '.'
+  '.' '.' '.' '.' 'H' '#' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '#' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '1' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '0' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '1' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' 'D' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '#' '#' '#' 'X']
+ ['X' '#' '#' 'H' '.' '.' '.' '.' '.' '.' '.' '.' '.' '0' '.' '.' '.' '.'
+  '.' '.' '.' '.' 'H' '#' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '#' '#' '#' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' 'X']
+ ['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X']]
+    level_data	None
+    level_data	[['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '1' '#' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '#' 'H' '.' '.' '.' '.' '0' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '.' '.' '2' '.' '.' '0' '.' '.' '.' '.' 'H' '#' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' 'E' '.' '#' '#' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  'X']
+ ['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X']]
+    level_data	None
+    level_data	[['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '#' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '1' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '0' '.' '.' '.' '#'
+  '.' '.' '.' '2' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' 'H' '#' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '#' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '#' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' 'H' '#' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '0' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '2' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '1'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' 'E' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' 'X']
+ ['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X']]
+    level_data	None
+    level_data	[['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '0' '.' '.' '.' '.' '.' '.' '.' 'H' '#'
+  'X']
+ ['X' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '3' '.' '.' '#' '#'
+  'X']
+ ['X' '#' 'H' '.' '.' '.' '0' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '#' '#' '#' '.' '.' '1' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '.' '.' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '#' '.' '.' '#' '#' '#' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '.' '.' 'D' '#' '.' '.' '#' 'H' '#' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '0' '.' '.' '.' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '1' '.' '.' '.' '.' '#'
+  'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  'X']
+ ['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X']]
+    level_data	None
+    level_data	[['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '#' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '0' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' 'H' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '3' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '#' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '#' 'H' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '0' '.' '.' '#' 'X']
+ ['X' '#' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' 'C' '#' 'X']
+ ['X' '#' '.' '.' '.' '2' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '#' '.' '.' '.' '2' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '#' '#' 'X']
+ ['X' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '#' '#' 'X']
+ ['X' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#' 'X']
+ ['X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X'
+  'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	None

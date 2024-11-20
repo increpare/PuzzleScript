@@ -1,0 +1,1014 @@
+ps_game
+  objects_section
+    object_data
+      object_name	LowFloorRaw
+      
+
+      colors
+        color	BLACK
+      
+
+      
+
+    object_data
+      object_name	LowFloor1
+      
+
+      colors
+        color	#111411
+        color	#191d19
+        color	#202020
+        color	#252725
+      
+
+      sprite
+        ['0' '1' '0' '1' '1']
+        ['1' '2' '3' '1' '0']
+        ['2' '3' '3' '2' '0']
+        ['0' '2' '3' '2' '1']
+        ['0' '2' '1' '1' '0']
+    object_data
+      object_name	LowFloor2
+      
+
+      colors
+        color	#111411
+        color	#191d19
+        color	#202020
+        color	#252725
+      
+
+      sprite
+        ['0' '1' '0' '0' '1']
+        ['2' '2' '3' '1' '2']
+        ['1' '2' '3' '3' '1']
+        ['0' '1' '3' '1' '0']
+        ['1' '0' '1' '0' '1']
+    object_data
+      object_name	WallFacade
+      
+
+      colors
+        color	#555555
+        color	#666666
+        color	#777777
+      
+
+      sprite
+        ['2' '1' '2' '2' '1']
+        ['1' '0' '0' '1' '1']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	HighFloor
+      
+
+      colors
+        color	#909090
+        color	#999999
+        color	#bbbbbb
+        color	#cccccc
+      
+
+      sprite
+        ['3' '3' '2' '3' '2']
+        ['3' '1' '0' '1' '2']
+        ['2' '0' '0' '0' '2']
+        ['3' '1' '0' '1' '2']
+        ['3' '2' '2' '2' '2']
+    object_data
+      object_name	LowPlayer
+      
+
+      colors
+        color	#686868
+        color	#707070
+        color	#787878
+        color	#808080
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '2' '3' '2' '.']
+        ['.' '1' '2' '1' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	HighPlayer
+      
+
+      colors
+        color	#e8e8e8
+        color	#f0f0f0
+        color	#f8f8f8
+        color	#ffffff
+      
+
+      sprite
+        ['.' '2' '3' '2' '.']
+        ['.' '1' '2' '1' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Crate
+      
+
+      colors
+        color	#999944
+        color	#88883a
+        color	#777733
+      
+
+      sprite
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '1']
+        ['2' '2' '2' '2' '2']
+        ['2' '2' '2' '2' '2']
+    object_data
+      object_name	HighCrate
+      
+
+      colors
+        color	#dddd55
+        color	#eeee50
+        color	#cccc48
+      
+
+      sprite
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '1']
+        ['2' '2' '2' '2' '2']
+        ['2' '2' '2' '2' '2']
+    object_data
+      object_name	BurntCrate
+      
+
+      colors
+        color	#222222
+        color	#111111
+        color	#000000
+      
+
+      sprite
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '1']
+        ['2' '2' '2' '2' '2']
+        ['2' '2' '2' '2' '2']
+    object_data
+      object_name	MeltingIce
+      
+
+      colors
+        color	White
+        color	LightBlue
+        color	#9999ff
+        color	#330000
+      
+
+      sprite
+        ['.' '3' '3' '.' '.']
+        ['3' '3' '3' '3' '.']
+        ['3' '1' '0' '1' '3']
+        ['1' '1' '3' '3' '0']
+        ['2' '1' '1' '1' '2']
+    object_data
+      object_name	StaticIce
+      
+
+      colors
+        color	White
+        color	LightBlue
+        color	#9999ff
+      
+
+      sprite
+        ['1' '0' '0' '0' '2']
+        ['1' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '1']
+        ['1' '0' '0' '1' '2']
+        ['2' '1' '1' '2' '2']
+    object_data
+      object_name	IceCubeN
+      
+
+      colors
+        color	White
+        color	LightBlue
+        color	#9999ff
+      
+
+      sprite
+        ['1' '0' '0' '0' '2']
+        ['1' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '1']
+        ['1' '0' '0' '1' '2']
+        ['2' '1' '1' '2' '2']
+    object_data
+      object_name	IceCubeE
+      
+
+      colors
+        color	White
+        color	LightBlue
+        color	#9999ff
+      
+
+      sprite
+        ['1' '0' '0' '0' '2']
+        ['1' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '1']
+        ['1' '0' '0' '1' '2']
+        ['2' '1' '1' '2' '2']
+    object_data
+      object_name	IceCubeS
+      
+
+      colors
+        color	White
+        color	LightBlue
+        color	#9999ff
+      
+
+      sprite
+        ['1' '0' '0' '0' '2']
+        ['1' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '1']
+        ['1' '0' '0' '1' '2']
+        ['2' '1' '1' '2' '2']
+    object_data
+      object_name	IceCubeW
+      
+
+      colors
+        color	White
+        color	LightBlue
+        color	#9999ff
+      
+
+      sprite
+        ['1' '0' '0' '0' '2']
+        ['1' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '1']
+        ['1' '0' '0' '1' '2']
+        ['2' '1' '1' '2' '2']
+    object_data
+      object_name	FirePit1
+      
+
+      colors
+        color	#990000
+        color	#770000
+        color	#550000
+        color	#330000
+      
+
+      sprite
+        ['0' '2' '1' '1' '1']
+        ['1' '3' '3' '2' '1']
+        ['0' '2' '3' '2' '1']
+        ['3' '2' '1' '1' '0']
+        ['2' '3' '1' '2' '1']
+    object_data
+      object_name	FirePit2
+      
+
+      colors
+        color	#990000
+        color	#770000
+        color	#550000
+        color	#330000
+      
+
+      sprite
+        ['1' '0' '3' '1' '1']
+        ['2' '1' '2' '3' '3']
+        ['1' '1' '0' '2' '1']
+        ['2' '3' '2' '1' '3']
+        ['2' '0' '1' '2' '2']
+    object_data
+      object_name	Pillar
+      
+
+      colors
+        color	#cccccc
+        color	#dddddd
+        color	#eeeeee
+        color	#ffffff
+        color	#bbbbbb
+        color	#aaaaaa
+      
+
+      sprite
+        ['3' '2' '1' '2' '3']
+        ['3' '3' '3' '3' '3']
+        ['0' '2' '1' '2' '0']
+        ['2' '2' '1' '2' '2']
+        ['0' '1' '3' '1' '0']
+    object_data
+      object_name	IceCubeShadow
+      
+
+      colors
+        color	RED
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Coin
+      
+
+      colors
+        color	WHITE
+        color	#eeee55
+        color	#aaaa33
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '1' '1' '1' '2']
+        ['0' '1' '2' '1' '2']
+        ['0' '1' '1' '1' '2']
+        ['.' '2' '2' '2' '.']
+    object_data
+      object_name	StairsNorth
+      
+
+      colors
+        color	#333333
+        color	#444444
+        color	#555555
+        color	#666666
+        color	#777777
+      
+
+      sprite
+        ['4' '4' '4' '4' '4']
+        ['4' '3' '3' '3' '4']
+        ['3' '2' '2' '2' '3']
+        ['2' '1' '1' '1' '2']
+        ['1' '0' '0' '0' '1']
+  legend_section
+    legend_data
+      .
+      object_name	LowFloorRaw
+    legend_data
+      "
+      object_name	HighFloor
+    legend_data
+      @
+      object_name	LowPlayer
+      legend_operation
+        object_name	LowFloorRaw
+    legend_data
+      $
+      object_name	Coin
+      legend_operation
+        object_name	HighFloor
+    legend_data
+      £
+      object_name	Coin
+    legend_data
+      H
+      object_name	HighCrate
+      legend_operation
+        object_name	HighFloor
+    legend_data
+      :
+      object_name	WallFacade
+      legend_operation
+        object_name	FirePit1
+      legend_operation
+        object_name	LowFloorRaw
+    legend_data
+      ~
+      object_name	WallFacade
+      legend_operation
+        object_name	LowFloorRaw
+    legend_data
+      #
+      object_name	Crate
+      legend_operation
+        object_name	LowFloorRaw
+    legend_data
+      W
+      object_name	Crate
+      legend_operation
+        object_name	LowFloorRaw
+      legend_operation
+        object_name	WallFacade
+    legend_data
+      !
+      object_name	FirePit1
+      legend_operation
+        object_name	LowFloorRaw
+    legend_data
+      I
+      object_name	Pillar
+      legend_operation
+        object_name	HighFloor
+    legend_data
+      %
+      object_name	StaticIce
+      legend_operation
+        object_name	LowFloorRaw
+    legend_data
+      &
+      object_name	StaticIce
+      legend_operation
+        object_name	LowFloorRaw
+      legend_operation
+        object_name	WallFacade
+    legend_data
+      /
+      object_name	StairsNorth
+      legend_operation
+        object_name	LowFloorRaw
+    legend_data
+      FirePit
+      object_name	FirePit1
+      legend_operation
+        object_name	FirePit2
+    legend_data
+      LowFloor
+      object_name	LowFloor1
+      legend_operation
+        object_name	LowFloor2
+    legend_data
+      Background
+      object_name	LowFloor
+      legend_operation
+        object_name	HighFloor
+      legend_operation
+        object_name	LowFloorRaw
+    legend_data
+      Player
+      object_name	LowPlayer
+      legend_operation
+        object_name	HighPlayer
+    legend_data
+      Obstacle
+      object_name	StairsNorth
+    legend_data
+      BlocksLow
+      object_name	Crate
+      legend_operation
+        object_name	HighFloor
+      legend_operation
+        object_name	StaticIce
+      legend_operation
+        object_name	Pillar
+      legend_operation
+        object_name	BurntCrate
+    legend_data
+      Pushable
+      object_name	Crate
+      legend_operation
+        object_name	StaticIce
+    legend_data
+      MovingIce
+      object_name	IceCubeE
+      legend_operation
+        object_name	IceCubeS
+      legend_operation
+        object_name	IceCubeW
+      legend_operation
+        object_name	IceCubeN
+    legend_data
+      IceCube
+      object_name	StaticIce
+      legend_operation
+        object_name	MovingIce
+    legend_data
+      Grounded
+      object_name	IceCube
+      legend_operation
+        object_name	LowPlayer
+      legend_operation
+        object_name	Crate
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	StairsNorth
+      object_name	FirePit
+    layer_data
+      object_name	WallFacade
+    layer_data
+      object_name	Crate
+      object_name	IceCube
+    layer_data
+      object_name	MovingIce
+      object_name	LowPlayer
+    layer_data
+      object_name	MeltingIce
+      object_name	BurntCrate
+    layer_data
+      object_name	Pillar
+      object_name	HighPlayer
+    layer_data
+      object_name	HighCrate
+      object_name	Coin
+    layer_data
+      object_name	IceCubeShadow
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content	LowFloorRaw
+          ->
+          rule_part
+            rule_content
+              random
+              LowFloor
+          
+
+        rule_data
+          rule_part
+            rule_content	FirePit
+          ->
+          rule_part
+            rule_content
+              random
+              FirePit
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              LowPlayer
+            cell_border
+            rule_content	Pushable
+          ->
+          rule_part
+            rule_content
+              >
+              LowPlayer
+            cell_border
+            rule_content
+              >
+              Pushable
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              HighPlayer
+            cell_border
+            rule_content	HighCrate
+          ->
+          rule_part
+            rule_content
+              >
+              HighPlayer
+            cell_border
+            rule_content
+              >
+              HighCrate
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Grounded
+            cell_border
+            rule_content	Pillar
+          ->
+          rule_part
+            rule_content	Grounded
+            cell_border
+            rule_content	Pillar
+          
+
+        rule_data
+          rule_part
+            rule_content
+              MeltingIce
+              FirePit
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content
+              IceCube
+              FirePit
+          ->
+          rule_part
+            rule_content
+              MeltingIce
+              FirePit
+          command
+            sound
+              sound_id	0
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	RIGHT
+          rule_part
+            rule_content
+              >
+              StaticIce
+          ->
+          rule_part
+            rule_content
+              >
+              IceCubeE
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          prefix	DOWN
+          rule_part
+            rule_content
+              >
+              StaticIce
+          ->
+          rule_part
+            rule_content
+              >
+              IceCubeS
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          prefix	LEFT
+          rule_part
+            rule_content
+              >
+              StaticIce
+          ->
+          rule_part
+            rule_content
+              >
+              IceCubeW
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          prefix	UP
+          rule_part
+            rule_content
+              >
+              StaticIce
+          ->
+          rule_part
+            rule_content
+              >
+              IceCubeN
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          rule_part
+            rule_content
+              MovingIce
+              no
+              IceCubeShadow
+          ->
+          rule_part
+            rule_content
+              MovingIce
+              IceCubeShadow
+          
+
+        rule_data
+          prefix	RIGHT
+          rule_part
+            rule_content	IceCubeE
+          ->
+          rule_part
+            rule_content
+              >
+              IceCubeE
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	DOWN
+          rule_part
+            rule_content	IceCubeS
+          ->
+          rule_part
+            rule_content
+              >
+              IceCubeS
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	LEFT
+          rule_part
+            rule_content	IceCubeW
+          ->
+          rule_part
+            rule_content
+              >
+              IceCubeW
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	UP
+          rule_part
+            rule_content	IceCubeN
+          ->
+          rule_part
+            rule_content
+              >
+              IceCubeN
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              IceCube
+            cell_border
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	StaticIce
+            cell_border
+            rule_content	Obstacle
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Crate
+            cell_border
+            rule_content	Obstacle
+          ->
+          rule_part
+            rule_content	Crate
+            cell_border
+            rule_content	Obstacle
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              LowPlayer
+              FirePit
+          ->
+          rule_part
+            rule_content	FirePit
+          command
+            sound
+              sound_id	5
+          None
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              MovingIce
+              IceCubeShadow
+          ->
+          rule_part
+            rule_content	StaticIce
+          command
+            sound
+              sound_id	5
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	IceCubeShadow
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              Crate
+              FirePit
+          ->
+          rule_part
+            rule_content
+              BurntCrate
+              FirePit
+          command
+            sound
+              sound_id	5
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              HighPlayer
+            cell_border
+            rule_content	Coin
+            rule_content	HighFloor
+          ->
+          rule_part
+            cell_border
+            rule_content	HighPlayer
+            rule_content	HighFloor
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              LowPlayer
+            cell_border
+            rule_content	Coin
+            rule_content	LowFloor
+          ->
+          rule_part
+            cell_border
+            rule_content	LowPlayer
+            rule_content	LowFloor
+          
+
+        rule_data
+          prefix	UP
+          rule_part
+            rule_content
+              >
+              LowPlayer
+              StairsNorth
+            cell_border
+            rule_content	HighFloor
+          ->
+          rule_part
+            rule_content	StairsNorth
+            cell_border
+            rule_content	HighPlayer
+            rule_content	HighFloor
+          command
+            sound
+              sound_id	6
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Grounded
+            cell_border
+            rule_content	HighFloor
+          ->
+          rule_part
+            rule_content	Grounded
+            cell_border
+            rule_content	HighFloor
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              HighPlayer
+              no
+              BlocksLow
+          ->
+          rule_part
+            rule_content	LowPlayer
+          command
+            sound
+              sound_id	1
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              HighCrate
+              no
+              BlocksLow
+          ->
+          rule_part
+            rule_content	Crate
+          command
+            sound
+              sound_id	1
+          command
+            command_keyword	again
+          
+
+  winconditions_section
+    condition_data
+      No
+      object_name	Coin
+  levels_section
+    level_data	None
+    level_data	[['"' '"' '"' '"' '"' '"' '!' '!' '!' '"' '"' '"']
+ ['"' 'h' '"' '"' '"' '"' '.' '.' '!' '"' '$' '"']
+ ['"' '"' '"' '"' '"' '"' '#' '.' '!' '"' '"' '"']
+ ['"' '"' '"' '"' '"' '"' '.' '.' '!' '"' '"' '"']
+ ['i' '~' '~' '/' 'i' '/' '.' '.' '!' ':' ':' ':']
+ ['"' '.' '.' '.' '"' '.' '.' '.' '!' '!' '!' '!']
+ ['i' '"' '"' '"' 'i' '.' '.' '.' '.' '.' '.' '.']
+ ['"' '/' '~' '~' '"' '!' '!' '.' '.' '.' '#' '.']
+ ['i' '.' '@' '.' 'i' '!' '!' '.' '.' '.' '.' '.']]
+    level_data	None
+    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '£']
+ ['.' '!' '!' '!' '!' '!' '!' '!' '!' '!' '.']
+ ['.' '!' '!' '!' '!' '!' '!' '!' '!' '!' '.']
+ ['.' '!' '!' '.' '%' '%' '%' '.' '!' '!' '.']
+ ['.' '!' '!' '%' '.' '.' '.' '%' '!' '!' '.']
+ ['.' '!' '!' '%' '.' '@' '.' '%' '!' '!' '.']
+ ['.' '!' '!' '%' '.' '.' '.' '%' '!' '!' '.']
+ ['.' '!' '!' '.' '%' '%' '%' '.' '!' '!' '.']
+ ['.' '!' '!' '!' '!' '!' '!' '!' '!' '!' '.']
+ ['.' '!' '!' '!' '!' '!' '!' '!' '!' '!' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
+    level_data	None
+    level_data	[['!' '!' '.' '@' '.' '"' '"' '"' '"' '!' '!']
+ ['!' '!' '%' '.' '.' '"' '~' '/' '"' '!' '!']
+ ['!' '!' '.' '%' '.' '&' '.' '.' '~' '!' '!']
+ ['!' '!' '%' '.' '.' '%' '.' '.' '.' '!' '!']
+ ['!' '!' '.' '%' '.' '%' '.' '%' '.' '!' '!']
+ ['!' '!' '%' '.' '.' '%' '.' '.' '%' '!' '!']
+ ['!' '!' '.' '%' '.' '%' '.' '%' '.' '!' '!']
+ ['!' '!' '.' '.' '.' '%' '.' '.' '%' '!' '!']
+ ['!' '!' '.' '.' '.' '%' '.' '%' '.' '!' '!']
+ ['!' '!' '$' '.' '.' '"' '.' '.' '%' '!' '!']
+ ['!' '!' '"' '"' '"' '"' '.' '%' '.' '!' '!']]
+    level_data	None
+    level_data	[['"' '"' '"' '"' '"' '"' '"' '"' '"' '"' '$']
+ ['"' '"' '"' '"' '"' '"' '"' '"' '"' '"' '"']
+ ['~' '~' '~' '~' 'W' '~' 'W' '~' '~' ':' ':']
+ ['.' '%' '@' '.' '#' '.' '.' '#' '.' '!' '!']
+ ['.' '.' '.' '.' '#' '.' '#' '.' '.' '!' '!']
+ ['!' '!' '!' '!' '"' '"' '"' '"' '"' '.' '.']
+ ['!' '!' '!' '!' '"' '"' '"' '"' '"' '.' '.']
+ ['.' '.' '.' '.' '~' '/' '~' '~' '~' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
+    level_data	None
+    level_data	[['!' '"' '!' '!' '!' '!' '!' '!' '!' '!' '!' '"']
+ ['!' '~' '.' '.' '"' '.' '.' '"' '"' '.' '.' ':']
+ ['!' '.' '.' '.' '~' '.' '.' '/' '~' '$' '.' '!']
+ ['!' '"' '.' '.' '.' '.' '.' '.' '@' '~' '.' '!']
+ ['!' '~' '.' '.' '.' '"' '.' '.' '.' '.' '.' '!']
+ ['!' '.' '.' '.' '.' '~' '.' '%' '.' '.' '.' '!']
+ ['!' '.' '.' '.' '.' '%' '.' '.' '.' '.' '.' '!']
+ ['!' '.' '"' '.' '.' '.' '.' '%' '.' '.' '.' '!']
+ ['!' '.' '~' '.' '.' '.' '.' '.' '.' '.' '"' '!']
+ ['!' '.' '.' '"' '.' '.' '.' '.' '.' '.' '~' '!']
+ ['!' '"' '.' '~' '.' '.' '.' '"' '.' '.' '.' '!']
+ ['!' ':' '!' '!' '!' '!' '!' ':' '!' '!' '!' '!']]
+    level_data	None
+    level_data	[['.' '.' '"' '"' '.' '"' '.' '"' '.' '"' '.' '.' '!' '!' '!']
+ ['.' '.' 'w' '~' '.' '"' '#' '"' '.' '~' '#' '.' '!' '"' '!']
+ ['"' '"' '.' '.' '.' '~' '.' '~' '#' '.' '.' '"' '!' '~' '!']
+ ['~' '&' '.' '.' '@' '.' '.' '.' '.' '.' '.' '~' '!' '£' '!']
+ ['"' '"' '.' '.' '.' '.' '#' '"' '"' '"' '.' '"' '!' '.' '!']
+ ['~' '~' '.' '.' '.' '#' '.' '"' '/' '"' '#' '~' '!' '"' '!']
+ ['.' '.' '.' '.' '.' '.' '.' '~' '.' '"' '.' '.' '!' ':' '!']]
+    level_data	None
+    level_data	[['.' '.' '.' '#' '.' '"' '$' '"' '.' '#' '.' '.' '.']
+ ['.' '.' '#' '.' '.' '"' '"' '"' '.' '.' '#' '.' '.']
+ ['!' '!' '.' '#' '.' ':' ':' ':' '.' '#' '.' '!' '!']
+ ['$' '"' '!' '.' '.' '.' '!' '.' '.' '.' '!' '"' '$']
+ ['"' '"' '!' '.' '!' '!' '!' '!' '!' '.' '!' '"' '"']
+ ['~' '~' '!' '.' '!' 'h' '"' 'h' '!' '.' '!' '~' '~']
+ ['.' '#' '!' '!' '!' '"' '"' '"' '!' '!' '!' '#' '.']
+ ['.' '.' '.' '.' '.' 'h' '"' 'h' '.' '.' '.' '.' '.']
+ ['"' '!' '!' '.' '.' '"' '"' '"' '.' '.' '!' '!' '"']
+ ['"' '"' '!' '.' '.' '~' '/' '~' '.' '.' '!' '"' '"']
+ ['"' '"' '"' '.' '.' '.' '@' '.' '.' '.' '"' '"' '"']
+ [':' '~' '~' '.' '%' '.' '%' '.' '%' '.' '~' '~' ':']
+ ['!' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '!']]
+    level_data	None

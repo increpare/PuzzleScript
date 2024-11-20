@@ -69,7 +69,18 @@ if not os.path.isfile(generated_filepath) or args.overwrite:
 
     generator = generate.cfg(model, grammar)
     print("Generating code...")
-    generated_code = generator(prompt, max_tokens=1024)
+    # generated_code = generator(prompt, max_tokens=1024)
+    # Stream the output
+    stream = generator.stream(prompt_filepath, max_tokens=1024)
+    all_generated_code = []
+    with open(generated_filepath, 'w') as f:
+        f.write('')
+        for i in range(1024):
+            generated_code = next(stream)
+            all_generated_code.append(generated_code)
+            print(generated_code)
+            f.write(generated_code)
+    generated_code = ''.join(all_generated_code)
 
     with open(generated_filepath, 'w') as f:
         f.write(generated_code)

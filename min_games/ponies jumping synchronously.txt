@@ -1,0 +1,429 @@
+OBJECTS
+
+Background(special, automatically placed in its own layer)
+lightblue
+
+JumpVariableA
+lightblue
+0...0
+.000.
+.0.0.
+.000.
+0...0
+
+JumpVariableA1
+lightblue
+0...0
+..0..
+..0..
+..0..
+0...0
+
+JumpVariableA2
+lightblue
+0...0
+.0.0.
+.0.0.
+.0.0.
+0...0
+
+JumpVariableT
+lightblue
+..0..
+.000.
+.0.0.
+.000.
+.....
+
+JumpVariableT1
+lightblue
+..0..
+..0..
+..0..
+..0..
+.....
+
+JumpVariableT2
+lightblue
+..0..
+.0.0.
+.0.0.
+.0.0.
+.....
+
+JumpVariableB
+lightblue
+.....
+.000.
+.0.0.
+.000.
+..0..
+
+JumpVariableB1
+lightblue
+.....
+..0..
+..0..
+..0..
+..0..
+
+JumpVariableB2
+lightblue
+.....
+.0.0.
+.0.0.
+.0.0.
+..0..
+
+Dirt
+brown darkbrown
+00000
+01000
+00000
+00010
+00000
+
+Tunnel
+brown darkbrown
+00000
+01000
+.....
+.....
+.....
+
+Grass
+brown lightgreen green darkBrown
+11211
+21020
+00000
+00030
+00000
+
+Exit
+pink red
+.1.1.
+10101
+10001
+.101.
+..1..
+
+WoodenWall
+Brown orange
+.111.
+.001.
+.111.
+.100.
+.111.
+
+Teleport
+Brown darkBrown pink white
+23332
+02220
+00000
+00010
+00000
+
+Fire
+red orange yellow
+..0..
+.00..
+0110.
+01210
+.020.
+
+TwiLeft
+purple
+.0...
+00...
+.0000
+.0.0.
+.0.0.
+
+TwiRight
+purple
+...0.
+...00
+0000.
+.0.0.
+.0.0.
+
+TeleportingTwilight
+purple
+...0.
+...00
+0000.
+.0.0.
+.0.0.
+
+RdLeft
+#00dddd
+.0...
+00...
+.0000
+.0.0.
+.0.0.
+
+RdRight
+#00dddd
+...0.
+...00
+0000.
+.0.0.
+.0.0.
+
+AbLeft
+yellow red
+..1..
+.01..
+00...
+.0000
+.0.0.
+
+AbRight
+yellow red
+..1..
+..10.
+...00
+0000.
+.0.0.
+
+AjLeft
+orange
+.0...
+00...
+.0000
+.0.0.
+.0.0.
+
+AjRight
+orange
+...0.
+...00
+0000.
+.0.0.
+.0.0.
+
+DeadPony
+lightGray darkGray
+.111.
+10001
+10101
+10001
+10101
+
+Boulder
+lightGray darkGray
+.....
+.111.
+10001
+10001
+.111.
+
+
+LEGEND
+
+Applejack = AjLeft or AjRight
+RainbowDash = RdLeft or RdRight
+Twilight = TwiLeft or TwiRight
+AppleBloom = AbLeft or AbRight
+Player = Twilight or Applejack or AppleBloom or RainbowDash
+Obstacle = Grass or Dirt or DeadPony or WoodenWall or Teleport or Boulder
+JumpObstacle = Obstacle or Player or Tunnel
+JumpObstacleForFillies = Obstacle or Player
+JumpVariablePositiveA = JumpVariableA1 or JumpVariableA2
+JumpVariablePositiveT = JumpVariableT1 or JumpVariableT2
+JumpVariablePositiveB = JumpVariableB1 or JumpVariableB2
+. = Background
+# = Dirt
+~ = Grass
+| = WoodenWall
+T = TwiRight
+A = AjRight
+D = RdRight
+B = AbRight
+J = JumpVariableA
+H = JumpVariableT
+L = JumpVariableB
+E = Exit
+^ = Teleport
+F = Fire
+O = Boulder
+- = Tunnel
+
+COLLISIONLAYERS
+
+Background
+JumpVariableA, JumpVariablePositiveA
+JumpVariableT, JumpVariablePositiveT
+JumpVariableB, JumpVariablePositiveB
+Exit
+Fire, Tunnel
+Player
+Obstacle, TeleportingTwilight
+
+RULES
+
+[ > Player | StationaryPlayer ] -> cancel 
+[ > Player | < Player ] -> cancel 
+[ > Applejack | Tunnel ] -> [ Applejack | Tunnel ] 
+[ > RainbowDash | Tunnel ] -> [ RainbowDash | Tunnel ] 
+[ > Twilight | Tunnel ] -> [ Twilight | Tunnel ] 
+Vertical [ > AppleBloom | Tunnel ] -> [ AppleBloom | Tunnel ] 
+[ Left TwiRight ] -> [ Left TwiLeft ] 
+[ Right TwiLeft ] -> [ Right TwiRight ] 
+[ Left RdRight ] -> [ Left RdLeft ] 
+[ Right RdLeft ] -> [ Right RdRight ] 
+[ Left AjRight ] -> [ Left AjLeft ] 
+[ Right AjLeft ] -> [ Right AjRight ] 
+[ Left AbRight ] -> [ Left AbLeft ] 
+[ Right AbLeft ] -> [ Right AbRight ] 
+Right [ Action Applejack | WoodenWall ] -> [ AjLeft |  ] 
+Left [ Action Applejack | WoodenWall ] -> [ AjRight |  ] 
+Down [ Action Twilight | Teleport ] [ no Player | Teleport ] -> [  | Teleport ] [ TeleportingTwilight | Teleport ] 
+late [ TeleportingTwilight ] -> [ TwiRight ] 
+UP [ Up Applejack | NoObstacle No Player no tunnel ] [ JumpVariableA ] -> [ Up Applejack |  ] [ JumpVariableA2 ] 
+DOWN [ Up Applejack | noobstacle No Player no tunnel ] [ JumpVariablePositiveA ] -> [ Applejack |  ] [ JumpVariablePositiveA ] 
+DOWN [ Up Applejack | noobstacle No Player no tunnel ] [ JumpVariableA2 ] -> [ Applejack |  ] [ JumpVariableA2 ] 
+HORIZONTAL [ > Applejack | NOobstacle No Player no tunnel ] [ JumpVariableA1 ] -> [  | Applejack ] [ JumpVariableA ] 
+HORIZONTAL [ > Applejack | NOobstacle No Player no tunnel ] [ JumpVariableA2 ] -> [  | Applejack ] [ JumpVariableA1 ] 
+HORIZONTAL [ > Applejack | JumpObstacle ] [ JumpVariableA1 ] -> [ Applejack | JumpObstacle ] [ JumpVariableA ] 
+HORIZONTAL [ > Applejack | JumpObstacle ] [ JumpVariableA2 ] -> [ Applejack | JumpObstacle ] [ JumpVariableA1 ] 
+LATE DOWN [ Applejack | NOobstacle No Player no tunnel ] [ JumpVariableA ] -> [  | Applejack ] [ JumpVariableA ] 
+LATE DOWN [ Applejack | Obstacle ] [ JumpVariablePositiveA ] -> [ Applejack | Obstacle ] [ JumpVariableA ] 
+UP [ Up Twilight | NoObstacle No Player no tunnel ] [ JumpVariableT ] -> [ Up Twilight |  ] [ JumpVariableT2 ] 
+DOWN [ Up Twilight | noobstacle No Player no tunnel ] [ JumpVariablePositiveT ] -> [ Twilight |  ] [ JumpVariablePositiveT ] 
+DOWN [ Up Twilight | noobstacle No Player no tunnel ] [ JumpVariableT2 ] -> [ Twilight |  ] [ JumpVariableT2 ] 
+HORIZONTAL [ > Twilight | NOobstacle No Player no tunnel ] [ JumpVariableT1 ] -> [  | Twilight ] [ JumpVariableT ] 
+HORIZONTAL [ > Twilight | NOobstacle No Player no tunnel ] [ JumpVariableT2 ] -> [  | Twilight ] [ JumpVariableT1 ] 
+HORIZONTAL [ > Twilight | JumpObstacle ] [ JumpVariableT1 ] -> [ Twilight | JumpObstacle ] [ JumpVariableT ] 
+HORIZONTAL [ > Twilight | JumpObstacle ] [ JumpVariableT2 ] -> [ Twilight | JumpObstacle ] [ JumpVariableT1 ] 
+LATE DOWN [ Twilight | NOobstacle No Player no tunnel ] [ JumpVariableT ] -> [  | Twilight ] [ JumpVariableT ] 
+LATE DOWN [ Twilight | Obstacle ] [ JumpVariablePositiveT ] -> [ Twilight | Obstacle ] [ JumpVariableT ] 
+UP [ Up AppleBloom | NoObstacle No Player no tunnel ] [ JumpVariableB ] -> [ Up AppleBloom |  ] [ JumpVariableB2 ] 
+DOWN [ Up AppleBloom | noobstacle No Player no tunnel ] [ JumpVariablePositiveB ] -> [ AppleBloom |  ] [ JumpVariablePositiveB ] 
+DOWN [ Up AppleBloom | noobstacle No Player no tunnel ] [ JumpVariableB2 ] -> [ AppleBloom |  ] [ JumpVariableB2 ] 
+HORIZONTAL [ > AppleBloom | NOobstacle No Player ] [ JumpVariableB1 ] -> [  | AppleBloom ] [ JumpVariableB ] 
+HORIZONTAL [ > AppleBloom | NOobstacle No Player ] [ JumpVariableB2 ] -> [  | AppleBloom ] [ JumpVariableB1 ] 
+HORIZONTAL [ > AppleBloom | JumpObstacleForFillies ] [ JumpVariableB1 ] -> [ AppleBloom | JumpObstacleForFillies ] [ JumpVariableB ] 
+HORIZONTAL [ > AppleBloom | JumpObstacleForFillies ] [ JumpVariableB2 ] -> [ AppleBloom | JumpObstacleForFillies ] [ JumpVariableB1 ] 
+LATE DOWN [ AppleBloom | NOobstacle No Player no tunnel ] [ JumpVariableB ] -> [  | AppleBloom ] [ JumpVariableB ] 
+LATE DOWN [ AppleBloom | Obstacle ] [ JumpVariablePositiveB ] -> [ AppleBloom | Obstacle ] [ JumpVariableB ] 
+late [ Player Fire ] -> [ DeadPony Fire ] 
+[ > Applejack | Boulder | noObstacle No Player ] -> [ > Applejack | > Boulder |  ] 
+[ > RainbowDash | Boulder | noObstacle No Player ] -> [ > RainbowDash |  |  ] 
+Right [ Action TwiRight | Boulder ] -> [ TwiRight |  ] 
+Left [ Action TwiLeft | Boulder ] -> [ TwiLeft |  ] 
+[ Boulder Fire ] -> [ Boulder ] 
+late down [ Boulder | Player ] -> [  | DeadPony ] 
+late down [ Boulder | noObstacle no Tunnel ] -> [  | Boulder no Fire ] 
+late [ Boulder Fire ] -> [ Boulder ] 
+
+
+WINCONDITIONS
+
+some Player
+all Exit on Player
+no DeadPony
+
+LEVELS
+
+..........H
+...........
+.........E.
+..T....~~~~
+~~~~~~#####
+###########
+
+..........J
+..~~~~~~~~~
+...########
+.A.|.o...E#
+######.####
+###########
+
+...........H
+............
+............
+.T....E.O...
+~^~FFF~~~~^~
+############
+
+#########
+....#..E#
+....O..##
+....#..##
+.D..#..##
+#########
+
+.........J
+..........
+...~~~~~.~
+~~O..O...#
+##|A.O..E#
+##########
+
+J.....###
+......###
+...D..#.E
+....#..O#
+.A..O..|#
+~~~######
+#########
+
+##.......JL#####
+---..O.A.O.#...#
+###~.~~~~~.#..E#
+###.F..B..F-.###
+####.#####.#####
+################
+
+~~~~~..........L
+#####.........D.
+###E-....O......
+######...O......
+#######.###...B.
+############~~~~
+
+.........##############
+.......###O############
+JHL..#####O############
+...#######O############
+..#####..-O------O-E###
+######..##O######O#####
+#####..###|...A..O.....
+####..####O###^.#######
+####.-----O-------...B.
+##########O############
+..........O..........T.
+############^##########
+
+JH.........###
+.......O.#.#OE
+DAT....|.#..O#
+~~~.~~~.~###O#
+.......F.#..O#
+########^#^###
+
+~~~~~...............JHL
+#####~~~~~~~~~~........
+################.......
+###......###...........
+###..O.O.F.....#.#..D..
+#E-..#B#.|O........A.T.
+#############.~~~~~~~~~
+#######################
+
+###############################
+#########O#####################
+#########O#####################
+###......O..................JHL
+###..O.#.O..............D......
+#E-..#B#.O.....................
+#########O#####################
+#........|.....................
+#########O#####..|.|.|.|.|.....
+#........O....##.#.#.#.#.#.A...
+############...################
+#############..................
+###############...F........T...
+###############################

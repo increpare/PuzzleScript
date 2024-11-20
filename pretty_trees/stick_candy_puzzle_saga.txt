@@ -1,0 +1,1183 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	Black
+        color	DarkGrey
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Wall
+      
+
+      colors
+        color	Pink
+        color	#febfc6
+      
+
+      sprite
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '0' '1' '1']
+        ['0' '0' '1' '1' '0']
+        ['0' '1' '1' '0' '0']
+        ['1' '1' '0' '0' '0']
+    object_data
+      object_name	Player
+      
+
+      colors
+        color	Pink
+        color	#febfc6
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['0' '0' '1' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	Yellow
+      
+
+      colors
+        color	Yellow
+        color	White
+        color	Orange
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '1' '1' '0' '0']
+        ['0' '1' '0' '0' '0']
+        ['0' '0' '0' '0' '2']
+        ['.' '0' '2' '2' '.']
+    object_data
+      object_name	Red
+      
+
+      colors
+        color	Red
+        color	Orange
+        color	DarkRed
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '1' '1' '0' '0']
+        ['0' '1' '0' '0' '0']
+        ['0' '0' '0' '0' '2']
+        ['.' '0' '2' '2' '.']
+    object_data
+      object_name	Blue
+      
+
+      colors
+        color	LightBlue
+        color	White
+        color	#3468f7
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '1' '1' '0' '0']
+        ['0' '1' '0' '0' '0']
+        ['0' '0' '0' '0' '2']
+        ['.' '0' '2' '2' '.']
+    object_data
+      object_name	YellowTarget
+      
+
+      colors
+        color	Brown
+        color	Yellow
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '0' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	RedTarget
+      
+
+      colors
+        color	DarkBrown
+        color	Red
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '0' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	BlueTarget
+      
+
+      colors
+        color	Purple
+        color	LightBlue
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '0' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Marker
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	WallL
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['0' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+    object_data
+      object_name	WallR
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '0']
+    object_data
+      object_name	WallU
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	WallD
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	WallLR
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '.' '.' '.' '0']
+    object_data
+      object_name	WallUD
+      
+
+      colors
+        color	White
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	JoinL
+      
+
+      colors
+        color	#febfc6
+      
+
+      sprite
+        ['0' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+    object_data
+      object_name	JoinR
+      
+
+      colors
+        color	#febfc6
+      
+
+      sprite
+        ['.' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '0']
+    object_data
+      object_name	JoinU
+      
+
+      colors
+        color	#febfc6
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	JoinD
+      
+
+      colors
+        color	#febfc6
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+    object_data
+      object_name	JoinBoth
+      
+
+      colors
+        color	#febfc6
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+    object_data
+      object_name	Zero
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	One
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['.' '0' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Two
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Three
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Four
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '.' '.' '0' '.']
+    object_data
+      object_name	Five
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Six
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Seven
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '.' '.' '0' '.']
+    object_data
+      object_name	Eight
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	Nine
+      
+
+      colors
+        color	Purple
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      P
+      object_name	Player
+    legend_data
+      A
+      object_name	Red
+    legend_data
+      B
+      object_name	Yellow
+    legend_data
+      C
+      object_name	Blue
+    legend_data
+      X
+      object_name	RedTarget
+    legend_data
+      Y
+      object_name	YellowTarget
+    legend_data
+      Z
+      object_name	BlueTarget
+    legend_data
+      WallCoverLR
+      object_name	WallL
+      legend_operation
+        object_name	WallR
+      legend_operation
+        object_name	WallLR
+    legend_data
+      WallCoverUD
+      object_name	WallU
+      legend_operation
+        object_name	WallD
+      legend_operation
+        object_name	WallUD
+    legend_data
+      JoinCoverLR
+      object_name	JoinL
+      legend_operation
+        object_name	JoinR
+      legend_operation
+        object_name	JoinBoth
+    legend_data
+      JoinCoverUD
+      object_name	JoinU
+      legend_operation
+        object_name	JoinD
+    legend_data
+      Join
+      object_name	JoinCoverLR
+      legend_operation
+        object_name	JoinCoverUD
+    legend_data
+      CoverLR
+      object_name	WallCoverLR
+      legend_operation
+        object_name	JoinCoverLR
+    legend_data
+      CoverUD
+      object_name	WallCoverUD
+      legend_operation
+        object_name	JoinCoverUD
+    legend_data
+      0
+      object_name	Zero
+      legend_operation
+        object_name	Wall
+    legend_data
+      1
+      object_name	One
+      legend_operation
+        object_name	Wall
+    legend_data
+      2
+      object_name	Two
+      legend_operation
+        object_name	Wall
+    legend_data
+      3
+      object_name	Three
+      legend_operation
+        object_name	Wall
+    legend_data
+      4
+      object_name	Four
+      legend_operation
+        object_name	Wall
+    legend_data
+      5
+      object_name	Five
+      legend_operation
+        object_name	Wall
+    legend_data
+      6
+      object_name	Six
+      legend_operation
+        object_name	Wall
+    legend_data
+      7
+      object_name	Seven
+      legend_operation
+        object_name	Wall
+    legend_data
+      8
+      object_name	Eight
+      legend_operation
+        object_name	Wall
+    legend_data
+      9
+      object_name	Nine
+      legend_operation
+        object_name	Wall
+    legend_data
+      Number
+      object_name	Zero
+      legend_operation
+        object_name	One
+      legend_operation
+        object_name	Two
+      legend_operation
+        object_name	Three
+      legend_operation
+        object_name	Four
+      legend_operation
+        object_name	Five
+      legend_operation
+        object_name	Six
+      legend_operation
+        object_name	Seven
+      legend_operation
+        object_name	Eight
+      legend_operation
+        object_name	Nine
+    legend_data
+      Candy
+      object_name	Yellow
+      legend_operation
+        object_name	Red
+      legend_operation
+        object_name	Blue
+    legend_data
+      Target
+      object_name	YellowTarget
+      legend_operation
+        object_name	RedTarget
+      legend_operation
+        object_name	BlueTarget
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Marker
+    layer_data
+      object_name	Target
+    layer_data
+      object_name	Player
+    layer_data
+      object_name	Wall
+      object_name	Candy
+    layer_data
+      object_name	CoverUD
+    layer_data
+      object_name	CoverLR
+      object_name	Number
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Candy
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content
+              >
+              Candy
+          
+
+        rule_data
+          rule_part
+            rule_content
+              moving
+              Candy
+            cell_border
+            rule_content	stationary
+            rule_content	Candy
+          ->
+          rule_part
+            rule_content
+              moving
+              Candy
+            cell_border
+            rule_content	moving
+            rule_content	Candy
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Candy
+            cell_border
+            rule_content	Wall
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content
+              >
+              Candy
+          ->
+          rule_part
+            rule_content	Candy
+            cell_border
+            rule_content	Wall
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Candy
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	stationary
+            rule_content	Candy
+          rule_part
+            rule_content
+              moving
+              Candy
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Candy
+          rule_part
+            rule_content	Candy
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Candy
+            cell_border
+            rule_content	no
+            rule_content	Candy
+          ->
+          rule_part
+            rule_content
+              >
+              Candy
+            cell_border
+            rule_content	Marker
+          
+
+        rule_data
+          rule_part
+            rule_content	Marker
+            cell_border
+            rule_content	stationary
+            rule_content	Candy
+          ->
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          rule_part
+            rule_content	Marker
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Wall
+          ->
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	stationary
+            rule_content	Candy
+          ->
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              Wall
+              no
+              WallCoverLR
+            cell_border
+            rule_content	no
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content
+              Wall
+              WallL
+            cell_border
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              Wall
+              no
+              WallCoverLR
+            cell_border
+            rule_content	no
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content
+              Wall
+              WallR
+            cell_border
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              Wall
+              WallL
+            cell_border
+            rule_content	no
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content
+              Wall
+              WallLR
+            cell_border
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              Wall
+              no
+              WallCoverUD
+            cell_border
+            rule_content	no
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content
+              Wall
+              WallU
+            cell_border
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              Wall
+              no
+              WallCoverUD
+            cell_border
+            rule_content	no
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content
+              Wall
+              WallD
+            cell_border
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              Wall
+              WallU
+            cell_border
+            rule_content	no
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content
+              Wall
+              WallUD
+            cell_border
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Join
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          prefix	left
+          rule_part
+            rule_content	Candy
+            cell_border
+            rule_content	Candy
+          ->
+          rule_part
+            rule_content
+              Candy
+              JoinL
+            cell_border
+            rule_content	Candy
+          
+
+        rule_data
+          prefix	late
+          prefix	right
+          rule_part
+            rule_content
+              Candy
+              no
+              JoinL
+            cell_border
+            rule_content	Candy
+          ->
+          rule_part
+            rule_content
+              Candy
+              JoinR
+            cell_border
+            rule_content	Candy
+          
+
+        rule_data
+          prefix	late
+          prefix	right
+          rule_part
+            rule_content
+              Candy
+              JoinL
+            cell_border
+            rule_content	Candy
+          ->
+          rule_part
+            rule_content
+              Candy
+              JoinBoth
+            cell_border
+            rule_content	Candy
+          
+
+        rule_data
+          prefix	late
+          prefix	up
+          rule_part
+            rule_content
+              Candy
+              no
+              JoinBoth
+            cell_border
+            rule_content	Candy
+          ->
+          rule_part
+            rule_content
+              Candy
+              JoinU
+            cell_border
+            rule_content	Candy
+          
+
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content
+              Candy
+              no
+              JoinU
+              no
+              JoinBoth
+            cell_border
+            rule_content	Candy
+          ->
+          rule_part
+            rule_content
+              Candy
+              JoinD
+            cell_border
+            rule_content	Candy
+          
+
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content
+              Candy
+              JoinU
+            cell_border
+            rule_content	Candy
+          ->
+          rule_part
+            rule_content
+              Candy
+              JoinBoth
+            cell_border
+            rule_content	Candy
+          
+
+  winconditions_section
+    condition_data
+      All
+      object_name	Yellow
+      on
+      object_name	YellowTarget
+    condition_data
+      All
+      object_name	Red
+      on
+      object_name	RedTarget
+    condition_data
+      All
+      object_name	Blue
+      on
+      object_name	BlueTarget
+  levels_section
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '.' '.' '.' '#' '#']
+ ['#' '.' '.' 'b' '.' 'y' '#']
+ ['#' 'p' 'b' '#' '.' 'y' '#']
+ ['#' '.' '.' 'b' '.' 'y' '#']
+ ['#' '#' '.' '.' '.' '#' '#']
+ ['1' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '#' '#']
+ ['#' '.' '.' 'a' '.' '#' '.' 'x' '#']
+ ['#' 'p' 'a' '.' '.' '.' '.' 'x' '#']
+ ['#' '.' '.' 'a' '.' '#' '.' 'x' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '#' '#']
+ ['2' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'p' '.' '.' '.' 'y' 'y' '#']
+ ['#' '.' 'b' '.' 'a' 'y' 'y' '#']
+ ['#' '.' '.' 'b' '.' 'a' '.' '#']
+ ['#' '.' 'a' '.' 'b' '.' '.' '#']
+ ['#' 'x' 'x' 'a' '.' 'b' '.' '#']
+ ['#' 'x' 'x' '.' '.' '.' '.' '#']
+ ['3' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' 'p' '.' '.' '.' '.' '#']
+ ['#' '.' '.' 'b' '.' 'c' '.' 'b' '.' '.' '#']
+ ['#' '.' '.' '.' 'c' '.' 'c' '.' '.' '.' '#']
+ ['#' '#' '#' '.' 'z' 'z' 'z' '.' '#' '#' '#']
+ ['#' '#' '#' '#' 'b' '.' 'b' '#' '#' '#' '#']
+ ['#' '#' '#' '#' 'y' 'y' 'y' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' 'y' '#' '#' '#' '#' '#']
+ ['4' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' 'a' '.' '.' '.' '#' '#' '#']
+ ['#' '.' 'a' '.' '.' '.' '#' '#' '#']
+ ['#' '.' '.' 'c' '.' 'a' 'x' 'x' '#']
+ ['#' 'z' 'z' '.' 'p' '.' 'x' 'x' '#']
+ ['#' 'z' 'z' 'c' '.' 'a' '.' '.' '#']
+ ['#' '#' '#' '.' '.' '.' 'c' '.' '#']
+ ['#' '#' '#' '.' '.' '.' 'c' '.' '#']
+ ['5' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '.' '.' '#' '#']
+ ['#' 'y' '.' '#' '.' 'p' '.' '#' '.' 'z' '#']
+ ['#' 'y' 'c' '.' 'b' '.' 'c' '.' 'b' 'z' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '.' '.' '#' '#']
+ ['#' '#' '#' '.' '.' '#' '.' '.' '#' '#' '#']
+ ['6' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '.' '.' 'z' '#']
+ ['#' '.' '.' '.' 'b' '.' 'z' 'z' '#']
+ ['#' '.' 'b' '.' 'b' 'b' '.' 'z' '#']
+ ['#' 'p' '.' '#' '#' '#' '.' '.' '#']
+ ['#' 'y' '.' 'c' 'c' '.' 'c' '.' '#']
+ ['#' 'y' 'y' '.' 'c' '.' '.' '.' '#']
+ ['#' 'y' '.' '.' '#' '#' '#' '#' '#']
+ ['7' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' 'x' '.' 'c' '.' '#' 'b' 'y' '#']
+ ['#' '.' 'b' '.' 'p' '.' '.' 'y' '#']
+ ['#' 'z' '.' 'a' '.' '#' 'b' 'y' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '.' '#']
+ ['8' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'y' 'y' '.' 'c' '.' 'x' '.' '#']
+ ['#' 'y' '.' 'b' '.' '.' 'x' 'x' '#']
+ ['#' '.' 'b' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' 'b' '#']
+ ['#' '.' 'a' '.' '.' '.' 'c' '.' '#']
+ ['#' '.' 'a' 'a' '.' 'c' '.' 'z' '#']
+ ['#' 'p' '.' '.' '.' '.' 'z' 'z' '#']
+ ['9' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'y' 'y' '#' '#' '#' 'z' 'z' '#']
+ ['#' '.' '.' '.' 'x' '.' '.' '.' '#']
+ ['#' '.' '#' '#' 'a' '#' '#' '.' '#']
+ ['#' '.' '.' 'b' '.' 'b' '.' '.' '#']
+ ['#' '.' '.' '#' '.' '#' '.' '.' '#']
+ ['#' '.' '.' 'c' '.' 'c' '.' '.' '#']
+ ['#' '#' '.' '.' 'p' '.' '.' '#' '#']
+ ['1' '0' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' 'y' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' 'y' 'y' 'y' '#' '#' '#' '#']
+ ['#' '#' '#' '.' 'b' '.' 'b' '.' '#' '#' '#']
+ ['#' '#' '#' 'a' '.' '.' '.' 'c' '#' '#' '#']
+ ['#' 'z' '.' '.' '.' 'p' '.' '.' '.' 'x' '#']
+ ['#' 'z' 'a' '.' 'b' '.' 'b' '.' 'c' 'x' '#']
+ ['#' '#' '#' '.' '.' '.' '.' '.' '#' '#' '#']
+ ['1' '1' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '.' '.' 'A' '#' '#' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '.' '#' '#' '#']
+ ['#' '.' '.' '#' 'A' '#' '.' '.' 'x' 'x' '#']
+ ['#' 'p' 'A' '.' '.' '.' 'A' '.' 'x' 'x' '#']
+ ['#' '.' '.' '#' 'A' '#' '.' '.' 'x' 'x' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '.' '.' 'A' '#' '#' '#']
+ ['1' '2' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' 'x' 'x' 'x' '.' '.' '#']
+ ['#' '.' '.' '#' 'a' '#' '.' '.' '#']
+ ['#' '.' '.' 'b' '.' 'b' '.' '.' '#']
+ ['#' '#' '.' '#' 'p' '#' '.' '#' '#']
+ ['#' '#' '.' 'a' 'y' 'a' '.' '#' '#']
+ ['#' '#' '.' '.' 'y' '.' '.' '#' '#']
+ ['1' '3' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '.' '.' 'z' 'z' 'z' '.' '.' '#' '#']
+ ['#' '.' '.' 'a' '.' 'p' '.' 'b' '.' '.' '#']
+ ['#' 'y' 'y' '#' 'c' 'c' 'c' '#' 'x' 'x' '#']
+ ['#' '.' '.' 'b' '.' '.' '.' 'a' '.' '.' '#']
+ ['#' '#' '.' '.' '.' '#' '.' '.' '.' '#' '#']
+ ['1' '4' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '#' '#' '#' '#' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' 'c' '.' 'b' '.' '.' '.' '.' '#']
+ ['#' 'y' 'y' '#' '.' '.' 'p' '.' '.' '#' 'z' 'z' '#']
+ ['#' '.' 'y' '.' 'c' 'c' '.' 'b' 'b' '.' 'z' '.' '#']
+ ['#' '#' '#' '#' '.' '.' '.' '.' '.' '#' '#' '#' '#']
+ ['1' '5' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '.' 'a' '.' 'a' '.' 'a' '.' '#']
+ ['#' '.' '.' '.' 'x' '.' '.' '.' '#']
+ ['#' 'z' '#' '.' 'x' '.' '#' 'y' '#']
+ ['#' 'z' 'c' '.' 'x' '.' 'b' 'y' '#']
+ ['#' '.' 'c' '.' 'p' '.' 'b' '.' '#']
+ ['#' '#' '#' '.' '.' '.' '#' '#' '#']
+ ['1' '6' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '.' '#' '#' '#']
+ ['#' '#' '.' '#' '.' '.' 'c' '.' '.' '.' '#']
+ ['#' '.' '.' '.' 'c' '#' '.' '.' 'z' 'z' '#']
+ ['#' 'p' 'c' '.' '.' '#' 'c' '#' 'z' 'z' '#']
+ ['#' '.' '.' '.' 'c' '#' '.' '.' 'z' 'z' '#']
+ ['#' '#' '.' '#' '.' '.' 'c' '.' '.' '.' '#']
+ ['#' '#' '.' '.' '.' '.' '.' '.' '#' '#' '#']
+ ['1' '7' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '#' '#' 'z' '#' '#' '#' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' 'b' 'z' 'z' 'z' 'b' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' 'c' '.' 'c' '.' 'c' '.' 'c' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '.' 'y' 'y' 'y' '.' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '.' '#' 'b' '#' '.' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '.' 'p' '.' '#' '#' '#' '#' '#' '#']
+ ['1' '8' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' 'x' '#' '.' '.' '.' '#' 'z' '#' '#' '#']
+ ['#' '.' 'x' 'x' 'a' '.' 'c' '.' 'a' 'z' 'z' '.' '#']
+ ['#' '.' '.' 'c' '.' '.' '.' '.' '.' 'c' '.' '.' '#']
+ ['#' '#' '#' '.' '.' '#' 'a' '#' '.' '.' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '.' 'p' '.' '.' '#' '#' '#' '#']
+ ['1' '9' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '.' '.' '.' '.' '.' '#' '#' '#']
+ ['#' '#' 'c' '.' 'a' '.' 'a' '.' 'b' '#' '#']
+ ['#' '.' 'c' 'y' 'y' '.' 'z' 'z' 'b' '.' '#']
+ ['#' '.' '.' 'y' 'y' '.' 'z' 'z' '.' '.' '#']
+ ['#' 'a' '.' '.' 'c' '.' 'b' '.' '.' 'a' '#']
+ ['#' '.' '.' 'x' 'c' '.' 'b' 'x' '.' '.' '#']
+ ['#' '.' '.' 'x' 'x' 'x' 'x' 'x' '.' '.' '#']
+ ['#' '#' 'a' '.' '.' 'a' '.' '.' 'a' '#' '#']
+ ['#' '#' '#' '.' '.' '.' 'p' '.' '#' '#' '#']
+ ['2' '0' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None

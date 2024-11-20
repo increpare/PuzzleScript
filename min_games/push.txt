@@ -1,0 +1,542 @@
+OBJECTS
+
+Background.
+#756C5E
+
+Wall#
+#635854
+
+StrongPlayerP
+#E8D2AC #67453D Black #282D3C Red
+11111
+02020
+40004
+43334
+33.33
+
+WeakPlayer
+#E8D2AC #67453D Black #282D3C
+11111
+02020
+.000.
+.333.
+33.33
+
+GibbedPlayer
+Red
+...0.
+.0...
+0..0.
+.....
+..0.0
+
+Rock*
+#202020 #706249 #A6957B
+.000.
+02220
+02210
+01110
+.000.
+
+RockDust(destroyed by a projectile)
+#A6957B
+...0.
+.0...
+0..0.
+.....
+..0.0
+
+IdolG
+#945527 #C97536 #F4EF0B
+.000.
+01210
+.222.
+.010.
+01210
+
+Pit_
+Black #5A5349
+.1.1.
+1000.
+.000.
+.0001
+..11.
+
+PitFilled
+Black #5A5349 #706249
+.1.1.
+1222.
+.222.
+.2221
+..11.
+
+PitPlayer
+Black #5A5349 #E8D2AC #282D3C
+.1.1.
+1020.
+.222.
+.3331
+..11.
+
+WeakGroundx
+#5A5349
+.0..0
+00..0
+..00.
+00..0
+0.0..
+
+GunUSingleU
+Black Grey Yellow
+..0..
+12021
+11011
+11111
+.111.
+
+GunDSingleD
+Black Grey Yellow
+.111.
+11111
+11011
+12021
+..0..
+
+GunRSingleR
+Black Grey Yellow
+.111.
+1112.
+11000
+1112.
+.111.
+
+GunLSingleL
+Black Grey Yellow
+.111.
+.2111
+00011
+.2111
+.111.
+
+GunUMultiM
+Black Grey Red
+..0..
+.202.
+12021
+12221
+.111.
+
+GunLMultiN
+Black Grey Red
+..11.
+.2221
+00021
+.2221
+..11.
+
+GunRMultiO
+Black Grey Red
+.11..
+1222.
+12000
+1222.
+.11..
+
+ButtonT
+#969283 #4A4A4A
+.000.
+01110
+01010
+01110
+.000.
+
+ButtonPressed
+#969283 #3A3A3A
+.000.
+01110
+01110
+01110
+.000.
+
+ArrowU
+Brown
+..0..
+.000.
+..0..
+.....
+.....
+
+ArrowR
+Brown
+.....
+...0.
+..000
+...0.
+.....
+
+ArrowL
+Brown
+.....
+.0...
+000..
+.0...
+.....
+
+ArrowD
+Brown DarkBrown
+.....
+.....
+..0..
+.000.
+..0..
+
+Firing
+Black
+
+Fired
+Brown
+
+
+LinkA
+Red
+
+LinkB
+Green
+
+LinkC
+Blue
+
+LinkD
+White
+
+LinkE
+Black
+
+
+LEGEND
+
+Player = StrongPlayer or WeakPlayer or GibbedPlayer
+DeadPlayer = GibbedPlayer or PitPlayer
+GunU = GunUSingle or GunUMulti
+GunD = GunDSingle
+GunL = GunLSingle or GunLMulti
+GunR = GunRSingle or GunRMulti
+MultiGun = GunUMulti or GunLMulti or GunRMulti
+Gun = GunU or GunR or GunD or GunL
+Movable = Rock or Gun
+Q = StrongPlayer or WeakGround
+Heavy = Movable or Player
+Arrow = ArrowU or ArrowR or ArrowD or ArrowL
+Link = LinkA or LinkB or LinkC or LinkD or LinkE
+Blockers = Player or Wall or Idol or Movable
+1 = Wall or LinkA
+2 = Wall or LinkB
+3 = Wall or LinkC
+4 = Wall or LinkD
+5 = Wall or LinkE
+7 = GunRSingle or LinkE
+8 = Button or LinkE
+
+COLLISIONLAYERS
+
+Link
+Firing, Fired
+Background
+Pit
+PitFilled, WeakGround
+Button, ButtonPressed
+PitPlayer, RockDust
+Blockers
+Arrow
+
+RULES
+
+[ > StrongPlayer | Movable | noBlockers ] -> [ > WeakPlayer | > Movable |  ] 
+[ > Movable Link ] -> [ > Movable> Link ] 
+[ DeadPlayer ] -> cancel 
+late [ Player Pit ] -> [ PitPlayer ] (falling into a pit kills you) 
+late [ Pit Rock ] -> [ PitFilled ] (they can be filled) 
+[ Player WeakGround ] -> [ Player WeakGround LinkA ] (mark WeakGround as visited) 
+late [ WeakGround LinkA no Player ] -> [ Pit ] (pits appear when you move off weakground) 
+[ Wall Link ] [ Button no Link | ... | Gun no Link ] -> [ Wall ] [ Button Link | ... | GunLink ] 
+[ Wall Link ] [ Button no Link ] [ Gun no Link ] -> [ Wall ] [ Button Link ] [ Gun Link ] 
+late [ Button Heavy LinkA ] [ Gun LinkA ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again 
+late [ Button Heavy LinkB ] [ Gun LinkB ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again 
+late [ Button Heavy LinkC ] [ Gun LinkC ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again 
+late [ Button Heavy LinkD ] [ Gun LinkD ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again 
+late [ Button Heavy LinkE ] [ Gun LinkE ] -> [ ButtonPressed Heavy ] [ Gun Firing ] again 
+[ MultiGun Firing no Link ] -> [ MultiGun Firing LinkB ] 
+[ MultiGun Fired LinkB ] -> [ MultiGun Firing LinkA ] 
+[ MultiGun Fired LinkA ] -> [ MultiGun Firing ] 
+[ GunU Firing ] -> [ GunU ArrowU Fired ] 
+[ GunR Firing ] -> [ GunR ArrowR Fired ] 
+[ GunL Firing ] -> [ GunL ArrowL Fired ] 
+[ GunD Firing ] -> [ GunD ArrowD Fired ] 
+[ ArrowL ] -> [ left ArrowL ] again 
+[ ArrowU ] -> [ up ArrowU ] again 
+[ ArrowR ] -> [ right ArrowR ] again 
+[ ArrowD ] -> [ down ArrowD ] again 
+late [ Arrow Rock ] -> [ RockDust ] 
+late [ Arrow Player ] -> [ GibbedPlayer ] 
+late [ Arrow Blockers ] -> [ Blockers ] 
+[ DeadPlayer ] -> cancel 
+[ > Player | Idol ] -> [ Player | Pit ] 
+
+
+WINCONDITIONS
+
+no Idol
+
+LEVELS
+
+###########
+#.........#
+#......*..#
+#.*.....*.#
+#...***...#
+#..**g*...#
+#..*.*....#
+#.........#
+#...p...*.#
+#.........#
+###########
+
+###########
+#**.......#
+#*....*.*.#
+#.........#
+#...***...#
+#...*g*...#
+#...*_*...#
+#*........#
+#..*.p..*.#
+#.........#
+###########
+
+###########
+#****g****#
+#.*_..****#
+#x********#
+#.********#
+#.x.xx...*#
+#*******x*#
+#......x.*#
+#.********#
+#p*.......#
+###########
+
+1##########
+#*...g...*#
+#........*#
+#*********#
+#**.....*.#
+#**.......#
+#**_.p....#
+#*t*...**.#
+#**_...**.#
+#**..u...*#
+###########
+
+1##########
+#**.....*.#
+#*......**#
+#...*g*...#
+#.*.......#
+#.........#
+#*********#
+#..*.**...#
+#*......t.#
+#..*.u...p#
+###########
+
+1##########
+#t**.****.#
+#.*...**g*#
+#.x.....**#
+#.**.*....#
+#..*.*....#
+#.**......#
+#**.......#
+#**p..*...#
+#**..**.u*#
+###########
+
+12#########
+#*********#
+#*t****_..#
+#*x*.d**..#
+#.....**..#
+#.....*...#
+#t..._*...#
+#r...**.g.#
+#...***...#
+#p..****..#
+###########
+
+123########
+#*....**.*#
+#..***l**.#
+#g****l***#
+#*****l***#
+#tx**xxxxx#
+#xxxqxxx*t#
+#xx*_**x_x#
+#*x_xxxxx*#
+#*xtx*x**_#
+###########
+
+1234#######
+#****x***_#
+#***.tt.**#
+#xg_.dd.**#
+#*__......#
+#_*__**.lt#
+#_*..*..lt#
+#.........#
+#*p.......#
+#**...*..*#
+###########
+
+1234#######
+#**_*...t.#
+#*......d.#
+#r......**#
+#*.****..*#
+#t.*.g**.*#
+#..******x#
+#....**_xt#
+#.....p***#
+#_.u*t._.l#
+###########
+
+1234#######
+#t..*..*_l#
+#_.****.__#
+#r.*x**.t*#
+#******.**#
+#**xtr_.*g#
+#__.__..**#
+#_......**#
+#....p.u.*#
+#**....t..#
+###########
+
+1##########
+#*t.._____#
+#...._*g__#
+#.r.._.*..#
+#...._*.**#
+#**_._.*.*#
+#****_....#
+#*..*_..**#
+#*.**_..**#
+#*p**_..p*#
+###########
+
+12#########
+#**...._.g#
+#*.t..._*.#
+#*...d._.*#
+#*p..__*_*#
+#*...__.u*#
+#.*..._.t*#
+#*...**_**#
+#*..***.**#
+#*.**....p#
+###########
+
+12#########
+#*********#
+#*********#
+#g*8...pl*#
+#*********#
+#7********#
+#...***...#
+#......p.t#
+#....*.*..#
+#.ut......#
+###########
+
+123########
+#**..*..**#
+#*.......*#
+#....p...*#
+#t......**#
+#r.**..**g#
+#...*...**#
+#..uup..**#
+#*.......*#
+#**tt...**#
+###########
+
+1##########
+#*********#
+#p..*g****#
+#....*****#
+#..*******#
+#..**.*.**#
+#***......#
+#***.p....#
+#....t.m..#
+#_........#
+###########
+
+123########
+#p**...n*g#
+#*****..*_#
+#******.**#
+#***..t*.*#
+#*7_*.....#
+#8.x*....l#
+#...xp...x#
+#...u*.._t#
+#*..t*...x#
+###########
+
+12345######
+#_g.*_****#
+#____**...#
+#.....*...#
+#rx.***.x.#
+#t..*.*...#
+#.px..*.pl#
+#o.**.*x.*#
+#t...*.x.t#
+#.xtm*mtx.#
+###########
+
+1##########
+#*********#
+#..*t***x*#
+#p...*****#
+#.r..*g***#
+#.*_____*_#
+#**_...___#
+#*__p..___#
+#*x_...__*#
+#_*_______#
+###########
+
+1##########
+#p.**g*_.p#
+#....**x..#
+#_*.._..**#
+#.*..*...*#
+#..*.x....#
+#_x__*.._.#
+#*.x_*x.._#
+#*x..***..#
+#*_.tm.*..#
+###########
+
+###########
+#*.......*#
+#....p....#
+#._....._.#
+#_...*..._#
+#_..._..._#
+#__._g_.__#
+#_________#
+#_________#
+#*_______*#
+###########

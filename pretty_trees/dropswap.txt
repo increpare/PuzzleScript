@@ -1,0 +1,1777 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	Black
+      
+
+    object_data
+      object_name	Player
+      
+
+      colors
+        color	#ffffff
+        color	#000000
+        color	#626263
+        color	#3c3b3c
+      
+
+      sprite
+        ['.' '2' '2' '2' '.']
+        ['2' '1' '1' '1' '2']
+        ['2' '3' '1' '3' '2']
+        ['2' '0' '1' '0' '2']
+        ['.' '2' '2' '2' '.']
+    object_data
+      object_name	DeadPlayer
+      
+
+      colors
+        color	#ffffff
+        color	#000000
+        color	#626263
+        color	#3c3b3c
+      
+
+      sprite
+        ['.' '2' '2' '2' '.']
+        ['2' '1' '1' '1' '2']
+        ['2' '1' '1' '1' '2']
+        ['2' '3' '1' '3' '2']
+        ['.' '2' '2' '2' '.']
+    object_data
+      object_name	BaseWall
+      
+
+      colors
+        color	#222222
+        color	#333333
+        color	#444444
+        color	#ffffff
+      
+
+      sprite
+        ['1' '1' '1' '1' '0']
+        ['1' '2' '2' '2' '0']
+        ['1' '2' '2' '0' '0']
+        ['1' '2' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	APill
+      
+
+      colors
+        color	#ff0000
+        color	#ff7374
+        color	#ff0000
+        color	#ff0000
+      
+
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['1' '1' '1' '1' '0']
+        ['1' '1' '0' '1' '0']
+        ['1' '1' '1' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	BPill
+      
+
+      colors
+        color	#00de00
+        color	#cffa92
+        color	#ff0000
+        color	#ff0000
+      
+
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['1' '0' '0' '1' '0']
+        ['1' '0' '1' '1' '0']
+        ['1' '1' '1' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	CPill
+      
+
+      colors
+        color	#7a35fc
+        color	#b56bfd
+        color	#ff0000
+        color	#ff0000
+      
+
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['1' '0' '1' '1' '0']
+        ['1' '1' '0' '1' '0']
+        ['1' '1' '1' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	DPill
+      
+
+      colors
+        color	#0094fc
+        color	#79b5fd
+        color	#ff0000
+        color	#ff0000
+      
+
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['1' '0' '1' '0' '0']
+        ['1' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	EPill
+      
+
+      colors
+        color	#d1c200
+        color	#fff919
+        color	#ffffff
+        color	#ff0000
+      
+
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['1' '0' '0' '1' '0']
+        ['1' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	FPill
+      
+
+      colors
+        color	#ff33b1
+        color	#ff76d2
+        color	#ff0000
+        color	#ff0000
+      
+
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['1' '0' '1' '0' '0']
+        ['1' '1' '1' '1' '0']
+        ['1' '0' '1' '1' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	AllPill
+      
+
+      colors
+        color	#eeee66
+        color	#ffffff
+        color	#ffffcc
+        color	#ffffff
+      
+
+      sprite
+        ['.' '1' '1' '2' '.']
+        ['1' '1' '1' '1' '2']
+        ['1' '1' '0' '1' '2']
+        ['2' '1' '1' '2' '0']
+        ['.' '2' '2' '0' '.']
+    object_data
+      object_name	NoPill
+      
+
+      colors
+        color	#ffffff
+        color	#000000
+        color	#ffde85
+        color	#ff0000
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['2' '1' '0' '1' '2']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '2' '.' '.']
+    object_data
+      object_name	Bomb
+      
+
+      colors
+        color	#6e6e6e
+        color	#000000
+        color	#ff0000
+        color	#fcf26b
+      
+
+      sprite
+        ['.' '0' '2' '0' '.']
+        ['0' '2' '3' '2' '0']
+        ['0' '1' '2' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	GemPill
+      
+
+      colors
+        color	#ffffff
+        color	#000000
+        color	#626263
+        color	#3c3b3c
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '2' '.']
+        ['0' '0' '0' '2' '2']
+        ['.' '2' '2' '3' '.']
+        ['.' '.' '2' '.' '.']
+    object_data
+      object_name	Count
+      
+
+      colors
+        color	#ffffff
+        color	#000000
+        color	#5a595a
+        color	#ff0000
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Marked
+      
+
+      colors
+        color	#ffffff
+        color	#000000
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '1' '.' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '.' '1' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	CountTray
+      
+
+      colors
+        color	#333333
+      
+
+    object_data
+      object_name	GemTray
+      
+
+      colors
+        color	#333333
+      
+
+    object_data
+      object_name	StartGem
+      
+
+      colors
+        color	red
+      
+
+    object_data
+      object_name	Collect
+      
+
+      colors
+        color	White
+      
+
+    object_data
+      object_name	Debris1
+      
+
+      colors
+        color	#ffffff
+        color	#0739f5
+        color	#1f0f42
+        color	#ffffff
+      
+
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['0' '0' '.' '0' '0']
+        ['.' '.' '0' '.' '.']
+        ['0' '0' '.' '0' '0']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	Debris2
+      
+
+      colors
+        color	#ffffff
+        color	#0739f5
+        color	#1f0f42
+        color	#ffffff
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Empty
+      
+
+      colors
+        color	Black
+      
+
+    object_data
+      object_name	OldPos
+      
+
+      colors
+        color	Black
+      
+
+    object_data
+      object_name	StartCount
+      
+
+      colors
+        color	Black
+      
+
+    object_data
+      object_name	DropWall1
+      
+
+      colors
+        color	#222222
+        color	#333333
+        color	#444444
+        color	#ffffff
+      
+
+      sprite
+        ['1' '1' '1' '1' '0']
+        ['1' '2' '2' '2' '0']
+        ['1' '2' '2' '0' '0']
+        ['1' '2' '2' '0' '0']
+        ['1' '2' '2' '0' '0']
+    object_data
+      object_name	DropWall2
+      
+
+      colors
+        color	#222222
+        color	#333333
+        color	#444444
+        color	#ffffff
+      
+
+      sprite
+        ['1' '1' '1' '1' '0']
+        ['1' '2' '2' '2' '0']
+        ['1' '2' '2' '0' '0']
+        ['1' '2' '2' '0' '0']
+        ['1' '2' '2' '0' '0']
+    object_data
+      object_name	DropWall3
+      
+
+      colors
+        color	#222222
+        color	#333333
+        color	#444444
+        color	#ffffff
+      
+
+      sprite
+        ['1' '1' '1' '1' '0']
+        ['1' '2' '2' '2' '0']
+        ['1' '2' '2' '0' '0']
+        ['1' '2' '2' '0' '0']
+        ['1' '2' '2' '0' '0']
+    object_data
+      object_name	DropWall4
+      
+
+      colors
+        color	#222222
+        color	#333333
+        color	#444444
+        color	#ffffff
+      
+
+      sprite
+        ['1' '1' '1' '1' '0']
+        ['1' '2' '2' '2' '0']
+        ['1' '2' '2' '0' '0']
+        ['1' '2' '2' '0' '0']
+        ['1' '2' '2' '0' '0']
+    object_data
+      object_name	DropMarker
+      
+
+      colors
+        color	Blue
+      
+
+    object_data
+      object_name	Init
+      
+
+      colors
+        color	Purple
+      
+
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      @
+      object_name	Player
+    legend_data
+      p
+      object_name	DeadPlayer
+    legend_data
+      #
+      object_name	BaseWall
+    legend_data
+      a
+      object_name	APill
+    legend_data
+      b
+      object_name	BPill
+    legend_data
+      c
+      object_name	CPill
+    legend_data
+      d
+      object_name	DPill
+    legend_data
+      e
+      object_name	EPill
+    legend_data
+      f
+      object_name	FPill
+    legend_data
+      n
+      object_name	NoPill
+    legend_data
+      x
+      object_name	AllPill
+    legend_data
+      u
+      object_name	Count
+      legend_operation
+        object_name	CountTray
+    legend_data
+      w
+      object_name	Count
+      legend_operation
+        object_name	CountTray
+      legend_operation
+        object_name	StartCount
+    legend_data
+      g
+      object_name	GemPill
+    legend_data
+      q
+      object_name	GemTray
+    legend_data
+      o
+      object_name	GemTray
+      legend_operation
+        object_name	StartGem
+    legend_data
+      p
+      object_name	Bomb
+    legend_data
+      i
+      object_name	Init
+    legend_data
+      j
+      object_name	DropWall1
+    legend_data
+      k
+      object_name	DropWall2
+    legend_data
+      l
+      object_name	DropWall3
+    legend_data
+      m
+      object_name	DropWall4
+    legend_data
+      MatchPill
+      object_name	APill
+      legend_operation
+        object_name	BPill
+      legend_operation
+        object_name	CPill
+      legend_operation
+        object_name	DPill
+      legend_operation
+        object_name	EPill
+      legend_operation
+        object_name	FPill
+      legend_operation
+        object_name	AllPill
+    legend_data
+      Pill
+      object_name	MatchPill
+      legend_operation
+        object_name	NoPill
+      legend_operation
+        object_name	GemPill
+      legend_operation
+        object_name	Bomb
+    legend_data
+      Debris
+      object_name	Debris1
+      legend_operation
+        object_name	Debris2
+    legend_data
+      AMatch
+      object_name	APill
+      legend_operation
+        object_name	AllPill
+    legend_data
+      BMatch
+      object_name	BPill
+      legend_operation
+        object_name	AllPill
+    legend_data
+      CMatch
+      object_name	CPill
+      legend_operation
+        object_name	AllPill
+    legend_data
+      DMatch
+      object_name	DPill
+      legend_operation
+        object_name	AllPill
+    legend_data
+      EMatch
+      object_name	EPill
+      legend_operation
+        object_name	AllPill
+    legend_data
+      FMatch
+      object_name	FPill
+      legend_operation
+        object_name	AllPill
+    legend_data
+      Wall
+      object_name	BaseWall
+      legend_operation
+        object_name	DropWall1
+      legend_operation
+        object_name	DropWall2
+      legend_operation
+        object_name	DropWall3
+      legend_operation
+        object_name	DropWall4
+    legend_data
+      Item
+      object_name	Pill
+      legend_operation
+        object_name	Debris
+      legend_operation
+        object_name	Wall
+      legend_operation
+        object_name	Player
+    legend_data
+      Heavy
+      object_name	Pill
+      legend_operation
+        object_name	Player
+    legend_data
+      Dropping
+      object_name	Marked
+      legend_operation
+        object_name	DropMarker
+    legend_data
+      DropMix1
+      object_name	APill
+      legend_operation
+        object_name	BPill
+      legend_operation
+        object_name	CPill
+      legend_operation
+        object_name	DPill
+      legend_operation
+        object_name	EPill
+    legend_data
+      DropMix2
+      object_name	APill
+      legend_operation
+        object_name	BPill
+      legend_operation
+        object_name	CPill
+      legend_operation
+        object_name	DPill
+      legend_operation
+        object_name	EPill
+      legend_operation
+        object_name	GemPill
+    legend_data
+      DropMix3
+      object_name	APill
+      legend_operation
+        object_name	BPill
+      legend_operation
+        object_name	CPill
+      legend_operation
+        object_name	DPill
+      legend_operation
+        object_name	EPill
+      legend_operation
+        object_name	NoPill
+    legend_data
+      DropMix4
+      object_name	APill
+      legend_operation
+        object_name	BPill
+      legend_operation
+        object_name	CPill
+      legend_operation
+        object_name	DPill
+      legend_operation
+        object_name	EPill
+      legend_operation
+        object_name	FPill
+      legend_operation
+        object_name	GemPill
+    legend_data
+      DropMix5
+      object_name	APill
+      legend_operation
+        object_name	BPill
+      legend_operation
+        object_name	CPill
+      legend_operation
+        object_name	DPill
+      legend_operation
+        object_name	EPill
+      legend_operation
+        object_name	FPill
+    legend_data
+      DropWallMarked
+      object_name	DropWall1
+      legend_operation
+        object_name	DropWall3
+  collisionlayers_section
+    layer_data
+      object_name	Collect
+    layer_data
+      object_name	StartCount
+      object_name	StartGem
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	OldPos
+    layer_data
+      object_name	CountTray
+      object_name	GemTray
+    layer_data
+      object_name	Player
+      object_name	Wall
+    layer_data
+      object_name	Pill
+      object_name	Empty
+    layer_data
+      object_name	Count
+      object_name	DeadPlayer
+    layer_data
+      object_name	Bomb
+      object_name	Init
+    layer_data
+      object_name	Debris
+    layer_data
+      object_name	Marked
+      object_name	DropMarker
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content	DropWall1
+          rule_part
+            rule_content	Init
+          ->
+          rule_part
+            rule_content	DropWall1
+          rule_part
+            rule_content
+              random
+              DropMix1
+              Marked
+          
+
+        rule_data
+          rule_part
+            rule_content	DropWall2
+          rule_part
+            rule_content	Init
+          ->
+          rule_part
+            rule_content	DropWall2
+          rule_part
+            rule_content
+              random
+              DropMix1
+          
+
+        rule_data
+          rule_part
+            rule_content	DropWall3
+          rule_part
+            rule_content	Init
+          ->
+          rule_part
+            rule_content	DropWall3
+          rule_part
+            rule_content
+              random
+              DropMix1
+              Marked
+          
+
+        rule_data
+          rule_part
+            rule_content	DropWall4
+          rule_part
+            rule_content	Init
+          ->
+          rule_part
+            rule_content	DropWall4
+          rule_part
+            rule_content
+              random
+              DropMix5
+          
+
+        rule_data
+          rule_part
+            rule_content	Debris2
+          ->
+          rule_part
+            rule_content	Empty
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	Debris1
+          ->
+          rule_part
+            rule_content	Debris2
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Pill
+          ->
+          rule_part
+            rule_content
+              Pill
+              OldPos
+            cell_border
+            rule_content	Player
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Player
+              Marked
+            cell_border
+            rule_content	OldPos
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	OldPos
+            rule_content	Marked
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	No
+            rule_content	Pill
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content	AMatch
+            cell_border
+            rule_content	AMatch
+            cell_border
+            rule_content	AMatch
+          ->
+          rule_part
+            rule_content
+              AMatch
+              Collect
+            cell_border
+            rule_content	AMatch
+            rule_content	Collect
+            cell_border
+            rule_content	AMatch
+            rule_content	Collect
+          
+
+        rule_data
+          rule_part
+            rule_content	BMatch
+            cell_border
+            rule_content	BMatch
+            cell_border
+            rule_content	BMatch
+          ->
+          rule_part
+            rule_content
+              BMatch
+              Collect
+            cell_border
+            rule_content	BMatch
+            rule_content	Collect
+            cell_border
+            rule_content	BMatch
+            rule_content	Collect
+          
+
+        rule_data
+          rule_part
+            rule_content	CMatch
+            cell_border
+            rule_content	CMatch
+            cell_border
+            rule_content	CMatch
+          ->
+          rule_part
+            rule_content
+              CMatch
+              Collect
+            cell_border
+            rule_content	CMatch
+            rule_content	Collect
+            cell_border
+            rule_content	CMatch
+            rule_content	Collect
+          
+
+        rule_data
+          rule_part
+            rule_content	DMatch
+            cell_border
+            rule_content	DMatch
+            cell_border
+            rule_content	DMatch
+          ->
+          rule_part
+            rule_content
+              DMatch
+              Collect
+            cell_border
+            rule_content	DMatch
+            rule_content	Collect
+            cell_border
+            rule_content	DMatch
+            rule_content	Collect
+          
+
+        rule_data
+          rule_part
+            rule_content	EMatch
+            cell_border
+            rule_content	EMatch
+            cell_border
+            rule_content	EMatch
+          ->
+          rule_part
+            rule_content
+              EMatch
+              Collect
+            cell_border
+            rule_content	EMatch
+            rule_content	Collect
+            cell_border
+            rule_content	EMatch
+            rule_content	Collect
+          
+
+        rule_data
+          rule_part
+            rule_content	FMatch
+            cell_border
+            rule_content	FMatch
+            cell_border
+            rule_content	FMatch
+          ->
+          rule_part
+            rule_content
+              FMatch
+              Collect
+            cell_border
+            rule_content	FMatch
+            rule_content	Collect
+            cell_border
+            rule_content	FMatch
+            rule_content	Collect
+          
+
+        rule_data
+          rule_part
+            rule_content	NoPill
+            cell_border
+            rule_content	NoPill
+            cell_border
+            rule_content	NoPill
+          ->
+          rule_part
+            rule_content
+              NoPill
+              Collect
+            cell_border
+            rule_content	NoPill
+            rule_content	Collect
+            cell_border
+            rule_content	NoPill
+            rule_content	Collect
+          
+
+        rule_data
+          rule_part
+            rule_content
+              OldPos
+              Bomb
+          ->
+          command
+            sound
+              sound_id	5
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              OldPos
+              Bomb
+            cell_border
+            rule_content	Pill
+          ->
+          rule_part
+            rule_content
+              OldPos
+              Bomb
+            cell_border
+            rule_content	Pill
+            rule_content
+              >
+              Collect
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              OldPos
+              Bomb
+            cell_border
+            rule_content	Pill
+          ->
+          rule_part
+            rule_content
+              OldPos
+              Bomb
+            cell_border
+            rule_content	Pill
+            rule_content
+              >
+              Collect
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              OldPos
+              Bomb
+            cell_border
+            rule_content	Pill
+          ->
+          rule_part
+            rule_content
+              OldPos
+              Bomb
+            cell_border
+            rule_content	Pill
+            rule_content
+              >
+              Collect
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              OldPos
+              Bomb
+            cell_border
+            rule_content	Pill
+          ->
+          rule_part
+            rule_content
+              OldPos
+              Bomb
+            cell_border
+            rule_content	Pill
+            rule_content
+              >
+              Collect
+          
+
+        rule_data
+          rule_part
+            rule_content
+              OldPos
+              Bomb
+          ->
+          rule_part
+            rule_content
+              OldPos
+              Empty
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	Pill
+            rule_content
+              >
+              Collect
+            cell_border
+            rule_content	Pill
+          ->
+          rule_part
+            rule_content
+              Pill
+              Collect
+            cell_border
+            rule_content	Pill
+            rule_content
+              >
+              Collect
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content	Pill
+            rule_content
+              >
+              Collect
+            cell_border
+            rule_content	Pill
+          ->
+          rule_part
+            rule_content
+              Pill
+              Collect
+            cell_border
+            rule_content	Pill
+            rule_content
+              >
+              Collect
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	Pill
+            rule_content
+              >
+              Collect
+            cell_border
+            rule_content	Pill
+          ->
+          rule_part
+            rule_content
+              Pill
+              Collect
+            cell_border
+            rule_content	Pill
+            rule_content
+              >
+              Collect
+          
+
+        rule_data
+          prefix	left
+          rule_part
+            rule_content	Pill
+            rule_content
+              >
+              Collect
+            cell_border
+            rule_content	Pill
+          ->
+          rule_part
+            rule_content
+              Pill
+              Collect
+            cell_border
+            rule_content	Pill
+            rule_content
+              >
+              Collect
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Collect
+          ->
+          rule_part
+            rule_content	Collect
+          
+
+        rule_data
+          rule_part
+            rule_content
+              GemPill
+              Collect
+          ->
+          rule_part
+            rule_content	GemPill
+          
+
+        rule_data
+          prefix	Right
+          rule_part
+            rule_content	Collect
+            cell_border
+            rule_content	Collect
+          ->
+          rule_part
+            rule_content
+              >
+              Collect
+            cell_border
+            rule_content
+              >
+              Collect
+          
+
+        rule_data
+          prefix	Down
+          rule_part
+            rule_content	Collect
+            cell_border
+            rule_content	Collect
+          ->
+          rule_part
+            rule_content
+              >
+              Collect
+            cell_border
+            rule_content
+              >
+              Collect
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Down
+              Collect
+            cell_border
+            rule_content	Right
+            rule_content	Collect
+          rule_part
+            rule_content
+              Collect
+              OldPos
+          ->
+          rule_part
+            rule_content	Collect
+            cell_border
+            rule_content	Collect
+          rule_part
+            rule_content
+              Bomb
+              OldPos
+          command
+            sound
+              sound_id	6
+          
+
+        rule_data
+          rule_part
+            rule_content
+              MatchPill
+              Collect
+            cell_border
+            rule_content	MatchPill
+            rule_content	Collect
+            cell_border
+            rule_content	MatchPill
+            rule_content	Collect
+            cell_border
+            rule_content	MatchPill
+            rule_content	Collect
+          rule_part
+            rule_content
+              Collect
+              OldPos
+          ->
+          rule_part
+            rule_content
+              MatchPill
+              Collect
+            cell_border
+            rule_content	MatchPill
+            rule_content	Collect
+            cell_border
+            rule_content	MatchPill
+            rule_content	Collect
+            cell_border
+            rule_content	MatchPill
+            rule_content	Collect
+          rule_part
+            rule_content
+              AllPill
+              OldPos
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          prefix	random
+          prefix	right
+          rule_part
+            rule_content	OldPos
+          rule_part
+            rule_content	Count
+            cell_border
+            rule_content	No
+            rule_content	Count
+          ->
+          rule_part
+            rule_content	OldPos
+          rule_part
+            cell_border
+          
+
+        rule_data
+          rule_part
+            rule_content	Collect
+          rule_part
+            rule_content	CountTray
+          ->
+          rule_part
+            rule_content	Collect
+          rule_part
+            rule_content
+              CountTray
+              Count
+          
+
+        rule_data
+          rule_part
+            rule_content	DeadPlayer
+          ->
+          command
+            command_keyword	cancel
+          
+
+        rule_data
+          rule_part
+            rule_content
+              No
+              Count
+              StartCount
+              CountTray
+          rule_part
+            rule_content	Player
+          ->
+          rule_part
+            rule_content
+              No
+              Count
+              StartCount
+              CountTray
+          rule_part
+            rule_content	DeadPlayer
+          command
+            sound
+              sound_id	7
+          
+
+        rule_data
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	NoPill
+            rule_content	Collect
+          ->
+          rule_part
+            rule_content	DeadPlayer
+            cell_border
+            rule_content	NoPill
+          
+
+        rule_data
+          rule_part
+            rule_content	DeadPlayer
+          rule_part
+            rule_content
+              CountTray
+              Count
+          ->
+          rule_part
+            rule_content	DeadPlayer
+          rule_part
+            rule_content	CountTray
+          command
+            sound
+              sound_id	7
+          
+
+        rule_data
+          rule_part
+            rule_content
+              APill
+              Collect
+          ->
+          rule_part
+            rule_content	Debris1
+          command
+            sound
+              sound_id	3
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content
+              BPill
+              Collect
+          ->
+          rule_part
+            rule_content	Debris1
+          command
+            sound
+              sound_id	3
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content
+              CPill
+              Collect
+          ->
+          rule_part
+            rule_content	Debris1
+          command
+            sound
+              sound_id	3
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content
+              DPill
+              Collect
+          ->
+          rule_part
+            rule_content	Debris1
+          command
+            sound
+              sound_id	3
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content
+              EPill
+              Collect
+          ->
+          rule_part
+            rule_content	Debris1
+          command
+            sound
+              sound_id	3
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content
+              FPill
+              Collect
+          ->
+          rule_part
+            rule_content	Debris1
+          command
+            sound
+              sound_id	3
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content
+              AllPill
+              Collect
+          ->
+          rule_part
+            rule_content	Debris1
+          command
+            sound
+              sound_id	3
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	Player
+          rule_part
+            rule_content
+              NoPill
+              Collect
+          ->
+          rule_part
+            rule_content	Player
+          rule_part
+            rule_content	Debris1
+          command
+            sound
+              sound_id	3
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	NoPill
+            cell_border
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content	Debris1
+            cell_border
+            rule_content	Wall
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	GemPill
+            cell_border
+            rule_content	Wall
+          ->
+          rule_part
+            rule_content
+              GemPill
+              Collect
+            cell_border
+            rule_content	Wall
+          
+
+        rule_data
+          rule_part
+            rule_content
+              GemPill
+              Collect
+          rule_part
+            rule_content
+              StartGem
+              No
+              GemPill
+          ->
+          rule_part
+            rule_content	Debris1
+          rule_part
+            rule_content
+              StartGem
+              GemPill
+          command
+            command_keyword	again
+          command
+            sound
+              sound_id	8
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              GemPill
+              Collect
+          rule_part
+            rule_content
+              GemPill
+              GemTray
+            cell_border
+            rule_content
+              No
+              GemPill
+              GemTray
+          ->
+          rule_part
+            rule_content	Debris1
+          rule_part
+            rule_content
+              GemPill
+              GemTray
+            cell_border
+            rule_content	GemPill
+            rule_content	GemTray
+          command
+            command_keyword	again
+          command
+            sound
+              sound_id	8
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Heavy
+              No
+              Dropping
+          ->
+          rule_part
+            rule_content
+              Heavy
+              DropMarker
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              Heavy
+              Dropping
+            cell_border
+            rule_content	Empty
+          ->
+          rule_part
+            rule_content	Empty
+            cell_border
+            rule_content	Heavy
+            rule_content	Dropping
+          
+
+        rule_data
+          rule_part
+            rule_content	DropMarker
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	DropWall1
+            cell_border
+            rule_content	Empty
+          ->
+          rule_part
+            rule_content	DropWall1
+            cell_border
+            rule_content	random
+            rule_content	DropMix1
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	DropWall2
+            cell_border
+            rule_content	Empty
+          ->
+          rule_part
+            rule_content	DropWall2
+            cell_border
+            rule_content	random
+            rule_content	DropMix2
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	DropWall3
+            cell_border
+            rule_content	Empty
+          ->
+          rule_part
+            rule_content	DropWall3
+            cell_border
+            rule_content	random
+            rule_content	DropMix3
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	DropWall4
+            cell_border
+            rule_content	Empty
+          ->
+          rule_part
+            rule_content	DropWall4
+            cell_border
+            rule_content	random
+            rule_content	DropMix4
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              GemPill
+              GemTray
+            cell_border
+            rule_content	Wall
+          ->
+          command
+            command_keyword	win
+          
+
+        rule_data
+          rule_part
+            rule_content	OldPos
+          ->
+          rule_part
+          
+
+  winconditions_section
+    condition_data
+      No
+      object_name	Marked
+    condition_data
+      Some
+      object_name	DropWallMarked
+  levels_section
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['w' 'u' 'u' 'u' 'u' 'u' '#']
+ ['#' 'j' 'j' 'j' 'j' 'j' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' '@' 'i' 'i' '#']
+ ['#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['w' 'u' 'u' 'u' 'u' 'u' 'u' '#']
+ ['#' 'j' 'j' 'j' 'j' 'j' 'j' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' '@' 'i' 'i' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['o' 'q' 'q' 'q' 'q' 'q' 'q' 'q' '#']
+ ['w' 'u' 'u' 'u' 'u' 'u' 'u' 'u' '#']
+ ['#' 'k' 'k' 'k' 'k' 'k' 'k' 'k' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' '@' 'i' 'i' 'i' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	None
+    level_data	[['w' 'u' 'u' 'u' 'u' 'u' 'u' '#']
+ ['#' 'l' 'l' 'l' 'l' 'l' 'l' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' '@' 'i' 'i' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['o' 'q' 'q' 'q' 'q' 'q' 'q' 'q' '#']
+ ['w' 'u' 'u' 'u' 'u' 'u' 'u' 'u' '#']
+ ['#' 'm' 'm' 'm' 'm' 'm' 'm' 'm' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' 'i' 'i' 'i' 'i' '#']
+ ['#' 'i' 'i' 'i' '@' 'i' 'i' 'i' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None

@@ -85,7 +85,6 @@ command: command_keyword
 
 // Condition Data
 condition_data: condition_id+
-              | NEWLINES_OR_COMMENTS
 
 // Level Data
 // level_data: (levelline NEWLINE)+ COMMENT? NEWLINE
@@ -94,12 +93,15 @@ condition_data: condition_id+
 //           | NEWLINE
 // level_data: "dummy"
 
-level_data: LEVELLINES
+level_data: LEVELLINES NEWLINE
+          | NEWLINES_OR_COMMENTS
        //    | "message "i STRING+
        //    | NEWLINES_OR_COMMENTS
 
 // levellines: (levelline NEWLINE)+
-LEVELLINES: /((?<!message)[a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±]+\n)+/
+// LEVELLINES: /([a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±]+\n)+/
+LEVELLINES: LEVELLINE+
+LEVELLINE: PIXEL+ NEWLINE
 
 NEWLINES_OR_COMMENTS: (NEWLINE | COMMENT)+
 

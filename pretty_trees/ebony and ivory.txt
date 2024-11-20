@@ -1,0 +1,255 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	Purple
+      
+
+    object_data
+      object_name	Gray
+      
+
+      colors
+        color	GRAY
+      
+
+    object_data
+      object_name	White
+      
+
+      colors
+        color	WHITE
+      
+
+    object_data
+      object_name	Black
+      
+
+      colors
+        color	BLACK
+      
+
+    object_data
+      object_name	PlayerRed
+      
+
+      colors
+        color	Red
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	PlayerGold
+      
+
+      colors
+        color	Yellow
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+  legend_section
+    legend_data
+      .
+      object_name	White
+    legend_data
+      ,
+      object_name	Black
+    legend_data
+      #
+      object_name	Gray
+    legend_data
+      :
+      object_name	PlayerRed
+      legend_operation
+        object_name	White
+    legend_data
+      ;
+      object_name	PlayerRed
+      legend_operation
+        object_name	Black
+    legend_data
+      Player
+      object_name	PlayerRed
+      legend_operation
+        object_name	PlayerGold
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Black
+    layer_data
+      object_name	White
+      object_name	Gray
+    layer_data
+      object_name	Player
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content	PlayerGold
+          ->
+          rule_part
+            rule_content	PlayerRed
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+              White
+            cell_border
+            rule_content	Black
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+              White
+            cell_border
+            rule_content
+              >
+              Black
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+              Black
+            cell_border
+            rule_content	White
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+              Black
+            cell_border
+            rule_content
+              >
+              White
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Black
+            cell_border
+            rule_content	White
+          ->
+          rule_part
+            rule_content	White
+            cell_border
+            rule_content	Black
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              White
+            cell_border
+            rule_content	Black
+          ->
+          rule_part
+            rule_content	Black
+            cell_border
+            rule_content	White
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+              White
+            cell_border
+            rule_content	Black
+          ->
+          rule_part
+            rule_content
+              Player
+              White
+            cell_border
+            rule_content	Black
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+              Black
+            cell_border
+            rule_content	White
+          ->
+          rule_part
+            rule_content
+              Player
+              Black
+            cell_border
+            rule_content	White
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Gray
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	Gray
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	PlayerRed
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	PlayerGold
+          
+
+  winconditions_section
+    condition_data
+      No
+      object_name	PlayerRed
+  levels_section
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' ',' ',' ',' ',' '#']
+ ['#' '.' ':' '.' ',' '.' ',' '#']
+ ['#' '.' '.' '.' ',' ',' ',' '#']
+ ['#' '.' ',' '.' ',' ';' ',' '#']
+ ['#' '.' '.' '.' '.' ',' ',' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']]

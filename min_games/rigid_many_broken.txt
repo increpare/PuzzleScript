@@ -1,0 +1,134 @@
+OBJECTS
+
+Background
+white
+
+Target
+DarkBlue
+
+Wall
+DarkGrey
+
+Player
+Blue
+..0..
+..0.0
+00000
+.000.
+.0.0.
+
+Shadow
+Black
+..0..
+0.0..
+00000
+.000.
+.0.0.
+
+
+Crate
+orange
+
+Chest
+green
+
+Box
+red
+
+
+Small
+darkred
+.....
+.000.
+.000.
+.000.
+.....
+
+
+Glue
+pink
+.000.
+00000
+00000
+00000
+.000.
+
+
+Wanna_Move
+#ff00ff
+.....
+.....
+..0..
+.....
+.....
+
+
+LEGEND
+
+. = Background
+# = Wall
+P = Player
+S = Shadow
+* = Crate
++ = Box
+% = Chest
+o = Small
+g = Glue
+Movable = Crate or Box or Chest or Small or Glue
+Mover = Player or Shadow or Movable
+Obstacle = Wall or Mover
+
+COLLISIONLAYERS
+
+Background
+Target
+Obstacle
+Wanna_Move
+
+RULES
+
+[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ] 
+[ > Mover | stationaryMovable ] -> [ > Mover | > Movable ] 
++ [ > Box ] [ stationary Box ] -> [ > Box ] [ > Box ] 
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ] 
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ] 
++ [ moving Glue | stationaryGlue ] -> [ moving Glue | movingGlue ] 
+[ > Mover | stationaryObstacle ] -> [ stationary Mover | Obstacle ] 
++ [ > Crate ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ] 
++ [ > Box ] [ stationary Box ] -> [ stationary Box ] [ Box ] 
++ [ > Chest ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ] 
++ [ moving Glue | stationaryGlue ] -> [ stationary Glue | Glue ] 
+[ > Movable ] -> [ Movable wanna_move ] 
+[ > Mover | stationary Movable WANNA_MOVE ] -> [ > Mover | > Movable ] 
++ [ > Box ] [ stationary Box ] -> [ > Box ] [ > Box ] 
++ [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ] 
++ [ > Chest ] [ stationary Chest ] -> [ > Chest ] [ > Chest ] 
++ [ moving Glue | stationaryGlue ] -> [ moving Glue | movingGlue ] 
+[ wanna_move ] -> [  ] 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+###################
+#.................#
+#............s....#
+#...*..g.g.#......#
+#...*......#...g###
+#...*...o.%%%.....#
+#...+++.o.%.......#
+#....+....%%%.....#
+#....+.........g..#
+#....p.gg.........#
+###################
+
+#########
+#.......#
+#.p.+...#
+#...+...#
+#...+.s.#
+#.......#
+#########

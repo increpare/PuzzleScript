@@ -1,0 +1,1715 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	#4c352b
+        color	#4e382f
+        color	#533c30
+      
+
+      sprite
+        ['0' '1' '0' '1' '0']
+        ['0' '2' '2' '1' '1']
+        ['2' '0' '0' '1' '0']
+        ['0' '0' '0' '1' '2']
+        ['1' '2' '1' '0' '2']
+      
+
+    object_data
+      object_name	PlayerS
+      
+
+      colors
+        color	#a65200
+        color	red
+        color	#6f3c0a
+      
+
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['2' '1' '0' '1' '2']
+        ['2' '0' '0' '0' '2']
+        ['2' '2' '0' '2' '2']
+    object_data
+      object_name	PlayerU
+      
+
+      colors
+        color	#a65200
+        color	red
+        color	#6f3c0a
+      
+
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['2' '0' '0' '0' '2']
+        ['2' '2' '0' '2' '2']
+        ['.' '2' '.' '2' '.']
+    object_data
+      object_name	inflow
+      
+
+      colors
+        color	yellow
+        color	orange
+        color	white
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['2' '2' '2' '2' '2']
+        ['1' '1' '1' '1' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	exit
+      
+
+      colors
+        color	green
+      
+
+      sprite
+        ['.' '0' '.' '0' '.']
+        ['0' '.' '0' '.' '0']
+        ['.' '0' '.' '0' '.']
+        ['0' '.' '0' '.' '0']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	tempwall
+      
+
+      colors
+        color	blue
+      
+
+    object_data
+      object_name	DirtM
+      
+
+      colors
+        color	#82642b
+        color	#876b35
+        color	#927538
+      
+
+      sprite
+        ['0' '1' '0' '1' '0']
+        ['0' '2' '2' '1' '1']
+        ['2' '0' '0' '1' '0']
+        ['0' '0' '0' '1' '2']
+        ['1' '2' '1' '0' '2']
+    object_data
+      object_name	DirtU
+      
+
+      colors
+        color	#82642b
+        color	#876b35
+        color	#927538
+        color	#b19154
+      
+
+      sprite
+        ['2' '2' '2' '2' '2']
+        ['3' '3' '3' '3' '3']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '2']
+        ['1' '2' '1' '0' '2']
+    object_data
+      object_name	Rock
+      
+
+      colors
+        color	#e0e0e0
+        color	#a4a4a4
+        color	#8a8a8a
+        color	#7c7c7c
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '1' '1' '1' '2']
+        ['1' '1' '1' '2' '3']
+        ['1' '1' '2' '2' '3']
+        ['.' '2' '3' '3' '.']
+    object_data
+      object_name	enemy
+      
+
+      colors
+        color	white
+        color	#ff7070
+        color	black
+        color	#880000
+        color	red
+      
+
+      sprite
+        ['0' '1' '4' '1' '4']
+        ['1' '4' '3' '4' '3']
+        ['1' '4' '3' '4' '3']
+        ['1' '4' '4' '4' '3']
+        ['4' '3' '2' '3' '2']
+    object_data
+      object_name	h_grav
+      
+
+      colors
+        color	black
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	h_step
+      
+
+      colors
+        color	red
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+      
+
+    object_data
+      object_name	pickupoverlay
+      
+
+      colors
+        color	pink
+      
+
+    object_data
+      object_name	enemyoverlay
+      
+
+      colors
+        color	pink
+      
+
+    object_data
+      object_name	destroy
+      
+
+      colors
+        color	red
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['.' '0' '.' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '.' '0' '.']
+        ['0' '.' '.' '.' '0']
+    object_data
+      object_name	scrolling
+      
+
+      colors
+        color	blue
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+      
+
+    object_data
+      object_name	Shoes
+      
+
+      colors
+        color	#ff11f7
+        color	#9711ff
+        color	#641d9a
+      
+
+      sprite
+        ['.' '.' '.' '0' '.']
+        ['.' '.' '.' '1' '0']
+        ['.' '.' '.' '0' '1']
+        ['.' '1' '1' '1' '1']
+        ['.' '2' '2' '2' '2']
+    object_data
+      object_name	Eraser
+      
+
+      colors
+        color	#00ff12
+        color	#99ffa0
+        color	#008509
+      
+
+      sprite
+        ['.' '.' '1' '0' '.']
+        ['.' '1' '0' '0' '0']
+        ['1' '0' '0' '0' '0']
+        ['.' '2' '0' '0' '0']
+        ['.' '.' '2' '0' '.']
+    object_data
+      object_name	Unraser
+      
+
+      colors
+        color	#00ff12
+        color	#99ffa0
+        color	#008509
+      
+
+      sprite
+        ['.' '0' '1' '.' '.']
+        ['0' '0' '0' '1' '.']
+        ['0' '0' '0' '0' '1']
+        ['0' '0' '0' '2' '.']
+        ['.' '0' '2' '.' '.']
+    object_data
+      object_name	Shoesworn
+      
+
+      colors
+        color	purple
+        color	pink
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['1' '0' '.' '0' '1']
+  legend_section
+    legend_data
+      #
+      object_name	Dirtm
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      P
+      object_name	playerS
+    legend_data
+      o
+      object_name	Rock
+    legend_data
+      s
+      object_name	shoes
+    legend_data
+      x
+      object_name	enemy
+    legend_data
+      @
+      object_name	dirtm
+      legend_operation
+        object_name	destroy
+    legend_data
+      $
+      object_name	dirtm
+      legend_operation
+        object_name	inflow
+    legend_data
+      e
+      object_name	exit
+      legend_operation
+        object_name	Dirtm
+    legend_data
+      %
+      object_name	unraser
+    legend_data
+      dirt
+      object_name	dirtm
+      legend_operation
+        object_name	dirtu
+    legend_data
+      Player
+      object_name	PlayerS
+      legend_operation
+        object_name	PlayerU
+    legend_data
+      Helpers
+      object_name	h_grav
+      legend_operation
+        object_name	scrolling
+      legend_operation
+        object_name	h_step
+    legend_data
+      Pickups
+      object_name	shoes
+      legend_operation
+        object_name	Eraser
+      legend_operation
+        object_name	Unraser
+    legend_data
+      Heldpickups
+      object_name	shoesworn
+    legend_data
+      Solid
+      object_name	Dirt
+      legend_operation
+        object_name	Player
+      legend_operation
+        object_name	Rock
+      legend_operation
+        object_name	Pickups
+      legend_operation
+        object_name	enemy
+    legend_data
+      Heavy
+      object_name	Rock
+      legend_operation
+        object_name	Pickups
+      legend_operation
+        object_name	enemy
+    legend_data
+      overlays
+      object_name	pickupoverlay
+      legend_operation
+        object_name	enemyoverlay
+    legend_data
+      Everything
+      object_name	Solid
+      legend_operation
+        object_name	tempwall
+      legend_operation
+        object_name	overlays
+  collisionlayers_section
+    layer_data
+      object_name	helpers
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	tempwall
+      object_name	solid
+    layer_data
+      object_name	Heldpickups
+    layer_data
+      object_name	overlays
+    layer_data
+      object_name	destroy
+    layer_data
+      object_name	inflow
+      object_name	exit
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              >
+              PlayerU
+          ->
+          command
+            command_keyword	cancel
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              >
+              PlayerU
+          ->
+          rule_part
+            rule_content	PlayerS
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              >
+              PlayerS
+            cell_border
+            rule_content	no
+            rule_content	Solid
+            cell_border
+            rule_content	no
+            rule_content
+              Solid
+              no
+              inflow
+          ->
+          rule_part
+            cell_border
+            cell_border
+            rule_content	PlayerU
+            rule_content	scrolling
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              >
+              PlayerS
+            cell_border
+            rule_content	no
+            rule_content	Solid
+            cell_border
+            rule_content
+              Dirt
+              no
+              inflow
+          ->
+          rule_part
+            cell_border
+            cell_border
+            rule_content	PlayerU
+            rule_content	scrolling
+          command
+            sound
+              sound_id	7
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              >
+              PlayerS
+            cell_border
+            rule_content	no
+            rule_content
+              Solid
+              no
+              inflow
+          ->
+          rule_part
+            cell_border
+            rule_content	PlayerU
+            rule_content	scrolling
+          command
+            sound
+              sound_id	2
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              >
+              PlayerS
+            cell_border
+            rule_content
+              Dirt
+              no
+              inflow
+          ->
+          rule_part
+            cell_border
+            rule_content	PlayerU
+            rule_content	scrolling
+          command
+            sound
+              sound_id	7
+          
+
+        rule_data
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content
+              Everything
+              destroy
+          ->
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content	destroy
+          
+
+        rule_data
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content
+              inflow
+              no
+              Player
+          ->
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content
+              inflow
+              tempwall
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content	inflow
+          ->
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content
+              inflow
+              random
+              overlays
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content	inflow
+          ->
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content
+              inflow
+              random
+              overlays
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content	inflow
+          ->
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content
+              inflow
+              random
+              overlays
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content	inflow
+          ->
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content
+              inflow
+              random
+              overlays
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content	inflow
+          ->
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content
+              inflow
+              enemyoverlay
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content	inflow
+          ->
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content
+              inflow
+              enemyoverlay
+          
+
+    rule_block
+      rule_block_loop
+        startloop
+        
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	tempwall
+          ->
+          rule_part
+            rule_content	dirtm
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	tempwall
+          ->
+          rule_part
+            rule_content	dirtm
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	tempwall
+          ->
+          rule_part
+            rule_content	dirtm
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	tempwall
+          ->
+          rule_part
+            rule_content	dirtm
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	tempwall
+          ->
+          rule_part
+            rule_content	dirtm
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	tempwall
+          ->
+          rule_part
+            rule_content	dirtm
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	tempwall
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	tempwall
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	random
+          prefix	down
+          rule_part
+            rule_content	tempwall
+            cell_border
+            rule_content	solid
+          ->
+          rule_part
+            rule_content	rock
+            cell_border
+            rule_content	Solid
+          
+
+        rule_data
+          prefix	random
+          prefix	down
+          rule_part
+            rule_content	tempwall
+            cell_border
+            rule_content	solid
+          ->
+          rule_part
+            rule_content	rock
+            cell_border
+            rule_content	Solid
+          
+
+        endloop
+        
+
+    rule_block
+      rule_block_once
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              pickupoverlay
+              rock
+          ->
+          rule_part
+            rule_content
+              random
+              pickups
+          
+
+        rule_data
+          rule_part
+            rule_content
+              enemyoverlay
+              rock
+          ->
+          rule_part
+            rule_content	enemy
+          
+
+        rule_data
+          prefix	random
+          prefix	down
+          rule_part
+            rule_content
+              Solid
+              inflow
+            cell_border
+            rule_content	rock
+            cell_border
+            rule_content	rock
+          ->
+          rule_part
+            rule_content
+              rock
+              inflow
+            cell_border
+            rule_content	rock
+            cell_border
+            rule_content	rock
+          
+
+        rule_data
+          rule_part
+            rule_content
+              no
+              Solid
+            cell_border
+            rule_content	inflow
+            rule_content	Solid
+            cell_border
+            rule_content	no
+            rule_content	Solid
+          ->
+          rule_part
+            cell_border
+            rule_content	inflow
+            cell_border
+          
+
+        rule_data
+          rule_part
+            rule_content
+              no
+              Solid
+            cell_border
+            rule_content	inflow
+            rule_content	Solid
+            cell_border
+            rule_content	inflow
+            rule_content	Solid
+            cell_border
+            rule_content	no
+            rule_content	Solid
+          ->
+          rule_part
+            cell_border
+            rule_content	inflow
+            cell_border
+            rule_content	inflow
+            cell_border
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content	Everything
+          ->
+          rule_part
+            rule_content	scrolling
+          rule_part
+            rule_content
+              >
+              Everything
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content	Heavy
+          ->
+          rule_part
+            rule_content
+              down
+              Heavy
+          command
+            command_keyword	again
+          
+
+        rule_data
+          prefix	horizontal
+          rule_part
+            rule_content
+              >
+              PlayerU
+            cell_border
+            rule_content	Dirt
+          ->
+          rule_part
+            cell_border
+            rule_content	PlayerS
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          prefix	horizontal
+          rule_part
+            rule_content
+              >
+              PlayerU
+          ->
+          rule_part
+            rule_content
+              >
+              PlayerS
+          
+
+        rule_data
+          rule_part
+            rule_content
+              action
+              PlayerU
+          ->
+          rule_part
+            rule_content	PlayerS
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Dirt
+          ->
+          rule_part
+            cell_border
+            rule_content	Player
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              action
+              PlayerS
+              shoesworn
+            cell_border
+            rule_content	Solid
+            cell_border
+            rule_content	no
+            rule_content
+              inflow
+              no
+              exit
+          ->
+          rule_part
+            cell_border
+            rule_content	Solid
+            cell_border
+            rule_content	PlayerS
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              action
+              PlayerS
+              shoesworn
+            cell_border
+            cell_border
+            rule_content	Solid
+            cell_border
+            rule_content	no
+            rule_content
+              inflow
+              no
+              exit
+          ->
+          rule_part
+            cell_border
+            cell_border
+            rule_content	Solid
+            cell_border
+            rule_content	PlayerS
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              action
+              PlayerS
+              shoesworn
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	no
+            rule_content
+              inflow
+              no
+              exit
+          ->
+          rule_part
+            cell_border
+            cell_border
+            cell_border
+            cell_border
+            rule_content	PlayerU
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          prefix	Horizontal
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Heavy
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content
+              >
+              Heavy
+          command
+            sound
+              sound_id	6
+          
+
+        rule_data
+          prefix	Horizontal
+          rule_part
+            rule_content
+              >
+              Heavy
+            cell_border
+            rule_content	Heavy
+          ->
+          rule_part
+            rule_content
+              >
+              Heavy
+            cell_border
+            rule_content
+              >
+              Heavy
+          
+
+        rule_data
+          prefix	Horizontal
+          rule_part
+            rule_content
+              >
+              Enemy
+            cell_border
+            rule_content	Dirt
+          ->
+          rule_part
+            rule_content
+              >
+              Enemy
+            cell_border
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          prefix	Horizontal
+          rule_part
+            rule_content
+              >
+              Enemy
+            cell_border
+            rule_content	pickups
+            cell_border
+            rule_content	Solid
+          ->
+          rule_part
+            rule_content
+              >
+              Enemy
+            cell_border
+            cell_border
+            rule_content	Solid
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          rule_part
+            rule_content
+              moving
+              Enemy
+              h_grav
+          ->
+          rule_part
+            rule_content
+              moving
+              Enemy
+              moving
+              h_grav
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              >
+              Enemy
+              h_grav
+            cell_border
+            rule_content
+              Solid
+              no
+              Player
+              no
+              Enemy
+          ->
+          rule_part
+            cell_border
+            rule_content	Enemy
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              >
+              Enemy
+            cell_border
+            rule_content	Player
+          ->
+          rule_part
+            rule_content
+              >
+              Enemy
+            cell_border
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	shoes
+          ->
+          rule_part
+            cell_border
+            rule_content
+              stationary
+              Player
+              shoesworn
+          command
+            sound
+              sound_id	3
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Eraser
+          rule_part
+            rule_content
+              Solid
+              no
+              Player
+              no
+              Pickups
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Eraser
+          rule_part
+            rule_content	DirtM
+          
+
+    rule_block
+      rule_block_loop
+        startloop
+        
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Unraser
+          rule_part
+            rule_content
+              Solid
+              no
+              Player
+            cell_border
+            rule_content	no
+            rule_content	Solid
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Unraser
+          rule_part
+            rule_content	Solid
+            cell_border
+            rule_content	Rock
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Unraser
+          rule_part
+            rule_content
+              Solid
+              no
+              Player
+            cell_border
+            rule_content	no
+            rule_content	Solid
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Unraser
+          rule_part
+            rule_content	Solid
+            cell_border
+            rule_content	Dirtm
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Unraser
+          rule_part
+            rule_content
+              Solid
+              no
+              Player
+            cell_border
+            rule_content	no
+            rule_content	Solid
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Unraser
+          rule_part
+            rule_content	Solid
+            cell_border
+            rule_content	Dirtm
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Unraser
+          rule_part
+            rule_content
+              Solid
+              no
+              Player
+            cell_border
+            rule_content	no
+            rule_content	Solid
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Unraser
+          rule_part
+            rule_content	Solid
+            cell_border
+            rule_content	Dirtm
+          
+
+        endloop
+        
+
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Pickups
+          ->
+          rule_part
+            cell_border
+            rule_content	stationary
+            rule_content	Player
+          command
+            sound
+              sound_id	8
+          
+
+    rule_block
+      rule_block_once
+        rule_data
+          prefix	up
+          rule_part
+            rule_content	PlayerS
+            cell_border
+            rule_content	no
+            rule_content	Solid
+          ->
+          rule_part
+            rule_content	PlayerS
+            cell_border
+            rule_content	h_step
+          
+
+        rule_data
+          rule_part
+            rule_content
+              moving
+              PlayerS
+          rule_part
+            rule_content	h_step
+          ->
+          rule_part
+            rule_content
+              moving
+              PlayerS
+          rule_part
+            rule_content
+              moving
+              h_step
+          
+
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content	h_step
+            cell_border
+            rule_content	Player
+          ->
+          rule_part
+            cell_border
+            rule_content	Player
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	h_grav
+          rule_part
+            rule_content	h_step
+          ->
+          rule_part
+            rule_content	h_grav
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content
+              h_step
+              no
+              Solid
+            cell_border
+            rule_content	no
+            rule_content	Player
+          rule_part
+            rule_content	PlayerS
+          ->
+          rule_part
+            rule_content	PlayerS
+            cell_border
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content
+              h_step
+              Dirt
+            cell_border
+            rule_content	no
+            rule_content	Player
+          rule_part
+            rule_content	PlayerS
+          ->
+          rule_part
+            rule_content	PlayerS
+            cell_border
+          rule_part
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content	PlayerS
+            cell_border
+            rule_content	h_grav
+          ->
+          rule_part
+            cell_border
+            rule_content	PlayerS
+          
+
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content	PlayerS
+            cell_border
+            rule_content	no
+            rule_content	Solid
+          ->
+          rule_part
+            rule_content	PlayerS
+            cell_border
+            rule_content	h_grav
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              Player
+              no
+              shoesworn
+          rule_part
+            rule_content	shoesworn
+          ->
+          rule_part
+            rule_content
+              Player
+              shoesworn
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content	enemy
+            cell_border
+            rule_content	no
+            rule_content	Solid
+          ->
+          rule_part
+            rule_content
+              enemy
+              h_grav
+            cell_border
+          
+
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content	enemy
+            cell_border
+            rule_content	Player
+          ->
+          rule_part
+            rule_content
+              enemy
+              h_grav
+            cell_border
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	scrolling
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	overlays
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	h_step
+          ->
+          rule_part
+          
+
+        rule_data
+          prefix	late
+          prefix	up
+          rule_part
+            rule_content	Dirtm
+            cell_border
+            rule_content	no
+            rule_content	Dirt
+          ->
+          rule_part
+            rule_content	DirtU
+            cell_border
+          
+
+        rule_data
+          prefix	late
+          prefix	up
+          rule_part
+            rule_content	DirtU
+            cell_border
+            rule_content	Dirt
+          ->
+          rule_part
+            rule_content	Dirtm
+            cell_border
+            rule_content	Dirt
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Player
+              destroy
+          ->
+          rule_part
+            rule_content	destroy
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              Player
+              exit
+          rule_part
+            rule_content
+              exit
+              no
+              Player
+          ->
+          rule_part
+            rule_content
+              Player
+              exit
+          rule_part
+          command
+            sound
+              sound_id	9
+          
+
+  winconditions_section
+    condition_data
+      all
+      object_name	exit
+      on
+      object_name	player
+  levels_section
+    level_data	None
+    level_data	[['$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$'
+  '$']
+ ['e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e'
+  'e']
+ ['e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e'
+  'e']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' 'P' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#']
+ ['@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@'
+  '@']]
+    level_data	None
+    level_data	[['$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$' '$'
+  '$' '$' '$' '$' '$' '$' '$']
+ ['e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e'
+  'e' 'e' 'e' 'e' 'e' 'e' 'e']
+ ['e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e' 'e'
+  'e' 'e' 'e' 'e' 'e' 'e' 'e']
+ ['o' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' 'o']
+ ['o' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' 'o']
+ ['o' '.' '.' 'x' '.' 'x' '.' 'x' '.' 'x' '.' 'x' 'p' 'x' '.' 'x' '.' 'x'
+  '.' 'x' '.' 'x' '.' '.' 'o']
+ ['o' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' 'x' '#' '.' '#' '.' '#'
+  '.' '#' '.' '#' '.' '#' 'o']
+ ['o' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.'
+  '#' '.' '#' '.' '#' '.' 'o']
+ ['o' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#'
+  '.' '#' '.' '#' '.' '#' 'o']
+ ['o' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.'
+  '#' '.' '#' '.' '#' '.' 'o']
+ ['o' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#'
+  '.' '#' '.' '#' '.' '#' 'o']
+ ['o' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.'
+  '#' '.' '#' '.' '#' '.' 'o']
+ ['o' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#' '.' '#'
+  '.' '#' '.' '#' '.' '#' 'o']
+ ['o' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' 'o']
+ ['o' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' 'o']
+ ['o' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' 'o']
+ ['o' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' 'o']
+ ['o' '.' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '.' '.' 'o']
+ ['o' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.' '.' '.' '.' '#' '.' 'o']
+ ['o' '.' '.' '.' '.' '#' '#' '#' '.' '.' '.' '%' '.' '.' '.' '#' '.' '.'
+  '#' '.' '.' '#' '#' '.' 'o']
+ ['#' '#' '#' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.'
+  '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '.' '#' '#' '.' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '.' '#' '#' '#' '#' '#' '.' '.' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
+  '#' '#' '#' '#' '#' '#' '#']
+ ['@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@' '@'
+  '@' '@' '@' '@' '@' '@' '@']]

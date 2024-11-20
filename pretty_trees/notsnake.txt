@@ -1,0 +1,90 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	blue
+      
+
+    object_data
+      object_name	Player
+      
+
+      colors
+        color	lightblue
+      
+
+    object_data
+      object_name	Trail
+      
+
+      colors
+        color	purple
+      
+
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      P
+      object_name	Player
+    legend_data
+      O
+      object_name	Trail
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Trail
+    layer_data
+      object_name	Player
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	No
+            rule_content	Trail
+          ->
+          rule_part
+            rule_content	Trail
+            cell_border
+            rule_content	Player
+          command
+            sound
+              sound_id	0
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Trail
+          ->
+          rule_part
+            cell_border
+            rule_content	Player
+          command
+            sound
+              sound_id	1
+          
+
+  winconditions_section
+    condition_data
+      no
+      object_name	Trail
+  levels_section
+    level_data	[['O' 'O' 'O' 'O' 'O' 'O' 'O' 'O']
+ ['O' 'O' 'O' 'O' 'O' 'O' 'O' 'O']
+ ['O' '.' '.' 'P' 'O' 'O' '.' 'O']
+ ['O' 'O' 'O' 'O' 'O' 'O' 'O' 'O']
+ ['O' 'O' 'O' 'O' 'O' 'O' 'O' 'O']]

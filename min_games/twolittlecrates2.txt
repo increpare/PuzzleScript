@@ -1,0 +1,87 @@
+OBJECTS
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+BlueCrateB
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+OrangeCrateO
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+LEGEND
+
+Crate = OrangeCrate or BlueCrate
+. = Background
+# = Wall
+P = Player
+
+COLLISIONLAYERS
+
+Background
+Target
+Player
+Wall, Crate
+
+RULES
+
+[ > Player | Crate ] -> [ > Player | > Crate ] 
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ] 
+[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ] 
+[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ] 
+[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ] 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+################
+#..............#
+#..............#
+#.P.BOBOBOBOB..#
+#..............#
+#..............#
+################

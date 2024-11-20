@@ -1,0 +1,309 @@
+OBJECTS
+
+Background.
+darkgreen green
+00000
+00000
+00100
+00000
+00000
+
+Player
+Black brown grey Blue
+.111.
+.111.
+22222
+13331
+.3.3.
+
+Player_Dead
+darkgrey darkgrey darkgrey darkgrey
+.111.
+.111.
+22222
+.333.
+.3.3.
+
+Wall#
+black
+
+Red_OffR
+black DarkRed
+.....
+..1..
+.101.
+.101.
+.101.
+
+Red_OnT
+pink red
+.....
+..1..
+.101.
+.101.
+.101.
+
+Green_OffG
+black Green
+.....
+..1..
+.101.
+.101.
+.101.
+
+Green_OnH
+Green LightGreen
+.....
+..1..
+.101.
+.101.
+.101.
+
+Blue_OffB
+black DarkBlue
+.....
+..1..
+.101.
+.101.
+.101.
+
+Blue_OnN
+Blue LightBlue
+.....
+..1..
+.101.
+.101.
+.101.
+
+Battery_HC
+Grey lightgrey
+.000.
+.010.
+01110
+.010.
+.000.
+
+Battery_VO
+Grey lightgrey
+..0..
+00100
+01110
+00100
+..0..
+
+cable_hq
+grey
+.....
+.....
+00000
+.....
+.....
+
+cable_ve
+grey
+..0..
+..0..
+..0..
+..0..
+..0..
+
+cable_ulw
+grey
+..0..
+..0..
+000..
+.....
+.....
+
+cable_urd
+grey
+..0..
+..0..
+..000
+.....
+.....
+
+cable_drs
+grey
+.....
+.....
+..000
+..0..
+..0..
+
+cable_dla
+grey
+.....
+.....
+000..
+..0..
+..0..
+
+cable_omniz
+grey
+..0..
+..0..
+00000
+..0..
+..0..
+
+cable_dlri
+grey
+.....
+.....
+00000
+..0..
+..0..
+
+cable_ulrk
+grey
+..0..
+..0..
+00000
+.....
+.....
+
+cable_udrj
+grey
+..0..
+..0..
+..000
+..0..
+..0..
+
+cable_udll
+grey
+..0..
+..0..
+000..
+..0..
+..0..
+
+light
+black
+
+light_up
+yellow
+.000.
+.000.
+.000.
+.....
+.....
+
+light_down
+yellow
+.....
+.....
+.000.
+.000.
+.000.
+
+light_Left
+yellow
+.....
+000..
+000..
+000..
+.....
+
+light_right
+yellow
+.....
+..000
+..000
+..000
+.....
+
+
+LEGEND
+
+P = Player
+Unlit = Blue_Off or Green_Off or Red_Off
+Lit = Blue_On or Green_On or Red_On
+Cable = Cable_h or Cable_v or Cable_dr or Cable_dl or Cable_ul or Cable_ur or Cable_UL or Cable_UR or Cable_UDR or Cable_ULR or Cable_UDL or Cable_DLR or Cable_Omni
+Battery = Battery_H or Battery_V
+Item = Unlit or Lit or Battery or Cable
+Cable_Up = Cable_V or Cable_UL or Cable_UR or Battery_V or Cable_UDR or Cable_ULR or Cable_UDL or Cable_Omni or Player
+Cable_Down = Cable_V or Cable_DL or Cable_DR or Battery_V or Cable_UDR or Cable_UDL or Cable_DLR or Cable_Omni or Player
+Cable_Left = Cable_H or Cable_UL or Cable_DL or Battery_H or Cable_ULR or Cable_UDL or Cable_DLR or Cable_Omni or Player
+Cable_Right = Cable_H or Cable_UR or Cable_DR or Battery_H or Cable_UDR or Cable_ULR or Cable_DLR or Cable_Omni or Player
+LightEffect = Light_Up or Light_Down or Light_Left or Light_Right
+Object = Player or Item
+Player_Dying = Player or Light
+
+COLLISIONLAYERS
+
+Background
+Light
+Light_Up
+Light_Down
+Light_Left
+Light_Right
+Player, Player_Dead
+Wall, Item
+
+RULES
+
+[ Light ] -> [  ] 
+[ LightEffect no Player ] -> [  ] 
+[ Red_On ] -> [ Red_Off ] 
+[ Green_On ] -> [ Green_Off ] 
+[ Blue_On ] -> [ Blue_Off ] 
+[ > Object | Object ] -> [ > Object | > Object ] 
+startLoop
+late [ Battery ] -> [ Light Battery ] 
+late left [ Player | Light_Right ] -> [ Light Player | Light_Right ] 
+late right [ Player | Light_Left ] -> [ Light Player | Light_Left ] 
+late up [ Player | Light_Down ] -> [ Light Player | Light_Down ] 
+late down [ Player | Light_Up ] -> [ Light Player | Light_Up ] 
+late up [ Player_Dead | Light_Down ] -> [ Light Player_Dead | Light_Down ] 
+late down [ Player_Dead | Light_up ] -> [ Light Player_Dead | Light_up ] 
+late left [ Cable_Left | Light_Right ] -> [ Light Cable_Left | Light_Right ] 
+late right [ Cable_Right | Light_Left ] -> [ Light Cable_Right | Light_Left ] 
+late up [ Cable_Up | Light_Down ] -> [ Light Cable_Up | Light_Down ] 
+late down [ Cable_Down | Light_Up ] -> [ Light Cable_Down | Light_Up ] 
+late down [ Red_Off | Light_Up ] -> [ Red_On | Light_Up ] 
+late down [ Green_Off | Light_Up ] -> [ Green_On | Light_Up ] 
+late down [ Blue_Off | Light_Up ] -> [ Blue_On | Light_Up ] 
+late [ Light Cable_Up ] -> [ Light Light_Up Cable_Up ] 
+late [ Light Cable_Down ] -> [ Light Light_Down Cable_Down ] 
+late [ Light Cable_Left ] -> [ Light Light_Left Cable_Left ] 
+late [ Light Cable_Right ] -> [ Light Light_Right Cable_Right ] 
+endLoop
+late [ Player Light ] -> again 
+late [ Player_Dead Light ] -> again 
+late [ Player LightEffect ] -> [ Player_Dead LightEffect ] again 
+late [ Player_Dead Light ] -> [ Player_Dead ] 
+
+
+WINCONDITIONS
+
+No Unlit
+No Player_Dead
+
+LEVELS
+
+......
+.r.g..
+..o.p.
+.w.d..
+......
+
+.....##.....
+.....##.w.d.
+..c.........
+...p....r.g.
+.....##.....
+
+.......
+..rgb..
+..wkd..
+...o...
+.....p.
+.......
+
+...........
+...ccccc...
+.d.crcgc.w.
+...ccccc...
+..........p

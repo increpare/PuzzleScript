@@ -1,0 +1,79 @@
+OBJECTS
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Blood
+DarkRed red white
+.01.0
+.1202
+2.0.1
+02.1.
+.1.0.
+
+SheepO
+black white gray
+..11.
+01111
+01112
+.212.
+.0.0.
+
+
+LEGEND
+
+. = Background
+# = Wall
+P = Player
+
+COLLISIONLAYERS
+
+Background
+Blood
+Player
+Wall, Sheep
+
+RULES
+
+[ Action Player | Sheep ] -> [ Action Player | > Sheep ] 
+[ > Sheep | Sheep ] -> [ blood | > Sheep ] 
+
+
+WINCONDITIONS
+
+
+
+LEVELS
+
+#################
+#...............#
+#...............#
+#......ooo......#
+#########ooo....#
+#P.o...o..ooo...#
+#########oooo...#
+#...oooooooo....#
+#......oo.......#
+#...............#
+#################

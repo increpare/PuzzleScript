@@ -1,0 +1,302 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      legend_key	.
+      
+
+      colors
+        color	black
+        color	white
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Player
+      legend_key	P
+      
+
+      colors
+        color	transparent
+      
+
+    object_data
+      object_name	visited
+      
+
+      colors
+        color	transparent
+      
+
+    object_data
+      object_name	filler
+      
+
+      colors
+        color	transparent
+      
+
+    object_data
+      object_name	w_up
+      
+
+      colors
+        color	white
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	w_down
+      
+
+      colors
+        color	white
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	w_left
+      
+
+      colors
+        color	white
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['0' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	w_right
+      
+
+      colors
+        color	white
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '0']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	to_delete
+      
+
+      colors
+        color	transparent
+      
+
+    object_data
+      object_name	temp
+      
+
+      colors
+        color	transparent
+      
+
+    object_data
+      object_name	tempA
+      
+
+      colors
+        color	transparent
+      
+
+  legend_section
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Player
+    layer_data
+      object_name	filler
+    layer_data
+      object_name	visited
+    layer_data
+      object_name	w_up
+    layer_data
+      object_name	w_down
+    layer_data
+      object_name	w_left
+    layer_data
+      object_name	w_right
+    layer_data
+      object_name	to_delete
+    layer_data
+      object_name	temp
+    layer_data
+      object_name	tempA
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          prefix	random
+          rule_part
+            rule_content
+              no
+              filler
+          ->
+          rule_part
+            rule_content
+              player
+              visited
+          
+
+        rule_data
+          rule_part
+            rule_content
+              no
+              filler
+          ->
+          rule_part
+            rule_content	filler
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	no
+            rule_content
+              v
+              isited
+          ->
+          rule_part
+            rule_content
+              v
+              isited
+            rule_content
+              >
+              to_delete
+            cell_border
+            rule_content
+              <
+              to_delete
+            rule_content	player
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	player
+            cell_border
+            rule_content	no
+            rule_content
+              v
+              isited
+          ->
+          rule_part
+            rule_content
+              player
+              tempA
+            cell_border
+          
+
+        rule_data
+          prefix	random
+          rule_part
+            rule_content
+              player
+              no
+              tempA
+          rule_part
+            rule_content
+              v
+              isited
+            cell_border
+            rule_content	no
+            rule_content
+              v
+              isited
+          ->
+          rule_part
+            rule_content
+              v
+              isited
+          rule_part
+            rule_content
+              v
+              isited
+              player
+            cell_border
+          command
+            command_keyword	again
+          
+
+        rule_data
+          rule_part
+            rule_content	tempA
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content
+              up
+              to_delete
+          ->
+          rule_part
+            rule_content	w_up
+          
+
+        rule_data
+          rule_part
+            rule_content
+              down
+              to_delete
+          ->
+          rule_part
+            rule_content	w_down
+          
+
+        rule_data
+          rule_part
+            rule_content
+              left
+              to_delete
+          ->
+          rule_part
+            rule_content	w_left
+          
+
+        rule_data
+          rule_part
+            rule_content
+              right
+              to_delete
+          ->
+          rule_part
+            rule_content	w_right
+          
+
+  winconditions_section
+  levels_section
+    level_data	[['.' '.' '.' ... '.' '.' '.']
+ ['.' '.' '.' ... '.' '.' '.']
+ ['.' '.' '.' ... '.' '.' '.']
+ ...
+ ['.' '.' '.' ... '.' '.' '.']
+ ['.' '.' '.' ... '.' '.' '.']
+ ['.' '.' '.' ... '.' '.' '.']]

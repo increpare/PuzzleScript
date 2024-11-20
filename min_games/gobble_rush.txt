@@ -1,0 +1,415 @@
+OBJECTS
+
+Background
+Black
+
+Exit
+White Black
+01010
+10101
+01010
+10101
+01010
+
+Wall
+Brown
+
+Hole
+Brown
+00000
+00.00
+0...0
+0...0
+0...0
+
+Player
+Pink Blue Brown Red DarkBlue
+.222.
+.101.
+33333
+.444.
+44.44
+
+Enemy
+LightBrown
+.....
+0..0.
+.00..
+0000.
+0..0.
+
+Alert
+Red
+....0
+....0
+.....
+....0
+.....
+
+Chicken
+#EA3 #FC9 #FEA
+.....
+2....
+.110.
+01100
+.000.
+
+Lettuce
+#6C3 #5A2 #482 #361 #240
+.2.2.
+24342
+12421
+01310
+.002.
+
+LoS
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveU
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveD
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveL
+White
+.....
+.....
+.....
+.....
+.....
+
+MoveR
+White
+.....
+.....
+.....
+.....
+.....
+
+CanMove
+White
+.....
+.....
+.....
+.....
+.....
+
+Level0
+White #F00
+.....
+.....
+.111.
+.....
+.....
+
+Level1
+White #F00
+00000
+.....
+.111.
+.....
+.....
+
+Level2
+White #F00
+.....
+00000
+.111.
+.....
+.....
+
+Level3
+White #F88
+.....
+.....
+01110
+.....
+.....
+
+Level4
+White #F00
+.....
+.....
+.111.
+00000
+.....
+
+Level5
+White #F00
+.....
+.....
+.111.
+.....
+00000
+
+
+LEGEND
+
+. = Background
+X = Exit
+# = Wall
+H = Hole
+P = Player
+Q = Player or Exit
+E = Enemy
+F = Enemy or Exit
+C = Chicken
+D = Chicken or Exit
+L = Lettuce
+M = Lettuce or Exit
+0 = Level0
+1 = Level1
+2 = Level2
+3 = Level3
+4 = Level4
+5 = Level5
+Move = MoveU or MoveD or MoveL or MoveR
+Obstacle = Wall or Enemy
+Food = Player or Chicken
+
+COLLISIONLAYERS
+
+Background
+Exit, Hole
+Level0, Level1
+Level2, Level3
+Level4, Level5
+Wall
+Player, Enemy
+Chicken, Lettuce
+LoS, Move
+Alert, CanMove
+
+RULES
+
+[ > Player | Hole ] -> cancel 
+[ Enemy Move ] -> [ Enemy CanMove Move ] 
+late up [ Enemy CanMove MoveU | Obstacle no Move ] -> [ Enemy | Obstacle ] 
+late down [ Enemy CanMove MoveD | Obstacle no Move ] -> [ Enemy | Obstacle ] 
+late left [ Enemy CanMove MoveL | Obstacle no Move ] -> [ Enemy | Obstacle ] 
+late right [ Enemy CanMove MoveR | Obstacle no Move ] -> [ Enemy | Obstacle ] 
+late down [ Enemy CanMove MoveD | Enemy CanMove MoveU ] -> [ Enemy | Enemy ] 
+late right [ Enemy CanMove MoveR | Enemy CanMove MoveL ] -> [ Enemy | Enemy ] 
+late up [ Enemy CanMove MoveU | Enemy no Move ] -> [ Enemy | Enemy ] 
+late down [ Enemy CanMove MoveD | Enemy no Move ] -> [ Enemy | Enemy ] 
+late left [ Enemy CanMove MoveL | Enemy no Move ] -> [ Enemy | Enemy ] 
+late right [ Enemy CanMove MoveR | Enemy no Move ] -> [ Enemy | Enemy ] 
+late up [ Enemy CanMove MoveU | noObstacle ] -> [  | EnemyMoveU ] again 
+late down [ Enemy CanMove MoveD | noObstacle ] -> [  | EnemyMoveD ] again 
+late left [ Enemy CanMove MoveL | noObstacle ] -> [  | EnemyMoveL ] again 
+late right [ Enemy CanMove MoveR | noObstacle ] -> [  | EnemyMoveR ] again 
+late [ Enemy CanMove ] -> [ Enemy ] 
+late [ Enemy Alert ] -> [ Enemy ] 
+late [ Food no CanMove ] -> [ Food CanMove ] 
+late [ Move ] [ CanMove ] -> [ Move ] [  ] 
+late [ Player CanMove ] -> [ Player LoS ] 
+late [ Player LoS | noWall no LoS ] -> [ Player LoS | LoS ] 
+late [ Player Los | ... | LoS | noWall no LoS ] -> [ Player LoS | ... | LoS | LoS ] 
+late up [ Enemy LoS no Move | ... | PlayerLoS ] -> [ Enemy MoveU Alert | ... | PlayerLoS ] 
+late down [ Enemy LoS no Move | ... | PlayerLoS ] -> [ Enemy MoveD Alert | ... | PlayerLoS ] 
+late left [ Enemy LoS no Move | ... | PlayerLoS ] -> [ Enemy MoveL Alert | ... | PlayerLoS ] 
+late right [ Enemy LoS no Move | ... | PlayerLoS ] -> [ Enemy MoveR Alert | ... | PlayerLoS ] 
+late [ LoS ] -> [  ] 
+startloop
+late random [ Chicken CanMove ] -> [ Chicken LoS ] 
+late [ Chicken LoS | noWall no LoS ] -> [ Chicken LoS | LoS ] 
+late [ Chicken Los | ... | LoS | noWall no LoS ] -> [ Chicken LoS | ... | LoS | LoS ] 
+late up [ Enemy LoS no Move | ... | ChickenLoS ] -> [ Enemy MoveU Alert | ... | ChickenLoS ] 
+late down [ Enemy LoS no Move | ... | ChickenLoS ] -> [ Enemy MoveD Alert | ... | ChickenLoS ] 
+late left [ Enemy LoS no Move | ... | ChickenLoS ] -> [ Enemy MoveL Alert | ... | ChickenLoS ] 
+late right [ Enemy LoS no Move | ... | ChickenLoS ] -> [ Enemy MoveR Alert | ... | ChickenLoS ] 
+late [ LoS ] -> [  ] 
+endloop
+
+
+WINCONDITIONS
+
+some Exit on Player
+no Alert
+no Move
+
+LEVELS
+
+..#####....
+..#X..#...3
+..#...###.0
+..#E....#.0
+..###...#.0
+....#..P#.0
+....#####..
+
+..#######..
+..#P....#.4
+..#.....#.0
+..#####.#.0
+..#EX...#.0
+..###...#.0
+....#####..
+
+..#######..
+..#.....#.5
+..#..#..#.0
+..#.....#.0
+..#.P##E#.0
+..#..#XE#.0
+..#######..
+
+..#######..
+..#.....#.0
+..#.E...#.1
+..#.E...#.0
+..#.E...#.0
+..#XE.P.#.0
+..#######..
+
+..#######..
+..#..#.X#.0
+..#..E..#.2
+..##.#E##.0
+..#.....#.0
+..#P.#..#.0
+..#######..
+
+..#######..
+..#X...P#.0
+..##.#..#.3
+..#...#.#.0
+..#.....#.0
+..#.E#.E#.0
+..#######..
+
+..######...
+..#P.#.##.0
+..#.X..E#.4
+..##.#..#.0
+..#.....#.0
+..##..E.#.0
+...######..
+
+...####....
+..##..##..0
+..#.P..##.5
+..#..X.E#.0
+..##...##.0
+...##E##..0
+....###....
+
+..#######..
+..#XE...#.0
+..#EE..##.0
+..#..P..#.1
+..#.....#.0
+..#.#...#.0
+..#######..
+
+..#######..
+..#P..#X#.0
+..#.....#.0
+..##....#.2
+..#.....#.0
+..#E..#E#.0
+..#######..
+
+..#######..
+..#X...P#.0
+..#.###.#.0
+..#.....#.3
+..#E###.#.0
+..#....C#.0
+..#######..
+
+..#######..
+..#P....#.0
+..#..#.E#.0
+..#.....#.4
+..##.C.##.0
+...##X##..0
+....###....
+
+..#######..
+..#....C#.0
+..##X#.##.0
+..#EH..#..5
+..##...#..0
+...#.PC#..0
+...#####...
+
+...######..
+...#.#..#.0
+..##Q..E#.0
+..#...#.#.0
+..#..#..#.1
+..#.E.C.#.0
+..#######..
+
+.....####..
+...###.E#.0
+...#P...#.0
+..##..L.#.0
+..#..LXL#.2
+..#E..L.#.0
+..#######..
+
+...######..
+..##LLCX#.0
+..#LLCLC#.0
+..#LCL.L#.0
+..#ELLPL#.3
+..#LLC#L#.0
+..#######..
+
+..#######..
+..#....P#.0
+..#E.#E.#.0
+..#.....#.0
+..##LLL##.4
+...##X##..0
+....###....
+
+..#######..
+..##LXL##.0
+..#..L..#.0
+..#..#..#.0
+..#E...E#.5
+..##.P.##.0
+..#######..
+
+..#######..
+..#H.P..#.0
+..#XH...#.0
+..#..H.E#.0
+..#...H.#.0
+..#.E...#.1
+..#######..
+
+..#######..
+..#.E.E.#.0
+..#P....#.0
+..#..X.E#.0
+..#L..L.#.0
+..#.E.EL#.2
+..#######..
+
+..#######..
+..#L.L.L#.0
+..#L.L.L#.0
+..#L.P.L#.0
+..#L.L.L#.0
+..#L.L.L#.3
+..##X#X##..

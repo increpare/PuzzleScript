@@ -1,0 +1,533 @@
+OBJECTS
+
+Background
+Black
+
+Wall
+Brown DarkBrown
+00010
+11111
+01000
+11111
+00010
+
+Floor
+#888855 #885588
+00100
+01110
+11011
+01110
+00100
+
+Hole
+Black #222222 Brown
+21112
+10000
+10000
+10000
+10000
+
+Marker
+Red
+00.00
+0...0
+.....
+0...0
+00.00
+
+MMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+CMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+DMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+EMarker
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+Mouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+UpMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+LeftMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+RightMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+DownMovingMouse
+LightGrey Black
+.....
+.1.1.
+.000.
+.010.
+..1..
+
+Cat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+RightMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+LeftMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+UpMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+DownMovingCat
+White Green Pink Grey
+0...0
+00000
+01010
+30203
+.000.
+
+Dog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+UpMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+DownMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+LeftMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+RightMovingDog
+DarkBrown Black
+.0.0.
+01010
+00000
+00100
+01110
+
+Elephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+UpMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+DownMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+LeftMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+RightMovingElephant
+LightGrey Black #eeeeee Grey
+.000.
+31300
+32330
+30000
+.0..0
+
+
+LEGEND
+
+X = Background
+. = Floor
+# = Wall
+E = Elephant or Floor or Marker
+D = Dog or Floor or Marker
+C = Cat or Floor or Marker
+M = Mouse or Floor or Marker
+3 = Elephant or Floor
+2 = Dog or Floor
+1 = Cat or Floor
+0 = Mouse or Floor
+H = Hole or Floor
+Player = Marker
+Obstacle = Wall or Hole
+VerticalMovingElephant = UpMovingElephant or DownMovingElephant
+HorizontalMovingElephant = LeftMovingElephant or RightMovingElephant
+MovingElephant = VerticalMovingElephant or HorizontalMovingElephant
+VerticalMovingDog = UpMovingDog or DownMovingDog
+HorizontalMovingDog = LeftMovingDog or RightMovingDog
+MovingDog = VerticalMovingDog or HorizontalMovingDog
+VerticalMovingCat = UpMovingCat or DownMovingCat
+HorizontalMovingCat = LeftMovingCat or RightMovingCat
+MovingCat = VerticalMovingCat or HorizontalMovingCat
+VerticalMovingMouse = UpMovingMouse or DownMovingMouse
+HorizontalMovingMouse = LeftMovingMouse or RightMovingMouse
+MovingMouse = VerticalMovingMouse or HorizontalMovingMouse
+MoveMarker = MMarker or CMarker or DMarker or EMarker
+
+COLLISIONLAYERS
+
+Background
+Floor
+Hole
+Mouse
+MovingMouse, Cat
+MovingCat, Dog
+MovingDog, Elephant
+MovingElephant, Wall
+Marker, MoveMarker
+
+RULES
+
+[ > Marker Mouse ] -> [ MMarker> Mouse ] 
+[ > Marker Cat ] -> [ CMarker> Cat ] 
+[ > Marker Dog ] -> [ DMarker> Dog ] 
+[ > Marker Elephant ] -> [ EMarker> Elephant ] 
+startLoop
+[ UP Elephant ] -> [ UP UpMovingElephant ] 
+[ DOWN Elephant ] -> [ DOWN DownMovingElephant ] 
+[ LEFT Elephant ] -> [ LEFT LeftMovingElephant ] 
+[ RIGHT Elephant ] -> [ RIGHT RightMovingElephant ] 
+[ UpMovingElephant ] -> [ Up UpMovingElephant ] again 
+[ LeftMovingElephant ] -> [ Left LeftMovingElephant ] again 
+[ RightMovingElephant ] -> [ Right RightMovingElephant ] again 
+[ DownMovingElephant ] -> [ Down DownMovingElephant ] again 
+right [ Elephant | StationaryDog | NoObstacle ] -> [ Elephant | rightDog | SFX3 ] 
+left [ Elephant | StationaryDog | NoObstacle ] -> [ Elephant | leftDog | SFX3 ] 
+up [ Elephant | StationaryDog | NoObstacle ] -> [ Elephant | upDog | SFX3 ] 
+down [ Elephant | StationaryDog | NoObstacle ] -> [ Elephant | downDog | SFX3 ] 
+right [ VerticalMovingElephant | StationaryDog | NoObstacle ] -> [ VerticalMovingElephant | rightDog | SFX3 ] 
+left [ VerticalMovingElephant | StationaryDog | NoObstacle ] -> [ VerticalMovingElephant | leftDog | SFX3 ] 
+up [ HorizontalMovingElephant | StationaryDog | NoObstacle ] -> [ HorizontalMovingElephant | upDog | SFX3 ] 
+down [ HorizontalMovingElephant | StationaryDog | NoObstacle ] -> [ HorizontalMovingElephant | downDog | SFX3 ] 
+[ > MovingElephant | Cat |  ] -> [ Elephant | Cat | SFX5 ] 
+[ > MovingElephant | Mouse ] -> [ Elephant | Mouse ] 
+[ > MovingElephant | Dog | Obstacle |  ] -> [ Elephant | Dog | Obstacle | SFX3 ] 
+[ > MovingElephant | Dog | NoObstacle ] -> [ Elephant | > Dog | SFX3 ] 
+[ > MovingElephant | Obstacle |  ] -> [ Elephant | Obstacle | SFX2 ] 
+[ UP Dog ] -> [ UP UpMovingDog ] 
+[ DOWN Dog ] -> [ DOWN DownMovingDog ] 
+[ LEFT Dog ] -> [ LEFT LeftMovingDog ] 
+[ RIGHT Dog ] -> [ RIGHT RightMovingDog ] 
+[ UpMovingDog ] -> [ Up UpMovingDog ] again 
+[ LeftMovingDog ] -> [ Left LeftMovingDog ] again 
+[ RightMovingDog ] -> [ Right RightMovingDog ] again 
+[ DownMovingDog ] -> [ Down DownMovingDog ] again 
+right [ Dog | StationaryCat | NoObstacle ] -> [ Dog | rightCat | SFX4 ] 
+left [ Dog | StationaryCat | NoObstacle ] -> [ Dog | leftCat | SFX4 ] 
+up [ Dog | StationaryCat | NoObstacle ] -> [ Dog | upCat | SFX4 ] 
+down [ Dog | StationaryCat | NoObstacle ] -> [ Dog | downCat | SFX4 ] 
+right [ VerticalMovingDog | StationaryCat | NoObstacle ] -> [ VerticalMovingDog | rightCat | SFX4 ] 
+left [ VerticalMovingDog | StationaryCat | NoObstacle ] -> [ VerticalMovingDog | leftCat | SFX4 ] 
+up [ HorizontalMovingDog | StationaryCat | NoObstacle ] -> [ HorizontalMovingDog | upCat | SFX4 ] 
+down [ HorizontalMovingDog | StationaryCat | NoObstacle ] -> [ HorizontalMovingDog | downCat | SFX4 ] 
+[ > MovingDog | Mouse |  ] -> [ Dog | Mouse | SFX3 ] 
+[ > MovingDog | Elephant ] -> [ Dog | Elephant ] 
+[ > MovingDog | Cat | Obstacle |  ] -> [ Dog | Cat | Obstacle | SFX4 ] 
+[ > MovingDog | Cat | NoObstacle ] -> [ Dog | > Cat | SFX4 ] 
+[ > MovingDog | Obstacle |  ] -> [ Dog | Obstacle | SFX2 ] 
+[ UP Cat ] -> [ UP UpMovingCat ] 
+[ DOWN Cat ] -> [ DOWN DownMovingCat ] 
+[ LEFT Cat ] -> [ LEFT LeftMovingCat ] 
+[ RIGHT Cat ] -> [ RIGHT RightMovingCat ] 
+[ UpMovingCat ] -> [ Up UpMovingCat ] again 
+[ LeftMovingCat ] -> [ Left LeftMovingCat ] again 
+[ RightMovingCat ] -> [ Right RightMovingCat ] again 
+[ DownMovingCat ] -> [ Down DownMovingCat ] again 
+right [ Cat | StationaryMouse | NoWall ] -> [ Cat | rightMouse | SFX1 ] 
+left [ Cat | StationaryMouse | NoWall ] -> [ Cat | leftMouse | SFX1 ] 
+up [ Cat | StationaryMouse | NoWall ] -> [ Cat | upMouse | SFX1 ] 
+down [ Cat | StationaryMouse | NoWall ] -> [ Cat | downMouse | SFX1 ] 
+right [ VerticalMovingCat | StationaryMouse | NoWall ] -> [ VerticalMovingCat | rightMouse | SFX1 ] 
+left [ VerticalMovingCat | StationaryMouse | NoWall ] -> [ VerticalMovingCat | leftMouse | SFX1 ] 
+up [ HorizontalMovingCat | StationaryMouse | NoWall ] -> [ HorizontalMovingCat | upMouse | SFX1 ] 
+down [ HorizontalMovingCat | StationaryMouse | NoWall ] -> [ HorizontalMovingCat | downMouse | SFX1 ] 
+[ > MovingCat | Elephant |  ] -> [ Cat | Elephant | SFX4 ] 
+[ > MovingCat | Dog ] -> [ Cat | Dog ] 
+[ > MovingCat | Mouse | Wall |  ] -> [ Cat | Mouse | Wall | SFX1 ] 
+[ > MovingCat | Mouse | NoWall ] -> [ Cat | > Mouse | SFX1 ] 
+[ > MovingCat | Obstacle |  ] -> [ Cat | Obstacle | SFX2 ] 
+[ UP Mouse ] -> [ UP UpMovingMouse ] 
+[ DOWN Mouse ] -> [ DOWN DownMovingMouse ] 
+[ LEFT Mouse ] -> [ LEFT LeftMovingMouse ] 
+[ RIGHT Mouse ] -> [ RIGHT RightMovingMouse ] 
+[ UpMovingMouse ] -> [ Up UpMovingMouse ] again 
+[ LeftMovingMouse ] -> [ Left LeftMovingMouse ] again 
+[ RightMovingMouse ] -> [ Right RightMovingMouse ] again 
+[ DownMovingMouse ] -> [ Down DownMovingMouse ] again 
+right [ Mouse | StationaryElephant | NoObstacle ] -> [ Mouse | rightElephant | SFX5 ] 
+left [ Mouse | StationaryElephant | NoObstacle ] -> [ Mouse | leftElephant | SFX5 ] 
+up [ Mouse | StationaryElephant | NoObstacle ] -> [ Mouse | upElephant | SFX5 ] 
+down [ Mouse | StationaryElephant | NoObstacle ] -> [ Mouse | downElephant | SFX5 ] 
+right [ VerticalMovingMouse | StationaryElephant | NoObstacle ] -> [ VerticalMovingMouse | rightElephant | SFX5 ] 
+left [ VerticalMovingMouse | StationaryElephant | NoObstacle ] -> [ VerticalMovingMouse | leftElephant | SFX5 ] 
+up [ HorizontalMovingMouse | StationaryElephant | NoObstacle ] -> [ HorizontalMovingMouse | upElephant | SFX5 ] 
+down [ HorizontalMovingMouse | StationaryElephant | NoObstacle ] -> [ HorizontalMovingMouse | downElephant | SFX5 ] 
+[ > MovingMouse | Dog |  ] -> [ Mouse | Dog | SFX1 ] 
+[ > MovingMouse | Cat ] -> [ Mouse | Cat ] 
+[ > MovingMouse | Elephant | Wall |  ] -> [ Mouse | Elephant | Wall | SFX5 ] 
+[ > MovingMouse | Elephant | NoObstacle ] -> [ Mouse | > Elephant | SFX5 ] 
+[ > MovingMouse | Wall |  ] -> [ Mouse | Wall | SFX2 ] 
+[ > MovingMouse | Hole |  ] -> [ No MovingMouse | Hole | SFX0 ] 
+endloop
+late [ Mouse ] [ MMarker ] -> [ Mouse Marker ] [  ] 
+late [ Cat ] [ CMarker ] -> [ Cat Marker ] [  ] 
+late [ Dog ] [ DMarker ] -> [ Dog Marker ] [  ] 
+late [ Elephant ] [ EMarker ] -> [ Elephant Marker ] [  ] 
+
+
+WINCONDITIONS
+
+No MovingMouse
+No Mouse
+
+LEVELS
+
+XXXXXXXXXXXXXXXXXXXXX
+X###################X
+X#...............###X
+X#..#........#...###X
+X#...............###X
+X###...M..#........#X
+X##H..........#....#X
+X###..#.....#......#X
+X#.............#...#X
+X#..#....#.........#X
+X#..............####X
+X###################X
+XXXXXXXXXXXXXXXXXXXXX
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#...##....###.###....###X
+X#...##....#H#........###X
+X#.M.............#......#X
+X#....##..##.....##.....#X
+X#.....#......##........#X
+X#..##.......###........#X
+X#..##....#.......###...#X
+X#.......##........##...#X
+X#...##..##........##...#X
+X#...##.................#X
+X###.........###.....####X
+X###.........###....#####X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+XXXXXXXXXXXXXXXXXXXXX
+X###################X
+X#.................#X
+X#.........#.......#X
+X###...............#X
+X##H.....0.....#...#X
+X###...............#X
+X#.................#X
+X#....#..........###X
+X#.........0.....H##X
+X#C..............###X
+X###################X
+XXXXXXXXXXXXXXXXXXXXX
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#.......##.###.........#X
+X#......##..#H#.........#X
+X#.................#....#X
+X#..........0...0#......#X
+X###....#...............#X
+X##H..................###X
+X###......0...........H##X
+X#........#.....#.....###X
+X#................#.....#X
+X#......0...............#X
+X#.C.......#H#..........#X
+X#.........###..........#X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#...............#X
+X#.......1#......#X
+X###.............#X
+X##H....0........#X
+X###.............#X
+X#.............###X
+X#.D......0....H##X
+X#.#...........###X
+X#...#...........#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X###..................###X
+X##H.......0.0........H##X
+X###..................###X
+X#......................#X
+X#..#...................#X
+X#.1.........#..........#X
+X#.........0............#X
+X##.........1...........#X
+X#.......D..............#X
+X###..................###X
+X##H.........0........H##X
+X###.......#..........###X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#...............#X
+X#.......1#......#X
+X###.............#X
+X##H....0........#X
+X###.............#X
+X#.............###X
+X#.....2..0....H##X
+X#...#.......E.###X
+X#...#...........#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#....................#.#X
+X#....1..........#......#X
+X#...........0...#...2..#X
+X#......................#X
+X#..........#H#.........#X
+X#..........###.........#X
+X#..........###.........#X
+X#..........#H#.........#X
+X#...........0..........#X
+X#...2...........1......#X
+X#.E...................##X
+X#......................#X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+XXXXXXXXXXXXXXXXXXX
+X#################X
+X#......0.......H#X
+X##..........3..##X
+X#H...0..........#X
+X##..............#X
+X####..1.........#X
+X#............#..#X
+X#...#..###......#X
+X#..D#..#H#......#X
+X#.......0.......#X
+X#..........1....#X
+X#################X
+XXXXXXXXXXXXXXXXXXX
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+X########################X
+X#.....#..............###X
+X#.....0..............H##X
+X#.......3............###X
+X#......................#X
+X###....................#X
+X##H.................0..#X
+X###....................#X
+X#......................#X
+X#.....................C#X
+X#...2.................##X
+X#....#...2............##X
+X#.....................##X
+X########################X
+XXXXXXXXXXXXXXXXXXXXXXXXXX

@@ -1,0 +1,580 @@
+OBJECTS
+
+RedMon
+#D8144D #B00F3F BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+YellowMon
+#F3F333 #C7C829 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+BlueMon
+#0366E3 #0A52BB BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+PurpleMon
+#9E14E2 #800FBA BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+OrangeMon
+#E68A25 #BB711E BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+GreenMon
+#1CED55 #15C346 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+TrashMon
+#7C6953 #6D5239 BLACK WHITE
+00000
+020.3
+000..
+00000
+1..1.
+
+
+
+RedCake
+#D8144D #B00F3F
+.000.
+00000
+00000
+10001
+.111.
+
+YellowCake
+#F3F333 #C7C829
+.000.
+00000
+00000
+10001
+.111.
+
+BlueCake
+#0366E3 #0A52BB
+.000.
+00000
+00000
+10001
+.111.
+
+PurpleCake
+#9E14E2 #800FBA
+.000.
+00000
+00000
+10001
+.111.
+
+OrangeCake
+#E68A25 #BB711E
+.000.
+00000
+00000
+10001
+.111.
+
+GreenCake
+#1CED55 #15C346
+.000.
+00000
+00000
+10001
+.111.
+
+TrashCake
+#7C6953 #6D5239
+.000.
+00000
+00000
+10001
+.111.
+
+
+Destroyer
+#001111 #223333 #384949
+.222.
+20202
+12021
+10101
+.111.
+
+Background
+#152020 #192525
+01101
+10110
+01101
+11010
+01010
+
+Wall
+#334444 #384949 #445555 #475959 #4A6B6B
+34443
+23332
+12221
+01110
+00000
+
+Blackness
+#050A0A
+
+
+LEGEND
+
+. = Background
+_ = Blackness
+# = Wall
+X = Destroyer
+R = RedMon
+Y = YellowMon
+B = BlueMon
+P = PurpleMon
+O = OrangeMon
+G = GreenMon
+T = TrashMon
+Monster = RedMon or YellowMon or BlueMon or PurpleMon or OrangeMon or GreenMon or TrashMon
+Player = Monster
+PrimaryMon = RedMon or YellowMon or BlueMon
+SecondaryMon = PurpleMon or OrangeMon or GreenMon
+S = RedCake
+Z = YellowCake
+C = BlueCake
+Q = PurpleCake
+A = OrangeCake
+H = GreenCake
+U = TrashCake
+Cake = RedCake or YellowCake or BlueCake or PurpleCake or OrangeCake or GreenCake or TrashCake
+
+COLLISIONLAYERS
+
+Background
+Blackness
+Wall, Destroyer
+Monster, Cake
+
+RULES
+
+[ > Monster ] -> [ > Monster ] 
+[ > Monster | Wall ] -> [ Monster | Wall ] 
+[ > Monster | Destroyer ] -> [  | Destroyer ] 
+[ > RedMon | RedCake ] -> [  | RedMon ] 
+[ > BlueMon | BlueCake ] -> [  | BlueMon ] 
+[ > YellowMon | YellowCake ] -> [  | YellowMon ] 
+[ > PurpleMon | PurpleCake ] -> [  | PurpleMon ] 
+[ > OrangeMon | OrangeCake ] -> [  | OrangeMon ] 
+[ > GreenMon | GreenCake ] -> [  | GreenMon ] 
+[ > TrashMon | TrashCake ] -> [  | TrashMon ] 
+[ > RedMon | Cake no RedCake ] -> [ RedMon | Cake no RedCake ] 
+[ > BlueMon | Cake no BlueCake ] -> [ BlueMon | Cake no BlueCake ] 
+[ > YellowMon | Cake no YellowCake ] -> [ YellowMon | Cake no YellowCake ] 
+[ > PurpleMon | Cake no PurpleCake ] -> [ PurpleMon | Cake no PurpleCake ] 
+[ > OrangeMon | Cake no OrangeCake ] -> [ OrangeMon | Cake no OrangeCake ] 
+[ > GreenMon | Cake no GreenCake ] -> [ GreenMon | Cake no GreenCake ] 
+[ > TrashMon | Cake no TrashCake ] -> [ TrashMon | Cake no TrashCake ] 
+[ > BlueMon | stationaryRedMon ] -> [  | PurpleMon ] 
+[ > RedMon | stationaryBlueMon ] -> [  | PurpleMon ] 
+[ > RedMon | stationaryYellowMon ] -> [  | OrangeMon ] 
+[ > YellowMon | stationaryRedMon ] -> [  | OrangeMon ] 
+[ > BlueMon | stationaryYellowMon ] -> [  | GreenMon ] 
+[ > YellowMon | stationaryBlueMon ] -> [  | GreenMon ] 
+[ > PrimaryMon | stationarySecondaryMon ] -> [  | TrashMon ] 
+[ > SecondaryMon | stationaryPrimaryMon ] -> [  | TrashMon ] 
+[ > GreenMon | stationaryOrangeMon ] -> [  | TrashMon ] 
+[ > OrangeMon | stationaryGreenMon ] -> [  | TrashMon ] 
+[ > PurpleMon | stationaryOrangeMon ] -> [  | TrashMon ] 
+[ > OrangeMon | stationaryPurpleMon ] -> [  | TrashMon ] 
+[ > GreenMon | stationaryPurpleMon ] -> [  | TrashMon ] 
+[ > PurpleMon | stationaryGreenMon ] -> [  | TrashMon ] 
+[ > TrashMon | stationaryMonster ] -> [  | TrashMon ] 
+[ > Monster | stationaryTrashMon ] -> [  | TrashMon ] 
+[ > Monster | stationaryMonster ] -> [  | Monster ] 
+
+
+WINCONDITIONS
+
+No Cake
+
+LEVELS
+
+_______
+#######
+#.....#
+#.r...#
+#...s.#
+#.....#
+#######
+_______
+
+######_######
+#....#_#z...#
+#.r..#_#....#
+#..s.#_#....#
+#....#_#...y#
+######_######
+_____________
+######_######
+#.c..#_#....#
+#....#_#...h#
+#..b.#_#g...#
+#....#_#....#
+######_######
+
+_________
+#########
+#r.z....#
+#######.#
+#.......#
+#.sy....#
+#########
+_________
+
+_________
+#########
+#.......#
+#.#####.#
+#.r.q.b.#
+#.#####.#
+#.......#
+#########
+_________
+
+__________
+##########
+#........#
+#.rybpog.#
+#........#
+#........#
+#.szcqah.#
+#........#
+#........#
+#.uuuuuu.#
+#........#
+##########
+__________
+
+############
+#y........c#
+#b........z#
+#####..#####
+____#..#____
+____#..#____
+____#hh#____
+____####____
+
+_____
+#####
+#RCQ#
+#.CS#
+#Q.B#
+#####
+_____
+
+______
+######
+#R...#
+#B...#
+#Q.QQ#
+#CSCS#
+######
+______
+
+_______
+#######
+#R.H.B#
+#.....#
+#.....#
+#Y.Q.B#
+#######
+_______
+
+_______
+#######
+#CCHCB#
+#.....#
+#YZHZZ#
+#######
+_______
+
+______
+######
+#R..B#
+#S.C.#
+#.A.C#
+#Y.C.#
+######
+______
+
+#########
+#ccccccc#
+#bcccccc#
+######cc#
+_____#ch#
+######zz#
+#yzzzzzz#
+#yzzzzzz#
+######zz#
+_____#sa#
+######ss#
+#rssssss#
+#sssssss#
+#########
+
+_______
+#######
+#R.B.Y#
+#Y.B.R#
+#R.B.Y#
+#Y.B.R#
+#AHQHA#
+#######
+_______
+
+_______
+#######
+#AR.BA#
+#.#.#.#
+#H...H#
+##.A.##
+#HY#YH#
+#######
+_______
+
+_________
+_###_###_
+#...#...#
+#.q.x.p.#
+#...x...#
+_#..x..#_
+__#...#__
+___#.#___
+____#____
+_________
+
+_____
+#####
+#RAR#
+#RXY#
+#YAY#
+#####
+_____
+
+______
+######
+#BHHB#
+#YXXY#
+#YXXY#
+#BHHB#
+######
+______
+
+_______
+#######
+#RQXQR#
+#SQXQS#
+#BQXQB#
+#######
+_______
+
+___________
+#####_#####
+#sss#_#qqq#
+#sss###qqq#
+#x.......x#
+##x.rxb.x##
+#x.......x#
+#qqq###ccc#
+#qqq#_#ccc#
+#####_#####
+___________
+
+___________
+###########
+#...#q#.b.#
+#sxr#.#xx.#
+#.x.....c.#
+###########
+___________
+
+______
+######
+#RZSZ#
+#YSZS#
+#..SZ#
+#..ZS#
+######
+______
+
+#######
+#Y#B#Y#
+#.#R#.#
+#.#.#.#
+#.....#
+#.###.#
+#HHAHH#
+#######
+
+####__####
+#qc####cb#
+#c......c#
+##.####.##
+_#.#xx#.#_
+_#.c.r#.#_
+##.####.##
+#c......c#
+#qc####cq#
+####__####
+
+_#########_
+_#rrr.sss#_
+_#.......#_
+_#yyy.zzz#_
+_#.......#_
+##bbb.ccc##
+#.........#
+#.q..a..h.#
+#.........#
+###########
+
+______
+######
+#RA.Y#
+#....#
+#HH..#
+#SBCY#
+######
+______
+
+#############
+#...#.h.#...#
+#.r.#...#.y.#
+#...c#c#s...#
+###c.....s###
+#..#.#h#.#..#
+#z.h.z.c.s.c#
+#..#.#s#.#..#
+###......z###
+#....#z#z...#
+#.b.#...#.g.#
+#...#.s.#...#
+#############
+
+_____
+#####
+#B.B#
+#RRY#
+#.Q.#
+#S.S#
+#CHC#
+#####
+_____
+
+______
+######
+#HYBH#
+#YBYB#
+#BBBB#
+#HHHH#
+######
+______
+
+______
+######
+#BR.Y#
+#..A.#
+#SCZA#
+#CSZA#
+######
+______
+
+______
+######
+#CZG.#
+#ZCR##
+###..#
+#SHY##
+#HSB.#
+######
+______
+
+______
+######
+#YYYY#
+#...R#
+#AAAA#
+#ZZZZ#
+######
+______
+
+_______
+#######
+#Y..YA#
+#.BB.H#
+#R..RQ#
+#Y..YH#
+#######
+_______
+
+______
+######
+#ZBBZ#
+#YBYB#
+#....#
+#ZHCZ#
+######
+______
+
+_______
+#######
+#A.S.A#
+#.Z.Z.#
+#SYRYS#
+#.ZYZ.#
+#A.S.A#
+#######
+_______
+
+______
+######
+#ZZZZ#
+#SSSS#
+#CCCC#
+#YRB.#
+######
+______
+
+_____
+#####
+#AYA#
+#...#
+#CBC#
+#SZY#
+#RZS#
+#CBC#
+#...#
+#HOH#
+#####
+_____

@@ -1,0 +1,307 @@
+OBJECTS
+
+Bg
+#111111 #222222
+00010
+11111
+01000
+01000
+11111
+
+Selection
+white gray
+..1..
+..1..
+11011
+..1..
+..1..
+
+Wall
+DarkBlue DarkGreen #333333
+20002
+22022
+22122
+21112
+11111
+
+Hole
+DarkGray Gray Black
+.111.
+12221
+10001
+10001
+.111.
+
+Arrow
+Red Red
+..1..
+..11.
+11111
+..11.
+..1..
+
+HudDivider
+white black
+00000
+11111
+11111
+11111
+11111
+
+IconGO
+green white
+10111
+10011
+10001
+10011
+10111
+
+Going
+green white
+10111
+10011
+10001
+10011
+10111
+
+LeftBouncer
+White White Blue
+.221.
+2.1.2
+21..2
+2.1.2
+.221.
+
+RightBouncer
+White White Blue
+.122.
+2.1.2
+2..12
+2.1.2
+.122.
+
+UpBouncer
+White White Blue
+.222.
+2.1.2
+21.12
+1...1
+.222.
+
+DownBouncer
+White White Blue
+.222.
+1...1
+21.12
+2.1.2
+.222.
+
+HudBG
+black
+
+Empty
+black
+
+PlayEmpty
+black
+.....
+.....
+.....
+.....
+.....
+
+Ball
+#003300 Green
+.000.
+01110
+01110
+01110
+.000.
+
+WinBall
+LightBlue LightGreen
+.000.
+01110
+01110
+01110
+.000.
+
+BallUp
+#003300 Green Black
+.000.
+01210
+01110
+01110
+.000.
+
+BallDown
+#003300 Green Black
+.000.
+01110
+01110
+01210
+.000.
+
+BallLeft
+#003300 Green Black
+.000.
+01110
+02110
+01110
+.000.
+
+BallRight
+#003300 Green Black
+.000.
+01110
+01120
+01110
+.000.
+
+
+LEGEND
+
+Background = Bg or HudBG
+. = bg or PlayEmpty
+S = Selection or PlayEmpty
+- = HudDivider or Wall
+H = HudBG or PlayEmpty
+A = Arrow or HudBG
+G = IconGO
+W = Wall
+O = Hole
+L = LeftBouncer or HudBG
+R = RightBouncer or HudBG
+U = UpBouncer or HudBG
+D = DownBouncer or HudBG
+B = BallLeft
+N = BallRight
+M = BallUp
+K = BallDown
+Player = Selection
+PlacedLeftbouncer = LeftBouncer or Selection
+PlacedRightbouncer = RightBouncer or Selection
+PlacedUpbouncer = UpBouncer or Selection
+PlacedDownbouncer = DownBouncer or Selection
+Bouncer = LeftBouncer or RightBouncer or UpBouncer or DownBouncer
+emptyPlayer = Selection or PlayEmpty
+ballSwitchLeft = Ball or LeftBouncer
+ballSwitchRight = Ball or RightBouncer
+ballSwitchUp = Ball or UpBouncer
+ballSwitchDown = Ball or DownBouncer
+ballSwitchedLeft = BallLeft or LeftBouncer
+ballSwitchedRight = BallRight or RightBouncer
+ballSwitchedUp = BallUp or UpBouncer
+ballSwitchedDown = BallDown or DownBouncer
+gameGo = Selection or IconGO
+gameGoing = Going
+WinL = BallLeft or Hole
+WinR = BallRight or Hole
+WinU = BallUp or Hole
+WinD = BallDown or Hole
+Win = WinBall
+MovingBall = Ball or BallLeft or BallRight or BallUp or BallDown
+
+COLLISIONLAYERS
+
+Background
+Arrow, Empty
+LeftBouncer, RightBouncer
+UpBouncer, DownBouncer
+PlayEmpty, IconGO
+Going, Hole
+WinBall
+Wall, Ball
+BallUp, BallDown
+BallLeft, BallRight
+Selection, HudDivider
+
+RULES
+
+[ action selection PlayEmpty ] [ Arrow | LeftBouncer ] -> [ PlacedLeftbouncer ] [ Arrow | Empty ] 
+[ action selection PlayEmpty ] [ Arrow | RightBouncer ] -> [ PlacedRightbouncer ] [ Arrow | Empty ] 
+[ action selection PlayEmpty ] [ Arrow | UpBouncer ] -> [ PlacedUpbouncer ] [ Arrow | Empty ] 
+[ action selection PlayEmpty ] [ Arrow | DownBouncer ] -> [ PlacedDownbouncer ] [ Arrow | Empty ] 
+[ WinL ] -> [ Win ] again 
+[ WinR ] -> [ Win ] again 
+[ WinU ] -> [ Win ] again 
+[ WinD ] -> [ Win ] again 
+right [ Empty | Bouncer ] -> [ Bouncer | Empty ] 
+[ action selection iconGO ] -> [ gameGoing ] again 
+[ ballSwitchLeft ] -> [ ballSwitchedLeft ] again 
+[ ballSwitchRight ] -> [ ballSwitchedRight ] again 
+[ ballSwitchUp ] -> [ ballSwitchedUp ] again 
+[ ballSwitchDown ] -> [ ballSwitchedDown ] again 
+right [ Going ] [ Bouncer | BallLeft ] -> [ Going ] [ Bouncer | LeftBall ] again 
+left [ Going ] [ Bouncer | BallRight ] -> [ Going ] [ Bouncer | RightBall ] again 
+up [ Going ] [ Bouncer | BallDown ] -> [ Going ] [ Bouncer | DownBall ] again 
+down [ Going ] [ Bouncer | BallUp ] -> [ Going ] [ Bouncer | UpBall ] again 
+[ Going ] [ BallLeft ] -> [ Going ] [ LEFT BallLeft ] again 
+[ Going ] [ BallRight ] -> [ Going ] [ RIGHT BallRight ] again 
+[ Going ] [ BallUp ] -> [ Going ] [ UP BallUp ] again 
+[ Going ] [ BallDown ] -> [ Going ] [ DOWN BallDown ] again 
+[ Going ] -> [ Going ] again 
+
+
+WINCONDITIONS
+
+no MovingBall
+
+LEVELS
+
+......w.....
+..o...w.....
+......w.....
+......w.....
+......w..b..
+......s.....
+............
+g-----------
+-hhadluhhhhh
+
+............
+......o.....
+..s.........
+......w.....
+...o.....b..
+......m.....
+............
+g-----------
+-hhalurhhhhh
+
+............
+............
+..o.wwww....
+..s.n..b....
+....wwww.o..
+............
+............
+g-----------
+-hhaudrlhhhh
+
+............
+............
+..o......o..
+............
+............
+.s..bbbb....
+............
+............
+..o......o..
+............
+g-----------
+-hhalrudu...
+
+.....n......w...
+..wwww.k....o.w.
+......b..m......
+...o............
+.......w........
+.....b.w........
+......wwo.......
+w.ww.www........
+.o..............
+....s...........
+..........wwwo..
+g---------------
+-hhaddddddrrr...

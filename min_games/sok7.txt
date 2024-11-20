@@ -1,0 +1,235 @@
+OBJECTS
+
+Background(special, automatically placed in its own layer)
+darkgray black
+10000
+10000
+10000
+10000
+11111
+
+Player
+RED PINK
+.1.1.
+.000.
+11111
+.111.
+.1.1.
+
+Garbage1
+lightgray black
+00000
+01110
+01010
+01110
+00000
+
+Garbage2
+lightgray darkgray darkgray
+00200
+01110
+21012
+01110
+00200
+
+One
+green white
+00100
+00100
+00100
+00100
+00100
+
+Two
+yellow white
+01110
+00010
+01110
+01000
+01110
+
+Three
+orange white
+01110
+00010
+00110
+00010
+01110
+
+Four
+red white
+01010
+01010
+01110
+00010
+00010
+
+Five
+purple white
+01110
+01000
+01110
+00010
+01110
+
+Six
+lightblue white
+01110
+01000
+01110
+01010
+01110
+
+Seven
+darkblue white
+01110
+00010
+00010
+00010
+00010
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+O(unoccupied cell)
+white
+00000
+00000
+00000
+00000
+00000
+
+X(occupied cell)
+black
+00000
+00000
+00000
+00000
+00000
+
+E(explosion)
+black
+00000
+00000
+00000
+00000
+00000
+
+D(disappeared disc)
+black
+00000
+00000
+00000
+00000
+00000
+
+C(counter)
+black
+00000
+00000
+00000
+00000
+00000
+
+
+LEGEND
+
+. = Background
+P = Player
+1 = One
+2 = Two
+3 = Three
+4 = Four
+5 = Five
+6 = Six
+7 = Seven
+W = Wall
+Garbage = Garbage1 or Garbage2
+Garbage1_1 = Garbage1
+Garbage1_2 = Garbage1
+Garbage1_3 = Garbage1
+Disc = One or Two or Three or Four or Five or Six or Seven or Garbage
+RandomDisc = One or Two or Three or Four or Five or Six or Garbage1 or Garbage1_1 or Garbage1_2 or Garbage1_3
+NumberDisc = One or Two or Three or Four or Five or Six or Seven
+Object = Disc or Player
+
+COLLISIONLAYERS
+
+C
+E, D
+O, X
+Background
+Wall, Player
+One, Two
+Three, Four
+Five, Six
+Seven, Garbage
+
+RULES
+
+[ > Player | Disc ] -> [ > Player | > Disc ] 
+[ D ] -> [  ] 
+[ X ] -> [ O ] 
+[  ] -> [ O ] 
+[ One O ] -> [ One X ] 
+[ Two O ] -> [ Two X ] 
+[ Three O ] -> [ Three X ] 
+[ Four O ] -> [ Four X ] 
+[ Five O ] -> [ Five X ] 
+[ Six O ] -> [ Six X ] 
+[ Seven O ] -> [ Seven X ] 
+[ Garbage O ] -> [ Garbage X ] 
+[ O | One | O ] -> [ O | DX | O ] again 
+[ O | Two | X | O ] -> [ O | DX | X | O ] again 
+[ O | Three | X | X | O ] -> [ O | DX | X | X | O ] again 
+[ O | X | Three | X | O ] -> [ O | X | DX | X | O ] again 
+[ O | X | X | Three | O ] -> [ O | X | X | DX | O ] again 
+[ O | Four | X | X | X | O ] -> [ O | DX | X | X | X | O ] again 
+[ O | X | Four | X | X | O ] -> [ O | X | DX | X | X | O ] again 
+[ O | X | X | Four | X | O ] -> [ O | X | X | DX | X | O ] again 
+[ O | X | X | X | Four | O ] -> [ O | X | X | X | DX | O ] again 
+[ O | Five | X | X | X | X | O ] -> [ O | DX | X | X | X | X | O ] again 
+[ O | X | Five | X | X | X | O ] -> [ O | X | DX | X | X | X | O ] again 
+[ O | X | X | Five | X | X | O ] -> [ O | X | X | DX | X | X | O ] again 
+[ O | X | X | X | Five | X | O ] -> [ O | X | X | X | DX | X | O ] again 
+[ O | X | X | X | X | Five | O ] -> [ O | X | X | X | X | DX | O ] again 
+[ O | Six | X | X | X | X | X | O ] -> [ O | DX | X | X | X | X | X | O ] again 
+[ O | X | Six | X | X | X | X | O ] -> [ O | X | DX | X | X | X | X | O ] again 
+[ O | X | X | Six | X | X | X | O ] -> [ O | X | X | DX | X | X | X | O ] again 
+[ O | X | X | X | Six | X | X | O ] -> [ O | X | X | X | DX | X | X | O ] again 
+[ O | X | X | X | X | Six | X | O ] -> [ O | X | X | X | X | DX | X | O ] again 
+[ O | X | X | X | X | X | Six | O ] -> [ O | X | X | X | X | X | DX | O ] again 
+[ O | Seven | X | X | X | X | X | X | O ] -> [ O | DX | X | X | X | X | X | X | O ] again 
+[ O | X | Seven | X | X | X | X | X | O ] -> [ O | X | DX | X | X | X | X | X | O ] again 
+[ O | X | X | Seven | X | X | X | X | O ] -> [ O | X | X | DX | X | X | X | X | O ] again 
+[ O | X | X | X | Seven | X | X | X | O ] -> [ O | X | X | X | DX | X | X | X | O ] again 
+[ O | X | X | X | X | Seven | X | X | O ] -> [ O | X | X | X | X | DX | X | X | O ] again 
+[ O | X | X | X | X | X | Seven | X | O ] -> [ O | X | X | X | X | X | DX | X | O ] again 
+[ O | X | X | X | X | X | X | Seven | O ] -> [ O | X | X | X | X | X | X | DX | O ] again 
+[ C X ] -> [ X ] 
+[ > Player |  ] -> [ > Player | C ] 
+[ C No Object | C No Object | C No Object | C No Object | C No Object | C No Object ] -> [  |  | randomRandomDisc |  |  |  ] 
+[ D | Garbage1 ] -> [  | Garbage2 ] 
+[ D | Garbage2 ] -> [  | randomNumberDisc ] 
+
+
+WINCONDITIONS
+
+No Disc
+
+LEVELS
+
+WWWWWWWWWWWWWW
+W....13......W
+W.4..2..5....W
+W....2..3....W
+W.77....6....W
+W....3..5....W
+W.P........2.W
+W....2.......W
+WWWWWWWWWWWWWW

@@ -1,0 +1,933 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	#AAAAAA
+        color	#DDDDDD
+      
+
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Goal
+      
+
+      colors
+        color	Brown
+        color	Yellow
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Wall
+      
+
+      colors
+        color	Darkgrey
+        color	#222222
+      
+
+      sprite
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	Fighter
+      
+
+      colors
+        color	#FF4444
+        color	Pink
+        color	DarkBrown
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '2' '.' '2' '.']
+    object_data
+      object_name	Wizard
+      
+
+      colors
+        color	#2266FF
+        color	Pink
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	Thief
+      
+
+      colors
+        color	#00BB00
+        color	Pink
+        color	DarkBrown
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	SFighter
+      
+
+      colors
+        color	#880000
+        color	Pink
+        color	DarkBrown
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '2' '.' '2' '.']
+    object_data
+      object_name	SWizard
+      
+
+      colors
+        color	#000088
+        color	Pink
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_name	SThief
+      
+
+      colors
+        color	#006600
+        color	Pink
+        color	DarkBrown
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_name	Crate
+      
+
+      colors
+        color	Orange
+        color	#552200
+      
+
+      sprite
+        ['.' '1' '1' '1' '.']
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['.' '1' '1' '1' '.']
+    object_data
+      object_name	YellowSwitch
+      
+
+      colors
+        color	Yellow
+        color	Black
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	YellowOpen
+      
+
+      colors
+        color	Yellow
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+    object_data
+      object_name	YellowDoor
+      
+
+      colors
+        color	Yellow
+        color	#AA7722
+      
+
+      sprite
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '1']
+        ['0' '1' '0' '1' '0']
+    object_data
+      object_name	PurpleSwitch
+      
+
+      colors
+        color	#6611CC
+        color	Black
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '1' '1' '1' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	PurpleDoor
+      
+
+      colors
+        color	#6611CC
+        color	#220088
+      
+
+      sprite
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '1']
+        ['0' '1' '0' '1' '0']
+    object_data
+      object_name	PurpleOpen
+      
+
+      colors
+        color	#6611CC
+      
+
+      sprite
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+    object_data
+      object_name	Temp
+      
+
+      colors
+        color	Pink
+      
+
+    object_data
+      object_name	ShadowDoor
+      
+
+      colors
+        color	Purple
+      
+
+  legend_section
+    legend_data
+      Player
+      object_name	Fighter
+      legend_operation
+        object_name	Wizard
+      legend_operation
+        object_name	Thief
+    legend_data
+      SPlayer
+      object_name	Swizard
+      legend_operation
+        object_name	Sthief
+      legend_operation
+        object_name	SFighter
+    legend_data
+      Hero
+      object_name	Player
+      legend_operation
+        object_name	Splayer
+    legend_data
+      ClosedDoor
+      object_name	PurpleDoor
+      legend_operation
+        object_name	YellowDoor
+    legend_data
+      OpenDoor
+      object_name	YellowOpen
+      legend_operation
+        object_name	PurpleOpen
+    legend_data
+      Switch
+      object_name	PurpleSwitch
+      legend_operation
+        object_name	YellowSwitch
+    legend_data
+      Moveable
+      object_name	Crate
+      legend_operation
+        object_name	SPlayer
+    legend_data
+      Static
+      object_name	Wall
+      legend_operation
+        object_name	ClosedDoor
+    legend_data
+      Weighing
+      object_name	Crate
+      legend_operation
+        object_name	Player
+      legend_operation
+        object_name	SPlayer
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      F
+      object_name	Fighter
+    legend_data
+      W
+      object_name	Wizard
+    legend_data
+      T
+      object_name	Thief
+    legend_data
+      1
+      object_name	SFighter
+    legend_data
+      2
+      object_name	SThief
+    legend_data
+      3
+      object_name	SWizard
+    legend_data
+      *
+      object_name	Crate
+    legend_data
+      G
+      object_name	Goal
+    legend_data
+      [
+      object_name	YellowDoor
+    legend_data
+      ]
+      object_name	PurpleDoor
+    legend_data
+      {
+      object_name	YellowSwitch
+    legend_data
+      }
+      object_name	PurpleSwitch
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Temp
+    layer_data
+      object_name	Goal
+      object_name	Switch
+    layer_data
+      object_name	OpenDoor
+      object_name	ShadowDoor
+    layer_data
+      object_name	ClosedDoor
+      object_name	Hero
+    layer_data
+      object_name	Crate
+      object_name	Wall
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content
+              >
+              Fighter
+            cell_border
+            rule_content	Moveable
+          ->
+          rule_part
+            rule_content
+              >
+              Fighter
+            cell_border
+            rule_content
+              >
+              Moveable
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Moveable
+            cell_border
+            rule_content	Moveable
+          rule_part
+            rule_content	Fighter
+          ->
+          rule_part
+            rule_content
+              >
+              Moveable
+            cell_border
+            rule_content
+              >
+              Moveable
+          rule_part
+            rule_content	Fighter
+          
+
+        rule_data
+          rule_part
+            rule_content
+              <
+              Thief
+            cell_border
+            rule_content	Moveable
+          ->
+          rule_part
+            rule_content
+              <
+              Thief
+            cell_border
+            rule_content
+              <
+              Moveable
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Wizard
+          ->
+          rule_part
+            rule_content	Wizard
+            rule_content
+              >
+              Temp
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Temp
+            cell_border
+            rule_content	no
+            rule_content
+              Moveable
+              no
+              Static
+          ->
+          rule_part
+            cell_border
+            rule_content
+              >
+              Temp
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Temp
+            cell_border
+            rule_content	Static
+          rule_part
+            rule_content	Wizard
+          ->
+          rule_part
+            cell_border
+            rule_content	Static
+          rule_part
+            rule_content
+              >
+              Wizard
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Temp
+            cell_border
+            rule_content	Moveable
+          rule_part
+            rule_content	Wizard
+          ->
+          rule_part
+            cell_border
+            rule_content	Wizard
+            rule_content	Sfx0
+          rule_part
+            rule_content	Moveable
+          
+
+        rule_data
+          prefix	Late
+          rule_part
+            rule_content	Temp
+          ->
+          rule_part
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Fighter
+          rule_part
+            rule_content	SThief
+          ->
+          rule_part
+            rule_content	SFighter
+          rule_part
+            rule_content
+              Thief
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Thief
+          rule_part
+            rule_content	SWizard
+          ->
+          rule_part
+            rule_content	SThief
+          rule_part
+            rule_content
+              Wizard
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Wizard
+          rule_part
+            rule_content	SFighter
+          ->
+          rule_part
+            rule_content	SWizard
+          rule_part
+            rule_content
+              Fighter
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Fighter
+          rule_part
+            rule_content
+              no
+              SThief
+          rule_part
+            rule_content	SWizard
+          ->
+          rule_part
+            rule_content	SFighter
+          rule_part
+            rule_content
+              no
+              SThief
+          rule_part
+            rule_content
+              Wizard
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Thief
+          rule_part
+            rule_content
+              no
+              Swizard
+          rule_part
+            rule_content	SFighter
+          ->
+          rule_part
+            rule_content	SThief
+          rule_part
+            rule_content
+              no
+              SWizard
+          rule_part
+            rule_content
+              Fighter
+              Sfx1
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Wizard
+          rule_part
+            rule_content
+              no
+              SFighter
+          rule_part
+            rule_content	SThief
+          ->
+          rule_part
+            rule_content	SWizard
+          rule_part
+            rule_content
+              no
+              SFighter
+          rule_part
+            rule_content
+              Thief
+              Sfx1
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              Weighing
+              YellowSwitch
+          rule_part
+            rule_content	YellowDoor
+          ->
+          rule_part
+            rule_content
+              Weighing
+              YellowSwitch
+          rule_part
+            rule_content	ShadowDoor
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              YellowSwitch
+              no
+              Weighing
+          rule_part
+            rule_content	YellowOpen
+          ->
+          rule_part
+            rule_content	YellowSwitch
+          rule_part
+            rule_content
+              YellowDoor
+              sfx2
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              YellowSwitch
+              no
+              Weighing
+          rule_part
+            rule_content	ShadowDoor
+          ->
+          rule_part
+            rule_content	YellowSwitch
+          rule_part
+            rule_content	YellowDoor
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	ShadowDoor
+          ->
+          rule_part
+            rule_content
+              YellowOpen
+              sfx3
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              Weighing
+              PurpleSwitch
+          rule_part
+            rule_content	PurpleDoor
+          ->
+          rule_part
+            rule_content
+              Weighing
+              PurpleSwitch
+          rule_part
+            rule_content	ShadowDoor
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              PurpleSwitch
+              no
+              Weighing
+          rule_part
+            rule_content	PurpleOpen
+          ->
+          rule_part
+            rule_content	PurpleSwitch
+          rule_part
+            rule_content
+              PurpleDoor
+              sfx2
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content
+              PurpleSwitch
+              no
+              Weighing
+          rule_part
+            rule_content	ShadowDoor
+          ->
+          rule_part
+            rule_content	PurpleSwitch
+          rule_part
+            rule_content	PurpleDoor
+          
+
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	ShadowDoor
+          ->
+          rule_part
+            rule_content
+              PurpleOpen
+              sfx3
+          
+
+  winconditions_section
+    condition_data
+      All
+      object_name	Hero
+      on
+      object_name	Goal
+    condition_data
+      All
+      object_name	Goal
+      on
+      object_name	Hero
+  levels_section
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' 'F' '.' '.' '.' '.' '.' '.' '.' 'G' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '*' '.' '#' '.' '*' '.' '#']
+ ['#' '.' 'F' '.' '.' '.' '*' '.' '*' '*' 'G' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '*' '.' '#' '.' '*' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '.' 'F' '.' '*' '.' '{' '.' '#' '.' 'G' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '[' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '#' 'G' '#']
+ ['#' '.' '#' '*' '.' '.' '#' '[' '#']
+ ['#' '.' '*' '*' '.' 'F' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '{' '.' '{' '.' '{' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '*' '#' '.' '.' '.' '#']
+ ['#' '.' 'T' '.' '*' '.' '{' '.' '#' '.' 'G' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '*' '[' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '#' 'G' '#']
+ ['#' '.' '#' '*' '.' '.' '#' '[' '#']
+ ['#' '.' '*' '*' '.' 'T' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '{' '.' '{' '.' '{' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '#' 'G' '.' '#']
+ ['#' '.' '#' '.' '.' '#' '#' '[' '#']
+ ['#' '.' '.' '.' '.' '{' '.' '.' '#']
+ ['#' '.' '#' '.' '#' '.' '#' '.' '#']
+ ['#' '.' '.' '*' '.' 'T' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '*' '.' '{' '.' '#' '.' '.' '.' '#']
+ ['#' '.' 'W' '.' '*' '.' '{' '.' '[' '.' 'G' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '#' 'G' '#']
+ ['#' '.' '#' '*' '.' '.' '#' '[' '#']
+ ['#' '.' '*' '*' '.' 'W' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '{' '.' '{' '.' '{' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#']
+ ['#' 'W' '#' 'G' '#' '*' '#']
+ ['#' '.' '#' '.' '#' '.' '#']
+ ['#' '*' '.' '.' '.' '*' '#']
+ ['#' '.' '#' '#' '#' '.' '#']
+ ['#' '*' '.' '*' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '.' 'F' '.' '.' '.' '}' '.' '[' '.' 'G' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '.' '3' '.' ']' '.' '{' '.' '.' '.' 'G' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '*' '#' '.' '.' '#' '#' 'G' '.' 'G' '#']
+ ['#' '.' '#' '.' '2' '.' '#' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '#' '.' '.' '#' '#']
+ ['#' 'W' '#' '#' '#' '.' '*' '.' '.' '*' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'F' '.' '*' '.' '#' '.' '*' '#' '{' '#']
+ ['#' '.' '.' '#' '.' '.' '.' '*' '.' '.' '#']
+ ['#' '#' '#' '#' '.' '.' '.' '*' '.' '*' '#']
+ ['#' '.' '.' '#' '.' '#' '#' '[' '#' '#' '#']
+ ['#' '2' '.' '.' '.' '#' '*' '.' 'G' 'G' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '*' '.' '.' '.' '.' '{' '.' '.' '.' '.' '3' '#']
+ ['#' '.' '#' '#' '#' '#' '.' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '#' '.' '.' '#' '.' '#' '#' '#' '.' '.' '#']
+ ['#' '.' '#' 'G' '.' '.' '.' '.' '[' ']' '.' 'G' '#']
+ ['#' '.' '#' '.' '.' '#' '.' '#' '#' '#' '.' '.' '#']
+ ['#' '.' '#' '#' '#' '#' '.' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '}' '.' '.' '.' '.' 'T' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' 'G' '.' '#' 'F' '#' '*' '#' '.' '.' '.' '#']
+ ['#' '*' '.' '.' '[' '.' '.' '.' '.' '.' '{' '.' '#']
+ ['#' '#' 'G' '.' '#' '3' '#' '#' '#' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'W' '.' '.' '{' '.' '.' '.' '[' '*' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '#' '[' '#']
+ ['#' 'G' '#' 'G' '#' 'G' '#' '.' '#' '2' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#' '1' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '*' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '.' '#']
+ ['#' 'F' '2' '3' '.' ']' '#' '.' '#']
+ ['#' '.' '.' '#' '#' 'G' '#' '.' '#']
+ ['#' '.' '.' '#' 'G' 'G' '#' '.' '#']
+ ['#' '#' '.' '#' '#' '#' '#' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '}' '#' '#' '#' '#' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' 'G' '.' 'G' '#' '.' '.' '.' '#']
+ ['#' '.' '*' '.' '#' 'F' '2' '3' '#' '.' 'G' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '#' '[' '#' '#' '#' '.' '#' '#' '#' '[' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '.' '{' '.' '.' '.' '{' '.' '.' '.' '{' '.' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#']
+ ['#' 'G' '*' '*' '*' 'F' '#']
+ ['#' '*' '*' '*' '*' '*' '#']
+ ['#' 'G' '*' '*' '*' '2' '#']
+ ['#' '*' '*' '*' '*' '*' '#']
+ ['#' 'G' '*' '*' '*' '3' '#']
+ ['#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '3' '.' '.' 'G' '[' '*' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'F' '*' '*' 'G' '{' '{' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '2' '.' '[' 'G' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' 'F' '#' '.' '*' '.' '#' '.' '*' '.' '#' '3' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '.' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '#' '#' '#' '#']
+ ['#' '2' '#' '.' '*' '.' '#' '.' '.' '.' '}' '*' '#']
+ ['#' '.' '.' '.' '#' '.' '.' '.' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '.' '#' '#' '#' '#' '#' '#']
+ ['#' 'G' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' 'G' '.' '.' ']' '.' '#' '.' '.' '.' '#' '.' '#']
+ ['#' 'G' '.' '.' '#' '.' '.' '.' '#' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'F' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'G' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'T' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'G' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'W' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'G' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None

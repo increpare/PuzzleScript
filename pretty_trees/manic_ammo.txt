@@ -1,0 +1,1197 @@
+ps_game
+  objects_section
+    object_data
+      object_name	Background
+      
+
+      colors
+        color	gray
+      
+
+    object_data
+      object_name	Target
+      
+
+      colors
+        color	darkgray
+        color	gray
+        color	lightgray
+        color	white
+      
+
+      sprite
+        ['3' '3' '3' '3' '3']
+        ['3' '1' '1' '1' '2']
+        ['3' '1' '0' '0' '2']
+        ['3' '1' '0' '0' '2']
+        ['3' '2' '2' '2' '2']
+    object_data
+      object_name	Wall
+      
+
+      colors
+        color	BROWN
+      
+
+    object_data
+      object_name	Boom
+      
+
+      colors
+        color	Red
+        color	YELLOW
+        color	orange
+      
+
+      sprite
+        ['.' '1' '0' '1' '.']
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '2' '0' '0']
+        ['1' '0' '0' '0' '1']
+        ['.' '1' '0' '1' '.']
+    object_data
+      object_name	Player
+      
+
+      colors
+        color	PINK
+        color	YELLOW
+        color	BLACK
+      
+
+      sprite
+        ['.' '2' '2' '2' '.']
+        ['.' '0' '0' '0' '.']
+        ['2' '2' '1' '2' '2']
+        ['.' '2' '2' '2' '.']
+        ['.' '2' '.' '2' '.']
+    object_data
+      object_name	CrateW
+      
+
+      colors
+        color	Brown
+        color	DarkBrown
+        color	lightbrown
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '2' '0' '0' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '2' '0' '0' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	CrateN
+      
+
+      colors
+        color	Brown
+        color	DarkBrown
+        color	lightbrown
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '2' '1' '2' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	CrateMineN
+      
+
+      colors
+        color	Brown
+        color	DarkBrown
+        color	lightbrown
+        color	darkblue
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '2' '1' '2' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '0' '3' '0' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	CrateGunN
+      
+
+      colors
+        color	Brown
+        color	DarkBrown
+        color	lightbrown
+        color	darkred
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '2' '1' '2' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '0' '3' '0' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	CrateGunS
+      
+
+      colors
+        color	Brown
+        color	DarkBrown
+        color	lightbrown
+        color	darkred
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '2' '3' '2' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	CrateS
+      
+
+      colors
+        color	Brown
+        color	DarkBrown
+        color	lightbrown
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '2' '1' '2' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	CrateE
+      
+
+      colors
+        color	Brown
+        color	DarkBrown
+        color	lightbrown
+      
+
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '0' '2' '1']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '0' '2' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_name	Shell
+      
+
+      colors
+        color	yellow
+        color	orange
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '0' '1' '.']
+    object_data
+      object_name	Bang
+      
+
+      colors
+        color	Yellow
+        color	LightRed
+      
+
+      sprite
+        ['.' '1' '0' '1' '.']
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '0' '0' '0']
+        ['1' '0' '0' '0' '1']
+        ['.' '1' '0' '1' '.']
+    object_data
+      object_name	GunN
+      
+
+      colors
+        color	red
+        color	lightred
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '1' '0' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_name	GunW
+      
+
+      colors
+        color	red
+        color	lightred
+      
+
+      sprite
+        ['.' '.' '.' '0' '.']
+        ['.' '.' '1' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '1' '0' '0']
+        ['.' '.' '.' '0' '.']
+    object_data
+      object_name	GunS
+      
+
+      colors
+        color	red
+        color	lightred
+      
+
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '1' '0' '1' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_name	GunE
+      
+
+      colors
+        color	red
+        color	lightred
+      
+
+      sprite
+        ['.' '0' '.' '.' '.']
+        ['0' '0' '1' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '1' '.' '.']
+        ['.' '0' '.' '.' '.']
+    object_data
+      object_name	InertMine
+      
+
+      colors
+        color	darkblue
+        color	blue
+        color	lightblue
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '0' '2' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	ActiveMine
+      
+
+      colors
+        color	darkred
+        color	red
+        color	lightred
+      
+
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '0' '2' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_name	Squawk
+      
+
+      colors
+        color	lightblue
+        color	blue
+      
+
+      sprite
+        ['.' '.' '.' '.' '0']
+        ['.' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '0']
+        ['.' '1' '1' '.' '0']
+        ['1' '1' '1' '1' '.']
+    object_data
+      object_name	SquawkBang
+      
+
+      colors
+        color	orange
+        color	lightblue
+      
+
+      sprite
+        ['.' '.' '.' '.' '0']
+        ['.' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '0']
+        ['.' '1' '1' '.' '0']
+        ['1' '1' '1' '1' '.']
+    object_data
+      object_name	Droid
+      
+
+      colors
+        color	black
+        color	green
+      
+
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '1' '0' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+  legend_section
+    legend_data
+      .
+      object_name	Background
+    legend_data
+      #
+      object_name	Wall
+    legend_data
+      P
+      object_name	Player
+    legend_data
+      N
+      object_name	CrateN
+    legend_data
+      E
+      object_name	CrateE
+    legend_data
+      W
+      object_name	CrateW
+    legend_data
+      S
+      object_name	CrateS
+    legend_data
+      O
+      object_name	Target
+    legend_data
+      +
+      object_name	Shell
+    legend_data
+      ^
+      object_name	GunN
+    legend_data
+      <
+      object_name	GunW
+    legend_data
+      >
+      object_name	GunE
+    legend_data
+      ˅
+      object_name	GunS
+    legend_data
+      M
+      object_name	InertMine
+    legend_data
+      A
+      object_name	ActiveMine
+    legend_data
+      B
+      object_name	Boom
+    legend_data
+      %
+      object_name	CrateGunN
+    legend_data
+      &
+      object_name	CrateMineN
+    legend_data
+      @
+      object_name	CrateGunS
+    legend_data
+      X
+      object_name	Squawk
+    legend_data
+      D
+      object_name	Droid
+  collisionlayers_section
+    layer_data
+      object_name	Background
+    layer_data
+      object_name	Target
+    layer_data
+      object_name	Player
+    layer_data
+      object_name	Wall
+      object_name	CrateN
+    layer_data
+      object_name	CrateE
+      object_name	CrateW
+    layer_data
+      object_name	CrateS
+      object_name	Shell
+    layer_data
+      object_name	GunN
+      object_name	GunW
+    layer_data
+      object_name	GunE
+      object_name	GunS
+    layer_data
+      object_name	Bang
+      object_name	InertMine
+    layer_data
+      object_name	ActiveMine
+      object_name	Boom
+    layer_data
+      object_name	CrateMineN
+      object_name	CrateGunN
+    layer_data
+      object_name	CrateGunS
+      object_name	Squawk
+    layer_data
+      object_name	Droid
+      object_name	SquawkBang
+  rules_section
+    rule_block
+      rule_block_once
+        rule_data
+          rule_part
+            rule_content	Bang
+          ->
+          rule_part
+            rule_content	background
+          
+
+        rule_data
+          rule_part
+            rule_content	boom
+          ->
+          command
+            command_keyword	restart
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              player
+          rule_part
+            rule_content	Droid
+          ->
+          rule_part
+            rule_content
+              >
+              player
+          rule_part
+            rule_content
+              >
+              Droid
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Shell
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content
+              >
+              Shell
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Droid
+            cell_border
+            rule_content	Shell
+          ->
+          rule_part
+            rule_content
+              >
+              Droid
+            cell_border
+            rule_content
+              >
+              Shell
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	InertMine
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content
+              >
+              InertMine
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	InertMine
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	ActiveMine
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Droid
+            cell_border
+            rule_content	InertMine
+          ->
+          rule_part
+            rule_content	Droid
+            cell_border
+            rule_content	ActiveMine
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	ActiveMine
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	boom
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Droid
+            cell_border
+            rule_content	ActiveMine
+          ->
+          rule_part
+            rule_content	Droid
+            cell_border
+            rule_content	boom
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              shell
+            cell_border
+            rule_content	ActiveMine
+          ->
+          rule_part
+            rule_content	boom
+            cell_border
+            rule_content	boom
+          
+
+        rule_data
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	Squawk
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	SquawkBang
+          
+
+        rule_data
+          rule_part
+            rule_content
+              >
+              Droid
+            cell_border
+            rule_content	Squawk
+          ->
+          rule_part
+            rule_content	Droid
+            cell_border
+            rule_content	SquawkBang
+          
+
+        rule_data
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	CrateMineN
+          ->
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	ActiveMine
+          
+
+        rule_data
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	CrateGunN
+          ->
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	GunN
+          
+
+        rule_data
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	CrateGunS
+          ->
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	GunS
+          
+
+        rule_data
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	CrateN
+          ->
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	Shell
+          
+
+        rule_data
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	CrateS
+          ->
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	Shell
+          
+
+        rule_data
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	CrateE
+          ->
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	Shell
+          
+
+        rule_data
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	CrateW
+          ->
+          rule_part
+            rule_content	SquawkBang
+          rule_part
+            rule_content	Shell
+          
+
+        rule_data
+          rule_part
+            rule_content	SquawkBang
+          ->
+          rule_part
+          command
+            sound
+              sound_id	1
+          
+
+        rule_data
+          prefix	DOWN
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	CrateN
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	Shell
+          
+
+        rule_data
+          prefix	UP
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	CrateS
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	Shell
+          
+
+        rule_data
+          prefix	LEFT
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	CrateE
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	Shell
+          
+
+        rule_data
+          prefix	RIGHT
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	CrateW
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	Shell
+          
+
+        rule_data
+          prefix	DOWN
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	CrateGunN
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	GunN
+          
+
+        rule_data
+          prefix	UP
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	CrateGunS
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	GunS
+          
+
+        rule_data
+          prefix	DOWN
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	CrateMineN
+          ->
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	ActiveMine
+          
+
+        rule_data
+          prefix	UP
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	GunN
+            cell_border
+            rule_content	No
+            rule_content	Bang
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	GunN
+            cell_border
+            rule_content	Bang
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          prefix	LEFT
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	GunW
+            cell_border
+            rule_content	No
+            rule_content	Bang
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	GunW
+            cell_border
+            rule_content	Bang
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          prefix	DOWN
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	GunS
+            cell_border
+            rule_content	No
+            rule_content	Bang
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	GunS
+            cell_border
+            rule_content	Bang
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          prefix	RIGHT
+          rule_part
+            rule_content
+              Action
+              Player
+            cell_border
+            rule_content	GunE
+            cell_border
+            rule_content	No
+            rule_content	Bang
+          ->
+          rule_part
+            rule_content	Player
+            cell_border
+            rule_content	GunE
+            cell_border
+            rule_content	Bang
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          prefix	UP
+          rule_part
+            rule_content
+              >
+              Droid
+            cell_border
+            rule_content	GunN
+            cell_border
+            rule_content	No
+            rule_content	Bang
+          ->
+          rule_part
+            rule_content	Droid
+            cell_border
+            rule_content	GunN
+            cell_border
+            rule_content	Bang
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          prefix	LEFT
+          rule_part
+            rule_content
+              >
+              Droid
+            cell_border
+            rule_content	GunW
+            cell_border
+            rule_content	No
+            rule_content	Bang
+          ->
+          rule_part
+            rule_content	Droid
+            cell_border
+            rule_content	GunW
+            cell_border
+            rule_content	Bang
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          prefix	DOWN
+          rule_part
+            rule_content
+              >
+              Droid
+            cell_border
+            rule_content	GunS
+            cell_border
+            rule_content	No
+            rule_content	Bang
+          ->
+          rule_part
+            rule_content	Droid
+            cell_border
+            rule_content	GunS
+            cell_border
+            rule_content	Bang
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          prefix	RIGHT
+          rule_part
+            rule_content
+              >
+              Droid
+            cell_border
+            rule_content	GunE
+            cell_border
+            rule_content	No
+            rule_content	Bang
+          ->
+          rule_part
+            rule_content	Droid
+            cell_border
+            rule_content	GunE
+            cell_border
+            rule_content	Bang
+          command
+            sound
+              sound_id	4
+          
+
+        rule_data
+          rule_part
+            rule_content	bang
+            cell_border
+            rule_content	shell
+          ->
+          rule_part
+            rule_content	bang
+            cell_border
+            rule_content	bang
+          
+
+        rule_data
+          rule_part
+            rule_content	boom
+            cell_border
+            rule_content	no
+            rule_content	player
+          ->
+          rule_part
+            rule_content	boom
+            cell_border
+            rule_content	boom
+          command
+            sound
+              sound_id	2
+          
+
+  winconditions_section
+    condition_data
+      All
+      object_name	Player
+      on
+      object_name	Target
+  levels_section
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' 'P' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' 'O' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' 'O' '#']
+ ['#' '.' '.' '+' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' 'N' '.' '.' '.' '#']
+ ['#' 'P' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '+' '.' 'P' '#']
+ ['#' '.' '.' '.' '.' '+' '.' '#']
+ ['#' '.' '.' '+' '+' '.' '.' '#']
+ ['#' '+' '+' '.' '.' '+' '+' '#']
+ ['#' '.' 'O' 'N' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '+' '.' '+' '.' 'O' '#']
+ ['#' '.' '.' 'N' '+' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' 'S' '.' '.' '#']
+ ['#' '.' '.' '.' '^' '.' '.' '.' '#']
+ ['#' '.' 'P' '.' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '+' '.' '+' 'O' '+' '.' 'P' '#']
+ ['#' '+' '.' '+' '+' '.' '.' '.' '#']
+ ['#' '.' '+' '.' '+' '.' 'N' '.' '#']
+ ['#' '+' '.' '.' '.' '.' '.' '.' '#']
+ ['#' 'E' '+' '+' '+' '.' '<' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '+' '.' '+' 'P' '+' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' 'S' 'S' 'S' 'S' 'M' '.' '.' '#']
+ ['#' '.' 'O' '.' 'E' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '&' '+' '.' '.' '+' '.' '#']
+ ['#' '.' '+' 'O' '&' '.' '+' '.' '#']
+ ['#' '.' '+' '+' '+' '%' '.' '.' '#']
+ ['#' '.' 'P' '.' 'S' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' 'X' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '#']
+ ['#' '.' '.' 'P' '.' '.' '.' '.' '#']
+ ['#' '.' '.' '.' '.' 'N' 'N' 'N' '#']
+ ['#' '.' '>' '.' '.' 'S' 'O' 'N' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' 'D' '.' '.' '.' 'P' 'N' '#']
+ ['#' '.' '.' '+' '.' '.' '.' 'N' '#']
+ ['#' 'A' '.' '+' '.' '.' '.' '.' '#']
+ ['#' '.' 'N' 'N' '.' 'O' '.' '.' '#']
+ ['#' '.' '.' '+' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'O' '+' 'N' '.' '.' '+' '.' 'W' '.' '#']
+ ['#' 'S' 'N' '&' '.' '.' '+' '.' 'N' 'X' '#']
+ ['#' '.' 'D' 'N' '.' '+' '.' '+' '.' '.' '#']
+ ['#' '%' '.' 'N' 'W' 'P' '.' 'N' 'S' '+' '#']
+ ['#' '.' '.' '.' '+' 'N' '.' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'P' '.' '.' '&' '&' '&' '&' '&' '&' '#']
+ ['#' 'D' 'X' '.' 'N' '.' '.' '.' '.' '&' '#']
+ ['#' '.' '.' '.' '&' '&' '&' '&' '&' '&' '#']
+ ['#' '.' 'N' '.' 'N' '.' '.' '.' 'O' '.' '#']
+ ['#' '&' '&' '&' '&' '&' '&' '&' '&' '&' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'P' 'E' 'S' 'W' '.' 'W' 'D' 'W' '.' '#']
+ ['#' 'N' 'W' '.' '.' '&' 'N' '@' '.' 'N' '#']
+ ['#' '.' 'N' '%' 'N' 'W' 'N' '.' 'X' '.' '#']
+ ['#' 'N' '.' '.' '.' 'N' 'N' 'N' 'N' 'N' '#']
+ ['#' 'N' '.' 'N' 'N' 'N' 'N' 'N' 'O' 'N' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' 'P' '.' 'N' 'N' 'N' '.' 'D' 'N' '.' '#']
+ ['#' 'M' 'M' '>' '.' '+' '+' '+' 'N' '.' '#']
+ ['#' '.' '.' 'N' '.' 'N' 'N' '+' '.' '.' '#']
+ ['#' '+' '+' 'N' '+' '+' '.' '.' '.' '.' '#']
+ ['#' '+' '+' '.' '.' '.' '<' '.' 'O' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' 'P' '.' '.' 'M' '.' 'M' '.' '.' '#']
+ ['#' '.' 'M' 'M' 'M' '.' 'M' '.' 'M' 'M' '#']
+ ['#' '.' '.' 'M' '.' '.' 'M' 'N' 'M' '.' '#']
+ ['#' 'M' 'M' '.' 'M' 'M' '.' 'M' 'O' 'S' '#']
+ ['#' '.' 'M' '.' '.' 'M' 'D' '.' '.' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '+' '.' '.' 'P' '.' '+' '.' '#']
+ ['#' '.' 'N' '.' '.' '@' '.' 'N' '.' '.' '#']
+ ['#' '+' '.' '&' '.' '.' 'E' '.' '&' '.' '#']
+ ['#' '+' '+' '.' '.' 'S' '.' 'S' 'S' 'S' '#']
+ ['#' '.' 'X' '+' '&' '.' '.' 'N' 'O' '.' '#']
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
+    level_data	None
