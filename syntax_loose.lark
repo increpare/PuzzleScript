@@ -20,7 +20,7 @@ delimiter: "="+
 // Sections
 objects_section: section_delimiter? "OBJECTS" NEWLINES section_delimiter? object_data+
 legend_section: section_delimiter? "LEGEND" NEWLINES section_delimiter? legend_data+
-sounds_section: section_delimiter? "SOUNDS" NEWLINES section_delimiter? sound_data+
+sounds_section: section_delimiter? "SOUNDS" NEWLINES section_delimiter? sound_data*
 collisionlayers_section: section_delimiter? "COLLISIONLAYERS" NEWLINES section_delimiter? layer_data+
 rules_section: section_delimiter? "RULES" NEWLINES section_delimiter? rule_block+
 winconditions_section: section_delimiter? "WINCONDITIONS"i NEWLINES section_delimiter? condition_data+ // Accept no win conditions
@@ -29,31 +29,33 @@ levels_section: section_delimiter? "LEVELS" NEWLINES section_delimiter? level_da
 // Prelude
 prelude: prelude_data+
 
-prelude_data: (KEYWORD_ID STRING*)? COMMENT? NEWLINES
+prelude_data: (KEYWORD_ID STRING*)? comment* NEWLINES
 
 STRING: /[^\n]+/
 
 // Can match anything inside comment, except for `)`
-COMMENT: /\((?:[^\(\)]|\((?:[^\(\)]|\([^)]*\))*\))*\)/
+// comment: /\((?:[^\(\)]|\((?:[^\(\)]|\([^)]*\))*\))*\)/
+comment: /\((?:[^\(\)]*\))/
+       | "(" comment* ")"
 
 // Object Data
-object_data: (object_name COMMENT? legend_key? NEWLINE colors COMMENT? NEWLINE sprite?) NEWLINES?
-           | NEWLINES_OR_COMMENTS
+object_data: object_name newlines_or_comments? legend_key? newlines_or_comments? colors newlines_or_comments? sprite?
+           | newlines_or_comments
 
 SPRITE_PIXEL: /[0-9.]/
 colors: color+
 
-sprite: (SPRITE_PIXEL~5 COMMENT? NEWLINE)~5
+sprite: (SPRITE_PIXEL~5 comment* NEWLINE)~5
 
 // Legend Data
 legend_data: (PIXEL | ID) "=" object_name legend_operation*
-           | NEWLINES_OR_COMMENTS
+           | newlines_or_comments
 
 legend_operation: "or"i object_name
                 | "and"i object_name
 
 // Sound Data
-sound_data: (sound_id+ sound_number)? COMMENT? NEWLINE
+sound_data: (sound_id+ sound_number?)? comment* NEWLINE
 
 sound_number: INT
 
@@ -61,16 +63,19 @@ sound: "sfx"i sound_id
 
 // Layer Data
 layer_data: ((object_name ("," | " "))* object_name ","*)?
-          | NEWLINES_OR_COMMENTS
+          | newlines_or_comments
 
 STARTLOOP: "startloop"i
 ENDLOOP: "endloop"i
 
 // Rule Data
-rule_data: PLUS? (prefix | rule_part)+ THEN (command | rule_part)* message? COMMENT? NEWLINE
-         | NEWLINES_OR_COMMENTS
+rule_data: RULE_MOD* rule_part+ THEN (command | rule_part)* message? comment* NEWLINE
+         | newlines_or_comments
 
 THEN: "->"
+
+RULE_MOD: "right"i | "down"i | "up"i | "left"i | PLUS | "late"i
+        | "vertical"i | "horizontal"i | "random"i | "rigid"i
 PLUS: "+"
 
 rule_block_once: rule_data+
@@ -85,7 +90,7 @@ rule_part: "[" (rule_content? cell_border*)+ "]"
 
 cell_border: "|"
 
-rule_content: DIRECTIONAL? ID+
+rule_content: DIRECTIONAL? (ID+ | PIXEL)
 
 ID: /[a-z0-9.A-Z#_]/+
 
@@ -95,34 +100,28 @@ command: command_keyword
 
 // Condition Data
 condition_data: QUANT object_name (ON object_name)?
-              | NEWLINES_OR_COMMENTS
+              | newlines_or_comments
 
 ON: "on"i
-QUANT: "all"i | "some"i | "no"i
+QUANT: "all"i | "some"i | "no"i | "any"i
 
 
 // Level Data
-// level_data: (levelline NEWLINE)+ COMMENT? NEWLINE
-//           | "message"i STRING* COMMENT? NEWLINE
-//           | COMMENT
-//           | NEWLINE
-// level_data: "dummy"
 
 level_data: levellines
           | message
-          | NEWLINES_OR_COMMENTS
+          | newlines_or_comments
 
-// levellines: /((?<!message)[a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±]+\n)+/
+// levellines: (levelline NEWLINE)+
+levellines: levelline+ NEWLINE
+levelline: /(?<!message)[¨å,äa-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±]+/ comment* NEWLINE
 
-NEWLINES_OR_COMMENTS: (NEWLINE | COMMENT)+
+newlines_or_comments: (NEWLINE | comment | "="+)+
 
 // levelline: /(?<!message) / PIXEL+
-PIXEL: /[a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±]/
+PIXEL: /[a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàåäé;?:\/+°£^{}|\><^v¬˅\\±¨]/
 sprite_key: PIXEL
           | "="  // To permit easyenigma
-
-levellines: levelline+
-levelline: /(?<!message)[a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±]/ COMMENT*
 // Rewrite LEVELLINE to use PIXEL, but still inhibit message
 // levelline: /(?<!message)./ sprite_key*
 
