@@ -89,6 +89,13 @@ Also, if you hold CTRL (or, on a Mac, CMD) and left click on the text of a level
 <p>
     </div><!-- /.container -->
 
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        var container = document.getElementById("documentation-container");
+        var documentationText = container.innerText;
+        console.log(documentationText);
+      });
+    </script>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

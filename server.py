@@ -47,6 +47,9 @@ gen_game_from_idea_prompt = (
     """Create a simplified `demake` of the following game idea in PuzzleScript: {game_idea}. {cot_prompt}"""
     + formatting_prompt
 )
+from_idea_repair_prompt = (
+    """We are trying to create the following game: {game_idea}. """
+)
 cot_prompt = (
     """First, reason about your task and determine the best plan of action. Then, write your code. """
 )
@@ -61,13 +64,15 @@ game_crossover_prompt = (
     + formatting_prompt
 )
 game_compile_repair_prompt = (
+    """{from_idea_repair_prompt}"""
     """The following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
     """produced the following console output:\n{console_text}\n"""
-    """Return a repaired version of the code that addresses these errors. {cot_prompt} {from_idea_prompt}"""
+    """Return a repaired version of the code that addresses these errors. {cot_prompt}"""
     + formatting_prompt
 )
 from_idea_prompt = """The game should be a simplified `demake` of the following game idea: {game_idea}"""
 game_solvability_repair_prompt = (
+    """{from_idea_repair_prompt}"""
     """The following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
     """compiled, but a solvability check returned the following error:\n{solver_text}\n"""
     """{from_idea_prompt}"""
@@ -186,7 +191,9 @@ def load_ideas():
 @app.route('/load_game_from_file', methods=['POST'])
 def load_game_from_file():
     data = request.json
-    game_path = os.path.join('misc', '3d_sokoban.txt')
+    game = data['game']
+    # game_path = os.path.join('misc', game)
+    game_path = os.path.join('src', 'demo', f'{game}.txt')
     with open(game_path, 'r') as f:
         code = f.read()
     return code
@@ -259,7 +266,31 @@ def gen_fewshot_examples(system_prompt, prompt):
     return fewshot_examples_prompt_i
 
 
+GPT4V_ENDPOINT = "https://aoai-physics.openai.azure.com/openai/deployments/gpt4o/chat/completions?api-version=2024-02-15-preview"
+GPT4V_KEY = os.environ.get("AZURE_OPENAI_API_KEY")
+headers = {
+    "Content-Type": "application/json",
+    "api-key": GPT4V_KEY,
+}
+
 def llm_text_query(system_prompt, prompt, seed):
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": prompt},
+    ]
+    payload = {
+        "messages": messages,
+        "temperature": 0.7,
+        "top_p": 0.95,
+    }
+    try:
+        response = requests.post(GPT4V_ENDPOINT, headers=headers, json=payload)
+        response.raise_for_status() # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
+    except requests.RequestException as e:
+        raise SystemExit(f"Failed to make the request. Error: {e}")
+
+    return response.json()['choices'][0]['message']['content']
+
     global openai_client
     if openai_client is None:
         openai_client = openai.Client(api_key=os.getenv('OPENAI_API_KEY'))
@@ -298,8 +329,9 @@ def gen_game():
     solver_text = data['solver_text']
     n_iter = data['n_iter']
     gen_game_output_path = os.path.join(save_dir, f'{n_iter}b_code.txt')
-    print(gen_game_output_path)
-    if not os.path.isfile(gen_game_output_path):
+    gen_game_code_output_path = os.path.join(save_dir, f'{n_iter}b_code.txt')
+    print(gen_game_code_output_path)
+    if not os.path.isfile(gen_game_code_output_path):
         gen_game_prompt_output_path = os.path.join(save_dir, f'{n_iter}a_prompt.txt')
         system_prompt = game_gen_system_prompt
         from_idea_prompt_i = from_idea_prompt.format(game_idea=game_idea) if from_idea else ''
@@ -322,10 +354,10 @@ def gen_game():
             system_prompt += gen_fewshot_examples(system_prompt, prompt)
         save_prompts(system_prompt, prompt, gen_game_prompt_output_path)
         text = llm_text_query(system_prompt, prompt, seed)
-        with open(gen_game_output_path, 'w', encoding='utf-8') as f:
+        with open(gen_game_code_output_path, 'w', encoding='utf-8') as f:
             f.write(text)
     else:
-        with open(gen_game_output_path, 'r', encoding='utf-8') as f:
+        with open(gen_game_code_output_path, 'r', encoding='utf-8') as f:
             text = f.read()
     code, plaintext = extract_ps_code(text)
     if 'randomDir' in code:

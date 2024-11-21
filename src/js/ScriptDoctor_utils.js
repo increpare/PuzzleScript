@@ -442,3 +442,32 @@ function makeGIFDoctor() {
 
   return [data_url, filename];
 }
+
+
+function DoRestartSearch(force) {
+	if (restarting===true){
+		return;
+	}
+	if (force!==true && ('norestart' in state.metadata)) {
+		return;
+	}
+	restarting=true;
+	if (force!==true) {
+		addUndoState(backupLevel());
+	}
+
+	if (verbose_logging) {
+		consolePrint("--- restarting ---",true);
+	}
+
+	restoreLevel(restartTarget);
+	// tryPlayRestartSound();
+
+	if ('run_rules_on_level_start' in state.metadata) {
+    	processInput(-1,true);
+	}
+	
+	level.commandQueue=[];
+	level.commandQueueSourceRules=[];
+	restarting=false;
+}

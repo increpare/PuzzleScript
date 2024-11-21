@@ -235,7 +235,6 @@ function getScore() {
 						var minDistance = maxDistance;
 						for (var j = 0; j < level.n_tiles; j++) {
 							if (!filter2.bitsClearInArray(level.getCellInto(j, _o10).data)) {
-                                console.log(distanceTable);
 								var dist = distanceTable[i][j];
 								if (dist < minDistance) {
 									minDistance = dist;
