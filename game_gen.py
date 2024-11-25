@@ -150,7 +150,8 @@ def gen_game_from_plan(seed, save_dir, game_idea, n_iter):
     return code, sols, skip
 
 
-def gen_game(seed, fewshot, cot, save_dir, gen_mode, parents, code, from_idea, game_idea, console_text, solver_text, compilation_success, n_iter):
+def gen_game(seed, fewshot, cot, save_dir, gen_mode, parents, code, from_idea, game_idea, console_text, 
+             solver_text, compilation_success, n_iter):
     cot_prompt_text = cot_prompt if cot else ''
     log_dir = 'logs'
     save_dir = os.path.join(log_dir, save_dir)
@@ -173,10 +174,10 @@ def gen_game(seed, fewshot, cot, save_dir, gen_mode, parents, code, from_idea, g
                 prompt = game_crossover_prompt.format(parents=parents_text, cot_prompt=cot_prompt_text)    
         elif not compilation_success:
             prompt = game_compile_repair_prompt.format(code=code, console_text=console_text, cot_prompt=cot_prompt_text,
-                                                       from_idea_prompt=from_idea_prompt_i)
+                                                       game_idea=game_idea)
         else:
             prompt = game_solvability_repair_prompt.format(code=code, solver_text=solver_text,
-                                                           from_idea_prompt=from_idea_prompt_i)
+                                                           game_idea=game_idea)
         # if not gen_mode == GenModes.ZERO_SHOT:
         if fewshot:
             system_prompt += gen_fewshot_examples(system_prompt, prompt)

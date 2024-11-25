@@ -2,13 +2,16 @@ comments_note = "Any comments must be in the form `(comment)`."
 formatting_prompt = \
     """Return your code in full, inside a ```plaintext code block."""
 game_gen_system_prompt = (
-    "You are a game designer, familiar with the PuzzleScript game description language. "
+    "You are a creative and resourceful indie puzzle game designer, familiar with the PuzzleScript game description language. "
+    f"""Here are the docs: {open('all_documentation.txt', 'r').read()}\n"""
 )
 fewshow_examples_prompt = (
     "Here are some example games, for inspiration (do not reproduce these games exactly):"""
 )
 gen_game_prompt = (
-    """Output the code for a complete PuzzleScript game. {from_idea_prompt} {cot_prompt}"""
+    """Output the code for a complete PuzzleScript game. """
+    """The game should be unique and slightly unconventional, with inventive mechanics. """
+    """{from_idea_prompt} {cot_prompt}"""
     + formatting_prompt
 )
 gen_game_from_idea_prompt = (
@@ -34,7 +37,7 @@ game_crossover_prompt = (
 game_compile_repair_prompt = (
     """{from_idea_repair_prompt}"""
     """The following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
-    """produced the following console output:\n{console_text}\n"""
+    """produced the following console output:\n```\n{console_text}\n```\n"""
     """Return a repaired version of the code that addresses these errors. {cot_prompt}"""
     + formatting_prompt
 )
@@ -43,7 +46,6 @@ game_solvability_repair_prompt = (
     """{from_idea_repair_prompt}"""
     """The following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
     """compiled, but a solvability check returned the following error:\n{solver_text}\n"""
-    """{from_idea_prompt}"""
     + formatting_prompt
 )
 # plan_game_prompt = (

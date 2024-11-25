@@ -356,6 +356,8 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
   solverText = '';
   compiledIters = [];
   solvedIters = [];
+
+  bestIndividual = new GameIndividual('', -Infinity, [], [], true);
   while (nGenAttempts < maxGenAttempts & (nGenAttempts == 0 | !compilationSuccess | !solvable)) {
     console.log(`Game ${saveDir}, attempt ${nGenAttempts}.`);
 
@@ -531,8 +533,11 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
     }
 
     nGenAttempts++;
+    individual = new GameIndividual(code, fitness, compiledIters, solvedIters, false);
+    bestIndividual = bestIndividual.fitness < individual.fitness ? individual : bestIndividual;
+
   }
-  return new GameIndividual(code, fitness, compiledIters, solvedIters, false);
+  return bestIndividual;
 }
 
 
@@ -716,12 +721,12 @@ function generateClick() {
   expFn();
 }
 
-const expSeed = 1;
+const expSeed = 2;
 
 // sweep();
 // fromIdeaSweep();
 // fromPlanSweep();
 // playTest();
-// evolve();
+evolve();
 
 // genGame('init', [], 'test_99', 99, fewshot=true, cot=true, maxGenAttempts=20);

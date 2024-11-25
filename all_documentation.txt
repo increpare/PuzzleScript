@@ -1,0 +1,1167 @@
+
+
+Documentation
+The Action Button
+
+The Action Button
+
+You want the player to respond to pressing action (X or SPACEBAR)?  It's super easy.
+
+ Edit[ Action Player | Sheep ] -> [  Action  Player | > Sheep  ]
+[ > Sheep |  Sheep ] -> [ blood | > Sheep ]
+
+You must feel so powerful now that you know how to ACTION.  
+
+It's treated like a directional input, merely one that has no effect during the movement phase and is removed (so if you search for a moving player, it will detect someone doing an action.  If you want to detect someone moving who is not doing an action, you can use the word ORTHOGONAL (which just means up/down/left/right).
+
+Action markers are discarded during the movement phase.  
+
+TIP: If you are using action in your games, you often will want to use norepeat_action to prevent the player from repeatedly triggering the action even just by holding down action (this is especially useful when action toggles between two states - when toggling a button, say, you will probably want "one press" = "one toggle").
+
+So, what are you going to use the action button for?  For pushing crates?  For swapping between characters? for pressing buttons?  There are many possibilities!
+
+Documentation
+Bird's-eye View
+CollisionLayers
+
+Bird's-eye view of a PuzzleScript file
+
+A puzzlescript file is divided into 8 sections:
+
+Prelude
+Objects
+Legend
+Sounds
+CollisionLayers
+Rules
+WinConditions
+Levels
+
+CollisionLayers
+
+    Objects can be placed on different layers:
+    
+Background
+Target
+Player, Wall, Crate
+
+The main purpose of layers is in resolving movements: two objects on the same layer cannot coexist in a single cell.  The order of layers also determines in what order things are drawn.
+
+The Background layer is a special layer.  Every game must have one.  Every tile must have a background tile.  However, by defining 
+Background = Background1 or Background2
+in the legend, you can have several tile types on the background layer. Every tile must have a background tile. If you don't specify one explicitly for a tile, it is inferred based on what other background tiles are used in the level it's in.
+
+Documentation
+Directions
+
+Intermediate Directions and Movement
+
+Relative directions rotate along with their pattern
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+gets compiled to the following set of rules:
+
+UP [ UP player | crate ] -> [ UP player | UP crate ] 
+DOWN [ DOWN player | crate ] -> [ DOWN player | DOWN crate ] 
+LEFT [ LEFT player | crate ] -> [ LEFT player | LEFT crate ] 
+RIGHT [ RIGHT player | crate ] -> [ RIGHT player | RIGHT crate ]
+
+You can restrict patterns so that they're only matched in a particular direction (by default, when the interpreter tries to find places to apply to rule, it tries all four rotations of it).  To implement gravity, we could do 
+
+DOWN [ stationary Object ] -> [ > Object ]
+
+Which compiles to
+
+DOWN [ stationary Object ] -> [ DOWN Object ]
+
+It would probably have been simpler to write the rule as 
+
+[ stationary Object ] -> [ DOWN Object ]
+
+which is the same thing.
+
+Another good illustration of why rule direction might be important would be if you're making a word game.
+
+[ C | A | T ] -> WIN
+
+would look for words in all four directions, so TAC would also match this rule. To fix it, you would restrict the rule to read left-to-right as follows:
+
+ Editright [ C | A | T ] -> WIN
+
+Huzzah!
+
+There are horizontal directons as well - if you want something that moves horizontally when you move horizontally, but ignores you otherwise, you do this
+
+[ Horizontal  Player ] [ Crate ] -> [  Horizontal  Player ] [  Horizontal Crate  ]
+and get this:
+
+(Vertical is also a keyword that you can use).
+
+Vertical and horizontal are both keywords, but is there a way of reducing the following to a single instruction?
+
+[ ^ Player | Crate ] -> [ ^ Player | ^ Crate ]
+[ v Player | Crate ] -> [ v Player | v Crate ]
+
+There is, and it's this:
+
+[ Perpendicular Player | Crate ] -> [ Perpendicular Player | Perpendicular Crate ]
+
+Parallel is also a keyword, and means what you think it might :)
+
+Tip: if you don't know what something does in the examples (or in your own code :S ), it can be helpful to add the DEBUG flag to the prelude to see how the compiler interprets it.
+
+Documentation
+Execution Order
+
+Execution Order
+
+Zoom Level 1
+Zoom Level 2
+Zoom Level 3
+StartLoop/EndLoop
+
+    Let's start with the vaguest picture, and zoom in a bit each section for a more detailed description, and in the end describe a final looping construct that you may find yourself needing at some point.
+    
+Zoom Level 1
+
+    According to Rules 101, a turn is like this:
+    
+
+The player is marked as being someone who wants to move
+Each of your rules is applied as often as it can be, before moving to the next.
+Movement happens.
+An optional extra stage for rules you want to apply at the very end.
+
+Zoom Level 2
+
+    Let's look at step 2.  What does it mean? 
+    
+    Say we have the following:
+    
+[ > Crate | Crate ] -> [ > Crate | > Crate ]
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+    The player won't be able to push several crates in a row with this, because the first rule gets applied first, and then the second rule after that.  So order does matter - these aren't abstract replacement rules floating around in a vacuum.
+    
+Zoom Level 3
+
+    Each rule gets applied in turn as often as it can be before the interpreter moves on to the next one.  It sounds quite simple, doesn't it, but there's one point of ambiguity.  The compiler often compiles single rules you write down into several simpler rules (You can see the output by using the DEBUG switch in the Prelude).
+    
+    For instance
+    
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+    is compiled into these four instructions:
+    Rule Assembly : (4 rules)
+===========
+  (81) DOWN [ crate | up player ] -> [ up crate | up player ]
++ (81) DOWN [ down player | crate ] -> [ down player | down crate ]
++ (81) RIGHT [ crate | left player ] -> [ left crate | left player ]
++ (81) RIGHT [ right player | crate ] -> [ right player | right crate ]
+===========
+
+    So the question is: When I say that each rule is executed in turn to exhaustion, do I mean the few rules you write, or the many rules the interpreter ends up with?
+    
+    The answer is "the former".  The compiler generates lots of rules, but packs them together into rule groups.  The interpreter then, instead of applying one rule as much as it can before moving to the next, loops through each rule group as often as it can (still for each individual rule running it as often as it can), before moving to the next.  
+    
+    You might wonder if you can construct rule groups yourself.  The answer is yes, with use of the modest + symbol..
+    
+[ > Player | Crate ] -> [ > Player | > Crate ]
++ [ < Player | Crate ] -> [ < Player | < Crate ] 
+
+    That assigns both rules (or rather, the rules that are generated from them) to the same rule group.
+    
+    This technique is used  in the extended rigid bodies section (warning: it's a bit of an arcane subject).
+    
+StartLoop/EndLoop
+
+    Having rule-groups is nice, and they should be your first port of call for loop-constructions.  But there are reasons why you might want to nest loops, to have groups of rule groups iterating themselves in a loop to exhaustion.
+    
+      Thankfully you can realize this, at least to a depth of two, using the STARTLOOP/ENDLOOP keywords. Let's take the standard sokoban example:
+    
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+    This gets compiled to something like the following rule-group:
+    
+DOWN [ crate | up player ] -> [ up crate | up player ] 
++ DOWN [ down player | crate ] -> [ down player | down crate ]
++ RIGHT [ crate | left player ] -> [ left crate | left player ] 
++ RIGHT [ right player | crate ] -> [ right player | right crate ]
+
+      The alternative STARTLOOP/ENDLOOP form of this rule-group is the following:
+    
+STARTLOOP
+DOWN [ crate | up player ] -> [ up crate | up player ]
+DOWN [ down player | crate ] -> [ down player | down crate ]
+RIGHT [ crate | left player ] -> [ left crate | left player ]
+RIGHT [ right player | crate ] -> [ right player | right crate ]
+ENDLOOP
+
+  So, what does this do? This is in this case exactly the same as the rule-group.  It iterates each rule separately, and once it reaches ENDLOOP, if any rule changed any movement or object during the run it jumps back to the STARTLOOP line (even if changes were subsequently reverted later in the loop).  It can only leave when it reaches ENDLOOP without any rule since STARTLOOP having modified any object or movement.
+
+  And that's also how it works if there are bigger rule groups.  So basically it's just another way to write loops where rule-groups can be nested inside (See the rigidbody description for (slightly complicated) examples of use).  
+
+  Things to note:
+
+You can't nest multiple STARTLOOP/ENDLOOP loops inside eachother.
+You can't put STARTLOOP/ENDLOOP loops inside a rule-group. They are strictly on the outer level.
+To be clear: if any rule in any rule-group within a STARTLOOP/ENDLOOP block makes any changes to objects/movements, the loop will repeat.
+
+  And that's it.  It's actually a pretty simple/chill construct that does more or less what it says on the tin.  I'd still recommend rule-groups as a first port-of-call, but these are here if you need them. :)
+
+Documentation
+Tool for extracting source code from exported standalone games
+
+Tool for extracting source code from exported standalone games
+
+    Kept a copy of a playable copy of your puzzlescript game as a HTML file around, but lost the source code? Worry no more, just drop the HTML file here and it'll give you the original puzzlescript code :)
+
+nothing loaded
+
+Documentation
+Input
+
+Input
+
+When you press the arrow keys or action, this input is sent to the main player.  
+
+Sometimes you will want to have several player entities on screen at once.  Don't worry, input gets sent to all of them :)
+
+Sometimes you will want several different types of objects to be able to receive input.  Let's call them Player1,Player2, Player3.  You can define player as follows in the legend section
+
+Player = Player1 or Player2 or Player3
+
+and then three of those entity types will receive input from the player.
+
+See kettle for an example of sending many inputs to many entities simultaneously.
+
+Documentation
+Bird's-eye View
+Legend
+
+Bird's-eye view of a PuzzleScript file
+
+A puzzlescript file is divided into 8 sections:
+
+Prelude
+Objects
+Legend
+Sounds
+CollisionLayers
+Rules
+WinConditions
+Levels
+
+Legend
+    This section has two purposes.  Firstly, it's a place where you can set up single-character names for things so that you can type them in levels:
+    
+P = Player
+. = Background
+# = Wall
+* = Crate
+O = Target
+@ = Crate and Target
+
+	There is another purpose, and this is to define properties of objects that you can refer to in rules and elsewhere:
+	
+Flying = Bat or Bird
+Obstacle = Wall or Lava or Water
+
+Documentation
+Bird's-eye View
+Levels
+
+Bird's-eye view of a PuzzleScript file
+
+A puzzlescript file is divided into 8 sections:
+
+Prelude
+Objects
+Legend
+Sounds
+CollisionLayers
+Rules
+WinConditions
+Levels
+
+Levels
+
+    Here's where all the fun happens!  A level section of a file looks something like this:
+    
+=======
+LEVELS
+=======
+
+#########
+#.......#
+#.*.*.O.#
+#..*..O.#
+#.P.*.*.#
+#.......#
+#########
+
+MESSAGE Woah, that was tough, eh?!
+
+#########
+#.....@.#
+#.P.*.O.#
+#.......#
+#########
+
+#########
+#.....@.#
+#.P.*.O.#     
+#.......#
+#########
+
+MESSAGE Thank you for playing the game.
+
+Levels are separated by blank lines, and you can also display messages if you want to.  If you want to have several objects occupying  single tile, you can specify this in the legend using and:
+
+@ = Crate and Target
+
+If you hold CTRL (or, on a Mac, CMD) and left click on the level in the text editor, it will load it in game.
+
+What stuff is hard to do?
+
+Branching.  I have no support for it in terms of this level structure.  If you want a continuous open world where you don't see everything all the time you can set zoomscreen or flickscreen in the prelude.
+
+If you can think of an elegant way to implement level branching in the engine, let me know, and I'll consider it : )
+
+    
+
+Documentation
+Bird's-eye View
+Objects
+
+Bird's-eye view of a PuzzleScript file
+
+A puzzlescript file is divided into 8 sections:
+
+Prelude
+Objects
+Legend
+Sounds
+CollisionLayers
+Rules
+WinConditions
+Levels
+
+Objects
+    Here's where your in-game objects are all declared.  The simplest way is to give something a name and a color:
+    
+Player
+Blue
+    If you do this, the player will be a blue square. 
+    
+    You can specify a sprite as a 5x5 grid as follows:
+    
+Player 
+PINK YELLOW BLACK    
+.222.
+.000.
+22122
+.222.
+.2.2.
+
+	Which gives you this wee fella:
+	
+
+    The dots represent transparency, and the numbers 0..9 index the colours in the second line.
+    
+    I'm getting slightly ahead of myself here, but I should mention the following convenience: instead of doing it in the legend section, you can specify a character that you can use to refer to the object when level editing just by putting it after its real name:
+    
+Player P
+PINK WHITE BLACK    
+.222.
+.000.
+22122
+.222.
+.2.2.
+
+	The available colour names are:
+	
+blackwhitelightgray/greygray/greydarkgray/greyreddarkredlightredbrowndarkbrownlightbrownorangeyellowgreendarkgreenlightgreenbluelightbluedarkbluepurplepinktransparent
+
+	You can use hex-codes instead of these names, if you prefer:
+    Player 
+#FF5555 #FFFFFF #000000    
+.222.
+.000.
+22122
+.222.
+.2.2.
+
+Documentation
+Updateable PuzzleScript.net URLs
+
+Updateable PuzzleScript.net URLs
+
+    If you want to share a link to a puzzle you've made, but still be able to update it (in case there are bugs you want to fix, or new levels you want to add), here's how you do that:
+
+Click Share in the PuzzleScript editor.
+Copy the ID at the end of the shareable URL that PuzzleScript just generated for you: https://www.puzzlescript.net/play.html?p=4b0af10c54188fc97599092f2683fea7, and paste it at the end of this URL: https://gist.github.com/4b0af10c54188fc97599092f2683fea7.
+If you're signed into GitHub, you should see a button labelled Edit. Press that and if you modify script.txt the game at the puzzlescript.net/play.html link will be updated.
+The game at https://gist.github.com/4b0af10c54188fc97599092f2683fea7 is now up to date.
+
+Documentation
+Bird's-eye View
+Prelude
+
+Bird's-eye view of a PuzzleScript file
+
+A puzzlescript file is divided into 8 sections:
+
+Prelude
+Objects
+Legend
+Sounds
+CollisionLayers
+Rules
+WinConditions
+Levels
+
+Prelude
+
+      Before any of the "official" sections are declared, you can give details about your project in this section, and also set some editor options.
+      
+title 2D Whale World
+author increpare
+homepage www.increpare.com
+
+require_player_movement
+key_repeat_interval 0.12
+
+Here are the possible options:
+		
+
+author increpare
+Your name goes here.  This will appear in the title screen of the game.
+color_palette mastersystem
+By default, when you use colour names, they are pulled from a variation of Arne's 16-Colour palette.  However, there are other palettes to choose from:
+			
+
+1 - mastersystem 
+2 - gameboycolour 
+3 - amiga 
+4 - arnecolors 
+5 - famicom  
+6 - atari 
+7 - pastel  
+8 - ega 
+9 - amstrad 
+10 - proteus_mellow 
+11 - proteus_rich 
+12 - proteus_night 
+13 - c64 
+14 - whitingjp 
+
+(you can also refer to them by their numerical index)
+			
+again_interval 0.1
+The amount of time it takes an 'again' event to trigger.
+background_color blue
+Can accept a color name or hex code (in the form #412bbc). Controls the background color of title/message screens, as well as the background color of the website.  Text_color is its sibling.
+debug
+This outputs the compiled instructions whenever you build your file.  For instance, the line
+			
+ Edit[ > Player | Crate ] -> [ > Player | > Crate ]
+
+			is compiled into four instructions, as the output from debug shows when you hit 'RUN':
+			===========
+Rule Assembly : (4 rules)
+===========
+  (83) DOWN [ crate | up player ] -> [ up crate | up player ]
++ (83) DOWN [ down player | crate ] -> [ down player | down crate ]
++ (83) RIGHT [ crate | left player ] -> [ left crate | left player ]
++ (83) RIGHT [ right player | crate ] -> [ right player | right crate ]
+===========
+			Going from left to right:
+      
+
+          The number near the left is the line-number the rule came from in the original source code.  You can click on the number to jump to that line in the file.
+        
+
+          A plus-sign on the left of the line indicates that the rule is grouped with the previous one as part of a rule-group and the engine will loop through the group as a whole trying to apply the rules until no more rules in the group can be applied (See the rules page for more info).
+        
+
+        The compiler does a lot of stuff to the rules you give to it to 'simplify' them in various ways.  One thing it does for instance is replace all relative directions ( ^, v, <, and >), with UP, DOWN, LEFT, and RIGHT, which often involves splitting a single rule into many more rules (as above). An other thing you'll notice is that the core engine has rules only going DOWN and  RIGHT - rules in other directions are flipped.  For more information about directions in puzzlescript, see this page.
+      
+			
+flickscreen WxH
+
+				Setting flickscreen divides each level into WxH grids, and zooms the camera in so that the player can only see one at a time - the camera does not follow the player around on a move-to-move basis, but if the player moves from one part of this grid to another, the camera flicks to the new position.  See Legend of Zokoban for a cute example.
+			
+homepage www.mypage.com
+
+			The homepage of the author.  This doesn't appear directly in the game itself, but is included in the shared game and exported HTML build.
+			
+key_repeat_interval 0.1
+
+			When you hold down a key, how long is the delay between repeated presses getting sent to the game (in seconds)?  The default value is 1.5.
+			
+noaction
+Changes the action key (X) instruction from the title screen, and does not respond when the player pressed it (outside of menus and cutscenes and the like).
+norepeat_action
+For many games, you don't want holding action down to retrigger it - games where you're toggling a switch, say.  For these games, set norepeat_action, and the action button will only respond to individual presses.
+noundo
+Disables the undo key (Z) (I generally advise against disabling undo, FWIW).
+norestart
+Disables the restart key (R)
+realtime_interval
+The number indicates how long each realtime frame should be.  In the above case, twice a second the game engine will tick, but with no input.  Player input is processed as regular. See this documentation for more info on making realtime games.
+require_player_movement
+
+			This is a common requirement in games - if the player doesn't move, cancel the whole move.  This is equivalent, where there's only one player character, to the following:
+			[ Player ]->[ Player Temp ]
+late [ Player Temp ] -> CANCEL
+late [ Temp ] -> [ ]
+
+run_rules_on_level_start
+
+			For some games you will want, before the player sees the level, for the rules to be applied once.  (Games that have rules that generate level graphics on the fly, for instance, may want this.  Try out this game with and without the prelude option and compare results.)
+			
+scanline
+Applies a scanline visual effect - only draws every other line
+text_color blue
+Can accept a color name or hex code (in the form #412bbc). Controls the font color of title/message screens, as well as the font color in the website. Background_color is its sibling.
+title My Amazing Puzzle Game
+The name of your game.  Appears on the title screen.
+throttle_movement
+For use in conjunction with realtime_interval - this stops you from moving crazy fast - repeated keypresses of the same movement direction will not increase your speed. This doesn't apply to the action button.  If you can think of an example that requires action be throttled, just let me know and I'll try accommodate you.
+verbose_logging
+As you play the game, spits out information about all rules applied as you play, and also allows visual inspection of what exactly the rules do with the visual debugger.
+zoomscreen WxH
+Zooms the camera in to a WxH section of the map around the player, centered on the player.  Silly example.
+
+Documentation
+Real-time Games
+
+Real-time Games
+
+If you want your game to work in real-time, set the realtime_interval tag in the prelude.
+
+realtime_interval 0.5
+
+The number indicates how long each realtime frame should be.  In the above case, twice a second the game engine will tick, but with no input.  Player input is processed as regular.
+
+So, there are two sorts of ticks - one where the player has input, and then realtime ones - to tell them apart, you can search for this pattern.
+
+(only triggers on real-time ticks)
+[ stationary Player ] [ a ] -> [ Player ] [ b ] 
+
+(only triggers in response to player input)
+[ moving Player ] [ c ] -> [ moving Player ] [ d ] 
+
+Because you're working on a realtime game, you might want to limit the speed at which a player can move - you can do this with the throttle_movement prelude switch:
+
+throttle_movement
+
+With this switch, if you press the same direction multiple times in rapid succession, you'll still move no more quickly than key_repeat_interval.  You can still alternate directions quickly, and press action as quickly as you like.
+
+A small note on the interaction of realtime and again:
+
+If again is triggered, no realtime ticks will happen until the again stuff has finished.
+
+  Note: Apologies for not including any examples here. Other people have used realtime a bunch to varying effects, some of which I like, but I'm still trying to find a good simple example that shows it off at its best.  Drop me a line if you have a suggestion for a good example. :) 
+    
+
+Documentation
+Extended Rigid Bodies
+
+Extended Rigid Bodies
+
+Intro
+One Player, One Extended Body
+One Player, Multiple Extended Bodies
+Multiple Parallel-Moving Players, Multiple Extended Bodies
+One Player, Unlimited Extended Bodies
+Trying and failing to do Multiple Players + Multiple Extended Bodies
+The RIGID keyword
+An example using RIGID
+
+Introduction
+
+So, it's nice to be able to push blocks around that are larger than 1x1. An initial effort to achieve this will look like this:
+
+ Edit[ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
+[ Moving BigBlock | BigBlock ] -> [ Moving BigBlock | Moving BigBlock ]
+
+To the naked eye it will look splendid:
+
+but upon closer inspection it will reveal itself to be rather a flimsy construction:
+
+There are many different ways to solve this, depending on what your needs are. I'm going to approach the cases from simplest to most complex. For the purpose of illustration I'll be focussing on multiban style rules - where you can push objects, and the objects can furthermore push eachother.
+
+WARNING: Here be a rabbit hole - there are many approaches of increasing complexity, depending on what you want to achieve.  I'd strongly advise to not read down any further into this document than you need to. This topic starts out fun but at its deepest extents is exceedingly delicate, and more akin to a research-subject than something of practical utility. This document was originally just a description of the RIGID keyword, but owing to its complexity/it being overkill in most situations, it ended up being a catalogue of helpful ways not to use it.
+
+SO, let's start are catalogue of cases:
+
+One Player, One Extended body.
+
+ This is the easiest. You just push everything, and if one crate can't be pushed, you cancel everything:
+
+ Edit[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
+[ > Crate | Wall ] -> cancel
+
+One Player, Multiple Extended Bodies
+
+If you want to have several objects at once, you can do something like the following:
+
+ Edit[ > Player | Box ] -> [ > Player | > Box ]
+
+startloop
+
+(Propagate movements through crates of different types.)
+[ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
+[ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
+[ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
+[ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
+
+(Extend the movements between crates of different types.)
+[ > Box | Box ] -> [ > Box | > Box ]
+
+endloop
+
+(Just cancel the whole turn if something can't move.)
+[ > Box | Wall ] -> cancel
+ Note that this can't be extended to having multiple players because if one player is blocked, the whole turn is cancelled.
+
+Multiple Parallel-Moving Players, Multiple Extended Bodies
+
+If we have many characters that want simultaneously to push several objects, but some may succeed and some may not, what do we do? Well, it's actually not so finnicky (at least if the characters are all trying to move in the same direction) - we do a three stage process:
+
+First we propagate movements like before, 
+then we see what things can't move, 
+then we extend this blockage back the chain,
+then we clear all crate movements, and only try to move non-blocked crates.
+
+ (Checking this example in the visual debugger is strongly recommended).
+  
+ Edit( 1. Propagate movements forward )
+[ > Mover | Movable ] -> [ > Mover | > Movable ]
++ [ > Box ] [ Box ] -> [ > Box ] [ > Box ]
++ [ > Crate ] [ Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 2. Propagate obstructions backwards )
+[ > Mover | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
++ [ > Crate ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box ] [ stationary Box ] -> [ stationary Box ] [ Box ]
++ [ > Chest ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+
+( 3. remove all movement, keep a flag )
+[ > Movable ] -> [ Movable wanna_move ]
+
+( 4. propagate movement only on wanna_move things )
+( ie redo step 1 but with WANNA_MOVE added to the first line below )
+[ > Mover | Movable WANNA_MOVE ] -> [ > Mover | > Movable ]
++ [ > Box ] [ Box ] -> [ > Box ] [ > Box ]
++ [ > Crate ] [ Crate ] -> [ > Crate ] [ > Crate ]
++ [ > Chest ] [ Chest ] -> [ > Chest ] [ > Chest ]
++ [ moving Glue | Glue ] -> [ moving Glue | moving Glue ]
+
+( 5. cleanup, remove flag )
+[ wanna_move ] -> [ ]
+
+ Which seems to work quite well, I'd say! The notion of propagating information around like this is generally a powerful technique in puzzlescript and puzzle games generally. 
+
+One Player, Unlimited Extended Bodies
+
+You don't have to define individual objects for each crate in regular sokoban, so why do you have to do it for extended bodies? Well, you don't; you can instead have a single CRATE block type and encode information about directional connections as 'metadata' on top of it (CRATE_U, CRATE_D, CRATE_L, CRATE_R) that rules use to propagate movements within single extended bodies like so:
+
+ Edit(Propagate movements within and between extended bodies)
+[ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
++ up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
++ down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
++ left [ moving Crate Crate_L | Crate ] -> [ moving Crate Crate_L | moving Crate ]
++ right [ moving Crate Crate_R | Crate ] -> [ moving Crate Crate_R | moving Crate ]
+
+(Move connections along with the crates themselves)
+[ moving Crate stationary Crate_connection ] -> [ moving Crate moving Crate_connection ]
+
+(If any crate can't move, cancel the turn. This works because there's only one player.)
+[ > Crate | wall ] -> cancel  
+
+Et voilà:
+
+    This can be extended to cover multiple players, but you have to back-propagate blockages, so it's a biiit trickier. Here's a sketch if you want to look.
+Trying and failing to do Multiple Players + Multiple Extended Bodies
+
+So I'm going to take the above example and push it beyond its limits. Let's say we take the above example but have two characters: a regular player, and a shadow player that moves in the opposite direction.
+
+ Edit[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]
+
+The problem here is, what happens if you push the same extended body from two directions at once? Well, as you can see, the directions end up fighting with eachother and can't resolve:
+
+A question you might ask yourself here would be: how would you expect this to resolve anyway? Well, in this case you could detect conflicting movements as obstructions like so in this step 2:
+
+ Edit( 2. Propagate obstructions backwards )
+[ > Mover | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
+
+ (The next lines deal with directional conflicts:)
++ [ ^ Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ ^ Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ v Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ v Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ < Crate | > Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ < Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate | < Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | ^ Crate ] -> [ stationary Crate | stationary Crate ] 
++ [ > Crate | v Crate ] -> [ stationary Crate | stationary Crate ] 
+
++ [ > Crate ] [ stationary Crate ] -> [ stationary Crate ] [ Crate ]
++ [ > Box ] [ stationary Box ] -> [ stationary Box ] [ Box ]
++ [ > Chest ] [ stationary Chest ] -> [ stationary Chest ] [ Chest ]
++ [ moving Glue | stationary Glue ] -> [ stationary Glue | Glue ]
+Which gives us this:
+
+And I might be feeling good about myself, but there's still a lot of ways that movement-resolution might not work out:
+
+ So you throw in this as well to detect when two objects are trying to move together and stick one of them in place:
+
+ Edit+ [ > Mover | | < Mover ] -> [ stationary Mover | | < Mover ]
+
+ This patches up that behaviour quite nicely!
+
+ But wait, no what about this:
+
+ Well that's no good at all. 
+
+ Anyway, this goes on and on and you can patch things up until the cows come home but ultimately you'll be nervous you're missing something. It's a gigantic and subtle kettle of worms, as I hope I've demonstrated.
+
+ So how did I go about trying to help the engine support this in a more robust way? Read on!
+
+The RIGID keyword
+
+Initially I thought the solution would be to add a keyword to objects, to mark them as rigid. However, I later realized that it was far nicer, and cooler, and more in-keeping with the engine, to think of rigidity as something you could apply instead to rules. 
+
+Let's just dive in and explain exactly what it is. 
+
+ (I kinda regret adding this keyword to the engine. However it's in, and I'm going to continue to support it because it's there. However, it's quite complex and idiosyncratic. I'm going to depart from my normal expositional style for this section - the next 'specification' is more technical, and as much for my future reference as for expositional purposes. In the past I was very enthusiastic about this feature, but I can't keep it up - I now know the extents and capabilities of the PuzzleScript language waaay better than I did when I was desinging it in the beginning - many of the reasonably elegant techniques above were just not things I knew how to do when I was first designing the language, whence the heavy-handed and rather mystical RIGID keyword.)
+
+ I'm first going to give the technical definition/specification (based on my post-hoc analysis of the code and creation of tests to figure out its semantics), then I'm going to give a high-level explanation of how/why it works, and in the final section I'll show an example of how you might use it.
+
+Semantics of RIGID
+
+The RIGID keyword is a keyword that can be applied to any rule.
+When a RIGID RULE triggers movements, the MOVEMENTS are tagged as being RIGID, and coming from a particular RULE-GROUP.
+ 
+
+Even if a rigid rule doesn't change the state of the level (let's say it tries to apply movements that already exist), it will still tag all movements as being rigid and coming from its rule-group.
+Assigning ACTION counts as assigning a movement.
+Assigning STATIONARY counts as assigning a movement.
+There does need to be some movement mentioned though: rigid [ Crate ] -> [ Crate ] Sfx0 will not cause anything to be marked as rigid.
+If a movement is implicitly removed, by it being mentioned on the left but not on the right, it is not marked as being rigid (e.g. rigid [ right Crate ] -> [ Crate ]  will not cause anything to be marked as rigid, whereas rigid [ right Crate ] -> [ stationary Crate ]  will).
+Even if subsequent rules (even in other rule-groups) alter the movement of this object, the RIGID tag persists.
+Even if subsequent rules (even in other rule-groups) delete the objects, the RIGID tag persists and any subsequent unresolvable movements created on that tile in that layer will trigger the rigid cancellation.
+Even a RIGID rule removing an object on a layer causes that position and that layer to be marked as RIGID.
+
+ I guess the rule-of-thumb is that RIGID applies a tag to a layer when any movement-related stuff is mentioned on the RHS of a rule.
+ 
+
+During the MOVE-RESOLUTION PHASE, if a MOVEMENT cannot be resolved, and if the movement is associated with a RIGID tag, the whole RULE-GROUP is disabled for that turn, and the TURN is simulated again from the beginning. This may happen iteratively, with additional RULE-GROUPS being disabled on subsequent resimulations.
+
+ACTION does not need to resolve - it's ignored during resolution.
+
+Hand-Wavey Description of RIGID
+
+So, if a rigid object would be one where, if one part can't move, no parts can, a RIGID RULE is a RULE where, if anything it tries to move can't move, then its RULE-GROUP doesn't apply at all (the unresolved rigid movement disables the rule-group that caused it for that turn and resimulates the entire turn).
+
+An example using RIGID
+
+Let's go back to the broken example right at the start:
+
+ Edit[ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
+[ Moving BigBlock | BigBlock ] -> [ Moving BigBlock | Moving BigBlock ]
+
+We want that, if any of the BigBlock pieces don't get to move, that whole rule just doesn't apply. Actually, we also don't want the first rule to apply. So what we do is that we group the rules together using the + symbol, and we mark them as rigid
+
+ Editrigid [ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
++ rigid [ Moving BigBlock | BigBlock ] -> [ Moving BigBlock | Moving BigBlock ]
+
+and magically it works
+
+So all's good if you have a single rigid block, but if you try to have blocks pushing other blocks it gets complicated. Let's say you want a big block to collide with little blocks. You end up with stuff like this:
+
+ Edit[ > Player | LittleBlock ] -> [ > Player | > LittleBlock ]
+[ > LittleBlock | LittleBlock ] -> [ > LittleBlock | > LittleBlock ]
+
+rigid [ > LittleBlock | BigBlock ] -> [ > LittleBlock | > BigBlock ]
++ rigid [ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
++ rigid [ moving BigBlock | BigBlock ] -> [ moving BigBlock | moving BigBlock ]
++ [ > BigBlock | LittleBlock ] -> [ > BigBlock | > LittleBlock ]
+
+The rule is, anything that adds motion to a BigBlock has to be marked as rigid. Repeating the code twice isn't so bad, really, but if one has more than two block types, there's no compact method of encompassing all the ways that they can interact without maybe introducing one thing that I should mention.  We'll need to take a few steps back and look at a simple but related scenario:
+
+Let's try to model two crate types, where crates can push crates.
+
+ Edit=======
+LEGEND
+=======
+
+Crate = OrangeCrate or BlueCrate
+
+======
+RULES 
+====== 
+
+[ > Player | Crate ] -> [ > Player | > Crate ] 
+[ > Crate | Crate ] -> [ > Crate | > Crate ]
+
+Thich works splendidly. But what if we weren't allowed to refer to the Crate but instead had to refer to them individually, or weren't allowed to combine them together into a rulegroup in the second rule? We could try something like:
+
+ Edit[ > Player | Crate ] -> [ > Player | > Crate ] 
+
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
+[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
+[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
+[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
+
+you can push around pairs of blocks, but a big alternating sequence of blocks you can't deal with:
+
+If only there were some way of looping through these four rules. Well, adding them all to the same rulegroup is one way, but in the case of rigid rules we don't want to cancel the movement of EVERYTHING just because one block can't move (e.g. let's say there's gravity pulling objects down - we don't want one object being prevented from falling to prevent all of them falling) - so we need another layer of loopiness. So, let's introduce STARTLOOP and ENDLOOP:
+
+ Edit[ > Player | Crate ] -> [ > Player | > Crate ] 
+
+startLoop
+
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
+[ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
+[ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
+[ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
+
+endLoop
+
+That fixes our weird theoretical problem (in a way that will be useful for solving the more complicated but less theoretical problem):
+
+For the above example, this is more or less identical to saying
+
+ Edit[ > Player | Crate ] -> [ > Player | > Crate ] 
+
+[ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
++ [ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
++ [ > BlueCrate | OrangeCrate ] -> [ > BlueCrate | > OrangeCrate ]
++ [ > BlueCrate | BlueCrate ] -> [ > BlueCrate | > BlueCrate ]
+
+However, we don't have this luxury for rigidbodies (Can you tell why not? It's because rigidbodies deactivate entire rule-groups - if our whole game logic is in one giant rule-group we can't selectively delete parts of it). So, with all that said, here's what code for a system with several rigid bodies and some small blocks looks like, thanks to the STARTLOOP and ENDLOOP keywords:
+
+ Editstartloop
+
+[ > Player | Smallcrate ] -> [ > Player | > SmallCrate ]
+
+[ > Player | RedCrate ] -> [ > Player | > RedCrate ] 
++ rigid [ moving RedCrate | RedCrate ] -> [ moving RedCrate | moving RedCrate ]
++ [ > Crate | RedCrate ] -> [ > Crate | > RedCrate ] 
+
+[ > Player | GreenCrate ] -> [ > Player | > GreenCrate ] 
++ rigid [ moving GreenCrate | GreenCrate ] -> [ moving GreenCrate | moving GreenCrate ]
++ [ > Crate | GreenCrate ] -> [ > Crate | > GreenCrate ] 
+
+[ > Player | BlueCrate ] -> [ > Player | > BlueCrate ] 
++ rigid [ moving BlueCrate | BlueCrate ] -> [ moving BlueCrate | moving BlueCrate ]
++ [ > Crate | BlueCrate ] -> [ > Crate | > BlueCrate ] 
+
+[ > Crate | SmallCrate ] -> [ > Crate | > SmallCrate ]
+
+endloop
+
+And this gives us the image at the beginning of this document. It works even if there are multiple player characters moving in multiple directions at a single time:
+
+Anyway, that's it.  Thanks for bearing with me through this rather labourious description.  Drop me a mail if you noticed I made a mistake anywhere.  This material is hairy, so it's very possible there are some errors above.
+
+Documentation
+Bird's-eye View
+Rules
+
+Bird's-eye view of a PuzzleScript file
+
+A puzzlescript file is divided into 8 sections:
+
+Prelude
+Objects
+Legend
+Sounds
+CollisionLayers
+Rules
+WinConditions
+Levels
+
+Rules
+    See Rules 101 for an introduction to rules. 
+   	
+   	Rules are about pattern replacement.  There's a left side, and a right side, the engine looks for occurrences of the left side, possibly in many different orientations, and when it finds one, it replaces the contents with what's on the right.
+   	
+   	Let's look at the standard sokoban example more closely:
+   	
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+Left-hand Side
+
+   	The left-hand side specifies what the rule looks for.  It's looking for two cells, side by side, one having a player, and one having a crate.  There's an arrow next to the player, and it's pointing at the crate - that means that we are looking for a player that's trying to move towards the crate (Directional arrows are relative - if you want absolute directions, for gravity, for instance you can use absolute directions such as UP, DOWN, LEFT, and RIGHT).
+   	
+   	There is no arrow next to crate, this means that the pattern doesn't care whether or not its moving.  If one wanted to specifically search for crates that were not moving, one would type 
+   	
+[ > Player | STATIONARY Crate ] -> [ > Player | > Crate ]
+
+  If you want to search if two things overlap, just mention them side by side
+  
+[ Player Spikes ] -> [ DeadPlayer Spikes ]
+
+	If one wanted to match any player movements, not just movements towards the crate, one could replace the arrow with the MOVING keyword.
+   	
+[ MOVING Player | STATIONARY Crate ] -> [ MOVING Player | MOVING Crate ]
+
+	Note that the compiler can infer that the crate should be made to move in the same direction to how the player is moving.
+	
+	What if you want to search for somewhere there isn't a crate?  You can use the NO keyword.
+   	
+[ < Player | No Crate ] -> [ < Player | Crate ] (leave a trail of crates behind you)
+
+	It's possible for a rule to search for several disconnected bits.  For instance, you could have a bird that vanishes whenever the cat tries to jump up:
+	   	
+[ UP Cat ]  [ Bird ] -> [ UP Cat ] [ ]
+
+	It's possible to restrict rules to only operating in particular directions - for instance, the following removes anything that steps on lava:
+	
+DOWN [ Mortal | Lava ]  -> [ Corpse | Lava ]
+
+	The direction DOWN indicates what direction the pattern will be oriented.
+	
+	One can also have ellipses in patterns, that allow for them to be variable length.  Here's a lava gun that turns anyone in line with it into a Corpse:
+	
+ late [ LavaGun | ... | Mortal ] -> [ LavaGun | ... | Corpse ]
+
+  If the compiler was dumb, it would decompile this into something like
+  
+(92) late [ LavaGun | Mortal ] -> [ LavaGun | Corpse ]
+(92) late [ LavaGun | | Mortal ] -> [ LavaGun | | Corpse ]
+(92) late [ LavaGun | | | Mortal ] -> [ LavaGun | | | Corpse ]
+(92) late [ LavaGun | | | | Mortal ] -> [ LavaGun | | | | Corpse ]
+(92) ... etc.
+
+  and never finish compiling.
+  
+	A technical point that might occasionally be relevant : ellipsis-based rules search from smallest to biggest.  
+	
+		Also, it's possible to use two ellipses in a single pattern, such as stiff like this.
+		(92) [ > Player | ... | Crate | ... | Crate ] -> [ > Player | ... | > Crate | ... | Crate ]
+		
+
+			(Please be a little bit careful with using multiple ellipses in a single rule - it might get a bit slow).
+			
+Right-hand Side
+	If we had the following rule
+   	
+[ > Player | > Crate ] -> [ > Player | Crate ]
+
+   	it would tell us to remove the movement from crate.  However, the following one would not change anything:
+   	
+[ > Player | Crate ] -> [ > Player | Crate ]
+
+   	the rule is - the only things that are removed are things that are referred to., that goes for both movements and objects.
+   	
+   	If you want to specify that an object of a particular type be removed, without referring to it on the left-hand side, you can use the NO key word:
+     
+[ > Player |  ] -> [ > Player | NO Wall ]
+
+Commands
+
+   	Sometimes you want other things to happen than to just replace tiles with tiles.  That's what commands are for. 
+   	
+   	You can install a checkpoint, so that when people hit reset, they're taken back to this point, rather than the start of the level:
+   	
+late [ Player SavePoint ] -> CHECKPOINT
+
+   	In several games, it's important that if the player can't move, nothing else can happen either - so that you can't make time tick forward by repeatedly walking into walls.  There's a prelude setting for this, require_player_movement, but you can also simulate it as follows
+   	[ Player ] -> [ Player Shadow ]
+late [ Player Shadow ] -> CANCEL
+late [ Shadow ] -> [ ]
+
+	At the start of the turn, you put a counter on the square the player's in, and if they're still together after the movement phase, then cancel the whole move.
+	
+	You can combine several commands together, so you could say
+	
+late [ Player Shadow ] -> CHECKPOINT SFX3
+
+	If you wanted to play a sound effect as well.
+	
+	You can combine commands with regular rules, if you want:
+   	
+ [ > Player | Person ] -> [ < Player | Person ] message Woah, buddy, back off!
+   	   	
+   	Here're all the available commands:
+   	
+
+again
+means that there'll be a small pause after this turn, after which another turn will be fired off, with no player input - a way of doing non-interactive animations and other fun things :) .  You can control the time between frames with the 'again_interval' prelude switch. 
+      
+ Editrandom [ no Sheep ] -> [ Sheep ] again
+
+      Again is a moderately intelligent command - it only triggers if changes happen - so it won't loop infinitely if it's doing nothing.
+cancel
+cancels the entire turn, and reverts back to how it was at the start of the turn. basically "forget everything and pretend nothing happened"
+checkpoint
+saves the game state.  Now, whenever the person presses R to restart, or your do the RESTART command, they'll spawn here instead.
+restart
+Same as pressing R
+Win
+Wins the level!
+Message
+Gives the player a message.  So you can say things like "Message Hello World".  Reads everything to its right, so it has to be the rightmost argument.
+sfx0 ... sfx10
+Sound effects banks - you associate these to sounds in the sounds section, and then you can trigger them in rules by mentioning them.
+
+What stuff is hard to do?
+
+Loops
+
+	Wait actually loops are pretty easy.  Check out the execution order docs for more information (specifically about rule-groups and the StartLoop/EndLoop construction).
+	
+Counting
+
+   	If you had a rule that said "if there are two walls next to the player, destroy it", that would be tough.  You can do it with tricks, like putting temporary counters down as markers, but it's not hooked up that way.
+   	
+Diagonal Directions
+
+   	If you can think of an interesting use for diagonal directions, just let me know and I'll try add it back in.
+   	
+Extended Movements
+   	Movements that play out over many turns.  You can't attach variables to states - all movements are cleared out at the end of turns.  You end up having to have a different object for each frame, and it gets messy.  Having an platform character that jumps into 4 tiles into the air, I haven't figured out how to do in an elegant way.  But there might be a way.
+   	
+Real-time behaviours
+
+	Just because you can, it doesn't mean that you should, but if you want to do something realtime have a look here.
+	
+Extended Rigid Bodies
+
+   	It's definitely possible, just experimental.  See this document.
+   	
+Randomness
+
+   	Definitely possible, just a bit half-baked.  See this document.
+   	
+
+Documentation
+Rules 101
+
+Rules 101
+
+PuzzleScript is a game engine designed to help you make tile-based puzzle games.  The most famous tile-based puzzle game is sokoban:
+
+Sokoban has one rule:
+
+If a player is trying to walk into a crate, try to push that crate.
+
+PuzzleScript allows you to express this succinctly:
+
+ Edit[ > Player | Crate ] -> [ > Player | > Crate ]
+
+The engine looks for the pattern on the left, and replaces it with the one on the right.  
+
+> is a directional arrow.  The four arrows are <, >, ^, and v.
+
+Let's play with the above line of code - what would happen if we changed the direction of the arrows?
+
+ Edit[ < Player | Crate ] -> [ < Player | < Crate ]
+
+Now, the crates stick to you you when you move away from them!
+
+The engine works like this:
+
+The player is marked as being someone who wants to move
+Each of your rules is applied as often as it can be.
+Movement happens.
+An optional extra stage for rules you want to apply at the very end.
+
+What might you want to do after movements have been applied?  Say you want three crates in a row to vanish (a la block faker), you do this by adding the following rule:
+
+ Editlate [ Crate | Crate | Crate ] -> [ | | ]
+
+If the late keyword wasn't there, the crates wouldn't disappear until the start of the next turn.
+
+Let's have spooky eyeballs that follow you around.
+
+ Edit[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ]
+
+Here's a naughty teleport sprite - whenever she sees you she swaps places with you:
+
+late [ Sprite | ... | Player ] -> [ Player | ... | Sprite ]
+
+No, wait!  Don't type that in. It causes an infinite loop, it keeps swapping them back and forth forever.  This fixes it:
+
+ Editlate [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ]
+late [ Temp ] -> [ Player ]
+
+What if you're a kitty that likes fruit?
+
+ Edit[ > Kitty | ... | Fruit ] -> [ | ... | Kitty ]
+[ > Kitty ] -> [ Kitty ]
+
+The second line is because we are moving the kitty ourselves, and don't want the game engine letting kitty wander about.
+
+What if you want crates that can only be pushed horizontally? 
+
+ EditHorizontal [ > Player | Block ] -> [ > Player | > Block ]
+
+This only looks for occurrences of the pattern that are horizontal. You could also say vertical instead.
+
+You can have several patterns rather than just a single row - here's a sumo wrestler that imitates whatever you do, wherever you are:
+
+ Edit[ > Player ] [ Sumo ] -> [ > Player ] [ > Sumo ]
+
+That about covers all the basics.  You should be able to tinker with the examples now.  There's plenty more to read if you want to, but I would advise to learn the rest on a need-to-know basis.  There're no prizes for knowing all the nooks and crannies of PuzzleScript - it's a tool for making games, and if you're not doing that with it, then the engine has failed in its purpose.
+
+Make some games!
+
+Documentation
+Bird's-eye View
+WinConditions
+
+Bird's-eye view of a PuzzleScript file
+
+A puzzlescript file is divided into 8 sections:
+
+Prelude
+Objects
+Legend
+Sounds
+CollisionLayers
+Rules
+WinConditions
+Levels
+
+WinConditions
+
+    Here are the possible formats of win conditions:
+    
+(Neko Puzzle - you win if there's no fruit left)
+No Fruit
+
+(Sokoban - you win if every target point has a crate on it)
+All Target On Crate 
+
+(You win if Love exists somewhere)
+Some Love 
+
+(You win if there's some gold in the chest)
+Some Gold on Chest 
+
+(you win if all gold has been taken from the chest)
+No Gold on Chest
+
+If you have multiple win conditions, they all have to be satisfied.
+
+These should do for most games, but if you want more advanced control over winning and losing, then you can specify your own win rules using commands.
+
+    

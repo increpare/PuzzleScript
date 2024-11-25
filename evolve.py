@@ -1,4 +1,5 @@
 import base64
+import math
 import os
 import json
 import random
@@ -7,6 +8,7 @@ import shutil
 from flask import jsonify
 import io
 from javascript import require
+from javascript.errors import JavaScriptError
 from PIL import Image
 from omegaconf import DictConfig, OmegaConf
 from dataclasses import dataclass
@@ -15,7 +17,7 @@ from hydra.core.config_store import ConfigStore
 
 from game_gen import gen_game, gen_game_from_plan
 from prompts import *
-ps = require('./script-doctory-py/node_modules/puzzlescript/lib/index.js')
+ps = require('./script-doctor/node_modules/puzzlescript/lib/index.js')
 
 
 @dataclass
@@ -24,6 +26,7 @@ class EvoConfig:
     n_gens: int = 20
     exp_seed: int = 1
     overwrite: bool = False
+    max_attempts: int = 20
 
 cs = ConfigStore.instance()
 cs.store(name="config", node=EvoConfig)
@@ -43,7 +46,8 @@ def load_game_from_file(game):
     return code
 
 def solve_level_bfs(level, engine):
-    sol, n_search_iters = engine.bfs(level)
+    sol, n_search_iters = engine.bfs(level, timeout=2**16)
+    sol = sol.valueOf()
     return sol, n_search_iters
 
 
@@ -89,52 +93,68 @@ def log_gen_results(save_dir, sols, n_iter, console_text, solver_text, gif_urls)
                 except EOFError:
                     break
     
-    return jsonify({})
+    return
 
 
 
 # async def gen_game_wrapper(gen_mode, parents, save_dir, exp_seed, fewshot, cot, from_idea=False, idea='', from_plan=False, max_gen_attempts=10):
-def gen_game_wrapper(gen_mode, parents, save_dir, exp_seed, fewshot, cot, from_idea=False, idea='', from_plan=False, max_gen_attempts=10):
-    console_text = ''
+def gen_game_wrapper(gen_mode, parents, save_dir, exp_seed, fewshot, cot, from_idea=False, idea='', 
+                     from_plan=False, max_gen_attempts=20):
     n_gen_attempts = 0
     code = ''
     compilation_success = False
+    console_text = ''
     solvable = False
     solver_text = ''
     compiled_iters = []
     solved_iters = []
+    max_n_search_iters = 0
 
     while n_gen_attempts < max_gen_attempts and (n_gen_attempts == 0 or not compilation_success or not solvable):
         print(f"Game {save_dir}, attempt {n_gen_attempts}.")
         if from_plan and n_gen_attempts == 0:
             code, sols, skip = gen_game_from_plan(exp_seed, save_dir, idea, n_gen_attempts)
         else:
-            code, sols, skip = gen_game(exp_seed, fewshot, cot, save_dir, gen_mode, parents, code, from_idea, idea, console_text, solver_text, compilation_success, n_gen_attempts)
+            code, sols, skip = gen_game(
+                exp_seed, fewshot, cot, save_dir, gen_mode, parents, code, 
+                from_idea, idea, console_text, solver_text, compilation_success, 
+                n_gen_attempts)
 
         if skip:
             return GameIndividual(code, -1, [], [], True)
 
-        if not compilation_success:
+        try:
+            game_data = ps.Parser.parse(code).data
+            console_text = None
             compilation_success = True
-            solvable = True
-            engine = ps.GameEngine(ps.Parser.parse(code).data, ps.EmptyGameEngineHandler())
-            for level_i in range(len(engine.data['levels'])):
-                sol, n_search_iters = solve_level_bfs(level_i, engine)
-                if sol:
-                    solver_text += f"Found solution for level {level_i} in {n_search_iters} iterations: {sol}.\n"
-                    if len(sol) < 10:
-                        solver_text += "Solution is very short. Please make it a bit more complex.\n"
-                        solvable = False
-                    else:
-                        solved_iters.append(n_gen_attempts)
-                else:
+        except JavaScriptError as e:
+            compilation_success = False
+            console_text = f"Compilation failed: {e}\n"
+            solvable = False
+            solver_text = ''
+            n_gen_attempts += 1
+            continue
+        engine = ps.GameEngine(game_data, ps.EmptyGameEngineHandler())
+        for level_i, level in enumerate(game_data['levels']):
+            if level.type != 'LEVEL_MAP':
+                continue
+            sol, n_search_iters = solve_level_bfs(level_i, engine)
+            max_n_search_iters = max(max_n_search_iters, n_search_iters)
+            if sol:
+                solver_text += f"\nFound solution for level {level_i} in {n_search_iters} iterations: {sol}.\n"
+                if len(sol) < 10:
+                    solver_text += "Solution is very short. Please make it a bit more complex.\n"
                     solvable = False
-                    solver_text += f"Level {level_i} is not solvable. Please repair it.\n"
+                else:
+                    solved_iters.append(n_gen_attempts)
+            else:
+                solvable = False
+                solver_text += f"\nLevel {level_i} is not solvable. Please repair it.\n"
         n_gen_attempts += 1
 
         log_gen_results(save_dir, sols, n_gen_attempts, console_text, solver_text, [])
 
-    return GameIndividual(code, n_search_iters, compiled_iters, solved_iters, False)
+    return GameIndividual(code, max_n_search_iters, compiled_iters, solved_iters, False)
 
 # async def evolve():
 def evolve(cfg: EvoConfig):
@@ -152,7 +172,8 @@ def evolve(cfg: EvoConfig):
     for ind_idx in range(pop_size * 2):
         save_dir = f"{evo_dir}/gen{gen}/game{ind_idx}"
         # game_i = await gen_game_wrapper('init', [], save_dir, exp_seed, fewshot=True, cot=True)
-        game_i = gen_game_wrapper('init', [], save_dir, exp_seed, fewshot=True, cot=True)
+        game_i = gen_game_wrapper('init', [], save_dir, exp_seed, fewshot=True, cot=True,
+                                  max_gen_attempts=cfg.max_attempts)
         pop.append(game_i)
 
     for gen in range(1, n_gens):

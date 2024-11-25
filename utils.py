@@ -42,11 +42,11 @@ def extract_ps_code(text):
         return None, None
 
 
-def gen_fewshot_examples(system_prompt, prompt):
+def gen_fewshot_examples(system_prompt, prompt, max_tokens=128_000):
     # Randomly add fewshot examples to the system prompt (within our token limit)
     with open('example_games.json', 'r') as f:
         example_games = json.load(f)
-    n_tokens_avail = 10_000 - num_tokens_from_string(system_prompt, 'gpt-4o')
+    n_tokens_avail = max_tokens - num_tokens_from_string(system_prompt, 'gpt-4o')
     fewshot_examples_prompt_i = fewshow_examples_prompt
     last_fewshot_examples_prompt_i = fewshot_examples_prompt_i
     while num_tokens_from_string(system_prompt + fewshot_examples_prompt_i + prompt, 'gpt-4o') < n_tokens_avail:

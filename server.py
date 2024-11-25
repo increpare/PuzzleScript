@@ -126,6 +126,8 @@ def log_gen_results():
     
     return jsonify({})
 
+import lark
+lark_parser = lark.Lark.open('syntax.lark', start='ps_game')
 
 @app.route('/gen_game', methods=['POST'])
 def gen_game():
@@ -164,10 +166,10 @@ def gen_game():
                 prompt = game_crossover_prompt.format(parents=parents_text, cot_prompt=cot_prompt_text)    
         elif not compilation_success:
             prompt = game_compile_repair_prompt.format(code=code, console_text=console_text, cot_prompt=cot_prompt_text,
-                                                       from_idea_prompt=from_idea_prompt_i)
+                                                       from_idea_repair_prompt=from_idea_prompt_i)
         else:
             prompt = game_solvability_repair_prompt.format(code=code, solver_text=solver_text,
-                                                           from_idea_prompt=from_idea_prompt_i)
+                                                           from_idea_repair_prompt=from_idea_prompt_i)
         # if not gen_mode == GenModes.ZERO_SHOT:
         if fewshot:
             system_prompt += gen_fewshot_examples(system_prompt, prompt)
@@ -190,6 +192,10 @@ def gen_game():
             sols = json.load(f)
     else:
         sols = {}
+
+    parse_tree = lark_parser.parse(code)
+    breakpoint()
+
     return jsonify({
         'code': code,
         'text': plaintext,
