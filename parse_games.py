@@ -28,8 +28,8 @@ def extract_sprites(content):
 if __name__ == '__main__':
     example_games = []
     example_sprites = {}
-    for game_path in os.listdir('src/demo'):
-        with open(f'src/demo/{game_path}', 'r', encoding='utf-8') as f:
+    for game_path in os.listdir('scraped_games'):
+        with open(f'scraped_games/{game_path}', 'r', encoding='utf-8') as f:
             game_code = f.read()
         if not game_path.endswith('.txt'):
             print(f'Skipping {game_path}')
@@ -38,7 +38,11 @@ if __name__ == '__main__':
         game_name = os.path.basename(game_path)
         example_games.append(game_code)
         print(f'{game_path}: {n_tokens} tokens')
-        new_sprites = extract_sprites(game_code)
+        try:
+            new_sprites = extract_sprites(game_code)
+        except AttributeError as e:
+            print(f'Error extracting sprites from {game_path}: {e}')
+            continue
         for new_sprite in new_sprites:
             if new_sprite not in example_sprites:
                 example_sprites[new_sprite] = [new_sprites[new_sprite],]
