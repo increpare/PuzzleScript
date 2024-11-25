@@ -50,7 +50,9 @@ if os.path.isfile(visited_ps_links_path):
 else:
     with open(visited_ps_links_path, "w") as f:
         f.write("")
-        visited_ps_linkes = []
+        visited_ps_links = []
+if not os.path.isdir('scraped_games'):
+    os.mkdir('scraped_games')
 for link in ps_links:
     if link in visited_ps_links:
         print(f"Skipping {link}")
@@ -71,7 +73,7 @@ for link in ps_links:
         }
 
         def add_to_visited():
-            with open(visited_ps_links_path, "a") as f:
+            with open(visited_ps_links_path, "a", encoding='utf-8') as f:
                 f.write(f"{link}\n")
         
         try:
@@ -90,7 +92,7 @@ for link in ps_links:
         else:
             script =  gist['files']['script.txt']['content']
 
-        with open(script_path, "w") as f:
+        with open(script_path, "w", encoding='utf-8') as f:
             f.write(script)
         add_to_visited()
 

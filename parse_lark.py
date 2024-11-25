@@ -13,9 +13,9 @@ args = parser.parse_args()
 from lark import Lark, Transformer, Tree, Token, Visitor
 import numpy as np
 
-with open("syntax.lark", "r") as file:
+with open("syntax.lark", "r", encoding='utf-8') as file:
     puzzlescript_grammar = file.read()
-with open("syntax_generate.lark", "r") as file:
+with open("syntax_generate.lark", "r", encoding='utf-8') as file:
     min_puzzlescript_grammar = file.read()
 
 class StripPuzzleScript(Transformer):
@@ -136,6 +136,26 @@ class StripPuzzleScript(Transformer):
         return grid
 
 
+class RepairPuzzleScript(Transformer):
+    def object_data(self, items):
+        # If we're missing colors, add random ones
+        child_trees = [i for i in items if isinstance(i, Tree)]
+        child_tree_names = [i.data for i in child_trees]
+        colors = [i for i in child_trees if i.data == 'colors'][0]
+        n_colors = len(colors.children)
+        if 'sprite' in child_tree_names:
+            sprite = [i for i in child_trees if i.data == 'sprite'][0]
+            sprite_arr = sprite.children
+            unique_sprite_pixels = set(np.unique(sprite_arr))
+            unique_sprite_pixels.discard('.')
+            n_unique_pixels = len(unique_sprite_pixels)
+            while n_unique_pixels - 1 > n_colors:
+                colors.children.append(Token('COLOR', f'#{np.random.randint(0, 0xFFFFFF):06X}'))
+                n_colors += 1
+                breakpoint()
+        return Tree('object_data', items)
+
+
 def array_2d_to_str(arr):
     s = ""
     for row in arr:
@@ -174,6 +194,10 @@ class PrintPuzzleScript(Transformer):
     def command(self, items):
         return ' '.join(items)
 
+    def legend_data(self, items):
+        # Omitting final NEWLINES
+        return items[0].value + ' = ' + ' or '.join(items[1:-1])
+
     def legend_operation(self, items):
         if len(items) == 1:
             return items[0]
@@ -197,10 +221,7 @@ class PrintPuzzleScript(Transformer):
     
     def object_data(self, items):
         return ''.join(items)
-    
-    def legend_data(self, items):
-        return items[0].value + ' = ' + ' or '.join(items[1:])
-    
+     
     def layer_data(self, items):
         return ', '.join(items)
 
@@ -248,12 +269,18 @@ class PrintPuzzleScript(Transformer):
             return array_2d_to_str(arr[0])
 
 
+def add_empty_sounds_section(txt):
+    txt = re.sub(r'COLLISIONLAYERS', 'SOUNDS\n\nCOLLISIONLAYERS', txt)
+    return txt
+
 
 # Parse a PuzzleScript file
-def preprocess_ps(filepath):
-    with open(filepath, "r") as file:
+def preprocess_ps_file(filepath):
+    with open(filepath, "r", encoding='utf-8') as file:
         txt = file.read()
+    return preprocess_ps(txt)
 
+def preprocess_ps(txt):
     # Remove whitespace at end of any line
     txt = re.sub(r'[ \t]+$', '', txt, flags=re.MULTILINE)
 
@@ -342,11 +369,11 @@ if __name__ == "__main__":
         simp_filepath = os.path.join(simpd_dir, simp_filename)
         if args.overwrite or not simp_filename in simpd_games:
             # Now save the simplified version of the file
-            content = preprocess_ps(os.path.join(games_dir, filename))
-            with open(simp_filepath, "w") as file:
+            content = preprocess_ps_file(os.path.join(games_dir, filename))
+            with open(simp_filepath, "w", encoding='utf-8') as file:
                 file.write(content)
         else:
-            with open(simp_filepath, "r") as file:
+            with open(simp_filepath, "r", encoding='utf-8') as file:
                 content = file.read()
         print(f"Parsing {simp_filepath}")
 
@@ -368,6 +395,6 @@ if __name__ == "__main__":
         with open(min_filename, "w") as file:
             file.write(ps_str)
 
-        with open(parsed_games_filename) as file:
+        with open(parsed_games_filename, 'a') as file:
             file.write(filename + "\n")
 

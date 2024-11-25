@@ -30,7 +30,7 @@ if __name__ == '__main__':
     example_sprites = {}
     for game_path in os.listdir('scraped_games'):
         with open(f'scraped_games/{game_path}', 'r', encoding='utf-8') as f:
-            game_code = f.read()
+            game_code = f.read().strip()
         if not game_path.endswith('.txt'):
             print(f'Skipping {game_path}')
             continue
@@ -60,3 +60,5 @@ if __name__ == '__main__':
     
     n_tokens = num_tokens_from_string(example_sprite_names, 'gpt-4o')
     print(f'example_sprite_names: {n_tokens} tokens')
+
+    print(f"Parsed {len(example_games)} games and {len(example_sprites)} sprites")

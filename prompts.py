@@ -3,6 +3,7 @@ formatting_prompt = \
     """Return your code in full, inside a ```plaintext code block."""
 game_gen_system_prompt = (
     "You are a creative and resourceful indie puzzle game designer, familiar with the PuzzleScript game description language. "
+    """Recall that comments in PuzzleScript are enclosed in parentheses. (E.g. this is a comment.) """
     f"""Here are the docs: {open('all_documentation.txt', 'r').read()}\n"""
 )
 fewshow_examples_prompt = (
@@ -45,7 +46,7 @@ from_idea_prompt = """The game should be a simplified `demake` of the following 
 game_solvability_repair_prompt = (
     """{from_idea_repair_prompt}"""
     """The following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
-    """compiled, but a solvability check returned the following error:\n{solver_text}\n"""
+    """compiled, but a solvability check returned the following:\n```\n{solver_text}\n```\n"""
     + formatting_prompt
 )
 # plan_game_prompt = (

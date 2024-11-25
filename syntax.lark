@@ -37,7 +37,7 @@ colors: color+
 sprite: (SPRITE_PIXEL~5 NEWLINE)~5
 
 // Legend Data
-legend_data: (PIXEL | ID) "=" object_name legend_operation* NEWLINES
+legend_data: PIXEL "=" object_name legend_operation* NEWLINES
 
 legend_operation: "or"i object_name
                 | "and"i object_name
@@ -93,6 +93,7 @@ level_data: levellines
 
 // Pixel can match any character
 PIXEL: /./
+LEGEND_PIXEL: PIXEL "="
 // PIXEL: /[█a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±↑↓→←⸝·öù]/
 sprite_key: PIXEL
           | "="  // To permit easyenigma

@@ -6,6 +6,12 @@ import json
 import os
 import random
 import re
+import webbrowser  # Add this import
+import atexit  # Add this import
+import threading  # Add this import
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium import webdriver
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
@@ -14,6 +20,7 @@ import openai
 import requests
 
 import game_gen
+from parse_lark import PrintPuzzleScript, RepairPuzzleScript, StripPuzzleScript, add_empty_sounds_section, preprocess_ps
 from prompts import *
 from utils import extract_ps_code, gen_fewshot_examples, llm_text_query, num_tokens_from_string, save_prompts, truncate_str_to_token_len
 
@@ -193,11 +200,29 @@ def gen_game():
     else:
         sols = {}
 
-    parse_tree = lark_parser.parse(code)
-    breakpoint()
+    simp_filepath = os.path.join(save_dir, f'{n_iter}b1_code_simplified.txt')
+    # Now save the simplified version of the file
+    simp_code = preprocess_ps(code)
+    with open(simp_filepath, "w", encoding='utf-8') as file:
+        print(f"Writing to {simp_filepath}")
+        file.write(simp_code)
+    parse_tree = lark_parser.parse(simp_code)
+    min_parse_tree = StripPuzzleScript().transform(parse_tree)
+    pretty_parse_tree_str = min_parse_tree.pretty()
+    pretty_tree_filename = os.path.join(save_dir, f'{n_iter}b2_code_tree.txt')
+    print(f"Writing pretty tree to {pretty_tree_filename}")
+    with open(pretty_tree_filename, "w") as file:
+        file.write(pretty_parse_tree_str)
+    repaired_parse_tree = RepairPuzzleScript().transform(min_parse_tree)
+    min_code = PrintPuzzleScript().transform(repaired_parse_tree)
+    min_code = add_empty_sounds_section(min_code)
+    min_filename = os.path.join(save_dir, f'{n_iter}b3_code_min.txt')
+    with open(min_filename, "w") as file:
+        file.write(min_code)
 
     return jsonify({
         'code': code,
+        'min_code': min_code,
         'text': plaintext,
         'sols': sols,
         'skip': skip,
@@ -359,6 +384,6 @@ def gen_game_from_plan():
     })
 
 
+
 if __name__ == '__main__':
-    app.run(debug=False, port=8000)
-    # app.run(debug=True, port=8000)
+    app.run(port=8000)

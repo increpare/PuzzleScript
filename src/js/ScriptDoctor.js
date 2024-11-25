@@ -405,7 +405,7 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
     // for (const line of data.text.split('\n')) {
     //   consolePrint(line);
     // }
-    code = data.code;
+    code = data.min_code;
     sols = data.sols;
     if (data.skip) {
       return new GameIndividual(code, -1, [], [], true);
