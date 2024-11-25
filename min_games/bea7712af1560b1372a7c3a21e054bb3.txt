@@ -1,64 +1,92 @@
 OBJECTS
 
-BackgroundLIGHTGREEN GREEN11111
+Background
+LIGHTGREEN GREEN
+11111
 01111
 11101
 11111
 10111
 
-TargetNeutral#0a0a0a.....
+TargetNeutral
+#0a0a0a
+.....
 .000.
 .0.0.
 .000.
 .....
 
-TargetTowardsOrange.....
+TargetTowards
+Orange
+.....
 .000.
 .0.0.
 .000.
 .....
 
-TargetAwayBlue.....
+TargetAway
+Blue
+.....
 .000.
 .0.0.
 .000.
 .....
 
-WallBROWN DARKBROWN
-0001011111
-0100011111
-00010Player
-BlackRed Blue.000.
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Red Blue
+.000.
 .020.
 .....
 00000
 01010
 
-PlayerDecoyBlack
-OrangeWhite Blue
-.000..202.
-...0.00000
-01010EyeballAway
-WhitelightBlue lightRed
-.000.00100
-0111020102
-.202.EyeballTowards
-Whiteorange Red.000.
+PlayerDecoy
+Black Orange White Blue
+.000.
+.202.
+...0.
+00000
+01010
+
+EyeballAway
+White lightBlue lightRed
+.000.
 00100
 01110
 20102
 .202.
 
-PlayerDoorYellow Black10001
+EyeballTowards
+White orange Red
+.000.
+00100
+01110
+20102
+.202.
+
+PlayerDoor
+Yellow Black
+10001
 10101
 11111
 00000
 01010
 
-EyeballDoorYellow
-Black10001
-0010001110
-0010010001
+EyeballDoor
+Yellow Black
+10001
+00100
+01110
+00100
+10001
 
 
 LEGEND
@@ -92,9 +120,9 @@ RULES
 [ EyeballAway | ... | PlayerDecoy ] -> [ < EyeballAway | ... | PlayerDecoy ] 
 [ EyeballTowards | ... | Player ] -> [ > EyeballTowards | ... | Player ] 
 [ EyeballAway | ... | Player ] -> [ < EyeballAway | ... | Player ] 
-[ > Player | PlayerDecoy ] -> [ Player | >PlayerDecoy ] 
-[ > Player | PlayerDoor |  ] -> [ |PlayerDoor | Player ] 
-[ > Eyeball | EyeballDoor |  ] -> [ |EyeballDoor | Eyeball ] 
+[ > Player | PlayerDecoy ] -> [ Player | > PlayerDecoy ] 
+[ > Player | PlayerDoor |  ] -> [  | PlayerDoor | Player ] 
+[ > Eyeball | EyeballDoor |  ] -> [  | EyeballDoor | Eyeball ] 
 
 
 WINCONDITIONS
@@ -116,7 +144,6 @@ LEVELS
 #########
 
 ###########
-
 #.........#
 #.........#
 #..P.#....#

@@ -13,7 +13,7 @@ args = parser.parse_args()
 from lark import Lark, Transformer, Tree, Token, Visitor
 import numpy as np
 
-with open("syntax_loose.lark", "r") as file:
+with open("syntax.lark", "r") as file:
     puzzlescript_grammar = file.read()
 with open("syntax_generate.lark", "r") as file:
     min_puzzlescript_grammar = file.read()
@@ -27,7 +27,7 @@ class StripPuzzleScript(Transformer):
 
     def strip_newlines_data(self, items, data_name):
         """Remove any instances of section data that are newlines/comments"""
-        items = [item for item in items if not (isinstance(item, Tree) and item.data == "newlines_or_comments")]
+        items = [item for item in items if not (isinstance(item, Token) and item.type == "NEWLINES_OR_COMMENTS")]
         if len(items) > 0:
             return Tree(data_name, items)
 
@@ -119,12 +119,11 @@ class StripPuzzleScript(Transformer):
         items = [i for i in items if not (isinstance(i, Token) and i.type == 'COMMENT')]
         return Tree('sprite', self.shape_2d(items))
 
-    def levelline(self, items):
-        return items[0]
-
     def levellines(self, items):
         grid = []
-        level_lines = items
+        level_str = items[0].value
+        # Split the level string into lines
+        level_lines = level_str.strip().split("\n")        
         grid = [list(line) for line in level_lines]
         # padd all rows with empty tiles
         max_len = max(len(row) for row in grid)
@@ -248,90 +247,79 @@ class PrintPuzzleScript(Transformer):
 
 
 # Parse a PuzzleScript file
-def preprocess_ps(parser, filename):
+def parse_puzzlescript_file(parser, filename):
     with open(filename, "r") as file:
         content = file.read()
-
-    ## Preprocess the content of the file, stripping any comments
+    
+    content = strip_misc(content)
     content = strip_comments(content)
-    # any double newlines
-    content = content.replace('\n\n\n', '\n\n')
-    # and any lines that are just `=+`
-    content = re.sub(r'^=+\n', '', content, flags=re.MULTILINE)
+    content = preprocess_ps_txt(content)
+    
+    # try:
+    # Parse the content of the file
+    parse_tree = parser.parse(content)
+    # Optionally transform the parse tree to a more usable form
+    # transformed_tree = GameTransformer().transform(parse_tree)
+    
+    # Print or return the transformed parse tree
+    # print(parse_tree.pretty())
+    return parse_tree
 
-    txt = txt.replace('\u00A0', ' ')
+    # except Exception as e:
+    #     print(f"Error parsing file: {e}")
+
+games_to_skip = set({'easyenigma.txt'})
+
+def preprocess_ps_txt(txt):
     # If the file does not end with a newline, add one
     if not txt.endswith("\n"):
         txt += "\n"
     return txt
 
- 
-
-    # except Exception as e:
-    #     print(f"Error parsing file: {e}")
+def strip_misc(text):
+    # remove double newlines
+    text = re.sub(r'\n\n+', '\n\n', text)
+    """Remove any lines that are only `=+`."""
+    return "\n".join(line for line in text.split("\n") if not re.match(r"^[=+]+$", line))
 
 def strip_comments(text):
+    """Remove any `(comment)` from the text"""
+    n_open_parens = 0
     new_text = ""
-    n_open_brackets = 0
-    # Move through the text, keeping track of how deep we are in brackets
     for c in text:
         if c == "(":
-            n_open_brackets += 1
+            n_open_parens += 1
         elif c == ")":
-            # we ignore unmatched closing brackets if we are outside
-            n_open_brackets = max(0, n_open_brackets - 1)
-        elif n_open_brackets == 0:
+            n_open_parens -= 1
+        elif n_open_parens == 0:
             new_text += c
     return new_text
-
-games_to_skip = set({'easyenigma.txt'})
 
 # Usage example
 if __name__ == "__main__":
     # Initialize the Lark parser with the PuzzleScript grammar
     parser = Lark(puzzlescript_grammar, start="ps_game", maybe_placeholders=False)
-    # min_parser = Lark(min_puzzlescript_grammar, start="ps_game")
+    min_parser = Lark(min_puzzlescript_grammar, start="ps_game")
 
-    # games_dir = os.path.join('script-doctor','games')
-    games_dir = 'scraped_games'
+    # Replace 'your_puzzlescript_file.txt' with the path to your PuzzleScript file
+    # demo_games_dir = os.path.join('script-doctor','games')
+    demo_games_dir = 'scraped_puzzles'
 
     parsed_games_filename = "parsed_games.txt"
-    # min_grammar = os.path.join('syntax_generate.lark')
+    min_grammar = os.path.join('syntax_generate.lark')
     if args.overwrite or not os.path.exists(parsed_games_filename):
         with open(parsed_games_filename, "w") as file:
             file.write("")
-    with open(parsed_games_filename, "r", encoding='utf-8') as file:
+    with open(parsed_games_filename, "r") as file:
         # Get the set of all lines from this text file
         parsed_games = set(file.read().splitlines())
-    if not os.path.isdir('pretty_trees'):
-        os.mkdir('pretty_trees')
-    # for i, filename in enumerate(['blank.txt'] + os.listdir(demo_games_dir)):
-    game_files = os.listdir(games_dir)
-    # sort them alphabetically
-    game_files.sort()
-    for i, filename in enumerate(game_files):
+    for i, filename in enumerate(os.listdir(demo_games_dir)):
         if filename in parsed_games or filename in games_to_skip:
             print(f"Skipping {filename}")
+            continue
+        if filename.endswith('.txt'):
             print(f"Processing {filename}")
-            # try:
-
-            # Now save the simpolified version of the file
-            simp_filename = filename.strip('.txt') + '_simplified.txt'
-            print(simp_filename)
-            if not os.path.exists(simp_filename):
-                content = preprocess_ps(os.path.join(games_dir, filename))
-                with open(simp_filename, "w") as file:
-                    file.write(content)
-            else:
-                with open(simp_filename, "r") as file:
-                    content = file.read()
-            parse_tree = parser.parse(content)
-
-            # except Exception as e:
-                # breakpoint()
-                # with open("parsed_games.txt", "a") as file:
-                #     file.write(filename + "\n")
-                # continue
+            parse_tree = parse_puzzlescript_file(parser, os.path.join(demo_games_dir, filename))
             min_parse_tree = StripPuzzleScript().transform(parse_tree)
             pretty_parse_tree_str = min_parse_tree.pretty()
             pretty_tree_filename = os.path.join('pretty_trees', filename)

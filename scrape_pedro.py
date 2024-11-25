@@ -46,10 +46,11 @@ else:
 visited_ps_links_path = "visited_ps_links.txt"
 if os.path.isfile(visited_ps_links_path):
     with open(visited_ps_links_path, "r") as f:
-        visited_ps_links = f.read().splitlines()
+        visited_ps_links = set(f.read().splitlines())
 else:
     with open(visited_ps_links_path, "w") as f:
         f.write("")
+        visited_ps_linkes = []
 for link in ps_links:
     if link in visited_ps_links:
         print(f"Skipping {link}")
