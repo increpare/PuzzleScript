@@ -51,9 +51,10 @@ function dumpTestCase() {
 	var errorStrings_stripped = errorStrings.map(stripHTMLTags);
 	var resultarray = [levelDat,errorStrings_stripped,errorCount];
 	var resultstring = JSON.stringify(resultarray);
+	var escapedtitle = (state.metadata.title||"untitled test").replace(/"/g, '\\"');
 	resultstring = `<br>
 	[<br>
-		"${state.metadata.title||"untitled test"}",<br>
+		"${escapedtitle}",<br>
 		${resultstring}<br>
 	],`;
 	selectableint++;
