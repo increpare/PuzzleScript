@@ -690,94 +690,96 @@ var codeMirrorFn = function() {
             }
 
             //MATCH SECTION NAME
-            var sectionNameMatches = stream.match(reg_sectionNames, true);
-            if (sol && sectionNameMatches ) {
+            if (state.section!=="levels" /*cf #976 lol*/){
+                var sectionNameMatches = stream.match(reg_sectionNames, true);
+                if (sol && sectionNameMatches) {
 
-                state.section = sectionNameMatches[0].trim();
-                if (state.visitedSections.indexOf(state.section) >= 0) {
-                    logError('cannot duplicate sections (you tried to duplicate \"' + state.section.toUpperCase() + '").', state.lineNumber);
-                }
-                state.line_should_end = true;
-                state.line_should_end_because = `a section name ("${state.section.toUpperCase()}")`;
-                state.visitedSections.push(state.section);
-                var sectionIndex = sectionNames.indexOf(state.section);
-                if (sectionIndex == 0) {
-                    state.objects_section = 0;
-                    if (state.visitedSections.length > 1) {
-                        logError('section "' + state.section.toUpperCase() + '" must be the first section', state.lineNumber);
+                    state.section = sectionNameMatches[0].trim();
+                    if (state.visitedSections.indexOf(state.section) >= 0) {
+                        logError('cannot duplicate sections (you tried to duplicate \"' + state.section.toUpperCase() + '").', state.lineNumber);
                     }
-                } else if (state.visitedSections.indexOf(sectionNames[sectionIndex - 1]) == -1) {
-                    if (sectionIndex===-1) {
-                        //honestly not sure how I could get here.
-                        logError('no such section as "' + state.section.toUpperCase() + '".', state.lineNumber);
-                    } else {
-                        logError('section "' + state.section.toUpperCase() + '" is out of order, must follow  "' + sectionNames[sectionIndex - 1].toUpperCase() + '" (or it could be that the section "'+sectionNames[sectionIndex - 1].toUpperCase()+`"is just missing totally.  You have to include all section headings, even if the section itself is empty).`, state.lineNumber);                            
+                    state.line_should_end = true;
+                    state.line_should_end_because = `a section name ("${state.section.toUpperCase()}")`;
+                    state.visitedSections.push(state.section);
+                    var sectionIndex = sectionNames.indexOf(state.section);
+                    if (sectionIndex == 0) {
+                        state.objects_section = 0;
+                        if (state.visitedSections.length > 1) {
+                            logError('section "' + state.section.toUpperCase() + '" must be the first section', state.lineNumber);
+                        }
+                    } else if (state.visitedSections.indexOf(sectionNames[sectionIndex - 1]) == -1) {
+                        if (sectionIndex===-1) {
+                            //honestly not sure how I could get here.
+                            logError('no such section as "' + state.section.toUpperCase() + '".', state.lineNumber);
+                        } else {
+                            logError('section "' + state.section.toUpperCase() + '" is out of order, must follow  "' + sectionNames[sectionIndex - 1].toUpperCase() + '" (or it could be that the section "'+sectionNames[sectionIndex - 1].toUpperCase()+`"is just missing totally.  You have to include all section headings, even if the section itself is empty).`, state.lineNumber);                            
+                        }
                     }
-                }
 
-                if (state.section === 'sounds') {
-                    //populate names from rules
-                    for (var n in state.objects) {
-                        if (state.objects.hasOwnProperty(n)) {
-/*                                if (state.names.indexOf(n)!==-1) {
-                                logError('Object "'+n+'" has been declared to be multiple different things',state.objects[n].lineNumber);
-                            }*/
+                    if (state.section === 'sounds') {
+                        //populate names from rules
+                        for (var n in state.objects) {
+                            if (state.objects.hasOwnProperty(n)) {
+    /*                                if (state.names.indexOf(n)!==-1) {
+                                    logError('Object "'+n+'" has been declared to be multiple different things',state.objects[n].lineNumber);
+                                }*/
+                                state.names.push(n);
+                            }
+                        }
+                        //populate names from legends
+                        for (var i = 0; i < state.legend_synonyms.length; i++) {
+                            var n = state.legend_synonyms[i][0];
+                            /*
+                            if (state.names.indexOf(n)!==-1) {
+                                logError('Object "'+n+'" has been declared to be multiple different things',state.legend_synonyms[i].lineNumber);
+                            }
+                            */
+                            state.names.push(n);
+                        }
+                        for (var i = 0; i < state.legend_aggregates.length; i++) {
+                            var n = state.legend_aggregates[i][0];
+                            /*
+                            if (state.names.indexOf(n)!==-1) {
+                                logError('Object "'+n+'" has been declared to be multiple different things',state.legend_aggregates[i].lineNumber);
+                            }
+                            */
+                            state.names.push(n);
+                        }
+                        for (var i = 0; i < state.legend_properties.length; i++) {
+                            var n = state.legend_properties[i][0];
+                            /*
+                            if (state.names.indexOf(n)!==-1) {
+                                logError('Object "'+n+'" has been declared to be multiple different things',state.legend_properties[i].lineNumber);
+                            }                           
+                            */ 
                             state.names.push(n);
                         }
                     }
-                    //populate names from legends
-                    for (var i = 0; i < state.legend_synonyms.length; i++) {
-                        var n = state.legend_synonyms[i][0];
-                        /*
-                        if (state.names.indexOf(n)!==-1) {
-                            logError('Object "'+n+'" has been declared to be multiple different things',state.legend_synonyms[i].lineNumber);
+                    else if (state.section === 'levels') {
+                        //populate character abbreviations
+                        for (var n in state.objects) {
+                            if (state.objects.hasOwnProperty(n) && n.length == 1) {
+                                state.abbrevNames.push(n);
+                            }
                         }
-                        */
-                        state.names.push(n);
-                    }
-                    for (var i = 0; i < state.legend_aggregates.length; i++) {
-                        var n = state.legend_aggregates[i][0];
-                        /*
-                        if (state.names.indexOf(n)!==-1) {
-                            logError('Object "'+n+'" has been declared to be multiple different things',state.legend_aggregates[i].lineNumber);
-                        }
-                        */
-                        state.names.push(n);
-                    }
-                    for (var i = 0; i < state.legend_properties.length; i++) {
-                        var n = state.legend_properties[i][0];
-                        /*
-                        if (state.names.indexOf(n)!==-1) {
-                            logError('Object "'+n+'" has been declared to be multiple different things',state.legend_properties[i].lineNumber);
-                        }                           
-                        */ 
-                        state.names.push(n);
-                    }
-                }
-                else if (state.section === 'levels') {
-                    //populate character abbreviations
-                    for (var n in state.objects) {
-                        if (state.objects.hasOwnProperty(n) && n.length == 1) {
-                            state.abbrevNames.push(n);
-                        }
-                    }
 
-                    for (var i = 0; i < state.legend_synonyms.length; i++) {
-                        if (state.legend_synonyms[i][0].length == 1) {
-                            state.abbrevNames.push(state.legend_synonyms[i][0]);
+                        for (var i = 0; i < state.legend_synonyms.length; i++) {
+                            if (state.legend_synonyms[i][0].length == 1) {
+                                state.abbrevNames.push(state.legend_synonyms[i][0]);
+                            }
+                        }
+                        for (var i = 0; i < state.legend_aggregates.length; i++) {
+                            if (state.legend_aggregates[i][0].length == 1) {
+                                state.abbrevNames.push(state.legend_aggregates[i][0]);
+                            }
                         }
                     }
-                    for (var i = 0; i < state.legend_aggregates.length; i++) {
-                        if (state.legend_aggregates[i][0].length == 1) {
-                            state.abbrevNames.push(state.legend_aggregates[i][0]);
-                        }
+                    return 'HEADER';
+                } else {
+                    if (state.section === undefined) {
+                        //unreachable I think, pre-empted caught above
+                        logError('must start with section "OBJECTS"', state.lineNumber);
                     }
-                }
-                return 'HEADER';
-            } else {
-                if (state.section === undefined) {
-                    //unreachable I think, pre-empted caught above
-                    logError('must start with section "OBJECTS"', state.lineNumber);
                 }
             }
 
