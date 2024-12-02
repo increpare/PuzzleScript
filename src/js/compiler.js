@@ -45,10 +45,6 @@ var colorPalette;
 
 function generateExtraMembers(state) {
 
-    if (state.collisionLayers.length === 0) {
-        logError("No collision layers defined.  All objects need to be in collision layers.");
-    }
-
     //annotate objects with layers
     //assign ids at the same time
     state.idDict = [];
@@ -2846,6 +2842,11 @@ function loadFile(str) {
     }
 
     // delete state.lineNumber;
+
+    if (state.collisionLayers.length === 0) {
+        logError("No collision layers defined.  All objects need to be in collision layers.");
+        return null;
+    }
 
     generateExtraMembers(state);
     generateMasks(state);
