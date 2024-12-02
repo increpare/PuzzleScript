@@ -774,6 +774,7 @@ function processRuleString(rule, state, curRules) {
                             logWarning('Encountered an unexpected "->" inside square brackets.  It\'s used to separate states, it has no place inside them >:| .', lineNumber);
                         } else if (rhs) {
                             logError('Error, you can only use "->" once in a rule; it\'s used to separate before and after states.', lineNumber);
+                            return null;
                         } else {
                             rhs = true;
                         }
@@ -906,6 +907,9 @@ function rulesToArray(state) {
     for (var i = 0; i < oldrules.length; i++) {
         var lineNumber = oldrules[i][1];
         var newrule = processRuleString(oldrules[i], state, rules);
+        if (newrule==null){
+            continue;//error in processing string.
+        }
         if (newrule.bracket !== undefined) {
             loops.push([lineNumber, newrule.bracket]);
             continue;
