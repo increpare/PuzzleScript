@@ -596,6 +596,11 @@ function level4Serialization() {
 
 
 function setGameState(_state, command, randomseed) {
+	
+	if (_state===undefined) {
+		_state=introstate;
+		return;
+	}
 	oldflickscreendat=[];
 	timer=0;
 	autotick=0;
