@@ -986,6 +986,10 @@ function DoRestart(force) {
 	if (force!==true && ('norestart' in state.metadata)) {
 		return;
 	}
+	
+	if (againing){
+		DoUndo(force,true);
+	}
 	restarting=true;
 	if (force!==true) {
 		addUndoState(backupLevel());
