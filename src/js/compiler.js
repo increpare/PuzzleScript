@@ -741,6 +741,7 @@ function processRuleString(rule, state, curRules) {
                         bracketbalance--;
                         if (bracketbalance < 0) {
                             logWarning("Multiple closing brackets without corresponding opening brackets.  Something fishy here.  Every '[' has to be closed by a ']', and you can't nest them.", lineNumber);
+                            return null;
                         }
 
                         if (curcell.length % 2 == 1) {
