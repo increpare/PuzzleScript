@@ -907,6 +907,7 @@ function restoreLevel(lev) {
     againing=false;
     level.commandQueue=[];
     level.commandQueueSourceRules=[];
+	messagetext="";
 }
 
 var zoomscreen=false;
