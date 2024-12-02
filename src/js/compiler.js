@@ -530,6 +530,7 @@ var simpleRelativeDirections = ['^', 'v', '<', '>'];
 var reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
 //redeclaring here, i don't know why
 var commandwords = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again"];
+var commandwords_sfx = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"];
 
 
 function directionalRule(rule) {
@@ -808,6 +809,19 @@ function processRuleString(rule, state, curRules) {
                             commands.push([token, messageStr]);
                             i = tokens.length;
                         } else {
+                            if (commandwords_sfx.indexOf(token) >= 0) {
+                                //check defined
+                                var found=false;
+                                for (var j = 0; j < state.sounds.length;j++){
+                                    var sound = state.sounds[j];
+                                    if (sound[0][0] === token){
+                                        found=true;
+                                    }
+                                }
+                                if (!found){
+                                    logWarning('Sound effect "' + token + '" not defined.', lineNumber);                            
+                                }
+                            }
                             commands.push([token]);
                         }
                     } else {
