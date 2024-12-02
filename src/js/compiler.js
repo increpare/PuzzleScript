@@ -2315,7 +2315,10 @@ function processWinConditions(state) {
         var aggr1 = false;
         var aggr2 = false;
 
-        if (n1 in state.objectMasks) {
+        if (wincondition.length <=2 ){
+            logError('Win conditions is badly formatted - needs to look something like "No Fruit", "All Target On Crate", "Some Fruit", "Some Gold on Chest", "No Gold on Chest", or the like.', lineNumber);
+        }
+        else if (n1 in state.objectMasks) {
             aggr1 = false;
             mask1 = state.objectMasks[n1];
         } else if (n1 in state.aggregateMasks){
