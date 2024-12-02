@@ -2999,10 +2999,18 @@ function compile(command, text, randomseed) {
     
 
     if (errorCount > 0) {
-        if (IDE===false){
-            consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.  If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.</span>');
-        } else{
-            consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.</span>');
+        if (IDE===false){            
+            if (state===null){
+                consoleError('<span class="systemMessage">Errors detected during compilation; I can\'t salvage anything playable from it.  If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.</span>');
+            } else {
+                consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly. If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.</span>');
+            }
+        } else {
+            if (state===null){
+                consoleError('<span class="systemMessage">Errors detected during compilation; I can\'t salvage anything playable from it.</span>');
+            } else {
+                consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.</span>');
+            }
         }
         if (errorCount > MAX_ERRORS) {
             return;
