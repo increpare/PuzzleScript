@@ -14121,7 +14121,7 @@ function getMaskFromName(state, name) {
     }
 
     if (objectMask.iszero()) {
-        logErrorNoLine("error, didn't find any object called player, either in the objects section, or the legends section. there must be a player!");
+        logErrorNoLine("Error, didn't find any object called player, either in the objects section, or the legends section. There must be a player!");
     }
     return objectMask;
 }
