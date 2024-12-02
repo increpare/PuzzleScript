@@ -2091,6 +2091,40 @@ function generateRigidGroupList(state) {
     state.groupIndex_to_RigidGroupIndex = groupIndex_to_RigidGroupIndex;
 }
 
+function isObjectDefined(state, name) {
+    
+    var result = name in state.objects || 
+    (state.aggregatesDict!==undefined && (name in state.aggregatesDict)) || 
+    (state.propertiesDict!==undefined && (name in state.propertiesDict)) || 
+    (state.synonymsDict!==undefined && (name in state.synonymsDict));
+
+    if (state.legend_aggregates!==undefined){
+        for (var i=0;i<state.legend_aggregates.length;i++){
+            if (state.legend_aggregates[i][0]===name){
+                result = true;
+                break;
+            }
+        }
+    }
+    if (state.legend_properties!==undefined){
+        for (var i=0;i<state.legend_properties.length;i++){
+            if (state.legend_properties[i][0]===name){
+                result = true;
+                break;
+            }
+        }
+    }
+    if (state.legend_synonyms!==undefined){
+        for (var i=0;i<state.legend_synonyms.length;i++){
+            if (state.legend_synonyms[i][0]===name){
+                result = true;
+                break;
+            }
+        }
+    }
+    return result;
+}
+
 function getMaskFromName(state, name) {
     var objectMask = new BitVec(STRIDE_OBJ);
     if (name in state.objects) {
@@ -2123,7 +2157,7 @@ function getMaskFromName(state, name) {
     }
 
     if (objectMask.iszero()) {
-        logErrorNoLine("error, didn't find any object called player, either in the objects section, or the legends section. there must be a player!");
+        logErrorNoLine(`Error, didn't find any object called ${name}, either in the objects section, or the legends section.`);
     }
     return objectMask;
 }
@@ -2845,7 +2879,14 @@ function loadFile(str) {
         while (ss.eol() === false);
     }
 
-    // delete state.lineNumber;
+    //check if player defined
+    if (!isObjectDefined(state,"player")){            
+        logErrorNoLine("Error, didn't find any object called player, either in the objects section, or the legends section. There must be a player!");
+    }
+    //check if background
+    if (!isObjectDefined(state,"background")){
+        logErrorNoLine("Error, didn't find any object called background, either in the objects section, or the legends section. There must be a background!");
+    }
 
     if (state.collisionLayers.length === 0) {
         logError("No collision layers defined.  All objects need to be in collision layers.");
