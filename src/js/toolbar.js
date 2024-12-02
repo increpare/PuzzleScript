@@ -37,6 +37,7 @@ function dateToReadable(title,time) {
 }
 
 function saveClick() {
+	compile(["rebuild"]);//to regenerate/extract title
 	var title = "Untitled";
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title;
