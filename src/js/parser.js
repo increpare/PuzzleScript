@@ -376,7 +376,7 @@ var codeMirrorFn = function() {
                 state.legend_aggregates.push(newlegend);
         
             } else if (splits[3]==='or'){
-                var malformed=true;
+                var malformed=false;
 
                 var substitutor = function(n) {
 
@@ -395,7 +395,7 @@ var codeMirrorFn = function() {
                         var a = state.legend_aggregates[i];
                         if (a[0]===n) {           
                             logError("Cannot define a property (something defined in terms of 'or') in terms of aggregates (something that uses 'and').", state.lineNumber);
-                            malformed=false;          
+                            malformed=true;          
                         }
                     }
                     for (var i=0;i<state.legend_properties.length;i++) {
@@ -418,11 +418,11 @@ var codeMirrorFn = function() {
 
                 for (var i = 5; i < splits.length; i += 2) {
                     if (splits[i].toLowerCase() !== 'or') {
-                        malformed = false;
+                        malformed = true;
                         break;
                     }
                 }
-                if (malformed) {
+                if (!malformed) {
                     var newlegend = [splits[0]].concat(substitutor(splits[2])).concat(substitutor(splits[4]));
                     for (var i = 6; i < splits.length; i += 2) {
                         newlegend.push(splits[i].toLowerCase());
