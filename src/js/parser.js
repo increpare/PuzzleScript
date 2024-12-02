@@ -631,6 +631,7 @@ var codeMirrorFn = function() {
                 if (state.commentLevel > 0) {
                     state.commentLevel--;
                     if (state.commentLevel === 0) {
+                        state.sol_after_comment=true;
                         return 'comment';
                     }
                 } else {
@@ -1514,7 +1515,7 @@ var codeMirrorFn = function() {
                 
                 default://if you're in the preamble
                 {
-                    if (sol) {
+                    if (sol||state.sol_after_comment) {
                         state.tokenIndex=0;
                     }
                     if (state.tokenIndex==0) {
@@ -1571,7 +1572,10 @@ var codeMirrorFn = function() {
                                 return 'ERROR';
                             }
                             return 'METADATA';
-                        }       
+                        } else {
+                            //garbage found
+                            logError(`Unrecognised stuff "${stream.string}" in the prelude.`, state.lineNumber);
+                        }    
                     } else {
                         stream.match(reg_notcommentstart, true);
                         state.tokenIndex++;
