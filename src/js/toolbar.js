@@ -37,7 +37,12 @@ function dateToReadable(title,time) {
 }
 
 function saveClick() {
-	compile(["rebuild"]);//to regenerate/extract title
+	// I never want a game causing the compiler to somehow throw errors to stopping you from saving it
+	try {		
+		compile(["rebuild"]);//to regenerate/extract title
+	} catch (error) {
+		console.log(error);
+	}
 	var title = "Untitled";
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title;
