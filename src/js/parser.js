@@ -394,7 +394,7 @@ var codeMirrorFn = function() {
                     for (var i=0;i<state.legend_aggregates.length;i++) {
                         var a = state.legend_aggregates[i];
                         if (a[0]===n) {           
-                            logError("Cannot define a property (something defined in terms of 'or') in terms of aggregates (something that uses 'and').", state.lineNumber);
+                            logError(`Cannot define a property (something defined in terms of 'or') in terms of an aggregate (something that uses 'and').  In this case, you can't define "${splits[0]}" in terms of "${n}".`, state.lineNumber);
                             malformed=true;  
                             return [];        
                         }

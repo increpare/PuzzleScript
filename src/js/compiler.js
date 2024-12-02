@@ -396,12 +396,13 @@ function generateExtraMembers(state) {
             var lineNumber = state.original_line_numbers['background'];
             logError("background cannot be an aggregate (declared with 'and'), it has to be a simple type, or property (declared in terms of others using 'or').",lineNumber);
         } else {
+            //background doesn't exist. Error already printed elsewhere.
             var o = state.objects[state.idDict[0]];
             if (o!=null){
                 backgroundid = o.id;
                 backgroundlayer = o.layer;
             }
-            logError("you have to define something to be the background");
+            logError("Seriously, you have to define something to be the background.");
         }
     } else {
         backgroundid = state.objects.background.id;
