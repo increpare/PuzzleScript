@@ -1608,7 +1608,7 @@ function rulesToMask(state) {
         layerTemplate.push(null);
     }
 
-    for (var i = 0; i < state.rules.length; i++) {
+    outerloop: for (var i = 0; i < state.rules.length; i++) {
         var rule = state.rules[i];
         for (var j = 0; j < rule.lhs.length; j++) {
             var cellrow_l = rule.lhs[j];
@@ -1629,7 +1629,10 @@ function rulesToMask(state) {
                         objectsPresent = ellipsisPattern;
                         if (cell_l.length !== 2) {
                             logError("You can't have anything in with an ellipsis. Sorry.", rule.lineNumber);
-                            throw 'aborting compilation';//throwing here because I was getting infinite loops in the compiler otherwise
+                            //delete the rule
+                            state.rules.splice(i, 1);
+                            i--;
+                            continue outerloop;
                         } else if ((k === 0) || (k === cellrow_l.length - 1)) {
                             logError("There's no point in putting an ellipsis at the very start or the end of a rule", rule.lineNumber);
                         } else if (rule.rhs.length > 0) {
