@@ -395,7 +395,8 @@ var codeMirrorFn = function() {
                         var a = state.legend_aggregates[i];
                         if (a[0]===n) {           
                             logError("Cannot define a property (something defined in terms of 'or') in terms of aggregates (something that uses 'and').", state.lineNumber);
-                            malformed=true;          
+                            malformed=true;  
+                            return [];        
                         }
                     }
                     for (var i=0;i<state.legend_properties.length;i++) {
