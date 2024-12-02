@@ -669,11 +669,14 @@ function processRuleString(rule, state, curRules) {
                         if (groupNumber === lineNumber) {
                             if (curRules.length == 0) {
                                 logError('The "+" symbol, for joining a rule with the group of the previous rule, needs a previous rule to be applied to.', lineNumber);
+                                has_plus=false;
                             }
                             if (i !== 0) {
                                 logError('The "+" symbol, for joining a rule with the group of the previous rule, must be the first symbol on the line ', lineNumber);
                             }
-                            groupNumber = curRules[curRules.length - 1].groupNumber;
+                            if (has_plus){
+                                groupNumber = curRules[curRules.length - 1].groupNumber;
+                            }
                         } else {
                             logError('Two "+"s (the "append to previous rule group" symbol) applied to the same rule.', lineNumber);
                         }
