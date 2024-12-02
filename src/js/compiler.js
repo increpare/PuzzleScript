@@ -2714,6 +2714,10 @@ function generateSoundData(state) {
                     var targetName = targets[j];
                     var targetDat = state.objects[targetName];
                     var targetLayer = targetDat.layer;
+                    //if not found, continue - probably from the error ""aggr" is an aggregate (defined using "and"), and cannot be added to a single layer because its constituent objects must be able to coexist."
+                    if (targetLayer === undefined) {
+                        continue;
+                    }
                     var shiftedDirectionMask = new BitVec(STRIDE_MOV);
                     shiftedDirectionMask.ishiftor(directionMask, 5 * targetLayer);
 
