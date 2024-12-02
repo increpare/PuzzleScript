@@ -1,4 +1,5 @@
-function runTest(dataarray) {
+function runTest(dataarray,testname) {
+	console.log("Running test "+testname);
 	unitTesting=true;
 	levelString=dataarray[0];
 	errorStrings = [];
@@ -69,7 +70,8 @@ function runTest(dataarray) {
 }
 
 
-function runCompilationTest(dataarray) {
+function runCompilationTest(dataarray,testname) {
+	console.log("Running test "+testname);
 	unitTesting=true;
 	levelString=dataarray[0];
 	var recordedErrorStrings=dataarray[1];
