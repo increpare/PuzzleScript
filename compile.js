@@ -4,9 +4,8 @@
 
 creates a highly compressed release build in bin of the contents of src
 
-packages used:
+(See DEVELOPMENT.md for information on how to set up/use this script)
 
-npm i rimraf compress-images web-resource-inliner ncp gifsicle@5.3.0 concat ycssmin terser gzipper@7.2.0 html-minifier-terser glob@8   
 */
 
 const fs = require("fs");
