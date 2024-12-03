@@ -14,16 +14,16 @@ function github_authURL() {
 		+ "&scope=gist"
 		+ "&state=" + randomState
 		+ "&allow_signup=true";
-};
+}
 
-function github_signOut{
+function github_signOut(){
 	storage_remove("oauth_access_token");
-};
+}
 
 function github_isSignedIn() {
 	var token = storage_get("oauth_access_token");
 	return typeof token === "string";
-};
+}
 
 function github_load(id, done) { 
 	var githubURL = "https://api.github.com/gists/"+id;
@@ -70,7 +70,7 @@ function github_load(id, done) {
 	}
 	githubHTTPClient.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	githubHTTPClient.send();
-};
+}
 
 function github_save(title, code, done) {
 	var oauthAccessToken = storage_get("oauth_access_token");
@@ -118,4 +118,4 @@ function github_save(title, code, done) {
 	githubHTTPClient.setRequestHeader("Authorization", "Token "+oauthAccessToken);
 	var stringifiedGist = JSON.stringify(gistToCreate);
 	githubHTTPClient.send(stringifiedGist);
-};
+}
