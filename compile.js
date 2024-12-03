@@ -4,7 +4,8 @@
 
 creates a highly compressed release build in bin of the contents of src
 
-(see DEVELOPMENT.md for information on how to use this script/how to set it up)
+(See DEVELOPMENT.md for information on how to set up/use this script)
+
 */
 
 const fs = require("fs");

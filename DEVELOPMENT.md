@@ -18,7 +18,7 @@ The structure of PuzzleScript is the following:
 npm install
 ```
 
-This will install the packages listed in `package.json`.
+This installs the packages listed in `package.json`.
 
 Then you should be able to compile the site (outputted to the `./bin/` directory) with 
 
