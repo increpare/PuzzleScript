@@ -4,9 +4,8 @@
 
 creates a highly compressed release build in bin of the contents of src
 
-packages used:
+(See DEVELOPMENT.md for information on how to set up/use this script)
 
-npm i rimraf compress-images web-resource-inliner ncp gifsicle@5.3.0 concat ycssmin terser gzipper html-minifier-terser glob   
 */
 
 const fs = require("fs");
@@ -98,7 +97,7 @@ ncp("./src", "./bin/", function (err) {
             rimraf.sync('./bin/js');
             rimraf.sync('./bin/css');
             rimraf.sync('./bin/tests');
-            
+
             fs.mkdirSync('./bin/js');
             fs.mkdirSync('./bin/css');
 
@@ -118,6 +117,9 @@ ncp("./src", "./bin/", function (err) {
 
             console.log('css files concatenated')
 
+
+
+
             var css = fs.readFileSync("./bin/css/combined.css", encoding = 'utf8');
             var min = cssmin(css);
             fs.writeFileSync("./bin/css/combined.css", min, encoding = "utf8");
@@ -128,7 +130,29 @@ ncp("./src", "./bin/", function (err) {
 
             console.log("running js minification");
 
-            var files = [
+            async function generateFrom(toinclude, output_src, output_bin) {
+                var files = toinclude;
+
+                var corpus = {};
+                for (var i = 0; i < files.length; i++) {
+                    var fpath = files[i];
+                    corpus["source/" + fpath.slice(9)] = fs.readFileSync(fpath, encoding = 'utf-8');
+                }
+
+                var result = await minify(
+                    corpus,
+                    {
+                        sourceMap: {
+                            filename: output_src,
+                            url: output_src + ".map"
+                        }
+                    });
+
+                fs.writeFileSync(output_bin, result.code);
+                fs.writeFileSync(output_bin + ".map", result.map);
+            };
+
+            var includes_editor = [
                 "./src/js/Blob.js",
                 "./src/js/FileSaver.js",
                 "./src/js/jsgif/LZWEncoder.js",
@@ -157,6 +181,7 @@ ncp("./src", "./bin/", function (err) {
                 "./src/js/buildStandalone.js",
                 "./src/js/engine.js",
                 "./src/js/parser.js",
+                "./src/js/github.js",
                 "./src/js/editor.js",
                 "./src/js/compiler.js",
                 "./src/js/console.js",
@@ -166,24 +191,14 @@ ncp("./src", "./bin/", function (err) {
                 "./src/js/addlisteners.js",
                 "./src/js/addlisteners_editor.js",
                 "./src/js/makegif.js"];
+                
+            await generateFrom(
+                includes_editor,
+                "scripts_compiled.js",
+                "./bin/js/scripts_compiled.js");
 
-            var corpus = {};
-            for (var i = 0; i < files.length; i++) {
-                var fpath = files[i];
-                corpus["source/" + fpath.slice(9)] = fs.readFileSync(fpath, encoding = 'utf-8');
-            }
-            var result = await minify(
-                corpus,
-                {
-                    sourceMap: {
-                        filename: "scripts_compiled.js",
-                        url: "scripts_compiled.js.map"
-                    }
-                });
-            fs.writeFileSync('./bin/js/scripts_compiled.js', result.code);
-            fs.writeFileSync('./bin/js/scripts_compiled.js.map', result.map);
 
-            files = [
+            var includes_play = [
                 "./src/js/storagewrapper.js",
                 "./src/js/globalVariables.js",
                 "./src/js/debug_off.js",
@@ -196,26 +211,15 @@ ncp("./src", "./bin/", function (err) {
                 "./src/js/graphics.js",
                 "./src/js/engine.js",
                 "./src/js/parser.js",
+                "./src/js/github.js",
                 "./src/js/compiler.js",
                 "./src/js/inputoutput.js",
                 "./src/js/mobile.js"];
 
-            corpus = {};
-            for (var i = 0; i < files.length; i++) {
-                var fpath = files[i];
-                corpus["source/" + fpath.slice(9)] = fs.readFileSync(fpath, encoding = 'utf-8');
-            }
-
-            var result = await minify(
-                corpus,
-                {
-                    sourceMap: {
-                        filename: "scripts_play_compiled.js",
-                        url: "scripts_play_compiled.js.map"
-                    }
-                });
-            fs.writeFileSync('./bin/js/scripts_play_compiled.js', result.code);
-            fs.writeFileSync('./bin/js/scripts_play_compiled.js.map', result.map);
+            await generateFrom(
+                includes_play,
+                "scripts_play_compiled.js",
+                "./bin/js/scripts_play_compiled.js");
 
             await ncp("./src/js", "./bin/js/source", function (err) {
                 if (err) {
@@ -274,7 +278,7 @@ ncp("./src", "./bin/", function (err) {
                                 collapseWhitespace: true,
                                 minifyCSS: true,
                                 minifyURLs: true,
-                                removeAttributeQuotes: true,
+                                // removeAttributeQuotes: true,
                                 removeComments: true,
                                 removeEmptyAttributes: true,
                             });
@@ -301,7 +305,7 @@ ncp("./src", "./bin/", function (err) {
                         files = files.concat(glob.sync("./bin/**/*.css"));
                         files = files.concat(glob.sync("./bin/**/*.txt"));
 
-                        for (var i=0;i<files.length;i++) {
+                        for (var i = 0; i < files.length; i++) {
                             var file = files[i];
                             var comp = new Compress(file);
                             await comp.run();

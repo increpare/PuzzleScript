@@ -151,6 +151,7 @@ function showContinueOptionOnTitleScreen(){
 }
 
 function unloadGame() {
+	levelEditorOpened=false;
 	state=introstate;
 	level = new Level(0, 5, 5, 2, null);
 	level.objects = new Int32Array(0);
@@ -595,6 +596,11 @@ function level4Serialization() {
 
 
 function setGameState(_state, command, randomseed) {
+	
+	if (_state===undefined) {
+		_state=introstate;
+		return;
+	}
 	oldflickscreendat=[];
 	timer=0;
 	autotick=0;
@@ -901,6 +907,7 @@ function restoreLevel(lev) {
     againing=false;
     level.commandQueue=[];
     level.commandQueueSourceRules=[];
+	messagetext="";
 }
 
 var zoomscreen=false;
@@ -984,6 +991,10 @@ function DoRestart(force) {
 	}
 	if (force!==true && ('norestart' in state.metadata)) {
 		return;
+	}
+	
+	if (againing){
+		DoUndo(force,true);
 	}
 	restarting=true;
 	if (force!==true) {
@@ -2530,9 +2541,9 @@ var sfxCreateMask=null;
 var sfxDestroyMask=null;
 
 function calculateRowColMasks() {
-	for(var i=0;i<level.mapCellContents.length;i++) {
-		level.mapCellContents[i]=0;
-		level.mapCellContents_Movements[i]=0;	
+	for(var i=0;i<level.mapCellContents.data.length;i++) {
+		level.mapCellContents.data[i]=0;
+		level.mapCellContents_Movements.data[i]=0;	
 	}
 
 	for (var i=0;i<level.width;i++) {

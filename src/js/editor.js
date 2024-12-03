@@ -170,46 +170,19 @@ function getParameterByName(name) {
 }
 
 function tryLoadGist(id) {
-	var githubURL = 'https://api.github.com/gists/'+id;
-
-	consolePrint("Contacting GitHub",true);
-	var githubHTTPClient = new XMLHttpRequest();
-
-	githubHTTPClient.open('GET', githubURL);
-	githubHTTPClient.onreadystatechange = function() {
-	
-		if(githubHTTPClient.readyState!=4) {
+	github_load(id, function(code, e) {
+		if (e!==null) {
+			consoleError(e);
 			return;
 		}
-
-		if (githubHTTPClient.responseText==="") {
-			consoleError("GitHub request returned nothing.  A connection fault, maybe?");
-		}
-
-		var result = JSON.parse(githubHTTPClient.responseText);
-		if (githubHTTPClient.status===403) {
-			consoleError(result.message);
-		} else if (githubHTTPClient.status!==200&&githubHTTPClient.status!==201) {
-			consoleError("HTTP Error "+ githubHTTPClient.status + ' - ' + githubHTTPClient.statusText);
-		} else {
-			var code=result["files"]["script.txt"]["content"];
-			editor.setValue(code);
-			editor.clearHistory();
-			clearConsole();
-			setEditorClean();
-			unloadGame();
-			compile(["restart"],code);
-		}
-	}
-	// if (storage_has('oauth_access_token')) {
-    //     var oauthAccessToken = storage_get("oauth_access_token");
-    //     if (typeof oauthAccessToken === "string") {
-    //         githubHTTPClient.setRequestHeader("Authorization","token "+oauthAccessToken);
-    //     }
-    // }
-	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-	githubHTTPClient.send();
-}
+		editor.setValue(code);
+		editor.clearHistory();
+		clearConsole();
+		setEditorClean();
+		unloadGame();
+		compile(["restart"],code);
+	});
+};
 
 function tryLoadFile(fileName) {
 	var fileOpenClient = new XMLHttpRequest();
@@ -220,11 +193,24 @@ function tryLoadFile(fileName) {
   			return;
   		}
   		
-		editor.setValue(fileOpenClient.responseText);
-		clearConsole();
-		setEditorClean();
-		unloadGame();
-		compile(["restart"]);
+		function doStuff(){
+			editor.setValue(fileOpenClient.responseText);
+			clearConsole();
+			setEditorClean();
+			unloadGame();
+			compile(["restart"]);
+		}
+		if (document.readyState === "complete") {
+			doStuff();
+		} else {
+			let handler = (event)=>{
+				if (document.readyState === "complete") {
+					doStuff();			
+					document.removeEventListener("readystatechange",handler);							
+				}
+			};
+			document.addEventListener("readystatechange",handler);
+		}
 	}
 	fileOpenClient.send();
 }
@@ -257,12 +243,12 @@ editor.on('keyup', function (editor, event) {
 
 function debugPreview(turnIndex,lineNumber){
 	diffToVisualize=debug_visualisation_array[turnIndex][lineNumber];
-	redraw();
+	canvasResize(diffToVisualize.level);
 }
 
 function debugUnpreview(){
 	diffToVisualize=null;
-	redraw();
+	canvasResize();
 }
 
 function addToDebugTimeline(level,lineNumber){
@@ -282,6 +268,7 @@ function addToDebugTimeline(level,lineNumber){
 		commandQueue:level.commandQueue.concat([]),
 		commandQueueSourceRules:level.commandQueueSourceRules.concat([]),
 		rigidMovementAppliedMask:level.rigidMovementAppliedMask.map(a=>a.clone()),
+		level: level,
 	};
 	
 

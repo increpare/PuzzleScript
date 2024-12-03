@@ -262,14 +262,21 @@ var cellheight;
 var xoffset;
 var yoffset;
 
-window.addEventListener('resize', canvasResize, false);
+window.addEventListener('resize', function(){canvasResize();}, false);
 canvas = document.getElementById('gameCanvas');
 ctx = canvas.getContext('2d');
 x = 0;
 y = 0;
 
 function glyphCount(){
-    return state.glyphOrder.length;
+    //could also just return glyphImages.length
+    var count=0;
+	for (var n of state.glyphOrder) {
+		if (n.length==1 && state.glyphDict.hasOwnProperty(n)) {    
+            count++;
+        }
+    }
+    return count;
 }
 
 function redraw() {
@@ -484,8 +491,11 @@ function drawEditorIcons(mini,minj) {
             
         }
     }
+    if (mouseIndex===-1){
+        tooltip_string = "print level to console"
+    }
     // prepare tooltip: content of a level's cell
-    else if ( (mouseCoordX >= 0) && (mouseCoordY >= 0) && (mouseCoordX < screenwidth) && (mouseCoordY < screenheight-editorRowCount) )
+    else if ( (mouseCoordX >= 0) && (mouseCoordY >= 0) && (mouseCoordX < screenwidth) && (mouseCoordY < screenheight-editorRowCount-2) )
     {
         const posMask = level.getCellInto((mouseCoordY+minj) + (mouseCoordX+mini)*level.height, _o12);
         tooltip_objects = state.idDict.filter( (x,k) => (posMask.get(k) != 0) )
@@ -527,16 +537,17 @@ var oldcellheight=0;
 var oldtextmode=-1;
 var oldfgcolor=-1;
 var forceRegenImages=false;
-function canvasResize() {
+function canvasResize(displaylevel) {
+    displaylevel||=level;
     canvas.width = canvas.parentNode.clientWidth;
     canvas.height = canvas.parentNode.clientHeight;
 
-    screenwidth=level.width;
-    screenheight=level.height;
+    screenwidth=displaylevel.width;
+    screenheight=displaylevel.height;
     if (state!==undefined){
         flickscreen=state.metadata.flickscreen!==undefined;
         zoomscreen=state.metadata.zoomscreen!==undefined;
-	    if (levelEditorOpened) {
+	    if (levelEditorOpened ) {
             screenwidth+=2;
             var glyphcount = glyphCount();
             editorRowCount = Math.ceil(glyphcount/(screenwidth-1));

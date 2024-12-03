@@ -131,9 +131,9 @@ var games_gallery = [
     "homepage": "zarat.us"
   },
   {
-    "url": "https://www.puzzlescript.net/play.html?p=6893137",
+    "url": "https://www.puzzlescript.net/play.html?p=7072266",
     "thumb": "6893137.gif",
-    "title": "tiny treasure hunt 1.0",
+    "title": "tiny treasure hunt",
     "author": "Weeble",
     "homepage": "www.twitter.com/weeble"
   },
@@ -814,5 +814,33 @@ var games_gallery = [
     "title": "Caramelban",
     "author": "Notan",
     "homepage": "https://notaninart.itch.io/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=fe33549f62cd7666ea14eedcfc3863a3",
+    "thumb": "clearingspace.gif",
+    "title": "Clearing Space",
+    "author": "Sevan",
+    "homepage": "https://www.puzzlescript.net/play.html?p=fe33549f62cd7666ea14eedcfc3863a3"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=bc8f853dae0cf7a2ad336a75ab24ba09",
+    "thumb": "crateassembler.gif",
+    "title": "Crate Assembler",
+    "author": "MoonSoup",
+    "homepage": "https://moonsoup.itch.io/"
+  },
+  {
+    "url": "https://theconspiracy.itch.io/single-screen-scream",
+    "thumb": "singlescreenscream.gif",
+    "title": "Single Screen Scream",
+    "author": "Kip Fabish",
+    "homepage": "https://theconspiracy.itch.io"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=fce521be3852cca725e85154d122e53f",
+    "thumb": "sokoban3d.gif",
+    "title": "Sokoban... in 3D!",
+    "author": "beekie",
+    "homepage": "https://beekie.itch.io/sokoban-in-3d"
   },
 ]

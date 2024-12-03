@@ -1,8 +1,3 @@
-// The client ID of a GitHub OAuth app registered at https://github.com/settings/developers.
-// The “callback URL” of that app points to https://www.puzzlescript.net/auth.html.
-// If you’re running from another host name, sharing might not work.
-
-
 function runClick() {
 	clearConsole();
 	compile(["restart"]);
@@ -37,6 +32,12 @@ function dateToReadable(title,time) {
 }
 
 function saveClick() {
+	// I never want a game causing the compiler to somehow throw errors to stopping you from saving it
+	try {		
+		compile(["rebuild"]);//to regenerate/extract title
+	} catch (error) {
+		console.log(error);
+	}
 	var title = "Untitled";
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title;
@@ -182,25 +183,8 @@ function levelEditorClick_Fn() {
     lastDownTarget=canvas;	
 }
 
-OAUTH_CLIENT_ID = "211570277eb588cddf44";
-
-function getAuthURL(){
-	var randomState = window.btoa(Array.prototype.map.call(
-		window.crypto.getRandomValues(new Uint8Array(24)),
-		function(x) { return String.fromCharCode(x); }).join(""));
-
-	var authUrl = "https://github.com/login/oauth/authorize"
-		+ "?client_id=" + OAUTH_CLIENT_ID
-		+ "&scope=gist"
-		+ "&state=" + randomState
-		+ "&allow_signup=true";
-
-	return authUrl;
-}
-
 function printUnauthorized(){
-
-	var authUrl = getAuthURL();
+	var authUrl = github_authURL();
 	consolePrint(
 			"<br>" +
 			"PuzzleScript needs permission to share games through GitHub:<br>" +
@@ -210,9 +194,7 @@ function printUnauthorized(){
 }
 
 function shareClick() {
-	var oauthAccessToken = storage_get("oauth_access_token");
-	if (typeof oauthAccessToken !== "string") {
-		// Generates 32 letters of random data, like "liVsr/e+luK9tC02fUob75zEKaL4VpQn".
+	if (!github_isSignedIn()) {
 		printUnauthorized();
 		return;
 	}
@@ -225,76 +207,37 @@ function shareClick() {
 	
 	compile(["rebuild"]);
 
-
 	var source=editor.getValue();
-
-	var gistToCreate = {
-		"description" : title,
-		"public" : true,
-		"files": {
-			"readme.txt" : {
-				"content": "Play this game by pasting the script in http://www.puzzlescript.net/editor.html"
-			},
-			"script.txt" : {
-				"content": source
+	github_save(title, source, function(id, e) {
+		if (e !== null) {
+			consoleError(e);
+			if (!github_isSignedIn()) {
+				printUnauthorized();
 			}
-		}
-	};
-
-	var githubURL = 'https://api.github.com/gists';
-	var githubHTTPClient = new XMLHttpRequest();
-	githubHTTPClient.open('POST', githubURL);
-	githubHTTPClient.onreadystatechange = function() {		
-		if(githubHTTPClient.readyState!=4) {
 			return;
-		}		
-		var result = JSON.parse(githubHTTPClient.responseText);
-		if (githubHTTPClient.status===403) {
-			consoleError(result.message);
-		} else if (githubHTTPClient.status!==200&&githubHTTPClient.status!==201) {
-			if (githubHTTPClient.statusText==="Unauthorized"){
-				consoleError("Authorization check failed.  You have to log back into GitHub (or give it permission again or something).");
-				storage_remove("oauth_access_token");
-			} else {
-				consoleError("HTTP Error "+ githubHTTPClient.status + ' - ' + githubHTTPClient.statusText);
-				consoleError("Try giving puzzlescript permission again, that might fix things...");
-			}
-
-			printUnauthorized();
-		} else {
-			var id = result.id;
-			var url = "play.html?p="+id;
-			url=qualifyURL(url);
-
-			var editurl = "editor.html?hack="+id;
-			editurl=qualifyURL(editurl);
-			var sourceCodeLink = "Link to source code:<br><a target=\"_blank\"  href=\""+editurl+"\">"+editurl+"</a>";
-
-
-			consolePrint('GitHub (<a onclick="githubLogOut();"  href="javascript:void(0);">log out</a>) submission successful.<br>',true);
-
-			consolePrint('<br>'+sourceCodeLink,true);
-
-
-			if (errorCount>0) {
-				consolePrint("<br>Cannot link directly to playable game, because there are compiler errors.",true);
-			} else {
-				consolePrint("<br>The game can now be played at this url:<br><a target=\"_blank\" href=\""+url+"\">"+url+"</a>",true);
-			} 
-
 		}
-	}
-	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-	githubHTTPClient.setRequestHeader("Authorization","token "+oauthAccessToken);
-	var stringifiedGist = JSON.stringify(gistToCreate);
-	githubHTTPClient.send(stringifiedGist);
-    lastDownTarget=canvas;	
+
+		var url = qualifyURL("play.html?p="+id);
+		var editurl = qualifyURL("editor.html?hack="+id);
+		var sourceCodeLink = "Link to source code:<br><a target=\"_blank\"  href=\""+editurl+"\">"+editurl+"</a>";
+
+		consolePrint('GitHub (<a onclick="githubLogOut();"  href="javascript:void(0);">log out</a>) submission successful.<br>',true);
+		consolePrint('<br>'+sourceCodeLink,true);
+
+
+		if (errorCount>0) {
+			consolePrint("<br>Cannot link directly to playable game, because there are compiler errors.",true);
+		} else {
+			consolePrint("<br>The game can now be played at this url:<br><a target=\"_blank\" href=\""+url+"\">"+url+"</a>",true);
+		} 
+	});
+	lastDownTarget=canvas;	
 }
 
 function githubLogOut(){
-	storage_remove("oauth_access_token");
+	github_signOut();
 
-	var authUrl = getAuthURL();
+	var authUrl = github_authURL();
 	consolePrint(
 		"<br>Logged out of Github.<br>" +
 		"<ul>" +

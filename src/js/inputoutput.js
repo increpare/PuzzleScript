@@ -11,7 +11,7 @@ function selectText(containerid,e) {
 	e = e || window.event;
 	var myspan = document.getElementById(containerid);
 	if (e&&(e.ctrlKey || e.metaKey)) {
-		var levelarr = ["console"].concat(myspan.innerHTML.split("<br>"));
+		var levelarr = ["console"].concat(myspan.innerText.split("\n"));
 		var leveldat = levelFromString(state,levelarr);
 		loadLevelFromLevelDat(state,leveldat,null);
 		canvasResize();
@@ -174,7 +174,9 @@ function matchGlyph(inputmask,glyphAndMask) {
 		return highestmask;
 	}
 	
-	logErrorNoLine("Wasn't able to approximate a glyph value for some tiles, using '.' as a placeholder.",true);
+	compiling=true; //i'm so sorry cf #999 "can't print level to console if too many approximations lol"
+	logWarningNoLine("Wasn't able to approximate glyph values for some tiles, using '.' as a placeholder.",false);
+	compiling=false;
 	return '.';
 }
 
@@ -190,44 +192,51 @@ var htmlEntityMap = {
 var selectableint  = 0;
 
 function printLevel() {
-	var glyphMasks = [];
-	for (var glyphName in state.glyphDict) {
-		if (state.glyphDict.hasOwnProperty(glyphName)&&glyphName.length===1) {
-			var glyph = state.glyphDict[glyphName];
-			var glyphmask=new BitVec(STRIDE_OBJ);
-			for (var i=0;i<glyph.length;i++)
-			{
-				var id = glyph[i];
-				if (id>=0) {
-					glyphmask.ibitset(id);
+	try{
+		errorCount = 0;
+		errorStrings = [];
+		var glyphMasks = [];
+		
+		for (var glyphName in state.glyphDict) {
+			if (state.glyphDict.hasOwnProperty(glyphName)&&glyphName.length===1) {
+				var glyph = state.glyphDict[glyphName];
+				var glyphmask=new BitVec(STRIDE_OBJ);
+				for (var i=0;i<glyph.length;i++)
+				{
+					var id = glyph[i];
+					if (id>=0) {
+						glyphmask.ibitset(id);
+					}
 				}
+				var glyphbits = glyphmask.clone();
+				//register the same - backgroundmask with the same name
+				var bgMask = state.layerMasks[state.backgroundlayer];
+				glyphmask.iclear(bgMask);
+				glyphMasks.push([glyphName, glyphmask, glyphbits]);
 			}
-			var glyphbits = glyphmask.clone();
-			//register the same - backgroundmask with the same name
-			var bgMask = state.layerMasks[state.backgroundlayer];
-			glyphmask.iclear(bgMask);
-			glyphMasks.push([glyphName, glyphmask, glyphbits]);
 		}
-	}
-	selectableint++;
-	var tag = 'selectable'+selectableint;
-	var output="Printing level contents:<br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">";
-	for (var j=0;j<level.height;j++) {
-		for (var i=0;i<level.width;i++) {
-			var cellIndex = j+i*level.height;
-			var cellMask = level.getCell(cellIndex);
-			var glyph = matchGlyph(cellMask,glyphMasks);
-			if (glyph in htmlEntityMap) {
-				glyph = htmlEntityMap[glyph]; 
+		selectableint++;
+		var tag = 'selectable'+selectableint;
+		var output="Printing level contents:<br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">";
+		for (var j=0;j<level.height;j++) {
+			for (var i=0;i<level.width;i++) {
+				var cellIndex = j+i*level.height;
+				var cellMask = level.getCell(cellIndex);
+				var glyph = matchGlyph(cellMask,glyphMasks);
+				if (glyph in htmlEntityMap) {
+					glyph = htmlEntityMap[glyph]; 
+				}
+				output = output+glyph;
 			}
-			output = output+glyph;
+			if (j<level.height-1){
+				output=output+"<br>";
+			}
 		}
-		if (j<level.height-1){
-			output=output+"<br>";
-		}
+		output+="</span><br><br>"
+		consolePrint(output,true);
+	} catch (e) {		
+		consolePrint("unable to print level contents because of errors",true);
 	}
-	output+="</span><br><br>"
-	consolePrint(output,true);
 }
 
 function levelEditorClick(event,click) {
@@ -700,6 +709,7 @@ function checkKey(e,justPressed) {
         	break;	
         }
 		case 189://-
+		case 109://numpad -		
 		{
         	if (levelEditorOpened&&justPressed) {
 				if (glyphSelectedIndex>0) {
@@ -711,6 +721,7 @@ function checkKey(e,justPressed) {
         	break;	
 		}
 		case 187://+
+		case 107://numpad +
 		{
         	if (levelEditorOpened&&justPressed) {
 				if (glyphSelectedIndex+1<glyphImages.length) {

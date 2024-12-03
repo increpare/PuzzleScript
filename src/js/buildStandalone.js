@@ -1,7 +1,3 @@
-var get_blob = function() {
-		return self.Blob;
-}
-
 var standalone_HTML_String="";
 
 var clientStandaloneRequest = new XMLHttpRequest();
@@ -19,6 +15,16 @@ clientStandaloneRequest.onreadystatechange = function() {
 }
 clientStandaloneRequest.send();
 
+function escapeHtmlChars(unsafe)
+{
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
+ 
 function buildStandalone(sourceCode) {
 	if (standalone_HTML_String.length===0) {
 		consolePrint("Can't export yet - still downloading html template.",true,null,null);
@@ -38,6 +44,7 @@ function buildStandalone(sourceCode) {
 		}
 	}
 	var homepage_stripped = homepage.replace(/^https?:\/\//,'');
+	homepage_stripped = escapeHtmlChars(homepage_stripped);
 
 	var background_color="black";
 	if ('background_color' in state.metadata) {
@@ -51,7 +58,7 @@ function buildStandalone(sourceCode) {
 	}
 	htmlString = htmlString.replace(/___TEXTCOLOR___/g,text_color);	
 
-	htmlString = htmlString.replace(/__GAMETITLE__/g,title);
+	htmlString = htmlString.replace(/__GAMETITLE__/g,escapeHtmlChars(title));
 
 
 	htmlString = htmlString.replace(/__HOMEPAGE__/g,homepage);
@@ -68,7 +75,5 @@ function buildStandalone(sourceCode) {
 	// Then when we substitute them, the doubled $'s will be reduced to single ones.
 	htmlString = htmlString.replace(/"__GAMEDAT__"/g,sourceCode);
 
-	var BB = get_blob();
-	var blob = new BB([htmlString], {type: "text/plain;charset=utf-8"});
-	saveAs(blob, title+".html");
+	saveAs(htmlString, 'data:text/html;charset=utf-8',title+".html");
 }

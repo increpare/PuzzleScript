@@ -147,7 +147,7 @@ ENDLOOP</code></pre>
 <p>
   So, what does this do? This is in this case exactly the same as the rule-group.  It iterates each rule separately, and once it reaches ENDLOOP, if any rule changed any movement or object during the run it jumps back to the STARTLOOP line (even if changes were subsequently reverted later in the loop).  It can only leave when it reaches ENDLOOP without any rule since STARTLOOP having modified any object or movement.
 <p>
-  And that's also how it works if there are bigger rule groups.  So basically it's just another way to write loops where rule-groups can be nested inside (See the <a href="rigidbody.html#rigid_keyword">rigidbody</a> description for (slightly complicated) examples of use).  
+  And that's also how it works if there are bigger rule groups.  So basically it's just another way to write loops where rule-groups can be nested inside (See the <a href="rigidbodies.html#rigid_keyword">rigidbody</a> description for (slightly complicated) examples of use).  
 <p>
   Things to note:
 <ul>
