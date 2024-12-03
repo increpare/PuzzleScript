@@ -286,7 +286,7 @@ function getData(){
 		displayError("No ID specified in URL.")
 		return;
 	}
-	github.load(id, function(code, e) {
+	github_load(id, function(code, e) {
 		if (e!==null) {
 			displayError(e);
 			return;
