@@ -258,6 +258,7 @@ a {
 <script src="js/compiler.js"></script>
 <script src="js/inputoutput.js"></script>
 <script src="js/mobile.js"></script>
+<script src="js/github.js"></script>
 
 <script>
 
@@ -285,23 +286,11 @@ function getData(){
 		displayError("No ID specified in URL.")
 		return;
 	}
-
-	var githubURL = 'https://api.github.com/gists/'+id;
-
-	var githubHTTPClient = new XMLHttpRequest();
-	githubHTTPClient.open('GET', githubURL);
-	githubHTTPClient.onreadystatechange = function() {
-		if(githubHTTPClient.readyState!=4) {
+	github.load(id, function(code, e) {
+		if (e!==null) {
+			displayError(e);
 			return;
-		}		
-		var result = JSON.parse(githubHTTPClient.responseText);
-		if (githubHTTPClient.status===403) {
-			displayError(result.message);
-		} else if (githubHTTPClient.status!==200&&githubHTTPClient.status!==201) {
-			displayError("HTTP Error "+ githubHTTPClient.status + ' - ' + githubHTTPClient.statusText);
 		}
-		var result = JSON.parse(githubHTTPClient.responseText);
-		var code=result["files"]["script.txt"]["content"];
 		compile(["restart"],code);
 
 		if (state.metadata.homepage!==undefined) {
@@ -335,16 +324,7 @@ function getData(){
 		url=qualifyURL(url);
 
 		hacklink.href=url;
-        
-	}
-    // if (storage_has('oauth_access_token')) {
-    //     var oauthAccessToken = storage_get("oauth_access_token");
-    //     if (typeof oauthAccessToken === "string") {
-    //         githubHTTPClient.setRequestHeader("Authorization","token "+oauthAccessToken);
-    //     }
-    // }
-	githubHTTPClient.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-	githubHTTPClient.send();
+	});
 }
 
 getData();
