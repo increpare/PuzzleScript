@@ -160,6 +160,8 @@ ncp("./src", "./bin/", function (err) {
                 "./src/js/jsgif/GIFEncoder.js",
                 "./src/js/storagewrapper.js",
                 "./src/js/debug.js",
+                "./src/js/bitvec.js",
+                "./src/js/level.js",
                 "./src/js/globalVariables.js",
                 "./src/js/font.js",
                 "./src/js/rng.js",
@@ -200,6 +202,8 @@ ncp("./src", "./bin/", function (err) {
 
             var includes_play = [
                 "./src/js/storagewrapper.js",
+                "./src/js/bitvec.js",
+                "./src/js/level.js",
                 "./src/js/globalVariables.js",
                 "./src/js/debug_off.js",
                 "./src/js/font.js",

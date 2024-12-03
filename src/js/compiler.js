@@ -412,24 +412,6 @@ function generateExtraMembers(state) {
     state.backgroundlayer = backgroundlayer;
 }
 
-Level.prototype.calcBackgroundMask = function(state) {    
-    if (state.backgroundlayer === undefined) {
-        logError("you have to have a background layer");
-    }
-
-    var backgroundMask = state.layerMasks[state.backgroundlayer];
-    for (var i = 0; i < this.n_tiles; i++) {
-        var cell = this.getCell(i);
-        cell.iand(backgroundMask);
-        if (!cell.iszero()) {
-            return cell;
-        }
-    }
-    cell = new BitVec(STRIDE_OBJ);
-    cell.ibitset(state.backgroundid);
-    return cell;
-}
-
 function levelFromString(state, level) {
     var backgroundlayer = state.backgroundlayer;
     var backgroundid = state.backgroundid;
