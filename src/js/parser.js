@@ -684,7 +684,18 @@ var codeMirrorFn = function() {
             }            
 
             //MATCH '==="s AT START OF LINE
-            if (sol && stream.match(reg_equalsrow, true)) {
+            //for #977 we need to be careful about matching an equals row in the levels section
+            //check if the line contains something other than an equals characte or space
+            var shouldmatchequals = true;
+            if (sol && state.section==="levels"){
+                var linestring =  stream.string.substring(stream.pos);
+                const reg_matchall_whitespace_equals = /^[\p{Z}\s=]*$/u;
+                if(!reg_matchall_whitespace_equals.test(linestring)){
+                    shouldmatchequals = false;
+                }            
+            }
+
+            if (sol && (shouldmatchequals&&stream.match(reg_equalsrow, true))) {
                 state.line_should_end = true;
                 state.line_should_end_because = 'a bunch of equals signs (\'===\')';
                 return 'EQUALSBIT';
