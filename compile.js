@@ -156,6 +156,7 @@ ncp("./src", "./bin/", function (err) {
                 "./src/js/buildStandalone.js",
                 "./src/js/engine.js",
                 "./src/js/parser.js",
+                "./src/js/github.js",
                 "./src/js/editor.js",
                 "./src/js/compiler.js",
                 "./src/js/console.js",
