@@ -43,7 +43,9 @@
             "black", "white", "darkgray", "lightgray", "gray", "red", "darkred", "lightred", "brown", "darkbrown", "lightbrown", "orange", "yellow", "green", "darkgreen", "lightgreen", "blue", "lightblue", "darkblue", "purple", "pink", "transparent"];
         var RULE_COMMAND_WORDS = [
             "COMMAND",
-            "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again"];
+            //sfx added manually based on definitions
+            "cancel", "checkpoint", "restart", "win", "message", "again"];
+        var SFX_COMMAND_LIST = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"];
 
         var CARDINAL_DIRECTION_WORDS = [
             "DIRECTION",
@@ -249,7 +251,18 @@
                         } else {
                             candlists.push(PATTERN_DIRECTION_WORDS);                            
                         }
+                        
                         if (lineToCursor.indexOf("->")>=0) {
+                            var my_commands = RULE_COMMAND_WORDS;
+                            for (var i=0;i<SFX_COMMAND_LIST.length;i++){
+                                var sfxcommand = SFX_COMMAND_LIST[i];
+                                for (var j=0;j<state.sounds.length;j++){
+                                    var sfx = state.sounds[j][0][0];
+                                    if (sfxcommand===sfx){
+                                        my_commands.push(sfxcommand);
+                                    }
+                                }
+                            }
                             candlists.push(RULE_COMMAND_WORDS);
                         }
                         addObjects=true;

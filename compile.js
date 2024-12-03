@@ -273,7 +273,7 @@ ncp("./src", "./bin/", function (err) {
                                 collapseWhitespace: true,
                                 minifyCSS: true,
                                 minifyURLs: true,
-                                removeAttributeQuotes: true,
+                                // removeAttributeQuotes: true,
                                 removeComments: true,
                                 removeEmptyAttributes: true,
                             });

@@ -19,6 +19,16 @@ clientStandaloneRequest.onreadystatechange = function() {
 }
 clientStandaloneRequest.send();
 
+function escapeHtmlChars(unsafe)
+{
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
+ 
 function buildStandalone(sourceCode) {
 	if (standalone_HTML_String.length===0) {
 		consolePrint("Can't export yet - still downloading html template.",true,null,null);
@@ -38,6 +48,7 @@ function buildStandalone(sourceCode) {
 		}
 	}
 	var homepage_stripped = homepage.replace(/^https?:\/\//,'');
+	homepage_stripped = escapeHtmlChars(homepage_stripped);
 
 	var background_color="black";
 	if ('background_color' in state.metadata) {
@@ -51,7 +62,7 @@ function buildStandalone(sourceCode) {
 	}
 	htmlString = htmlString.replace(/___TEXTCOLOR___/g,text_color);	
 
-	htmlString = htmlString.replace(/__GAMETITLE__/g,title);
+	htmlString = htmlString.replace(/__GAMETITLE__/g,escapeHtmlChars(title));
 
 
 	htmlString = htmlString.replace(/__HOMEPAGE__/g,homepage);

@@ -33,7 +33,8 @@ for (var i=0;i<testdata.length;i++) {
 				if (audiooutput!==undefined) {
 					errormessage += "\naudioinput : "+audiooutput.join(";");
 				}
-				ok(runTest(td[1]),errormessage);
+				var testname = td[0];
+				ok(runTest(td[1],testname),errormessage);
 			};
 		}(i)
 	);
@@ -54,7 +55,9 @@ for (var i=0;i<errormessage_testdata.length;i++) {
 					throw "Error/Warning message testdata has wrong number of fields, invalid. Accidentally pasted in level recording data?"+"\n\n\n"+testcode;
 				}
 				var errormessage =  testcode+"\n\n\ndesired errors : "+testerrors;
-				ok(runCompilationTest(td[1]),errormessage);
+				
+				var testname = td[0];
+				ok(runCompilationTest(td[1],testname),errormessage);
 			};
 		}(i)
 	);

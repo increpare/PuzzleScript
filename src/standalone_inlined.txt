@@ -6838,14 +6838,21 @@ var cellheight;
 var xoffset;
 var yoffset;
 
-window.addEventListener('resize', canvasResize, false);
+window.addEventListener('resize', function(){canvasResize();}, false);
 canvas = document.getElementById('gameCanvas');
 ctx = canvas.getContext('2d');
 x = 0;
 y = 0;
 
 function glyphCount(){
-    return state.glyphOrder.length;
+    //could also just return glyphImages.length
+    var count=0;
+	for (var n of state.glyphOrder) {
+		if (n.length==1 && state.glyphDict.hasOwnProperty(n)) {    
+            count++;
+        }
+    }
+    return count;
 }
 
 function redraw() {
@@ -7060,8 +7067,11 @@ function drawEditorIcons(mini,minj) {
             
         }
     }
+    if (mouseIndex===-1){
+        tooltip_string = "print level to console"
+    }
     // prepare tooltip: content of a level's cell
-    else if ( (mouseCoordX >= 0) && (mouseCoordY >= 0) && (mouseCoordX < screenwidth) && (mouseCoordY < screenheight-editorRowCount) )
+    else if ( (mouseCoordX >= 0) && (mouseCoordY >= 0) && (mouseCoordX < screenwidth) && (mouseCoordY < screenheight-editorRowCount-2) )
     {
         const posMask = level.getCellInto((mouseCoordY+minj) + (mouseCoordX+mini)*level.height, _o12);
         tooltip_objects = state.idDict.filter( (x,k) => (posMask.get(k) != 0) )
@@ -7103,16 +7113,17 @@ var oldcellheight=0;
 var oldtextmode=-1;
 var oldfgcolor=-1;
 var forceRegenImages=false;
-function canvasResize() {
+function canvasResize(displaylevel) {
+    displaylevel||=level;
     canvas.width = canvas.parentNode.clientWidth;
     canvas.height = canvas.parentNode.clientHeight;
 
-    screenwidth=level.width;
-    screenheight=level.height;
+    screenwidth=displaylevel.width;
+    screenheight=displaylevel.height;
     if (state!==undefined){
         flickscreen=state.metadata.flickscreen!==undefined;
         zoomscreen=state.metadata.zoomscreen!==undefined;
-	    if (levelEditorOpened) {
+	    if (levelEditorOpened ) {
             screenwidth+=2;
             var glyphcount = glyphCount();
             editorRowCount = Math.ceil(glyphcount/(screenwidth-1));
@@ -9717,9 +9728,9 @@ var sfxCreateMask=null;
 var sfxDestroyMask=null;
 
 function calculateRowColMasks() {
-	for(var i=0;i<level.mapCellContents.length;i++) {
-		level.mapCellContents[i]=0;
-		level.mapCellContents_Movements[i]=0;	
+	for(var i=0;i<level.mapCellContents.data.length;i++) {
+		level.mapCellContents.data[i]=0;
+		level.mapCellContents_Movements.data[i]=0;	
 	}
 
 	for (var i=0;i<level.width;i++) {
@@ -10362,8 +10373,9 @@ var errorStrings = [];//also stores warning strings
 var errorCount=0;//only counts errors
 
 function TooManyErrors(){
-    consolePrint("Too many errors/warnings; aborting compilation.",true);
-    throw new Error("Too many errors/warnings; aborting compilation.");
+    const message = compiling ? "Too many errors/warnings; aborting compilation." : "Too many errors/warnings; noping out.";
+    consolePrint(message,true);
+    throw new Error(message);
 }
 
 function logErrorCacheable(str, lineNumber,urgent) {
@@ -10695,6 +10707,7 @@ var codeMirrorFn = function() {
                             return [n];
                         }
                     }
+                    //seems like this shouldn't be reachable?
                     return [n];
                 };
                                                 
@@ -11039,6 +11052,7 @@ var codeMirrorFn = function() {
                     }
                 } else if (state.visitedSections.indexOf(sectionNames[sectionIndex - 1]) == -1) {
                     if (sectionIndex===-1) {
+                        //honestly not sure how I could get here.
                         logError('no such section as "' + state.section.toUpperCase() + '".', state.lineNumber);
                     } else {
                         logError('section "' + state.section.toUpperCase() + '" is out of order, must follow  "' + sectionNames[sectionIndex - 1].toUpperCase() + '" (or it could be that the section "'+sectionNames[sectionIndex - 1].toUpperCase()+`"is just missing totally.  You have to include all section headings, even if the section itself is empty).`, state.lineNumber);                            
@@ -11106,6 +11120,7 @@ var codeMirrorFn = function() {
                 return 'HEADER';
             } else {
                 if (state.section === undefined) {
+                    //unreachable I think, pre-empted caught above
                     logError('must start with section "OBJECTS"', state.lineNumber);
                 }
             }
@@ -11182,7 +11197,6 @@ var codeMirrorFn = function() {
                         {
                             state.objects_spritematrix = [];
                             return tryParseName();
-                            break;
                         }
                     case 2:
                         {
@@ -11210,7 +11224,6 @@ var codeMirrorFn = function() {
                                     return 'MULTICOLOR'+match_color[0];
                                 }
                             }
-                            break;
                         }
                     case 3:
                         {
@@ -11246,10 +11259,6 @@ var codeMirrorFn = function() {
                                 var n = parseInt(ch);
                                 if (n>=o.colors.length) {
                                     logError("Trying to access color number "+n+" from the color palette of sprite " +state.objects_candname.toUpperCase()+", but there are only "+o.colors.length+" defined in it.",state.lineNumber);
-                                    return 'ERROR';
-                                }
-                                if (isNaN(n)) {
-                                    logError('Invalid character "' + ch + '" in sprite for ' + state.objects_candname.toUpperCase(), state.lineNumber);
                                     return 'ERROR';
                                 }
                                 return 'COLOR BOLDCOLOR COLOR-' + o.colors[n].toUpperCase();
@@ -11400,7 +11409,7 @@ var codeMirrorFn = function() {
                         if (match === null) { 
                             match = stream.match(reg_name, true);
                             if (match !== null) {
-                                if (wordAlreadyDeclared(state, match[0])){
+                                if (wordAlreadyDeclared(state, match[0].trim())){
                                     tokentype = 'NAME';
                                 } else {
                                     tokentype = 'ERROR';                   
@@ -11537,8 +11546,6 @@ var codeMirrorFn = function() {
                     }     
 
                     return tokentype;
-
-                    break;
                 }
             case 'collisionlayers':
                 {
@@ -11615,6 +11622,7 @@ var codeMirrorFn = function() {
                         var ar = substitutor(candname);
 
                         if (state.collisionLayers.length===0) {
+                            //pre-empted by other messages
                             logError("no layers found.",state.lineNumber);
                             return 'ERROR';
                         }
@@ -11792,12 +11800,14 @@ var codeMirrorFn = function() {
                             if (state.levels[state.levels.length - 1].length == 0) {
                                 state.levels.splice(state.levels.length - 1, 0, newdat);
                             } else {
+                                //don't seem to ever reach this.
                                 state.levels.push(newdat);
                             }
                             return 'MESSAGE_VERB';
                         } else {
                             var matches = stream.match(reg_notcommentstart, false);
                             if (matches===null || matches.length===0){
+                                //not sure if it's possible to get here.
                                 logError("Detected a comment where I was expecting a level. Oh gosh; if this is to do with you using '(' as a character in the legend, please don't do that ^^",state.lineNumber);
                                 state.commentLevel++;
                                 stream.skipToEnd();
@@ -11898,6 +11908,7 @@ var codeMirrorFn = function() {
                                     return 'ERROR';
                                 }
                             } else if (state.tokenIndex==-1) {
+                                //no idea how to get here. covered with a similar error message above.
                                 logError('MetaData "'+token+'" has no parameters.',state.lineNumber);
                                 return 'ERROR';
                             }
@@ -11907,9 +11918,8 @@ var codeMirrorFn = function() {
                         stream.match(reg_notcommentstart, true);
                         state.tokenIndex++;
 
-                        var key = state [state.metadata.length-3];
-                        var val = state.metadata[state.metadata.length-2];
-                        var oldLineNum = state.metadata[state.metadata.length-1];
+                        var key = state.metadata[state.metadata.length-2];
+                        var val = state.metadata[state.metadata.length-1];
 
                         if( state.tokenIndex>2){
                             logWarning("Error: you can't embed comments in metadata values. Anything after the comment will be ignored.",state.lineNumber);
@@ -11937,6 +11947,7 @@ var codeMirrorFn = function() {
         
 
             if (stream.eol()) {
+                //don't know how to reach this.
                 return null;
             }
 
@@ -12423,7 +12434,7 @@ function generateExtraMembers(state) {
     state.backgroundlayer = backgroundlayer;
 }
 
-Level.prototype.calcBackgroundMask = function(state) {
+Level.prototype.calcBackgroundMask = function(state) {    
     if (state.backgroundlayer === undefined) {
         logError("you have to have a background layer");
     }
@@ -12557,9 +12568,6 @@ function directionalRule(rule) {
     }
     for (var i = 0; i < rule.rhs.length; i++) {
         var cellRow = rule.rhs[i];
-        if (cellRow.length > 1) {
-            return true;
-        }
         for (var j = 0; j < cellRow.length; j++) {
             var cell = cellRow[j];
             for (var k = 0; k < cell.length; k += 2) {
@@ -12781,7 +12789,7 @@ function processRuleString(rule, state, curRules) {
                         }
                         
                         if (incellrow) {
-                            logError('Encountered an unexpected "->" inside square brackets.  It\'s used to separate states, it has no place inside them >:| .', lineNumber);
+                            logWarning('Encountered an unexpected "->" inside square brackets.  It\'s used to separate states, it has no place inside them >:| .', lineNumber);
                         } else if (rhs) {
                             logError('Error, you can only use "->" once in a rule; it\'s used to separate before and after states.', lineNumber);
                         } else {
@@ -12837,7 +12845,7 @@ function processRuleString(rule, state, curRules) {
         if (commands.length > 0 && rhs_cells.length == 0) {
             //ok
         } else {
-            logError('Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right', lineNumber);
+            logWarning('Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right', lineNumber);
         }
     } else {
         for (var i = 0; i < lhs_cells.length; i++) {
@@ -12918,6 +12926,9 @@ function rulesToArray(state) {
         var ruledirs = rule.directions;
         for (var j = 0; j < ruledirs.length; j++) {
             var dir = ruledirs[j];
+            // The following block is never getting hit by any tests. 
+            // Presumably in the past it was used to expand out rules with
+            // multiple directions, but now that's done somewhere else.
             if (dir in directionaggregates && directionalRule(rule)) {
                 var dirs = directionaggregates[dir];
                 for (var k = 0; k < dirs.length; k++) {
@@ -14110,7 +14121,7 @@ function getMaskFromName(state, name) {
     }
 
     if (objectMask.iszero()) {
-        logErrorNoLine("error, didn't find any object called player, either in the objects section, or the legends section. there must be a player!");
+        logErrorNoLine("Error, didn't find any object called player, either in the objects section, or the legends section. There must be a player!");
     }
     return objectMask;
 }
@@ -14234,7 +14245,7 @@ function twiddleMetaData(state) {
         }
         var result = parseInt(s);
         if (isNaN(result)){
-            logWarning(`Wasn't able to make sense of "${s}" as an dimension.`,lineNumber);
+            logWarning(`Wasn't able to make sense of "${s}" as a dimension.`,lineNumber);
         }
         if (result<=0){
             logWarning(`The dimension given to me (you gave "${s}") is baad - it should be greater than 0.`,lineNumber);
@@ -14283,6 +14294,7 @@ function processWinConditions(state) {
     for (var i = 0; i < state.winconditions.length; i++) {
         var wincondition = state.winconditions[i];
         if (wincondition.length == 0) {
+            //I feel like here should never be reached, right? Not sure if it warrants an error though.
             return;
         }
         var num = 0;
@@ -14553,10 +14565,6 @@ function generateLoopPoints(state) {
     state.lateLoopPoint = loopPoint;
 }
 
-function validSeed(seed) {
-    return /^\s*\d+\s*$/.exec(seed) !== null;
-}
-
 var soundDirectionIndicatorMasks = {
     'up': parseInt('00001', 2),
     'down': parseInt('00010', 2),
@@ -14581,12 +14589,13 @@ function generateSoundData(state) {
     for (var i = 0; i < state.sounds.length; i++) {
         var sound = state.sounds[i];
         if (sound.length <= 1) {
+            //don't see that this would ever be triggered
             continue;
         }
         var lineNumber = sound[sound.length - 1];
 
         if (sound.length === 2) {
-            logError('incorrect sound declaration.', lineNumber);
+            logWarning('incorrect sound declaration.', lineNumber);
             continue;
         }
 
@@ -14598,11 +14607,15 @@ function generateSoundData(state) {
         var seed = sound[sound.length - 2][0];
         var seed_t = sound[sound.length - 2][1];
         if (seed_t !== 'SOUND') {
+            // unreachable?
+            // seems to be pre-empted by "Was expecting a soundverb here 
+            // (MOVE, DESTROY, CANTMOVE, or the like), but found something else" message
             logError("Expecting sfx data, instead found \"" + seed + "\".", lineNumber);
         }
 
         if (t0 === "SOUNDEVENT") {
 
+            //pretty sure neither of the following are reachable, they're caught by the parser before.
             if (sound.length > 4) {
                 logError("too much stuff to define a sound event.", lineNumber);
             } else {
@@ -14625,11 +14638,12 @@ function generateSoundData(state) {
                 if (sound[j][1] === 'DIRECTION') {
                     directions.push(sound[j][0]);      
                 } else {
-                    //Don't know how if I can get here, but just in case
+                    //Don't think I can get here, but just in case
                     logError(`Expected a direction here, but found instead "$(sound[j][0])".`, lineNumber);
                 }
             }
             if (directions.length > 0 && (verb !== 'move' && verb !== 'cantmove')) {
+                //this is probably unreachable, as the parser catches it before it gets here
                 logError('Incorrect sound declaration - cannot have directions (UP/DOWN/etc.) attached to non-directional sound verbs (CREATE is not directional, but MOVE is directional).', lineNumber);
             }
 
@@ -14648,6 +14662,7 @@ function generateSoundData(state) {
             } else if (target in state.objectMasks) {
 
             } else {
+                //probably unreachable
                 logError('Object "' + target + '" not found.', lineNumber);
             }
 
@@ -14658,6 +14673,7 @@ function generateSoundData(state) {
                 directions[j] = directions[j].trim();
                 var direction = directions[j];
                 if (soundDirectionIndicators.indexOf(direction) === -1) {
+                    //pre-emted by parser
                     logError('Was expecting a direction, instead found "' + direction + '".', lineNumber);
                 } else {
                     var soundDirectionMask = soundDirectionIndicatorMasks[direction];
@@ -14834,10 +14850,6 @@ function loadFile(str) {
 
     removeDuplicateRules(state);
 
-    if (state.invalid>0){
-        return null;
-    }
-
     rulesToMask(state);
 
 
@@ -14928,9 +14940,6 @@ function compile(command, text, randomseed) {
         logError('No levels found.  Add some levels!', undefined, true);
     }
 
-    if (errorCount > MAX_ERRORS) {
-        return;
-    }
     
 
     if (errorCount > 0) {
@@ -14938,6 +14947,9 @@ function compile(command, text, randomseed) {
             consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.  If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.</span>');
         } else{
             consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.</span>');
+        }
+        if (errorCount > MAX_ERRORS) {
+            return;
         }
     } else {
         var ruleCount = 0;
@@ -14996,7 +15008,7 @@ function selectText(containerid,e) {
 	e = e || window.event;
 	var myspan = document.getElementById(containerid);
 	if (e&&(e.ctrlKey || e.metaKey)) {
-		var levelarr = ["console"].concat(myspan.innerHTML.split("<br>"));
+		var levelarr = ["console"].concat(myspan.innerText.split("\n"));
 		var leveldat = levelFromString(state,levelarr);
 		loadLevelFromLevelDat(state,leveldat,null);
 		canvasResize();
@@ -15175,44 +15187,51 @@ var htmlEntityMap = {
 var selectableint  = 0;
 
 function printLevel() {
-	var glyphMasks = [];
-	for (var glyphName in state.glyphDict) {
-		if (state.glyphDict.hasOwnProperty(glyphName)&&glyphName.length===1) {
-			var glyph = state.glyphDict[glyphName];
-			var glyphmask=new BitVec(STRIDE_OBJ);
-			for (var i=0;i<glyph.length;i++)
-			{
-				var id = glyph[i];
-				if (id>=0) {
-					glyphmask.ibitset(id);
+	try{
+		errorCount = 0;
+		errorStrings = [];
+		var glyphMasks = [];
+		
+		for (var glyphName in state.glyphDict) {
+			if (state.glyphDict.hasOwnProperty(glyphName)&&glyphName.length===1) {
+				var glyph = state.glyphDict[glyphName];
+				var glyphmask=new BitVec(STRIDE_OBJ);
+				for (var i=0;i<glyph.length;i++)
+				{
+					var id = glyph[i];
+					if (id>=0) {
+						glyphmask.ibitset(id);
+					}
 				}
+				var glyphbits = glyphmask.clone();
+				//register the same - backgroundmask with the same name
+				var bgMask = state.layerMasks[state.backgroundlayer];
+				glyphmask.iclear(bgMask);
+				glyphMasks.push([glyphName, glyphmask, glyphbits]);
 			}
-			var glyphbits = glyphmask.clone();
-			//register the same - backgroundmask with the same name
-			var bgMask = state.layerMasks[state.backgroundlayer];
-			glyphmask.iclear(bgMask);
-			glyphMasks.push([glyphName, glyphmask, glyphbits]);
 		}
-	}
-	selectableint++;
-	var tag = 'selectable'+selectableint;
-	var output="Printing level contents:<br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">";
-	for (var j=0;j<level.height;j++) {
-		for (var i=0;i<level.width;i++) {
-			var cellIndex = j+i*level.height;
-			var cellMask = level.getCell(cellIndex);
-			var glyph = matchGlyph(cellMask,glyphMasks);
-			if (glyph in htmlEntityMap) {
-				glyph = htmlEntityMap[glyph]; 
+		selectableint++;
+		var tag = 'selectable'+selectableint;
+		var output="Printing level contents:<br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">";
+		for (var j=0;j<level.height;j++) {
+			for (var i=0;i<level.width;i++) {
+				var cellIndex = j+i*level.height;
+				var cellMask = level.getCell(cellIndex);
+				var glyph = matchGlyph(cellMask,glyphMasks);
+				if (glyph in htmlEntityMap) {
+					glyph = htmlEntityMap[glyph]; 
+				}
+				output = output+glyph;
 			}
-			output = output+glyph;
+			if (j<level.height-1){
+				output=output+"<br>";
+			}
 		}
-		if (j<level.height-1){
-			output=output+"<br>";
-		}
+		output+="</span><br><br>"
+		consolePrint(output,true);
+	} catch (e) {		
+		consolePrint("unable to print level contents because of errors",true);
 	}
-	output+="</span><br><br>"
-	consolePrint(output,true);
 }
 
 function levelEditorClick(event,click) {
@@ -15685,6 +15704,7 @@ function checkKey(e,justPressed) {
         	break;	
         }
 		case 189://-
+		case 109://numpad -		
 		{
         	if (levelEditorOpened&&justPressed) {
 				if (glyphSelectedIndex>0) {
@@ -15696,6 +15716,7 @@ function checkKey(e,justPressed) {
         	break;	
 		}
 		case 187://+
+		case 107://numpad +
 		{
         	if (levelEditorOpened&&justPressed) {
 				if (glyphSelectedIndex+1<glyphImages.length) {

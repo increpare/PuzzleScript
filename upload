@@ -1,0 +1,11 @@
+#personal script for uploading to the puzzlescript.net server. If you're not increpare, you don't wanna use this :)
+
+#prompt user to type UPLOAD to confirm uploading
+read -p "Type UPLOAD to confirm uploading: " confirm
+if [ "$confirm" != "UPLOAD" ]; then
+    echo "Aborting."
+    exit 1
+fi
+
+node compile.js
+rsync -avW -e ssh bin/ r3okadmin_puzzlescript@ssh.nyc1.nearlyfreespeech.net:/home/public/
