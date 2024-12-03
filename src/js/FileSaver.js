@@ -1,6 +1,9 @@
-function saveAs(text, filename) {
+function saveAs(text, type, filename) {
     var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(text));
+    //encode text as blob
+    var blob = new Blob([text], {type: type});
+    var url = URL.createObjectURL(blob);
+    element.setAttribute('href', url);
     element.setAttribute('download', filename);
 
     element.style.display = 'none';

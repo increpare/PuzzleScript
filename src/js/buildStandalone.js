@@ -1,7 +1,3 @@
-var get_blob = function() {
-		return self.Blob;
-}
-
 var standalone_HTML_String="";
 
 var clientStandaloneRequest = new XMLHttpRequest();
@@ -79,7 +75,5 @@ function buildStandalone(sourceCode) {
 	// Then when we substitute them, the doubled $'s will be reduced to single ones.
 	htmlString = htmlString.replace(/"__GAMEDAT__"/g,sourceCode);
 
-	var BB = get_blob();
-	var blob = new BB([htmlString], {type: "text/plain;charset=utf-8"});
-	saveAs(blob, title+".html");
+	saveAs(htmlString, 'data:text/html;charset=utf-8',title+".html");
 }
