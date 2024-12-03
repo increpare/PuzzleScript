@@ -170,7 +170,7 @@ function getParameterByName(name) {
 }
 
 function tryLoadGist(id) {
-	github.load(id, function(code, e) {
+	github_load(id, function(code, e) {
 		if (e!==null) {
 			consoleError(e);
 			return;

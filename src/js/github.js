@@ -1,11 +1,9 @@
-github = {};
-
 // The client ID of a GitHub OAuth app registered at https://github.com/settings/developers.
 // The “callback URL” of that app points to https://www.puzzlescript.net/auth.html.
 // If you’re running from another host name, sharing might not work.
 OAUTH_CLIENT_ID = "211570277eb588cddf44";
 
-github.authURL = function() {
+function github_authURL() {
 	// Generates 32 letters of random data, like "liVsr/e+luK9tC02fUob75zEKaL4VpQn".
 	var randomState = window.btoa(Array.prototype.map.call(
 		window.crypto.getRandomValues(new Uint8Array(24)),
@@ -18,16 +16,16 @@ github.authURL = function() {
 		+ "&allow_signup=true";
 };
 
-github.signOut = function() {
+function github_signOut{
 	storage_remove("oauth_access_token");
 };
 
-github.isSignedIn = function() {
+function github_isSignedIn() {
 	var token = storage_get("oauth_access_token");
 	return typeof token === "string";
 };
 
-github.load = function(id, done) { 
+function github_load(id, done) { 
 	var githubURL = "https://api.github.com/gists/"+id;
 
 	var githubHTTPClient = new XMLHttpRequest();
@@ -47,13 +45,13 @@ github.load = function(id, done) {
 
 		var result = JSON.parse(githubHTTPClient.responseText);
 		if (githubHTTPClient.status===403) {
-			if (!github.isSignedIn() && (result.message.indexOf("rate limit") !== -1)) {
+			if (!github_isSignedIn() && (result.message.indexOf("rate limit") !== -1)) {
 				done(null, "Exceeded GitHub rate limits. Try signing in from the editor.");
 			} else {
 				done(null, result.message);
 			}
 		} else if (githubHTTPClient.status===401) {
-			github.signOut();
+			github_signOut();
 			done(null, "Authorization check failed.  Try reloading or signing back in from the editor.");
 		} else if (githubHTTPClient.status>=500) {
 			done(null, "HTTP Error "+ githubHTTPClient.status + " - " + githubHTTPClient.statusText + ".");
@@ -66,7 +64,7 @@ github.load = function(id, done) {
 		}
 	}
 
-	if (github.isSignedIn()) {
+	if (github_isSignedIn()) {
 		var oauthAccessToken = storage_get("oauth_access_token");
 		githubHTTPClient.setRequestHeader("Authorization", "Token "+oauthAccessToken);
 	}
@@ -74,7 +72,7 @@ github.load = function(id, done) {
 	githubHTTPClient.send();
 };
 
-github.save = function(title, code, done) {
+function github_save(title, code, done) {
 	var oauthAccessToken = storage_get("oauth_access_token");
 	if (typeof oauthAccessToken !== "string") {
 		printUnauthorized();
@@ -105,12 +103,12 @@ github.save = function(title, code, done) {
 		if (githubHTTPClient.status===403) {
 			done(null, result.message);
 		} else if (githubHTTPClient.status===401) {
-			github.signOut();
+			github_signOut();
 			done(null, "Authorization check failed.  You have to log back into GitHub (or give it permission again or something).");
 		} else if (githubHTTPClient.status>=500) {
 			done(null, "HTTP Error "+ githubHTTPClient.status + " - " + githubHTTPClient.statusText + ".");
 		} else if (githubHTTPClient.status!==200 && githubHTTPClient.status!==201) {
-			github.signOut();
+			github_signOut();
 			done(null, "HTTP Error "+ githubHTTPClient.status + " - " + githubHTTPClient.statusText + ".  Try giving puzzlescript permission again, that might fix things...");
 		} else {
 			done(result.id, null);

@@ -178,7 +178,7 @@ function levelEditorClick_Fn() {
 }
 
 function printUnauthorized(){
-	var authUrl = github.authURL();
+	var authUrl = github_authURL();
 	consolePrint(
 			"<br>" +
 			"PuzzleScript needs permission to share games through GitHub:<br>" +
@@ -188,7 +188,7 @@ function printUnauthorized(){
 }
 
 function shareClick() {
-	if (!github.isSignedIn()) {
+	if (!github_isSignedIn()) {
 		printUnauthorized();
 		return;
 	}
@@ -202,10 +202,10 @@ function shareClick() {
 	compile(["rebuild"]);
 
 	var source=editor.getValue();
-	github.save(title, source, function(id, e) {
+	github_save(title, source, function(id, e) {
 		if (e !== null) {
 			consoleError(e);
-			if (!github.isSignedIn()) {
+			if (!github_isSignedIn()) {
 				printUnauthorized();
 			}
 			return;
@@ -229,9 +229,9 @@ function shareClick() {
 }
 
 function githubLogOut(){
-	github.signOut();
+	github_signOut();
 
-	var authUrl = github.authURL();
+	var authUrl = github_authURL();
 	consolePrint(
 		"<br>Logged out of Github.<br>" +
 		"<ul>" +
