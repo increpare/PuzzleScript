@@ -176,7 +176,11 @@ function escapeHtml(unsafe) {
 function replaceContent() {
   var columns = [document.getElementById('col_1'),document.getElementById('col_2'),document.getElementById('col_3')];
 
-
+  //filter games_gallery to only linke to puzzlescript.net games (they will have a puzzlescript.net url in their .url property)
+  games_gallery = games_gallery.filter(function(item){
+    return item.url.indexOf("www.puzzlescript.net")!==-1;
+  });
+  
   var data = [];
   for (var i=0;i<games_gallery.length;i++) {
     item=games_gallery[i];
