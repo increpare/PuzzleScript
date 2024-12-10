@@ -2585,7 +2585,7 @@ function processInput(dir,dontDoWin,dontModify) {
 
 	    	if (verbose_logging) { 
 	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('restart')];
-	    		consolePrintFromRule('RESTART command executed, reverting to restart state.',r.lineNumber);
+	    		consolePrintFromRule('RESTART command executed, reverting to restart state.',r);
 	    		consoleCacheDump();
 			}
 			if (!dontModify){
