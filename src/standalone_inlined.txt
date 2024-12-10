@@ -8307,7 +8307,6 @@ function restoreLevel(lev) {
     againing=false;
     level.commandQueue=[];
     level.commandQueueSourceRules=[];
-	messagetext="";
 }
 
 var zoomscreen=false;
@@ -9951,6 +9950,10 @@ function processInput(dir,dontDoWin,dontModify) {
 				}
         		addUndoState(bak);
         		DoUndo(true,false);
+
+				messagetext="";
+				textMode=false;
+
         		return false;
         	}
         	//play player cantmove sounds here
@@ -9986,7 +9989,7 @@ function processInput(dir,dontDoWin,dontModify) {
 
 	    	if (verbose_logging) { 
 	    		var r = level.commandQueueSourceRules[level.commandQueue.indexOf('restart')];
-	    		consolePrintFromRule('RESTART command executed, reverting to restart state.',r.lineNumber);
+	    		consolePrintFromRule('RESTART command executed, reverting to restart state.',r);
 	    		consoleCacheDump();
 			}
 			if (!dontModify){
