@@ -2550,6 +2550,10 @@ function processInput(dir,dontDoWin,dontModify) {
 				}
         		addUndoState(bak);
         		DoUndo(true,false);
+
+				messagetext="";
+				textMode=false;
+
         		return false;
         	}
         	//play player cantmove sounds here
