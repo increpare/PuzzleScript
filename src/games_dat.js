@@ -843,4 +843,46 @@ var games_gallery = [
     "author": "beekie",
     "homepage": "https://beekie.itch.io/sokoban-in-3d"
   },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=8627569e70bdd911680d458ba6d0826a",
+    "thumb": "pipebend.gif",
+    "title": "Pipe Bend",
+    "author": "Wizard Melentis",
+    "homepage": "https://wizard-melentis.itch.io"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=ea5982c0e23eb7f892325d003423f65f",
+    "thumb": "raking.gif",
+    "title": "Raking Sokoban",
+    "author": "Ilija Biškup",
+    "homepage": "https://www.puzzlescript.net/play.html?p=ea5982c0e23eb7f892325d003423f65f"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=42a7e74f578b9d0bdc9c66469d97b262",
+    "thumb": "observers_paradox.gif",
+    "title": "The observer's paradox",
+    "author": "Sevan",
+    "homepage": "https://sevansevan.itch.io"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=e2b7b25668f077084a5c31f0fa84973a",
+    "thumb": "sunak.gif",
+    "title": "IBurnedDownBigBenBecauseRishiSunakF**kingRobbedMyFish",
+    "author": "stingby12",
+    "homepage": "https://stingby12.itch.io"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=e614e414e570294e45533109426245d4",
+    "thumb": "quantum-rails.gif",
+    "title": "Quantum Rails",
+    "author": "crb233",
+    "homepage": "https://crb233.itch.io"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=3bcc0608540276e7b190caf9d2583a1f",
+    "thumb": "uphillclimb.gif",
+    "title": "Billy Bob's Uphill Climb",
+    "author": "Monakrom",
+    "homepage": "https://monakrom.itch.io"
+  }
 ]
