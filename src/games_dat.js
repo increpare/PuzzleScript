@@ -884,5 +884,12 @@ var games_gallery = [
     "title": "Billy Bob's Uphill Climb",
     "author": "Monakrom",
     "homepage": "https://monakrom.itch.io"
-  }
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=25ee2f1c9000620aa7b6f429c958d095",
+    "thumb": "iamtwo.gif",
+    "title": "I am two",
+    "author": "nebu soku",
+    "homepage": "https://nebu-soku.itch.io/i-am-two"
+  },
 ]
