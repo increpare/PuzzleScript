@@ -1,40 +1,76 @@
+Title Alley
+text_color yellow
+Author Connorses
+run_rules_on_level_start
+debug
+color_palette 2
+noaction
+
 OBJECTS
 
-background1.darkgrey
-background2darkblue
-player@lightgreen green
-00.0.001..
-.11000.0..
-..0..wall #
-browndarkbrown brown22222
+background1 .
+darkgrey
+
+background2
+darkblue
+
+player @
+lightgreen green
+00.0.
+001..
+.1100
+0.0..
+..0.
+
+wall #
+brown darkbrown brown
+22222
 20001
 20001
 10001
-11111
+1111
 
-wall2£brown darkgrey0001.
+wall2 £
+brown darkgrey
+0001.
 111..
 00...
 0....
-.....
+....
 
-crate*orange orange
-11.1110001
-.0.0.10001
-11.11target
-oblue..0..
+crate *
+orange orange
+11.11
+10001
+.0.0.
+10001
+11.1
+
+target o
+blue
+..0..
 ..0..
 00000
 ..0..
-..0..
+..0.
 
-muptransparent
-mudtransparent
-multransparent
-murtransparent
-m1transparent
-m2transparent
+mup
+transparent
 
+mud
+transparent
+
+mul
+transparent
+
+mur
+transparent
+
+m1
+transparent
+
+m2
+transparent
 
 
 LEGEND
@@ -48,8 +84,7 @@ COLLISIONLAYERS
 
 background1, background2
 target
-player, wall
-wall2, crate
+player, wall, wall2, crate
 m1
 m2
 mup
@@ -59,57 +94,7 @@ mur
 
 RULES
 
-[ background1 | background1 ] -> [ background1 | background2 ] 
-+ [ background2 | background2 ] -> [ background2 | background1 ] 
-left [ up player | nom1 ] -> [ up player | upm1 ] (move northwest) 
-right [ down player | nom1 ] -> [ down player | downm1 ] (move southeast) 
-up [ right player | nom1 ] -> [ right player | rightm1 ] (move northeast) 
-down [ left player | nom1 ] -> [ left player | leftm1 ] (move southwest) 
-[ > m1 |  ] -> [ |m1 ] (Move and check positon 1) 
-[ m1 wall ] -> [ wall ] 
-left [ up player][m1crate | nom2 ] -> [ up player][m1crate | upm2 ] (<--push northwest) 
-right [ down player][m1crate | nom2 ] -> [ down player][m1crate | downm2 ] (<--push southeast) 
-down [ left player][m1crate | nom2 ] -> [ left player][m1crate | leftm2 ] (<-- push southwest) 
-up [ right player][m1crate | nom2 ] -> [ right player][m1crate | rightm2 ] (<-- push northeast) 
-[ > m2 |  ] -> [ |m2 ] (Move and check position 2) 
-[ m1][m2wall ] -> [ ][wall ] 
-[ m1][m2crate ] -> [ ][crate ] 
-[ crate m1][m2 ] -> [ m1][crate ] (update positions for diagonal) 
-[ player][m1 ] -> [ ][stationaryplayer ] 
-up [ moving player | crate | nosolid ] -> [ moving player mup | crate |  ] 
-down [ moving player | crate | nosolid ] -> [ moving player mud | crate |  ] 
-left [ moving player | crate | nosolid ] -> [ moving player mul | crate |  ] 
-right [ moving player | crate | nosolid ] -> [ moving player mur | crate |  ] 
-[ up player mul mup ] -> [ stationary player ] 
-[ down player mur mud ] -> [ stationary player ] 
-[ left player mud mul ] -> [ stationary player ] 
-[ right player mup mur ] -> [ stationary player ] 
-up [ up player | solid ] -> [ up player left m1 | solid ] 
-down [ down player | solid ] -> [ down player right m1 | solid ] 
-left [ left player | solid ] -> [ left player down m1 | solid ] 
-right [ right player | solid ] -> [ right player up m1 | solid ] 
-random [ > m1 |  ] -> [ |>m1 ] (Move and check position 1 orthogonally, but only once) 
-[ m1 wall ] -> [ wall ] 
-[ > m1 crate ] -> [ > m1>m2crate ] 
-[ > m2 |  ] -> [ |m2 ] (Move and check position 2 orthogonally) 
-[ m1][m2wall ] -> [ ][wall ] 
-[ m1][m2crate ] -> [ ][crate ] 
-[ crate m1][m2 ] -> [ m1][crate ] (update positions for orthogonal movement) 
-[ player][m1 ] -> [ ][stationaryplayer ] 
-left [ up player | solid ] -> [ up player up m1 | solid ] 
-right [ down player | solid ] -> [ down player down m1 | solid ] 
-down [ left player | solid ] -> [ left player left m1 | solid ] 
-up [ right player | solid ] -> [ right player right m1 | solid ] 
-random [ > m1 |  ] -> [ |>m1 ] (Move and check position 1 orthogonally, but only once) 
-[ m1 wall ] -> [ wall ] 
-[ > m1 crate ] -> [ > m1>m2crate ] 
-[ > m2 |  ] -> [ |m2 ] (Move and check position 2 orthogonally) 
-[ m1][m2wall ] -> [ ][wall ] 
-[ m1][m2crate ] -> [ ][crate ] 
-[ crate m1][m2 ] -> [ m1][crate ] (update positions for orthogonal movement) 
-[ player][m1 ] -> [ ][stationaryplayer ] 
-[ player ] -> [ stationary player ] (prevents extra move due to flagging) 
-
+[ background1 | background1 ] -> [ background1 | background2 ]+ [ background2 | background2 ] -> [ background2 | background1 ]left [ upplayer | nom1 ] -> [ upplayer | upm1 ]right [ downplayer | nom1 ] -> [ downplayer | downm1 ]up [ rightplayer | nom1 ] -> [ rightplayer | rightm1 ]down [ leftplayer | nom1 ] -> [ leftplayer | leftm1 ][ > m1 |  ] -> [  | m1 ][ m1wall ] -> [ wall ]left [ upplayer ] [ m1crate | nom2 ] -> [ upplayer ] [ m1crate | upm2 ]right [ downplayer ] [ m1crate | nom2 ] -> [ downplayer ] [ m1crate | downm2 ]down [ leftplayer ] [ m1crate | nom2 ] -> [ leftplayer ] [ m1crate | leftm2 ]up [ rightplayer ] [ m1crate | nom2 ] -> [ rightplayer ] [ m1crate | rightm2 ][ > m2 |  ] -> [  | m2 ][ m1 ] [ m2wall ] -> [  ] [ wall ][ m1 ] [ m2crate ] -> [  ] [ crate ][ cratem1 ] [ m2 ] -> [ m1 ] [ crate ][ player ] [ m1 ] -> [  ] [ stationaryplayer ]up [ movingplayer | crate | nosolid ] -> [ movingplayermup | crate |  ]down [ movingplayer | crate | nosolid ] -> [ movingplayermud | crate |  ]left [ movingplayer | crate | nosolid ] -> [ movingplayermul | crate |  ]right [ movingplayer | crate | nosolid ] -> [ movingplayermur | crate |  ][ upplayermulmup ] -> [ stationaryplayer ][ downplayermurmud ] -> [ stationaryplayer ][ leftplayermudmul ] -> [ stationaryplayer ][ rightplayermupmur ] -> [ stationaryplayer ]up [ upplayer | solid ] -> [ upplayerleftm1 | solid ]down [ downplayer | solid ] -> [ downplayerrightm1 | solid ]left [ leftplayer | solid ] -> [ leftplayerdownm1 | solid ]right [ rightplayer | solid ] -> [ rightplayerupm1 | solid ]random [ > m1 |  ] -> [  | > m1 ][ m1wall ] -> [ wall ][ > m1crate ] -> [ > m1> m2crate ][ > m2 |  ] -> [  | m2 ][ m1 ] [ m2wall ] -> [  ] [ wall ][ m1 ] [ m2crate ] -> [  ] [ crate ][ cratem1 ] [ m2 ] -> [ m1 ] [ crate ][ player ] [ m1 ] -> [  ] [ stationaryplayer ]left [ upplayer | solid ] -> [ upplayerupm1 | solid ]right [ downplayer | solid ] -> [ downplayerdownm1 | solid ]down [ leftplayer | solid ] -> [ leftplayerleftm1 | solid ]up [ rightplayer | solid ] -> [ rightplayerrightm1 | solid ]random [ > m1 |  ] -> [  | > m1 ][ m1wall ] -> [ wall ][ > m1crate ] -> [ > m1> m2crate ][ > m2 |  ] -> [  | m2 ][ m1 ] [ m2wall ] -> [  ] [ wall ][ m1 ] [ m2crate ] -> [  ] [ crate ][ cratem1 ] [ m2 ] -> [ m1 ] [ crate ][ player ] [ m1 ] -> [  ] [ stationaryplayer ][ player ] -> [ stationaryplayer ]
 
 WINCONDITIONS
 
@@ -140,7 +125,6 @@ LEVELS
 #########
 
 ############
-
 ###o#.######
 ##*.*..###o#
 #..o..#.#.##
@@ -160,7 +144,6 @@ LEVELS
 ###########
 
 ########
-
 #o..####
 #.o.####
 #...*..#

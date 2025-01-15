@@ -1,14 +1,26 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Colour Chained Endless
+    prelude_data
+      author
+      Aarex Tiaokhiao
+    prelude_data	run_rules_on_level_start
+    prelude_data
+      youtube
+      _VzrmRkLfxM
   objects_section
     object_data
-      object_name	Background
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	Background
+      color_line
+        color	Black
     object_data
-      object_name	Wall
-      legend_key	-
-      colors
+      object_line
+        object_name	Wall
+        legend_key	-
+      color_line
         color	DarkGrey
       sprite
         ['.' '.' '.' '.' '.']
@@ -17,486 +29,328 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	VBorder
-      legend_key	|
-      colors
+      object_line
+        object_name	VBorder
+        legend_key	|
+      color_line
         color	DarkGrey
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
     object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	Colour1
+        legend_key	1
+      color_line
+        color	Red
+        color	LightGrey
+        color	Black
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	C1P
+        legend_key	!
+      color_line
+        color	Red
+        color	LightGrey
+        color	Black
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
     object_data
-      object_name	..0..
-      legend_key	C
-      colors
-        color	olour1
-        color	1
+      object_line
+        object_name	Colour2
+        legend_key	2
+      color_line
+        color	Green
+        color	LightGrey
+        color	Black
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
     object_data
-      object_name	Red
-      legend_key	L
-      colors
-        color	ightGrey
+      object_line
+        object_name	C2P
+        legend_key	@
+      color_line
+        color	Green
+        color	LightGrey
+        color	Black
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
     object_data
-      object_name	Black
-      legend_key	.
-      colors
-        color	000.
+      object_line
+        object_name	Colour3
+        legend_key	3
+      color_line
+        color	Blue
+        color	LightGrey
+        color	Black
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
     object_data
-      object_name	00010
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	C3P
+        legend_key	#
+      color_line
+        color	Blue
+        color	LightGrey
+        color	Black
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
     object_data
-      object_name	00000
-      legend_key	.
-      colors
-        color	000.
+      object_line
+        object_name	Colour4
+        legend_key	4
+      color_line
+        color	Yellow
+        color	LightGrey
+        color	Black
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
     object_data
-      object_name	C1P
-      legend_key	!
-      colors
+      object_line
+        object_name	C4P
+        legend_key	$
+      color_line
+        color	Yellow
+        color	LightGrey
+        color	Black
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_line
+        object_name	Playera
+      color_line
+        color	Black
+    object_data
+      object_line
+        object_name	Playerb
+      color_line
+        color	Black
+    object_data
+      object_line
+        object_name	Released
+      color_line
+        color	Grey
+    object_data
+      object_line
+        object_name	hasN
+      color_line
+        color	Black
+    object_data
+      object_line
+        object_name	Remove
+      color_line
+        color	Black
+    object_data
+      object_line
+        object_name	np1
+        legend_key	n
+      color_line
+        color	Black
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_line
+        object_name	np2
+        legend_key	m
+      color_line
+        color	Black
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_line
+        object_name	LoseFlag
+      color_line
         color	Red
     object_data
-      object_name	LightGrey
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	0010
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	.000.
-      legend_key	C
-      colors
-        color	olour2
-        color	2
-    object_data
-      object_name	Green
-      legend_key	L
-      colors
-        color	ightGrey
-    object_data
-      object_name	Black
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	00010
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	C2P
-      legend_key	@
-      colors
-        color	Green
-    object_data
-      object_name	LightGrey
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	0010
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	.000.
-      legend_key	C
-      colors
-        color	olour3
-        color	3
-    object_data
-      object_name	Blue
-      legend_key	L
-      colors
-        color	ightGrey
+      object_line
+        object_name	PieceGen
+      color_line
         color	Black
     object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	0010
+      object_line
+        object_name	Digit1
+      color_line
+        color	White
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	Digit2
+      color_line
+        color	White
+      sprite
+        ['.' '0' '0' '.' '.']
+        ['0' '.' '.' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '.' '.' '.']
+        ['0' '0' '0' '0' '.']
     object_data
-      object_name	.000.
-      legend_key	C
-      colors
-        color	3P
-        color	#
+      object_line
+        object_name	Digit3
+      color_line
+        color	White
+      sprite
+        ['0' '0' '0' '.' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '0' '0' '.' '.']
+        ['.' '.' '.' '0' '.']
+        ['0' '0' '0' '.' '.']
     object_data
-      object_name	Blue
-      legend_key	L
-      colors
-        color	ightGrey
+      object_line
+        object_name	Digit4
+      color_line
+        color	White
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '.' '.']
+        ['0' '.' '0' '.' '.']
+        ['0' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+    object_data
+      object_line
+        object_name	Digit5
+      color_line
+        color	White
+      sprite
+        ['0' '0' '0' '0' '.']
+        ['0' '.' '.' '.' '.']
+        ['0' '0' '0' '.' '.']
+        ['.' '.' '.' '0' '.']
+        ['0' '0' '0' '.' '.']
+    object_data
+      object_line
+        object_name	Digit6
+      color_line
+        color	White
+      sprite
+        ['.' '0' '0' '.' '.']
+        ['0' '.' '.' '.' '.']
+        ['0' '0' '0' '.' '.']
+        ['0' '.' '.' '0' '.']
+        ['.' '0' '0' '.' '.']
+    object_data
+      object_line
+        object_name	Digit7
+      color_line
+        color	White
+      sprite
+        ['0' '0' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '.' '.' '.']
+        ['0' '.' '.' '.' '.']
+    object_data
+      object_line
+        object_name	Digit8
+      color_line
+        color	White
+      sprite
+        ['.' '0' '0' '.' '.']
+        ['0' '.' '.' '0' '.']
+        ['.' '0' '0' '.' '.']
+        ['0' '.' '.' '0' '.']
+        ['.' '0' '0' '.' '.']
+    object_data
+      object_line
+        object_name	Digit9
+        legend_key	9
+      color_line
+        color	White
+      sprite
+        ['.' '0' '0' '.' '.']
+        ['0' '.' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['.' '0' '0' '.' '.']
+    object_data
+      object_line
+        object_name	Digit0
+        legend_key	0
+      color_line
+        color	White
+      sprite
+        ['.' '0' '0' '.' '.']
+        ['0' '.' '.' '0' '.']
+        ['0' '.' '.' '0' '.']
+        ['0' '.' '.' '0' '.']
+        ['.' '0' '0' '.' '.']
+    object_data
+      object_line
+        object_name	Inc
+      color_line
         color	Black
-    object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	0010
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	.000.
-      legend_key	C
-      colors
-        color	olour4
-        color	4
-    object_data
-      object_name	Yellow
-      legend_key	L
-      colors
-        color	ightGrey
-    object_data
-      object_name	Black
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	00010
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	C4P
-      legend_key	$
-      colors
-        color	Yellow
-    object_data
-      object_name	LightGrey
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	0010
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	.000.
-      legend_key	P
-      colors
-        color	layera
-    object_data
-      object_name	Black
-      legend_key	P
-      colors
-        color	layerb
-    object_data
-      object_name	Black
-      legend_key	R
-      colors
-        color	eleased
-    object_data
-      object_name	Grey
-      legend_key	h
-      colors
-        color	asN
-    object_data
-      object_name	Black
-      legend_key	R
-      colors
-        color	emove
-    object_data
-      object_name	Black
-      legend_key	n
-      colors
-        color	p1
-    object_data
-      object_name	n
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	n
-      colors
-        color	p2
-    object_data
-      object_name	m
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	L
-      colors
-        color	oseFlag
-    object_data
-      object_name	Red
-      legend_key	P
-      colors
-        color	ieceGen
-    object_data
-      object_name	Black
-      legend_key	D
-      colors
-        color	igit1
-    object_data
-      object_name	White
-      legend_key	.
-      colors
-        color	.0..
-    object_data
-      object_name	.00..
-      legend_key	.
-      colors
-        color	.0..
-    object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	Digit2
-      legend_key	W
-      colors
-        color	hite
-    object_data
-      object_name	.00..
-      legend_key	0
-      colors
-        color	..0.
-    object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	0...
-    object_data
-      object_name	0000.
-      legend_key	D
-      colors
-        color	igit3
-    object_data
-      object_name	White
-      legend_key	0
-      colors
-        color	00..
-    object_data
-      object_name	...0.
-      legend_key	.
-      colors
-        color	00..
-    object_data
-      object_name	...0.
-      legend_key	0
-      colors
-        color	00..
-    object_data
-      object_name	Digit4
-      legend_key	W
-      colors
-        color	hite
-    object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	00..
-    object_data
-      object_name	0.0..
-      legend_key	0
-      colors
-        color	000.
-    object_data
-      object_name	..0..
-      legend_key	D
-      colors
-        color	igit5
-    object_data
-      object_name	White
-      legend_key	0
-      colors
-        color	000.
-    object_data
-      object_name	0....
-      legend_key	0
-      colors
-        color	00..
-    object_data
-      object_name	...0.
-      legend_key	0
-      colors
-        color	00..
-    object_data
-      object_name	Digit6
-      legend_key	W
-      colors
-        color	hite
-    object_data
-      object_name	.00..
-      legend_key	0
-      colors
-        color	....
-    object_data
-      object_name	000..
-      legend_key	0
-      colors
-        color	..0.
-    object_data
-      object_name	.00..
-      legend_key	D
-      colors
-        color	igit7
-    object_data
-      object_name	White
-      legend_key	0
-      colors
-        color	000.
-    object_data
-      object_name	...0.
-      legend_key	.
-      colors
-        color	.0..
-    object_data
-      object_name	.0...
-      legend_key	0
-      colors
-        color	....
-    object_data
-      object_name	Digit8
-      legend_key	W
-      colors
-        color	hite
-    object_data
-      object_name	.00..
-      legend_key	0
-      colors
-        color	..0.
-    object_data
-      object_name	.00..
-      legend_key	0
-      colors
-        color	..0.
-    object_data
-      object_name	.00..
-      legend_key	D
-      colors
-        color	igit9
-    object_data
-      object_name	9
-      legend_key	W
-      colors
-        color	hite
-    object_data
-      object_name	.00..
-      legend_key	0
-      colors
-        color	..0.
-    object_data
-      object_name	.000.
-      legend_key	.
-      colors
-        color	..0.
-    object_data
-      object_name	.00..
-      legend_key	D
-      colors
-        color	igit0
-        color	0
-    object_data
-      object_name	White
-      legend_key	.
-      colors
-        color	00..
-    object_data
-      object_name	0..0.
-      legend_key	0
-      colors
-        color	..0.
-    object_data
-      object_name	0..0.
-      legend_key	.
-      colors
-        color	00..
-    object_data
-      object_name	Inc
-      legend_key	B
-      colors
-        color	lack
   legend_section
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      a
+      a =
       object_name	Playera
     legend_data
-      b
+      b =
       object_name	Playerb
     legend_data
-      x
+      x =
       object_name	PieceGen
     legend_data
-      +
+      + =
       object_name	Inc
     legend_data
-      Player
+      Player =
       object_name	Playera
       legend_operation
         object_name	Playerb
     legend_data
-      Piece
+      Piece =
       object_name	Colour1
       legend_operation
         object_name	Colour2
@@ -505,7 +359,7 @@ ps_game
       legend_operation
         object_name	Colour4
     legend_data
-      Preview
+      Preview =
       object_name	C1P
       legend_operation
         object_name	C2P
@@ -514,17 +368,17 @@ ps_game
       legend_operation
         object_name	C4P
     legend_data
-      Np
+      Np =
       object_name	Np1
       legend_operation
         object_name	Np2
     legend_data
-      Border
+      Border =
       object_name	Wall
       legend_operation
         object_name	VBorder
     legend_data
-      Score
+      Score =
       object_name	Digit1
       legend_operation
         object_name	Digit2
@@ -549,799 +403,326 @@ ps_game
       object_name	Background
     layer_data
       object_name	Wall
-    layer_data
       object_name	Released
       object_name	LoseFlag
     layer_data
       object_name	VBorder
-    layer_data
       object_name	Player
       object_name	Np
     layer_data
       object_name	Piece
       object_name	Preview
-    layer_data
       object_name	Score
       object_name	Inc
     layer_data
       object_name	hasN
-    layer_data
       object_name	Remove
       object_name	PieceGen
   rules_section
     rule_block
       rule_block_once
         rule_data
-          Right
+          prefix	Right
           rule_part
             rule_content	Colour1
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	1
+            rule_content	Colour1
           ->
           rule_part
-            rule_content
-              Colour1
-              hasN
+            rule_content	Colour1
+            rule_content	hasN
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	1
-            rule_content	h
-            rule_content	a
-            rule_content	s
-            rule_content	N
-          
-
+            rule_content	Colour1
+            rule_content	hasN
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
-            rule_content
-              Colour1
-              hasN
+            rule_content	Colour1
+            rule_content	hasN
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	1
+            rule_content	Colour1
           ->
           rule_part
-            rule_content
-              Colour1
-              Remove
+            rule_content	Colour1
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	1
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
-          
-
+            rule_content	Colour1
+            rule_content	Remove
         rule_data
           rule_part
-            rule_content
-              Colour1
-              Remove
+            rule_content	Colour1
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	1
+            rule_content	Colour1
           ->
           rule_part
-            rule_content
-              Colour1
-              Remove
+            rule_content	Colour1
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	1
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
-          
-
+            rule_content	Colour1
+            rule_content	Remove
         rule_data
           rule_part
             rule_content	Colour1
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	1
+            rule_content	Colour1
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	1
+            rule_content	Colour1
           ->
           rule_part
-            rule_content
-              Colour1
-              Remove
+            rule_content	Colour1
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	1
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
+            rule_content	Colour1
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	1
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
-          
-
+            rule_content	Colour1
+            rule_content	Remove
         rule_data
-          Right
+          prefix	Right
           rule_part
             rule_content	Colour2
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	2
+            rule_content	Colour2
           ->
           rule_part
-            rule_content
-              Colour2
-              hasN
+            rule_content	Colour2
+            rule_content	hasN
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	2
-            rule_content	h
-            rule_content	a
-            rule_content	s
-            rule_content	N
-          
-
+            rule_content	Colour2
+            rule_content	hasN
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
-            rule_content
-              Colour2
-              hasN
+            rule_content	Colour2
+            rule_content	hasN
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	2
+            rule_content	Colour2
           ->
           rule_part
-            rule_content
-              Colour2
-              Remove
+            rule_content	Colour2
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	2
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
-          
-
+            rule_content	Colour2
+            rule_content	Remove
         rule_data
           rule_part
-            rule_content
-              Colour2
-              Remove
+            rule_content	Colour2
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	2
+            rule_content	Colour2
           ->
           rule_part
-            rule_content
-              Colour2
-              Remove
+            rule_content	Colour2
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	2
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
-          
-
+            rule_content	Colour2
+            rule_content	Remove
         rule_data
           rule_part
             rule_content	Colour2
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	2
+            rule_content	Colour2
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	2
+            rule_content	Colour2
           ->
           rule_part
-            rule_content
-              Colour2
-              Remove
+            rule_content	Colour2
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	2
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
+            rule_content	Colour2
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	2
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
-          
-
+            rule_content	Colour2
+            rule_content	Remove
         rule_data
-          Right
+          prefix	Right
           rule_part
             rule_content	Colour3
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	3
+            rule_content	Colour3
           ->
           rule_part
-            rule_content
-              Colour3
-              hasN
+            rule_content	Colour3
+            rule_content	hasN
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	3
-            rule_content	h
-            rule_content	a
-            rule_content	s
-            rule_content	N
-          
-
+            rule_content	Colour3
+            rule_content	hasN
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
-            rule_content
-              Colour3
-              hasN
+            rule_content	Colour3
+            rule_content	hasN
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	3
+            rule_content	Colour3
           ->
           rule_part
-            rule_content
-              Colour3
-              Remove
+            rule_content	Colour3
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	3
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
-          
-
+            rule_content	Colour3
+            rule_content	Remove
         rule_data
           rule_part
-            rule_content
-              Colour3
-              Remove
+            rule_content	Colour3
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	3
+            rule_content	Colour3
           ->
           rule_part
-            rule_content
-              Colour3
-              Remove
+            rule_content	Colour3
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	3
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
-          
-
+            rule_content	Colour3
+            rule_content	Remove
         rule_data
           rule_part
             rule_content	Colour3
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	3
+            rule_content	Colour3
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	3
+            rule_content	Colour3
           ->
           rule_part
-            rule_content
-              Colour3
-              Remove
+            rule_content	Colour3
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	3
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
+            rule_content	Colour3
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	3
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
-          
-
+            rule_content	Colour3
+            rule_content	Remove
         rule_data
-          Right
+          prefix	Right
           rule_part
             rule_content	Colour4
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	4
+            rule_content	Colour4
           ->
           rule_part
-            rule_content
-              Colour4
-              hasN
+            rule_content	Colour4
+            rule_content	hasN
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	4
-            rule_content	h
-            rule_content	a
-            rule_content	s
-            rule_content	N
-          
-
+            rule_content	Colour4
+            rule_content	hasN
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
-            rule_content
-              Colour4
-              hasN
+            rule_content	Colour4
+            rule_content	hasN
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	4
+            rule_content	Colour4
           ->
           rule_part
-            rule_content
-              Colour4
-              Remove
+            rule_content	Colour4
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	4
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
-          
-
+            rule_content	Colour4
+            rule_content	Remove
         rule_data
           rule_part
-            rule_content
-              Colour4
-              Remove
+            rule_content	Colour4
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	4
+            rule_content	Colour4
           ->
           rule_part
-            rule_content
-              Colour4
-              Remove
+            rule_content	Colour4
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	4
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
-          
-
+            rule_content	Colour4
+            rule_content	Remove
         rule_data
           rule_part
             rule_content	Colour4
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	4
+            rule_content	Colour4
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	4
+            rule_content	Colour4
           ->
           rule_part
-            rule_content
-              Colour4
-              Remove
+            rule_content	Colour4
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	4
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
+            rule_content	Colour4
+            rule_content	Remove
             cell_border
-            rule_content	C
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	4
-            rule_content	R
-            rule_content	e
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	e
-          
-
+            rule_content	Colour4
+            rule_content	Remove
         rule_data
           rule_part
-            rule_content
-              Piece
-              Remove
-            rule_content	]
-            rule_content	[
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	a
-            rule_content	]
-            rule_content	[
-            rule_content	I
-            rule_content	n
-            rule_content	c
+            rule_content	Piece
+            rule_content	Remove
+          rule_part
+            rule_content	Playera
+          rule_part
+            rule_content	Inc
           ->
           rule_part
-            rule_content	]
-            rule_content	[
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	a
-            rule_content	]
-            rule_content	[
-            rule_content	l
-            rule_content	e
-            rule_content	f
-            rule_content	t
-            rule_content	I
-            rule_content	n
-            rule_content	c
-          command
-            sound
-              sound_id	1
-          
-
+          rule_part
+            rule_content	Playera
+          rule_part
+            rule_content	left
+            rule_content	Inc
+          prefix	sfx1
         rule_data
           rule_part
-            rule_content
-              Piece
-              Remove
-            rule_content	]
-            rule_content	[
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	a
+            rule_content	Piece
+            rule_content	Remove
+          rule_part
+            rule_content	Playera
           ->
           rule_part
-            rule_content	]
-            rule_content	[
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	a
-          command
-            sound
-              sound_id	1
-          
-
+          rule_part
+            rule_content	Playera
+          prefix	sfx1
         rule_data
           rule_part
-            rule_content
-              Piece
-              Remove
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	s
-            rule_content	e
-            rule_content	F
-            rule_content	l
-            rule_content	a
-            rule_content	g
+            rule_content	Piece
+            rule_content	Remove
+          rule_part
+            rule_content	LoseFlag
           ->
           rule_part
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	s
-            rule_content	e
-            rule_content	F
-            rule_content	l
-            rule_content	a
-            rule_content	g
-          
-
+          rule_part
+            rule_content	LoseFlag
         rule_data
           rule_part
             rule_content	hasN
           ->
           rule_part
-          
-
         rule_data
-          Down
+          prefix	Down
           rule_part
             rule_content
               >
               Player
-              Piece
+            rule_content	Piece
           ->
           rule_part
             rule_content
               >
               Player
-              Released
-              Piece
-          
-
+            rule_content	Released
+            rule_content	Piece
         rule_data
-          Down
+          prefix	Down
           rule_part
-            rule_content
-              Player
-              Released
-              Piece
+            rule_content	Player
+            rule_content	Released
+            rule_content	Piece
             cell_border
-            rule_content	N
-            rule_content	o
-            rule_content	P
-            rule_content	i
-            rule_content	e
-            rule_content	c
-            rule_content	e
+            rule_content	No
+            rule_content	Piece
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	>
-            rule_content	P
-            rule_content	i
-            rule_content	e
-            rule_content	c
-            rule_content	e
-          
-
+            rule_content
+              >
+              Piece
         rule_data
-          Down
+          prefix	Down
           rule_part
             rule_content
               >
@@ -1349,74 +730,39 @@ ps_game
           ->
           rule_part
             rule_content	Player
-          
-
         rule_data
           rule_part
             rule_content	Released
           ->
           rule_part
-          
-
         rule_data
-          Down
+          prefix	Down
           rule_part
-            rule_content
-              Piece
-              No
-              Player
-              No
-              NP
+            rule_content	Piece
+            rule_content	No
+            rule_content	Player
+            rule_content	No
+            rule_content	NP
             cell_border
-            rule_content	N
-            rule_content	o
-            rule_content	P
-            rule_content	i
-            rule_content	e
-            rule_content	c
-            rule_content	e
-            rule_content	N
-            rule_content	o
-            rule_content	P
-            rule_content	r
-            rule_content	e
-            rule_content	v
-            rule_content	i
-            rule_content	e
-            rule_content	w
-            rule_content	N
-            rule_content	o
-            rule_content	S
-            rule_content	c
-            rule_content	o
-            rule_content	r
-            rule_content	e
+            rule_content	No
+            rule_content	Piece
+            rule_content	No
+            rule_content	Preview
+            rule_content	No
+            rule_content	Score
           ->
           rule_part
-            rule_content	|
-            rule_content	>
-            rule_content	P
-            rule_content	i
-            rule_content	e
-            rule_content	c
-            rule_content	e
-          command
-            command_keyword	again
-          
-
+            cell_border
+            rule_content
+              >
+              Piece
+          prefix	again
         rule_data
           rule_part
-            rule_content
-              Action
-              Playera
+            rule_content	Action
+            rule_content	Playera
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	b
+            rule_content	Playerb
           ->
           rule_part
             rule_content
@@ -1424,360 +770,198 @@ ps_game
               Playera
             cell_border
             rule_content	v
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	b
-          
-
+            rule_content	Playerb
         rule_data
           rule_part
-            rule_content
-              Moving
-              Player
-              Piece
+            rule_content	Moving
+            rule_content	Player
+            rule_content	Piece
           ->
           rule_part
-            rule_content
-              Moving
-              Player
-              Moving
-              Piece
-          
-
+            rule_content	Moving
+            rule_content	Player
+            rule_content	Moving
+            rule_content	Piece
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	B
-            rule_content	o
-            rule_content	r
-            rule_content	d
-            rule_content	e
-            rule_content	r
+            rule_content	Border
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
-          Up
+          prefix	Up
           rule_part
             rule_content	Preview
             cell_border
-            rule_content	N
-            rule_content	o
-            rule_content	P
-            rule_content	i
-            rule_content	e
-            rule_content	c
-            rule_content	e
-            rule_content	N
-            rule_content	o
-            rule_content	P
-            rule_content	r
-            rule_content	e
-            rule_content	v
-            rule_content	i
-            rule_content	e
-            rule_content	w
+            rule_content	No
+            rule_content	Piece
+            rule_content	No
+            rule_content	Preview
           ->
           rule_part
-            rule_content	|
-            rule_content	P
-            rule_content	r
-            rule_content	e
-            rule_content	v
-            rule_content	i
-            rule_content	e
-            rule_content	w
-          command
-            command_keyword	again
-          
-
+            cell_border
+            rule_content	Preview
+          prefix	again
         rule_data
           rule_part
-            rule_content
-              NP
-              C1P
+            rule_content	NP
+            rule_content	C1P
           ->
           rule_part
-            rule_content
-              NP
-              Colour1
-          
-
+            rule_content	NP
+            rule_content	Colour1
         rule_data
           rule_part
-            rule_content
-              NP
-              C2P
+            rule_content	NP
+            rule_content	C2P
           ->
           rule_part
-            rule_content
-              NP
-              Colour2
-          
-
+            rule_content	NP
+            rule_content	Colour2
         rule_data
           rule_part
-            rule_content
-              NP
-              C3P
+            rule_content	NP
+            rule_content	C3P
           ->
           rule_part
-            rule_content
-              NP
-              Colour3
-          
-
+            rule_content	NP
+            rule_content	Colour3
         rule_data
           rule_part
-            rule_content
-              NP
-              C4P
+            rule_content	NP
+            rule_content	C4P
           ->
           rule_part
-            rule_content
-              NP
-              Colour4
-          
-
+            rule_content	NP
+            rule_content	Colour4
         rule_data
           rule_part
-            rule_content
-              Playera
-              no
-              Piece
-            rule_content	]
-            rule_content	[
-            rule_content	N
-            rule_content	P
-            rule_content	1
-            rule_content	P
-            rule_content	i
-            rule_content	e
-            rule_content	c
-            rule_content	e
+            rule_content	Playera
+            rule_content	no
+            rule_content	Piece
+          rule_part
+            rule_content	NP1
+            rule_content	Piece
           ->
           rule_part
-            rule_content
-              Playera
-              Piece
-            rule_content	]
-            rule_content	[
-            rule_content	N
-            rule_content	P
-            rule_content	1
-          
-
+            rule_content	Playera
+            rule_content	Piece
+          rule_part
+            rule_content	NP1
         rule_data
           rule_part
-            rule_content
-              Playerb
-              no
-              Piece
-            rule_content	]
-            rule_content	[
-            rule_content	N
-            rule_content	P
-            rule_content	2
-            rule_content	P
-            rule_content	i
-            rule_content	e
-            rule_content	c
-            rule_content	e
+            rule_content	Playerb
+            rule_content	no
+            rule_content	Piece
+          rule_part
+            rule_content	NP2
+            rule_content	Piece
           ->
           rule_part
-            rule_content
-              Playerb
-              Piece
-            rule_content	]
-            rule_content	[
-            rule_content	N
-            rule_content	P
-            rule_content	2
-          
-
+            rule_content	Playerb
+            rule_content	Piece
+          rule_part
+            rule_content	NP2
         rule_data
           rule_part
-            rule_content
-              PieceGen
-              No
-              Preview
+            rule_content	PieceGen
+            rule_content	No
+            rule_content	Preview
           ->
           rule_part
-            rule_content
-              PieceGen
-              Random
-              Preview
-          command
-            command_keyword	again
-          
-
+            rule_content	PieceGen
+            rule_content	Random
+            rule_content	Preview
+          prefix	again
         rule_data
           rule_part
-            rule_content
-              Piece
-              Border
+            rule_content	Piece
+            rule_content	Border
           ->
           rule_part
             rule_content	LoseFlag
-          command
-            sound
-              sound_id	0
-          command
-            command_keyword	again
-          
-
+          prefix	sfx0
+          prefix	again
         rule_data
           rule_part
             rule_content	LoseFlag
-            rule_content	]
-            rule_content	[
-            rule_content	B
-            rule_content	o
-            rule_content	r
-            rule_content	d
-            rule_content	e
-            rule_content	r
+          rule_part
+            rule_content	Border
           ->
           rule_part
             rule_content	LoseFlag
-            rule_content	]
-            rule_content	[
-          
-
+          rule_part
         rule_data
           rule_part
             rule_content	LoseFlag
-            rule_content	]
-            rule_content	[
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
+          rule_part
+            rule_content	Player
           ->
           rule_part
             rule_content	LoseFlag
-            rule_content	]
-            rule_content	[
-          
-
+          rule_part
         rule_data
           rule_part
             rule_content	LoseFlag
-            rule_content	]
-            rule_content	[
-            rule_content	N
-            rule_content	o
-            rule_content	P
-            rule_content	i
-            rule_content	e
-            rule_content	c
-            rule_content	e
+          rule_part
+            rule_content	No
+            rule_content	Piece
           ->
           rule_part
             rule_content	LoseFlag
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	a
-            rule_content	n
-            rule_content	d
-            rule_content	o
-            rule_content	m
-            rule_content	P
-            rule_content	i
-            rule_content	e
-            rule_content	c
-            rule_content	e
-          
-
+          rule_part
+            rule_content	Random
+            rule_content	Piece
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
               inc
             cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	o
-            rule_content	r
-            rule_content	e
+            rule_content	score
           ->
           rule_part
             rule_content
               >
               inc
             cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	o
-            rule_content	r
-            rule_content	e
-          
-
+            rule_content
+              >
+              score
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
               digit9
             cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	o
-            rule_content	r
-            rule_content	e
+            rule_content	score
           ->
           rule_part
             rule_content	digit0
             cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	o
-            rule_content	r
-            rule_content	e
-          
-
+            rule_content
+              >
+              score
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
               digit9
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	r
-            rule_content	d
-            rule_content	e
-            rule_content	r
+            rule_content	border
           ->
           rule_part
             rule_content	digit0
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	r
-            rule_content	d
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	border
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
@@ -1785,10 +969,8 @@ ps_game
           ->
           rule_part
             rule_content	digit1
-          
-
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
@@ -1796,10 +978,8 @@ ps_game
           ->
           rule_part
             rule_content	digit2
-          
-
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
@@ -1807,10 +987,8 @@ ps_game
           ->
           rule_part
             rule_content	digit3
-          
-
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
@@ -1818,10 +996,8 @@ ps_game
           ->
           rule_part
             rule_content	digit4
-          
-
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
@@ -1829,10 +1005,8 @@ ps_game
           ->
           rule_part
             rule_content	digit5
-          
-
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
@@ -1840,10 +1014,8 @@ ps_game
           ->
           rule_part
             rule_content	digit6
-          
-
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
@@ -1851,10 +1023,8 @@ ps_game
           ->
           rule_part
             rule_content	digit7
-          
-
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
@@ -1862,10 +1032,8 @@ ps_game
           ->
           rule_part
             rule_content	digit8
-          
-
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
@@ -1873,8 +1041,6 @@ ps_game
           ->
           rule_part
             rule_content	digit9
-          
-
   winconditions_section
     condition_data
       No
@@ -1892,5 +1058,4 @@ ps_game
  ['.' '.' '|' '.' '.' '.' '.' '.' '.' '|']
  ['.' '.' '|' '.' '.' '.' '.' '.' '.' '|']
  ['.' '.' '|' '.' '.' '.' '.' '.' '.' '|']
- ['x' 'x' '|' '0' '0' '0' '0' '0' '0' '+']
- ['\n' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
+ ['x' 'x' '|' '0' '0' '0' '0' '0' '0' '+']]

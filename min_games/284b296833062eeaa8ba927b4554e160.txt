@@ -1,53 +1,79 @@
+title Tumblin'
+author Westward
+homepage aka.ms/westward
+
 OBJECTS
 
-BackgroundBlack
-SandYellow Brown00000
+Background
+Black
+
+Sand
+Yellow Brown
+00000
 01000
 00000
 00010
-00000
+0000
 
-Emptytransparent
-TargetBlue0...0
+Empty
+transparent
+
+Target
+Blue
+0...0
 .0.0.
 ..0..
 .0.0.
-0...0
+0...
 
-WallBROWN
-Playerlightbrown brown.000.
-00000
-00000
-00000
+Wall
+BROWN
+
+Player
+lightbrown brown
 .000.
+00000
+00000
+00000
+.000
 
-RightPlayerlightbrown brown.000.
+RightPlayer
+lightbrown brown
+.000.
 00100
 00010
 00100
-.000.
+.000
 
-LeftPlayerlightbrown brown.000.
+LeftPlayer
+lightbrown brown
+.000.
 00100
 01000
 00100
-.000.
+.000
 
-UpPlayerlightbrown brown.000.
+UpPlayer
+lightbrown brown
+.000.
 00100
 01010
 00000
-.000.
+.000
 
-DownPlayerlightbrown brown.000.
+DownPlayer
+lightbrown brown
+.000.
 00000
 01010
 00100
-.000.
+.000
 
-ActionFlagtransparent
-ActionFlag2transparent
+ActionFlag
+transparent
 
+ActionFlag2
+transparent
 
 
 LEGEND
@@ -64,37 +90,12 @@ COLLISIONLAYERS
 Background
 Empty, Sand
 Target
-Player, Wall
-RightPlayer, LeftPlayer
-UpPlayer, DownPlayer
+Player, Wall, RightPlayer, LeftPlayer, UpPlayer, DownPlayer
 ActionFlag, ActionFlag2
 
 RULES
 
-[ RIGHT Player ] -> [ RightPlayer ] 
-RIGHT [ RightPlayer ] -> [ > RightPlayer ] 
-RIGHT [ RightPlayer | Wall ] -> [ Player | Wall ] 
-RIGHT [ RightPlayer | Player ] -> [ Player | Player ] 
-[ UP Player ] -> [ UpPlayer ] 
-UP [ UpPlayer ] -> [ > UpPlayer ] 
-UP [ UpPlayer | Wall ] -> [ Player | Wall ] 
-UP [ UpPlayer | Player ] -> [ Player | Player ] 
-[ DOWN Player ] -> [ DownPlayer ] 
-DOWN [ DownPlayer ] -> [ > DownPlayer ] 
-DOWN [ DownPlayer | Wall ] -> [ Player | Wall ] 
-DOWN [ DownPlayer | Player ] -> [ Player | Player ] 
-[ LEFT Player ] -> [ LeftPlayer ] 
-LEFT [ LeftPlayer ] -> [ > LeftPlayer ] 
-LEFT [ LeftPlayer | Wall ] -> [ Player | Wall ] 
-LEFT [ LeftPlayer | Player ] -> [ Player | Player ] 
-late [ RightPlayer ] -> [ RightPlayer ] again 
-late [ UpPlayer ] -> [ UpPlayer ] again 
-late [ DownPlayer ] -> [ DownPlayer ] again 
-late [ LeftPlayer ] -> [ LeftPlayer ] again 
-[ Action Player ] -> [ ActionFlag Player ] 
-late [ ActionFlag ] -> [ ActionFlag2 ] 
-[ ActionFlag2 ] -> [  ] 
-
+[ RIGHTPlayer ] -> [ RightPlayer ]RIGHT [ RightPlayer ] -> [ > RightPlayer ]RIGHT [ RightPlayer | Wall ] -> [ Player | Wall ]RIGHT [ RightPlayer | Player ] -> [ Player | Player ][ UPPlayer ] -> [ UpPlayer ]UP [ UpPlayer ] -> [ > UpPlayer ]UP [ UpPlayer | Wall ] -> [ Player | Wall ]UP [ UpPlayer | Player ] -> [ Player | Player ][ DOWNPlayer ] -> [ DownPlayer ]DOWN [ DownPlayer ] -> [ > DownPlayer ]DOWN [ DownPlayer | Wall ] -> [ Player | Wall ]DOWN [ DownPlayer | Player ] -> [ Player | Player ][ LEFTPlayer ] -> [ LeftPlayer ]LEFT [ LeftPlayer ] -> [ > LeftPlayer ]LEFT [ LeftPlayer | Wall ] -> [ Player | Wall ]LEFT [ LeftPlayer | Player ] -> [ Player | Player ]late [ RightPlayer ] -> [ RightPlayer ] againlate [ UpPlayer ] -> [ UpPlayer ] againlate [ DownPlayer ] -> [ DownPlayer ] againlate [ LeftPlayer ] -> [ LeftPlayer ] again[ ActionPlayer ] -> [ ActionFlagPlayer ]late [ ActionFlag ] -> [ ActionFlag2 ][ ActionFlag2 ] -> [  ]
 
 WINCONDITIONS
 
@@ -116,7 +117,6 @@ LEVELS
 ########--------
 
 ##########--------
-
 #....#...#-#######
 #P#..#.P.#-#....P#
 ###.##.#O#-##..P##

@@ -1,67 +1,117 @@
+title Wizard School!
+author Luke Davies
+homepage twitter.com/lefishy
+again_interval 0.01
+norepeat_action
+
 OBJECTS
 
-playeridledarkblue brown..0..
+playeridle
+darkblue brown
+..0..
 .000.
 .000.
 01110
-.0.0.
+.0.0
 
+playercarrying
+darkblue brown
+1.0..
+1000.
+1000.
+00000
+.0.0
 
-playercarryingdarkblue brown
-1.0..1000.
-1000.00000
-.0.0.boxidle
-browndarkbrown lightbrown
-1111112001
-1020110021
-11111boxsummoned
-browndarkbrown purple.....
+boxidle
+brown darkbrown lightbrown
+11111
+12001
+10201
+10021
+1111
+
+boxsummoned
+brown darkbrown purple
+.....
 .111.
 .121.
 .111.
-.....
+....
 
-boxcarriedbrown
-darkbrownlightbrown purple
-1111112331
-1323113321
-11111boxthrownup
-browndarkbrown purple
-.111..101.
-.111..222.
-..2..boxthrowndown
-browndarkbrown purple
-..2...222.
-.111..101.
-.111.boxthrownleft
-browndarkbrown purple
-.....1112.
-101221112.
-.....boxthrownright
-browndarkbrown purple.....
+boxcarried
+brown darkbrown lightbrown purple
+11111
+12331
+13231
+13321
+1111
+
+boxthrownup
+brown darkbrown purple
+.111.
+.101.
+.111.
+.222.
+..2.
+
+boxthrowndown
+brown darkbrown purple
+..2..
+.222.
+.111.
+.101.
+.111
+
+boxthrownleft
+brown darkbrown purple
+.....
+1112.
+10122
+1112.
+....
+
+boxthrownright
+brown darkbrown purple
+.....
 .2111
 22101
 .2111
-.....
+....
 
-plainwallgrey darkgrey00100
+plainwall
+grey darkgrey
+00100
 11111
 10000
 11111
-00100
+0010
 
-backgroundyellow
-castuptransparent
-castdowntransparent
-castlefttransparent
-castrighttransparent
-targetdarkred black..1..
+background
+yellow
+
+castup
+transparent
+
+castdown
+transparent
+
+castleft
+transparent
+
+castright
+transparent
+
+target
+darkred black
+..1..
 .101.
 10001
 .101.
-..1..
+..1.
 
-doorwhite
+door
+white
+
 
 LEGEND
 
@@ -83,48 +133,11 @@ COLLISIONLAYERS
 
 background
 target
-wall, player
-box, magic
-boxthrown, door
+wall, player, box, magic, boxthrown, door
 
 RULES
 
-up [ action playeridle | noblocker ] -> [ action playeridle | castup ] again 
-down [ action playeridle | noblocker ] -> [ action playeridle | castdown ] again 
-left [ action playeridle | noblocker ] -> [ action playeridle | castleft ] again 
-right [ action playeridle | noblocker ] -> [ action playeridle | castright ] again 
-[ action playeridle | boxidle ] -> [ action playeridle | boxcarried ] again 
-up [ castup | boxidle ] -> [ |boxsummoned ] again 
-down [ castdown | boxidle ] -> [ |boxsummoned ] again 
-left [ castleft | boxidle ] -> [ |boxsummoned ] again 
-right [ castright | boxidle ] -> [ |boxsummoned ] again 
-up [ castup | nowall ] -> [ > castup |  ] again 
-down [ castdown | nowall ] -> [ > castdown |  ] again 
-left [ castleft | nowall ] -> [ > castleft |  ] again 
-right [ castright | nowall ] -> [ > castright |  ] again 
-up [ castup | wall ] -> [ |wall ] again 
-down [ castdown | wall ] -> [ |wall ] again 
-left [ castleft | wall ] -> [ |wall ] again 
-right [ castright | wall ] -> [ |wall ] again 
-[ boxsummoned | ... | player ] -> [ > boxsummoned | ... | player ] again 
-[ > boxsummoned | player ] -> [ boxcarried | player ] again 
-rigid [ moving player | boxcarried ] -> [ moving player | movingboxcarried ] 
-[ > boxcarried | wall ] -> cancel 
-up [ action playercarrying | boxcarried ] -> [ action playercarrying | boxthrownup ] again 
-down [ action playercarrying | boxcarried ] -> [ action playercarrying | boxthrowndown ] again 
-left [ action playercarrying | boxcarried ] -> [ action playercarrying | boxthrownleft ] again 
-right [ action playercarrying | boxcarried ] -> [ action playercarrying | boxthrownright ] again 
-[ boxthrown][playercarrying ] -> [ boxthrown][playeridle ] 
-up [ boxthrownup | noblocker ] -> [ > boxthrownup |  ] again 
-down [ boxthrowndown | noblocker ] -> [ > boxthrowndown |  ] again 
-left [ boxthrownleft | noblocker ] -> [ > boxthrownleft |  ] again 
-right [ boxthrownright | noblocker ] -> [ > boxthrownright |  ] again 
-up [ boxthrownup | blocker ] -> [ boxidle | blocker ] again 
-down [ boxthrowndown | blocker ] -> [ boxidle | blocker ] again 
-left [ boxthrownleft | blocker ] -> [ boxidle | blocker ] again 
-right [ boxthrownright | blocker ] -> [ boxidle | blocker ] again 
-[ boxcarried][playeridle ] -> [ boxcarried][playercarrying ] 
-
+up [ actionplayeridle | noblocker ] -> [ actionplayeridle | castup ] againdown [ actionplayeridle | noblocker ] -> [ actionplayeridle | castdown ] againleft [ actionplayeridle | noblocker ] -> [ actionplayeridle | castleft ] againright [ actionplayeridle | noblocker ] -> [ actionplayeridle | castright ] again[ actionplayeridle | boxidle ] -> [ actionplayeridle | boxcarried ] againup [ castup | boxidle ] -> [  | boxsummoned ] againdown [ castdown | boxidle ] -> [  | boxsummoned ] againleft [ castleft | boxidle ] -> [  | boxsummoned ] againright [ castright | boxidle ] -> [  | boxsummoned ] againup [ castup | nowall ] -> [ > castup |  ] againdown [ castdown | nowall ] -> [ > castdown |  ] againleft [ castleft | nowall ] -> [ > castleft |  ] againright [ castright | nowall ] -> [ > castright |  ] againup [ castup | wall ] -> [  | wall ] againdown [ castdown | wall ] -> [  | wall ] againleft [ castleft | wall ] -> [  | wall ] againright [ castright | wall ] -> [  | wall ] again[ boxsummoned | ... | player ] -> [ > boxsummoned | ... | player ] again[ > boxsummoned | player ] -> [ boxcarried | player ] againrigid [ movingplayer | boxcarried ] -> [ movingplayer | movingboxcarried ][ > boxcarried | wall ] -> cancelup [ actionplayercarrying | boxcarried ] -> [ actionplayercarrying | boxthrownup ] againdown [ actionplayercarrying | boxcarried ] -> [ actionplayercarrying | boxthrowndown ] againleft [ actionplayercarrying | boxcarried ] -> [ actionplayercarrying | boxthrownleft ] againright [ actionplayercarrying | boxcarried ] -> [ actionplayercarrying | boxthrownright ] again[ boxthrown ] [ playercarrying ] -> [ boxthrown ] [ playeridle ]up [ boxthrownup | noblocker ] -> [ > boxthrownup |  ] againdown [ boxthrowndown | noblocker ] -> [ > boxthrowndown |  ] againleft [ boxthrownleft | noblocker ] -> [ > boxthrownleft |  ] againright [ boxthrownright | noblocker ] -> [ > boxthrownright |  ] againup [ boxthrownup | blocker ] -> [ boxidle | blocker ] againdown [ boxthrowndown | blocker ] -> [ boxidle | blocker ] againleft [ boxthrownleft | blocker ] -> [ boxidle | blocker ] againright [ boxthrownright | blocker ] -> [ boxidle | blocker ] again[ boxcarried ] [ playeridle ] -> [ boxcarried ] [ playercarrying ]
 
 WINCONDITIONS
 

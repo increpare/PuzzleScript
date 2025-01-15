@@ -1,120 +1,186 @@
+title Magnetoban
+author Mrquaotta
+homepage www.puzzlescript.net
+run_rules_on_level_start
+
 OBJECTS
 
-BackgroundBlue DarkBlue11111
-10001
-10001
-10001
+Background
+Blue DarkBlue
 11111
+10001
+10001
+10001
+1111
 
-WallDarkGreen #5c5c8a
-1000101100
-1100000011
-01010Cover1
-DarkGreen#5c5c8a #4db8ff
-..........
-..........
-22222Cover2
-DarkBlueBlue #4db8ff22222
-.....
-.....
-.....
-.....
+Wall
+DarkGreen #5c5c8a
+10001
+01100
+11000
+00011
+0101
 
-Cover3DarkGreen #5c5c8a.....
+Cover1
+DarkGreen #5c5c8a #4db8ff
 .....
 .....
 .....
-01010
+.....
+2222
 
-Cover4#4db8ff.....
+Cover2
+DarkBlue Blue #4db8ff
+22222
+.....
+.....
+.....
+....
+
+Cover3
+DarkGreen #5c5c8a
+.....
+.....
+.....
+.....
+0101
+
+Cover4
+#4db8ff
+.....
 .....
 .....
 00000
-00000
+0000
 
-EmptyBlack
-PlayerDOrange
-DarkBrownPurple DarkGray
-..0...222.
-0222001110
-.1.1.PlayerL
-OrangeDarkBrown Purple
-..0...222.
-.220..110.
-.1.1.PlayerR
-OrangeDarkBrown Purple
-..0...222.
-.022..011.
-.1.1.Crate
-LightBrownBrown Yellow.222.
+Empty
+Black
+
+PlayerD
+Orange DarkBrown Purple DarkGray
+..0..
+.222.
+02220
+01110
+.1.1
+
+PlayerL
+Orange DarkBrown Purple
+..0..
+.222.
+.220.
+.110.
+.1.1
+
+PlayerR
+Orange DarkBrown Purple
+..0..
+.222.
+.022.
+.011.
+.1.1
+
+Crate
+LightBrown Brown Yellow
+.222.
 .222.
 .222.
 .111.
-.111.
+.111
 
-MagnetDDarkRed
-RedDarkGray Gray.111.
+MagnetD
+DarkRed Red DarkGray Gray
+.111.
 11111
 11011
 33.33
-22.22
+22.2
 
-MagnetUDarkRed
-RedDarkGray Gray33.33
+MagnetU
+DarkRed Red DarkGray Gray
+33.33
 11.11
 11111
 01110
-.000.
+.000
 
-MagnetRDarkRed
-RedDarkGray Gray.1113
+MagnetR
+DarkRed Red DarkGray Gray
+.1113
 11002
 11113
 01113
-.0002
+.000
 
-MagnetLDarkRed
-RedDarkGray Gray3111.
+MagnetL
+DarkRed Red DarkGray Gray
+3111.
 20011
 31111
 31110
-2000.
+2000
 
-TargetDLightBlue.....
+TargetD
+LightBlue
+.....
 .000.
 00000
 00.00
-00.00
+00.0
 
-TargetULightBlue.....
+TargetU
+LightBlue
+.....
 00.00
 00.00
 00000
-.000.
+.000
 
-TargetRLightBlue.....
+TargetR
+LightBlue
+.....
 .0000
 00...
 00000
-.0000
+.000
 
-TargetLLightBlue.....
+TargetL
+LightBlue
+.....
 0000.
 ...00
 00000
-0000.
+0000
 
-Detect1Orange
-Detect2Orange
-Detect3Orange
-Detect4Orange
-WaveDPurple
-WaveULightBrown
-WaveLLightRed
-WaveRLightGreen
-Center1Transparent
-Center2Transparent
+Detect1
+Orange
 
+Detect2
+Orange
+
+Detect3
+Orange
+
+Detect4
+Orange
+
+WaveD
+Purple
+
+WaveU
+LightBrown
+
+WaveL
+LightRed
+
+WaveR
+LightGreen
+
+Center1
+Transparent
+
+Center2
+Transparent
 
 
 LEGEND
@@ -147,111 +213,20 @@ Magnet = MagnetD or MagnetU or MagnetR or MagnetL
 COLLISIONLAYERS
 
 Background
-WaveD, Detect3
-Detect4, Empty
+WaveD, Detect3, Detect4, Empty
 WaveU
-WaveL
-Detect1, Detect2
+WaveL, Detect1, Detect2
 WaveR
 Center1
 Center2
 Cover2
 Target
 Object
-Cover1
-Cover3, Cover4
+Cover1, Cover3, Cover4
 
 RULES
 
-Down [ Wall | noWall ] -> [ Cover1 Wall | Cover2noWall ] 
-Up [ Wall | noWall ] -> [ Wall | Cover3noWall ] 
-[ Left PlayerD ] -> [ Left PlayerL ] 
-[ Right PlayerD ] -> [ Right PlayerR ] 
-[ Vertical PlayerL ] -> [ Vertical PlayerD ] 
-[ Right PlayerL ] -> [ Right PlayerR ] 
-[ Vertical PlayerR ] -> [ Vertical PlayerD ] 
-[ Left PlayerR ] -> [ Left PlayerL ] 
-[ > Player | Moveable ] -> [ > Player | >Moveable ] 
-[ Moving Player ] -> [ Moving Player ] again 
-Down [ Detect3 | MagnetLR ] -> [ Detect3 | <MagnetLR ] again 
-Up [ Detect4 | MagnetLR ] -> [ Detect4 | <MagnetLR ] again 
-Left [ Detect2 | MagnetDU ] -> [ Detect2 | <MagnetDU ] again 
-Right [ Detect1 | MagnetDU ] -> [ Detect1 | <MagnetDU ] again 
-Down [ no Object | MagnetDLRWaveD ] -> [ no Object | <MagnetDLRWaveD ] again 
-Up [ no Object | MagnetULRWaveU ] -> [ no Object | <MagnetULRWaveU ] again 
-Left [ no Object | MagnetDULWaveL ] -> [ no Object | <MagnetDULWaveL ] again 
-Right [ no Object | MagnetDURWaveR ] -> [ no Object | <MagnetDURWaveR ] again 
-Down [ no Object | MagnetD | Center2 ] -> [ no Object | <MagnetD | Center2 ] again 
-Up [ no Object | MagnetU | Center2 ] -> [ no Object | <MagnetU | Center2 ] again 
-Left [ no Object | MagnetL | Center1 ] -> [ no Object | <MagnetL | Center1 ] again 
-Right [ no Object | MagnetR | Center1 ] -> [ no Object | <MagnetR | Center1 ] again 
-Down Late [ MagnetD |  ] -> [ MagnetD | WaveD ] 
-Down Late [ WaveD |  ] -> [ WaveD | WaveD ] 
-[ WaveD ] -> [  ] 
-Up Late [ MagnetU |  ] -> [ MagnetU | WaveU ] 
-Up Late [ WaveU |  ] -> [ WaveU | WaveU ] 
-[ WaveU ] -> [  ] 
-Left Late [ MagnetL |  ] -> [ MagnetL | WaveL ] 
-Left Late [ WaveL |  ] -> [ WaveL | WaveL ] 
-[ WaveL ] -> [  ] 
-Right Late [ MagnetR |  ] -> [ MagnetR | WaveR ] 
-Right Late [ WaveR |  ] -> [ WaveR | WaveR ] 
-[ WaveR ] -> [  ] 
-Late [ WaveR WaveL ] -> [ Center1 ] 
-[ Center1 ] -> [  ] 
-Late [ WaveD WaveU ] -> [ Center2 ] 
-[ Center2 ] -> [  ] 
-Down Late [ MagnetU Center2 | Center2Center1 | noObject ] -> [ MagnetU Center2 | Center2Center1 | Crate ] 
-Up Late [ MagnetD Center2 | Center2Center1 | noObject ] -> [ MagnetD Center2 | Center2Center1 | Crate ] 
-Left Late [ MagnetR Center1 | Center2Center1 | noObject ] -> [ MagnetR Center1 | Center2Center1 | Crate ] 
-Right Late [ MagnetL Center1 | Center2Center1 | noObject ] -> [ MagnetL Center1 | Center2Center1 | Crate ] 
-Down Late [ MagnetU WaveD | Center1WaveD | noObject ] -> [ MagnetU WaveD | Center1WaveD | Crate ] 
-Up Late [ MagnetD WaveD | Center1WaveD | noObject ] -> [ MagnetD WaveD | Center1WaveD | Crate ] 
-Down Late [ MagnetU WaveU | Center1WaveU | noObject ] -> [ MagnetU WaveU | Center1WaveU | Crate ] 
-Up Late [ MagnetD WaveU | Center1WaveU | noObject ] -> [ MagnetD WaveU | Center1WaveU | Crate ] 
-Left Late [ MagnetR Center1 | Center1WaveD | noObject ] -> [ MagnetR WaveD | Center1WaveD | Crate ] 
-Right Late [ MagnetL Center1 | Center1WaveD | noObject ] -> [ MagnetL WaveD | Center1WaveD | Crate ] 
-Left Late [ MagnetR Center1 | Center1WaveU | noObject ] -> [ MagnetR WaveU | Center1WaveU | Crate ] 
-Right Late [ MagnetL Center1 | Center1WaveU | noObject ] -> [ MagnetL WaveU | Center1WaveU | Crate ] 
-Down Late [ MagnetU Center2 | Center2WaveR | noObject ] -> [ MagnetU Center2 | Center2WaveR | Crate ] 
-Up Late [ MagnetD Center2 | Center2WaveR | noObject ] -> [ MagnetD Center2 | Center2WaveR | Crate ] 
-Down Late [ MagnetU Center2 | Center2WaveL | noObject ] -> [ MagnetU Center2 | Center2WaveL | Crate ] 
-Up Late [ MagnetD Center2 | Center2WaveL | noObject ] -> [ MagnetD Center2 | Center2WaveL | Crate ] 
-Left Late [ MagnetR WaveR | Center2WaveR | noObject ] -> [ MagnetR WaveR | Center2WaveR | Crate ] 
-Right Late [ MagnetL WaveR | Center2WaveR | noObject ] -> [ MagnetL WaveR | Center2WaveR | Crate ] 
-Left Late [ MagnetR WaveL | Center2WaveL | noObject ] -> [ MagnetR WaveL | Center2WaveL | Crate ] 
-Right Late [ MagnetL WaveL | Center2WaveL | noObject ] -> [ MagnetL WaveL | Center2WaveL | Crate ] 
-Left Late [ MagnetR WaveL | WaveLWaveD | noObject ] -> [ MagnetR WaveL | WaveLWaveD | Crate ] 
-Right Late [ MagnetDUL WaveL | WaveLWaveD | noObject ] -> [ MagnetDUL WaveL | WaveLWaveD | Crate ] 
-Left Late [ MagnetDUR WaveR | WaveRWaveD | noObject ] -> [ MagnetDUR WaveR | WaveRWaveD | Crate ] 
-Right Late [ MagnetL WaveR | WaveRWaveD | noObject ] -> [ MagnetL WaveR | WaveRWaveD | Crate ] 
-Down Late [ MagnetU WaveD | WaveRWaveD | noObject ] -> [ MagnetU WaveD | WaveRWaveD | Crate ] 
-Down Late [ MagnetU WaveD | WaveLWaveD | noObject ] -> [ MagnetU WaveL | WaveRWaveD | Crate ] 
-Up Late [ MagnetD WaveU | WaveLWaveU | noObject ] -> [ MagnetD WaveU | WaveLWaveU | Crate ] 
-Up Late [ MagnetD WaveU | WaveRWaveU | noObject ] -> [ MagnetD WaveU | WaveRWaveD | Crate ] 
-Left Late [ MagnetDUR WaveR | WaveRWaveU | noObject ] -> [ MagnetDUR WaveR | WaveRWaveU | Crate ] 
-Right Late [ MagnetL WaveR | WaveRWaveU | noObject ] -> [ MagnetL WaveR | WaveRWaveU | Crate ] 
-Left Late [ MagnetR WaveL | WaveLWaveU | noObject ] -> [ MagnetR WaveL | WaveLWaveU | Crate ] 
-Right Late [ MagnetDUL WaveL | WaveLWaveU | noObject ] -> [ MagnetDUL WaveL | WaveLWaveU | Crate ] 
-Right Late [ no MagnetR | MagnetDUCenter1 | noMagnetL ] -> [ Detect1 | MagnetDUCenter1 | Detect2 ] 
-Right Late [ |Detect1noMagnetR | ... | Detect2noMagnetL |  ] -> [ Detect1 | noMagnetR | ... | noMagnetL | Detect2 ] 
-Late [ Detect1 no MagnetR ] -> [ no MagnetR ] 
-Late [ Detect2 no MagnetL ] -> [ no MagnetL ] 
-Left Late [ no MagnetDU | Detect1 ] -> [ Detect1 | Detect1 ] 
-Right Late [ no MagnetDU | Detect2 ] -> [ Detect2 | Detect2 ] 
-Right Late [ Detect1 | MagnetDU | Detect2 ] -> [ |MagnetDU |  ] 
-[ Detect1 ] -> [  ] 
-[ Detect2 ] -> [  ] 
-Down Late [ no MagnetD | MagnetLRCenter2 | noMagnetU ] -> [ Detect3 | MagnetLRCenter2 | Detect4 ] 
-Down Late [ |Detect3noMagnetD | ... | Detect4noMagnetU |  ] -> [ Detect3 | noMagnetD | ... | noMagnetU | Detect4 ] 
-Late [ Detect3 no MagnetD ] -> [ no MagnetD ] 
-Late [ Detect4 no MagnetU ] -> [ no MagnetU ] 
-Up Late [ no MagnetLR | Detect3 ] -> [ Detect3 | Detect3 ] 
-Down Late [ no MagnetLR | Detect4 ] -> [ Detect4 | Detect4 ] 
-Down Late [ Detect3 | MagnetLR | Detect4 ] -> [ |MagnetLR |  ] 
-[ Detect3 ] -> [  ] 
-[ Detect4 ] -> [  ] 
-
+Down [ Wall | noWall ] -> [ Cover1Wall | Cover2noWall ]Up [ Wall | noWall ] -> [ Wall | Cover3noWall ][ LeftPlayerD ] -> [ LeftPlayerL ][ RightPlayerD ] -> [ RightPlayerR ][ VerticalPlayerL ] -> [ VerticalPlayerD ][ RightPlayerL ] -> [ RightPlayerR ][ VerticalPlayerR ] -> [ VerticalPlayerD ][ LeftPlayerR ] -> [ LeftPlayerL ][ > Player | Moveable ] -> [ > Player | > Moveable ][ MovingPlayer ] -> [ MovingPlayer ] againDown [ Detect3 | MagnetLR ] -> [ Detect3 | < MagnetLR ] againUp [ Detect4 | MagnetLR ] -> [ Detect4 | < MagnetLR ] againLeft [ Detect2 | MagnetDU ] -> [ Detect2 | < MagnetDU ] againRight [ Detect1 | MagnetDU ] -> [ Detect1 | < MagnetDU ] againDown [ noObject | MagnetDLRWaveD ] -> [ noObject | < MagnetDLRWaveD ] againUp [ noObject | MagnetULRWaveU ] -> [ noObject | < MagnetULRWaveU ] againLeft [ noObject | MagnetDULWaveL ] -> [ noObject | < MagnetDULWaveL ] againRight [ noObject | MagnetDURWaveR ] -> [ noObject | < MagnetDURWaveR ] againDown [ noObject | MagnetD | Center2 ] -> [ noObject | < MagnetD | Center2 ] againUp [ noObject | MagnetU | Center2 ] -> [ noObject | < MagnetU | Center2 ] againLeft [ noObject | MagnetL | Center1 ] -> [ noObject | < MagnetL | Center1 ] againRight [ noObject | MagnetR | Center1 ] -> [ noObject | < MagnetR | Center1 ] againDown Late [ MagnetD |  ] -> [ MagnetD | WaveD ]Down Late [ WaveD |  ] -> [ WaveD | WaveD ][ WaveD ] -> [  ]Up Late [ MagnetU |  ] -> [ MagnetU | WaveU ]Up Late [ WaveU |  ] -> [ WaveU | WaveU ][ WaveU ] -> [  ]Left Late [ MagnetL |  ] -> [ MagnetL | WaveL ]Left Late [ WaveL |  ] -> [ WaveL | WaveL ][ WaveL ] -> [  ]Right Late [ MagnetR |  ] -> [ MagnetR | WaveR ]Right Late [ WaveR |  ] -> [ WaveR | WaveR ][ WaveR ] -> [  ]Late [ WaveRWaveL ] -> [ Center1 ][ Center1 ] -> [  ]Late [ WaveDWaveU ] -> [ Center2 ][ Center2 ] -> [  ]Down Late [ MagnetUCenter2 | Center2Center1 | noObject ] -> [ MagnetUCenter2 | Center2Center1 | Crate ]Up Late [ MagnetDCenter2 | Center2Center1 | noObject ] -> [ MagnetDCenter2 | Center2Center1 | Crate ]Left Late [ MagnetRCenter1 | Center2Center1 | noObject ] -> [ MagnetRCenter1 | Center2Center1 | Crate ]Right Late [ MagnetLCenter1 | Center2Center1 | noObject ] -> [ MagnetLCenter1 | Center2Center1 | Crate ]Down Late [ MagnetUWaveD | Center1WaveD | noObject ] -> [ MagnetUWaveD | Center1WaveD | Crate ]Up Late [ MagnetDWaveD | Center1WaveD | noObject ] -> [ MagnetDWaveD | Center1WaveD | Crate ]Down Late [ MagnetUWaveU | Center1WaveU | noObject ] -> [ MagnetUWaveU | Center1WaveU | Crate ]Up Late [ MagnetDWaveU | Center1WaveU | noObject ] -> [ MagnetDWaveU | Center1WaveU | Crate ]Left Late [ MagnetRCenter1 | Center1WaveD | noObject ] -> [ MagnetRWaveD | Center1WaveD | Crate ]Right Late [ MagnetLCenter1 | Center1WaveD | noObject ] -> [ MagnetLWaveD | Center1WaveD | Crate ]Left Late [ MagnetRCenter1 | Center1WaveU | noObject ] -> [ MagnetRWaveU | Center1WaveU | Crate ]Right Late [ MagnetLCenter1 | Center1WaveU | noObject ] -> [ MagnetLWaveU | Center1WaveU | Crate ]Down Late [ MagnetUCenter2 | Center2WaveR | noObject ] -> [ MagnetUCenter2 | Center2WaveR | Crate ]Up Late [ MagnetDCenter2 | Center2WaveR | noObject ] -> [ MagnetDCenter2 | Center2WaveR | Crate ]Down Late [ MagnetUCenter2 | Center2WaveL | noObject ] -> [ MagnetUCenter2 | Center2WaveL | Crate ]Up Late [ MagnetDCenter2 | Center2WaveL | noObject ] -> [ MagnetDCenter2 | Center2WaveL | Crate ]Left Late [ MagnetRWaveR | Center2WaveR | noObject ] -> [ MagnetRWaveR | Center2WaveR | Crate ]Right Late [ MagnetLWaveR | Center2WaveR | noObject ] -> [ MagnetLWaveR | Center2WaveR | Crate ]Left Late [ MagnetRWaveL | Center2WaveL | noObject ] -> [ MagnetRWaveL | Center2WaveL | Crate ]Right Late [ MagnetLWaveL | Center2WaveL | noObject ] -> [ MagnetLWaveL | Center2WaveL | Crate ]Left Late [ MagnetRWaveL | WaveLWaveD | noObject ] -> [ MagnetRWaveL | WaveLWaveD | Crate ]Right Late [ MagnetDULWaveL | WaveLWaveD | noObject ] -> [ MagnetDULWaveL | WaveLWaveD | Crate ]Left Late [ MagnetDURWaveR | WaveRWaveD | noObject ] -> [ MagnetDURWaveR | WaveRWaveD | Crate ]Right Late [ MagnetLWaveR | WaveRWaveD | noObject ] -> [ MagnetLWaveR | WaveRWaveD | Crate ]Down Late [ MagnetUWaveD | WaveRWaveD | noObject ] -> [ MagnetUWaveD | WaveRWaveD | Crate ]Down Late [ MagnetUWaveD | WaveLWaveD | noObject ] -> [ MagnetUWaveL | WaveRWaveD | Crate ]Up Late [ MagnetDWaveU | WaveLWaveU | noObject ] -> [ MagnetDWaveU | WaveLWaveU | Crate ]Up Late [ MagnetDWaveU | WaveRWaveU | noObject ] -> [ MagnetDWaveU | WaveRWaveD | Crate ]Left Late [ MagnetDURWaveR | WaveRWaveU | noObject ] -> [ MagnetDURWaveR | WaveRWaveU | Crate ]Right Late [ MagnetLWaveR | WaveRWaveU | noObject ] -> [ MagnetLWaveR | WaveRWaveU | Crate ]Left Late [ MagnetRWaveL | WaveLWaveU | noObject ] -> [ MagnetRWaveL | WaveLWaveU | Crate ]Right Late [ MagnetDULWaveL | WaveLWaveU | noObject ] -> [ MagnetDULWaveL | WaveLWaveU | Crate ]Right Late [ noMagnetR | MagnetDUCenter1 | noMagnetL ] -> [ Detect1 | MagnetDUCenter1 | Detect2 ]Right Late [  | Detect1noMagnetR | ... | Detect2noMagnetL |  ] -> [ Detect1 | noMagnetR | ... | noMagnetL | Detect2 ]Late [ Detect1noMagnetR ] -> [ noMagnetR ]Late [ Detect2noMagnetL ] -> [ noMagnetL ]Left Late [ noMagnetDU | Detect1 ] -> [ Detect1 | Detect1 ]Right Late [ noMagnetDU | Detect2 ] -> [ Detect2 | Detect2 ]Right Late [ Detect1 | MagnetDU | Detect2 ] -> [  | MagnetDU |  ][ Detect1 ] -> [  ][ Detect2 ] -> [  ]Down Late [ noMagnetD | MagnetLRCenter2 | noMagnetU ] -> [ Detect3 | MagnetLRCenter2 | Detect4 ]Down Late [  | Detect3noMagnetD | ... | Detect4noMagnetU |  ] -> [ Detect3 | noMagnetD | ... | noMagnetU | Detect4 ]Late [ Detect3noMagnetD ] -> [ noMagnetD ]Late [ Detect4noMagnetU ] -> [ noMagnetU ]Up Late [ noMagnetLR | Detect3 ] -> [ Detect3 | Detect3 ]Down Late [ noMagnetLR | Detect4 ] -> [ Detect4 | Detect4 ]Down Late [ Detect3 | MagnetLR | Detect4 ] -> [  | MagnetLR |  ][ Detect3 ] -> [  ][ Detect4 ] -> [  ]
 
 WINCONDITIONS
 
@@ -263,7 +238,6 @@ All TargetL on MagnetL
 LEVELS
 
 -#######
-
 -#....e#
 ##.c####
 #...##g#
@@ -283,7 +257,6 @@ LEVELS
 --#####---
 
 --#######
-
 --#.....#
 --#..a.f#
 ####....#
@@ -293,7 +266,6 @@ LEVELS
 ######---
 
 -######-
-
 ##....##
 #..af..#
 #.c##p.#
@@ -303,7 +275,6 @@ LEVELS
 -######-
 
 ###########
-
 #..g.e....#
 #..######.#
 #..#.*..#.#
@@ -337,7 +308,6 @@ LEVELS
 ############
 
 ######---
-
 #...e#---
 #.ga*#---
 ##..h####

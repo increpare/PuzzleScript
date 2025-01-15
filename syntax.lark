@@ -9,7 +9,7 @@ NEWLINE: "\n"
 // Start rule
 start: ps_game
 
-ps_game: objects_section legend_section sounds_section collisionlayers_section rules_section winconditions_section levels_section
+ps_game: prelude objects_section legend_section sounds_section collisionlayers_section rules_section winconditions_section levels_section
 NEWLINES: NEWLINE+
 
 // Section delimiters
@@ -18,6 +18,7 @@ section_delimiter: delimiter NEWLINE
 delimiter: "="+
 
 // Sections
+prelude: prelude_data+
 objects_section: "OBJECTS"i NEWLINES object_data+
 legend_section: "LEGEND"i NEWLINES legend_data+
 sounds_section: "SOUNDS"i NEWLINES sound_data*
@@ -29,7 +30,9 @@ levels_section: "LEVELS"i NEWLINES level_data+
 STRING: /[^\n]+/
 
 // Object Data
-object_data: (object_name legend_key? NEWLINES colors (NEWLINES sprite)?) NEWLINES?
+object_line: object_name legend_key?
+color_line: color+ 
+object_data: object_line NEWLINES color_line NEWLINES (sprite NEWLINES)?
 
 SPRITE_PIXEL: /[0-9.]/
 colors: color+
@@ -37,7 +40,8 @@ colors: color+
 sprite: (SPRITE_PIXEL~5 NEWLINE)~5
 
 // Legend Data
-legend_data: PIXEL "=" object_name legend_operation* NEWLINES
+legend_data: LEGEND_PIXEL object_name legend_operation* NEWLINES
+LEGEND_PIXEL: PIXEL+ "="
 
 legend_operation: "or"i object_name
                 | "and"i object_name
@@ -93,7 +97,6 @@ level_data: levellines
 
 // Pixel can match any character
 PIXEL: /./
-LEGEND_PIXEL: PIXEL "="
 // PIXEL: /[█a-zA-Zぁ-㍿.!@#$%&*0-9\-,`\'~_"§\[\]è!çàé;?:\/+°£^{}|\><^v¬˅\\±↑↓→←⸝·öù]/
 sprite_key: PIXEL
           | "="  // To permit easyenigma
@@ -115,11 +118,13 @@ DIRECTIONAL: /[\^v<>]/
 KEYWORD_ID: /[a-z0-9.A-Z_]+/
 prefix: ID
 
+prelude_data: PRELUDE_KEYWORD (" " STRING)* NEWLINES
+
 // Keywords
-prelude_keyword: "title" | "author" | "homepage" | "color_palette" | "again_interval" | "background_color" | "debug" 
-               | "flickscreen" | "key_repeat_interval" | "noaction" | "norepeat_action" | "noundo" | "norestart" 
-               | "realtime_interval" | "require_player_movement" | "run_rules_on_level_start" | "scanline" 
-               | "text_color" | "throttle_movement" | "verbose_logging" | "youtube" | "zoomscreen"
+PRELUDE_KEYWORD: "title"i | "author"i | "homepage"i | "color_palette"i | "again_interval"i | "background_color"i | "debug"i 
+               | "flickscreen"i | "key_repeat_interval"i | "noaction"i | "norepeat_action"i | "noundo"i | "norestart"i
+               | "realtime_interval"i | "require_player_movement"i | "run_rules_on_level_start"i | "scanline"i 
+               | "text_color"i | "throttle_movement"i | "verbose_logging"i | "youtube"i | "zoomscreen"i
 
 legend_keyword: "or"i | "and"i
 // command_keyword: "again"i | "cancel"i | "checkpoint"i | "restart"i | "win"i

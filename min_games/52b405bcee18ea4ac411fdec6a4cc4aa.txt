@@ -1,29 +1,57 @@
+title naborciM
+author Connorses [ Based on levels by D. Skinner ]
+homepage www.puzzlescript.net
+
 OBJECTS
 
-BackgroundGREEN LIGHTGREEN
-1111101111
-1110111111
-10111Target
-darkblue00000
-0...00.0.0
-0...000000
-WallDARKBROWN
-BROWN00010
-1111101000
-1111100010
-PlayerABlue
-whiteOrange
-black.000.
-.111.22222
-.333..3.3.
-PlayerBlightblue
-whiteyellow darkgrey
-.000..111.
-22222.333.
-.3.3.Crate
-Orange.....
-.000..000.
-.000......
+Background
+GREEN LIGHTGREEN
+11111
+01111
+11101
+11111
+1011
+
+Target
+darkblue
+00000
+0...0
+0.0.0
+0...0
+0000
+
+Wall
+DARKBROWN BROWN
+00010
+11111
+01000
+11111
+0001
+
+PlayerA
+Blue white Orange black
+.000.
+.111.
+22222
+.333.
+.3.3
+
+PlayerB
+lightblue white yellow darkgrey
+.000.
+.111.
+22222
+.333.
+.3.3
+
+Crate
+Orange
+.....
+.000.
+.000.
+.000.
+....
+
 
 LEGEND
 
@@ -39,13 +67,11 @@ COLLISIONLAYERS
 
 Background
 Target
-Player
-Wall, Crate
+Player, Wall, Crate
 
 RULES
 
-[ no wall no crate | >PlayerA | Crate ] -> [ |<PlayerA | <Crate ] 
-
+[ nowallnocrate | > PlayerA | Crate ] -> [  | < PlayerA | < Crate ]
 
 WINCONDITIONS
 
@@ -62,8 +88,6 @@ LEVELS
 #.......#..
 #########..
 
-..........
-
 #####.
 #O..##
 #P**.#
@@ -71,8 +95,6 @@ LEVELS
 .##..#
 ..##O#
 ...###
-
-.....
 
 ..######
 ..#.OOP#
@@ -87,8 +109,6 @@ LEVELS
 ###...#.
 ..#####.
 
-.......
-
 #######
 #.....#
 #.O*O.#
@@ -98,16 +118,12 @@ LEVELS
 #..P..#
 #######
 
-......
-
 ######.#####
 #....###...#
 #.**.....#P#
 #.*.#OOO...#
 #...########
 #####.......
-
-...........
 
 .#######
 .#.....#
@@ -117,8 +133,6 @@ LEVELS
 #......#
 ########
 
-.......
-
 ########
 #......#
 #.O@@*P#
@@ -126,16 +140,12 @@ LEVELS
 #####..#
 ....####
 
-.......
-
 ..####...
 ###..####
 #.....*.#
 #.#..#*.#
 #.O.O#P.#
 #########
-
-........
 
 ######
 #....#
@@ -145,8 +155,6 @@ LEVELS
 #....#
 ######
 
-.....
-
 ####..
 #.O#..
 #..###
@@ -154,5 +162,3 @@ LEVELS
 #..*.#
 #..###
 ####..
-
-.....

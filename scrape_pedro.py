@@ -1,9 +1,15 @@
+from argparse import ArgumentParser
 import os
 import requests
 import re
 
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+
+parser = ArgumentParser()
+parser.add_argument("--update", action="store_true", help="Update the list of PuzzleScript URLs")
+args = parser.parse_args()
+
 
 load_dotenv()
 
@@ -16,7 +22,7 @@ def return_keyval(d, key):
     return None
 
 ps_urls_path = "ps_urls.txt"
-if not os.path.isfile(ps_urls_path):
+if args.update or not os.path.isfile(ps_urls_path):
 
     # URL of the JS file
     js_url = "https://pedros.works/puzzlescript/hyper/PGDGame.js"

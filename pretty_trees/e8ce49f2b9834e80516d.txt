@@ -1,111 +1,105 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Enqueue
+    prelude_data
+      author
+      Allen Webster
+    prelude_data
+      homepage
+      www.pushthegame.com
+    prelude_data	norepeat_action
+    prelude_data	run_rules_on_level_start
   objects_section
     object_data
-      object_name	Background
-      colors
-        color	.
+      object_line
+        object_name	Background
+        legend_key	.
+      color_line
+        color	BLACK
     object_data
-      object_name	BLACK
-      legend_key	W
-      colors
-        color	all
+      object_line
+        object_name	Wall
+        legend_key	#
+      color_line
+        color	DARKGRAY
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '0' '.' '0']
+        ['.' '0' '0' '0' '.']
+        ['0' '.' '0' '.' '0']
+        ['0' '0' '.' '0' '0']
     object_data
-      object_name	#
-      legend_key	D
-      colors
-        color	ARKGRAY
+      object_line
+        object_name	Player
+        legend_key	S
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	00.00
-      legend_key	0
-      colors
-        color	.0.0
+      object_line
+        object_name	Selector
+      color_line
+        color	WHITE
+      sprite
+        ['0' '0' '.' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '.' '0' '0']
     object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	.0.0
+      object_line
+        object_name	RedBlock
+        legend_key	R
+      color_line
+        color	#990000
     object_data
-      object_name	00.00
-      legend_key	P
-      colors
-        color	layer
+      object_line
+        object_name	BlueBlock
+        legend_key	B
+      color_line
+        color	#000099
     object_data
-      object_name	S
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	GreenBlock
+        legend_key	G
+      color_line
+        color	#009900
     object_data
-      object_name	Selector
-      legend_key	W
-      colors
-        color	HITE
+      object_line
+        object_name	YellowBlock
+        legend_key	Y
+      color_line
+        color	#888800
     object_data
-      object_name	00.00
-      legend_key	0
-      colors
-        color	...0
+      object_line
+        object_name	PurpleBlock
+        legend_key	P
+      color_line
+        color	#660066
     object_data
-      object_name	.....
-      legend_key	0
-      colors
-        color	...0
+      object_line
+        object_name	OrangeBlock
+        legend_key	O
+      color_line
+        color	#994400
     object_data
-      object_name	00.00
-      legend_key	R
-      colors
-        color	edBlock
-        color	R
+      object_line
+        object_name	PinkBlock
+        legend_key	I
+      color_line
+        color	PINK
     object_data
-      object_name	#990000
-      legend_key	B
-      colors
-        color	lueBlock
-        color	B
+      object_line
+        object_name	BrownBlock
+        legend_key	W
+      color_line
+        color	#222200
     object_data
-      object_name	#000099
-      legend_key	G
-      colors
-        color	reenBlock
-        color	G
-    object_data
-      object_name	#009900
-      legend_key	Y
-      colors
-        color	ellowBlock
-        color	Y
-    object_data
-      object_name	#888800
-      legend_key	P
-      colors
-        color	urpleBlock
-        color	P
-    object_data
-      object_name	#660066
-      legend_key	O
-      colors
-        color	rangeBlock
-        color	O
-    object_data
-      object_name	#994400
-      legend_key	P
-      colors
-        color	inkBlock
-        color	I
-    object_data
-      object_name	PINK
-      legend_key	B
-      colors
-        color	rownBlock
-    object_data
-      object_name	W
-      legend_key	#
-      colors
-        color	222200
-    object_data
-      object_name	RedPad
-      legend_key	#
-      colors
-        color	990000
+      object_line
+        object_name	RedPad
+      color_line
+        color	#990000
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '0' '.' '.']
@@ -113,10 +107,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	BluePad
-      legend_key	#
-      colors
-        color	000099
+      object_line
+        object_name	BluePad
+      color_line
+        color	#000099
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '0' '.' '.']
@@ -124,10 +118,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	GreenPad
-      legend_key	#
-      colors
-        color	009900
+      object_line
+        object_name	GreenPad
+      color_line
+        color	#009900
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '0' '.' '.']
@@ -135,10 +129,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	YellowPad
-      legend_key	#
-      colors
-        color	888800
+      object_line
+        object_name	YellowPad
+      color_line
+        color	#888800
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '0' '.' '.']
@@ -146,10 +140,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	PurplePad
-      legend_key	#
-      colors
-        color	660066
+      object_line
+        object_name	PurplePad
+      color_line
+        color	#660066
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '0' '.' '.']
@@ -157,10 +151,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	OrangePad
-      legend_key	#
-      colors
-        color	994400
+      object_line
+        object_name	OrangePad
+      color_line
+        color	#994400
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '0' '.' '.']
@@ -168,10 +162,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	PinkPad
-      legend_key	P
-      colors
-        color	INK
+      object_line
+        object_name	PinkPad
+      color_line
+        color	PINK
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '0' '.' '.']
@@ -179,10 +173,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	BrownPad
-      legend_key	#
-      colors
-        color	222200
+      object_line
+        object_name	BrownPad
+      color_line
+        color	#222200
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '0' '.' '.']
@@ -190,108 +184,108 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	QueueLocation
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	QueueLocation
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	QueueHead
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	QueueHead
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	EnqueueHead
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	EnqueueHead
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	Taker
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	Taker
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	Filler
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	Filler
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	WaitingFiller
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	WaitingFiller
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	FillerTakerLocation
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	FillerTakerLocation
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	ModeGen
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	ModeGen
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	WaitingGen
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	WaitingGen
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	SendMode
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	SendMode
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	SendModePerm
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	SendModePerm
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	ReceiveMode
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	ReceiveMode
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	ReceiveModePerm
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	ReceiveModePerm
+      color_line
+        color	TRANSPARENT
   legend_section
     legend_data
-      @
+      @ =
       object_name	Wall
       legend_operation
         object_name	Player
       legend_operation
         object_name	QueueLocation
     legend_data
-      H
+      H =
       object_name	Wall
       legend_operation
         object_name	QueueLocation
     legend_data
-      x
+      x =
       object_name	SendMode
       legend_operation
         object_name	Wall
     legend_data
-      z
+      z =
       object_name	ReceiveMode
       legend_operation
         object_name	ModeGen
       legend_operation
         object_name	Wall
     legend_data
-      ?
+      ? =
       object_name	WaitingGen
       legend_operation
         object_name	Wall
     legend_data
-      +
+      + =
       object_name	SendModePerm
     legend_data
-      -
+      - =
       object_name	ReceiveModePerm
     legend_data
-      Block
+      Block =
       object_name	RedBlock
       legend_operation
         object_name	BlueBlock
@@ -308,7 +302,7 @@ ps_game
       legend_operation
         object_name	BrownBlock
     legend_data
-      Pad
+      Pad =
       object_name	RedPad
       legend_operation
         object_name	BluePad
@@ -325,50 +319,50 @@ ps_game
       legend_operation
         object_name	BrownPad
     legend_data
-      Head
+      Head =
       object_name	QueueHead
       legend_operation
         object_name	EnqueueHead
     legend_data
-      F
+      F =
       object_name	Filler
       legend_operation
         object_name	Wall
     legend_data
-      !
+      ! =
       object_name	Taker
       legend_operation
         object_name	Wall
     legend_data
-      a
+      a =
       object_name	Filler
       legend_operation
         object_name	FillerTakerLocation
       legend_operation
         object_name	Wall
     legend_data
-      [
+      [ =
       object_name	RedPad
     legend_data
-      {
+      { =
       object_name	BluePad
     legend_data
-      ]
+      ] =
       object_name	GreenPad
     legend_data
-      }
+      } =
       object_name	YellowPad
     legend_data
-      :
+      : =
       object_name	PurplePad
     legend_data
-      ;
+      ; =
       object_name	OrangePad
     legend_data
-      '
+      ' =
       object_name	PinkPad
     legend_data
-      "
+      " =
       object_name	BrownPad
   collisionlayers_section
     layer_data
@@ -384,25 +378,19 @@ ps_game
     layer_data
       object_name	RedBlock
       object_name	BlueBlock
-    layer_data
       object_name	GreenBlock
       object_name	YellowBlock
-    layer_data
       object_name	PurpleBlock
       object_name	OrangeBlock
-    layer_data
       object_name	PinkBlock
       object_name	BrownBlock
     layer_data
       object_name	RedPad
       object_name	BluePad
-    layer_data
       object_name	GreenPad
       object_name	YellowPad
-    layer_data
       object_name	PurplePad
       object_name	OrangePad
-    layer_data
       object_name	PinkPad
       object_name	BrownPad
     layer_data
@@ -433,7 +421,7 @@ ps_game
     rule_block
       rule_block_once
         rule_data
-          vertical
+          prefix	vertical
           rule_part
             rule_content
               >
@@ -441,1011 +429,406 @@ ps_game
           ->
           rule_part
             rule_content	Player
-          
-
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	H
-            rule_content	e
-            rule_content	a
-            rule_content	d
+            rule_content	Head
           ->
           rule_part
-            rule_content	|
-            rule_content	.
-            rule_content	.
-            rule_content	.
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	H
-            rule_content	e
-            rule_content	a
-            rule_content	d
-          
-
+            rule_content	...
+            cell_border
+            rule_content	Player
+            rule_content	Head
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	N
-            rule_content	o
-            rule_content	H
-            rule_content	e
-            rule_content	a
-            rule_content	d
+            rule_content	No
+            rule_content	Head
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-          
-
         rule_data
           rule_part
             rule_content	SendModePerm
-            rule_content	]
-            rule_content	[
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	]
-            rule_content	[
-            rule_content	S
-            rule_content	e
-            rule_content	l
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	o
-            rule_content	r
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	]
-            rule_content	[
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
+          rule_part
+            rule_content	action
+            rule_content	Player
+          rule_part
+            rule_content	Selector
+            rule_content	Block
+          rule_part
+            rule_content	Filler
           ->
           rule_part
             rule_content	SendModePerm
-            rule_content	]
-            rule_content	[
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	]
-            rule_content	[
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	S
-            rule_content	e
-            rule_content	l
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	o
-            rule_content	r
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	I
-            rule_content	G
-            rule_content	H
-            rule_content	T
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-          
-
+          rule_part
+            rule_content	action
+            rule_content	Player
+          rule_part
+            rule_content	Wall
+            rule_content	Selector
+          rule_part
+            rule_content	RIGHT
+            rule_content	Filler
+            rule_content	Block
         rule_data
           rule_part
             rule_content	ReceiveModePerm
-            rule_content	]
-            rule_content	[
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	]
-            rule_content	[
-            rule_content	S
-            rule_content	e
-            rule_content	l
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	o
-            rule_content	r
-            rule_content	]
-            rule_content	[
-            rule_content	T
-            rule_content	a
-            rule_content	k
-            rule_content	e
-            rule_content	r
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
+          rule_part
+            rule_content	action
+            rule_content	Player
+          rule_part
+            rule_content	Selector
+          rule_part
+            rule_content	Taker
+            rule_content	Block
           ->
           rule_part
             rule_content	ReceiveModePerm
-            rule_content	]
-            rule_content	[
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	]
-            rule_content	[
-            rule_content	S
-            rule_content	e
-            rule_content	l
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	o
-            rule_content	r
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	I
-            rule_content	G
-            rule_content	H
-            rule_content	T
-            rule_content	T
-            rule_content	a
-            rule_content	k
-            rule_content	e
-            rule_content	r
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-          
-
+          rule_part
+            rule_content	action
+            rule_content	Player
+          rule_part
+            rule_content	Selector
+            rule_content	Block
+          rule_part
+            rule_content	RIGHT
+            rule_content	Taker
+            rule_content	Wall
         rule_data
           rule_part
-            rule_content
-              RedBlock
-              RedPad
+            rule_content	RedBlock
+            rule_content	RedPad
           ->
           rule_part
             rule_content	RedBlock
-          
-
         rule_data
           rule_part
-            rule_content
-              BlueBlock
-              BluePad
+            rule_content	BlueBlock
+            rule_content	BluePad
           ->
           rule_part
             rule_content	BlueBlock
-          
-
         rule_data
           rule_part
-            rule_content
-              GreenBlock
-              GreenPad
+            rule_content	GreenBlock
+            rule_content	GreenPad
           ->
           rule_part
             rule_content	GreenBlock
-          
-
         rule_data
           rule_part
-            rule_content
-              YellowBlock
-              YellowPad
+            rule_content	YellowBlock
+            rule_content	YellowPad
           ->
           rule_part
             rule_content	YellowBlock
-          
-
         rule_data
           rule_part
-            rule_content
-              PurpleBlock
-              PurplePad
+            rule_content	PurpleBlock
+            rule_content	PurplePad
           ->
           rule_part
             rule_content	PurpleBlock
-          
-
         rule_data
           rule_part
-            rule_content
-              OrangeBlock
-              OrangePad
+            rule_content	OrangeBlock
+            rule_content	OrangePad
           ->
           rule_part
             rule_content	OrangeBlock
-          
-
         rule_data
           rule_part
-            rule_content
-              PinkBlock
-              PinkPad
+            rule_content	PinkBlock
+            rule_content	PinkPad
           ->
           rule_part
             rule_content	PinkBlock
-          
-
         rule_data
           rule_part
-            rule_content
-              BrownBlock
-              BrownPad
+            rule_content	BrownBlock
+            rule_content	BrownPad
           ->
           rule_part
             rule_content	BrownBlock
-          
-
         rule_data
-          horizontal
+          prefix	horizontal
           rule_part
             rule_content	QueueLocation
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	S
-            rule_content	e
-            rule_content	n
-            rule_content	d
-            rule_content	M
-            rule_content	o
-            rule_content	d
-            rule_content	e
+            rule_content	SendMode
           ->
           rule_part
-            rule_content
-              QueueLocation
-              QueueHead
+            rule_content	QueueLocation
+            rule_content	QueueHead
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	S
-            rule_content	e
-            rule_content	n
-            rule_content	d
-            rule_content	M
-            rule_content	o
-            rule_content	d
-            rule_content	e
-          
-
+            rule_content	SendMode
         rule_data
           rule_part
             rule_content	SendMode
-            rule_content	]
-            rule_content	[
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	N
-            rule_content	o
-            rule_content	H
-            rule_content	e
-            rule_content	a
-            rule_content	d
-            rule_content	]
-            rule_content	[
-            rule_content	Q
-            rule_content	u
-            rule_content	e
-            rule_content	u
-            rule_content	e
-            rule_content	L
-            rule_content	o
-            rule_content	c
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
+          rule_part
+            rule_content	Player
+            rule_content	No
+            rule_content	Head
+          rule_part
+            rule_content	QueueLocation
           ->
           rule_part
             rule_content	SendMode
-            rule_content	]
-            rule_content	[
-            rule_content	]
-            rule_content	[
-            rule_content	Q
-            rule_content	u
-            rule_content	e
-            rule_content	u
-            rule_content	e
-            rule_content	L
-            rule_content	o
-            rule_content	c
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-          
-
+          rule_part
+          rule_part
+            rule_content	QueueLocation
+            rule_content	Player
         rule_data
           rule_part
             rule_content	SendMode
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	c
-            rule_content	e
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	M
-            rule_content	o
-            rule_content	d
-            rule_content	e
-            rule_content	P
-            rule_content	e
-            rule_content	r
-            rule_content	m
+          rule_part
+            rule_content	ReceiveModePerm
           ->
           rule_part
-            rule_content	]
-            rule_content	[
-            rule_content	S
-            rule_content	e
-            rule_content	n
-            rule_content	d
-            rule_content	M
-            rule_content	o
-            rule_content	d
-            rule_content	e
-            rule_content	P
-            rule_content	e
-            rule_content	r
-            rule_content	m
-          
-
+          rule_part
+            rule_content	SendModePerm
         rule_data
           rule_part
             rule_content	SendMode
           ->
           rule_part
-          
-
         rule_data
-          horizontal
+          prefix	horizontal
           rule_part
             rule_content	QueueLocation
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	R
-            rule_content	e
-            rule_content	c
-            rule_content	e
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	M
-            rule_content	o
-            rule_content	d
-            rule_content	e
+            rule_content	ReceiveMode
           ->
           rule_part
-            rule_content
-              QueueLocation
-              EnqueueHead
+            rule_content	QueueLocation
+            rule_content	EnqueueHead
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	R
-            rule_content	e
-            rule_content	c
-            rule_content	e
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	M
-            rule_content	o
-            rule_content	d
-            rule_content	e
-          
-
+            rule_content	ReceiveMode
         rule_data
           rule_part
             rule_content	ReceiveMode
-            rule_content	]
-            rule_content	[
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	N
-            rule_content	o
-            rule_content	H
-            rule_content	e
-            rule_content	a
-            rule_content	d
-            rule_content	]
-            rule_content	[
-            rule_content	Q
-            rule_content	u
-            rule_content	e
-            rule_content	u
-            rule_content	e
-            rule_content	L
-            rule_content	o
-            rule_content	c
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
+          rule_part
+            rule_content	Player
+            rule_content	No
+            rule_content	Head
+          rule_part
+            rule_content	QueueLocation
           ->
           rule_part
             rule_content	ReceiveMode
-            rule_content	]
-            rule_content	[
-            rule_content	]
-            rule_content	[
-            rule_content	Q
-            rule_content	u
-            rule_content	e
-            rule_content	u
-            rule_content	e
-            rule_content	L
-            rule_content	o
-            rule_content	c
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-          
-
+          rule_part
+          rule_part
+            rule_content	QueueLocation
+            rule_content	Player
         rule_data
           rule_part
             rule_content	ReceiveMode
-            rule_content	]
-            rule_content	[
-            rule_content	S
-            rule_content	e
-            rule_content	n
-            rule_content	d
-            rule_content	M
-            rule_content	o
-            rule_content	d
-            rule_content	e
-            rule_content	P
-            rule_content	e
-            rule_content	r
-            rule_content	m
+          rule_part
+            rule_content	SendModePerm
           ->
           rule_part
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	c
-            rule_content	e
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	M
-            rule_content	o
-            rule_content	d
-            rule_content	e
-            rule_content	P
-            rule_content	e
-            rule_content	r
-            rule_content	m
-          
-
+          rule_part
+            rule_content	ReceiveModePerm
         rule_data
           rule_part
             rule_content	ReceiveMode
           ->
           rule_part
-          
-
         rule_data
           rule_part
-            rule_content
-              action
-              Player
-              Head
+            rule_content	action
+            rule_content	Player
+            rule_content	Head
           ->
           rule_part
-            rule_content
-              RIGHT
-              Player
-              RIGHT
-              Head
-          
-
+            rule_content	RIGHT
+            rule_content	Player
+            rule_content	RIGHT
+            rule_content	Head
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
             rule_content	QueueHead
             cell_border
-            rule_content	N
-            rule_content	o
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
+            rule_content	No
+            rule_content	Block
           ->
           rule_part
-            rule_content	|
-          
-
+            cell_border
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
             rule_content	EnqueueHead
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Wall
           ->
           rule_part
-            rule_content	|
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-          
-
+            cell_border
+            rule_content	Wall
         rule_data
-          late
-          horizontal
+          prefix	late
+          prefix	horizontal
           rule_part
-            rule_content
-              Player
-              No
-              Head
+            rule_content	Player
+            rule_content	No
+            rule_content	Head
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	H
-            rule_content	e
-            rule_content	a
-            rule_content	d
+            rule_content	Head
           ->
           rule_part
-            rule_content	|
-            rule_content	.
-            rule_content	.
-            rule_content	.
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	H
-            rule_content	e
-            rule_content	a
-            rule_content	d
-          
-
+            rule_content	...
+            cell_border
+            rule_content	Player
+            rule_content	Head
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
             rule_content	Player
             cell_border
-            rule_content	N
-            rule_content	o
-            rule_content	S
-            rule_content	e
-            rule_content	l
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	o
-            rule_content	r
+            rule_content	No
+            rule_content	Selector
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	S
-            rule_content	e
-            rule_content	l
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	o
-            rule_content	r
-          
-
+            rule_content	Selector
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
-            rule_content
-              No
-              Player
+            rule_content	No
+            rule_content	Player
             cell_border
-            rule_content	S
-            rule_content	e
-            rule_content	l
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	o
-            rule_content	r
+            rule_content	Selector
           ->
           rule_part
-            rule_content	|
-          
-
+            cell_border
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Selector
-              Wall
+            rule_content	Selector
+            rule_content	Wall
           ->
           rule_part
             rule_content	Wall
-          
-
         rule_data
-          late
-          up
+          prefix	late
+          prefix	up
           rule_part
-            rule_content
-              Filler
-              Wall
+            rule_content	Filler
+            rule_content	Wall
             cell_border
-            rule_content	N
-            rule_content	o
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	No
+            rule_content	Wall
           ->
           rule_part
             rule_content	Wall
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	Filler
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
             rule_content	Filler
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
+            rule_content	Filler
           ->
           rule_part
             rule_content	Filler
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	i
-            rule_content	t
-            rule_content	i
-            rule_content	n
-            rule_content	g
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	WaitingFiller
         rule_data
-          late
-          up
+          prefix	late
+          prefix	up
           rule_part
-            rule_content
-              Taker
-              Wall
+            rule_content	Taker
+            rule_content	Wall
             cell_border
-            rule_content	N
-            rule_content	o
-            rule_content	T
-            rule_content	a
-            rule_content	k
-            rule_content	e
-            rule_content	r
+            rule_content	No
+            rule_content	Taker
           ->
           rule_part
             rule_content	Wall
             cell_border
-            rule_content	T
-            rule_content	a
-            rule_content	k
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	Taker
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Taker
-              No
-              Block
-            rule_content	]
-            rule_content	[
-            rule_content	M
-            rule_content	o
-            rule_content	d
-            rule_content	e
-            rule_content	G
-            rule_content	e
-            rule_content	n
+            rule_content	Taker
+            rule_content	No
+            rule_content	Block
+          rule_part
+            rule_content	ModeGen
           ->
           rule_part
-            rule_content	]
-            rule_content	[
-            rule_content	S
-            rule_content	e
-            rule_content	n
-            rule_content	d
-            rule_content	M
-            rule_content	o
-            rule_content	d
-            rule_content	e
-          command
-            command_keyword	again
-          
-
-        rule_data
-          late
-          up
           rule_part
-            rule_content
-              Filler
-              Wall
+            rule_content	SendMode
+          prefix	again
+        rule_data
+          prefix	late
+          prefix	up
+          rule_part
+            rule_content	Filler
+            rule_content	Wall
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	]
-            rule_content	[
-            rule_content	W
-            rule_content	a
-            rule_content	i
-            rule_content	t
-            rule_content	i
-            rule_content	n
-            rule_content	g
-            rule_content	G
-            rule_content	e
-            rule_content	n
-            rule_content	]
-            rule_content	u
-            rule_content	p
-            rule_content	[
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
-            rule_content	T
-            rule_content	a
-            rule_content	k
-            rule_content	e
-            rule_content	r
-            rule_content	L
-            rule_content	o
-            rule_content	c
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
+            rule_content	Wall
+          rule_part
+            rule_content	WaitingGen
+          prefix	up
+          rule_part
+            rule_content	FillerTakerLocation
             cell_border
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	]
-            rule_content	[
-            rule_content	W
-            rule_content	a
-            rule_content	i
-            rule_content	t
-            rule_content	i
-            rule_content	n
-            rule_content	g
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
+            rule_content	Block
+          rule_part
+            rule_content	WaitingFiller
           ->
           rule_part
             rule_content	Wall
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	]
-            rule_content	[
-            rule_content	M
-            rule_content	o
-            rule_content	d
-            rule_content	e
-            rule_content	G
-            rule_content	e
-            rule_content	n
-            rule_content	R
-            rule_content	e
-            rule_content	c
-            rule_content	e
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	M
-            rule_content	o
-            rule_content	d
-            rule_content	e
-            rule_content	]
-            rule_content	[
+            rule_content	Wall
+          rule_part
+            rule_content	ModeGen
+            rule_content	ReceiveMode
+          rule_part
             cell_border
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	T
-            rule_content	a
-            rule_content	k
-            rule_content	e
-            rule_content	r
-            rule_content	]
-            rule_content	[
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
-          command
-            command_keyword	again
-          
-
+            rule_content	Block
+            rule_content	Taker
+          rule_part
+            rule_content	Filler
+          prefix	again
   winconditions_section
     condition_data
       No
@@ -1465,7 +848,6 @@ ps_game
  ['#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '[' ']' '{' '[' '#' '#']
  ['#' '#' 'F' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' 'R' 'B' 'R' 'B' '#' '#']
  ['#' '#' '!' '#' '#' '#' '#' '#']
@@ -1510,7 +892,6 @@ ps_game
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '[' ';' '[' '[' ']' '[' '#' '#']
  ['#' '#' 'F' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' 'R' 'G' 'B' 'Y' 'O' 'P' '#' '#']
  ['#' '#' '!' '#' '#' '#' '#' '#' '#' '#']
@@ -1533,7 +914,6 @@ ps_game
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '[' ']' ';' ':' '{' '}' '#' '#']
  ['#' '#' 'F' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' 'R' 'G' 'G' 'B' 'B' 'Y' 'Y' 'R' '#' '#']
  ['#' '#' '!' '#' '#' '#' '#' '#' '#' '#' '#' '#']
@@ -1648,4 +1028,3 @@ ps_game
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '"' ';' ':' ']' "'" '{' '}' '[' '#' '#']
  ['#' '#' 'F' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None

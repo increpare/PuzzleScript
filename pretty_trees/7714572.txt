@@ -1,73 +1,79 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Cancel
+    prelude_data
+      author
+      Dean Huff
+    prelude_data
+      homepage
+      www.puzzlescript.net
   objects_section
     object_data
-      object_name	Background
-      legend_key	B
-      colors
-        color	LACK
+      object_line
+        object_name	Background
+      color_line
+        color	BLACK
     object_data
-      object_name	Target
-      legend_key	D
-      colors
-        color	arkBlue
+      object_line
+        object_name	Target
+      color_line
+        color	DarkBlue
     object_data
-      object_name	Wall
-      legend_key	O
-      colors
-        color	range
+      object_line
+        object_name	Wall
+      color_line
+        color	Orange
     object_data
-      object_name	Player
-      legend_key	D
-      colors
-        color	arkGray
+      object_line
+        object_name	Player
+      color_line
+        color	DarkGray
     object_data
-      object_name	Earth
-      legend_key	G
-      colors
-        color	reen
+      object_line
+        object_name	Earth
+      color_line
+        color	Green
     object_data
-      object_name	Water
-      legend_key	B
-      colors
-        color	lue
+      object_line
+        object_name	Water
+      color_line
+        color	Blue
     object_data
-      object_name	Fire
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Fire
+      color_line
+        color	Red
     object_data
-      object_name	Air
-      legend_key	W
-      colors
-        color	hite
-      
-
-
-
+      object_line
+        object_name	Air
+      color_line
+        color	White
   legend_section
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      #
+      # =
       object_name	Wall
     legend_data
-      P
+      P =
       object_name	Player
     legend_data
-      E
+      E =
       object_name	Earth
     legend_data
-      W
+      W =
       object_name	Water
     legend_data
-      F
+      F =
       object_name	Fire
     legend_data
-      A
+      A =
       object_name	Air
     legend_data
-      @
+      @ =
       object_name	Target
   collisionlayers_section
     layer_data
@@ -77,10 +83,8 @@ ps_game
     layer_data
       object_name	Player
       object_name	Wall
-    layer_data
       object_name	Earth
       object_name	Water
-    layer_data
       object_name	Fire
       object_name	Air
   rules_section
@@ -92,145 +96,93 @@ ps_game
               >
               Player
             cell_border
-            rule_content	E
-            rule_content	a
-            rule_content	r
-            rule_content	t
-            rule_content	h
+            rule_content	Earth
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	E
-            rule_content	a
-            rule_content	r
-            rule_content	t
-            rule_content	h
-          
-
+            rule_content
+              >
+              Earth
         rule_data
           rule_part
             rule_content
               <
               Player
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	r
+            rule_content	Water
           ->
           rule_part
             rule_content
               <
               Player
             cell_border
-            rule_content	<
-            rule_content	W
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content
+              <
+              Water
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	r
-            rule_content	e
+            rule_content	Fire
           ->
           rule_part
             rule_content	Fire
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-          command
-            sound
-              sound_id	0
-          
-
+            rule_content	Player
+          prefix	SFX0
         rule_data
           rule_part
-            rule_content
-              V
-              Player
+            rule_content	V
+            rule_content	Player
             cell_border
-            rule_content	A
-            rule_content	i
-            rule_content	r
+            rule_content	Air
           ->
           rule_part
-            rule_content
-              V
-              Player
+            rule_content	V
+            rule_content	Player
             cell_border
-            rule_content	<
-            rule_content	A
-            rule_content	i
-            rule_content	r
-          
-
+            rule_content
+              <
+              Air
         rule_data
           rule_part
             rule_content
               ^
               Player
             cell_border
-            rule_content	A
-            rule_content	i
-            rule_content	r
+            rule_content	Air
           ->
           rule_part
             rule_content
               ^
               Player
             cell_border
-            rule_content	<
-            rule_content	A
-            rule_content	i
-            rule_content	r
-          
-
+            rule_content
+              <
+              Air
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Fire
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	r
+            rule_content	Water
           ->
           rule_part
-            rule_content	|
-          
-
+            cell_border
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Earth
             cell_border
-            rule_content	A
-            rule_content	i
-            rule_content	r
+            rule_content	Air
           ->
           rule_part
-            rule_content	|
-          
-
+            cell_border
   winconditions_section
     condition_data
       No
@@ -245,7 +197,6 @@ ps_game
       No
       object_name	Air
   levels_section
-    level_data	None
     level_data	[['#' '#' '#' '#' '.' '.' '#' '#' '#']
  ['#' 'P' '#' '#' '.' '.' '.' '.' '.']
  ['#' 'E' '#' '.' '.' '.' '#' '.' '.']
@@ -253,7 +204,6 @@ ps_game
  ['.' '.' '#' '#' '#' '#' '#' '.' '#']
  ['.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '.' '.' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '.' '.' '#']
  ['#' 'W' '#' '.' '.' '.' '.' '.' '#']
  ['#' 'P' '#' '.' '.' '.' '#' '.' '#']
@@ -261,7 +211,6 @@ ps_game
  ['#' '.' '#' '#' '#' '#' '#' '.' '.']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.']
  ['#' '.' '.' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '.' '.' '.' '.']
  ['.' 'F' '#' '.' '.' '.' '.' '.' '.']
  ['.' 'P' '#' '#' '.' '#' '.' '.' '.']
@@ -269,7 +218,6 @@ ps_game
  ['.' '.' '#' '#' '#' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '.' '.' '.' '.']
  ['.' 'A' '#' '#' '.' '.' '.' '.' '.']
  ['.' 'P' '#' '.' '.' '.' '#' '.' '.']
@@ -277,7 +225,6 @@ ps_game
  ['.' '.' '#' '#' '#' '#' '#' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.']]
-    level_data	None
     level_data	[['P' '.' 'E' '#' 'E' '#' 'E' '.' '.']
  ['.' '.' '#' '.' '.' '.' '#' '.' '.']
  ['E' '.' '.' 'A' 'A' 'A' '.' '.' 'E']
@@ -285,16 +232,14 @@ ps_game
  ['E' '.' '.' 'A' 'A' 'A' '.' '.' 'E']
  ['.' '.' '#' '.' '.' '.' '#' '.' '.']
  ['.' '.' 'E' '#' 'E' '#' 'E' '.' '.']]
-    level_data	None
-    level_data	[['W' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '.']]
-    level_data	[['#' '#' '.' '.' '#' '#' '.' '.' '.' '.' '.' '.']
+    level_data	[['W' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '.']
+ ['#' '#' '.' '.' '#' '#' '.' '.' '.' '.' '.' '.']
  ['F' 'F' '#' '.' '.' '.' '#' '.' '#' '.' '#' '.']
  ['P' 'F' '#' '#' '.' '.' '#' '.' '#' '.' '.' '.']
  ['.' 'F' '.' '.' '.' '#' '.' '.' 'W' '.' '.' '#']
  ['#' '#' '.' '#' '.' '.' '#' '.' '#' '#' '.' '.']
  ['W' '.' '.' '.' '.' '.' '.' '.' 'W' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '.' '.' '#']]
-    level_data	None
     level_data	[['P' '.' 'F' 'F' 'F' 'F']
  ['.' '#' '#' '#' '#' '.']
  ['.' '#' '.' '.' '.' '.']
@@ -304,13 +249,11 @@ ps_game
  ['.' '.' '.' '.' '.' '.']
  ['.' '#' '#' '#' '#' 'W']
  ['.' '.' 'F' 'F' 'F' '.']]
-    level_data	None
-    level_data	[['P' '.' '.' 'A' '.' '.' '.' '#' '.']]
-    level_data	[['.' '#' '.' '.' 'A' '#' '.' '.' '.']
+    level_data	[['P' '.' '.' 'A' '.' '.' '.' '#' '.']
+ ['.' '#' '.' '.' 'A' '#' '.' '.' '.']
  ['.' '.' '.' '#' '.' '.' '.' '#' 'E']
  ['.' '#' '.' 'A' '.' '#' '.' '.' '.']
  ['.' 'A' '.' '#' '.' '.' '.' '#' 'E']
  ['.' '#' '.' '.' '.' '#' '#' '.' '.']
  ['.' 'A' '.' '#' '.' '.' '.' '.' 'E']
  ['.' '.' '.' '.' 'E' '.' 'E' '.' '.']]
-    level_data	None

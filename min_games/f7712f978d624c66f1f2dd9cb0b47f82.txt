@@ -1,146 +1,254 @@
+title Quantum Childminding
+author Mark Richardson
+noaction
+require_player_movement
+run_rules_on_level_start
+
 OBJECTS
 
-Background,Black
-Player@White
-GrayPink Green
-.000..323.
-00000.111.
-11111Wave
-.Pink
-..........
-..0.......
-.....Child
-BrownYellow Pink
-......000.
-11111.222.
-22222Move1
-TransparentMove2
-TransparentWallA A
-LightGrayWallB
-BLightGray LightBlue
-1101111011
-0000011011
-11011WallC C
-BlueDarkBlue LightBlue
-0010110110
-0101010101
-10100Level1
-1Brown Black
-0000001110
-0111001110
-00000Level1A
-Brown#F00 #D00
-0121002120
-0121002120
-00000Level1B
-Brown#F80 #D70
-0121002120
-0121002120
-00000Level1C
-Brown#FF0 #DD0
-0121002120
-0121002120
-00000Level1D
-Brown#8F0 #7D0
-0121002120
-0121002120
-00000Level1E
-Brown#0F0 #0D0
-0121002120
-0121002120
-00000Level2
-2Brown Black
-1111111111
-0000011111
-00000Level2A
-BrownDarkGreen
-PurpleLightBlue Orange
-3441234412
-0000012334
-00000Level2B
-BrownRed
-WhiteBlack Blue
-3441234412
-0000012334
-00000Level2C
-BrownLightGreen
-GreenYellow LightRed
-3441234412
-0000012334
-00000Level2D
-BrownPink
-DarkBrownDarkBlue Grey
-3441234412
-0000012334
-00000Level2E
-BrownLightGrey
-LightBrownDarkGrey DarkRed
-3441234412
-0000012334
-00000Level3
-3Brown Black00000
-01110
-01110
-01110
-00000
+Background ,
+Black
 
-Level3ABrown LightBlue
-0000001110
-0111001110
-00000Level3B
-BrownGrey LightGrey00000
+Player @
+White Gray Pink Green
+.000.
+.323.
+00000
+.111.
+1111
+
+Wave .
+Pink
+.....
+.....
+..0..
+.....
+....
+
+Child
+Brown Yellow Pink
+.....
+.000.
+11111
+.222.
+2222
+
+Move1
+Transparent
+
+Move2
+Transparent
+
+WallA A
+LightGray
+
+WallB B
+LightGray LightBlue
+11011
+11011
+00000
+11011
+1101
+
+WallC C
+Blue DarkBlue LightBlue
+00101
+10110
+01010
+10101
+1010
+
+Level1 1
+Brown Black
+00000
+01110
+01110
+01110
+0000
+
+Level1A
+Brown #F00 #D00
 01210
 02120
 01210
-00000
+02120
+0000
 
-Level3CBrown LightBrown
-..1...100.
-..1...100.
-.100.Level3D
-WhiteRed Black00000
+Level1B
+Brown #F80 #D70
+01210
+02120
+01210
+02120
+0000
+
+Level1C
+Brown #FF0 #DD0
+01210
+02120
+01210
+02120
+0000
+
+Level1D
+Brown #8F0 #7D0
+01210
+02120
+01210
+02120
+0000
+
+Level1E
+Brown #0F0 #0D0
+01210
+02120
+01210
+02120
+0000
+
+Level2 2
+Brown Black
+11111
+11111
+00000
+11111
+0000
+
+Level2A
+Brown DarkGreen Purple LightBlue Orange
+34412
+34412
+00000
+12334
+0000
+
+Level2B
+Brown Red White Black Blue
+34412
+34412
+00000
+12334
+0000
+
+Level2C
+Brown LightGreen Green Yellow LightRed
+34412
+34412
+00000
+12334
+0000
+
+Level2D
+Brown Pink DarkBrown DarkBlue Grey
+34412
+34412
+00000
+12334
+0000
+
+Level2E
+Brown LightGrey LightBrown DarkGrey DarkRed
+34412
+34412
+00000
+12334
+0000
+
+Level3 3
+Brown Black
+00000
+01110
+01110
+01110
+0000
+
+Level3A
+Brown LightBlue
+00000
+01110
+01110
+01110
+0000
+
+Level3B
+Brown Grey LightGrey
+00000
+01210
+02120
+01210
+0000
+
+Level3C
+Brown LightBrown
+..1..
+.100.
+..1..
+.100.
+.100
+
+Level3D
+White Red Black
+00000
 .000.
 11121
 12111
-.000.
+.000
 
-Level3EBrown DarkBrown
-0000011011
-0000001101
-00000Level4 4
-GreenDarkGreen LightGreen
-0010010001
-0101101001
-11010Level4A
-GreenDarkGreen LightGreen
-1010010000
-0010010011
-01010Level4B
-GreenDarkGreen LightGreen
-1001002010
-0010000221
-01010Level4C
-GreenDarkGreen LightGreen10120
+Level3E
+Brown DarkBrown
+00000
+11011
+00000
+01101
+0000
+
+Level4 4
+Green DarkGreen LightGreen
+00100
+10001
+01011
+01001
+1101
+
+Level4A
+Green DarkGreen LightGreen
+10100
+10000
+00100
+10011
+0101
+
+Level4B
+Green DarkGreen LightGreen
+10010
+02010
+00100
+00221
+0101
+
+Level4C
+Green DarkGreen LightGreen
+10120
 10000
 00100
 20011
-01010
+0101
 
-Level4DGreen
-DarkGreenLightGreen Red01032
+Level4D
+Green DarkGreen LightGreen Red
+01032
 31001
 00131
 13000
-01020
+0102
 
-Level4EGreen
-DarkGreenLightGreen Yellow01312
+Level4E
+Green DarkGreen LightGreen Yellow
+01312
 03001
 00103
 10300
-01020
-
-
+0102
 
 
 LEGEND
@@ -154,39 +262,14 @@ Wall = A or B or C or 1 or Level1X or 2 or Level2X or 3 or Level3X or 4 or Level
 COLLISIONLAYERS
 
 Background
-Wave, Child
-Move1, Move2
+Wave, Child, Move1, Move2
 Player, Wall
 
 RULES
 
-[ Level1 ] -> [ random Level1X ] 
-[ Level2 ] -> [ random Level2X ] 
-[ Level3 ] -> [ random Level3X ] 
-[ Level4 ] -> [ random Level4X ] 
-[ Move1 ] -> [  ] 
-random [ Wall ] -> [ action Wall ] 
-[ Move2][actionWall ] -> [ ][stationaryWallMove1 ] 
-[ action Wall ] -> [ stationary Wall Move2 ] 
-[ > Player | noWall ] -> [ |stationaryPlayer ] 
-[ Child no Player ] -> [ Wave ] 
-[ Move1][stationaryWave ] -> [ Move1][actionWave ] 
-[ action Wave | noWavenoWallnoPlayer ] -> [ action Wave | stationaryWave ] 
-[ action Wave ] -> [ stationary Wave ] 
-[ Player Wave ] -> [ Player up Wave ] 
-[ up Wave][stationaryWave ] -> [ ][stationaryWave ] 
-[ up Wave ] -> [ stationary Child ] 
-[ Player | noWallstationaryBackground ] -> [ Player | >Background ] 
-startloop
-[ moving Background stationary Wave ] -> [ moving Background action Wave ] 
-[ > Background | noWallstationaryBackground ] -> [ > Background | actionBackground ] 
-[ > Background | stationaryBackground ] -> [ stationary Background | stationaryBackground ] 
-[ > Background | actionBackground ] -> [ stationary Background | >Background ] 
-random [ action Wave ] -> [ up Wave ] 
-[ action Wave ] -> [  ] 
-[ up Wave][stationaryWave ] -> [ ][stationaryWave ] 
-[ up Wave ] -> [ stationary Child ] 
-endloop
+[ Level1 ] -> [ randomLevel1X ][ Level2 ] -> [ randomLevel2X ][ Level3 ] -> [ randomLevel3X ][ Level4 ] -> [ randomLevel4X ][ Move1 ] -> [  ]random [ Wall ] -> [ actionWall ][ Move2 ] [ actionWall ] -> [  ] [ stationaryWallMove1 ][ actionWall ] -> [ stationaryWallMove2 ][ > Player | noWall ] -> [  | stationaryPlayer ][ ChildnoPlayer ] -> [ Wave ][ Move1 ] [ stationaryWave ] -> [ Move1 ] [ actionWave ][ actionWave | noWavenoWallnoPlayer ] -> [ actionWave | stationaryWave ][ actionWave ] -> [ stationaryWave ][ PlayerWave ] -> [ PlayerupWave ][ upWave ] [ stationaryWave ] -> [  ] [ stationaryWave ][ upWave ] -> [ stationaryChild ][ Player | noWallstationaryBackground ] -> [ Player | > Background ]startloop
+[ movingBackgroundstationaryWave ] -> [ movingBackgroundactionWave ][ > Background | noWallstationaryBackground ] -> [ > Background | actionBackground ][ > Background | stationaryBackground ] -> [ stationaryBackground | stationaryBackground ][ > Background | actionBackground ] -> [ stationaryBackground | > Background ]random [ actionWave ] -> [ upWave ][ actionWave ] -> [  ][ upWave ] [ stationaryWave ] -> [  ] [ stationaryWave ][ upWave ] -> [ stationaryChild ]endloop
+
 
 
 WINCONDITIONS

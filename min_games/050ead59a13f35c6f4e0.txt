@@ -1,88 +1,121 @@
+title FACED
+author Daniel Haazen
+homepage www.sheepolution.com
+run_rules_on_level_start
+
 OBJECTS
 
-BackgroundBLACK00000
+Background
+BLACK
 00000
 00000
 00000
 00000
+0000
 
-Player#2491FF black00000
+Player
+#2491FF black
+00000
 01010
 00000
 01110
-00000
+0000
 
-Pullingyellow.....
+Pulling
+yellow
+.....
 .0.0.
 .....
 .000.
-.....
+....
 
-Yellow#EBB00000000
+Yellow
+#EBB000
 00000
 00000
 00000
 00000
+0000
 
-Red#FF545400000
+Red
+#FF5454
+00000
 0.0.0
 00000
 0...0
-00000
+0000
 
-Green#00990000000
+Green
+#009900
+00000
 0.0.0
 00000
 0...0
-00000
+0000
 
-Purple#C500FF00000
+Purple
+#C500FF
+00000
 0.0.0
 00000
 0...0
-00000
+0000
 
-Grey#64646400000
+Grey
+#646464
+00000
 0.0.0
 00000
 0...0
-00000
+0000
 
-Orange#FF8A2400000
+Orange
+#FF8A24
+00000
 0.0.0
 00000
 0...0
-00000
+0000
 
-Red2#FF5454.....
+Red2
+#FF5454
+.....
 .0.0.
 .....
 .000.
-.....
+....
 
-Green2#009900.....
+Green2
+#009900
+.....
 .0.0.
 .....
 .000.
-.....
+....
 
-Purple2#C500FF.....
+Purple2
+#C500FF
+.....
 .0.0.
 .....
 .000.
-.....
+....
 
-Grey2#646464.....
+Grey2
+#646464
+.....
 .0.0.
 .....
 .000.
-.....
+....
 
-Orange2#FF8A24.....
+Orange2
+#FF8A24
+.....
 .0.0.
 .....
 .000.
-.....
+....
 
 
 LEGEND
@@ -109,24 +142,7 @@ pulling
 
 RULES
 
-[ action player no pulling ] -> [ player pulling ] 
-[ action player pulling ] -> [ player ] 
-[ > Player | Red ] -> [ > Player | >Red ] 
-[ > Player | Green ] -> [ > Player | >Green ] 
-[ < Player pulling | Purple ] -> [ < Player | <Purple ] 
-[ > Player no Yellow no pulling | Orange ] -> [ Orange | Player ] 
-[ < Player pulling | Red ] -> [ < Player | <Red ] 
-[ > Player pulling ] -> [ > Player ] 
-[ > Face1 | Yellow ] -> [ Face1 | Yellow ] 
-[ > Face1 | Face1 ] -> [ Face1 | Face1 ] 
-[ Face2 ] -> [  ] 
-[ Purple |  |  |  |  |  |  |  ] -> [ Purple |  |  |  |  |  |  | Purple2 ] 
-[ Red |  |  |  |  |  |  |  ] -> [ Red |  |  |  |  |  |  | Red2 ] 
-[ Green |  |  |  |  |  |  |  ] -> [ Green |  |  |  |  |  |  | Green2 ] 
-[ Grey |  |  |  |  |  |  |  ] -> [ Grey |  |  |  |  |  |  | Grey2 ] 
-[ Orange |  |  |  |  |  |  |  ] -> [ Orange |  |  |  |  |  |  | Orange2 ] 
-[ orthogonal Face1 |  |  |  |  |  |  | Face2 ] -> [ orthogonal Face1 |  |  |  |  |  |  | orthogonalFace2 ] 
-
+[ actionplayernopulling ] -> [ playerpulling ][ actionplayerpulling ] -> [ player ][ > Player | Red ] -> [ > Player | > Red ][ > Player | Green ] -> [ > Player | > Green ][ < Playerpulling | Purple ] -> [ < Player | < Purple ][ > PlayernoYellownopulling | Orange ] -> [ Orange | Player ] sfx1[ < Playerpulling | Red ] -> [ < Player | < Red ][ > Playerpulling ] -> [ > Player ][ > Face1 | Yellow ] -> [ Face1 | Yellow ][ > Face1 | Face1 ] -> [ Face1 | Face1 ][ Face2 ] -> [  ][ Purple |  |  |  |  |  |  |  ] -> [ Purple |  |  |  |  |  |  | Purple2 ][ Red |  |  |  |  |  |  |  ] -> [ Red |  |  |  |  |  |  | Red2 ][ Green |  |  |  |  |  |  |  ] -> [ Green |  |  |  |  |  |  | Green2 ][ Grey |  |  |  |  |  |  |  ] -> [ Grey |  |  |  |  |  |  | Grey2 ][ Orange |  |  |  |  |  |  |  ] -> [ Orange |  |  |  |  |  |  | Orange2 ][ orthogonalFace1 |  |  |  |  |  |  | Face2 ] -> [ orthogonalFace1 |  |  |  |  |  |  | orthogonalFace2 ]
 
 WINCONDITIONS
 

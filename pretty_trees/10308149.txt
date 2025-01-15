@@ -1,61 +1,54 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Hack It! - Tilt Game
+    prelude_data
+      author
+      Everyone
+    prelude_data	noundo
+    prelude_data
+      zoomscreen
+      10x5
   objects_section
     object_data
-      object_name	Background
-      colors
-        color	.
+      object_line
+        object_name	Background
+        legend_key	.
+      color_line
+        color	Green
     object_data
-      object_name	Green
-      legend_key	F
-      colors
-        color	inish
-    object_data
-      object_name	O
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Finish
+        legend_key	O
+      color_line
+        color	Red
         color	DarkRed
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '.' '.' '0']
+        ['0' '1' '.' '.' '0']
+        ['0' '0' '0' '0' '0']
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	1110
-    object_data
-      object_name	01..0
-      legend_key	0
-      colors
-        color	1..0
-    object_data
-      object_name	00000
-      legend_key	W
-      colors
-        color	all
-    object_data
-      object_name	#
-      legend_key	B
-      colors
-        color	rown
+      object_line
+        object_name	Wall
+        legend_key	#
+      color_line
+        color	Brown
         color	DarkBrown
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '.' '.' '0']
+        ['0' '1' '.' '.' '0']
+        ['0' '0' '0' '0' '0']
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	1110
-    object_data
-      object_name	01..0
-      legend_key	0
-      colors
-        color	1..0
-    object_data
-      object_name	00000
-      legend_key	C
-      colors
-        color	rate
-    object_data
-      object_name	C
-      legend_key	B
-      colors
-        color	rown
+      object_line
+        object_name	Crate
+        legend_key	C
+      color_line
+        color	Brown
         color	DarkBrown
       sprite
         ['.' '.' '.' '.' '.']
@@ -64,9 +57,10 @@ ps_game
         ['.' '0' '0' '0' '1']
         ['.' '.' '1' '1' '1']
     object_data
-      object_name	Player
-      legend_key	@
-      colors
+      object_line
+        object_name	Player
+        legend_key	@
+      color_line
         color	Orange
         color	Blue
       sprite
@@ -76,16 +70,13 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	Timer
-      legend_key	#
-      colors
-        color	309800
-      
-
-
+      object_line
+        object_name	Timer
+      color_line
+        color	#309800
   legend_section
     legend_data
-      Solid
+      Solid =
       object_name	Player
       legend_operation
         object_name	Wall
@@ -100,7 +91,6 @@ ps_game
       object_name	Finish
     layer_data
       object_name	Player
-    layer_data
       object_name	Wall
       object_name	Crate
   rules_section
@@ -111,115 +101,59 @@ ps_game
             rule_content	Finish
           ->
           rule_part
-            rule_content
-              action
-              Finish
-          
-
+            rule_content	action
+            rule_content	Finish
         rule_data
-          random
+          prefix	random
           rule_part
-            rule_content
-              action
-              Finish
-            rule_content	]
-            rule_content	[
-            rule_content	T
-            rule_content	i
-            rule_content	m
-            rule_content	e
-            rule_content	r
+            rule_content	action
+            rule_content	Finish
+          rule_part
+            rule_content	Timer
           ->
           rule_part
             rule_content	Finish
-            rule_content	]
-            rule_content	[
-          
-
-        rule_data
-          random
           rule_part
-            rule_content
-              action
-              Finish
-            rule_content	]
-            rule_content	[
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+        rule_data
+          prefix	random
+          rule_part
+            rule_content	action
+            rule_content	Finish
+          rule_part
+            rule_content	Wall
           ->
           rule_part
             rule_content	Wall
-            rule_content	]
-            rule_content	[
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	F
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	s
-            rule_content	h
-          
-
+          rule_part
+            rule_content	action
+            rule_content	Finish
         rule_data
           rule_part
-            rule_content
-              action
-              Finish
-            rule_content	]
-            rule_content	[
-            rule_content	n
-            rule_content	o
-            rule_content	T
-            rule_content	i
-            rule_content	m
-            rule_content	e
-            rule_content	r
+            rule_content	action
+            rule_content	Finish
+          rule_part
+            rule_content	no
+            rule_content	Timer
           ->
           rule_part
-            rule_content
-              action
-              Finish
-            rule_content	]
-            rule_content	[
-            rule_content	T
-            rule_content	i
-            rule_content	m
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	action
+            rule_content	Finish
+          rule_part
+            rule_content	Timer
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
+            rule_content	no
+            rule_content	Solid
           ->
           rule_part
-            rule_content	|
-            rule_content	>
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-          
-
+            cell_border
+            rule_content
+              >
+              Player
         rule_data
           +
           rule_part
@@ -227,149 +161,69 @@ ps_game
               >
               Player
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
-            rule_content	n
-            rule_content	o
-            rule_content	F
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	s
-            rule_content	h
+            rule_content	no
+            rule_content	Solid
+            rule_content	no
+            rule_content	Finish
           ->
           rule_part
-            rule_content	|
-            rule_content	>
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Crate
         rule_data
           rule_part
-            rule_content	|
-            rule_content	>
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-            rule_content	F
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	s
-            rule_content	h
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content
+              >
+              Player
+            rule_content	Finish
+            cell_border
+            rule_content	Wall
           ->
           rule_part
             rule_content	Finish
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Wall
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-          command
-            sound
-              sound_id	2
-          
-
+            rule_content	Player
+          prefix	SFX2
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Wall
           ->
           rule_part
             rule_content	Wall
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-          command
-            sound
-              sound_id	3
-          
-
+            rule_content	Player
+          prefix	SFX3
         rule_data
-          random
+          prefix	random
           rule_part
-            rule_content
-              Player
-              Finish
-            rule_content	]
-            rule_content	[
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Player
+            rule_content	Finish
+          rule_part
+            rule_content	Wall
           ->
           rule_part
             rule_content	Player
-            rule_content	]
-            rule_content	[
-            rule_content	F
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	s
-            rule_content	h
-          
-
+          rule_part
+            rule_content	Finish
         rule_data
           rule_part
-            rule_content
-              Player
-              finish
+            rule_content	Player
+            rule_content	finish
           ->
-          command
-            sound
-              sound_id	1
-          command
-            command_keyword	win
-          
-
+          prefix	SFX1
+          prefix	win
   winconditions_section
   levels_section
     level_data	[['C' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' 'c']

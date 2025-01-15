@@ -1,701 +1,456 @@
 ps_game
+  prelude
+    prelude_data
+      Title
+      Darn gifs for my game
+    prelude_data
+      author
+      Battle Pillow
+    prelude_data
+      realtime_interval
+      0.15
+    prelude_data
+      key_repeat_interval
+      0.15
+    prelude_data
+      again_interval
+      0.01
+    prelude_data
+      background_color
+      #F9F9F9
+    prelude_data
+      text_color
+      #786D5F
+    prelude_data	noundo
+    prelude_data
+      youtube
+      j1w69c0Ef-U
   objects_section
     object_data
-      object_name	Background
-      legend_key	g
-      colors
-        color	rey
-    object_data
-      object_name	darkgrey
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	11111
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	11111
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	WireLR
-      legend_key	#
-      colors
-        color	D8D8D8
-    object_data
-      object_name	white
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	WireUD
-      legend_key	#
-      colors
-        color	D8D8D8
-    object_data
-      object_name	white
-      legend_key	.
-      colors
-        color	.0..
-    object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	.0..
-    object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	.0..
-    object_data
-      object_name	WireLD
-      legend_key	#
-      colors
-        color	D8D8D8
-    object_data
-      object_name	white
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	0
-      colors
-        color	00..
-    object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	.0..
-    object_data
-      object_name	WireRD
-      legend_key	#
-      colors
-        color	D8D8D8
-    object_data
-      object_name	white
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	.000
-    object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	.0..
-    object_data
-      object_name	WireLU
-      legend_key	#
-      colors
-        color	D8D8D8
-    object_data
-      object_name	white
-      legend_key	.
-      colors
-        color	.0..
-    object_data
-      object_name	..0..
-      legend_key	0
-      colors
-        color	00..
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	WireRU
-      legend_key	#
-      colors
-        color	D8D8D8
-        color	white
-    object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	.0..
-    object_data
-      object_name	..000
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	C
-      colors
-        color	Lock
-    object_data
-      object_name	white
-      legend_key	b
-      colors
-        color	lack
-        color	red
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0002
-    object_data
-      object_name	01110
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	O
-      colors
-        color	Lock
-    object_data
-      object_name	white
-      legend_key	b
-      colors
-        color	lack
-    object_data
-      object_name	blue
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00002
-      legend_key	0
-      colors
-        color	1110
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	onTarget
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	lightblue
-      legend_key	b
-      colors
-        color	lue
-    object_data
-      object_name	#D8D8D8
-      legend_key	3
-      colors
-        color	0003
-    object_data
-      object_name	00200
-      legend_key	0
-      colors
-        color	2120
-    object_data
-      object_name	00200
-      legend_key	3
-      colors
-        color	0003
-    object_data
-      object_name	offTarget
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	#A9F5F2
-      legend_key	l
-      colors
-        color	ightblue
-    object_data
-      object_name	#D8D8D8
-      legend_key	3
-      colors
-        color	0003
-    object_data
-      object_name	00200
-      legend_key	0
-      colors
-        color	2120
-    object_data
-      object_name	00200
-      legend_key	3
-      colors
-        color	0003
-    object_data
-      object_name	TestWall
-      legend_key	g
-      colors
-        color	rey
-        color	white
-    object_data
-      object_name	11111
-      legend_key	1
-      colors
-        color	0001
-    object_data
-      object_name	10001
-      legend_key	1
-      colors
-        color	0001
-    object_data
-      object_name	11111
-      legend_key	P
-      colors
-        color	layer
-    object_data
-      object_name	black
-      legend_key	#
-      colors
-        color	FF8000
-    object_data
-      object_name	red
-      legend_key	#
-      colors
-        color	F79F81
-        color	white
-    object_data
-      object_name	.222.
-      legend_key	.
-      colors
-        color	333.
-    object_data
-      object_name	31143
-      legend_key	.
-      colors
-        color	111.
-    object_data
-      object_name	.1.1.
-      legend_key	B
-      colors
-        color	unshin1
-    object_data
-      object_name	black
-      legend_key	#
-      colors
-        color	0040FF
-        color	#01A9DB
-    object_data
-      object_name	.001.
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	00100
-      legend_key	2
-      colors
-        color	000.
-    object_data
-      object_name	.0.0.
-      legend_key	B
-      colors
-        color	unshin2
-    object_data
-      object_name	black
-      legend_key	#
-      colors
-        color	0040FF
-        color	#01A9DB
-    object_data
-      object_name	.0102
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	00010
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	.1.0.
-      legend_key	B
-      colors
-        color	unshin3
-    object_data
-      object_name	black
-      legend_key	#
-      colors
-        color	0040FF
-        color	#01A9DB
-    object_data
-      object_name	.001.
-      legend_key	.
-      colors
-        color	010.
-    object_data
-      object_name	01001
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	20.0.
-      legend_key	B
-      colors
-        color	unshin4
-    object_data
-      object_name	black
-      legend_key	#
-      colors
-        color	0040FF
-        color	#01A9DB
-    object_data
-      object_name	2000.
-      legend_key	.
-      colors
-        color	010.
-    object_data
-      object_name	01000
-      legend_key	.
-      colors
-        color	0102
-    object_data
-      object_name	.0.0.
-      legend_key	C
-      colors
-        color	rate
-    object_data
-      object_name	darkbrown
-      legend_key	b
-      colors
-        color	rown
-        color	red
-    object_data
-      object_name	01110
-      legend_key	1
-      colors
-        color	0001
-    object_data
-      object_name	10201
-      legend_key	1
-      colors
-        color	0001
-    object_data
-      object_name	01110
-      legend_key	C
-      colors
-        color	rateunlock
-    object_data
-      object_name	darkbrown
-      legend_key	w
-      colors
-        color	hite
-        color	blue
-    object_data
-      object_name	01110
-      legend_key	1
-      colors
-        color	0001
-    object_data
-      object_name	10201
-      legend_key	1
-      colors
-        color	0001
-    object_data
-      object_name	01110
-      legend_key	D
-      colors
-        color	umbot
-    object_data
-      object_name	white
-      legend_key	#
-      colors
-        color	E6E6E6
-    object_data
-      object_name	#FF0000
-      legend_key	#
-      colors
-        color	F6CECE
-    object_data
-      object_name	#F78181
-      legend_key	.
-      colors
-        color	141.
-    object_data
-      object_name	13231
-      legend_key	4
-      colors
-        color	2324
-    object_data
-      object_name	13231
-      legend_key	.
-      colors
-        color	141.
-    object_data
-      object_name	Door
-      legend_key	b
-      colors
-        color	lue
-        color	#0404B4
-    object_data
-      object_name	00000
-      legend_key	1
-      colors
-        color	...1
-    object_data
-      object_name	0...0
-      legend_key	1
-      colors
-        color	...1
-    object_data
-      object_name	00000
-      legend_key	K
-      colors
-        color	ey
-    object_data
-      object_name	yellow
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	button
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	black
-      legend_key	y
-      colors
-        color	ellow
-    object_data
-      object_name	#D8D8D8
-      legend_key	3
-      colors
-        color	0003
-    object_data
-      object_name	02220
-      legend_key	0
-      colors
-        color	2220
-    object_data
-      object_name	02220
-      legend_key	3
-      colors
-        color	0003
-    object_data
-      object_name	Tele
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	lightblue
-      legend_key	b
-      colors
-        color	lue
-        color	#A9F5F2
-    object_data
-      object_name	3.2.3
-      legend_key	.
-      colors
-        color	212.
-    object_data
-      object_name	21012
-      legend_key	.
-      colors
-        color	212.
-    object_data
-      object_name	3.2.3
-      legend_key	B
-      colors
-        color	omb
-    object_data
-      object_name	blue
-      legend_key	w
-      colors
-        color	hite
+      object_line
+        object_name	Background
+      color_line
+        color	grey
+        color	darkgrey
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_line
+        object_name	WireLR
+      color_line
         color	#D8D8D8
+        color	white
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	212.
-    object_data
-      object_name	.101.
-      legend_key	.
-      colors
-        color	212.
-    object_data
-      object_name	.....
-      legend_key	a
-      colors
-        color	ctivebomb
-    object_data
-      object_name	#FF0000
-      legend_key	#
-      colors
-        color	F6CECE
+      object_line
+        object_name	WireUD
+      color_line
         color	#D8D8D8
+        color	white
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	212.
-    object_data
-      object_name	.101.
-      legend_key	.
-      colors
-        color	212.
-    object_data
-      object_name	.....
-      legend_key	d
-      colors
-        color	eactivebomb
-    object_data
-      object_name	black
-      legend_key	w
-      colors
-        color	hite
+      object_line
+        object_name	WireLD
+      color_line
         color	#D8D8D8
+        color	white
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '0' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	212.
+      object_line
+        object_name	WireRD
+      color_line
+        color	#D8D8D8
+        color	white
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '0' '0']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
     object_data
-      object_name	.101.
-      legend_key	.
-      colors
-        color	212.
+      object_line
+        object_name	WireLU
+      color_line
+        color	#D8D8D8
+        color	white
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['0' '0' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
     object_data
-      object_name	.....
-      legend_key	k
-      colors
-        color	eyoff
+      object_line
+        object_name	WireRU
+      color_line
+        color	#D8D8D8
+        color	white
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '.' '0' '0' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
     object_data
-      object_name	grey
-      legend_key	w
-      colors
-        color	hite
+      object_line
+        object_name	CLock
+      color_line
+        color	white
         color	black
+        color	red
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '2']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
     object_data
-      object_name	11111
-      legend_key	1
-      colors
-        color	0001
+      object_line
+        object_name	OLock
+      color_line
+        color	white
+        color	black
+        color	blue
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '2']
+        ['0' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
     object_data
-      object_name	12221
-      legend_key	1
-      colors
-        color	0001
+      object_line
+        object_name	onTarget
+      color_line
+        color	white
+        color	lightblue
+        color	blue
+        color	#D8D8D8
+      sprite
+        ['3' '0' '0' '0' '3']
+        ['0' '0' '2' '0' '0']
+        ['0' '2' '1' '2' '0']
+        ['0' '0' '2' '0' '0']
+        ['3' '0' '0' '0' '3']
     object_data
-      object_name	11111
-      legend_key	k
-      colors
-        color	eyon
+      object_line
+        object_name	offTarget
+      color_line
+        color	white
+        color	#A9F5F2
+        color	lightblue
+        color	#D8D8D8
+      sprite
+        ['3' '0' '0' '0' '3']
+        ['0' '0' '2' '0' '0']
+        ['0' '2' '1' '2' '0']
+        ['0' '0' '2' '0' '0']
+        ['3' '0' '0' '0' '3']
     object_data
-      object_name	grey
-      legend_key	w
-      colors
-        color	hite
+      object_line
+        object_name	TestWall
+      color_line
+        color	grey
+        color	white
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '1' '1' '1' '1']
     object_data
-      object_name	yellow
-      legend_key	1
-      colors
-        color	1111
+      object_line
+        object_name	Player
+      color_line
+        color	black
+        color	#FF8000
+        color	red
+        color	#F79F81
+        color	white
+      sprite
+        ['.' '2' '2' '2' '.']
+        ['.' '3' '3' '3' '.']
+        ['3' '1' '1' '4' '3']
+        ['.' '1' '1' '1' '.']
+        ['.' '1' '.' '1' '.']
     object_data
-      object_name	10001
-      legend_key	1
-      colors
-        color	2221
+      object_line
+        object_name	Bunshin1
+      color_line
+        color	black
+        color	#0040FF
+        color	#01A9DB
+      sprite
+        ['.' '0' '0' '1' '.']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '1' '0' '0']
+        ['2' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
     object_data
-      object_name	10001
-      legend_key	1
-      colors
-        color	1111
+      object_line
+        object_name	Bunshin2
+      color_line
+        color	black
+        color	#0040FF
+        color	#01A9DB
+      sprite
+        ['.' '0' '1' '0' '2']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '1' '0']
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '.' '0' '.']
     object_data
-      object_name	Boom
-      legend_key	o
-      colors
-        color	range
+      object_line
+        object_name	Bunshin3
+      color_line
+        color	black
+        color	#0040FF
+        color	#01A9DB
+      sprite
+        ['.' '0' '0' '1' '.']
+        ['.' '0' '1' '0' '.']
+        ['0' '1' '0' '0' '1']
+        ['.' '0' '0' '0' '.']
+        ['2' '0' '.' '0' '.']
+    object_data
+      object_line
+        object_name	Bunshin4
+      color_line
+        color	black
+        color	#0040FF
+        color	#01A9DB
+      sprite
+        ['2' '0' '0' '0' '.']
+        ['.' '0' '1' '0' '.']
+        ['0' '1' '0' '0' '0']
+        ['.' '0' '1' '0' '2']
+        ['.' '0' '.' '0' '.']
+    object_data
+      object_line
+        object_name	Crate
+      color_line
+        color	darkbrown
+        color	brown
+        color	red
+      sprite
+        ['0' '1' '1' '1' '0']
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '2' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['0' '1' '1' '1' '0']
+    object_data
+      object_line
+        object_name	Crateunlock
+      color_line
+        color	darkbrown
+        color	white
+        color	blue
+      sprite
+        ['0' '1' '1' '1' '0']
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '2' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['0' '1' '1' '1' '0']
+    object_data
+      object_line
+        object_name	Dumbot
+      color_line
+        color	white
+        color	#E6E6E6
+        color	#FF0000
+        color	#F6CECE
+        color	#F78181
+      sprite
+        ['.' '1' '4' '1' '.']
+        ['1' '3' '2' '3' '1']
+        ['4' '2' '3' '2' '4']
+        ['1' '3' '2' '3' '1']
+        ['.' '1' '4' '1' '.']
+    object_data
+      object_line
+        object_name	Door
+      color_line
+        color	blue
+        color	#0404B4
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['1' '.' '.' '.' '1']
+        ['0' '.' '.' '.' '0']
+        ['1' '.' '.' '.' '1']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_line
+        object_name	Key
+      color_line
         color	yellow
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
     object_data
-      object_name	.010.
-      legend_key	0
-      colors
-        color	1110
+      object_line
+        object_name	button
+      color_line
+        color	white
+        color	black
+        color	yellow
+        color	#D8D8D8
+      sprite
+        ['3' '0' '0' '0' '3']
+        ['0' '2' '2' '2' '0']
+        ['0' '2' '2' '2' '0']
+        ['0' '2' '2' '2' '0']
+        ['3' '0' '0' '0' '3']
     object_data
-      object_name	11111
-      legend_key	0
-      colors
-        color	1110
+      object_line
+        object_name	Tele
+      color_line
+        color	white
+        color	lightblue
+        color	blue
+        color	#A9F5F2
+      sprite
+        ['3' '.' '2' '.' '3']
+        ['.' '2' '1' '2' '.']
+        ['2' '1' '0' '1' '2']
+        ['.' '2' '1' '2' '.']
+        ['3' '.' '2' '.' '3']
     object_data
-      object_name	.010.
-      legend_key	C
-      colors
-        color	opyBot
+      object_line
+        object_name	Bomb
+      color_line
+        color	blue
+        color	white
+        color	#D8D8D8
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '2' '1' '2' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '2' '1' '2' '.']
+        ['.' '.' '.' '.' '.']
     object_data
-      object_name	white
-      legend_key	#
-      colors
-        color	40FF00
+      object_line
+        object_name	activebomb
+      color_line
+        color	#FF0000
+        color	#F6CECE
+        color	#D8D8D8
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '2' '1' '2' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '2' '1' '2' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_line
+        object_name	deactivebomb
+      color_line
+        color	black
+        color	white
+        color	#D8D8D8
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '2' '1' '2' '.']
+        ['.' '1' '0' '1' '.']
+        ['.' '2' '1' '2' '.']
+        ['.' '.' '.' '.' '.']
+    object_data
+      object_line
+        object_name	keyoff
+      color_line
+        color	grey
+        color	white
+        color	black
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '2' '2' '2' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_line
+        object_name	keyon
+      color_line
+        color	grey
+        color	white
+        color	yellow
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '2' '2' '2' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_line
+        object_name	Boom
+      color_line
+        color	orange
+        color	yellow
+      sprite
+        ['.' '0' '1' '0' '.']
+        ['0' '1' '1' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '1' '1' '0']
+        ['.' '0' '1' '0' '.']
+    object_data
+      object_line
+        object_name	CopyBot
+      color_line
+        color	white
+        color	#40FF00
         color	#A9F5A9
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '2' '0' '0']
+        ['0' '2' '1' '2' '0']
+        ['0' '0' '2' '0' '0']
+        ['.' '0' '0' '0' '.']
     object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	0200
-    object_data
-      object_name	02120
-      legend_key	0
-      colors
-        color	0200
-    object_data
-      object_name	.000.
-      legend_key	S
-      colors
-        color	talker
-    object_data
-      object_name	white
-      legend_key	r
-      colors
-        color	ed
-    object_data
-      object_name	#BDBDBD
-      legend_key	.
-      colors
-        color	010.
-    object_data
-      object_name	.101.
-      legend_key	2
-      colors
-        color	0002
-    object_data
-      object_name	.202.
-      legend_key	.
-      colors
-        color	0.0.
+      object_line
+        object_name	Stalker
+      color_line
+        color	white
+        color	red
+        color	#BDBDBD
+      sprite
+        ['.' '0' '1' '0' '.']
+        ['.' '1' '0' '1' '.']
+        ['2' '0' '0' '0' '2']
+        ['.' '2' '0' '2' '.']
+        ['.' '0' '.' '0' '.']
   legend_section
     legend_data
-      Lockx
+      Lockx =
       object_name	Olock
       legend_operation
         object_name	Clock
     legend_data
-      bombx
+      bombx =
       object_name	bomb
       legend_operation
         object_name	activebomb
     legend_data
-      Wirex
+      Wirex =
       object_name	wireUD
       legend_operation
         object_name	WireLR
@@ -708,7 +463,7 @@ ps_game
       legend_operation
         object_name	WireRU
     legend_data
-      Bunshin
+      Bunshin   =
       object_name	Bunshin1
       legend_operation
         object_name	Bunshin2
@@ -717,107 +472,107 @@ ps_game
       legend_operation
         object_name	Bunshin4
     legend_data
-      B
+      B =
       object_name	Bunshin1
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      #
+      # =
       object_name	testWall
     legend_data
-      P
+      P =
       object_name	Player
     legend_data
-      *
+      * =
       object_name	Crate
     legend_data
-      -
+      - =
       object_name	offTarget
     legend_data
-      +
+      + =
       object_name	onTarget
     legend_data
-      R
+      R =
       object_name	Dumbot
     legend_data
-      {
+      { =
       object_name	CLock
       legend_operation
         object_name	wireUD
     legend_data
-      }
+      } =
       object_name	Clock
       legend_operation
         object_name	wireLR
     legend_data
-      [
+      [ =
       object_name	Clock
       legend_operation
         object_name	WireLU
     legend_data
-      ]
+      ] =
       object_name	Clock
       legend_operation
         object_name	WireRU
     legend_data
-      K
+      K =
       object_name	Key
     legend_data
-      1
+      1 =
       object_name	WireLR
     legend_data
-      2
+      2 =
       object_name	WireUD
     legend_data
-      3
+      3 =
       object_name	WireLD
     legend_data
-      4
+      4 =
       object_name	WireRD
     legend_data
-      5
+      5 =
       object_name	WireLU
     legend_data
-      6
+      6 =
       object_name	WireRU
     legend_data
-      I
+      I =
       object_name	Button
       legend_operation
         object_name	WireLR
     legend_data
-      O
+      O =
       object_name	Button
       legend_operation
         object_name	WireLU
     legend_data
-      U
+      U =
       object_name	Button
       legend_operation
         object_name	WireUD
     legend_data
-      %
+      % =
       object_name	Button
       legend_operation
         object_name	WireRU
     legend_data
-      :
+      : =
       object_name	Keyoff
     legend_data
-      E
+      E =
       object_name	Bomb
     legend_data
-      C
+      C =
       object_name	Copybot
     legend_data
-      D
+      D =
       object_name	Door
     legend_data
-      S
+      S =
       object_name	Stalker
     legend_data
-      L
+      L =
       object_name	crateunlock
   collisionlayers_section
     layer_data
@@ -825,18 +580,14 @@ ps_game
     layer_data
       object_name	offTarget
       object_name	onTarget
-    layer_data
       object_name	WireLR
       object_name	WireLD
-    layer_data
       object_name	WireRD
       object_name	WireUD
-    layer_data
       object_name	WireLU
       object_name	WireRU
     layer_data
       object_name	button
-    layer_data
       object_name	CLock
       object_name	OLock
     layer_data
@@ -844,28 +595,20 @@ ps_game
     layer_data
       object_name	Player
       object_name	testWall
-    layer_data
       object_name	Crate
       object_name	Crateunlock
-    layer_data
       object_name	Bunshin1
       object_name	bunshin2
-    layer_data
       object_name	bunshin3
       object_name	bunshin4
-    layer_data
       object_name	Dumbot
       object_name	Tele
-    layer_data
       object_name	bomb
       object_name	activebomb
-    layer_data
       object_name	deactivebomb
       object_name	keyon
-    layer_data
       object_name	keyoff
       object_name	Copybot
-    layer_data
       object_name	Door
       object_name	Stalker
     layer_data
@@ -875,2045 +618,910 @@ ps_game
       rule_block_once
         rule_data
           rule_part
-            rule_content
-              boom
-              player
+            rule_content	boom
+            rule_content	player
           ->
-          command
-            command_keyword	restart
-          
-
+          prefix	restart
         rule_data
-          vertical
-          late
+          prefix	vertical
+          prefix	late
           rule_part
             rule_content	boom
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	t
-            rule_content	e
-            rule_content	s
-            rule_content	t
-            rule_content	w
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	n
-            rule_content	o
-            rule_content	c
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	n
-            rule_content	o
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	n
-            rule_content	o
-            rule_content	o
-            rule_content	f
-            rule_content	f
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	n
-            rule_content	o
-            rule_content	o
-            rule_content	n
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	n
-            rule_content	o
-            rule_content	b
-            rule_content	u
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	n
-            rule_content	n
-            rule_content	o
-            rule_content	b
-            rule_content	u
-            rule_content	n
-            rule_content	s
-            rule_content	h
-            rule_content	i
-            rule_content	n
+            rule_content	no
+            rule_content	testwall
+            rule_content	no
+            rule_content	clock
+            rule_content	no
+            rule_content	olock
+            rule_content	no
+            rule_content	offtarget
+            rule_content	no
+            rule_content	ontarget
+            rule_content	no
+            rule_content	button
+            rule_content	no
+            rule_content	bunshin
           ->
           rule_part
             rule_content	boom
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	o
-            rule_content	m
-          
-
+            rule_content	boom
         rule_data
-          horizontal
-          late
+          prefix	horizontal
+          prefix	late
           rule_part
             rule_content	boom
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	t
-            rule_content	e
-            rule_content	s
-            rule_content	t
-            rule_content	w
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	n
-            rule_content	o
-            rule_content	c
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	n
-            rule_content	o
-            rule_content	o
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	n
-            rule_content	o
-            rule_content	o
-            rule_content	f
-            rule_content	f
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	n
-            rule_content	o
-            rule_content	o
-            rule_content	n
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	n
-            rule_content	o
-            rule_content	b
-            rule_content	u
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	n
-            rule_content	n
-            rule_content	o
-            rule_content	b
-            rule_content	u
-            rule_content	n
-            rule_content	s
-            rule_content	h
-            rule_content	i
-            rule_content	n
+            rule_content	no
+            rule_content	testwall
+            rule_content	no
+            rule_content	clock
+            rule_content	no
+            rule_content	olock
+            rule_content	no
+            rule_content	offtarget
+            rule_content	no
+            rule_content	ontarget
+            rule_content	no
+            rule_content	button
+            rule_content	no
+            rule_content	bunshin
           ->
           rule_part
             rule_content	boom
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	o
-            rule_content	m
-          
-
+            rule_content	boom
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              boom
-              crate
+            rule_content	boom
+            rule_content	crate
           ->
           rule_part
             rule_content	boom
-          
-
         rule_data
           rule_part
-            rule_content
-              boom
-              bombx
+            rule_content	boom
+            rule_content	bombx
           ->
           rule_part
-            rule_content
-              Activebomb
-              key
-              boom
-          
-
+            rule_content	Activebomb
+            rule_content	key
+            rule_content	boom
         rule_data
           rule_part
             rule_content	boom
           ->
           rule_part
-          
-
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	K
-            rule_content	e
-            rule_content	y
-            rule_content	L
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	x
-            rule_content	]
-            rule_content	[
-            rule_content	k
-            rule_content	e
-            rule_content	y
-            rule_content	o
-            rule_content	f
-            rule_content	f
+            rule_content	Key
+            rule_content	Lockx
+          rule_part
+            rule_content	keyoff
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	L
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	x
-            rule_content	]
-            rule_content	[
-            rule_content	k
-            rule_content	e
-            rule_content	y
-            rule_content	o
-            rule_content	f
-            rule_content	f
-          
-
+            rule_content	Lockx
+          rule_part
+            rule_content	keyoff
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	K
-            rule_content	e
-            rule_content	y
-            rule_content	]
-            rule_content	[
-            rule_content	K
-            rule_content	e
-            rule_content	y
-            rule_content	o
-            rule_content	f
-            rule_content	f
+            rule_content	Key
+          rule_part
+            rule_content	Keyoff
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	]
-            rule_content	[
-            rule_content	k
-            rule_content	e
-            rule_content	y
-            rule_content	o
-            rule_content	n
-          command
-            sound
-              sound_id	6
-          
-
+          rule_part
+            rule_content	keyon
+          prefix	sfx6
         rule_data
           rule_part
-            rule_content
-              Olock
-              key
-              WireUD
+            rule_content	Olock
+            rule_content	key
+            rule_content	WireUD
           ->
           rule_part
-            rule_content
-              Olock
-              WireUD
-          
-
+            rule_content	Olock
+            rule_content	WireUD
         rule_data
           rule_part
-            rule_content
-              Olock
-              key
-              WireRU
+            rule_content	Olock
+            rule_content	key
+            rule_content	WireRU
           ->
           rule_part
-            rule_content
-              Olock
-              WireRU
-          
-
+            rule_content	Olock
+            rule_content	WireRU
         rule_data
           rule_part
-            rule_content
-              Olock
-              key
-              WireLU
+            rule_content	Olock
+            rule_content	key
+            rule_content	WireLU
           ->
           rule_part
-            rule_content
-              Olock
-              WireLU
-          
-
+            rule_content	Olock
+            rule_content	WireLU
         rule_data
           rule_part
-            rule_content
-              Olock
-              WireLR
-              key
+            rule_content	Olock
+            rule_content	WireLR
+            rule_content	key
           ->
           rule_part
-            rule_content
-              Olock
-              WireLR
-          
-
+            rule_content	Olock
+            rule_content	WireLR
         rule_data
           rule_part
-            rule_content
-              Olock
-              WireLR
+            rule_content	Olock
+            rule_content	WireLR
           ->
           rule_part
-            rule_content
-              Clock
-              WireLR
-          
-
+            rule_content	Clock
+            rule_content	WireLR
         rule_data
           rule_part
-            rule_content
-              action
-              Player
+            rule_content	action
+            rule_content	Player
             cell_border
-            rule_content	C
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	]
-            rule_content	[
-            rule_content	k
-            rule_content	e
-            rule_content	y
-            rule_content	o
-            rule_content	n
+            rule_content	Clock
+          rule_part
+            rule_content	keyon
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	O
-            rule_content	L
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	k
-            rule_content	e
-            rule_content	y
-            rule_content	]
-            rule_content	[
-            rule_content	k
-            rule_content	e
-            rule_content	y
-            rule_content	o
-            rule_content	f
-            rule_content	f
-          
-
+            rule_content	OLock
+            rule_content	key
+          rule_part
+            rule_content	keyoff
         rule_data
           rule_part
             rule_content	Stalker
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
+            rule_content	Player
           ->
           rule_part
             rule_content
               >
               Stalker
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	Player
         rule_data
           rule_part
             rule_content
               >
               Stalker
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
+            rule_content	Player
           ->
           rule_part
             rule_content
               >
               Stalker
             cell_border
-          
-
         rule_data
           rule_part
-            rule_content
-              action
-              player
+            rule_content	action
+            rule_content	player
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	l
-            rule_content	k
-            rule_content	e
-            rule_content	r
+            rule_content	Stalker
           ->
           rule_part
-            rule_content
-              action
-              player
+            rule_content	action
+            rule_content	player
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	l
-            rule_content	k
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	stalker
         rule_data
           rule_part
-            rule_content
-              stationary
-              player
-            rule_content	]
-            rule_content	[
-            rule_content	D
-            rule_content	u
-            rule_content	m
-            rule_content	b
-            rule_content	o
-            rule_content	t
+            rule_content	stationary
+            rule_content	player
+          rule_part
+            rule_content	Dumbot
           ->
           rule_part
             rule_content	player
-            rule_content	]
-            rule_content	[
-            rule_content	r
-            rule_content	a
-            rule_content	n
-            rule_content	d
-            rule_content	o
-            rule_content	m
-            rule_content	d
-            rule_content	i
-            rule_content	r
-            rule_content	D
-            rule_content	u
-            rule_content	m
-            rule_content	b
-            rule_content	o
-            rule_content	t
-          
-
+          rule_part
+            rule_content	randomdir
+            rule_content	Dumbot
         rule_data
           rule_part
+            rule_content	stationary
+            rule_content	player
+          rule_part
             rule_content
-              stationary
-              player
-            rule_content	]
-            rule_content	[
-            rule_content	>
-            rule_content	D
-            rule_content	u
-            rule_content	m
-            rule_content	b
-            rule_content	o
-            rule_content	t
+              >
+              Dumbot
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
+            rule_content	Player
           ->
           rule_part
             rule_content	player
-            rule_content	]
-            rule_content	[
-            rule_content	>
-            rule_content	D
-            rule_content	u
-            rule_content	m
-            rule_content	b
-            rule_content	o
-            rule_content	t
-            cell_border
-          command
-            sound
-              sound_id	7
-          
-
-        rule_data
           rule_part
             rule_content
-              stationary
-              player
-            rule_content	]
-            rule_content	[
-            rule_content	>
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
+              >
+              Dumbot
             cell_border
-            rule_content	D
-            rule_content	u
-            rule_content	m
-            rule_content	b
-            rule_content	o
-            rule_content	t
+          prefix	sfx7
+        rule_data
+          rule_part
+            rule_content	stationary
+            rule_content	player
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	Dumbot
           ->
           rule_part
             rule_content	player
-            rule_content	]
-            rule_content	[
+          rule_part
             cell_border
-            rule_content	D
-            rule_content	u
-            rule_content	m
-            rule_content	b
-            rule_content	o
-            rule_content	t
-          command
-            sound
-              sound_id	7
-          
-
+            rule_content	Dumbot
+          prefix	sfx7
         rule_data
           rule_part
             rule_content
               >
               Player
-            rule_content	]
-            rule_content	[
-            rule_content	c
-            rule_content	o
-            rule_content	p
-            rule_content	y
-            rule_content	b
-            rule_content	o
-            rule_content	t
+          rule_part
+            rule_content	copybot
           ->
           rule_part
             rule_content
               >
               Player
-            rule_content	]
-            rule_content	[
-            rule_content	>
-            rule_content	c
-            rule_content	o
-            rule_content	p
-            rule_content	y
-            rule_content	b
-            rule_content	o
-            rule_content	t
-          
-
+          rule_part
+            rule_content
+              >
+              copybot
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
+            rule_content
+              >
+              Crate
         rule_data
           rule_part
             rule_content
               >
               Copybot
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
           ->
           rule_part
             rule_content
               >
               Copybot
             cell_border
-            rule_content	>
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
+            rule_content
+              >
+              Crate
         rule_data
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
           ->
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	>
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
+            rule_content
+              >
+              Crate
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content
+              >
+              Crate
             cell_border
-            rule_content	o
-            rule_content	f
-            rule_content	f
-            rule_content	T
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
+            rule_content	offTarget
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	stationary
+            rule_content	Crate
             cell_border
-            rule_content	o
-            rule_content	f
-            rule_content	f
-            rule_content	T
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          
-
+            rule_content	offTarget
         rule_data
           rule_part
-            rule_content
-              Activebomb
-              key
+            rule_content	Activebomb
+            rule_content	key
           ->
           rule_part
             rule_content	boom
-          
-
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	A
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	Activebomb
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	A
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-            rule_content	k
-            rule_content	e
-            rule_content	y
-          command
-            sound
-              sound_id	2
-          
-
+            rule_content	Activebomb
+            rule_content	key
+          prefix	sfx2
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-          
-
+            rule_content
+              >
+              activebomb
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	d
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	deactivebomb
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	d
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-          
-
+            rule_content
+              >
+              deactivebomb
         rule_data
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	activebomb
           ->
           rule_part
             rule_content	Crate
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	o
-            rule_content	m
-          
-
+            rule_content	boom
         rule_data
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
           ->
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	>
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-          
-
+            rule_content
+              >
+              activebomb
         rule_data
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	d
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	deactivebomb
           ->
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	>
-            rule_content	d
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-          
-
+            rule_content
+              >
+              deactivebomb
         rule_data
           rule_part
             rule_content
               >
               Copybot
             cell_border
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	activebomb
           ->
           rule_part
             rule_content
               >
               Copybot
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	o
-            rule_content	m
-          
-
+            rule_content	boom
         rule_data
           rule_part
             rule_content
               >
               Copybot
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
           ->
           rule_part
             rule_content
               >
               Copybot
             cell_border
-            rule_content	>
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-          
-
+            rule_content
+              >
+              activebomb
         rule_data
           rule_part
             rule_content
               >
               Copybot
             cell_border
-            rule_content	d
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	deactivebomb
           ->
           rule_part
             rule_content
               >
               Copybot
             cell_border
-            rule_content	>
-            rule_content	d
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-          
-
+            rule_content
+              >
+              deactivebomb
         rule_data
           rule_part
             rule_content
               >
               activebomb
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
           ->
           rule_part
             rule_content	activebomb
             cell_border
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	activebomb
             cell_border
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	activebomb
             cell_border
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	activebomb
             cell_border
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-          
-
+            rule_content	activebomb
         rule_data
           rule_part
             rule_content
               >
               activebomb
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
           ->
           rule_part
             rule_content	activebomb
             cell_border
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	activebomb
             cell_border
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	activebomb
             cell_border
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-          
-
+            rule_content	activebomb
         rule_data
           rule_part
             rule_content
               >
               activebomb
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
           ->
           rule_part
             rule_content	activebomb
             cell_border
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	activebomb
             cell_border
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-          
-
+            rule_content	activebomb
         rule_data
           rule_part
             rule_content
               >
               activebomb
             cell_border
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	bomb
           ->
           rule_part
             rule_content	activebomb
             cell_border
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-          
-
+            rule_content	activebomb
         rule_data
           rule_part
             rule_content
               >
               deactivebomb
             cell_border
-            rule_content	d
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
+            rule_content	deactivebomb
           ->
           rule_part
             rule_content
               >
               deactivebomb
             cell_border
-            rule_content	>
-            rule_content	d
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-          
-
+            rule_content
+              >
+              deactivebomb
         rule_data
           rule_part
-            rule_content
-              action
-              Player
-            rule_content	]
-            rule_content	[
-            rule_content	B
-            rule_content	u
-            rule_content	n
-            rule_content	s
-            rule_content	h
-            rule_content	i
-            rule_content	n
+            rule_content	action
+            rule_content	Player
+          rule_part
+            rule_content	Bunshin
           ->
           rule_part
             rule_content	Bunshin
-            rule_content	]
-            rule_content	[
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-          command
-            sound
-              sound_id	1
-          
-
+          rule_part
+            rule_content	Player
+          prefix	sfx1
         rule_data
           rule_part
             rule_content	Bunshin1
           ->
           rule_part
-            rule_content
-              random
-              Bunshin
-          
-
+            rule_content	random
+            rule_content	Bunshin
         rule_data
           rule_part
             rule_content	Bunshin2
           ->
           rule_part
-            rule_content
-              random
-              Bunshin
-          
-
+            rule_content	random
+            rule_content	Bunshin
         rule_data
           rule_part
             rule_content	Bunshin3
           ->
           rule_part
-            rule_content
-              random
-              Bunshin
-          
-
+            rule_content	random
+            rule_content	Bunshin
         rule_data
           rule_part
             rule_content	Bunshin4
           ->
           rule_part
-            rule_content
-              random
-              Bunshin
-          
-
+            rule_content	random
+            rule_content	Bunshin
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Crate
-              Button
+            rule_content	Crate
+            rule_content	Button
           ->
           rule_part
             rule_content	Crateunlock
-          
-
         rule_data
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	u
-            rule_content	n
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
+            rule_content	Crateunlock
           ->
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	b
-            rule_content	u
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	n
-            rule_content	>
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
-        rule_data
-          rule_part
-            rule_content
-              Crateunlock
-              WireLU
-            rule_content	]
-            rule_content	[
-            rule_content	d
-            rule_content	o
-            rule_content	o
-            rule_content	r
-          ->
-          rule_part
-            rule_content
-              Crateunlock
-              wireLU
-            rule_content	]
-            rule_content	[
-          command
-            sound
-              sound_id	5
-          
-
-        rule_data
-          rule_part
-            rule_content
-              Olock
-              WireLU
-            rule_content	]
-            rule_content	[
-            rule_content	d
-            rule_content	o
-            rule_content	o
-            rule_content	r
-          ->
-          rule_part
-            rule_content
-              Olock
-              WireLU
-            rule_content	]
-            rule_content	[
-          command
-            sound
-              sound_id	5
-          
-
-        rule_data
-          rule_part
+            rule_content	button
             rule_content
               >
-              Player
-            cell_border
-            rule_content	O
-            rule_content	n
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          ->
-          rule_part
-            rule_content	|
-            rule_content	T
-            rule_content	e
-            rule_content	l
-            rule_content	e
-            rule_content	O
-            rule_content	n
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          
-
-        rule_data
-          late
-          rule_part
-            rule_content
-              Olock
-              WireUD
-            rule_content	]
-            rule_content	[
-            rule_content	o
-            rule_content	f
-            rule_content	f
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          ->
-          rule_part
-            rule_content
-              Olock
-              WireUD
-            rule_content	]
-            rule_content	[
-            rule_content	o
-            rule_content	n
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          
-
-        rule_data
-          late
-          rule_part
-            rule_content
-              Crateunlock
-              WireUD
-            rule_content	]
-            rule_content	[
-            rule_content	o
-            rule_content	f
-            rule_content	f
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          ->
-          rule_part
-            rule_content
-              crateunlock
-              WireUD
-            rule_content	]
-            rule_content	[
-            rule_content	o
-            rule_content	n
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          
-
-        rule_data
-          late
-          rule_part
-            rule_content
-              Crateunlock
-              WireRU
-            rule_content	]
-            rule_content	[
-            rule_content	o
-            rule_content	f
-            rule_content	f
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	]
-            rule_content	[
-            rule_content	O
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	W
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	R
-            rule_content	U
-          ->
-          rule_part
-            rule_content
               Crate
-              Button
-              WireRU
-            rule_content	]
-            rule_content	[
-            rule_content	O
-            rule_content	n
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	]
-            rule_content	[
-            rule_content	O
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	W
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	R
-            rule_content	U
-          
-
-        rule_data
-          late
-          rule_part
-            rule_content
-              button
-              WireUD
-            rule_content	]
-            rule_content	[
-            rule_content	o
-            rule_content	n
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          ->
-          rule_part
-            rule_content
-              button
-              WireUD
-            rule_content	]
-            rule_content	[
-            rule_content	o
-            rule_content	f
-            rule_content	f
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          
-
         rule_data
           rule_part
-            rule_content
-              Olock
-              WireLR
-            rule_content	]
-            rule_content	[
-            rule_content	d
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-            rule_content	w
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	x
+            rule_content	Crateunlock
+            rule_content	WireLU
+          rule_part
+            rule_content	door
           ->
           rule_part
-            rule_content
-              Olock
-              WireLR
-            rule_content	]
-            rule_content	[
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-            rule_content	w
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	x
-          command
-            sound
-              sound_id	5
-          
-
+            rule_content	Crateunlock
+            rule_content	wireLU
+          rule_part
+          prefix	sfx5
         rule_data
           rule_part
-            rule_content
-              Olock
-              WireLR
-            rule_content	]
-            rule_content	[
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-            rule_content	x
-            rule_content	w
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	x
+            rule_content	Olock
+            rule_content	WireLU
+          rule_part
+            rule_content	door
           ->
           rule_part
-            rule_content
-              Olock
-              WireLR
-            rule_content	]
-            rule_content	[
-            rule_content	d
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-            rule_content	w
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	x
-          command
-            sound
-              sound_id	5
-          
-
-        rule_data
+            rule_content	Olock
+            rule_content	WireLU
           rule_part
-            rule_content
-              Crateunlock
-              WireLR
-            rule_content	]
-            rule_content	[
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-            rule_content	x
-            rule_content	w
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	x
-          ->
-          rule_part
-            rule_content
-              Crateunlock
-              WireLR
-            rule_content	]
-            rule_content	[
-            rule_content	d
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-            rule_content	w
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	x
-          
-
-        rule_data
-          rule_part
-            rule_content
-              Crateunlock
-              WireLR
-            rule_content	]
-            rule_content	[
-            rule_content	d
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	v
-            rule_content	e
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-            rule_content	w
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	x
-          ->
-          rule_part
-            rule_content
-              Crateunlock
-              WireLR
-            rule_content	]
-            rule_content	[
-            rule_content	b
-            rule_content	o
-            rule_content	m
-            rule_content	b
-            rule_content	w
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	x
-          
-
+          prefix	sfx5
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	x
+            rule_content	Ontarget
+          ->
+          rule_part
+            cell_border
+            rule_content	Tele
+            rule_content	Ontarget
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Olock
+            rule_content	WireUD
+          rule_part
+            rule_content	offtarget
+          ->
+          rule_part
+            rule_content	Olock
+            rule_content	WireUD
+          rule_part
+            rule_content	ontarget
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Crateunlock
+            rule_content	WireUD
+          rule_part
+            rule_content	offtarget
+          ->
+          rule_part
+            rule_content	crateunlock
+            rule_content	WireUD
+          rule_part
+            rule_content	ontarget
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Crateunlock
+            rule_content	WireRU
+          rule_part
+            rule_content	offtarget
+          rule_part
+            rule_content	Olock
+            rule_content	WireRU
+          ->
+          rule_part
+            rule_content	Crate
+            rule_content	Button
+            rule_content	WireRU
+          rule_part
+            rule_content	Ontarget
+          rule_part
+            rule_content	Olock
+            rule_content	WireRU
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	button
+            rule_content	WireUD
+          rule_part
+            rule_content	ontarget
+          ->
+          rule_part
+            rule_content	button
+            rule_content	WireUD
+          rule_part
+            rule_content	offtarget
+        rule_data
+          rule_part
+            rule_content	Olock
+            rule_content	WireLR
+          rule_part
+            rule_content	deactivebomb
+            rule_content	wirex
+          ->
+          rule_part
+            rule_content	Olock
+            rule_content	WireLR
+          rule_part
+            rule_content	bomb
+            rule_content	wirex
+          prefix	sfx5
+        rule_data
+          rule_part
+            rule_content	Olock
+            rule_content	WireLR
+          rule_part
+            rule_content	bombx
+            rule_content	wirex
+          ->
+          rule_part
+            rule_content	Olock
+            rule_content	WireLR
+          rule_part
+            rule_content	deactivebomb
+            rule_content	wirex
+          prefix	sfx5
+        rule_data
+          rule_part
+            rule_content	Crateunlock
+            rule_content	WireLR
+          rule_part
+            rule_content	bombx
+            rule_content	wirex
+          ->
+          rule_part
+            rule_content	Crateunlock
+            rule_content	WireLR
+          rule_part
+            rule_content	deactivebomb
+            rule_content	wirex
+        rule_data
+          rule_part
+            rule_content	Crateunlock
+            rule_content	WireLR
+          rule_part
+            rule_content	deactivebomb
+            rule_content	wirex
+          ->
+          rule_part
+            rule_content	Crateunlock
+            rule_content	WireLR
+          rule_part
+            rule_content	bomb
+            rule_content	wirex
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            cell_border
+            rule_content	lockx
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	x
-          
-
+            rule_content	lockx
         rule_data
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	x
+            rule_content	lockx
           ->
           rule_part
             rule_content	Crate
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	x
-          
-
+            rule_content	lockx
         rule_data
           rule_part
             rule_content
               >
               Dumbot
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	x
+            rule_content	lockx
           ->
           rule_part
             rule_content	Dumbot
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	x
-          
-
+            rule_content	lockx
         rule_data
           rule_part
             rule_content
               >
               Copybot
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	x
+            rule_content	lockx
           ->
           rule_part
             rule_content	Copybot
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	x
-          
-
+            rule_content	lockx
         rule_data
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	o
-            rule_content	n
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
+            rule_content	ontarget
           ->
           rule_part
             rule_content	Crate
             cell_border
-            rule_content	o
-            rule_content	n
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          
-
+            rule_content	ontarget
         rule_data
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	o
-            rule_content	f
-            rule_content	f
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
+            rule_content	offtarget
           ->
           rule_part
             rule_content	Crate
             cell_border
-            rule_content	o
-            rule_content	f
-            rule_content	f
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          
-
+            rule_content	offtarget
         rule_data
           rule_part
             rule_content
               >
               Stalker
             cell_border
-            rule_content	o
-            rule_content	n
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
+            rule_content	ontarget
           ->
           rule_part
             rule_content	Stalker
             cell_border
-            rule_content	o
-            rule_content	n
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          
-
+            rule_content	ontarget
         rule_data
           rule_part
             rule_content
               >
               Stalker
             cell_border
-            rule_content	o
-            rule_content	f
-            rule_content	f
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
+            rule_content	offtarget
           ->
           rule_part
             rule_content	Stalker
             cell_border
-            rule_content	o
-            rule_content	f
-            rule_content	f
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-          
-
+            rule_content	offtarget
         rule_data
           rule_part
             rule_content
               >
               Stalker
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	x
+            rule_content	lockx
           ->
           rule_part
             rule_content	Stalker
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	x
-          
-
+            rule_content	lockx
   winconditions_section
     condition_data
       Some
@@ -2936,11 +1544,7 @@ ps_game
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '2'
   '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
-  '#' '#' '#' '#' '#']
- ['\n' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
-  '.' '.' '.' '.' '.' '.']]
-    level_data	None
-    level_data	None
+  '#' '#' '#' '#' '#']]
     level_data	[[':' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
   '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '#' '#' 'E' '.' '.' '.' '.' 'E' 'E' 'E' '.' 'E' '.' '.'
@@ -2964,14 +1568,7 @@ ps_game
  ['#' 'E' '.' '.' '2' 'E' '.' 'E' '.' 'E' '.' '.' '.' 'E' '2' 'E' '.' '.'
   '.' 'S' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
-  '#' '#' '#' '#' '#']
- ['\n' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
-  '.' '.' '.' '.' '.' '.']]
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
+  '#' '#' '#' '#' '#']]
     level_data	[[':' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#'
   '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '-' '#' '4' '1' '3' '.' '.' '2' '.'
@@ -2989,27 +1586,7 @@ ps_game
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '2' '#' '#' 'O' '.' '.' '.' '2'
   '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '6' '1' '5' '#' '#' '#' '#' '#'
-  '#']
- ['\n' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
-  '.' '.']]
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
+  '#']]
     level_data	[[':' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'P' '.' '.' '.' '.' '.' '.' '+' '#']
- ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
- ['\n' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
-    level_data	None
+ ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]

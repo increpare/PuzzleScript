@@ -1,66 +1,114 @@
+title Power Block
+author SRP
+homepage www.puzzlescript.net
+
 OBJECTS
 
-BackgroundlightBlue
-WinBoxlightblue
-WallGray
-BrownGBrown
-Brown1Brown
-Brown2Brown
-BlueGBlue
-Blue1Blue
-Blue2Blue
-YellowYellow White.000.
+Background
+lightBlue
+
+WinBox
+lightblue
+
+Wall
+Gray
+
+BrownG
+Brown
+
+Brown1
+Brown
+
+Brown2
+Brown
+
+BlueG
+Blue
+
+Blue1
+Blue
+
+Blue2
+Blue
+
+Yellow
+Yellow White
+.000.
 10001
 11011
 .000.
-00000
+0000
 
-BrickBROWN DARKBROWN00010
+Brick
+BROWN DARKBROWN
+00010
 11111
 01000
 11111
-00010
+0001
 
-MagicBlockblue White
-1111110001
-1000110001
-11111Fire
-RedYellow orange..1..
+MagicBlock
+blue White
+11111
+10001
+10001
+10001
+1111
+
+Fire
+Red Yellow orange
+..1..
 .121.
 12021
 .1221
-..121
+..12
 
-LeftSwitchRed Blue.....
+LeftSwitch
+Red Blue
+.....
 0....
 .0...
 ..0..
-11111
+1111
 
-RightSwitchRed Blue.....
+RightSwitch
+Red Blue
+.....
 ....0
 ...0.
 ..0..
-11111
+1111
 
-Holelightblue
-Sinkholebrown darkbrown01010
-10101
-01010
-10101
-01010
+Hole
+lightblue
 
-FBlockLightblue
-WhiteGWhite
-White1White
-White2White
-CrateRed Black10101
+Sinkhole
+brown darkbrown
 01010
 10101
 01010
 10101
+0101
 
+FBlock
+Lightblue
 
+WhiteG
+White
+
+White1
+White
+
+White2
+White
+
+Crate
+Red Black
+10101
+01010
+10101
+01010
+1010
 
 
 LEGEND
@@ -99,62 +147,12 @@ C = Crate
 COLLISIONLAYERS
 
 Background
-WinBox
-Hole, FBlock
-Player, Wall
-PlayerGroundB, PlayerGroundL, JumpingPlayerB, JumpingPlayerL, MagicBlock, Fire
-Yellow, Switch
-sinkhole, White
-Brick, Crate
+WinBox, Hole, FBlock
+Player, Wall, PlayerGroundB, PlayerGroundL, JumpingPlayerB, JumpingPlayerL, MagicBlock, Fire, Yellow, Switch, sinkhole, White, Brick, Crate
 
 RULES
 
-UP [ Up BrownG | NoSolids ] -> [ Up Brown2 |  ] 
-UP [ Up BlueG | NoSolids ] -> [ Up Blue2 |  ] 
-up [ up whiteg | nosolids ] -> [ up white2 |  ] 
-DOWN [ Up JumpingPlayerL | noSolids ] -> [ JumpingPlayerL |  ] 
-DOWN [ Up PlayerJump2L | noSolids ] -> [ PlayerJump2L |  ] 
-DOWN [ Up JumpingPlayerB | noSolids ] -> [ JumpingPlayerB |  ] 
-DOWN [ Up PlayerJump2B | noSolids ] -> [ PlayerJump2B |  ] 
-down [ up jumpingplayerW | nosolids ] -> [ jumpingplayerw |  ] 
-down [ up white2 | nosolids ] -> [ white2 |  ] 
-HORIZONTAL [ > Brown1 | NOSolids ] -> [ |BrownG ] 
-HORIZONTAL [ > Blue1 | NOSolids ] -> [ |BlueG ] 
-horizontal [ > white1 | nosolids ] -> [ |whiteG ] 
-HORIZONTAL [ > Brown2 | NOSolids ] -> [ |Brown1 ] 
-Horizontal [ > Blue2 | Nosolids ] -> [ |Blue1 ] 
-horizontal [ > white2 | nosolids ] -> [ |white1 ] 
-LATE DOWN [ PlayerGroundB | NOSolids ] -> [ |playergroundB ] 
-LATE DOWN [ PlayerGroundL | NOSolids ] -> [ |playergroundL ] 
-late down [ whiteG | nosolids ] -> [ |whiteg ] 
-late down [ Crate | nosolids ] -> [ |crate ] 
-LATE DOWN [ JumpingPlayerB | Solids ] -> [ BrownG | Solids ] 
-LATE DOWN [ JumpingPlayerL | Solids ] -> [ BlueG | Solids ] 
-late down [ jumpingplayerw | solids ] -> [ whiteg | solids ] 
-[ Action Brown | Brick ] -> [ Action Brown |  ] 
-Horizontal [ Action Blue | SolidMagic ] -> [ Blue | SolidMagic ] 
-Horizontal [ Action Blue | Brick ] -> [ Blue | Brick ] 
-[ Action Blue |  | MagicBlock ] -> [ Blue | >Fire |  ] 
-[ Action Blue | MagicBlock ] -> [ Action Blue | MagicBlock ] 
-right [ Action Blue |  ] -> [ Blue | >Fire ] 
-[ Stationary Fire ] -> [  ] 
-[ Action Yellow | LeftSwitch ] -> [ Yellow | RightSwitch ] 
-[ Action Yellow | RightSwitch ] -> [ Yellow | LeftSwitch ] 
-[ Action Brown | LeftSwitch ] -> [ Brown | RightSwitch ] 
-[ Action Brown | RightSwitch ] -> [ Brown | LeftSwitch ] 
-[ Brick | ... | RightSwitch ] -> [ |... | Rightswitch ] 
-[ brick | ... | Player | RightSwitch ] -> [ |... | Player | RightSwitch ] 
-[ Brick | Rightswitch ] -> [ |Rightswitch ] 
-[ Brick | Player | RightSwitch ] -> [ |Player | Rightswitch ] 
-[ > Player | Hole ] -> Restart 
-Down [ > Player | Sinkhole |  ] -> [ |Sinkhole | <Player ] 
-Up [ RightSwitch |  ] -> [ RightSwitch | FBlock ] 
-Horizontal [ | |  |  |  | FBlock ] -> [ Brick |  |  |  |  | FBlock ] 
-[ FBlock ] -> [ Background ] 
-[ > White | MagicBlock ] -> [ Browng | MagicBlock ] 
-[ > White | Brick ] -> [ blueg | Brick ] 
-[ > Player | Crate ] -> [ > Player | >Crate ] 
-
+UP [ UpBrownG | NoSolids ] -> [ UpBrown2 |  ]UP [ UpBlueG | NoSolids ] -> [ UpBlue2 |  ]up [ upwhiteg | nosolids ] -> [ upwhite2 |  ]DOWN [ UpJumpingPlayerL | noSolids ] -> [ JumpingPlayerL |  ]DOWN [ UpPlayerJump2L | noSolids ] -> [ PlayerJump2L |  ]DOWN [ UpJumpingPlayerB | noSolids ] -> [ JumpingPlayerB |  ]DOWN [ UpPlayerJump2B | noSolids ] -> [ PlayerJump2B |  ]down [ upjumpingplayerW | nosolids ] -> [ jumpingplayerw |  ]down [ upwhite2 | nosolids ] -> [ white2 |  ]HORIZONTAL [ > Brown1 | NOSolids ] -> [  | BrownG ]HORIZONTAL [ > Blue1 | NOSolids ] -> [  | BlueG ]horizontal [ > white1 | nosolids ] -> [  | whiteG ]HORIZONTAL [ > Brown2 | NOSolids ] -> [  | Brown1 ]Horizontal [ > Blue2 | Nosolids ] -> [  | Blue1 ]horizontal [ > white2 | nosolids ] -> [  | white1 ]LATE DOWN [ PlayerGroundB | NOSolids ] -> [  | playergroundB ]LATE DOWN [ PlayerGroundL | NOSolids ] -> [  | playergroundL ]late down [ whiteG | nosolids ] -> [  | whiteg ]late down [ Crate | nosolids ] -> [  | crate ]LATE DOWN [ JumpingPlayerB | Solids ] -> [ BrownG | Solids ]LATE DOWN [ JumpingPlayerL | Solids ] -> [ BlueG | Solids ]late down [ jumpingplayerw | solids ] -> [ whiteg | solids ][ ActionBrown | Brick ] -> [ ActionBrown |  ]Horizontal [ ActionBlue | SolidMagic ] -> [ Blue | SolidMagic ]Horizontal [ ActionBlue | Brick ] -> [ Blue | Brick ][ ActionBlue |  | MagicBlock ] -> [ Blue | > Fire |  ][ ActionBlue | MagicBlock ] -> [ ActionBlue | MagicBlock ]right [ ActionBlue |  ] -> [ Blue | > Fire ][ StationaryFire ] -> [  ][ ActionYellow | LeftSwitch ] -> [ Yellow | RightSwitch ][ ActionYellow | RightSwitch ] -> [ Yellow | LeftSwitch ][ ActionBrown | LeftSwitch ] -> [ Brown | RightSwitch ][ ActionBrown | RightSwitch ] -> [ Brown | LeftSwitch ][ Brick | ... | RightSwitch ] -> [  | ... | Rightswitch ][ brick | ... | Player | RightSwitch ] -> [  | ... | Player | RightSwitch ][ Brick | Rightswitch ] -> [  | Rightswitch ][ Brick | Player | RightSwitch ] -> [  | Player | Rightswitch ][ > Player | Hole ] -> RestartDown [ > Player | Sinkhole |  ] -> [  | Sinkhole | < Player ]Up [ RightSwitch |  ] -> [ RightSwitch | FBlock ]Horizontal [  |  |  |  |  | FBlock ] -> [ Brick |  |  |  |  | FBlock ][ FBlock ] -> [ Background ][ > White | MagicBlock ] -> [ Browng | MagicBlock ][ > White | Brick ] -> [ blueg | Brick ][ > Player | Crate ] -> [ > Player | > Crate ]
 
 WINCONDITIONS
 
@@ -162,32 +160,25 @@ Any Winbox on Player
 
 LEVELS
 
-......*..W
-B.....*..W
-##########
-
-......M..W
-L.....M..W
-##########
-
-.........W
-
-.....*...W
-Y....*...W
-##########
-
-............MW
-............MW
-............MW
-.I....*.....MW
-##############
-
-............MW
-
-.....*......MW
-.LY..*...S..MW
-##############
-
+......*..W...................
+B.....*..W...................
+##########...................
+......M..W...................
+L.....M..W...................
+##########...................
+.........W...................
+.....*...W...................
+Y....*...W...................
+##########...................
+............MW...............
+............MW...............
+............MW...............
+.I....*.....MW...............
+##############...............
+............MW...............
+.....*......MW...............
+.LY..*...S..MW...............
+##############...............
 ...........................#W
 ...........................#W
 ...........................#W
@@ -199,85 +190,70 @@ Y....*...W
 #############......##########
 #############.......#########
 #############HHHHHHH#########
-
-.............W
-
-.............*
-............**
-...........***
-..I..C.....***
-##############
-
-...................MW
-..........C........MW
-..........C.*......MW
-..........C........MW
-..........C........MW
-........C.C........MW
-........C.C........MW
-..I.....C.C........MW
-#####################
-
-#WWWWWWWWWWWW#
-
-#*****##*****#
-#............#
-#............#
-#............#
-#............#
-#**#**.SM....#
-#.....######.#
-#I...#S...***#
-#######......#
-#............#
-#............#
-Y............#
-##############
-
-........#......#..W
-l....y..s......*..W
-###################
-
-....M*........*MW
-
-...#*.........*MW
-#Il.#.........*MW
-#################
-
-............MW
-
-............MW
-.......*....MW
-....Y.......MW
-..L..*....S.MW
-######^^######
-######..######
-######HH######
-
-################
-
-............#.*W
-.........##.#.##
-.........#..#.##
-.........#.##.##
-.........#..m.##
-Bly...#.###.#.##
-################
-
-...........#......*w
-
-...........#......*w
-...........#.#....*w
-...........*.#....*w
-...........#.#....*w
-........s*.#*#....##
-..b..#s##..*##..####
-#########^^*****####
-#########..#########
-#########hh#########
-
-i..............#..W
-l..............m..W
-b..............*..W
-y..............#..W
-###################
+.............W...............
+.............*...............
+............**...............
+...........***...............
+..I..C.....***...............
+##############...............
+...................MW........
+..........C........MW........
+..........C.*......MW........
+..........C........MW........
+..........C........MW........
+........C.C........MW........
+........C.C........MW........
+..I.....C.C........MW........
+#####################........
+#WWWWWWWWWWWW#...............
+#*****##*****#...............
+#............#...............
+#............#...............
+#............#...............
+#............#...............
+#**#**.SM....#...............
+#.....######.#...............
+#I...#S...***#...............
+#######......#...............
+#............#...............
+#............#...............
+Y............#...............
+##############...............
+........#......#..W..........
+l....y..s......*..W..........
+###################..........
+....M*........*MW............
+...#*.........*MW............
+#Il.#.........*MW............
+#################............
+............MW...............
+............MW...............
+.......*....MW...............
+....Y.......MW...............
+..L..*....S.MW...............
+######^^######...............
+######..######...............
+######HH######...............
+################.............
+............#.*W.............
+.........##.#.##.............
+.........#..#.##.............
+.........#.##.##.............
+.........#..m.##.............
+Bly...#.###.#.##.............
+################.............
+...........#......*w.........
+...........#......*w.........
+...........#.#....*w.........
+...........*.#....*w.........
+...........#.#....*w.........
+........s*.#*#....##.........
+..b..#s##..*##..####.........
+#########^^*****####.........
+#########..#########.........
+#########hh#########.........
+i..............#..W..........
+l..............m..W..........
+b..............*..W..........
+y..............#..W..........
+###################..........

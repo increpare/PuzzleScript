@@ -9,9 +9,9 @@ import re
 import webbrowser  # Add this import
 import atexit  # Add this import
 import threading  # Add this import
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium import webdriver
+# from selenium import webdriver
+# from selenium.webdriver.chrome.service import Service as ChromeService
+# from selenium import webdriver
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
@@ -76,7 +76,8 @@ def load_game_from_file():
     data = request.json
     game = data['game']
     # game_path = os.path.join('misc', game)
-    game_path = os.path.join('src', 'demo', f'{game}.txt')
+    # game_path = os.path.join('src', 'demo', f'{game}.txt')
+    game_path = os.path.join('scraped_games', f'{game}.txt')
     with open(game_path, 'r') as f:
         code = f.read()
     return code
@@ -383,6 +384,72 @@ def gen_game_from_plan():
         'skip': skip,
     })
 
+
+TRANSITIONS_DIR = 'transitions'
+
+@app.route('/list_scraped_games')
+def list_scraped_games():
+    games = []
+    for filename in os.listdir('scraped_games'):
+        if filename.endswith('.txt'):
+            games.append(filename[:-4])
+    return jsonify(games)
+
+@app.route('/save_init_state', methods=['POST'])
+def save_init_state():
+    data = request.json
+
+    game_hash = data['game_hash']
+    game_level = data['game_level']
+    state_hash = data['state_hash']
+    im_data = data['im_data']
+    im_data = base64.b64decode(im_data.split(',')[1])
+    im_dir = os.path.join(TRANSITIONS_DIR, game_hash, str(game_level), 'images')
+    os.makedirs(im_dir, exist_ok=True)
+    im_path = os.path.join(im_dir, f'{state_hash}.png')
+    if not os.path.isfile(im_path):
+        with open(im_path, 'wb') as f:
+            f.write(im_data)
+    return jsonify({'status': 'success'})
+
+
+@app.route('/save_transition', methods=['POST'])
+def save_transition():
+    data = request.json
+
+    game_hash = data['game_hash']
+    game_level = data['game_level']
+    trans_dir = os.path.join(TRANSITIONS_DIR, game_hash, str(game_level))
+    im_dir = os.path.join(trans_dir, 'images')
+    
+    # Create directories
+    os.makedirs(trans_dir, exist_ok=True)
+    os.makedirs(im_dir, exist_ok=True)
+    
+    # Save images
+    # for i, img in enumerate([data['state1_img'], data['state2_img']]):
+    img_2 = data['state2_img']
+    img_data_2 = base64.b64decode(img_2.split(',')[1])
+    img_hash_1 = data[f'state1_hash']
+    img_hash_2 = data[f'state2_hash']
+    img_path_1 = os.path.join(im_dir, f'{img_hash_1}.png')
+    img_path_2 = os.path.join(im_dir, f'{img_hash_2}.png')
+
+    if not os.path.exists(img_path_2):
+        with open(img_path_2, 'wb') as f:
+            f.write(img_data_2)
+    
+    # Save transition data
+    transition = {
+        'state1': data['state1_hash'],
+        'state2': data['state2_hash'],
+        'action': data['action']
+    }
+    
+    with open(os.path.join(trans_dir, 'transitions.json'), 'a') as f:
+        f.write(json.dumps(transition) + '\n')
+        
+    return jsonify({'status': 'success'})
 
 
 if __name__ == '__main__':

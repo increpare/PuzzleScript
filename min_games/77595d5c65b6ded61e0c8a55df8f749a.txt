@@ -1,97 +1,144 @@
+title Random Color Maze
+author Super Papyrus & Super Alphys
+homepage www.undertale.com
+
 OBJECTS
 
-Background.lightblue white11111
+Background .
+lightblue white
+11111
 01111
 11101
 11111
-10111
+1011
 
-Path,#fffefe #ffcccc11011
+Path ,
+#fffefe #ffcccc
+11011
 10001
 00100
 10001
-11011
+1101
 
-Alert!white lightgreen11011
+Alert !
+white lightgreen
+11011
 10001
 00100
 10001
-11011
+1101
 
-AlertActivewhite lightgray
-1101110001
-0010010001
-11011Goal
-Ggray darkblue
-......000.
-0111011111
-.111.Wall
-#red darkred
-0001011111
-0100011111
-00010Electric
-Zyellow lightblue
-1000101010
-0010001010
-10001Water
-Wblue #6666ff00100
+AlertActive
+white lightgray
+11011
+10001
+00100
+10001
+1101
+
+Goal G
+gray darkblue
+.....
+.000.
+01110
+11111
+.111
+
+Wall #
+red darkred
+00010
+11111
+01000
+11111
+0001
+
+Electric Z
+yellow lightblue
+10001
+01010
+00100
+01010
+1000
+
+Water W
+blue #6666ff
+00100
 00100
 01110
 11011
-01110
+0111
 
-Piranhasblue
-#6666fflightblue orange00130
+Piranhas
+blue #6666ff lightblue orange
+00130
 00133
 03122
 13311
-02210
+0221
 
-Elecwaterblue #6677ff
-0010000100
-0111011011
-01110Orange
-Qorange green
-0011100100
-0000000000
-00000Frisk
-Fbrown
-yellowpink Blue
-.000..111.
-22222.333.
-.3.3.Soap
-Ypurple pink00000
-00110
-01010
-01100
+Elecwater
+blue #6677ff
+00100
+00100
+01110
+11011
+0111
+
+Orange Q
+orange green
+00111
+00100
 00000
+00000
+0000
 
-Bubbleswhite lightblue....1
-0....
+Frisk F
+brown yellow pink Blue
 .000.
-1...0
-11111
-
-SubmergedFriskbrown
-yellowpink lightblue.....
-.000.
-.111.
-22222
-33333
-
-FriskOrngbrown
-orangered green.000.
 .111.
 22222
 .333.
-.3.3.
+.3.3
 
-Randler?gray black01110
+Soap Y
+purple pink
+00000
+00110
+01010
+01100
+0000
+
+Bubbles
+white lightblue
+....1
+0....
+.000.
+1...0
+1111
+
+SubmergedFrisk
+brown yellow pink lightblue
+.....
+.000.
+.111.
+22222
+3333
+
+FriskOrng
+brown orange red green
+.000.
+.111.
+22222
+.333.
+.3.3
+
+Randler ?
+gray black
+01110
 00010
 00100
 00000
-00100
-
+0010
 
 
 LEGEND
@@ -102,32 +149,13 @@ Tile = Path or Alert or Wall or Electric or Water or Orange or Soap
 COLLISIONLAYERS
 
 Background
-Path
-Goal, Alert
-AlertActive, Water
-Piranhas, Elecwater
-Orange, Soap
+Path, Goal, Alert, AlertActive, Water, Piranhas, Elecwater, Orange, Soap
 Bubbles, Randler
-Player
-Wall, Electric
+Player, Wall, Electric
 
 RULES
 
-late [ Player Alert ] -> [ Player AlertActive ] 
-late [ AlertActive no Player ] -> [ Alert ] 
-late [ Frisk Water ] -> [ SubmergedFrisk Water ] 
-late [ SubmergedFrisk no Water ] -> [ Frisk no Water ] 
-late [ Frisk Orange ] -> [ FriskOrng Orange ] 
-[ Piranhas ] -> [ Water ] 
-[ > Player | Electric ] -> [ < Player | Electric ] 
-[ > FriskOrng | Water ] -> [ < FriskOrng | Piranhas ] 
-[ > Player | Elecwater ] -> [ < Player | Elecwater ] 
-[ Water | Electric ] -> [ Elecwater | Electric ] 
-[ Bubbles | Player ] -> [ Bubbles | >Frisk ] 
-[ Bubbles ] -> [  ] 
-[ > Player | Soap ] -> [ Bubbles>Frisk | Soap ] again 
-[ Randler ] -> [ random Tile ] 
-
+late [ PlayerAlert ] -> [ PlayerAlertActive ] sfx0late [ AlertActivenoPlayer ] -> [ Alert ]late [ FriskWater ] -> [ SubmergedFriskWater ] sfx2late [ SubmergedFrisknoWater ] -> [ FrisknoWater ] sfx2late [ FriskOrange ] -> [ FriskOrngOrange ] sfx3[ Piranhas ] -> [ Water ][ > Player | Electric ] -> [ < Player | Electric ] sfx1[ > FriskOrng | Water ] -> [ < FriskOrng | Piranhas ] sfx3[ > Player | Elecwater ] -> [ < Player | Elecwater ] sfx1[ Water | Electric ] -> [ Elecwater | Electric ][ Bubbles | Player ] -> [ Bubbles | > Frisk ][ Bubbles ] -> [  ][ > Player | Soap ] -> [ Bubbles> Frisk | Soap ] again[ Randler ] -> [ randomTile ]
 
 WINCONDITIONS
 
@@ -160,7 +188,6 @@ g.,w,,,,,Q,,
 ..,,,w,w,,Q,
 
 f.,,yyyyyy#
-
 ..,,y#yyyy,
 ######y###q
 g.,yyyy####

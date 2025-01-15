@@ -1,28 +1,55 @@
+Author Loneship Games.
+Title Drainage
+again_interval 0.03
+run_rules_on_level_start
+
 OBJECTS
 
-backgroundlightblue
-wblue
-w_Lblue
-lightblue00000
-0100010001
-0111000000
-w_Rblue
-lightblue00000
-0001010001
-0111000000
-w_Dblue lightblue00000
-01010
-01010
-00100
-00100
+background
+lightblue
 
-wallbrown
-playergreen00000
+w
+blue
+
+w_L
+blue lightblue
+
+00000
+01000
+
+10001
+01110
+
+00000
+w_R
+
+blue l
+00000
+
+00010
+10001
+
+01110
+00000
+
+w_D
+blue lightblue
+00000
+01010
+01010
+00100
+0010
+
+wall
+brown
+
+player
+green
+00000
 0.0.0
 00000
 0...0
-00000
-
+0000
 
 
 LEGEND
@@ -36,27 +63,12 @@ solid = wall or w
 COLLISIONLAYERS
 
 background
-wall
-water, w_L
-w_R, w_D
+wall, water, w_L, w_R, w_D
 player
 
 RULES
 
-[ water ] -> [ stationary w ] 
-down [ water | nowallnowater ] -> [ down w_D |  ] again 
-down [ w_D | wall ] -> [ stationary w | wall ] again 
-right [ water | w_D ] -> [ right w_R | w_D ] again 
-right [ w_D | water ] -> [ w_D | leftw_L ] again 
-right [ w | w_r ] -> [ right w_r | w_r ] again 
-right [ w_l | w ] -> [ w_l | leftw_l ] again 
-down [ w_D | w ] -> [ w_d | right w ] 
-right [ right w | w ] -> [ left w | w ] 
-horizontal [ solid | w | nosolid ] -> [ solid | >w |  ] 
-random horizontal [ no solid | stationary w | nosolid ] -> [ |>w |  ] 
-[ action player wall ] -> [ player ] again 
-late down [ water | nowallnowater ] -> [ water |  ] again 
-
+[ water ] -> [ stationaryw ]down [ water | nowallnowater ] -> [ downw_D |  ] againdown [ w_D | wall ] -> [ stationaryw | wall ] againright [ water | w_D ] -> [ rightw_R | w_D ] againright [ w_D | water ] -> [ w_D | leftw_L ] againright [ w | w_r ] -> [ rightw_r | w_r ] againright [ w_l | w ] -> [ w_l | leftw_l ] againdown [ w_D | w ] -> [ w_d | rightw ]right [ rightw | w ] -> [ leftw | w ]horizontal [ solid | w | nosolid ] -> [ solid | > w |  ]random horizontal [ nosolid | stationaryw | nosolid ] -> [  | > w |  ][ actionplayerwall ] -> [ player ] againlate down [ water | nowallnowater ] -> [ water |  ] again
 
 WINCONDITIONS
 

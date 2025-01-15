@@ -1,369 +1,470 @@
+title Smoothoban
+author jcGyo Levels By David W. Skinner
+homepage www.puzzlescript.net
+realtime_interval 0.01
+verbose_logging
+
 OBJECTS
 
-BackgroundLIGHTGREEN GREEN11111
+Background
+LIGHTGREEN GREEN
+11111
 01111
 11101
 11111
-10111
+1011
 
-TargetDarkBlue.....
+Target
+DarkBlue
+.....
 .000.
 .0.0.
 .000.
-.....
+....
 
-WallBROWN DARKBROWN00010
+Wall
+BROWN DARKBROWN
+00010
 11111
 01000
 11111
-00010
+0001
 
-Playertransparent
-PlayerBonkU4Black
-OrangeWhite Blue.000.
+Player
+transparent
+
+PlayerBonkU4
+Black Orange White Blue
+.000.
 21112
 .333.
 .3.3.
-.....
+....
 
-PlayerBonkU3Black
-OrangeWhite Blue.000.
+PlayerBonkU3
+Black Orange White Blue
+.000.
 21112
 .333.
 .3.3.
-.....
+....
 
-PlayerBonkU2Black
-OrangeWhite Blue.000.
+PlayerBonkU2
+Black Orange White Blue
+.000.
 21112
 .333.
 .3.3.
-.....
+....
 
-PlayerBonkU1Black
-OrangeWhite Blue.000.
+PlayerBonkU1
+Black Orange White Blue
+.000.
 21112
 .333.
 .3.3.
+....
+
+PlayerBonkD4
+Black Orange White Blue
 .....
+.000.
+.111.
+22222
+.333
 
-PlayerBonkD4Black
-OrangeWhite Blue.....
+PlayerBonkD3
+Black Orange White Blue
+.....
+.000.
+.111.
+22222
+.333
+
+PlayerBonkD2
+Black Orange White Blue
+.....
+.000.
+.111.
+22222
+.333
+
+PlayerBonkD1
+Black Orange White Blue
+.....
+.000.
+.111.
+22222
+.333
+
+PlayerBonkL4
+Black Orange White Blue
+000..
+111..
+2222.
+333..
+3.3.
+
+PlayerBonkL3
+Black Orange White Blue
+000..
+111..
+2222.
+333..
+3.3.
+
+PlayerBonkL2
+Black Orange White Blue
+000..
+111..
+2222.
+333..
+3.3.
+
+PlayerBonkL1
+Black Orange White Blue
+000..
+111..
+2222.
+333..
+3.3.
+
+PlayerBonkR4
+Black Orange White Blue
+..000
+..111
+.2222
+..333
+..3.
+
+PlayerBonkR3
+Black Orange White Blue
+..000
+..111
+.2222
+..333
+..3.
+
+PlayerBonkR2
+Black Orange White Blue
+..000
+..111
+.2222
+..333
+..3.
+
+PlayerBonkR1
+Black Orange White Blue
+..000
+..111
+.2222
+..333
+..3.
+
+PlayerC
+Black Orange White Blue
 .000.
 .111.
 22222
 .333.
+.3.3
 
-PlayerBonkD3Black
-OrangeWhite Blue.....
-.000.
-.111.
-22222
-.333.
-
-PlayerBonkD2Black
-OrangeWhite Blue.....
-.000.
-.111.
-22222
-.333.
-
-PlayerBonkD1Black
-OrangeWhite Blue.....
-.000.
-.111.
-22222
-.333.
-
-PlayerBonkL4Black
-OrangeWhite Blue000..
-111..
-2222.
-333..
-3.3..
-
-PlayerBonkL3Black
-OrangeWhite Blue000..
-111..
-2222.
-333..
-3.3..
-
-PlayerBonkL2Black
-OrangeWhite Blue000..
-111..
-2222.
-333..
-3.3..
-
-PlayerBonkL1Black
-OrangeWhite Blue000..
-111..
-2222.
-333..
-3.3..
-
-PlayerBonkR4Black
-OrangeWhite Blue..000
-..111
-.2222
-..333
-..3.3
-
-PlayerBonkR3Black
-OrangeWhite Blue..000
-..111
-.2222
-..333
-..3.3
-
-PlayerBonkR2Black
-OrangeWhite Blue..000
-..111
-.2222
-..333
-..3.3
-
-PlayerBonkR1Black
-OrangeWhite Blue..000
-..111
-.2222
-..333
-..3.3
-
-PlayerCBlack
-OrangeWhite Blue.000.
+PlayerU1
+Black Orange White Blue
 .111.
 22222
 .333.
 .3.3.
+....
 
-PlayerU1Black
-OrangeWhite Blue.111.
+PlayerU2
+Black Orange White Blue
 22222
 .333.
 .3.3.
 .....
+....
 
-PlayerU2Black
-OrangeWhite Blue22222
+PlayerU3
+Black Orange White Blue
 .333.
 .3.3.
 .....
 .....
+....
 
-PlayerU3Black
-OrangeWhite Blue.333.
+PlayerU4
+Black Orange White Blue
 .3.3.
 .....
 .....
 .....
+....
 
-PlayerU4Black
-OrangeWhite Blue.3.3.
-.....
-.....
-.....
-.....
-
-PlayerD1Black
-OrangeWhite Blue.....
-.000.
-.111.
-22222
-.333.
-
-PlayerD2Black
-OrangeWhite Blue.....
+PlayerD1
+Black Orange White Blue
 .....
 .000.
 .111.
 22222
+.333
 
-PlayerD3Black
-OrangeWhite Blue.....
+PlayerD2
+Black Orange White Blue
 .....
 .....
 .000.
 .111.
+2222
 
-PlayerD4Black
-OrangeWhite Blue.....
+PlayerD3
+Black Orange White Blue
 .....
 .....
 .....
 .000.
+.111
 
-PlayerR1Black
-OrangeWhite Blue..000
+PlayerD4
+Black Orange White Blue
+.....
+.....
+.....
+.....
+.000
+
+PlayerR1
+Black Orange White Blue
+..000
 ..111
 .2222
 ..333
-..3.3
+..3.
 
-PlayerR2Black
-OrangeWhite Blue...00
+PlayerR2
+Black Orange White Blue
+...00
 ...11
 ..222
 ...33
-...3.
+...3
 
-PlayerR3Black
-OrangeWhite Blue....0
+PlayerR3
+Black Orange White Blue
+....0
 ....1
 ...22
 ....3
-....3
+....
 
-PlayerR4Black
-OrangeWhite Blue.....
+PlayerR4
+Black Orange White Blue
+.....
 .....
 ....2
 .....
-.....
+....
 
-PlayerL1Black
-OrangeWhite Blue000..
+PlayerL1
+Black Orange White Blue
+000..
 111..
 2222.
 333..
-3.3..
+3.3.
 
-PlayerL2Black
-OrangeWhite Blue00...
+PlayerL2
+Black Orange White Blue
+00...
 11...
 222..
 33...
-.3...
+.3..
 
-PlayerL3Black
-OrangeWhite Blue0....
+PlayerL3
+Black Orange White Blue
+0....
 1....
 22...
 3....
-3....
+3...
 
-PlayerL4Black
-OrangeWhite Blue.....
+PlayerL4
+Black Orange White Blue
+.....
 .....
 2....
 .....
-.....
+....
 
-Cratetransparent
-CrateCOrange00000
-0...0
-0...0
-0...0
-00000
+Crate
+transparent
 
-CrateU1Orange0...0
-0...0
-0...0
-00000
-.....
-
-CrateU2Orange0...0
-0...0
-00000
-.....
-.....
-
-CrateU3Orange0...0
-00000
-.....
-.....
-.....
-
-CrateU4Orange00000
-.....
-.....
-.....
-.....
-
-CrateD1Orange.....
+CrateC
+Orange
 00000
 0...0
 0...0
 0...0
+0000
 
-CrateD2Orange.....
+CrateU1
+Orange
+0...0
+0...0
+0...0
+00000
+....
+
+CrateU2
+Orange
+0...0
+0...0
+00000
+.....
+....
+
+CrateU3
+Orange
+0...0
+00000
+.....
+.....
+....
+
+CrateU4
+Orange
+00000
+.....
+.....
+.....
+....
+
+CrateD1
+Orange
 .....
 00000
 0...0
 0...0
+0...
 
-CrateD3Orange.....
+CrateD2
+Orange
 .....
 .....
 00000
 0...0
+0...
 
-CrateD4Orange.....
+CrateD3
+Orange
 .....
 .....
 .....
 00000
+0...
 
-CrateR1Orange.0000
-.0...
-.0...
-.0...
+CrateD4
+Orange
+.....
+.....
+.....
+.....
+0000
+
+CrateR1
+Orange
 .0000
+.0...
+.0...
+.0...
+.000
 
-CrateR2Orange..000
-..0..
-..0..
-..0..
+CrateR2
+Orange
 ..000
+..0..
+..0..
+..0..
+..00
 
-CrateR3Orange...00
-...0.
-...0.
-...0.
+CrateR3
+Orange
 ...00
+...0.
+...0.
+...0.
+...0
 
-CrateR4Orange....0
+CrateR4
+Orange
 ....0
 ....0
 ....0
 ....0
+....
 
-CrateL1Orange0000.
-...0.
-...0.
-...0.
+CrateL1
+Orange
 0000.
+...0.
+...0.
+...0.
+0000
 
-CrateL2Orange000..
-..0..
-..0..
-..0..
+CrateL2
+Orange
 000..
+..0..
+..0..
+..0..
+000.
 
-CrateL3Orange00...
-.0...
-.0...
-.0...
+CrateL3
+Orange
 00...
+.0...
+.0...
+.0...
+00..
 
-CrateL4Orange0....
+CrateL4
+Orange
 0....
 0....
 0....
 0....
+0...
 
-CUptransparent
-CDowntransparent
-CLefttransparent
-CRighttransparent
-QUptransparent
-QDowntransparent
-QLefttransparent
-QRighttransparent
-QNonetransparent
-NoTweenstransparent
+CUp
+transparent
 
+CDown
+transparent
+
+CLeft
+transparent
+
+CRight
+transparent
+
+QUp
+transparent
+
+QDown
+transparent
+
+QLeft
+transparent
+
+QRight
+transparent
+
+QNone
+transparent
+
+NoTweens
+transparent
 
 
 LEGEND
@@ -398,8 +499,7 @@ COLLISIONLAYERS
 
 Background
 Target
-Player
-Wall, Crate
+Player, Wall, Crate
 PlayerGraphics
 CrateGraphics
 Movement
@@ -408,85 +508,7 @@ NoTweens
 
 RULES
 
-[ Movement ] -> [  ] 
-[ QueuedAction no Player][PlayernoQueuedAction ] -> [ ][QueuedActionPlayer ] 
-[ Player no QueuedAction ] -> [ Player QNone ] 
-[ Tweens][UpPlayer ] -> [ Tweens][PlayerQUp ] 
-[ Tweens][DownPlayer ] -> [ Tweens][PlayerQDown ] 
-[ Tweens][LeftPlayer ] -> [ Tweens][PlayerQLeft ] 
-[ Tweens][RightPlayer ] -> [ Tweens][PlayerQRight ] 
-[ Tweens][MovingPlayer ] -> [ Tweens][Player ] 
-[ Player ] -> [ NoTweens Player ] 
-[ Tweens][NoTweensPlayer ] -> [ Tweens][Player ] 
-[ NoTweens Player QUp ] -> [ Up Player QNone ] 
-[ NoTweens Player QDown ] -> [ Down Player QNone ] 
-[ NoTweens Player QLeft ] -> [ Left Player QNone ] 
-[ NoTweens Player QRight ] -> [ Right Player QNone ] 
-[ NoTweens ] -> [  ] 
-[ > Player | Crate ] -> [ > Player | >Crate ] 
-[ UP Crate ] -> [ UP Crate CUp ] 
-[ DOWN Crate ] -> [ DOWN Crate CDown ] 
-[ LEFT Crate ] -> [ LEFT Crate CLeft ] 
-[ RIGHT Crate ] -> [ RIGHT Crate CRight ] 
-[ > Crate | Solid ] -> [ Crate | Solid ] 
-[ PlayerBonk1 ] -> [ PlayerC ] 
-[ PlayerBonkU2 ] -> [ PlayerBonkU1 ] 
-[ PlayerBonkU3 ] -> [ PlayerBonkU2 ] 
-[ PlayerBonkU4 ] -> [ PlayerBonkU3 ] 
-[ PlayerBonkD2 ] -> [ PlayerBonkD1 ] 
-[ PlayerBonkD3 ] -> [ PlayerBonkD2 ] 
-[ PlayerBonkD4 ] -> [ PlayerBonkD3 ] 
-[ PlayerBonkL2 ] -> [ PlayerBonkL1 ] 
-[ PlayerBonkL3 ] -> [ PlayerBonkL2 ] 
-[ PlayerBonkL4 ] -> [ PlayerBonkL3 ] 
-[ PlayerBonkR2 ] -> [ PlayerBonkR1 ] 
-[ PlayerBonkR3 ] -> [ PlayerBonkR2 ] 
-[ PlayerBonkR4 ] -> [ PlayerBonkR3 ] 
-Up [ Up Player PlayerC | stationarySolid ] -> [ Up Player PlayerBonkU4 | Solid ] 
-Down [ Down Player PlayerC | stationarySolid ] -> [ Down Player PlayerBonkD4 | Solid ] 
-Left [ Left Player PlayerC | stationarySolid ] -> [ Left Player PlayerBonkL4 | Solid ] 
-Right [ Right Player PlayerC | stationarySolid ] -> [ Right Player PlayerBonkR4 | Solid ] 
-LATE RIGHT [ PlayerR4 | PlayerL1Player ] -> [ |PlayerCPlayer ] 
-LATE RIGHT [ PlayerR3 | PlayerL2Player ] -> [ PlayerR4 | PlayerL1Player ] 
-LATE RIGHT [ PlayerR2 | PlayerL3Player ] -> [ PlayerR3 | PlayerL2Player ] 
-LATE RIGHT [ PlayerR1 | PlayerL4Player ] -> [ PlayerR2 | PlayerL3Player ] 
-LATE RIGHT [ PlayerC | Player ] -> [ PlayerR1 | PlayerL4Player ] 
-LATE LEFT [ PlayerL4 | PlayerR1Player ] -> [ |PlayerCPlayer ] 
-LATE LEFT [ PlayerL3 | PlayerR2Player ] -> [ PlayerL4 | PlayerR1Player ] 
-LATE LEFT [ PlayerL2 | PlayerR3Player ] -> [ PlayerL3 | PlayerR2Player ] 
-LATE LEFT [ PlayerL1 | PlayerR4Player ] -> [ PlayerL2 | PlayerR3Player ] 
-LATE LEFT [ PlayerC | Player ] -> [ PlayerL1 | PlayerR4Player ] 
-LATE UP [ PlayerU4 | PlayerD1Player ] -> [ |PlayerCPlayer ] 
-LATE UP [ PlayerU3 | PlayerD2Player ] -> [ PlayerU4 | PlayerD1Player ] 
-LATE UP [ PlayerU2 | PlayerD3Player ] -> [ PlayerU3 | PlayerD2Player ] 
-LATE UP [ PlayerU1 | PlayerD4Player ] -> [ PlayerU2 | PlayerD3Player ] 
-LATE UP [ PlayerC | Player ] -> [ PlayerU1 | PlayerD4Player ] 
-LATE DOWN [ PlayerD4 no Crate | PlayerU1Player ] -> [ |PlayerCPlayer ] 
-LATE DOWN [ PlayerD3 no Crate | PlayerU2Player ] -> [ PlayerD4 | PlayerU1Player ] 
-LATE DOWN [ PlayerD2 no Crate | PlayerU3Player ] -> [ PlayerD3 | PlayerU2Player ] 
-LATE DOWN [ PlayerD1 no Crate | PlayerU4Player ] -> [ PlayerD2 | PlayerU3Player ] 
-LATE DOWN [ PlayerC no Crate | Player ] -> [ PlayerD1 | PlayerU4Player ] 
-LATE RIGHT [ CrateR4 no Crate | CrateL1Crate ] -> [ |CrateCCrate ] 
-LATE RIGHT [ CrateR3 no Crate | CrateL2Crate ] -> [ CrateR4 | CrateL1Crate ] 
-LATE RIGHT [ CrateR2 no Crate | CrateL3Crate ] -> [ CrateR3 | CrateL2Crate ] 
-LATE RIGHT [ CrateR1 no Crate | CrateL4Crate ] -> [ CrateR2 | CrateL3Crate ] 
-LATE RIGHT [ CrateC no Crate CRight | Crate ] -> [ CrateR1 | CrateL4Crate ] 
-LATE LEFT [ CrateL4 no Crate | CrateR1Crate ] -> [ |CrateCCrate ] 
-LATE LEFT [ CrateL3 no Crate | CrateR2Crate ] -> [ CrateL4 | CrateR1Crate ] 
-LATE LEFT [ CrateL2 no Crate | CrateR3Crate ] -> [ CrateL3 | CrateR2Crate ] 
-LATE LEFT [ CrateL1 no Crate | CrateR4Crate ] -> [ CrateL2 | CrateR3Crate ] 
-LATE LEFT [ CrateC no Crate CLeft | Crate ] -> [ CrateL1 | CrateR4Crate ] 
-LATE UP [ CrateU4 no Crate | CrateD1Crate ] -> [ |CrateCCrate ] 
-LATE UP [ CrateU3 no Crate | CrateD2Crate ] -> [ CrateU4 | CrateD1Crate ] 
-LATE UP [ CrateU2 no Crate | CrateD3Crate ] -> [ CrateU3 | CrateD2Crate ] 
-LATE UP [ CrateU1 no Crate | CrateD4Crate ] -> [ CrateU2 | CrateD3Crate ] 
-LATE UP [ CrateC no Crate CUp | Crate ] -> [ CrateU1 | CrateD4Crate ] 
-LATE DOWN [ CrateD4 no Crate | CrateU1Crate ] -> [ |CrateCCrate ] 
-LATE DOWN [ CrateD3 no Crate | CrateU2Crate ] -> [ CrateD4 | CrateU1Crate ] 
-LATE DOWN [ CrateD2 no Crate | CrateU3Crate ] -> [ CrateD3 | CrateU2Crate ] 
-LATE DOWN [ CrateD1 no Crate | CrateU4Crate ] -> [ CrateD2 | CrateU3Crate ] 
-LATE DOWN [ CrateC no Crate CDown | Crate ] -> [ CrateD1 | CrateU4Crate ] 
-
+[ Movement ] -> [  ][ QueuedActionnoPlayer ] [ PlayernoQueuedAction ] -> [  ] [ QueuedActionPlayer ][ PlayernoQueuedAction ] -> [ PlayerQNone ][ Tweens ] [ UpPlayer ] -> [ Tweens ] [ PlayerQUp ][ Tweens ] [ DownPlayer ] -> [ Tweens ] [ PlayerQDown ][ Tweens ] [ LeftPlayer ] -> [ Tweens ] [ PlayerQLeft ][ Tweens ] [ RightPlayer ] -> [ Tweens ] [ PlayerQRight ][ Tweens ] [ MovingPlayer ] -> [ Tweens ] [ Player ][ Player ] -> [ NoTweensPlayer ][ Tweens ] [ NoTweensPlayer ] -> [ Tweens ] [ Player ][ NoTweensPlayerQUp ] -> [ UpPlayerQNone ][ NoTweensPlayerQDown ] -> [ DownPlayerQNone ][ NoTweensPlayerQLeft ] -> [ LeftPlayerQNone ][ NoTweensPlayerQRight ] -> [ RightPlayerQNone ][ NoTweens ] -> [  ][ > Player | Crate ] -> [ > Player | > Crate ][ UPCrate ] -> [ UPCrateCUp ][ DOWNCrate ] -> [ DOWNCrateCDown ][ LEFTCrate ] -> [ LEFTCrateCLeft ][ RIGHTCrate ] -> [ RIGHTCrateCRight ][ > Crate | Solid ] -> [ Crate | Solid ][ PlayerBonk1 ] -> [ PlayerC ][ PlayerBonkU2 ] -> [ PlayerBonkU1 ][ PlayerBonkU3 ] -> [ PlayerBonkU2 ][ PlayerBonkU4 ] -> [ PlayerBonkU3 ][ PlayerBonkD2 ] -> [ PlayerBonkD1 ][ PlayerBonkD3 ] -> [ PlayerBonkD2 ][ PlayerBonkD4 ] -> [ PlayerBonkD3 ][ PlayerBonkL2 ] -> [ PlayerBonkL1 ][ PlayerBonkL3 ] -> [ PlayerBonkL2 ][ PlayerBonkL4 ] -> [ PlayerBonkL3 ][ PlayerBonkR2 ] -> [ PlayerBonkR1 ][ PlayerBonkR3 ] -> [ PlayerBonkR2 ][ PlayerBonkR4 ] -> [ PlayerBonkR3 ]Up [ UpPlayerPlayerC | stationarySolid ] -> [ UpPlayerPlayerBonkU4 | Solid ]Down [ DownPlayerPlayerC | stationarySolid ] -> [ DownPlayerPlayerBonkD4 | Solid ]Left [ LeftPlayerPlayerC | stationarySolid ] -> [ LeftPlayerPlayerBonkL4 | Solid ]Right [ RightPlayerPlayerC | stationarySolid ] -> [ RightPlayerPlayerBonkR4 | Solid ]LATE RIGHT [ PlayerR4 | PlayerL1Player ] -> [  | PlayerCPlayer ]LATE RIGHT [ PlayerR3 | PlayerL2Player ] -> [ PlayerR4 | PlayerL1Player ]LATE RIGHT [ PlayerR2 | PlayerL3Player ] -> [ PlayerR3 | PlayerL2Player ]LATE RIGHT [ PlayerR1 | PlayerL4Player ] -> [ PlayerR2 | PlayerL3Player ]LATE RIGHT [ PlayerC | Player ] -> [ PlayerR1 | PlayerL4Player ]LATE LEFT [ PlayerL4 | PlayerR1Player ] -> [  | PlayerCPlayer ]LATE LEFT [ PlayerL3 | PlayerR2Player ] -> [ PlayerL4 | PlayerR1Player ]LATE LEFT [ PlayerL2 | PlayerR3Player ] -> [ PlayerL3 | PlayerR2Player ]LATE LEFT [ PlayerL1 | PlayerR4Player ] -> [ PlayerL2 | PlayerR3Player ]LATE LEFT [ PlayerC | Player ] -> [ PlayerL1 | PlayerR4Player ]LATE UP [ PlayerU4 | PlayerD1Player ] -> [  | PlayerCPlayer ]LATE UP [ PlayerU3 | PlayerD2Player ] -> [ PlayerU4 | PlayerD1Player ]LATE UP [ PlayerU2 | PlayerD3Player ] -> [ PlayerU3 | PlayerD2Player ]LATE UP [ PlayerU1 | PlayerD4Player ] -> [ PlayerU2 | PlayerD3Player ]LATE UP [ PlayerC | Player ] -> [ PlayerU1 | PlayerD4Player ]LATE DOWN [ PlayerD4noCrate | PlayerU1Player ] -> [  | PlayerCPlayer ]LATE DOWN [ PlayerD3noCrate | PlayerU2Player ] -> [ PlayerD4 | PlayerU1Player ]LATE DOWN [ PlayerD2noCrate | PlayerU3Player ] -> [ PlayerD3 | PlayerU2Player ]LATE DOWN [ PlayerD1noCrate | PlayerU4Player ] -> [ PlayerD2 | PlayerU3Player ]LATE DOWN [ PlayerCnoCrate | Player ] -> [ PlayerD1 | PlayerU4Player ]LATE RIGHT [ CrateR4noCrate | CrateL1Crate ] -> [  | CrateCCrate ]LATE RIGHT [ CrateR3noCrate | CrateL2Crate ] -> [ CrateR4 | CrateL1Crate ]LATE RIGHT [ CrateR2noCrate | CrateL3Crate ] -> [ CrateR3 | CrateL2Crate ]LATE RIGHT [ CrateR1noCrate | CrateL4Crate ] -> [ CrateR2 | CrateL3Crate ]LATE RIGHT [ CrateCnoCrateCRight | Crate ] -> [ CrateR1 | CrateL4Crate ]LATE LEFT [ CrateL4noCrate | CrateR1Crate ] -> [  | CrateCCrate ]LATE LEFT [ CrateL3noCrate | CrateR2Crate ] -> [ CrateL4 | CrateR1Crate ]LATE LEFT [ CrateL2noCrate | CrateR3Crate ] -> [ CrateL3 | CrateR2Crate ]LATE LEFT [ CrateL1noCrate | CrateR4Crate ] -> [ CrateL2 | CrateR3Crate ]LATE LEFT [ CrateCnoCrateCLeft | Crate ] -> [ CrateL1 | CrateR4Crate ]LATE UP [ CrateU4noCrate | CrateD1Crate ] -> [  | CrateCCrate ]LATE UP [ CrateU3noCrate | CrateD2Crate ] -> [ CrateU4 | CrateD1Crate ]LATE UP [ CrateU2noCrate | CrateD3Crate ] -> [ CrateU3 | CrateD2Crate ]LATE UP [ CrateU1noCrate | CrateD4Crate ] -> [ CrateU2 | CrateD3Crate ]LATE UP [ CrateCnoCrateCUp | Crate ] -> [ CrateU1 | CrateD4Crate ]LATE DOWN [ CrateD4noCrate | CrateU1Crate ] -> [  | CrateCCrate ]LATE DOWN [ CrateD3noCrate | CrateU2Crate ] -> [ CrateD4 | CrateU1Crate ]LATE DOWN [ CrateD2noCrate | CrateU3Crate ] -> [ CrateD3 | CrateU2Crate ]LATE DOWN [ CrateD1noCrate | CrateU4Crate ] -> [ CrateD2 | CrateU3Crate ]LATE DOWN [ CrateCnoCrateCDown | Crate ] -> [ CrateD1 | CrateU4Crate ]
 
 WINCONDITIONS
 
@@ -512,7 +534,6 @@ LEVELS
 ######
 
 ..####...
-
 ###..####
 #.....*.#
 #.#..#*.#
@@ -520,7 +541,6 @@ LEVELS
 #########
 
 ########
-
 #......#
 #.O@@*P#
 #......#
@@ -536,7 +556,6 @@ LEVELS
 ########
 
 ######.#####
-
 #....###...#
 #.**.....#P#
 #.*.#OOO...#
@@ -544,7 +563,6 @@ LEVELS
 #####.......
 
 #######
-
 #.....#
 #.O*O.#
 #.*O*.#
@@ -554,7 +572,6 @@ LEVELS
 #######
 
 ..######
-
 ..#.OOP#
 ..#.**.#
 ..##.###
@@ -576,7 +593,6 @@ LEVELS
 ...###
 
 ......#####
-
 ......#O..#
 ......#O#.#
 #######O#.#
@@ -586,7 +602,6 @@ LEVELS
 #########..
 
 ..######.
-
 ..#....#.
 ..#.##P##
 ###.#.*.#
@@ -596,7 +611,6 @@ LEVELS
 ####.....
 
 #####....
-
 #...##...
 #.*..#...
 ##.*.####
@@ -616,7 +630,6 @@ LEVELS
 .####..
 
 #######
-
 #.....#
 #.#.#.#
 #O.*@P#
@@ -632,7 +645,6 @@ LEVELS
 ....#####
 
 .####.....
-
 .#..####..
 .#.....##.
 ##.##...#.
@@ -660,7 +672,6 @@ LEVELS
 ..####.
 
 ########
-
 #...OO.#
 #..P**.#
 #####.##
@@ -670,7 +681,6 @@ LEVELS
 ...####.
 
 #######..
-
 #.....###
 #..P**OO#
 ####.##.#
@@ -680,7 +690,6 @@ LEVELS
 ..####...
 
 ####...
-
 #..####
 #.O.O.#
 #.**#P#
@@ -722,7 +731,6 @@ LEVELS
 #####..
 
 .#####
-
 .#.P.#
 .#...#
 ###*.#
@@ -790,7 +798,6 @@ LEVELS
 #######
 
 ..####...
-
 ###..####
 #.......#
 #P*@@@O.#
@@ -798,7 +805,6 @@ LEVELS
 #########
 
 ..####.
-
 .##..#.
 .#O.*#.
 .#O*.#.
@@ -816,7 +822,6 @@ LEVELS
 ###############
 
 ......###
-
 #####.#O#
 #...###O#
 #...*.#O#
@@ -844,7 +849,6 @@ LEVELS
 #####.....
 
 .#####.
-
 .#...#.
 ##...##
 #.***.#
@@ -852,7 +856,6 @@ LEVELS
 #######
 
 #######.
-
 #.....#.
 #P***.##
 #..#OOO#
@@ -860,7 +863,6 @@ LEVELS
 .######.
 
 ...####
-
 ...#..#
 ...#P.#
 ####*O#
@@ -892,7 +894,6 @@ LEVELS
 ######
 
 .######
-
 ##....#
 #..##.#
 #.#.*.#
@@ -910,7 +911,6 @@ LEVELS
 #####.#####
 
 ######..
-
 #..P.#..
 #..#.##.
 #.O#..##
@@ -920,7 +920,6 @@ LEVELS
 ...#####
 
 ######..
-
 #.P..#..
 #.*#.#..
 #.*..#..
@@ -948,7 +947,6 @@ LEVELS
 ..######
 
 ..####
-
 ###.P#
 #..*.#
 #..@O#
@@ -966,7 +964,6 @@ LEVELS
 .#####.
 
 ......######
-
 ......#....#
 ..#####.O..#
 ###..###O..#
@@ -976,7 +973,6 @@ LEVELS
 .######.....
 
 ########..
-
 #.P.#..#..
 #......#..
 #####*.#..
@@ -986,7 +982,6 @@ LEVELS
 ....####..
 
 #####..
-
 #...###
 #..*..#
 ##@.O.#
@@ -1022,7 +1017,6 @@ LEVELS
 .......######
 
 .#########
-
 .#.......#
 ##P#####.#
 #..#...#.#
@@ -1034,7 +1028,6 @@ LEVELS
 ########..
 
 ########.
-
 #......#.
 #.####.#.
 #.#OOOP#.
@@ -1046,7 +1039,6 @@ LEVELS
 ...###...
 
 ...##########
-
 ####....##..#
 #..***OOOO*P#
 #......###..#
@@ -1054,7 +1046,6 @@ LEVELS
 #####........
 
 #####...####.......
-
 #...#####.O#.......
 #.......*..########
 ###..####.O*....P.#
@@ -1082,7 +1073,6 @@ LEVELS
 .########
 
 ...###...
-
 ...#P#...
 .###*###.
 ##..O..##
@@ -1098,7 +1088,6 @@ LEVELS
 ..#####..
 
 #####..
-
 #...##.
 #.#..#.
 #P*@O##
@@ -1116,7 +1105,6 @@ LEVELS
 ######....
 
 ####..####.
-
 #..####..#.
 #..#..#..#.
 #..#....*##
@@ -1126,7 +1114,6 @@ LEVELS
 ###########
 
 #####...
-
 #.P.####
 #......#
 #.*.**.#
@@ -1160,7 +1147,6 @@ LEVELS
 ####......
 
 ####....
-
 #..#####
 #.**.*.#
 #......#
@@ -1172,7 +1158,6 @@ LEVELS
 ########
 
 .####......
-
 .#..#######
 .#*.P#...O#
 ##.#**...O#
@@ -1210,7 +1195,6 @@ LEVELS
 .#####.....
 
 .#######...
-
 ##.....##..
 #..*.*..#..
 #.*.*.*.#..
@@ -1220,7 +1204,6 @@ LEVELS
 ..#######..
 
 .#########
-
 .#....#..#
 ##.*#*#..#
 #..O*OP..#
@@ -1250,7 +1233,6 @@ LEVELS
 .#####
 
 #####...
-
 #...###.
 #.O...##
 ##@#*..#
@@ -1260,7 +1242,6 @@ LEVELS
 #######.
 
 ######..
-
 #....##.
 #.*.*.##
 ##.**..#
@@ -1272,7 +1253,6 @@ LEVELS
 .####...
 
 ########....
-
 #..OOO.#....
 #..###.##...
 #..#.*..#...
@@ -1296,7 +1276,6 @@ LEVELS
 .#######...
 
 ....####.
-
 ..###..##
 .##.*...#
 ##.*..#.#
@@ -1306,7 +1285,6 @@ LEVELS
 #####....
 
 .....####
-
 ######..#
 #.......#
 #..OOO.O#
@@ -1318,7 +1296,6 @@ LEVELS
 ..######.
 
 .....####..
-
 .#.###..#..
 .#.#....#..
 .#.#..#.#..
@@ -1356,7 +1333,6 @@ LEVELS
 ###########
 
 ..####.........
-
 ..#..#....#####
 ..#..#....#...#
 ..#..######O#.#
@@ -1380,7 +1356,6 @@ LEVELS
 .#########.
 
 #########
-
 #.P.#...#
 #.*.*...#
 ##*###.##
@@ -1390,7 +1365,6 @@ LEVELS
 .....####
 
 ########
-
 #P.....#
 #.O**O.#
 #.*OO*.#
@@ -1412,7 +1386,6 @@ LEVELS
 ...#####...
 
 ...####.......
-
 ...#..########
 ####.*.*OOOOO#
 #...*...######
@@ -1424,7 +1397,6 @@ LEVELS
 .######.......
 
 #####...........
-
 #...##.####.....
 #..*.###.O#.....
 #.*...*..O#.....
@@ -1436,7 +1408,6 @@ LEVELS
 ........#######.
 
 ...............#####..
-
 ...............#...#..
 #######..#######.#.#..
 #.....#..#..#......#..
@@ -1448,7 +1419,6 @@ LEVELS
 .........####.........
 
 #######.
-
 #.P#..#.
 #O*...#.
 #O.#.*##
@@ -1472,7 +1442,6 @@ LEVELS
 ......#####..
 
 ###########
-
 #OOOO#....#
 #..#...**.#
 #..P..##..#
@@ -1482,7 +1451,6 @@ LEVELS
 .....######
 
 ..#####.
-
 ..#.O.##
 ###.*..#
 #.O.*#P#
@@ -1524,7 +1492,6 @@ LEVELS
 .....#####
 
 ########
-
 #......#
 #.*@@@.#
 #.@..@.#
@@ -1534,7 +1501,6 @@ LEVELS
 ########
 
 ####.....#####.
-
 #..###...#...##
 #....#...#*.*.#
 #OO#.#####.#..#
@@ -1568,7 +1534,6 @@ LEVELS
 ...####..
 
 ######...
-
 #....####
 #....OOO#
 #....OOO#
@@ -1620,7 +1585,6 @@ LEVELS
 .#####.....
 
 ....#####...
-
 #####...####
 #.....#....#
 #..#OOOOO..#
@@ -1638,7 +1602,6 @@ LEVELS
 ....#####.
 
 .####.####.
-
 .#..###..##
 .#......P.#
 ##OO###...#
@@ -1650,7 +1613,6 @@ LEVELS
 ...####....
 
 .#####....
-
 ##...##...
 #..*..##..
 #.*.*..##.
@@ -1662,7 +1624,6 @@ LEVELS
 .########.
 
 ..######.
-
 ..#....##
 .##.##..#
 .#.**.#.#
@@ -1698,7 +1659,6 @@ LEVELS
 .##########
 
 #####......
-
 #...###....
 #.#*..#....
 #.*...#....
@@ -1734,7 +1694,6 @@ LEVELS
 .#############
 
 ......#####..
-
 ......#...##.
 ......#.*..#.
 ########.#P##
@@ -1762,7 +1721,6 @@ LEVELS
 ####......
 
 ..#########
-
 ###...#...#
 #.@.*.O.O.#
 #...*.##.##
@@ -1772,7 +1730,6 @@ LEVELS
 .#####.....
 
 ..#########
-
 ###.P.#...#
 #.@.*.@OO.#
 #...*.#...#
@@ -1802,7 +1759,6 @@ LEVELS
 .####..
 
 ####......
-
 #.P###....
 #O@..#####
 #OO#**.*.#
@@ -1812,7 +1768,6 @@ LEVELS
 .#####....
 
 .#######..
-
 .#..O.O###
 .#.O.O.O.#
 ###.####.#
@@ -1822,7 +1777,6 @@ LEVELS
 ...#####..
 
 ........####
-
 #########..#
 #...##.*...#
 #..*...##..#
@@ -1842,7 +1796,6 @@ LEVELS
 ...########
 
 .#######.
-
 .#.....#.
 ##.###*##
 #O*...P.#
@@ -1852,7 +1805,6 @@ LEVELS
 ######...
 
 .......####..
-
 ......##..###
 ####..#..*..#
 #..####.*.*.#
@@ -1876,7 +1828,6 @@ LEVELS
 .....######.
 
 .####...........
-
 ##..####........
 #...OOO#........
 #...OOO#........
@@ -1936,7 +1887,6 @@ LEVELS
 ..#####..
 
 ...####.....
-
 .###..#####.
 .#.**.#...#.
 .#.*.O.O**##
@@ -1972,7 +1922,6 @@ LEVELS
 .#######.
 
 .......#####
-
 ########...#
 #O...O..P#O#
 #..###.....#
@@ -1992,7 +1941,6 @@ LEVELS
 ..#############
 
 .####.....
-
 ##..###...
 #P*...#...
 ###.*.#...
@@ -2006,7 +1954,6 @@ LEVELS
 .####.....
 
 .....####......
-
 .#####..#......
 .#.....*#######
 ##.##.OO#..OOO#
@@ -2016,7 +1963,6 @@ LEVELS
 ......####.....
 
 ...####.....
-
 ...#..#.....
 .###..#.....
 ##..*.#.....
@@ -2038,7 +1984,6 @@ LEVELS
 ###############
 
 #############
-
 #O#.P#..#...#
 #O#**...#.*.#
 #O#..#.*#...#

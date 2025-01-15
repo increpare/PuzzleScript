@@ -1,10 +1,32 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Grandma's Christmas Kisses
+    prelude_data
+      author
+      Julianna Shevchenko
+    prelude_data
+      homepage
+      www.puzzlescript.net
+    prelude_data
+      background_color
+      white
+    prelude_data
+      text_color
+      green
+    prelude_data
+      youtube
+      9DlD7-TykIU
+    prelude_data
+      zoomscreen
+      8x8
   objects_section
     object_data
-      object_name	Temp
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	Temp
+      color_line
+        color	Black
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -12,10 +34,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Background
-      legend_key	#
-      colors
-        color	B0926E
+      object_line
+        object_name	Background
+      color_line
+        color	#B0926E
         color	#C9A578
       sprite
         ['1' '0' '1' '1' '1']
@@ -24,10 +46,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['1' '1' '0' '1' '1']
     object_data
-      object_name	Background2
-      legend_key	#
-      colors
-        color	B0926E
+      object_line
+        object_name	Background2
+      color_line
+        color	#B0926E
         color	#C9A578
       sprite
         ['0' '0' '0' '0' '0']
@@ -36,41 +58,27 @@ ps_game
         ['1' '1' '0' '1' '1']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Grandson
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	l
-      colors
-        color	ightgreen
+      object_line
+        object_name	Grandson
+      color_line
+        color	Black
+        color	Orange
+        color	lightgreen
         color	Red
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['2' '2' '2' '2' '2']
+        ['.' '0' '.' '0' '.']
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	.111.
-      legend_key	2
-      colors
-        color	2222
-    object_data
-      object_name	.0.0.
-      legend_key	P
-      colors
-        color	layer
-    object_data
-      object_name	Grey
-      legend_key	O
-      colors
-        color	range
-    object_data
-      object_name	White
-      legend_key	l
-      colors
-        color	ightbrown
+      object_line
+        object_name	Player
+      color_line
+        color	Grey
+        color	Orange
+        color	White
+        color	lightbrown
         color	darkbrown
       sprite
         ['.' '0' '0' '0' '.']
@@ -79,15 +87,12 @@ ps_game
         ['.' '3' '3' '3' '.']
         ['.' '4' '.' '4' '.']
     object_data
-      object_name	Mom
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	Mom
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Brown
       sprite
         ['.' '0' '0' '0' '.']
@@ -96,15 +101,12 @@ ps_game
         ['.' '2' '2' '2' '.']
         ['.' '3' '.' '3' '.']
     object_data
-      object_name	Dad
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	g
-      colors
-        color	reen
+      object_line
+        object_name	Dad
+      color_line
+        color	Black
+        color	Orange
+        color	green
         color	Red
       sprite
         ['.' '0' '0' '0' '.']
@@ -113,141 +115,90 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '0' '.' '0' '.']
     object_data
-      object_name	Uncle
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	#
-      colors
-        color	003200
+      object_line
+        object_name	Uncle
+      color_line
+        color	Black
+        color	Orange
+        color	#003200
         color	darkgray
+      sprite
+        ['.' '0' '0' '3' '.']
+        ['.' '1' '1' '1' '.']
+        ['2' '2' '2' '2' '2']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
     object_data
-      object_name	.003.
-      legend_key	.
-      colors
-        color	111.
-    object_data
-      object_name	22222
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	.0.0.
-      legend_key	B
-      colors
-        color	anner1
-    object_data
-      object_name	lightbrown
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Banner1
+      color_line
+        color	lightbrown
+        color	Red
         color	#967C63
+      sprite
+        ['0' '1' '1' '1' '1']
+        ['2' '1' '1' '1' '1']
+        ['2' '2' '1' '1' '1']
+        ['2' '2' '2' '1' '1']
+        ['2' '2' '2' '2' '2']
     object_data
-      object_name	01111
-      legend_key	2
-      colors
-        color	1111
-    object_data
-      object_name	22111
-      legend_key	2
-      colors
-        color	2211
-    object_data
-      object_name	22222
-      legend_key	B
-      colors
-        color	annerX
-    object_data
-      object_name	White
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	BannerX
+      color_line
+        color	White
+        color	Black
         color	#967C63
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '0' '1' '0']
+        ['2' '2' '2' '2' '2']
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	1010
-    object_data
-      object_name	00100
-      legend_key	0
-      colors
-        color	1010
-    object_data
-      object_name	22222
-      legend_key	B
-      colors
-        color	annerM
-    object_data
-      object_name	Green
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	BannerM
+      color_line
+        color	Green
+        color	Black
         color	#967C63
+      sprite
+        ['0' '1' '0' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['1' '0' '0' '0' '1']
+        ['2' '2' '2' '2' '2']
     object_data
-      object_name	01010
-      legend_key	1
-      colors
-        color	0101
-    object_data
-      object_name	10001
-      legend_key	1
-      colors
-        color	0001
-    object_data
-      object_name	22222
-      legend_key	B
-      colors
-        color	annerA
-    object_data
-      object_name	Red
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	BannerA
+      color_line
+        color	Red
+        color	Black
         color	#967C63
+      sprite
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['1' '0' '0' '0' '1']
+        ['2' '2' '2' '2' '2']
     object_data
-      object_name	00100
-      legend_key	0
-      colors
-        color	1010
-    object_data
-      object_name	11111
-      legend_key	1
-      colors
-        color	0001
-    object_data
-      object_name	22222
-      legend_key	B
-      colors
-        color	annerS
-    object_data
-      object_name	White
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	BannerS
+      color_line
+        color	White
+        color	Black
         color	#967C63
+      sprite
+        ['0' '1' '1' '1' '0']
+        ['0' '1' '1' '0' '0']
+        ['0' '0' '1' '1' '0']
+        ['0' '1' '1' '1' '0']
+        ['2' '2' '2' '2' '2']
     object_data
-      object_name	01110
-      legend_key	0
-      colors
-        color	1100
-    object_data
-      object_name	00110
-      legend_key	0
-      colors
-        color	1110
-    object_data
-      object_name	22222
-      legend_key	B
-      colors
-        color	anner2
-    object_data
-      object_name	lightbrown
-      legend_key	G
-      colors
-        color	reen
+      object_line
+        object_name	Banner2
+      color_line
+        color	lightbrown
+        color	Green
         color	#967C63
       sprite
         ['1' '1' '1' '1' '0']
@@ -256,10 +207,10 @@ ps_game
         ['1' '1' '2' '2' '2']
         ['2' '2' '2' '2' '2']
     object_data
-      object_name	Rug1
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Rug1
+      color_line
+        color	Red
         color	White
       sprite
         ['.' '.' '.' '.' '1']
@@ -268,10 +219,10 @@ ps_game
         ['.' '1' '0' '0' '0']
         ['1' '0' '0' '0' '0']
     object_data
-      object_name	Rug2
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Rug2
+      color_line
+        color	Red
         color	White
       sprite
         ['1' '1' '1' '1' '1']
@@ -280,10 +231,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Rug3
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Rug3
+      color_line
+        color	Red
         color	White
       sprite
         ['1' '.' '.' '.' '.']
@@ -292,10 +243,10 @@ ps_game
         ['0' '0' '0' '1' '.']
         ['0' '0' '0' '0' '1']
     object_data
-      object_name	Rug4
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Rug4
+      color_line
+        color	Red
         color	White
       sprite
         ['1' '0' '0' '0' '0']
@@ -304,10 +255,10 @@ ps_game
         ['1' '0' '0' '0' '0']
         ['1' '0' '0' '0' '0']
     object_data
-      object_name	Rug5
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Rug5
+      color_line
+        color	Red
         color	White
       sprite
         ['0' '0' '0' '0' '0']
@@ -316,10 +267,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Rug6
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Rug6
+      color_line
+        color	Red
         color	White
       sprite
         ['0' '0' '0' '0' '1']
@@ -328,10 +279,10 @@ ps_game
         ['0' '0' '0' '0' '1']
         ['0' '0' '0' '0' '1']
     object_data
-      object_name	Rug7
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Rug7
+      color_line
+        color	Red
         color	White
       sprite
         ['1' '0' '0' '0' '0']
@@ -340,10 +291,10 @@ ps_game
         ['.' '.' '.' '1' '0']
         ['.' '.' '.' '.' '1']
     object_data
-      object_name	Rug8
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Rug8
+      color_line
+        color	Red
         color	White
       sprite
         ['0' '0' '0' '0' '0']
@@ -352,10 +303,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['1' '1' '1' '1' '1']
     object_data
-      object_name	Rug9
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Rug9
+      color_line
+        color	Red
         color	White
       sprite
         ['0' '0' '0' '0' '1']
@@ -364,10 +315,10 @@ ps_game
         ['0' '1' '.' '.' '.']
         ['1' '.' '.' '.' '.']
     object_data
-      object_name	Gift
-      legend_key	B
-      colors
-        color	lue
+      object_line
+        object_name	Gift
+      color_line
+        color	Blue
         color	White
       sprite
         ['.' '.' '.' '.' '.']
@@ -376,15 +327,12 @@ ps_game
         ['.' '0' '1' '0' '.']
         ['.' '0' '1' '0' '.']
     object_data
-      object_name	Tree1
-      legend_key	l
-      colors
-        color	ightbrown
-    object_data
-      object_name	Green
-      legend_key	l
-      colors
-        color	ightgreen
+      object_line
+        object_name	Tree1
+      color_line
+        color	lightbrown
+        color	Green
+        color	lightgreen
         color	Brown
       sprite
         ['.' '.' '.' '.' '0']
@@ -393,15 +341,12 @@ ps_game
         ['.' '2' '2' '1' '1']
         ['.' '.' '.' '.' '3']
     object_data
-      object_name	Tree2
-      legend_key	l
-      colors
-        color	ightbrown
-    object_data
-      object_name	Green
-      legend_key	l
-      colors
-        color	ightgreen
+      object_line
+        object_name	Tree2
+      color_line
+        color	lightbrown
+        color	Green
+        color	lightgreen
         color	Brown
       sprite
         ['0' '.' '.' '.' '.']
@@ -410,10 +355,10 @@ ps_game
         ['1' '1' '1' '1' '.']
         ['3' '.' '.' '.' '.']
     object_data
-      object_name	Wall
-      legend_key	#
-      colors
-        color	967C63
+      object_line
+        object_name	Wall
+      color_line
+        color	#967C63
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
@@ -421,10 +366,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Target1
-      legend_key	R
-      colors
-        color	ED
+      object_line
+        object_name	Target1
+      color_line
+        color	RED
         color	green
       sprite
         ['.' '.' '1' '1' '.']
@@ -433,10 +378,10 @@ ps_game
         ['0' '0' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Target2
-      legend_key	R
-      colors
-        color	ED
+      object_line
+        object_name	Target2
+      color_line
+        color	RED
         color	green
       sprite
         ['.' '.' '1' '.' '.']
@@ -444,92 +389,90 @@ ps_game
         ['1' '1' '1' '.' '.']
         ['.' '.' '.' '0' '0']
         ['.' '.' '.' '0' '0']
-      
-
   legend_section
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      ,
+      , =
       object_name	Background2
     legend_data
-      1
+      1 =
       object_name	Banner1
     legend_data
-      2
+      2 =
       object_name	Banner2
     legend_data
-      3
+      3 =
       object_name	BannerX
     legend_data
-      4
+      4 =
       object_name	BannerM
     legend_data
-      5
+      5 =
       object_name	BannerA
     legend_data
-      6
+      6 =
       object_name	BannerS
     legend_data
-      f
+      f =
       object_name	Rug1
     legend_data
-      n
+      n =
       object_name	Rug2
     legend_data
-      b
+      b =
       object_name	Rug3
     legend_data
-      j
+      j =
       object_name	Rug4
     legend_data
-      c
+      c =
       object_name	Rug5
     legend_data
-      x
+      x =
       object_name	Rug6
     legend_data
-      z
+      z =
       object_name	Rug7
     legend_data
-      l
+      l =
       object_name	Rug8
     legend_data
-      k
+      k =
       object_name	Rug9
     legend_data
-      p
+      p =
       object_name	Player
     legend_data
-      s
+      s =
       object_name	Grandson
     legend_data
-      m
+      m =
       object_name	Mom
     legend_data
-      d
+      d =
       object_name	Dad
     legend_data
-      u
+      u =
       object_name	Uncle
     legend_data
-      r
+      r =
       object_name	Tree1
     legend_data
-      e
+      e =
       object_name	Tree2
     legend_data
-      g
+      g =
       object_name	gift
     legend_data
-      w
+      w =
       object_name	Wall
     legend_data
-      t
+      t =
       object_name	Target1
     legend_data
-      a
+      a =
       object_name	Target2
   collisionlayers_section
     layer_data
@@ -539,39 +482,28 @@ ps_game
       object_name	Temp
     layer_data
       object_name	Rug1
-    layer_data
       object_name	Rug2
       object_name	Rug3
-    layer_data
       object_name	Rug4
       object_name	Rug5
-    layer_data
       object_name	Rug6
       object_name	Rug7
-    layer_data
       object_name	Rug8
       object_name	Rug9
     layer_data
       object_name	Player
-    layer_data
       object_name	Wall
       object_name	Tree1
-    layer_data
       object_name	Tree2
       object_name	Grandson
-    layer_data
       object_name	Banner1
       object_name	BannerX
-    layer_data
       object_name	BannerM
       object_name	BannerA
-    layer_data
       object_name	BannerS
       object_name	Banner2
-    layer_data
       object_name	Gift
       object_name	Mom
-    layer_data
       object_name	Dad
       object_name	Uncle
     layer_data
@@ -585,374 +517,207 @@ ps_game
             rule_content
               >
               Player
-            rule_content	]
-            rule_content	[
-            rule_content	G
-            rule_content	r
-            rule_content	a
-            rule_content	n
-            rule_content	d
-            rule_content	s
-            rule_content	o
-            rule_content	n
+          rule_part
+            rule_content	Grandson
           ->
           rule_part
             rule_content
               >
               Player
-            rule_content	]
-            rule_content	[
-            rule_content	>
-            rule_content	G
-            rule_content	r
-            rule_content	a
-            rule_content	n
-            rule_content	d
-            rule_content	s
-            rule_content	o
-            rule_content	n
-          
-
+          rule_part
+            rule_content
+              >
+              Grandson
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	G
-            rule_content	i
-            rule_content	f
-            rule_content	t
+            rule_content	Gift
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	G
-            rule_content	i
-            rule_content	f
-            rule_content	t
-          
-
+            rule_content
+              >
+              Gift
         rule_data
           rule_part
             rule_content
               <
               Player
             cell_border
-            rule_content	G
-            rule_content	i
-            rule_content	f
-            rule_content	t
+            rule_content	Gift
           ->
           rule_part
             rule_content
               <
               Player
             cell_border
-            rule_content	<
-            rule_content	G
-            rule_content	i
-            rule_content	f
-            rule_content	t
-          
-
+            rule_content
+              <
+              Gift
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Player
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
+            rule_content	Mom
           ->
-          None
-          
-
         rule_data
           rule_part
             rule_content	Gift
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	G
-            rule_content	r
-            rule_content	a
-            rule_content	n
-            rule_content	d
-            rule_content	s
-            rule_content	o
-            rule_content	n
+            rule_content	Grandson
           ->
           rule_part
             rule_content	Temp
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-          
-
         rule_data
           rule_part
             rule_content	Temp
           ->
           rule_part
             rule_content	Grandson
-          
-
         rule_data
           rule_part
-            rule_content
-              stationary
-              Uncle
+            rule_content	stationary
+            rule_content	Uncle
           ->
           rule_part
-            rule_content
-              randomDir
-              Uncle
-          
-
+            rule_content	randomDir
+            rule_content	Uncle
         rule_data
           rule_part
             rule_content	Uncle
             cell_border
-            rule_content	G
-            rule_content	i
-            rule_content	f
-            rule_content	t
+            rule_content	Gift
           ->
           rule_part
             rule_content
               <
               Uncle
             cell_border
-            rule_content	G
-            rule_content	i
-            rule_content	f
-            rule_content	t
-          
-
+            rule_content	Gift
         rule_data
           rule_part
             rule_content	Uncle
             cell_border
-            rule_content	T
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	1
+            rule_content	Target1
           ->
           rule_part
             rule_content
               <
               Uncle
             cell_border
-            rule_content	T
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	1
-          
-
+            rule_content	Target1
         rule_data
           rule_part
             rule_content	Uncle
             cell_border
-            rule_content	T
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	2
+            rule_content	Target2
           ->
           rule_part
             rule_content
               <
               Uncle
             cell_border
-            rule_content	T
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	2
-          
-
+            rule_content	Target2
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Player
             cell_border
-            rule_content	U
-            rule_content	n
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	Uncle
           ->
-          None
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Player
             cell_border
-            rule_content	U
-            rule_content	n
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	Uncle
           ->
-          command
-            command_keyword	again
-          
-
+          prefix	again
         rule_data
           rule_part
             rule_content	Player
             cell_border
-            rule_content	U
-            rule_content	n
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	Uncle
           ->
-          command
-            command_keyword	restart
-          
-
+          prefix	restart
         rule_data
           rule_part
-            rule_content
-              stationary
-              Dad
+            rule_content	stationary
+            rule_content	Dad
           ->
           rule_part
-            rule_content
-              randomDir
-              Dad
-          
-
+            rule_content	randomDir
+            rule_content	Dad
         rule_data
           rule_part
             rule_content	Dad
             cell_border
-            rule_content	G
-            rule_content	i
-            rule_content	f
-            rule_content	t
+            rule_content	Gift
           ->
           rule_part
             rule_content
               <
               Dad
             cell_border
-            rule_content	G
-            rule_content	i
-            rule_content	f
-            rule_content	t
-          
-
+            rule_content	Gift
         rule_data
           rule_part
             rule_content	Dad
             cell_border
-            rule_content	T
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	1
+            rule_content	Target1
           ->
           rule_part
             rule_content
               <
               Dad
             cell_border
-            rule_content	T
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	1
-          
-
+            rule_content	Target1
         rule_data
           rule_part
             rule_content	Dad
             cell_border
-            rule_content	T
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	2
+            rule_content	Target2
           ->
           rule_part
             rule_content
               <
               Dad
             cell_border
-            rule_content	T
-            rule_content	a
-            rule_content	r
-            rule_content	g
-            rule_content	e
-            rule_content	t
-            rule_content	2
-          
-
+            rule_content	Target2
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Player
             cell_border
-            rule_content	D
-            rule_content	a
-            rule_content	d
+            rule_content	Dad
           ->
-          None
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Player
             cell_border
-            rule_content	D
-            rule_content	a
-            rule_content	d
+            rule_content	Dad
           ->
-          command
-            command_keyword	again
-          
-
+          prefix	again
         rule_data
           rule_part
             rule_content	Player
             cell_border
-            rule_content	D
-            rule_content	a
-            rule_content	d
+            rule_content	Dad
           ->
-          command
-            command_keyword	restart
-          
-
+          prefix	restart
   winconditions_section
     condition_data
       All
@@ -965,16 +730,14 @@ ps_game
       on
       object_name	Target2
   levels_section
-    level_data	None
-    level_data	[['w' '1' '2' '1' '2' 'w']]
-    level_data	[['w' ',' ',' 'a' 't' 'w']
+    level_data	[['w' '1' '2' '1' '2' 'w']
+ ['w' ',' ',' 'a' 't' 'w']
  ['w' '.' '.' '.' '.' 'w']
  ['w' ',' ',' ',' ',' 'w']
  ['w' '.' '.' '.' 's' 'w']
  ['w' ',' ',' ',' ',' 'w']
  ['w' '.' 'p' '.' '.' 'w']
  ['w' 'w' 'w' 'w' 'w' 'w']]
-    level_data	None
     level_data	[['w' 'w' 'w' '1' '3' '4' '5' '6' '2' 'w' 'w' 'w']
  ['w' 'r' 'e' '.' '.' '.' '.' '.' '.' 'r' 'e' 'w']
  ['w' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' 'w']
@@ -986,7 +749,6 @@ ps_game
  ['w' ',' ',' ',' 'w' ',' ',' ',' ',' ',' ',' 'w']
  ['w' '.' 'p' '.' 'w' '.' '.' '.' '.' 'a' 't' 'w']
  ['w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w']]
-    level_data	None
     level_data	[['w' 'w' 'w' '1' '3' '4' '5' '6' '2' 'w' 'w' 'w']
  ['w' 'a' 't' '.' '.' 'r' 'e' '.' '.' '.' '.' 'w']
  ['w' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' 'w']
@@ -998,7 +760,6 @@ ps_game
  ['w' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' 'w']
  ['w' 'r' 'e' '.' '.' '.' '.' '.' '.' 'r' 'e' 'w']
  ['w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w']]
-    level_data	None
     level_data	[['w' 'w' 'w' 'w' 'w' 'w' '1' '3' '4' '5' '6' '2' 'w']
  ['w' 'r' 'e' 's' '.' 'w' '.' '.' '.' '.' 'a' 't' 'w']
  ['w' ',' ',' ',' ',' 'w' ',' ',' ',' ',' ',' ',' 'w']
@@ -1010,7 +771,6 @@ ps_game
  ['w' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' 'w']
  ['w' '.' '.' 'r' 'e' '.' '.' '.' '.' 'p' '.' '.' 'w']
  ['w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w']]
-    level_data	None
     level_data	[['w' '1' '3' '4' '5' '6' '2' 'w' 'w' 'w' 'w' 'w']
  ['w' '.' '.' 'm' '.' '.' '.' 'w' '.' '.' '.' 'w']
  ['w' ',' 'f' 'n' 'n' 'b' ',' 'w' ',' ',' ',' 'w']
@@ -1022,7 +782,6 @@ ps_game
  ['w' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' 'w']
  ['w' 'r' 'e' 'g' '.' '.' '.' '.' '.' '.' '.' 'w']
  ['w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w']]
-    level_data	None
     level_data	[['w' 'w' 'w' 'w' 'w' 'w' '1' '3' '4' '5' '6' '2' 'w' 'w' 'w' 'w' 'w' 'w'
   'w']
  ['w' '.' '.' '.' 'w' '.' '.' 'm' '.' '.' '.' '.' 'w' '.' '.' '.' 'r' 'e'
@@ -1045,10 +804,9 @@ ps_game
   'w']
  ['w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w'
   'w']]
-    level_data	None
     level_data	[['w' 'w' 'w' '1' '3' '4' '5' '6' '2' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w'
-  'w' 'w']]
-    level_data	[['w' 'r' 'e' ',' ',' ',' ',' ',' ',' 'w' ',' 'f' 'n' 'b' ',' 'w' ',' ','
+  'w' 'w']
+ ['w' 'r' 'e' ',' ',' ',' ',' ',' ',' 'w' ',' 'f' 'n' 'b' ',' 'w' ',' ','
   ',' 'w']
  ['w' '.' '.' '.' '.' '.' '.' '.' '.' 'w' '.' 'j' 'c' 'x' '.' 'w' '.' '.'
   '.' 'w']
@@ -1082,10 +840,9 @@ ps_game
   '.' 'w']
  ['w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w'
   'w' 'w']]
-    level_data	None
     level_data	[['w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' '1' '3' '4' '5' '6' '2'
-  'w' 'w']]
-    level_data	[['w' ',' ',' 'a' 't' ',' ',' ',' ',' ',' 'w' ',' ',' ',' ',' ',' ',' ','
+  'w' 'w']
+ ['w' ',' ',' 'a' 't' ',' ',' ',' ',' ',' 'w' ',' ',' ',' ',' ',' ',' ','
   ',' 'w']
  ['w' '.' 'w' '.' '.' 'w' '.' '.' 'w' '.' 'w' '.' 'f' 'n' 'n' 'n' 'n' 'b'
   'd' 'w']
@@ -1119,10 +876,9 @@ ps_game
   '.' 'w']
  ['w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w'
   'w' 'w']]
-    level_data	None
     level_data	[['w' '1' '3' '4' '5' '6' '2' 'w' 'w' 'w' 'w' 'w' 'w' '1' '3' '4' '5' '6'
-  '2' 'w']]
-    level_data	[['w' 'a' 't' ',' ',' ',' 'r' 'e' 'w' ',' ',' ',' 'w' ',' ',' ',' ',' ','
+  '2' 'w']
+ ['w' 'a' 't' ',' ',' ',' 'r' 'e' 'w' ',' ',' ',' 'w' ',' ',' ',' ',' ','
   ',' 'w']
  ['w' '.' '.' '.' '.' '.' '.' '.' 'w' '.' 's' '.' 'w' '.' 'f' 'n' 'n' 'b'
   '.' 'w']
@@ -1156,10 +912,9 @@ ps_game
   '.' 'w']
  ['w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w'
   'w' 'w']]
-    level_data	None
     level_data	[['w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w'
-  'w' 'w']]
-    level_data	[['w' ',' ',' ',' 'w' ',' ',' ',' ',' 'w' 'a' 't' 'w' 'g' 'r' 'e' 'w' ','
+  'w' 'w']
+ ['w' ',' ',' ',' 'w' ',' ',' ',' ',' 'w' 'a' 't' 'w' 'g' 'r' 'e' 'w' ','
   ',' 'w']
  ['w' '.' 's' '.' 'w' '.' 'u' '.' '.' 'w' '.' '.' 'w' 'g' 'g' 'g' 'w' '.'
   '.' 'w']
@@ -1193,4 +948,3 @@ ps_game
   '.' 'w']
  ['w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w' 'w'
   'w' 'w']]
-    level_data	None

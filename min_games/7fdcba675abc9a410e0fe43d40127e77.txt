@@ -1,73 +1,107 @@
+title Meatball
+
 OBJECTS
 
-backgroundgreen
-stick0brown..0..
-.000.
-.000.
-.000.
-.000.
+background
+green
 
-stick1brown.000.
+stick0
+brown
+..0..
 .000.
 .000.
 .000.
-.000.
+.000
 
-walldarkbrown
-meatyellow.....
+stick1
+brown
+.000.
+.000.
+.000.
+.000.
+.000
+
+wall
+darkbrown
+
+meat
+yellow
+.....
 .000.
 00000
 .000.
-.....
+....
 
-grillORANGE.....
+grill
+ORANGE
+.....
 .000.
 00000
 .000.
-.....
+....
 
-sm0yellow.....
+sm0
+yellow
+.....
 .000.
 00000
 .000.
-.....
+....
 
-sg0ORANGE.....
+sg0
+ORANGE
+.....
 .000.
 00000
 .000.
-.....
+....
 
-sm1yellow.....
+sm1
+yellow
+.....
 .000.
 00000
 .000.
-.....
+....
 
-sg1ORANGE.....
+sg1
+ORANGE
+.....
 .000.
 00000
 .000.
-.....
+....
 
-sm2yellow.....
+sm2
+yellow
+.....
 .000.
 00000
 .000.
-.....
+....
 
-sg2ORANGE.....
+sg2
+ORANGE
+.....
 .000.
 00000
 .000.
-.....
+....
 
-se0TRANSPARENT
-se1TRANSPARENT
-se2TRANSPARENT
-burnerred
-waterblue
+se0
+TRANSPARENT
 
+se1
+TRANSPARENT
+
+se2
+TRANSPARENT
+
+burner
+red
+
+water
+blue
 
 
 LEGEND
@@ -92,41 +126,12 @@ COLLISIONLAYERS
 
 background
 burner, water
-wall, meat
-stick, grill
-top1
-top2, top0
+wall, meat, stick, grill
+top1, top2, top0
 
 RULES
 
-vertical [ > player | meat][se0 ] -> [ > player | ][sm0 ] 
-vertical [ > player | grill][se0 ] -> [ > player | ][sg0 ] 
-vertical [ > player | meat][sm0][se1 ] -> [ > player | ][sm0][sm1 ] 
-vertical [ > player | grill][sm0][se1 ] -> [ > player | ][sg0][sm1 ] 
-vertical [ > player | meat][sg0][se1 ] -> [ > player | ][sm0][sg1 ] 
-vertical [ > player | grill][sg0][se1 ] -> [ > player | ][sg0][sg1 ] 
-vertical [ > player | meat][sm0][sm1][se2 ] -> [ > player | ][sm0][sm1][sm2 ] 
-vertical [ > player | grill][sm0][sm1][se2 ] -> [ > player | ][sg0][sm1][sm2 ] 
-vertical [ > player | meat][sg0][sm1][se2 ] -> [ > player | ][sm0][sg1][sm2 ] 
-vertical [ > player | grill][sg0][sm1][se2 ] -> [ > player | ][sg0][sg1][sm2 ] 
-vertical [ > player | meat][sm0][sg1][se2 ] -> [ > player | ][sm0][sm1][sg2 ] 
-vertical [ > player | grill][sm0][sg1][se2 ] -> [ > player | ][sg0][sm1][sg2 ] 
-vertical [ > player | meat][sg0][sg1][se2 ] -> [ > player | ][sm0][sg1][sg2 ] 
-vertical [ > player | grill][sg0][sg1][se2 ] -> [ > player | ][sg0][sg1][sg2 ] 
-[ > player][stick ] -> [ > player][>stick ] 
-[ > player][top0 ] -> [ > player][>top0 ] 
-[ > player][top1 ] -> [ > player][>top1 ] 
-[ > player][top2 ] -> [ > player][>top2 ] 
-[ > stick | wall ] -> cancel 
-[ > stick | mb ] -> [ > stick | >mb ] 
-[ > mb | mb ] -> [ > mb | >mb ] 
-[ > mb | wall ] -> cancel 
-late [ meat burner ] -> [ grill burner ] 
-late [ sm0 burner ] -> [ sg0 burner ] 
-late [ sm1 burner ] -> [ sg1 burner ] 
-late [ sm2 burner ] -> [ sg2 burner ] 
-late [ meat water ] -> restart 
-
+vertical [ > player | meat ] [ se0 ] -> [ > player |  ] [ sm0 ]vertical [ > player | grill ] [ se0 ] -> [ > player |  ] [ sg0 ]vertical [ > player | meat ] [ sm0 ] [ se1 ] -> [ > player |  ] [ sm0 ] [ sm1 ]vertical [ > player | grill ] [ sm0 ] [ se1 ] -> [ > player |  ] [ sg0 ] [ sm1 ]vertical [ > player | meat ] [ sg0 ] [ se1 ] -> [ > player |  ] [ sm0 ] [ sg1 ]vertical [ > player | grill ] [ sg0 ] [ se1 ] -> [ > player |  ] [ sg0 ] [ sg1 ]vertical [ > player | meat ] [ sm0 ] [ sm1 ] [ se2 ] -> [ > player |  ] [ sm0 ] [ sm1 ] [ sm2 ]vertical [ > player | grill ] [ sm0 ] [ sm1 ] [ se2 ] -> [ > player |  ] [ sg0 ] [ sm1 ] [ sm2 ]vertical [ > player | meat ] [ sg0 ] [ sm1 ] [ se2 ] -> [ > player |  ] [ sm0 ] [ sg1 ] [ sm2 ]vertical [ > player | grill ] [ sg0 ] [ sm1 ] [ se2 ] -> [ > player |  ] [ sg0 ] [ sg1 ] [ sm2 ]vertical [ > player | meat ] [ sm0 ] [ sg1 ] [ se2 ] -> [ > player |  ] [ sm0 ] [ sm1 ] [ sg2 ]vertical [ > player | grill ] [ sm0 ] [ sg1 ] [ se2 ] -> [ > player |  ] [ sg0 ] [ sm1 ] [ sg2 ]vertical [ > player | meat ] [ sg0 ] [ sg1 ] [ se2 ] -> [ > player |  ] [ sm0 ] [ sg1 ] [ sg2 ]vertical [ > player | grill ] [ sg0 ] [ sg1 ] [ se2 ] -> [ > player |  ] [ sg0 ] [ sg1 ] [ sg2 ][ > player ] [ stick ] -> [ > player ] [ > stick ][ > player ] [ top0 ] -> [ > player ] [ > top0 ][ > player ] [ top1 ] -> [ > player ] [ > top1 ][ > player ] [ top2 ] -> [ > player ] [ > top2 ][ > stick | wall ] -> cancel[ > stick | mb ] -> [ > stick | > mb ][ > mb | mb ] -> [ > mb | > mb ][ > mb | wall ] -> cancellate [ meatburner ] -> [ grillburner ]late [ sm0burner ] -> [ sg0burner ]late [ sm1burner ] -> [ sg1burner ]late [ sm2burner ] -> [ sg2burner ]late [ meatwater ] -> restart
 
 WINCONDITIONS
 
@@ -135,7 +140,6 @@ WINCONDITIONS
 LEVELS
 
 wwwwwww
-
 w.....w
 wm...bw
 w..m.bw
@@ -147,7 +151,6 @@ w..2..w
 wwwwwww
 
 wwwwwwwww
-
 w....#..w
 w.m..#..w
 w..0.#..w

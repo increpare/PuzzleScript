@@ -1,3 +1,7 @@
+title Eyes On You
+author whoever
+homepage crouton.net
+
 OBJECTS
 
 Background
@@ -6,7 +10,7 @@ LIGHTGREEN GREEN
 01111
 11101
 11111
-10111
+1011
 
 TargetNeutral
 #0a0a0a
@@ -14,7 +18,7 @@ TargetNeutral
 .000.
 .0.0.
 .000.
-.....
+....
 
 TargetTowards
 Orange
@@ -22,7 +26,7 @@ Orange
 .000.
 .0.0.
 .000.
-.....
+....
 
 TargetAway
 Blue
@@ -30,7 +34,7 @@ Blue
 .000.
 .0.0.
 .000.
-.....
+....
 
 Wall
 BROWN DARKBROWN
@@ -38,7 +42,7 @@ BROWN DARKBROWN
 11111
 01000
 11111
-00010
+0001
 
 Player
 Black Red Blue
@@ -46,7 +50,7 @@ Black Red Blue
 .020.
 .....
 00000
-01010
+0101
 
 PlayerDecoy
 Black Orange White Blue
@@ -54,7 +58,7 @@ Black Orange White Blue
 .202.
 ...0.
 00000
-01010
+0101
 
 EyeballAway
 White lightBlue lightRed
@@ -62,7 +66,7 @@ White lightBlue lightRed
 00100
 01110
 20102
-.202.
+.202
 
 EyeballTowards
 White orange Red
@@ -70,21 +74,26 @@ White orange Red
 00100
 01110
 20102
-.202.
+.202
 
 PlayerDoor
 Yellow Black
+
 10001
 10101
+
 11111
 00000
-01010
 
+01010
 EyeballDoor
-Yellow Black
+
+Yellow B
 10001
+
 00100
 01110
+
 00100
 10001
 
@@ -109,21 +118,11 @@ COLLISIONLAYERS
 
 Background
 Target
-Player
-Wall, EyeballTowards
-EyeballAway, PlayerDecoy
-PlayerDoor, EyeballDoor
+Player, Wall, EyeballTowards, EyeballAway, PlayerDecoy, PlayerDoor, EyeballDoor
 
 RULES
 
-[ EyeballTowards | ... | PlayerDecoy ] -> [ > EyeballTowards | ... | PlayerDecoy ] 
-[ EyeballAway | ... | PlayerDecoy ] -> [ < EyeballAway | ... | PlayerDecoy ] 
-[ EyeballTowards | ... | Player ] -> [ > EyeballTowards | ... | Player ] 
-[ EyeballAway | ... | Player ] -> [ < EyeballAway | ... | Player ] 
-[ > Player | PlayerDecoy ] -> [ Player | > PlayerDecoy ] 
-[ > Player | PlayerDoor |  ] -> [  | PlayerDoor | Player ] 
-[ > Eyeball | EyeballDoor |  ] -> [  | EyeballDoor | Eyeball ] 
-
+[ EyeballTowards | ... | PlayerDecoy ] -> [ > EyeballTowards | ... | PlayerDecoy ] SFX0[ EyeballAway | ... | PlayerDecoy ] -> [ < EyeballAway | ... | PlayerDecoy ] SFX0[ EyeballTowards | ... | Player ] -> [ > EyeballTowards | ... | Player ] SFX0[ EyeballAway | ... | Player ] -> [ < EyeballAway | ... | Player ] SFX0[ > Player | PlayerDecoy ] -> [ Player | > PlayerDecoy ] SFX0[ > Player | PlayerDoor |  ] -> [  | PlayerDoor | Player ] SFX0[ > Eyeball | EyeballDoor |  ] -> [  | EyeballDoor | Eyeball ] SFX0
 
 WINCONDITIONS
 

@@ -1,20 +1,28 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Sluzzle
+    prelude_data
+      author
+      Hannes Petri
+    prelude_data	noaction
   objects_section
     object_data
-      object_name	Background
-      legend_key	B
-      colors
-        color	LACK
+      object_line
+        object_name	Background
+      color_line
+        color	BLACK
     object_data
-      object_name	Player
-      legend_key	B
-      colors
-        color	LACK
+      object_line
+        object_name	Player
+      color_line
+        color	BLACK
     object_data
-      object_name	One
-      legend_key	B
-      colors
-        color	LUE
+      object_line
+        object_name	One
+      color_line
+        color	BLUE
         color	RED
       sprite
         ['0' '0' '0' '0' '0']
@@ -23,10 +31,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Two
-      legend_key	B
-      colors
-        color	LUE
+      object_line
+        object_name	Two
+      color_line
+        color	BLUE
         color	RED
       sprite
         ['0' '0' '0' '0' '0']
@@ -35,10 +43,10 @@ ps_game
         ['0' '0' '0' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Three
-      legend_key	B
-      colors
-        color	LUE
+      object_line
+        object_name	Three
+      color_line
+        color	BLUE
         color	RED
       sprite
         ['0' '0' '0' '0' '0']
@@ -47,10 +55,10 @@ ps_game
         ['0' '0' '0' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Four
-      legend_key	B
-      colors
-        color	LUE
+      object_line
+        object_name	Four
+      color_line
+        color	BLUE
         color	RED
       sprite
         ['0' '0' '0' '0' '0']
@@ -59,10 +67,10 @@ ps_game
         ['0' '1' '0' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Five
-      legend_key	B
-      colors
-        color	LUE
+      object_line
+        object_name	Five
+      color_line
+        color	BLUE
         color	RED
       sprite
         ['0' '0' '0' '0' '0']
@@ -71,10 +79,10 @@ ps_game
         ['0' '1' '0' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Six
-      legend_key	B
-      colors
-        color	LUE
+      object_line
+        object_name	Six
+      color_line
+        color	BLUE
         color	RED
       sprite
         ['0' '0' '0' '0' '0']
@@ -83,10 +91,10 @@ ps_game
         ['0' '1' '0' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Seven
-      legend_key	B
-      colors
-        color	LUE
+      object_line
+        object_name	Seven
+      color_line
+        color	BLUE
         color	RED
       sprite
         ['0' '0' '0' '0' '0']
@@ -95,10 +103,10 @@ ps_game
         ['0' '1' '0' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Eight
-      legend_key	B
-      colors
-        color	LUE
+      object_line
+        object_name	Eight
+      color_line
+        color	BLUE
         color	RED
       sprite
         ['0' '0' '0' '0' '0']
@@ -107,61 +115,58 @@ ps_game
         ['0' '1' '1' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	OneM
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	OneM
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	FourM
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	FourM
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	SevenM
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	SevenM
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	Deleter
-      legend_key	T
-      colors
-        color	RANSPARENT
-      
-
-
+      object_line
+        object_name	Deleter
+      color_line
+        color	TRANSPARENT
   legend_section
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      1
+      1 =
       object_name	One
     legend_data
-      2
+      2 =
       object_name	Two
     legend_data
-      3
+      3 =
       object_name	Three
     legend_data
-      4
+      4 =
       object_name	Four
     legend_data
-      5
+      5 =
       object_name	Five
     legend_data
-      6
+      6 =
       object_name	Six
     legend_data
-      7
+      7 =
       object_name	Seven
     legend_data
-      8
+      8 =
       object_name	Eight
     legend_data
-      @
+      @ =
       object_name	Player
     legend_data
-      Tile
+      Tile =
       object_name	One
       legend_operation
         object_name	Two
@@ -183,10 +188,8 @@ ps_game
     layer_data
       object_name	Player
       object_name	Tile
-    layer_data
       object_name	OneM
       object_name	FourM
-    layer_data
       object_name	SevenM
       object_name	Deleter
   rules_section
@@ -198,396 +201,252 @@ ps_game
               <
               Player
             cell_border
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+            rule_content	Tile
           ->
           rule_part
             rule_content	Tile
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	Player
         rule_data
-          RIGHT
+          prefix	RIGHT
           rule_part
             rule_content	One
             cell_border
-            rule_content	T
-            rule_content	w
-            rule_content	o
+            rule_content	Two
             cell_border
-            rule_content	T
-            rule_content	h
-            rule_content	r
-            rule_content	e
-            rule_content	e
+            rule_content	Three
           ->
           rule_part
             rule_content	OneM
             cell_border
-            rule_content	T
-            rule_content	w
-            rule_content	o
+            rule_content	Two
             cell_border
-            rule_content	T
-            rule_content	h
-            rule_content	r
-            rule_content	e
-            rule_content	e
-          
-
+            rule_content	Three
         rule_data
-          RIGHT
+          prefix	RIGHT
           rule_part
             rule_content	Four
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	v
-            rule_content	e
+            rule_content	Five
             cell_border
-            rule_content	S
-            rule_content	i
-            rule_content	x
+            rule_content	Six
           ->
           rule_part
             rule_content	FourM
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	v
-            rule_content	e
+            rule_content	Five
             cell_border
-            rule_content	S
-            rule_content	i
-            rule_content	x
-          
-
+            rule_content	Six
         rule_data
-          RIGHT
+          prefix	RIGHT
           rule_part
             rule_content	Seven
             cell_border
-            rule_content	E
-            rule_content	i
-            rule_content	g
-            rule_content	h
-            rule_content	t
+            rule_content	Eight
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
+            rule_content	Player
           ->
           rule_part
             rule_content	SevenM
             cell_border
-            rule_content	E
-            rule_content	i
-            rule_content	g
-            rule_content	h
-            rule_content	t
+            rule_content	Eight
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	Player
         rule_data
-          DOWN
+          prefix	DOWN
           rule_part
             rule_content	OneM
             cell_border
-            rule_content	F
-            rule_content	o
-            rule_content	u
-            rule_content	r
-            rule_content	M
+            rule_content	FourM
             cell_border
-            rule_content	S
-            rule_content	e
-            rule_content	v
-            rule_content	e
-            rule_content	n
-            rule_content	M
+            rule_content	SevenM
           ->
           rule_part
             rule_content	Deleter
             cell_border
-            rule_content	D
-            rule_content	e
-            rule_content	l
-            rule_content	e
-            rule_content	t
-            rule_content	e
-            rule_content	r
+            rule_content	Deleter
             cell_border
-            rule_content	D
-            rule_content	e
-            rule_content	l
-            rule_content	e
-            rule_content	t
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	Deleter
         rule_data
           rule_part
             rule_content	Deleter
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+            rule_content	Tile
           ->
           rule_part
             rule_content	Deleter
             cell_border
-            rule_content	.
-            rule_content	.
-            rule_content	.
+            rule_content	...
             cell_border
-          
-
         rule_data
           rule_part
             rule_content	OneM
           ->
           rule_part
             rule_content	One
-          
-
         rule_data
           rule_part
             rule_content	FourM
           ->
           rule_part
             rule_content	Four
-          
-
         rule_data
           rule_part
             rule_content	SevenM
           ->
           rule_part
             rule_content	Seven
-          
-
   winconditions_section
     condition_data
       NO
       object_name	Tile
   levels_section
-    level_data	None
     level_data	[['2' '@' '3']
  ['1' '4' '6']
  ['7' '5' '8']]
-    level_data	None
     level_data	[['2' '3' '@']
  ['1' '4' '8']
  ['7' '6' '5']]
-    level_data	None
     level_data	[['3' '8' '5']
  ['2' '1' '7']
  ['4' '@' '6']]
-    level_data	None
     level_data	[['@' '5' '1']
  ['8' '3' '7']
  ['4' '2' '6']]
-    level_data	None
     level_data	[['@' '6' '1']
  ['3' '8' '7']
  ['5' '4' '2']]
-    level_data	None
     level_data	[['1' '7' '2']
  ['3' '8' '4']
  ['5' '6' '@']]
-    level_data	None
     level_data	[['@' '8' '1']
  ['3' '2' '4']
  ['5' '6' '7']]
-    level_data	None
     level_data	[['7' '1' '2']
  ['4' '8' '@']
  ['3' '5' '6']]
-    level_data	None
     level_data	[['1' '4' '8']
  ['@' '7' '5']
  ['3' '2' '6']]
-    level_data	None
     level_data	[['@' '8' '5']
  ['4' '6' '3']
  ['7' '2' '1']]
-    level_data	None
     level_data	[['4' '6' '1']
  ['7' '@' '2']
  ['8' '3' '5']]
-    level_data	None
     level_data	[['5' '4' '6']
  ['7' '3' '2']
  ['1' '8' '@']]
-    level_data	None
     level_data	[['5' '7' '4']
  ['8' '1' '3']
  ['6' '2' '@']]
-    level_data	None
     level_data	[['5' '3' '6']
  ['7' '4' '@']
  ['8' '1' '2']]
-    level_data	None
     level_data	[['2' '4' '8']
  ['7' '1' '@']
  ['5' '6' '3']]
-    level_data	None
     level_data	[['1' '3' '4']
  ['@' '5' '6']
  ['2' '7' '8']]
-    level_data	None
     level_data	[['6' '4' '2']
  ['3' '5' '@']
  ['1' '8' '7']]
-    level_data	None
     level_data	[['2' '8' '6']
  ['@' '7' '5']
  ['3' '4' '1']]
-    level_data	None
     level_data	[['1' '5' '@']
  ['7' '2' '8']
  ['3' '4' '6']]
-    level_data	None
     level_data	[['@' '7' '3']
  ['8' '6' '2']
  ['4' '5' '1']]
-    level_data	None
     level_data	[['7' '6' '2']
  ['5' '@' '8']
  ['3' '4' '1']]
-    level_data	None
     level_data	[['6' '3' '5']
  ['@' '2' '7']
  ['4' '1' '8']]
-    level_data	None
     level_data	[['8' '2' '3']
  ['1' '4' '5']
  ['7' '@' '6']]
-    level_data	None
     level_data	[['6' '1' '3']
  ['4' '8' '5']
  ['@' '7' '2']]
-    level_data	None
     level_data	[['6' '8' '7']
  ['1' '4' '3']
  ['@' '5' '2']]
-    level_data	None
     level_data	[['7' '6' '@']
  ['5' '1' '3']
  ['2' '4' '8']]
-    level_data	None
     level_data	[['2' '5' '6']
  ['7' '4' '3']
  ['8' '1' '@']]
-    level_data	None
     level_data	[['1' '7' '4']
  ['2' '6' '5']
  ['3' '8' '@']]
-    level_data	None
     level_data	[['3' '8' '5']
  ['4' '6' '2']
  ['@' '1' '7']]
-    level_data	None
     level_data	[['4' '1' '5']
  ['7' '@' '3']
  ['6' '2' '8']]
-    level_data	None
     level_data	[['3' '7' '5']
  ['2' '8' '@']
  ['1' '4' '6']]
-    level_data	None
     level_data	[['8' '1' '7']
  ['5' '3' '@']
  ['6' '2' '4']]
-    level_data	None
     level_data	[['5' '1' '@']
  ['6' '8' '7']
  ['2' '3' '4']]
-    level_data	None
     level_data	[['5' '@' '1']
  ['2' '3' '4']
  ['8' '6' '7']]
-    level_data	None
     level_data	[['7' '8' '1']
  ['4' '5' '3']
  ['6' '2' '@']]
-    level_data	None
     level_data	[['@' '6' '5']
  ['2' '7' '8']
  ['3' '4' '1']]
-    level_data	None
     level_data	[['6' '4' '7']
  ['1' '2' '5']
  ['@' '8' '3']]
-    level_data	None
     level_data	[['3' '1' '4']
  ['2' '5' '@']
  ['8' '7' '6']]
-    level_data	None
     level_data	[['5' '@' '6']
  ['1' '3' '7']
  ['2' '8' '4']]
-    level_data	None
     level_data	[['2' '8' '5']
  ['4' '7' '1']
  ['6' '3' '@']]
-    level_data	None
     level_data	[['6' '5' '4']
  ['3' '2' '1']
  ['8' '@' '7']]
-    level_data	None
     level_data	[['8' '6' '5']
  ['1' '@' '7']
  ['2' '4' '3']]
-    level_data	None
     level_data	[['1' '3' '5']
  ['@' '8' '4']
  ['7' '2' '6']]
-    level_data	None
     level_data	[['6' '4' '3']
  ['2' '@' '5']
  ['7' '8' '1']]
-    level_data	None
     level_data	[['1' '5' '7']
  ['@' '8' '2']
  ['3' '6' '4']]
-    level_data	None
     level_data	[['8' '@' '1']
  ['6' '4' '7']
  ['3' '5' '2']]
-    level_data	None
     level_data	[['1' '6' '3']
  ['7' '@' '4']
  ['8' '5' '2']]
-    level_data	None
     level_data	[['1' '7' '8']
  ['5' '3' '2']
  ['4' '6' '@']]
-    level_data	None
     level_data	[['4' '3' '1']
  ['7' '2' '6']
  ['8' '5' '@']]
-    level_data	None

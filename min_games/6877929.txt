@@ -1,82 +1,121 @@
+title Explod
+author CHz
+homepage quiteajolt.com
+
 OBJECTS
 
-BackgroundGreen
-GoalDarkBlue Black.111.
-10001
-10001
-10001
-10001
+Background
+Green
 
-WallDarkBrown DarkGray00000
-01110
-01110
-01110
+Goal
+DarkBlue Black
+.111.
+10001
+10001
+10001
+1000
+
+Wall
+DarkBrown DarkGray
 00000
+01110
+01110
+01110
+0000
 
-LivePlayerPINK..0..
+LivePlayer
+PINK
+..0..
 ..0..
 .000.
 ..0..
-.0.0.
+.0.0
 
-DeadPlayerRED.....
+DeadPlayer
+RED
+.....
 .....
 0.0..
 .0000
-0.0..
+0.0.
 
-WaterBlue
-MovementCheckBlack.....
-.....
-.....
-.....
-.....
+Water
+Blue
 
-ExplodingCheckBlack
-..........
-..........
-.....UnlitBomb3
-BlackGray Brown
-...22..2..
-.101..000.
-.101.UnlitBomb2
-BlackGray Brown
-...2...2..
-.101..000.
-.101.UnlitBomb1
-BlackGray Brown.....
+MovementCheck
+Black
+.....
+.....
+.....
+.....
+....
+
+ExplodingCheck
+Black
+.....
+.....
+.....
+.....
+....
+
+UnlitBomb3
+Black Gray Brown
+...22
 ..2..
 .101.
 .000.
-.101.
+.101
 
-
-LitBomb4BLACK
-LitBomb3Black
-GrayBrown Yellow...23
+UnlitBomb2
+Black Gray Brown
+...2.
 ..2..
 .101.
 .000.
-.101.
+.101
 
-LitBomb2Black
-GrayBrown Yellow...3.
+UnlitBomb1
+Black Gray Brown
+.....
 ..2..
 .101.
 .000.
-.101.
+.101
 
-LitBomb1Black
-GrayBrown Yellow
-.......3..
-.101..000.
-.101.Explosion
-RedOrange Yellow0.0.0
+LitBomb4
+BLACK
+
+LitBomb3
+Black Gray Brown Yellow
+...23
+..2..
+.101.
+.000.
+.101
+
+LitBomb2
+Black Gray Brown Yellow
+...3.
+..2..
+.101.
+.000.
+.101
+
+LitBomb1
+Black Gray Brown Yellow
+.....
+..3..
+.101.
+.000.
+.101
+
+Explosion
+Red Orange Yellow
+0.0.0
 .010.
 01210
 .010.
-0.0.0
-
+0.0.
 
 
 LEGEND
@@ -97,40 +136,12 @@ COLLISIONLAYERS
 Background
 MovementCheck, ExplodingCheck
 Goal, Water
-Player
-Wall, Bomb
+Player, Wall, Bomb
 Explosion
 
 RULES
 
-[ MOVING DeadPlayer ] -> [ STATIONARY DeadPlayer ] 
-[ Player ] -> [ Player MovementCheck ] 
-[ ExplodingCheck][PlayerMovementCheck ] -> [ ExplodingCheck][PlayernoMovementCheck ] 
-[ > LivePlayer | Bomb ] -> [ > LivePlayer | >Bomb ] 
-[ Action LivePlayer | UnlitBomb3NoWater ] -> [ Action LivePlayer | LitBomb4NoWater ] 
-[ Action LivePlayer | UnlitBomb2NoWater ] -> [ Action LivePlayer | LitBomb3NoWater ] 
-[ Action LivePlayer | UnlitBomb1NoWater ] -> [ Action LivePlayer | LitBomb2NoWater ] 
-[ Action LivePlayer MovementCheck ] -> [ Action LivePlayer ] 
-late [ LitBomb3 Water ] -> [ UnlitBomb3 Water ] 
-late [ LitBomb2 Water ] -> [ UnlitBomb2 Water ] 
-late [ LitBomb1 Water ] -> [ UnlitBomb1 Water ] 
-late [ Explosion ] -> [  ] 
-late [ ExplodingCheck ] -> [  ] 
-late [ LitBomb1][Bomb ] -> [ LitBomb1][BombExplodingCheck ] 
-late [ LitBomb1 no Explosion ] -> [ LitBomb1 Explosion ] again 
-late [ LitBomb1 | noExplosion ] -> [ LitBomb1 | Explosion ] 
-late [ LitBomb1 | LivePlayer ] -> [ LitBomb1 | DeadPlayer ] 
-late [ LitBomb1 | Wall ] -> [ LitBomb1 |  ] 
-late [ LitBomb1 | UnlitBomb3 ] -> [ LitBomb1 | LitBomb4 ] 
-late [ LitBomb1 | UnlitBomb2 ] -> [ LitBomb1 | LitBomb3 ] 
-late [ LitBomb1 | UnlitBomb1 ] -> [ LitBomb1 | LitBomb2 ] 
-late [ LitBomb1 ] -> [  ] 
-late [ LitBomb2 no ExplodingCheck ] -> [ LitBomb1 no ExplodingCheck ] 
-late [ LitBomb3 no ExplodingCheck ] -> [ LitBomb2 no ExplodingCheck ] 
-late [ LitBomb4 no ExplodingCheck ] -> [ LitBomb3 no ExplodingCheck ] 
-late [ Player MovementCheck ] -> CANCEL 
-late [ MovementCheck ] -> [  ] 
-
+[ MOVINGDeadPlayer ] -> [ STATIONARYDeadPlayer ][ Player ] -> [ PlayerMovementCheck ][ ExplodingCheck ] [ PlayerMovementCheck ] -> [ ExplodingCheck ] [ PlayernoMovementCheck ][ > LivePlayer | Bomb ] -> [ > LivePlayer | > Bomb ] SFX2[ ActionLivePlayer | UnlitBomb3NoWater ] -> [ ActionLivePlayer | LitBomb4NoWater ] SFX3[ ActionLivePlayer | UnlitBomb2NoWater ] -> [ ActionLivePlayer | LitBomb3NoWater ] SFX3[ ActionLivePlayer | UnlitBomb1NoWater ] -> [ ActionLivePlayer | LitBomb2NoWater ] SFX3[ ActionLivePlayerMovementCheck ] -> [ ActionLivePlayer ]late [ LitBomb3Water ] -> [ UnlitBomb3Water ] SFX4late [ LitBomb2Water ] -> [ UnlitBomb2Water ] SFX4late [ LitBomb1Water ] -> [ UnlitBomb1Water ] SFX4late [ Explosion ] -> [  ]late [ ExplodingCheck ] -> [  ]late [ LitBomb1 ] [ Bomb ] -> [ LitBomb1 ] [ BombExplodingCheck ]late [ LitBomb1noExplosion ] -> [ LitBomb1Explosion ] againlate [ LitBomb1 | noExplosion ] -> [ LitBomb1 | Explosion ]late [ LitBomb1 | LivePlayer ] -> [ LitBomb1 | DeadPlayer ] SFX1late [ LitBomb1 | Wall ] -> [ LitBomb1 |  ]late [ LitBomb1 | UnlitBomb3 ] -> [ LitBomb1 | LitBomb4 ] SFX3late [ LitBomb1 | UnlitBomb2 ] -> [ LitBomb1 | LitBomb3 ] SFX3late [ LitBomb1 | UnlitBomb1 ] -> [ LitBomb1 | LitBomb2 ] SFX3late [ LitBomb1 ] -> [  ] SFX0late [ LitBomb2noExplodingCheck ] -> [ LitBomb1noExplodingCheck ] SFX5late [ LitBomb3noExplodingCheck ] -> [ LitBomb2noExplodingCheck ] SFX5late [ LitBomb4noExplodingCheck ] -> [ LitBomb3noExplodingCheck ]late [ PlayerMovementCheck ] -> CANCELlate [ MovementCheck ] -> [  ]
 
 WINCONDITIONS
 
@@ -147,7 +158,6 @@ G#.P2#.
 .#...#.
 
 G#....
-
 .#.33.
 .#.33.
 .#...P
@@ -159,7 +169,6 @@ G#....
 3333333.#.
 
 ..G..
-
 #####
 #####
 #####
@@ -183,7 +192,6 @@ P3.3.3######G
 .3.3.3#######
 
 .#.33WP
-
 .#.33W.
 .#.33W.
 G#.33W.

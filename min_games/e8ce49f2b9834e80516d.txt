@@ -1,85 +1,160 @@
+title Enqueue
+author Allen Webster
+homepage www.pushthegame.com
+norepeat_action
+run_rules_on_level_start
+
 OBJECTS
 
-Background.
-BLACKWall
-#DARKGRAY
-00.000.0.0
-.000.0.0.0
-00.00Player
-STRANSPARENT
-SelectorWHITE
-00.000...0
-.....0...0
-00.00RedBlock R
-#990000BlueBlock B
-#000099GreenBlock G
-#009900YellowBlock Y
-#888800PurpleBlock P
-#660066OrangeBlock O
-#994400PinkBlock I
-PINKBrownBlock
-W#222200
-RedPad#990000.....
+Background .
+BLACK
+
+Wall #
+DARKGRAY
+00.00
+0.0.0
+.000.
+0.0.0
+00.0
+
+Player S
+TRANSPARENT
+
+Selector
+WHITE
+00.00
+0...0
+.....
+0...0
+00.0
+
+RedBlock R
+#990000
+
+BlueBlock B
+#000099
+
+GreenBlock G
+#009900
+
+YellowBlock Y
+#888800
+
+PurpleBlock P
+#660066
+
+OrangeBlock O
+#994400
+
+PinkBlock I
+PINK
+
+BrownBlock W
+#222200
+
+RedPad
+#990000
+.....
 ..0..
 .000.
 ..0..
-.....
+....
 
-BluePad#000099.....
+BluePad
+#000099
+.....
 ..0..
 .000.
 ..0..
-.....
+....
 
-GreenPad#009900.....
+GreenPad
+#009900
+.....
 ..0..
 .000.
 ..0..
-.....
+....
 
-YellowPad#888800.....
+YellowPad
+#888800
+.....
 ..0..
 .000.
 ..0..
-.....
+....
 
-PurplePad#660066.....
+PurplePad
+#660066
+.....
 ..0..
 .000.
 ..0..
-.....
+....
 
-OrangePad#994400.....
+OrangePad
+#994400
+.....
 ..0..
 .000.
 ..0..
-.....
+....
 
-PinkPadPINK.....
+PinkPad
+PINK
+.....
 ..0..
 .000.
 ..0..
-.....
+....
 
-BrownPad#222200.....
+BrownPad
+#222200
+.....
 ..0..
 .000.
 ..0..
-.....
+....
 
-QueueLocationTRANSPARENT
-QueueHeadTRANSPARENT
-EnqueueHeadTRANSPARENT
-TakerTRANSPARENT
-FillerTRANSPARENT
-WaitingFillerTRANSPARENT
-FillerTakerLocationTRANSPARENT
-ModeGenTRANSPARENT
-WaitingGenTRANSPARENT
-SendModeTRANSPARENT
-SendModePermTRANSPARENT
-ReceiveModeTRANSPARENT
-ReceiveModePermTRANSPARENT
+QueueLocation
+TRANSPARENT
+
+QueueHead
+TRANSPARENT
+
+EnqueueHead
+TRANSPARENT
+
+Taker
+TRANSPARENT
+
+Filler
+TRANSPARENT
+
+WaitingFiller
+TRANSPARENT
+
+FillerTakerLocation
+TRANSPARENT
+
+ModeGen
+TRANSPARENT
+
+WaitingGen
+TRANSPARENT
+
+SendMode
+TRANSPARENT
+
+SendModePerm
+TRANSPARENT
+
+ReceiveMode
+TRANSPARENT
+
+ReceiveModePerm
+TRANSPARENT
+
 
 LEGEND
 
@@ -112,14 +187,8 @@ QueueHead
 EnqueueHead
 QueueLocation
 Wall
-RedBlock, BlueBlock
-GreenBlock, YellowBlock
-PurpleBlock, OrangeBlock
-PinkBlock, BrownBlock
-RedPad, BluePad
-GreenPad, YellowPad
-PurplePad, OrangePad
-PinkPad, BrownPad
+RedBlock, BlueBlock, GreenBlock, YellowBlock, PurpleBlock, OrangeBlock, PinkBlock, BrownBlock
+RedPad, BluePad, GreenPad, YellowPad, PurplePad, OrangePad, PinkPad, BrownPad
 Selector
 Filler
 WaitingFiller
@@ -135,40 +204,7 @@ Player
 
 RULES
 
-vertical [ > Player ] -> [ Player ] 
-[ > Player | ... | Head ] -> [ |... | PlayerHead ] 
-[ > Player | ... | NoHead ] -> [ Player | ... |  ] 
-[ SendModePerm][actionPlayer][SelectorBlock][Filler ] -> [ SendModePerm][actionPlayer][WallSelector][RIGHTFillerBlock ] 
-[ ReceiveModePerm][actionPlayer][Selector][TakerBlock ] -> [ ReceiveModePerm][actionPlayer][SelectorBlock][RIGHTTakerWall ] 
-[ RedBlock RedPad ] -> [ RedBlock ] 
-[ BlueBlock BluePad ] -> [ BlueBlock ] 
-[ GreenBlock GreenPad ] -> [ GreenBlock ] 
-[ YellowBlock YellowPad ] -> [ YellowBlock ] 
-[ PurpleBlock PurplePad ] -> [ PurpleBlock ] 
-[ OrangeBlock OrangePad ] -> [ OrangeBlock ] 
-[ PinkBlock PinkPad ] -> [ PinkBlock ] 
-[ BrownBlock BrownPad ] -> [ BrownBlock ] 
-horizontal [ QueueLocation | ... | SendMode ] -> [ QueueLocation QueueHead | ... | SendMode ] 
-[ SendMode][PlayerNoHead][QueueLocation ] -> [ SendMode][][QueueLocationPlayer ] 
-[ SendMode][ReceiveModePerm ] -> [ ][SendModePerm ] 
-[ SendMode ] -> [  ] 
-horizontal [ QueueLocation | ... | ReceiveMode ] -> [ QueueLocation EnqueueHead | ... | ReceiveMode ] 
-[ ReceiveMode][PlayerNoHead][QueueLocation ] -> [ ReceiveMode][][QueueLocationPlayer ] 
-[ ReceiveMode][SendModePerm ] -> [ ][ReceiveModePerm ] 
-[ ReceiveMode ] -> [  ] 
-[ action Player Head ] -> [ RIGHT Player RIGHT Head ] 
-late down [ QueueHead | NoBlock ] -> [ | ] 
-late down [ EnqueueHead | Wall ] -> [ |Wall ] 
-late horizontal [ Player No Head | ... | Head ] -> [ |... | PlayerHead ] 
-late down [ Player | NoSelector ] -> [ Player | Selector ] 
-late down [ No Player | Selector ] -> [ | ] 
-late [ Selector Wall ] -> [ Wall ] 
-late up [ Filler Wall | NoWall ] -> [ Wall | Filler ] 
-late down [ Filler | ... | Filler ] -> [ Filler | ... | WaitingFiller ] 
-late up [ Taker Wall | NoTaker ] -> [ Wall | Taker ] 
-late [ Taker No Block][ModeGen ] -> [ ][SendMode ] again 
-late up [ Filler Wall | Wall][WaitingGen]up[FillerTakerLocation | Block][WaitingFiller ] -> [ Wall | Wall][ModeGenReceiveMode][ | BlockTaker][Filler ] again 
-
+vertical [ > Player ] -> [ Player ][ > Player | ... | Head ] -> [  | ... | PlayerHead ][ > Player | ... | NoHead ] -> [ Player | ... |  ][ SendModePerm ] [ actionPlayer ] [ SelectorBlock ] [ Filler ] -> [ SendModePerm ] [ actionPlayer ] [ WallSelector ] [ RIGHTFillerBlock ][ ReceiveModePerm ] [ actionPlayer ] [ Selector ] [ TakerBlock ] -> [ ReceiveModePerm ] [ actionPlayer ] [ SelectorBlock ] [ RIGHTTakerWall ][ RedBlockRedPad ] -> [ RedBlock ][ BlueBlockBluePad ] -> [ BlueBlock ][ GreenBlockGreenPad ] -> [ GreenBlock ][ YellowBlockYellowPad ] -> [ YellowBlock ][ PurpleBlockPurplePad ] -> [ PurpleBlock ][ OrangeBlockOrangePad ] -> [ OrangeBlock ][ PinkBlockPinkPad ] -> [ PinkBlock ][ BrownBlockBrownPad ] -> [ BrownBlock ]horizontal [ QueueLocation | ... | SendMode ] -> [ QueueLocationQueueHead | ... | SendMode ][ SendMode ] [ PlayerNoHead ] [ QueueLocation ] -> [ SendMode ] [  ] [ QueueLocationPlayer ][ SendMode ] [ ReceiveModePerm ] -> [  ] [ SendModePerm ][ SendMode ] -> [  ]horizontal [ QueueLocation | ... | ReceiveMode ] -> [ QueueLocationEnqueueHead | ... | ReceiveMode ][ ReceiveMode ] [ PlayerNoHead ] [ QueueLocation ] -> [ ReceiveMode ] [  ] [ QueueLocationPlayer ][ ReceiveMode ] [ SendModePerm ] -> [  ] [ ReceiveModePerm ][ ReceiveMode ] -> [  ][ actionPlayerHead ] -> [ RIGHTPlayerRIGHTHead ]late down [ QueueHead | NoBlock ] -> [  |  ]late down [ EnqueueHead | Wall ] -> [  | Wall ]late horizontal [ PlayerNoHead | ... | Head ] -> [  | ... | PlayerHead ]late down [ Player | NoSelector ] -> [ Player | Selector ]late down [ NoPlayer | Selector ] -> [  |  ]late [ SelectorWall ] -> [ Wall ]late up [ FillerWall | NoWall ] -> [ Wall | Filler ]late down [ Filler | ... | Filler ] -> [ Filler | ... | WaitingFiller ]late up [ TakerWall | NoTaker ] -> [ Wall | Taker ]late [ TakerNoBlock ] [ ModeGen ] -> [  ] [ SendMode ] againlate up [ FillerWall | Wall ] [ WaitingGen ] up [ FillerTakerLocation | Block ] [ WaitingFiller ] -> [ Wall | Wall ] [ ModeGenReceiveMode ] [  | BlockTaker ] [ Filler ] again
 
 WINCONDITIONS
 

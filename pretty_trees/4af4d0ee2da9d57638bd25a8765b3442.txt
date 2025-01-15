@@ -1,15 +1,21 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Fabric
+    prelude_data	run_rules_on_level_start
+    prelude_data	noaction
   objects_section
     object_data
-      object_name	Background
-      legend_key	d
-      colors
-        color	arkblue
+      object_line
+        object_name	Background
+      color_line
+        color	darkblue
     object_data
-      object_name	ScarfTile
-      legend_key	l
-      colors
-        color	ightgray
+      object_line
+        object_name	ScarfTile
+      color_line
+        color	lightgray
         color	white
       sprite
         ['0' '0' '0' '0' '0']
@@ -18,10 +24,10 @@ ps_game
         ['0' '1' '1' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	ScarfCutTile
-      legend_key	l
-      colors
-        color	ightgray
+      object_line
+        object_name	ScarfCutTile
+      color_line
+        color	lightgray
         color	white
       sprite
         ['0' '0' '0' '0' '0']
@@ -30,10 +36,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	StarTile
-      legend_key	l
-      colors
-        color	ightgray
+      object_line
+        object_name	StarTile
+      color_line
+        color	lightgray
         color	white
       sprite
         ['0' '0' '0' '0' '0']
@@ -42,31 +48,23 @@ ps_game
         ['0' '1' '1' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	NotTile
-      legend_key	l
-      colors
-        color	ightgrey
+      object_line
+        object_name	NotTile
+      color_line
+        color	lightgrey
         color	white
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '.' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	.0.0.
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	.....
-      legend_key	H
-      colors
-        color	eroGrey
-    object_data
-      object_name	darkgrey
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	HeroGrey
+      color_line
+        color	darkgrey
+        color	darkgreen
         color	grey
       sprite
         ['2' '1' '2' '1' '2']
@@ -75,15 +73,12 @@ ps_game
         ['1' '1' '1' '1' '1']
         ['1' '1' '1' '1' '1']
     object_data
-      object_name	RedHero
-      legend_key	r
-      colors
-        color	ed
-    object_data
-      object_name	black
-      legend_key	d
-      colors
-        color	arkred
+      object_line
+        object_name	RedHero
+      color_line
+        color	red
+        color	black
+        color	darkred
         color	yellow
       sprite
         ['3' '1' '3' '1' '3']
@@ -92,15 +87,12 @@ ps_game
         ['2' '2' '2' '2' '2']
         ['2' '2' '2' '2' '2']
     object_data
-      object_name	RedHeroBack
-      legend_key	r
-      colors
-        color	ed
-    object_data
-      object_name	black
-      legend_key	d
-      colors
-        color	arkred
+      object_line
+        object_name	RedHeroBack
+      color_line
+        color	red
+        color	black
+        color	darkred
         color	yellow
       sprite
         ['3' '1' '3' '1' '3']
@@ -109,10 +101,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['2' '2' '2' '2' '2']
     object_data
-      object_name	RedScarfStar
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	RedScarfStar
+      color_line
+        color	red
         color	yellow
       sprite
         ['.' '.' '.' '.' '.']
@@ -121,10 +113,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	StarGrey
-      legend_key	g
-      colors
-        color	rey
+      object_line
+        object_name	StarGrey
+      color_line
+        color	grey
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -132,10 +124,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Star
-      legend_key	y
-      colors
-        color	ellow
+      object_line
+        object_name	Star
+      color_line
+        color	yellow
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -143,10 +135,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	RedScarf
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	RedScarf
+      color_line
+        color	red
         color	yellow
       sprite
         ['.' '.' '.' '.' '.']
@@ -155,10 +147,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	RedScarfTail
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	RedScarfTail
+      color_line
+        color	red
         color	yellow
       sprite
         ['.' '.' '.' '.' '.']
@@ -167,35 +159,35 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	RedGrow
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	RedGrow
+      color_line
+        color	transparent
     object_data
-      object_name	RedDrop
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	RedDrop
+      color_line
+        color	transparent
     object_data
-      object_name	RedPick
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	RedPick
+      color_line
+        color	transparent
     object_data
-      object_name	RedPick2
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	RedPick2
+      color_line
+        color	transparent
     object_data
-      object_name	RedPick3
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	RedPick3
+      color_line
+        color	transparent
     object_data
-      object_name	ToLeft
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	ToLeft
+      color_line
+        color	red
       sprite
         ['.' '.' '.' '.' '.']
         ['0' '.' '.' '.' '.']
@@ -203,10 +195,10 @@ ps_game
         ['0' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	ToRight
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	ToRight
+      color_line
+        color	red
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '0']
@@ -214,10 +206,10 @@ ps_game
         ['.' '.' '.' '.' '0']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	ToUp
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	ToUp
+      color_line
+        color	red
       sprite
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
@@ -225,10 +217,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	ToDown
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	ToDown
+      color_line
+        color	red
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -236,142 +228,139 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	Tail
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	Tail
+      color_line
+        color	transparent
     object_data
-      object_name	Check
-      legend_key	b
-      colors
-        color	lue
+      object_line
+        object_name	Check
+      color_line
+        color	blue
     object_data
-      object_name	Border
-      legend_key	g
-      colors
-        color	rey
+      object_line
+        object_name	Border
+      color_line
+        color	grey
     object_data
-      object_name	ToDelete
-      legend_key	t
-      colors
-        color	ransparent
-      
-
-
+      object_line
+        object_name	ToDelete
+      color_line
+        color	transparent
   legend_section
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      p
+      p =
       object_name	RedHero
     legend_data
-      b
+      b =
       object_name	RedHeroBack
     legend_data
-      t
+      t =
       object_name	StarTile
     legend_data
-      +
+      + =
       object_name	ScarfTile
     legend_data
-      -
+      - =
       object_name	StarGrey
     legend_data
-      \
+      \ =
       object_name	NotTile
     legend_data
-      /
+      / =
       object_name	ScarfCutTile
     legend_data
-      0
+      0 =
       object_name	RedScarf
     legend_data
-      1
+      1 =
       object_name	ToUp
     legend_data
-      2
+      2 =
       object_name	ToRight
     legend_data
-      3
+      3 =
       object_name	ToDown
     legend_data
-      4
+      4 =
       object_name	ToLeft
     legend_data
-      @
+      @ =
       object_name	RedScarfStar
       legend_operation
         object_name	ToRight
     legend_data
-      o
+      o =
       object_name	HeroGrey
     legend_data
-      9
+      9 =
       object_name	ToLeft
       legend_operation
         object_name	RedScarf
     legend_data
-      8
+      8 =
       object_name	ToDown
       legend_operation
         object_name	RedScarf
     legend_data
-      7
+      7 =
       object_name	ToRight
       legend_operation
         object_name	RedScarf
     legend_data
-      6
+      6 =
       object_name	ToUp
       legend_operation
         object_name	RedScarf
     legend_data
-      5
+      5 =
       object_name	ToRight
       legend_operation
         object_name	RedScarfTail
     legend_data
-      c
+      c =
       object_name	Check
     legend_data
-      #
+      # =
       object_name	Border
     legend_data
-      Player
+      Player =
       object_name	RedHero
       legend_operation
         object_name	RedHeroBack
     legend_data
-      RedHeros
+      RedHeros =
       object_name	RedHero
       legend_operation
         object_name	RedHeroBack
     legend_data
-      Heros
+      Heros =
       object_name	RedHeros
     legend_data
-      Stars
+      Stars =
       object_name	StarGrey
     legend_data
-      RedScarfs
+      RedScarfs =
       object_name	RedScarf
       legend_operation
         object_name	RedScarfTail
       legend_operation
         object_name	RedScarfStar
     legend_data
-      Scarfs
+      Scarfs =
       object_name	RedScarfs
     legend_data
-      Obstacles
+      Obstacles =
       object_name	Player
       legend_operation
         object_name	Scarfs
       legend_operation
         object_name	Border
     legend_data
-      Directions
+      Directions =
       object_name	ToUp
       legend_operation
         object_name	ToDown
@@ -380,7 +369,7 @@ ps_game
       legend_operation
         object_name	ToRight
     legend_data
-      r
+      r =
       object_name	RedGrow
   collisionlayers_section
     layer_data
@@ -390,7 +379,6 @@ ps_game
     layer_data
       object_name	RedDrop
       object_name	RedPick
-    layer_data
       object_name	RedPick2
       object_name	RedPick3
     layer_data
@@ -398,24 +386,19 @@ ps_game
     layer_data
       object_name	StarTile
       object_name	StarGrey
-    layer_data
       object_name	ScarfTile
       object_name	HeroGrey
-    layer_data
       object_name	NotTile
       object_name	ScarfCutTile
     layer_data
       object_name	ToLeft
       object_name	ToRight
-    layer_data
       object_name	ToUp
       object_name	ToDown
     layer_data
       object_name	RedHero
-    layer_data
       object_name	RedHeroBack
       object_name	RedScarf
-    layer_data
       object_name	RedScarfTail
       object_name	RedScarfStar
     layer_data
@@ -435,83 +418,46 @@ ps_game
               >
               Heros
             cell_border
-            rule_content	B
-            rule_content	o
-            rule_content	r
-            rule_content	d
-            rule_content	e
-            rule_content	r
+            rule_content	Border
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
             rule_content	Check
           ->
           rule_part
-          
-
         rule_data
           rule_part
             rule_content	Star
           ->
           rule_part
-          
-
         rule_data
           rule_part
-            rule_content
-              Directions
-              no
-              Heros
-              no
-              Scarfs
+            rule_content	Directions
+            rule_content	no
+            rule_content	Heros
+            rule_content	no
+            rule_content	Scarfs
           ->
           rule_part
-          
-
         rule_data
           rule_part
             rule_content
               >
               RedHero
             cell_border
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
+            rule_content	RedScarfs
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
             rule_content
               >
               RedHeroBack
             cell_border
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
+            rule_content	RedScarfs
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
             rule_content
@@ -522,10 +468,8 @@ ps_game
             rule_content
               >
               RedHero
-          
-
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content
               >
@@ -535,1561 +479,516 @@ ps_game
             rule_content
               >
               RedHeroBack
-          
-
         rule_data
           rule_part
-            rule_content
-              up
-              RedHeros
+            rule_content	up
+            rule_content	RedHeros
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
-            rule_content	s
+            rule_content	no
+            rule_content	Obstacles
           ->
           rule_part
-            rule_content
-              ToUp
-              up
-              RedHeros
+            rule_content	ToUp
+            rule_content	up
+            rule_content	RedHeros
             cell_border
-          
-
         rule_data
           rule_part
-            rule_content
-              down
-              RedHeros
+            rule_content	down
+            rule_content	RedHeros
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
-            rule_content	s
+            rule_content	no
+            rule_content	Obstacles
           ->
           rule_part
-            rule_content
-              ToDown
-              down
-              RedHeros
+            rule_content	ToDown
+            rule_content	down
+            rule_content	RedHeros
             cell_border
-          
-
         rule_data
           rule_part
-            rule_content
-              left
-              RedHeros
+            rule_content	left
+            rule_content	RedHeros
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
-            rule_content	s
+            rule_content	no
+            rule_content	Obstacles
           ->
           rule_part
-            rule_content
-              ToLeft
-              left
-              RedHeros
+            rule_content	ToLeft
+            rule_content	left
+            rule_content	RedHeros
             cell_border
-          
-
         rule_data
           rule_part
-            rule_content
-              right
-              RedHeros
+            rule_content	right
+            rule_content	RedHeros
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
-            rule_content	s
+            rule_content	no
+            rule_content	Obstacles
           ->
           rule_part
-            rule_content
-              ToRight
-              right
-              RedHeros
+            rule_content	ToRight
+            rule_content	right
+            rule_content	RedHeros
             cell_border
-          
-
         rule_data
           rule_part
-            rule_content
-              up
-              RedHeros
+            rule_content	up
+            rule_content	RedHeros
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
+            rule_content	no
+            rule_content	RedScarfs
           ->
           rule_part
-            rule_content
-              ToUp
-              up
-              RedHeros
+            rule_content	ToUp
+            rule_content	up
+            rule_content	RedHeros
             cell_border
-          
-
         rule_data
           rule_part
-            rule_content
-              down
-              RedHeros
+            rule_content	down
+            rule_content	RedHeros
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
+            rule_content	no
+            rule_content	RedScarfs
           ->
           rule_part
-            rule_content
-              ToDown
-              down
-              RedHeros
+            rule_content	ToDown
+            rule_content	down
+            rule_content	RedHeros
             cell_border
-          
-
         rule_data
           rule_part
-            rule_content
-              left
-              RedHeros
+            rule_content	left
+            rule_content	RedHeros
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
+            rule_content	no
+            rule_content	RedScarfs
           ->
           rule_part
-            rule_content
-              ToLeft
-              left
-              RedHeros
+            rule_content	ToLeft
+            rule_content	left
+            rule_content	RedHeros
             cell_border
-          
-
         rule_data
           rule_part
-            rule_content
-              right
-              RedHeros
+            rule_content	right
+            rule_content	RedHeros
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
+            rule_content	no
+            rule_content	RedScarfs
           ->
           rule_part
-            rule_content
-              ToRight
-              right
-              RedHeros
+            rule_content	ToRight
+            rule_content	right
+            rule_content	RedHeros
             cell_border
-          
-
         rule_data
           rule_part
-            rule_content
-              ToUp
-              Scarfs
+            rule_content	ToUp
+            rule_content	Scarfs
           ->
           rule_part
-            rule_content
-              ToUp
-              up
-              Scarfs
-          
-
+            rule_content	ToUp
+            rule_content	up
+            rule_content	Scarfs
         rule_data
           rule_part
-            rule_content
-              ToDown
-              Scarfs
+            rule_content	ToDown
+            rule_content	Scarfs
           ->
           rule_part
-            rule_content
-              ToDown
-              down
-              Scarfs
-          
-
+            rule_content	ToDown
+            rule_content	down
+            rule_content	Scarfs
         rule_data
           rule_part
-            rule_content
-              ToLeft
-              Scarfs
+            rule_content	ToLeft
+            rule_content	Scarfs
           ->
           rule_part
-            rule_content
-              ToLeft
-              left
-              Scarfs
-          
-
+            rule_content	ToLeft
+            rule_content	left
+            rule_content	Scarfs
         rule_data
           rule_part
-            rule_content
-              ToRight
-              Scarfs
+            rule_content	ToRight
+            rule_content	Scarfs
           ->
           rule_part
-            rule_content
-              ToRight
-              right
-              Scarfs
-          
-
+            rule_content	ToRight
+            rule_content	right
+            rule_content	Scarfs
         rule_data
           rule_part
             rule_content
               >
               RedScarfTail
-              StarTile
+            rule_content	StarTile
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	StarTile
           ->
           rule_part
             rule_content
               >
               RedScarfTail
-              StarTile
+            rule_content	StarTile
             cell_border
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	P
-            rule_content	i
-            rule_content	c
-            rule_content	k
-          
-
+            rule_content	RedPick
         rule_data
           rule_part
             rule_content
               >
               RedScarfTail
-              no
-              StarTile
+            rule_content	no
+            rule_content	StarTile
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+            rule_content	StarTile
           ->
           rule_part
             rule_content
               >
               RedScarfTail
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	P
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	2
-          
-
+            rule_content	StarTile
+            rule_content	RedPick2
         rule_data
           rule_part
-            rule_content
-              ToUp
-              Scarfs
+            rule_content	ToUp
+            rule_content	Scarfs
           ->
           rule_part
-            rule_content
-              ToUp
-              up
-              Scarfs
-          
-
+            rule_content	ToUp
+            rule_content	up
+            rule_content	Scarfs
         rule_data
           rule_part
-            rule_content
-              ToDown
-              Scarfs
+            rule_content	ToDown
+            rule_content	Scarfs
           ->
           rule_part
-            rule_content
-              ToDown
-              down
-              Scarfs
-          
-
+            rule_content	ToDown
+            rule_content	down
+            rule_content	Scarfs
         rule_data
           rule_part
-            rule_content
-              ToLeft
-              Scarfs
+            rule_content	ToLeft
+            rule_content	Scarfs
           ->
           rule_part
-            rule_content
-              ToLeft
-              left
-              Scarfs
-          
-
+            rule_content	ToLeft
+            rule_content	left
+            rule_content	Scarfs
         rule_data
           rule_part
-            rule_content
-              ToRight
-              Scarfs
+            rule_content	ToRight
+            rule_content	Scarfs
           ->
           rule_part
-            rule_content
-              ToRight
-              right
-              Scarfs
-          
-
+            rule_content	ToRight
+            rule_content	right
+            rule_content	Scarfs
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
-            rule_content
-              Directions
-              RedScarfStar
+            rule_content	Directions
+            rule_content	RedScarfStar
             cell_border
-            rule_content	T
-            rule_content	o
-            rule_content	U
-            rule_content	p
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+            rule_content	ToUp
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
           ->
           rule_part
-            rule_content	|
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
-        rule_data
-          late
-          down
-          rule_part
-            rule_content
-              Directions
-              RedScarf
             cell_border
-            rule_content	T
-            rule_content	o
-            rule_content	U
-            rule_content	p
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
+        rule_data
+          prefix	late
+          prefix	down
+          rule_part
+            rule_content	Directions
+            rule_content	RedScarf
+            cell_border
+            rule_content	ToUp
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
           ->
           rule_part
-            rule_content	|
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
-        rule_data
-          late
-          up
-          rule_part
-            rule_content
-              Directions
-              RedScarfStar
             cell_border
-            rule_content	T
-            rule_content	o
-            rule_content	D
-            rule_content	o
-            rule_content	w
-            rule_content	n
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
+        rule_data
+          prefix	late
+          prefix	up
+          rule_part
+            rule_content	Directions
+            rule_content	RedScarfStar
+            cell_border
+            rule_content	ToDown
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
           ->
           rule_part
-            rule_content	|
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
-        rule_data
-          late
-          up
-          rule_part
-            rule_content
-              Directions
-              RedScarf
             cell_border
-            rule_content	T
-            rule_content	o
-            rule_content	D
-            rule_content	o
-            rule_content	w
-            rule_content	n
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
+        rule_data
+          prefix	late
+          prefix	up
+          rule_part
+            rule_content	Directions
+            rule_content	RedScarf
+            cell_border
+            rule_content	ToDown
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
           ->
           rule_part
-            rule_content	|
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
-        rule_data
-          late
-          right
-          rule_part
-            rule_content
-              Directions
-              RedScarfStar
             cell_border
-            rule_content	T
-            rule_content	o
-            rule_content	L
-            rule_content	e
-            rule_content	f
-            rule_content	t
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
+        rule_data
+          prefix	late
+          prefix	right
+          rule_part
+            rule_content	Directions
+            rule_content	RedScarfStar
+            cell_border
+            rule_content	ToLeft
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
           ->
           rule_part
-            rule_content	|
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
-        rule_data
-          late
-          right
-          rule_part
-            rule_content
-              Directions
-              RedScarf
             cell_border
-            rule_content	T
-            rule_content	o
-            rule_content	L
-            rule_content	e
-            rule_content	f
-            rule_content	t
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
+        rule_data
+          prefix	late
+          prefix	right
+          rule_part
+            rule_content	Directions
+            rule_content	RedScarf
+            cell_border
+            rule_content	ToLeft
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
           ->
           rule_part
-            rule_content	|
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
-        rule_data
-          late
-          left
-          rule_part
-            rule_content
-              Directions
-              RedScarfStar
             cell_border
-            rule_content	T
-            rule_content	o
-            rule_content	R
-            rule_content	i
-            rule_content	g
-            rule_content	h
-            rule_content	t
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
+        rule_data
+          prefix	late
+          prefix	left
+          rule_part
+            rule_content	Directions
+            rule_content	RedScarfStar
+            cell_border
+            rule_content	ToRight
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
           ->
           rule_part
-            rule_content	|
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
-        rule_data
-          late
-          left
-          rule_part
-            rule_content
-              Directions
-              RedScarf
             cell_border
-            rule_content	T
-            rule_content	o
-            rule_content	R
-            rule_content	i
-            rule_content	g
-            rule_content	h
-            rule_content	t
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
+        rule_data
+          prefix	late
+          prefix	left
+          rule_part
+            rule_content	Directions
+            rule_content	RedScarf
+            cell_border
+            rule_content	ToRight
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
           ->
           rule_part
-            rule_content	|
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	C
-            rule_content	u
-            rule_content	t
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
-        rule_data
-          late
-          rule_part
-            rule_content
-              Directions
-              RedScarfStar
             cell_border
-            rule_content	D
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	s
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfCutTile
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Directions
+            rule_content	RedScarfStar
+            cell_border
+            rule_content	Directions
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	StarTile
           ->
           rule_part
-            rule_content
-              Directions
-              RedScarfStar
+            rule_content	Directions
+            rule_content	RedScarfStar
             cell_border
-            rule_content	D
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	s
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
-        rule_data
-          late
+            rule_content	Directions
+            rule_content	RedScarfStar
           rule_part
-            rule_content
-              Directions
-              RedScarf
+            rule_content	RedHeros
+            rule_content	StarTile
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Directions
+            rule_content	RedScarf
             cell_border
-            rule_content	D
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	s
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+            rule_content	Directions
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	StarTile
           ->
           rule_part
-            rule_content
-              Directions
-              RedScarf
+            rule_content	Directions
+            rule_content	RedScarf
             cell_border
-            rule_content	D
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	s
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
-        rule_data
-          late
+            rule_content	Directions
+            rule_content	RedScarfStar
           rule_part
-            rule_content
-              Directions
-              RedScarfStar
+            rule_content	RedHeros
+            rule_content	StarTile
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Directions
+            rule_content	RedScarfStar
             cell_border
-            rule_content	D
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	s
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+            rule_content	Directions
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfTile
           ->
           rule_part
-            rule_content
-              Directions
-              RedScarfStar
+            rule_content	Directions
+            rule_content	RedScarfStar
             cell_border
-            rule_content	D
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	s
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
-        rule_data
-          late
+            rule_content	Directions
+            rule_content	RedScarf
           rule_part
-            rule_content
-              Directions
-              RedScarf
+            rule_content	RedHeros
+            rule_content	ScarfTile
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Directions
+            rule_content	RedScarf
             cell_border
-            rule_content	D
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	s
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+            rule_content	Directions
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfTile
           ->
           rule_part
-            rule_content
-              Directions
-              RedScarf
+            rule_content	Directions
+            rule_content	RedScarf
             cell_border
-            rule_content	D
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	s
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
+            rule_content	Directions
+            rule_content	RedScarf
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfTile
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	RedHeros
             cell_border
-            rule_content	D
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	s
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+            rule_content	Directions
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfTile
           ->
           rule_part
             rule_content	RedHeros
             cell_border
-            rule_content	D
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	s
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
+            rule_content	Directions
+            rule_content	RedScarf
+          rule_part
+            rule_content	RedHeros
+            rule_content	ScarfTile
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	RedHeros
             cell_border
-            rule_content	D
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	s
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	s
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
+            rule_content	Directions
+            rule_content	no
+            rule_content	RedScarfs
+          rule_part
+            rule_content	RedHeros
+            rule_content	StarTile
           ->
           rule_part
             rule_content	RedHeros
             cell_border
-            rule_content	D
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	c
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	s
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	S
-            rule_content	c
-            rule_content	a
-            rule_content	r
-            rule_content	f
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	]
-            rule_content	[
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	o
-            rule_content	s
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	T
-            rule_content	i
-            rule_content	l
-            rule_content	e
-          
-
-        rule_data
-          late
+            rule_content	Directions
+            rule_content	RedScarfStar
           rule_part
-            rule_content
-              StarGrey
-              RedScarfStar
+            rule_content	RedHeros
+            rule_content	StarTile
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	StarGrey
+            rule_content	RedScarfStar
           ->
           rule_part
-            rule_content
-              StarGrey
-              RedScarfStar
-              Star
-          
-
+            rule_content	StarGrey
+            rule_content	RedScarfStar
+            rule_content	Star
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              StarGrey
-              RedScarfTail
+            rule_content	StarGrey
+            rule_content	RedScarfTail
           ->
           rule_part
-            rule_content
-              StarGrey
-              RedScarfTail
-              Star
-          
-
+            rule_content	StarGrey
+            rule_content	RedScarfTail
+            rule_content	Star
   winconditions_section
     condition_data
       all
@@ -2153,14 +1052,14 @@ ps_game
  ['#' '.' '.' '7' 'p' '+' '.' 't' '.' '.' '#']
  ['#' 'o' '.' '.' '-' '+' '.' '-' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '-' '-' '-' '-' '#']
+    level_data	[['#' '#' '#' '#' '#' '#']
+ ['#' '-' '-' '-' '-' '#']
  ['#' '-' '7' '8' 't' '#']
  ['#' '-' '.' '7' 'p' '#']
  ['#' '-' '-' '-' '-' '#']
  ['#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '-' '-' '-' '-' '#']
+    level_data	[['#' '#' '#' '#' '#' '#']
+ ['#' '-' '-' '-' '-' '#']
  ['#' '-' '-' '-' 't' '#']
  ['#' '-' '-' '8' 'p' '#']
  ['#' '-' '-' '7' '6' '#']
@@ -2172,14 +1071,14 @@ ps_game
  ['#' '.' '.' '.' '.' 'o' '.' '.' '#']
  ['#' '.' '.' '\\' '\\' '.' '\\' '\\' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '7' '8' '\\' 'o' '#']
+    level_data	[['#' '#' '#' '#' '#' '#']
+ ['#' '7' '8' '\\' 'o' '#']
  ['#' '.' '7' 'b' '\\' '#']
  ['#' '.' '#' '#' '.' '#']
  ['#' '.' '/' '/' '.' '#']
  ['#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '.' '7' '8' '#' '\\' 'o' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '7' '8' '#' '\\' 'o' '#']
  ['#' '.' '.' '7' 'b' '\\' '\\' '#']
  ['#' '/' '#' '#' '#' '#' '+' '#']
  ['#' '/' '/' '/' '+' '+' '+' '#']

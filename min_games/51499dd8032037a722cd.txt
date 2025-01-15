@@ -1,110 +1,191 @@
+title Flower Bed
+author Theta Games
+homepage http://theta.freehostia.com
+color_palette c64
+key_repeat_interval 0.25
+background_color #120C08
+text_color #399E24
+
 OBJECTS
 
-BackgroundTRANSPARENT
-Border#TRANSPARENT
-Player#F7EDF200...
+Background
+TRANSPARENT
+
+Border #
+TRANSPARENT
+
+Player
+#F7EDF2
+00...
 00...
 000..
 0....
-00...
+00..
 
-
-ShownFlower#D149CF #399E24..0..
+ShownFlower
+#D149CF #399E24
+..0..
 .000.
 .10..
 ..11.
+..1.
+
+Seed
+#399E24 #8AFA34
+.....
+.....
+.....
 ..1..
+..0.
 
-Seed#399E24 #8AFA34
-
-..........
-.......1..
-..0..Soil
-#403227#61503E #4A464300000
+Soil
+#403227 #61503E #4A4643
+00000
 01000
 00000
 00020
+0000
+
+Target
+#911919
+00.00
+0...0
+.....
+0...0
+00.0
+
+Rock O
+#403227 #948D87 #4A4643
 00000
-
-Target#911919
-
-00.000...0
-.....0...0
-00.00Rock O
-#403227#948D87 #4A4643
-
-0000001100
-1111111112
-02220Water
-W#403227
-#2763A3#47A2DE #344563
-0033003113
-3211331123
-03330Dirtblock
-D#8A7054 #61503E11111
-10001
-10001
-10001
+01100
 11111
+11112
+0222
 
-ShownWeed#335E2A #399E24
-.100..0.10
-10.....01.
-..0..BugRight
-#911919#399E24 #335E2A
+Water W
+#403227 #2763A3 #47A2DE #344563
+00330
+03113
+32113
+31123
+0333
 
-2.2..00011
-000112.2..
-.....BugDown
-#911919#399E24 #335E2A
+Dirtblock D
+#8A7054 #61503E
+11111
+10001
+10001
+10001
+1111
 
-.2002..00.
-.2002..11.
-..11.BugLeft
-#911919#399E24 #335E2A
+ShownWeed
+#335E2A #399E24
+.100.
+.0.10
+10...
+..01.
+..0.
 
-.......2.2
-1100011000
-..2.2BugUp
-#911919#399E24 #335E2A.11..
+BugRight
+#911919 #399E24 #335E2A
+2.2..
+00011
+00011
+2.2..
+....
+
+BugDown
+#911919 #399E24 #335E2A
+.2002
+..00.
+.2002
+..11.
+..11
+
+BugLeft
+#911919 #399E24 #335E2A
+.....
+..2.2
+11000
+11000
+..2.
+
+BugUp
+#911919 #399E24 #335E2A
+.11..
 .11..
 2002.
 .00..
-2002.
+2002
 
-Counter0TRANSPARENT
-Counter1TRANSPARENT
-Counter2TRANSPARENT
-Counter3TRANSPARENT
-Counter4TRANSPARENT
-LeftCountedTRANSPARENT
-RightCountedTRANSPARENT
-UpCountedTRANSPARENT
-DownCountedTRANSPARENT
-FlowerTRANSPARENT
-WeedTRANSPARENT
-WCounter0TRANSPARENT
-WCounter1TRANSPARENT
-WCounter2TRANSPARENT
-WCounter3TRANSPARENT
-WCounter4TRANSPARENT
-WLeftCountedTRANSPARENT
-WRightCountedTRANSPARENT
-WUpCountedTRANSPARENT
-WDownCountedTRANSPARENT
-BugMovedTRANSPARENT
-BugParentTRANSPARENT
-BugResidueTRANSPARENT
+Counter0
+TRANSPARENT
 
+Counter1
+TRANSPARENT
 
+Counter2
+TRANSPARENT
 
+Counter3
+TRANSPARENT
 
+Counter4
+TRANSPARENT
 
+LeftCounted
+TRANSPARENT
 
+RightCounted
+TRANSPARENT
 
+UpCounted
+TRANSPARENT
 
+DownCounted
+TRANSPARENT
 
+Flower
+TRANSPARENT
 
+Weed
+TRANSPARENT
+
+WCounter0
+TRANSPARENT
+
+WCounter1
+TRANSPARENT
+
+WCounter2
+TRANSPARENT
+
+WCounter3
+TRANSPARENT
+
+WCounter4
+TRANSPARENT
+
+WLeftCounted
+TRANSPARENT
+
+WRightCounted
+TRANSPARENT
+
+WUpCounted
+TRANSPARENT
+
+WDownCounted
+TRANSPARENT
+
+BugMoved
+TRANSPARENT
+
+BugParent
+TRANSPARENT
+
+BugResidue
+TRANSPARENT
 
 
 LEGEND
@@ -128,19 +209,12 @@ Target
 Rock, Water
 Seed
 ShownFlower, ShownWeed
-BugLeft, BugRight
-BugUp, BugDown
+BugLeft, BugRight, BugUp, BugDown
 Dirtblock, Player
-Counter0
-Counter1, Counter2
-Counter3, Counter4
-WCounter0
-WCounter1, WCounter2
-WCounter3, WCounter4
-LeftCounted, RightCounted
-UpCounted, DownCounted
-WLeftCounted, WRightCounted
-WUpCounted, WDownCounted
+Counter0, Counter1, Counter2, Counter3, Counter4
+WCounter0, WCounter1, WCounter2, WCounter3, WCounter4
+LeftCounted, RightCounted, UpCounted, DownCounted
+WLeftCounted, WRightCounted, WUpCounted, WDownCounted
 BugMoved
 BugParent
 BugResidue
@@ -148,134 +222,7 @@ Flower, Weed
 
 RULES
 
-[ Seed ] -> [ ShownFlower ] 
-[ Soil ] -> [ Soil Counter0 WCounter0 ] 
-[ action Player No Seed ] -> [ Player Flower Seed ] 
-[ > Player | ShownFlower ] -> [ |PlayerNoShownFlower ] 
-[ > Player | ShownWeed ] -> [ |PlayerNoShownWeed ] 
-[ > Player | BugLeft ] -> [ |PlayerNoBugLeft ] 
-[ > Player | BugRight ] -> [ |PlayerNoBugRight ] 
-[ > Player | BugUp ] -> [ |PlayerNoBugUp ] 
-[ > Player | BugDown ] -> [ |PlayerNoBugDown ] 
-[ ShownWeed | ShownFlower ] -> [ ShownWeed | NoShownFlower ] 
-[ > Player | Rock ] -> [ Player | Rock ] 
-[ > Player | Water ] -> [ Player | Water ] 
-[ > Player | Border ] -> [ Player | Border ] 
-[ > Player | Dirtblock | Soil ] -> [ |SoilPlayer | Dirtblock ] 
-[ > Player | Dirtblock | ShownFlowerSoil ] -> [ |SoilPlayer | DirtblockNoSoilNoShownFlower ] 
-[ > Player | Dirtblock | ShownWeedSoil ] -> [ |SoilPlayer | DirtblockNoSoilNoShownWeed ] 
-[ > Player | Dirtblock | NoSoilNoWater ] -> [ Player | Dirtblock |  ] 
-[ > Player | Dirtblock | Water ] -> [ |SoilPlayer | SoilNoWater ] 
-[ BugLeft ] -> [ BugLeft BugParent ] 
-[ BugRight ] -> [ BugRight BugParent ] 
-[ BugUp ] -> [ BugUp BugParent ] 
-[ BugDown ] -> [ BugDown BugParent ] 
-down [ BugDown No BugMoved | SoilNoPlayerNoBugParent ] -> [ No BugParent BugResidue | BugDownSoilBugMovedBugParent ] 
-down [ BugDown No BugMoved | NoSoil ] -> [ BugLeft BugMoved |  ] 
-down [ BugDown No BugMoved | Player ] -> [ BugLeft BugMoved | Player ] 
-down [ BugDown No BugMoved | BugParent ] -> [ BugLeft BugMoved | BugParent ] 
-right [ BugRight No BugMoved | SoilNoPlayerNoBugParent ] -> [ No BugParent BugResidue | BugRightSoilBugMovedBugParent ] 
-right [ BugRight No BugMoved | NoSoil ] -> [ BugDown BugMoved |  ] 
-right [ BugRight No BugMoved | Player ] -> [ BugDown BugMoved | Player ] 
-right [ BugRight No BugMoved | BugParent ] -> [ BugDown BugMoved | BugParent ] 
-up [ BugUp No BugMoved | SoilNoPlayerNoBugParent ] -> [ No BugParent BugResidue | BugUpSoilBugMovedBugParent ] 
-up [ BugUp No BugMoved | NoSoil ] -> [ BugRight BugMoved |  ] 
-up [ BugUp No BugMoved | Player ] -> [ BugRight BugMoved | Player ] 
-up [ BugUp No BugMoved | BugParent ] -> [ BugRight BugMoved | BugParent ] 
-left [ BugLeft No BugMoved | SoilNoPlayerNoBugParent ] -> [ No BugParent BugResidue | BugLeftSoilBugMovedBugParent ] 
-left [ BugLeft No BugMoved | NoSoil ] -> [ BugUp BugMoved |  ] 
-left [ BugLeft No BugMoved | Player ] -> [ BugUp BugMoved | Player ] 
-left [ BugLeft No BugMoved | BugParent ] -> [ BugUp BugMoved | BugParent ] 
-[ ShownFlower ] -> [ ShownFlower Flower ] 
-[ ShownWeed ] -> [ ShownWeed Weed ] 
-[ Water ] -> [ Water Flower ] 
-left [ Soil Counter0 No LeftCounted | Flower ] -> [ Soil Counter1 LeftCounted | Flower ] 
-left [ Soil Counter1 No LeftCounted | Flower ] -> [ Soil Counter2 LeftCounted | Flower ] 
-left [ Soil Counter2 No LeftCounted | Flower ] -> [ Soil Counter3 LeftCounted | Flower ] 
-left [ Soil Counter3 No LeftCounted | Flower ] -> [ Soil Counter4 LeftCounted | Flower ] 
-right [ Soil Counter0 No RightCounted | Flower ] -> [ Soil Counter1 RightCounted | Flower ] 
-right [ Soil Counter1 No RightCounted | Flower ] -> [ Soil Counter2 RightCounted | Flower ] 
-right [ Soil Counter2 No RightCounted | Flower ] -> [ Soil Counter3 RightCounted | Flower ] 
-right [ Soil Counter3 No RightCounted | Flower ] -> [ Soil Counter4 RightCounted | Flower ] 
-up [ Soil Counter0 No UpCounted | Flower ] -> [ Soil Counter1 UpCounted | Flower ] 
-up [ Soil Counter1 No UpCounted | Flower ] -> [ Soil Counter2 UpCounted | Flower ] 
-up [ Soil Counter2 No UpCounted | Flower ] -> [ Soil Counter3 UpCounted | Flower ] 
-up [ Soil Counter3 No UpCounted | Flower ] -> [ Soil Counter4 UpCounted | Flower ] 
-down [ Soil Counter0 No DownCounted | Flower ] -> [ Soil Counter1 DownCounted | Flower ] 
-down [ Soil Counter1 No DownCounted | Flower ] -> [ Soil Counter2 DownCounted | Flower ] 
-down [ Soil Counter2 No DownCounted | Flower ] -> [ Soil Counter3 DownCounted | Flower ] 
-down [ Soil Counter3 No DownCounted | Flower ] -> [ Soil Counter4 DownCounted | Flower ] 
-left [ Soil WCounter0 No WLeftCounted | Weed ] -> [ Soil WCounter1 WLeftCounted | Weed ] 
-left [ Soil WCounter1 No WLeftCounted | Weed ] -> [ Soil WCounter2 WLeftCounted | Weed ] 
-left [ Soil WCounter2 No WLeftCounted | Weed ] -> [ Soil WCounter3 WLeftCounted | Weed ] 
-left [ Soil WCounter3 No WLeftCounted | Weed ] -> [ Soil WCounter4 WLeftCounted | Weed ] 
-right [ Soil WCounter0 No WRightCounted | Weed ] -> [ Soil WCounter1 WRightCounted | Weed ] 
-right [ Soil WCounter1 No WRightCounted | Weed ] -> [ Soil WCounter2 WRightCounted | Weed ] 
-right [ Soil WCounter2 No WRightCounted | Weed ] -> [ Soil WCounter3 WRightCounted | Weed ] 
-right [ Soil WCounter3 No WRightCounted | Weed ] -> [ Soil WCounter4 WRightCounted | Weed ] 
-up [ Soil WCounter0 No WUpCounted | Weed ] -> [ Soil WCounter1 WUpCounted | Weed ] 
-up [ Soil WCounter1 No WUpCounted | Weed ] -> [ Soil WCounter2 WUpCounted | Weed ] 
-up [ Soil WCounter2 No WUpCounted | Weed ] -> [ Soil WCounter3 WUpCounted | Weed ] 
-up [ Soil WCounter3 No WUpCounted | Weed ] -> [ Soil WCounter4 WUpCounted | Weed ] 
-down [ Soil WCounter0 No WDownCounted | Weed ] -> [ Soil WCounter1 WDownCounted | Weed ] 
-down [ Soil WCounter1 No WDownCounted | Weed ] -> [ Soil WCounter2 WDownCounted | Weed ] 
-down [ Soil WCounter2 No WDownCounted | Weed ] -> [ Soil WCounter3 WDownCounted | Weed ] 
-down [ Soil WCounter3 No WDownCounted | Weed ] -> [ Soil WCounter4 WDownCounted | Weed ] 
-late [ BugParent ShownFlower ] -> [ BugParent No ShownFlower ] 
-late [ BugParent Counter0 ] -> [ BugParent No Counter0 ] 
-late [ BugParent Counter1 ] -> [ BugParent No Counter0 ] 
-late [ BugParent Counter2 ] -> [ BugParent No Counter0 ] 
-late [ BugParent Counter3 ] -> [ BugParent No Counter0 ] 
-late [ BugParent Counter4 ] -> [ BugParent No Counter0 ] 
-late [ BugParent ShownWeed ] -> [ BugParent No ShownWeed ] 
-late [ BugParent WCounter0 ] -> [ BugParent No WCounter4 ] 
-late [ BugParent WCounter1 ] -> [ BugParent No WCounter4 ] 
-late [ BugParent WCounter2 ] -> [ BugParent No WCounter4 ] 
-late [ BugParent WCounter3 ] -> [ BugParent No WCounter4 ] 
-late [ BugParent WCounter4 ] -> [ BugParent No WCounter4 ] 
-late [ Soil No ShownWeed No ShownFlower Counter0 No BugResidue ] -> [ Soil No Counter0 No ShownFlower ] 
-late [ Soil No ShownWeed No ShownFlower Counter1 No BugResidue ] -> [ Soil No Counter1 No ShownFlower ] 
-late [ Soil No ShownWeed No ShownFlower Counter2 No BugResidue ] -> [ Soil No Counter2 ShownFlower ] 
-late [ Soil No ShownWeed No ShownFlower Counter3 No BugResidue ] -> [ Soil No Counter3 No ShownFlower ] 
-late [ Soil No ShownWeed No ShownFlower Counter4 No BugResidue ] -> [ Soil No Counter4 No ShownFlower ] 
-late [ Soil ShownFlower Counter0 No BugResidue ] -> [ Soil No Counter0 No ShownFlower ] 
-late [ Soil ShownFlower Counter1 No BugResidue ] -> [ Soil No Counter1 ShownFlower ] 
-late [ Soil ShownFlower Counter2 No BugResidue ] -> [ Soil No Counter2 ShownFlower ] 
-late [ Soil ShownFlower Counter3 No BugResidue ] -> [ Soil No Counter3 No ShownFlower ] 
-late [ Soil ShownFlower Counter4 No BugResidue ] -> [ Soil No Counter4 No ShownFlower ] 
-late [ Soil No ShownWeed WCounter0 No BugResidue ] -> [ Soil No WCounter0 No ShownWeed ] 
-late [ Soil No ShownWeed WCounter1 No BugResidue ] -> [ Soil No WCounter1 ShownWeed ] 
-late [ Soil No ShownWeed WCounter2 No BugResidue ] -> [ Soil No WCounter2 ShownWeed ] 
-late [ Soil No ShownWeed WCounter3 No BugResidue ] -> [ Soil No WCounter3 No ShownWeed ] 
-late [ Soil No ShownWeed WCounter4 No BugResidue ] -> [ Soil No WCounter4 No ShownWeed ] 
-late [ Soil ShownWeed WCounter0 No BugResidue ] -> [ Soil No WCounter0 ShownWeed ] 
-late [ Soil ShownWeed WCounter1 No BugResidue ] -> [ Soil No WCounter1 ShownWeed ] 
-late [ Soil ShownWeed WCounter2 No BugResidue ] -> [ Soil No WCounter2 ShownWeed ] 
-late [ Soil ShownWeed WCounter3 No BugResidue ] -> [ Soil No WCounter3 No ShownWeed ] 
-late [ Soil ShownWeed WCounter4 No BugResidue ] -> [ Soil No WCounter4 No ShownWeed ] 
-late [ Flower ] -> [  ] 
-late [ Weed ] -> [  ] 
-late [ Player ShownFlower ] -> [ Player No ShownFlower ] 
-late [ Dirtblock ShownFlower ] -> [ Dirtblock No ShownFlower ] 
-late [ Dirtblock ShownWeed ] -> [ Dirtblock No ShownWeed ] 
-late [ Player ShownWeed ] -> [ Player No ShownWeed ] 
-late [ Player BugLeft ] -> [ Player No BugLeft ] 
-late [ Player BugRight ] -> [ Player No BugRight ] 
-late [ Player BugUp ] -> [ Player No BugUp ] 
-late [ Player BugDown ] -> [ Player No BugDown ] 
-late [ ShownWeed | ShownFlower ] -> [ ShownWeed | NoShownFlower ] 
-late [ LeftCounted ] -> [  ] 
-late [ RightCounted ] -> [  ] 
-late [ UpCounted ] -> [  ] 
-late [ DownCounted ] -> [  ] 
-late [ WLeftCounted ] -> [  ] 
-late [ WRightCounted ] -> [  ] 
-late [ WUpCounted ] -> [  ] 
-late [ WDownCounted ] -> [  ] 
-late [ BugMoved ] -> [  ] 
-late [ BugParent ] -> [  ] 
-late [ BugResidue ] -> [  ] 
-
+[ Seed ] -> [ ShownFlower ][ Soil ] -> [ SoilCounter0WCounter0 ][ actionPlayerNoSeed ] -> [ PlayerFlowerSeed ][ > Player | ShownFlower ] -> [  | PlayerNoShownFlower ][ > Player | ShownWeed ] -> [  | PlayerNoShownWeed ][ > Player | BugLeft ] -> [  | PlayerNoBugLeft ][ > Player | BugRight ] -> [  | PlayerNoBugRight ][ > Player | BugUp ] -> [  | PlayerNoBugUp ][ > Player | BugDown ] -> [  | PlayerNoBugDown ][ ShownWeed | ShownFlower ] -> [ ShownWeed | NoShownFlower ][ > Player | Rock ] -> [ Player | Rock ][ > Player | Water ] -> [ Player | Water ][ > Player | Border ] -> [ Player | Border ][ > Player | Dirtblock | Soil ] -> [  | SoilPlayer | Dirtblock ][ > Player | Dirtblock | ShownFlowerSoil ] -> [  | SoilPlayer | DirtblockNoSoilNoShownFlower ][ > Player | Dirtblock | ShownWeedSoil ] -> [  | SoilPlayer | DirtblockNoSoilNoShownWeed ][ > Player | Dirtblock | NoSoilNoWater ] -> [ Player | Dirtblock |  ][ > Player | Dirtblock | Water ] -> [  | SoilPlayer | SoilNoWater ][ BugLeft ] -> [ BugLeftBugParent ][ BugRight ] -> [ BugRightBugParent ][ BugUp ] -> [ BugUpBugParent ][ BugDown ] -> [ BugDownBugParent ]down [ BugDownNoBugMoved | SoilNoPlayerNoBugParent ] -> [ NoBugParentBugResidue | BugDownSoilBugMovedBugParent ]down [ BugDownNoBugMoved | NoSoil ] -> [ BugLeftBugMoved |  ]down [ BugDownNoBugMoved | Player ] -> [ BugLeftBugMoved | Player ]down [ BugDownNoBugMoved | BugParent ] -> [ BugLeftBugMoved | BugParent ]right [ BugRightNoBugMoved | SoilNoPlayerNoBugParent ] -> [ NoBugParentBugResidue | BugRightSoilBugMovedBugParent ]right [ BugRightNoBugMoved | NoSoil ] -> [ BugDownBugMoved |  ]right [ BugRightNoBugMoved | Player ] -> [ BugDownBugMoved | Player ]right [ BugRightNoBugMoved | BugParent ] -> [ BugDownBugMoved | BugParent ]up [ BugUpNoBugMoved | SoilNoPlayerNoBugParent ] -> [ NoBugParentBugResidue | BugUpSoilBugMovedBugParent ]up [ BugUpNoBugMoved | NoSoil ] -> [ BugRightBugMoved |  ]up [ BugUpNoBugMoved | Player ] -> [ BugRightBugMoved | Player ]up [ BugUpNoBugMoved | BugParent ] -> [ BugRightBugMoved | BugParent ]left [ BugLeftNoBugMoved | SoilNoPlayerNoBugParent ] -> [ NoBugParentBugResidue | BugLeftSoilBugMovedBugParent ]left [ BugLeftNoBugMoved | NoSoil ] -> [ BugUpBugMoved |  ]left [ BugLeftNoBugMoved | Player ] -> [ BugUpBugMoved | Player ]left [ BugLeftNoBugMoved | BugParent ] -> [ BugUpBugMoved | BugParent ][ ShownFlower ] -> [ ShownFlowerFlower ][ ShownWeed ] -> [ ShownWeedWeed ][ Water ] -> [ WaterFlower ]left [ SoilCounter0NoLeftCounted | Flower ] -> [ SoilCounter1LeftCounted | Flower ]left [ SoilCounter1NoLeftCounted | Flower ] -> [ SoilCounter2LeftCounted | Flower ]left [ SoilCounter2NoLeftCounted | Flower ] -> [ SoilCounter3LeftCounted | Flower ]left [ SoilCounter3NoLeftCounted | Flower ] -> [ SoilCounter4LeftCounted | Flower ]right [ SoilCounter0NoRightCounted | Flower ] -> [ SoilCounter1RightCounted | Flower ]right [ SoilCounter1NoRightCounted | Flower ] -> [ SoilCounter2RightCounted | Flower ]right [ SoilCounter2NoRightCounted | Flower ] -> [ SoilCounter3RightCounted | Flower ]right [ SoilCounter3NoRightCounted | Flower ] -> [ SoilCounter4RightCounted | Flower ]up [ SoilCounter0NoUpCounted | Flower ] -> [ SoilCounter1UpCounted | Flower ]up [ SoilCounter1NoUpCounted | Flower ] -> [ SoilCounter2UpCounted | Flower ]up [ SoilCounter2NoUpCounted | Flower ] -> [ SoilCounter3UpCounted | Flower ]up [ SoilCounter3NoUpCounted | Flower ] -> [ SoilCounter4UpCounted | Flower ]down [ SoilCounter0NoDownCounted | Flower ] -> [ SoilCounter1DownCounted | Flower ]down [ SoilCounter1NoDownCounted | Flower ] -> [ SoilCounter2DownCounted | Flower ]down [ SoilCounter2NoDownCounted | Flower ] -> [ SoilCounter3DownCounted | Flower ]down [ SoilCounter3NoDownCounted | Flower ] -> [ SoilCounter4DownCounted | Flower ]left [ SoilWCounter0NoWLeftCounted | Weed ] -> [ SoilWCounter1WLeftCounted | Weed ]left [ SoilWCounter1NoWLeftCounted | Weed ] -> [ SoilWCounter2WLeftCounted | Weed ]left [ SoilWCounter2NoWLeftCounted | Weed ] -> [ SoilWCounter3WLeftCounted | Weed ]left [ SoilWCounter3NoWLeftCounted | Weed ] -> [ SoilWCounter4WLeftCounted | Weed ]right [ SoilWCounter0NoWRightCounted | Weed ] -> [ SoilWCounter1WRightCounted | Weed ]right [ SoilWCounter1NoWRightCounted | Weed ] -> [ SoilWCounter2WRightCounted | Weed ]right [ SoilWCounter2NoWRightCounted | Weed ] -> [ SoilWCounter3WRightCounted | Weed ]right [ SoilWCounter3NoWRightCounted | Weed ] -> [ SoilWCounter4WRightCounted | Weed ]up [ SoilWCounter0NoWUpCounted | Weed ] -> [ SoilWCounter1WUpCounted | Weed ]up [ SoilWCounter1NoWUpCounted | Weed ] -> [ SoilWCounter2WUpCounted | Weed ]up [ SoilWCounter2NoWUpCounted | Weed ] -> [ SoilWCounter3WUpCounted | Weed ]up [ SoilWCounter3NoWUpCounted | Weed ] -> [ SoilWCounter4WUpCounted | Weed ]down [ SoilWCounter0NoWDownCounted | Weed ] -> [ SoilWCounter1WDownCounted | Weed ]down [ SoilWCounter1NoWDownCounted | Weed ] -> [ SoilWCounter2WDownCounted | Weed ]down [ SoilWCounter2NoWDownCounted | Weed ] -> [ SoilWCounter3WDownCounted | Weed ]down [ SoilWCounter3NoWDownCounted | Weed ] -> [ SoilWCounter4WDownCounted | Weed ]late [ BugParentShownFlower ] -> [ BugParentNoShownFlower ]late [ BugParentCounter0 ] -> [ BugParentNoCounter0 ]late [ BugParentCounter1 ] -> [ BugParentNoCounter0 ]late [ BugParentCounter2 ] -> [ BugParentNoCounter0 ]late [ BugParentCounter3 ] -> [ BugParentNoCounter0 ]late [ BugParentCounter4 ] -> [ BugParentNoCounter0 ]late [ BugParentShownWeed ] -> [ BugParentNoShownWeed ]late [ BugParentWCounter0 ] -> [ BugParentNoWCounter4 ]late [ BugParentWCounter1 ] -> [ BugParentNoWCounter4 ]late [ BugParentWCounter2 ] -> [ BugParentNoWCounter4 ]late [ BugParentWCounter3 ] -> [ BugParentNoWCounter4 ]late [ BugParentWCounter4 ] -> [ BugParentNoWCounter4 ]late [ SoilNoShownWeedNoShownFlowerCounter0NoBugResidue ] -> [ SoilNoCounter0NoShownFlower ]late [ SoilNoShownWeedNoShownFlowerCounter1NoBugResidue ] -> [ SoilNoCounter1NoShownFlower ]late [ SoilNoShownWeedNoShownFlowerCounter2NoBugResidue ] -> [ SoilNoCounter2ShownFlower ]late [ SoilNoShownWeedNoShownFlowerCounter3NoBugResidue ] -> [ SoilNoCounter3NoShownFlower ]late [ SoilNoShownWeedNoShownFlowerCounter4NoBugResidue ] -> [ SoilNoCounter4NoShownFlower ]late [ SoilShownFlowerCounter0NoBugResidue ] -> [ SoilNoCounter0NoShownFlower ]late [ SoilShownFlowerCounter1NoBugResidue ] -> [ SoilNoCounter1ShownFlower ]late [ SoilShownFlowerCounter2NoBugResidue ] -> [ SoilNoCounter2ShownFlower ]late [ SoilShownFlowerCounter3NoBugResidue ] -> [ SoilNoCounter3NoShownFlower ]late [ SoilShownFlowerCounter4NoBugResidue ] -> [ SoilNoCounter4NoShownFlower ]late [ SoilNoShownWeedWCounter0NoBugResidue ] -> [ SoilNoWCounter0NoShownWeed ]late [ SoilNoShownWeedWCounter1NoBugResidue ] -> [ SoilNoWCounter1ShownWeed ]late [ SoilNoShownWeedWCounter2NoBugResidue ] -> [ SoilNoWCounter2ShownWeed ]late [ SoilNoShownWeedWCounter3NoBugResidue ] -> [ SoilNoWCounter3NoShownWeed ]late [ SoilNoShownWeedWCounter4NoBugResidue ] -> [ SoilNoWCounter4NoShownWeed ]late [ SoilShownWeedWCounter0NoBugResidue ] -> [ SoilNoWCounter0ShownWeed ]late [ SoilShownWeedWCounter1NoBugResidue ] -> [ SoilNoWCounter1ShownWeed ]late [ SoilShownWeedWCounter2NoBugResidue ] -> [ SoilNoWCounter2ShownWeed ]late [ SoilShownWeedWCounter3NoBugResidue ] -> [ SoilNoWCounter3NoShownWeed ]late [ SoilShownWeedWCounter4NoBugResidue ] -> [ SoilNoWCounter4NoShownWeed ]late [ Flower ] -> [  ]late [ Weed ] -> [  ]late [ PlayerShownFlower ] -> [ PlayerNoShownFlower ]late [ DirtblockShownFlower ] -> [ DirtblockNoShownFlower ]late [ DirtblockShownWeed ] -> [ DirtblockNoShownWeed ]late [ PlayerShownWeed ] -> [ PlayerNoShownWeed ]late [ PlayerBugLeft ] -> [ PlayerNoBugLeft ]late [ PlayerBugRight ] -> [ PlayerNoBugRight ]late [ PlayerBugUp ] -> [ PlayerNoBugUp ]late [ PlayerBugDown ] -> [ PlayerNoBugDown ]late [ ShownWeed | ShownFlower ] -> [ ShownWeed | NoShownFlower ]late [ LeftCounted ] -> [  ]late [ RightCounted ] -> [  ]late [ UpCounted ] -> [  ]late [ DownCounted ] -> [  ]late [ WLeftCounted ] -> [  ]late [ WRightCounted ] -> [  ]late [ WUpCounted ] -> [  ]late [ WDownCounted ] -> [  ]late [ BugMoved ] -> [  ]late [ BugParent ] -> [  ]late [ BugResidue ] -> [  ]
 
 WINCONDITIONS
 
@@ -288,7 +235,6 @@ LEVELS
 ###########
 
 ########
-
 #P.....#
 #......#
 #..TT..#
@@ -298,7 +244,6 @@ LEVELS
 ########
 
 ########
-
 #F....P#
 #F.O...#
 #F.O..T#
@@ -360,7 +305,6 @@ LEVELS
 ######
 
 ########
-
 #T.....#
 #......#
 #....P.#
@@ -380,7 +324,6 @@ LEVELS
 ############
 
 #################
-
 #.........T.....#
 #....P..........#
 #...............#
@@ -400,7 +343,6 @@ LEVELS
 #############
 
 ###############
-
 #.........WW.T#
 #.........WW..#
 #..P.D....WW..#
@@ -410,7 +352,6 @@ LEVELS
 ###############
 
 #########
-
 #.......#
 #.P...D.#
 #.......#
@@ -422,7 +363,6 @@ LEVELS
 #########
 
 ###############
-
 #.......FFP...#
 #.............#
 #.............#
@@ -430,7 +370,6 @@ LEVELS
 ###############
 
 ########
-
 #OWWWWO#
 #......#
 #.P....#
@@ -468,7 +407,6 @@ LEVELS
 ###########
 
 ######
-
 #.X.W#
 #..PT#
 #.D..#
@@ -488,7 +426,6 @@ LEVELS
 ########
 
 ##############
-
 #..6.......X.#
 #P.6.........#
 #..6........T#

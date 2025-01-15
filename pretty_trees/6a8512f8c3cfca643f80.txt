@@ -1,15 +1,28 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Bubblegoban
+    prelude_data
+      author
+      Franklin P. Dyer
+    prelude_data
+      color_palette
+      c64
+    prelude_data
+      text_color
+      Pink
   objects_section
     object_data
-      object_name	Background
-      legend_key	L
-      colors
-        color	IGHTGREEN
+      object_line
+        object_name	Background
+      color_line
+        color	LIGHTGREEN
     object_data
-      object_name	Target
-      legend_key	D
-      colors
-        color	arkBlue
+      object_line
+        object_name	Target
+      color_line
+        color	DarkBlue
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '0' '0' '.']
@@ -17,10 +30,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Wall
-      legend_key	B
-      colors
-        color	ROWN
+      object_line
+        object_name	Wall
+      color_line
+        color	BROWN
         color	DARKBROWN
       sprite
         ['0' '0' '0' '1' '0']
@@ -29,15 +42,12 @@ ps_game
         ['1' '1' '1' '1' '1']
         ['0' '0' '0' '1' '0']
     object_data
-      object_name	Player
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	Player
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['.' '0' '0' '0' '.']
@@ -46,10 +56,10 @@ ps_game
         ['.' '3' '3' '3' '.']
         ['.' '3' '.' '3' '.']
     object_data
-      object_name	Gum
-      legend_key	P
-      colors
-        color	ink
+      object_line
+        object_name	Gum
+      color_line
+        color	Pink
         color	Lightred
       sprite
         ['.' '0' '0' '0' '.']
@@ -58,10 +68,10 @@ ps_game
         ['0' '1' '1' '1' '0']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	Box
-      legend_key	B
-      colors
-        color	rown
+      object_line
+        object_name	Box
+      color_line
+        color	Brown
         color	Darkbrown
       sprite
         ['1' '1' '1' '1' '1']
@@ -69,33 +79,31 @@ ps_game
         ['1' '1' '0' '1' '1']
         ['1' '0' '1' '0' '1']
         ['1' '1' '1' '1' '1']
-      
-
   legend_section
     legend_data
-      Stickable
+      Stickable =
       object_name	Player
       legend_operation
         object_name	Gum
       legend_operation
         object_name	Box
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      x
+      x =
       object_name	Wall
     legend_data
-      g
+      g =
       object_name	gum
     legend_data
-      P
+      P =
       object_name	Player
     legend_data
-      O
+      O =
       object_name	Target
     legend_data
-      b
+      b =
       object_name	box
   collisionlayers_section
     layer_data
@@ -114,172 +122,89 @@ ps_game
               >
               Stickable
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	a
-            rule_content	b
-            rule_content	l
-            rule_content	e
+            rule_content	Stickable
           ->
           rule_part
             rule_content
               >
               Stickable
             cell_border
-            rule_content	>
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	a
-            rule_content	b
-            rule_content	l
-            rule_content	e
-          
-
+            rule_content
+              >
+              Stickable
     rule_block
       rule_block_loop
         startloop
         
 
-        rule_data
-          rule_part
-            rule_content
-              moving
-              Gum
-            cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	a
-            rule_content	b
-            rule_content	l
-            rule_content	e
-          ->
-          rule_part
-            rule_content
-              moving
-              Gum
-            cell_border
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	i
-            rule_content	n
-            rule_content	g
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	a
-            rule_content	b
-            rule_content	l
-            rule_content	e
-          
 
         rule_data
           rule_part
-            rule_content
-              moving
-              Stickable
+            rule_content	moving
+            rule_content	Gum
             cell_border
-            rule_content	G
-            rule_content	u
-            rule_content	m
+            rule_content	Stickable
           ->
           rule_part
-            rule_content
-              moving
-              Stickable
+            rule_content	moving
+            rule_content	Gum
             cell_border
-            rule_content	m
-            rule_content	o
-            rule_content	v
-            rule_content	i
-            rule_content	n
-            rule_content	g
-            rule_content	G
-            rule_content	u
-            rule_content	m
-          
-
+            rule_content	moving
+            rule_content	Stickable
+        rule_data
+          rule_part
+            rule_content	moving
+            rule_content	Stickable
+            cell_border
+            rule_content	Gum
+          ->
+          rule_part
+            rule_content	moving
+            rule_content	Stickable
+            cell_border
+            rule_content	moving
+            rule_content	Gum
         rule_data
           rule_part
             rule_content
               >
               Stickable
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	a
-            rule_content	b
-            rule_content	l
-            rule_content	e
+            rule_content	Stickable
           ->
           rule_part
             rule_content
               >
               Stickable
             cell_border
-            rule_content	>
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	a
-            rule_content	b
-            rule_content	l
-            rule_content	e
-          
-
+            rule_content
+              >
+              Stickable
         endloop
         
 
-    rule_block
-      rule_block_once
+
     rule_block
       rule_block_once
         rule_data
           rule_part
-            rule_content
-              Moving
-              Gum
+            rule_content	Moving
+            rule_content	Gum
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Wall
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
+    rule_block
+      rule_block_once
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Wall
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
   winconditions_section
     condition_data
       All
@@ -287,8 +212,8 @@ ps_game
       on
       object_name	Player
   levels_section
-    level_data	[['x' 'x' '.' '.' '.' '.' '.' '.']]
-    level_data	[['x' 'x' '.' '.' '.' '.' '.' 'o']
+    level_data	[['x' 'x' '.' '.' '.' '.' '.' '.']
+ ['x' 'x' '.' '.' '.' '.' '.' 'o']
  ['x' '.' '.' '.' '.' '.' '.' '.']
  ['x' '.' '.' '.' 'x' 'x' 'x' 'x']
  ['x' '.' '.' '.' '.' '.' 'x' 'x']
@@ -297,8 +222,8 @@ ps_game
  ['x' 'x' 'x' 'x' 'x' '.' '.' '.']
  ['x' 'x' '.' '.' '.' '.' '.' '.']
  ['x' 'x' 'p' '.' '.' 'g' '.' '.']]
-    level_data	[['x' 'x' '.' '.' '.' '.' '.' '.' 'x' 'x']]
-    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+    level_data	[['x' 'x' '.' '.' '.' '.' '.' '.' 'x' 'x']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['o' '.' '.' '.' 'x' 'x' 'x' '.' '.' '.']
@@ -320,8 +245,8 @@ ps_game
  ['x' 'x' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['x' 'x' '.' 'x' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['x' 'x' 'x' 'x' 'x' 'x' 'x' 'x' 'x' 'x' 'x' 'x' 'x']]
-    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
-    level_data	[['x' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['x' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['x' 'o' '.' '.' '.' '.' '.' '.' 'x' 'x']
  ['x' 'x' 'x' '.' '.' '.' '.' '.' '.' '.']
  ['x' 'x' 'x' 'x' 'x' '.' '.' '.' '.' '.']
@@ -342,8 +267,8 @@ ps_game
  ['.' '.' '.' '.' '.' '.' '.' 'g' '.' '.']
  ['.' 'p' '.' '.' 'g' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
-    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
     level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
@@ -352,8 +277,8 @@ ps_game
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
-    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
     level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
@@ -362,8 +287,8 @@ ps_game
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
-    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
     level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.']

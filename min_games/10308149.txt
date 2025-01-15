@@ -1,29 +1,47 @@
+title Hack It! - Tilt Game
+author Everyone
+noundo
+zoomscreen 10x5
+
 OBJECTS
 
-Background.
-GreenFinish
-ORed DarkRed
-0000001110
-01..001..0
-00000Wall
-#Brown DarkBrown
-0000001110
-01..001..0
-00000Crate
-CBrown DarkBrown.....
+Background .
+Green
+
+Finish O
+Red DarkRed
+00000
+01110
+01..0
+01..0
+0000
+
+Wall #
+Brown DarkBrown
+00000
+01110
+01..0
+01..0
+0000
+
+Crate C
+Brown DarkBrown
+.....
 .000.
 .0001
 .0001
-..111
+..11
 
-Player@Orange Blue.000.
+Player @
+Orange Blue
+.000.
 01010
 00000
 00000
-.000.
+.000
 
-Timer#309800
-
+Timer
+#309800
 
 
 LEGEND
@@ -35,22 +53,11 @@ COLLISIONLAYERS
 Background
 Timer
 Finish
-Player
-Wall, Crate
+Player, Wall, Crate
 
 RULES
 
-[ Finish ] -> [ action Finish ] 
-random [ action Finish][Timer ] -> [ Finish][ ] 
-random [ action Finish][Wall ] -> [ Wall][actionFinish ] 
-[ action Finish][noTimer ] -> [ action Finish][Timer ] 
-[ > Player | noSolid ] -> [ |>Player ] 
-+ [ > Player | Crate | noSolidnoFinish ] -> [ |>Player | Crate ] 
-[ |>PlayerFinish | Wall ] -> [ Finish | Wall | Player ] 
-[ > Player | Wall ] -> [ Wall | Player ] 
-random [ Player Finish][Wall ] -> [ Player][Finish ] 
-[ Player finish ] -> win 
-
+[ Finish ] -> [ actionFinish ]random [ actionFinish ] [ Timer ] -> [ Finish ] [  ]random [ actionFinish ] [ Wall ] -> [ Wall ] [ actionFinish ][ actionFinish ] [ noTimer ] -> [ actionFinish ] [ Timer ][ > Player | noSolid ] -> [  | > Player ]+ [ > Player | Crate | noSolidnoFinish ] -> [  | > Player | Crate ][  | > PlayerFinish | Wall ] -> [ Finish | Wall | Player ] SFX2[ > Player | Wall ] -> [ Wall | Player ] SFX3random [ PlayerFinish ] [ Wall ] -> [ Player ] [ Finish ][ Playerfinish ] -> SFX1 win
 
 WINCONDITIONS
 

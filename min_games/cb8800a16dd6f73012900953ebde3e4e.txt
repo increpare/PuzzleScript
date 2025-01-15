@@ -1,122 +1,199 @@
+title Sokofun Clone
+author ncrecc
+homepage http://www.sokofun.de/
+noaction
+run_rules_on_level_start
+require_player_movement
+background_color darkblue
+
 OBJECTS
 
-BackgroundDarkblue
-TargetBlack
-......000.
-.0.0..000.
-.....Wall
-LightblueBlue Purple
-0000101112
-0111201112
-12222Player
-PinkRed
-LightgreenGreen Darkgreen
-3222324042
-20.1224142
-32223Crate
-OrangeBrown Lightbrown00001
+Background
+Darkblue
+
+Target
+Black
+.....
+.000.
+.0.0.
+.000.
+....
+
+Wall
+Lightblue Blue Purple
+00001
+01112
+01112
+01112
+1222
+
+Player
+Pink Red Lightgreen Green Darkgreen
+32223
+24042
+20.12
+24142
+3222
+
+Crate
+Orange Brown Lightbrown
+00001
 00011
 00111
 01111
-11111
+1111
 
-CrateSpotBrown Orange
-......001.
-.011..111.
-.....Match
-LightblueBlue
-PurpleLightgreen Green
-0030100312
-3334401422
-12422Blue
-BluePurple Black
-0000102011
-0212101121
-11111Red
-RedDarkred Black
-0000100021
-0212102111
-11111Yellow
-YellowLightbrown Black
-0000100221
-0011102211
-11111Green
-LightgreenGreen Black00001
+CrateSpot
+Brown Orange
+.....
+.001.
+.011.
+.111.
+....
+
+Match
+Lightblue Blue Purple Lightgreen Green
+00301
+00312
+33344
+01422
+1242
+
+Blue
+Blue Purple Black
+00001
+02011
+02121
+01121
+1111
+
+Red
+Red Darkred Black
+00001
+00021
+02121
+02111
+1111
+
+Yellow
+Yellow Lightbrown Black
+00001
+00221
+00111
+02211
+1111
+
+Green
+Lightgreen Green Black
+00001
 02211
 00111
 01221
-11111
+1111
 
-PinPink.....
+Pin
+Pink
+.....
 .....
 ..0..
 .....
-.....
+....
 
-FlowPurple.000.
-0...0
-0...0
-0...0
+Flow
+Purple
 .000.
+0...0
+0...0
+0...0
+.000
 
-LaserUWhite.0.0.
+LaserU
+White
+.0.0.
 ..0..
 .....
 .....
-.....
+....
 
-LaserLWhite.....
+LaserL
+White
+.....
 0....
 .0...
 0....
-.....
+....
 
-LaserDWhite.....
+LaserD
+White
+.....
 .....
 .....
 ..0..
-.0.0.
+.0.0
 
-LaserRWhite.....
+LaserR
+White
+.....
 ....0
 ...0.
 ....0
+....
+
+RayU
+White
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+.0.0
+
+RayL
+White
 .....
-
-RayUWhite.0.0.
-.0.0.
-.0.0.
-.0.0.
-.0.0.
-
-RayLWhite.....
 00000
 .....
 00000
+....
+
+RayD
+White
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+.0.0
+
+RayR
+White
+
 .....
+00000
 
-RayDWhite.0.0.
-.0.0.
-.0.0.
-.0.0.
-.0.0.
+.....
+00000
 
-RayRWhite
-.....00000
-.....00000
-.....Fragile
-GreyDarkgrey Black
-0020101211
-2212201211
-11211Large
-LightgreyGrey Black00001
+.....
+Fragile
+
+Grey D
+00201
+
+01211
+22122
+
+01211
+11211
+
+Large
+Lightgrey Grey Black
+00001
 01211
 02221
 01211
-11111
+1111
 
-HoleBlack
-
+Hole
+Black
 
 
 LEGEND
@@ -157,8 +234,7 @@ Flow
 Background
 Hole
 Target
-Player
-Wall, Block
+Player, Wall, Block
 CrateSpot
 Laser
 Pin
@@ -169,50 +245,10 @@ RayR
 
 RULES
 
-[ > Player | BlocknoPin ] -> [ > Player | >Block ] (standard sokobanning... pin is usually only used on ane specific color of block in sokofun, but this opens up more design opportunities. artistic license? you can always just restrict yourself to placing pins only on blue sokolor blocks) 
-late [ CrateSpot no Crate ] -> [  ] 
-late [ Crate Target ] -> [ Crate Target CrateSpot ] (render the inverted part of the crate) 
-[ > Player | Hole ] -> [ Player | Hole ] (you don't get to go down there) 
-[ > Crate | Hole ] -> [ Crate | Hole ] 
-[ > Color | Hole ] -> [ Color | Hole ] (some blocks simply cannot be pushed into a hole in the original sokofun) 
-late [ Fragile Hole ] -> [ Hole ] (cracked blocks fall into holes without filling them) 
-late [ Laser Hole ] -> [ Hole ] (laser emitters also fall into holes. it's important that lasers are not allowed to fire the turn they fall into a hole) 
-late [ Large Hole ] -> [  ] (large blocks turn holes into floor after falling in) 
-[ Laser>Midlayer ] -> [ > Laser>Midlayer ] (lasers move with their mounts) 
-[ > Player | Ray ] -> [ Player | Ray ] (you can't move into a ray, only the ray can move into you) 
-[ > Player Ray ] -> [ Player Ray ] (once you're in a ray, you're trapped!) 
-late [ Ray ] -> [  ] (rays are re-fired each turn) 
-late up [ LaserU |  ] -> [ LaserU | RayU ] 
-late left [ LaserL |  ] -> [ LaserL | RayL ] 
-late down [ LaserD |  ] -> [ LaserD | RayD ] 
-late right [ LaserR |  ] -> [ LaserR | RayR ] (fire rays from laser emitters) 
-startloop
-late [ Ray Fragile ] -> [ Ray ] (rays destroy fragile blocks) 
-late [ Ray Laserproof ] -> [ Laserproof ] (rays cannot be on top of laserproof objects) 
-late up [ RayU | noLaserproof ] -> [ RayU | RayU ] 
-late left [ RayL | noLaserproof ] -> [ RayL | RayL ] 
-late down [ RayD | noLaserproof ] -> [ RayD | RayD ] 
-late right [ RayR | noLaserproof ] -> [ RayR | RayR ] (rays try to advance) 
-endloop
-late [ Laser no Midlayer ] -> [  ] (laser emitters must be mounted on something. again, i am allowing for more freedom than was in the original game by letting the emitter be mounted on any midlayer object.) 
-late up [ no LaserU no RayU | RayU ] -> [ | ] 
-late left [ no LaserL no RayL | RayL ] -> [ | ] 
-late down [ no LaserD no RayD | RayD ] -> [ | ] 
-late right [ no LaserR no RayR | RayR ] -> [ | ] (clean up rays from destroyed laser emitters) 
-late [ Player Ray ] -> [ Player Ray ] (sound plays if player moved into a ray) 
-[ Flow ] -> [  ] ("flow" is recalculated each turn) 
-random [ > Block][Blue ] -> [ > Block][BlueFlow ] 
-random [ > Block][Red ] -> [ > Block][RedFlow ] 
-random [ > Block][Yellow ] -> [ > Block][YellowFlow ] 
-random [ > Block][Green ] -> [ > Block][GreenFlow ] 
-random [ > Block][Match ] -> [ > Block][MatchFlow ] (flow is spawned on a random color block for each color in the level. this check is only started when a block is pushed, as to eliminate unneeded checks... still wonder if this could be reduced to 1 rule) 
-[ Flow>Block ] -> [ > Flow>Block ] (flow moves with moving blocks, so that it can not be left behind and turn what should be a winning push into a mysterious "nothing is happening!" scenario) 
-late [ Flow Blue | Blue ] -> [ Flow Blue | FlowBlue ] 
-late [ Flow Red | Red ] -> [ Flow Red | FlowRed ] 
-late [ Flow Yellow | Yellow ] -> [ Flow Yellow | FlowYellow ] 
-late [ Flow Green | Green ] -> [ Flow Green | FlowGreen ] 
-late [ Flow Match | Match ] -> [ Flow Match | FlowMatch ] (flow "spreads" to adjacent blocks of same color. this repeats until it has no more blocks to spread to. game wins when all blocks on the map can be flowed to from an arbitrary flow placement, i.e. all blocks of the same color are touching) 
+[ > Player | BlocknoPin ] -> [ > Player | > Block ]late [ CrateSpotnoCrate ] -> [  ]late [ CrateTarget ] -> [ CrateTargetCrateSpot ][ > Player | Hole ] -> [ Player | Hole ][ > Crate | Hole ] -> [ Crate | Hole ][ > Color | Hole ] -> [ Color | Hole ]late [ FragileHole ] -> [ Hole ] sfx1late [ LaserHole ] -> [ Hole ]late [ LargeHole ] -> [  ][ Laser> Midlayer ] -> [ > Laser> Midlayer ][ > Player | Ray ] -> [ Player | Ray ][ > PlayerRay ] -> [ PlayerRay ]late [ Ray ] -> [  ]late up [ LaserU |  ] -> [ LaserU | RayU ]late left [ LaserL |  ] -> [ LaserL | RayL ]late down [ LaserD |  ] -> [ LaserD | RayD ]late right [ LaserR |  ] -> [ LaserR | RayR ]startloop
+late [ RayFragile ] -> [ Ray ] sfx2late [ RayLaserproof ] -> [ Laserproof ]late up [ RayU | noLaserproof ] -> [ RayU | RayU ]late left [ RayL | noLaserproof ] -> [ RayL | RayL ]late down [ RayD | noLaserproof ] -> [ RayD | RayD ]late right [ RayR | noLaserproof ] -> [ RayR | RayR ]endloop
 
+late [ LasernoMidlayer ] -> [  ]late up [ noLaserUnoRayU | RayU ] -> [  |  ]late left [ noLaserLnoRayL | RayL ] -> [  |  ]late down [ noLaserDnoRayD | RayD ] -> [  |  ]late right [ noLaserRnoRayR | RayR ] -> [  |  ]late [ PlayerRay ] -> [ PlayerRay ] sfx0[ Flow ] -> [  ]random [ > Block ] [ Blue ] -> [ > Block ] [ BlueFlow ]random [ > Block ] [ Red ] -> [ > Block ] [ RedFlow ]random [ > Block ] [ Yellow ] -> [ > Block ] [ YellowFlow ]random [ > Block ] [ Green ] -> [ > Block ] [ GreenFlow ]random [ > Block ] [ Match ] -> [ > Block ] [ MatchFlow ][ Flow> Block ] -> [ > Flow> Block ]late [ FlowBlue | Blue ] -> [ FlowBlue | FlowBlue ]late [ FlowRed | Red ] -> [ FlowRed | FlowRed ]late [ FlowYellow | Yellow ] -> [ FlowYellow | FlowYellow ]late [ FlowGreen | Green ] -> [ FlowGreen | FlowGreen ]late [ FlowMatch | Match ] -> [ FlowMatch | FlowMatch ]
 
 WINCONDITIONS
 
@@ -223,7 +259,6 @@ No Player on Ray
 LEVELS
 
 ..####..
-
 ###.1###
 #3.1.2.#
 #.3p4.2#
@@ -231,7 +266,6 @@ LEVELS
 ..####..
 
 ########
-
 ##..p.##
 ##.3..##
 ###.#1##
@@ -241,7 +275,6 @@ LEVELS
 ########
 
 .#####
-
 .#p#5#
 .#5#.#
 .#.#.#
@@ -263,7 +296,6 @@ LEVELS
 #########
 
 #########
-
 #...p...#
 #.##5##.#
 #>......#
@@ -285,7 +317,6 @@ LEVELS
 #########
 
 #########
-
 #...#...#
 #.*...*.#
 ##.#.#.##

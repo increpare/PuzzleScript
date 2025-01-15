@@ -1,33 +1,65 @@
+title Ice Maze
+author Son Nguyen
+homepage http://mywebspace.quinnipiac.edu/sdnguyen/portfolio/
+
 OBJECTS
 
-Background#def6ff
-#e8fffc00000
-0010101000
-0001000000
-Wall#001942 #220078
-1110011000
-1110011000
-11100Player
-#ffe4e0black
-#ffd44722222
-2000221012
-2000200000
-RBox1Red
-black00000
-0111001110
-0111000000
-RBox2Red black
-0010001110
-1101101110
-00100Ice
-White#00aceb
-#f5faff20000
-2212001210
-0112200002
-Holeblack
-orange.....
-..0...010.
-..0.......
+Background
+#def6ff #e8fffc
+00000
+00101
+01000
+00010
+0000
+
+Wall
+#001942 #220078
+11100
+11000
+11100
+11000
+1110
+
+Player
+#ffe4e0 black #ffd447
+22222
+20002
+21012
+20002
+0000
+
+RBox1
+Red black
+00000
+01110
+01110
+01110
+0000
+
+RBox2
+Red black
+00100
+01110
+11011
+01110
+0010
+
+Ice
+White #00aceb #f5faff
+20000
+22120
+01210
+01122
+0000
+
+Hole
+black orange
+.....
+..0..
+.010.
+..0..
+....
+
 
 LEGEND
 
@@ -44,18 +76,12 @@ Object = Box or Player or Wall
 COLLISIONLAYERS
 
 Background
-Player
-Wall, RBox1
-RBox2, Ice
+Player, Wall, RBox1, RBox2, Ice
 hole
 
 RULES
 
-[ > Player | RBox1 ] -> [ > Player | >RBox1 ] 
-[ RBox2 | RBox1 ] -> [ RBox2 |  ] 
-[ > Player | Ice ] -> [ Player |  ] 
-[ > Player | Hole ] -> [ |Hole ] 
-
+[ > Player | RBox1 ] -> [ > Player | > RBox1 ][ RBox2 | RBox1 ] -> [ RBox2 |  ][ > Player | Ice ] -> [ Player |  ][ > Player | Hole ] -> [  | Hole ]
 
 WINCONDITIONS
 
@@ -71,8 +97,6 @@ w...0..w
 w...0..w
 wwwwwwww
 
-.......
-
 wwwwwwwww
 wh..p..hw
 ww0w0w0ww
@@ -85,8 +109,6 @@ w.00000.w
 wh.0x0.hw
 wwwwwwwww
 
-........
-
 wwwwwwwwwww
 wp..w0000ww
 w.r.w0...hw
@@ -97,8 +119,6 @@ w.w00w0..ww
 w00w00w...w
 wx.0000...w
 wwwwwwwwwww
-
-..........
 
 wwwwwwwwwwwwwwwww
 wp.w.....w000w..w
@@ -118,5 +138,3 @@ w00...00w0..w0w0w
 www00...0000w0.0w
 w0..00000000w00xw
 wwwwwwwwwwwwwwwww
-
-................

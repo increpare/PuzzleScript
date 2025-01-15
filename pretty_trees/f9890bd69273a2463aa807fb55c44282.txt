@@ -1,15 +1,30 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Escape the Void Full
+    prelude_data
+      author
+      Croubble
+    prelude_data
+      homepage
+      www.puzzlescript.net
+    prelude_data
+      background_color
+      darkblue
+    prelude_data	verbose_logging
+    prelude_data	run_rules_on_level_start
   objects_section
     object_data
-      object_name	Background
-      legend_key	#
-      colors
-        color	050505
+      object_line
+        object_name	Background
+      color_line
+        color	#050505
     object_data
-      object_name	Target
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Target
+      color_line
+        color	Red
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '0' '0' '.']
@@ -17,36 +32,25 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Wall
-      legend_key	B
-      colors
-        color	ROWN
+      object_line
+        object_name	Wall
+      color_line
+        color	BROWN
         color	DARKBROWN
+      sprite
+        ['0' '0' '0' '1' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
     object_data
-      object_name	00010
-      legend_key	1
-      colors
-        color	1111
-    object_data
-      object_name	01000
-      legend_key	1
-      colors
-        color	1111
-    object_data
-      object_name	00010
-      legend_key	P
-      colors
-        color	layer
-    object_data
-      object_name	White
-      legend_key	W
-      colors
-        color	hite
-    object_data
-      object_name	White
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	Player
+      color_line
+        color	White
+        color	White
+        color	White
+        color	White
         color	Red
       sprite
         ['.' '0' '0' '0' '.']
@@ -55,10 +59,10 @@ ps_game
         ['.' '3' '3' '3' '.']
         ['.' '3' '.' '3' '.']
     object_data
-      object_name	Crate2
-      legend_key	O
-      colors
-        color	range
+      object_line
+        object_name	Crate2
+      color_line
+        color	Orange
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '.' '.' '.' '0']
@@ -66,10 +70,10 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Crate1
-      legend_key	Y
-      colors
-        color	ellow
+      object_line
+        object_name	Crate1
+      color_line
+        color	Yellow
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '.' '.' '.' '0']
@@ -77,59 +81,54 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Water
-      legend_key	#
-      colors
-        color	FAFAFA
-      
-
-
-
-
+      object_line
+        object_name	Water
+      color_line
+        color	#FAFAFA
   legend_section
     legend_data
-      Cratey
+      Cratey =
       object_name	Crate1
       legend_operation
         object_name	Crate2
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      #
+      # =
       object_name	Water
     legend_data
-      P
+      P =
       object_name	Player
     legend_data
-      O
+      O =
       object_name	Target
     legend_data
-      y
+      y =
       object_name	Crate1
     legend_data
-      x
+      x =
       object_name	Crate1
       legend_operation
         object_name	Target
     legend_data
-      w
+      w =
       object_name	Wall
     legend_data
-      s
+      s =
       object_name	Crate2
     legend_data
-      t
+      t =
       object_name	Crate2
       legend_operation
         object_name	Target
     legend_data
-      a
+      a =
       object_name	Crate1
       legend_operation
         object_name	Target
     legend_data
-      b
+      b =
       object_name	Crate2
       legend_operation
         object_name	Target
@@ -140,10 +139,8 @@ ps_game
       object_name	Target
     layer_data
       object_name	Player
-    layer_data
       object_name	Wall
       object_name	Crate1
-    layer_data
       object_name	Crate2
       object_name	Water
   rules_section
@@ -155,56 +152,32 @@ ps_game
               <
               Player
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	1
+            rule_content	Crate1
           ->
           rule_part
             rule_content
               <
               Player
             cell_border
-            rule_content	<
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	1
-          (2: Players pull pull crates)
-          
-
+            rule_content
+              <
+              Crate1
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	2
+            rule_content	Crate2
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	2
-          (3: Players can push push crates)
-          
-
+            rule_content
+              >
+              Crate2
   winconditions_section
     condition_data
       All
@@ -212,7 +185,6 @@ ps_game
       on
       object_name	Cratey
   levels_section
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '#' '#' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '#']
@@ -222,7 +194,6 @@ ps_game
  ['#' '#' 'p' '#' '#' '#' '#']
  ['#' '#' 'o' '#' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '#' '#' '#' '#']
  ['#' '.' '.' '#' '#' '#' '#']
@@ -232,8 +203,6 @@ ps_game
  ['#' '.' '#' 'p' '#' '#' '#']
  ['#' '.' '.' '.' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '#' '#' '#']
  ['#' '.' 't' '.' '#' '#' '#']
@@ -241,7 +210,6 @@ ps_game
  ['#' '#' '.' 'p' '#' '.' '#']
  ['#' '#' '#' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#']
  ['#' '#' '.' '.' '#' '#']
  ['#' '#' '.' 'o' '.' '#']
@@ -251,16 +219,14 @@ ps_game
  ['#' '.' 'o' '.' '#' '#']
  ['#' '.' '.' '.' '#' '#']
  ['#' '#' '#' '#' '#' '#']]
-    level_data	None
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '#' '#' '#' '.' '.' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#' '.' '.' '#']
  ['#' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '#' '.' '.' '.' '#']
  ['#' '.' '.' 's' 'o' 'o' '#' '#' '#']
  ['#' '.' '.' '.' 's' '.' '#' '#' '#']
  ['#' '#' '#' '#' 'p' '#' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '#' '#' '.' '.' '#' '#' '#' '#']
  ['#' '#' '#' '#' '.' '.' '#' '#' '#' '#']
@@ -270,24 +236,22 @@ ps_game
  ['#' '.' '.' '.' '.' '#' 'y' 'y' '.' '#']
  ['#' '#' '#' '#' '#' '#' 'p' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
-    level_data	[['#' '#' '#' '#' '#' '#']]
     level_data	[['#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '#' '#' '#']
  ['#' '.' 'o' '#' '#' '#']
  ['#' '.' '.' '#' '#' '#']
  ['#' 't' 'p' '.' '.' '#']
  ['#' '.' '.' 's' '.' '#']
  ['#' '.' '.' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '.' '.' '#' '#' '#']
+    level_data	[['#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '#' '#' '#']
  ['#' '.' 'o' '#' '#' '#']
  ['#' '.' 'p' '#' '#' '#']
  ['#' 'x' '.' '.' '.' '#']
  ['#' '.' '.' 'y' '.' '#']
  ['#' '.' '.' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '#' '#' '#' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' 'o' 'o' 'o' '.' '.' '#']
@@ -295,24 +259,20 @@ ps_game
  ['#' '.' '#' '#' '#' '.' '#' '#' '#' '#']
  ['#' '.' 'p' '.' '.' '.' '#' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '.' '.' '#' '#' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '#' '.' '.' '#' '#' '#']
  ['#' '#' '#' '.' '.' '#' '#' '#']
  ['#' '#' '#' '.' 'y' 'o' '.' '#']
  ['#' '.' 'o' '.' '.' '.' 'p' '#']
  ['#' '#' '#' 'y' '.' '#' '#' '#']
  ['#' '#' '#' '.' '.' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
-    level_data	None
-    level_data	[['#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '.' '.' '#' '#']
+    level_data	[['#' '#' '#' '#' '#' '#']
+ ['#' '#' '.' '.' '#' '#']
  ['#' '.' 'o' '.' '.' '#']
  ['#' '.' 'x' 's' '.' '#']
  ['#' '#' '.' 'p' '#' '#']
  ['#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '#' 'o' 'x' '#' '#' '#']
  ['#' '#' '#' '.' '.' '.' '#' '#']
@@ -320,14 +280,12 @@ ps_game
  ['#' '#' 'x' '.' '.' '.' '#' '#']
  ['#' '#' '#' 'x' '#' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
-    level_data	[['#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '.' 'p' 'y' '.' '#' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' 'p' 'y' '.' '#' '#']
  ['#' '.' '#' 'o' 'o' 'y' '#']
  ['#' '.' 's' 'o' 'o' '#' '#']
  ['#' '.' '.' '.' 'y' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '.' '.' '#' '#' '#']
  ['#' '#' '.' 'o' '.' '#' '#']
@@ -337,7 +295,6 @@ ps_game
  ['#' '.' '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#']
  ['#' '#' '#' '.' '.' '#']
  ['#' '.' 'y' '.' '.' '#']
@@ -347,7 +304,6 @@ ps_game
  ['#' '#' '.' '.' '#' '#']
  ['#' '#' '.' '.' '#' '#']
  ['#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#']
  ['#' '#' 'o' '#' '#' '#']
  ['#' '#' '.' '#' '#' '#']
@@ -359,7 +315,6 @@ ps_game
  ['#' '#' 'p' '#' '#' '#']
  ['#' '#' 'a' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '#' '#' 'x' '#' '#' '#']
  ['#' '#' '#' '.' 'p' 'x' '#' '#']
@@ -369,4 +324,3 @@ ps_game
  ['#' '#' '.' '#' '.' '#' '.' '#']
  ['#' 'y' '.' 'o' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None

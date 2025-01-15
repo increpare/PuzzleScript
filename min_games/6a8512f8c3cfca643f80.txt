@@ -1,37 +1,52 @@
+title Bubblegoban
+author Franklin P. Dyer
+color_palette c64
+text_color Pink
+
 OBJECTS
 
-BackgroundLIGHTGREEN
-TargetDarkBlue.....
+Background
+LIGHTGREEN
+
+Target
+DarkBlue
+.....
 .000.
 .0.0.
 .000.
-.....
+....
 
-WallBROWN DARKBROWN00010
+Wall
+BROWN DARKBROWN
+00010
 11111
 01000
 11111
-00010
+0001
 
-PlayerBlack
-OrangeWhite Blue.000.
+Player
+Black Orange White Blue
+.000.
 .111.
 22222
 .333.
-.3.3.
+.3.3
 
-GumPink Lightred.000.
-01110
-01110
-01110
+Gum
+Pink Lightred
 .000.
+01110
+01110
+01110
+.000
 
-BoxBrown Darkbrown11111
+Box
+Brown Darkbrown
+11111
 10101
 11011
 10101
-11111
-
+1111
 
 
 LEGEND
@@ -52,15 +67,11 @@ Stickable, wall
 
 RULES
 
-[ > Stickable | Stickable ] -> [ > Stickable | >Stickable ] 
-startloop
-[ moving Gum | Stickable ] -> [ moving Gum | movingStickable ] 
-[ moving Stickable | Gum ] -> [ moving Stickable | movingGum ] 
-[ > Stickable | Stickable ] -> [ > Stickable | >Stickable ] 
-endloop
-[ Moving Gum | Wall ] -> cancel 
-[ > Player | Wall ] -> cancel 
+[ > Stickable | Stickable ] -> [ > Stickable | > Stickable ]startloop
 
+[ movingGum | Stickable ] -> [ movingGum | movingStickable ][ movingStickable | Gum ] -> [ movingStickable | movingGum ][ > Stickable | Stickable ] -> [ > Stickable | > Stickable ]endloop
+
+[ MovingGum | Wall ] -> cancel[ > Player | Wall ] -> cancel
 
 WINCONDITIONS
 
@@ -69,7 +80,6 @@ All Target on Player
 LEVELS
 
 xx......
-
 xx.....o
 x.......
 x...xxxx
@@ -81,7 +91,6 @@ xx......
 xxp..g..
 
 xx......xx
-
 ..........
 ..........
 ..........
@@ -107,7 +116,6 @@ xx.x.........
 xxxxxxxxxxxxx
 
 ..........
-
 x.........
 xo......xx
 xxx.......
@@ -131,7 +139,6 @@ xxxxxx...x
 ..........
 
 ..........
-
 ..........
 ..........
 ..........
@@ -143,7 +150,6 @@ xxxxxx...x
 ..........
 
 ..........
-
 ..........
 ..........
 ..........
@@ -155,7 +161,6 @@ xxxxxx...x
 ..........
 
 ..........
-
 ..........
 ..........
 ..........

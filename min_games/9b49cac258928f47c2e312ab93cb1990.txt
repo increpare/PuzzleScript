@@ -1,143 +1,192 @@
+title  I Have No Mouth, And I Must  Find My Hiding Spot
+author Corey Martin & Alan Hazelden - mod by jc
+run_rules_on_level_start
+
 OBJECTS
 
-Background#00000000000
+Background
+#000000
 00000
 00000
 00000
 00000
+0000
 
-Floor#00000000000
+Floor
+#000000
 00000
 00000
 00000
 00000
+0000
 
-Wall#393875 #4f4e8d
-0000001000
-1111111111
-00000PlayerRight
-#990c33#ffffff
-#c83242#cf5c50 black
-.0000.2121
-2212123333
-.3..3PlayerLeft
-#990c33#ffffff
-#c83242#cf5c50 black0000.
+Wall
+#393875 #4f4e8d
+00000
+01000
+11111
+11111
+0000
+
+PlayerRight
+#990c33 #ffffff #c83242 #cf5c50 black
+.0000
+.2121
+22121
+23333
+.3..
+
+PlayerLeft
+#990c33 #ffffff #c83242 #cf5c50 black
+0000.
 1212.
 12122
 33332
-3..3.
+3..3
 
-
-Crate#f99596
-#7a41c7#f08687 black01310
+Crate
+#f99596 #7a41c7 #f08687 black
+01310
 03130
 01310
 00000
-22222
+2222
 
-AboveCrate#f99596.....
+AboveCrate
+#f99596
 .....
 .....
 .....
+.....
+0000
+
+BelowCrate
+#f08687
 00000
+.....
+.....
+.....
+....
 
-BelowCrate#f0868700000
-.....
-.....
-.....
-.....
-
-Decor1#786d4f.0...
+Decor1
+#786d4f
+.0...
 .00..
 ..0..
 ..0..
-..00.
+..00
 
-Decor2#786d4f...0.
+Decor2
+#786d4f
+...0.
 ...0.
 ..00.
 ..0..
-..0..
+..0.
 
-Decor3#13694d #0f5c43.0..0
+Decor3
+#13694d #0f5c43
+.0..0
 010.1
 .0100
 .00.1
-..00.
+..00
 
-Decor4#79dbb2.....
+Decor4
+#79dbb2
+.....
 .0...
 .0.0.
 ..00.
-.....
+....
 
-BelowWall#44400000
+BelowWall
+#444
+00000
 .....
 .....
 .....
-.....
+....
 
-AboveWall#93815f.....
+AboveWall
+#93815f
+.....
+.....
+.....
+.....
+0000
+
+WallD
+#93815f #444
 .....
 .....
 .....
 00000
+1111
 
-WallD#93815f #444.....
-.....
-.....
-00000
-11111
-
-WallL#93815f0....
+WallL
+#93815f
 0....
 0....
 0....
 0....
+0...
 
-WallR#93815f....0
+WallR
+#93815f
 ....0
 ....0
 ....0
 ....0
+....
 
-WallLR#93815f0...0
+WallLR
+#93815f
 0...0
 0...0
 0...0
 0...0
+0...
 
-AboveWallL#93815f.....
+AboveWallL
+#93815f
+.....
 .....
 .....
 0....
+0...
+
+AboveWallR
+#93815f
+.....
+.....
+.....
+....0
+....
+
+AboveWallLR
+#93815f
+.....
+.....
+.....
+0...0
+0...
+
+AboveWallLRwithR
+#93815f
+....0
+....0
+....0
+0...0
+0...
+
+AboveWallLRwithL
+#93815f
 0....
-
-AboveWallR#93815f.....
-.....
-.....
-....0
-....0
-
-AboveWallLR#93815f.....
-.....
-.....
-0...0
-0...0
-
-AboveWallLRwithR#93815f....0
-....0
-....0
-0...0
-0...0
-
-AboveWallLRwithL#93815f0....
 0....
 0....
 0...0
-0...0
-
+0...
 
 
 LEGEND
@@ -160,37 +209,15 @@ COLLISIONLAYERS
 Background
 Floor
 BelowWall, BelowCrate
-Player
-Wall, Crate
-Decor1, Decor2
-Decor3, Decor4
+Player, Wall, Crate
+Decor1, Decor2, Decor3, Decor4
 AboveDecoration
-WallD, AboveWallLR
-AboveWallLRwithR, AboveWallLRwithL
+WallD, AboveWallLR, AboveWallLRwithR, AboveWallLRwithL
 AboveCrate
 
 RULES
 
-[ left Player ] -> [ left PlayerLeft ] 
-[ right Player ] -> [ right PlayerRight ] 
-[ action Player | noWall ] -> [ action Player | Crate ] 
-[ > Player | Crate ] -> [ > Player | >Crate ] 
-[ > Crate | Crate ] -> [ > Crate | >Crate ] 
-late [ AboveCrate ] -> [  ] 
-late up [ Crate |  ] -> [ Crate | AboveCrate ] 
-late [ BelowCrate ] -> [  ] 
-late down [ Crate |  ] -> [ Crate | BelowCrate ] 
-down [ Wall | noWall ] -> [ Wall WallD | BelowWall ] 
-up [ Wall | noWall ] -> [ Wall | AboveWall ] 
-left [ Wall | noWall ] -> [ Wall WallL |  ] 
-right [ Wall WallL | noWall ] -> [ Wall WallLR |  ] 
-right [ Wall no AboveDecoration | noWall ] -> [ Wall WallR |  ] 
-up [ WallL | WallnoAboveDecoration ] -> [ WallL | WallAboveWallL ] 
-up [ WallR | WallnoAboveDecoration ] -> [ WallR | WallAboveWallR ] 
-up [ WallLR | Wall ] -> [ WallLR | WallAboveWallLR ] 
-up [ WallL | WallWallR ] -> [ WallL | WallAboveWallLRwithR ] 
-up [ WallR | WallWallL ] -> [ WallR | WallAboveWallLRwithL ] 
-
+[ leftPlayer ] -> [ leftPlayerLeft ][ rightPlayer ] -> [ rightPlayerRight ][ actionPlayer | noWall ] -> [ actionPlayer | Crate ][ > Player | Crate ] -> [ > Player | > Crate ][ > Crate | Crate ] -> [ > Crate | > Crate ]late [ AboveCrate ] -> [  ]late up [ Crate |  ] -> [ Crate | AboveCrate ]late [ BelowCrate ] -> [  ]late down [ Crate |  ] -> [ Crate | BelowCrate ]down [ Wall | noWall ] -> [ WallWallD | BelowWall ]up [ Wall | noWall ] -> [ Wall | AboveWall ]left [ Wall | noWall ] -> [ WallWallL |  ]right [ WallWallL | noWall ] -> [ WallWallLR |  ]right [ WallnoAboveDecoration | noWall ] -> [ WallWallR |  ]up [ WallL | WallnoAboveDecoration ] -> [ WallL | WallAboveWallL ]up [ WallR | WallnoAboveDecoration ] -> [ WallR | WallAboveWallR ]up [ WallLR | Wall ] -> [ WallLR | WallAboveWallLR ]up [ WallL | WallWallR ] -> [ WallL | WallAboveWallLRwithR ]up [ WallR | WallWallL ] -> [ WallR | WallAboveWallLRwithL ]
 
 WINCONDITIONS
 
@@ -243,7 +270,6 @@ LEVELS
 ................
 
 ..................
-
 ..................
 .......####...3...
 .1....##--##......
@@ -255,7 +281,6 @@ LEVELS
 ..................
 
 ...................
-
 ..4................
 ....1..###....4..3.
 .3.....#-###.......
@@ -289,7 +314,6 @@ LEVELS
 .....................
 
 4.............1..
-
 ....#########.2.3
 .2..#---#---#....
 ....#-p-----#.4..
@@ -399,7 +423,6 @@ LEVELS
 .......4...........
 
 .........4.....2.....
-
 ..2..............3...
 4......#######.......
 ......##-#p#-##......

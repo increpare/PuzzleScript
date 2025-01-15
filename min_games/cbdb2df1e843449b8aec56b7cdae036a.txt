@@ -1,201 +1,355 @@
+title Dangerous Dungeon
+run_rules_on_level_start
+again_interval 0.05
+
 OBJECTS
 
-Background#222
-#BBBBBB#CCCCCC01110
-12221
-12221
-12221
+Background
+#222 #BBBBBB #CCCCCC
 01110
+12221
+12221
+12221
+0111
 
-walldarkgrey
-wu#22200000
-.....
-.....
-.....
-.....
+wall
+darkgrey
 
-wd#222.....
-.....
-.....
-.....
+wu
+#222
 00000
+.....
+.....
+.....
+....
 
-wl#2220....
-0....
-0....
-0....
-0....
+wd
+#222
+.....
+.....
+.....
+.....
+0000
 
-wr#222
-....0....0
-....0....0
-....0bu
-darkbrownlightbrown darkbrown
-......212.
-.111..111.
-.....bl
-darkbrownlightbrown darkbrown
-......211.
-.111..211.
-.....br
-darkbrownlightbrown darkbrown
-......112.
-.111..112.
-.....bd
-darkbrownlightbrown darkbrown
-......111.
-.111..212.
-.....gu
-blackgreen darkblue
-......212.
-.111..111.
-.....gl
-blackgreen darkblue
-......211.
-.111..211.
-.....gr
-blackgreen darkblue
-......112.
-.111..112.
-.....gd
-blackgreen darkblue.....
+wl
+#222
+0....
+0....
+0....
+0....
+0...
+
+wr
+#222
+....0
+....0
+....0
+....0
+....
+
+bu
+darkbrown lightbrown darkbrown
+.....
+.212.
+.111.
+.111.
+....
+
+bl
+darkbrown lightbrown darkbrown
+.....
+.211.
+.111.
+.211.
+....
+
+br
+darkbrown lightbrown darkbrown
+.....
+.112.
+.111.
+.112.
+....
+
+bd
+darkbrown lightbrown darkbrown
+.....
 .111.
 .111.
 .212.
+....
+
+gu
+black green darkblue
+
+.....
+.212.
+
+.111.
+.111.
+
+.....
+gl
+
+black g
 .....
 
-autransparent
-adtransparent
-altransparent
-artransparent
-agtransparent
-vttransparent
-httransparent
-spikesdarkgrey.....
+.211.
+.111.
+
+.211.
+.....
+
+gr
+black green darkblue
+.....
+.112.
+.111.
+.112.
+....
+
+gd
+black green darkblue
+.....
+.111.
+.111.
+.212.
+....
+
+au
+transparent
+
+ad
+transparent
+
+al
+transparent
+
+ar
+transparent
+
+ag
+transparent
+
+vt
+transparent
+
+ht
+transparent
+
+spikes
+darkgrey
+
+.....
 ..0..
+
 .0.0.
 ..0..
-.....
 
-rured
-grey..1..
-.111...0..
-..0....0..
-rrred grey.....
+.....
+ru
+
+red g
+..1..
+
+.111.
+..0..
+
+..0..
+..0..
+
+rr
+red grey
+
+.....
 ...1.
+
 00011
 ...1.
-.....
 
-rdred
-grey..0..
-..0....0..
-.111...1..
-rlred grey.....
+.....
+rd
+
+red g
+..0..
+
+..0..
+..0..
+
+.111.
+..1..
+
+rl
+red grey
+.....
 .1...
 11000
 .1...
-.....
+....
 
-goalgreen
-tagtransparent
-tut1transparent
-tut2transparent
-blood1red..0..
+goal
+green
+
+tag
+transparent
+
+tut1
+transparent
+
+tut2
+transparent
+
+blood1
+red
+..0..
 ...0.
 00...
 .0..0
-.0...
+.0..
 
-blood2red
-...0....0.
-.0..00..0.
-.0...blood3
-red..0..
-0.0.0...0.
-.0......0.
-blood4red.0...
+blood2
+red
+
+...0.
+...0.
+
+.0..0
+0..0.
+
+.0...
+blood3
+
+red
+..0..
+
+0.0.0
+...0.
+
+.0...
+...0.
+
+blood4
+red
+.0...
 ...0.
 0.0..
 ..0.0
-..0..
+..0.
 
-blood5red..0..
+blood5
+red
+..0..
 .0..0
 .0.0.
 0....
-.0...
+.0..
 
-su1#9999FF.000.
+su1
+#9999FF
+.000.
 .....
 .....
 .....
-.....
+....
 
-sl1#9999FF.....
+sl1
+#9999FF
+.....
 0....
 0....
 0....
-.....
+....
 
-sd1#9999FF.....
+sd1
+#9999FF
 .....
 .....
 .....
-.000.
+.....
+.000
 
-sr1#9999FF.....
+sr1
+#9999FF
+.....
 ....0
 ....0
 ....0
-.....
+....
 
-s1#9999FF.....
+s1
+#9999FF
+.....
 .000.
 .000.
 .000.
-.....
+....
 
-su2#FF9999.000.
+su2
+#FF9999
+.000.
 .....
 .....
 .....
-.....
+....
 
-sl2#FF9999.....
+sl2
+#FF9999
+.....
 0....
 0....
 0....
-.....
+....
 
-sd2#FF9999.....
+sd2
+#FF9999
 .....
 .....
 .....
-.000.
+.....
+.000
 
-sr2#FF9999.....
+sr2
+#FF9999
+.....
 ....0
 ....0
 ....0
+....
+
+s2
+#FF9999
 .....
-
-s2#FF9999.....
 .000.
 .000.
 .000.
-.....
+....
 
-temptransparent
-togg1transparent
-togg2transparent
-staytransparent
-endspottransparent
-noarrowtransparent
-bullstransparent
-bulls2transparent
-endspot2transparent
+temp
+transparent
 
+togg1
+transparent
+
+togg2
+transparent
+
+stay
+transparent
+
+endspot
+transparent
+
+noarrow
+transparent
+
+bulls
+transparent
+
+bulls2
+transparent
+
+endspot2
+transparent
 
 
 LEGEND
@@ -299,93 +453,7 @@ endspot2
 
 RULES
 
-late [ bx tut1 ] -> [ bx ] 
-late [ bx tut2 ] -> [ bx ] 
-up [ no wall | wall ] -> [ |wallwd ] 
-down [ no wall | wall ] -> [ |wallwu ] 
-right [ no wall | wall ] -> [ |wallwl ] 
-left [ no wall | wall ] -> [ |wallwr ] 
-down [ |wu ] -> [ wd | wu ] 
-up [ |wd ] -> [ wu | wd ] 
-right [ |wl ] -> [ wr | wl ] 
-left [ |wr ] -> [ wl | wr ] 
-[ ax ] -> [  ] 
-[ bx ] -> [ bx au ad al ar ] 
-[ noarrow][actionbx ] -> [ noarrow][bx ] 
-[ action bu ] -> [ action bu ru ] 
-[ action bl ] -> [ action bl rl ] 
-[ action bd ] -> [ action bd rd ] 
-[ action br ] -> [ action br rr ] 
-up [ au no wu no gx | nowd ] -> [ au | au ] 
-down [ ad no wd no gx | nowu ] -> [ ad | ad ] 
-left [ al no wl no gx | nowr ] -> [ al | al ] 
-right [ ar no wr no gx | nowl ] -> [ ar | ar ] 
-[ tag][stationaryru ] -> [ tag][upru ] 
-[ tag][stationaryrl ] -> [ tag][leftrl ] 
-[ tag][stationaryrd ] -> [ tag][downrd ] 
-[ tag][stationaryrr ] -> [ tag][rightrr ] 
-[ au gx ] -> [ au gd ] 
-[ al gx ] -> [ al gr ] 
-[ ar gx ] -> [ ar gl ] 
-[ ad gx ] -> [ ad gu ] 
-[ ag][gu ] -> [ ag][upgu ] 
-[ ag][gl ] -> [ ag][leftgl ] 
-[ ag][gr ] -> [ ag][rightgr ] 
-[ ag][gd ] -> [ ag][downgd ] 
-[ up gx wu ] -> [ stationary gx wu ] 
-[ left gx wl ] -> [ stationary gx wl ] 
-[ right gx wr ] -> [ stationary gx wr ] 
-[ down gx wd ] -> [ stationary gx wd ] 
-[ left bx ] -> [ left bl ] 
-[ right bx ] -> [ right br ] 
-[ down bx ] -> [ down bd ] 
-[ up bx ] -> [ up bu ] 
-[ ag ] -> [  ] 
-[ tag ] -> [ ag ] again 
-[ moving player ] -> [ tag moving player ] again 
-[ action player ] -> [ tag action player ] again 
-[ up bx wu ] -> [ stationary bx wu ] 
-[ left bx wl ] -> [ stationary bx wl ] 
-[ right bx wr ] -> [ stationary bx wr ] 
-[ down bx wd ] -> [ stationary bx wd ] 
-[ > bx | rx ] -> [ stationary bx | rx ] 
-[ moving gx stay ] -> [ stationary gx stay ] 
-[ moving gx ] -> 
-[ moving bx ] -> 
-[ moving rx ] -> 
-[ > gx |  | <gx ] -> [ |randomblood |  ] 
-vertical [ > gx |  ] -> [ > gx | vt ] 
-horizontal [ > gx |  ] -> [ > gx | ht ] 
-vertical [ > gx | ht ] -> [ |randombloodht ] 
-horizontal [ > gx | vt ] -> [ |randombloodvt ] 
-[ ht ] -> [  ] 
-[ v t ] -> [  ] 
-[ up rx su1 ] -> [ up rx su1 togg1 ] 
-[ left rx sl1 ] -> [ left rx sl1 togg1 ] 
-[ down rx sd1 ] -> [ down rx sd1 togg1 ] 
-[ right rx sr1 ] -> [ right rx sr1 togg1 ] 
-[ s1 spikes][togg1 ] -> [ s1 temp][togg1 ] 
-[ s1 no spikes no temp][togg1 ] -> [ s1 spikes][togg1 ] 
-[ up rx su2 ] -> [ up rx su2 togg2 ] 
-[ left rx sl2 ] -> [ left rx sl2 togg2 ] 
-[ down rx sd2 ] -> [ down rx sd2 togg2 ] 
-[ right rx sr2 ] -> [ right rx sr2 togg2 ] 
-[ s2 spikes][togg2 ] -> [ s2 temp][togg2 ] 
-[ s2 no spikes no temp][togg2 ] -> [ s2 spikes][togg2 ] 
-[ togg1][bulls2 ] -> [ togg1][ ] 
-[ togg1][bulls ] -> [ togg1][bulls2 ] 
-[ temp ] -> [  ] 
-[ togg1 ] -> [  ] 
-[ togg2 ] -> [  ] 
-[ up rx wu ] -> [ wu ] 
-[ left rx wl ] -> [ wl ] 
-[ right rx wr ] -> [ wr ] 
-[ down rx wd ] -> [ wd ] 
-late [ bx s ] -> [ s random blood stay ] 
-late [ bx gx ] -> [ gx random blood stay ] 
-late [ gx s ] -> [ s random blood ] 
-late [ gx rx ] -> [ random blood ] 
-
+late [ bxtut1 ] -> [ bx ]late [ bxtut2 ] -> [ bx ]up [ nowall | wall ] -> [  | wallwd ]down [ nowall | wall ] -> [  | wallwu ]right [ nowall | wall ] -> [  | wallwl ]left [ nowall | wall ] -> [  | wallwr ]down [  | wu ] -> [ wd | wu ]up [  | wd ] -> [ wu | wd ]right [  | wl ] -> [ wr | wl ]left [  | wr ] -> [ wl | wr ][ ax ] -> [  ][ bx ] -> [ bxauadalar ][ noarrow ] [ actionbx ] -> [ noarrow ] [ bx ][ actionbu ] -> [ actionburu ][ actionbl ] -> [ actionblrl ][ actionbd ] -> [ actionbdrd ][ actionbr ] -> [ actionbrrr ]up [ aunowunogx | nowd ] -> [ au | au ]down [ adnowdnogx | nowu ] -> [ ad | ad ]left [ alnowlnogx | nowr ] -> [ al | al ]right [ arnowrnogx | nowl ] -> [ ar | ar ][ tag ] [ stationaryru ] -> [ tag ] [ upru ][ tag ] [ stationaryrl ] -> [ tag ] [ leftrl ][ tag ] [ stationaryrd ] -> [ tag ] [ downrd ][ tag ] [ stationaryrr ] -> [ tag ] [ rightrr ][ augx ] -> [ augd ][ algx ] -> [ algr ][ argx ] -> [ argl ][ adgx ] -> [ adgu ][ ag ] [ gu ] -> [ ag ] [ upgu ][ ag ] [ gl ] -> [ ag ] [ leftgl ][ ag ] [ gr ] -> [ ag ] [ rightgr ][ ag ] [ gd ] -> [ ag ] [ downgd ][ upgxwu ] -> [ stationarygxwu ][ leftgxwl ] -> [ stationarygxwl ][ rightgxwr ] -> [ stationarygxwr ][ downgxwd ] -> [ stationarygxwd ][ leftbx ] -> [ leftbl ][ rightbx ] -> [ rightbr ][ downbx ] -> [ downbd ][ upbx ] -> [ upbu ][ ag ] -> [  ][ tag ] -> [ ag ] again[ movingplayer ] -> [ tagmovingplayer ] again[ actionplayer ] -> [ tagactionplayer ] again SFX1[ upbxwu ] -> [ stationarybxwu ][ leftbxwl ] -> [ stationarybxwl ][ rightbxwr ] -> [ stationarybxwr ][ downbxwd ] -> [ stationarybxwd ][ > bx | rx ] -> [ stationarybx | rx ][ movinggxstay ] -> [ stationarygxstay ][ movinggx ] -> SFX2[ movingbx ] -> SFX3[ movingrx ] -> SFX4[ > gx |  | < gx ] -> [  | randomblood |  ] SFX5vertical [ > gx |  ] -> [ > gx | v t ]horizontal [ > gx |  ] -> [ > gx | ht ]vertical [ > gx | ht ] -> [  | randombloodht ] SFX5horizontal [ > gx | v t ] -> [  | randombloodv t ] SFX5[ ht ] -> [  ][ v t ] -> [  ][ uprxsu1 ] -> [ uprxsu1togg1 ] SFX6[ leftrxsl1 ] -> [ leftrxsl1togg1 ] SFX6[ downrxsd1 ] -> [ downrxsd1togg1 ] SFX6[ rightrxsr1 ] -> [ rightrxsr1togg1 ] SFX6[ s1spikes ] [ togg1 ] -> [ s1temp ] [ togg1 ][ s1nospikesnotemp ] [ togg1 ] -> [ s1spikes ] [ togg1 ][ uprxsu2 ] -> [ uprxsu2togg2 ] SFX6[ leftrxsl2 ] -> [ leftrxsl2togg2 ] SFX6[ downrxsd2 ] -> [ downrxsd2togg2 ] SFX6[ rightrxsr2 ] -> [ rightrxsr2togg2 ] SFX6[ s2spikes ] [ togg2 ] -> [ s2temp ] [ togg2 ][ s2nospikesnotemp ] [ togg2 ] -> [ s2spikes ] [ togg2 ][ togg1 ] [ bulls2 ] -> [ togg1 ] [  ][ togg1 ] [ bulls ] -> [ togg1 ] [ bulls2 ][ temp ] -> [  ][ togg1 ] -> [  ][ togg2 ] -> [  ][ uprxwu ] -> [ wu ][ leftrxwl ] -> [ wl ][ rightrxwr ] -> [ wr ][ downrxwd ] -> [ wd ]late [ bxs ] -> [ srandombloodstay ] SFX0late [ bxgx ] -> [ gxrandombloodstay ] SFX0late [ gxs ] -> [ srandomblood ] SFX5late [ gxrx ] -> [ randomblood ] SFX5
 
 WINCONDITIONS
 
@@ -426,7 +494,6 @@ x####
 ########
 
 ########
-
 #!!!...#
 #$.....#
 #4..%#7#
@@ -436,7 +503,6 @@ x####
 ########
 
 #######
-
 #4@].*#
 #!6/!.#
 y######
@@ -448,7 +514,6 @@ y######
 #############
 
 #######
-
 #5s...#
 #!:!^$#
 #$..%$#

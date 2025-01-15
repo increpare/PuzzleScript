@@ -1,60 +1,77 @@
 ps_game
+  prelude
+    prelude_data
+      Author
+      Loneship Games.
+    prelude_data
+      Title
+      Drainage
+    prelude_data
+      again_interval
+      0.03
+    prelude_data	run_rules_on_level_start
   objects_section
     object_data
-      object_name	background
-      legend_key	l
-      colors
-        color	ightblue
+      object_line
+        object_name	background
+      color_line
+        color	lightblue
     object_data
-      object_name	w
-      legend_key	b
-      colors
-        color	lue
+      object_line
+        object_name	w
+      color_line
+        color	blue
     object_data
-      object_name	w_L
-      legend_key	b
-      colors
-        color	lue
+      object_line
+        object_name	w_L
+      color_line
+        color	blue
+        color	lightblue
     object_data
-      object_name	lightblue
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	01000
     object_data
-      object_name	01000
-      legend_key	1
-      colors
-        color	0001
+      object_line
+        object_name	10001
+      color_line
+        color	01110
     object_data
-      object_name	01110
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	w_R
     object_data
-      object_name	w_R
-      legend_key	b
-      colors
-        color	lue
+      object_line
+        object_name	blue
+        legend_key
+          l
+          i
+          g
+          h
+          t
+          b
+          l
+          u
+          e
+      color_line
+        color	00000
     object_data
-      object_name	lightblue
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00010
+      color_line
+        color	10001
     object_data
-      object_name	00010
-      legend_key	1
-      colors
-        color	0001
+      object_line
+        object_name	01110
+      color_line
+        color	00000
     object_data
-      object_name	01110
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	w_D
-      legend_key	b
-      colors
-        color	lue
+      object_line
+        object_name	w_D
+      color_line
+        color	blue
         color	lightblue
       sprite
         ['0' '0' '0' '0' '0']
@@ -63,35 +80,33 @@ ps_game
         ['0' '0' '1' '0' '0']
         ['0' '0' '1' '0' '0']
     object_data
-      object_name	wall
-      legend_key	b
-      colors
-        color	rown
+      object_line
+        object_name	wall
+      color_line
+        color	brown
     object_data
-      object_name	player
-      legend_key	g
-      colors
-        color	reen
+      object_line
+        object_name	player
+      color_line
+        color	green
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '.' '0' '.' '0']
         ['0' '0' '0' '0' '0']
         ['0' '.' '.' '.' '0']
         ['0' '0' '0' '0' '0']
-      
-
   legend_section
     legend_data
-      .
+      . =
       object_name	background
     legend_data
-      #
+      # =
       object_name	wall
     legend_data
-      p
+      p =
       object_name	player
     legend_data
-      water
+      water =
       object_name	w
       legend_operation
         object_name	w_L
@@ -100,7 +115,7 @@ ps_game
       legend_operation
         object_name	w_D
     legend_data
-      solid
+      solid =
       object_name	wall
       legend_operation
         object_name	w
@@ -109,10 +124,8 @@ ps_game
       object_name	background
     layer_data
       object_name	wall
-    layer_data
       object_name	water
       object_name	w_L
-    layer_data
       object_name	w_R
       object_name	w_D
     layer_data
@@ -125,131 +138,77 @@ ps_game
             rule_content	water
           ->
           rule_part
-            rule_content
-              stationary
-              w
-          
-
+            rule_content	stationary
+            rule_content	w
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content	water
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	w
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	n
-            rule_content	o
-            rule_content	w
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	r
+            rule_content	no
+            rule_content	wall
+            rule_content	no
+            rule_content	water
           ->
           rule_part
-            rule_content
-              down
-              w_D
+            rule_content	down
+            rule_content	w_D
             cell_border
-          command
-            command_keyword	again
-          
-
+          prefix	again
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content	w_D
             cell_border
-            rule_content	w
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	wall
           ->
           rule_part
-            rule_content
-              stationary
-              w
-            cell_border
+            rule_content	stationary
             rule_content	w
-            rule_content	a
-            rule_content	l
-            rule_content	l
-          command
-            command_keyword	again
-          
-
+            cell_border
+            rule_content	wall
+          prefix	again
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content	water
             cell_border
-            rule_content	w
-            rule_content	_
-            rule_content	D
+            rule_content	w_D
           ->
           rule_part
-            rule_content
-              right
-              w_R
+            rule_content	right
+            rule_content	w_R
             cell_border
-            rule_content	w
-            rule_content	_
-            rule_content	D
-          command
-            command_keyword	again
-          
-
+            rule_content	w_D
+          prefix	again
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content	w_D
             cell_border
-            rule_content	w
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	r
+            rule_content	water
           ->
           rule_part
             rule_content	w_D
             cell_border
-            rule_content	l
-            rule_content	e
-            rule_content	f
-            rule_content	t
-            rule_content	w
-            rule_content	_
-            rule_content	L
-          command
-            command_keyword	again
-          
-
+            rule_content	left
+            rule_content	w_L
+          prefix	again
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content	w
             cell_border
-            rule_content	w
-            rule_content	_
-            rule_content	r
+            rule_content	w_r
           ->
           rule_part
-            rule_content
-              right
-              w_r
+            rule_content	right
+            rule_content	w_r
             cell_border
-            rule_content	w
-            rule_content	_
-            rule_content	r
-          command
-            command_keyword	again
-          
-
+            rule_content	w_r
+          prefix	again
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content	w_l
             cell_border
@@ -258,19 +217,11 @@ ps_game
           rule_part
             rule_content	w_l
             cell_border
-            rule_content	l
-            rule_content	e
-            rule_content	f
-            rule_content	t
-            rule_content	w
-            rule_content	_
-            rule_content	l
-          command
-            command_keyword	again
-          
-
+            rule_content	left
+            rule_content	w_l
+          prefix	again
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content	w_D
             cell_border
@@ -279,118 +230,81 @@ ps_game
           rule_part
             rule_content	w_d
             cell_border
-            rule_content
-              right
-              w
-          
-
+            rule_content	right
+            rule_content	w
         rule_data
-          right
+          prefix	right
           rule_part
-            rule_content
-              right
-              w
+            rule_content	right
+            rule_content	w
             cell_border
             rule_content	w
           ->
           rule_part
-            rule_content
-              left
-              w
+            rule_content	left
+            rule_content	w
             cell_border
             rule_content	w
-          
-
         rule_data
-          horizontal
+          prefix	horizontal
           rule_part
             rule_content	solid
             cell_border
             rule_content	w
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	s
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
+            rule_content	no
+            rule_content	solid
           ->
           rule_part
             rule_content	solid
             cell_border
-            rule_content	>
-            rule_content	w
-            cell_border
-          
-
-        rule_data
-          random
-          horizontal
-          rule_part
             rule_content
-              no
-              solid
-            cell_border
-            rule_content
-              stationary
+              >
               w
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	s
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
-          ->
+        rule_data
+          prefix	random
+          prefix	horizontal
           rule_part
-            rule_content	|
-            rule_content	>
+            rule_content	no
+            rule_content	solid
+            cell_border
+            rule_content	stationary
             rule_content	w
             cell_border
-          
-
+            rule_content	no
+            rule_content	solid
+          ->
+          rule_part
+            cell_border
+            rule_content
+              >
+              w
+            cell_border
         rule_data
           rule_part
-            rule_content
-              action
-              player
-              wall
+            rule_content	action
+            rule_content	player
+            rule_content	wall
           ->
           rule_part
             rule_content	player
-          command
-            command_keyword	again
-          
-
+          prefix	again
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
             rule_content	water
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	w
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	n
-            rule_content	o
-            rule_content	w
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	r
+            rule_content	no
+            rule_content	wall
+            rule_content	no
+            rule_content	water
           ->
           rule_part
             rule_content	water
             cell_border
-          command
-            command_keyword	again
-          
-
+          prefix	again
   winconditions_section
   levels_section
     level_data	[['#' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#' '#']

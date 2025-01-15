@@ -1,50 +1,64 @@
+title Sokubunny and the colored Boxes
+author Lucas Boedeker
+homepage www.l-boe.de
+
 OBJECTS
 
-BackgroundLIGHTGREEN GREEN11111
+Background
+LIGHTGREEN GREEN
+11111
 01111
 11101
 11111
-10111
+1011
 
-RedTargetblack Red.....
+RedTarget
+black Red
+.....
 .000.
 .010.
 .000.
-.....
+....
 
-BlueTargetblack Blue.....
+BlueTarget
+black Blue
+.....
 .000.
 .010.
 .000.
-.....
+....
 
-WallBROWN DARKBROWN00010
+Wall
+BROWN DARKBROWN
+00010
 11111
 01000
 11111
-00010
+0001
 
-PlayerWhite
-OrangeWhite Blue.0.0.
+Player
+White Orange White Blue
+.0.0.
 .0.0.
 .000.
 23332
-.3.3.
+.3.3
 
-RedCrateRed00000
-0...0
-0...0
-0...0
+RedCrate
+Red
 00000
+0...0
+0...0
+0...0
+0000
 
-BlueCrateBlue00000
-0...0
-0...0
-0...0
+BlueCrate
+Blue
 00000
-
-
-
+0...0
+0...0
+0...0
+0000
 
 
 LEGEND
@@ -64,13 +78,11 @@ COLLISIONLAYERS
 
 Background
 Target
-Player
-Wall, Crate
+Player, Wall, Crate
 
 RULES
 
-[ > Player | Crate ] -> [ > Player | >Crate ] 
-
+[ > Player | Crate ] -> [ > Player | > Crate ]
 
 WINCONDITIONS
 
@@ -80,7 +92,6 @@ All BlueTarget on BlueCrate
 LEVELS
 
 ######
-
 #....#
 #.NRT#
 #p.B##
@@ -144,7 +155,6 @@ LEVELS
 #######
 
 ######
-
 #..###
 #rn###
 #tbp.#
@@ -152,7 +162,6 @@ LEVELS
 ######
 
 ########
-
 ###..###
 #....###
 #.#..###
@@ -170,7 +179,6 @@ LEVELS
 #######
 
 #########
-
 ##...n.##
 #...##.##
 #.prtb..#
@@ -178,7 +186,6 @@ LEVELS
 #########
 
 ######
-
 #....#
 #.PB.#
 #.R..#
@@ -186,7 +193,6 @@ LEVELS
 ###T##
 
 #######
-
 ##....#
 ##.B..#
 #.RP#N#
@@ -206,7 +212,6 @@ LEVELS
 #..##
 
 ....P
-
 .B.RT
 .T.R#
 ##N.#
@@ -224,7 +229,6 @@ T.#.#
 #.P..
 
 #######
-
 #TN...#
 #...R.#
 ##.#B.#
@@ -232,7 +236,6 @@ T.#.#
 #######
 
 ######
-
 #..###
 #.R.N#
 #T.B.#
@@ -246,7 +249,6 @@ T.#.#
 #######
 
 ####.#
-
 #P#.#.
 .....#
 .BRT..

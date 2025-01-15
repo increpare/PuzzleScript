@@ -1,36 +1,48 @@
+title Clones
+author Jack Fritz
+homepage www.playfulsystems.com
+
 OBJECTS
 
-Backgroundblack00000
+Background
+black
 00000
 00000
 00000
 00000
+0000
 
-Wallyellow00000
+Wall
+yellow
 00000
 00000
 00000
 00000
+0000
 
-Playerdarkred white00000
+Player
+darkred white
+00000
 01010
 00000
 01110
-00000
+0000
 
-Cratelightblue00000
-0...0
-0...0
-0...0
+Crate
+lightblue
 00000
+0...0
+0...0
+0...0
+0000
 
-Targetwhite.....
-.000.
-.000.
-.000.
+Target
+white
 .....
-
-
+.000.
+.000.
+.000.
+....
 
 
 LEGEND
@@ -44,14 +56,12 @@ T = Target
 COLLISIONLAYERS
 
 Background
-Player
-Wall, Crate
+Player, Wall, Crate
 Target
 
 RULES
 
-[ > Player | Crate ] -> [ > Player | >Crate ] 
-
+[ > Player | Crate ] -> [ > Player | > Crate ]
 
 WINCONDITIONS
 
@@ -88,7 +98,6 @@ w..................w
 wwwwwwwwwwwwwwwwwwww
 
 wwwwwwwwwwwwwwwwwwww
-
 wt.................w
 wpcccccccccccccccccw
 w..................w
@@ -106,7 +115,6 @@ w..................w
 wwwwwwwwwwwwwwwwwwww
 
 wwwwwwwwwwwwwwww
-
 w.c.w.....w....w
 w.c.w..t..w....w
 w.c.w.....w....w
@@ -128,7 +136,6 @@ wtp.wp....w.p..w
 wwwwwwwwwwwwwwww
 
 wwwwwwwwwwwwwwwwwwww
-
 wt.................w
 wpcccccccccccccccccw
 w..................w
@@ -150,7 +157,6 @@ w..................w
 wwwwwwwwwwwwwwwwwwww
 
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-
 w.................twt.................w
 wcccccccccccccccccpwpcccccccccccccccccw
 w..................w..................w

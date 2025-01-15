@@ -1,83 +1,113 @@
+title Sorx-Aubi
+author Ali Nikkhah
+homepage twitter.com/_AliNikk__
+run_rules_on_level_start
+
 OBJECTS
 
-BackgroundWhite00000
+Background
+White
 00000
 00000
 00000
 00000
+0000
 
-TargetDarkBlue.....
+Target
+DarkBlue
+.....
 .000.
 .0.0.
 .000.
-.....
+....
 
-WallLightGrey00000
+Wall
+LightGrey
 00000
 00000
 00000
 00000
+0000
 
-NormalPlayerGray DarkGray..0..
+NormalPlayer
+Gray DarkGray
+..0..
 .111.
 01.10
 .111.
-..0..
+..0.
 
-BrokenPlayerGray DarkGray..0..
+BrokenPlayer
+Gray DarkGray
+..0..
 .111.
 01.10
 ...1.
-..0..
+..0.
 
-SorxCrateLightRed00000
-0...0
-0...0
-0...0
+SorxCrate
+LightRed
 00000
+0...0
+0...0
+0...0
+0000
 
-AubiCrateLightBlue00000
-0...0
-0...0
-0...0
+AubiCrate
+LightBlue
 00000
+0...0
+0...0
+0...0
+0000
 
-SorxxCrateRed LightRed00000
+SorxxCrate
+Red LightRed
 00000
 00000
 00000
 00000
+0000
 
-AubiiCrateBlue LightBlue.000.
-00000
-00000
-00000
+AubiiCrate
+Blue LightBlue
 .000.
+00000
+00000
+00000
+.000
 
-AubiCorner1Blue....0
-.....
-.....
-.....
-.....
-
-AubiCorner2Blue.....
-.....
-.....
-.....
+AubiCorner1
+Blue
 ....0
+.....
+.....
+.....
+....
 
-AubiCorner3Blue.....
+AubiCorner2
+Blue
 .....
 .....
 .....
+.....
+....
+
+AubiCorner3
+Blue
+.....
+.....
+.....
+.....
+0...
+
+AubiCorner4
+Blue
 0....
-
-AubiCorner4Blue0....
 .....
 .....
 .....
-.....
-
+....
 
 
 LEGEND
@@ -100,9 +130,7 @@ COLLISIONLAYERS
 
 Background
 Target
-Player, Wall
-SorxxCrate, SorxCrate
-AubiiCrate, AubiCrate
+Player, Wall, SorxxCrate, SorxCrate, AubiiCrate, AubiCrate
 AubiCorner1
 AubiCorner2
 AubiCorner3
@@ -110,21 +138,11 @@ AubiCorner4
 
 RULES
 
-[ > NormalPlayer][BrokenPlayer ] -> [ > NormalPlayer][<BrokenPlayer ] 
-startloop
-[ > Player | AubiCrate ] -> [ > Player | >AubiCrate ] 
-[ > Player | AubiiCrate ] -> [ > Player | >AubiiCrate ] 
-+ rigid [ moving AubiiCrate | AubiiCrate ] -> [ moving AubiiCrate | movingAubiiCrate ] 
-+ [ > Crate | AubiiCrate ] -> [ > Crate | >AubiiCrate ] 
-[ > Crate | AubiCrate ] -> [ > Crate | >AubiCrate ] 
-endloop
-late [ AubiCrate | SorxxCrate ] -> [ SorxCrate | SorxxCrate ] 
-late [ SorxCrate | AubiiCrate ] -> [ AubiCrate | AubiiCrate ] 
-[ AubiCorner |  ] -> [ | ] 
-late [ AubiCorner |  ] -> [ | ] 
-late RIGHT [ AubiiCrate | AubiiCrate ] -> [ AubiiCrate AubiCorner1 AubiCorner2 | AubiiCrateAubiCorner3AubiCorner4 ] 
-late DOWN [ AubiiCrate | AubiiCrate ] -> [ AubiiCrate AubiCorner2 AubiCorner3 | AubiiCrateAubiCorner1AubiCorner4 ] 
+[ > NormalPlayer ] [ BrokenPlayer ] -> [ > NormalPlayer ] [ < BrokenPlayer ]startloop
 
+[ > Player | AubiCrate ] -> [ > Player | > AubiCrate ][ > Player | AubiiCrate ] -> [ > Player | > AubiiCrate ]+ rigid [ movingAubiiCrate | AubiiCrate ] -> [ movingAubiiCrate | movingAubiiCrate ]+ [ > Crate | AubiiCrate ] -> [ > Crate | > AubiiCrate ][ > Crate | AubiCrate ] -> [ > Crate | > AubiCrate ]endloop
+
+late [ AubiCrate | SorxxCrate ] -> [ SorxCrate | SorxxCrate ]late [ SorxCrate | AubiiCrate ] -> [ AubiCrate | AubiiCrate ][ AubiCorner |  ] -> [  |  ]late [ AubiCorner |  ] -> [  |  ]late RIGHT [ AubiiCrate | AubiiCrate ] -> [ AubiiCrateAubiCorner1AubiCorner2 | AubiiCrateAubiCorner3AubiCorner4 ]late DOWN [ AubiiCrate | AubiiCrate ] -> [ AubiiCrateAubiCorner2AubiCorner3 | AubiiCrateAubiCorner1AubiCorner4 ]
 
 WINCONDITIONS
 
@@ -193,7 +211,6 @@ LEVELS
 #########
 
 #######
-
 #.pb..#
 #r#b..#
 #.Or..#
@@ -203,7 +220,6 @@ LEVELS
 #######
 
 ##########
-
 #........#
 #........#
 #..xrxx..#
@@ -237,7 +253,6 @@ LEVELS
 ##########
 
 ###########
-
 ##....r####
 #...rr..###
 #r.rr....##

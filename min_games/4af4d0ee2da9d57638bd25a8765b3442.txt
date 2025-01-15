@@ -1,112 +1,166 @@
+title Fabric
+run_rules_on_level_start
+noaction
+
 OBJECTS
 
-Backgrounddarkblue
-ScarfTilelightgray white00000
-01110
-01110
-01110
-00000
+Background
+darkblue
 
-ScarfCutTilelightgray white00000
+ScarfTile
+lightgray white
 00000
-00000
-00000
-00000
+01110
+01110
+01110
+0000
 
-StarTilelightgray white00000
+ScarfCutTile
+lightgray white
+00000
+00000
+00000
+00000
+0000
+
+StarTile
+lightgray white
+00000
 01110
 01010
 01110
-00000
+0000
 
-NotTilelightgrey white
-......000.
-.0.0..000.
-.....HeroGrey
-darkgreydarkgreen grey21212
-00000
-00000
-11111
-11111
-
-RedHerored
-blackdarkred yellow31313
-00000
-00000
-22222
-22222
-
-RedHeroBackred
-blackdarkred yellow31313
-00000
-00000
-00000
-22222
-
-RedScarfStarred yellow.....
+NotTile
+lightgrey white
+.....
 .000.
 .0.0.
 .000.
-.....
+....
 
-StarGreygrey.....
-.....
-..0..
-.....
-.....
+HeroGrey
+darkgrey darkgreen grey
+21212
+00000
+00000
+11111
+1111
 
-Staryellow.....
-.....
-..0..
-.....
-.....
+RedHero
+red black darkred yellow
+31313
+00000
+00000
+22222
+2222
 
-RedScarfred yellow.....
-.000.
-.000.
-.000.
-.....
+RedHeroBack
+red black darkred yellow
+31313
+00000
+00000
+00000
+2222
 
-RedScarfTailred yellow.....
+RedScarfStar
+red yellow
+.....
 .000.
 .0.0.
 .000.
-.....
+....
 
-RedGrowtransparent
-RedDroptransparent
-RedPicktransparent
-RedPick2transparent
-RedPick3transparent
-ToLeftred.....
-0....
-0....
-0....
+StarGrey
+grey
 .....
+.....
+..0..
+.....
+....
 
-ToRightred.....
-....0
-....0
-....0
+Star
+yellow
 .....
+.....
+..0..
+.....
+....
 
-ToUpred.000.
-.....
-.....
-.....
-.....
-
-ToDownred.....
-.....
-.....
+RedScarf
+red yellow
 .....
 .000.
+.000.
+.000.
+....
 
-Tailtransparent
-Checkblue
-Bordergrey
-ToDeletetransparent
+RedScarfTail
+red yellow
+.....
+.000.
+.0.0.
+.000.
+....
 
+RedGrow
+transparent
+
+RedDrop
+transparent
+
+RedPick
+transparent
+
+RedPick2
+transparent
+
+RedPick3
+transparent
+
+ToLeft
+red
+.....
+0....
+0....
+0....
+....
+
+ToRight
+red
+.....
+....0
+....0
+....0
+....
+
+ToUp
+red
+.000.
+.....
+.....
+.....
+....
+
+ToDown
+red
+.....
+.....
+.....
+.....
+.000
+
+Tail
+transparent
+
+Check
+blue
+
+Border
+grey
+
+ToDelete
+transparent
 
 
 LEGEND
@@ -147,17 +201,11 @@ COLLISIONLAYERS
 
 Background
 RedGrow
-RedDrop, RedPick
-RedPick2, RedPick3
+RedDrop, RedPick, RedPick2, RedPick3
 Check
-StarTile, StarGrey
-ScarfTile, HeroGrey
-NotTile, ScarfCutTile
-ToLeft, ToRight
-ToUp, ToDown
-RedHero
-RedHeroBack, RedScarf
-RedScarfTail, RedScarfStar
+StarTile, StarGrey, ScarfTile, HeroGrey, NotTile, ScarfCutTile
+ToLeft, ToRight, ToUp, ToDown
+RedHero, RedHeroBack, RedScarf, RedScarfTail, RedScarfStar
 Border
 ToDelete
 Star
@@ -165,49 +213,7 @@ Tail
 
 RULES
 
-[ > Heros | Border ] -> cancel 
-[ Check ] -> [  ] 
-[ Star ] -> [  ] 
-[ Directions no Heros no Scarfs ] -> [  ] 
-[ > RedHero | RedScarfs ] -> cancel 
-[ > RedHeroBack | RedScarfs ] -> cancel 
-[ > RedHeroBack ] -> [ > RedHero ] 
-up [ > Player ] -> [ > RedHeroBack ] 
-[ up RedHeros | noObstacles ] -> [ ToUp up RedHeros |  ] 
-[ down RedHeros | noObstacles ] -> [ ToDown down RedHeros |  ] 
-[ left RedHeros | noObstacles ] -> [ ToLeft left RedHeros |  ] 
-[ right RedHeros | noObstacles ] -> [ ToRight right RedHeros |  ] 
-[ up RedHeros | noRedScarfs ] -> [ ToUp up RedHeros |  ] 
-[ down RedHeros | noRedScarfs ] -> [ ToDown down RedHeros |  ] 
-[ left RedHeros | noRedScarfs ] -> [ ToLeft left RedHeros |  ] 
-[ right RedHeros | noRedScarfs ] -> [ ToRight right RedHeros |  ] 
-[ ToUp Scarfs ] -> [ ToUp up Scarfs ] 
-[ ToDown Scarfs ] -> [ ToDown down Scarfs ] 
-[ ToLeft Scarfs ] -> [ ToLeft left Scarfs ] 
-[ ToRight Scarfs ] -> [ ToRight right Scarfs ] 
-[ > RedScarfTail StarTile | noStarTile ] -> [ > RedScarfTail StarTile | RedPick ] 
-[ > RedScarfTail no StarTile | StarTile ] -> [ > RedScarfTail | StarTileRedPick2 ] 
-[ ToUp Scarfs ] -> [ ToUp up Scarfs ] 
-[ ToDown Scarfs ] -> [ ToDown down Scarfs ] 
-[ ToLeft Scarfs ] -> [ ToLeft left Scarfs ] 
-[ ToRight Scarfs ] -> [ ToRight right Scarfs ] 
-late down [ Directions RedScarfStar | ToUpnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
-late down [ Directions RedScarf | ToUpnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
-late up [ Directions RedScarfStar | ToDownnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
-late up [ Directions RedScarf | ToDownnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
-late right [ Directions RedScarfStar | ToLeftnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
-late right [ Directions RedScarf | ToLeftnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
-late left [ Directions RedScarfStar | ToRightnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
-late left [ Directions RedScarf | ToRightnoRedScarfs][RedHerosScarfCutTile ] -> [ |][RedHerosScarfCutTile ] 
-late [ Directions RedScarfStar | DirectionsnoRedScarfs][RedHerosStarTile ] -> [ Directions RedScarfStar | DirectionsRedScarfStar][RedHerosStarTile ] 
-late [ Directions RedScarf | DirectionsnoRedScarfs][RedHerosStarTile ] -> [ Directions RedScarf | DirectionsRedScarfStar][RedHerosStarTile ] 
-late [ Directions RedScarfStar | DirectionsnoRedScarfs][RedHerosScarfTile ] -> [ Directions RedScarfStar | DirectionsRedScarf][RedHerosScarfTile ] 
-late [ Directions RedScarf | DirectionsnoRedScarfs][RedHerosScarfTile ] -> [ Directions RedScarf | DirectionsRedScarf][RedHerosScarfTile ] 
-late [ RedHeros | DirectionsnoRedScarfs][RedHerosScarfTile ] -> [ RedHeros | DirectionsRedScarf][RedHerosScarfTile ] 
-late [ RedHeros | DirectionsnoRedScarfs][RedHerosStarTile ] -> [ RedHeros | DirectionsRedScarfStar][RedHerosStarTile ] 
-late [ StarGrey RedScarfStar ] -> [ StarGrey RedScarfStar Star ] 
-late [ StarGrey RedScarfTail ] -> [ StarGrey RedScarfTail Star ] 
-
+[ > Heros | Border ] -> cancel[ Check ] -> [  ][ Star ] -> [  ][ DirectionsnoHerosnoScarfs ] -> [  ][ > RedHero | RedScarfs ] -> cancel[ > RedHeroBack | RedScarfs ] -> cancel[ > RedHeroBack ] -> [ > RedHero ]up [ > Player ] -> [ > RedHeroBack ][ upRedHeros | noObstacles ] -> [ ToUpupRedHeros |  ][ downRedHeros | noObstacles ] -> [ ToDowndownRedHeros |  ][ leftRedHeros | noObstacles ] -> [ ToLeftleftRedHeros |  ][ rightRedHeros | noObstacles ] -> [ ToRightrightRedHeros |  ][ upRedHeros | noRedScarfs ] -> [ ToUpupRedHeros |  ][ downRedHeros | noRedScarfs ] -> [ ToDowndownRedHeros |  ][ leftRedHeros | noRedScarfs ] -> [ ToLeftleftRedHeros |  ][ rightRedHeros | noRedScarfs ] -> [ ToRightrightRedHeros |  ][ ToUpScarfs ] -> [ ToUpupScarfs ][ ToDownScarfs ] -> [ ToDowndownScarfs ][ ToLeftScarfs ] -> [ ToLeftleftScarfs ][ ToRightScarfs ] -> [ ToRightrightScarfs ][ > RedScarfTailStarTile | noStarTile ] -> [ > RedScarfTailStarTile | RedPick ][ > RedScarfTailnoStarTile | StarTile ] -> [ > RedScarfTail | StarTileRedPick2 ][ ToUpScarfs ] -> [ ToUpupScarfs ][ ToDownScarfs ] -> [ ToDowndownScarfs ][ ToLeftScarfs ] -> [ ToLeftleftScarfs ][ ToRightScarfs ] -> [ ToRightrightScarfs ]late down [ DirectionsRedScarfStar | ToUpnoRedScarfs ] [ RedHerosScarfCutTile ] -> [  |  ] [ RedHerosScarfCutTile ]late down [ DirectionsRedScarf | ToUpnoRedScarfs ] [ RedHerosScarfCutTile ] -> [  |  ] [ RedHerosScarfCutTile ]late up [ DirectionsRedScarfStar | ToDownnoRedScarfs ] [ RedHerosScarfCutTile ] -> [  |  ] [ RedHerosScarfCutTile ]late up [ DirectionsRedScarf | ToDownnoRedScarfs ] [ RedHerosScarfCutTile ] -> [  |  ] [ RedHerosScarfCutTile ]late right [ DirectionsRedScarfStar | ToLeftnoRedScarfs ] [ RedHerosScarfCutTile ] -> [  |  ] [ RedHerosScarfCutTile ]late right [ DirectionsRedScarf | ToLeftnoRedScarfs ] [ RedHerosScarfCutTile ] -> [  |  ] [ RedHerosScarfCutTile ]late left [ DirectionsRedScarfStar | ToRightnoRedScarfs ] [ RedHerosScarfCutTile ] -> [  |  ] [ RedHerosScarfCutTile ]late left [ DirectionsRedScarf | ToRightnoRedScarfs ] [ RedHerosScarfCutTile ] -> [  |  ] [ RedHerosScarfCutTile ]late [ DirectionsRedScarfStar | DirectionsnoRedScarfs ] [ RedHerosStarTile ] -> [ DirectionsRedScarfStar | DirectionsRedScarfStar ] [ RedHerosStarTile ]late [ DirectionsRedScarf | DirectionsnoRedScarfs ] [ RedHerosStarTile ] -> [ DirectionsRedScarf | DirectionsRedScarfStar ] [ RedHerosStarTile ]late [ DirectionsRedScarfStar | DirectionsnoRedScarfs ] [ RedHerosScarfTile ] -> [ DirectionsRedScarfStar | DirectionsRedScarf ] [ RedHerosScarfTile ]late [ DirectionsRedScarf | DirectionsnoRedScarfs ] [ RedHerosScarfTile ] -> [ DirectionsRedScarf | DirectionsRedScarf ] [ RedHerosScarfTile ]late [ RedHeros | DirectionsnoRedScarfs ] [ RedHerosScarfTile ] -> [ RedHeros | DirectionsRedScarf ] [ RedHerosScarfTile ]late [ RedHeros | DirectionsnoRedScarfs ] [ RedHerosStarTile ] -> [ RedHeros | DirectionsRedScarfStar ] [ RedHerosStarTile ]late [ StarGreyRedScarfStar ] -> [ StarGreyRedScarfStarStar ]late [ StarGreyRedScarfTail ] -> [ StarGreyRedScarfTailStar ]
 
 WINCONDITIONS
 
@@ -262,7 +268,6 @@ LEVELS
 ###########
 
 ######
-
 #----#
 #-78t#
 #-.7p#
@@ -270,7 +275,6 @@ LEVELS
 ######
 
 ######
-
 #----#
 #---t#
 #--8p#
@@ -286,7 +290,6 @@ LEVELS
 #########
 
 ######
-
 #78\o#
 #.7b\#
 #.##.#
@@ -294,7 +297,6 @@ LEVELS
 ######
 
 ########
-
 #.78#\o#
 #..7b\\#
 #/####+#

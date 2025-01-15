@@ -1,32 +1,62 @@
+title Flower Dance
+author quat
+background_color lightbrown
+text_color darkbrown
+require_player_movement
+color_palette 14
+again_interval 0.1
+noaction
+
 OBJECTS
 
-Background.lightbrown
-Playerred lightred.110.
+Background .
+lightbrown
+
+Player
+red lightred
+.110.
 10000
 00000
 00000
-.000.
+.000
 
-Markertransparent
-Check&brown
-......000.
-.0....000.
-.....Bud
-redgreen lightgreen
-..........
-...2....1.
-...1.Plant
-redgreen lightgreen
-..0...020.
-..01...11.
-...1.Wall #
-darkgreyEnd
-Wbrown.....
+Marker
+transparent
+
+Check &
+brown
+.....
+.000.
+.0...
+.000.
+....
+
+Bud
+red green lightgreen
+.....
+.....
+...2.
+...1.
+...1
+
+Plant
+red green lightgreen
+..0..
+.020.
+..01.
+..11.
+...1
+
+Wall #
+darkgrey
+
+End W
+brown
+.....
 .000.
 .0.0.
 .000.
-.....
-
+....
 
 
 LEGEND
@@ -41,18 +71,11 @@ End
 Check
 Marker
 Bud
-Player
-Wall, Plant
+Player, Wall, Plant
 
 RULES
 
-[ > Player | NoCollidable ] -> [ |>Player ] 
-[ Player ] -> [ Marker Player ] 
-[ Bud Player ] -> 
-[ Bud ] -> [ Plant ] 
-[ Marker no Player ] -> [ Bud ] 
-[ Player Check ] -> [ Player ] checkpoint 
-
+[ > Player | NoCollidable ] -> [  | > Player ] sfx7[ Player ] -> [ MarkerPlayer ][ BudPlayer ] -> sfx2[ Bud ] -> [ Plant ][ MarkernoPlayer ] -> [ Bud ][ PlayerCheck ] -> [ Player ] checkpoint sfx1
 
 WINCONDITIONS
 
@@ -62,7 +85,6 @@ All Player on End
 LEVELS
 
 ......................#............#.............
-
 ............#......#..#..#...#...................
 ...........###..##...#...#....#....#.............
 ...........##.##....#.#..#.#..#...#....#.........

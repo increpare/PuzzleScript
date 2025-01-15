@@ -1,10 +1,21 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      FACED
+    prelude_data
+      author
+      Daniel Haazen
+    prelude_data
+      homepage
+      www.sheepolution.com
+    prelude_data	run_rules_on_level_start
   objects_section
     object_data
-      object_name	Background
-      legend_key	B
-      colors
-        color	LACK
+      object_line
+        object_name	Background
+      color_line
+        color	BLACK
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
@@ -12,10 +23,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Player
-      legend_key	#
-      colors
-        color	2491FF
+      object_line
+        object_name	Player
+      color_line
+        color	#2491FF
         color	black
       sprite
         ['0' '0' '0' '0' '0']
@@ -24,10 +35,10 @@ ps_game
         ['0' '1' '1' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Pulling
-      legend_key	y
-      colors
-        color	ellow
+      object_line
+        object_name	Pulling
+      color_line
+        color	yellow
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '.' '0' '.']
@@ -35,10 +46,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Yellow
-      legend_key	#
-      colors
-        color	EBB000
+      object_line
+        object_name	Yellow
+      color_line
+        color	#EBB000
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
@@ -46,21 +57,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Red
-      legend_key	#
-      colors
-        color	FF5454
-      sprite
-        ['0' '0' '0' '0' '0']
-        ['0' '.' '0' '.' '0']
-        ['0' '0' '0' '0' '0']
-        ['0' '.' '.' '.' '0']
-        ['0' '0' '0' '0' '0']
-    object_data
-      object_name	Green
-      legend_key	#
-      colors
-        color	009900
+      object_line
+        object_name	Red
+      color_line
+        color	#FF5454
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '.' '0' '.' '0']
@@ -68,10 +68,10 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Purple
-      legend_key	#
-      colors
-        color	C500FF
+      object_line
+        object_name	Green
+      color_line
+        color	#009900
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '.' '0' '.' '0']
@@ -79,10 +79,10 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Grey
-      legend_key	#
-      colors
-        color	646464
+      object_line
+        object_name	Purple
+      color_line
+        color	#C500FF
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '.' '0' '.' '0']
@@ -90,10 +90,10 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Orange
-      legend_key	#
-      colors
-        color	FF8A24
+      object_line
+        object_name	Grey
+      color_line
+        color	#646464
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '.' '0' '.' '0']
@@ -101,10 +101,21 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Red2
-      legend_key	#
-      colors
-        color	FF5454
+      object_line
+        object_name	Orange
+      color_line
+        color	#FF8A24
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '.' '0' '.' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '.' '.' '.' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_line
+        object_name	Red2
+      color_line
+        color	#FF5454
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '.' '0' '.']
@@ -112,10 +123,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Green2
-      legend_key	#
-      colors
-        color	009900
+      object_line
+        object_name	Green2
+      color_line
+        color	#009900
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '.' '0' '.']
@@ -123,10 +134,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Purple2
-      legend_key	#
-      colors
-        color	C500FF
+      object_line
+        object_name	Purple2
+      color_line
+        color	#C500FF
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '.' '0' '.']
@@ -134,10 +145,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Grey2
-      legend_key	#
-      colors
-        color	646464
+      object_line
+        object_name	Grey2
+      color_line
+        color	#646464
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '.' '0' '.']
@@ -145,10 +156,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Orange2
-      legend_key	#
-      colors
-        color	FF8A24
+      object_line
+        object_name	Orange2
+      color_line
+        color	#FF8A24
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '.' '0' '.']
@@ -157,33 +168,33 @@ ps_game
         ['.' '.' '.' '.' '.']
   legend_section
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      #
+      # =
       object_name	Yellow
     legend_data
-      @
+      @ =
       object_name	Player
       legend_operation
         object_name	Yellow
     legend_data
-      P
+      P =
       object_name	Purple
     legend_data
-      R
+      R =
       object_name	Red
     legend_data
-      G
+      G =
       object_name	Green
     legend_data
-      E
+      E =
       object_name	Grey
     legend_data
-      O
+      O =
       object_name	Orange
     legend_data
-      FACE1
+      FACE1 =
       object_name	Purple
       legend_operation
         object_name	Red
@@ -194,7 +205,7 @@ ps_game
       legend_operation
         object_name	Orange
     legend_data
-      FACE2
+      FACE2 =
       object_name	Purple2
       legend_operation
         object_name	Red2
@@ -205,7 +216,7 @@ ps_game
       legend_operation
         object_name	Orange2
     legend_data
-      FACE
+      FACE =
       object_name	face1
       legend_operation
         object_name	face2
@@ -226,222 +237,145 @@ ps_game
       rule_block_once
         rule_data
           rule_part
-            rule_content
-              action
-              player
-              no
-              pulling
-          ->
-          rule_part
-            rule_content
-              player
-              pulling
-          
-
-        rule_data
-          rule_part
-            rule_content
-              action
-              player
-              pulling
+            rule_content	action
+            rule_content	player
+            rule_content	no
+            rule_content	pulling
           ->
           rule_part
             rule_content	player
-          
-
+            rule_content	pulling
+        rule_data
+          rule_part
+            rule_content	action
+            rule_content	player
+            rule_content	pulling
+          ->
+          rule_part
+            rule_content	player
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	R
-            rule_content	e
-            rule_content	d
+            rule_content	Red
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	R
-            rule_content	e
-            rule_content	d
-          
-
+            rule_content
+              >
+              Red
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	G
-            rule_content	r
-            rule_content	e
-            rule_content	e
-            rule_content	n
+            rule_content	Green
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	G
-            rule_content	r
-            rule_content	e
-            rule_content	e
-            rule_content	n
-          
-
+            rule_content
+              >
+              Green
         rule_data
           rule_part
             rule_content
               <
               Player
-              pulling
+            rule_content	pulling
             cell_border
-            rule_content	P
-            rule_content	u
-            rule_content	r
-            rule_content	p
-            rule_content	l
-            rule_content	e
+            rule_content	Purple
           ->
           rule_part
             rule_content
               <
               Player
             cell_border
-            rule_content	<
-            rule_content	P
-            rule_content	u
-            rule_content	r
-            rule_content	p
-            rule_content	l
-            rule_content	e
-          
-
+            rule_content
+              <
+              Purple
         rule_data
           rule_part
             rule_content
               >
               Player
-              no
-              Yellow
-              no
-              pulling
+            rule_content	no
+            rule_content	Yellow
+            rule_content	no
+            rule_content	pulling
             cell_border
-            rule_content	O
-            rule_content	r
-            rule_content	a
-            rule_content	n
-            rule_content	g
-            rule_content	e
+            rule_content	Orange
           ->
           rule_part
             rule_content	Orange
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
-          command
-            sound
-              sound_id	1
-          
-
+            rule_content	Player
+          prefix	sfx1
         rule_data
           rule_part
             rule_content
               <
               Player
-              pulling
+            rule_content	pulling
             cell_border
-            rule_content	R
-            rule_content	e
-            rule_content	d
+            rule_content	Red
           ->
           rule_part
             rule_content
               <
               Player
             cell_border
-            rule_content	<
-            rule_content	R
-            rule_content	e
-            rule_content	d
-          
-
+            rule_content
+              <
+              Red
         rule_data
           rule_part
             rule_content
               >
               Player
-              pulling
+            rule_content	pulling
           ->
           rule_part
             rule_content
               >
               Player
-          
-
         rule_data
           rule_part
             rule_content
               >
               Face1
             cell_border
-            rule_content	Y
-            rule_content	e
-            rule_content	l
-            rule_content	l
-            rule_content	o
-            rule_content	w
+            rule_content	Yellow
           ->
           rule_part
             rule_content	Face1
             cell_border
-            rule_content	Y
-            rule_content	e
-            rule_content	l
-            rule_content	l
-            rule_content	o
-            rule_content	w
-          
-
+            rule_content	Yellow
         rule_data
           rule_part
             rule_content
               >
               Face1
             cell_border
-            rule_content	F
-            rule_content	a
-            rule_content	c
-            rule_content	e
-            rule_content	1
+            rule_content	Face1
           ->
           rule_part
             rule_content	Face1
             cell_border
-            rule_content	F
-            rule_content	a
-            rule_content	c
-            rule_content	e
-            rule_content	1
-          
-
+            rule_content	Face1
         rule_data
           rule_part
             rule_content	Face2
           ->
           rule_part
-          
-
         rule_data
           rule_part
             rule_content	Purple
@@ -462,15 +396,7 @@ ps_game
             cell_border
             cell_border
             cell_border
-            rule_content	P
-            rule_content	u
-            rule_content	r
-            rule_content	p
-            rule_content	l
-            rule_content	e
-            rule_content	2
-          
-
+            rule_content	Purple2
         rule_data
           rule_part
             rule_content	Red
@@ -491,12 +417,7 @@ ps_game
             cell_border
             cell_border
             cell_border
-            rule_content	R
-            rule_content	e
-            rule_content	d
-            rule_content	2
-          
-
+            rule_content	Red2
         rule_data
           rule_part
             rule_content	Green
@@ -517,14 +438,7 @@ ps_game
             cell_border
             cell_border
             cell_border
-            rule_content	G
-            rule_content	r
-            rule_content	e
-            rule_content	e
-            rule_content	n
-            rule_content	2
-          
-
+            rule_content	Green2
         rule_data
           rule_part
             rule_content	Grey
@@ -545,13 +459,7 @@ ps_game
             cell_border
             cell_border
             cell_border
-            rule_content	G
-            rule_content	r
-            rule_content	e
-            rule_content	y
-            rule_content	2
-          
-
+            rule_content	Grey2
         rule_data
           rule_part
             rule_content	Orange
@@ -572,20 +480,11 @@ ps_game
             cell_border
             cell_border
             cell_border
-            rule_content	O
-            rule_content	r
-            rule_content	a
-            rule_content	n
-            rule_content	g
-            rule_content	e
-            rule_content	2
-          
-
+            rule_content	Orange2
         rule_data
           rule_part
-            rule_content
-              orthogonal
-              Face1
+            rule_content	orthogonal
+            rule_content	Face1
             cell_border
             cell_border
             cell_border
@@ -593,16 +492,11 @@ ps_game
             cell_border
             cell_border
             cell_border
-            rule_content	F
-            rule_content	a
-            rule_content	c
-            rule_content	e
-            rule_content	2
+            rule_content	Face2
           ->
           rule_part
-            rule_content
-              orthogonal
-              Face1
+            rule_content	orthogonal
+            rule_content	Face1
             cell_border
             cell_border
             cell_border
@@ -610,23 +504,8 @@ ps_game
             cell_border
             cell_border
             cell_border
-            rule_content	o
-            rule_content	r
-            rule_content	t
-            rule_content	h
-            rule_content	o
-            rule_content	g
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	l
-            rule_content	F
-            rule_content	a
-            rule_content	c
-            rule_content	e
-            rule_content	2
-          
-
+            rule_content	orthogonal
+            rule_content	Face2
   winconditions_section
     condition_data
       No
@@ -634,7 +513,6 @@ ps_game
       on
       object_name	face2
   levels_section
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' 'r' '.' '.' 'r' '#' '#' '.' '.' '.' '.' '.' '#']
@@ -642,7 +520,6 @@ ps_game
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' 'r' '.' '.' '#' '#' '.' '.' 'r' '.' 'r' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
@@ -650,7 +527,6 @@ ps_game
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
@@ -658,7 +534,6 @@ ps_game
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
@@ -666,7 +541,6 @@ ps_game
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
@@ -674,7 +548,6 @@ ps_game
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' 'e' '.' '.' '#' '#' '.' 'e' '.' 'e' '.' '#']
@@ -682,7 +555,6 @@ ps_game
  ['#' '.' '.' 'e' '.' '.' '#' '#' '.' 'e' '.' 'e' '.' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' 'r' '.' 'r' 'p' '#' '#' '.' 'o' '.' 'e' 'g' '#']
@@ -690,7 +562,6 @@ ps_game
  ['#' '.' 'e' 'g' '.' '.' '#' '#' '.' 'p' 'e' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' '.' 'o' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'p' '.' 'p' '.' 'o' '#' '#' 'g' 'g' 'r' 'r' '.' '#']
  ['#' 'r' 'r' '.' '.' 'p' '#' '#' '.' '.' 'o' 'g' '.' '#']
@@ -698,7 +569,6 @@ ps_game
  ['#' 'o' 'r' '.' 'r' 'r' '#' '#' '.' 'o' 'p' '.' '.' '#']
  ['#' '.' '.' 'p' '.' '.' '#' '#' 'o' '.' '.' 'p' 'o' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' 'r' '.' '.' '.' '#' '#' '.' 'o' '.' 'o' 'p' '#']
  ['#' '.' '.' 'r' '.' 'r' '#' '#' '.' 'r' 'r' 'r' '.' '#']
@@ -706,7 +576,6 @@ ps_game
  ['#' 'g' '.' '.' '.' 'g' '#' '#' '.' '.' 'o' '.' 'o' '#']
  ['#' 'r' '.' '.' 'p' 'r' '#' '#' '.' '.' 'r' 'g' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' 'g' 'r' 'o' '#' '#' '.' 'g' '.' '.' 'r' '#']
  ['#' 'r' '.' 'g' '.' '.' '#' '#' '.' '.' 'r' 'p' '.' '#']
@@ -714,7 +583,6 @@ ps_game
  ['#' 'o' 'p' '.' '.' '.' '#' '#' '.' '.' 'g' 'p' 'g' '#']
  ['#' 'p' '.' 'o' '.' 'e' '#' '#' 'o' '.' 'e' '.' 'r' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'p' '.' 'e' '.' 'e' '#' '#' 'p' '.' 'g' 'p' '.' '#']
  ['#' 'e' '.' 'g' 'p' '.' '#' '#' '.' 'p' 'p' '.' 'o' '#']
@@ -722,7 +590,6 @@ ps_game
  ['#' '.' 'r' 'p' '.' '.' '#' '#' '.' '.' 'g' 'o' 'r' '#']
  ['#' '.' 'o' 'r' 'o' 'r' '#' '#' 'r' '.' '.' 'o' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' 'r' '.' 'r' 'p' '#' '#' 'r' '.' 'p' '.' '.' '#']
  ['#' 'p' '.' '.' 'g' 'p' '#' '#' 'p' '.' 'r' 'p' 'o' '#']
@@ -730,7 +597,6 @@ ps_game
  ['#' '.' 'e' 'r' 'g' '.' '#' '#' '.' 'p' 'o' 'g' '.' '#']
  ['#' '.' '.' '.' 'p' 'r' '#' '#' '.' 'r' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'e' 'p' 'o' '.' 'r' '#' '#' 'r' '.' 'e' 'p' '.' '#']
  ['#' 'g' '.' '.' 'p' 'r' '#' '#' 'r' 'g' '.' '.' '.' '#']
@@ -738,7 +604,6 @@ ps_game
  ['#' 'g' '.' '.' 'r' 'e' '#' '#' '.' 'r' 'g' 'p' 'p' '#']
  ['#' 'o' '.' '.' '.' '.' '#' '#' '.' 'o' '.' '.' 'o' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'e' 'g' '.' 'o' '.' '#' '#' '.' '.' '.' 'g' '.' '#']
  ['#' '.' '.' 'g' '.' '.' '#' '#' 'e' '.' '.' 'r' '.' '#']
@@ -746,7 +611,6 @@ ps_game
  ['#' 'p' 'e' '.' 'g' 'o' '#' '#' '.' 'p' '.' 'o' 'p' '#']
  ['#' '.' '.' '.' 'g' '.' '#' '#' 'e' 'e' 'r' 'p' 'r' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'e' '.' 'o' '.' 'o' '#' '#' '.' '.' '.' '.' 'e' '#']
  ['#' 'g' 'r' '.' '.' '.' '#' '#' 'e' '.' '.' '.' '.' '#']
@@ -754,7 +618,6 @@ ps_game
  ['#' '.' '.' 'o' 'r' 'p' '#' '#' 'g' 'p' '.' 'r' 'e' '#']
  ['#' '.' 'e' 'o' 'p' 'e' '#' '#' '.' 'p' '.' 'e' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' 'r' '.' 'p' '.' '#' '#' 'r' 'g' '.' '.' '.' '#']
  ['#' 'o' 'p' '.' '.' 'p' '#' '#' 'p' '.' '.' 'r' '.' '#']
@@ -762,7 +625,6 @@ ps_game
  ['#' '.' '.' 'r' 'o' '.' '#' '#' 'p' 'p' 'o' 'p' '.' '#']
  ['#' '.' '.' 'r' '.' 'p' '#' '#' 'p' 'g' '.' 'r' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'o' 'g' 'p' 'p' 'o' '#' '#' '.' 'o' 'r' '.' '.' '#']
  ['#' 'p' 'r' '.' 'g' '.' '#' '#' 'g' '.' '.' 'p' 'r' '#']
@@ -770,7 +632,6 @@ ps_game
  ['#' '.' '.' '.' '.' '.' '#' '#' '.' 'g' '.' '.' 'r' '#']
  ['#' 'p' '.' 'g' '.' 'r' '#' '#' '.' 'o' '.' 'r' 'g' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'r' 'r' 'r' '.' 'r' '#' '#' '.' '.' 'p' '.' '.' '#']
  ['#' '.' '.' 'p' '.' 'g' '#' '#' 'o' 'o' 'g' '.' '.' '#']
@@ -778,7 +639,6 @@ ps_game
  ['#' '.' 'g' '.' '.' '.' '#' '#' 'g' '.' '.' '.' 'o' '#']
  ['#' 'o' 'r' 'p' 'p' '.' '#' '#' '.' 'g' '.' 'o' 'g' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'o' 'p' '.' '.' '.' '#' '#' '.' '.' '.' 'g' 'p' '#']
  ['#' 'p' '.' '.' 'p' 'o' '#' '#' '.' 'e' 'o' '.' '.' '#']
@@ -786,7 +646,6 @@ ps_game
  ['#' '.' '.' 'p' 'r' 'e' '#' '#' 'e' '.' 'o' '.' '.' '#']
  ['#' '.' 'e' 'g' 'r' 'p' '#' '#' 'r' 'g' 'g' 'e' 'o' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' 'e' 'g' '.' '#' '#' '.' 'g' '.' 'r' '.' '#']
  ['#' 'o' '.' 'p' 'g' 'p' '#' '#' 'e' 'r' '.' 'r' 'o' '#']
@@ -794,7 +653,6 @@ ps_game
  ['#' 'r' '.' 'g' '.' '.' '#' '#' 'p' 'e' 'r' '.' '.' '#']
  ['#' '.' 'o' 'o' 'p' '.' '#' '#' '.' 'g' 'e' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'e' 'e' 'g' '.' '.' '#' '#' '.' 'r' 'r' 'o' 'g' '#']
  ['#' '.' 'e' 'g' '.' '.' '#' '#' '.' 'o' '.' 'e' '.' '#']
@@ -802,7 +660,6 @@ ps_game
  ['#' 'p' 'e' 'g' '.' 'p' '#' '#' '.' '.' 'o' 'g' 'r' '#']
  ['#' 'p' '.' 'g' '.' '.' '#' '#' '.' '.' 'g' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' 'e' 'r' '.' 'r' '#' '#' '.' 'r' 'r' 'e' 'r' '#']
  ['#' '.' 'g' 'g' '.' 'e' '#' '#' '.' '.' '.' 'e' '.' '#']
@@ -810,7 +667,6 @@ ps_game
  ['#' 'o' '.' 'g' '.' 'p' '#' '#' '.' 'o' '.' 'p' '.' '#']
  ['#' 'p' '.' '.' 'e' '.' '#' '#' '.' 'o' 'r' 'p' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' 'p' '#' '#' '.' 'o' '.' '.' 'g' '#']
  ['#' '.' 'p' '.' 'o' '.' '#' '#' '.' 'e' 'p' '.' '.' '#']
@@ -818,7 +674,6 @@ ps_game
  ['#' '.' 'e' 'g' 'e' 'g' '#' '#' '.' 'p' 'g' 'r' '.' '#']
  ['#' 'p' 'p' '.' 'r' '.' '#' '#' '.' '.' '.' 'e' 'p' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' 'g' '.' '.' '.' '#' '#' 'p' 'g' 'o' '.' '.' '#']
  ['#' 'g' 'p' '.' 'g' '.' '#' '#' 'e' '.' '.' '.' 'e' '#']
@@ -826,7 +681,6 @@ ps_game
  ['#' '.' '.' 'r' 'r' 'r' '#' '#' '.' '.' 'g' '.' 'e' '#']
  ['#' 'o' 'o' 'g' '.' 'e' '#' '#' 'p' 'o' 'o' '.' 'r' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' 'e' '.' '#' '#' '.' '.' 'g' '.' '.' '#']
  ['#' '.' '.' 'p' 'o' 'g' '#' '#' '.' '.' '.' 'g' 'g' '#']
@@ -834,7 +688,6 @@ ps_game
  ['#' 'r' 'g' 'o' 'p' '.' '#' '#' '.' 'p' 'r' '.' 'r' '#']
  ['#' 'p' '.' '.' '.' '.' '#' '#' 'g' '.' '.' 'g' 'r' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' 'r' 'g' '#' '#' 'g' '.' '.' '.' 'r' '#']
  ['#' 'o' 'g' '.' 'o' 'e' '#' '#' '.' 'e' '.' 'p' 'o' '#']
@@ -842,5 +695,3 @@ ps_game
  ['#' 'p' '.' 'r' '.' '.' '#' '#' 'g' '.' '.' 'o' '.' '#']
  ['#' 'g' 'e' '.' 'e' '.' '#' '#' 'r' '.' '.' '.' 'p' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
-    level_data	None

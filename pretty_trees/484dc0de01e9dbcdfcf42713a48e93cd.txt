@@ -1,233 +1,265 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      IDOLS TO THE BURNT GOD
+    prelude_data
+      author
+      Edalcmagal
+    prelude_data
+      homepage
+      www.puzzlescript.net
+    prelude_data
+      background_color
+      darkred
+    prelude_data
+      text_color
+      Red
+    prelude_data	noaction
   objects_section
     object_data
-      object_name	Outlineup
-      legend_key	b
-      colors
-        color	lue
+      object_line
+        object_name	Outlineup
+      color_line
+        color	blue
+        color	darkgreen
+    object_data
+      object_line
+        object_name	00000
+      color_line
+        color	11111
+    object_data
+      object_line
+        object_name	11111
+      color_line
+        color	11111
+    object_data
+      object_line
+        object_name	11111
+      color_line
+        color	Outlinedown
+    object_data
+      object_line
+        object_name	blue
+        legend_key
+          d
+          a
+          r
+          k
+          g
+          r
+          e
+          e
+          n
+      color_line
+        color	11111
+    object_data
+      object_line
+        object_name	11111
+      color_line
+        color	11111
+    object_data
+      object_line
+        object_name	11111
+      color_line
+        color	00000
+    object_data
+      object_line
+        object_name	Outlineright
+      color_line
+        color	blue
         color	darkgreen
       sprite
-        ['0' '0' '0' '0' '0']
-        ['1' '1' '1' '1' '1']
-        ['1' '1' '1' '1' '1']
-        ['1' '1' '1' '1' '1']
-        ['1' '1' '1' '1' '1']
+        ['1' '1' '1' '1' '0']
+        ['1' '1' '1' '1' '0']
+        ['1' '1' '1' '1' '0']
+        ['1' '1' '1' '1' '0']
+        ['1' '1' '1' '1' '0']
     object_data
-      object_name	Outlinedown
-      legend_key	b
-      colors
-        color	lue
+      object_line
+        object_name	Outlineleft
+      color_line
+        color	blue
         color	darkgreen
-      sprite
-        ['1' '1' '1' '1' '1']
-        ['1' '1' '1' '1' '1']
-        ['1' '1' '1' '1' '1']
-        ['1' '1' '1' '1' '1']
-        ['0' '0' '0' '0' '0']
     object_data
-      object_name	Outlineright
-      legend_key	b
-      colors
-        color	lue
+      object_line
+        object_name	01111
+      color_line
+        color	01111
+    object_data
+      object_line
+        object_name	01111
+      color_line
+        color	01111
+    object_data
+      object_line
+        object_name	01111
+      color_line
+        color	UpRight
+    object_data
+      object_line
+        object_name	darkgreen
+        legend_key
+          b
+          l
+          u
+          e
+      color_line
+        color	00001
+    object_data
+      object_line
+        object_name	00000
+      color_line
+        color	00000
+    object_data
+      object_line
+        object_name	00000
+      color_line
+        color	00000
+    object_data
+      object_line
+        object_name	UpLeft
+      color_line
         color	darkgreen
-      sprite
-        ['1' '1' '1' '1' '0']
-        ['1' '1' '1' '1' '0']
-        ['1' '1' '1' '1' '0']
-        ['1' '1' '1' '1' '0']
-        ['1' '1' '1' '1' '0']
-    object_data
-      object_name	Outlineleft
-      legend_key	b
-      colors
-        color	lue
-        color	darkgreen
-      sprite
-        ['0' '1' '1' '1' '1']
-        ['0' '1' '1' '1' '1']
-        ['0' '1' '1' '1' '1']
-        ['0' '1' '1' '1' '1']
-        ['0' '1' '1' '1' '1']
-    object_data
-      object_name	UpRight
-      legend_key	d
-      colors
-        color	arkgreen
-    object_data
-      object_name	blue
-      legend_key	0
-      colors
-        color	0001
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	UpLeft
-      legend_key	d
-      colors
-        color	arkgreen
-    object_data
-      object_name	blue
-      legend_key	1
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	DownRight
-      legend_key	d
-      colors
-        color	arkgreen
-    object_data
-      object_name	blue
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0001
-    object_data
-      object_name	DownLeft
-      legend_key	d
-      colors
-        color	arkgreen
         color	blue
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	10000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	10000
-      legend_key	B
-      colors
-        color	ackground
+      object_line
+        object_name	00000
+      color_line
+        color	DownRight
     object_data
-      object_name	grey
-      legend_key	#
-      colors
-        color	973043
+      object_line
+        object_name	darkgreen
+        legend_key
+          b
+          l
+          u
+          e
+      color_line
+        color	00000
+    object_data
+      object_line
+        object_name	00000
+      color_line
+        color	00000
+    object_data
+      object_line
+        object_name	00000
+      color_line
+        color	00001
+    object_data
+      object_line
+        object_name	DownLeft
+      color_line
+        color	darkgreen
+        color	blue
+    object_data
+      object_line
+        object_name	00000
+      color_line
+        color	00000
+    object_data
+      object_line
+        object_name	00000
+      color_line
+        color	00000
+    object_data
+      object_line
+        object_name	10000
+      color_line
+        color	Background
+    object_data
+      object_line
+        object_name	grey
+        legend_key
+          #
+          9
+          7
+          3
+          0
+          4
+          3
+          #
+          7
+          7
+          3
+          0
+          4
+          3
+      color_line
+        color	22222
+    object_data
+      object_line
+        object_name	22222
+      color_line
+        color	22222
+    object_data
+      object_line
+        object_name	22222
+      color_line
+        color	22222
+    object_data
+      object_line
+        object_name	Background2
+      color_line
+        color	grey
+        color	#973043
         color	#773043
+      sprite
+        ['2' '2' '2' '2' '2']
+        ['2' '2' '2' '2' '2']
+        ['2' '2' '2' '2' '2']
+        ['2' '2' '2' '2' '2']
+        ['2' '2' '2' '2' '2']
     object_data
-      object_name	22222
-      legend_key	2
-      colors
-        color	2222
-    object_data
-      object_name	22222
-      legend_key	2
-      colors
-        color	2222
-    object_data
-      object_name	22222
-      legend_key	B
-      colors
-        color	ackground2
-    object_data
-      object_name	grey
-      legend_key	#
-      colors
-        color	973043
-        color	#773043
-    object_data
-      object_name	22222
-      legend_key	2
-      colors
-        color	2222
-    object_data
-      object_name	22222
-      legend_key	2
-      colors
-        color	2222
-    object_data
-      object_name	22222
-      legend_key	T
-      colors
-        color	arget
-    object_data
-      object_name	DarkBlue
-      legend_key	p
-      colors
-        color	urple
+      object_line
+        object_name	Target
+      color_line
+        color	DarkBlue
+        color	purple
         color	pink
+      sprite
+        ['.' '.' '1' '.' '.']
+        ['.' '2' '0' '2' '.']
+        ['1' '0' '1' '0' '1']
+        ['.' '2' '0' '2' '.']
+        ['.' '.' '1' '.' '.']
     object_data
-      object_name	..1..
-      legend_key	.
-      colors
-        color	202.
+      object_line
+        object_name	Wall
+      color_line
+        color	darkred
     object_data
-      object_name	10101
-      legend_key	.
-      colors
-        color	202.
-    object_data
-      object_name	..1..
-      legend_key	W
-      colors
-        color	all
-    object_data
-      object_name	darkred
-      legend_key	P
-      colors
-        color	layer
-    object_data
-      object_name	black
-      legend_key	r
-      colors
-        color	ed
-    object_data
-      object_name	yellow
-      legend_key	d
-      colors
-        color	arkgray
+      object_line
+        object_name	Player
+      color_line
+        color	black
+        color	red
+        color	yellow
+        color	darkgray
         color	#222222
+      sprite
+        ['1' '.' '2' '.' '1']
+        ['.' '0' '3' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '4' '3' '4' '.']
+        ['.' '0' '0' '0' '.']
     object_data
-      object_name	1.2.1
-      legend_key	.
-      colors
-        color	030.
-    object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	434.
-    object_data
-      object_name	.000.
-      legend_key	C
-      colors
-        color	losedDoor
-    object_data
-      object_name	Red
-      legend_key	D
-      colors
-        color	arkRed
+      object_line
+        object_name	ClosedDoor
+      color_line
+        color	Red
+        color	DarkRed
         color	black
       sprite
         ['.' '.' '.' '.' '.']
@@ -236,220 +268,220 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	MarkerUp
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	MarkerUp
+      color_line
+        color	transparent
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	M
-      colors
-        color	arkerDown
+      object_line
+        object_name	00000
+      color_line
+        color	MarkerDown
     object_data
-      object_name	transparent
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	transparent
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	MarkerLeft
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	MarkerLeft
+      color_line
+        color	transparent
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	M
-      colors
-        color	arkerRight
+      object_line
+        object_name	00000
+      color_line
+        color	MarkerRight
     object_data
-      object_name	transparent
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	transparent
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	Marker1
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	Marker1
+      color_line
+        color	transparent
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	M
-      colors
-        color	arkerStart
+      object_line
+        object_name	00000
+      color_line
+        color	MarkerStart
     object_data
-      object_name	transparent
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	transparent
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	MarkerStop
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	MarkerStop
+      color_line
+        color	transparent
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	F
-      colors
-        color	ill
+      object_line
+        object_name	00000
+      color_line
+        color	Fill
     object_data
-      object_name	black
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	black
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	.0..
+      object_line
+        object_name	.....
+      color_line
+        color	..0..
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	Fill2
-      legend_key	b
-      colors
-        color	lack
+      object_line
+        object_name	Fill2
+      color_line
+        color	black
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	..0..
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	M
-      colors
-        color	arkerAgain
+      object_line
+        object_name	.....
+      color_line
+        color	MarkerAgain
     object_data
-      object_name	transparent
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	transparent
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
+      object_line
+        object_name	00000
+      color_line
+        color	00000
     object_data
-      object_name	MarkerPathCount1
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	MarkerPathCount1
+      color_line
+        color	transparent
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	M
-      colors
-        color	arkerAlreadyFound
+      object_line
+        object_name	.....
+      color_line
+        color	MarkerAlreadyFound
     object_data
-      object_name	transparent
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	transparent
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	Marker2
-      legend_key	b
-      colors
-        color	lack
+      object_line
+        object_name	Marker2
+      color_line
+        color	black
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -457,126 +489,131 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Box
-      legend_key	p
-      colors
-        color	ink
+      object_line
+        object_name	Box
+      color_line
+        color	pink
         color	purple
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	.0..
+      object_line
+        object_name	.....
+      color_line
+        color	..0..
     object_data
-      object_name	.010.
-      legend_key	.
-      colors
-        color	.0..
+      object_line
+        object_name	.010.
+      color_line
+        color	..0..
     object_data
-      object_name	.....
-      legend_key	N
-      colors
-        color	ewTarget
+      object_line
+        object_name	.....
+      color_line
+        color	NewTarget
     object_data
-      object_name	DarkRed
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	DarkRed
+      color_line
+        color	.....
     object_data
-      object_name	.000.
-      legend_key	.
-      colors
-        color	0.0.
+      object_line
+        object_name	.000.
+      color_line
+        color	.0.0.
     object_data
-      object_name	.000.
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.000.
+      color_line
+        color	.....
     object_data
-      object_name	MarkerMoveUp
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	MarkerMoveUp
+      color_line
+        color	transparent
+        color	blue
     object_data
-      object_name	blue
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	MarkerMoveDown
     object_data
-      object_name	MarkerMoveDown
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	transparent
+        legend_key
+          y
+          e
+          l
+          l
+          o
+          w
+      color_line
+        color	.....
     object_data
-      object_name	yellow
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	MarkerMoveLeft
+      color_line
+        color	transparent
+        color	purple
     object_data
-      object_name	MarkerMoveLeft
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	purple
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	MarkerMoveRight
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	transparent
+        legend_key
+          b
+          l
+          a
+          c
+          k
+      color_line
+        color	.....
     object_data
-      object_name	MarkerMoveRight
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	black
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	Teleporter
-      legend_key	p
-      colors
-        color	urple
+      object_line
+        object_name	Teleporter
+      color_line
+        color	purple
         color	pink
       sprite
         ['.' '0' '1' '0' '.']
@@ -585,259 +622,283 @@ ps_game
         ['1' '0' '0' '0' '1']
         ['.' '0' '1' '0' '.']
     object_data
-      object_name	Marker3
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	Marker3
+      color_line
+        color	transparent
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	M
-      colors
-        color	arker4
+      object_line
+        object_name	.....
+      color_line
+        color	Marker4
     object_data
-      object_name	transparent
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	transparent
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	Marker5
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	Marker5
+      color_line
+        color	transparent
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	M
-      colors
-        color	arker6
+      object_line
+        object_name	.....
+      color_line
+        color	Marker6
     object_data
-      object_name	transparent
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	transparent
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	Marker7
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	Marker7
+      color_line
+        color	transparent
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	M
-      colors
-        color	arker8
+      object_line
+        object_name	.....
+      color_line
+        color	Marker8
     object_data
-      object_name	transparent
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	transparent
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	Loop
-      legend_key	t
-      colors
-        color	ransparent
-    object_data
-      object_name	blue
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	Loop2
-      legend_key	t
-      colors
-        color	ransparent
-    object_data
-      object_name	red
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	MarkerChange
-      legend_key	t
-      colors
-        color	ransparent
-    object_data
-      object_name	green
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	MarkerChange2
-      legend_key	t
-      colors
-        color	ransparent
-    object_data
-      object_name	darkgreen
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	Key
-      legend_key	y
-      colors
-        color	ellow
-        color	brown
-      sprite
-        ['.' '0' '0' '.' '.']
-        ['.' '0' '0' '.' '.']
-        ['.' '.' '0' '.' '.']
-        ['.' '0' '1' '0' '.']
-        ['.' '0' '0' '0' '.']
-    object_data
-      object_name	ImmovableWallVert
-      legend_key	#
-      colors
-        color	3690ff
-    object_data
-      object_name	blue
-      legend_key	1
-      colors
-        color	1011
-    object_data
-      object_name	11111
-      legend_key	1
-      colors
-        color	0111
-    object_data
-      object_name	11101
-      legend_key	1
-      colors
-        color	1111
-    object_data
-      object_name	ImmovableWallVert2
-      legend_key	#
-      colors
-        color	3690ff
+      object_line
+        object_name	Loop
+      color_line
+        color	transparent
         color	blue
-      sprite
-        ['1' '1' '1' '1' '1']
-        ['1' '1' '0' '1' '1']
-        ['1' '1' '1' '1' '1']
-        ['1' '0' '1' '1' '1']
-        ['1' '1' '1' '0' '1']
     object_data
-      object_name	ImmovableWallHor
-      legend_key	#
-      colors
-        color	3690ff
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	blue
-      legend_key	1
-      colors
-        color	1111
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	11101
-      legend_key	0
-      colors
-        color	1111
+      object_line
+        object_name	.....
+      color_line
+        color	Loop2
     object_data
-      object_name	11011
-      legend_key	1
-      colors
-        color	1111
+      object_line
+        object_name	transparent
+        legend_key
+          r
+          e
+          d
+      color_line
+        color	.....
     object_data
-      object_name	ImmovableWallHor2
-      legend_key	#
-      colors
-        color	3690ff
+      object_line
+        object_name	.....
+      color_line
+        color	.....
+    object_data
+      object_line
+        object_name	.....
+      color_line
+        color	.....
+    object_data
+      object_line
+        object_name	MarkerChange
+      color_line
+        color	transparent
+        color	green
+    object_data
+      object_line
+        object_name	.....
+      color_line
+        color	.....
+    object_data
+      object_line
+        object_name	.....
+      color_line
+        color	.....
+    object_data
+      object_line
+        object_name	.....
+      color_line
+        color	MarkerChange2
+    object_data
+      object_line
+        object_name	transparent
+        legend_key
+          d
+          a
+          r
+          k
+          g
+          r
+          e
+          e
+          n
+      color_line
+        color	.....
+    object_data
+      object_line
+        object_name	.....
+      color_line
+        color	.....
+    object_data
+      object_line
+        object_name	.....
+      color_line
+        color	.....
+    object_data
+      object_line
+        object_name	Key
+      color_line
+        color	yellow
+        color	brown
+    object_data
+      object_line
+        object_name	.00..
+      color_line
+        color	.00..
+    object_data
+      object_line
+        object_name	..0..
+      color_line
+        color	.010.
+    object_data
+      object_line
+        object_name	.000.
+      color_line
+        color	ImmovableWallVert
+    object_data
+      object_line
+        object_name	#3690ff
+        legend_key
+          b
+          l
+          u
+          e
+      color_line
+        color	11011
+    object_data
+      object_line
+        object_name	11111
+      color_line
+        color	10111
+    object_data
+      object_line
+        object_name	11101
+      color_line
+        color	11111
+    object_data
+      object_line
+        object_name	ImmovableWallVert2
+      color_line
+        color	#3690ff
+        color	blue
+    object_data
+      object_line
+        object_name	11111
+      color_line
+        color	11011
+    object_data
+      object_line
+        object_name	11111
+      color_line
+        color	10111
+    object_data
+      object_line
+        object_name	11101
+      color_line
+        color	ImmovableWallHor
+    object_data
+      object_line
+        object_name	#3690ff
+        legend_key
+          b
+          l
+          u
+          e
+      color_line
+        color	11111
+    object_data
+      object_line
+        object_name	11101
+      color_line
+        color	01111
+    object_data
+      object_line
+        object_name	11011
+      color_line
+        color	11111
+    object_data
+      object_line
+        object_name	ImmovableWallHor2
+      color_line
+        color	#3690ff
         color	blue
       sprite
         ['1' '1' '1' '1' '1']
@@ -846,10 +907,10 @@ ps_game
         ['1' '1' '1' '0' '1']
         ['1' '1' '1' '1' '1']
     object_data
-      object_name	Enabler
-      legend_key	d
-      colors
-        color	arkred
+      object_line
+        object_name	Enabler
+      color_line
+        color	darkred
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
@@ -857,10 +918,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Idol
-      legend_key	w
-      colors
-        color	hite
+      object_line
+        object_name	Idol
+      color_line
+        color	white
         color	brown
       sprite
         ['1' '.' '0' '.' '1']
@@ -869,10 +930,10 @@ ps_game
         ['.' '0' '.' '0' '.']
         ['0' '0' '.' '0' '0']
     object_data
-      object_name	IdolCool
-      legend_key	l
-      colors
-        color	ightblue
+      object_line
+        object_name	IdolCool
+      color_line
+        color	lightblue
         color	yellow
       sprite
         ['1' '.' '0' '.' '1']
@@ -881,10 +942,10 @@ ps_game
         ['.' '0' '.' '0' '.']
         ['0' '0' '.' '0' '0']
     object_data
-      object_name	Burn1
-      legend_key	y
-      colors
-        color	ellow
+      object_line
+        object_name	Burn1
+      color_line
+        color	yellow
         color	red
       sprite
         ['1' '.' '0' '.' '1']
@@ -893,10 +954,10 @@ ps_game
         ['.' '0' '.' '0' '.']
         ['0' '0' '.' '0' '0']
     object_data
-      object_name	Burn2
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	Burn2
+      color_line
+        color	red
         color	black
       sprite
         ['1' '.' '0' '.' '1']
@@ -905,31 +966,23 @@ ps_game
         ['.' '0' '.' '0' '.']
         ['0' '0' '.' '0' '0']
     object_data
-      object_name	Burn3
-      legend_key	b
-      colors
-        color	lack
+      object_line
+        object_name	Burn3
+      color_line
         color	black
+        color	black
+      sprite
+        ['1' '.' '0' '.' '1']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '.' '0' '.']
+        ['0' '0' '.' '0' '0']
     object_data
-      object_name	1.0.1
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	0.0.
-    object_data
-      object_name	00.00
-      legend_key	A
-      colors
-        color	sh
-    object_data
-      object_name	black
-      legend_key	d
-      colors
-        color	arkgray
+      object_line
+        object_name	Ash
+      color_line
+        color	black
+        color	darkgray
         color	grey
       sprite
         ['.' '.' '.' '.' '.']
@@ -938,51 +991,35 @@ ps_game
         ['1' '0' '0' '0' '1']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Campfire
-      legend_key	b
-      colors
-        color	rown
+      object_line
+        object_name	Campfire
+      color_line
+        color	brown
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '.' '.' '.' '0']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '.' '0' '0']
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	0...0
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	00.00
-      legend_key	C
-      colors
-        color	ampfire1
-    object_data
-      object_name	brown
-      legend_key	y
-      colors
-        color	ellow
+      object_line
+        object_name	Campfire1
+      color_line
+        color	brown
+        color	yellow
         color	red
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '1' '2' '1' '0']
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '.' '0' '0']
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	01210
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	00.00
-      legend_key	C
-      colors
-        color	ampfire2
-    object_data
-      object_name	brown
-      legend_key	y
-      colors
-        color	ellow
+      object_line
+        object_name	Campfire2
+      color_line
+        color	brown
+        color	yellow
         color	red
       sprite
         ['.' '.' '.' '.' '.']
@@ -991,15 +1028,12 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['0' '0' '.' '0' '0']
     object_data
-      object_name	Campfire3
-      legend_key	b
-      colors
-        color	rown
-    object_data
-      object_name	yellow
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	Campfire3
+      color_line
+        color	brown
+        color	yellow
+        color	red
         color	orange
       sprite
         ['.' '.' '2' '.' '.']
@@ -1008,10 +1042,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['0' '0' '.' '0' '0']
     object_data
-      object_name	MiniIdol
-      legend_key	w
-      colors
-        color	hite
+      object_line
+        object_name	MiniIdol
+      color_line
+        color	white
         color	brown
       sprite
         ['.' '.' '.' '.' '.']
@@ -1020,10 +1054,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '0' '.' '0' '.']
     object_data
-      object_name	MiniBurn1
-      legend_key	y
-      colors
-        color	ellow
+      object_line
+        object_name	MiniBurn1
+      color_line
+        color	yellow
         color	red
       sprite
         ['.' '.' '.' '.' '.']
@@ -1032,10 +1066,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '0' '.' '0' '.']
     object_data
-      object_name	MiniBurn2
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	MiniBurn2
+      color_line
+        color	red
         color	black
       sprite
         ['.' '.' '.' '.' '.']
@@ -1044,31 +1078,23 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '0' '.' '0' '.']
     object_data
-      object_name	MiniBurn3
-      legend_key	b
-      colors
-        color	lack
+      object_line
+        object_name	MiniBurn3
+      color_line
         color	black
+        color	black
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['1' '.' '0' '.' '1']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '.' '0' '.']
     object_data
-      object_name	.....
-      legend_key	1
-      colors
-        color	.0.1
-    object_data
-      object_name	.000.
-      legend_key	.
-      colors
-        color	.0..
-    object_data
-      object_name	.0.0.
-      legend_key	M
-      colors
-        color	iniAsh
-    object_data
-      object_name	black
-      legend_key	d
-      colors
-        color	arkgray
+      object_line
+        object_name	MiniAsh
+      color_line
+        color	black
+        color	darkgray
         color	grey
       sprite
         ['.' '.' '.' '.' '.']
@@ -1077,10 +1103,10 @@ ps_game
         ['.' '1' '0' '1' '.']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	MiniIdolCool
-      legend_key	l
-      colors
-        color	ightblue
+      object_line
+        object_name	MiniIdolCool
+      color_line
+        color	lightblue
         color	yellow
       sprite
         ['.' '.' '.' '.' '.']
@@ -1089,10 +1115,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '0' '.' '0' '.']
     object_data
-      object_name	HereticIdol
-      legend_key	#
-      colors
-        color	CCCCCC
+      object_line
+        object_name	HereticIdol
+      color_line
+        color	#CCCCCC
         color	brown
       sprite
         ['.' '.' '0' '.' '.']
@@ -1101,10 +1127,10 @@ ps_game
         ['.' '0' '.' '0' '.']
         ['0' '0' '.' '0' '0']
     object_data
-      object_name	HereticBurn1
-      legend_key	#
-      colors
-        color	c0bb35
+      object_line
+        object_name	HereticBurn1
+      color_line
+        color	#c0bb35
         color	#ab3838
       sprite
         ['.' '.' '0' '.' '.']
@@ -1113,10 +1139,10 @@ ps_game
         ['.' '0' '.' '0' '.']
         ['0' '0' '.' '0' '0']
     object_data
-      object_name	HereticBurn2
-      legend_key	#
-      colors
-        color	ab3838
+      object_line
+        object_name	HereticBurn2
+      color_line
+        color	#ab3838
         color	#404040
       sprite
         ['.' '.' '0' '.' '.']
@@ -1125,30 +1151,22 @@ ps_game
         ['.' '0' '.' '0' '.']
         ['0' '0' '.' '0' '0']
     object_data
-      object_name	HereticBurn3
-      legend_key	#
-      colors
-        color	404040
+      object_line
+        object_name	HereticBurn3
+      color_line
+        color	#404040
+      sprite
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['0' '.' '0' '.' '0']
+        ['.' '0' '.' '0' '.']
+        ['0' '0' '.' '0' '0']
     object_data
-      object_name	..0..
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	0.0.0
-      legend_key	.
-      colors
-        color	0.0.
-    object_data
-      object_name	00.00
-      legend_key	H
-      colors
-        color	ereticAsh
-    object_data
-      object_name	black
-      legend_key	d
-      colors
-        color	arkgray
+      object_line
+        object_name	HereticAsh
+      color_line
+        color	black
+        color	darkgray
         color	grey
       sprite
         ['.' '.' '.' '.' '.']
@@ -1157,10 +1175,10 @@ ps_game
         ['1' '0' '0' '0' '1']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	MiniHeretic
-      legend_key	#
-      colors
-        color	CCCCCC
+      object_line
+        object_name	MiniHeretic
+      color_line
+        color	#CCCCCC
         color	brown
       sprite
         ['.' '.' '.' '.' '.']
@@ -1169,10 +1187,10 @@ ps_game
         ['1' '.' '0' '.' '1']
         ['.' '0' '.' '0' '.']
     object_data
-      object_name	MiniHereticBurn1
-      legend_key	#
-      colors
-        color	c0bb35
+      object_line
+        object_name	MiniHereticBurn1
+      color_line
+        color	#c0bb35
         color	#ab3838
       sprite
         ['.' '.' '.' '.' '.']
@@ -1181,10 +1199,10 @@ ps_game
         ['1' '.' '0' '.' '1']
         ['.' '0' '.' '0' '.']
     object_data
-      object_name	MiniHereticBurn2
-      legend_key	#
-      colors
-        color	ab3838
+      object_line
+        object_name	MiniHereticBurn2
+      color_line
+        color	#ab3838
         color	#404040
       sprite
         ['.' '.' '.' '.' '.']
@@ -1193,92 +1211,84 @@ ps_game
         ['1' '.' '0' '.' '1']
         ['.' '0' '.' '0' '.']
     object_data
-      object_name	MiniHereticBurn3
-      legend_key	#
-      colors
-        color	404040
+      object_line
+        object_name	MiniHereticBurn3
+      color_line
+        color	#404040
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '0' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['0' '.' '0' '.' '0']
+        ['.' '0' '.' '0' '.']
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	.0..
-    object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	.0.0
-    object_data
-      object_name	.0.0.
-      legend_key	M
-      colors
-        color	iniHereticAsh
-    object_data
-      object_name	black
-      legend_key	d
-      colors
-        color	arkgray
+      object_line
+        object_name	MiniHereticAsh
+      color_line
+        color	black
+        color	darkgray
         color	grey
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	..2..
-      legend_key	.
-      colors
-        color	101.
+      object_line
+        object_name	..2..
+      color_line
+        color	.101.
     object_data
-      object_name	.000.
-      legend_key	M
-      colors
-        color	ove
+      object_line
+        object_name	.000.
+      color_line
+        color	Move
     object_data
-      object_name	transparent
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	transparent
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
+      object_line
+        object_name	.....
+      color_line
+        color	.....
   legend_section
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      ;
+      ; =
       object_name	Background2
     legend_data
-      #
+      # =
       object_name	Wall
       legend_operation
         object_name	Background
     legend_data
-      P
+      P =
       object_name	Player
       legend_operation
         object_name	Background
     legend_data
-      C
+      C =
       object_name	Campfire
     legend_data
-      D
+      D =
       object_name	Campfire1
     legend_data
-      E
+      E =
       object_name	Campfire2
     legend_data
-      F
+      F =
       object_name	Campfire3
     legend_data
-      ImmovableWall
+      ImmovableWall =
       object_name	ImmovableWallVert
       legend_operation
         object_name	ImmovableWallHor
@@ -1287,31 +1297,31 @@ ps_game
       legend_operation
         object_name	ImmovableWallHor2
     legend_data
-      1
+      1=
       object_name	Outlineup
     legend_data
-      2
+      2=
       object_name	Outlinedown
     legend_data
-      3
+      3=
       object_name	Outlineright
     legend_data
-      4
+      4=
       object_name	Outlineleft
     legend_data
-      5
+      5=
       object_name	UpRight
     legend_data
-      6
+      6=
       object_name	UpLeft
     legend_data
-      7
+      7=
       object_name	DownRight
     legend_data
-      8
+      8=
       object_name	DownLeft
     legend_data
-      MarkerMove
+      MarkerMove =
       object_name	MarkerMoveUp
       legend_operation
         object_name	MarkerMoveDown
@@ -1320,13 +1330,13 @@ ps_game
       legend_operation
         object_name	MarkerMoveRight
     legend_data
-      I
+      I =
       object_name	ImmovableWallVert
     legend_data
-      S
+      S =
       object_name	ImmovableWallHor
     legend_data
-      Boundary
+      Boundary =
       object_name	Outlineup
       legend_operation
         object_name	Outlinedown
@@ -1337,65 +1347,65 @@ ps_game
       legend_operation
         object_name	ImmovableWall
     legend_data
-      U
+      U =
       object_name	Burn1
     legend_data
-      G
+      G =
       object_name	Burn2
     legend_data
-      T
+      T =
       object_name	Burn3
     legend_data
-      ]
+      ] =
       object_name	Ash
     legend_data
-      [
+      [ =
       object_name	Idol
     legend_data
-      }
+      } =
       object_name	Enabler
       legend_operation
         object_name	ClosedDoor
     legend_data
-      {
+      { =
       object_name	Enabler
       legend_operation
         object_name	ClosedDoor
       legend_operation
         object_name	Target
     legend_data
-      w
+      w =
       object_name	Player
       legend_operation
         object_name	Background2
     legend_data
-      x
+      x =
       object_name	box
       legend_operation
         object_name	Background2
     legend_data
-      y
+      y =
       object_name	key
       legend_operation
         object_name	Background2
     legend_data
-      z
+      z =
       object_name	ClosedDoor
       legend_operation
         object_name	Background2
     legend_data
-      v
+      v =
       object_name	Target
       legend_operation
         object_name	Background2
     legend_data
-      ?
+      ?=
       object_name	Loop
     legend_data
-      !
+      !=
       object_name	Loop2
     legend_data
-      MiniStatue
+      MiniStatue =
       object_name	MiniIdol
       legend_operation
         object_name	MiniBurn1
@@ -1414,7 +1424,7 @@ ps_game
       legend_operation
         object_name	MiniHereticBurn3
     legend_data
-      Camp
+      Camp =
       object_name	Campfire
       legend_operation
         object_name	Campfire1
@@ -1423,37 +1433,37 @@ ps_game
       legend_operation
         object_name	Campfire3
     legend_data
-      M
+      M =
       object_name	MiniIdol
     legend_data
-      L
+      L=
       object_name	MiniIdolCool
     legend_data
-      H
+      H =
       object_name	HereticIdol
     legend_data
-      A
+      A =
       object_name	HereticBurn1
     legend_data
-      B
+      B =
       object_name	HereticBurn2
     legend_data
-      J
+      J =
       object_name	HereticBurn3
     legend_data
-      K
+      K =
       object_name	HereticAsh
     legend_data
-      0
+      0 =
       object_name	MiniHeretic
     legend_data
-      ~
+      ~ =
       object_name	MiniHereticBurn1
     legend_data
-      *
+      * =
       object_name	IdolCool
     legend_data
-      Heretic
+      Heretic =
       object_name	HereticIdol
       legend_operation
         object_name	HereticBurn1
@@ -1470,7 +1480,7 @@ ps_game
       legend_operation
         object_name	MiniHereticBurn3
     legend_data
-      Unburnt
+      Unburnt =
       object_name	MiniIdolCool
       legend_operation
         object_name	Idol
@@ -1489,7 +1499,7 @@ ps_game
       legend_operation
         object_name	IdolCool
     legend_data
-      Statue
+      Statue =
       object_name	Idol
       legend_operation
         object_name	Burn1
@@ -1531,10 +1541,8 @@ ps_game
       object_name	MarkerStop
     layer_data
       object_name	MarkerAlreadyFound
-    layer_data
       object_name	MarkerUp
       object_name	MarkerDown
-    layer_data
       object_name	MarkerRight
       object_name	MarkerLeft
     layer_data
@@ -1544,7 +1552,6 @@ ps_game
     layer_data
       object_name	Ash
       object_name	MiniAsh
-    layer_data
       object_name	HereticAsh
       object_name	MiniHereticAsh
     layer_data
@@ -1552,25 +1559,18 @@ ps_game
     layer_data
       object_name	Player
       object_name	Burn1
-    layer_data
       object_name	Burn2
       object_name	Burn3
-    layer_data
       object_name	Idol
       object_name	Campfire
-    layer_data
       object_name	Campfire1
       object_name	Campfire2
-    layer_data
       object_name	Campfire3
       object_name	MiniIdol
-    layer_data
       object_name	MiniBurn1
       object_name	MiniBurn2
-    layer_data
       object_name	MiniBurn3
       object_name	MiniIdolCool
-    layer_data
       object_name	Heretic
       object_name	IdolCool
     layer_data
@@ -1607,16 +1607,12 @@ ps_game
       object_name	MarkerMoveRight
     layer_data
       object_name	Outlineup
-    layer_data
       object_name	Outlinedown
       object_name	Outlineright
-    layer_data
       object_name	Outlineleft
       object_name	UpRight
-    layer_data
       object_name	UpLeft
       object_name	DownRight
-    layer_data
       object_name	DownLeft
       object_name	ImmovableWall
     layer_data
@@ -1635,1505 +1631,707 @@ ps_game
             rule_content
               >
               Player
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
+          rule_part
+            rule_content	Loop
           ->
           rule_part
             rule_content
               >
               Player
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
-            rule_content	2
-          
-
+          rule_part
+            rule_content	Loop2
         rule_data
           rule_part
-            rule_content
-              action
-              Player
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
+            rule_content	action
+            rule_content	Player
+          rule_part
+            rule_content	Loop
           ->
           rule_part
-            rule_content
-              action
-              Player
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
-            rule_content	2
-          
-
+            rule_content	action
+            rule_content	Player
+          rule_part
+            rule_content	Loop2
         rule_data
-          random
+          prefix	random
           rule_part
-            rule_content
-              Teleporter
-              no
-              MarkerStart
-              no
-              MarkerStop
+            rule_content	Teleporter
+            rule_content	no
+            rule_content	MarkerStart
+            rule_content	no
+            rule_content	MarkerStop
           ->
           rule_part
-            rule_content
-              Teleporter
-              MarkerStart
-          
-
+            rule_content	Teleporter
+            rule_content	MarkerStart
         rule_data
-          random
+          prefix	random
           rule_part
-            rule_content
-              Teleporter
-              no
-              MarkerStart
-              no
-              MarkerStop
+            rule_content	Teleporter
+            rule_content	no
+            rule_content	MarkerStart
+            rule_content	no
+            rule_content	MarkerStop
           ->
           rule_part
-            rule_content
-              Teleporter
-              MarkerStop
-          
-
+            rule_content	Teleporter
+            rule_content	MarkerStop
         rule_data
           rule_part
-            rule_content
-              ImmovableWallVert
-              no
-              MarkerChange
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
+            rule_content	ImmovableWallVert
+            rule_content	no
+            rule_content	MarkerChange
+          rule_part
+            rule_content	Loop
           ->
           rule_part
-            rule_content
-              ImmovableWallVert
-              MarkerChange
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
-          
-
+            rule_content	ImmovableWallVert
+            rule_content	MarkerChange
+          rule_part
+            rule_content	Loop
         rule_data
           rule_part
-            rule_content
-              ImmovableWallVert2
-              no
-              MarkerChange
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
+            rule_content	ImmovableWallVert2
+            rule_content	no
+            rule_content	MarkerChange
+          rule_part
+            rule_content	Loop
           ->
           rule_part
-            rule_content
-              ImmovableWallVert2
-              MarkerChange
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
-          
-
+            rule_content	ImmovableWallVert2
+            rule_content	MarkerChange
+          rule_part
+            rule_content	Loop
         rule_data
           rule_part
-            rule_content
-              ImmovableWallHor
-              no
-              MarkerChange
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
+            rule_content	ImmovableWallHor
+            rule_content	no
+            rule_content	MarkerChange
+          rule_part
+            rule_content	Loop
           ->
           rule_part
-            rule_content
-              ImmovableWallHor
-              MarkerChange
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
-          
-
+            rule_content	ImmovableWallHor
+            rule_content	MarkerChange
+          rule_part
+            rule_content	Loop
         rule_data
           rule_part
-            rule_content
-              ImmovableWallHor2
-              no
-              MarkerChange
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
+            rule_content	ImmovableWallHor2
+            rule_content	no
+            rule_content	MarkerChange
+          rule_part
+            rule_content	Loop
           ->
           rule_part
-            rule_content
-              ImmovableWallHor2
-              MarkerChange
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
-          
-
+            rule_content	ImmovableWallHor2
+            rule_content	MarkerChange
+          rule_part
+            rule_content	Loop
         rule_data
           rule_part
-            rule_content
-              Background
-              no
-              MarkerChange
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
+            rule_content	Background
+            rule_content	no
+            rule_content	MarkerChange
+          rule_part
+            rule_content	Loop
           ->
           rule_part
-            rule_content
-              Background
-              MarkerChange
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
-          
-
+            rule_content	Background
+            rule_content	MarkerChange
+          rule_part
+            rule_content	Loop
         rule_data
           rule_part
-            rule_content
-              Background2
-              no
-              MarkerChange2
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
+            rule_content	Background2
+            rule_content	no
+            rule_content	MarkerChange2
+          rule_part
+            rule_content	Loop
           ->
           rule_part
-            rule_content
-              Background2
-              MarkerChange2
-            rule_content	]
-            rule_content	[
-            rule_content	L
-            rule_content	o
-            rule_content	o
-            rule_content	p
-          
-
+            rule_content	Background2
+            rule_content	MarkerChange2
+          rule_part
+            rule_content	Loop
         rule_data
           rule_part
-            rule_content
-              ImmovableWallVert
-              MarkerChange
+            rule_content	ImmovableWallVert
+            rule_content	MarkerChange
           ->
           rule_part
-            rule_content
-              ImmovableWallVert2
-              no
-              MarkerChange
-          
-
+            rule_content	ImmovableWallVert2
+            rule_content	no
+            rule_content	MarkerChange
         rule_data
           rule_part
-            rule_content
-              ImmovableWallVert2
-              MarkerChange
+            rule_content	ImmovableWallVert2
+            rule_content	MarkerChange
           ->
           rule_part
-            rule_content
-              ImmovableWallVert
-              no
-              MarkerChange
-          
-
+            rule_content	ImmovableWallVert
+            rule_content	no
+            rule_content	MarkerChange
         rule_data
           rule_part
-            rule_content
-              ImmovableWallHor
-              MarkerChange
+            rule_content	ImmovableWallHor
+            rule_content	MarkerChange
           ->
           rule_part
-            rule_content
-              ImmovableWallHor2
-              no
-              MarkerChange
-          
-
+            rule_content	ImmovableWallHor2
+            rule_content	no
+            rule_content	MarkerChange
         rule_data
           rule_part
-            rule_content
-              ImmovableWallHor2
-              MarkerChange
+            rule_content	ImmovableWallHor2
+            rule_content	MarkerChange
           ->
           rule_part
-            rule_content
-              ImmovableWallHor
-              no
-              MarkerChange
-          
-
+            rule_content	ImmovableWallHor
+            rule_content	no
+            rule_content	MarkerChange
         rule_data
           rule_part
-            rule_content
-              Background
-              MarkerChange
+            rule_content	Background
+            rule_content	MarkerChange
           ->
           rule_part
-            rule_content
-              Background2
-              no
-              MarkerChange
-          
-
+            rule_content	Background2
+            rule_content	no
+            rule_content	MarkerChange
         rule_data
           rule_part
-            rule_content
-              Background2
-              MarkerChange2
+            rule_content	Background2
+            rule_content	MarkerChange2
           ->
           rule_part
-            rule_content
-              Background
-              no
-              MarkerChange2
-          
-
+            rule_content	Background
+            rule_content	no
+            rule_content	MarkerChange2
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	B
-            rule_content	o
-            rule_content	u
-            rule_content	n
-            rule_content	d
-            rule_content	a
-            rule_content	r
-            rule_content	y
+            rule_content	Boundary
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	B
-            rule_content	o
-            rule_content	u
-            rule_content	n
-            rule_content	d
-            rule_content	a
-            rule_content	r
-            rule_content	y
-          
-
+            rule_content	Boundary
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Wall
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-          
-
+            rule_content	Wall
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	u
-            rule_content	e
+            rule_content	MiniStatue
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	u
-            rule_content	e
-          command
-            sound
-              sound_id	2
-          
-
+            rule_content
+              >
+              MiniStatue
+          prefix	sfx2
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
+            rule_content	Camp
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
-          
-
+            rule_content
+              >
+              Camp
         rule_data
           rule_part
             rule_content
               >
               Camp
             cell_border
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
+            rule_content	Camp
           ->
           rule_part
             rule_content
               >
               Camp
             cell_border
-            rule_content	>
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
-          
-
+            rule_content
+              >
+              Camp
         rule_data
           rule_part
             rule_content
               >
               MiniStatue
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	u
-            rule_content	e
+            rule_content	MiniStatue
           ->
           rule_part
             rule_content
               >
               MiniStatue
             cell_border
-            rule_content	>
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	u
-            rule_content	e
-          
-
-        rule_data
-          late
-          rule_part
             rule_content
-              Player
-              Move
+              >
+              MiniStatue
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Player
+            rule_content	Move
           ->
           rule_part
-            rule_content
-              Player
-              Marker1
-          
-
+            rule_content	Player
+            rule_content	Marker1
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              no
-              Move
-              no
-              Marker1
+            rule_content	Player
+            rule_content	no
+            rule_content	Move
+            rule_content	no
+            rule_content	Marker1
           ->
           rule_part
-            rule_content
-              Player
-              Move
-          
-
+            rule_content	Player
+            rule_content	Move
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	3
+            rule_content	HereticBurn3
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	A
-            rule_content	s
-            rule_content	h
-          command
-            sound
-              sound_id	0
-          
-
+            rule_content	HereticAsh
+          prefix	sfx0
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	3
+            rule_content	Burn3
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	A
-            rule_content	s
-            rule_content	h
-          command
-            sound
-              sound_id	0
-          
-
+            rule_content	Ash
+          prefix	sfx0
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	3
+            rule_content	MiniHereticBurn3
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	A
-            rule_content	s
-            rule_content	h
-          command
-            sound
-              sound_id	0
-          
-
+            rule_content	MiniHereticAsh
+          prefix	sfx0
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	3
+            rule_content	MiniBurn3
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	A
-            rule_content	s
-            rule_content	h
-          command
-            sound
-              sound_id	0
-          
-
+            rule_content	MiniAsh
+          prefix	sfx0
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	2
+            rule_content	HereticBurn2
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	3
-          
-
+            rule_content	HereticBurn3
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	2
+            rule_content	Burn2
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	3
-          
-
+            rule_content	Burn3
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	2
+            rule_content	MiniHereticBurn2
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	3
-          
-
+            rule_content	MiniHereticBurn3
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	2
+            rule_content	MiniBurn2
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	3
-          
-
+            rule_content	MiniBurn3
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	1
+            rule_content	HereticBurn1
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	2
-          
-
+            rule_content	HereticBurn2
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	1
+            rule_content	Burn1
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	2
-          
-
+            rule_content	Burn2
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	1
+            rule_content	MiniHereticBurn1
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	2
-          
-
+            rule_content	MiniHereticBurn2
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	1
+            rule_content	MiniBurn1
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	2
-          
-
+            rule_content	MiniBurn2
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	I
-            rule_content	d
-            rule_content	o
-            rule_content	l
+            rule_content	HereticIdol
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	1
-          
-
+            rule_content	HereticBurn1
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Move
-              Player
+            rule_content	Move
+            rule_content	Player
             cell_border
-            rule_content	I
-            rule_content	d
-            rule_content	o
-            rule_content	l
+            rule_content	Idol
           ->
           rule_part
-            rule_content
-              Move
-              Player
+            rule_content	Move
+            rule_content	Player
             cell_border
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	1
-          
-
+            rule_content	Burn1
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
+            rule_content	MiniHeretic
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	H
-            rule_content	e
-            rule_content	r
-            rule_content	e
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	1
-          
-
+            rule_content	MiniHereticBurn1
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	I
-            rule_content	d
-            rule_content	o
-            rule_content	l
+            rule_content	MiniIdol
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	1
-          
-
+            rule_content	MiniBurn1
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	I
-            rule_content	d
-            rule_content	o
-            rule_content	l
-            rule_content	C
-            rule_content	o
-            rule_content	o
-            rule_content	l
+            rule_content	IdolCool
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	I
-            rule_content	d
-            rule_content	o
-            rule_content	l
-          
-
+            rule_content	Idol
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	I
-            rule_content	d
-            rule_content	o
-            rule_content	l
-            rule_content	C
-            rule_content	o
-            rule_content	o
-            rule_content	l
+            rule_content	MiniIdolCool
           ->
           rule_part
-            rule_content
-              Player
-              Move
+            rule_content	Player
+            rule_content	Move
             cell_border
-            rule_content	M
-            rule_content	i
-            rule_content	n
-            rule_content	i
-            rule_content	I
-            rule_content	d
-            rule_content	o
-            rule_content	l
-          
-
+            rule_content	MiniIdol
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Player
             cell_border
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
-            rule_content	f
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	2
+            rule_content	Campfire2
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
-            rule_content	f
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	3
-          
-
+            rule_content	Campfire3
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Player
             cell_border
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
-            rule_content	f
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	1
+            rule_content	Campfire1
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
-            rule_content	f
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	2
-          
-
+            rule_content	Campfire2
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Player
             cell_border
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
-            rule_content	f
-            rule_content	i
-            rule_content	r
-            rule_content	e
+            rule_content	Campfire
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
-            rule_content	f
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	1
-          
-
+            rule_content	Campfire1
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Campfire2
             cell_border
-            rule_content	I
-            rule_content	d
-            rule_content	o
-            rule_content	l
+            rule_content	Idol
           ->
           rule_part
             rule_content	Campfire2
             cell_border
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	1
-          
-
+            rule_content	Burn1
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Campfire3
             cell_border
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	1
+            rule_content	Burn1
           ->
           rule_part
             rule_content	Campfire3
             cell_border
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	2
-          
-
+            rule_content	Burn2
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Campfire3
             cell_border
-            rule_content	I
-            rule_content	d
-            rule_content	o
-            rule_content	l
+            rule_content	Idol
           ->
           rule_part
             rule_content	Campfire3
             cell_border
-            rule_content	B
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	1
-          
-
+            rule_content	Burn1
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Campfire3
             cell_border
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
-            rule_content	f
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	1
+            rule_content	Campfire1
           ->
           rule_part
             rule_content	Campfire3
             cell_border
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
-            rule_content	f
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	2
-          
-
+            rule_content	Campfire2
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Campfire2
             cell_border
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
-            rule_content	f
-            rule_content	i
-            rule_content	r
-            rule_content	e
+            rule_content	Campfire
           ->
           rule_part
             rule_content	Campfire2
             cell_border
-            rule_content	C
-            rule_content	a
-            rule_content	m
-            rule_content	p
-            rule_content	f
-            rule_content	i
-            rule_content	r
-            rule_content	e
-            rule_content	1
-          
-
+            rule_content	Campfire1
         rule_data
-          late
-          random
+          prefix	late
+          prefix	random
           rule_part
             rule_content	Marker1
           ->
           rule_part
             rule_content	Move
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Loop2
           ->
           rule_part
             rule_content	Loop
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Ash
           ->
           rule_part
             rule_content	Ash
-          None
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	MiniAsh
           ->
           rule_part
             rule_content	MiniAsh
-          None
-          
-
         rule_data
           rule_part
-            rule_content
-              Move
-              no
-              Player
+            rule_content	Move
+            rule_content	no
+            rule_content	Player
           ->
           rule_part
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
           ->
           rule_part
             rule_content	Marker1
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Marker1
-              no
-              Ash
-            rule_content	]
-            rule_content	[
-            rule_content	M
-            rule_content	a
-            rule_content	r
-            rule_content	k
-            rule_content	e
-            rule_content	r
-            rule_content	1
-            rule_content	A
-            rule_content	s
-            rule_content	h
+            rule_content	Marker1
+            rule_content	no
+            rule_content	Ash
+          rule_part
+            rule_content	Marker1
+            rule_content	Ash
           ->
           rule_part
-            rule_content	]
-            rule_content	[
-            rule_content	M
-            rule_content	a
-            rule_content	r
-            rule_content	k
-            rule_content	e
-            rule_content	r
-            rule_content	1
-            rule_content	A
-            rule_content	s
-            rule_content	h
-          
-
-        rule_data
-          late
           rule_part
-            rule_content
-              Marker1
-              no
-              Unburnt
-            rule_content	]
-            rule_content	[
-            rule_content	M
-            rule_content	a
-            rule_content	r
-            rule_content	k
-            rule_content	e
-            rule_content	r
-            rule_content	1
-            rule_content	U
-            rule_content	n
-            rule_content	b
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	t
+            rule_content	Marker1
+            rule_content	Ash
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	Marker1
+            rule_content	no
+            rule_content	Unburnt
+          rule_part
+            rule_content	Marker1
+            rule_content	Unburnt
           ->
           rule_part
-            rule_content	]
-            rule_content	[
-            rule_content	M
-            rule_content	a
-            rule_content	r
-            rule_content	k
-            rule_content	e
-            rule_content	r
-            rule_content	1
-            rule_content	U
-            rule_content	n
-            rule_content	b
-            rule_content	u
-            rule_content	r
-            rule_content	n
-            rule_content	t
-          
-
-        rule_data
-          late
-          random
           rule_part
-            rule_content
-              Marker1
-              no
-              Ash
-              no
-              Unburnt
+            rule_content	Marker1
+            rule_content	Unburnt
+        rule_data
+          prefix	late
+          prefix	random
+          rule_part
+            rule_content	Marker1
+            rule_content	no
+            rule_content	Ash
+            rule_content	no
+            rule_content	Unburnt
           ->
           rule_part
-          command
-            sound
-              sound_id	7
-          
-
+          prefix	sfx7
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Marker1
           ->
           rule_part
-          
-
   winconditions_section
     condition_data
       no
@@ -3148,7 +2346,6 @@ ps_game
       no
       object_name	Unburnt
   levels_section
-    level_data	None
     level_data	[['.' '.' '[' '.' '.']
  ['.' '.' '.' '.' '.']
  ['.' '.' 'p' '.' '.']
@@ -3169,8 +2366,8 @@ ps_game
  ['.' '.' 'p' '.' '[']
  ['[' '.' '.' '.' '.']
  ['.' '.' '[' '.' '.']]
-    level_data	[['.' '.' '.' '.' '.' '.']]
-    level_data	[['u' '[' '.' '.' '.' '.']
+    level_data	[['.' '.' '.' '.' '.' '.']
+ ['u' '[' '.' '.' '.' '.']
  ['.' '.' 'u' '[' 'u' '.']
  ['.' '.' '[' '.' '.' '.']
  ['.' 'u' '.' '.' '.' '.']
@@ -3182,9 +2379,8 @@ ps_game
  ['.' '.' '.' 'u' '.' 'u' '.' '.' '.']
  ['.' '.' 'g' '.' '.' '.' 'g' '.' '.']
  ['.' '.' '.' '.' 'p' '.' '.' '.' '.']]
-    level_data	None
-    level_data	[['.' '.' '.' ';' ';']]
-    level_data	[['m' 'm' ';' ';' ';']
+    level_data	[['.' '.' '.' ';' ';']
+ ['m' 'm' ';' ';' ';']
  ['m' 'm' '.' ';' ';']
  ['.' '.' '.' 'p' '.']]
     level_data	[['.' '.' '[' '[' '[']
@@ -3197,8 +2393,8 @@ ps_game
  ['[' '[' '.' '[' '[']
  ['.' '.' '.' '.' '.']
  ['.' '.' 'p' '.' '.']]
-    level_data	[['.' '.' '.' ';' ';']]
-    level_data	[['m' 'm' 'm' ';' ';']
+    level_data	[['.' '.' '.' ';' ';']
+ ['m' 'm' 'm' ';' ';']
  ['m' 'm' 'm' ';' ';']
  ['.' '.' '.' 'p' '.']]
     level_data	[['w' '.' '.' '.' '.' '.']
@@ -3206,7 +2402,6 @@ ps_game
  ['.' '.' '.' '.' '.' '.']
  ['.' '.' 'm' 'm' '.' '.']
  ['.' 'm' 'm' 'm' 'm' '.']]
-    level_data	None
     level_data	[['.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.']
  ['.' '.' 'm' 'm' 'm' '.' '.']
@@ -3214,33 +2409,32 @@ ps_game
  ['.' '.' 'm' 'm' 'm' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' 'w' '.' '.' '.']]
-    level_data	[['.' '.' '.' ';' ';']]
-    level_data	[['m' 'm' 'm' 'm' ';']
+    level_data	[['.' '.' '.' ';' ';']
+ ['m' 'm' 'm' 'm' ';']
  ['m' 'm' 'm' 'm' ';']
  ['.' '.' '.' 'p' '.']]
-    level_data	[['.' '.' '.' '.' '.']]
-    level_data	[['.' 'm' 'm' 'm' '.']
+    level_data	[['.' '.' '.' '.' '.']
+ ['.' 'm' 'm' 'm' '.']
  ['.' 'm' 'p' 'm' '.']
  ['.' 'm' 'm' 'm' '.']
  ['.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.']]
-    level_data	[['.' '.' '.' '.' '.']]
-    level_data	[['.' 'm' 'm' 'm' '.']
+    level_data	[['.' '.' '.' '.' '.']
+ ['.' 'm' 'm' 'm' '.']
  ['.' 'm' 'm' 'm' '.']
  ['.' 'm' 'm' 'm' '.']
  ['.' '.' '.' '.' '.']
  ['.' '.' 'w' '.' '.']]
-    level_data	None
-    level_data	[['m' '.' '.' '.' '?' '.' '.' '.' 'm']]
-    level_data	[['.' 'm' '.' '.' '.' '.' '.' 'm' '.']
+    level_data	[['m' '.' '.' '.' '?' '.' '.' '.' 'm']
+ ['.' 'm' '.' '.' '.' '.' '.' 'm' '.']
  ['.' '.' 'm' '.' 'g' '.' 'm' '.' '.']
  ['.' '.' '.' 'g' '.' 'g' '.' '.' '.']
  ['.' '.' '.' 'g' '.' 'g' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' 'p' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.']]
-    level_data	[['.' 't' '.' 'g' 't' 't' 't' ';']]
-    level_data	[['t' 'g' ';' '.' '.' '.' ';' ';']
+    level_data	[['.' 't' '.' 'g' 't' 't' 't' ';']
+ ['t' 'g' ';' '.' '.' '.' ';' ';']
  ['t' '.' '.' '.' '.' '.' 'g' 't']
  ['t' '.' 'g' '.' '.' '.' ';' '.']
  ['t' '.' '.' '.' '.' 'g' ';' 't']
@@ -3261,9 +2455,8 @@ ps_game
  ['.' ';' ';' ';']
  ['m' 'm' 'm' ';']
  ['p' '.' ';' '.']]
-    level_data	None
-    level_data	[['.' '.' '.' '.']]
-    level_data	[['l' 'l' 'l' '.']
+    level_data	[['.' '.' '.' '.']
+ ['l' 'l' 'l' '.']
  ['l' 'l' 'l' '.']
  ['.' '.' '.' 'p']]
     level_data	[['.' '.' '.' '.' '.']
@@ -3276,7 +2469,6 @@ ps_game
  ['.' 'l' 'l' 'l' '.']
  ['.' 'l' 'l' 'l' '.']
  ['.' '.' 'p' '.' '.']]
-    level_data	None
     level_data	[['.' '.' '.' '.' '#' '.' '[']
  ['.' '.' '.' '#' '.' '.' '.']
  ['.' '.' '.' '#' '.' '.' '.']
@@ -3297,7 +2489,6 @@ ps_game
  ['.' 'm' 'w' 'm' '.']
  ['.' 'm' '0' 'm' '.']
  ['.' '.' '.' '.' '.']]
-    level_data	None
     level_data	[['.' '.' '.' '.' '.' '.' '#' '#' '#']
  ['.' '*' '.' '.' '?' '#' '[' '.' 'g']
  ['.' '.' 'l' '0' '.' '#' '.' 'h' '.']
@@ -3305,5 +2496,3 @@ ps_game
  ['.' ';' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '0' '.' '#' '.' '.' 'u']
  ['.' '.' 'w' '.' '.' '.' '#' '#' '#']]
-    level_data	None
-    level_data	None

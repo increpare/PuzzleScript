@@ -1,361 +1,728 @@
+title IDOLS TO THE BURNT GOD
+author Edalcmagal
+homepage www.puzzlescript.net
+background_color darkred
+text_color Red
+noaction
+
 OBJECTS
 
-Outlineupblue darkgreen00000
+Outlineup
+blue darkgreen
+
+00000
 11111
-11111
+
 11111
 11111
 
-Outlinedownblue darkgreen11111
+11111
+Outlinedown
+
+blue d
+11111
+
 11111
 11111
+
 11111
 00000
 
-Outlinerightblue darkgreen11110
+Outlineright
+blue darkgreen
 11110
 11110
 11110
 11110
+1111
 
-Outlineleftblue darkgreen01111
-01111
-01111
+Outlineleft
+blue darkgreen
+
 01111
 01111
 
-UpRightdarkgreen
-blue00001
-0000000000
-0000000000
-UpLeftdarkgreen
-blue10000
-0000000000
-0000000000
-DownRightdarkgreen
-blue00000
-0000000000
-0000000001
-DownLeftdarkgreen blue
-0000000000
-0000000000
-10000Background
-grey#973043 #773043
-2222222222
-2222222222
-22222Background2
-grey#973043 #773043
-2222222222
-2222222222
-22222Target
-DarkBluepurple pink
-..1...202.
-10101.202.
-..1..Wall
-darkredPlayer
-blackred
-yellowdarkgray #222222
-1.2.1.030.
-..0...434.
-.000.ClosedDoor
-RedDarkRed black.....
+01111
+01111
+
+01111
+UpRight
+
+darkgreen b
+00001
+
+00000
+00000
+
+00000
+00000
+
+UpLeft
+darkgreen blue
+
+10000
+00000
+
+00000
+00000
+
+00000
+DownRight
+
+darkgreen b
+00000
+
+00000
+00000
+
+00000
+00001
+
+DownLeft
+darkgreen blue
+
+00000
+00000
+
+00000
+00000
+
+10000
+Background
+
+grey #
+22222
+
+22222
+22222
+
+22222
+22222
+
+Background2
+grey #973043 #773043
+22222
+22222
+22222
+22222
+2222
+
+Target
+DarkBlue purple pink
+..1..
+.202.
+10101
+.202.
+..1.
+
+Wall
+darkred
+
+Player
+black red yellow darkgray #222222
+1.2.1
+.030.
+..0..
+.434.
+.000
+
+ClosedDoor
+Red DarkRed black
+.....
 .000.
 .200.
 .000.
-.000.
+.000
 
-MarkerUptransparent
-0000000000
-0000000000
-00000MarkerDown
-transparent00000
-0000000000
-0000000000
-MarkerLefttransparent
-0000000000
-0000000000
-00000MarkerRight
-transparent00000
-0000000000
-0000000000
-Marker1transparent
-0000000000
-0000000000
-00000MarkerStart
-transparent00000
-0000000000
-0000000000
-MarkerStoptransparent
-0000000000
-0000000000
-00000Fill
-black.....
-.......0..
-..........
-Fill2black
-..........
-..0.......
-.....MarkerAgain
-transparent00000
-0000000000
-0000000000
-MarkerPathCount1transparent
-..........
-..........
-.....MarkerAlreadyFound
-transparent.....
-..........
-..........
-Marker2black.....
+MarkerUp
+transparent
+
+00000
+00000
+
+00000
+00000
+
+00000
+MarkerDown
+
+transparent
+00000
+
+00000
+00000
+
+00000
+00000
+
+MarkerLeft
+transparent
+
+00000
+00000
+
+00000
+00000
+
+00000
+MarkerRight
+
+transparent
+00000
+
+00000
+00000
+
+00000
+00000
+
+Marker1
+transparent
+
+00000
+00000
+
+00000
+00000
+
+00000
+MarkerStart
+
+transparent
+00000
+
+00000
+00000
+
+00000
+00000
+
+MarkerStop
+transparent
+
+00000
+00000
+
+00000
+00000
+
+00000
+Fill
+
+black
 .....
+
 .....
+..0..
+
 .....
 .....
 
-Boxpink purple
-.......0..
-.010...0..
-.....NewTarget
-DarkRed.....
-.000..0.0.
-.000......
-MarkerMoveUptransparent
-blue.....
-..........
-..........
-MarkerMoveDowntransparent
-yellow.....
-..........
-..........
-MarkerMoveLefttransparent
-purple.....
-..........
-..........
-MarkerMoveRighttransparent
-black.....
-..........
-..........
-Teleporterpurple pink.010.
-10001
-10001
-10001
+Fill2
+black
+
+.....
+.....
+
+..0..
+.....
+
+.....
+MarkerAgain
+
+transparent
+00000
+
+00000
+00000
+
+00000
+00000
+
+MarkerPathCount1
+transparent
+
+.....
+.....
+
+.....
+.....
+
+.....
+MarkerAlreadyFound
+
+transparent
+.....
+
+.....
+.....
+
+.....
+.....
+
+Marker2
+black
+.....
+.....
+.....
+.....
+....
+
+Box
+pink purple
+
+.....
+..0..
+
 .010.
+..0..
 
-Marker3transparent
-..........
-..........
-.....Marker4
-transparent.....
-..........
-..........
-Marker5transparent
-..........
-..........
-.....Marker6
-transparent.....
-..........
-..........
-Marker7transparent
-..........
-..........
-.....Marker8
-transparent.....
-..........
-..........
-Looptransparent
-blue.....
-..........
-..........
-Loop2transparent
-red.....
-..........
-..........
-MarkerChangetransparent
-green.....
-..........
-..........
-MarkerChange2transparent
-darkgreen.....
-..........
-..........
-Keyyellow brown.00..
+.....
+NewTarget
+
+DarkRed
+.....
+
+.000.
+.0.0.
+
+.000.
+.....
+
+MarkerMoveUp
+transparent blue
+
+.....
+.....
+
+.....
+.....
+
+.....
+MarkerMoveDown
+
+transparent y
+.....
+
+.....
+.....
+
+.....
+.....
+
+MarkerMoveLeft
+transparent purple
+
+.....
+.....
+
+.....
+.....
+
+.....
+MarkerMoveRight
+
+transparent b
+.....
+
+.....
+.....
+
+.....
+.....
+
+Teleporter
+purple pink
+.010.
+10001
+10001
+10001
+.010
+
+Marker3
+transparent
+
+.....
+.....
+
+.....
+.....
+
+.....
+Marker4
+
+transparent
+.....
+
+.....
+.....
+
+.....
+.....
+
+Marker5
+transparent
+
+.....
+.....
+
+.....
+.....
+
+.....
+Marker6
+
+transparent
+.....
+
+.....
+.....
+
+.....
+.....
+
+Marker7
+transparent
+
+.....
+.....
+
+.....
+.....
+
+.....
+Marker8
+
+transparent
+.....
+
+.....
+.....
+
+.....
+.....
+
+Loop
+transparent blue
+
+.....
+.....
+
+.....
+.....
+
+.....
+Loop2
+
+transparent r
+.....
+
+.....
+.....
+
+.....
+.....
+
+MarkerChange
+transparent green
+
+.....
+.....
+
+.....
+.....
+
+.....
+MarkerChange2
+
+transparent d
+.....
+
+.....
+.....
+
+.....
+.....
+
+Key
+yellow brown
+
 .00..
+.00..
+
 ..0..
 .010.
-.000.
 
-ImmovableWallVert#3690ff
-blue11011
-1111110111
-1110111111
-ImmovableWallVert2#3690ff blue11111
+.000.
+ImmovableWallVert
+
+#3690ff b
 11011
+
 11111
 10111
-11101
 
-ImmovableWallHor#3690ff
-blue11111
-1110101111
-1101111111
-ImmovableWallHor2#3690ff blue11111
+11101
+11111
+
+ImmovableWallVert2
+#3690ff blue
+
+11111
+11011
+
+11111
+10111
+
+11101
+ImmovableWallHor
+
+#3690ff b
+11111
+
+11101
+01111
+
+11011
+11111
+
+ImmovableWallHor2
+#3690ff blue
+11111
 11110
 10111
 11101
-11111
+1111
 
-Enablerdarkred00000
+Enabler
+darkred
 00000
 00000
 00000
 00000
+0000
 
-Idolwhite brown1.0.1
+Idol
+white brown
+1.0.1
 .000.
 ..0..
 .0.0.
-00.00
+00.0
 
-IdolCoollightblue yellow1.0.1
+IdolCool
+lightblue yellow
+1.0.1
 .000.
 ..0..
 .0.0.
-00.00
+00.0
 
-Burn1yellow red1.0.1
+Burn1
+yellow red
+1.0.1
 .000.
 ..0..
 .0.0.
-00.00
+00.0
 
-Burn2red black1.0.1
+Burn2
+red black
+1.0.1
 .000.
 ..0..
 .0.0.
-00.00
+00.0
 
-Burn3black black
-1.0.1.000.
-..0...0.0.
-00.00Ash
-blackdarkgray grey.....
+Burn3
+black black
+1.0.1
+.000.
+..0..
+.0.0.
+00.0
+
+Ash
+black darkgray grey
+.....
 .....
 .121.
 10001
-00000
+0000
 
-Campfirebrown
-..........
-0...0.000.
-00.00Campfire1
-brownyellow red
-..........
-01210.000.
-00.00Campfire2
-brownyellow red.....
+Campfire
+brown
+.....
+.....
+0...0
+.000.
+00.0
+
+Campfire1
+brown yellow red
+.....
+.....
+01210
+.000.
+00.0
+
+Campfire2
+brown yellow red
+.....
 .222.
 02120
 .000.
-00.00
+00.0
 
-Campfire3brown
-yellowred orange..2..
+Campfire3
+brown yellow red orange
+..2..
 12221
 01110
 .000.
-00.00
+00.0
 
-MiniIdolwhite brown.....
+MiniIdol
+white brown
+.....
 1.0.1
 .000.
 ..0..
-.0.0.
+.0.0
 
-MiniBurn1yellow red.....
+MiniBurn1
+yellow red
+.....
 1.0.1
 .000.
 ..0..
-.0.0.
+.0.0
 
-MiniBurn2red black.....
+MiniBurn2
+red black
+.....
 1.0.1
 .000.
 ..0..
-.0.0.
+.0.0
 
-MiniBurn3black black
-.....1.0.1
-.000...0..
-.0.0.MiniAsh
-blackdarkgray grey.....
+MiniBurn3
+black black
+.....
+1.0.1
+.000.
+..0..
+.0.0
+
+MiniAsh
+black darkgray grey
+.....
 .....
 ..2..
 .101.
-.000.
+.000
 
-MiniIdolCoollightblue yellow.....
+MiniIdolCool
+lightblue yellow
+.....
 1.0.1
 .000.
 ..0..
-.0.0.
+.0.0
 
-HereticIdol#CCCCCC brown..0..
+HereticIdol
+#CCCCCC brown
+..0..
 .000.
 1.0.1
 .0.0.
-00.00
+00.0
 
-HereticBurn1#c0bb35 #ab3838..0..
+HereticBurn1
+#c0bb35 #ab3838
+..0..
 .000.
 1.0.1
 .0.0.
-00.00
+00.0
 
-HereticBurn2#ab3838 #404040..0..
+HereticBurn2
+#ab3838 #404040
+..0..
 .000.
 1.0.1
 .0.0.
-00.00
+00.0
 
-HereticBurn3#404040
-..0...000.
-0.0.0.0.0.
-00.00HereticAsh
-blackdarkgray grey.....
+HereticBurn3
+#404040
+..0..
+.000.
+0.0.0
+.0.0.
+00.0
+
+HereticAsh
+black darkgray grey
+.....
 .....
 .121.
 10001
-00000
+0000
 
-MiniHeretic#CCCCCC brown.....
+MiniHeretic
+#CCCCCC brown
+.....
 ..0..
 .000.
 1.0.1
-.0.0.
+.0.0
 
-MiniHereticBurn1#c0bb35 #ab3838.....
+MiniHereticBurn1
+#c0bb35 #ab3838
+.....
 ..0..
 .000.
 1.0.1
-.0.0.
+.0.0
 
-MiniHereticBurn2#ab3838 #404040.....
+MiniHereticBurn2
+#ab3838 #404040
+.....
 ..0..
 .000.
 1.0.1
-.0.0.
+.0.0
 
-MiniHereticBurn3#404040
-.......0..
-.000.0.0.0
-.0.0.MiniHereticAsh
-blackdarkgray grey
-..........
-..2...101.
-.000.Move
-transparent.....
-..........
-..........
+MiniHereticBurn3
+#404040
+.....
+..0..
+.000.
+0.0.0
+.0.0
+
+MiniHereticAsh
+black darkgray grey
+
+.....
+.....
+
+..2..
+.101.
+
+.000.
+Move
+
+transparent
+.....
+
+.....
+.....
+
+.....
+.....
+
 
 LEGEND
 
@@ -421,22 +788,12 @@ Fill2
 MarkerAgain, MarkerPathCount1
 MarkerStart
 MarkerStop
-MarkerAlreadyFound
-MarkerUp, MarkerDown
-MarkerRight, MarkerLeft
+MarkerAlreadyFound, MarkerUp, MarkerDown, MarkerRight, MarkerLeft
 Target
 Wall
-Ash, MiniAsh
-HereticAsh, MiniHereticAsh
+Ash, MiniAsh, HereticAsh, MiniHereticAsh
 ClosedDoor
-Player, Burn1
-Burn2, Burn3
-Idol, Campfire
-Campfire1, Campfire2
-Campfire3, MiniIdol
-MiniBurn1, MiniBurn2
-MiniBurn3, MiniIdolCool
-Heretic, IdolCool
+Player, Burn1, Burn2, Burn3, Idol, Campfire, Campfire1, Campfire2, Campfire3, MiniIdol, MiniBurn1, MiniBurn2, MiniBurn3, MiniIdolCool, Heretic, IdolCool
 Move
 Key
 Box
@@ -453,11 +810,7 @@ MarkerMoveUp
 MarkerMoveDown
 MarkerMoveLeft
 MarkerMoveRight
-Outlineup
-Outlinedown, Outlineright
-Outlineleft, UpRight
-UpLeft, DownRight
-DownLeft, ImmovableWall
+Outlineup, Outlinedown, Outlineright, Outlineleft, UpRight, UpLeft, DownRight, DownLeft, ImmovableWall
 Loop
 Loop2
 MarkerChange
@@ -465,67 +818,7 @@ MarkerChange2
 
 RULES
 
-[ > Player][Loop ] -> [ > Player][Loop2 ] 
-[ action Player][Loop ] -> [ action Player][Loop2 ] 
-random [ Teleporter no MarkerStart no MarkerStop ] -> [ Teleporter MarkerStart ] 
-random [ Teleporter no MarkerStart no MarkerStop ] -> [ Teleporter MarkerStop ] 
-[ ImmovableWallVert no MarkerChange][Loop ] -> [ ImmovableWallVert MarkerChange][Loop ] 
-[ ImmovableWallVert2 no MarkerChange][Loop ] -> [ ImmovableWallVert2 MarkerChange][Loop ] 
-[ ImmovableWallHor no MarkerChange][Loop ] -> [ ImmovableWallHor MarkerChange][Loop ] 
-[ ImmovableWallHor2 no MarkerChange][Loop ] -> [ ImmovableWallHor2 MarkerChange][Loop ] 
-[ Background no MarkerChange][Loop ] -> [ Background MarkerChange][Loop ] 
-[ Background2 no MarkerChange2][Loop ] -> [ Background2 MarkerChange2][Loop ] 
-[ ImmovableWallVert MarkerChange ] -> [ ImmovableWallVert2 no MarkerChange ] 
-[ ImmovableWallVert2 MarkerChange ] -> [ ImmovableWallVert no MarkerChange ] 
-[ ImmovableWallHor MarkerChange ] -> [ ImmovableWallHor2 no MarkerChange ] 
-[ ImmovableWallHor2 MarkerChange ] -> [ ImmovableWallHor no MarkerChange ] 
-[ Background MarkerChange ] -> [ Background2 no MarkerChange ] 
-[ Background2 MarkerChange2 ] -> [ Background no MarkerChange2 ] 
-[ > Player | Boundary ] -> [ Player | Boundary ] 
-[ > Player | Wall ] -> [ Player | Wall ] 
-[ > Player | MiniStatue ] -> [ > Player | >MiniStatue ] 
-[ > Player | Camp ] -> [ > Player | >Camp ] 
-[ > Camp | Camp ] -> [ > Camp | >Camp ] 
-[ > MiniStatue | MiniStatue ] -> [ > MiniStatue | >MiniStatue ] 
-late [ Player Move ] -> [ Player Marker1 ] 
-late [ Player no Move no Marker1 ] -> [ Player Move ] 
-late [ Player Move | HereticBurn3 ] -> [ Player Move | HereticAsh ] 
-late [ Player Move | Burn3 ] -> [ Player Move | Ash ] 
-late [ Player Move | MiniHereticBurn3 ] -> [ Player Move | MiniHereticAsh ] 
-late [ Player Move | MiniBurn3 ] -> [ Player Move | MiniAsh ] 
-late [ Player Move | HereticBurn2 ] -> [ Player Move | HereticBurn3 ] 
-late [ Player Move | Burn2 ] -> [ Player Move | Burn3 ] 
-late [ Player Move | MiniHereticBurn2 ] -> [ Player Move | MiniHereticBurn3 ] 
-late [ Player Move | MiniBurn2 ] -> [ Player Move | MiniBurn3 ] 
-late [ Player Move | HereticBurn1 ] -> [ Player Move | HereticBurn2 ] 
-late [ Player Move | Burn1 ] -> [ Player Move | Burn2 ] 
-late [ Player Move | MiniHereticBurn1 ] -> [ Player Move | MiniHereticBurn2 ] 
-late [ Player Move | MiniBurn1 ] -> [ Player Move | MiniBurn2 ] 
-late [ Player Move | HereticIdol ] -> [ Player Move | HereticBurn1 ] 
-late [ Move Player | Idol ] -> [ Move Player | Burn1 ] 
-late [ Player Move | MiniHeretic ] -> [ Player Move | MiniHereticBurn1 ] 
-late [ Player Move | MiniIdol ] -> [ Player Move | MiniBurn1 ] 
-late [ Player Move | IdolCool ] -> [ Player Move | Idol ] 
-late [ Player Move | MiniIdolCool ] -> [ Player Move | MiniIdol ] 
-late [ Player | Campfire2 ] -> [ Player | Campfire3 ] 
-late [ Player | Campfire1 ] -> [ Player | Campfire2 ] 
-late [ Player | Campfire ] -> [ Player | Campfire1 ] 
-late [ Campfire2 | Idol ] -> [ Campfire2 | Burn1 ] 
-late [ Campfire3 | Burn1 ] -> [ Campfire3 | Burn2 ] 
-late [ Campfire3 | Idol ] -> [ Campfire3 | Burn1 ] 
-late [ Campfire3 | Campfire1 ] -> [ Campfire3 | Campfire2 ] 
-late [ Campfire2 | Campfire ] -> [ Campfire2 | Campfire1 ] 
-late random [ Marker1 ] -> [ Move ] 
-late [ Loop2 ] -> [ Loop ] 
-late [ Ash ] -> [ Ash ] 
-late [ MiniAsh ] -> [ MiniAsh ] 
-[ Move no Player ] -> [  ] 
-late [  ] -> [ Marker1 ] 
-late [ Marker1 no Ash][Marker1Ash ] -> [ ][Marker1Ash ] 
-late [ Marker1 no Unburnt][Marker1Unburnt ] -> [ ][Marker1Unburnt ] 
-late random [ Marker1 no Ash no Unburnt ] -> [  ] 
-late [ Marker1 ] -> [  ] 
-
+[ > Player ] [ Loop ] -> [ > Player ] [ Loop2 ][ actionPlayer ] [ Loop ] -> [ actionPlayer ] [ Loop2 ]random [ TeleporternoMarkerStartnoMarkerStop ] -> [ TeleporterMarkerStart ]random [ TeleporternoMarkerStartnoMarkerStop ] -> [ TeleporterMarkerStop ][ ImmovableWallVertnoMarkerChange ] [ Loop ] -> [ ImmovableWallVertMarkerChange ] [ Loop ][ ImmovableWallVert2noMarkerChange ] [ Loop ] -> [ ImmovableWallVert2MarkerChange ] [ Loop ][ ImmovableWallHornoMarkerChange ] [ Loop ] -> [ ImmovableWallHorMarkerChange ] [ Loop ][ ImmovableWallHor2noMarkerChange ] [ Loop ] -> [ ImmovableWallHor2MarkerChange ] [ Loop ][ BackgroundnoMarkerChange ] [ Loop ] -> [ BackgroundMarkerChange ] [ Loop ][ Background2noMarkerChange2 ] [ Loop ] -> [ Background2MarkerChange2 ] [ Loop ][ ImmovableWallVertMarkerChange ] -> [ ImmovableWallVert2noMarkerChange ][ ImmovableWallVert2MarkerChange ] -> [ ImmovableWallVertnoMarkerChange ][ ImmovableWallHorMarkerChange ] -> [ ImmovableWallHor2noMarkerChange ][ ImmovableWallHor2MarkerChange ] -> [ ImmovableWallHornoMarkerChange ][ BackgroundMarkerChange ] -> [ Background2noMarkerChange ][ Background2MarkerChange2 ] -> [ BackgroundnoMarkerChange2 ][ > Player | Boundary ] -> [ Player | Boundary ][ > Player | Wall ] -> [ Player | Wall ][ > Player | MiniStatue ] -> [ > Player | > MiniStatue ] sfx2[ > Player | Camp ] -> [ > Player | > Camp ][ > Camp | Camp ] -> [ > Camp | > Camp ][ > MiniStatue | MiniStatue ] -> [ > MiniStatue | > MiniStatue ]late [ PlayerMove ] -> [ PlayerMarker1 ]late [ PlayernoMovenoMarker1 ] -> [ PlayerMove ]late [ PlayerMove | HereticBurn3 ] -> [ PlayerMove | HereticAsh ] sfx0late [ PlayerMove | Burn3 ] -> [ PlayerMove | Ash ] sfx0late [ PlayerMove | MiniHereticBurn3 ] -> [ PlayerMove | MiniHereticAsh ] sfx0late [ PlayerMove | MiniBurn3 ] -> [ PlayerMove | MiniAsh ] sfx0late [ PlayerMove | HereticBurn2 ] -> [ PlayerMove | HereticBurn3 ]late [ PlayerMove | Burn2 ] -> [ PlayerMove | Burn3 ]late [ PlayerMove | MiniHereticBurn2 ] -> [ PlayerMove | MiniHereticBurn3 ]late [ PlayerMove | MiniBurn2 ] -> [ PlayerMove | MiniBurn3 ]late [ PlayerMove | HereticBurn1 ] -> [ PlayerMove | HereticBurn2 ]late [ PlayerMove | Burn1 ] -> [ PlayerMove | Burn2 ]late [ PlayerMove | MiniHereticBurn1 ] -> [ PlayerMove | MiniHereticBurn2 ]late [ PlayerMove | MiniBurn1 ] -> [ PlayerMove | MiniBurn2 ]late [ PlayerMove | HereticIdol ] -> [ PlayerMove | HereticBurn1 ]late [ MovePlayer | Idol ] -> [ MovePlayer | Burn1 ]late [ PlayerMove | MiniHeretic ] -> [ PlayerMove | MiniHereticBurn1 ]late [ PlayerMove | MiniIdol ] -> [ PlayerMove | MiniBurn1 ]late [ PlayerMove | IdolCool ] -> [ PlayerMove | Idol ]late [ PlayerMove | MiniIdolCool ] -> [ PlayerMove | MiniIdol ]late [ Player | Campfire2 ] -> [ Player | Campfire3 ]late [ Player | Campfire1 ] -> [ Player | Campfire2 ]late [ Player | Campfire ] -> [ Player | Campfire1 ]late [ Campfire2 | Idol ] -> [ Campfire2 | Burn1 ]late [ Campfire3 | Burn1 ] -> [ Campfire3 | Burn2 ]late [ Campfire3 | Idol ] -> [ Campfire3 | Burn1 ]late [ Campfire3 | Campfire1 ] -> [ Campfire3 | Campfire2 ]late [ Campfire2 | Campfire ] -> [ Campfire2 | Campfire1 ]late random [ Marker1 ] -> [ Move ]late [ Loop2 ] -> [ Loop ]late [ Ash ] -> [ Ash ]late [ MiniAsh ] -> [ MiniAsh ][ MovenoPlayer ] -> [  ]late [  ] -> [ Marker1 ]late [ Marker1noAsh ] [ Marker1Ash ] -> [  ] [ Marker1Ash ]late [ Marker1noUnburnt ] [ Marker1Unburnt ] -> [  ] [ Marker1Unburnt ]late random [ Marker1noAshnoUnburnt ] -> [  ] sfx7late [ Marker1 ] -> [  ]
 
 WINCONDITIONS
 
@@ -561,7 +854,6 @@ LEVELS
 ..[..
 
 ......
-
 u[....
 ..u[u.
 ..[...
@@ -577,7 +869,6 @@ u[....
 ....p....
 
 ...;;
-
 mm;;;
 mm.;;
 ...p.
@@ -595,7 +886,6 @@ mm.;;
 ..p..
 
 ...;;
-
 mmm;;
 mmm;;
 ...p.
@@ -615,13 +905,11 @@ w.....
 ...w...
 
 ...;;
-
 mmmm;
 mmmm;
 ...p.
 
 .....
-
 .mmm.
 .mpm.
 .mmm.
@@ -629,7 +917,6 @@ mmmm;
 .....
 
 .....
-
 .mmm.
 .mmm.
 .mmm.
@@ -637,7 +924,6 @@ mmmm;
 ..w..
 
 m...?...m
-
 .m.....m.
 ..m.g.m..
 ...g.g...
@@ -647,7 +933,6 @@ m...?...m
 .........
 
 .t.gttt;
-
 tg;...;;
 t.....gt
 t.g...;.
@@ -673,7 +958,6 @@ mmm;
 p.;.
 
 ....
-
 lll.
 lll.
 ...p

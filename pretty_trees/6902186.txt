@@ -1,31 +1,33 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Take Heart Lass
+    prelude_data
+      author
+      Kevin Zuhn
+    prelude_data
+      homepage
+      www.kevinzuhn.com
   objects_section
     object_data
-      object_name	Background
-      legend_key	L
-      colors
-        color	ightGreen
+      object_line
+        object_name	Background
+      color_line
+        color	LightGreen
         color	Green
+      sprite
+        ['1' '1' '1' '1' '1']
+        ['1' '1' '0' '1' '1']
+        ['1' '0' '1' '0' '1']
+        ['1' '1' '0' '1' '1']
+        ['1' '1' '1' '1' '1']
     object_data
-      object_name	11111
-      legend_key	1
-      colors
-        color	1011
-    object_data
-      object_name	10101
-      legend_key	1
-      colors
-        color	1011
-    object_data
-      object_name	11111
-      legend_key	B
-      colors
-        color	ackFlowers
-    object_data
-      object_name	Green
-      legend_key	P
-      colors
-        color	urple
+      object_line
+        object_name	BackFlowers
+      color_line
+        color	Green
+        color	Purple
         color	Yellow
       sprite
         ['1' '0' '0' '0' '1']
@@ -34,10 +36,10 @@ ps_game
         ['0' '0' '1' '0' '0']
         ['1' '0' '0' '0' '1']
     object_data
-      object_name	Target
-      legend_key	R
-      colors
-        color	ED
+      object_line
+        object_name	Target
+      color_line
+        color	RED
         color	LightRed
       sprite
         ['.' '0' '.' '0' '.']
@@ -46,10 +48,10 @@ ps_game
         ['.' '0' '1' '0' '.']
         ['.' '.' '0' '.' '.']
     object_data
-      object_name	Wall
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Wall
+      color_line
+        color	Red
         color	DarkGreen
       sprite
         ['0' '0' '0' '0' '0']
@@ -58,10 +60,10 @@ ps_game
         ['0' '0' '1' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	DespairWall
-      legend_key	D
-      colors
-        color	arkBrown
+      object_line
+        object_name	DespairWall
+      color_line
+        color	DarkBrown
         color	DarkBlue
       sprite
         ['0' '0' '0' '0' '0']
@@ -70,10 +72,10 @@ ps_game
         ['0' '0' '1' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	NewDespairWall
-      legend_key	D
-      colors
-        color	arkRed
+      object_line
+        object_name	NewDespairWall
+      color_line
+        color	DarkRed
         color	DarkBlue
       sprite
         ['0' '0' '0' '0' '0']
@@ -82,15 +84,12 @@ ps_game
         ['0' '0' '1' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Player
-      legend_key	B
-      colors
-        color	lue
-    object_data
-      object_name	LightRed
-      legend_key	Y
-      colors
-        color	ellow
+      object_line
+        object_name	Player
+      color_line
+        color	Blue
+        color	LightRed
+        color	Yellow
         color	DarkBlue
       sprite
         ['.' '3' '3' '3' '.']
@@ -99,10 +98,10 @@ ps_game
         ['.' '1' '1' '1' '.']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	OldHope
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	OldHope
+      color_line
+        color	White
         color	Pink
       sprite
         ['1' '1' '1' '1' '1']
@@ -111,10 +110,10 @@ ps_game
         ['1' '1' '0' '1' '1']
         ['1' '1' '1' '1' '1']
     object_data
-      object_name	NewHope
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	NewHope
+      color_line
+        color	White
         color	LightRed
       sprite
         ['1' '1' '1' '1' '1']
@@ -123,10 +122,10 @@ ps_game
         ['1' '1' '0' '1' '1']
         ['1' '1' '1' '1' '1']
     object_data
-      object_name	Crate
-      legend_key	P
-      colors
-        color	ink
+      object_line
+        object_name	Crate
+      color_line
+        color	Pink
         color	White
       sprite
         ['.' '0' '.' '0' '.']
@@ -135,10 +134,10 @@ ps_game
         ['.' '0' '1' '0' '.']
         ['.' '.' '0' '.' '.']
     object_data
-      object_name	OldDespair
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	OldDespair
+      color_line
+        color	Black
         color	DarkBlue
       sprite
         ['0' '1' '0' '1' '0']
@@ -147,10 +146,10 @@ ps_game
         ['1' '0' '1' '0' '1']
         ['0' '1' '0' '1' '0']
     object_data
-      object_name	AltOldDespair
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	AltOldDespair
+      color_line
+        color	Black
         color	DarkBlue
       sprite
         ['1' '0' '1' '0' '1']
@@ -159,10 +158,10 @@ ps_game
         ['0' '1' '0' '1' '0']
         ['1' '0' '1' '0' '1']
     object_data
-      object_name	NewDespair
-      legend_key	D
-      colors
-        color	arkBlue
+      object_line
+        object_name	NewDespair
+      color_line
+        color	DarkBlue
         color	DarkGray
       sprite
         ['0' '1' '0' '1' '0']
@@ -171,10 +170,10 @@ ps_game
         ['1' '0' '1' '0' '1']
         ['0' '1' '0' '1' '0']
     object_data
-      object_name	AltNewDespair
-      legend_key	D
-      colors
-        color	arkBlue
+      object_line
+        object_name	AltNewDespair
+      color_line
+        color	DarkBlue
         color	DarkGray
       sprite
         ['1' '0' '1' '0' '1']
@@ -182,43 +181,41 @@ ps_game
         ['1' '0' '1' '0' '1']
         ['0' '1' '0' '1' '0']
         ['1' '0' '1' '0' '1']
-      
-
   legend_section
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      f
+      f =
       object_name	BackFlowers
     legend_data
-      #
+      # =
       object_name	Wall
     legend_data
-      P
+      P =
       object_name	Player
     legend_data
-      *
+      * =
       object_name	Crate
     legend_data
-      @
+      @ =
       object_name	Crate
       legend_operation
         object_name	Target
     legend_data
-      O
+      O =
       object_name	Target
     legend_data
-      X
+      X =
       object_name	OldDespair
     legend_data
-      Z
+      Z =
       object_name	AltOldDespair
     legend_data
-      H
+      H =
       object_name	OldHope
     legend_data
-      Despair
+      Despair =
       object_name	OldDespair
       legend_operation
         object_name	NewDespair
@@ -227,12 +224,12 @@ ps_game
       legend_operation
         object_name	AltNewDespair
     legend_data
-      Hope
+      Hope =
       object_name	OldHope
       legend_operation
         object_name	NewHope
     legend_data
-      Blocker
+      Blocker =
       object_name	Despair
       legend_operation
         object_name	Crate
@@ -249,7 +246,7 @@ ps_game
       legend_operation
         object_name	Hope
     legend_data
-      HopeBlocker
+      HopeBlocker =
       object_name	Crate
       legend_operation
         object_name	Target
@@ -266,18 +263,14 @@ ps_game
       object_name	Background
     layer_data
       object_name	Target
-    layer_data
       object_name	BackFlowers
       object_name	Hope
     layer_data
       object_name	Player
-    layer_data
       object_name	Wall
       object_name	Crate
-    layer_data
       object_name	Despair
       object_name	NewDespair
-    layer_data
       object_name	DespairWall
       object_name	NewDespairWall
   rules_section
@@ -289,348 +282,168 @@ ps_game
           ->
           rule_part
             rule_content	OldDespair
-          
-
         rule_data
           rule_part
             rule_content	AltNewDespair
           ->
           rule_part
             rule_content	AltOldDespair
-          
-
         rule_data
           rule_part
             rule_content	NewDespairWall
           ->
           rule_part
             rule_content	DespairWall
-          
-
         rule_data
           rule_part
             rule_content	NewHope
           ->
           rule_part
             rule_content	OldHope
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	OldDespair
             cell_border
-            rule_content	N
-            rule_content	o
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
+            rule_content	No
+            rule_content	Blocker
           ->
           rule_part
             rule_content	OldDespair
             cell_border
-            rule_content	A
-            rule_content	l
-            rule_content	t
-            rule_content	N
-            rule_content	e
-            rule_content	w
-            rule_content	D
-            rule_content	e
-            rule_content	s
-            rule_content	p
-            rule_content	a
-            rule_content	i
-            rule_content	r
-          
-
+            rule_content	AltNewDespair
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	AltOldDespair
             cell_border
-            rule_content	N
-            rule_content	o
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
+            rule_content	No
+            rule_content	Blocker
           ->
           rule_part
             rule_content	AltOldDespair
             cell_border
-            rule_content	N
-            rule_content	e
-            rule_content	w
-            rule_content	D
-            rule_content	e
-            rule_content	s
-            rule_content	p
-            rule_content	a
-            rule_content	i
-            rule_content	r
-          
-
+            rule_content	NewDespair
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	OldDespair
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Wall
           ->
           rule_part
             rule_content	OldDespair
             cell_border
-            rule_content	N
-            rule_content	e
-            rule_content	w
-            rule_content	D
-            rule_content	e
-            rule_content	s
-            rule_content	p
-            rule_content	a
-            rule_content	i
-            rule_content	r
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-          
-
+            rule_content	NewDespairWall
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	DespairWall
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Wall
           ->
           rule_part
             rule_content	DespairWall
             cell_border
-            rule_content	N
-            rule_content	e
-            rule_content	w
-            rule_content	D
-            rule_content	e
-            rule_content	s
-            rule_content	p
-            rule_content	a
-            rule_content	i
-            rule_content	r
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-          
-
+            rule_content	NewDespairWall
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	OldHope
             cell_border
-            rule_content	N
-            rule_content	o
-            rule_content	H
-            rule_content	o
-            rule_content	p
-            rule_content	e
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
+            rule_content	No
+            rule_content	HopeBlocker
           ->
           rule_part
             rule_content	OldHope
             cell_border
-            rule_content	N
-            rule_content	e
-            rule_content	w
-            rule_content	H
-            rule_content	o
-            rule_content	p
-            rule_content	e
-          
-
+            rule_content	NewHope
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
+            rule_content
+              >
+              Crate
         rule_data
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
+            rule_content	Blocker
           ->
           rule_part
             rule_content	Crate
             cell_border
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	Blocker
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Target
             cell_border
-            rule_content	D
-            rule_content	e
-            rule_content	s
-            rule_content	p
-            rule_content	a
-            rule_content	i
-            rule_content	r
+            rule_content	Despair
           ->
           rule_part
             rule_content	Target
             cell_border
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Despair
-              Target
+            rule_content	Despair
+            rule_content	Target
           ->
           rule_part
             rule_content	Target
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Crate
             cell_border
-            rule_content	D
-            rule_content	e
-            rule_content	s
-            rule_content	p
-            rule_content	a
-            rule_content	i
-            rule_content	r
+            rule_content	Despair
           ->
           rule_part
             rule_content	Crate
             cell_border
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Hope
-              Despair
+            rule_content	Hope
+            rule_content	Despair
           ->
           rule_part
             rule_content	Hope
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Hope
             cell_border
-            rule_content	D
-            rule_content	e
-            rule_content	s
-            rule_content	p
-            rule_content	a
-            rule_content	i
-            rule_content	r
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	DespairWall
           ->
           rule_part
             rule_content	Hope
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-          
-
+            rule_content	Wall
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Hope
             cell_border
-            rule_content	N
-            rule_content	e
-            rule_content	w
-            rule_content	D
-            rule_content	e
-            rule_content	s
-            rule_content	p
-            rule_content	a
-            rule_content	i
-            rule_content	r
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	NewDespairWall
           ->
           rule_part
             rule_content	Hope
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-          
-
+            rule_content	Wall
   winconditions_section
     condition_data
       Some
@@ -638,14 +451,12 @@ ps_game
       on
       object_name	Target
   levels_section
-    level_data	None
-    level_data	[['#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '.' '.' '.' 'x' '#']
+    level_data	[['#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' 'x' '#']
  ['#' '.' 'f' 'f' '.' '#']
  ['#' '.' 'f' 'f' '.' '#']
  ['#' 'o' '.' '.' 'P' '#']
  ['#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'x' '.' 'f' '.' '.' '.' 'f' '#']
  ['#' '.' '#' '.' '.' '.' '.' '.' '#']
@@ -653,7 +464,6 @@ ps_game
  ['#' '.' '#' '.' '.' '#' 'f' '.' '#']
  ['#' 'x' 'z' 'f' '.' '.' '.' 'o' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'x' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '#' '.' '.' '.' '#']
@@ -661,14 +471,12 @@ ps_game
  ['#' '.' '.' '.' '#' '.' '.' '.' '#']
  ['#' 'x' '.' '.' '.' '.' '.' 'o' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '.' '#' 'z' 'x' '#' 'p' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '#' 'z' 'x' '#' 'p' '#']
  ['#' '.' '.' '.' '.' '*' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '#']
  ['#' 'o' '#' '*' '.' '#' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '*' '#' '.' 'o' '.' '#' '#' '#' '#']
@@ -678,7 +486,6 @@ ps_game
  ['#' '#' '#' '#' '.' '.' '.' '#' '#' '#' '#']
  ['#' 'x' '.' '.' '.' '.' '.' '.' '.' 'p' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'o' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '.' '#' '#' '.' '#' '.' '#']
@@ -688,7 +495,6 @@ ps_game
  ['#' '.' '#' '*' '.' '#' '.' '#' '#' '.' '#']
  ['#' 'x' '#' '.' '.' '.' 'p' '#' 'z' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' 'o' '.' '.' '.' 'z' 'x' '#']
  ['#' '.' '#' '.' '.' '.' '.' '.' '#' 'z' '#']
@@ -698,7 +504,6 @@ ps_game
  ['#' 'z' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' 'x' 'z' '.' '.' '.' '.' '.' '.' 'p' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' 'o' '.' '.' '.' '.' '#']
  ['#' '.' '.' '#' '#' '#' '#' '#' '.' '.' '#']
@@ -708,7 +513,6 @@ ps_game
  ['#' '.' '.' '.' '#' '#' '#' '.' '.' '.' '#']
  ['#' 'x' '.' '.' '.' '.' '.' '.' '.' 'x' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' 'H' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' 'p' '.' '#']
@@ -718,7 +522,6 @@ ps_game
  ['#' 'z' 'x' 'z' 'x' '.' '.' '.' '.' '.' '#']
  ['#' 'o' 'z' 'x' 'z' 'x' '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' 'p' '.' '.' '.' '.' '#']
  ['#' '#' '#' '.' '#' '*' '#' '.' '#' '#' '#']
@@ -728,7 +531,6 @@ ps_game
  ['#' '#' '#' '.' '#' '.' '#' '.' '#' '#' '#']
  ['#' 'x' '.' '.' '.' '.' '.' '.' '.' 'o' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '.' 'z' 'x' 'z' 'x' '#']
  ['#' '.' '#' '#' '.' '#' '#' '.' '#' '#' '#' '#']
@@ -738,7 +540,6 @@ ps_game
  ['#' '#' '#' '#' '.' '#' '#' '#' '.' '.' '.' '#']
  ['#' 'H' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '*' '.' '#' 'H' '#' 'o' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '*' '.' '.' '#' '#' '#' '#' '#' '#' '#' '.' '#' '.' '#']
@@ -750,5 +551,3 @@ ps_game
  ['#' '.' '*' '.' '.' '.' '.' '.' '.' '.' '*' '.' '.' '.' 'x' 'z' 'x' '#']
  ['#' 'x' '.' '.' '.' '#' '.' '*' '.' '.' '.' '.' '#' 'x' 'z' 'x' 'z' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
-    level_data	None

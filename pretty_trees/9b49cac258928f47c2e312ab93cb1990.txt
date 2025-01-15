@@ -1,10 +1,18 @@
 ps_game
+  prelude
+    prelude_data
+      title
+       I Have No Mouth, And I Must  Find My Hiding Spot
+    prelude_data
+      author
+      Corey Martin & Alan Hazelden - mod by jc
+    prelude_data	run_rules_on_level_start
   objects_section
     object_data
-      object_name	Background
-      legend_key	#
-      colors
-        color	000000
+      object_line
+        object_name	Background
+      color_line
+        color	#000000
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
@@ -12,10 +20,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Floor
-      legend_key	#
-      colors
-        color	000000
+      object_line
+        object_name	Floor
+      color_line
+        color	#000000
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
@@ -23,62 +31,40 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Wall
-      legend_key	#
-      colors
-        color	393875
+      object_line
+        object_name	Wall
+      color_line
+        color	#393875
         color	#4f4e8d
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['1' '1' '1' '1' '1']
+        ['0' '0' '0' '0' '0']
     object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	1000
-    object_data
-      object_name	11111
-      legend_key	1
-      colors
-        color	1111
-    object_data
-      object_name	00000
-      legend_key	P
-      colors
-        color	layerRight
-    object_data
-      object_name	#990c33
-      legend_key	#
-      colors
-        color	ffffff
-    object_data
-      object_name	#c83242
-      legend_key	#
-      colors
-        color	cf5c50
+      object_line
+        object_name	PlayerRight
+      color_line
+        color	#990c33
+        color	#ffffff
+        color	#c83242
+        color	#cf5c50
         color	black
+      sprite
+        ['.' '0' '0' '0' '0']
+        ['.' '2' '1' '2' '1']
+        ['2' '2' '1' '2' '1']
+        ['2' '3' '3' '3' '3']
+        ['.' '3' '.' '.' '3']
     object_data
-      object_name	.0000
-      legend_key	.
-      colors
-        color	2121
-    object_data
-      object_name	22121
-      legend_key	2
-      colors
-        color	3333
-    object_data
-      object_name	.3..3
-      legend_key	P
-      colors
-        color	layerLeft
-    object_data
-      object_name	#990c33
-      legend_key	#
-      colors
-        color	ffffff
-    object_data
-      object_name	#c83242
-      legend_key	#
-      colors
-        color	cf5c50
+      object_line
+        object_name	PlayerLeft
+      color_line
+        color	#990c33
+        color	#ffffff
+        color	#c83242
+        color	#cf5c50
         color	black
       sprite
         ['0' '0' '0' '0' '.']
@@ -86,18 +72,13 @@ ps_game
         ['1' '2' '1' '2' '2']
         ['3' '3' '3' '3' '2']
         ['3' '.' '.' '3' '.']
-      
-
     object_data
-      object_name	Crate
-      legend_key	#
-      colors
-        color	f99596
-    object_data
-      object_name	#7a41c7
-      legend_key	#
-      colors
-        color	f08687
+      object_line
+        object_name	Crate
+      color_line
+        color	#f99596
+        color	#7a41c7
+        color	#f08687
         color	black
       sprite
         ['0' '1' '3' '1' '0']
@@ -106,10 +87,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['2' '2' '2' '2' '2']
     object_data
-      object_name	AboveCrate
-      legend_key	#
-      colors
-        color	f99596
+      object_line
+        object_name	AboveCrate
+      color_line
+        color	#f99596
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -117,10 +98,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	BelowCrate
-      legend_key	#
-      colors
-        color	f08687
+      object_line
+        object_name	BelowCrate
+      color_line
+        color	#f08687
       sprite
         ['0' '0' '0' '0' '0']
         ['.' '.' '.' '.' '.']
@@ -128,10 +109,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Decor1
-      legend_key	#
-      colors
-        color	786d4f
+      object_line
+        object_name	Decor1
+      color_line
+        color	#786d4f
       sprite
         ['.' '0' '.' '.' '.']
         ['.' '0' '0' '.' '.']
@@ -139,10 +120,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '.' '0' '0' '.']
     object_data
-      object_name	Decor2
-      legend_key	#
-      colors
-        color	786d4f
+      object_line
+        object_name	Decor2
+      color_line
+        color	#786d4f
       sprite
         ['.' '.' '.' '0' '.']
         ['.' '.' '.' '0' '.']
@@ -150,10 +131,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '.' '0' '.' '.']
     object_data
-      object_name	Decor3
-      legend_key	#
-      colors
-        color	13694d
+      object_line
+        object_name	Decor3
+      color_line
+        color	#13694d
         color	#0f5c43
       sprite
         ['.' '0' '.' '.' '0']
@@ -162,10 +143,10 @@ ps_game
         ['.' '0' '0' '.' '1']
         ['.' '.' '0' '0' '.']
     object_data
-      object_name	Decor4
-      legend_key	#
-      colors
-        color	79dbb2
+      object_line
+        object_name	Decor4
+      color_line
+        color	#79dbb2
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '.' '.' '.']
@@ -173,10 +154,10 @@ ps_game
         ['.' '.' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	BelowWall
-      legend_key	#
-      colors
-        color	444
+      object_line
+        object_name	BelowWall
+      color_line
+        color	#444
       sprite
         ['0' '0' '0' '0' '0']
         ['.' '.' '.' '.' '.']
@@ -184,10 +165,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	AboveWall
-      legend_key	#
-      colors
-        color	93815f
+      object_line
+        object_name	AboveWall
+      color_line
+        color	#93815f
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -195,10 +176,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	WallD
-      legend_key	#
-      colors
-        color	93815f
+      object_line
+        object_name	WallD
+      color_line
+        color	#93815f
         color	#444
       sprite
         ['.' '.' '.' '.' '.']
@@ -207,10 +188,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['1' '1' '1' '1' '1']
     object_data
-      object_name	WallL
-      legend_key	#
-      colors
-        color	93815f
+      object_line
+        object_name	WallL
+      color_line
+        color	#93815f
       sprite
         ['0' '.' '.' '.' '.']
         ['0' '.' '.' '.' '.']
@@ -218,10 +199,10 @@ ps_game
         ['0' '.' '.' '.' '.']
         ['0' '.' '.' '.' '.']
     object_data
-      object_name	WallR
-      legend_key	#
-      colors
-        color	93815f
+      object_line
+        object_name	WallR
+      color_line
+        color	#93815f
       sprite
         ['.' '.' '.' '.' '0']
         ['.' '.' '.' '.' '0']
@@ -229,10 +210,10 @@ ps_game
         ['.' '.' '.' '.' '0']
         ['.' '.' '.' '.' '0']
     object_data
-      object_name	WallLR
-      legend_key	#
-      colors
-        color	93815f
+      object_line
+        object_name	WallLR
+      color_line
+        color	#93815f
       sprite
         ['0' '.' '.' '.' '0']
         ['0' '.' '.' '.' '0']
@@ -240,10 +221,10 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['0' '.' '.' '.' '0']
     object_data
-      object_name	AboveWallL
-      legend_key	#
-      colors
-        color	93815f
+      object_line
+        object_name	AboveWallL
+      color_line
+        color	#93815f
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -251,10 +232,10 @@ ps_game
         ['0' '.' '.' '.' '.']
         ['0' '.' '.' '.' '.']
     object_data
-      object_name	AboveWallR
-      legend_key	#
-      colors
-        color	93815f
+      object_line
+        object_name	AboveWallR
+      color_line
+        color	#93815f
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -262,10 +243,10 @@ ps_game
         ['.' '.' '.' '.' '0']
         ['.' '.' '.' '.' '0']
     object_data
-      object_name	AboveWallLR
-      legend_key	#
-      colors
-        color	93815f
+      object_line
+        object_name	AboveWallLR
+      color_line
+        color	#93815f
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -273,10 +254,10 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['0' '.' '.' '.' '0']
     object_data
-      object_name	AboveWallLRwithR
-      legend_key	#
-      colors
-        color	93815f
+      object_line
+        object_name	AboveWallLRwithR
+      color_line
+        color	#93815f
       sprite
         ['.' '.' '.' '.' '0']
         ['.' '.' '.' '.' '0']
@@ -284,64 +265,62 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['0' '.' '.' '.' '0']
     object_data
-      object_name	AboveWallLRwithL
-      legend_key	#
-      colors
-        color	93815f
+      object_line
+        object_name	AboveWallLRwithL
+      color_line
+        color	#93815f
       sprite
         ['0' '.' '.' '.' '.']
         ['0' '.' '.' '.' '.']
         ['0' '.' '.' '.' '.']
         ['0' '.' '.' '.' '0']
         ['0' '.' '.' '.' '0']
-      
-
   legend_section
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      -
+      - =
       object_name	Floor
     legend_data
-      #
+      # =
       object_name	Wall
     legend_data
-      P
+      P =
       object_name	PlayerRight
       legend_operation
         object_name	Floor
     legend_data
-      *
+      * =
       object_name	Crate
       legend_operation
         object_name	Floor
     legend_data
-      1
+      1 =
       object_name	Decor1
     legend_data
-      2
+      2 =
       object_name	Decor2
     legend_data
-      3
+      3 =
       object_name	Decor3
     legend_data
-      4
+      4 =
       object_name	Decor4
     legend_data
-      Player
+      Player =
       object_name	PlayerRight
       legend_operation
         object_name	PlayerLeft
     legend_data
-      Winnables
+      Winnables =
       object_name	PlayerRight
       legend_operation
         object_name	PlayerLeft
       legend_operation
         object_name	Crate
     legend_data
-      AboveDecoration
+      AboveDecoration =
       object_name	AboveWall
       legend_operation
         object_name	AboveWallL
@@ -363,13 +342,11 @@ ps_game
       object_name	BelowCrate
     layer_data
       object_name	Player
-    layer_data
       object_name	Wall
       object_name	Crate
     layer_data
       object_name	Decor1
       object_name	Decor2
-    layer_data
       object_name	Decor3
       object_name	Decor4
     layer_data
@@ -377,7 +354,6 @@ ps_game
     layer_data
       object_name	WallD
       object_name	AboveWallLR
-    layer_data
       object_name	AboveWallLRwithR
       object_name	AboveWallLRwithL
     layer_data
@@ -387,114 +363,74 @@ ps_game
       rule_block_once
         rule_data
           rule_part
-            rule_content
-              left
-              Player
+            rule_content	left
+            rule_content	Player
           ->
           rule_part
-            rule_content
-              left
-              PlayerLeft
-          
-
+            rule_content	left
+            rule_content	PlayerLeft
         rule_data
           rule_part
-            rule_content
-              right
-              Player
+            rule_content	right
+            rule_content	Player
           ->
           rule_part
-            rule_content
-              right
-              PlayerRight
-          
-
+            rule_content	right
+            rule_content	PlayerRight
         rule_data
           rule_part
-            rule_content
-              action
-              Player
+            rule_content	action
+            rule_content	Player
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	no
+            rule_content	Wall
           ->
           rule_part
-            rule_content
-              action
-              Player
+            rule_content	action
+            rule_content	Player
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
+            rule_content	Crate
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
+            rule_content
+              >
+              Crate
         rule_data
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
           ->
           rule_part
             rule_content
               >
               Crate
             cell_border
-            rule_content	>
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
+            rule_content
+              >
+              Crate
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	AboveCrate
           ->
           rule_part
-          
-
         rule_data
-          late
-          up
+          prefix	late
+          prefix	up
           rule_part
             rule_content	Crate
             cell_border
@@ -502,29 +438,16 @@ ps_game
           rule_part
             rule_content	Crate
             cell_border
-            rule_content	A
-            rule_content	b
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
+            rule_content	AboveCrate
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	BelowCrate
           ->
           rule_part
-          
-
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
             rule_content	Crate
             cell_border
@@ -532,336 +455,137 @@ ps_game
           rule_part
             rule_content	Crate
             cell_border
-            rule_content	B
-            rule_content	e
-            rule_content	l
-            rule_content	o
-            rule_content	w
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
+            rule_content	BelowCrate
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content	Wall
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	no
+            rule_content	Wall
           ->
           rule_part
-            rule_content
-              Wall
-              WallD
+            rule_content	Wall
+            rule_content	WallD
             cell_border
-            rule_content	B
-            rule_content	e
-            rule_content	l
-            rule_content	o
-            rule_content	w
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-          
-
+            rule_content	BelowWall
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content	Wall
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	no
+            rule_content	Wall
           ->
           rule_part
             rule_content	Wall
             cell_border
-            rule_content	A
-            rule_content	b
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-          
-
+            rule_content	AboveWall
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content	Wall
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	no
+            rule_content	Wall
           ->
           rule_part
-            rule_content
-              Wall
-              WallL
+            rule_content	Wall
+            rule_content	WallL
             cell_border
-          
-
         rule_data
-          right
+          prefix	right
           rule_part
-            rule_content
-              Wall
-              WallL
+            rule_content	Wall
+            rule_content	WallL
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	no
+            rule_content	Wall
           ->
           rule_part
-            rule_content
-              Wall
-              WallLR
+            rule_content	Wall
+            rule_content	WallLR
             cell_border
-          
-
         rule_data
-          right
+          prefix	right
           rule_part
-            rule_content
-              Wall
-              no
-              AboveDecoration
+            rule_content	Wall
+            rule_content	no
+            rule_content	AboveDecoration
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	no
+            rule_content	Wall
           ->
           rule_part
-            rule_content
-              Wall
-              WallR
+            rule_content	Wall
+            rule_content	WallR
             cell_border
-          
-
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content	WallL
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	n
-            rule_content	o
-            rule_content	A
-            rule_content	b
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	D
-            rule_content	e
-            rule_content	c
-            rule_content	o
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
+            rule_content	Wall
+            rule_content	no
+            rule_content	AboveDecoration
           ->
           rule_part
             rule_content	WallL
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	A
-            rule_content	b
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	L
-          
-
+            rule_content	Wall
+            rule_content	AboveWallL
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content	WallR
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	n
-            rule_content	o
-            rule_content	A
-            rule_content	b
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	D
-            rule_content	e
-            rule_content	c
-            rule_content	o
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
+            rule_content	Wall
+            rule_content	no
+            rule_content	AboveDecoration
           ->
           rule_part
             rule_content	WallR
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	A
-            rule_content	b
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	R
-          
-
+            rule_content	Wall
+            rule_content	AboveWallR
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content	WallLR
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Wall
           ->
           rule_part
             rule_content	WallLR
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	A
-            rule_content	b
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	L
-            rule_content	R
-          
-
+            rule_content	Wall
+            rule_content	AboveWallLR
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content	WallL
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	R
+            rule_content	Wall
+            rule_content	WallR
           ->
           rule_part
             rule_content	WallL
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	A
-            rule_content	b
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	L
-            rule_content	R
-            rule_content	w
-            rule_content	i
-            rule_content	t
-            rule_content	h
-            rule_content	R
-          
-
+            rule_content	Wall
+            rule_content	AboveWallLRwithR
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content	WallR
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	L
+            rule_content	Wall
+            rule_content	WallL
           ->
           rule_part
             rule_content	WallR
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	A
-            rule_content	b
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	L
-            rule_content	R
-            rule_content	w
-            rule_content	i
-            rule_content	t
-            rule_content	h
-            rule_content	L
-          
-
+            rule_content	Wall
+            rule_content	AboveWallLRwithL
   winconditions_section
     condition_data
       All
@@ -869,7 +593,6 @@ ps_game
       on
       object_name	Winnables
   levels_section
-    level_data	None
     level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
   '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '4' '.'
@@ -921,8 +644,8 @@ ps_game
  ['.' '.' '.' '2' '.' '.' '#' '#' '#' '#' '#' '.' '.' '.' '.' '.']
  ['.' '.' '4' '.' '.' '.' '.' '.' '.' '.' '.' '3' '.' '.' '1' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
-    level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
     level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '#' '#' '#' '#' '.' '.' '.' '3' '.' '.' '.']
  ['.' '1' '.' '.' '.' '.' '#' '#' '-' '-' '#' '#' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '#' '-' '-' '-' '-' '#' '.' '.' '.' '.' '4' '.']
@@ -932,8 +655,8 @@ ps_game
  ['.' '.' '.' '2' '.' '.' '.' '.' '.' '.' '.' '.' '3' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.']]
     level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
-  '.']]
-    level_data	[['.' '.' '4' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
+  '.']
+ ['.' '.' '4' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
   '.']
  ['.' '.' '.' '.' '1' '.' '.' '#' '#' '#' '.' '.' '.' '.' '4' '.' '.' '3'
   '.']
@@ -982,8 +705,8 @@ ps_game
   '1' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
   '.' '.' '.']]
-    level_data	[['4' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '1' '.' '.']]
-    level_data	[['.' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.' '2' '.' '3']
+    level_data	[['4' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '1' '.' '.']
+ ['.' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '#' '#' '.' '2' '.' '3']
  ['.' '2' '.' '.' '#' '-' '-' '-' '#' '-' '-' '-' '#' '.' '.' '.' '.']
  ['.' '.' '.' '.' '#' '-' 'p' '-' '-' '-' '-' '-' '#' '.' '4' '.' '.']
  ['3' '.' '.' '.' '#' '#' '-' '#' '#' '#' '-' '#' '#' '.' '.' '3' '.']
@@ -1144,8 +867,8 @@ ps_game
  ['.' '.' '.' '.' '.' '.' '.' '4' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.'
   '.']]
     level_data	[['.' '.' '.' '.' '.' '.' '.' '.' '.' '4' '.' '.' '.' '.' '.' '2' '.' '.'
-  '.' '.' '.']]
-    level_data	[['.' '.' '2' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '3'
+  '.' '.' '.']
+ ['.' '.' '2' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '3'
   '.' '.' '.']
  ['4' '.' '.' '.' '.' '.' '.' '#' '#' '#' '#' '#' '#' '#' '.' '.' '.' '.'
   '.' '.' '.']
@@ -1181,4 +904,3 @@ ps_game
   '.']
  ['.' '.' '.' '.' '1' '.' '.' '.' '4' '.' '.' '3' '.' '.' '.' '.' '.' '.'
   '.']]
-    level_data	None

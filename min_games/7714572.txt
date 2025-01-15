@@ -1,15 +1,32 @@
+title Cancel
+author Dean Huff
+homepage www.puzzlescript.net
+
 OBJECTS
 
-BackgroundBLACK
-TargetDarkBlue
-WallOrange
-PlayerDarkGray
-EarthGreen
-WaterBlue
-FireRed
-AirWhite
+Background
+BLACK
 
+Target
+DarkBlue
 
+Wall
+Orange
+
+Player
+DarkGray
+
+Earth
+Green
+
+Water
+Blue
+
+Fire
+Red
+
+Air
+White
 
 
 LEGEND
@@ -27,20 +44,11 @@ COLLISIONLAYERS
 
 Background
 Target
-Player, Wall
-Earth, Water
-Fire, Air
+Player, Wall, Earth, Water, Fire, Air
 
 RULES
 
-[ > Player | Earth ] -> [ > Player | >Earth ] 
-[ < Player | Water ] -> [ < Player | <Water ] 
-[ > Player | Fire ] -> [ Fire | Player ] 
-[ V Player | Air ] -> [ V Player | <Air ] 
-[ ^ Player | Air ] -> [ ^ Player | <Air ] 
-late [ Fire | Water ] -> [ | ] 
-late [ Earth | Air ] -> [ | ] 
-
+[ > Player | Earth ] -> [ > Player | > Earth ][ < Player | Water ] -> [ < Player | < Water ][ > Player | Fire ] -> [ Fire | Player ] SFX0[ VPlayer | Air ] -> [ VPlayer | < Air ][ ^ Player | Air ] -> [ ^ Player | < Air ]late [ Fire | Water ] -> [  |  ]late [ Earth | Air ] -> [  |  ]
 
 WINCONDITIONS
 
@@ -92,7 +100,6 @@ E..AAA..E
 ..E#E#E..
 
 W........##.
-
 ##..##......
 FF#...#.#.#.
 PF##..#.#...
@@ -112,7 +119,6 @@ W#W#W.
 ..FFF.
 
 P..A...#.
-
 .#..A#...
 ...#...#E
 .#.A.#...

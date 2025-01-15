@@ -1,10 +1,21 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Straighten Up
+    prelude_data
+      author
+      Ricky
+    prelude_data
+      homepage
+      puzzlescript.net
+    prelude_data	run_rules_on_level_start
   objects_section
     object_data
-      object_name	Background
-      legend_key	#
-      colors
-        color	757D82
+      object_line
+        object_name	Background
+      color_line
+        color	#757D82
         color	DARKGRAY
       sprite
         ['1' '1' '1' '1' '1']
@@ -13,10 +24,10 @@ ps_game
         ['1' '1' '0' '1' '1']
         ['1' '1' '1' '1' '1']
     object_data
-      object_name	Wall
-      legend_key	D
-      colors
-        color	ARKBLUE
+      object_line
+        object_name	Wall
+      color_line
+        color	DARKBLUE
         color	#22303F
       sprite
         ['0' '0' '0' '0' '0']
@@ -25,10 +36,10 @@ ps_game
         ['0' '1' '1' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	GreenPlayer
-      legend_key	L
-      colors
-        color	IGHTGREEN
+      object_line
+        object_name	GreenPlayer
+      color_line
+        color	LIGHTGREEN
         color	WHITE
       sprite
         ['.' '0' '0' '0' '.']
@@ -37,10 +48,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['.' '0' '.' '0' '.']
     object_data
-      object_name	RedPlayer
-      legend_key	R
-      colors
-        color	ED
+      object_line
+        object_name	RedPlayer
+      color_line
+        color	RED
         color	WHITE
       sprite
         ['.' '0' '0' '0' '.']
@@ -49,10 +60,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['.' '0' '.' '0' '.']
     object_data
-      object_name	LeftArm
-      legend_key	L
-      colors
-        color	IGHTGREEN
+      object_line
+        object_name	LeftArm
+      color_line
+        color	LIGHTGREEN
       sprite
         ['0' '.' '.' '.' '.']
         ['0' '.' '.' '.' '.']
@@ -60,10 +71,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	RightArm
-      legend_key	L
-      colors
-        color	IGHTGREEN
+      object_line
+        object_name	RightArm
+      color_line
+        color	LIGHTGREEN
       sprite
         ['.' '.' '.' '.' '0']
         ['.' '.' '.' '.' '0']
@@ -71,10 +82,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	MoveCrate
-      legend_key	O
-      colors
-        color	RANGE
+      object_line
+        object_name	MoveCrate
+      color_line
+        color	ORANGE
         color	BROWN
       sprite
         ['0' '0' '0' '0' '0']
@@ -83,10 +94,10 @@ ps_game
         ['0' '1' '1' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	FixedCrate
-      legend_key	O
-      colors
-        color	RANGE
+      object_line
+        object_name	FixedCrate
+      color_line
+        color	ORANGE
         color	BROWN
       sprite
         ['0' '0' '0' '0' '0']
@@ -95,10 +106,10 @@ ps_game
         ['0' '1' '1' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	BlueCrate
-      legend_key	L
-      colors
-        color	IGHTBLUE
+      object_line
+        object_name	BlueCrate
+      color_line
+        color	LIGHTBLUE
         color	BLUE
       sprite
         ['0' '0' '0' '0' '0']
@@ -107,10 +118,10 @@ ps_game
         ['0' '1' '1' '1' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	FixedDot
-      legend_key	D
-      colors
-        color	ARKBLUE
+      object_line
+        object_name	FixedDot
+      color_line
+        color	DARKBLUE
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -118,60 +129,58 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	PathHoriz
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	PathHoriz
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	PathVert
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	PathVert
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	Flag
-      legend_key	T
-      colors
-        color	RANSPARENT
-      
-
+      object_line
+        object_name	Flag
+      color_line
+        color	TRANSPARENT
   legend_section
     legend_data
-      .
+      .=
       object_name	Background
     legend_data
-      P
+      P=
       object_name	GreenPlayer
     legend_data
-      R
+      R=
       object_name	RedPlayer
     legend_data
-      #
+      #=
       object_name	Wall
     legend_data
-      M
+      M=
       object_name	MoveCrate
     legend_data
-      F
+      F=
       object_name	FixedCrate
       legend_operation
         object_name	FixedDot
     legend_data
-      Crate
+      Crate=
       object_name	MoveCrate
       legend_operation
         object_name	FixedCrate
     legend_data
-      Path
+      Path=
       object_name	PathHoriz
       legend_operation
         object_name	PathVert
     legend_data
-      Arm
+      Arm=
       object_name	LeftArm
       legend_operation
         object_name	RightArm
     legend_data
-      Player
+      Player=
       object_name	GreenPlayer
       legend_operation
         object_name	RedPlayer
@@ -181,7 +190,6 @@ ps_game
     layer_data
       object_name	Player
       object_name	Crate
-    layer_data
       object_name	Wall
       object_name	RedPlayer
     layer_data
@@ -205,543 +213,240 @@ ps_game
               >
               GreenPlayer
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	MoveCrate
           ->
           rule_part
             rule_content
               >
               GreenPlayer
             cell_border
-            rule_content	>
-            rule_content	M
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
+            rule_content
+              >
+              MoveCrate
         rule_data
           rule_part
             rule_content
               <
               RedPlayer
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	MoveCrate
           ->
           rule_part
             rule_content
               <
               RedPlayer
             cell_border
-            rule_content	<
-            rule_content	M
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-          
-
+            rule_content
+              <
+              MoveCrate
         rule_data
-          late
-          right
+          prefix	late
+          prefix	right
           rule_part
             rule_content	Crate
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
           ->
           rule_part
-            rule_content
-              Crate
-              PathHoriz
+            rule_content	Crate
+            rule_content	PathHoriz
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
-            rule_content	H
-            rule_content	o
-            rule_content	r
-            rule_content	i
-            rule_content	z
+            rule_content	Crate
+            rule_content	PathHoriz
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
-            rule_content	H
-            rule_content	o
-            rule_content	r
-            rule_content	i
-            rule_content	z
-          
-
+            rule_content	Crate
+            rule_content	PathHoriz
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
             rule_content	Crate
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
           ->
           rule_part
-            rule_content
-              Crate
-              PathVert
+            rule_content	Crate
+            rule_content	PathVert
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
-            rule_content	V
-            rule_content	e
-            rule_content	r
-            rule_content	t
+            rule_content	Crate
+            rule_content	PathVert
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
-            rule_content	V
-            rule_content	e
-            rule_content	r
-            rule_content	t
-          
-
+            rule_content	Crate
+            rule_content	PathVert
         rule_data
-          late
-          right
+          prefix	late
+          prefix	right
           rule_part
-            rule_content
-              no
-              Crate
+            rule_content	no
+            rule_content	Crate
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
-            rule_content	H
-            rule_content	o
-            rule_content	r
-            rule_content	i
-            rule_content	z
+            rule_content	Crate
+            rule_content	PathHoriz
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
-            rule_content	H
-            rule_content	o
-            rule_content	r
-            rule_content	i
-            rule_content	z
+            rule_content	Crate
+            rule_content	PathHoriz
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	no
+            rule_content	Crate
           ->
           rule_part
-            rule_content	|
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
             cell_border
-          
-
+            rule_content	Crate
+            cell_border
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
-            rule_content
-              no
-              Crate
+            rule_content	no
+            rule_content	Crate
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
-            rule_content	V
-            rule_content	e
-            rule_content	r
-            rule_content	t
+            rule_content	Crate
+            rule_content	PathVert
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
-            rule_content	V
-            rule_content	e
-            rule_content	r
-            rule_content	t
+            rule_content	Crate
+            rule_content	PathVert
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	no
+            rule_content	Crate
           ->
           rule_part
-            rule_content	|
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Crate
             cell_border
-          
-
+            rule_content	Crate
+            cell_border
         rule_data
-          late
-          right
+          prefix	late
+          prefix	right
           rule_part
-            rule_content
-              no
-              Crate
+            rule_content	no
+            rule_content	Crate
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
-            rule_content	H
-            rule_content	o
-            rule_content	r
-            rule_content	i
-            rule_content	z
+            rule_content	Crate
+            rule_content	PathHoriz
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	no
+            rule_content	Crate
           ->
           rule_part
-            rule_content	|
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
             cell_border
-          
-
+            rule_content	Crate
+            cell_border
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
-            rule_content
-              no
-              Crate
+            rule_content	no
+            rule_content	Crate
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
-            rule_content	V
-            rule_content	e
-            rule_content	r
-            rule_content	t
+            rule_content	Crate
+            rule_content	PathVert
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	no
+            rule_content	Crate
           ->
           rule_part
-            rule_content	|
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
             cell_border
-          
-
+            rule_content	Crate
+            cell_border
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Path
-              no
-              Crate
+            rule_content	Path
+            rule_content	no
+            rule_content	Crate
           ->
           rule_part
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Path
           ->
           rule_part
-            rule_content
-              Path
-              BlueCrate
-          
-
+            rule_content	Path
+            rule_content	BlueCrate
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              BlueCrate
-              no
-              Path
+            rule_content	BlueCrate
+            rule_content	no
+            rule_content	Path
           ->
           rule_part
-          
-
         rule_data
-          late
-          random
+          prefix	late
+          prefix	random
           rule_part
-            rule_content
-              no
-              Crate
+            rule_content	no
+            rule_content	Crate
           ->
           rule_part
             rule_content	Flag
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              Flag
-              no
-              Crate
-            rule_content	]
-            rule_content	[
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	n
-            rule_content	o
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
+            rule_content	Flag
+            rule_content	no
+            rule_content	Crate
+          rule_part
+            rule_content	Crate
+            rule_content	no
+            rule_content	Path
           ->
           rule_part
-            rule_content	]
-            rule_content	[
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	F
-            rule_content	l
-            rule_content	a
-            rule_content	g
-          
-
-        rule_data
-          late
           rule_part
-            rule_content
-              Flag
-              no
-              Crate
-          ->
-          command
-            sound
-              sound_id	0
-          
-
+            rule_content	Crate
+            rule_content	Flag
         rule_data
-          late
+          prefix	late
+          rule_part
+            rule_content	Flag
+            rule_content	no
+            rule_content	Crate
+          ->
+          prefix	sfx0
+        rule_data
+          prefix	late
           rule_part
             rule_content	Arm
           ->
           rule_part
-          
-
         rule_data
-          late
-          right
+          prefix	late
+          prefix	right
           rule_part
-            rule_content
-              no
-              Arm
+            rule_content	no
+            rule_content	Arm
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
+            rule_content	Player
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	A
-            rule_content	r
-            rule_content	m
-            rule_content	]
-            rule_content	[
-            rule_content	F
-            rule_content	l
-            rule_content	a
-            rule_content	g
-            rule_content	n
-            rule_content	o
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	no
+            rule_content	Arm
+          rule_part
+            rule_content	Flag
+            rule_content	no
+            rule_content	Crate
           ->
           rule_part
             rule_content	RightArm
             cell_border
-            rule_content	P
-            rule_content	l
-            rule_content	a
-            rule_content	y
-            rule_content	e
-            rule_content	r
+            rule_content	Player
             cell_border
-            rule_content	L
-            rule_content	e
-            rule_content	f
-            rule_content	t
-            rule_content	A
-            rule_content	r
-            rule_content	m
-            rule_content	]
-            rule_content	[
-            rule_content	F
-            rule_content	l
-            rule_content	a
-            rule_content	g
-          
-
+            rule_content	LeftArm
+          rule_part
+            rule_content	Flag
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	Flag
           ->
           rule_part
-          
-
   winconditions_section
     condition_data
       all
@@ -749,7 +454,6 @@ ps_game
       on
       object_name	Path
   levels_section
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '#' 'm' '.' 'm' '#' '#' '#']
  ['#' '#' '#' '.' '.' '.' '#' '#' '#']
@@ -759,7 +463,6 @@ ps_game
  ['#' '#' '#' '.' '.' '.' '#' '#' '#']
  ['#' '#' '#' 'm' 'm' '.' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '#' 'm' '.' 'm' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '#']
@@ -769,7 +472,6 @@ ps_game
  ['#' '.' '.' 'm' '.' 'm' '.' '.' '#']
  ['#' '#' '#' '.' '.' '.' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '#' '.' '.' '.' '#']
  ['#' '.' '.' 'm' '.' 'm' '.' '.' '#']
@@ -779,7 +481,6 @@ ps_game
  ['#' '.' '.' 'm' '.' 'm' '.' '.' '#']
  ['#' '.' '.' '.' '#' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '#' '#' '#' '.' '.' '#']
@@ -789,7 +490,6 @@ ps_game
  ['#' '.' '.' '#' '#' '#' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '#' '#' '.' '.' '.' '#' '#' '#']
  ['#' '#' '.' '.' 'm' '.' '.' '#' '#']
@@ -799,7 +499,6 @@ ps_game
  ['#' '#' '.' '.' 'm' '.' '.' '#' '#']
  ['#' '#' '#' '.' '.' '.' '#' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' 'f' '.' 'f' '.' '#' '.' '.' '.' '#' '.' '#' '.' '#']
  ['#' '.' '.' 'm' '.' '.' '.' '.' '#' '.' '.' 'm' '.' '.' '.' '.' '#']

@@ -1,172 +1,244 @@
+title Grandma's Christmas Kisses
+author Julianna Shevchenko
+homepage www.puzzlescript.net
+background_color white
+text_color green
+youtube 9DlD7-TykIU
+zoomscreen 8x8
+
 OBJECTS
 
-TempBlack.....
+Temp
+Black
 .....
 .....
 .....
 .....
+....
 
-Background#B0926E #C9A57810111
+Background
+#B0926E #C9A578
+10111
+00000
+11101
+00000
+1101
+
+Background2
+#B0926E #C9A578
 00000
 11101
 00000
 11011
+0000
 
-Background2#B0926E #C9A57800000
-11101
-00000
-11011
-00000
+Grandson
+Black Orange lightgreen Red
+.....
+.000.
+.111.
+22222
+.0.0
 
-GrandsonBlack
-Orangelightgreen Red
-......000.
-.111.22222
-.0.0.Player
-GreyOrange
-Whitelightbrown darkbrown.000.
+Player
+Grey Orange White lightbrown darkbrown
+.000.
 .010.
 30303
 .333.
-.4.4.
+.4.4
 
-MomBlack
-OrangeWhite Brown.000.
+Mom
+Black Orange White Brown
+.000.
 00100
 20202
 .222.
-.3.3.
+.3.3
 
-DadBlack
-Orangegreen Red.000.
+Dad
+Black Orange green Red
+.000.
 .111.
 22222
 .000.
-.0.0.
+.0.0
 
-UncleBlack
-Orange#003200 darkgray
-.003..111.
-22222.000.
-.0.0.Banner1
-lightbrownRed #967C63
-0111121111
-2211122211
-22222BannerX
-WhiteBlack #967C63
-0000001010
-0010001010
-22222BannerM
-GreenBlack #967C63
-0101010101
-1000110001
-22222BannerA
-RedBlack #967C63
-0010001010
-1111110001
-22222BannerS
-WhiteBlack #967C63
-0111001100
-0011001110
-22222Banner2
-lightbrownGreen #967C6311110
+Uncle
+Black Orange #003200 darkgray
+.003.
+.111.
+22222
+.000.
+.0.0
+
+Banner1
+lightbrown Red #967C63
+01111
+21111
+22111
+22211
+2222
+
+BannerX
+White Black #967C63
+00000
+01010
+00100
+01010
+2222
+
+BannerM
+Green Black #967C63
+01010
+10101
+10001
+10001
+2222
+
+BannerA
+Red Black #967C63
+00100
+01010
+11111
+10001
+2222
+
+BannerS
+White Black #967C63
+01110
+01100
+00110
+01110
+2222
+
+Banner2
+lightbrown Green #967C63
+11110
 11112
 11122
 11222
-22222
+2222
 
-Rug1Red White....1
-...10
-..100
-.1000
-10000
-
-Rug2Red White11111
-00000
-00000
-00000
-00000
-
-Rug3Red White1....
-01...
-001..
-0001.
-00001
-
-Rug4Red White10000
-10000
-10000
-10000
-10000
-
-Rug5Red White00000
-00000
-00000
-00000
-00000
-
-Rug6Red White00001
-00001
-00001
-00001
-00001
-
-Rug7Red White10000
-.1000
-..100
-...10
+Rug1
+Red White
 ....1
+...10
+..100
+.1000
+1000
 
-Rug8Red White00000
-00000
-00000
-00000
+Rug2
+Red White
 11111
+00000
+00000
+00000
+0000
 
-Rug9Red White00001
+Rug3
+Red White
+1....
+01...
+001..
+0001.
+0000
+
+Rug4
+Red White
+10000
+10000
+10000
+10000
+1000
+
+Rug5
+Red White
+00000
+00000
+00000
+00000
+0000
+
+Rug6
+Red White
+00001
+00001
+00001
+00001
+0000
+
+Rug7
+Red White
+10000
+.1000
+..100
+...10
+....
+
+Rug8
+Red White
+00000
+00000
+00000
+00000
+1111
+
+Rug9
+Red White
+00001
 0001.
 001..
 01...
-1....
+1...
 
-GiftBlue White.....
+Gift
+Blue White
+.....
 .....
 .1.1.
 .010.
-.010.
+.010
 
-Tree1lightbrown
-Greenlightgreen Brown....0
+Tree1
+lightbrown Green lightgreen Brown
+....0
 ...22
 ..221
 .2211
-....3
+....
 
-Tree2lightbrown
-Greenlightgreen Brown0....
+Tree2
+lightbrown Green lightgreen Brown
+0....
 11...
 111..
 1111.
-3....
+3...
 
-Wall#967C6300000
+Wall
+#967C63
 00000
 00000
 00000
 00000
+0000
 
-Target1RED green..11.
+Target1
+RED green
+..11.
 ..111
 00...
 00...
-.....
+....
 
-Target2RED green..1..
+Target2
+RED green
+..1..
 .11..
 111..
 ...00
-...00
-
+...0
 
 
 LEGEND
@@ -204,44 +276,13 @@ COLLISIONLAYERS
 
 Background
 Background2, Temp
-Rug1
-Rug2, Rug3
-Rug4, Rug5
-Rug6, Rug7
-Rug8, Rug9
-Player
-Wall, Tree1
-Tree2, Grandson
-Banner1, BannerX
-BannerM, BannerA
-BannerS, Banner2
-Gift, Mom
-Dad, Uncle
+Rug1, Rug2, Rug3, Rug4, Rug5, Rug6, Rug7, Rug8, Rug9
+Player, Wall, Tree1, Tree2, Grandson, Banner1, BannerX, BannerM, BannerA, BannerS, Banner2, Gift, Mom, Dad, Uncle
 Target1, Target2
 
 RULES
 
-[ > Player][Grandson ] -> [ > Player][>Grandson ] 
-[ > Player | Gift ] -> [ > Player | >Gift ] 
-[ < Player | Gift ] -> [ < Player | <Gift ] 
-late [ Player | Mom ] -> 
-[ Gift | ... | Grandson ] -> [ Temp | ... |  ] 
-[ Temp ] -> [ Grandson ] 
-[ stationary Uncle ] -> [ randomDir Uncle ] 
-[ Uncle | Gift ] -> [ < Uncle | Gift ] 
-[ Uncle | Target1 ] -> [ < Uncle | Target1 ] 
-[ Uncle | Target2 ] -> [ < Uncle | Target2 ] 
-late [ Player | Uncle ] -> 
-late [ Player | Uncle ] -> again 
-[ Player | Uncle ] -> restart 
-[ stationary Dad ] -> [ randomDir Dad ] 
-[ Dad | Gift ] -> [ < Dad | Gift ] 
-[ Dad | Target1 ] -> [ < Dad | Target1 ] 
-[ Dad | Target2 ] -> [ < Dad | Target2 ] 
-late [ Player | Dad ] -> 
-late [ Player | Dad ] -> again 
-[ Player | Dad ] -> restart 
-
+[ > Player ] [ Grandson ] -> [ > Player ] [ > Grandson ][ > Player | Gift ] -> [ > Player | > Gift ][ < Player | Gift ] -> [ < Player | < Gift ]late [ Player | Mom ] ->[ Gift | ... | Grandson ] -> [ Temp | ... |  ][ Temp ] -> [ Grandson ][ stationaryUncle ] -> [ randomDirUncle ][ Uncle | Gift ] -> [ < Uncle | Gift ][ Uncle | Target1 ] -> [ < Uncle | Target1 ][ Uncle | Target2 ] -> [ < Uncle | Target2 ]late [ Player | Uncle ] ->late [ Player | Uncle ] -> again[ Player | Uncle ] -> restart[ stationaryDad ] -> [ randomDirDad ][ Dad | Gift ] -> [ < Dad | Gift ][ Dad | Target1 ] -> [ < Dad | Target1 ][ Dad | Target2 ] -> [ < Dad | Target2 ]late [ Player | Dad ] ->late [ Player | Dad ] -> again[ Player | Dad ] -> restart
 
 WINCONDITIONS
 
@@ -251,7 +292,6 @@ All Player on Target2
 LEVELS
 
 w1212w
-
 w,,atw
 w....w
 w,,,,w
@@ -321,7 +361,6 @@ w.zk.w.zlllllk.grew
 wwwwwwwwwwwwwwwwwww
 
 www134562wwwwwwwwwww
-
 wre,,,,,,w,fnb,w,,,w
 w........w.jcx.w...w
 w,,,,,,,,w,zlk,w,,,w
@@ -341,7 +380,6 @@ w...p....rew...s...w
 wwwwwwwwwwwwwwwwwwww
 
 wwwwwwwwwwww134562ww
-
 w,,at,,,,,w,,,,,,,,w
 w.w..w..w.w.fnnnnbdw
 w,w,,w,,w,w,jccccx,w
@@ -361,7 +399,6 @@ w...w..zllllkw.re..w
 wwwwwwwwwwwwwwwwwwww
 
 w134562wwwwww134562w
-
 wat,,,rew,,,w,,,,,,w
 w.......w.s.w.fnnb.w
 w,,,,,,,w,,,w,jccx,w
@@ -381,7 +418,6 @@ wreg....w.p.w......w
 wwwwwwwwwwwwwwwwwwww
 
 wwwwwwwwwwwwwwwwwwww
-
 w,,,w,,,,watwgrew,,w
 w.s.w.u..w..wgggw..w
 w,,,w,,,,w,,wgggw,,w

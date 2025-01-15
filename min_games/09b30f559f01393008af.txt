@@ -1,16 +1,33 @@
+title the undertaking
+author anna anthropy
+homepage www.auntiepixelante.com
+noaction
+noundo
+norestart
+run_rules_on_level_start
+realtime_interval 0.01
+
 OBJECTS
 
-BackgroundBlack
-ExitTransparent
-WallWhite
-PlayerWhite..0..
+Background
+Black
+
+Exit
+Transparent
+
+Wall
+White
+
+Player
+White
+..0..
 .000.
 00000
 .000.
-.0.0.
+.0.0
 
-AutoplayerGrey
-
+Autoplayer
+Grey
 
 
 LEGEND
@@ -25,13 +42,11 @@ COLLISIONLAYERS
 
 Background
 Exit
-Player
-Autoplayer, Wall
+Player, Autoplayer, Wall
 
 RULES
 
-[ Autoplayer ] -> [ Player Exit ] 
-
+[ Autoplayer ] -> [ PlayerExit ]
 
 WINCONDITIONS
 

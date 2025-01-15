@@ -1,45 +1,68 @@
+title Soko and the Band
+author Ove Ahlman
+homepage http://oveahlman.itch.io
+background_color red
+text_color white
+color_palette c64
+
 OBJECTS
 
-BackgroundWhite
-EndPointGreen
-PlayerForwardBlack00000
+Background
+White
+
+EndPoint
+Green
+
+PlayerForward
+Black
+00000
 00000
 0....
 00000
-00000
+0000
 
-PlayerBackBlack00000
+PlayerBack
+Black
+00000
 00000
 ....0
 00000
-00000
+0000
 
-PlayerUpBlack00.00
+PlayerUp
+Black
+00.00
 00.00
 0...0
 00000
-00000
+0000
 
-PlayerDownBlack00000
+PlayerDown
+Black
+00000
 00000
 0...0
 00.00
-00.00
+00.0
 
-WallGray
-WallBlockBlack Grey01111
-01111
-01111
-01111
-00001
+Wall
+Gray
 
-BlockOrange00000
-0.0.0
+WallBlock
+Black Grey
+01111
+01111
+01111
+01111
+0000
+
+Block
+Orange
 00000
 0.0.0
 00000
-
-
+0.0.0
+0000
 
 
 LEGEND
@@ -62,16 +85,11 @@ COLLISIONLAYERS
 
 Background
 EndPoint
-Player, Wall
-WallBlock, Block
+Player, Wall, WallBlock, Block
 
 RULES
 
-[ > PlayerDown | Movable ] -> [ > PlayerDown | vMovable ] 
-[ > PlayerForward | Movable ] -> [ > PlayerForward | >Movable ] 
-[ > PlayerUp | Movable ] -> [ > PlayerUp | ^Movable ] 
-[ > PlayerBack | Movable ] -> [ > PlayerBack | <Movable ] 
-
+[ > PlayerDown | Movable ] -> [ > PlayerDown | vMovable ][ > PlayerForward | Movable ] -> [ > PlayerForward | > Movable ][ > PlayerUp | Movable ] -> [ > PlayerUp | ^ Movable ][ > PlayerBack | Movable ] -> [ > PlayerBack | < Movable ]
 
 WINCONDITIONS
 
@@ -80,7 +98,6 @@ WINCONDITIONS
 LEVELS
 
 ######
-
 #...d#
 #...c#
 #....#

@@ -62,7 +62,7 @@ async function playTest() {
   console.log('Playtesting...');
   compile(['loadLevel', n_level], editor.getValue());
   console.log('Solving level:', n_level, ' with A*');
-  var [sol_a, n_search_iters_a] = await solveLevelAStar(n_level);
+  var [sol_a, n_search_iters_a] = await solveLevelAStar(level_i=n_level);
 
 
   editor.setValue(code);
@@ -137,6 +137,13 @@ function byScoreAndLength2(a, b) {
 	} else {
 		return a[2].length < b[2].length;
 	}
+}
+
+
+function hashStateObjects(state) {
+  return JSON.stringify(state).split('').reduce((hash, char) => {
+    return (hash * 31 + char.charCodeAt(0)) % 1_000_000_003; // Simple hash
+  }, 0);
 }
 
 
@@ -229,7 +236,7 @@ async function solveLevelBFS(level) {
 }
 
 
-async function solveLevelAStar() {
+async function solveLevelAStar(captureStates=false, gameHash=0, levelI=0, maxIters=1_000_000) {
 	// if (levelEditorOpened) return;
 	// if (showingSolution) return;
 	// if (solving) return;
@@ -265,17 +272,35 @@ async function solveLevelAStar() {
 
 	var startTime = performance.now();
 
-	while (!queue.isEmpty()) {
+  if (captureStates) {
+    const canvas = document.getElementById('gameCanvas');
+    const imageData = canvas.toDataURL('image/png');
+    await fetch('/save_init_state', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        game_hash: gameHash,
+        game_level: levelI,
+        state_hash: hashStateObjects(level.objects),
+        im_data: imageData,
+      })
+    });
+  }
+
+	while (!queue.isEmpty() && totalIters < maxIters) {
 		if (abortSolver) {
 			consolePrint("solver aborted");
 			// cancelLink.hidden = true;
 			break;
 		}
+    if (totalIters > maxIters) {
+      console.log('Exceeded max iterations. Exiting.');
+      break;
+    }
 		iters++;
 		if (iters > 500) {
 			iters = 0;
-			// consolePrint("searched: " + size + " queue: " + discovered);
-			// console.log(discovered, size);
+			// console.log(size);
 			// solvingProgress.innerHTML = "searched: " + size;
 			// redraw();
 			// await timeout(1);
@@ -298,12 +323,17 @@ async function solveLevelAStar() {
 				if (level.objects in exploredStates) {
 					continue;
 				}
+        if (captureStates) {
+          await processStateTransition(gameHash, parentState, level.objects, actions[i]);
+          console.log(winning);
+        }
 
         // await new Promise(resolve => setTimeout(resolve, 1)); // Small delay for live feedback
         // redraw();
 
 				exploredStates[level.objects] = [parentState, actions[i]];
 				if (winning || hasUsedCheckpoint) {
+          console.log('Winning!');
 					muted = false;
 					solving = false;
 					winning = false;
@@ -343,6 +373,48 @@ async function solveLevelAStar() {
 	redraw();
 	// cancelLink.hidden = true;
   return ['', totalIters];
+}
+
+
+async function captureGameState() {
+  // Capture current game state as PNG
+  const canvas = document.getElementById('gameCanvas');
+  const imageData = canvas.toDataURL('image/png');
+  return imageData;
+}
+
+async function processStateTransition(gameHash, parentState, childState, action) {
+  // const img1 = await captureGameState(); 
+  const hash1 = hashStateObjects(parentState);
+
+  for (var k = 0, len2 = parentState.length; k < len2; k++) {
+    level.objects[k] = parentState[k];
+  }
+  redraw(); 
+  
+  // Apply action and capture result
+  processInput(action);
+  while (againing) {
+    processInput(-1);
+  }
+  
+  const img2 = await captureGameState();
+  const hash2 = hashStateObjects(childState);
+  // const hash2 = state2
+
+  // Save transition
+  await fetch('/save_transition', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      game_hash: gameHash,
+      game_level: curlevel,
+      state1_hash: hash1,
+      state2_hash: hash2, 
+      state2_img: img2,
+      action: action
+    })
+  });
 }
 
 
@@ -688,6 +760,48 @@ async function fromPlanSweep() {
   saveStats(saveDir + '/fromPlan', results);
 }
 
+async function collectGameData(gamePath) {
+  // Load game
+  const response = await fetch('/load_game_from_file', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ game: gamePath })
+  });
+  
+  const code = await response.text();
+  
+  // Initialize game
+  editor.setValue(code);
+  clearConsole();
+  setEditorClean();
+  unloadGame();
+  compile(['restart'], code);
+
+  // Process each level
+  for (let level = 0; level < state.levels.length; level++) {
+    if (!state.levels[level].hasOwnProperty('height')) {
+      continue;
+    }
+    
+    console.log(`Processing level ${level}`);
+    compile(['loadLevel', level], code);
+    await solveLevelAStar(captureStates=true, gameHash=gamePath, level_i=level, maxIters=1_000);
+    console.log(`Finished processing level ${level}`);
+  }
+}
+
+async function processAllGames() {
+  const response = await fetch('/list_scraped_games');
+  const games = await response.json();
+
+  // Shuffle the games
+  games.sort(() => Math.random() - 0.5);
+  
+  for (const game of games) {
+    console.log(`Processing game: ${game}`);
+    await collectGameData(game);
+  }
+}
 var experimentDropdown = document.getElementById("experimentDropdown");
 experimentDropdown.addEventListener("change", experimentDropdownChange, false);
 
@@ -727,6 +841,7 @@ const expSeed = 2;
 // fromIdeaSweep();
 // fromPlanSweep();
 // playTest();
-evolve();
+// evolve();
+processAllGames();
 
 // genGame('init', [], 'test_99', 99, fewshot=true, cot=true, maxGenAttempts=20);

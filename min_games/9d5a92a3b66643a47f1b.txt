@@ -1,67 +1,96 @@
+title No Fault of My Own
+author Jonah Ostroff
+Background_Color Black
+Run_Rules_On_Level_Start
+norepeat_action
+
 OBJECTS
 
-BackgroundWhite
-CursorRed00.00
+Background
+White
+
+Cursor
+Red
+00.00
 0...0
 .....
 0...0
-00.00
+00.0
 
-LayingRed Blue00.00
+Laying
+Red Blue
+00.00
 01110
 .111.
 01110
-00.00
+00.0
 
-FaultR#ECC....0
+FaultR
+#ECC
 ....0
 ....0
 ....0
 ....0
+....
 
-FaultL#ECC0....
+FaultL
+#ECC
 0....
 0....
 0....
 0....
+0...
 
-FaultU#ECC00000
-.....
-.....
-.....
-.....
-
-FaultD#ECC.....
-.....
-.....
-.....
+FaultU
+#ECC
 00000
+.....
+.....
+.....
+....
 
-DominoRBlue.....
+FaultD
+#ECC
+.....
+.....
+.....
+.....
+0000
+
+DominoR
+Blue
+.....
 .0000
 .0000
 .0000
-.....
+....
 
-DominoLBlue.....
+DominoL
+Blue
+.....
 0000.
 0000.
 0000.
+....
+
+DominoU
+Blue
+.000.
+.000.
+.000.
+.000.
+....
+
+DominoD
+Blue
 .....
+.000.
+.000.
+.000.
+.000
 
-DominoUBlue.000.
-.000.
-.000.
-.000.
-.....
-
-DominoDBlue.....
-.000.
-.000.
-.000.
-.000.
-
-MonominoBlack
+Monomino
+Black
 
 
 LEGEND
@@ -91,27 +120,7 @@ Player
 
 RULES
 
-[ Action Cursor no Domino ] -> [ Laying ] 
-[ Action Laying ] -> [ Cursor ] 
-[ Action Cursor Domino ] -> [ Cursor Action Domino ] 
-Right [ Action DominoR | DominoL ] -> [ | ] 
-Left [ Action DominoL | DominoR ] -> [ | ] 
-Down [ Action DominoD | DominoU ] -> [ | ] 
-Up [ Action DominoU | DominoD ] -> [ | ] 
-Right [ > Laying | noDomino ] -> [ DominoR | DominoLCursor ] 
-Left [ > Laying | noDomino ] -> [ DominoL | DominoRCursor ] 
-Up [ > Laying | noDomino ] -> [ DominoU | DominoDCursor ] 
-Down [ > Laying | noDomino ] -> [ DominoD | DominoUCursor ] 
-[ > Laying ] -> Cancel 
-late Left [ no LThing |  ] -> [ FaultL |  ] 
-late Right [ no RThing |  ] -> [ FaultR |  ] 
-late Up [ no UThing |  ] -> [ FaultU |  ] 
-late Down [ no DThing |  ] -> [ FaultD |  ] 
-late Horizontal [ FaultU | noFaultU ] -> [ | ] 
-late Horizontal [ FaultD | noFaultD ] -> [ | ] 
-late Vertical [ FaultR | noFaultR ] -> [ | ] 
-late Vertical [ FaultL | noFaultL ] -> [ | ] 
-
+[ ActionCursornoDomino ] -> [ Laying ][ ActionLaying ] -> [ Cursor ][ ActionCursorDomino ] -> [ CursorActionDomino ]Right [ ActionDominoR | DominoL ] -> [  |  ] Sfx2Left [ ActionDominoL | DominoR ] -> [  |  ] Sfx2Down [ ActionDominoD | DominoU ] -> [  |  ] Sfx2Up [ ActionDominoU | DominoD ] -> [  |  ] Sfx2Right [ > Laying | noDomino ] -> [ DominoR | DominoLCursor ] Sfx1Left [ > Laying | noDomino ] -> [ DominoL | DominoRCursor ] Sfx1Up [ > Laying | noDomino ] -> [ DominoU | DominoDCursor ] Sfx1Down [ > Laying | noDomino ] -> [ DominoD | DominoUCursor ] Sfx1[ > Laying ] -> Cancellate Left [ noLThing |  ] -> [ FaultL |  ]late Right [ noRThing |  ] -> [ FaultR |  ]late Up [ noUThing |  ] -> [ FaultU |  ]late Down [ noDThing |  ] -> [ FaultD |  ]late Horizontal [ FaultU | noFaultU ] -> [  |  ]late Horizontal [ FaultD | noFaultD ] -> [  |  ]late Vertical [ FaultR | noFaultR ] -> [  |  ]late Vertical [ FaultL | noFaultL ] -> [  |  ]
 
 WINCONDITIONS
 
@@ -138,7 +147,6 @@ LEVELS
 .......
 
 @.....
-
 ......
 ......
 ......

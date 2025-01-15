@@ -1,197 +1,21 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      🍡 -ooo- 🍡
+    prelude_data
+      author
+      Baku
+    prelude_data
+      homepage
+      http://baku89.com
   objects_section
     object_data
-      object_name	Dark
-      legend_key	+
-      colors
+      object_line
+        object_name	Dark
+        legend_key	+
+      color_line
         color	Black
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	B
-      colors
-        color	ackgroundSolid
-    object_data
-      object_name	.
-      legend_key	#
-      colors
-        color	EEEEEE
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	I
-      colors
-        color	nstructionT
-    object_data
-      object_name	T
-      legend_key	#
-      colors
-        color	EEEEEE
-        color	#dce2e5
-    object_data
-      object_name	00100
-      legend_key	0
-      colors
-        color	1110
-    object_data
-      object_name	10101
-      legend_key	0
-      colors
-        color	0100
-    object_data
-      object_name	00100
-      legend_key	I
-      colors
-        color	nstructionK
-    object_data
-      object_name	K
-      legend_key	#
-      colors
-        color	EEEEEE
-        color	#dce2e5
-    object_data
-      object_name	00100
-      legend_key	0
-      colors
-        color	1000
-    object_data
-      object_name	11110
-      legend_key	0
-      colors
-        color	1000
-    object_data
-      object_name	00100
-      legend_key	I
-      colors
-        color	nstructionD
-    object_data
-      object_name	D
-      legend_key	#
-      colors
-        color	EEEEEE
-        color	#dce2e5
-    object_data
-      object_name	00100
-      legend_key	0
-      colors
-        color	0010
-    object_data
-      object_name	01111
-      legend_key	0
-      colors
-        color	0010
-    object_data
-      object_name	00100
-      legend_key	I
-      colors
-        color	nstructionI
-    object_data
-      object_name	I
-      legend_key	#
-      colors
-        color	EEEEEE
-        color	#dce2e5
-    object_data
-      object_name	00100
-      legend_key	0
-      colors
-        color	0100
-    object_data
-      object_name	00100
-      legend_key	0
-      colors
-        color	0100
-    object_data
-      object_name	00100
-      legend_key	I
-      colors
-        color	nstruction1
-    object_data
-      object_name	1
-      legend_key	#
-      colors
-        color	EEEEEE
-        color	#dce2e5
-    object_data
-      object_name	01100
-      legend_key	0
-      colors
-        color	0100
-    object_data
-      object_name	00100
-      legend_key	0
-      colors
-        color	0100
-    object_data
-      object_name	01110
-      legend_key	I
-      colors
-        color	nstruction2
-    object_data
-      object_name	2
-      legend_key	#
-      colors
-        color	EEEEEE
-        color	#dce2e5
-    object_data
-      object_name	11110
-      legend_key	0
-      colors
-        color	0001
-    object_data
-      object_name	01110
-      legend_key	1
-      colors
-        color	0000
-    object_data
-      object_name	11111
-      legend_key	I
-      colors
-        color	nstruction3
-    object_data
-      object_name	3
-      legend_key	#
-      colors
-        color	EEEEEE
-        color	#dce2e5
-    object_data
-      object_name	01110
-      legend_key	1
-      colors
-        color	0001
-    object_data
-      object_name	00111
-      legend_key	1
-      colors
-        color	0001
-    object_data
-      object_name	01110
-      legend_key	W
-      colors
-        color	all
-    object_data
-      object_name	#
-      legend_key	#
-      colors
-        color	d7b7a2
       sprite
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
@@ -199,9 +23,125 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	PlayerV
-      legend_key	$
-      colors
+      object_line
+        object_name	BackgroundSolid
+        legend_key	.
+      color_line
+        color	#EEEEEE
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_line
+        object_name	InstructionT
+        legend_key	T
+      color_line
+        color	#EEEEEE
+        color	#dce2e5
+      sprite
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '1' '1' '0']
+        ['1' '0' '1' '0' '1']
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '1' '0' '0']
+    object_data
+      object_line
+        object_name	InstructionK
+        legend_key	K
+      color_line
+        color	#EEEEEE
+        color	#dce2e5
+      sprite
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '0' '0' '0']
+        ['1' '1' '1' '1' '0']
+        ['0' '1' '0' '0' '0']
+        ['0' '0' '1' '0' '0']
+    object_data
+      object_line
+        object_name	InstructionD
+        legend_key	D
+      color_line
+        color	#EEEEEE
+        color	#dce2e5
+      sprite
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '0' '1' '0']
+        ['0' '1' '1' '1' '1']
+        ['0' '0' '0' '1' '0']
+        ['0' '0' '1' '0' '0']
+    object_data
+      object_line
+        object_name	InstructionI
+        legend_key	I
+      color_line
+        color	#EEEEEE
+        color	#dce2e5
+      sprite
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '1' '0' '0']
+    object_data
+      object_line
+        object_name	Instruction1
+        legend_key	1
+      color_line
+        color	#EEEEEE
+        color	#dce2e5
+      sprite
+        ['0' '1' '1' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '0' '1' '0' '0']
+        ['0' '1' '1' '1' '0']
+    object_data
+      object_line
+        object_name	Instruction2
+        legend_key	2
+      color_line
+        color	#EEEEEE
+        color	#dce2e5
+      sprite
+        ['1' '1' '1' '1' '0']
+        ['0' '0' '0' '0' '1']
+        ['0' '1' '1' '1' '0']
+        ['1' '0' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+    object_data
+      object_line
+        object_name	Instruction3
+        legend_key	3
+      color_line
+        color	#EEEEEE
+        color	#dce2e5
+      sprite
+        ['0' '1' '1' '1' '0']
+        ['1' '0' '0' '0' '1']
+        ['0' '0' '1' '1' '1']
+        ['1' '0' '0' '0' '1']
+        ['0' '1' '1' '1' '0']
+    object_data
+      object_line
+        object_name	Wall
+        legend_key	#
+      color_line
+        color	#d7b7a2
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+    object_data
+      object_line
+        object_name	PlayerV
+        legend_key	$
+      color_line
         color	#d5bd7d
       sprite
         ['.' '.' '0' '.' '.']
@@ -210,9 +150,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '.' '0' '.' '.']
     object_data
-      object_name	StickV
-      legend_key	|
-      colors
+      object_line
+        object_name	StickV
+        legend_key	|
+      color_line
         color	#e3cc8e
       sprite
         ['.' '.' '0' '.' '.']
@@ -221,9 +162,10 @@ ps_game
         ['.' '.' '0' '.' '.']
         ['.' '.' '0' '.' '.']
     object_data
-      object_name	PlayerH
-      legend_key	~
-      colors
+      object_line
+        object_name	PlayerH
+        legend_key	~
+      color_line
         color	#d5bd7d
       sprite
         ['.' '.' '.' '.' '.']
@@ -232,142 +174,92 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	StickH
-      legend_key	-
-      colors
+      object_line
+        object_name	StickH
+        legend_key	-
+      color_line
         color	#e3cc8e
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	00000
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	F
-      colors
-        color	loatA
-    object_data
-      object_name	A
-      legend_key	#
-      colors
-        color	ffb1c5
-    object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	.000.
-      legend_key	F
-      colors
-        color	loatB
-    object_data
-      object_name	B
-      legend_key	W
-      colors
-        color	HITE
-    object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	.000.
-      legend_key	F
-      colors
-        color	loatC
-    object_data
-      object_name	C
-      legend_key	#
-      colors
-        color	d0dc6e
-    object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	.000.
-      legend_key	F
-      colors
-        color	ixedA
-    object_data
-      object_name	X
-      legend_key	#
-      colors
-        color	ffb1c5
-    object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	.000.
-      legend_key	F
-      colors
-        color	ixedB
-    object_data
-      object_name	Y
-      legend_key	W
-      colors
-        color	HITE
-    object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	00000
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	.000.
-      legend_key	F
-      colors
-        color	ixedC
-    object_data
-      object_name	Z
-      legend_key	#
-      colors
-        color	d0dc6e
+      object_line
+        object_name	FloatA
+        legend_key	A
+      color_line
+        color	#ffb1c5
       sprite
         ['.' '0' '0' '0' '.']
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
         ['.' '0' '0' '0' '.']
-      
-
-
+    object_data
+      object_line
+        object_name	FloatB
+        legend_key	B
+      color_line
+        color	WHITE
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_line
+        object_name	FloatC
+        legend_key	C
+      color_line
+        color	#d0dc6e
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_line
+        object_name	FixedA
+        legend_key	X
+      color_line
+        color	#ffb1c5
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_line
+        object_name	FixedB
+        legend_key	Y
+      color_line
+        color	WHITE
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
+    object_data
+      object_line
+        object_name	FixedC
+        legend_key	Z
+      color_line
+        color	#d0dc6e
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['0' '0' '0' '0' '0']
+        ['.' '0' '0' '0' '.']
   legend_section
     legend_data
-      Background
+      Background =
       object_name	BackgroundSolid
       legend_operation
         object_name	InstructionT
@@ -384,66 +276,66 @@ ps_game
       legend_operation
         object_name	Instruction3
     legend_data
-      Stick
+      Stick =
       object_name	StickV
       legend_operation
         object_name	StickH
     legend_data
-      Player
+      Player =
       object_name	PlayerV
       legend_operation
         object_name	PlayerH
     legend_data
-      Float
+      Float 	=
       object_name	FloatA
       legend_operation
         object_name	FloatB
       legend_operation
         object_name	FloatC
     legend_data
-      FloatAB
+      FloatAB =
       object_name	FloatA
       legend_operation
         object_name	FloatB
     legend_data
-      FloatAC
+      FloatAC =
       object_name	FloatA
       legend_operation
         object_name	FloatC
     legend_data
-      FloatBC
+      FloatBC =
       object_name	FloatB
       legend_operation
         object_name	FloatC
     legend_data
-      Fixed
+      Fixed =
       object_name	FixedA
       legend_operation
         object_name	FixedB
       legend_operation
         object_name	FixedC
     legend_data
-      Dango
+      Dango =
       object_name	Float
       legend_operation
         object_name	Fixed
     legend_data
-      Body
+      Body =
       object_name	Player
       legend_operation
         object_name	Fixed
     legend_data
-      AxisV
+      AxisV =
       object_name	PlayerV
       legend_operation
         object_name	StickV
     legend_data
-      AxisH
+      AxisH =
       object_name	PlayerH
       legend_operation
         object_name	StickH
     legend_data
-      Axis
+      Axis =
       object_name	Player
       legend_operation
         object_name	Stick
@@ -454,10 +346,8 @@ ps_game
       object_name	Stick
     layer_data
       object_name	Player
-    layer_data
       object_name	Wall
       object_name	Dango
-    layer_data
       object_name	Fixed
       object_name	Dark
   rules_section
@@ -465,954 +355,397 @@ ps_game
       rule_block_once
         rule_data
           rule_part
-            rule_content
-              Moving
-              Player
-            rule_content	]
-            rule_content	[
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
+            rule_content	Moving
+            rule_content	Player
+          rule_part
+            rule_content	Stick
           ->
           rule_part
-            rule_content
-              Moving
-              Player
-            rule_content	]
-            rule_content	[
-            rule_content	M
-            rule_content	o
-            rule_content	v
-            rule_content	i
-            rule_content	n
-            rule_content	g
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-          
-
+            rule_content	Moving
+            rule_content	Player
+          rule_part
+            rule_content	Moving
+            rule_content	Stick
         rule_data
           rule_part
-            rule_content
-              Moving
-              Player
-            rule_content	]
-            rule_content	[
-            rule_content	F
-            rule_content	i
-            rule_content	x
-            rule_content	e
-            rule_content	d
+            rule_content	Moving
+            rule_content	Player
+          rule_part
+            rule_content	Fixed
           ->
           rule_part
-            rule_content
-              Moving
-              Player
-            rule_content	]
-            rule_content	[
-            rule_content	M
-            rule_content	o
-            rule_content	v
-            rule_content	i
-            rule_content	n
-            rule_content	g
-            rule_content	F
-            rule_content	i
-            rule_content	x
-            rule_content	e
-            rule_content	d
-          
-
+            rule_content	Moving
+            rule_content	Player
+          rule_part
+            rule_content	Moving
+            rule_content	Fixed
         rule_data
           rule_part
-            rule_content
-              Horizontal
-              StickV
-              Dango
+            rule_content	Horizontal
+            rule_content	StickV
+            rule_content	Dango
           ->
           rule_part
-            rule_content
-              Horizontal
-              StickV
-              Horizontal
-              Dango
-          
-
+            rule_content	Horizontal
+            rule_content	StickV
+            rule_content	Horizontal
+            rule_content	Dango
         rule_data
           rule_part
-            rule_content
-              Vertical
-              StickH
-              Dango
+            rule_content	Vertical
+            rule_content	StickH
+            rule_content	Dango
           ->
           rule_part
-            rule_content
-              Vertical
-              StickH
-              Vertical
-              Dango
-          
-
+            rule_content	Vertical
+            rule_content	StickH
+            rule_content	Vertical
+            rule_content	Dango
         rule_data
           rule_part
             rule_content
               >
               Axis
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Wall
           ->
-          command
-            command_keyword	Cancel
-          
-
+          prefix	Cancel
         rule_data
-          Horizontal
+          prefix	Horizontal
           rule_part
             rule_content
               >
               AxisV
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
+            rule_content	Stationary
+            rule_content	Float
           ->
-          command
-            command_keyword	Cancel
-          (push by side)
-          
-
+          prefix	Cancel
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
             rule_content
               >
               PlayerV
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
+            rule_content	Stationary
+            rule_content	Float
           ->
-          command
-            command_keyword	Cancel
-          (push by root)
-          
-
+          prefix	Cancel
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
             rule_content
               >
               AxisH
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
+            rule_content	Stationary
+            rule_content	Float
           ->
-          command
-            command_keyword	Cancel
-          (push by side)
-          
-
+          prefix	Cancel
         rule_data
-          Horizontal
+          prefix	Horizontal
           rule_part
             rule_content
               >
               PlayerH
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
+            rule_content	Stationary
+            rule_content	Float
           ->
-          command
-            command_keyword	Cancel
-          (push by root)
-          
-
+          prefix	Cancel
         rule_data
           rule_part
             rule_content
               >
               Dango
             cell_border
-            rule_content	>
-            rule_content	D
-            rule_content	a
-            rule_content	n
-            rule_content	g
-            rule_content	o
+            rule_content
+              >
+              Dango
             cell_border
-            rule_content	>
-            rule_content	D
-            rule_content	a
-            rule_content	n
-            rule_content	g
-            rule_content	o
+            rule_content
+              >
+              Dango
             cell_border
-            rule_content	D
-            rule_content	a
-            rule_content	n
-            rule_content	g
-            rule_content	o
+            rule_content	Dango
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
-          late
-          Vertical
+          prefix	late
+          prefix	Vertical
           rule_part
             rule_content	PlayerV
             cell_border
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	C
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
+            rule_content	FloatC
+            rule_content	StickV
           ->
           rule_part
             rule_content	PlayerV
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	x
-            rule_content	e
-            rule_content	d
-            rule_content	C
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
-          
-
+            rule_content	FixedC
+            rule_content	StickV
         rule_data
-          late
-          Vertical
+          prefix	late
+          prefix	Vertical
           rule_part
             rule_content	FixedC
             cell_border
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	B
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
+            rule_content	FloatB
+            rule_content	StickV
           ->
           rule_part
             rule_content	FixedC
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	x
-            rule_content	e
-            rule_content	d
-            rule_content	B
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
-          
-
+            rule_content	FixedB
+            rule_content	StickV
         rule_data
-          late
-          Vertical
+          prefix	late
+          prefix	Vertical
           rule_part
             rule_content	FixedB
             cell_border
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	A
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
+            rule_content	FloatA
+            rule_content	StickV
           ->
           rule_part
             rule_content	FixedB
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	x
-            rule_content	e
-            rule_content	d
-            rule_content	A
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
-          
-
+            rule_content	FixedA
+            rule_content	StickV
         rule_data
-          late
-          Horizontal
+          prefix	late
+          prefix	Horizontal
           rule_part
             rule_content	PlayerH
             cell_border
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	C
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
+            rule_content	FloatC
+            rule_content	StickH
           ->
           rule_part
             rule_content	PlayerH
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	x
-            rule_content	e
-            rule_content	d
-            rule_content	C
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
-          
-
+            rule_content	FixedC
+            rule_content	StickH
         rule_data
-          late
-          Horizontal
+          prefix	late
+          prefix	Horizontal
           rule_part
             rule_content	FixedC
             cell_border
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	B
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
+            rule_content	FloatB
+            rule_content	StickH
           ->
           rule_part
             rule_content	FixedC
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	x
-            rule_content	e
-            rule_content	d
-            rule_content	B
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
-          
-
+            rule_content	FixedB
+            rule_content	StickH
         rule_data
-          late
-          Horizontal
+          prefix	late
+          prefix	Horizontal
           rule_part
             rule_content	FixedB
             cell_border
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	A
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
+            rule_content	FloatA
+            rule_content	StickH
           ->
           rule_part
             rule_content	FixedB
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	x
-            rule_content	e
-            rule_content	d
-            rule_content	A
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
-          
-
+            rule_content	FixedA
+            rule_content	StickH
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
             rule_content
               >
               PlayerV
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
+            rule_content	StickV
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	A
-            rule_content	B
+            rule_content	Stationary
+            rule_content	FloatAB
           ->
-          command
-            sound
-              sound_id	1
-          
-
+          prefix	SFX1
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
             rule_content
               >
               FixedC
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
+            rule_content	StickV
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	A
-            rule_content	C
+            rule_content	Stationary
+            rule_content	FloatAC
           ->
-          command
-            sound
-              sound_id	1
-          
-
+          prefix	SFX1
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
             rule_content
               >
               FixedB
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
+            rule_content	StickV
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	B
-            rule_content	C
+            rule_content	Stationary
+            rule_content	FloatBC
           ->
-          command
-            sound
-              sound_id	1
-          
-
+          prefix	SFX1
         rule_data
-          Horizontal
+          prefix	Horizontal
           rule_part
             rule_content
               >
               PlayerH
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
+            rule_content	StickH
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	A
-            rule_content	B
+            rule_content	Stationary
+            rule_content	FloatAB
           ->
-          command
-            sound
-              sound_id	1
-          
-
+          prefix	SFX1
         rule_data
-          Horizontal
+          prefix	Horizontal
           rule_part
             rule_content
               >
               FixedC
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
+            rule_content	StickH
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	A
-            rule_content	C
+            rule_content	Stationary
+            rule_content	FloatAC
           ->
-          command
-            sound
-              sound_id	1
-          
-
+          prefix	SFX1
         rule_data
-          Horizontal
+          prefix	Horizontal
           rule_part
             rule_content
               >
               FixedB
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
+            rule_content	StickH
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	B
-            rule_content	C
+            rule_content	Stationary
+            rule_content	FloatBC
           ->
-          command
-            sound
-              sound_id	1
-          
-
+          prefix	SFX1
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
+            rule_content	StickV
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
+            rule_content	StickV
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
+            rule_content	StickV
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
+            rule_content	Stationary
+            rule_content	Float
           ->
-          command
-            sound
-              sound_id	2
-          
-
+          prefix	SFX2
         rule_data
-          Horizontal
+          prefix	Horizontal
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
+            rule_content	StickH
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
+            rule_content	StickH
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
+            rule_content	StickH
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
+            rule_content	Stationary
+            rule_content	Float
           ->
-          command
-            sound
-              sound_id	2
-          
-
+          prefix	SFX2
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
             rule_content
               >
               PlayerV
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
+            rule_content	StickV
             cell_border
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	C
+            rule_content	FloatC
           ->
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
             rule_content
               >
               FixedC
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
+            rule_content	StickV
             cell_border
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	B
+            rule_content	FloatB
           ->
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
         rule_data
-          Vertical
+          prefix	Vertical
           rule_part
             rule_content
               >
               FixedB
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	V
+            rule_content	StickV
             cell_border
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	A
+            rule_content	FloatA
           ->
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
         rule_data
-          Horizontal
+          prefix	Horizontal
           rule_part
             rule_content
               >
               PlayerH
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
+            rule_content	StickH
             cell_border
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	C
+            rule_content	FloatC
           ->
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
         rule_data
-          Horizontal
+          prefix	Horizontal
           rule_part
             rule_content
               >
               FixedC
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
+            rule_content	StickH
             cell_border
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	B
+            rule_content	FloatB
           ->
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
         rule_data
-          Horizontal
+          prefix	Horizontal
           rule_part
             rule_content
               >
               FixedB
             cell_border
-            rule_content	S
-            rule_content	t
-            rule_content	i
-            rule_content	c
-            rule_content	k
-            rule_content	H
+            rule_content	StickH
             cell_border
-            rule_content	F
-            rule_content	l
-            rule_content	o
-            rule_content	a
-            rule_content	t
-            rule_content	A
+            rule_content	FloatA
           ->
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
   winconditions_section
     condition_data
       No
       object_name	Float
   levels_section
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' 'a' '.' '1' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' 'T' '.' '.' '.' '.' '.' '.' '.' '.' '#']
@@ -1427,8 +760,8 @@ ps_game
  ['#' '.' '.' '.' '.' '.' '.' '$' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' 'c' 'K' '3' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
@@ -1443,8 +776,8 @@ ps_game
  ['#' '.' '.' '.' '.' '.' '.' '$' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+']]
-    level_data	[['+' '+' '+' '+' '+' '#' '#' '#' '#' '#' '+' '+' '+' '+' '+']
+    level_data	[['+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+']
+ ['+' '+' '+' '+' '+' '#' '#' '#' '#' '#' '+' '+' '+' '+' '+']
  ['+' '+' '+' '+' '+' '#' '.' '.' '.' '#' '+' '+' '+' '+' '+']
  ['+' '+' '+' '+' '+' '#' '.' '#' '.' '#' '+' '+' '+' '+' '+']
  ['+' '+' '+' '+' '+' '#' '.' 'c' '.' '#' '+' '+' '+' '+' '+']
@@ -1459,8 +792,8 @@ ps_game
  ['+' '+' '+' '+' '+' '+' '#' '#' '#' '#' '+' '+' '+' '+' '+']
  ['+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+']
  ['+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+']]
-    level_data	[['+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+']]
-    level_data	[['+' '+' '+' '#' '#' '#' '#' '#' '#' '#' '#' '#' '+' '+' '+']
+    level_data	[['+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+']
+ ['+' '+' '+' '#' '#' '#' '#' '#' '#' '#' '#' '#' '+' '+' '+']
  ['+' '+' '+' '#' '#' '.' '#' '.' '#' '.' '#' '#' '+' '+' '+']
  ['+' '+' '+' '#' 'b' '.' '.' '.' '.' '.' 'b' '#' '+' '+' '+']
  ['+' '+' '+' '#' '.' '.' '.' '.' '.' '.' '.' '#' '+' '+' '+']
@@ -1475,8 +808,8 @@ ps_game
  ['+' '+' '+' '#' '.' '.' '.' '.' '.' '.' '.' '#' '+' '+' '+']
  ['+' '+' '+' '#' '#' '#' '#' '#' '#' '#' '#' '#' '+' '+' '+']
  ['+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+']]
-    level_data	[['+' '+' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '+' '+']]
-    level_data	[['+' '+' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '+' '+']
+    level_data	[['+' '+' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '+' '+']
+ ['+' '+' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '+' '+']
  ['+' '+' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '+' '+']
  ['+' '+' '#' '.' '.' '.' 'b' 'a' 'c' '.' '.' '.' '#' '+' '+']
  ['+' '+' '#' '.' '.' '.' 'a' 'c' 'b' '.' '.' '.' '#' '+' '+']
@@ -1491,8 +824,8 @@ ps_game
  ['+' '+' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '+' '+']
  ['+' '+' '#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '+' '+']
  ['+' '+' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '+' '+']]
-    level_data	[['+' '+' '+' '+' '+' '#' '#' '#' '#' '#' '+' '+' '+' '+' '+']]
-    level_data	[['+' '+' '+' '#' '#' '#' '.' '.' 'a' '#' '#' '#' '+' '+' '+']
+    level_data	[['+' '+' '+' '+' '+' '#' '#' '#' '#' '#' '+' '+' '+' '+' '+']
+ ['+' '+' '+' '#' '#' '#' '.' '.' 'a' '#' '#' '#' '+' '+' '+']
  ['+' '+' '#' '#' '.' '.' '.' '.' '.' '.' '.' '#' '#' '+' '+']
  ['+' '#' '#' '.' '.' '.' 'c' '.' '.' '.' '.' '.' '#' '#' '+']
  ['+' '#' '.' '.' '.' '.' '.' '.' '|' '.' '.' '.' '.' '#' '+']
@@ -1522,8 +855,8 @@ ps_game
  ['+' '#' '.' '.' 'a' '.' 'a' '.' '.' '.' '.' '.' '.' '#' '+']
  ['+' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '+']
  ['+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+' '+']]
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '+']]
-    level_data	[['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '+']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' 'a' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '|' 'c' '.' '.' '.' '.' '.' '#']

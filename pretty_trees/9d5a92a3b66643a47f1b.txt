@@ -1,15 +1,27 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      No Fault of My Own
+    prelude_data
+      author
+      Jonah Ostroff
+    prelude_data
+      Background_Color
+      Black
+    prelude_data	Run_Rules_On_Level_Start
+    prelude_data	norepeat_action
   objects_section
     object_data
-      object_name	Background
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	Background
+      color_line
+        color	White
     object_data
-      object_name	Cursor
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Cursor
+      color_line
+        color	Red
       sprite
         ['0' '0' '.' '0' '0']
         ['0' '.' '.' '.' '0']
@@ -17,10 +29,10 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['0' '0' '.' '0' '0']
     object_data
-      object_name	Laying
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	Laying
+      color_line
+        color	Red
         color	Blue
       sprite
         ['0' '0' '.' '0' '0']
@@ -29,10 +41,10 @@ ps_game
         ['0' '1' '1' '1' '0']
         ['0' '0' '.' '0' '0']
     object_data
-      object_name	FaultR
-      legend_key	#
-      colors
-        color	ECC
+      object_line
+        object_name	FaultR
+      color_line
+        color	#ECC
       sprite
         ['.' '.' '.' '.' '0']
         ['.' '.' '.' '.' '0']
@@ -40,10 +52,10 @@ ps_game
         ['.' '.' '.' '.' '0']
         ['.' '.' '.' '.' '0']
     object_data
-      object_name	FaultL
-      legend_key	#
-      colors
-        color	ECC
+      object_line
+        object_name	FaultL
+      color_line
+        color	#ECC
       sprite
         ['0' '.' '.' '.' '.']
         ['0' '.' '.' '.' '.']
@@ -51,10 +63,10 @@ ps_game
         ['0' '.' '.' '.' '.']
         ['0' '.' '.' '.' '.']
     object_data
-      object_name	FaultU
-      legend_key	#
-      colors
-        color	ECC
+      object_line
+        object_name	FaultU
+      color_line
+        color	#ECC
       sprite
         ['0' '0' '0' '0' '0']
         ['.' '.' '.' '.' '.']
@@ -62,10 +74,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	FaultD
-      legend_key	#
-      colors
-        color	ECC
+      object_line
+        object_name	FaultD
+      color_line
+        color	#ECC
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -73,10 +85,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	DominoR
-      legend_key	B
-      colors
-        color	lue
+      object_line
+        object_name	DominoR
+      color_line
+        color	Blue
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '0' '0' '0']
@@ -84,10 +96,10 @@ ps_game
         ['.' '0' '0' '0' '0']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	DominoL
-      legend_key	B
-      colors
-        color	lue
+      object_line
+        object_name	DominoL
+      color_line
+        color	Blue
       sprite
         ['.' '.' '.' '.' '.']
         ['0' '0' '0' '0' '.']
@@ -95,10 +107,10 @@ ps_game
         ['0' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	DominoU
-      legend_key	B
-      colors
-        color	lue
+      object_line
+        object_name	DominoU
+      color_line
+        color	Blue
       sprite
         ['.' '0' '0' '0' '.']
         ['.' '0' '0' '0' '.']
@@ -106,10 +118,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	DominoD
-      legend_key	B
-      colors
-        color	lue
+      object_line
+        object_name	DominoD
+      color_line
+        color	Blue
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '0' '0' '.']
@@ -117,20 +129,18 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	Monomino
-      legend_key	B
-      colors
-        color	lack
-      
-
+      object_line
+        object_name	Monomino
+      color_line
+        color	Black
   legend_section
     legend_data
-      Player
+      Player =
       object_name	Cursor
       legend_operation
         object_name	Laying
     legend_data
-      Domino
+      Domino =
       object_name	DominoR
       legend_operation
         object_name	DominoL
@@ -141,7 +151,7 @@ ps_game
       legend_operation
         object_name	Monomino
     legend_data
-      Fault
+      Fault =
       object_name	FaultR
       legend_operation
         object_name	FaultL
@@ -150,43 +160,43 @@ ps_game
       legend_operation
         object_name	FaultU
     legend_data
-      RThing
+      RThing =
       object_name	DominoR
       legend_operation
         object_name	FaultR
     legend_data
-      LThing
+      LThing =
       object_name	DominoL
       legend_operation
         object_name	FaultL
     legend_data
-      UThing
+      UThing =
       object_name	DominoU
       legend_operation
         object_name	FaultU
     legend_data
-      DThing
+      DThing =
       object_name	DominoD
       legend_operation
         object_name	FaultD
     legend_data
-      FaultV
+      FaultV =
       object_name	FaultU
       legend_operation
         object_name	FaultD
     legend_data
-      FaultH
+      FaultH =
       object_name	FaultL
       legend_operation
         object_name	FaultR
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      @
+      @ =
       object_name	Cursor
     legend_data
-      M
+      M =
       object_name	Monomino
   collisionlayers_section
     layer_data
@@ -208,418 +218,233 @@ ps_game
       rule_block_once
         rule_data
           rule_part
-            rule_content
-              Action
-              Cursor
-              no
-              Domino
+            rule_content	Action
+            rule_content	Cursor
+            rule_content	no
+            rule_content	Domino
           ->
           rule_part
             rule_content	Laying
-          
-
         rule_data
           rule_part
-            rule_content
-              Action
-              Laying
+            rule_content	Action
+            rule_content	Laying
           ->
           rule_part
             rule_content	Cursor
-          
-
         rule_data
           rule_part
-            rule_content
-              Action
-              Cursor
-              Domino
+            rule_content	Action
+            rule_content	Cursor
+            rule_content	Domino
           ->
           rule_part
-            rule_content
-              Cursor
-              Action
-              Domino
-          
-
+            rule_content	Cursor
+            rule_content	Action
+            rule_content	Domino
         rule_data
-          Right
+          prefix	Right
           rule_part
-            rule_content
-              Action
-              DominoR
+            rule_content	Action
+            rule_content	DominoR
             cell_border
-            rule_content	D
-            rule_content	o
-            rule_content	m
-            rule_content	i
-            rule_content	n
-            rule_content	o
-            rule_content	L
+            rule_content	DominoL
           ->
           rule_part
-            rule_content	|
-          command
-            sound
-              sound_id	2
-          
-
-        rule_data
-          Left
-          rule_part
-            rule_content
-              Action
-              DominoL
             cell_border
-            rule_content	D
-            rule_content	o
-            rule_content	m
-            rule_content	i
-            rule_content	n
-            rule_content	o
-            rule_content	R
-          ->
-          rule_part
-            rule_content	|
-          command
-            sound
-              sound_id	2
-          
-
+          prefix	Sfx2
         rule_data
-          Down
+          prefix	Left
           rule_part
-            rule_content
-              Action
-              DominoD
+            rule_content	Action
+            rule_content	DominoL
             cell_border
-            rule_content	D
-            rule_content	o
-            rule_content	m
-            rule_content	i
-            rule_content	n
-            rule_content	o
-            rule_content	U
+            rule_content	DominoR
           ->
           rule_part
-            rule_content	|
-          command
-            sound
-              sound_id	2
-          
-
-        rule_data
-          Up
-          rule_part
-            rule_content
-              Action
-              DominoU
             cell_border
-            rule_content	D
-            rule_content	o
-            rule_content	m
-            rule_content	i
-            rule_content	n
-            rule_content	o
-            rule_content	D
+          prefix	Sfx2
+        rule_data
+          prefix	Down
+          rule_part
+            rule_content	Action
+            rule_content	DominoD
+            cell_border
+            rule_content	DominoU
           ->
           rule_part
-            rule_content	|
-          command
-            sound
-              sound_id	2
-          
-
+            cell_border
+          prefix	Sfx2
         rule_data
-          Right
+          prefix	Up
+          rule_part
+            rule_content	Action
+            rule_content	DominoU
+            cell_border
+            rule_content	DominoD
+          ->
+          rule_part
+            cell_border
+          prefix	Sfx2
+        rule_data
+          prefix	Right
           rule_part
             rule_content
               >
               Laying
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	D
-            rule_content	o
-            rule_content	m
-            rule_content	i
-            rule_content	n
-            rule_content	o
+            rule_content	no
+            rule_content	Domino
           ->
           rule_part
             rule_content	DominoR
             cell_border
-            rule_content	D
-            rule_content	o
-            rule_content	m
-            rule_content	i
-            rule_content	n
-            rule_content	o
-            rule_content	L
-            rule_content	C
-            rule_content	u
-            rule_content	r
-            rule_content	s
-            rule_content	o
-            rule_content	r
-          command
-            sound
-              sound_id	1
-          
-
+            rule_content	DominoL
+            rule_content	Cursor
+          prefix	Sfx1
         rule_data
-          Left
+          prefix	Left
           rule_part
             rule_content
               >
               Laying
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	D
-            rule_content	o
-            rule_content	m
-            rule_content	i
-            rule_content	n
-            rule_content	o
+            rule_content	no
+            rule_content	Domino
           ->
           rule_part
             rule_content	DominoL
             cell_border
-            rule_content	D
-            rule_content	o
-            rule_content	m
-            rule_content	i
-            rule_content	n
-            rule_content	o
-            rule_content	R
-            rule_content	C
-            rule_content	u
-            rule_content	r
-            rule_content	s
-            rule_content	o
-            rule_content	r
-          command
-            sound
-              sound_id	1
-          
-
+            rule_content	DominoR
+            rule_content	Cursor
+          prefix	Sfx1
         rule_data
-          Up
+          prefix	Up
           rule_part
             rule_content
               >
               Laying
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	D
-            rule_content	o
-            rule_content	m
-            rule_content	i
-            rule_content	n
-            rule_content	o
+            rule_content	no
+            rule_content	Domino
           ->
           rule_part
             rule_content	DominoU
             cell_border
-            rule_content	D
-            rule_content	o
-            rule_content	m
-            rule_content	i
-            rule_content	n
-            rule_content	o
-            rule_content	D
-            rule_content	C
-            rule_content	u
-            rule_content	r
-            rule_content	s
-            rule_content	o
-            rule_content	r
-          command
-            sound
-              sound_id	1
-          
-
+            rule_content	DominoD
+            rule_content	Cursor
+          prefix	Sfx1
         rule_data
-          Down
+          prefix	Down
           rule_part
             rule_content
               >
               Laying
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	D
-            rule_content	o
-            rule_content	m
-            rule_content	i
-            rule_content	n
-            rule_content	o
+            rule_content	no
+            rule_content	Domino
           ->
           rule_part
             rule_content	DominoD
             cell_border
-            rule_content	D
-            rule_content	o
-            rule_content	m
-            rule_content	i
-            rule_content	n
-            rule_content	o
-            rule_content	U
-            rule_content	C
-            rule_content	u
-            rule_content	r
-            rule_content	s
-            rule_content	o
-            rule_content	r
-          command
-            sound
-              sound_id	1
-          
-
+            rule_content	DominoU
+            rule_content	Cursor
+          prefix	Sfx1
         rule_data
           rule_part
             rule_content
               >
               Laying
           ->
-          command
-            command_keyword	Cancel
-          
-
+          prefix	Cancel
         rule_data
-          late
-          Left
+          prefix	late
+          prefix	Left
           rule_part
-            rule_content
-              no
-              LThing
+            rule_content	no
+            rule_content	LThing
             cell_border
           ->
           rule_part
             rule_content	FaultL
             cell_border
-          
-
         rule_data
-          late
-          Right
+          prefix	late
+          prefix	Right
           rule_part
-            rule_content
-              no
-              RThing
+            rule_content	no
+            rule_content	RThing
             cell_border
           ->
           rule_part
             rule_content	FaultR
             cell_border
-          
-
         rule_data
-          late
-          Up
+          prefix	late
+          prefix	Up
           rule_part
-            rule_content
-              no
-              UThing
+            rule_content	no
+            rule_content	UThing
             cell_border
           ->
           rule_part
             rule_content	FaultU
             cell_border
-          
-
         rule_data
-          late
-          Down
+          prefix	late
+          prefix	Down
           rule_part
-            rule_content
-              no
-              DThing
+            rule_content	no
+            rule_content	DThing
             cell_border
           ->
           rule_part
             rule_content	FaultD
             cell_border
-          
-
         rule_data
-          late
-          Horizontal
+          prefix	late
+          prefix	Horizontal
           rule_part
             rule_content	FaultU
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	F
-            rule_content	a
-            rule_content	u
-            rule_content	l
-            rule_content	t
-            rule_content	U
+            rule_content	no
+            rule_content	FaultU
           ->
           rule_part
-            rule_content	|
-          
-
+            cell_border
         rule_data
-          late
-          Horizontal
+          prefix	late
+          prefix	Horizontal
           rule_part
             rule_content	FaultD
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	F
-            rule_content	a
-            rule_content	u
-            rule_content	l
-            rule_content	t
-            rule_content	D
+            rule_content	no
+            rule_content	FaultD
           ->
           rule_part
-            rule_content	|
-          
-
+            cell_border
         rule_data
-          late
-          Vertical
+          prefix	late
+          prefix	Vertical
           rule_part
             rule_content	FaultR
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	F
-            rule_content	a
-            rule_content	u
-            rule_content	l
-            rule_content	t
-            rule_content	R
+            rule_content	no
+            rule_content	FaultR
           ->
           rule_part
-            rule_content	|
-          
-
+            cell_border
         rule_data
-          late
-          Vertical
+          prefix	late
+          prefix	Vertical
           rule_part
             rule_content	FaultL
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	F
-            rule_content	a
-            rule_content	u
-            rule_content	l
-            rule_content	t
-            rule_content	L
+            rule_content	no
+            rule_content	FaultL
           ->
           rule_part
-            rule_content	|
-          
-
+            cell_border
   winconditions_section
     condition_data
       no
@@ -645,10 +470,9 @@ ps_game
  ['.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.' '.']]
-    level_data	[['@' '.' '.' '.' '.' '.']]
-    level_data	[['.' '.' '.' '.' '.' '.']
+    level_data	[['@' '.' '.' '.' '.' '.']
+ ['.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.']
  ['.' '.' '.' '.' '.' '.']]
-    level_data	None

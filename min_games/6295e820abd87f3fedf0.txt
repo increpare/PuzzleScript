@@ -1,60 +1,90 @@
+title Sluzzle
+author Hannes Petri
+noaction
+
 OBJECTS
 
-BackgroundBLACK
-PlayerBLACK
-OneBLUE RED00000
+Background
+BLACK
+
+Player
+BLACK
+
+One
+BLUE RED
+00000
 00000
 00100
 00000
-00000
+0000
 
-TwoBLUE RED00000
+Two
+BLUE RED
+00000
 01000
 00000
 00010
-00000
+0000
 
-ThreeBLUE RED00000
+Three
+BLUE RED
+00000
 01000
 00100
 00010
-00000
+0000
 
-FourBLUE RED00000
+Four
+BLUE RED
+00000
 01010
 00000
 01010
-00000
+0000
 
-FiveBLUE RED00000
+Five
+BLUE RED
+00000
 01010
 00100
 01010
-00000
+0000
 
-SixBLUE RED00000
-01010
-01010
-01010
+Six
+BLUE RED
 00000
+01010
+01010
+01010
+0000
 
-SevenBLUE RED00000
+Seven
+BLUE RED
+00000
 01010
 01110
 01010
-00000
+0000
 
-EightBLUE RED00000
+Eight
+BLUE RED
+00000
 01110
 01010
 01110
-00000
+0000
 
-OneMTRANSPARENT
-FourMTRANSPARENT
-SevenMTRANSPARENT
-DeleterTRANSPARENT
+OneM
+TRANSPARENT
 
+FourM
+TRANSPARENT
+
+SevenM
+TRANSPARENT
+
+Deleter
+TRANSPARENT
 
 
 LEGEND
@@ -74,22 +104,11 @@ Tile = One or Two or Three or Four or Five or Six or Seven or Eight
 COLLISIONLAYERS
 
 Background
-Player, Tile
-OneM, FourM
-SevenM, Deleter
+Player, Tile, OneM, FourM, SevenM, Deleter
 
 RULES
 
-[ < Player | Tile ] -> [ Tile | Player ] 
-RIGHT [ One | Two | Three ] -> [ OneM | Two | Three ] 
-RIGHT [ Four | Five | Six ] -> [ FourM | Five | Six ] 
-RIGHT [ Seven | Eight | Player ] -> [ SevenM | Eight | Player ] 
-DOWN [ OneM | FourM | SevenM ] -> [ Deleter | Deleter | Deleter ] 
-[ Deleter | ... | Tile ] -> [ Deleter | ... |  ] 
-[ OneM ] -> [ One ] 
-[ FourM ] -> [ Four ] 
-[ SevenM ] -> [ Seven ] 
-
+[ < Player | Tile ] -> [ Tile | Player ]RIGHT [ One | Two | Three ] -> [ OneM | Two | Three ]RIGHT [ Four | Five | Six ] -> [ FourM | Five | Six ]RIGHT [ Seven | Eight | Player ] -> [ SevenM | Eight | Player ]DOWN [ OneM | FourM | SevenM ] -> [ Deleter | Deleter | Deleter ][ Deleter | ... | Tile ] -> [ Deleter | ... |  ][ OneM ] -> [ One ][ FourM ] -> [ Four ][ SevenM ] -> [ Seven ]
 
 WINCONDITIONS
 

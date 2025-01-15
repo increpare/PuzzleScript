@@ -1,64 +1,97 @@
+title Space Expedition
+author RILEY VAN ETTEN AND ORRY PAYNTER
+homepage www.puzzlescript.net
+Text_color Yellow
+
 OBJECTS
 
-BackgroundYELLOW BLACK11111
+Background
+YELLOW BLACK
+11111
 11101
 11111
 10111
-11111
+1111
 
-WallBrown grey...01
+Wall
+Brown grey
+...01
 01101
 01100
 .0110
-..00.
+..00
 
-PlayerRightORANGE
-YELLOWBLUE RED
-00000.0010
-3010033000
-.33.0PlayerLeft
-OrangeYellow Red
-000000100.
-0010200022
-0.22.PlayerUp
-OrangeYellow Red
-..0...010.
-0010000000
-0.2.0PlayerDown
-Orangeyellow Red0.2.0
+PlayerRight
+ORANGE YELLOW BLUE RED
+00000
+.0010
+30100
+33000
+.33.
+
+PlayerLeft
+Orange Yellow Red
+00000
+0100.
+00102
+00022
+0.22
+
+PlayerUp
+Orange Yellow Red
+..0..
+.010.
+00100
+00000
+0.2.
+
+PlayerDown
+Orange yellow Red
+0.2.0
 00000
 00100
 .010.
-..0..
+..0.
 
-PlanetPink
-BLUELightblue White
-.101.10021
-0212012001
-.101.Alien
-GreenLightgreen RED..0..
+Planet
+Pink BLUE Lightblue White
+.101.
+10021
+02120
+12001
+.101
+
+Alien
+Green Lightgreen RED
+..0..
 .010.
 02120
 01110
-.0.0.
+.0.0
 
-AsteroidMBrown White...01
+AsteroidM
+Brown White
+...01
 01101
 01100
 .0110
-..00.
+..00
 
-AstronautWhite
-#625b5b#2e2e2e #d8d5d5
-3.1113.121
-3.000.3.0.
-..0.0Corpse
-White#625b5b
-#2e2e2e#d8d5d5 RED3.011
+Astronaut
+White #625b5b #2e2e2e #d8d5d5
+3.111
+3.121
+3.000
+.3.0.
+..0.
+
+Corpse
+White #625b5b #2e2e2e #d8d5d5 RED
+3.011
 3.141
 3.000
 .3.4.
-..4..
+..4.
 
 
 LEGEND
@@ -75,29 +108,12 @@ Player = PlayerUp or PlayerDown or PlayerRight or PlayerLeft
 COLLISIONLAYERS
 
 Background
-Planet
-Astronaut, Corpse
-PlayerLeft
-PlayerRight, PlayerUp
-PlayerDown, Wall
-Alien, AsteroidM
+Planet, Astronaut, Corpse
+PlayerLeft, PlayerRight, PlayerUp, PlayerDown, Wall, Alien, AsteroidM
 
 RULES
 
-[ STATIONARY Alien ] -> [ RANDOMDIR Alien ] 
-[ Alien | ... | Player ] -> [ > Alien | ... | Player ] 
-[ > Alien | Alien ] -> [ No Alien | NoAlien ] 
-[ > Player | Wall ] -> [ Wall | NOPlayer ] 
-[ > Alien | Player ] -> [ Alien | NOPlayer ] 
-[ > Player | AsteroidM ] -> [ > Player | >AsteroidM ] 
-[ > Alien | AsteroidM ] -> [ > Alien | >AsteroidM ] 
-[ LEFT Player ] -> [ LEFT PlayerLeft ] 
-[ RIGHT Player ] -> [ RIGHT PlayerRight ] 
-[ UP Player ] -> [ UP PlayerUp ] 
-[ DOWN Player ] -> [ DOWN PlayerDown ] 
-[ ACTION Player Astronaut ] -> [ Player NO Astronaut ] 
-[ > Alien | Astronaut ] -> [ Alien | Corpse ] 
-
+[ STATIONARYAlien ] -> [ RANDOMDIRAlien ][ Alien | ... | Player ] -> [ > Alien | ... | Player ][ > Alien | Alien ] -> [ NoAlien | NoAlien ] SFX3[ > Player | Wall ] -> [ Wall | NOPlayer ] SFX1[ > Alien | Player ] -> [ Alien | NOPlayer ] SFX0 SFX1[ > Player | AsteroidM ] -> [ > Player | > AsteroidM ][ > Alien | AsteroidM ] -> [ > Alien | > AsteroidM ][ LEFTPlayer ] -> [ LEFTPlayerLeft ][ RIGHTPlayer ] -> [ RIGHTPlayerRight ][ UPPlayer ] -> [ UPPlayerUp ][ DOWNPlayer ] -> [ DOWNPlayerDown ][ ACTIONPlayerAstronaut ] -> [ PlayerNOAstronaut ] SFX2[ > Alien | Astronaut ] -> [ Alien | Corpse ] SFX0
 
 WINCONDITIONS
 
@@ -108,7 +124,6 @@ NO Corpse
 LEVELS
 
 ##########
-
 #...##n###
 #.p.#..#.#
 #.....#t.#
@@ -138,7 +153,6 @@ LEVELS
 ###########
 
 ############
-
 ##p...#....#
 ###.#.c..#.#
 #.##.####..#
@@ -150,7 +164,6 @@ LEVELS
 ############
 
 ##############
-
 #p..c..####.a#
 ##.##c###.#..#
 #####...##.c.#
@@ -164,7 +177,6 @@ LEVELS
 ##############
 
 ###############
-
 ###......n#####
 #a......#####.#
 ##.......#.#..#

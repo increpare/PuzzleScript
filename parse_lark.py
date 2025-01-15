@@ -2,6 +2,10 @@ import argparse
 import json
 import os
 import re
+import traceback
+import signal  # Add this import
+import contextlib
+from typing import Optional
 
 import lark
 from lark.reconstruct import Reconstructor
@@ -12,6 +16,24 @@ args = parser.parse_args()
 
 from lark import Lark, Transformer, Tree, Token, Visitor
 import numpy as np
+
+@contextlib.contextmanager
+def timeout_handler(seconds: int):
+    """Context manager for handling timeouts using signals"""
+    def signal_handler(signum, frame):
+        raise TimeoutError("Parsing timed out")
+        
+    # Store previous handler
+    previous_handler = signal.getsignal(signal.SIGALRM)
+    
+    try:
+        signal.signal(signal.SIGALRM, signal_handler)
+        signal.alarm(seconds)
+        yield
+    finally:
+        signal.alarm(0)  # Disable alarm
+        signal.signal(signal.SIGALRM, previous_handler)  # Restore previous handler
+
 
 with open("syntax.lark", "r", encoding='utf-8') as file:
     puzzlescript_grammar = file.read()
@@ -28,6 +50,7 @@ class StripPuzzleScript(Transformer):
     def strip_newlines_data(self, items, data_name):
         """Remove any instances of section data that are newlines/comments"""
         items = [item for item in items if not (isinstance(item, Tree) and item.data == "newlines_or_comments")]
+        items = [item for item in items if not (isinstance(item, Token) and item.type == "NEWLINES")]
         if len(items) > 0:
             return Tree(data_name, items)
 
@@ -62,8 +85,8 @@ class StripPuzzleScript(Transformer):
     def sounds_section(self, items):
         return
 
-    def prelude(self, items):
-        return
+    def prelude_data(self, items):
+        return self.strip_newlines_data(items, 'prelude_data')
 
     def object_data(self, items):
         return self.strip_newlines_data(items, 'object_data')
@@ -176,6 +199,12 @@ class PrintPuzzleScript(Transformer):
     def color(self, items):
         return items[0].value
 
+    def prelude(self, items):
+        return '\n'.join(items)
+
+    def prelude_data(self, items):
+        return ' '.join(items)
+
     def rule_data(self, items):
         return ' '.join([item for item in items if item])
 
@@ -196,7 +225,7 @@ class PrintPuzzleScript(Transformer):
 
     def legend_data(self, items):
         # Omitting final NEWLINES
-        return items[0].value + ' = ' + ' or '.join(items[1:-1])
+        return str(items[0])[:-1].strip() + ' = ' + ' or '.join(items[1:])
 
     def legend_operation(self, items):
         if len(items) == 1:
@@ -211,7 +240,7 @@ class PrintPuzzleScript(Transformer):
         return items[0].value
 
     def sprite(self, arr):
-        return array_2d_to_str(arr)
+        return array_2d_to_str(arr)[:-2]
 
     def level_data(self, items):
         return '\n'.join(items)
@@ -220,7 +249,13 @@ class PrintPuzzleScript(Transformer):
         return array_2d_to_str(arr)
     
     def object_data(self, items):
-        return ''.join(items)
+        return '\n'.join(items) + '\n'
+
+    def object_line(self, items):
+        return ' '.join(items)
+
+    def color_line(self, items):
+        return ' '.join(items)
      
     def layer_data(self, items):
         return ', '.join(items)
@@ -284,9 +319,7 @@ def preprocess_ps(txt):
     # Remove whitespace at end of any line
     txt = re.sub(r'[ \t]+$', '', txt, flags=re.MULTILINE)
 
-    ## Preprocess the content of the file, stripping any comments
-    txt = strip_comments(txt)
-    # and any lines that are just `=+`
+    # Remove any lines that are just `=+`
     txt = re.sub(r'^=+\n', '', txt, flags=re.MULTILINE)
 
     txt = txt.replace('\u00A0', ' ')
@@ -301,6 +334,9 @@ def preprocess_ps(txt):
     # Truncate lines ending with "message"
     txt = re.sub(r'message.*\n', '\n', txt, flags=re.MULTILINE | re.IGNORECASE)
 
+    ## Strip any comments
+    txt = strip_comments(txt)
+
     # Remove any lines that are just whitespace
     txt = re.sub(r'^\s*\n', '\n', txt, flags=re.MULTILINE)
 
@@ -308,9 +344,9 @@ def preprocess_ps(txt):
     txt = re.sub(r'\n{3,}', '\n\n', txt)
 
     # Remove everything until "objects" (case insensitive)
-    txt = re.sub(r'^.*OBJECTS', 'OBJECTS', txt, flags=re.MULTILINE | re.DOTALL | re.IGNORECASE)
+    # txt = re.sub(r'^.*OBJECTS', 'OBJECTS', txt, flags=re.MULTILINE | re.DOTALL | re.IGNORECASE)
 
-    return txt
+    return txt.lstrip()
 
 
 def strip_comments(text):
@@ -337,6 +373,9 @@ if __name__ == "__main__":
 
     # games_dir = os.path.join('script-doctor','games')
     games_dir = 'scraped_games'
+    min_games_dir = 'min_games'
+    if not os.path.isdir(min_games_dir):
+        os.makedirs(min_games_dir)
 
     parsed_games_filename = "parsed_games.txt"
     # min_grammar = os.path.join('syntax_generate.lark')
@@ -356,18 +395,20 @@ if __name__ == "__main__":
     simpd_dir = 'simplified_games'
     if not os.path.isdir(simpd_dir):
         os.mkdir(simpd_dir)
+    scrape_log_dir = 'scrape_logs'
+    if not os.path.isdir(scrape_log_dir):
+        os.makedirs(scrape_log_dir)
     simpd_games = set(os.listdir(simpd_dir))
     for i, filename in enumerate(game_files):
         simp_filename = filename.strip('.txt') + '_simplified.txt' 
         filepath = os.path.join(games_dir, filename)
-        print(f"Parsing game {filepath} ({i+1}/{len(game_files)})")
         if filename in parsed_games or filename in games_to_skip:
             print(f"Skipping {filename}")
-            print(f"Processing {filename}")
-            # try:
+            continue
 
+        print(f"Parsing game {filepath} ({i+1}/{len(game_files)})")
         simp_filepath = os.path.join(simpd_dir, simp_filename)
-        if args.overwrite or not simp_filename in simpd_games:
+        if args.overwrite or not (simp_filename in simpd_games):
             # Now save the simplified version of the file
             content = preprocess_ps_file(os.path.join(games_dir, filename))
             with open(simp_filepath, "w", encoding='utf-8') as file:
@@ -377,10 +418,24 @@ if __name__ == "__main__":
                 content = file.read()
         print(f"Parsing {simp_filepath}")
 
+        log_filename = os.path.join(scrape_log_dir, filename + '.log')
         try:
-            parse_tree = parser.parse(content)
-        except lark.exceptions.UnexpectedCharacters or lark.exceptions.UnexpectedEOF as e:
+            with timeout_handler(10):
+                parse_tree = parser.parse(content)
+        except TimeoutError:
+            with open(log_filename, 'w') as file:
+                file.write("timeout")
+            print(f"Timeout parsing {simp_filepath}")
+            with open(parsed_games_filename, 'a') as file:
+                file.write(filename + "\n")
+            continue
+        except Exception as e:
+            with open(log_filename, 'w') as file:
+                traceback.print_exc(file=file)
+
             print(f"Error parsing {simp_filepath}:\n{e}")
+            with open(parsed_games_filename, 'a') as file:
+                file.write(filename + "\n")
             continue
 
         min_parse_tree = StripPuzzleScript().transform(parse_tree)
@@ -391,10 +446,14 @@ if __name__ == "__main__":
             file.write(pretty_parse_tree_str)
         # print(min_parse_tree.pretty())
         ps_str = PrintPuzzleScript().transform(min_parse_tree)
-        min_filename = os.path.join('min_games', filename)
+        min_filename = os.path.join(min_games_dir, filename)
+        print(f"Writing minified game to {min_filename}")
         with open(min_filename, "w") as file:
             file.write(ps_str)
 
         with open(parsed_games_filename, 'a') as file:
             file.write(filename + "\n")
 
+# Count the number of games in `min_gmes`
+n_min_games = len(os.listdir('min_games'))
+print(f"Number of minified games: {n_min_games}")

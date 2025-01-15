@@ -1,94 +1,148 @@
+title Boulderban
+author ncrecc
+homepage www.puzzlescript.net
+verbose_logging
+run_rules_on_level_start
+again_interval 0
+
 OBJECTS
 
-BackgroundBlack
-DirtBrown Darkbrown01000
+Background
+Black
+
+Dirt
+Brown Darkbrown
+01000
 00001
 00100
 10000
-00010
+0001
 
-MudDarkbrown Brown01000
+Mud
+Darkbrown Brown
+01000
 00001
 00100
 10000
-00010
+0001
 
-TargetDarkblue
-WallLightgray Gray00010
+Target
+Darkblue
+
+Wall
+Lightgray Gray
+00010
 11111
 01000
 11111
-00010
+0001
 
-Steellightgray Gray
-1000000010
-0010001000
-00001DGuy
-BrownRed Orange
-.000..222.
-11111.111.
-.0.0.UGuy
-BrownRed Orange
-.000..000.
-11011.111.
-.0.0.LGuy
-BrownRed Orange
-.000..200.
-1110..111.
-.0..0RGuy
-BrownRed Orange.000.
+Steel
+lightgray Gray
+10000
+00010
+00100
+01000
+0000
+
+DGuy
+Brown Red Orange
+.000.
+.222.
+11111
+.111.
+.0.0
+
+UGuy
+Brown Red Orange
+.000.
+.000.
+11011
+.111.
+.0.0
+
+LGuy
+Brown Red Orange
+.000.
+.200.
+1110.
+.111.
+.0..
+
+RGuy
+Brown Red Orange
+.000.
 .002.
 .0111
 .111.
-0..0.
+0..0
 
-IndicatorDarkgreen
-RockGray Darkgray.001.
+Indicator
+Darkgreen
+
+Rock
+Gray Darkgray
+.001.
 0001.
 00001
 00011
-.111.
+.111
 
-Gem1Lightblue Blue..0..
+Gem1
+Lightblue Blue
+..0..
 .111.
 00000
 .111.
-..0..
+..0.
 
-Gem2Lightblue Blue
-..1...000.
-11111.000.
-..1..Explosion
-OrangeRed Yellow.101.
+Gem2
+Lightblue Blue
+..1..
+.000.
+11111
+.000.
+..1.
+
+Explosion
+Orange Red Yellow
+.101.
 10201
 02020
 10201
-.101.
+.101
 
-CornerLblack0....
+CornerL
+black
+0....
 .....
 .....
 .....
-.....
+....
 
-CornerRblack....0
+CornerR
+black
+....0
 .....
 .....
 .....
-.....
+....
 
-SlipLeftRed..0..
+SlipLeft
+Red
+..0..
 .0...
 00000
 .0...
-..0..
+..0.
 
-SlipRightBlue..0..
+SlipRight
+Blue
+..0..
 ...0.
 00000
 ...0.
-..0..
-
+..0.
 
 
 LEGEND
@@ -120,56 +174,17 @@ COLLISIONLAYERS
 Background
 Indicator
 Target
-Player, Wall
-Steel, Rock
-Gem, Explosion
-Dirt, Mud
+Player, Wall, Steel, Rock, Gem, Explosion, Dirt, Mud
 CornerL
 CornerR
 SlipMark
 
 RULES
 
-left [ PlaceCorners | noStructural ] -> [ PlaceCorners CornerL |  ] 
-right [ PlaceCorners | noStructural ] -> [ PlaceCorners CornerR |  ] 
-up [ PlaceCorners Corner | Structural ] -> [ PlaceCorners | Structural ] 
-[ Player no SlipMark ] -> [ Player left Background ] 
-startloop
-[ left Background | stationaryBackground ] -> [ left Background | rightBackground ] 
-[ right Background | stationaryBackground ] -> [ right Background | leftBackground ] 
-endloop
-[ Gem1 right Background ] -> [ Gem2 ] 
-[ Player no SlipMark ] -> [ Player SlipRight ] 
-[ moving Background ] -> [ stationary Background ] 
-[ right Player ] -> [ right RGuy ] 
-[ left Player ] -> [ left LGuy ] 
-[ down Player ] -> [ down DGuy ] 
-[ up Player ] -> [ up UGuy ] 
-[ Faller][PlayerSlipLeft ] -> [ down Faller][PlayerSlipLeft ] 
-down [ > Faller | SlipRightSlippery ] -> [ > Faller^Background | SlipRightSlippery ] 
-down [ > Faller | SlipLeftSlippery ] -> [ > Faller v Background | SlipLeftSlippery ] 
-horizontal [ > Background | Solid ] -> [ action Background | Solid ] 
-horizontal [ > Background |  ] -> [ > Background | downBackground ] 
-down [ > Background | Solid ] -> [ action Background | Solid ] 
-[ action Background | horizontalBackground ] -> [ action Background | actionBackground ] 
-down [ > Faller^Background | SlipRightSlippery ] -> [ ^ Faller | SlipLeftSlippery ] 
-down [ > Faller v Background | SlipLeftSlippery ] -> [ v Faller | SlipRightSlippery ] 
-[ > Faller | Solid ] -> [ Faller | Solid ] 
-[ Player SlipLeft ] -> [ Player SlipRight ] 
-[ action Player no Indicator ] -> [ Player Indicator ] 
-[ action Player Indicator ] -> [ Player SlipLeft ] 
-[ > Player SlipRight ] -> [ > Player SlipLeft ] 
-horizontal [ > Player | Rock ] -> [ > Player | >Rock ] 
-[ > Player no Indicator | Diggable ] -> [ > Player |  ] 
-[ > Player Indicator | Diggable ] -> [ Player |  ] 
-[ > Player SlipMark ] -> [ > Player>SlipMark ] (info moves with player) 
-[ > Faller SlipMark ] -> [ > Faller>SlipMark ] (slip info moves with fallers) 
-late [ Indicator no Solid ] -> [  ] 
-late [ Player SlipLeft][Gem1noIndicator ] -> [ Player SlipLeft][Gem2Indicator ] 
-late [ Player SlipLeft][Gem2noIndicator ] -> [ Player SlipLeft][Gem1Indicator ] 
-late [ Gem Indicator ] -> [ Gem ] 
-late [ Player SlipLeft ] -> again 
+left [ PlaceCorners | noStructural ] -> [ PlaceCornersCornerL |  ]right [ PlaceCorners | noStructural ] -> [ PlaceCornersCornerR |  ]up [ PlaceCornersCorner | Structural ] -> [ PlaceCorners | Structural ][ PlayernoSlipMark ] -> [ PlayerleftBackground ]startloop
+[ leftBackground | stationaryBackground ] -> [ leftBackground | rightBackground ][ rightBackground | stationaryBackground ] -> [ rightBackground | leftBackground ]endloop
 
+[ Gem1rightBackground ] -> [ Gem2 ][ PlayernoSlipMark ] -> [ PlayerSlipRight ][ movingBackground ] -> [ stationaryBackground ][ rightPlayer ] -> [ rightRGuy ][ leftPlayer ] -> [ leftLGuy ][ downPlayer ] -> [ downDGuy ][ upPlayer ] -> [ upUGuy ][ Faller ] [ PlayerSlipLeft ] -> [ downFaller ] [ PlayerSlipLeft ]down [ > Faller | SlipRightSlippery ] -> [ > Faller^ Background | SlipRightSlippery ]down [ > Faller | SlipLeftSlippery ] -> [ > FallervBackground | SlipLeftSlippery ]horizontal [ > Background | Solid ] -> [ actionBackground | Solid ]horizontal [ > Background |  ] -> [ > Background | downBackground ]down [ > Background | Solid ] -> [ actionBackground | Solid ][ actionBackground | horizontalBackground ] -> [ actionBackground | actionBackground ]down [ > Faller^ Background | SlipRightSlippery ] -> [ ^ Faller | SlipLeftSlippery ]down [ > FallervBackground | SlipLeftSlippery ] -> [ v Faller | SlipRightSlippery ][ > Faller | Solid ] -> [ Faller | Solid ][ PlayerSlipLeft ] -> [ PlayerSlipRight ][ actionPlayernoIndicator ] -> [ PlayerIndicator ][ actionPlayerIndicator ] -> [ PlayerSlipLeft ][ > PlayerSlipRight ] -> [ > PlayerSlipLeft ]horizontal [ > Player | Rock ] -> [ > Player | > Rock ][ > PlayernoIndicator | Diggable ] -> [ > Player |  ][ > PlayerIndicator | Diggable ] -> [ Player |  ][ > PlayerSlipMark ] -> [ > Player> SlipMark ][ > FallerSlipMark ] -> [ > Faller> SlipMark ]late [ IndicatornoSolid ] -> [  ]late [ PlayerSlipLeft ] [ Gem1noIndicator ] -> [ PlayerSlipLeft ] [ Gem2Indicator ]late [ PlayerSlipLeft ] [ Gem2noIndicator ] -> [ PlayerSlipLeft ] [ Gem1Indicator ]late [ GemIndicator ] -> [ Gem ]late [ PlayerSlipLeft ] -> again
 
 WINCONDITIONS
 

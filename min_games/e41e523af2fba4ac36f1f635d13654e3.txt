@@ -1,96 +1,168 @@
+title 🍡 -ooo- 🍡
+author Baku
+homepage http://baku89.com
+
 OBJECTS
 
-Dark+Black
-0000000000
-0000000000
-00000BackgroundSolid
-.#EEEEEE
-0000000000
-0000000000
-00000InstructionT
-T#EEEEEE #dce2e5
-0010001110
-1010100100
-00100InstructionK
-K#EEEEEE #dce2e5
-0010001000
-1111001000
-00100InstructionD
-D#EEEEEE #dce2e5
-0010000010
-0111100010
-00100InstructionI
-I#EEEEEE #dce2e5
-0010000100
-0010000100
-00100Instruction1
-1#EEEEEE #dce2e5
-0110000100
-0010000100
-01110Instruction2
-2#EEEEEE #dce2e5
-1111000001
-0111010000
-11111Instruction3
-3#EEEEEE #dce2e5
-0111010001
-0011110001
-01110Wall
-##d7b7a200000
+Dark +
+Black
 00000
 00000
 00000
 00000
+0000
 
-PlayerV$#d5bd7d..0..
-..0..
-..0..
-..0..
-..0..
+BackgroundSolid .
+#EEEEEE
+00000
+00000
+00000
+00000
+0000
 
-StickV|#e3cc8e..0..
-..0..
-..0..
-..0..
-..0..
+InstructionT T
+#EEEEEE #dce2e5
+00100
+01110
+10101
+00100
+0010
 
-PlayerH~#d5bd7d.....
+InstructionK K
+#EEEEEE #dce2e5
+00100
+01000
+11110
+01000
+0010
+
+InstructionD D
+#EEEEEE #dce2e5
+00100
+00010
+01111
+00010
+0010
+
+InstructionI I
+#EEEEEE #dce2e5
+00100
+00100
+00100
+00100
+0010
+
+Instruction1 1
+#EEEEEE #dce2e5
+01100
+00100
+00100
+00100
+0111
+
+Instruction2 2
+#EEEEEE #dce2e5
+11110
+00001
+01110
+10000
+1111
+
+Instruction3 3
+#EEEEEE #dce2e5
+01110
+10001
+00111
+10001
+0111
+
+Wall #
+#d7b7a2
+00000
+00000
+00000
+00000
+0000
+
+PlayerV $
+#d5bd7d
+..0..
+..0..
+..0..
+..0..
+..0.
+
+StickV |
+#e3cc8e
+..0..
+..0..
+..0..
+..0..
+..0.
+
+PlayerH ~
+#d5bd7d
+.....
 .....
 00000
 .....
-.....
+....
 
-StickH-#e3cc8e
-..........
-00000.....
-.....FloatA
-A#ffb1c5
-.000.00000
-0000000000
-.000.FloatB
-BWHITE
-.000.00000
-0000000000
-.000.FloatC
-C#d0dc6e
-.000.00000
-0000000000
-.000.FixedA
-X#ffb1c5
-.000.00000
-0000000000
-.000.FixedB
-YWHITE
-.000.00000
-0000000000
-.000.FixedC
-Z#d0dc6e.000.
+StickH -
+#e3cc8e
+.....
+.....
 00000
-00000
-00000
+.....
+....
+
+FloatA A
+#ffb1c5
 .000.
+00000
+00000
+00000
+.000
 
+FloatB B
+WHITE
+.000.
+00000
+00000
+00000
+.000
 
+FloatC C
+#d0dc6e
+.000.
+00000
+00000
+00000
+.000
+
+FixedA X
+#ffb1c5
+.000.
+00000
+00000
+00000
+.000
+
+FixedB Y
+WHITE
+.000.
+00000
+00000
+00000
+.000
+
+FixedC Z
+#d0dc6e
+.000.
+00000
+00000
+00000
+.000
 
 
 LEGEND
@@ -113,43 +185,11 @@ COLLISIONLAYERS
 
 Background
 Stick
-Player
-Wall, Dango
-Fixed, Dark
+Player, Wall, Dango, Fixed, Dark
 
 RULES
 
-[ Moving Player][Stick ] -> [ Moving Player][MovingStick ] 
-[ Moving Player][Fixed ] -> [ Moving Player][MovingFixed ] 
-[ Horizontal StickV Dango ] -> [ Horizontal StickV Horizontal Dango ] 
-[ Vertical StickH Dango ] -> [ Vertical StickH Vertical Dango ] 
-[ > Axis | Wall ] -> Cancel 
-Horizontal [ > AxisV | StationaryFloat ] -> Cancel (push by side) 
-Vertical [ > PlayerV | StationaryFloat ] -> Cancel (push by root) 
-Vertical [ > AxisH | StationaryFloat ] -> Cancel (push by side) 
-Horizontal [ > PlayerH | StationaryFloat ] -> Cancel (push by root) 
-[ > Dango | >Dango | >Dango | Dango ] -> cancel 
-late Vertical [ PlayerV | FloatCStickV ] -> [ PlayerV | FixedCStickV ] 
-late Vertical [ FixedC | FloatBStickV ] -> [ FixedC | FixedBStickV ] 
-late Vertical [ FixedB | FloatAStickV ] -> [ FixedB | FixedAStickV ] 
-late Horizontal [ PlayerH | FloatCStickH ] -> [ PlayerH | FixedCStickH ] 
-late Horizontal [ FixedC | FloatBStickH ] -> [ FixedC | FixedBStickH ] 
-late Horizontal [ FixedB | FloatAStickH ] -> [ FixedB | FixedAStickH ] 
-Vertical [ > PlayerV | StickV | StationaryFloatAB ] -> 
-Vertical [ > FixedC | StickV | StationaryFloatAC ] -> 
-Vertical [ > FixedB | StickV | StationaryFloatBC ] -> 
-Horizontal [ > PlayerH | StickH | StationaryFloatAB ] -> 
-Horizontal [ > FixedC | StickH | StationaryFloatAC ] -> 
-Horizontal [ > FixedB | StickH | StationaryFloatBC ] -> 
-Vertical [ > Player | StickV | StickV | StickV | StationaryFloat ] -> 
-Horizontal [ > Player | StickH | StickH | StickH | StationaryFloat ] -> 
-Vertical [ > PlayerV | StickV | FloatC ] -> 
-Vertical [ > FixedC | StickV | FloatB ] -> 
-Vertical [ > FixedB | StickV | FloatA ] -> 
-Horizontal [ > PlayerH | StickH | FloatC ] -> 
-Horizontal [ > FixedC | StickH | FloatB ] -> 
-Horizontal [ > FixedB | StickH | FloatA ] -> 
-
+[ MovingPlayer ] [ Stick ] -> [ MovingPlayer ] [ MovingStick ][ MovingPlayer ] [ Fixed ] -> [ MovingPlayer ] [ MovingFixed ][ HorizontalStickVDango ] -> [ HorizontalStickVHorizontalDango ][ VerticalStickHDango ] -> [ VerticalStickHVerticalDango ][ > Axis | Wall ] -> CancelHorizontal [ > AxisV | StationaryFloat ] -> CancelVertical [ > PlayerV | StationaryFloat ] -> CancelVertical [ > AxisH | StationaryFloat ] -> CancelHorizontal [ > PlayerH | StationaryFloat ] -> Cancel[ > Dango | > Dango | > Dango | Dango ] -> cancellate Vertical [ PlayerV | FloatCStickV ] -> [ PlayerV | FixedCStickV ]late Vertical [ FixedC | FloatBStickV ] -> [ FixedC | FixedBStickV ]late Vertical [ FixedB | FloatAStickV ] -> [ FixedB | FixedAStickV ]late Horizontal [ PlayerH | FloatCStickH ] -> [ PlayerH | FixedCStickH ]late Horizontal [ FixedC | FloatBStickH ] -> [ FixedC | FixedBStickH ]late Horizontal [ FixedB | FloatAStickH ] -> [ FixedB | FixedAStickH ]Vertical [ > PlayerV | StickV | StationaryFloatAB ] -> SFX1Vertical [ > FixedC | StickV | StationaryFloatAC ] -> SFX1Vertical [ > FixedB | StickV | StationaryFloatBC ] -> SFX1Horizontal [ > PlayerH | StickH | StationaryFloatAB ] -> SFX1Horizontal [ > FixedC | StickH | StationaryFloatAC ] -> SFX1Horizontal [ > FixedB | StickH | StationaryFloatBC ] -> SFX1Vertical [ > Player | StickV | StickV | StickV | StationaryFloat ] -> SFX2Horizontal [ > Player | StickH | StickH | StickH | StationaryFloat ] -> SFX2Vertical [ > PlayerV | StickV | FloatC ] -> SFX0Vertical [ > FixedC | StickV | FloatB ] -> SFX0Vertical [ > FixedB | StickV | FloatA ] -> SFX0Horizontal [ > PlayerH | StickH | FloatC ] -> SFX0Horizontal [ > FixedC | StickH | FloatB ] -> SFX0Horizontal [ > FixedB | StickH | FloatA ] -> SFX0
 
 WINCONDITIONS
 
@@ -158,7 +198,6 @@ No Float
 LEVELS
 
 ###############
-
 #.............#
 #......a.1....#
 #.............#
@@ -176,7 +215,6 @@ LEVELS
 ###############
 
 ###############
-
 #.............#
 #.............#
 #.........cK3.#
@@ -194,7 +232,6 @@ LEVELS
 ###############
 
 +++++++++++++++
-
 +++++#####+++++
 +++++#...#+++++
 +++++#.#.#+++++
@@ -212,7 +249,6 @@ LEVELS
 +++++++++++++++
 
 +++++++++++++++
-
 +++#########+++
 +++##.#.#.##+++
 +++#b.....b#+++
@@ -230,7 +266,6 @@ LEVELS
 +++++++++++++++
 
 ++###########++
-
 ++#.........#++
 ++#.........#++
 ++#...bac...#++
@@ -248,7 +283,6 @@ LEVELS
 ++###########++
 
 +++++#####+++++
-
 +++###..a###+++
 ++##.......##++
 +##...c.....##+
@@ -282,7 +316,6 @@ LEVELS
 +++++++++++++++
 
 ##############+
-
 #............##
 #........a....#
 #.............#

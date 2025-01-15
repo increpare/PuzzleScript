@@ -1,226 +1,477 @@
+title Philosophy
+author Grace He
+norepeat_action
+
 OBJECTS
 
-BackgroundDARKBROWN
-Playerbrown white
-orange..2..
-.121.21112
-20002.0.0.
-Lv1_1white
-BLACK00100
-0110000100
-0010001110
-lv1_2WHITE
-BLACK11111
-0000111111
-1000011111
-lv1_3WHITE
-BLACK11111
-0000111111
-0000111111
-lv1_4WHITE
-BLACK01001
-0100101111
-0000100001
-lv1_5white
-BLACK11111
-1000011111
-0000111111
-lv1_6WHITE
-BLACK11111
-1000011111
-1000111111
-lv1_7WHITE
-BLACK11111
-0000100001
-0000100001
-lv1_8WHITE
-BLACK11111
-1000111111
-1000111111
-lv1_9WHITE
-BLACK11111
-1000111111
-0000111111
-lv1_dividergrey
-lv1_Mwhite
-0...000.00
-0.0.00...0
-0...0lv1_O
-WHITE.....
-......000.
-.0.0..000.
-lv1_VWHITE
-..........
-0...0.0.0.
-..0..lv1_E
-WHITE..00.
-.0..0.000.
-.0.....00.
-lv1_Swhite
-..000.0...
-..00.....0
-.000.lv1_Colon
-white..00.
-..00......
-..00...00.
-Lv1_unit_1DARKBROWN
-WHITE00100
-0110000100
-0010001110
-lv1_unit_2DARKBROWN
-WHITE01111
-0000101111
-0100001111
-lv1_unit_3DARKBROWN
-WHITE01111
-0000101111
-0000101111
-lv1_unit_4DARKBROWN
-WHITE01001
-0100101111
-0000100001
-lv1_unit_5DARKBROWN
-WHITE01111
-0100001111
-0000101111
-lv1_unit_6DARKBROWN
-WHITE01111
-0100001111
-0100101111
-lv1_unit_7DARKBROWN
-WHITE01111
-0000100001
-0000100001
-lv1_unit_8DARKBROWN
-WHITE01111
-0100101111
-0100101111
-lv1_unit_9DARKBROWN
-WHITE01111
-0100101111
-0000101111
-lv1_unit_0DARKBROWN
-WHITE01111
-0100101001
-0100101111
-lv1_unit_0_2DARKBROWN
-WHITE01111
-0100101001
-0100101111
-Lv1_ten_1DARKBROWN
-WHITE00100
-0110000100
-0010001110
-lv1_ten_2DARKBROWN
-WHITE11111
-0000111111
-1000011111
-lv1_ten_3DARKBROWN
-WHITE11111
-0000111111
-0000111111
-lv1_ten_4DARKBROWN
-WHITE01001
-0100101111
-0000100001
-lv1_ten_5DARKBROWN
-WHITE11111
-1000011111
-0000111111
-lv1_ten_6DARKBROWN
-WHITE11111
-1000011111
-1000111111
-lv1_ten_7DARKBROWN
-WHITE11111
-0000100001
-0000100001
-lv1_ten_8DARKBROWN
-WHITE11111
-1000111111
-1000111111
-lv1_ten_9DARKBROWN
-WHITE11111
-1000111111
-0000111111
-lv1_ten_0DARKBROWN WHITE
-0111101001
-0100101001
-01111lv2_wall
-LIGHTGRAYlv2_writing
-WHITElv2_robber
-BLACKBLACK
-orange..1..
-.121.21112
-20002.0.0.
-lv2_winDARKBROWN
-lv2_endGREEN
-lv2_trail1DARKBROWN
-lv2_trail2DARKBROWN
-lv2_trail2_2DARKBROWN
-lv2_trail3DARKBROWN
-lv3_targetred WHITE
-0000001110
-0101001110
-00000lv3_person
-greyred orange
-..2...121.
-2111220002
-.0.0.lv3_person1
-BLUEWHITE orange
-..2...121.
-2111220002
-.0.0.lv3_person2
-YELLOWGREEN orange
-..2...121.
-2111220002
-.0.0.lv3_person3
-BLACKLIGHTBROWN orange
-..2...121.
-2111220002
-.0.0.lv3_person4
-DARKREDDARKBLUE
-orange..2..
-.121.21112
-20002.0.0.
-lv3_wallLIGHTGRAY
-lv3_spawnerDARKBROWN
-lv4_waterDARKBLUE
-lv4_islandGREEN
-lv4_bridgeDARKBROWN
-BLACK00100
-0010000100
-0010000100
-lv4_ship_downBROWN
-WHITE11111
-11011..0..
-00000.000.
-lv4_ship_upBROWN
-WHITE11111
-11011..0..
-00000.000.
-lv4_port_upDARKBLUE
-lv4_port_downDARKBLUE
-lv5_alienGREEN
-BLACK.101.
-.000...0..
-000000.0.0
-lv5_alien_1GREEN
-BLACK.101.
-.000...0..
-000000.0.0
-lv5_squarered
-lv5_wallGRAY
-lv5_targetred
-WHITE00000
-0111001010
-0111000000
-lv5_upDARKBROWN
-lv6_stonedarkgrey
-grey.000.
-0010.01100
-0111000000
-lv6_holeblack
+Background
+DARKBROWN
+
+Player
+brown white orange
+..2..
+.121.
+21112
+20002
+.0.0
+
+Lv1_1
+white BLACK
+00100
+01100
+00100
+00100
+0111
+
+lv1_2
+WHITE BLACK
+11111
+00001
+11111
+10000
+1111
+
+lv1_3
+WHITE BLACK
+11111
+00001
+11111
+00001
+1111
+
+lv1_4
+WHITE BLACK
+01001
+01001
+01111
+00001
+0000
+
+lv1_5
+white BLACK
+11111
+10000
+11111
+00001
+1111
+
+lv1_6
+WHITE BLACK
+11111
+10000
+11111
+10001
+1111
+
+lv1_7
+WHITE BLACK
+11111
+00001
+00001
+00001
+0000
+
+lv1_8
+WHITE BLACK
+11111
+10001
+11111
+10001
+1111
+
+lv1_9
+WHITE BLACK
+11111
+10001
+11111
+00001
+1111
+
+lv1_divider
+grey
+
+lv1_M
+white
+0...0
+00.00
+0.0.0
+0...0
+0...
+
+lv1_O
+WHITE
+.....
+.....
+.000.
+.0.0.
+.000
+
+lv1_V
+WHITE
+.....
+.....
+0...0
+.0.0.
+..0.
+
+lv1_E
+WHITE
+..00.
+.0..0
+.000.
+.0...
+..00
+
+lv1_S
+white
+..000
+.0...
+..00.
+....0
+.000
+
+lv1_Colon
+white
+..00.
+..00.
+.....
+..00.
+..00
+
+Lv1_unit_1
+DARKBROWN WHITE
+00100
+01100
+00100
+00100
+0111
+
+lv1_unit_2
+DARKBROWN WHITE
+01111
+00001
+01111
+01000
+0111
+
+lv1_unit_3
+DARKBROWN WHITE
+01111
+00001
+01111
+00001
+0111
+
+lv1_unit_4
+DARKBROWN WHITE
+01001
+01001
+01111
+00001
+0000
+
+lv1_unit_5
+DARKBROWN WHITE
+01111
+01000
+01111
+00001
+0111
+
+lv1_unit_6
+DARKBROWN WHITE
+01111
+01000
+01111
+01001
+0111
+
+lv1_unit_7
+DARKBROWN WHITE
+01111
+00001
+00001
+00001
+0000
+
+lv1_unit_8
+DARKBROWN WHITE
+01111
+01001
+01111
+01001
+0111
+
+lv1_unit_9
+DARKBROWN WHITE
+01111
+01001
+01111
+00001
+0111
+
+lv1_unit_0
+DARKBROWN WHITE
+01111
+01001
+01001
+01001
+0111
+
+lv1_unit_0_2
+DARKBROWN WHITE
+01111
+01001
+01001
+01001
+0111
+
+Lv1_ten_1
+DARKBROWN WHITE
+00100
+01100
+00100
+00100
+0111
+
+lv1_ten_2
+DARKBROWN WHITE
+11111
+00001
+11111
+10000
+1111
+
+lv1_ten_3
+DARKBROWN WHITE
+11111
+00001
+11111
+00001
+1111
+
+lv1_ten_4
+DARKBROWN WHITE
+01001
+01001
+01111
+00001
+0000
+
+lv1_ten_5
+DARKBROWN WHITE
+11111
+10000
+11111
+00001
+1111
+
+lv1_ten_6
+DARKBROWN WHITE
+11111
+10000
+11111
+10001
+1111
+
+lv1_ten_7
+DARKBROWN WHITE
+11111
+00001
+00001
+00001
+0000
+
+lv1_ten_8
+DARKBROWN WHITE
+11111
+10001
+11111
+10001
+1111
+
+lv1_ten_9
+DARKBROWN WHITE
+11111
+10001
+11111
+00001
+1111
+
+lv1_ten_0
+DARKBROWN WHITE
+01111
+01001
+01001
+01001
+0111
+
+lv2_wall
+LIGHTGRAY
+
+lv2_writing
+WHITE
+
+lv2_robber
+BLACK BLACK orange
+..1..
+.121.
+21112
+20002
+.0.0
+
+lv2_win
+DARKBROWN
+
+lv2_end
+GREEN
+
+lv2_trail1
+DARKBROWN
+
+lv2_trail2
+DARKBROWN
+
+lv2_trail2_2
+DARKBROWN
+
+lv2_trail3
+DARKBROWN
+
+lv3_target
+red WHITE
+00000
+01110
+01010
+01110
+0000
+
+lv3_person
+grey red orange
+..2..
+.121.
+21112
+20002
+.0.0
+
+lv3_person1
+BLUE WHITE orange
+..2..
+.121.
+21112
+20002
+.0.0
+
+lv3_person2
+YELLOW GREEN orange
+..2..
+.121.
+21112
+20002
+.0.0
+
+lv3_person3
+BLACK LIGHTBROWN orange
+..2..
+.121.
+21112
+20002
+.0.0
+
+lv3_person4
+DARKRED DARKBLUE orange
+..2..
+.121.
+21112
+20002
+.0.0
+
+lv3_wall
+LIGHTGRAY
+
+lv3_spawner
+DARKBROWN
+
+lv4_water
+DARKBLUE
+
+lv4_island
+GREEN
+
+lv4_bridge
+DARKBROWN BLACK
+00100
+00100
+00100
+00100
+0010
+
+lv4_ship_down
+BROWN WHITE
+11111
+11011
+..0..
+00000
+.000
+
+lv4_ship_up
+BROWN WHITE
+11111
+11011
+..0..
+00000
+.000
+
+lv4_port_up
+DARKBLUE
+
+lv4_port_down
+DARKBLUE
+
+lv5_alien
+GREEN BLACK
+.101.
+.000.
+..0..
+00000
+0.0.
+
+lv5_alien_1
+GREEN BLACK
+.101.
+.000.
+..0..
+00000
+0.0.
+
+lv5_square
+red
+
+lv5_wall
+GRAY
+
+lv5_target
+red WHITE
+00000
+01110
+01010
+01110
+0000
+
+lv5_up
+DARKBROWN
+
+lv6_stone
+darkgrey grey
+.000.
+0010.
+01100
+01110
+0000
+
+lv6_hole
+black
+
 
 LEGEND
 
@@ -268,103 +519,19 @@ COLLISIONLAYERS
 
 lv2_end
 Background
-Lv1_1
-lv1_2, lv1_3
-lv1_4, lv1_5
-lv1_6, lv1_7
-lv1_8, lv1_9
-lv1_divider, lv1_M
-lv1_O, lv1_V
-lv1_E, lv1_S
-lv1_Colon, Lv1_unit_1
-Lv1_unit_2, Lv1_unit_3
-Lv1_unit_4, Lv1_unit_5
-Lv1_unit_6, Lv1_unit_7
-Lv1_unit_8, Lv1_unit_9
-Lv1_unit_0, lv1_ten_0
-lv1_ten_1, lv1_ten_2
-lv1_ten_3, lv1_ten_4
-lv1_ten_5, lv1_ten_6
-lv1_ten_7, lv1_ten_8
-lv1_ten_9, lv1_unit_0_2
-lv2_writing, lv2_win
-lv2_trail1, lv2_trail2
-lv2_trail2_2, lv2_trail3
+Lv1_1, lv1_2, lv1_3, lv1_4, lv1_5, lv1_6, lv1_7, lv1_8, lv1_9, lv1_divider, lv1_M, lv1_O, lv1_V, lv1_E, lv1_S, lv1_Colon, Lv1_unit_1, Lv1_unit_2, Lv1_unit_3, Lv1_unit_4, Lv1_unit_5, Lv1_unit_6, Lv1_unit_7, Lv1_unit_8, Lv1_unit_9, Lv1_unit_0, lv1_ten_0, lv1_ten_1, lv1_ten_2, lv1_ten_3, lv1_ten_4, lv1_ten_5, lv1_ten_6, lv1_ten_7, lv1_ten_8, lv1_ten_9, lv1_unit_0_2
+lv2_writing, lv2_win, lv2_trail1, lv2_trail2, lv2_trail2_2, lv2_trail3
 lv3_target, lv3_spawner
-lv4_water, lv4_island
-lv4_port_up, lv4_port_down
+lv4_water, lv4_island, lv4_port_up, lv4_port_down
 lv4_bridge
 lv5_target, lv5_up
 lv6_hole
-Player, lv2_wall
-lv2_robber, lv3_person
-lv3_person2, lv3_person3
-lv3_person4, lv3_person1
-lv3_wall, lv4_ship_down
-lv4_ship_up, lv5_square
-lv5_wall, lv6_stone
+Player, lv2_wall, lv2_robber, lv3_person, lv3_person2, lv3_person3, lv3_person4, lv3_person1, lv3_wall, lv4_ship_down, lv4_ship_up, lv5_square, lv5_wall, lv6_stone
 lv5_alien, lv5_alien_1
 
 RULES
 
-[ moving Player][lv1_unit_1 ] -> [ moving Player][lv1_unit_0_2 ] 
-[ moving Player][lv1_unit_2 ] -> [ moving Player][lv1_unit_1 ] 
-[ moving Player][lv1_unit_3 ] -> [ moving Player][lv1_unit_2 ] 
-[ moving Player][lv1_unit_4 ] -> [ moving Player][lv1_unit_3 ] 
-[ moving Player][lv1_unit_5 ] -> [ moving Player][lv1_unit_4 ] 
-[ moving Player][lv1_unit_6 ] -> [ moving Player][lv1_unit_5 ] 
-[ moving Player][lv1_unit_7 ] -> [ moving Player][lv1_unit_6 ] 
-[ moving Player][lv1_unit_8 ] -> [ moving Player][lv1_unit_7 ] 
-[ moving Player][lv1_unit_9 ] -> [ moving Player][lv1_unit_8 ] 
-[ moving Player][lv1_ten_9 | lv1_unit_0 ] -> [ moving Player][lv1_ten_8 | lv1_unit_9 ] 
-[ moving Player][lv1_ten_8 | lv1_unit_0 ] -> [ moving Player][lv1_ten_7 | lv1_unit_9 ] 
-[ moving Player][lv1_ten_7 | lv1_unit_0 ] -> [ moving Player][lv1_ten_6 | lv1_unit_9 ] 
-[ moving Player][lv1_ten_6 | lv1_unit_0 ] -> [ moving Player][lv1_ten_5 | lv1_unit_9 ] 
-[ moving Player][lv1_ten_5 | lv1_unit_0 ] -> [ moving Player][lv1_ten_4 | lv1_unit_9 ] 
-[ moving Player][lv1_ten_4 | lv1_unit_0 ] -> [ moving Player][lv1_ten_3 | lv1_unit_9 ] 
-[ moving Player][lv1_ten_3 | lv1_unit_0 ] -> [ moving Player][lv1_ten_2 | lv1_unit_9 ] 
-[ moving Player][lv1_ten_2 | lv1_unit_0 ] -> [ moving Player][lv1_ten_1 | lv1_unit_9 ] 
-[ moving Player][lv1_ten_1 | lv1_unit_0 ] -> [ moving Player][lv1_ten_0 | lv1_unit_9 ] 
-[ moving Player][lv1_ten_0 | lv1_unit_0 ] -> win 
-late [ lv1_unit_0_2 ] -> [ lv1_unit_0 ] 
-[ action player Lv1_1 ] -> [ player lv1_2 ] 
-[ action player Lv1_2 ] -> [ player lv1_3 ] 
-[ action player Lv1_3 ] -> [ player lv1_4 ] 
-[ action player Lv1_4 ] -> [ player lv1_5 ] 
-[ action player Lv1_5 ] -> [ player lv1_6 ] 
-[ action player Lv1_6 ] -> [ player lv1_7 ] 
-[ action player Lv1_7 ] -> [ player lv1_8 ] 
-[ action player Lv1_8 ] -> [ player lv1_9 ] 
-[ action player Lv1_9 ] -> [ player lv1_1 ] 
-[ > Player | lv2_robber ] -> [ |Player ] 
-[ lv2_robber lv2_trail1 | lv2_trail2noPlayer ] -> [ lv2_trail1 | lv2_robberlv2_trail2_2 ] 
-[ lv2_robber lv2_trail3 | lv2_trail1noPlayer ] -> [ lv2_trail3 | lv2_robberlv2_trail1 ] 
-[ lv2_robber lv2_trail2 | lv2_trail3noPlayer ] -> [ lv2_trail2 | lv2_robberlv2_trail3 ] 
-late [ lv2_trail2_2 ] -> [ lv2_trail2 ] 
-late [ lv2_robber lv2_end ] -> win 
-late [ Player lv2_win ] -> win 
-[ > Player | lv3_wall ] -> cancel 
-[ stationary lv3_human ] -> [ randomdir lv3_human ] 
-[ lv3_spawner no lv3_human no Player ] -> [ lv3_spawner random lv3_human ] 
-late [ lv3_human lv3_target ] -> win 
-late [ Player lv3_target ] -> win 
-down [ stationary lv4_ship_down | noPlayer ] -> [ down lv4_ship_down |  ] 
-up [ stationary lv4_ship_up | noPlayer ] -> [ up lv4_ship_up |  ] 
-late [ lv4_ship_down lv4_port_up ] -> [ lv4_ship_up lv4_port_up ] 
-late [ lv4_ship_up lv4_port_down ] -> [ lv4_ship_down lv4_port_down ] 
-late [ lv4_water Player ] -> [ Player lv4_bridge ] 
-[ > lv4_ship | lv4_bridge ] -> [ |lv4_shiplv4_water ] 
-[ > lv4_ship | Player ] -> [ lv4_ship | Player ] 
-late right [ lv4_island | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_island ] -> win 
-[ stationary lv5_square ] -> [ randomdir lv5_square ] 
-[ lv5_alien ] -> [ left lv5_alien ] 
-late [ lv5_alien lv5_up ] -> [ lv5_alien_1 ] 
-[ lv5_alien_1 ] -> [ up lv5_alien_1 ] 
-late [ Player lv5_target ] -> win 
-late [ lv5_alien_1 lv5_target ] -> win 
-late [ lv5_square lv5_target ] -> win 
-late [ lv6_hole Player ] -> win 
-
+[ movingPlayer ] [ lv1_unit_1 ] -> [ movingPlayer ] [ lv1_unit_0_2 ][ movingPlayer ] [ lv1_unit_2 ] -> [ movingPlayer ] [ lv1_unit_1 ][ movingPlayer ] [ lv1_unit_3 ] -> [ movingPlayer ] [ lv1_unit_2 ][ movingPlayer ] [ lv1_unit_4 ] -> [ movingPlayer ] [ lv1_unit_3 ][ movingPlayer ] [ lv1_unit_5 ] -> [ movingPlayer ] [ lv1_unit_4 ][ movingPlayer ] [ lv1_unit_6 ] -> [ movingPlayer ] [ lv1_unit_5 ][ movingPlayer ] [ lv1_unit_7 ] -> [ movingPlayer ] [ lv1_unit_6 ][ movingPlayer ] [ lv1_unit_8 ] -> [ movingPlayer ] [ lv1_unit_7 ][ movingPlayer ] [ lv1_unit_9 ] -> [ movingPlayer ] [ lv1_unit_8 ][ movingPlayer ] [ lv1_ten_9 | lv1_unit_0 ] -> [ movingPlayer ] [ lv1_ten_8 | lv1_unit_9 ][ movingPlayer ] [ lv1_ten_8 | lv1_unit_0 ] -> [ movingPlayer ] [ lv1_ten_7 | lv1_unit_9 ][ movingPlayer ] [ lv1_ten_7 | lv1_unit_0 ] -> [ movingPlayer ] [ lv1_ten_6 | lv1_unit_9 ][ movingPlayer ] [ lv1_ten_6 | lv1_unit_0 ] -> [ movingPlayer ] [ lv1_ten_5 | lv1_unit_9 ][ movingPlayer ] [ lv1_ten_5 | lv1_unit_0 ] -> [ movingPlayer ] [ lv1_ten_4 | lv1_unit_9 ][ movingPlayer ] [ lv1_ten_4 | lv1_unit_0 ] -> [ movingPlayer ] [ lv1_ten_3 | lv1_unit_9 ][ movingPlayer ] [ lv1_ten_3 | lv1_unit_0 ] -> [ movingPlayer ] [ lv1_ten_2 | lv1_unit_9 ][ movingPlayer ] [ lv1_ten_2 | lv1_unit_0 ] -> [ movingPlayer ] [ lv1_ten_1 | lv1_unit_9 ][ movingPlayer ] [ lv1_ten_1 | lv1_unit_0 ] -> [ movingPlayer ] [ lv1_ten_0 | lv1_unit_9 ][ movingPlayer ] [ lv1_ten_0 | lv1_unit_0 ] -> winlate [ lv1_unit_0_2 ] -> [ lv1_unit_0 ][ actionplayerLv1_1 ] -> [ playerlv1_2 ][ actionplayerLv1_2 ] -> [ playerlv1_3 ][ actionplayerLv1_3 ] -> [ playerlv1_4 ][ actionplayerLv1_4 ] -> [ playerlv1_5 ][ actionplayerLv1_5 ] -> [ playerlv1_6 ][ actionplayerLv1_6 ] -> [ playerlv1_7 ][ actionplayerLv1_7 ] -> [ playerlv1_8 ][ actionplayerLv1_8 ] -> [ playerlv1_9 ][ actionplayerLv1_9 ] -> [ playerlv1_1 ][ > Player | lv2_robber ] -> [  | Player ][ lv2_robberlv2_trail1 | lv2_trail2noPlayer ] -> [ lv2_trail1 | lv2_robberlv2_trail2_2 ][ lv2_robberlv2_trail3 | lv2_trail1noPlayer ] -> [ lv2_trail3 | lv2_robberlv2_trail1 ][ lv2_robberlv2_trail2 | lv2_trail3noPlayer ] -> [ lv2_trail2 | lv2_robberlv2_trail3 ]late [ lv2_trail2_2 ] -> [ lv2_trail2 ]late [ lv2_robberlv2_end ] -> winlate [ Playerlv2_win ] -> win[ > Player | lv3_wall ] -> cancel[ stationarylv3_human ] -> [ randomdirlv3_human ][ lv3_spawnernolv3_humannoPlayer ] -> [ lv3_spawnerrandomlv3_human ]late [ lv3_humanlv3_target ] -> winlate [ Playerlv3_target ] -> windown [ stationarylv4_ship_down | noPlayer ] -> [ downlv4_ship_down |  ]up [ stationarylv4_ship_up | noPlayer ] -> [ uplv4_ship_up |  ]late [ lv4_ship_downlv4_port_up ] -> [ lv4_ship_uplv4_port_up ]late [ lv4_ship_uplv4_port_down ] -> [ lv4_ship_downlv4_port_down ]late [ lv4_waterPlayer ] -> [ Playerlv4_bridge ][ > lv4_ship | lv4_bridge ] -> [  | lv4_shiplv4_water ][ > lv4_ship | Player ] -> [ lv4_ship | Player ]late right [ lv4_island | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_bridge | lv4_island ] -> win[ stationarylv5_square ] -> [ randomdirlv5_square ][ lv5_alien ] -> [ leftlv5_alien ]late [ lv5_alienlv5_up ] -> [ lv5_alien_1 ][ lv5_alien_1 ] -> [ uplv5_alien_1 ]late [ Playerlv5_target ] -> winlate [ lv5_alien_1lv5_target ] -> winlate [ lv5_squarelv5_target ] -> winlate [ lv6_holePlayer ] -> win
 
 WINCONDITIONS
 
@@ -388,8 +555,6 @@ WERTYU23.......
 ...............
 .......p.......
 
-..............
-
 i.......a......
 i.5465465......
 i.6..iiiiiiiiip
@@ -405,8 +570,6 @@ i.6......6546..
 i.54654654..5..
 iiiiiiiiiii.4..
 i......a56456..
-
-..............
 
 iiiiiiiiiiiiiii
 i.............i
@@ -424,8 +587,6 @@ i.ooo.o.oooo..i
 i.............i
 iiiiiiiiiiiiiii
 
-..............
-
 ggggggggggggggg
 g...p.........g
 g.............g
@@ -441,8 +602,6 @@ g.........g...g
 g.........g...g
 g.............g
 ggggggggggggggg
-
-..............
 
 gggggggggggggghggggggggggggggg
 g..........g.................g
@@ -475,8 +634,6 @@ g.......g....................g
 g............................g
 gggggggggggggghggggggggggggggg
 
-.............................
-
 jjjcjjcjcjjcjjjj
 jjjjjjxjjjjjjjjj
 jjjjjjjjjjjjjjjj
@@ -488,8 +645,6 @@ kjjjjjjjjjjjjjjk
 jjjjjjjjjjjjjjjj
 jjjjjjjjxjjjjjjj
 jjjljjljljjljjjj
-
-...............
 
 nnnnnnnnnnnnnnn
 npn...........n
@@ -507,8 +662,6 @@ n.nnnnnnnnn.n.n
 n...........nbn
 nnnnnnnnnnnnnnn
 
-..............
-
 nnnnnnnnnnnnnnn
 npn...........n
 n.n.nnnnnnnnn.n
@@ -525,8 +678,6 @@ n.nnnnnnnnn.n.n
 n......,....nvn
 nnnnnnnnnnnnnnn
 
-..............
-
 777777777777
 7P.......7.7
 7.77777..7.7
@@ -539,8 +690,6 @@ nnnnnnnnnnnnnnn
 77777777.7.7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7....7.7...7
@@ -555,8 +704,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7...87.....7
 7.77777777.7
@@ -569,8 +716,6 @@ nnnnnnnnnnnnnnn
 7..7...777.7
 77...7.....7
 777777777777
-
-...........
 
 777777777777
 7..7p......7
@@ -585,8 +730,6 @@ nnnnnnnnnnnnnnn
 7.......7..7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7787777777.7
@@ -599,8 +742,6 @@ nnnnnnnnnnnnnnn
 7..7...7...7
 7....7...7.7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -615,8 +756,6 @@ nnnnnnnnnnnnnnn
 7...7......7
 777777777777
 
-...........
-
 777777777777
 777777.....7
 7......777.7
@@ -629,8 +768,6 @@ nnnnnnnnnnnnnnn
 7.77.77777.7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -645,8 +782,6 @@ nnnnnnnnnnnnnnn
 7...7......7
 777777777777
 
-...........
-
 777777777777
 7.77.......7
 7....77777.7
@@ -659,8 +794,6 @@ nnnnnnnnnnnnnnn
 7.7.7p7.7..7
 7...7......7
 777777777777
-
-...........
 
 777777777777
 7......7.7.7
@@ -675,8 +808,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.77777777.7
@@ -689,8 +820,6 @@ nnnnnnnnnnnnnnn
 7.777..8...7
 7.....777..7
 777777777777
-
-...........
 
 777777777777
 7......7...7
@@ -705,8 +834,6 @@ nnnnnnnnnnnnnnn
 7.....7....7
 777777777777
 
-...........
-
 777777777777
 7..7.......7
 7.....7.77.7
@@ -719,8 +846,6 @@ nnnnnnnnnnnnnnn
 7.7.7.7777.7
 7...7......7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -735,8 +860,6 @@ nnnnnnnnnnnnnnn
 7..7.......7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.7.7777...7
@@ -749,8 +872,6 @@ nnnnnnnnnnnnnnn
 7...777777.7
 7.7........7
 777777777777
-
-...........
 
 777777777777
 7.7........7
@@ -765,8 +886,6 @@ nnnnnnnnnnnnnnn
 77...7.....7
 777777777777
 
-...........
-
 777777777777
 7..7.......7
 77..7...7..7
@@ -779,8 +898,6 @@ nnnnnnnnnnnnnnn
 7...7..7...7
 77.......7.7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -795,8 +912,6 @@ nnnnnnnnnnnnnnn
 7..77......7
 777777777777
 
-...........
-
 777777777777
 77.7.7.7.7.7
 7.7.7.7.7.77
@@ -809,8 +924,6 @@ nnnnnnnnnnnnnnn
 7..7.7.....7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7.7777777777
@@ -825,8 +938,6 @@ nnnnnnnnnnnnnnn
 7777777777.7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7...p.7....7
@@ -839,8 +950,6 @@ nnnnnnnnnnnnnnn
 7.....7....7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..7.......7
@@ -855,8 +964,6 @@ nnnnnnnnnnnnnnn
 7........7.7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.....p....7
@@ -869,8 +976,6 @@ nnnnnnnnnnnnnnn
 7..........7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -885,8 +990,6 @@ nnnnnnnnnnnnnnn
 7..7.......7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7..........7
@@ -899,8 +1002,6 @@ nnnnnnnnnnnnnnn
 7..........7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -915,8 +1016,6 @@ nnnnnnnnnnnnnnn
 77.........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7..........7
@@ -929,8 +1028,6 @@ nnnnnnnnnnnnnnn
 77........77
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -945,8 +1042,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.........87
@@ -960,8 +1055,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.........p7
@@ -974,8 +1067,6 @@ nnnnnnnnnnnnnnn
 7..777777777
 7......8...7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -990,8 +1081,6 @@ nnnnnnnnnnnnnnn
 7......p...7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7..........7
@@ -1004,8 +1093,6 @@ nnnnnnnnnnnnnnn
 7..........7
 7...8......7
 777777777777
-
-...........
 
 777777777777
 7.......8..7
@@ -1020,8 +1107,6 @@ nnnnnnnnnnnnnnn
 7...p......7
 777777777777
 
-...........
-
 777777777777
 7...7...p..7
 7...7......7
@@ -1034,8 +1119,6 @@ nnnnnnnnnnnnnnn
 7...77777777
 7..........7
 777777777777
-
-...........
 
 777777777777
 7....7.....7
@@ -1050,8 +1133,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7..77777...7
@@ -1064,8 +1145,6 @@ nnnnnnnnnnnnnnn
 7..77777...7
 7.......8..7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1080,8 +1159,6 @@ nnnnnnnnnnnnnnn
 7....7..p..7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.77777777.7
@@ -1094,8 +1171,6 @@ nnnnnnnnnnnnnnn
 7..p.......7
 7....8.....7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1110,8 +1185,6 @@ nnnnnnnnnnnnnnn
 7....p.....7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.77777....7
@@ -1124,8 +1197,6 @@ nnnnnnnnnnnnnnn
 7.77777....7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1140,8 +1211,6 @@ nnnnnnnnnnnnnnn
 7....7.....7
 777777777777
 
-...........
-
 777777777777
 7.....8....7
 7.777777...7
@@ -1154,8 +1223,6 @@ nnnnnnnnnnnnnnn
 7.7....7...7
 7.7.....7..7
 777777777777
-
-...........
 
 777777777777
 7.....p....7
@@ -1170,8 +1237,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7....7.....7
@@ -1184,8 +1249,6 @@ nnnnnnnnnnnnnnn
 7.7.....7..7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1200,8 +1263,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.7.....7..7
@@ -1214,8 +1275,6 @@ nnnnnnnnnnnnnnn
 7.7...8.7..7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..8.......7
@@ -1230,8 +1289,6 @@ nnnnnnnnnnnnnnn
 7....7.....7
 777777777777
 
-...........
-
 777777777777
 7..p.......7
 7.7......7.7
@@ -1244,8 +1301,6 @@ nnnnnnnnnnnnnnn
 787......7.7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1260,8 +1315,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.77777777.7
@@ -1274,8 +1327,6 @@ nnnnnnnnnnnnnnn
 7.8..7.....7
 7....7.....7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1290,8 +1341,6 @@ nnnnnnnnnnnnnnn
 7..7777777.7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7....7.....7
@@ -1304,8 +1353,6 @@ nnnnnnnnnnnnnnn
 77......p7.7
 77.8.....7.7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1320,8 +1367,6 @@ nnnnnnnnnnnnnnn
 7..p.7.....7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.77777777.7
@@ -1334,8 +1379,6 @@ nnnnnnnnnnnnnnn
 7....7...p.7
 7....7.....7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1350,8 +1393,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7..p.......7
@@ -1364,8 +1405,6 @@ nnnnnnnnnnnnnnn
 7.77777777.7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1380,8 +1419,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.7......7.7
@@ -1394,8 +1431,6 @@ nnnnnnnnnnnnnnn
 7.7......7.7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1410,8 +1445,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7..777777..7
@@ -1424,8 +1457,6 @@ nnnnnnnnnnnnnnn
 7..77.777..7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1440,8 +1471,6 @@ nnnnnnnnnnnnnnn
 787........7
 777777777777
 
-...........
-
 777777777777
 7....8.....7
 7...77777..7
@@ -1454,8 +1483,6 @@ nnnnnnnnnnnnnnn
 7..7.......7
 7p..77777..7
 777777777777
-
-...........
 
 777777777777
 7....p.....7
@@ -1470,8 +1497,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.77777....7
@@ -1484,8 +1509,6 @@ nnnnnnnnnnnnnnn
 7.77777....7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1500,8 +1523,6 @@ nnnnnnnnnnnnnnn
 7.8........7
 777777777777
 
-...........
-
 777777777777
 7....7.....7
 7....7.....7
@@ -1514,8 +1535,6 @@ nnnnnnnnnnnnnnn
 7...777....7
 7.p.777....7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1530,8 +1549,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7......77..7
@@ -1544,8 +1561,6 @@ nnnnnnnnnnnnnnn
 7.......7..7
 7.......7..7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1560,8 +1575,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7..........7
@@ -1574,8 +1587,6 @@ nnnnnnnnnnnnnnn
 7..........7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1590,8 +1601,6 @@ nnnnnnnnnnnnnnn
 7...7......7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7......7.p.7
@@ -1604,8 +1613,6 @@ nnnnnnnnnnnnnnn
 7..7.......7
 7.7........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1620,8 +1627,6 @@ nnnnnnnnnnnnnnn
 7....78....7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7..........7
@@ -1634,8 +1639,6 @@ nnnnnnnnnnnnnnn
 7....7.....7
 7...7.p..8.7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1650,8 +1653,6 @@ nnnnnnnnnnnnnnn
 7...7....p.7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7...78.....7
@@ -1664,8 +1665,6 @@ nnnnnnnnnnnnnnn
 7..........7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1680,8 +1679,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7..........7
@@ -1694,8 +1691,6 @@ nnnnnnnnnnnnnnn
 7...p7.....7
 7...7......7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1710,8 +1705,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7........7.7
 7.........77
@@ -1724,8 +1717,6 @@ nnnnnnnnnnnnnnn
 7.7777777..7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7...7......7
@@ -1740,8 +1731,6 @@ nnnnnnnnnnnnnnn
 7...7......7
 777777777777
 
-...........
-
 777777777777
 7...7.....87
 7...7..p...7
@@ -1754,8 +1743,6 @@ nnnnnnnnnnnnnnn
 7.7.....7..7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7.......7.p7
@@ -1770,8 +1757,6 @@ nnnnnnnnnnnnnnn
 7.7.......87
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.77777777.7
@@ -1784,8 +1769,6 @@ nnnnnnnnnnnnnnn
 7...7......7
 7..7......p7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1800,8 +1783,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7p.........7
@@ -1814,8 +1795,6 @@ nnnnnnnnnnnnnnn
 777777777777
 7..........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1830,8 +1809,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7......8...7
 7.....7....7
@@ -1844,8 +1821,6 @@ nnnnnnnnnnnnnnn
 7....7.....7
 7.....7....7
 777777777777
-
-...........
 
 777777777777
 7......p...7
@@ -1860,8 +1835,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7.8........7
 7..777777..7
@@ -1874,8 +1847,6 @@ nnnnnnnnnnnnnnn
 7....77777.7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7.p........7
@@ -1890,8 +1861,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7..777777..7
@@ -1904,8 +1873,6 @@ nnnnnnnnnnnnnnn
 7.....7....7
 7....7.....7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -1920,8 +1887,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7..........7
@@ -1934,8 +1899,6 @@ nnnnnnnnnnnnnnn
 7.7777777..7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7......7...7
@@ -1950,8 +1913,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7.......78.7
 7.......7..7
@@ -1964,8 +1925,6 @@ nnnnnnnnnnnnnnn
 7..7.......7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7........p.7
@@ -1980,8 +1939,6 @@ nnnnnnnnnnnnnnn
 7....7.....7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7.......8..7
@@ -1994,8 +1951,6 @@ nnnnnnnnnnnnnnn
 7..7.......7
 7.7........7
 777777777777
-
-...........
 
 777777777777
 7..........7
@@ -2010,8 +1965,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 78.........7
 7.....7....7
@@ -2024,8 +1977,6 @@ nnnnnnnnnnnnnnn
 7..7.......7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7P.......7.7
@@ -2040,8 +1991,6 @@ nnnnnnnnnnnnnnn
 7..........7
 777777777777
 
-...........
-
 777777777777
 7....7.7...7
 7..7.7.7.7.7
@@ -2054,8 +2003,6 @@ nnnnnnnnnnnnnnn
 7.77.77777.7
 7..........7
 777777777777
-
-...........
 
 777777777777
 7...87.....7
@@ -2070,8 +2017,6 @@ nnnnnnnnnnnnnnn
 77...7.....7
 777777777777
 
-...........
-
 777777777777
 7..7p......7
 7.7777777..7
@@ -2085,8 +2030,6 @@ nnnnnnnnnnnnnnn
 7.......7..7
 777777777777
 
-...........
-
 777777777777
 7..........7
 7787777777.7
@@ -2099,5 +2042,3 @@ nnnnnnnnnnnnnnn
 7..7...7...7
 7....7...7.7
 777777777777
-
-...........

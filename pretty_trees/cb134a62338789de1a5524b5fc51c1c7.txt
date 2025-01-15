@@ -1,30 +1,45 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Cross All Logs
+    prelude_data
+      author
+      arrogantgamer & edderiofer
+    prelude_data
+      homepage
+      www.puzzlescript.net
+    prelude_data	norepeat_action
+    prelude_data	run_rules_on_level_start
+    prelude_data
+      again_interval
+      0.1
+    prelude_data
+      zoomscreen
+      24x12
   objects_section
     object_data
-      object_name	Background
-      legend_key	b
-      colors
-        color	lack
+      object_line
+        object_name	Background
+      color_line
+        color	black
     object_data
-      object_name	Grass
-      legend_key	L
-      colors
-        color	IGHTGREEN
+      object_line
+        object_name	Grass
+      color_line
+        color	LIGHTGREEN
     object_data
-      object_name	Water
-      legend_key	#
-      colors
-        color	ADD8E6
+      object_line
+        object_name	Water
+      color_line
+        color	#ADD8E6
     object_data
-      object_name	Player
-      legend_key	b
-      colors
-        color	rown
-    object_data
-      object_name	#493c2b
-      legend_key	#
-      colors
-        color	000000
+      object_line
+        object_name	Player
+      color_line
+        color	brown
+        color	#493c2b
+        color	#000000
       sprite
         ['.' '.' '0' '.' '.']
         ['.' '1' '1' '1' '.']
@@ -32,15 +47,12 @@ ps_game
         ['0' '2' '2' '2' '0']
         ['.' '2' '.' '2' '.']
     object_data
-      object_name	TreeTip
-      legend_key	#
-      colors
-        color	44891A
-    object_data
-      object_name	brown
-      legend_key	#
-      colors
-        color	54992A
+      object_line
+        object_name	TreeTip
+      color_line
+        color	#44891A
+        color	brown
+        color	#54992A
         color	#64A93A
       sprite
         ['.' '.' '.' '.' '.']
@@ -49,15 +61,12 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '3' '.' '.']
     object_data
-      object_name	tree
-      legend_key	#
-      colors
-        color	44891A
-    object_data
-      object_name	brown
-      legend_key	#
-      colors
-        color	54992A
+      object_line
+        object_name	tree
+      color_line
+        color	#44891A
+        color	brown
+        color	#54992A
         color	#64A93A
       sprite
         ['.' '2' '3' '2' '.']
@@ -66,10 +75,10 @@ ps_game
         ['.' '1' '1' '1' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	stump
-      legend_key	b
-      colors
-        color	rown
+      object_line
+        object_name	stump
+      color_line
+        color	brown
         color	LIGHTBROWN
       sprite
         ['.' '1' '1' '1' '.']
@@ -78,10 +87,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	LogH
-      legend_key	b
-      colors
-        color	rown
+      object_line
+        object_name	LogH
+      color_line
+        color	brown
       sprite
         ['.' '.' '.' '.' '.']
         ['0' '0' '0' '0' '0']
@@ -89,10 +98,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	LogV
-      legend_key	b
-      colors
-        color	rown
+      object_line
+        object_name	LogV
+      color_line
+        color	brown
         color	LIGHTBROWN
       sprite
         ['.' '0' '0' '0' '.']
@@ -101,10 +110,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '1' '1' '1' '.']
     object_data
-      object_name	BridgeH
-      legend_key	b
-      colors
-        color	rown
+      object_line
+        object_name	BridgeH
+      color_line
+        color	brown
         color	#ADD8E6
       sprite
         ['1' '1' '1' '1' '1']
@@ -113,15 +122,12 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['1' '1' '1' '1' '1']
     object_data
-      object_name	BridgeV
-      legend_key	b
-      colors
-        color	rown
-    object_data
-      object_name	#ADD8E6
-      legend_key	y
-      colors
-        color	ellow
+      object_line
+        object_name	BridgeV
+      color_line
+        color	brown
+        color	#ADD8E6
+        color	yellow
         color	#BDE8F6
       sprite
         ['1' '0' '0' '0' '1']
@@ -130,10 +136,10 @@ ps_game
         ['1' '0' '0' '0' '1']
         ['1' '0' '0' '0' '1']
     object_data
-      object_name	Stone
-      legend_key	l
-      colors
-        color	ightgrey
+      object_line
+        object_name	Stone
+      color_line
+        color	lightgrey
         color	grey
       sprite
         ['.' '.' '0' '0' '0']
@@ -142,15 +148,12 @@ ps_game
         ['0' '1' '1' '1' '1']
         ['1' '1' '1' '1' '.']
     object_data
-      object_name	SunkenStone
-      legend_key	L
-      colors
-        color	IGHTGRAY
-    object_data
-      object_name	grey
-      legend_key	#
-      colors
-        color	ADD8E6
+      object_line
+        object_name	SunkenStone
+      color_line
+        color	LIGHTGRAY
+        color	grey
+        color	#ADD8E6
         color	#9DC8E6
       sprite
         ['.' '.' '.' '.' '.']
@@ -159,41 +162,30 @@ ps_game
         ['3' '0' '0' '0' '1']
         ['3' '3' '3' '3' '3']
     object_data
-      object_name	Momentum
-      legend_key	T
-      colors
-        color	RANSPARENT
+      object_line
+        object_name	Momentum
+      color_line
+        color	TRANSPARENT
     object_data
-      object_name	Beach
-      legend_key	y
-      colors
-        color	ellow
+      object_line
+        object_name	Beach
+      color_line
+        color	yellow
         color	#BDE8F6
+      sprite
+        ['0' '0' '0' '0' '0']
+        ['1' '1' '1' '1' '1']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
+        ['.' '.' '.' '.' '.']
     object_data
-      object_name	00000
-      legend_key	1
-      colors
-        color	1111
-    object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	....
-    object_data
-      object_name	.....
-      legend_key	B
-      colors
-        color	irchTop
-    object_data
-      object_name	white
-      legend_key	#
-      colors
-        color	44891A
-    object_data
-      object_name	#54992A
-      legend_key	#
-      colors
-        color	64A93A
+      object_line
+        object_name	BirchTop
+      color_line
+        color	white
+        color	#44891A
+        color	#54992A
+        color	#64A93A
         color	#74B94A
       sprite
         ['4' '4' '4' '4' '4']
@@ -202,15 +194,12 @@ ps_game
         ['2' '2' '2' '2' '2']
         ['1' '1' '1' '1' '1']
     object_data
-      object_name	BirchTopLeft
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	#44891A
-      legend_key	#
-      colors
-        color	54992A
+      object_line
+        object_name	BirchTopLeft
+      color_line
+        color	white
+        color	#44891A
+        color	#54992A
         color	#64A93A
       sprite
         ['.' '.' '.' '.' '.']
@@ -219,15 +208,12 @@ ps_game
         ['.' '.' '.' '.' '2']
         ['.' '.' '.' '.' '1']
     object_data
-      object_name	BirchTopRight
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	#44891A
-      legend_key	#
-      colors
-        color	54992A
+      object_line
+        object_name	BirchTopRight
+      color_line
+        color	white
+        color	#44891A
+        color	#54992A
         color	#64A93A
       sprite
         ['.' '.' '.' '.' '.']
@@ -236,15 +222,12 @@ ps_game
         ['2' '.' '.' '.' '.']
         ['1' '.' '.' '.' '.']
     object_data
-      object_name	BirchTrunkTop
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	#337819
-      legend_key	D
-      colors
-        color	ARKGRAY
+      object_line
+        object_name	BirchTrunkTop
+      color_line
+        color	white
+        color	#337819
+        color	DARKGRAY
         color	grey
       sprite
         ['1' '1' '1' '1' '1']
@@ -253,15 +236,12 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '3' '0' '0' '.']
     object_data
-      object_name	BirchTrunkBottom
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	green
-      legend_key	D
-      colors
-        color	ARKGRAY
+      object_line
+        object_name	BirchTrunkBottom
+      color_line
+        color	white
+        color	green
+        color	DARKGRAY
         color	grey
       sprite
         ['.' '0' '2' '0' '.']
@@ -270,10 +250,10 @@ ps_game
         ['.' '2' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	BirchStump
-      legend_key	w
-      colors
-        color	hite
+      object_line
+        object_name	BirchStump
+      color_line
+        color	white
         color	YELLOW
       sprite
         ['.' '1' '1' '1' '.']
@@ -282,41 +262,27 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	BirchLogVTop
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	#337819
-      legend_key	D
-      colors
-        color	ARKGRAY
+      object_line
+        object_name	BirchLogVTop
+      color_line
+        color	white
+        color	#337819
+        color	DARKGRAY
         color	grey
+      sprite
+        ['.' '0' '1' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '0' '.']
     object_data
-      object_name	.010.
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	.000.
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	.000.
-      legend_key	B
-      colors
-        color	irchLogVBottom
-    object_data
-      object_name	white
-      legend_key	#
-      colors
-        color	337819
-    object_data
-      object_name	DARKGRAY
-      legend_key	g
-      colors
-        color	rey
+      object_line
+        object_name	BirchLogVBottom
+      color_line
+        color	white
+        color	#337819
+        color	DARKGRAY
+        color	grey
         color	YELLOW
       sprite
         ['.' '0' '0' '0' '.']
@@ -325,15 +291,12 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '4' '4' '4' '.']
     object_data
-      object_name	BirchLogHLeft
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	#337819
-      legend_key	D
-      colors
-        color	ARKGRAY
+      object_line
+        object_name	BirchLogHLeft
+      color_line
+        color	white
+        color	#337819
+        color	DARKGRAY
         color	grey
       sprite
         ['.' '.' '.' '.' '.']
@@ -342,15 +305,12 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	BirchLogHRight
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	#337819
-      legend_key	D
-      colors
-        color	ARKGRAY
+      object_line
+        object_name	BirchLogHRight
+      color_line
+        color	white
+        color	#337819
+        color	DARKGRAY
         color	grey
       sprite
         ['.' '.' '.' '.' '.']
@@ -359,20 +319,14 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	BirchBridgeVTop
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	DARKGRAY
-      legend_key	g
-      colors
-        color	rey
-    object_data
-      object_name	#ADD8E6
-      legend_key	y
-      colors
-        color	ellow
+      object_line
+        object_name	BirchBridgeVTop
+      color_line
+        color	white
+        color	DARKGRAY
+        color	grey
+        color	#ADD8E6
+        color	yellow
         color	#BDE8F6
       sprite
         ['3' '0' '0' '0' '3']
@@ -381,20 +335,14 @@ ps_game
         ['3' '0' '0' '0' '3']
         ['3' '0' '2' '0' '3']
     object_data
-      object_name	BirchBridgeVBottom
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	DARKGRAY
-      legend_key	g
-      colors
-        color	rey
-    object_data
-      object_name	#ADD8E6
-      legend_key	y
-      colors
-        color	ellow
+      object_line
+        object_name	BirchBridgeVBottom
+      color_line
+        color	white
+        color	DARKGRAY
+        color	grey
+        color	#ADD8E6
+        color	yellow
         color	#BDE8F6
       sprite
         ['3' '0' '0' '0' '3']
@@ -403,20 +351,14 @@ ps_game
         ['3' '0' '1' '0' '3']
         ['3' '2' '0' '0' '3']
     object_data
-      object_name	BirchBridgeHLeft
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	DARKGRAY
-      legend_key	g
-      colors
-        color	rey
-    object_data
-      object_name	#ADD8E6
-      legend_key	y
-      colors
-        color	ellow
+      object_line
+        object_name	BirchBridgeHLeft
+      color_line
+        color	white
+        color	DARKGRAY
+        color	grey
+        color	#ADD8E6
+        color	yellow
         color	#BDE8F6
       sprite
         ['3' '3' '3' '3' '3']
@@ -425,20 +367,14 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['3' '3' '3' '3' '3']
     object_data
-      object_name	BirchBridgeHRight
-      legend_key	w
-      colors
-        color	hite
-    object_data
-      object_name	DARKGRAY
-      legend_key	g
-      colors
-        color	rey
-    object_data
-      object_name	#ADD8E6
-      legend_key	y
-      colors
-        color	ellow
+      object_line
+        object_name	BirchBridgeHRight
+      color_line
+        color	white
+        color	DARKGRAY
+        color	grey
+        color	#ADD8E6
+        color	yellow
         color	#BDE8F6
       sprite
         ['3' '3' '3' '3' '3']
@@ -448,65 +384,65 @@ ps_game
         ['3' '3' '3' '3' '3']
   legend_section
     legend_data
-      ~
+      ~ =
       object_name	water
     legend_data
-      .
+      . =
       object_name	Background
       legend_operation
         object_name	Grass
     legend_data
-      P
+      P =
       object_name	Player
       legend_operation
         object_name	Grass
     legend_data
-      T
+      T =
       object_name	tree
       legend_operation
         object_name	Grass
     legend_data
-      o
+      o =
       object_name	stone
       legend_operation
         object_name	Grass
     legend_data
-      I
+      I =
       object_name	BirchTrunkBottom
       legend_operation
         object_name	grass
     legend_data
-      Log
+      Log =
       object_name	LogV
       legend_operation
         object_name	LogH
     legend_data
-      BirchLogH
+      BirchLogH =
       object_name	BirchLogHLeft
       legend_operation
         object_name	BirchLogHRight
     legend_data
-      BirchLogV
+      BirchLogV =
       object_name	BirchLogVTop
       legend_operation
         object_name	BirchLogVBottom
     legend_data
-      BirchLog
+      BirchLog =
       object_name	BirchLogV
       legend_operation
         object_name	BirchLogH
     legend_data
-      BirchBridgeH
+      BirchBridgeH =
       object_name	BirchBridgeHLeft
       legend_operation
         object_name	BirchBridgeHRight
     legend_data
-      BirchBridgeV
+      BirchBridgeV =
       object_name	BirchBridgeVTop
       legend_operation
         object_name	BirchBridgeVBottom
     legend_data
-      Bridge
+      Bridge =
       object_name	BridgeV
       legend_operation
         object_name	BridgeH
@@ -519,7 +455,7 @@ ps_game
       legend_operation
         object_name	BirchBridgeHRight
     legend_data
-      Obstacle
+      Obstacle =
       object_name	Log
       legend_operation
         object_name	Tree
@@ -540,25 +476,20 @@ ps_game
       object_name	SunkenStone
     layer_data
       object_name	Stump
-    layer_data
       object_name	Bridge
       object_name	BirchStump
     layer_data
       object_name	Player
       object_name	Tree
-    layer_data
       object_name	Log
       object_name	Stone
-    layer_data
       object_name	BirchTrunkBottom
       object_name	BirchLog
     layer_data
       object_name	Momentum
       object_name	TreeTip
-    layer_data
       object_name	BirchTrunkTop
       object_name	BirchTop
-    layer_data
       object_name	BirchTopRight
       object_name	BirchTopLeft
   rules_section
@@ -570,671 +501,269 @@ ps_game
               >
               player
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	o
-            rule_content	n
-            rule_content	e
+            rule_content	stone
           ->
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	t
-            rule_content	o
-            rule_content	n
-            rule_content	e
-          
-
-        rule_data
-          late
-          rule_part
             rule_content
+              >
               stone
-              water
+        rule_data
+          prefix	late
+          rule_part
+            rule_content	stone
+            rule_content	water
           ->
           rule_part
-            rule_content
-              water
-              SunkenStone
-          
-
+            rule_content	water
+            rule_content	SunkenStone
         rule_data
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	w
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	r
+            rule_content	water
           ->
           rule_part
             rule_content	player
             cell_border
-            rule_content	w
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	water
         rule_data
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	S
-            rule_content	u
-            rule_content	n
-            rule_content	k
-            rule_content	e
-            rule_content	n
-            rule_content	S
-            rule_content	t
-            rule_content	o
-            rule_content	n
-            rule_content	e
+            rule_content	SunkenStone
           ->
           rule_part
             rule_content	player
             cell_border
-            rule_content	S
-            rule_content	u
-            rule_content	n
-            rule_content	k
-            rule_content	e
-            rule_content	n
-            rule_content	S
-            rule_content	t
-            rule_content	o
-            rule_content	n
-            rule_content	e
-          
-
+            rule_content	SunkenStone
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              player
-              bridge
+            rule_content	player
+            rule_content	bridge
           ->
-          command
-            command_keyword	checkpoint
-          
-
+          prefix	checkpoint
         rule_data
-          vertical
+          prefix	vertical
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	g
-            rule_content	V
+            rule_content	logV
           ->
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	>
-            rule_content	l
-            rule_content	o
-            rule_content	g
-            rule_content	V
-          
-
+            rule_content
+              >
+              logV
         rule_data
-          horizontal
+          prefix	horizontal
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	g
-            rule_content	H
+            rule_content	logH
           ->
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	>
-            rule_content	l
-            rule_content	o
-            rule_content	g
-            rule_content	H
-          
-
+            rule_content
+              >
+              logH
         rule_data
-          vertical
+          prefix	vertical
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	t
-            rule_content	r
-            rule_content	e
-            rule_content	e
+            rule_content	tree
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
           ->
           rule_part
             rule_content	player
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	u
-            rule_content	m
-            rule_content	p
+            rule_content	stump
             cell_border
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
-          
-
+            rule_content	LogV
         rule_data
-          horizontal
+          prefix	horizontal
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	t
-            rule_content	r
-            rule_content	e
-            rule_content	e
+            rule_content	tree
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
           ->
           rule_part
             rule_content	player
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	u
-            rule_content	m
-            rule_content	p
+            rule_content	stump
             cell_border
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
-          
-
+            rule_content	LogH
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	T
-            rule_content	r
-            rule_content	u
-            rule_content	n
-            rule_content	k
-            rule_content	B
-            rule_content	o
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	m
+            rule_content	BirchTrunkBottom
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
           ->
           rule_part
             rule_content	player
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	S
-            rule_content	t
-            rule_content	u
-            rule_content	m
-            rule_content	p
+            rule_content	BirchStump
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
-            rule_content	B
-            rule_content	o
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	m
+            rule_content	BirchLogVBottom
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
-            rule_content	T
-            rule_content	o
-            rule_content	p
-          
-
+            rule_content	BirchLogVTop
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	T
-            rule_content	r
-            rule_content	u
-            rule_content	n
-            rule_content	k
-            rule_content	B
-            rule_content	o
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	m
+            rule_content	BirchTrunkBottom
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
           ->
           rule_part
             rule_content	player
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	S
-            rule_content	t
-            rule_content	u
-            rule_content	m
-            rule_content	p
+            rule_content	BirchStump
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
-            rule_content	T
-            rule_content	o
-            rule_content	p
+            rule_content	BirchLogVTop
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
-            rule_content	B
-            rule_content	o
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	m
-          
-
+            rule_content	BirchLogVBottom
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	T
-            rule_content	r
-            rule_content	u
-            rule_content	n
-            rule_content	k
-            rule_content	B
-            rule_content	o
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	m
+            rule_content	BirchTrunkBottom
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
           ->
           rule_part
             rule_content	player
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	S
-            rule_content	t
-            rule_content	u
-            rule_content	m
-            rule_content	p
+            rule_content	BirchStump
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
-            rule_content	R
-            rule_content	i
-            rule_content	g
-            rule_content	h
-            rule_content	t
+            rule_content	BirchLogHRight
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
-            rule_content	L
-            rule_content	e
-            rule_content	f
-            rule_content	t
-          
-
+            rule_content	BirchLogHLeft
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	T
-            rule_content	r
-            rule_content	u
-            rule_content	n
-            rule_content	k
-            rule_content	B
-            rule_content	o
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	m
+            rule_content	BirchTrunkBottom
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
           ->
           rule_part
             rule_content	player
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	S
-            rule_content	t
-            rule_content	u
-            rule_content	m
-            rule_content	p
+            rule_content	BirchStump
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
-            rule_content	L
-            rule_content	e
-            rule_content	f
-            rule_content	t
+            rule_content	BirchLogHLeft
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
-            rule_content	R
-            rule_content	i
-            rule_content	g
-            rule_content	h
-            rule_content	t
-          
-
+            rule_content	BirchLogHRight
         rule_data
-          vertical
+          prefix	vertical
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	g
-            rule_content	H
+            rule_content	logH
           ->
           rule_part
             rule_content	player
             cell_border
-            rule_content	>
-            rule_content	l
-            rule_content	o
-            rule_content	g
-            rule_content	H
-          
-
+            rule_content
+              >
+              logH
         rule_data
-          horizontal
+          prefix	horizontal
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	l
-            rule_content	o
-            rule_content	g
-            rule_content	V
+            rule_content	logV
           ->
           rule_part
             rule_content	player
             cell_border
-            rule_content	>
-            rule_content	l
-            rule_content	o
-            rule_content	g
-            rule_content	V
-          
-
+            rule_content
+              >
+              logV
         rule_data
-          horizontal
+          prefix	horizontal
           rule_part
             rule_content	LogV
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
+            rule_content	Momentum
           ->
           rule_part
             rule_content
               >
               LogV
             cell_border
-          
-
         rule_data
-          horizontal
+          prefix	horizontal
           rule_part
             rule_content
               >
               LogV
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
             cell_border
           ->
           rule_part
@@ -1243,56 +772,29 @@ ps_game
               LogV
             cell_border
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
-          command
-            command_keyword	again
-          
-
+            rule_content	Momentum
+          prefix	again
         rule_data
-          vertical
+          prefix	vertical
           rule_part
             rule_content	LogH
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
+            rule_content	Momentum
           ->
           rule_part
             rule_content
               >
               LogH
             cell_border
-          
-
         rule_data
-          vertical
+          prefix	vertical
           rule_part
             rule_content
               >
               LogH
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
             cell_border
           ->
           rule_part
@@ -1301,127 +803,66 @@ ps_game
               LogH
             cell_border
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
-          command
-            command_keyword	again
-          
-
+            rule_content	Momentum
+          prefix	again
         rule_data
-          vertical
+          prefix	vertical
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
+            rule_content	BirchLogV
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
-          
-
+            rule_content
+              >
+              BirchLogV
         rule_data
           +
-          horizontal
+          prefix	horizontal
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
+            rule_content	BirchLogV
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	>
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
-          
-
+            rule_content
+              >
+              BirchLogV
         rule_data
           +
-          rigid
-          horizontal
+          prefix	rigid
+          prefix	horizontal
           rule_part
             rule_content	BirchLogVTop
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
+            rule_content	Momentum
           ->
           rule_part
             rule_content
               >
               BirchLogVTop
             cell_border
-          
-
         rule_data
           +
-          rigid
-          horizontal
+          prefix	rigid
+          prefix	horizontal
           rule_part
             rule_content
               >
               BirchLogVTop
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
             cell_border
           ->
           rule_part
@@ -1430,60 +871,33 @@ ps_game
               BirchLogVTop
             cell_border
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
-          command
-            command_keyword	again
-          
-
+            rule_content	Momentum
+          prefix	again
         rule_data
           +
-          rigid
-          horizontal
+          prefix	rigid
+          prefix	horizontal
           rule_part
             rule_content	BirchLogVBottom
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
+            rule_content	Momentum
           ->
           rule_part
             rule_content
               >
               BirchLogVBottom
             cell_border
-          
-
         rule_data
           +
-          rigid
-          horizontal
+          prefix	rigid
+          prefix	horizontal
           rule_part
             rule_content
               >
               BirchLogVBottom
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
             cell_border
           ->
           rule_part
@@ -1492,227 +906,98 @@ ps_game
               BirchLogVBottom
             cell_border
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
-          command
-            command_keyword	again
-          
-
+            rule_content	Momentum
+          prefix	again
         rule_data
           +
-          rigid
-          up
+          prefix	rigid
+          prefix	up
           rule_part
-            rule_content
-              Moving
-              BirchLogVBottom
+            rule_content	Moving
+            rule_content	BirchLogVBottom
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
-            rule_content	T
-            rule_content	o
-            rule_content	p
+            rule_content	BirchLogVTop
           ->
           rule_part
-            rule_content
-              Moving
-              BirchLogVBottom
+            rule_content	Moving
+            rule_content	BirchLogVBottom
             cell_border
-            rule_content	M
-            rule_content	O
-            rule_content	V
-            rule_content	I
-            rule_content	N
-            rule_content	G
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
-            rule_content	T
-            rule_content	o
-            rule_content	p
-          
-
+            rule_content	MOVING
+            rule_content	BirchLogVTop
         rule_data
           +
-          rigid
-          down
+          prefix	rigid
+          prefix	down
           rule_part
-            rule_content
-              Moving
-              BirchLogVTop
+            rule_content	Moving
+            rule_content	BirchLogVTop
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
-            rule_content	B
-            rule_content	o
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	m
+            rule_content	BirchLogVBottom
           ->
           rule_part
-            rule_content
-              Moving
-              BirchLogVTop
+            rule_content	Moving
+            rule_content	BirchLogVTop
             cell_border
-            rule_content	M
-            rule_content	O
-            rule_content	V
-            rule_content	I
-            rule_content	N
-            rule_content	G
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
-            rule_content	B
-            rule_content	o
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	m
-          
-
+            rule_content	MOVING
+            rule_content	BirchLogVBottom
         rule_data
-          horizontal
+          prefix	horizontal
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
+            rule_content	BirchLogH
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
-          
-
+            rule_content
+              >
+              BirchLogH
         rule_data
           +
-          vertical
+          prefix	vertical
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
+            rule_content	BirchLogH
           ->
           rule_part
             rule_content	Player
             cell_border
-            rule_content	>
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
-          
-
+            rule_content
+              >
+              BirchLogH
         rule_data
           +
-          rigid
-          vertical
+          prefix	rigid
+          prefix	vertical
           rule_part
             rule_content	BirchLogHLeft
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
+            rule_content	Momentum
           ->
           rule_part
             rule_content
               >
               BirchLogHLeft
             cell_border
-          
-
         rule_data
           +
-          rigid
-          vertical
+          prefix	rigid
+          prefix	vertical
           rule_part
             rule_content
               >
               BirchLogHLeft
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
             cell_border
           ->
           rule_part
@@ -1721,60 +1006,33 @@ ps_game
               BirchLogHLeft
             cell_border
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
-          command
-            command_keyword	again
-          
-
+            rule_content	Momentum
+          prefix	again
         rule_data
           +
-          rigid
-          vertical
+          prefix	rigid
+          prefix	vertical
           rule_part
             rule_content	BirchLogHRight
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
+            rule_content	Momentum
           ->
           rule_part
             rule_content
               >
               BirchLogHRight
             cell_border
-          
-
         rule_data
           +
-          rigid
-          vertical
+          prefix	rigid
+          prefix	vertical
           rule_part
             rule_content
               >
               BirchLogHRight
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	O
-            rule_content	b
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	c
-            rule_content	l
-            rule_content	e
+            rule_content	no
+            rule_content	Obstacle
             cell_border
           ->
           rule_part
@@ -1783,350 +1041,139 @@ ps_game
               BirchLogHRight
             cell_border
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
-          command
-            command_keyword	again
-          
-
+            rule_content	Momentum
+          prefix	again
         rule_data
           +
-          rigid
-          right
+          prefix	rigid
+          prefix	right
           rule_part
-            rule_content
-              Moving
-              BirchLogHLeft
+            rule_content	Moving
+            rule_content	BirchLogHLeft
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
-            rule_content	R
-            rule_content	i
-            rule_content	g
-            rule_content	h
-            rule_content	t
+            rule_content	BirchLogHRight
           ->
           rule_part
-            rule_content
-              Moving
-              BirchLogHLeft
+            rule_content	Moving
+            rule_content	BirchLogHLeft
             cell_border
-            rule_content	M
-            rule_content	O
-            rule_content	V
-            rule_content	I
-            rule_content	N
-            rule_content	G
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
-            rule_content	R
-            rule_content	i
-            rule_content	g
-            rule_content	h
-            rule_content	t
-          
-
+            rule_content	MOVING
+            rule_content	BirchLogHRight
         rule_data
           +
-          rigid
-          left
+          prefix	rigid
+          prefix	left
           rule_part
-            rule_content
-              Moving
-              BirchLogHRight
+            rule_content	Moving
+            rule_content	BirchLogHRight
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
-            rule_content	L
-            rule_content	e
-            rule_content	f
-            rule_content	t
+            rule_content	BirchLogHLeft
           ->
           rule_part
-            rule_content
-              Moving
-              BirchLogHRight
+            rule_content	Moving
+            rule_content	BirchLogHRight
             cell_border
-            rule_content	M
-            rule_content	O
-            rule_content	V
-            rule_content	I
-            rule_content	N
-            rule_content	G
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
-            rule_content	L
-            rule_content	e
-            rule_content	f
-            rule_content	t
-          
-
+            rule_content	MOVING
+            rule_content	BirchLogHLeft
         rule_data
           rule_part
-            rule_content
-              Momentum
-              Obstacle
+            rule_content	Momentum
+            rule_content	Obstacle
           ->
           rule_part
             rule_content	Obstacle
-          
-
         rule_data
           rule_part
-            rule_content
-              Momentum
-              Obstacle
+            rule_content	Momentum
+            rule_content	Obstacle
             cell_border
-            rule_content	M
-            rule_content	o
-            rule_content	m
-            rule_content	e
-            rule_content	n
-            rule_content	t
-            rule_content	u
-            rule_content	m
+            rule_content	Momentum
           ->
           rule_part
             rule_content	Obstacle
             cell_border
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              water
-              logV
+            rule_content	water
+            rule_content	logV
           ->
           rule_part
             rule_content	bridgeV
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              water
-              logH
+            rule_content	water
+            rule_content	logH
           ->
           rule_part
             rule_content	bridgeH
-          
-
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
-            rule_content
-              water
-              BirchLogVTop
+            rule_content	water
+            rule_content	BirchLogVTop
             cell_border
-            rule_content	w
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	r
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	V
-            rule_content	B
-            rule_content	o
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	m
+            rule_content	water
+            rule_content	BirchLogVBottom
           ->
           rule_part
             rule_content	BirchBridgeVTop
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	B
-            rule_content	r
-            rule_content	i
-            rule_content	d
-            rule_content	g
-            rule_content	e
-            rule_content	V
-            rule_content	B
-            rule_content	o
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	m
-          
-
+            rule_content	BirchBridgeVBottom
         rule_data
-          late
-          right
+          prefix	late
+          prefix	right
           rule_part
-            rule_content
-              water
-              BirchLogHLeft
+            rule_content	water
+            rule_content	BirchLogHLeft
             cell_border
-            rule_content	w
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	r
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	L
-            rule_content	o
-            rule_content	g
-            rule_content	H
-            rule_content	R
-            rule_content	i
-            rule_content	g
-            rule_content	h
-            rule_content	t
+            rule_content	water
+            rule_content	BirchLogHRight
           ->
           rule_part
             rule_content	BirchBridgeHLeft
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	B
-            rule_content	r
-            rule_content	i
-            rule_content	d
-            rule_content	g
-            rule_content	e
-            rule_content	H
-            rule_content	R
-            rule_content	i
-            rule_content	g
-            rule_content	h
-            rule_content	t
-          
-
+            rule_content	BirchBridgeHRight
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content	TreeTip
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	t
-            rule_content	r
-            rule_content	e
-            rule_content	e
+            rule_content	no
+            rule_content	tree
           ->
           rule_part
-            rule_content	|
-          
-
+            cell_border
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content	tree
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	T
-            rule_content	r
-            rule_content	e
-            rule_content	e
-            rule_content	T
-            rule_content	i
-            rule_content	p
+            rule_content	no
+            rule_content	TreeTip
           ->
           rule_part
             rule_content	tree
             cell_border
-            rule_content	T
-            rule_content	r
-            rule_content	e
-            rule_content	e
-            rule_content	T
-            rule_content	i
-            rule_content	p
-          
-
+            rule_content	TreeTip
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content	Grass
             cell_border
-            rule_content	w
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	r
-            rule_content	n
-            rule_content	o
-            rule_content	b
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	h
+            rule_content	water
+            rule_content	no
+            rule_content	beach
           ->
           rule_part
             rule_content	Grass
             cell_border
-            rule_content	w
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	r
-            rule_content	b
-            rule_content	e
-            rule_content	a
-            rule_content	c
-            rule_content	h
-          
-
+            rule_content	water
+            rule_content	beach
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content	BirchTrunkBottom
             cell_border
@@ -2135,75 +1182,24 @@ ps_game
           rule_part
             rule_content	BirchTrunkBottom
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	T
-            rule_content	r
-            rule_content	u
-            rule_content	n
-            rule_content	k
-            rule_content	T
-            rule_content	o
-            rule_content	p
+            rule_content	BirchTrunkTop
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	T
-            rule_content	o
-            rule_content	p
-          
-
+            rule_content	BirchTop
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content	BirchTop
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	T
-            rule_content	r
-            rule_content	u
-            rule_content	n
-            rule_content	k
-            rule_content	T
-            rule_content	o
-            rule_content	p
+            rule_content	BirchTrunkTop
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	T
-            rule_content	r
-            rule_content	u
-            rule_content	n
-            rule_content	k
-            rule_content	B
-            rule_content	o
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	m
+            rule_content	no
+            rule_content	BirchTrunkBottom
           ->
           rule_part
-            rule_content	|
             cell_border
-          
-
+            cell_border
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content	BirchTop
             cell_border
@@ -2211,42 +1207,19 @@ ps_game
           rule_part
             rule_content	BirchTop
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	T
-            rule_content	o
-            rule_content	p
-            rule_content	L
-            rule_content	e
-            rule_content	f
-            rule_content	t
-          
-
+            rule_content	BirchTopLeft
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content	BirchTopLeft
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	T
-            rule_content	o
-            rule_content	p
+            rule_content	no
+            rule_content	BirchTop
           ->
           rule_part
-            rule_content	|
-          
-
+            cell_border
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content	BirchTop
             cell_border
@@ -2254,41 +1227,17 @@ ps_game
           rule_part
             rule_content	BirchTop
             cell_border
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	T
-            rule_content	o
-            rule_content	p
-            rule_content	R
-            rule_content	i
-            rule_content	g
-            rule_content	h
-            rule_content	t
-          
-
+            rule_content	BirchTopRight
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content	BirchTopRight
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	B
-            rule_content	i
-            rule_content	r
-            rule_content	c
-            rule_content	h
-            rule_content	T
-            rule_content	o
-            rule_content	p
+            rule_content	no
+            rule_content	BirchTop
           ->
           rule_part
-            rule_content	|
-          
-
+            cell_border
   winconditions_section
   levels_section
     level_data	[['~' '~' '~' ... '~' '~' '~']

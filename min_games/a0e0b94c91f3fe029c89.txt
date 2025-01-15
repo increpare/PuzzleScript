@@ -1,142 +1,193 @@
+title Cyberbox
+author Doug Beeferman & anna anthropy
+homepage auntiepixelante.com
+run_rules_on_level_start
+noaction
+text_color pink
+
 OBJECTS
 
-Background#9A00C2 #5200C2
-1101110101
-0111010101
-11011Cornerwall
-#FFB591#FF5501 #A83700
-0000101212
-0202201212
-12222Horiwall
-#FFB591#FF5501 #A83700
-0000010122
-2101222101
-22222Vertwall
-#FFB591#FF5501 #A83700
-0122200122
-0101202102
-02212Player
-BrownPink White.111.
+Background
+#9A00C2 #5200C2
+11011
+10101
+01110
+10101
+1101
+
+Cornerwall
+#FFB591 #FF5501 #A83700
+00001
+01212
+02022
+01212
+1222
+
+Horiwall
+#FFB591 #FF5501 #A83700
+00000
+10122
+21012
+22101
+2222
+
+Vertwall
+#FFB591 #FF5501 #A83700
+01222
+00122
+01012
+02102
+0221
+
+Player
+Brown Pink White
+.111.
 .0011
 .0011
 .222.
-02220
+0222
 
-Exittransparent
-Everyslider#BCF818
-#58D858#006800 Black00201
+Exit
+transparent
+
+Everyslider
+#BCF818 #58D858 #006800 Black
+00201
 01312
 23333
 01312
-12322
+1232
 
-Horislider#38C0FC
-#0088FC#0000FC Black00001
+Horislider
+#38C0FC #0088FC #0000FC Black
+00001
 01112
 23333
 01112
-12222
+1222
 
-Vertslider#FCFF00
-#FCB800#503000 Black
-0020101312
-0131201312
-12322Block
-#FCA048#FC3800 #AC100000001
+Vertslider
+#FCFF00 #FCB800 #503000 Black
+00201
+01312
+01312
+01312
+1232
+
+Block
+#FCA048 #FC3800 #AC1000
+00001
 01112
 01212
 01112
-12222
+1222
 
-RighteleportWhite
-#FC78FC#94008C Black03001
+Righteleport
+White #FC78FC #94008C Black
+03001
 03312
 01332
 03312
-13222
+1322
 
-DownteleportWhite
-#FC78FC#94008C Black00001
+Downteleport
+White #FC78FC #94008C Black
+00001
 33133
 03332
 01312
-12222
+1222
 
-LefteleportWhite
-#FC78FC#94008C Black00131
+Lefteleport
+White #FC78FC #94008C Black
+00131
 01332
 03312
 01332
-12232
+1223
 
-UpteleportWhite
-#FC78FC#94008C Black00001
+Upteleport
+White #FC78FC #94008C Black
+00001
 01312
 03332
 33133
-12222
+1222
 
-RightpusherWhite
-#00E8E4#0088FC Black03001
+Rightpusher
+White #00E8E4 #0088FC Black
+03001
 03312
 03332
 03312
-13222
+1322
 
-DownpusherWhite
-#00E8E4#0088FC Black00001
+Downpusher
+White #00E8E4 #0088FC Black
+00001
 33333
 03332
 01312
-12222
+1222
 
-LeftpusherWhite
-#00E8E4#0088FC Black00131
+Leftpusher
+White #00E8E4 #0088FC Black
+00131
 01332
 03332
 01332
-12232
+1223
 
-UppusherWhite
-#00E8E4#0088FC Black00001
+Uppusher
+White #00E8E4 #0088FC Black
+00001
 01312
 03332
 33333
-12222
+1222
 
-SelectorWhite00.00
+Selector
+White
+00.00
 0...0
 .....
 0...0
-00.00
+00.0
 
-FakeselectorWhite00.00
+Fakeselector
+White
+00.00
 0...0
 .....
 0...0
-00.00
+00.0
 
-XselectorWhite00.00
+Xselector
+White
+00.00
 0...0
 ..0..
 0...0
-00.00
+00.0
 
-Barnaby#503000
-#905F25#FC3800 Black.0.0.
+Barnaby
+#503000 #905F25 #FC3800 Black
+.0.0.
 .000.
 .303.
 00020
-10001
+1000
 
-VoidBlack00000
+Void
+Black
 00000
 00000
 00000
 00000
+0000
 
-MarkerTransparent
-
+Marker
+Transparent
 
 
 LEGEND
@@ -179,42 +230,16 @@ Marker
 Background
 Exit
 Barnaby, Void
-Player, Cornerwall
-Horiwall, Vertwall
-Everyslider, Horislider
-Vertslider, Block
-Righteleport, Upteleport
-Lefteleport, Downteleport
-Rightpusher, Uppusher
-Leftpusher, Downpusher
-Selector, Xselector
+Player, Cornerwall, Horiwall, Vertwall, Everyslider, Horislider, Vertslider, Block, Righteleport, Upteleport, Lefteleport, Downteleport, Rightpusher, Uppusher, Leftpusher, Downpusher, Selector, Xselector
 Fakeselector
 
 RULES
 
-[ > Player | Xselector ] -> [ Stationary Player | StationaryXselector ] 
-[ > Player | Selector ] -> [ |StationaryPlayerFakeselector ] 
-[ Fakeselector no Player ] -> [ Selector ] 
-[ Stationary Player][Rightpusher ] -> [ Player][RightRightpusher ] 
-[ Stationary Player][Downpusher ] -> [ Player][DownDownpusher ] 
-[ Stationary Player][Leftpusher ] -> [ Player][LeftLeftpusher ] 
-[ Stationary Player][Uppusher ] -> [ Player][UpUppusher ] 
-[ moving Pusher ] -> [ moving Pusher Marker ] 
-startloop
-Horizontal [ Marker>Pusher | stationaryHoripushable ] -> [ Marker>Pusher | >HoriPushable ] 
-Vertical [ Marker>Pusher | stationaryVertPushable ] -> [ Marker>Pusher | >VertPushable ] 
-[ Marker>Pusher | noMarker>Anypushable ] -> [ > Pusher | Marker>Anypushable ] 
-Horizontal [ Marker>Pusher | VerticalPusher ] -> [ Pusher | VerticalPusher ] 
-Vertical [ Marker>Pusher | HorizontalPusher ] -> [ Pusher | HorizontalPusher ] 
-endloop
-Right [ > Player | Righteleport | NoObstacle ] -> [ |Righteleport | Player ] 
-Down [ > Player | Downteleport | NoObstacle ] -> [ |Downteleport | Player ] 
-Left [ > Player | Lefteleport | NoObstacle ] -> [ |Lefteleport | Player ] 
-Up [ > Player | Upteleport | NoObstacle ] -> [ |Upteleport | Player ] 
-[ Player ] -> [ Player ] again 
-[ Barnaby ] -> [ Barnaby Exit ] 
-[ Marker ] -> [  ] 
+[ > Player | Xselector ] -> [ StationaryPlayer | StationaryXselector ] Sfx1[ > Player | Selector ] -> [  | StationaryPlayerFakeselector ][ FakeselectornoPlayer ] -> [ Selector ][ StationaryPlayer ] [ Rightpusher ] -> [ Player ] [ RightRightpusher ][ StationaryPlayer ] [ Downpusher ] -> [ Player ] [ DownDownpusher ][ StationaryPlayer ] [ Leftpusher ] -> [ Player ] [ LeftLeftpusher ][ StationaryPlayer ] [ Uppusher ] -> [ Player ] [ UpUppusher ][ movingPusher ] -> [ movingPusherMarker ]startloop
 
+Horizontal [ Marker> Pusher | stationaryHoripushable ] -> [ Marker> Pusher | > HoriPushable ]Vertical [ Marker> Pusher | stationaryVertPushable ] -> [ Marker> Pusher | > VertPushable ][ Marker> Pusher | noMarker> Anypushable ] -> [ > Pusher | Marker> Anypushable ]Horizontal [ Marker> Pusher | VerticalPusher ] -> [ Pusher | VerticalPusher ]Vertical [ Marker> Pusher | HorizontalPusher ] -> [ Pusher | HorizontalPusher ]endloop
+
+Right [ > Player | Righteleport | NoObstacle ] -> [  | Righteleport | Player ] Sfx0Down [ > Player | Downteleport | NoObstacle ] -> [  | Downteleport | Player ] Sfx0Left [ > Player | Lefteleport | NoObstacle ] -> [  | Lefteleport | Player ] Sfx0Up [ > Player | Upteleport | NoObstacle ] -> [  | Upteleport | Player ] Sfx0[ Player ] -> [ Player ] again[ Barnaby ] -> [ BarnabyExit ][ Marker ] -> [  ]
 
 WINCONDITIONS
 
@@ -223,7 +248,6 @@ All player on exit
 LEVELS
 
 #HHHHHH#E#HHHHHH#
-
 I....*.....*....I
 I.....-|-|-.....I
 I|.....+.+.....|I
@@ -237,7 +261,6 @@ I....--.p.--....I
 #HHHHHHHHHHHHHHH#
 
 #hhhh#h#E#h#hhhh#
-
 i....*....**....i
 i....**....*....i
 i..-----|---..*|i
@@ -251,7 +274,6 @@ i..*.*..p-..*.-.i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i*..*..*....*...i
 i..|*.*...||..*.i
 i.|+******++**..i
@@ -265,7 +287,6 @@ i..*..*.p*.*.+.*i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i......+-+++++s.i
 i....*....*.*.-|i
 i..**.***...-...i
@@ -279,7 +300,6 @@ i.......p*.----.i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i......*.....--.i
 i.*.....*.|.-.*.i
 i*.*.|.|.*...*..i
@@ -293,7 +313,6 @@ i.......p*......i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i...*..s........i
 i...---s------|ai
 i......-.....*+.i
@@ -307,7 +326,6 @@ i.......p*....w.i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i--s----..*.....i
 i..-...*+.*.....i
 i....+dd|.*..**.i
@@ -321,7 +339,6 @@ i.......p....*..i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i......*.*......i
 i.**..*.8.*..**.i
 i*..*..|.|...**.i
@@ -335,7 +352,6 @@ i.....4.p*......i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i.....*sss..-s..i
 i|----+--+...-..i
 i.**5..6.4..*...i
@@ -349,7 +365,6 @@ i.4.4.**p*.....*i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i.*....*.*.*....i
 i.d|....-...****i
 i..+*..*.***....i
@@ -363,7 +378,6 @@ i.......p....***i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i....***s****...i
 i...*..---+-.*..i
 i..*.+----....*.i
@@ -377,7 +391,6 @@ i.....--p--.....i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i..*s.x--..s....i
 i...-...*..|....i
 i*8*|....**+*...i
@@ -391,7 +404,6 @@ i.....x.p.x.....i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i......xxx......i
 i........****...i
 i.....***...4...i
@@ -405,7 +417,6 @@ i.......p*..**w*i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i..6.6.6.6.4.4..i
 i.6.6.4.4.4.6.4.i
 i8.5.8.8.5.8.5.8i
@@ -419,7 +430,6 @@ i.6.4.4.p.6.6.6.i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i.+...--s--s--s-i
 i.+..***|*.x..x.i
 i.***..*|*.o..o.i
@@ -433,7 +443,6 @@ i....*..p..*....i
 #hhhh#hhhhh#hhhh#
 
 #hhhh#h#e#h#hhhh#
-
 i......*.4......i
 i**...*.*.****..i
 i..|o|..*.*..*.*i
@@ -447,7 +456,6 @@ i..w.w.*p**.....i
 #hhhh#hhhhh#hhhh#
 
 00000000000000000
-
 00000000000000000
 00000000000000000
 00000#hh#hh#00000

@@ -1,77 +1,111 @@
+title The Land Of Secrets
+flickscreen 20x10
+background_color black
+noaction
+
 OBJECTS
 
-Background#0e193f #202a4c
-#20324a#1f3649 #00003d00004
+Background
+#0e193f #202a4c #20324a #1f3649 #00003d
+00004
 13210
 04000
 10111
-00032
+0003
 
-Enddarkbrown.0.0.
+End
+darkbrown
+.0.0.
 00.00
 0.0.0
 00.00
-.0.0.
+.0.0
 
-GrassLIGHTGREEN GREEN11111
+Grass
+LIGHTGREEN GREEN
+11111
 01111
 11101
 11111
-10111
+1011
 
-Brickbrown DARKBROWN
-0001011111
-0100011111
-00010PlayerWithoutKeyorSuv
-purplewhite blue
-..1..00000
-0222002220
-00000PlayerWithKey
-purplewhite blue..1..
+Brick
+brown DARKBROWN
+00010
+11111
+01000
+11111
+0001
+
+PlayerWithoutKeyorSuv
+purple white blue
+..1..
+00000
+02220
+02220
+0000
+
+PlayerWithKey
+purple white blue
+..1..
 22222
 20002
 20002
-22222
+2222
 
-PlayerWithSuvorange..0..
+PlayerWithSuv
+orange
+..0..
 00000
 00000
 00000
-00000
+0000
 
-Lockblack.000.
+Lock
+black
+.000.
 0...0
 0...0
 00000
-00000
+0000
 
-Keyblack.00..
+Key
+black
+.00..
 ..0..
 ..0..
 .000.
-.000.
+.000
 
-Suvbrown gray
-.111.11111
-11111..0..
-..0..Bk
-transparentTile1
-#587ba2#4f6e92
-#7895b6#354961 #425a7821111
-20003
-20003
-20003
-44443
+Suv
+brown gray
+.111.
+11111
+11111
+..0..
+..0.
 
-Tile2#396959
-#335f50#12261b #447f6c11112
+Bk
+transparent
+
+Tile1
+#587ba2 #4f6e92 #7895b6 #354961 #425a78
+21111
+20003
+20003
+20003
+4444
+
+Tile2
+#396959 #335f50 #12261b #447f6c
+11112
 30022
 30222
 32222
-22222
+2222
 
-Adbrown
-
+Ad
+brown
 
 
 LEGEND
@@ -103,16 +137,11 @@ Bk
 Suv
 Tile1
 Tile2
-Player, Lock
-Brick, Ad
+Player, Lock, Brick, Ad
 
 RULES
 
-[ > PlayerWithKey | lock ] -> [ PlayerWithoutKeyorSuv |  ] 
-[ > PlayerWithSuv | Bk ] -> [ PlayerWithoutKeyorSuv | Key ] 
-[ Player Key ] -> [ PlayerWithKey ] 
-[ Player Suv ] -> [ PlayerWithSuv ] 
-
+[ > PlayerWithKey | lock ] -> [ PlayerWithoutKeyorSuv |  ][ > PlayerWithSuv | Bk ] -> [ PlayerWithoutKeyorSuv | Key ][ PlayerKey ] -> [ PlayerWithKey ][ PlayerSuv ] -> [ PlayerWithSuv ]
 
 WINCONDITIONS
 
@@ -121,7 +150,6 @@ all Player on End
 LEVELS
 
 gggggggggggggggggggg
-
 gggggggggggggggggggg
 ggggsggggggggggg1ggg
 gggggggggggggggggggg
@@ -143,7 +171,6 @@ gggggggggggggggggggg
 ...........#########
 
 #######ggggggggggggg
-
 p.k...#ggggggggggggg
 ####l####ggggggg####
 ......lllgg1g1ggggg#
@@ -205,7 +232,6 @@ ggggggggggggggggg#2#
 ####################
 
 ###.###..#.###.###..#5#...........#ggggg
-
 .#..#.#.#..##..###..#5#...........#ggagg
 ###.#.#..#.#...#..#.#5##########..#ggggg
 ........#..###.#...##5llllllllll..###g##
@@ -237,7 +263,6 @@ ggggggg5gggggggggggg#iiiiiiii#l#iiiiiiii
 llllllllllllllllllll#...555...555...555.
 
 #########l##########.#.###..............
-
 #llllllllglllllllll##..#.#...#..##..####
 #l................l#.#.#.#..#.##..#.##..
 #l......gggg......l##..###.#......#.#...

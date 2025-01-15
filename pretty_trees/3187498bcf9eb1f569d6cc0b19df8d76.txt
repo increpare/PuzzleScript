@@ -1,10 +1,26 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Ice and Tar
+    prelude_data
+      author
+      ncrecc
+    prelude_data
+      homepage
+      www.puzzlescript.net
+    prelude_data
+      color_palette
+      14
+    prelude_data
+      again_interval
+      0.05
   objects_section
     object_data
-      object_name	Background
-      legend_key	L
-      colors
-        color	IGHTGREEN
+      object_line
+        object_name	Background
+      color_line
+        color	LIGHTGREEN
         color	GREEN
       sprite
         ['1' '1' '1' '1' '1']
@@ -13,10 +29,10 @@ ps_game
         ['1' '1' '1' '1' '1']
         ['1' '0' '1' '1' '1']
     object_data
-      object_name	Deco
-      legend_key	L
-      colors
-        color	IGHTGREEN
+      object_line
+        object_name	Deco
+      color_line
+        color	LIGHTGREEN
         color	GREEN
       sprite
         ['1' '1' '1' '0' '1']
@@ -25,10 +41,10 @@ ps_game
         ['0' '1' '1' '1' '1']
         ['1' '1' '1' '1' '1']
     object_data
-      object_name	Target
-      legend_key	D
-      colors
-        color	arkBlue
+      object_line
+        object_name	Target
+      color_line
+        color	DarkBlue
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '0' '0' '.']
@@ -36,10 +52,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Wall
-      legend_key	B
-      colors
-        color	ROWN
+      object_line
+        object_name	Wall
+      color_line
+        color	BROWN
         color	DARKBROWN
       sprite
         ['0' '0' '0' '1' '0']
@@ -48,15 +64,12 @@ ps_game
         ['1' '1' '1' '1' '1']
         ['0' '0' '0' '1' '0']
     object_data
-      object_name	PlayerUP1
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerUP1
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['1' '.' '.' '3' '1']
@@ -65,15 +78,12 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '3' '.' '.' '.']
     object_data
-      object_name	PlayerUP2
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerUP2
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['1' '3' '.' '.' '1']
@@ -82,15 +92,12 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '3' '.']
     object_data
-      object_name	PlayerDP1
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerDP1
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['.' '.' '.' '3' '.']
@@ -99,15 +106,12 @@ ps_game
         ['2' '1' '1' '1' '2']
         ['1' '3' '.' '.' '1']
     object_data
-      object_name	PlayerDP2
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerDP2
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['.' '3' '.' '.' '.']
@@ -116,15 +120,12 @@ ps_game
         ['2' '1' '1' '1' '2']
         ['1' '.' '.' '3' '1']
     object_data
-      object_name	PlayerLP1
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerLP1
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['1' '2' '2' '.' '.']
@@ -133,15 +134,12 @@ ps_game
         ['.' '1' '0' '0' '3']
         ['1' '2' '2' '.' '.']
     object_data
-      object_name	PlayerLP2
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerLP2
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['1' '2' '2' '.' '.']
@@ -150,15 +148,12 @@ ps_game
         ['3' '1' '0' '0' '.']
         ['1' '2' '2' '.' '.']
     object_data
-      object_name	PlayerRP1
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerRP1
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['.' '.' '2' '2' '1']
@@ -167,15 +162,12 @@ ps_game
         ['.' '0' '0' '1' '3']
         ['.' '.' '2' '2' '1']
     object_data
-      object_name	PlayerRP2
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerRP2
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['.' '.' '2' '2' '1']
@@ -184,15 +176,12 @@ ps_game
         ['3' '0' '0' '1' '.']
         ['.' '.' '2' '2' '1']
     object_data
-      object_name	PlayerUW1
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerUW1
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['1' '.' '.' '3' '.']
@@ -201,15 +190,12 @@ ps_game
         ['.' '0' '0' '0' '2']
         ['.' '3' '.' '.' '1']
     object_data
-      object_name	PlayerUW2
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerUW2
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['.' '3' '.' '.' '1']
@@ -218,15 +204,12 @@ ps_game
         ['2' '0' '0' '0' '.']
         ['1' '.' '.' '3' '.']
     object_data
-      object_name	PlayerDW1
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerDW1
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['1' '.' '.' '3' '.']
@@ -235,15 +218,12 @@ ps_game
         ['.' '1' '1' '1' '2']
         ['.' '3' '.' '.' '1']
     object_data
-      object_name	PlayerDW2
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerDW2
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['.' '3' '.' '.' '1']
@@ -252,15 +232,12 @@ ps_game
         ['2' '1' '1' '1' '.']
         ['1' '.' '.' '3' '.']
     object_data
-      object_name	PlayerLW1
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerLW1
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['.' '.' '2' '2' '1']
@@ -269,15 +246,12 @@ ps_game
         ['.' '1' '0' '0' '3']
         ['1' '2' '2' '.' '.']
     object_data
-      object_name	PlayerLW2
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerLW2
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['1' '2' '2' '.' '.']
@@ -286,15 +260,12 @@ ps_game
         ['3' '1' '0' '0' '.']
         ['.' '.' '2' '2' '1']
     object_data
-      object_name	PlayerRW1
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerRW1
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
       sprite
         ['.' '.' '2' '2' '1']
@@ -303,99 +274,64 @@ ps_game
         ['.' '0' '0' '1' '3']
         ['1' '2' '2' '.' '.']
     object_data
-      object_name	PlayerRW2
-      legend_key	B
-      colors
-        color	lack
-    object_data
-      object_name	Orange
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerRW2
+      color_line
+        color	Black
+        color	Orange
+        color	White
         color	Blue
+      sprite
+        ['1' '2' '2' '.' '.']
+        ['.' '0' '0' '1' '3']
+        ['.' '0' '0' '1' '.']
+        ['3' '0' '0' '1' '.']
+        ['.' '.' '2' '2' '1']
     object_data
-      object_name	122..
-      legend_key	.
-      colors
-        color	0013
-    object_data
-      object_name	.001.
-      legend_key	3
-      colors
-        color	001.
-    object_data
-      object_name	..221
-      legend_key	P
-      colors
-        color	layerUS
-    object_data
-      object_name	Black
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerUS
+      color_line
+        color	Black
+        color	White
         color	Orange
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '2' '2' '2' '.']
+        ['1' '0' '0' '0' '1']
+        ['.' '0' '0' '0' '.']
+        ['.' '.' '.' '.' '.']
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	222.
-    object_data
-      object_name	10001
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	.....
-      legend_key	P
-      colors
-        color	layerDS
-    object_data
-      object_name	Black
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerDS
+      color_line
+        color	Black
+        color	White
         color	Orange
+      sprite
+        ['.' '.' '.' '.' '.']
+        ['.' '0' '0' '0' '.']
+        ['1' '0' '0' '0' '1']
+        ['.' '2' '2' '2' '.']
+        ['.' '.' '.' '.' '.']
     object_data
-      object_name	.....
-      legend_key	.
-      colors
-        color	000.
-    object_data
-      object_name	10001
-      legend_key	.
-      colors
-        color	222.
-    object_data
-      object_name	.....
-      legend_key	P
-      colors
-        color	layerLS
-    object_data
-      object_name	Black
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerLS
+      color_line
+        color	Black
+        color	White
         color	Orange
+      sprite
+        ['.' '.' '1' '.' '.']
+        ['.' '2' '0' '0' '.']
+        ['.' '2' '0' '0' '.']
+        ['.' '2' '0' '0' '.']
+        ['.' '.' '1' '.' '.']
     object_data
-      object_name	..1..
-      legend_key	.
-      colors
-        color	200.
-    object_data
-      object_name	.200.
-      legend_key	.
-      colors
-        color	200.
-    object_data
-      object_name	..1..
-      legend_key	P
-      colors
-        color	layerRS
-    object_data
-      object_name	Black
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	PlayerRS
+      color_line
+        color	Black
+        color	White
         color	Orange
       sprite
         ['.' '.' '1' '.' '.']
@@ -404,10 +340,10 @@ ps_game
         ['.' '0' '0' '2' '.']
         ['.' '.' '1' '.' '.']
     object_data
-      object_name	Crate
-      legend_key	L
-      colors
-        color	ightbrown
+      object_line
+        object_name	Crate
+      color_line
+        color	Lightbrown
         color	Yellow
       sprite
         ['0' '0' '0' '0' '0']
@@ -416,20 +352,20 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	Ice
-      legend_key	L
-      colors
-        color	ightblue
+      object_line
+        object_name	Ice
+      color_line
+        color	Lightblue
     object_data
-      object_name	Tar
-      legend_key	D
-      colors
-        color	arkgray
+      object_line
+        object_name	Tar
+      color_line
+        color	Darkgray
     object_data
-      object_name	Iron
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	Iron
+      color_line
+        color	Black
       sprite
         ['.' '0' '0' '0' '.']
         ['0' '.' '.' '.' '0']
@@ -437,10 +373,10 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	Balloon
-      legend_key	W
-      colors
-        color	hite
+      object_line
+        object_name	Balloon
+      color_line
+        color	White
       sprite
         ['.' '0' '0' '0' '.']
         ['0' '.' '.' '.' '0']
@@ -448,10 +384,10 @@ ps_game
         ['0' '.' '.' '.' '0']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	AgainU
-      legend_key	R
-      colors
-        color	ed
+      object_line
+        object_name	AgainU
+      color_line
+        color	Red
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -459,10 +395,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	AgainD
-      legend_key	D
-      colors
-        color	arkred
+      object_line
+        object_name	AgainD
+      color_line
+        color	Darkred
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -471,158 +407,158 @@ ps_game
         ['.' '.' '.' '.' '.']
   legend_section
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      #
+      # =
       object_name	Wall
     legend_data
-      >
+      > =
       object_name	PlayerRS
     legend_data
-      v
+      v =
       object_name	PlayerDS
     legend_data
-      <
+      < =
       object_name	PlayerLS
     legend_data
-      ^
+      ^ =
       object_name	PlayerUS
     legend_data
-      *
+      * =
       object_name	Crate
     legend_data
-      @
+      @ =
       object_name	Crate
       legend_operation
         object_name	Target
     legend_data
-      O
+      O =
       object_name	Target
     legend_data
-      ~
+      ~ =
       object_name	Ice
     legend_data
-      -
+      - =
       object_name	Tar
     legend_data
-      1
+      1 =
       object_name	Crate
       legend_operation
         object_name	Ice
     legend_data
-      2
+      2 =
       object_name	Crate
       legend_operation
         object_name	Tar
     legend_data
-      3
+      3 =
       object_name	Target
       legend_operation
         object_name	Ice
     legend_data
-      4
+      4 =
       object_name	Target
       legend_operation
         object_name	Tar
     legend_data
-      5
+      5 =
       object_name	Crate
       legend_operation
         object_name	Tar
       legend_operation
         object_name	Target
     legend_data
-      6
+      6 =
       object_name	Crate
       legend_operation
         object_name	Ice
       legend_operation
         object_name	Target
     legend_data
-      7
+      7 =
       object_name	PlayerUS
       legend_operation
         object_name	Ice
     legend_data
-      ,
+      , =
       object_name	Deco
     legend_data
-      A
+      A =
       object_name	Iron
     legend_data
-      B
+      B =
       object_name	Balloon
     legend_data
-      PlayerU1
+      PlayerU1 =
       object_name	PlayerUP1
       legend_operation
         object_name	PlayerUW1
     legend_data
-      PlayerU2
+      PlayerU2 =
       object_name	PlayerUP2
       legend_operation
         object_name	PLayerUW2
       legend_operation
         object_name	PlayerUS
     legend_data
-      PlayerD1
+      PlayerD1 =
       object_name	PlayerDP1
       legend_operation
         object_name	PlayerDW1
     legend_data
-      PlayerD2
+      PlayerD2 =
       object_name	PlayerDP2
       legend_operation
         object_name	PLayerDW2
       legend_operation
         object_name	PlayerDS
     legend_data
-      PlayerL1
+      PlayerL1 =
       object_name	PlayerLP1
       legend_operation
         object_name	PlayerLW1
     legend_data
-      PlayerL2
+      PlayerL2 =
       object_name	PlayerLP2
       legend_operation
         object_name	PLayerLW2
       legend_operation
         object_name	PlayerLS
     legend_data
-      PlayerR1
+      PlayerR1 =
       object_name	PlayerRP1
       legend_operation
         object_name	PlayerRW1
     legend_data
-      PlayerR2
+      PlayerR2 =
       object_name	PlayerRP2
       legend_operation
         object_name	PLayerRW2
       legend_operation
         object_name	PlayerRS
     legend_data
-      PlayerU
+      PlayerU =
       object_name	PlayerU1
       legend_operation
         object_name	PlayerU2
     legend_data
-      PlayerD
+      PlayerD =
       object_name	PlayerD1
       legend_operation
         object_name	PlayerD2
     legend_data
-      PlayerL
+      PlayerL =
       object_name	PlayerL1
       legend_operation
         object_name	PlayerL2
     legend_data
-      PlayerR
+      PlayerR =
       object_name	PlayerR1
       legend_operation
         object_name	PlayerR2
     legend_data
-      Player
+      Player =
       object_name	PlayerU
       legend_operation
         object_name	PlayerD
@@ -631,7 +567,7 @@ ps_game
       legend_operation
         object_name	PlayerR
     legend_data
-      Solid
+      Solid =
       object_name	Crate
       legend_operation
         object_name	Wall
@@ -642,14 +578,14 @@ ps_game
       legend_operation
         object_name	Balloon
     legend_data
-      Filler
+      Filler =
       object_name	Crate
       legend_operation
         object_name	Iron
       legend_operation
         object_name	Balloon
     legend_data
-      Player1
+      Player1 =
       object_name	PlayerU1
       legend_operation
         object_name	PlayerD1
@@ -658,7 +594,7 @@ ps_game
       legend_operation
         object_name	PlayerR1
     legend_data
-      Player2
+      Player2 =
       object_name	PlayerU2
       legend_operation
         object_name	PlayerD2
@@ -667,7 +603,7 @@ ps_game
       legend_operation
         object_name	PlayerR2
     legend_data
-      Blocker
+      Blocker =
       object_name	Crate
       legend_operation
         object_name	Wall
@@ -676,7 +612,7 @@ ps_game
       legend_operation
         object_name	Iron
     legend_data
-      IronBlocker
+      IronBlocker =
       object_name	Player
       legend_operation
         object_name	Wall
@@ -692,10 +628,8 @@ ps_game
       object_name	Target
     layer_data
       object_name	Player
-    layer_data
       object_name	Wall
       object_name	Crate
-    layer_data
       object_name	Iron
       object_name	Balloon
     layer_data
@@ -707,513 +641,323 @@ ps_game
       rule_block_once
         rule_data
           rule_part
-            rule_content
-              up
-              PlayerU
-              Tar
+            rule_content	up
+            rule_content	PlayerU
+            rule_content	Tar
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              down
-              PlayerD
-              Tar
+            rule_content	down
+            rule_content	PlayerD
+            rule_content	Tar
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              right
-              PlayerR
-              Tar
+            rule_content	right
+            rule_content	PlayerR
+            rule_content	Tar
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              left
-              PlayerL
-              Tar
+            rule_content	left
+            rule_content	PlayerL
+            rule_content	Tar
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              down
-              PlayerU
-              Tar
+            rule_content	down
+            rule_content	PlayerU
+            rule_content	Tar
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              up
-              PlayerD
-              Tar
+            rule_content	up
+            rule_content	PlayerD
+            rule_content	Tar
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              left
-              PlayerR
-              Tar
+            rule_content	left
+            rule_content	PlayerR
+            rule_content	Tar
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              right
-              PlayerL
-              Tar
+            rule_content	right
+            rule_content	PlayerL
+            rule_content	Tar
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              left
-              PlayerU
-              Ice
+            rule_content	left
+            rule_content	PlayerU
+            rule_content	Ice
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              right
-              PlayerU
-              Ice
+            rule_content	right
+            rule_content	PlayerU
+            rule_content	Ice
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              left
-              PlayerD
-              Ice
+            rule_content	left
+            rule_content	PlayerD
+            rule_content	Ice
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              right
-              PlayerD
-              Ice
+            rule_content	right
+            rule_content	PlayerD
+            rule_content	Ice
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              up
-              PlayerL
-              Ice
+            rule_content	up
+            rule_content	PlayerL
+            rule_content	Ice
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              down
-              PlayerL
-              Ice
+            rule_content	down
+            rule_content	PlayerL
+            rule_content	Ice
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              up
-              PlayerR
-              Ice
+            rule_content	up
+            rule_content	PlayerR
+            rule_content	Ice
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              down
-              PlayerR
-              Ice
+            rule_content	down
+            rule_content	PlayerR
+            rule_content	Ice
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
-            rule_content
-              right
-              Player2
-              Background
+            rule_content	right
+            rule_content	Player2
+            rule_content	Background
           ->
           rule_part
-            rule_content
-              right
-              PlayerRW1
-          
-
+            rule_content	right
+            rule_content	PlayerRW1
         rule_data
           rule_part
-            rule_content
-              right
-              Player1
-              Background
+            rule_content	right
+            rule_content	Player1
+            rule_content	Background
           ->
           rule_part
-            rule_content
-              right
-              PlayerRW2
-          
-
+            rule_content	right
+            rule_content	PlayerRW2
         rule_data
           rule_part
-            rule_content
-              left
-              Player2
-              Background
+            rule_content	left
+            rule_content	Player2
+            rule_content	Background
           ->
           rule_part
-            rule_content
-              left
-              PlayerLW1
-          
-
+            rule_content	left
+            rule_content	PlayerLW1
         rule_data
           rule_part
-            rule_content
-              left
-              Player1
-              Background
+            rule_content	left
+            rule_content	Player1
+            rule_content	Background
           ->
           rule_part
-            rule_content
-              left
-              PlayerLW2
-          
-
+            rule_content	left
+            rule_content	PlayerLW2
         rule_data
           rule_part
-            rule_content
-              down
-              Player2
-              Background
+            rule_content	down
+            rule_content	Player2
+            rule_content	Background
           ->
           rule_part
-            rule_content
-              down
-              PlayerDW1
-          
-
+            rule_content	down
+            rule_content	PlayerDW1
         rule_data
           rule_part
-            rule_content
-              down
-              Player1
-              Background
+            rule_content	down
+            rule_content	Player1
+            rule_content	Background
           ->
           rule_part
-            rule_content
-              down
-              PlayerDW2
-          
-
+            rule_content	down
+            rule_content	PlayerDW2
         rule_data
           rule_part
-            rule_content
-              up
-              Player2
-              Background
+            rule_content	up
+            rule_content	Player2
+            rule_content	Background
           ->
           rule_part
-            rule_content
-              up
-              PlayerUW1
-          
-
+            rule_content	up
+            rule_content	PlayerUW1
         rule_data
           rule_part
-            rule_content
-              up
-              Player1
-              Background
+            rule_content	up
+            rule_content	Player1
+            rule_content	Background
           ->
           rule_part
-            rule_content
-              up
-              PlayerUW2
-          
-
+            rule_content	up
+            rule_content	PlayerUW2
         rule_data
           rule_part
             rule_content
               >
               PlayerRW1
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
+            rule_content	Solid
           ->
           rule_part
             rule_content
               >
               PlayerRP1
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
-          
-
+            rule_content	Solid
         rule_data
           rule_part
             rule_content
               >
               PlayerRW2
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
+            rule_content	Solid
           ->
           rule_part
             rule_content
               >
               PlayerRP2
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
-          
-
+            rule_content	Solid
         rule_data
           rule_part
             rule_content
               >
               PlayerLW1
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
+            rule_content	Solid
           ->
           rule_part
             rule_content
               >
               PlayerLP1
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
-          
-
+            rule_content	Solid
         rule_data
           rule_part
             rule_content
               >
               PlayerLW2
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
+            rule_content	Solid
           ->
           rule_part
             rule_content
               >
               PlayerLP2
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
-          
-
+            rule_content	Solid
         rule_data
           rule_part
             rule_content
               >
               PlayerUW1
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
+            rule_content	Solid
           ->
           rule_part
             rule_content
               >
               PlayerUP1
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
-          
-
+            rule_content	Solid
         rule_data
           rule_part
             rule_content
               >
               PlayerUW2
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
+            rule_content	Solid
           ->
           rule_part
             rule_content
               >
               PlayerUP2
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
-          
-
+            rule_content	Solid
         rule_data
           rule_part
             rule_content
               >
               PlayerDW1
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
+            rule_content	Solid
           ->
           rule_part
             rule_content
               >
               PlayerDP1
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
-          
-
+            rule_content	Solid
         rule_data
           rule_part
             rule_content
               >
               PlayerDW2
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
+            rule_content	Solid
           ->
           rule_part
             rule_content
               >
               PlayerDP2
             cell_border
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
-          
-
+            rule_content	Solid
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
+            rule_content	Filler
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content
+              >
+              Filler
         rule_data
           rule_part
-            rule_content
-              no
-              Background
+            rule_content	no
+            rule_content	Background
           ->
           rule_part
             rule_content	Background
-          
-
         rule_data
           rule_part
             rule_content
@@ -1224,19 +968,9 @@ ps_game
             rule_content
               >
               Solid
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	c
-            rule_content	k
-            rule_content	g
-            rule_content	r
-            rule_content	o
-            rule_content	u
-            rule_content	n
-            rule_content	d
-          
-
+            rule_content
+              >
+              Background
         rule_data
           rule_part
             rule_content
@@ -1247,200 +981,118 @@ ps_game
           rule_part
             rule_content	Background
             cell_border
-          
-
         rule_data
           rule_part
             rule_content
               >
               PlayerRW1
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	c
-            rule_content	k
-            rule_content	g
-            rule_content	r
-            rule_content	o
-            rule_content	u
-            rule_content	n
-            rule_content	d
+            rule_content
+              >
+              Background
           ->
           rule_part
             rule_content
               >
               PlayerRP1
-              Background
-          
-
+            rule_content	Background
         rule_data
           rule_part
             rule_content
               >
               PlayerRW2
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	c
-            rule_content	k
-            rule_content	g
-            rule_content	r
-            rule_content	o
-            rule_content	u
-            rule_content	n
-            rule_content	d
+            rule_content
+              >
+              Background
           ->
           rule_part
             rule_content
               >
               PlayerRP2
-              Background
-          
-
+            rule_content	Background
         rule_data
           rule_part
             rule_content
               >
               PlayerLW1
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	c
-            rule_content	k
-            rule_content	g
-            rule_content	r
-            rule_content	o
-            rule_content	u
-            rule_content	n
-            rule_content	d
+            rule_content
+              >
+              Background
           ->
           rule_part
             rule_content
               >
               PlayerLP1
-              Background
-          
-
+            rule_content	Background
         rule_data
           rule_part
             rule_content
               >
               PlayerLW2
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	c
-            rule_content	k
-            rule_content	g
-            rule_content	r
-            rule_content	o
-            rule_content	u
-            rule_content	n
-            rule_content	d
+            rule_content
+              >
+              Background
           ->
           rule_part
             rule_content
               >
               PlayerLP2
-              Background
-          
-
+            rule_content	Background
         rule_data
           rule_part
             rule_content
               >
               PlayerUW1
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	c
-            rule_content	k
-            rule_content	g
-            rule_content	r
-            rule_content	o
-            rule_content	u
-            rule_content	n
-            rule_content	d
+            rule_content
+              >
+              Background
           ->
           rule_part
             rule_content
               >
               PlayerUP1
-              Background
-          
-
+            rule_content	Background
         rule_data
           rule_part
             rule_content
               >
               PlayerUW2
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	c
-            rule_content	k
-            rule_content	g
-            rule_content	r
-            rule_content	o
-            rule_content	u
-            rule_content	n
-            rule_content	d
+            rule_content
+              >
+              Background
           ->
           rule_part
             rule_content
               >
               PlayerUP2
-              Background
-          
-
+            rule_content	Background
         rule_data
           rule_part
             rule_content
               >
               PlayerDW1
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	c
-            rule_content	k
-            rule_content	g
-            rule_content	r
-            rule_content	o
-            rule_content	u
-            rule_content	n
-            rule_content	d
+            rule_content
+              >
+              Background
           ->
           rule_part
             rule_content
               >
               PlayerDP1
-              Background
-          
-
+            rule_content	Background
         rule_data
           rule_part
             rule_content
               >
               PlayerDW2
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	c
-            rule_content	k
-            rule_content	g
-            rule_content	r
-            rule_content	o
-            rule_content	u
-            rule_content	n
-            rule_content	d
+            rule_content
+              >
+              Background
           ->
           rule_part
             rule_content
               >
               PlayerDP2
-              Background
-          
-
+            rule_content	Background
     rule_block
       rule_block_loop
         startloop
@@ -1452,309 +1104,152 @@ ps_game
               >
               Solid
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	B
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	o
-            rule_content	o
-            rule_content	n
+            rule_content	stationary
+            rule_content	Balloon
           ->
           rule_part
             rule_content
               >
               Solid
             cell_border
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	o
-            rule_content	o
-            rule_content	n
-          
-
+            rule_content
+              >
+              Balloon
         rule_data
           rule_part
             rule_content
               >
               Iron
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
+            rule_content	stationary
+            rule_content	Filler
           ->
           rule_part
             rule_content
               >
               Iron
             cell_border
-            rule_content	>
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content
+              >
+              Filler
         endloop
         
 
+
     rule_block
       rule_block_once
+        rule_data
+          rule_part
+            rule_content	AgainD
+            rule_content	no
+            rule_content	Iron
+          ->
+          rule_part
     rule_block
       rule_block_once
         rule_data
+          prefix	down
           rule_part
-            rule_content
-              AgainD
-              no
-              Iron
+            rule_content	down
+            rule_content	Iron
+            rule_content	no
+            rule_content	AgainD
+            cell_border
+            rule_content	no
+            rule_content	IronBlocker
           ->
           rule_part
-          
-
-        rule_data
-          down
-          rule_part
-            rule_content
-              down
-              Iron
-              no
-              AgainD
+            rule_content	down
+            rule_content	Iron
+            rule_content	down
+            rule_content	AgainD
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	I
-            rule_content	r
-            rule_content	o
-            rule_content	n
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
+        rule_data
+          rule_part
+            rule_content	Iron
+            rule_content	AgainD
+            cell_border
+            rule_content	no
+            rule_content	IronBlocker
           ->
           rule_part
-            rule_content
-              down
-              Iron
-              down
-              AgainD
+            rule_content	down
+            rule_content	Iron
+            rule_content	down
+            rule_content	AgainD
             cell_border
-          
-
         rule_data
-          rule_part
-            rule_content
-              Iron
-              AgainD
-            cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	I
-            rule_content	r
-            rule_content	o
-            rule_content	n
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
-          ->
-          rule_part
-            rule_content
-              down
-              Iron
-              down
-              AgainD
-            cell_border
-          
-
-        rule_data
-          down
+          prefix	down
           rule_part
             rule_content
               >
               Iron
-              AgainD
+            rule_content	AgainD
             cell_border
-            rule_content	I
-            rule_content	r
-            rule_content	o
-            rule_content	n
+            rule_content	Iron
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	I
-            rule_content	r
-            rule_content	o
-            rule_content	n
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
+            rule_content	no
+            rule_content	IronBlocker
           ->
           rule_part
             rule_content
               >
               Iron
-            rule_content	>
-            rule_content	A
-            rule_content	g
-            rule_content	a
-            rule_content	i
-            rule_content	n
-            rule_content	D
+            rule_content
+              >
+              AgainD
             cell_border
-            rule_content	>
-            rule_content	I
-            rule_content	r
-            rule_content	o
-            rule_content	n
-            rule_content	>
-            rule_content	A
-            rule_content	g
-            rule_content	a
-            rule_content	i
-            rule_content	n
-            rule_content	D
+            rule_content
+              >
+              Iron
+            rule_content
+              >
+              AgainD
             cell_border
-          
-
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content
               >
               Iron
-              AgainD
+            rule_content	AgainD
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
-            rule_content	n
-            rule_content	o
-            rule_content	I
-            rule_content	r
-            rule_content	o
-            rule_content	n
+            rule_content	Filler
+            rule_content	no
+            rule_content	Iron
             cell_border
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
+            rule_content	Blocker
           ->
           rule_part
             rule_content	Iron
             cell_border
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
+            rule_content	Filler
             cell_border
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	Blocker
         rule_data
           rule_part
-            rule_content
-              stationary
-              AgainD
+            rule_content	stationary
+            rule_content	AgainD
           ->
           rule_part
-          
-
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content
               >
               AgainD
             cell_border
-            rule_content	I
-            rule_content	r
-            rule_content	o
-            rule_content	n
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
+            rule_content	IronBlocker
           ->
           rule_part
-            rule_content	|
-            rule_content	I
-            rule_content	r
-            rule_content	o
-            rule_content	n
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
-          
-
+            cell_border
+            rule_content	IronBlocker
         rule_data
           rule_part
-            rule_content
-              down
-              AgainD
+            rule_content	down
+            rule_content	AgainD
           ->
-          command
-            command_keyword	again
-          
-
+          prefix	again
     rule_block
       rule_block_loop
         startloop
@@ -1766,449 +1261,255 @@ ps_game
               >
               Solid
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	B
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	o
-            rule_content	o
-            rule_content	n
+            rule_content	stationary
+            rule_content	Balloon
           ->
           rule_part
             rule_content
               >
               Solid
             cell_border
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	o
-            rule_content	o
-            rule_content	n
-          
-
+            rule_content
+              >
+              Balloon
         rule_data
           rule_part
             rule_content
               >
               Iron
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
+            rule_content	stationary
+            rule_content	Filler
           ->
           rule_part
             rule_content
               >
               Iron
             cell_border
-            rule_content	>
-            rule_content	F
-            rule_content	i
-            rule_content	l
-            rule_content	l
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content
+              >
+              Filler
         endloop
         
 
+
     rule_block
       rule_block_once
+        rule_data
+          rule_part
+            rule_content	AgainU
+            rule_content	no
+            rule_content	Balloon
+          ->
+          rule_part
     rule_block
       rule_block_once
         rule_data
+          prefix	up
           rule_part
-            rule_content
-              AgainU
-              no
-              Balloon
+            rule_content	up
+            rule_content	Balloon
+            rule_content	no
+            rule_content	AgainU
+            cell_border
+            rule_content	no
+            rule_content	Blocker
           ->
           rule_part
-          
-
-        rule_data
-          up
-          rule_part
-            rule_content
-              up
-              Balloon
-              no
-              AgainU
+            rule_content	up
+            rule_content	Balloon
+            rule_content	up
+            rule_content	AgainU
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
+        rule_data
+          rule_part
+            rule_content	Balloon
+            rule_content	AgainU
+            cell_border
+            rule_content	no
+            rule_content	Crate
+            rule_content	no
+            rule_content	Blocker
           ->
           rule_part
-            rule_content
-              up
-              Balloon
-              up
-              AgainU
+            rule_content	up
+            rule_content	Balloon
+            rule_content	up
+            rule_content	AgainU
             cell_border
-          
-
         rule_data
-          rule_part
-            rule_content
-              Balloon
-              AgainU
-            cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
-            rule_content	n
-            rule_content	o
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
-          ->
-          rule_part
-            rule_content
-              up
-              Balloon
-              up
-              AgainU
-            cell_border
-          
-
-        rule_data
-          up
+          prefix	up
           rule_part
             rule_content
               >
               Balloon
-              AgainU
+            rule_content	AgainU
             cell_border
-            rule_content	B
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	o
-            rule_content	o
-            rule_content	n
+            rule_content	Balloon
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
+            rule_content	no
+            rule_content	Blocker
           ->
           rule_part
             rule_content
               >
               Balloon
-            rule_content	>
-            rule_content	A
-            rule_content	g
-            rule_content	a
-            rule_content	i
-            rule_content	n
-            rule_content	U
+            rule_content
+              >
+              AgainU
             cell_border
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	o
-            rule_content	o
-            rule_content	n
-            rule_content	>
-            rule_content	A
-            rule_content	g
-            rule_content	a
-            rule_content	i
-            rule_content	n
-            rule_content	U
+            rule_content
+              >
+              Balloon
+            rule_content
+              >
+              AgainU
             cell_border
-          
-
         rule_data
           rule_part
-            rule_content
-              stationary
-              AgainU
+            rule_content	stationary
+            rule_content	AgainU
           ->
           rule_part
-          
-
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content
               >
               AgainU
             cell_border
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
+            rule_content	Blocker
           ->
           rule_part
-            rule_content	|
-            rule_content	B
-            rule_content	l
-            rule_content	o
-            rule_content	c
-            rule_content	k
-            rule_content	e
-            rule_content	r
-          
-
-        rule_data
-          rule_part
-            rule_content
-              up
-              AgainU
-          ->
-          command
-            command_keyword	again
-          
-
-        rule_data
-          rule_part
-            rule_content
-              >
-              Player
-              Tar
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Blocker
+        rule_data
+          rule_part
+            rule_content	up
+            rule_content	AgainU
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	again
         rule_data
           rule_part
             rule_content
               >
               Player
-              Tar
-            rule_content	]
-            rule_content	[
-            rule_content	>
-            rule_content	S
-            rule_content	o
-            rule_content	l
-            rule_content	i
-            rule_content	d
+            rule_content	Tar
             cell_border
-            rule_content	W
-            rule_content	a
-            rule_content	l
-            rule_content	l
+            rule_content	Wall
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
             rule_content
               >
               Player
-              Tar
-            rule_content	]
-            rule_content	[
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	o
-            rule_content	o
-            rule_content	n
+            rule_content	Tar
+          rule_part
+            rule_content
+              >
+              Solid
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Wall
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
             rule_content
               >
               Player
-              Tar
-            rule_content	]
-            rule_content	[
-            rule_content	>
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Tar
+          rule_part
+            rule_content
+              >
+              Balloon
             cell_border
-            rule_content	I
-            rule_content	r
-            rule_content	o
-            rule_content	n
+            rule_content	Crate
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
             rule_content
               >
               Player
-              Tar
-            rule_content	]
-            rule_content	[
-            rule_content	>
-            rule_content	B
-            rule_content	a
-            rule_content	l
-            rule_content	l
-            rule_content	o
-            rule_content	o
-            rule_content	n
+            rule_content	Tar
+          rule_part
+            rule_content
+              >
+              Crate
             cell_border
-            rule_content	I
-            rule_content	r
-            rule_content	o
-            rule_content	n
+            rule_content	Iron
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
             rule_content
               >
               Player
-              Tar
-            rule_content	]
-            rule_content	[
-            rule_content	>
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Tar
+          rule_part
+            rule_content
+              >
+              Balloon
             cell_border
-            rule_content	C
-            rule_content	r
-            rule_content	a
-            rule_content	t
-            rule_content	e
+            rule_content	Iron
           ->
-          command
-            command_keyword	cancel
-          
-
+          prefix	cancel
         rule_data
           rule_part
             rule_content
               >
               Player
-              no
-              Ice
-              no
-              Tar
-          ->
+            rule_content	Tar
           rule_part
             rule_content
               >
-              Player
-          command
-            sound
-              sound_id	0
-          
-
+              Crate
+            cell_border
+            rule_content	Crate
+          ->
+          prefix	cancel
         rule_data
           rule_part
             rule_content
               >
               Player
-              Ice
+            rule_content	no
+            rule_content	Ice
+            rule_content	no
+            rule_content	Tar
           ->
           rule_part
             rule_content
               >
               Player
-              Ice
-          command
-            sound
-              sound_id	1
-          
-
+          prefix	sfx0
         rule_data
           rule_part
             rule_content
               >
               Player
-              Tar
+            rule_content	Ice
           ->
           rule_part
             rule_content
               >
               Player
-              Tar
-          command
-            sound
-              sound_id	2
-          
-
+            rule_content	Ice
+          prefix	sfx1
+        rule_data
+          rule_part
+            rule_content
+              >
+              Player
+            rule_content	Tar
+          ->
+          rule_part
+            rule_content
+              >
+              Player
+            rule_content	Tar
+          prefix	sfx2
   winconditions_section
     condition_data
       All
@@ -2228,8 +1529,8 @@ ps_game
       some
       object_name	player
   levels_section
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '.' '~' '~' '~' '~' '~' '.' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '~' '~' '~' '~' '~' '.' '#']
  ['#' '.' '~' '~' '1' '~' '~' 'o' '#']
  ['#' 'o' '~' '~' '1' '~' '~' '.' '#']
  ['#' '>' '~' '~' '~' '~' '~' '.' '#']
@@ -2246,24 +1547,24 @@ ps_game
  ['#' '.' '~' '1' '~' '<' '#']
  ['#' 'o' '.' '~' '.' 'o' '#']
  ['#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '.' '-' '-' '.' '#' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '.' '-' '-' '.' '#' '#']
  ['#' '.' 'o' '-' '2' 'o' '.' '#']
  ['#' '-' '2' '-' '#' '-' '-' '-']
  ['#' '-' '-' '#' '-' '2' '-' '-']
  ['#' '.' 'o' '2' '-' 'o' '.' '#']
  ['#' '#' '^' '-' '-' '.' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '.' '-' '-' '.' '#' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '.' '-' '-' '.' '#' '#']
  ['#' '.' 'o' '-' '2' 'o' '.' '#']
  ['#' '-' '2' '-' '~' '-' '-' '#']
  ['#' '-' '-' '~' '-' '2' '-' '#']
  ['#' '.' 'o' '2' '-' 'o' '.' '#']
  ['#' '#' '^' '-' '-' '.' '#' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '.' '-' '-' '.' '#' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '#' '.' '-' '-' '.' '#' '#']
  ['#' '.' 'o' '-' '2' 'o' '.' '#']
  ['#' '-' '2' '~' '~' '-' '-' '#']
  ['#' '-' '-' '~' '~' '2' '-' '#']
@@ -2284,8 +1585,8 @@ ps_game
  [',' '~' '~' '1' '~' ',']
  [',' '~' '~' '#' ',' '#']
  ['#' ',' ',' ',' '.' '.']]
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '.']]
-    level_data	[['#' '.' '.' '#' '.' '.' '#' '.']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '.']
+ ['#' '.' '.' '#' '.' '.' '#' '.']
  ['>' 'a' '*' '.' '.' '.' '#' '.']
  ['#' '.' '.' '.' '.' '.' '#' '.']
  ['#' ',' ',' ',' '#' '#' '#' '#']
@@ -2299,8 +1600,8 @@ ps_game
  ['#' ',' '.' ',' 'b' '.' '#']
  ['#' ',' '.' ',' '.' '.' '<']
  ['#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '-' '#' '#' '#' '#']]
-    level_data	[['.' ',' '.' '.' '.' '.' '.' '*' '*' '.' '.' '.' ',']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '-' '#' '#' '#' '#']
+ ['.' ',' '.' '.' '.' '.' '.' '*' '*' '.' '.' '.' ',']
  ['#' '#' 'a' '#' '#' '#' '#' '#' '-' '#' '#' ',' '#']
  ['~' '#' '*' '#' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['~' '#' 'b' '#' '.' 'b' '#' '#' '.' 'b' '.' '.' '#']
@@ -2311,8 +1612,8 @@ ps_game
  ['.' '#' '*' '#' '.' '.' '.' '.' '.' '.' '.' '#' '~']
  ['.' '#' 'b' '#' '#' '#' '#' '#' '#' '#' '#' '#' '~']
  ['.' '.' '^' '#' '~' '~' '~' '~' '~' '~' '~' '~' '~']]
-    level_data	[['#' '#' '#' '#' '#' '4' '#']]
-    level_data	[['#' ',' '.' ',' '#' '4' '#']
+    level_data	[['#' '#' '#' '#' '#' '4' '#']
+ ['#' ',' '.' ',' '#' '4' '#']
  ['#' ',' 'a' ',' '#' '4' '#']
  ['#' ',' '.' ',' '#' '-' '#']
  ['#' ',' '.' ',' '*' '-' '#']

@@ -1,325 +1,443 @@
+title Color Totems
+author Jeff Schubbe
+homepage www.puzzlescript.net
+youtube 3zd6QvtJzEg
+noaction
+require_player_movement
+run_rules_on_level_start true
+
 OBJECTS
 
-BackgroundGrey DarkGrey01001
+Background
+Grey DarkGrey
+01001
 00110
 01001
 10010
-01100
+0110
 
-TargetDarkBlue.000.
+Target
+DarkBlue
+.000.
 00.00
 0.0.0
 00.00
+.000
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+0001
+
+WallR
+#AA0000 #660000
+00010
+11111
+01000
+11111
+0001
+
+WallG
+#00AA00 #006600
+00010
+11111
+01000
+11111
+0001
+
+WallB
+#0000AA #000066
+00010
+11111
+01000
+11111
+0001
+
+WallC
+#00AAAA #006666
+00010
+11111
+01000
+11111
+0001
+
+WallY
+#AAAA00 #666600
+00010
+11111
+01000
+11111
+0001
+
+WallM
+#AA00AA #660066
+00010
+11111
+01000
+11111
+0001
+
+WallBl
+#333333 #111111
+00010
+11111
+01000
+11111
+0001
+
+WallW
+#DDDDDD #999999
+00010
+11111
+01000
+11111
+0001
+
+PlayerC
+#00AAAA White
 .000.
-
-WallBROWN DARKBROWN00010
-11111
-01000
-11111
-00010
-
-WallR#AA0000 #66000000010
-11111
-01000
-11111
-00010
-
-WallG#00AA00 #00660000010
-11111
-01000
-11111
-00010
-
-WallB#0000AA #00006600010
-11111
-01000
-11111
-00010
-
-WallC#00AAAA #00666600010
-11111
-01000
-11111
-00010
-
-WallY#AAAA00 #66660000010
-11111
-01000
-11111
-00010
-
-WallM#AA00AA #66006600010
-11111
-01000
-11111
-00010
-
-WallBl#333333 #11111100010
-11111
-01000
-11111
-00010
-
-WallW#DDDDDD #99999900010
-11111
-01000
-11111
-00010
-
-PlayerC#00AAAA White.000.
 .101.
 00000
 .000.
-.0.0.
+.0.0
 
-PlayerY#AAAA00 White.000.
+PlayerY
+#AAAA00 White
+.000.
 .101.
 00000
 .000.
-.0.0.
+.0.0
 
-PlayerM#AA00AA White.000.
+PlayerM
+#AA00AA White
+.000.
 .101.
 00000
 .000.
-.0.0.
+.0.0
 
-PlayerR#AA0000 White.000.
+PlayerR
+#AA0000 White
+.000.
 .101.
 00000
 .000.
-.0.0.
+.0.0
 
-PlayerG#00AA00 White.000.
+PlayerG
+#00AA00 White
+.000.
 .101.
 00000
 .000.
-.0.0.
+.0.0
 
-PlayerB#0000AA White.000.
+PlayerB
+#0000AA White
+.000.
 .101.
 00000
 .000.
-.0.0.
+.0.0
 
-PlayerBl#111111 White.000.
+PlayerBl
+#111111 White
+.000.
 .101.
 00000
 .000.
-.0.0.
+.0.0
 
-PlayerWWhite Purple.000.
+PlayerW
+White Purple
+.000.
 .101.
 00000
 .000.
-.0.0.
+.0.0
 
-CoinC#00FFFF.....
+CoinC
+#00FFFF
+.....
 ..0..
 .000.
 .000.
-..0..
+..0.
 
-CoinY#FFFF00.....
-..0..
-.000.
-.000.
-..0..
-
-CoinM#FF00FF.....
+CoinY
+#FFFF00
+.....
 ..0..
 .000.
 .000.
-..0..
+..0.
 
-CoinR#FF0000.....
-..0..
-.000.
-.000.
-..0..
-
-CoinG#00FF00.....
+CoinM
+#FF00FF
+.....
 ..0..
 .000.
 .000.
-..0..
+..0.
 
-CoinB#0000FF.....
-..0..
-.000.
-.000.
-..0..
-
-CoinBl#111111.....
+CoinR
+#FF0000
+.....
 ..0..
 .000.
 .000.
-..0..
+..0.
 
-CoinWWhite.....
+CoinG
+#00FF00
+.....
 ..0..
 .000.
 .000.
+..0.
+
+CoinB
+#0000FF
+.....
 ..0..
+.000.
+.000.
+..0.
 
-PadC#D0D0A0 #00CCCC11011
+CoinBl
+#111111
+.....
+..0..
+.000.
+.000.
+..0.
+
+CoinW
+White
+.....
+..0..
+.000.
+.000.
+..0.
+
+PadC
+#D0D0A0 #00CCCC
+11011
 10101
 01010
 10101
-11011
+1101
 
-PadY#D0D0A0 #CCCC0011011
+PadY
+#D0D0A0 #CCCC00
+11011
 10101
 01010
 10101
-11011
+1101
 
-PadM#D0D0A0 #CC00CC11011
+PadM
+#D0D0A0 #CC00CC
+11011
 10101
 01010
 10101
-11011
+1101
 
-PadR#D0D0A0 #CC000011011
+PadR
+#D0D0A0 #CC0000
+11011
 10101
 01010
 10101
-11011
+1101
 
-PadG#D0D0A0 #00CC0011011
+PadG
+#D0D0A0 #00CC00
+11011
 10101
 01010
 10101
-11011
+1101
 
-PadB#D0D0A0 #0000CC11011
+PadB
+#D0D0A0 #0000CC
+11011
 10101
 01010
 10101
-11011
+1101
 
-PadC_2#D0D0A0 #00FFFF11011
+PadC_2
+#D0D0A0 #00FFFF
+11011
 10101
 01010
 10101
-11011
+1101
 
-PadY_2#D0D0A0 #FFFF0011011
+PadY_2
+#D0D0A0 #FFFF00
+11011
 10101
 01010
 10101
-11011
+1101
 
-PadM_2#D0D0A0 #FF00FF11011
+PadM_2
+#D0D0A0 #FF00FF
+11011
 10101
 01010
 10101
-11011
+1101
 
-PadR_2#D0D0A0 #FF000011011
+PadR_2
+#D0D0A0 #FF0000
+11011
 10101
 01010
 10101
-11011
+1101
 
-PadG_2#D0D0A0 #00FF0011011
+PadG_2
+#D0D0A0 #00FF00
+11011
 10101
 01010
 10101
-11011
+1101
 
-PadB_2#D0D0A0 #0000FF11011
+PadB_2
+#D0D0A0 #0000FF
+11011
 10101
 01010
 10101
-11011
+1101
 
-LtdPadC#111111 #00CCCC11011
+LtdPadC
+#111111 #00CCCC
+11011
 10101
 01010
 10101
-11011
+1101
 
-LtdPadY#111111 #CCCC0011011
+LtdPadY
+#111111 #CCCC00
+11011
 10101
 01010
 10101
-11011
+1101
 
-LtdPadM#111111 #CC00CC11011
+LtdPadM
+#111111 #CC00CC
+11011
 10101
 01010
 10101
-11011
+1101
 
-LtdPadR#111111 #CC000011011
+LtdPadR
+#111111 #CC0000
+11011
 10101
 01010
 10101
-11011
+1101
 
-LtdPadG#111111 #00CC0011011
+LtdPadG
+#111111 #00CC00
+11011
 10101
 01010
 10101
-11011
+1101
 
-LtdPadB#111111 #0000CC11011
+LtdPadB
+#111111 #0000CC
+11011
 10101
 01010
 10101
-11011
+1101
 
-LtdPadW#111111 white11011
+LtdPadW
+#111111 white
+11011
 10101
 01010
 10101
-11011
+1101
 
-EmptyPad#111111..0..
+EmptyPad
+#111111
+..0..
 .0.0.
 0.0.0
 .0.0.
+..0.
+
+TotemC
+#D0D0A0 #009999
 ..0..
-
-TotemC#D0D0A0 #009999..0..
 .010.
 .101.
 .111.
-.111.
+.111
 
-TotemY#D0D0A0 #999900..0..
+TotemY
+#D0D0A0 #999900
+..0..
 .010.
 .101.
 .111.
-.111.
+.111
 
-TotemM#D0D0A0 #990099..0..
+TotemM
+#D0D0A0 #990099
+..0..
 .010.
 .101.
 .111.
-.111.
+.111
 
-TotemR#D0D0A0 #990000..0..
+TotemR
+#D0D0A0 #990000
+..0..
 .010.
 .101.
 .111.
-.111.
+.111
 
-TotemG#D0D0A0 #009900..0..
+TotemG
+#D0D0A0 #009900
+..0..
 .010.
 .101.
 .111.
-.111.
+.111
 
-TotemB#D0D0A0 #000099..0..
+TotemB
+#D0D0A0 #000099
+..0..
 .010.
 .101.
 .111.
-.111.
+.111
 
-Toggle_OFFBlack
-Toggle_ONWhite
+Toggle_OFF
+Black
+
+Toggle_ON
+White
+
 
 LEGEND
 
@@ -381,200 +499,12 @@ COLLISIONLAYERS
 
 Toggle
 Background
-Target, Coin
-Pad, MagicWall
-Player
-Wall, Totem
+Target, Coin, Pad, MagicWall
+Player, Wall, Totem
 
 RULES
 
-late [ PlayerR PadR ] -> [ PlayerBl PadR_2 ] 
-late [ PlayerG PadR ] -> [ PlayerY PadR_2 ] 
-late [ PlayerB PadR ] -> [ PlayerM PadR_2 ] 
-late [ PlayerC PadR ] -> [ PlayerW PadR_2 ] 
-late [ PlayerM PadR ] -> [ PlayerB PadR_2 ] 
-late [ PlayerY PadR ] -> [ PlayerG PadR_2 ] 
-late [ PlayerBl PadR ] -> [ PlayerR PadR_2 ] 
-late [ PlayerW PadR ] -> [ PlayerC PadR_2 ] 
-[ < Player PadR_2 ] -> [ < Player PadR ] 
-late [ PlayerR PadG ] -> [ PlayerY PadG_2 ] 
-late [ PlayerG PadG ] -> [ PlayerBl PadG_2 ] 
-late [ PlayerB PadG ] -> [ PlayerC PadG_2 ] 
-late [ PlayerC PadG ] -> [ PlayerB PadG_2 ] 
-late [ PlayerM PadG ] -> [ PlayerW PadG_2 ] 
-late [ PlayerY PadG ] -> [ PlayerR PadG_2 ] 
-late [ PlayerBl PadG ] -> [ PlayerG PadG_2 ] 
-late [ PlayerW PadG ] -> [ PlayerM PadG_2 ] 
-[ < Player PadG_2 ] -> [ < Player PadG ] 
-late [ PlayerR PadB ] -> [ PlayerM PadB_2 ] 
-late [ PlayerG PadB ] -> [ PlayerC PadB_2 ] 
-late [ PlayerB PadB ] -> [ PlayerBl PadB_2 ] 
-late [ PlayerC PadB ] -> [ PlayerG PadB_2 ] 
-late [ PlayerM PadB ] -> [ PlayerR PadB_2 ] 
-late [ PlayerY PadB ] -> [ PlayerW PadB_2 ] 
-late [ PlayerBl PadB ] -> [ PlayerB PadB_2 ] 
-late [ PlayerW PadB ] -> [ PlayerY PadB_2 ] 
-[ < Player PadB_2 ] -> [ < Player PadB ] 
-late [ PlayerR PadC ] -> [ PlayerW PadC_2 ] 
-late [ PlayerG PadC ] -> [ PlayerB PadC_2 ] 
-late [ PlayerB PadC ] -> [ PlayerG PadC_2 ] 
-late [ PlayerC PadC ] -> [ PlayerBl PadC_2 ] 
-late [ PlayerM PadC ] -> [ PlayerY PadC_2 ] 
-late [ PlayerY PadC ] -> [ PlayerM PadC_2 ] 
-late [ PlayerBl PadC ] -> [ PlayerC PadC_2 ] 
-late [ PlayerW PadC ] -> [ PlayerR PadC_2 ] 
-[ < Player PadC_2 ] -> [ < Player PadC ] 
-late [ PlayerR PadY ] -> [ PlayerG PadY_2 ] 
-late [ PlayerG PadY ] -> [ PlayerR PadY_2 ] 
-late [ PlayerB PadY ] -> [ PlayerW PadY_2 ] 
-late [ PlayerC PadY ] -> [ PlayerM PadY_2 ] 
-late [ PlayerM PadY ] -> [ PlayerC PadY_2 ] 
-late [ PlayerY PadY ] -> [ PlayerBl PadY_2 ] 
-late [ PlayerBl PadY ] -> [ PlayerY PadY_2 ] 
-late [ PlayerW PadY ] -> [ PlayerB PadY_2 ] 
-[ < Player PadY_2 ] -> [ < Player PadY ] 
-late [ PlayerR PadM ] -> [ PlayerB PadM_2 ] 
-late [ PlayerG PadM ] -> [ PlayerW PadM_2 ] 
-late [ PlayerB PadM ] -> [ PlayerR PadM_2 ] 
-late [ PlayerC PadM ] -> [ PlayerY PadM_2 ] 
-late [ PlayerM PadM ] -> [ PlayerBl PadM_2 ] 
-late [ PlayerY PadM ] -> [ PlayerC PadM_2 ] 
-late [ PlayerBl PadM ] -> [ PlayerM PadM_2 ] 
-late [ PlayerW PadM ] -> [ PlayerG PadM_2 ] 
-[ < Player PadM_2 ] -> [ < Player PadM ] 
-late [ PlayerC CoinC ] -> [ PlayerC No CoinC ] 
-late [ PlayerY CoinY ] -> [ PlayerY No CoinY ] 
-late [ PlayerM CoinM ] -> [ PlayerM No CoinM ] 
-late [ PlayerR CoinR ] -> [ PlayerR No CoinR ] 
-late [ PlayerG CoinG ] -> [ PlayerG No CoinG ] 
-late [ PlayerB CoinB ] -> [ PlayerB No CoinB ] 
-late [ PlayerBl CoinBl ] -> [ PlayerBl No CoinBl ] 
-late [ PlayerW CoinW ] -> [ PlayerW No CoinW ] 
-[ > Player No PlayerR No PlayerY No PlayerM No PlayerW | WallR ] -> [ Player No PlayerR No PlayerY No PlayerM No PlayerW | WallR ] 
-[ > Player No PlayerG No PlayerC No PlayerY No PlayerW | WallG ] -> [ Player No PlayerG No PlayerC No PlayerY No PlayerW | WallG ] 
-[ > Player No PlayerB No PlayerC No PlayerM No PlayerW | WallB ] -> [ Player No PlayerB No PlayerC No PlayerM No PlayerW | WallB ] 
-[ > Player No PlayerC No PlayerW | WallC ] -> [ Player No PlayerC | WallC ] 
-[ > Player No PlayerY No PlayerW | WallY ] -> [ Player No PlayerY | WallY ] 
-[ > Player No PlayerM No PlayerW | WallM ] -> [ Player No PlayerM | WallM ] 
-[ > Player No PlayerBl | WallBl ] -> [ Player No PlayerBl | WallBl ] 
-[ > Player No PlayerW | WallW ] -> [ Player No PlayerW | WallW ] 
-late [ PlayerR LtdPadR ] -> [ PlayerBl EmptyPad ] 
-late [ PlayerG LtdPadR ] -> [ PlayerY EmptyPad ] 
-late [ PlayerB LtdPadR ] -> [ PlayerM EmptyPad ] 
-late [ PlayerC LtdPadR ] -> [ PlayerW EmptyPad ] 
-late [ PlayerM LtdPadR ] -> [ PlayerB EmptyPad ] 
-late [ PlayerY LtdPadR ] -> [ PlayerG EmptyPad ] 
-late [ PlayerBl LtdPadR ] -> [ PlayerR EmptyPad ] 
-late [ PlayerW LtdPadR ] -> [ PlayerC EmptyPad ] 
-late [ PlayerR LtdPadG ] -> [ PlayerY EmptyPad ] 
-late [ PlayerG LtdPadG ] -> [ PlayerBl EmptyPad ] 
-late [ PlayerB LtdPadG ] -> [ PlayerC EmptyPad ] 
-late [ PlayerC LtdPadG ] -> [ PlayerB EmptyPad ] 
-late [ PlayerM LtdPadG ] -> [ PlayerW EmptyPad ] 
-late [ PlayerY LtdPadG ] -> [ PlayerR EmptyPad ] 
-late [ PlayerBl LtdPadG ] -> [ PlayerG EmptyPad ] 
-late [ PlayerW LtdPadG ] -> [ PlayerM EmptyPad ] 
-late [ PlayerR LtdPadB ] -> [ PlayerM EmptyPad ] 
-late [ PlayerG LtdPadB ] -> [ PlayerC EmptyPad ] 
-late [ PlayerB LtdPadB ] -> [ PlayerBl EmptyPad ] 
-late [ PlayerC LtdPadB ] -> [ PlayerG EmptyPad ] 
-late [ PlayerM LtdPadB ] -> [ PlayerR EmptyPad ] 
-late [ PlayerY LtdPadB ] -> [ PlayerW EmptyPad ] 
-late [ PlayerBl LtdPadB ] -> [ PlayerB EmptyPad ] 
-late [ PlayerW LtdPadB ] -> [ PlayerY EmptyPad ] 
-late [ PlayerR LtdPadC ] -> [ PlayerW EmptyPad ] 
-late [ PlayerG LtdPadC ] -> [ PlayerB EmptyPad ] 
-late [ PlayerB LtdPadC ] -> [ PlayerG EmptyPad ] 
-late [ PlayerC LtdPadC ] -> [ PlayerBl EmptyPad ] 
-late [ PlayerM LtdPadC ] -> [ PlayerY EmptyPad ] 
-late [ PlayerY LtdPadC ] -> [ PlayerM EmptyPad ] 
-late [ PlayerBl LtdPadC ] -> [ PlayerC EmptyPad ] 
-late [ PlayerW LtdPadC ] -> [ PlayerR EmptyPad ] 
-late [ PlayerR LtdPadY ] -> [ PlayerG EmptyPad ] 
-late [ PlayerG LtdPadY ] -> [ PlayerR EmptyPad ] 
-late [ PlayerB LtdPadY ] -> [ PlayerW EmptyPad ] 
-late [ PlayerC LtdPadY ] -> [ PlayerM EmptyPad ] 
-late [ PlayerM LtdPadY ] -> [ PlayerC EmptyPad ] 
-late [ PlayerY LtdPadY ] -> [ PlayerBl EmptyPad ] 
-late [ PlayerBl LtdPadY ] -> [ PlayerY EmptyPad ] 
-late [ PlayerW LtdPadY ] -> [ PlayerB EmptyPad ] 
-late [ PlayerR LtdPadM ] -> [ PlayerB EmptyPad ] 
-late [ PlayerG LtdPadM ] -> [ PlayerW EmptyPad ] 
-late [ PlayerB LtdPadM ] -> [ PlayerR EmptyPad ] 
-late [ PlayerC LtdPadM ] -> [ PlayerY EmptyPad ] 
-late [ PlayerM LtdPadM ] -> [ PlayerBl EmptyPad ] 
-late [ PlayerY LtdPadM ] -> [ PlayerC EmptyPad ] 
-late [ PlayerBl LtdPadM ] -> [ PlayerM EmptyPad ] 
-late [ PlayerW LtdPadM ] -> [ PlayerG EmptyPad ] 
-late [ PlayerR LtdPadW ] -> [ PlayerC EmptyPad ] 
-late [ PlayerG LtdPadW ] -> [ PlayerM EmptyPad ] 
-late [ PlayerB LtdPadW ] -> [ PlayerY EmptyPad ] 
-late [ PlayerC LtdPadW ] -> [ PlayerR EmptyPad ] 
-late [ PlayerM LtdPadW ] -> [ PlayerG EmptyPad ] 
-late [ PlayerY LtdPadW ] -> [ PlayerB EmptyPad ] 
-late [ PlayerBl LtdPadW ] -> [ PlayerW EmptyPad ] 
-late [ PlayerW LtdPadW ] -> [ PlayerBl EmptyPad ] 
-late [ PlayerR | TotemR | ... | CoinB ] -> [ PlayerR | TotemR | ... | CoinM ] 
-late [ PlayerR | TotemR | ... | CoinG ] -> [ PlayerR | TotemR | ... | CoinY ] 
-late [ PlayerR | TotemR | ... | CoinC ] -> [ PlayerR | TotemR | ... | CoinW ] 
-late [ PlayerR | TotemR | ... | CoinBl ] -> [ PlayerR | TotemR | ... | CoinR ] 
-late [ PlayerY | TotemR | ... | CoinB ] -> [ PlayerY | TotemR | ... | CoinM ] 
-late [ PlayerY | TotemR | ... | CoinG ] -> [ PlayerY | TotemR | ... | CoinY ] 
-late [ PlayerY | TotemR | ... | CoinC ] -> [ PlayerY | TotemR | ... | CoinW ] 
-late [ PlayerY | TotemR | ... | CoinBl ] -> [ PlayerY | TotemR | ... | CoinR ] 
-late [ PlayerM | TotemR | ... | CoinB ] -> [ PlayerM | TotemR | ... | CoinM ] 
-late [ PlayerM | TotemR | ... | CoinG ] -> [ PlayerM | TotemR | ... | CoinY ] 
-late [ PlayerM | TotemR | ... | CoinC ] -> [ PlayerM | TotemR | ... | CoinW ] 
-late [ PlayerM | TotemR | ... | CoinBl ] -> [ PlayerM | TotemR | ... | CoinR ] 
-late [ PlayerW | TotemR | ... | CoinB ] -> [ PlayerW | TotemR | ... | CoinM ] 
-late [ PlayerW | TotemR | ... | CoinG ] -> [ PlayerW | TotemR | ... | CoinY ] 
-late [ PlayerW | TotemR | ... | CoinC ] -> [ PlayerW | TotemR | ... | CoinW ] 
-late [ PlayerW | TotemR | ... | CoinBl ] -> [ PlayerW | TotemR | ... | CoinR ] 
-late [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinM ] -> [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinB ] 
-late [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinY ] -> [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinG ] 
-late [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinW ] -> [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinC ] 
-late [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinR ] -> [ Player No PlayerR No PlayerY No PlayerM No PlayerW | TotemR | ... | CoinBl ] 
-late [ PlayerG | TotemG | ... | CoinR ] -> [ PlayerG | TotemG | ... | CoinY ] 
-late [ PlayerG | TotemG | ... | CoinB ] -> [ PlayerG | TotemG | ... | CoinC ] 
-late [ PlayerG | TotemG | ... | CoinM ] -> [ PlayerG | TotemG | ... | CoinW ] 
-late [ PlayerG | TotemG | ... | CoinBl ] -> [ PlayerG | TotemG | ... | CoinG ] 
-late [ PlayerC | TotemG | ... | CoinR ] -> [ PlayerC | TotemG | ... | CoinY ] 
-late [ PlayerC | TotemG | ... | CoinB ] -> [ PlayerC | TotemG | ... | CoinC ] 
-late [ PlayerC | TotemG | ... | CoinM ] -> [ PlayerC | TotemG | ... | CoinW ] 
-late [ PlayerC | TotemG | ... | CoinBl ] -> [ PlayerC | TotemG | ... | CoinG ] 
-late [ PlayerY | TotemG | ... | CoinR ] -> [ PlayerY | TotemG | ... | CoinY ] 
-late [ PlayerY | TotemG | ... | CoinB ] -> [ PlayerY | TotemG | ... | CoinC ] 
-late [ PlayerY | TotemG | ... | CoinM ] -> [ PlayerY | TotemG | ... | CoinW ] 
-late [ PlayerY | TotemG | ... | CoinBl ] -> [ PlayerY | TotemG | ... | CoinG ] 
-late [ PlayerW | TotemG | ... | CoinR ] -> [ PlayerW | TotemG | ... | CoinY ] 
-late [ PlayerW | TotemG | ... | CoinB ] -> [ PlayerW | TotemG | ... | CoinC ] 
-late [ PlayerW | TotemG | ... | CoinM ] -> [ PlayerW | TotemG | ... | CoinW ] 
-late [ PlayerW | TotemG | ... | CoinBl ] -> [ PlayerW | TotemG | ... | CoinG ] 
-late [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinY ] -> [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinR ] 
-late [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinC ] -> [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinB ] 
-late [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinW ] -> [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinM ] 
-late [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinG ] -> [ Player No PlayerG No PlayerC No PlayerY No PlayerW | TotemG | ... | CoinBl ] 
-late [ PlayerB | TotemB | ... | CoinR ] -> [ PlayerB | TotemB | ... | CoinM ] 
-late [ PlayerB | TotemB | ... | CoinG ] -> [ PlayerB | TotemB | ... | CoinC ] 
-late [ PlayerB | TotemB | ... | CoinY ] -> [ PlayerB | TotemB | ... | CoinW ] 
-late [ PlayerB | TotemB | ... | CoinBl ] -> [ PlayerB | TotemB | ... | CoinB ] 
-late [ PlayerC | TotemB | ... | CoinR ] -> [ PlayerC | TotemB | ... | CoinM ] 
-late [ PlayerC | TotemB | ... | CoinG ] -> [ PlayerC | TotemB | ... | CoinC ] 
-late [ PlayerC | TotemB | ... | CoinY ] -> [ PlayerC | TotemB | ... | CoinW ] 
-late [ PlayerC | TotemB | ... | CoinBl ] -> [ PlayerC | TotemB | ... | CoinB ] 
-late [ PlayerM | TotemB | ... | CoinR ] -> [ PlayerM | TotemB | ... | CoinM ] 
-late [ PlayerM | TotemB | ... | CoinG ] -> [ PlayerM | TotemB | ... | CoinC ] 
-late [ PlayerM | TotemB | ... | CoinY ] -> [ PlayerM | TotemB | ... | CoinW ] 
-late [ PlayerM | TotemB | ... | CoinBl ] -> [ PlayerM | TotemB | ... | CoinB ] 
-late [ PlayerW | TotemB | ... | CoinR ] -> [ PlayerW | TotemB | ... | CoinM ] 
-late [ PlayerW | TotemB | ... | CoinG ] -> [ PlayerW | TotemB | ... | CoinC ] 
-late [ PlayerW | TotemB | ... | CoinY ] -> [ PlayerW | TotemB | ... | CoinW ] 
-late [ PlayerW | TotemB | ... | CoinBl ] -> [ PlayerW | TotemB | ... | CoinB ] 
-late [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinM ] -> [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinR ] 
-late [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinC ] -> [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinG ] 
-late [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinW ] -> [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinY ] 
-late [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinB ] -> [ Player No PlayerB No PlayerC No PlayerM No PlayerW | TotemB | ... | CoinBl ] 
-
+late [ PlayerRPadR ] -> [ PlayerBlPadR_2 ] sfx0late [ PlayerGPadR ] -> [ PlayerYPadR_2 ] sfx0late [ PlayerBPadR ] -> [ PlayerMPadR_2 ] sfx0late [ PlayerCPadR ] -> [ PlayerWPadR_2 ] sfx0late [ PlayerMPadR ] -> [ PlayerBPadR_2 ] sfx0late [ PlayerYPadR ] -> [ PlayerGPadR_2 ] sfx0late [ PlayerBlPadR ] -> [ PlayerRPadR_2 ] sfx0late [ PlayerWPadR ] -> [ PlayerCPadR_2 ] sfx0[ < PlayerPadR_2 ] -> [ < PlayerPadR ]late [ PlayerRPadG ] -> [ PlayerYPadG_2 ] sfx0late [ PlayerGPadG ] -> [ PlayerBlPadG_2 ] sfx0late [ PlayerBPadG ] -> [ PlayerCPadG_2 ] sfx0late [ PlayerCPadG ] -> [ PlayerBPadG_2 ] sfx0late [ PlayerMPadG ] -> [ PlayerWPadG_2 ] sfx0late [ PlayerYPadG ] -> [ PlayerRPadG_2 ] sfx0late [ PlayerBlPadG ] -> [ PlayerGPadG_2 ] sfx0late [ PlayerWPadG ] -> [ PlayerMPadG_2 ] sfx0[ < PlayerPadG_2 ] -> [ < PlayerPadG ]late [ PlayerRPadB ] -> [ PlayerMPadB_2 ] sfx0late [ PlayerGPadB ] -> [ PlayerCPadB_2 ] sfx0late [ PlayerBPadB ] -> [ PlayerBlPadB_2 ] sfx0late [ PlayerCPadB ] -> [ PlayerGPadB_2 ] sfx0late [ PlayerMPadB ] -> [ PlayerRPadB_2 ] sfx0late [ PlayerYPadB ] -> [ PlayerWPadB_2 ] sfx0late [ PlayerBlPadB ] -> [ PlayerBPadB_2 ] sfx0late [ PlayerWPadB ] -> [ PlayerYPadB_2 ] sfx0[ < PlayerPadB_2 ] -> [ < PlayerPadB ]late [ PlayerRPadC ] -> [ PlayerWPadC_2 ] sfx0late [ PlayerGPadC ] -> [ PlayerBPadC_2 ] sfx0late [ PlayerBPadC ] -> [ PlayerGPadC_2 ] sfx0late [ PlayerCPadC ] -> [ PlayerBlPadC_2 ] sfx0late [ PlayerMPadC ] -> [ PlayerYPadC_2 ] sfx0late [ PlayerYPadC ] -> [ PlayerMPadC_2 ] sfx0late [ PlayerBlPadC ] -> [ PlayerCPadC_2 ] sfx0late [ PlayerWPadC ] -> [ PlayerRPadC_2 ] sfx0[ < PlayerPadC_2 ] -> [ < PlayerPadC ]late [ PlayerRPadY ] -> [ PlayerGPadY_2 ] sfx0late [ PlayerGPadY ] -> [ PlayerRPadY_2 ] sfx0late [ PlayerBPadY ] -> [ PlayerWPadY_2 ] sfx0late [ PlayerCPadY ] -> [ PlayerMPadY_2 ] sfx0late [ PlayerMPadY ] -> [ PlayerCPadY_2 ] sfx0late [ PlayerYPadY ] -> [ PlayerBlPadY_2 ] sfx0late [ PlayerBlPadY ] -> [ PlayerYPadY_2 ] sfx0late [ PlayerWPadY ] -> [ PlayerBPadY_2 ] sfx0[ < PlayerPadY_2 ] -> [ < PlayerPadY ]late [ PlayerRPadM ] -> [ PlayerBPadM_2 ] sfx0late [ PlayerGPadM ] -> [ PlayerWPadM_2 ] sfx0late [ PlayerBPadM ] -> [ PlayerRPadM_2 ] sfx0late [ PlayerCPadM ] -> [ PlayerYPadM_2 ] sfx0late [ PlayerMPadM ] -> [ PlayerBlPadM_2 ] sfx0late [ PlayerYPadM ] -> [ PlayerCPadM_2 ] sfx0late [ PlayerBlPadM ] -> [ PlayerMPadM_2 ] sfx0late [ PlayerWPadM ] -> [ PlayerGPadM_2 ] sfx0[ < PlayerPadM_2 ] -> [ < PlayerPadM ]late [ PlayerCCoinC ] -> [ PlayerCNoCoinC ] sfx2late [ PlayerYCoinY ] -> [ PlayerYNoCoinY ] sfx2late [ PlayerMCoinM ] -> [ PlayerMNoCoinM ] sfx2late [ PlayerRCoinR ] -> [ PlayerRNoCoinR ] sfx2late [ PlayerGCoinG ] -> [ PlayerGNoCoinG ] sfx2late [ PlayerBCoinB ] -> [ PlayerBNoCoinB ] sfx2late [ PlayerBlCoinBl ] -> [ PlayerBlNoCoinBl ] sfx2late [ PlayerWCoinW ] -> [ PlayerWNoCoinW ] sfx2[ > PlayerNoPlayerRNoPlayerYNoPlayerMNoPlayerW | WallR ] -> [ PlayerNoPlayerRNoPlayerYNoPlayerMNoPlayerW | WallR ][ > PlayerNoPlayerGNoPlayerCNoPlayerYNoPlayerW | WallG ] -> [ PlayerNoPlayerGNoPlayerCNoPlayerYNoPlayerW | WallG ][ > PlayerNoPlayerBNoPlayerCNoPlayerMNoPlayerW | WallB ] -> [ PlayerNoPlayerBNoPlayerCNoPlayerMNoPlayerW | WallB ][ > PlayerNoPlayerCNoPlayerW | WallC ] -> [ PlayerNoPlayerC | WallC ][ > PlayerNoPlayerYNoPlayerW | WallY ] -> [ PlayerNoPlayerY | WallY ][ > PlayerNoPlayerMNoPlayerW | WallM ] -> [ PlayerNoPlayerM | WallM ][ > PlayerNoPlayerBl | WallBl ] -> [ PlayerNoPlayerBl | WallBl ][ > PlayerNoPlayerW | WallW ] -> [ PlayerNoPlayerW | WallW ]late [ PlayerRLtdPadR ] -> [ PlayerBlEmptyPad ] sfx0late [ PlayerGLtdPadR ] -> [ PlayerYEmptyPad ] sfx0late [ PlayerBLtdPadR ] -> [ PlayerMEmptyPad ] sfx0late [ PlayerCLtdPadR ] -> [ PlayerWEmptyPad ] sfx0late [ PlayerMLtdPadR ] -> [ PlayerBEmptyPad ] sfx0late [ PlayerYLtdPadR ] -> [ PlayerGEmptyPad ] sfx0late [ PlayerBlLtdPadR ] -> [ PlayerREmptyPad ] sfx0late [ PlayerWLtdPadR ] -> [ PlayerCEmptyPad ] sfx0late [ PlayerRLtdPadG ] -> [ PlayerYEmptyPad ] sfx0late [ PlayerGLtdPadG ] -> [ PlayerBlEmptyPad ] sfx0late [ PlayerBLtdPadG ] -> [ PlayerCEmptyPad ] sfx0late [ PlayerCLtdPadG ] -> [ PlayerBEmptyPad ] sfx0late [ PlayerMLtdPadG ] -> [ PlayerWEmptyPad ] sfx0late [ PlayerYLtdPadG ] -> [ PlayerREmptyPad ] sfx0late [ PlayerBlLtdPadG ] -> [ PlayerGEmptyPad ] sfx0late [ PlayerWLtdPadG ] -> [ PlayerMEmptyPad ] sfx0late [ PlayerRLtdPadB ] -> [ PlayerMEmptyPad ] sfx0late [ PlayerGLtdPadB ] -> [ PlayerCEmptyPad ] sfx0late [ PlayerBLtdPadB ] -> [ PlayerBlEmptyPad ] sfx0late [ PlayerCLtdPadB ] -> [ PlayerGEmptyPad ] sfx0late [ PlayerMLtdPadB ] -> [ PlayerREmptyPad ] sfx0late [ PlayerYLtdPadB ] -> [ PlayerWEmptyPad ] sfx0late [ PlayerBlLtdPadB ] -> [ PlayerBEmptyPad ] sfx0late [ PlayerWLtdPadB ] -> [ PlayerYEmptyPad ] sfx0late [ PlayerRLtdPadC ] -> [ PlayerWEmptyPad ] sfx0late [ PlayerGLtdPadC ] -> [ PlayerBEmptyPad ] sfx0late [ PlayerBLtdPadC ] -> [ PlayerGEmptyPad ] sfx0late [ PlayerCLtdPadC ] -> [ PlayerBlEmptyPad ] sfx0late [ PlayerMLtdPadC ] -> [ PlayerYEmptyPad ] sfx0late [ PlayerYLtdPadC ] -> [ PlayerMEmptyPad ] sfx0late [ PlayerBlLtdPadC ] -> [ PlayerCEmptyPad ] sfx0late [ PlayerWLtdPadC ] -> [ PlayerREmptyPad ] sfx0late [ PlayerRLtdPadY ] -> [ PlayerGEmptyPad ] sfx0late [ PlayerGLtdPadY ] -> [ PlayerREmptyPad ] sfx0late [ PlayerBLtdPadY ] -> [ PlayerWEmptyPad ] sfx0late [ PlayerCLtdPadY ] -> [ PlayerMEmptyPad ] sfx0late [ PlayerMLtdPadY ] -> [ PlayerCEmptyPad ] sfx0late [ PlayerYLtdPadY ] -> [ PlayerBlEmptyPad ] sfx0late [ PlayerBlLtdPadY ] -> [ PlayerYEmptyPad ] sfx0late [ PlayerWLtdPadY ] -> [ PlayerBEmptyPad ] sfx0late [ PlayerRLtdPadM ] -> [ PlayerBEmptyPad ] sfx0late [ PlayerGLtdPadM ] -> [ PlayerWEmptyPad ] sfx0late [ PlayerBLtdPadM ] -> [ PlayerREmptyPad ] sfx0late [ PlayerCLtdPadM ] -> [ PlayerYEmptyPad ] sfx0late [ PlayerMLtdPadM ] -> [ PlayerBlEmptyPad ] sfx0late [ PlayerYLtdPadM ] -> [ PlayerCEmptyPad ] sfx0late [ PlayerBlLtdPadM ] -> [ PlayerMEmptyPad ] sfx0late [ PlayerWLtdPadM ] -> [ PlayerGEmptyPad ] sfx0late [ PlayerRLtdPadW ] -> [ PlayerCEmptyPad ] sfx0late [ PlayerGLtdPadW ] -> [ PlayerMEmptyPad ] sfx0late [ PlayerBLtdPadW ] -> [ PlayerYEmptyPad ] sfx0late [ PlayerCLtdPadW ] -> [ PlayerREmptyPad ] sfx0late [ PlayerMLtdPadW ] -> [ PlayerGEmptyPad ] sfx0late [ PlayerYLtdPadW ] -> [ PlayerBEmptyPad ] sfx0late [ PlayerBlLtdPadW ] -> [ PlayerWEmptyPad ] sfx0late [ PlayerWLtdPadW ] -> [ PlayerBlEmptyPad ] sfx0late [ PlayerR | TotemR | ... | CoinB ] -> [ PlayerR | TotemR | ... | CoinM ] sfx1late [ PlayerR | TotemR | ... | CoinG ] -> [ PlayerR | TotemR | ... | CoinY ] sfx1late [ PlayerR | TotemR | ... | CoinC ] -> [ PlayerR | TotemR | ... | CoinW ] sfx1late [ PlayerR | TotemR | ... | CoinBl ] -> [ PlayerR | TotemR | ... | CoinR ] sfx1late [ PlayerY | TotemR | ... | CoinB ] -> [ PlayerY | TotemR | ... | CoinM ] sfx1late [ PlayerY | TotemR | ... | CoinG ] -> [ PlayerY | TotemR | ... | CoinY ] sfx1late [ PlayerY | TotemR | ... | CoinC ] -> [ PlayerY | TotemR | ... | CoinW ] sfx1late [ PlayerY | TotemR | ... | CoinBl ] -> [ PlayerY | TotemR | ... | CoinR ] sfx1late [ PlayerM | TotemR | ... | CoinB ] -> [ PlayerM | TotemR | ... | CoinM ] sfx1late [ PlayerM | TotemR | ... | CoinG ] -> [ PlayerM | TotemR | ... | CoinY ] sfx1late [ PlayerM | TotemR | ... | CoinC ] -> [ PlayerM | TotemR | ... | CoinW ] sfx1late [ PlayerM | TotemR | ... | CoinBl ] -> [ PlayerM | TotemR | ... | CoinR ] sfx1late [ PlayerW | TotemR | ... | CoinB ] -> [ PlayerW | TotemR | ... | CoinM ] sfx1late [ PlayerW | TotemR | ... | CoinG ] -> [ PlayerW | TotemR | ... | CoinY ] sfx1late [ PlayerW | TotemR | ... | CoinC ] -> [ PlayerW | TotemR | ... | CoinW ] sfx1late [ PlayerW | TotemR | ... | CoinBl ] -> [ PlayerW | TotemR | ... | CoinR ] sfx1late [ PlayerNoPlayerRNoPlayerYNoPlayerMNoPlayerW | TotemR | ... | CoinM ] -> [ PlayerNoPlayerRNoPlayerYNoPlayerMNoPlayerW | TotemR | ... | CoinB ] sfx3late [ PlayerNoPlayerRNoPlayerYNoPlayerMNoPlayerW | TotemR | ... | CoinY ] -> [ PlayerNoPlayerRNoPlayerYNoPlayerMNoPlayerW | TotemR | ... | CoinG ] sfx3late [ PlayerNoPlayerRNoPlayerYNoPlayerMNoPlayerW | TotemR | ... | CoinW ] -> [ PlayerNoPlayerRNoPlayerYNoPlayerMNoPlayerW | TotemR | ... | CoinC ] sfx3late [ PlayerNoPlayerRNoPlayerYNoPlayerMNoPlayerW | TotemR | ... | CoinR ] -> [ PlayerNoPlayerRNoPlayerYNoPlayerMNoPlayerW | TotemR | ... | CoinBl ] sfx3late [ PlayerG | TotemG | ... | CoinR ] -> [ PlayerG | TotemG | ... | CoinY ] sfx1late [ PlayerG | TotemG | ... | CoinB ] -> [ PlayerG | TotemG | ... | CoinC ] sfx1late [ PlayerG | TotemG | ... | CoinM ] -> [ PlayerG | TotemG | ... | CoinW ] sfx1late [ PlayerG | TotemG | ... | CoinBl ] -> [ PlayerG | TotemG | ... | CoinG ] sfx1late [ PlayerC | TotemG | ... | CoinR ] -> [ PlayerC | TotemG | ... | CoinY ] sfx1late [ PlayerC | TotemG | ... | CoinB ] -> [ PlayerC | TotemG | ... | CoinC ] sfx1late [ PlayerC | TotemG | ... | CoinM ] -> [ PlayerC | TotemG | ... | CoinW ] sfx1late [ PlayerC | TotemG | ... | CoinBl ] -> [ PlayerC | TotemG | ... | CoinG ] sfx1late [ PlayerY | TotemG | ... | CoinR ] -> [ PlayerY | TotemG | ... | CoinY ] sfx1late [ PlayerY | TotemG | ... | CoinB ] -> [ PlayerY | TotemG | ... | CoinC ] sfx1late [ PlayerY | TotemG | ... | CoinM ] -> [ PlayerY | TotemG | ... | CoinW ] sfx1late [ PlayerY | TotemG | ... | CoinBl ] -> [ PlayerY | TotemG | ... | CoinG ] sfx1late [ PlayerW | TotemG | ... | CoinR ] -> [ PlayerW | TotemG | ... | CoinY ] sfx1late [ PlayerW | TotemG | ... | CoinB ] -> [ PlayerW | TotemG | ... | CoinC ] sfx1late [ PlayerW | TotemG | ... | CoinM ] -> [ PlayerW | TotemG | ... | CoinW ] sfx1late [ PlayerW | TotemG | ... | CoinBl ] -> [ PlayerW | TotemG | ... | CoinG ] sfx1late [ PlayerNoPlayerGNoPlayerCNoPlayerYNoPlayerW | TotemG | ... | CoinY ] -> [ PlayerNoPlayerGNoPlayerCNoPlayerYNoPlayerW | TotemG | ... | CoinR ] sfx3late [ PlayerNoPlayerGNoPlayerCNoPlayerYNoPlayerW | TotemG | ... | CoinC ] -> [ PlayerNoPlayerGNoPlayerCNoPlayerYNoPlayerW | TotemG | ... | CoinB ] sfx3late [ PlayerNoPlayerGNoPlayerCNoPlayerYNoPlayerW | TotemG | ... | CoinW ] -> [ PlayerNoPlayerGNoPlayerCNoPlayerYNoPlayerW | TotemG | ... | CoinM ] sfx3late [ PlayerNoPlayerGNoPlayerCNoPlayerYNoPlayerW | TotemG | ... | CoinG ] -> [ PlayerNoPlayerGNoPlayerCNoPlayerYNoPlayerW | TotemG | ... | CoinBl ] sfx3late [ PlayerB | TotemB | ... | CoinR ] -> [ PlayerB | TotemB | ... | CoinM ] sfx1late [ PlayerB | TotemB | ... | CoinG ] -> [ PlayerB | TotemB | ... | CoinC ] sfx1late [ PlayerB | TotemB | ... | CoinY ] -> [ PlayerB | TotemB | ... | CoinW ] sfx1late [ PlayerB | TotemB | ... | CoinBl ] -> [ PlayerB | TotemB | ... | CoinB ] sfx1late [ PlayerC | TotemB | ... | CoinR ] -> [ PlayerC | TotemB | ... | CoinM ] sfx1late [ PlayerC | TotemB | ... | CoinG ] -> [ PlayerC | TotemB | ... | CoinC ] sfx1late [ PlayerC | TotemB | ... | CoinY ] -> [ PlayerC | TotemB | ... | CoinW ] sfx1late [ PlayerC | TotemB | ... | CoinBl ] -> [ PlayerC | TotemB | ... | CoinB ] sfx1late [ PlayerM | TotemB | ... | CoinR ] -> [ PlayerM | TotemB | ... | CoinM ] sfx1late [ PlayerM | TotemB | ... | CoinG ] -> [ PlayerM | TotemB | ... | CoinC ] sfx1late [ PlayerM | TotemB | ... | CoinY ] -> [ PlayerM | TotemB | ... | CoinW ] sfx1late [ PlayerM | TotemB | ... | CoinBl ] -> [ PlayerM | TotemB | ... | CoinB ] sfx1late [ PlayerW | TotemB | ... | CoinR ] -> [ PlayerW | TotemB | ... | CoinM ] sfx1late [ PlayerW | TotemB | ... | CoinG ] -> [ PlayerW | TotemB | ... | CoinC ] sfx1late [ PlayerW | TotemB | ... | CoinY ] -> [ PlayerW | TotemB | ... | CoinW ] sfx1late [ PlayerW | TotemB | ... | CoinBl ] -> [ PlayerW | TotemB | ... | CoinB ] sfx1late [ PlayerNoPlayerBNoPlayerCNoPlayerMNoPlayerW | TotemB | ... | CoinM ] -> [ PlayerNoPlayerBNoPlayerCNoPlayerMNoPlayerW | TotemB | ... | CoinR ] sfx3late [ PlayerNoPlayerBNoPlayerCNoPlayerMNoPlayerW | TotemB | ... | CoinC ] -> [ PlayerNoPlayerBNoPlayerCNoPlayerMNoPlayerW | TotemB | ... | CoinG ] sfx3late [ PlayerNoPlayerBNoPlayerCNoPlayerMNoPlayerW | TotemB | ... | CoinW ] -> [ PlayerNoPlayerBNoPlayerCNoPlayerMNoPlayerW | TotemB | ... | CoinY ] sfx3late [ PlayerNoPlayerBNoPlayerCNoPlayerMNoPlayerW | TotemB | ... | CoinB ] -> [ PlayerNoPlayerBNoPlayerCNoPlayerMNoPlayerW | TotemB | ... | CoinBl ] sfx3
 
 WINCONDITIONS
 
@@ -584,7 +514,6 @@ Some Player On Target
 LEVELS
 
 ######o######
-
 #.....1.....#
 #...........#
 #3..3...3..3#
@@ -672,7 +601,6 @@ o183#333%333#33#
 ###############
 
 ######o#####
-
 #....#1#...#
 #.&..*..%..#
 #..&..*..%.#
@@ -684,7 +612,6 @@ o183#333%333#33#
 ############
 
 ######o#####
-
 #.....1....#
 #..........#
 #..%asdj&..#
@@ -698,7 +625,6 @@ o183#333%333#33#
 ############
 
 ##########
-
 ###......#
 ###&.&&..#
 ##..k..k.#
@@ -726,7 +652,6 @@ o1#.44...aa449.6..&d.#
 ######################
 
 #############
-
 ####......###
 ###........##
 ##...%.*....#

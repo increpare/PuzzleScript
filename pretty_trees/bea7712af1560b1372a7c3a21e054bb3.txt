@@ -1,14 +1,21 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Eyes On You
+    prelude_data
+      author
+      whoever
+    prelude_data
+      homepage
+      crouton.net
   objects_section
     object_data
-      object_name	Background
-      
-
-      colors
+      object_line
+        object_name	Background
+      color_line
         color	LIGHTGREEN
         color	GREEN
-      
-
       sprite
         ['1' '1' '1' '1' '1']
         ['0' '1' '1' '1' '1']
@@ -16,13 +23,10 @@ ps_game
         ['1' '1' '1' '1' '1']
         ['1' '0' '1' '1' '1']
     object_data
-      object_name	TargetNeutral
-      
-
-      colors
+      object_line
+        object_name	TargetNeutral
+      color_line
         color	#0a0a0a
-      
-
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '0' '0' '.']
@@ -30,13 +34,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	TargetTowards
-      
-
-      colors
+      object_line
+        object_name	TargetTowards
+      color_line
         color	Orange
-      
-
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '0' '0' '.']
@@ -44,13 +45,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	TargetAway
-      
-
-      colors
+      object_line
+        object_name	TargetAway
+      color_line
         color	Blue
-      
-
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '0' '0' '0' '.']
@@ -58,14 +56,11 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	Wall
-      
-
-      colors
+      object_line
+        object_name	Wall
+      color_line
         color	BROWN
         color	DARKBROWN
-      
-
       sprite
         ['0' '0' '0' '1' '0']
         ['1' '1' '1' '1' '1']
@@ -73,15 +68,12 @@ ps_game
         ['1' '1' '1' '1' '1']
         ['0' '0' '0' '1' '0']
     object_data
-      object_name	Player
-      
-
-      colors
+      object_line
+        object_name	Player
+      color_line
         color	Black
         color	Red
         color	Blue
-      
-
       sprite
         ['.' '0' '0' '0' '.']
         ['.' '0' '2' '0' '.']
@@ -89,16 +81,13 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '1' '0' '1' '0']
     object_data
-      object_name	PlayerDecoy
-      
-
-      colors
+      object_line
+        object_name	PlayerDecoy
+      color_line
         color	Black
         color	Orange
         color	White
         color	Blue
-      
-
       sprite
         ['.' '0' '0' '0' '.']
         ['.' '2' '0' '2' '.']
@@ -106,15 +95,12 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '1' '0' '1' '0']
     object_data
-      object_name	EyeballAway
-      
-
-      colors
+      object_line
+        object_name	EyeballAway
+      color_line
         color	White
         color	lightBlue
         color	lightRed
-      
-
       sprite
         ['.' '0' '0' '0' '.']
         ['0' '0' '1' '0' '0']
@@ -122,15 +108,12 @@ ps_game
         ['2' '0' '1' '0' '2']
         ['.' '2' '0' '2' '.']
     object_data
-      object_name	EyeballTowards
-      
-
-      colors
+      object_line
+        object_name	EyeballTowards
+      color_line
         color	White
         color	orange
         color	Red
-      
-
       sprite
         ['.' '0' '0' '0' '.']
         ['0' '0' '1' '0' '0']
@@ -138,80 +121,92 @@ ps_game
         ['2' '0' '1' '0' '2']
         ['.' '2' '0' '2' '.']
     object_data
-      object_name	PlayerDoor
-      
-
-      colors
+      object_line
+        object_name	PlayerDoor
+      color_line
         color	Yellow
         color	Black
-      
-
-      sprite
-        ['1' '0' '0' '0' '1']
-        ['1' '0' '1' '0' '1']
-        ['1' '1' '1' '1' '1']
-        ['0' '0' '0' '0' '0']
-        ['0' '1' '0' '1' '0']
     object_data
-      object_name	EyeballDoor
-      
-
-      colors
-        color	Yellow
-        color	Black
-      
-
-      sprite
-        ['1' '0' '0' '0' '1']
-        ['0' '0' '1' '0' '0']
-        ['0' '1' '1' '1' '0']
-        ['0' '0' '1' '0' '0']
-        ['1' '0' '0' '0' '1']
+      object_line
+        object_name	10001
+      color_line
+        color	10101
+    object_data
+      object_line
+        object_name	11111
+      color_line
+        color	00000
+    object_data
+      object_line
+        object_name	01010
+      color_line
+        color	EyeballDoor
+    object_data
+      object_line
+        object_name	Yellow
+        legend_key
+          B
+          l
+          a
+          c
+          k
+      color_line
+        color	10001
+    object_data
+      object_line
+        object_name	00100
+      color_line
+        color	01110
+    object_data
+      object_line
+        object_name	00100
+      color_line
+        color	10001
   legend_section
     legend_data
-      .
+      . =
       object_name	Background
     legend_data
-      :
+      : =
       object_name	TargetNeutral
     legend_data
-      %
+      % =
       object_name	TargetTowards
     legend_data
-      $
+      $ =
       object_name	TargetAway
     legend_data
-      Target
+      Target =
       object_name	TargetNeutral
       legend_operation
         object_name	TargetTowards
       legend_operation
         object_name	TargetAway
     legend_data
-      #
+      # =
       object_name	Wall
     legend_data
-      P
+      P =
       object_name	Player
     legend_data
-      Q
+      Q =
       object_name	PlayerDecoy
     legend_data
-      O
+      O =
       object_name	EyeballTowards
     legend_data
-      i
+      i =
       object_name	EyeballAway
     legend_data
-      Eyeball
+      Eyeball =
       object_name	EyeballAway
       legend_operation
         object_name	EyeballTowards
     legend_data
-      G
+      G =
       object_name	PlayerDoor
     legend_data
-      H
+      H =
       object_name	EyeballDoor
   collisionlayers_section
     layer_data
@@ -220,13 +215,10 @@ ps_game
       object_name	Target
     layer_data
       object_name	Player
-    layer_data
       object_name	Wall
       object_name	EyeballTowards
-    layer_data
       object_name	EyeballAway
       object_name	PlayerDecoy
-    layer_data
       object_name	PlayerDoor
       object_name	EyeballDoor
   rules_section
@@ -248,11 +240,7 @@ ps_game
             rule_content	...
             cell_border
             rule_content	PlayerDecoy
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
         rule_data
           rule_part
             rule_content	EyeballAway
@@ -269,11 +257,7 @@ ps_game
             rule_content	...
             cell_border
             rule_content	PlayerDecoy
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
         rule_data
           rule_part
             rule_content	EyeballTowards
@@ -290,11 +274,7 @@ ps_game
             rule_content	...
             cell_border
             rule_content	Player
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
         rule_data
           rule_part
             rule_content	EyeballAway
@@ -311,11 +291,7 @@ ps_game
             rule_content	...
             cell_border
             rule_content	Player
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
         rule_data
           rule_part
             rule_content
@@ -330,11 +306,7 @@ ps_game
             rule_content
               >
               PlayerDecoy
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
         rule_data
           rule_part
             rule_content
@@ -349,11 +321,7 @@ ps_game
             rule_content	PlayerDoor
             cell_border
             rule_content	Player
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
         rule_data
           rule_part
             rule_content
@@ -368,11 +336,7 @@ ps_game
             rule_content	EyeballDoor
             cell_border
             rule_content	Eyeball
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	SFX0
   winconditions_section
     condition_data
       all
@@ -390,7 +354,6 @@ ps_game
       on
       object_name	EyeballAway
   levels_section
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '#']
@@ -400,7 +363,6 @@ ps_game
  ['#' '.' '.' '.' '#' '#' '.' '.' '#']
  ['#' '.' '.' '.' ':' '.' '.' '.' '#']
  ['#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']

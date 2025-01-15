@@ -1,106 +1,169 @@
+title Pumpkin smasher
+author Lucas Svangard
+homepage https://twitter.com/luckylucanos
+realtime_interval 0.5
+verbose_logging
+youtube DOtEdhKOMgQ
+
 OBJECTS
 
-backgroundgrey
-TargetDarkBlue.....
+background
+grey
+
+Target
+DarkBlue
+
+.....
 .000.
+
 .0.0.
 .000.
+
 .....
+Wall
 
-Wall#313131
-PlayerBlack
-OrangeWhite
-Blue.000.
-.111.22222
-.333..3.3.
-pumpkingreen
-blackorange #d05502..0..
-23232
-23232
-23232
-23232
+#313131
+Player
 
-splashorange.0.0.
-..00.
-00000
+Black O
 .000.
-.0..0
 
-grass,darkgreen
-gravegrey darkgrey
-.......0..
-.111..010.
-.000.animatepumpkin
-ogreen
-blackorange #d05502..0..
-23232
-23232
-23232
-23232
-
-pumpkintempletwhite.....
-.....
-.....
-.....
-.....
-
-animatePlayerBlack
-OrangeWhite Blue.000.
 .111.
 22222
+
 .333.
 .3.3.
 
-statplayer'Black
-OrangeWhite Blue
-.000..111.
-22222.333.
-.3.3.BlockL
-alightgrey #21abfe00000
+pumpkin
+green black orange #d05502
+..0..
+23232
+23232
+23232
+2323
+
+splash
+orange
+.0.0.
+..00.
+00000
+.000.
+.0..
+
+grass ,
+darkgreen
+
+grave
+grey darkgrey
+.....
+..0..
+.111.
+.010.
+.000
+
+animatepumpkin o
+green black orange #d05502
+..0..
+23232
+23232
+23232
+2323
+
+pumpkintemplet
+white
+.....
+.....
+.....
+.....
+....
+
+animatePlayer
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3
+
+statplayer '
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3
+
+BlockL a
+lightgrey #21abfe
+00000
 01000
 11110
 01000
-00000
+0000
 
-movingblockLlightgrey #21abfe
-0000001000
-1111001000
-00000BlockR
-dlightgrey #21abfe00000
+movingblockL
+lightgrey #21abfe
+00000
+01000
+11110
+01000
+0000
+
+BlockR d
+lightgrey #21abfe
+00000
 00010
 01111
 00010
-00000
+0000
 
-movingblockRlightgrey #21abfe
-0000000010
-0111100010
-00000BlockU
-wlightgrey #21abfe00100
+movingblockR
+lightgrey #21abfe
+00000
+00010
+01111
+00010
+0000
+
+BlockU w
+lightgrey #21abfe
+00100
 01110
 00100
 00100
-00000
+0000
 
-movingblockUlightgrey #21abfe
-0010001110
-0010000100
-00000BlockD
-slightgrey #21abfe00000
-00100
+movingblockU
+lightgrey #21abfe
 00100
 01110
 00100
+00100
+0000
 
-movingblockDlightgrey #21abfe
-0000000100
-0010001110
-00100ghost
-gwhite black.000.
+BlockD s
+lightgrey #21abfe
+00000
+00100
+00100
+01110
+0010
+
+movingblockD
+lightgrey #21abfe
+00000
+00100
+00100
+01110
+0010
+
+ghost g
+white black
+.000.
 01010
 00000
 00100
-0.0.0
+0.0.
 
 
 LEGEND
@@ -121,43 +184,13 @@ COLLISIONLAYERS
 Background
 grass, splash
 Target
-Player
-Wall, pumpkin
-BlockL, BlockR, BlockU
-blockD, movingblockL, movingblockR
-movingblockU, movingblockd, ghost
+Player, Wall, pumpkin, BlockL, BlockR, BlockU, blockD, movingblockL, movingblockR, movingblockU, movingblockd, ghost
 pumpkintemplet, animatepumpkin, statplayer
 grave, animateplayer
 
 RULES
 
-[ > Player | noPlayerObs ] -> [ |>player ] 
-[ player | pumpkin ] -> [ player | splash ] 
-left [ MovingblockL | ghost | noBlockObs ] -> [ |ghost | MovingBlockL ] 
-+ left [ MovingblockL | noBlockObs ] -> [ |>MovingblockL ] 
-[ movingblockL ] -> [ BlockL ] 
-right [ MovingblockR | ghost | noBlockObs ] -> [ |ghost | MovingBlockR ] 
-+ right [ MovingblockR | noBlockObs ] -> [ |>MovingblockR ] 
-[ movingblockR ] -> [ BlockR ] 
-up [ MovingblockU | ghost | noBlockObs ] -> [ |ghost | MovingBlockU ] 
-+ up [ MovingblockU | noBlockObs ] -> [ |>MovingblockU ] 
-[ movingblockU ] -> [ BlockU ] 
-down [ MovingblockD | ghost | noBlockObs ] -> [ |ghost | MovingBlockD ] 
-+ down [ MovingblockD | noBlockObs ] -> [ |>MovingblockD ] 
-[ movingblockD ] -> [ BlockD ] 
-[ BlockL | pumpkin ] -> [ BlockL | splash ] 
-[ BlockR | pumpkin ] -> [ BlockR | splash ] 
-[ BlockU | pumpkin ] -> [ BlockU | splash ] 
-[ BlockD | pumpkin ] -> [ BlockD | splash ] 
-[ animateplayer | ... | animatepumpkin ] -> [ > animateplayer | ... | animatepumpkin ] 
-[ pumpkintemplet | animateplayer | pumpkintemplet ] -> [ animatepumpkin | statplayer | animatepumpkin ] again 
-[ animatepumpkin | statplayer | pumpkintemplet ] -> [ animatepumpkin | statplayer | animatepumpkin ] again 
-[ animatepumpkin | statplayer | nopumpkintemplet ] -> win 
-left [ > player | stationaryBlockL ] -> [ player | >MovingBlockL ] 
-+ right [ > player | stationaryBlockR ] -> [ player | >MovingBlockR ] 
-+ up [ > player | stationaryBlockU ] -> [ player | >MovingBlockU ] 
-+ down [ > player | stationaryBlockD ] -> [ player | >MovingBlockD ] 
-
+[ > Player | noPlayerObs ] -> [  | > player ] sfx0[ player | pumpkin ] -> [ player | splash ] sfx1left [ MovingblockL | ghost | noBlockObs ] -> [  | ghost | MovingBlockL ]+ left [ MovingblockL | noBlockObs ] -> [  | > MovingblockL ] sfx0[ movingblockL ] -> [ BlockL ]right [ MovingblockR | ghost | noBlockObs ] -> [  | ghost | MovingBlockR ]+ right [ MovingblockR | noBlockObs ] -> [  | > MovingblockR ] sfx0[ movingblockR ] -> [ BlockR ]up [ MovingblockU | ghost | noBlockObs ] -> [  | ghost | MovingBlockU ]+ up [ MovingblockU | noBlockObs ] -> [  | > MovingblockU ] sfx0[ movingblockU ] -> [ BlockU ]down [ MovingblockD | ghost | noBlockObs ] -> [  | ghost | MovingBlockD ]+ down [ MovingblockD | noBlockObs ] -> [  | > MovingblockD ] sfx0[ movingblockD ] -> [ BlockD ][ BlockL | pumpkin ] -> [ BlockL | splash ] sfx1[ BlockR | pumpkin ] -> [ BlockR | splash ] sfx1[ BlockU | pumpkin ] -> [ BlockU | splash ] sfx1[ BlockD | pumpkin ] -> [ BlockD | splash ] sfx1[ animateplayer | ... | animatepumpkin ] -> [ > animateplayer | ... | animatepumpkin ][ pumpkintemplet | animateplayer | pumpkintemplet ] -> [ animatepumpkin | statplayer | animatepumpkin ] again[ animatepumpkin | statplayer | pumpkintemplet ] -> [ animatepumpkin | statplayer | animatepumpkin ] again[ animatepumpkin | statplayer | nopumpkintemplet ] -> winleft [ > player | stationaryBlockL ] -> [ player | > MovingBlockL ]+ right [ > player | stationaryBlockR ] -> [ player | > MovingBlockR ]+ up [ > player | stationaryBlockU ] -> [ player | > MovingBlockU ]+ down [ > player | stationaryBlockD ] -> [ player | > MovingBlockD ]
 
 WINCONDITIONS
 
@@ -189,7 +222,6 @@ LEVELS
 ######
 
 ############
-
 #.0#...#0..#
 #..........#
 #.#P....#..#
@@ -213,7 +245,6 @@ LEVELS
 ##########
 
 ###########
-
 #.........#
 #w........#
 #p........#

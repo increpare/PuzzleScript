@@ -1,88 +1,120 @@
+title Take Heart Lass
+author Kevin Zuhn
+homepage www.kevinzuhn.com
+
 OBJECTS
 
-BackgroundLightGreen Green
-1111111011
-1010111011
-11111BackFlowers
-GreenPurple Yellow10001
+Background
+LightGreen Green
+11111
+11011
+10101
+11011
+1111
+
+BackFlowers
+Green Purple Yellow
+10001
 00100
 01210
 00100
-10001
+1000
 
-TargetRED LightRed.0.0.
+Target
+RED LightRed
+.0.0.
 01010
 01110
 .010.
-..0..
+..0.
 
-WallRed DarkGreen00000
+Wall
+Red DarkGreen
+00000
 00100
 01010
 00100
-00000
+0000
 
-DespairWallDarkBrown DarkBlue00000
+DespairWall
+DarkBrown DarkBlue
+00000
 00100
 01010
 00100
-00000
+0000
 
-NewDespairWallDarkRed DarkBlue00000
+NewDespairWall
+DarkRed DarkBlue
+00000
 00100
 01010
 00100
-00000
+0000
 
-PlayerBlue
-LightRedYellow DarkBlue.333.
+Player
+Blue LightRed Yellow DarkBlue
+.333.
 .323.
 20002
 .111.
-.000.
+.000
 
-OldHopeWhite Pink11111
+OldHope
+White Pink
+11111
 11011
 10101
 11011
-11111
+1111
 
-NewHopeWhite LightRed11111
+NewHope
+White LightRed
+11111
 11011
 10101
 11011
-11111
+1111
 
-CratePink White.0.0.
+Crate
+Pink White
+.0.0.
 01010
 01110
 .010.
-..0..
+..0.
 
-OldDespairBlack DarkBlue01010
-10101
+OldDespair
+Black DarkBlue
 01010
 10101
 01010
+10101
+0101
 
-AltOldDespairBlack DarkBlue10101
-01010
+AltOldDespair
+Black DarkBlue
 10101
 01010
 10101
+01010
+1010
 
-NewDespairDarkBlue DarkGray01010
-10101
+NewDespair
+DarkBlue DarkGray
 01010
 10101
 01010
+10101
+0101
 
-AltNewDespairDarkBlue DarkGray10101
-01010
+AltNewDespair
+DarkBlue DarkGray
 10101
 01010
 10101
-
+01010
+1010
 
 
 LEGEND
@@ -105,33 +137,12 @@ HopeBlocker = Crate or Target or Wall or DespairWall or NewDespairWall or Hope
 COLLISIONLAYERS
 
 Background
-Target
-BackFlowers, Hope
-Player
-Wall, Crate
-Despair, NewDespair
-DespairWall, NewDespairWall
+Target, BackFlowers, Hope
+Player, Wall, Crate, Despair, NewDespair, DespairWall, NewDespairWall
 
 RULES
 
-[ NewDespair ] -> [ OldDespair ] 
-[ AltNewDespair ] -> [ AltOldDespair ] 
-[ NewDespairWall ] -> [ DespairWall ] 
-[ NewHope ] -> [ OldHope ] 
-late [ OldDespair | NoBlocker ] -> [ OldDespair | AltNewDespair ] 
-late [ AltOldDespair | NoBlocker ] -> [ AltOldDespair | NewDespair ] 
-late [ OldDespair | Wall ] -> [ OldDespair | NewDespairWall ] 
-late [ DespairWall | Wall ] -> [ DespairWall | NewDespairWall ] 
-late [ OldHope | NoHopeBlocker ] -> [ OldHope | NewHope ] 
-[ > Player | Crate ] -> [ > Player | >Crate ] 
-[ > Crate | Blocker ] -> [ Crate | Blocker ] 
-late [ Target | Despair ] -> [ Target |  ] 
-late [ Despair Target ] -> [ Target ] 
-late [ Crate | Despair ] -> [ Crate |  ] 
-late [ Hope Despair ] -> [ Hope ] 
-late [ Hope | DespairWall ] -> [ Hope | Wall ] 
-late [ Hope | NewDespairWall ] -> [ Hope | Wall ] 
-
+[ NewDespair ] -> [ OldDespair ][ AltNewDespair ] -> [ AltOldDespair ][ NewDespairWall ] -> [ DespairWall ][ NewHope ] -> [ OldHope ]late [ OldDespair | NoBlocker ] -> [ OldDespair | AltNewDespair ]late [ AltOldDespair | NoBlocker ] -> [ AltOldDespair | NewDespair ]late [ OldDespair | Wall ] -> [ OldDespair | NewDespairWall ]late [ DespairWall | Wall ] -> [ DespairWall | NewDespairWall ]late [ OldHope | NoHopeBlocker ] -> [ OldHope | NewHope ][ > Player | Crate ] -> [ > Player | > Crate ][ > Crate | Blocker ] -> [ Crate | Blocker ]late [ Target | Despair ] -> [ Target |  ]late [ DespairTarget ] -> [ Target ]late [ Crate | Despair ] -> [ Crate |  ]late [ HopeDespair ] -> [ Hope ]late [ Hope | DespairWall ] -> [ Hope | Wall ]late [ Hope | NewDespairWall ] -> [ Hope | Wall ]
 
 WINCONDITIONS
 
@@ -140,7 +151,6 @@ Some Player on Target
 LEVELS
 
 ######
-
 #...x#
 #.ff.#
 #.ff.#
@@ -164,7 +174,6 @@ LEVELS
 #########
 
 ########
-
 #.#zx#p#
 #....*.#
 #......#

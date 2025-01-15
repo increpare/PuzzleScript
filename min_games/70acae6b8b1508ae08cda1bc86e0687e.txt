@@ -1,48 +1,77 @@
+title Footprint Puzzle
+author Tung Cao
+homepage www.puzzlescript.net
+
 OBJECTS
 
-BackgroundLIGHTGREEN gray11111
+Background
+LIGHTGREEN gray
+11111
 01111
 11101
 11111
-10111
+1011
 
-TargetDarkBlue.....
+Target
+DarkBlue
+.....
 .000.
 .0.0.
 .000.
-.....
+....
 
-WallBROWN DARKBROWN00010
+Wall
+BROWN DARKBROWN
+00010
 11111
 01000
 11111
-00010
+0001
 
-PlayerBlack
-OrangeWhite Blue.000.
+Player
+Black Orange White Blue
+.000.
 .111.
 22222
 .333.
-.3.3.
+.3.3
 
-CrateOrange Yellow
-0...00...0
-0...00...0
-00000TreeApple
-BROWNGREEN RED
-.111.12121
-.101...0..
-..0..TreeKaputt
-BROWNGREEN BLACK
-.111.12121
-.101...0..
-..0..TreeHarvest
-BROWNGREEN white.111.
+Crate
+Orange Yellow
+0...0
+0...0
+0...0
+0...0
+0000
+
+TreeApple
+BROWN GREEN RED
+
+.111.
+12121
+
+.101.
+..0..
+
+..0..
+TreeKaputt
+
+BROWN G
+.111.
+
+12121
+.101.
+
+..0..
+..0..
+
+TreeHarvest
+BROWN GREEN white
+.111.
 12121
 .101.
 ..0..
-..0..
-
+..0.
 
 
 LEGEND
@@ -63,17 +92,12 @@ COLLISIONLAYERS
 
 Background
 Target
-TreeKaputt
-TreeHarvest, TreeApple
-Player
-Wall, Crate
+TreeKaputt, TreeHarvest, TreeApple
+Player, Wall, Crate
 
 RULES
 
-[ > Player | Crate ] -> [ > Player | >Crate ] 
-[ > Crate | TreeHarvest ] -> [ > Crate | TreeKaputt ] 
-[ > Crate | TreeApple ] -> [ > Crate | TreeHarvest ] 
-
+[ > Player | Crate ] -> [ > Player | > Crate ][ > Crate | TreeHarvest ] -> [ > Crate | TreeKaputt ][ > Crate | TreeApple ] -> [ > Crate | TreeHarvest ]
 
 WINCONDITIONS
 
@@ -84,7 +108,6 @@ NO TreeKaputt
 LEVELS
 
 ##############
-
 #............#
 #............#
 #.....O......#
@@ -96,7 +119,6 @@ LEVELS
 ##############
 
 ##############
-
 #............#
 #............#
 #....#A#.....#
@@ -108,7 +130,6 @@ LEVELS
 ##############
 
 ##############
-
 #............#
 #............#
 #....#A###...#
@@ -120,7 +141,6 @@ LEVELS
 ##############
 
 ##############
-
 #...###....O.#
 #...A...A.#..#
 #..#.#A.#.#..#

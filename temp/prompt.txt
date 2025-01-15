@@ -1,0 +1,456 @@
+You are a game designer, familiar with the PuzzleScript game description language. Here are some example games, for inspiration (do not reproduce these games exactly):
+
+title The Trouble with Toasters
+author Edward Brown
+homepage www.casuallabs.com
+
+OBJECTS
+
+Background
+#BBBBDD #AAAACC
+11111
+11111
+11011
+11111
+1111
+
+Spawner
+WHITE #DDDDDD
+.....
+..0..
+.010.
+..0..
+....
+
+Player
+#CC0000 #F9E39D #0000CC BLACK
+..1..
+00000
+1.0.1
+.222.
+33.3
+
+Toaster
+#666666 #222222 #777777 #888888
+.222.
+21012
+21012
+22222
+3333
+
+ToasterGestating
+#FF0000 #222222
+.....
+.000.
+.010.
+.000.
+....
+
+Crate
+#614C18 #715C18 #513C18
+11111
+12021
+10201
+12021
+1111
+
+CrateSpawner
+WHITE #DDDDDD
+.....
+..0..
+.010.
+..0..
+....
+
+
+LEGEND
+
+Obstacle = Player or Toaster
+. = Background
+P = Player
+* = Toaster
+O = Spawner
+C = Crate
+
+COLLISIONLAYERS
+
+Background
+Spawner
+ToasterGestating
+CrateSpawner
+Player, Toaster, Crate
+
+RULES
+
+[ > Player ] -> [ > Player ] SFX0up [ ToasterGestatingnoObstacle ] -> [ Toaster ]up [ SpawnernoObstacle ] -> [ SpawnerrandomToasterGestating ] SFX3late [ CrateToasterGestating ] -> [ Crate ] SFX3[ > Player | Toaster ] -> [ > Player | > Toaster ] SFX2[ > Player | Crate ] -> [ > Player | > Crate ] SFX2[ < Player | Crate ] -> [ < Player | < Crate ]late [ Toaster | Toaster | Toaster ] -> [  |  |  ] SFX1
+
+WINCONDITIONS
+
+No Toaster
+
+LEVELS
+
+.......
+.....*.
+.......
+...O...
+.......
+.P.....
+.......
+
+..*....
+.*.....
+....O..
+.......
+.......
+....P..
+.......
+
+......P
+.*.....
+....O..
+.C.....
+..O....
+.......
+.......
+
+.......
+.C...*.
+.......
+*..O...
+O......
+....C..
+...P...
+
+.*..O..
+....O..
+O......
+......*
+..C....
+.P.....
+.**....
+
+
+title Pousser des caisses
+author Docteur Glandois
+again_interval 0.4
+noaction
+
+OBJECTS
+
+Background
+#00C000 #009000
+11111
+01111
+11101
+11111
+1011
+
+Target
+DarkBlue
+.....
+.000.
+.000.
+.000.
+....
+
+Wall
+Brown Darkbrown
+00010
+11111
+01000
+11111
+0001
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3
+
+Crate
+Orange Yellow
+00000
+00..0
+0.0.0
+0..00
+0000
+
+Door
+darkbrown brown
+11111
+11111
+10111
+11111
+1111
+
+DoorBorder
+transparent lightbrown
+11111
+10001
+10001
+10001
+1000
+
+NotWonYet
+transparent
+
+Victory
+transparent
+
+CurtainClosed
+#456fb2 #253c60
+11111
+00000
+11111
+00000
+1111
+
+CurtainOpening_1
+#456fb2 #253c60 transparent
+00000
+11111
+00000
+11111
+2222
+
+CurtainOpening_2
+#456fb2 #253c60 transparent
+11111
+00000
+11111
+22222
+2222
+
+CurtainOpening_3
+#456fb2 #253c60 transparent
+00000
+11111
+22222
+22222
+2222
+
+CurtainOpening_4
+#456fb2 #253c60 transparent
+11111
+22222
+22222
+22222
+2222
+
+CurtainOpening_5
+transparent
+
+Flag
+transparent gray #ff1111
+02220
+01222
+02220
+01000
+1110
+
+FlagWrap_P
+lightgray #009000
+00001
+01101
+00001
+01111
+0111
+
+FlagWrap_Z
+lightgray #009000
+00001
+11101
+11011
+10111
+0000
+
+FlagWrap_S
+lightgray #009000
+00001
+01111
+00001
+11101
+0000
+
+FlagWrap_Curl_Open
+lightgray #009000
+11001
+11011
+10011
+11011
+1100
+
+FlagWrap_Curl_Close
+lightgray #009000
+10011
+11011
+11001
+11011
+1001
+
+Obf_______
+lightgray #009000
+10011
+01101
+01101
+01101
+1001
+
+Obf____
+lightgray #009000
+11011
+10011
+11011
+11011
+1000
+
+Obf_
+lightgray #009000
+00011
+11101
+10011
+01111
+0000
+
+Obf________
+lightgray #009000
+00011
+11101
+10011
+11101
+0001
+
+Obf_____
+lightgray #009000
+01111
+01101
+00001
+11101
+1110
+
+Obf__
+lightgray #009000
+00001
+01111
+00011
+11101
+0001
+
+Obf_________
+lightgray #009000
+10011
+01111
+00011
+01101
+1001
+
+Obf______
+lightgray #009000
+00001
+11101
+11011
+10111
+0111
+
+Obf___
+lightgray #009000
+10011
+01101
+10011
+01101
+1001
+
+Obf__________
+lightgray #009000
+10011
+01101
+10001
+11101
+1001
+
+Obf
+transparent
+
+
+LEGEND
+
+. = Background
+# = Wall
++ = Player
+X = Crate
+@ = Crate or Target
+O = Target
+D = Door or DoorBorder or Obf
+* = Flag
+A = Obf__________ or CurtainClosed
+J = Obf_________ or CurtainClosed
+L = Obf________ or CurtainClosed
+B = Obf_______ or CurtainClosed
+M = Obf______ or CurtainClosed
+N = Obf_____ or CurtainClosed
+R = Obf____ or CurtainClosed
+C = Obf___ or CurtainClosed
+T = Obf__ or CurtainClosed
+E = Obf_ or CurtainClosed
+P = FlagWrap_P or CurtainClosed
+Z = FlagWrap_Z or CurtainClosed
+S = FlagWrap_S or CurtainClosed
+{ = FlagWrap_Curl_Open or CurtainClosed
+} = FlagWrap_Curl_Close or CurtainClosed
+
+COLLISIONLAYERS
+
+Background
+Target
+Player, Wall, Crate, Door
+Obf__________, Obf_________, Obf________, Obf_______, Obf______, Obf_____, Obf____, Obf___, Obf__, Obf_, Obf
+FlagWrap_P, FlagWrap_Z, FlagWrap_S, FlagWrap_Curl_Open, FlagWrap_Curl_Close
+CurtainClosed, CurtainOpening_1, CurtainOpening_2, CurtainOpening_3, CurtainOpening_4, CurtainOpening_5
+NotWonYet, Victory
+DoorBorder
+Flag
+
+RULES
+
+LEFT [ DoorObf ] [ Obf_ | ... | Obf__ ] -> [ DoorObf ] [ Obf__ | ... | Obf_ ]LEFT [ DoorObf ] [ Obf___ | ... | Obf________ ] -> [ DoorObf ] [ Obf________ | ... | Obf___ ]LEFT [ DoorObf ] [ Obf____ | ... | Obf_________ ] -> [ DoorObf ] [ Obf_________ | ... | Obf____ ]RIGHT [ DoorObf ] [ Obf________ | ... | Obf_ ] -> [ DoorObf ] [ Obf_ | ... | Obf________ ]LEFT [ DoorObf ] [ Obf__________ | ... | Obf__ ] -> [ DoorObf ] [ Obf__ | ... | Obf__________ ]LEFT [ DoorObf ] [ Obf________ | ... | Obf__________ ] -> [ DoorObf ] [ Obf__________ | ... | Obf________ ]RIGHT [ DoorObf ] [ Obf_______ | ... | Obf_________ ] -> [ DoorObf ] [ Obf_________ | ... | Obf_______ ]LEFT [ DoorObf ] [ Obf_____ | ... | Obf_________ ] -> [ DoorObf ] [ Obf_________ | ... | Obf_____ ]LEFT [ DoorObf ] [ Obf_ | ... | Obf_________ ] -> [ DoorObf ] [ Obf_________ | ... | Obf_ ]RIGHT [ DoorObf ] [ Obf_______ | ... | Obf____ ] -> [ DoorObf ] [ Obf____ | ... | Obf_______ ]RIGHT [ DoorObf ] [ Obf_________ | ... | Obf__________ ] -> [ DoorObf ] [ Obf__________ | ... | Obf_________ ]LEFT [ DoorObf ] [ Obf_____ | ... | Obf________ ] -> [ DoorObf ] [ Obf________ | ... | Obf_____ ]LEFT [ DoorObf ] [ Obf__ | ... | Obf__________ ] -> [ DoorObf ] [ Obf__________ | ... | Obf__ ]RIGHT [ DoorObf ] [ Obf______ | ... | Obf____ ] -> [ DoorObf ] [ Obf____ | ... | Obf______ ]RIGHT [ DoorObf ] [ Obf__________ | ... | Obf_________ ] -> [ DoorObf ] [ Obf_________ | ... | Obf__________ ]RIGHT [ DoorObf ] [ Obf_______ | ... | Obf_ ] -> [ DoorObf ] [ Obf_ | ... | Obf_______ ]LEFT [ DoorObf ] [ Obf________ | ... | Obf______ ] -> [ DoorObf ] [ Obf______ | ... | Obf________ ]RIGHT [ DoorObf ] [ Obf__________ | ... | Obf__ ] -> [ DoorObf ] [ Obf__ | ... | Obf__________ ]LEFT [ DoorObf ] [ Obf_________ | ... | Obf_______ ] -> [ DoorObf ] [ Obf_______ | ... | Obf_________ ]RIGHT [ DoorObf ] [ Obf____ | ... | Obf_ ] -> [ DoorObf ] [ Obf_ | ... | Obf____ ]RIGHT [ DoorObf ] [ Obf____ | ... | Obf__________ ] -> [ DoorObf ] [ Obf__________ | ... | Obf____ ][ DoorObf ] -> [ Door ][ > Player | Crate ] -> [ > Player | > Crate ]late [ Door ] [ CratenoTarget ] -> [ DoorNotWonYet ] [ CratenoTarget ]late [ Door ] [ noCrateTarget ] -> [ DoorNotWonYet ] [ noCrateTarget ]late [ DoornoNotWonYet ] -> [ DoorVictory ]late [ NotWonYet ] -> [  ]late [ VictorynoDoor ] -> [  ]late [ VictoryDoor ] [ CurtainOpening_5 ] -> [ Victory ] [  ] againlate [ Victory ] [ CurtainOpening_4 ] -> [ Victory ] [ CurtainOpening_5 ] againlate [ Victory ] [ CurtainOpening_3 ] -> [ Victory ] [ CurtainOpening_4 ] againlate [ Victory ] [ CurtainOpening_2 ] -> [ Victory ] [ CurtainOpening_3 ] againlate [ Victory ] [ CurtainOpening_1 ] -> [ Victory ] [ CurtainOpening_2 ] againlate [ Victory ] [ CurtainClosed ] -> [ Victory ] [ CurtainOpening_1 ] again
+
+WINCONDITIONS
+
+All Player on Flag
+
+LEVELS
+
+##########
+#######o##
+#...*##X##
+#.#####.##
+#D#####.##
+#+..X...o#
+##########
+PZS{ARBRE}
+
+###o..ooo####
+####...#+####
+#####.##.####
+#####.##.####
+#####XX..####
+####..X######
+###..X.######
+###....D...*#
+####...######
+#############
+PZS{AMARANTE}
+
+#################
+#..o.o.o.o.o.####
+#............####
+#..X.X.X...X.####
+#.....+......D.*#
+#################
+PZS{BRETELLEMENT}
+
+
+Now, generate a PuzzleScript.

@@ -1,138 +1,271 @@
+Title Darn gifs for my game
+author Battle Pillow
+realtime_interval 0.15
+key_repeat_interval 0.15
+again_interval 0.01
+background_color #F9F9F9
+text_color #786D5F
+noundo
+youtube j1w69c0Ef-U
+
 OBJECTS
 
-Backgroundgrey
-darkgrey00000
-1111100000
-1111100000
-WireLR#D8D8D8
-white.....
-.....00000
-..........
-WireUD#D8D8D8
-white..0..
-..0....0..
-..0....0..
-WireLD#D8D8D8
-white.....
-.....000..
-..0....0..
-WireRD#D8D8D8
-white.....
-.......000
-..0....0..
-WireLU#D8D8D8
-white..0..
-..0..000..
-..........
-WireRU#D8D8D8 white
-..0....0..
-..000.....
-.....CLock
-whiteblack red
-0000000002
-0111000000
-00000OLock
-whiteblack
-blue00000
-0000201110
-0000000000
-onTargetwhite
-lightblueblue
-#D8D8D830003
-0020002120
-0020030003
-offTargetwhite
-#A9F5F2lightblue
-#D8D8D830003
-0020002120
-0020030003
-TestWallgrey white
-1111110001
-1000110001
-11111Player
-black#FF8000
-red#F79F81 white
-.222..333.
-31143.111.
-.1.1.Bunshin1
-black#0040FF #01A9DB
-.001..000.
-001002000.
-.0.0.Bunshin2
-black#0040FF #01A9DB
-.0102.000.
-00010.000.
-.1.0.Bunshin3
-black#0040FF #01A9DB
-.001..010.
-01001.000.
-20.0.Bunshin4
-black#0040FF #01A9DB
-2000..010.
-01000.0102
-.0.0.Crate
-darkbrownbrown red
-0111010001
-1020110001
-01110Crateunlock
-darkbrownwhite blue
-0111010001
-1020110001
-01110Dumbot
-white#E6E6E6
-#FF0000#F6CECE
-#F78181.141.
-1323142324
-13231.141.
-Doorblue #0404B4
-000001...1
-0...01...1
-00000Key
-yellow.....
-......000.
-..........
-buttonwhite
-blackyellow
-#D8D8D830003
-0222002220
-0222030003
-Telewhite
-lightblueblue #A9F5F2
-3.2.3.212.
-21012.212.
-3.2.3Bomb
-bluewhite #D8D8D8
-......212.
-.101..212.
-.....activebomb
-#FF0000#F6CECE #D8D8D8
-......212.
-.101..212.
-.....deactivebomb
-blackwhite #D8D8D8
-......212.
-.101..212.
-.....keyoff
-greywhite black
-1111110001
-1222110001
-11111keyon
-greywhite
-yellow11111
-1000112221
-1000111111
-Boomorange yellow
-.010.01110
-1111101110
-.010.CopyBot
-white#40FF00 #A9F5A9
-.000.00200
-0212000200
-.000.Stalker
-whitered
-#BDBDBD.010.
-.101.20002
-.202..0.0.
+Background
+grey darkgrey
+00000
+11111
+00000
+11111
+0000
+
+WireLR
+#D8D8D8 white
+.....
+.....
+00000
+.....
+....
+
+WireUD
+#D8D8D8 white
+..0..
+..0..
+..0..
+..0..
+..0.
+
+WireLD
+#D8D8D8 white
+.....
+.....
+000..
+..0..
+..0.
+
+WireRD
+#D8D8D8 white
+.....
+.....
+..000
+..0..
+..0.
+
+WireLU
+#D8D8D8 white
+..0..
+..0..
+000..
+.....
+....
+
+WireRU
+#D8D8D8 white
+..0..
+..0..
+..000
+.....
+....
+
+CLock
+white black red
+00000
+00002
+01110
+00000
+0000
+
+OLock
+white black blue
+00000
+00002
+01110
+00000
+0000
+
+onTarget
+white lightblue blue #D8D8D8
+30003
+00200
+02120
+00200
+3000
+
+offTarget
+white #A9F5F2 lightblue #D8D8D8
+30003
+00200
+02120
+00200
+3000
+
+TestWall
+grey white
+11111
+10001
+10001
+10001
+1111
+
+Player
+black #FF8000 red #F79F81 white
+.222.
+.333.
+31143
+.111.
+.1.1
+
+Bunshin1
+black #0040FF #01A9DB
+.001.
+.000.
+00100
+2000.
+.0.0
+
+Bunshin2
+black #0040FF #01A9DB
+.0102
+.000.
+00010
+.000.
+.1.0
+
+Bunshin3
+black #0040FF #01A9DB
+.001.
+.010.
+01001
+.000.
+20.0
+
+Bunshin4
+black #0040FF #01A9DB
+2000.
+.010.
+01000
+.0102
+.0.0
+
+Crate
+darkbrown brown red
+01110
+10001
+10201
+10001
+0111
+
+Crateunlock
+darkbrown white blue
+01110
+10001
+10201
+10001
+0111
+
+Dumbot
+white #E6E6E6 #FF0000 #F6CECE #F78181
+.141.
+13231
+42324
+13231
+.141
+
+Door
+blue #0404B4
+00000
+1...1
+0...0
+1...1
+0000
+
+Key
+yellow
+.....
+.....
+.000.
+.....
+....
+
+button
+white black yellow #D8D8D8
+30003
+02220
+02220
+02220
+3000
+
+Tele
+white lightblue blue #A9F5F2
+3.2.3
+.212.
+21012
+.212.
+3.2.
+
+Bomb
+blue white #D8D8D8
+.....
+.212.
+.101.
+.212.
+....
+
+activebomb
+#FF0000 #F6CECE #D8D8D8
+.....
+.212.
+.101.
+.212.
+....
+
+deactivebomb
+black white #D8D8D8
+.....
+.212.
+.101.
+.212.
+....
+
+keyoff
+grey white black
+11111
+10001
+12221
+10001
+1111
+
+keyon
+grey white yellow
+11111
+10001
+12221
+10001
+1111
+
+Boom
+orange yellow
+.010.
+01110
+11111
+01110
+.010
+
+CopyBot
+white #40FF00 #A9F5A9
+.000.
+00200
+02120
+00200
+.000
+
+Stalker
+white red #BDBDBD
+.010.
+.101.
+20002
+.202.
+.0.0
+
 
 LEGEND
 
@@ -173,94 +306,15 @@ L = crateunlock
 COLLISIONLAYERS
 
 Background
-offTarget, onTarget
-WireLR, WireLD
-WireRD, WireUD
-WireLU, WireRU
-button
-CLock, OLock
+offTarget, onTarget, WireLR, WireLD, WireRD, WireUD, WireLU, WireRU
+button, CLock, OLock
 key
-Player, testWall
-Crate, Crateunlock
-Bunshin1, bunshin2
-bunshin3, bunshin4
-Dumbot, Tele
-bomb, activebomb
-deactivebomb, keyon
-keyoff, Copybot
-Door, Stalker
+Player, testWall, Crate, Crateunlock, Bunshin1, bunshin2, bunshin3, bunshin4, Dumbot, Tele, bomb, activebomb, deactivebomb, keyon, keyoff, Copybot, Door, Stalker
 boom
 
 RULES
 
-[ boom player ] -> restart 
-vertical late [ boom | notestwallnoclocknoolocknoofftargetnoontargetnobuttonnobunshin ] -> [ boom | boom ] 
-horizontal late [ boom | notestwallnoclocknoolocknoofftargetnoontargetnobuttonnobunshin ] -> [ boom | boom ] 
-late [ boom crate ] -> [ boom ] 
-[ boom bombx ] -> [ Activebomb key boom ] 
-[ boom ] -> [  ] 
-[ > Player | KeyLockx][keyoff ] -> [ Player | Lockx][keyoff ] 
-[ > Player | Key][Keyoff ] -> [ > Player | ][keyon ] 
-[ Olock key WireUD ] -> [ Olock WireUD ] 
-[ Olock key WireRU ] -> [ Olock WireRU ] 
-[ Olock key WireLU ] -> [ Olock WireLU ] 
-[ Olock WireLR key ] -> [ Olock WireLR ] 
-[ Olock WireLR ] -> [ Clock WireLR ] 
-[ action Player | Clock][keyon ] -> [ Player | OLockkey][keyoff ] 
-[ Stalker | ... | Player ] -> [ > Stalker | ... | Player ] 
-[ > Stalker | Player ] -> [ > Stalker |  ] 
-[ action player | ... | Stalker ] -> [ action player | ... | stalker ] 
-[ stationary player][Dumbot ] -> [ player][randomdirDumbot ] 
-[ stationary player][>Dumbot | Player ] -> [ player][>Dumbot |  ] 
-[ stationary player][>Player | Dumbot ] -> [ player][ | Dumbot ] 
-[ > Player][copybot ] -> [ > Player][>copybot ] 
-[ > Player | Crate ] -> [ > Player | >Crate ] 
-[ > Copybot | Crate ] -> [ > Copybot | >Crate ] 
-[ > Crate | Crate ] -> [ > Crate | >Crate ] 
-[ > Player | >Crate | offTarget ] -> [ Player | stationaryCrate | offTarget ] 
-[ Activebomb key ] -> [ boom ] 
-[ > Player | Activebomb ] -> [ Player | Activebombkey ] 
-[ > Player | bomb ] -> [ > Player | >activebomb ] 
-[ > Player | deactivebomb ] -> [ > Player | >deactivebomb ] 
-[ > Crate | activebomb ] -> [ Crate | boom ] 
-[ > Crate | bomb ] -> [ > Crate | >activebomb ] 
-[ > Crate | deactivebomb ] -> [ > Crate | >deactivebomb ] 
-[ > Copybot | activebomb ] -> [ > Copybot | boom ] 
-[ > Copybot | bomb ] -> [ > Copybot | >activebomb ] 
-[ > Copybot | deactivebomb ] -> [ > Copybot | >deactivebomb ] 
-[ > activebomb | bomb | bomb | bomb | bomb ] -> [ activebomb | activebomb | activebomb | activebomb | activebomb ] 
-[ > activebomb | bomb | bomb | bomb ] -> [ activebomb | activebomb | activebomb | activebomb ] 
-[ > activebomb | bomb | bomb ] -> [ activebomb | activebomb | activebomb ] 
-[ > activebomb | bomb ] -> [ activebomb | activebomb ] 
-[ > deactivebomb | deactivebomb ] -> [ > deactivebomb | >deactivebomb ] 
-[ action Player][Bunshin ] -> [ Bunshin][Player ] 
-[ Bunshin1 ] -> [ random Bunshin ] 
-[ Bunshin2 ] -> [ random Bunshin ] 
-[ Bunshin3 ] -> [ random Bunshin ] 
-[ Bunshin4 ] -> [ random Bunshin ] 
-late [ Crate Button ] -> [ Crateunlock ] 
-[ > player | Crateunlock ] -> [ > player | button>Crate ] 
-[ Crateunlock WireLU][door ] -> [ Crateunlock wireLU][ ] 
-[ Olock WireLU][door ] -> [ Olock WireLU][ ] 
-[ > Player | Ontarget ] -> [ |TeleOntarget ] 
-late [ Olock WireUD][offtarget ] -> [ Olock WireUD][ontarget ] 
-late [ Crateunlock WireUD][offtarget ] -> [ crateunlock WireUD][ontarget ] 
-late [ Crateunlock WireRU][offtarget][OlockWireRU ] -> [ Crate Button WireRU][Ontarget][OlockWireRU ] 
-late [ button WireUD][ontarget ] -> [ button WireUD][offtarget ] 
-[ Olock WireLR][deactivebombwirex ] -> [ Olock WireLR][bombwirex ] 
-[ Olock WireLR][bombxwirex ] -> [ Olock WireLR][deactivebombwirex ] 
-[ Crateunlock WireLR][bombxwirex ] -> [ Crateunlock WireLR][deactivebombwirex ] 
-[ Crateunlock WireLR][deactivebombwirex ] -> [ Crateunlock WireLR][bombwirex ] 
-[ > Player | lockx ] -> [ Player | lockx ] 
-[ > Crate | lockx ] -> [ Crate | lockx ] 
-[ > Dumbot | lockx ] -> [ Dumbot | lockx ] 
-[ > Copybot | lockx ] -> [ Copybot | lockx ] 
-[ > Crate | ontarget ] -> [ Crate | ontarget ] 
-[ > Crate | offtarget ] -> [ Crate | offtarget ] 
-[ > Stalker | ontarget ] -> [ Stalker | ontarget ] 
-[ > Stalker | offtarget ] -> [ Stalker | offtarget ] 
-[ > Stalker | lockx ] -> [ Stalker | lockx ] 
-
+[ boomplayer ] -> restartvertical late [ boom | notestwallnoclocknoolocknoofftargetnoontargetnobuttonnobunshin ] -> [ boom | boom ]horizontal late [ boom | notestwallnoclocknoolocknoofftargetnoontargetnobuttonnobunshin ] -> [ boom | boom ]late [ boomcrate ] -> [ boom ][ boombombx ] -> [ Activebombkeyboom ][ boom ] -> [  ][ > Player | KeyLockx ] [ keyoff ] -> [ Player | Lockx ] [ keyoff ][ > Player | Key ] [ Keyoff ] -> [ > Player |  ] [ keyon ] sfx6[ OlockkeyWireUD ] -> [ OlockWireUD ][ OlockkeyWireRU ] -> [ OlockWireRU ][ OlockkeyWireLU ] -> [ OlockWireLU ][ OlockWireLRkey ] -> [ OlockWireLR ][ OlockWireLR ] -> [ ClockWireLR ][ actionPlayer | Clock ] [ keyon ] -> [ Player | OLockkey ] [ keyoff ][ Stalker | ... | Player ] -> [ > Stalker | ... | Player ][ > Stalker | Player ] -> [ > Stalker |  ][ actionplayer | ... | Stalker ] -> [ actionplayer | ... | stalker ][ stationaryplayer ] [ Dumbot ] -> [ player ] [ randomdirDumbot ][ stationaryplayer ] [ > Dumbot | Player ] -> [ player ] [ > Dumbot |  ] sfx7[ stationaryplayer ] [ > Player | Dumbot ] -> [ player ] [  | Dumbot ] sfx7[ > Player ] [ copybot ] -> [ > Player ] [ > copybot ][ > Player | Crate ] -> [ > Player | > Crate ][ > Copybot | Crate ] -> [ > Copybot | > Crate ][ > Crate | Crate ] -> [ > Crate | > Crate ][ > Player | > Crate | offTarget ] -> [ Player | stationaryCrate | offTarget ][ Activebombkey ] -> [ boom ][ > Player | Activebomb ] -> [ Player | Activebombkey ] sfx2[ > Player | bomb ] -> [ > Player | > activebomb ][ > Player | deactivebomb ] -> [ > Player | > deactivebomb ][ > Crate | activebomb ] -> [ Crate | boom ][ > Crate | bomb ] -> [ > Crate | > activebomb ][ > Crate | deactivebomb ] -> [ > Crate | > deactivebomb ][ > Copybot | activebomb ] -> [ > Copybot | boom ][ > Copybot | bomb ] -> [ > Copybot | > activebomb ][ > Copybot | deactivebomb ] -> [ > Copybot | > deactivebomb ][ > activebomb | bomb | bomb | bomb | bomb ] -> [ activebomb | activebomb | activebomb | activebomb | activebomb ][ > activebomb | bomb | bomb | bomb ] -> [ activebomb | activebomb | activebomb | activebomb ][ > activebomb | bomb | bomb ] -> [ activebomb | activebomb | activebomb ][ > activebomb | bomb ] -> [ activebomb | activebomb ][ > deactivebomb | deactivebomb ] -> [ > deactivebomb | > deactivebomb ][ actionPlayer ] [ Bunshin ] -> [ Bunshin ] [ Player ] sfx1[ Bunshin1 ] -> [ randomBunshin ][ Bunshin2 ] -> [ randomBunshin ][ Bunshin3 ] -> [ randomBunshin ][ Bunshin4 ] -> [ randomBunshin ]late [ CrateButton ] -> [ Crateunlock ][ > player | Crateunlock ] -> [ > player | button> Crate ][ CrateunlockWireLU ] [ door ] -> [ CrateunlockwireLU ] [  ] sfx5[ OlockWireLU ] [ door ] -> [ OlockWireLU ] [  ] sfx5[ > Player | Ontarget ] -> [  | TeleOntarget ]late [ OlockWireUD ] [ offtarget ] -> [ OlockWireUD ] [ ontarget ]late [ CrateunlockWireUD ] [ offtarget ] -> [ crateunlockWireUD ] [ ontarget ]late [ CrateunlockWireRU ] [ offtarget ] [ OlockWireRU ] -> [ CrateButtonWireRU ] [ Ontarget ] [ OlockWireRU ]late [ buttonWireUD ] [ ontarget ] -> [ buttonWireUD ] [ offtarget ][ OlockWireLR ] [ deactivebombwirex ] -> [ OlockWireLR ] [ bombwirex ] sfx5[ OlockWireLR ] [ bombxwirex ] -> [ OlockWireLR ] [ deactivebombwirex ] sfx5[ CrateunlockWireLR ] [ bombxwirex ] -> [ CrateunlockWireLR ] [ deactivebombwirex ][ CrateunlockWireLR ] [ deactivebombwirex ] -> [ CrateunlockWireLR ] [ bombwirex ][ > Player | lockx ] -> [ Player | lockx ][ > Crate | lockx ] -> [ Crate | lockx ][ > Dumbot | lockx ] -> [ Dumbot | lockx ][ > Copybot | lockx ] -> [ Copybot | lockx ][ > Crate | ontarget ] -> [ Crate | ontarget ][ > Crate | offtarget ] -> [ Crate | offtarget ][ > Stalker | ontarget ] -> [ Stalker | ontarget ][ > Stalker | offtarget ] -> [ Stalker | offtarget ][ > Stalker | lockx ] -> [ Stalker | lockx ]
 
 WINCONDITIONS
 
@@ -278,8 +332,6 @@ LEVELS
 #................2....#
 #######################
 
-......................
-
 :######################
 #...##E....EEE.E...S..#
 #.P.##EE.E.EE..E.E...E#
@@ -293,8 +345,6 @@ LEVELS
 #E..2E.E.E...E2E...S..#
 #######################
 
-......................
-
 :##################
 #########-#413..2.#
 ##.****.#.D5#2..2.#
@@ -305,10 +355,6 @@ LEVELS
 ##########2##O...2#
 ##########615######
 
-..................
-
 :#########
 #P......+#
 ##########
-
-.........

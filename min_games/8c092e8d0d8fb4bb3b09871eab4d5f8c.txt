@@ -1,131 +1,183 @@
+title Multiply
+author Austyn Burgess
+
 OBJECTS
 
-BackgroundLightBlue
-WallDarkGrey
-PlayerBlack
-OrangeWhite Blue.000.
+Background
+LightBlue
+
+Wall
+DarkGrey
+
+Player
+Black Orange White Blue
+.000.
 .111.
 22222
 .333.
-.3.3.
+.3.3
 
-PlayerOff1Black
-OrangeWhite Blue.000.
+PlayerOff1
+Black Orange White Blue
+.000.
 .000.
 00000
 .000.
-.0.0.
+.0.0
 
-PlayerOff2Black
-OrangeWhite Blue.000.
+PlayerOff2
+Black Orange White Blue
+.000.
 .000.
 00000
 .000.
-.0.0.
+.0.0
 
-DuplicatorPink
-Button1Red.....
-.000.
-.000.
-.000.
-.....
+Duplicator
+Pink
 
-DoorFrameV1Red DarkGrey10001
+Button1
+Red
 .....
-.....
-.....
+.000.
+.000.
+.000.
+....
+
+DoorFrameV1
+Red DarkGrey
 10001
+.....
+.....
+.....
+1000
 
-DoorFrameH1Red DarkGrey1...1
-0...0
-0...0
-0...0
+DoorFrameH1
+Red DarkGrey
 1...1
+0...0
+0...0
+0...0
+1...
 
-DoorClosed1Red DarkGrey.....
-.000.
-.000.
-.000.
+DoorClosed1
+Red DarkGrey
 .....
+.000.
+.000.
+.000.
+....
 
-DoorOpen1Red DarkGrey.....
+DoorOpen1
+Red DarkGrey
 .....
 .....
 .....
 .....
+....
 
-Button2Blue.....
-.000.
-.000.
-.000.
+Button2
+Blue
 .....
+.000.
+.000.
+.000.
+....
 
-DoorFrameV2Blue DarkGrey10001
-.....
-.....
-.....
+DoorFrameV2
+Blue DarkGrey
 10001
+.....
+.....
+.....
+1000
 
-DoorFrameH2Blue DarkGrey1...1
-0...0
-0...0
-0...0
+DoorFrameH2
+Blue DarkGrey
 1...1
+0...0
+0...0
+0...0
+1...
 
-DoorClosed2Blue DarkGrey.....
-.000.
-.000.
-.000.
+DoorClosed2
+Blue DarkGrey
 .....
+.000.
+.000.
+.000.
+....
 
-DoorOpen2Blue DarkGrey.....
+DoorOpen2
+Blue DarkGrey
 .....
 .....
 .....
 .....
+....
 
-Button3Green.....
-.000.
-.000.
-.000.
+Button3
+Green
 .....
+.000.
+.000.
+.000.
+....
 
-DoorFrameV3Green DarkGrey10001
-.....
-.....
-.....
+DoorFrameV3
+Green DarkGrey
 10001
+.....
+.....
+.....
+1000
 
-DoorFrameH3Green DarkGrey1...1
-0...0
-0...0
-0...0
+DoorFrameH3
+Green DarkGrey
 1...1
-
-DoorClosed3Green DarkGrey.....
-.000.
-.000.
-.000.
-.....
-
-DoorOpen3Green DarkGrey.....
-.....
-.....
-.....
-.....
-
-CrateOrange Yellow00000
 0...0
 0...0
 0...0
+1...
+
+DoorClosed3
+Green DarkGrey
+.....
+.000.
+.000.
+.000.
+....
+
+DoorOpen3
+Green DarkGrey
+.....
+.....
+.....
+.....
+....
+
+Crate
+Orange Yellow
 00000
+0...0
+0...0
+0...0
+0000
 
-GoalBrown
-TutDuplicatorPink
-DoorTest1Black
-DoorTest2Black
-DoorTest3Black
+Goal
+Brown
 
+TutDuplicator
+Pink
+
+DoorTest1
+Black
+
+DoorTest2
+Black
+
+DoorTest3
+Black
 
 
 LEGEND
@@ -160,36 +212,12 @@ COLLISIONLAYERS
 DoorTest
 Background
 DoorFrame
-Goal, DoorOpen
-Button, DoorClosed
-Player, Off
-Wall, Crate
-Duplicator, TutDuplicator
+Goal, DoorOpen, Button, DoorClosed
+Player, Off, Wall, Crate, Duplicator, TutDuplicator
 
 RULES
 
-[ > Player | Crate ] -> [ > Player | >Crate ] 
-[ > Pusher | DoorClosed ] -> [ Pusher | DoorClosed ] 
-[ > Player | TutDuplicator ] -> [ Player | PlayerOff1 ] 
-[ > Player | Duplicator][PlayerOff1 ] -> [ Player | PlayerOff2][PlayerOff1 ] 
-[ > Player | Duplicator ] -> [ Player | PlayerOff1 ] 
-[ action Player][PlayerOff1][PlayerOff2 ] -> [ PlayerOff2][Player][PlayerOff1 ] 
-[ action Player][PlayerOff1 ] -> [ PlayerOff1][Player ] 
-[ action Player][PlayerOff2 ] -> [ PlayerOff2][Player ] 
-Late [ DoorOpen1 ] -> [ DoorOpen1 DoorTest1 ] 
-Late [ Button1 Pusher][DoorTest1 ] -> [ Button1 Pusher][ ] 
-Late [ DoorOpen1 DoorTest1 ] -> [ DoorClosed1 ] 
-Late [ Button1 Pusher][DoorClosed1 ] -> [ Button1 Pusher][DoorOpen1 ] 
-Late [ DoorOpen2 ] -> [ DoorOpen2 DoorTest2 ] 
-Late [ Button2 Pusher][DoorTest2 ] -> [ Button2 Pusher][ ] 
-Late [ DoorOpen2 DoorTest2 ] -> [ DoorClosed2 ] 
-Late [ Button2 Pusher][DoorClosed2 ] -> [ Button2 Pusher][DoorOpen2 ] 
-Late [ DoorOpen3 ] -> [ DoorOpen3 DoorTest3 ] 
-Late [ Button3 Pusher][DoorTest3 ] -> [ Button3 Pusher][ ] 
-Late [ DoorOpen3 DoorTest3 ] -> [ DoorClosed3 ] 
-Late [ Button3 Pusher][DoorClosed3 ] -> [ Button3 Pusher][DoorOpen3 ] 
-Late [ Pusher DoorClosed ] -> [ DoorClosed ] 
-
+[ > Player | Crate ] -> [ > Player | > Crate ][ > Pusher | DoorClosed ] -> [ Pusher | DoorClosed ][ > Player | TutDuplicator ] -> [ Player | PlayerOff1 ][ > Player | Duplicator ] [ PlayerOff1 ] -> [ Player | PlayerOff2 ] [ PlayerOff1 ][ > Player | Duplicator ] -> [ Player | PlayerOff1 ][ actionPlayer ] [ PlayerOff1 ] [ PlayerOff2 ] -> [ PlayerOff2 ] [ Player ] [ PlayerOff1 ][ actionPlayer ] [ PlayerOff1 ] -> [ PlayerOff1 ] [ Player ][ actionPlayer ] [ PlayerOff2 ] -> [ PlayerOff2 ] [ Player ]Late [ DoorOpen1 ] -> [ DoorOpen1DoorTest1 ]Late [ Button1Pusher ] [ DoorTest1 ] -> [ Button1Pusher ] [  ]Late [ DoorOpen1DoorTest1 ] -> [ DoorClosed1 ]Late [ Button1Pusher ] [ DoorClosed1 ] -> [ Button1Pusher ] [ DoorOpen1 ]Late [ DoorOpen2 ] -> [ DoorOpen2DoorTest2 ]Late [ Button2Pusher ] [ DoorTest2 ] -> [ Button2Pusher ] [  ]Late [ DoorOpen2DoorTest2 ] -> [ DoorClosed2 ]Late [ Button2Pusher ] [ DoorClosed2 ] -> [ Button2Pusher ] [ DoorOpen2 ]Late [ DoorOpen3 ] -> [ DoorOpen3DoorTest3 ]Late [ Button3Pusher ] [ DoorTest3 ] -> [ Button3Pusher ] [  ]Late [ DoorOpen3DoorTest3 ] -> [ DoorClosed3 ]Late [ Button3Pusher ] [ DoorClosed3 ] -> [ Button3Pusher ] [ DoorOpen3 ]Late [ PusherDoorClosed ] -> [ DoorClosed ]
 
 WINCONDITIONS
 

@@ -1,10 +1,28 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Rock, Paper, Scissors 
+    prelude_data
+      author
+      chaotic_iak
+    prelude_data
+      homepage
+      chaosatthesky.wordpress.com
+    prelude_data
+      again_interval
+      0.15
+    prelude_data
+      key_repeat_interval
+      0.2
+    prelude_data	run_rules_on_level_start
+    prelude_data	verbose_logging
   objects_section
     object_data
-      object_name	background
-      legend_key	l
-      colors
-        color	ightgreen
+      object_line
+        object_name	background
+      color_line
+        color	lightgreen
         color	yellow
       sprite
         ['0' '0' '0' '0' '0']
@@ -12,13 +30,11 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '1' '0' '0' '0']
         ['0' '0' '0' '0' '0']
-      
-
     object_data
-      object_name	wall
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	wall
+      color_line
+        color	darkgreen
         color	green
       sprite
         ['0' '1' '1' '1' '0']
@@ -27,10 +43,10 @@ ps_game
         ['1' '0' '0' '0' '1']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	level0
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	level0
+      color_line
+        color	darkgreen
         color	green
       sprite
         ['0' '1' '1' '0' '0']
@@ -39,10 +55,10 @@ ps_game
         ['1' '0' '0' '1' '0']
         ['0' '1' '1' '0' '0']
     object_data
-      object_name	level1
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	level1
+      color_line
+        color	darkgreen
         color	green
       sprite
         ['0' '0' '1' '0' '0']
@@ -51,10 +67,10 @@ ps_game
         ['0' '0' '1' '0' '0']
         ['0' '1' '1' '1' '0']
     object_data
-      object_name	level2
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	level2
+      color_line
+        color	darkgreen
         color	green
       sprite
         ['0' '1' '1' '0' '0']
@@ -63,10 +79,10 @@ ps_game
         ['0' '1' '0' '0' '0']
         ['1' '1' '1' '1' '0']
     object_data
-      object_name	level3
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	level3
+      color_line
+        color	darkgreen
         color	green
       sprite
         ['1' '1' '1' '0' '0']
@@ -75,10 +91,10 @@ ps_game
         ['0' '0' '0' '1' '0']
         ['1' '1' '1' '0' '0']
     object_data
-      object_name	level4
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	level4
+      color_line
+        color	darkgreen
         color	green
       sprite
         ['0' '0' '1' '0' '0']
@@ -87,10 +103,10 @@ ps_game
         ['1' '1' '1' '1' '0']
         ['0' '0' '1' '0' '0']
     object_data
-      object_name	level5
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	level5
+      color_line
+        color	darkgreen
         color	green
       sprite
         ['1' '1' '1' '1' '0']
@@ -99,10 +115,10 @@ ps_game
         ['0' '0' '0' '1' '0']
         ['1' '1' '1' '0' '0']
     object_data
-      object_name	level6
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	level6
+      color_line
+        color	darkgreen
         color	green
       sprite
         ['0' '1' '1' '0' '0']
@@ -111,10 +127,10 @@ ps_game
         ['1' '0' '0' '1' '0']
         ['0' '1' '1' '0' '0']
     object_data
-      object_name	level7
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	level7
+      color_line
+        color	darkgreen
         color	green
       sprite
         ['1' '1' '1' '1' '0']
@@ -123,10 +139,10 @@ ps_game
         ['0' '1' '0' '0' '0']
         ['0' '1' '0' '0' '0']
     object_data
-      object_name	level8
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	level8
+      color_line
+        color	darkgreen
         color	green
       sprite
         ['0' '1' '1' '0' '0']
@@ -135,10 +151,10 @@ ps_game
         ['1' '0' '0' '1' '0']
         ['0' '1' '1' '0' '0']
     object_data
-      object_name	level9
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	level9
+      color_line
+        color	darkgreen
         color	green
       sprite
         ['0' '1' '1' '0' '0']
@@ -147,36 +163,25 @@ ps_game
         ['0' '0' '0' '1' '0']
         ['1' '1' '1' '0' '0']
     object_data
-      object_name	player
-      legend_key	b
-      colors
-        color	lack
-    object_data
-      object_name	orange
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	player
+      color_line
+        color	black
+        color	orange
+        color	red
         color	blue
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '1' '1' '1' '.']
+        ['2' '2' '2' '2' '2']
+        ['.' '3' '3' '3' '.']
+        ['.' '3' '.' '3' '.']
     object_data
-      object_name	.000.
-      legend_key	.
-      colors
-        color	111.
-    object_data
-      object_name	22222
-      legend_key	.
-      colors
-        color	333.
-    object_data
-      object_name	.3.3.
-      legend_key	r
-      colors
-        color	ock
-    object_data
-      object_name	darkbrown
-      legend_key	b
-      colors
-        color	rown
+      object_line
+        object_name	rock
+      color_line
+        color	darkbrown
+        color	brown
         color	orange
       sprite
         ['.' '1' '1' '2' '.']
@@ -185,10 +190,10 @@ ps_game
         ['0' '1' '1' '1' '1']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	paper
-      legend_key	l
-      colors
-        color	ightgray
+      object_line
+        object_name	paper
+      color_line
+        color	lightgray
         color	gray
       sprite
         ['0' '0' '0' '1' '.']
@@ -197,10 +202,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	paperborderl
-      legend_key	w
-      colors
-        color	hite
+      object_line
+        object_name	paperborderl
+      color_line
+        color	white
       sprite
         ['0' '.' '.' '.' '.']
         ['0' '.' '.' '.' '.']
@@ -208,10 +213,10 @@ ps_game
         ['0' '.' '.' '.' '.']
         ['0' '.' '.' '.' '.']
     object_data
-      object_name	paperborderd
-      legend_key	w
-      colors
-        color	hite
+      object_line
+        object_name	paperborderd
+      color_line
+        color	white
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -219,10 +224,10 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['0' '0' '0' '0' '0']
     object_data
-      object_name	paperborderld
-      legend_key	w
-      colors
-        color	hite
+      object_line
+        object_name	paperborderld
+      color_line
+        color	white
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
@@ -230,20 +235,20 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['0' '.' '.' '.' '.']
     object_data
-      object_name	papernexttoborderl
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	papernexttoborderl
+      color_line
+        color	transparent
     object_data
-      object_name	papernexttoborderd
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	papernexttoborderd
+      color_line
+        color	transparent
     object_data
-      object_name	papernofold
-      legend_key	l
-      colors
-        color	ightgray
+      object_line
+        object_name	papernofold
+      color_line
+        color	lightgray
       sprite
         ['.' '.' '.' '0' '0']
         ['.' '.' '.' '.' '0']
@@ -251,15 +256,12 @@ ps_game
         ['.' '.' '.' '.' '.']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	scissorsu
-      legend_key	d
-      colors
-        color	arkgray
-    object_data
-      object_name	gray
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	scissorsu
+      color_line
+        color	darkgray
+        color	gray
+        color	red
         color	darkred
       sprite
         ['1' '.' '.' '.' '1']
@@ -268,15 +270,12 @@ ps_game
         ['2' '2' '.' '2' '2']
         ['2' '3' '.' '2' '3']
     object_data
-      object_name	scissorsl
-      legend_key	d
-      colors
-        color	arkgray
-    object_data
-      object_name	gray
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	scissorsl
+      color_line
+        color	darkgray
+        color	gray
+        color	red
         color	darkred
       sprite
         ['1' '0' '.' '2' '2']
@@ -285,15 +284,12 @@ ps_game
         ['.' '1' '0' '2' '2']
         ['1' '0' '.' '2' '3']
     object_data
-      object_name	scissorsd
-      legend_key	d
-      colors
-        color	arkgray
-    object_data
-      object_name	gray
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	scissorsd
+      color_line
+        color	darkgray
+        color	gray
+        color	red
         color	darkred
       sprite
         ['2' '2' '.' '2' '2']
@@ -302,15 +298,12 @@ ps_game
         ['0' '1' '.' '1' '0']
         ['1' '.' '.' '.' '1']
     object_data
-      object_name	scissorsr
-      legend_key	d
-      colors
-        color	arkgray
-    object_data
-      object_name	gray
-      legend_key	r
-      colors
-        color	ed
+      object_line
+        object_name	scissorsr
+      color_line
+        color	darkgray
+        color	gray
+        color	red
         color	darkred
       sprite
         ['2' '2' '.' '0' '1']
@@ -319,10 +312,10 @@ ps_game
         ['2' '2' '0' '1' '.']
         ['2' '3' '.' '0' '1']
     object_data
-      object_name	gem
-      legend_key	b
-      colors
-        color	lue
+      object_line
+        object_name	gem
+      color_line
+        color	blue
         color	lightblue
       sprite
         ['.' '.' '.' '.' '.']
@@ -331,10 +324,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '0' '.' '.']
     object_data
-      object_name	star
-      legend_key	d
-      colors
-        color	arkred
+      object_line
+        object_name	star
+      color_line
+        color	darkred
         color	red
       sprite
         ['.' '.' '.' '.' '.']
@@ -343,10 +336,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '0' '.' '.']
     object_data
-      object_name	nostar
-      legend_key	d
-      colors
-        color	arkgreen
+      object_line
+        object_name	nostar
+      color_line
+        color	darkgreen
         color	green
       sprite
         ['0' '0' '0' '0' '0']
@@ -355,10 +348,10 @@ ps_game
         ['0' '1' '1' '1' '0']
         ['0' '0' '1' '0' '0']
     object_data
-      object_name	starcover
-      legend_key	d
-      colors
-        color	arkred
+      object_line
+        object_name	starcover
+      color_line
+        color	darkred
         color	red
       sprite
         ['.' '.' '.' '.' '.']
@@ -367,10 +360,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '.' '0' '.' '.']
     object_data
-      object_name	exit
-      legend_key	b
-      colors
-        color	lue
+      object_line
+        object_name	exit
+      color_line
+        color	blue
         color	lightblue
       sprite
         ['.' '0' '0' '1' '.']
@@ -379,126 +372,123 @@ ps_game
         ['0' '0' '1' '0' '1']
         ['.' '0' '1' '1' '.']
     object_data
-      object_name	exitholder
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	exitholder
+      color_line
+        color	transparent
     object_data
-      object_name	startlevel
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	startlevel
+      color_line
+        color	transparent
     object_data
-      object_name	skipcheck
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	skipcheck
+      color_line
+        color	transparent
     object_data
-      object_name	nextstar
-      legend_key	t
-      colors
-        color	ransparent
+      object_line
+        object_name	nextstar
+      color_line
+        color	transparent
     object_data
-      object_name	processedstar
-      legend_key	t
-      colors
-        color	ransparent
-      
-
-
+      object_line
+        object_name	processedstar
+      color_line
+        color	transparent
   legend_section
     legend_data
-      .
+      . =
       object_name	background
     legend_data
-      #
+      # =
       object_name	wall
     legend_data
-      o
+      o =
       object_name	player
       legend_operation
         object_name	startlevel
     legend_data
-      g
+      g =
       object_name	gem
     legend_data
-      e
+      e =
       object_name	exit
       legend_operation
         object_name	exitholder
     legend_data
-      r
+      r =
       object_name	rock
     legend_data
-      p
+      p =
       object_name	paper
     legend_data
-      w
+      w =
       object_name	scissorsu
     legend_data
-      a
+      a =
       object_name	scissorsl
     legend_data
-      s
+      s =
       object_name	scissorsd
     legend_data
-      d
+      d =
       object_name	scissorsr
     legend_data
-      0
+      0 =
       object_name	wall
       legend_operation
         object_name	level0
     legend_data
-      1
+      1 =
       object_name	wall
       legend_operation
         object_name	level1
     legend_data
-      2
+      2 =
       object_name	wall
       legend_operation
         object_name	level2
     legend_data
-      3
+      3 =
       object_name	wall
       legend_operation
         object_name	level3
     legend_data
-      4
+      4 =
       object_name	wall
       legend_operation
         object_name	level4
     legend_data
-      5
+      5 =
       object_name	wall
       legend_operation
         object_name	level5
     legend_data
-      6
+      6 =
       object_name	wall
       legend_operation
         object_name	level6
     legend_data
-      7
+      7 =
       object_name	wall
       legend_operation
         object_name	level7
     legend_data
-      8
+      8 =
       object_name	wall
       legend_operation
         object_name	level8
     legend_data
-      9
+      9 =
       object_name	wall
       legend_operation
         object_name	level9
     legend_data
-      *
+      * =
       object_name	star
     legend_data
-      scissors
+      scissors =
       object_name	scissorsu
       legend_operation
         object_name	scissorsl
@@ -507,7 +497,7 @@ ps_game
       legend_operation
         object_name	scissorsr
     legend_data
-      object
+      object =
       object_name	wall
       legend_operation
         object_name	player
@@ -524,7 +514,7 @@ ps_game
       legend_operation
         object_name	exitholder
     legend_data
-      lvnum
+      lvnum =
       object_name	level0
       legend_operation
         object_name	level1
@@ -545,7 +535,7 @@ ps_game
       legend_operation
         object_name	level9
     legend_data
-      paperborder
+      paperborder =
       object_name	paperborderl
       legend_operation
         object_name	paperborderd
@@ -558,7 +548,7 @@ ps_game
       legend_operation
         object_name	papernexttoborderd
     legend_data
-      sprites
+      sprites =
       object_name	lvnum
       legend_operation
         object_name	paperborder
@@ -595,1001 +585,517 @@ ps_game
     rule_block
       rule_block_once
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content	startlevel
-            rule_content	]
-            rule_content	[
-            rule_content	l
-            rule_content	v
-            rule_content	n
-            rule_content	u
-            rule_content	m
+          rule_part
+            rule_content	lvnum
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	l
-            rule_content	v
-            rule_content	n
-            rule_content	u
-            rule_content	m
+            rule_content	no
+            rule_content	lvnum
           ->
           rule_part
             rule_content	startlevel
-            rule_content	]
-            rule_content	[
-            rule_content	l
-            rule_content	v
-            rule_content	n
-            rule_content	u
-            rule_content	m
+          rule_part
+            rule_content	lvnum
             cell_border
-            rule_content	n
-            rule_content	e
-            rule_content	x
-            rule_content	t
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-          
-
+            rule_content	nextstar
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content	startlevel
-            rule_content	]
-            rule_content	[
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	n
-            rule_content	o
-            rule_content	p
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	e
-            rule_content	s
-            rule_content	s
-            rule_content	e
-            rule_content	d
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	]
-            rule_content	[
-            rule_content	n
-            rule_content	e
-            rule_content	x
-            rule_content	t
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
+          rule_part
+            rule_content	star
+            rule_content	no
+            rule_content	processedstar
+          rule_part
+            rule_content	nextstar
             cell_border
           ->
           rule_part
             rule_content	startlevel
-            rule_content	]
-            rule_content	[
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	p
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	e
-            rule_content	s
-            rule_content	s
-            rule_content	e
-            rule_content	d
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	]
-            rule_content	[
-            rule_content	n
-            rule_content	o
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
+          rule_part
+            rule_content	star
+            rule_content	processedstar
+          rule_part
+            rule_content	nostar
             cell_border
-            rule_content	n
-            rule_content	e
-            rule_content	x
-            rule_content	t
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-          
-
+            rule_content	nextstar
         rule_data
           rule_part
             rule_content	startlevel
-            rule_content	]
-            rule_content	[
-            rule_content	n
-            rule_content	e
-            rule_content	x
-            rule_content	t
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
+          rule_part
+            rule_content	nextstar
           ->
           rule_part
             rule_content	startlevel
-            rule_content	]
-            rule_content	[
-          
-
+          rule_part
         rule_data
           rule_part
             rule_content	startlevel
-            rule_content	]
-            rule_content	[
-            rule_content	p
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	e
-            rule_content	s
-            rule_content	s
-            rule_content	e
-            rule_content	d
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
+          rule_part
+            rule_content	processedstar
           ->
           rule_part
             rule_content	startlevel
-            rule_content	]
-            rule_content	[
-          
-
+          rule_part
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content	startlevel
-            rule_content	]
-            rule_content	[
-            rule_content	l
-            rule_content	v
-            rule_content	n
-            rule_content	u
-            rule_content	m
+          rule_part
+            rule_content	lvnum
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
+            rule_content	nostar
           ->
           rule_part
             rule_content	startlevel
-            rule_content	]
-            rule_content	[
-            rule_content	l
-            rule_content	v
-            rule_content	n
-            rule_content	u
-            rule_content	m
+          rule_part
+            rule_content	lvnum
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	n
-            rule_content	e
-            rule_content	x
-            rule_content	t
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-          
-
+            rule_content	nostar
+            rule_content	nextstar
         rule_data
           rule_part
             rule_content	startlevel
           ->
           rule_part
-          
-
         rule_data
           rule_part
-            rule_content
-              action
-              player
-              skipcheck
+            rule_content	action
+            rule_content	player
+            rule_content	skipcheck
           ->
           rule_part
             rule_content	player
-          command
-            command_keyword	win
-          
-
+          prefix	win
         rule_data
           rule_part
-            rule_content
-              orthogonal
-              player
-              skipcheck
+            rule_content	orthogonal
+            rule_content	player
+            rule_content	skipcheck
           ->
           rule_part
-            rule_content
-              orthogonal
-              player
-          
-
+            rule_content	orthogonal
+            rule_content	player
         rule_data
           rule_part
-            rule_content
-              action
-              player
-              no
-              skipcheck
+            rule_content	action
+            rule_content	player
+            rule_content	no
+            rule_content	skipcheck
           ->
           rule_part
-            rule_content
-              player
-              skipcheck
-          command
-            sound
-              sound_id	9
-          
-
+            rule_content	player
+            rule_content	skipcheck
+          prefix	sfx9
         rule_data
           rule_part
             rule_content	skipcheck
           ->
-          None
-          
-
     rule_block
       rule_block_loop
         startloop
         
 
+
         rule_data
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	k
+            rule_content	rock
           ->
           rule_part
             rule_content
               >
               player
             cell_border
-            rule_content	>
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	k
-          
-
-        rule_data
-          down
-          rule_part
             rule_content
               >
-              object
-            cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	n
-            rule_content	o
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	u
-          ->
-          rule_part
-            rule_content
-              >
-              object
-            cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-          
-
-        rule_data
-          down
-          rule_part
-            rule_content
-              >
-              scissors
-            cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	u
-          ->
-          rule_part
-            rule_content
-              >
-              scissors
-            cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	u
-          
-
-        rule_data
-          down
-          rule_part
-            rule_content
-              >
-              gem
-            cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	u
-          ->
-          rule_part
-            rule_content
-              >
-              gem
-            cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	u
-          
-
-        rule_data
-          right
-          rule_part
-            rule_content
-              >
-              object
-            cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	n
-            rule_content	o
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	l
-          ->
-          rule_part
-            rule_content
-              >
-              object
-            cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-          
-
-        rule_data
-          right
-          rule_part
-            rule_content
-              >
-              scissors
-            cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	l
-          ->
-          rule_part
-            rule_content
-              >
-              scissors
-            cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	l
-          
-
-        rule_data
-          right
-          rule_part
-            rule_content
-              >
-              gem
-            cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	l
-          ->
-          rule_part
-            rule_content
-              >
-              gem
-            cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	l
-          
-
-        rule_data
-          up
-          rule_part
-            rule_content
-              >
-              object
-            cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	n
-            rule_content	o
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	d
-          ->
-          rule_part
-            rule_content
-              >
-              object
-            cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-          
-
-        rule_data
-          up
-          rule_part
-            rule_content
-              >
-              scissors
-            cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	d
-          ->
-          rule_part
-            rule_content
-              >
-              scissors
-            cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	d
-          
-
-        rule_data
-          up
-          rule_part
-            rule_content
-              >
-              gem
-            cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	d
-          ->
-          rule_part
-            rule_content
-              >
-              gem
-            cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	d
-          
-
-        rule_data
-          left
-          rule_part
-            rule_content
-              >
-              object
-            cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	n
-            rule_content	o
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	r
-          ->
-          rule_part
-            rule_content
-              >
-              object
-            cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-          
-
-        rule_data
-          left
-          rule_part
-            rule_content
-              >
-              scissors
-            cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	r
-          ->
-          rule_part
-            rule_content
-              >
-              scissors
-            cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	r
-          
-
-        rule_data
-          left
-          rule_part
-            rule_content
-              >
-              gem
-            cell_border
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	r
-          ->
-          rule_part
-            rule_content
-              >
-              gem
-            cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	r
-          
-
-        rule_data
-          rigid
-          down
-          rule_part
-            rule_content
-              >
-              object
-              no
               rock
-              no
-              scissorsd
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              >
+              object
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	scissors
+            rule_content	no
+            rule_content	scissorsu
           ->
           rule_part
             rule_content
               >
               object
             cell_border
-            rule_content	>
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content
+              >
+              scissors
         rule_data
-          +
-          rigid
-          right
+          prefix	down
           rule_part
             rule_content
               >
-              object
-              no
-              rock
-              no
-              scissorsr
+              scissors
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	scissorsu
           ->
           rule_part
             rule_content
               >
-              object
+              scissors
             cell_border
-            rule_content	>
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
-          
-
-        rule_data
-          +
-          rigid
-          up
-          rule_part
             rule_content
               >
-              object
-              no
-              rock
-              no
               scissorsu
+        rule_data
+          prefix	down
+          rule_part
+            rule_content
+              >
+              gem
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	scissorsu
+          ->
+          rule_part
+            rule_content
+              >
+              gem
+            cell_border
+            rule_content
+              >
+              scissorsu
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              >
+              object
+            cell_border
+            rule_content	scissors
+            rule_content	no
+            rule_content	scissorsl
           ->
           rule_part
             rule_content
               >
               object
             cell_border
-            rule_content	>
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content
+              >
+              scissors
         rule_data
-          +
-          rigid
-          left
+          prefix	right
           rule_part
             rule_content
               >
-              object
-              no
-              rock
-              no
+              scissors
+            cell_border
+            rule_content	scissorsl
+          ->
+          rule_part
+            rule_content
+              >
+              scissors
+            cell_border
+            rule_content
+              >
               scissorsl
+        rule_data
+          prefix	right
+          rule_part
+            rule_content
+              >
+              gem
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	scissorsl
+          ->
+          rule_part
+            rule_content
+              >
+              gem
+            cell_border
+            rule_content
+              >
+              scissorsl
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              >
+              object
+            cell_border
+            rule_content	scissors
+            rule_content	no
+            rule_content	scissorsd
           ->
           rule_part
             rule_content
               >
               object
             cell_border
-            rule_content	>
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content
+              >
+              scissors
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              >
+              scissors
+            cell_border
+            rule_content	scissorsd
+          ->
+          rule_part
+            rule_content
+              >
+              scissors
+            cell_border
+            rule_content
+              >
+              scissorsd
+        rule_data
+          prefix	up
+          rule_part
+            rule_content
+              >
+              gem
+            cell_border
+            rule_content	scissorsd
+          ->
+          rule_part
+            rule_content
+              >
+              gem
+            cell_border
+            rule_content
+              >
+              scissorsd
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              >
+              object
+            cell_border
+            rule_content	scissors
+            rule_content	no
+            rule_content	scissorsr
+          ->
+          rule_part
+            rule_content
+              >
+              object
+            cell_border
+            rule_content
+              >
+              scissors
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              >
+              scissors
+            cell_border
+            rule_content	scissorsr
+          ->
+          rule_part
+            rule_content
+              >
+              scissors
+            cell_border
+            rule_content
+              >
+              scissorsr
+        rule_data
+          prefix	left
+          rule_part
+            rule_content
+              >
+              gem
+            cell_border
+            rule_content	scissorsr
+          ->
+          rule_part
+            rule_content
+              >
+              gem
+            cell_border
+            rule_content
+              >
+              scissorsr
+        rule_data
+          prefix	rigid
+          prefix	down
+          rule_part
+            rule_content
+              >
+              object
+            rule_content	no
+            rule_content	rock
+            rule_content	no
+            rule_content	scissorsd
+            cell_border
+            rule_content	paper
+          ->
+          rule_part
+            rule_content
+              >
+              object
+            cell_border
+            rule_content
+              >
+              paper
         rule_data
           +
-          rigid
+          prefix	rigid
+          prefix	right
           rule_part
             rule_content
-              orthogonal
+              >
+              object
+            rule_content	no
+            rule_content	rock
+            rule_content	no
+            rule_content	scissorsr
+            cell_border
+            rule_content	paper
+          ->
+          rule_part
+            rule_content
+              >
+              object
+            cell_border
+            rule_content
+              >
               paper
+        rule_data
+          +
+          prefix	rigid
+          prefix	up
+          rule_part
+            rule_content
+              >
+              object
+            rule_content	no
+            rule_content	rock
+            rule_content	no
+            rule_content	scissorsu
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	paper
           ->
           rule_part
             rule_content
-              orthogonal
+              >
+              object
+            cell_border
+            rule_content
+              >
               paper
-            cell_border
-            rule_content	o
-            rule_content	r
-            rule_content	t
-            rule_content	h
-            rule_content	o
-            rule_content	g
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	l
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
-          
-
         rule_data
-          rule_part
-            rule_content
-              >
-              player
-            cell_border
-            rule_content	g
-            rule_content	e
-            rule_content	m
-          ->
-          rule_part
-            rule_content
-              >
-              player
-            cell_border
-          
-
-        rule_data
-          rule_part
-            rule_content
-              >
-              player
-            cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-          ->
-          rule_part
-            rule_content
-              >
-              player
-            cell_border
-            rule_content	p
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	e
-            rule_content	s
-            rule_content	s
-            rule_content	e
-            rule_content	d
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-          
-
-        rule_data
+          +
+          prefix	rigid
+          prefix	left
           rule_part
             rule_content
               >
               object
+            rule_content	no
+            rule_content	rock
+            rule_content	no
+            rule_content	scissorsl
             cell_border
-            rule_content	g
-            rule_content	e
-            rule_content	m
+            rule_content	paper
           ->
           rule_part
             rule_content
               >
               object
             cell_border
-            rule_content	>
-            rule_content	g
-            rule_content	e
-            rule_content	m
-          
-
+            rule_content
+              >
+              paper
+        rule_data
+          +
+          prefix	rigid
+          rule_part
+            rule_content	orthogonal
+            rule_content	paper
+            cell_border
+            rule_content	paper
+          ->
+          rule_part
+            rule_content	orthogonal
+            rule_content	paper
+            cell_border
+            rule_content	orthogonal
+            rule_content	paper
+        rule_data
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	gem
+          ->
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+        rule_data
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	star
+          ->
+          rule_part
+            rule_content
+              >
+              player
+            cell_border
+            rule_content	processedstar
         rule_data
           rule_part
             rule_content
               >
               object
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
+            rule_content	gem
           ->
           rule_part
             rule_content
               >
               object
             cell_border
-            rule_content	>
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-          
-
+            rule_content
+              >
+              gem
+        rule_data
+          rule_part
+            rule_content
+              >
+              object
+            cell_border
+            rule_content	star
+          ->
+          rule_part
+            rule_content
+              >
+              object
+            cell_border
+            rule_content
+              >
+              star
         endloop
         
 
-    rule_block
-      rule_block_once
+
     rule_block
       rule_block_once
         rule_data
@@ -1598,879 +1104,390 @@ ps_game
               >
               player
             cell_border
-            rule_content	e
-            rule_content	x
-            rule_content	i
-            rule_content	t
-            rule_content	h
-            rule_content	o
-            rule_content	l
-            rule_content	d
-            rule_content	e
-            rule_content	r
+            rule_content	exitholder
           ->
           rule_part
             rule_content
               >
               player
             cell_border
-          
-
+    rule_block
+      rule_block_once
         rule_data
           rule_part
             rule_content
               >
               rock
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	stationary
+            rule_content	paper
           ->
           rule_part
-            rule_content	|
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
-          
-
+            cell_border
+            rule_content	paper
         rule_data
           rule_part
             rule_content
               >
               paper
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	k
+            rule_content	stationary
+            rule_content	rock
           ->
           rule_part
             rule_content
               >
               paper
             cell_border
-          
-
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content
               >
               paper
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	u
+            rule_content	stationary
+            rule_content	scissorsu
           ->
           rule_part
-            rule_content	|
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	u
-          
-
+            cell_border
+            rule_content	scissorsu
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content
               >
               scissorsd
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	stationary
+            rule_content	paper
           ->
           rule_part
             rule_content
               >
               scissorsd
             cell_border
-          
-
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content
               >
               paper
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	l
+            rule_content	stationary
+            rule_content	scissorsl
           ->
           rule_part
-            rule_content	|
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	l
-          
-
+            cell_border
+            rule_content	scissorsl
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content
               >
               scissorsr
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	stationary
+            rule_content	paper
           ->
           rule_part
             rule_content
               >
               scissorsr
             cell_border
-          
-
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content
               >
               paper
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	d
+            rule_content	stationary
+            rule_content	scissorsd
           ->
           rule_part
-            rule_content	|
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	d
-          
-
+            cell_border
+            rule_content	scissorsd
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content
               >
               scissorsu
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	stationary
+            rule_content	paper
           ->
           rule_part
             rule_content
               >
               scissorsu
             cell_border
-          
-
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
               paper
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	r
+            rule_content	stationary
+            rule_content	scissorsr
           ->
           rule_part
-            rule_content	|
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	r
-          
-
+            cell_border
+            rule_content	scissorsr
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
               scissorsl
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	stationary
+            rule_content	paper
           ->
           rule_part
             rule_content
               >
               scissorsl
             cell_border
-          
-
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content
               >
               scissorsd
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	k
+            rule_content	stationary
+            rule_content	rock
           ->
           rule_part
-            rule_content	|
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	k
-          
-
+            cell_border
+            rule_content	rock
         rule_data
-          down
+          prefix	down
           rule_part
             rule_content
               >
               rock
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	u
+            rule_content	stationary
+            rule_content	scissorsu
           ->
           rule_part
             rule_content
               >
               rock
             cell_border
-          
-
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content
               >
               scissorsr
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	k
+            rule_content	stationary
+            rule_content	rock
           ->
           rule_part
-            rule_content	|
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	k
-          
-
+            cell_border
+            rule_content	rock
         rule_data
-          right
+          prefix	right
           rule_part
             rule_content
               >
               rock
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	l
+            rule_content	stationary
+            rule_content	scissorsl
           ->
           rule_part
             rule_content
               >
               rock
             cell_border
-          
-
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content
               >
               scissorsu
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	k
+            rule_content	stationary
+            rule_content	rock
           ->
           rule_part
-            rule_content	|
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	k
-          
-
+            cell_border
+            rule_content	rock
         rule_data
-          up
+          prefix	up
           rule_part
             rule_content
               >
               rock
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	d
+            rule_content	stationary
+            rule_content	scissorsd
           ->
           rule_part
             rule_content
               >
               rock
             cell_border
-          
-
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
               scissorsl
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	k
+            rule_content	stationary
+            rule_content	rock
           ->
           rule_part
-            rule_content	|
-            rule_content	r
-            rule_content	o
-            rule_content	c
-            rule_content	k
-          
-
+            cell_border
+            rule_content	rock
         rule_data
-          left
+          prefix	left
           rule_part
             rule_content
               >
               rock
             cell_border
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	t
-            rule_content	i
-            rule_content	o
-            rule_content	n
-            rule_content	a
-            rule_content	r
-            rule_content	y
-            rule_content	s
-            rule_content	c
-            rule_content	i
-            rule_content	s
-            rule_content	s
-            rule_content	o
-            rule_content	r
-            rule_content	s
-            rule_content	r
+            rule_content	stationary
+            rule_content	scissorsr
           ->
           rule_part
             rule_content
               >
               rock
             cell_border
-          
-
         rule_data
-          late
+          prefix	late
           rule_part
             rule_content	paperborder
           ->
           rule_part
-          
-
         rule_data
-          late
-          left
+          prefix	late
+          prefix	left
           rule_part
             rule_content	paper
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	no
+            rule_content	paper
           ->
           rule_part
-            rule_content
-              paper
-              paperborderl
+            rule_content	paper
+            rule_content	paperborderl
             cell_border
-          
-
         rule_data
-          late
-          down
+          prefix	late
+          prefix	down
           rule_part
             rule_content	paper
             cell_border
-            rule_content	n
-            rule_content	o
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	no
+            rule_content	paper
           ->
           rule_part
-            rule_content
-              paper
-              paperborderd
+            rule_content	paper
+            rule_content	paperborderd
             cell_border
-          
-
         rule_data
-          late
-          up
+          prefix	late
+          prefix	up
           rule_part
             rule_content	paperborderl
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	paper
           ->
           rule_part
             rule_content	paperborderl
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
-            rule_content	n
-            rule_content	e
-            rule_content	x
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	b
-            rule_content	o
-            rule_content	r
-            rule_content	d
-            rule_content	e
-            rule_content	r
-            rule_content	l
-          
-
+            rule_content	paper
+            rule_content	papernexttoborderl
         rule_data
-          late
-          right
+          prefix	late
+          prefix	right
           rule_part
             rule_content	paperborderd
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	paper
           ->
           rule_part
             rule_content	paperborderd
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
-            rule_content	n
-            rule_content	e
-            rule_content	x
-            rule_content	t
-            rule_content	t
-            rule_content	o
-            rule_content	b
-            rule_content	o
-            rule_content	r
-            rule_content	d
-            rule_content	e
-            rule_content	r
-            rule_content	d
-          
-
+            rule_content	paper
+            rule_content	papernexttoborderd
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              papernexttoborderl
-              papernexttoborderd
+            rule_content	papernexttoborderl
+            rule_content	papernexttoborderd
           ->
           rule_part
             rule_content	paperborderld
-          
-
         rule_data
-          late
-          up
+          prefix	late
+          prefix	up
           rule_part
             rule_content	paper
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	paper
           ->
           rule_part
-            rule_content
-              paper
-              papernofold
+            rule_content	paper
+            rule_content	papernofold
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	paper
         rule_data
-          late
-          right
+          prefix	late
+          prefix	right
           rule_part
             rule_content	paper
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
+            rule_content	paper
           ->
           rule_part
-            rule_content
-              paper
-              papernofold
+            rule_content	paper
+            rule_content	papernofold
             cell_border
-            rule_content	p
-            rule_content	a
-            rule_content	p
-            rule_content	e
-            rule_content	r
-          
-
+            rule_content	paper
         rule_data
-          late
-          right
+          prefix	late
+          prefix	right
           rule_part
             rule_content	processedstar
-            rule_content	]
-            rule_content	[
-            rule_content	n
-            rule_content	e
-            rule_content	x
-            rule_content	t
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
+          rule_part
+            rule_content	nextstar
             cell_border
           ->
           rule_part
-            rule_content	]
-            rule_content	[
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-            rule_content	c
-            rule_content	o
-            rule_content	v
-            rule_content	e
-            rule_content	r
+          rule_part
+            rule_content	starcover
             cell_border
-            rule_content	n
-            rule_content	e
-            rule_content	x
-            rule_content	t
-            rule_content	s
-            rule_content	t
-            rule_content	a
-            rule_content	r
-          
-
+            rule_content	nextstar
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              player
-              exit
-            rule_content	]
-            rule_content	[
-            rule_content	g
-            rule_content	e
-            rule_content	m
+            rule_content	player
+            rule_content	exit
+          rule_part
+            rule_content	gem
           ->
-          command
-            sound
-              sound_id	0
-          
-
+          prefix	sfx0
         rule_data
-          late
+          prefix	late
           rule_part
-            rule_content
-              exit
-              no
-              player
+            rule_content	exit
+            rule_content	no
+            rule_content	player
           ->
           rule_part
-            rule_content
-              exit
-              exitholder
-          
-
+            rule_content	exit
+            rule_content	exitholder
   winconditions_section
     condition_data
       no
@@ -2481,7 +1498,6 @@ ps_game
       on
       object_name	exit
   levels_section
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '.' '#' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' 'r' 'r' '.' '.' '.' '#']
@@ -2491,8 +1507,6 @@ ps_game
  ['#' '.' 'o' '.' '#' 'e' '.' '.' 'r' 'r' '.' '#']
  ['#' '.' '.' '.' '#' '#' '.' '.' 'r' '.' '.' '#']
  ['0' '1' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' 'g' '.' '.' '.' 'r' '.' 'r' 'r' '.' '#']
@@ -2502,7 +1516,6 @@ ps_game
  ['#' '.' 'o' '.' '#' '#' '.' 'r' '.' 'r' 'g' '#']
  ['#' '.' '.' '.' '#' '#' '.' '*' 'r' '.' '#' '#']
  ['0' '2' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' 'g' '.' '.' 'e' 'r' 'g' 'r' '.' '.' '#']
@@ -2512,7 +1525,6 @@ ps_game
  ['#' '.' 'o' '.' '#' '.' 'g' 'r' 'g' 'r' '.' '#']
  ['#' '.' '.' '.' '#' '.' 'r' 'g' 'r' 'g' '.' '#']
  ['0' '3' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' '.' '.' '*' '#' 'e' '#' '#']
  ['#' '.' '.' '.' '.' '.' '.' '#' 'p' 'p' '.' '#']
@@ -2522,7 +1534,6 @@ ps_game
  ['#' '.' 'o' '.' '#' '.' '.' 'p' 'p' '.' '.' '#']
  ['#' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '#']
  ['0' '4' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' 'a' '.' '.' '.' '.' '.' '#' '#' '#']
  ['#' '.' '.' 'a' 'g' '.' '.' '.' '.' '#' '#' '#']
@@ -2532,7 +1543,6 @@ ps_game
  ['#' '.' 'o' '.' '#' '.' '.' '.' '.' 'w' '.' '#']
  ['#' '.' '.' '.' '#' '.' '.' '.' '#' '.' '.' '#']
  ['0' '5' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '#' '.' '.' '#' '.' '.' '#' '#']
  ['#' '.' 'r' '.' 'a' 'd' '.' '.' '.' '.' '#' '#']
@@ -2542,7 +1552,6 @@ ps_game
  ['#' '.' 'o' '.' '#' 'e' 'w' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '#' '#' 'w' '.' '.' '.' '.' '#']
  ['0' '6' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' 'p' '.' 'p' 'r' 'r' 'r' 'e' '#' '*' '#']
  ['#' '.' '.' '.' 'p' 'r' 'r' '.' 'r' '#' 'r' '#']
@@ -2552,7 +1561,6 @@ ps_game
  ['#' '.' 'o' '.' '#' '.' 'r' 'p' 'r' '.' 'r' '#']
  ['#' '.' '.' '.' '#' 'r' '.' 'r' '.' 'r' '.' '#']
  ['0' '7' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' 'p' '.' '.' 'e' '#' '#' '*' '#']
  ['#' '.' 'p' '.' 'p' '.' 'a' '#' '#' '#' 'p' '#']
@@ -2562,8 +1570,6 @@ ps_game
  ['#' '.' 'o' '.' '#' '.' '.' '.' 'p' 'p' '.' '#']
  ['#' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '#']
  ['0' '8' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' '.' '.' '.' '.' 'r' '*' '.' '.' 'r' '.' '#']
  ['#' '.' '.' '.' 'g' '#' 'r' '.' '#' '.' 'e' '#']
@@ -2573,8 +1579,6 @@ ps_game
  ['#' '.' 'o' '.' '#' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '#' '.' '.' '.' '.' '.' '.' '#']
  ['0' '9' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None
-    level_data	None
     level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
  ['#' 'o' '.' '.' '.' 'e' '#' '.' '.' '.' '.' '.' '#']
  ['#' 'r' 'g' 'r' 'g' 'r' '#' '*' 'r' 'g' 'r' 'g' '#']
@@ -2602,8 +1606,8 @@ ps_game
  ['#' '.' '.' 'r' '.' '.' '#' '.' '#' '.' '.' '#']
  ['#' '.' '.' 'r' '.' '.' '.' '.' 'a' '*' '.' '#']
  ['1' '2' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '.' '.' '.' '.' '.' 'o' '#' 'e' '.' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' 'o' '#' 'e' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '#' '.' '.' '#']
  ['#' '.' '.' '#' '#' '#' '#' '#' '#' 's' '#']
  ['#' 'g' 'r' 'g' 'g' 'r' 'g' 'g' 'g' 'r' '#']
@@ -2686,4 +1690,3 @@ ps_game
  ['#' '#' '#' '.' '.' '.' '.' 'a' 'a' '#']
  ['#' 'e' 'r' 'o' '.' '#' '#' '*' '#' '#']
  ['1' '8' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	None

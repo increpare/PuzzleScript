@@ -1,35 +1,34 @@
 ps_game
+  prelude
+    prelude_data
+      title
+      Switch It Up
+    prelude_data
+      author
+      Pancake Robot
+    prelude_data
+      homepage
+      crouton.net
   objects_section
     object_data
-      object_name	Blackground
-      legend_key	#
-      colors
-        color	555555
+      object_line
+        object_name	Blackground
+      color_line
+        color	#555555
+        color	#777777
+        color	#222222
+      sprite
+        ['2' '0' '1' '1' '1']
+        ['2' '0' '0' '0' '1']
+        ['2' '0' '0' '0' '1']
+        ['2' '0' '0' '0' '0']
+        ['2' '2' '2' '2' '2']
     object_data
-      object_name	#777777
-      legend_key	#
-      colors
-        color	222222
-    object_data
-      object_name	20111
-      legend_key	2
-      colors
-        color	0001
-    object_data
-      object_name	20001
-      legend_key	2
-      colors
-        color	0000
-    object_data
-      object_name	22222
-      legend_key	W
-      colors
-        color	hiteground
-    object_data
-      object_name	#DDDDEE
-      legend_key	#
-      colors
-        color	FFFFFF
+      object_line
+        object_name	Whiteground
+      color_line
+        color	#DDDDEE
+        color	#FFFFFF
         color	#CCCCDD
       sprite
         ['0' '0' '1' '1' '1']
@@ -38,10 +37,10 @@ ps_game
         ['2' '0' '0' '0' '0']
         ['2' '2' '2' '2' '2']
     object_data
-      object_name	PathAll
-      legend_key	D
-      colors
-        color	arkBlue
+      object_line
+        object_name	PathAll
+      color_line
+        color	DarkBlue
       sprite
         ['.' '0' '0' '0' '.']
         ['0' '0' '0' '0' '0']
@@ -49,10 +48,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	PathHoriz
-      legend_key	D
-      colors
-        color	arkBlue
+      object_line
+        object_name	PathHoriz
+      color_line
+        color	DarkBlue
       sprite
         ['.' '.' '.' '.' '.']
         ['0' '0' '0' '0' '0']
@@ -60,10 +59,10 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	PathVert
-      legend_key	D
-      colors
-        color	arkBlue
+      object_line
+        object_name	PathVert
+      color_line
+        color	DarkBlue
       sprite
         ['.' '0' '0' '0' '.']
         ['.' '0' '0' '0' '.']
@@ -71,10 +70,10 @@ ps_game
         ['.' '0' '0' '0' '.']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	PathCornSD
-      legend_key	D
-      colors
-        color	arkBlue
+      object_line
+        object_name	PathCornSD
+      color_line
+        color	DarkBlue
       sprite
         ['.' '.' '.' '.' '.']
         ['.' '.' '0' '0' '0']
@@ -82,10 +81,10 @@ ps_game
         ['.' '0' '0' '0' '0']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	PathCornSA
-      legend_key	D
-      colors
-        color	arkBlue
+      object_line
+        object_name	PathCornSA
+      color_line
+        color	DarkBlue
       sprite
         ['.' '.' '.' '.' '.']
         ['0' '0' '0' '.' '.']
@@ -93,10 +92,10 @@ ps_game
         ['0' '0' '0' '0' '.']
         ['.' '0' '0' '0' '.']
     object_data
-      object_name	PathCornWD
-      legend_key	D
-      colors
-        color	arkBlue
+      object_line
+        object_name	PathCornWD
+      color_line
+        color	DarkBlue
       sprite
         ['.' '0' '0' '0' '.']
         ['.' '0' '0' '0' '0']
@@ -104,114 +103,74 @@ ps_game
         ['.' '.' '0' '0' '0']
         ['.' '.' '.' '.' '.']
     object_data
-      object_name	PathCornWA
-      legend_key	D
-      colors
-        color	arkBlue
+      object_line
+        object_name	PathCornWA
+      color_line
+        color	DarkBlue
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '.']
+        ['0' '0' '0' '0' '.']
+        ['0' '0' '0' '.' '.']
+        ['.' '.' '.' '.' '.']
     object_data
-      object_name	.000.
-      legend_key	0
-      colors
-        color	000.
-    object_data
-      object_name	0000.
-      legend_key	0
-      colors
-        color	00..
-    object_data
-      object_name	.....
-      legend_key	W
-      colors
-        color	all
-    object_data
-      object_name	#110000
-      legend_key	#
-      colors
-        color	1a0000
+      object_line
+        object_name	Wall
+      color_line
+        color	#110000
+        color	#1a0000
         color	#010000
+      sprite
+        ['2' '0' '1' '1' '1']
+        ['2' '0' '0' '0' '1']
+        ['2' '0' '0' '0' '1']
+        ['2' '0' '0' '0' '0']
+        ['2' '2' '2' '2' '2']
     object_data
-      object_name	20111
-      legend_key	2
-      colors
-        color	0001
-    object_data
-      object_name	20001
-      legend_key	2
-      colors
-        color	0000
-    object_data
-      object_name	22222
-      legend_key	P
-      colors
-        color	layerFront
-    object_data
-      object_name	gray
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	PlayerFront
+      color_line
+        color	gray
+        color	Black
         color	Blue
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '2' '2' '2' '.']
+        ['.' '1' '.' '1' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
     object_data
-      object_name	.000.
-      legend_key	.
-      colors
-        color	222.
-    object_data
-      object_name	.1.1.
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	01010
-      legend_key	P
-      colors
-        color	layerLeft
-    object_data
-      object_name	gray
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	PlayerLeft
+      color_line
+        color	gray
+        color	Black
         color	Blue
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '2' '0' '0' '.']
+        ['.' '.' '.' '0' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
     object_data
-      object_name	.000.
-      legend_key	.
-      colors
-        color	200.
-    object_data
-      object_name	...0.
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	01010
-      legend_key	P
-      colors
-        color	layerRight
-    object_data
-      object_name	gray
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	PlayerRight
+      color_line
+        color	gray
+        color	Black
         color	Blue
+      sprite
+        ['.' '0' '0' '0' '.']
+        ['.' '0' '0' '2' '.']
+        ['.' '0' '.' '.' '.']
+        ['0' '0' '0' '0' '0']
+        ['0' '1' '0' '1' '0']
     object_data
-      object_name	.000.
-      legend_key	.
-      colors
-        color	002.
-    object_data
-      object_name	.0...
-      legend_key	0
-      colors
-        color	0000
-    object_data
-      object_name	01010
-      legend_key	P
-      colors
-        color	layerBack
-    object_data
-      object_name	gray
-      legend_key	B
-      colors
-        color	lack
+      object_line
+        object_name	PlayerBack
+      color_line
+        color	gray
+        color	Black
         color	Blue
       sprite
         ['.' '0' '0' '0' '.']
@@ -220,15 +179,12 @@ ps_game
         ['0' '0' '0' '0' '0']
         ['0' '1' '0' '1' '0']
     object_data
-      object_name	HeartsSwitch
-      legend_key	#
-      colors
-        color	FF0000
-    object_data
-      object_name	#FFAAAA
-      legend_key	#
-      colors
-        color	DD0000
+      object_line
+        object_name	HeartsSwitch
+      color_line
+        color	#FF0000
+        color	#FFAAAA
+        color	#DD0000
         color	#000000
       sprite
         ['2' '3' '1' '3' '1']
@@ -237,15 +193,12 @@ ps_game
         ['2' '3' '3' '3' '0']
         ['2' '2' '3' '2' '2']
     object_data
-      object_name	DiamondSwitch
-      legend_key	#
-      colors
-        color	00FF00
-    object_data
-      object_name	#AAFFAA
-      legend_key	#
-      colors
-        color	00DD00
+      object_line
+        object_name	DiamondSwitch
+      color_line
+        color	#00FF00
+        color	#AAFFAA
+        color	#00DD00
         color	#000000
       sprite
         ['2' '0' '3' '1' '1']
@@ -254,15 +207,12 @@ ps_game
         ['2' '3' '3' '3' '0']
         ['2' '2' '3' '2' '2']
     object_data
-      object_name	LancerSwitch
-      legend_key	#
-      colors
-        color	0000FF
-    object_data
-      object_name	#AAAAFF
-      legend_key	#
-      colors
-        color	0000DD
+      object_line
+        object_name	LancerSwitch
+      color_line
+        color	#0000FF
+        color	#AAAAFF
+        color	#0000DD
         color	#000000
       sprite
         ['2' '0' '3' '1' '1']
@@ -272,18 +222,18 @@ ps_game
         ['2' '2' '2' '2' '2']
   legend_section
     legend_data
-      Background
+      Background =
       object_name	Blackground
       legend_operation
         object_name	Whiteground
     legend_data
-      .
+      . =
       object_name	Whiteground
     legend_data
-      #
+      # =
       object_name	Wall
     legend_data
-      Player
+      Player =
       object_name	PlayerFront
       legend_operation
         object_name	PlayerLeft
@@ -292,10 +242,10 @@ ps_game
       legend_operation
         object_name	PlayerBack
     legend_data
-      P
+      P =
       object_name	PlayerRight
     legend_data
-      Path
+      Path =
       object_name	PathAll
       legend_operation
         object_name	PathHoriz
@@ -310,14 +260,14 @@ ps_game
       legend_operation
         object_name	PathCornWA
     legend_data
-      Switch
+      Switch =
       object_name	HeartsSwitch
       legend_operation
         object_name	DiamondSwitch
       legend_operation
         object_name	LancerSwitch
     legend_data
-      -
+      - =
       object_name	PathHoriz
   collisionlayers_section
     layer_data
@@ -326,7 +276,6 @@ ps_game
       object_name	Path
     layer_data
       object_name	Player
-    layer_data
       object_name	Wall
       object_name	Switch
   rules_section
@@ -334,103 +283,61 @@ ps_game
       rule_block_once
         rule_data
           rule_part
-            rule_content
-              right
-              Player
+            rule_content	right
+            rule_content	Player
           ->
           rule_part
-            rule_content
-              right
-              PlayerRight
-          
-
+            rule_content	right
+            rule_content	PlayerRight
         rule_data
           rule_part
-            rule_content
-              up
-              Player
+            rule_content	up
+            rule_content	Player
           ->
           rule_part
-            rule_content
-              up
-              PlayerBack
-          
-
+            rule_content	up
+            rule_content	PlayerBack
         rule_data
           rule_part
-            rule_content
-              left
-              Player
+            rule_content	left
+            rule_content	Player
           ->
           rule_part
-            rule_content
-              left
-              PlayerLeft
-          
-
+            rule_content	left
+            rule_content	PlayerLeft
         rule_data
           rule_part
-            rule_content
-              down
-              Player
+            rule_content	down
+            rule_content	Player
           ->
           rule_part
-            rule_content
-              down
-              PlayerFront
-          
-
+            rule_content	down
+            rule_content	PlayerFront
         rule_data
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	S
-            rule_content	w
-            rule_content	i
-            rule_content	t
-            rule_content	c
-            rule_content	h
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
+            rule_content	Switch
+            rule_content	Path
             cell_border
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
-            rule_content	A
-            rule_content	l
-            rule_content	l
+            rule_content	PathAll
           ->
           rule_part
             rule_content
               >
               Player
             cell_border
-            rule_content	>
-            rule_content	S
-            rule_content	w
-            rule_content	i
-            rule_content	t
-            rule_content	c
-            rule_content	h
+            rule_content
+              >
+              Switch
             cell_border
-            rule_content	P
-            rule_content	a
-            rule_content	t
-            rule_content	h
-            rule_content	A
-            rule_content	l
-            rule_content	l
-          
-
+            rule_content	PathAll
   winconditions_section
   levels_section
-    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']]
-    level_data	[['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
+    level_data	[['#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#' '#']
+ ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '#' '.' '.' '.' '.' '.' '#']
  ['#' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']
  ['#' '.' 'P' '.' '.' '.' '.' '.' '.' '.' '.' '.' '.' '#']

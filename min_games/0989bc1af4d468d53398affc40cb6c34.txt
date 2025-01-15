@@ -1,99 +1,143 @@
+title Step-over sequence mazes [pre-2010]
+author Andrea Gilbert
+homepage http://www.clickmazes.com/step123/new-step.htm
+
 OBJECTS
 
-Backgroundblack
-pAred..0..
+Background
+black
+
+pA
+red
+..0..
 .000.
 00.00
 .000.
-..0..
+..0.
 
-pBblue..0..
+pB
+blue
+..0..
 .000.
 00.00
 .000.
-..0..
+..0.
 
-pCyellow..0..
+pC
+yellow
+..0..
 .000.
 00.00
 .000.
-..0..
+..0.
 
-goalwhite..0..
+goal
+white
+..0..
 .0.0.
 0.0.0
 .0.0.
-..0..
+..0.
 
-vAred..0..
+vA
+red
 ..0..
 ..0..
 ..0..
 ..0..
+..0.
 
-hAred.....
+hA
+red
+.....
 .....
 00000
 .....
+....
+
+vB
+blue
+..0..
+..0..
+..0..
+..0..
+..0.
+
+hB
+blue
 .....
-
-vBblue..0..
-..0..
-..0..
-..0..
-..0..
-
-hBblue.....
 .....
 00000
 .....
-.....
+....
 
-vCyellow..0..
+vC
+yellow
 ..0..
 ..0..
 ..0..
 ..0..
+..0.
 
-hCyellow.....
+hC
+yellow
+.....
 .....
 00000
 .....
+....
+
+vXe
+darkgrey
+.000.
+.000.
+.000.
+.000.
+.000
+
+hXe
+darkgrey
 .....
-
-vXedarkgrey.000.
-.000.
-.000.
-.000.
-.000.
-
-hXedarkgrey.....
 00000
 00000
 00000
-.....
+....
 
-xXdarkgrey.....
-.000.
-.000.
-.000.
+xX
+darkgrey
 .....
+.000.
+.000.
+.000.
+....
 
-xRBred blue
-......0.1.
-.0.1......
-.....xRBY
-redblue yellow.....
+xRB
+red blue
+.....
+.0.1.
+.0.1.
+.....
+....
+
+xRBY
+red blue yellow
+.....
 0.1.2
 0.1.2
 .....
-.....
+....
 
-voidtransparent
-freesteptransparent
-s2transparent
-s3transparent
+void
+transparent
 
+freestep
+transparent
+
+s2
+transparent
+
+s3
+transparent
 
 
 LEGEND
@@ -135,16 +179,7 @@ Goal
 
 RULES
 
-[ > pA | notA ] -> cancel 
-[ > pB | notB ] -> cancel 
-[ > pC | notC ] -> cancel 
-[ > pA sN | stepA |  ] -> [ |stepA | pBsN ] 
-[ > pB s2 | stepB |  ] -> [ |stepB | pAs2 ] 
-[ > pB s3 | stepB |  ] -> [ |stepB | pCs3 ] 
-[ > pC sN | stepC |  ] -> [ |stepC | pAsN ] 
-[ > player sN | freestep |  ] -> [ |freestep | playersN ] 
-late [ Player Goal ] -> [ Player ] 
-
+[ > pA | notA ] -> cancel[ > pB | notB ] -> cancel[ > pC | notC ] -> cancel[ > pAsN | stepA |  ] -> [  | stepA | pBsN ][ > pBs2 | stepB |  ] -> [  | stepB | pAs2 ][ > pBs3 | stepB |  ] -> [  | stepB | pCs3 ][ > pCsN | stepC |  ] -> [  | stepC | pAsN ][ > playersN | freestep |  ] -> [  | freestep | playersN ]late [ PlayerGoal ] -> [ Player ]
 
 WINCONDITIONS
 

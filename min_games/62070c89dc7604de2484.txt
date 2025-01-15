@@ -1,185 +1,257 @@
+title Rock, Paper, Scissors 
+author chaotic_iak
+homepage chaosatthesky.wordpress.com
+again_interval 0.15
+key_repeat_interval 0.2
+run_rules_on_level_start
+verbose_logging
+
 OBJECTS
 
-backgroundlightgreen yellow00000
+background
+lightgreen yellow
+00000
 00010
 00000
 01000
-00000
+0000
 
-
-walldarkgreen green01110
+wall
+darkgreen green
+01110
 10001
 01110
 10001
-00000
+0000
 
-level0darkgreen green01100
-10010
-10010
-10010
+level0
+darkgreen green
 01100
+10010
+10010
+10010
+0110
 
-level1darkgreen green00100
+level1
+darkgreen green
+00100
 01100
 00100
 00100
-01110
+0111
 
-level2darkgreen green01100
+level2
+darkgreen green
+01100
 10010
 00100
 01000
-11110
+1111
 
-level3darkgreen green11100
-00010
-01100
-00010
+level3
+darkgreen green
 11100
+00010
+01100
+00010
+1110
 
-level4darkgreen green00100
+level4
+darkgreen green
+00100
 01100
 10100
 11110
-00100
+0010
 
-level5darkgreen green11110
+level5
+darkgreen green
+11110
 10000
 11100
 00010
-11100
+1110
 
-level6darkgreen green01100
+level6
+darkgreen green
+01100
 10000
 11100
 10010
-01100
+0110
 
-level7darkgreen green11110
+level7
+darkgreen green
+11110
 00010
 00100
 01000
-01000
+0100
 
-level8darkgreen green01100
-10010
+level8
+darkgreen green
 01100
 10010
 01100
+10010
+0110
 
-level9darkgreen green01100
+level9
+darkgreen green
+01100
 10010
 01110
 00010
-11100
+1110
 
-playerblack
-orangered blue
-.000..111.
-22222.333.
-.3.3.rock
-darkbrownbrown orange.112.
+player
+black orange red blue
+.000.
+.111.
+22222
+.333.
+.3.3
+
+rock
+darkbrown brown orange
+.112.
 01112
 01112
 01111
-.000.
+.000
 
-paperlightgray gray0001.
+paper
+lightgray gray
+0001.
 00001
 00000
 00000
-00000
+0000
 
-paperborderlwhite0....
+paperborderl
+white
 0....
 0....
 0....
 0....
+0...
 
-paperborderdwhite.....
+paperborderd
+white
 .....
 .....
 .....
-00000
+.....
+0000
 
-paperborderldwhite.....
+paperborderld
+white
 .....
 .....
 .....
-0....
+.....
+0...
 
-papernexttoborderltransparent
-papernexttoborderdtransparent
-papernofoldlightgray...00
+papernexttoborderl
+transparent
+
+papernexttoborderd
+transparent
+
+papernofold
+lightgray
+...00
 ....0
 .....
 .....
-.....
+....
 
-scissorsudarkgray
-grayred darkred1...1
+scissorsu
+darkgray gray red darkred
+1...1
 01.10
 .010.
 22.22
-23.23
+23.2
 
-scissorsldarkgray
-grayred darkred10.22
+scissorsl
+darkgray gray red darkred
+10.22
 .1023
 ..1..
 .1022
-10.23
+10.2
 
-scissorsddarkgray
-grayred darkred22.22
+scissorsd
+darkgray gray red darkred
+22.22
 23.23
 .010.
 01.10
-1...1
+1...
 
-scissorsrdarkgray
-grayred darkred22.01
+scissorsr
+darkgray gray red darkred
+22.01
 2301.
 ..1..
 2201.
-23.01
+23.0
 
-gemblue lightblue.....
+gem
+blue lightblue
+.....
 .011.
 00001
 .000.
-..0..
+..0.
 
-stardarkred red.....
+star
+darkred red
+.....
 .011.
 00001
 .000.
-..0..
+..0.
 
-nostardarkgreen green00000
+nostar
+darkgreen green
+00000
 01110
 11111
 01110
-00100
+0010
 
-starcoverdarkred red.....
+starcover
+darkred red
+.....
 .011.
 00001
 .000.
-..0..
+..0.
 
-exitblue lightblue.001.
+exit
+blue lightblue
+.001.
 01011
 00011
 00101
-.011.
+.011
 
-exitholdertransparent
-startleveltransparent
-skipchecktransparent
-nextstartransparent
-processedstartransparent
+exitholder
+transparent
 
+startlevel
+transparent
+
+skipcheck
+transparent
+
+nextstar
+transparent
+
+processedstar
+transparent
 
 
 LEGEND
@@ -229,71 +301,11 @@ papernofold
 
 RULES
 
-right [ startlevel][lvnum | nolvnum ] -> [ startlevel][lvnum | nextstar ] 
-right [ startlevel][starnoprocessedstar][nextstar |  ] -> [ startlevel][starprocessedstar][nostar | nextstar ] 
-[ startlevel][nextstar ] -> [ startlevel][ ] 
-[ startlevel][processedstar ] -> [ startlevel][ ] 
-right [ startlevel][lvnum | nostar ] -> [ startlevel][lvnum | nostarnextstar ] 
-[ startlevel ] -> [  ] 
-[ action player skipcheck ] -> [ player ] win 
-[ orthogonal player skipcheck ] -> [ orthogonal player ] 
-[ action player no skipcheck ] -> [ player skipcheck ] 
-[ skipcheck ] -> 
-startloop
-[ > player | rock ] -> [ > player | >rock ] 
-down [ > object | scissorsnoscissorsu ] -> [ > object | >scissors ] 
-down [ > scissors | scissorsu ] -> [ > scissors | >scissorsu ] 
-down [ > gem | scissorsu ] -> [ > gem | >scissorsu ] 
-right [ > object | scissorsnoscissorsl ] -> [ > object | >scissors ] 
-right [ > scissors | scissorsl ] -> [ > scissors | >scissorsl ] 
-right [ > gem | scissorsl ] -> [ > gem | >scissorsl ] 
-up [ > object | scissorsnoscissorsd ] -> [ > object | >scissors ] 
-up [ > scissors | scissorsd ] -> [ > scissors | >scissorsd ] 
-up [ > gem | scissorsd ] -> [ > gem | >scissorsd ] 
-left [ > object | scissorsnoscissorsr ] -> [ > object | >scissors ] 
-left [ > scissors | scissorsr ] -> [ > scissors | >scissorsr ] 
-left [ > gem | scissorsr ] -> [ > gem | >scissorsr ] 
-rigid down [ > object no rock no scissorsd | paper ] -> [ > object | >paper ] 
-+ rigid right [ > object no rock no scissorsr | paper ] -> [ > object | >paper ] 
-+ rigid up [ > object no rock no scissorsu | paper ] -> [ > object | >paper ] 
-+ rigid left [ > object no rock no scissorsl | paper ] -> [ > object | >paper ] 
-+ rigid [ orthogonal paper | paper ] -> [ orthogonal paper | orthogonalpaper ] 
-[ > player | gem ] -> [ > player |  ] 
-[ > player | star ] -> [ > player | processedstar ] 
-[ > object | gem ] -> [ > object | >gem ] 
-[ > object | star ] -> [ > object | >star ] 
-endloop
-[ > player | exitholder ] -> [ > player |  ] 
-[ > rock | stationarypaper ] -> [ |paper ] 
-[ > paper | stationaryrock ] -> [ > paper |  ] 
-down [ > paper | stationaryscissorsu ] -> [ |scissorsu ] 
-down [ > scissorsd | stationarypaper ] -> [ > scissorsd |  ] 
-right [ > paper | stationaryscissorsl ] -> [ |scissorsl ] 
-right [ > scissorsr | stationarypaper ] -> [ > scissorsr |  ] 
-up [ > paper | stationaryscissorsd ] -> [ |scissorsd ] 
-up [ > scissorsu | stationarypaper ] -> [ > scissorsu |  ] 
-left [ > paper | stationaryscissorsr ] -> [ |scissorsr ] 
-left [ > scissorsl | stationarypaper ] -> [ > scissorsl |  ] 
-down [ > scissorsd | stationaryrock ] -> [ |rock ] 
-down [ > rock | stationaryscissorsu ] -> [ > rock |  ] 
-right [ > scissorsr | stationaryrock ] -> [ |rock ] 
-right [ > rock | stationaryscissorsl ] -> [ > rock |  ] 
-up [ > scissorsu | stationaryrock ] -> [ |rock ] 
-up [ > rock | stationaryscissorsd ] -> [ > rock |  ] 
-left [ > scissorsl | stationaryrock ] -> [ |rock ] 
-left [ > rock | stationaryscissorsr ] -> [ > rock |  ] 
-late [ paperborder ] -> [  ] 
-late left [ paper | nopaper ] -> [ paper paperborderl |  ] 
-late down [ paper | nopaper ] -> [ paper paperborderd |  ] 
-late up [ paperborderl | paper ] -> [ paperborderl | paperpapernexttoborderl ] 
-late right [ paperborderd | paper ] -> [ paperborderd | paperpapernexttoborderd ] 
-late [ papernexttoborderl papernexttoborderd ] -> [ paperborderld ] 
-late up [ paper | paper ] -> [ paper papernofold | paper ] 
-late right [ paper | paper ] -> [ paper papernofold | paper ] 
-late right [ processedstar][nextstar |  ] -> [ ][starcover | nextstar ] 
-late [ player exit][gem ] -> 
-late [ exit no player ] -> [ exit exitholder ] 
+right [ startlevel ] [ lvnum | nolvnum ] -> [ startlevel ] [ lvnum | nextstar ]right [ startlevel ] [ starnoprocessedstar ] [ nextstar |  ] -> [ startlevel ] [ starprocessedstar ] [ nostar | nextstar ][ startlevel ] [ nextstar ] -> [ startlevel ] [  ][ startlevel ] [ processedstar ] -> [ startlevel ] [  ]right [ startlevel ] [ lvnum | nostar ] -> [ startlevel ] [ lvnum | nostarnextstar ][ startlevel ] -> [  ][ actionplayerskipcheck ] -> [ player ] win[ orthogonalplayerskipcheck ] -> [ orthogonalplayer ][ actionplayernoskipcheck ] -> [ playerskipcheck ] sfx9[ skipcheck ] ->startloop
 
+[ > player | rock ] -> [ > player | > rock ]down [ > object | scissorsnoscissorsu ] -> [ > object | > scissors ]down [ > scissors | scissorsu ] -> [ > scissors | > scissorsu ]down [ > gem | scissorsu ] -> [ > gem | > scissorsu ]right [ > object | scissorsnoscissorsl ] -> [ > object | > scissors ]right [ > scissors | scissorsl ] -> [ > scissors | > scissorsl ]right [ > gem | scissorsl ] -> [ > gem | > scissorsl ]up [ > object | scissorsnoscissorsd ] -> [ > object | > scissors ]up [ > scissors | scissorsd ] -> [ > scissors | > scissorsd ]up [ > gem | scissorsd ] -> [ > gem | > scissorsd ]left [ > object | scissorsnoscissorsr ] -> [ > object | > scissors ]left [ > scissors | scissorsr ] -> [ > scissors | > scissorsr ]left [ > gem | scissorsr ] -> [ > gem | > scissorsr ]rigid down [ > objectnorocknoscissorsd | paper ] -> [ > object | > paper ]+ rigid right [ > objectnorocknoscissorsr | paper ] -> [ > object | > paper ]+ rigid up [ > objectnorocknoscissorsu | paper ] -> [ > object | > paper ]+ rigid left [ > objectnorocknoscissorsl | paper ] -> [ > object | > paper ]+ rigid [ orthogonalpaper | paper ] -> [ orthogonalpaper | orthogonalpaper ][ > player | gem ] -> [ > player |  ][ > player | star ] -> [ > player | processedstar ][ > object | gem ] -> [ > object | > gem ][ > object | star ] -> [ > object | > star ]endloop
+
+[ > player | exitholder ] -> [ > player |  ][ > rock | stationarypaper ] -> [  | paper ][ > paper | stationaryrock ] -> [ > paper |  ]down [ > paper | stationaryscissorsu ] -> [  | scissorsu ]down [ > scissorsd | stationarypaper ] -> [ > scissorsd |  ]right [ > paper | stationaryscissorsl ] -> [  | scissorsl ]right [ > scissorsr | stationarypaper ] -> [ > scissorsr |  ]up [ > paper | stationaryscissorsd ] -> [  | scissorsd ]up [ > scissorsu | stationarypaper ] -> [ > scissorsu |  ]left [ > paper | stationaryscissorsr ] -> [  | scissorsr ]left [ > scissorsl | stationarypaper ] -> [ > scissorsl |  ]down [ > scissorsd | stationaryrock ] -> [  | rock ]down [ > rock | stationaryscissorsu ] -> [ > rock |  ]right [ > scissorsr | stationaryrock ] -> [  | rock ]right [ > rock | stationaryscissorsl ] -> [ > rock |  ]up [ > scissorsu | stationaryrock ] -> [  | rock ]up [ > rock | stationaryscissorsd ] -> [ > rock |  ]left [ > scissorsl | stationaryrock ] -> [  | rock ]left [ > rock | stationaryscissorsr ] -> [ > rock |  ]late [ paperborder ] -> [  ]late left [ paper | nopaper ] -> [ paperpaperborderl |  ]late down [ paper | nopaper ] -> [ paperpaperborderd |  ]late up [ paperborderl | paper ] -> [ paperborderl | paperpapernexttoborderl ]late right [ paperborderd | paper ] -> [ paperborderd | paperpapernexttoborderd ]late [ papernexttoborderlpapernexttoborderd ] -> [ paperborderld ]late up [ paper | paper ] -> [ paperpapernofold | paper ]late right [ paper | paper ] -> [ paperpapernofold | paper ]late right [ processedstar ] [ nextstar |  ] -> [  ] [ starcover | nextstar ]late [ playerexit ] [ gem ] -> sfx0late [ exitnoplayer ] -> [ exitexitholder ]
 
 WINCONDITIONS
 
@@ -423,7 +435,6 @@ LEVELS
 12##########
 
 ###########
-
 #.....o#e.#
 #......#..#
 #..######s#

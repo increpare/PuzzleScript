@@ -1,68 +1,98 @@
+title Straighten Up
+author Ricky
+homepage puzzlescript.net
+run_rules_on_level_start
+
 OBJECTS
 
-Background#757D82 DARKGRAY11111
+Background
+#757D82 DARKGRAY
+11111
 11011
 10001
 11011
-11111
+1111
 
-WallDARKBLUE #22303F00000
-01110
-01110
-01110
+Wall
+DARKBLUE #22303F
 00000
+01110
+01110
+01110
+0000
 
-GreenPlayerLIGHTGREEN WHITE.000.
+GreenPlayer
+LIGHTGREEN WHITE
+.000.
 00000
 01010
 00000
-.0.0.
+.0.0
 
-RedPlayerRED WHITE.000.
+RedPlayer
+RED WHITE
+.000.
 00000
 01010
 00000
-.0.0.
+.0.0
 
-LeftArmLIGHTGREEN0....
+LeftArm
+LIGHTGREEN
+0....
 0....
 .....
 .....
-.....
+....
 
-RightArmLIGHTGREEN....0
+RightArm
+LIGHTGREEN
+....0
 ....0
 .....
 .....
+....
+
+MoveCrate
+ORANGE BROWN
+00000
+01110
+01110
+01110
+0000
+
+FixedCrate
+ORANGE BROWN
+00000
+01110
+01110
+01110
+0000
+
+BlueCrate
+LIGHTBLUE BLUE
+00000
+01110
+01110
+01110
+0000
+
+FixedDot
+DARKBLUE
 .....
-
-MoveCrateORANGE BROWN00000
-01110
-01110
-01110
-00000
-
-FixedCrateORANGE BROWN00000
-01110
-01110
-01110
-00000
-
-BlueCrateLIGHTBLUE BLUE00000
-01110
-01110
-01110
-00000
-
-FixedDotDARKBLUE.....
 .....
 ..0..
 .....
-.....
+....
 
-PathHorizTRANSPARENT
-PathVertTRANSPARENT
-FlagTRANSPARENT
+PathHoriz
+TRANSPARENT
+
+PathVert
+TRANSPARENT
+
+Flag
+TRANSPARENT
 
 
 LEGEND
@@ -81,8 +111,7 @@ Player = GreenPlayer or RedPlayer
 COLLISIONLAYERS
 
 Background
-Player, Crate
-Wall, RedPlayer
+Player, Crate, Wall, RedPlayer
 PathHoriz
 PathVert
 BlueCrate
@@ -92,24 +121,7 @@ Flag
 
 RULES
 
-[ > GreenPlayer | MoveCrate ] -> [ > GreenPlayer | >MoveCrate ] 
-[ < RedPlayer | MoveCrate ] -> [ < RedPlayer | <MoveCrate ] 
-late right [ Crate | Crate | Crate ] -> [ Crate PathHoriz | CratePathHoriz | CratePathHoriz ] 
-late down [ Crate | Crate | Crate ] -> [ Crate PathVert | CratePathVert | CratePathVert ] 
-late right [ no Crate | CratePathHoriz | CratePathHoriz | noCrate ] -> [ |Crate | Crate |  ] 
-late down [ no Crate | CratePathVert | CratePathVert | noCrate ] -> [ |Crate | Crate |  ] 
-late right [ no Crate | CratePathHoriz | noCrate ] -> [ |Crate |  ] 
-late down [ no Crate | CratePathVert | noCrate ] -> [ |Crate |  ] 
-late [ Path no Crate ] -> [  ] 
-late [ Path ] -> [ Path BlueCrate ] 
-late [ BlueCrate no Path ] -> [  ] 
-late random [ no Crate ] -> [ Flag ] 
-late [ Flag no Crate][CratenoPath ] -> [ ][CrateFlag ] 
-late [ Flag no Crate ] -> 
-late [ Arm ] -> [  ] 
-late right [ no Arm | Player | noArm][FlagnoCrate ] -> [ RightArm | Player | LeftArm][Flag ] 
-late [ Flag ] -> [  ] 
-
+[ > GreenPlayer | MoveCrate ] -> [ > GreenPlayer | > MoveCrate ][ < RedPlayer | MoveCrate ] -> [ < RedPlayer | < MoveCrate ]late right [ Crate | Crate | Crate ] -> [ CratePathHoriz | CratePathHoriz | CratePathHoriz ]late down [ Crate | Crate | Crate ] -> [ CratePathVert | CratePathVert | CratePathVert ]late right [ noCrate | CratePathHoriz | CratePathHoriz | noCrate ] -> [  | Crate | Crate |  ]late down [ noCrate | CratePathVert | CratePathVert | noCrate ] -> [  | Crate | Crate |  ]late right [ noCrate | CratePathHoriz | noCrate ] -> [  | Crate |  ]late down [ noCrate | CratePathVert | noCrate ] -> [  | Crate |  ]late [ PathnoCrate ] -> [  ]late [ Path ] -> [ PathBlueCrate ]late [ BlueCratenoPath ] -> [  ]late random [ noCrate ] -> [ Flag ]late [ FlagnoCrate ] [ CratenoPath ] -> [  ] [ CrateFlag ]late [ FlagnoCrate ] -> sfx0late [ Arm ] -> [  ]late right [ noArm | Player | noArm ] [ FlagnoCrate ] -> [ RightArm | Player | LeftArm ] [ Flag ]late [ Flag ] -> [  ]
 
 WINCONDITIONS
 

@@ -1,95 +1,140 @@
+title Lawn-Mowing Robot
+author Alex Baines
+homepage abaines.me.uk
+again_interval 0.5
+background_color #1B1825
+
 OBJECTS
 
-BackgroundDarkBlue
-WallDarkBlue
-DirtDarkBrown Brown10000
+Background
+DarkBlue
+
+Wall
+DarkBlue
+
+Dirt
+DarkBrown Brown
+10000
 00010
 01000
 00000
-00010
+0001
 
-WeedGreen LightGreen10010
+Weed
+Green LightGreen
+10010
 01000
 00001
 10100
-00010
+0001
 
-LawnULightGreen
-LawnDGreen
-RockPurple Brown.....
+LawnU
+LightGreen
+
+LawnD
+Green
+
+Rock
+Purple Brown
+.....
 .000.
 .010.
 .000.
-.....
+....
 
-PlayerWhite Pink.....
+Player
+White Pink
+.....
 .111.
 .101.
 .111.
-.....
+....
 
-ErrorRed0.0.0
+Error
+Red
+0.0.0
 .....
 0...0
 .....
-0.0.0
+0.0.
 
-TryMoveUTransparent
-TryMoveDTransparent
-Num_1LightGray.00..
-..0..
-..0..
-..0..
-.000.
+TryMoveU
+Transparent
 
-Num_2LightGray.00..
+TryMoveD
+Transparent
+
+Num_1
+LightGray
+.00..
+..0..
+..0..
+..0..
+.000
+
+Num_2
+LightGray
+.00..
 0..0.
 ..0..
 .0...
-0000.
+0000
 
-Num_3LightGray.00..
+Num_3
+LightGray
+.00..
 0..0.
 ..0..
 0..0.
-.00..
+.00.
 
-Num_4LightGray0....
+Num_4
+LightGray
+0....
 0....
 0.0..
 0000.
-..0..
+..0.
 
-Num_5LightGray0000.
+Num_5
+LightGray
+0000.
 0....
 000..
 ...0.
-000..
+000.
 
-Num_6LightGray.00..
+Num_6
+LightGray
+.00..
 0....
 000..
 0..0.
-.00..
+.00.
 
-Num_7LightGray0000.
+Num_7
+LightGray
+0000.
 ...0.
 ..0..
 .0...
-.0...
+.0..
 
-Num_8LightGray.00..
-0..0.
+Num_8
+LightGray
 .00..
 0..0.
 .00..
+0..0.
+.00.
 
-Num_9LightGray.00..
+Num_9
+LightGray
+.00..
 0..0.
 .000.
 ...0.
-..0..
-
+..0.
 
 
 LEGEND
@@ -119,37 +164,13 @@ COLLISIONLAYERS
 
 Background
 Dirt
-Weed
-LawnU, LawnD
-Player, Wall
-Rock, Num
+Weed, LawnU, LawnD
+Player, Wall, Rock, Num
 Error, TryMove
 
 RULES
 
-[ Error ] -> [  ] 
-[ > Player | Rock | noWall ] -> [ > Player | >Rock |  ] 
-horizontal [ up Player Weed | LawnU ] -> [ Player Weed Error | LawnUError ] 
-horizontal [ down Player Weed | LawnD ] -> [ Player Weed Error | LawnDError ] 
-vertical [ up Player Weed | LawnD ] -> [ Player Weed Error | LawnDError ] 
-vertical [ down Player Weed | LawnU ] -> [ Player Weed Error | LawnUError ] 
-up [ > Player Weed | noLawnD ] -> [ > Player LawnU |  ] 
-down [ > Player Weed | noLawnU ] -> [ > Player LawnD |  ] 
-up [ > Player | Weed ] -> [ > Player | WeedTryMoveU ] 
-down [ > Player | Weed ] -> [ > Player | WeedTryMoveD ] 
-horizontal [ TryMoveU | LawnU ] -> [ Error | ErrorLawnU ] 
-horizontal [ TryMoveD | LawnD ] -> [ Error | ErrorLawnD ] 
-vertical [ TryMoveU no Rock | LawnD ] -> [ Error | ErrorLawnD ] 
-vertical [ TryMoveD no Rock | LawnU ] -> [ Error | ErrorLawnU ] 
-vertical [ TryMoveU<Rock | LawnD ] -> [ Error Rock | ErrorLawnD ] 
-vertical [ TryMoveD<Rock | LawnU ] -> [ Error Rock | ErrorLawnU ] 
-[ Error][Rock ] -> [ Error][stationaryRock ] 
-[ Error][Player ] -> [ Error][stationaryPlayer ] again 
-[ > Rock | Lawn ] -> [ > Rock | Weed ] 
-late [ Player TryMoveU ] -> [ Player LawnU ] 
-late [ Player TryMoveD ] -> [ Player LawnD ] 
-late [ TryMove ] -> cancel 
-
+[ Error ] -> [  ][ > Player | Rock | noWall ] -> [ > Player | > Rock |  ]horizontal [ upPlayerWeed | LawnU ] -> [ PlayerWeedError | LawnUError ]horizontal [ downPlayerWeed | LawnD ] -> [ PlayerWeedError | LawnDError ]vertical [ upPlayerWeed | LawnD ] -> [ PlayerWeedError | LawnDError ]vertical [ downPlayerWeed | LawnU ] -> [ PlayerWeedError | LawnUError ]up [ > PlayerWeed | noLawnD ] -> [ > PlayerLawnU |  ]down [ > PlayerWeed | noLawnU ] -> [ > PlayerLawnD |  ]up [ > Player | Weed ] -> [ > Player | WeedTryMoveU ]down [ > Player | Weed ] -> [ > Player | WeedTryMoveD ]horizontal [ TryMoveU | LawnU ] -> [ Error | ErrorLawnU ]horizontal [ TryMoveD | LawnD ] -> [ Error | ErrorLawnD ]vertical [ TryMoveUnoRock | LawnD ] -> [ Error | ErrorLawnD ]vertical [ TryMoveDnoRock | LawnU ] -> [ Error | ErrorLawnU ]vertical [ TryMoveU< Rock | LawnD ] -> [ ErrorRock | ErrorLawnD ]vertical [ TryMoveD< Rock | LawnU ] -> [ ErrorRock | ErrorLawnU ][ Error ] [ Rock ] -> [ Error ] [ stationaryRock ][ Error ] [ Player ] -> [ Error ] [ stationaryPlayer ] sfx0 again[ > Rock | Lawn ] -> [ > Rock | Weed ]late [ PlayerTryMoveU ] -> [ PlayerLawnU ]late [ PlayerTryMoveD ] -> [ PlayerLawnD ]late [ TryMove ] -> cancel
 
 WINCONDITIONS
 
@@ -158,7 +179,6 @@ no Weed
 LEVELS
 
 ########
-
 #ududud#
 #ududud#
 #ududud#
@@ -166,7 +186,6 @@ LEVELS
 ########
 
 #######
-
 #@----#
 #-----#
 #-----#
@@ -174,7 +193,6 @@ LEVELS
 1######
 
 ########
-
 #@----d#
 #-#---d#
 #--#--d#
@@ -182,7 +200,6 @@ LEVELS
 2#######
 
 ###############
-
 #@---#-------##
 #d--###-#-##--#
 ##----#-------#
@@ -192,7 +209,6 @@ LEVELS
 3##############
 
 ##############
-
 ####-d-------#
 #-----d---##-#
 #@-#---d--##-#
@@ -228,7 +244,6 @@ LEVELS
 6############
 
 ################
-
 #---------x---##
 #----------#@-##
 ##*#-------#####
@@ -240,7 +255,6 @@ LEVELS
 7###############
 
 ######################
-
 ##-#x------*-###@#####
 #x--*----------#-#---#
 #-##d##u##d#---#-#---#
