@@ -892,4 +892,11 @@ var games_gallery = [
     "author": "nebu soku",
     "homepage": "https://nebu-soku.itch.io/i-am-two"
   },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=95dc770efe45854e528fa80a48eeca0a",
+    "thumb": "transition.gif",
+    "title": "Transition",
+    "author": "NinaBirb",
+    "homepage": "https://ninabirb.itch.io/transition/"
+  },
 ]
