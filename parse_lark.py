@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import pickle
 import re
 import traceback
 import signal  # Add this import
@@ -309,12 +310,6 @@ def add_empty_sounds_section(txt):
     return txt
 
 
-# Parse a PuzzleScript file
-def preprocess_ps_file(filepath):
-    with open(filepath, "r", encoding='utf-8') as file:
-        txt = file.read()
-    return preprocess_ps(txt)
-
 def preprocess_ps(txt):
     # Remove whitespace at end of any line
     txt = re.sub(r'[ \t]+$', '', txt, flags=re.MULTILINE)
@@ -363,7 +358,11 @@ def strip_comments(text):
             new_text += c
     return new_text
 
-games_to_skip = set({'easyenigma.txt'})
+data_dir = 'data'
+games_dir = os.path.join(data_dir, 'scraped_games')
+min_games_dir = os.path.join(data_dir, 'min_games')
+simpd_dir = os.path.join(data_dir, 'simplified_games')
+trees_dir = os.path.join(data_dir, 'game_trees')
 
 # Usage example
 if __name__ == "__main__":
@@ -372,11 +371,11 @@ if __name__ == "__main__":
     # min_parser = Lark(min_puzzlescript_grammar, start="ps_game")
 
     # games_dir = os.path.join('script-doctor','games')
-    games_dir = 'scraped_games'
-    min_games_dir = 'min_games'
-    if not os.path.isdir(min_games_dir):
-        os.makedirs(min_games_dir)
 
+    games_to_skip = set({'easyenigma.txt'})
+
+    os.makedirs(trees_dir, exist_ok=True)
+    os.makedirs(min_games_dir, exist_ok=True)
     parsed_games_filename = "parsed_games.txt"
     # min_grammar = os.path.join('syntax_generate.lark')
     if args.overwrite or not os.path.exists(parsed_games_filename):
@@ -392,7 +391,6 @@ if __name__ == "__main__":
     # sort them alphabetically
     game_files.sort()
 
-    simpd_dir = 'simplified_games'
     if not os.path.isdir(simpd_dir):
         os.mkdir(simpd_dir)
     scrape_log_dir = 'scrape_logs'
@@ -400,17 +398,19 @@ if __name__ == "__main__":
         os.makedirs(scrape_log_dir)
     simpd_games = set(os.listdir(simpd_dir))
     for i, filename in enumerate(game_files):
-        simp_filename = filename.strip('.txt') + '_simplified.txt' 
         filepath = os.path.join(games_dir, filename)
+        with open(filepath, 'r') as f:
+            ps_text = f.read()
+        simp_filename = filename.strip('.txt') + '_simplified.txt' 
         if filename in parsed_games or filename in games_to_skip:
-            print(f"Skipping {filename}")
+            print(f"Skipping {filepath}")
             continue
 
         print(f"Parsing game {filepath} ({i+1}/{len(game_files)})")
         simp_filepath = os.path.join(simpd_dir, simp_filename)
         if args.overwrite or not (simp_filename in simpd_games):
             # Now save the simplified version of the file
-            content = preprocess_ps_file(os.path.join(games_dir, filename))
+            content = preprocess_ps(ps_text)
             with open(simp_filepath, "w", encoding='utf-8') as file:
                 file.write(content)
         else:
@@ -439,6 +439,9 @@ if __name__ == "__main__":
             continue
 
         min_parse_tree = StripPuzzleScript().transform(parse_tree)
+        min_tree_path = os.path.join(trees_dir, filename.strip('.txt') + '.pkl')
+        with open(min_tree_path, "wb") as f:
+            pickle.dump(min_parse_tree, f)
         pretty_parse_tree_str = min_parse_tree.pretty()
         pretty_tree_filename = os.path.join('pretty_trees', filename)
         print(f"Writing pretty tree to {pretty_tree_filename}")
@@ -454,6 +457,6 @@ if __name__ == "__main__":
         with open(parsed_games_filename, 'a') as file:
             file.write(filename + "\n")
 
-# Count the number of games in `min_gmes`
-n_min_games = len(os.listdir('min_games'))
-print(f"Number of minified games: {n_min_games}")
+    # Count the number of games in `min_gmes`
+    n_min_games = len(min_games_dir)
+    print(f"Number of minified games: {n_min_games}")

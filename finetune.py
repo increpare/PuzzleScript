@@ -110,7 +110,8 @@ else:
     torch_dtype = None
 
 # Load the model
-model_name = "microsoft/Phi-3.5-mini-instruct"  # or similar
+# model_name = "microsoft/Phi-3.5-mini-instruct"  # or similar
+model_name = "gpt2"  # or similar
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
     quantization_config=quantization_config,
@@ -177,16 +178,15 @@ trainer = SFTTrainer(
     model=model,
     args=training_args,
     callbacks=[CustomTQDMCallback(model_name=args.model)],
-    # max_seq_length=args.block_size,
+    max_seq_length=args.block_size,
     train_dataset=dataset,
-    # dataset_text_field="text",
+    dataset_text_field="text",
     tokenizer=tokenizer,
     peft_config=peft_config,
 )
 
 # Remove the default PrinterCallback (since we're rolling its functionality into our CustomTQDMCallback)
 trainer.remove_callback(PrinterCallback)
-breakpoint()
 
 # Train and save
 trainer.train()

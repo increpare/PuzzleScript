@@ -49,7 +49,7 @@ if args.update or not os.path.isfile(ps_urls_path):
 else:
     with open(ps_urls_path, "r") as f:
         ps_links = f.read().splitlines()
-visited_ps_links_path = "visited_ps_links.txt"
+visited_ps_links_path = "data/visited_ps_links.txt"
 if os.path.isfile(visited_ps_links_path):
     with open(visited_ps_links_path, "r") as f:
         visited_ps_links = set(f.read().splitlines())
@@ -57,8 +57,7 @@ else:
     with open(visited_ps_links_path, "w") as f:
         f.write("")
         visited_ps_links = []
-if not os.path.isdir('scraped_games'):
-    os.mkdir('scraped_games')
+os.makedirs('data/scraped_games', exist_ok = True)
 for link in ps_links:
     if link in visited_ps_links:
         print(f"Skipping {link}")
@@ -68,7 +67,6 @@ for link in ps_links:
     else:
         hack_link = link.replace('play.html?p=', 'editor.html?hack=')
         id = hack_link.split('hack=')[1].strip('"')
-        script_path = os.path.join('scraped_games', f"{id}.txt")
         print(f'hack link: {hack_link}')
         git_url = f"https://api.github.com/gists/{id}"
         
@@ -98,10 +96,18 @@ for link in ps_links:
         else:
             script =  gist['files']['script.txt']['content']
 
+        title_match = re.search(r'(?i)title (.+)', script)
+        if not title_match:
+            breakpoint()
+        title = title_match.groups()[0]
+        title = title.replace(' ', '_')
+        filename = f'{title}_{filename}'
+        script_path = os.path.join('/data/scraped_games', filename)
+
         with open(script_path, "w", encoding='utf-8') as f:
             f.write(script)
         add_to_visited()
 
 # Count number of scripts
-script_files = os.listdir("scraped_games")
+script_files = os.listdir("data/scraped_games")
 print(f"Total scripts: {len(script_files)}")
