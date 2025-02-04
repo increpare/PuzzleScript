@@ -43,8 +43,11 @@ sprite: (SPRITE_PIXEL~5 NEWLINE)~5
 legend_data: LEGEND_PIXEL object_name legend_operation* NEWLINES
 LEGEND_PIXEL: PIXEL+ "="
 
-legend_operation: "or"i object_name
-                | "and"i object_name
+OR: "or"i
+AND: "and"i
+
+legend_operation: OR object_name
+                | AND object_name
 
 // Sound Data
 sound_data: ID* sound_id* sound_number? NEWLINES

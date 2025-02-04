@@ -1,6 +1,6 @@
 import os
 import pickle
-from typing import List, Dict, Optional, Any, Set, Tuple
+from typing import List, Dict, Optional, Any, Set, Tuple, Type, Union
 import copy
 import random
 
@@ -22,12 +22,24 @@ class LegendEntry:
         main_name = "Target"
         components = [("Target1"), ("Target2"), ("Target3")]
     """
-    def __init__(self, main_name: str, components: List[str]):
-        self.main_name = main_name
-        self.components = components
+    def __init__(self, key: str, obj_names: List[str], operator: Optional[str]):
+        self.key = key
+        self.obj_names = obj_names
+        self.operator = operator
 
     def __repr__(self):
-        return f"{self.main_name} = {' or '.join(self.components)}"
+        return f"{self.key} = {f' {self.operator} '.join(self.obj_names)}"
+
+class RuleBlock:
+    def __init__(self, rules: List[Union["Rule", "RuleBlock"]], looping=False):
+        self.looping = looping
+        self.rules = rules
+
+    def __repr__(self):
+        return (f"RuleBlock -- {('once' if not self.looping else 'loop')}\n"\
+                + "\n".join([str(r) for r in self.rules]) +
+                "\n end block"
+                )
 
 class Rule:
     """
@@ -54,14 +66,13 @@ class WinCondition:
     """
     For example: 'All Box on Target'
     """
-    def __init__(self, quantifier: str, object_name: str, relation: str, target_name: str):
+    def __init__(self, quantifier: str, src_obj: str, trg_obj: str):
         self.quantifier = quantifier  # e.g. "All", "Some", "No"
-        self.object_name = object_name
-        self.relation = relation      # e.g. "on"
-        self.target_name = target_name
+        self.src_obj = src_obj
+        self.trg_obj = trg_obj
     
     def __repr__(self):
-        return f"{self.quantifier} {self.object_name} {self.relation} {self.target_name}"
+        return f"{self.quantifier} {self.src_obj}" + (f" on {self.trg_obj}" if self.trg_obj is not None else "")
 
 class PSGame:
     def __init__(self,
@@ -69,7 +80,7 @@ class PSGame:
                  flickscreen: Optional[str],
                  verbose_logging: bool,
                  objects: Dict[str, PSObject],
-                 legends: List[LegendEntry],
+                 legend: List[LegendEntry],
                  collision_layers: List[List[str]],
                  rules: List[Rule],
                  win_conditions: List[WinCondition],
@@ -79,7 +90,7 @@ class PSGame:
         self.verbose_logging = verbose_logging
 
         self.objects = objects               # Dict[object_name -> PSObject]
-        self.legends = legends               # List[LegendEntry]
+        self.legends = legend               # List[LegendEntry]
         self.collision_layers = collision_layers   # List of Lists of object_names
         self.rules = rules                   # List[Rule]
         self.win_conditions = win_conditions # List[WinCondition]
