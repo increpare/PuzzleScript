@@ -1,6 +1,26 @@
 ScriptDoctor
 ============
 
+## Scraping and parsing games
+
+```
+python scrape_pedro.py
+python parse_lark.py
+python gen_trees.py
+```
+I'm still working on `gen_trees.py`
+- Convert games to canonical (graph-like) form
+- Determine if two games are functionally equivalent via this form
+- Reimplement game mechanics etc. in numpy and jax, as an RL environment
+
+## Fine-tuning a model
+
+```
+python finetune.py
+```
+
+## Evolving games with OpenAI queries
+
 Put your OpenAI API key in a file called `.env`, which will have a single line that reads `OPENAI_API_KEY=yourkeyhere`.
 
 To install requirements: `pip install -r requirements.txt`. To run a local server: `python server.py`. Then, open the local IP address. You should see the PuzzleScript editor page displayed, and some GPT slop appearing in the PuzzleScript terminal and level code editor. 
