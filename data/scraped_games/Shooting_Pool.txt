@@ -1,0 +1,392 @@
+title Shooting Pool
+author Franklin P. Dyer
+again_interval 0.05
+run_rules_on_level_start on
+
+========
+OBJECTS
+========
+
+Background .
+Green
+
+Black ,
+Black
+
+WallVert /
+Darkbrown Brown
+00000
+11111
+11111
+11111
+00000
+
+WallHorz \
+Darkbrown Brown
+01110
+01110
+01110
+01110
+01110
+
+Cornr1 1
+Darkbrown Brown Black
+00000
+00111
+01111
+01111
+01110
+
+Cornr2 2
+Darkbrown Brown Black
+00000
+11100
+11110
+11110
+01110
+
+Cornr3 3
+Darkbrown Brown Black
+01110
+11110
+11110
+11100
+00000
+
+Cornr4 4
+Darkbrown Brown Black
+01110
+01111
+01111
+00111
+00000
+
+HoleUp a
+Darkbrown Brown Black
+00000
+11111
+11211
+12221
+02220
+
+HoleDown b
+Darkbrown Brown Black
+02220
+12221
+11211
+11111
+00000
+
+HoleLeft c
+Darkbrown Brown Black
+01110
+01122
+01222
+01122
+01110
+
+HoleRight d
+Darkbrown Brown Black
+01110
+22110
+22210
+22110
+01110
+
+PlayerU @
+Darkbrown White
+..1..
+..0..
+..0..
+..0..
+..0..
+
+PlayerD
+Darkbrown White
+..0..
+..0..
+..0..
+..0..
+..1..
+
+PlayerL
+Darkbrown White
+.....
+.....
+10000
+.....
+.....
+
+PlayerR
+Darkbrown White
+.....
+.....
+00001
+.....
+.....
+
+Stick1Vert
+Darkbrown
+..0..
+..0..
+..0..
+..0..
+..0..
+
+Stick1Horz
+Darkbrown
+.....
+.....
+00000
+.....
+.....
+
+PlainBall e
+Lightblue Blue Darkblue
+.000.
+01112
+01112
+01112
+.222.
+
+PlainballU
+Lightblue Blue Darkblue
+.000.
+01112
+01112
+01112
+.222.
+
+PlainballD
+Lightblue Blue Darkblue
+.000.
+01112
+01112
+01112
+.222.
+
+PlainballL
+Lightblue Blue Darkblue
+.000.
+01112
+01112
+01112
+.222.
+
+PlainballR
+Lightblue Blue Darkblue
+.000.
+01112
+01112
+01112
+.222.
+
+Cueball f
+Gray Lightgray White
+.000.
+01112
+01112
+01112
+.222.
+
+CueballU
+Gray Lightgray White
+.000.
+01112
+01112
+01112
+.222.
+
+CueballD
+Gray Lightgray White
+.000.
+01112
+01112
+01112
+.222.
+
+CueballL
+Gray Lightgray White
+.000.
+01112
+01112
+01112
+.222.
+
+CueballR
+Gray Lightgray White
+.000.
+01112
+01112
+01112
+.222.
+
+=======
+LEGEND
+=======
+
+Stick = Stick1Vert or Stick1Horz
+Player = PlayerU or PlayerD or PlayerL or PlayerR
+TableBounds = WallVert or WallHorz or Cornr1 or Cornr2 or Cornr3 or Cornr4
+Hole = HoleUp or HoleDown or HoleLeft or HoleRight
+CueballM = CueballU or CueballD or CueballL or CueballR
+PlainballM = PlainballU or PlainballD or PlainballL or PlainballR
+BallM = CueballM or PlainballM
+Ball = Cueball or Plainball or BallM
+Solid = Tablebounds
+
+=======
+SOUNDS
+=======
+
+BallM Create 53810306
+Player Move 34759707
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Black
+Tablebounds, Hole, Player, Ball, Cueball, Plainball, CueballM, PlainballM
+Stick
+
+======
+RULES
+======
+
+[Stick] -> [No Stick]
+
+[Up Player No PlayerU] -> [PlayerU]
+[Down Player No PlayerD] -> [PlayerD]
+[Left Player No PlayerL] -> [PlayerL]
+[Right Player No PlayerR] -> [PlayerR] 
+
+startloop
+[> Player|Cueball] -> [Player|> Cueball]
+
+[Up Cueball] -> [CueballU]again
+[CueballU] -> [UP CueballU] again
+[Down Cueball] -> [CueballD]again
+[CueballD] -> [DOWN CueballD] again
+[Left Cueball] -> [CueballL]again
+[CueballL] -> [LEFT CueballL] again
+[Right Cueball] -> [CueballR]again
+[CueballR] -> [RIGHT CueballR] again
+[> CueballM|Solid] -> [Cueball|Solid]
+
+[> CueballM|Ball] -> [CueBall|> Ball]
+[> PlainBallM|Ball] -> [Plainball|> Ball]
+[v BallM|Ball] -> [v BallM|> Ball]
+[^ BallM|Ball] -> [^ BallM|> Ball]
+
+[Up Plainball] -> [PlainballU]again
+[PlainballU] -> [UP PlainballU] again
+[Down Plainball] -> [PlainballD]again
+[PlainballD] -> [DOWN PlainballD] again
+[Left Plainball] -> [PlainballL]again
+[PlainballL] -> [LEFT PlainballL] again
+[Right Plainball] -> [PlainballR]again
+[PlainballR] -> [RIGHT PlainballR] again
+[> PlainballM|Solid] -> [Plainball|Solid]
+
+[> BallM|Hole] -> [|Hole]
+[> Player|Hole] -> [|Hole]
+endloop
+
+startloop
+UP[No Stick|...|PlayerU] -> UP[Stick1Vert|...|PlayerU]
+DOWN[No Stick|...|PlayerD] -> UP[Stick1Vert|...|PlayerD]
+LEFT[No Stick|...|PlayerL] -> UP[Stick1Horz|...|PlayerL]
+RIGHT[No Stick|...|PlayerR] -> UP[Stick1Horz|...|PlayerR]
+endloop
+
+VERTICAL[> Player] -> [> Player Stick1Vert]
+HORIZONTAL[> Player] -> [> Player Stick1Horz]
+
+==============
+WINCONDITIONS
+==============
+
+No Plainball
+No PlainballM
+Some Cueball
+
+=======
+LEVELS
+=======
+
+message Time to shoot some pool!
+message Hit all balls other than the cueball into a hole. You can only hit the cueball.
+
+1////////////a///2
+\................\
+\.@..f...e....e..d
+\............e...\
+\................\
+c...e.........e..d
+\.......e........\
+\................\
+4///////b////////3
+
+message When a ball shoots by another ball, it knocks it aside.
+
+1////////a///////2
+\........e.......\
+\................\
+c.......e.e......d
+\................\
+\.@.f.....e......d
+\................\
+\................\
+4////////////////3
+
+1//a/////////////2
+\................\
+\................\
+c.e.......e...f..d
+\........e.......\
+\.e........e..@..\
+\................\
+\................\
+4/b//////b/b/////3
+
+1///a/////////a//2
+\.............e..\
+\...e............\
+c.....e.......e..\
+c.e....f.@.e....ed
+4/b/2......e.....\
+,,,,\............\
+,,,,\............\
+,,,,4//////b/////3
+
+1a////2,,,,1/////2
+\.....4a///3.....\
+\e1//2.f.e......ed
+\.\,,c.......e...\
+\.\,,\...1///2...\
+\e4//3.e.4///3...\
+\...............13
+c....@........e.42
+4/////b///////b//3
+
+1//b/b/b/b///b///2
+\................\
+c..eee.e.e...e...d
+c..e...e.ee..e...d
+c..eee.e.e.e.e.@.d
+\..e...e.e..ee...d
+c..e...efe...e...d
+\................\
+4//b/b/b/bbbbb///3
+
+(1////////////////2
+\................\
+\................\
+\................\
+\................\
+\................\
+\................\
+\................\
+4////////////////3)

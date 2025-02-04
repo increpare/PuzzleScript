@@ -1,0 +1,421 @@
+title Battle-Mage
+author Mark Richardson
+key_repeat_interval 0.5
+noundo
+
+
+========
+OBJECTS
+========
+
+Background
+#FF4 #FF6 #FF8
+00100
+10000
+00020
+02000
+00001
+
+Player
+Pink Blue #808 #A06 #DDD
+.444.
+41014
+33433
+.242.
+22222
+
+Hat
+#808
+...0.
+..0..
+.000.
+.000.
+00000
+
+SeekLine
+Black
+.....
+.....
+.....
+.....
+.....
+
+Spawn
+Black
+.....
+.....
+.....
+.....
+.....
+
+Enemy
+#00D #00F #04F
+.000.
+02210
+02110
+.010.
+1.1.1
+
+AcidSpell
+#080 #0B0 #0F0 #4F4 #8F8
+.012.
+01234
+01234
+01234
+.234.
+
+FireSpell
+#F00 #F80 #FF0
+.2..2
+.1.11
+21112
+10001
+.111.
+
+LightningSpell
+#8FF #0FF #08F
+.2.10
+..101
+2101.
+10122
+01.2.
+
+TeleportSpell
+#F80 #FC8 #FF4
+.101.
+.020.
+.020.
+.020.
+.101.
+
+Acid1
+#080 #0B0 #0F0
+.110.
+0111.
+11211
+.2121
+.10..
+
+Acid2
+#0B0 #0F0 #8F8
+.200.
+0202.
+00120
+.1010
+.00..
+
+Acid3
+#5C2 #5F2 #8F8
+.200.
+0202.
+00120
+.1010
+.00..
+
+Acid4
+#AE4 #AF4 #8F8
+.200.
+0202.
+00120
+.1010
+.00..
+
+Fire1
+#F00 #F40 #F80 #FC0 #FF0
+20314
+31240
+24130
+13024
+32401
+
+Fire2
+#F00 #F40 #F80 #FC0 #FF0
+02413
+23140
+20314
+40231
+03421
+
+Fire3
+#F00 #F40 #F80 #FC0 #FF0
+01243
+23104
+30241
+04312
+34012
+
+LightningH
+#8FF #0FF #0BF #08F
+.3..3
+21221
+00000
+22122
+..3..
+
+LightningV
+#8FF #0FF #0BF #08F
+.202.
+.2013
+3102.
+.202.
+.2013
+
+LightningA
+#8FF #0FF #0BF #08F
+..3..
+3221.
+.1023
+.212.
+33..3
+
+Magic
+#F0F #B0B #808
+..1..
+.212.
+11011
+.212.
+..1..
+
+Border1
+#FF4 #882 #48F #CC3
+22100
+22100
+21111
+23333
+23333
+
+Border2
+#FF4 #882 #48F #CC3
+00000
+01000
+13100
+33311
+33333
+
+Border3
+#FF4 #882 #48F #CC3
+00122
+00122
+11122
+33312
+33332
+
+Border4
+#FF4 #882 #48F #CC3
+22100
+21000
+21000
+23100
+22310
+
+Border6
+#FF4 #882 #48F #CC3
+00122
+01322
+01322
+00122
+00012
+
+Border7
+#FF4 #882 #48F #CC3
+22222
+22122
+22111
+22100
+22100
+
+Border8
+#FF4 #882 #48F #CC3
+22222
+21122
+10012
+00001
+00000
+
+Border9
+#FF4 #882 #48F #CC3
+22222
+22122
+11122
+00122
+00122
+
+
+=======
+LEGEND
+=======
+
+. = Background
+@ = Player
+, = Hat
+1 = Border1 and Spawn
+2 = Border2 and Spawn
+3 = Border3 and Spawn
+4 = Border4 and Spawn
+6 = Border6 and Spawn
+7 = Border7 and Spawn
+8 = Border8 and Spawn
+9 = Border9 and Spawn
+
+Fire = Fire1 or Fire2 or Fire3
+Lightning = LightningH or LightningV or LightningA
+Acid = Acid1 or Acid2 or Acid3 or Acid4
+Spell = FireSpell or LightningSpell or AcidSpell or TeleportSpell
+Seek = SeekLine or Hat
+Border = Border1 or Border2 or Border3 or Border4 or Border6 or Border7 or Border8 or Border9
+Primer = Enemy or Spawn or Acid
+Occupied = Player or Enemy or Border
+
+
+=======
+SOUNDS
+=======
+
+SFX1 70464908 (Dead)
+SFX2 23482704 (Magic)
+SFX3 20272702 (Fire)
+SFX4 23414108 (Lightning)
+SFX5 97937303 (Acid)
+SFX6 94418508 (Teleport)
+SFX7 88968903 (Charge)
+SFX8 53983503 (Charged)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Spawn
+Acid, Border
+Player, Enemy, Fire, Lightning, Magic
+Hat, SeekLine
+Spell
+
+
+======
+RULES
+======
+
+(Remove attacks)
+[ Lightning ] -> [ ]
+[ Magic     ] -> [ ]
+[ Fire      ] -> [ ]
+[ Acid4     ] -> [ ]
+
+(Prime enemies, spawns and fire)
+[      > Player          | no Spell ] [ Primer ] -> [      > Player | ] [ action Primer ]
+[ action Player no Spell | no Spell ] [ Primer ] -> [ action Player | ] [ action Primer ]
+[ Border1 ] -> [ action Border1 ]
+[ action Border1 ] [ Player ] -> [        Border1 ] [        Player ]
+[ action Border1 ] [ Primer ] -> [ action Border1 ] [ action Primer ]
+[ action Border1 ]            -> [        Border1 ]
+
+(Soak acid)
+[ action Acid3 ] -> [ Acid4 ]
+[ action Acid2 ] -> [ Acid3 ]
+[ action Acid1 ] -> [ Acid2 ]
+
+(Show spells)
+up    [ action Player no Spell | no Spell ] -> [ action Player | FireSpell      ]
+left  [ action Player no Spell | no Spell ] -> [ action Player | LightningSpell ]
+right [ action Player no Spell | no Spell ] -> [ action Player | AcidSpell      ]
+down  [ action Player no Spell | no Spell ] -> [        Player | TeleportSpell  ] SFX7
+
+(Select spell)
+[      > Player no Spell | Spell ] -> [        Player Spell | ] SFX8
+[ action Player no Spell | Spell ] -> [ action Player       | ]
+[ action Player no Spell ]         -> [        Player       ]
+[        Player    Spell | Spell ] -> [        Player Spell | ]
+
+(Cast spell)
+[ action Player Spell ] -> [ Player ]
+           [ > Player FireSpell      | ... | Enemy           ] -> [   Player                | ... | Fire1        ] SFX3
+vertical   [ > Player LightningSpell | ... | no Lightning    ] -> [ > Player LightningSpell | ... | LightningV   ]
+horizontal [ > Player LightningSpell | ... | no Lightning    ] -> [ > Player LightningSpell | ... | LightningH   ]
+           [ > Player LightningSpell ]                         -> [   Player                ]                      SFX4
+           [ > Player AcidSpell      | ... | Enemy no Border ] -> [   Player                | ... | action Acid1 ] SFX5
+random     [ > Player TeleportSpell  ] [ no Occupied ]         -> [                         ] [ Player ]           SFX6
+           [ > Player Spell          ]                         -> [   Player                ]
+           [ > Player no Spell       | Enemy ]                 -> [   Player                | Magic ]              SFX2
+
+(Spread fire)
+[ Fire1 | no Fire no Player ] -> [ Fire1 | Fire2 ]
+[ Fire2 | no Fire no Player ] -> [ Fire2 | Fire3 ]
+
+(Spread lightning)
+horizontal [ Enemy | LightningV ] -> [ LightningA | LightningV ]
+vertical   [ Enemy | LightningH ] -> [ LightningA | LightningH ]
+
+(Spread acid)
+[ action Acid1 | no Acid1 no Border ] -> [ action Acid1 | Acid1 ]
+[ action Acid1 ]                      -> [ Acid1 ]
+
+(Disolve enemies)
+[ Enemy Acid ] -> [ ]
+
+(Stop movement)
+[ > Player | Border ] -> cancel
+
+(Move enemies)
+       [ action Enemy | ... | Player ] -> [ > Enemy | ... | Player ]
+startloop
+random [ action Enemy | ... | Seek   ] -> [ > Enemy | ... | Seek   ]
+endloop
+
+(Spawn enemy)
+random [ action Spawn no Enemy ] -> [ Enemy ]
+random [ action Spawn no Enemy ] -> [ Enemy ]
+       [ action Spawn          ] -> [ Spawn ]
+
+(Enemies kill player)
+[ > Enemy | stationary Player ] [ Spell ] -> [ > Enemy | Player ] [ ]
+[ > Enemy | stationary Player ]           -> [ > Enemy |        ] SFX1
+
+(Corrode enemies)
+late [ Enemy Acid ] -> [ ]
+
+(Lay seek lines)
+late    [ Seek ] -> [ ]
+late up [ Player | no Hat ] -> [ Player | Hat ]
+late    [ Player | ... | no Seek ] -> [ Player | ... | SeekLine ]
+
+
+==============
+WINCONDITIONS
+==============
+
+no Spawn
+no Enemy
+some Player
+
+
+=======
+LEVELS
+=======
+
+message I am surrounded.  I will stand until they all fall!
+
+788888888888888888889
+4...................6
+4...................6
+4...................6
+4...................6
+4...................6
+4...................6
+4...................6
+4...................6
+4.........,.........6
+4.........@.........6
+4...................6
+4...................6
+4...................6
+4...................6
+4...................6
+4...................6
+4...................6
+4...................6
+4...................6
+122222222222222222223
+
+message So much for their so called army.

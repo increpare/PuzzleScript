@@ -1,0 +1,124 @@
+title Come Doggo come - Alliteration
+author Lucas Boedeker
+homepage l-boe.de
+
+========
+OBJECTS
+========
+
+Background
+gray darkgray
+11111
+10001
+10001
+10001
+11111
+
+StreetH
+darkgray white
+00000
+00000
+01110
+00000
+00000
+
+
+Lantern
+green brown 
+.000.
+00000
+.000.
+..1..
+..1..
+
+LanternPeed
+green brown #fed700 
+.000.
+00000
+.000.
+..1..
+.222.
+
+House
+brown darkred
+.111.
+11111
+00000
+01010
+00010
+
+Player
+yellow Orange blue
+0000.
+01100
+.111.
+22222
+.2.2.
+
+Doggo
+orange brown red
+..0.0
+..000
+00000
+0000.
+1..1.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = House
+P = Player and StreetH
+* = Doggo and StreetH
+T = Lantern
+H = StreetH
+
+
+=======
+SOUNDS
+=======
+
+Doggo MOVE 36772507
+LanternPeed CREATE 5197703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+StreetH
+Lantern, LanternPeed
+Player, House, Doggo
+
+======
+RULES
+======
+
+[ > Player | LanternPeed ] -> [ Player | LanternPeed ]
+[ < Player | Doggo ] -> [  <  Player | < Doggo  ]
+[ Doggo Lantern ] -> [ Doggo LanternPeed ]
+
+==============
+WINCONDITIONS
+==============
+
+No Lantern
+
+=======
+LEVELS
+=======
+
+message walk your dog
+message he likes to pee at trees
+message you dont like walking through pee
+
+.###...###...###...###.
+*PHHHHHHHHHHHHHHHHHHHHH
+.T.T...T.T...T.T...T...
+#.#.###.#.###.#.###.#.#
+..#..#..#..#..#..#..#..
+.T...#.T..###....#.T..#
+..#.#...#..#..#..#..#..
+....#.T....#.T...#.T...
+..###...####..#..#..###

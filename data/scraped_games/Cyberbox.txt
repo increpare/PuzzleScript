@@ -1,0 +1,594 @@
+title Cyberbox
+author Doug Beeferman & anna anthropy
+homepage auntiepixelante.com
+run_rules_on_level_start
+noaction
+text_color pink
+
+(this game is a remake of doug beeferman's 1991 dos puzzle game, CYBERBOX. the puzzles were all designed by him.)
+
+========
+OBJECTS
+========
+
+Background
+#9A00C2 #5200C2
+11011
+10101
+01110
+10101
+11011
+
+Cornerwall
+#FFB591 #FF5501 #A83700
+00001
+01212
+02022
+01212
+12222
+
+Horiwall
+#FFB591 #FF5501 #A83700
+00000
+10122
+21012
+22101
+22222
+
+Vertwall
+#FFB591 #FF5501 #A83700
+01222
+00122
+01012
+02102
+02212
+
+Player
+Brown Pink White
+.111.
+.0011
+.0011
+.222.
+02220
+
+Exit
+transparent
+
+Everyslider
+#BCF818 #58D858 #006800 Black
+00201
+01312
+23333
+01312
+12322
+
+Horislider
+#38C0FC #0088FC #0000FC Black
+00001
+01112
+23333
+01112
+12222
+
+Vertslider
+#FCFF00 #FCB800 #503000 Black
+00201
+01312
+01312
+01312
+12322
+
+Block
+#FCA048 #FC3800 #AC1000
+00001
+01112
+01212
+01112
+12222
+
+Righteleport
+White #FC78FC #94008C Black
+03001
+03312
+01332
+03312
+13222
+
+Downteleport
+White #FC78FC #94008C Black
+00001
+33133
+03332
+01312
+12222
+
+Lefteleport
+White #FC78FC #94008C Black
+00131
+01332
+03312
+01332
+12232
+
+Upteleport
+White #FC78FC #94008C Black
+00001
+01312
+03332
+33133
+12222
+
+Rightpusher
+White #00E8E4 #0088FC Black
+03001
+03312
+03332
+03312
+13222
+
+Downpusher
+White #00E8E4 #0088FC Black
+00001
+33333
+03332
+01312
+12222
+
+Leftpusher
+White #00E8E4 #0088FC Black
+00131
+01332
+03332
+01332
+12232
+
+Uppusher
+White #00E8E4 #0088FC Black
+00001
+01312
+03332
+33333
+12222
+
+Selector
+White
+00.00
+0...0
+.....
+0...0
+00.00
+
+Fakeselector
+White
+00.00
+0...0
+.....
+0...0
+00.00
+
+Xselector
+White
+00.00
+0...0
+..0..
+0...0
+00.00
+
+Barnaby
+#503000 #905F25 #FC3800 Black
+.0.0.
+.000.
+.303.
+00020
+10001
+
+Void
+Black
+00000
+00000
+00000
+00000
+00000
+
+Marker
+Transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Cornerwall
+H = Horiwall
+I = Vertwall
+* = Block
+p = Player
+e = Exit
++ = Everyslider
+- = Horislider
+| = Vertslider
+6 = Righteleport
+8 = Upteleport
+4 = Lefteleport
+5 = Downteleport
+d = Rightpusher
+w = Uppusher
+a = Leftpusher
+s = Downpusher
+O = Selector
+X = Xselector
+b = Barnaby
+0 = Void
+Wall = Cornerwall or Horiwall or Vertwall
+Horipushable = Horislider or Everyslider or Selector or Xselector
+Vertpushable = Vertslider or Everyslider or Selector or Xselector
+Anypushable = Horislider or Vertslider or Everyslider or Selector or Xselector
+Anypusher = Uppusher or Leftpusher or Rightpusher or Downpusher
+Anyteleport = Upteleport or Lefteleport or Righteleport or Downteleport
+Obstacle = Wall or Anyteleport or Anypushable or Player
+Pusher = Anypusher or Player or Anypushable
+Anyotherpusher = Anypusher or Anypushable
+
+=======
+SOUNDS
+=======
+
+Anypushable Move 89849307
+Player CantMove 71349904
+Endlevel 53562900
+Sfx0 85238901 (teleport)
+Sfx1 71349904 (player tries to push an Xselector)
+
+================
+COLLISIONLAYERS
+================
+
+Marker
+Background
+Exit
+Barnaby, Void
+Player, Cornerwall, Horiwall, Vertwall, Everyslider, Horislider, Vertslider, Block, Righteleport, Upteleport, Lefteleport, Downteleport, Rightpusher, Uppusher, Leftpusher, Downpusher,Selector,Xselector
+Fakeselector
+
+======
+RULES
+======
+
+(thanks to alan hazelden, jonah ostroff and jamie perconti for help with weird rules issues)
+
+(selectors)
+[ > Player | Xselector ] -> [ Stationary Player | Stationary Xselector ] Sfx1
+[ > Player | Selector ] -> [ | Stationary Player Fakeselector]
+[ Fakeselector no Player ] -> [ Selector ]
+
+[Stationary Player][Rightpusher] -> [Player][Right Rightpusher]
+[Stationary Player][Downpusher] -> [Player][Down Downpusher]
+[Stationary Player][Leftpusher] -> [Player][Left Leftpusher]
+[Stationary Player][Uppusher] -> [Player][Up Uppusher]
+
+[ moving Pusher ] -> [ moving Pusher Marker ]
+
+startloop
+
+Horizontal [Marker > Pusher|stationary Horipushable] -> [Marker > Pusher|> HoriPushable]
+Vertical [Marker > Pusher|stationary VertPushable] -> [Marker > Pusher|> VertPushable]
+
+[Marker > Pusher|no Marker > Anypushable] -> [> Pusher|Marker > Anypushable]
+
+Horizontal [Marker > Pusher|Vertical Pusher] -> [Pusher|Vertical Pusher]
+Vertical [Marker > Pusher|Horizontal Pusher] -> [Pusher|Horizontal Pusher]
+
+endloop
+
+(teleporters)
+Right [> Player|Righteleport|No Obstacle] -> [ |Righteleport|Player] Sfx0
+Down [> Player|Downteleport|No Obstacle] -> [ |Downteleport|Player] Sfx0
+Left [> Player|Lefteleport|No Obstacle] -> [ |Lefteleport|Player] Sfx0
+Up [> Player|Upteleport|No Obstacle] -> [ |Upteleport|Player] Sfx0
+
+[Player] -> [Player] again
+
+[ Barnaby ] -> [ Barnaby Exit ]
+
+[ Marker ] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All player on exit
+
+=======
+LEVELS
+=======
+
+MESSAGE Finally, all moved into my eccentric Great-Aunt's old mansion!
+(beeferman's name: "the lobby.")
+
+#HHHHHH#E#HHHHHH#
+I....*.....*....I
+I.....-|-|-.....I
+I|.....+.+.....|I
+I|.*..*.|.*..*.|I
+I...............I
+I.*.*.-.+.-.*.*.I
+I...............I
+I|.*..*.|.*..*.|I
+I|.............|I
+I....--.p.--....I
+#HHHHHHHHHHHHHHH#
+
+MESSAGE Of course, the real work is going to be unpacking all these boxes.
+(beeferman's name: "no problem.")
+
+#hhhh#h#E#h#hhhh#
+i....*....**....i
+i....**....*....i
+i..-----|---..*|i
+#..*....+|..***|#
+i|.-.....+.....|i
+i|+.**......*...i
+#|**..****....*.#
+i|..|..***..*.-.i
+i|.*.+|..*..-|*.i
+i..*.*..p-..*.-.i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE Now, where's Barnaby?
+(beeferman's name: "think ahead.")
+
+#hhhh#h#e#h#hhhh#
+i*..*..*....*...i
+i..|*.*...||..*.i
+i.|+******++**..i
+#..|......|...*.#
+i.*.....**+*.*..i
+i..****..*|..--.i
+#.*....*.*|*.--.#
+i..*++.*...d|*..i
+i...||..*..*.+..i
+i..*..*.p*.*.+.*i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE I couldn't have forgetten to pack him, could I?
+(beeferman's name: "choices, choices.")
+
+#hhhh#h#e#h#hhhh#
+i......+-+++++s.i
+i....*....*.*.-|i
+i..**.***...-...i
+#.*......****.*|#
+i.*.-.**.-....*.i
+i.*.*|..*.-..*..i
+#|*.*|*..****...#
+i|a|a|a.----....i
+i.*.*.****......i
+i.......p*.----.i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE He isn't in any of these boxes!
+(beeferman's name: "you can do it!")
+
+#hhhh#h#e#h#hhhh#
+i......*.....--.i
+i.*.....*.|.-.*.i
+i*.*.|.|.*...*..i
+#*.**|*.|.***..|#
+i*.*ss*..|..*...i
+i.|---+...*.*...i
+#.|*..***.*.*.**#
+i.+*...****.--+.i
+i*|********.+--.i
+i.......p*......i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE I don't even remember packing this much stuff!
+(beeferman's name: "chain reaction.")
+
+#hhhh#h#e#h#hhhh#
+i...*..s........i
+i...---s------|ai
+i......-.....*+.i
+#.............|.#
+i......*......|.i
+id---|********|*i
+#****.*.*...**|.#
+i.....-......*|.i
+i.....******|+-.i
+i.......p*....w.i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE Could some of this have belonged to my Great-Aunt?
+(beeferman's name: "your guess...")
+
+#hhhh#h#e#h#hhhh#
+i--s----..*.....i
+i..-...*+.*.....i
+i....+dd|.*..**.i
+#**..+-..*..*..*#
+i.d|.+..-......*i
+i....+..w.....*.i
+#....+.......*..#
+i**.--+-----.*..i
+i...............i
+i.......p....*..i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE She sure collected a lot of weird junk.
+(beeferman's name: "go with the flow.")
+
+#hhhh#h#e#h#hhhh#
+i......*.*......i
+i.**..*.8.*..**.i
+i*..*..|.|...**.i
+#..5...+*+...**.#
+i.*.*..|*|...**.i
+i8d|...----.....i
+#.*.***w*ww.....#
+i.*.*.4..*...**.i
+i.***.4..*...**.i
+i.....4.p*......i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE I guess when you have a place this big, you have to fill the space somehow.
+(beeferman's name: "don't get zapped!")
+
+#hhhh#h#e#h#hhhh#
+i.....*sss..-s..i
+i|----+--+...-..i
+i.**5..6.4..*...i
+#8.*..**.***....#
+i..***.4.6.*....i
+i.*.4..*.*.**8**i
+#8.8.5.*.*..---.#
+i.4.6.5*8*....s.i
+i6.8.5.*.*..-+-.i
+i.4.4.**p*.....*i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE I wonder what causes someone to hold on to stuff like this for so long.
+(beeferman's name: "prioritize!")
+
+#hhhh#h#e#h#hhhh#
+i.*....*.*.*....i
+i.d|....-...****i
+i..+*..*.***....i
+#..|..*.-.......#
+i..|..*d|*...**.i
+i.*|..**.****...i
+#8.-+---.*ddd+++#
+i.*|..**8**.....i
+i...**..........i
+i.......p....***i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE Maybe it's the satisfaction of having something real to show for your experiences.
+(beeferman's name: "fifty-fifty.")
+
+#hhhh#h#e#h#hhhh#
+i....***s****...i
+i...*..---+-.*..i
+i..*.+----....*.i
+#..*..---+--..*.#
+i..*.-+--+--..*.i
+i..*..---+--..*.i
+#...*...-....*..#
+i......*.*......i
+i.....*s*s*.....i
+i.....--p--.....i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE Or maybe it's pure nostalgia.
+(beeferman's name: "watch your step!")
+
+#hhhh#h#e#h#hhhh#
+i..*s.x--..s....i
+i...-...*..|....i
+i*8*|....**+*...i
+#...|------a.|..#
+i..4..+.*5***...i
+i..4..+..+..--..i
+#..4..+..+.**w88#
+i...**.***.*....i
+i.....x.-.x.....i
+i.....x.p.x.....i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE Maybe having something you can hold in your hands makes the memories real.
+(beeferman's name: "move it or lose it.")
+
+#hhhh#h#e#h#hhhh#
+i......xxx......i
+i........****...i
+i.....***...4...i
+#*****.....**...#
+i......****..*.*i
+i..*....-....4..i
+#*.******.*.*...#
+i.....+.4.*.*...i
+i......**.....-.i
+i.......p*..**w*i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE Or maybe it's just being afraid to get rid of things and move on.
+(beeferman's name: "zapperland.")
+
+#hhhh#h#e#h#hhhh#
+i..6.6.6.6.4.4..i
+i.6.6.4.4.4.6.4.i
+i8.5.8.8.5.8.5.8i
+#.4.4.6.4.5.4.4.#
+i5.5.8.8.5.4.6.8i
+i.6.4.4.4.6.8.6.i
+#8.5.5.5.5.8.8.5#
+i.4.6.6.4.6.6.6.i
+i5.8.8.8.8.8.5.8i
+i.6.4.4.p.6.6.6.i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE Is this stuff mine or my Great Aunt's? I can't remember now.
+(beeferman's name: "logistics.")
+
+#hhhh#h#e#h#hhhh#
+i.+...--s--s--s-i
+i.+..***|*.x..x.i
+i.***..*|*.o..o.i
+#8..***.|*.o..o.#
+i.||.*..x***+.*.i
+i*oo8*..o..*.***i
+#.||.*..o..*.*..#
+i**.***.*.**....i
+i...............i
+i....*..p..*....i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE I just want to find Barnaby!
+(beeferman's name: "last but not least.")
+
+#hhhh#h#e#h#hhhh#
+i......*.4......i
+i**...*.*.****..i
+i..|o|..*.*..*.*i
+#8.x*x*..|..-o-.#
+i.4o.o.*.x****.*i
+i*.....*.o..-o-.i
+#......*5x****.*#
+i......*.|6.-o-.i
+i.--+-.4..**.*.*i
+i..w.w.*p**.....i
+#hhhh#hhhhh#hhhh#
+
+MESSAGE Oh, there you are!
+
+00000000000000000
+00000000000000000
+00000000000000000
+00000#hh#hh#00000
+00000i.....i00000
+00000i..b..i00000
+00000i.....i00000
+00000i.....i00000
+00000#h#.#h#00000
+0000000i.i0000000
+0000000ipi0000000
+0000000#h#0000000
+
+MESSAGE Come on, Barnaby, let's go to bed. We can unpack all these boxes tomorrow.
+
+(
+empty room
+
+#hhhh#h#e#h#hhhh#
+i...............i
+i...............i
+i...............i
+#...............#
+i...............i
+i...............i
+#...............#
+i...............i
+i...............i
+i.......p.......i
+#hhhh#hhhhh#hhhh#
+)
+

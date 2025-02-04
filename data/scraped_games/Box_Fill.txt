@@ -1,0 +1,149 @@
+title Box Fill
+author Pichusuperlover
+homepage twitter.com/pichusuperlover
+noaction
+
+========
+OBJECTS
+========
+
+Background
+white
+
+Air
+white
+
+Wall
+brown
+
+Box
+lightbrown
+
+TempBox
+lightbrown
+
+BoxCreator
+orange
+
+Button
+red
+
+GateDown
+lightblue
+
+GateUp
+darkblue
+
+=======
+LEGEND
+=======
+
+. = Air
+# = Wall
+P = BoxCreator
+B = Button and Air
+G = GateDown
+
+Player = BoxCreator or Box
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Air
+TempBox
+Button, GateDown
+BoxCreator, Wall, Box,GateUp
+
+======
+RULES
+======
+
+(Box Creator)
+[ > BoxCreator | Air ] -> [ BoxCreator | Air TempBox ]
+[ > BoxCreator | GateDown ] -> [ BoxCreator | GateDown TempBox ]
+[ > BoxCreator ] -> [ BoxCreator ]
+late [ TempBox ] -> [ Box ]
+
+(Gates)
+late [ Box Button ] [ GateDown ] -> [ Box Button ] [ GateUp ]
+
+
+==============
+WINCONDITIONS
+==============
+
+All Air on Box
+
+=======
+LEVELS
+=======
+
+#######
+#.....#
+#.....#
+#.....#
+#.....#
+#P....#
+#######
+
+#######
+#.....#
+#...#.#
+#...###
+#.....#
+#P....#
+#######
+
+#######
+#.....#
+#.###.#
+#...#.#
+#####.#
+#P....#
+#######
+
+#######
+#...G.#
+#...GG#
+#.....#
+#.....#
+#P...B#
+#######
+
+#######
+#..G..#
+#..G.B#
+#.#####
+#.....#
+#P....#
+#######
+
+#######
+#.G..##
+#.G..##
+#.#####
+#..G.B#
+#P.G..#
+#######
+
+#######
+#G....#
+#.#B#.#
+#####.#
+#.....#
+#P....#
+#######
+
+#######
+#.GB###
+#.#####
+#..GB##
+#.#####
+#P..GB#
+#######

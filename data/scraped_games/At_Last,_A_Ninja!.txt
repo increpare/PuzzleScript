@@ -1,0 +1,578 @@
+title At Last, A Ninja!
+author Jere Majava
+homepage www.twitter.com/jjmajava
+key_repeat_interval 0.15
+realtime_interval 0.2
+noundo
+text_color darkred
+
+========
+OBJECTS 
+========
+
+Background
+darkgreen
+
+(Level elements) 
+ 
+Floor
+darkblue darkbrown 
+00000
+11111
+.....
+.....
+.....
+
+Wall
+black  darkblue
+11111
+10101
+01010
+00000
+00000
+
+
+Statue
+darkblue darkgreen green
+.012.
+.012.
+01012
+01112
+00122
+
+Bell
+darkred orange darkblue
+.000.
+00000
+.2.2.
+.212.
+.2.2.
+
+Gong
+brown orange darkblue
+..01.
+.0011
+.1000
+.2102
+.2..2
+
+Table
+darkblue brown
+.....
+.....
+.....
+.1111
+.0..0
+
+Treasure
+darkblue brown red white lightgrey
+.....
+..22.
+..43.
+.1111
+.0..0
+
+Exit
+black darkgrey grey
+22222
+10001
+10001
+10001
+10001
+
+(Player)
+
+NinjaR1
+black darkblue
+...0.
+..00.
+..101
+..00.
+.0..0
+
+NinjaR2
+black darkblue
+.0...
+00...
+101..
+00...
+00...
+
+NinjaRF
+black darkblue
+1.0..
+00001
+.00..
+0000.
+.0..0
+
+NinjaRJ
+black darkblue
+..0.1
+.0000
+1000.
+.0.0.
+0....
+
+NinjaRK
+black darkblue
+.....
+..0..
+.00..
+.000.
+0010.
+
+NinjaL1
+black darkblue
+.0...
+.00..
+101..
+.00..
+0..0.
+
+NinjaL2
+black darkblue
+...0.
+...00
+..101
+...00
+...00
+
+NinjaLF
+black darkblue
+..0.1
+10000
+..00.
+..000
+.0.0.
+
+NinjaLJ
+black darkblue
+1.0..
+0000.
+00001
+.0.0.
+....0
+
+NinjaLK
+black darkblue
+.....
+..0..
+..00.
+.000.
+.0100
+
+(Samurai)
+
+SamuR1
+darkgrey darkred white orange
+...3.
+..00.
+.3222
+..11.
+.1111
+
+SamuR2
+darkgrey darkred white orange
+.3...
+00...
+3222.
+11...
+11...
+
+SamuRA
+darkgrey darkred white orange
+..3..
+.0003
+.00..
+.111.
+1111.
+
+SamuRK
+darkgrey darkred white orange
+.....
+.3...
+00...
+0322.
+1111.
+
+SamuL1
+darkgrey darkred white orange
+.3...
+.00..
+2223.
+.11..
+1111.
+
+SamuL2
+darkgrey darkred white orange
+...3.
+...00
+.2223
+...11
+...11
+
+SamuLA
+darkgrey darkred white orange
+..3..
+3000.
+..00.
+.111.
+.1111
+
+SamuLK
+darkgrey darkred white orange
+.....
+...3.
+...00 
+.2230
+.1111
+
+SwordL
+white 
+.....
+..000
+.....
+.....
+.....
+
+SwordR
+white
+.....
+000..
+.....
+.....
+.....
+
+Corpse
+darkblue orange darkred
+.....
+.....
+.....
+..00.
+02201
+
+Temp
+yellow
+
+Safezone
+darkgreen
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+- = Floor
+o = Statue
+ö = Floor and Statue
+
+G = Gong
+! = Bell
+T = Table
+
+* = Treasure
+! = Treasure and Floor
+X = Exit
+
+W = NinjaR1
+N = NinjaL1
+F = NinjaRF
+
+b = SamuR1
+d = SamuL2
+k = SamuRK
+j = SamuLK
+s = SamuRK and Floor
+z = SamuLK and Floor
+
+NinjaRight = NinjaR1 or NinjaR2 or NinjaRF or NinjaRJ or NinjaRK
+NinjaLeft  = NinjaL1 or NinjaL2 or NinjaLF or NinjaLJ or NinjaLK
+
+Player = NinjaRight or NinjaLeft
+
+NinjaRM  = NinjaR1 or NinjaR2
+NinjaLM  = NinjaL1 or NinjaL2
+
+SamuRight = SamuR1 or SamuR2 or SamuRA or SamuRK
+SamuLeft  = SamuL1 or SamuL2 or SamuLA or SamuLK
+
+SamuRM = SamuR1 or SamuR2
+SamuLM  = SamuL1 or SamuL2
+
+SamuM = SamuRM or SamuLM
+
+SamuK = SamuLK or samuRK
+
+Samurai = SamuRight or SamuLeft
+
+Sword = SwordL or SwordR
+
+Platform = Floor or Statue or Wall or Exit
+Obstacle = Statue or Wall or Samurai
+
+
+=======
+SOUNDS
+=======
+
+sfx0 12554508 (rock)
+sfx1 54935104 (drop on platform)
+sfx2 53700708 (sword)
+sfx3 74383504 (drop on rock)
+sfx4 82388102 (bell)
+sfx5 81871908 (Samu sees Ninja)
+sfx6 98411107 (rock pushed)
+sfx7 81332908 (death)
+sfx8 44593904 (samurai killed)
+sfx9 22045103 (get the treasure)
+sfx10 78499108 (Gong)
+(TitleScreen 6006708)
+Startlevel 72700708
+EndLevel    1117508
+Restart    94829108
+
+(
+sfx10 1637108  (stupid, mule)
+
+sfx0 62079108 (long high piched chiming)
+sfx0 54220108 (dong)
+sfx0 82388102 (ding)
+sfx0 24478708 (little springy sound)
+
+
+sfx0 12150508 (BIG Woosh!)
+sfx0 6006708  (Longer Woosh!)
+sfx0 28887908 (whooosshhhh...)
+sfx10 18595508 (loud flute)
+sfx10 12054508 (boom!)
+
+19442708 Breathing fire, thunder?
+94025708 Steam Engine!
+17716108 faster steam engine
+
+41900908 small item drops
+9170108 low sproing
+32278108 vinkuvinku
+92559108 robot says no
+67416308 paradoid!
+
+52795308 Dangerous!
+24803108
+60744308
+1718508  on note flute
+
+62940508 wierdness
+)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+SafeZone
+Floor Exit Gong Bell
+Corpse Temp
+Player Statue Wall Samurai SwordL SwordR 
+Table Treasure
+
+======
+RULES
+======
+
+(SafeZone, place where you don't fall)
+up [ Platform | ] -> [ Platform | SafeZone ]
+
+(Statue falls)
+down [ Statue | no Platform | Platform ] -> [ > Statue | | Platform ] sfx0
+down [ Statue | no Platform ] -> [ > Statue | ]
+down [ Statue | Samurai no Platform ] -> [ > Statue | Corpse ]
+
+(Gravity right)
+
+down [ NinjaRF | SamuK ] -> [ NinjaRF | Corpse ] sfx8
+down [ NinjaRF | Platform ] ->  [ NinjaRK | Platform ]
+down [ NinjaRF | no Platform ] -> [ > NinjaRF | ]
+down [ NinjaRF | no Platform | Floor ] -> [ > NinjaRF | | Floor ] sfx1
+down [ NinjaRF | no Platform | Statue ] -> [ > NinjaRF | | Statue ] sfx3
+down [ NinjaRF | no Platform | Wall ] -> [ > NinjaRF | | Wall ] sfx3
+down [ NinjaRM | no Platform ] -> [ NinjaRF | ]
+
+
+(Jumping right)
+right [ NinjaRJ | SamuRK | no Obstacle ] -> [ | NinjaRF | Corpse ]
+right [ NinjaRJ | SamuRK ] -> [ | NinjaRF Corpse ]
+
+right [ NinjaRJ | no Obstacle ] -> [ | NinjaRF ]
+      [ NinjaRJ ] -> [ NinjaRF ]      
+right [ action NinjaRM no Bell no Gong | no Obstacle no Samurai ] -> [ > NinjaRJ | ]
+up    [ > NinjaRM | no  Obstacle no Samurai ] -> [ | NinjaRJ ]
+
+(Moving right )
+down  [ > NinjaRK ] -> [ NinjaRK ]
+      [ > NinjaRK ] -> [ NinjaR2 ]
+      [ action NinjaRK ] -> [ NinjaR2 ]
+right [ > NinjaR2 | no Obstacle ] -> [ NinjaR1 | ]
+right [ > NinjaR1 | no Obstacle ] -> [ > NinjaR2 | ]
+
+down  [ > NinjaRight | Platform ] -> [ NinjaRK | Platform ]
+
+(Pushing right)
+right [ > NinjaR2 | Statue ] -> [ NinjaR1 | Statue ]
+right [ > NinjaR1 | Statue | no Obstacle ] -> [ > NinjaR2 | > Statue | ] sfx6
+
+(Player turning)
+right [ > NinjaLeft  ] -> [ NinjaR1 ]
+left  [ > NinjaRight ] -> [ NinjaL1 ]
+
+(Gravity left)
+down [ NinjaLF | SamuK ] -> [ NinjaLF | Corpse ] sfx8
+down [ NinjaLF | Platform ] ->  [ NinjaLK | Platform ]
+down [ NinjaLF | no Platform ] -> [ > NinjaLF | ]
+down [ NinjaLF | no Platform | Floor ] -> [ > NinjaLF | | Floor ] sfx1
+down [ NinjaLF | no Platform | Statue ] -> [ > NinjaLF | | Statue ] sfx3
+down [ NinjaLF | no Platform | Wall ] -> [ > NinjaLF | | Wall ] sfx3
+down [ NinjaLM | no Platform ] -> [ NinjaLF | ]
+
+(Jumping left)
+left [ NinjaLJ | SamuLK | no Obstacle ] -> [ | NinjaLF | Corpse ]
+left [ NinjaLJ | SamuLK ] -> [ | NinjaLF Corpse ]
+
+left [ NinjaLJ | no Obstacle no Samurai ] -> [ | NinjaLF ]
+     [ NinjaLJ ] -> [ NinjaLF ]      
+left [ action NinjaLM no Bell no Gong | no Obstacle ] -> [ > NinjaLJ | ]
+up   [ > NinjaLM | no Obstacle ] -> [ | NinjaLJ ]
+
+(Moving left )
+down [ > NinjaLK ] -> [ NinjaLK ]
+     [ > NinjaLK ] -> [ NinjaL2 ]
+     [ action NinjaLK ] -> [ NinjaL2 ]
+left [ > NinjaL2 | no Obstacle ] -> [ NinjaL1 | ]
+left [ > NinjaL1  | no Obstacle ] -> [ > NinjaL2 | ]
+
+down [ > NinjaLeft | Platform ] -> [ NinjaLK | Platform ]
+
+(Pushing left )
+left [ > NinjaL2 | Statue ] -> [ NinjaL1 | Statue ]
+left [ > NinjaL1 | Statue | no Samurai ] -> [ > NinjaL2 | > Statue | ]  sfx6
+
+(Samurai walking around)
+[ SamuR2 ] -> [ Temp ]
+right [ SamuR1 | no Obstacle SafeZone ] -> [ > SamuR2 | ]
+[ Temp ] -> [ SamuR1 ]
+
+[ SamuL2 ] -> [ Temp ]
+left [ SamuL1 | no Obstacle SafeZone ] -> [ > SamuL2 |  ]
+[ Temp ] -> [ SamuL1 ]
+
+down [ Samurai | no SafeZone no Platform ] -> [ > Samurai | ]
+
+(Samu sees the Ninja)
+left  [ SamuLK | ... | Player ] -> [ SamuL2 | ... | Player ] sfx5
+right [ SamuRK | ... | Player ] -> [ SamuR2 | ... | Player ] sfx5
+
+(Samu turning)
+right [ SamuR1 | Obstacle ] -> [ SamuL1 | Obstacle ]
+right [ SamuR1 | no SafeZone ] -> [ SamuL1 | no SafeZone ]
+
+left  [ SamuL1 | Obstacle ] -> [ SamuR1 |  Obstacle ]
+left  [ SamuL1 | no SafeZone ] -> [ SamuR1 | no SafeZone ]
+
+horizontal [ SamuM | SamuRK ] -> [ SamuM | SamuR1 ]
+horizontal [ SamuM | SamuLK ] -> [ SamuM | SamuL1 ]
+
+(Samu attacking)
+left  [ SamuLeft | Player ] -> [ SamuLA | SwordL Corpse ] sfx2 sfx7
+right [ SamuRight | Player ] -> [ SamuRA | SwordR Corpse ] sfx2 sfx7
+
+(When hitting a falling Ninja the sword may drop down, this fixes it)
+left  [ no SamuLA | SwordL ] -> [ | ] 
+right [ no SamuRA | SwordR ] -> [ | ]
+left  [ SamuLA | ] -> [ SamuLA | SwordL ] 
+right [ SamuRA | ] -> [ SamuRA | SwordR ]
+
+(Corpse  falls)
+[ Corpse no SafeZone ] -> [ down Corpse ]
+
+(Get the treasure!)
+[ Player Treasure ] -> [ Player Table ] sfx9
+
+(Play the Gong)
+[ Player Gong ] [ SamuRK ] -> [ Player Gong ] [ SamuR2 ] sfx10
+[ Player Gong ] [ SamuLK ] -> [ Player Gong ] [ SamuL2 ] sfx10
+[ Samurai Gong ] [ SamuRK ] -> [ Samurai Gong ] [ SamuR2 ] sfx10
+[ Samurai Gong ] [ SamuLK ] -> [ Samurai Gong ] [ SamuL2 ] sfx10
+
+(Play the Bell)
+[ > Player  | Bell ] [ SamuRK ] -> [ > Player  | Bell ] [ Temp ] sfx4
+[ > Samurai | Bell ] [ SamuRK ] -> [ > Samurai | Bell ] [ Temp ] sfx4
+[ > Player  | Bell ] [ SamuLK ] -> [ > Player  | Bell ] [ SamuRK ] sfx4
+[ > Samurai | Bell ] [ SamuLK ] -> [ > Samurai | Bell ] [ SamuRK ] sfx4
+[ Temp ] -> [ SamuLK ]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+All Exit on Player
+No Treasure
+
+=======
+LEVELS
+=======
+
+Message I. Enter the Shiro
+
+......#..........#
+......j.*.o......#
+.....-#-####.....#
+.....j------....x#
+.....-#--.--...--#
+F.....#.o.o..o...#
+......#.---..#####
+.........o...#####
+##################
+
+Message II. Mind the gaps
+
+#f...............#
+#....ot......t...#
+#...----..-----..#
+#.t....--...bt...#
+####....--..-#--.#
+#....-..o.----..-#
+#--....###...#--.#
+#.ktj......*.#.x.#
+#------###########
+
+Message III. Be swift
+
+#......o...b.....#
+#wT...--...-#----#
+#---.o....xk---.o#
+#.Gk.--..-#------#
+#---......#....o.#
+#...--....#--.---#
+#.--......--..---#
+#.*j.--...#-T.bT.#
+#--------.########
+
+(
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#................#
+#W..............x#
+------------------
+)

@@ -1,0 +1,906 @@
+title Forest of Tizenhat
+author Ax         …
+homepage axelceard.fr
+background_color #301a17
+text_color #936d45
+
+run_rules_on_level_start
+norepeat_action
+realtime_interval 0.2
+youtube 2dljZWZQLFQ
+noundo
+
+
+========
+OBJECTS
+========
+
+background
+#004CD4
+
+backgroundTemp
+transparent
+
+background0
+#004CD4 #0047C6 #0058F6 
+00000
+01110
+12221
+20002
+00000
+
+background1
+#004CD4 #0047C6 #0058F6 
+00000
+00000
+00111
+11222
+22000
+
+background2
+#004CD4 #0047C6 #0058F6 
+00000
+00000
+10011
+21122
+02200
+
+
+background3
+#004CD4 #0047C6 #0058F6 
+00000
+00000
+11001
+22112
+00220
+
+background4
+#004CD4 #0047C6 #0058F6 
+00000
+11100
+22211
+00022
+00000
+
+
+
+tileSide
+#25331b
+00000
+00000
+.....
+.....
+.....
+
+stopSide
+#331f1b
+00000
+00000
+.....
+.....
+.....
+
+woodSide
+#331f1b
+.....
+.....
+.....
+00000
+00000
+
+rightDir
+transparent
+
+leftDir
+transparent
+
+grass
+#75d434 #71cb34 #6abe30 #64b62c #5fad2a
+00112
+02223
+12223
+12224
+23344
+
+outR
+#d9a066 #8f563b #b16f4f #c7896b #e1a66a #975c3f #ffd6ac #eeb67d
+51123
+40076
+40076
+40076
+51123
+
+outL
+#d9a066 #8f563b #b16f4f #c7896b #cf9962 #865138 #ffd6ac #eeb67d
+32115
+67004
+67004
+67004
+32115
+
+outU
+#d9a066 #8f563b #b16f4f #c7896b #cf9962 #865138 #ffd6ac #eeb67d
+36663
+27772
+10001
+10001
+54445
+
+outD
+#d9a066 #8f563b #b16f4f #c7896b #e1a66a #975c3f #ffd6ac #eeb67d
+54445
+10001
+10001
+27772
+36663
+
+inR
+#d9a066 #8f563b #5f3e2e #3d281e #e1a66a #975c3f #5b452f #8f6943
+51123
+40076
+40076
+40076
+51123
+
+inL
+#d9a066 #8f563b #5f3e2e #3d281e #cf9962 #865138 #5b452f #8f6943
+32115
+67004
+67004
+67004
+32115
+
+inU
+#d9a066 #8f563b #5f3e2e #3d281e #cf9962 #865138 #5b452f #8f6943
+36663
+27772
+10001
+10001
+54445
+
+inD
+#d9a066 #8f563b #5f3e2e #3d281e #e1a66a #975c3f #5b452f #8f6943
+54445
+10001
+10001
+27772
+36663
+
+
+
+pathTile
+#d9a066 #975c3f #8f563b #865138
+.222.
+20002
+20002
+20002
+.222.
+
+pup
+#e1a66a #975c3f #8f563b #865138
+10001
+.....
+.....
+.....
+.....
+
+pdown
+#cf9962 #975c3f #8f563b #865138
+.....
+.....
+.....
+.....
+30003
+
+pleft
+#e1a66a #975c3f #8f563b #865138
+1....
+0....
+0....
+0....
+1....
+
+pright
+#cf9962 #975c3f #8f563b #865138
+....3
+....0
+....0
+....0
+....3
+
+wood
+#452621 #936d45 #613a28
+00000
+11111
+22222
+00000
+22222
+
+gem
+yellow red
+..0..
+.000.
+00100
+.000.
+..0..
+
+
+pMove
+#EEC39A #ac3232 #c76c2e #3F3F74 #222034 
+.....
+.....
+..0..
+.....
+.....
+
+
+pPush
+transparent
+
+pBald
+#EEC39A
+.....
+.....
+.....
+.....
+.000.
+
+pMoveHeadRight
+#EEC39A #ac3232 #c76c2e #3F3F74 #222034 
+.....
+.....
+.....
+2.222
+.200.
+
+pMoveBodyRight
+#EEC39A #ac3232 #c76c2e #3F3F74 #222034 
+00404
+.000.
+.131.
+13331
+.4.44
+
+
+pPushHeadRight
+#EEC39A #ac3232 #FBF236 #3F3F74 #c76c2e #222034 #D95763 
+.....
+.....
+.....
+2.222
+.200.
+
+pPushbodyRight
+#EEC39A #ac3232 #FBF236 #3F3F74 #c76c2e #222034 #D95763 
+00505
+10061
+.131.
+.333.
+.5.55
+
+pMoveHeadLeft
+#EEC39A #ac3232 #c76c2e #3F3F74 #222034 
+.....
+.....
+.....
+222.2
+.002.
+
+pMoveBodyLeft
+#EEC39A #ac3232 #c76c2e #3F3F74 #222034 
+40400
+.000.
+.131.
+13331
+44.4.
+
+
+pPushHeadLeft
+#EEC39A #ac3232 #FBF236 #3F3F74 #c76c2e #222034 #D95763 
+.....
+.....
+.....
+222.2
+.002.
+
+pPushbodyLeft
+#EEC39A #ac3232 #FBF236 #3F3F74 #c76c2e #222034 #D95763 
+50500
+16001
+.131.
+.333.
+55.5.
+
+
+one
+#eec39a
+..0..
+.00..
+..0..
+..0..
+.000.
+
+two
+#eec39a
+.00..
+...0.
+..0..
+.0...
+.000.
+
+thr
+#eec39a
+.00..
+...0.
+..0..
+...0.
+.00..
+
+fou
+#eec39a
+.0...
+.0...
+.0.0.
+.000.
+...0.
+
+fiv
+#eec39a
+.000.
+.0...
+.00..
+...0.
+.00..
+
+six
+#eec39a
+..0..
+.0...
+.00..
+.0.0.
+..00.
+
+sev
+#eec39a
+.000.
+...0.
+..0..
+..0..
+..0..
+
+eig
+#eec39a
+.00..
+.0.0.
+..0..
+.0.0.
+..00.
+
+nin
+#eec39a
+.00..
+.0.0.
+..00.
+...0.
+..0..
+
+zer
+#eec39a
+..0..
+.0.0.
+.0.0.
+.0.0.
+..0..
+
+temp
+transparent
+
+hermit
+#DF7126 #EEC39A #222034 #FFFFFF #663931 
+..121
+...11
+...33
+...33
+..11.
+
+hermit2
+#DF7126 #EEC39A #222034 #FFFFFF #663931 
+21...
+1.4..
+314..
+3.4..
+1.4..
+
+hermit3
+#DF7126 #EEC39A #222034 #FFFFFF #663931 
+.....
+.....
+.....
+..000
+...11
+
+hermit4
+#DF7126 #EEC39A #222034 #FFFFFF #663931 
+.....
+.....
+.....
+.0...
+0....
+
+hermit3Bald
+#DF7126 #EEC39A #222034 #FFFFFF #663931 
+.....
+.....
+.....
+.....
+...11
+
+hermit4Bald
+#DF7126 #EEC39A #222034 #FFFFFF #663931 
+.....
+.....
+.....
+.....
+1....
+
+crate
+#663931
+.....
+.000.
+.000.
+.000.
+.....
+
+
+txtBridge
+transparent
+
+txtHermit1
+transparent
+txtHermit2
+transparent
+txtHermit3
+transparent
+txtHermit4
+transparent
+txtHermit5
+transparent
+txtHermit6
+transparent
+txtHermit7
+transparent
+
+txtBye
+transparent
+
+baldness
+transparent
+
+freeTile
+transparent
+
+=======
+LEGEND
+=======
+
+in = inR or inL or inU or inD
+out = outR or outL or outU or outD
+
+player = pMove or pPush
+path = pathTile or out or in
+tile = grass or pathTile
+item = gem or crate
+available = background or tile
+stop = in or out or wood
+
+head = pMoveHeadRight or pMoveHeadleft or pPushHeadRight or pPushHeadleft
+
+winTile = out or gem
+
+dir = leftDir or rightDir
+
+pathDecoration = pup or pdown or pleft or pright
+playerDecoration = pMoveHeadRight or pMoveBodyRight or pPushHeadRight or pPushbodyRight or pMoveHeadleft or pMoveBodyleft or pPushHeadleft or pPushbodyleft or pBald
+
+decoration = pathDecoration or playerDecoration or tileSide or stopSide
+
+numbers = one or two or thr or fou or fiv or six or sev or eig or nin or zer
+
+waterAnim = background0 or background1 or background2 or background3 or background4 or backgroundTemp
+
+1 = one and wood
+2 = two and wood
+3 = thr and wood
+4 = fou and wood
+5 = fiv and wood
+6 = six and wood
+7 = sev and wood
+8 = eig and wood
+9 = nin and wood
+0 = zer and wood
+
+. = background
+# = grass
+o = pathTile and grass
+
+c = crate and o
+
+P = pMove and o and rightDir
+z = pMove and inU and rightDir
+q = pMove and inL and rightDir
+s = pMove and inD and rightDir
+d = pMove and inR and leftDir
+
+* = gem and o
+/ = wood
+
+l = outR
+j = outL
+i = outU
+k = outD
+
+h = hermit and o
+e = hermit2 and grass
+r = hermit3 and grass
+m = hermit4 and grass
+
+! = txtBridge and o
+? = txtHermit1 and o
+y = txtBye and o
+
+b = baldness and wood
+
+=======
+SOUNDS
+=======
+
+pMove move 9640507
+dir create 9640507
+
+tile move 24057709(43000102)(52066902)
+pPush create 54048109(10435709)
+pMove create 66800909
+endlevel 78643909
+baldness destroy 91626703
+txtHermit3 create 18094302
+
+crate move 80548707
+crate destroy 68162102
+
+================
+COLLISIONLAYERS
+================
+
+background
+
+waterAnim
+
+tileSide
+stopSide
+
+stop, grass, out, in
+
+woodSide
+
+pathTile
+
+freeTile
+
+pup
+pdown
+pleft
+pright
+
+gem
+player, crate, hermit, hermit2, hermit3, hermit4, hermit3Bald, hermit4Bald
+
+rightDir, leftDir
+
+numbers
+
+playerDecoration
+
+temp
+
+txtBridge, txtHermit1, txtHermit2, txtHermit3, txtHermit4, txtHermit5, txtHermit6, txtHermit7, txtBye
+baldness
+======
+RULES
+======
+
+(playerDir)
+[right pmove] [leftDir] -> [right pmove] [rightDir]
+[left pmove] [rightDir] -> [left pmove] [leftDir]
+
+
+(do not speed up animation if player bumps into walls)
+(require_player_movement prevented from pressing Action)
+([> Player]->[> Player Temp]
+late [ Player Temp ] -> CANCEL
+late [ Temp ] -> [ ]
+)
+(compute free tiles)
+[background] -> [background freeTile]
+[grass freeTile] -> [grass]
+[stop freeTile] -> [stop]
+[path freeTile] -> [path]
+
+
+(INTRO)
+[player txtBye] [hermit][hermit2][hermit3Bald][hermit4Bald] -> [player] [][][][] message "See ya never, kiddo!"
+
+[player][txtHermit6] -> [player][] message [Press SPACE to mess up]
+[action player][txtHermit5] -> [player][txtHermit6] message "It's a really powerful hat. You can really mess up with space."
+
+[player txtHermit4] [baldness] [hermit3|hermit4] -> [player txtHermit5] [] [hermit3Bald|hermit4Bald] message [You got the Tizen Hat!]
+[player txtHermit3] -> [player txtHermit4] message "Here you go, take my hat. I won't need it anymore."
+[player txtHermit2] -> [player txtHermit3] message "Ha! Ha!"
+[action player txtHermit1] -> [player txtHermit2] message "Oy! Kiddo! Can't you swim?"
+
+[player txtBridge] -> [player] message "The bridge! It collapsed!"
+
+[action pMove] [baldness] -> [pMove] [baldness]
+
+
+
+
+(GAMEPLAY)
+(change mode)
+[action pMove] -> [pPush]
+[action pPush] -> [pMove]
+
+(move)
+[ > pMove | no path ] -> [ pMove | no path ]
+[ > pMove | crate | pathTile ] -> [ > pMove | > crate | pathTile ]
+[ > pMove | crate | freeTile ] -> [ > pMove | | pathTile grass]
+
+
+(above)
+[> pPush tile] -> [> pPush > tile]
+(push)
+[> tile | tile] -> [> tile | > tile]
+(pull)
+[< tile | tile] -> [< tile | < tile]
+
+(items move along)
+[item > tile] -> [> item > tile]
+
+(not on in)
+[> ppush in] -> cancel
+
+(collision)
+[> tile | stop] -> cancel
+
+
+(BONUS LEVEL)
+[nin] [pathTile|pathTile|pathTile|pathTile|pathTile|pathTile] -> win
+
+
+
+
+(DECORATION)
+late [decoration] -> []
+
+(pathDeco)
+late up [path | path] -> [path pup | path]
+late down [path | path] -> [path pdown | path]
+late left [path | path] -> [path pleft | path]
+late right [path | path] -> [path pright | path]
+
+(playerDeco)
+late [pMove] [rightDir]-> [pMoveBodyRight pMove][rightDir]
+late [pPush] [rightDir]-> [pPushBodyRight pPush][rightDir]
+
+late up [pMove | ] [rightDir]-> [pMove | pMoveHeadRight][rightDir]
+late up [pPush | ] [rightDir]-> [pPush | pPushHeadRight][rightDir]
+
+late [pMove] [leftDir]-> [pMoveBodyLeft pMove][leftDir]
+late [pPush] [leftDir]-> [pPushBodyLeft pPush][leftDir]
+
+late up [pMove | ] [leftDir]-> [pMove | pMoveHeadLeft][leftDir]
+late up [pPush | ] [leftDir]-> [pPush | pPushHeadLeft][leftDir]
+
+(sides)
+late up [background | tile] -> [tileSide background | tile]
+late up [background | stop] -> [stopSide background | stop]
+late down [wood | no wood] -> [woodSide wood | no wood]
+
+(water)
+[background no waterAnim] -> [background background0]
+[stationary player] [background4] -> [stationary player] [backgroundTemp]
+[stationary player] [background3] -> [stationary player] [background4]
+[stationary player] [background2] -> [stationary player] [background3]
+[stationary player] [background1] -> [stationary player] [background2]
+[stationary player] [background0] -> [stationary player] [background1]
+[stationary player] [backgroundTemp] -> [stationary player] [background0]
+
+(baldness)
+late [head] [baldness] -> [pBald] [baldness]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+some player on winTile
+
+=======
+LEVELS
+=======
+
+(essage .1     9.     17..18     .26   34.)
+(essage 1234567890123456789012345678901234)
+
+message Lost in the woods...
+message [ARROWS to move]
+
+b//i//
+/##o#/
+/##o#/
+/#po#/
+/####/
+//////
+
+message He just wants to go back home.
+
+b/////
+/####/
+/#oool
+/#o##/
+/#oo#/
+///s//
+
+message [Press X to talk to people]
+
+b/////////
+/##rm####/
+/#?he####/
+/#o######/
+qo!....oyl
+/########/
+//////////
+
+/////1
+qoo.o/
+/###o/
+/###./
+/###./
+////k/
+
+message Why was he in the forest in the first place?
+
+//z//2
+/#o#./
+/#ooo/
+/oo#o/
+/o###/
+//k///
+
+message Nobody knows.
+message [Press R to reset level]
+
+/////3
+/.##o/
+qo#o#l
+/o#oo/
+/oo../
+//////
+
+message He doesn't remember anything.
+message [Remember, if you're stuck in a level, press R]
+
+/z///4
+/o.##/
+/o###/
+/.#o./
+/oo#ol
+//////
+
+message But he likes his new hat.
+message [You can join blocks to pull them together]
+
+/////5
+/oooo/
+/o##o/
+/o..#/
+/o##o/
+/s//k/
+
+message He roams and wanders...
+
+/////6
+/####/
+/ooo#/
+qo.#o/
+/##ool
+//////
+
+message But the forest changes...
+
+/z///7
+/o#o./
+/#o.o/
+/o.o#/
+/.o#o/
+////k/
+
+message He has no idea where to go...
+
+/////8
+/##ood
+/#o.#/
+/#.o#/
+/oo##/
+///k//
+
+message He runs south, north, back and forth...
+
+//i//9
+/.o#o/
+/##oo/
+/##o./
+/ooo./
+/s////
+
+message He moves every rock, every leaf...
+
+////10
+/.##o/
+/#o.o/
+/o.o#/
+/o##.l
+/s////
+
+message But the forest keeps getting bigger.
+
+///////11
+/.##ooo#/
+/.##o##ol
+/#ooo#o#/
+/##o##o#/
+/..o###o/
+///s/////
+
+message He's obviously going around in circles.
+
+///////12
+/.##ooo#/
+/.##o##o/
+/#ooo#o#/
+/##o##o#/
+/..o###ol
+///s/////
+
+message Hasn't he already been here?
+///////13
+/.##ooo#/
+/.##o##o/
+/#ooo#o#/
+/##o##o#/
+/..o###o/
+///s/k///
+
+message But he's gaining confidence...
+
+///i14
+/o##o/
+/.o#./
+/.#o./
+/o##o/
+/s////
+
+message Bonus level : try to align the six path blocks.
+
+//////99
+/....../
+/.###o./
+/.#oo#./
+/.#po#./
+/.o###./
+/....../
+////////
+
+message Oh nice you made it.
+message Congratulations!
+message The end.

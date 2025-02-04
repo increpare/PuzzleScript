@@ -1,0 +1,837 @@
+title Doors and Boxes
+author Marcos Donnantuoni
+homepage https://marcosd.itch.io/
+
+key_repeat_interval 0.15
+(verbose_logging)
+require_player_movement
+noaction
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+background
+black black
+11111
+10001
+10001
+10001
+11111
+
+wall
+brown
+
+box
+green
+.....
+.000.
+.000.
+.000.
+.....
+
+player
+yellow
+.....
+..0..
+.000.
+.0.0.
+.....
+
+target
+#777777 #666666 #555555 #444444
+00.11
+0...1
+.....
+2...3
+22.33
+
+axis
+transparent blue transparent
+00000
+01110
+01210
+01110
+00000
+
+door1
+blue
+....0
+...0.
+..0..
+.....
+.....
+
+door2
+blue
+..0..
+..0..
+..0..
+..0..
+.....
+
+door3
+blue
+0....
+.0...
+..0..
+.....
+.....
+
+door4
+blue
+.....
+.....
+.0000
+.....
+.....
+
+door6
+blue
+.....
+.....
+0000.
+.....
+.....
+
+door7
+blue
+.....
+.....
+..0..
+...0.
+....0
+
+door8
+blue
+.....
+..0..
+..0..
+..0..
+..0..
+
+door9
+blue
+.....
+.....
+..0..
+.0...
+0....
+
+fdoor1
+blue
+.....
+.....
+.....
+.0...
+0....
+
+fdoor2
+blue
+.....
+.....
+.....
+..0..
+..0..
+
+fdoor3
+blue
+.....
+.....
+.....
+...0.
+....0
+
+fdoor4
+blue
+.....
+.....
+00...
+.....
+.....
+
+fdoor6
+blue
+.....
+.....
+...00
+.....
+.....
+
+fdoor7
+blue
+0....
+.0...
+.....
+.....
+.....
+
+fdoor8
+blue
+..0..
+..0..
+.....
+.....
+.....
+
+fdoor9
+blue
+....0
+...0.
+.....
+.....
+.....
+
+pd1
+transparent
+pd3
+transparent
+pd7
+transparent
+pd9
+transparent
+
+r1
+blue
+.....
+.....
+...00
+.....
+.....
+u1
+blue
+..0..
+..0..
+.....
+.....
+.....
+
+r2
+blue
+.....
+.....
+...00
+.....
+.....
+l2
+blue
+.....
+.....
+00...
+.....
+.....
+
+u3
+blue
+..0..
+..0..
+.....
+.....
+.....
+l3
+blue
+.....
+.....
+00...
+.....
+.....
+
+u6
+blue
+..0..
+..0..
+.....
+.....
+.....
+d6
+blue
+.....
+.....
+.....
+..0..
+..0..
+
+l9
+blue
+.....
+.....
+00...
+.....
+.....
+d9
+blue
+.....
+.....
+.....
+..0..
+..0..
+
+r8
+blue
+.....
+.....
+...00
+.....
+.....
+l8
+blue
+.....
+.....
+00...
+.....
+.....
+
+r7
+blue
+.....
+.....
+...00
+.....
+.....
+d7
+blue
+.....
+.....
+.....
+..0..
+..0..
+
+u4
+blue
+..0..
+..0..
+.....
+.....
+.....
+d4
+blue
+.....
+.....
+.....
+..0..
+..0..
+
+f1
+transparent
+f2
+transparent
+f3
+transparent
+f4
+transparent
+f6
+transparent
+f7
+transparent
+f8
+transparent
+f9
+transparent
+
+
+=======
+LEGEND
+=======
+
+. = background
+# = wall
+@ = player
+t = target
+b = box
+1 = door1
+2 = door2
+3 = door3
+4 = door4
+5 = axis
+6 = door6
+7 = door7
+8 = door8
+9 = door9
+
+door = door1 or door2 or door3 or door4 or door6 or door7 or door8 or door9
+dir = r1 or u1 or l2 or r2 or l3 or u3 or u4 or d4 or u6 or d6 or d7 or r7 or l8 or r8 or l9 or d9
+f = f1 or f2 or f3 or f4 or f6 or f7 or f8 or f9
+decor = fdoor1 or fdoor2 or fdoor3 or fdoor4 or fdoor6 or fdoor7 or fdoor8 or fdoor9 or pd1 or pd3 or pd7 or pd9
+
+=======
+SOUNDS
+=======
+
+cancel 36229308
+endlevel 19134109
+door move 79244109
+
+================
+COLLISIONLAYERS
+================
+
+background
+target
+wall, player, axis, box
+door1
+door2
+door3
+door4
+door6
+door7
+door8
+door9
+r1
+u1
+l2
+r2
+l3
+u3
+u4
+d4
+u6
+d6
+d7
+r7
+l8
+r8
+l9
+d9
+f1
+f2
+f3
+f4
+f6
+f7
+f8
+f9
+pd1
+pd3
+pd7
+pd9
+fdoor1
+fdoor2
+fdoor3
+fdoor4
+fdoor6
+fdoor7
+fdoor8
+fdoor9
+
+
+======
+RULES
+======
+
+[ dir ] -> [ ]
+[ f ] -> [ ]
+
+(initial push)
+
+[ > player | box ] -> [ > player | > box ]
+
+right [ > player | door1 ] -> [  > player | door1 r1 ]
+left  [ > player | door1 ] -> [  > player | door1 u1 ]
+up    [ > player | door1 ] -> [  > player | door1 u1 ]
+down  [ > player | door1 ] -> [  > player | door1 r1 ]
+right [ > player | door2 ] -> [  > player | door2 r2 ]
+left  [ > player | door2 ] -> [  > player | door2 l2 ]
+right [ > player | door3 ] -> [  > player | door3 u3 ]
+left  [ > player | door3 ] -> [  > player | door3 l3 ]
+up    [ > player | door3 ] -> [  > player | door3 u3 ]
+down  [ > player | door3 ] -> [  > player | door3 l3 ]
+up    [ > player | door4 ] -> [  > player | door4 u4 ]
+down  [ > player | door4 ] -> [  > player | door4 d4 ]
+up    [ > player | door6 ] -> [  > player | door6 u6 ]
+down  [ > player | door6 ] -> [  > player | door6 d6 ]
+right [ > player | door7 ] -> [  > player | door7 r7 ]
+left  [ > player | door7 ] -> [  > player | door7 d7 ]
+up    [ > player | door7 ] -> [  > player | door7 r7 ]
+down  [ > player | door7 ] -> [  > player | door7 d7 ]
+right [ > player | door8 ] -> [  > player | door8 r8 ]
+left  [ > player | door8 ] -> [  > player | door8 l8 ]
+right [ > player | door9 ] -> [  > player | door9 d9 ]
+left  [ > player | door9 ] -> [  > player | door9 l9 ]
+up    [ > player | door9 ] -> [  > player | door9 l9 ]
+down  [ > player | door9 ] -> [  > player | door9 d9 ]
+
+startloop
+
+(propagate rotations)
+right [ r1 | no r2 ] -> [ r1 | r2 ]
+up    [ u1 | no u4 ] -> [ u1 | u4 ]
+left  [ l2 | no u1 ] -> [ l2 | u1 ]
+right [ r2 | no u3 ] -> [ r2 | u3 ]
+left  [ l3 | no l2 ] -> [ l3 | l2 ]
+up    [ u3 | no u6 ] -> [ u3 | u6 ]
+up    [ u4 | no r7 ] -> [ u4 | r7 ]
+down  [ d4 | no r1 ] -> [ d4 | r1 ]
+up    [ u6 | no l9 ] -> [ u6 | l9 ]
+down  [ d6 | no l3 ] -> [ d6 | l3 ]
+down  [ d7 | no d4 ] -> [ d7 | d4 ]
+right [ r7 | no r8 ] -> [ r7 | r8 ]
+left  [ l8 | no d7 ] -> [ l8 | d7 ]
+right [ r8 | no d9 ] -> [ r8 | d9 ]
+left  [ l9 | no l8 ] -> [ l9 | l8 ]
+down  [ d9 | no d6 ] -> [ d9 | d6 ]
+
+(propagate pushes)
+(door pushes door)
+right [ door1 r1 | door1 no r1 ] -> [ door1 r1 | door1 r1 ]
+up    [ door1 u1 | door1 no u1 ] -> [ door1 u1 | door1 u1 ]
+right [ door1 r1 | door2 no r2 ] -> [ door1 r1 | door2 r2 ]
+right [ door1 r1 | door3 no u3 ] -> [ door1 r1 | door3 u3 ]
+up    [ door1 u1 | door3 no u3 ] -> [ door1 u1 | door3 u3 ]
+up    [ door1 u1 | door4 no u4 ] -> [ door1 u1 | door4 u4 ]
+up    [ door1 u1 | door6 no u6 ] -> [ door1 u1 | door6 u6 ]
+right [ door1 r1 | door7 no r7 ] -> [ door1 r1 | door7 r7 ]
+up    [ door1 u1 | door7 no r7 ] -> [ door1 u1 | door7 r7 ]
+right [ door1 r1 | door8 no r8 ] -> [ door1 r1 | door8 r8 ]
+right [ door1 r1 | door9 no d9 ] -> [ door1 r1 | door9 d9 ]
+up    [ door1 u1 | door9 no l9 ] -> [ door1 u1 | door9 l9 ]
+
+left  [ door2 l2 | door1 no u1 ] -> [ door2 l2 | door1 u1 ]
+right [ door2 r2 | door1 no r1 ] -> [ door2 r2 | door1 r1 ]
+left  [ door2 l2 | door2 no l2 ] -> [ door2 l2 | door2 l2 ]
+right [ door2 r2 | door2 no r2 ] -> [ door2 r2 | door2 r2 ]
+left  [ door2 l2 | door3 no l3 ] -> [ door2 l2 | door3 l3 ]
+right [ door2 r2 | door3 no u3 ] -> [ door2 r2 | door3 u3 ]
+left  [ door2 l2 | door7 no d7 ] -> [ door2 l2 | door7 d7 ]
+right [ door2 r2 | door7 no r7 ] -> [ door2 r2 | door7 r7 ]
+left  [ door2 l2 | door8 no l8 ] -> [ door2 l2 | door8 l8 ]
+right [ door2 r2 | door8 no r8 ] -> [ door2 r2 | door8 r8 ]
+left  [ door2 l2 | door9 no l9 ] -> [ door2 l2 | door9 l9 ]
+right [ door2 r2 | door9 no d9 ] -> [ door2 r2 | door9 d9 ]
+
+left  [ door3 l3 | door1 no u1 ] -> [ door3 l3 | door1 u1 ]
+up    [ door3 u3 | door1 no u1 ] -> [ door3 u3 | door1 u1 ]
+left  [ door3 l3 | door2 no l2 ] -> [ door3 l3 | door2 l2 ]
+left  [ door3 l3 | door3 no l3 ] -> [ door3 l3 | door3 l3 ]
+up    [ door3 u3 | door3 no u3 ] -> [ door3 u3 | door3 u3 ]
+up    [ door3 u3 | door4 no u4 ] -> [ door3 u3 | door4 u4 ]
+up    [ door3 u3 | door6 no u6 ] -> [ door3 u3 | door6 u6 ]
+left  [ door3 l3 | door7 no d7 ] -> [ door3 l3 | door7 d7 ]
+up    [ door3 u3 | door7 no r7 ] -> [ door3 u3 | door7 r7 ]
+left  [ door3 l3 | door8 no l8 ] -> [ door3 l3 | door8 l8 ]
+left  [ door3 l3 | door9 no l9 ] -> [ door3 l3 | door9 l9 ]
+up    [ door3 u3 | door9 no l9 ] -> [ door3 u3 | door9 l9 ]
+
+up    [ door4 u4 | door1 no u1 ] -> [ door4 u4 | door1 u1 ]
+down  [ door4 d4 | door1 no r1 ] -> [ door4 d4 | door1 r1 ]
+up    [ door4 u4 | door3 no u3 ] -> [ door4 u4 | door3 u3 ]
+down  [ door4 d4 | door3 no l3 ] -> [ door4 d4 | door3 l3 ]
+up    [ door4 u4 | door4 no u4 ] -> [ door4 u4 | door4 u4 ]
+down  [ door4 d4 | door4 no d4 ] -> [ door4 d4 | door4 d4 ]
+up    [ door4 u4 | door6 no u6 ] -> [ door4 u4 | door6 u6 ]
+down  [ door4 d4 | door6 no d6 ] -> [ door4 d4 | door6 d6 ]
+up    [ door4 u4 | door7 no r7 ] -> [ door4 u4 | door7 r7 ]
+down  [ door4 d4 | door7 no d7 ] -> [ door4 d4 | door7 d7 ]
+up    [ door4 u4 | door9 no l9 ] -> [ door4 u4 | door9 l9 ]
+down  [ door4 d4 | door9 no d9 ] -> [ door4 d4 | door9 d9 ]
+
+up    [ door6 u6 | door1 no u1 ] -> [ door6 u6 | door1 u1 ]
+down  [ door6 d6 | door1 no r1 ] -> [ door6 d6 | door1 r1 ]
+up    [ door6 u6 | door3 no u3 ] -> [ door6 u6 | door3 u3 ]
+down  [ door6 d6 | door3 no l3 ] -> [ door6 d6 | door3 l3 ]
+up    [ door6 u6 | door4 no u4 ] -> [ door6 u6 | door4 u4 ]
+down  [ door6 d6 | door4 no d4 ] -> [ door6 d6 | door4 d4 ]
+up    [ door6 u6 | door6 no u6 ] -> [ door6 u6 | door6 u6 ]
+down  [ door6 d6 | door6 no d6 ] -> [ door6 d6 | door6 d6 ]
+up    [ door6 u6 | door7 no r7 ] -> [ door6 u6 | door7 r7 ]
+down  [ door6 d6 | door7 no d7 ] -> [ door6 d6 | door7 d7 ]
+up    [ door6 u6 | door9 no l9 ] -> [ door6 u6 | door9 l9 ]
+down  [ door6 d6 | door9 no d9 ] -> [ door6 d6 | door9 d9 ]
+
+right [ door7 r7 | door1 no r1 ] -> [ door7 r7 | door1 r1 ]
+down  [ door7 d7 | door1 no r1 ] -> [ door7 d7 | door1 r1 ]
+right [ door7 r7 | door2 no r2 ] -> [ door7 r7 | door2 r2 ]
+right [ door7 r7 | door3 no u3 ] -> [ door7 r7 | door3 u3 ]
+down  [ door7 d7 | door3 no l3 ] -> [ door7 d7 | door3 l3 ]
+down  [ door7 d7 | door4 no d4 ] -> [ door7 d7 | door4 d4 ]
+down  [ door7 d7 | door6 no d6 ] -> [ door7 d7 | door6 d6 ]
+right [ door7 r7 | door7 no r7 ] -> [ door7 r7 | door7 r7 ]
+down  [ door7 d7 | door7 no d7 ] -> [ door7 d7 | door7 d7 ]
+right [ door7 r7 | door8 no r8 ] -> [ door7 r7 | door8 r8 ]
+right [ door7 r7 | door9 no d9 ] -> [ door7 r7 | door9 d9 ]
+down  [ door7 d7 | door9 no d9 ] -> [ door7 d7 | door9 d9 ]
+
+left  [ door8 l8 | door1 no u1 ] -> [ door8 l8 | door1 u1 ]
+right [ door8 r8 | door1 no r1 ] -> [ door8 r8 | door1 r1 ]
+left  [ door8 l8 | door2 no l2 ] -> [ door8 l8 | door2 l2 ]
+right [ door8 r8 | door2 no r2 ] -> [ door8 r8 | door2 r2 ]
+left  [ door8 l8 | door3 no l3 ] -> [ door8 l8 | door3 l3 ]
+right [ door8 r8 | door3 no u3 ] -> [ door8 r8 | door3 u3 ]
+left  [ door8 l8 | door7 no d7 ] -> [ door8 l8 | door7 d7 ]
+right [ door8 r8 | door7 no r7 ] -> [ door8 r8 | door7 r7 ]
+left  [ door8 l8 | door8 no l8 ] -> [ door8 l8 | door8 l8 ]
+right [ door8 r8 | door8 no r8 ] -> [ door8 r8 | door8 r8 ]
+left  [ door8 l8 | door9 no l9 ] -> [ door8 l8 | door9 l9 ]
+right [ door8 r8 | door9 no d9 ] -> [ door8 r8 | door9 d9 ]
+
+left  [ door9 l9 | door1 no u1 ] -> [ door9 l9 | door1 u1 ]
+down  [ door9 d9 | door1 no r1 ] -> [ door9 d9 | door1 r1 ]
+left  [ door9 l9 | door2 no l2 ] -> [ door9 l9 | door2 l2 ]
+left  [ door9 l9 | door3 no l3 ] -> [ door9 l9 | door3 l3 ]
+down  [ door9 d9 | door3 no l3 ] -> [ door9 d9 | door3 l3 ]
+down  [ door9 d9 | door4 no d4 ] -> [ door9 d9 | door4 d4 ]
+down  [ door9 d9 | door6 no d6 ] -> [ door9 d9 | door6 d6 ]
+left  [ door9 l9 | door7 no d7 ] -> [ door9 l9 | door7 d7 ]
+down  [ door9 d9 | door7 no d7 ] -> [ door9 d9 | door7 d7 ]
+left  [ door9 l9 | door8 no l8 ] -> [ door9 l9 | door8 l8 ]
+left  [ door9 l9 | door9 no l9 ] -> [ door9 l9 | door9 l9 ]
+down  [ door9 d9 | door9 no d9 ] -> [ door9 d9 | door9 d9 ]
+
+(box pushes door)
+right [ > box | door1 no r1 ] -> [  > box | door1 r1 ]
+left  [ > box | door1 no u1 ] -> [  > box | door1 u1 ]
+up    [ > box | door1 no u1 ] -> [  > box | door1 u1 ]
+down  [ > box | door1 no r1 ] -> [  > box | door1 r1 ]
+right [ > box | door2 no r2 ] -> [  > box | door2 r2 ]
+left  [ > box | door2 no l2 ] -> [  > box | door2 l2 ]
+right [ > box | door3 no u3 ] -> [  > box | door3 u3 ]
+left  [ > box | door3 no l3 ] -> [  > box | door3 l3 ]
+up    [ > box | door3 no u3 ] -> [  > box | door3 u3 ]
+down  [ > box | door3 no l3 ] -> [  > box | door3 l3 ]
+up    [ > box | door4 no u4 ] -> [  > box | door4 u4 ]
+down  [ > box | door4 no d4 ] -> [  > box | door4 d4 ]
+up    [ > box | door6 no u6 ] -> [  > box | door6 u6 ]
+down  [ > box | door6 no d6 ] -> [  > box | door6 d6 ]
+right [ > box | door7 no r7 ] -> [  > box | door7 r7 ]
+left  [ > box | door7 no d7 ] -> [  > box | door7 d7 ]
+up    [ > box | door7 no r7 ] -> [  > box | door7 r7 ]
+down  [ > box | door7 no d7 ] -> [  > box | door7 d7 ]
+right [ > box | door8 no r8 ] -> [  > box | door8 r8 ]
+left  [ > box | door8 no l8 ] -> [  > box | door8 l8 ]
+right [ > box | door9 no d9 ] -> [  > box | door9 d9 ]
+left  [ > box | door9 no l9 ] -> [  > box | door9 l9 ]
+up    [ > box | door9 no l9 ] -> [  > box | door9 l9 ]
+down  [ > box | door9 no d9 ] -> [  > box | door9 d9 ]
+
+(door pushes box)
+down  [ door4 d4 | stationary box ] -> [ door4 d4 | down  box ]
+down  [ door6 d6 | stationary box ] -> [ door6 d6 | down  box ]
+down  [ door7 d7 | stationary box ] -> [ door7 d7 | down  box ]
+down  [ door9 d9 | stationary box ] -> [ door9 d9 | down  box ]
+left  [ door2 l2 | stationary box ] -> [ door2 l2 | left  box ]
+left  [ door3 l3 | stationary box ] -> [ door3 l3 | left  box ]
+left  [ door8 l8 | stationary box ] -> [ door8 l8 | left  box ]
+left  [ door9 l9 | stationary box ] -> [ door9 l9 | left  box ]
+right [ door1 r1 | stationary box ] -> [ door1 r1 | right box ]
+right [ door2 r2 | stationary box ] -> [ door2 r2 | right box ]
+right [ door7 r7 | stationary box ] -> [ door7 r7 | right box ]
+right [ door8 r8 | stationary box ] -> [ door8 r8 | right box ]
+up    [ door1 u1 | stationary box ] -> [ door1 u1 | up    box ]
+up    [ door3 u3 | stationary box ] -> [ door3 u3 | up    box ]
+up    [ door4 u4 | stationary box ] -> [ door4 u4 | up    box ]
+up    [ door6 u6 | stationary box ] -> [ door6 u6 | up    box ]
+
+(box pushes box)
+[ > box | stationary box ] -> [ > box | > box ]
+
+endloop
+
+[ r1 u1 ] -> cancel
+[ l2 r2 ] -> cancel
+[ l3 u3 ] -> cancel
+[ u4 d4 ] -> cancel
+[ u6 d6 ] -> cancel
+[ r7 d7 ] -> cancel
+[ l8 r8 ] -> cancel
+[ l9 d9 ] -> cancel
+
+(assign movements)
+right [ r1 door1 no f1 ] -> [ right door2 f2 ]
+up    [ u1 door1 no f1 ] -> [ up    door4 f4 ]
+left  [ l2 door2 no f2 ] -> [ left  door1 f1 ]
+right [ r2 door2 no f2 ] -> [ right door3 f3 ]
+left  [ l3 door3 no f3 ] -> [ left  door2 f2 ]
+up    [ u3 door3 no f3 ] -> [ up    door6 f6 ]
+up    [ u4 door4 no f4 ] -> [ up    door7 f7 ]
+down  [ d4 door4 no f4 ] -> [ down  door1 f1 ]
+up    [ u6 door6 no f6 ] -> [ up    door9 f9 ]
+down  [ d6 door6 no f6 ] -> [ down  door3 f3 ]
+down  [ d7 door7 no f7 ] -> [ down  door4 f4 ]
+right [ r7 door7 no f7 ] -> [ right door8 f8 ]
+left  [ l8 door8 no f8 ] -> [ left  door7 f7 ]
+right [ r8 door8 no f8 ] -> [ right door9 f9 ]
+left  [ l9 door9 no f9 ] -> [ left  door8 f8 ]
+down  [ d9 door9 no f9 ] -> [ down  door6 f6 ]
+
+late [ player door  ] -> cancel
+late [ wall   door  ] -> cancel
+late [ box    door  ] -> cancel
+late [ axis   door  ] -> cancel
+late [ door1  door2 ] -> cancel
+late [ door1  door3 ] -> cancel
+late [ door1  door4 ] -> cancel
+late [ door1  door6 ] -> cancel
+late [ door1  door7 ] -> cancel
+late [ door1  door8 ] -> cancel
+late [ door1  door9 ] -> cancel
+late [ door2  door1 ] -> cancel
+late [ door2  door3 ] -> cancel
+late [ door2  door4 ] -> cancel
+late [ door2  door6 ] -> cancel
+late [ door2  door7 ] -> cancel
+late [ door2  door8 ] -> cancel
+late [ door2  door9 ] -> cancel
+late [ door3  door1 ] -> cancel
+late [ door3  door2 ] -> cancel
+late [ door3  door4 ] -> cancel
+late [ door3  door6 ] -> cancel
+late [ door3  door7 ] -> cancel
+late [ door3  door8 ] -> cancel
+late [ door3  door9 ] -> cancel
+late [ door4  door1 ] -> cancel
+late [ door4  door2 ] -> cancel
+late [ door4  door3 ] -> cancel
+late [ door4  door6 ] -> cancel
+late [ door4  door7 ] -> cancel
+late [ door4  door8 ] -> cancel
+late [ door4  door9 ] -> cancel
+late [ door6  door1 ] -> cancel
+late [ door6  door2 ] -> cancel
+late [ door6  door3 ] -> cancel
+late [ door6  door4 ] -> cancel
+late [ door6  door7 ] -> cancel
+late [ door6  door8 ] -> cancel
+late [ door6  door9 ] -> cancel
+late [ door7  door1 ] -> cancel
+late [ door7  door2 ] -> cancel
+late [ door7  door3 ] -> cancel
+late [ door7  door4 ] -> cancel
+late [ door7  door6 ] -> cancel
+late [ door7  door8 ] -> cancel
+late [ door7  door9 ] -> cancel
+late [ door8  door1 ] -> cancel
+late [ door8  door2 ] -> cancel
+late [ door8  door3 ] -> cancel
+late [ door8  door4 ] -> cancel
+late [ door8  door6 ] -> cancel
+late [ door8  door7 ] -> cancel
+late [ door8  door9 ] -> cancel
+late [ door9  door1 ] -> cancel
+late [ door9  door2 ] -> cancel
+late [ door9  door3 ] -> cancel
+late [ door9  door4 ] -> cancel
+late [ door9  door6 ] -> cancel
+late [ door9  door7 ] -> cancel
+late [ door9  door8 ] -> cancel
+
+late [ dir ] -> [ ]
+late [ f ] -> [ ]
+
+(decorations for the axis)
+late [ decor ] -> [ ]
+late up    [ door2 | axis   ] -> [ door2 | axis fdoor2 ]
+late right [ door4 | axis   ] -> [ door4 | axis fdoor4 ]
+late left  [ door6 | axis   ] -> [ door6 | axis fdoor6 ]
+late down  [ door8 | axis   ] -> [ door8 | axis fdoor8 ]
+late right [ door1 | no pd1 ] -> [ door1 | pd1         ]
+late left  [ door3 | no pd3 ] -> [ door3 | pd3         ]
+late right [ door7 | no pd7 ] -> [ door7 | pd7         ]
+late left  [ door9 | no pd9 ] -> [ door9 | pd9         ]
+late up    [ pd1   | axis   ] -> [ pd1   | axis fdoor1 ]
+late up    [ pd3   | axis   ] -> [ pd3   | axis fdoor3 ]
+late down  [ pd7   | axis   ] -> [ pd7   | axis fdoor7 ]
+late down  [ pd9   | axis   ] -> [ pd9   | axis fdoor9 ]
+
+
+==============
+WINCONDITIONS
+==============
+
+(some player on target)
+all box on target
+
+=======
+LEVELS
+=======
+
+message You can push boxes...
+
+#########
+#.......#
+#@.bbtt.#
+#.......#
+#########
+
+
+message ...doors can push boxes...
+
+#########
+#@.7bbtt#
+#...56..#
+#...2...#
+#########
+
+
+message ...boxes can push doors...
+
+########
+#......#
+#@b..9t#
+#..45..#
+#.b..3t#
+#......#
+########
+
+
+message ...and doors can push other doors. Good luck!
+
+#########
+#.......#
+#..7....#
+#@.b556t#
+#...22..#
+#.......#
+#########
+
+
+#########
+##..5..##
+#.b1.3t.#
+#@......#
+#.b7.9t.#
+##..5..##
+#########
+
+
+#########
+#..tb9..#
+#@.45...#
+#..tb3..#
+#########
+
+
+#########
+#...@...#
+#.b...b.#
+#.8...8.#
+#.54565.#
+#.t3.1t.#
+#########
+
+
+#########
+#...@...#
+#..bbb..#
+#...9.9.#
+#.4545..#
+#..ttt..#
+#########
+
+
+#########
+#.......#
+#..7t9..#
+#7t.5.t9#
+#.5...5.#
+#1b.5.b3#
+#..1b3..#
+#...@...#
+#########
+
+
+##############
+#t.7.7.7.7.b.#
+#...5.5.5.5..#
+#@b.2.2.2.2.t#
+##############
+

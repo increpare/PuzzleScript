@@ -1,0 +1,494 @@
+title Gingham
+author Jack Kutilek
+homepage www.jackkutilek.com
+
+again_interval .05
+run_rules_on_level_start
+
+background_color #1F272E
+text_color #E8E1D1
+========
+OBJECTS
+========
+
+Background
+#193b42
+
+ground_checker1
+#2b4952
+
+ground_checker2
+#91af9f
+
+ground_checker3
+#e8e1d1
+
+Target
+darkred
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#D3AB96
+.000.
+00000
+00000
+00000
+.000.
+
+PlayerAll
+#d25a4d #b23a2d
+11111
+10001
+10001
+10001
+11111
+
+
+PlayerLR
+#d25a4d #b23a2d
+11111
+10101
+10001
+10101
+11111
+
+jumping_player_all
+#b23a2d #d25a4d
+.....
+.000.
+.010.
+.000.
+.....
+
+jumping_player_all2
+#b23a2d #d25a4d
+.....
+.000.
+.010.
+.000.
+.....
+
+
+jumping_player_lr
+#b23a2d #d25a4d
+.....
+.000.
+.010.
+.000.
+.....
+
+jumping_player_lr2
+#b23a2d #d25a4d
+.....
+.000.
+.010.
+.000.
+.....
+
+
+player_marker
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+Crate
+#F1B665 
+.....
+.000.
+.000.
+.000.
+.....
+
+Crate_left_mark
+#d25a4d
+.....
+.....
+.0...
+.....
+.....
+
+Crate_right_mark
+#d25a4d
+.....
+.....
+...0.
+.....
+.....
+
+Crate_up_mark
+#d25a4d
+.....
+..0..
+.....
+.....
+.....
+
+Crate_down_mark
+#d25a4d
+.....
+.....
+.....
+..0..
+.....
+
+hole h
+#1F272E
+
+three
+transparent
+
+two
+transparent
+
+one
+transparent
+
+move_right
+transparent
+
+move_left
+transparent
+
+move_up
+transparent
+
+move_down
+transparent
+
+start
+transparent
+
+
+num_one 1
+#E8E1D1
+..0..
+.00..
+..0..
+..0..
+.000.
+
+num_two 2
+#E8E1D1
+.000.
+0...0
+...0.
+..0..
+00000
+
+num_three 3
+#E8E1D1
+.000.
+0...0
+..00.
+0...0
+.000.
+
+num_four 4
+#E8E1D1
+0..0.
+0..0.
+00000
+...0.
+...0.
+
+num_five 5
+#E8E1D1
+0000.
+0....
+000..
+...0.
+000..
+
+num_six 6
+#E8E1D1
+.00..
+0....
+000..
+0..0.
+.00..
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = PlayerAll
+R = PlayerLR
+* = Crate
+@ = Crate and Target
+O = Target
+
+player = PlayerAll or PlayerLR
+
+adjuster = wall or crate
+
+count = one or two or three
+
+mover = move_right or move_left or move_up or move_down
+
+jumping_player = jumping_player_all or jumping_player_lr
+jumping_player2 = jumping_player_all2 or jumping_player_lr2
+
+ground_checker = ground_checker1 or ground_checker2 or ground_checker3
+
+crate_mark = Crate_left_mark or Crate_right_mark or Crate_up_mark or Crate_down_mark
+
+number = num_one or num_two or num_three or num_four or num_five or num_six
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ground_checker1, ground_checker2, ground_checker3
+Target, hole
+Player, Wall, Crate
+one
+two, three
+mover
+
+player_marker
+jumping_player_all, jumping_player_all2, jumping_player_lr, jumping_player_lr2
+start
+
+Crate_left_mark
+Crate_right_mark
+Crate_up_mark
+Crate_down_mark
+
+number
+======
+RULES
+======
+
+[number no hole]->[number hole]
+
+[player no start]->[player start]
+[player start][start no player] -> [player][start]
+
+
+[jumping_player_all2]->[playerall]
+[jumping_player_lr2]->[playerlr]
+
+
+
+
+
+right [jumping_player_lr move_right | ]->[ | jumping_player_lr2]
+left  [jumping_player_lr move_left  | ]->[ | jumping_player_lr2]
+
+right [jumping_player_all move_right | ]->[ | jumping_player_all2]
+left  [jumping_player_all move_left  | ]->[ | jumping_player_all2]
+down  [jumping_player_all move_down  | ]->[ | jumping_player_all2]
+up    [jumping_player_all move_up    | ]->[ | jumping_player_all2]
+
+
+[ > Player | Crate ] -> [  >  Player | > Crate  ] 
+
+right [ right PlayerLR | no crate | no wall no crate]->[ | move_right jumping_player_lr | ] again
+left  [ left  PlayerLR | no crate | no wall no crate]->[ | move_left  jumping_player_lr | ] again
+
+right [ right PlayerAll | no crate | no wall no crate]->[ | move_right jumping_player_all | ] again
+left  [ left  PlayerAll | no crate | no wall no crate]->[ | move_left  jumping_player_all | ] again
+up    [ up    PlayerAll | no crate | no wall no crate]->[ | move_up    jumping_player_all | ] again
+down  [ down  PlayerAll | no crate | no wall no crate]->[ | move_down  jumping_player_all | ] again
+
+
+[jumping_player2] -> again
+[player hole]->[hole]
+
+
+(
+late [player][player_marker]->[player][]
+)
+(
+late [player][ground_checker]->[player][]
+)
+
+(late [player no player_marker]->[player player_marker])
+late right [player start | no ground_checker2]->[player start | ground_checker2]
+late down [player start | no ground_checker1]->[player start | ground_checker1 three]
+late right [three  | no ground_checker3] -> [ | ground_checker3]
+
+
+(late [player_marker | | no player_marker]->[player_marker | | player_marker])
+late [ground_checker1 | | no ground_checker1]->[ground_checker1 | | ground_checker1]
+late [ground_checker2 | | no ground_checker2]->[ground_checker2 | | ground_checker2]
+late [ground_checker3 | | no ground_checker3]->[ground_checker3 | | ground_checker3]
+
+
+late [player][crate_mark]->[player][]
+
+late [player no ground_checker][adjuster no ground_checker ]->[player                ][adjuster                 Crate_left_mark Crate_right_mark Crate_down_mark Crate_up_mark]
+late [player ground_checker1  ][adjuster ground_checker1   ]->[player ground_checker1][adjuster ground_checker1 Crate_left_mark Crate_right_mark Crate_down_mark Crate_up_mark]
+late [player ground_checker2  ][adjuster ground_checker2   ]->[player ground_checker2][adjuster ground_checker2 Crate_left_mark Crate_right_mark Crate_down_mark Crate_up_mark]
+late [player ground_checker3  ][adjuster ground_checker3   ]->[player ground_checker3][adjuster ground_checker3 Crate_left_mark Crate_right_mark Crate_down_mark Crate_up_mark]
+
+late [player no ground_checker][crate ground_checker1   ]->[player][crate ground_checker1 Crate_up_mark Crate_down_mark]
+late [player no ground_checker][crate ground_checker2   ]->[player][crate ground_checker2 Crate_left_mark Crate_right_mark]
+
+late [player ground_checker1  ][crate no ground_checker ]->[player ground_checker1][crate                 Crate_up_mark Crate_down_mark]
+late [player ground_checker1  ][crate ground_checker3   ]->[player ground_checker1][crate ground_checker3 Crate_left_mark Crate_right_mark]
+
+late [player ground_checker2  ][crate no ground_checker ]->[player ground_checker2][crate                 Crate_left_mark Crate_right_mark]
+late [player ground_checker2  ][crate ground_checker3   ]->[player ground_checker2][crate ground_checker3 Crate_up_mark Crate_down_mark]
+
+late [player ground_checker3  ][crate ground_checker1   ]->[player ground_checker3][crate ground_checker1 Crate_left_mark Crate_right_mark]
+late [player ground_checker3  ][crate ground_checker2   ]->[player ground_checker3][crate ground_checker2 Crate_up_mark Crate_down_mark]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+(
+hhhhhhhhhhhhhhh
+h.............h
+h...*.........h
+h......ro.*...h
+h...o.........h
+h.............h
+hhhhhhhhhhhhhhh
+
+hhhhhhhhhhhhhhh
+h.............h
+h...*.........h
+h......ro.*...h
+h....o........h
+h.............h
+hhhhhhhhhhhhhhh
+)
+
+hhhhhhhhhhhhh
+hhhhhhhhhhhhh
+hh........hhh
+hh.o..*....hh
+hh.........hh
+hhh.......hhh
+hhhhhhhhhhhhh
+hhhhhhh.hhhhh
+hhhhhhhhhhhhh
+hhh.......hhh
+hh.........hh
+hh..#......hh
+hh.........hh
+hh......p..hh
+hhh.......hhh
+hhhh.....hhhh
+h1hhhhhhhhhhh
+hhhhhhhhhhhhh
+
+hhhhhhhhhhhhh
+hhhhhhhhhhhhh
+hh........hhh
+hh..o..*...hh
+hh.........hh
+hhh.......hhh
+hhhhhhhhhhhhh
+hhhhhhh.hhhhh
+hhhhhhhhhhhhh
+hhh.......hhh
+hh.........hh
+hh..*..o...hh
+hh.........hh
+hh......p..hh
+hhh.......hhh
+hhhh.....hhhh
+h2hhhhhhhhhhh
+hhhhhhhhhhhhh
+
+hhhhhhhhhhhhh
+hhhhhhhhhhhhh
+hh........hhh
+hh.........hh
+hh.....#...hh
+hh...#.....hh
+hh......#..hh
+hh....#....hh
+hh.........hh
+hh..h.hhhh.hh
+hh.hh..*...hh
+hhhh..hh...hh
+hh.........hh
+hh.o..p....hh
+hhh.hh....hhh
+hhhh.....hhhh
+h3hhhhhhhhhhh
+hhhhhhhhhhhhh
+
+hhhhhhhhhhhhh
+hhhhhhhhhhhhh
+hh........hhh
+hh.........hh
+hh.........hh
+hh...o.....hh
+hh.........hh
+hh......*..hh
+hh.........hh
+hh...*..o..hh
+hh.........hh
+hh.........hh
+hh.........hh
+hh....p....hh
+hhh.......hhh
+hhhh.....hhhh
+h4hhhhhhhhhhh
+hhhhhhhhhhhhh
+
+hhhhhhhhhhhhh
+hhhhhhhhhhhhh
+hh#...hh..hhh
+hh....hh...hh
+hh.#..h....hh
+hh....hh...hh
+hh....hh...hh
+hhhhhhhh...hh
+hhhh.hh....hh
+hh.........hh
+hh...o.*...hh
+hh...o.*...hh
+hh.........hh
+hh....p..#.hh
+hhh.......hhh
+hhhh.....hhhh
+h5hhhhhhhhhhh
+hhhhhhhhhhhhh
+
+hhhhhhhhhhhhh
+hhhhhhhhhhhhh
+hh........hhh
+hh.........hh
+hh.........hh
+hh...o.*...hh
+hh.........hh
+hh.........hh
+hh...o.*...hh
+hh.........hh
+hh.........hh
+hh...o.*...hh
+hh.........hh
+hh....p....hh
+hhh.......hhh
+hhhh.....hhhh
+h6hhhhhhhhhhh
+hhhhhhhhhhhhh
+
+message Thanks for playing!

@@ -1,0 +1,617 @@
+title VRPS
+author Jack Lance
+run_rules_on_level_start
+========
+OBJECTS
+========
+
+Background
+white
+
+grass
+#5f5 #8f8 #afa
+12111
+11101
+01111
+11121
+11011
+
+brick
+#808 #b0b #f0f
+22222
+22111
+21110
+11100
+10000
+
+crate
+#f40  #f60 #d20
+.110.
+11.00
+0...0
+00.22
+.022.
+
+goal
+#44f #88f
+.....
+..1..
+.101.
+..1..
+.....
+
+scooterup
+#f00 #f44 #f88
+00000
+.111.
+.212.
+.212.
+.212.
+
+scooterdown
+#f00 #f44 #f88
+.212.
+.212.
+.212.
+.111.
+00000
+
+scooterleft
+#f00 #f44 #f88
+0....
+01222
+01111
+01222
+0....
+
+scooterright
+#f00 #f44 #f88
+....0
+22210
+11110
+22210
+....0
+
+ascooterup
+#f00 #f44 #f88
+00000
+.....
+.....
+.....
+.....
+
+ascooterdown
+#f00 #f44 #f88
+.....
+.....
+.....
+.....
+00000
+
+ascooterleft
+#f00 #f44 #f88
+0....
+0....
+0....
+0....
+0....
+
+ascooterright
+#f00 #f44 #f88
+....0
+....0
+....0
+....0
+....0
+
+avatarup
+ #008 #88f #00f      
+.010.
+11111
+22222
+.222.
+.....
+
+avatardown
+ #008 #88f #00f      
+.....
+.222.
+22222
+11111
+.010.
+
+avatarright
+ #008 #88f #00f    
+..21.
+.2210
+.2211
+.2210
+..21.
+
+avatarleft
+ #008 #88f #00f      
+.12..
+0122.
+1122.
+0122.
+.12..
+
+scavatarup
+ #008 #88f #00f #f00 #8f8
+33333
+40104
+11111
+22222
+42224
+
+
+scavatardown
+ #008 #88f #00f   #f00 #8f8   
+42224
+22222
+11111
+40104
+33333
+
+scavatarright
+ #008 #88f #00f  #f00 #8f8  
+42143
+22103
+22113
+22103
+42143
+
+scavatarleft
+ #008 #88f #00f #f00 #8f8    
+34124
+30122
+31122
+30122
+34124
+
+
+world
+#aab
+
+wall
+#211
+
+playerup
+black #666666 #555555 #778877
+00000
+00000
+03330
+33333
+.333.
+
+playerdown
+black #666666 #555555 #778877
+.333.
+33333
+03330
+00000
+00000
+
+playerleft
+black #666666 #555555 #778877
+0003.
+00333
+00333
+00333
+0003.
+
+playerright
+black #666666 #555555 #778877
+.3000
+33300
+33300
+33300
+.3000
+
+boundarydown
+#644
+.....
+.....
+.....
+.....
+00000
+
+boundaryup
+#644
+00000
+.....
+.....
+.....
+.....
+
+
+boundaryright
+#644
+....0
+....0
+....0
+....0
+....0
+
+boundaryleft
+#644
+0....
+0....
+0....
+0....
+0....
+
+1warningdown
+#ff0 #ee0
+.....
+.....
+.....
+.....
+1.0.1
+
+1warningup
+#ff0 #ee0
+1.0.1
+.....
+.....
+.....
+.....
+
+
+1warningleft
+#ff0 #ee0
+1....
+.....
+0....
+.....
+1....
+
+1warningright
+#ff0 #ee0
+....1
+.....
+....0
+.....
+....1
+
+2warningdown
+#000 #222
+.....
+.....
+.....
+.....
+1.0.1
+
+2warningup
+#000 #222
+1.0.1
+.....
+.....
+.....
+.....
+
+
+2warningleft
+#000 #222
+1....
+.....
+0....
+.....
+1....
+
+2warningright
+#000 #222
+....1
+.....
+....0
+.....
+....1
+
+1warningdown2
+#cc0 #cc8888
+.....
+.....
+.....
+.....
+.0.0.
+
+1warningup2
+#cc0 #cc8888
+.0.0.
+.....
+.....
+.....
+.....
+
+1warningleft2
+#cc0 #cc8888
+.....
+0....
+.....
+0....
+.....
+
+1warningright2
+#cc0 #cc8888
+.....
+....0
+.....
+....0
+.....
+
+2warningdown2
+#444 #cc8888
+.....
+.....
+.....
+.....
+.0.0.
+
+2warningup2
+#444 #cc8888
+.0.0.
+.....
+.....
+.....
+.....
+
+2warningleft2
+#444 #cc8888
+.....
+0....
+.....
+0....
+.....
+
+2warningright2
+#444 #cc8888
+.....
+....0
+.....
+....0
+.....
+
+=======
+LEGEND
+=======
+
+- = Background
+. = grass
+, = world
+p = playerup and world
+q = avatarup and grass
+o = crate and grass
+! = grass and goal
+^ = scooterup and grass
+v = scooterdown and grass
+< = scooterleft and grass
+> = scooterright and grass
+x = brick
+# = wall
+
+player = playerup or playerdown or playerright or playerleft
+avatar = avatarup or avatardown or avatarright or avatarleft
+scooter = scooterup or scooterdown or scooterleft or scooterright
+scavatar = scavatarup or scavatardown or scavatarright or scavatarleft
+ascooter = ascooterup or ascooterdown or ascooterright or ascooterleft
+warningup = 1warningup or 2warningup or 1warningup2 or 2warningup2
+warningleft = 1warningleft or 2warningleft or 1warningleft2 or 2warningleft2
+warningdown = 1warningdown or 2warningdown or 1warningdown2 or 2warningdown2
+warningright = 1warningright or 2warningright or 1warningright2 or 2warningright2
+
+warningver = warningdown or warningup
+warninghor = warningleft or warningright
+warning = warningdown or warningup or warningleft or warningright
+
+item = crate or scooter
+blockable = item or avatar
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+grass
+goal
+scooter
+brick, avatar, crate
+world
+player, wall
+boundarydown, boundaryup, boundaryright, boundaryleft
+ascooter
+scavatar
+warningver
+warninghor
+
+======
+RULES
+======
+[warning] -> []
+
+
+
+down [wall | world] -> [wall boundarydown | world]
+up [wall | world] -> [wall boundaryup | world]
+right [wall | world] -> [wall boundaryright | world]
+left [wall | world] -> [wall boundaryleft | world]
+
+late down [player | boundaryup][avatar| ] -> [player | boundaryup][avatar| 1warningup]
+late up [player | boundarydown][avatar| ] -> [player | boundarydown][avatar| 1warningdown]
+late right [player | boundaryleft][avatar| ] -> [player | boundaryleft][avatar| 1warningleft]
+late left [player | boundaryright][avatar| ] -> [player | boundaryright][avatar| 1warningright]
+
+late right  [1warningup  | ] -> [1warningup | 1warningup2]
+late left  [1warningup  | ] -> [1warningup | 1warningup2]
+late right  [1warningdown  | ] -> [1warningdown | 1warningdown2]
+late left  [1warningdown  | ] -> [1warningdown | 1warningdown2]
+late up  [1warningleft  | ] -> [1warningleft | 1warningleft2]
+late down  [1warningleft  | ] -> [1warningleft | 1warningleft2]
+late up  [1warningright  | ] -> [1warningright | 1warningright2]
+late down  [1warningright | ] -> [1warningright | 1warningright2]
+
+
+late [1warningup no brick] -> [2warningup]
+late [1warningup2 no brick] -> [2warningup2]
+late [1warningdown no brick] -> [2warningdown]
+late [1warningdown2 no brick] -> [2warningdown2]
+late [1warningleft no brick] -> [2warningleft]
+late [1warningleft2 no brick] -> [2warningleft2]
+late [1warningright no brick] -> [2warningright]
+late [1warningright2 no brick] -> [2warningright2]
+
+late [warningver warninghor] -> []
+
+late [warning brick] -> [brick]
+
+[moving player][avatar] -> [moving player][moving avatar]
+
+up[up avatar scooterup]-> [up avatar up scooterup]
+down[down avatar scooterdown] -> [down avatar down scooterdown]
+left[left avatar scooterleft] -> [left avatar left scooterleft]
+right[right avatar scooterright]-> [right avatar right scooterright]
+
+[> avatar | crate ] -> [> avatar | > crate ]
+[> item | item ] -> [> item | > item]
+
+
+
+[> blockable | brick] -> [stationary blockable | brick]
+[> blockable | stationary crate] -> [stationary blockable | stationary crate]
++ [> item | stationary item] -> [stationary item | stationary item]
+
+up[up avatar up scooterup][up player] -> [up avatar up scooterup][stationary player]
+down[down avatar down scooterdown][down player] -> [down avatar down scooterdown][stationary player]
+left[left avatar left scooterleft][left player] -> [left avatar left scooterleft][stationary player]
+right[right avatar right scooterright][right player] -> [right avatar right scooterright][stationary player]
+
+
+[stationary avatar][player] -> [stationary avatar][stationary player]
+
+
+
+[left player][avatar] -> [left playerleft][avatarleft]
+[right player][avatar] -> [right playerright][avatarright]
+[up player][avatar] -> [up playerup][avatarup]
+[down player][avatar] -> [down playerdown][avatardown]
+
+[ player][left avatar scooterleft] -> [playerleft][left avatarleft scooterleft]
+[ player][right avatar scooterright] -> [playerright][right avatarright scooterright]
+[ player][up avatar scooterup] -> [playerup][up avatarup scooterup]
+[ player][down avatar scooterdown] -> [playerdown][down avatardown scooterdown]
+
+[> player | wall] -> cancel
+
+late [scavatar] -> []
+late [ascooter] -> []
+late [avatarup scooterup] -> [avatarup scooterup scavatarup]
+late [avatardown scooterdown] -> [avatardown scooterdown scavatardown]
+late [avatarleft scooterleft] -> [avatarleft scooterleft scavatarleft]
+late [avatarright scooterright] -> [avatarright scooterright scavatarright]
+(looks worse:
+late [scooterup] -> [scooterup ascooterup]
+late [scooterdown] -> [scooterdown ascooterdown]
+late [scooterleft] -> [scooterleft ascooterleft]
+late [scooterright] -> [scooterright ascooterright])
+==============
+WINCONDITIONS
+==============
+
+all goal on crate
+
+=======
+LEVELS
+=======
+ 
+message VIRTUAL REALITY PUZZLE SCRIPT
+
+xxxxxx######
+xx!o.x#,,,,#
+x.xx.x#,,,,#
+xqxx.x#p,,,#
+x....x#,,,,#
+xxxxxx######
+
+message The device simulates an immersive virtual reality environment. Take precaution to be aware of your surroundings at all times while using the headset and stay in a cleared area free of any obstacles.
+
+xxxxxxxx######
+x......x######
+x.!....x######
+x...o..x#,,,,#
+x..o...x#,,,,#
+x.oq...x#,p,,#
+x!.....x#,,,,#
+x...!..x######
+x......x######
+xxxxxxxx######
+
+message To use a scooter, hold one foot firmly in place, and slide the other backwards to "push off"
+
+xxxxxxxxxxxx######
+x..........x######
+x.q........x#,,p,#
+x..o....!..x#,,,,#
+x>.........x#,,,,#
+x..........x#,,,,#
+x..........x######
+xxxxxxxxxxxx######
+
+xxxxxxxx######
+x......x######
+x......x######
+x!..o..x#,,,,#
+x..o.^.x#,,,,#
+x.o.q..x#,,p,#
+x!.....x#,,,,#
+x...!..x######
+x......x######
+xxxxxxxx######
+
+xxxxxxxxxxxx######
+x..........x######
+x.q........x#,,p,#
+x..o.....!.x#,,,,#
+x>...x.....x#,,,,#
+x..........x#,,,,#
+x..........x######
+xxxxxxxxxxxx######
+
+
+
+xxxxxxxxxx######
+x........x######
+x.....V..x######
+x......<.x#,,,,#
+x.>q.....x#,,,,#
+x..^.....x#,p,,#
+x........x#,,,,#
+x...xxxxxx######
+x.....o.!x######
+xxxxxxxxxx######
+
+
+xxxxxxxxxxxx######
+x..........x######
+x.q........x#,,p,#
+x..o....!..x#,,,,#
+x>...x.....x#,,,,#
+x....x.....x#,,,,#
+x..........x######
+xxxxxxxxxxxx######
+
+message [next level is the last level]
+
+xxxxxxxxxxx######
+xq.v......x######
+x.o.......x######
+x>.o.....!x######
+x.........x#,,,,#
+x.........x#,,p,#
+x.........x#,,,,#
+x.........x#,,,,#
+x.........x######
+x..!......x######
+xxxxxxxxxxx######

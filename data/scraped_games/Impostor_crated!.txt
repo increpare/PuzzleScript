@@ -1,0 +1,347 @@
+title Impostor crated!
+author builder17
+homepage www.puzzlescript.net
+noaction
+again_interval 0.3
+flickscreen 7x7
+(verbose_logging)
+
+========
+OBJECTS
+========
+
+Background 
+GREEN     
+
+Wall 
+BROWN
+
+PlayerLeft
+red lightblue
+.000.
+.1100
+.0000
+.0000
+.0.0.
+
+PlayerRight
+red lightblue
+.000.
+0011.
+0000.
+0000.
+.0.0.
+
+PlayerDead
+red white
+.....
+..00.
+1.000
+1100.
+1.000
+
+Crate 
+Orange 
+
+ScareCrate
+red
+.0.0.
+.....
+.000.
+.000.
+.....
+
+ImpostorCrate
+Orange
+
+Impostor
+Orange lightblue
+.000.
+.010.
+00000
+00000
+00000
+
+BoxBreaking
+orange red
+.000.
+.010.
+.....
+0...0
+00000
+
+ImpostorAngry
+orange red
+.000.
+.010.
+00000
+.000.
+.0.0.
+
+ImpostorDead
+Orange black
+.....
+11.00
+.110.
+11.00
+.....
+
+Temp
+transparent
+Temp2
+transparent
+Temp3
+transparent
+
+CrewmateBlack
+black white
+.....
+..00.
+1.000
+1100.
+1.000
+
+CrewmateYellow
+yellow lightblue 
+..000
+.0011
+.0000
+.0000
+..0.0
+
+CrewmateBlue
+purple lightblue
+000..
+1100.
+0000.
+0000.
+0.0..
+
+CrateTemp
+transparent
+WallTemp
+transparent
+SaveSpot
+transparent 
+Gaze
+transparent
+Message1 1
+transparent
+Message2 2
+transparent
+Message3 3
+transparent
+Message4 4
+transparent
+Message5 5
+transparent
+AngeredImp A
+transparent
+CaughtImp C
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = PlayerLeft
+' = Crate
+0 = ScareCrate
+* = ImpostorCrate
+X = CrewmateBlack
+Y = CrewmateYellow
+B = CrewmateBlue
+S = SaveSpot and Wall
+
+Player = PlayerLeft or PlayerRight
+Crewmate = CrewmateBlack or CrewmateYellow or CrewmateBlue
+Obstacle = Wall or Crate
+Dialogue = Message1 or Message2 or Message3 or Message4 or Message5
+
+=======
+SOUNDS
+=======
+
+sfx0 26675304
+sfx1 87409703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+PlayerDead, Impostor, ImpostorDead, AngeredImp
+PlayerLeft, PlayerRight, Wall, Crate, ImpostorCrate, Crewmate, BoxBreaking
+ImpostorAngry, SaveSpot, ScareCrate
+Temp 
+Temp2
+Temp3
+CrateTemp
+WallTemp
+Gaze
+Dialogue
+CaughtImp
+
+======
+RULES     
+======     
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ >  Player | ScareCrate ] -> [  >  Player | > ScareCrate  ]
+[ left Player ] -> [ left PlayerLeft ]
+[ right Player ] -> [ right PlayerRight ]
+[ > Player | CrewmateBlack ] -> [ Player | CrewmateBlack ] message - Oh no, do we have an impostor here?!
+[ > Player | CrewmateYellow ] -> [ Player | CrewmateYellow ] message - Such a scaredy cat this impostor, lol!
+[ > Player | CrewmateBlue ] -> [ Player | CrewmateBlue] message - You better be careful, that imp isn't on good mood any longer!
+
+(if impostor is angry, only move when pushed)
+[ Player | Crate | ImpostorAngry | no Obstacle ] -> [ > Player | > Crate | > ImpostorAngry | no Obstacle ] again
+(wait until next move before ImpostorAngry is created)
+[BoxBreaking] -> [ImpostorAngry]
+(if impostor is on AngeredImp, initiate BoxBreaking)
+late [ ImpostorCrate AngeredImp ] -> [ BoxBreaking ]
+(when cornered, impostor gets crushed)
+late [ ImpostorAngry CaughtImp ] -> [ ImpostorDead ] message Looks like this one won't be returning anymore.
+
+(give the box ability to move if there's an impostor inside)
+late [ ImpostorCrate | no Obstacle | ... | no Crate | Player ] -> [ | ImpostorCrate | ... | no Crate | Player ]
+late [ ImpostorCrate | no Obstacle | ... | Crewmate ] -> [ | ImpostorCrate | ... |  Crewmate ]
+(the impostor box should also move away if there is crate between it and player)
+late [ no Obstacle | ImpostorCrate | ... | Crate | | Player ] -> [  ImpostorCrate | | ... | Crate ScareCrate | | Player ]
+(late [ no Obstacle | ImpostorCrate | ... | Crate | | Crewmate ] -> [ ImpostorCrate | | ... | Crate ScareCrate | | Crewmate ])
+late [ no Obstacle | ImpostorCrate | ... | Crate | Player ] -> [  ImpostorCrate | | ... | Crate ScareCrate | Player ]
+(late [ no Obstacle | ImpostorCrate | ... | Crate | Crewmate ] -> [ ImpostorCrate | | ... | Crate ScareCrate | Crewmate ])
+
+(check if ImpostorCrate is next to player, if yes kill the player)
+late [ Player | ImpostorCrate ] -> [ PlayerDead | Impostor ] sfx0
+late [ Player | ImpostorAngry ] -> [ PlayerDead | ImpostorAngry ] sfx0
+(fancy temp counter for crates surrounding this)
+late [ Crate | ImpostorCrate no Temp ] -> [ Wall WallTemp CrateTemp | ImpostorCrate Temp ]
+late [ Crate | ImpostorCrate Temp no Temp2 no Temp3 ] -> [ Wall WallTemp CrateTemp | ImpostorCrate Temp Temp2 ]
+late [ Crate | ImpostorCrate Temp2 no Temp3 ] -> [ Wall WallTemp CrateTemp | ImpostorCrate Temp3 ]
+late [ Crate no WallTemp | ImpostorCrate Temp3 ] -> [ Wall | ImpostorDead ]
+(should work with walls too)
+late [ Wall no WallTemp | ImpostorCrate no Temp ] -> [ Wall WallTemp | ImpostorCrate Temp ]
+late [ Wall no WallTemp | ImpostorCrate Temp no Temp2 no Temp3 ] -> [ Wall WallTemp | ImpostorCrate Temp Temp2 ]
+late [ Wall no WallTemp | ImpostorCrate Temp2 no Temp3 ] -> [ Wall WallTemp | ImpostorCrate Temp3 ]
+late [ Wall no WallTemp | ImpostorCrate Temp3 ] -> [ Wall | ImpostorDead ]
+(return walls back into crates once ImpostorCrate has moved away)
+late [ no ImpostorCrate Temp | CrateTemp Wall ] -> [ no ImpostorCrate | Crate ]
+late [ no ImpostorCrate Temp2 | CrateTemp Wall ] -> [ no ImpostorCrate | Crate ]
+late [ no ImpostorCrate Temp3 | CrateTemp Wall ] -> [ no ImpostorCrate | Crate ]
+(make scarecrates back to normal crates)
+late [ ScareCrate | ... | no Player ] -> [ | ... | no Player ]
+late [ ImpostorCrate | ... | Crate | Player ] -> [ ImpostorCrate | ... | Crate ScareCrate | Player]
+late [  ImpostorCrate | ... | Crate | | Player ] -> [  ImpostorCrate | ... | Crate ScareCrate | | Player]
+late [ ScareCrate no Crate ] -> [ no Crate ]
+
+late [ Player | SaveSpot ] -> checkpoint sfx1
+
+late [ Player Message1 ] -> [ Player ] message One day, one of your co-workers gets cruelly murdered!
+late [ Player Message2 ] -> [ Player ] message With all these boxes around here, impostor could be in one of them!
+late [ Player Message3 ] -> [ Player ] message Looks like this impostor gets scared easily?
+late [ Player Message4 ] -> [ Player ] message I really hope that there won't be more victims to this beast...
+late [ Player Message5 ] -> [ Player ] message Is this pushing or pulling? I can't tell...
+
+==============
+WINCONDITIONS
+==============
+
+No ImpostorCrate
+No PlayerDead
+No BoxBreaking
+No ImpostorAngry
+
+=======     
+LEVELS
+=======
+
+message You are one of many employees in local box storage.
+
+#####################..............
+#.....###.'..'..'...#..............
+#..X..###.'.'''P'.'.########.......
+#....1..''.'..''''''####C###.......
+###.#####.'.''.''...####.###.......
+##S.#####.''....'...####.###.......
+###.####################.###.......
+###.####################.##########
+#..2'.###......Y....##..5......##B#
+#.'''.###.#....'....####........'.#
+#.''''###3#'.......4...........A#.#
+#.'.*...........'...##.#'######'#.#
+#...'.##S#..........##............#
+###################################
+
+(combine all of these levels into one when you are ready)
+
+(##############
+##.'..'..'...#
+##.'.'''P'.'.#
+.''.'..''''''#
+##.'.''.''...#
+##.''....'...#
+##############
+
+(message One day, one of your co-workers gets cruelly murdered!)
+
+(Level 2, with black crewmate murdered in it)
+#######
+#.....#
+#..X..#
+#....1.
+###.###
+##S.###
+###.###
+
+(message With all these boxes around here, impostor could be in one of them!)
+(Level 3, introduction to impostor boxes)
+###.###
+#..2'.#
+#.'''.#
+#.''''#
+#.'.*..
+#...'.#
+#######
+
+(message Looks like this impostor gets scared easily?)
+(Level 4, long corridor with lots of boxes...)
+##############
+##......Y....#
+##.#....'....#
+##3#'.......4.
+......*..'...#
+#S#..........#
+##############
+(message I really hope that there won't be more victims to this beast...)
+
+(Level 5, now it's gonna get angry!)
+###.##########
+#'.5......''B#
+#''........'.#
+.P....*...A'.#
+#.''''''''''.#
+#............#
+##############
+(message Is this pushing or pulling? I can't tell...)
+
+(Final level!)
+.......
+.......
+#######
+###C###
+###.###
+###.###
+###.###)
+
+(Testing level, not part of the story)
+(#############
+#...........#
+#.....''....#
+#.P...*.....#
+#...''......#
+#...........#
+#...........#
+#############)

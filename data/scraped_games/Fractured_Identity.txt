@@ -1,0 +1,382 @@
+title Fractured Identity
+author Adam Conway
+homepage www.puzzlescript.net
+
+(Thank you to Ryan Barthelet for helping huge with this project, and dave tomczyk for helping fleshout the idea of the game)
+========
+OBJECTS
+========
+
+Background
+lightgreen white
+11111
+01111
+11101
+11111
+10111
+
+Blackened
+black
+00000
+00000
+00000
+00000
+00000
+
+teleporter3
+black
+00000
+00000
+00000
+00000
+00000
+
+Forevers
+white white
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+darkblue black
+00010
+11111
+01000
+11111
+00010
+
+Player1
+Black lightblue black lightgreen	
+33333
+31313
+33333
+33333
+22322
+
+Player2
+white lightblue black red
+33333
+31313
+33333
+33333
+22322
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Teleporter
+black blue darkblue
+10001
+00200
+02120
+00200
+10001
+
+Teleporter2
+black red darkred
+10001
+00200
+02120
+00200
+10001
+
+death
+black darkgray
+10001
+00000
+00000
+00000
+10001
+
+OffButton
+red
+0...0
+..0..
+.000.
+..0..
+0...0
+
+OButton
+yellow
+0...0
+..0..
+.000.
+..0..
+0...0
+
+OnButton
+green
+0...0
+..0..
+.000.
+..0..
+0...0
+
+filler
+purple
+00000
+00000
+00000
+00000
+00000
+
+key
+yellow
+.000.
+.0.0.
+.000.
+..0..
+.00..
+
+lock
+gray black yellow
+20002
+20202
+11111
+11111
+11111
+
+
+
+=======
+LEGEND
+=======
+
+u = Background
+# = Wall
+P = Player1 and Forevers
+* = Crate
+O = Target
+t = Teleporter
+d = death
+g = OnButton
+r = OffButton
+f = filler
+a = OButton
+e = OffButton and OButton and OnButton
+. = Forevers
+c = Player1 and e
+k = key
+l = lock
+b = Player2 and Forevers
+z = Player2 and e
+y = Teleporter2 and Forevers
+w = Blackened
+m = teleporter3
+
+Player = Player1 or Player2
+teleport = teleporter3 or Teleporter or Teleporter2
+=======
+SOUNDS
+=======
+
+Player1 MOVE 36772507
+Player2 move 82006704
+teleport destroy 8855903
+sfx0  70769904
+teleporter3 destroy 47239908
+key destroy 72341100
+startgame 7389508
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Forevers, Blackened
+death, filler
+OffButton
+OButton
+Target, Teleporter, OnButton, key, lock, Teleporter2, teleporter3
+Player1, player2, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player1 ] [ Player2 ] -> [ > Player1 ] [ > Player2 ]
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ >  Player2 Forevers] -> [ > Player2 death ]
+[ > Player | death] -> [Player | death]
+[ > Player | lock] -> [Player | lock]
+[ > Player2 | Blackened] -> [Player2 | Blackened]
+
+
+
+([action Player  OffButton] -> [action Player  OButton]
+[action Player  OButton] -> [action Player  OnButton])
+
+[action Player OffButton] [Forevers] -> [action Player offButton] [ filler] sfx0
+ 
+[action Player OButton] [death] -> [action Player OButton] [ Forevers] sfx0
+  
+[action Player OnButton] [filler] -> [action Player OnButton] [ death] sfx0
+
+
+[Player1 Teleporter3] -> [Player1]
+[Player1 Teleporter] -> [Player1]
+[Player2 Teleporter2] -> [Player2]
+late [player1 key] [lock] -> [Player1] []
+
+
+
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+no Teleport
+all Teleport on Player
+
+
+=======
+LEVELS
+=======
+
+message Make your way over to the Blue ??? to advance. Activate the green button to switch planes.
+message level 1: Two Worlds
+#########
+#######t#
+#######d#
+#######d#
+#######d#
+###...#d#
+#p..d..e#
+#########
+
+message What is.. H̹̻͓̼̩̀̇̑̎͗ḁ̫͈̠̀̑͘͞p̫̗̟͎̄͂̅͘peñ̠ì̢̟̟̾͂̕͢nǵ̺̬̕
+message Level 2: A Fractured Whole
+#########
+#e......#
+#######.#
+#b......#
+#########
+#pdddddt#
+#########
+
+message H̴̶̶̷̸̵̷̶̶̷̴̵̵̷̵̷̴̵̷̵̶̘̟̭̱͓̃̇͛̎͛͂͋͑̒͘͝͠͝e̸̶̵̴̸̶̷̴̵̸̴̶̶̵̴̷̵̸̸̴̴̡̼̻͚̥̜̼̙̰̰̥̞̐̑̿͌̑̀l̷̷̷̷̶̶̴̷̴̴̴̷̸̴̴̴̵̸̸̴͍̯͔̻̣̮̞̝͊̓̊͋̃̀̈̕ͅp̶̷̶̷̵̶̴̶̶̸̷̶̷̵̴̵̴̛̼̜̈́̄̈́̃̃̾̏͛͘͘ͅ
+message Level 3: A World Inverted
+#########
+#.......#
+#l#####.#
+#.#...#.#
+#.#.#t#.#
+#.#.#e#.#
+#c#.###.#
+#k#.....#
+#########
+
+message H̵̶̶̴̷̶̸̶̴̶̴̶̷̶̡̢̦͙̼̮̞̳̤͈̓ȩ̸̴̷̵̸̶̵̸̶̵̵̸̵̴̴̶̸̷̴̶̸̧̗̖̹̭͓͙͛͊̒͒͆̂̇̉̒͝ĺ̶̶̸̷̸̸̴̴̶̶̴̷̶̷̷̴̟͔̹̯̬̼͚̱̩̤͕̙l̸̶̶̴̴̸̵̷̶̸̶̶̴̸̴̶̷̷̸̶̶̴̵̶̴̗͔̖̥̺͔͉̲̯̍̎͗̽̋͑̽͆̈́̆̈̚ͅõ̴̸̵̶̴̶̷̴̵̶̗̾̋́̕͠
+message Level 3b: detrevnI dlroW A
+#########
+#.......#
+#.#####.#
+#.#...#.#
+#kl.#y#.#
+#.#.le#.#
+#z#.###.#
+#y#.....#
+#########
+
+
+message ...this is new...
+message Level 4: One World
+#########
+#e.###.e#
+#.y.#.y.#
+##.....##
+###.z.###
+##.....##
+#.y.#.y.#
+#e.###.e#
+#########
+
+
+message It gets closer...It...
+message Level 5: Seperate
+#########
+##e.....#
+#p#.....#
+#dd#b...#
+#...#...#
+#dddd#..#
+#dd..d#y#
+#d..det##
+#########
+
+
+message What is he...is he...me? ...am i...him?
+message Level 6: The Merge
+#########
+#kdd..###
+###...###
+#e..b.lt#
+#.###.###
+#.###.###
+#p...e###
+#########
+
+message no no no. He is NOT me. I AM ME. HE IS...they?
+message Level 7: The Crack
+###########
+#.........#
+#..k..e.b.#
+#.b.....k.#
+#.####....#
+#.#tlll.b.#
+#.####....#
+#c.......k#
+###########
+
+
+message ...
+message Level 8: Hole Fracture
+###########
+#.........#
+#....e....#
+#..#......#
+#..#b.b.b.#
+#..#......#
+#..#......#
+#..#.#l####
+#cu#k#bklt#
+###########
+
+message ...One Way Out...
+message Level 9: surrounded
+###########
+#bbbbbbbbb#
+#bt.....tb#
+#b.......b#
+#b.......b#
+#b...c...b#
+#b.......b#
+#b.......b#
+#bt.....tb#
+#bbbbbbbbb#
+###########
+
+message Level 10: The surrender
+#########wwwww
+#pddddddwwmwzw
+#########wwwww

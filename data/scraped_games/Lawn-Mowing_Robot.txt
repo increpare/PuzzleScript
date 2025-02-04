@@ -1,0 +1,355 @@
+title Lawn-Mowing Robot
+author Alex Baines
+homepage abaines.me.uk
+again_interval 0.5
+background_color #1B1825
+(
+debug
+verbose_logging
+)
+========
+OBJECTS
+========
+
+Background
+DarkBlue
+
+Wall
+DarkBlue
+
+Dirt
+DarkBrown Brown
+10000
+00010
+01000
+00000
+00010
+
+Weed
+Green LightGreen
+10010
+01000
+00001
+10100
+00010
+
+LawnU
+LightGreen
+
+LawnD
+Green
+
+Rock
+Purple Brown
+.....
+.000.
+.010.
+.000.
+.....
+
+
+Player
+White Pink
+.....
+.111.
+.101.
+.111.
+.....
+
+
+Error
+Red
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+TryMoveU
+Transparent
+
+TryMoveD
+Transparent
+
+Num_1
+LightGray
+.00..
+..0..
+..0..
+..0..
+.000.
+
+Num_2
+LightGray
+.00..
+0..0.
+..0..
+.0...
+0000.
+
+Num_3
+LightGray
+.00..
+0..0.
+..0..
+0..0.
+.00..
+
+Num_4
+LightGray
+0....
+0....
+0.0..
+0000.
+..0..
+
+Num_5
+LightGray
+0000.
+0....
+000..
+...0.
+000..
+
+Num_6
+LightGray
+.00..
+0....
+000..
+0..0.
+.00..
+
+Num_7
+LightGray
+0000.
+...0.
+..0..
+.0...
+.0...
+
+Num_8
+LightGray
+.00..
+0..0.
+.00..
+0..0.
+.00..
+
+Num_9
+LightGray
+.00..
+0..0.
+.000.
+...0.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+x = Dirt
+# = Wall
+@ = Player and Dirt
+- = Weed
+u = LawnU
+d = LawnD
+* = Rock and Weed
+
+Lawn = LawnU or LawnD
+TryMove = TryMoveU or TryMoveD
+
+1 = Num_1
+2 = Num_2
+3 = Num_3
+4 = Num_4
+5 = Num_5
+6 = Num_6
+7 = Num_7
+8 = Num_8
+9 = Num_9
+
+Num = Num_1 or Num_2 or Num_3 or Num_4 or Num_5 or Num_6 or Num_7 or Num_8 or Num_9
+
+=======
+SOUNDS
+=======
+
+sfx0 73072307
+
+player move 62609307
+Lawn create 83421107
+endlevel 50950103
+restart 85196309
+undo 31084301
+closemessage 81199503
+startgame 81199503
+endgame 94648703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Dirt
+Weed, LawnU, LawnD
+Player, Wall, Rock, Num
+Error, TryMove
+
+======
+RULES     
+======     
+
+[ Error ] -> []
+
+[ > Player | Rock | no Wall ] -> [ > Player | > Rock | ]
+
+horizontal [ up   Player Weed | LawnU ] -> [ Player Weed Error | LawnU Error ]
+horizontal [ down Player Weed | LawnD ] -> [ Player Weed Error | LawnD Error ]
+vertical   [ up   Player Weed | LawnD ] -> [ Player Weed Error | LawnD Error ]
+vertical   [ down Player Weed | LawnU ] -> [ Player Weed Error | LawnU Error ]
+
+up   [ > Player Weed | no LawnD ] -> [ > Player LawnU | ]
+down [ > Player Weed | no LawnU ] -> [ > Player LawnD | ]
+
+up   [ > Player | Weed ] -> [ > Player | Weed TryMoveU ]
+down [ > Player | Weed ] -> [ > Player | Weed TryMoveD ]
+
+horizontal [ TryMoveU | LawnU ] -> [ Error | Error LawnU ] 
+horizontal [ TryMoveD | LawnD ] -> [ Error | Error LawnD ]
+vertical   [ TryMoveU no Rock | LawnD ] -> [ Error | Error LawnD ]
+vertical   [ TryMoveD no Rock | LawnU ] -> [ Error | Error LawnU ]
+vertical   [ TryMoveU <  Rock | LawnD ] -> [ Error Rock | Error LawnD ]
+vertical   [ TryMoveD <  Rock | LawnU ] -> [ Error Rock | Error LawnU ]
+
+[ Error ] [ Rock   ] -> [ Error ] [ stationary Rock   ]
+[ Error ] [ Player ] -> [ Error ] [ stationary Player ] sfx0 again
+
+[ > Rock | Lawn ] -> [ > Rock | Weed ]
+
+late [ Player TryMoveU ] -> [ Player LawnU ]
+late [ Player TryMoveD ] -> [ Player LawnD ]
+
+late [ TryMove ] -> cancel
+
+
+==============
+WINCONDITIONS
+==============
+
+no Weed
+
+=======     
+LEVELS
+=======
+
+Message I must fulfill my destiny to be the best lawn-mowing robot!
+Message Those lawns will look great if I cut them in vertical stripes like that one...
+
+########
+#ududud#
+#ududud#
+#ududud#
+#ududud#
+########
+
+Message I'll only cut the grass when moving up or down. Here goes nothing!
+
+#######
+#@----#
+#-----#
+#-----#
+#-----#
+1######
+
+Message That was easy... How about this one?
+
+########
+#@----d#
+#-#---d#
+#--#--d#
+#-----d#
+2#######
+
+Message Rocks won't stop me. I'll just push 'em out the way.
+
+###############
+#@---#-------##
+#d--###-#-##--#
+##----#-------#
+#--##-#-*-#--##
+#---------#--##
+#--#---------x#
+3##############
+
+Message This lawn is a mess! How will I fix this?!
+
+##############
+####-d-------#
+#-----d---##-#
+#@-#---d--##-#
+##-##---*--#-#
+##-##-----#--#
+##-----#----x#
+4#############
+
+Message I thought I signed up for lawn-mowing not rock-pushing!
+
+###############
+#-----#------x#
+#---*x----###-#
+#@-#-----####-#
+##-###--*---#*#
+#--#---#--#---#
+#--*---#-----x#
+#---#-----#--##
+5##############
+
+Message Such lawn-negligence! I'd better get paid double for that one.
+
+#############
+#---------@-#
+#-----------#
+#x####-######
+#x*--------x#
+######-####x#
+###---------#
+###--------##
+#--uu#-#----#
+#-*--#------#
+#----#----###
+###d#----####
+#--------####
+#-------#####
+6############
+
+Message Hah! No lawn is too untidy for me!
+
+################
+#---------x---##
+#----------#@-##
+##*#-------#####
+#---u#-###--*--#
+#----#--#------#
+#####---------##
+#####-------####
+###x-------#####
+7###############
+
+Message Just one more. Then I'll surely be recognised for my lawn-mowing prowess!
+
+######################
+##-#x------*-###@#####
+#x--*----------#-#---#
+#-##d##u##d#---#-#---#
+#-#---------------**-#
+#-#--####------#-#---#
+#------#----#----#---#
+##---#---------#u#---#
+###########u####----u#
+#########-----d---#-u#
+####x-------------duu#
+8#####################
+
+Message Congratulations!                                                    You are truely the best lawn-mowing robot there ever was.                                      Thanks for playing.
+

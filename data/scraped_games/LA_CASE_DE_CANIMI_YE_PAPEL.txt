@@ -1,0 +1,388 @@
+title LA CASE DE CANIMI YE PAPEL
+author Ege Verim 
+homepage https://twitter.com/Swegetie
+background_color Darkgreen
+zoomscreen 8x8
+youtube y5_A9oFeWDw
+========
+OBJECTS
+========
+
+Background
+Grey
+
+Background1
+Grey DarkGreen
+00000
+11111
+11111
+00000
+00000
+
+Background2
+Grey DarkGreen
+00000
+11111
+11111
+00000
+00000
+
+BackgroundLeft
+Grey Yellow 
+(00000
+00000
+10000
+00000
+00000)
+
+Wall 
+#584a4e #70a169 #b4d157 
+11111
+12221
+12221
+11111
+00000
+
+Crash
+Red DarkRed Yellow
+.202.
+20102
+01110
+20102
+.202.
+
+PlayerBase
+Yellow Black
+.000.
+01010
+10001
+01110
+.000.
+
+PlayerShooting
+Yellow Black darkred
+.000.
+02020
+10001
+01110
+.000.
+
+Friend
+LightGreen Red Yellow Orange White Black
+..2..
+41514
+.515.
+.111.
+.1.1.
+
+Mine
+Red Orange Yellow
+..1..
+.010.
+01210
+02220
+.000.
+
+Enemy
+LightGreen purple white Orange Red Black
+..2..
+41514
+.515.
+.111.
+.1.1.
+
+Enemy2
+LightGreen purple white Orange Red Black
+..2..
+41514
+.151.
+.111.
+.1.1.
+
+Enemy3
+LightGreen purple white Orange Red Black
+..2..
+41514
+.111.
+.111.
+.1.1.
+
+Temp
+Black
+
+=======
+LEGEND
+=======
+
+# = Wall
+, = Background
+. = Background1
+: = Background2
+; = BackgroundLeft
+P = PlayerBase
+E = Enemy 
+F = Enemy2  
+G = Enemy3 
+M = Mine
+R = Friend
+Player = PlayerBase or PlayerShooting
+
+MovingLeft = Enemy  or Enemy2 or Enemy3 or Background1 or Background2 or Friend or Mine 
+MovingLeftShips = Enemy or Enemy2 or Enemy3 
+
+Enemies = Enemy or Enemy2 or Enemy3 
+Shootable = Enemies or Friend
+
+=======
+SOUNDS
+=======
+
+Sfx0 67775302 (You Crash)
+Sfx1 12510902 (Laser On Enemy)
+Sfx2 84978501 (Shoot Laser)
+Sfx3 97130504 
+EndLevel 11059703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BackgroundLeft
+Background1, Background2
+Enemy, Enemy2, Enemy3, Friend, Mine , Wall
+Player
+Crash
+Temp
+
+======
+RULES
+======
+[Crash] -> restart
+[BackgroundLeft MovingLeft] -> [BackgroundLeft]
+
+Horizontal [> Player] -> cancel 
+vertical [> Player] -> [> PlayerBase]
+
+
+Right [Action Player | ... | Shootable] -> [PlayerShooting | ... |Shootable Temp] Sfx2 Sfx3
+Right [Action Player | ... | No Shootable] -> [PlayerShooting | ... | ]  Sfx1
+[Enemy Temp] -> []
+[Enemy2 Temp] -> [Enemy]
+[Enemy3 Temp] -> [Enemy2]
+[Friend Temp] -> [Left Crash]
+([BackgroundLeft| MovingLeft] -> [BackgroundLeft| ])
+[BackgroundLeft| ... | MovingLeft] -> [BackgroundLeft | ... |Left MovingLeft]
+
+ late [Player Wall] -> [Crash] Sfx0
+late [Player Enemies] -> [Crash] Sfx0
+late [Player Mine] -> [Crash] Sfx0
+late [Player Friend] -> [Crash] Sfx0
+
+
+==============
+WINCONDITIONS
+==============
+
+No Enemies
+No Crash
+
+=======
+LEVELS
+=======
+
+Message *	violent conflict   *
+
+Message piuv piuv
+
+Message James be quick
+
+Message Whats the password
+
+Message ok got it
+
+Message now let's get out of here
+
+Message omg polices have landed
+
+Message Level 1 out of 10
+##############
+;:,:,,e.,,.,:,
+;,:,,,..,,,,,.
+;p:,,,.,,:,.,,
+;,.,:,..,,,,,:
+;,:,,,e.,:,:,,
+##############
+
+Message Their number is increasing.
+
+Message You can shoot at polices by pressing space.
+
+Message be carefull
+
+Message Level 2 out of 10
+##############
+;:,:e,,f,,.g:,
+;,,,e,,f,,,g,.
+;p:,e,,f,:,g,,
+;,,,e,,f,,,g,:
+;,:,e,,f,:,g,,
+##############
+
+
+Message Where was the exit of the bank mate
+
+Message I dont remember, f word
+
+
+Message Level 3 out of 10
+
+##############
+;:,,e,,gf,g,:,
+;,,,g,,g,,g,,.
+;p,:gf,f,:g,,,
+;,,,g,,f,,g.,:
+;,,:e,,fg:g,,,
+##############
+
+Message James did you watch the snake serdar video
+
+Message Why
+
+Message Follow me
+
+Message Level 4 out of 10
+##############
+;:f:f,e,e,,,:,
+;,,g.e,f,g,,,.
+;pg,g,e.g:,,,,
+;,,e,f,f,g,.,:
+;,f,e,g,f:,,,,
+##############
+
+
+Message time is running out
+
+Message we must surrender
+
+Message you have to shoot me first idiot
+
+Message go go go
+
+
+Message Level 5 out of 10
+#############
+;:,e,f,g,g,:,
+;,,e,fg,,fg,.
+;p,feeg,egf,,
+;,,f,ef,eg,,:
+;,,,f,,eege,,
+#############
+
+
+Message call other members
+
+Message otherwise we will not be able to get out of here
+
+Message we lost the way, f word
+
+Message policemen are everywhere
+
+
+
+
+Message Level 6 out of 10
+#############
+;:,,eefe,e,:,
+;,,ee,g:,fg,.
+;p,eeff,g,e,,
+;,,efef,efe,:
+;,,,ge,gefe,,
+;:,.,e,,gf,,,
+;,,,:,ef,ge,,
+;,:,,,,ee,g,,
+#############
+
+
+Message After this corridor group members will meet us
+
+Message There's a fire everywhere
+
+Message Watch out for smoke and breath
+
+Message omg police traps
+
+
+Message Level 7 out of 10
+################
+;:,,.ff,ef,:e,,,
+;,,,,m,eme,mm,:,
+;p,:,m,g,fe,e,,,
+;,,,,me,m,fmg,.,
+;,,,:,ge,e,fe,,,
+;:,.,,,gf,f,m:,,
+################
+
+Message Finally
+
+Message Friends will show the way
+
+
+Message Do not shoot Friends
+
+
+Message Level 8 out of 10
+################
+;:,,.ef,e,r:,,,,
+;,,,rem,,m,f,,:,
+;p,:r,rg,,ff,,,,
+;,,,r,,ffmre,,.,
+;,,,:fge,,eg,,,,
+################
+
+Message This way
+
+
+Message We are close to the exit
+
+
+Message Level 9 out of 10
+##################
+;:,,,,,,r,.r,,me,,
+;,,:,,er,re,f:fr,,
+;,,,,,r,e,eme,,,r,
+;p,,,:,rr,,,r,mg,,
+;,,,,,r,eer,ggem.,
+;,.,,,re,m,m,ef,,,
+;,,,,,,,r,:,rme,,,
+;,,.,,fee,mr,ee.,,
+##################
+
+
+
+Message CMON GUYZ we re free after this
+
+Message I see the light
+
+Message Level 10 out of 10
+##################
+;:,,,:f.e,,r,:g,,,
+;,,:,,g,fee,f,g,,,
+;,,,,,mrmer,f,r,,,
+;p,,,:me,.:,e,e,:,
+;,,,,,meeeeee,r,,,
+;,.,,,,er,,,gmm,,,
+;,,,,,,m,ree,,g,,,
+;,,.,,,,f,,fr:f.,,
+;,,,,,.,eg,eemf,,,
+##################
+
+
+
+Message ow yeaaaaaaaa
+
+Message look michael we re super rich now you dont need to ask debt
+
+Message lets go to nusret for celebration
+
+Message END

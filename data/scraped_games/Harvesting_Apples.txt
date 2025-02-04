@@ -1,0 +1,149 @@
+title Harvesting Apples
+author PJ
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+TreeApple
+red darkgreen brown
+.101.
+11101
+.011.
+..2..
+.....
+
+TreeHarvest
+darkgreen brown
+.000.
+00000
+.000.
+..1..
+.....
+
+TreeKaputt
+darkgreen brown grey
+.220.
+02002
+.020.
+..1..
+.....
+
+
+Target
+DarkBlue orange
+..0..
+00000
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+10101
+00000
+.010.
+.010.
+.....
+
+Wall2
+Brown darkbrown
+.0.0.
+10101
+00000
+10101
+10101
+
+Player
+yellow Orange red Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+.....
+.....
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+2 = Wall2
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+T = TreeApple
+H = TreeHarvest
+K = TreeKaputt
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 12257109
+TreeHarvest CREATE 3355903
+TreeKaputt create 50006902
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, TreeApple, TreeHarvest, TreeKaputt
+Player, Wall, Crate, Wall2
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ >  Crate | TreeHarvest ] -> [  >  Crate | TreeKaputt  ]
+[ >  Crate | TreeApple ] -> [  >  Crate | TreeHarvest  ]
+
+
+
+==============
+WINCONDITIONS
+==============
+No TreeApple
+No TreeKaputt
+All Crate on Target
+
+=======
+LEVELS
+=======
+ 
+ message Collect the apples by pushing the crate on the apple trees.
+ message Pushing the crate on a tree without apples makes the tree kaputt!
+
+hhho.hhhh.
+htt.t#t.th
+t.h...ttt.
+.t.ht.t.#.
+..h#tt.p.h
+.thh.#h.*.
+.h#.t.tt*h
+ohh#h#..h.
+
+

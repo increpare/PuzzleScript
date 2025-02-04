@@ -1,0 +1,473 @@
+flickscreen 7x7
+title the camel and th 
+author Katelyn 
+homepage www.puzzlescript.net
+========
+OBJECTS
+========
+background
+#CCCCCC
+
+whiteground
+#CCCCCC
+
+grayground
+gray
+
+blackground
+black
+
+wall
+black
+
+wintile
+#888888 #555555 
+.....
+.000.
+.010.
+.000.
+.....
+
+graybox 
+#888888 #555555 
+.....
+.000.
+.010.
+.000.
+.....
+
+brownbox
+#885500 #663300 #331100
+00000
+02120
+01210
+02120
+00000
+
+player
+black
+.....
+.000.
+.000.
+.000.
+.....
+
+swloop
+black
+
+sloop
+black
+
+seloop
+black
+
+wloop
+black
+
+eloop
+black
+
+nwloop
+black
+
+nloop
+black
+
+neloop
+black
+
+bluetext
+#110033 #050018 #050022
+22222
+20002
+21112
+20002
+22222
+
+purple
+#050022 #020014
+01010
+01010
+01010
+10100
+10100
+
+purplepath
+black
+
+green
+#002200 #003300
+00000
+01100
+00000
+00110
+00000
+
+greenbutton
+#004400 #001100 #002200
+20002
+20002
+20002
+21112
+22222
+
+greenwall
+#005500 #007700 #CCFFCC #002200
+30013
+00121
+00010
+00000
+30003
+
+greentext
+#001100 #001800 #002200
+22222
+20002
+21112
+20002
+22222
+
+red
+#220000 #440000 #550000
+10120
+02010
+02021
+10102
+02011
+
+redbrick
+#330000 #110000
+00100
+00100
+11111
+00100
+00100
+
+redlaser
+#330000 #110000 #FF2222 #222222
+00100
+00103
+11132
+00103
+00100
+
+redbutton
+#440000 #110000 #220000
+20002
+20002
+20002
+21112
+22222
+
+laserreciever
+#330000 #110000 #ff2222 #dd2222
+00100
+03330
+33231
+03330
+00100
+
+
+laser
+#FF0000
+.....
+.....
+00000
+.....
+.....
+
+bouncertarget
+black
+
+bouncer
+#992200 #FF0000 black
+.000.
+.101.
+00000
+.0.0.
+.0.0.
+
+redtext
+#050000 #180000 #220000
+22222
+20002
+21112
+20002
+22222
+
+laserpath
+transparent
+
+laserpath2
+transparent
+
+bluetextdone
+transparent
+
+greentextdone
+transparent
+
+redtextdone
+transparent
+
+greencrystal
+#AAFFAA #88FF88 #22FF22 gray black
+44044
+40114
+40124
+44244
+43334
+
+bluecrystal
+#AAAAFF #8888FF #2222FF gray black
+44044
+40114
+40124
+44244
+43334
+
+redcrystal
+#FFAAAA #FF8888 #FF2222 gray black
+44044
+40114
+40124
+44244
+43334
+
+deadcrystal
+#AAAAAA #888888 #444444 gray black
+44044
+40114
+40124
+44244
+43334
+
+deadbutton
+#888888 #555555 black
+22222
+20002
+20102
+20002
+22222
+
+buttonplace
+black
+
+=======
+LEGEND
+=======
+. = blackground
+, = grayground
+' = whiteground
+# = grayground and graybox
+@ = player
+1 = swloop
+2 = sloop
+3 = seloop
+4 = wloop
+6 = eloop
+7 = nwloop
+8 = nloop
+9 = neloop
+! = wintile
+x = brownbox
+w = wall
+
+p = purple
+d = purplepath
+a = bluecrystal
+q = bluetext
+g = green
+b = greenbutton
+n = greenwall
+t = greentext
+z = greencrystal
+r = red 
+s = redbrick
+l = redlaser
+y = redcrystal
+j = redbutton
+c = laserreciever
+h = bouncertarget and blackground
+e = redbrick and red
+u = laserpath and blackground
+o = laserpath2 and eloop
+k = laserpath2 and wloop
+m = laserpath2 and blackground
+f = redtext
+% = buttonplace
+
+box = graybox or brownbox
+winsquare = wintile or deadbutton
+winobject = box or player 
+warpsquare = swloop or sloop or seloop or wloop or eloop or nwloop or nloop or neloop
+
+=======
+SOUNDS
+=======
+
+sfx0 87145508
+sfx1 2854908
+sfx2 21355108
+sfx3 34733708
+sfx4 65927908
+sfx5 77302508
+sfx6 3052507
+sfx7 30912503
+sfx8 81712907
+sfx9 84269508
+================
+COLLISIONLAYERS
+================
+
+background 
+whiteground grayground blackground wintile
+swloop sloop seloop wloop eloop nwloop nloop neloop
+greentextdone bluetextdone redtextdone
+purple purplepath green greenbutton bluetext greentext red redbutton bouncertarget redtext deadbutton buttonplace
+box player wall greencrystal greenwall bluecrystal redcrystal redbrick redlaser laserreciever bouncer deadcrystal
+laser
+laserpath laserpath2
+
+======
+RULES     
+====== 
+[ > player | box ] -> [ > player | > box ]
+
+[nloop no box |...| down player sloop] -> [nloop player |...| sloop]
+[box nloop| |...| down player sloop] -> [nloop player|box| ... | sloop]
+[nloop no box |...| down player | box sloop] -> [box nloop |...| |player sloop]
+
+[sloop no box |...| up player nloop] -> [sloop player |...| nloop]
+[box sloop| |...| up player nloop] -> [sloop player|box| ... | nloop]
+[sloop no box |...| up player | box nloop] -> [box sloop |...| |player nloop]
+
+[eloop no box |...| left player wloop] -> [eloop player |...| wloop]
+[box eloop| |...| left player wloop] -> [eloop player|box| ... | wloop]
+[eloop no box |...| left player | box wloop] -> [box eloop |...| |player wloop]
+
+[wloop no box |...| right player eloop] -> [wloop player |...| eloop]
+[box wloop| |...| right player eloop] -> [wloop player|box| ... | eloop]
+[wloop no box |...| right player | box eloop] -> [box wloop |...| |player eloop]
+
+[swloop no box |...| up player nwloop] -> [swloop player |...| nwloop]
+[box swloop| |...| up player nwloop] -> [swloop player|box| ... | nwloop]
+[swloop no box |...| up player | box nwloop] -> [box swloop |...| |player nwloop]
+[swloop no box |...| right player seloop] -> [swloop player |...| seloop]
+[box swloop| |...| right player seloop] -> [swloop player|box| ... | seloop]
+[swloop no box |...| right player | box seloop] -> [box swloop |...| |player seloop]
+
+[seloop no box |...| up player neloop] -> [seloop player |...| neloop]
+[box seloop| |...| up player neloop] -> [seloop player|box| ... | neloop]
+[seloop no box |...| up player | box neloop] -> [box seloop |...| |player neloop]
+[seloop no box |...| left player swloop] -> [seloop player |...| swloop]
+[box seloop| |...| left player swloop] -> [seloop player|box| ... | swloop]
+[seloop no box |...| left player | box swloop] -> [box seloop |...| |player swloop]
+
+[nwloop no box |...| down player swloop] -> [nwloop player |...| swloop]
+[box nwloop| |...| down player swloop] -> [nwloop player|box| ... | swloop]
+[nwloop no box |...| down player | box swloop] -> [box nwloop |...| |player swloop]
+[nwloop no box |...| right player neloop] -> [nwloop player |...| neloop]
+[box nwloop| |...| right player neloop] -> [nwloop player|box| ... | neloop]
+[nwloop no box |...| right player | box neloop] -> [box nwloop |...| |player neloop]
+
+[neloop no box |...| down player seloop] -> [neloop player |...| seloop]
+[box neloop| |...| down player seloop] -> [neloop player|box| ... | seloop]
+[neloop no box |...| down player | box seloop] -> [box neloop |...| |player seloop]
+[neloop no box |...| left player nwloop] -> [neloop player |...| nwloop]
+[box neloop| |...| left player nwloop] -> [neloop player|box| ... | nwloop]
+[neloop no box |...| left player | box nwloop] -> [box neloop |...| |player nwloop]
+
+late [player blackground] -> sfx0
+late [player warpsquare] -> sfx0 
+late [player purple] -> sfx6
+late [player green] -> sfx7
+late [player red] -> sfx8
+late [player bluetext] [bluecrystal] -> [player purple bluetextdone] [deadcrystal] sfx1 message "but understanding is worth pursuing, wouldn't you agree"
+late [player purplepath] -> [player purple]
+late [box greenbutton] [player greenbutton] [greenwall] -> [box green] [player green] [green] sfx4
+late [player greentext] [greencrystal] -> [player green greentextdone] [deadcrystal] sfx2 message the camel thought this over and replied, "no. I think there is some value in it, but it demands too high a price eventually."
+
+late [box redbutton] [laserpath] -> [box redbutton] [laser]
+late [box redbutton] [bouncertarget] -> [box red] [bouncer bouncertarget]
+[> player | bouncer] -> [player | bouncertarget] sfx9 message ...moving. 
+late [laser] [bouncertarget no bouncer] [laserpath2] -> [laser] [bouncertarget laser] [laserpath2 laser]
+late [laserpath2 laser] [red redbrick] -> [laserpath2 laser] [red]
+late [player redtext] [redcrystal] -> [player red redtextdone] [deadcrystal] sfx5 message nobody understood what the camel meant by that.
+
+late [redtextdone ][ bluetextdone ][ greentextdone][buttonplace] -> [][][][deadbutton]
+
+==============
+WINCONDITIONS
+==============
+
+any winsquare on winobject
+
+=======     
+LEVELS
+=======
+788888888888888888888888888888888888888888888888888888888888889
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4..g..........................azy.............................6
+4..g...g......................................................6
+4.gngb.........................%..............................6
+4gntngg.......................................................6
+4.gng.........................................................6
+4.gg.b........................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4................................................p............6
+4.................................................ppppp.......6
+4................................................pwwwwwp......6
+4................................................pwqddwp......6
+4................................................pwwwdwp......6
+4........................,,,,,,,,,,,,,..........ppwdddwp......6
+4........................,,,,,,,,,,,,,.........p.pwdwwwp......6
+4........................,,,,,,,,,,,,,............ppppp.......6
+4........................,,,,,,,,,,,,,.............p...p......6
+4........................,,,,''''',,,,.................pp.....6
+4........................,,,,'x'!',,,,........................6
+4........................,,,,''''',,,,........................6
+4........................,,,,''@'',,,,........................6
+4........................,,,,''''',,,,........................6
+4........................,,,,,,,,,,,,,........................6
+4........................,,,,,,,,,,,,,........................6
+4........................,,,,,,,,,,,,,........................6
+4........................,,,,,,,,,,,,,........................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............rrrrrrr.........................................6
+4.............rrrjrrr.........................................6
+4.............rrrrrrr.........................................6
+4.............rsssssr.........................................6
+kmmmmmmmmmmmmmmcrfrluuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuhmmmo
+4.............rssessr.........................................6
+4.............rrrrrrr.........................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+4.............................................................6
+122222222222222222222222222222222222222222222222222222222222223
+
+message the end

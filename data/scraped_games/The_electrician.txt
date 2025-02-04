@@ -1,0 +1,156 @@
+title The electrician
+author Fabien Vidal
+homepage vfabien21.itch.io
+
+========
+OBJECTS
+========
+
+Background 
+LIGHTGRAY  
+
+Target 
+Red 
+
+Working
+Green
+
+Wall 
+Grey
+
+Player 
+Blue
+
+Crate 
+Orange
+
+Temp
+Red
+
+Source
+Yellow
+
+
+Dead
+Black
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Source
+O = Target
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate , Source, Dead, working,Target, Temp
+
+======
+RULES     
+======     
+
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Crate | Crate ] -> [  >  Temp  | > Crate  ]
+[ Source | Target ] -> [  Source | Working  ]  
+
+
+late [ Crate | Source ] -> [  Source | Source  ] 
+late [ Temp  ] -> [ Crate  ]
+late [ Player | Source ] -> [  Dead | Source  ] 
+
+
+
+==============
+WINCONDITIONS
+==============
+
+No Target
+Some Player
+
+=======     
+LEVELS
+=======
+
+Message Connect the engine to the power source
+
+#########
+#.......#
+#.......#
+#P.**.O.#
+#....@..#
+#....#..#
+#########
+
+Message Well done !
+Message Don't get electrocuted when touching the power source
+
+#########
+#.......#
+#.......#
+#..**.O.#
+#....@..#
+#.....P.#
+#########
+
+Message Good, taking the long way vas very cautious.
+Message Also, be careful when plugging a conductor into the power source
+
+##########
+#........#
+#........#
+#.*.P*.O.#
+#.....@..#
+#.....#..#
+##########
+
+Message Nice. It looks like you know how to work safely
+Message Lets do some real work now
+
+
+##########
+#........#
+#....**..#
+#...P..**O
+#....**..#
+#........#
+#####@####
+
+Message Good !
+Message Uh. Someone placed walls in the way
+
+##########
+#........#
+#.....*..#
+#...#..**O
+#...***..#
+#P.......#
+#####@####
+
+Message I am impressed !
+Message A last one... And all engines will be up and running
+
+##########
+#........#
+#.....*..#
+#...#..**O
+#...***#.#
+#P.....*.#
+#####@####
+
+Message BRrrrrr. Do you hear that sound ? That's the sound of Victory !
+message Well done, electrician;-)
+Message Game made during the One Hour Jame 173
+
+

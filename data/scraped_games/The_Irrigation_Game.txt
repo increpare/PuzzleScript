@@ -1,0 +1,464 @@
+title The Irrigation Game
+author Dan Williams
+homepage www.activeupgames.com
+
+========
+OBJECTS
+========
+
+Background
+green #11aa11
+00000
+01000
+00000
+00010
+00000
+
+tree
+#559955 brown lightgreen darkgreen
+.220.
+20003
+20003
+.033.
+..1..
+
+rock
+gray lightgray #555555
+.111.
+11002
+10022
+00022
+.222.
+
+
+
+riverhoriz
+blue white
+00000
+01100
+00000
+00110
+00000
+
+riververt
+blue white
+00000
+00010
+01010
+01000
+00000
+
+ocean
+blue white
+01000
+00000
+00010
+00000
+00000
+
+flower5
+red yellow white orange pink green lightgreen
+42304
+01535
+05210
+34051
+04345
+
+flower4
+red yellow white orange pink green lightgreen
+42554
+01535
+05210
+55051
+05545
+
+flower3
+red yellow white orange pink green lightgreen
+52554
+51535
+05510
+55055
+05545
+
+flower2
+red yellow white orange pink green lightgreen
+52555
+55535
+05555
+55055
+55545
+
+flower1
+red yellow white orange pink green lightgreen black
+75567
+55555
+56555
+55565
+75557
+
+flowerbed
+brown green darkblue
+00000
+02120
+01110
+02120
+00000
+
+
+dirthole
+brown lightbrown
+.111.
+10001
+10001
+10001
+.111.
+
+dirtmound
+lightbrown brown darkbrown
+.000.
+01112
+01112
+01112
+.222.
+
+dirtmoundonwater
+lightbrown brown darkbrown blue
+33333
+30113
+01112
+31123
+33333
+
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+wallhoriz
+gray darkgray
+00000
+11111
+00000
+11111
+00000
+
+wallvert
+gray darkgray
+01010
+01010
+01010
+01010
+01010
+
+wall1
+gray darkgray
+00000
+01111
+01000
+01011
+01010
+
+wall2
+gray darkgray
+00000
+11110
+00010
+11010
+01010
+
+wall3
+gray darkgray
+01010
+01011
+01000
+01111
+00000
+
+wall4
+gray darkgray
+01010
+11010
+00010
+11110
+00000
+
+playerright
+brown Orange red Blue black
+.000.
+.114.
+.222.
+.333.
+..3..
+
+Playerdown
+brown Orange red Blue black
+.000.
+.414.
+22222
+.333.
+.3.3.
+
+playerleft
+brown Orange red Blue black
+.000.
+.411.
+.222.
+.333.
+..3..
+
+Playerup
+brown Orange red Blue black
+.000.
+.000.
+22222
+.333.
+.3.3.
+
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+, = ocean
+- = Wallhoriz
+| = wallvert
+1 = wall1
+2 = wall2
+3 = wall3
+4 = wall4
+P = Playerdown
+O = Target
+T = tree
+R = rock
+W = ocean
+B = flowerbed
+water = ocean or riververt or riverhoriz
+
+flower = flower1 or flower2 or flower3 or flower4 or flower5
+
+object = tree or rock or flowerbed or flower or wallhoriz or wallvert
+
+Player = playerright or playerdown or playerleft or Playerup
+
+wall = wall1 or wall2 or wall3 or wall4 or wallhoriz or wallvert
+
+=======
+SOUNDS
+=======
+
+player MOVE 29986507
+startgame 9455508
+restart 90013309
+closemessage 35794303
+undo 21150709
+endlevel 24543300
+
+
+sfx0 437309 (balsl stick to each other)
+sfx1 21946837 (push block)
+sfx2 6213103 (get redirected)
+sfx3 74507102 (push block into wall)
+sfx4 40920304 (dig dirt)
+sfx5 89915908 (flower grow)
+sfx6 71192708 (electricity - not used)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, riverhoriz, riververt, ocean, dirthole, flowerbed, dirtmound, dirtmoundonwater
+Player, Wall, Crate, tree, rock, flower
+
+
+======
+RULES
+======
+
+[ right player ] -> [ right  playerright ]
+[ down player ] -> [ down  playerdown ]
+[ left player ] -> [ left  playerleft ]
+[ up player ] -> [ up  playerup ]
+
+right [ action playerright no water no flowerbed no dirtmoundonwater | no object water ] -> [ playerright dirthole | dirtmoundonwater ] sfx4
+left [ action playerleft no water no flowerbed no dirtmoundonwater | no object water ] -> [ playerleft dirthole | dirtmoundonwater ] sfx4
+up [ action playerup no water no flowerbed no dirtmoundonwater | no object water ] -> [ playerup dirthole | dirtmoundonwater ] sfx4
+down [ action playerdown no water no flowerbed no dirtmoundonwater | no object water ] -> [ playerdown dirthole | dirtmoundonwater ] sfx4
+
+
+right [ action playerright no water no flowerbed no dirtmoundonwater | no object ] -> [ playerright dirthole | dirtmound ] sfx4
+left [ action playerleft no water no flowerbed no dirtmoundonwater  | no object ] -> [ playerleft dirthole | dirtmound ] sfx4
+up [ action playerup no water no flowerbed no dirtmoundonwater  | no object ] -> [ playerup dirthole | dirtmound ] sfx4
+down [ action playerdown no water no flowerbed no dirtmoundonwater  | no object ] -> [ playerdown dirthole | dirtmound ] sfx4
+
+
+([ action player no dirthole no flowerbed ] -> [ player dirthole ] sfx4)
+
+
+
+[ > player | water ] -> [ player | water ]
+
+
+startloop
+late horizontal [ water | dirthole ] -> [ water | riverhoriz ]
+late vertical [ water | dirthole ] -> [ water | riververt ]
+endloop
+
+[ flowerbed | water ] -> [ flower1 | water ]
+
+[ flower4 ] -> [ flower5 ] again
+[ flower3 ] -> [ flower4 ] again
+[ flower2 ] -> [ flower3 ] again
+[ flower1 ] -> [ flower2 ] again sfx5
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+no flowerbed
+no flower1
+no flower2
+no flower3
+no flower4
+
+=======
+LEVELS
+=======
+
+message Dig trenches to irrigate water into the land. Make sure water is next to all the flower beds!
+
+message Level 1 of 10
+
+1----------2
+|,,,,,,,,,,|
+|,,,,,,,,,,|
+|,,.r.t.,,,|
+|,,,p.b..,,|
+|,,,,....,,|
+|,,,,t..t,,|
+3----------4
+
+message Digging a trench next to the water will dump a pile of dirt that you can walk across.
+
+message Level 2 of 10
+
+1----------2
+|.....b.,,,|
+|bp..t..,..|
+|b...,,,,..|
+|,,,,,tt...|
+|..r.t..bb.|
+|......r.t.|
+3----------4
+
+message Level 3 of 10
+
+1----------2
+|,,,,,,,,,,|
+|,,,,,,,,,,|
+|..trt,..t,|
+|.bt...bbb.|
+|.r.br.....|
+|.p.....b..|
+3----------4
+
+message Level 4 of 10
+
+1----------2
+|.bbb...ttt|
+|........p.|
+|.r.t,,rt..|
+|b...,,,r..|
+|.t.,,,....|
+|.b......b.|
+3----------4
+
+message Level 5 of 10
+
+1----------2
+|,,,,,,,,,,|
+|,,..r..,,,|
+|,,.t..b.,,|
+|,.brttp,,,|
+|,,..,...,,|
+|,,,,,,,,,,|
+3----------4
+
+message Level 6 of 10
+
+1----------2
+|,,,,,,,,,,|
+|rtt.,,,,..|
+|.....,.tr.|
+|.b.p,,..b.|
+|rtr,..,rrt|
+|,,,.b.,,,,|
+3----------4
+
+message Level 7 of 10
+
+1----------2
+|,.rbt..,,,|
+|,.t..bt,,,|
+|,,r.rrp,,,|
+|,,.....,,,|
+|,,,...,,,,|
+|,,,,,,,,,,|
+3----------4
+
+message Level 8 of 10
+
+1----------2
+|.p.b..,,,,|
+|.tt..,,,,,|
+|.bb..,,,,,|
+|.b..,,,,,,|
+|...,,,,,,,|
+|,,,,,,,,,,|
+3----------4
+
+message Level 9 of 10
+
+1----------2
+|,,,,,,,,,,|
+|,,,,,,,,,,|
+|,,..p..t..|
+|,,,,r.b.b.|
+|,......t.,|
+|,,.....,,,|
+3----------4
+
+message Level 10 of 10
+
+1----------2
+|,,,,,,,,,,|
+|,,,,,,,,,,|
+|,,,,,.rr.,|
+|,,,,..bp.,|
+|,,.r..t,,,|
+|,..bb.t,,,|
+3----------4
+
+message Congratulations! The flowery world celebrates your irritation capabilities!
+
+
+
+

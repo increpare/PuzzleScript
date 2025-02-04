@@ -1,0 +1,313 @@
+title Sheep
+author Rabbit From Hell
+homepage rabbitfromhell.newgrounds.com/follow
+
+key_repeat_interval 0.35
+
+========
+OBJECTS
+========
+
+Background 
+Green Yellow Brown
+00000
+01000
+00000
+00010
+00000
+
+Target 
+Green Red
+11011
+10001
+00000
+10001
+11011
+
+
+WallA 
+Darkblue DarkRed
+10101
+01010
+10101
+01010
+10101
+
+WallB 
+Darkblue DarkRed
+01010
+10101
+01010
+10101
+01010
+
+
+Player 
+Black Orange White Blue DarkBrown
+44444
+10101
+11111
+10001
+33.33
+
+Crate 
+Orange Brown DarkBrown
+11111
+12021
+10101
+12021
+11111
+
+Sheep
+White Grey Black
+11011
+12021
+00100
+10001
+20002
+
+PennedSheep
+White Grey Black Red
+31313
+32323
+30303
+30303
+30303
+
+
+RunningSheep
+White Grey Black
+11011
+12021
+00100
+10001
+20002
+
+Probe
+Red
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+Wall = WallA or WallB
+Solid = Player or Wall or Sheep or Crate or PennedSheep
+Obst = Crate or Wall or Player or Probe or PennedSheep
+ObstM =  Crate or Wall or Player
+
+. = Background
+# = WallA
+$ = WallB
+P = Player
+* = Crate
+O = Target
+S = Sheep
+
+=======
+SOUNDS
+=======
+
+Player move 45379507
+Crate move 93110307
+Sheep move 1943907
+CloseMessage 91412900
+EndGame 42707303
+EndLevel 29754303
+TitleScreen 22546103
+Undo 155504
+Restart 29704903
+
+Sfx0 36551100 (sheep penned)
+Sfx1 62497704 (sheep hitting wall)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Probe
+Player, Wall, Crate, Sheep, RunningSheep, PennedSheep
+
+======
+RULES     
+======     
+
+[Player | ] -> [Player | > Probe]
+[Probe Solid] -> [Solid]
+[> Probe Solid] -> [Solid]
+[> Probe | no Solid] -> [Probe | > Probe] again
+[> Probe | Sheep ] -> [ | > Sheep] again
+[> Probe | Obst] -> [ | Obst]
+[Probe] -> []
+[Player | Sheep] -> [Player | > Sheep] again
+[> Sheep | Solid] -> [Sheep | Solid]
+([> Sheep Target] -> [Sheep Target])
+late [Sheep Target] -> [PennedSheep] Sfx0
+[> Sheep Target] -> [PennedSheep]
+
+[> Player | Crate] -> [>  Player | > Crate]     
+
+==============
+WINCONDITIONS
+==============
+
+No Sheep
+
+=======     
+LEVELS
+=======
+
+( TEST AREA )
+
+message You are the shepherd in charge of taking the sheep to their pens (the blue target shapes).
+message But the sheep (sheep-like shapes) are terrified of you, and run away the moment they see you!
+message You can use the crates that are inexplicably scattered all over the place to help you control the little b..., I mean, the lovely creatures.
+message Good luck!
+
+message Level 1
+(a)
+#$#$#$#$#
+$.......$
+#...S.*.#
+$.P.*.O.$
+#.......#
+$.......$
+#$#$#$#$#
+
+message Level 2
+(b)
+#$#$#$#$#
+$....#..$
+#....$*.#
+$.s..#op$
+#...*.*.#
+$.......$
+#$#$#$#$#
+
+message Level 3
+(c)
+#$#$#$#$#
+$.......$
+#.....s.#
+$......*$
+#$#.#$#.#
+$.*....P$
+#......o#
+$#$#$#$#$
+
+message Level 4
+(d)
+#$#$#$#$#.
+$....#po$.
+#....$..#$
+$.s..#*..#
+#........$
+$...*#..$#
+#....$*.#.
+$#$#$#$#$.
+
+message Level 5
+(e)
+#$#$#$#$#$#$
+$..........#
+#.s.$#$#$*.$
+$...#po.#..#
+#.....*....$
+$...#$.$#*.#
+#..........$
+$#$#$#$#$#$#
+
+message Level 6
+(f)
+#$#$#$#$#$#$
+$..........#
+#po#....*#.$
+$..$..s..$.#
+#..#.#$#.#.$
+$..$*....$.#
+#..........$
+$..........#
+#$#$#$#$#$#$
+
+message Level 7
+(g)
+#$#$#$#$#$#$
+$.....$....#
+#.....#....$
+$...s......#
+#.p...#....$
+$.**..$..o*#
+#.....#....$
+$#$#$#$#$#$#
+
+message Level 8
+(h)
+$#$#$#$#$#$#$#
+#............$
+$........#...#
+#..#$#...$o..$
+$........#...#
+#...#.s......$
+$...$...#$#..#
+#.p.#.*...*..$
+$............#
+#$#$#$#$#$#$#$
+
+message Level 9
+(i)
+$#$#$#$#$#$#$#
+#............$
+$...*....#...#
+#..#$#...$o..$
+$......s.#...#
+#...#.s......$
+$.*o$...#$#..#
+#.*p#........$
+$............#
+#$#$#$#$#$#$#$
+
+message Level 10
+(j)
+$#$#$#$#$#$#$#
+#............$
+$...*....#...#
+#..#$#...$s*p$
+$........#...#
+#...#........$
+$..s$...#$#..#
+#...#...o.o..$
+$............#
+#$#$#$#$#$#$#$
+
+message Level 11
+(k)
+$#$#$#$#$#$#$#
+#............$
+$...s....#.*.#
+#..#$#.o.$s.p$
+$......o.#...#
+#...#*o......$
+$..s$.o.#$#..#
+#...#....s...$
+$............#
+#$#$#$#$#$#$#$
+
+message Level 12
+$#$#$#$#$#$#$#
+#.o.#....$.o.$
+$....*..*....#
+#..#$....$#..$
+$....s..s....#
+#....s..s....$
+$..#$....$#..#
+#..p.*..*....$
+$.o.$....#.o.#
+#$#$#$#$#$#$#$
+
+message Congratulations! You won.
+

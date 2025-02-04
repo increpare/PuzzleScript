@@ -1,0 +1,386 @@
+title Travelling salesman
+author Rabbit from Hell
+homepage http://rabbitfromhell.newgrounds.com
+youtube felW3KTvg_E
+
+require_player_movement
+key_repeat_interval 0.6
+
+background_color white
+text_color black
+
+noaction
+
+color_palette c64
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Node
+Black
+
+HLink
+Black
+.....
+.....
+00000
+.....
+.....
+
+VLink
+Black
+..0..
+..0..
+..0..
+..0..
+..0..
+
+NodeSeen
+Blue
+
+HLinkSeen
+Blue
+.....
+.....
+00000
+.....
+.....
+
+VLinkSeen
+Blue
+..0..
+..0..
+..0..
+..0..
+..0..
+
+Wall
+White
+
+Player
+Green
+00000
+0.0.0
+00000
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+Link = HLink or VLink
+LinkSeen = HLinkSeen or VLinkSeen
+AnyNode = Node or NodeSeen
+AnyLink = Link or LinkSeen
+
+. = Background
+- = HLink
+| = VLink
+o = Node
+* = Wall
+P = Node and Player
+
+=========
+SOUNDS
+=========
+Player Move 33606907
+Player CantMove 94213304
+Sfx0 94213304
+Sfx1 33606907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Node, NodeSeen
+Player, Link, LinkSeen, Wall
+
+======
+RULES
+======
+
+[ > Player | HLink | Node ] -> [ NodeSeen | HLinkSeen | Player NodeSeen ] Sfx1
+[ > Player | VLink | Node ] -> [ NodeSeen | VLinkSeen | Player NodeSeen ] Sfx1
+[ > Player | No AnyLink ] -> [Player | ]
+[ > Player | AnyLink | NodeSeen ] -> Sfx0
+
+==============
+WINCONDITIONS
+==============
+No Node
+
+=======
+LEVELS
+=======
+
+message Your mission is to visit all nodes of the grid...
+message But you can only visit each node once!
+message Let us start with an easy one...
+
+o-o-P
+|...|
+o-o-o
+|.|..
+o-o..
+
+message Good! Ready for the real thing? Good luck!
+
+o-o-o-o
+|.|...|
+o.P-o-o
+|.|...|
+o-o-o-o
+|...|.|
+o-o-o-o
+
+message Well done!
+
+P-o.o-o
+|.|.|.|
+o-o-o.o
+|.|...|
+o.o-o-o
+|.|.|.|
+o-o-o-o
+
+message Good!
+
+( solution:
+o-o.o-o
+..|.|.|
+o-o.o.o
+|...|.|
+o-o-o.o
+......|
+o-o-o-o
+)
+
+p-o-o-o
+|.|.|.|
+o-o.o.o
+|...|.|
+o-o-o-o
+|.|...|
+o-o-o-o
+
+message Excellent!
+
+( sol
+o-o-o-o
+|.....|
+o.p-o.o
+|...|.|
+o-o-o.o
+......|
+o-o-o-o
+)
+
+o-o-o-o
+|...|.|
+o-p-o.o
+|...|.|
+o-o-o-o
+|.|...|
+o-o-o-o
+
+message I am impressed! And now, for something completely different...
+
+( sol
+o-o.o-o.o-o.o-o
+|.|.|.|.|.|.|.|
+o.o.o.o-o.o.o.o
+|...|.....|.|.|
+o-o-o.....o-o.o
+)
+
+o-o-o-o.o-o.o-o
+|.|.|.|.|.|.|.|
+o.o.o-o-o-o-o-o
+|.|.|.....|.|.|
+o-o-o.....o-o.p
+
+message Extraordinary!
+
+( sol
+o-o-o-o-o
+........|
+o-o-o-o-o
+|........
+o.o-p.o-o
+|.|...|.|
+o.o-o-o.o
+|.......|
+o-o-o-o-o
+.........
+)
+
+o-o-o-o-o
+|...|...|
+o-o-o-o-o
+|...|...|
+o-o-p-o-o
+|.|...|.|
+o.o-o-o.o
+|.|...|.|
+o-o-o-o-o
+
+message Incredible!
+
+( sol
+o-o.o-o-o
+|.|.|...|
+o.o-o.o-o
+|........
+o-o.p-o-o
+..|.....|
+o-o.o-o.o
+|...|.|.|
+o-o-o.o-o
+)
+
+o-o-o-o-o
+|...|...|
+o-o-o-o-o
+|.....|.|
+o-o-p-o-o
+..|...|.|
+o-o-o-o.o
+|...|.|.|
+o-o-o.o-o
+
+message Wow!
+
+o-o-o-o-o
+|.|.....|
+o.o-o-o-o
+|.|...|.|
+o-o-p.o-o
+|.|.|.|.|
+o.o-o-o.o
+|...|...|
+o-o-o-o-o
+
+message I am impressed.
+
+( sol
+o-o.o-o-o
+|.|.|...|
+o.p.o-o.o
+|.....|.|
+o-o.o-o.o
+..|.|...|
+o-o.o-o.o
+|.....|.|
+o-o-o-o.o
+)
+
+o-o-o-o-o
+|.|.|...|
+o.p.o-o.o
+|.|...|.|
+o-o.o-o-o
+|.|.|...|
+o-o-o-o-o
+|.....|.|
+o-o-o-o-o
+
+message You are really good.
+
+( sol
+o-o.o-o-o
+|.|.|...|
+o.o-o.o-o
+|.....|..
+o-o-o.o-o
+....|...|
+o-o.o.o-o
+|.|.|.|..
+p.o-o.o-o
+)
+
+o-o.o-o-o
+|.|.|...|
+o.o-o-o-o
+|.|.|.|..
+o-o-o-o-o
+|...|...|
+o-o.o-o-o
+|.|.|.|.|
+p-o-o.o-o
+
+message And now, the grand finale...
+
+( sol
+o-o.o-o.....o-o-o-o.
+|.|.|.|.....|.....|.
+o.o.o.o-o-o.o.o-o.o.
+|.|.|.....|.|.|.|.|.
+o.o-o.o-o-o.o.p.o.o.
+|.....|.....|...|.|.
+o-o.o-o.....o-o.o-o.
+..|.|.........|.....
+..o.o.........o-o...
+..|.|...........|...
+..o.o.........o-o...
+..|.|.........|.....
+o-o.o-o.....o-o.o-o.
+|.....|.....|...|.|.
+o-o-o.o-o-o.o-o-o.o.
+....|.............|.
+o-o-o.o-o-o-o.o-o.o.
+|.....|.....|.|.|.|.
+o-o-o-o.....o-o.o-o.
+)
+
+o-o.o-o.....o-o-o-o.
+|.|.|.|.....|...|.|.
+o.o-o.o-o-o-o.o-o.o.
+|.|.|.|...|.|.|.|.|.
+o.o-o-o-o-o-o-p.o.o.
+|.|...|.....|.|.|.|.
+o-o.o-o.....o-o.o-o.
+..|.|.........|.|...
+..o.o.........o-o...
+..|.|...........|...
+..o-o.........o-o...
+..|.|.........|.|...
+o-o.o-o.....o-o-o-o.
+|.....|.....|...|.|.
+o-o-o-o-o-o-o-o-o.o.
+|...|.|...|.....|.|.
+o-o-o.o-o-o-o.o-o.o.
+|.....|.....|.|.|.|.
+o-o-o-o.....o-o-o-o.
+
+message You beat the game, congratulations! And thanks for playing!
+message Music by Beethoven, from www.youtube.com/watch?v=felW3KTvg_E
+
+(*
+o.o.o.o.o.o.o.o.o.o.
+....................
+o.o.o.o.o.o.o.o.o.o.
+....................
+o.o.o.o.o.o.o.o.o.o.
+....................
+o.o.o.o.o.o.o.o.o.o.
+....................
+o.o.o.o.o.o.o.o.o.o.
+....................
+o.o.o.o.o.o.o.o.o.o.
+....................
+o.o.o.o.o.o.o.o.o.o.
+....................
+o.o.o.o.o.o.o.o.o.o.
+....................
+o.o.o.o.o.o.o.o.o.o.
+....................
+o.o.o.o.o.o.o.o.o.o.
+....................
+)

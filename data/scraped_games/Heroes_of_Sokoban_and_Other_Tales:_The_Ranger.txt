@@ -1,0 +1,566 @@
+title Heroes of Sokoban and Other Tales: The Ranger
+author Chris Pickel
+homepage http://www.puzzlescript.net/play.html?p=6860122
+text_color yellow
+key_repeat_interval 0.25
+require_player_movement
+
+========
+OBJECTS
+========
+
+Background 
+#AAA #DDD
+00000
+00100
+00000
+00010
+00000
+
+Water
+#03C Blue
+00000
+00100
+00000
+00010
+00000
+
+Swimming
+#03C
+.....
+.....
+.....
+0.0.0
+00000
+
+Goal 
+Brown Yellow
+.000.
+00000
+00010
+00000
+00000
+
+Wall
+Darkgrey #222
+01000
+11111
+00010
+00010
+11111
+
+Fighter 
+#F44 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Wizard
+#26F Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+Thief
+#0B0 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+Ranger
+#A74 Green DarkBrown
+.222.
+.212.
+11011
+.000.
+.1.1.
+
+Dog
+#A74 DarkBrown
+.....
+.000.
+01010
+00100
+.0.0.
+
+SFighter 
+#800 Pink DarkBrown
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+SWizard
+#008 Pink
+.000.
+.010.
+00000
+.000.
+00000
+
+SThief
+#060 Pink DarkBrown
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+SRanger
+#754 Green DarkBrown
+.222.
+.212.
+11011
+.000.
+.1.1.
+
+SDog
+#754 DarkBrown
+.....
+.000.
+01010
+00100
+.0.0.
+
+Crate 
+Orange #520
+.111.
+10001
+10001
+10001
+.111.
+
+YellowSwitch
+Yellow Black
+.....
+.111.
+.101.
+.111.
+.....
+
+YellowOpen
+Yellow
+0...0
+.....
+.....
+.....
+0...0
+
+YellowDoor
+Yellow #A72
+01010
+10001
+00000
+10001
+01010
+
+PurpleSwitch
+#61C Black
+.....
+.111.
+.101.
+.111.
+.....
+
+PurpleDoor
+#61C #208
+01010
+10001
+00000
+10001
+01010
+
+PurpleOpen
+#61C
+0...0
+.....
+.....
+.....
+0...0
+
+Teleport
+Pink
+
+Opening
+Purple
+
+=======
+LEGEND
+=======
+
+Player     = Fighter  or Wizard  or Thief  or Ranger
+SPlayer    = SFighter or SWizard or SThief or SRanger
+Hero       = Player or SPlayer
+Companion  = Dog or SDog
+
+ClosedDoor = PurpleDoor or YellowDoor
+OpenDoor   = YellowOpen or PurpleOpen
+Switch     = PurpleSwitch or YellowSwitch
+
+Pusher     = Fighter or Dog
+Moveable   = Crate or SPlayer or Companion
+Static     = Wall or ClosedDoor
+Sinks      = Crate
+Swims      = Hero or Companion
+Weighing   = Sinks or Swims
+
+. = Background
+~ = Water
+# = Wall
+F = Fighter
+W = Wizard
+T = Thief
+R = Ranger
+D = Dog
+1 = SFighter
+2 = SThief
+3 = SWizard
+4 = SRanger
+$ = SDog
+* = Crate
+G = Goal
+[ = YellowDoor
+] = PurpleDoor
+{ = YellowSwitch
+} = PurpleSwitch
+≤ = Water and YellowSwitch
+≥ = Water and PurpleSwitch
+Ɛ = Water and SWizard and Swimming
+
+
+=======
+SOUNDS
+=======
+
+Moveable   move   82056307
+Player     create 66399906
+ClosedDoor create 92172900
+OpenDoor   create 15129100
+Sfx0              21221308
+EndLevel          36315908
+EndGame           86793500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Water
+Teleport, Opening
+Goal, Switch, OpenDoor
+Static, Hero, Dog, SDog, Crate
+Swimming
+
+======
+RULES     
+======     
+
+(The dog follows the ranger over any distance.  The ranger pushes the dog, but isn't allowed to push other objects by pushing the dog into them.)
+[ Dog | ... | > Ranger ] -> [ > Dog | ... | > Ranger ]
+[ > Ranger | Dog | Moveable ] -> [ Ranger | Moveable | Dog ]
+[ > Ranger | Dog ] -> [ > Ranger | > Dog ]
+
+(The fighter and dog push any number of movable objects)
+[ > Pusher   | Moveable ] -> [ > Pusher   | > Moveable ]
+[ > Moveable | Moveable ] -> [ > Moveable | > Moveable ]
+
+(The thief pulls one movable object)
+[ < Thief | Moveable ] -> [ < Thief | < Moveable ]
+
+(Anything that sinks is not allowed to move into water)
+[ > Sinks | Water ] -> [ Sinks | Water ]
+
+(The wizard swaps with movable objects, but not if it would put an object that sinks into water)
+[ > Wizard ] -> [ > Wizard > Teleport]
+[ > Teleport | no Moveable no Static] -> [ | > Teleport]
+[ > Teleport | Sinks ] [> Wizard Water] -> [ | Sinks ] [> Wizard Water]
+[ > Teleport | Moveable] [> Wizard] -> [ | Wizard Sfx0] [Moveable]
+[ > Teleport ] -> [ ]
+
+(Character switching. Try each possibility in turn; first succeeds)
+[Action Fighter] [SThief  ] -> [SFighter] [Thief  ]
+[Action Fighter] [SWizard ] -> [SFighter] [Wizard ]
+[Action Fighter] [SRanger ] -> [SFighter] [Ranger ]
+[Action Thief  ] [SWizard ] -> [SThief  ] [Wizard ]
+[Action Thief  ] [SRanger ] -> [SThief  ] [Ranger ]
+[Action Thief  ] [SFighter] -> [SThief  ] [Fighter]
+[Action Wizard ] [SRanger ] -> [SWizard ] [Ranger ]
+[Action Wizard ] [SFighter] -> [SWizard ] [Fighter]
+[Action Wizard ] [SThief  ] -> [SWizard ] [Thief  ]
+[Action Ranger ] [SFighter] -> [SRanger ] [Fighter]
+[Action Ranger ] [SThief  ] -> [SRanger ] [Thief  ]
+[Action Ranger ] [SWizard ] -> [SRanger ] [Wizard ]
+
+(Doors try to open, but are closed if any switch lacks a weight)
+late [YellowDoor] -> [Opening YellowDoor]
+late [YellowSwitch no Weighing] [Opening YellowDoor] -> [YellowSwitch] [YellowDoor]
+late [YellowSwitch no Weighing] [        YellowOpen] -> [YellowSwitch] [YellowDoor]
+late [Opening YellowDoor] -> [YellowOpen]
+
+late [PurpleDoor] -> [Opening PurpleDoor]
+late [PurpleSwitch no Weighing] [Opening PurpleDoor] -> [PurpleSwitch] [PurpleDoor]
+late [PurpleSwitch no Weighing] [        PurpleOpen] -> [PurpleSwitch] [PurpleDoor]
+late [Opening PurpleDoor] -> [PurpleOpen]
+
+(Copy active/inactive state from ranger to dog)
+late [SRanger] [Dog ] -> [SRanger] [SDog]
+late [Ranger ] [SDog] -> [Ranger ] [Dog]
+
+(Visual effect: cover bottom half of swimming characters with water)
+late [Swimming] -> []
+late [Swims Water] -> [Swimming Swims Water]
+
+==============
+WINCONDITIONS
+==============
+
+All Hero on Goal     
+All Goal on Hero
+
+=======     
+LEVELS
+=======
+
+Message Welcome.
+
+Message [You've played Jonah Ostroff's excellent original, yes?]
+Message [If not, this might be confusing.]
+
+(***
+ *** Prologue
+ ***)
+
+(Temple of Sokoban)
+#############
+####3.F.2####
+###.......###
+###.##.##.###
+#.*{#.{*#{.*#
+#...#...#...#
+#...#...#...#
+###[##[##[###
+##.G..G..G.##
+#############
+
+(***
+ *** Act I: The Ranger
+ ***)
+
+Message Brown ranger's dog follows her.
+
+(Corridog)
+#########
+#.......#
+#.DR..G.#
+#.......#
+#########
+
+Message The dog can push crates.
+
+(Dog on Rails)
+#######
+#R....#
+###.###
+#D*{}.#
+#####.#
+#G].[.#
+#######
+
+Message The ranger can push the dog.
+
+(Spin Dogtor)
+#######
+#R#...#
+#D..#.#
+#.*.{.#
+###[###
+#G].###
+###}###
+#######
+
+(The Classic Levels I, Ranger Edition)
+#############
+#.D...{.#...#
+#.R.*.{.[.G.#
+#...#...#...#
+#############
+
+(The Classic Levels II, Ranger Edition)
+#########
+#.....#G#
+#.#*..#[#
+#.*D.R..#
+#.......#
+#.{.{.{.#
+#.......#
+#########
+
+(***
+ *** Act II: The Ranger and Friends
+ ***)
+
+(Hashbang)
+##########
+##.#.#####
+#.$.4[..G#
+##.#.##*.#
+#{F..{#.G#
+##.#.#####
+##########
+
+(Balancing Act)
+##########
+##4$...###
+#G.{*{..[#
+##T....#G#
+##########
+
+(Goblet of Crates)
+#########
+#..{.{..#
+#.*#{#*.#
+#.*###*.#
+#F....$4#
+####.####
+#G.[.[.G#
+#########
+
+(Ranger++)
+########
+##.##G##
+#W}4$].#
+##.##G##
+########
+
+(Spring-Loaded)
+###########
+####.F.####
+#.{{{..[.G#
+###***.####
+#.}}}..].G#
+####.4$####
+###########
+
+(Alley)
+#########
+#W....$4#
+#..###..#
+#..{.{..#
+####[####
+##G.*.G##
+#########
+
+(Ollie)
+########
+#G..#.T#
+#.#.[}{#
+#4$.#.G#
+##]##}{#
+#G..#.3#
+########
+
+(***
+ *** Act III: The Deep
+ ***)
+
+Message Crates can't be pushed into water.
+
+(Pool Party, Fighter and Thief Edition)
+#########
+#F....#G#
+#.~*~.#.#
+#.~~~.[.#
+#.~{~.#.#
+#2....#G#
+#########
+
+(Pool Party, Wizard Edition)
+#########
+#W....#.#
+#.~*~.#.#
+#.~~~.[.#
+#.~{~.#.#
+#.....#G#
+#########
+
+(Pool Party, Ranger Edition)
+#########
+#R....#.#
+#D~*~.#.#
+#.~~~.[.#
+#.~≤~.#.#
+#.....#G#
+#########
+
+(Sewer Rat)
+############
+##*******###
+#*W.~...~[G#
+#*~~~~~{~*##
+#*....~~~*##
+#*~~~.~.~*##
+#*~{~~~.~*##
+#*~.....{*##
+#*~~~~~~~*##
+##*******###
+############
+
+(Zero Island)
+#########
+##~~~~#.#
+#*~.{~#G#
+##~T3~[.#
+#*~.{~#G#
+##~~~~#.#
+#########
+
+(Shameless Plug)
+############
+#F...*{{[..#
+#..##*#.#.G#
+#..#~.#.####
+#..#~...[.G#
+#$4#~~#~#~~#
+############
+
+(Two Canal)
+############
+#####~~~~###
+#T.3.{*{~[G#
+#####~~~~###
+#G.G]~}.}$4#
+#####~~~~###
+############
+
+(Top Dog)
+#############
+#G.G#.$.#~Ɛ~#
+#...#...#~~~#
+##[###*###*##
+#...#...~...#
+#F#.***.#~≤~#
+#...#...~...#
+##[###*###*##
+#...#...#...#
+#G.G#.4.#..2#
+#############
+
+(***
+ *** Epilogue
+ ***)
+
+(Conga Line)
+##############
+#............#
+#.D123R.GGGG.#
+#............#
+##############
+
+Message Thanks for playing!

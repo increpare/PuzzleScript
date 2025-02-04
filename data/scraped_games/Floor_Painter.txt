@@ -1,0 +1,349 @@
+Title Floor Painter
+Author Connorses
+background_color #363636
+run_rules_on_level_start
+========
+OBJECTS
+========
+background
+#363636
+player1
+lightgrey
+.000.
+.000.
+00000
+.0.0.
+.....
+player2
+lightgrey
+.....
+.000.
+.000.
+00000
+.....
+player3
+lightgrey
+.....
+.000.
+.000.
+00000
+.0.0.
+
+crate1
+lightbrown brown
+00000
+01110
+00000
+01110
+00000
+sponge
+yellow
+000.0
+.0000
+0.00.
+00000
+00.00
+wall
+lightgrey
+edge
+grey
+side
+darkgrey
+.....
+.....
+.....
+.....
+00000
+A
+red
+B
+blue
+C
+#e6e708(yellow)
+AB
+#b410bf(violet)
+BC
+green
+AC
+orange
+mix
+brown
+goalA
+red
+00.00
+0...0
+.....
+0...0
+00.00
+goalB
+blue
+00.00
+0...0
+.....
+0...0
+00.00
+goalC
+#e6e708 (yellow)
+00.00
+0...0
+.....
+0...0
+00.00
+goalmix
+brown
+00.00
+0...0
+.....
+0...0
+00.00
+goalAB
+#b410bf(violet)
+00.00
+0...0
+.....
+0...0
+00.00
+goalBC
+green
+00.00
+0...0
+.....
+0...0
+00.00
+goalAC
+orange
+00.00
+0...0
+.....
+0...0
+00.00
+=======
+LEGEND
+=======
+player = player1 or player2 or player3
+crate = crate1 or sponge
+s = player3
+p = player1 and edge
+# = wall and edge
+% = edge
+. = background
+o = crate1
+$ = sponge
+1 = goalA
+2 = goalb
+3 = goalc
+4 = goalAB
+5 = goalBC
+6 = goalAC
+] = goalc and crate1
+[ = goalA and crate1
+} = goalB and crate1
+flood = A or B or C or AB or AC or BC or mix
+=======
+SOUNDS
+=======
+crate move 63532307
+flood create 74777103(3018508)
+(mix create 94723508)
+(42806908)(81672308)(94723508)(41847308)
+sfx0 3018508(70129504)
+endlevel 42806908
+sfx1 55720907
+(74777103
+95445303)
+================
+COLLISIONLAYERS
+================
+background
+flood,crate,edge
+goalA,goalB,goalC,goalAB,goalBC,goalAC,goalMix
+player,wall
+side
+======
+RULES
+======
+[> player|crate] -> [> player|> crate]
+[> crate|edge] -> [crate|edge]
+[> crate1|flood] -> [crate1|flood]
+[> crate|crate] -> [crate|crate]
+[> sponge|flood] -> [> sponge|   ]
+[> player|stationary crate] -> [player|crate]
+
+down [wall|no wall] -> [wall side|   ]
+down [wall|wall] -> [wall no side|wall]
+down [edge no wall|no edge no wall] -> [edge side|   ]
+down [edge no wall|edge no wall] -> [edge no side|edge]
+
+late down [flood|no edge no flood no crate] -> [flood|flood]
+late [flood|no edge no flood no crate] -> [flood|flood]
+
+late [A|B] -> [AB|AB]
+late [B|C] -> [BC|BC]
+late [A|C] -> [AC|AC]
+late [A|AB] -> [AB|AB]
+late [B|AB] -> [AB|AB]
+late [B|BC] -> [BC|BC]
+late [C|BC] -> [BC|BC]
+late [A|AC] -> [AC|AC]
+late [C|AC] -> [AC|AC]
+late [AB|BC] -> [mix|mix]
+late [BC|AC] -> [mix|mix]
+late [AC|AB] -> [mix|mix]
+late [A|BC] -> [mix|mix]
+late [B|AC] -> [mix|mix]
+late [C|AB] -> [mix|mix]
+
+
+late [mix|flood] -> [mix|mix]
+
+late [player flood] -> [player2 flood] sfx0
+late [player no flood no edge] -> [player3] sfx1
+late [player edge] -> [player1 edge] sfx1
+==============
+WINCONDITIONS
+==============
+all goalA on A
+all goalB on B
+all goalC on C
+all goalMix on mix
+=======
+LEVELS
+=======
+
+message sponges can wipe up color
+###########
+#%%%%%%%%%#
+#%%%%p%%%%#
+#%c$3.2bb%#
+#%%%%%%%%%#
+#%%%%%%%%%#
+###########
+
+
+(message Level 1/11)
+#######
+#%aa%%#
+#%aa%%#
+#p%o.%#
+#%%.1%#
+#%%%%%#
+#######
+
+#######
+#%%%%%#
+#%bbb%#
+#p%o%%#
+#%...%#
+#%222%#
+#######
+
+#####
+#%p%#
+#%c%#
+#.]3#
+#3].#
+#%3%#
+#%%%#
+#####
+
+#######
+#%aaa%#
+#%[[[%#
+#%111%#
+#p111%#
+#%...%#
+#######
+
+########
+####.###
+####2###
+###.o.2#
+#pbo..2#
+###..o2#
+########
+
+###########
+###.2}22p##
+###2.o22###
+###}}bo}###
+###.2o22###
+###.2}2.###
+###########
+
+#######
+#%ccc%#
+#%ccc%#
+#p%c%%#
+#3]]]3#
+#.33]3#
+#%...3#
+#######
+
+########
+#p%%b%%#
+#%%.o.%#
+#%..o.%#
+#aooo.2#
+#%....%#
+#%%%1%%#
+########
+
+########
+#%%a%%%#
+#p.ooc%#
+#%...o%#
+#%[.3.%#
+#%%%%%%#
+########
+
+#########
+#%%%%%%%#
+#%ab%bc%#
+#%%o.o%%#
+#%o...o%#
+#%o.s.o%#
+#%44.55%#
+#%%%%%%%#
+#########
+
+###########
+#%%apb%c%%#
+#%ooooooo%#
+#%.1.....%#
+#%..2..3.%#
+#%%%%%%%%%#
+###########
+message Congraduation_ you are win!
+(message Level 10/10
+###########
+#......####
+#.####..###
+#.##a##.###
+#.#1o..2.##
+#.#.s.o#oc#
+#.#.o....##
+#...o.3..##
+####b######
+###########)
+
+(message Remember, paint flows downward first.
+#######
+#%%%%%#
+#%acb%#
+#pacb%#
+#.ooo%#
+#....%#
+#.132%#
+#######
+
+##########
+#%%....%%#
+#%%.oo.%%#
+#%poabo%%#
+#%..oo..%#
+#%o.....%#
+#%%2%%1%%#
+#%%.%%.%%#
+##########)
+
+

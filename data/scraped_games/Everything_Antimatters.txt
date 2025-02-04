@@ -1,0 +1,454 @@
+title Everything Antimatters
+author Le Slo
+homepage www.puzzlescript.net
+background_color #452c5b
+
+========
+OBJECTS
+========
+
+Background
+#b4b4ff
+00000
+00000
+00000
+00000
+00000
+
+
+Wall
+#452c5b
+00000
+00000
+00000
+00000
+00000
+
+Pit
+#050c0b
+00000
+00000
+00000
+00000
+00000
+
+Cursor
+#9494ff
+00.00
+0...0
+..0..
+0...0
+00.00
+
+CursorStop
+#b22b61
+00.00
+0...0
+..0..
+0...0
+00.00
+
+Positive
+#fabbbd
+..0..
+.000.
+00000
+.000.
+..0..
+
+Negative
+#3f0c6b
+..0..
+.000.
+00000
+.000.
+..0..
+
+TargetP
+#fabbbd
+00.00
+0...0
+.....
+0...0
+00.00
+
+TargetN
+#3f0c6b
+00.00
+0...0
+.....
+0...0
+00.00
+
+
+PositiveAux
+#fabbbd
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+NegativeAux
+#3f0c6b
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+Anim01
+#3f0c6b #fabbbd
+..0..
+.010.
+01010
+.010.
+..0..
+
+Anim02
+#fabbbd #3f0c6b
+..0..
+.010.
+01010
+.010.
+..0..
+
+NFAnim01
+#3f0c6b
+.....
+..0..
+.000.
+..0..
+.....
+
+PFAnim01
+#fabbbd
+.....
+..0..
+.000.
+..0..
+.....
+
+NFAnim02
+#3f0c6b
+.....
+.....
+..0..
+.....
+.....
+PFAnim02
+#fabbbd
+.....
+.....
+..0..
+.....
+.....
+
+
+
+LeftS
+transparent
+
+RightS
+transparent
+
+UpS
+transparent
+
+DownS
+transparent
+
+MovingS
+transparent
+
+
+
+(MovingS
+#e9ffff
+0...0
+00.00
+0.0.0
+0...0
+0...0
+
+RightS
+#e9ffff
+..0..
+...0.
+00000
+...0.
+..0..
+
+LeftS
+#e9ffff
+..0..
+.0...
+00000
+.0...
+..0..
+
+DownS
+#e9ffff
+..0..
+..0..
+0.0.0
+.000.
+..0..
+
+UpS
+#e9ffff
+..0..
+.000.
+0.0.0
+..0..
+..0..)
+
+
+True
+transparent
+
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+C = Cursor
+N = TargetN
+P = TargetP
+X = Pit
+
+Player =  Cursor or PositiveAux
+crate = Positive or Negative
+state = lefts or rights or ups or downs or Movings
+horizontalS = lefts or RightS
+verticals = ups or downs
+directions = horizontalS or verticals
+
+animations = Anim01 or Anim02 or PFAnim01 or PFAnim02 or NFAnim01 or NFAnim02
+=======
+SOUNDS
+=======
+
+sfx0 36341904
+cancel 36341904
+Anim01 create 50439708
+PFAnim01 create 15358708
+NFAnim01 create 15358708
+endlevel 20753708
+Positive create 78297703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+true
+TargetP, TargetN
+pit
+Negative
+Positive
+
+NegativeAux
+PositiveAux
+
+animations
+Cursor, Wall, CursorStop
+
+state
+
+======
+RULES
+======
+
+[action cursor ] -> [  cursorStop PositiveAux NegativeAux Movings]
+[action PositiveAux] [ NegativeAux ] [directions] [CursorStop] -> [positive] [Negative] [] [cursor]
+[action PositiveAux NegativeAux movings cursorStop] -> [cursor]
+
+[> cursor | crate] -> [cursor | crate] sfx0
+[> cursor | pit] -> [cursor | pit] sfx0
+
+
+[left PositiveAux NegativeAux] [Movings] -> [left PositiveAux right NegativeAux true] [lefts] 
+[right PositiveAux NegativeAux] [Movings] -> [right PositiveAux left NegativeAux true] [rights]
+[up PositiveAux NegativeAux] [Movings] -> [up PositiveAux down NegativeAux true] [ups]
+[down PositiveAux NegativeAux] [Movings] -> [down PositiveAux up NegativeAux true] [downs]
+
+[left PositiveAux] [NegativeAux] [horizontalS]-> [left PositiveAux true] [right NegativeAux] [horizontalS]
+[right PositiveAux] [NegativeAux] [horizontalS]-> [right PositiveAux true] [left NegativeAux] [horizontalS]
+[up PositiveAux] [NegativeAux] [verticals]-> [up PositiveAux true] [down NegativeAux] [verticals]
+[down PositiveAux] [NegativeAux] [verticals]-> [down PositiveAux true] [up NegativeAux] [verticals]
+
+
+(Los fantasmas empujan las cajas)
+right[right NegativeAux | negative | no wall no Negative][leftS]->[right NegativeAux | right negative|][leftS]
+right[right positiveAux | positive | no wall no positive][rightS]->[right PositiveAux | right positive|][rightS]
+
+left[left NegativeAux | negative | no wall no Negative] [rightS] -> [left NegativeAux | left negative | ][rightS]
+left[left positiveAux | positive | no wall no positive] [leftS] -> [left PositiveAux | left positive | ][leftS]
+
+up[up NegativeAux | negative | no wall no Negative] [downS] -> [up NegativeAux | up negative | ][downS] 
+up[up positiveAux | positive | no wall no positive] [upS]-> [up PositiveAux | up positive | ][upS]
+
+down[down NegativeAux | negative | no wall no Negative] [upS] -> [down NegativeAux | down negative | ][upS]
+down[down positiveAux | positive | no wall no positive] [downS]-> [down PositiveAux | down positive | ][downS]
+
+
+
+[> PositiveAux no true] -> [PositiveAux] sfx0
+
+late [NegativeAux negative] -> cancel
+late [PositiveAux positive] -> cancel
+
+late [NegativeAux wall] -> cancel
+late [PositiveAux wall] -> cancel
+
+late[true] -> []
+
+(ANIMATIONS)
+late [pfanim02] -> []
+late [pfanim01] -> [pfanim02] again
+late [nfanim02] -> []
+late [nfanim01] -> [nfanim02] again
+late [anim02] -> []
+late [anim01] -> [anim02] again
+
+(ANIMATIONS)
+late [Positive Negative] -> [anim01] again
+late [Positive Pit] -> [Pit PFAnim01] again
+late [Pit Negative] -> [Pit nFAnim01] again
+late[PositiveAux NegativeAux directions] -> [PositiveAux NegativeAux MovingS]
+
+==============
+WINCONDITIONS
+==============
+
+All TargetP on Positive
+All TargetN on Negative
+
+=======
+LEVELS
+=======
+
+message Press x and use arrows to create matter and antimatter
+
+message 0/10
+
+#######
+#.....#
+#.n.p.#
+#..c..#
+#.p.n.#
+#.....#
+#######
+
+message 1/9
+
+######
+##...#
+##.n.#
+##.n.#
+#...n#
+#..c.#
+######
+
+message 2/8
+
+######
+##...#
+##.n.#
+##.n.#
+#n..p#
+#..c.#
+######
+
+message 3/7
+
+#####
+#.n.#
+#.n.#
+#.n.#
+#.n.#
+#.c.#
+#xxx#
+#####
+
+message 4/6
+
+#####
+#.n.#
+#.p.#
+#.n.#
+#.p.#
+#.c.#
+#xxx#
+#####
+
+message 5/5
+
+########
+##..xp.#
+#...x..#
+#...xxx#
+##.#...#
+##c....#
+####...#
+########
+
+message 6/4
+
+######
+##c###
+#....#
+#.np.#
+#.pn.#
+#....#
+######
+
+message 7/3
+
+#######
+##.n.##
+#c.n.##
+##.n..#
+##.n.##
+#######
+
+message 8/2
+
+#######
+###n###
+#.ncn.#
+#x.x.x#
+#x...x#
+#######
+
+message 9/1
+
+######
+#pn..#
+#n.#.#
+#.#c.#
+#....#
+#....#
+######
+
+message 10/0
+
+########
+#p.#####
+#..x..##
+#xxx..##
+#...c.##
+#xxx..##
+#..x...#
+#p.x...#
+########
+
+message You are the antimaster! :)
+
+
+

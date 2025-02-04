@@ -1,0 +1,686 @@
+title Blind Maze a1
+author bregehr
+homepage www.puzzlescript.net
+run_rules_on_level_start
+verbose_logging
+norepeat_action
+key_repeat_interval 0.2
+noundo
+
+========
+OBJECTS
+========
+
+Background
+#828282
+
+
+Target
+#5e81ff #2c2c2e
+..00.
+.000.
+0000.
+...1.
+...1.
+
+Wall
+#828282
+
+Player
+transparent
+
+playerview
+blue
+.000.
+00000
+00000
+00000
+.000.
+
+
+start
+transparent
+
+view
+orange
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+fail
+black
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+wallL
+#696e72
+....0
+....0
+....0
+....0
+....0
+
+wallU
+#9ba1a5
+00000
+.....
+.....
+.....
+.....
+
+wallR
+#aaafb3
+0....
+0....
+0....
+0....
+0....
+
+wallD
+#5a5f63
+.....
+.....
+.....
+.....
+00000
+
+movingleft
+transparent
+
+movingright
+transparent
+
+movingdown
+transparent
+
+movingup
+transparent
+
+success
+transparent
+
+board
+transparent
+
+red
+#de2323
+
+white
+#c7c7c7
+
+randcolor
+#c7c7c7 #de2323
+11111
+10000
+10000
+10000
+10000
+
+unknown
+#526b59 #2f3d33 #27332b #435748 #627a68 #3e4f41
+05544
+30014
+31104
+30004
+32333
+
+unknownflag
+#526b59 #2c2c2e
+..00.
+.000.
+0000.
+...1.
+...1.
+
+swirlflag
+#ce43de #2c2c2e
+..00.
+.000.
+0000.
+...1.
+...1.
+
+swirl1
+#ce43de #bf3acf #b537c4
+11101
+02021
+10001
+12020
+10111
+
+swirl2
+#ce43de #bf3acf #b537c4
+10111
+10200
+12021
+00201
+11101
+
+fog1
+#7f8485
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+fog2
+#7f8485
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+flipper
+#132747
+.....
+.....
+..0..
+.....
+.....
+
+screenfail
+transparent
+
+screenwin
+transparent
+
+screenwin2
+transparent
+
+screenwin3
+transparent
+
+tempred
+transparent
+
+tempwhite
+transparent
+
+
+animation
+transparent
+
+flipperon
+transparent
+
+flippervisualon
+#b53f96
+.....
+.000.
+.000.
+.000.
+.....
+
+flipperactivatedimage
+#b53f96
+.....
+.000.
+.0.0.
+.000.
+.....
+
+test
+transparent
+
+flipped
+transparent
+
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+q = view and start
+R = randcolor and start and board
+y = playerview
+u = unknown and start and board and randcolor
+s = swirl1 and start and board and randcolor
+f = fog1 and start and board and randcolor
+l = flipper and start and board and randcolor
+w = flippervisualon
+i = flipper and fog1 and start and board and randcolor
+x = target
+? = unknownflag
+d = fog1 and unknown and start and board and randcolor
+$ = swirlflag
+color = red or white
+movingg = movingleft or movingright or movingdown or movingup
+wallside = wallL or wallU or wallR or wallD
+swirl = swirl1 or swirl2
+fog = fog1 or fog2
+screenfog = screenfail or screenwin or screenwin or screenwin2 or screenwin3
+tempcolor = tempred or tempwhite
+flag = target or unknownflag or swirlflag
+
+
+=======
+SOUNDS
+=======
+
+
+target destroy 56949502
+unknownflag destroy 21979702
+swirlflag destroy 60794902
+sfx0 49064904
+sfx1 33483507
+sfx2 58056507
+sfx3 48114108
+
+================
+COLLISIONLAYERS
+================
+
+Background
+randcolor
+view
+flippervisualon
+red, white
+unknown
+swirl
+fog
+flag
+Player
+wall
+wallL
+wallD
+wallU
+wallR
+screenfog
+flipper
+flipperon
+flipperactivatedimage
+flipped
+playerview
+fail
+start
+movingg
+success
+board
+animation
+tempcolor
+test
+
+
+======
+RULES
+======
+
+(cleaning)
+[movingg] -> []
+
+(setup)
+[randcolor] -> [random color]
+[background no board no view] -> [background wall]
+
+(fog tile randomization)
+startloop
+[start][fog1 | fog no fog2] -> [start][fog1 | fog2]
++ [start][fog2 | fog no fog1] -> [start][fog2 | fog1]
+
+endloop
+
+(swirl randomization)
+[swirl color] -> [swirl]
+[swirl no color] -> [swirl random color]
+
+(swirl animation)
+[swirl] -> [swirl animation]
+[swirl1 animation] -> [swirl2]
+[swirl2 animation] -> [swirl1]
+([swirl3 animation] -> [swirl1])
+
+
+(fog animation)
+[fog] -> [fog animation]
+[fog1 animation] -> [fog2]
+[fog2 animation] -> [fog1]
+
+
+
+(flippers)
+random [start][flipper] -> [start][ flipper flipperon]
+horizontal [start][flipperon | color no flipped] -> [start][flipperon flipped | flipped color]
+vertical [start][ flipped | color no test] -> [start][ flipped | color test]
+[test] -> [flipped]
+
+(flipper visuals)
+random [start][flippervisualon][color] -> [start][][flippervisualon color]
+[start][flippervisualon][flipperon] -> [start][flippervisualon][flipperon flipperactivatedimage]
+
+
+
+(wall work)
+down [wall| no wall] -> [wall wallD |]
+up [wall| no wall] -> [wall wallU |]
+left [wall| no wall] -> [wall wallR |]
+right [wall| no wall] -> [wall wallL|]
+
+(flag randomization)
+startloop
+random [flag no color][color no flag no flipper] -> [][flag color]
+endloop
+
+(random player start)
+random [start][color no flag no flipper] -> [start][color player]
+
+
+
+[start] -> []
+
+
+(find target)
+[action player target] -> [player success]
+
+
+(placing unknown flag three times)
+random [action player unknownflag][board color no flag no flipper no swirl no unknown] -> [action player unknownflag][board color unknown]
+random [action player unknownflag][board color no flag no flipper no swirl no unknown] -> [action player unknownflag][board color unknown]
+random [action player unknownflag][board color no flag no flipper no swirl no unknown] -> [player success][board color unknown]
+
+(placing swirl flag two times)
+random [action player swirlflag][board color no flag no flipper no swirl no unknown] -> [action player swirlflag][board color swirl1]
+random [action player swirlflag][board color no flag no flipper no swirl no unknown] -> [player success][board color swirl1]
+    
+(flag success)
+random [Player][success][board][flag] -> [][][player board][flag]
+
+(flag fail)
+[action player no target]-> [fail]sfx0
+[fail playerview] -> [fail]
+
+
+
+(continuous player movement)
+left [ left player | no color] -> [movingright player | ]
+right [ right player | no color] -> [movingleft player | ]
+down [ down player | no color] -> [movingup player | ]
+up [ up player | no color] -> [movingdown player | ]
+
+   (move loop)
+   startloop
+   late left[player movingleft | color ] -> [ | player movingleft color] 
+   late right[player movingright | color ] -> [ | player movingright color]
+   late down[player movingdown | color ] -> [ | player movingdown color]
+   late up[player movingup | color ] -> [ | player movingup color]
+   endloop
+
+(visible player)
+late [playerview no player][player] -> [][playerview player]
+
+
+   (info to player)
+late [player red][view] -> [player red][view red]
+late [player white][view] -> [player white][view white]
+
+late [screenfog] -> []
+late [player fog no screenfog] -> [player fog random screenfog]
+late [player screenfail] -> [player screenfail random tempcolor]
+
+late [player flipped red] -> [player flipped red tempwhite]
+late [player flipped white] -> [player flipped white tempred]
+
+late [player tempred][view] -> [player tempred][view red]
+late [player tempwhite][view] -> [player tempwhite][view white]
+late [tempcolor] -> []
+
+
+(player move sound)
+late random [view red] -> sfx1
+late random [view white] -> sfx2
+
+
+
+==============
+WINCONDITIONS
+==============
+
+no flag
+
+=======
+LEVELS
+=======
+
+message Press 'X' on all flags.
+
+x....y
+.rrrr.
+.rrrr.
+.rrrr.
+.rrrr.
+......
+
+message You position is randomized whenever you collect a flag.
+
+yxxx.....
+.rrrrrrr.
+.rrrrrrr.
+.rrrrrrr.
+.rrrrrrr.
+.........
+
+message The panel will tell you the color you are on.
+
+yxxx.......
+.rrrrr.qqq.
+.rrrrr.qqq.
+.rrrrr.qqq.
+.rrrrr.qqq.
+.rrrrr.qqq.
+...........
+
+message HINT: You can loop from one end to the other.
+
+.xxx.......
+.rrrrr.qqq.
+.rrrrr.qqq.
+.rrrrr.qqq.
+.rrrrr.qqq.
+.rrrrr.qqq.
+...........
+
+xxx..........
+...rrr...qqq.
+..rrrrr..qqq.
+.rrrrrrr.qqq.
+.rrrrrrr.qqq.
+.rrrrrrr.qqq.
+..rrrrr..qqq.
+...rrr...qqq.
+.............
+
+message These question marks hide even more info from you.
+
+xxxx........
+.rrrrrr.qqq.
+.rrrrrr.qqq.
+.rruurr.qqq.
+.rruurr.qqq.
+.rrrrrr.qqq.
+.rrrrrr.qqq.
+............
+
+
+xxxx.........
+.uuuuuu.qqq..
+.urrrrr.qqq..
+.urrrrr.qqq..
+.urrrrr.qqq..
+.urrrrr.qqq..
+.urrrrr.qqq..
+.............
+
+message Swirls will produce a random result each time you step on them
+
+xxxy........
+.ssssss.qqq.
+.srrrrr.qqq.
+.srrrrr.qqq.
+.srrurr.qqq.
+.srrrrr.qqq.
+.srrrrr.qqq.
+............
+
+xx.........
+.srrrs.qqq.
+.rsrsr.qqq.
+.rrsrr.qqq.
+.rsrsr.qqq.
+.srrrs.qqq.
+...........
+
+
+message In fog, your screen has a 12.5% chance to display the wrong color.
+
+.xxxy.......
+.ffrrff.qqq.
+.ffrrff.qqq.
+.rrffrr.qqq.
+.rrffrr.qqq.
+.ffrrff.qqq.
+.ffrrff.qqq.
+............
+
+xxx..........
+..fffff..qqq.
+.frrrrrf.qqq.
+.frrurrf.qqq.
+.frrurrf.qqq.
+.frrrrrf.qqq.
+..fffff..qqq.
+.............
+
+xxx..........
+.fffsfff.qqq.
+.fffsfff.qqq.
+.rrrsrrr.qqq.
+.rrrsrrr.qqq.
+.fffsfff.qqq.
+.fffsfff.qqq.
+.............
+
+
+message One flipper (magenta) has been turned on randomly. The 3x3 area it occupies has been flipped.
+
+yxw.........
+.rrrrr.qqq..
+.rrrrr.qqq..
+.rrlrr.qqq..
+.rrrrr.qqq..
+.rrrrr.qqq..
+............
+
+xywx.......
+.rrrrr.qqq.
+.rrlrr.qqq.
+.rrrrr.qqq.
+.rrrrr.qqq.
+.rrlrr.qqq.
+.rrrrr.qqq.
+...........
+
+xxw..........
+.rrrrrrr.qqq.
+.rrrrrrr.qqq.
+.rrrlrrr.qqq.
+.rrrrrrr.qqq.
+.rrrrrrr.qqq.
+.............
+
+message You won't always know which flipper was turned on, however.
+
+xxx.........
+.rrrrrr.qqq.
+.rlrrlr.qqq.
+.rrrrrr.qqq.
+.rrrrrr.qqq.
+.rlrrlr.qqq.
+.rrrrrr.qqq.
+............
+
+xxx.........
+.rrr....qqq.
+.rlrrrr.qqq.
+.rrrrlr.qqq.
+.rlrrrr.qqq.
+.rrrrlr.qqq.
+....rrr.qqq.
+............
+
+
+xx..........
+.iffffi.qqq.
+.ffrrff.qqq.
+.frrrrf.qqq.
+.frrrrf.qqq.
+.ffrrff.qqq.
+.iffffi.qqq.
+............
+
+xx.........
+.srsrs.qqq.
+.rlrlr.qqq.
+.srrrs.qqq.
+.rlrlr.qqq.
+.srsrs.qqq.
+...........
+
+xxx...........
+.rrrrrrrrr.qq.
+.rlrrlrrlr.qq.
+.rrrrrrrrr.qq.
+..............
+
+message I wonder what these different flags do...
+
+????.......
+.rrrrr.qqq.
+.rrrrr.qqq.
+.rrrrr.qqq.
+.rrrrr.qqq.
+.rrrrr.qqq.
+...........
+
+??x.........
+.dddd...qqq.
+.drrrr..qqq.
+.drrrrd.qqq.
+.drrrrd.qqq.
+..rrrrd.qqq.
+...dddd.qqq.
+............
+
+$$$.........
+..rrrr..qqq.
+.rrrrrr.qqq.
+.rrrrrr.qqq.
+.rrrrrr.qqq.
+..rrrr..qqq.
+..rrrr..qqq.
+............
+
+$$$...........
+.rrrrrrrr.qqq.
+.rrrrrrrr.qqq.
+.ss.ss.ss.qqq.
+.rrrrrrrr.qqq.
+.rrrrrrrr.qqq.
+..............
+
+??$$xx.......
+....fff..qqq.
+.frrrrr..qqq.
+.frrrrr..qqq.
+.frr.rrf.qqq.
+..rrrrrf.qqq.
+..rrrrrf.qqq.
+..fff....qqq.
+.............

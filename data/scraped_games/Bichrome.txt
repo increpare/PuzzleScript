@@ -1,0 +1,303 @@
+title Bichrome
+author Nils Jung
+
+norepeat_action
+
+========
+OBJECTS
+========
+
+PlayerOrange
+orange
+.....
+.000.
+.0.0.
+.000.
+.....
+
+PlayerBlue
+blue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+PlayerOrangeActive
+orange yellow
+.....
+.101.
+.0.0.
+.101.
+.....
+
+PlayerBlueActive
+blue yellow
+.....
+.101.
+.0.0.
+.101.
+.....
+
+WallOrange
+orange #DB7921
+11111
+10001
+10001
+10001
+11111
+
+WallBlue
+(blue #2D67FF)
+blue #0D47DF
+11111
+10001
+10001
+10001
+11111
+
+Wall
+black
+
+TargetOrange
+#DB7921 red
+00000
+01110
+01110
+01110
+00000
+
+TargetBlue
+#0D47DF red
+00000
+01110
+01110
+01110
+00000
+
+Background
+darkgrey
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+0 = WallOrange
+1 = WallBlue
+2 = TargetOrange
+3 = TargetBlue
+o = PlayerOrangeActive and WallBlue
+b = PlayerBlue and WallOrange
+Player = PlayerOrange or PlayerBlue or PlayerOrangeActive or PlayerBlueActive
+BlueWall = WallBlue or TargetBlue
+OrangeWall = WallOrange or TargetOrange
+ColoredWall = BlueWall or OrangeWall
+
+BlueBlockade = BlueWall or Wall or TargetOrange
+OrangeBlockade = OrangeWall or Wall or TargetBlue
+OrangePlayer = PlayerOrange or PlayerOrangeActive
+BluePlayer = PlayerBlue or PlayerBlueActive
+
+=======
+SOUNDS
+=======
+
+SFX0 12088307
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ColoredWall, Wall
+Player
+
+======
+RULES
+======
+
+[ > PlayerOrange ] -> [ PlayerOrange ]
+[ > PlayerBlue ] -> [ PlayerBlue ]
+
+[ > PlayerOrangeActive | OrangeWall ] -> [ > PlayerOrangeActive | > OrangeWall ]
+[ > PlayerBlueActive | BlueWall ] -> [ > PlayerBlueActive | > BlueWall ]
+
+[ > PlayerOrangeActive | Wall ] -> [ PlayerOrangeActive | Wall ]
+[ > PlayerBlueActive | Wall ] -> [ PlayerBlueActive | Wall ]
+
+[ > OrangePlayer | > OrangeWall | OrangeBlockade ] -> [ OrangePlayer | OrangeWall | OrangeBlockade ]
+[ > BluePlayer | > BlueWall | BlueBlockade ] -> [ BluePlayer | BlueWall | BlueBlockade ]
+[ > ColoredWall Player ] -> [ ColoredWall Player ]
+
+[ Action PlayerOrange ] -> [ PlayerOrangeActive ]
+[ Action PlayerBlue ] -> [ PlayerBlueActive ]
+[ Action PlayerOrangeActive ] -> [ PlayerOrange ]
+[ Action PlayerBlueActive ] -> [ PlayerBlue ]
+
+[ > OrangeWall | WallBlue ] -> [ WallBlue | OrangeWall ] SFX0
+[ > BlueWall | WallOrange ] -> [ WallOrange | BlueWall ] SFX0
+
+==============
+WINCONDITIONS
+==============
+
+all PlayerOrangeActive on TargetBlue
+all PlayerOrange on TargetBlue
+all PlayerBlueActive on TargetOrange
+all PlayerBlue on TargetOrange
+
+=======
+LEVELS
+=======
+
+message Level 1 of 12
+
+message Use the arrow keys to move around. Press x or Spacebar to switch characters.
+
+(gg ez)
+###########
+#o11111113#
+###########
+#20000000b#
+###########
+
+message Level 2 of 12
+
+message Press z to undo a move.
+
+(Sokoban 2.0)
+#############
+###3#####b0##
+#01010##000##
+#10101#01#00#
+#01110#00110#
+#10001#11011#
+#01010#10#10#
+#10101##010##
+###o####02###
+#############
+
+message Level 3 of 12
+
+message Press r to restart a level.
+
+(First Contact)
+##########
+#111##000#
+#10110010#
+#20o10b13#
+#10110010#
+#111##000#
+##########
+
+message Level 4 of 12
+
+message Good luck!
+
+(Typewriter)
+#######
+#11113#
+#0000b#
+#11111#
+#20000#
+#o1111#
+#######
+
+message Level 5 of 12
+
+(Roundabout)
+##########
+#11101000#
+#1o10100b#
+#11101000#
+#111##000#
+#11101000#
+#12101003#
+#11101000#
+##########
+
+
+message Level 6 of 12
+
+(#holebound)
+#########
+#1111111#
+#1000021#
+#10#1#01#
+#1013101#
+#10#1#01#
+#1b00001#
+#o111111#
+#########
+
+message Level 7 of 12
+
+(Pause Ahead)
+########
+#101101#
+#ob1123#
+#101101#
+########
+
+message Level 8 of 12
+
+(Trigonometry)
+##########
+######000#
+#o###1110#
+#12#10010#
+#10101010#
+#10110#30#
+#1000###b#
+#111######
+##########
+
+message Level 9 of 12
+
+(Open your eyes)
+##########
+#111###13#
+#10010000#
+#o001011b#
+#11110110#
+#20###000#
+##########
+
+message Level 10 of 12
+
+(Two Worlds)
+#############
+#111#1111121#
+#1o11101#101#
+#111#111#111#
+#000#000#000#
+#01000b0#010#
+#030#0000000#
+#############
+
+message Level 11 of 12
+
+(Perpetual Stare)
+##########
+#b0001113#
+#11110000#
+#00#01#11#
+#o1110002#
+##########
+
+message Level 12 of 12
+
+(3D Chess)
+#######
+#10103#
+#0101b#
+#10101#
+#21010#
+#o0101#
+#######
+
+message Congratulations!

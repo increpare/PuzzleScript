@@ -1,0 +1,135 @@
+title Veggie Jam
+author Big Tiger
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background 
+DarkBlue
+
+Player 
+#663399 #D3AF8E blue brown
+..1..
+10001
+.000.
+.2.2.
+.3.3.
+
+
+Cauliflower
+#DDDDDD white #CCC
+.121.
+12021
+20102
+..2..
+.....
+
+Carrot
+orange green
+111..
+..00.
+..00.
+..00.
+..0..
+
+
+Peas
+lightgreen green
+.00..
+.01..
+.....
+...00
+...01
+
+Wall
+gray
+
+Target
+Red White
+00000
+01110
+0...0
+01110
+.000.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+Q = Peas
+O = Cauliflower
+C = Carrot
+# = Wall
+T = Target
+
+=======
+SOUNDS
+=======
+Player Move left 75334907
+Player Move right 75334907
+Player Move down 64978107
+Player Move up 64978107
+endlevel 82144903
+endgame 58951508
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player Wall Cauliflower Carrot Peas
+
+======
+RULES     
+======     
+[ > Player | Cauliflower ] -> [ > Player | > Cauliflower ]
+[ > Player | Carrot ] -> [ > Player | > Carrot ]
+[ > Player | Peas ] -> [ > Player | > Peas ]
+
+==============
+WINCONDITIONS
+==============
+All Cauliflower on Target
+All Carrot on Target
+All Peas on Target
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#.....T.#
+#.P.....#
+#.....O.#
+#.......#
+#########
+
+message "Costco now has cauliflower pizza"
+
+#########
+#.P.....#
+#####.C.#
+#.......#
+#.T.....#
+#.......#
+#########
+
+message "Carrots make a fine bread"
+
+
+#################
+#.#.#.#.#.#.#...#
+#...............#
+#.q.#.#......#.pt
+#.........#.....#
+#.......#..###..#
+#################
+
+message "Peas & Thank You For Playing!"

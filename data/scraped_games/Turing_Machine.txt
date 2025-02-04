@@ -1,0 +1,114 @@
+title Turing Machine
+author Andrew Baker (failrate)
+homepage www.failrate.com
+debug
+
+========
+OBJECTS
+========
+Wrap
+Red
+
+Background 
+Black  
+
+Target 
+DarkBlue    
+
+Player
+Blue   
+..0..
+..0..
+00000
+..0..
+..0..
+
+Temp
+Blue   
+.....
+..0..
+.000.
+..0..
+.....
+
+Alpha
+Orange 
+00.00
+00.00
+.....
+00.00
+00.00
+
+Beta
+Green
+00.00
+00.00
+.....
+00.00
+00.00
+
+Gamma
+Yellow
+00.00
+00.00
+.....
+00.00
+00.00
+
+=======
+LEGEND
+=======
+
+. = Background
++ = Player
+@ = Player and Alpha
+# = Player and Beta
+$ = Player and Gamma
+a = Alpha
+b = Beta
+c = Gamma
+W = Wrap
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Alpha, Beta, Gamma, Wrap
+Player, Temp
+Target
+
+
+======
+RULES     
+======     
+right [ Action Player Alpha | ] -> [ Beta |  Temp ]
+left [ Action Player Beta | ] -> [ Gamma |  Temp ]
+up [ Action Player Gamma | ] -> [ Alpha |  Temp ]
+[ Wrap Temp | ... | | Wrap ] -> [ Wrap | ... | Temp | Wrap ]
+[ Wrap Player | ... | | Wrap ] -> [ Wrap | ... | Player | Wrap ]
+late [ Temp ] -> [ Player ]
+
+
+==============
+WINCONDITIONS
+==============
+
+
+
+=======     
+LEVELS
+=======
+WWWWWWWWWWW
+WcccccccccW
+WcccccccccW
+WcccccccccW
+Wcc@abccccW
+WcccccccccW
+WcccccccccW
+WcccccccccW
+WWWWWWWWWWW

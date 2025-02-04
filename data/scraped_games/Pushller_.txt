@@ -1,0 +1,329 @@
+title Pushller 
+author Le Slo
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#0c457d #0c457d
+11111
+01111
+11101
+11111
+10111
+
+
+Push
+#e8702a #ffbe4f
+.000.
+00100
+01110
+00100
+.000.
+
+Pull
+#ffbe4f #e8702a
+.000.
+01010
+00100
+01010
+.000.
+
+Player
+white
+0...0
+.....
+.....
+.....
+0...0
+
+TargetMarker
+white
+.....
+.000.
+.0.0.
+.000.
+.....
+
+TargetMarkerP
+#ffbe4f
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Aux
+transparent
+
+CornerPlayer
+#059090 #6bd2db
+.....
+.011.
+.0.0.
+.1100
+...00
+
+CornetTL
+#6bd2db #059090
+....0
+..00.
+.00..
+.0.1.
+0...1
+
+HorizontalW
+#6bd2db #059090
+00.11
+.0.1.
+..0..
+.1.0.
+11.00
+
+CornetTR
+#059090 #6bd2db
+0....
+.00..
+...0.
+.1.0.
+1...0
+
+
+VerticalW
+#6bd2db #059090
+0...1
+00.11
+..1..
+11.00
+1...0
+
+CornerBL
+#059090 #6bd2db
+0...1
+.0.1.
+.0...
+..00.
+....0
+
+
+CornerBR
+#059090 #6bd2db
+0...1
+.0.1.
+...1.
+.11..
+1....
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and CornerPlayer
+O = TargetMarker
+1 = push
+2 = pull
+A = CornetTL
+B = CornerBR
+C = CornerBL
+D = CornetTR
+H = HorizontalW
+W = VerticalW
+
+Wall = A or B or C or D or H or W or CornerPlayer
+
+Collision = push or pull
+=======
+SOUNDS
+=======
+
+sfx0 32829907
+sfx1 39455903
+
+endlevel 31525308
+
+restart 67407308
+
+undo 48393108
+
+startlevel 48494508
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, TargetMarker, TargetMarkerP
+Aux
+Push, Pull , Wall
+Player
+
+======
+RULES
+======
+
+(PUSHER)
+
+right [ right Player | Push] -> [right Player | Push Aux]
+Startloop
+right [Aux  | no Wall no Collision] -> [ | Aux]
+right [Aux | Collision no wall | no Collision no wall] -> [|  | Collision] sfx0
+endLoop
+
+[Aux] -> []
+
+left [ left Player | Push] -> [ left Player | Push Aux]
+Startloop
+left [Aux  | no Wall no Collision] -> [ | Aux] 
+left [Aux | Collision no wall | no Collision no wall] -> [|  | Collision] sfx0
+endLoop
+
+[Aux] -> []
+
+down [ down Player | Push] -> [down Player | Push Aux]
+Startloop
+down [Aux  | no Wall no Collision] -> [ | Aux]
+down [Aux | Collision no wall | no Collision no wall] -> [|  | Collision] sfx0
+endLoop
+
+[Aux] -> []
+
+up [ up Player | Push] -> [up Player | Push Aux]
+Startloop
+up [Aux  | no Wall no Collision] -> [ | Aux]
+up [Aux | Collision no wall | no Collision no wall] -> [|  | Collision] sfx0
+endLoop
+
+[Aux] -> []
+
+(PULLER)
+
+right [ right Player | Pull] -> [right Player | Pull Aux]
+Startloop
+right [Aux  | no Wall no Collision] -> [ | Aux]
+right [Aux no collision | Collision no wall] -> [Collision |  ] sfx1
+endLoop
+
+[Aux] -> []
+
+left [ left Player | Pull] -> [ left Player | Pull Aux]
+Startloop
+left [Aux  | no Wall no Collision] -> [ | Aux] 
+left [Aux no collision | Collision no wall] -> [Collision |  ] sfx1
+endLoop
+
+[Aux] -> []
+
+down [ down Player | Pull] -> [down Player | Pull Aux]
+Startloop
+down [Aux  | no Wall no Collision] -> [ | Aux]
+down [Aux no collision | Collision no wall] -> [Collision |  ] sfx1
+endLoop
+
+[Aux] -> []
+
+up [ up Player | Pull] -> [up Player | Pull Aux]
+Startloop
+up [Aux  | no Wall no Collision] -> [ | Aux]
+up [Aux no collision | Collision no wall] -> [Collision |  ] sfx1
+endLoop
+
+[Aux] -> []
+
+
+late left [targetMarker | | | | | | collision] -> [targetMarkerP | | | | | |  collision]
+
+late left [targetMarkerP | | | | | | no collision] -> [targetMarker | | | | | | ]
+
+
+==============
+WINCONDITIONS
+==============
+
+no TargetMarker 
+
+=======
+LEVELS
+=======
+
+message Pusher 
+
+..............
+.phhhhdawwwwd.
+.w....who..oh.
+.w.11.wh....h.
+.w.11.wh....h.
+.w....who..oh.
+.chhhhbcwwwwb.
+..............
+
+message Puller 
+
+..............
+.phhhhdawwwwd.
+.w2..2wh....h.
+.w....wh.oo.h.
+.w....wh.oo.h.
+.w2..2wh....h.
+.chhhhbcwwwwb.
+..............
+
+message Pushller
+
+...............
+.phhhhdawwwwd..
+.w.21.who..oh..
+.w.11.who..oh..
+.w.11.who..oh..
+.w.12.who..oh..
+.chhhhbcwwwwb..
+...............
+
+
+message Pullsher
+
+..............
+.phhhhdawwwwd.
+.w2..2wh.oo.h.
+.w2..2wh.oo.h.
+.w2..2wh.oo.h.
+.w1..1wh.oo.h.
+.chhhhbcwwwwb.
+..............
+
+
+(message Pushller
+
+..............
+.phhhhdawwwwd.
+.w.12.who..oh.
+.w.21.who..oh.
+.w.12.who..oh.
+.w.21.who..oh.
+.chhhhbcwwwwb.
+..............
+
+message Pullsher
+
+..............
+.phhhhdawwwwd.
+.w1..2wh.oo.h.
+.w2..1wh.oo.h.
+.w1..2wh.oo.h.
+.w2..1wh.oo.h.
+.chhhhbcwwwwb.
+..............
+)

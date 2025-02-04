@@ -1,0 +1,209 @@
+Title It Is Pitch Black
+Author Connorses
+again_interval 0.15
+background_color black
+========
+OBJECTS
+========
+bg
+purple
+lg
+lightgrey
+
+Player
+white purple
+.....
+.111.
+10101
+.111.
+.1.1.
+
+Crate
+purple
+00000
+0..00
+0.0.0
+00..0
+00000
+
+
+wall
+purple
+
+lightswitch
+purple red darkred
+00200
+02120
+0.2.0
+0...0
+00000
+lightswitch_on
+purple red
+00000
+0...0
+0...0
+0.1.0
+00000
+
+endlevel
+purple red
+00000
+0...0
+0...0
+0.1.0
+00000
+
+cratedust
+grey
+.0.0.
+0...0
+.....
+0...0
+.0.0.
+
+switch
+purple lightgreen green
+00000
+0.2.0
+02120
+0.2.0
+00000
+Door
+purple
+00.00
+00.00
+00.00
+00.00
+00.00
+door1
+darkgrey grey lightgrey purple lightgreen green
+00113
+01125
+01254
+01125
+00113
+door2
+darkgrey grey lightgrey purple lightgreen green
+.0113
+.1125
+.1254
+.1125
+.0113
+door3
+darkgrey grey lightgrey purple lightgreen green
+...13
+...25
+...54
+...25
+...13
+door4
+darkgrey grey lightgrey purple lightgreen green
+....3
+....5
+...54
+....5
+....3
+=======
+LEGEND
+=======
+background = bg or lg
+. = bg
+p = player
+# = wall
+% = crate
+* = lightswitch
+! = switch
+D = door
+
+
+=======
+SOUNDS
+=======
+lightswitch_on create 12092707
+Cratedust move 91605502
+Cratedust cantmove 1370102
+Player cantmove 94637307
+
+Sfx0 67255700 (ding)
+Sfx1 9189909  (slide)
+================
+COLLISIONLAYERS
+================
+background
+door1, door2, door3, door4
+player, wall, lightswitch,lightswitch_on, switch, endlevel, crate, cratedust, door
+
+======
+RULES
+======
+[cratedust] -> [crate]
+
+[lightswitch_on] -> [endlevel]
+[> player|lightswitch] -> [player|lightswitch_on]
+[lightswitch_on][bg] -> [lightswitch_on][lg]
+
+[> player|crate] -> [> player|> cratedust] again
+[door3] -> [door4]
+[door2] -> [door3] again
+[door1] -> [door2] Sfx1 again
+[> player|switch] [door] -> [> player|switch] [door1] Sfx0 again
+
+==============
+WINCONDITIONS
+==============
+no lightswitch
+no lightswitch_on
+=======
+LEVELS
+=======
+
+message Sure is dark in here.
+#####*###
+#.......#
+#...###.#
+#.......#
+#####...#
+#......##
+#.p.#...#
+#...#...#
+#########
+message What's this in the way?
+#########
+#..#*#..#
+#.......#
+#.......#
+####%####
+#.......#
+#.....p.#
+#.......#
+#########
+message Great. The door is shut tight.
+######!##
+#%..#...#
+#*..#...#
+#%..#...#
+##d##...#
+#.......#
+#.p.....#
+#.......#
+#########
+message Boxes? Crates?
+#########
+#%%#p#%%#
+#%%.%.%%#
+#%%...%%#
+####%####
+#.......#
+#.......#
+#.......#
+####*####
+message Press z to undo, r to restart.
+#########
+##..%...#
+#...%...#
+#...##..#
+#..%%%%.#
+#*#%p%.%#
+#..%%%..#
+#...#...#
+#########

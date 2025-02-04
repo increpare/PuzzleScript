@@ -1,0 +1,395 @@
+title Lights Out
+author Garbageio
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+white
+
+
+floor
+purple
+
+onFloor
+darkred
+
+offFloor
+lightred
+
+darkbg
+darkgray
+
+
+
+semidarkbg
+gray
+
+semilightBg
+lightgray
+
+
+
+lightBg
+white
+
+
+offlamplight
+darkgray
+
+
+semiofflamplight
+darkgray
+
+slofflamplight
+darkgray
+
+Player
+red
+.000.
+00000
+00000
+.000.
+.0.0.
+
+
+Wall
+darkblue
+
+
+switch
+lightgreen darkblue
+11111
+11011
+10001
+11011
+11111
+
+offswitch 
+green darkblue
+11111
+11011
+10001
+11011
+11111
+
+switchlight
+yellow white
+10001
+01010
+00000
+01010
+10001
+
+offswitchlight
+darkgreen darkgray
+10001
+01010
+00000
+01010
+10001
+
+lamp
+yellow white
+10001
+00000
+11010
+11011
+00000
+
+bed
+darkbrown
+
+
+
+semidarkbed
+brown
+
+
+lightbed
+lightbrown
+
+
+offlamp
+darkgreen darkgray
+10001
+00000
+11010
+11011
+00000
+
+window
+blue
+
+
+=======
+LEGEND
+=======
+
+.=Background
+p=Player and onFloor and darkbg
+1=Player and onFloor and bed
+q=onfloor
+
+a=switch and onFloor
+h=offswitch and offfloor
+c=switchlight and onFloor
+e=offswitchlight and offFloor
+
+b=bed and onFloor and darkbg
+f=semidarkbed
+g=lightbed
+
+w=Wall and onFloor
+r=window and onfloor and darkbg
+
+
+l=lamp and onfloor
+o=offlamp and onfloor
+d=lightBg
+z=semilightBg
+s=semidarkbg
+x=offlamplight
+n=slofflamplight
+y=semiofflamplight
+j=darkbg and onFloor
+
+
+l1=lamp or switchlight
+l2= offlamp or offswitchlight
+l3=offlamp or offswitch
+l4=switch or switchlight or offswitch or offswitchlight
+
+h1=semidarkbg or darkbg or offlamplight or semiofflamplight or semilightBg or slofflamplight
+
+h2=darkbg or offlamplight or semiofflamplight or semidarkbg or slofflamplight
+
+h3=offlamplight or semiofflamplight or darkbg or semidarkbg or slofflamplight
+h4=offlamplight or semiofflamplight or slofflamplight
+h5=darkbg or offlamplight or slofflamplight or semiofflamplight
+
+u1= lightBg or semidarkbg or darkbg or semiofflamplight or semilightBg or slofflamplight
+u2= lightBg or semidarkbg or darkbg or semilightBg or semiofflamplight
+u3=lightBg or semidarkbg or darkbg or semilightBg
+
+=======
+SOUNDS
+=======
+
+
+sfx0 47837307 
+endlevel 2782108
+sfx1 70445702
+
+================
+COLLISIONLAYERS
+================
+
+Background
+onFloor, offFloor,floor
+switch,offswitch,switchlight,offswitchlight
+darkbg,semidarkbg,offlamplight,semiofflamplight,lightBg,semilightBg,slofflamplight
+lightbed,wall,bed,semidarkbed
+
+Player,lamp,offlamp
+window
+
+
+======
+RULES
+======
+
+(turn lamp on/off)
+[> player|lamp] -> [player|offlamp] sfx0
+[> player|offlamp] -> [player|lamp] sfx0
+
+
+(floor/switch/lightswitch signaling rules)
+[> player|switch] -> [player|offswitch offFloor] sfx0
+[> player|offswitch] -> [player|switch onFloor] sfx0
+late [onfloor]->[floor]
+late [ offFloor]->[floor]
+[floor|offFloor]->[offFloor|offFloor]
+[Floor|onFloor]->[onFloor|onFloor]
+[switchlight offFloor]->[offswitchlight Floor] sfx1
+[offswitchlight onFloor] -> [switchlight Floor] sfx1
+
+
+(things player can't interact with)
+[> player|l4] -> [player|l4]
+[> Player|Wall]->[Player|Wall]
+[> Player|Window]->[Player|Window]
+[> Player|h5]->[Player|h5]
+
+
+(light goes on)
+[h1|l1]->[lightBg|l1]
+[h1|lightBg]->[semilightbg|lightBg]
+[h2|semilightBg]->[semidarkbg|semilightBg]
+
+(light goes off)
+[u1|l2]->[offlamplight|l2]
+[u2|offlamplight]->[slofflamplight|offlamplight]
+[u3|slofflamplight]->[semiofflamplight|slofflamplight]
+
+(on lights overrule off lights)
+[h4|l1]->[lightBg|l1]
+[h4|lightBg]->[semilightbg|lightBg]
+[h4|semilightBg]->[semidarkbg|semilightBg]
+
+==============
+WINCONDITIONS
+==============
+
+all player on bed
+no lamp 
+no switchlight
+
+=======
+LEVELS
+=======
+
+
+message "Turn off the lights and go to bed."
+
+
+
+message "Level 1"
+
+wwwww
+wbopw
+wjjjw
+wjjxw
+wxxxw
+wxxxw
+wwwww
+
+message "Level 2"
+
+wwhwwww
+wjbreww
+wjwwrww
+wjjjjww
+wjwxjpw
+wejjjow
+wwhwwww
+
+message "Level 3"
+wwwwwwwww
+w1oo1jjjw
+wjjjjjjjw
+wjjwwwjjw
+wjjwcajjw
+wxowwwjjw
+wxjjjjjow
+wjjjojjjw
+wwwwwwwww
+
+message "Level 4"
+
+wwewwwwwwww
+wjjjwjjjwew
+wjwjwjejwbh
+wpwjjjwjjjw
+wwwwrwwjwww
+wjjjojjojjh
+wjjjjjjbjjw
+wjjjjjjjjjw
+wjjjjjjcjjw
+wjjjjjjjjpw
+wwwwwwwwwww
+
+message "Level 5"
+
+wwwwwwwewwwwww
+w1oyypyyyyyyye
+eywywwwrrwywyw
+wyoywwwyorywyw
+wywyoryywwywyw
+eyoywwyborywyw
+wywywwyhwwywye
+wywyowywweywyw
+wywyyyyyyyywyw
+wywwwwowwwwwyw
+eyyyyyyyyyyyyw
+wwwwwwewwwweww
+
+message "Level 6"
+
+wwwwewwwwewwww
+wyyyyyyyyyyyww
+wywwowwwwowyww
+eyoyyyyyyywyww
+wywyewwowywyew
+wywywyyywywyww
+wywywywbwpwyww
+wywywywaewoyww
+eyoyoyyyyyyyww
+wywywowwwwowww
+wpwyyyyyyyyybw
+whwowewwwwewww
+
+message "Level 7"
+
+wwwwwwwwwwwwww
+wejjjjjwjjjjjw
+wjjjjjpopjjhjw
+wjjjjjjjjjwjjw
+wjjwrwwrwwjjew
+wojjejjobjjjjw
+wjjjjjjjjjabjw
+wjjjjojjjjjjjw
+wwewwwwwwwwwww
+
+message "Level 8"
+
+wwwwwwewwwwwww
+wbyyyyyyyyyyyw
+wowawwwwwwweyw
+wyyyyyyyyyyyyw
+wywwwrwwwewwww
+eywwwewwwwwwww
+wyyyyyyyyyyyph
+wowwwwwowwewww
+wrwwwewrwwrwww
+wbyyyyyyyyyypw
+wwwwrwwwowwoww
+wwwwewwwrwwrww
+wpyyyyyyyyyybw
+wwwwwwwwwwwwww
+
+message "Level 9"
+
+wwwwwowhwwwww
+wjjjjjjbwjjjw
+wjewwwwewjejw
+wjjjjjyjwjwjw
+wwwwwwojwjwjw
+wbojypwpwjwjo
+wjwjehwwojwjw
+ojwjwpwpjjebh
+wjwjwjewwwwww
+wjwjwjjjjjjjw
+wjejwowwwwejw
+wjjjwbjjjjjjw
+wwowwwwowwwww
+
+
+message "Level 10"
+
+wwwewwwwwwwwww
+wpjjjjjwjjjhpw
+whwrwwjrjejjjw
+wjjjjjjwjwwwww
+wjwjwwewjjjjjw
+wejjjjrhwwwejw
+wrwwrjbbjjjjjw
+wjjjrxbbrwrwww
+wjrjejrjjjjjjw
+wjwjwjwjewowww
+wjejrjwjwjjjow
+wjwjwjwjwjwjhw
+wphjjjwjjjejpw
+wwwwewwwwwwwww

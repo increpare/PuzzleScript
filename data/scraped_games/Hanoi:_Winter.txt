@@ -1,0 +1,186 @@
+title Hanoi: Winter
+author TheGreatEscaper
+
+========
+OBJECTS
+========
+
+Background 
+LIGHTBLUE 
+
+Target 
+BLUE
+
+Wall 
+LIGHTGREY GREY DARKGREY
+...2.
+..22.
+.2102
+22012
+20002
+
+Player 
+BLACK GREY DARKGREY
+..2..
+.202.
+.222.
+.111.
+.222.
+
+Top
+LIGHTGREY
+.....
+.....
+..0..
+.....
+.....
+
+Mid
+GREY
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Base
+DARKGREY
+00000
+0...0
+0...0
+0...0
+00000
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+1 = Top
+A = Target
+2 = Mid
+4 = Base
+3 = Mid and Top
+5 = Base and Top
+6 = Base and Mid
+7 = Base and Mid and Top
+q = Top and Target
+w = Mid and Target
+e = Mid and Top and Target
+r = Base and Target
+t = Base and Top and Target
+y = Base and Mid and Target
+u = Base and Mid and Top and Target
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall,
+Player, Top
+Player, Mid
+Player, Base
+Top, Wall
+Mid, Wall
+Base, Wall
+
+======
+RULES     
+======     
+
+[ > p | # ] -> [ p | # ]
+[ > p | 1 | # ] -> [ p | 1 | # ]
+[ > p | 2 | # ] -> [ p | 2 | # ]
+[ > p | 3 | # ] -> [ p | 3 | # ]
+[ > p | 4 | # ] -> [ p | 4 | # ]
+[ > p | 5 | # ] -> [ p | 5 | # ]
+[ > p | 6 | # ] -> [ p | 6 | # ]
+[ > p | 7 | # ] -> [ p | 7 | # ]
+
+[ > p | 2 | 1 ] -> [ p | 2 | 1 ]
+[ > p | 2 | 5 ] -> [ p | 2 | 5 ]
+[ > p | 4 | 1 ] -> [ p | 4 | 1 ]
+[ > p | 6 | 1 ] -> [ p | 6 | 1 ]
+
+
+[ > p | 3 | ] -> [ p | 2 | 1 ]
+[ > p | 5 | ] -> [ p | 4 | 1 ]
+[ > p | 6 | ] -> [ p | 4 | 2 ]
+[ > p | 7 | ] -> [ p | 6 | 1 ]
+[ > p | 5 | 2 ] -> [ p | 4 | 3 ]
+[ > p | 1 ] -> [ > p | > 1 ]
+
+[ > p | 4 | 2 ] -> [ p | 4 | 2 ]
+
+[ > p | 2 ] -> [ > p | > 2 ]
+[ > p | 4 ] -> [ > p | > 4 ]
+
+==============
+WINCONDITIONS
+==============
+
+All Top on Target
+All Mid on Target
+All Base on Target
+
+=======     
+LEVELS
+=======
+
+message I: Silence
+
+
+#########
+#.......#
+#.P.1.y.#
+#.......#
+#########
+
+message II: Ripple
+
+#########
+#.......#
+#.......#
+#.P.7.A.#
+#.......#
+#.......#
+#########
+
+message III: Confinement
+
+#########
+#########
+##...####
+##P.7.A##
+##....###
+####..###
+#########
+
+message IV: Passage
+
+#########
+#P...####
+#..7...A#
+#.#.#####
+#.#.#####
+#...#####
+#########
+
+message V: Separation
+
+#########
+###....##
+###.##..#
+#P..421A#
+##..##..#
+###....##
+#########
+
+message The journey is over

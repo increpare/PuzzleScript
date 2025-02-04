@@ -1,0 +1,217 @@
+title Painter
+background_color grey
+text_color black
+========
+OBJECTS
+========
+background
+white
+00000
+00000
+00000
+00000
+00000
+
+paintbrushblack
+black grey
+.000.
+.000.
+.111.
+..1..
+..1..
+
+paintbrushred
+red grey
+.000.
+.000.
+.111.
+..1..
+..1..
+
+paintbrushyellow
+yellow grey
+.000.
+.000.
+.111.
+..1..
+..1..
+
+paintbrushblue
+blue grey
+.000.
+.000.
+.111.
+..1..
+..1..
+
+paintbrushgreen
+green grey
+.000.
+.000.
+.111.
+..1..
+..1..
+
+paintbrushpink
+pink grey
+.000.
+.000.
+.111.
+..1..
+..1..
+
+eraser
+pink
+.....
+..000
+.000.
+000..
+.....
+
+Player
+#FF4040 #FFEE83 blue
+.000.
+0000.
+.111.
+22222
+.2.2.
+
+black
+black
+00000
+00000
+00000
+00000
+00000
+
+red
+red
+00000
+00000
+00000
+00000
+00000
+
+yellow
+yellow
+00000
+00000
+00000
+00000
+00000
+
+blue
+blue
+00000
+00000
+00000
+00000
+00000
+
+green
+green
+00000
+00000
+00000
+00000
+00000
+
+pink
+pink
+00000
+00000
+00000
+00000
+00000
+
+white
+white
+00000
+00000
+00000
+00000
+00000
+
+
+=======
+LEGEND
+=======
+b = paintbrushblack
+r = paintbrushred
+y = paintbrushyellow
+l = paintbrushblue
+g = paintbrushgreen
+p = paintbrushpink
+e = eraser
+o = player
+. = background
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+background
+black,red,yellow,blue,green,pink,white
+paintbrushblack, paintbrushred, paintbrushyellow, paintbrushblue, paintbrushgreen, paintbrushpink, eraser
+player
+======
+RULES
+======
+
+
+late [paintbrushblack player] -> [paintbrushblack player black]
+late [paintbrushred player] -> [paintbrushred player red]
+late [paintbrushyellow player] -> [paintbrushyellow player yellow]
+late [paintbrushblue player] -> [paintbrushblue player blue]
+late [paintbrushgreen player] -> [paintbrushgreen player green]
+late [paintbrushpink player] -> [paintbrushpink player pink]
+late [eraser player] -> [eraser player white]
+(late [paintbrushwhite player] -> [key player playerkey]
+late [paintbrushwhite player] -> [key player playerkey])
+
+[player no paintbrushblack] [action player|paintbrushblack] -> [player] [player paintbrushblack|  ]
+[player no paintbrushred] [action player|paintbrushred] -> [player] [player paintbrushred|  ]
+[player no paintbrushyellow] [action player|paintbrushyellow] -> [player] [player paintbrushyellow|  ]
+[player no paintbrushblue] [action player|paintbrushblue] -> [player] [player paintbrushblue|  ]
+[player no paintbrushgreen] [action player|paintbrushgreen] -> [player] [player paintbrushgreen|  ]
+[player no paintbrushpink] [action player|paintbrushpink] -> [player] [player paintbrushpink|  ]
+[player no eraser] [action player|eraser] -> [player] [player eraser|  ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+message Hold Down  X  to use paintbrush.  Use eraser or press  R  to restart
+
+..b.r.y.l.g.p.e............................
+...........................................
+........o..................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................
+...........................................

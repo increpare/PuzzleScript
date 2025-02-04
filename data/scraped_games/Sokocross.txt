@@ -1,0 +1,732 @@
+title Sokocross
+author Alpha-5
+homepage www.puzzlescript.net
+color_palette mastersystem
+youtube SienqLS0J7w
+========
+OBJECTS
+========
+
+Background
+LIGHTGRAY GRAY
+11111
+10001
+10001
+10001
+11111
+
+Outside
+BLACK darkgray
+00000
+00000
+00000
+00000
+00000
+
+(TODO: MAKE THIS TRANSPARENT)
+Target
+Green
+.....
+.....
+.....
+.....
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+UknknNum
+lightGray Black
+10011
+01101
+11011
+11111
+11011
+
+ZeroNum
+Gray Black
+10011
+01101
+01101
+01101
+10011
+
+OneNum
+White Black
+11011
+10011
+11011
+11011
+10001
+
+TwoNum
+White Black
+10001
+01101
+11011
+10111
+00001
+
+ThreeNum
+White Black
+10001
+11110
+10000
+11110
+10001
+
+FourNum
+White Black
+01101
+01101
+00000
+11101
+11101
+
+FiveNum
+White Black
+10000
+10111
+10001
+11110
+10001
+
+SixNum
+White Black
+10001
+10111
+10001
+10101
+10001
+
+SevenNum
+White Black
+00000
+11110
+11101
+11011
+11011
+
+EightNum
+White Black
+10001
+01110
+00000
+01110
+10001
+
+NineNum
+White Black
+10001
+10101
+10001
+11101
+10001
+
+Player
+Pink Black WHITE
+1.1..
+000..
+0.0..
+..0.0
+..000
+
+Crate
+blue lightblue Black
+22222
+20002
+20002
+20002
+22222
+
+CrateHorizontal
+blue lightblue black
+22222
+20002
+11111
+20002
+22222
+
+CrateVertical
+blue lightblue black
+22122
+20102
+20102
+20102
+22122
+
+
+(The following are memes for the special stages)
+WhiteCrate
+White
+00000
+00000
+00000
+00000
+00000
+
+WurmCrate
+Pink Black
+11111
+10001
+10001
+10001
+11111
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+_ = Outside
+? = UknknNum
+0 = ZeroNum
+1 = OneNum
+2 = TwoNum
+3 = ThreeNum
+4 = FourNum
+5 = FiveNum
+6 = SixNum
+7 = SevenNum
+8 = EightNum
+9 = NineNum
+P = Player
++ = Crate
+- = CrateHorizontal
+I = CrateVertical
+
+
+@ = Crate and Target
+& = CrateVertical and Target
+% = CrateHorizontal and Target
+Q = Player and Target
+T = Target
+
+(Memes go here)
+j = WurmCrate
+w = WurmCrate and Target
+s = WhiteCrate and outside
+Z = Player and outside
+X = Outside and Target
+$ = WhiteCrate and Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+CrateVertical MOVE 36772507
+CrateHorizontal MOVE 36772507
+WurmCrate MOVE 36772507
+WhiteCrate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Outside,
+Target,
+Player, Wall, Crate, CrateVertical, CrateHorizontal, WurmCrate, WhiteCrate,
+ZeroNum, OneNum, TwoNum, ThreeNum, FourNum, FiveNum, SixNum, SevenNum, EightNum, NineNum, UknknNum
+
+======
+RULES
+======
+
+[ >  Player | WurmCrate ] -> [  >  Player | > WurmCrate  ]
+[ >  Player | WhiteCrate ] -> [  >  Player | > WhiteCrate  ]
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+Up [ >  Player | CrateVertical ] -> [  >  Player | > CrateVertical  ]
+Down [ >  Player | CrateVertical ] -> [  >  Player | > CrateVertical  ]
+Left [ >  Player | CrateHorizontal ] -> [  >  Player | > CrateHorizontal  ]
+Right [ >  Player | CrateHorizontal ] -> [  >  Player | > CrateHorizontal  ]
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+All CrateHorizontal on Target
+All CrateVertical on Target
+All WurmCrate on Target
+All WhiteCrate on Target
+
+=======
+LEVELS
+=======
+
+message WELCOME TO SOKOCROSS. Where you play sokoban and picross. I hope you have fun. Put blocks to mark where the picross puzzle tells you to put things.
+
+____10003_
+___#######
+__0#.....#
+__0#++.++#
+1_1#T...T#
+__1#....T#
+__1#..P.T#
+___#######
+
+__2101_
+_######
+2#QT+.#
+1#T+..#
+0#+.+.#
+1#...T#
+_######
+
+
+__11111_
+________
+__11111_
+_#######
+5#TT@TT#
+0#+.++.#
+0#.+P..#
+0#+.+.+#
+5#T@T@T#
+_######_
+
+
+
+__4111_
+_######
+4#@@@T#
+1#TP+.#
+1#@++.#
+1#T...#
+_######
+
+__00000000010_
+_#############
+0####..#_____#
+0#P+...#_____#
+0#####.#_____#
+0#___#.#_____#
+0#__##.#_#####
+0#__#..###..##
+0#__#.......##
+0#__#######.##
+0#________#.##
+1#________#T##
+_#############
+
+
+_________1__
+____________
+____0002010_
+___#########
+__0#...#####
+__1#....+T.#
+__0####+...#
+__1###.T+.P#
+1_1###.T+T.#
+___#########
+
+_______112_1__
+______________
+______7111117_
+_____#########
+__4_2#T@TT.@T#
+1_1_1#@+#T#+@#
+__1_1#@.+.+.@#
+__1_1#T+.P.+T#
+__1_1#T+.+.+T#
+__1_1#@+++++T#
+____7#@TT@TT@#
+_____#########
+
+________1________
+_________________
+______2333200000_
+_____############
+____0#..........#
+____1#..T.+.+.+.#
+__1_1#.T#T.+++..#
+____3#.TTT..+..P#
+____5#TTTT@++++.#
+1_1_1#T.T.T.+.+.#
+____0#..........#
+_____############
+
+
+____123422310_
+___###########
+__0#.P.......#
+__2#.+@@+++..#
+__6#+T@T@TT..#
+__8#T@@@@@@@.#
+1_1#...@..T+.#
+___###########
+
+
+__________2_______
+__________________
+__________1331_2__
+__________________
+________141325310_
+_______###########
+______1#T+.......#
+______5#..@@@@@..#
+____4_2#.@@@@.@@.#
+____1_5#.@.@@@@@.#
+____2_1#.T@.P@...#
+1_1_1_1#.T.@.@.@.#
+______4#.+@@@@...#
+______3#...@@@.+.#
+______0#.........#
+_______###########
+
+
+
+_____1_1___
+___________
+____11111__
+___________
+____131310_
+___########
+1_1#.T.T..#
+__0#..++..#
+__5#T@T@T.#
+__0#.+.++.#
+__0#..+...#
+2_2#@@.@T.#
+1_1#.@P@..#
+__3#.@@@..#
+___########
+
+
+
+_____22_22__
+____________
+____0211120_
+___#########
+__0#.......#
+2_2#.@@.@@.#
+2_2#.@T.T@.#
+__0#...P...#
+1_1#.@+++@.#
+__5#.@TTT@.#
+__0#.+...+.#
+__0#.......#
+___#########
+
+
+message There are now blocks you may only push horizontally or vertically.
+
+__1111_
+_######
+1###T##
+1#T#.##
+1#IP-T#
+0#.II##
+0##...#
+1_#T###
+__#####
+
+
+______1______
+_____________
+______1______
+_____________
+____01110001_
+___##########
+__2###&T....#
+__1##T#..+#.#
+__0##.#.#.#.#
+__1#..T.#.+.#
+__0#..#.#.#.#
+__0##.#+..#.#
+1_1##IT.P-.T#
+__0##.......#
+___##########
+
+
+____00111121_
+___##########
+__1###.-..T##
+__1###P-..T##
+__0####II.###
+1_1#...-.T-T#
+__1#.-T..####
+__2####TT####
+___##########
+
+_____1_1___
+___________
+____310110_
+___########
+1_1#.T.T#.#
+__1#TI-I..#
+1_1#T-P-T.#
+__1#TI-I..#
+1_1##T.T#.#
+___########
+
+
+message Did you know that several worms like to solve picross in tandem?
+
+_____11111__
+____________
+____7111117_
+___#########
+__7#@@TTT@@#
+1_1#T+++++T#
+1_1#T+PPP+T#
+1_1#T+PPP+T#
+1_1#T+PPP+T#
+1_1#@+++++@#
+__7#@TTTTT@#
+
+________1__
+___________
+____322121_
+___########
+__0#.##.###
+__1#..P+T.#
+__0########
+__2##.PT@##
+__1##.+IT##
+__1#@...+##
+3_1#@@@+.T#
+__3#@@T####
+___########
+
+
+______1_______
+______________
+______12___1__
+______________
+____011320011_
+___###########
+__0#.........#
+__0#.........#
+__1#...T+....#
+2_1#.+TT-.+T.#
+1_1#.T+IPP-.T#
+2_1#.+TTI.+T.#
+__2#...T@....#
+__3###@@@#####
+___###########
+
+
+message You might see some different colored crates up ahead. Any weird colored function the same as regular ones.
+
+___________1__
+______________
+____215151113_
+___###########
+__3#WWT..j...#
+1_1#T#T#P#.#j#
+__1#jjWj.....#
+__1#.#T#j#.#.#
+__3#..TTW..j.#
+__1#.#.#W#.#.#
+1_2#..j.T..WW#
+1_1#.#j#W#j#T#
+__5#.j..TTTWW#
+___###########
+______________
+
+
+
+(HOW DO YOU LIKE ME I AM THE FINAL CHALLENGE)
+
+_________________________1__
+____________________________
+__________________11111111__
+____________________________
+____________800070121212128_
+____________################
+___________##.##############
+________1_1#t-.-..........t#
+______1_1_1#t.p-t#.i.+....%#
+1_1_1_1_1_2#&-.-t#.t-t-t-t%#
+______1_1_1#t.p-t#i.+.+.i-t#
+1_1_1_1_1_3#&-.-t#t.t+t.tt%#
+______1_1_1#t.p-t#.i+.+i.i%#
+1_1_1_1_1_2#&-.-t#it.t.ti%t#
+______1_1_9#t.p-t#t&&&&tt&@#
+___________#################
+
+
+_????????????????????????__
+?##########################
+?#........._______........#
+?#........_$$$$$$$_.......#
+?#......._$$__$__$$_......#
+?#......._$_$__$__$_......#
+?#......_$$_$__$__$$_.....#
+?#.._..._$$$__$__$$$_.._..#
+?#._$____$$$$$X$$$$$___$_.#
+?#_$$$$$$$$$Xss$$$$$_$$$$_#
+?#._$___$$$$$ZsX$$$____$_.#
+?#.._..._$$$$$$$$$$_..._..#
+?#......_$$$$$$$$$_.......#
+?#......._$$$$$$$$_.......#
+?#......._$$$$$$$_........#
+?#........_$$$$$_.........#
+?#........_$$$$$_.........#
+?#........_$$$$$_.........#
+?#........_$$$$_..........#
+?#........_$$$_...........#
+?#........_$$_............#
+?#......._$$_.............#
+?#......____..............#
+_##########################
+
+
+message CONGLATURATION !!!
+message A Winner? Is You!
+(
+message Pause your timer here. This is the end of "regulation" stages - that is, stages that are going to be in the final version.
+message Up next are a bunch of testing stages, you should test them individually and decide which ones are getting added. Its really hard to create a stage, make modifications, and decide what is acceptable. I'll have a note before each one explaining what they are. Almost all of these would be added near the worm puzzle.
+message so remember, time each one individually. I'll make the Stage number in the top left.
+
+
+message this is the last regular stage from the base game. Its really simple, and I hate how the mechanics of the game are used and then just not matter. I want you to play this one first, because i have a heavily modified one elsewhere.
+
+1___________________111111111_
+______________800070121212128_
+_____________#################
+__________1_1#T-.-..........T#
+________1_1_1#T-P-T#.I.I.I.I@#
+__1_1_1_1_1_2#T-.-T#.T.T.T.T@#
+________1_1_1#T-P-T#I.I.I.I.@#
+1_1_1_1_1_1_1#T-.-T#T.T.T.T.@#
+________1_1_1#T-P-T#.I.I.I.I@#
+__1_1_1_1_1_2#T-.-T#.T.T.T.T@#
+________1_1_9#T-P-T#@@@@@@@@@#
+_____________#################
+
+
+message this the modification of the first testing stage. this one requires you to be a little smarter with your 4 worms. This would go BEFORE the worm puzzle as the last regular stage.
+
+
+2___________________111111111_
+______________________________
+______________800070121212128_
+______________################
+_____________##.##############
+__________1_1#t-.-..........t#
+________1_1_1#t.p-t#.i.+....@#
+__1_1_1_1_1_2#&-.-t#.t-t-t-t@#
+________1_1_1#t.p-t#i.+.+.i.@#
+1_1_1_1_1_1_3#&-.-t#t.t+t.tt@#
+________1_1_1#t.p-t#.i+.+..i@#
+__1_1_1_1_1_2#&-.-t#.t.t.t.t@#
+________1_1_9#t.p-t#@@@@@@@@@#
+_____________#################
+)
+
+(
+message this is the same stage as prior, but I tried out a different numbering layout to increase visibility. I made it super easy for you to solve, I just wanted for you to tell me what you thought
+
+?___________________111111111_
+______________________________
+______________800070121212128_
+______________################
+_____________##.##############
+__________1_1#@....+........t#
+_______1_1_1_#@.P.@#########@#
+__1_1_1_1_1_2#@...@#.@.@.@.@@#
+_______1_1_1_#@...@#........@#
+1_1_1_1_1_1_3#@...@#@.@.@.@@@#
+_______1_1_1_#@...@#........@#
+__1_1_1_1_1_2#@...@#.@.@.@.@@#
+_______1_1_9_#@...@#@@@@@@@@@#
+_____________#################
+
+
+
+message This is also in the base game, I thought it was a bit interesting, but my concern is that it might be a bit simple or straight forward.
+3_____2_1_______2___
+____________________
+______3113101101110_
+_____###############
+____1#P-....T#.....#
+____2##I##I+...-&T.#
+__1_1#...#...%..%..#
+____1#.T.#...##....#
+____0#I#.#.#.#######
+__1_1#T-I#.-....T###
+1_1_1#T.T#T#.##I####
+____0#######.##.####
+__1_2#T.T%.-..#.####
+1_1_1#%.I%....#T####
+__1_1#T..%....######
+_____###############
+
+
+message This one is my favorite from the base game, i remember it being hard when doing it - turns out when you can see the switches, this stage is a joke. Which is why you can't.
+4_________2411__1_21__
+______________________
+________0011420011110_
+_______###############
+______0#.............#
+______2#...@@P.......#
+____2_1#..@T-T-......#
+____2_1#.-T@.P..#.T#.#
+____2_4#...@@...%@&%.#
+______2#...-T@.......#
+1_2_1_2#..@.@@..%.%&.#
+______2#...T%.....I..#
+______0#....I........#
+______0#.............#
+_______###############
+
+message This one i took from a different sokoban game, but it was actual sokoban. I like it, but am worried its too tedious and/or difficult while also being picross. It is really pretty though
+
+5__________1_____1____
+______________________
+__________21_____12___
+______________________
+__________311111113___
+______________________
+________0021111111200_
+_______###############
+______0#....#...#....#
+______0#.#..#...#..#.#
+__2_3_2#..@@+@@@+@@..#
+1_1_1_1#..@.T...T.@..#
+____1_1###+T##.##T+###
+____1_1#..@.#...#.@..#
+____1_1#..@...P...@..#
+____1_1#..@.#...#.@..#
+____1_1###+T##.##T+###
+1_1_1_1#..@.T...T.@..#
+__2_3_2#..@@+@@@+@@..#
+______0#.#..#...#..#.#
+______0#....#...#....#
+_______###############
+
+
+message This is also from the base game, I liked this one as well. The original one was much harder because they chucked in a bunch of extra blocks which created a whole ton of noise, so it might be too simple now.
+________________1___
+____________________
+____________11__1___
+____________________
+______1001111111101_
+_____###############
+__1_1####....T.T.###
+____1####...PI-IT###
+____0####...+....###
+____1##..#T.-.######
+____1##...##.###T.##
+____1##...##T##....#
+__1_1#.P+..T#T..+P.#
+1_1_1#....##T#T-.-T#
+____1#I.-T##.##.I..#
+____0#...#.....#...#
+____0#..#...+...####
+__1_1#T##.-.P.I.T###
+____1###......T.####
+_____###############
+
+)

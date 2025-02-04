@@ -1,0 +1,265 @@
+title Hill Buddies
+author Anonymous
+
+========
+OBJECTS
+========
+Wall
+black
+
+Background
+darkbrown
+
+
+Sky
+lightblue
+
+DownHillR
+darkbrown lightblue
+11111
+01111
+00111
+00011
+00001
+
+DownHillL
+darkbrown lightblue
+11111
+11110
+11100
+11000
+10000
+
+Player
+Red
+..000
+.0...
+0....
+0....
+0...0
+
+Player2
+Red
+00...
+..0..
+...0.
+...0.
+...0.
+
+Player3
+Red
+...0.
+...0.
+..0..
+00...
+.....
+
+Player4
+Red
+0....
+0....
+.0...
+..000
+.....
+
+Character
+blue pink lightblue
+22222
+22222
+22221
+22220
+22220
+
+
+Character1
+blue pink lightblue
+22222
+22222
+22212
+22202
+22202
+
+Character2
+blue pink lightblue
+22222
+22222
+22122
+22022
+22022
+
+Character3
+blue pink lightblue
+22222
+22222
+21222
+20222
+20222
+
+Character4
+blue pink lightblue
+22222
+22222
+12222
+02222
+02222
+
+CharR0
+darkbrown lightblue blue pink 
+11111
+01111
+00113
+00012
+00002
+
+CharR1
+darkbrown lightblue blue pink 
+11111
+01131
+00121
+00021
+00001
+
+CharR2
+darkbrown lightblue blue pink 
+11311
+01211
+00211
+00011
+00001
+
+
+CharR3
+darkbrown lightblue blue
+12111
+02111
+00111
+00011
+00001
+
+
+SkyR3
+blue pink lightblue
+22222
+22222
+22222
+22222
+21222
+
+CharR4
+darkbrown lightblue blue
+21111
+01111
+00111
+00011
+00001
+
+
+SkyR4
+blue pink lightblue
+22222
+22222
+22222
+12222
+02222
+
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+S = Sky
+
+p = Player
+q = Player2
+d = Player3
+b = Player4
+
+I = Character
+1 = Character1
+2 = Character2
+3 = Character3
+4 = Character4
+
+5 = CharR0
+6 = CharR1
+7 = CharR2
+8 = CharR3
+e = SkyR3
+9 = CharR4
+n = SkyR4
+
+r = DownHillR
+l = DownHillL
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+Background
+
+Sky, Wall, DownHillR, DownHillL
+Character, Character1, Character2, Character3, Character4
+CharR0, CharR1, CharR2, CharR3, SkyR3, CharR4, SkyR4
+Player,Player2, Player3, Player4
+
+======
+RULES     
+======      
+[ moving Player | stationary Player2 ] -> [ moving Player | moving Player2 ]
+[ moving Player2 | stationary Player3 ] -> [ moving Player2 | moving Player3 ]
+[ moving Player | stationary Player4 ] -> [ moving Player | moving Player4 ]
+
+[CharR4] -> [DownHillR]
+left [SkyR4|DownHillR] -> [Sky|CharR0]
+left [SkyR4|Sky] -> [Sky|Character]
+[SkyR4] -> [Sky]
+up [CharR4|Wall] -> [DownHillR|Wall]
+up [CharR3|Wall] -> [CharR4|Wall] 
+up [CharR2|Wall] -> [CharR3|Wall]
+up [CharR3|SkyR3] -> [CharR4|SkyR4] 
+up [CharR2|Sky] -> [CharR3|SkyR3]
+[CharR1] -> [CharR2] 
+[CharR0] -> [CharR1] 
+[Character4 | DownHillR] -> [Character | CharR0]
+left [Character4 | Sky] -> [Character | Character] 
+left [Character4 | Character4] -> [Character | Character] 
+[Character3] -> [Character4]
+[Character2] -> [Character3]
+[Character1] -> [Character2]
+[Character] -> [Character1]
+
+==============
+WINCONDITIONS
+==============
+All Player on CharR0
+
+=======     
+LEVELS
+=======
+##########################
+.rssssssssssssssssssssssss
+..rsssssssssssssssssssssss
+.....rssssssssssssssssssss
+......rsssssssssssssssssss
+...........rssssssssssssss
+............rsssssssssssss
+..............rsssssssssss
+...............rssssssssss
+.........pq.....rsssssssss
+.........bd......rssssssss
+...................rssssss
+.....................rssss
+.......................rss
+........................rI
+..........................
+..........................
+..........................
+..........................
+..........................
+
+message "You Found Waldo!"

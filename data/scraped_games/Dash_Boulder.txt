@@ -1,0 +1,331 @@
+(,.-•*^*•-.,.-•*^*•-.,.-•*^*•-.,.-•*^*•-.,.-•*^*•-.,)
+(Original Puzzlescript Boulder Dash source code made)
+(by Connor M (connorses.devianart.com) Please credit)
+(him by pasting this in if you use this code! ^-^;  )
+(,.-•*^*•-.,.-•*^*•-.,.-•*^*•-.,.-•*^*•-.,.-•*^*•-.,)
+
+title Dash Boulder
+author Connorses
+homepage connorses.deviantart.com
+
+realtime_interval 0.25
+noundo
+zoomscreen 25x13
+
+========
+OBJECTS
+========
+background
+black
+
+player
+grey darkblue orange white
+.0.0.
+.101.
+.000.
+.222.
+.3.3.
+
+corpse
+red
+.0.0.
+00000
+.000.
+00000
+.0.0.
+
+dirt
+brown darkbrown
+00000
+10101
+01010
+01101
+11111
+wall
+grey
+00000
+0.0.0
+00000
+0.0.0
+00000
+
+brick
+white grey
+01000
+11111
+00010
+11111
+01000
+
+boulder
+lightgrey grey
+.000.
+10101
+01010
+01101
+.111.
+
+
+diamond
+blue lightblue darkblue
+..1..
+.011.
+02111
+.220.
+..2..
+
+chest
+brown yellow darkbrown
+.....
+.000.
+00000
+22122
+00000
+
+key
+yellow
+.....
+.....
+...00
+000.0
+00.00
+
+gate
+darkblue blue
+11111
+10001
+10011
+10001
+11111
+opengate
+blue
+00000
+0...0
+0...0
+0...0
+00000
+
+fireflyd
+yellow white darkblue
+11.11
+11.11
+20002
+.000.
+.2.2.
+fireflyu
+yellow white darkblue
+.2.2.
+.000.
+20002
+11.11
+11.11
+fireflyl
+yellow white darkblue
+..211
+20011
+.00..
+20011
+..211
+fireflyr
+yellow white darkblue
+112..
+11002
+..00.
+11002
+112..
+
+
+l
+black
+r
+black
+m
+green
+.....
+.....
+.....
+.....
+.....
+t
+black
+=======
+LEGEND
+=======
+. = background
+# = wall
+$ = brick
+@ = dirt
+p = player
+o = boulder
+* = diamond
+c = chest
+k = key
+g = gate and m
+f = fireflyu
+pushable = boulder or chest or key
+round = boulder or diamond
+falling = boulder or diamond or chest or key
+
+firefly = fireflyl or fireflyr or fireflyu or fireflyd
+
+obstacle = round or player or dirt or wall or chest or key or t or firefly or brick
+required = diamond or chest
+marker = l or m or r
+=======
+SOUNDS
+=======
+Sfx0 4196300  (pickup)
+Sfx1 53087508 (death)
+Sfx2 87691904 (boulder)
+Sfx3 54502    (chest)
+
+boulder move 87691904
+diamond move 53046700
+
+Sfx4 80749107 (player move)
+
+================
+COLLISIONLAYERS
+================
+background
+l
+r
+m,t
+corpse,gate,opengate
+obstacle
+
+======
+RULES
+======
+
+
+[corpse] -> []
+
+[l] -> []
+[r] -> []
+[t] -> []
+
+[> player|dirt] -> [t|player] Sfx4
+[> player |no obstacle] -> [t|player ]Sfx4
+[player] -> [player]
+[> player|diamond] -> [|player] Sfx0
+
+(MONSTERS! [WIP] not in any levels yet)
+
+[fireflyu m] -> [up fireflyu]
+[fireflyr m] -> [right fireflyr]
+[fireflyd m] -> [down fireflyd]
+[fireflyl m] -> [left fireflyl]
+up    [fireflyu|obstacle] -> [right fireflyr|obstacle]
+right [fireflyr|obstacle] -> [down  fireflyd|obstacle]
+down  [fireflyd|obstacle] -> [left  fireflyl|obstacle]
+left  [fireflyl|obstacle] -> [up    fireflyu|obstacle]
+[firefly] -> [firefly m]
+[m no gate no opengate no firefly] -> []
+
+
+(----V-V-Falling objects-V-V----)
+
+down [falling|no obstacle] -> [> falling|] Sfx2
+(chest opens with key)
+[stationary chest|stationary key] -> [diamond| ] Sfx3
+
+down[> falling|no obstacle|stationary player] -> [|falling|corpse] Sfx1
+
+down[falling|firefly] -> [falling|corpse] (Rocks fall, everyone dies.)
+
+[> falling|no obstacle] -> [t|falling]
+
+left [stationary round|no obstacle] -> [round l| ]
+right[stationary round|no obstacle] -> [round r| ]
+
+down [round|round l] -> [left  round|round l]
+down [round|round r] -> [right round|round r]
+down [round|round l r] -> [round m|round l r]
+horizontal [round m|no obstacle] -> [|round]
+horizontal [> round|obstacle] -> [round|obstacle]
+(player pushes things)
+horizontal [> player|pushable] -> [> player|> pushable] Sfx2
+
+
+
+
+(gates)
+[gate] -> opengate]
+[required][opengate] -> [required][gate]
+[opengate m] -> [opengate no m] message DIAMONDS COLLECTED - the EXIT is OPEN!
+
+==============
+WINCONDITIONS
+==============
+all opengate on player
+no required
+
+=======
+LEVELS
+=======
+message Dig up all diamonds!
+#########
+#@@@@o@g#
+#@@@@@$$#
+#*o@@@@@#
+#o@@@@@*#
+#@.@@o@@#
+#@p@@*@@#
+#@@@@@@@#
+#########
+
+#*@@@@@@@@@@@@@@@@@@o*o@@@@@@@@o@@#
+#o@o@@@@@@@@@@@@@@@@@o@@@@@@@@.@o@#
+#@.o.@@@@@*o@@@@@@@..@.@@@@@@@o@oo#
+#@@@.@@@@@@@@@@@*@@@@o@@oo@@@@ogo@#
+#@@@@@@@@@@..@@@@@@@@oo@@o@oo@@o@@#
+#@@o@@o@@@@@@@@@o@@@oo@@@@*@o@@@@@#
+#o@oo@@@@##########################
+#@o@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+#@o@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+#@@@@o@@@@@@@@@@@@@@*@@@@o@o@@@@@@#
+#@@o@o.@@@@@@@@@@@@@o@@@.o@@@@@@@@#
+#@@@.o@@@@@.@@@@o@@@@@@@*o@@@@@@@@#
+#@..o@@@@@@o@o@@@@@@@@@@@@@@@@@@p@#
+#@@@*o@@@@@@@o@@@@@@@@@@@@@@@@@@@@#
+###################################
+message Unlock buried treasure!
+############
+#@@@...@@@@#
+#@@@.k.@@@@#
+#@p@@@o@@@@#
+#@@@@@@@@@@g
+#@o*@@@@@@@#
+#@@@@@@oc@@#
+############
+message Beware of cave-ins.
+############
+##.......###
+##o.oo.o*###
+#@#ooooo#o@#
+#@@#ooo#@@@#
+#@o@#*#@@@@#
+#@*o.@.@o@p#
+#@@o@...@@@#
+#g@@......@#
+#..........#
+#.....o....#
+#@@@@@@@@@@#
+############
+
+############
+#@@@@*@@@@@#
+#*o@@@@@@@@#
+#@@@@@@lll@#
+#@@@@@#rkl@#
+#@co@#@ooo@#
+#g@@@@@@@@@#
+####...llll#
+#@@....llll#
+#@@@.......#
+#@p@..#....#
+#@@@@.#olll#
+############
+
+message ALL LEVELS COMPLETED!

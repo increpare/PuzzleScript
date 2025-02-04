@@ -1,0 +1,300 @@
+title Unfinished Arrows Game
+author Vincent Povirk
+homepage madewokherd.itch.io
+noaction
+
+========
+OBJECTS
+========
+
+Background
+Orange
+
+Wall
+DarkBrown
+
+PlayerUp
+Black
+.....
+..0..
+.0.0.
+0...0
+.....
+
+PlayerDown
+Black
+.....
+0...0
+.0.0.
+..0..
+.....
+
+PlayerRight
+Black
+.0...
+..0..
+...0.
+..0..
+.0...
+
+PlayerLeft
+Black
+...0.
+..0..
+.0...
+..0..
+...0.
+
+Crate
+Brown
+.....
+.000.
+.000.
+.000.
+.....
+
+Goal
+Green
+00000
+0...0
+0...0
+0...0
+00000
+
+NoPushIndicator
+Yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+(markers)
+Pushing
+Transparent
+
+PushedHorizontal
+Transparent
+
+PushedVertical
+Transparent
+
+=======
+LEGEND
+=======
+
+Player = PlayerUp or PlayerLeft or PlayerDown or PlayerRight
+
+Moveable = Player or Crate
+
+. = Background
+# = Wall
+@ = NoPushIndicator and Wall
+
+C = Crate
+
+G = Goal
+
+X = Crate and Goal
+
+^ = PlayerUp
+< = PlayerLeft
+> = PlayerRight
+v = PlayerDown
+
+U = PlayerUp and Goal
+L = PlayerLeft and Goal
+D = PlayerDown and Goal
+R = PlayerRight and Goal
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Wall, Player, Crate
+Pushing, PushedHorizontal, NoPushIndicator
+PushedVertical
+
+======
+RULES
+======
+
+(figure out which crates want to move)
+[ UP PlayerUp | Crate ] -> [ UP PlayerUp | UP Crate ]
+[ LEFT PlayerLeft | Crate ] -> [ LEFT PlayerLeft | LEFT Crate ]
+[ DOWN PlayerDown | Crate ] -> [ DOWN PlayerDown | DOWN Crate ]
+[ RIGHT PlayerRight | Crate ] -> [ RIGHT PlayerRight | RIGHT Crate ]
+
+(mark players that are moving in the correct direction)
+[ UP PlayerUp ] -> [ UP PlayerUp Pushing ]
+[ LEFT PlayerLeft ] -> [ LEFT PlayerLeft Pushing ]
+[ DOWN PlayerDown ] -> [ DOWN PlayerDown Pushing ]
+[ RIGHT PlayerRight ] -> [ RIGHT PlayerRight Pushing ]
+
+(mark crates that are being pushed)
+HORIZONTAL [ MOVING Crate | Pushing ] -> [ MOVING Crate PushedHorizontal | Pushing ]
+VERTICAL [ MOVING Crate | Pushing ] -> [ MOVING Crate PushedVertical | Pushing ]
+
+(cancel all movement that is blocked)
+[ > Moveable | Wall ] -> [ Moveable | Wall ]
+[ > Moveable | STATIONARY Moveable ] -> [ Moveable | Moveable ]
++ [ STATIONARY Moveable Pushing ] -> [ STATIONARY Moveable ]
++ HORIZONTAL [ NO Pushing | MOVING Crate PushedHorizontal | NO Pushing ] -> [ | MOVING Crate | ]
++ VERTICAL [ NO Pushing | MOVING Crate PushedVertical | NO Pushing ] -> [ | MOVING Crate | ]
++ [ MOVING Crate NO PushedHorizontal NO PushedVertical ] -> [ Crate ]
+
+(destroy the indicator if there was a push)
+[ NoPushIndicator ] [ > Moveable Pushing | > Crate ] -> [ ] [ > Moveable Pushing | > Crate ]
+
+(destroy all temporary markers)
+[ Pushing ] -> [ ]
+[ PushedHorizontal ] -> [ ]
+[ PushedVertical ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+All Goal on Crate
+
+=======
+LEVELS
+=======
+
+@####
+#.G.#
+#...#
+#.C.#
+#...#
+#...#
+#.^.#
+#####
+
+@########
+####C####
+###...###
+###...###
+###...###
+###.G.###
+#..CCC..#
+#.#...#.#
+#.......#
+##.#v#.##
+##.....##
+#########
+
+@##############
+#G...........G#
+#.......v.....#
+#...^.........#
+#.........>...#
+#.....##......#
+#....#####....#
+#......##.....#
+#.............#
+#...<.........#
+#.......CC....#
+#.......CC....#
+#.............#
+#G...........G#
+###############
+
+@#####
+#G..##
+#X..##
+#C...#
+#G..^#
+#C.v##
+#X...#
+#C...#
+#G..##
+######
+
+@######
+####.G#
+#C....#
+##...##
+##^>.##
+#######
+
+@####
+#..G#
+#<C>#
+#.^.#
+#####
+
+######
+#G####
+#..###
+#.C><#
+###.^#
+######
+
+########
+###GG###
+###CC###
+#.<....#
+###CC###
+###..###
+###CC###
+#....>.#
+###CC###
+###.^###
+########
+
+@#######
+##..X..#
+#C.v.v.#
+##..>..#
+##.v.vG#
+##.....#
+########
+
+(
+(Holding place for levels that I don't like.)
+#################
+########G########
+##......C......##
+##.............##
+##.............##
+##.............##
+##.............##
+##.....<^^.....##
+#GC....<X>....GC#
+##.....vv>.....##
+##.............##
+##.............##
+##.............##
+##.............##
+##......C......##
+########G########
+#################
+
+###########
+#####G#####
+#####C#####
+###.....###
+###.>vv.###
+#GC.>X<.CG#
+###.^^<.###
+###.....###
+#####C#####
+#####G#####
+###########
+
+########
+#..CC>.#
+#^.#G..#
+#CG..#C#
+#C#..GC#
+#..G#.v#
+#.<CC..#
+########
+
+)

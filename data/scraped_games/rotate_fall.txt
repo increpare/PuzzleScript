@@ -1,0 +1,630 @@
+title rotate fall
+author chen chi-ren
+
+again_interval 0.15
+noundo
+run_rules_on_level_start
+flickscreen 6x6
+
+========
+OBJECTS
+========
+Background
+Black
+
+dead
+Black
+
+Player
+white
+0....
+.....
+.....
+.....
+.....
+
+a1 (area 1)
+transparent
+
+a2
+transparent
+
+a3
+transparent
+
+a4
+transparent
+
+n0
+red
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+n1
+red
+..0..
+..0..
+..0..
+..0..
+..0..
+
+n2
+red
+.000.
+...0.
+.000.
+.0...
+.000.
+
+n3
+red
+.000.
+...0.
+.000.
+...0.
+.000.
+
+n4
+red
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+n5
+red
+.000.
+.0...
+.000.
+...0.
+.000.
+
+n6
+red
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+n7
+red
+.000.
+...0.
+...0.
+...0.
+...0.
+
+n8
+red
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+n9
+red
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+n10
+red
+0.000
+0.0.0
+0.0.0
+0.0.0
+0.000
+
+n11
+red
+0..0.
+0..0.
+0..0.
+0..0.
+0..0.
+
+
+p1 (player 1)
+red pink
+.111.
+11110
+11110
+11100
+.000.
+
+p2
+red pink
+.111.
+11110
+11110
+11100
+.000.
+
+p3
+red pink
+.111.
+11110
+11110
+11100
+.000.
+
+p4
+red pink
+.111.
+11110
+11110
+11100
+.000.
+
+Wall
+gray lightgray
+00000
+01110
+01110
+01110
+00000
+
+w1
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12000
+00000
+
+w2
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12000
+00000
+
+w3
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12000
+00000
+
+w4
+#222222 #333333 #444444 #ffffff
+11110
+12220
+12200
+12000
+00000
+
+ball
+green lightgreen
+.111.
+11110
+11110
+11100
+.000.
+
+target
+pink
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = wall
+c = p1
+d = p2
+e = p3
+f = p4
+players=c or d or e or f
+
+i = w1
+3 = n3 and w2 and player
+4 = n4 and w2 and player
+5 = n5 and w2 and player
+6 = n6 and w2 and player
+7 = n7 and w2 and player
+8 = n8 and w2 and player
+9 = n9 and w2 and player
+a = n10 and w2 and player
+b = n11 and w2 and player
+k = w3
+l = w4
+@ = ball
+t = target
+movable = ball or players
+obstacle = movable or wall
+num= n0 or n1 or n2 or n3 or n4 or n5 or n6 or n7 or n8 or n9 or n10 or n11
+
+=======
+SOUNDS
+=======
+
+player move 19008103
+EndLevel 3032303
+
+================
+COLLISIONLAYERS
+================
+Background
+target
+a1,a2,a3,a4
+w1,w2,w3,w4
+Player,dead
+num
+Wall, ball,p1,p2,p3,p4
+
+======
+RULES
+======
+
+(set 4 areas for different fall direction)
+startloop
+[p1 no a1] -> [p1 a1]
+[a1|no wall no a1] -> [a1|a1]
+[p2 no a2] -> [p2 a2]
+[a2|no wall no a2] -> [a2|a2]
+[p3 no a3] -> [p3 a3]
+[a3|no wall no a3] -> [a3|a3]
+[p4 no a4] -> [p4 a4]
+[a4|no wall no a4] -> [a4|a4]
+endloop
+
+[vertical player] -> cancel
+
+(rotate by shift view window)(flickscreen 6x6)
+( w2 | w1
+ ----+----
+  w3 | w4 )(left w1>w2>w3>w4 right w4>w3>w>w1)
+
+[left player w4] -> [up player w4]
+[right player w1] -> [down player w1]
+[right player w3] -> [up player w3]
+[right player w4] -> [left player w4]
+[left player w2] -> [down player w2]
+[left player w3] -> [right player w3]
+
+[> player num] -> [> player > num]
+
+(fall)
+[player w1][movable a1] -> [player w1][down  movable a1] again
+[player w1][movable a2] -> [player w1][right movable a2] again
+[player w1][movable a3] -> [player w1][up    movable a3] again
+[player w1][movable a4] -> [player w1][left  movable a4] again
+
+[player w2][movable a1] -> [player w2][left  movable a1] again
+[player w2][movable a2] -> [player w2][down  movable a2] again
+[player w2][movable a3] -> [player w2][right movable a3] again
+[player w2][movable a4] -> [player w2][up    movable a4] again
+
+[player w3][movable a1] -> [player w3][up    movable a1] again
+[player w3][movable a2] -> [player w3][left  movable a2] again
+[player w3][movable a3] -> [player w3][down  movable a3] again
+[player w3][movable a4] -> [player w3][right movable a4] again
+
+[player w4][movable a1] -> [player w4][right movable a1] again
+[player w4][movable a2] -> [player w4][up    movable a2] again
+[player w4][movable a3] -> [player w4][left  movable a3] again
+[player w4][movable a4] -> [player w4][down  movable a4] again
+
+[> ball| target] -> [ball| target]
+
+(count)
+[moving n0][player]->[moving n0][dead]
+[moving n1]->[moving n0]
+[moving n2]->[moving n1]
+[moving n3]->[moving n2]
+[moving n4]->[moving n3]
+[moving n5]->[moving n4]
+[moving n6]->[moving n5]
+[moving n7]->[moving n6]
+[moving n8]->[moving n7]
+[moving n9]->[moving n8]
+[moving n10]->[moving n9]
+[moving n11]->[moving n10]
+
+==============
+WINCONDITIONS
+==============
+all players on target
+
+=======
+LEVELS
+=======
+
+message left or right to rotate, total 20 levels
+
+message level 1 best 3
+############
+##td.##.#@##
+#@...##.#.t#
+###..###..c#
+#..#.##....#
+#####3i#####
+#####kl#####
+#....##.#..#
+#e..###..###
+#t.#.##...@#
+##@#.##.ft##
+############
+
+message level 2 best 3
+############
+#.d#.##..t.#
+#t...##...c#
+#..@.##@@.##
+#..@.##....#
+#####3i#####
+#####kl#####
+#....##.@..#
+##.@@##.@..#
+#e...##...t#
+#.t..##.#f.#
+############
+
+message level 3 best 3
+############
+#d..t##..@c#
+#@#@.##.@#.#
+#.@@.##.@@.#
+#...@##@..t#
+#####3i#####
+#####kl#####
+#t..@##@...#
+#.@@.##.@@.#
+#.#@.##.@#@#
+#e@..##t..f#
+############
+
+message level 4 best 4
+############
+#d#t###...c#
+#.#..##..###
+#..@###@@.t#
+#..@.##.#.##
+#####4i#####
+#####kl#####
+##.#.##.@..#
+#t.@@###@..#
+###..##..#.#
+#e...###t#f#
+############
+
+message level 5 best 4
+############
+#d@@@##.@.c#
+#.@.###.@@@#
+#@@@.##t@.@#
+#..t.##..#@#
+#####4i#####
+#####kl#####
+#@#..##.t..#
+#@.@t##.@@@#
+#@@@.###.@.#
+#e.@.##@@@f#
+############
+
+message level 6 best 4
+############
+#@d.###t@.@#
+#....###..c#
+#@...##....#
+#t#.####..##
+#####4i#####
+#####kl#####
+##..####.#t#
+#....##...@#
+#e..###....#
+#@.@t###.f@#
+############
+
+message level 7 best 5
+############
+#t@@d##..#t#
+##.@@###..@#
+#....##..@@#
+#.#..##..@c#
+#####5i#####
+#####kl#####
+#e@..##..#.#
+#@@..##....#
+#@..###@@.##
+#t#..##f@@t#
+############
+
+message level 8 best 5
+############
+#d@.t##@.@c#
+#@#@@##..#@#
+#..#.##.#@.#
+#@...##..@t#
+#####5i#####
+#####kl#####
+#t@..##...@#
+#.@#.##.#..#
+#@#..##@@#@#
+#e@.@##t.@f#
+############
+
+message level 9 best 5
+############
+#@d#.##@..@#
+#.#..##@t#c#
+#.t@###.@.##
+#@@..##.#..#
+#####5i#####
+#####kl#####
+#..#.##..@@#
+##.@.###@t.#
+#e#t@##..#.#
+#@..@##.#f@#
+############
+
+message level 10 best 6
+############
+#.@t.##.@..#
+#.#.@##.##@#
+#@#@d##.@.t#
+#....##.c@.#
+#####6i#####
+#####kl#####
+#.@e.##....#
+#t.@.##f@#@#
+#@##.##@.#.#
+#..@.##.t@.#
+############
+
+message level 11 best 6
+############
+#t.####.#.t#
+#...@##....#
+##.#.##c#.##
+#..d.##..@##
+#####6i#####
+#####kl#####
+##@..##.f..#
+##.#e##.#.##
+#....##@...#
+#t.#.####.t#
+############
+
+message level 12 best 6
+############
+#d#@@##.#@c#
+#@...##...##
+##.t.###t.@#
+#..#####..@#
+#####6i#####
+#####kl#####
+#@..#####..#
+#@.t###.t.##
+##...##...@#
+#e@#.##@@#f#
+############
+
+message level 13 best 7
+############
+#@#dt##@#.@#
+#...###...##
+##..@##...c#
+#@..####@#t#
+#####7i#####
+#####kl#####
+#t#@####..@#
+#e...##@..##
+##...###...#
+#@.#@##tf#@#
+############
+
+message level 14 best 7
+############
+#d.@###@#.c#
+#..@t###@..#
+##@..##@.@@#
+#@#@@##@.t##
+#####7i#####
+#####kl#####
+##t.@##@@#@#
+#@@.@##..@##
+#..@###t@..#
+#e.#@###@.f#
+############
+
+message level 15 best 8
+############
+#.d.@##....#
+#.#.t##.##c#
+#.#..##....#
+#...####.t@#
+#####8i#####
+#####kl#####
+#@t.####...#
+#....##..#.#
+#e##.##t.#.#
+#....##@.f.#
+############
+
+message level 16 best 8
+############
+#.@d.##@#..#
+#..@@##t@.@#
+##@#@##.#@c#
+#@t.####@@.#
+#####8i#####
+#####kl#####
+#.@@####.t@#
+#e@#.##@#@##
+#@.@t##@@..#
+#..#@##.f@.#
+############
+
+message level 17 best 9
+############
+#t..@####.t#
+#.#..##c.#.#
+##.@####@..#
+##d#@##@#.@#
+#####9i#####
+#####kl#####
+#@.#@##@#f##
+#..@####@.##
+#.#.e##..#.#
+#t.####@..t#
+############
+
+message level 18 best 10
+############
+#t#d.##..@t#
+#@@.@##@.@##
+#...@##@..c#
+#.@@.##.@@.#
+#####Ai#####
+#####kl#####
+#.@@.##.@@.#
+#e..@##@...#
+##@.@##@.@@#
+#t@..##.f#t#
+############
+
+message level 19 best 11
+############
+#######...##
+#.#.t##@####
+#.#@###c@.##
+#.@d@##@#t##
+#####Bi#####
+#####kl#####
+##t#@##@f@.#
+##.@e###@#.#
+####@##t.#.#
+##...#######
+############
+
+message level 20 best 11
+############
+#t@.###.#.t#
+#.#.d###.#@#
+##...##....#
+#.#.@##@.c##
+#####Bi#####
+#####kl#####
+##e.@##@.#.#
+#....##...##
+#@#.###f.#.#
+#t.#.###.@t#
+############
+

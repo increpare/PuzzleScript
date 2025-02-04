@@ -1,0 +1,716 @@
+title Good title for my puzzle game
+author quaternary
+homepage www.highlysuspect.agency
+background_color darkblue
+color_palette proteus_mellow
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background 
+darkgray
+
+Wall 
+darkblue
+
+Pit
+black
+
+CrumblePitA
+black
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+CrumblePitB
+black
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+PitCrate1
+darkgreen black
+00000
+01110
+01110
+01110
+00000
+
+PitCrate2
+darkgreen black
+00000
+01110
+01110
+01110
+00000
+
+PitCrate3
+darkgreen black
+00000
+01110
+01110
+01110
+00000
+
+Player
+blue
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+PlayerGhost
+lightblue
+.0.0.
+.....
+0...0
+.....
+.0.0.
+
+PlayerTarget 
+lightred
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+Crate1
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Crate1Ghost
+lightbrown
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+Crate2
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Crate2Ghost
+lightbrown
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+Crate3
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Crate3Ghost
+lightbrown
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+CrateTarget
+lightred
+00.00
+0...0
+..0..
+0...0
+00.00
+
+DeviceInactive
+orange
+.....
+.000.
+.0.0.
+.000.
+.....
+
+DeviceActive
+orange
+0...0
+.000.
+.0.0.
+.000.
+0...0
+
+Outline00
+darkbrown
+0.0.0
+.....
+0....
+.....
+0....
+
+Outline01
+darkbrown
+.0.0.
+.....
+.....
+.....
+.....
+
+Outline02
+darkbrown
+0.0.0
+.....
+.....
+.....
+.....
+
+Outline03
+darkbrown
+.0.0.
+.....
+.....
+.....
+.....
+
+Outline04
+darkbrown
+0.0.0
+.....
+.....
+.....
+.....
+
+Outline05
+darkbrown
+.0.0.
+.....
+.....
+.....
+.....
+
+Outline06
+darkbrown
+0.0.0
+.....
+....0
+.....
+....0
+
+Outline10
+darkbrown
+.....
+0....
+.....
+0....
+.....
+
+Outline11
+transparent
+
+Outline12
+transparent
+
+Outline13
+transparent
+
+Outline14
+transparent
+
+Outline15
+transparent
+
+Outline16
+darkbrown
+.....
+....0
+.....
+....0
+.....
+
+Outline20
+darkbrown
+0....
+.....
+0....
+.....
+0....
+
+Outline21
+transparent
+
+Outline22
+transparent
+
+Outline23
+transparent
+
+Outline24
+transparent
+
+Outline25
+transparent
+
+Outline26
+darkbrown
+....0
+.....
+....0
+.....
+....0
+
+Outline30
+darkbrown
+.....
+0....
+.....
+0....
+.....
+
+Outline31
+transparent
+
+Outline32
+transparent
+
+Outline33
+transparent
+
+Outline34
+transparent
+
+Outline35
+transparent
+
+Outline36
+darkbrown
+.....
+....0
+.....
+....0
+.....
+
+Outline40
+darkbrown
+0....
+.....
+0....
+.....
+0....
+
+Outline41
+transparent
+
+Outline42
+transparent
+
+Outline43
+transparent
+
+Outline44
+transparent
+
+Outline45
+transparent
+
+Outline46
+darkbrown
+....0
+.....
+....0
+.....
+....0
+
+Outline50
+darkbrown
+.....
+0....
+.....
+0....
+.....
+
+Outline51
+transparent
+
+Outline52
+transparent
+
+Outline53
+transparent
+
+Outline54
+transparent
+
+Outline55
+transparent
+
+Outline56
+darkbrown
+.....
+....0
+.....
+....0
+.....
+
+Outline60
+darkbrown
+0....
+.....
+0....
+.....
+0.0.0
+
+Outline61
+darkbrown
+.....
+.....
+.....
+.....
+.0.0.
+
+Outline62
+darkbrown
+.....
+.....
+.....
+.....
+0.0.0
+
+Outline63
+darkbrown
+.....
+.....
+.....
+.....
+.0.0.
+
+Outline64
+darkbrown
+.....
+.....
+.....
+.....
+0.0.0
+
+Outline65
+darkbrown
+.....
+.....
+.....
+.....
+.0.0.
+
+Outline66
+darkbrown
+....0
+.....
+....0
+.....
+0.0.0
+
+Bang
+red
+..0..
+..0..
+..0..
+.....
+..0..
+
+Already
+transparent
+
+Activating
+transparent
+
+Deactivating
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+p = Player
+o = PlayerTarget
+1 = Crate1
+2 = Crate2
+3 = Crate3
+t = CrateTarget
+x = DeviceInactive
+% = Pit
+- = CrumblePitA
++ = CrumblePitB
+
+Crate = Crate1 or Crate2 or Crate3
+Device = DeviceActive or DeviceInactive
+Pushable = Crate or Device
+Pittable = Pushable or Player
+
+Ghost = Crate1Ghost or Crate2Ghost or Crate3Ghost or PlayerGhost
+
+PitCrate = PitCrate1 or PitCrate2 or PitCrate3
+CrumblePit = CrumblePitA or CrumblePitB
+
+(
+  00 01 02 03 04 05 06
+  10 11 12 13 14 15 16
+  20 21 22 23 24 25 26
+  30 31 32 33 34 35 36
+  40 41 42 43 44 45 46
+  50 51 52 53 54 55 56
+  60 61 62 63 64 65 66
+)
+
+(
+  Outline00 or Outline01 or Outline02 or Outline03 or Outline04 or Outline05 or Outline06 or 
+  Outline10 or Outline11 or Outline12 or Outline13 or Outline14 or Outline15 or Outline16 or 
+  Outline20 or Outline21 or Outline22 or Outline23 or Outline24 or Outline25 or Outline26 or 
+  Outline30 or Outline31 or Outline32 or Outline33 or Outline34 or Outline35 or Outline36 or 
+  Outline40 or Outline41 or Outline42 or Outline43 or Outline44 or Outline45 or Outline46 or 
+  Outline50 or Outline51 or Outline52 or Outline53 or Outline54 or Outline55 or Outline56 or 
+  Outline60 or Outline61 or Outline62 or Outline63 or Outline64 or Outline65 or Outline66 or 
+)
+
+Outline = Outline00 or Outline01 or Outline02 or Outline03 or Outline04 or Outline05 or Outline06 or Outline10 or Outline11 or Outline12 or Outline13 or Outline14 or Outline15 or Outline16 or Outline20 or Outline21 or Outline22 or Outline23 or Outline24 or Outline25 or Outline26 or Outline30 or Outline31 or Outline32 or Outline33 or Outline34 or Outline35 or Outline36 or Outline40 or Outline41 or Outline42 or Outline43 or Outline44 or Outline45 or Outline46 or Outline50 or Outline51 or Outline52 or Outline53 or Outline54 or Outline55 or Outline56 or Outline60 or Outline61 or Outline62 or Outline63 or Outline64 or Outline65 or Outline66
+
+=======
+SOUNDS
+=======
+
+sfx0 45016502 ( activating )
+sfx1 107102   ( deactivating )
+sfx2 35432702 ( cant deactivate )
+sfx3 94344509 ( fall in pit )
+sfx4 15300109 ( pit crumble )
+sfx5 93043900 ( activate target )
+sfx6 49873104 ( deactivate target )
+
+( unfortunately these play while using the device as well )
+Player move 50409107
+Player cantmove 61411504
+Device move 60897304
+Crate move 95413104
+
+endlevel 99189500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Already
+Activating, Deactivating
+PlayerTarget, CrateTarget
+Pit, CrumblePit
+PitCrate
+Player, Wall, Pushable
+Outline
+Ghost
+Bang
+
+======
+RULES 
+======
+
+[ Bang ] -> []
+
+( Pushing stuff )
+rigid [ >  Player | Pushable ] -> [  >  Player | > Pushable ]
++ rigid [ > DeviceActive ] [ Ghost ] -> [ > DeviceActive ] [ > Ghost ]
+
+[ > Crate | CrateTarget ] -> [ > Crate | CrateTarget ] sfx5
+[ > Player | PlayerTarget ] -> [ > Player | PlayerTarget ] sfx5
+[ CrateTarget moving Crate ] -> [ CrateTarget moving Crate ] sfx6
+[ PlayerTarget moving Player ] -> [ PlayerTarget moving Player ] sfx6
+
+( Using device )
+[ action Player ] [ DeviceInactive no Already ] -> [ Player ] [ DeviceActive Activating Already ] sfx0
+[ action Player ] [ DeviceActive no Already ] -> [ Player ] [ DeviceInactive Deactivating Already ] sfx1
+[ Already ] -> []
+
+( Draw outline )
+[ Outline ] -> []
+
+right late [ | | | Device | | | ] -> [ Outline30 | Outline31 | Outline32 | Outline33 Device | Outline34 | Outline35 | Outline36 ]
++down late [ | | | Outline30 | | | ] -> [ Outline00 | Outline10 | Outline20 | Outline30 | Outline40 | Outline50 | Outline60 ]
++down late [ | | | Outline31 | | | ] -> [ Outline01 | Outline11 | Outline21 | Outline31 | Outline41 | Outline51 | Outline61 ]
++down late [ | | | Outline32 | | | ] -> [ Outline02 | Outline12 | Outline22 | Outline32 | Outline42 | Outline52 | Outline62 ]
++down late [ | | | Outline33 | | | ] -> [ Outline03 | Outline13 | Outline23 | Outline33 | Outline43 | Outline53 | Outline63 ]
++down late [ | | | Outline34 | | | ] -> [ Outline04 | Outline14 | Outline24 | Outline34 | Outline44 | Outline54 | Outline64 ]
++down late [ | | | Outline35 | | | ] -> [ Outline05 | Outline15 | Outline25 | Outline35 | Outline45 | Outline55 | Outline65 ]
++down late [ | | | Outline36 | | | ] -> [ Outline06 | Outline16 | Outline26 | Outline36 | Outline46 | Outline56 | Outline66 ]
+
+( Activating and deactivating logic )
+late [ Activating ] [ Player Outline ] -> [ Activating ] [ Player PlayerGhost Outline ]
+late [ Activating ] [ Crate1 Outline ] -> [ Activating ] [ Crate1 Crate1Ghost Outline ]
+late [ Activating ] [ Crate2 Outline ] -> [ Activating ] [ Crate2 Crate2Ghost Outline ]
+late [ Activating ] [ Crate3 Outline ] -> [ Activating ] [ Crate3 Crate3Ghost Outline ]
+
+late [ Activating ] -> []
+
+( Can't deactivate if there is a ghost on top of a wall )
+late [ Deactivating ] [ DeviceInactive ] [ Ghost Wall ] -> [] [ DeviceActive ] [ Ghost Wall Bang ] sfx2
+
+( Deactivate edge cases where the ghost is directly on top of the item )
+late [ Deactivating ] [ PlayerGhost Player ] -> [ Deactivating ] [ Player ]
+late [ Deactivating ] [ Crate1Ghost Crate1 ] -> [ Deactivating ] [ Crate1 ]
+late [ Deactivating ] [ Crate2Ghost Crate2 ] -> [ Deactivating ] [ Crate2 ]
+late [ Deactivating ] [ Crate3Ghost Crate3 ] -> [ Deactivating ] [ Crate3 ]
+( Cases where it's not )
+late [ Deactivating ] [ PlayerGhost ] [ Player ] -> [ Deactivating ] [ Player ] []
+late [ Deactivating ] [ Crate1Ghost ] [ Crate1 ] -> [ Deactivating ] [ Crate1 ] []
+late [ Deactivating ] [ Crate1Ghost ] [ PitCrate1 ] -> [ Deactivating ] [ Crate1 ] [ Pit ]
+late [ Deactivating ] [ Crate2Ghost ] [ Crate2 ] -> [ Deactivating ] [ Crate2 ] []
+late [ Deactivating ] [ Crate2Ghost ] [ PitCrate2 ] -> [ Deactivating ] [ Crate2 ] [ Pit ]
+late [ Deactivating ] [ Crate3Ghost ] [ Crate3 ] -> [ Deactivating ] [ Crate3 ] []
+late [ Deactivating ] [ Crate3Ghost ] [ PitCrate3 ] -> [ Deactivating ] [ Crate3 ] [ Pit ]
+
+late [ Deactivating ] -> []
+
+late [ Player Pit ] -> [ Pit ] sfx3
+late [ Crate1 Pit ] -> [ PitCrate1 ] sfx3
+late [ Crate2 Pit ] -> [ PitCrate2 ] sfx3
+late [ Crate3 Pit ] -> [ PitCrate3 ] sfx3
+
+late [ Player CrumblePit ] -> [ Player Pit ] sfx4
+late [ Crate CrumblePit ] -> [ Crate Pit ] sfx4
+
+==============
+WINCONDITIONS
+==============
+
+All PlayerTarget on Player
+All CrateTarget on Crate
+
+=======     
+LEVELS
+=======
+
+%%%##########%%%%%###
+%%%%%#########%%%%%%%
+#%%%########%%%%%%%%#
+##%%-+-+-%%%%%-...%%#
+##%%%..-+-%%%-.p..%%#
+###%.t...+%%%+....%%#
+###......%%%+.....%##
+###.2.....-%...1..%##
+#%%.......%%%.....%##
+%%%.......-.%%%%%%%##
+%%%%+-+-+-+.....%%%##
+%%%%%%-+-+.......%%%#
+#%%%%%......o....%###
+#%%%%.........%%%%###
+##%%%%%%%-+-+-+-#####
+###%%###%%%%-+-+#####
+#####################
+
+message Press X to toggle the device
+
+####%%###%%%#########
+#%%%%%%%%%%%%%#######
+#%%%%%%%%%%##########
+#%%%%%-.%%%%....#####
+###-+-...%%.......##%
+###...p...%...t...#%#
+###.......%.......#%%
+###....1..%%.....%%%%
+###........%%%%%%%%%%
+###.............%%%%#
+###......x.......#%%%
+###%.............#%##
+##%%%..........-+####
+%%%%%%%#.##...-+#####
+#%%%%%%##############
+#%%%%%############%%%
+#################%%%%
+
+####%###%%%%%%##%%###
+##%%%%##%%%%###%%%%%#
+#%%%%%###%%%##%%%%%%%
+%%%%%%+..%.......%%%%
+%%%%-+-...1#.....#%##
+#%%%.....###......###
+#%%%......#..p....###
+#%%.......#.......###
+#%%.......#.......###
+#%%...t...#...t...###
+#%%-......#.......###
+##%+-...-+%%....x-###
+##%%%-+-+..%...+-+%##
+##%%%%.2...%...-%%%%%
+####%%.....%%##%%%%%%
+####%%%%%%%%%%%%%%%%%
+#######%%%%%%%#####%%
+
+###########%%%%%%%%%%
+###########%%%%%%%%%%
+#%%%#########%%%%%%##
+#%%.............+-%##
+###....x.....t.+-+%##
+###..p.........-+%%##
+###....%%......+-%%##
+###...%%%%.....%%%%%#
+###...%%%%%%%%%%%%%%%
+%%%...%%%.......%%%%%
+%%%%-+%%.........##%#
+#%%%%-%%.....o...####
+#%%+-+-....1......###
+###-+-+-+.....#######
+######%%#############
+######%%%############
+#####%%%%############
+
+######%###%%%#%%#####
+#####%%%####%%%%%####
+####%%%%###########%#
+####%%%%......#####%#
+###%%%.........###%%#
+###%%%...x......##%%#
+###%%%..........##%%%
+##%%%........%%.%%%%%
+##%%%...t...%%%%%%%%%
+#%%%%......%%%%-%%%%%
+#%%%+.....%%%....%%%%
+#%%+-+-+-+%%...1..#%%
+#%%-+-+-+-+-..p.o.##%
+#%%%%###%%%%#.....###
+##%%%%##%%%###...####
+####%####%###########
+#####################
+
+message Harder version of level 3!
+
+####%####%%%%%%%%%%##
+##%%%####%%%%%%%%%%%#
+#%%%%%####%%%%%%%%%%%
+%%%%%%%#####%+-+-%%%%
+%%%%-+-..###....+%%##
+#%%%#.....#......%###
+#%%%.....1#..p....###
+#%%..t....#.......#%#
+#%%.......#.......#%#
+#%%.......#...t...%%#
+#%%-+-+-+-##......%%#
+##%+-.....##....x-%%#
+##%%%.....+%....-+%%#
+##%%%%.2..-%....%%%%%
+####%%....#####%%%%%%
+#####%%%%%%%%%%%%%%%%
+#######%%%%%%%#####%%
+
+message Yuo are supar gamer ! !!

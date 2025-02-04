@@ -1,0 +1,477 @@
+(
+Created for Ludum Dare 33
+Casey Brant http://www.twitter.com/basecase
+Josh Hertel http://www.twitter.com/herteljt
+
+Ocean Waves Recorded by Mike Koenig, License: Attribution 3.0, http://soundbible.com/1935-Ocean-Waves.html
+)
+
+title Delicious Ships!
+author Josh & Casey
+homepage uhacc.club
+require_player_movement
+youtube cmiX1FrL_88
+(verbose_logging)
+run_rules_on_level_start
+(realtime_interval 1)
+noaction
+
+
+========
+OBJECTS
+========
+
+Background
+#1072da #177eee
+00001
+00100
+00000
+00010
+01000
+
+Sidebar
+Black
+
+Player
+Pink Purple
+.....
+.000.
+00000
+01010
+.....
+
+PlayerDead
+Pink Purple
+.0..1
+.00..
+.....
+00..0
+.1.0.
+
+GoalShip
+Black Red Gray DarkGrey
+33333
+32233
+30000
+31113
+33333
+
+EmptyGoal
+White Black
+00000
+01110
+01110
+01110
+00000
+
+CompletedGoal
+White Green
+00000
+01110
+01110
+01110
+00000
+
+CargoShip
+Black Red Gray
+.....
+.22..
+.0000
+.111.
+.....
+
+PirateShip
+DarkBrown Brown Black
+..12.
+..1..
+..1..
+00000
+.0000
+
+TentacleCargoShip
+Black Red Gray Purple Pink
+...3.
+.2343
+.0300
+.131.
+.33..
+
+TentaclePirateShip
+DarkBrown Brown Black Purple Pink
+.312.
+.433.
+..1.3
+00034
+.0330
+
+CargoShipwreck
+Black Red Gray
+...1.
+02.2.
+.1..0
+...0.
+0.1..
+
+PirateShipwreck
+DarkBrown Brown Black
+..0..
+1...2
+...10
+00...
+..0..
+
+Island
+Yellow #F9E889
+00001
+00100
+10000
+00100
+00000
+
+Tree
+Brown #05ff1a
+.....
+.11..
+.111.
+..0..
+.000.
+
+IslandRubble
+Yellow #8a8a8a #a3a3a3 #cfc930
+00001
+20030
+00200
+30000
+02010
+
+
+Whirlpool1
+#0022ff #00e5ff DarkBlue
+00000
+02110
+01210
+01120
+00000
+
+Whirlpool2
+#0022ff #00e5ff DarkBlue
+00000
+01110
+02220
+01110
+00000
+
+Whirlpool3
+#0022ff #00e5ff DarkBlue
+00000
+01120
+01210
+02110
+00000
+
+Whirlpool4
+#0022ff #00e5ff DarkBlue
+00000
+01210
+01210
+01210
+00000
+
+temp
+white
+.....
+.....
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Sidebar
+G = GoalShip
+_ = EmptyGoal
+@ = Player
+P = PirateShip
+C = CargoShip
+Q = PirateShipwreck
+D = CargoShipwreck
+I = Island
+T = Tree and Island
+W = Whirlpool1
+R = IslandRubble
+
+Ship = CargoShip or PirateShip
+TentacleShip = TentacleCargoShip or TentaclePirateShip
+Whirlpool = Whirlpool1 or Whirlpool2 or Whirlpool3 or Whirlpool4
+
+
+=======
+SOUNDS
+=======
+
+PirateShipwreck create 29648102
+PlayerDead move 89775108
+CargoShipwreck create 46205502
+CompletedGoal create 67660100
+EndLevel 45420300
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+temp
+Player, Ship, GoalShip, CompletedGoal, EmptyGoal, TentacleShip, CargoShipwreck, PirateShipwreck, Island, PlayerDead, GoalShip, Sidebar, Whirlpool, IslandRubble
+Tree
+
+
+======
+RULES
+======
+
+late [ Player | CargoShip ] -> [ Player | TentacleCargoShip ]
+[ EmptyGoal ] [ > Player | TentacleCargoShip ] -> [ CompletedGoal ] [ > Player | ]
+[ < Player | TentacleCargoShip ] -> [ < Player | CargoShipwreck ]
+[ TentacleCargoShip | no Player ] -> [ CargoShip | ]
+
+late [ Player | PirateShip ] -> [ Player | TentaclePirateShip ]
+[ > Player | TentaclePirateShip ] -> [ > PlayerDead | ]
+[ < Player | TentaclePirateShip ] -> [ < Player | PirateShipwreck ]
+[ TentaclePirateShip | no Player ] -> [ PirateShip | ]
+[ > Player | PirateShipwreck ] -> [ > Player | > PirateShipwreck ]
+
+
+(((
+(Whirlpool Animations)
+[stationary Player][Whirlpool1 no temp] -> [stationary Player][Whirlpool2 temp]
+[stationary Player][Whirlpool2 no temp] -> [stationary Player][Whirlpool3 temp]
+[stationary Player][Whirlpool3 no temp] -> [stationary Player][Whirlpool4 temp]
+[stationary Player][Whirlpool4 no temp] -> [stationary Player][Whirlpool1 temp]
+[stationary Player][Whirlpool temp] -> [stationary Player][Whirlpool]
+
+(Whirlpool as Player Moves)
+[Whirlpool1 no temp] -> [Whirlpool2 temp]
+[Whirlpool2 no temp] -> [Whirlpool3 temp]
+[Whirlpool3 no temp] -> [Whirlpool4 temp]
+[Whirlpool4 no temp] -> [Whirlpool1 temp]
+late [Whirlpool temp] -> [Whirlpool]
+
+(Whirlpool Rules)
+[ > Player | Whirlpool ] -> [ > PlayerDead | ]
+[ < Player | Whirlpool ] -> [ < Player | Whirlpool ]
+[ ^ Player | Whirlpool ] -> [ > PlayerDead | ] message You are pulled into the Whirlpool!
+[ v Player | Whirlpool ] -> [ > PlayerDead | ] message You are pulled into the Whirlpool!
+)))
+
+
+==============
+WINCONDITIONS
+==============
+
+No EmptyGoal
+
+
+=======
+LEVELS
+=======
+
+message Ah, so hungry! Those cargo ships look amazing!
+(Level 1)
+#ri......t..
+git......ir.
+_...........
+_...........
+#..@....c...
+#...........
+#...ri......
+#..cii......
+#...t.......
+#...........
+
+
+(Level 2)
+#...........
+gcirit......
+_.rit.....r.
+_.i......rr.
+_....@.i....
+#..it..iii..
+#.ii.i...ic.
+#itc.....t..
+#...........
+#...........
+
+
+(Level 3)
+#...........
+g...........
+_......tiiri
+_......iccir
+#..@.....it.
+#.....ircii.
+#.....riii..
+#ti.........
+#ii.........
+#...........
+
+(Level 4)
+#.........ii
+g....t...iri
+_...rci...i.
+_...i....ii.
+_....c..iti.
+#..it@iriiti
+#cri.c...r..
+#itc........
+#.i.......ii
+#.......iri.
+
+(Level 5)
+#iiiiirrt...
+giiitiiri...
+_iriiiiii...
+_iiic@cii...
+_.ttc.ci....
+_...........
+#...........
+#........ti.
+#.........i.
+#...........
+
+(Level 6)
+#........i..i
+g.......tic.i
+_..@..i.r..it
+_r...itii..ii
+_.i.i.iiic..i
+#.c.c.i...iii
+#.t.r.i.ic...
+#ci.r...i....
+#..tt...r....
+#...i...i....
+
+
+(Level 7)
+#rriiiii....
+giiirrriiii.
+_...ticccii.
+_....ic.ci..
+_....ic@ct..
+_....ii.cr..
+_...........
+_...........
+_...........
+_...........
+
+
+message Uh oh, those pirates look mean!
+(Level 8)
+#itrii......
+gitri...@...
+_iii........
+#iicp.......
+#iii........
+#ii.........
+#i..........
+#...........
+#......trt..
+#......rii..
+
+
+(Level 9)
+#............
+gi.......it..
+_i.p....irrii
+_i.i.@..p...i
+_c.tc...ti.i.
+_..iri.p.i...
+#.i.i.i.i....
+#ti.ici..c.ri
+#......iii.it
+#......p...i.
+
+
+(Level 10)
+
+#............
+g....tiirr...
+_.r.....ri...
+_i...@...p...
+_tti.itiiciii
+#...pi.p..t..
+#ci.p..ci....
+#.iriiiiiii..
+#....iiir....
+#.....ti.....
+
+
+(Level 11)
+
+#...ii.....p.
+gc..itc..ti..
+_...iii...i..
+_..i@..irp.p.
+_r.i...ii.i..
+_..p.p..i.ci.
+#t.i....i.ii.
+#itrpr..iii..
+#....ii......
+#..c...i.....
+
+message Surrounded!
+(Level 12)
+#.....i......
+gc..i.i..c...
+_.i...ip.....
+_.riici.riii.
+_..p.@.p.it.
+_it.rcii.ir..
+_...i....ti..
+#..ctr...it..
+#...ii.......
+#....i.......
+
+(Level 13)
+giiiiiiiiiiii
+_iqqc........
+_@..qq...qqdq
+_...pp..d.pc.
+_i..pq...iii.
+#i..qp.dqiiid
+#i..qc.i....d
+#ii.q..r..c..
+#diiiirrr..q.
+
+(Level 14)
+#c.i..@..irc.
+g..tri.ip...i
+_..i...p.iic.
+_..ppp..p..i.
+_..i.t.ii..i.
+#..i...i...r.
+#.riiriir.ii.
+#ri...tt.p.i.
+#...c.i..p.t.
+#........i...
+
+(Level 15)
+#c....i......
+g.ir..p.i....
+_ttiti.irii..
+_....p....i..
+_..piicii.it.
+_i..pc@c.p...
+_..p.iciri...
+#ii.i....ii..
+#....t.r.....
+#..c..rrr....
+
+
+message Yum! Time for a nap.
+message Created by basecase and herteljt for Ludum Dare 33
+message Thanks for playing!

@@ -1,0 +1,193 @@
+title The Trouble with Toasters
+author Edward Brown 
+homepage www.casuallabs.com
+
+========
+OBJECTS
+========
+
+
+Background  (special, automatically placed in its own layer)
+#BBBBDD #AAAACC
+11111
+11111
+11011
+11111
+11111
+
+Spawner  (Name)
+WHITE #DDDDDD(Color)
+..... (Sprite)
+..0..
+.010.
+..0..
+.....
+
+Player    (Required by game)
+#CC0000 #F9E39D #0000CC BLACK
+..1..
+00000
+1.0.1
+.222.
+33.33
+
+Toaster
+#666666 #222222 #777777 #888888
+.222.
+21012
+21012
+22222
+33333
+
+ToasterGestating
+#FF0000 #222222
+.....
+.000.
+.010.
+.000.
+.....
+
+
+Crate
+#614C18 #715C18 #513C18
+11111
+12021
+10201
+12021
+11111
+
+CrateSpawner  (Name)
+WHITE #DDDDDD(Color)
+..... (Sprite)
+..0..
+.010.
+..0..
+.....
+
+
+=======
+LEGEND
+=======
+
+Obstacle = Player or Toaster
+. = Background
+P = Player
+* = Toaster
+O = Spawner
+C = Crate
+
+=======
+SOUNDS
+=======
+
+SFX0 13215908  (player move)
+SFX1 78247108  
+SFX2 80154108  (push a toaster)
+SFX3 86561708  (spawn a toaster)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Spawner, 
+ToasterGestating
+CrateSpawner
+Player, Toaster, Crate
+
+======
+RULES
+======
+
+(play sfx when player moves)
+[ >  Player ] -> [ >  Player ] SFX0  
+
+(change a ToasterGestating into a Toaster)
+up [ ToasterGestating no Obstacle] -> [ Toaster ]
+
+(spawn a new ToasterGestating)
+up [ Spawner no Obstacle ] -> [ Spawner random ToasterGestating ] SFX3
+
+(Crate blocks ToasterGestating )
+late [ Crate ToasterGestating ] -> [ Crate ] SFX3
+
+
+
+
+
+(push a toaster)
+[ >  Player | Toaster ] -> [  >  Player | > Toaster  ] SFX2
+
+(push a crate)
+[ >  Player | Crate ] -> [  >  Player | > Crate  ] SFX2
+
+(pull a crate)
+[ < Player | Crate ] -> [ < Player | < Crate ]
+
+(match 3 toasters)
+late [ Toaster | Toaster | Toaster ] -> [ | |] SFX1
+
+
+
+==============
+WINCONDITIONS
+==============
+
+No Toaster
+
+=======
+LEVELS
+=======
+
+
+message Match 3 toasters until all gone
+
+.......
+.....*.
+.......
+...O...
+.......
+.P.....
+.......
+
+message Abstinance didn't work
+
+..*....
+.*.....
+....O..
+.......
+.......
+....P..
+.......
+
+message The Rhythm Method is a joke 
+
+......P
+.*.....
+....O..
+.C.....
+..O....
+.......
+.......
+
+message Educate your toasters early
+
+.......
+.C...*.
+.......
+*..O...
+O......
+....C..
+...P...
+
+message A crate is better than no crate
+
+.*..O..
+....O..
+O.....
+......*
+..C....
+.P.....
+.**....
+
+message Everybody wins!

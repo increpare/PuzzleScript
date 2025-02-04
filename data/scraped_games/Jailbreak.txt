@@ -1,0 +1,888 @@
+title Jailbreak
+author scorched
+homepage https://gamin.me/entries/629
+
+text_color #8ea7a7
+
+noundo
+noaction
+run_rules_on_level_start
+again_interval 0.1
+
+key_repeat_interval 0.2
+color_palette 2
+
+========
+OBJECTS
+========
+
+(Background 
+BLACK
+
+Target 
+DarkBlue    
+
+Wall 
+BROWN)
+
+Pit
+BLACK
+
+PlatformMiddle
+WHITE
+
+PlatformLone
+WHITE
+.000.
+00000
+00000
+00000
+.000.
+
+PlatformLeft
+WHITE
+.0000
+00000
+00000
+00000
+.0000
+
+PlatformRight
+WHITE
+0000.
+00000
+00000
+00000
+0000.
+
+PlatformUp
+WHITE
+.000.
+00000
+00000
+00000
+00000
+
+PlatformDown
+WHITE
+00000
+00000
+00000
+00000
+.000.
+
+PlatformUpLeft
+WHITE
+.0000
+00000
+00000
+00000
+00000
+
+PlatformUpRight
+WHITE
+0000.
+00000
+00000
+00000
+00000
+
+PlatformDownLeft
+WHITE
+00000
+00000
+00000
+00000
+.0000
+
+PlatformDownRight
+WHITE
+00000
+00000
+00000
+00000
+0000.
+
+PlayerWalk 
+Orange lightblue
+.....
+.100.
+.000.
+.0.0.
+00.00
+
+PlayerFall2
+Orange lightblue
+.....
+.100.
+.000.
+.0.0.
+00.00
+
+PlayerFall1
+Orange lightblue
+.....
+.....
+.10..
+.00..
+0000.
+
+PlayerFall0
+Orange lightblue
+.....
+.....
+.....
+.00..
+.00..
+
+PlayerFall0A
+Orange lightblue
+.....
+.....
+.....
+.....
+.....
+
+PlayerFall0B
+Orange lightblue
+.....
+.....
+.....
+.....
+.....
+
+PlayerFall0C
+Orange lightblue
+.....
+.....
+.....
+.....
+.....
+
+PlayerFall0D
+Orange lightblue
+.....
+.....
+.....
+.....
+.....
+
+PlayerFall0E
+Orange lightblue
+.....
+.....
+.....
+.....
+.....
+
+(Crate 
+Orange) 
+
+LeftArrow
+WHITE
+...0.
+..00.
+.000.
+..00.
+...0.
+
+RightArrow
+WHITE
+.0...
+.00..
+.000.
+.00..
+.0...
+
+DownArrow
+WHITE
+.....
+00000
+.000.
+..0..
+.....
+
+UpArrow
+WHITE
+.....
+..0..
+.000.
+00000
+.....
+
+SaveIcon
+Orange lightblue
+.1110
+01110
+00000
+00000
+00000
+
+SaveGame
+Orange lightblue
+.1110
+01110
+00000
+00000
+00000
+
+ExitIcon
+Orange lightblue WHITE
+.000.
+02220
+02120
+02220
+02220
+
+NextLevel
+Orange lightblue
+.000.
+0...0
+0.1.0
+0...0
+0...0
+
+Fly
+Orange lightblue
+.....
+0...0
+00.00
+.000.
+..1..
+
+DoubleTypeInit
+Orange
+.....
+0...0
+0...0
+0...0
+.....
+
+DoubleTypeNotAgain
+Orange
+.....
+0...0
+0...0
+0...0
+.....
+
+InversionIcon
+lightblue Orange
+.....
+0011.
+0011.
+0011.
+.....
+
+Inversion
+Orange lightblue
+.....
+0011.
+0011.
+0011.
+.....
+
+(...1.
+.0..1
+0...1
+0..1.
+.0...)
+
+PlayerFly
+Orange lightblue
+0...0
+00.00
+.000.
+..1..
+.....
+
+Jailbreak
+Orange lightblue
+..11.
+.111.
+..0..
+..0..
+..0..
+
+ReadyInit
+Orange
+.....
+.....
+.....
+0....
+00...
+
+ReadyMatched
+Orange
+.....
+.....
+.....
+0....
+00...
+
+ReadyUnmatched
+RED
+.....
+.....
+.....
+0....
+00...
+
+Highlight
+Orange
+00000
+00000
+00000
+00000
+00000
+
+Execution0
+lightblue
+.....
+.....
+..0..
+.....
+.....
+
+Execution1
+lightblue
+.....
+.000.
+.000.
+.000.
+.....
+
+Execution2
+lightblue
+
+Execution3
+lightblue
+
+InversionAgentFinal
+lightblue
+.....
+.000.
+.000.
+.000.
+.....
+
+InversionAgent0
+lightblue
+.....
+.000.
+.000.
+.000.
+.....
+
+InversionAgent1
+lightblue
+.....
+.000.
+.000.
+.000.
+.....
+
+InversionAgent2
+lightblue
+.....
+.000.
+.000.
+.000.
+.....
+
+InversionAgent3
+lightblue
+.....
+.000.
+.000.
+.000.
+.....
+
+JailbreakAgent
+lightblue
+.....
+.000.
+..00.
+.0.0.
+0....
+
+Text_L
+#8ea7a7
+..0..
+.00..
+..0..
+..0.0
+..00.
+
+Text_V
+#8ea7a7
+.....
+.0.0.
+.0.00
+.0.0.
+..0..
+
+Text_Zero
+#8ea7a7
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+Text_One
+#8ea7a7
+..0..
+.00..
+..0..
+..0..
+..0..
+
+Text_Two
+#8ea7a7
+.000.
+0..0.
+..0..
+.0...
+0000.
+
+Text_Three
+#8ea7a7
+.000.
+0..0.
+..0..
+0..0.
+.000.
+
+Text_Four
+#8ea7a7
+..0..
+.00..
+0.0..
+0000.
+..0..
+
+Text_Five
+#8ea7a7
+0000.
+0....
+000..
+...0.
+0000.
+
+Text_Six
+#8ea7a7
+..00.
+.0...
+000..
+0..0.
+.00..
+
+Jail
+ORANGE
+00000
+0...0
+0...0
+0...0
+00000
+
+JailLevel
+TRANSPARENT
+
+MusicPlayer
+TRANSPARENT
+
+Note1
+TRANSPARENT
+
+Note2
+TRANSPARENT
+
+Note3
+TRANSPARENT
+
+NotePause
+TRANSPARENT
+
+MusicTimer0
+TRANSPARENT
+
+MusicTimer1
+TRANSPARENT
+
+MusicTimer2
+TRANSPARENT
+
+MusicTimer3
+TRANSPARENT
+
+MusicTimer4
+TRANSPARENT
+
+MusicTimer5
+TRANSPARENT
+
+=======
+LEGEND
+=======
+
+# = Jail and JailLevel
+M = MusicPlayer and Jail
+t = Note1
+y = Note2
+h = Note3
+r = NotePause
+
+MusicTimer = MusicTimer0 or MusicTimer1 or MusicTimer2 or MusicTimer3 or MusicTimer4 or MusicTimer5
+Note = Note1 or Note2 or NotePause or Note3
+
+. = Pit
+o = PlatformMiddle
+
+Platform = PlatformMiddle or PlatformLeft or PlatformRight or PlatformUp or PlatformDown or PlatformUpLeft or PlatformUpRight or PlatformDownLeft or PlatformDownRight or PlatformLone
+
+P = PlayerWalk and PlatformMiddle
+
+PlayerFall = PlayerFall2 or PlayerFall1 or PlayerFall0 or PlayerFall0A or PlayerFall0B or PlayerFall0C or PlayerFall0D or PlayerFall0E
+Player = PlayerFly or PlayerWalk
+
+( directions for recipe )
+a = LeftArrow
+d = RightArrow
+w = UpArrow
+s = DownArrow
+
+NotRightArrow = LeftArrow or UpArrow or DownArrow
+NotLeftArrow = RightArrow or UpArrow or DownArrow
+NotDownArrow = RightArrow or UpArrow or LeftArrow
+NotUpArrow = RightArrow or DownArrow or LeftArrow
+
+Direction = LeftArrow or RightArrow or UpArrow or DownArrow
+Ready = ReadyInit or ReadyMatched or ReadyUnmatched
+
+Execution = Execution3 or Execution2 or Execution1 or Execution0
+
+( programs )
+N = NextLevel
+F = Fly
+G = SaveGame
+(X = DoubleTypeInit)
+X = Inversion
+J = Jailbreak
+
+InversionAgent = InversionAgent0 or InversionAgent1 or InversionAgent2 or InversionAgent3 or InversionAgentFinal
+InversionTarget = Pit or Platform
+
+JailbreakTarget = InversionTarget 
+(or Text_Zero)
+
+DoubleType = DoubleTypeNotAgain or DoubleTypeInit
+Program = NextLevel or Fly or SaveGame or DoubleType or Inversion or Jailbreak
+
+( text )
+l = Text_L
+u = Text_V ( v is a keyword, so lul instead of lvl )
+0 = Text_Zero
+1 = Text_One
+2 = Text_Two
+3 = Text_Three
+4 = Text_Four
+5 = Text_Five
+6 = Text_Six
+
+Text = Text_L or Text_V or Text_Zero or Text_One or Text_Two or Text_Three or Text_Four or Text_Five or Text_Six
+
+(* = Crate
+@ = Crate and Target
+O = Target)
+
+Background = Pit
+
+=======
+SOUNDS
+=======
+
+sfx0 60274706
+sfx1 22811906
+sfx2 25332301
+
+(Jail Destroy 60274706)
+
+================
+COLLISIONLAYERS
+================
+
+Pit, Highlight, Execution, Ready, ReadyMatched, Platform, Jail
+Text
+Direction, Program
+InversionAgent, JailbreakAgent, JailLevel, Note, MusicPlayer, MusicTimer
+Player, PlayerFall
+InversionIcon, SaveIcon, ExitIcon
+
+======
+RULES     
+======     
+
+( further in sequence )
+[ RIGHT Player ] [ RightArrow Ready ] -> [ RIGHT Player ] [ RightArrow Highlight ] 
+[ LEFT Player ] [ LeftArrow Ready ] -> [ LEFT Player ] [ LeftArrow Highlight ] 
+[ UP Player ] [ UpArrow Ready ] -> [ UP Player ] [ UpArrow Highlight ] 
+[ DOWN Player ] [ DownArrow Ready ] -> [ DOWN Player ] [ DownArrow Highlight ] 
+
+RIGHT [ Highlight | Program ] -> [ Highlight | Program Execution3 ] sfx2
+
+[ Ready ] -> [ ReadyUnmatched ]
+
+LEFT [ Direction no Highlight no Execution no ReadyUnmatched | Highlight ] -> [ Direction ReadyMatched | Highlight ]
+
+(LEFT [ Execution ] [ Highlight ] -> [ Execution ] [ no Highlight ])
+LEFT [ Execution | Highlight ] -> [ Execution | ReadyUnmatched ]
+LEFT [ ReadyUnmatched | Highlight ] -> [ | ReadyUnmatched ]
+
+LEFT [ Direction no Highlight no Execution | no Direction ] -> [ Direction ReadyInit | ]
+
+
+([ DoubleTypeNotAgain Execution ] -> [ DoubleTypeInit Execution ]
+[ DoubleTypeInit Execution ] -> again
+[ DoubleTypeInit Execution ] -> [ DoubleTypeNotAgain Execution ])
+
+
+late [ Fly Execution0 ] [ PlayerFly ] -> [ Fly Execution0 ] [ PlayerWalk ] sfx0
+
+late [ Execution0 ] -> [ ]
+late [ Execution1 ] -> [ Execution0 ]
+late [ Execution2 ] -> [ Execution1 ]
+late [ Execution3 ] -> [ Execution2 ]
+
+(late [ InversionAgent0 ] -> [ ]
+late [ InversionAgent1 ] -> [ InversionAgent0 ]
+late [ InversionAgent2 ] -> [ InversionAgent1 ]
+late [ InversionAgent3 ] -> [ InversionAgent2 ])
+
+(late [ NextLevel Execution ] -> win)
+
+late [ SaveIcon ] -> [ ]
+
+late [ SaveGame Execution ] [ Player Platform ] -> [ SaveGame Execution ] [ Player Platform SaveIcon ]
+late [ SaveIcon ] -> checkpoint sfx2
+
+late [ SaveGame Execution ] -> [ SaveGame ]
+
+(late [ Program Execution ] [ No JailLevel ] -> sfx2)
+
+late [ NextLevel Execution ] [ Player ] -> [ NextLevel Execution ] [ Player ExitIcon ]
+
+
+late [ InversionIcon ] -> [ ]
+
+late [ Inversion Execution ] [ Player ] -> [ Inversion ] [ Player InversionAgent3 ]
+late UP [ InversionAgent3 | InversionTarget ] -> [ InversionAgent3 | InversionAgent2 InversionTarget ]
+late DOWN [ InversionAgent3 | InversionTarget ] -> [ InversionAgent1 | InversionAgent2 InversionTarget ]
+late UP [ InversionAgent2 | InversionTarget ] -> [ InversionAgent2 | InversionAgent1 InversionTarget ]
+late DOWN [ InversionAgent2 | InversionTarget ] -> [ InversionAgent1 | InversionAgent1 InversionTarget ]
+
+late LEFT [ InversionAgent1 | InversionTarget ] -> [ InversionAgent1 | InversionAgent0 InversionTarget ]
+late RIGHT [ InversionAgent1 | InversionTarget ] -> [ InversionAgentFinal | InversionAgent0 InversionTarget ]
+late LEFT [ InversionAgent0 | InversionTarget ] -> [ InversionAgent0 | InversionAgentFinal InversionTarget ]
+late RIGHT [ InversionAgent0 | InversionTarget ] -> [ InversionAgentFinal | InversionAgentFinal InversionTarget ]
+
+late [ InversionAgentFinal Pit no Player ] -> [ InversionIcon PlatformMiddle ]
+late [ InversionAgentFinal Platform no Player ] -> [ InversionIcon Pit ]
+
+late [ InversionAgent ] -> [ ]
+
+late [ Jailbreak Execution ] [ Player no Platform ] -> [ Jailbreak ] [ Player ]
+late [ Jailbreak Execution ] [ Player ] -> [ Jailbreak ] [ Player JailbreakAgent ]
+
+late RIGHT [ JailbreakAgent | JailbreakTarget ] -> [ | JailbreakAgent PlatformMiddle ]
++ late UP [ JailbreakAgent | JailbreakTarget ] -> [ | JailbreakAgent PlatformMiddle ]
+
+(late [ JailbreakAgent ] -> [ ])
+
+
+(late [ DoubleTypeInit Execution ] -> [ DoubleTypeNotAgain Execution ])
+
+late [ Fly Execution ] [ Player ] -> [ Fly Execution ] [ PlayerFly ]
+
+late [ PlayerWalk No Platform ] -> [ PlayerFall2 ] sfx1
+
+late [ JailbreakAgent Text_Zero ] -> [ JailbreakAgent ]
+late [ Player JailbreakAgent ] -> win
+
+random [ Jail ] -> [ Pit ] again
+([ Jail ] -> again)
+
+late [ JailLevel ] [ NextLevel ] -> [ JailLevel ] [ NextLevel Execution3 ]
+
+[ MusicPlayer | Note1 ] -> [ | MusicTimer2 ] sfx0
+[ MusicPlayer | Note2 ] -> [ | MusicTimer2 ] sfx1
+[ MusicPlayer | Note3 ] -> [ | MusicTimer2 ] sfx2
+[ MusicPlayer | NotePause ] -> [ | MusicTimer2 ]
+
+late [ PlayerFall0E ] -> restart
+late [ PlayerFall0D ] -> [ PlayerFall0E ] again
+late [ PlayerFall0C ] -> [ PlayerFall0D ] again
+late [ PlayerFall0B ] -> [ PlayerFall0C ] again
+late [ PlayerFall0A ] -> [ PlayerFall0B ] again
+late [ PlayerFall0 ] -> [ PlayerFall0A ] again
+late [ PlayerFall1 ] -> [ PlayerFall0 ] again
+late [ PlayerFall2 ] -> [ PlayerFall1 ] again
+
+late [ MusicTimer0 ] -> [ MusicPlayer ]
+late [ MusicTimer1 ] -> [ MusicTimer0 ]
+late [ MusicTimer2 ] -> [ MusicTimer1 ]
+late [ MusicTimer3 ] -> [ MusicTimer2 ]
+late [ MusicTimer4 ] -> [ MusicTimer3 ]
+late [ MusicTimer5 ] -> [ MusicTimer4 ]
+
+==============
+WINCONDITIONS
+==============
+
+Some NextLevel on Execution
+No Jail on JailLevel
+
+=======     
+LEVELS
+=======
+
+......lul.4
+...........
+...........
+...........
+...........
+....ooo....
+....Poo....
+....ooo....
+...........
+...........
+.ddwwaasdN.
+...........
+
+......lul.3
+...........
+...........
+...........
+...........
+...ooo.o...
+...ooo.o...
+...ooo.o...
+......oo...
+......o....
+.....Po....
+...........
+...........
+.wwwwF.....
+.ddwwaasdN.
+...........
+
+............lul.2
+.................
+.................
+.................
+.................
+..oo.ooo.........
+..oo.o....o......
+..oo.o....o..o...
+...o.o....o......
+...o......o......
+...o..ooo........
+...o..ooo....o...
+...o..ooo....o...
+...o.........o...
+...o.........P...
+.................
+.................
+....aassG........
+....wwwwF........
+....ddwwaasdN....
+.................
+
+.........lul.1
+..............
+..............
+..............
+..............
+..............
+......ooo.....
+.....o..o.....
+.....o..o.....
+.ooooo........
+......o.o.....
+......ooo.....
+.....o..oo....
+......oPo.o...
+.....o...o....
+......ooo.....
+..............
+..............
+..aaaaddddX...
+..aassG.......
+..wwwwF.......
+..ddwwaasdN...
+..............
+
+.......................lul.0
+............................
+............................
+..................oo........
+..................o.........
+.............o.oooo.oo......
+..............o..o..ooo.....
+........ooooo.oo....o.o.....
+.......o.....oooo..o........
+.......o.....o.oo..o........
+.......o.o....ooo..o........
+.......P.oo...o.o..o........
+.......o..ooooo.............
+.......o........o...........
+............o..o............
+..............o.............
+............................
+...........dwdwdwdwJ........
+...........aaaaddddX........
+...........aassG............
+...........wwwwF............
+...........ddwwaasdN........
+............................
+
+#############
+Mtrrtrryrryrr
+############t
+htrryrryrrtrr
+r############
+thryrryhhthrt
+######N#####h
+ryyryyhhyrryr
+h############
+#############
+#############
+#############
+#############
+
+
+MESSAGE Congratulations! You've made it out of the jail!       
+MESSAGE Thank you for playing Jailbreak! The game was originally created for KOD jam on Gamin.me
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

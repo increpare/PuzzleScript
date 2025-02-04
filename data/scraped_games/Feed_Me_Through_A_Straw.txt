@@ -1,0 +1,1225 @@
+title Feed Me Through A Straw
+author drusilla
+homepage www.puzzlescript.net
+color_palette 3
+background_color darkred
+text_color darkgrey
+norepeat_action
+
+
+( -- Rules --
+
+Elf1 can only push
+
+Elf2 can only pull
+
+Elf3 can only rotate straws using x
+
+Elf4 can only "destroy" one pseudorandom object orthogonally oriented using x, turning it into a StrawElf, an object that can fill straws in any direction
+
+All elves can use x to 'sacrifice' themselves next to a filled straw, i.e. objects in the Straw2 class
+
+
+The straws are filled by turns; arrow keys will still progress them while in the StrawElf state
+
+Tongues only kill you if you walk into them
+
+All elves have to die before the level restarts
+
+♥ drusilla
+
+)
+
+========
+OBJECTS
+========
+
+Background
+LightGreen Pink 
+00100
+00000
+00010
+01000
+00000
+
+
+Wall
+Green Red DarkRed Yellow
+..112
+..132
+0.122
+.0...
+0.0..
+
+Fence
+White
+.0.0.
+00000
+.0.0.
+00000
+.0.0.
+
+Elf1
+DarkBlue Red Black
+.....
+..11.
+.222.
+.0.0.
+.....
+
+Elf2
+Yellow Purple Black
+.....
+.00..
+.222.
+.1.1.
+.....
+
+Elf3
+DarkGreen Black DarkBrown
+.....
+.0.0.
+.111.
+.2.2.
+.....
+
+Elf4
+Black DarkRed
+.....
+.0.0.
+.010.
+.0.0.
+.....
+
+(Hazards)
+
+Tongue
+Pink Grey 
+000..
+01000
+.0100
+.0000
+00000
+
+Tongue2
+Pink Grey 
+..000
+00010
+0010.
+0000.
+00000
+
+(Straws)
+
+StrawLR
+White Red
+.....
+01010
+.....
+10101
+.....
+
+StrawUD
+White Red
+.1.0.
+.0.1.
+.1.0.
+.0.1.
+.1.0.
+
+StrawRU
+White Red
+.1.0.
+10.1.
+...0.
+0101.
+.....
+
+StrawRD
+White Red
+.....
+1010.
+...1.
+01.0.
+.0.1.
+
+
+StrawLD
+White Red
+.....
+.1010
+.0...
+.1.01
+.0.1.
+
+StrawLU
+White Red
+.1.0.
+.0.10
+.1...
+.0101
+.....
+
+(Straws, filled)
+
+StrawLR2
+White Red Brown
+.....
+01010
+22222
+10101
+.....
+
+StrawUD2
+White Red Brown
+.021.
+.120.
+.021.
+.120.
+.021.
+
+StrawRU2
+White Red Brown
+.120.
+1021.
+2220.
+0101.
+.....
+
+StrawRD2
+White Red Brown
+.....
+1010.
+2221.
+0120.
+.021.
+
+
+StrawLD2
+White Red Brown
+.....
+.1010
+.0222
+.1201
+.021.
+
+StrawLU2
+White Red Brown
+.120.
+.0210
+.1222
+.0101
+.....
+
+StrawElf
+DarkRed Red Brown
+22001
+0112.
+01220
+11022
+.2120
+
+StrawElf2
+DarkRed Red Brown
+2200.
+.1120
+0201.
+11022
+0..20
+
+StrawElf3
+DarkRed Red Brown
+021.2
+.0021
+.2102
+12010
+1120.
+
+
+
+NoPlayerDetected
+Black 
+.....
+.....
+.....
+.....
+.....
+
+( Coffee Pots. Take up too much space on the counter  )
+
+( CoffeePotA1
+Black Grey LightGrey Brown LightBrown
+.....
+.....
+.....
+....1
+...12
+
+
+CoffeePotA2
+Black Grey LightGrey Brown LightBrown
+..011
+.0.14
+.0.10
+.0.14
+..013
+
+CoffeePotA3
+Black Grey LightGrey Brown LightBrown
+...13
+...13
+...11
+...1.
+.....
+
+CoffeePotB1
+Black Grey LightGrey Brown LightBrown DarkGreen
+.....
+..0..
+10001
+22022
+22222
+
+CoffeePotB2
+Black Grey LightGrey Brown LightBrown
+22222
+11111
+44444
+00000
+44424
+
+CoffeePotB3
+Black Grey LightGrey Brown LightBrown
+33323
+33323
+33321
+11111
+...11
+
+CoffeePotC1
+Black Grey LightGrey Brown LightBrown
+.....
+.....
+.....
+1....
+21...
+
+CoffeePotC2
+Black Grey LightGrey Brown LightBrown
+111..
+41...
+01...
+41...
+31...
+
+CoffeePotC3
+Black Grey LightGrey Brown LightBrown
+31...
+31...
+1....
+.....
+.....
+
+CoffeeCup
+White Brown LightBrown
+01120
+01120
+01120
+01120
+.000.
+
+CoffeePotA1
+Black LightBlue Brown White
+.000.
+0..00
+0.011
+.0111
+02222
+
+CoffeePotA2
+Black LightBlue Brown White
+02222
+02222
+02222
+.0222
+..000
+
+CoffeePotB1
+Black LightBlue Brown White
+.0000
+0000.
+110..
+1110.
+22220
+
+CoffeePotB2
+Black LightBlue Brown White
+22320
+22320
+23220
+2220.
+000..)
+
+(More food)
+
+CoffeeCup
+White Brown LightBrown
+01120
+01120
+01120
+01120
+.000.
+
+Cupcake
+Orange Yellow DarkRed Brown White
+..2..
+.444.
+33333
+01010
+.010.
+
+Avocado
+Green DarkGreen Brown
+..1..
+.101.
+10201
+10201
+.111.
+
+Egg
+White Yellow Red
+.000.
+01110
+01210
+01110
+.000.
+
+Peach (?)
+Red DarkRed
+.1.1.
+10101
+10001
+.101.
+..1..
+
+Mushroom
+Red White
+.000.
+01000
+00010
+.000.
+..1..
+
+Mushroom1
+Red White
+.000.
+00100
+01000
+.000.
+...1.
+
+Mushroom2 
+Red White
+.001.
+00000
+00100
+.000.
+.1...
+
+(Mouth)
+
+LipsA1
+Black Red White
+..00.
+.0110
+01111
+00000
+02022
+
+LipsA2
+Black Red White
+00000
+02022
+00000
+.0111
+..000
+
+LipsB1
+Black Red White
+.00..
+0110.
+11110
+00000
+22220
+
+LipsB2
+Black Red White
+02020
+22220
+00000
+1110.
+000..
+
+=======
+LEGEND
+=======
+
+. = Background 
+# = Wall
+1 = Elf1
+2 = Elf2
+B = Elf3
+C = Elf4
+
+
+@ = StrawRU
+$ = StrawRD
+% = StrawLU
+& = StrawLD
+- = StrawLR
++ = StrawUD
+
+3 = StrawRU2
+4 = StrawRD2
+5 = StrawLU2
+6 = StrawLD2
+7 = StrawLR2
+8 = StrawUD2
+9 = StrawElf
+
+ 
+! = Tongue
+* = Fence
+
+
+E = LipsA1
+F = LipsA2
+G = LipsB1
+H = LipsB2
+
+A = CoffeeCup
+I = Cupcake
+J = Avocado
+K = Egg
+L = Peach
+M = Mushroom
+
+
+(Other coffee options. 
+
+French Press!
+
+a = CoffeePotA1
+b = CoffeePotA2
+c = CoffeePotA3
+d = CoffeePotB1
+e = CoffeePotB2
+f = CoffeePotB3
+g = CoffeePotC1
+h = CoffeePotC2
+i = CoffeePotC3
+j = CoffeeCup
+
+Drip
+
+A = CoffeePotA1
+B = CoffeePotA2
+C = CoffeePotB1
+D = CoffeePotB2) 
+
+Player = Elf1 or Elf2 or Elf3 or Elf4 or StrawElf or StrawElf2 or StrawElf3
+
+Lips = LipsA1 or LipsA2 or LipsB1 or LipsB2 
+
+Straw1 = StrawRU or StrawRD or StrawLU or StrawLD or StrawLR or StrawUD
+Straw2 = StrawRU2 or StrawRD2 or StrawLU2 or StrawLD2 or StrawLR2 or StrawUD2 or StrawElf or StrawElf2 or StrawElf3
+
+Straw = Straw1 or Straw2
+
+StrawElfs = StrawElf or StrawElf2 or StrawElf3
+
+
+Food = CoffeeCup or Cupcake or Avocado or Egg or Peach or Mushroom
+
+Tongues = Tongue or Tongue2
+
+Everything = Player or Straw or Wall or Fence or Tongues
+
+Mushrooms = Mushroom or Mushroom1 or Mushroom2
+
+=======
+SOUNDS
+=======
+Player Move 99161708
+Player CantMove 125738
+EndLevel 78220108
+(EndLevel 57702908)
+TitleScreen 20161908
+SFX0 18987702 (Straw action)
+SFX1 61651109 (Sacrifice)
+SFX2 20895308 (Rotate straw)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, Player, Straw, Food, Fence
+Wall, Player, Food, Fence, Lips
+Player, Straw, Wall, Fence, Food, Mushrooms
+Tongues
+NoPlayerDetected
+
+
+======
+RULES
+======
+
+(Restart after death)
+
+random [] -> [NoPlayerDetected] 
+[Player] [NoPlayerDetected] -> [Player] [] 
+[NoPlayerDetected] -> restart 
+
+(Dead, immobile elves)
+
+[Action Player | Straw2 ] -> [ StrawElf | Straw2 ] SFX1
+
+[orthogonal StrawElf] -> [ StrawElf ]
+
+(Push those straws around!)
+[ >  Elf1 | Straw1 ] -> [  >  Elf1 | > Straw1 ]
+
+(Or pull!)
+
+[ < Elf2 | Straw1 ] -> [ < Elf2 | < Straw1 ]
+
+(Rotate straw)
+
+[ Action Elf3 | StrawUD ] -> [ Elf3 | StrawLR ] SFX2
+[ Action Elf3 | StrawLR ] -> [ Elf3 | StrawUD ] SFX2
+[ Action Elf3 | StrawRU ] -> [ Elf3 | StrawLU ] SFX2
+[ Action Elf3 | StrawLU ] -> [ Elf3 | StrawLD ] SFX2
+[ Action Elf3 | StrawLD ] -> [ Elf3 | StrawRD ] SFX2
+[ Action Elf3 | StrawRD ] -> [ Elf3 | StrawRU ] SFX2
+
+(Destroy objects)
+
+[ Action Elf4 | Everything ] -> [ StrawElf | StrawElf ] SFX1
+
+(Fill straws. There's got to be a better way.)
+
+late up    [ Food | StrawUD ] -> [ Food | StrawUD2 ] SFX0
+late down  [ Food | StrawUD ] -> [ Food | StrawUD2 ] SFX0
+late left  [ Food | StrawLR ] -> [ Food | StrawLR2 ] SFX0 
+late right [ Food | StrawLR ] -> [ Food | StrawLR2 ] SFX0
+late right [ Food | StrawRU ] -> [ Food | StrawRU2 ] SFX0
+late down  [ Food | StrawRU ] -> [ Food | StrawRU2 ] SFX0
+late left  [ Food | StrawLU ] -> [ Food | StrawLU2 ] SFX0
+late down  [ Food | StrawLU ] -> [ Food | StrawLU2 ] SFX0
+late left  [ Food | StrawLD ] -> [ Food | StrawLD2 ] SFX0
+late up    [ Food | StrawLD ] -> [ Food | StrawLD2 ] SFX0
+late right [ Food | StrawRD ] -> [ Food | StrawRD2 ] SFX0
+late up    [ Food | StrawRD ] -> [ Food | StrawRD2 ] SFX0
+
+(StrawUD)
+
+late up   [ StrawUD2 | StrawUD ] -> [ StrawUD2 | StrawUD2 ] SFX0
+late down [ StrawUD2 | StrawUD ] -> [ StrawUD2 | StrawUD2 ] SFX0
+late down [ StrawUD2 | StrawRU ] -> [ StrawUD2 | StrawRU2 ] SFX0
+late down [ StrawUD2 | StrawLU ] -> [ StrawUD2 | StrawLU2 ] SFX0
+late up   [ StrawUD2 | StrawLD ] -> [ StrawUD2 | StrawLD2 ] SFX0
+late up   [ StrawUD2 | StrawRD ] -> [ StrawUD2 | StrawRD2 ] SFX0
+
+(StrawLR)
+
+late left  [ StrawLR2 | StrawLR ] -> [ StrawLR2 | StrawLR2 ] SFX0
+late right [ StrawLR2 | StrawLR ] -> [ StrawLR2 | StrawLR2 ] SFX0
+late right [ StrawLR2 | StrawRU ] -> [ StrawLR2 | StrawRU2 ] SFX0
+late left  [ StrawLR2 | StrawLU ] -> [ StrawLR2 | StrawLU2 ] SFX0
+late left  [ StrawLR2 | StrawLD ] -> [ StrawLR2 | StrawLD2 ] SFX0
+late right [ StrawLR2 | StrawRD ] -> [ StrawLR2 | StrawRD2 ] SFX0
+
+(StrawRU)
+
+late up   [ StrawRU2 | StrawUD ] -> [ StrawRU2 | StrawUD2 ] SFX0
+late left [ StrawRU2 | StrawLR ] -> [ StrawRU2 | StrawLR2 ] SFX0
+late left [ StrawRU2 | StrawLU ] -> [ StrawRU2 | StrawLU2 ] SFX0
+late down [ StrawRU2 | StrawLU ] -> [ StrawRU2 | StrawLU2 ] SFX0
+late left [ StrawRU2 | StrawLD ] -> [ StrawRU2 | StrawLD2 ] SFX0
+late up   [ StrawRU2 | StrawLD ] -> [ StrawRU2 | StrawLD2 ] SFX0
+late up   [ StrawRU2 | StrawRD ] -> [ StrawRU2 | StrawRD2 ] SFX0
+
+(StrawLU)
+
+late up    [ StrawLU2 | StrawUD ] -> [ StrawLU2 | StrawUD2 ] SFX0
+late right [ StrawLU2 | StrawLR ] -> [ StrawLU2 | StrawLR2 ] SFX0
+late left  [ StrawLU2 | StrawRU ] -> [ StrawLU2 | StrawRU2 ] SFX0
+late up    [ StrawLU2 | StrawLD ] -> [ StrawLU2 | StrawLD2 ] SFX0
+late up    [ StrawLU2 | StrawRD ] -> [ StrawLU2 | StrawRD2 ] SFX0
+late right [ StrawLU2 | StrawRD ] -> [ StrawLU2 | StrawRD2 ] SFX0
+
+(StrawLD)
+
+late down  [ StrawLD2 | StrawUD ] -> [ StrawLD2 | StrawUD2 ] SFX0
+late right [ StrawLD2 | StrawLR ] -> [ StrawLD2 | StrawLR2 ] SFX0
+late right [ StrawLD2 | StrawRU ] -> [ StrawLD2 | StrawRU2 ] SFX0
+late down  [ StrawLD2 | StrawRU ] -> [ StrawLD2 | StrawRU2 ] SFX0
+late down  [ StrawLD2 | StrawLU ] -> [ StrawLD2 | StrawLU2 ] SFX0
+late right [ StrawLD2 | StrawRD ] -> [ StrawLD2 | StrawRD2 ] SFX0
+
+(StarRD)
+
+late down [ StrawRD2 | StrawUD ] -> [ StrawRD2 | StrawUD2 ] SFX0
+late left [ StrawRD2 | StrawLR ] -> [ StrawRD2 | StrawLR2 ] SFX0
+late down [ StrawRD2 | StrawRU ] -> [ StrawRD2 | StrawRU2 ] SFX0
+late left [ StrawRD2 | StrawLU ] -> [ StrawRD2 | StrawLU2 ] SFX0
+late down [ StrawRD2 | StrawLU ] -> [ StrawRD2 | StrawLU2 ] SFX0
+late left [ StrawRD2 | StrawLD ] -> [ StrawRD2 | StrawLD2 ] SFX0
+
+(StrawElf)
+
+late down  [ StrawElf | StrawUD ] -> [ StrawElf | StrawUD2 ] SFX0
+late up    [ StrawElf | StrawUD ] -> [ StrawElf | StrawUD2 ] SFX0
+late left  [ StrawElf | StrawLR ] -> [ StrawElf | StrawLR2 ] SFX0
+late right [ StrawElf | StrawLR ] -> [ StrawElf | StrawLR2 ] SFX0
+late down  [ StrawElf | StrawRU ] -> [ StrawElf | StrawRU2 ] SFX0
+late right [ StrawElf | StrawRU ] -> [ StrawElf | StrawRU2 ] SFX0
+late up    [ StrawElf | StrawRD ] -> [ StrawElf | StrawRD2 ] SFX0
+late right [ StrawElf | StrawRD ] -> [ StrawElf | StrawRD2 ] SFX0
+late left  [ StrawElf | StrawLU ] -> [ StrawElf | StrawLU2 ] SFX0
+late down  [ StrawElf | StrawLU ] -> [ StrawElf | StrawLU2 ] SFX0
+late up    [ StrawElf | StrawLD ] -> [ StrawElf | StrawLD2 ] SFX0
+late left  [ StrawElf | StrawLD ] -> [ StrawElf | StrawLD2 ] SFX0
+
+
+(It kills you)
+
+[> Player | Tongues ] -> [ NoPlayerDetected | Tongues ]
+
+(Just saying 'hi'!)
+
+[ Tongues ]          -> [ action Tongues ]
+[ action Tongues ]   -> [ random Tongues ]
+
+[ StrawElfs ]        -> [ action StrawElfs ]
+[ action StrawElfs ] -> [ random StrawElfs ]
+
+[ Mushrooms ]        -> [ action Mushrooms ]
+[ action Mushrooms ] -> [ random Mushrooms ]
+
+==============
+WINCONDITIONS
+==============
+
+some lips on straw2
+
+=======
+LEVELS
+=======
+
+Message one
+
+Message Could you get my coffee?
+
+Message Bring it to my lips 
+
+######eg
+#.&--.fh
+#.+..--#
+#&@.1..#
+#+*....#
+#a######
+
+Message two
+
+Message Needs more sugar
+
+########eg
+#.&--.$*fh
+#.+.*-.-+#
+#.....%..#
+#.+*.*.*.#
+#*+*.+..@#
+#*+*..1..#
+##a#######
+
+Message three
+
+Message Feed me with your body
+
+#########eg
+#.#..*..&fh
+##.#*...+-#
+#****...+.#
+#&------..#
+#+******.1#
+#+.....*..#
+#i#########
+
+Message four
+
+Message What's this? 
+
+Message You have a little friend to help you? 
+
+Message I wonder what she can do
+
+eg######
+fh---$.#
+#....+.#
+#-.2..+#
+#.....+#
+#&---@.#
+#a######
+
+Message five
+
+Message Work it out together
+
+#########eg
+#2*..-..+fh
+#.*.&....+#
+#.......-@#
+#....+....#
+#..-..+...#
+#.&.--@.*1#
+##i########
+
+Message six
+
+Message It's good you believe in each other
+
+Message Let's have a nice egg 
+
+
+#####eg##
+#....fh+#
+#2*....+#
+#**..-.+#
+k-...@**#
+#**-...1#
+#########
+
+Message seven
+
+Message Another egg? I don't want to coddle them... 
+
+eg#########
+fh-$......#
+#..+.+..*2#
+#..-....**#
+#..%-$....#
+#....%-$..#
+#**.**.%$.#
+#.1..*..57k
+###########
+
+Message eight
+
+Message My tongues will eat anyone
+
+##########
+#........k
+#..1.!-!63
+#.!...-.8#
+#.......+#
+#.&--.--@#
+eg.@.....#
+fh########
+
+Message nine
+
+Message After all those eggs I need some roughage 
+
+eg######*!
+fh1......*
+#+..$...*#
+#.-.!j.$.#
+#+%%....@#
+#....-.2*#
+**..-....*
+!*######*!
+
+
+Message ten
+
+Message Sucking on some guacamole 
+
+#j########
+#.......1#
+#+.$..-$+#
+#+-.-.-!eg
+#..-.-.!fh
+#.%...-@+#
+#.......2#
+#j########
+
+Message eleven
+
+Message It's so close
+
+###########
+#.........#
+#.*******.#
+#.......*eg
+#.*****.*fh
+#.....*.*.#
+#****.*.*+#
+#.....*.*k#
+#.*.***.*!#
+#.*..1*..2#
+###########
+
+Message twelve
+
+Message I can taste your enzymes 
+
+###########
+#.........#
+#.!+!!!!..#
+#.......*eg
+#.!!!.!.!fh
+#.....!.!.#
+#!!!!..2!.#
+#.....!.!j#
+#.!.!!!.!*#
+#.!..1!...#
+###########
+
+Message thirteen
+
+Message I don't really care what we eat, just pick a place and I'll find something I like.
+
+#####eg#####
+#....fh....#
+#.@........#
+#!!!...!!..#
+#..!...j!.%#
+#..!k...!!!#
+#.+!!......#
+#.+.......+#
+#.....!...+#
+#1....!...2#
+############
+
+Message fourteen
+
+Message There's another one of you?
+
+Message Looks like my straw got twisted. Fix it. 
+
+!########eg
+#.......&fh
+#.!.%++-&.#
+#..$+.....#
+#..&$.****#
+#.%%$.*!.!#
+#.a.....b.#
+#.....*!.!#
+!#########!
+
+Message fifteen
+
+Message I can't get these chia seeds out of my teeth
+
+eg########
+!!......j#
+fh...%.+.#
+#....%.+.#
+#......+.#
+#....%.+.#
+#....%.+.#
+#.b..%.+.#
+#k....1..#
+##########
+
+Message sixteen
+
+Message Can you save yourself?
+
+!########i
+#!...--..$
+#.!@-....#
+#......-.#
+#.&.!.1.+#
+#..+.!...#
+#-..+...+#
+#..+...!.#
+egb@..-.!#
+fh#######!
+
+Message seventeen
+
+Message Your presentation leaves something to be desired
+
+#########eg
+#+.+....-fh
+#.+.-.....#
+#......$..#
+#.....$...#
+#*.***....#
+#1..-*..+.#
+#.ja.*...+#
+#.ik..$..+#
+#...2*..-.#
+###########
+
+Message eighteen
+
+Message Mmm
+
+Message It doesn't matter
+
+###########eg
+#..........fh
+#!.!!-.---!.#
+#!.1........#
+#!.!.!.!.+.@#
+#!.!.!-!.+..#
+#!...!.!.+&.#
+#!+!.....+.+#
+#!.!-!.!.+..#
+#!.!.!.!.+.+#
+#!i!...!.+-.#
+#!!!.!......#
+#############
+
+Message juneteenth
+
+Message How many of you are there?
+
+Message I hope this one's better at cramming produce into straws
+
+eg######
+fh-1..!#
+#*+****#
+#*%---$#
+#*****+#
+i*c---@#
+########
+
+Message twenty
+
+Message The taste of fence and flesh lingers on my lips
+
+l#######eg
+#......1fh
+#.....1%b#
+#....1%..#
+#...1%...#
+#..1%....#
+#.1%.....#
+#*%......#
+#c*.....1#
+l########l
+
+
+Message twenty-one
+
+Message So sweet, twisted, and burning
+
+l#######eg
+#......&fh
+#.....&%b#
+#..@&&%..#
+#....%...#
+#..&.....#
+#.&%.....#
+#*.@.....#
+#c*...1..#
+l########l
+
+Message twenty-two
+
+Message I wish it would last
+
+#######a######
+#21.......---#
+#..........&.#
+#...!.!.!....#
+#..!.........#
+#....****.!..#
+#..!..eg*b...i
+k....*fh..!..#
+#..!.****....#
+#.........!..#
+#.&..!.!.!.&.#
+#............#
+#---......---#
+######j#######
+
+
+Message twenty-three
+
+Message Milk moustache
+
+
+###############################
+#!...........................!#
+#1.b.b.b.b.b.b.b.b.b.b.b.b.b.b#
+#*.*+*.*+*.*+*.*+*.*+*.*+*.*.**
+a-.-.+.-.-.-.-.-.-.-.-.-.-.-.eg
+#*+*.*+*.*+*.*+*.*+*.*+*.*+*.**
+#.1.1.1.1.1.1.1.1.1.1.1.1.1.1.#
+#!...........................!#
+###############################
+
+Message twenty-four
+
+Message Broken Up
+
+e.......g
+.!.-.%.!.
+.........
+.+.!.!.1.
+....l....
+.+.!.!.+.
+.........
+.!.-.-.!.
+f...2...h
+
+Message twenty-five
+
+#######j####
+#..+!......#
+#.-+!......#
+#..+!......#
+#.++!......#
+#1.+!......#
+#.-%!......#
+#...!..2.eg#
+#########fh#
+
+Message twenty-six
+
+Message I feel some hostility 
+
+####################
+#kkkkkkkk#........1#
+#kjjjjjjk#.......2.#
+#kjaaa...#..&.....1#
+#kja...jk#..+....2.#
+#kjac.ajk#..+.....1#
+#kjaaaajk#..+....2.#
+#kjjjjjji#..+.....1#
+#kkkkkkieg..@....b.#
+########fh##########
+
+Message twenty-seven
+
+Message C'mon, just give me a little bite
+
+#############
+#.....c.....#
+#..1..+...2.#
+#.1.*.+.*2..#
+#.....+.....#
+#e*.11+2..*g#
+#f*...+.2.*h#
+#...1.+2.2..#
+#.1...+...2.#
+#1..*.+.*...#
+#..1.1+.2.2.#
+#.....+.....#
+######a######
+
+Message vingt-huit
+
+Message All I do is give, all you do is take
+
+c#########c######
+#!$$$$$$$!#######
+#+.......+##!#!##
+#+...*...+#######
+#+..1*2..+#######
+#+...*...+.....eg
+#+...*...+.....fh
+#+...*...+#######
+#+...*...+#######
+#+...b...+##!#!##
+#!-------!#######
+c#########c######
+
+Message twenty-nine
+
+Message Just shove it right in there
+
+########################
+#*..c*..11...2..1..2...#
+#*.#.*.........2.......#
+#*b1.******!**...*!***!#
+#*..2*.......*****.1*1.#
+#******!*.1..*..2*2.*.2#
+#.*.....**...*c#.*.1*1.#
+#c*...1..!.2.*..b*..*..#
+#.*.2.1.2*...******!**!#
+#.!...11.*.2....*...*..#
+#!*!*..2.*....1.*...*..#
+#.11*....**!**..!.1.!.eg
+#...****!*...*2.*...*.fh
+#.2..1...!.1.*..*.2.*c.#
+#...1..2**.1.*****!**.l#
+#!*****.*....!..*...*2.#
+#.2...*.*.2***.2*..2*..#
+#.....*b*1.!....!.1.!.1#
+#*!*2.*.!..*b.1.*b..*..#
+#.-!..*.*..!..***.1.*..#
+#1.*1.!.*..*..*c*...*.b#
+########################
+
+Message thirty
+
+Message Give me your everything
+
+.#.#.#.#.#.#.
+#........e!g#
+2........!l!.
+#........f!h#
+b.1..........
+#...........#
+1.b.2........
+#...........#
+1.1.b.1......
+#...........#
+2.1.1.b.2....
+@2..........#
+l%2#1#2#b#1#.
+
+Message I think I ate too much
+
+Message the end
+
+Message ...
+ 
+Message ...
+
+Message ...
+
+Message ... I could eat
+
+Message Collective Noun: An Assault of Mushrooms
+
+eg!!!!!!!!!!!!!!!!!!!!!!
+fh.m.......m.....m.....!
+!+...m.m.mmm...m.m.mmm.!
+!mmm.mmmmm...mmm.m.m...!
+!....m.....m.m.m...m.mm!
+!.mm...mmmmm.m.mmmmm...!
+!..mmmmm...........m.m.!
+!.mm.m...mmmmmmmmmmmmm.!
+!.m..mmmmm..m........m.!
+!.m.mm.....mm.mmmmm.mm.!
+!mm.m..mmmmm...m....m..!
+!............mmm.mmmmm.!
+!mmmmmm.mmmm.m.m...m.m.!
+!.....m.m....m.mmm.m...!
+!.mmm...m.mmmm...m.m.mm!
+!.m...m.m.m....m.m.m...!
+!.m.mmm.m.m.mmmm.m.mmm.!
+!.m.m...m2m....m.......!
+!!!!!!!!!!!!!!!!!!!!!!!!
+
+Message the end, again
+
+

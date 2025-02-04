@@ -1,0 +1,188 @@
+Title Rewindoban
+Author Loneship Games
+homepage http://connorses.deviantart.com/
+
+noundo
+
+========
+OBJECTS
+========
+background
+darkblue darkgreen
+00010
+01000
+00000
+00100
+00000
+
+player3
+red
+.....
+.000.
+00000
+.000.
+.0.0.
+
+player1
+red darkred
+.....
+.011.
+01100
+.011.
+.0.0.
+
+player2
+red lightgrey darkgrey
+.....
+.012.
+01200
+.012.
+.0.0.
+Sc
+orange
+00000
+0...0
+0...0
+0...0
+00000
+Uc
+orange
+00000
+0.0.0
+0...0
+0...0
+00000
+Dc
+orange
+00000
+0...0
+0...0
+0.0.0
+00000
+Lc
+orange
+00000
+0...0
+00..0
+0...0
+00000
+Rc
+orange
+00000
+0...0
+0..00
+0...0
+00000
+
+target
+white
+.....
+.000.
+.0.0.
+.000.
+.....
+
+wall
+brown
+
+power
+yellow
+.000.
+..00.
+.00..
+.00..
+..0..
+=======
+LEGEND
+=======
+c = Uc or Dc or Lc or Rc or Sc
+Mc = Uc or Dc or Lc or Rc
+player = player1 or player3
+
+# = wall
+. = background
+p = player1
+s = player3
+* = target
+o = Sc
+@ = target and SC
+! = power
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+background
+target, power
+player, player2, wall, c
+======
+RULES
+======
+[power player1] -> [player1] Message New ability! Press [X] to rewind.
+late [power player3] -> [power player2] again
+
+[> player|c|wall] -> cancel
+
+up   [> player|c] -> [> player|> Uc]
+down [> player|c] -> [> player|> Dc]
+left [> player|c] -> [> player|> Lc]
+right[> player|c] -> [> player|> Rc]
+
+([> c|wall ] -> [Sc|wall]
+[> c|c] -> [Sc|c])
+
+[player2 no power] -> [player1]
+[action player1] -> [player2] again
+
+[player2] [Uc] -> [player2] [down  Sc]
+[player2] [Dc] -> [player2] [up    Sc]
+[player2] [Lc] -> [player2] [right Sc]
+[player2] [Rc] -> [player2] [left  Sc]
+
+[power player2] -> [power player1] again
+==============
+WINCONDITIONS
+==============
+all c on target
+no power
+=======
+LEVELS
+=======
+#####
+#.*.#
+#.o.#
+#...#
+#.s.#
+#...#
+#.o.#
+#.*.#
+#####
+Message Remember, [R] resets the level.
+#####
+#...#
+#...#
+##.*#
+#so.#
+#..##
+#####
+
+#########
+#.s..#.!#
+###.o...#
+####*####
+
+#####
+##*##
+#po.#
+##.##
+#####
+
+#####
+#...#
+#..@#
+##.*#
+#po.#
+#..##
+#####

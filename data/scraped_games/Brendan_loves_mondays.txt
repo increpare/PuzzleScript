@@ -1,0 +1,419 @@
+author Benjy Bates
+title Brendan loves mondays
+homepage http://badfeministgames.wordpress.com/
+
+
+noundo
+
+========
+OBJECTS
+========
+
+background
+#2C2921 #47402E #635636 #363226 #5C793E #6E9943
+02224
+01122
+01112
+00112
+40003
+
+
+JeffHate
+#a807b7 #B700C7 #BF00D7 #DF00F7
+..33.
+.00..
+.0003
+3000.
+.0.0.
+
+JeffHate2
+#a807b7 #B700C7 #BF00D7 #DF00F7
+..33.
+.00..
+.0003
+3000.
+.0.0.
+
+JeffHate3
+#a807b7 #B700C7 #BF00D7 #DF00F7
+..33.
+.00..
+.0003
+3000.
+.0.0.
+
+JeffLove
+#4FAEE7 #77CBF7
+..11.
+.00..
+.0001
+1000.
+.0.0.
+
+JeffLove2
+#4FAEE7 #77CBF7
+..11.
+.00..
+.0001
+1000.
+.0.0.
+
+JeffLove3
+#4FAEE7 #77CBF7
+..11.
+.00..
+.0001
+1000.
+.0.0.
+
+JeffOrange
+#D05000 #F75B00
+..11.
+.00..
+.0001
+1000.
+.0.0.
+
+JeffOrange2
+#D05000 #F75B00
+..11.
+.00..
+.0001
+1000.
+.0.0.
+
+JeffGreen
+#A7B70F #BFDB00
+..11.
+.00..
+.0001
+1000.
+.0.0.
+
+Me
+#E7B79F white #779BAF
+..00.
+.11..
+.1110
+0222.
+.2.2.
+
+HateBall
+#a807b7 #B700C7 #BF00D7 white
+.222.
+01232
+01122
+00112
+.000.
+
+LoveBall
+#4FAEE7 #5FBBEF #77CBF7 white
+.222.
+01232
+01122
+00112
+.000.
+
+OrangeBall
+#D05000 #DF5300 #F75B00 white
+.222.
+01232
+01122
+00112
+.000.
+
+GreenBall
+#A7B70F #67730F #B1C903 white
+.222.
+01232
+01122
+00112
+.000.
+
+
+Key
+#DF9C2F #DFB32F #E7BB3F
+.....
+012..
+0.111
+000.0
+.....
+
+Lucozade
+#C75A1F #CF6F37 #DFBF77
+..0..
+.012.
+.011.
+.001.
+.000.
+
+Lock
+#453730 #292929 #604739 #DF9C2F #DFB32F #E7BB3F
+03450
+03142
+23140
+02320
+02020
+
+
+RExit
+red
+
+terrain
+#9FA38F #C7C3BF #B7B3B7 #CFCBCF #CFC7CF #5C793E
+13333
+02244
+02224
+00224
+00001
+
+bed
+#5F3F2F #573B2F #C7C3C7 #3F4F8F #3F5397 
+01110
+22222
+33444
+33333
+01110
+
+======= 
+LEGEND
+=======
+
+wall = terrain
+target = RExit 
+player = JeffHate or JeffHate2 or JeffHate3 or JeffLove or JeffLove2 or JeffLove3 or JeffOrange or JeffOrange2 or JeffGreen or Me
+crate = HateBall or LoveBall or OrangeBall or GreenBall or Key or Lucozade
+
+
+.=background
+h=JeffHate
+*=terrain
+l=JeffLove
+<=HateBall
+>=LoveBall
+}=RExit
+k=Key
+!=Lock
+o=OrangeBall
+2=JeffOrange
+3=JeffGreen
+g=greenball
+m=me
+0=lucozade
+b=bed
+
+=======
+SOUNDS
+=======
+SFX1 32150507
+EndLevel 8598103
+SFX2 83571904
+SFX3 92857703
+sfx4 85067703
+sfx5 19007704
+
+player move 74475107
+
+================
+COLLISIONLAYERS
+================
+
+background
+target, lock, bed
+Player, terrain, crate, 
+
+======
+RULES
+======
+
+
+(Jeff Hate)
+[action JeffHate] -> [JeffLove] SFX3 message Brendan loves mondays
+[> JeffHate|HateBall] -> [> JeffHate |> HateBall] SFX1 
+[> HateBall|HateBall] -> [> HateBall |> HateBall]
+
+(Jeff Love)
+[action JeffLove] -> [JeffHate] SFX2 message Brendan hates mondays
+[> JeffLove|LoveBall] -> [> JeffLove |> LoveBall] SFX1
+[> LoveBall|LoveBall] -> [> LoveBall |> LoveBall]
+
+(Key)
+[> Player|Key] -> [> Player| > Key]
+
+(Jeff Intermediate)
+[action JeffHate2] -> [JeffLove2] SFX3 message Brendan loves mondays
+[action JeffLove2] -> [JeffOrange] sfx4 message Brendan is feeling rambunctious
+[action JeffOrange] -> [JeffHate2] SFX2 message Brendan hates mondays
+
+[> JeffHate2|HateBall] -> [> JeffHate2|> HateBall] SFX1
+[> HateBall|HateBall] -> [> HateBall |> HateBall]
+[> JeffLove2|LoveBall] -> [> JeffLove2|> LoveBall]SFX1
+[> LoveBall|LoveBall] -> [> LoveBall |> LoveBall]
+[> JeffOrange|OrangeBall] -> [> JeffOrange |> OrangeBall] SFX1
+[> OrangeBall|OrangeBall] -> [> OrangeBall |> OrangeBall] sfx1
+
+(Jeff Advanced)
+[action JeffHate3] -> [JeffGreen] SFX5 message Brendan is feeling sick
+[action JeffGreen] -> [JeffLove3] SFX3 message Brendan loves mondays
+[action JeffLove3] -> [JeffOrange2] sfx4 message Brendan is feeling rambunctious
+[action JeffOrange2] -> [JeffHate3] SFX2 message Brendan hates mondays
+
+[> JeffHate3|HateBall] -> [> JeffHate3|> HateBall] SFX1
+[> HateBall|HateBall] -> [> HateBall |> HateBall]
+[> JeffLove3|LoveBall] -> [> JeffLove3|> LoveBall]SFX1
+[> LoveBall|LoveBall] -> [> LoveBall |> LoveBall]
+[> JeffOrange2|OrangeBall] -> [> JeffOrange2|> OrangeBall] SFX1
+[> OrangeBall|OrangeBall] -> [> OrangeBall|> OrangeBall] sfx1
+[> JeffGreen|GreenBall] -> [> JeffGreen|> GreenBall] SFX1
+[> GreenBall|GreenBall] -> [> GreenBall|> GreenBall] sfx1
+
+
+[> me|lucozade] -> [> me|> lucozade] SFX1
+[> lucozade|lock] -> win
+[> me|bed] -> win
+
+==============
+WINCONDITIONS
+==============
+
+
+all key on lock
+all lucozade on lock
+all me on bed
+
+=======
+LEVELS
+=======
+
+
+message Do you know Brendan?
+
+message I do
+ 
+message Brendan loves mondays
+
+*******
+*.....*
+*.<k>.!
+*..l..*
+*******
+
+message Everybody loves Brendan
+
+message I think he's only ok though
+
+************
+*....>.....*
+*.k..>..<..*
+*.**.>..<<.*
+*.*..>...<.*
+*..<.>...<l!
+*.<<.>.....*
+************
+
+message Everyone in the dungeon talks about Brendan in great detail
+
+message I bet that makes him fairly rambunctious
+
+message I bet bendan is feeling rambuctious right now
+
+*****!******
+*.......o..*
+*.<.*.*.o..*
+*.<oooooo..*
+*.<.<<<>>..*
+*.*..k.>.*.*
+*...2..>...*
+************
+
+message Remember that time Brendan got drunk at the xmas party?
+
+message no seriously, i'm asking because i don't
+
+*!**********
+*....*.....*
+*..***>...<*
+*.o<..>...<*
+*.oo..***.<*
+*..o.*.k.<.*
+*2.o*..<...*
+************
+
+message Ah well, i suppose it doesn't matter about the xmas party.
+
+message I remember when Brendan got sick
+
+message The entire dungeon brought him flowers... I got him some lucozade instead
+
+************
+*3*........*
+*.>*..g.****
+*.>....g.k.*
+*.ooo..g...*
+*..*....****
+*.*..<<....!
+************
+
+message wait a minute... I haven't seen brendan since
+
+message actually, at all
+
+*******!****
+*3..*.gg...*
+*.k.*.o>>>.*
+*..<*.o....*
+*..<*.o....*
+*..<<<<....*
+*..<*.ggg..*
+************
+
+message I miss Brendan
+
+message but trust me, he's only ok
+
+message lets go see him... with more lucozade
+
+**!**
+*...*
+*...*
+*...*
+*.0.*
+*.m.*
+*****
+
+message Ooh Now I'm getting excited
+
+**!**
+*...*
+*...*
+*...*
+*.0.*
+*.m.*
+*****
+
+message nearly there!
+
+**!**
+*...*
+*...*
+*...*
+*.0.*
+*.m.*
+*****
+
+message brendan?
+
+*****
+*...*
+*.b.*
+*...*
+*.m.*
+*****
+
+message brendan loved mondays
+
+message Everyone in the dungeon talked about Brendan in great detail
+
+message I thought brendan was only ok
+
+message the end.

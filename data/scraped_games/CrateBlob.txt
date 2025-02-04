@@ -1,0 +1,2120 @@
+title CrateBlob
+author Zachary Abel
+homepage zacharyabel.com
+
+run_rules_on_level_start
+
+(verbose_logging)
+
+again_interval .03
+
+========
+OBJECTS
+========
+
+Blank
+black
+
+
+Background
+green
+
+NoiseA1
+white #ddeeff
+01011
+00111
+10100
+01100
+10111
+
+NoiseA2
+white #ddeeff
+11010
+01001
+01110
+10010
+01010
+
+NoiseA3
+white #ddeeff
+11010
+01100
+00000
+00110
+10101
+
+NoiseB1
+white #ddeeff
+001..
+.01.1
+.01..
+...11
+.1.01
+
+NoiseB2
+white #ddeeff
+.1...
+0.1.0
+.00..
+11.0.
+001..
+
+NoiseB3
+white #ddeeff
+..0..
+.1100
+0.010
+.0.0.
+..1..
+
+NoiseC1
+white #ddeeff
+.0..0
+..10.
+.01..
+.0...
+..1.1
+
+NoiseC2
+white #ddeeff
+..0..
+1....
+00...
+.1...
+..01.
+
+NoiseC3
+white #ddeeff
+..1..
+01.1.
+1.0..
+0...0
+.0.0.
+
+
+
+
+Target
+gray gray
+.....
+.010.
+.1.1.
+.010.
+.....
+
+Checker0
+transparent
+Checker1
+transparent
+
+(red = #BE2633)
+Fire0
+lightred red
+.....
+..0..
+.000.
+00100
+01110
+
+Fire1
+red lightred
+.....
+..0..
+.000.
+00100
+01110
+
+FireDown0
+lightred red
+01110
+00100
+.000.
+..0..
+.....
+
+FireDown1
+red lightred
+01110
+00100
+.000.
+..0..
+.....
+
+
+Wall0
+brown(W0) #995522(W2)
+10101
+01010
+10101
+01010
+10101
+
+Wall1
+brown(W0) #995522(W2)
+01010
+10101
+01010
+10101
+01010
+
+
+WallR
+darkbrown(W1)
+....0
+....0
+....0
+....0
+....0
+
+WallU
+darkbrown(W1)
+00000
+.....
+.....
+.....
+.....
+
+WallL
+darkbrown(W1)
+0....
+0....
+0....
+0....
+0....
+
+WallD
+darkbrown(W1)
+.....
+.....
+.....
+.....
+00000
+
+WallUR
+darkbrown(W1)
+....0
+.....
+.....
+.....
+.....
+
+WallUL
+darkbrown(W1)
+0....
+.....
+.....
+.....
+.....
+
+WallDL
+darkbrown(W1)
+.....
+.....
+.....
+.....
+0....
+
+WallDR
+darkbrown(W1)
+.....
+.....
+.....
+.....
+....0
+
+
+Player
+transparent
+
+nbR
+transparent
+nbU
+transparent
+nbL
+transparent
+nbD
+transparent
+
+Crate
+transparent
+
+Crimg0
+orange(C0) lightbrown(C1) orange(C2)
+00000
+01110
+01210
+01110
+00000
+
+CrimgR1
+orange(C0) lightbrown(C1) orange(C2)
+.0000
+.0111
+.0121
+.0111
+.0000
+
+CrimgR2
+orange(C0) lightbrown(C1) orange(C2)
+..000
+..011
+..012
+..011
+..000
+
+CrimgR3
+orange(C0) lightbrown(C1) orange(C2)
+...00
+...01
+...01
+...01
+...00
+
+CrimgR4
+orange(C0) lightbrown(C1) orange(C2)
+....0
+....0
+....0
+....0
+....0
+
+CrimgU1
+orange(C0) lightbrown(C1) orange(C2)
+01110
+01210
+01110
+00000
+.....
+
+CrimgU2
+orange(C0) lightbrown(C1) orange(C2)
+01210
+01110
+00000
+.....
+.....
+
+CrimgU3
+orange(C0) lightbrown(C1) orange(C2)
+01110
+00000
+.....
+.....
+.....
+
+CrimgU4
+orange(C0) lightbrown(C1) orange(C2)
+00000
+.....
+.....
+.....
+.....
+
+CrimgL1
+orange(C0) lightbrown(C1) orange(C2)
+0000.
+1110.
+1210.
+1110.
+0000.
+
+CrimgL2
+orange(C0) lightbrown(C1) orange(C2)
+000..
+110..
+210..
+110..
+000..
+
+CrimgL3
+orange(C0) lightbrown(C1) orange(C2)
+00...
+10...
+10...
+10...
+00...
+
+CrimgL4
+orange(C0) lightbrown(C1) orange(C2)
+0....
+0....
+0....
+0....
+0....
+
+CrimgD1
+orange(C0) lightbrown(C1) orange(C2)
+.....
+00000
+01110
+01210
+01110
+
+CrimgD2
+orange(C0) lightbrown(C1) orange(C2)
+.....
+.....
+00000
+01110
+01210
+
+CrimgD3
+orange(C0) lightbrown(C1) orange(C2)
+.....
+.....
+.....
+00000
+01110
+
+CrimgD4
+orange(C0) lightbrown(C1) orange(C2)
+.....
+.....
+.....
+.....
+00000
+
+
+HAdjImg0
+lightbrown(C1)
+.....
+0....
+0....
+0....
+.....
+
+HAdjImg1
+lightbrown(C1)
+.....
+.0...
+.0...
+.0...
+.....
+
+HAdjImg2
+lightbrown(C1)
+.....
+..0..
+..0..
+..0..
+.....
+
+HAdjImg3
+lightbrown(C1)
+.....
+...0.
+...0.
+...0.
+.....
+
+HAdjImg4
+lightbrown(C1)
+.....
+....0
+....0
+....0
+.....
+
+VAdjImg0
+lightbrown(C1)
+.....
+.....
+.....
+.....
+.000.
+
+VAdjImg1
+lightbrown(C1)
+.....
+.....
+.....
+.000.
+.....
+
+VAdjImg2
+lightbrown(C1)
+.....
+.....
+.000.
+.....
+.....
+
+VAdjImg3
+lightbrown(C1)
+.....
+.000.
+.....
+.....
+.....
+
+VAdjImg4
+lightbrown(C1)
+.000.
+.....
+.....
+.....
+.....
+
+
+
+FillImg00
+lightbrown(F0)
+.....
+.....
+.....
+.....
+0....
+
+FillImg10
+lightbrown(F0)
+.....
+.....
+.....
+.....
+.0...
+
+FillImg20
+lightbrown(F0)
+.....
+.....
+.....
+.....
+..0..
+
+FillImg30
+lightbrown(F0)
+.....
+.....
+.....
+.....
+...0.
+
+FillImg40
+lightbrown(F0)
+.....
+.....
+.....
+.....
+....0
+
+FillImg41
+lightbrown(F0)
+.....
+.....
+.....
+....0
+.....
+
+FillImg42
+lightbrown(F0)
+.....
+.....
+....0
+.....
+.....
+
+FillImg43
+lightbrown(F0)
+.....
+....0
+.....
+.....
+.....
+
+FillImg44
+lightbrown(F0)
+....0
+.....
+.....
+.....
+.....
+
+FillImg34
+lightbrown(F0)
+...0.
+.....
+.....
+.....
+.....
+
+FillImg24
+lightbrown(F0)
+..0..
+.....
+.....
+.....
+.....
+
+FillImg14
+lightbrown(F0)
+.0...
+.....
+.....
+.....
+.....
+
+FillImg04
+lightbrown(F0)
+0....
+.....
+.....
+.....
+.....
+
+FillImg03
+lightbrown(F0)
+.....
+0....
+.....
+.....
+.....
+
+FillImg02
+lightbrown(F0)
+.....
+.....
+0....
+.....
+.....
+
+FillImg01
+lightbrown(F0)
+.....
+.....
+.....
+0....
+.....
+
+
+SinewImg00
+#f2d11c(S0)
+.....
+.....
+.....
+.....
+0....
+
+SinewImg10
+#f2d11c(S0)
+.....
+.....
+.....
+.....
+.0...
+
+SinewImg20
+#f2d11c(S0)
+.....
+.....
+.....
+.....
+..0..
+
+SinewImg30
+#f2d11c(S0)
+.....
+.....
+.....
+.....
+...0.
+
+SinewImg40
+#f2d11c(S0)
+.....
+.....
+.....
+.....
+....0
+
+SinewImg41
+#f2d11c(S0)
+.....
+.....
+.....
+....0
+.....
+
+SinewImg42
+#f2d11c(S0)
+.....
+.....
+....0
+.....
+.....
+
+SinewImg43
+#f2d11c(S0)
+.....
+....0
+.....
+.....
+.....
+
+SinewImg44
+#f2d11c(S0)
+....0
+.....
+.....
+.....
+.....
+
+SinewImg34
+#f2d11c(S0)
+...0.
+.....
+.....
+.....
+.....
+
+SinewImg24
+#f2d11c(S0)
+..0..
+.....
+.....
+.....
+.....
+
+SinewImg14
+#f2d11c(S0)
+.0...
+.....
+.....
+.....
+.....
+
+SinewImg04
+#f2d11c(S0)
+0....
+.....
+.....
+.....
+.....
+
+SinewImg03
+#f2d11c(S0)
+.....
+0....
+.....
+.....
+.....
+
+SinewImg02
+#f2d11c(S0)
+.....
+.....
+0....
+.....
+.....
+
+SinewImg01
+#f2d11c(S0)
+.....
+.....
+.....
+0....
+.....
+
+
+
+(
+Croff>{N;0;1;2;3;4;5}
+transparent
+)
+CroffR0
+transparent
+CroffR1
+transparent
+CroffR2
+transparent
+CroffR3
+transparent
+CroffR4
+transparent
+CroffR5
+transparent
+CroffU0
+transparent
+CroffU1
+transparent
+CroffU2
+transparent
+CroffU3
+transparent
+CroffU4
+transparent
+CroffU5
+transparent
+CroffL0
+transparent
+CroffL1
+transparent
+CroffL2
+transparent
+CroffL3
+transparent
+CroffL4
+transparent
+CroffL5
+transparent
+CroffD0
+transparent
+CroffD1
+transparent
+CroffD2
+transparent
+CroffD3
+transparent
+CroffD4
+transparent
+CroffD5
+transparent
+
+Plimg0
+transparent(P0) blue(P1) transparent(P2)
+.....
+.010.
+.121.
+.010.
+.....
+
+PlimgR1
+transparent(P0) blue(P1) transparent(P2)
+.....
+..010
+..121
+..010
+.....
+
+PlimgR2
+transparent(P0) blue(P1) transparent(P2)
+.....
+...01
+...12
+...01
+.....
+
+PlimgR3
+transparent(P0) blue(P1) transparent(P2)
+.....
+....0
+....1
+....0
+.....
+
+PlimgU1
+transparent(P0) blue(P1) transparent(P2)
+.010.
+.121.
+.010.
+.....
+.....
+
+PlimgU2
+transparent(P0) blue(P1) transparent(P2)
+.121.
+.010.
+.....
+.....
+.....
+
+PlimgU3
+transparent(P0) blue(P1) transparent(P2)
+.010.
+.....
+.....
+.....
+.....
+
+PlimgL1
+transparent(P0) blue(P1) transparent(P2)
+.....
+010..
+121..
+010..
+.....
+
+PlimgL2
+transparent(P0) blue(P1) transparent(P2)
+.....
+10...
+21...
+10...
+.....
+
+PlimgL3
+transparent(P0) blue(P1) transparent(P2)
+.....
+0....
+1....
+0....
+.....
+
+PlimgD1
+transparent(P0) blue(P1) transparent(P2)
+.....
+.....
+.010.
+.121.
+.010.
+
+PlimgD2
+transparent(P0) blue(P1) transparent(P2)
+.....
+.....
+.....
+.010.
+.121.
+
+PlimgD3
+transparent(P0) blue(P1) transparent(P2)
+.....
+.....
+.....
+.....
+.010.
+
+
+(todo: actially animate these?)
+
+CollisionR_f1
+red(L0) lightred(L1)
+..100
+...10
+...10
+...10
+..100
+
+CollisionR_f2
+red(L0) lightred(L1)
+..100
+...10
+...10
+...10
+..100
+
+CollisionR_f3
+red(L0) lightred(L1)
+..100
+...10
+...10
+...10
+..100
+
+CollisionR_f4
+red(L0) lightred(L1)
+..100
+...10
+...10
+...10
+..100
+
+CollisionR_f5
+red(L0) lightred(L1)
+..100
+...10
+...10
+...10
+..100
+
+
+
+CollisionU_f1
+red(L0) lightred(L1)
+00000
+01110
+1...1
+.....
+.....
+
+CollisionU_f2
+red(L0) lightred(L1)
+00000
+01110
+1...1
+.....
+.....
+
+CollisionU_f3
+red(L0) lightred(L1)
+00000
+01110
+1...1
+.....
+.....
+
+CollisionU_f4
+red(L0) lightred(L1)
+00000
+01110
+1...1
+.....
+.....
+
+CollisionU_f5
+red(L0) lightred(L1)
+00000
+01110
+1...1
+.....
+.....
+
+
+CollisionL_f1
+red(L0) lightred(L1)
+001..
+01...
+01...
+01...
+001..
+
+CollisionL_f2
+red(L0) lightred(L1)
+001..
+01...
+01...
+01...
+001..
+
+CollisionL_f3
+red(L0) lightred(L1)
+001..
+01...
+01...
+01...
+001..
+
+CollisionL_f4
+red(L0) lightred(L1)
+001..
+01...
+01...
+01...
+001..
+
+CollisionL_f5
+red(L0) lightred(L1)
+001..
+01...
+01...
+01...
+001..
+
+
+CollisionD_f1
+red(L0) lightred(L1)
+.....
+.....
+1...1
+01110
+00000
+
+CollisionD_f2
+red(L0) lightred(L1)
+.....
+.....
+1...1
+01110
+00000
+
+CollisionD_f3
+red(L0) lightred(L1)
+.....
+.....
+1...1
+01110
+00000
+
+CollisionD_f4
+red(L0) lightred(L1)
+.....
+.....
+1...1
+01110
+00000
+
+CollisionD_f5
+red(L0) lightred(L1)
+.....
+.....
+1...1
+01110
+00000
+
+
+
+
+(
+Ploff>{N;0;1;2;3;4;5}
+transparent
+)
+PloffR0
+transparent
+PloffR1
+transparent
+PloffR2
+transparent
+PloffR3
+transparent
+PloffR4
+transparent
+PloffR5
+transparent
+PloffU0
+transparent
+PloffU1
+transparent
+PloffU2
+transparent
+PloffU3
+transparent
+PloffU4
+transparent
+PloffU5
+transparent
+PloffL0
+transparent
+PloffL1
+transparent
+PloffL2
+transparent
+PloffL3
+transparent
+PloffL4
+transparent
+PloffL5
+transparent
+PloffD0
+transparent
+PloffD1
+transparent
+PloffD2
+transparent
+PloffD3
+transparent
+PloffD4
+transparent
+PloffD5
+transparent
+
+Piece0
+transparent
+Piece1
+transparent
+Piece2
+transparent
+
+Globals
+transparent
+DoneAnimating
+transparent
+
+Current
+transparent
+
+nbROld
+transparent
+nbUOld
+transparent
+nbLOld
+transparent
+nbDOld
+transparent
+
+CrateOld
+transparent
+
+CrateNew
+transparent
+
+CantFall
+transparent
+WillFall
+transparent
+IsGravityMove
+transparent
+
+CollidedTrue
+transparent
+CollidedFalse
+transparent
+
+NoVerticals
+transparent
+
+JustMoved
+transparent
+
+DontLetGo
+white #ddeeff white
+00000
+00100
+01010
+00100
+00000
+
+Level0
+transparent
+Level1
+transparent
+Level2
+transparent
+Level3
+transparent
+Level4
+transparent
+Level5
+transparent
+Level6
+transparent
+Level7
+transparent
+Level8
+transparent
+Level9
+transparent
+
+=======
+LEGEND
+=======
+CroffR = CroffR0 or CroffR1 or CroffR2 or CroffR3 or CroffR4 or CroffR5
+CroffU = CroffU0 or CroffU1 or CroffU2 or CroffU3 or CroffU4 or CroffU5
+CroffL = CroffL0 or CroffL1 or CroffL2 or CroffL3 or CroffL4 or CroffL5
+CroffD = CroffD0 or CroffD1 or CroffD2 or CroffD3 or CroffD4 or CroffD5
+Croff = CroffR or CroffU or CroffL or CroffD
+
+Croff0 = CroffR0 or CroffU0 or CroffL0 or CroffD0
+Croff5 = CroffR5 or CroffU5 or CroffL5 or CroffD5
+
+CrimgR = CrimgR1 or CrimgR2 or CrimgR3 or CrimgR4
+CrimgU = CrimgU1 or CrimgU2 or CrimgU3 or CrimgU4
+CrimgL = CrimgL1 or CrimgL2 or CrimgL3 or CrimgL4
+CrimgD = CrimgD1 or CrimgD2 or CrimgD3 or CrimgD4
+Crimg = Crimg0 or CrimgR or CrimgU or CrimgL or CrimgD
+
+
+PloffR = PloffR0 or PloffR1 or PloffR2 or PloffR3 or PloffR4 or PloffR5
+PloffU = PloffU0 or PloffU1 or PloffU2 or PloffU3 or PloffU4 or PloffU5
+PloffL = PloffL0 or PloffL1 or PloffL2 or PloffL3 or PloffL4 or PloffL5
+PloffD = PloffD0 or PloffD1 or PloffD2 or PloffD3 or PloffD4 or PloffD5
+Ploff = PloffR or PloffU or PloffL or PloffD
+
+Ploff0 = PloffR0 or PloffU0 or PloffL0 or PloffD0
+Ploff5 = PloffR5 or PloffU5 or PloffL5 or PloffD5
+
+PlimgR = PlimgR1 or PlimgR2 or PlimgR3
+PlimgU = PlimgU1 or PlimgU2 or PlimgU3
+PlimgL = PlimgL1 or PlimgL2 or PlimgL3
+PlimgD = PlimgD1 or PlimgD2 or PlimgD3
+Plimg = Plimg0 or PlimgR or PlimgU or PlimgL or PlimgD
+
+HSinew0 = CrimgD3 or CrimgD2 or CrimgD1 or VAdjImg0
+HSinew1 = CrimgD2 or CrimgD1 or Crimg0  or VAdjImg1
+HSinew2 = CrimgD1 or Crimg0  or CrimgU1 or VAdjImg2
+HSinew3 = Crimg0  or CrimgU1 or CrimgU2 or VAdjImg3
+HSinew4 = CrimgU1 or CrimgU2 or CrimgU3 or VAdjImg4
+
+VSinew0 = CrimgL3 or CrimgL2 or CrimgL1 or HAdjImg0
+VSinew1 = CrimgL2 or CrimgL1 or Crimg0  or HAdjImg1
+VSinew2 = CrimgL1 or Crimg0  or CrimgR1 or HAdjImg2
+VSinew3 = Crimg0  or CrimgR1 or CrimgR2 or HAdjImg3
+VSinew4 = CrimgR1 or CrimgR2 or CrimgR3 or HAdjImg4
+
+
+FillImg = FillImg00 or FillImg10 or FillImg20 or FillImg30 or FillImg40 or FillImg41 or FillImg42 or FillImg43 or FillImg44 or FillImg34 or FillImg24 or FillImg14 or FillImg04 or FillImg03 or FillImg02 or FillImg01
+
+SinewImg = SinewImg00 or SinewImg10 or SinewImg20 or SinewImg30 or SinewImg40 or SinewImg41 or SinewImg42 or SinewImg43 or SinewImg44 or SinewImg34 or SinewImg24 or SinewImg14 or SinewImg04 or SinewImg03 or SinewImg02 or SinewImg01
+
+
+HAdjImg = HAdjImg0 or HAdjImg1 or HAdjImg2 or HAdjImg3 or HAdjImg4 
+VAdjImg = VAdjImg0 or VAdjImg1 or VAdjImg2 or VAdjImg3 or VAdjImg4
+
+Piece = Piece0 or Piece1 or Piece2
+
+nbOld = nbROld or nbUOld or nbLOld or nbDOld
+
+CollisionR = CollisionR_f1 or CollisionR_f2 or CollisionR_f3 or CollisionR_f4 or CollisionR_f5
+CollisionU = CollisionU_f1 or CollisionU_f2 or CollisionU_f3 or CollisionU_f4 or CollisionU_f5
+CollisionL = CollisionL_f1 or CollisionL_f2 or CollisionL_f3 or CollisionL_f4 or CollisionL_f5
+CollisionD = CollisionD_f1 or CollisionD_f2 or CollisionD_f3 or CollisionD_f4 or CollisionD_f5
+
+Collision = CollisionR or CollisionU or CollisionL or CollisionD
+CollisionDone = CollisionR_f5 or CollisionU_f5 or CollisionL_f5 or CollisionD_f5
+
+NoiseA = NoiseA1 or NoiseA2 or NoiseA3
+NoiseB = NoiseB1 or NoiseB2 or NoiseB3
+NoiseC = NoiseC1 or NoiseC2 or NoiseC3
+
+Checker = Checker0 or Checker1
+
+
+
+Wall = Wall0 or Wall1
+Fire = Fire0 or Fire1 or FireDown0 or FireDown1
+
+, = Blank
+. = Background
+# = Wall0
+P = Player and Crate and Piece0
+T = Target
+F = Fire0
+G = FireDown0
+
+0 = Crate and Piece0
+1 = Crate and Piece1
+2 = Crate and Piece2
+
+! = NoVerticals and Wall0
+? = DontLetGo
+
+⓿ = Level0 and Wall0
+❶ = Level1 and Wall0
+❷ = Level2 and Wall0
+❸ = Level3 and Wall0
+❹ = Level4 and Wall0
+❺ = Level5 and Wall0
+❻ = Level6 and Wall0
+❼ = Level7 and Wall0
+❽ = Level8 and Wall0
+❾ = Level9 and Wall0
+
+=======
+SOUNDS
+=======
+
+ENDLEVEL 36376503 (73093503)
+
+CollidedTrue CREATE 36772507 ( 24829904) (78745707) ( 33959907) ( 98628102)
+
+sfx0 52309302 (19346501) (burn)
+
+sfx1 10437907 (land after falling)
+
+sfx2 64139106 (bad input)
+
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+NoiseA
+NoiseB
+NoiseC
+
+
+DontLetGo
+
+Blank
+
+Checker0
+Checker1
+
+Wall
+
+WallR
+WallU
+WallL
+WallD
+
+WallUR
+WallUL
+WallDL
+WallDR
+
+
+Crate
+
+Target
+
+
+CroffR, CroffU, CroffL, CroffD
+
+Crimg0
+CrimgR
+CrimgU
+CrimgL
+CrimgD
+
+
+SinewImg00
+SinewImg10
+SinewImg20
+SinewImg30
+SinewImg40
+SinewImg41
+SinewImg42
+SinewImg43
+SinewImg44
+SinewImg34
+SinewImg24
+SinewImg14
+SinewImg04
+SinewImg03
+SinewImg02
+SinewImg01
+
+
+FillImg00
+FillImg10
+FillImg20
+FillImg30
+FillImg40
+FillImg41
+FillImg42
+FillImg43
+FillImg44
+FillImg34
+FillImg24
+FillImg14
+FillImg04
+FillImg03
+FillImg02
+FillImg01
+
+
+
+HAdjImg0
+HAdjImg1
+HAdjImg2
+HAdjImg3
+HAdjImg4 
+
+VAdjImg0
+VAdjImg1
+VAdjImg2
+VAdjImg3
+VAdjImg4 
+
+PloffR, PloffU, PloffL, PloffD
+Plimg0
+PlimgR
+PlimgU
+PlimgL
+PlimgD
+
+Player
+
+Fire
+
+Piece
+
+nbR
+nbU
+nbL
+nbD
+
+
+CollisionR
+CollisionU
+CollisionL
+CollisionD
+
+Globals
+DoneAnimating
+
+Current
+CrateOld
+CrateNew
+nbROld
+nbUOld
+nbLOld
+nbDOld
+
+CantFall
+WillFall
+IsGravityMove
+CollidedTrue, CollidedFalse
+NoVerticals
+
+JustMoved
+
+Level0, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9
+
+
+======
+RULES
+======
+
+
+
+
+
+
+[Level0] -> [] message .   Pilot CrateBlob to the       . .   gray targets!                . .                                . .   Move LEFT and RIGHT to       . .   slide rows past each other.  . 
+
+late [Crate DontLetGo] -> [Crate] message See how rows won't fully let go of their neighboring rows? They drag them along if necessary.
+
+[Level1] -> [] message . Now use UP and DOWN too!       . .                                . . Columns slide just like rows.  .
+[Level2] -> [] message Watch out for falling CrateBlobs!
+
+([Level3] -> [] message Level 3)
+([Level4] -> [] message Level 4)
+([Level5] -> [] message Level 5)
+([Level6] -> [] message Level 6)
+
+[Level7] -> [] message CrateBlob says these last three levels are more challenging. Good luck!
+
+([Level8] -> [] message Level 8)
+([Level9] -> [] message Level 9)
+
+
+
+
+(-----------------------------------)
+(-- Initialize. Only needed once. --)
+(-----------------------------------)
+
+[no NoiseA] -> [random NoiseA]
+[no NoiseB] -> [random NoiseB]
+[no NoiseC] -> [random NoiseC]
+(
+[NoiseA no NoiseC] -> [random NoiseA NoiseC1]
+[NoiseC1 no NoiseB] -> [random NoiseB no NoiseC]
+[no NoiseC] -> [random NoiseC]
+)
+
+(put in lower left corner, just so it's predictable)
+[] -> [Globals]
+right [ | ... | Globals] -> [Globals | ... | ]
+up [ | ... | Globals] -> [Globals | ... | ]
+[Globals no CollidedTrue no CollidedFalse] -> [Globals CollidedFalse]
+
+[Globals] -> [Globals Checker0]
+right   [Checker0 | ] -> [Checker0 | Checker1]
++ right [Checker1 | ] -> [Checker1 | Checker0]
++ up    [Checker0 | ] -> [Checker0 | Checker1]
++ up    [Checker1 | ] -> [Checker1 | Checker0]
+
+
+[Wall0 Checker1] -> [Wall1 Checker1]
+
+[Wall] -> [Wall WallR WallU WallL WallD]
+right [Wall | Wall] -> [Wall no WallR | Wall no WallL]
+up [Wall | Wall] -> [Wall no WallU | Wall no WallD]
+
+up [Wall WallR no WallU | no WallR] -> [Wall WallR | WallDR]
+up [Wall WallL no WallU | no WallL] -> [Wall WallL | WallDL]
+
+down [Wall WallR no WallD | no WallR] -> [Wall WallR | WallUR]
+down [Wall WallL no WallD | no WallL] -> [Wall WallL | WallUL]
+
+[Fire0 Checker1] -> [Fire1 Checker1]
+[FireDown0 Checker1] -> [FireDown1 Checker1]
+
+(Note: Pieces are only used for inputting levels. Everything is a Crate after init, and connectivity is stored only with nb pointers.)
+
+(
+> [Piece{N;0;1;2} | Piece{N;0;1;2}] -> [Piece{N;0;1;2} nb> | Piece{N;0;1;2} nb<]
+Only use R and U
+)
+right [Piece0 | Piece0] -> [Piece0 nbR | Piece0 nbL]
+right [Piece1 | Piece1] -> [Piece1 nbR | Piece1 nbL]
+right [Piece2 | Piece2] -> [Piece2 nbR | Piece2 nbL]
+up [Piece0 | Piece0] -> [Piece0 nbU | Piece0 nbD]
+up [Piece1 | Piece1] -> [Piece1 nbU | Piece1 nbD]
+up [Piece2 | Piece2] -> [Piece2 nbU | Piece2 nbD]
+
+[Piece] -> []
+
+
+
+(------------------------)
+(-- advance animations --)
+(------------------------)
+
+[NoVerticals] [PloffU1] -> [NoVerticals] [] sfx2
+[NoVerticals] [PloffD1] -> [NoVerticals] [] sfx2
+
+(
+[Croff>{D;4;3;2;1;0}] [CollidedFalse] -> [Croff>{D;5;4;3;2;1}] [CollidedFalse] {D;;again;again;again;again}
+)
+[CroffR4] [CollidedFalse] -> [CroffR5] [CollidedFalse] 
+[CroffR3] [CollidedFalse] -> [CroffR4] [CollidedFalse] again
+[CroffR2] [CollidedFalse] -> [CroffR3] [CollidedFalse] again
+[CroffR1] [CollidedFalse] -> [CroffR2] [CollidedFalse] again
+[CroffR0] [CollidedFalse] -> [CroffR1] [CollidedFalse] again
+[CroffU4] [CollidedFalse] -> [CroffU5] [CollidedFalse] 
+[CroffU3] [CollidedFalse] -> [CroffU4] [CollidedFalse] again
+[CroffU2] [CollidedFalse] -> [CroffU3] [CollidedFalse] again
+[CroffU1] [CollidedFalse] -> [CroffU2] [CollidedFalse] again
+[CroffU0] [CollidedFalse] -> [CroffU1] [CollidedFalse] again
+[CroffL4] [CollidedFalse] -> [CroffL5] [CollidedFalse] 
+[CroffL3] [CollidedFalse] -> [CroffL4] [CollidedFalse] again
+[CroffL2] [CollidedFalse] -> [CroffL3] [CollidedFalse] again
+[CroffL1] [CollidedFalse] -> [CroffL2] [CollidedFalse] again
+[CroffL0] [CollidedFalse] -> [CroffL1] [CollidedFalse] again
+[CroffD4] [CollidedFalse] -> [CroffD5] [CollidedFalse] 
+[CroffD3] [CollidedFalse] -> [CroffD4] [CollidedFalse] again
+[CroffD2] [CollidedFalse] -> [CroffD3] [CollidedFalse] again
+[CroffD1] [CollidedFalse] -> [CroffD2] [CollidedFalse] again
+[CroffD0] [CollidedFalse] -> [CroffD1] [CollidedFalse] again
+
+
+(
+[Ploff>{D;4;3;2;1;0}] [CollidedFalse] -> [Ploff>{D;5;4;3;2;1}] [CollidedFalse] {D;;again;again;again;again}
+)
+[PloffR4] [CollidedFalse] -> [PloffR5] [CollidedFalse] 
+[PloffR3] [CollidedFalse] -> [PloffR4] [CollidedFalse] again
+[PloffR2] [CollidedFalse] -> [PloffR3] [CollidedFalse] again
+[PloffR1] [CollidedFalse] -> [PloffR2] [CollidedFalse] again
+[PloffR0] [CollidedFalse] -> [PloffR1] [CollidedFalse] again
+[PloffU4] [CollidedFalse] -> [PloffU5] [CollidedFalse] 
+[PloffU3] [CollidedFalse] -> [PloffU4] [CollidedFalse] again
+[PloffU2] [CollidedFalse] -> [PloffU3] [CollidedFalse] again
+[PloffU1] [CollidedFalse] -> [PloffU2] [CollidedFalse] again
+[PloffU0] [CollidedFalse] -> [PloffU1] [CollidedFalse] again
+[PloffL4] [CollidedFalse] -> [PloffL5] [CollidedFalse] 
+[PloffL3] [CollidedFalse] -> [PloffL4] [CollidedFalse] again
+[PloffL2] [CollidedFalse] -> [PloffL3] [CollidedFalse] again
+[PloffL1] [CollidedFalse] -> [PloffL2] [CollidedFalse] again
+[PloffL0] [CollidedFalse] -> [PloffL1] [CollidedFalse] again
+[PloffD4] [CollidedFalse] -> [PloffD5] [CollidedFalse] 
+[PloffD3] [CollidedFalse] -> [PloffD4] [CollidedFalse] again
+[PloffD2] [CollidedFalse] -> [PloffD3] [CollidedFalse] again
+[PloffD1] [CollidedFalse] -> [PloffD2] [CollidedFalse] again
+[PloffD0] [CollidedFalse] -> [PloffD1] [CollidedFalse] again
+
+[CollisionDone] [Croff] -> [CollisionDone] []
+[CollisionDone] [Ploff] -> [CollisionDone] []
+[CollisionDone] [Globals CollidedTrue] -> [CollisionDone] [Globals CollidedFalse]
+[Globals CollidedFalse] [Collision] -> [Globals CollidedFalse] []
+
+(
+[Collision>_f4] -> [Collision>_f5]
+[Collision>_f3] -> [Collision>_f4]
+[Collision>_f2] -> [Collision>_f3]
+[Collision>_f1] -> [Collision>_f2]
+)
+[CollisionR_f4] -> [CollisionR_f5]
+[CollisionR_f3] -> [CollisionR_f4]
+[CollisionR_f2] -> [CollisionR_f3]
+[CollisionR_f1] -> [CollisionR_f2]
+[CollisionU_f4] -> [CollisionU_f5]
+[CollisionU_f3] -> [CollisionU_f4]
+[CollisionU_f2] -> [CollisionU_f3]
+[CollisionU_f1] -> [CollisionU_f2]
+[CollisionL_f4] -> [CollisionL_f5]
+[CollisionL_f3] -> [CollisionL_f4]
+[CollisionL_f2] -> [CollisionL_f3]
+[CollisionL_f1] -> [CollisionL_f2]
+[CollisionD_f4] -> [CollisionD_f5]
+[CollisionD_f3] -> [CollisionD_f4]
+[CollisionD_f2] -> [CollisionD_f3]
+[CollisionD_f1] -> [CollisionD_f2]
+
+
+(--------------)
+(-- movement --)
+(--------------)
+
+[NoVerticals] [up Player] -> [NoVerticals] [Player PloffU1] again
+[NoVerticals] [down Player] -> [NoVerticals] [Player PloffD1] again
+
+([NoVerticals] [vertical Player] -> [NoVerticals] [Player])
+
+(player moves without pushing)
+
+( > [> Player nb>] -> [Player Ploff>1 nb>] )
+right [right Player nbR] -> [Player PloffR1 nbR]
+up [up Player nbU] -> [Player PloffU1 nbU]
+left [left Player nbL] -> [Player PloffL1 nbL]
+down [down Player nbD] -> [Player PloffD1 nbD]
+
+
+(player initiates push)
+( > [> Player no nb>] -> [Player Ploff>1 Croff>1] )
+right [right Player no nbR] -> [Player PloffR1 CroffR1]
+up [up Player no nbU] -> [Player PloffU1 CroffU1]
+left [left Player no nbL] -> [Player PloffL1 CroffL1]
+down [down Player no nbD] -> [Player PloffD1 CroffD1]
+
+(gravity)
+[Crate WillFall] -> [Crate CroffD1]
+[Player CroffD1] -> [Player PloffD1 CroffD1]
+
+(propagate)
+
+(
+> [Croff>1 | Crate no Croff] -> [Croff>1 | Crate Croff>1]
++ > [Crate nb> no Croff | Croff>1] -> [Crate nb> Croff>1 | Croff>1]
++ ^ [Croff>2 nb^ no nb< | Crate no nb> no Croff] -> [Croff>2 nb^ | Crate Croff>0]
++ $ [Croff>2 nb$ no nb< | Crate no nb> no Croff] -> [Croff>2 nb$ | Crate Croff>0]
+)
+
+
+
+(1)
+right [CroffR1 | Crate no Croff] -> [CroffR1 | Crate CroffR1]
++ right [Crate nbR no Croff | CroffR1] -> [Crate nbR CroffR1 | CroffR1]
++ up [CroffR1 nbU no nbL | Crate no nbR no Croff] -> [CroffR1 nbU | Crate CroffR0]
++ down [CroffR1 nbD no nbL | Crate no nbR no Croff] -> [CroffR1 nbD | Crate CroffR0]
+
+up [CroffU1 | Crate no Croff] -> [CroffU1 | Crate CroffU1]
++ up [Crate nbU no Croff | CroffU1] -> [Crate nbU CroffU1 | CroffU1]
++ left [CroffU1 nbL no nbD | Crate no nbU no Croff] -> [CroffU1 nbL | Crate CroffU0]
++ right [CroffU1 nbR no nbD | Crate no nbU no Croff] -> [CroffU1 nbR | Crate CroffU0]
+
+left [CroffL1 | Crate no Croff] -> [CroffL1 | Crate CroffL1]
++ left [Crate nbL no Croff | CroffL1] -> [Crate nbL CroffL1 | CroffL1]
++ down [CroffL1 nbD no nbR | Crate no nbL no Croff] -> [CroffL1 nbD | Crate CroffL0]
++ up [CroffL1 nbU no nbR | Crate no nbL no Croff] -> [CroffL1 nbU | Crate CroffL0]
+
+down [CroffD1 | Crate no Croff] -> [CroffD1 | Crate CroffD1]
++ down [Crate nbD no Croff | CroffD1] -> [Crate nbD CroffD1 | CroffD1]
++ right [CroffD1 nbR no nbU | Crate no nbD no Croff] -> [CroffD1 nbR | Crate CroffD0]
++ left [CroffD1 nbL no nbU | Crate no nbD no Croff] -> [CroffD1 nbL | Crate CroffD0]
+
+
+(2)
+(
+right [CroffR1 | Crate no Croff] -> [CroffR1 | Crate CroffR1]
++ right [Crate nbR no Croff | CroffR1] -> [Crate nbR CroffR1 | CroffR1]
++ up [CroffR2 nbU no nbL | Crate no nbR no Croff] -> [CroffR2 nbU | Crate CroffR0]
++ down [CroffR2 nbD no nbL | Crate no nbR no Croff] -> [CroffR2 nbD | Crate CroffR0]
+up [CroffU1 | Crate no Croff] -> [CroffU1 | Crate CroffU1]
++ up [Crate nbU no Croff | CroffU1] -> [Crate nbU CroffU1 | CroffU1]
++ left [CroffU2 nbL no nbD | Crate no nbU no Croff] -> [CroffU2 nbL | Crate CroffU0]
++ right [CroffU2 nbR no nbD | Crate no nbU no Croff] -> [CroffU2 nbR | Crate CroffU0]
+left [CroffL1 | Crate no Croff] -> [CroffL1 | Crate CroffL1]
++ left [Crate nbL no Croff | CroffL1] -> [Crate nbL CroffL1 | CroffL1]
++ down [CroffL2 nbD no nbR | Crate no nbL no Croff] -> [CroffL2 nbD | Crate CroffL0]
++ up [CroffL2 nbU no nbR | Crate no nbL no Croff] -> [CroffL2 nbU | Crate CroffL0]
+down [CroffD1 | Crate no Croff] -> [CroffD1 | Crate CroffD1]
++ down [Crate nbD no Croff | CroffD1] -> [Crate nbD CroffD1 | CroffD1]
++ right [CroffD2 nbR no nbU | Crate no nbD no Croff] -> [CroffD2 nbR | Crate CroffD0]
++ left [CroffD2 nbL no nbU | Crate no nbD no Croff] -> [CroffD2 nbL | Crate CroffD0]
+)
+
+(check for wall collision)
+
+(> [Croff>1 | Wall no Collision] -> [Croff>1 | Wall Collision<f1] again)
+right [CroffR1 | Wall no Collision] -> [CroffR1 | Wall CollisionL_f1] again
+up [CroffU1 | Wall no Collision] -> [CroffU1 | Wall CollisionD_f1] again
+left [CroffL1 | Wall no Collision] -> [CroffL1 | Wall CollisionR_f1] again
+down [CroffD1 | Wall no Collision] -> [CroffD1 | Wall CollisionU_f1] again
+[Collision] [Globals CollidedFalse] -> [Collision] [Globals CollidedTrue]
+
+
+
+(-----------------------------)
+(-- Restore After Animation --)
+(-----------------------------)
+
+(are we done animating?)
+[Globals] -> [Globals DoneAnimating]
+[DoneAnimating] [Croff no Croff5] -> [] [Croff] again
+[DoneAnimating] [Ploff no Ploff5] -> [] [Ploff] again
+
+(move player)
+( > [DoneAnimating] [Player Ploff> | ] -> [DoneAnimating] [ | Player] )
+right [DoneAnimating] [Player PloffR | ] -> [DoneAnimating] [ | Player]
+up [DoneAnimating] [Player PloffU | ] -> [DoneAnimating] [ | Player]
+left [DoneAnimating] [Player PloffL | ] -> [DoneAnimating] [ | Player]
+down [DoneAnimating] [Player PloffD | ] -> [DoneAnimating] [ | Player]
+[Player Fire] -> [Fire] sfx0
+
+(move crates and recompute connectivity)
+[DoneAnimating] [Crate] -> [DoneAnimating] [CrateOld]
+([DoneAnimating] [nb>] -> [DoneAnimating] [nb>Old])
+[DoneAnimating] [nbR] -> [DoneAnimating] [nbROld]
+[DoneAnimating] [nbU] -> [DoneAnimating] [nbUOld]
+[DoneAnimating] [nbL] -> [DoneAnimating] [nbLOld]
+[DoneAnimating] [nbD] -> [DoneAnimating] [nbDOld]
+
+startloop
+    (mark one component as current, using the "action" flag)
+	random [CrateOld] -> [action CrateOld]
+    ( + > [action CrateOld nb>Old | ] -> [action CrateOld nb>Old | action CrateOld] )
+    right [action CrateOld nbROld | ] -> [action CrateOld nbROld | action CrateOld]
+    + up [action CrateOld nbUOld | ] -> [action CrateOld nbUOld | action CrateOld]
+    + left [action CrateOld nbLOld | ] -> [action CrateOld nbLOld | action CrateOld]
+    + down [action CrateOld nbDOld | ] -> [action CrateOld nbDOld | action CrateOld]
+    
+    (move to new positions)
+    ( > [action CrateOld Croff> | ] -> [ | CrateNew] )
+    right [action CrateOld CroffR | ] -> [ | CrateNew JustMoved]
+	up [action CrateOld CroffU | ] -> [ | CrateNew JustMoved]
+	left [action CrateOld CroffL | ] -> [ | CrateNew JustMoved]
+	down [action CrateOld CroffD | ] -> [ | CrateNew JustMoved]
+	[action CrateOld] -> [CrateNew]
+    
+    [CrateNew Fire] -> [Fire] sfx0
+    
+    (mark new adjacencies)
+    right [CrateNew | CrateNew] -> [CrateNew nbR | CrateNew nbL]
+    up [CrateNew | CrateNew] -> [CrateNew nbU | CrateNew nbD]
+    
+    [CrateNew] -> [Crate]
+endloop
+
+[nbOld] -> []
+
+
+(-----------------------)
+(-- Check for Gravity --)
+(-----------------------)
+
+
+down [DoneAnimating] [Crate | Wall] -> [DoneAnimating] [Crate CantFall | Wall]
+
+down [Crate | CantFall] -> [Crate CantFall | CantFall]
++ right [CantFall nbR | ] -> [CantFall nbR | CantFall]
++ up [CantFall nbU | ] -> [CantFall nbU | CantFall]
++ left [CantFall nbL | ] -> [CantFall nbL | CantFall]
++ down [CantFall nbD | ] -> [CantFall nbD | CantFall]
+
+[IsGravityMove] [CantFall JustMoved] -> sfx1 (something just landed)
+[JustMoved] -> []
+
+[DoneAnimating] [IsGravityMove] -> [DoneAnimating] []
+[DoneAnimating] [Crate no CantFall] -> [DoneAnimating] [Crate WillFall] again
+[WillFall] [Globals] -> [WillFall] [Globals IsGravityMove]
+[CantFall] -> []
+
+
+
+(------------)
+(-- Render --)
+(------------)
+
+[Crimg] -> []
+[HAdjImg] -> []
+[VAdjImg] -> []
+[FillImg] -> []
+[SinewImg] -> []
+
+
+
+(Draw components one by one.
+Properties are marked "active" as the component is built up, then de"active"ated after each component.
+This is a horrible misappropriation of the "action" flag, but it works!)
+
+startloop
+    (mark one component as current, using the "action" flag)
+	random [Crate] -> [action Crate]
+    ( + > [action Crate nb> | ] -> [action Crate nb> | action Crate] )
+    right [action Crate nbR | ] -> [action Crate nbR | action Crate]
+    + up [action Crate nbU | ] -> [action Crate nbU | action Crate]
+    + left [action Crate nbL | ] -> [action Crate nbL | action Crate]
+    + down [action Crate nbD | ] -> [action Crate nbD | action Crate]
+
+	(crate images)
+    
+	(... for in-place crates)
+    [action Crate no Croff] -> [action Crate action Crimg0]
+    [action Crate Croff0] -> [action Crate action Croff0 action Crimg0]
+
+	(... for offset crates)
+	right [action Crate CroffR1 | ] -> [action Crate action CroffR1 action CrimgR1 | action CrimgL4]
+    right [action Crate CroffR2 | ] -> [action Crate action CroffR2 action CrimgR2 | action CrimgL3]
+    right [action Crate CroffR3 | ] -> [action Crate action CroffR3 action CrimgR3 | action CrimgL2]
+    right [action Crate CroffR4 | ] -> [action Crate action CroffR4 action CrimgR4 | action CrimgL1]
+    right [action Crate CroffR5 | ] -> [action Crate action CroffR5                | action Crimg0 ]
+    up [action Crate CroffU1 | ] -> [action Crate action CroffU1 action CrimgU1 | action CrimgD4]
+    up [action Crate CroffU2 | ] -> [action Crate action CroffU2 action CrimgU2 | action CrimgD3]
+    up [action Crate CroffU3 | ] -> [action Crate action CroffU3 action CrimgU3 | action CrimgD2]
+    up [action Crate CroffU4 | ] -> [action Crate action CroffU4 action CrimgU4 | action CrimgD1]
+    up [action Crate CroffU5 | ] -> [action Crate action CroffU5                | action Crimg0 ]
+    left [action Crate CroffL1 | ] -> [action Crate action CroffL1 action CrimgL1 | action CrimgR4]
+    left [action Crate CroffL2 | ] -> [action Crate action CroffL2 action CrimgL2 | action CrimgR3]
+    left [action Crate CroffL3 | ] -> [action Crate action CroffL3 action CrimgL3 | action CrimgR2]
+    left [action Crate CroffL4 | ] -> [action Crate action CroffL4 action CrimgL4 | action CrimgR1]
+    left [action Crate CroffL5 | ] -> [action Crate action CroffL5                | action Crimg0 ]
+    down [action Crate CroffD1 | ] -> [action Crate action CroffD1 action CrimgD1 | action CrimgU4]
+    down [action Crate CroffD2 | ] -> [action Crate action CroffD2 action CrimgD2 | action CrimgU3]
+    down [action Crate CroffD3 | ] -> [action Crate action CroffD3 action CrimgD3 | action CrimgU2]
+    down [action Crate CroffD4 | ] -> [action Crate action CroffD4 action CrimgD4 | action CrimgU1]
+    down [action Crate CroffD5 | ] -> [action Crate action CroffD5                | action Crimg0 ]
+
+
+
+    (adj)
+    
+    (... in-place)
+    right [action Crimg0 | action Crimg0] -> [action Crimg0 action HAdjImg4 | action Crimg0 action HAdjImg0]
+    up [action Crimg0 | action Crimg0] -> [action Crimg0 action VAdjImg4 | action Crimg0 action VAdjImg0]
+
+	(... offset)
+    right [action CrimgR1 | action CrimgR1] -> [action CrimgR1 | action CrimgR1 action HAdjImg0 action HAdjImg1]
+    right [action CrimgR2 | action CrimgR2] -> [action CrimgR2 | action CrimgR2 action HAdjImg1 action HAdjImg2]
+    right [action CrimgR3 | action CrimgR3] -> [action CrimgR3 | action CrimgR3 action HAdjImg2 action HAdjImg3]
+    right [action CrimgR4 | action CrimgR4] -> [action CrimgR4 | action CrimgR4 action HAdjImg3 action HAdjImg4]
+    up [action CrimgU1 | action CrimgU1] -> [action CrimgU1 | action CrimgU1 action VAdjImg0 action VAdjImg1]
+    up [action CrimgU2 | action CrimgU2] -> [action CrimgU2 | action CrimgU2 action VAdjImg1 action VAdjImg2]
+    up [action CrimgU3 | action CrimgU3] -> [action CrimgU3 | action CrimgU3 action VAdjImg2 action VAdjImg3]
+    up [action CrimgU4 | action CrimgU4] -> [action CrimgU4 | action CrimgU4 action VAdjImg3 action VAdjImg4]
+
+
+	(fill)
+    
+    (equally-offset adjacent crates)
+    
+(this direction tested by gravity)
+right [action CrimgU1 | action CrimgU1] -> [action CrimgU1 action FillImg42 action FillImg43 action FillImg44 | action CrimgU1 action FillImg02 action FillImg03 action FillImg04]
+right [action CrimgU2 | action CrimgU2] -> [action CrimgU2 action FillImg43 action FillImg44 | action CrimgU2 action FillImg03 action FillImg04]
+right [action CrimgU3 | action CrimgU3] -> [action CrimgU3 action FillImg44 | action CrimgU3 action FillImg04]
+
+right [action CrimgD1 | action CrimgD1] -> [action CrimgD1 action FillImg42 action FillImg41 action FillImg40 | action CrimgD1 action FillImg02 action FillImg01 action FillImg00]
+right [action CrimgD2 | action CrimgD2] -> [action CrimgD2 action FillImg41 action FillImg40 | action CrimgD2 action FillImg01 action FillImg00]
+right [action CrimgD3 | action CrimgD3] -> [action CrimgD3 action FillImg40 | action CrimgD3 action FillImg00]
+
+(todo: this direction untested)
+up [action CrimgR1 | action CrimgR1] -> [action CrimgR1 action FillImg24 action FillImg34 action FillImg44 | action CrimgR1 action FillImg20 action FillImg30 action FillImg40]
+up [action CrimgR2 | action CrimgR2] -> [action CrimgR2 action FillImg34 action FillImg44 | action CrimgR2 action FillImg30 action FillImg40]
+up [action CrimgR3 | action CrimgR3] -> [action CrimgR3 action FillImg44 | action CrimgR3 action FillImg40]
+
+up [action CrimgL1 | action CrimgL1] -> [action CrimgL1 action FillImg24 action FillImg14 action FillImg04 | action CrimgL1 action FillImg20 action FillImg10 action FillImg00]
+up [action CrimgL2 | action CrimgL2] -> [action CrimgL2 action FillImg14 action FillImg04 | action CrimgL2 action FillImg10 action FillImg00]
+up [action CrimgL3 | action CrimgL3] -> [action CrimgL3 action FillImg04 | action CrimgL3 action FillImg00]
+
+
+(gaps between equally-offset adjacent crates)
+
+    
+    
+up [action Crimg0  action HAdjImg0 | action Crimg0  action HAdjImg0] -> [action Crimg0  action HAdjImg0 action FillImg04 | action Crimg0  action HAdjImg0 action FillImg00]
+up [action CrimgR1 action HAdjImg1 | action CrimgR1 action HAdjImg1] -> [action CrimgR1 action HAdjImg1 action FillImg14 | action CrimgR1 action HAdjImg1 action FillImg10]
+up [action CrimgR2 action HAdjImg2 | action CrimgR2 action HAdjImg2] -> [action CrimgR2 action HAdjImg2 action FillImg24 | action CrimgR2 action HAdjImg2 action FillImg20]
+up [action CrimgR3 action HAdjImg3 | action CrimgR3 action HAdjImg3] -> [action CrimgR3 action HAdjImg3 action FillImg34 | action CrimgR3 action HAdjImg3 action FillImg30]
+up [action CrimgR4 action HAdjImg4 | action CrimgR4 action HAdjImg4] -> [action CrimgR4 action HAdjImg4 action FillImg44 | action CrimgR4 action HAdjImg4 action FillImg40] 
+
+up [action CrimgR1 action HAdjImg0 | action CrimgR1 action HAdjImg0] -> [action CrimgR1 action HAdjImg0 action FillImg04 | action CrimgR1 action HAdjImg0 action FillImg00] 
+up [action CrimgR2 action HAdjImg1 | action CrimgR2 action HAdjImg1] -> [action CrimgR2 action HAdjImg1 action FillImg14 | action CrimgR2 action HAdjImg1 action FillImg10] 
+up [action CrimgR3 action HAdjImg2 | action CrimgR3 action HAdjImg2] -> [action CrimgR3 action HAdjImg2 action FillImg24 | action CrimgR3 action HAdjImg2 action FillImg20] 
+up [action CrimgR4 action HAdjImg3 | action CrimgR4 action HAdjImg3] -> [action CrimgR4 action HAdjImg3 action FillImg34 | action CrimgR4 action HAdjImg3 action FillImg30] 
+up [action Crimg0  action HAdjImg4 | action Crimg0  action HAdjImg4] -> [action Crimg0  action HAdjImg4 action FillImg44 | action Crimg0  action HAdjImg4 action FillImg40] 
+
+right [action Crimg0  action VAdjImg0 | action Crimg0  action VAdjImg0] -> [action Crimg0  action VAdjImg0 action FillImg40 | action Crimg0  action VAdjImg0 action FillImg00]
+right [action CrimgU1 action VAdjImg1 | action CrimgU1 action VAdjImg1] -> [action CrimgU1 action VAdjImg1 action FillImg41 | action CrimgU1 action VAdjImg1 action FillImg01]
+right [action CrimgU2 action VAdjImg2 | action CrimgU2 action VAdjImg2] -> [action CrimgU2 action VAdjImg2 action FillImg42 | action CrimgU2 action VAdjImg2 action FillImg02]
+right [action CrimgU3 action VAdjImg3 | action CrimgU3 action VAdjImg3] -> [action CrimgU3 action VAdjImg3 action FillImg43 | action CrimgU3 action VAdjImg3 action FillImg03]
+right [action CrimgU4 action VAdjImg4 | action CrimgU4 action VAdjImg4] -> [action CrimgU4 action VAdjImg4 action FillImg44 | action CrimgU4 action VAdjImg4 action FillImg04] 
+
+right [action CrimgU1 action VAdjImg0 | action CrimgU1 action VAdjImg0] -> [action CrimgU1 action VAdjImg0 action FillImg40 | action CrimgU1 action VAdjImg0 action FillImg00] 
+right [action CrimgU2 action VAdjImg1 | action CrimgU2 action VAdjImg1] -> [action CrimgU2 action VAdjImg1 action FillImg41 | action CrimgU2 action VAdjImg1 action FillImg01] 
+right [action CrimgU3 action VAdjImg2 | action CrimgU3 action VAdjImg2] -> [action CrimgU3 action VAdjImg2 action FillImg42 | action CrimgU3 action VAdjImg2 action FillImg02] 
+right [action CrimgU4 action VAdjImg3 | action CrimgU4 action VAdjImg3] -> [action CrimgU4 action VAdjImg3 action FillImg43 | action CrimgU4 action VAdjImg3 action FillImg03] 
+right [action Crimg0  action VAdjImg4 | action Crimg0  action VAdjImg4] -> [action Crimg0  action VAdjImg4 action FillImg44 | action Crimg0  action VAdjImg4 action FillImg04] 
+
+
+
+	(sinew)
+    right [action HSinew0 | action HSinew0] -> [action HSinew0 action SinewImg40 | action HSinew0 action SinewImg00]
+    right [action HSinew1 | action HSinew1] -> [action HSinew1 action SinewImg41 | action HSinew1 action SinewImg01]
+    right [action HSinew2 | action HSinew2] -> [action HSinew2 action SinewImg42 | action HSinew2 action SinewImg02]
+    right [action HSinew3 | action HSinew3] -> [action HSinew3 action SinewImg43 | action HSinew3 action SinewImg03]
+    right [action HSinew4 | action HSinew4] -> [action HSinew4 action SinewImg44 | action HSinew4 action SinewImg04]
+    up [action VSinew0 | action VSinew0] -> [action VSinew0 action SinewImg04 | action VSinew0 action SinewImg00]
+    up [action VSinew1 | action VSinew1] -> [action VSinew1 action SinewImg14 | action VSinew1 action SinewImg10]
+    up [action VSinew2 | action VSinew2] -> [action VSinew2 action SinewImg24 | action VSinew2 action SinewImg20]
+    up [action VSinew3 | action VSinew3] -> [action VSinew3 action SinewImg34 | action VSinew3 action SinewImg30]
+    up [action VSinew4 | action VSinew4] -> [action VSinew4 action SinewImg44 | action VSinew4 action SinewImg40]
+
+
+
+
+    [action Crate] -> [CrateNew]
+	[action Croff] -> [Croff]
+	[action Crimg] -> [Crimg]
+    [action HAdjImg] -> [HAdjImg]
+    [action VAdjImg] -> [VAdjImg]
+	[action FillImg] -> [FillImg]
+endloop
+
+[CrateNew] -> [Crate]
+
+
+
+)
+
+(player)
+
+[Plimg] -> []
+[Player no Ploff] -> [Player Plimg0]
+[Player Ploff0] -> [Player Ploff0 Plimg0]
+
+(
+> [Ploff>1 | ] -> [Ploff>1 Plimg>1 |        ]
+> [Ploff>2 | ] -> [Ploff>2 Plimg>2 | Plimg<3]
+> [Ploff>3 | ] -> [Ploff>3 Plimg>3 | Plimg<2]
+> [Ploff>4 | ] -> [Ploff>4         | Plimg<1]
+> [Ploff>5 | ] -> [Ploff>5         | Plimg0]
+)
+right [PloffR1 | ] -> [PloffR1 PlimgR1 |        ]
+right [PloffR2 | ] -> [PloffR2 PlimgR2 | PlimgL3]
+right [PloffR3 | ] -> [PloffR3 PlimgR3 | PlimgL2]
+right [PloffR4 | ] -> [PloffR4         | PlimgL1]
+right [PloffR5 | ] -> [PloffR5         | Plimg0]
+up [PloffU1 | ] -> [PloffU1 PlimgU1 |        ]
+up [PloffU2 | ] -> [PloffU2 PlimgU2 | PlimgD3]
+up [PloffU3 | ] -> [PloffU3 PlimgU3 | PlimgD2]
+up [PloffU4 | ] -> [PloffU4         | PlimgD1]
+up [PloffU5 | ] -> [PloffU5         | Plimg0]
+left [PloffL1 | ] -> [PloffL1 PlimgL1 |        ]
+left [PloffL2 | ] -> [PloffL2 PlimgL2 | PlimgR3]
+left [PloffL3 | ] -> [PloffL3 PlimgL3 | PlimgR2]
+left [PloffL4 | ] -> [PloffL4         | PlimgR1]
+left [PloffL5 | ] -> [PloffL5         | Plimg0]
+down [PloffD1 | ] -> [PloffD1 PlimgD1 |        ]
+down [PloffD2 | ] -> [PloffD2 PlimgD2 | PlimgU3]
+down [PloffD3 | ] -> [PloffD3 PlimgD3 | PlimgU2]
+down [PloffD4 | ] -> [PloffD4         | PlimgU1]
+down [PloffD5 | ] -> [PloffD5         | Plimg0]
+
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+no WillFall
+no Collision
+some DoneAnimating
+
+=======
+LEVELS
+=======
+
+
+
+⓿#########
+#0P.TT..?#
+#00.TT...#
+#00.TT...#
+#00.TT...#
+#########!
+
+
+
+❶############
+#000.#......#
+#0P0.......T#
+#000.#......#
+#############
+
+
+
+❷#########
+#........#
+#........#
+#.....#..#
+#0..#....#
+#0P#T....#
+##########
+
+
+❸#######
+#......#
+#.T....#
+#......#
+#....#.#
+#......#
+#....#.#
+#......#
+#....#.#
+#......#
+#.#....#
+#....P.#
+#.0000.#
+########
+
+
+
+❹######
+#.....#
+#..T..#
+#.....#
+#.....#
+#.....#
+#00000#
+#0.#.0#
+#00P00#
+#.....#
+#######
+
+
+
+❺#############
+#............#
+#....1111....#
+#......1.....#
+#.....11.....#
+#..P000......#
+#..#.........#
+#.........T..#
+#.........#..#
+#............#
+#............#
+#FFFFFFFFFFFF#
+
+,,❻######
+###.....#
+#.......#
+#0...F.##
+#00.#..#,
+#0P.#.##,
+###...T#,
+,,####.#,
+,,,,,###,
+
+❼##########
+##G......##
+#...000...#
+#...000...#
+#...000...#
+#....P....#
+#FFFF#....#
+#....#....#
+#.........#
+##T###....#
+######FFFF#
+
+,,,,❽###
+,,,,#TT#
+,,,,#TT#
+,,,,#TT#
+#####..#
+#00T...#
+#00111.#
+#P0111.#
+########
+
+❾##########
+#.........#
+#.......T.#
+#.........#
+#.........#
+#...0P....#
+#...0#....#
+#.110.....#
+#.100.....#
+#.1.......#
+#.1.......#
+#FFFFFFFFF#
+
+
+
+message CrateBlob says GrateJob!
+
+
+
+(Test for landing sound effect)
+(
+#######################
+#..................T..#
+#.P0..................#
+#.#00.................#
+#...011220011.........#
+#...0011220011........#
+#.....................#
+#............#........#
+#..........#..........#
+#........#............#
+#......#..............#
+#....#................#
+#.....................#
+#######################
+)
+

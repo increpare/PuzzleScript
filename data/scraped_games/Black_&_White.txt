@@ -1,0 +1,229 @@
+title Black & White
+author Franklin P. Dyer
+background_color Darkblue
+key_repeat_interval 1
+
+========
+OBJECTS
+========
+
+Background
+PINK
+
+Black .
+BLACK
+
+White ,
+WHITE
+
+Gray -
+DarkGRAY
+
+PlayerW 
+Black
+.....
+.000.
+.000.
+.000.
+.....
+
+PlayerB
+White
+.....
+.000.
+.000.
+.000.
+.....
+
+PlayerG
+Darkgray Lightgray
+.....
+.101.
+.010.
+.101.
+.....
+
+Goal o
+Purple GRAY
+11111
+10001
+10001
+10001
+11111
+
+Wall x
+Black White
+01010
+10101
+01010
+10101
+01010
+
+=======
+LEGEND
+=======
+
+Tile = White or Black or Gray
+Player = PlayerW or PlayerB or PlayerG
+
+@ = PlayerB and Black
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Gray, Black, White 
+Goal
+Player, Wall
+
+======
+RULES
+======
+
+[> Player|Gray] -> [|PlayerG Gray]
+[> PlayerB Black|White|Black] -> [Black|PlayerB Black|White]
+[> PlayerW White|Black|White] -> [White|PlayerW White|Black]
+[> PlayerG|Black] -> [|PlayerB Black]
+[> PlayerG|White] -> [|PlayerW White]
+[> PlayerW|Black] -> [PlayerW|Black]
+[> PlayerB|White] -> [PlayerB|White]
+
+==============
+WINCONDITIONS
+==============
+
+All player on goal
+
+=======
+LEVELS
+=======
+
+message Level 1 of 20
+
+@..,,
+..-,,
+..,,o
+
+message Level 2 of 20
+
+@......
+...,...
+..,o,..
+...,...
+.......
+
+message Level 3 of 20
+
+@...,o
+..,,,,
+...,..
+.,....
+..-...
+
+(message Level 4 of 20
+
+message Level 5 of 20
+
+message Level 6 of 20
+
+message Level 7 of 20
+
+message Level 8 of 20
+
+message Level 9 of 20
+
+message Level 10 of 20
+
+message Level 11 of 20
+
+message Level 12 of 20
+
+message Level 13 of 20
+
+message Level 14 of 20
+
+message Level 15 of 20
+
+message Level 16 of 20
+
+message Level 17 of 20
+
+message Level 18 of 20
+
+message Level 19 of 20
+
+message Level 20 of 20)
+
+
+@....,,,,
+..,...,,,
+..-..,,o,
+...,..,,,
+.....,,,,
+
+@..-,,,,
+....,,,-
+.-..,,,,
+.,..,,..
+....,,.o
+
+@....-,
+.,...-,
+.,...-,
+,,,,.x,
+o,...-,
+
+@....,,,,,
+.-,...,,-,
+...,.,,,,,
+....,,,,,,
+......,,..
+......,,.o
+
+@....-,
+......,
+......,
+....,,,
+,,...,,
+o,,..,,
+
+.....,,,,,
+@....,,,,,
+.....-...,
+xxxxx,,.,,
+.....,,..,
+....,..,,,
+....,,,,,,
+....xxxxxx
+-...,,,,,o
+
+@..-.
+..,..
+.,,..
+.....
+...,,
+...,o
+
+xxx.....
+xo,,,,,.
+x,@...,.
+.,....,.
+.,..-x,.
+.,....,.
+.,....,.
+.,,x.x,.
+.....x..
+
+@.....,,,,,
+......,,,,,
+......,,,,,
+.....,,,,,,
+.....,,,,,,
+.....,,,,,,
+
+

@@ -1,0 +1,435 @@
+Title Zoop Demake
+Author Loneship Games
+homepage http://connorses.deviantart.com/
+realtime_interval 0.21
+key_repeat_interval 0.13
+noundo
+background_color darkblue
+
+youtube o0c9KNIobUo
+========
+OBJECTS
+========
+0
+white darkblue
+11011
+10101
+10101
+10101
+11011
+1
+white darkblue
+11011
+10011
+11011
+11011
+10001
+2
+white darkblue
+11011
+10101
+11101
+11011
+10001
+3
+white darkblue
+10001
+11101
+11011
+11101
+10011
+4
+white darkblue
+10101
+10101
+10001
+11101
+11101
+5
+white darkblue
+10001
+10111
+10011
+11101
+10011
+6
+white darkblue
+11001
+10111
+10011
+10101
+11011
+7
+white darkblue
+10001
+11101
+11001
+11101
+11101
+8
+white darkblue
+10001
+10101
+11011
+10101
+10001
+9
+white darkblue
+10001
+10101
+10001
+11101
+11011
+
+
+border
+lightblue
+.....
+.....
+..0..
+.....
+.....
+
+corner
+grey
+.....
+.....
+..0..
+.....
+.....
+
+edge
+darkgrey
+.....
+.....
+..0..
+.....
+.....
+
+center
+purple white
+00000
+00000
+00100
+00000
+00000
+
+u
+lightgrey
+..0..
+.000.
+.0.0.
+00000
+00000
+
+d
+lightgrey
+00000
+00000
+.0.0.
+.000.
+..0..
+
+l
+lightgrey
+...00
+.0000
+00.00
+.0000
+...00
+r
+lightgrey
+00...
+0000.
+00.00
+0000.
+00...
+
+o
+orange
+.....
+.000.
+.0.0.
+.000.
+.....
+
+b
+blue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+g
+green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+p
+pink
+.....
+.000.
+.0.0.
+.000.
+.....
+
+os
+orange
+..00.
+..000
+.0.0.
+00000
+.000.
+bs
+blue
+000..
+.0000
+...00
+.0000
+0000.
+gs
+green
+.00..
+00000
+00.00
+00000
+..00.
+ps
+pink
+.000.
+..0..
+.0.0.
+.000.
+00000
+
+spawn
+yellow darkgrey
+00.00
+0...0
+..1..
+0...0
+00.00
+
+uz
+white
+..0..
+.000.
+.000.
+..0..
+.....
+dz
+white
+.....
+..0..
+.000.
+.000.
+..0..
+lz
+white
+.....
+.00..
+0000.
+.00..
+.....
+rz
+white
+.....
+..00.
+.0000
+..00.
+.....
+
+=======
+LEGEND
+=======
+background = border or center or edge or corner
+player = u or d or l or r
+zoop = uz or dz or lz or rz
+color = o or b or g or p
+shape = os or bs or gs or ps
+number = 0 or 1 or 2 or 3 or 4 or 5 or 5 or 6 or 7 or 8 or 9
+
+! = 0 and center
+& = 1 and border
++ = spawn and corner
+# = spawn and border
+, = corner
+* = border
+- = center
+@ = edge
+} = r and p and center
+=======
+SOUNDS
+=======
+sfx1 4292502
+(zoop create 86416107)
+(zoop create 13094702)
+zoop create 69991707
+sfx0 89283303
+================
+COLLISIONLAYERS
+================
+background
+player
+zoop shape
+color
+spawn
+number
+======
+RULES
+======
+
+up [border spawn|corner no spawn] -> [center spawn|corner]
+random up [border spawn|corner spawn] [stationary player] [color no zoop] -> [border spawn|border spawn] [player] [color]
+
+
+(spawn shapes on interval only!)
+startloop
+[center spawn] [edge spawn no shape|shape|shape|os] -> [center spawn] [edge os|shape|shape|os]
+[center spawn] [edge spawn no shape|shape|shape|bs] -> [center spawn] [edge bs|shape|shape|bs]
+[center spawn] [edge spawn no shape|shape|shape|gs] -> [center spawn] [edge gs|shape|shape|gs]
+[center spawn] [edge spawn no shape|shape|shape|ps] -> [center spawn] [edge ps|shape|shape|ps]
+
+[center spawn] [edge spawn no shape|no shape] -> [center spawn] [edge random shape| ]
+[center spawn] [edge spawn no shape|shape|no shape] -> [center spawn] [edge random shape|shape| ]
+endloop
+
+random [center spawn] [edge no spawn] -> [center spawn] [edge spawn]
+
+[center spawn] [border spawn] -> [center spawn] [corner spawn]
+[center spawn] -> [corner spawn]
+[edge|corner spawn] -> [edge|border spawn]
+
+(shapes push onto the board)
+[spawn shape|...|center] -> [spawn > shape|...|center]
+[> shape|shape] -> [> shape|> shape]
+
+
+(reset after zoop)
+[player no zoop no color][zoop no color] -> [player] [ ]
+[player no zoop no color][zoop color] -> [player color] [ ]
+
+(player movement)
+[up player color] -> [up u up color]
+[down player color] -> [down d down color]
+[left player color] -> [left l left color]
+[right player color] -> [right r right color]
+
+[ > player > color|border] -> [player color|border]
+
+(zoop on action)
+[action u] -> [d uz] again
+[action d] -> [u dz] again
+[action l] -> [r lz] again
+[action r] -> [l rz] again
+
+(directional color matching)
+startloop
+up    [uz color|no shape] -> [uz|uz color]
+down  [dz color|no shape] -> [dz|dz color]
+left  [lz color|no shape] -> [lz|lz color]
+right [rz color|no shape] -> [rz|rz color]
+
+random up    [center number] [uz o|os] -> [left number center] [uz|uz o] sfx0
+random down  [center number] [dz o|os] -> [left number center] [dz|dz o] sfx0
+random left  [center number] [lz o|os] -> [left number center] [lz|lz o] sfx0
+random right [center number] [rz o|os] -> [left number center] [rz|rz o] sfx0
+
+random up    [center number] [uz b|bs] -> [left number center] [uz|uz b] sfx0
+random down  [center number] [dz b|bs] -> [left number center] [dz|dz b] sfx0
+random left  [center number] [lz b|bs] -> [left number center] [lz|lz b] sfx0
+random right [center number] [rz b|bs] -> [left number center] [rz|rz b] sfx0
+
+random up    [center number] [uz g|gs] -> [left number center] [uz|uz g] sfx0
+random down  [center number] [dz g|gs] -> [left number center] [dz|dz g] sfx0
+random left  [center number] [lz g|gs] -> [left number center] [lz|lz g] sfx0
+random right [center number] [rz g|gs] -> [left number center] [rz|rz g] sfx0
+
+random up    [center number] [uz p|ps] -> [left number center] [uz|uz p] sfx0
+random down  [center number] [dz p|ps] -> [left number center] [dz|dz p] sfx0
+random left  [center number] [lz p|ps] -> [left number center] [lz|lz p] sfx0
+random right [center number] [rz p|ps] -> [left number center] [rz|rz p] sfx0
+
+[number left center] -> [left number center]
+
+[left 0] -> [1]
+[left 1] -> [2]
+[left 2] -> [3]
+[left 3] -> [4]
+[left 4] -> [5]
+[left 5] -> [6]
+[left 6] -> [7]
+[left 7] -> [8]
+[left 8] -> [9]
+right [number|left 9] -> [left number|0]
+right [ |left 9] -> [1|0]
+endloop
+
+up [2 corner] [spawn no edge|spawn|spawn|spawn|spawn|spawn|spawn|corner] ->[2 corner] [spawn|spawn|spawn|spawn|spawn|spawn|corner|corner]
+
+up [6 corner] [spawn no edge|spawn|spawn|spawn|spawn|spawn|corner] -> [6 corner] [spawn|spawn|spawn|spawn|spawn|corner|corner]
+
+up [1 border] [spawn no edge|spawn|spawn|spawn|spawn|corner] -> [1 border] [spawn|spawn|spawn|spawn|corner|corner]
+up [2 border] [spawn no edge|spawn|spawn|spawn|corner] -> [2 border] [spawn|spawn|spawn|corner|corner]
+
+up    [uz color|os] [player zoop] -> [uz o|color] [player]
+down  [dz color|os] [player zoop] -> [dz o|color] [player]
+left  [lz color|os] [player zoop] -> [lz o|color] [player]
+right [rz color|os] [player zoop] -> [rz o|color] [player]
+
+up    [uz color|bs] [player zoop] -> [uz b|color] [player]
+down  [dz color|bs] [player zoop] -> [dz b|color] [player]
+left  [lz color|bs] [player zoop] -> [lz b|color] [player]
+right [rz color|bs] [player zoop] -> [rz b|color] [player]
+
+up    [uz color|gs] [player zoop] -> [uz g|color] [player]
+down  [dz color|gs] [player zoop] -> [dz g|color] [player]
+left  [lz color|gs] [player zoop] -> [lz g|color] [player]
+right [rz color|gs] [player zoop] -> [rz g|color] [player]
+
+up    [uz color|ps] [player zoop] -> [uz p|color] [player]
+down  [dz color|ps] [player zoop] -> [dz p|color] [player]
+left  [lz color|ps] [player zoop] -> [lz p|color] [player]
+right [rz color|ps] [player zoop] -> [rz p|color] [player]
+
+[player zoop] [zoop edge] -> [player no zoop] [zoop edge]
+
+(Loss Condition)
+[shape center] [player color] -> [shape center] [ ] sfx1
+
+late [o no zoop no player] -> [os]
+late [b no zoop no player] -> [bs]
+late [g no zoop no player] -> [gs]
+late [p no zoop no player] -> [ps]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+,,,,,,,,@@@@,,,,,,,,
+,,,*,!,,****,,,,,,,+
+,,,,,,,,****,,,,,,,+
+,,,,,,,,****,,,,,,,+
+,,,,,,,,****,,,,,,,+
+,,,,,,,,****,,,,,,,+
+,,,,,,,,****,,,,,,,+
+,,,,,,,,****,,,,,,,#
+@*******}---*******@
+@*******----*******@
+@*******----*******@
+@*******----*******@
+,,,,,,,,****,,,,,,,,
+,,,,,,,,****,,,,,,,,
+,,,,,,,,****,,,,,,,,
+,,,,,,,,****,,,,,,,,
+,,,,,,,,****,,,,,,,,
+,,,,,,,,****,,,,,,,,
+,,,,,,,,****,,,,,,,,
+,,,,,,,,@@@@,,,,,,,,

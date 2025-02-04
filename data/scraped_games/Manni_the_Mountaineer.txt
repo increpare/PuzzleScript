@@ -1,0 +1,452 @@
+title Manni the Mountaineer
+author Zejety
+homepage www.puzzlescript.net
+again_interval 0.06
+key_repeat_interval 0.1
+run_rules_on_level_start
+color_palette 4
+norepeat_action
+
+========
+OBJECTS
+========
+
+Background
+darkblue
+
+Border
+Black
+
+Grass1
+green
+00000
+.....
+.....
+.....
+.....
+
+Grass2
+green lightgreen
+00010
+.....
+.....
+.....
+.....
+
+Grass3
+green lightgreen
+01000
+.....
+.....
+.....
+.....
+
+Grass4
+green
+00000
+.....
+.....
+.....
+.....
+
+Grass5
+green
+00000
+.....
+.....
+.....
+.....
+
+Grass6
+green
+00000
+.....
+.....
+.....
+.....
+
+Grass7
+green
+00000
+.....
+.....
+.....
+.....
+
+Target
+yellow
+...0.
+...0.
+...0.
+...0.
+...0.
+
+ExtendedTarget
+yellow
+.....
+...0.
+...0.
+...0.
+...0.
+
+Flag
+yellow pink
+.....
+.110.
+1110.
+.110.
+...0.
+
+
+EarthWall
+brown
+00000
+00000
+00000
+00000
+00000
+
+RockWall
+grey
+00000
+00000
+00000
+00000
+00000
+
+EarthBoulder
+ brown lightbrown Black
+.111.
+10002
+10002
+10002
+.222.
+
+RockBoulder
+ grey lightgrey darkgrey
+.111.
+10002
+10002
+10002
+.222.
+
+IceBoulder
+lightblue white lightgrey
+.111.
+10002
+10002
+10002
+.222.
+
+Cloud
+lightgrey white 
+..11.
+.1110
+11100
+.000.
+.....
+
+PlayerR
+Red lightbrown black yellow
+.11..
+.11..
+22220
+333..
+3.3..
+
+PlayerL
+Red lightbrown black yellow
+..11.
+..11.
+02222
+..333
+..3.3
+
+PlayerU
+Red lightbrown black yellow
+.110.
+.112.
+2222.
+2333.
+.3.3.
+
+PlayerGrabR
+Red lightbrown black yellow
+.11..
+.11..
+.2220
+.233.
+..333
+
+PlayerGrabL
+Red lightbrown black yellow
+..11.
+..11.
+0222.
+.332.
+333..
+
+PlayerGrabU
+Red lightbrown black yellow
+2110.
+2112.
+.222.
+.333.
+.3.3.
+
+ChainV
+red
+...0.
+...0.
+...0.
+...0.
+...0.
+
+ChainH
+red
+.....
+.....
+00000
+.....
+.....
+
+
+Ticked
+transparent
+
+FreeSpot
+transparent
+
+BeingDragged
+transparent
+
+RemoveChains
+transparent
+
+FakeObstruction
+transparent
+
+=======
+LEGEND
+=======
+
+Grass = Grass1 or Grass2 or Grass3 or Grass4 or Grass5 or Grass6 or Grass7
+PlayerFree = PlayerL or PlayerR or PlayerU
+PlayerGrab = PlayerGrabL or PlayerGrabR or PlayerGrabU
+PlayersL = PlayerL or PlayerGrabL
+PlayersR = PlayerR or PlayerGrabR
+PlayersU = PlayerU or PlayerGrabU
+Boulder = RockBoulder or EarthBoulder or IceBoulder
+Wall = EarthWall or RockWall
+Earth = EarthBoulder or EarthWall
+Rock = RockBoulder or RockWall
+Ice = IceBoulder
+Player = PlayerFree or PlayerGrab
+Chain = ChainV or ChainH
+Obstruction = Boulder or Wall or Border or FakeObstruction or Cloud
+Anchorable = Earth
+Grabable = Boulder or Wall or Cloud
+Pullable = IceBoulder or Player or Cloud
+CanFall = PlayerFree or Boulder
+Pushable = Boulder or Cloud
+RemoveOnMove = Chain  or BeingDragged
+RemoveOnTick = Ticked or FakeObstruction or FreeSpot
+
+. = Background
+# = EarthWall
+X = RockWall
+P = PlayerR
+E = EarthBoulder
+R = RockBoulder
+I = IceBoulder
+C = Cloud
+! = Target
++ = Border
+
+
+=======
+SOUNDS
+=======
+Boulder Move 22410307
+Player Move 23299100
+SFX0 39201707
+SFX1 57295507
+SFX2 30065707
+restart 73299508
+undo 15745906
+flag create 18026700
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Obstruction, Chain
+Target, ExtendedTarget, Flag
+Grass
+FreeSpot
+Ticked
+BeingDragged
+RemoveChains
+
+======
+RULES
+======
+Up [Wall no Grass|no Wall]  -> [Wall random Grass|] 
+Up [Target | no ExtendedTarget] -> [Target | ExtendedTarget]
+
+
+[RemoveOnTick] -> []
+[moving Player][RemoveOnMove] -> [moving Player][]
+
+[RemoveChains][Chain] -> [RemoveChains][]
+[RemoveChains] -> []
+
+[ ACTION PlayerGrab ] -> [ DOWN PlayerGrab ]
+
+[ LEFT PlayerU ] -> [ PlayerL]
+[ RIGHT PlayerU ] -> [ PlayerR]
+[ LEFT PlayerR ] -> [ PlayerL]
+[ RIGHT PlayerL ] -> [ PlayerR]
+
+Horizontal [> PlayerFree|Pushable] ->[> PlayerFree|> Pushable]   
+
+
+UP [ UP PlayerGrabL | No Obstruction ] -> [ PlayerGrabL | FreeSpot ]
+UP [ LEFT PlayerGrabL | No Obstruction ] -> [ PlayerGrabL | FreeSpot ]
+UP [ UP PlayerGrabR | No Obstruction ] -> [ PlayerGrabR | FreeSpot ]
+UP [ RIGHT PlayerGrabR | No Obstruction ] -> [ PlayerGrabR | FreeSpot ]
+[ LEFT  Player ] -> [ LEFT PlayerL ]
+[ RIGHT  Player ] -> [ RIGHT PlayerR ]
+[ DOWN  PlayersL ] -> [ PlayerL ]
+[ DOWN  PlayersR ] -> [ PlayerR ]
+[ DOWN  PlayersU ] -> [ PlayerU ]
+[ UP  PlayerFree ] -> [ PlayerU ]
+
+
+RIGHT [ no Obstruction | FreeSpot ] [PlayerGrabL] -> [ PlayerL |  ] [] SFX1
+Left [ no Obstruction | FreeSpot ] [PlayerGrabR] -> [ PlayerR |  ] [] SFX1
+
+Right [ACTION PlayerR | Grabable] -> [PlayerGrabR | Grabable]
+Left [ACTION PlayerL | Grabable] -> [PlayerGrabL | Grabable]
+Up [ACTION PlayerU | Grabable] -> [PlayerGrabU | Grabable]
+
+Right [ACTION PlayerR | no Obstruction] -> [PlayerR | ChainH ] sfx0 again 
+Left [ACTION PlayerL | no Obstruction] -> [PlayerL | ChainH ] sfx0 again
+Up [ACTION PlayerU | no Obstruction] -> [PlayerU | ChainV ] sfx0 again
+
+
+[Chain|Chain|Chain|Chain|Chain|no Obstruction no Player] -> [Chain|Chain|Chain|Chain|Chain|FakeObstruction] 
++ Horizontal [ ChainH | no Player no Obstruction ] -> [ ChainH | ChainH ]
++ Up [ ChainV | no Player no Obstruction ] -> [ ChainV | ChainV ]
+[Player|...|Chain | Pullable no BeingDragged] -> [Player|...|Chain | Pullable BeingDragged] SFX2
+[Player no BeingDragged|...|Chain | Anchorable] -> [Player BeingDragged |...| Chain | Anchorable] SFX2
+[Player|...| Chain | Obstruction no Anchorable no Pullable] -> [Player|...| Chain RemoveChains | Obstruction ]
+
+
+Late Left [Player no Ticked BeingDragged|Chain|Anchorable] -> [| PlayerGrabL Ticked  | Anchorable] again
+Late Right [Player no Ticked BeingDragged|Chain|Anchorable] -> [|PlayerGrabR Ticked | Anchorable] again
+Late Up [Player no Ticked|Chain|Anchorable] -> [|PlayerGrabU Ticked | Anchorable] again
+
+
+Late [Pullable no Ticked BeingDragged|Chain] -> [|Pullable BeingDragged Ticked] again
+Late [BeingDragged][no Chain] -> [][]
+
+Late DOWN [CanFall no BeingDragged no Ticked | no Obstruction no Player] -> [no CanFall no BeingDragged | CanFall Ticked ] again
+
+
+Late Up [Target Player no BeingDragged|ExtendedTarget] -> [Target Player|Flag]
+
+==============
+WINCONDITIONS
+==============
+Some Flag
+
+=======
+LEVELS
+=======
+
+MESSAGE I am Manni the Mountaineer! No mountain is too tall for my trusty grappling hook [ACTION]! I will reach the golden flagpole without breaking a sweat.
++++++++++++++++++++++++++++
++.........................+
++.........................+
++................#........+
++.....####..............!.+
++.................########+
++.....................####+
++.........########....####+
++........................#+
++#.....................###+
++#.P..........#####....###+
++####.........#####....###+
++#########################+
+
+MESSAGE Even when my grappling hook does not work, I can overcome small hills by holding on to them [ACTION] and pulling myself UP or TOWARDS the ledge.
++++++++++++++++++++++++++++
++.........................+
++...............###..###..+
++...............########..+
++.P.....xx...............!+
++##......x.......x......##+
++##..............x......##+
++#..............xx......##+
++#.......XX....#x.......##+
++#......##XX...#.......x##+
++###....########......####+
++#########################+
+
++++++++++++++++++++++++++++
++................##..##...+
++....######......#..###..!+
++.......###........#.....#+
++....................##.x#+
++....####..........##...xx+
++.....##.........x.....#x#+
++.........#x......##...###+
++..##.##.....xxxx.....x###+
++.....##....###..xxxx..###+
++.P..........##.......####+
++#########################+
+
+MESSAGE These boulders? Pah! I can push them around; no problem. [Remember: Undo last steps with Z and restart a level with R]
++++++++++++++++++++++++++++
++#..#...#.................+
++#P.R...E.......E##.......+
++####...#X..#...###.......+
++.......#X#........#......+
++....R.........R..........+
++.######....x#####.E...###+
++.###.......xx..#..XX.....+
++.##...#....r..!#.........+
++.##..##..x.#.###.##....XX+
++###......x.............XX+
++#########################+
+
++++++++++++++++++++++++++++
++.........................+
++..#...........E........##+
++.........#XX.####....#...+
++.....##........##....#...+
++......####.........I.#..!+
++...#..#....###.....###..X+
++.....I..#..####.........X+
++P.#..####...............X+
++#...####...............XX+
++#...###########.##.###.XX+
++#########################+
+
++++++++++++++++++++++++++++
++...........#....#......#.+
++.....#.............R.....+
++P......C.#XX.....####...!+
++#C......##......#.......x+
++#.......................x+
++#.....#...##.............+
++#.....###I...............+
++#######..I...............+
++#######.#E...............+
++#######..I###############+
++#########################+
+
+MESSAGE Thanks for playing!

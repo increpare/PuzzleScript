@@ -1,0 +1,280 @@
+title Involuntary Line Force Plus
+author Joel Fox
+noaction
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+PlayerU
+Black Orange White Blue
+.111.
+22222
+.333.
+.3.3.
+.....
+
+PlayerD
+Black Orange White Blue
+.....
+.010.
+22222
+.333.
+.3.3.
+
+PlayerL
+Black Orange White Blue
+.01..
+.22..
+2222.
+.333.
+.3.3.
+
+PlayerR
+Black Orange White Blue
+..10.
+..22.
+.2222
+.333.
+.3.3.
+
+OrangeCrate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+PurpleCrate
+Purple
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+Player = PlayerU or PlayerD or PlayerL or PlayerR
+crate = PurpleCrate or OrangeCrate
+Blocking = wall or crate
+
+. = Background
+# = Wall
+P = PlayerU
+* = OrangeCrate
+@ = OrangeCrate and Target
+O = Target
+X = playerU and Target
+U = PurpleCrate
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+up [> Player] -> [> PlayerU]
+down [> Player] -> [> PlayerD]
+left [> Player] -> [> PlayerL]
+right [> Player] -> [> PlayerR]
+
+[> player|wall] -> [player|wall]
+[> player|crate|wall] -> [player|crate|wall]
+[> player|crate|crate|wall] -> [player|crate|crate|wall]
+[> player|crate|crate|crate|wall] -> [player|crate|crate|crate|wall]
+[> player|crate|crate|crate|crate|wall] -> [player|crate|crate|crate|crate|wall]
+[> player|crate|crate|crate|crate|crate|wall] -> [player|crate|crate|crate|crate|crate|wall]
+
+[> player|PurpleCrate] -> [player|PurpleCrate]
+[> player||PurpleCrate] -> [player||PurpleCrate]
+
+[parallel Player|...|Orangecrate] -> [parallel Player|...|parallel Orangecrate]
+[> Player|...|Purplecrate] -> [> Player|...|< Purplecrate]
+[Purplecrate|...|> Player] -> [< Purplecrate|...|> Player]
+[> PurpleCrate||< OrangeCrate] -> [PurpleCrate||OrangeCrate]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Use the force of lines!  Wait, I didn't mean to do that
+message level 1 of 10
+
+####..
+#..#..
+#.o###
+#*p..#
+#..*.#
+#.o###
+####..
+
+message Hmm, something is wrong with this one.
+message level 1.5 of 10
+
+####..
+#..#..
+#.o###
+#up..#
+#..*.#
+#.o###
+####..
+
+message level 2 of 10
+
+######
+#u...#
+#.#p.#
+#.@@.#
+#.o@.#
+#....#
+######
+
+message level 3 of 10
+
+#########
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+message level 4 of 10
+
+#######
+#..*..#
+#uo@ox#
+#..*..#
+#######
+
+message level 5 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*P*.#
+#.O*O.#
+#.....#
+#######
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#p#
+#.*#..ooo..#
+############
+
+message level 7 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+######
+#.OOP#
+#.**.#
+##.###
+.#.#..
+.#.#..
+##.#..
+#..##.
+#...#.
+#.#.#.
+#...#.
+#####.
+
+message level 9 of 10 
+
+######
+#o.#.#
+#p**.#
+##...#
+.###.#
+..##o#
+.....#
+
+message level 10 of 10
+
+#########
+#....ooo#
+#...#.#.#
+#####.#.#
+#.......#
+#*#*#*###
+#.p...#..
+#######..
+
+message congratulations!
+
+(these next two both work)
+#######
+#*****#
+#ooooo#
+##....#
+###...#
+####..#
+#####p#
+#######
+
+######
+#****#
+#oooo#
+##...#
+###..#
+####p#
+######

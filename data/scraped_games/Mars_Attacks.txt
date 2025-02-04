@@ -1,0 +1,177 @@
+title Mars Attacks
+ 
+homepage https://soundcloud.com/ridlaa
+
+text_color green
+
+========
+OBJECTS
+========
+
+Background
+Black darkblue
+00100
+00000
+00010 
+10000 
+00000
+
+
+Crate
+lightbrown brown darkbrown 
+10000
+21110
+21110
+21110
+22221
+
+
+Wall
+Green Darkgreen lightgreen
+02222
+10002
+10002
+10002
+11110
+
+Player
+lightgreenBlack
+.000.
+01010
+01010
+.000.
+..0..
+
+Fruit 
+White gray
+.000.
+00000
+00010
+00010
+.000.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+F = Fruit
+C = Crate
+
+
+=======
+SOUNDS
+=======
+Fruit destroy 66959100
+startgame 82125102
+endgame 70589308
+Crate move 47385307
+closemessage 83916906
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+Player, Wall, Fruit, Crate
+
+======
+RULES
+======
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player |  ] -> [ > Player | NO Fruit ]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+No fruit
+
+=======
+LEVELS
+=======
+
+message collect all the pills
+
+message Wake up Ridlaa time to take your pills
+
+#######
+#.P..F#
+#.....#
+###C#..
+#....#.
+#...F.#
+#.....#
+
+message You look kinda ill but I'm feeling them skills
+
+P#####.
+...#...
+...#...
+.F.#.F.
+...#...
+...C...
+.#####.
+
+message Raise it up raise it up
+
+####...
+#...#..
+#.F..#.
+#.....#
+#..F..#
+#F...C.
+#####.P
+
+message Waiting for the aliens with bright lights n beams
+
+..#...P
+..C....
+..#.F..
+..#....
+..#.F..
+..#....
+F.#####
+
+message We all killing one another, there's no I in team
+
+...#...
+..#P#..
+.#...#.
+###C###
+#F....#
+#.....#
+#....F#
+
+message Beam me up scotty n don't forget my hottie
+
+P..C...
+..#.#..
+.#...#.
+###C###
+#.....#
+#.....#
+#F...F#
+
+message A token of my life just trying to break free
+
+#######.......####....#........C......#...
+#.P...#.#####.#...#...C.......#.#....#.#..
+#....C....#...#.F..#..#......#...#..#...#.
+#####..F..C...#.....#.#.F...###C##.#######
+#....#....#...#.....#.#.....#....#.C.....#
+#.....#.#####.####C#..C.....#.F..#.#..F..#
+#......#..............#####.#....#.#.....#
+
+message You won!
+
+
+
+
+

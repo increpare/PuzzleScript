@@ -1,0 +1,814 @@
+title Towers of Saigon
+author Theta Games
+homepage http://theta.freehostia.com
+
+noaction
+color_palette c64
+text_color LIGHTGREEN
+Background_color BLACK
+
+========
+OBJECTS
+========
+
+Player P
+WHITE LIGHTGREY
+0...0
+.000.
+.000.
+.000.
+0...0
+
+Wall #
+DARKGREY GREY
+11110
+10000
+10000
+10000
+00000
+
+Background .
+GREEN
+
+
+Tower1 1
+YELLOW BROWN
+00000
+0...0
+0...0
+0...0
+00000
+
+Tower2 2
+ORANGE
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Tower3 3
+RED
+.....
+.....
+..0..
+.....
+.....
+
+PadEnt M
+DARKBLUE DARKGREEN
+..0..
+.000.
+00100
+.000.
+..0..
+
+PadExit N
+DARKBLUE DARKGREEN
+11.11
+1...1
+..0..
+1...1
+11.11
+
+ChangePad *
+PURPLE BLUE
+.111.
+1...1
+1.1.1
+1...1
+.111.
+
+
+
+
+=======
+LEGEND
+=======
+
+a = Tower1 and Tower2
+b = Tower2 and Tower3
+c = Tower1 and Tower3
+d = Tower1 and Tower2 and Tower3
+@ = Player and PadExit
+j = Tower1 and ChangePad
+k = Tower2 and ChangePad
+l = Tower3 and ChangePad
+
+w = Tower1 and Tower2 and ChangePad
+x = Tower2 and Tower3 and ChangePad
+y = Tower1 and Tower3 and ChangePad
+z = Tower1 and Tower2 and Tower3 and ChangePad
+
+=======
+SOUNDS
+=======
+
+Tower1 Move 57121907
+Tower2 Move 57121907
+Tower3 Move 57121907
+
+StartGame 9766906
+EndLevel 71264903
+EndGame 64944903
+Restart 48391304
+Undo 26735304
+
+
+sfx1 16121703
+(sfx2 88063503)
+sfx2 67416302
+
+================
+COLLISIONLAYERS
+================
+
+Background
+PadEnt, PadExit, ChangePad
+Player, Wall, Tower1
+Tower2
+Tower3
+
+======
+RULES
+======
+
+[ > Player | Tower1 | ] -> [ > Player | > Tower1 | ]
+[ > Player | Tower2 | ] -> [ > Player | > Tower2 | ]
+[ > Player | Tower3 | ] -> [ > Player | > Tower3 | ]
+
+[> Player | > Tower2 | Tower3 ] -> [ Player | Tower2 | Tower3 ]
+
+[> Player | > Tower1 | Tower3 ] -> [ Player | Tower1 | Tower3]
+
+[> Player | > Tower1 | Tower2 ] -> [ Player | Tower1 | Tower2 ]
+
+[> Player | > Tower3 | Tower3 ] -> [ Player | Tower3 | Tower3 ]
+
+[> Player | > Tower2 | Tower2 ] -> [ Player | Tower2 | Tower2 ]
+
+[ > Tower1 | Tower3 ] -> [ Tower1 | Tower3 ]
+
+
+[ > Tower1 | Wall ] -> cancel
+[ > Tower2 | Wall ] -> cancel
+[ > Tower3 | Wall ] -> cancel
+
+[> Player | > Tower1 > Tower2 | Tower3 ] -> [ Player | Tower1 Tower2 | Tower3]
+
+[> Player | > Tower1 Tower2 | Tower3 ] -> [ Player | Tower1 Tower2 | Tower3]
+
+[> Player | > Tower2 Tower3 | Tower1 Tower2 ] -> [Player | Tower2 | Tower1 Tower2 Tower3]
+
+[> Player | ChangePad no Tower1 no Tower2 no Tower3] [ Tower1 ChangePad no Tower2 no Tower3] [Tower2 ChangePad no Tower1 no Tower3] [Tower3 ChangePad no Tower1 no Tower2] -> [ | Player  ChangePad sfx2] [ ChangePad Tower3 ] [ ChangePad Tower1 ] [ ChangePad Tower2 ]
+
+
+late [ Player PadEnt ] [PadExit no Tower1 no Tower2 no Tower3] -> [ Padent ] [Player Padexit] sfx1
+
+late [ Tower1 PadEnt ] [PadExit no Player no Tower1 no Tower2 no Tower3] -> [ Padent ] [Tower1 Padexit] sfx1
+
+late [ Tower2 PadEnt ] [PadExit no Player no Tower2 no Tower3] -> [ Padent ] [Tower2 Padexit] sfx1
+
+late [ Tower3 PadEnt ] [PadExit no Player no Tower3] -> [ Padent ] [Tower3 Padexit] sfx1
+
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+all Tower3 on Tower2
+all Tower2 on Tower1
+
+=======
+LEVELS
+=======
+
+
+(Level 1)
+#########
+#.......#
+#.......#
+#..P.3..#
+#.......#
+#..1.2..#
+#.......#
+#.......#
+#########
+
+MESSAGE Hi
+
+(Level 2)
+#########
+#.......#
+#.......#
+#..P#3..#
+#...#...#
+#..1#2..#
+#...#...#
+#...#...#
+#########
+
+MESSAGE Do you like this game?
+
+(Level 3)
+#########
+#.......#
+#2......#
+#..P#3..#
+#...#...#
+#..3.1..#
+#....2..#
+#1......#
+#########
+
+MESSAGE It's going to get a bit trickier.
+
+(Level 4)
+#########
+#P.2....#
+##1#..3.#
+#.......#
+#..2....#
+#...#####
+#..3#...#
+#.....1.#
+#########
+
+MESSAGE Puzzles
+
+(Level 5)
+#########
+#.......#
+#.......#
+##.#....#
+#P31.2#.#
+#####.#.#
+#.......#
+#.......#
+#########
+
+MESSAGE Mmmmm, banh mi.
+
+(Level 6)
+#########
+#.......#
+#...2...#
+#.......#
+#.13P31.#
+#.......#
+#...2...#
+#.......#
+#########
+
+MESSAGE Am I so predictable?
+
+(Level 7)
+#########
+#...P...#
+#.......#
+#.1.2.3.#
+#..###..#
+#...1...#
+#2.....3#
+#.......#
+#########
+
+MESSAGE Go go Power Rangers!
+
+(Level 8)
+#########
+#.1.3.2.#
+#.P.....#
+#.2..2..#
+#...##..#
+#..1#...#
+#.13....#
+#....3..#
+#########
+
+
+MESSAGE Shifting
+
+(Level 9)
+#########
+#.......#
+#.......#
+#....a..#
+#.P..b..#
+#....c..#
+#.......#
+#.......#
+#########
+
+MESSAGE Natural light
+
+(Level 10)
+#########
+#.......#
+#..d...1#
+#......##
+#.P.....#
+#......2#
+#......3#
+#.......#
+#########
+
+MESSAGE Wraps and hot pickles
+
+(Level 11)
+#########
+#......1#
+#....3c##
+#.......#
+#.P.....#
+#...22..#
+#.......#
+#.......#
+#########
+
+MESSAGE Is this too easy?
+
+(Level 12)
+#########
+#P.2.3..#
+#..2....#
+#.2.###.#
+#.3.11#.#
+#..d1##.#
+#.....3.#
+#.......#
+#########
+
+MESSAGE Do you like the color palette?
+
+(Level 13)
+#########
+#......P#
+#.b#c...#
+#..#....#
+#.b#1...#
+#.......#
+#.....#.#
+#.....#a#
+#########
+
+MESSAGE Do you want to build a snowman?
+
+(Level 14)
+#########
+#P......#
+#..#.23.#
+#..a#.13#
+#...d#..#
+#.......#
+#.......#
+#.......#
+#########
+
+MESSAGE Is this canon?
+
+(Level 15)
+#########
+#...#...#
+#.P.#2#.#
+#....3..#
+#..####.#
+#.2d1.1.#
+#.3.....#
+#.......#
+#########
+
+MESSAGE Level 16
+
+(Level 16)
+#########
+#.......#
+#.b.#.2.#
+#..Pc...#
+#.#cac#.#
+#...c...#
+#.2.#.2.#
+#.......#
+#########
+
+MESSAGE What goes in must come out!
+
+(Level 17)
+#########
+#.......#
+#.P...M.#
+#.......#
+#########
+#.......#
+#.N.321.#
+#.......#
+#########
+
+MESSAGE Chao em!
+
+(Level 18)
+#########
+#...#...#
+#M.P1...#
+#.#####a#
+#3..#...#
+#...#..b#
+#3..1.2N#
+#.......#
+#########
+
+MESSAGE Crunchy praline
+
+(Level 19)
+#########
+#P......#
+#..1.1c.#
+#.a###.2#
+#..###..#
+#..###b3#
+#...3...#
+#...2...#
+#########
+
+MESSAGE A found harmonium
+
+(Level 20)
+#########
+#P......#
+#.c.M.2.#
+#..#1#..#
+#3##.#2.#
+#..21#..#
+#.2.N3c.#
+#.......#
+#########
+
+MESSAGE Party
+
+(Level 21)
+#########
+#########
+###...###
+###3#.###
+#P1M2N..#
+#########
+#########
+#########
+#########
+
+MESSAGE Shine on you crazy diamond
+
+(Level 22)
+#########
+#P..M...#
+#...#.3.#
+#.1###..#
+#..#N#2.#
+#..###..#
+#...#.3a#
+#...#...#
+#########
+
+MESSAGE Human GPS
+
+(Level 23)
+#########
+#P.1.3..#
+###.#.#.#
+#...#2..#
+#.#.#.#1#
+#.a...#.#
+#.##3##.#
+#.b.....#
+#########
+
+MESSAGE Fitchers Vogel
+
+(Level 24)
+#########
+#P......#
+#.###12.#
+#2#...#.#
+#1#c#b#.#
+#...d...#
+#3#####.#
+#.......#
+#########
+
+MESSAGE ChChChChanges
+
+(Level 25)
+#########
+#########
+##a#.#1##
+##j#k#l##
+#...b.3.#
+#.......#
+#...*...#
+#...P...#
+#########
+
+MESSAGE Down the line
+
+(Level 26)
+
+#########
+#########
+#########
+#......P#
+#b####2.#
+#l**.1.*#
+#1#######
+#########
+#########
+
+MESSAGE One of each on each
+
+(Level 27)
+#########
+#P###...#
+#.w1#.l.#
+#.###...#
+#......3#
+#.###...#
+#.*##.k.#
+#.###...#
+#########
+
+MESSAGE The Little Box
+
+(Level 28)
+#########
+#.......#
+#P..##..#
+#..kl#..#
+#..*j...#
+#..###..#
+#.......#
+#.......#
+#########
+
+MESSAGE Stylophone
+
+(Level 29)
+#########
+#...#...#
+#.3a#b..#
+#..*#.*.#
+#P#1#23##
+#.*.#*..#
+#..a#c..#
+#.......#
+#########
+
+MESSAGE Reversal
+
+(Level 30)
+#########
+###...###
+##.321.##
+#.1.#.3.#
+#.2P*.2.#
+#.3.#.1.#
+##.jkl.##
+###...###
+#########
+
+MESSAGE Combining elements
+
+(Level 31)
+#########
+#M...####
+###.3####
+#.*P*..1#
+#.#.k##3#
+#..1*2.N#
+#########
+#########
+#########
+
+MESSAGE In the stairwell (level 32)
+
+(Level 32)
+#########
+#P...#..#
+#.*1.#3.#
+#.#*2.2.#
+#.#M*3..#
+#.###*N.#
+#.#######
+#1#######
+#########
+
+MESSAGE Have another chocolate
+
+(Level 33)
+#########
+#P..#...#
+#3..#a..#
+#.M.....#
+######2##
+#1N2....#
+#3...c#.#
+#..1..b.#
+#########
+
+MESSAGE Measure Theory
+
+(Level 34)
+#########
+#.......#
+#.2.2.b.#
+#P#..##c#
+#.31N.a.#
+#..31.#M#
+#.3#.#.a#
+#.......#
+#########
+
+MESSAGE For reals
+
+(Level 35)
+#########
+#.#...#.#
+#..P1b..#
+#..#a#.2#
+#.cM.Nc.#
+#..#3#..#
+#..b.a..#
+#.#...#.#
+#########
+
+MESSAGE Talking turtle, fish, and cricket
+
+(Level 36)
+#########
+#...#...#
+#.P*.j1.#
+#...#1..#
+##.###.##
+#.3.#.2.#
+#..l.k.2#
+#.3.....#
+#########
+
+MESSAGE A free movie
+
+(Level 37)
+#########
+#P......#
+#.##.##b#
+#.c.2.#1#
+#.###..M#
+#3.N.3#.#
+#..2.1.a#
+#.......#
+#########
+
+MESSAGE Mmmmm, spring rolls
+
+(Level 38)
+#########
+#########
+#*k.2.###
+#**3...##
+#.1#32.##
+#11#P3.##
+#......##
+#########
+#########
+
+MESSAGE Key change!
+
+(Level 39)
+#########
+#.P..b..#
+#.2.M.2.#
+#1#a##c.#
+#..##...#
+#3.3.N.##
+#.ac...##
+#....####
+#########
+
+MESSAGE Doin' it right
+
+(Level 40)
+#########
+#.....3.#
+#.1P3*2.#
+#...#*#.#
+#..#.*1.#
+#...#k#.#
+#.1..#..#
+#..b....#
+#########
+
+MESSAGE Seems familiar?
+
+(Level 41)
+#########
+#.......#
+#.3a#b..#
+#...#...#
+#P#1#23##
+#...#...#
+#..a#c..#
+#.......#
+#########
+
+MESSAGE The baffled king composing
+
+(Level 42)
+#########
+#l.....*#
+#...2.1.#
+#.####3.#
+#P#M**1N#
+#.####2.#
+#.1.3.2.#
+#.......#
+#########
+
+MESSAGE Can't wait!
+
+(Level 43)
+#########
+###...###
+##M.2..##
+#.31.13.#
+#.2.P.2.#
+#.31.13.#
+##..2.N##
+###...###
+#########
+
+MESSAGE Do you like symmetric levels?
+
+(Level 44)
+#########
+#...2...#
+#.b.c.b.#
+#..1.1..#
+#2c.P.c2#
+#..1.1..#
+#.b.c.b.#
+#...2...#
+#########
+
+MESSAGE Psychedelic tarantulas
+
+(Level 45)
+#########
+#P..2..*#
+#.c.#.b.#
+#..*#*.1#
+#.1.#.2.#
+#..#*#..#
+#.##3...#
+#.......#
+#########
+
+MESSAGE Instant Crush
+
+(Level 46)
+#########
+#.......#
+#.1.3.b.#
+#..@a#..#
+##21Md2##
+#..#c#..#
+#.b.3.1.#
+#.......#
+#########
+
+MESSAGE And so I went downstairs
+
+(Level 47)
+#########
+#########
+###l.*N##
+#.1.3.2.#
+#P.a3113#
+#..3..a.#
+##M*.k.2#
+#####...#
+#########
+
+MESSAGE Last level?
+
+(Level 48)
+#########
+#..*..3P#
+#.###*#.#
+#.#N#M2.#
+#.#.#.#b#
+#..*1...#
+#.#a#.#.#
+#....c.*#
+#########
+
+MESSAGE Thanks for playing!

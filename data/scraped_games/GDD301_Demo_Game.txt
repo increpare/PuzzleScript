@@ -1,0 +1,167 @@
+title GDD301 Demo Game
+author Edward T. Reyes
+homepage www.playfulsystems.com
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Wall
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+
+Player
+darkblue red
+00000
+01010
+11111
+01110
+00100
+
+Player2
+darkblue green
+00000
+01010
+11111
+01110
+00100
+
+Button1
+black gray darkgray red
+02220
+21112
+21312
+21112
+02220
+
+Button2
+black gray darkgray green
+02220
+21112
+21312
+21112
+02220
+
+Crate
+orange brown darkbrown
+21112
+10001
+10001
+10001
+21112
+
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+t = Player2
+W = Wall
+c = Crate
+B = Button1
+u = Button2
+
+
+=======
+SOUNDS
+=======
+
+Player MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Button1, Button2
+Player, Player2, Wall, Crate
+
+
+======
+RULES
+======
+[ > Player ] [ Player2] -> [ > Player ] [ > Player2 ] 
+[ action Player ] [ Player2 ] -> [ > Player ] [  < Player2 ]
+(push)
+([ > Player | Crate ] -> [ > Player | > Crate ])
+([ > Player | Crate | Crate] -> [ > Player | > Crate | > Crate])
+([ > Player | Crate | Crate | Crate ] -> [ Player | | | ])
+([ action Player | Crate ] -> [ Player | > Crate])
+
+
+
+==============
+WINCONDITIONS
+==============
+All Button1 On Player
+All Button2 On Player2
+=======
+LEVELS
+=======
+
+MESSAGE Match your blocks with the corresponding buttons!
+
+wwwwwww
+w.b.u.w
+w.....w
+w.....w
+w.p.t.w
+w.....w
+wwwwwww
+
+MESSAGE Use crates to seperate your players!
+
+wwwwwwwww
+w..B.u..w
+w.......w
+w...c...w
+w...p...w
+w...t...w
+wwwwwwwww
+
+MESSAGE That was pretty easy, lets try something tougher!
+
+wwwwwwwwww
+w.......uw
+w........w
+w.......tw
+w......c.w
+w.....p..w
+w.B......w
+w.c......w
+w........w
+wwwwwwwwww
+
+MESSAGE Ok im working on a new mechanic..... its not working :(
+
+wwwwwwwww
+wb......w
+w..cccc.w
+w..c.uc.w
+w.....c.w
+wt...ccpw
+wwwwwwwww
+
+MESSAGE More easy levels just for filler!
+
+wwwwwwwww
+w...c...w
+w...c.c.w
+w.cbcuc.w
+w.c.....w
+wt.....pw
+wwwwwwwww

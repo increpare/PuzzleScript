@@ -1,0 +1,370 @@
+title Misaligned
+author Lucas Watson
+homepage www.puzzlescript.net
+again_interval 0.08
+
+========
+OBJECTS
+========
+
+Background
+LIGHTBLUE BLUE
+00000
+01010
+00000
+01010
+00000
+
+MoveBlock
+Black
+.....
+.....
+.....
+.....
+.....
+
+MoveResidue
+Black
+.....
+.....
+.....
+.....
+.....
+
+MoveR
+Black
+.....
+.....
+.....
+.....
+.....
+
+MoveR2
+Black
+.....
+.....
+.....
+.....
+.....
+
+MoveL
+Black
+.....
+.....
+.....
+.....
+.....
+
+MoveL2
+Black
+.....
+.....
+.....
+.....
+.....
+
+MoveU
+Black
+.....
+.....
+.....
+.....
+.....
+
+MoveU2
+Black
+.....
+.....
+.....
+.....
+.....
+
+MoveD
+Black
+.....
+.....
+.....
+.....
+.....
+
+MoveD2
+Black
+.....
+.....
+.....
+.....
+.....
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+PTarget
+DarkBlue
+.000.
+.0.0.
+00.00
+.000.
+.0.0.
+
+Wall
+DarkBlue DarkGreen
+00010
+11111
+01000
+11111
+00010
+
+Player1
+Black Red White Blue
+.000.
+.111.
+32323
+.333.
+.3.3.
+
+Player2
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Player3
+Black Yellow White Blue
+.000.
+.111.
+32323
+.333.
+.3.3.
+
+Crate
+Green LightGreen
+00000
+01100
+00010
+00010
+00000
+
+
+=======
+LEGEND
+=======
+
+MoveGroup = MoveR or MoveR2 or MoveL or MoveL2 or MoveU or MoveU2 or MoveD or MoveD2 or MoveResidue
+Player = Player1 or Player2 or Player3
+. = Background
+# = Wall and MoveBlock
+P = Player1
+Q = Player2
+R = Player3
+* = Crate
+@ = Crate and Target
+O = Target
+X = PTarget
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+Player MOVE 52120707
+
+================
+COLLISIONLAYERS
+================
+
+Background
+MoveR, MoveR2, MoveD, MoveD2, MoveL, MoveL2, MoveU, MoveU2, MoveResidue, MoveBlock
+Target, PTarget
+Player1, Player2, Player3, Wall, Crate
+
+======
+RULES
+======
+
+[ right Player3 ] -> [ right Player3 right MoveR2 ] again
+[ stationary Player3 MoveR2 ] -> [ right Player3 right MoveR] again
+[ stationary Player3 MoveR ] -> [ right Player3 right moveResidue] again
+[ left Player3 ] -> [ left Player3 left MoveL2 ] again
+[ stationary Player3 MoveL2 ] -> [ left Player3 left MoveL] again
+[ stationary Player3 MoveL ] -> [ left Player3 left moveResidue] again
+[ up Player3 ] -> [ up Player3 up MoveU2 ] again
+[ stationary Player3 MoveU2 ] -> [ up Player3 up MoveU] again
+[ stationary Player3 MoveU ] -> [ up Player3 up moveResidue] again
+[ down Player3 ] -> [ down Player3 down MoveD2 ] again
+[ stationary Player3 MoveD2 ] -> [ down Player3 down MoveD] again
+[ stationary Player3 MoveD ] -> [ down Player3 down moveResidue] again
+
+[ right Player2 ] -> [ right Player2 right MoveR ] again
+[ stationary Player2 MoveR ] -> [ right Player2 right MoveResidue] again
+[ left Player2 ] -> [ left Player2 left MoveL ] again
+[ stationary Player2 MoveL ] -> [ left Player2 left MoveResidue] again
+[ up Player2 ] -> [ up Player2 up MoveU ] again
+[ stationary Player2 MoveU ] -> [ up Player2 up MoveResidue] again
+[ down Player2 ] -> [ down Player2 down MoveD ] again
+[ stationary Player2 MoveD ] -> [ down Player2 down MoveResidue] again
+
+[ > Player  |  Crate ] -> [  >  Player  | > Crate  ]
+[ > Crate   |  Crate ] -> [  >  Crate   | > Crate  ]
+[ > Crate   |  Player] -> [  >  Crate   | > Player ]
+[ > Player  |  Player] -> [  >  Player  | > Player ]
+
+late [MoveGroup no Player] -> []
+late [MoveResidue Player] -> [Player]
+
+==============
+WINCONDITIONS
+==============
+
+All PTarget on Player
+All Target on Crate
+No MoveGroup
+
+=======
+LEVELS
+=======
+
+Message Our story begins with Pamela, a simple and honest box pusher.
+Message She is content with the peaceful life of pushing boxes.
+
+############
+#....##....#
+#....**...O#
+#O...##....#
+#.P........#
+###......###
+############
+
+Message Pamela was born with a talent for box pushing.
+Message Everyone wishes they could be half as skilled as she was!
+Message Unfortunately, for someone, that wish came true.
+Message That someone is Quincy.
+
+###########
+#####.O.###
+#####...###
+#.......###
+#.......###
+###..*..###
+###..Q...##
+###.....###
+###########
+
+Message Quincy is forced to go by his quick wit to solve hard problems.
+Message His "misalignment" is considered his most endearing quality.
+
+###########
+###....O.##
+###O..#####
+###.......#
+###.....*.#
+#....Q..*.#
+#.........#
+###########
+
+Message Despite his shortcomings, Quincy is catching up to Pamela's level!
+Message He should still learn to move 1 tile at a time, though.
+
+###########
+##.####...#
+##O.......#
+##.####...#
+##*####...#
+#.........#
+#......*.##
+#.Q...##.##
+#.....##O##
+###########
+
+Message Thanks to his hard work, Quincy finally caught up to Pamela's level!
+Message Congrats, Quincy!
+
+############
+#....##....#
+#....**...O#
+#O...##....#
+#.Q........#
+###......###
+############
+
+Message I think Quincy's doing just fine.
+Message On that note, let's check in on Pamela real quick!
+
+###########
+#.OO.O.OO.#
+#.#.#.#.#.#
+#.#.#*#.#.#
+#.*.*.*.*.#
+#.P.......#
+###########
+
+Message That didn't look like a problem at all for our esteemed Pamela!
+Message Now, I know what you're wondering:
+Message Will our box pushers meet in a wondrous turn of fate?!?!
+Message ...That's right now, actually!
+
+##########
+#.......##
+#......X##
+#..P.Q..##
+#......X##
+#........#
+##########
+
+Message They exchanged greetings! It was quite a nondescript experience.
+Message Perhaps things will change in the workplace, though!
+
+############
+#...##.O.*.#
+#......#...#
+#.Q.#..#...#
+#####..#####
+#...#..#.P.#
+#.*.O..#...#
+#...#......#
+############
+
+Message Together, they work like a charm!
+Message Wait a minute...Together....
+Message I have an idea.
+
+##################
+##..#..###########
+#.O....###########
+#..*...###########
+##..#..#..X.#.##.#
+#R.....#....######
+#...........#.##.#
+#......#....##..##
+#####..###########
+##################
+##################
+
+Message Thus, Ray enters the picture.
+Message Theoretically speaking, I wonder what weird stuff Ray and Quincy could do together!
+
+################
+#....######....#
+#....######....#
+#..............#
+#....######....#
+###.##....##.###
+#...##....##.###
+#......O..##.###
+###########....#
+#...Q*R........#
+###########....#
+###########....#
+################
+
+Message After concluding their shenanigans, Ray, Pamela, and Quincy go their separate ways.
+Message Although apart, the three of them will always be kept together by the art of box pushing.
+Message Good ending, right? I'm gonna go to sleep now. Hope that was a fun time!
+Message Thanks for playing! ~The End~

@@ -1,0 +1,467 @@
+title Pipes
+author Adam Gates
+homepage www.puzzlescript.net
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+New
+RED
+0....
+.....
+.....
+.....
+.....
+
+Join
+GREEN
+0....
+.....
+.....
+.....
+.....
+
+Rotate
+ORANGE
+0....
+.....
+.....
+.....
+.....
+
+Connected
+Green
+.....
+.....
+.....
+.....
+.....
+
+NotConnected
+Red
+.....
+.....
+..0..
+.....
+.....
+
+Player
+GREY
+00.00
+0...0
+.....
+0...0
+00.00
+
+E0000 .
+DARKGREY
+.....
+.....
+.....
+.....
+.....
+
+E1000
+DARKGREY
+00000
+.....
+.....
+.....
+.....
+
+E0100
+DARKGREY
+....0
+....0
+....0
+....0
+....0
+
+E0010
+DARKGREY
+.....
+.....
+.....
+.....
+00000
+
+E0001
+DARKGREY
+0....
+0....
+0....
+0....
+0....
+
+E1001
+DARKGREY
+00000
+0....
+0....
+0....
+0....
+
+E1100
+DARKGREY
+00000
+....0
+....0
+....0
+....0
+
+E0110
+DARKGREY
+....0
+....0
+....0
+....0
+00000
+
+E0011
+DARKGREY
+0....
+0....
+0....
+0....
+00000
+
+I1000
+Yellow
+..0..
+.000.
+.000.
+.000.
+.....
+
+I0100
+Yellow
+.....
+.000.
+.0000
+.000.
+.....
+
+I0010
+Yellow
+.....
+.000.
+.000.
+.000.
+..0..
+
+I0001
+Yellow
+.....
+.000.
+0000.
+.000.
+.....
+
+I1100
+Yellow
+..0..
+..0..
+..000
+.....
+.....
+
+I0110
+Yellow
+.....
+.....
+..000
+..0..
+..0..
+
+I0011
+Yellow
+.....
+.....
+000..
+..0..
+..0..
+
+I1001
+Yellow
+..0..
+..0..
+000..
+.....
+.....
+
+I1010
+Yellow
+..0..
+..0..
+..0..
+..0..
+..0..
+
+I0101
+Yellow
+.....
+.....
+00000
+.....
+.....
+
+I1110
+Yellow
+..0..
+..0..
+..000
+..0..
+..0..
+
+I0111
+Yellow
+.....
+.....
+00000
+..0..
+..0..
+
+I1011
+Yellow
+..0..
+..0..
+000..
+..0..
+..0..
+
+I1101
+Yellow
+..0..
+..0..
+00000
+.....
+.....
+
+I1111
+Yellow
+..0..
+..0..
+00000
+..0..
+..0..
+
+=======
+LEGEND
+=======
+
+X = New and E0000
+U = New and E1000
+R = New and E0100
+D = New and E0010
+L = New and E0001
+1 = New and E1001 and Player
+2 = New and E1100
+3 = New and E0011
+4 = New and E0110
+
+Background = E0000 or E1000 or E0100 or E0010 or E0001 or E1001 or E1100 or E0110 or E0011 
+
+Item = I1000 or I0100 or I0010 or I0001 or I1100 or I0110 or I0011 or I1001 or I1010 or I0101 or I0111 or I1011 or I1101 or I1110 or I1111
+
+T1  = I1000 or I0100 or I0010 or I0001
+T2A = I1100 or I0110 or I0011 or I1001
+T2B = I1010 or I0101
+T3  = I0111 or I1011 or I1101 or I1110 
+T4  = I1111
+
+T1000 = I1000 or I1100 or I1001 or I1010 or I1011 or I1101 or I1110 or I1111
+T0100 = I0100 or I1100 or I0110 or I0101 or I0111 or I1101 or I1110 or I1111
+T0010 = I0010 or I0110 or I0011 or I1010 or I0111 or I1011 or I1110 or I1111
+T0001 = I0001 or I0011 or I1001 or I0101 or I0111 or I1011 or I1101 or I1111
+
+N1000 = I0100 or I0010 or I0001 or I0110 or I0011 or I0101 or I0111
+N0100 = I1000 or I0010 or I0001 or I0011 or I1001 or I1010 or I1011
+N0010 = I1000 or I0100 or I0001 or I1100 or I1001 or I0101 or I1101
+N0001 = I1000 or I0100 or I0010 or I1100 or I0110 or I1010 or I1110
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Item
+New, Join, Rotate, Connected, NotConnected
+Player
+
+======
+RULES
+======
+
+[New E1000]->[Join E1000 Random I0100 Random I0010 Random I0001]
+[New E0100]->[Join E0100 Random I1000 Random I0010 Random I0001]
+[New E0010]->[Join E0010 Random I1000 Random I0100 Random I0001]
+[New E0001]->[Join E0001 Random I1000 Random I0100 Random I0010]
+
+[New E1100]->[Join E1100 Random I0010 Random I0001]
+[New E1001]->[Join E1001 Random I0100 Random I0010]
+[New E0110]->[Join E0110 Random I1000 Random I0001]
+[New E0011]->[Join E0011 Random I1000 Random I0100]
+
+[New E0000]->[Join E0000 Random I1000 Random I0100 Random I0010 Random I0001]
+
+(single)
+(up   [Join I1000|T0010]->[Join I1000|T0010])
+up   [Join I0100|T0010]->[Join I1100|T0010]
+up   [Join I0010|T0010]->[Join I1010|T0010]
+up   [Join I0001|T0010]->[Join I1001|T0010]
+
+right[Join I1000|T0001]->[Join I1100|T0001]
+(right[Join I0100|T0001]->[Join I0100|T0001])
+right[Join I0010|T0001]->[Join I0110|T0001]
+right[Join I0001|T0001]->[Join I0101|T0001]
+
+down [Join I1000|T1000]->[Join I1010|T1000]
+down [Join I0100|T1000]->[Join I0110|T1000]
+(down [Join I0010|T1000]->[Join I0010|T1000])
+down [Join I0001|T1000]->[Join I0011|T1000]
+
+left [Join I1000|T0100]->[Join I1001|T0100]
+left [Join I0100|T0100]->[Join I0101|T0100]
+left [Join I0010|T0100]->[Join I0011|T0100]
+(left [Join I0001|T0100]->[Join I0001|T0100])
+
+(double)
+(up   [Join I1100|T0010]->[Join I1100|T0010])
+up   [Join I0110|T0010]->[Join I1110|T0010]
+up   [Join I0011|T0010]->[Join I1011|T0010]
+(up   [Join I1001|T0010]->[Join I1001|T0010])
+up   [Join I0101|T0010]->[Join I1101|T0010]
+(up   [Join I1010|T0010]->[Join I1010|T0010])
+
+(right[Join I1100|T0001]->[Join I1100|T0001])
+(right[Join I0110|T0001]->[Join I0110|T0001])
+right[Join I0011|T0001]->[Join I0111|T0001]
+right[Join I1001|T0001]->[Join I1101|T0001]
+(right[Join I0101|T0001]->[Join I0101|T0001])
+right[Join I1010|T0001]->[Join I1110|T0001]
+
+down [Join I1100|T1000]->[Join I1110|T1000]
+(down [Join I0110|T1000]->[Join I0110|T1000])
+(down [Join I0011|T1000]->[Join I0011|T1000])
+down [Join I1001|T1000]->[Join I1011|T1000]
+down [Join I0101|T1000]->[Join I0111|T1000]
+(down [Join I1010|T1000]->[Join I1010|T1000])
+
+left [Join I1100|T0100]->[Join I1101|T0100]
+left [Join I0110|T0100]->[Join I0111|T0100]
+(left [Join I0011|T0100]->[Join I0011|T0100])
+(left [Join I1001|T0100]->[Join I1001|T0100])
+(left [Join I0101|T0100]->[Join I0101|T0100])
+left [Join I1010|T0100]->[Join I1011|T0100]
+
+(triple)
+up   [Join I0111|T0010]->[Join I1111|T0010]
+(up   [Join I1011|T0010]->[Join I1011|T0010])
+(up   [Join I1101|T0010]->[Join I1101|T0010])
+(up   [Join I1110|T0010]->[Join I1110|T0010])
+
+(right[Join I0111|T0001]->[Join I0111|T0001])
+right[Join I1011|T0001]->[Join I1111|T0001]
+(right[Join I1101|T0001]->[Join I1101|T0001])
+(right[Join I1110|T0001]->[Join I1110|T0001])
+
+(down [Join I0111|T1000]->[Join I0111|T1000])
+(down [Join I1011|T1000]->[Join I1011|T1000])
+down [Join I1101|T1000]->[Join I1111|T1000]
+(down [Join I1110|T1000]->[Join I1110|T1000])
+
+(left [Join I0111|T0100]->[Join I0111|T0100])
+(left [Join I1011|T0100]->[Join I1011|T0100])
+(left [Join I1101|T0100]->[Join I1101|T0100])
+left [Join I1110|T0100]->[Join I1111|T0100]
+
+[ Join ] -> [ Rotate ]
+
+[Rotate T1 ]->[Random T1 ]
+[Rotate T2A]->[Random T2A]
+[Rotate T2B]->[Random T2B]
+[Rotate T3 ]->[Random T3 ]
+[Rotate T4 ]->[       T4 ]
+
+[ ACTION Player I1000 ] -> [ Player I0100 ]
+[ ACTION Player I0100 ] -> [ Player I0010 ]
+[ ACTION Player I0010 ] -> [ Player I0001 ]
+[ ACTION Player I0001 ] -> [ Player I1000 ]
+
+[ ACTION Player I1100 ] -> [ Player I0110 ]
+[ ACTION Player I0110 ] -> [ Player I0011 ]
+[ ACTION Player I0011 ] -> [ Player I1001 ]
+[ ACTION Player I1001 ] -> [ Player I1100 ]
+
+[ ACTION Player I1010 ] -> [ Player I0101 ]
+[ ACTION Player I0101 ] -> [ Player I1010 ]
+
+[ ACTION Player I1110 ] -> [ Player I0111 ]
+[ ACTION Player I0111 ] -> [ Player I1011 ]
+[ ACTION Player I1011 ] -> [ Player I1101 ]
+[ ACTION Player I1101 ] -> [ Player I1110 ]
+
+[] -> [ Connected ]
+
+late [Connected T1000 E1000]->[No Connected T1000 E1000]
+late [Connected T0100 E0100]->[No Connected T0100 E0100]
+late [Connected T0010 E0010]->[No Connected T0010 E0010]
+late [Connected T0001 E0001]->[No Connected T0001 E0001]
+
+late up   [Connected T1000|N0010]->[No Connected T1000|N0010]
+late right[Connected T0100|N0001]->[No Connected T0100|N0001]
+late down [Connected T0010|N1000]->[No Connected T0010|N1000]
+late left [Connected T0001|N0100]->[No Connected T0001|N0100]
+
+late [ No Connected ] -> [ NotConnected ]
+
+==============
+WINCONDITIONS
+==============
+
+All Item on Connected
+
+=======     
+LEVELS
+=======
+
+1UUU2
+LXXXR
+LXXXR
+LXXXR
+3DDD4
+
+message Well done! Something a little harder...
+
+1UUUUUU2
+LXXXXXXR
+LXXXXXXR
+LXXXXXXR
+LXXXXXXR
+LXXXXXXR
+LXXXXXXR
+3DDDDDD4
+
+message Too easy? Try this...
+
+1UUUUUUUUUUUUUUUU2
+LXXXXXXXXXXXXXXXXR
+LXXXXXXXXXXXXXXXXR
+LXXXXXXXXXXXXXXXXR
+LXXXXXXXXXXXXXXXXR
+LXXXXXXXXXXXXXXXXR
+LXXXXXXXXXXXXXXXXR
+LXXXXXXXXXXXXXXXXR
+LXXXXXXXXXXXXXXXXR
+LXXXXXXXXXXXXXXXXR
+LXXXXXXXXXXXXXXXXR
+3DDDDDDDDDDDDDDDD4
+
+message Congratulations!
+

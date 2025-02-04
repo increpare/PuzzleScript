@@ -1,0 +1,983 @@
+Title Tiny Farm 0.1
+author Colin Han
+
+background_color #3FC712
+
+zoomscreen 15x9
+
+realtime_interval 0.25
+again_interval 0.25
+========
+OBJECTS
+========
+
+border
+#505250 #3E403E #2D2E2D
+00000
+00000
+11111
+11111
+22222
+
+background
+#33E823 #29D61A #18A60C #188F0D #33B327
+44434
+42324
+10432
+02344
+44444
+
+PlayerD1
+#F0C60C #67F00C #4CA312 black
+.222.
+.000.
+02220
+.222.
+.3.3.
+
+PlayerU1
+#F0C60D #67F00C #4CA312 black
+.222.
+.000.
+02220
+.222.
+.3.3.
+
+PlayerL1
+#F0C60C #67F00C #4CA312 black
+.222.
+.000.
+.022.
+.222.
+.3.3.
+
+PlayerR1
+#F0C60C #67F00C #4CA312 black
+.222.
+.000.
+.220.
+.222.
+.3.3.
+
+PlayerhoeD1
+#F0C60C #67F00C #4CA312 black brown
+.222.
+.000.
+0220.
+.220.
+.3444
+
+PlayerhoeU1
+#F0C60D #67F00C #4CA312 black brown
+.222.
+4000.
+0222.
+.222.
+.3.3.
+
+PlayerhoeL1
+#F0C60C #67F00C #4CA312 black brown
+222..
+000..
+220..
+2220.
+3.444
+
+PlayerhoeR1
+#F0C60C #67F00C #4CA312 black brown
+..222
+..000
+..022
+.0222
+443.3
+
+PlayerwheatD1
+#F0C60C #67F00C #4CA312 yellow black
+.222.
+.000.
+0330.
+.332.
+.4.4.
+
+PlayerwheatU1
+#F0C60C #67F00C #4CA312 yellow black
+.222.
+.000.
+.2220
+.2223
+.4.4.
+
+PlayerwheatL1
+#F0C60C #67F00C #4CA312 yellow black
+.222.
+.000.
+3022.
+3222.
+.4.4.
+
+PlayerwheatR1
+#F0C60C #67F00C #4CA312 yellow black
+.222.
+.000.
+.0330
+.233.
+.4.4.
+
+(Currency)
+
+Dollar
+#FFE100 #505250 #3E403E #2D2E2D
+11111
+10100
+22222
+00202
+33333
+
+
+C1
+#FFE100 #505250 #3E403E #2D2E2D
+00010
+00010
+00020
+00020
+00030
+
+C2
+#FFE100 #505250 #3E403E #2D2E2D
+11110
+00010
+22220
+20000
+33330
+
+C3
+#FFE100 #505250 #3E403E #2D2E2D
+11110
+00010
+02220
+00020
+33330
+
+C3tut
+#FFE100 #505250 #3E403E #2D2E2D
+11110
+00010
+02220
+00020
+33330
+
+C4
+#FFE100 #505250 #3E403E #2D2E2D
+10010
+10010
+22220
+00020
+00030
+
+C5
+#FFE100 #505250 #3E403E #2D2E2D
+11110
+10000
+22220
+00020
+33330
+
+C6
+#FFE100 #505250 #3E403E #2D2E2D
+10000
+10000
+22220
+20020
+33330
+
+C7 
+#FFE100 #505250 #3E403E #2D2E2D
+11110
+00010
+00020
+00020
+00030
+
+C8
+#FFE100 #505250 #3E403E #2D2E2D
+11110
+10010
+22220
+20020
+33330
+
+C9
+#FFE100 #505250 #3E403E #2D2E2D
+11110
+10010
+22220
+00020
+00030
+
+C0
+#FFE100 #505250 #3E403E #2D2E2D
+11110
+10010
+20020
+20020
+33330
+
+(The houses. Only the hut so far)
+
+housefloor
+#91600C #9E6E21
+00100
+00100
+11111
+00100
+00100
+
+ htopmiddleset
+ purple
+ 
+ Htopsides1
+ #D43D3D #C9842A #FFF700
+ .....
+ ..0..
+ .010.
+ 01110
+ 01110
+ 
+ htopmiddle1
+ #D43D3D #C9842A #FFF700
+ ..0..
+ .010.
+ 01110
+ 11111
+ 10001
+ 
+ hwindow1
+ #D43D3D #C9842A #FFF700 #878784
+ 00000
+ 00000
+ 00200
+ 00000
+ 33333
+
+(Doors)
+
+Housedoortut
+#D1940F #A87913 white #878784 #D43D3D
+40004
+10000
+11020
+10000
+33333
+
+Housedoor1
+#D1940F #A87913 white #878784 #D43D3D
+40004
+10000
+11020
+10000
+33333
+
+(crop-farms)
+
+Farmland
+#BF862A #9E6E21
+00010
+00000
+00000
+01000
+00000
+
+Hoedfarmland
+#91600C #9E6E21
+00010
+00000
+00000
+01000
+00000
+(Tutorial crops)
+
+Farmlandtut
+#BF862A #9E6E21
+00010
+00000
+00000
+01000
+00000
+
+Hoedfarmlandtut
+#91600C #9E6E21
+00010
+00000
+00000
+01000
+00000
+
+(Crops!)
+
+wheatseed
+yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+Wheat1
+yellow #CED422
+.....
+.....
+.....
+.1...
+.0.1.
+
+Wheat2
+yellow #CED422
+.....
+.1...
+.0.1.
+.0.0.
+.0.0.
+
+wheat3
+yellow #CED422
+1....
+.0.1.
+.0.0.
+.0.0.
+.0.0.
+
+wheat4
+yellow #FFD500 #CED422
+1....
+.0.1.
+.2.0.
+.0.2.
+.0...
+
+(Collectable coins)
+
+coin1 
+yellow black #F5DD27 #F5DD27
+.300.
+00120
+00010
+22000
+.003.
+
+coin2 
+yellow black #F5DD27 #F5DD27
+.300.
+00120
+00010
+22000
+.003.
+
+coin3
+yellow black #F5DD27 #F5DD27
+.300.
+00120
+00010
+22000
+.003.
+
+coin4
+yellow black #F5DD27 #F5DD27
+.300.
+00120
+00010
+22000
+.003.
+
+coin5
+yellow black #F5DD27 #F5DD27
+.300.
+00120
+00010
+22000
+.003.
+
+cointut
+yellow black #F5DD27 #F5DD27
+.300.
+00120
+00010
+22000
+.003.
+
+cointutbeta
+Transparent transparent transparent transparent
+.300.
+00120
+00010
+22000
+.003.
+(Tutorial messages)
+Msg1
+#505250 #3E403E #2D2E2D
+00.00
+0...0
+.....
+1...1
+22.22
+
+msg2beta
+transparent
+
+Msg2
+#505250 #3E403E #2D2E2D
+00.00
+0...0
+.....
+1...1
+22.22
+
+msg3beta
+transparent
+
+Msg3
+#505250 #3E403E #2D2E2D
+00.00
+0...0
+.....
+1...1
+22.22
+
+msg4beta
+transparent
+
+Msg4
+#505250 #3E403E #2D2E2D
+00.00
+0...0
+.....
+1...1
+22.22
+
+Msg5
+#505250 #3E403E #2D2E2D
+00.00
+0...0
+.....
+1...1
+22.22
+
+Msg6
+#505250 #3E403E #2D2E2D
+00.00
+0...0
+.....
+1...1
+22.22
+
+Msg7
+#505250 #3E403E #2D2E2D
+00.00
+0...0
+.....
+1...1
+22.22
+
+Msg8
+#505250 #3E403E #2D2E2D
+00.00
+0...0
+.....
+1...1
+22.22
+
+(Misc)
+Target
+Red Darkred Darkred
+00.00
+0...0
+1...0
+1...1
+22.22
+
+targetbeta
+transparent
+
+(decor)
+
+water
+#2D27DB #3D37F0 #5C57E6
+00110
+02000
+01020
+01000
+00201
+
+treetop1
+#55DE16 #4ABF13
+..0..
+..01.
+.100.
+00010
+.0000
+
+treetop2
+#55DE16 #4ABF13
+..0..
+.100.
+.000.
+.0010
+01000
+
+treetop3
+#55DE16 #4ABF13
+...0.
+..01.
+.100.
+.0010
+0000.
+
+treetop4
+#55DE16 #4ABF13
+.....
+..01.
+.1000
+1001.
+.0000
+
+treewood
+#D19017 #BA7E0F
+..00.
+..10.
+..01.
+..00.
+..00.
+Temp
+purple
+
+Carry
+#505250 #3E403E #2D2E2D
+00000
+00.00
+1...1
+11.11
+22222
+
+animate
+transparent
+
+=======
+LEGEND
+=======
+Player = PlayerD1 or PlayerU1 or PlayerL1 or PlayerR1 or PlayerhoeD1 or PlayerhoeU1 or PlayerHoeR1 or PlayerhoeL1 or PlayerwheatU1 or PlayerwheatD1 or PlayerwheatL1 or PlayerwheatR1
+
+Player1 = PlayerD1 or PlayerU1 or PlayerL1 or PlayerR1
+
+Playerseed = PlayerwheatU1 or PlayerwheatD1 or PlayerwheatL1 or PlayerwheatR1
+
+Playerwheat =  PlayerwheatU1 or PlayerwheatD1 or PlayerwheatL1 or PlayerwheatR1
+
+PlayerHoe = PlayerhoeD1 or PlayerhoeU1 or PlayerHoeR1 or PlayerhoeL1
+
+PlayerHoe1 = PlayerhoeD1 or PlayerhoeU1 or PlayerHoeR1 or PlayerhoeL1
+
+number = C1 or C2 or C3 or C4 or C5 or C6 or C7 or C8 or C9 or C0
+
+Messages = Msg1 or Msg2 or msg2beta or Msg3 or msg3beta or Msg4 or msg4beta or Msg5 or Msg6 or Msg7 or Msg8
+
+Coins = coin1 or coin2 or coin3 or coin4 or coin5 or cointut or cointutbeta
+
+buildings = htopmiddleset or htopsides1 or htopmiddle1 or hwindow1
+
+trees = treetop1 or treetop2 or treetop3 or treetop4
+
+housedoors = housedoor1 or housedoortut
+
+cointuts = cointut or cointutbeta
+
+x = target
+Z = targetbeta
+
+P = playerD1
+# = border
+. = background
+
+$ = Farmland
+C = Cointut and MSG3
+
+(Tutorial Stuff)
+
+1 = Msg1
+2 = Msg2beta
+3 = Msg3beta
+@ = farmlandtut
+
+L = Htopsides1
+O = Htopmiddle1
+H = Hwindow1
+E = housedoortut
+U = housedoor1
+
+T = treetop1
+& = water
+
+% = hoedfarmland
+
+A = c0
+B = C3
++ = carry
+
+- = housefloor
+_ = wheatseed
+=======
+SOUNDS
+=======
+
+SFX0 86923704 (Dying)
+SFX1 68958507 (hoeing)
+SFX2 36217700 (Colect coin)
+
+================
+COLLISIONLAYERS
+================
+background
+
+temp, Messages, carry, dollar, buildings, animate, target, targetbeta
+
+Farmland, hoedfarmland, Farmlandtut, hoedfarmlandtut, housedoors, housefloor, coins
+
+wheatseed, wheat1, wheat2, wheat3, wheat4, water
+
+border, Player, trees, treewood
+
+number, c3tut, playerhoe, border
+
+======
+RULES
+======
+
+(Autosave)
+[ Player Background ] -> checkpoint
+
+( Player movement )
+[ Player Water ] -> [ water ] SFX0
+
+(Player picks up crop seeds)
+late [ PlayerU1 wheatseed ] -> [ PlayerwheatU1 Wheatseed ]
+late [ PlayerD1 wheatseed ] -> [ PlayerwheatD1 Wheatseed ]
+late [ PlayerL1 wheatseed ] -> [ PlayerwheatL1 Wheatseed ]
+late [ PlayerR1 wheatseed ] -> [ PlayerwheatR1 Wheatseed ]
+
+(PLANTING)
+
+late [ Playerwheat hoedfarmlandtut ] -> Playerwheat hoedfarmlandtut wheat1 ]
+
+(Harvestation!)
+
+(graphics-rendering)
+[ PlayerHoe Farmland ] -> [ PlayerHoe Hoedfarmland ]
+[ wheatseed no temp ] -> [ wheatseed housefloor ]
+
+(Animation)
+
+down [ trees | no temp ] -> [ trees | treewood ]
+late [ wheat1 no temp ] -> [ wheat2 ]
+late [ wheat2 no temp ] -> [ wheat3 ]
+late [ wheat3 no temp ] -> [ wheat4 ]
+
+(Top bar follows you)
+
+[ > Player ] [ Number ] -> [ > Player ] [ > Number ]
+[ > Player | Trees ] -> Cancel
+
+
+(Player switching tools)
+[ Action PlayerD1 ] -> [ PlayerHoeD1 ]
+[ Action PlayerU1 ] -> [ PlayerHoeU1 ] 
+[ Action PlayerL1 ] -> [ PlayerHoeL1 ] 
+[ Action PlayerR1 ] -> [ PlayerHoeR1 ] 
+
+[ Action PlayerwheatD1 ] -> [ PlayerD1 ]
+[ Action PlayerwheatU1 ] -> [ PlayerU1 ]
+[ Action PlayerwheatL1 ] -> [ PlayerL1 ]
+[ Action PlayerwheatR1 ] -> [ PlayerR1 ]
+
+[ Action PlayerhoeD1 ] -> [ PlayerD1 ] 
+[ Action PlayerhoeU1 ] -> [ PlayerU1 ] 
+[ Action PlayerhoeL1 ] -> [ PlayerL1 ] 
+[ Action PlayerhoeR1 ] -> [ PlayerR1 ]
+
+(Player movement)
+[ left Player1 ] -> [ left PlayerR1 ]
+[ right Player1 ] -> [ right PlayerL1 ]
+[ up Player1 ] -> [ up PlayerU1 ]
+[ down Player1 ] -> [ down PlayerD1 ]
+
+[ left PlayerHoe1 ] -> [ left PlayerHoeR1 ]
+[ right PlayerHoe1 ] -> [ right PlayerhoeL1 ]
+[ up PlayerHoe1 ] -> [ up PlayerHoeU1 ]
+[ down PlayerHoe1 ] -> [ down PlayerHoeD1 ]
+
+(Coin system)
+
+late down [ C1 | ... | C0 ] -> [ C0 | ... | C1 ]
+late down [ C2 | ... | C0 ] -> [ C0 | ... | C2 ]
+late down [ C3 | ... | C0 ] -> [ C0 | ... | C3 ]
+late down [ C4 | ... | C0 ] -> [ C0 | ... | C4 ]
+late down [ C5 | ... | C0 ] -> [ C0 | ... | C5 ]
+late down [ C6 | ... | C0 ] -> [ C0 | ... | C6 ]
+late down [ C7 | ... | C0 ] -> [ C0 | ... | C7 ]
+late down [ C8 | ... | C0 ] -> [ C0 | ... | C8 ]
+late down [ C9 | ... | C0 ] -> [ C0 | ... | C9 ]
+
+late down [ C1 | ... | C1 ] -> [ C0 | ... | C2 ]
+late down [ C2 | ... | C1 ] -> [ C0 | ... | C3 ]
+late down [ C3 | ... | C1 ] -> [ C0 | ... | C4 ]
+late down [ C4 | ... | C1 ] -> [ C0 | ... | C5 ]
+late down [ C5 | ... | C1 ] -> [ C0 | ... | C6 ]
+late down [ C6 | ... | C1 ] -> [ C0 | ... | C7 ]
+late down [ C7 | ... | C1 ] -> [ C0 | ... | C8 ]
+late down [ C8 | ... | C1 ] -> [ C0 | ... | C9 ]
+late down [ C9 | ... | C1 ] -> [ C0 | ... | C0 Carry ]
+
+late down [ C1 | ... | C2 ] -> [ C0 | ... | C3 ]
+late down [ C2 | ... | C2 ] -> [ C0 | ... | C4 ]
+late down [ C3 | ... | C2 ] -> [ C0 | ... | C5 ]
+late down [ C4 | ... | C2 ] -> [ C0 | ... | C6 ]
+late down [ C5 | ... | C2 ] -> [ C0 | ... | C7 ]
+late down [ C6 | ... | C2 ] -> [ C0 | ... | C8 ]
+late down [ C7 | ... | C2 ] -> [ C0 | ... | C9 ]
+late down [ C8 | ... | C2 ] -> [ C0 | ... | C0 Carry ]
+late down [ C9 | ... | C2 ] -> [ C0 | ... | C1 Carry ]
+
+late down [ C1 | ... | C3 ] -> [ C0 | ... | C4 ]
+late down [ C2 | ... | C3 ] -> [ C0 | ... | C5 ]
+late down [ C3 | ... | C3 ] -> [ C0 | ... | C6 ]
+late down [ C4 | ... | C3 ] -> [ C0 | ... | C7 ]
+late down [ C5 | ... | C3 ] -> [ C0 | ... | C8 ]
+late down [ C6 | ... | C3 ] -> [ C0 | ... | C9 ]
+late down [ C7 | ... | C3 ] -> [ C0 | ... | C0 Carry ]
+late down [ C8 | ... | C3 ] -> [ C0 | ... | C1 Carry ]
+late down [ C9 | ... | C3 ] -> [ C0 | ... | C2 Carry ]
+
+late down [ C1 | ... | C4 ] -> [ C0 | ... | C5 ]
+late down [ C2 | ... | C4 ] -> [ C0 | ... | C6 ]
+late down [ C3 | ... | C4 ] -> [ C0 | ... | C7 ]
+late down [ C4 | ... | C4 ] -> [ C0 | ... | C8 ]
+late down [ C5 | ... | C4 ] -> [ C0 | ... | C9 ]
+late down [ C6 | ... | C4 ] -> [ C0 | ... | C0 Carry ]
+late down [ C7 | ... | C4 ] -> [ C0 | ... | C1 Carry ]
+late down [ C8 | ... | C4 ] -> [ C0 | ... | C2 Carry ]
+late down [ C9 | ... | C4 ] -> [ C0 | ... | C3 Carry ]
+
+late down [ C1 | ... | c5 ] -> [ C0 | ... | C6 ]
+late down [ C2 | ... | C5 ] -> [ C0 | ... | C7 ]
+late down [ C3 | ... | C5 ] -> [ C0 | ... | C8 ]
+late down [ C4 | ... | C5 ] -> [ C0 | ... | C9 ]
+late down [ C5 | ... | C5 ] -> [ C0 | ... | c0 Carry ]
+late down [ C6 | ... | C5 ] -> [ C0 | ... | C1 Carry ]
+late down [ C7 | ... | C5 ] -> [ C0 | ... | C2 Carry ]
+late down [ C8 | ... | C5 ] -> [ C0 | ... | C3 Carry ]
+late down [ C9 | ... | C5 ] -> [ C0 | ... | C4 Carry ]
+
+late down [ C1 | ... | C6 ] -> [ C0 | ... | C7 ]
+late down [ C2 | ... | C6 ] -> [ C0 | ... | C8 ]
+late down [ C3 | ... | C6 ] -> [ C0 | ... | c9 ]
+late down [ C4 | ... | C6 ] -> [ C0 | ... | c0 Carry ]
+late down [ C5 | ... | C6 ] -> [ C0 | ... | c1 Carry ]
+late down [ C6 | ... | C6 ] -> [ C0 | ... | C2 Carry ]
+late down [ C7 | ... | C6 ] -> [ C0 | ... | C3 Carry ]
+late down [ C8 | ... | C6 ] -> [ C0 | ... | C4 Carry ]
+late down [ C9 | ... | C6 ] -> [ c0 | ... | C5 Carry ]
+
+late down [ C1 | ... | C7 ] -> [ C0 | ... | C8 ]
+late down [ C2 | ... | C7 ] -> [ C0 | ... | C9 ]
+late down [ C3 | ... | C7 ] -> [ C0 | ... | C0 Carry ]
+late down [ C4 | ... | C7 ] -> [ C0 | ... | C1 Carry ]
+late down [ C5 | ... | C7 ] -> [ C0 | ... | C2 Carry ]
+late down [ C6 | ... | C7 ] -> [ C0 | ... | C3 Carry ]
+late down [ C7 | ... | C7 ] -> [ C0 | ... | C4 Carry ]
+late down [ C8 | ... | C7 ] -> [ C0 | ... | C5 Carry ]
+late down [ C9 | ... | C7 ] -> [ C0 | ... | C6 Carry ]
+
+late down [ C1 | ... | C8 ] -> [ C0 | ... | C9 ]
+late down [ C2 | ... | C8 ] -> [ C0 | ... | C0 Carry ]
+late down [ C3 | ... | C8 ] -> [ C0 | ... | C1 Carry ]
+late down [ C4 | ... | C8 ] -> [ C0 | ... | C2 Carry ]
+late down [ C5 | ... | C8 ] -> [ C0 | ... | C3 Carry ]
+late down [ C6 | ... | C8 ] -> [ C0 | ... | C4 Carry ]
+late down [ C7 | ... | C8 ] -> [ C0 | ... | C5 Carry ]
+late down [ C8 | ... | C8 ] -> [ C0 | ... | C6 Carry ]
+late down [ C9 | ... | c8 ] -> [ C0 | ... | C7 Carry ]
+
+late down [ C1 | ... | C9 ] -> [ C0 | ... | C0 Carry ]
+late down [ C2 | ... | C9 ] -> [ C0 | ... | C1 Carry ]
+late down [ C3 | ... | C9 ] -> [ C0 | ... | C2 Carry ]
+late down [ C4 | ... | C9 ] -> [ C0 | ... | C3 Carry ]
+late down [ C5 | ... | C9 ] -> [ C0 | ... | C4 Carry ]
+late down [ C6 | ... | C9 ] -> [ C0 | ... | C5 Carry ]
+late down [ C7 | ... | C9 ] -> [ C0 | ... | C6 Carry ]
+late down [ C8 | ... | C9 ] -> [ C0 | ... | C7 Carry ]
+late down [ C9 | ... | C9 ] -> [ C0 | ... | C8 Carry ]
+
+(Carrying the money)
+
+startloop
+
+	late right [ no Number | ... | C0 | Number Carry ] -> [ | ... | C1 | Number ]
+	late right [ no Number | ... | C1 | Number Carry ] -> [ | ... | C2 | Number ]
+	late right [ no Number | ... | C2 | Number Carry ] -> [ | ... | C3 | Number ]
+	late right [ no Number | ... | C3 | Number Carry ] -> [ | ... | C4 | Number ]
+	late right [ no Number | ... | C4 | Number Carry ] -> [ | ... | C5 | Number ]
+	late right [ no Number | ... | C5 | Number Carry ] -> [ | ... | C6 | Number ]
+	late right [ no Number | ... | C6 | Number Carry ] -> [ | ... | C7 | Number ]
+	late right [ no Number | ... | C7 | Number Carry ] -> [ | ... | C8 | Number ]
+	late right [ no Number | ... | C8 | Number Carry ] -> [ | ... | C9 | Number ]
+	late right [ no Number | ... | C9 no Carry | Number Carry ] -> [ | ... | C0 Carry | Number ]
+    late right [ no Number | C0 Carry ] -> [ | C0 ]
+
+endloop
+
+late right [ Player wheat4 ] [| C0 | C0 | C0 | C0 |C0 | C0 ] -> [ Player no wheat4 ] [| C0 | C0 | C0 | C0 | C1 | C0 ] message You just made money. Now collect that coin over there!
+
+late [ Player Coin1 ] [| C0 | C0 | C0 | C0 | C0 ] -> [ Player ] [ | C0 | C0 | C0 | C0 | C3 ] again
+
+late right [ Player Cointut ] [| C0 | C0 | C0 | C1 | C0 ] -> [ Player ] [ | C0 | C0 | C0 | C1 | C3 ] again
+
+
+late [ Player Coin2 ] [| C0 | C0 | C0 | C0 | C0 ] -> [ Player ] [ | C0 | C0 | C0 | C0 | C3 ] again 
+
+late [ Player Coin3 ] [| C0 | C0 | C0 | C0 | C0 ] -> [ Player ] [ | C0 | C0 | C0 | C0 | C3 ] again again
+
+late [ Player Coin4 ] [| C0 | C0 | C0 | C0 | C0 ] -> [ Player ] [ | C0 | C0 | C0 | C1 | C2 ] again 
+
+late [ Player Coin5 ] [| C0 | C0 | C0 | C0 | C0 ] -> [ Player ] [ | C0 | C0 | C0 | C1 | C5 ] again 
+
+late [ Player Coins ] -> [ Player ] SFX3
+
+(Tutorial)
+
+
+ (Tutorial targets appearing)
+[ PlayerHoe Farmlandtut ] [ msg1 ] -> [ PlayerHoe Hoedfarmlandtut ] [ ]
+
+[ PlayerHoe Farmlandtut ] -> [ PlayerHoe Hoedfarmlandtut ]
+
+[ msg2beta ] [ hoedfarmlandtut | hoedfarmlandtut | hoedfarmlandtut | hoedfarmlandtut | hoedfarmlandtut ] -> [ msg2 ] [ hoedfarmlandtut | hoedfarmlandtut | hoedfarmlandtut | hoedfarmlandtut | hoedfarmlandtut ]
+
+ (Tutorial messages)
+
+[ Player Msg1 ] -> [ Player ] message This is farmland. Press the action buton to switch to your hoe, then walk on the farmland to get it ready for planting.
+
+[ Player Msg2 ] -> [ Player ] message See that yellow thing? That is a bag of wheat seeds. Grab that and walk over the hoed farmland to plant them.
+
+([ Player housedoor1 ]  [ housedoortut ] -> [ Player housedoor1 ] [ housedoor1 ] message this is your seedbank. There are many more seeds to unlock for your farm. Collect it and in your hand, walk over the farmland to plant them. They will soon sprout!)
+
+late [ Playerwheat hoedfarmlandtut ] [ targetbeta ] -> [ Playerwheat hoedfarmlandtut ] [ target ]
+
+late [ msg3beta | hoedfarmlandtut ] -> [ msg3 | hoedfarmlandtut ] message Once your finished with that boy, go to your next target.
+
+[ Player msg3 ] -> [ Player ] message That, you just picked up, was a coin! I left it there anyway, but you can have the 3 dollars. Look at your number on the top. You now have 3 dollars!
+
+[ Player cointut ] ->  message Look! the counter goes up! That is your money! You just collected a coin! Find themto get more money, get COWS AND MORE SEEDS!
+
+[ Player target ] -> win
+
+==============
+WINCONDITIONS
+==============
+some player on wheat4
+
+some player on target
+=======
+LEVELS
+=======
+message Welcome to Tiny Farm!
+message Your uncle has unfortunately passed away a month ago and gave you a run-down farm.
+message it is your mission to fix the farm and start it flowing again!
+message But first you need to know the basics.
+
+message go to the target to know what to do
+
+-----...#aaaaaa
+-_---...#######
+-----..........
+.2.....P.......
+@@@@@1....@@@@@
+@@@@@.....@@@@@
+&&&&&..Z..&&&&&
+@@@@@.....@@@@@
+@@@@@.....@@@@@
+
+(.............................................
+.............................................
+.............................................
+.......t...t....t..t....t..t.................
+......t..t...t...t...............t...........
+........................t....................
+.............................................
+......................tttttttt...............
+...........ttttttttttt........tt..t..........
+..........t.........AAAAA.......tt....tt.....
+.......tt.........................t......t...
+.....tt......................................
+....t...............................t..t.....
+......................p..............t.....t.
+....t........@@@@@@.......@@@@@@.............
+.............@@@@@@.......@@@@@@......t......
+....t........&&&&&&.......&&&&&&........t....
+.....t.......@@@@@@.......@@@@@@......t......
+......t......@@@@@@.......@@@@@@...........t.
+.......t..............................t..t...
+........t............................t.......
+.........t................................t..
+..........t.........................t........
+.....t.............................t.....t...
+....t..t....t.....................t.......t..
+.............t..........................t....
+.................................t.....t.....
+....t.........t.................t............
+...............tt..............t......t......
+.......t....................ttt.....t...tt.t.
+..................tt..tttt.t....t.t..........
+.........tt............................t.....
+........................t....................
+...........t..t.....t.......................t
+................t............tt.....t.t......
+..............t....t..............t........tt
+................................t.......tt...
+...............................t...t.tt......
+.............................................)
+
+message You just planted wheat! It is pretty straight-foward with the other seeds, but is left for you to solve your selfe as a farmer.
+
+message see that coin? Pick it up and watch what happens to your money!
+
+#AAAAAA#...
+########...
+TTTTTTTTTTT
+...........
+P....C....X
+TTTTTTTTTTT
+...........
+
+message You gotta leave me from here mate.
+
+message Yes, this is my farm.
+
+message Yours is that run-down one ocer there.
+
+message Anyway, my name is Stephen. I own the farm next door. Feel free to buy my produce.
+
+message End...
+
+message go to editor and try all the things if you want to.
+
+-----...#aaaaaa
+-_---...#######
+-----..........
+.......P.......
+@@@@@.....@@@@@
+@@@@@.....@@@@@
+&&&&&.....&&&&&
+@@@@@.....@@@@@
+@@@@@.....@@@@@
+
+
+
+
+

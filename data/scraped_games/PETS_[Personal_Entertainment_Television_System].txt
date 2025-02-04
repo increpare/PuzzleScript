@@ -1,0 +1,2528 @@
+
+(Version A.0)
+
+(CREDITS)
+(THIS GAME IS BASED ON A STORY BY DANI JANE HEARNE PHILLIPS)
+(DIRECTOR: COLTON PHILLIPS)
+(LEAD PROGRAMMER: COLTON PHILLIPS)
+(LEAD ARTIST: BOYAD HOLLINGSHEAD)
+(ADDITIONAL ART: DARIN JOHNSON)
+(TESTERS: )
+(SPECIAL THANKS: UVIC GAMEDEV & BRANDON DUNCAN & ANDREW STEWART & LEE GAUTHIER & DARIN JOHNSON & DAVID GALLOWAY & BLAIR CHASTER & MIKE HOPPATEE)
+
+title PETS [Personal Entertainment Television System]
+author Dani
+homepage www.coltonphillips.ca
+youtube c8r1PfYs9PM
+zoomscreen 11x11
+realtime_interval 1.25
+again_interval 0.55
+verbose_logging
+text_color #F0F0A0
+key_repeat_interval 0.6
+run_rules_on_level_start (!IMPORTANT)
+
+========
+OBJECTS
+========
+
+DumbMenu
+white
+.....
+.....
+.....
+.....
+.....
+
+Lock
+#636363 #888888 #f6dc63 #f6cc08
+.010.
+.1.1.
+22222
+22022
+33333
+
+HasKey
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+Key
+#f2ac05 #f2bb23 #f2c843
+.000.
+.1.1.
+.222.
+..2..
+.21..
+
+Key2
+#f2ac05 #f2bb23 #f2c843
+..1..
+.....
+.....
+.....
+.....
+
+Boat
+#feede8 #ffffff #aa5f39 #6a4231
+..01.
+..011
+...1.
+22222
+.333.
+
+Rupee
+#ff6986 #ff0055 #ff1b88 #d00004
+..0..
+.121.
+.121.
+.121.
+..3..
+
+PotentialRupee
+Red
+.....
+.....
+..0..
+.....
+.....
+
+(SYSTEM/ENGINE OBJECTS)
+
+TimerTarget
+White
+.....
+.....
+0000.
+.....
+000..
+
+Timer
+Yellow
+000..
+000..
+0....
+0....
+.....
+
+LockAction
+Black
+.....
+.....
+.....
+.....
+.....
+
+LockWin
+Black
+.....
+.....
+.....
+.....
+.....
+
+LockMotion
+Black
+.....
+.....
+.....
+.....
+.....
+
+RoomNext 
+Black
+.....
+.....
+.....
+.....
+.....
+
+InvisibleDoor
+Black
+.....
+.....
+.....
+.....
+.....
+
+
+HasNoShovel
+Black
+.....
+.....
+.....
+.....
+.....
+
+HasShovel
+White
+.....
+.....
+.....
+.....
+.....
+
+
+Proton 
+Red
+.....
+.....
+.....
+.....
+.....
+
+Neutron
+White
+.....
+.....
+.....
+.....
+.....
+
+Electron
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+GrassFlag
+red
+.....
+.....
+.....
+.....
+.....
+
+FunMessage
+blue
+.....
+.....
+.....
+.....
+.....
+
+ImportantMessage
+red
+.....
+.....
+.....
+.....
+.....
+
+PetDeath
+Black
+.....
+.....
+.....
+.....
+.....
+
+InvisibleHouse
+black
+.....
+.....
+.....
+.....
+.....
+
+DogTemp
+Blue
+.....
+.....
+.....
+.....
+.....
+
+RabbitTemp
+Yellow
+.....
+.....
+.....
+.....
+.....
+
+(VISUAL OBJECTS)
+
+Player 
+#033485 #33133c #f2d7e1 #ffffff 
+.111.
+00000
+.323.
+.212.
+.0.0.
+
+PlayerColorSquareBlue 
+#033485 #273787
+10001
+01010
+00100
+00000
+00000
+
+PlayerColorSquareBlack 
+#33133c #33234c
+00000
+00000
+11111
+00000
+00000
+
+PlayerColorSquarePink 
+#f2d7e1 #e2e7f1
+00000
+01010
+00100
+00000
+00000
+
+PlayerColorSquareWhite 
+#ffffff #033485 #33133c 
+00000
+01110
+01210
+01110
+00000
+
+PlayerColorSquareMouth
+#f2d7e1 #33133c
+00000
+00000
+01001
+01110
+00000
+
+MockPlayer 
+#033485 #33133c #f2d7e1 #ffffff 
+.111.
+00000
+.323.
+.212.
+.0.0.
+
+(HOUSE)
+
+House 
+#431b1c #402722 #83625a #5f3324
+..3..
+.303.
+30003
+.121.
+.020.
+
+FakeHouse
+#431b1c #402722 #83625a #5f3324
+..3..
+.303.
+30003
+.121.
+.020.
+
+Darkness 
+Black
+.....
+.....
+.....
+.....
+.....
+
+Darkness1
+Purple
+.0.0.
+0.0.0
+.0.0.
+..0.0
+0.0..
+
+Darkness2
+DarkBlue
+.0..0
+0.0..
+.0.00
+0.0..
+.0.0.
+
+Darkness3
+#003300
+0.0..
+0..0.
+.0..0
+0.00.
+.0..0
+
+Darkness4
+#33001a
+..0.0
+0..0.
+.00.0
+0..0.
+.0..0
+
+Darkness5
+#003366
+.0.0.
+..0.0
+00.0.
+..0.0
+0..0.
+
+
+Lightness 
+White
+.....
+.....
+.....
+.....
+.....
+
+Lightness1
+#e9f4f7
+.0.0.
+0.0.0
+.0.0.
+..0.0
+0.0..
+
+Lightness2
+#f3e9f7
+.0..0
+0.0..
+.0.00
+0.0..
+.0.0.
+
+Lightness3
+#edf7e9
+0.0..
+0..0.
+.0..0
+0.00.
+.0..0
+
+Lightness4
+#f0efd3
+..0.0
+0..0.
+.00.0
+0..0.
+.0..0
+
+Lightness5
+#f0d9d3
+.0.0.
+..0.0
+00.0.
+..0.0
+0..0.
+
+(Celestial Sphere Objects) 
+
+Sun
+#ffffb6 #ffff6d #ffffda #ffffff
+.211.
+22022
+02202
+00000
+.003.
+
+Star
+#071777 #06008e #fffaff #03010c
+.....
+..0..
+.123.
+..0..
+.....
+
+Moon
+#555555 #aaaaaa #ffffff
+.011.
+00121
+01201
+11221
+.121.
+
+NightSky
+#030009 #030305 #08030a #030007
+01210
+12121
+21212
+13131
+31313
+
+DawnSky
+#484891 #48486d #6d486d #6d4891
+01020
+10102
+33010
+10301
+01010
+
+MorningSky
+#ffcfbf #ffcfcf #ffdfcf #efcfbf
+00122
+31211
+03112
+02111
+00033
+
+(Tools)
+
+Shovel
+#c58a3d #885400 #91948d #473805
+.000.
+..1..
+..1..
+.222.
+..3..
+
+Sign
+#793d00 #9d4f00 #643200 #310181 
+00000
+01110
+00000
+..2..
+..2..
+
+(GRASS)
+
+Grass 
+#9eff7d #beff7d #7dff7d #aaff66
+01210
+10012
+01301
+10010
+02023
+
+DarkGrass 
+DarkGreen DarkGray Gray DarkBlue
+01210
+10012
+01301
+10010
+02023
+
+Grass1
+#9eff7d #beff7d #7dff7d #aaff66
+01210
+10012
+01301
+10010
+02023
+
+Grass2 
+#9eff7d #beff7d #7dff7d #aaff66
+12100
+00121
+13010
+00101
+20230
+
+Grass3 
+#9eff7d #beff7d #7dff7d #aaff66
+21001
+01210
+30101
+01010
+02302
+
+Grass4 
+#9eff7d #beff7d #7dff7d #aaff66
+10012
+12100
+01013
+10100
+23020
+
+Grass5 
+#9eff7d #beff7d #7dff7d #aaff66
+00121
+21001
+10130
+01001
+30202
+
+GrassEdgeLeft
+#9eff7d #beff7d #7dff7d #aaff66
+...10
+....2
+...01
+..010
+...23
+
+
+GrassEdgeRight
+#9eff7d #beff7d #7dff7d #aaff66
+01...
+100..
+01...
+1....
+02...
+
+GrassEdgeDown 
+#9eff7d #beff7d #7dff7d #aaff66
+01210
+1.012
+...0.
+.....
+.....
+
+GrassEdgeUp
+#9eff7d #beff7d #7dff7d #aaff66
+.....
+.....
+.1...
+100.0
+02023
+
+(FLOWER SYSTEM)
+
+WitheredSeed
+Gray
+.....
+.....
+.....
+..0..
+.....
+
+Sapling
+Green Gray
+.....
+..1..
+..0..
+..0..
+.....
+
+
+LeafedSapling
+Green LightGreen Gray
+01...
+102.0
+.001.
+..0..
+.....
+
+Flower
+#ff0000 #ffff00 #5ce21d #18ab71 
+..0..
+.010.
+..0..
+..2..
+.323.
+
+(DIRT)
+
+Dirt
+#6b4b3a #7b2f2d #8a4837 #7b5746  
+21020
+00002
+30232
+02313
+20020
+
+DirtEdgeLeft
+#6b4b3a #7b2f2d #8a4837 #7b5746 
+...10
+....2
+...01
+..010
+...23
+
+
+DirtEdgeRight
+#6b4b3a #7b2f2d #8a4837 #7b5746 
+01...
+100..
+01...
+1....
+02...
+
+DirtEdgeDown 
+#6b4b3a #7b2f2d #8a4837 #7b5746 
+01210
+1.012
+...0.
+.....
+.....
+
+DirtEdgeUp
+#6b4b3a #7b2f2d #8a4837 #7b5746 
+.....
+.....
+.1...
+100.0
+02023
+
+(GROUND)
+
+Sand
+#e9d254 #f0d642 #f9d74f #eecc57 
+20303
+31212
+20303
+03132
+12020
+
+Mud
+#a0775f #7c7245 #a08770 #695f1f 
+.111.
+20202
+31013
+10101
+.121.
+
+Beach
+#f3f2d6 #bb8e66 #9c6f63 #ceba9b 
+.....
+.0.0.
+00000
+31313
+12122
+
+(CLIFF)
+
+Cliff
+#627e9d #a2b3ac #aea4ae #79fda0 
+30131
+00112
+20122
+....2
+....1
+
+SandCliff
+#c8c599 #a4c491 #b8bda4 #efdf6d 
+30131
+00112
+20122
+....2
+.....
+
+(WEED)
+
+TallGrass
+#239927 #42a746 #7f3338 #43c047
+.....
+.3..3
+1.1.1
+.0.0.
+.0.0.
+
+SmallGrass
+#239927 #42a746 #7f3338 #43c047
+..0..
+.0.0.
+3.1.3
+1.1.1
+0.0.0
+
+(CLOUD)
+
+Cloud
+#ffffff #fffee6 #ff0000 #ff0000 
+.1.1.
+10101
+00000
+.000.
+..0..
+
+MountainCloud
+#ffffff #ffffa8 #ff0000 #ff0000 
+...1.
+..100
+.....
+.....
+.....
+
+(WALLS)
+
+Tree
+#00CC00 #006600 #174707 #68533e 
+..0..
+.000.
+11011
+.212.
+..3..
+
+Wall 
+#5f5aa5 #424768 #672e6d #a758a7 
+.010.
+02320
+13231
+02320
+.010.
+
+Rock
+#748982 #d3dad6 #dca0d6 #e2bae2 
+..0..
+.010.
+.1310
+.0121
+.....
+
+Mountain
+#946d71 #eb9e70 #517326 #4f9926 
+..13.
+..00.
+.0121
+.1310
+13232
+
+(OCEAN)
+
+Ocean1
+#6f8db2 #dbe8f2 #183558 #ff0000 
+01000
+12120
+20200
+00012
+10121
+
+Ocean2
+#6f8db2 #dbe8f2 #183558 #ff0000 
+21201
+02002
+00120
+01211
+10000
+
+Ocean3
+#6f8db2 #dbe8f2 #183558 #ff0000 
+00001
+12012
+20020
+01200
+12110
+
+Ocean4
+#6f8db2 #dbe8f2 #183558 #ff0000 
+21101
+00010
+20121
+00202
+12000
+
+Ocean5
+#6f8db2 #dbe8f2 #183558 #ff0000 
+00100
+01212
+02020
+20001
+11012
+
+Ocean
+#6f8db2 #dbe8f2 #183558 #ff0000 
+01000
+01000
+01000
+12120
+20200
+
+(obstacle)
+
+Lava
+#ff2c0d #ffbf00 #ff0606 #ff5300 
+32323
+33333
+13131
+31313
+03030
+
+(GAME MECHANICS)
+
+Meat
+#750437 #ffc6c6 #ffffff #ffece6 
+..0..
+.031.
+.313.
+..2..
+.2.2.
+
+Bone
+#ffffff #fff3f2 #ffd9d9 #ff0000 
+.....
+.....
+2...0
+.101.
+2...0
+
+Carrot
+#ff9b28 #000000 #87cc70 #ff0000
+...2.
+..022
+.000.
+.00..
+.....
+
+(Candidates for deletion)
+
+Soil (what is this)
+#96896d #8f7252 #6c663c #51913c 
+3.3.3
+3010.
+.1213
+3010.
+.3.33
+
+Button
+#ff0000 #ffff80 #ffffff #ff0000 
+.....
+.000.
+.000.
+.111.
+22222
+
+Rug
+#e8bfe7 #ede0fe #ffffff #ffd9da 
+.2.0.
+01210
+32323
+01210
+.230.
+
+Yarn
+#ff4a4a #ff0f0f #fe36a4 #f98ad8 
+..3..
+.113.
+03130
+2130.
+.1023
+
+Bed
+#793d00 #b9e9ff #ffffff #221100 
+0....
+02111
+00000
+3...3
+.....
+
+WoodSteps
+#9d6639 #562e10 #2c1410 #775733 
+12121
+22222
+00000
+00000
+33333
+
+(PAINTING FRAME. Expression.)
+
+PaintingNW
+#cdb57f #927442 #7f653e #e0cba1
+00000
+01111
+01222
+01211
+01213
+
+PaintingNE
+#cdb57f #927442 #7f653e #e0cba1
+00000
+11110
+22210
+11210
+31210
+
+PaintingSW
+#cdb57f #927442 #7f653e #e0cba1
+01213
+01211
+01222
+01111
+00000
+
+PaintingSE
+#e0cba1 #927442 #7f653e #cdb57f
+01213
+11213
+22213
+11113
+33333
+
+PaintingVertical
+#eddcb3 #a38149 #8d7045 #e8d39a
+01213
+31210
+01213
+31210
+01213
+
+PaintingHorizontal
+#d9c18a #e0cba1 #927442 #7f653e
+01010
+22222
+33333
+22222
+10101
+
+(ROCK PILES)
+
+RockPileNode
+white yellow purple black 
+.0.0.
+.033.
+20032
+.310.
+.3.3.
+
+RockPileHorizontal
+#606a69 #bb95b5 #635b8a #9d9d9d 
+.013.
+31113
+02110
+22233
+.303.
+
+RockPileVertical
+#959f9d #7989a6 #635b8a #9a6391 
+.010.
+01110
+02130
+22333
+.203.
+
+(RAYLN THE RAVEN)
+
+Raven1
+#2e1855 #000565
+....1
+..1.1
+..011
+...00
+...10
+
+Raven2
+#2e1855 #000565 #000000 #462d6c
+3....
+3.00.
+312..
+11...
+03...
+
+Raven3
+#2e1855 #000565 #462d6c
+....0
+.0000
+...00
+...00
+..1.1
+
+Raven4
+#2e1855 #462d6c #000565
+0....
+000..
+00...
+0....
+.0...
+
+
+(DOOFY)
+
+Seagull1
+#d4cfcc #3f3f74 #f4a728 #f4bb28
+.000.
+01010
+00200
+03230
+00100
+
+Seagull2
+#d4cfcc #5f6267 #f4a728 #f4c457
+00000
+10001
+.212.
+.2.2.
+33.33
+
+Seagull3
+#d4cfcc #645761 #f4a728 #f4c457
+010..
+0100.
+0012.
+0122.
+1333.
+
+Seagull4
+#d4cfcc #3f3f74 #f4a728 #f4bb28
+.0000
+00100
+10000
+02200
+.31.0
+
+(EXTRAS. Not essential in function.)
+
+PlayerReflection 
+#0344A5 #33235c #d2d7f1 #edeeff 
+.0.0.
+.212.
+.323.
+00000
+.111.
+
+Bridge
+#832e43 #56170c #542130 #641502 
+.0.0.
+.030.
+20.02
+.010.
+.3.3.
+
+BridgeLink
+#832e43 #56170c #542130 #641502 
+.....
+.....
+00000
+.1.3.
+..2..
+
+Beer
+#ffcc00 #ebecea #ffad33 #fffed7 
+.....
+.111.
+.3023
+.0021
+.020.
+
+Frisbee
+#d2d200 #ffff0d #ffff6f #ffffff 
+.313.
+32323
+31133
+32123
+.333.
+
+FrisbeeTrail
+#d2d200 #ffff0d #ffff6f #ffffff 
+.....
+..2..
+.232.
+..2..
+.....
+
+Chest
+#643200 #643200 #824100 #edcf27 
+.....
+.111.
+00300
+22222
+22222
+
+Banana
+#ff0000 #ded30e #ffff00 #403306 
+..13.
+.12..
+.12..
+.12..
+..11.
+
+Tombstone
+#ffffff #c8caca #ff0000 #ff0000 
+..0..
+.000.
+..0..
+..0..
+.101.
+
+Skull
+#000000 #ffffff #804000 #5e2f00 
+.111.
+11111
+10101
+.101.
+.111.
+
+(ANIMALS)
+
+Cat 
+#e7ebeb #837986 #9893ff #bbaebb 
+..31.
+.0003
+.202.
+.010.
+.1.1.
+
+Dog
+#94836b #8e642b #2b0141 #d0a85e 
+13.31
+.232.
+.313.
+30303
+.3.3.
+
+DogColorSquare0
+#94836b #84735b
+10001
+01010
+00100
+00000
+00000
+
+DogColorSquare1
+#8e642b #7e541b 
+10001
+01010
+00100
+00000
+00000
+
+DogColorSquare2
+#FFFFFF #000000 #2b0141
+00000
+02220
+02120
+02220
+00000
+
+DogColorSquare3
+#d0a85e 
+00000
+00000
+00000
+00000
+00000
+
+DogColorSquareMouth
+#8e642b #7e541b #404040 #000000
+11111
+01110
+03330
+02320
+00000
+
+Rabbit
+#cea971 #fdefac #0057d9 #fbb7b7 
+10.01
+.111.
+.202.
+.131.
+.010.
+
+Mouse
+#4d5739 #ffffff #ff0000 #7c946b 
+.....
+.0.0.
+.1013
+.3230
+.0.0.
+
+Sheep
+#d2d9dd #e6e7ec #4a5084 #70718f 
+.0.0.
+12021
+11311
+11111
+.111.
+
+Pig
+#fcabab #ffcece #ffe6e6 #ffffff 
+.0.0.
+03030
+.111.
+21212
+.1.1.
+
+Snake
+#954538 #000000 #7f3338 #ff0000
+.002.
+02101
+.02..
+..02.
+0002.
+
+(GENDER SYMBOLS)
+Female1
+#fbe6ff #d77bba #c55cba
+01110
+11.11
+10.01
+11011
+21112
+
+Female2
+#d77bba #f5c4ff #c55cba
+..0..
+11011
+00000
+22022
+..0..
+
+Male1
+#b8f4ff #5fcde4 #639bff
+.010.
+01110
+12121
+2.1.2
+.111.
+
+Male2
+#5fcde4 #639bff #b8f4ff
+00100
+01.10
+02.20
+00200
+10001
+
+NonBinary1
+#b8cfff #b8f4ff #a151b5 #7a48b3
+.....
+.....
+.0000
+12233
+22...
+
+NonBinary2
+#c4c4ff #3932ad #b8cfff #4732ad #7a48b3
+.000.
+.1110
+2.110
+31.10
+43...
+
+NonBinary3
+#a151b5 #f5c4ff #bb7bba
+00111
+.0000
+.1121
+.2222
+...2.
+
+NonBinary4
+#7a48b3 #f5c4ff #bb7bba
+00...
+0....
+1....
+2....
+.....
+
+(LETTERS)
+
+AA
+White
+00000
+0...0
+00000
+0...0
+0...0
+
+SS
+White
+00000
+0....
+00000
+....0
+00000
+
+DD
+White
+0000.
+0...0
+0...0
+0...0
+0000.
+
+WW
+White
+0.0.0
+0.0.0
+0.0.0
+00000
+.0.0.
+
+XX
+White
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+ZZ
+White
+00000
+...0.
+..0..
+.0...
+00000
+
+RR
+White
+0000.
+0...0
+0000.
+0...0
+0...0
+
+=======
+LEGEND
+=======
+
+(LOGIC)
+Particle = electron or neutron or proton 
+Gender = Male1 or Male2 or Female1 or Female2 or NonBinary1 or NonBinary2 or NonBinary3 or NonBinary4
+RockPile = RockPileHorizontal or RockPileVertical
+collidable = Player or Tree or Mouse or Dog or Cat or Pig or Sheep or Rabbit or Wall or Rock or Mountain or Rabbit or Ocean or cliff or RockPile or PaintingVertical or PaintingHorizontal
+RealOrFakeHouse = FakeHouse or House
+animal = Player or Mouse or Dog or Cat or Sheep or Pig or Rabbit
+
+pullablegrass = tallgrass or smallgrass 
+
+HeavyAnimal = Player or Sheep or Pig
+
+Pet = Cat or Dog or Mouse or Sheep or Rabbit
+
+Pickup = Beer or carrot or banana
+
+Painting = PaintingVertical or PaintingHorizontal or PaintingNW or PaintingNE or PaintingSW or PaintingSE
+
+(why are these weird things classified "ground"?)
+ground = soil or mud or woodsteps or beach or yarn or carrot or bone or flower or LeafedSapling
+
+AnyMessage = FunMessage or ImportantMessage
+Letter = aa or ss or dd or ww or xx or zz or rr
+
+(ONE CHARACTER KEYS)
+(     [ ] \  /  )
+( G K L N U W E N S " )
+(UNICODE OPTIONS)
+(ëêéŶùúüøõòôóœàß£€ç¡¿°¥￦」「§•μ¬Г©¤₹៛₪﷼฿Ωθฯ)
+(katakana)
+ア = LockAction and LockMotion (A)
+ェ = LockAction and LockWin (E)
+ラ = Raven1 and InvisibleHouse (RA)
+オ = Darkness and Darkness1 and DarkGrass (O)
+イ = Lightness and Lightness1 (I)
+(hiragana)
+あ = Seagull1       (a)
+え = Seagull3       (e)
+お = MockPlayer     (o)
+う = InvisibleHouse (u)
+い = InvisibleDoor and GrassFlag (i)
+ほ = FakeHouse and Player  and GrassFlag and　HasShovel and FunMessage and ImportantMessage
+き = PaintingVertical (ki)
+け = PaintingHorizontal (ke)
+こ = PaintingNW (ko)
+く = PaintingNE (ku)
+か = PaintingSW (ka)
+ん = PaintingSE (n)
+つ = HasNoShovel (tsu)
+ず = Shovel (zu)
+さ = NightSky (sa)
+ざ = DawnSky(za)
+や = MorningSky (ya)
+も = Moon and NightSky and Player (mo)
+み = Moon and DawnSky and Player(mi)
+ま = Moon and MorningSky and Player (ma)
+す = Sun and MorningSky (su)
+ぼ = Star and NightSky (bo)
+び = Star and DawnSky (bi)
+
+(non english unicode)
+á = AA and GrassFlag
+è = DD and GrassFlag
+û = WW and GrassFlag
+ö = SS and GrassFlag
+ï = PlayerColorSquareBlue
+ì = PlayerColorSquareBlack
+î = PlayerColorSquarePink
+í = PlayerColorSquareWhite
+ñ = PlayerColorSquareMouth and Player
+
+â = DogColorSquare0
+ã = DogColorSquare1
+å = DogColorSquare2
+æ = DogColorSquare3
+ä = DogColorSquareMouth and Player
+
+(other unicode!)
+♪ = Timer
+♫ = TimerTarget
+♀ = Female1
+♂ = Male1
+⚥ = NonBinary1
+⚿ = Key
+Ⓛ = Lock and GrassFlag
+
+ (english)
+X = XX and GrassFlag
+| = RR and GrassFlag
+\ = ZZ and GrassFlag
+
+Background = Grass
+. = Grass and GrassFlag 
+* = Sand
+
+(ground)
+, = Dirt  and GrassFlag 
+: = Mud  and GrassFlag 
+@ = WoodSteps
+~ = Beach  and GrassFlag 
+` = Beach and Sand
+
+(fg)
+T = Tree  and GrassFlag 
+y = Tree and Sand
+_ = Bridge and Ocean
+- = BridgeLink and Ocean
+; = Cloud
+
+(Wall)
++ = RockPileNode and GrassFlag
+# = Wall
+A = Mountain and MountainCloud
+Q = Rock
+$ = Wall and Cloud
+
+(game mechanics)
+H = House  and GrassFlag 
+! = Button  and GrassFlag 
+£ = Rug  and GrassFlag 
+P = Player  and GrassFlag and　HasShovel and FunMessage and ImportantMessage
+O = Yarn  and GrassFlag 
+I = Bone  and GrassFlag 
+C = Cat  and GrassFlag 
+D = Dog  and GrassFlag 
+M = Mouse  and GrassFlag 
+R = Rabbit  and GrassFlag 
+S = Sheep  and GrassFlag 
+Z = Pig  and GrassFlag 
+} = Frisbee and GrassFlag
+] = Sign and GrassFlag
+
+(obstacle)
+Obstacle = Lava
+& = Lava 
+
+(pickup)
+{ = Chest and GrassFlag
+B = Beer  and GrassFlag 
+F = Meat  and GrassFlag 
+
+(some extra shit. still tho. refactor!)
+(Todo: 0-1 with the exception of 0 should be for things that grow)
+(numpad) (this shit is biblical)
+0 = Ocean and Ocean1
+1 = Flower and GrassFlag
+2 = Carrot  and Dirt 
+3 = TallGrass  and GrassFlag 
+4 = SmallGrass  and GrassFlag 
+5 = TallGrass and Sand
+6 = Snake  and GrassFlag  (you got the 6 and the 9 RUSSIAN VIDS)
+7 = Bed and GrassFlag (bed is useless. better as decorative)
+8 = Ocean and Cloud
+9 = Snake  and GrassFlag 
+
+=======
+SOUNDS
+=======
+
+SFX0 64268901 (beep)
+SFX1 97365301 (pew)
+SFX2 1562708 (dice roll)
+SFX3 72936900 (PING)
+SFX4 19022308 (WUBWUBWUB)
+SFX6 76469507 (ham)
+SFX7 79786502 (boying)
+SFX8 47916504 (giduk)
+SFX9 30654500 (ting!)
+SFX10 42684908 (lost soul)
+
+TitleScreen 69830108
+StartGame 32848108
+Startlevel 29735108
+(EndLevel 93053708)
+(ShowMessage 90216706)
+(CloseMessage 22471908)
+Undo 5164701
+Restart 62512108
+EndGame 70703108
+
+(Player Move up 47916504
+Player Move down 6537907
+Player Move left 69868507
+Player Move right 4029107)
+
+Player CantMove up 86945707
+Player CantMove down 15220707
+Player CantMove left 38356507
+Player CantMove right 38356507
+Cat Move 94568507
+
+Dog Move up 98330507
+Dog Move down 16284507
+Dog Move left 51034707
+Dog Move right 2636307
+
+(Sheep Move up 10264709
+Sheep Move down 10264709
+Sheep Move left 41514304
+Sheep Move right 10264709)
+Mouse Move 72058309
+Pig Move left 45763907
+Pig Move right 78198707
+Pig Move Up 81410902
+Pig Move Down 75461707
+
+(pickup)
+Beer destroy 8437902
+Meat destroy 81045107
+Bone destroy 43776508
+
+Pickup destroy 35046100
+
+Letter destroy 51080905
+
+Sand destroy 54323908
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Grass ()
+Grass1,Grass2,Grass3,Grass4,Grass5,
+Sand
+GrassEdgeLeft
+GrassEdgeRight
+GrassEdgeDown
+GrassEdgeUp
+DarkGrass
+Dirt,
+DirtEdgeLeft
+DirtEdgeRight
+DirtEdgeDown
+DirtEdgeUp
+Beach
+Sapling, WitheredSeed, LeafedSapling
+Soil, Mud, Button, Rug, WoodSteps, Flower
+Bed
+Frisbee
+FrisbeeTrail
+Obstacle
+Shovel
+PotentialRupee,
+Rupee
+House, InvisibleHouse, FakeHouse
+RoomNext
+Key,Key2
+HasKey
+Lock
+Male1,Male2,Female1,Female2, NonBinary1, NonBinary2, NonBinary3, NonBinary4
+Player, Tree, Sign, Wall, Ocean, Cat, Dog, Mouse, Pig, Sheep, Rabbit, Rock, Mountain, RockPile
+Ocean1,Ocean2,Ocean3,Ocean4,Ocean5
+PlayerColorSquareBlue,PlayerColorSquareBlack,PlayerColorSquarePink,PlayerColorSquareWhite, PlayerColorSquareMouth
+Snake
+Cliff, SandCliff
+Boat
+PlayerReflection, MockPlayer
+TallGrass, SmallGrass
+Bone, Beer, Meat, Carrot, Yarn, Chest, Banana
+Cloud, MountainCloud
+Bridge, BridgeLink
+RabbitTemp
+DogTemp
+DogColorSquare0,DogColorSquare1,DogColorSquare2,DogColorSquare3,DogColorSquareMouth
+PetDeath
+GrassFlag
+RockPileNode
+LockAction
+LockWin
+LockMotion
+InvisibleDoor
+FunMessage
+ImportantMessage
+AA,SS,DD,WW,XX,ZZ,RR
+Skull, Tombstone
+Seagull1,Seagull2, Seagull3, Seagull4
+Raven1,Raven2,Raven3,Raven4
+PaintingVertical,PaintingHorizontal,PaintingNW,PaintingNE,PaintingSW,PaintingSE
+HasNoShovel
+HasShovel
+NightSky, DawnSky, MorningSky
+Darkness
+Darkness1, Darkness2,Darkness3,Darkness4,Darkness5
+Lightness
+Lightness1,Lightness2,Lightness3,Lightness4,Lightness5
+Star
+Sun
+Moon
+Timer
+TimerTarget
+Proton
+Neutron
+Electron
+DumbMenu
+
+======
+RULES     
+======  
+
+
+
+[Carrot DumbMenu]->[]
+right[|||||Player]->[Banana DumbMenu|||||Player]
+down late [Banana DumbMenu|||||] -> [Banana DumbMenu|||||Carrot DumbMenu]
+right [moving Player][Banana DumbMenu]->[moving Player][]
+
+[HasKey][> Player | Lock] -> [][|Player]
+[> Player | Lock]->Cancel
+[]->[]
+
+[action Player Key]->[Player HasKey] message "I got the key!"
+down [Key|no Key2]->[Key | Key2]
+late up [Key2 |no Key]->[|]
+
+down [Ocean | GrassFlag | RealOrFakeHouse]->[Ocean Boat | GrassFlag | RealOrFakeHouse]
+
+
+[AnyMessage][action Player | Boat]->[][ Player | Boat] message "Boats rule."
+
+[Rupee action Player][ImportantMessage]->[Player][FunMessage] message "These don't seem to belong here, although they say Zelda on them."
+[Rupee action Player]->[Player] message "I'm Rich!"
+[Rupee action Player][FunMessage]->[Player][] message "I'm financially well off!"
+
+[> Player| Painting]->Cancel
+
+[FunMessage][action Player Meat]->[][Player Bone] message "Yay. Ground meat. This is exactly what I imagined I would be doing with my life when I was a teenager."
+[ImportantMessage][action Player Bone]->[][Player Bone] message "Dogs are to meat like moths are to light. Ha! Look at that. Analogy!"
+
+[electron proton neutron LeafedSapling] [LeafedSapling]->[][Flower]
+
+[action Player][LockAction]->Cancel
+[Moving Player][LockMotion]->Cancel
+
+(LETTER IN THE GAME)
+[Player letter]->[Player electron]
+[Skull | ZZ]->[Tombstone | RR]
+
+(fundamental particles)
+[stationary Animal][Animal | ... | stationary Electron]->[stationary Animal][Animal |...|  > Electron]
+[stationary Player][Animal stationary Electron]->[stationary Player][Animal > Electron]
+[stationary Player][stationary Proton | Electron]->[stationary Player][ > Proton | Electron]
+random[stationary Player] [House] -> [stationary Player] [House Proton]
+random [Proton] -> [Neutron]
+random[stationary Animal] [Neutron] -> [stationary Animal] [Proton]
+random [stationary Animal ] [Proton | stationary Electron] -> [stationary Animal] [Proton | < Electron]
+random [stationary Animal ] [Neutron | stationary Electron] -> [stationary Animal] [Neutron | < Electron]
+[ stationary Animal ] [Proton stationary Electron] ->[ stationary Animal ] [Proton randomDir Electron]
+[ stationary Animal ] [Neutron stationary Electron] ->[ stationary Animal ] [Neutron randomDir Electron]
+[ stationary Animal ] [ Animal no electron ] -> [ stationary Animal ] [Animal randomdir Proton randomdir Neutron Electron]
+[stationary Proton | Proton]->[< Proton| > Proton]
+[stationary Electron | Electron]->[< Electron| > Electron]
+
+(levelsetup)
+[HasNoShovel][HasShovel]->[HasNoShovel][]
+
+late down [Seagull1|no Seagull2] -> [Seagull1|Seagull2]
+late left[Seagull3|no Seagull4] -> [Seagull3|Seagull4]
+
+late down [Raven1|no Raven3] ->[Raven1|Raven3]
+late right [Raven1|no Raven2] ->[Raven1|Raven2]
+late right [Raven3|no Raven4] ->[Raven3|Raven4]
+
+
+[Gender][RoomNext]->[][RoomNext]
+
+late down [Male1|no Male2] -> [Male1|Male2]
+late down [Female1|no Female2] -> [Female1|Female2]
+late down [NonBinary1|no NonBinary3] ->[NonBinary1|NonBinary3]
+late right [NonBinary1|no NonBinary2] ->[NonBinary1|NonBinary2]
+late right [NonBinary3|no NonBinary4] ->[NonBinary3|NonBinary4]
+
+late right [DirtEdgeLeft | GrassFlag] -> [| GrassFlag]
+late right [GrassFlag| DirtEdgeRight] -> [ GrassFlag|]
+late down [DirtEdgeUp|GrassFlag]-> [|GrassFlag]
+late up [DirtEdgeDown|GrassFlag]-> [|GrassFlag]
+
+late right [Sand no GrassEdgeLeft| GrassFlag  No Beach ] -> [Sand GrassEdgeLeft | GrassFLag]
+late left [Sand no GrassEdgeRight | GrassFlag  No Beach] -> [Sand GrassEdgeRight | GrassFLag]
+late up [Sand no GrassEdgeDown | GrassFlag  No Beach] -> [Sand GrassEdgeDown | GrassFLag]
+late down [Sand no GrassEdgeUp | GrassFlag  No Beach ] -> [Sand GrassEdgeUp | GrassFLag]
+
+(dirtedgedown can be optimized) 
+late right [Dirt  | no DirtEdgeRight no Dirt   ] -> [Dirt  | no GrassFLag DirtEdgeRight]
+late left [Dirt  | no DirtEdgeLeft  no Dirt] -> [Dirt |  DirtEdgeLeft no GrassFlag]
+late up [Dirt  | no DirtEdgeUp no Dirt   ] -> [Dirt  | no GrassFLag DirtEdgeUp]
+late down [Dirt  | no DirtEdgeDown no Dirt   ] -> [Dirt  | DirtEdgeDown no GrassFLag]
+
+late up [Ocean no Cliff| GrassFlag  No Beach ] -> [Ocean Cliff | GrassFLag]
+late up [Ocean no SandCliff| Sand  No Beach ] -> [Ocean SandCliff | Sand]
+
+(Player Reflection System) 
+[PlayerReflection]->[]
+late up [Ocean | Player Beach ] -> [Ocean PlayerReflection | Player Beach ]
+
+ ( genius design )
+right [no RockPileNode no RockPileVertical | RockPileNode | no RockPileNode ] -> [| RockPileVertical|]
+[RockPileNode] -> [RockPileHorizontal]
+
+(justmechanic)
+[FrisbeeTrail][Frisbee Ocean]->[][Ocean]
+[Dog Frisbee | FrisbeeTrail]->[Dog Frisbee | ]
+[ Dog|...|FrisbeeTrail ] -> [ > Dog | ...  | FrisbeeTrail ]
+[FrisbeeTrail Frisbee]->[Frisbee]
+[action player Frisbee ]->[ player randomdir Frisbee FrisbeeTrail]message You throw the Frisbee in a random direction! Wee!
+[FrisbeeTrail| Frisbee]->[|FrisbeeTrail > Frisbee]
+
+[action player | pickup collidable]->[ player | collidable ]
+
+up[|action Player Chest|]->[ randomdir carrot|action Player randomdir carrot|randomdir banana] message Free stuff!
+down[|action player chest|]->[randomdir banana|action player randomdir banana|randomdir carrot] message Yay! Free stuff!
+
+(early twine)
+[action Player no FunMessage|Sign]->[ Player FunMessage|Sign] message The sign enlightens you about some fun information in the area. It gives you some good ideas for your own projects, actually!
+
+[action Player no ImportantMessage Bed]->[ Player ImportantMessage Bed] message Taking a nap enlightens you to some important ideas that you're going to want to remember!
+
+[FunMessage] [Snake | Player] -> [][ snake |  Player] message "Beat it, MAN. SSS"
+([ Action Player Meat ][Dog] -> [  Action Player no Meat ][Dog] message "Yuck... Raw Meat...           Now the DOG will follow me. They are  looking for a handout.")
+[ action Player | Meat Dog | ] -> [ action Player | Meat Dog | ZZ] message "RRR! ZZZ! BEHAVE! GIVE ME THAT DAMNED BLOODY MEAT STICK! I GIVE UP!!!"
+
+(Mountain times) (somehow more important than dogs)
+[FunMessage][action Player | Mountain] -> [][player  | mountain ] message "This mountain, contrasted with other mountains on this and other Islands (Such as in the Wa Alpha, or the Sa Delta) is relatively small. Quite so, actually."
+
+[AnyMessage][Dog|action Player|House]->[][Dog|Player|House]message "Are you ready to go home Buddy?" "Ya, whatevfur." "Puns!? Ha! Love it kid."
+(mans best friend) (kinda important aka goes first)
+ [> Player | Dog | no collidable] -> [ no Player |Dog |Player] 
+[ < Player | Dog ] -> [ < Player | < Dog ] 
+
+[stationary Dog | player] -> [> Dog | player]
+[Dog | ... | Meat no Dog] -> [> Dog | ... | Meat no Dog]
+[Dog Meat ] -> [stationary Dog Meat]  
+[FunMessage][action Player no frisbee | no house Dog]->[][Player | Dog] message "Woof! Indeed good Sir! And, might I say your hat is STILL lovely."
+[action Player no frisbee | Dog no bone] -> [ < Player | stationary Dog] message "Stay!"
+[action Player  | Dog Bone]->[Player | Dog Bone] message "BUDDY! WHY? UGH!!! GET. IN. THE. HOUSE! AGH!!!
+
+[FunMessage][ action Player | Tree ] -> [][Player | Tree ] message "I feel safer hiding behind a tree."
+
+(allthis sheep shit has to go right here...)
+
+[ >  Player | Sheep ] -> [  >  Player | > Sheep  ] sfx2
+[ < Player | Sheep ] -> [ < Player | < Sheep ] sfx3
+
+[ Sheep | > Sheep ] -> [  >  Sheep | > Sheep  ] sfx1
+[ >  Sheep | Sheep ] -> [  >  Sheep | > Sheep  ] sfx8
+
+[stationary sheep | sheep ] -> [> sheep | sheep]
+[stationary sheep | player] -> [> sheep | player]
+[action Player | Sheep ] -> [ < Player | stationary Sheep] message "Stay! Mr Sheep!"
+[ImportantMessage][ action Player Mud] -> [][ Player Mud ] message "Pigs are attracted to this?! Look at all that yucky MUD!"
+[FunMessage][action Player pullablegrass]->[ImportantMessage][ player]message "These weeds are no joke! Yoink."
+
+[action Player pullablegrass]->[action player pullablegrass PotentialRupee]
+[action Player pullablegrass]->[player]
+late [PotentialRupee neutron]->[Rupee]
+late[PotentialRupee]->[]
+
+[action Player Sand][FunMessage]->[Player Sand][] message "There is way too much sand..."
+[ action Player Sand  no Beach no electron no house ] -> [Player GrassFlag]sfx0
+[FunMessage][ action Player Sand no Beach no Proton no house ] -> [] [Player GrassFlag]sfx0 message There is way too much sand...
+[ action Player Sand no Beach no house ] -> [Player GrassFlag]sfx0 
+[HasShovel][FunMessage][ action Player Grass no Dirt no bed no Sand no Beach no house no FakeHouse no pickup] -> [HasShovel][][ Player Dirt no GrassFlag no Grass ]SFX8 message "You can't beat the feel of dirt on your skin. Bless my green thumb."
+[HasShovel][ action Player Grass no bed no fakehouse no Sand no Beach no house no pickup] -> random [HasShovel][ Player Dirt no GrassFlag no Grass ]SFX8 
+
+[FunMessage] [action Player House ] -> [][Player House] message Mi casa Si Casa, PETS!
+
+
+[FunMessage] [action Player FakeHouse ] -> [][Player FakeHouse] message "This looks like my house. Oh! This IS my house... I slept outside..."
+
+
+[FunMessage][ action Player Flower ] -> [][Player Flower] message "Ello Lillily"
+[ action Player Beer ] -> [Player] sfx0 message Beer! Ain't it great? Well. It passed the time.
+[ action Player | Mouse] -> [ action Player | Mouse ] message "Hi Mouse.
+[action Player Button ] -> [action Player Button] message "Heaviness". The downward force caused by gravity on an object." That's what we want to use to depress this BUTTON.
+late [ Player | Mouse Button ]-> [ Player | Mouse Button ] message A mouse cannot depress a BUTTON :( A mouse is not very heavy at all. 
+
+[ action Player | Cat] -> [ action Player | Cat ] message "Hello, Cat. How are you?
+[ action Player House] -> [ action Player House ] message This is a nice HOME for a young PET. Do your part. Bring those pets HOME.
+[ action Player WoodSteps] -> [ action Player Woodsteps ] message This bench looks like shit.
+[ action Player | Lava] -> [ action Player | Lava ] message Never TOUCH LAVA!
+
+[ action Player | Pig ] -> [ action Player | Pig ] message "Hello you MEAN piggy... :*("
+[ action Player Button ] -> [ action Player Button ] message Push HEAVY ANIMALS onto this button to win the level!
+
+[ action Player no bone | Rock ] -> [ action Player | Rock ] message Some rocks are not meant to be climbed.                                                              "I'm not a rock climber..." *sigh*~
+
+[ action Player | Rabbit ] -> [action Player | Rabbit ] message "Stopatee STOP your hop! Stop! SIT!
+
+[FunMessage][ action Player | Ocean ] -> [][action Player | Ocean ] message Their Ocean beckons.
+
+random [FunMessage][ action Player Beach ] -> [][action Player Beach] message "Oh, I hate walking on sand
+
+(INNER TWINE)
+(pickup)
+[  Player Pickup ] -> [ Player ]
+
+(win level) (special)
+late [ Player Rug ] -> Win
+late [ Pet InvisibleHouse ] -> Win
+
+(flower)
+random [ stationary Player ] [ Sapling Grass ] -> [ stationary Player ] [Grass] 
+random [ stationary Player ] [ Sapling ] -> [ stationary Player ] [ LeafedSapling] 
+random [ moving Player ] [no Player  Sapling | no Sand  no animal ] -> [ moving Player ] [ LeafedSapling | ]
+random [ stationary Player ] [LeafedSapling no Electron] -> [ stationary Player ] [Sapling]
+random [ stationary Player ] [LeafedSapling proton electron] ->[stationary player] [LeafedSapling no Dirt GrassFlag Grass]
+
+(cloud) (mountain)
+random [Mountain] -> [Mountain MountainCloud]
+random [ MountainCloud ] -> [  right MountainCloud ]
+random [ MountainCloud ] -> [  left MountainCloud ]
+random [ Cloud ] -> [  right Cloud ]
+random [ Cloud ] -> [  left Cloud ]
+random [ > MountainCloud |MountainCloud] ->[ > MountainCloud | > MountainCloud]
+random [ < MountainCloud |MountainCloud] ->[ < MountainCloud | < MountainCloud]
+random [MountainCloud | MountainCloud] -> [ | ]
+random [Mountain | Mountain] -> [ Mountain MountainCloud | Mountain MountainCloud ]
+random [Ocean] -> [ Ocean MountainCloud]
+random [Ocean MountainCloud] -> [ Ocean Cloud]
+random [Ocean MountainCloud] -> [ Ocean]
+random [Ocean Cloud] -> [ Ocean MountainCloud]
+random [Ocean Cloud] -> [ Ocean]
+random [Cloud] -> [MountainCloud]
+random [MountainCloud] -> [Cloud]
+random [MountainCloud] -> [Cloud]
+random [Cloud] -> []
+
+(snake)
+[Snake  | Electron |  ... | Player] -> [> Snake |< Electron| ... |  Player]
+random [stationary player ][Snake no electron | electron ]->[player ][randomDir snake electron | ]
+random [Snake  stationary Player] -> [Snake Skull]
+random [Snake  stationary Pet] -> [Snake Skull]
+[snake tombstone]->[randomdir snake tombstone ]
+[snake house]-> [randomdir snake house]
+
+up [Skull| no rr no ZZ] -> [Skull |  ZZ ]
+
+(mouse)
+[Mouse | Player] -> [ < Mouse | Player ]
+[Mouse | no collidable |  Player ] -> [ < Mouse | | Player ]
+[Mouse | Cat] -> [ < Mouse | Cat ]
+[Mouse | no collidable |  Cat] -> [ < Mouse | | Cat ]
+[Mouse | no collidable | no collidable |   Cat] -> [ < Mouse | | | Cat ]
+[Mouse | House ] -> [> Mouse | House]
+[Mouse House ] -> [stationary Mouse House] 
+[ >  Player | Mouse ] -> [  >  Player | > Mouse  ] SFX1
+[ < Player | Mouse ] -> [ < Player | < Mouse ] SFX1
+
+(cat)
+[Cat | Mouse] -> [ > Cat | Mouse ]
+[ >  Player | Cat ] -> [  >  Player | > Cat  ] SFX1
+[ >  Cat | Cat ] -> [  >  Cat | > Cat  ]  SFX3 
+[ < Player | Cat ] -> [ < Player | < Cat ] SFX2
+   
+(pig)
+[Pig | Mouse]  -> [Pig| > PetDeath] SFX10 message "He swalled the MOUSE. Greedy PIG!" 
+[Pig | ... | Mud] -> [> Pig | ... | Mud]
+[Pig Mud ] -> [stationary Pig Mud] 
+[ < Player | Pig Mud ] -> [ < Player | < Pig Mud ]  message "Uh, OK you're following me, MEAN pig."
+[ < Player | Pig  no Mud ] -> [ < Player | < Pig ] 
+[> Pig | House] -> [> Pig | House ] message Pigs are not very good Pets. This Pig would rather sit in the mud anyway.
+
+(rabbit)
+[Rabbit | Player] -> [ > Rabbit | Player]
+[action Player | Rabbit ] -> [ < Player | stationary Rabbit]
+late [Rabbit Carrot] -> [Rabbit]
+
+(lava death)
+late [animal lava] -> [lava] sfx10
+
+(latest rules)
+random [ TallGrass] -> [SmallGrass]
+random [SmallGrass] -> [TallGrass]
+
+[ action Player Dirt no ground no House] -> [action Player Dirt GrassFlag Sapling]
+[FunMessage][ImportantMessage][ action Player no pickup no Sapling no ground  ] -> [][ImportantMessage][action Player ] message "Okay."
+
+[> Dog| MockPlayer]->[  > Dog| > MockPlayer]
+
+[Shovel Player][HasNoShovel] ->[Player HasShovel][] message "You found the shovel!"
+
+(next line showcases a weird puzzlescript bug)
+[stationary Moon] -> [^ Moon]
+[stationary Sun] -> [^ Sun]
+[stationary Star] -> [^ Star]
+random [moving Star] -> []
+
+(NAME)
+[Player Female1]->[Player RoomNext]message "My Name Is Lord Asler Ashley Aspen"
+[Player Female2]->[Player RoomNext]message "My Name Is Lord Ashley Asa Ash"
+[Player Male1]->[Player RoomNext]message "My Name Is Lord Ashton Asler Asia"
+[Player Male2]->[Player RoomNext]message "My Name Is Lord Ashlund Asa Ash"
+[Player NonBinary1]->[Player RoomNext]message "My Name Is Lord Asa Ashley Ash"
+[Player NonBinary2]->[Player RoomNext]message "My Name Is Lord Asia Ashby Ashton"
+[Player NonBinary3]->[Player RoomNext]message "My Name Is Lord Aspen Asler Ashby"
+[Player NonBinary4]->[Player RoomNext]message "My Name Is Lord Ashby Ashley Ash"
+
+[Player] [RoomNext] -> Win
+[Player InvisibleDoor] -> Win
+
+[Ocean5]->[Ocean1]
+[Ocean4]->[Ocean5]
+[Ocean3]->[Ocean4]
+[Ocean2]->[Ocean3]
+[Ocean1]->[Ocean2]
+ 
+[Electron Grass5]->[Grass1]
+[Electron Grass4]->[Grass5]
+[Electron Grass3]->[Grass4]
+[no Electron Grass2]->[Grass3]
+[Electron Grass1]->[Electron Grass2]
+ 
+[Ocean no Ocean1 no Ocean2 no Ocean3 no Ocean4 no Ocean5] -> [Ocean Ocean1]
+
+[GrassFlag no Grass1 no Grass2 no Grass3 no Grass4 no Grass5] -> [GrassFlag Grass1]
+
+late[Timer TimerTarget] -> Win
+[Timer | ... | TimerTarget] -> [> Timer | ... | TimerTarget]
+
+[Dog Meat]->[Dog Bone]
+[Dog|Bone]->[> Dog |Bone]
+
+[STATIONARY Raven1| Pet]->[up Raven1|up Pet]again
+[STATIONARY Raven1| ... | stationary Pet]->[down Raven1| ... | Pet]again
+
+[STATIONARY Raven1| Pet]->[up Raven1|up Pet]again
+
+[Raven2]->[]
+[Raven3]->[]
+[Raven4]->[]
+
+
+[Darkness][no Darkness]->[Darkness][Darkness Darkness1 DarkGrass]
+[Darkness GrassFlag no DarkGrass]->[Darkness GrassFlag DarkGrass]
+
+[Darkness5]->[Darkness1]
+[Darkness4]->[Darkness5]
+[Darkness3]->[Darkness4]
+[Darkness2]->[Darkness3]
+[Darkness1]->[Darkness2]
+
+[Darkness no Darkness1 no Darkness2 no Darkness3 no Darkness4 no Darkness5] -> [Darkness Darkness1]
+
+[Lightness][no Lightness]->[Lightness][Lightness Lightness1]
+
+[Lightness5]->[Lightness1]
+[Lightness4]->[Lightness5]
+[Lightness3]->[Lightness4]
+[Lightness2]->[Lightness3]
+[Lightness1]->[Lightness2]
+
+
+[Lightness no Lightness1 no Lightness2 no Lightness3 no Lightness4 no Lightness5]->[Darkness Darkness1]
+==============
+WINCONDITIONS
+==============
+
+All House On Pet
+All Pet on House
+all Button on HeavyAnimal
+no PetDeath
+no TimerTarget
+no LockWin
+
+======     
+LEVELS
+======
+
+こけけけけけけけけけけけけけけけく00000000000
+き000000000000000き00000000000
+き000000000000000き00000000000
+き000000000000000き00000000000
+き000000000000000き00000000000
+き0000*3134220000き00000000000
+き0000543~~,,0000き00000000000
+き0000544;2220000き00000000000
+き0000**.P.,,0000き00000000000
+き0000``..F220000き00000000000
+き000000.X.,,0000き00000000000
+き000000000000000き00000000000
+き000000000000000き00000000000
+き000000000000000き00000000000
+き000000000000000き00000000000
+かけけけけけけけけけけけけけけけん00000000000
+.♫.........................♪
+message That's right! You Press X or SPACE to interact!
+message Oh! I forgot! 
+message This game comes with a Digital Instruction Booklet System.
+message Or DIBS for short!
+message It should teach you all the rules and more. Okay. Sorry.
+message Now try this: Whether or not you die, you can press R to restart.
+message That's R
+こけけけけけけけけけけけけけけけく0000000000000000000000000
+き000000000000000き0000000000000000000000000
+き000000000000000き0000000000000000000000000
+き000000000000000き0000000000000000000000000
+き000000000000000き0000000000000000000000000
+き0000*3134220000き0000000000000000000000000
+き0000643~...0000き0000000000000000000000000
+き0000544;2220000き0000000000000000000000000
+き0000**.P.,,0000き0000000000000000000000000
+き0000``..i220000き0000000000000000000000000
+き000000.|.,,0000き0000000000000000000000000
+き000000000000000き0000000000000000000000000
+き000000000000000き0000000000000000000000000
+き000000000000000き0000000000000000000000000
+き000000000000000き000000000000000000000000つ
+かけけけけけけけけけけけけけけけん0000000000000000000000000
+.♫........................♪...............
+message That's right! You can Press R to restart. 
+message Now this:
+message Whether or not you or your friends die, you can press Z to go back in time a little bit.
+こけけけけけけけけけけけけけけけく0000000000000000000000
+き0000000000000000き000000000000000000000
+き0000000000000000き000000000000000000000
+き0000000000000000き000000000000000000000
+き0000000000000000き000000000000000000000
+き00000*3134220000き000000000000000000000
+き00000543~6,,0000き000000000000000000000
+き00000544;2260000き000000000000000000000
+き00000**.P.,,0000き000000000000000000000
+き00000`6..i220000き000000000000000000000
+き0000000.\.,,0000き000000000000000000000
+き0000000000000000き000000000000000000000
+き0000000000000000き000000000000000000000
+き0000000000000000き000000000000000000000
+き0000000000000000き0000000000000000000つ0
+かけけけけけけけけけけけけけけけん0000000000000000000000
+.♫....................♪................
+
+message Okay! You're ready to play!
+message Loading Rules...
+こけけけけけけけけけく.
+き000000000き0
+き000000000き0
+き_-_-_-_-_き_
+き.3.3.3.3.き.
+きDお4.4H...きF
+き.4.4.4.6.き.
+き3.3.3.3.3き3
+き000000000き0
+き000000000きき
+かけけけけけけけけけんん
+message Loading Good Graphics...
+こけけけけけけけけけく
+きBACOTQYIRき
+きPDSHZXM,;き
+きãæ.æã..FFき
+き.åæå...FFき
+き.æäæ.FFF.き
+きæâæâæFFF.き
+き.æ.æ.F...き
+き]12345678き
+き9-;......き
+かけけけけけけけけけん
+.♫..♪...ア..
+message Deleting Bad Graphics...
+こけけけけけけけけけく
+き000000000き
+き_-2_-_-_-_
+き444ììì444き
+き33ïíïíï33き
+き121ññ2í121
+き33.îñî.22き
+き.3.ï.ï.2.き
+き121212121き
+き343434343き
+かけけけけけけけけけん
+.♫..♪...ア..
+message Loading Sound...
+
+message Loading Complete. You're ready to play!
+message Nightfall: Distant Past. 
+
+00ラ000000ラ0
+0オ...ラ....0
+0..1....4.0
+0.........0
+....1.....0
+4.T.....H.0
+3.........0
+...........
+0.4..M..3..
+0.C.0..0.S0
+00000000000
+
+00000000000
+0オ...ラ..ラ.0
+0..1....4.0
+0000.....00
+0000.....00
+0000....M..
+0000.....3.
+.3..H......
+..4..C..3.0
+0.0.0..0..0
+00000000000
+
+000000000ラ0
+0オ.ラ.ラ..ラ.0
+0..1....4.0
+0.........0
+....2.....0
+..T.....H.0
+.....4....0
+..HD.1..3.0
+0.4..R.3C30
+0.0.0..0000
+00000000000
+
+message Sunrise: Lord ___'s Mansion
+
+ささささささささささぼさ
+ささささささぼさささささ
+さささぼささささささささ
+ささささささささぼささぼ
+ささささささぼさささささ
+さささささささささささも
+ささささささささささささ
+さささぼささささささぼさ
+ささささささささささささ
+さささささささぼささささ
+さささぼさささささささぼ
+..♫.....♪.ア.
+オオオオオオオオオオオオ
+
+ざざざざざざざざざざざ
+ざざざざざざざざざざざ
+ざざざざざざざざざざざ
+ざざざざざざざざざざざ
+ざざざざざざざざざざざ
+ざざざざざざざざざざざ
+ざざざざざみざざざざざ
+ざざざざざざざざざざざ
+ざざざざざざざざざざざ
+ざざざざざざざざざざざ
+ざざざざざざざざざざざ
+ざざざざざざざざざざざ
+.♫..♪...ア..
+オオオオオオオオオオオ
+
+やややややややややややや
+やややややややややややや
+やややややややややややや
+やややややややややややや
+やややややややややややや
+やややまやややややややす
+やややややややややややや
+やややややややややややや
+やややややややややややや
+やややややややややややや
+やややややややややややや
+.♫..♪....アイ.
+
+message "Good Morning World!"
+000000000000000000000
+000000000000000000000
+000000000000000000000
+000000000000000000000
+000000000000000000000
+00000...........00000
+00000.Ⓛ...ほ.**..00000
+00000..,,....**.00000
+00000.......*...00000
+00000..T...⚿.T..00000
+00000...........00000
+00000...5.4.3...00000
+00000.....い.....00000
+00000....いDい....00000
+00000.0.0.い0.0.000000
+000000000000000000000
+000000000000000000000
+000000000000000000000
+000000000000000000000
+000000000000000000000
+
+message "Hey Buddy the Dog!", said the Lord.
+message "Hello my Lord.", said the Dog.
+こけけけけけけけけけく
+き.433..Q3.き
+き.5..5....き
+きI.ãæ.æã..き
+き...åæå..:き
+き53.æäæ.3.き
+き..æâæâæ..き
+き.Q.æ.æ.:Qき
+き1;3.0.0.0き
+き000000000き
+かけけけけけけけけけん
+.♫..♪...ア..
+message "Can I ask you a question?"
+message "Pawsibly."
+message "Ow's she cuttin' me doggy?"
+message "I see a bird... and meat!"
+message "Ah. Gutfoundered are ya?"
+00000000000
+00000000000
+00*31342200
+00543~~,,00
+00544;22200
+00**.あ.,,00
+00**F.i2200
+00**...,,00
+00000000000
+00000000000
+00000000000
+00000000000
+.♫...♪.....
+
+00000000000
+00000000000
+00*31342200
+00543~~,,00
+00544;22200
+00**...,,00
+00**Iえi2200
+00**...,,00
+00000000000
+00000000000
+00000000000
+♪...♫......
+
+message "Aw man, I wanted that!"
+message "Ah what odds, Buddy."
+message "So Unfurrtunate."
+
+00000000000
+00000000000
+00*31342200
+00543~~,,00
+00544;22200
+00**.あ.,,00
+00**I.i2200
+00**...,,00
+00000000000
+00000000000
+00000000000
+00000000000
+.♫..♪......
+
+message My name is Doofy the Seagull.
+message I come from the East.
+message To the RIGHT (D) (RIGHT ARROW)
+message I'm not the only Seagull. 
+message I've LEFT (A) (LEFT ARROW) my kin behind.
+
+
+0000000000000
+0000000000000
+00.i..あ..0000
+00.あ....あ.000
+00i..あ....000
+00....Fえ.あ..0
+00....F..i..0
+00あ.あ..あ...あ0
+00.あ........0
+00....あ..あ000
+00,,,,,..0000
+0000000000000
+.♫..♪....0000
+message I flew West because I wanted to INTERACT (X) (C) (SPACE) with new friends!
+message Don't be DOWN (S) (DOWN ARROW) though.
+message I'm sure we'll meet UP (W) (UP ARROW) again soon.
+message And you are? (CHOOSE)
+こけけけけけけけけけく
+き.........き
+き....⚥....き
+き.........き
+き.........き
+き.♀..P..♂.き
+き.........き
+き.........き
+き.Y.....X.き
+きェ........き
+かけけけけけけけけけん
+message "That's AAA for short."
+message "Professional Gardener Extroadinaire!"
+message "Or better yet, call me Ash. You're my friend, and my friends call me Ash (or Ashley), therefore visa vi so will you!"
+message "The ball of fur to my left is my compatible compadre: Buddy the Dog"
+message "I'm a boy dog and I'm all about the ladies."
+こけけけけけけけけけく
+き.........き
+き....♀....き
+き...Z.Z...き
+き..Z.D.Z..き
+き...Z.Z.⚥.き
+き.........き
+き....♂....き
+き.Y.......き
+き....H....き
+かけけけけけけけけけん
+FFFFFFFFFFF
+:::::::::::
+message "Buddy!"
+message "It's true!"
+message Hmm...Triple-Ash and Buddy. Buddy and AAA...........
+00000000000
+00000000000
+00*31342200
+00543~~,,00
+00544;22200
+00**.あ.,,00
+00**I.i2200
+00**...,,00
+00000000000
+00000000000
+00000000000
+00000000000
+.♫.♪.......
+message Nice names!
+00000000000
+00000000000
+00*31342200
+00543~~,,00
+00544;22200
+00**.あ.,,00
+00**I.i2200
+00**...,,00
+00000000000
+00000000000
+00000000000
+00000000000
+.♫♪........
+message  "Woof is up, Sir?",             said Buddy the Dog.
+message "Do you have reliable means to produce more Meat? I'll make you an Of-fur you can't refuse"
+message Please just call me Doofy. By the way I was not finished speaking...
+message "Oh heavens! Our apologies, Doofy", said Lord Ashley.
+message "Apologize all you want, I'll still always be a little bit mean.", Buddy said. 
+message "I think you're saying there is a bark side to some animals."
+message "Enough. About. The dog puns!"
+message "Whatevfur."
+00000000000
+00000000000
+00*31342200
+00543~~,,00
+00544;22200
+00**.あ.,,00
+00**I.i2200
+00**...,,00
+00000000000
+00000000000
+00000000000
+00000000000
+.♫♪........
+message I've tracked every hill and mountain and every plain and field.
+message That makes me qualified to tell you...
+message All the PETS are...
+000000000000000000000
+000000000000000000000
+000000000000000000000
+000000000000000000000
+000000000000000000000
+00000...........00000
+00000.....ラ.**..00000
+00000..,,.H..**.00000
+00000.......*...00000
+00000..T.....T..00000
+00000...........00000
+00000...5.4.3...00000
+00000.....D.....00000
+00000...........00000
+00000.0.0.P0.0.000000
+000000000000000000000
+000000000000000000000
+000000000000000000000
+000000000000000000000
+000000000000000000000
+
+message GONE.
+message "Buddy!"
+message I feel like I should have skipped my qualifications and gotten straight to the point...
+message "Where are they taking Buddy?"
+message to testers: Please remark only on the events before you have read this sentence. ALl other content is not representative of the full experience. Enjoy.
+message The game you're playing is called...
+message "うぇるこむとれつさいふえヴりばぢすぺつ"
+
+message Okay Ash, that sounds completely logical. The rule of the game is...
+
+
+message LURE every GOOD PET into a loving HOME!
+message "Buddy the DOG is my GOOD PET."
+message That's right Hat Man. DOGS make GOOD PETS!
+message "I'll call Buddy right now. Buddy!"
+...........
+.....D.....
+...........
+...........
+...........
+.....う.....
+.....お.....
+...........
+...........
+...........
+...........
+.....F.....
+
+message Do you two know how to WIN the GAME of LIFE?
+こけけけけけけけけけく
+きP........き
+き.........き
+き.........き
+き.........き
+き..D....H.き
+き.........き
+き....F....き
+き.........き
+き.........き
+かけけけけけけけけけん
+
+message The rule of the game is not to LURE every ANIMAL into a loving HOME.
+message "Woof?"
+message Buddy, you are a GOOD PET, but some animals are NOT.
+message A PIG is a BAD PET!
+
+こけけけけけけけけけく
+き.........き
+き.........き
+き.........き
+きCM....Z..き
+き.....M...き
+き.........き
+き.....う...き
+き.........き
+き.........き
+かけけけけけけけけけん
+message But both the CAT and MOUSE make GOOD PETS!
+message Get it yet?
+
+
+message "Yes. Find MEAT. Chew BONE. Done. Winning!"
+message "Oh Buddy. It's surely more complicated than that."
+message "Maybe for you, Hat Man!"
+message Let me be coy. If you want to WIN you need to "GIT GUD"
+message "Woof?"
+
+
+message Okay. You're well in your way towards "GITTING GUD"
+00000000000
+00000000000
+00*31342200
+00543~~,,00
+00544;22200
+00**.あ.,,00
+00``..i2200
+0000...,,00
+00000000000
+00000000000
+00000000000
+00000000000
+00000000000
+.♫....♪....
+
+
+message "TESTERS: THE REMAINING CONTENT IS NOT APPLICABLE TO YOUR TESTING EXPERIENCE. YOU MAY CONTINUE IF YOU CHOOSE BUT NOTHING GOING FORWARD IS GOING TO BE IN THE FINAL GAME"
+message Bus Kitty Games would like to thank you for playing. Please keep in contact, and please keep testing and we will credit you as a "Tester" in the final game.
+message Hey look there is a shovel"
+000000000
+0*3134220
+0543~~,,0
+0544;2220
+0**.P.,,0
+0`ず`.D.i2
+000...,,0
+000000000
+つ00000000
+000000000
+000000000
+

@@ -1,0 +1,333 @@
+(Paste into http://www.puzzlescript.net/editor.html to run it!)
+Title Crypt of the Necrodancer *DEMAKE*
+Author Connorses [original by Brace Yourself Games]
+noundo
+realtime_interval 0.25
+zoomscreen 13 x 13
+key_repeat_interval 1
+========
+OBJECTS
+========
+background
+darkbrown black
+01011
+10000
+00001
+10000
+10101
+player
+red lightbrown brown
+.....
+.....
+20002
+.000.
+.1.1.
+playerhead1
+yellow pink lightbrown brown
+.222.
+.000.
+.0.0.
+.....
+.....
+playerhead2
+yellow pink brown
+.000.
+.010.
+.....
+.....
+.....
+dirt
+brown lightbrown
+10101
+01010
+10101
+00000
+00000
+
+wall
+grey
+
+door
+orange
+clear
+transparent
+
+nort
+transparent
+..0..
+.....
+.....
+.....
+.....
+sout
+transparent
+.....
+.....
+.....
+.....
+..0..
+east
+transparent
+.....
+.....
+....0
+.....
+.....
+west
+transparent
+.....
+.....
+0....
+.....
+.....
+beat1
+transparent
+beat2
+transparent
+wait
+transparent
+.....
+.....
+..0..
+.....
+.....
+turn
+transparent
+.....
+.0.0.
+.....
+.0.0.
+.....
+turn2
+transparent
+.....
+..0..
+.0.0.
+..0..
+.....
+
+wraith
+red white
+.000.
+.101.
+.000.
+..00.
+..0..
+
+
+skele1
+white lightgrey grey
+.000.
+.202.
+.101.
+1.0.1
+.0.0.
+skele2
+white lightgrey grey
+.000.
+02020
+.101.
+..0..
+.0.0.
+
+move
+transparent
+.....
+.....
+..0..
+.....
+.....
+one
+transparent
+.....
+.....
+..0..
+.....
+.....
+two
+transparent
+.....
+...0.
+.....
+.0...
+.....
+three
+transparent
+.....
+.0...
+..0..
+...0.
+.....
+stairs
+lightgrey grey darkgrey black
+00000
+03330
+02220
+01110
+00000
+blocked
+white #8A2BE2 grey
+.....
+.0000
+.1010
+.0000
+.020.
+
+=======
+LEGEND
+=======
+. = background
+p = player
+# = wall
+% = dirt
+& = beat1 and wall
+| = door
+W = wraith
+x = stairs
+s = skele1
+z = skele2
+beat = beat1 or beat2
+monster = wraith or skele1 or skele2
+skele = skele1 or skele2
+follower = wraith or skele2
+path = one or two or three
+solid = wall or door or dirt
+dir = nort or sout or west or east
+extra = playerhead1 or playerhead2
+=======
+SOUNDS
+=======
+beat1 create 86216306(63206506)(85105306)(19704707)
+(beat2 create 52494908 86216306 24421500)
+dirt destroy 3761107
+sfx0 81867509(45903708)(68091309)
+door destroy 98202904
+player destroy 80402708
+sfx1 36648504
+(80093106)
+(84979308)
+(wind? 79589308 43885908)
+startlevel 15642908
+endlevel 34600108
+================
+COLLISIONLAYERS
+================
+background
+stairs
+blocked
+player, wall, dirt, door, monster
+extra
+move
+path
+clear
+beat1, beat2
+wait
+turn
+turn2
+nort, sout, east, west
+======
+RULES
+======
+(draw x on stairs until level is done)
+[blocked] -> [  ]
+[stairs] [monster] -> [stairs blocked] [monster]
+(force player to move once per 2 ticks)
+[wait] -> [  ]
+[moving player] [beat turn] -> cancel (insert extra move penalty here)
+[moving player] [beat no turn] -> [moving player] [beat turn wait turn2]
+
+(allow digging and opening doors)
+[> player|dirt] -> [player|no dirt]
+[> player|door] -> [player|door clear]
+(kill monstars!)
+[> player|wraith] -> [player|  ] sfx0
+[> player|skele] -> [player|  ] sfx1
+
+[door clear|door no clear] -> [door clear|door clear]
+[door clear] -> [   ]
+
+
+(cycle beats)
+[beat1 turn no wait] -> [beat2 wait no turn]
+[beat1 no wait no turn] -> [beat2 wait no turn turn2]
+[beat2 no wait] -> [beat1 wait]
+
+
+(extra graphics)
+late [extra] -> [  ]
+late [beat1] [player] -> [beat1] [player playerhead1]
+late [beat2] [player] -> [beat2] [player playerhead2]
+
+(make uphill paths toward Player)
+late [path] -> [  ]
+late [player no path] -> [player three]
+startloop
+late [three|no path no solid] -> [three|two]
+late [two| no path no solid] -> [two|one]
+late [one|no path no solid] -> [one|three]
+endloop
+
+(prime monsters after player moves)
+late [turn2] [monster] -> [turn2] [monster move]
+late [turn2] -> [  ]
+(do other monster changes)
+late [skele1 move no path] -> [skele1]
+late [skele1 move path] -> [skele2]
+(determine monster directions)
+late up [follower move one|two  ] -> [nort follower one|two]
+late up [follower move two|three] -> [nort follower two|three]
+late up [follower move three|one] -> [nort follower three|one]
+late down [follower move one|two  ] -> [sout follower one|two]
+late down [follower move two|three] -> [sout follower two|three]
+late down [follower move three|one] -> [sout follower three|one]
+late left [follower move one|two  ] -> [west follower one|two]
+late left [follower move two|three] -> [west follower two|three]
+late left [follower move three|one] -> [west follower three|one]
+late right [follower move one|two  ] -> [east follower one|two]
+late right [follower move two|three] -> [east follower two|three]
+late right [follower move three|one] -> [east follower three|one]
+(execute monster movements - moving onto the player kills them, for now)
+late up [skele2 nort|no solid no monster] -> [  |skele1]
+late down [skele2 sout|no solid no monster] -> [  |skele1]
+late left [skele2 west|no solid no monster] -> [  |skele1]
+late right [skele2 east|no solid no monster] -> [  |skele1]
+
+late [skele2] -> [skele2 no dir] (for when skele2 is stuck behind monsters)
+
+late up [monster nort|no solid no monster] -> [  |monster]
+late down [monster sout|no solid no monster] -> [  |monster]
+late left [monster west|no solid no monster] -> [  |monster]
+late right [monster east|no solid no monster] -> [  |monster]
+
+
+==============
+WINCONDITIONS
+==============
+no monster
+some player on stairs
+=======
+LEVELS
+=======
+message I hope you have sound turned on!
+message No really, turn on your sound!
+#&&&&&&&&&&&&&&&&&&&&&&&&&
+#&&%%%%&&&&&&&&&&&&&&&&&&&
+##%%%%%%&&%%%&&&&&&&&&&&&&
+##%....%%%%%%%%###########
+#%%....%%%%%%%%%##%%%%%%##
+#%%.s..|.......%#%%%%%%%%#
+#%%....%%%.....%#%.w....%#
+#%%|%%%%#%..p..%#%w..sx.%#
+#%.....%#%.....%#%......%#
+#%.....%#%.....%#%s.....%#
+#%.....%#%%%%%%%#%......%#
+#%....w%##%%%%###%.....s%#
+#%%%%.%%#############|####
+#%%%%..%####%%%%%%%%..%%%#
+#%%%%%|%%%%%%.....z%..%%%#
+##%%%.......%.%..%s|..%%##
+##%%%.....%.|.%w.%.%%%%%##
+##%%%.w...%%%..w...%%%%###
+###%%....w%%%%%%%%%%%#####
+####%%%%%%%%%%%%%%%%######
+##########################

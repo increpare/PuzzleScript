@@ -1,0 +1,328 @@
+title Puzzle Stitch
+author Zithral
+homepage www.puzzlescript.net
+
+key_repeat_interval 10
+realtime_interval 0.1
+
+
+
+========
+OBJECTS
+========
+
+Background
+darkgray #e7e7e7 #efefef #f7f7f7 #ffffff
+23123
+34234
+12012
+23123
+34234
+
+PlayerOrth
+orange
+..0..
+..0..
+00000
+..0..
+..0..
+
+PlayerDiag
+orange
+.....
+.....
+..0..
+.....
+.....
+
+CanNW
+orange
+0....
+.0...
+..0..
+.....
+.....
+
+CanNE
+orange
+....0
+...0.
+..0..
+.....
+.....
+
+CanSW
+orange
+.....
+.....
+..0..
+.0...
+0....
+
+CanSE
+orange
+.....
+.....
+..0..
+...0.
+....0
+
+
+ThreadNN
+lightblue
+..0..
+..0..
+..0..
+.....
+.....
+
+ThreadSS
+lightblue
+.....
+.....
+..0..
+..0..
+..0..
+
+ThreadWW
+lightblue
+.....
+.....
+000..
+.....
+.....
+
+ThreadEE
+lightblue
+.....
+.....
+..000
+.....
+.....
+
+ThreadNW
+blue
+0....
+.0...
+..0..
+.....
+.....
+
+ThreadNE
+blue
+....0
+...0.
+..0..
+.....
+.....
+
+ThreadSW
+blue
+.....
+.....
+..0..
+.0...
+0....
+
+ThreadSE
+blue
+.....
+.....
+..0..
+...0.
+....0
+
+
+
+
+( Half-directions )
+N
+transparent
+S
+transparent
+W
+transparent
+E
+transparent
+( Full-directions )
+NN
+transparent
+SS
+transparent
+WW
+transparent
+EE
+transparent
+NW
+transparent
+NE
+transparent
+SW
+transparent
+SE
+transparent
+
+Src
+transparent
+HalfDst
+transparent
+Dst
+transparent
+
+
+=======
+LEGEND
+=======
+
+. = Background
+p = PlayerDiag
+
+
+
+Player = PlayerOrth or PlayerDiag
+Can = CanNW or CanNE or CanSW or CanSE
+
+HalfDir = N or S or W or E
+NorS = N or S
+WorE = W or E
+DiagN = NW or NE
+DiagS = SW or SE
+DiagW = NW or SW
+DiagE = NE or SE
+Diag = NW or NE or SW or SE
+Orth = NN or SS or EE or WW
+FullDir = Diag or Orth
+Dir = HalfDir or FullDir
+
+Thread = ThreadNN or ThreadSS or ThreadWW or ThreadEE or ThreadNW or ThreadNE or ThreadSW or ThreadSE
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ThreadNN
+ThreadSS
+ThreadWW
+ThreadEE
+ThreadNW
+ThreadNE
+ThreadSW
+ThreadSE
+Player
+CanNW
+CanNE
+CanSW
+CanSE
+
+NorS
+WorE
+FullDir
+Src, HalfDst, Dst
+
+
+
+======
+RULES
+======
+
+[ action Player ] [ Thread ] -> [ action Player ] [ ]
+[ action Player ] -> [ PlayerDiag ]
+
+( Going back cancels )
+[ up Player S ] -> [ Player ]
+[ down Player N ] -> [ Player ]
+[ left Player E ] -> [ Player ]
+[ right Player W ] -> [ Player ]
+( Letting go of all keys confirms an orthogonal move )
+[ stationary Player N ] -> [ Player NN ]
+[ stationary Player S ] -> [ Player SS ]
+[ stationary Player W ] -> [ Player WW ]
+[ stationary Player E ] -> [ Player EE ]
+( Same direction twice confirms )
+[ up Player N ] -> [ Player NN ]
+[ down Player S ] -> [ Player SS ]
+[ left Player W ] -> [ Player WW ]
+[ right Player E ] -> [ Player EE ]
+( Going perpendicular to first move results in diagonal )
+[ up Player WorE ] -> [ Player WorE N ]
+[ down Player WorE ] -> [ Player WorE S ]
+[ left Player NorS ] -> [ Player NorS W ]
+[ right Player NorS ] -> [ Player NorS E ]
+[ Player N W ] -> [ Player NW ]
+[ Player N E ] -> [ Player NE ]
+[ Player S W ] -> [ Player SW ]
+[ Player S E ] -> [ Player SE ]
+
+( Do first half of the move )
+[ up Player no Dir ] -> [ Player N ]
+[ down Player no Dir ] -> [ Player S ]
+[ left Player no Dir ] -> [ Player W ]
+[ right Player no Dir ] -> [ Player E ]
+
+( Move direction marker )
+[ FullDir ] -> [ FullDir Src ]
+up [ NN | ] -> [ NN | Dst ]
+down [ SS | ] -> [ SS | Dst ]
+left [ WW | ] -> [ WW | Dst ]
+right [ EE | ] -> [ EE | Dst ]
+up [ DiagN | ] -> [ DiagN | HalfDst ]
+down [ DiagS | ] -> [ DiagS | HalfDst ]
+left [ HalfDst | ] [ DiagW ] -> [ | Dst ] [ DiagW ]
+right [ HalfDst | ] [ DiagE ] -> [ | Dst ] [ DiagE ]
+[ FullDir Src ] [ Dst ] -> [ Src ] [ FullDir Dst ]
+( Cancel diagonal movement against edge of the map )
+[ FullDir no Dst ] -> [ ]
+[ HalfDst ] -> [ ]
+[ Dst ] -> [ ]
+
+( If move is incorrect for current state, cancel it )
+[ PlayerOrth ] [ Diag ] -> [ PlayerOrth ] [ ]
+[ PlayerDiag ] [ Orth ] -> [ PlayerDiag ] [ ]
+[ NW ] [ Player no CanNW ] -> [ ] [ Player ]
+[ NE ] [ Player no CanNE ] -> [ ] [ Player ]
+[ SW ] [ Player no CanSW ] -> [ ] [ Player ]
+[ SE ] [ Player no CanSE ] -> [ ] [ Player ]
+
+( If move is correct for current state, move and change state )
+[ PlayerOrth ] [ NN ] -> [ ThreadNN ] [ ThreadSS PlayerDiag ]
+[ PlayerOrth ] [ SS ] -> [ ThreadSS ] [ ThreadNN PlayerDiag ]
+[ PlayerOrth ] [ WW ] -> [ ThreadWW ] [ ThreadEE PlayerDiag ]
+[ PlayerOrth ] [ EE ] -> [ ThreadEE ] [ ThreadWW PlayerDiag ]
+[ PlayerDiag ] [ NW ] -> [ ThreadNW ] [ ThreadSE PlayerOrth ]
+[ PlayerDiag ] [ NE ] -> [ ThreadNE ] [ ThreadSW PlayerOrth ]
+[ PlayerDiag ] [ SW ] -> [ ThreadSW ] [ ThreadNE PlayerOrth ]
+[ PlayerDiag ] [ SE ] -> [ ThreadSE ] [ ThreadNW PlayerOrth ]
+
+( Add markers showing which diagonals you can go on )
+[ Can ] -> [ ]
+( Can only do underdiag if not already done )
+[ PlayerDiag no ThreadNE ] -> [ PlayerDiag CanNE ]
+[ PlayerDiag no ThreadSW ] -> [ PlayerDiag CanSW ]
+( Can only do overdiag if not already done, and underdiag already done )
+right [ ThreadNE | PlayerDiag no ThreadNW ] -> [ ThreadNE | PlayerDiag CanNW ]
+right [ PlayerDiag no ThreadSE | ThreadSW ] -> [ PlayerDiag CanSE | ThreadSW ]
+
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+.........
+.........
+.........
+.........
+....p....
+.........
+.........
+.........
+.........
+

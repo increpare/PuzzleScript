@@ -1,0 +1,313 @@
+title Go
+author Zithral
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightbrown
+
+N
+#7F6119
+..0..
+..0..
+..0..
+.....
+.....
+
+S
+#7F6119
+.....
+.....
+..0..
+..0..
+..0..
+
+W
+#7F6119
+.....
+.....
+000..
+.....
+.....
+
+E
+#7F6119
+.....
+.....
+..000
+.....
+.....
+
+GridSpot
+black black transparent transparent #B48923
+.....
+.212.
+.101.
+.212.
+.....
+
+BlackStone
+black
+.000.
+00000
+00000
+00000
+.000.
+
+WhiteStone
+white
+.000.
+00000
+00000
+00000
+.000.
+
+ClearPrev
+transparent
+
+BlackPrev
+transparent
+
+WhitePrev
+transparent
+
+ClearPrevPrev
+transparent
+
+BlackPrevPrev
+transparent
+
+WhitePrevPrev
+transparent
+
+Mine
+transparent
+
+Yours
+transparent
+
+Captured
+transparent
+
+Safe
+transparent
+
+BlackCursor
+gray black
+.....
+..0..
+.010.
+..0..
+.....
+
+WhiteCursor
+lightgray white
+.....
+..0..
+.010.
+..0..
+.....
+
+BlackTurn
+transparent
+
+WhiteTurn
+transparent
+
+
+=======
+LEGEND
+=======
+
+. = Background
+┼ = N and S and W and E
+O = GridSpot and N and S and W and E
+┬ = S and W and E
+┴ = N and W and E
+├ = N and S and E
+┤ = N and S and W
+┘ = N and W
+└ = N and E
+┐ = S and W
+┌ = S and E
+P = BlackCursor
+
+Grid = N or S or E or W
+Stone = BlackStone or WhiteStone
+Prev = ClearPrev or BlackPrev or WhitePrev
+PrevPrev = ClearPrevPrev or BlackPrevPrev or WhitePrevPrev
+Owner = Mine or Yours
+CaptureStatus = Captured or Safe
+Cursor = BlackCursor or WhiteCursor
+Turn = BlackTurn or WhiteTurn ( exists when a turn is being processed )
+Player = Cursor or Turn
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+N
+S
+W
+E
+GridSpot
+Stone
+Prev
+PrevPrev
+Owner
+CaptureStatus
+Player
+
+======
+RULES
+======
+
+( Invalid actions )
+[ action Player Stone ] -> cancel
+[ action Player no Grid ] -> cancel
+
+( Initiate turn )
+[ action BlackCursor ] -> [ BlackTurn ]
+[ action WhiteCursor ] -> [ WhiteTurn ]
+
+( Record previous state )
+[ Turn ] [ ClearPrev ] -> [ Turn ] [ ClearPrevPrev ]
+[ Turn ] [ BlackPrev ] -> [ Turn ] [ BlackPrevPrev ]
+[ Turn ] [ WhitePrev ] -> [ Turn ] [ WhitePrevPrev ]
+[ Turn ] [ Grid no Stone ] -> [ Turn ] [ Grid no Stone ClearPrev ]
+[ Turn ] [ BlackStone ] -> [ Turn ] [ BlackStone BlackPrev ]
+[ Turn ] [ WhiteStone ] -> [ Turn ] [ WhiteStone WhitePrev ]
+
+( Place stone )
+[ BlackTurn ] -> [ BlackTurn BlackStone ]
+[ WhiteTurn ] -> [ WhiteTurn WhiteStone ]
+
+( Mark current player's stones as "mine", other player's "yours" )
+[ BlackTurn ] [ BlackStone ] -> [ BlackTurn ] [ BlackStone Mine ]
+[ BlackTurn ] [ WhiteStone ] -> [ BlackTurn ] [ WhiteStone Yours ]
+[ WhiteTurn ] [ WhiteStone ] -> [ WhiteTurn ] [ WhiteStone Mine ]
+[ WhiteTurn ] [ BlackStone ] -> [ WhiteTurn ] [ BlackStone Yours ]
+
+( Capture opponent stones )
+[ Yours ] -> [ Yours Captured ]
+[ Captured | Grid no Stone ] -> [ Safe | Grid no Stone ]
+[ Captured | Safe ] -> [ Safe | Safe ]
+[ Captured ] -> [ no Stone ]
+[ CaptureStatus ] -> [ ]
+
+( Capture own stones )
+[ Mine ] -> [ Mine Captured ]
+[ Captured | Grid no Stone ] -> [ Safe | Grid no Stone ]
+[ Captured | Safe ] -> [ Safe | Safe ]
+[ Captured ] -> cancel
+[ CaptureStatus ] -> [ ]
+
+( Clear markers )
+[ Owner ] -> [ ]
+
+( Check that this is not a repeat of a previous state )
+( - Remove PrevPrev that don't match, to mark a difference )
+[ ClearPrevPrev Stone ] -> [ Stone ]
+[ BlackPrevPrev no BlackStone ] -> [ no BlackStone ]
+[ WhitePrevPrev no WhiteStone ] -> [ no WhiteStone ]
+( - If there are any differences, remove all PrevPrev )
+[ Grid no PrevPrev ] [ PrevPrev ] -> [ Grid no PrevPrev ] [ ]
+( - If there are any PrevPrev left, this is a repeated position, so an invalid move )
+[ PrevPrev ] -> cancel
+
+( Next player's turn )
+[ BlackTurn ] -> [ WhiteCursor ]
+[ WhiteTurn ] -> [ BlackCursor ]
+
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+(9x9)
+...........
+.┌┬┬┬┬┬┬┬┐.
+.├┼┼┼┼┼┼┼┤.
+.├┼O┼┼┼O┼┤.
+.├┼┼┼┼┼┼┼┤.
+.├┼┼┼O┼┼┼┤.
+.├┼┼┼┼┼┼┼┤.
+.├┼O┼┼┼O┼┤.
+.├┼┼┼┼┼┼┼┤.
+.└┴┴┴┴┴┴┴┘.
+.........P.
+
+(7x7)
+.........
+.┌┬┬┬┬┬┐.
+.├┼┼┼┼┼┤.
+.├┼┼┼┼┼┤.
+.├┼┼O┼┼┤.
+.├┼┼┼┼┼┤.
+.├┼┼┼┼┼┤.
+.└┴┴┴┴┴┘.
+.......P.
+
+(5x5)
+.......
+.┌┬┬┬┐.
+.├┼┼┼┤.
+.├┼O┼┤.
+.├┼┼┼┤.
+.└┴┴┴┘.
+.....P.
+
+
+(13x13)
+...............
+.┌┬┬┬┬┬┬┬┬┬┬┬┐.
+.├┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼O┼┼┼┼┼O┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼O┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼O┼┼┼┼┼O┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┤.
+.└┴┴┴┴┴┴┴┴┴┴┴┘.
+.............P.
+
+(19x19)
+.....................
+.┌┬┬┬┬┬┬┬┬┬┬┬┬┬┬┬┬┬┐.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼O┼┼┼┼┼O┼┼┼┼┼O┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼O┼┼┼┼┼O┼┼┼┼┼O┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼O┼┼┼┼┼O┼┼┼┼┼O┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.├┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┤.
+.└┴┴┴┴┴┴┴┴┴┴┴┴┴┴┴┴┴┘.
+...................P.
+

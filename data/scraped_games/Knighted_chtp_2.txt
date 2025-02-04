@@ -1,0 +1,483 @@
+title Knighted chtp 2
+author Funatuns
+homepage www.puzzlescript.net
+flickscreen 9x9
+key_repeat_interval 0.35
+
+
+
+========
+OBJECTS
+========
+
+Backgrounds
+#2BFF00 #25DE00 #22CF00
+10210
+02120
+10212
+22100
+02011
+
+Backgroundfake
+#2BFF00 #25DE00 #22CF00
+10210
+02120
+10212
+22100
+02011
+
+tree
+#1EB300 #199600 #168500
+01011
+10210
+02221
+01211
+10010
+
+Player 
+lightred red darkred gray #705600 black
+....3
+21103
+15553
+10514
+21214
+
+heftyarmor
+#A3A3A3 #969696 #808080
+.....
+2110.
+1....
+10.1.
+2121.
+
+
+morkai
+#A17B00 brown #705600 black
+.....
+2110.
+1031.
+1303.
+2121.
+
+Tenka
+blue #636EFF #000ED1 black
+.011.
+00011
+20301
+22300
+.220.
+
+peasent
+#FFA617 orange #E38C00 #D18100 black
+.....
+1000.
+0404.
+2101.
+332..
+
+peasentw1
+#FFA617 orange #E38C00 #D18100 black brown gray #754800
+....6
+10005
+04045
+21017
+332.7
+
+slime
+purple #8300A3 #A300CC white
+.....
+.11..
+1231.
+1221.
+.11..
+
+faketree
+#1EB300 #199600 #168500
+01011
+10210
+02221
+01211
+10010
+
+faketreef
+#1EB300 #199600 #168500
+01011
+10210
+02221
+01211
+10010
+
+glonka
+#C70000 #FF5E5E #A80000 black
+.011.
+00011
+20301
+22300
+.220.
+
+talkblock1
+#2BFF00 #25DE00 #22CF00
+10210
+02120
+10212
+22100
+02011
+
+peasent1
+#FFA617 orange #E38C00 #D18100 black
+.....
+1000.
+0404.
+2101.
+332..
+
+peasent2
+#FFA617 orange #E38C00 #D18100 black
+.....
+1000.
+0404.
+2101.
+332..
+
+peasent3
+#FFA617 orange #E38C00 #D18100 black
+.....
+1000.
+0404.
+2101.
+332..
+ 
+background2
+#707070 #858585 #5C5C5C
+12210
+00120
+10212
+22100
+02011
+
+backgroundbutton
+#707070 #858585 #5C5C5C
+12210
+00120
+10212
+22100
+02011
+
+gravestone
+#575757 #424242 #292929
+01011
+10210
+02221
+01211
+10010
+
+monster
+#C70AC7 #960596 black
+.....
+000..
+0020.
+1000.
+.0.0.
+
+spirtew
+blue #0017C7 brown orange
+....3
+.11.3
+.0102
+.1..2
+.....
+
+spirte1
+blue #0017C7 
+.....
+.11..
+.010.
+.1...
+.....
+
+spirte2
+blue #0017C7 
+.....
+.11..
+.010.
+.1...
+.....
+
+redblade
+orange brown
+....0
+....0
+....0
+....1
+....1
+
+smallstone
+grey white
+.....
+.....
+.....
+.001.
+0000.
+
+bigstone
+grey white
+..0..
+..01.
+.000.
+00001
+00000
+
+flower
+black
+.....
+.....
+.....
+.....
+.....
+
+bluef
+green blue
+1...1
+.111.
+.111.
+..0..
+.0...
+
+orangef
+green orange
+1...1
+.111.
+.111.
+..0..
+.0...
+
+purplef
+green pink
+1...1
+.111.
+.111.
+..0..
+.0...
+
+redf
+green red
+1...1
+.111.
+11111
+..0..
+.000.
+
+fire
+orange red black
+.....
+..0..
+.010.
+01212
+01110
+
+ice
+lightblue blue black
+.....
+..0..
+.010.
+01212
+01110
+
+pit
+black
+
+Die
+blue #455BFF #0018CC yellow
+.....
+.110.
+.1102
+.3032
+..02.
+
+Die1
+blue #455BFF #0018CC yellow
+.....
+.110.
+.1102
+.3032
+..02.
+
+fireball
+orange red black
+.....
+..0..
+.010.
+01110
+01110
+=======
+LEGEND
+=======
+
+. = Backgrounds
+" = backgroundfake
+# = tree
+P = Player 
+M = morkai
+T = Tenka
+y = peasent
+w = peasentw1
+s = slime
+? = faketree
+g = glonka
+1 = talkblock1
+b = peasent1
+n = peasent2
+F = monster
+, = peasent3
+' = background2 and backgrounds
+i = gravestone
+d = spirtew
+0 = faketreef
+; = spirte1 and background2
+: = spirte2 and background2
+u = smallstone
+o = bigstone
+e = flower
+r = redf
+` = pit
+~ = die and background2
+$ = fire and background2
+l = fireball
+7 = die1
+5 = backgroundbutton
+8 = purplef and background2
+q = ice and backgroundbutton
+Background = backgrounds or background2
+peasentw = peasentw1 or spirtew
+solid = peasentw or peasent1 or peasent2 or peasent3 or faketree
+! = heftyarmor
+flowerchange = purplef or bluef or orangef 
+=======
+SOUNDS
+=======
+sfx1 24823308
+sfx2 18051108
+sfx3 828702
+sfx4 13568908
+
+================
+COLLISIONLAYERS
+================
+
+Backgrounds
+background2, backgroundfake, backgroundbutton
+Tenka, slime, glonka, talkblock1, faketreef, smallstone, bigstone, flowerchange, flower, redf
+Player, tree, morkai, peasent, peasentw, faketree, peasent1, peasent2, peasent3, gravestone, monster, spirte2, spirte1, fire, pit, die, die1, ice
+heftyarmor, fireball,
+redblade
+======
+RULES     
+======  
+(morkai ai)
+[morkai |...| Player] -> [> morkai |...| Player]
+[Tenka no monster|...| Player] -> [Tenka morkai no monster|...|Player]
+
+(peasent crap)
+[> player | peasentw] [morkai] -> [> player | peasentw] []message there you go!
+late [player talkblock1]-> [player]message orange-ish warrior: over here!  
+[> player|peasent1]  -> [player| peasent1]  message Hey where is this place? orange thing: goto forest. 
+[> player|peasent2]  -> [player| peasent2]  message where should I go?     orange thing: south if you know what your doing, otherwise east
+[> player|peasent3]  -> [player| peasent3]  message who am I? orange thing: red armor... long blade... its on the tip of my tounge...
+
+(spirte crap)
+[> player | spirte1]->[player | spirte1] message a blade of flames burns the tents of the morkai (the brown things) to enchant a blade, find a red flower.
+[> player | spirte2]->[player | spirte2] message a big stone shall give some hefty armor.
+
+(morkai camp stuff)
+late [player slime] [faketree] -> [player][] sfx1 
+
+(monster)
+[monster] -> [randomdir monster]
+late [monster|player ] -> [monster|] message a monster ate your face!
+late [monster|morkai] -> [monster|]
+[> monster|backgroundfake]->[ monster|backgroundfake]
+[fire|heftyarmor]->[< fire|heftyarmor]
+
+(epuipment)
+[> player redblade]->[> player > redblade]
+late [redblade|player]->[|player redblade]
+[> redblade| tenka]->[> redblade|]
+[> player heftyarmor]->[> player > heftyarmor]
+late [heftyarmor|player]->[|player heftyarmor]
+late [player bigstone]->[player heftyarmor]
+late [player redf]->[player redblade]
+late [flower]->[random flowerchange]
+
+(boss)
+[stationary die]->[randomdir die]
+right [| die] ->[fireball|die]
+late[player|die]->[player|]sfx2
+
+
+
+(fireball)
+[fireball]->[< fireball] 
+[> fireball|gravestone]->[|gravestone]
+random [player backgroundbutton][pit]->[player backgroundbutton][background2]
+late[player fireball]-> [fireball]sfx3
+(ice)
+[stationary ice]->[randomdir ice]
+[> player|ice]->[player|ice]sfx4
+[< player|ice]->[player|ice]sfx4
+[v player|ice]->[player|ice]sfx4
+[^ player|ice]->[player|ice]sfx4
+
+
+
+
+==============
+WINCONDITIONS
+==============
+no die
+     
+
+=======     
+LEVELS
+=======
+message what... where am I?
+message weird brown things: we cook you!! we cook you!!
+message what?... oh god (the weird brown things reach for you)
+message I have to get out of here
+message The tents! they come from there!
+message those purple orbs look helpful
+
+
+################."00#######
+#s...t.s##.......##.....e.#
+#.t.....##.......##.e....e#
+#.....t.##.......##..e.e..#
+#p..st.??."......##......e#
+#..t....##.......##e..r...#
+#.t...t.##.......##.e...e.#
+#s..?..s##.......##...e...#
+####?#################.####
+####1#############iii#.####
+#.......##t......#i';.....#
+#gg..n.g##..t.f..#i''.d...#
+#g.b....##..t....##.......#
+#.........".....".........#
+#w...,..##......t##.....''i
+#.ggg...##.t..t..####...':i
+#..g....##..f..t.?..#...''i
+####.##############.##.#iii
+iiii'iiiiiiiiiiiii#.##.####
+i$'$'$'$ii555``''i#.#.....#
+i'$'$'$'ii5q5``''i#.#..u..#
+i''$'$''ii555``'~i#.#.....#
+i''''''''555```''i##.u....#
+i'''''''ii55``'''i#......u#
+i'''''''iiq5``'''i#....o..#
+i'''''''iiq5``'''i#.u.....#
+iiiiiiiiiiiiiiiiii#########
+
+
+
+
+
+
+

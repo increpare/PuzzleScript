@@ -1,0 +1,422 @@
+title 3 in a row
+author James Ah Ha
+
+realtime_interval 0.3
+(if you want to see score counting & the 'state machine' work then comment out Flick screeen)
+flickscreen 8x12
+========
+OBJECTS
+========
+
+Background
+#7070f0
+
+PlayArea
+#7070f0
+
+TopLine
+#7070f0
+
+Spare
+#7070f0
+
+BlueBlk
+#000090 #0000B0 #0000FF
+22222
+21110
+21110
+21110
+00000
+
+RedBlk
+#900000 #B00000 #FF0000
+22222
+21110
+21110
+21110
+00000
+
+GreenBlk
+#009000 #00B000 #00FF00
+22222
+21110
+21110
+21110
+00000
+
+OrangeBlk
+#903500 #B05500 #F07500
+22222
+21110
+21110
+21110
+00000
+
+YellowBlk
+#909000 #B0B000 #FFFF00
+22222
+21110
+21110
+21110
+00000
+
+PurpleBlk 
+#900090 #B000B0 #FF00FF
+22222
+21110
+21110
+21110
+00000
+
+Player
+white
+..0..
+..0..
+00000
+..0..
+..0..
+
+
+Swap1
+white
+..0..
+.0.0.
+0...0
+.0.0.
+..0..
+
+HighLite
+white
+00000
+0...0
+0...0
+0...0
+00000
+
+AddLite
+white
+00000
+0...0
+0.0.0
+0...0
+00000
+
+
+Checking
+white
+.000.
+0...0
+0....
+0...0
+.000.
+
+Found
+white
+0000.
+0....
+000..
+0....
+0....
+
+Dropping
+white
+0000.
+0...0
+0...0
+0...0
+0000.
+
+Waiting
+white
+0...0
+0...0
+0.0.0
+0.0.0
+.0.0.
+
+Swapping
+white
+.000.
+0....
+.000.
+....0
+.000.
+
+Holder
+darkred
+
+Clear
+yellow
+
+(digits modified from   Jere Majava  )
+one
+lightgrey darkgray
+..0..
+.001.
+..01.
+.0001
+..111
+two 2
+lightgrey darkgray
+..00.
+.0001
+.0111
+.0001
+..111
+three 3
+lightgrey darkgray
+.0001
+..001
+...01
+.0001
+..111
+four 4
+lightgrey darkgray
+.0...
+.010.
+.0001
+..101
+....1
+five 5
+lightgrey darkgray
+.00..
+.000.
+..101
+.0001
+..111
+six 6
+lightgrey darkgray
+.000.
+.0011
+.0101
+.0001
+..111
+seven 7
+lightgrey darkgray
+.000.
+..101
+..01.
+.01..
+..1..
+eight 8
+lightgrey darkgray
+.000.
+.0001
+.0101
+.0001
+..111
+nine 
+lightgrey darkgray
+.000.
+.0101
+..001
+.0001
+..111
+zero 
+lightgrey darkgray
+.000.
+.0101
+.0101
+.0001
+..111
+
+carry 
+transparent
+
+Units
+yellow
+....0
+....0
+....0
+....0
+....0
+
+Tens
+yellow
+...0.
+...0.
+...0.
+...0.
+...0.
+
+Hunds
+yellow
+..0..
+..0..
+..0..
+..0..
+..0..
+
+Thos
+yellow
+0....
+0....
+0....
+0....
+0....
+
+DispTho u
+transparent
+
+DispHund x
+transparent
+
+DispTen y
+transparent
+
+DispUnit z
+transparent
+
+=======
+LEGEND
+=======
+
+. = PlayArea
+_ = topline and PlayArea
+* = Spare
+& = holder and Dropping and Clear
+P = Player and TopLine and PlayArea
+
+Blocks = BlueBlk or RedBlk or GreenBlk or OrangeBlk or YellowBlk or PurpleBlk
+Blocks2 = Blocks
+stages = Dropping or Checking or Found or Waiting or Swapping
+D = Dropping
+C = Checking
+W = Waiting
+S = Swapping
+F = Found
+
+Lite = HighLite or AddLite
+
+numbers = one or two or three or four or five or six or seven or eight or nine or zero or carry
+0 = zero and Units and Tens and Hunds and Thos
+1 = one
+q = carry
+9 = nine 
+display = DispTho or DispHund or DispTen or DispUnit
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+PlayArea, display
+TopLine,  numbers, Spare, Holder,
+Blocks,   units        
+Player,   tens
+Swap1,    Hunds, stages
+HighLite, Thos,  clear, AddLite
+
+======
+RULES
+======
+
+
+(whilst Filling fill any spaces on top line)
+[D][TopLine no Blocks] -> [D][TopLine random Blocks]
+
+
+(get blocks above spaces to drop)
+down[Blocks | no Blocks][D] -> [down Blocks | ][D]
+
+(check if all dropping has stopped if so then Checking next)
+[D] -> [C]
+[C][PlayArea no Blocks] -> [D][PlayArea]
+
+
+(keep player on PlayArea)
+[> Player | no PlayArea] -> [Player |]
+(see if player ACTIONS a block if so then set to Swapping)
+[W][action Player] -> [S][Player Swap1]
+
+(swap drops in direction pressed)
+[S][> Player Swap1 Blocks | Blocks2] -> [C][> Player Swap1 Blocks2 | Blocks]
+
+(if 3 in row, or longer, found then add one for each 3 plus one for each '3+' ie AddLite to score)
+startloop
+
+up[Units | ][F] -> [ | Units][C]
+up[Tens | ][Units carry][zero | one] -> [ | Tens][carry][units zero | one]
+up[Hunds | ][Tens carry][zero | one] -> [ | Hunds][carry][Tens zero | one]
+up[Thos | ][Hunds carry][zero | one] -> [ | Thos][carry][Hunds zero | one]
+up[Units | ][AddLite Blocks] -> [ | Units][]
+
+endloop
+(remove any Highlited blocks as Checking & scoring has been done)
+[Blocks Lite] -> []
+
+
+(Checking - if 3 in a row/column then set Found)
+[C][BlueBlk no HighLite | BlueBlk no HighLite | BlueBlk no HighLite] -> [F][BlueBlk HighLite | BlueBlk HighLite | BlueBlk HighLite]
+
+[C][RedBlk no HighLite | RedBlk no HighLite | RedBlk no HighLite] -> [F][RedBlk HighLite | RedBlk HighLite | RedBlk HighLite]
+
+[C][GreenBlk no HighLite | GreenBlk no HighLite | GreenBlk no HighLite] -> [F][GreenBlk HighLite | GreenBlk HighLite | GreenBlk HighLite]
+
+[C][YellowBlk no HighLite | YellowBlk no HighLite | YellowBlk no HighLite] -> [F][YellowBlk HighLite | YellowBlk HighLite | YellowBlk HighLite]
+
+[C][OrangeBlk no HighLite | OrangeBlk no HighLite | OrangeBlk no HighLite] -> [F][OrangeBlk HighLite | OrangeBlk HighLite | OrangeBlk HighLite]
+
+[C][PurpleBlk no HighLite | PurpleBlk no HighLite | PurpleBlk no HighLite] -> [F][PurpleBlk HighLite | PurpleBlk HighLite | PurpleBlk HighLite]
+
+(Add any more on that 3+ set)
+[F][BlueBlk Lite | BlueBlk Lite | BlueBlk no Lite] -> [F][BlueBlk Lite | BlueBlk Lite | BlueBlk AddLite]
+
+[F][RedBlk Lite | RedBlk Lite | RedBlk no Lite] -> [F][RedBlk Lite | RedBlk Lite | RedBlk AddLite]
+
+[F][GreenBlk Lite | GreenBlk Lite | GreenBlk no Lite] -> [F][GreenBlk Lite | GreenBlk Lite | GreenBlk AddLite]
+
+[F][YellowBlk Lite | YellowBlk Lite | YellowBlk no Lite] -> [F][YellowBlk Lite | YellowBlk Lite | YellowBlk AddLite]
+
+[F][OrangeBlk Lite | OrangeBlk Lite | OrangeBlk no Lite] -> [F][OrangeBlk Lite | OrangeBlk Lite | OrangeBlk AddLite]
+
+[F][PurpleBlk Lite | PurpleBlk Lite | PurpleBlk no Lite] -> [F][PurpleBlk Lite | PurpleBlk Lite | PurpleBlk AddLite]
+
+
+(if just done Swapping and no 3+ matches ie no highlites ie swap did not score then un-swap)
+[> Player Swap1 Blocks | Blocks2][C] -> [Player Blocks2 | Blocks][C]
+[C][swap1] -> [C][]
+
+
+
+(if CLEAR set then now waiting for FIRST user input so clear score)
+[Clear W] -> [Clear W] message move "cross" to a block, press SPACE to highlight it then swap it with the block in the direction of the next arrow key pressed
+down[Units | ... | zero][Clear W] -> [ | ... | units zero][Clear W]
+down[tens | ... | zero][Clear W] -> [ | ... | Tens zero][Clear W]
+[Clear W] -> [W]
+
+(see if checking & no blocks highlighted then Waiting for user input)
+[C][PlayArea no Blocks] -> [D][PlayArea]
+[C] -> [W]
+[W][HighLite] -> [C][HighLite]
+
+(display current postions/values of Thosands, Hundreds, Tens & units)
+[numbers Thos][DispTho] -> [numbers Thos][DispTho numbers]
+[numbers Hunds][DispHund] -> [numbers Hunds][DispHund numbers]
+[numbers Tens][DispTen] -> [numbers Tens][DispTen numbers]
+[numbers Units][DispUnit] -> [numbers Units][DispUnit numbers]
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+*********q
+*********9
+**uxyz***8
+*********7
+P_______&6
+........*5
+........*4
+........*3
+........*2
+........*1
+........*0

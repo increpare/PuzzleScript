@@ -1,0 +1,372 @@
+title Un-Lock
+author noa
+homepage www.puzzlescript.net
+
+background_color #03091A
+text_color #6E9999
+
+flickscreen 8x8
+run_rules_on_level_start
+again_interval 0.05
+
+========
+OBJECTS
+========
+
+background
+#0A4D41 #081F28 #023755
+11111
+21111
+11101
+11111
+10111
+
+connect
+#081F28
+
+lshadow
+#081F28
+0....
+0....
+0....
+0....
+0....
+
+dshadow
+#081F28
+.....
+.....
+.....
+.....
+00000
+
+fullshadow
+#081F28
+
+wall
+#46626F #352F5A #6E9999 #636F98
+02210
+11111
+01220
+11111
+00110
+
+wall2
+#0C5149 #3D644C #06442E #062E2B #081F28 #291D39 #5F3026
+41114
+01102
+20002
+32223
+45654
+
+botwall
+#352F5A
+.....
+.....
+.....
+00000
+00000
+
+pplayer
+#873D26 Orange #DAEAF1 darkred
+.000.
+.111.
+22222
+13331
+.3.3.
+
+kplayer
+#873D26 Orange #DAEAF1 #E2A60B
+.000.
+.111.
+22222
+13331
+.3.3.
+
+
+adoor
+#7B482B #5F3026 #291D39 #BE9352
+.333.
+31010
+01010
+01020
+01010
+
+invdoor
+#5F3026 #552522 #291D39 #7B482B
+.333.
+31010
+01010
+01020
+01010
+
+halfdoor
+#7B482B #5F3026 #081F28
+.....
+.....
+.000.
+01010
+01010
+
+atriple
+#7B482B #5F3026 #E2A60B brown
+.333.
+32010
+01210
+01020
+01010
+
+invtriple
+#5F3026 #552522 #E2A60B #7B482B
+.333.
+32010
+01210
+01020
+01010
+
+adouble
+#7B482B #5F3026 #291D39 #BE9352
+.333.
+31010
+01210
+01020
+01010
+
+invdouble
+#5F3026 #552522 #291D39 #7B482B
+.333.
+31010
+01210
+01020
+01010
+
+abox
+#A64F43 #832929 #291D39 #DC684F
+.333.
+31011
+01011
+01021
+.111.
+
+invbox
+#6C1F2D #552427 #291D39 #832929
+.333.
+31011
+01011
+01021
+.111.
+
+halfbox
+#6C1F2D #552427 #832929
+.....
+.....
+.222.
+01010
+01010
+
+akey
+yellow #E2A60B brown
+0....
+10...
+.100.
+..0.0
+..101
+
+invkey
+orange brown
+0....
+10...
+.100.
+..0.0
+..101
+
+halfkey
+orange brown
+.....
+.....
+0....
+10...
+.100.
+
+pickeddoor
+transparent
+
+reach
+transparent
+
+end
+darkblue black #352F5A
+11111
+21111
+22111
+22011
+22001
+
+destroymarker
+transparent
+
+pickedmarker
+black
+.....
+.....
+.....
+...0.
+.....
+
+=======
+LEGEND
+=======
+
+. = background
+# = wall
+W = wall and wall2
+p = pplayer
+* = akey
+@ = invdoor
+b = invbox
+- = connect
+e = end
+t = invtriple
+
+player = kplayer or pplayer
+door = adoor or invdoor or atriple or invtriple or adouble or invdouble
+box = abox or invbox
+key = akey or invkey
+shadow = lshadow or dshadow
+
+inreachdoor = adoor or abox or adouble or atriple
+inreach = adoor or abox or akey
+halfanim = halfdoor or halfbox or halfkey
+
+=======
+SOUNDS
+=======
+
+player cantmove 56954507
+box move 31407507
+
+sfx2 56091904 (doors half disappear)
+sfx1 29816907 (key taken)
+sfx0 15708307 (doors gone)
+
+================
+COLLISIONLAYERS
+================
+
+background
+lshadow
+dshadow
+fullshadow
+
+connect, key, end
+player, wall, door, box
+
+(graphics only)
+wall2
+botwall
+halfanim
+
+(marker)
+reach
+pickeddoor
+pickedmarker
+destroymarker
+
+======
+RULES
+======
+(push, if no key)
+[> pplayer | box] -> [> pplayer | > box]
+[> box | box] -> [> box | > box]
+
+(use on door)
+[pickeddoor] -> []
+[> kplayer | inreachdoor] -> [> pplayer | inreachdoor pickeddoor]
+
+(remove ones in reach)
+[pickeddoor] [adoor no pickeddoor] -> [pickeddoor] [adoor destroymarker] sfx0
+[pickeddoor] [abox  no pickeddoor] -> [pickeddoor] [abox destroymarker] sfx0
+[pickeddoor] [akey  no pickeddoor] -> [pickeddoor] [akey destroymarker] sfx0
+[pickeddoor] [adouble no pickeddoor] -> [pickeddoor] [adoor] sfx0
+[pickeddoor] [atriple no pickeddoor] -> [pickeddoor] [adouble] sfx0
+
+(animation)
+late [pickedmarker] -> []
+late [pickeddoor] -> [pickedmarker ] again sfx2
+
+late [halfanim] -> []
+late [adoor destroymarker] -> [halfdoor] again sfx2
+late [abox  destroymarker] -> [halfbox ] again sfx2
+late [akey  destroymarker] -> [halfkey ] again sfx2
+
+
+(collect)
+late [pplayer key] -> [kplayer] sfx1
+
+(active reach)
+late [reach] -> []
+late [player no connect] -> [player reach]
+late [reach | no connect no wall no door no box] -> [reach | reach]
+(active doors)
+late [adoor] -> [invdoor]
+late [kplayer] [reach | invdoor] -> [kplayer] [reach | adoor]
+(active double)
+late [adouble] -> [invdouble]
+late [kplayer] [reach | invdouble] -> [kplayer] [reach | adouble]
+(active triple)
+late [atriple] -> [invtriple]
+late [kplayer] [reach | invtriple] -> [kplayer] [reach | atriple]
+(active boxes)
+late [abox] -> [invbox]
+late [kplayer] [reach | invbox] -> [kplayer] [reach | abox]
+(active keys)
+late [akey] -> [invkey]
+late [reach | invkey no box] -> [reach | akey]
+
+(shadows)
+late right [wall | no wall] -> [wall | lshadow] 
+late up    [wall | no wall] -> [wall | dshadow]
+
+late [fullshadow] -> []
+late [key] -> [key fullshadow]
+late [player] -> [player fullshadow]
+
+(wall)
+late down [wall no wall2 | no wall] -> [wall botwall |]
+
+(win)
+late [player end] -> win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+########wwwwwwww########
+#@*@*..#w...w..w#..te#.#
+#.#.#.@--....b.w#...##*#
+#.#.#..#w...w..w#..b#.@#
+#@#@#@##ww@ww..w#@#@#**#
+#......#w....*.w#...b.*#
+#......#w......w#...#..#
+####-###wwwwwwww######-#
+wwww-www########wwwwww-w
+w...@..w#......#w....@@w
+w....@.w#......#w....w@w
+w.....@--......#w.**.w@w
+w......w#...*..#w..w.w@w
+w....*.w#......#ww*www@w
+w......w#...@..#w.....*w
+w----www####-###w--wwwww
+#----###wwww-www#--#####
+#....#.#w......w#.@..@.#
+##@###.#w......w##b##*##
+#....#@#w......w#......#
+#......#wwww...w#####..#
+#.*..p.#w.*..*ww#...#..#
+#......#w....@.--..@..*#
+########wwwwwwww########
+
+message When one door closes, another opens.

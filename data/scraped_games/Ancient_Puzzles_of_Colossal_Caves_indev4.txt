@@ -1,0 +1,730 @@
+title Ancient Puzzles of Colossal Caves indev4
+author bregehr
+homepage www.puzzlescript.net
+run_rules_on_level_start
+again_interval 0.055
+========
+OBJECTS
+========
+
+Background
+#262626
+
+target
+#7c3111 #6d2a0d
+01000
+00010
+10000
+00001
+00100
+
+Wallsolo
+#8a8e91 #7c8184 #82888c
+11000
+02210
+22002
+10001
+02112
+
+wallbreakable
+#3f4244
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+wallL
+#696e72
+....0
+....0
+....0
+....0
+....0
+
+wallU
+#9ba1a5
+00000
+.....
+.....
+.....
+.....
+
+wallR
+#c4cace
+0....
+0....
+0....
+0....
+0....
+
+wallD
+#5a5f63
+.....
+.....
+.....
+.....
+00000
+
+
+gem1
+#ce272f #d83139 #e0474f #c42129
+..210
+.1000
+00003
+0003.
+333..
+
+gem2
+#ce42a6 #bc3896 #db4cb2 #ea59c0
+.320.
+20020
+00200
+02001
+.111.
+
+gem3 
+#ffa516 #ffb43d #edb150 #db8f15 #cc8412
+..2..
+.201.
+10101
+01013
+.343.
+
+gem4
+#2f4cef #3b58f9 #4a63ef #4863f9 #2943d8
+321..
+1001.
+10000
+.4000
+..444
+
+gem5
+#2fa3fc #4daff9 #68beff #2d94e2 #2387d3
+..11.
+.1002
+40102
+4003.
+.33..
+
+gem1pop
+#ce272f
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+gem2pop
+#ce42a6
+000.0
+....0
+0...0
+0....
+0.000
+
+gem3pop
+#ffa516
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+gem4pop
+#2f4cef
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+gem5pop
+#2fa3fc
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+wallpop
+#8a8e91
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+
+Player
+white
+00.00
+0...0
+.....
+0...0
+00.00
+
+playerSelect
+#d1d1d1
+00000
+0...0
+0...0
+0...0
+00000
+
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+startlevel
+transparent
+
+arrowMarker
+#44330c #302409
+111..
+0001.
+00001
+0000.
+000..
+
+n1
+#684d0f
+.00..
+..0..
+..0..
+..0..
+.000.
+
+n2
+#684d0f
+.000.
+...0.
+.000.
+.0...
+.000.
+
+n3
+#684d0f
+.000.
+...0.
+.000.
+...0.
+.000.
+
+n4
+#684d0f
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+n5
+#684d0f
+.000.
+.0...
+.000.
+...0.
+.000.
+
+n6
+#684d0f
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+n7
+#684d0f
+.000.
+...0.
+..0..
+..0..
+..0..
+
+n8
+#684d0f
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+n9
+#684d0f
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+n0
+#684d0f
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+darkness
+#232323 #191919 #1e1e1e
+11002
+20122
+10001
+02110
+10211
+
+dim1
+#191919
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+dim2
+#191919
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+dither1
+#191919
+0...0
+..0..
+0...0
+..0..
+0...0
+
+dither2
+#191919
+..0..
+0...0
+..0..
+0...0
+..0..
+
+
+darkplace
+#352f11
+00000
+0...0
+0...0
+0...0
+00000
+
+dark
+transparent
+
+lanternoff 
+#594f26 #474436 #706432 #605627 #473f1c #2b2500
+52205
+23000
+30004
+00004
+54445
+
+lanternon
+#ffdd54 #ffdf60 #ffe47a #f9d540 #7f7741
+42204
+21000
+10003
+00003
+43334
+
+swapped
+transparent
+
+resume
+black
+
+pop
+black
+
+remnant
+black
+
+canMove
+transparent
+
+matched
+transparent
+
+undo
+transparent
+
+reverse
+transparent
+
+corner
+#44330c #302409
+..1..
+.101.
+10001
+.000.
+..0..
+
+setup
+transparent
+
+test1
+red
+
+test2
+blue
+
+test3
+green
+
+lit
+transparent
+
+
+
+=======
+LEGEND
+=======
+
+1 = n1 and Wallsolo
+2 = n2 and Wallsolo
+3 = n3 and Wallsolo
+4 = n4 and Wallsolo
+5 = n5 and Wallsolo
+6 = n6 and Wallsolo
+7 = n7 and Wallsolo
+8 = n8 and Wallsolo
+9 = n9 and Wallsolo
+0 = n0 and Wallsolo
+D = darkplace
+B = darkplace and target
+W = wallbreakable and darkplace
+T = wallbreakable and darkplace and target
+L = lanternoff
+F = lanternon
+X = wallbreakable
+Y = wallbreakable and target
+# = Wallsolo
+. = Background
+P = Player and startlevel
+C = Player and startlevel and target
+* = Crate
+@ = Crate and Target
+$ = Target
+A = arrowMarker and Wallsolo and setup
+gem = gem1 or gem2 or gem3 or gem4 or gem5
+item = gem
+item2 = item
+gempop = gem1pop or gem2pop or gem3pop or gem4pop or gem5pop
+Wall = wallsolo
+wallborder = wallL or wallR or wallU or wallD
+number = n1 or n2 or n3 or n4 or n5 or n6 or n7 or n8 or n9 or n0
+movable = item
+object = wall or item
+itempop = gempop or wallpop
+dim = dim1 or dim2
+dither = dither1 or dither2
+lantern = lanternon or lanternoff
+test = test1 or test2 or test3
+solid = Wall or lantern
+passThroughSolid = lantern
+
+
+
+=======
+SOUNDS
+=======
+gem1pop create 88284300
+gem2pop create 81896700
+gem3pop create 53741900
+gem4pop create 77331500
+gem5pop create 90668300
+wallpop create 94240704
+lanternon create 13658100
+lanternoff create 86163302
+
+
+item move 1331308
+
+
+target destroy 11655907
+sfx0 85729907
+================
+COLLISIONLAYERS
+================
+
+resume, canMove
+
+pop, remnant
+Background
+Target
+Crate, item, itempop, movable
+wallbreakable
+wall, lantern
+wallL
+wallD
+wallU
+wallR
+number
+darkness, darkplace, dim, dither
+dark
+Player
+playerSelect
+startlevel
+matched
+arrowMarker
+corner
+swapped
+undo
+reverse
+setup
+test
+lit
+
+
+======
+RULES
+======
+
+(generate)
+[startlevel][no solid no item] -> [startlevel][random item]
+
+
+startloop
+ [startlevel][gem1|gem1|gem1] -> [startlevel][random gem|random gem|random gem]
++[startlevel][gem2|gem2|gem2] -> [startlevel][random gem|random gem|random gem]
++[startlevel][gem3|gem3|gem3] -> [startlevel][random gem|random gem|random gem]
++[startlevel][gem4|gem4|gem4] -> [startlevel][random gem|random gem|random gem]
++[startlevel][gem5|gem5|gem5] -> [startlevel][random gem|random gem|random gem]
+endloop
+
+(making fake walls)
+[startlevel][wallbreakable no Wallsolo] -> [startlevel][wallbreakable Wallsolo]
+
+
+(lanterns)
+[lit] -> []
+horizontal [lanternon | ] -> [lanternon | test1]
+vertical [test1 | ] -> [test1 | test2]
+vertical [lanternon | ] -> [lanternon | test2]
+[test] -> [test1]
+[test1 | no test1] -> [test1 | test3]
+[test] -> [test1]
+[test1 | no test1] -> [test1 | test3]
+[test] -> [lit]
+
+(darkness)
+[darkplace] -> [darkness dark]
+
+[dark] -> [dark darkness]
+[lit darkness] -> [lit]
+
+[dim] -> []
+[dither] -> []
+[darkness | no darkness no solid] -> [darkness | dim1]
+[dim1|dim1] -> [dim2|dim1]
+[dim | no dim no darkness no solid] -> [dim | dither1]
+[dither1|dither1] -> [dither2|dither1]
+
+(Wallify)
+down [wall no wallbreakable| no wall] -> [wall wallD |]
+up [wall no wallbreakable| no wall] -> [wall wallU |]
+left [wall no wallbreakable| no wall] -> [wall wallR |]
+right [wall no wallbreakable| no wall] -> [wall wallL|]
+[wallborder no Wallsolo] -> []
+
+
+
+[startlevel] -> []
+
+[undo][pop] -> [undo][]
+
+(pop)
+
+(put custom events that occur when something matches here.)
+[itempop] -> [remnant] again
+
+[pop | Wallsolo wallbreakable] -> [pop | wallpop]
+[pop | lanternoff] -> [pop | lanternoff pop]
+[pop | lanternon] -> [pop | lanternon pop]
+[lanternoff pop] -> [lanternon]
+[lanternon pop] -> [lanternoff]
+[gem1 pop] -> [gem1pop]
+[gem2 pop] -> [gem2pop]
+[gem3 pop] -> [gem3pop]
+[gem4 pop] -> [gem4pop]
+[gem5 pop] -> [gem5pop]
+[itempop] -> again
+
+
+(target break)
+[gempop target] -> [gempop]
+
+(drop)
+[resume] -> []
+[arrowMarker][remnant] -> [arrowMarker resume][]
+
+down [movable|passThroughSolid|no movable no solid][arrowMarker] -> [ | passThroughSolid | movable][arrowMarker resume]
+down [movable|no object no solid][arrowMarker] -> [> movable|][arrowMarker resume] again
+
+down [movable|> movable][arrowMarker] -> [> movable|> movable][arrowMarker resume]
+
+
+
+
+late down [wall | no solid no movable no wallbreakable no wall no itempop] -> [wall | random gem]
+late down [wall | passThroughSolid | no solid no movable no wallbreakable no itempop no wall] -> [wall | passThroughSolid | random gem]
+
+
+
+(swapping and moving)
+[action player no playerSelect no solid no darkness] -> [player playerSelect]
+[action player playerSelect] -> [action player]
+
+	(swapping)
+    
+    [arrowMarker] -> [arrowMarker setup]
+    [> player playerSelect | solid] -> cancel
+    [> player playerSelect | darkness] -> cancel
+    [> player playerSelect item | item2][arrowMarker setup] -> [item2 | player item][arrowMarker swapped]
+    
+    
+ (prepare popping)
+[arrowMarker no resume][gem1|gem1|gem1] -> [arrowMarker][gem1 pop|gem1 pop|gem1 pop]
+[arrowMarker no resume][gem2|gem2|gem2] -> [arrowMarker][gem2 pop|gem2 pop|gem2 pop]
+[arrowMarker no resume][gem3|gem3|gem3] -> [arrowMarker][gem3 pop|gem3 pop|gem3 pop]
+[arrowMarker no resume][gem4|gem4|gem4] -> [arrowMarker][gem4 pop|gem4 pop|gem4 pop]
+[arrowMarker no resume][gem5|gem5|gem5] -> [arrowMarker][gem5 pop|gem5 pop|gem5 pop]
+
+[swapped][item] -> [swapped][item test1]
+[swapped][pop item test1] -> [][pop item]
+[swapped] -> cancel
+
+
+
+[swapped][arrowMarker no setup] -> cancel
+   
+late [movable pop] -> again  
+
+[setup] -> []
+
+[test] -> []
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+no target
+
+=======
+LEVELS
+=======
+
+
+#########
+###$$$###
+###$$$###
+#$$...$$#
+#$$.p.$$#
+#$$...$$#
+##$$$$$##
+a1#######
+
+########
+##$$$$##
+#$$$c$$#
+#$$$$$$#
+#yyyyyy#
+#yyyyyy#
+##yyyy##
+a2######
+
+############
+###xxxxxxx##
+##xxxxxxxxx#
+##xxxxxxxxx#
+##xxx###xxx#
+##xxx###xxx#
+#.....##yyy#
+#.p...##yyy#
+#.....##$$$#
+#.....##$$$#
+##...###$$$#
+a3##########
+
+#################
+##.....xyyyyy####
+#......xyyyyyy###
+#...p..xyyyyyyy##
+#......##yyyyyy##
+#......##yy#yyyy#
+###xxx###yy##yyy#
+#yyyyy#yyyy##yyy#
+#yyyyyyyyyyyyyyy#
+#yyy#yyyyyyyyyy##
+##yyyyyyyyy######
+a4###############
+
+#######
+#ddddd#
+#d...d#
+#..p..#
+#$$$$$#
+#$$$$$#
+#$$$$$#
+#yyyyy#
+#yyyyy#
+##yyy##
+a5#####
+
+############
+#..........#
+#..p.......#
+#..........#
+#..........#
+#d.l$$$$l.d#
+#ddbbbbbbdd#
+#ddbbbbbbdd#
+#ddlbbbbldd#
+#dddddddddd#
+#dddddddddd#
+a6##########
+
+###########
+#..$$#$$..#
+#.p$$#$$..#
+#..$$f$$..#
+#ddbb#bbdd#
+#ddbb#bbdd#
+#ddbbFbbdd#
+#ddbb#bbdd#
+#ddbb#bbdd#
+#lbbblbbbl#
+#bbbbbbbbb#
+#bbbbbbbbb#
+#lbbbbbbbl#
+a7#########
+
+############
+##xxxxxxxx##
+#xxxxxxxxxx#
+#xx......xx#
+#xx..p...xx#
+#xx......xx#
+####....####
+#l#l....l#l#
+#dbbbbbbbbd#
+#dbbbbbbbbd#
+#dbbbbbbbbd#
+#ldddlldddl#
+a8##########

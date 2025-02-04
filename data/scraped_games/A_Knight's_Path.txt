@@ -1,0 +1,210 @@
+title A Knight's Path
+author Nils Jung
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Hole
+black
+
+PathU
+Yellow
+..0..
+..0..
+..0..
+.....
+.....
+
+PathD
+Yellow
+.....
+.....
+..0..
+..0..
+..0..
+
+PathL
+Yellow
+.....
+.....
+000..
+.....
+.....
+
+PathR
+Yellow
+.....
+.....
+..000
+.....
+.....
+
+OldPosition
+transparent
+
+Step0
+transparent
+
+Step1
+transparent
+
+Step2
+transparent
+
+Step3
+transparent
+
+verified
+transparent
+
+
+
+=======
+LEGEND
+=======
+
+Path = PathU or PathD or PathL or PathR
+Step = Step0 or Step1 or Step2 or Step3
+
+. = Background
+# = Wall
+P = Player and Step0
+* = Crate
+@ = Crate and Target
+O = Target
+h = Hole
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+CANCEL 73592106
+ENDLEVEL 30158303
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Hole
+Target
+PathU
+PathD
+PathL
+PathR
+Player, Wall, Crate
+OldPosition
+Step
+verified
+
+======
+RULES
+======
+
+[Player Step0] [Path] -> [Player Step0] []
+
+[Player] -> [Player OldPosition]
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+late [Crate Hole] -> CANCEL
+
+late [Player OldPosition] -> CANCEL
+
+late [OldPosition Step1] [Player Step0] -> CANCEL
+late [OldPosition Step2] [Player Step1] -> CANCEL
+
+late [OldPosition Step0] [Player] -> [OldPosition Step0] [Player Step1]
+late [OldPosition Step1] [Player] -> [OldPosition Step1] [Player Step2]
+late [OldPosition Step2] [Player] -> [OldPosition Step2] [Player Step3]
+
+late [Player Step3 Hole] -> CANCEL
+
+late [Step0 | Step1 | Step2] [Step3] -> [Step0 | Step1 | Step2] [Step3 verified]
+late [Step1 | Step2 | Step3 no verified] -> [Step1 | Step2 | Step3 verified]
+late [Step0 | Step1 | Step2 | Step3 verified] -> [Step0 | Step1 | Step2 | Step3]
+
+late [Step3 no verified] -> CANCEL
+
+late [Step0] [Step1] [Step2] [Step3 verified] -> [] [] [] [Step0]
+
+late UP [OldPosition | Player] -> [OldPosition PathU | Player PathD]
+late DOWN [OldPosition | Player] -> [OldPosition PathD | Player PathU]
+late LEFT [OldPosition | Player] -> [OldPosition PathL | Player PathR]
+late RIGHT [OldPosition | Player] -> [OldPosition PathR | Player PathL]
+
+late [OldPosition] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Level 1 of 2
+#####################
+###############..#..#
+#.......#...###.....#
+#p...#..........*#o.#
+#.......#...###.....#
+###############..#..#
+#####################
+
+message Level 2 of 2
+#########
+###...###
+#...#...#
+#.#.#.#o#
+#p#.#.#o#
+#..***.o#
+#...@...#
+#########
+
+message Congratulations!

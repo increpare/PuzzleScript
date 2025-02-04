@@ -1,0 +1,262 @@
+Title Alley
+text_color yellow
+Author Connorses
+run_rules_on_level_start
+debug
+color_palette 2
+noaction
+========
+OBJECTS
+========
+background1 .
+darkgrey
+
+background2
+darkblue
+
+player @
+lightgreen green
+00.0.
+001..
+.1100
+0.0..
+..0..
+
+wall #
+brown darkbrown brown
+22222
+20001
+20001
+10001
+11111
+
+
+wall2 £
+brown darkgrey
+0001.
+111..
+00...
+0....
+.....
+
+crate *
+orange orange
+11.11
+10001
+.0.0.
+10001
+11.11
+
+target o
+blue
+..0..
+..0..
+00000
+..0..
+..0..
+
+mup
+transparent
+
+mud
+transparent
+
+mul
+transparent
+
+mur
+transparent
+
+m1
+transparent
+m2
+transparent
+
+=======
+LEGEND
+=======
+background = background1 or background2
+mu = mup or mud or mul or mur
+solid = wall or crate
+& = target and crate
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+background1, background2
+target
+player, wall, wall2, crate
+m1
+m2
+mup
+mud
+mul
+mur
+======
+RULES
+======
+(to-do: Fix a couple of movements :U)
+
+
+(Place dark/light tiles)
+[background1|background1] -> [background1|background2]
++[background2|background2] -> [background2|background1]
+
+(Do diagonal movement)
+left [up player|no m1] -> [up player|up m1] (move northwest)
+right [down player|no m1] -> [down player|down m1] (move southeast)
+up [right player|no m1] -> [right player|right m1](move northeast)
+down [left player|no m1] -> [left player|left m1](move southwest)
+
+[> m1| ] -> [ |m1] (Move and check positon 1)
+[m1 wall] -> [  wall]
+
+left [up player] [m1 crate| no m2] -> [up player] [m1 crate|up m2] (<--push northwest)
+right [down player] [m1 crate|no m2] -> [down player] [m1 crate|down m2] (<--push southeast)
+down [left player] [m1 crate|no m2] -> [left player] [m1 crate|left m2] (<-- push southwest)
+up [right player] [m1 crate|no m2] -> [right player] [m1 crate|right m2] (<-- push northeast)
+
+[> m2| ] -> [ |m2] (Move and check position 2)
+[m1] [m2 wall ] -> [  ] [  wall]
+[m1] [m2 crate] -> [  ] [ crate]
+
+[crate m1] [m2] -> [m1] [crate](update positions for diagonal)
+[player] [m1] -> [  ]  [stationary player]
+
+(Check for that one glitch)
+
+up    [moving player|crate|no solid] -> [moving player mup|crate|  ]
+down  [moving player|crate|no solid] -> [moving player mud|crate|  ]
+left  [moving player|crate|no solid] -> [moving player mul|crate|  ]
+right [moving player|crate|no solid] -> [moving player mur|crate|  ]
+
+[up    player mul mup] -> [stationary player]
+[down  player mur mud] -> [stationary player]
+[left  player mud mul] -> [stationary player]
+[right player mup mur] -> [stationary player]
+
+(Do orthogonal movement when bumping smooth walls/crate arrangements, ONLY IF the diagonal movement failed)
+
+(NW)
+up [up player|solid] -> [up player left m1|solid]
+(SE)
+down [down player|solid] -> [down player right m1|solid]
+(SW)
+left [left player|solid] -> [left player down m1|solid]
+(NE)
+right [right player|solid] -> [right player up m1|solid]
+
+random [> m1| ] -> [ |> m1] (Move and check position 1 orthogonally, but only once)
+[m1 wall] -> [  wall]
+
+[> m1 crate] -> [> m1 > m2 crate]
+
+[> m2| ] -> [ |m2] (Move and check position 2 orthogonally)
+[m1] [m2 wall ] -> [  ] [  wall]
+[m1] [m2 crate] -> [  ] [ crate]
+
+[crate m1] [m2] -> [m1] [crate](update positions for orthogonal movement)
+[player] [m1] -> [  ]  [stationary player]
+
+(NW)
+left [up player|solid] -> [up player up m1|solid]
+(SE)
+right [down player|solid] -> [down player down m1|solid]
+(SW)
+down [left player|solid] -> [left player left m1|solid]
+(NE)
+up [right player|solid] -> [right player right m1|solid]
+
+random [> m1| ] -> [ |> m1] (Move and check position 1 orthogonally, but only once)
+[m1 wall] -> [  wall]
+
+[> m1 crate] -> [> m1 > m2 crate]
+
+[> m2| ] -> [ |m2] (Move and check position 2 orthogonally)
+[m1] [m2 wall ] -> [  ] [  wall]
+[m1] [m2 crate] -> [  ] [ crate]
+
+[crate m1] [m2] -> [m1] [crate](update positions for orthogonal movement)
+[player] [m1] -> [  ]  [stationary player]
+
+[player] -> [stationary player](prevents extra move due to flagging)
+
+
+==============
+WINCONDITIONS
+==============
+all target on crate
+=======
+LEVELS
+=======
+
+###########
+#####.#####
+####.##.###
+###.##.o.##
+##.##...###
+#.##.*.##.#
+###...##.##
+##.@.##.###
+###.##.####
+#####.#####
+###########
+
+#########
+####.####
+###...###
+##..*..##
+#..@....#
+##..o..##
+###...###
+####.####
+#########
+
+############
+###o#.######
+##*.*..###o#
+#..o..#.#.##
+##.#.###*###
+#######...##
+########.#@#
+############
+
+###########
+##.o.....##
+#######*.##
+########.##
+########.##
+########.##
+########@##
+########.##
+###########
+
+########
+#o..####
+#.o.####
+#...*..#
+###*...#
+###..@.#
+###....#
+########
+
+########
+#..o&..#
+#..&o*.#
+#...*..#
+#.@....#
+#......#
+########
+
+#########
+#.......#
+#.....@.#
+#...&o..#
+#..*#&..#
+#.o.*...#
+#.*o....#
+#.......#
+#########

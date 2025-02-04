@@ -1,0 +1,294 @@
+norepeat_action
+debug
+color_palette 2
+background_color lightgrey
+title TimeStopp
+========
+OBJECTS
+========
+black
+lightgrey
+cursor 
+yellow
+00.00
+0...0
+.....
+0...0
+00.00
+uncursor
+grey blue
+00.00
+0...0
+..1..
+0...0
+00.00
+background
+grey
+select
+red
+00.00
+0...0
+.....
+0...0
+00.00
+trash
+red
+..0..
+00000
+0.0.0
+0.0.0
+.000.
+ncrate
+brown lightbrown
+00000
+00110
+01010
+01100
+00000
+play
+lightgreen
+00...
+0000.
+00000
+0000.
+00...
+play2
+lightgreen
+00...
+0000.
+00000
+0000.
+00...
+play3
+lightgreen
+00...
+0000.
+00000
+0000.
+00...
+fire
+red orange white yellow
+..33.
+.331.
+31101
+10200
+12221
+tempf
+red orange
+.....
+.....
+.....
+.1.11
+10101
+sblock
+darkgrey
+.....
+.....
+..0..
+.....
+.....
+tcrate
+green lightgreen
+00000
+01100
+01010
+00110
+00000
+delselect
+red
+00.00
+0...0
+.....
+0...0
+00.00
+gcrate
+brown lightbrown
+11011
+11011
+01010
+10001
+11011
+wsource
+blue darkblue
+00000
+01110
+01110
+01110
+00000
+water
+blue lightblue
+00110
+11001
+00000
+11001
+00110
+tempw
+transparent
+Pdoor
+green purple 
+.....
+..1..
+.111.
+..1..
+.....
+Sdoor
+ black
+mcrate
+black #8c8c8c
+10101
+00000
+10001
+00000
+10101
+=======
+LEGEND
+=======
+C = Cursor and black
+. = background
+o = cursor
+x = select
+0 = ncrate
+d = gcrate
+u = gcrate and sblock
+! = ncrate and sblock
+t = tcrate
+# = trash and black
+e = tcrate and sblock
+p = play and black
+B = black
+f = fire
+i = pdoor
+g = fire and sblock
+s = sblock
+w = wsource
+~ = wsource and sblock
+m = mcrate
+1 = mcrate and sblock
+water2 = w or water
+crate = 0 or tcrate or gcrate
+player = cursor and select and delselect and uncursor
+object = fire or crate or wsource or mcrate
+go = play3 or play2
+block = object or black or pdoor
+moveable = crate or fire or wsource or mcrate
+=======
+SOUNDS
+=======
+o move 20901900
+crate move 40775507
+f move 35730508
+f create 35730508
+SFX0 17676706
+f destroy 35730508
+sfx1 90087704
+sfx2 51088508
+t destroy 78819900
+cursor create 16754500
+uncursor move 80689504
+mcrate move 69209707
+================
+COLLISIONLAYERS
+================
+background 
+pdoor
+crate black fire tempf wsource water sdoor mcrate
+select play play2 play3 sblock trash
+delselect
+uncursor
+cursor tempw
+======
+RULES
+======
+[> select|black] ->[select|black]
+ [action cursor object] -> [ select object]
+[ > cursor ] [select] -> [cursor] [select]
+[action select] -> [cursor]
+[action cursor play] -> [again play2 SFX0]
+[play2] -> [play3 again]
+[play3] -> [play2 again]
+[fire|crate] [go] -> [fire|tempf] [go]
+[tempf] -> [fire]
+[action cursor trash] -> [delselect trash]
+[ > select|block] -> [select|block]
+[> uncursor| no sblock] -> [|cursor]
+[> cursor|sblock] -> [|uncursor sblock sfx1]
+[> select|sblock] -> [select|sblock sfx1]
+[> delselect|sblock] -> [delselect|sblock sfx1]
+[action delselect object] -> [cursor sfx2]
+[go] [sblock] -> [go] []
+[gcrate] [go] -> [down gcrate] [go]
+[fire|water2] [go]-> [tempw|water2] [go]
+late [no block|water2] [go] -> [tempw|water2] [go]
+[tempw] -> [water]
+[> object| moveable] [go] -> [> object|> moveable] [go]
+[pdoor] [go] -> [sdoor] [go]
+(must be final rules section)
+[ select > object] -> [> select > object]
+[> select object] -> [> select > object]
+
+
+==============
+WINCONDITIONS
+==============
+no tcrate
+=======
+LEVELS
+=======
+message Press X to select an object
+message Try to burn this green crate
+message Move to play and press X when ready
+f...t
+.....
+pbbbC
+message You can't move things with a grey dot on them
+message Brown crates are flamable too!
+!!!e
+...o
+!..0
+g...
+pbbb
+message I wonder what that is...
+.....
+sss..
+sss.d
+s!s..
+esg..
+pbbbc
+message Hey look! A well!
+message Those will pour out water, so keep them away from fire!
+message You can block water with crates
+~~~~~~.
+.0.0...
+.......
+g0000e.
+pbbbbbc
+message You can move fire too!
+.!t!.
+.!!!.
+.....
+..f..
+.....
+pcbbb
+
+.d.ff
+...ff
+...ff
+11.11
+g!1!e
+.....
+pcbbb
+
+.mmme
+mtttm
+mtttm
+mtttm
+gmmm.
+pcbbb
+
+
+.....
+.....
+f.m.d
+11s11
+e.0.0
+pcbbb

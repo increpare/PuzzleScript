@@ -1,0 +1,142 @@
+title Darkness Sokoban
+author Stephen Lavelle
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+BLACK
+
+BackgroundM
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+Target
+BLACK
+
+TargetM
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BLACK
+
+WallM
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+BLACK
+
+CrateM
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+x = Wall
+p = Player
+c = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall, Crate
+BackgroundM
+TargetM
+Player, WallM, CrateM
+
+======
+RULES
+======
+
+[> Player|Wall] -> [Player|Wall]
+LATE[Player Background] -> [Player Background Backgroundm]
+LATE[Player Target] -> [Player Target Targetm]
+
+LATE[Background No Backgroundm|Player] -> [Background Backgroundm|Player]
+LATE[Wall No Wallm|Player] -> [Wall Wallm|Player]
+LATE[Crate No Cratem|Player] -> [Crate Cratem|Player]
+LATE[Target No Targetm|Player] -> [Target Targetm|Player]
+
+LATE[Backgroundm no Background] -> [no Backgroundm]
+LATE[Wallm no Wall] -> [no Wallm]
+LATE[Cratem no Crate] -> [no Cratem]
+LATE[Targetm no Target] -> [no Targetm]
+
+[Background Backgroundm|No Player] -> [Background No Backgroundm|No Player]
+[Wall Wallm|No Player] -> [Wall No Wallm|No Player]
+[Crate Cratem|No Player] -> [Crate No Cratem|No Player]
+[Target Targetm|No Player] -> [Target No Targetm|No Player]
+
+[> Player|Crate] -> [> Player|> Crate]
+[> Player|> Crate|Wall] -> [Player|Crate|Wall]
+[> Player|> Crate|Crate] -> [Player|Crate|Crate]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+xxxxxxx
+xo....x
+xxx.x.x
+xp....x
+x..c..x
+x.....x
+xxxxxxx
+
+xxxxxxx
+xxx...x
+xxo.xxx
+xx@.c.x
+x.c...x
+xp...ox
+xxxxxxx

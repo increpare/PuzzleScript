@@ -1,0 +1,302 @@
+title Ocean Treasure
+author By Juan Pablo Peralta Pino
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+00000
+00000
+00000
+00000
+00000
+
+algae
+green darkgreen lightblue
+21022
+21022
+22102
+22002
+21002
+
+coin
+yellow lightblue
+11111
+11111
+11001
+11001
+11111
+
+rock
+darkbrown darkgray lightblue
+00110
+10010
+10110
+10010
+00100 
+
+bucle
+blue darkblue
+.....
+..0..
+.010.
+..0..
+.....
+
+desactivate
+red darkred
+.....
+..0..
+.010.
+..0..
+.....
+
+desactivate2
+red darkred
+.....
+..0..
+.010.
+..0..
+.....
+
+Activate
+lightgreen
+.....
+.....
+.....
+.....
+00000
+
+Activate2
+purple
+.....
+.....
+.....
+.....
+00000
+
+piedra
+darkbrown darkgray lightblue
+.....
+.....
+.0110
+10010
+01101
+
+vortice
+black
+.....
+.....
+.....
+.....
+00000
+
+vortice2
+black
+.....
+.....
+.....
+.....
+00000
+
+Player
+yellow black white lightbrown
+..122
+.313.
+10031
+30010
+.300.
+
+=======
+LEGEND
+=======
+. = Background
+a = algae
+P = Player
+c = coin
+2 = rock
+b = bucle
+k = Activate
+d = desactivate
+u = desactivate2
+l = Activate2
+ñ = piedra
+8 = vortice
+9 = vortice2
+=======
+SOUNDS
+=======
+
+endlevel 10014100
+startgame 5355708
+TitleScreen 85484308
+Player move 89370709
+coin destroy 36423300
+bucle destroy 32413701
+
+================
+COLLISIONLAYERS
+================
+
+Background
+algae, coin, bucle, desactivate, desactivate2, Activate, Activate2, vortice, vortice2
+Player, rock, piedra
+
+======
+RULES     
+======  
+
+[ > Player | coin ] -> [ > Player | ]
+[ > Player | ... | bucle ] -> [ | ... | Player ]
+[ > player | piedra ] -> [ > player | > piedra ] 
+[ Player | Activate ] [ desactivate ] -> [ Player | Activate ] [ bucle ]
+[ piedra | Activate2 ] [ desactivate2 ] -> [ piedra | Activate2 ] [ bucle ]
+[ piedra | vortice ] [vortice2] -> [ | vortice ] [ piedra ]
+
+
+==============
+WINCONDITIONS
+==============
+
+no coin
+
+=======     
+LEVELS
+=======
+message Ahi estan las monedas!! Vamos a agarrarlas todas.
+
+........
+p.......
+........
+....c...
+.....c..
+.a..c..a
+
+
+message mmm.. es una especie de teletransportador de moleculas...
+
+....2...b
+....2..c.
+..p.2.c..
+....2...c
+....2c...
+....2....
+a..a2...a
+
+message Funciono!! Con que asi va la mano eh... hmmm
+
+...p.2a...
+.....22..c
+...c..2...
+a.a...2.c.
+222.a.2...
+..22222..b
+...22....2
+bac.2.a.a2
+
+
+message Tendremos que tener cuidado... los teletransportadores solo funcionan una vez, y no nos iremos de aqui sin las monedas!!
+
+........a22...
+.....c..22..c.
+..p.....2.a...
+a..a....22222.
+22222.a22...2b
+.....222...c22
+.......2......
+.....aa2......
+c...2222.a.ba.
+...a2.b2222222
+ba.22a..c..a.2
+
+p....2.....2.c
+.ba..2c...a2..
+2222c2.ab.22..
+...22222222...
+.c...2.....b..
+a....2222a..a.
+22ba.2.b222222
+.222222...22..
+.c..222.c.....
+b.a22...a.ca.a
+
+message Ese teletransportador esta desactivado.. veremos que podemos hacer!!
+
+..2......
+p.22...d.
+...2a....
+...22c...
+....2.c..
+aka.2a.a.
+
+message Aja!! teletransportador activado *bip*
+
+......2cd
+c....a222
+....k22..
+p..a22...
+..a22....
+..2.c...b
+..2..c...
+
+....c....2..
+.p......a2..
+a..a..a.22.c
+222222222...
+.c2....2....
+..22.c.2..b.
+...2.d.2....
+b.a2.a.2.ka.
+
+message Hmm.. esta placa es diferente..
+
+..........
+.p........
+a.........
+222añ.a...
+..222222la
+.......222
+....c.....
+..u..c....
+a...a..a.a
+
+p......2......
+....c..2..u..c
+......a2....c.
+a.ka..222a....
+2222222.2222a.
+.....22....222
+...c..2añ....b
+.d....222.c...
+.a..a..22a.al.
+
+message Oh no, la placa de presion esta del otro lado!!
+
+.......2..c.
+.p.....2u..c
+.......2..a.
+.......22222
+.....ña2....
+.....222...d
+....82......
+a.ka22a.9a.l
+
+message wow!! el vortice negro puede teletransportar rocas!!
+
+.p...c2.....c
+....ña2.a.b..
+a8ak22222....
+222222..2.a..
+222222..222.a
+.....2.....22
+.....2.9....d
+...c.222..c..
+.u.....2....l
+a.a..a.2..a.2
+
+message Conseguimos todas las monedas!!
+
+

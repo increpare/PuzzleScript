@@ -1,0 +1,295 @@
+title Gravity Sokoban
+author Franklin P. Dyer
+run_rules_on_level_start on
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+PlayerGround
+Black #d2b48c White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+PlayerJump1
+Black #d2b48c White Blue
+.000.
+.111.
+22222
+.333.
+3...3
+
+PlayerJump2
+Black #d2b48c White Blue
+.000.
+.111.
+22222
+.333.
+3...3
+
+BoxJump1
+Black #d2b48c White Blue Orange
+.000.
+.1444
+22424
+.3444
+3...3
+
+BoxJump2
+Black #d2b48c White Blue ORange
+.000.
+.1444
+22424
+.3444
+3...3
+
+Playerbox
+Black #d2b48c White Blue Orange
+.000.
+.1444
+22424
+.3444
+.3.3.
+
+DropBox
+Black #d2b48c White Blue Orange
+.000.
+.444.
+24242
+.444.
+.3.3.
+
+Pickup
+Black #d2b48c White Blue
+.000.
+.111.
+.222.
+23332
+.3.3.
+
+Box
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Socket
+Orange Darkblue
+00000
+01110
+01.10
+01110
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = PlayerGround
+* = Box
+@ = Socket
+O = Target
+
+JumpingPlayer = PlayerJump1 or PlayerJump2
+BoxJump = Boxjump1 or Boxjump2
+Player = PlayerGround or PlayerJump1 or PlayerJump2 or PlayerBox or Dropbox or Pickup or BoxJump1 or BoxJump2
+Canfall = Box or PlayerGround or PlayerBox or Dropbox or Pickup
+Obstacle = Box or Wall or Player or Socket
+
+=======
+SOUNDS
+=======
+
+Box MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Box, Socket
+
+======
+RULES
+======
+
+LATE[Box Target] -> [Socket]
+
+[ >  Player | Box ] -> [  >  Player | > Box  ]
+
+UP [ Up PlayerGround | No Obstacle ] -> [ Up PlayerJump2 | ]
+DOWN [ Up JumpingPlayer | no Obstacle ] -> [ JumpingPlayer | ]
+DOWN [ Up PlayerJump2 | no Obstacle ] -> [ PlayerJump2 | ]
+HORIZONTAL [ > PlayerJump1 | NO Obstacle ] -> [ | PlayerGround ]
+HORIZONTAL [ > PlayerJump2 | NO Obstacle ] -> [ | PlayerJump1 ]
+LATE DOWN [ PlayerGround | NO Obstacle ] -> [ | playerground ]
+LATE DOWN [ JumpingPlayer | Obstacle ] -> [ PlayerGround | Obstacle ]
+
+UP [ Up PlayerBox | No Obstacle ] -> [ Up BoxJump2 | ]
+DOWN [ Up boxjump | no Obstacle ] -> [ boxjump | ]
+DOWN [ Up boxJump2 | no Obstacle ] -> [ boxJump2 | ]
+HORIZONTAL [ > boxJump1 | NO Obstacle ] -> [ | Playerbox ]
+HORIZONTAL [ > boxJump2 | NO Obstacle ] -> [ | boxJump1 ]
+LATE DOWN [ playerbox | NO Obstacle ] -> [ | playerbox ]
+LATE DOWN [ boxjump | Obstacle ] -> [ playerbox | Obstacle ]
+
+[Action PlayerGround] -> [Pickup]
+[> Pickup|Box] -> [Playerbox|]
+[> Pickup|Socket] -> [Playerbox|Target]
+[Action PlayerBox] -> [Dropbox]
+[> Dropbox|No Obstacle] -> [PlayerGround|Box]
+DOWN[No Obstacle|DOWN Dropbox|Obstacle] -> [PlayerGround|Box|Obstacle]
+[> Dropbox|Obstacle] -> [Dropbox|Obstacle]
+
+[ Stationary CanFall ] -> [ Down CanFall ]again
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Box
+
+=======
+LEVELS
+=======
+
+message level 1 of 10
+
+#####.
+#.O.#.
+#*.*##
+#@P.*#
+#****#
+#**###
+####..
+
+message level 2 of 10
+
+######
+#....#
+#.#P.#
+#..O.#
+#.OO.#
+#.***#
+######
+
+message level 3 of 10
+
+..####...
+###..####
+#....**.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+message level 4 of 10
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O*#
+#.....*#
+########
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+..######
+..#.OOP#
+..#**..#
+..##*###
+...#*#..
+...#*#..
+####.#..
+#..**##.
+#.#**.#.
+#..*#.#.
+###**.#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 10 of 10
+
+......#####
+....###O..#
+....#..O.*#
+#####..O**#
+#.P.*.*.#.#
+#.#.#.#*###
+#*.*.*..#..
+#########..
+
+message congratulations!

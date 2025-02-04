@@ -1,0 +1,251 @@
+title EpicJamGame
+author Toombler
+homepage www.puzzlescript.net
+
+again_interval 0.05
+
+========
+OBJECTS
+========
+
+Background
+#ffaf47 #ffbf69
+11011
+01110
+11001
+11100
+00111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Red green darkblue darkgray
+.000.
+.111.
+02220
+02220
+.0.0.
+
+Crate
+darkbrown Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Spirit
+Purple
+.....
+.000.
+.000.
+.000.
+.....
+
+Water 
+#27A599
+
+BlockingU
+transparent
+
+BlockingD
+transparent
+
+BlockingR
+transparent
+
+BlockingL
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+S = Spirit
+~ = Water
+
+Blocking = BlockingU or BlockingD or BlockingR or BlockingL
+Opaque = Crate or Wall
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+Endlevel 96976903
+
+Spirit move 39212302
+
+Player move 74291507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Water
+Target
+Player, Wall, Crate, Spirit
+
+Blocking
+
+
+======
+RULES
+======
+
+[ > Player | Water ] -> [ Player | Water ]
+[ >  Player | Crate ] -> [  >  Player | > Crate ]
+
+ 
+
+(check lines of sight from spirit)
+[Blocking] -> []
+up [ Spirit | ... | Opaque ] -> [ Spirit | ... | Opaque BlockingU]
+down [ Spirit | ... | Opaque ] -> [ Spirit | ... | Opaque BlockingD]
+right [ Spirit | ... | Opaque ] -> [ Spirit | ... | Opaque BlockingR]
+left [ Spirit | ... | Opaque ] -> [ Spirit | ... | Opaque BlockingL]
+
+(make spirit move away)
+[ Player | ... | Spirit | no wall no crate Background] -> [ Player | ... | > Spirit | no wall no crate Background]
+(cancel spirit movement if line of sight blocked) 
+up [up Spirit][ Player | ... | BlockingD ] ->  [ stationary Spirit][ Player | ... | BlockingD ]
+down [down Spirit][ Player | ... | BlockingU ] ->  [ stationary Spirit][ Player | ... | BlockingU ] 
+right [right Spirit][ Player | ... | BlockingL ] ->  [ stationary Spirit][ Player | ... | BlockingL ] 
+left [left Spirit][ Player | ... | BlockingR ] ->  [ stationary Spirit][ Player | ... | BlockingR ] 
+ 
+
+[stationary Spirit Target] -> win
+
+late [Player | ... | Spirit] -> [Player | ... | Spirit] again
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+
+
+~~~~~~~~~~
+~~~#...#.~
+~~.#o....~
+~........~
+~........~
+~~#.s...~~
+~~......#~
+~.....p.#~
+~~.###...~
+~~~~~~~~~~
+
+~~~~~~~~~~~
+~~~~~~~..~~
+~~~###...~~
+~~~....#.~~
+~~...p....~
+~~........~
+~~..s.o#..~
+~##...##.~~
+~~.......~~
+~~~.....~~~
+~~~~~~~~~~~
+
+
+(
+~~~~~~~~~~~
+~~####~~~~~
+~~#..####~~
+~~#......~~
+~~#...s..~~
+~~.......~~
+~~...p.o#~~
+~~~##...~~~
+~~~~~~~~~~~
+~~~~~~~~~~~)
+
+
+
+
+~~~~~~~~~~~~
+~~~~####~~~~
+~####..o~~~~
+~~........~~
+~~.#..s...~~
+~~......p.~~
+~~~##...###~
+~~~~#.#.#~~~
+~~~~~...~~~~
+~~~~~~~~~~~~
+
+~~~~~~~~~~~~
+~~~....##~~~
+~~#.#.....~~
+~#...~.#...~
+~#.#.~~.s..~
+~~..~~~..p.~
+~~~..~~~.##~
+~~~~.~~~o#~~
+~~~~#~#~~#~~
+~~~~~~#~~~~~
+~~~~~~~~~~~~
+
+
+~~~~~~~~~~~~~~~
+~~~#~..~..~~~~~
+~.~#.......~~~~
+~~~#........~~~
+~~.#o.*s..#.~~~
+~~~.......#..~~
+~.~#.p.......~~
+~.~~~......~~~~
+~~~~~~#.~~~~#~~
+~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~
+~~~~~..~~~~~~
+~~~~.....###~
+~~###.....o#~
+~~#........#~
+~.#..s......~
+~...........~
+~..*....##.~~
+~~....~.##.~~
+~~.p.~~....~~
+~~~~~~~~~~~~~
+
+~~~~~~~~~~#~~~
+~#~~~~~~~~~#~~
+~~~~~....~~~~~
+~~~...*..~~#~~
+~~....o...~~#~
+~~..p.*...~~#~
+~~.......~~~#~
+#~....s..~~#~~
+~~~......~~#~~
+~#~~~~..~~~~#~
+~#~~~~~~~~#~~~

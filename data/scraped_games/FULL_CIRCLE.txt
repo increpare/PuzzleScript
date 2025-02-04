@@ -1,0 +1,430 @@
+title FULL CIRCLE
+author Julien Grimard
+homepage www.jgrimard.com
+
+(2020-01-09 - First version)
+(2020-01-10 - Added 2/4 objects, added levels 5-6-7)
+(2020-01-11 - Modified level 4 and swapped with level 3)
+(2020-01-12 - Added Tutorial, updated level 3)
+
+color_palette arnecolors
+background_color darkgray
+text_color white
+
+noaction
+
+========
+OBJECTS
+========
+
+Logo
+white lightgray
+11011
+01011
+01010
+11011
+11011
+
+Background 
+black darkgray
+00000
+00000
+00100
+00000
+00000
+
+Wall_V
+white #f5f5f5 lightgray
+01000
+00100
+10000
+00010
+22222
+
+Wall_H
+white #f5f5f5
+01000
+00100
+10000
+00010
+00001
+
+Outside
+darkgray
+
+Arrow_D
+black darkgray
+.....
+1...1
+.101.
+..1..
+.....
+
+Arrow_R
+black darkgray
+.1...
+..1..
+..01.
+..1..
+.1...
+
+Player 
+red lightred darkred
+.111.
+.212.
+10001
+.000.
+.1.1.
+
+Round_TL
+blue lightblue
+...11
+..100
+.1000
+10000
+10000
+
+Round_TL2
+green lightgreen
+...11
+..100
+.1000
+10000
+10000
+
+Round_TR
+purple pink
+11...
+001..
+0001.
+00001
+00001
+
+Round_TR2
+blue lightblue
+11...
+001..
+0001.
+00001
+00001
+
+Round_BL
+green lightgreen
+10000
+10000
+.1000
+..100
+...11
+
+Round_BL2
+orange yellow
+10000
+10000
+.1000
+..100
+...11
+
+Round_BR
+orange yellow
+00001
+00001
+0001.
+001..
+11...
+
+Round_BR2
+purple pink
+00001
+00001
+0001.
+001..
+11...
+
+Round_TL_Win
+blue white
+...11
+..100
+.1000
+10000
+10000
+
+Round_TL2_Win
+green white
+...11
+..100
+.1000
+10000
+10000
+
+Round_TR_Win
+purple white
+11...
+001..
+0001.
+00001
+00001
+
+Round_TR2_Win
+blue white
+11...
+001..
+0001.
+00001
+00001
+
+Round_BL_Win
+green white
+10000
+10000
+.1000
+..100
+...11
+
+Round_BL2_Win
+orange white
+10000
+10000
+.1000
+..100
+...11
+
+Round_BR_Win
+orange white
+00001
+00001
+0001.
+001..
+11...
+
+Round_BR2_Win
+purple white
+00001
+00001
+0001.
+001..
+11...
+
+Target_TL
+blue darkgray black
+...11
+..1..
+.12.2
+1...2
+1.222
+
+Target_TR
+purple darkgray black
+11...
+..1..
+2.21.
+2...1
+222.1
+
+Target_BL
+green darkgray black
+1.222
+1...2
+.12.2
+..1..
+...11
+
+Target_BR
+orange darkgray black
+222.1
+2...1
+2.21.
+..1..
+11...
+
+=======
+LEGEND
+=======
+
+L = Logo
+. = Background
+# = Wall_V
+% = Wall_H
+/ = Outside
+P = Player
+1 = Round_TL
+a = Round_TL2
+2 = Round_TR
+b = Round_TR2
+3 = Round_BL
+c = Round_BL2
+4 = Round_BR
+d = Round_BR2
+5 = Target_TL
+6 = Target_TR
+7 = Target_BL
+8 = Target_BR
+: = Round_TL and Target_BR
+¨ = Round_BR and Target_TL
+' = Round_TR_Win and Target_TR
+j = Round_BL_Win and Target_BL
+z = Round_BR_Win and Target_BR
+↓ = Arrow_D
+→ = Arrow_R
+
+Wall = Wall_V or Wall_H
+Round = Round_TL or Round_TL2 or Round_TR or Round_TR2 or Round_BL or Round_BL2 or Round_BR or Round_BR2
+Round_Win = Round_TL_Win or Round_TL2_Win or Round_TR_Win or Round_TR2_Win or Round_BL_Win or Round_BL2_Win or Round_BR_Win or Round_BR2_Win
+Round_T = Round_TL or Round_TL_Win or Round_TR2 or Round_TR2_Win
+Round_B = Round_BR or Round_BR_Win or Round_BL2 or Round_BL2_Win
+Round_L = Round_BL or Round_BL_Win or Round_TL2 or Round_TL2_Win
+Round_R = Round_TR or Round_TR_Win or Round_BR2 or Round_BR2_Win
+Target = Target_TL or Target_TR or Target_BL or Target_BR
+Decor = Arrow_D or Arrow_R
+
+=======
+SOUNDS
+=======
+
+Player cantmove 57560304
+Player move 58069907
+Round create 43564103
+Round move 1477107
+Round_Win create 54731300
+Round_Win move 1477107
+endlevel 15696709
+startgame 26890109
+startlevel 78054309
+closemessage 26890109
+undo 61005704
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, Decor
+Player, Wall, Round, Round_Win, Round_T, Outside, Logo
+
+======
+RULES     
+======     
+
+(Movement Round_T)
+rigid [ > Player | Round_T ] -> [ > Player | > Round_T ]
++ rigid [ Moving Round_T | Round_T ] -> [ Moving Round_T | MOVING Round_T ]
+(Movement Round_B)
+rigid [ > Player | Round_B ] -> [ > Player | > Round_B ]
++ rigid [ Moving Round_B | Round_B ] -> [ Moving Round_B | MOVING Round_B ]
+(Movement Round_L)
+rigid [ > Player | Round_L ] -> [ > Player | > Round_L ]
++ rigid [ Moving Round_L | Round_L ] -> [ Moving Round_L | MOVING Round_L ]
+(Movement Round_R)
+rigid [ > Player | Round_R ] -> [ > Player | > Round_R ]
++ rigid [ Moving Round_R | Round_R ] -> [ Moving Round_R | MOVING Round_R ]
+
+(Round on Target)
+late [ Round_TL Target_TL ] -> [ Round_TL_Win Target_TL ]
+late [ Round_TL2 Target_TL ] -> [ Round_TL2_Win Target_TL ]
+late [ Round_TR Target_TR ] -> [ Round_TR_Win Target_TR ]
+late [ Round_TR2 Target_TR ] -> [ Round_TR2_Win Target_TR ]
+late [ Round_BL Target_BL ] -> [ Round_BL_Win Target_BL ]
+late [ Round_BL2 Target_BL ] -> [ Round_BL2_Win Target_BL ]
+late [ Round_BR Target_BR ] -> [ Round_BR_Win Target_BR ]
+late [ Round_BR2 Target_BR ] -> [ Round_BR2_Win Target_BR ]
+
+(Round_Win out of Target)
+late [ Round_TL_Win | Target_TL ] -> [ Round_TL | Target_TL ]
+late [ Round_TL2_Win | Target_TL ] -> [ Round_TL2 | Target_TL ]
+late [ Round_TR_Win | Target_TR ] -> [ Round_TR | Target_TR ]
+late [ Round_TR2_Win | Target_TR ] -> [ Round_TR2 | Target_TR ]
+late [ Round_BL_Win | Target_BL ] -> [ Round_BL | Target_BL ]
+late [ Round_BL2_Win | Target_BL ] -> [ Round_BL2 | Target_BL ]
+late [ Round_BR_Win | Target_BR ] -> [ Round_BR | Target_BR ]
+late [ Round_BR2_Win | Target_BR ] -> [ Round_BR2 | Target_BR ]
+
+==============
+WINCONDITIONS
+==============
+
+No Round
+
+=======     
+LEVELS
+=======
+
+message complete the circle
+
+%#######%
+%.......%
+%.p1→5'.%
+%....jz.%
+%.......%
+#########
+
+message 1 / 7
+
+/%####%/
+%#....#%
+%.4..3.%
+%..56..%
+%..78..%
+%.2..1.%
+#%.p..%#
+/######/
+
+message 2 / 7
+
+%###%/
+%...#%
+%.2..%
+%.¨6.%
+%.7:.%
+%..3.%
+#%p..%
+/#####
+
+message 3 / 7
+
+/%####%/
+%#.p..#%
+%..1b..%
+%.4..3.%
+##%56%##
+//%78%//
+//####//
+
+message 4 / 7
+
+%####%
+%...p%
+%.32.%
+%561.%
+%784.%
+######
+
+message 5 / 7
+
+///%###%
+%###..p%
+%56.2..%
+%78.41.%
+###%.3.%
+///%...%
+///#####
+
+message 6 / 7
+
+/%####%/
+%#....#%
+%.c4...%
+%562a56%
+%78d378%
+%p..1b.%
+#%....%#
+/######/
+
+message 7 / 7
+
+%##%%###%
+%78##...%
+%p..12..%
+%56..34.%
+###%...%#
+///#####/
+
+message Thank you for playing!

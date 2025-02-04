@@ -1,0 +1,541 @@
+title Shared Bridges Game
+author Puzzlescripters
+homepage groups.google.com/forum/#!topic/puzzlescript/l4dxRwKmBq0
+norepeat_action
+background_color darkblue
+run_rules_on_level_start (for decorations)
+
+(
+========
+README
+========
+
+Open game of PuzzleScript Tennis inspired by PhotoShop Tennis and #IDARB!
+
+This iz how it works:
+
+1. Pick the latest version from the forum thread. Write a post telling you are taking the next turn.
+2. Hack it. Add anything. Delete mercilessly. Change the rules, change the name.
+3. Write in the comments what you did. What's new? What changed?
+4. Add yourself to the log.
+5. Share the link to your version on the thread.
+
+Remember:
+
+- All code created and shared in the match is Public Domain.
+- Tennis is a speedy game. Be quick with your edits and return the ball so other's get to hit it too.
+- This is a game but not a contest.
+- This will probably be messy, don't expect or aim for a final product.
+- If you do see something you'd like to keep working on more closely, just fork it.
+
+
+========
+LOG
+========
+
+2015-02-04: Jere (@jjmajava) started the game.
+
+2015-02-05: Daniël (@sheepolution) Made a path the player from the other world can only walk on.
+
+2015-02-06: Jere scrapped portals completely, changed path elements to one platform that can be pushed to other colored areas, enabled multiple platforms being pushed. Changed the name, updated the URL to point to the forum thread.
+
+2015-05-07: Connorses fixed a couple of bugs where players could move onto boxes while still in their own color, added goal squares for Red and Green to reach, and made the map into a legit puzzle.
+
+2015-05-08: Connnorses added more levels.
+
+2015-05-09: Sfiera added norepeat_action, changed style to hi/mid/low.
+
+2015-05-12: Connorses added background_color to Prelude, added more levels, fixed a bug where you could push platforms that were under a character by having Sleeper include CharHi in addition to CharLow, changed background graphic
+
+2015-05-13: Sfiera added NoSwitching, made slight style changes, added one level.
+)
+
+========
+OBJECTS
+========
+
+Background #
+#0c1520 black
+11111
+10001
+10101
+10001
+11111
+
+RedWorldLow
+#300
+
+RedWorldMid .
+darkred #300
+00000
+00000
+00000
+11111
+11111
+
+RedWorldMidCap
+darkred
+.....
+.....
+.....
+00000
+00000
+
+GreenWorldLow ,
+#020
+
+GreenWorldMid
+darkgreen #020
+00000
+00000
+00000
+11111
+11111
+
+GreenWorldMidCap
+darkgreen
+.....
+.....
+.....
+00000
+00000
+
+RedHi
+Transparent
+
+RedHiCap
+Red
+.....
+.....
+.000.
+.000.
+.000.
+
+RedMidCap
+lightred
+.....
+.....
+.....
+.....
+.000.
+
+RedMid
+lightred
+.000.
+.000.
+.....
+.....
+.....
+
+RedLow
+red
+.....
+.000.
+.000.
+.000.
+.....
+
+GreenHi
+Transparent
+
+GreenHiCap
+Green
+.....
+.....
+.000.
+.000.
+.000.
+
+GreenMid
+lightgreen
+.000.
+.000.
+.....
+.....
+.....
+
+GreenMidCap
+lightgreen
+.....
+.....
+.....
+.....
+.000.
+
+GreenLow
+green
+.....
+.000.
+.000.
+.000.
+.....
+
+NoSwitching !
+Transparent
+
+PlatformLow
+darkgray #222
+00000
+00000
+00000
+11111
+11111
+
+PlatformLowCap
+darkgray
+.....
+.....
+.....
+00000
+00000
+
+PlatformMid
+white lightgray
+00000
+11111
+11111
+.....
+.....
+
+PlatformMidCap
+white
+.....
+00000
+00000
+00000
+00000
+
+RedGoalLow
+red
+00.00
+0...0
+.....
+0...0
+00.00
+
+RedGoalMidCap
+Red
+.....
+.....
+.....
+00.00
+0...0
+
+RedGoalMid
+Red
+.....
+0...0
+00.00
+.....
+.....
+
+RedGoalHi
+Red
+00.00
+.....
+.....
+.....
+.....
+
+RedGoalHiCap
+Red
+.....
+00.00
+0...0
+.....
+0...0
+
+GreenGoalLow
+green
+00.00
+0...0
+.....
+0...0
+00.00
+
+GreenGoalMidCap
+Green
+.....
+.....
+.....
+00.00
+0...0
+
+GreenGoalMid
+Green
+.....
+0...0
+00.00
+.....
+.....
+
+GreenGoalHi
+Green
+00.00
+.....
+.....
+.....
+.....
+
+GreenGoalHiCap
+Green
+.....
+00.00
+0...0
+.....
+0...0
+
+=======
+LEGEND
+=======
+
+(Characters)
+Red       = RedHi   or RedMid   or RedLow
+Green     = GreenHi or GreenMid or GreenLow
+
+CharHi    = RedHi  or GreenHi
+CharMid   = RedMid or GreenMid
+CharLow   = RedLow or GreenLow
+Char      = Red    or Green
+
+Player    = CharMid
+Sleeper   = CharLow or CharHi
+
+(World and platforms)
+RedWorld   = RedWorldMid   or RedWorldLow
+GreenWorld = GreenWorldMid or GreenWorldLow
+Platform   = PlatformMid   or PlatformLow
+
+WorldMid   = RedWorldMid or GreenWorldMid
+WorldLow   = RedWorldLow or GreenWorldLow
+World      = RedWorld    or GreenWorld
+
+(Goals)
+RedGoal   = RedGoalHi   or RedGoalMid   or RedGoalLow
+GreenGoal = GreenGoalHi or GreenGoalMid or GreenGoalLow
+Goal = RedGoal or GreenGoal
+
+(Maps)
+R = RedMid       and RedWorldMid
+G = GreenLow     and GreenWorldLow
+
++ = PlatformMid  and RedWorldMid
+x = PlatformLow  and GreenWorldLow
+
+} = RedGoalMid   and RedWorldMid
+[ = GreenGoalMid and RedWorldMid
+] = RedGoalLow   and GreenWorldLow
+{ = GreenGoalLow and GreenWorldLow
+
+(Decorations)
+WorldCap = RedWorldMidCap or GreenWorldMidCap
+PlatformCap = PlatformMidCap or PlatformLowCap
+GoalCap = RedGoalHiCap or GreenGoalHiCap or RedGoalMidCap or GreenGoalMidCap
+CharCap = RedHiCap or GreenHiCap or RedMidCap or GreenMidCap
+Decoration = WorldCap or PlatformCap or GoalCap or CharCap
+
+=======
+SOUNDS
+=======
+
+CharMid create 16981906
+Platform move 33676907
+sfx2 88593103
+sfx3 55706102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+World
+PlatformLow
+PlatformMid
+Goal
+Char
+WorldCap
+PlatformCap
+GoalCap
+CharCap
+NoSwitching
+
+======
+RULES
+======
+
+( No switching when there's a platform on a platform )
+[ action Player ] [ PlatformMid PlatformLow ] -> [ Player ] [ PlatformMid PlatformLow ] sfx3
+
+[ action Player ] [ NoSwitching ] -> [ Player ] [ NoSwitching ]
+
+( Action changes the active world )
+[ action Player   ] [ RedWorldMid   ] -> [ action Player   ] [ RedWorldLow ]
+[ action Player   ] [ GreenWorldMid ] -> [ action Player   ] [ GreenWorldLow ]
+[ action RedMid   ] [ GreenWorldLow ] -> [ action RedMid   ] [ GreenWorldMid ]
+[ action GreenMid ] [ RedWorldLow   ] -> [ action GreenMid ] [ RedWorldMid ]
+[ action RedMid   ] [ Green         ] -> [ RedLow          ] [ GreenMid ]
+[ action GreenMid ] [ Red           ] -> [ GreenLow        ] [ RedMid ]
+
+( Each Box can push platforms only in the active world ) 
+[ > Player | PlatformMid no sleeper] -> [ > Player | > PlatformMid ]
+
+( Multiple Platform blocks can be pushed at the same time )
+[ > PlatformMid | PlatformMid no sleeper] -> [ > PlatformMid | > PlatformMid ]
+
+( Platforms can't be pushed out of the world )
+[ > PlatformMid | no World ] -> cancel
+
+( Platforms can't be pushed through players )
+[ > PlatformMid | Sleeper ] -> cancel
+
+( Platforms can't be pushed out from under players )
+[ > PlatformMid Sleeper ] -> cancel
+
+( Make a sound if a platform is going to fall )
+[ > PlatformMid | no WorldMid no PlatformLow ] -> sfx2
+
+( Most importantly: Players have to stay in the active world or on a platform! )
+[ > Player | no WorldMid no PlatformLow ] -> [ Player | ]
+
+( Platforms fall or rise with the world )
+late [ PlatformLow WorldMid ] -> [ PlatformMid WorldMid ]
+late [ PlatformMid WorldLow no PlatformLow ] -> [ PlatformLow WorldLow ]
+
+( Goals and chars float on whatever they are on )
+late [ WorldMid no Platform RedGoal   ] -> [ WorldMid RedGoalMid ]
+late [ WorldMid no Platform GreenGoal ] -> [ WorldMid GreenGoalMid ]
+late [ PlatformLow          RedGoal   ] -> [ PlatformLow RedGoalMid ]
+late [ PlatformLow          GreenGoal ] -> [ PlatformLow GreenGoalMid ]
+late [ WorldLow no Platform RedGoal   ] -> [ WorldLow RedGoalLow ]
+late [ WorldLow no Platform GreenGoal ] -> [ WorldLow GreenGoalLow ]
+late [ PlatformMid          RedGoal   ] -> [ PlatformMid RedGoalHi ]
+late [ PlatformMid          GreenGoal ] -> [ PlatformMid GreenGoalHi ]
+late [ RedLow   PlatformMid ] -> [ RedHi   PlatformMid ]
+late [ GreenLow PlatformMid ] -> [ GreenHi PlatformMid ]
+
+( Some tiles have parts that extend above or below them. Recreate every tick. )
+late [ Decoration ] -> []
+late up [ PlatformLow   | ] -> [ PlatformLow   | PlatformLowCap ]
+late up [ PlatformMid   | ] -> [ PlatformMid   | PlatformMidCap ]
+late up [ RedWorldMid   | ] -> [ RedWorldMid   | RedWorldMidCap ]
+late up [ GreenWorldMid | ] -> [ GreenWorldMid | GreenWorldMidCap ]
+late up [ RedGoalMid    | ] -> [ RedGoalMid    | RedGoalMidCap ]
+late up [ GreenGoalMid  | ] -> [ GreenGoalMid  | GreenGoalMidCap ]
+late up [ RedGoalHi     | ] -> [ RedGoalHi     | RedGoalHiCap ]
+late up [ GreenGoalHi   | ] -> [ GreenGoalHi   | GreenGoalHiCap ]
+late up [ RedHi         | ] -> [ RedHi         | RedHiCap ]
+late up [ GreenHi       | ] -> [ GreenHi       | GreenHiCap ]
+late up [ RedMid        | ] -> [ RedMid        | RedMidCap ]
+late up [ GreenMid      | ] -> [ GreenMid      | GreenMidCap ]
+
+==============
+WINCONDITIONS
+==============
+
+(players must be on the matching target)
+all Red on RedGoal
+all Green on GreenGoal
+
+=======
+LEVELS
+=======
+!###########
+############
+##...,,...##
+##.+.,,...##
+##.+.,,...##
+##.r.,,.}.##
+##...,,...##
+##...,,...##
+############
+############
+############
+
+!###########
+############
+#######..r##
+#####.....##
+#####++#..##
+###],,,+.###
+###,,,,+.###
+#######..###
+############
+############
+############
+
+message press x to switch players
+
+############
+############
+##......,,##
+##....r{,,##
+##......,,##
+##..,,,,,,##
+##..}g,,,,##
+##..,,,,,,##
+############
+############
+############
+
+############
+#,,,,,.....#
+#,,,,,...}.#
+#,,,,,+++..#
+#,,,,,+++..#
+#,,g,,..r..#
+#,,,,,.....#
+#,,,,,...[.#
+#,,,,,.....#
+############
+############
+############
+
+############
+#####r######
+#####.######
+####g,x,,###
+####{,x,,###
+####,,x,,###
+#####.######
+#####}######
+############
+############
+############
+
+############
+############
+#,,,.....###
+#},,.....###
+#,,,,,,#.###
+#,,,,,,...##
+##,,g,,.+r##
+##,,,,,.+.##
+##,,,,,...##
+########{###
+############
+############
+
+############
+############
+#####}######
+####,,,#####
+###,...,####
+##g,.xr,{###
+###,...,####
+####...#####
+###.+.+.####
+##.......###
+############
+############
+
+############
+#....##,,,,#
+#...+.,,,,,#
+#..r..xx,x,#
+##+..##,,g##
+##,,,##...##
+#,,xx,..+..#
+#,xx,,.+...#
+#],,,##...[#
+############
+############

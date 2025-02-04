@@ -1,0 +1,105 @@
+title Brain
+author Isaac D
+
+========
+OBJECTS
+========
+
+Background
+Black
+Grey
+Grey
+White
+White
+z
+Black
+x
+Black
+c
+Black
+h
+Black
+b
+Black
+n
+Black
+m
+Black
+s
+Black
+Player
+Grey White
+01010
+1...1
+0...0
+1...1
+01010
+
+=======
+LEGEND
+=======
+0=z
+2=c
+3=h
+4=b
+5=n
+6=m
+7=s
+G = Grey
+W = White
+P = Player
+Q = Player and Grey and z
+E = z and Grey
+R = x and Grey
+T = c and Grey
+Y = h and Grey
+U = b and Grey
+I = n and Grey
+O = m and Grey
+A = s and Grey
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+z,x,c,h,b,n,m,s
+grey,white
+Player
+
+======
+RULES
+======
+
+[Action P G z] -> [P W z]
+[Action P W z] -> [P G z]
+[Action P G x|W z] -> [P W x|W z]
+[Action P W x|W z] -> [P G x|W z]
+[Action P G c|W x|G z] -> [P W c|W x|G z]
+[Action P W c|W x|G z] -> [P G c|W x|G z]
+[Action P G h|W c|G x|G z] -> [P W h|W c|G x|G z]
+[Action P W h|W c|G x|G z] -> [P G h|W c|G x|G z]
+[Action P G b|W h|G c|G x|G z] -> [P W b|W h|G c|G x|G z]
+[Action P W b|W h|G c|G x|G z] -> [P G b|W h|G c|G x|G z]
+[Action P G n|W b|G h|G c|G x|G z] -> [P W n|W b|G h|G c|G x|G z]
+[Action P W n|W b|G h|G c|G x|G z] -> [P G n|W b|G h|G c|G x|G z]
+[Action P G m|W n|G b|G h|G c|G x|G z] -> [P W m|W n|G b|G h|G c|G x|G z]
+[Action P W m|W n|G b|G h|G c|G x|G z] -> [P G m|W n|G b|G h|G c|G x|G z]
+[Action P G s|W m|G n|G b|G h|G c|G x|G z] -> [P W s|W m|G n|G b|G h|G c|G x|G z]
+[Action P W s|W m|G n|G b|G h|G c|G x|G z] -> [P G s|W m|G n|G b|G h|G c|G x|G z]
+
+==============
+WINCONDITIONS
+==============
+
+no G
+
+=======
+LEVELS
+=======
+message Instrustions: The left square can be toggled freely. The other squares require for the square directly to the left to be on, and the ones to the left of that square to be off. To win, make all the squares white.
+QRTYUIOA

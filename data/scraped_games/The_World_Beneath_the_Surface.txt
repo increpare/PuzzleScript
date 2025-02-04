@@ -1,0 +1,807 @@
+title The World Beneath the Surface
+author CrocaDino
+youtube kx7sTMU1eL8
+========
+OBJECTS
+========
+Tile
+#184747#1a4d4d#1b5050#1d5252
+32210
+22210
+22210
+11110
+00000
+Player1
+White
+00.00
+0...0
+.....
+0...0
+00.00
+Player2
+White
+00.00
+0...0
+.....
+0...0
+00.00
+RedBlock
+#872e2e#802b2b#9e3636#a73838#af3a3aBlack
+00000
+05450
+04330
+05520
+11111
+BlueBlock
+#2e4487#2b4080#36519e#3854a7#3a58afBlack
+00000
+05450
+04330
+05520
+11111
+YellowBlock
+#87872e#80802b#9e9e36#a7a738#afaf3aBlack
+00000
+05450
+04330
+05520
+11111
+GreenBlock
+#2e872e#2b802b#369e36#38a738#3aaf3aBlack
+00000
+05450
+04330
+05520
+11111
+CyanBlock
+#2e8787#2b8080#369e9e#38a7a7#3aafafBlack
+00000
+05450
+04330
+05520
+11111
+MagentaBlock
+#5a2d88#552b80#6a34a0#7037a8#7539b0Black
+00000
+05450
+04330
+05520
+11111
+BombBlock
+#444444#3f3f3f#505050#545454#585858BlackRed
+00600
+05450
+04330
+05520
+11111
+Explosion
+#184747#1a4d4d#1b5050
+.2.1.
+22210
+.221.
+11110
+.0.0.
+HorizontalWall
+#318181#277878#257070#226868#206060
+44444
+23233
+11011
+32232
+44444
+VerticalWall
+#318181#277878#257070#226868#206060
+43124
+43134
+42024
+43124
+42134
+Corner1
+#318181#277878#257070#226868#206060
+.4444
+43233
+42011
+43123
+42134
+Corner2
+#318181#277878#257070#226868#206060
+4444.
+33234
+11024
+32134
+43124
+Corner3
+#318181#277878#257070#226868#206060
+42134
+43123
+42011
+43233
+.4444
+Corner4
+#318181#277878#257070#226868#206060
+43124
+32134
+11024
+33234
+4444.
+SingleWall
+#318181#257070#226868#206060
+33333
+32123
+31013
+32123
+33333
+Grass
+#b58900#b58800#aa8000#9f7800#f4b800#6ad301
+55555
+55153
+51123
+22243
+33333
+Dirt
+#b58900#b58800#aa8000#9f7800#f4b800
+00123
+04123
+11123
+22243
+33333
+Stone
+#848484#7f7f7f#7a7a7a#6f6f6f#8a8a8a
+00123
+04123
+11123
+22243
+33333
+DarkStone
+#7a7a7a#6f6f6f#6a6a6a#646464#858585
+00123
+04123
+11123
+22243
+33333
+Bedrock
+#646464#5f5f5f#5a5a5a#555555#808080
+00123
+04123
+11123
+22243
+33333
+BoardEmpty
+Black
+BoardL
+BlackWhite
+10000
+10000
+10000
+10000
+11110
+BoardE
+BlackWhite
+11110
+10000
+11100
+10000
+11110
+BoardV
+BlackWhite
+10001
+01010
+01010
+00100
+00100
+BoardT
+BlackWhite
+01110
+00100
+00100
+00100
+00100
+BoardU
+BlackWhite
+10010
+10010
+10010
+10010
+01100
+BoardR
+BlackWhite
+11100
+10010
+11100
+10100
+10010
+BoardN
+BlackWhite
+10010
+11010
+10110
+10010
+10010
+BoardS
+BlackWhite
+01110
+10000
+01100
+00010
+11100
+Board1
+BlackWhite
+01100
+00100
+00100
+00100
+01110
+Board2
+BlackWhite
+11111
+00001
+11111
+10000
+11111
+Board3
+BlackWhite
+11110
+00001
+00110
+00001
+11110
+Board4
+BlackWhite
+10010
+10010
+11111
+00010
+00010
+Board5
+BlackWhite
+11111
+10000
+11110
+00001
+11110
+Board6
+BlackWhite
+01110
+10000
+11110
+10001
+01110
+Board7
+BlackWhite
+11111
+00001
+00010
+00100
+01000
+Board8
+BlackWhite
+01110
+10001
+01110
+10001
+01110
+Board9
+BlackWhite
+01110
+10001
+01111
+00001
+01110
+Board0
+BlackWhite
+11111
+10011
+10101
+11001
+11111
+Turn1
+BlackWhite
+01100
+00100
+00100
+00100
+01110
+Turn2
+BlackWhite
+11111
+00001
+11111
+10000
+11111
+Turn3
+BlackWhite
+11110
+00001
+00110
+00001
+11110
+Turn4
+BlackWhite
+10010
+10010
+11111
+00010
+00010
+Turn5
+BlackWhite
+11111
+10000
+11110
+00001
+11110
+Turn6
+BlackWhite
+01110
+10000
+11110
+10001
+01110
+Turn7
+BlackWhite
+11111
+00001
+00010
+00100
+01000
+Turn8
+BlackWhite
+01110
+10001
+01110
+10001
+01110
+Turn9
+BlackWhite
+01110
+10001
+01111
+00001
+01110
+Turn0
+BlackRed
+11111
+10011
+10101
+11001
+11111
+=======
+LEGEND
+=======
+Background=Tile
+Player=Player1 or Player2
+Block=RedBlock or BlueBlock or YellowBlock or GreenBlock or CyanBlock or MagentaBlock or BombBlock
+Wall=HorizontalWall or VerticalWall or Corner1 or Corner2 or Corner3 or Corner4 or SingleWall
+Board=BoardEmpty or BoardL or BoardE or BoardV or BoardT or BoardU or BoardR or BoardN or BoardS or Board1 or Board2 or Board3 or Board4 or Board5 or Board6 or Board7 or Board8 or Board9 or Board0
+Turn=Turn1 or Turn2 or Turn3 or Turn4 or Turn5 or Turn6 or Turn7 or Turn8 or Turn9
+Decor=Grass or Dirt or Stone or DarkStone or Bedrock
+.=Background
+p=Player1
+q=Player2
+r=RedBlock
+b=BlueBlock
+y=YellowBlock
+g=GreenBlock
+c=CyanBlock
+m=MagentaBlock
+@=BombBlock
+-=HorizontalWall
+|=VerticalWall
+W=Corner1
+X=Corner2
+U=Corner3
+Z=Corner4
+#=BoardEmpty
+L=BoardL
+E=BoardE
+V=BoardV
+T=BoardT
+A=BoardU
+D=BoardR
+N=BoardN
+S=BoardS
+1=Board1
+2=Board2
+3=Board3
+4=Board4
+5=Board5
+6=Board6
+7=Board7
+8=Board8
+9=Board9
+0=Board0
+!=Turn1
+f=Turn2
+h=Turn3
+i=Turn4
+j=Turn5
+k=Turn6
+$=Turn7
+^=Turn8
+&=Turn9
+o=Turn0
+%=SingleWall
+"=Grass
+'=Dirt
+,=Stone
+:=DarkStone
+;=Bedrock
+=======
+SOUNDS
+=======
+================
+COLLISIONLAYERS
+================
+Background
+Block,Board,Turn,Turn0,Decor
+Player,Wall
+Explosion
+======
+RULES
+======
+(Restart game if no more turns)
+[Turn0]->restart
+(Turn explosion effect off as soon as it begins)
+[Explosion Block]->[]
+(No movement if one player can't move)
+[> Player1|Wall][Player2]->[Stationary Player1|Wall][Stationary Player2]
+[> Player2|Wall][Player1]->[Stationary Player2|Wall][Stationary Player1]
+(Block swapping when action button pressed)
+[Action Player1 Block][Corner1]->[Player1][Corner1 Block]
+[Action Player2 Block][Corner2]->[Player2][Corner2 Block]
+[Action Player1]->[Player1]
+(Countdown timer whenever the player swaps blocks)
+[Wall Block][Turn1]->[Wall Block][Turn0]
+[Wall Block][Turn2]->[Wall Block][Turn1]
+[Wall Block][Turn3]->[Wall Block][Turn2]
+[Wall Block][Turn4]->[Wall Block][Turn3]
+[Wall Block][Turn5]->[Wall Block][Turn4]
+[Wall Block][Turn6]->[Wall Block][Turn5]
+[Wall Block][Turn7]->[Wall Block][Turn6]
+[Wall Block][Turn8]->[Wall Block][Turn7]
+[Wall Block][Turn9]->[Wall Block][Turn8]
+(Reset block position)
+[Corner1 Block][Player2 No Block]->[Corner1][Player2 Block]
+[Corner2 Block][Player1 No Block]->[Corner2][Player1 Block]
+(Gravity)
+Down[Block|No Block No Wall]->[|Block]again
+(Destroy block if in a row of 3-5)
+[RedBlock|RedBlock|RedBlock|RedBlock|RedBlock]->[RedBlock Explosion|RedBlock Explosion|RedBlock Explosion|RedBlock Explosion|RedBlock Explosion]
+[BlueBlock|BlueBlock|BlueBlock|BlueBlock|BlueBlock]->[BlueBlock Explosion|BlueBlock Explosion|BlueBlock Explosion|BlueBlock Explosion|BlueBlock Explosion]
+[YellowBlock|YellowBlock|YellowBlock|YellowBlock|YellowBlock]->[YellowBlock Explosion|YellowBlock Explosion|YellowBlock Explosion|YellowBlock Explosion|YellowBlock Explosion]
+[GreenBlock|GreenBlock|GreenBlock|GreenBlock|GreenBlock]->[GreenBlock Explosion|GreenBlock Explosion|GreenBlock Explosion|GreenBlock Explosion|GreenBlock Explosion]
+[CyanBlock|CyanBlock|CyanBlock|CyanBlock|CyanBlock]->[CyanBlock Explosion|CyanBlock Explosion|CyanBlock Explosion|CyanBlock Explosion|CyanBlock Explosion]
+[MagentaBlock|MagentaBlock|MagentaBlock|MagentaBlock|MagentaBlock]->[MagentaBlock Explosion|MagentaBlock Explosion|MagentaBlock Explosion|MagentaBlock Explosion|MagentaBlock Explosion]
+[BombBlock|BombBlock|BombBlock|BombBlock|BombBlock]->[BombBlock Explosion|BombBlock Explosion|BombBlock Explosion|BombBlock Explosion|BombBlock Explosion]
+[RedBlock|RedBlock|RedBlock|RedBlock]->[RedBlock Explosion|RedBlock Explosion|RedBlock Explosion|RedBlock Explosion]
+[BlueBlock|BlueBlock|BlueBlock|BlueBlock]->[BlueBlock Explosion|BlueBlock Explosion|BlueBlock Explosion|BlueBlock Explosion]
+[YellowBlock|YellowBlock|YellowBlock|YellowBlock]->[YellowBlock Explosion|YellowBlock Explosion|YellowBlock Explosion|YellowBlock Explosion]
+[GreenBlock|GreenBlock|GreenBlock|GreenBlock]->[GreenBlock Explosion|GreenBlock Explosion|GreenBlock Explosion|GreenBlock Explosion]
+[CyanBlock|CyanBlock|CyanBlock|CyanBlock]->[CyanBlock Explosion|CyanBlock Explosion|CyanBlock Explosion|CyanBlock Explosion]
+[MagentaBlock|MagentaBlock|MagentaBlock|MagentaBlock]->[MagentaBlock Explosion|MagentaBlock Explosion|MagentaBlock Explosion|MagentaBlock Explosion]
+[BombBlock|BombBlock|BombBlock|BombBlock]->[BombBlock Explosion|BombBlock Explosion|BombBlock Explosion|BombBlock Explosion]
+[RedBlock|RedBlock|RedBlock]->[RedBlock Explosion|RedBlock Explosion|RedBlock Explosion]
+[BlueBlock|BlueBlock|BlueBlock]->[BlueBlock Explosion|BlueBlock Explosion|BlueBlock Explosion]
+[YellowBlock|YellowBlock|YellowBlock]->[YellowBlock Explosion|YellowBlock Explosion|YellowBlock Explosion]
+[GreenBlock|GreenBlock|GreenBlock]->[GreenBlock Explosion|GreenBlock Explosion|GreenBlock Explosion]
+[CyanBlock|CyanBlock|CyanBlock]->[CyanBlock Explosion|CyanBlock Explosion|CyanBlock Explosion]
+[MagentaBlock|MagentaBlock|MagentaBlock]->[MagentaBlock Explosion|MagentaBlock Explosion|MagentaBlock Explosion]
+[BombBlock|BombBlock|BombBlock]->[BombBlock Explosion|BombBlock Explosion|BombBlock Explosion]
+(Any block next to an exploding bomb block explodes in turn)
+late[BombBlock Explosion|Block]->[BombBlock Explosion|Block Explosion]again
+==============
+WINCONDITIONS
+==============
+All Block on Explosion
+=======
+LEVELS
+=======
+Message[Made for Ludum Dare 29]
+Message[Use arrow keys to move the cursors and X to swap blocks.]
+Message[Align rows of three or more blocks of the same color to eliminate them.]
+Message[You must eliminate all of the blocks to create a passage leading deeper down into the underground.]
+Message[You must also complete each level using the turns provided.]
+"""w------x"""
+'''|pq....|'''
+'''|......|'''
+'''|......|'''
+'''|......|'''
+'''|......|'''
+'''|......|'''
+'''|......|'''
+'''|......|'''
+'''|......|'''
+'''|..br..|'''
+'''|..rb..|'''
+'''|..br..|'''
+'''u------z'''
+##############
+###LEVEL##0###
+##############
+###TADNS##!###
+MessageThere is a world, beneath the surface, where none have dared to travel.
+'''w------x'''
+'''|pq....|'''
+'''|......|'''
+'''|......|'''
+'''|......|'''
+'''|......|'''
+'''|......|'''
+'''|......|'''
+'''|......|'''
+'''|......|'''
+'''|cr....|'''
+'''|rc....|'''
+'''|rcy.yy|'''
+'''u------z'''
+##############
+###LEVEL##1###
+##############
+###TADNS##f###
+MessageI am the first of all my kind, I wonder what I'll unravel.
+'''w------x'''
+'''|pq....|,''
+'''|......|'''
+'''|......|'',
+,''|......|'''
+'''|......|'''
+'''|......|'''
+'''|......|','
+'''|......|'''
+'',|..gg..|'''
+'''|..mm..|'''
+'''|y.rr.g|,''
+'''|m.yy.r|'''
+','u------z'''
+##############
+###LEVEL##2###
+##############
+###TADNS##i###
+MessageRumors tell that in there lies a great almighty beast.
+'''w------x'',
+,,'|pq....|'''
+'''|......|,',
+,',|......|'''
+'''|......|','
+'',|......|'',
+','|......|'''
+'''|......|,''
+,,'|......|'''
+'''|......|','
+'',|.y.r..|,''
+,''|yy.by.|'',
+','|bb.brr|'''
+'''u------z,,'
+##############
+###LEVEL##3###
+##############
+###TADNS##h###
+MessageSome have said that there's a cellar holding the deceased.
+,,,w------x',,
+,',|pq....|,,,
+,,,|......|,,'
+','|......|,,,
+,,,|......|,',
+,,,|......|,,,
+'',|......|,,,
+,,,|......|','
+,,,|gc....|,,,
+,,,|gm.rb.|,,,
+,',|mg.br.|',,
+',,|gm.br.|,,,
+,,,|gc.cc.|,''
+,,'u------z,,,
+##############
+###LEVEL##4###
+##############
+###TADNS##h###
+MessageThere is a world, beneath the surface, where none have dared to go.
+,,,w------x,,,
+,,,|pq....|,,,
+,,,|......|',,
+,,,|......|,,,
+,',|......|,,,
+,,,|......|,,,
+,,,|......|,,,
+,,,|......|,,'
+',,|....r.|,,,
+,,,|....%.|,,,
+,,,|......|',,
+,,,|.%y%.r|,,,
+,,'|..yy.r|,,,
+,,,u------z,,,
+##############
+###LEVEL##5###
+##############
+###TADNS##f###
+MessagePerhaps there is an awful secret only I will know.
+,,,w------x,,,
+,:,|pq....|,,,
+,,,|......|,,,
+,,,|......|,,,
+,,:|..b...|,,,
+,,,|..%.%.|,,,
+,,,|...m..|,,,
+,,,|...%..|,,:
+,,,|.%....|,,,
+,,,|....%.|,,,
+:,,|......|,,,
+,,,|bg..cm|,,,
+,,,|bggccm|,:,
+,,,u------z,,,
+##############
+###LEVEL##6###
+##############
+###TADNS##k###
+MessageMaybe it's a secret underground civilization.
+:,,w------x,,,
+,,,|pq....|::,
+,:,|......|,,:
+,,,|......|,,,
+,::|......|:,,
+,,,|......|,,,
+,,,|......|,:,
+:,,|.%.g..|:,,
+,:,|.bc%b.|,,:
+,,,|yrr.%.|,:,
+:,:|rbcbb.|,,,
+,,,|ybcmm.|,,,
+,:,|ymmgg.|,,:
+:,,u------z,,,
+##############
+###LEVEL##7###
+##############
+###TADNS##h###
+MessageCould it hold a list of plans for global domination?
+,::w------x:::
+:::|pq....|:,:
+:,:|......|,::
+:::|......|:::
+,,:|....m.|:,,
+::,|....%.|:::
+:,:|.%y..%|,::
+:::|..%...|:,:
+,:,|..b...|:::
+:::|bgb...|,,:
+:::|ggr...|:::
+:,:|rrb.mm|::,
+:::|bby.yy|,::
+:::u------z:,,
+##############
+###LEVEL##8###
+##############
+###TADNS##h###
+MessageThere is a world, beneath the surace, now I'm slightly scared.
+:::w------x:::
+:::|pq....|:::
+::,|......|:::
+:::|......|:::
+:::|......|,::
+,::|......|:::
+::,|......|::,
+:::|......|:::
+:::|...@%.|:::
+:,:|...%..|:::
+:::|......|:,:
+:::|.b.g..|:::
+,::|r@.@y.|:::
+:::u------z:::
+##############
+###LEVEL##9###
+##############
+###TADNS##f###
+MessageI had been so confident. Have I come ill-prepared?
+:::w------x:::
+:::|pq....|:::
+:::|......|:::
+:::|......|:::
+:::|......|:::
+:::|......|:::
+:::|......|:::
+:::|....%.|:::
+:::|...%yy|:::
+:::|....bb|:::
+:::|.@b%@@|:::
+:::|.%%@@g|:::
+:::|..@@gy|:::
+:::u------z:::
+##############
+###LEVEL#10###
+##############
+###TADNS##k###
+MessageMaybe there's a deathly pit that's full of scorching flames.
+:::w------x:::
+:;:|pq....|:::
+:::|......|;::
+:::|......|:::
+:::|......|:::
+::;|......|:::
+:::|......|:;:
+:::|......|:::
+:;:|.%c...|:::
+:::|..@...|:::
+:::|..%c..|;::
+;::|@..%%.|:::
+:::|@@....|:::
+:::u------z::;
+##############
+###LEVEL#11###
+##############
+###TADNS##$###
+MessageMaybe it's a monster that just lives on flesh and brains.
+;;;w------x;;:
+;;;|pq....|;;;
+::;|...r..|;:;
+;;;|...gb.|;;;
+;;;|...cb.|;;;
+;;:|...mg.|::;
+;;;|...@y.|;;:
+::;|...gy.|;;;
+;;;|.@@brb|:;:
+:;:|.rrbyr|;;;
+;;;|.ggrcg|;:;
+;:;|.mybmc|;;:
+:;;|.@@y@m|:;;
+;;:u------z;;;
+##############
+###LEVEL#12###
+##############
+###TADNS##f###
+MessageThere is a world beneath the surface, but there's no need for fright.
+;;;w------x;;;
+;;;|pq....|;;;
+;;;|.%.%..|;;;
+;;;|..m.r.|;;;
+;;;|..%.%.|;;;
+;;;|......|;;;
+;;;|.%.%..|;;;
+;;;|......|;;;
+;;;|..%.%.|;;;
+;;;|......|;;;
+;;;|.%.%..|;;;
+;;;|......|;;;
+;;;|.rrmm.|;;;
+;;;u------z;;;
+##############
+###LEVEL#13###
+##############
+###TADNS##$###
+MessageNow that I look closer, I can see a hint of light.
+;;;w------x;;;
+;;;|pq..g.|;;;
+;;;|....r.|;;;
+;;;|....b.|;;;
+;;;|....r.|;;;
+;;;|.b..b.|;;;
+;;;|.c..r.|;;;
+;;;|.y..b.|;;;
+;;;|.gg.r.|;;;
+;;;|.y%.b.|;;;
+;;;|.y..r.|;;;
+;;;|.c..b.|;;;
+;;;|.c..r.|;;;
+;;;u------z;;;
+##############
+###LEVEL#14###
+##############
+###TADNS##&###
+MessageThis secret holds no evil foe or cruel malicious demon.
+;;;w------x;;;
+;;;|pq....|;;;
+;;;|......|;;;
+;;;|......|;;;
+;;;|......|;;;
+;;;|......|;;;
+;;;|......|;;;
+;;;|..y...|;;;
+;;;|r@b...|;;;
+;;;|rb@...|;;;
+;;;|br@...|;;;
+;;;|rbgy..|;;;
+;;;|rbgyg.|;;;
+;;;u------z;;;
+##############
+###LEVEL#15###
+##############
+###TADNS##i###
+MessageThere is a world beneath the surface. I see that it is freedom.
+MessagePROGRAMMING AND MUSIC BY GABRIEL P. AKA CROCADINO
+MessageTHANK YOU FOR PLAYING

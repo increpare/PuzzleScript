@@ -1,0 +1,655 @@
+title Diamond Mine
+author Joseph Mansfield
+homepage www.puzzlescript.net
+text_color DarkBrown
+run_rules_on_level_start
+noaction
+flickscreen 14x12
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+PlayerRight
+DarkBrown Yellow DarkGreen #FFDCB2 #430000
+.0001
+4003.
+4222.
+.222.
+..2..
+
+PlayerLeft
+DarkBrown Yellow DarkGreen #FFDCB2 #430000
+1000.
+.3004
+.2224
+.222.
+..2..
+
+Ladder
+#1A0A01
+0...0
+00000
+0...0
+0..00
+000.0
+
+WallDark
+#0a0a0a #0c0c0c
+10000
+01000
+00001
+00110
+00000
+
+WallLight
+#0f0f0f #141414
+10000
+01000
+00001
+00110
+00000
+
+Diamond1Dark
+#0a0a0a #0c0c0c
+10000
+01000
+00001
+00110
+00000
+
+Diamond1Light
+#0f0f0f #064C54 #1B9CAB #141414
+30000
+01000
+00003
+00230
+00000
+
+SecretDark
+#0a0a0a #0c0c0c
+10000
+010.0
+00001
+0.110
+00000
+
+SecretLight
+#0f0f0f #141414
+10000
+010.0
+00001
+0.110
+00000
+
+Diamond2Dark
+#0a0a0a #0c0c0c
+10000
+01000
+00001
+00110
+00000
+
+Diamond2Light
+#0f0f0f #064C54 #1B9CAB #141414
+30000
+01000
+00023
+00230
+00000
+
+Diamond3Dark
+#0a0a0a #0c0c0c
+10000
+01000
+00001
+00110
+00000
+
+Diamond3Light
+#0f0f0f #064C54 #1B9CAB #141414
+30010
+01000
+00023
+00230
+00000
+
+DiamondShards
+#064C54 #1B9CAB
+.....
+.....
+..0..
+..01.
+.011.
+
+Gold
+#595C06 #777A0C
+.....
+.....
+..0..
+..01.
+.011.
+
+BoulderDark
+#0a0a0a #0c0c0c
+.00..
+01000
+00010
+00100
+.000.
+
+BoulderLight
+#0f0f0f #141414
+.00..
+01000
+00010
+00100
+.000.
+
+Water
+#02101F #041D36
+00000
+01100
+00000
+00010
+00000
+
+Lava
+#300D03 #451406
+00000
+01100
+00000
+00010
+00000
+
+Exit8
+#1A0A01
+00000
+.....
+.....
+.....
+.....
+
+Exit7
+#1A0A01
+00000
+.....
+.....
+.....
+.....
+
+Exit6
+#1A0A01
+00000
+.....
+.....
+.....
+.....
+
+Exit5
+#1A0A01
+00000
+.....
+.....
+.....
+.....
+
+Exit4
+#1A0A01
+00000
+.....
+.....
+.....
+.....
+
+Exit3
+#1A0A01
+00000
+.....
+.....
+.....
+.....
+
+Exit2
+#1A0A01
+00000
+.....
+.....
+.....
+.....
+
+Exit1
+#1A0A01
+00000
+.....
+.....
+.....
+.....
+
+Exit0
+#1A0A01
+....0
+....0
+....0
+....0
+....0
+
+Rope
+#261503 #361E05
+..0..
+..1..
+..0..
+..1..
+..1..
+
+Trigger
+Black
+.....
+.....
+.....
+.....
+.....
+
+Skeleton
+#BABABA #D6D6D6 DarkBrown #262102
+.....
+....3
+..1.2
+.1112
+10002
+
+
+=======
+LEGEND
+=======
+
+P = PlayerRight
+L = Ladder
+# = WallDark
+S = SecretDark
+$ = Diamond1Dark
+B = BoulderDark
+2 = Exit2
+3 = Exit3
+4 = Exit4
+6 = Exit6
+7 = Exit7
+8 = Exit8
+0 = Exit0
+R = Rope
+G = Gold
+W = Water
+* = Lava
+! = Trigger
+K = Skeleton
+~ = DiamondShards
+T = Ladder and Trigger
+F = SecretDark and Water
+(C = CountPlace)
+
+. = Background
+
+Player = PlayerLeft or PlayerRight
+Wall = WallDark or WallLight
+Secret = SecretDark or SecretLight
+Diamond1 = Diamond1Dark or Diamond1Light
+Diamond2 = Diamond2Dark or Diamond2Light
+Diamond3 = Diamond3Dark or Diamond3Light
+Diamond = Diamond1 or Diamond2 or Diamond3
+Exit = Exit8 or Exit7 or Exit6 or Exit5 or Exit4 or Exit3 or Exit2 or Exit1
+Boulder = BoulderDark or BoulderLight
+Solid = Wall or Diamond or Exit or Boulder or Player
+BoulderSolid = Solid or DiamondShards
+Liquid = Water or Lava
+
+=======
+SOUNDS
+=======
+
+Sfx0 90746700 (Diamond)
+Sfx1 3966900  (Gold)
+Sfx2 93960104 (Hit block)
+Sfx3 60826702 (Break block)
+Sfx4 75198907 (Push)
+Sfx5 8646908  (Cave in)
+Sfx6 35485702 (Boulder fall)
+Sfx7 7890507  (Player fall)
+Sfx8 78569902 (Burn)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Ladder, Exit0, Rope, Skeleton
+DiamondShards, Gold, Liquid, Trigger
+Player, Wall, Diamond, Boulder, Exit
+Secret
+
+======
+RULES     
+======
+
+( Change character sprite )
+[ RIGHT PlayerLeft ] -> [ PlayerRight]
+[ LEFT PlayerRight ] -> [ PlayerLeft ]
+
+( Move horizontally before gravity )
+HORIZONTAL [ > Player | NO Solid ] -> [  | Player ]
+DOWN [ DOWN Player | NO Solid ] -> [  | Player ]
+
+( Collect diamond )
+[ Player DiamondShards ] [ Exit8 ] -> [ Player ] [ Exit7 ] sfx0
+[ Player DiamondShards ] [ Exit7 ] -> [ Player ] [ Exit6 ] sfx0
+[ Player DiamondShards ] [ Exit6 ] -> [ Player ] [ Exit5 ] sfx0
+[ Player DiamondShards ] [ Exit5 ] -> [ Player ] [ Exit4 ] sfx0
+[ Player DiamondShards ] [ Exit4 ] -> [ Player ] [ Exit3 ] sfx0
+[ Player DiamondShards ] [ Exit3 ] -> [ Player ] [ Exit2 ] sfx0
+[ Player DiamondShards ] [ Exit2 ] -> [ Player ] [ Exit1 ] sfx0
+[ Player DiamondShards ] [ Exit1 ] -> [ Player ] [ Exit0 ] sfx0
+[ Player DiamondShards ] -> [ Player ] sfx0
+
+( Collect gold )
+[ Player Gold ] [ Rope ] -> [ Player ] [ Rope ] sfx1 message Some gold! Sweet!
+[ Player Gold ] -> [ Player ] sfx1
+
+( Gravity )
+DOWN [ Player NO Ladder NO Liquid NO Exit0 | NO Solid NO Ladder ] -> [  | Player ] sfx7
+late DOWN [ Boulder | NO BoulderSolid ] -> [  | Boulder ] sfx6
+
+( Move up after gravity )
+UP [ UP Player | NO Solid ] -> [  | Player ]
+
+( Mine diamond )
+HORIZONTAL [ > Player | Diamond1Light ] -> [ Player | Diamond2Light ] sfx2
+HORIZONTAL [ > Player | Diamond2Light ] -> [ Player | Diamond3Light ] sfx2
+HORIZONTAL [ > Player | Diamond3Light ] -> [ Player | DiamondShards ] sfx3
+
+HORIZONTAL [ > Player | Boulder ] -> [ > Player | > Boulder ] sfx4
+
+late [ WallLight ] -> [ WallDark ]
+late RIGHT [ PlayerRight | ... | WallDark ] -> [ PlayerRight | ... | WallLight]
+late LEFT [ PlayerLeft | ... | WallDark ] -> [ PlayerLeft | ... | WallLight]
+late VERTICAL [ Player | ... | WallDark ] -> [ Player | ... | WallLight]
+late [ SecretLight ] -> [ SecretDark ]
+late RIGHT [ PlayerRight | ... | SecretDark ] -> [ PlayerRight | ... | SecretLight]
+late LEFT [ PlayerLeft | ... | SecretDark ] -> [ PlayerLeft | ... | SecretLight]
+late VERTICAL [ Player | ... | SecretDark ] -> [ Player | ... | SecretLight]
+late [ Player SecretDark ] -> [ Player SecretLight ]
+late [ Diamond1Light ] -> [ Diamond1Dark ]
+late RIGHT [ PlayerRight | ... | Diamond1Dark ] -> [ PlayerRight | ... | Diamond1Light]
+late LEFT [ PlayerLeft | ... | Diamond1Dark ] -> [ PlayerLeft | ... | Diamond1Light]
+late VERTICAL [ Player | ... | Diamond1Dark ] -> [ Player | ... | Diamond1Light]
+late [ Diamond2Light ] -> [ Diamond2Dark ]
+late RIGHT [ PlayerRight | ... | Diamond2Dark ] -> [ PlayerRight | ... | Diamond2Light]
+late LEFT [ PlayerLeft | ... | Diamond2Dark ] -> [ PlayerLeft | ... | Diamond2Light]
+late VERTICAL [ Player | ... | Diamond2Dark ] -> [ Player | ... | Diamond2Light]
+late [ Diamond3Light ] -> [ Diamond3Dark ]
+late RIGHT [ PlayerRight | ... | Diamond3Dark ] -> [ PlayerRight | ... | Diamond3Light]
+late LEFT [ PlayerLeft | ... | Diamond3Dark ] -> [ PlayerLeft | ... | Diamond3Light]
+late VERTICAL [ Player | ... | Diamond3Dark ] -> [ Player | ... | Diamond3Light]
+late [ BoulderLight ] -> [ BoulderDark ]
+late RIGHT [ PlayerRight | ... | BoulderDark ] -> [ PlayerRight | ... | BoulderLight]
+late LEFT [ PlayerLeft | ... | BoulderDark ] -> [ PlayerLeft | ... | BoulderLight]
+late VERTICAL [ Player | ... | BoulderDark ] -> [ Player | ... | BoulderLight]
+
+( Ending )
+late RIGHT [ Player | ... | Trigger | Ladder | Diamond1 ] -> [ Player | ... |  | Ladder | Diamond1 ] message "Except maybe diamonds"
+late RIGHT [ Player Trigger | Ladder | Diamond1 ] -> [ Player | Ladder | Diamond1 ] message "Except maybe diamonds"
+late RIGHT [ Trigger | Player Ladder | Diamond1 ] -> [  | Player Ladder | Diamond1 ] message "Except maybe diamons"
+late RIGHT [ WallDark | WallDark | PlayerRight Trigger | Diamond1Light | Diamond1Light ] -> [ WallDark | WallDark | PlayerRight | Diamond1Light | Diamond1Light ] sfx5 message "What's that noise?"
+late RIGHT [ Diamond1Light | Diamond1Light | PlayerLeft Trigger | Diamond1Dark | Diamond1Dark | Diamond1Dark | Diamond1Dark | Diamond1Dark | WallDark ] [ Trigger | WallDark | WallDark | WallDark ] [  | WallDark |  | Trigger ] -> [ Diamond1Light | Diamond1Light | PlayerLeft | Diamond1Dark | Diamond1Dark | Diamond1Dark | Diamond1Dark | Diamond1Dark | BoulderDark ] [  | WallDark |  BoulderDark | WallDark ] [  | BoulderDark |  |  ] sfx5 message "I'd better get out of here"
+late RIGHT [ Diamond1Dark | Diamond1Dark | PlayerRight Trigger | Diamond1Light | Diamond1Light | Diamond1Light | Diamond1Light | Diamond1Light | WallLight ] [ Trigger | WallDark | WallDark | WallDark ] [  | WallDark |  | Trigger ] -> [ Diamond1Dark | Diamond1Dark | PlayerRight | Diamond1Light | Diamond1Light | Diamond1Light | Diamond1Light | Diamond1Light | BoulderLight ] [  | BoulderDark | BoulderDark | WallDark ] [  | BoulderDark |  |  ] sfx5 message "I'd better get out of here"
+late RIGHT [  | Player Trigger | NO Solid | NO Solid | Trigger ] -> [ Trigger | Player |  | BoulderDark | BoulderDark ] sfx6
+late RIGHT [ Player Trigger | NO Solid | NO Solid | BoulderDark | BoulderDark ] -> [ Player |  |  | BoulderDark | BoulderDark ] message "Now I'm screwed"
+late DOWN [ PlayerRight Trigger | BoulderLight | BoulderLight | BoulderLight | BoulderLight ] -> [ PlayerRight | BoulderLight | BoulderLight | BoulderLight | WallLight ] message "Hello?"
+late RIGHT [ WallDark | BoulderDark | BoulderDark | PlayerRight | Skeleton ] -> [ BoulderDark | BoulderDark | BoulderDark | PlayerRight | Skeleton ] message "Is that..."
+late RIGHT [ Skeleton |  | PlayerRight ] -> Win
+
+
+( Death )
+late [ Player Lava ] -> sfx8
+late [ Player Lava ] -> restart
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Exit0
+
+=======     
+LEVELS
+=======
+
+message Mine all diamonds to proceed
+message Each level has 1 secret gold
+message Level 1
+message "I'll bring her around"
+
+#R############
+#R###$....####
+#R#######L####
+#.#######L####
+#P.......L...#
+############L#
+##..$SSSSS##L#
+##L######SG#L#
+##L....#####L#
+####...#####L#
+#####.......L#
+#######2######
+
+message Level 2
+message "She won't always feel this way"
+
+#######.####################
+#..$##.P..B.$###############
+#L####L#L##.#####...G#######
+#L...#L#L#######...#########
+#L..B.L#L....###..##########
+##.#########.###L######.####
+##.####....B.###L#####...###
+#######L####.###L####....###
+#######L#$...SSSL####WWWW###
+#######L#.##.#########WW####
+#######L.....###############
+#########3##################
+
+message Level 3
+message "Only the brightest diamond..."
+
+#########.##################
+#$....B..P.B.###############
+##L##.######L#######WW######
+##.#........L######WWWW#####
+#.B.....#...########WWWW####
+#L#######$.##########W######
+#L##.L..####################
+#..B...L.L.L$###############
+#.###.#.....################
+###.$...#.#..###############
+#...#........SSSS##..G######
+#4##############L##L########
+################L##L########
+################L..L#GSSSLS#
+#########################SS#
+###############.....####SS##
+###############L##L.###SS###
+##############.L##L.#SSS####
+##################L..$######
+##############......########
+#################..######W##
+##############..$#######WW##
+##############..#######WWWW#
+#######################WWW##
+
+message Level 4
+message "No other man would be so kind"
+
+#.##############L##L########
+#.#..#$......###L..L#GSSSLS#
+#.#L#####L##L############SS#
+#.#L#....L.#L##.....####SS##
+#P.L.....L.#L##L##L.###SS###
+########L#.#L..L##L.#SSS####
+##$.##..B..#######L..$######
+###L#B..####........########
+#..L.B..#.BL.####..######W##
+#L#######L#.##..$#######WW##
+#L$#$....L......#######WWWW#
+#.#####6###############WWW##
+
+message Level 5
+message "How could she resist?"
+
+#####################.###############WW###
+.L###############..........###########W###
+#L##########...$#....P.....###############
+#L##...#####L####....#....GSSSS###########
+#L##L#.##..BL##...........####L###########
+#L##L#.###L#.##............###L###########
+#L##L#.###L..##............###L###########
+#L##L#.$.#...##............###L###########
+#L##L###..B#.##L#WWWWWWWWW####L##...B...##
+#L##L.....B..##L#WWWWWWW######L##.#####L##
+#L####....B....L##WWWWWWFFFFFFL##L$####L##
+#L#############L###W#############.#####L##
+#L#############L###W#############.#####L.#
+#L#....L.......L...W..............#......#
+#L#....L#B#....L..#WWWWW..###..#.L..#.B..#
+#L#L#####$........#####W#########.########
+#L#L......##......L.$l.W.......##....$####
+#L#L.$..L........#..L..W..L######.L#######
+#L#L.###........L#.#.#.W..L#.............#
+#L#L.............#.....W..L#.........B.B.#
+#L#WWWWWW##WWWWWW#WWWWWWWWWWWWW##WW#####L#
+#L##WWWW####WWW#W#WWWWWWWWWWWWWW########L#
+#L############W#####WWWWWWWWWWWWWWW#####.#
+#L######################################7#
+
+message Level 6
+message "How DARE she resist?"
+
+##########################.###############
+...###SS#######S#SSS##SS$#PSSSS#####WWWW##
+##L##SSSSSSS###SSSSSSSS$##L###L#####WWW###
+##L##S#####S.###L######SS#.###L###########
+..L##S#SSS##L###LSSSS#S#S#.###L####.BSSSS#
+####WWWW#S##L#######SSSSSS.###L####.####L#
+######W##SS#LSSS..########L###L####.SSG#L#
+##.B.#####S######L#SSSSSS#.###L####.##S#L#
+##.#L####SS$B...$L##SS##SS.SSSL####.$#S#L#
+##.BL####S#####L#L########L####..SS$S#S#L#
+#$.#L####S#####L#LSSS.SS##.####L####S#S#L#
+##.#L####S#####L##########L###.L......SSL#
+##.#L####.##...L.#########L###........####
+####L####.##WWWWF###W#####W####WWWWWW#####
+####L####.###WWWFF#WWWWW##W######WWW######
+####L.###.#######FWWW##W$#W#######WW##FFF#
+#.....SSS.#########WW#####W#######W#####F#
+##...####.S#WWWW####WW####W#######W#FFFFF#
+##..###S#.S####WWWW##W###WWWW##WWWW####F##
+##L###SS##F####WW#WWWWWWWWWWWWWW#WWWWW#F##
+##LSSSS###FF#######W####WWWWW#######WW#F##
+##L########FFFFFFFFWWW###WWWW##FFWWWWWWW##
+##L...####################WW###F#W########
+#####8####################################
+
+message Level 7
+message "She needs me!"
+
+###############L##########################
+#SSS..L..######L............##############
+#SB..........#############################
+####L#.#####.L.LL.L......#################
+#*#.L......##*#**#*#6#**##..##############
+#*#.L......#########.#####L###############
+**#######L....$####...####L###############
+**#....L..##L######...####L###############
+*##.........L...###.#.####L###############
+###L###.#######L###...####L###############
+###L...........L##.....###L###############
+**#L.L##.#.######........#L###############
+**#L.L..L..######.......##L###############
+*##L.L.#.L.#SSSS#..#.#..##L###############
+###L.L.#...SS#$S#........#################
+*##L.L.#..L######....L$$$LL###############
+###L.###...#####$$$$L$$$$$L###############
+#SSL.......#####$L$$$$L$$$L###############
+#S#L######L#####L$$$$$$$$#L###############
+#S#..$#...L######$$.$$$$$#L###############
+#S#.L##.L#.#######L$#$$L#..###############
+#SB.....L.##....##########################
+#.B........#L##L##########################
+#L#####**#L#L##L##########################
+#L########L#L##L#################.########
+#L########L#L##L##WWW############.##SSSS##
+#L#...###.L#L##L#WWWWWW##....B..#.#$S##L##
+#L#....L..L#L##L#########L#####S#.#S###L##
+#L#L##....LSL##L#SSBSSS..L.......P.B...L##
+#L#L..#.####L##L#S#####L###...######**####
+#L#.#......#L##L...#B##L#####L############
+#L####......L###....B..L.....L#####..$####
+#W*$W#L####L#####.###########L##....######
+#W*#W#L......SSS#####SSG......LLL..#######
+#WWWW#######*##SSSSSSS##*********#########
+#########***#############******###########
+
+message "What else could she want?"
+
+##########################################
+##.......!..!..L##########################
+#..############L##########..##############
+#.#####....####L##...#####L###############
+#..##.......###L##L#.##...L###############
+#!...........##L##L#.###L#.###############
+#B...........##L##L#.###L..###############
+#B...........##L##L#...#...###############
+#BB.........B##L##L###...#.###############
+#BBB.K.~....B##L##L.....B..###############
+########****###L####...BB...##############
+###############L##########################
+###############L##########################
+###############L#....L......##############
+###############L#....L#.#...##############
+###############L#L#####.....##############
+###############L#L......##..##############
+###############L#L....L.....##############
+###############L#L.###......##############
+###############L#L.....B....##############
+###############L#WWWWWW##WWW##############
+###############L##WWWW####WW##############
+###############L##########################
+###############L##########################
+###############L##########################
+###############L...............###SS######
+##############################L##SSSSSSS##
+##############.LL.L......#####L##S#####S.#
+###############**#*#0#**##....L##S#SSS##L#
+####################.#####L#####WWWW#S##L#
+##############.####...####L#######W##SS#LS
+###################.P.####L###.B.#####S###
+##############..###.#.####L###.#L####SS..!
+###############L###...####L###.BL####S####
+##############.L##.....###L##..#L####S####
+#################........#L###.#L####S####
+#################.......##L###############
+##############SS#..#.#.!##L###############
+##############.S#.......!#################
+#################...!L$$$LL###############
+################$$$$L$$$$$L###############
+################$L$$$$L$$$L###############
+################T$$$$$$$$#L###############
+#################$$T$$$$$#L###############
+##################L$#$$L#..###############
+##############..##########################
+###############L##########################
+###############L##########################
+
+message "Will somebody come for me?"
+message "Anybody..?"
+message "Please..."
+message END

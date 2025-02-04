@@ -1,0 +1,236 @@
+title RAFTURE 2: SALVATION
+author Marcos Donnantuoni
+homepage https://marcosd.itch.io
+
+noaction
+require_player_movement
+
+========
+objects
+========
+
+background
+brown
+
+water
+#2242d6 #1254cf
+00000
+00100
+00000
+10000
+00010
+
+player
+#fff20c black red
+..1..
+02020
+.222.
+.0.0.
+.0.0.
+
+saved
+#d7d028 black #dddddd
+..1..
+02020
+.222.
+.0.0.
+.0.0.
+
+damnedL
+#847d03 black grey
+.....
+00220
+..21.
+00220
+.....
+
+damnedR
+#847d03 black grey
+.....
+02200
+.12..
+02200
+.....
+
+damnedU
+#847d03 black grey
+.0.0.
+.0.0.
+.222.
+.212.
+.0.0.
+
+damnedD
+#847d03 black grey
+.0.0.
+.212.
+.222.
+.0.0.
+.0.0.
+
+=======
+legend
+=======
+
+. = background
+~ = water
+@ = player
+* = saved
+l = damnedL and water
+r = damnedR and water
+u = damnedU and water
+d = damnedD and water
+damned = damnedL or damnedR or damnedU or damnedD
+
+=======
+sounds
+=======
+
+saved move 79323907
+endlevel 23962708
+
+================
+collisionlayers
+================
+
+background
+water
+player, saved, damned
+
+======
+rules
+======
+
+[ > player | saved ] -> [ > player | > saved ]
+[ > saved | water ] -> cancel
+[ > player | water ] -> cancel
+[ no water | < player | damned ] -> [ | < player | < saved ]
+
+
+==============
+winconditions
+==============
+
+no damned
+
+=======
+levels
+=======
+
+message BRING ALL THE PEOPLE ON THE RAFT
+
+message Level 1 of 9
+( size: [3, 4] obj: 47 kol: 32 pushes: 4 steps: 8 )
+( 11U12r22U33D32l34L24d34d )
+~~~~~~~
+~~~uu~~
+~~...~~
+~~.*.~~
+~l*@*r~
+~~...~~
+~~~~~~~
+~~~~~~~
+
+message Level 2 of 9
+( size: [3, 4] obj: 48 kol: 35 pushes: 5 steps: 9 )
+( 11U11R12U13r23D12r32U32l33l )
+~~~~~~~
+~~~~~~~
+~~...~~
+~l..*r~
+~l**.r~
+~~@*.~~
+~~~~~~~
+~~~~~~~
+
+message Level 3 of 9
+( size: [4, 5] obj: 58 kol: 38 pushes: 6 steps: 10 )
+( 11U12U13U14r24D24R35d41U42l13r )
+~~~~~~~~
+~~~~u~~~
+~~.*..~~
+~l..*.~~
+~l.**.~~
+~~*@.*r~
+~~....~~
+~~~~~~~~
+~~~~~~~~
+
+message Level 4 of 9
+( size: [4, 5] obj: 59 kol: 39 pushes: 7 steps: 11 )
+( 11R21u32U33U34L24D13r25R35d43D42l )
+~~~~~~~~
+~~~~u~~~
+~~....~~
+~~.*.*~~
+~l.**.~~
+~~*..*r~
+~~@*..~~
+~~~d~~~~
+~~~~~~~~
+
+message Level 5 of 9
+( size: [4, 4] obj: 54 kol: 39 pushes: 8 steps: 11 )
+( 11U11R12U13R24R24d21U32U43D42l43l )
+~~~~~~~~
+~~~u~~~~
+~~..*.~~
+~~.*..r~
+~~**.*r~
+~~@*..~~
+~~~d~~~~
+~~~~~~~~
+
+message Level 6 of 9
+( size: [3, 5] obj: 52 kol: 41 pushes: 9 steps: 13 )
+( 11U12U13U14R24D23D12r33D35D34D33l34l35l )
+~~~~~~~
+~~~~~~~
+~~...r~
+~~.*.r~
+~~.*.r~
+~l*.*~~
+~~@..~~
+~~~~~~~
+~~~~~~~
+
+message Level 7 of 9
+( size: [4, 5] obj: 60 kol: 41 pushes: 10 steps: 12 )
+( 13D12R21R21u22R31u32U33L35L25D24D35D )
+~~~~~~~~
+~~~uu~~~
+~~.*..~~
+~~**..~~
+~~@**.~~
+~~**..~~
+~~..*.~~
+~~~dd~~~
+~~~~~~~~
+
+message Level 8 of 9
+( size: [4, 5] obj: 60 kol: 41 pushes: 11 steps: 13 )
+( 11U 12U 13U 14R 24D 33D 12R 13r 43D 42L 43U 24R 35d )
+~~~~~~~~
+~~~~u~~~
+~~.*..~~
+~~.*.*~~
+~l.*..~~
+~l*.**r~
+~~@*..~~
+~~~~~~~~
+~~~~~~~~
+
+
+message Level 9 of 9
+( size: [4, 5] obj: 60 kol: 41 pushes: 12 steps: 13 )
+( 13D12R21R31U21u42U43U44L34D33L35L25D42L )
+~~~~~~~~
+~~~u~~~~
+~~.*..~~
+~~*.*.~~
+~~@*.*~~
+~~**..r~
+~~..*.~~
+~~~d~~~~
+~~~~~~~~
+

@@ -1,0 +1,254 @@
+title Wizard School!
+author Luke Davies
+homepage twitter.com/lefishy
+
+again_interval 0.01
+norepeat_action
+
+
+OBJECTS
+
+playeridle
+darkblue brown
+..0..
+.000.
+.000.
+01110
+.0.0.
+
+playercarrying
+darkblue brown
+1.0..
+1000.
+1000.
+00000
+.0.0.
+
+boxidle
+brown darkbrown lightbrown
+11111
+12001
+10201
+10021
+11111
+
+boxsummoned
+brown darkbrown purple
+.....
+.111.
+.121.
+.111.
+.....
+
+boxcarried
+brown darkbrown lightbrown purple
+11111
+12331
+13231
+13321
+11111
+
+boxthrownup
+brown darkbrown purple
+.111.
+.101.
+.111.
+.222.
+..2..
+
+boxthrowndown
+brown darkbrown purple
+..2..
+.222.
+.111.
+.101.
+.111.
+
+boxthrownleft
+brown darkbrown purple
+.....
+1112.
+10122
+1112.
+.....
+
+boxthrownright
+brown darkbrown purple
+.....
+.2111
+22101
+.2111
+.....
+
+plainwall
+grey darkgrey
+00100
+11111
+10000
+11111
+00100
+
+background
+yellow
+
+castup
+transparent
+
+castdown
+transparent
+
+castleft
+transparent
+
+castright
+transparent
+
+target
+darkred black
+..1..
+.101.
+10001
+.101.
+..1..
+
+door
+white
+
+LEGEND
+
+p = playeridle
+b = boxidle
+# = plainwall
+. = background
+t = target
+@ = boxidle and target
+d = door
+
+wall = plainwall
+
+player = playeridle or playercarrying
+box = boxidle or boxsummoned or boxcarried
+magic = castup or castdown or castleft or castright
+blocker = wall or box
+boxthrown = boxthrownup or boxthrowndown or boxthrownleft or boxthrownright
+
+SOUNDS
+
+COLLISIONLAYERS
+
+background
+target
+wall, player, box, magic, boxthrown, door
+
+RULES
+
+up [action playeridle | no blocker] -> [ action playeridle | castup] again
+down [action playeridle | no blocker] -> [ action playeridle | castdown] again
+left [action playeridle | no blocker] -> [action playeridle | castleft] again
+right [ action playeridle | no blocker] -> [action playeridle | castright] again
+
+[action playeridle | boxidle] -> [action playeridle | boxcarried] again
+
+up [castup | boxidle] -> [ | boxsummoned] again
+down [castdown | boxidle] -> [ | boxsummoned] again
+left [ castleft | boxidle] -> [ | boxsummoned] again
+right [ castright | boxidle] -> [ | boxsummoned] again
+
+up [castup | no wall] -> [ > castup | ] again
+down [castdown | no wall] -> [ > castdown | ] again
+left [castleft | no wall] -> [ > castleft | ] again
+right [castright | no wall] -> [ > castright | ] again
+
+up [castup | wall] -> [ | wall] again
+down [castdown | wall] -> [ | wall] again
+left [castleft | wall] -> [ | wall] again
+right [castright | wall] -> [ | wall] again
+
+[ boxsummoned | ... | player] -> [ > boxsummoned | ... | player] again
+
+[ > boxsummoned | player] ->  [boxcarried | player] again
+
+rigid [ moving player | boxcarried] -> [moving player | moving boxcarried] 
+
+[> boxcarried | wall] -> cancel
+
+up [action playercarrying | boxcarried] -> [action playercarrying | boxthrownup] again
+down [action playercarrying | boxcarried] -> [action playercarrying | boxthrowndown] again
+left [action playercarrying | boxcarried] -> [action playercarrying | boxthrownleft] again
+right [action playercarrying | boxcarried] -> [action playercarrying | boxthrownright] again
+
+[boxthrown][playercarrying] -> [boxthrown][playeridle]
+
+up [boxthrownup | no blocker] -> [> boxthrownup | ] again
+down [boxthrowndown | no blocker] -> [> boxthrowndown | ] again
+left [boxthrownleft | no blocker] -> [> boxthrownleft | ] again
+right [boxthrownright | no blocker] -> [> boxthrownright | ] again
+
+up [boxthrownup | blocker] -> [boxidle | blocker] again
+down [boxthrowndown | blocker] -> [boxidle | blocker] again
+left [boxthrownleft | blocker] -> [boxidle | blocker] again
+right [boxthrownright | blocker] -> [boxidle | blocker] again
+
+
+[boxcarried][playeridle] -> [boxcarried][playercarrying]
+
+
+
+
+
+
+WINCONDITIONS
+
+all target on box
+
+LEVELS
+
+message You are Wizard. You must pass the trials.
+
+message Press X to call boxes to your side.
+
+#######
+#pt..b#
+#######
+
+message Press X again to send them away once more.
+
+#########
+#p..b..t#
+#########
+
+message You cannot move un-magicked boxes. You have arms for wand waving not load lifting.
+
+#######
+#..####
+#..####
+#p...b#
+##.####
+##t####
+#######
+
+#######
+#t.b.t#
+#.....#
+#b.p.b#
+#.....#
+#t.b.t#
+#######
+
+#######
+#....p#
+#.b#..#
+#.#t..#
+#t..#.#
+#...b.#
+#######
+
+#########
+####.####
+###@.t###
+##t...@##
+#...p...#
+##@...t##
+###t.@###
+####.####
+#########

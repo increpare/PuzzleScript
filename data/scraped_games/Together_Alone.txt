@@ -1,0 +1,281 @@
+title Together Alone
+author Qwok Games
+homepage www.qwokgames.com
+
+(
+Simplified version of our free game Together Alone.
+
+A puzzle game where you can switch between two characters.
+Each character breaks tiles of their own color. 
+You must break all tiles and guide both to the exit.
+)
+
+========
+OBJECTS
+========
+
+Background .
+Black
+
+(Brown tiles, broken by Ben)
+BrownTile 1
+Brown DarkBrown Yellow
+22220
+20001
+20001
+20001
+01111
+
+(Blue tiles, broken by Isabelle)
+BlueTile 2
+Blue DarkBlue LightBlue
+22220
+20001
+20001
+20001
+01111
+
+(Gray tiles, cannot be broken)
+GrayTile g
+Gray DarkGray LightGray
+22220
+20001
+20001
+20001
+01111
+
+(Two-color tiles, broken by both)
+TwoColTile +
+Brown Blue DarkBlue Yellow
+33330
+30001
+30012
+30112
+01222
+
+(Isabelle's Exit)
+BlueExit 5
+Gray DarkGray LightGray Blue
+22220
+20301
+23331
+20301
+01111
+
+(Ben's Exit)
+BrownExit 6
+Gray DarkGray LightGray Brown
+22220
+20301
+23331
+20301
+01111
+
+(Jump orbs
+Orb
+White Black
+.....
+..1..
+.101.
+..1..
+.....
+)
+
+(Character 1, Ben)
+Ben
+Brown Yellow Black
+20002
+01010
+20002
+20202
+.....
+
+(Character 2, Isabelle)
+Isabelle
+Blue LightBlue Black
+20002
+01010
+20002
+20202
+.....
+
+(Helper object to indicate Ben is active)
+BenActive
+White
+.....
+.....
+.....
+.....
+00000
+
+(Helper object to indicate Isabelle is active)
+IsaActive
+White
+.....
+.....
+.....
+.....
+00000
+
+(Helper object to indicate Isabelle will become active)
+IsaWillBeActive
+White
+.....
+.....
+.....
+.....
+00000
+
+(Helper object to indicate Ben will become active)
+BenWillBeActive
+White
+.....
+.....
+.....
+.....
+00000
+
+
+=======
+LEGEND
+=======
+
+(The characters we can switch between)
+Player = Ben or Isabelle
+
+(Tiles that contain a certain color)
+TileWithBrown = BrownTile or TwoColTile
+TileWithBlue = BlueTile or TwoColTile
+
+(Any tile)
+BreakableTile = TileWithBrown or TileWithBlue
+Tile = BreakableTile or GrayTile
+
+(Any exit)
+Exit = BlueExit or BrownExit
+
+(Helper objects)
+HelperObjects = BenActive or IsaActive or BenWillBeActive or IsaWillBeActive
+
+(Any square characters can stand on)
+Ground = Tile or Exit
+
+(Character starting positions)
+B = Ben and BrownTile and BenActive
+I = Isabelle and BlueTile
+
+(Tile with orb
+3 = Orb and BrownTile
+4 = Orb and BlueTile
+)
+
+=========
+SOUNDS
+=========
+endlevel 97728103
+endgame 45301503
+Tile destroy 93051107
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Ground
+Ben
+Isabelle (, Orb)
+HelperObjects
+
+======
+RULES
+======
+
+(Action button switches active players; some helper object trickery is needed 
+ to prevent both rules firing at once)
+[ Action Ben BenActive ] [ Isabelle ] -> [ Ben ] [ Isabelle IsaWillBeActive ]
+[ Action Isabelle IsaActive ] [ Ben ] -> [ Isabelle ] [ Ben BenWillBeActive ]
+[ IsaWillBeActive ] -> [ IsaActive ]
+[ BenWillBeActive ] -> [ BenActive ]
+
+(Only active player moves; Ben breaks the brown tiles, Isabelle the blue ones
+ Note that Ben and Isa can occupy the same tile, and if this is so, the tile cannot
+ be broken. In the original game, the tile would crack in this case and break later;
+ here we just flip the color to get the same effect)
+[ > Ben Isabelle BenActive TileWithBrown | Ground ] -> [ Isabelle BlueTile | Ben BenActive Ground ]
+[ > Ben TileWithBrown BenActive | Ground ] -> [ | Ben BenActive Ground ]
+[ > Ben BenActive | Ground ] -> [ | Ben BenActive Ground ]
+[ > Isabelle Ben IsaActive TileWithBlue | Ground ] -> [ Ben BrownTile | Isabelle IsaActive Ground ]
+[ > Isabelle IsaActive TileWithBlue | Ground ] -> [ | Isabelle IsaActive Ground ]
+[ > Isabelle IsaActive | Ground ] -> [ | Isabelle IsaActive Ground ]
+
+(Ben can jump over 1-square gaps)
+[ > Ben Isabelle BenActive TileWithBrown | No Tile | Ground ] -> [ Isabelle BlueTile | | Ben BenActive Ground ]
+[ > Ben BenActive TileWithBrown | No Tile | Ground ] -> [ | | Ben BenActive Ground ]
+[ > Ben BenActive | No Tile | Ground ] -> [ | | Ben BenActive Ground ]
+
+(NOTE: Isa could originally step diagonally, but this isn't easy (possible?) to implement 
+ in PuzzleScript)
+
+(Stop moving player)
+[ > Player ] -> [ Player]
+
+
+==============
+WINCONDITIONS
+==============
+No BreakableTile
+All Ben on BrownExit
+All Isabelle on BlueExit
+
+=======
+LEVELS
+=======
+
+(
+message Orbs allow a character to jump a 1-square gap.
+
+........
+........
+........
+.b13.11.
+........
+........
+)
+
+message X to switch chars. Each must break all tiles of their color and end at their exit (+).
+........
+.B111...
+.1111...
+...56I..
+...222..
+...222..
+...222..
+
+message They can stand on the same tile.
+
+........
+..i.....
+.b121...
+..2125..
+....6...
+
+message Gray tiles cannot be broken.
+message Ben (Brown) can jump over gaps.
+
+...6....
+...2....
+b11g115.
+...2....
+...i....
+
+message A tile won't break with a character standing on it.
+
+..i.....
+.b1221..
+..1..g..
+..2..1..
+..1115..
+.....6..
+
+message congratulations!

@@ -1,0 +1,2402 @@
+Title Gamlet v16.09.04 Alpha
+
+author Jere Majava
+homepage www.twitter.com/jjmajava
+realtime_interval 0.08
+key_repeat_interval 0.07
+throttle_movement
+zoomscreen 23x15
+run_rules_on_level_start
+norepeat_action
+noundo
+
+(
+Todo:
+- Invisibility (animation works)
+- Different hues for different floor tilesets
+- Floating eye 
+- Sound for opening the hatch
+- Sound for trying to open a lock door
+- No orcs (or only orcs?) in the 1st level
+- Spiderwebs!
+- Oil ad fire
+- Openings in the floor
+- Magic arrows
+- Quiver (running out of arrows!)
+- Goblins (make orcs harder)
+- Kobolds with bows
+- Bosses...
+)
+
+========
+OBJECTS
+========
+
+Player P
+transparent
+Tick tk
+transparent
+GoU
+transparent
+GoD
+transparent
+GoL
+transparent
+GoR
+transparent
+Act
+transparent
+
+Use
+transparent
+ElfZone EZ
+transparent
+
+HFlickZone hfz
+transparent
+.....
+.....
+.000.
+.....
+.....
+VFlickZone vfz
+transparent
+.....
+..0..
+..0..
+..0..
+.....
+
+Blackness ~
+black
+Bottom
+transparent
+Shadows
+black
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+Background .
+darkblue #161e27
+00100
+00000
+10101
+00000
+00100
+Engraving ,
+darkblue #161e27
+01010
+10101
+01010
+10101
+01010
+Board +
+darkblue #161e27 darkgreen
+11111
+10001
+10201
+10001
+11111
+Tile1 :
+darkblue #161e27
+00010
+11111
+10000
+11111
+00100
+Tile2
+darkblue #161e27
+11111
+00001
+11111
+01000
+11111
+Square2
+darkblue #161e27
+00000
+00000
+00000
+00000
+00000
+Square1 '
+darkblue #161e27
+11111
+11111
+11111
+11111
+11111
+Stone1
+darkblue #161e27
+11111
+10010
+10011
+11110
+10010
+Stone2
+darkblue #161e27
+11111
+10010
+11100
+10010
+10001
+Stone3
+darkblue #161e27
+11111
+10010
+11101
+10100
+10100
+Stone4
+darkblue #161e27
+11111
+10100
+11100
+10011
+10010
+Stoner ;
+red
+
+WallH #
+darkgrey darkgreen black
+00000
+00000
+00000
+11111
+11111
+
+WallV
+darkgrey darkgreen black
+00022
+00022
+00022
+00022
+00022
+
+WallC
+darkgrey darkgreen black
+00000
+00000
+00000
+00021
+00022
+
+WallS
+darkgrey darkgreen black 
+00022
+00022
+00022
+11112
+11111
+
+Altar $
+darkgrey darkgreen black grey
+.030.
+.303.
+.030.
+.111.
+.....
+Statue S
+grey darkgrey darkgreen black
+1.00.
+23003
+21221
+01100
+23211
+
+StatueLit
+lightgrey grey darkgrey darkgreen black
+1.00.
+24004
+21221
+01100
+24211
+
+DoorH -
+brown darkgreen
+.....
+00000
+11111
+11111
+.....
+DoorH2
+brown darkgreen
+.....
+...00
+....1
+.....
+.....
+DoorV I
+lightgrey black darkgrey
+.011.
+.011.
+.011.
+.011.
+.011.
+DoorV2
+lightgrey black darkblue
+.....
+.....
+.....
+.01..
+.011.
+SDoorH /
+darkgrey darkgreen
+00000
+01010
+00000
+11111
+11111
+
+SDoorH2
+darkgrey darkgreen
+...00
+...01
+...00
+....1
+.....
+
+SDoorV \
+darkgrey black darkgreen
+00011
+02011
+00011
+02011
+00011
+SDoorV2
+darkgrey black darkgreen
+.....
+.....
+.....
+0001.
+02011
+
+SDVTrap !
+darkblue #161e27 black
+.....
+.....
+..2..
+.....
+.....
+SDHTrap ?
+darkblue #161e27 black
+.....
+.....
+..2..
+.....
+.....
+RubbleTrap u
+darkblue #161e27 black
+.....
+.....
+..2..
+.....
+.....
+
+RubbleFall F
+transparent
+
+KeyH 1
+yellow lightbrown brown
+.....
+.1...
+1211.
+.1.2.
+.....
+KeyV 2
+lightgrey grey darkgrey
+.....
+.1...
+1211.
+.1.2.
+.....
+HasHKey
+transparent
+HasVKey
+transparent
+
+ElfTemp ET
+yellow
+
+(
+TargetL TL
+red
+TargetR TR
+blue
+TargetU TU
+green
+TargetD TD
+yellow
+)
+IZ1
+transparent
+.....
+.....
+..0..
+.....
+.....
+IZ2
+transparent
+.....
+.....
+..0..
+.....
+.....
+TargetL TL
+transparent
+.....
+..0..
+.0...
+..0..
+.....
+TargetR TR
+transparent
+.....
+..0..
+...0.
+..0..
+.....
+TargetU TU
+transparent
+.....
+..0..
+.0.0.
+.....
+.....
+TargetD TD
+transparent
+.....
+.....
+.0.0.
+..0..
+.....
+ElFD
+green darkgreen black brown darkbrown
+..00.
+..00.
+.1331
+41113
+.434.
+ElFD1
+green darkgreen black brown darkbrown
+.1331
+41113
+.434.
+.....
+.....
+
+ElFD2
+green darkgreen black brown darkbrown
+.....
+.....
+.....
+..00.
+..00.
+
+ElFU
+green darkgreen black brown darkbrown
+.300.
+4100.
+.1143
+.241.
+..22.
+ElFU1
+green darkgreen black brown darkbrown
+.....
+.....
+.300.
+4100.
+.1143
+
+ElFU2
+green darkgreen black brown darkbrown
+.1403
+..22.
+.....
+.....
+.....
+ElFL
+green darkgreen black brown darkbrown
+.11..
+4300.
+4.004
+31114
+.422.
+ElFL1
+green darkgreen black brown darkbrown
+...11
+..430
+..4.0
+..311
+...4.
+ElFL2
+green darkgreen black brown darkbrown
+.....
+01...
+04...
+14...
+.2...
+ElFR
+green darkgreen black brown darkbrown
+..11.
+.0034
+400.4
+41113
+.224.
+ElFR1
+green darkgreen black brown darkbrown
+11...
+034..
+0.4..
+113..
+.4...
+ElFR2
+green darkgreen black brown darkbrown
+.....
+....0
+...40
+...41
+...2.
+ElFUR
+green darkgreen black brown darkbrown
+..44.
+.00.3
+40014
+.41.4
+.22..
+ElFUL
+green darkgreen black brown darkbrown
+.44..
+3.00.
+41004
+4.14.
+..22.
+ElFDR
+green darkgreen black brown darkbrown
+.00..
+.00..
+413.4
+41114
+.443.
+ElFDL
+green darkgreen black brown darkbrown
+..00.
+..00.
+4.314
+41114
+.344.
+ElFDead
+green darkgreen darkred brown darkbrown
+.1.1.
+31224
+.2014
+.3323
+.004.
+
+H10
+red darkred #161e27
+00000
+00000
+.....
+.....
+.....
+H9
+red darkred #161e27
+00001
+00001
+.....
+.....
+.....
+H8
+red darkred #161e27
+00002
+00002
+.....
+.....
+.....
+H7
+red darkred #161e27
+00012
+00012
+.....
+.....
+.....
+H6
+red darkred #161e27
+00022
+00022
+.....
+.....
+.....
+H5
+red darkred #161e27
+00122
+00122
+.....
+.....
+.....
+H4
+red darkred #161e27
+00222
+00222
+.....
+.....
+.....
+H3
+red darkred #161e27
+01222
+01222
+.....
+.....
+.....
+H2
+red darkred #161e27
+02222
+02222
+.....
+.....
+.....
+H1
+red darkred #161e27
+12222
+12222
+.....
+.....
+.....
+H0
+red darkred #161e27
+22222
+22222
+.....
+.....
+.....
+HUp
+lightred
+00000
+00000
+.....
+.....
+.....
+
+(
+Aim1
+lightgreen
+.....
+.....
+.....
+.....
+.....
+Aim2
+green
+.....
+.....
+.....
+.....
+.....
+Aim3
+yellow
+.....
+.....
+.....
+.....
+.....
+Aim4
+orange
+.....
+.....
+.....
+.....
+.....
+Aim5
+red
+.....
+.....
+.....
+.....
+.....
+Aim6
+darkred
+.....
+.....
+.....
+.....
+.....
+)
+
+
+
+HP5
+transparent
+HP4
+transparent
+HP3
+transparent
+HP2
+transparent
+HP1
+transparent
+HP0
+transparent
+
+W32
+transparent
+W16
+transparent
+W8
+transparent
+W4
+transparent
+W2
+transparent
+W1
+transparent
+
+CD
+transparent
+
+GhostR
+white lightgrey grey #161e27
+...11
+..003
+.100.
+2211.
+33300
+GhostL
+white lightgrey grey #161e27
+11...
+300..
+.001.
+.1122
+00333
+GhostU
+white lightgrey grey #161e27
+1...0
+10010
+30013
+.312.
+..32.
+GhostD
+white lightgrey grey #161e27
+...2.
+..12.
+.001.
+10010
+13330
+GhostGone1
+lightgrey grey darkgrey
+1...1
+.101.
+.1.1.
+..2..
+...2.
+GhostGone2
+lightgrey grey darkgrey
+.2...
+2..2.
+.....
+..2..
+....2
+Bones1
+lightgrey grey darkgrey black
+0.02.
+.120.
+00121
+03202
+.1..0
+Bones2
+lightgrey grey darkgrey black
+.1...
+2.120
+.00.0
+.03..
+..1.1
+Boneyard
+transparent
+
+BatU2
+black
+00.00
+.000.
+..0..
+.....
+.....
+BatU1 B
+black
+.....
+..0..
+.000.
+.0.0.
+.....
+BatD2
+black
+.....
+.....
+..0..
+.000.
+00.00
+BatD1
+black
+.....
+.0.0.
+.000.
+..0..
+.....
+BatL2
+black
+0....
+00...
+.00..
+00...
+0....
+BatL1
+black
+.....
+..00.
+.00..
+..00.
+.....
+BatR2
+black
+....0
+...00
+..00.
+...00
+....0
+BatR1
+black
+.....
+.00..
+..00.
+.00..
+.....
+BWait
+transparent
+BRadar
+blue
+
+
+
+SpiderL
+black red darkbrown darkred darkgrey #161e27
+.0050
+05425
+55130
+.0550
+0...0
+
+SpiderR
+black red darkbrown darkred darkgrey #161e27
+0500.
+54250
+03155
+0550.
+0..50
+
+SpiderD
+black red darkbrown darkred darkgrey #161e27
+0550.
+0420.
+5115.
+0550.
+0..0.
+
+
+SpiderU
+black red darkbrown darkred darkgrey #161e27
+.0..0
+.0550
+.5425
+.0330
+.0550
+
+
+SpiderDead
+black red darkbrown darkred darkgrey #161e27
+.....
+0..30
+.202.
+.330.
+30..3
+
+EyeS o
+green darkgreen black yellow white darkbrown lightgreen
+.666.
+66000
+60000
+13531
+.111.
+
+EyeA
+green darkgreen black yellow white darkbrown lightgreen
+.000.
+03530
+43234
+13531
+.111.
+
+
+OrcPassive
+black darkbrown darkgrey green grey  darkred
+..00.
+..00.
+.5331
+31144
+.4.22
+OrcD
+black darkbrown darkgrey green grey  darkred
+..00.
+4.00.
+45331
+31144
+.0.22
+
+OrcU
+black darkbrown darkgrey green grey darkred
+.00.4
+400.4
+11513
+1511.
+1511.
+
+OrcL
+black darkbrown darkgrey green grey darkred
+2231.
+..005
+.4001
+.4311
+.200.
+
+OrcR
+black darkbrown darkgrey green grey darkred
+.114.
+1004.
+5002.
+111..
+.1322
+
+OrcDead1
+black darkbrown darkgrey #557640 darkred
+.....
+031..
+.1430
+04130
+.30..
+OrcDead2
+black darkbrown darkgrey #557640 darkred
+.0.0.
+3141.
+.114.
+.33.3
+.004.
+
+OrcDead3
+black darkbrown darkgrey #557640 darkred
+..11.
+04130
+0311.
+..340
+.....
+
+
+ArrowTemp
+lightbrown
+ArrowU AU
+darkbrown brown lightbrown
+..2..
+..0..
+..0..
+..1..
+.....
+ArrowD AD
+darkbrown brown lightbrown
+.....
+..1..
+..0..
+..0..
+..2..
+ArrowL AL
+darkbrown brown lightbrown
+.....
+.....
+2001.
+.....
+.....
+ArrowR AR
+darkbrown brown lightbrown
+.....
+.....
+.1002
+.....
+.....  
+ArrowUR AUR
+darkbrown brown lightbrown
+.....
+...2.
+..0..
+.1...
+.....
+ArrowUL AUL
+darkbrown brown lightbrown
+.....
+.2...
+..0..
+...1.
+.....
+ArrowDR ADR
+darkbrown brown lightbrown
+.....
+.1...
+..0..
+...2.
+.....
+ArrowDL ADL
+darkbrown brown lightbrown
+.....
+...1.
+..0..
+.2...
+.....
+
+HitCreature
+darkred
+.....
+.0.0.
+..0..
+.0.0.
+.....
+HitUndead
+lightblue
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+ExitL x
+black  darkblue #161e27 darkgreen
+00003
+00013
+00313
+02313
+22222
+ExitR y
+black  darkblue #161e27 darkgreen
+30000
+31000
+31300
+31320
+22222
+
+Lid
+darkblue #161e27 black
+11111
+12121
+11111
+12121
+11111
+
+Torch1
+darkbrown white yellow
+.....
+.....
+.2...
+010..
+.0...
+
+Torch2
+darkbrown yellow lightbrown
+.....
+.....
+.2...
+010..
+.0...
+
+Torch3
+darkbrown lightbrown orange lightbrown
+.....
+.....
+.2...
+010..
+.0...
+Potion q
+(yellow lightbrown orange)
+(lightred red darkred orange)
+lightgreen green white lightblue darkblue #161e27 lightgrey grey
+.....
+.434.
+.3675
+.0115
+..555
+
+(darkgreen green lightgrey grey darkgrey
+.....
+..3..
+.424.
+.010.
+.....)
+(.....
+..0..
+.534.
+.344.
+.....)
+
+Gem *
+lightgreen green darkgreen
+.....
+..0..
+.100.
+..2..
+.....
+Chest €
+brown darkbrown lightbrown lightgreen lightblue yellow red white green 
+00000
+14531
+13762
+11111
+...8.
+ChestLocked
+brown darkbrown orange
+00000
+00000
+00000
+11111
+.....
+Gold ¢
+white yellow lightbrown
+2....
+..12.
+.101.
+.....
+.2...
+Sacked
+transparent
+GotIt
+transparent
+
+FountainF
+darkgrey darkgreen blue black
+.0003
+02220
+02220
+10003
+.111.
+
+FountainH 
+darkgrey darkgreen blue darkblue
+.000.
+03330
+02220
+10001
+.111.
+
+FountainE 
+darkgrey darkgreen black darkblue
+.000.
+03330
+02220
+10001
+.111.
+
+Blood1
+#471c21
+.....
+0....
+.....
+.0.0.
+..00.
+Blood2
+#471c21
+..0..
+...00
+..00.
+.....
+.0...
+Blood3
+#471c21
+..00.
+00...
+0....
+....0
+.....
+Blood4
+#471c21
+.....
+..0..
+.000.
+..00.
+.....
+
+Web W
+grey darkgrey 
+.1...
+..0.1
+10.0.
+.10.1
+1....
+
+
+
+
+
+
+Rubbler §
+brown
+
+Rubble1
+darkgrey darkgreen black
+.1.02
+..002
+02111
+102..
+.11.0
+Rubble2
+darkgrey darkgreen black
+.02.1
+02...
+1.020
+.1002
+..11.
+Rubble3
+darkgrey darkgreen black
+..1..
+0002.
+002..
+11.02
+.2.1.
+Invisible
+transparent
+Invi1
+#161e27
+00000
+.....
+00000
+.....
+00000
+Invi2
+#161e27
+.....
+00000
+.....
+00000
+.....
+InviTemp
+blue
+
+
+
+=======
+LEGEND
+=======
+E = ElfD and Player and Tick
+Go  = GoU or GoD or GoL or GoR or Act
+Wall = WallH or WallV or WallC or WallS
+Elf = ElfU or ElfD or ElfL or ElfR or ElfUR or ElfUL or ElfDR or ElfDL
+HalfElf = ElfR1 or ElfR2 or ElfL1 or ElfL2 or ElfU1 or ElfU2 or ElfD1 or ElfD2
+AnyElf = Elf or HalfElf
+Health = H10 or H9 or H8 or H7 or H6 or H5 or H4 or H3 or H2 or H1 or H0
+Arrow = AR or AL or AU or AD or AUR or AUL or ADR or ADL
+
+Hit = HitCreature or HitUndead
+
+(Aim = Aim1 or Aim2 or Aim3 or Aim4 or Aim5 or Aim6)
+
+
+HP = HP5 or HP4 or HP3 or HP2 or HP1 or HP0
+
+Dying = GhostGone1 or GhostGone2
+
+IZ = IZ1 or IZ2
+T = TR or TL or TU or TD
+
+Wait = W1 or W2 or W4 or W8 or W16 or W32
+W2-8 = W2 or W4 or W8
+
+fz = hfz or vfz (flickzone)
+
+Tile = Tile1 or Tile2
+Square = Square1 or Square2
+Stone = Stone1 or Stone2 or Stone3 or Stone4
+
+Exit = ExitL or ExitR
+
+Torch = Torch1 or Torch2 or Torch3
+% = WallH and Torch1
+
+Bones = Bones1 or Bones2
+Ghost = GhostU or GhostD or GhostR or GhostL
+GhostH = GhostL or GhostR
+GhostV = GhostU or GhostD
+
+Spider  = SpiderR or SpiderL or SpiderU or SpiderD
+SpiderH = SpiderR or SpiderL
+SpiderV = SpiderU or SpiderD
+
+Bat =  BatU1 or BatU2 or BatD1 or BatD2 or BatL1 or BatL2 or BatR1 or BatR2
+BatU = BatU1 or BatU2
+BatD = BatD1 or BatD2
+BatL = BatL1 or BatL2
+BatR = BatR1 or BatR2
+BatH = BatL2 or BatR2
+BatV = BatU2 or BatD2
+BatA = BatU1 or BatD1 or BatL1 or BatR1
+
+Eye = EyeS or EyeA
+
+Orc = OrcU or OrcD or OrcL or OrcR
+OrcH = OrcL or OrcR
+OrcV = OrcU or OrcD
+OrcDead = OrcDead1 or OrcDead2 or OrcDead3
+Treasure = Gold or Chest
+
+Mob = Ghost or Spider or Eye or Orc or OrcPassive
+
+Critter = Bat
+Undead = Ghost or Bones
+Monster = Spider or Eye or Orc
+
+Rubble = Rubble1 or Rubble2 or Rubble3
+
+Crate = Statue or StatueLit
+Fountain = FountainF or FountainH or FountainE
+Door = DoorH or DoorV
+SDoor = SDoorH or SDoorV
+Usable = Fountain or Door
+
+Trap = SDVTrap or SDHTrap or RubbleTrap
+
+InviMask = Invi1 or Invi2 or InviTemp
+
+
+Mark = Elf or Statue
+
+Obs = Wall or Altar or Elf or HalfElf  or Ghost or Bones or Spider or Orc or Door or SDoor or Fountain or Crate or Blackness or Rubble
+Obstr = Wall or Door or SDoor or Blackness or Crate
+Struct = Wall or Altar or Door or SDoor or Fountain or Crate or Blackness
+BatWall = Bat or Wall or Door or SDoor or Blackness
+
+Key = KeyH or KeyV
+
+Item = KeyH or KeyV or Potion or Gem or Chest or ChestLocked or Gold or Potion
+
+Blood = Blood1 or Blood2 or Blood3 or Blood4
+
+z = Bottom and Blackness
+
+& = FountainF and HP1
+G = GhostR and HP2
+@ = Bones1 and HP4
+R = SpiderL and HP3
+c = OrcPassive
+H = H10 and Blackness
+L = StatueLit and Board
+¿ = SDVTrap and SDHTrap
+3 = KeyV and SDVTrap and SDHTrap
+4 = KeyV and SDVTrap and SDHTrap
+=======
+SOUNDS
+=======
+
+sfx0 12917107 ( Step )
+sfx1 28568508 (87819908) ( Ghost spawns)
+sfx2 98925508 ( Shoot )
+sfx3 26397503 ( Sacked )
+
+sfx6 83736704 ( Orc attacks )
+sfx7 45077708 ( Bat )
+sfx8 94900708 (61193508) (76068708) ( Ghost attacks )
+sfx9 30850508  ( Spider attacks )
+
+EndLevel 36939103
+Titlescreen 2476508
+Startlevel 26246308
+restart 20157508
+GhostGone1 create 76700108
+(Bat destroy 86912108)
+Hit create 42429504
+ElfDead create 52430708
+Gold destroy 27913900
+Chest destroy  96868300
+Bones1 destroy 96047108
+Bones2 destroy 38062308
+HUp create 52933303
+Key destroy 67739909
+Door destroy 11977904
+Statue create 48749907
+StatueLit create 22836108
+Rubble create 6908308
+Sdoor destroy 94134908
+OrcDead create 91599104 (94915104) (78850708)
+SpiderDead create 76587508
+(Act create 98925508) (Shooting)
+(14296501
+78051308
+73324708
+99601901
+98925508)
+
+
+
+( !!!!!)
+(
+Slime create 71799908
+)
+
+
+(
+
+90246908 rumble, like push?
+33010708 deathsound for something
+8521708 Robotsy computer excellent
+49940508 Multiexplosion
+40741908 low long rumble
+65450908 clean explosion
+82588308 funny low rumble, motorbike?
+43054508 Wobwobwobwobwohwoh whwhwhw...
+42553308 Electric interference
+21487508 Buu-hoo, horn
+30530108 Arcade lasers or something
+6856708 Low shotish explosion
+91134508 Whoosh, like a big sword?
+60065108 long shoft explosion
+98992308 fast funny beeps
+57940908 dojoujojou-clang, weird...
+11306508 small caliber shot
+11071108 BIG shot
+80916108 shot, long echo
+18243908 intense drrrrm
+72257908 jet engine
+
+62187508 fuljuljuljul
+14939108 shot, stops short
+2431508  fiuuu, pitches down
+21839108 ihan tuubaa
+64186508 small flutey sound
+87815508 biiiig rumble
+10677508 low explosion
+72022708 low, danger
+26027508 metallinen kumina
+47536708 pinei robottivalikko
+22903308 sähkölaite
+295708   dihjunjunjunjun...
+82233308 hauska, robotsy
+72605108 djouu-juu...
+99280908 Hitchcock-scary
+2014308 nice soft hit
+
+36182308 du dul guitar?
+68576708 wublulj crazy!
+70567508 low rumbing woosh
+33783708 witch laughing
+79146908 t k d d d d silent
+80229508 mosquito?
+20746708 pieru
+10255108 long low silent brwmmm
+16274908 lng steady tsrrrrrg
+86240708 great steady water fall!!!!
+94155508 low brooww
+49268308 crazy
+80634108 flaming explosion
+65915908 long metallic fluity noise
+10560108 short metallic flute
+26241908 Ou, fail!
+33052308 zrrour, miss
+76853908 loong arching swoosh
+28180508 satisfyin dlomb
+97638308 endless tsjktsjktsjktsjk
+88916108 water streaming 
+95463708 door locked?
+54022308 robotsy duljulju paradroid
+20265908 another explosion
+18830708
+43072108 dzrr effective
+978508 small shot
+)
+================
+COLLISIONLAYERS
+================
+
+Background
+Tick
+Bottom
+Engraving Tile Square Stoner Stone
+Board RubbleTrap SDVTrap RubbleFall
+SDHTrap
+Blood1
+Blood2
+Blood3
+Blood4
+Web
+Boneyard
+SpiderDead OrcDead
+Go
+vfz
+HP
+CD
+W1
+W2
+W4
+W8
+W16
+W32
+Use
+BWait BRadar
+(Aim)
+Exit Altar Fountain Rubbler Rubble
+Lid
+Item Treasure ElfDead
+Arrow ArrowTemp
+Blackness Wall Door SDoor Crate Elf HalfElf Dying Bones Mob
+Invi1 Invi2 InviTemp
+Invisible
+Bat
+DoorH2 DoorV2 SDoorH2 SDoorV2
+Torch Hit
+ElfZone
+Health Shadows
+HUp
+Sacked GotIt
+ElfTemp
+Player
+HasHKey
+HasVKey
+IZ
+T
+hfz
+
+======
+RULES
+======
+
+
+( Tick )
+[ Player ] -> [ Player TK ]
+
+( Walls )
+down  [ tk ][ WallH | WallH ]   -> [ tk ][ WallV | WallH ]
+[ tk ][ Treasure ][ Sacked ] -> [ tk ][ Treasure ][ ]
+[ tk ][ Sacked ] -> [ tk ][ ] sfx3 Message Well done Rogue! You have collected all the gold.
+[ tk ][ Health ][ Treasure ] -> [ tk ][ Health Sacked ][ Treasure ]
+
+left  [ tk ][ WallH | WallV ]   -> [ tk ][ WallH | WallC ]
+right [ tk ][ WallH | no Wall ] -> [ tk ][ WallS | ]
+right [ tk ][ WallV | WallV ]   -> [ tk ][ WallC | WallV ]
+right [ tk ][ WallV | WallC ]   -> [ tk ][ WallC | WallC ]
+
+
+( Torch )
+[ tk ][ Torch no Wait ] -> [ tk ][ random Torch W2 ]
+
+( Floor )
+[ tk ][ Tile | no Tile ] -> [ tk ][ Tile | Tile]
+down [ tk ][ Tile1 | Tile1 ] -> [ tk ][ Tile1 | Tile2 ]
+startloop
+[ tk ][ Square1 | no Square ] -> [ tk ][ Square1 | Square2 ]
+[ tk ][ Square2 | no Square ] -> [ tk ][ Square2 | Square1 ]
+endloop
+[ tk ][ Stoner | ] -> [ tk ][ Stoner | Stoner ]
+[ tk ][ Stoner ] -> [ tk ][ random Stone ]
+[ tk ][ Rubbler ] -> [ tk ][ random Rubble ]
+
+( Doors )
+up   [ tk ][ DoorV | ] -> [ tk ][ DoorV | DoorV2 ]
+left [ tk ][ DoorH | ] -> [ tk ][ DoorH | DoorH2 ]
+up   [ tk ][ SDoorV | ] -> [ tk ][ SDoorV | SDoorV2 ]
+left [ tk ][ SDoorH | ] -> [ tk ][ SDoorH | sDoorH2 ]
+
+( Traps )
+[ tk ][ Mark SDHTrap ][ SDoorH ] -> [ tk ][ Mark SDHTrap ][ ]
+[ tk ][ Mark SDVTrap ][ SDoorV ] -> [ tk ][ Mark SDVTrap ][ ]
+[ tk ][ Mark RubbleTrap ][ RubbleFall ] -> [ tk ][ Mark RubbleTrap ][ random Rubble ]
+
+( Fountain )
+[ tk ][ FountainF HP0 ] -> [ tk ][ FountainH HP1 ]
+[ tk ][ FountainH HP0 ] -> [ tk ][ FountainE ]
+[ tk ][ HUp no Wait ] ->[ tk ][ ]
+
+( Statues and closed exits )
+[ tk ][ Lid ] -> [ tk ][ ]
+[ tk ][ Exit ][ Board no Crate ] -> [ tk ][ Exit Lid ][ Board ]
+[ tk ][ Statue Board ] -> [ tk ][ StatueLit Board ]
+[ tk ][ StatueLit no Board ] -> [ tk ][ Statue ]
+
+
+
+(Aim)
+(
+[ tk ][ Aim ] -> [ tk ][ ]
+[ tk ][ Elf  |        ] -> [ tk ][ Elf  | Aim1 ]
+[ tk ][ Aim1 | no Aim ] -> [ tk ][ Aim1 | Aim2 ]
+[ tk ][ Aim2 | no Aim ] -> [ tk ][ Aim2 | Aim3 ]
+[ tk ][ Aim3 | no Aim ] -> [ tk ][ Aim3 | Aim4 ]
+[ tk ][ Aim4 | no Aim ] -> [ tk ][ Aim4 | Aim5 ]
+[ tk ][ Aim5 | no Aim ] -> [ tk ][ Aim5 | Aim6 ]
+)
+
+( "Player" )
+[ tk ][ up     Player TK ] -> [ tk ][ Player GoU no TK ]
+[ tk ][ down   Player TK ] -> [ tk ][ Player GoD no TK ]
+[ tk ][ left   Player TK ] -> [ tk ][ Player GoL no TK ]
+[ tk ][ right  Player TK ] -> [ tk ][ Player GoR no TK ]
+[ tk ][ action Player TK ] -> [ tk ][ Player Act no TK ]
+
+( Clearing things )
+[ tk ][ Hit ] -> [ tk ][ ]
+
+( Elf uses things such as... )
+up    [ tk ][ GoU ][ ElfU no Wait | Usable ] -> [ tk ][ ][ ElfU | Usable Use ]
+down  [ tk ][ GoD ][ ElfD no Wait | Usable ] -> [ tk ][ ][ ElfD | Usable Use ]
+left  [ tk ][ GoL ][ ElfL no Wait | Usable ] -> [ tk ][ ][ ElfL | Usable Use ]
+right [ tk ][ GoR ][ ElfR no Wait | Usable ] -> [ tk ][ ][ ElfR | Usable Use ]
+
+( ...doors... )
+[ tk ][ HasHKey ][ DoorH Use ] -> [ tk ][ HasHKey ][ ]
+[ tk ][ HasVKey ][ DoorV Use ] -> [ tk ][ HasVKey ][ ]
+
+
+
+( ...and fountains. )
+[ tk ][ Fountain HP Use ][ Health no H10 ] -> [ tk ][ Fountain HP CD ][ H10 HUp W4 W2 ]
+
+[ tk ][ Use ] -> [ tk ][ ]
+
+( Elf moves crates  )
+up    [ tk ][ GoU ][ ElfU no Wait | Crate | no Obs ] -> [ tk ][ ][ ElfU2 | ElfTemp W8 | Crate ]
+down  [ tk ][ GoD ][ ElfD no Wait | Crate | no Obs ] -> [ tk ][ ][ ElfD2 | ElfTemp W8 | Crate ]
+left  [ tk ][ GoL ][ ElfL no Wait | Crate | no Obs ] -> [ tk ][ ][ ElfL2 | ElfTemp W8 | Crate ]
+right [ tk ][ GoR ][ ElfR no Wait | Crate | no Obs ] -> [ tk ][ ][ ElfR2 | ElfTemp W8 | Crate ]
+
+
+( Elf moves )
+right [ tk ][ GoR ][ ElfR no Wait | no Obs ] -> [ tk ][ ][ ElfR2 | ElfTemp ] sfx0
+right [ tk ][ ElfR2 | ElfR1 ]        -> [ tk ][ | ElfR ]
+right [ tk ][ ElfR2 | ElfTemp ]      -> [ tk ][ ElfR2 | ElfR1 ]
+
+left  [ tk ][ GoL ][ ElfL no Wait | no Obs ] -> [ tk ][ ][ ElfL2 | ElfTemp ] sfx0
+left  [ tk ][ ElfL2 | ElfL1 ]        -> [ tk ][ | ElfL ]
+left  [ tk ][ ElfL2 | ElfTemp ]      -> [ tk ][ ElfL2 | ElfL1 ]
+
+up    [ tk ][ GoU ][ ElfU no Wait | no Obs ] -> [ tk ][ ][ ElfU2 | ElfTemp ] sfx0
+up    [ tk ][ ElfU2 | ElfU1 ]        -> [ tk ][ | ElfU ]
+up    [ tk ][ ElfU2 | ElfTemp ]      -> [ tk ][ ElfU2 | ElfU1 ]
+
+down  [ tk ][ GoD ][ ElfD no Wait | no Obs ] -> [ tk ][ ][ ElfD2 | ElfTemp ] sfx0
+down  [ tk ][ ElfD2 | ElfD1 ]        -> [ tk ][ | ElfD ]
+down  [ tk ][ ElfD2 | ElfTemp ]      -> [ tk ][ ElfD2 | ElfD1 ]
+
+( Elf turns quickly, if next to a mob )
+[ tk ][ GoR ][ Elf | Mob ] -> [ tk ][ ][ ElfR | Mob ]
+[ tk ][ GoL ][ Elf | Mob ] -> [ tk ][ ][ ElfL | Mob ]
+[ tk ][ GoU ][ Elf | Mob ] -> [ tk ][ ][ ElfU | Mob ]
+[ tk ][ GoD ][ Elf | Mob ] -> [ tk ][ ][ ElfD | Mob ]
+
+( Elf turns )
+[ tk ][ GoU ][ ElfR ] -> [ tk ][ ][ ElfUR ]
+[ tk ][ GoR ][ ElfU ] -> [ tk ][ ][ ElfUR ]
+
+[ tk ][ GoU ][ ElfL ] -> [ tk ][ ][ ElfUL ]
+[ tk ][ GoL ][ ElfU ] -> [ tk ][ ][ ElfUL ]
+
+[ tk ][ GoD ][ ElfR ] -> [ tk ][ ][ ElfDR ]
+[ tk ][ GoR ][ ElfD ] -> [ tk ][ ][ ElfDR ]
+
+[ tk ][ GoD ][ ElfL ] -> [ tk ][ ][ ElfDL ]
+[ tk ][ GoL ][ ElfD ] -> [ tk ][ ][ ElfDL ]
+
+[ tk ][ GoL ][ ElfDR ] -> [ tk ][ ][ ElfDL ]
+[ tk ][ GoD ][ ElfUL ] -> [ tk ][ ][ ElfDL ]
+
+[ tk ][ GoU ][ ElfDL ] -> [ tk ][ ][ ElfUL ]
+[ tk ][ GoL ][ ElfUR ] -> [ tk ][ ][ ElfUL ]
+
+[ tk ][ GoU ][ ElfDR ] -> [ tk ][ ][ ElfUR ]
+[ tk ][ GoR ][ ElfUL ] -> [ tk ][ ][ ElfUR ]
+
+[ tk ][ GoR ][ ElfDL ] -> [ tk ][ ][ ElfDR ]
+[ tk ][ GoD ][ ElfUR ] -> [ tk ][ ][ ElfDR ]
+
+
+[ tk ][ GoD ][ ElfU ] -> [ tk ][ ][ ElfDR ]
+[ tk ][ GoU ][ ElfD ] -> [ tk ][ ][ ElfUL ]
+[ tk ][ GoR ][ ElfL ] -> [ tk ][ ][ ElfUR ]
+[ tk ][ GoL ][ ElfR ] -> [ tk ][ ][ ElfDL ]
+
+
+[ tk ][ GoR ][ Elf ] -> [ tk ][ ][ ElfR ]
+[ tk ][ GoL ][ Elf ] -> [ tk ][ ][ ElfL ]
+[ tk ][ GoU ][ Elf ] -> [ tk ][ ][ ElfU ]
+[ tk ][ GoD ][ Elf ] -> [ tk ][ ][ ElfD ]
+
+( Elf picks up stuff )
+[ tk ][ Elf KeyH ] -> [ tk ][ Elf HasHKey ]
+[ tk ][ Elf KeyV ] -> [ tk ][ Elf HasVKey ]
+[ tk ][ Elf Treasure ] -> [ tk ][ Elf ]
+[ tk ][ Elf Potion ] -> [ tk ][ Elf Invisible Invi1 ]
+
+
+( Invisibility )
+[ tk ][ Invisible ][ AnyElf Invi2 ]    -> [ tk ][ Invisible ][ AnyElf InviTemp ]
+[ tk ][ Invisible ][ AnyElf Invi1 ]    -> [ tk ][ Invisible ][ AnyElf Invi2 ]
+[ tk ][ Invisible ][ AnyElf InviTemp ] -> [ tk ][ Invisible ][ AnyElf Invi1 ]
+late [ tk ][ Invimask no AnyElf ] -> [ tk ][ ]
+late [ tk ][ Invisible ][ AnyElf no Invimask ] -> [ tk ][ Invisible ][ AnyElf Invi1 ]
+late up [ tk ][ Invi1 | Invi1 ] -> [ tk ][ Invi1 | Invi2 ]
+late up [ tk ][ Invi2 | Invi2 ] -> [ tk ][ Invi2 | Invi1 ]
+
+
+( Elf Shoots )
+[ tk ][ Act ][ ElfR no Wait ] -> [ tk ][ ][ ElfR W2 AR ]    sfx2
+[ tk ][ Act ][ ElfL no Wait ] -> [ tk ][ ][ ElfL W2 AL ] sfx2
+[ tk ][ Act ][ ElfD no Wait ] -> [ tk ][ ][ ElfD W2 AD ] sfx2
+[ tk ][ Act ][ ElfU no Wait ] -> [ tk ][ ][ ElfU W2 AU ] sfx2
+
+[ tk ][ Act ][ ElfUR no Wait ] -> [ tk ][ ][ ElfUR W2 AUR ] sfx2
+[ tk ][ Act ][ ElfUL no Wait ] -> [ tk ][ ][ ElfUL W2 AUL ] sfx2
+[ tk ][ Act ][ ElfDR no Wait ] -> [ tk ][ ][ ElfDR W2 ADR ] sfx2
+[ tk ][ Act ][ ElfDL no Wait ] -> [ tk ][ ][ ElfDL W2 ADL ] sfx2
+
+( Arrows fly )
+[ tk ][ AR ]  -> [ tk ][ right AR ]
+[ tk ][ AL ]  -> [ tk ][ left AL ]
+[ tk ][ AD ]  -> [ tk ][ down AD ]
+[ tk ][ AU ]  -> [ tk ][ up AU ]
+
+up    [ tk ][ AUR | ]       -> [ tk ][ | ArrowTemp ]
+right [ tk ][ ArrowTemp | ] -> [ tk ][ | AUR ]
+up    [ tk ][ AUL | ]       -> [ tk ][ | ArrowTemp ]
+left  [ tk ][ ArrowTemp | ] -> [ tk ][ | AUL ]
+down  [ tk ][ ADR | ]       -> [ tk ][ | ArrowTemp ]
+right [ tk ][ ArrowTemp | ] -> [ tk ][ | ADR ]
+down  [ tk ][ ADL | ]       -> [ tk ][ | ArrowTemp ]
+left  [ tk ][ ArrowTemp | ] -> [ tk ][ | ADL ]
+
+( Things get hit)
+[ tk ][ > Arrow | Obstr ] -> [ tk ][ | Obstr ]
+[ tk ][ Arrow Obstr ] -> [ tk ][ Obstr ]
+
+[ tk ][ > Arrow | Bat ] -> [ tk ][ | HitCreature random Blood ]
+[ tk ][ Arrow Bat ] -> [ tk ][ HitCreature random Blood ]
+
+[ tk ][ > Arrow | Spider HP ] -> [ tk ][ | Spider HP HitCreature CD random Blood ]
+[ tk ][ Arrow Spider HP ] -> [ tk ][ Spider HP HitCreature CD random Blood ]
+
+[ tk ][ > Arrow | Orc HP ] -> [ tk ][ | Orc HP HitCreature CD random Blood ]
+[ tk ][ Arrow Orc HP ] -> [ tk ][ Orc HP HitCreature CD random Blood ]
+
+[ tk ][ > Arrow | OrcPassive ] -> [ tk ][ | OrcD HP4 HitCreature random Blood ]
+[ tk ][ Arrow | OrcPassive ] -> [ tk ][ | OrcD HP4 HitCreature random Blood ]
+
+[ tk ][ > Arrow | Ghost HP ] -> [ tk ][ | Ghost HP HitUndead CD ]
+[ tk ][ Arrow Ghost HP ] -> [ tk ][ Ghost HP HitUndead CD ]
+
+[ tk ][ > Arrow | Bones HP ] -> [ tk ][ | Bones HP HitUndead CD ]
+[ tk ][ Arrow Bones HP ] -> [ tk ][ Bones HP HitUndead CD ]
+
+
+( Screen flicks )
+
+
+[ tk ][ P ][ Elf fz ][ Health ] -> [ ][ ][ Elf P tk Health ][ ]
+
+
+[ tk ][ fz ] -> [ tk ][  ]
+right [ tk ][ Bottom | no Bottom ] -> [ tk ][ Bottom | Bottom ]
+
+
+up  [ tk ][ Health | ] -> [ tk ][ | Health ]
+
+right [ tk ][ P | | | | no vfz | | | | ] -> [ tk ][ P | | | | vfz | | | | ]
+left  [ tk ][ P | | | | no vfz | | | | ] -> [ tk ][ P | | | | vfz | | | | ]
+down  [ tk ][ P | | | no hfz | | | | | ] -> [ tk ][ P | | | hfz | | | | | ]
+up    [ tk ][ Health ][ P | | | no hfz | | | | | ] -> [ tk ][ ][ P | | | hfz | | | | Health | ]
+
+up    [ tk ][ Health Bottom | ] -> [ tk ][ Bottom | Health ]
+
+
+horizontal [ tk ][ hfz | no fz ] -> [ tk ][ hfz | hfz ]
+vertical   [ tk ][ vfz | no fz ] -> [ tk ][ vfz | vfz ]
+
+
+
+( Exit )
+[ tk ][ Elf Exit no Lid ] -> [ tk ][ Elf Exit ] win 
+
+( Bat bites )
+[ tk ][ BatA Elf no Hit ] -> [ tk ][ BatA Elf HitCreature ] sfx7
+
+( Bat Turns )
+up    [ tk ][ BatU no BWait | | BatWall ] -> [ tk ][ random BatH BWait | | BatWall ]
+down  [ tk ][ BatD no BWait | | BatWall ] -> [ tk ][ random BatH BWait | | BatWall ]
+left  [ tk ][ BatL no BWait | | BatWall ] -> [ tk ][ random BatV BWait | | BatWall ]
+right [ tk ][ BatR no BWait | | BatWall ] -> [ tk ][ random BatV BWait | | BatWall ]
+
+up    [ tk ][ BatU no BWait | BatWall ] -> [ tk ][ random BatH BWait | BatWall ]
+down  [ tk ][ BatD no BWait | BatWall ] -> [ tk ][ random BatH BWait | BatWall ]
+left  [ tk ][ BatL no BWait | BatWall ] -> [ tk ][ random BatV BWait | BatWall ]
+right [ tk ][ BatR no BWait | BatWall ] -> [ tk ][ random BatV BWait | BatWall ]
+
+( Bat Moves )
+up    [ tk ][ BatU1 no BWait ] -> [ tk ][ BatU2 BWait ]
+up    [ tk ][ BatU2 no BWait | no BatWall ] -> [ tk ][ | BatU1 BWait ]
+down  [ tk ][ BatD1 no BWait ] -> [ tk ][ BatD2 BWait ]
+down  [ tk ][ BatD2 no BWait | no BatWall ] -> [ tk ][ | BatD1 BWait ]
+left  [ tk ][ BatL1 no BWait ] -> [ tk ][ BatL2 BWait ]
+left  [ tk ][ BatL2 no BWait | no BatWall ] -> [ tk ][ | BatL1 BWait ]
+right [ tk ][ BatR1 no BWait ] -> [ tk ][ BatR2 BWait ]
+right [ tk ][ BatR2 no BWait | no BatWall ] -> [ tk ][ | BatR1 BWait ]
+
+( Ghost turns towards Elf )
+right [ tk ][ Ghost no GhostR TR no Wait no EZ | no Struct ] -> [ tk ][ GhostR W2 W1 | ]
+left  [ tk ][ Ghost no GhostL TL no Wait no EZ | no Struct ] -> [ tk ][ GhostL W2 W1 | ]
+down  [ tk ][ Ghost no GhostD TD no Wait no EZ | no Struct ] -> [ tk ][ GhostD W2 W1 | ]
+up    [ tk ][ Ghost no GhostU TU no Wait no EZ | no Struct ] -> [ tk ][ GhostU W2 W1 | ]
+
+( Ghost turns away from obstacles )
+right [ tk ][ GhostR no Wait | Obs no Elf ] -> [ tk ][ random GhostV W2 W1 | Obs ]
+left  [ tk ][ GhostL no Wait | Obs no Elf ] -> [ tk ][ random GhostV W2 W1 | Obs ]
+down  [ tk ][ GhostD no Wait | Obs no Elf ] -> [ tk ][ random GhostH W2 W1 | Obs ]
+up    [ tk ][ GhostU no Wait | Obs no Elf ] -> [ tk ][ random GhostH W2 W1 | Obs ]
+
+( Ghost attacks )
+right [ tk ][ GhostR no Wait | Elf ] -> [ tk ][ GhostGone1 no Wait W1 | Elf HitCreature ] sfx8
+left  [ tk ][ GhostL no Wait | Elf ] -> [ tk ][ GhostGone1 no Wait W1 | Elf HitCreature ] sfx8
+down  [ tk ][ GhostD no Wait | Elf ] -> [ tk ][ GhostGone1 no Wait W1 | Elf HitCreature ] sfx8
+up    [ tk ][ GhostU no Wait | Elf ] -> [ tk ][ GhostGone1 no Wait W1 | Elf HitCreature ] sfx8
+
+( Ghost moves )
+right [ tk ][ GhostR HP no Wait | no Obs no Struct ] -> [ tk ][ | GhostR HP W4 W2 ]
+left  [ tk ][ GhostL HP no Wait | no Obs no Struct ] -> [ tk ][ | GhostL HP W4 W2 ]
+down  [ tk ][ GhostD HP no Wait | no Obs no Struct ] -> [ tk ][ | GhostD HP W4 W2 ]
+up    [ tk ][ GhostU HP no Wait | no Obs no Struct ] -> [ tk ][ | GhostU HP W4 W2 ]
+
+( Ghost Spawns )
+[ tk ][ Bones IZ no Wait ] -> [ tk ][ Bones IZ W16 W1 random Wait randomdir Boneyard ]
+[ tk ][ Boneyard no Obs no Ghost no Bones ] -> [ tk ][random Ghost HP2 W4 ] sfx1
+[ tk ][ Boneyard Obs no Bones ] -> [ tk ][ Obs ]
+([ tk ][ Bones T no Wait | no Ghost no Obs ] -> [ tk ][ Boneyard random Ghost HP2 W4 | Bones T W6 ] sfx1)
+
+( Ghost dies )
+[ tk ][ GhostGone2 no Wait ] -> [ tk ][ ]
+[ tk ][ GhostGone1 no Wait ] -> [ tk ][ GhostGone2 W1 ]
+[ tk ][ Ghost HP0 ] -> [ tk ][ GhostGone1 no Wait W1 ]
+
+[ tk ][ Bones1 HP0 ] -> [ tk ][ Bones2 HP3 ]
+[ tk ][ Bones2 HP0 ] -> [ tk ][ GhostGone1 no Wait W1 ]
+
+( Orc turns towards Elf )
+right [ tk ][ Orc no OrcR TR no Wait no EZ | no Struct ] -> [ tk ][ OrcR W2 W1 | ]
+left  [ tk ][ Orc no OrcL TL no Wait no EZ | no Struct ] -> [ tk ][ OrcL W2 W1 | ]
+down  [ tk ][ Orc no OrcD TD no Wait no EZ | no Struct ] -> [ tk ][ OrcD W2 W1 | ]
+up    [ tk ][ Orc no OrcU TU no Wait no EZ | no Struct ] -> [ tk ][ OrcU W2 W1 | ]
+
+( Orc turns away from obstacles )
+right [ tk ][ OrcR no Wait | Obs no Elf ] -> [ tk ][ random OrcV W2 W1 | Obs ]
+left  [ tk ][ OrcL no Wait | Obs no Elf ] -> [ tk ][ random OrcV W2 W1 | Obs ]
+down  [ tk ][ OrcD no Wait | Obs no Elf ] -> [ tk ][ random OrcH W2 W1 | Obs ]
+up    [ tk ][ OrcU no Wait | Obs no Elf ] -> [ tk ][ random OrcH W2 W1 | Obs ]
+
+( Orc attacks )
+right [ tk ][ OrcR no Wait | Elf ] -> [ tk ][ OrcR W4 W2 | Elf HitCreature ] sfx6
+left  [ tk ][ OrcL no Wait | Elf ] -> [ tk ][ OrcL W4 W2 | Elf HitCreature ] sfx6
+down  [ tk ][ OrcD no Wait | Elf ] -> [ tk ][ OrcD W4 W2 | Elf HitCreature ] sfx6
+up    [ tk ][ OrcU no Wait | Elf ] -> [ tk ][ OrcU W4 W2 | Elf HitCreature ] sfx6
+
+( Orc moves )
+right [ tk ][ OrcR HP no Wait | no Obs no Struct ] -> [ tk ][ | OrcR HP W4 ]
+left  [ tk ][ OrcL HP no Wait | no Obs no Struct ] -> [ tk ][ | OrcL HP W4 ]
+down  [ tk ][ OrcD HP no Wait | no Obs no Struct ] -> [ tk ][ | OrcD HP W4 ]
+up    [ tk ][ OrcU HP no Wait | no Obs no Struct ] -> [ tk ][ | OrcU HP W4 ]
+
+( Passive orc Gets active )
+[ tk ][ OrcPassive T ] -> [ tk ][ OrcD HP5 ]
+
+
+( Orc dies )
+[ tk ][ Orc HP0 ] -> [ tk ][ random OrcDead ]
+
+
+( Spider turns towards Elf )
+right [ tk ][ Spider no SpiderR TR no Wait no EZ | no Struct ] -> [ tk ][ SpiderR W2 | ]
+left  [ tk ][ Spider no SpiderL TL no Wait no EZ | no Struct ] -> [ tk ][ SpiderL W2 | ]
+down  [ tk ][ Spider no SpiderD TD no Wait no EZ | no Struct ] -> [ tk ][ SpiderD W2 | ]
+up    [ tk ][ Spider no SpiderU TU no Wait no EZ | no Struct ] -> [ tk ][ SpiderU W2 | ]
+
+( Spider turns away from obstacles )
+right [ tk ][ SpiderR no Wait | Obs no Elf ] -> [ tk ][ random Spider W2 | Obs ]
+left  [ tk ][ SpiderL no Wait | Obs no Elf ] -> [ tk ][ random Spider W2 | Obs ]
+down  [ tk ][ SpiderD no Wait | Obs no Elf ] -> [ tk ][ random Spider W2 | Obs ]
+up    [ tk ][ SpiderU no Wait | Obs no Elf ] -> [ tk ][ random Spider W2 | Obs ]
+
+( Spider attacks )
+right [ tk ][ SpiderR no Wait | Elf ] -> [ tk ][ SpiderR W4 W1 | Elf HitCreature ] sfx9
+left  [ tk ][ SpiderL no Wait | Elf ] -> [ tk ][ SpiderL W4 W1 | Elf HitCreature ] sfx9
+down  [ tk ][ SpiderD no Wait | Elf ] -> [ tk ][ SpiderD W4 W1 | Elf HitCreature ] sfx9
+up    [ tk ][ SpiderU no Wait | Elf ] -> [ tk ][ SpiderU W4 W1 | Elf HitCreature ] sfx9
+
+( Spider moves )
+right [ tk ][ SpiderR HP no Wait | no Obs no Struct ] -> [ tk ][ | SpiderR HP W2 ]
+left  [ tk ][ SpiderL HP no Wait | no Obs no Struct ] -> [ tk ][ | SpiderL HP W2 ]
+down  [ tk ][ SpiderD HP no Wait | no Obs no Struct ] -> [ tk ][ | SpiderD HP W2 ]
+up    [ tk ][ SpiderU HP no Wait | no Obs no Struct ] -> [ tk ][ | SpiderU HP W2 ]
+
+( Spider dies )
+[ tk ][ Spider HP0 ] -> [ tk ][ SpiderDead ]
+
+( Eye awakes)
+[ tk ][ EyeS T ] -> [ tk ][ EyEA T W4 W1 HP5 ]
+
+( Diagonally near the Elf ) 
+late [ tk ][ EZ ] -> [ tk ][ ]
+late down [ tk ][ | Elf | ] -> [ tk ][ ET | Elf | ET ]
+late left [ tk ][ | ET | ] -> [ tk ][ EZ | | EZ ]
+
+( Elf targeted )
+
+late [ tk ][ T ]  -> [ tk ][ ]
+late [ tk ][ IZ ] -> [ tk ][ ]
+
+
+( Create the targeting zone )
+late [ tk ][ | | Elf | | ] -> [ tk ][ IZ1 | IZ1 | Elf IZ1 TU | IZ1 | IZ1 ]
+late [ tk ][ | no IZ | IZ | no IZ | ] -> [ tk ][ IZ1 | IZ1 | IZ1 | IZ1 | IZ1 ]
+late [ tk ][ IZ1 | no IZ | ] -> [ tk ][ IZ1 | IZ2 | IZ2 ]
+late [ tk ][ IZ2 | IZ2 | no IZ | no IZ ] -> [ tk ][ IZ2 | IZ2 | IZ1 | IZ1 ]
+late [ tk ][ IZ2 | IZ1 | IZ1 | no IZ ] -> [ tk ][ IZ2 | IZ1 | IZ1 | IZ2 ]
+
+( Pathfinding )
+startloop
+late up    [ tk ][ T IZ | no T no Wall no Door ] -> [ tk ][ T IZ | TD ]
+late down  [ tk ][ T IZ | no T no Wall no Door ] -> [ tk ][ T IZ | TU ]
+late left  [ tk ][ T IZ | no T no Wall no Door ] -> [ tk ][ T IZ | TR ]
+late right [ tk ][ T IZ | no T no Wall no Door ] -> [ tk ][ T IZ | TL ]
+endloop
+
+
+( Old targeting and "pathfinding" )
+
+(
+startloop
+late right [ tk ][Elf|] -> [ tk ][Elf|TL]
+late right [ tk ][Elf||] -> [ tk ][Elf|TL|TL]
+late right [ tk ][Elf|||] -> [ tk ][Elf|TL|TL|TL]
+late right [ tk ][Elf||||] -> [ tk ][Elf|TL|TL|TL|TL]
+late right [ tk ][Elf|||||] -> [ tk ][Elf|TL|TL|TL|TL|TL]
+late right [ tk ][Elf||||||] -> [ tk ][Elf|TL|TL|TL|TL|TL|TL]
+late right [ tk ][Elf|||||||] -> [ tk ][Elf|TL|TL|TL|TL|TL|TL|TL]
+
+late left [ tk ][Elf|] -> [ tk ][Elf|TR]
+late left [ tk ][Elf||] -> [ tk ][Elf|TR|TR]
+late left [ tk ][Elf|||] -> [ tk ][Elf|TR|TR|TR]
+late left [ tk ][Elf||||] -> [ tk ][Elf|TR|TR|TR|TR]
+late left [ tk ][Elf|||||] -> [ tk ][Elf|TR|TR|TR|TR|TR]
+late left [ tk ][Elf||||||] -> [ tk ][Elf|TR|TR|TR|TR|TR|TR]
+late left [ tk ][Elf|||||||] -> [ tk ][Elf|TR|TR|TR|TR|TR|TR|TR]
+
+late down [ tk ][Elf|] -> [ tk ][Elf|TU]
+late down [ tk ][Elf||] -> [ tk ][Elf|TU|TU]
+late down [ tk ][Elf|||] -> [ tk ][Elf|TU|TU|TU]
+late down [ tk ][Elf||||] -> [ tk ][Elf|TU|TU|TU|TU]
+late down [ tk ][Elf|||||] -> [ tk ][Elf|TU|TU|TU|TU|TU]
+late down [ tk ][Elf||||||] -> [ tk ][Elf|TU|TU|TU|TU|TU|TU]
+late down [ tk ][Elf|||||||] -> [ tk ][Elf|TU|TU|TU|TU|TU|TU|TU]
+
+late up [ tk ][Elf|] -> [ tk ][Elf|TD]
+late up [ tk ][Elf||] -> [ tk ][Elf|TD|TD]
+late up [ tk ][Elf|||] -> [ tk ][Elf|TD|TD|TD]
+late up [ tk ][Elf||||] -> [ tk ][Elf|TD|TD|TD|TD]
+late up [ tk ][Elf|||||] -> [ tk ][Elf|TD|TD|TD|TD|TD]
+late up [ tk ][Elf||||||] -> [ tk ][Elf|TD|TD|TD|TD|TD|TD]
+late up [ tk ][Elf|||||||] -> [ tk ][Elf|TD|TD|TD|TD|TD|TD|TD]
+endloop
+
+
+late down  [ tk ][no TR|TR|no TR] -> [ tk ][TR|TR|TR]
+late down  [ tk ][no TL|TL|no TL] -> [ tk ][TL|TL|TL]
+late right [ tk ][no TD|TD|no TD] -> [ tk ][TD|TD|TD]
+late right [ tk ][no TU|TU|no TU] -> [ tk ][TU|TU|TU]
+late right [ tk ][no T|TD|TD|TD|no T] -> [ tk ][TD|TD|TD|TD|TD]
+late right [ tk ][no T|TU|TU|TU|no T] -> [ tk ][TU|TU|TU|TU|TU]
+late down  [ tk ][no T|TR|TR|TR|no T] -> [ tk ][TR|TR|TR|TR|TR]
+late down  [ tk ][no T|TL|TL|TL|no T] -> [ tk ][TL|TL|TL|TL|TL]
+late right [ tk ][no T|TD|TD|TD|TD|TD|no T] -> [ tk ][TD|TD|TD|TD|TD|TD|TD]
+late right [ tk ][no T|TU|TU|TU|TU|TU|no T] -> [ tk ][TU|TU|TU|TU|TU|TU|TU]
+late down  [ tk ][no T|TR|TR|TR|TR|TR|no T] -> [ tk ][TR|TR|TR|TR|TR|TR|TR]
+late down  [ tk ][no T|TL|TL|TL|TL|TL|no T] -> [ tk ][TL|TL|TL|TL|TL|TL|TL]
+late right [ tk ][no T|TD|TD|TD|TD|TD|TD|TD|no T] -> [ tk ][TD|TD|TD|TD|TD|TD|TD|TD|TD]
+late right [ tk ][no T|TU|TU|TU|TU|TU|TU|TU|no T] -> [ tk ][TU|TU|TU|TU|TU|TU|TU|TU|TU]
+late down  [ tk ][no T|TR|TR|TR|TR|TR|TR|TR|no T] -> [ tk ][TR|TR|TR|TR|TR|TR|TR|TR|TR]
+late down  [ tk ][no T|TL|TL|TL|TL|TL|TL|TL|no T] -> [ tk ][TL|TL|TL|TL|TL|TL|TL|TL|TL]
+late right [ tk ][no T|TD|TD|TD|TD|TD|TD|TD|TD|TD|no T] -> [ tk ][TD|TD|TD|TD|TD|TD|TD|TD|TD|TD|TD]
+late right [ tk ][no T|TU|TU|TU|TU|TU|TU|TU|TU|TU|no T] -> [ tk ][TU|TU|TU|TU|TU|TU|TU|TU|TU|TU|TU]
+late down  [ tk ][no T|TR|TR|TR|TR|TR|TR|TR|TR|TR|no T] -> [ tk ][TR|TR|TR|TR|TR|TR|TR|TR|TR|TR|TR]
+late down  [ tk ][no T|TL|TL|TL|TL|TL|TL|TL|TL|TL|no T] -> [ tk ][TL|TL|TL|TL|TL|TL|TL|TL|TL|TL|TL]
+)
+
+
+
+
+( Counting )
+late [ tk ][ HP5 CD ] -> [ tk ][ HP4 ]
+late [ tk ][ HP4 CD ] -> [ tk ][ HP3 ]
+late [ tk ][ HP3 CD ] -> [ tk ][ HP2 ]
+late [ tk ][ HP2 CD ] -> [ tk ][ HP1 ]
+late [ tk ][ HP1 CD ] -> [ tk ][ HP0 ]
+late [ tk ][ HP0 CD ] -> [ tk ][ HP0 ]
+
+( Hurting )
+late [ tk ][ Health no CD ][ Elf Hit ] -> [ tk ][ Health CD ][ Elf Hit random Blood ]
+late [ tk ][ H10 CD ] -> [ tk ][ H9 ]
+late [ tk ][ H9  CD ] -> [ tk ][ H8 ]
+late [ tk ][ H8  CD ] -> [ tk ][ H7 ]
+late [ tk ][ H7  CD ] -> [ tk ][ H6 ]
+late [ tk ][ H6  CD ] -> [ tk ][ H5 ]
+late [ tk ][ H5  CD ] -> [ tk ][ H4 ]
+late [ tk ][ H4  CD ] -> [ tk ][ H3 ]
+late [ tk ][ H3  CD ] -> [ tk ][ H2 ]
+late [ tk ][ H2  CD ] -> [ tk ][ H1 ]
+late [ tk ][ H1  CD ] -> [ tk ][ H0 ]
+late [ tk ][ H0  CD ][ Elf ] -> [ tk ][ H0 ][ ElfDead ]
+
+late [ tk ][ CD ] -> [ tk ][ ]
+
+( Waiting )
+late [ tk ][ Wait ] -> [ tk ][ Wait CD ]
+late [ tk ][ W1 CD ] -> [ tk ][ ]
+late [ tk ][ W2 CD no W1 ] -> [ tk ][ W1 ]
+late [ tk ][ W4 CD no W2 no W1 ] -> [ tk ][ W2 W1 ]
+late [ tk ][ W8 CD no W4 no W2 no W1 ] -> [ tk ][ W4 W2 W1 ]
+late [ tk ][ W16 CD no W8 no W4 no W2 no W1 ] -> [ tk ][ W8 W4 W2 W1  ]
+late [ tk ][ W32 CD no W16 no W8 no W no W2 no W1 ] -> [ tk ][ W16 W8 W4 W2 W1 ]
+
+
+late [ tk ][ BWait ] -> [ tk ][ ]
+
+( Opening )
+late right [ tk ][ DoorH2  | no DoorH  ] -> [ tk ][ | ]
+late down  [ tk ][ DoorV2  | no DoorV  ] -> [ tk ][ | ]
+late right [ tk ][ SDoorH2 | no SDoorH ] -> [ tk ][ | ]
+late down  [ tk ][ SDoorV2 | no SDoorV ] -> [ tk ][ | ]
+
+
+( Clear tokens )
+late [ TK Go ] -> [ tk ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+
+message Gamlet                                                            pronunciation of "Gauntlet" (the video game) by my 4-year-old son Nooa.
+
+
+
+(
+~~~~~~~~~~~~~~~~~~~~H~~~~~~~~~~~~~~~~~~
+~~######~~~~###########~~~~~~~~~~#####~
+~~#..ww######.........############...#~
+~~#r..w#cccc#c..c............#...#...#~
+~~#w..r#cc.c#c.....c..#####..........#~
+~~#r.w.#c.c.####..#####...#..........#~
+~###.###.c.c#......#..#...#..#...#...#~
+~#.w...###.##...c..#......#..######.##~
+~#wr.....c.........#..#...#....#....#~~
+~#...w..ww.......######...#....#....#~~
+~#..r.w.w######..#....##.#######.####~~
+~#.ww....#....#.......#.....#.......#~~
+z######..#....#..#..E.#.....#.......#~~
+z#....#.r##.######....#.....#######.##~
+z#..r.........#@.#....#..........#...#~
+z#....#.r.....#..##.###..........#...#~
+z#....#########.......############...#~
+z#....#.......#.......#..........#...#~
+z#............#@......#..........#...#~
+z#....#.......#......@#..........#...#~
+z#....##########.###.######.###.##...#~
+z##.###...........#..........#...#...#~
+z~#...............#..........#.......#~
+z~#####...........############...#####~
+z~~~~~#############~~~~~~~~~~#####~~~~~
+z~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+)
+
+(
+
+~~~~~~~~~~~H~~~~~~~~~~~~~~~~~~~~~~
+~################################~
+~#..............................#~
+~#.E............................#~
+~#..............................#~
+~#..............................#~
+~#..............................#~
+~#..............................#~
+~#..............................#~
+~#..............................#~
+~#..............................#~
+~#..............................#~
+~#..............................#~
+Z#..............................#~
+Z#..............................#~
+Z#..............................#~
+Z#..............................#~
+Z#..............................#~
+Z#..............................#~
+Z#..............................#~
+Z#..............................#~
+Z#..............................#~
+Z#..............................#~
+Z#..............................#~
+Z#..............................#~
+Z################################~
+Z~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+)
+
+
+
+(
+~~~~~~~~H~~~~~~~~
+~~#############~~
+~~#...........#~~
+~~#.E.....c...#~~
+~~#...........#~~
+~~#######.....#~~
+~~~~~~~~#§.#-%#~~
+~~#######..#..#~~
+~~#www#s.c.#.c#~~
+~~#ww......####~~
+~~#w......¢#~~~~~
+~~#.c.#@######~~~
+~~#c..#.#....#~~~
+~~#.c......y.#~~~
+~~#1..###..c.#~~~
+~~#####~######~~~
+~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+)
+
+
+
+(
+message LEVEL X - Fool's Errand
+~~~H~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~###########################~~
+~~#E..........#;......#.....#~~
+~~#...........#.......#.....#~~
+~~#.....#####.#.$.$.###..##.#~~
+~~#.........#........#....#.#~~
+~~#.........#........#....#.#~~
+~~#.######..###############.#~~
+~~#.#....#...#.....#.........#~~
+~~#.#....#...#.....#.........#~~
+~~#.#.#..###.#.###.#.#.......#~~
+~~#...#.#.#.#.#...#.#.......#~~
+~~#...#.#.#.#.#...#.#.......#~~
+~~#####.#.#.#.#.###.#######~~
+~~#.......#.#.#.......#...#~~
+~~#.......#.#.#.......#...#~~
+~~#...#####.#.#######.#.#.#~~
+~~#...#.....#.....#.....#.#~~
+~~#...#.....#.....#.....#.#~~
+~~#.###.###.#####.#.#####.#~~
+~~#.#...#2#.#.#...#.#...#.#~~
+~~#.#...#.#.#.#...#.#...#.#~~
+~~#.#.###.#.#.#...#.#.#.###~~
+~~#.#.#...#...#...#.#.#...#~~
+~~#.#.#...#...#...#.#.#...#~~
+~~#.#.#.#####.###.###.###.#~~
+~~#...#...#...#...#...#...#~~
+~~#...#...#...#...#...#...#~~
+~~###.#...#.###.###.###.#.#~~
+~~#...#.....#...#x#.#...#.#~~
+~~#...#.....#...#.I.#...#.#~~
+~~#.#########.#####.#.#####~~
+~~#.#.........#...#.#.....#~~
+~~#.#.........#...#.#.....#~~
+~~###.#####...#.#.#######.#~~
+~~#.......#.....#.........#~~
+~~#.......#.....#.........#~~
+~~#########################~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+)
+
+
+(
+message LEVEL 3 - Harm's Way
+~~~~~~~~~~~~~~~~~~~~H~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~###########~######~~
+~~##:g..@....###2¢.€#~~
+~~#€..#..%......¢..g#~~
+~~#g..@........g....#~~
+~~##.........###.B..#~~
+~~##-#####...#~###.##~~
+~~#.g.#~~#$.$##~~#.#~~~
+~~#...####.B.¢#~##.##~~
+~~#..,#¢.#...g#~#...#~~
+~~#x@.#ggI..B.#~#.,.#~~
+~~#####1g#@.¢€#~#..e#~~
+~~~~~~#########~#####~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+)
+
+
+message LEVEL 1 - Welcome to The Dungeon
+
+
+~~~~~~~H~~~~~~~~~
+~#####~#########~
+~#:..###......€#~
+z#.E.......¢,..#~
+z#...###.......#~
+z#####~#......B#~
+z~~~~~~#c..##-%#~
+z#######...#..€#~
+z#B@.#s#...#¢.@#~
+z#.........#####~
+z#........¢#~~~~~
+z#..c##.#-##%##~~
+z#¢..#¢.#.....#~~
+z#...B.c#..By@#~~
+z#1¢.####.¢...#~~
+z#####~~#######~~
+z~~~~~~~~~~~~~~~~
+
+
+
+(
+~~~~~~~H~~~~~~~
+~#####~#######~
+~#...###....€#~
+z#.E.....,¢,.#~
+z#...###.....#~
+z#####~#....B#~
+z~~~~~~#c.#-%#~
+z#######..#¢€#~
+z#B..#s#..#€@#~
+z#.,......####~
+z#.......¢#~~~~
+z#.c.#.######~~
+z#¢..#.#....#~~
+z#.,B.c..By@#~~
+z#1¢.###¢...#~~
+z#####~######~~
+z~~~~~~~~~~~~~-
+)
+
+message LEVEL 2 - The Unknown Warriors
+
+
+
+~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
+~~~~~#######~~~
+~~~~~#x...:##~~
+~~~~~#..##S+%#~
+~~~~~#e.+%...#~
+~~~~~#.....S.#~
+~~~~~###.....#~
+~~~~~~~#######~
+~~~~~~~~~~~~~~~
+
+
+message LEVEL 3 - The Crypt
+
+~~~~~~~~~~~~~~~~H~~~
+~~~~~###%###~##%##~~
+~#####.¢..¢###¢.€#~~
+~#.@€#@..b.#s#...#~~
+~#¢.2#¢¢..¢I....@#~~
+~#...###-#####.b.#~~
+~#..¢##...###....#~~
+z#b.##.....#...####~
+z#.##...%b....#...#~
+z#.#...#@#...#.b..#~
+z#....%1,.%..I..y.#~
+z###...#@#.@b#....#~
+z~~##...s.....#..@#~
+z##%.b.....#...####~
+z#¢g..#...###....#~~
+z#ggg###-##~##.e.#~~
+z#¢g¢#~#.#%#~#...#~~
+z#####~#.¢€#~#####~~
+z~~~~~~#¢@.#~~~~~~~~
+z~~~~~~#####~~~~~~~~
+z~~~~~~~~~~~~~~~~~~~
+
+message LEVEL 4 - Dancing Statues
+
+(
+~~~~~~~~~~~~
+~~~~~~~~~~~~
+~~~~~~~~~~~~
+~~~~~~~~~~~~
+~~~~~####~~~
+~~~~~#.+###~
+~~~~~#..%x#~
+~~~~~#LE..#~
+~~~~~#..S.#~
+~~~~~#.:###~
+~~~~~####~~~
+~~~~~~~~~~~~
+)
+
+message LEVEL 4 - The Haunted Halls
+
+~~~~~~~~~~~~~~H~~~~~~~~~~~~~~~
+~~~#####~~~~~~~~~~~~#######~~~
+~###sxs###~######~~~#..,..#~~~
+~#.......#~#....#~~~#...@.#~~~
+~#.$@..$.#~#.e..#~~~#,.&.,#~~~
+~#.@.....#~#....#~~~#..g@.#~~~
+~#.......#~##..######g.,B.#~~~
+z#.$...$.#~~#..#¢G..##.%.##~~~
+z#.......#~~#..#.........#~~~~
+z####%#-#####..###.......####~
+z~~#@€#...#......#..##......#~
+z~~#g¢#.............##...B..#~
+z~~#¢gI.....,¢B,.....#¢..%..#~
+z~~#€.#.....¢........#.¢....#~
+z~~#¢@#...#......#######..g.#~
+z~~####%..########..¢1...g.g#~
+z~~#@.....#~#¢.......########~
+z~~#....g.#~#@...B...#~~~~~~~~
+z~~#2¢g..€#~####¢...@#~~~~~~~~
+z~~########~~~~#######~~~~~~~~
+z~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+(
+~~~~~~~~~~~~~~H~~~~~~~~~~~~~~~~~
+~~~~#####~~~~~~~~~~~~#######~~~~
+~~###sxs###~######~~~#..,..#~~~~
+~~#.......#~#....#~~~#...@.#~~~~
+~~#.$@..$.#~#.e..#~~~#,.&.,#~~~~
+~~#.@.....#~#....#~~~#..g@.#~~~~
+~~#.......#~##..######g.,B.#~~~~
+~~#.$...$.#~~#..#¢G..##.%.##~~~~
+~~#.......#~~#..#.........#~~~~~
+~~####%#-#####..###.......####~~
+~~~~#@€#...#......#..##......#~~
+~~~~#g¢#.............##...B..#~~
+~~~~#¢gI.....,¢B,.....#¢..%..#~~
+~~~~#€.#.....¢........#.¢....#~~
+~~~~#¢@#...#......#######..g.#~~
+~~~~####%..########..¢1...g.g#~~
+~~~~~#@.....#~#¢.......#######~~
+~~~~~#....g.#~#@...B...#~~~~~~~~
+~~~~~#2¢g..€#~####¢...@#~~~~~~~~
+~~~~~########~~~~#######~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+)
+
+(
+
+message LEVEL 6 - By the Fountain
+
+~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+~~#%####%##~~
+~~#.+.+#e.#~~
+~~#.&..#sy#~~
+~~#.....s.#~~
+~~###..####~~
+~~~~####~~~~~
+~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+)
+
+
+message LEVEL 5 - Gauntlet
+
+~~~~H~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~####~~#############~#####~~~~~
+~~#¢¢####,.....,#¢@R###+S+###~~~
+~~#RR#..I.b.....\RR@#b.....@#~~~
+~~#@R#x.#.......#####.@.....###~
+~###/####....b......u.$.,.$.#@#~
+~#.............,#####.......#/#~
+~#......#########~~~#...g.b...#~
+z#..%...\R@#~~~~~~~~#.$.,.$.&.#~
+z#..@...#@¢#######~~#.........#~
+z#b.....####4....#~~###...#####~
+z#..%.1.I..I...&.#~~~~#.S.#~~~~~
+z#.@...#####.....#~~###..b###~~~
+z#..b..#~~~#¢....#~##.......##~~
+z###-#########-#####.¢#.,.#@.##~
+z~#...g##S##.....#...g........#~
+z~#............¢.#..b.,.,.,.b.#~
+z~#....#####@....ff....g.....¢#~
+z~#.E..#~~~#f.¢.f###..#b,.#.¢##~
+z~######~~~#.fb..#~##...¢¢..##~~
+z~~~~~~~~~~#######~~#########~~~
+z~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+(hard sokobans...
+
+~~~~~~~~~~~
+~~~~~~~~~~~
+~~~~~~~~~~~
+~~~~~~~~~~~
+~~~~~~~~~~~
+~~~~~~~~~~~
+~~~######~~
+~~##e...##~
+~~#..s#s+#~
+~~#.#.s..#~
+~~#..s.#+#~
+~~#..#+s.#~
+~~##.+..+#~
+~~~#######~
+~~~~~~~~~~~
+
+
+
+
+~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+~~~~~~##%#~~~
+~~~~~~#..#~~~
+~~#####..#~~~
+~~#y#.s+.##~~
+~~#..+..s.#~~
+~~#.#s.&+.#~~
+~~#.#.+se##~~
+~~#.#%#.##~~~
+~~#.....#~~~~
+~~#######~~~~
+~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+
+)

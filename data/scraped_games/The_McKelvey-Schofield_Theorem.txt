@@ -1,0 +1,171 @@
+title The McKelvey-Schofield Theorem
+author Jonah Ostroff
+text_color #FEF
+run_rules_on_level_start
+norepeat_action
+
+========
+OBJECTS
+========
+
+Voter
+#AA8
+.000.
+0...0
+0...0
+0...0
+.000.
+
+OldChoice
+#D32
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Player
+#28E
+00.00
+0...0
+.....
+0...0
+00.00
+
+Goal
+#CA4
+..0..
+.....
+0...0
+.....
+..0..
+
+OldVote
+#D32
+.....
+.....
+..0..
+.....
+.....
+
+NewVote
+#28E
+.....
+.....
+..0..
+.....
+.....
+
+TieVote
+#AA8
+.....
+.....
+..0..
+.....
+.....
+
+Previous
+TRANSPARENT
+
+Counted
+TRANSPARENT
+
+Background
+#EED
+
+=======
+LEGEND
+=======
+
+@ = Player and OldChoice
+. = Background
+? = Voter
+G = Goal
+
+Votes = OldVote or NewVote or TieVote
+=======
+SOUNDS
+=======
+Sfx1 8305101
+Sfx2 35686100
+endlevel 18260100
+
+================
+COLLISIONLAYERS
+================
+Background
+Goal
+OldChoice
+Voter
+Player
+Votes
+Previous Counted
+======
+RULES     
+======
+
+(Test if more prefer new location.)
+[Action Player][NewVote no Counted][OldVote no Counted] -> [Action Player][Newvote Counted][OldVote Counted]
+[Action Player][NewVote no Counted][OldChoice] -> [Player OldChoice][NewVote][] Sfx2
+[Action Player] -> [Player] Sfx1
+
+(Clear votes)
+late [Votes] -> []
+
+(Update new preferences.)
+late [Player no OldChoice] -> [Player Previous NewVote]
+late [OldChoice] -> [OldChoice Previous OldVote]
+
+late [Previous NewVote|no Previous] -> [Previous NewVote|NewVote]
++ late[Previous OldVote|no Previous no NewVote] -> [Previous OldVote|OldVote]
++ late[Previous OldVote|NewVote no Previous] -> [Previous OldVote|TieVote]
++ late[Previous TieVote|no Previous] -> [Previous TieVote|TieVote]
++ late[Votes no Previous] -> [Votes Previous]
+
+late [Player OldChoice][OldVote] -> [Player OldChoice][TieVote]
+
+late [Previous] -> []
+late [Votes no Voter] -> []
+
+==============
+WINCONDITIONS
+==============
+
+Some OldChoice on Goal
+
+=======     
+LEVELS
+=======
+Message The gray circles are senators.
+
+Message The red square is your bill.
+
+Message Press X to propose an amendment.
+
+Message Move your bill to the yellow target.
+
+........
+.....?..
+..@.....
+....G...
+..?.....
+......?.
+........
+
+Message Senators will vote yea if an amendment is closer to their beliefs than the current version, and nay if it's farther.
+
+.................
+.................
+.................
+.................
+.......?.........
+.................
+......@........G.
+....?............
+........?........
+.................
+.................
+.................
+.................
+
+Message Yikes.

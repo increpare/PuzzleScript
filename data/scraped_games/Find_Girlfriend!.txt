@@ -1,0 +1,229 @@
+title Find Girlfriend!
+
+========
+OBJECTS
+========
+Background
+Yellow
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Girl
+White Orange Pink Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+StairsD
+Grey White
+00001
+00011
+00111
+01111
+11111
+
+StairsD2
+Grey White
+00001
+00011
+00111
+01111
+11111
+
+StairsU
+Grey White
+00001
+00011
+00111
+01111
+11111
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+P = Player
+O = Girl
+U = StairsU
+D = StairsD
+A = StairsD2
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Girl
+StairsD, StairsD2
+StairsU, Player, Wall
+======
+RULES
+======
+late [Player|Girl] -> WIN
+late [Player StairsD] -> WIN
+[> Player|StairsD2] -> [Player|StairsD2] message I'm not going down!
+[> Player|StairsU] -> [Player|StairsU] message I'm not going up!
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+message Once upon a time, there a girlfriend in lost building.
+message Can you help to find it?
+
+####..
+#..#..
+UP.###
+#....A
+#.O..#
+#..###
+####..
+
+message I'm not a girlfriend... I'm boyfriend! HAHAHAHAHA!
+message At next day...
+
+####..
+#..#..
+UP.###
+#....D
+#....#
+#..###
+####..
+
+
+######
+#....#
+#.UP.#
+#....#
+#.O..A
+#....#
+######
+
+message I'm not a girlfriend... I'm boyfriend! HAHAHAHAHA!
+message At next day...
+
+####..
+#..#..
+UP.###
+#....D
+#....#
+#..###
+####..
+
+
+######
+#....#
+#.UP.#
+#....#
+#....D
+#....#
+######
+
+..####...
+###..####
+#.......#
+#.#..#..#
+#.O.A#P.#
+######U##
+
+message I'm not a girlfriend... I'm boyfriend! HAHAHAHAHA!
+message At next day...
+
+####..
+#..#..
+UP.###
+#....D
+#....#
+#..###
+####..
+
+
+######
+#....#
+#.UP.#
+#....#
+#....D
+#....#
+######
+
+..####...
+###..####
+#.......#
+#.#..#..#
+#...D#P.#
+######U##
+
+###A####
+#......#
+#.O..UP#
+#......#
+#####..#
+....####
+
+message I'm not a girlfriend... I'm boyfriend! HAHAHAHAHA!
+message At next day...
+
+####..
+#..#..
+UP.###
+#....D
+#....#
+#..###
+####..
+
+
+######
+#....#
+#.UP.#
+#....#
+#....D
+#....#
+######
+
+..####...
+###..####
+#.......#
+#.#..#..#
+#...D#P.#
+######U##
+
+###D####
+#......#
+#....UP#
+#......#
+#####..#
+....####
+
+.#######
+.#.....#
+.#.U...#
+##.P...#
+#..O.A.#
+#......#
+########
+
+message I'm not a girlfriend... I'm boyfriend! HAHAHAHAHA!
+message Where is real?!
+message Fake girl: The girl is in the another building!
+message WHAT?
+message END

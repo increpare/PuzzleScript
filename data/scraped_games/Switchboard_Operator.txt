@@ -1,0 +1,462 @@
+title Switchboard Operator
+author Ricky Liu
+homepage www.puzzlescript.net
+
+noaction
+run_rules_on_level_start
+again_interval 0.055
+realtime_interval 0.5
+(verbose_logging)
+
+========
+OBJECTS
+========
+
+Background 
+#44c #4444d6
+00110
+01100
+11000
+10001
+00011
+
+
+
+
+Board
+#005500 #005900
+10000
+11110
+00010
+00010
+10011
+
+Wire
+#005500 Gray #005900
+20100
+22120
+11111
+00120
+20122
+
+
+
+Powered1
+#ff5 #ff1
+..1..
+..0..
+10001
+..0..
+..1..
+
+Powered2
+#ff1 #ff5
+..1..
+..0..
+10001
+..0..
+..1..
+
+
+
+Source1
+#ff5 #ff1
+01110
+11111
+11011
+11111
+01110
+
+Source2
+#ff1 #ff5
+01110
+11111
+11011
+11111
+01110
+
+Player 
+#dd0000
+.....
+.000.
+.000.
+.000.
+.....
+
+NoDown
+#005500
+.....
+.....
+.....
+..0..
+..0..
+
+NoRight
+#005500 #005900
+.....
+.....
+...10
+.....
+.....
+
+NoLeft
+#005500
+.....
+.....
+00...
+.....
+.....
+
+NoUp
+#005500 #005900
+..0..
+..1..
+.....
+.....
+.....
+
+
+H1
+#2a4 #44c #4444d6
+10..1
+10..1
+20..1
+20..2
+10..2
+
+H2
+#2a4 #44c #4444d6
+11021
+12011
+22011
+21012
+11022
+
+H3
+#2a4 #44c #4444d6
+1..01
+1..01
+2..01
+2..02
+1..02
+
+V1
+#2a4 #44c #4444d6
+11221
+00000
+.....
+.....
+11122
+
+V2
+#2a4 #44c #4444d6
+11221
+12211
+00000
+21112
+11122
+
+V3
+#2a4 #44c #4444d6
+11221
+.....
+.....
+00000
+11122
+
+FlipR
+transparent
+
+FlipL
+transparent
+
+FlipD
+transparent
+
+FlipU
+transparent
+
+Recalc
+transparent
+
+Animate
+transparent
+
+=======
+LEGEND
+=======
+
+Powered = Powered1 or Powered2
+Source = Source1 or Source2
+
+VWire = Wire and NoLeft and NoRight
+HWire = Wire and NoUp and NoDown
+Flip = FlipR or FlipL or FlipD or FlipU
+
+. = Background
+# = Board
+P = Player and Source1 and Wire and Recalc
+a = VWire and NoDown
+b = HWire and NoLeft
+c = VWire and NoUp
+d = HWire and NoRight
+e = Wire and NoDown and NoLeft
+f = Wire and NoLeft and NoUp
+g = Wire and NoUp and NoRight
+h = Wire and NoRight and NoDown
+i = VWire
+j = HWire
+k = Wire and NoDown
+l = Wire and NoUp
+m = Wire and NoRight
+n = Wire and NoLeft
++ = Wire
+
+
+=======
+SOUNDS
+=======
+
+Flip create 94383907
+EndLevel 70964300
+StartGame 70964300
+
+================
+COLLISIONLAYERS
+================
+
+Recalc
+Animate
+Background
+Board, Wire
+Powered
+Source
+NoUp
+NoDown
+NoLeft
+NoRight
+
+H1, H2, H3, V1, V2, V3
+FlipR, FlipL, FlipD, FlipU
+
+Player
+
+
+======
+RULES     
+======     
+
+(electricity animation)
+[stationary Player] [Source] -> [Player] [Source Animate]
+[Flip] [Animate] -> [Flip] []
+[Powered] [Animate] -> [Powered Animate] [Animate]
+[Source1 Animate] -> [Source2]
+[Source2 Animate] -> [Source1]
+[Powered1 Animate] -> [Powered2]
+[Powered2 Animate] -> [Powered1]
+
+(flip animation)
+[FlipR H3] -> []
+[FlipR H2 NoLeft] -> [FlipR H3 NoRight Recalc] again
+[FlipR H2] -> [FlipR H3] again
+[FlipR H1] -> [FlipR H2] again
+
+[FlipL H1] -> []
+[FlipL H2 NoRight] -> [FlipL H1 NoLeft Recalc] again
+[FlipL H2] -> [FlipL H1] again
+[FlipL H3] -> [FlipL H2] again
+
+[FlipD V3] -> []
+[FlipD V2 NoUp] -> [FlipD V3 NoDown Recalc] again
+[FlipD V2] -> [FlipD V3] again
+[FlipD V1] -> [FlipD V2] again
+
+[FlipU V1] -> []
+[FlipU V2 NoDown] -> [FlipU V1 NoUp Recalc] again
+[FlipU V2] -> [FlipU V1] again
+[FlipU V3] -> [FlipU V2] again
+
+
+(move player)
+UP [up Player no NoUp | Wire no NoDown]->[FlipU V3 | Player Wire] again
+DOWN [down Player no NoDown | Wire no NoUp]->[FlipD V1 | Player Wire] again
+LEFT [left Player no NoLeft | Wire no NoRight]->[FlipL H3 | Player Wire] again
+RIGHT [right Player no NoRight | Wire no NoLeft]->[FlipR H1 | Player Wire] again
+
+[> Player] -> [Player]
+
+
+(add power)
+[Recalc] [Powered] -> [Recalc] []
+[Recalc] [Source] -> [Recalc] [Source1 Powered1]
+
+UP [Powered no NoUp | no Powered Wire no NoDown] [Recalc]->[Powered | Powered1 Wire] [Recalc]
++ DOWN [Powered no NoDown | no Powered Wire no NoUp] [Recalc]->[Powered | Powered1 Wire] [Recalc]
++ LEFT [Powered no NoLeft | no Powered Wire no NoRight] [Recalc]->[Powered | Powered1 Wire] [Recalc]
++ RIGHT [Powered no NoRight | no Powered Wire no NoLeft] [Recalc]->[Powered | Powered1 Wire] [Recalc]
+
+[Recalc]->[]
+
+==============
+WINCONDITIONS
+==============
+
+All Wire on Powered
+No Flip
+
+=======     
+LEVELS
+=======
+
+Message Power up all the wires!
+
+Message Level 1/10: Flippin' Awesome
+
+..........
+.########.
+.#####fg#.
+.#pjjjgi#.
+.#####ii#.
+.##fg#ii#.
+.#fekjmm#.
+.#ejjjjh#.
+.########.
+..........
+
+Message Level 2/10: About Face
+
+.............
+.###########.
+.#fllllllg##.
+.#pmmmmmmmd#.
+.#ekkkkkkh##.
+.###########.
+.............
+
+Message Level 3/10: Ups and Downs
+
+...............
+.#############.
+.##fjjjjjjjjg#.
+.##ifjjjjjjgi#.
+.##iifjjjg#ii#.
+.##iiifgci#ii#.
+.#plllllllllg#.
+.#ekkkkkkkkkh#.
+.##ehehiehehi#.
+.######ejjjjh#.
+.#############.
+...............
+
+Message Level 4/10: Not So Fast
+
+.......
+.#####.
+.##c##.
+.#ngl#.
+.#plm#.
+.#ngm#.
+.#n+k#.
+.#####.
+.......
+
+Message Level 5/10: Ready Set Go
+
+.............
+.###########.
+.#pc########.
+.#+g########.
+.#i+j+j+jjg#.
+.#ii#i#i##i#.
+.#iememe+jm#.
+.#i#i#njm#i#.
+.#i#njm#ejh#.
+.#i#i#ejh###.
+.#i#ejh#####.
+.#ejh#######.
+.###########.
+.............
+
+Message Level 6/10: Four by Four
+
+.................
+.fg###########fg.
+.efljjjjjjj+jlgh.
+.#nh#######i#em#.
+.#i#####fg#i##i#.
+.#+jjjjlgh#i##i#.
+.#i####em##i##i#.
+.#i#fg##i#fm##i#.
+.#i#efljpjkhg#i#.
+.#i##nh#i##eh#i#.
+.#i##i##ng####i#.
+.#i##i#fekjjjj+#.
+.#i##i#eh#####i#.
+.#ng#i#######fm#.
+.fekj+jjjjjjjkhg.
+.eh###########eh.
+.................
+
+Message Level 7/10: One Way Maze
+.................
+.###############.
+.#########n+####.
+.#####lj+jki####.
+.###l+m#km#nl###.
+.#Pjmi###ilj+###.
+.#nl#km#n+m#km##.
+.##inj+jki###i##.
+.##+k#nl#nl#n+##.
+.##i###inj+jki##.
+.##km#n+k#km#km#.
+.###+jki###ilj+#.
+.###nl#km#l+m###.
+.####inj+jm#####.
+.##bf+k#########.
+.###eh##########.
+.###############.
+.................
+
+Message Level 8/10: You Can Count On It
+
+.........
+.#######.
+.#####c#.
+.#njjgg#.
+.#njggi#.
+.#nggii#.
+.#p+kkk#.
+.#######.
+.........
+
+Message Level 9/10: Chichen Itza
+
+.............
+.###########.
+.#fjllllljg#.
+.#ifkkkkkgi#.
+.#nmfkkkgii#.
+.#nmmfkgiii#.
+.#nmmmhiiii#.
+.#nmmejhiii#.
+.#nmejjjhii#.
+.#iejjjjjhi#.
+.#pjjjjjjjh#.
+.###########.
+.............
+
+Message Level 10/10: Horse Race
+
+............
+.##########.
+.#plllll+##.
+.#nmmhmmmg#.
+.#nmmgmhmm#.
+.#nmmmmghm#.
+.#nmmmhmgm#.
+.#nmhmgmmh#.
+.#+kjkkk+##.
+.##########.
+............
+
+Message Thanks for playing!

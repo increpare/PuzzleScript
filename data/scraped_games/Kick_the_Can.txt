@@ -1,0 +1,654 @@
+title Kick the Can
+author Mark Richardson
+again_interval 0.1
+key_repeat_interval 0.15
+
+
+========
+OBJECTS
+========
+
+Background
+#333 #444
+00000
+01111
+01111
+01111
+01111
+
+Road
+#000 #111 #222
+00120
+10000
+00002
+02000
+00010
+
+Grass
+#060 #030 #090
+00120
+10000
+00002
+02000
+00010
+
+Water
+#006 #008
+00010
+11000
+00000
+00110
+00000
+
+Move
+Black
+.....
+.....
+.....
+.....
+.....
+
+RollL
+Yellow
+.....
+.....
+0....
+.....
+.....
+
+RollR
+Yellow
+.....
+.....
+....0
+.....
+.....
+
+RollU
+Yellow
+..0..
+.....
+.....
+.....
+.....
+
+RollD
+Yellow
+.....
+.....
+.....
+.....
+..0..
+
+Wall
+Red DarkGray
+10000
+11111
+00100
+11111
+10000
+
+Window
+White Blue
+11011
+11011
+00000
+11011
+11011
+
+Barrier
+Yellow LightGray
+...0.
+..00.
+.00.1
+.0...
+1.1..
+
+ClosedDoor
+Gray LightBlue DarkGray
+00000
+01110
+01112
+00000
+00000
+
+OpenDoor
+Gray
+00...
+00...
+00...
+0....
+0....
+
+Bed
+White Red
+.000.
+.111.
+.111.
+.111.
+.111.
+
+Player
+Pink Yellow Blue Orange DarkBlue
+.111.
+.202.
+33333
+.444.
+44.44
+
+Zombie
+Green Brown Red #F00
+.000.
+.202.
+03330
+.111.
+11.31
+
+Soldier
+Pink Red Blue #999 #666
+.111.
+.202.
+44443
+.111.
+44.44
+
+
+Can
+#666 #777 #888 #999
+.....
+.....
+2223.
+11123
+0001.
+
+Dead
+#F00
+.....
+00..0
+.000.
+0..0.
+.....
+
+Sound4
+White
+.0...
+...0.
+0....
+..0..
+.....
+
+Sound3
+White
+.....
+...0.
+0....
+.....
+..0..
+
+Sound2
+White
+.....
+.0...
+.....
+.....
+...0.
+
+Sound1
+White
+.....
+.....
+..0..
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+, = Road
+' = Grass
+~ = Water
+# = Wall
+* = Background and Window
+$ = Background and Barrier
+% = Road       and Barrier
+& = Grass      and Barrier
+| = Background and ClosedDoor
+- = Background and ClosedDoor
+/ = Background and OpenDoor
+B = Background and Bed
+P = Background and Player
+Q = Road       and Player
+R = Grass      and Player
+X = Background and Zombie and Move
+Y = Road       and Zombie and Move
+Z = Grass      and Zombie and Move
+S = Background and Soldier
+T = Road       and Soldier
+U = Grass      and Soldier
+C = Background and Can
+D = Road       and Can
+E = Grass      and Can
+
+Roll     = RollL  or RollR  or RollU  or RollD
+Sound    = Sound4 or Sound3 or Sound2 or Sound1
+Obstacle = Wall or Window or Barrier or ClosedDoor or Player or Zombie or Soldier or Can
+
+
+=======
+SOUNDS
+=======
+
+SFX0 46128707 (Step)
+SFX1 43332502 (Door)
+SFX2 70464908 (Dead)
+SFX3 23431508 (Slam)
+SFX4 94600108 (Rattle)
+SFX5 47059108 (Snore)
+SFX6 76381100 (Window)
+SFX7 83050708 (Water)
+SFX8 55787708 (Gun fire)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Road, Grass, Water, Bed, OpenDoor
+Can, Dead
+Wall, Window, Barrier, ClosedDoor, Player, Zombie, Soldier
+Sound
+Move, Roll
+
+
+======
+RULES
+======
+
+(Fade sound)
+[ Sound ] -> [ action Sound ]
+[ action Sound ] [ Roll ] -> [ Sound ] [ Roll ]
+[ action Sound ] -> [ ]
+
+(Reset zombie movement)
+[ >      Player ] [ Zombie ] -> [ >      Player ] [ Zombie Move ]
+[ action Player ] [ Zombie ] -> [ action Player ] [ Zombie Move ]
+
+(Drag out death)
+[ Dead ] -> [ action Dead ]
+[ action Dead ] [ Player ] -> [ Dead ] [ Player ]
+[ action Dead no Roll ] -> restart
+[ Dead   RollR ] -> [ Dead       Sound4 ] again
+[ Dead   RollL ] -> [ Dead RollR Sound4 ] again
+[ Dead   RollD ] -> [ Dead RollL Sound4 ] again
+[ Dead   RollU ] -> [ Dead RollD Sound4 ] again
+
+(Player kicks can)
+left  [ action Player | Can ] -> [ Player | Can RollL ]
+right [ action Player | Can ] -> [ Player | Can RollR ]
+up    [ action Player | Can ] -> [ Player | Can RollU ]
+down  [ action Player | Can ] -> [ Player | Can RollD ]
+
+(Player moves can)
+[  > Player   |        Can ]               -> [ Player   | action Can Sound3 ] SFX4 again
+[    Player   | action Can | no Obstacle ] -> [ Player   | | Can Sound3 ]
+[    Obstacle | action Can | no Obstacle ] -> [ Obstacle | | Can Sound3 ]
+[ no Obstacle | action Can | no Obstacle ] -> [          | | Can Sound3 ]
+
+(Player breaks window)
+[ > Player | Window ] -> [ Player | Sound4 ] SFX6 again
+ 
+(Player operates door)
+[ action Player |   OpenDoor no Obstacle ]   -> [ Player | ClosedDoor Sound4 ]   SFX1 again
+[ action Player | ClosedDoor             | ] -> [ Player |   OpenDoor Sound4 | ] SFX1 again
+[      > Player | ClosedDoor             | ] -> [ Player |   OpenDoor Sound4 | ] SFX1 again
+[ action Player | ClosedDoor             ]   -> [ Player | ClosedDoor Sound4 ]   SFX1 again
+[      > Player | ClosedDoor             ]   -> [ Player | ClosedDoor Sound4 ]   SFX1 again
+
+(Player walks)
+[ > Player | no Obstacle ] -> [ Sound2 | Player Sound2 ] SFX0 again
+[ > Player |    Obstacle ] -> [ Player | Obstacle      ]
+
+(Player sleeps)
+[ Player    RollR     ] -> win
+[ Player    RollL     ] -> [ Player RollR Sound2      ] SFX5 again
+[ Player    RollD     ] -> [ Player RollL Sound2      ] SFX5 again
+[ Player    RollU     ] -> [ Player RollD Sound2      ] SFX5 again
+[ Player no Roll Bed ] -> [ Player RollU Sound2 Bed ] SFX5 again
+[ Player    Roll ] [ Zombie no Move ] -> [ Player Roll ] [ Zombie Move ] again
+
+(Roll can)
+[ stationary Can RollL ] -> [ left  Can left  RollL ]
+[ stationary Can RollR ] -> [ right Can right RollR ]
+[ stationary Can RollU ] -> [ up    Can up    RollU ]
+[ stationary Can RollD ] -> [ down  Can down  RollD ]
+[ > Can > Roll | no Obstacle ] -> [ > Can > Roll Sound3 |          ] SFX4 again
+[ > Can > Roll |    Window   ] -> [   Can        Sound4 | Sound4   ] SFX6 again
+[ > Can > Roll |    Zombie   ] -> [   Can        Sound4 | Zombie   ] SFX3 again
+[ > Can > Roll |    Obstacle ] -> [   Can        Sound4 | Obstacle ] SFX3 again
+
+(Things fall into water)
+[ Water Can    Roll ] -> [ Water Sound4            ] SFX7 again
+[ Water Can no Roll ] -> [ Water Sound4            ] SFX7 again
+[ Water Player      ] -> [ Water Sound4 Dead RollU ] SFX7 again
+[ Water Zombie      ] -> [ Water Sound4 Dead       ] SFX7 again
+
+(Solider shoots zombie)
+[ Soldier  |  Zombie ] -> [ Soldier Sound4  |  Dead Sound2 ] SFX8 again
+[ Soldier | | Zombie ] -> [ Soldier Sound4 | | Dead Sound2 ] SFX8 again
+
+(Expand sound)
+[ Sound4 | no Wall no Sound4 no Sound3                     ] -> [ Sound4 | Sound3 ]
+[ Sound3 | no Wall no Sound4 no Sound3 no Sound2           ] -> [ Sound3 | Sound2 ]
+[ Sound2 | no Wall no Sound4 no Sound3 no Sound2 no Sound1 ] -> [ Sound2 | Sound1 ]
+
+(Delay zombies until cans stop rolling)
+[ Zombie Move ] -> [ action Zombie Move ]
+[ action Zombie Move ] [ Can Roll ] -> [ Zombie Move ] [ Can Roll ]
+
+(Zombie eat player)
+[ action Zombie Move | Player ] -> [ Zombie | Dead Sound4 RollU ] SFX2 again
+
+(Zombie moves can)
+[ action Zombie Move Sound3   | Sound4 Can | no Obstacle ] -> [ Sound3 | Zombie Sound4 | Can Sound3 ] SFX4
+[ action Zombie Move Sound2   | Sound3 Can | no Obstacle ] -> [ Sound2 | Zombie Sound3 | Can Sound3 ] SFX4
+[ action Zombie Move Sound1   | Sound2 Can | no Obstacle ] -> [ Sound1 | Zombie Sound2 | Can Sound3 ] SFX4
+[ action Zombie Move no Sound | Sound1 Can | no Obstacle ] -> [        | Zombie Sound1 | Can Sound3 ] SFX4
+
+(Zombie follows sound)
+[ action Zombie Move Sound3   | Sound4 no Obstacle ] -> [ Sound3 | Zombie Sound4 ]
+[ action Zombie Move Sound2   | Sound3 no Obstacle ] -> [ Sound2 | Zombie Sound3 ]
+[ action Zombie Move Sound1   | Sound2 no Obstacle ] -> [ Sound1 | Zombie Sound2 ]
+[ action Zombie Move no Sound | Sound1 no Obstacle ] -> [        | Zombie Sound1 ]
+
+
+==============
+WINCONDITIONS
+==============
+
+(Never...)
+
+
+=======
+LEVELS
+=======
+
+message Oh no!  I've stayed out too late.
+message The zombies are out, and they're between me and my bed.
+message All I have is this trash can...
+message (Press X to kick cans and use doors.)
+message * Ailsa Street *
+
+#########%%%#
+#........,,,#
+#........,Q,#
+%,,,,,,,,,,,#
+%,Y,,,,,,,,,#
+%,,,,,,,,,,,#
+#.......C,,,#
+#####....,,,#
+#...#X...,,,#
+|...*....,,,#
+#...#....Y,,#
+#...|....,,,#
+#B..#....,,,#
+#########%%%#
+
+message I can't stay here.  I have to find another bed.
+message * Borg Street *
+
+#%%%###############
+%,,,,,,,,,,,,,,,.X#
+%,,,,,Y,,,,,,,,,,.#
+%,,,,,,,Y,,,,,D,,,%
+#,,,##-##..###,,,,%
+#,,,#...#..#.##,,,%
+#,,,#...#..#..##..#
+#,,,#...#..*...#..#
+#,,,#...#..#...#..#
+#,,,#.B.#..#...|.P|
+#,,,#####..*...#..#
+#,,,.......#...#..#
+#,,,.......#...#..#
+#%%%############$$#
+
+message Sometimes the beds are still warm.
+message * Crown Alley *
+
+#%%%##########
+#,,,.........$
+#,,,.........$
+#,,,###/###..#
+#,,D#.....#..#
+#,,,*.....*..#
+#,Q,#...XB#..#
+#%%%##########
+
+message * Denver Road *
+
+###############
+%,,,,,,,,,,,,,%
+%,,,,,Y,,,,,Y,%
+%,Q,,,,,,,,,,,%
+%,,,,,,,,Y,,,,%
+%,,,,,,,,,,,,,%
+###*########*##
+#......#......#
+#......#......#
+#.CC...#.....B#
+#####-###-#####
+
+(message * Enderman Close *)
+(message * Fitzroy Street *)
+
+(
+message * Grand Haven Hotel *
+
+#%%%#######################
+#,,,*...X.....#.BX.#.|....#
+#,Q,*.......C.#....#.#....#
+#,,,*.........#..../.#..B.#
+#,D,*.X.......######.######
+#,,,*.......X.#....|.#..B.#
+#,,,*.........#....#.#....#
+#,,,*.........#.B..#./X...#
+#,,,*.....X...######.######
+#,,,*.....................$
+#,,,|.....................$
+#,,,*..X..................$
+#,,,*.........######X######
+#,,,*.........#.BX.#.|X...#
+#,,D*....X....#....#.#....#
+#,,,*.........#....|.#..B.#
+#,,,*.........######.######
+#,,,*.X.......#..../.#..B.#
+#,,,*.......X.#....#.#....#
+#,,,*.........#.B..#./X...#
+#%%%#######################
+)
+
+message * Ilkew Court *
+
+#################$%%%#
+#...#.#.BX.#....#.,Q,#
+#...|.#....#B.X.#C,,,#
+#...*.#....#....#C,,,#
+#B..#.##-*###-*##.,,,#
+#####.,,,,,,,,,,,,,,,#
+#...#.Y,,D,,,,,,,,,,,#
+#...*.##-*###-*##C,,,#
+#...|.#....#....#C,,,#
+#...#.#...B#....#C,,,#
+#.B.#.#....#....#.,,,#
+#################$%%%#
+
+(message * Jester Highway *)
+
+message Is there a person in that house?
+message * Kiora Court *
+
+###########''''#
+#'''''''''#''''#
+#''''&''''#''''#
+##-*###*-#######
+#...X#....#''''#
+#....#....#''''#
+#....#....#''''#
+##-*###*-###*-##
+..........#....#
+,,,,,,,,,.#....#
+Q,,,,Y,,,.*....#
+,,,,,,,Y,.|S...#
+..........#.BB.#
+##-*###*-#######
+#....#...X#.BB.#
+#....#....#....|
+#....#....#....*
+##-*###*-##....#
+#''''&''''#....#
+#''''&''''##-*##
+###########''''#
+
+message "Hi, I'm Joe.  Sleep here tonight.  I'll keep watch."
+message "There's a survivors' refuge past the wetlands to the east.  I'm heading the other way but you should make your way there."
+
+message * Lord Malcolm Highway *
+
+######$%%%%%$%%%%%$######
+#....#.,,,,,.,,,,,.#.B..#
+#....#.,Y,,,#,,,,,C#....#
+#....#.,,,,,#,,,,,.#....#
+#....#.,,,,,#,,,,Y.#....#
+##-###.,,,,,#,,,,,.###-##
+#....#.,,,,,#,,,,,.#....#
+#....*.,,,,,#,Y,,,.$....#
+#....#.,,Y,,#,,,,,.#....#
+#....#.,,,,,#,,,,,.#....#
+##*-##.Y,,,,#,,,,,.##-*##
+$......,,,,,.,,,,,......$
+%Q,,,,,,,,,,,,,,,,,Y,,,,%
+%,,,,,,,,,,,Y,,,,,,,,,,,%
+$..X...,,,,,.,,,,,......$
+##*-##.,,,,,#,,,,,.##-*##
+#....#.,,,,,#,,,,,.#....#
+#....#.,,,,,#,,,,,.#....#
+#....#.,,,,,#,,,,,.#....#
+#....#X,,,,,#,,,,,.#....#
+##-###.,,,,,#,,Y,,.###-##
+#....#.,,,,,#,,,,,.#....#
+#....#.,,,,,#,,,,,.#....#
+#....*.,,,,,#,,,,,.$....#
+#....#.,,,,,.,,,,,.#....#
+######$%%%%%$%%%%%$######
+
+(message * Nina Crescent *)
+
+(
+message * Olivia Road x Paige Place *
+
+#%%%######%%%######%%%#
+%,,,,,,,,%,,,,,,,,,,,,%
+%,P,,,,,,%,,,,,,,,,,,,%
+%,,,,,,,,%,,,,,,,,,,,,%
+#,,,##*###,,,###*##,,,#
+#,,,#....#,,,#....#,,,#
+#,,,#....|,,X|....#,,,#
+#,,,#....#X,,#....#,,,#
+#,,,#....#,,,#....#,,,#
+#%%%##*###,X,###*##,,,#
+%,,,,,,,,,,,,,,,,,,,,,%
+%,,,,,,,,,,,,,,,,,,,,,%
+%,,,,,,,,,,,,,,,,,,,,,%
+#,,,##*###X,,###%##%%%#
+#,,,#C..C#,,X#....#,,,#
+#,,,#....|,,,|....#,,,#
+#,,,#....#,X,#....#,,,#
+#,,,#C..C#,,,#...B#,,,#
+#,,,##*###,,,###*##,,,#
+%,,,,,,,,,,,,%,,,,,,,,,
+%,,,,,,,,,,,,%,,,,,,,,,
+%,,,,,,,,,,,,%,,,,,,,,,
+#%%%######%%%######,,,#
+)
+
+message * Quiet Square *
+
+#%%%###################
+%,,,,,,,,,,,,,,,,,,,,,%
+%,Q,,,,,,D,,,,,,,,,Y,,%
+%,,,Y,,,,,,,,,,,,,,,,,%
+#,,,........X....######
+#,,,.....X.......#....#
+#,,,.........X.../....#
+#,,,X............#..X.#
+#,,,.............#....#
+#D,,.....X.......#...B#
+#,,,.............######
+#,,,.............#.X..#
+#,,,X....C....X..#....#
+#,,,............./....#
+#,,,.....X.......#....#
+#,,,.............#....#
+#,,,.............#...B#
+#%%%###################
+
+(message * Research Drive *)
+(message * Southern Parkway *)
+(message * Taurus Junction *)
+(message * Ultra Violet Boulevard *)
+
+(
+message * Wetlands Causeway *
+
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+%,,,,,,,,,,,,,,,,,,,,,%
+%,,,,,,,,,,,,,,,,,,,,,%
+%Q,,,,Y,,,,,,,,,,,,,,,%
+%,,,,,,,,,,,,,,,,,,,,,%
+%,,,,,,,,,,,,,,,,,,,,,%
+~~~C.~~~..~~~..~~~..~~~
+%,,,,,,,,,,,,,,,,,,,,,%
+%,,,,,,,,,,,,,,,,,,,,,%
+%,,,,,,,Y,,,,,,,,,,,,,%
+%,,,,,,,,,,,,,,,,,,,,,%
+%,,,,,,,,,,,,,,,,,,,,,%
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+)
+
+(message * Xiang Drive *)
+(message * Yellowstone Trail *)
+
+message This is it, the survivors' refuge!
+
+message * Route Zed *
+
+#########.,,,.#########
+#.B.B.B.#.,,,.#.B.B.B.#
+#.......|.,,,.|.......#
+#.B.B.B.#.,,,.#.B.B.B.#
+#########.,,,.#########
+..........,,,..........
+........S.,,,.S........
+#########$%%%.#########
+........$.,,,.$....X...
+..X.....$.%%%$$........
+......X...,,,..X.......
+..........,,,........X.
+..........,,Y..........
+...X....X.,,,..X...X...
+..........,,,..........
+......X...,,,X.......X.
+X.........Y,,....X.....
+..........,,,..X.......
+..X.......,Y,.........X
+.....X....,,,..........
+..........,,,..X.......
+.......X..,,,.......X..
+..X.......,Q,....X.....
+
+message You fall asleep, for the first time in many weeks, without fear.

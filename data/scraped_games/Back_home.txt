@@ -1,0 +1,547 @@
+title Back home
+author Le Slo
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+BackgroundB
+#f2f280 #1719a1 #fff9ff
+11111
+10111
+11111
+11112
+11111
+
+Background
+#824d17 #3789a2 #3a4034
+00000
+01110
+01110
+01110
+02220
+
+BackgroundB2
+#1DC3FF
+00000
+00000
+00000
+00000
+00000
+
+Target
+#824d17 #f2f280 #3a4034
+00000
+01110
+01110
+01110
+02220
+
+WallCL
+#3a4034 #66310d
+.....
+.....
+.....
+.0000
+..111
+
+WallT
+#3a4034 #66310d
+.....
+.....
+.....
+00000
+11111
+
+WallCR
+#3a4034 #66310d
+.....
+.....
+.....
+0000.
+111..
+
+WallL
+#66310d #824d17
+..001
+..011
+..001
+..011
+..001
+
+WallR
+#824d17 #66310d
+011..
+001..
+011..
+001..
+011..
+
+WallCDR
+#824d17 #66310d #3a4034
+011..
+001..
+011..
+00122
+00111
+
+Wall
+ darkgreen darkgray  yellow #49615c
+13111
+13111
+00000
+02220
+00000
+
+Player
+#1d201a #dfcb7c #cd3726
+.000.
+01110
+22122
+.222.
+.222.
+
+PlayerF
+#1d201a #dfcb7c #cd3726
+00000
+21112
+.212.
+.222.
+.222.
+
+Crate
+#5de236 #545454 #a8a8a8
+01210
+1...1
+2...2
+1...1
+01210
+
+CrateN
+#5de236 #545454 #a8a8a8
+01210
+1...1
+2...2
+1...1
+01210
+
+CrateL
+#a71f3f #545454 #a8a8a8
+01210
+1...1
+2...2
+1...1
+01210
+
+CrateNL
+#a71f3f #545454 #a8a8a8
+01210
+1...1
+2...2
+1...1
+01210
+
+Stair
+#824d17 #3a4034
+01010
+01110
+01010
+01110
+01010
+
+door
+#824d17 #622e0f #ffe434
+01110
+01110
+01120
+01110
+01110
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player and door
+* = Crate
+' = CrateL
+@ = Crate and stair
+O = Target
+s = stair
+a = WallCL and BackgroundB
+b = WallT and BackgroundB
+c = WallCR and BackgroundB
+d = WallL and BackgroundB
+e = WallR and BackgroundB
+
+f = WallCL and BackgroundB2
+g = WallT and BackgroundB2
+h = WallCR and BackgroundB2
+i = WallL and BackgroundB2
+j = WallR and BackgroundB2
+
+
+
+Players = Player or PlayerF
+Crates = Crate or CrateN or CrateL or CrateNL
+FloorP = Crates or Wall or stair or player
+FloorC = Crates or Wall or player
+Walls = Wall or WallCL or WallT or WallCR or WallL or WallR or WallCDR
+=======
+SOUNDS
+=======
+
+Crate move 86002907
+
+player move 63880907
+
+undo 82873707
+
+endlevel 61125708
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BackgroundB, door, BackgroundB2
+stair
+Target
+Players, Walls, Crates
+
+======
+RULES
+======
+
+right [ right  Player stair| Crate ] -> [  Player stair| right Crate  ] sfx0
+left [ left  Player stair| Crate ] -> [  Player stair| left Crate  ]
+[ >  Player | Crates ] -> [  > Player | > Crates  ] 
+
+Startloop
+[ >  Crate | Crate ] -> [  >  Crate | > Crate  ]
+[ >  Crate | Walls ] -> [  CrateN | Walls  ]
+[ >  Crate | CrateN ] -> [  CrateN | CrateN  ]
+endLoop
+
+
+(Devolver estado cajas)
+late[CrateN] -> [Crate]
+
+
+(Gravedad jugador)
+late down [PlayerF stair] -> [Player]
+late down [PlayerF | FloorP] -> [Player | FloorP]
+
+random down [PlayerF no stair| no Wall no Crates no stair] -> [ | PlayerF] 
+
+late down [ Player no stair| no Wall no Crates no stair] -> [ PlayerF | ] again
+
+late[PlayerF] -> [PlayerF] again
+
+(Magnetismo cajas)
+late [Crate] -> [CrateL]
+late[ CrateL | crates ] -> [  Crate | crates]
+late[ CrateNL | crates ] -> [  Crate | crates]
+
+(Gravedad cajas)
+late down [CrateNL | FloorC] -> [CrateL | FloorC]
+
+late down [CrateNL| no Wall no Crates no player] -> [ | CrateL] 
+
+late down [ CrateL no stair| no Wall no Crates no player] -> [ CrateNL | ] again
+
+(Magnetismo cajas)
+late [Crate] -> [CrateL]
+late[ CrateL | crates ] -> [  Crate | crates]
+late[ CrateNL | crates ] -> [  Crate | crates]
+late[ CrateL stair] -> [  Crate stair]
+(late down [ CrateL | stair] -> [  Crate | stair])
+
+late[CrateNL] -> [CrateNL] again 
+
+late down[Player no stair| CrateNL] -> [PlayerF | CrateNL] again
+late down[Player no stair| no FloorP] -> [PlayerF | no FloorP] again
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Player
+
+=======
+LEVELS
+=======
+
+message 1st Abbots Oaks
+
+message *searches pockets*
+
+message I lost my keys! Great! 
+
+message At least I can see my window from here.
+
+
+abbbbbbc
+d......e
+d..s...e
+d.s..o.e
+d.s..s.e
+d.s..s.e
+d.s..s.e
+d.s..s.e
+d.s.s..e
+d.s....e
+d.s.p..e
+########
+
+message 2nd Brookhouse Drive
+
+message *feels pockets*
+
+message Fantastic! 
+
+message Wait... What is that?
+
+abbbbbbc
+d......e
+d..ss..e
+d.s.**.e
+d.s....e
+d.s...oe
+d.s.p..e
+########
+
+
+message 3rd Cambrian North Street
+
+message *empties pockets*
+
+message Not again! 
+
+abbbbbbbbc
+d........e
+ds.......e
+ds@s@....e
+ds...o...e
+ds....s..e
+ds..p....e
+##########
+
+
+
+message 4th Dandelion Avenue
+
+message *touches pockets*
+
+message I should stop drinking! 
+
+abbbbbc
+ds....e
+ds*@*.e
+ds..s.e
+ds....e
+ds..o.e
+dss...e
+ds.p..e
+#######
+
+message 5th Epsom Lane
+
+message *shakes dress*
+
+message Nothing metalic...
+
+
+abbbbbbc
+d......e
+d.ss...e
+do.@*..e
+d..s...e
+d..sss.e
+d.ps.s.e
+########
+
+
+
+message 6th Furlong Moorings
+
+message *scans pockets*
+
+message Definitely classic! 
+
+abbbbbbc
+d......e
+d..s...e
+d..s...e
+d..sssoe
+d..s*..e
+d.ps*..e
+########
+
+message 7th Goldfinch Barton
+
+message ...
+
+message I'll assume the worst
+
+
+abbbbbbbc
+d.......e
+d..s....e
+d.s.s...e
+d.s*@*..e
+dos.s...e
+d.s.s...e
+d...ss..e
+d..ps...e
+#########
+
+message 8th Hawkesbury Road
+
+message *checks pockets*
+
+message Oh! The keys to my last flat. Too late now!
+
+
+abbbbbbbbbbbc
+d...........e
+d....s......e
+d.s@s.@s.o..e
+d......s....e
+d...p..'....e
+#############
+
+
+message 9th Ivy South
+
+message *digs in pockets*
+
+message I can't afford a locksmith after my electricity bill...
+
+abbbbbbbbbbc
+d......s...e
+d...@.s...oe
+d...*sss...e
+d..s*s.....e
+d.s.p......e
+############
+
+
+message 10th Halton Acre
+
+message *explores pockets*
+
+message I should really stop drinking.
+
+abbbbbbc
+d.o....e
+d....s.e
+d..s.sse
+d..s...e
+d.s**@se
+d.sp..se
+########
+
+message 11th Jo Street
+
+message *rummages pockets*
+
+message Why me?! 
+
+abbbbbbbbbbbc
+d...........e
+d..sss......e
+do....s.....e
+d.....s*s.@.e
+d....p.*.*..e
+#############
+
+
+message 12th Kempsford Square
+
+message *clears out purse*
+
+message My phone too?!
+
+abbbbbbbc
+d.......e
+d.sss...e
+d.***...e
+d.sss...e
+dss.....e
+d.s.....e
+d.s....oe
+d.s.....e
+d.s.....e
+d.s..p..e
+#########
+
+
+
+message 13th Le Slo Terrace
+
+message *inspects pockets*
+
+message But I'm not even drunk!
+
+fggggggh
+i......j
+i..*...j
+i.s*...j
+i.s*...j
+i.s*...j
+i.s...oj
+i.s....j
+i.sp...j
+########
+
+message This is the story of how G stopped moving out, and never left her place again.
+
+message The End
+
+
+
+
+(
+
+message 14th
+
+message ...
+
+message I'll assume the worst
+
+abbbbbc
+d.....e
+d.o.s.e
+d...s.e
+d.....e
+d.sss.e
+d...s.e
+d..s..e
+d.s**se
+d.s*@.e
+d..p..e
+#######
+
+
+message 15th
+
+message ...
+
+message I'll assume the worst
+
+abbbbbbc
+d.....oe
+d.s*...e
+d.s@...e
+d.s@...e
+d.s@...e
+d.ss...e
+d.s....e
+d.sp...e
+########)
+
+
+

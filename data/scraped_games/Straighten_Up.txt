@@ -1,0 +1,241 @@
+title Straighten Up
+author Ricky
+homepage puzzlescript.net
+
+run_rules_on_level_start
+========
+OBJECTS
+========
+
+Background
+#757D82 DARKGRAY
+11111
+11011
+10001
+11011
+11111
+
+Wall
+DARKBLUE #22303F
+00000
+01110
+01110
+01110
+00000
+
+GreenPlayer
+LIGHTGREEN WHITE
+.000.
+00000
+01010
+00000
+.0.0.
+
+RedPlayer
+RED WHITE
+.000.
+00000
+01010
+00000
+.0.0.
+
+LeftArm
+LIGHTGREEN
+0....
+0....
+.....
+.....
+.....
+
+RightArm
+LIGHTGREEN
+....0
+....0
+.....
+.....
+.....
+
+MoveCrate
+ORANGE BROWN
+00000
+01110
+01110
+01110
+00000
+
+FixedCrate
+ORANGE BROWN
+00000
+01110
+01110
+01110
+00000
+
+BlueCrate
+LIGHTBLUE BLUE
+00000
+01110
+01110
+01110
+00000
+
+FixedDot
+DARKBLUE
+.....
+.....
+..0..
+.....
+.....
+
+PathHoriz
+TRANSPARENT
+
+PathVert
+TRANSPARENT
+
+Flag
+TRANSPARENT
+=======
+LEGEND
+=======
+
+.=Background
+P=GreenPlayer
+R=RedPlayer
+#=Wall
+M=MoveCrate
+F=FixedCrate and FixedDot
+Crate=MoveCrate or FixedCrate
+Path=PathHoriz or PathVert
+Arm=LeftArm or RightArm
+Player=GreenPlayer or RedPlayer
+
+=======
+SOUNDS
+=======
+
+Player move 75135504
+Player cantmove 54586904
+Crate move 50916907
+Path create 36931303
+Path destroy 31553704
+sfx0 33914903
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate, Wall, RedPlayer
+PathHoriz
+PathVert
+BlueCrate
+Arm
+FixedDot
+Flag
+
+======
+RULES
+======
+
+[ > GreenPlayer | MoveCrate] -> [ > GreenPlayer | > MoveCrate]
+[ < RedPlayer | MoveCrate] -> [ < RedPlayer | < MoveCrate]
+
+late right [Crate | Crate | Crate] -> [Crate PathHoriz | Crate PathHoriz | Crate PathHoriz]
+late down [Crate | Crate | Crate] -> [Crate PathVert | Crate PathVert | Crate PathVert]
+late right [no Crate | Crate PathHoriz | Crate PathHoriz | no Crate] -> [ | Crate | Crate | ]
+late down [no Crate | Crate PathVert | Crate PathVert | no Crate] -> [ | Crate | Crate | ]
+late right [no Crate | Crate PathHoriz | no Crate] -> [ | Crate | ]
+late down [no Crate | Crate PathVert | no Crate] -> [ | Crate | ]
+late [Path no Crate] -> []
+late [Path] -> [Path BlueCrate]
+late [BlueCrate no Path] -> []
+
+late random[no Crate] -> [Flag]
+late [Flag no Crate] [Crate no Path] -> [] [Crate Flag]
+late [Flag no Crate] -> sfx0
+late [Arm] -> []
+late right [ no Arm | Player | no Arm] [Flag no Crate] -> [RightArm | Player | LeftArm] [Flag]
+late [Flag] -> []
+
+==============
+WINCONDITIONS
+==============
+
+all Crate on Path
+
+=======
+LEVELS
+=======
+
+message I/VI - Tic Tac Toe
+
+#########
+###m.m###
+###...###
+#.......#
+#.m.p.m.#
+#.......#
+###...###
+###mm.###
+#########
+
+message II/VI - No Child Left Behind
+
+#########
+###m.m###
+#.......#
+#...p...#
+#.......#
+#...m...#
+#..m.m..#
+###...###
+#########
+
+message III/VI - Connect Four
+
+#########
+#...#...#
+#..m.m..#
+#.#.p.#.#
+###.#.###
+#.#...#.#
+#..m.m..#
+#...#...#
+#########
+
+message IV/VI - You Can't Push Me Around
+
+#########
+#########
+#..###..#
+#..m...m#
+#..mp.f.#
+#..m...m#
+#..###..#
+#########
+#########
+
+message V/VI - Jack in the Box
+
+#########
+###...###
+##..m..##
+#..f.f..#
+#.m.p.m.#
+##.f.f.##
+##..m..##
+###...###
+#########
+
+message VI/VI - Stunt Double
+
+#################
+#...f.f.#...#.#.#
+#..m....#..m....#
+#...#m..#...#m..#
+#.......#.m.....#
+##m#.#####.#.#f##
+#...m...#...m...#
+#.p..#..#.p..#..#
+#################

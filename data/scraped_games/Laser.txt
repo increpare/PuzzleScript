@@ -1,0 +1,500 @@
+title Laser
+author Max
+noaction
+run_rules_on_level_start (for StartActivated)
+
+========
+OBJECTS
+========
+
+Activated
+Transparent
+
+StartActivated
+green
+
+GunShadow
+Transparent
+
+Background
+black
+
+Wall
+grey
+
+LaserWall
+grey
+00.00
+00.00
+.....
+00.00
+00.00
+
+Player
+#678 #222 red
+.101.
+.020.
+..0..
+.000.
+.0.0.
+
+
+GunUp
+#222 #666
+..1..
+.000.
+.111.
+.000.
+11111
+
+GunDown
+#222 #666
+11111
+.000.
+.111.
+.000.
+..1..
+
+GunRight
+#222 #666
+1....
+1010.
+10101
+1010.
+1....
+
+GunLeft
+#222 #666
+....1
+.0101
+10101
+.0101
+....1
+
+
+LaserUp
+#f00
+..0..
+..0..
+..0..
+..0..
+..0..
+
+
+LaserDown
+#f00
+..0..
+..0..
+..0..
+..0..
+..0..
+
+LaserLeft
+#f00
+.....
+.....
+00000
+.....
+.....
+
+LaserRight
+#f00
+.....
+.....
+00000
+.....
+.....
+
+
+BlockedLaserUp
+#f00
+.....
+.....
+..0..
+..0..
+..0..
+
+BlockedLaserDown
+#f00
+..0..
+..0..
+..0..
+.....
+.....
+
+BlockedLaserRight
+#f00
+.....
+.....
+000..
+.....
+.....
+
+
+BlockedLaserLeft
+#f00
+.....
+.....
+..000
+.....
+.....
+
+
+SwitchUpOff
+#666
+.....
+.....
+.....
+.0...
+..0..
+
+SwitchUpOn
+#666
+.....
+.....
+.....
+...0.
+..0..
+
+SwitchDownOff
+#666
+..0..
+.0...
+.....
+.....
+.....
+
+SwitchDownOn
+#666
+..0..
+...0.
+.....
+.....
+.....
+
+SwitchRightOff
+#666
+.....
+.....
+0....
+.0...
+.....
+
+SwitchRightOn
+#666
+.....
+.0...
+0....
+.....
+.....
+
+SwitchLeftOff
+#666
+.....
+.....
+....0
+...0.
+.....
+
+SwitchLeftOn
+#666
+.....
+...0.
+....0
+.....
+.....
+
+
+TargetDown
+#666 #888 grey
+22222
+22222
+22222
+00100
+.0.0.
+
+TargetUp
+#666 #888 grey
+.0.0.
+00100
+22222
+22222
+22222
+
+TargetRight
+#666 #888 grey
+2220.
+22200
+2221.
+22200
+2220.
+
+TargetLeft
+#666 #888 grey
+.0222
+00222
+.1222
+00222
+.0222
+
+
+DoorClosed
+grey #eee
+11111
+10001
+10001
+10001
+11111
+
+DoorOpen
+#eee
+00000
+0...0
+0...0
+0...0
+00000
+
+
+AntiDoorOpen
+grey
+00000
+0...0
+0...0
+0...0
+00000
+
+AntiDoorClosed
+#eee grey
+11111
+10001
+10001
+10001
+11111
+
+Goal
+yellow
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+& = LaserWall
+P = Player
+* = Goal
+? = StartActivated
+
+$ = DoorClosed
+@ = AntiDoorOpen
+
+8 = GunUp
+2 = GunDown
+6 = GunRight
+4 = GunLeft
+
+w = SwitchUpOff
+s = SwitchDownOff
+d = SwitchRightOff
+a = SwitchLeftOff
+
+i = TargetUp
+k = TargetDown
+l = TargetRight
+j = TargetLeft
+
+
+SwitchOn = SwitchUpOn or SwitchDownOn or SwitchRightOn or SwitchLeftOn
+SwitchOff = SwitchUpOff or SwitchDownOff or SwitchRightOff or SwitchLeftOff
+Switch = SwitchOn or SwitchOff
+
+BlockedLaser = BlockedLaserUp or BlockedLaserDown or BlockedLaserRight or BlockedLaserLeft
+Laser = LaserUp or LaserDown or LaserRight or LaserLeft or BlockedLaser
+Gun = GunUp or GunDown or GunRight or GunLeft
+Target = TargetUp or TargetDown or TargetRight or TargetLeft
+Door = DoorClosed or DoorOpen or AntiDoorClosed or AntiDoorOpen
+
+BlockLaser = Wall or Player or Gun or DoorClosed or AntiDoorClosed
+
+=========
+SOUNDS
+=========
+sfx0 14137301
+sfx1 29885504
+SwitchOn create 84213107
+SwitchOff create 84213107
+EndLevel 3301903
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal, Activated
+StartActivated
+GunShadow
+LaserUp
+LaserDown
+LaserRight
+LaserLeft
+BlockedLaserUp
+BlockedLaserDown
+BlockedLaserRight
+BlockedLaserLeft
+Door
+Player, Wall, LaserWall, Gun, Target
+Switch
+
+======
+RULES
+======
+
+(player can't move if stuck inside closed door)
+[ > Player DoorClosed ] -> [ Player DoorClosed ]
+[ > Player AntiDoorClosed ] -> [ Player AntiDoorClosed ]
+
+(player can't move into closed door)
+[ > Player | DoorClosed ] -> [ Player | DoorClosed ]
+[ > Player | AntiDoorClosed ] -> [ Player | AntiDoorClosed ]
+
+(player flips switch)
+[ > Player | SwitchUpOff ] -> [ | Player SwitchUpOn ]
+[ > Player | SwitchDownOff ] -> [ | Player SwitchDownOn ]
+[ > Player | SwitchRightOff ] -> [ | Player SwitchRightOn ]
+[ > Player | SwitchLeftOff ] -> [ | Player SwitchLeftOn ]
+
+[ > Player | SwitchUpOn ] -> [ | Player SwitchUpOff ]
+[ > Player | SwitchDownOn ] -> [ | Player SwitchDownOff ]
+[ > Player | SwitchRightOn ] -> [ | Player SwitchRightOff ]
+[ > Player | SwitchLeftOn ] -> [ | Player SwitchLeftOff ]
+
+(set up GunShadow. these will be used to determine whether to play laser sfx)
+[ GunShadow ] -> []
+[ Gun Laser ] -> [ Gun Laser GunShadow ]
+
+(switches activate)
+[ Activated ] -> []
+[ StartActivated ] -> [ Activated ]
+[ SwitchOn ] -> [ SwitchOn Activated ]
+
+(targets activate)
+[ LaserUp TargetDown ] -> [ LaserUp TargetDown Activated ]
+[ LaserDown TargetUp ] -> [ LaserDown TargetUp Activated ]
+[ LaserRight TargetLeft ] -> [ LaserRight TargetLeft Activated ]
+[ LaserLeft TargetRight ] -> [ LaserLeft TargetRight Activated ]
+
+(clear old lasers)
+[ Laser ] -> []
+
+(guns create lasers)
+[ Activated | GunUp ] -> [ Activated | GunUp LaserUp ]
+[ Activated | GunDown ] -> [ Activated | GunDown LaserDown ]
+[ Activated | GunRight ] -> [ Activated | GunRight LaserRight ]
+[ Activated | GunLeft ] -> [ Activated | GunLeft LaserLeft ]
+
+(maybe play laser sfx)
+[ Gun Laser no GunShadow ] -> sfx0
+
+(after this is 'late' because lasers depend on player's position after moving)
+
+(lasers propagate)
+late up [ LaserUp no Target | no LaserUp no BlockedLaserUp ] -> [ LaserUp | LaserUp ]
++ late up [ LaserUp BlockLaser ] -> [ BlockedLaserUp BlockLaser ]
+
+late down [ LaserDown no Target | no LaserDown no BlockedLaserDown ] -> [ LaserDown | LaserDown ]
++ late down [ LaserDown BlockLaser ] -> [ BlockedLaserDown BlockLaser ]
+
+late right [ LaserRight no Target | no LaserRight no BlockedLaserRight ] -> [ LaserRight | LaserRight ]
++ late right [ LaserRight BlockLaser ] -> [ BlockedLaserRight BlockLaser ]
+
+late left [ LaserLeft no Target | no LaserLeft no BlockedLaserLeft ] -> [ LaserLeft | LaserLeft ]
++ late left [ LaserLeft BlockLaser ] -> [ BlockedLaserLeft BlockLaser ]
+
+(Laser on Player sfx1)
+late [ Player Laser ] -> sfx1
+
+(switches & targets activate)
+[ Activated ] -> []
+[ SwitchOn ] -> [ SwitchOn Activated ]
+late [ LaserUp TargetDown ] -> [ LaserUp TargetDown Activated ]
+late [ LaserDown TargetUp ] -> [ LaserDown TargetUp Activated ]
+late [ LaserRight TargetLeft ] -> [ LaserRight TargetLeft Activated ]
+late [ LaserLeft TargetRight ] -> [ LaserLeft TargetRight Activated ]
+
+(doors)
+late [ DoorOpen ] -> [ DoorClosed ]
+late [ AntiDoorClosed ] -> [ AntiDoorOpen ]
+late [ Activated | DoorClosed ] -> [ Activated | DoorOpen ]
+late [ Activated | AntiDoorOpen ] -> [ Activated | AntiDoorClosed ]
+
+
+==============
+WINCONDITIONS
+==============
+
+some Player
+all Player on Goal
+
+
+=======
+LEVELS
+=======
+
+MESSAGE Level 1 of 4
+MESSAGE Laser
+
+....######
+#####...*#
+#...#.####
+#.#$k@...#
+#.#..###.#
+#a6....j$#
+#.#w8..p.#
+##########
+
+MESSAGE Level 2 of 4
+MESSAGE Laser
+
+###########
+#.$.......#
+#.l$...4#.#
+#*#k@..a#.#
+###..#..#.#
+#6s..&..j$#
+##w8##.p..#
+###########
+
+MESSAGE Level 3 of 4
+MESSAGE Laser
+###########
+#p.wwwww..#
+#..22222..#
+#.........#
+#..@@@@@..#
+#..iiiii###
+#..$$@$$.*#
+###########
+
+MESSAGE Level 4 of 4
+MESSAGE Laser
+..@.*.k6j.
+..l&4l&&4k
+.k2..2...&
+.8&......8
+.l&.....4k
+..i6.....&
+..2....p.&
+..&?..8..8
+..i6.&j6&j
+....@i....
+....l4....
+
+
+MESSAGE LASER

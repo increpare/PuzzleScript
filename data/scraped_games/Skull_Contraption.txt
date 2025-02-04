@@ -1,0 +1,333 @@
+title Skull Contraption
+author Bagingi 123
+homepage https://bagingi123.bandcamp.com/
+
+background_color #101021
+text_color RED
+
+========
+OBJECTS
+========
+
+Background
+#131322 lightgray #101021 #202039 #19192e
+23242
+42023
+20202
+32024
+24232
+
+TargetP
+white lightgray darkblue #101021
+30203
+02020
+20202
+02020
+30203
+
+
+Target
+blue lightgray darkblue #101021
+30203
+02020
+20202
+02020
+30203
+
+Target2
+pink lightgray purple #101021
+30203
+02020
+20202
+02020
+30203
+
+Target3
+LIGHTBROWN brown darkbrown #101021
+30203
+02020
+20202
+02020
+30203
+
+Target4
+brown lightbrown darkbrown #101021
+30203
+02020
+20202
+02020
+30203
+
+Target5
+green lightgreen DARKGREEN #101021
+30203
+02020
+20202
+02020
+30203
+
+
+Wall
+red darkred #101021
+20002
+00100
+00100
+00100
+10101
+
+Wall2
+red darkred #101021 #592121 #381414
+10001
+11111
+31113
+43334
+24442
+
+Wallyellow
+lightbrown brown #101021
+20002
+00100
+00100
+00100
+10101
+
+Wallyellow2
+lightbrown brown #101021 #7A512F #49301C
+10001
+11111
+31113
+43334
+24442
+
+Wallgreen
+LIGHTGREEN green #101021
+20002
+00100
+00100
+00100
+10101
+
+Wallgreen2
+LIGHTGREEN green #101021 #096509 #063f06
+10001
+11111
+31113
+43334
+24442
+
+Wallwhite
+white darkgray #101021
+20002
+00100
+00100
+00100
+20002
+
+Player
+white lightgray darkgray #101021 #dfdfe5 #c6c6cc #59595b
+30003
+02020
+46064
+54445
+35553
+
+Crate
+blue darkblue purple
+00000
+01210
+02120
+01210
+00000
+
+Crate2
+pink purple darkred
+00000
+01210
+02120
+01210
+00000
+
+Crate3
+LIGHTBROWN brown DARKBROWN 
+00000
+01210
+02120
+01210
+00000
+
+Crate4
+brown lightbrown DARKBROWN 
+00000
+01210
+02120
+01210
+00000
+
+Crate5
+LIGHTGREEN GREEN DARKBROWN 
+00000
+01210
+02120
+01210
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+$ = Wall2
+y = Wallyellow
+% = Wallyellow2
+g = Wallgreen 
+@ = Wallgreen2
+yellows = Wallyellow2
+greens = Wallgreen2
+& = Wallwhite 
+P = Player
+EpicCrate = Crate or Crate2 or Crate3 or Crate4 or Crate5
+* = Crate
+- = Crate2
+/ = Crate3
+\ = Crate4
++ = Crate5
+O = TargetP
+9 = Target
+8 = Target2
+7 = Target3
+6 = Target4
+5 = Target5
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 55681107
+Crate2 MOVE 1527507
+Crate3 MOVE 38818901
+Crate4 MOVE 54891101
+Crate5 MOVE 33066300
+Player action 89696707
+player move 97471707
+endlevel 90583902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+TargetP, Target, Target2, Target3, Target4, Target5
+Wallyellow2, Wallgreen2
+Wallwhite
+Player, Wall, Wall2, Wallgreen, Wallyellow, Crate, Crate2, Crate3, Crate4, Crate5
+
+======
+RULES
+======
+
+(CRATES)
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ < Player | Crate ] -> [ < Player | < Crate]
+[ >  Player | Crate2 ] -> [  >  Player | > Crate2  ]
+[ > Player | Crate2 ] -> [ < Player | < Crate2  ]
+[ action Player | ... | Crate3 ] -> [ Player | ... | > Crate3 ]
+[ action Player | ... | Crate4 ] -> [ Player | ... | < Crate4 ]
+[   Player |  Crate5 ] -> [  Player | > Crate5 ]
+
+(WALLS)
+
+[ > Player | yellows ] -> [ Player | yellows ]
+[ > Player | greens ] -> [ Player | greens ]
+[ > EpicCrate | Wallwhite ] -> [ EpicCrate | Wallwhite ]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on TargetP
+All Crate on Target
+All Crate2 on Target2
+All Crate3 on Target3
+All Crate4 on Target4
+All Crate5 on Target5
+
+=======
+LEVELS
+=======
+
+message LEVEL 1 - THE BONE CHURCH
+message move and grab blue crates
+
+#############
+##$$$$#$$$$##
+#$...*#9...$#
+#....###....#
+#....$#$....#
+#.....$.....$
+#p..........o
+#.....#.....#
+#....###....#
+#....$#$....#
+##...9#*...##
+#############
+$$$$$$$$$$$$$
+
+message LEVEL 2 - THE BONE HALL
+message run into purple crates to move them
+
+####################
+#$$$$$$$############
+#-*.....############
+######..############
+#$$$$$..$$$$$$$$$$$$
+$..................o
+p.......#########..#
+#.#####.#########.##
+#.$####.#####$$$$.$#
+#..$$$$.$$###.8....#
+#.....9...###......#
+####################
+$$$$$$$$$$$$$$$$$$$$ 
+
+message LEVEL 3 - THE BONE MAZE
+message press X to move yellow crates
+message you can't go through yellow blocks
+
+###########y###
+###########y###
+#$$$$$$$$$$y$$#
+#..........%.7#
+#..#######.####
+##.#######.#$$#
+##.$$$$$$#.#*-#
+##.......#.$..#
+##..###..#....#
+#######.##....#
+#######.#$.#..#
+#######.#..$..#
+$$$$$$$.#98...#
+p/......#.....#
+######..###..##
+############.##
+$$$$$$$$$$$$o$$
+
+message LEVEL 4 - THE BONE MACHINE
+message Green crates will run 1 block away from you
+message Brown crates will run into you if you press X
+message Only you can go through the white blocks
+
+######p######
+######.#$#$##
+####$#+#.#\##
+####5#.#.#.##
+####.g.$.#.##
+#$$$.@.&.#.$$
+#....#.#.#..o
+#&#&##.#.#..#
+#.$.$$&$.$..#
+#.........6.#
+#########...#
+#############
+$$$$$$$$$$$$$

@@ -1,0 +1,714 @@
+title Strong Fish
+author Verankert
+
+========
+OBJECTS
+========
+
+Background
+#0080ff #ff0000 #ff0000 #ff0000
+00000
+00000
+00000
+00000
+00000
+
+
+UpperWater
+#0080ff #ceffff #ff0000 #ff0000
+11111
+10011
+00000
+00000
+00000
+
+Sky
+#d7ffff #d7ffff #ff0000 #ff0000
+11111
+10011
+00000
+00000
+00000
+ 
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#00c800 #008040 #004040 #b4ff68
+00001
+30012
+00001
+30012
+00001
+
+PlayerL
+#ff8040 #ffffff #d7ffff #ff0000
+0...0
+00000
+.120.
+.0000
+...0.
+
+PlayerR
+#ff8040 #ffffff #d7ffff #ff0000
+0...0
+00000
+.021.
+0000.
+.0...
+
+
+Crate
+#e08f62 #a35638 #9dab86 #ff0000
+.220.
+01122
+22001
+11222
+.001.
+
+Stone
+grey darkgrey white grey
+.201.
+20001
+20001
+20001
+.201.
+
+Spikes
+grey grey darkgrey red
+.3.3.
+01212
+.2.2.
+.2.2.
+.2.2.
+
+SFish
+#ff0040 #ffffff 
+.....
+.....
+.00.0
+0100.
+.00.0
+
+BFish
+#dd4440 #ffffff 
+.00..
+0100.
+0000.
+.0000
+...0.
+(#80ffff #ffffff #c4ffff #ff0000)
+Bubble
+#0000dd #ffffff #0030ff #ff0000
+.222.
+211.2
+21..2
+2...2
+.222.
+
+=======
+LEGEND
+=======
+Player = PlayerL or PlayerR
+
+. = Background
+# = Wall
+p = PlayerR
+* = Crate
+O = Target
+U = UpperWater
+B = Bubble
+s = SFish
+t = Stone
+q = BFish
+i = Sky
+a = PlayerR and Sky
+n = Sky and Crate
+m = Sky and Stone
+z = SFish and Sky
+x = Crate and UpperWater
+l = Bubble and Crate
+h = Bubble and Sky
+r = Spikes
+CrateStone = Crate or Stone
+
+(If player should not be able to walk on walls?!)
+(Solid = Crate or Bubble or Player or Stone)
+Solid = Crate or Bubble or Player or Stone or Wall or Spikes
+PSolid = Crate or Player or Wall or Stone
+Pusher = Player or Stone
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sky
+Target,BFish,SFish
+UpperWater
+Player, Wall, Crate, Stone
+Bubble,Spikes
+
+
+======
+RULES
+======
+[left  PlayerR] ->[ left PlayerL]
+[right  PlayerL] ->[ right PlayerR]
+
+late [Crate SFish] -> [BFish]
+
+down [ Player  Sky| no Solid ] ->[down Player  Sky |]
+[> Player |no PSolid] -> [ | Player]
+[ >  Player | CrateStone ] -> [  >  Player | > CrateStone  ]
+
+(down  [Crate| no Solid] ->  [ | Crate])
+(down [Crate | Crate] -> [down Crate |  Crate])
+
+down  [ stationary CrateStone| no Solid] ->  [down CrateStone | no Solid]
+down [ Crate | down Crate no bubble] -> [down Crate | down Crate ]
+down [ Stone | down Stone] -> [down Stone | down Stone ]
+
+down [Stone | down CrateStone no bubble ] -> [down Stone | down CrateStone ]
+down [CrateStone | down Stone no bubble] -> [down CrateStone | down Stone ]
+
+
+
+
+[ >  Player | CrateStone ] -> [  >  Player | > CrateStone  ]
+
+
+
+Right [> CrateStone | CrateStone ] ->[> CrateStone |> CrateStone]
+Left [> CrateStone | CrateStone ] ->[> CrateStone |> CrateStone]
+Up [> CrateStone | CrateStone ] ->[> CrateStone |> CrateStone]
+down [ stationary Stone | stationary CrateStone] -> [ Stone | down CrateStone ]
+Down [> Crate | stationary Crate ] ->[> Crate |> Crate]
+
+
+
+[ >  Player | CrateStone ] -> [  >  Player | > CrateStone  ]
+
+down [ stationary Crate |  no bubble] -> [down Crate |]
+down [ stationary Stone] -> [down Stone]
+
+
+ ([right PlayerL] ->[PlayerR])
+
+
+
+(down [> Crate | > Crate |Bubble] ->[> Crate |Crate |Bubble])
+(
+down [> Crate |  Crate] -> [> Crate |> Crate]
+up [> Crate |  Crate] -> [> Crate |> Crate]
+right [> Crate |  Crate] -> [> Crate |> Crate]
+left [> Crate |  Crate] -> [> Crate |> Crate]
+)
+
+
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+no SFish
+
+=======
+LEVELS
+=======
+(Level 1 Learn - Push Food Up
+- You can move freely in water
+- You can push food
+- Food is affected by gravity
+(- .. but only as long as you don't push it)
+- You have to feed the fish
+)
+message Feed the small Fish
+
+iiiiiii
+iiiiiii
+uuuuuuu
+...*...
+p.##...
+#..#...
+##...s.
+####...
+######.
+
+(old version
+iiiiiii
+iiiiiii
+uuuuuuu
+...s...
+.......
+...*...
+...p...
+.bbbbb.
+.......
+)
+
+(Level 2 -
+- You can go through a bubble, but food stays on it.
+- can move food up if positioned below)
+message Oh you accidently dropped the food
+iiiiiii
+iiiiiii
+uuuuuuu
+...s...
+.p.....
+.......
+..*...#
+..#b#b#
+.##.#.#
+###...#
+
+(Level 3 - 
+Learn:
+ - Can move multipel food at once. 
+ - Can move Food horizontally without affects of gravity
+ - if multile small fish present, you have to feed ALL
+ )
+message One Child is not enough for
+iiiiiiii
+iiiiiiii
+uuuuuuuu
+.p......
+..**....
+..##....
+..###...
+.s####s.
+..####..
+
+
+message Trapped
+
+( Level 4 - 
+Learn
+ - You can always push Food through bubbles
+ - Food inside a bubble floats down like in normal Water
+ - .. if you go to far you get trapped
+)
+iiiiiii
+iiiiiii
+uuxuubu
+..*..bs
+..p..##
+bbb...#
+#i#....
+#u##...
+#s####.
+
+
+message Great View
+(Level 5
+
+Learng
+- A Crate can stay inside a bubble if there is a floor under
+- The fish can jump one tile out of the water, pushing the food up
+- It seems small fish can float in the air easily. Envy!
+)
+
+
+iiiziii
+iiihiii
+iiiiiii
+iiiiiii
+uuuuuuu
+.*...*.
+.#.b.#.
+.*...*.
+.#.p.#.
+
+
+(Level 6 maybe)
+
+
+
+(
+(Level 7 maybe -  to easy)
+iiiiiii
+iiiiiii
+iiiiiii
+uubiiii
+..biiii
+..bisii
+..bu#uu
+..b....
+..**.p.
+.***...
+bbbbb..
+)
+(
+(Level 8 maybe -  to easy)
+iiiiiii
+iiiiiii
+iiiiiii
+iiiiiii
+iiiiiii
+uubiisi
+...ub##
+.......
+..**...
+..**...
+bbpb...
+)
+(Level 6 - 
+- you can walk on bubbles if you are out of the water
+- Food falls out of water the same way
+- You can follow down falling food and move it in the air
+)
+
+message Fish against Water
+
+iiiiiii
+iiiiiii
+iiiiiii
+bbbiiiz
+...u###
+.....##
+.***..#
+.bpb..#
+
+
+message Knowledge applied
+(Level 7 - kinda hard
+- not much to learn
+- you can move through fish
+- Apply some things that were learned)
+iiiiiiii
+iiiiiiii
+iiiiiiii
+uuuxuuuu
+.#.#.*.#
+.#...###
+p..bb...
+##....#.
+##...##s
+##......
+
+
+message Living in Caves
+(Level 8 - not so hard
+- a bit strange with no water under the water
+- you can use food to stand on also!
+- Learn to move in non-water environment
+- you can go back to water from below
+)
+
+iiiiiiiiiii
+uuuuuuuuuuu
+#.....*....
+#.....*...#
+##....*...#
+###...#..##
+#####bbb###
+#ziiiiiiii#
+#haiihiiii#
+###########
+
+
+(Level 9 - not super hard
+- fish in a tube, cute
+- it looks easy at first
+- and is easy in the end)
+
+message Pyramid Scheme
+iiiiiiiiiii
+iiiiiiiiiii
+iiiiiiiiiii
+iiii#u#iiii
+iiii#s#iiii
+iiinbbbniii
+uuxbiiibxuu
+..biiaiib..
+
+( don't really know... maybe
+iiiiiiiiiii
+iiiiiiiiiii
+b##b#####ii
+b##i#####uu
+bbbiiiii#s.
+iiiibiii###
+iiiiiiiii##
+iiibibiiii#
+innnnnniiii
+bbbbbbbiiii
+...p...uuuu
+)
+
+
+
+( Level 1X
+- learn to use a stone
+- it falls through bubbles
+- it's weight takes everything below with him
+- don't worry fish lives under the rock
+)
+message The fish is alright, don't worry
+iiiiiiiii
+iiiiiiiii
+iiiiiiiii
+uuuuuuuuu
+.t.......
+##..#hhhh
+#...#iiii
+#.**#iiii
+#.bp#hhhh
+#...#uuuu
+#####s..s
+
+( not really working yet
+
+
+iiiiiiiiiii
+iiiiiiiiiii
+iiiiiiiiiii
+uuuuuuuuuuu
+...........
+...#####...
+...tt*tt.#.
+...##b##.#.
+..p......#.
+....#.#..#.
+....###.b#s
+)
+
+(Level 11
+i am unsure how difficult the level really is
+- stones are no food
+- solution may come by accident
+- stones are always blocking the way
+)
+message Stone no Food
+
+iiiii###iii
+iiii#####ii
+uuu#######u
+...t*.*t.*.
+...##.##*#.
+...##b##b#.
+.p.##s##s#.
+##....s..s.
+###########
+
+message Time is the Enemy
+(Level 12
+- a timed level, every step must be considered
+- something is missing
+- it is too easy i think)
+imiiimi
+iiimiii
+iiiiiii
+iiiiiii
+iiiiiii
+uuuuuuu
+.......
+.*.*.*.
+.b.b.b.
+p......
+..s....
+....s..
+......s
+.....b.
+
+
+(Level 13)
+(it took F some time at least, but he was not trained)
+(
+iiiiiiii####
+iiiiiiiiiiii
+iiiiiiiiiiii
+bubub#u#bbuu
+....##.#....
+b...#t.#....
+...#.*.#..b.
+..p..#b#tt..
+.b.#.b.stt..
+...##...tt..
+)
+
+message Up in the Sky
+(Level 14)
+
+iiiiiiiii
+ianiinnii
+hhhiihhhh
+iihnihiii
+iihhhhhhh
+iiiiiiiii
+iiiiiiiii
+uu#u#u#uu
+.s#s#s#s.
+
+(Level 14-B)
+(A bit harder, does not allow Fs solutions)
+(still also solvable with falling down pushing!)
+(iiiiiiiii
+ianiinnii
+hhiiihhhh
+iihnihiii
+iihhhhhhh
+iiiiiiiii
+iiiiiiiii
+..#.#.#.b
+.s#s#s#s.
+)
+
+
+message Still Standing
+(Level 15)
+(Thx to F discovery
+walking on air blocks should work?!)
+
+iiiiiiiii
+iiiihiiii
+ihhhhhhni
+iihiiihni
+iihiii###
+iihiiinz#
+iihiii###
+uubuusuuu
+..p..s...
+
+message Galton Board
+(Level 16)
+
+
+iiiiiiiiii
+iaiiiiiiii
+ibxmxxxbuu
+ibbbbbbb..
+iii#iii#..
+iiiiiii#..
+ii#i#ii#..
+iizizii#..
+i#i#i#i#..
+uuuuuuu#..
+..........
+
+message ...
+(Level 17
+to easy?, F says no)
+iiiiiiiii
+uuuxuuuxu
+...#.*.#.
+.t.bhhhb.
+.p.biiib.
+...biiib.
+..##iii##
+...#hhh#.
+.t.#zzz#.
+
+message Separated
+(leve 18
+very good, hard and simple, f 15-20min!)
+)
+
+
+iiiiiiiiiii
+iiiiiiiiiii
+uuuubibuuuu
+.*..bib....
+.t.*bib#.s.
+.p.#bib....
+....bib....
+....bib....
+bbbbbibbbbb
+hhhhhihhhhh
+hhhhhihhhhh
+iiiiiiiiiii
+
+message The Top
+(Level 19)
+
+
+iiiiiiiiiii
+iiiiiiiiiii
+iiiiiiiiiii
+iiiiiiiiiii
+iiiiiiiiiii
+iiiiiiiiiii
+iiiiiziiiii
+iiiih#hiiii
+iiihiiihiii
+iihiiaiihii
+bxxxxlxxxxb
+bbbbbbbbbbb
+
+(
+(Work on this...)
+a#iiiziii
+m#iiiiiii
+i#iiiiiii
+inbu*uuuu
+inb.****.
+hn###h###
+ih#......
+iih......
+ii#......
+uu#......
+
+(and this...)
+
+iiiiaiiii
+ihxxxxxbu
+ihhhhhhb.
+iii#iii#.
+iiiiiii#.
+#i#i#ii#.
+zizizii#.
+i#i#i#i#.
+uuuuuuu#.
+.........
+)
+(
+iiiiiii
+iiiiiii
+iiiiiii
+u#uuu.u
+.#....p
+.#***##
+..bbb..
+.#...#.
+.#...#s
+.#...#.
+..b....
+
+
+
+
+iii.iii
+siiiiii
+#piiiii
+u#buubu
+.......
+.......
+.......
+.......
+.......
+
+
+
+iiiiii
+iiiiii
+uuuuuu
+.*...s
+.#..*#
+...**.
+..pbb.
+......
+s.....
+)

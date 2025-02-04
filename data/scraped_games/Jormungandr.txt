@@ -1,0 +1,365 @@
+title Jormungandr
+author Franklin P. Dyer
+(edited one square to be solvable by Joel Fox)
+noaction
+zoomscreen 10x10
+text_color Green
+color_palette c64
+
+========
+OBJECTS
+========
+
+Background ,
+Lightgreen Green
+00000
+00000
+00000
+00000
+00000
+
+Water .
+Blue
+
+Black -
+Black
+
+Tree i
+Darkgreen Darkbrown
+..0..
+.000.
+.000.
+00000
+..1..
+
+Rock x
+Gray Darkgray
+.001.
+00001
+00001
+00001
+00001
+
+House o
+Lightgray Red Brown
+.111.
+11111
+.000.
+.020.
+.020.
+
+Building b
+gray yellow brown
+.000.
+.101.
+.000.
+.101.
+.020.
+
+HeadUp ^
+#198c19 #004c00 Yellow
+0...0
+00.00
+02000
+00000
+.000.
+
+HeadDown v
+#198c19 #004c00 Yellow
+.000.
+00000
+00020
+00.00
+0...0
+
+HeadLeft <
+#198c19 #004c00 Yellow
+0000.
+.0200
+..000
+.0000
+0000.
+
+HeadRight >
+#198c19 #004c00 Yellow
+.0000
+0020.
+000..
+0000.
+.0000
+
+Tail1
+#198c19 #004c00 Yellow
+.000.
+.111.
+.000.
+.111.
+.000.
+
+Tail2
+#198c19 #004c00 Yellow
+.....
+01010
+01010
+01010
+.....
+
+Tail3
+#198c19 #004c00 Yellow
+.000.
+0100.
+0010.
+0001.
+.....
+
+Tail4
+#198c19 #004c00 Yellow
+.000.
+.0010
+.0100
+.1000
+.....
+
+Tail5
+#198c19 #004c00 Yellow
+.....
+0001.
+0010.
+0100.
+.000.
+
+Tail6
+#198c19 #004c00 Yellow
+.....
+.1000
+.0100
+.0010
+.000.
+
+Endup
+#198c19
+.000.
+.000.
+.000.
+..0..
+.....
+
+Enddown
+#198c19
+.....
+..0..
+.000.
+.000.
+.000.
+
+Endleft
+#198c19
+.....
+000..
+0000.
+000..
+.....
+
+Endright
+#198c19
+.....
+..000
+.0000
+..000
+.....
+
+Upmarker
+Transparent
+
+Downmarker
+Transparent
+
+Leftmarker
+Transparent
+
+Rightmarker
+Transparent
+
+Someout
+Transparent
+
+Good
+Transparent
+
+Bad
+Transparent
+
+=======
+LEGEND
+=======
+
+Player = HeadUp  or HeadDown or HeadLeft or HeadRight
+Tail = Tail1 or Tail2 or Tail3 or Tail4 or Tail5 or Tail6
+LeftyTail = Tail3 or Tail5 or Tail2
+RightyTail = Tail4 or Tail6 or Tail2
+UppyTail = Tail4 or Tail3 or Tail1
+DownyTail = Tail5 or Tail6 or Tail1
+Marker = upmarker or downmarker or leftmarker or rightmarker
+End = endup or enddown or endleft or endright
+Obstacle = rock or tree
+Snakepart = player or end or tail
+Curvetail = tail3 or tail4 or tail5 or tail6
+Dot = house or building
+
+r = tail2 and rightmarker
+e = endright and rightmarker
+$ = someout and water
+
+=======
+SOUNDS
+=======
+
+SFX0 10999102
+
+================
+COLLISIONLAYERS
+================
+
+Someout, Good, Bad
+Marker
+Background
+Water
+Tail, End, Dot
+Player, Black, Obstacle
+
+======
+RULES
+======
+
+(DO NOT TOUCH ANY OF THIS STUFF)
+
+[> Player|Tail] -> cancel
+[> Player|End] -> cancel
+[> Player|Obstacle] -> cancel
+[> Player|No background] -> cancel
+
+[UP Player] -> [Up HeadUp upmarker]
+[DOWN Player] -> [Down HeadDown downmarker]
+[LEFT Player] -> [Left HeadLeft leftmarker]
+[RIGHT Player] -> [Right HeadRight rightmarker]
+
+[Tail upmarker] -> [UP tail1 upmarker]
+[Tail downmarker] -> [DOWN tail1 downmarker]
+[Tail leftmarker] -> [LEFT tail2 leftmarker]
+[Tail rightmarker] -> [RIGHT tail2 rightmarker]
+
+[End upmarker][> Player|No dot] -> [UP End ][> Player|No dot]
+[End downmarker][> Player|No dot] -> [DOWN End ][> Player|No dot]
+[End leftmarker][> Player|No dot] -> [LEFT End ][> Player|No dot]
+[End rightmarker][> Player|No dot] -> [RIGHT End ][> Player|No dot]
+
+LATE[End upmarker] -> [ Endup upmarker]
+LATE[End downmarker] -> [ Enddown downmarker]
+LATE[End leftmarker] -> [ Endleft leftmarker]
+LATE[End rightmarker] -> [ Endright rightmarker]
+
+LATE RIGHT[Rightmarker|Tail Upmarker] -> [Rightmarker|Tail3 Upmarker]
+LATE DOWN[Downmarker|Tail leftmarker] -> [downmarker|Tail3 leftmarker]
+LATE RIGHT[Rightmarker|Tail Downmarker] -> [rightmarker|Tail5 downmarker]
+LATE UP[Upmarker|Tail Leftmarker] -> [upmarker|Tail5 leftmarker]
+LATE LEFT[leftmarker|Tail Upmarker] -> [leftmarker|Tail4 upmarker]
+LATE DOWN[downmarker|Tail rightmarker] -> [downmarker|Tail4 rightmarker]
+LATE LEFT[leftmarker|Tail downmarker] -> [leftmarker|Tail6 downmarker]
+LATE UP[upmarker|Tail rightmarker] -> [upmarker|Tail6 rightmarker]
+
+UP[> Player |Dot] -> [upmarker Tail1|Player]
+DOWN[> Player |Dot] -> [downmarker Tail1|Player]
+LEFT[> Player |Dot] -> [leftmarker Tail2|Player]
+RIGHT[> Player |Dot] -> [rightmarker Tail2|Player]
+
+(DO NOT TOUCH ANY OF THIS STUFF)
+
+LATE[Someout][Curvetail water]->[Bad][Curvetail water]
+LATE[Someout][Snakepart no water] -> [Good][Snakepart no water]
+LATE[Someout]->[Bad]
+LATE[Snakepart][Bad]->[][Bad] SFX0
+LATE[Good]->[Someout]
+
+
+==============
+WINCONDITIONS
+==============
+
+No dot
+
+=======
+LEVELS
+=======
+
+message After sleeping for ten million years, you awake. And you are hungry for villagers.
+message Eat as many houses as possible. When travelling across water, make sure to leave part of yourself on land at all times or you will fall in. 
+message Also, don't try to change directions while crossing the water. This will also cause you to fall in.
+
+$...........................................................
+.....................ixx....................................
+..i,,x,.............,i,,x....................,,,,...........
+..er>,,,,,........,,,x,oi,..........,,,.....,,,i,...........
+...,,,i,,,......,,,,x,,,,,i.......,i,,x,.......,,,,.........
+...,i,,,,,.....,,,,,,ii,,,,,.....i,,,iio,.......,x,.........
+....,,i,x,,,...,,,,x,,,,x,,,.....,,,,,,,x......x,,,.........
+...,,,,i,,,,i.,,,x,,,,i,,,,,.....x,,,,xi,.......,o,.........
+..,,,iii,,x,,,,,x,i,,,,,,x,.......,,x,,,.........,x.........
+..,,,,i,,,.i,i,,xo,i,,,x,,.........,,,,..........,,x........
+...x,,,,,x..,,ii,,o,x,,,,........................x,i........
+.............,,,,,,i,ii,.........................x,x........
+.................................................i,i........
+..................................................,i........
+............................................................
+............................................................
+............................................................
+............................................................
+............................................................
+............................................................
+............................................................
+.................................ii,,i...........i,ii.......
+......................,,,,,,,,,,,i,,,,,,,......iii,i,i......
+.....................,,,,,,i,,,,,x,i,,i,,,,...i,,,,,,ii.....
+....................i,,xixi,ixi,,,i,xiii,,,,,,i,xiii,i,.....
+...................,,,,i,o,,,,,i,,,,,,,i,,iii,i,i,,i,,,i....
+...................ix,,,x,,,,,i,,,,i,,,,x,i,i,,,,,,i,i,,i...
+.....................,,,i,i,i,x,,x,io,,ox,,,ixiiii,i,i,ii...
+.....................x,,,i,,,i,,,,,,x,,i,,,,,,x,,iix,i,i....
+......................iiiixi,,,,,,,,,ii,x,,,,,,,,,,,,i......
+............................iiiii,,,,,i,,,,,xiixx,,,i.......
+.................................ixi,,,,,ii......iix........
+...............,....................iixxi...................
+..............,,............................................
+.........,,..,i,x,x.........................................
+........,i,,x,,,,,,,........................................
+.........,,,,,,,i,,,,.......................................
+.........,i,,,x,,x,i,.......................................
+.........,,xi,,,,,,x,.............,,........................
+........,x,x..,i.................x,,,................i,.....
+.......x,x,x....................,,ii,,,.............,,,,....
+........,i,,..ii...............,i,x,,,,,,...........,i,x....
+.............x,,x.............i,,,,i,,,i,............,,.....
+............x,,,,.............,,,,x,,,,,....................
+...........,ii,,,.............,,o,,i,,,,....................
+...........,x,,.................,i,,,,,.....................
+............,i..................x,,,,,......................
+..................................,i,.......................
+....................................................ii,ii...
+...................................................x,,,,,,..
+..................................................,,,i,,i,..
+.............................,ii,i,...............,,,,,o,...
+............................,xo,x,,i...............x,i,x....
+............................,i,,,,,i.................x,.....
+.............................i,,,,,i,.......................
+.............................,i,iix,x.......................
+.....,i,.....................x,x,,,,........................
+....i,,,,,....................,,,...........................
+...,,o,oi,,.................................................
+...i,i,,,i,,................................................
+............................................................
+............................................................
+
+message Mmm, delicious. Time to sleep off a couple pounds
+
+message Zzz...
+
+message Okay, I'm hungry again.

@@ -1,0 +1,149 @@
+Author Connorses
+Title Jump Fox
+
+noundo
+
+realtime_interval 0.2
+
+========
+OBJECTS
+========
+background
+lightblue
+
+fox_R2
+orange red
+.....
+..00.
+.1100
+0.11.
+.0..0
+
+fox_R1
+orange red
+.....
+..00.
+.1100
+0.11.
+.000.
+
+fox_L2
+orange red
+.....
+.00..
+0001.
+.11.0
+0..0.
+
+fox_L1
+orange red
+.....
+.00..
+0001.
+.11.0
+.000.
+
+floor
+darkbrown lightbrown brown
+11111
+02202
+00000
+00000
+00000
+
+wall
+darkbrown
+
+goal
+green brown darkbrown black
+00000
+03330
+03330
+02220
+01110
+
+turtle_R
+green darkgreen
+.....
+.....
+.000.
+.0001
+.1.1.
+
+turtle_L
+green darkgreen
+.....
+.....
+.000.
+1000.
+.1.1.
+
+move
+transparent
+
+=======
+LEGEND
+=======
+. = background
+# = wall
+% = floor
+f = fox_R1
+t = turtle_R
+
+player = fox_R1 or Fox_R2 or fox_L1 or fox_L2
+
+solid = wall or floor
+
+turtle = turtle_L or turtle_R
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+background
+goal
+move
+player, turtle, solid
+======
+RULES
+======
+[vertical player] -> cancel
+
+[move no player] -> [ ]
+
+[stationary fox_R2 move] -> [right fox_R1 move]
+[stationary fox_L2 move] -> [left  fox_L1 move]
+
+[right player no move] -> [fox_R2 move]
+[left  player no move] -> [fox_L2 move]
+
+[right fox_R1 move] -> [right fox_R1]
+[left  fox_L1 move] -> [left  fox_L1]
+
+(How to check player didn't move:)
+( [player no move] [x1] -> [player] [x2])
+[player no move] [stationary turtle_R] -> [player] [right turtle_R]
+[player no move] [stationary turtle_L] -> [player] [left  turtle_L]
+
+right [right turtle|solid] -> [left  turtle_L|solid]
+left  [left  turtle|solid] -> [right turtle_R|solid]
+
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+......
+.f....
+%%%%%%
+#....#
+#t...#
+%%%%%%

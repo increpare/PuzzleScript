@@ -1,0 +1,404 @@
+Title Don't Play On the Ice
+Author Loneship Games
+(scanline)
+background_color darkblue
+text_color #F5F5FF
+color_palette mastersystem
+key_repeat_interval 0.15
+again_interval 0.12
+run_rules_on_level_start
+noaction
+========
+OBJECTS
+========
+background
+darkblue
+
+level1
+red
+.....
+.....
+..0..
+.....
+.....
+
+level1B
+red
+.....
+...0.
+.....
+.0...
+.....
+
+player
+black darkred red
+.111.
+.222.
+00000
+.000.
+.....
+
+pU
+black darkred red
+.111.
+.222.
+00000
+.000.
+.....
+pD
+black darkred red
+.111.
+.222.
+00000
+.000.
+.....
+pL
+black darkred red
+.111.
+.222.
+00000
+.000.
+.....
+pR
+black darkred red
+.111.
+.222.
+00000
+.000.
+.....
+
+ice1
+blue white
+00000
+01000
+00001
+10000
+00000
+
+ice2
+lightblue white
+00010
+01000
+00101
+10000
+00101
+
+iceB
+blue white
+01010
+0.010
+010.0
+01010
+0.010
+
+iceC
+blue white
+00000
+1.11.
+00000
+11.11
+00000
+
+shore
+#F5F5FF
+
+rock
+lightgrey grey
+.000.
+00000
+00000
+00000
+10001
+
+tree
+green darkgreen brown lightgreen
+..2..
+30011
+.111.
+.222.
+.....
+
+treetop
+green darkgreen brown lightgreen
+.....
+..3..
+.301.
+..2..
+30011
+
+exit1
+transparent white
+00101
+00010
+00001
+00000
+00000
+
+exit2
+transparent white
+10100
+01000
+01000
+00000
+00000
+
+exit3
+transparent white
+00000
+00000
+01000
+10100
+01000
+
+exit4
+transparent white
+00000
+00000
+00010
+00000
+00011
+
+end
+red
+.000.
+0...0
+0...0
+0...0
+.000.
+
+end1
+pink
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+end2
+red
+..0..
+.0.0.
+0...0
+.0.0.
+..0..
+=======
+LEGEND
+=======
+~ = background (water)
+P = player and shore and end1
+m = player and shore
+n = shore and end1
+1 = ice1
+2 = ice2
+# = shore
+O = rock and shore
+0 = rock and ice1
+t = tree and shore
+e = exit1
+f = exit2
+g = exit1 and exit2
+h = exit3
+i = exit3 and exit4
+j = exit4
+k = exit1 and exit4
+l = exit2 and exit3
+Q = level1 and shore
+wall = rock or tree
+move = pu or pd or pr or pl
+ice = ice1 or ice2
+
+exit = exit1 or exit2 or exit3 or exit4
+=======
+SOUNDS
+=======
+sfx0 23633307
+sfx1 43003708(64226908)(73994308)
+sfx2 39217108 (A wild exit appeared!)
+================
+COLLISIONLAYERS
+================
+background
+ice, iceB, iceC shore
+end,end1,end2
+exit1
+exit2
+exit3
+exit4
+player, move, wall
+level1, level1B
+treetop
+======
+RULES
+======
+(end)
+[end2] -> [end]
+[end1] -> [end2]
+[end2] [ice] -> [end1] [ice]
+[end2] -> [end2] sfx2 again
+
+(tutorial message)
+late [level1] -> [level1B]
+late [level1B] [ice] -> [level1] [ice]
+late [level1B] [player] -> [ ] [player] Message Level complete! Go back to the exit.
+
+(visual stuff)
+up [tree|no treetop] -> [tree|treetop]
+up [rock ice|no shore no ice] -> [rock| ]
+(remove breaking ice)
+[iceB] -> [ ]
+[iceC] -> [ ]
+
+(stop player on shore)
+[move shore] -> [player shore]
+[move exit] -> [player exit]
+
+(player falls in water)
+[player no ice no shore no exit] -> [ ]
+[move no ice no shore no exit] -> [ ]
+
+[> player | no ice no shore no exit] -> cancel
+
+(start sliding)
+[up player   ] -> [up    pU] again
+[down player ] -> [down  pD] again
+[left player ] -> [left  pL] again
+[right player] -> [right pR] again
+
+(stop at obstacles)
+up    [pU | wall] -> [player | wall]
+down  [pD | wall] -> [player | wall]
+left  [pL | wall] -> [player | wall]
+right [pR | wall] -> [player | wall]
+
+(break ice under the player)
+[pU ice1] -> [up    pU iceB] again
+[pD ice1] -> [down  pD iceB] again
+[pL ice1] -> [left  pL iceC] again
+[pR ice1] -> [right pR iceC] again
+
+[pU ice2] -> [up    pU ice1] again
+[pD ice2] -> [down  pD ice1] again
+[pL ice2] -> [left  pL ice1] again
+[pR ice2] -> [right pR ice1] again
+==============
+WINCONDITIONS
+==============
+some player on end
+no ice
+no move (prevents bug when player is sliding)
+=======
+LEVELS
+=======
+
+jiiiiiiiiiiih
+ko##########l
+k####11#####l
+k#t#1111####l
+k###11#1####l
+k##p######q#l
+k##o######t#l
+k###########l
+egggggggggggf
+
+jiiiiiiiiiiih
+k###########l
+kt##########l
+k####1o1##t#l
+k###11111###l
+k####111####l
+k#o#########l
+k###t##p####l
+egggggggggggf
+
+jiiiiiiiiiiih
+k##o##p#o###l
+k###########l
+k##1111111##l
+kt#1111011##l
+k##1101111##l
+k##1111111#tl
+k###########l
+egggggggggggf
+
+jiiiiiiiiiiih
+k#t####t#oo#l
+kt###1#####tl
+k##111t11#t#l
+ko#11##11#t#l
+k##111111##tl
+k####111####l
+ktt#######p#l
+egggggggggggf
+
+jiiiiiiiiiiih
+k###########l
+k####2222##pl
+k##2211112##l
+k#221111122#l
+k#22o111122#l
+k###111112##l
+k###########l
+egggggggggggf
+
+jiiiiiiiiiiih
+k###p#######l
+k#t#2212##t#l
+k###2212####l
+kt##1101####l
+k###2221t###l
+k###t##t####l
+k###########l
+egggggggggggf
+
+jiiiiiiiiiiih
+k#########o#l
+k#o####222##l
+k###t12111#ol
+k##2222111##l
+kp#2101111##l
+k##1111111##l
+k########totl
+egggggggggggf
+
+jiiiiiiiiiiiiih
+k#############l
+k#####2221####l
+k####111112###l
+k##p22210121##l
+k###11101221##l
+k###1111111###l
+k#####1211####l
+k#############l
+egggggggggggggf
+
+jiiiiiiiiiiih
+k###o#######l
+k###11112###l
+k##110~~11#ol
+kop10~~~11##l
+k##21~~~11##l
+k###2111####l
+k###########l
+egggggggggggf
+
+~~~~~~~~~~~~~
+jiiii~ototh~~
+k####o####oh~
+k#t##21###toh
+k###12121##tl
+k###12121###o
+k##p##11##o#t
+k######0####o
+k######ot#otf
+egggggg~etgf~
+
+~~~~~~~~~~~~~
+~~totttotto~~
+~o##o######t~
+t###11111##ot
+o#o1111111##t
+t#11####11##t
+to111o##11##o
+ot#111#11##pt
+t#n###o#####t
+~ggggg~ggggg~

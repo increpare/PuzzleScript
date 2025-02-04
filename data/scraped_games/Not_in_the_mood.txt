@@ -1,0 +1,752 @@
+title Not in the mood
+author Le Slo
+homepage www.puzzlescript.net
+
+norepeat_action
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#067C54 #067C54
+11111
+01111
+11101
+11111
+10111
+
+Blackground
+#067C54 #067C54
+11111
+01111
+11101
+11111
+10111
+
+Background2
+#08a46f
+00000
+00000
+00000
+00000
+00000
+
+BackgroundA
+#067c54 #08a46f
+00011
+00011
+00011
+00011
+00011
+
+BackgroundAA
+#067c54 #08a46f
+01111
+01111
+01111
+01111
+01111
+
+Background2A
+#08a46f #067c54
+00011
+00011
+00011
+00011
+00011
+
+Background2AA
+#08a46f #067c54
+01111
+01111
+01111
+01111
+01111
+
+
+Sym01
+#535353 #2f2a29 #e4f5ff #14a1ff
+01110
+11111
+12311
+11111
+01110
+
+Sym02
+#535353 #2f2a29 #9a9a9a #e4f5ff #14a1ff
+01210
+11311
+23432
+11311
+01210
+
+Sym03
+#535353 #2f2a29 #e4f5ff #14a1ff #9a9a9a
+01110
+11211
+12341
+11411
+01110
+
+Sym04
+#535353 #2f2a29 #e4f5ff #9a9a9a #14a1ff
+01210
+11311
+23432
+11311
+01210
+
+
+
+SymP01
+#535353 #2f2a29 #c6ff53 #14a1ff
+01110
+11111
+12311
+11111
+01110
+
+SymP02
+#535353 #2f2a29 #8bb33a #c6ff53 #14a1ff
+01210
+11311
+23432
+11311
+01210
+
+
+SymP03
+#535353 #2f2a29 #c6ff53 #14a1ff #8bb33a
+01110
+11211
+12341
+11411
+01110
+
+SymP04
+#535353 #2f2a29 #c6ff53 #8bb33a #14a1ff
+01210
+11311
+23432
+11311
+01210
+
+
+cursorAT
+#1398f1 #0bbeff
+.....
+.....
+.....
+.....
+01111
+
+cursorA
+#1186d4 #1398f1 #0bbeff #0e6fb0
+01112
+01112
+01112
+00001
+33333
+
+
+SymA01
+#2f2a29 #535353 #14a1ff #e4f5ff #9a9a9a
+00110
+00000
+20043
+00000
+00110
+
+SymA02
+#9a9a9a #2f2a29 #535353 #e4f5ff #14a1ff
+01221
+31111
+43013
+31111
+01221
+
+SymA03
+#2f2a29 #535353 #e4f5ff #14a1ff #9a9a9a
+00110
+20000
+34024
+40000
+00110
+
+SymA04
+#e4f5ff #2f2a29 #535353 #9a9a9a #14a1ff
+01221
+31111
+43010
+31111
+01221
+
+
+
+SymAP01
+#2f2a29 #535353 #14a1ff #c6ff53 #8bb33a
+00110
+00000
+20043
+00000
+00110
+
+SymAP02
+#8bb33a #2f2a29 #535353 #c6ff53 #14a1ff
+01221
+31111
+43013
+31111
+01221
+
+
+SymAP03
+#2f2a29 #535353 #c6ff53 #14a1ff #8bb33a
+00110
+20000
+34024
+40000
+00110
+
+SymAP04
+#c6ff53 #2f2a29 #535353 #8bb33a #14a1ff
+01221
+31111
+43010
+31111
+01221
+
+
+SymAAP01
+#535353 #2f2a29 #8bb33a #c6ff53 #14a1ff
+00121
+11131
+12343
+11131
+00121
+
+SymAAP02
+#535353 #2f2a29 #c6ff53 #8bb33a #14a1ff
+00111
+11121
+31243
+11131
+00111
+
+SymAAP03
+#535353 #2f2a29 #c6ff53 #8bb33a #14a1ff
+00121
+11131
+12343
+11131
+00121
+
+SymAAP04
+#535353 #2f2a29 #c6ff53 #14a1ff
+00111
+11111
+21231
+11111
+00111
+
+SymAA01
+#535353 #2f2a29 #9a9a9a #e4f5ff #14a1ff
+00121
+11131
+12343
+11131
+00121
+
+SymAA02
+#535353 #2f2a29 #e4f5ff #9a9a9a #14a1ff
+00111
+11121
+31243
+11131
+00111
+
+SymAA03
+#535353 #2f2a29 #e4f5ff #9a9a9a #14a1ff
+00121
+11131
+12343
+11131
+00121
+
+SymAA04
+#535353 #2f2a29 #e4f5ff #14a1ff
+00111
+11111
+21231
+11111
+00111
+
+
+Cursor1
+transparent
+
+Cursor2
+transparent
+
+Cursor3
+transparent
+
+Cursor4
+transparent
+
+CursorV1
+transparent
+
+CursorV2
+transparent
+
+CursorV3
+transparent
+
+CursorV4
+transparent
+
+tileN
+transparent
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+TB
+#b00808
+.000.
+.000.
+.000.
+.....
+.....
+
+GB
+#c6ff53
+.000.
+.000.
+.000.
+.....
+.....
+
+
+
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+CornerCTL
+#9a9a9a #bbb #937121 #7c7c7c
+.0111
+00222
+32222
+32220
+32221
+
+CornerCT
+#bbb #937121 #7c7c7c #535353
+00000
+11111
+11111
+22222
+33333
+
+CornerCTR
+#bbb #937121 #7c7c7c
+0000.
+11100
+11110
+21110
+21110
+
+
+
+CornerCL
+#7c7c7c #937121 #bbb
+01112
+01112
+01112
+01112
+01112
+
+CornerCR
+#7c7c7c #937121 #bbb
+01112
+01112
+01112
+01112
+01112
+
+
+CornerCBL
+#7c7c7c #937121 #bbb #535353
+01112
+01111
+00111
+30000
+.3333
+
+CornerCB
+#bbb #937121 #7c7c7c #535353
+00000
+11111
+11111
+22222
+33333
+
+CornerCbR
+#9a9a9a #937121 #bbb #7c7c7c #535353
+01112
+11112
+11100
+33304
+4444.
+
+
+TileTop
+#9a9a9a #bbb
+.....
+.....
+.....
+.....
+01111
+
+
+Tile
+#7c7c7c #937121 #9a9a9a #535353 #bbb
+01114
+01114
+01114
+00002
+33333
+
+Effect01
+#FF1818 #937121 #9a9a9a #535353 #bbb
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+
+
+
+Effect02
+#c6ff53 #937121 #9a9a9a #535353 #bbb
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+counter4
+transparent
+
+counter3
+transparent
+
+counter2
+transparent
+
+counter1
+transparent
+
+counter0
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+¿ = Background2
+? = Blackground
+¡ = Blackground and target
+* = Crate
+@ = Background2 and Target
+5 = Blackground and cursorA
+O = Target
+1 = Sym01 and counter4
+2 = Sym02
+3 = Sym03
+4 = Sym04
+a = SymP01
+b = SymP02
+c = SymP03
+d = SymP04
+
+e = CornerCTL
+f = CornerCT
+g = CornerCTR
+h = CornerCL
+i = CornerCR
+j = CornerCBL
+k = CornerCB
+l = CornerCBR
+
+r = cursorA
+auxCursors = Cursor1 or Cursor2 or Cursor3 or Cursor4
+
+Symb = Sym01 or 2 or 3 or 4 or SymA01 or SymA03 or SymA04 or SymA02 or SymAP01 or SymAP02 or SymAP03 or SymAP04  or SymAA01 or SymAA03 or SymAA04 or SymAA02 or SymAAP01 or SymAAP02 or SymAAP03 or SymAAP04
+PlayerB = a or b or c or d 
+Player = playerB or cursorA
+Wall = e or f or g or h or i or j or k or l 
+
+cursorG1 = Cursor1 or cursorV1
+cursorG2 = Cursor2 or cursorV2
+cursorG3 = Cursor3 or cursorV3
+cursorG4 = Cursor4 or cursorV4
+
+validCursor = cursorV1 or cursorV2 or CursorV3 or CursorV4
+
+Effects = Effect01 or Effect02
+
+counters = counter0 or counter1 or counter2 or counter3 or counter4
+=======
+SOUNDS
+=======
+
+startgame  71002308
+
+(Colocar bien)
+sfx0 66533708
+
+(Sacar)
+
+sfx1 54116908
+
+(Crear)
+
+sfx2 73731701
+
+(Empujar)
+
+sfx3 4003708
+
+(Invertir)
+
+sfx4 31116108
+
+(Atraer)
+
+sfx5 62322108
+
+(Fallar)
+sfx6 68211304
+
+endlevel  71002308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Background2, background2a, Background2AA, BackgroundAA, BackgroundA, Blackground
+counters
+Target
+
+Wall, Crate, Symb, Tile
+
+auxCursors, cursorV1, CursorV2, CursorV3, CursorV4, tileN
+Player
+TB, GB
+Effects
+TileTop , cursorAT
+
+
+======
+RULES
+======
+
+
+[> CursorA | wall][> playerB] -> [CursorA | Wall] [playerB]
+[> CursorA | Tile][> playerB] -> [CursorA | Tile] [playerB]
+
+[ vertical PlayerB ] -> [ PlayerB]
+
+
+[right SymP01] [Sym02] -> [Sym01][SymP02 ]
+[right SymP02] [Sym03] -> [Sym02][SymP03 ]
+[right SymP03] [Sym04] -> [Sym03][SymP04 ]
+[right SymP04] [Sym01] -> [Sym04][SymP01 ]
+
+[left SymP01] [Sym04] -> [Sym01][SymP04 ]
+[left SymP02] [Sym01] -> [Sym02][SymP01 ]
+[left SymP03] [Sym02] -> [Sym03][SymP02 ]
+[left SymP04] [Sym03] -> [Sym04][SymP03 ]
+
+[Effect02] -> []
+[Effect01] -> []
+
+[symAAP01] -> [symP02] 
+[symAAP02] -> [symP03] 
+[symAAP03] -> [symP04] 
+[symAAP04] -> [symP01] 
+
+[symAA01] -> [sym02] 
+[symAA02] -> [sym03] 
+[symAA03] -> [sym04] 
+[symAA04] -> [sym01] 
+
+[BackgroundAA]	-> [Background2]
+[Background2AA]	-> [Blackground]
+
+[BackgroundA]	-> [BackgroundAA]
+[Background2A]	-> [Background2AA]
+
+
+
+[symAP01] -> [symAAP01] again
+[symAP02] -> [symAAP02] again
+[symAP03] -> [symAAP03] again
+[symAP04] -> [symAAP04] again
+
+[symA01] -> [symAA01] again
+[symA02] -> [symAA02] again
+[symA03] -> [symAA03] again
+[symA04] -> [symAA04] again
+
+(Convert Symbol in action)
+
+[action symP01] [cursorA] -> [symP01] [cursor1]
+[action symP02] [cursorA] -> [symP02] [cursor2]
+[action symP03] [cursorA] -> [symP03] [cursor3]
+[action symP04] [cursorA] -> [symP04] [cursor4]
+
+(Create Wall == 1)
+
+left[cursorG1 | no Wall no Tile] [counter4]		-> [cursorV1 | Tile Effect02] [counter3]sfx2
+left[cursorG1 | no Wall no Tile] [counter3]		-> [cursorV1 | Tile Effect02] [counter2]sfx2
+left[cursorG1 | no Wall no Tile] [counter2]		-> [cursorV1 | Tile Effect02] [counter1]sfx2
+left[cursorG1 | no Wall no Tile] [counter1]		-> [cursorV1 | Tile Effect02] [counter0]sfx2
+left[cursorG1 | no Wall no Tile] [counter0]		-> [cursor1 | ] [counter0] sfx1 message You can't overproduce
+
+(Switch Walls == 3)
+
+[no Wall no tile| cursorG3 | tile]  	-> [tileN | cursorV3 | Effect02] sfx4
+[no Wall no tile| cursorG3 | tile]  	-> [tileN | cursorV3 | Effect02] sfx4
+[no Wall no tile| cursorG3 | tile]  	-> [tileN | cursorV3 | Effect02] sfx4
+[no Wall no tile| cursorG3 | tile]  	-> [tileN | cursorV3 | Effect02] sfx4
+
+(Pull Walls == 2)
+
+[cursorG2 | no tile no wall | tile] 	-> [cursorV2 | tile | Effect02] sfx5
+[cursorG2 | no tile no wall | tile] 	-> [cursorV2 | tile | Effect02] sfx5
+[cursorG2 | no tile no wall | tile] 	-> [cursorV2 | tile | Effect02] sfx5
+[cursorG2 | no tile no wall | tile] 	-> [cursorV2 | tile | Effect02] sfx5
+	
+(Push Walls == 4)
+ 
+[cursorG4 | tile | no tile no wall]		-> [cursorV4 | Effect02 | tile] sfx3
+[cursorG4 | tile | no tile no wall]		-> [cursorV4 | Effect02 | tile] sfx3
+[cursorG4 | tile | no tile no wall]		-> [cursorV4 | Effect02 | tile] sfx3
+[cursorG4 | tile | no tile no wall]		-> [cursorV4 | Effect02 | tile] sfx3
+
+(Valid Move --> Symbol Change)
+[validCursor ][SymP01] [Sym02] [Sym03] [Sym04]-> [validCursor ][SymAP01][SymA02] [SymA03] [SymA04] 
+[validCursor ][SymP02] [Sym03] [Sym04] [Sym01]-> [validCursor ][SymAP02][SymA03] [SymA04] [SymA01]
+[validCursor ][SymP03] [Sym04] [Sym01] [Sym02]-> [validCursor ][SymAP03][SymA04] [SymA01] [SymA02]
+[validCursor ][SymP04] [Sym01] [Sym02] [Sym03]-> [validCursor ][SymAP04][SymA01] [SymA02] [SymA03]
+
+
+
+
+[TileN] -> [Tile]
+[cursorV1] -> [cursorA]
+[cursorV2] -> [cursorA]
+[cursorV3] -> [cursorA]
+[cursorV4] -> [cursorA]
+
+
+[SymA01] [Blackground] [Background2]-> [SymA01] [BackgroundA] [Background2A]
+[SymA02] [Blackground] [Background2]-> [SymA02] [BackgroundA] [Background2A]
+[SymA03] [Blackground] [Background2]-> [SymA03] [BackgroundA] [Background2A]
+[SymA04] [Blackground] [Background2]-> [SymA04] [BackgroundA] [Background2A]
+
+[Effect02] -> [Effect02] again 
+[SymA01] -> [SymA01] again
+[SymA02] -> [SymA02] again
+[SymA03] -> [SymA03] again
+[SymA04] -> [SymA04] again
+
+(If no effect, animation)
+left [cursor1 | ] -> [cursor1 | Effect01] again sfx6
+[cursor3 | ] -> [cursor3 | Effect01] again sfx6
+[cursor2 | | ] -> [cursor2 | | Effect01] again sfx6
+[cursor4 | ] -> [cursor4 | Effect01] again sfx6
+
+[auxCursors] -> [cursorA]
+
+late up [Tile | No TileTop] -> [Tile | TileTop]
+late down [TileTop | No Tile] -> [ | ]
+
+late up [CursorA | No cursorAT] -> [CursorA | cursorAT]
+late down [CursorAT | No cursorA] -> [ | ]
+
+
+late[TB no Tile] -> []
+late[GB no Tile] -> []
+
+late[Tile no Target no TB] -> [Tile TB] 
+late[Tile  Target no GB] -> [Tile Target GB] sfx0
+
+
+(right [ right SymP01 | Sym02 ] -> [ Sym01 | SymP02 ]
+right [ right SymP02 | Sym03 ] -> [ Sym02 | SymP03 ]
+right [ right SymP03 | Sym04 ] -> [ Sym03 | SymP04 ]
+right [ Sym01 | Sym02 | Sym03 | right SymP04] -> [ SymP01 | Sym02 | Sym03 | Sym04 ]
+
+right [ left SymP01 | Sym02 | Sym03 | Sym04] -> [ Sym01 | Sym02 | Sym03 | SymP04 ]
+left [ left SymP02 | Sym01 ] -> [ Sym02 | SymP01 ]
+left [ left SymP03 | Sym02 ] -> [ Sym03 | SymP02 ]
+left [ left SymP04 | Sym03 ] -> [ Sym04 | SymP03 ])
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Tile
+no TB
+no SymA01
+no SymA02
+no SymA03
+no SymA04
+
+=======
+LEVELS
+=======
+
+message Transform, Reject, Create, Concentrate
+
+message Press X to try
+
+........
+.effffg.
+.h@?¿¡h.
+.i¿5¿?i.
+.i¿?¿?i.
+.i@?¿¡i.
+.jkkkkl.
+.effffg.
+.h3d12i.
+.jkkkkl.
+........
+
+message Create, Concentrate, Transform, Reject
+
+
+

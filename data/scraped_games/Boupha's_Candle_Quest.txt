@@ -1,0 +1,361 @@
+title Boupha's Candle Quest
+author hyperme
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background 
+LightGreen
+ 
+
+Wall 
+Black Brown
+11101
+00000
+10111
+00000
+11101
+
+Player 
+Orange Green Blue
+.000.
+.000.
+11111
+.222.
+.2.2.
+
+Dead
+LightGrey
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+Pumpkin 
+Orange BLACK
+.000.
+01010
+00000
+01110
+.000.
+
+Unpumpkin
+Blue White
+.000.
+01010
+00000
+01110
+.000.
+
+Zombie
+DarkGrey White Blue
+.000.
+.000.
+11111
+.222.
+.2.2.
+
+Qumpkin
+Purple Black
+.000.
+01010
+00000
+01110
+.000.
+
+Skull
+White Red
+.000.
+.010.
+00000
+.0.0.
+.0.0.
+
+Switch
+Blue LightBlue
+.....
+.111.
+.101.
+.111.
+.....
+
+Candle
+Orange White Yellow
+.....
+..0..
+..1..
+..1.2
+.2222
+
+Brain
+Grey Yellow DarkGrey
+.000.
+02200
+02000
+.0001
+....1
+
+
+Rocket
+RED BLACK
+..0..
+.010.
+.000.
+00000
+0.0.0
+
+Door
+Blue LightBlue
+01010
+10001
+00000
+10001
+01010
+
+OpenDoor
+LightBlue
+0...0
+.....
+.....
+.....
+0...0
+
+OpenAntiDoor
+Pink
+0...0
+.....
+.....
+.....
+0...0
+
+AntiDoor
+Red Pink
+01010
+10001
+00000
+10001
+01010
+
+Temp
+White
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = Candle
+R = Rocket
++ = Pumpkin
+- = Unpumpkin
+* = Zombie
+B = Brain
+/ = Qumpkin
+\ = Skull
+' = Switch
+D = Door
+A = OpenAntiDoor
+
+Weight = Player or Pumpkin or Unpumpkin or Zombie or Qumpkin or Brain
+*kin = Pumpkin or Unpumpkin or  Qumpkin
+Monster = Zombie or Skull
+
+
+=======
+SOUNDS
+=======
+
+Candle Destroy 71773500
+*kin Move 92579507
+
+SFX0 51534704 (Die)
+SFX1 74133705 (Teleswap)
+SFX2 9809702 (Pumpkin Smashed)
+SFX3 84157304 (Brain Eaten)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Switch, Rocket, Candle
+OpenDoor, OpenAntiDoor
+Dead
+Player, Temp, Wall, Pumpkin, Zombie, Unpumpkin, Qumpkin, Door, AntiDoor, Skull, Brain
+
+
+======
+RULES     
+======     
+
+[ >  Player | Pumpkin ] -> [  >  Player | > Pumpkin  ]
+[ <  Player | Unpumpkin ] -> [  <  Player | < Unpumpkin  ]
+[ Zombie |...| Brain] -> [ > Zombie |...| Brain]
+[ Zombie |...| Player] -> [ > Zombie |...| Player]
+
+late [ Monster | Player] -> [ Monster | Dead] SFX0
+late [ Zombie | Brain] -> [ Zombie | ] SFX3 
+
+[ >  Player | Candle ] -> [  >  Player | No Candle]
+
+[ Action Player | *kin ] -> [ Player | ] SFX2
+
+
+late [Player |...| Qumpkin] -> [Qumpkin |...| Temp] SFX1
+late [Temp] -> [Player]
+
+(Doors)
+late [ Weight Switch][Door] -> [Weight Switch][OpenDoor]
+late [ No Weight Switch][OpenDoor] -> [Switch][Door]
+(Anti Doors)
+late [ Weight Switch][OpenAntiDoor No Weight] -> [Weight Switch][AntiDoor]
+late [ No Weight Switch][AntiDoor] -> [Switch][OpenAntiDoor]
+
+==============
+WINCONDITIONS
+==============
+    
+No Candle
+All Player On Rocket
+All Rocket On Player
+
+=======     
+LEVELS
+=======
+
+message Collect all Candles.
+message Then get to the Rocket.
+
+#########
+#...c...#
+#.......#
+#.p.c.r.#
+#.......#
+#...c...#
+#########
+
+message Pumpkins can be pushed.
+message Hold down all switchs to open doors.
+
+###########
+###..+..d.#
+###.....#c#
+#p.'.+..###
+###.....#r#
+###.....d.#
+###########
+
+#########
+#.....#c#
+#.....#d#
+#.p.....#
+#......r#
+#.......#
+##'#++..#
+##c#'c+.#
+#########
+
+message Unpumpkins can be pulled.
+
+###########
+####...#.r#
+####-.'#d##
+###.......#
+#-'.p..'.-#
+###.......#
+####'.-#d##
+####...#.c#
+###########
+
+###########
+#cd...#####
+#d..+.'####
+#r.p...'c-#
+#d..+.'####
+#cd...#####
+###########
+
+message Use Action to Gourdslay!
+
+###########
+#c#####.###
+#-.##....##
+#p..+.#cr.#
+#-.##....##
+#c####..###
+###########
+
+
+##########
+###...+.'#
+#cdr...+c#
+#cdp...+c#
+###...+.'#
+##########
+
+message Anti-doors close when doors open
+message Also, avoid Skeletons.
+
+###########
+#\#...#...#
+#'..c.a.r.#
+#.#...#...#
+#.##d######
+#.....+..c#
+#'.p..+..c#
+###########
+
+message Zombies like to eat Brains.
+message You might say it's their favourite food.
+
+#########
+#.....dr#
+#..'+-'d#
+#.......#
+#.......#
+#.p######
+####b'.*#
+#########
+
+message You have a brain!
+message Don't let zombies eat it.
+
+.\.#######
+...#...dr#
+####....d#
+#cp......#
+#........#
+#.#.+.####
+#*#..c''*#
+##########
+
+###############
+#.............#
+#.............#
+#......p......#
+#...#a#a#a#...#
+#...#'#'#'#...#
+#...#b#b#b#...#
+#...*#.#.#*...#
+#d...*.r.*...d#
+#cd.........dc#
+###############
+
+message Quantum Pumpkins switch with you.
+
+#######.....
+#c...p#.....
+#.....######
+##.####r..c#
+#\.\#.#./..#
+##.####....#
+#.....######
+#./.......c#
+#.........c#
+############
+

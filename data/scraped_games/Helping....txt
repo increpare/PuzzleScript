@@ -1,0 +1,261 @@
+title Helping...
+author Karam Byun
+homepage www.byunnnn.com
+color_palette whitingjp
+(debug)
+key_repeat_interval 0.5
+run_rules_on_level_start
+(verbose_logging)
+scanline
+zoomscreen 7x4
+
+youtube 0njLoYAHvhI
+
+========
+OBJECTS
+========
+
+Background 
+GREEN lightgreen
+00000
+00010
+01000
+00010
+10000
+
+Object o
+Green
+
+Target 
+DarkBlue    
+
+Wall 
+lightbrown black darkbrown
+00010
+02000
+00020
+20000
+10020
+
+Wall2 a
+lightbrown black darkbrown
+00010
+01102
+00020
+10000
+20022
+
+
+next N
+green
+
+helping y
+green
+
+Door d
+brown darkbrown black
+.101.
+01010
+01012
+01010
+01010
+
+Player 
+Red Blue Black
+
+.0000
+.0202
+.0000
+.0000
+.0..0
+
+PlayerR P
+Red Blue Black darkred
+
+.3000
+.3202
+.3300
+.3333
+.3..3
+
+PlayerL 
+Red Blue Black darkred
+
+0003.
+2023.
+0033.
+0333.
+0..3.
+
+PlayerDL
+Red Blue Black darkred
+
+.....
+0033.
+2023.
+0003.
+3333.
+
+PlayerDR
+Red Blue Black darkred
+
+.....
+.3300
+.3202
+.3333
+.3333
+
+Key k
+yellow black
+.....
+.....
+000..
+0.000
+000.0
+
+Sobby s
+white Blue Black gray
+
+.....
+0033.
+1013.
+0003.
+3333.
+
+Crate 
+Orange 
+
+Msg1 M
+green
+
+Msg2 Q
+green
+
+Msg3 E
+green
+
+Temp t
+Red Blue Black
+
+.000.
+.101.
+22222
+.000.
+.0.0.
+
+lib l
+red
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+Player = PlayerR or playerL or PlayerDR or PlayerDl
+* = Crate
+@ = Crate and Target
+O = Target
+Object = key or crate
+
+=======
+SOUNDS
+=======
+
+Player Move Left Right 2202507
+key move left right 19864100
+door destroy 52208108
+(closemessage 58068106)
+Endgame 
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+lib,msg1,msg2,msg3
+Target,next,door,helping
+Player,PlayerR, PlayerL,PlayerDR,PlayerDL, Wall,Wall2, object,crate,key, sobby
+temp
+
+======
+RULES     
+======     
+(Sprite Movement)
+[Left PlayerR] ->  [PlayerL] 
+[Right PlayerL]-> [PlayerR]
+
+[down PlayerR] -> [PlayerDR]
+[right PlayerDR]-> [PlayerR]
+[left PlayerDR]-> [PlayerL]
+
+[down PlayerL] -> [PlayerDL]
+[right PlayerDL]-> [PlayerR]
+[left PlayerDL]-> [PlayerL]
+
+(Basic Moving)
+[ >  Player | object ] -> [  >  Player | > object ]
+
+(Ending)
+[Right Player | helping]->[PlayerDR|win]
+
+(Sobby reactions)
+[action Player| sobby]->[< Player | > sobby] message sob... sob... who are you?
+[sobby helping] -> [helping] message I wanted to live...
+
+(To next screen)
+[ RIGHT Player next ] -> [win]
+
+(messages)
+late [ Key Door ] -> [ ] message sob... sob...
+late [msg1 player]->[player] message why... why?
+late [msg2 player]->[player] message you... you shouldn't come...
+late [msg3 player]->[player]
+
+==============
+WINCONDITIONS
+==============
+
+  (No winning conditions)   
+
+=======     
+LEVELS
+=======
+
+MESSAGE You hear sobbing in the distance
+
+#a######a###
+.P..m......N
+###a##a###a#
+#
+
+Message no... please go away...
+
+#a###a######a#
+P.....q......N
+#a##a####aa###
+#a
+Message go away... go away...
+
+##a#########a###
+P...k.....de...N
+#######aa#####a#
+###########a###a
+Message sob... sob... sob...
+Message can you please help me?
+
+########aa.
+P.....s...y
+##a####a##.
+##########.
+Message She can now rest in peace
+Message The End
+
+
+
+
+
+
+
+

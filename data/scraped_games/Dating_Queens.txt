@@ -1,0 +1,443 @@
+title Dating Queens
+author Pedro Rabinovitch
+homepage http://twitter.com/kathrrak
+run_rules_on_level_start
+require_player_movement 
+noaction
+color_palette ega 
+
+========
+OBJECTS
+========
+
+Background 
+LightGrey LightGrey
+00000
+00010
+10000
+00100
+00000
+
+Target1 O
+Red DarkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target2 W
+Blue DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Glass +
+LightBlue White
+00000
+0..10
+0...0
+0...0
+00000
+
+DLMirror |
+LightBlue White DarkGrey
+02222
+01222
+.0122
+..012
+...00
+
+DLMirror1
+LightBlue White DarkGrey DarkRed
+02222
+01222
+30322
+..012
+..300
+
+DLMirror2
+LightBlue White DarkGrey DarkBlue
+02222
+01222
+30322
+..012
+..300
+
+URMirror \
+LightBlue White DarkGrey
+00...
+210..
+2210.
+22210
+22220
+
+URMirror1
+LightBlue White DarkGrey DarkRed
+003..
+210..
+22303
+22210
+22220
+
+URMirror2
+LightBlue White DarkGrey DarkBlue
+003..
+210..
+22303
+22210
+22220
+
+ULMirror /
+LightBlue White DarkGrey
+...00
+..012
+.0122
+01222
+02222
+
+ULMirror1 
+LightBlue White DarkGrey DarkRed 
+..300
+..012
+30322
+01222
+02222
+
+ULMirror2
+LightBlue White DarkGrey DarkBlue
+..300
+..012
+30322
+01222
+02222
+
+DRMirror ?
+LightBlue White DarkGrey
+22220
+22210
+2210.
+210..
+00...
+
+DRMirror1 
+LightBlue White DarkGrey DarkRed 
+22220
+22210
+22103
+210..
+003..
+
+DRMirror2
+LightBlue White DarkGrey DarkBlue
+22220
+22210
+22103
+210..
+003..
+
+
+AngryQueen
+Purple Green Pink
+..1..
+.121.
+.000.
+.202.
+.000.
+
+Queen1 I
+DarkRed Black Orange
+..1..
+.121.
+.000.
+.202.
+.000.
+
+Queen2 Q
+DarkBlue Yellow Pink
+..1..
+.121.
+.000.
+.202.
+.000.
+
+Wall 
+DarkGrey
+
+Player 
+DarkGreen Black Orange
+.111.
+.222.
+20102
+.000.
+.2.2.
+
+
+Buddy 
+Green DarkRed Orange
+.111.
+.222.
+20102
+.000.
+.2.2.
+
+HSight1
+Red DarkRed
+.....
+.....
+.1.1.
+.....
+.....
+
+VSight1
+Red DarkRed
+.....
+..1..
+.....
+..1..
+.....
+
+HSight2
+Blue DarkBlue
+.....
+.....
+.1.1.
+.....
+.....
+
+VSight2
+Blue DarkBlue
+.....
+..1..
+.....
+..1..
+.....
+
+Conflict
+Red
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Buddy
+Queen = Queen1 or Queen2
+Follower = Queen
+Pushable = Queen1 or Buddy or Queen2
+Pullable = Queen1 or Queen2 or Buddy
+
+Sight1 = HSight1 or VSight1
+Sight2 = HSight2 or VSight2
+Sight = Sight1 or Sight2
+
+LMirror1 = ULMirror1 or DLMirror1
+UMirror1 = ULMirror1 or URMirror1
+LMirror2 = ULMirror2 or DLMirror2
+UMirror2 = ULMirror2 or URMirror2
+
+DMirror1 = DRMirror1 or DLMirror1
+RMirror1 = DRMirror1 or URMirror1
+DMirror2 = DRMirror2 or DLMirror2
+RMirror2 = DRMirror2 or URMirror2
+
+Mirror = ULMirror or URMirror or DRMirror or DLMirror or UMirror1 or UMirror2 or DMirror1 or DMirror2
+
+Blocking = Buddy or Wall or Player or Mirror 
+Opaque = Blocking or Queen
+Obstacle = Blocking or Glass
+
+RView1 = HSight1 or Queen1 or RMirror1
+LView1 = HSight1 or Queen1 or LMirror1
+UView1 = VSight1 or Queen1 or UMirror1
+DView1 = VSight1 or Queen1 or DMirror1
+HView1 = HSight1 or Queen1
+VView1 = VSight1 or Queen1
+
+RView2 = HSight2 or Queen2 or RMirror2
+LView2 = HSight2 or Queen2 or LMirror2
+UView2 = VSight2 or Queen2 or UMirror2
+DView2 = VSight2 or Queen2 or DMirror2
+HView2 = HSight2 or Queen2
+VView2 = VSight2 or Queen2		
+
+HView = HView1 or HView2
+VView = VView1 or VView2
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target1, Target2
+HSight1, HSight2
+VSight1, VSight2, Conflict
+Queen1, Player, Wall, Buddy, Queen2, AngryQueen, Glass, ULMirror, ULMirror1, ULMirror2, DRMirror, DRMirror1, DRMirror2, URMirror, URMirror1, URMirror2, DLMirror, DLMirror1, DLMirror2
+
+======
+RULES     
+======     
+
+([ Moving Player | Follower ] -> [  Moving Player | Moving Follower ])
+
+[> Player] [AngryQueen] -> RESTART
+
+[ >  Player | Pushable ] -> [  >  Player | > Pushable  ]
+[ <  Player | Pullable ] -> [  <  Player | < Pullable  ]     
+
+( Clear the field of transient lines of sight. )
+[Sight] -> []
+[ULMirror1] -> [ULMirror]
+[ULMirror2] -> [ULMirror]
+[URMirror1] -> [URMirror]
+[URMirror2] -> [URMirror]
+[DRMirror1] -> [DRMirror]
+[DRMirror2] -> [DRMirror]
+[DLMirror1] -> [DLMirror]
+[DLMirror2] -> [DLMirror]
+
+( Normal line of sight. )
+late horizontal [HView1 | No Opaque] -> [HView1 | HSight1] 
++ late vertical   [VView1 | No Opaque] -> [VView1 | VSight1] 
++ late horizontal [HView2 | No Opaque] -> [HView2 | HSight2] 
++ late vertical   [VView2 | No Opaque] -> [VView2 | VSight2] 
+
+( For Queen 1, light up mirrors she can see. )
++ late right [RView1 | ULMirror] -> [RView1 | ULMirror1]
++ late down  [DView1 | ULMirror] -> [DView1 | ULMirror1]
++ late left  [LView1 | DRMirror] -> [LView1 | DRMirror1]
++ late up    [UView1 | DRMirror] -> [UView1 | DRMirror1]
++ late left  [LView1 | URMirror] -> [LView1 | URMirror1]
++ late down  [DView1 | URMirror] -> [DView1 | URMirror1]
++ late right [RView1 | DLMirror] -> [RView1 | DLMirror1]
++ late up    [UView1 | DLMirror] -> [UView1 | DLMirror1]
+
+( Mirror, mirror, on the wall, can you see beyond at all? )
++ late up    [UMirror1 | No Opaque] -> [UMirror1 | VSight1]
++ late left  [LMirror1 | No Opaque] -> [LMirror1 | HSight1]
++ late down  [DMirror1 | No Opaque] -> [DMirror1 | VSight1]
++ late right [RMirror1 | No Opaque] -> [RMirror1 | HSight1]
+
+( Rinse and repeat -- a handy text editor with search and replace helps here ["1" -> "2"] )
+
+( For Queen 2, light up mirrors she can see. )
++ late right [RView2 | ULMirror] -> [RView2 | ULMirror2]
++ late down  [DView2 | ULMirror] -> [DView2 | ULMirror2]
++ late left  [LView2 | DRMirror] -> [LView2 | DRMirror2]
++ late up    [UView2 | DRMirror] -> [UView2 | DRMirror2]
++ late left  [LView2 | URMirror] -> [LView2 | URMirror2]
++ late down  [DView2 | URMirror] -> [DView2 | URMirror2]
++ late right [RView2 | DLMirror] -> [RView2 | DLMirror2]
++ late up    [UView2 | DLMirror] -> [UView2 | DLMirror2]
+
+( Mirror, mirror, on the wall, can you see beyond at all? )
++ late up    [UMirror2 | No Opaque] -> [UMirror2 | VSight2]
++ late left  [LMirror2 | No Opaque] -> [LMirror2 | HSight2]
++ late down  [DMirror2 | No Opaque] -> [DMirror2 | VSight2]
++ late right [RMirror2 | No Opaque] -> [RMirror2 | HSight2]
+
+
+( Check if they can see each other. Directional instead of axis-based so we can check when coming out of mirrors. )
+late right [RView1|LView2] [Queen]  -> [RView1|LView2]  [AngryQueen] 
+late right [RView2|LView1] [Queen]  -> [RView2|LView1]  [AngryQueen] 
+late left [LView1|RView2] [Queen]  -> [LView1|RView2]  [AngryQueen] 
+late left [LView2|RView1] [Queen]  -> [LView2|RView1]  [AngryQueen] 
+late up [UView1|DView2] [Queen]  -> [UView1|DView2]  [AngryQueen] 
+late up [UView2|DView1] [Queen]  -> [UView2|DView1]  [AngryQueen] 
+late down [DView1|UView2] [Queen]  -> [DView1|UView2]  [AngryQueen] 
+late down [DView2|UView1] [Queen]  -> [DView2|UView1]  [AngryQueen] 
+
+( Vision is symmetrical... No one-way mirrors or cameras (yet) )
+late [Queen] [AngryQueen] -> [AngryQueen] [AngryQueen]
+late [AngryQueen] -> [AngryQueen] message What is *SHE* doing here?
+
+==============
+WINCONDITIONS
+==============
+
+No AngryQueen
+All Queen1 on Target1
+All Queen2 on Target2
+
+=======     
+LEVELS
+=======
+
+##########
+#.......i#
+#.......##
+#w?.|../.#
+#........#
+#...P#...#
+#....#...#
+#\.Q/./.O#
+##########
+
+##########
+#........#
+#........#
+#w...../.#
+#........#
+#...P#.Q.#
+#...i#...#
+#../.../O#
+##########
+
+(
+Message Take me to our wonderful date!
+
+#########
+#i.P....#
+#.......#
+#####...#
+#.......#
+#......O#
+#########
+)
+Message You better not date anyone else!
+
+#########
+#w......#
+#.i###..#
+#.P.#...#
+#...#.Q.#
+#......O#
+#########
+
+Message Are you going to introduce me?
+
+#########
+#w.....O#
+#.......#
+#.P..+.B#
+#....#..#
+#...i#.Q#
+#########
+
+Message ...
+
+
+#########
+#w+....O#
+#.......#
+#.P.....#
+###...###
+#i..B..Q#
+#########
+
+
+
+Message Congratulations!

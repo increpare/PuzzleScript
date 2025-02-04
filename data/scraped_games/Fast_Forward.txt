@@ -1,0 +1,406 @@
+realtime_interval 1.5
+throttle_movement
+
+title Fast Forward
+author Sky
+
+========
+OBJECTS
+========
+
+s
+Red
+.....
+.....
+.....
+.....
+.....
+
+Background
+darkgreen darkblue
+00010
+11111
+01000
+11111
+00010
+
+
+Target
+lightblue
+..0..
+.000.
+00000
+00000
+.0.0.
+
+Stone
+blue lightbrown lightbrown #eda263 black
+..1..
+.000.
+20003
+24443
+.4.4.
+
+Gate
+darkgray
+00000
+0...0
+00000
+0...0
+00000
+
+
+RoadMiddleA
+darkgray lightgray
+01100
+01100
+01100
+01100
+01100
+
+RoadMiddleA1
+darkgray
+
+RoadMiddleA2
+darkgray lightgray
+01100
+01100
+01100
+01100
+01100
+
+RoadMiddleB
+darkgray lightgray
+01100
+01100
+01100
+01100
+01100
+
+RoadMiddleB1
+darkgray lightgray
+01100
+01100
+01100
+01100
+01100
+
+RoadMiddleB2
+darkgray
+
+RoadMiddleC
+darkgray
+
+RoadMiddleC1
+darkgray lightgray
+01100
+01100
+01100
+01100
+01100
+
+RoadMiddleC2
+darkgray lightgray
+01100
+01100
+01100
+01100
+01100
+
+Road
+darkgray
+
+Win
+darkgreen darkblue
+00010
+11111
+01000
+11111
+00010
+
+Wall
+Black
+
+Person
+darkbrown lightbrown lightbrown #eda263 black
+..1..
+.000.
+20003
+24443
+.4.4.
+
+
+People
+grey lightbrown lightbrown #eda263 black
+..1..
+.000.
+20003
+24443
+.4.4.
+
+Staircase
+lightgray Grey darkgray Black 
+00000
+03330
+02230
+01110
+00000
+
+Activate
+transparent
+
+NotVisited
+transparent
+
+Visited
+transparent
+
+=======
+LEGEND
+=======
+
+1 = Staircase
+w = Win
+# = Wall
+. = Background
+e = People
+player = Person
+p = Person
+Obstacle = People or Person or Wall or Road
+
+t = Target
+o = Stone
+g = Gate
+
+r = Road
+a = RoadMiddleA
+b = RoadMiddleA1
+c = RoadMiddleA2
+m = RoadMiddleB
+i = RoadMiddleB1
+d = RoadMiddleB2
+x = RoadMiddleC
+y = RoadMiddleC1
+z = RoadMiddleC2
+
+in = 1
+
+AllPeople = People or Stone
+
+Freemove = Stone or Person
+
+Movable = AllPeople or Stone or Person 
+
+AllObj = Movable or Wall or Road
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Win, Target, 1
+s
+People, Person, Wall, Road, a, b, c, m, i, d, x, y, z, Stone, Gate
+Visited, NotVisited
+Activate
+
+======
+RULES
+======
+
+[ > Person | Stone ] -> [ > Person | > Stone ]
+[ > Person | AllPeople s ] -> again [ > Person | > AllPeople s ]
+
+
+vertical [ > Freemove s | AllPeople ] -> again [ > Freemove s | > AllPeople ] 
+horizontal [ > Freemove | AllPeople ] -> [ > Freemove | > AllPeople ]
+
+
+[ Movable s ] -> [ Movable ]
+late horizontal [ AllObj | Freemove | AllObj ] -> [ AllObj | Freemove s | AllObj ]
+late horizontal [ Movable | Movable | Movable | Movable | Movable ] -> [ Movable s | Movable s | Movable s | Movable s | Movable s ]
+
+
+( This is the road animation. )
+
+[ stationary player ] [ c ] [ d ] [ z ] -> [ player ] [ a ] [ m ] [ x ]
+[ stationary player ] [ b ] [ i ] [ y ] -> [ player ] [ c ] [ d ] [ z ]
+[ stationary player ] [ a ] [ m ] [ x ] -> [ player ] [ b ] [ i ] [ y ]
+
+[ Activate ] -> [ ]
+[ moving Player ] -> [ moving Player Activate ]
+
+late [ Activate ] [ Staircase ] -> [ Activate ] [ Staircase NotVisited ]
+late [ Activate ] [ Staircase Person ] -> [ Activate ] [ Staircase Visited ]
+late [ Activate ] [ Staircase NotVisited no AllPeople ] [ Visited ] -> [ Activate ] [ Staircase Person ] [ Visited ]
+late [ Activate ] [ Staircase Visited ] -> [ Activate ] [ Staircase ]
+
+
+
+==============
+WINCONDITIONS
+==============
+All Person on Win
+All Target on Movable
+
+=======
+LEVELS
+=======
+
+
+
+
+
+rrarrwwwww#
+rrmrr.....#
+rrxrree...#
+rrarr...ee#
+rrmrre....#
+rrxrr..eee#
+rrarr.....#
+rrmrr.....#
+rrxrr...p.#
+
+rrarrwwwww#
+rrmrr.....#
+rrxrr.....#
+rrarre.eee#
+rrmrre.eee#
+rrxrr.e...#
+rrarr.....#
+rrmrr.....#
+rrxrr...p.#
+
+rrbrrwwwww#
+rrirr.....#
+rryrreeeee#
+rrbrr.....#
+rrirr.....#
+rryrr.....#
+rrbrreeeee#
+rrirr.....#
+rryrr...p.#
+
+rrbrrwwwww#
+rrirr.....#
+rryrree...#
+rrbrr..eee#
+rrirr.....#
+rryrr...e.#
+rrbrreee.e#
+rrirr.....#
+rryrr...p.#
+
+rrbrrwwwww#
+rrirr.....#
+rryrre.eee#
+rrbrre...e#
+rrirreee.e#
+rryrre...e#
+rrbrreeeee#
+rrirr.....#
+rryrr..p..#
+
+rrcrrwwwww#
+rrdrr.....#
+rrzrreeee.#
+rrcrr....e#
+rrdrree...#
+rrzrr...e.#
+rrcrr.....#
+rrdrr.....#
+rrzrr..p..#
+
+rrarrwwwww#
+rrmrr.....#
+rrxrr.....#
+rrarr.t...#
+rrmrr.....#
+rrxrr.....#
+rrarr.toe.#
+rrmrr.....#
+rrxrr...p.#
+
+rrcrrwwwww#
+rrdrr.....#
+rrzrr.....#
+rrcrr.....#
+rrdrreeee.#
+rrzrr.....#
+rrcrr.t..o#
+rrdrr.....#
+rrzrr...p.#
+
+rrbrrwwwww#
+rrirr.....#
+rryrr.....#
+rrbrr..e..#
+rrirr...ee#
+rryrreee.t#
+rrbrr...e.#
+rrirr.....#
+rryrr...p.#
+
+rrcrrwwwww#
+rrdrr.o.o.#
+rrzrro.o.o#
+rrcrr.o.o.#
+rrdrro.o.o#
+rrzrr.o.o.#
+rrcrro.o.o#
+rrdrr.o.o.#
+rrzrro.p.o#
+
+rrbrrwwwww#
+rrirr.oto.#
+rryrro.o.o#
+rrbrr.oto.#
+rrirro.o.o#
+rryrr.oto.#
+rrbrro.o.o#
+rrirr.oto.#
+rryrro.p.o#
+
+rrcrrwwwww#
+rrdrr.....#
+rrzrr.....#
+rrcrr..1..#
+rrdrreeeee#
+rrzrreeeee#
+rrcrr..1..#
+rrdrr.....#
+rrzrr...p.#
+
+rrcrreewee#
+rrdrr.....#
+rrzrr1111.#
+rrcrr.....#
+rrdrr.1111#
+rrzrr.....#
+rrcrr1111.#
+rrdrr.....#
+rrzrr..p..#
+
+rrbrreewee#
+rrirr.....#
+rryrr11111#
+rrbrr.....#
+rrirr11111#
+rryrr.....#
+rrbrr11111#
+rrirr.....#
+rryrr..p..#
+
+rrcrreewee#
+rrdrr...ee#
+rrzrr...ee#
+rrcrro11o.#
+rrdrro11o.#
+rrzrro11o.#
+rrcrr.....#
+rrdrr.....#
+rrzrr..p..#
+

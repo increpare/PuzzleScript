@@ -1,0 +1,144 @@
+title Remote Control Sokoban
+author Franklin P. Dyer
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN Yellow
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+Darkgray Gray
+00000
+01010
+00000
+01010
+00000
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Bot
+Darkgray Gray Lightgray White
+.000.
+.333.
+22222
+.111.
+.1.1.
+
+Crate
+Orange Gray 
+00000
+01.10
+0...0
+01.10
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+/ = Wall
+@ = Player
+! = Bot
+o = Crate
+& = Crate and Target
++ = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate Move 36772507
+endlevel 64145302
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, Bot
+
+======
+RULES
+======
+
+[Moving Player][Bot] -> [Moving Player][Moving Bot]
+
+[> Bot|Crate] -> [> Bot|> Crate]
+[> Player|Crate] -> [> Player|> Crate]
+
+[> Player|Wall] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Level 1 of 3
+
+/////////
+/....////
+/@...////
+/////////
+/////////
+/////////
+/!...////
+////.o.+/
+/////////
+
+message Level 2 of 3
+
+//////////
+/++./..../
+/...o.o.!/
+/..//..../
+//////////
+/..//..../
+/@......./
+/..../.../
+//////////
+
+message Level 3 of 3
+
+//////////
+/...///../
+/...///../
+/.+./@.../
+/.&./..../
+/.&.//.../
+/.o../.../
+/...!/.../
+/...//.../
+//////////
+
+message Congratulations! You win!

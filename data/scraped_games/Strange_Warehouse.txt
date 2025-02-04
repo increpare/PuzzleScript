@@ -1,0 +1,487 @@
+(
+Made during GGJ 2020.
+
+My heartfelt thanks goes out to several testers: 
+Dovydas,
+Saulius
+
+...as well as everybody involved in making the Vilnius GGJ event possibe.
+)                           
+
+title Strange Warehouse
+author Justas Dabrila
+homepage https://twitter.com/justas_dabrila
+
+run_rules_on_level_start
+verbose_logging
+noaction
+
+noaction
+again_interval .2
+
+background_color  #19182f
+text_color #fafafa
+
+========
+OBJECTS
+========
+
+background 
+red
+
+spr_ground
+#1f1827 #2e1f3c
+00000
+01000
+00100
+00010
+00000
+
+temp_wall
+transparent
+
+spr_wall_1
+#19182f #1c1b3b
+00000
+01111
+00111
+00000
+11110
+
+spr_wall_2
+#19182f #1c1b3b
+10000
+11110
+11100
+11001
+01011
+
+spr_wall_3
+#19182f #1c1b3b
+00011
+11011
+11010
+01000
+00011
+
+spr_wall_4
+#19182f #1c1b3b
+00011
+01111
+00111
+00010
+11000
+
+spr_wall_5
+#19182f #1c1b3b
+00111
+00011
+00001
+00011
+00000
+
+spr_player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+spr_enchanted_crate_target
+#0fcee2    
+..... 
+.000.
+.0.0.
+.000.
+.....
+
+spr_enchanted_crate
+#0fcee2 #14a1c2
+10001
+0...0
+0.1.0
+0...0
+10001
+
+spr_enchanted_crate_active_right
+#0fcee2 #fbf236 #bae866
+00021
+0...2
+0.1.0
+0...2
+00021
+
+spr_enchanted_crate_active_up
+#0fcee2 #fbf236 #bae866
+12021
+2...2
+0.1.0
+0...0
+00000
+
+spr_enchanted_crate_active_left
+#0fcee2 #fbf236 #bae866
+12000
+2...0
+0.1.0
+2...0
+12000
+
+
+spr_enchanted_crate_active_down
+#0fcee2 #fbf236 #bae866
+00000
+0...0
+0.1.0
+2...2
+12021
+
+spr_guy_target
+#424154
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+spr_crate_target
+Orange
+.....
+.000.
+.0.0.
+.000.
+.....
+
+spr_crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+spr_deco_wall_r
+#110f1c
+....0
+....0
+....0
+....0
+....0
+
+spr_deco_wall_l
+#110f1c
+0....
+0....
+0....
+0....
+0....
+
+spr_deco_wall_d
+#110f1c
+.....
+.....
+.....
+.....
+00000
+
+spr_deco_wall_u
+#110f1c
+00000
+.....
+.....
+.....
+.....
+
+spr_deco_wall_ur
+#110f1c
+....0
+.....
+.....
+.....
+.....
+
+spr_deco_wall_ur_temp
+transparent
+
+spr_deco_wall_dr
+#110f1c
+.....
+.....
+.....
+.....
+....0
+
+spr_deco_wall_dr_temp
+transparent
+
+spr_deco_wall_dl
+#110f1c
+.....
+.....
+.....
+.....
+0....
+
+spr_deco_wall_dl_temp
+transparent
+
+spr_deco_wall_ul
+#110f1c
+0....
+.....
+.....
+.....
+.....
+
+spr_deco_wall_ul_temp
+transparent
+
+
+=======
+LEGEND
+=======
+
+. = spr_ground
+# = temp_wall
+p = spr_player and spr_ground
+* = spr_enchanted_crate and spr_ground
+c = spr_crate and spr_ground
+o = spr_enchanted_crate_target and spr_ground
+f = spr_guy_target and spr_ground
+h = spr_crate_target and spr_ground
+
+ground = spr_ground
+
+wall = spr_wall_1 or spr_wall_2 or spr_wall_3 or spr_wall_4 or spr_wall_5
+
+enchanted_crate_active = spr_enchanted_crate_active_right or spr_enchanted_crate_active_left or spr_enchanted_crate_active_up or spr_enchanted_crate_active_down
+enchanted_crate = spr_enchanted_crate or enchanted_crate_active
+
+crate = spr_crate
+
+player = spr_player
+
+enchanted_crate_target = spr_enchanted_crate_target
+guy_target = spr_guy_target
+crate_target = spr_crate_target
+
+spr_deco_wall_temp = spr_deco_wall_ur_temp or spr_deco_wall_dr_temp or spr_deco_wall_dl_temp or spr_deco_wall_ul_temp
+
+=======
+SOUNDS
+=======
+sfx0 82215100 (activate crate)
+sfx1 5827701 (deactivate crate)
+
+undo 81144708
+restart 3948108
+
+showmessage 21799308
+
+crate MOVE 36772507
+enchanted_crate MOVE 36772507
+player MOVE 50155707
+
+endlevel 87429100
+
+================
+COLLISIONLAYERS
+================
+
+background
+temp_wall,
+ground,
+guy_target, enchanted_crate_target, crate_target
+player, wall, enchanted_crate, crate
+
+spr_deco_wall_r
+spr_deco_wall_l
+spr_deco_wall_d
+spr_deco_wall_u
+spr_deco_wall_ur
+spr_deco_wall_ul
+spr_deco_wall_dr
+spr_deco_wall_dl
+
+spr_deco_wall_temp
+
+======
+RULES     
+====== 
+
+(randomize walls)
+[ temp_wall ] -> [ random wall ]
+
+(wall decorations...)
+
+(...for sides)
+right [ wall no spr_deco_wall_r | no wall ] -> [ wall spr_deco_wall_r | ]
+left [ wall no spr_deco_wall_l | no wall ] -> [ wall spr_deco_wall_l | ]
+down [ wall no spr_deco_wall_d | no wall ] -> [ wall spr_deco_wall_d | ]
+up [ wall no spr_deco_wall_u | no wall ] -> [ wall spr_deco_wall_u | ]
+
+(... for corners)
+right [ wall no spr_deco_wall_temp | wall spr_deco_wall_u ] -> [ wall spr_deco_wall_ur_temp | wall spr_deco_wall_u ] 
+up [ wall spr_deco_wall_temp | wall spr_deco_wall_r ] -> [wall spr_deco_wall_ur | wall spr_deco_wall_r ]
+
+right [ wall no spr_deco_wall_temp | wall spr_deco_wall_d ] -> [ wall spr_deco_wall_dr_temp | wall spr_deco_wall_d ]
+down [ wall spr_deco_wall_temp | wall spr_deco_wall_r ] -> [ wall spr_deco_wall_dr | wall spr_deco_wall_r ]
+
+left [ wall no spr_deco_wall_temp | wall spr_deco_wall_d ] -> [ wall spr_deco_wall_dl_temp | wall spr_deco_wall_d ]
+down  [ wall spr_deco_wall_temp | wall spr_deco_wall_l ] -> [ wall spr_deco_wall_dl | wall spr_deco_wall_l ]
+
+left [ wall no spr_deco_wall_temp | wall spr_deco_wall_u ] -> [ wall spr_deco_wall_ul_temp | wall spr_deco_wall_u ]
+up [ wall spr_deco_wall_temp | wall spr_deco_wall_l ] -> [ wall spr_deco_wall_ul | wall spr_deco_wall_l ]
+
+(rules)
+
+(sokoban)
+[ > player | crate ] -> [ > player | > crate ]
+
+(enchanted crates)
+
+[ enchanted_crate | ... | moving player ] -> [ moving enchanted_crate | ... | moving player ]
+
+late [ enchanted_crate_active ] -> [ spr_enchanted_crate ]
+
+late right [ spr_enchanted_crate | ... | player ] -> [ spr_enchanted_crate_active_right | ... | player ]
+late left [ spr_enchanted_crate | ... | player ] -> [ spr_enchanted_crate_active_left | ... | player ]
+late up [ spr_enchanted_crate | ... | player ] -> [ spr_enchanted_crate_active_up | ... | player ]
+late down [ spr_enchanted_crate | ... | player ] -> [ spr_enchanted_crate_active_down | ... | player ] 
+
+==============
+WINCONDITIONS
+==============
+
+all enchanted_crate on enchanted_crate_target
+all player on guy_target
+all crate on crate_target
+
+=======     
+LEVELS
+=======
+
+message see "hack" below for credits & thanks.
+
+######
+##f..#
+###..#
+#...##
+#.p..#
+######
+
+#####
+##o.#
+###.#
+##f.#
+##..#
+##.*#
+###p#
+#####
+
+#########
+#########
+##.....##
+##..##.##
+##.*f#.##
+#o..##p##
+#########
+#########
+
+##########
+##########
+##*.oof.##
+##.....p##
+##*.....##
+##########
+##########
+
+########
+########
+##.o.f##
+##...###
+##.#p###
+####*###
+########
+########
+
+########
+########
+##..fo##
+##....##
+##.#*p##
+########
+########
+
+##########
+##########
+##*.oof*##
+###.....##
+####p.####
+##########
+##########
+
+###########
+###########
+##*.foo.*##
+##..o..####
+###.#######
+###.p*#####
+###########
+###########
+
+#########
+#########
+##....h##
+##pccfh##
+###...###
+#########
+#########
+
+##########
+##########
+####*.o###
+##.c*.fh##
+##.p..o###
+##########
+##########
+
+#########
+#########
+###oof###
+##.**..##
+##.p#..##
+##.....##
+#########
+#########
+
+#########
+#########
+###oof###
+##.*...##
+##.*c..##
+##..hp.##
+#########
+#########
+
+#########
+#########
+###oof###
+##..*..##
+##.c*..##
+##.ph..##
+#########
+#########
+
+########
+########
+###...##
+##.c.*##
+##pofh##
+########
+########
+
+message The Strange Warehouse has been tamed.
+message You Win!

@@ -1,0 +1,2167 @@
+title Decker GO
+author Mark Richardson
+again_interval 0.05
+key_repeat_interval 0.5
+(noundo)
+run_rules_on_level_start
+(verbose_logging)
+
+
+========
+OBJECTS
+========
+
+(Background)
+
+Background
+Black
+
+Inventory
+#111
+
+(Paths)
+
+StandardPath
+#222 #444
+00000
+00000
+00100
+00000
+00000
+
+SentinelPath
+#330 #660
+00000
+00000
+00100
+00000
+00000
+
+WirelessPath
+Transparent
+
+(Items)
+
+PasscodeA
+#FFF
+0...0
+.0.0.
+00000
+.0.0.
+0...0
+
+PasscodeB
+#00F
+0...0
+.0.0.
+00000
+.0.0.
+0...0
+
+PasscodeG
+#0F0
+0...0
+.0.0.
+00000
+.0.0.
+0...0
+
+PasscodeC
+#0AA
+0...0
+.0.0.
+00000
+.0.0.
+0...0
+
+PasscodeR
+#F00
+0...0
+.0.0.
+00000
+.0.0.
+0...0
+
+PasscodeM
+#A0A
+0...0
+.0.0.
+00000
+.0.0.
+0...0
+
+PasscodeY
+#AA0
+0...0
+.0.0.
+00000
+.0.0.
+0...0
+
+Stealth
+#777 #00F #0F0 #0AA #F00 #A0A #AA0
+1...5
+.1.5.
+33044
+.2.6.
+2...6
+
+Bomb
+#888 #F00
+.....
+.000.
+.010.
+.000.
+.....
+
+LaidBomb
+#888 #F00
+.....
+.000.
+.010.
+.000.
+.....
+
+(Links)
+
+LinkW
+Transparent
+
+LinkX
+Transparent
+
+LinkY
+Transparent
+
+LinkZ
+Transparent
+
+(Instructions)
+
+DatabaseI
+Transparent
+
+CoreI
+Transparent
+
+BombI
+Transparent
+
+StealthI
+Transparent
+
+(Nodes)
+
+Gateway1
+#000 #303
+00000
+00000
+00011
+00111
+00111
+
+Gateway2
+#303
+.....
+00000
+00000
+00000
+00000
+
+Gateway3
+#000 #303
+00000
+00000
+11000
+11100
+11100
+
+Gateway4
+#303 #F0F
+.0000
+.0001
+.0001
+.0001
+.0000
+
+Gateway5I
+#303 #F0F #808
+01110
+12221
+22222
+12221
+01110
+
+Gateway5O
+#303 #F0F #808
+01110
+12221
+21112
+12221
+01110
+
+Gateway6
+#303 #F0F
+0000.
+1000.
+1000.
+1000.
+0000.
+
+Gateway7
+#000 #303
+00111
+00111
+00011
+00000
+00000
+
+Gateway8
+#303
+00000
+00000
+00000
+00000
+.....
+
+Gateway9
+#303 #000
+00011
+00011
+00111
+11111
+11111
+
+Worker1
+#000 #033
+00000
+00000
+00000
+00001
+00011
+
+Worker2
+#033 #088
+..0..
+.000.
+00000
+00100
+00000
+
+Worker3
+#000 #033
+00000
+00000
+00000
+10000
+11000
+
+Worker4
+#033 #088
+..000
+.0000
+00010
+.0000
+..000
+
+Worker5
+#033 #088
+00000
+00100
+01010
+00100
+00000
+
+Worker6
+#033 #088
+000..
+0000.
+01000
+0000.
+000..
+
+Worker7
+#000 #033
+00011
+00001
+00000
+00000
+00000
+
+Worker8
+#033 #088
+00000
+00100
+00000
+.000.
+..0..
+
+Worker9
+#033 #000
+00111
+01111
+11111
+11111
+11111
+
+Database1
+#000 #0A0 #050
+00000
+02111
+01222
+01222
+01222
+
+Database2
+#0A0 #050
+.....
+10001
+01110
+01110
+01110
+
+Database3
+#000 #0A0 #050
+00000
+11120
+22210
+22210
+22210
+
+Database4
+#0A0 #050
+.1000
+.0111
+.0111
+.0111
+.1000
+
+Database5
+#0A0 #050
+10001
+01110
+01110
+01110
+10001
+
+Database6
+#0A0 #050
+0001.
+1110.
+1110.
+1110.
+0001.
+
+Database7
+#000 #0A0 #050
+01222
+01222
+01222
+02111
+00000
+
+Database8
+#0A0 #050
+01110
+01110
+01110
+10001
+.....
+
+Database9
+#050 #0A0 #000
+00012
+00012
+00012
+11102
+22222
+
+Security1
+#000
+00000
+00000
+00000
+00000
+00000
+
+Security2
+#330 #880
+..0..
+..0..
+.000.
+.000.
+00100
+
+Security3
+#000
+00000
+00000
+00000
+00000
+00000
+
+Security4
+#330 #880
+.....
+....0
+....1
+...01
+...01
+
+Security5
+#330 #880
+00100
+10101
+00100
+00100
+00000
+
+Security6
+#330 #880
+.....
+0....
+1....
+10...
+10...
+
+Security7
+#000 #330 #880
+00112
+00112
+01111
+01111
+00000
+
+Security8
+#330 #880
+00000
+00000
+11111
+00000
+.....
+
+Security9
+#880 #330 #000
+01122
+01122
+11112
+11112
+22222
+
+Router1
+#000 #006 #00F
+00001
+00001
+00001
+00000
+11101
+
+Router2
+#000 #006 #00F
+11111
+12221
+11211
+11111
+11111
+
+Router3
+#000 #006 #00F
+10000
+10000
+10000
+00000
+10111
+
+Router4
+#000 #006 #00F
+11111
+12111
+12211
+12111
+11111
+
+Router5
+#000 #006 #00F
+11111
+12221
+12221
+12221
+11111
+
+Router6
+#000 #006 #00F
+11111
+11121
+11221
+11121
+11111
+
+Router7
+#000 #006 #00F
+11101
+00000
+00001
+00001
+00001
+
+Router8
+#000 #006 #00F
+11111
+11111
+11211
+12221
+11111
+
+Router9
+#000 #006 #00F
+10111
+00000
+10000
+10000
+10000
+
+Core1
+#000 #F00 #600
+00000
+00000
+00001
+00012
+00122
+
+Core2
+#F00 #600
+.....
+00000
+11111
+11111
+11111
+
+Core3
+#000 #F00 #600
+00000
+00000
+10000
+21000
+22100
+
+Core4
+#F00 #600
+.0111
+.0111
+.0111
+.0111
+.0111
+
+Core5
+#FFF #999
+00000
+01010
+00100
+01010
+00000
+
+Core6
+#600 #F00
+0001.
+0001.
+0001.
+0001.
+0001.
+
+Core7
+#000 #F00 #600
+00122
+00012
+00001
+00000
+00000
+
+Core8
+#600 #F00
+00000
+00000
+00000
+11111
+.....
+
+Core9
+#600 #F00 #000
+00122
+01222
+12222
+22222
+22222
+
+(Firewalls)
+
+FirewallB
+#00F #009
+0...0
+00000
+01010
+01010
+00000
+
+FirewallG
+#0F0 #090
+0...0
+00000
+01010
+01010
+00000
+
+FirewallC
+#0AA #066
+0...0
+00000
+01010
+01010
+00000
+
+FirewallR
+#F00 #900
+0...0
+00000
+01010
+01010
+00000
+
+FirewallM
+#A0A #606
+0...0
+00000
+01010
+01010
+00000
+
+FirewallY
+#AA0 #660
+0...0
+00000
+01010
+01010
+00000
+
+(Player)
+
+Player
+#DD0 #F00 #000
+.000.
+02020
+00000
+01110
+.000.
+
+(Data File)
+
+DataFile3
+#0F0
+.....
+.....
+000..
+000..
+000..
+
+DataFile2
+#0F0
+.....
+.....
+0.0..
+.0...
+0.0..
+
+DataFile1
+#0F0
+.....
+.....
+0.0..
+.0...
+0.0..
+
+(Cover)
+
+Cover
+Black
+
+(Timers)
+
+Timer2
+Transparent
+
+Timer1
+Transparent
+
+(ICEs)
+
+SentinelU
+#CCF #F00 #FFF
+..2..
+.202.
+21012
+20002
+.222.
+
+SentinelD
+#CCF #F00 #FFF
+.222.
+20002
+21012
+.202.
+..2..
+
+SentinelL
+#CCF #F00 #FFF
+..22.
+.2102
+20002
+.2102
+..22.
+
+SentinelR
+#CCF #F00 #FFF
+.22..
+2012.
+20002
+2012.
+.22..
+
+Hunter
+#FFF #000 #F00
+.....
+.010.
+01210
+.010.
+.....
+
+(ICEs)
+
+FrozenSentinelU
+#040 #0F0 #080
+..2..
+.202.
+21012
+20002
+.222.
+
+FrozenSentinelD
+#040 #0F0 #080
+.222.
+20002
+21012
+.202.
+..2..
+
+FrozenSentinelL
+#040 #0F0 #080
+..22.
+.2102
+20002
+.2102
+..22.
+
+FrozenSentinelR
+#040 #0F0 #080
+.22..
+2012.
+20002
+2012.
+.22..
+
+FrozenHunter
+#080 #040 #0F0
+.....
+.010.
+01210
+.010.
+.....
+
+(Codes)
+
+Code0
+#000 #040 #080 #0F0
+33320
+00320
+10200
+23300
+00000
+
+Code1
+#000 #040 #080 #0F0
+01110
+03120
+03300
+33230
+00000
+
+Code2
+#000 #040 #080 #0F0
+00330
+23330
+30210
+01100
+00000
+
+Code3
+#000 #040 #080 #0F0
+23010
+03030
+31320
+30020
+00000
+
+Code4
+#000 #040 #080 #0F0
+23330
+13100
+23110
+13220
+00000
+
+Code5
+#000 #040 #080 #0F0
+23100
+00300
+33310
+22130
+00000
+
+Code6
+#000 #040 #080 #0F0
+12020
+33010
+03320
+23130
+00000
+
+Code7
+#000 #040 #080 #0F0
+33120
+33000
+02000
+03310
+00000
+
+Code8
+#000 #040 #080 #0F0
+12200
+00330
+00330
+31320
+00000
+
+Code9
+#000 #040 #080 #0F0
+13230
+22130
+31300
+03000
+00000
+
+(States)
+
+Morph
+Transparent
+
+MoveU
+Transparent
+
+MoveD
+Transparent
+
+MoveL
+Transparent
+
+MoveR
+Transparent
+
+Validation
+Transparent
+
+Initialise
+Transparent
+
+Target1
+#FFF
+0....
+.0...
+..0..
+...0.
+....0
+
+Target3
+#FFF
+....0
+...0.
+..0..
+.0...
+0....
+
+(Epilogue)
+
+End00a À
+white
+.....
+.....
+...00
+.....
+.....
+
+End01a Á
+white
+.....
+.....
+0...0
+.....
+.....
+
+End02a Â
+white
+.....
+.....
+00...
+.....
+.....
+
+End04a Ã
+white
+0...0
+.0.0.
+.0.0.
+..0..
+..0..
+
+End05a Ä
+white
+.0000
+...0.
+...0.
+...0.
+.0000
+
+End06a Å
+white
+0.000
+..0..
+..000
+..0..
+0.0..
+
+End07a Æ
+white
+0..0.
+.0.0.
+0..0.
+.0.0.
+.0.00
+
+End08a Ç
+white
+..0..
+..0.0
+..0..
+..0..
+000.0
+
+End09a È
+white
+0000.
+.....
+000..
+...0.
+000..
+
+End12a É
+white
+0.0..
+..00.
+..0.0
+..0..
+0.0..
+
+End13a Ê
+white
+.0..0
+.0.0.
+.0..0
+00...
+.0.00
+
+End14a Ë
+white
+000.0
+.....
+00...
+..0..
+00...
+
+End15a Ì
+white
+0000.
+.0...
+.0...
+.0...
+.0...
+
+End16a Î
+white
+00000
+0...0
+00000
+0...0
+0...0
+
+End17a Ï
+white
+.0...
+.0...
+.0...
+.0...
+.0000
+
+End18a Ð
+white
+..0..
+..0..
+..0..
+..0..
+0.000
+
+End19a Ñ
+white
+...00
+...0.
+...00
+...0.
+00.00
+
+End20a Ò
+white
+000.0
+....0
+000.0
+....0
+000.0
+
+End21a Ó
+white
+000..
+...0.
+...0.
+...0.
+000..
+
+End23a Ô
+white
+.....
+.....
+..000
+.....
+.....
+
+End25a Õ
+white
+.....
+.....
+0....
+.....
+.....
+
+End05b Ö
+white
+.0...
+..0.0
+...0.
+..0.0
+.0...
+
+End06b ×
+white
+0....
+.....
+.....
+.....
+0....
+
+End07b Ø
+white
+....0
+...00
+....0
+....0
+.....
+
+End08b Ù
+white
+.....
+0....
+....0
+..0.0
+00...
+
+End09b Ú
+white
+.....
+00...
+..0..
+..0..
+00...
+
+End11b Û
+white
+.....
+..000
+.0...
+.0...
+..000
+
+End12b Ü
+white
+.....
+...00
+..0..
+..0..
+...00
+
+End13b Ý
+white
+.....
+....0
+0..0.
+0..0.
+...0.
+
+End14b Þ
+white
+.....
+0...0
+.0...
+.0...
+.0...
+
+End15b ß
+white
+0....
+00...
+0....
+0..0.
+.00..
+
+End16b Ā
+white
+..0..
+.....
+.00..
+..0..
+.000.
+
+End17b Ă
+white
+.....
+..00.
+.0..0
+.0..0
+.0..0
+
+End18b Ą
+white
+.....
+..0..
+..0..
+..0..
+..000
+
+End19b Ć
+white
+....0
+0..0.
+0..00
+0..0.
+....0
+
+End20b Ĉ
+white
+0....
+.0...
+0....
+.....
+0....
+
+
+=======
+LEGEND
+=======
+
+- = Background
+/ = Inventory
+~ = Inventory and Initialise
++ = StandardPath
+* = SentinelPath
+' = WirelessPath
+0 = PasscodeA
+1 = PasscodeB
+2 = PasscodeG
+3 = PasscodeC
+4 = PasscodeR
+5 = PasscodeM
+6 = PasscodeY
+7 = Stealth
+8 = Bomb
+W = LinkW
+X = LinkX
+Y = LinkY
+Z = LinkZ
+T = Gateway5I
+I = Gateway5I and Player
+Q = Gateway5I and Player and Cover and Code0
+A = Worker5
+Ž = Worker1 and LinkZ and Cover
+B = Database5
+S = Security5
+N = Router5
+G = Gateway5O
+C = Core5
+E = Inventory and DatabaseI
+F = Inventory and CoreI
+J = Inventory and BombI
+K = Inventory and StealthI
+! = FirewallB
+@ = FirewallG
+# = FirewallC
+$ = FirewallR
+% = FirewallM
+& = FirewallY
+U = SentinelU and SentinelPath
+D = SentinelD and SentinelPath
+L = SentinelL and SentinelPath
+R = SentinelR and SentinelPath
+H = Hunter
+Ċ = Core5 and Player and Cover
+Č = Inventory and PasscodeA and Cover
+
+End = End00a or End01a or End02a or End04a or End05a or End06a or End07a or End08a or End09a or End12a or End13a or End14a or End15a or End16a or End17a or End18a or End19a or End20a or End21a or End23a or End25a or End05b or End06b or End07b or End08b or End09b or End11b or End12b or End13b or End14b or End15b or End16b or End17b or End18b or End19b or End20b
+Path = StandardPath or SentinelPath or WirelessPath
+Item = PasscodeA or PasscodeB or PasscodeG or PasscodeC or PasscodeR or PasscodeM or PasscodeY or Stealth or Bomb
+Link = LinkW or LinkX or LinkY or LinkZ
+Instruction = DatabaseI or CoreI or BombI or StealthI
+Gateway5 = Gateway5I or Gateway5O
+Gateway  = Gateway1  or Gateway2  or Gateway3  or Gateway4  or Gateway5  or Gateway6  or Gateway7  or Gateway8  or Gateway9
+Worker   = Worker1   or Worker2   or Worker3   or Worker4   or Worker5   or Worker6   or Worker7   or Worker8   or Worker9
+Database = Database1 or Database2 or Database3 or Database4 or Database5 or Database6 or Database7 or Database8 or Database9
+Security = Security1 or Security2 or Security3 or Security4 or Security5 or Security6 or Security7 or Security8 or Security9
+Router   = Router1   or Router2   or Router3   or Router4   or Router5   or Router6   or Router7   or Router8   or Router9
+Core     = Core1     or Core2     or Core3     or Core4     or Core5     or Core6     or Core7     or Core8     or Core9
+Goal = Core5 or Gateway5O
+Node = Gateway or Worker or Database or Security or Router or Core
+Node1 = Worker1 or Database1 or Security1
+Node5 = Gateway5 or Worker5 or Database5 or Security5 or Router5 or Core5
+Firewall = FirewallB or FirewallG or FirewallC or FirewallR or FirewallM or FirewallY
+DataFile = DataFile1 or DataFile2 or DataFile3
+Sentinel = SentinelU or SentinelD or SentinelL or SentinelR
+Ice = Sentinel or Hunter
+FrozenIce = FrozenSentinelU or FrozenSentinelD or FrozenSentinelL or FrozenSentinelR or FrozenHunter
+Walker = Ice or Player
+Timer = Timer1 or Timer2
+Code = Code0 or Code1 or Code2 or Code3 or Code4 or Code5 or Code6 or Code7 or Code8 or Code9
+Move = MoveU or MoveD or MoveL or MoveR
+Target = Target1 or Target3
+
+
+=======
+SOUNDS
+=======
+
+ShowMessage     33610109
+StartLevel       2117508
+Cancel          45973506
+Player   Create 42276707
+Ice      Create 42276707
+sfx0            36965903 (Database Searched)
+sfx1            17172503 (Use Stealth)
+sfx2            82885700 (Lay Bomb)
+sfx3            84487301 (Ice Frozen)
+sfx4            98857105 (Ice Thawed)
+sfx5            13664503 (Router Actioned)
+sfx6            89437308 (Core Crashed)
+sfx7            89168508 (Player Killed)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Inventory, Path, End
+Item, Link, Instruction
+Node, Firewall
+LaidBomb
+Ice, FrozenIce, Morph
+Player, DataFile
+Cover, Timer
+Code, Move, Validation, Initialise, Target
+
+
+======
+RULES
+======
+
+(===== Initialise level =====)
+(Tear down nodes.)
+right [Initialise][Link|Node5]->[Initialise][|Link action Node5]
+right [Initialise][action Worker5    ]->[Initialise][stationary Worker1    Cover]
+right [Initialise][action Database5||]->[Initialise][stationary Database1  Cover||DataFile3 Cover]
+right [Initialise][action Security5  ]->[Initialise][stationary Security1  Cover]
+(Expand nodes.)
+right [Initialise][no Gateway4 |Gateway5 |no Gateway6 ]->[Initialise][Gateway4 |Gateway5 |Gateway6 ]
+down  [Initialise][no Gateway1 |Gateway4 |no Gateway7 ]->[Initialise][Gateway1 |Gateway4 |Gateway7 ]
+down  [Initialise][no Gateway2 |Gateway5 |no Gateway8 ]->[Initialise][Gateway2 |Gateway5 |Gateway8 ]
+down  [Initialise][no Gateway3 |Gateway6 |no Gateway9 ]->[Initialise][Gateway3 |Gateway6 |Gateway9 ]
+right [Initialise][no Worker4  |Worker5  |no Worker6  ]->[Initialise][Worker4  |Worker5  |Worker6  ]
+down  [Initialise][no Worker1  |Worker4  |no Worker7  ]->[Initialise][Worker1  |Worker4  |Worker7  ]
+down  [Initialise][no Worker2  |Worker5  |no Worker8  ]->[Initialise][Worker2  |Worker5  |Worker8  ]
+down  [Initialise][no Worker3  |Worker6  |no Worker9  ]->[Initialise][Worker3  |Worker6  |Worker9  ]
+right [Initialise][no Database4|Database5|no Database6]->[Initialise][Database4|Database5|Database6]
+down  [Initialise][no Database1|Database4|no Database7]->[Initialise][Database1|Database4|Database7]
+down  [Initialise][no Database2|Database5|no Database8]->[Initialise][Database2|Database5|Database8]
+down  [Initialise][no Database3|Database6|no Database9]->[Initialise][Database3|Database6|Database9]
+right [Initialise][no Security4|Security5|no Security6]->[Initialise][Security4|Security5|Security6]
+down  [Initialise][no Security1|Security4|no Security7]->[Initialise][Security1|Security4|Security7]
+down  [Initialise][no Security2|Security5|no Security8]->[Initialise][Security2|Security5|Security8]
+down  [Initialise][no Security3|Security6|no Security9]->[Initialise][Security3|Security6|Security9]
+right [Initialise][no Router4  |Router5  |no Router6  ]->[Initialise][Router4  |Router5  |Router6  ]
+down  [Initialise][no Router1  |Router4  |no Router7  ]->[Initialise][Router1  |Router4  |Router7  ]
+down  [Initialise][no Router2  |Router5  |no Router8  ]->[Initialise][Router2  |Router5  |Router8  ]
+down  [Initialise][no Router3  |Router6  |no Router9  ]->[Initialise][Router3  |Router6  |Router9  ]
+right [Initialise][no Core4    |Core5    |no Core6    ]->[Initialise][Core4    |Core5    |Core6    ]
+down  [Initialise][no Core1    |Core4    |no Core7    ]->[Initialise][Core1    |Core4    |Core7    ]
+down  [Initialise][no Core2    |Core5    |no Core8    ]->[Initialise][Core2    |Core5    |Core8    ]
+down  [Initialise][no Core3    |Core6    |no Core9    ]->[Initialise][Core3    |Core6    |Core9    ]
+(Start with virus)
+[Initialise][Gateway5I Code]->[Initialise][Gateway5I Code]sfx6
+(Distribute database items.)
+[Initialise][Database3]->[Initialise][Database3 DataFile3]
+[Initialise][Item Database]->[Initialise][action Item Database]
+startloop
+random [action Item Database]->[action Item action Database]
+[action Database|stationary Database]->[action Database|action Database]
+random [action Item action Database][action Database3]->[action Database][stationary Item action Database3]
+[stationary PasscodeA][action PasscodeA]->[stationary PasscodeA][]
+[stationary PasscodeB][action PasscodeB]->[stationary PasscodeB][]
+[stationary PasscodeG][action PasscodeG]->[stationary PasscodeG][]
+[stationary PasscodeC][action PasscodeC]->[stationary PasscodeC][]
+[stationary PasscodeR][action PasscodeR]->[stationary PasscodeR][]
+[stationary PasscodeM][action PasscodeM]->[stationary PasscodeM][]
+[stationary PasscodeY][action PasscodeY]->[stationary PasscodeY][]
+[action Item action Database]->[action Database]
+[action Database]->[stationary Database]
+endloop
+(Add paths under links.)
+[Initialise][SentinelPath|Link|SentinelPath]->[Initialise][SentinelPath|Link SentinelPath|SentinelPath]
+[Initialise][StandardPath|Link|StandardPath]->[Initialise][StandardPath|Link StandardPath|StandardPath]
+(Add paths under firewalls.)
+[Initialise][SentinelPath|Firewall no Path|SentinelPath]->[Initialise][SentinelPath|SentinelPath Firewall|SentinelPath]
+[Initialise][StandardPath|Firewall no Path|StandardPath]->[Initialise][StandardPath|StandardPath Firewall|StandardPath]
+(Add covers over rotational firewalls.)
+[Initialise][Firewall no Path no Cover]->[Initialise][Firewall Cover]
+(Move hunters to nodes.)
+[Initialise][Path|Hunter|Node5]->[Initialise][Path|Path|Hunter Node5]
+[Initialise][Link|Hunter]->[Initialise][|Link Hunter]
+(Prepopulate inventory.)
+[Initialise][Item no Database3 no Inventory]->[Initialise][Item Inventory]
+(End initialisation.)
+[Initialise]->[]
+
+(===== Animation =====)
+(Animate code.)
+[stationary Code]->[action Code]
+[action Code]->[random Code]
+(Remove targets.)
+[Target]->[]
+
+(===== Rotational firewall =====)
+(If there is no code, activate firewalls.)
+[Firewall]->[action Firewall]
+[Code][action Firewall]->[Code][stationary Firewall]
+
+(===== Worker node =====)
+(If the player acts in a worker node, lay a bomb.)
+[action Player Worker5 no Bomb][Inventory Bomb]->[stationary Player Worker5 LaidBomb][Inventory]sfx2
+(If there is a bomb here already or the player has no bomb, cancel the action.)
+[action Player Worker5]->cancel
+(Activate bomb.)
+[LaidBomb]->[action LaidBomb]
+
+(===== Database node =====)
+(Continue previous scan.)
+[stationary DataFile2]->[action DataFile2]
+[stationary DataFile1]->[action DataFile1]
+[Ice Path][action DataFile]->[Ice Path][stationary DataFile]
+(If the player acts in a database, start scanning the data file.)
+up [action Player Database5|Database2]->[action Player Database5|action Database2]
+right [action Database2|DataFile3]->[stationary Database2|stationary DataFile2]sfx0
+(If the database has already been scanned, cancel the move.)
+[action Database2]->cancel
+(Complete scan.)
+[action DataFile2]->[stationary DataFile1]again
+[action DataFile1][stationary Player]->[action DataFile1][action Player]
+[action DataFile1 Item][Inventory no Item]->[action DataFile1][Inventory Item]
+[action DataFile1]->[]
+
+(===== Security node =====)
+(Frozen ICE timers decrement.)
+[moving Player][Timer1]->[moving Player][]
+[moving Player][Timer2]->[moving Player][Timer1]
+(If the player acts in a security node activate the link.)
+up [action Player Security5|Security2]->[stationary Player Security5|action Security2]
+left [action Security2|Link]->[stationary Security2|action Link]
+(Link to the ICE.)
+[action LinkW][stationary LinkW]->[action LinkW][action LinkW]
+[action LinkX][stationary LinkX]->[action LinkX][action LinkX]
+[action LinkY][stationary LinkY]->[action LinkY][action LinkY]
+[action LinkZ][stationary LinkZ]->[action LinkZ][action LinkZ]
+[action Link Ice]->[action Link action Ice]
+[action Ice][action Link]->[action Ice][stationary Link]
+(If there's nothing at the other end of the link, cancel the action.)
+[action Link]->cancel
+(If there is something at the other end, deactivate firewalls.)
+[action Ice][action Firewall]->[action Ice][stationary Firewall]
+(If ICE was found, freeze it.)
+[action SentinelU]->[stationary FrozenSentinelU Timer2]sfx3
+[action SentinelD]->[stationary FrozenSentinelD Timer2]sfx3
+[action SentinelL]->[stationary FrozenSentinelL Timer2]sfx3
+[action SentinelR]->[stationary FrozenSentinelR Timer2]sfx3
+[action Hunter   ]->[stationary FrozenHunter    Timer2]sfx3
+
+(===== Router node =====)
+(If the player acts in a router node activate the link.)
+up [action Player Router5|Router2]->[stationary Player Router5|action Router2]
+left [action Router2|Link]->[stationary Router2|action Link]
+(Link to the other node.)
+[action LinkW][stationary LinkW]->[action LinkW][action LinkW]
+[action LinkX][stationary LinkX]->[action LinkX][action LinkX]
+[action LinkY][stationary LinkY]->[action LinkY][action LinkY]
+[action LinkZ][stationary LinkZ]->[action LinkZ][action LinkZ]
+[action Link Router1]->[stationary Link Router1]
+[action Link Node1]->[stationary Link action Node1]
+(If there's nothing at the other end of the link, cancel the action.)
+[action Link]->cancel
+(If there is something at the other end, deactivate firewalls.)
+[action Node1][action Firewall]->[action Node1][stationary Firewall]
+(Morph the node. If the node contains ICE, cancel the action.)
+right [action Node1||]->[Node1 action Morph|action Morph|action Morph]
+down [action Morph|Ice]->cancel
+down [action Morph|FrozenIce]->cancel
+down [action Morph||]->[stationary Morph|Morph|Morph]sfx5
+(Recode the node.)
+[Player][Goal][Code]->[Player][Goal][action Code]
+[Morph no Code][action Code]->[Morph][stationary Code]
+random [Morph no Code]->[Morph random Code]again
+random [action Code]->[]
+[action Code]->[stationary Code]again
+(If the node is completely recoded, activate the rebuild.)
+[Morph Code]->[action Morph Code]
+[Morph no Code][action Morph]->[Morph][stationary Morph]
+(If the node was up, tear the node down.)
+[action Morph Node1 no Cover]->[action Node1 Cover]
+[action Node|stationary Node]->[action Node|action Node]
+[action Morph action Node]->[action Node]
+[action Node1]->[stationary Node1]
+[action Database3]->[Cover]
+[SentinelPath|action Node5|SentinelPath]->[SentinelPath|SentinelPath|SentinelPath]
+[StandardPath|action Node5|StandardPath]->[StandardPath|StandardPath|StandardPath]
+[action Node]->[]
+(If the node was down, build the node up.)
+[action Morph Node1 Cover]->[action Node1]
+right [action Worker1  ||no Worker3  ]->[action Worker1|action Worker2|action Worker3]
+right [action Database1||Cover       ]->[action Database1 |action Database2 |action Database3 ]
+right [action Security1||no Security3]->[action Security1 |action Security2 |action Security3 ]
+down  [action Worker1  ||]->[stationary Worker1  |Worker4  |Worker7  ]
+down  [action Worker2  ||]->[stationary Worker2  |Worker5  |Worker8  ]
+down  [action Worker3  ||]->[stationary Worker3  |Worker6  |Worker9  ]
+down  [action Database1||]->[stationary Database1|Database4|Database7]
+down  [action Database2||]->[stationary Database2|Database5|Database8]
+down  [action Database3||]->[stationary Database3|Database6|Database9]
+down  [action Security1||]->[stationary Security1|Security4|Security7]
+down  [action Security2||]->[stationary Security2|Security5|Security8]
+down  [action Security3||]->[stationary Security3|Security6|Security9]
+[Node5 Path]->[Node5]
+[action Morph]->[]
+
+(===== Gateway node =====)
+(If the player acts in the exit gateway, win the level.)
+[action Player Gateway5O]->[stationary Player Gateway5O]win
+(If the player acts in the entry gateway, cancel the action.)
+[action Player Gateway5I]->cancel
+
+(===== Core node =====)
+(If the player acts in the core with the passcode, activate the core.)
+[action Player Core5][Inventory PasscodeA]->[Player Worker5 random Code][Inventory PasscodeA]sfx6
+(If the player acts in the core without the passcode, cancel the action.)
+[action Player Core5]->cancel
+(Check if everything has crashed)
+random [Inventory]->[action Inventory]
+[Node][action Inventory]->[Node][stationary Inventory]
+[Code][action Inventory]->[Code][stationary Inventory]
+[action Inventory]->[stationary Inventory]win
+(Expand the crash.)
+[Player][Code]->[Player][action Code]
+[Goal][action Code]->[Goal][stationary Code]
+[action Code]->again
+[action Code no Node no Path no End]->[]
+[action Code Item     ]->[action Code]
+[action Code DataFile ]->[action Code]
+[action Code Firewall ]->[action Code]
+[action Code Ice      ]->[action Code]
+[action Code FrozenIce]->[action Code]
+[action Code Node     ]->[action Code]
+[action Code Path     ]->[action Code]
+[action Code End      ]->[action Code]
+[action Code|Node no Code]->[action Code|Node random Code]
+[action Code|Path no Code]->[action Code|Path random Code]
+[action Code|End  no Code]->[action Code|End  random Code]
+[action Code]->[stationary Code]
+
+(===== Validate player movement =====)
+(If there is no path, cancel the move.)
+[> Player|no Path]->cancel
+(Create validation object)
+[> Player|Path]->[> Player|Path Validation]
+startloop
+(If the validation leaves a path, it is good.)
+[Validation no Path]->[]
+(Otherwise, urge the validation away from the player.)
+[Player|...|Validation]->[Player|...|> Validation]
+(Validate through firewalls if the passcode is in the inventory.)
+[> Validation|FirewallB][Inventory PasscodeB]->[|Validation FirewallB][Inventory PasscodeB]
+[> Validation|FirewallG][Inventory PasscodeG]->[|Validation FirewallG][Inventory PasscodeG]
+[> Validation|FirewallC][Inventory PasscodeC]->[|Validation FirewallC][Inventory PasscodeC]
+[> Validation|FirewallR][Inventory PasscodeR]->[|Validation FirewallR][Inventory PasscodeR]
+[> Validation|FirewallM][Inventory PasscodeM]->[|Validation FirewallM][Inventory PasscodeM]
+[> Validation|FirewallY][Inventory PasscodeY]->[|Validation FirewallY][Inventory PasscodeY]
+[> Validation|Firewall ][Inventory stationary Stealth]->[|Validation Firewall][Inventory action Stealth]
+(Otherwise, firewalls cancel the move.)
+[> Validation|Firewall]->cancel
+(Move the validation forward.)
+[> Validation|]->[|Validation]
+endloop
+(Deactivate stealth until the p[layer actually passes through the firewall.)
+[action Stealth]->[stationary Stealth]
+
+(===== Move Hunters =====)
+(If player starts moving, activate hunters.)
+[action Player][stationary Hunter]->[action Player][action Hunter]
+[moving Player][stationary Hunter]->[moving Player][action Hunter]
+(If the player is not in an adjacent node, deactivate the hunter.)
+[action Hunter|Path|...|Player]->[action Hunter|action Path|...|Player]
+[action Path|Path|...|Player]->[stationary Path|action Path|...|Player]
+[action Hunter|...|action Path|Player]->[> Hunter|...|stationary Path|Player]
+[action Hunter]->[stationary Hunter]
+(Tell the active hunters to start moving.)
+[up    Hunter]->[Hunter MoveU]
+[down  Hunter]->[Hunter MoveD]
+[left  Hunter]->[Hunter MoveL]
+[right Hunter]->[Hunter MoveR]
+(Tell the hunters to continue moving.)
+up    [Hunter MoveU]->[> Hunter > MoveU]
+down  [Hunter MoveD]->[> Hunter > MoveD]
+left  [Hunter MoveL]->[> Hunter > MoveL]
+right [Hunter MoveR]->[> Hunter > MoveR]
+(If hunter is on a path, move again.)
+[> Hunter Link]->[> Hunter > Link]
+[> Hunter > Move|Path]->[|Hunter Move Path]again
+(If hunter reaches a node, stop walking.)
+[> Hunter > Move|Node5]->[|Hunter Node5]
+
+(===== Move Sentinels =====)
+(If player starts moving, tell sentinels to move forward.)
+[action Player][Node5 Sentinel]->[action Player][Node5 action Sentinel]again
+[moving Player][Node5 Sentinel]->[moving Player][Node5 action Sentinel]again
+(If sentinel is on a path, tell it to move forward.)
+[SentinelPath Sentinel]->[SentinelPath action Sentinel]again
+(All sentinels told to move forward initialise their heading.)
+[action SentinelU]->[up    SentinelU]
+[action SentinelD]->[down  SentinelD]
+[action SentinelL]->[left  SentinelL]
+[action SentinelR]->[right SentinelR]
+(If any sentinel is moving, deactivate bombs and firewalls.)
+[moving Sentinel][action LaidBomb]->[moving Sentinel][stationary LaidBomb]
+[moving Sentinel][action Firewall]->[moving Sentinel][stationary Firewall]
+(All sentinels stationary on nodes to told to change direction, unless there is ICE moving on a path.)
+[stationary Node5 stationary Sentinel]->[action Node5 action Sentinel]
+[Path Ice][action Node5 action Sentinel]->[Path Ice][stationary Node5 stationary Sentinel]
+(Move all sentinels forward.)
+[> Sentinel Link]->[> Sentinel > Link]
+[> Sentinel|no Ice no FrozenIce]->[|Sentinel]
+[> Link|]->[|Link]
+(If a sentinel cannot move forward, turn it around.)
+[> Sentinel|Ice]->[< Sentinel|Ice]
+[> Sentinel|FrozenIce]->[< Sentinel|FrozenIce]
+(If no ICE is moving, tell frozen ICE to thaw.)
+[action Ice][FrozenIce no Timer]->[action Ice][action FrozenIce]
+(If all ICE have stopped moving, all sentinals choose a new direction.)
+[action SentinelU]->[up    SentinelU]
+[action SentinelD]->[down  SentinelD]
+[action SentinelL]->[left  SentinelL]
+[action SentinelR]->[right SentinelR]
+[action Node5 > Sentinel|SentinelPath]->[stationary Node5 > Sentinel|SentinelPath]
+[action Node5 ^ Sentinel|SentinelPath]->[stationary Node5 > Sentinel|SentinelPath]
+[action Node5 v Sentinel|SentinelPath]->[stationary Node5 > Sentinel|SentinelPath]
+[action Node5 < Sentinel|SentinelPath]->[stationary Node5 > Sentinel|SentinelPath]
+[action Node5 > Sentinel]             ->[stationary Node5 stationary Sentinel]
+(If any sentinel didn't move, rotate it.)
+[up    Sentinel]->[SentinelU]
+[down  Sentinel]->[SentinelD]
+[left  Sentinel]->[SentinelL]
+[right Sentinel]->[SentinelR]
+
+(===== Move player =====)
+(Start moving.)
+[up    Player]->[Player MoveU]
+[down  Player]->[Player MoveD]
+[left  Player]->[Player MoveL]
+[right Player]->[Player MoveR]
+(If player was already moving, keep moving.)
+up    [Player MoveU]->[> Player > MoveU]
+down  [Player MoveD]->[> Player > MoveD]
+left  [Player MoveL]->[> Player > MoveL]
+right [Player MoveR]->[> Player > MoveR]
+(If the player is moving, deactivate firewalls.)
+(If player is on a path, walk again.)
+[> Player > Move|Path no Move]->[|Player Move Path]again
+[> Player > Move|Path    Move]->[|Player Move Path]
+(If player reaches a node, stop walking.)
+[> Player > Move|Node5]->[|Player Node5]
+(If the player passes a firewall without the passcode, use stealth.)
+random [Player Firewall][Inventory stationary Stealth]->[Player Firewall][Inventory action Stealth]
+[Player FirewallB][Inventory PasscodeB][action Stealth]->[Player FirewallB][Inventory PasscodeB][stationary Stealth]
+[Player FirewallG][Inventory PasscodeG][action Stealth]->[Player FirewallG][Inventory PasscodeG][stationary Stealth]
+[Player FirewallC][Inventory PasscodeC][action Stealth]->[Player FirewallC][Inventory PasscodeC][stationary Stealth]
+[Player FirewallR][Inventory PasscodeR][action Stealth]->[Player FirewallR][Inventory PasscodeR][stationary Stealth]
+[Player FirewallM][Inventory PasscodeM][action Stealth]->[Player FirewallM][Inventory PasscodeM][stationary Stealth]
+[Player FirewallY][Inventory PasscodeY][action Stealth]->[Player FirewallY][Inventory PasscodeY][stationary Stealth]
+[action Stealth]->[]sfx1
+
+(If anything is still on a path, deactivate bombs and firewalls.)
+[Path Walker][action LaidBomb]->[Path Walker][stationary LaidBomb]
+[Path Walker][action Firewall]->[Path Walker][stationary Firewall]
+
+(===== Kill player =====)
+(If ICE catches a player, player is destroyed.)
+[Player Ice]->[Ice]sfx7
+(If there is no player, generate random code forever.)
+random [Background]->[action Background]
+[Player][action Background]->[Player][stationary Background]
+vertical [action Background|...|stationary Background]->[action Background|...|action Background]again
+startloop
+random horizontal [action Background|...|no Code]->[stationary Background|...|random Code]
+endloop
+
+(===== Detonate Bomb =====)
+[SentinelU action LaidBomb]->[FrozenSentinelU Timer2]sfx3
+[SentinelD action LaidBomb]->[FrozenSentinelD Timer2]sfx3
+[SentinelL action LaidBomb]->[FrozenSentinelL Timer2]sfx3
+[SentinelR action LaidBomb]->[FrozenSentinelR Timer2]sfx3
+[Hunter    action LaidBomb]->[FrozenHunter    Timer2]sfx3
+
+(===== Thaw ICE =====)
+[action FrozenSentinelU]->[stationary SentinelU]sfx4
+[action FrozenSentinelD]->[stationary SentinelD]sfx4
+[action FrozenSentinelL]->[stationary SentinelL]sfx4
+[action FrozenSentinelR]->[stationary SentinelR]sfx4
+[action FrozenHunter   ]->[stationary Hunter   ]sfx4
+
+(===== Rotate Firewalls =====)
+[action Firewall Path|Cover]->[> Firewall action Path|Cover]
+[> Firewall|action Firewall]->[> Firewall|> Firewall]
+[|action Path|...|> Firewall|no Cover]->[> Firewall|Path|...||]
+[> Firewall|no Firewall]->[|Firewall]
+[action Firewall]->[stationary Firewall]
+
+(===== Display Security Target =====)
+(Activate the link to display the target.)
+up [Player Security5|Security2]->[Player Security5|action Security2]
+left [action Security2|Link]->[stationary Security2|action Link]
+(Link to the other node.)
+[action LinkW][stationary LinkW]->[action LinkW][action LinkW]
+[action LinkX][stationary LinkX]->[action LinkX][action LinkX]
+[action LinkY][stationary LinkY]->[action LinkY][action LinkY]
+[action LinkZ][stationary LinkZ]->[action LinkZ][action LinkZ]
+[action Link Security1]->[stationary Link Security1]
+(Display the target.)
+right [Background|action Link|Background]->[left Background|stationary Link|right Background]
+down [|left  Background|]->[Target1|stationary Background|Target3]
+down [|right Background|]->[Target3|stationary Background|Target1]
+
+(===== Display Router Target =====)
+(Activate the link to display target.)
+up [Player Router5|Router2]->[Player Router5|action Router2]
+[Code ][action Router2]->[Code ][stationary Router2]
+[Morph][action Router2]->[Morph][stationary Router2]
+left [action Router2|Link]->[stationary Router2|action Link]
+(Link to the other node.)
+[action LinkW][stationary LinkW]->[action LinkW][action LinkW]
+[action LinkX][stationary LinkX]->[action LinkX][action LinkX]
+[action LinkY][stationary LinkY]->[action LinkY][action LinkY]
+[action LinkZ][stationary LinkZ]->[action LinkZ][action LinkZ]
+[action Link Router1]->[stationary Link Router1]
+[action Link Node1]->[stationary Link action Node1]
+[action Link Code]->[stationary Link]
+(Display the target.)
+right [action Node1||]->[stationary Node1 action Target1||action Target3]
+down [action Target1||]->[stationary Target1||Target3]
+down [action Target3||]->[stationary Target3||Target1]
+
+(===== Tutorial =====)
+[Player Database5 ][DatabaseI]->[Player Database5 ][]message ♪   Press X to search a green    ♪ ♪ Database node for passcodes.   ♪ ♪                                ♪ ♪  Passcodes will let you pass   ♪ ♪           firewalls.           ♪
+[Player Core5     ][CoreI    ]->[Player Core5     ][]message ♪ Find the white Admin passcode  ♪ ♪         in a database.         ♪ ♪                                ♪ ♪  Then return to the red Core   ♪ ♪ node and press X to install a  ♪ ♪        cascading virus.        ♪
+[Inventory Bomb   ][BombI    ]->[Inventory Bomb   ][]message ♪Press X in a cyan Worker node to♪ ♪install this ICE Breaker virus. ♪ ♪                                ♪ ♪ When a Sentinel encounters it, ♪ ♪  the virus will briefly crash  ♪ ♪         the Sentinel.          ♪
+[Inventory Stealth][StealthI ]->[Inventory Stealth][]message ♪  A stealth module allows you   ♪ ♪ pass through any firewall once ♪ ♪   without a valid passcode.    ♪
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+(Prologue)
+
+message -- SECURE CONNECTION --
+
+message ♪   Thank you for joining our    ♪ ♪    cause.  Together, we will   ♪ ♪      topple the corporate      ♪ ♪   stranglehold on humanity!    ♪ ♪                                ♪ ♪I know you're new here, so I'll ♪ ♪start you off on something easy.♪
+
+(1. Introduce Worker, Sentinal, Firewall, Database, Passcode, Core)
+
+message ♪ A script kiddie wanted to join ♪ ♪  us.  He thought he'd get our  ♪ attention by hacking our network.♪ ♪                                ♪ ♪  He didn't get anywhere, but   ♪ ♪    we don't let any attack     ♪ ♪         go unpardoned.         ♪ ♪                                ♪ ♪ Show this kid he has a lot to  ♪ ♪   learn.  Crash his network.   ♪
+
+message ♪You'll always enter the network ♪ ♪  at the purple Gateway node.   ♪ ♪                                ♪ ♪   Watch out for Sentinel ICE   ♪ ♪patrolling the network.  They'll♪ ♪flatline you if they catch you! ♪
+
+--------------------1-----1
+-------I+++++A+++++B+++++B-
+-------------------------+-
+-------------------------+-
+-------------------------!-
+-------------------------+-
+--------0-----------2----+-
+-A*****B+++++A-----B-----A-
+-*-----*-----------+-----+-
+-*-----*-----------+-----+-
+-*-----*-----------+-----+-
+-*-----*-----------+-----+-
+-*0----U-----------+-----+-
+-B+++++C++@++A*****AR****A-
+-*-----*-----------+-------
+-*-----*-----------+-------
+-*-----*-----------+-------
+-*-----*-----------+-------
+-*-----*0----------+2---~//
+-A*****B+++++A-----B----//E
+------------------------//F
+
+message ♪             Great!             ♪ ♪                                ♪ ♪      You'll go far here.       ♪
+
+(2. Introduce Security, Bomb)
+
+message ♪     Your next target is a      ♪ ♪  journalist who is reporting   ♪ ♪       on our activities.       ♪ ♪                                ♪        Crash his network        ♪ ♪      and wipe his files.       ♪
+
+message ♪ Press X in the yellow Security ♪ ♪node to breifly crash a Seninel.♪
+
+------420-----------8------
+-------B-----C-----B-------
+-------+-----+-----+-------
+-------+-----+-----+-------
+-------+-----$-----@-------
+-------+-----+-----+-------
+420----+-----+-----+----420
+-B+++++A*****ARZ***A+++++B-
+-------+-----+-----+-------
+-------+-----+-----+-------
+-------+-----+-----+-------
+-------+-----+-----+-------
+-------+-----+-----+-------
+-------A*****AR****A-------
+-------+-----+-------------
+-------+-----+-------------
+-------+-----+-------------
+-------+-----+-------------
+------Z+-----+----------~//
+-------S-----A+++++I----///
+------------------------//J
+
+(3. Introduce Router, Hunter)
+
+message ♪           Excellent!           ♪ ♪                                ♪ ♪    Next we need to secure a    ♪ ♪   network to use as a relay    ♪ ♪      for future attacks.       ♪ ♪   This hosting company has a   ♪ ♪  suitable connection and node  ♪ ♪     array we can utilise.      ♪
+
+message ♪  Hunter ICE will chase you if  ♪ ♪         you're nearby.         ♪ ♪                                ♪ ♪   Press X in the blue Router   ♪ ♪   node to bring other nodes    ♪ ♪       online or offline.       ♪
+
+--------------------------5
+-B+++++A*****A*****A+++++B-
+-------*-----------D-------
+-------*-----------*-------
+-------*-----------*-------
+-------*-----------*-------
+-------U-----------*-------
+-I+++++A*****A**%**A+++++B-
+-------------+-------------
+-------------+-------------
+-------------+-------------
+-------------+-------------
+------Z-----Z+------------6
+-B+++++N+++++A+++++A+++++B-
+-+-----+-----------+-------
+-+-----+-----------+-------
+-+-----+-----------+-------
+-+-----+-----------+-------
+-H-----+0---------Y+----~//
+-A+++++B-----C++&++S----///
+-Y----------------------///
+
+(4a. Introduce Rotational Firewall, Gateway)
+
+message ♪     Okay, the path is set.     ♪ ♪                                ♪ ♪Together, we need to compromise ♪ ♪   several satelite networks    ♪ ♪   before we can take on the    ♪ Yutani-Boyd Alliance headquarters. ♪   I'm directing you to your    ♪ ♪      assigned target now.      ♪
+
+message ♪    This network is layered.    ♪ ♪  Press X in the second purple  ♪ ♪   Gateway node to connect to   ♪ ♪     the internal network.      ♪ ♪                                ♪ ♪The firewall here has a rotating♪ ♪  passcode.  Time it right and  ♪ ♪    you can slide past with     ♪ ♪       just one passcode.       ♪
+
+------------Z--------------
+-------------N-------------
+-------------+-------------
+-------------+-------------
+-------------+-------------
+-------------+-------------
+-------------+-------------
+-A*****BR****A*****B*****A-
+-+-----+-----+-----+-----+-
+-+-----+-----+-----+-----+-
+-+-----+-----#-----+-----+-
+-+-----+-----+-----+-----+-
+-+-----+3---Z+-----+-----+-
+-A*****BR****A*****A-----I-
+-------------+-------------
+-------------+-------------
+-------------#!#@----------
+-------------+-------------
+-------------+----------~//
+-------------G----------///
+------------------------///
+
+(4b. Introduce Stealth)
+
+-------60----------60------
+-------B++$++A++$++B-------
+-------+-----+-----+-------
+-------+-----+-----+-------
+-------+-----+-----+-------
+-------+-----+-----+-------
+-------+-----+-----+-------
+-C**&**AR*$**B**$**A*****A-
+-+-----+-----+-----+-----+-
+-+-----+-----+-----+-----+-
+-&-----+-----+-----+-----+-
+-+-----+-----+-----+-----+-
+-+7----+-----+-----+-----+7
+-B**#**AR*$**B**$**A**#**B-
+-------+-----+-----+-------
+-------+-----+-----+-------
+-------+-----+-----+-------
+-------+-----+-----+-------
+-------+-----+-----+----3//
+-------A++#++I++#++A----~//
+------------------------//K
+
+(5a. Introduce multi-Security)
+
+message ♪              Yes!              ♪ ♪  That's what we want to see!   ♪
+
+message Unfortunately, one of our members♪ ♪failed and was flatlined by the ♪ ♪  network he was infiltrating.  ♪ ♪                                ♪ ♪     You'll have to make a      ♪ ♪        second attempt.         ♪ ♪                                ♪ ♪           Watch out,           ♪ ♪  security has been increased!  ♪
+
+--3---------------------Y--
+-B++#++A+++++I-----A+++++N-
+-+-----*-----+-----+-----+-
+-+-----*-----+-----+-----+-
+-+-----*-----+-----+-----+-
+-+-----*-----+-----+-----+-
+-+-----*-----+-----+-----+-
+-A+++++*+++++A+++++A-----+-
+-------*-----+-----*-----+-
+-------*-----+-----*-----+-
+-------*-----+-----*-----+-
+-------Z-----+-----Z-----+-
+-------U----Y+-----U-----+-
+-A+++++A+++++A+++++A+++++A-
+-+-----------+-------------
+-+-----------+-------------
+-#-----------+-------------
+-+-----------+-------------
+-+----------Z+----------~//
+-GR****A-----S----------///
+------------------------///
+
+(5b. Introduce multi-Router)
+
+--------1-----------4---Y--
+-A**!**B-----I-----B+++++SY
+-*-----*-----+-----+-----H-
+-*-----*-----+-----+-----+-
+-*-----*-----+-----+-----+-
+-*-----*-----+-----+-----+-
+-*-----*2----+-----+----Z+7
+-A-----B+++++A++@++A-----B-
+-*-----*-----------+-----+-
+-*-----*-----------+-----+-
+-*-----*-----------+-----+-
+-*-----*-----------+-----+-
+-*-----*0---------Z+-----+-
+-A****LB-----C++%++A+++++A-
+----------------$--+-------
+-------------------+-------
+-------------------+-------
+-------------------+-------
+------------------Z+----3//
+-------------------N----~//
+------------------------///
+
+(6a. Introduce sentinel colission)
+
+message ♪       The time has come.       ♪ ♪                                ♪ ♪   Today will be the day the    ♪ ♪     world will witness the     ♪ ♪    corporate empire topple!    ♪
+
+message ♪ We're attacking from multiple  ♪ ♪    fronts to stretch their     ♪ ♪    security resources thin.    ♪ ♪                                ♪ ♪    Use the last network you    ♪ ♪    compromised as a relay.     ♪ ♪                                ♪ ♪    Let's make this happen!     ♪
+
+--------------------------8
+-G**%**A-----A*****A+++++B-
+-------*-----*-----+-----+-
+-------*-----*-----+-----+-
+-------*-----*-----!-----!-
+-------*-----*-----+-----+-
+--1----*-----*-----+-----+-
+-B****LA*****A*****A-----I-
+-------*-----*-----+-----+-
+-------*-----*-----+-----+-
+-------*-----*-----+-----+-
+-------*-----*-----+-----+-
+Z------*-----*----Z+-----+-
+-N++!++A-----A++!++A+++++A-
+-+-----*-----*-----+-------
+-+-----*-----*-----+-------
+-$!----$-----$-----!-------
+-+-----*-----*-----+-------
+-+--$--U-----U--$--+5---~//
+-B++!++A+++++A++!++B----///
+------------------------///
+
+(6b. No safe zone)
+
+--7------------------------
+-B++@++A****LA*****A-------
+-+--&--*-----------*-------
+-+-----*-----------*-------
+-@&----*-----------*-------
+-+-----*-----------*-------
+-+2----*------7----*-------
+-B****LA*****B-----A++$++G-
+-*-----*-----*-----*-------
+-*-----*-----*-----*-------
+-*-----$-----*-----*-------
+-*-----*-----*-----*-------
+-*-----*6----*-----*-------
+-A-----B**@**AR*$**A-------
+-*-----------*-----+-------
+-*-----------*-----+-------
+-*-----------*-----%-------
+-*-----------*-----+-------
+-*8----------*2----+----1//
+-B*****AR****B++$++I----5//
+------------------------~//
+
+(6c. Extensive planning)
+
+------Z-----X-----Y--------
+-A+++++N+++++N+++++N+++++I-
+-+-----D-----D-----D-------
+-+-----*-----*-----*-------
+-+-----$-----$-----$-------
+-+-----*-----*-----*-------
+-+--$-X*--$-Y*--@-Z*--&----
+-A++!++A++%++A++$++A++$++C-
+-+-----*-----*-----*-------
+-+-----*-----*-----*-------
+-+-----*-----*-----*-------
+-+-----*-----*-----*-------
+-+-----*-----*0----*------3
+-A++#++A++#++B++#++A+++++B-
+-------*-----*-----*-------
+-------*-----*-----*-------
+-------*-----*-----*-------
+-------*-----*-----*-------
+-------*-----*-----*----16/
+-------A-----A-----A----5~/
+------------------------2//
+
+(Epilogue)
+
+--7------------------------
+-B++@++A****LA*****A-------
+-+--&--*-----------*-------
+-+-----*-----------*-------
+-@&----*-----------*-------
+-+-----*-----------*-------
+-+2----*------7----*-------
+-B****LA*****B-----A++$++Q-
+-*-----*-----*-----*-------
+-*-----*-----*-----*-------
+-*-----$-----*-----*-------
+-*-----*-----*-----*-------
+-*-----*6----*-----*-------
+-A-----B**@**AR*$**A-------
+-*-----------*-----+-------
+-*-----------*-----+-------
+-*-----------*-----%-------
+-*-----------*-----+-------
+-*8----------*2----+----16~
+-B*****AR****B++$++T----53/
+------------------------20/
+
+--------------------------8
+-Q**%**A-----A*****A+++++B-
+-------*-----*-----+-----+-
+-------*-----*-----+-----+-
+-------*-----*-----!-----!-
+-------*-----*-----+-----+-
+--1----*-----*-----+-----+-
+-B****LA*****A*****A-----T-
+-------*-----*-----+-----+-
+-------*-----*-----+-----+-
+-------*-----*-----+-----+-
+-------*-----*-----+-----+-
+-------*-----*-----+-----+-
+-N++!++A-----A++!++++++++A-
+-+-----*-----*-----+-------
+-+-----*-----*-----+-------
+-$!----$-----$-----!-------
+-+-----*-----*-----+-------
+-+--$--U-----U--$--+5---16~
+-B++!++A+++++A++!++B----53/
+------------------------20/
+
+
+message ♪             Haha!              ♪ ♪ It's all over the media feeds. ♪ ♪                                ♪ ♪ "Yutani-Boyd networks suffer  ♪ massive outages and loss of data." ♪                                ♪ ♪  "YBN stock prices plummet."   ♪ ♪                                ♪ Reports say it'll be months before ♪   they make a full recovery.   ♪
+ 
+message I can't thank you enough.  Your skills and moral code made this possible.  There's no other way we'd have been able to do this without scrutiny and retaliation.
+
+message ♪        Our corporation,        ♪ ♪     Northdyne Industries,      ♪ ♪will fill the void left behind. ♪ ♪                                ♪ ♪We will surpass the Yutani-Boyd ♪ ♪ Alliance as the world's number ♪ ♪        one corporation!        ♪
+
+message ♪        And best of all,        ♪ ♪      you worked for free.      ♪
+
+message -- DISCONNECTED --
+
+message
+
+(7a. Persistent hunter)
+
+message Northdyne Industries have nowhere♪ ♪   near as many resources as    ♪ ♪          Yutani-Boyd.          ♪ ♪                                ♪ And Northdyne has forgotten about♪ one of their unused attack relays.
+
+message ♪ And I intend to make them pay! ♪
+
+
+------Z-------------------7
+-A+++++A++%++I+++++A*****B-
+-+-----------+-----*-----*-
+-+-----------+-----*-----*-
+-+-----------%-----*-----*-
+-+-----------+-----*-----*-
+-+----Z------+-----U-----*-
+-A+++++N+++++A++$++A*****A-
+-+-----------------+-----+-
+-+-----------------+-----+-
+-+-----------------%-----+-
+-+-----------------+-----+-
+Y+----0-5---Z------+-----H-
+-S+++++B**$**A****LA++%++AY
+-+-----*-----------*-------
+-+-----*-----------*-------
+-+-----$-----------*-------
+-+-----*-----------*-------
+0+5----*-----------*----~//
+-B-----C*****A*****A----///
+------------------------///
+
+(7b. Entensive patience)
+
+------W--------------------
+-I+++++N-----------A++#++G-
+-+-----D-----------*-----+-
+-+-----*-----------*-----+-
+-+-----*-----------!-----!-
+-+-----*-----------*-----+-
+Y+----W*1---------X*-----+-
+-N*****B*****A*****A**#*LA-
+-------*-----------*-------
+-------*-----------*-------
+-------!-----------*-------
+-------*-----------*-------
+Z-----Y*3---------Z*-------
+-NR*%**B*****A*****A*****A-
+-+-----*-----------*-------
+-+-----*-----------*-------
+-+-----%-----------*-------
+-+-----*-----------*-------
+-+----X*-----------U----5//
+-A+++++N-----------A----~//
+------------------------///
+
+(7c. Double network)
+
+----------7-------6-----Z--
+---------B*******B+++++++N-
+---------*-------*-------+-
+---------*-------*-------+-
+------2--*-------*--Z----+-
+-----B+++%+++A+++@+++N---+-
+-----+---*---+---*---+---+-
+-----+---*---+---*---+---+-
+Y----+--Z*--Ž+--Z*---+---+7
+-S***&***A*******ARX*@***B-
+-*---+---D---+---*---+---*-
+-*---+---Y---+---*---+---*-
+-*---+--Ž*--Z+--Ž*---+---*-
+-*---A+++*+++A+++*+++A---*-
+-*---+---*---+---*---+---*-
+-*---+---*---+---Y---+---*-
+-*7--+--Z*--Ž+--ZU---+---*7
+-B***$*XLA*******A***%***B-
+-+---+---*---+---*---+-----
+-+---+---*---+---*---+-----
+-+---+---*---+---*---+-----
+-+---C+++$+++I+++&+++B-----
+-+-------*-------*---------
+-+-------*-------*---------
+-+0------*7-----X*------5~/
+-B+++++++B*******S------1//
+------------------------3//
+
+(Epilogue)
+
+message -- BROADCASTING --
+
+message ♪     Northdyne Industries,      ♪ ♪  you sought to be the leader,  ♪ ♪ but you are just a gear in the ♪ ♪   greater corporate machine.   ♪ ♪                                ♪ ♪    You are a petty gear that   ♪ ♪    sought to tear apart the    ♪ ♪    machine you are part of.    ♪
+
+message ♪     Yutani-Boyd Alliance,      ♪ ♪     Northdyne Industries,      ♪ ♪     Ultrabreak Merchants,      ♪ ♪        Ortov-Lei Group,        ♪ ♪and every other inhuman entity: ♪ ♪                                ♪ ♪     You put a spanner in       ♪ ♪        your own gears.         ♪
+
+message ♪   And gave us little people    ♪ ♪    the leverage we need to     ♪ ♪    tear your machine apart!    ♪
+
+''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''
+'''''''ÀÁÂ'ÃÄÅÆÇÈ'ÄÉÊËÌÎÏÐÑÒÓ'ÔÀÕ'''''''
+'''''''''''''''''''Ċ''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''
+''''''''''''Ö×ØÙÚ'ÛÜÝÞßĀĂĄĆĈ''''''''''''
+''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''Č

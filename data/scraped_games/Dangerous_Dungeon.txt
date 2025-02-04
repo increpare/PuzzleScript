@@ -1,0 +1,727 @@
+title Dangerous Dungeon
+
+run_rules_on_level_start
+again_interval 0.05
+========
+OBJECTS
+========
+
+Background
+#222 #BBBBBB #CCCCCC
+01110
+12221
+12221
+12221
+01110
+
+
+wall
+darkgrey
+
+wu
+#222
+00000
+.....
+.....
+.....
+.....
+
+wd
+#222
+.....
+.....
+.....
+.....
+00000
+
+wl
+#222
+0....
+0....
+0....
+0....
+0....
+
+wr
+#222
+....0
+....0
+....0
+....0
+....0
+
+
+bu
+darkbrown lightbrown darkbrown
+.....
+.212.
+.111.
+.111.
+.....
+
+bl
+darkbrown lightbrown darkbrown
+.....
+.211.
+.111.
+.211.
+.....
+
+br
+darkbrown lightbrown darkbrown
+.....
+.112.
+.111.
+.112.
+.....
+
+bd
+darkbrown lightbrown darkbrown
+.....
+.111.
+.111.
+.212.
+.....
+
+gu
+black green darkblue
+.....
+.212.
+.111.
+.111.
+.....
+
+gl
+black green darkblue
+.....
+.211.
+.111.
+.211.
+.....
+gr
+black green darkblue
+.....
+.112.
+.111.
+.112.
+.....
+
+gd
+black green darkblue
+.....
+.111.
+.111.
+.212.
+.....
+
+au
+transparent
+
+ad
+transparent
+
+al
+transparent
+
+ar
+transparent
+
+
+
+ag
+transparent
+
+vt
+transparent
+
+ht
+transparent
+
+spikes
+darkgrey
+.....
+..0..
+.0.0.
+..0..
+.....
+
+ru
+red grey
+..1..
+.111.
+..0..
+..0..
+..0..
+rr
+red grey
+.....
+...1.
+00011
+...1.
+.....
+
+rd
+red grey
+..0..
+..0..
+..0..
+.111.
+..1..
+rl
+red grey
+.....
+.1...
+11000
+.1...
+.....
+
+goal
+green
+
+tag 
+transparent
+
+tut1
+transparent
+
+tut2
+transparent
+
+blood1
+red
+..0..
+...0.
+00...
+.0..0
+.0...
+
+blood2
+red
+...0.
+...0.
+.0..0
+0..0.
+.0...
+
+blood3
+red
+..0..
+0.0.0
+...0.
+.0...
+...0.
+blood4
+red
+.0...
+...0.
+0.0..
+..0.0
+..0..
+
+blood5
+red
+..0..
+.0..0
+.0.0.
+0....
+.0...
+
+su1
+#9999FF
+.000.
+.....
+.....
+.....
+.....
+
+sl1
+#9999FF
+.....
+0....
+0....
+0....
+.....
+
+sd1
+#9999FF
+.....
+.....
+.....
+.....
+.000.
+
+sr1
+#9999FF
+.....
+....0
+....0
+....0
+.....
+
+s1
+#9999FF
+.....
+.000.
+.000.
+.000.
+.....
+
+su2
+#FF9999
+.000.
+.....
+.....
+.....
+.....
+
+sl2
+#FF9999
+.....
+0....
+0....
+0....
+.....
+
+sd2
+#FF9999
+.....
+.....
+.....
+.....
+.000.
+
+sr2
+#FF9999
+.....
+....0
+....0
+....0
+.....
+
+s2
+#FF9999
+.....
+.000.
+.000.
+.000.
+.....
+
+temp
+transparent
+
+togg1
+transparent
+
+togg2
+transparent
+
+stay
+transparent
+
+endspot
+transparent
+
+noarrow
+transparent
+
+bulls
+transparent
+
+bulls2
+transparent
+
+endspot2
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+blood = blood1 or blood2 or blood3 or blood4 or blood5
+bx = bu or br or bd or bl
+player = bx
+gx = gu or gr or gd or gl
+ax = au or al or ad or ar
+rx = ru or rl or rd or rr
+sx1 = su1 or sd1 or sl1 or sr1
+
+s = spikes
+1 = bu
+2 = bd
+3 = bl
+4 = br
+5 = gu
+6 = gd
+7 = gl
+8 = gr
+! = wu
+@ = wd
+$ = wl
+% = wr
+~ = s and wu
+- = tut1
+_ = tut2
+^ = su1 and wu
+& = sl1 and wl
+* = sr1 and wr
++ = sd1 and wd
+: = su2 and wu
+; = sl2 and wl
+" = sr2 and wr
+' = sd2 and wd
+\ = su1 and wr
+[ = s1
+] = s1 and s
+{ = s2
+} = s2 and s
+? = gl and wu
+/ = s1 and s and wu
+e = s1  and wu
+> = endspot
+< = 8 and wu 
+x = noarrow and wall
+y = bulls and wall
+q = s1 and spikes and wd
+w = s1 and wd
+r = endspot2 and s
+
+=======
+SOUNDS
+=======
+SFX0 28968702
+SFX1 36492501
+SFX2 10918307
+SFX3 33819107
+SFX4 36751101
+SFX5 21509902
+SFX6 97185102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+blood1
+blood2
+blood3
+blood4
+blood5
+tag
+ag
+au
+al
+ar
+ad
+s1
+s2
+bx, 
+Wall, 
+wu
+wd
+wl
+wr
+
+sl1
+sr1
+sd1
+su1
+sl2
+sr2
+su2
+sd2
+gx
+
+goal
+spikes
+rx
+ht
+vt
+tut1
+tut2
+temp
+togg1
+togg2
+stay
+endspot
+noarrow
+bulls
+bulls2
+endspot2
+======
+RULES
+======
+
+late [bx tut1] -> [bx] message Watch out! If that monster sees you, you're a goner for sure!
+late [bx tut2] -> [bx] message Make sure not to step on those sharp spikes either!
+
+up [no wall|wall] -> [|wall wd]
+down [no wall|wall] -> [|wall wu]
+right [no wall|wall] -> [|wall wl]
+left [no wall|wall] -> [|wall wr]
+
+down [|wu] -> [wd|wu]
+up [|wd] -> [wu|wd]
+right [| wl] -> [wr|wl]
+left [| wr] -> [wl|wr]
+
+[ax] -> []
+[bx] -> [bx au ad al ar]
+
+[noarrow][action bx] -> [noarrow][bx]
+
+ [action bu ] -> [action bu ru]
+ [action bl ] -> [action bl rl]
+ [action bd ] -> [action bd rd]
+ [action br ] -> [action br rr]
+ 
+ 
+   
+up [au  no wu no gx| no wd] -> [au|au]
+down [ad  no wd no gx| no wu] -> [ad|ad]
+left [al no wl no gx| no wr] -> [al|al]
+right [ar  no wr no gx| no wl] -> [ar|ar]
+
+[tag][stationary ru] -> [tag][up ru]
+[tag][stationary rl] -> [tag][left rl]
+[tag][stationary rd] -> [tag][down rd]
+[tag][stationary rr] -> [tag][right rr]
+
+[au gx] -> [au gd]
+[al gx] -> [al gr]
+[ar gx] -> [ar gl]
+[ad gx] -> [ad gu]
+(late [au gx] -> [au gd]
+late [al gx] -> [al gr]
+late [ar gx] -> [ar gl]
+late [ad gx] -> [ad gu]
+)
+[ag][gu] -> [ag ][up gu] 
+[ag][gl] -> [ag][left gl] 
+[ag ][gr] -> [ag ][right gr] 
+[ag ][gd] -> [ag ][down gd] 
+
+
+[up gx wu] -> [stationary gx wu]
+[left gx wl] -> [stationary gx wl]
+[right gx wr] -> [stationary gx wr]
+[down gx wd] -> [stationary gx wd]
+
+[left bx] -> [left bl] 
+[right bx] -> [right br] 
+[down bx] -> [down bd] 
+[up bx] -> [up bu] 
+
+[ag] -> []
+[tag] -> [ag] again
+[moving player] -> [tag moving player] again 
+[action player] -> [tag action player] again SFX1
+
+
+[up bx wu] -> [stationary bx wu]
+[left bx wl] -> [stationary bx wl]
+[right bx wr] -> [stationary bx wr]
+[down bx wd] -> [stationary bx wd]
+[ >  bx | rx ] -> [  stationary bx | rx  ]
+
+
+[moving gx stay] -> [stationary gx stay] 
+
+[moving gx] -> SFX2
+[moving bx] -> SFX3
+[moving rx] -> SFX4
+
+([> bx | gx] -> cancel)
+[> gx| | < gx] -> [|random blood|] SFX5
+vertical [> gx|] -> [> gx | vt]
+horizontal [> gx|] -> [> gx | ht]
+vertical [> gx | ht] -> [|random blood ht] SFX5
+horizontal [> gx | vt] -> [|random blood vt] SFX5
+[ht] -> []
+[vt] -> []
+
+[up rx su1] -> [up rx su1 togg1] SFX6
+[left rx sl1] -> [left rx sl1 togg1] SFX6
+[down rx sd1] -> [down rx sd1 togg1] SFX6
+[right rx sr1] -> [right rx sr1 togg1] SFX6
+
+[s1 spikes][togg1] -> [s1 temp][togg1]
+[s1 no spikes no temp][togg1] -> [s1 spikes][togg1]
+
+[up rx su2] -> [up rx su2 togg2] SFX6
+[left rx sl2] -> [left rx sl2 togg2] SFX6
+[down rx sd2] -> [down rx sd2 togg2] SFX6
+[right rx sr2] -> [right rx sr2 togg2] SFX6
+
+[s2 spikes][togg2] -> [s2 temp][togg2]
+[s2 no spikes no temp][togg2] -> [s2 spikes][togg2]
+
+[togg1][ bulls2] -> [togg1] []message I can't hit the switch with my hand, because... uh.... that just wouldn't look nearly as cool!
+[togg1][ bulls] -> [togg1] [bulls2]message Bullseye!
+
+
+
+[temp] -> []
+[togg1] -> []
+[togg2] -> []
+
+[up rx wu] -> [ wu]
+[left rx wl] -> [ wl]
+[right rx wr] -> [ wr]
+[down rx wd] -> [ wd]
+
+
+
+late [bx s] -> [s random blood stay] SFX0
+late [bx gx] -> [gx random  blood stay] SFX0
+late [gx s] -> [s random blood] SFX5
+late [gx rx] -> [random blood] SFX5
+==============
+WINCONDITIONS
+==============
+all endspot2 on blood
+all endspot on player
+no gx
+
+
+=======
+LEVELS
+=======
+
+
+
+
+
+
+
+
+(
+
+#########
+#@.!%~@.#
+#.@~@.@_#
+#$s.@.5$#
+#@!%4-!@#
+#########
+)
+
+message I'd better watch out, those look like some really sharp spikes, and definitely not just like four squares on the ground
+
+
+message This dungeon sure is dangerous... but it will all pay off!
+
+
+
+#######
+#.@.s>#
+#%s%!.#
+#1%%@!#
+#%!.s.#
+#s.!!.#
+x######
+
+message I've heard a legend that if I get to the end of this dungeon and defeat the ultimate monster, there'll be a huge treasure!
+
+message And there better not be some "The treasure was me the whole time" twist...
+
+message Uh oh. Speaking of monsters, there's one now. It'll probably chase after me if it sees me.
+
+message I've gotta make sure to kill all the monsters, so they won't fight me on my way out
+
+####
+##7#
+##$#
+#4%#
+#%s#
+#.@#
+x###
+
+
+
+
+#####
+#8@.#
+#8!%#
+###$#
+#!!%#
+#4!.#
+x####
+
+message Hah! Killed two monsters with one stone!
+
+message I don't care how tough you think you are "ultimate monster", I'm coming for you!
+
+message Press action to fire an arrow! How do you like a piece of that!
+
+########
+#.@@@@.#
+#@@6@@.#
+#4.!..7#
+########
+
+########
+#!!!...#
+#$.....#
+#4..%#7#
+#....!.#
+#.....%#
+#....@@#
+########
+
+message I think if I fire an arrow, I might be able to hit that switch
+
+
+ 
+#######
+#4@].*#
+#!6/!.#
+y######
+
+#############
+#6!!!/![!e!!#
+#!!4!??7???*#
+#######7#####
+#############
+
+#######
+#5s...#
+#!:!^$#
+#$..%$#
+#$..*$#
+#&3.%]#
+#$.."}#
+#;..{[#
+#@@'+.#
+#######
+
+########
+#^%5@..#
+#.%!^].#
+#].&..##
+#.2$]*##
+#...6.##
+########
+
+message "Why are you killing us off!?"
+
+message "I have a family!"
+
+message Oh...
+
+message Oh god...
+
+message The treasure wasn't me the whole time...
+
+message The ultimate monster was...
+
+message I've gotta make sure to kill all the monsters
+
+#############
+#4.........r#
+#############
+
+
+
+
+

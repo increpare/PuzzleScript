@@ -1,0 +1,764 @@
+title Alcazar
+author TheIncredibleCompany
+homepage https://www.theincrediblecompany.com
+run_rules_on_level_start
+key_repeat_interval 0.25
+background_color LightGrey
+text_color #444
+
+========
+OBJECTS
+========
+
+Background
+LightGrey
+
+BackgroundDark
+Grey
+
+Deactivated
+Transparent
+
+Activated
+#9EB4EC
+
+ActivatedDark
+#6C81B7
+
+Wall 
+DarkBrown
+
+Completed1
+Transparent
+
+Completed2
+Transparent
+
+Completed3
+Transparent
+
+Marker
+Transparent
+
+Marker2
+Transparent
+
+Deco
+Transparent
+
+DarkWallLeft
+#2B241A
+.....
+0....
+0....
+0....
+.....
+
+DarkWallRight
+#2B241A
+.....
+....0
+....0
+....0
+.....
+
+DarkWallUp
+#2B241A
+.000.
+.....
+.....
+.....
+.....
+
+DarkWallDown
+#2B241A
+.....
+.....
+.....
+.....
+.000.
+
+DarkWallC1
+#2B241A
+0....
+.....
+.....
+.....
+.....
+
+DarkWallC2
+#2B241A
+....0
+.....
+.....
+.....
+.....
+
+DarkWallC3
+#2B241A
+.....
+.....
+.....
+.....
+0....
+
+DarkWallC4
+#2B241A
+.....
+.....
+.....
+.....
+....0
+
+ActivatorUp
+#2B241A Blue
+..1..
+01110
+00100
+.000.
+.....
+
+ActivatorDown
+#2B241A Blue
+.....
+.000.
+00100
+01110
+..1..
+
+ActivatorRight
+#2B241A Blue
+..00.
+.001.
+.0111
+.001.
+..00.
+
+ActivatorLeft
+#2B241A Blue
+.00..
+.100.
+1110.
+.100.
+.00..
+
+Placing
+Transparent
+
+PieceMiddle2
+Transparent
+
+PieceMiddle3
+Transparent
+
+Player 
+DarkRed
+00.00
+0...0
+.....
+0...0
+00.00
+
+PlayerHighlight
+Brown
+00.00
+0...0
+..0..
+0...0
+00.00
+
+PieceMiddle
+DarkBlue LightBlue
+.....
+.000.
+.010.
+.000.
+.....
+
+PieceMiddleActivated
+Blue
+.....
+.....
+..0..
+.....
+.....
+
+PieceUp
+DarkBlue LightBlue
+.010.
+..1..
+.....
+.....
+.....
+
+PieceUpActivated
+Blue
+..0..
+..0..
+.....
+.....
+.....
+
+PieceDown
+DarkBlue LightBlue
+.....
+.....
+.....
+..1..
+.010.
+
+PieceDownActivated
+Blue
+.....
+.....
+.....
+..0..
+..0..
+
+PieceLeft
+DarkBlue LightBlue
+.....
+0....
+11...
+0....
+.....
+
+PieceLeftActivated
+Blue
+.....
+.....
+00...
+.....
+.....
+
+PieceRight
+DarkBlue LightBlue
+.....
+....0
+...11
+....0
+.....
+
+PieceRightActivated
+Blue
+.....
+.....
+...00
+.....
+.....
+
+PieceUpEnd
+DarkBlue
+..0..
+.....
+.....
+.....
+.....
+
+PieceDownEnd
+DarkBlue
+.....
+.....
+.....
+.....
+..0..
+
+PieceLeftEnd
+DarkBlue
+.....
+.....
+0....
+.....
+.....
+
+PieceRightend
+DarkBlue
+.....
+.....
+....0
+.....
+.....
+
+ThinWallUp
+#2B241A
+00000
+.....
+.....
+.....
+.....
+
+ThinWallDown
+DarkBrown
+.....
+.....
+.....
+.....
+00000
+
+ThinWallLeft
+#2B241A
+0....
+0....
+0....
+0....
+0....
+
+ThinWallRight
+DarkBrown
+....0
+....0
+....0
+....0
+....0
+
+ThinWallC1
+#2B241A
+0....
+.....
+.....
+.....
+.....
+
+ThinWallC2
+#2B241A
+....0
+.....
+.....
+.....
+.....
+
+ThinWallC3
+#2B241A
+.....
+.....
+.....
+.....
+0....
+
+ThinWallC4
+DarkBrown
+.....
+.....
+.....
+.....
+....0
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+U = ActivatorUp AND Wall
+L = ActivatorLeft AND Wall
+D = ActivatorDown AND Wall
+R = ActivatorRight AND Wall
+
+┴ = ThinWallUp
+┬ = ThinWallDown
+┤ = ThinWallLeft
+├ = ThinWallRight
+
+PieceDir = PieceUp OR PieceDown OR PieceLeft OR PieceRight
+PieceDirActivated = PieceUpActivated OR PieceDownActivated OR PieceLeftActivated OR PieceRightActivated
+PieceEnd = PieceUpEnd OR PieceDownEnd OR PieceLeftEnd OR PieceRightEnd
+
+Activator = ActivatorUp OR ActivatorDown OR ActivatorLeft OR ActivatorRight
+
+=======
+SOUNDS
+=======
+
+SFX0 74798907
+SFX1 13093300
+EndLevel 99487903
+StartGame 10095707
+CloseMessage 10095707
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BackgroundDark
+Activated
+ActivatedDark
+Deactivated
+Wall
+
+PieceMiddle
+PieceMiddle2
+PieceMiddle3
+
+DarkWallLeft
+DarkWallRight
+DarkWallUp
+DarkWallDown
+DarkWallC1
+DarkWallC2
+DarkWallC3
+DarkWallC4
+
+ThinWallC1
+ThinWallC2
+ThinWallC3
+ThinWallC4
+ThinWallUp
+ThinWallDown
+ThinWallLeft
+ThinWallRight
+
+Activator
+PieceMiddleActivated
+
+Player
+PlayerHighlight
+
+PieceUp
+PieceDown
+PieceLeft
+PieceRight
+
+PieceUpActivated
+PieceDownActivated
+PieceLeftActivated
+PieceRightActivated
+
+PieceUpEnd
+PieceDownEnd
+PieceLeftEnd
+PieceRightEnd
+
+Placing
+Marker
+Marker2
+Completed1
+Completed2
+Completed3
+Deco
+
+======
+RULES
+======
+
+(
+	DECORATIONS
+)
+
+RIGHT[No Deco | No Deco] -> [No Deco | Deco]
+DOWN[No Deco | No Deco] -> [No Deco | Deco]
+RIGHT[Deco | Deco] -> [Deco | ]
+DOWN[Deco | Deco] -> [Deco | ]
+(This has been directly stolen from Filler)
+
+RIGHT[Wall No DarkWallC4 | No Marker] -> [Wall | Marker]
+DOWN[Marker | No Wall] -> [Marker2 | ]
+RIGHT[Wall No DarkWallC4 | No Wall] -> [Wall DarkWallC4 | ]
+DOWN[Wall No DarkWallC4 | No Wall] -> [Wall DarkWallC4 | ]
+RIGHT[Wall No DarkWallC4 | Marker2] -> [Wall DarkWallC4 | ]
+[Marker] -> []
+[Marker2] -> []
+
+LEFT[Wall No DarkWallC3 | No Marker] -> [Wall | Marker]
+DOWN[Marker | No Wall] -> [Marker2 | ]
+LEFT[Wall No DarkWallC3 | No Wall] -> [Wall DarkWallC3 | ]
+DOWN[Wall No DarkWallC3 | No Wall] -> [Wall DarkWallC3 | ]
+LEFT[Wall No DarkWallC3 | Marker2] -> [Wall DarkWallC3 | ]
+[Marker] -> []
+[Marker2] -> []
+
+RIGHT[Wall No DarkWallC2 | No Marker] -> [Wall | Marker]
+UP[Marker | No Wall] -> [Marker2 | ]
+RIGHT[Wall No DarkWallC2 | No Wall] -> [Wall DarkWallC2 | ]
+UP[Wall No DarkWallC2 | No Wall] -> [Wall DarkWallC2 | ]
+RIGHT[Wall No DarkWallC2 | Marker2] -> [Wall DarkWallC2 | ]
+[Marker] -> []
+[Marker2] -> []
+
+LEFT[Wall No DarkWallC1 | No Marker] -> [Wall | Marker]
+UP[Marker | No Wall] -> [Marker2 | ]
+LEFT[Wall No DarkWallC1 | No Wall] -> [Wall DarkWallC1 | ]
+UP[Wall No DarkWallC1 | No Wall] -> [Wall DarkWallC1 | ]
+LEFT[Wall No DarkWallC1 | Marker2] -> [Wall DarkWallC1 | ]
+[Marker] -> []
+[Marker2] -> []
+
+RIGHT[Wall No DarkWallRight | No Wall] -> [Wall DarkWallRight | ]
+LEFT[Wall No DarkWallLeft | No Wall] -> [Wall DarkWallLeft | ]
+UP[Wall No DarkWallUp | No Wall] -> [Wall DarkWallUp | ]
+DOWN[Wall No DarkWallDown | No Wall] -> [Wall DarkWallDown | ]
+
+(Walls)
+LEFT[ThinWallLeft | No ThinWallRight] -> [ThinWallLeft | ThinWallRight]
+RIGHT[ThinWallRight | No ThinWallLeft] -> [ThinWallRight | ThinWallLeft]
+UP[ThinWallUp | No ThinWallDown] -> [ThinWallUp | ThinWallDown]
+DOWN[ThinWallDown | No ThinWallUp] -> [ThinWallDown | ThinWallUp]
+
+DOWN[ThinWallRight| No ThinWallC1 No Marker] -> [ThinWallRight | Marker]
+RIGHT[ThinWallUp | Marker] -> [ThinWallUp | ThinWallC1]
+[Marker] -> []
+
+DOWN[ThinWallLeft| No ThinWallC2 No Marker] -> [ThinWallLeft | Marker]
+RIGHT[Marker | ThinWallUp] -> [ThinWallC2 | ThinWallUp]
+[Marker] -> []
+
+RIGHT[ThinWallDown | No ThinWallC3 No Marker] -> [ThinWallDown | Marker]
+DOWN[Marker | ThinWallLeft] -> [ThinWallC3 | ThinWallLeft]
+[Marker] -> []
+
+RIGHT[No ThinWallC4 No Marker | ThinWallDown] -> [Marker | ThinWallDown]
+DOWN[Marker | ThinWallRight] -> [ThinWallC4 | ThinWallRight]
+[Marker] -> []
+
+
+(
+	GAME RULES
+)
+
+[Completed1] -> []
+[Completed2] -> []
+[Completed3] -> []
+[No Deactivated No Wall] -> [Deactivated]
+[Activated] -> []
+[PieceDirActivated] -> []
+[PieceMiddleActivated] -> []
+
+[Action Player Wall No Activator] -> [Player Wall]
+[Action Player No Placing] -> [Player Placing]SFX1
+
+[Player Placing No PieceMiddle] -> [Player Placing PieceMiddle]
+
+(Block movement into walls)
+[> Player Placing | Wall No Activator] -> [Player Placing | Wall]
+
+[UP Player Placing ThinWallUp] -> [Player Placing ThinWallUp]
+[DOWN Player Placing ThinWallDown] -> [Player Placing ThinWallDown]
+[LEFT Player Placing ThinWallLeft] -> [Player Placing ThinWallLeft]
+[RIGHT Player Placing ThinWallRight] -> [Player Placing ThinWallRight]
+
+(Backtracking)
+UP[UP Player Placing | PieceMiddle3 No PieceDown] -> [Player Placing | PieceMiddle3]
+DOWN[DOWN Player Placing | PieceMiddle3 No PieceUp] -> [Player Placing | PieceMiddle3]
+LEFT[LEFT Player Placing | PieceMiddle3 No PieceRight] -> [Player Placing | PieceMiddle3]
+RIGHT[RIGHT Player Placing | PieceMiddle3 No PieceLeft] -> [Player Placing | PieceMiddle3]
+
+
+
+(As per request, here's "drag to draw")
+	(UP)
+UP[UP Player Placing No PieceUp No PieceMiddle2 No PieceMiddle3 No Activator] -> [UP Player Placing PieceUp PieceMiddle2 Marker]
+UP[UP Player Placing No PieceUp PieceMiddle2 No PieceMiddle3 No Activator] -> [UP Player Placing PieceUp PieceMiddle3 Marker]
+UP[UP Player Placing PieceUp PieceMiddle PieceMiddle2 No PieceMiddle3 No Activator No Marker] -> [UP Player Placing]
+UP[UP Player Placing PieceUp No PieceMiddle2 PieceMiddle3 No Activator No Marker] -> [UP Player Placing PieceMiddle2]
+	[Marker] -> []
+UP[UP Player Placing | No PieceDown No PieceMiddle2 No PieceMiddle3 No Activator] -> [ | Player Placing PieceDown PieceMiddle PieceMiddle2]SFX0
+UP[UP Player Placing | No PieceDown PieceMiddle2 No PieceMiddle3 No Activator] -> [ | Player Placing PieceDown PieceMiddle3]SFX0
+UP[UP Player Placing | PieceDown PieceMiddle3] -> [ | Player Placing PieceMiddle2]SFX0
+UP[UP Player Placing | PieceDown PieceMiddle PieceMiddle2] -> [ | Player Placing PieceMiddle]SFX0
+UP[UP Player Placing | Activator] -> [ | Player Placing Activator]SFX0
+[UP Player Placing] -> [Player Placing]
+
+	(DOWN)
+DOWN[DOWN Player Placing No PieceDown No PieceMiddle2 No PieceMiddle3 No Activator] -> [DOWN Player Placing PieceDown PieceMiddle2 Marker]
+DOWN[DOWN Player Placing No PieceDown PieceMiddle2 No PieceMiddle3 No Activator] -> [DOWN Player Placing PieceDown PieceMiddle3 Marker]
+DOWN[DOWN Player Placing PieceDown PieceMiddle PieceMiddle2 No PieceMiddle3 No Activator No Marker] -> [DOWN Player Placing]
+DOWN[DOWN Player Placing PieceDown No PieceMiddle2 PieceMiddle3 No Activator No Marker] -> [DOWN Player Placing PieceMiddle2]
+	[Marker] -> []
+DOWN[DOWN Player Placing | No PieceUp No PieceMiddle2 No PieceMiddle3 No Activator] -> [ | Player Placing PieceUp PieceMiddle PieceMiddle2]SFX0
+DOWN[DOWN Player Placing | No PieceUp PieceMiddle2 No PieceMiddle3 No Activator] -> [ | Player Placing PieceUp PieceMiddle3]SFX0
+DOWN[DOWN Player Placing | PieceUp PieceMiddle3] -> [ | Player Placing PieceMiddle2]SFX0
+DOWN[DOWN Player Placing | PieceUp PieceMiddle PieceMiddle2] -> [ | Player Placing PieceMiddle]SFX0
+DOWN[DOWN Player Placing | Activator] -> [ | Player Placing Activator]SFX0
+[DOWN Player Placing] -> [Player Placing]
+
+	(LEFT)
+LEFT[LEFT Player Placing No PieceLeft No PieceMiddle2 No PieceMiddle3 No Activator] -> [LEFT Player Placing PieceLeft PieceMiddle2 Marker]
+LEFT[LEFT Player Placing No PieceLeft PieceMiddle2 No PieceMiddle3 No Activator] -> [LEFT Player Placing PieceLeft PieceMiddle3 Marker]
+LEFT[LEFT Player Placing PieceLeft PieceMiddle PieceMiddle2 No PieceMiddle3 No Activator No Marker] -> [LEFT Player Placing]
+LEFT[LEFT Player Placing PieceLeft No PieceMiddle2 PieceMiddle3 No Activator No Marker] -> [LEFT Player Placing PieceMiddle2]
+	[Marker] -> []
+LEFT[LEFT Player Placing | No PieceRight No PieceMiddle2 No PieceMiddle3 No Activator] -> [ | Player Placing PieceRight PieceMiddle PieceMiddle2]SFX0
+LEFT[LEFT Player Placing | No PieceRight PieceMiddle2 No PieceMiddle3 No Activator] -> [ | Player Placing PieceRight PieceMiddle3]SFX0
+LEFT[LEFT Player Placing | PieceRight PieceMiddle3] -> [ | Player Placing PieceMiddle2]SFX0
+LEFT[LEFT Player Placing | PieceRight PieceMiddle PieceMiddle2] -> [ | Player Placing PieceMiddle]SFX0
+LEFT[LEFT Player Placing | Activator] -> [ | Player Placing Activator]SFX0
+[LEFT Player Placing] -> [Player Placing]
+
+	(RIGHT)
+RIGHT[RIGHT Player Placing No PieceRight No PieceMiddle2 No PieceMiddle3 No Activator] -> [RIGHT Player Placing PieceRight PieceMiddle2 Marker]
+RIGHT[RIGHT Player Placing No PieceRight PieceMiddle2 No PieceMiddle3 No Activator] -> [RIGHT Player Placing PieceRight PieceMiddle3 Marker]
+RIGHT[RIGHT Player Placing PieceRight PieceMiddle PieceMiddle2 No PieceMiddle3 No Activator No Marker] -> [RIGHT Player Placing]
+RIGHT[RIGHT Player Placing PieceRight No PieceMiddle2 PieceMiddle3 No Activator No Marker] -> [RIGHT Player Placing PieceMiddle2]
+	[Marker] -> []
+RIGHT[RIGHT Player Placing | No PieceLeft No PieceMiddle2 No PieceMiddle3 No Activator] -> [ | Player Placing PieceLeft PieceMiddle PieceMiddle2]SFX0
+RIGHT[RIGHT Player Placing | No PieceLeft PieceMiddle2 No PieceMiddle3 No Activator] -> [ | Player Placing PieceLeft PieceMiddle3]SFX0
+RIGHT[RIGHT Player Placing | PieceLeft PieceMiddle3] -> [ | Player Placing PieceMiddle2]SFX0
+RIGHT[RIGHT Player Placing | PieceLeft PieceMiddle PieceMiddle2] -> [ | Player Placing PieceMiddle]SFX0
+RIGHT[RIGHT Player Placing | Activator] -> [ | Player Placing Activator]SFX0
+[RIGHT Player Placing] -> [Player Placing]
+
+
+
+[Action Player Placing] -> [Player]SFX1
+[Moving Player Placing] -> [Player Placing]
+[Moving Player No Placing] -> [Moving Player]SFX0
+
+[NO Placing PieceMiddle NO PieceDir] -> []
+
+UP[PieceUp No PieceUpEnd | No PieceDown No ActivatorDown] -> [PieceUp PieceUpEnd | ]
+DOWN[PieceDown No PieceDownEnd | No PieceUp No ActivatorUp] -> [PieceDown PieceDownEnd | ]
+LEFT[PieceLeft No PieceLeftEnd | No PieceRight No ActivatorRight] -> [PieceLeft PieceLeftEnd | ]
+RIGHT[PieceRight No PieceRightEnd | No PieceLeft No ActivatorLeft] -> [PieceRight PieceRightEnd | ]
+
+UP[PieceUp PieceUpEnd | PieceDown] -> [PieceUp | PieceDown]
+DOWN[PieceDown PieceDownEnd | PieceUp] -> [PieceDown | PieceUp]
+LEFT[PieceLeft PieceLeftEnd | PieceRight] -> [PieceLeft | PieceRight]
+RIGHT[PieceRight PieceRightEnd | PieceLeft] -> [PieceRight | PieceLeft]
+
+[PieceUpEnd No PieceUp] -> []
+[PieceDownEnd No PieceDown] -> []
+[PieceLeftEnd No PieceLeft] -> []
+[PieceRightEnd No PieceRight] -> []
+
+[PlayerHighlight] -> []
+[Player Placing No PlayerHighlight] -> [Player Placing PlayerHighlight]
+
+startloop
+	UP[PieceUp No Activated | ActivatorDown] -> [PieceUp Activated | ActivatorDown]
+    DOWN[PieceDown No Activated | ActivatorUp] -> [PieceDown Activated | ActivatorUp]
+    LEFT[PieceLeft No Activated | ActivatorRight] -> [PieceLeft Activated | ActivatorRight]
+    RIGHT[PieceRight No Activated | ActivatorLeft] -> [PieceRight Activated | ActivatorLeft]
+    
+    UP[PieceUp No Activated | PieceDown Activated] -> [PieceUp Activated | PieceDown Activated]
+    DOWN[PieceDown No Activated | PieceUp Activated] -> [PieceDown Activated | PieceUp Activated]
+    LEFT[PieceLeft No Activated | PieceRight Activated] -> [PieceLeft Activated | PieceRight Activated]
+    RIGHT[PieceRight No Activated | PieceLeft Activated] -> [PieceRight Activated | PieceLeft Activated]
+endloop
+
+[Activated Deactivated PieceMiddle3] -> [Activated PieceMiddle3]
+[PieceUp Activated No PieceUpActivated] -> [PieceUp Activated PieceUpActivated]
+[PieceDown Activated No PieceDownActivated] -> [PieceDown Activated PieceDownActivated]
+[PieceLeft Activated No PieceLeftActivated] -> [PieceLeft Activated PieceLeftActivated]
+[PieceRight Activated No PieceRightActivated] -> [PieceRight Activated PieceRightActivated]
+[PieceMiddle Activated No PieceMiddleActivated] -> [PieceMiddle Activated PieceMiddleActivated]
+
+(I'm gonna be lazy)
+[Activator PieceDir] -> [Activator]
+[Activator PieceMiddle] -> [Activator]
+[Placing No Player] -> []
+
+(final decorations)
+[No Activated ActivatedDark] -> []
+[Background No Activated No BackgroundDark Deco] -> [Background BackgroundDark Deco]
+[Activated No ActivatedDark Deco] -> [Activated ActivatedDark Deco]
+
+(Checking if a single line makes the win)
+
+(Strike one)
+LATE UP[Activator | PieceDown No Completed1] -> [Activator | PieceDown Completed1]
+LATE DOWN[Activator | PieceUp No Completed1] -> [Activator | PieceUp Completed1]
+LATE LEFT[Activator | PieceRight No Completed1] -> [Activator | PieceRight Completed1]
+LATE RIGHT[Activator | PieceLeft No Completed1] -> [Activator | PieceLeft Completed1]
+
+(Strike two)
+LATE RANDOM[Completed1] -> [Completed2]
+LATE RANDOM[Completed1] -> [Completed2]
+
+(Strike three, you're out)
+LATE [No Completed1][Completed3] -> [][]
+LATE [Completed1] -> [Completed3]SFX2
+
+
+==============
+WINCONDITIONS
+==============
+
+No Deactivated
+No PieceEnd
+No Completed3
+
+=======     
+LEVELS
+=======
+
+message Original game by TheIncredibleCompany
+message Remake by HugoBDesigner
+message Connect two blue dots with a single, continuous line, such that it covers the whole board
+
+#####
+##D##
+##P##
+##U##
+#####
+
+#####
+R..P#
+###.#
+R...#
+#####
+
+#D#D#
+#...#
+#.P.#
+#...#
+#####
+
+###D#
+#.├.#
+R...#
+#.P.#
+###U#
+
+#####
+#p..#
+r..┤#
+r.┤.l
+#...#
+###u#
+
+###d##
+#..┬.#
+r.┬┬.#
+#..├.l
+#.p..#
+######
+
+###d###
+#.├...#
+#..p..#
+r.┴.┴┤l
+#..┤..#
+#..┤..#
+###u###
+
+######
+#...p#
+r.┬┬┤l
+#..┤┴#
+r..┤.#
+r.┤..#
+#....#
+######
+
+###d##
+#p...#
+#..├.l
+#.├..#
+#..├.l
+r.├..l
+#....#
+######
+
+######d##
+#.......#
+#├...├├.l
+#..├....#
+#..├.p..#
+r.├├..┴.l
+#.┴.....#
+#.├┬┴.┴.#
+#.......#
+#.┴..┴┴.l
+#.....┤.#
+#########

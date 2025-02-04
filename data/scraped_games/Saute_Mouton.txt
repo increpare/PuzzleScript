@@ -1,0 +1,184 @@
+title Saute Mouton
+author Alain Brobecker
+homepage abrobecker.free.fr
+
+again_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+Blue
+
+Ciel
+Blue
+
+CibleDroite
+Blue
+
+CibleGauche
+Blue
+
+Herbe
+LightGreen Green 
+01111
+11101
+11111
+10111
+11111
+
+Droite
+White
+.....
+..0..
+..00.
+000..
+0.0..
+
+DroiteSaute1
+White
+.....
+..0..
+..00.
+000..
+0.0..
+
+DroiteSaute2
+White
+.....
+..0..
+..00.
+000..
+0.0..
+
+DroiteSaute3
+White
+.....
+..0..
+..00.
+000..
+0.0..
+
+
+Gauche
+Black
+.....
+.0...
+00...
+.000.
+.0.0.
+
+
+GaucheSaute1
+Black
+.....
+.0...
+00...
+.000.
+.0.0.
+
+GaucheSaute2
+Black
+.....
+.0...
+00...
+.000.
+.0.0.
+
+GaucheSaute3
+Black
+.....
+.0...
+00...
+.000.
+.0.0.
+
+
+Player
+Red
+.00..
+.....
+.....
+.....
+.....
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+D = Droite and CibleGauche
+G = Gauche and CibleDroite
+P = Player
+, = Herbe
+# = Ciel
+
+Item = Droite or Gauche or Ciel
+
+=======
+SOUNDS
+=======
+
+sfx0 5160507 (move)
+sfx1 83704102 (jump)
+EndGame 10475908
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Herbe,Ciel
+CibleGauche,CibleDroite
+Droite,Gauche,DroiteSaute1,DroiteSaute2,DroiteSaute3,GaucheSaute1,GaucheSaute2,GaucheSaute3
+Player
+
+======
+RULES
+======
+
+(Player movements)
+LEFT [ LEFT Player | ] -> [  | Player ]
+RIGHT [ RIGHT Player | ] -> [  | Player ]
+DOWN [ DOWN Player ] -> [ Player ]
+UP [ UP Player ] -> [ Player ]
+
+(Walking Movements)
+RIGHT [Action Player Droite | No Item ] -> [ | Player Droite ] sfx0
+LEFT [Action Player Gauche | No Item ] -> [ | Player Gauche ] sfx0
+
+
+(Jumps)
+DOWN [ DroiteSaute3 | No Item ] -> [ | Droite ] again
+RIGHT [ DroiteSaute2 | No Item ] -> [ | DroiteSaute3 ] again
+RIGHT [ DroiteSaute1 | No Item ] -> [ | DroiteSaute2 ] again
+RIGHT [Action Player Droite | Item | No Item ] -> [ Player DroiteSaute1 | Item | ] sfx1
+UP [ DroiteSaute1 | No Item ] -> [ | DroiteSaute1 ] again
+
+DOWN [ GaucheSaute3 | No Item ] -> [ | Gauche ] again
+LEFT [ GaucheSaute2 | No Item ] -> [ | GaucheSaute3 ] again
+LEFT [ GaucheSaute1 | No Item ] -> [ | GaucheSaute2 ] again
+LEFT [Action Player Gauche | Item | No Item ] -> [ Player GaucheSaute1 | Item | ] sfx1
+UP [ GaucheSaute1 | No Item ] -> [ | GaucheSaute1 ] again
+
+
+==============
+WINCONDITIONS
+==============
+
+All Droite on CibleDroite
+All Gauche on CibleGauche
+
+=======
+LEVELS
+=======
+
+message White sheeps want to go right Black sheeps want to go left
+
+#######
+.......
+DDDPGGG
+,,,,,,,

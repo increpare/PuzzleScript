@@ -1,0 +1,180 @@
+title Hack It!
+author Everyone
+background_color green
+text_color  #6a1294
+again_interval 0.3
+========
+OBJECTS
+========
+Background
+Green Lightgreen
+11101
+10111
+11110
+11011
+01111
+
+JamesJoyce
+black white #ffca95
+.000.
+00000
+.222.
+01110
+.2.2.
+
+Player
+Brown #FFDFC4 Green #6a1294 white
+.000.
+.1144
+22222
+.333.
+.3.3.
+
+Finish
+Pink Yellow
+000..
+010..
+00000
+..010
+..000
+
+Start 
+LightGray
+.000.
+..0..
+.000.
+.000.
+.000.
+
+SubConscious
+#FFDFC4 #FA5C59 
+.....
+...00
+00.10
+01...
+.....
+
+SubConscious2
+brown red
+.....
+...00
+00.10
+01...
+.....
+
+Tripping1
+Purple Red
+1.0..
+.1.10
+..101
+...0.
+1.0..
+
+Tripping2
+Blue Pink
+..0.1
+..01.
+.0..1
+00...
+110..
+
+Tripping3
+Yellow Grey
+..10.
+.1..0
+0.1..
+.01.1
+.0.10
+
+DisappearingPlayer
+Black Black Black Black Black
+.000.
+.1144
+22222
+.333.
+.3.3.
+
+
+=======
+LEGEND
+=======
+. = Player and Start
+B = Background
+F = Finish
+S = Start
+# = Background
+@ = Background
+j = JamesJoyce
+SubConsciousAll = SubConscious or SubConscious2
+Solid = SubConsciousAll or Jamesjoyce
+Everything = subconscious
+Tripping = Tripping1 or Tripping2 or Tripping3
+obstacle = Background
+
+=======
+SOUNDS
+=======
+startgame 94294908
+sfx1 111111
+endlevel 222222
+sfx3 333333
+sfx4 94412308
+sfx5 431431
+SFX6 21193702
+================
+COLLISIONLAYERS
+================
+Background
+Start
+Finish 
+DisappearingPlayer
+Player SubConsciousAll JamesJoyce
+Tripping
+
+======
+RULES
+======
+late [DisappearingPlayer] -> []
+random [ jamesjoyce ] -> [ randomdir jamesjoyce ]
+[ DisappearingPlayer | JamesJoyce ] -> [ | ] sfx6 message What do you think of what I think you think I think of this game?
+[ Tripping Everything No Player] -> [Random Everything]
+[ Tripping] -> []
+
+[ > Player ] -> [ > Player] sfx3
+[ no solid no start | > Player ] -> [ subconscious | > Player ]
+[ > Player | SubConsciousAll | finish ] -> [ finish | | Player ] sfx4
+[ > Player | SubConsciousAll | no Solid ] -> [ | | Player ] sfx1
+[ > Player | SubConsciousAll | SubConsciousAll | finish ] -> [ finish |  | | Player ] sfx4
+[ > Player | SubConsciousAll | SubConsciousAll | no Solid ] -> [ |  | | Player ] sfx4
+late [ Subconscious2 ] -> [  ]	
+late [ Subconscious |Subconscious| Subconscious ] -> [ Subconscious2 | Subconscious2 | Subconscious2] sfx5
+[ Start > Player | Finish ] -> [ Start Finish | > Player ]
+[ No Start > Player | Finish | no Solid] -> [ Random Tripping | Finish | Player] again
+late [No Tripping] [Tripping] -> [random Tripping] [Tripping]
+late [Finish SubconsciousAll] -> [Finish]
+
+[ action Player | no Solid ] -> [ action Player | Player ]
+late [Player|] -> [Player|DisappearingPlayer]
+late [DisappearingPlayer Solid] -> [Solid]
+
+[Start|...|Player] -> [v start|...|player] 
+[> start|obstacle] -> [start|obstacle]
+==============
+WINCONDITIONS
+==============
+
+all Start on Finish
+
+=======
+LEVELS
+=======
+.bbbbbbbbbbb
+b#bbbb@b@@@@
+bbbb#f@b@bb@
+bbbbbb@b@bb@
+bbbbbb@b@@b@
+jbbbbbbbbbbb
+
+.bbbbbbbbbbbbb
+bbbbbbbbbbbbbb
+Fbbbbbbbbbbbbj

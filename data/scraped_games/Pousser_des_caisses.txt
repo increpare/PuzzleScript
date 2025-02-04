@@ -1,0 +1,413 @@
+
+title Pousser des caisses
+author Docteur Glandois
+
+(
+    Bonjour ! C'est un plaisir de vous voir ici.
+
+    Voici déjà un flag : PZS{WelCoME_INsIde_ThE_GaMe_SourCE}
+
+    Il ne vous reste plus qu'à explorer/modifier ce code.
+    J'attire votre attention sur le bouton "RUN" en haut de cette fenêtre.
+    Il devrait vous servir.
+)
+
+( Ce jeu a été créé à partir d'un exemple de PuzzleScript.
+https://www.puzzlescript.net/editor.html
+Exemple / Elementary / Microban
+Auteur original : David Skinner
+Homepage : www.sneezingtiger.com/sokoban/levels/microbanText.html )
+
+again_interval 0.4
+noaction
+
+========
+OBJECTS
+========
+
+Background
+#00C000  #009000
+11111
+01111
+11101
+11111
+10111
+
+Target
+DarkBlue
+.....
+.000.
+.000.
+.000.
+.....
+
+Wall
+Brown Darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+00..0
+0.0.0
+0..00
+00000
+
+Door
+darkbrown brown
+11111
+11111
+10111
+11111
+11111
+
+DoorBorder
+transparent lightbrown
+11111
+10001
+10001
+10001
+10001
+
+NotWonYet
+transparent
+
+Victory
+transparent
+
+CurtainClosed
+#456fb2 #253c60
+11111
+00000
+11111
+00000
+11111
+
+CurtainOpening_1
+#456fb2 #253c60 transparent
+00000
+11111
+00000
+11111
+22222
+
+CurtainOpening_2
+#456fb2 #253c60 transparent
+11111
+00000
+11111
+22222
+22222
+
+CurtainOpening_3
+#456fb2 #253c60 transparent
+00000
+11111
+22222
+22222
+22222
+
+CurtainOpening_4
+#456fb2 #253c60 transparent
+11111
+22222
+22222
+22222
+22222
+
+CurtainOpening_5
+transparent
+
+Flag
+transparent gray #ff1111
+02220
+01222
+02220
+01000
+11100
+
+FlagWrap_P
+lightgray #009000
+00001
+01101
+00001
+01111
+01111
+
+FlagWrap_Z
+lightgray #009000
+00001
+11101
+11011
+10111
+00001
+
+FlagWrap_S
+lightgray #009000
+00001
+01111
+00001
+11101
+00001
+
+FlagWrap_Curl_Open
+lightgray #009000
+11001
+11011
+10011
+11011
+11001
+
+FlagWrap_Curl_Close
+lightgray #009000
+10011
+11011
+11001
+11011
+10011
+
+
+Obf_______
+lightgray #009000
+10011
+01101
+01101
+01101
+10011
+
+Obf____
+lightgray #009000
+11011
+10011
+11011
+11011
+10001
+
+Obf_
+lightgray #009000
+00011
+11101
+10011
+01111
+00001
+
+Obf________
+lightgray #009000
+00011
+11101
+10011
+11101
+00011
+
+Obf_____
+lightgray #009000
+01111
+01101
+00001
+11101
+11101
+
+Obf__
+lightgray #009000
+00001
+01111
+00011
+11101
+00011
+
+Obf_________
+lightgray #009000
+10011
+01111
+00011
+01101
+10011
+
+Obf______
+lightgray #009000
+00001
+11101
+11011
+10111
+01111
+
+Obf___
+lightgray #009000
+10011
+01101
+10011
+01101
+10011
+
+Obf__________
+lightgray #009000
+10011
+01101
+10001
+11101
+10011
+
+Obf
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
++ = Player
+X = Crate
+@ = Crate and Target
+O = Target
+D = Door and DoorBorder and Obf
+* = Flag
+
+A = Obf__________ and CurtainClosed
+J = Obf_________ and CurtainClosed
+L = Obf________ and CurtainClosed
+B = Obf_______ and CurtainClosed
+M = Obf______ and CurtainClosed
+N = Obf_____ and CurtainClosed
+R = Obf____ and CurtainClosed
+C = Obf___ and CurtainClosed
+T = Obf__ and CurtainClosed
+E = Obf_ and CurtainClosed
+
+P = FlagWrap_P and CurtainClosed
+Z = FlagWrap_Z and CurtainClosed
+S = FlagWrap_S and CurtainClosed
+{ = FlagWrap_Curl_Open and CurtainClosed
+} = FlagWrap_Curl_Close and CurtainClosed
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, Door
+Obf__________, Obf_________, Obf________, Obf_______, Obf______, Obf_____, Obf____, Obf___, Obf__, Obf_, Obf
+FlagWrap_P, FlagWrap_Z, FlagWrap_S, FlagWrap_Curl_Open, FlagWrap_Curl_Close
+CurtainClosed, CurtainOpening_1, CurtainOpening_2, CurtainOpening_3, CurtainOpening_4, CurtainOpening_5
+NotWonYet, Victory
+DoorBorder
+Flag
+
+
+======
+RULES
+======
+
+LEFT [ Door Obf ][ Obf_ | ... | Obf__ ] -> [ Door Obf ][ Obf__ | ... | Obf_ ]
+LEFT [ Door Obf ][ Obf___ | ... | Obf________ ] -> [ Door Obf ][ Obf________ | ... | Obf___ ]
+LEFT [ Door Obf ][ Obf____ | ... | Obf_________ ] -> [ Door Obf ][ Obf_________ | ... | Obf____ ]
+RIGHT [ Door Obf ][ Obf________ | ... | Obf_ ] -> [ Door Obf ][ Obf_ | ... | Obf________ ]
+LEFT [ Door Obf ][ Obf__________ | ... | Obf__ ] -> [ Door Obf ][ Obf__ | ... | Obf__________ ]
+LEFT [ Door Obf ][ Obf________ | ... | Obf__________ ] -> [ Door Obf ][ Obf__________ | ... | Obf________ ]
+RIGHT [ Door Obf ][ Obf_______ | ... | Obf_________ ] -> [ Door Obf ][ Obf_________ | ... | Obf_______ ]
+LEFT [ Door Obf ][ Obf_____ | ... | Obf_________ ] -> [ Door Obf ][ Obf_________ | ... | Obf_____ ]
+LEFT [ Door Obf ][ Obf_ | ... | Obf_________ ] -> [ Door Obf ][ Obf_________ | ... | Obf_ ]
+RIGHT [ Door Obf ][ Obf_______ | ... | Obf____ ] -> [ Door Obf ][ Obf____ | ... | Obf_______ ]
+RIGHT [ Door Obf ][ Obf_________ | ... | Obf__________ ] -> [ Door Obf ][ Obf__________ | ... | Obf_________ ]
+LEFT [ Door Obf ][ Obf_____ | ... | Obf________ ] -> [ Door Obf ][ Obf________ | ... | Obf_____ ]
+LEFT [ Door Obf ][ Obf__ | ... | Obf__________ ] -> [ Door Obf ][ Obf__________ | ... | Obf__ ]
+RIGHT [ Door Obf ][ Obf______ | ... | Obf____ ] -> [ Door Obf ][ Obf____ | ... | Obf______ ]
+RIGHT [ Door Obf ][ Obf__________ | ... | Obf_________ ] -> [ Door Obf ][ Obf_________ | ... | Obf__________ ]
+RIGHT [ Door Obf ][ Obf_______ | ... | Obf_ ] -> [ Door Obf ][ Obf_ | ... | Obf_______ ]
+LEFT [ Door Obf ][ Obf________ | ... | Obf______ ] -> [ Door Obf ][ Obf______ | ... | Obf________ ]
+RIGHT [ Door Obf ][ Obf__________ | ... | Obf__ ] -> [ Door Obf ][ Obf__ | ... | Obf__________ ]
+LEFT [ Door Obf ][ Obf_________ | ... | Obf_______ ] -> [ Door Obf ][ Obf_______ | ... | Obf_________ ]
+RIGHT [ Door Obf ][ Obf____ | ... | Obf_ ] -> [ Door Obf ][ Obf_ | ... | Obf____ ]
+RIGHT [ Door Obf ][ Obf____ | ... | Obf__________ ] -> [ Door Obf ][ Obf__________ | ... | Obf____ ]
+
+[ Door Obf ] -> [ Door ]
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+late [ Door ][ Crate no Target ] -> [ Door NotWonYet ][ Crate no Target ]
+late [ Door ][ no Crate Target ] -> [ Door NotWonYet ][ no Crate Target ]
+late [ Door no NotWonYet ] -> [ Door Victory ]
+late [ NotWonYet ] -> [ ]
+
+late [ Victory no Door ] -> [ ]
+late [ Victory Door ][ CurtainOpening_5 ] -> [ Victory ][ ] again
+late [ Victory ][ CurtainOpening_4 ] -> [ Victory ][ CurtainOpening_5 ] again
+late [ Victory ][ CurtainOpening_3 ] -> [ Victory ][ CurtainOpening_4 ] again
+late [ Victory ][ CurtainOpening_2 ] -> [ Victory ][ CurtainOpening_3 ] again
+late [ Victory ][ CurtainOpening_1 ] -> [ Victory ][ CurtainOpening_2 ] again
+late [ Victory ][ CurtainClosed ] -> [ Victory ][ CurtainOpening_1 ] again
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Flag
+
+
+=======
+LEVELS
+=======
+
+message Niveau 1/3
+message Placez les caisses sur les cibles, recuperez le code, puis allez sur le flag.
+
+##########
+#######o##
+#...*##X##
+#.#####.##
+#D#####.##
+#+..X...o#
+##########
+PZS{ARBRE}
+
+message Niveau 2/3
+message Un tout petit peu plus difficile
+
+###o..ooo####
+####...#+####
+#####.##.####
+#####.##.####
+#####XX..####
+####..X######
+###..X.######
+###....D...*#
+####...######
+#############
+PZS{AMARANTE}
+
+message Niveau 3/3
+message Oups... Il manque une caisse.
+message C'est peut-etre le moment de faire du "hack".
+
+#################
+#..o.o.o.o.o.####
+#............####
+#..X.X.X...X.####
+#.....+......D.*#
+#################
+PZS{BRETELLEMENT}
+

@@ -1,0 +1,577 @@
+title Gloves and Boots
+author Cabledragon
+
+
+
+realtime_interval .3
+key_repeat_interval .3
+
+
+========
+OBJECTS
+========
+Background
+#73AC38 #85C048
+01101
+11011
+10110
+01101
+11011
+
+Ice
+White LightBlue
+11101
+11011
+10111
+01111
+11110
+
+
+Water
+#236CB6 #3D8BDA #1D5996
+22222
+21222
+22212
+22222
+22122
+
+Water2
+#236CB6 #3D8BDA #1D5996
+22222
+22212
+22222
+21222
+22221
+
+Dirt
+Brown
+
+BootsBlue
+#4A94DD #287CD0
+.....
+.....
+.....
+.0.0.
+11.11
+
+BootsRed
+#CA4D4D #A73232
+.....
+.....
+.....
+.0.0.
+11.11
+
+BootsYellow
+#DED858 #D0C828
+.....
+.....
+.....
+.0.0.
+11.11
+
+BoxWhite
+#EAEAEA #FFFFFF #DADADA
+01111
+20001
+20001
+20001
+22220
+
+
+BoxGrey
+#ACACAC #B7B7B7 #9A9A9A
+01111
+20001
+20001
+20001
+22220
+
+BoxBlack
+#333333 #555555 #101010
+01111
+20001
+20001
+20001
+22220
+
+BoxBlue
+#4A94DD #6FA9E3 #287CD0
+01111
+20001
+20001
+20001
+22220
+
+BoxRed
+#CA4D4D #D77979 #A73232
+01111
+20001
+20001
+20001
+22220
+
+BoxYellow
+#DED858 #E9E48B #D0C828
+01111
+20001
+20001
+20001
+22220
+
+GlovesBlue
+#4A94DD #6FA9E3 #287CD0
+.....
+..01.
+.200.
+..2..
+.....
+
+GlovesRed
+#CA4D4D #D77979 #A73232
+.....
+..01.
+.200.
+..2..
+.....
+
+GlovesYellow
+#DED858 #E9E48B #D0C828
+.....
+..01.
+.200.
+..2..
+.....
+
+Player
+#E0CB98 #BFAFDA #6D9DC0
+.000.
+11111
+02220
+.2.2.
+00.00
+
+RPlayer
+#E0CB98 #BFAFDA #6D9DC0
+.000.
+11111
+02220
+.2.2.
+00.00
+
+LPlayer
+#E0CB98 #BFAFDA #6D9DC0
+.000.
+11111
+02220
+.2.2.
+00.00
+
+UPlayer
+#E0CB98 #BFAFDA #6D9DC0
+.000.
+11111
+02220
+.2.2.
+00.00
+
+DPlayer
+#E0CB98 #BFAFDA #6D9DC0
+.000.
+11111
+02220
+.2.2.
+00.00
+
+Wall
+#AC863E #9F7B39 #866831
+00001
+01112
+01112
+01112
+12222
+
+
+EquipGlovesYellow
+#DED858
+.....
+.....
+0...0
+.....
+.....
+
+EquipGlovesBlue
+#4A94DD
+.....
+.....
+0...0
+.....
+.....
+
+EquipGlovesRed
+#CA4D4D
+.....
+.....
+0...0
+.....
+.....
+
+EquipBootsYellow
+#D0C828
+.....
+.....
+.....
+.....
+00.00
+
+EquipBootsBlue
+#287CD0
+.....
+.....
+.....
+.....
+00.00
+
+EquipBootsRed
+#A73232
+.....
+.....
+.....
+.....
+00.00
+
+Exit
+#866831 Black #9F7B39
+.202.
+02020
+02120
+02120
+02020
+
+
+
+Key
+#DED858 #E9E48B #D0C828
+.....
+11..0
+12000
+00...
+.....
+
+Lava
+Orange
+
+Tick
+Transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+G = BoxGrey
+R = BoxRed
+B = BoxBlue
+D = BoxBlack
+T = BoxWhite
+I = Ice
+L = Lava
+E = Exit
+K = Key
+Y = BoxYellow
+Q = GlovesYellow
+W = BootsYellow
+A = GlovesBlue
+S = BootsBlue
+Z = GlovesRed
+X = BootsRed
+C = Water
+
+Items = GlovesYellow or GlovesBlue or GlovesRed or BootsYellow or BootsBlue or BootsRed
+Box = BoxYellow or BoxRed or BoxBlue or BoxGrey or BoxBlack or BoxWhite
+Boots = BootsYellow or BootsBlue or BootsRed
+Gloves = GlovesYellow or GlovesBlue or GlovesRed
+WaterX = Water or Water2
+Solid = Box or Wall or Gloves or Boots or Exit or Key or Ice or WaterX
+SolidX = Box or Wall
+PlayerX = Player or RPlayer or LPlayer or UPlayer or DPlayer
+SolidY = Solid or PlayerX
+EquipGloves = EquipGlovesYellow or EquipGlovesBlue or EquipGlovesRed
+EquipBoots = EquipBootsYellow or EquipBootsBlue or EquipBootsRed
+Decoy = Rplayer or LPlayer or UPlayer or DPlayer
+
+=======
+SOUNDS
+=======
+sfx0 17081504
+sfx1 95227908
+sfx2 7748909
+
+Dirt DESTROY 60660904
+Box MOVE 38827504
+Key DESTROY 73742500
+Boots DESTROY 68729303
+Gloves DESTROY 40606503
+================
+COLLISIONLAYERS
+================
+
+Background
+Ice, Lava, WaterX, Dirt
+Box, Exit, Key
+Player, Wall, BoxBlack, Decoy
+EquipGloves
+EquipBoots
+Items
+Tick
+
+======
+RULES
+======
+(Level Skip Code)
+
+[Action Player]->[Action Player] Win
+
+
+(WaterCode)
+[> Player| WaterX]->[Tick Player| WaterX]
+
+[Stationary Player][Water Tick]->[Stationary Player][Water2]
+[Stationary Player][Water2 Tick]->[Stationary Player][Water]
+[Stationary Player][Water]->[Stationary Player][Water Tick]
+[Stationary Player][Water2]->[Stationary Player][Water2 Tick]
+
+[> Player| BoxGrey|WaterX]->[> Player|No BoxGrey|Dirt No WaterX] sfx1
+(Lava Code)
+[> Player| Lava No Box]->[Stationary Player| Lava No Box]
+
+(Dirt Code)
+[> SolidY| Dirt]->[> SolidY|Background No Dirt]
+
+(Ice Code)
+[RPlayer No Ice]->[Player No Ice]
+[LPlayer No Ice]->[Player No Ice]
+[UPlayer No Ice]->[Player No Ice]
+[DPlayer No Ice]->[Player No Ice]
+Right [> Player|Ice]->[> RPlayer|Ice] sfx2
+Left [> Player|Ice]->[> LPlayer|Ice] sfx2
+Up [> Player|Ice]->[> UPlayer|Ice] sfx2
+Down [> Player|Ice]->[> DPlayer|Ice] sfx2
+Right [Stationary RPlayer Ice| No SolidX]->[Right RPlayer Ice| No SolidX]
+Left [Stationary LPlayer Ice| No SolidX]->[Left LPlayer Ice| No SolidX]
+Up [Stationary UPlayer Ice| No SolidX]->[Up UPlayer Ice| No SolidX]
+Down [Stationary DPlayer Ice| No SolidX]->[Down DPlayer Ice| No SolidX]
+
+Right [Stationary RPlayer Ice| SolidX]->[Player Ice| SolidX] sfx0
+Left [Stationary LPlayer Ice| SolidX]->[Player Ice| SolidX] sfx0
+Up [Stationary UPlayer Ice| SolidX]->[Player Ice| SolidX] sfx0
+Down [Stationary DPlayer Ice| SolidX]->[Player Ice| SolidX] sfx0
+
+
+(Wall Code)
+[> Player| Wall]->[Stationary Player| Wall] sfx0
+(Key Code)
+[> PlayerX| Key]->[> PlayerX| No Key]
+(Exit Code)
+[> Player| Exit][Key]->[Stationary Player| Exit][Key] sfx0
+
+(GreyBox Code)
+[> Player| BoxGrey| No Solid]->[> Player| > BoxGrey| No Solid]
+[> Player| BoxGrey| Solid]->[Stationary Player| BoxGrey| Solid] sfx0
+
+
+(BlackBox Code)
+[BoxBlack| PlayerX No Solid]->[> BoxBlack| PlayerX No Solid]
+(WhiteBox Code)
+[> Player| BoxWhite| No Solid]->[> Player| > BoxWhite| No Solid]
+[> Player| BoxWhite| Solid]->[Stationary Player| BoxWhite| Solid] sfx0 
+[BoxWhite|BoxBlack]->[BoxBlack|BoxBlack]
+[BoxWhite|BoxYellow]->[BoxYellow|BoxYellow]
+[BoxWhite|BoxBlue]->[BoxBlue|BoxBlue]
+[BoxWhite|BoxRed]->[BoxRed|BoxRed]
+
+(GLOVE CODE)
+
+(Gloves follow player when equipped)
+late[EquipGloves No PlayerX][PlayerX]->[No PlayerX][PlayerX EquipGloves]
+
+(Remove gloves if picking up new ones)
+[> PlayerX EquipGloves| Gloves]->[> PlayerX | Gloves]
+(Equipd gloves)
+[> PlayerX| GlovesYellow]->[> PlayerX| EquipGlovesYellow] 
+[> PlayerX| GlovesRed]->[> PlayerX| EquipGlovesRed] 
+[> PlayerX| GlovesBlue]->[> PlayerX| EquipGlovesBlue] 
+
+(Push box if player has correct gloves)
+[> Player EquipGlovesYellow| BoxYellow No Lava| No Solid] -> [> Player EquipGlovesYellow| > BoxYellow| No Solid]
+[> Player EquipGlovesBlue| BoxBlue No Lava| No Solid] -> [> Player EquipGlovesBlue| > BoxBlue| No Solid]
+[> Player EquipGlovesRed| BoxRed No Lava| No Solid] -> [> Player EquipGlovesRed | > BoxRed| No Solid]
+
+(Stop player if he pushes a box into a solid object)
+
+([> Player| Box| Solid]->[Stationary Player| Box| Solid])
+
+(Stop player if he's wearing the wrong color gloves or no gloves)
+
+
+(BOOT CODE)
+
+(Boots follow player when equipped)
+late[EquipBoots No PlayerX][PlayerX]->[No PlayerX][PlayerX EquipBoots]
+
+(Remove Boots if picking up new ones)
+[> PlayerX EquipBoots| Boots]->[> PlayerX | Boots]
+
+(Equipd Boots)
+[> PlayerX| BootsYellow]->[> PlayerX| EquipBootsYellow] 
+[> PlayerX| BootsRed]->[> PlayerX| EquipBootsRed] 
+[> PlayerX| BootsBlue]->[> PlayerX| EquipBootsBlue]
+
+[> Player No EquipBootsYellow| BoxYellow] -> [Stationary Player No EquipBootsYellow| BoxYellow] sfx0
+[> Player No EquipBootsBlue| BoxBlue] -> [Stationary Player No EquipBootsBlue| BoxBlue] sfx0
+[> Player No EquipBootsRed| BoxRed] -> [Stationary Player No EquipBootsRed| BoxRed] sfx0
+
+
+==============
+WINCONDITIONS
+==============
+No Key
+All Exit on PlayerX
+
+=======
+LEVELS
+=======
+#########
+#p.g.g.g#
+#.g.gkg.#
+#g.g.g.g#
+#.g.g.g.#
+#gkg.g..#
+#.g.g..e#
+#########
+
+###############
+#k.g...g...g.k#
+#..g..gkg..g..#
+#ggggg.g.ggggg#
+#..gk.gkg.kg..#
+#.gggg.g.gggg.#
+#k.g..gpg..g.e#
+#.gggg.g.gggg.#
+#..gk.gkg.kg..#
+#ggggg.g.ggggg#
+#..g..gkg..g..#
+#k.g...g...g.k#
+###############
+
+###########
+#e.gg..g..#
+#..g.gg.g.#
+#ggkg..g.g#
+#g.g..gggk#
+#.g..gg..g#
+#.g.gg.g..#
+#g.gg.g.g##
+#.g.g..g..#
+#..gkg.#.p#
+###########
+
+############
+#p.....c...#
+#......c.g.#
+#......cccc#
+#.ggg.ccccc#
+#c...ccccc.#
+#cccccccc..#
+#c...ccc.g.#
+#..e..c..kg#
+############
+
+##########
+#kckckcke#
+#ckckckck#
+#gcgcgcgc#
+#.g.g.g.g#
+#g.g.g.g.#
+#pg.g.g.g#
+##########
+
+################
+#.....c.k.ccc..#
+#c.k.ccc.ccc..e#
+#cc.ccccccccc..#
+#cccccccccccccc#
+#cc.ccccccccccc#
+#cccccccc#....c#
+#cc.cccc..ggg.k#
+#...ccc...gpg..#
+#.#.ccc...ggg.c#
+#...cccc.....cc#
+################
+
+###############
+#g....gpg....g#
+#k.ggg.#.ggg.k#
+#g..g.g.g.g..g#
+#.#g.g.#.g.g#.#
+#.#.#.....#.#.#
+#ccccccccccccc#
+#ccccccccccccc#
+###ccccccccc###
+#..#ccccccc#..#
+#.e.##.c.##.k.#
+#...cc.c.cc...#
+###############
+
+###############
+#p..c.g..k#g..#
+#.g.c#.#.g..g.#
+#...c.g..g#g..#
+#cccc#.#...g.g#
+#.#.#kg.#c#.gk#
+#g.g.g..#c#.g.#
+#.g.g..g#c#gg.#
+#.#c#.g..c..#.#
+#.ckcg..#c#.g.#
+#.#c#..g#c#g#.#
+#.....g.#e#...#
+###############
+
+###############
+#..gggg#ky....#
+#.g....#.y..e.#
+#zg.ggg#yyy...#
+#.g.g....y....#
+#.g...ggg..g..#
+####g.gpg.g####
+#rr.g.ggg..gb.#
+#.r.r.r.bbb.bb#
+#ar.rrr#...rw.#
+#.r.b..#..b.b.#
+#rr....#..b.b.#
+###############
+
+
+###############
+#..gabw.......#
+#.pg.gggd.r.y.#
+#ggg..yg.bby.k#
+#z....yxr.b.y.#
+#bg..bb########
+#bbbbb.r....y.#
+#.g..bdr..r.ye#
+#gby.#.r...ry.#
+#..gs#..bbddrr#
+#w...#....dwrr#
+###############
+
+#########
+#p#.xd#k#
+#gzrb#.l#
+#.riiibs#
+#q..bab.#
+#yy.b.d.#
+#.k.#..e#
+#########

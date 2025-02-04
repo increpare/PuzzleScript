@@ -1,0 +1,132 @@
+title Sponge Game
+author Merge
+homepage www.puzzlescript.net
+
+again_interval 0.08
+
+========
+OBJECTS
+========
+
+Background
+grey darkgray
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Water
+blue
+
+DrySponge
+Yellow
+
+WentU
+transparent
+
+WentD
+transparent
+
+WentR
+transparent
+
+WentL
+transparent
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = DrySponge
+O = Target
+~ = water
+
+Went = WentU or WentD or WentR or WentL
+Solid = DrySponge or Wall
+
+=======
+SOUNDS
+=======
+
+DrySponge MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Water
+Went
+Target
+Player, Wall, DrySponge
+
+
+======
+RULES
+======
+
+[Went no Water] -> []
+
+[ no Went >  Player | DrySponge ] -> [ no Went >  Player | > DrySponge  ]
+
+[ up Player ] -> [ up Player up WentU ] again
+[ down Player ] -> [ down Player down WentD ] again
+[ right Player ] -> [ right Player right WentR ] again
+[ left Player ] -> [ left Player left WentL ] again
+
+[ Water Player WentU ] -> [ Water up Player up WentU  ] again
+[ Water Player WentD ] -> [ Water down Player down WentD  ] again
+[ Water Player WentR ] -> [ Water right Player right WentR ] again
+[ Water Player WentL ] -> [ Water left Player left WentL ] again
+
+late [ DrySponge water ] -> [ DrySponge ]
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on DrySponge
+
+=======
+LEVELS
+=======
+
+
+#########
+####.o..#
+#...~~~.#
+#.*.~~~.#
+#.p.~~~.#
+#...~~~.#
+#########

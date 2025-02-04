@@ -4,7 +4,7 @@ from typing import List, Dict, Optional, Any, Set, Tuple
 import copy
 import random
 
-from lark import Token, Transformer
+from lark import Token, Transformer, Tree
 import numpy as np
 
 from ps_game import PSGame, PSObject, Rule
@@ -35,9 +35,20 @@ class GenPSTree(Transformer):
     def rule_content(self, items):
         return ' '.join(items)
 
+    def rule_part(self, items):
+        cells = []
+        breakpoint()
+        # for item in items:
+        #     if isinstance(items[1], Tree):
+        #         return 
+        return items
+
     def rule_data(self, items):
+        ps = []
         l = []
         for i, item in enumerate(items):
+            if isinstance(item, Token) and item.type == 'RULE':
+                breakpoint()
             if isinstance(item, Token) and item.type == 'THEN':
                 r = items[i+1:]
                 break
@@ -70,7 +81,9 @@ if __name__ == '__main__':
     tree_paths = glob.glob(os.path.join(trees_dir, '*'))
     trees = []
     for tree_path in tree_paths:
-        print(f"Parsing {tree_path}")
+        print(tree_path)
+        og_game_path = os.path.join(data_dir, 'scraped_games', os.path.basename(tree_path)[:-3] + 'txt')
+        print(f"Parsing {og_game_path}")
         with open(tree_path, 'rb') as f:
             tree = pickle.load(f)
         trees.append(tree)

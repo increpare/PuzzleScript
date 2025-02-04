@@ -1,0 +1,217 @@
+title Castle Monk
+author Franklin P. Dyer
+run_rules_on_level_start on
+again_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+#51626d #526c7c
+01000
+11111
+01000
+01011
+01011
+
+Wall
+#414a4f #353c40
+10101
+00100
+11111
+00100
+10101
+
+Player
+Black #d2b48c #4d360a Blue
+.000.
+.111.
+22222
+.222.
+.222.
+
+Box
+#24544b #29675c #36897a
+00000
+01110
+01210
+01110
+00000
+
+Ladder #
+Darkbrown
+0...0
+00000
+0...0
+00000
+0...0
+
+Door
+Darkbrown #a0a13d
+.000.
+00000
+00000
+00010
+00000
+
+Headup v
+#324d2f Yellow
+0...0
+00.00
+00000
+00010
+00000
+
+Headdown ^
+#324d2f Yellow
+00000
+01000
+00000
+00.00
+0...0
+
+HeadLeft >
+#324d2f Yellow
+00000
+.0010
+..000
+.0000
+00000
+
+HeadRight <
+#324d2f Yellow
+00000
+0100.
+000..
+0000.
+00000
+
+Snakebody +
+#324d2f
+
+=======
+LEGEND
+=======
+
+. = Background
+/ = Wall
+@ = Player
+o = Box
+! = Door
+
+Obstacle = Box or Wall or SnakeBody
+Snakehead = HeadUp or Headdown or Headleft or Headright
+
+=======
+SOUNDS
+=======
+
+Box MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Door, Ladder
+Player, Wall, Box, Snakebody
+Snakehead
+
+======
+RULES
+======
+
+DOWN[Box|No Obstacle] -> [ Down Box|No Obstacle] again
+DOWN[Player No Ladder|No Obstacle] -> [Down Player|No Obstacle] again
+
+[ >  Player | Box ] -> [  >  Player | > Box  ]
+
+[Up player no ladder] -> cancel
+[player snakehead] -> cancel
+
+[Player|...|No Obstacle|Snakehead] -> [Player|...|No Obstacle|< Snakehead Snakebody] again
+[Up snakehead] -> [Up headup]
+[Down snakehead] -> [Down headdown]
+[left snakehead] -> [left headleft]
+[right snakehead] -> [right headright]
+[Snakehead|Player] -> [> Snakehead Snakebody|Player]
+
+[Background] -> [Background] again
+
+==============
+WINCONDITIONS
+==============
+
+All player on door
+
+=======
+LEVELS
+=======
+
+/////////
+/.#o..../
+/@#o..../
+//#/..///
+/.....///
+/......!/
+/////.///
+/////.///
+/////////
+
+//////////
+/.......#/
+/......o#/
+/../.../#/
+/!.#..#@#/
+///#./#/#/
+<..#..#.#/
+////./////
+////...///
+//////////
+
+(//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////
+//////////)

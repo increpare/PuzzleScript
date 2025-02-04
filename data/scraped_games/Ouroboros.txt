@@ -1,0 +1,198 @@
+Title Ouroboros
+Author Loneship Games
+========
+OBJECTS
+========
+background
+darkblue
+wall
+brown
+
+head
+green black darkblue
+20002
+00000
+01010
+00000
+20002
+
+u
+green darkgreen
+00000
+00100
+01010
+00000
+00000
+d
+green darkgreen
+00000
+00000
+01010
+00100
+00000
+l
+green darkgreen
+00000
+00100
+01000
+00100
+00000
+r
+green darkgreen
+00000
+00100
+00010
+00100
+00000
+
+tail
+lightgreen
+..0..
+.000.
+00000
+.000.
+..0..
+
+tail2
+lightgreen
+..0..
+.000.
+00000
+.000.
+..0..
+
+apple
+green lightgreen darkgreen
+.000.
+00110
+20010
+.200.
+.020.
+
+redapple
+red lightred darkred
+.000.
+00110
+20010
+.200.
+.020.
+
+=======
+LEGEND
+=======
+player = head
+snake = u or d or l or r
+
+. = background
+# = wall
+t = tail2
+1 = head and u
+2 = head and d
+3 = head and l
+4 = head and r
+a = apple
+@ = redapple
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+background
+wall,snake,tail, tail2, apple, redapple
+player
+
+======
+RULES
+======
+[tail2] -> [tail]
+
+[> player|tail] -> win
+
+[> player|wall ] -> cancel
+[> player|snake] -> cancel
+[> player|apple] [tail] -> [> player| ] [tail2]
+[> player|redapple] -> [player| ]
+
+up    [> player| ] -> [> player|u]
+down  [> player| ] -> [> player|d]
+left  [> player| ] -> [> player|l]
+right [> player| ] -> [> player|r]
+
+late up    [tail|u] -> [ |tail2]
+late down  [tail|d] -> [ |tail2]
+late left  [tail|l] -> [ |tail2]
+late right [tail|r] -> [ |tail2]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+#########
+#.......#
+#.urrrr.#
+#.t...d.#
+#.....d.#
+#.....d.#
+#...3ld.#
+#.......#
+#########
+
+##########
+#...3lllu#
+#...####u#
+#.#....#u#
+#.##.#..u#
+#......#u#
+##.##.##t#
+##.......#
+##########
+
+############
+###...#lllu#
+###...#d##u#
+#.....#d..u#
+#.#lllld.#u#
+#.#d###.##u#
+#.#drr#.##t#
+#...#d4.#..#
+###...#...##
+############
+
+#########
+#..llllu#
+#.#d#.#u#
+#.#d..#u#
+#..d#..t#
+#.#d#1#.#
+#..d#u#.#
+###drr..#
+#########
+
+#############
+##llu###...##
+##d#llu#.#.##
+##d#.#u#...##
+##d..#u..#.##
+##d###t###.##
+#ld.........#
+#d###.##.##.#
+#d..ur4...#.#
+#d##u#.##.#.#
+#drrr#....#.#
+####.##.#.#.#
+####....#...#
+#############
+
+#######
+#.3llu#
+#t...u#
+#d.a.u#
+#d...u#
+#drrrr#
+#######

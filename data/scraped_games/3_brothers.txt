@@ -1,0 +1,355 @@
+title 3 brothers
+author Son Nguyen
+homepage https://www.facebook.com/sonnguyen48
+========
+OBJECTS
+========
+
+Background
+#def6ff #e8fffc
+00000
+00101
+01000
+00010
+00000
+
+Wall
+darkblue black
+00010
+11111
+01000
+11111
+00010
+
+
+Player1
+Red white
+00000
+01010
+00000
+00000
+00000
+
+Player2
+blue white
+00000
+01010
+00000
+00000
+00000
+
+Player3
+Yellow white
+00000
+01010
+00000
+00000
+00000
+
+Goal1
+black red
+00000
+00100
+01010
+00100
+00000
+
+Goal2
+black blue
+00000
+00100
+01010
+00100
+00000
+
+Goal3
+black yellow
+00000
+00100
+01010
+00100
+00000
+
+Portal1a
+red white
+00000
+01010
+01110
+01010
+00000
+
+Portal1b
+red black 
+00000
+01110
+01010
+01110
+00000
+
+Portal2a
+blue white
+00000
+01010
+01110
+01010
+00000
+
+Portal2b
+blue black
+00000
+01110
+01010
+01110
+00000
+
+Portal3a
+yellow white
+00000
+01010
+01110
+01010
+00000
+
+Portal3b
+yellow black
+00000
+01110
+01010
+01110
+00000
+=======
+LEGEND
+=======
+
+. = Background
+a = Player1
+b = Player2
+c = Player3
+W = Wall
+x = Goal1
+y = Goal2
+z = Goal3
+
+j = Portal1a
+k = Portal2a
+l = Portal3a
+
+u = Portal1b
+i = Portal2b
+o = Portal3b
+
+
+Player = Player1 or Player2 or Player3
+Goal = Goal1 or Goal2 or Goal3
+
+=======
+SOUNDS
+=======
+
+Player MOVE 31363904
+EndLevel 6417822
+Restart 7865435
+Startlevel 765436
+TitleScreen 876543
+Undo 436234
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player1, Player2, Player3, Wall
+Goal1, Goal2, Goal3
+Portal1a, Portal2a, Portal3a, Portal1b, Portal2b, Portal3b
+
+======
+RULES
+======
+[Player1 | Player2 | Player3]->[> Player1 | > Player2 | > Player3]
+
+[Player1 Portal1a]...[Portal1b] -> [Portal1a]...[Player1 Portal1b]
+[Player2 Portal2a]...[Portal2b] -> [Portal2a]...[Player2 Portal2b]
+[Player3 Portal3a]...[Portal3b] -> [Portal3a]...[Player3 Portal3b]
+==============
+WINCONDITIONS
+==============
+
+all Player on Goal 
+
+
+=======
+LEVELS
+=======
+
+message Level 1
+
+wwwwwwwwww
+w........w
+wa......xw
+w........w
+wb......yw
+w........w
+wc......zw
+w........w
+wwwwwwwwww
+
+message Level 2
+
+wwwwwwwwww
+wb...c...w
+w........w
+w....z...w
+w....w..yw
+w....x...w
+w........w
+w....a...w
+wwwwwwwwww
+
+message Level 3
+
+wwwwwwwwww
+w.......xw
+wa.......w
+w...w....w
+wb..w....w
+w.......yw
+wc.....w.w
+w.......zw
+wwwwwwwwww
+
+message Level 4
+
+wwwwwwwwww
+w...a....w
+wb...w..yw
+ww.......w
+w........w
+w........w
+wc.....wzw
+ww..x....w
+wwwwwwwwww
+
+message Level 5
+
+wwwwwwwwww
+w........w
+wa...xw..w
+w........w
+wb......yw
+w........w
+wc..w....w
+w..z.....w
+wwwwwwwwww
+
+message Level 6
+
+wwwwwwwwww
+w....aw..w
+w.......xw
+w...w....w
+w....w..yw
+w..bw...ww
+w...z....w
+w.......cw
+wwwwwwwwww
+
+message Level 7
+
+wwwwwwwwww
+w.......xw
+wa....w..w
+w........w
+wb......yw
+w........w
+wc..w....w
+w.....z..w
+wwwwwwwwww
+
+message Level 8
+
+wwwwwwwwww
+w...a....w
+w..x.....w
+w..w.....w
+wb.......w
+w....w...w
+w...c...ww
+w..z...y.w
+wwwwwwwwww
+
+message Level 9
+
+wwwwwwwwww
+wx.....y.w
+w.w......w
+w.....w..w
+w...ab...w
+w...c....w
+w...w..z.w
+w........w
+wwwwwwwwww
+
+message Level 10
+
+wwwwwwwwww
+w........w
+w..w....aw
+w.....wy.w
+wbx......w
+w........w
+wc.......w
+w...wz...w
+wwwwwwwwww
+
+message Level 11
+
+wwwwwwwwww.wwwwwwwwww
+w.......jw.wu.......w
+wa.......w.w.......xw
+w.......kw.wi.......w
+wb.......w.w.......yw
+w.......lw.wo.......w
+wc.......w.w.......zw
+w........w.w........w
+wwwwwwwwww.wwwwwwwwww
+
+message Level 12
+
+wwwwwwwwww.wwwwwwwwww
+wb....o..w.w....l...w
+w.......xw.w........w
+w...a....w.w........w
+w.....w..w.w.......iw
+w........w.w..w.....w
+w.......zw.wc.y.....w
+w..k.....w.w........w
+wwwwwwwwww.wwwwwwwwww
+
+message Level 13
+
+wwwwwwwwww.wwwwwwwwww
+wa......lw.wu...x...w
+w........w.w....w...w
+ww.......w.w........w
+w.......iw.wk...w..bw
+wy...w...w.w....z...w
+w........w.w........w
+wc......jw.wo.......w
+wwwwwwwwww.wwwwwwwwww
+
+message Level 14
+
+wwwwwwwwww.wwwwwwwwww
+wi......lw.wj.......w
+w........w.w........w
+ww.......w.w...ww...w
+wx...c...w.wb..wk...w
+wy...w...w.w...ww...w
+w........w.w.....z.aw
+wu.......w.wo.......w
+wwwwwwwwww.wwwwwwwwww
+
+message Level 15
+message Just kidding, I'm too lazy to make another one
+message So I guess you win, yayy!

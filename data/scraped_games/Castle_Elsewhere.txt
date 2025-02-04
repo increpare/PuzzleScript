@@ -1,0 +1,871 @@
+title Castle Elsewhere
+(Solve Puzzles. Escape while you can.)
+author Croubble
+homepage www.puzzlescript.net
+background_color darkblue
+verbose_logging
+run_rules_on_level_start
+again_interval 0
+========
+OBJECTS
+========
+
+Background
+#050505
+
+
+Target
+Red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+White White White White Red
+.000.
+.141.
+22222
+.333.
+.3.3.
+
+Crate2 
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+Crate2a 
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+Crate2b
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+Crate2c
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+Crate2d
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+Crate2e
+Orange
+.....
+.....
+..0..
+.....
+.....
+
+
+URCorner2
+Orange
+....0
+.....
+.....
+.....
+.....
+
+ULCorner2
+Orange
+0....
+.....
+.....
+.....
+.....
+
+DRCorner2
+Orange
+.....
+.....
+.....
+.....
+....0
+DLCorner2
+Orange
+.....
+.....
+.....
+.....
+0....
+
+DLine2
+Orange
+.....
+.....
+.....
+.....
+00000
+
+ULine2
+Orange
+00000
+.....
+.....
+.....
+.....
+
+LLine2
+Orange
+0....
+0....
+0....
+0....
+0....
+RLine2
+Orange
+....0
+....0
+....0
+....0
+....0
+
+Crate1
+Yellow
+.....
+.....
+..0..
+.....
+.....
+
+Crate1a
+#E6D15A
+.....
+.....
+..0..
+.....
+.....
+
+Crate1b
+#E6D15A
+.....
+.....
+..0..
+.....
+.....
+
+
+Crate1c
+#E6D15A
+.....
+.....
+..0..
+.....
+.....
+
+URCorner
+Yellow
+....0
+.....
+.....
+.....
+.....
+
+ULCorner
+Yellow
+0....
+.....
+.....
+.....
+.....
+
+DRCorner
+Yellow
+.....
+.....
+.....
+.....
+....0
+DLCorner
+Yellow
+.....
+.....
+.....
+.....
+0....
+
+DLine
+Yellow
+.....
+.....
+.....
+.....
+00000
+
+ULine
+Yellow
+00000
+.....
+.....
+.....
+.....
+
+LLine
+Yellow
+0....
+0....
+0....
+0....
+0....
+RLine
+Yellow
+....0
+....0
+....0
+....0
+....0
+
+IHaveCrateU
+transparent
+
+IHaveCrateR
+transparent
+
+IHaveCrateL
+transparent
+
+IHaveCrateD
+transparent
+
+IHaveCrateUR
+transparent
+
+IhaveCrateUL
+transparent
+
+IHaveCrateDR
+transparent
+
+IHaveCrateDL
+transparent
+Water
+#FAFAFA
+
+Glue
+Blue
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+
+HalfGlue
+Red
+0...0
+0...0
+00000
+0...0
+0...0
+
+Marker 
+Green
+.....
+.....
+..0..
+.....
+.....
+
+Button
+Grey
+.0.0.
+00.00
+.....
+00.00
+.0.0.
+
+ButtonWall
+Grey
+00000
+00000
+00000
+00000
+00000
+
+ButtonWallOpen
+Grey
+0...0
+.....
+.....
+.....
+0...0
+
+ButtonFail
+transparent
+=======
+LEGEND
+=======
+CratePull = Crate1 or Crate1a or Crate1b or Crate1c
+CratePush = Crate2 or Crate2a or Crate2b or Crate2c or Crate2d or Crate2e
+Cratey = CratePush or CratePull
+
+. = Background
+# = Water
+P = Player
+O = Target
+y = Crate1
+x = Crate1 and Target
+f = Crate1 and Water
+w = Wall
+s = Crate2
+t = Crate2 and Target
+i = Crate2 and Water
+~ = Water and Target
+a = Crate1 and Target
+b = Crate2 and Target
+d = Crate2a and Target 
+g = Glue
+h = halfGlue
+
+0 = Crate2
+1 = Crate2a
+2 = Crate2b
+3 = Crate2c
+4 = Crate2d
+5 = Crate2e
+@ = Crate1a
+$ = Crate1b
+% = Crate1c
+
+c = Button
+e = ButtonWall
+=======
+SOUNDS
+=======
+
+Cratey MOVE 36772507
+EndLevel 41533300
+================
+COLLISIONLAYERS
+================
+
+(actual rules)
+Background
+Water
+Target, Button, ButtonWallOpen
+Player, Wall, CratePush, CratePull, ButtonWall
+Glue, HalfGlue
+
+(graphics stuff)
+LLine
+RLine
+ULine
+DLine
+URCorner
+ULCorner
+DRCorner
+DLCorner
+LLine2
+RLine2
+ULine2
+DLine2
+URCorner2
+ULCorner2
+DRCorner2
+DLCorner2
+IHaveCrateU
+IhaveCrateR
+IhaveCrateL
+IHaveCrateD
+IHaveCrateUR
+IhaveCrateUL
+IHaveCrateDR
+IHaveCrateDL
+Marker
+ButtonFail
+======
+RULES
+======
+(--
+1: Push / Pull
+2: Push / Pull (2x1)
+3: Push / Pull (unveil merging of sames)
+4: Tutorialization done, we can properly
+--)
+(rigidbody crate graphics)
+
+
+
+
+
+(===================== RENDERER ====================)
+[Cratey] -> [Cratey no URCorner no ULCorner no DRCorner no DLCorner no ULine no DLine no LLine no RLine no URCorner2 no ULCorner2 no DRCorner2 no DLCOrner2 no ULine2 no RLine2 no LLine2 no DLine2 no IHaveCrateU no IHaveCrateR no IHaveCrateL no IHaveCrateD no IhaveCrateUR no IHaveCrateUL no IHaveCrateDR no IHaveCrateDL]
+
+late [CratePull] -> [CratePull URCorner ULCorner DRCorner DLCorner ULine DLine LLine RLine]
+late [CratePush] -> [CratePush URCorner2 ULCorner2 DRCorner2 DLCorner2 ULine2 DLine2 LLine2 RLine2]
+late UP [Cratey | Cratey] [Glue] -> [Cratey IHaveCrateU | Cratey IHaveCrateD] [Glue]
+late DOWN [Cratey | Cratey] [Glue] -> [Cratey IHaveCrateD| Cratey IHaveCrateU] [Glue]
+late LEFT [Cratey | Cratey] [Glue] -> [Cratey IHaveCrateL | Cratey IHaveCrateR] [Glue]
+late RIGHT [Cratey | Cratey] [Glue] -> [Cratey IHaveCrateR | Cratey IHaveCrateL] [Glue]
+
+late UP [Crate1 | Crate1] [HalfGlue] -> [Crate1 IHaveCrateU | Crate1 IHaveCrateD] [HalfGlue]
+late DOWN [Crate1 | Crate1] [HalfGlue] -> [Crate1 IHaveCrateD| Crate1 IHaveCrateU] [HalfGlue]
+late LEFT [Crate1 | Crate1] [HalfGlue] -> [Crate1 IHaveCrateL | Crate1 IHaveCrateR] [HalfGlue]
+late RIGHT [Crate1 | Crate1] [HalfGlue] -> [Crate1 IHaveCrateR | Crate1 IHaveCrateL] [HalfGlue]
+
+late UP [Crate1a | Crate1a] [HalfGlue] -> [Crate1a IHaveCrateU | Crate1a IHaveCrateD] [HalfGlue]
+late DOWN [Crate1a | Crate1a] [HalfGlue] -> [Crate1a IHaveCrateD| Crate1a IHaveCrateU] [HalfGlue]
+late LEFT [Crate1a | Crate1a] [HalfGlue] -> [Crate1a IHaveCrateL | Crate1a IHaveCrateR] [HalfGlue]
+late RIGHT [Crate1a | Crate1a] [HalfGlue] -> [Crate1a IHaveCrateR | Crate1a IHaveCrateL] [HalfGlue]
+
+late UP [Crate1b | Crate1b] [HalfGlue] -> [Crate1b IHaveCrateU | Crate1b IHaveCrateD] [HalfGlue]
+late DOWN [Crate1b | Crate1b] [HalfGlue] -> [Crate1b IHaveCrateD| Crate1b IHaveCrateU] [HalfGlue]
+late LEFT [Crate1b | Crate1b] [HalfGlue] -> [Crate1b IHaveCrateL | Crate1b IHaveCrateR] [HalfGlue]
+late RIGHT [Crate1b | Crate1b] [HalfGlue] -> [Crate1b IHaveCrateR | Crate1b IHaveCrateL] [HalfGlue]
+
+late UP [Crate1c | Crate1c] [HalfGlue] -> [Crate1c IHaveCrateU | Crate1c IHaveCrateD] [HalfGlue]
+late DOWN [Crate1c | Crate1c] [HalfGlue] -> [Crate1c IHaveCrateD| Crate1c IHaveCrateU] [HalfGlue]
+late LEFT [Crate1c | Crate1c] [HalfGlue] -> [Crate1c IHaveCrateL | Crate1c IHaveCrateR] [HalfGlue]
+late RIGHT [Crate1c | Crate1c] [HalfGlue] -> [Crate1c IHaveCrateR | Crate1c IHaveCrateL] [HalfGlue]
+
+late UP [Crate2 | Crate2] [HalfGlue] -> [Crate2 IHaveCrateU | Crate2 IHaveCrateD] [HalfGlue]
+late DOWN [Crate2 | Crate2] [HalfGlue] -> [Crate2 IHaveCrateD| Crate2 IHaveCrateU] [HalfGlue]
+late LEFT [Crate2 | Crate2] [HalfGlue] -> [Crate2 IHaveCrateL | Crate2 IHaveCrateR] [HalfGlue]
+late RIGHT [Crate2 | Crate2] [HalfGlue] -> [Crate2 IHaveCrateR | Crate2 IHaveCrateL] [HalfGlue]
+
+late UP [Crate2a | Crate2a] [HalfGlue] -> [Crate2a IHaveCrateU | Crate2a IHaveCrateD] [HalfGlue]
+late DOWN [Crate2a | Crate2a] [HalfGlue] -> [Crate2a IHaveCrateD| Crate2a IHaveCrateU] [HalfGlue]
+late LEFT [Crate2a | Crate2a] [HalfGlue] -> [Crate2a IHaveCrateL | Crate2a IHaveCrateR] [HalfGlue]
+late RIGHT [Crate2a | Crate2a] [HalfGlue] -> [Crate2a IHaveCrateR | Crate2a IHaveCrateL] [HalfGlue]
+
+late UP [Crate2b | Crate2b] [HalfGlue] -> [Crate2b IHaveCrateU | Crate2b IHaveCrateD] [HalfGlue]
+late DOWN [Crate2b | Crate2b] [HalfGlue] -> [Crate2b IHaveCrateD| Crate2b IHaveCrateU] [HalfGlue]
+late LEFT [Crate2b | Crate2b] [HalfGlue] -> [Crate2b IHaveCrateL | Crate2b IHaveCrateR] [HalfGlue]
+late RIGHT [Crate2b | Crate2b] [HalfGlue] -> [Crate2b IHaveCrateR | Crate2b IHaveCrateL] [HalfGlue]
+
+late UP [Crate2c | Crate2c] [HalfGlue] -> [Crate2c IHaveCrateU | Crate2c IHaveCrateD] [HalfGlue]
+late DOWN [Crate2c | Crate2c] [HalfGlue] -> [Crate2c IHaveCrateD| Crate2c IHaveCrateU] [HalfGlue]
+late LEFT [Crate2c | Crate2c] [HalfGlue] -> [Crate2c IHaveCrateL | Crate2c IHaveCrateR] [HalfGlue]
+late RIGHT [Crate2c | Crate2c] [HalfGlue] -> [Crate2c IHaveCrateR | Crate2c IHaveCrateL] [HalfGlue]
+
+late UP [Crate2d | Crate2d] [HalfGlue] -> [Crate2d IHaveCrateU | Crate2d IHaveCrateD] [HalfGlue]
+late DOWN [Crate2d | Crate2d] [HalfGlue] -> [Crate2d IHaveCrateD| Crate2d IHaveCrateU] [HalfGlue]
+late LEFT [Crate2d | Crate2d] [HalfGlue] -> [Crate2d IHaveCrateL | Crate2d IHaveCrateR] [HalfGlue]
+late RIGHT [Crate2d | Crate2d] [HalfGlue] -> [Crate2d IHaveCrateR | Crate2d IHaveCrateL] [HalfGlue]
+
+late UP [Crate2e | Crate2e] [HalfGlue] -> [Crate2e IHaveCrateU | Crate2e IHaveCrateD] [HalfGlue]
+late DOWN [Crate2e | Crate2e] [HalfGlue] -> [Crate2e IHaveCrateD| Crate2e IHaveCrateU] [HalfGlue]
+late LEFT [Crate2e | Crate2e] [HalfGlue] -> [Crate2e IHaveCrateL | Crate2e IHaveCrateR] [HalfGlue]
+late RIGHT [Crate2e | Crate2e] [HalfGlue] -> [Crate2e IHaveCrateR | Crate2e IHaveCrateL] [HalfGlue]
+
+(calc if we need to delete those pesky, pesky corner graphic stuff)
+late RIGHT [Cratey IhaveCrateU | Cratey IhaveCrateU] -> [Cratey IhaveCrateU IHaveCrateUR | Cratey IhaveCrateU]
+LATE RIGHT [Cratey IHaveCrateD | Cratey IHaveCrateD] -> [Cratey IHaveCrateD IHaveCrateDR | Cratey IHaveCrateD] 
+LATE LEFT  [Cratey IHaveCrateU | Cratey IHaveCrateU] -> [Cratey IHaveCrateU IHaveCrateUL | Cratey IHaveCrateU]
+LATE LEFT  [Cratey IHaveCrateD | Cratey IhaveCrateD] -> [Cratey IHaveCrateD IHaveCrateDL | Cratey IhaveCrateD]
+
+Late [CratePull IHaveCrateU] -> [CratePull no ULine]
+Late [CratePull IHaveCrateR] -> [CratePull no RLine]
+Late [CratePull IHaveCrateL] -> [CratePull no LLine]
+Late [CratePull IHaveCrateD] -> [CratePull no DLine]
+LATE [CratePull IHaveCrateUR] -> [CratePull no URCorner]
+LATE [CratePull IHaveCrateDR] -> [CratePull no DRCorner]
+LATE [CratePull IHaveCrateUL] -> [CratePull No ULCorner]
+LATE [CratePull IHaveCrateDL] -> [CratePull No DLCorner]
+
+Late [CratePush IHaveCrateU] -> [CratePush no ULine2]
+Late [CratePush IHaveCrateR] -> [CratePush no RLine2]
+Late [CratePush IHaveCrateL] -> [CratePush no LLine2]
+Late [CratePush IHaveCrateD] -> [CratePush no DLine2]
+LATE [CratePush IHaveCrateUR] -> [CratePush no URCorner2]
+LATE [CratePush IHaveCrateDR] -> [CratePush no DRCorner2]
+LATE [CratePush IHaveCrateUL] -> [CratePush No ULCorner2]
+LATE [CratePush IHaveCrateDL] -> [CratePush No DLCorner2]
+
+(--
+late [GreenTarget] -> []
+late [RedTarget] -> []
+late [Target2 Crate2] -> [Target2 Crate2 GreenTarget]
+late [Target1 Crate1] -> [Target1 Crate1 GreenTarget]
+late [Target Cratey] -> [Target Cratey RedTarget]
+--)
+(================ ACTUAL RULES=======================)
+[ > Player | Water ] -> [ Player | Water]	(1: don't let player walk on water)
+
+rigid [ < Player | CratePull ] -> [ < Player | < CratePull] (2: Players pull pull crates)
++ rigid [ > Player | CratePush] -> [ > Player | > CratePush] (3: Players can push push crates)
++ rigid [ Moving Cratey | Cratey] [Glue]-> [ Moving Cratey | Moving Cratey] [Glue] (3: if we in glue mode, move any adjacent crates as well)
++ rigid [ Moving Crate1 | Crate1] [HalfGlue] -> [Moving Crate1 | Moving Crate1] [HalfGlue]
++ rigid [ Moving Crate1a | Crate1a] [HalfGlue] -> [Moving Crate1a | Moving Crate1a] [HalfGlue]
++ rigid [ Moving Crate1b | Crate1b] [HalfGlue] -> [Moving Crate1b | Moving Crate1b] [HalfGlue]
++ rigid [ Moving Crate1c | Crate1c] [HalfGlue] -> [Moving Crate1c | Moving Crate1c] [HalfGlue]
++ rigid [ Moving Crate2 | Crate2] [HalfGlue] -> [Moving Crate2 | Moving Crate2] [HalfGlue]
++ rigid [ Moving Crate2a | Crate2a] [HalfGlue] -> [Moving Crate2a | Moving Crate2a] [HalfGlue]
++ rigid [ Moving Crate2b | Crate2b] [HalfGlue] -> [Moving Crate2b | Moving Crate2b] [HalfGlue]
++ rigid [ Moving Crate2c | Crate2c] [HalfGlue] -> [Moving Crate2c | Moving Crate2c] [HalfGlue]
++ rigid [ Moving Crate2d | Crate2d] [HalfGlue] -> [Moving Crate2d | Moving Crate2d] [HalfGlue]
+
+
+(button stuff!)
+late [Button no Cratey no Player] -> [Button ButtonFail]
+late [ButtonWall] -> [ButtonWallOpen]
+late [ButtonFail] [ButtonWallOpen] -> [ButtonFail] [ButtonWall]
+late [ButtonFail] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Cratey
+=======
+LEVELS
+=======
+
+message Game 2 - Castle Elsewhere
+
+(act 1 - Push / pull alone no glue, just shapes)
+
+(WORLD - pull)
+
+message I am Crate, hear me pull. (B+) - Trivial (utter beginner set only
+hwwwwwwwwww
+w...$$.oo.w
+wpo.@..ww.w
+w.o.@.....w
+wwwwwwwwwww
+
+message Stop Pulling My Leg. (A-) (easy introduction to the idea of pull. A+ is removing the hook at the end, perhaps with a door? (EASY)
+wwwwwwwwwwww
+wwwwww..wwww
+whwwwwo.wwww
+ww@$.o...wyw
+ww@p.o....ow
+wwwwwwwwww.w
+wwwwwwwwwwww
+
+
+(WORLD - joined) 
+
+
+message Valve Bypass (A+)
+wwwwhwww
+wwwwwwww
+wwww..ww
+wwww..ww
+wo.@.t.w
+wo.@.tpw
+ww....ww
+ww..wwww
+wwwwwwww
+
+(WORLD - The void)
+
+message Simple Plus (S+) 
+##h#####
+########
+###..###
+###2o###
+#p1o...#
+##1o...#
+###..###
+###..###
+########
+
+(WORLD - push)
+
+message Keep it on the level (A+)
+wwwwwwwh
+w.o.p..w
+w..12o.w
+w..1.o.w
+wwwwwwww
+
+message Narrow Corridor (A+)
+
+wwwwwwwwwww
+w....0pooow
+w..11..ww.w
+wwwwww....w
+whwwwwwwwww
+
+
+
+message Simple (1 step) Push (A+)
+wwwwww
+wowwhw
+wo.www
+w.1.ww
+wo10ww
+wo.0pw
+ww.w.w
+ww...w
+wwwwww
+
+message Square Issues (B+)
+
+hwwwwwww
+w......w
+w.wwww.w
+w.w..oow
+w.w.11.w
+w...tt.w
+www.p.ww
+wwwwwwww
+
+
+message Park Stroll (B+) (kinda filler, where filler is necessary) 
+wwwwwwwwwwww
+wwwhwp..wwww
+wwwww.w.wwww
+w...w..t...w
+w.....4to..w
+wwwwwww....w
+wwwwwwwwwwww
+
+
+message Big Boi (A-) (choose your poison)
+hwwwwwww
+w......w
+w.w..w.w
+w.ott..w
+w.1tto.w
+w.wp2w.w
+w......w
+wwwwwwww
+
+hwwwwwww
+w..oo..w
+w.woow.w
+w.100..w
+w..00o.w
+w.wp.w.w
+w......w
+wwwwwwww
+
+
+
+
+
+
+
+
+
+message Closed Plus (C+)
+whwwww
+wwwwww
+wwy.ww
+ww.oww
+w.o1.w
+w.o1pw
+ww..ww
+ww..ww
+wwwwww
+
+
+
+( =============================================== BEGIN CUT CONTENT ==================================)
+message OFFSHOOts
+
+
+
+
+
+
+wwwwwwwwwwwwh
+wwww..wwwwwww
+w..p22..oooww
+w....1..ww.ww
+wwwwwww....ww
+wwwwwwwwwwwww
+
+wwwwwwwwwww
+ww....wwwwh
+ww.1..wwwww
+ww.w..wwwww
+ww0w.....ww
+ww0wwwwwoww
+w...p...o.w
+w.......oww
+w...ww...ww
+wwwwwwwwwww
+
+
+message The Triangle box. Interesting enough, definitely use, scaffolding terrain is issue. (A-)
+hwwwwwww
+wwww..ww
+ww.p.o.w
+ww..tt.w
+www.3t.w
+www...ww
+wwwwwwww
+
+message Oversized Microban #2 (B+)
+wwwwhwww
+wwwwwwww
+w...ww.w
+w.dd44.w
+w.dd44.w
+w.ttoo.w
+w.ttoo.w
+w.p....w
+wwwwwwww
+
+woowhwww
+wwwwwwww
+w...ww.w
+w.3224.w
+w.3224.w
+w.11oo.w
+w.11oo.w
+w.p....w
+wwwwwwww
+
+message Single Red Push (2x1)
+########h##
+######....#
+#.........#
+#.#######~#
+#.ps....#~#
+##.s....###
+#####..####
+###########
+
+message Pulling Jungle
+wwwwwwwwwww
+w....wwwwww
+w.w.....www
+h.......www
+wwww.wwwwww
+w@$p...wwww
+w@$..w.wwww
+wwww...wwww
+wwww..wwwww
+wwwwwwwwwww
+
+
+
+message Single Yellow Pull (2x1)
+
+#h#############
+########..#####
+#....#....#...#
+#..#...#......#
+#..#########.##
+##oy...#...#..#
+##oy.#...#....#
+##p..#######..#
+############..#
+###############
+
+
+message Two Red Push (2x1)
+
+message Two Yellow Pull (2x1)
+
+message The Hook Pull 
+###h#####
+#########
+#....#@@#
+#.....x@#
+#......##
+#..oo...#
+#..po...#
+#.......#
+#.......#
+#########
+ 
+message Inside a big yellow box
+
+message Inside a big orange box
+
+message Big Crate (2x2) Two levels, red and yellow.
+
+message Huge Crate(3x3) red
+
+message Huge Crate(4x4) yellow
+
+
+
+
+
+message X / Y - Trio
+
+#####g
+#.o###
+#oxw##
+#yy###
+#....#
+#p...#
+######
+
+#####g
+#ps###
+#ssw~#
+#..~~#
+#....#
+#....#
+######
+
+
+(act 2 - push / pull together no glue, just shapes)
+(act 3 - push / pull alone glue)
+
+message Great Hook
+#######g
+#####o##
+########
+#.....y#
+#...p.y#
+#.....y#
+#y....y#
+#......#
+########
+
+(act 4 - push / pull together glue)
+
+message Greater Hook
+#####g
+##fi##
+#....#
+#....#
+#.sy.#
+#p...#
+######
+######
+##y###
+###y##
+#y#o##
+######
+
+
+#####g
+#..###
+#..###
+#22..#
+#22..#
+#..###
+######
+
+(alternate between push / pull)
+
+
+message Four Exchanges
+

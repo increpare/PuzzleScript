@@ -1,0 +1,870 @@
+title Snowman Decorator
+author Stephan Cleaves
+homepage www.puzzlescript.net
+
+run_rules_on_level_start
+background_color white
+text_color black
+realtime_interval 0.1
+throttle_movement 
+
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+snow1
+white
+...00
+...00
+.....
+.....
+.....
+
+snow2
+white
+..00.
+..00.
+.....
+.....
+.....
+
+snow3
+white
+.....
+.00..
+.00..
+.....
+.....
+
+snow4
+white
+.....
+.....
+..00.
+..00.
+.....
+
+snow5
+white
+.....
+.....
+...00
+...00
+.....
+
+snow6
+white
+.....
+.....
+.....
+...00
+...00
+
+Snowman1
+white
+00000
+00000
+00000
+00000
+00000
+
+Snowman2
+white darkgray
+....1
+..100
+..100
+.1000
+.1000
+
+Snowman3
+lightgray white darkgray
+.2111
+.2111
+..211
+..211
+....2
+
+Snowman4
+lightgray white darkgray
+20000
+11200
+11200
+11120
+11120
+
+Snowman5
+lightgray white darkgray
+11120
+11120
+11200
+11200
+20000
+
+Snowman6
+lightgray white darkgray
+02111
+21111
+21111
+21111
+02111
+
+Snowman7
+lightgray white darkgray
+11120
+11112
+11112
+11112
+11120
+
+Snowman8
+white darkgray
+00001
+00010
+00100
+01000
+01000
+
+Snowman9
+white darkgray
+01000
+01000
+00100
+00010
+00001
+
+Snowman10
+white darkgray
+10000
+01000
+00100
+00010
+00010
+
+Snowman11
+white darkgray
+00010
+00010
+00100
+01000
+10000
+
+Snowman12
+white darkgray
+01000
+10000
+10000
+10000
+01000
+
+Snowman13
+white darkgray
+00010
+00001
+00001
+00001
+00010
+
+Hat1
+black
+00000
+00000
+00000
+00000
+00000
+
+HatTop
+black
+.....
+.....
+00000
+00000
+00000
+
+HatBrim
+black
+.....
+.....
+.....
+00000
+00000
+
+HatBand
+black red
+00000
+11111
+11111
+00000
+00000
+
+PartyHat1
+purple yellow
+10000
+01000
+00100
+00010
+00001
+
+PartyHat2
+purple yellow
+....0
+....0
+....0
+...00
+...00
+
+PartyHat3
+purple yellow
+0....
+0....
+0....
+00...
+00...
+
+PartyHat4
+purple yellow
+...00
+..000
+..000
+..010
+.0001
+
+PartyHat5
+purple yellow
+10...
+010..
+000..
+000..
+0000.
+
+Crown1
+pink
+00000
+00000
+00000
+00000
+00000
+
+Crown2
+pink
+00...
+00...
+00...
+000..
+000..
+
+Crown3
+pink
+....0
+...00
+...00
+..000
+..000
+
+Crown4
+pink
+0....
+00...
+00...
+000..
+000..
+
+Crown5
+pink
+...00
+...00
+...00
+..000
+..000
+
+Crown6
+pink
+.....
+..0..
+.000.
+00000
+00000
+
+ButtonRed
+red black
+.000.
+00100
+01010
+00100
+.000.
+
+ButtonGreen
+green black
+.000.
+00100
+01010
+00100
+.000.
+
+ButtonBlue
+blue black
+.000.
+00100
+01010
+00100
+.000.
+
+Coal1
+black
+.000.
+00000
+00000
+00000
+.000.
+
+Googly1
+black
+.000.
+0...0
+0.000
+0.000
+.000.
+
+Googly2
+black
+.000.
+0...0
+000.0
+000.0
+.000.
+
+Smile1
+black
+.....
+.000.
+.000.
+.000.
+.....
+
+Smile2
+transparent
+
+Frown1
+black
+.....
+.000.
+.000.
+.000.
+.....
+
+Frown2
+transparent
+
+CornPipe1
+lightbrown
+.....
+.....
+00000
+00000
+.....
+
+CornPipe2
+yellow
+.....
+00000
+00000
+00000
+.....
+
+CornPipe3
+yellow orange
+00000
+01000
+00100
+00010
+00000
+
+Scarf1
+blue green
+11001
+00110
+11001
+00110
+11001
+
+Scarf2
+blue green
+10011
+01100
+10011
+01100
+10011
+
+Carrot1
+orange lightbrown
+00000
+01100
+00000
+00110
+00000
+
+Carrot2
+orange lightbrown
+000..
+00000
+01100
+00000
+000..
+
+Carrot3
+orange lightbrown
+.....
+000..
+00000
+000..
+.....
+
+LeftTwig1
+darkbrown
+.....
+.000.
+00.00
+....0
+.....
+
+LeftTwig2
+darkbrown
+.....
+...00
+00000
+..00.
+.....
+
+LeftTwig3
+darkbrown
+.....
+.....
+00000
+00000
+.....
+
+RightTwig1
+darkbrown
+.....
+.000.
+00.00
+....0
+.....
+
+RightTwig2
+darkbrown
+.....
+...00
+00000
+..00.
+.....
+
+RightTwig3
+darkbrown
+.....
+.....
+00000
+00000
+.....
+
+HillUp1
+black white
+.....
+.0000
+01111
+11111
+11111
+
+HillUp2
+black white
+...00
+..011
+00111
+11111
+11111
+
+HillFlat
+black white
+.....
+.....
+00000
+11111
+11111
+
+HillDown1
+black white
+00...
+110..
+11100
+11111
+11111
+
+HillDown2
+black white
+.....
+0000.
+11110
+11110
+11111
+
+HillFill
+white
+00000
+00000
+00000
+00000
+00000
+
+Cabin1
+darkbrown
+....0
+...00
+..000
+.0000
+00000
+
+Cabin2
+darkbrown darkred
+0..11
+00.11
+00011
+00001
+00000
+
+Cabin3
+darkbrown yellow black
+00000
+01210
+02220
+01210
+00000
+
+Cabin4
+darkbrown
+00000
+00000
+00000
+00000
+00000
+
+Cabin5
+darkbrown red black
+11110
+11110
+11120
+11110
+11110
+
+Cabin6
+darkbrown red
+00111
+00111
+00111
+00111
+00111
+
+Cabin7
+darkbrown
+0....
+00...
+000..
+0000.
+00000
+
+Tree1
+darkbrown
+00000
+00000
+00000
+00000
+00000
+
+Tree2
+lightgray darkbrown
+00111
+00111
+00111
+00111
+00111
+
+Tree3
+lightgray darkbrown
+11100
+11100
+11100
+11100
+11100
+
+Branch1
+lightgray black
+00001
+00010
+00010
+00001
+00001
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall1
+DARKBROWN
+..0..
+.0.0.
+..0..
+.0.0.
+..0..
+
+Wall2
+darkbrown
+.....
+.0.0.
+0.0.0
+.0.0.
+.....
+
+Player
+Black
+00.00
+0...0
+.....
+0...0
+00.00
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+Template = Snowman1 or Snowman2 or Snowman3 or Snowman4 or Snowman5  or Snowman6 or Snowman7 or Snowman8 or Snowman9 or Snowman10 or Snowman11 or Snowman12 or Snowman13 or Tree1 or Tree2 or Tree3 or Branch1
+Hat = Hat1 or HatTop or HatBrim or HatBand
+PartyHat = PartyHat1 or PartyHat2 or PartyHat3 or PartyHat4 or PartyHat5
+Crown = Crown1 or Crown2 or Crown3 or Crown4 or Crown5 or Crown6
+snow = snow1 or snow2 or snow3 or snow4 or snow5 or snow6
+button = ButtonRed or ButtonGreen or ButtonBlue or Coal1 or Googly1 or Googly2
+smile = Smile1 or Smile2
+frown = Frown1 or Frown2
+pipe = CornPipe1 or CornPipe2 or CornPipe3
+scarf = Scarf1 or Scarf2
+carrot = Carrot1 or Carrot2 or Carrot3
+leftarm = LeftTwig1 or LeftTwig2 or LeftTwig3
+rightarm = RightTwig1 or RightTwig2 or RightTwig3
+Wall = Wall1 or Wall2
+Hill = HillUp1 or HillUp2 or HillFlat or HillDown1 or HillDown2 or HillFill
+Cabin = Cabin1 or Cabin2 or Cabin3 or Cabin4 or Cabin5 or Cabin6 or Cabin7
+
+. = Background
+4 = Snowman1
+5 = Snowman2
+6 = Snowman3
+7 = Snowman4
+8 = Snowman5
+9 = Snowman6
+0 = Snowman7
+Ω = Snowman8
+≈ = Snowman9
+ç = Snowman10
+√ = Snowman11
+˜ = Snowman12
+µ = Snowman13
+h = Hat1
+y = HatTop
+g = HatBrim
+j = HatBand
+u = PartyHat1
+i = PartyHat2
+r = PartyHat3
+e = PartyHat4
+w = PartyHat5
+a = Crown1
+b = Crown2
+n = Crown3
+m = Crown4
+, = Crown5
+- = Crown6
+c = ButtonRed
+d = ButtonGreen
+x = ButtonBlue
+l = Coal1
+q = Smile1
+$ = Smile2
+¡ = Frown1
+™ = Frown2
+£ = CornPipe1
+¢ = CornPipe2
+∞ = CornPipe3
+§ = Scarf1
+¶ = Scarf2
+• = Carrot1
+ª = Carrot2
+º = Carrot3
+œ = LeftTwig1
+∑ = LeftTwig2
+´ = LeftTwig3
+® = RightTwig1
+¥ = RightTwig2
+¨ = RightTwig3
+/ = Tree3
+Z = Branch1
+# = Wall1
+% = Wall2
+ø = HillUp1
+π = HillUp2
+“ = HillFlat
+‘ = HillDown1
+« = HillDown2
+å = HillFill
+˙ = Cabin1
+∆ = Cabin2
+˚ = Cabin3
+¬ = Cabin4
+… = Cabin5
+æ = Cabin6
+≠ = Cabin7
+– = Googly1
+÷ = Googly2
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Hill, Cabin
+Template
+Target
+Player, Wall, Crate, Hat, PartyHat, Crown, button, Smile, frown, pipe, scarf, carrot, leftarm, rightarm
+
+snow
+
+======
+RULES
+======
+
+random down [no snow|no snow|no snow|no snow|no snow] -> [snow1||||]
+
+[ snow4 ] -> [ snow5 ]
+[ snow3 ] -> [ snow4 ]
+[ snow2 ] -> [ snow3 ]
+[ snow1 ] -> [ snow2 ]
+down [ snow6|] -> [ |snow1 ]
+[ snow6] -> [  ]
+[ snow5 ] -> [ snow6 ]
+
+
+rigid [ > Player | Hat ] -> [ > Player | > Hat ]
++ rigid [ Moving Hat | Hat ] -> [ Moving Hat | Moving Hat]
+
+rigid [ > Player | PartyHat ] -> [ > Player | > PartyHat ]
++ rigid [ Moving PartyHat | PartyHat ] -> [ Moving PartyHat | Moving PartyHat]
+
+rigid [ > Player | Crown ] -> [ > Player | > Crown ]
++ rigid [ Moving Crown | Crown ] -> [ Moving Crown | Moving Crown ]
+
+rigid [ > Player | Smile ] -> [ > Player | > Smile ]
++ rigid [ Moving Smile | Smile ] -> [ Moving Smile | Moving Smile ]
+
+rigid [ > Player | frown ] -> [ > Player | > frown ]
++ rigid [ Moving frown | frown ] -> [ Moving frown | Moving frown ]
+
+rigid [ > Player | pipe ] -> [ > Player | > pipe ]
++ rigid [ Moving pipe | pipe ] -> [ Moving pipe | Moving pipe ]
+
+rigid [ > Player | scarf ] -> [ > Player | > scarf ]
++ rigid [ Moving scarf | scarf ] -> [ Moving scarf | Moving scarf ]
+
+rigid [ > Player | carrot ] -> [ > Player | > carrot ]
++ rigid [ Moving carrot | carrot ] -> [ Moving carrot | Moving carrot ]
+
+rigid [ > Player | leftarm ] -> [ > Player | > leftarm ]
++ rigid [ Moving leftarm | leftarm ] -> [ Moving leftarm | Moving leftarm ]
+
+rigid [ > Player | rightarm ] -> [ > Player | > rightarm ]
++ rigid [ Moving rightarm | rightarm ] -> [ Moving rightarm | Moving rightarm ]
+
+[ > Player | Button ] -> [ > Player | > Button ]
+[ | action Player | Button | Wall ] -> [ Button | Player | No Button | Wall ]
+[ | action Player | Button | No Wall] -> [ Button | Player | Button | No Wall ]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+No Snowman1
+
+=======
+LEVELS
+=======
+
+message Use X to clone small objects or move them away from a wall
+
+.%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%.
+#....................................................#
+#....................................................#
+#..........§§§§§§§...•ªº....-.....euw....yyy...c..d..#
+#.........¶¶¶¶¶¶¶¶¶.......bnam,...uuu....hhh.........#
+#........§§...............aaaaa..iuuur..gjjjg........#
+#.......¶¶.....................................x..l..#
+#....................................................#
+#....................................................#
+#..............................................–..÷..#
+#..q$$$q.............................................#
+#...qqq..............................................#
+#....................................................#
+#....................................................#
+#..™¡¡¡™.............................................#
+#..¡™™™¡..............................547............#
+#....................................54447...........#
+#...................................5444447..........#
+#......∞..................p........544444447.........#
+#..££¢¢∞..........................54444444447........#
+#.................................64444444448........#
+#..................................644444448.........#
+#..œ∑∑œ∑´...........................6444448..........#
+#...................................5444447..........#
+#..................................544444447.........#
+#..¨¥®¥¥®.........................54444444447........#
+#................................5444444444447.......#
+#.............z..................9444444444440.......#
+#...........˙≠z..................6444444444448.......#
+#..........˙˚˚∆...................64444444448........#
+#..........¬¬¬¬....................644444448.........#
+#..........˚æ…˚....................544444447.........#
+#øπ‘«π«““π‘¬æ…¬ø“““π«π‘«““øøπ‘«ø““54444444447øπ«π‘““«#
+#ååååååååååååååååååååååååååååååååω44444444444çååååååå#
+#åååååååååååååååååååååååååååååååω4444444444444çåååååå#
+#ååååååååååååååååååååååååååååååå˜4444444444444µåååååå#
+#ååååååååååååååååååååååååååååååå≈4444444444444√åååååå#
+#åååååååååååååååååååååååååååååååå≈44444444444√ååååååå#
+#ååååååååååååååååååååååååååååååååå≈444444444√åååååååå#
+.%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%.

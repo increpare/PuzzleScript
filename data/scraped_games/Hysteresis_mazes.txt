@@ -1,0 +1,278 @@
+title Hysteresis mazes
+author Andrea Gilbert
+homepage http://www.clickmazes.com/hk/new-hk.htm
+
+========
+OBJECTS
+========
+
+background
+white
+
+xNE
+black
+0....
+.0...
+..0..
+...0.
+....0
+
+xNW
+black
+....0
+...0.
+..0..
+.0...
+0....
+
+
+zSW
+black
+00000
+.0..0
+..0.0
+...00
+....0
+
+zSE
+black
+00000
+0..0.
+0.0..
+00...
+0....
+
+zNE
+black
+0....
+00...
+0.0..
+0..0.
+00000
+
+zNW
+black
+....0
+...00
+..0.0
+.0..0
+00000
+
+moveVH
+purple pink
+..1..
+.010.
+11111
+.010.
+..1..
+
+moveH
+purple pink
+..0..
+.000.
+11111
+.000.
+..0..
+
+moveV
+purple pink
+..1..
+.010.
+00100
+.010.
+..1..
+
+goal
+red
+.....
+.000.
+.000.
+.000.
+.....
+
+switch
+yellow
+00.00
+0...0
+.....
+0...0
+00.00
+
+cell
+transparent
+
+border
+darkgrey grey
+00010
+11111
+01000
+11111
+00010
+
+=======
+LEGEND
+=======
+
+o = border
+. = cell
+\ = xNE
+/ = xNW
+a = zNE
+b = zSE
+c = zSW
+d = zNW
+p = moveH
+g = goal
+* = switch
+
+player = moveV or moveH or moveVH
+
+slide = xNE or xNW
+halfslide = zNW or zNE or zSW or zSE
+wall = slide or halfslide
+maze = cell or wall or switch
+
+rPushN = xNW or zNW
+rPushS = xNE or zSW
+lPushN = xNE or zNE
+lPushS = xNW or zSE
+uPushR = xNW or zSE
+uPushL = xNE or zSW
+dPushR = xNE or zNE
+dPushL = xNW or zNW
+
+moveHx = moveH or moveVH
+moveVx = moveV or moveVH
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+background
+border
+maze
+player
+goal
+
+======
+RULES
+======
+
+[ > player | border ] -> cancel
+horizontal [ > moveV ] -> cancel
+vertical   [ > moveH ] -> cancel
+
+horizontal [ > moveVH switch | cell ] -> [ switch | moveH cell ]
+vertical   [ > moveVH switch | cell ] -> [ switch | moveV cell ]
+
+right [ right moveHx | rPushN ] -> [ | up moveH rPushN ]  
+right [ right moveHx | rPushS ] -> [ | down moveH rPushS ]  
+left  [ left moveHx | lPushS ]  -> [ | down moveH lPushS ]  
+left  [ left moveHx | lPushN ]  -> [ | up moveH lPushN ] 
+up    [ up moveVx | uPushR ]    -> [ | right moveV uPushR ]  
+up    [ up moveVx | uPushL ]    -> [ | left moveV uPushL ]  
+down  [ down moveVx | dPushL ]  -> [ | left moveV dPushL ]  
+down  [ down moveVx | dPushR ]  -> [ | right moveV dPushR ] 
+
+late [ player wall ]   -> cancel
+late [ player border ] -> cancel
+
+late [ player switch ] -> [ moveVH switch ]
+late [ player goal ]   -> [ player ]
+
+==============
+WINCONDITIONS
+==============
+
+No goal
+
+=======
+LEVELS
+=======
+
+Message The Hysteresis mazes are based on an original puzzle concept by M.Oskar van Deventer
+
+Message Maze 1 of 5 - To the red target using EAST/WEST movement only
+
+oooooooooooo
+o./.......\o
+o...c...d..o
+o./...\...\o
+og./..../..o
+o/.../..../o
+o...d../...o
+o\...\...\po
+o..a.../..\o
+o\.../../..o
+o..\../.../o
+oooooooooooo
+
+Message Maze 2 of 5
+
+oooooooooooooooooooo
+o/.......\.....\g..o
+o..d....\..../..../o
+o\..../....c......\o
+o../.....\.....d...o
+o\..../.....\...../o
+o/......../....a...o
+o..a...\...../..../o
+o/.../....\....\...o
+o..\...c..../...\..o
+o\....a..c....\.../o
+o..\....\.../..b...o
+o\.p./...../....../o
+oooooooooooooooooooo
+
+Message Maze 3 of 5
+
+oooooooooooooooooooo
+o/........\........o
+o..d....b...../..g/o
+o\....\.....\...a..o
+o...d....\/......./o
+o\...../\.....c....o
+o.../.......\...../o
+o..d..c...\.../\...o
+o\....../...\..../.o
+o...b....d....\.../o
+o\..../\...\....a..o
+o.p.\..../.../..../o
+o\..../\......../..o
+oooooooooooooooooooo
+
+Message Maze 4 of 5 - Explore the yellow portals
+
+oooooooooooo
+o.\/.*..\/.o
+o*....c....o
+o/........*o
+o.*/*...*./o
+o.c../..\..o
+o*.....\..*o
+o\.\.*..../o
+o...../...po
+o*/......*.o
+o..*/\*/g\.o
+oooooooooooo
+
+Message Maze 5 of 5
+
+oooooooooooo
+o*./...\.*.o
+o..../.../.o
+o.\..*...\.o
+o...*.b*...o
+o\.*c../*/.o
+o*.\......*o
+o.....*././o
+o.d.*.....\o
+o.../...*..o
+o\*.p./g.\.o
+oooooooooooo
+
+Message Thank you for playing! :)

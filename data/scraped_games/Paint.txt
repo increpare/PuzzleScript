@@ -1,0 +1,331 @@
+title Paint
+author SRP
+homepage www.puzzlescript.net
+realtime_interval 0.25
+run_rules_on_level_start
+(Hope you have fun!)
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Wall
+Black
+
+RedCursor
+Red
+00.00
+0...0
+.....
+0...0
+00.00
+BlueCursor
+Blue
+00.00
+0...0
+.....
+0...0
+00.00
+
+Block
+Gray
+
+BlockStop
+Gray
+
+BlockGo
+Gray
+
+Stop
+DarkRed Black
+01110
+10101
+11011
+10101
+01110
+
+Delete
+White Gray Black
+22222
+11110
+11110
+11110
+22222
+
+WeirdStop
+DarkBrown
+Weird
+DarkBrown
+Continue
+White Black
+10000
+01111
+01111
+01111
+10000
+ContinueGo
+Green Black
+10000
+01111
+01111
+01111
+10000
+
+WeirdGo
+White
+
+BlockRed
+Red
+BlockRedGo
+Red
+RedBucketStop
+Red Gray Black
+20002
+21112
+21112
+21112
+21112
+RedBucket
+Red Gray
+.000.
+.111.
+.111.
+.111.
+.111.
+RedBucketGo
+White
+
+BlockBlue
+Blue
+BlockBlueGo
+Blue
+BlueBucketStop
+Blue Gray Black
+20002
+21112
+21112
+21112
+21112
+BlueBucket
+Blue Gray
+.000.
+.111.
+.111.
+.111.
+.111.
+BlueBucketGo
+White
+
+BlockGreen
+Green
+BlockGreenGo
+Green
+GreenBucketStop
+Green Gray Black
+20002
+21112
+21112
+21112
+21112
+GreenBucket
+Green Gray
+.000.
+.111.
+.111.
+.111.
+.111.
+GreenBucketGo
+White
+
+
+=======
+LEGEND
+=======
+
+Player = RedCursor
+. = Background
+# = Wall
+P = RedCursor and Wall
+* = BlockStop
+Object = Wall or BlockStop or BlockRedGo or BlockGreenGo or BlockBlueGo or Stop or Delete or Continue or BlockGo or WeirdStop or Weird or WeirdGo or ContinueGo
+X = Stop
+@ = Delete
+> = Continue
+% = WeirdStop
+! = RedBucketStop
+B = BlueBucketStop
+G = GreenBucketStop
+Stuff = Block or Weird or RedBucket or BlueBucket or GreenBucket
+< = ContinueGo
++ = Weird
+- = Block
+$ = RedBucket
+S = BlueBucket
+R = GreenBucket
+
+=======
+SOUNDS
+=======
+================
+COLLISIONLAYERS
+================
+
+Background
+RedBucketGo, BlueBucketGo, GreenBucketGo
+Wall, Block, BlockStop, Stop, Delete, Continue, BlockGo, ContinueGo, Weird, WeirdGo, WeirdStop, RedBucketStop, BlockRed, BlockRedGo, RedBucket, BlueBucket, BlockBlue, BlueBucketStop, BlockBlueGo, GreenBucket, GreenBucketStop, BlockGreen, BlockGreenGo,
+BlueCursor
+Player,
+
+======
+RULES
+======
+
+[ Action Player | ... | BlueCursor ] -> [ Action Player | ... | ]
+[ Action Player GreenBucketStop ] -> [ Player BlueCursor GreenBucketStop ]
+[ Action Player No Object ][ BlueCursor GreenBucketStop ] -> [ Player GreenBucket ] [ BlueCursor GreenBucketStop ]
+[ Action Player BlueBucketStop ] -> [ Player BlueCursor BlueBucketStop ]
+[ Action Player No Object ][ BlueCursor BlueBucketStop ] -> [ Player BlueBucket ] [ BlueCursor BlueBucketStop ]
+[ Action Player RedBucketStop ] -> [ Player BlueCursor RedBucketStop ]
+[ Action Player No Object ][ BlueCursor RedBucketStop ] -> [ Player RedBucket ] [ BlueCursor RedBucketStop ]
+[ Action Player WeirdStop ] -> [ Player BlueCursor WeirdStop ]
+[ Action Player No Object ] [ BlueCursor WeirdStop ] -> [ Player Weird ] [ BlueCursor WeirdStop ]
+[ Action Player BlockStop ] -> [ Player BlueCursor BlockStop ]
+[ Action Player No Object ] [ BlueCursor BlockStop ] -> [ Player Block ] [ BlueCursor BlockStop ]
+[ Action Player Stop ] [ BlueCursor ] ->  [ Player Stop ] [ ]
+[ Action Player Delete ] -> [ Player BlueCursor Delete ]
+[ Action Player Stuff ] [ BlueCursor Delete ] -> [ Player ] [ BlueCursor Delete ]
+[ Action Player Continue ] -> [ Player ContinueGo ]
+[ > Player ContinueGo ] -> [ Player ContinueGo ]
+late [ Block RedBucketGo ] -> [ BlockRed RedBucketGo ]
+late [ Block BlueBucketGo ] -> [ BlockBlue BlueBucketGo ]
+late [ Block GreenBucketGo ] -> [ BlockGreen GreenBucketGo ]
+[ ContinueGo ] [ Weird ] -> [ ContinueGo ] [ WeirdGo ]
+[ ContinueGo ] [ Block ] -> [ ContinueGo ] [ BlockGo ]
+[ ContinueGo ] [ BlockRed ] -> [ ContinueGo ] [ BlockRedGo ]
+[ ContinueGo ] [ BlockBlue ] -> [ ContinueGo ] [ BlockBlueGo ]
+[ ContinueGo ] [ BlockGreen ] -> [ ContinueGo ] [ BlockGreenGo ]
+[ ContinueGo ] [ RedBucket ] -> [ ContinueGo ] [ RedBucketGo ]
+[ ContinueGo ] [ BlueBucket ] -> [ ContinueGo ] [ BlueBucketGo ]
+[ ContinueGo ] [ GreenBucket ] -> [ ContinueGo ] [ GreenBucketGo ]
+[ BlockGreenGo | No Object ] -> [ BlockGreenGo | BlockGreen ]
+[ BlockBlueGo | No Object ] -> [ BlockBlueGo | BlockBlue ]
+[ BlockRedGo | No Object ] -> [ BlockRedGo | BlockRed ]
+[ BlockGo | No Object ] -> [ BlockGo | Block ]
+
+==============
+WINCONDITIONS
+==============
+=======
+LEVELS
+=======
+
+Message Check out the examples too get a better picture of how too use "Paint."
+
+###############X#
+#>P############@#
+###############*#
+###############%#
+###############!#
+###############B#
+###############G#
+#.............###
+#.............###
+#.............###
+#.............###
+#.............###
+#.............###
+#.............###
+#.............###
+(Here are some examples)
+
+Message?
+(This is a basic design.)
+
+###############x#
+#>P############@#
+###############*#
+###############%#
+###############!#
+###############B#
+###############G#
+#.............###
+#...++++++....###
+#...+....+....###
+#...+.++.+....###
+#...+++..+....###
+#...+++-++....###
+#...++++++....###
+#...+++-++....###
+Message Person
+
+###############x#
+#>P############@#
+###############*#
+###############%#
+###############!#
+###############B#
+###############G#
+#..+.....+....###
+#..+.+.+.+....###
+#..+.....+....###
+#..+++.+++....###
+#..+++.+++....###
+#..+.....+....###
+#..+++-+++....###
+#..++-+-++....###
+
+Message Hi
+(This shows how too change colors)
+###############x#
+#>P############@#
+###############*#
+###############%#
+###############!#
+###############B#
+###############G#
+#++++++++.....###
+#.++.++++.....###
+#.++.+-++.....###
+#.++.++++.....###
+#.$..+.++.....###
+#.++.+.++.....###
+#.++.+.++.....###
+#.++-+-++.....###
+
+Message YOlO
+(Some more colors)
+###############x#
+#>P############@#
+###############*#
+###############%#
+###############!#
+###############B#
+###############G#
+#.+.+-.$+.+..S###
+#.+.+.+.+.+.+.###
+#.+.+.+.+.+.+.###
+#.$.+.+.+.+.+.###
+#+.++.+.+.+.+.###
+#+.++.+.+.+.+.###
+#+.++.+.+.+.+.###
+#+-++$..+-+S.-###
+
+Message Lightsaber
+###############x#
+#>P############@#
+###############*#
+###############%#
+###############!#
+###############b#
+###############g#
+#.+.+++.+...+.###
+#.+.+++.+s.s+.###
+#.+.+-+.+...+.###
+#.+.+++$++.++$###
+#...+.+-.....-###
+#.+.+.++++.+++###
+#.+.+.+++...++###
+#.+-+-+++-+-++###

@@ -1,0 +1,1159 @@
+title Simple Block Plagarism Game
+author ncrecc. yes ALL OF IT!
+homepage www.puzzlescript.net
+verbose_logging
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Matchblock
+Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+EyeBall
+White Blue Red
+.000.
+00100
+01110
+20102
+.202.
+
+Spawner  (Name)
+YELLOW (Color)
+..... (Sprite)
+..0..
+.000.
+..0..
+.....
+
+RedRobot
+gray black red
+.000.
+.200.
+...0.
+00000
+01010
+
+GreenRobot
+gray black lightgreen
+.000.
+.200.
+...0.
+00000
+01010
+
+BlueRobot
+gray black lightblue
+.000.
+.200.
+...0.
+00000
+01010
+
+Grille
+gray
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+
+BlueBlock
+Blue
+00000
+00.00
+0.0.0
+00.00
+00000
+
+GreenBlock
+LightGreen
+00000
+00000
+00.00
+00000
+00000
+
+RedBlock
+Red
+00000
+00.00
+0...0
+00.00
+00000
+
+PurpleBlock
+Purple
+00000
+0...0
+0.0.0
+0...0
+00000
+
+PinkBlock
+Pink
+00000
+0.0.0
+00000
+0.0.0
+00000
+
+Checkers
+black white
+01010
+10101
+01010
+10101
+01010
+
+EndPoint
+transparent
+.000.
+.....
+.000.
+.....
+..0..
+
+endphack
+transparent
+
+GirlFriend !
+Pink red
+.000.
+.000.
+01110
+.111.
+.1.1.
+
+Wife_Wedding W
+Pink White
+.000.
+.000.
+01110
+.111.
+11111
+
+Wife_Repulsed ]
+Pink White
+.000.
+.000.
+01110
+.111.
+11111
+
+Wife_Dying [
+Pink White
+.000.
+.000.
+01110
+.111.
+11111
+
+Wife_Coffin |
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+UPolice ^
+black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+DPolice v
+black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+LPolice <
+black
+.000.
+.000.
+0000.
+.000.
+.0.0.
+
+RPolice >
+black
+.000.
+.000.
+.0000
+.000.
+.0.0.
+
+Suspect +
+blue
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+Cat C
+Gray White
+.1.1.
+10101
+11111
+.111.
+00.00
+
+Fruit F
+Red darkGreen LightRed
+..1..
+.000.
+00020
+00000
+.000.
+
+SnakeSurface `
+#6C5EB5
+
+Trail ~
+#8F1D66
+
+UnbrushedSand
+lightbrown brown
+00000
+01000
+00000
+00010
+00000
+
+HBrushedSand
+lightbrown brown
+00000
+01011
+00000
+11010
+00000
+
+VBrushedSand
+lightbrown brown
+01000
+01010
+00000
+01010
+00010
+
+temp
+transparent
+
+playermovehack
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+
+PlayerBodyH
+darkgreen
+.000.
+00000
+0...0
+00000
+.000.
+
+PlayerBodyV
+darkgreen
+.000.
+00.00
+00.00
+00.00
+.000.
+
+PlayerHead1
+LightGreen
+.000.
+0.0.0
+00000
+00000
+.000.
+
+PlayerHead2
+Yellow
+.000.
+0.0.0
+00000
+00000
+.000.
+
+
+PlayerHead3
+Orange
+.000.
+0.0.0
+00000
+00000
+.000.
+
+
+PlayerHead4
+Red
+.000.
+0.0.0
+00000
+00000
+.000.
+
+Fallcrate
+Orange
+.000.
+00.00
+0...0
+0...0
+00000
+
+sweepmarker
+transparent
+
+sweepmarkerv
+transparent
+
+sweepmarkerh
+transparent
+
+Limeresetter
+lightBlue
+.000.
+00000
+00000
+00000
+.000.
+
+octatspace
+purple
+.....
+.....
+..0..
+.....
+.....
+
+octatlegacy
+pink red
+00000
+0...0
+0...0
+0...0
+00000
+
+octattemp
+transparent
+
+octatbg
+#121220
+
+temp2
+transparent
+
+temp3
+transparent
+
+temp4
+transparent
+
+twinmaker
+lightgray
+
+
+lovebase
+white
+
+Daughter
+BLACK
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+
+GoldDaughter
+ORANGE
+.....
+..0..
+.000.
+..0..
+.0.0.
+
+PlayerGround
+BLACK
+.....
+..0..
+.000.
+.000.
+.0.0.
+
+PlayerJump1
+BLACK
+.....
+..0..
+00000
+.000.
+.0.0.
+
+PlayerJump2
+BLACK
+.....
+..0..
+00000
+.000.
+.0.0.
+
+Crown
+Orange
+.000.
+.0.0.
+.....
+.....
+.....
+
+
+GoldBlock
+Orange
+
+
+GoldingBlock
+brown
+
+Water
+BROWN DARKBROWN Blue
+22222
+22222
+22222
+22222
+22222
+
+
+love
+pink
+.0.0.
+00000
+00000
+.000.
+..0..
+
+GoldPlayer
+orange lightbrown yellow lightbrown
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+GoldGirlFriend
+lightbrown orange
+.000.
+.000.
+01110
+.111.
+.1.1.
+
+GoldWife_Wedding
+lightbrown yellow
+.000.
+.000.
+01110
+.111.
+11111
+
+GoldWife_Repulsed
+lightbrown yellow
+.000.
+.000.
+01110
+.111.
+11111
+
+GoldWife_Dying
+lightbrown yellow
+.000.
+.000.
+01110
+.111.
+11111
+
+GoldCoffin
+yellow lightbrown orange
+.000.
+01210
+02220
+01210
+02220
+
+GoldUPolice
+orange
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+GoldDPolice
+orange
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+GoldLPolice
+orange
+.000.
+.000.
+0000.
+.000.
+.0.0.
+
+GoldRPolice
+orange
+.000.
+.000.
+.0000
+.000.
+.0.0.
+
+GoldSuspect
+lightbrown
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+GoldCat
+Orange Yellow
+.1.1.
+10101
+11111
+.111.
+00.00
+
+GoldFruit
+Lightbrown Orange Yellow
+..1..
+.000.
+00020
+00000
+.000.
+
+GoldLimeBodyH
+Orange
+.000.
+00000
+0...0
+00000
+.000.
+
+GoldLimeBodyV
+Orange
+.000.
+00.00
+00.00
+00.00
+.000.
+
+GoldLimeHead
+Lightbrown
+.000.
+0.0.0
+00000
+00000
+.000.
+
+GoldLimeresetter
+Yellow
+.000.
+00000
+00000
+00000
+.000.
+
+GoldMidasGround
+orange
+.....
+..0..
+.000.
+.000.
+.0.0.
+
+GoldMidasJump1
+orange
+.....
+..0..
+00000
+.000.
+.0.0.
+
+GoldMidasJump2
+orange
+.....
+..0..
+00000
+.000.
+.0.0.
+
+GoldRobot
+lightbrown orange yellow
+.000.
+.200.
+...0.
+00000
+01010
+
+Goldeyeball
+yellow lightbrown orange
+.000.
+00100
+01110
+20102
+.202.
+
+Whale
+brown
+00.00
+00000
+.000.
+00000
+00.00
+
+Goldwhale
+Lightbrown
+
+HBeam
+Yellow
+.....
+.....
+0.0.0
+.....
+.....
+
+VBeam
+Yellow
+..0..
+.....
+..0..
+.....
+..0..
+
+Void
+black
+
+rrhack
+black
+
+octateverywhere
+black
+
+unhappymatchblock
+black
+
+=======
+LEGEND
+=======
+
+JumpingMidas = PlayerJump1 or PlayerJump2
+Midas = PlayerGround or PlayerJump1 or PlayerJump2
+goldMidas = GoldMidasGround or GoldMidasJump1 or GoldMidasJump2
+AestheticGold = GoldDaughter or GoldBlock or GoldPlayer or GoldGirlFriend or GoldWife_Wedding or GoldWife_Repulsed or GoldWife_Dying or GoldCoffin or GoldUPolice or GoldDPolice or GoldLPolice or GoldRPolice or GoldSuspect or GoldCat or GoldLimeBodyH or GoldLimeBodyV or GoldLimeHead or GoldMidasGround or GoldMidasJump1 or GoldMidasJump2 or GoldRobot or Goldeyeball or goldwhale
+
+Limehead = PlayerHead1 or PlayerHead2 or PlayerHead3 or PlayerHead4
+Limebody = PlayerBodyH or PlayerBodyV
+Wife_Attracted = Girlfriend or Wife_Wedding or Wife_Dying
+Wife = Wife_Attracted or Wife_Repulsed or Wife_Coffin
+Person = Player or Wife
+FakerBlock = RedBlock or BlueBlock or PurpleBlock or PinkBlock or GreenBlock
+Block = Crate or Matchblock or Suspect or fallcrate or cat
+Robot = redRobot or greenRobot or blueRobot
+Police = UPolice or DPolice or LPolice or RPolice
+BrushedSand = HBrushedSand or VBrushedSand
+Sand = UnbrushedSand or BrushedSand
+Obstacle = Player or Robot or Block or Eyeball or FakerBlock or Wife or Police or Suspect or cat or brushedsand or limehead or limebody or wall or AestheticGold or PlayerGround or PlayerJump1 or PlayerJump2 or water or goldingblock or daughter or whale
+obstaclenotsandfuck = Player or Robot or Block or Eyeball or FakerBlock or Wife or Police or Suspect or cat or limehead or limebody or wall or AestheticGold or PlayerGround or PlayerJump1 or PlayerJump2  or water or goldingblock or daughter or whale
+pusher = player or robot or suspect or police or wife or cat or eyeball or limehead or PlayerGround or PlayerJump1 or PlayerJump2 or daughter
+eat = fruit or trail or limeresetter or SnakeSurface or octatlegacy
+exiter = player or police or wife or cat or limehead or midas
+latefaller = limehead or midas (or fallcrate or limebody)
+coverer = block or eyeball or Goldeyeball
+
+. = Background
+# = Wall
+P = Player and rrhack
+* = Crate
+@ = Crate and Target
+O = Target
+% = EyeBall
+& = RedRobot
+$ = Spawner
+B = BlueBlock
+G = GreenBLock
+K = RedBlock
+R = PurpleBlock
+? = PinkBlock
+E = EndPoint and Checkers
+x = Grille
+H = Grille and Player
+; = UnbrushedSand
+, = playermovehack and player
+d = PlayerHead1
+a = limeresetter
+: = fallcrate
+1 = octatlegacy and octatspace and octatbg
+2 = octatspace and octatbg
+3 = endpoint and octatlegacy and octatspace and octatbg and checkers
+4 = player and octatspace and octatbg and rrhack
+5 = endpoint and octatspace and octatbg and Checkers
+/ = twinmaker
+canfall = AestheticGold or GoldLimeresetter or goldfruit
+6 = PlayerGround and Crown
+7 = Daughter and endpoint
+8 = Water
+9 = GoldBlock
+- = GoldingBlock
+Beam = HBeam or VBeam
+j = Whale
+z = Void
+" = octateverywhere
+n = playerground
+
+=======
+SOUNDS
+=======
+
+Block MOVE 36772507
+SFX0 67117309
+
+================
+COLLISIONLAYERS
+================
+unhappymatchblock
+octattemp
+lovebase
+rrhack
+temp4
+temp3
+octateverywhere
+temp2
+temp
+sweepmarker 
+sweepmarkerv, sweepmarkerh
+endphack
+Background
+octatbg
+void
+Checkers
+SnakeSurface, Trail
+BrushedSand, UnbrushedSand
+twinmaker
+Octatspace
+octatlegacy
+grille
+Target, Spawner
+fruit, Limeresetter, goldfruit, goldlimeresetter
+obstaclenotsandfuck, Wall
+crown
+playermovehack
+love
+hbeam
+vbeam
+Endpoint
+
+======
+RULES
+======
+
+[sweepmarker] -> []
+[octattemp] -> []
+
+[octateverywhere] [no octatbg] -> [octateverywhere] [octatbg]
+[octateverywhere] -> []
+[Player no playermovehack no rrhack] -> [Player Temp]
+[rrhack] -> []
+
+late [ RedBlock | RedBlock | RedBlock ] -> [ | | ]
+late [ BlueBlock | BlueBlock | BlueBlock ] -> [ | | ]
+late [ PurpleBlock | PurpleBlock | PurpleBlock ] -> [ | | ]
+late [ PinkBlock | PinkBlock | PinkBlock ] -> [ | | ]
+late [ GreenBlock | GreenBlock | GreenBlock ] -> [ | | ]
+
+
+[ > Player ] [ Wife_Attracted no lovebase ] -> [ > Player ] [ > Wife_Attracted no lovebase ]
+[ > Player ] [ Wife_Repulsed no lovebase ] -> [ > Player ] [ < Wife_Repulsed no lovebase ]
+
+[up player] [UPolice no lovebase] -> [up player] [up UPolice]
+[down player] [dPolice no lovebase] -> [down player] [down dPolice]
+[left player] [lPolice no lovebase] -> [left player] [left lPolice]
+[right player] [rPolice no lovebase] -> [right player] [right rPolice]
+
+[> player] [midas no lovebase] -> [> player] [> midas]
+
+Horizontal [ > Player | VBeam ] -> [ > Player | > VBeam ]
+Vertical [ > Player | HBeam ] -> [ > Player | > HBeam ]
+
+[> midas crown] -> [> midas > crown]
+
+UP [up PlayerGround no lovebase | No Obstacle ] -> [ Up PlayerJump2 | ]
+DOWN [up JumpingMidas | no obstacle ] -> [ JumpingMidas | ]
+
+[ Stationary CanFall stationary crown ] -> [ Down CanFall down crown ]
+[> crown|pusher] -> [crown|pusher]
+[> crown|canfall] -> [crown|canfall]
+[ Stationary CanFall ] -> [ Down CanFall ]
+
+HORIZONTAL [ > PlayerJump1 crown | NO obstacle ] -> [ | PlayerGround crown ]
+HORIZONTAL [ > PlayerJump2 crown | NO obstacle ] -> [ | PlayerJump1  crown ]
+HORIZONTAL [ > PlayerJump1 | NO obstacle ] -> [ | PlayerGround ]
+HORIZONTAL [ > PlayerJump2 | NO obstacle ] -> [ | PlayerJump1 ]
+
+[> crown stationary midas] -> [crown midas]
+
+
+
+
+LATE [ player | target ] -> [ player lovebase | target ]
+LATE UP [ lovebase | ] -> [ | love ]
+
+[> player] [cat no lovebase] -> [> player] [> cat]
+[> cat] -> [> Background action cat]
+startloop
+[> Background|no Obstacle no wall stationary Background] -> [> Background|action Background]
+([> Background|Background octatspace no octatlegacy] -> [> background|octatspace]) (having cat jump through octatspace but stop at legacies is, i think, pretty interesting)
+[> Background|action Background] -> [> Background|> Background]
+[> background action cat|...|> Background eat] -> [octattemp Background|...|eat cat]
+endloop
+[fruit cat no Background] -> [cat Background]
+[trail cat no Background] -> [SnakeSurface cat Background]
+[SnakeSurface cat no Background] -> [trail cat Background]
+[limeresetter cat no Background] [limebody] -> [limeresetter action cat] []
+[limeresetter cat no Background] -> [cat Background]
+[octatlegacy cat no background] -> [octatlegacy sweepmarker cat background]
+[> Background] [action cat] -> [Background] [cat]
+[> Background] -> [Background > sweepmarker]
+[> cat] -> [cat]
+[no Background] -> [Background]
+
+late [ Wife_Dying ] -> [ Wife_Coffin ]
+late [ Pusher | Wife_Coffin ] -> [ Pusher | Wife_Dying ]
+
+up [up player] [limehead no playerhead4 no lovebase|block no Fallcrate|no Obstacle no grille] -> [up player] [limehead|sweepmarker|block]
+
+UP [up player] [ stationary PlayerHead3 no lovebase | octatspace no octatlegacy ] -> [up player] [ action PlayerHead3 | octatspace ]
+UP [up player] [ stationary  PlayerHead2 no lovebase | octatspace no octatlegacy ] ->  [up player] [ action PlayerHead2 | octatspace ]
+UP  [up player] [ stationary PlayerHead1 no lovebase | octatspace no octatlegacy ] ->  [up player] [ action PlayerHead1 | octatspace ]
+
+UP [up player] [ stationary PlayerHead3 | No Obstacle ] -> [up player] [ PlayerBodyV | sweepmarkerv action PlayerHead4 ]
+UP [up player] [ stationary  PlayerHead2 | No Obstacle ] ->  [up player] [ PlayerBodyV | sweepmarkerv action PlayerHead3 ]
+UP  [up player] [ stationary PlayerHead1 | No Obstacle ] ->  [up player] [ PlayerBodyV | sweepmarkerv action PlayerHead2 ]
+
+[ >  pusher no limehead | Block no Fallcrate ] -> [  >  pusher | > Block no Fallcrate ]
+horizontal [> pusher no limehead|fallcrate] -> [> pusher|> fallcrate]
+[> pusher no limehead|FakerBlock] -> [> pusher no limehead|> FakerBlock]
+
+[> player] [limehead] -> [> player] [> limehead]
+down [> limehead|block|no obstacle no grille] -> [playerbodyv|limehead|block]
+[> limehead] -> [limehead]
+
+Horizontal [> player] [ stationary limehead no lovebase | octatspace no octatlegacy ] -> [> player]  [ action limehead | octatspace ]
+
+Horizontal [> player] [ stationary limehead no lovebase| Block no fallcrate | No Obstacle no grille ] -> [> player] [ PlayerBodyH | sweepmarkerh action PlayerHead1 | Block ]
+Horizontal [> player] [ stationary limehead no lovebase | Fallcrate | No Obstacle no grille ] -> [> player] [ PlayerBodyH | sweepmarkerh action PlayerHead1 | Fallcrate ]
+Horizontal [> player] [ stationary limehead no lovebase | No Obstacle ] -> [> player]  [ PlayerBodyH  | sweepmarkerh action PlayerHead1 ]
+
+(while we allow whales to move onto the void, player's aren't)
+[ > exiter | void ] -> [ exiter | void ]
+
+
+(beams detect motion)
+
+[> pusher|beam wall] -> [> pusher|action beam wall]
+[> pusher|beam octatspace no octatlegacy] -> [> pusher|action beam octatspace]
+Horizontal [ > pusher | stationary VBeam ] -> [ > pusher | > VBeam ]
+Vertical [ > pusher | stationary HBeam ] -> [ > pusher | > HBeam ]
+
+(If beams detected motion, transfer that to the whales)
+[ Whale | ... | Perpendicular Beam ] -> [ Perpendicular Whale | ... | Perpendicular Beam ]
+
+(remove whales, if necessary)
+late [ obstacle Void ] -> [ Void ]
+
+(remove beams)
+[ Beam ] -> []
+
+(Place HVeams and VBeams)
+late Horizontal [ Whale | ... | ] -> [ Whale | ... | HBeam ]
+late Vertical [ Whale | ... | ] -> [ Whale | ... | VBeam ]
+
+[> fakerblock|FakerBlock] -> [> fakerblock|> FakerBlock]
+[> block|grille] -> [block|grille]
+[> FakerBlock|grille] -> [FakerBlock|Grille]
+[> block|fruit] -> [block|fruit]
+[> FakerBlock|fruit] -> [FakerBlock|fruit]
+[ Eyeball no lovebase | ... | exiter ] -> [ > Eyeball | ... | exiter ]
+late [ Matchblock | Matchblock | Matchblock ] -> [ | |]
+[ stationary Robot no lovebase ] -> [randomDir Robot]
+[ Spawner no Obstacle no fruit ] -> [ Spawner random Robot ]
+
+[ > Obstacle SnakeSurface | No Trail ] -> [ Trail > Obstacle | ]
+
+[pusher limeresetter] [limebody] -> [pusher limeresetter] []
+[pusher limeresetter] -> [pusher]
+
+
+late[sweepmarker limeresetter] [limebody] -> [sweepmarker limeresetter] []
+late[sweepmarker limeresetter] -> [sweepmarker]
+late[sweepmarkerv limeresetter] [limebody] -> [sweepmarkerv limeresetter] []
+late[sweepmarkerv limeresetter] -> [sweepmarkerv]
+late[sweepmarkerh limeresetter] [limebody] -> [sweepmarkerh limeresetter] []
+late[sweepmarkerh limeresetter] -> [sweepmarkerh]
+
+startloop
+late down [latefaller|octatspace no octatlegacy no octattemp] -> [latefaller temp4|octatspace]
+late down [latefaller|obstacle] -> [latefaller temp4|obstacle]
+late [temp3] -> []
+late down [latefaller|octatlegacy octatspace no latefaller no AestheticGold] -> [latefaller|octattemp no Background octatspace]
+late [no Background|no temp2 octatspace octatlegacy] -> [|temp2 octatspace]
+late [no background|no temp2 octatspace no octattemp] -> [|temp2 octatspace octatlegacy]
+late [no Background] -> [Background]
+
+late DOWN [ limehead no temp3 no temp4 | No Obstacle ] -> [ PlayerBodyV | sweepmarkerv PlayerHead1 temp3 ]
+late DOWN [ fallCrate no temp3 no temp4 | No Obstacle no grille ] -> [ | sweepmarkerv fallCrate temp3 ]
+LATE DOWN [ PlayerGround no temp3 no temp4 crown | NO obstacle ] -> [ | sweepmarkerv playerground temp3 crown ]
+LATE DOWN [ PlayerGround no temp3 no temp4 | NO obstacle ] -> [ | sweepmarkerv playerground temp3 ]
+(late DOWN [ Limebody no temp3 no temp4 | No Obstacle no grille ] -> [ | limebody temp3 ])
+late [latefaller temp2 octatspace] -> [latefaller temp4 octatspace] (i don't know why i wrote this. i don't know what temp4 is for and i only have a vague memory of what temp2 does)
+late [temp2] -> []
+late [octattemp] -> []
+late [latefaller octatspace no temp4] -> [latefaller temp2 octatspace]
+endloop
+late [temp4] -> []
+
+late [Obstacle trail] -> [Obstacle SnakeSurface]
+late [ sweepmarker snakesurface ] -> [ trail]
+late [ sweepmarker Trail ] -> [ SnakeSurface]
+late [ sweepmarkerh snakesurface ] -> [ trail]
+late [ sweepmarkerh Trail ] -> [ SnakeSurface]
+late [ sweepmarkerv snakesurface ] -> [ trail]
+late [ sweepmarkerv Trail ] -> [ SnakeSurface]
+
+[> player playermovehack] -> [player playermovehack]
+
+
+[obstacle octatspace] -> [Obstacle octatspace octattemp]
+[> obstacle|octatlegacy octatspace] -> [> obstacle|octattemp no Background octatspace]
+[sweepmarker octatlegacy octatspace] -> [sweepmarker no Background octatspace]
+[sweepmarkerh octatlegacy octatspace] -> [sweepmarkerh no Background octatspace]
+[sweepmarkerv octatlegacy octatspace] -> [sweepmarkerv no Background octatspace]
+[no Background|stationary octatspace octatlegacy] -> [|action octatspace]
+[no background|stationary octatspace no octattemp] -> [|action octatspace octatlegacy]
+[no Background] -> [Background]
+
+[> Obstacle no player|fruit] -> [Obstacle|fruit]
+[> Obstacle no player|octatspace no octatlegacy no octattemp] -> [Obstacle|octatspace]
+[> player|fruit] -> cancel
+[> player|octatspace no octatlegacy no octattemp] -> cancel
+[octattemp] -> []
+
+[> player|BrushedSand] -> cancel
+[> Obstacle|BrushedSand] -> [Obstacle|BrushedSand]
+
+Horizontal [ UnbrushedSand >  obstaclenotsandfuck  ] -> [ HBrushedSand > obstaclenotsandfuck ]
+Vertical [ UnbrushedSand > obstaclenotsandfuck ] -> [ VBrushedSand > obstaclenotsandfuck ]
+
+[ UnbrushedSand horizontal sweepmarker ] -> [ HBrushedSand horizontal sweepmarker ]
+[ UnbrushedSand vertical sweepmarker ] -> [ VBrushedSand vertical sweepmarker ]
+
+late Horizontal [ UnbrushedSand sweepmarkerh ] -> [ HBrushedSand sweepmarkerh ]
+late Vertical [ UnbrushedSand sweepmarkerv ] -> [ VBrushedSand sweepmarkerv ]
+
+late [ Player Temp ] -> CANCEL
+late [ Temp ] -> [ ]
+
+late [Endpoint] -> [endpoint no endphack]
+late [exiter endpoint] -> [exiter endpoint endphack]
+
+late [limebody octatlegacy] -> [limebody] (kludge!!!)
+late [limebody twinmaker] -> [twinmaker] (makes things a little neater since i dont really have a neat way of dealing with the multiple-objects-in-twinmakers edgecase)
+
+late [ obstacle twinmaker ] -> [ obstacle twinmaker temp ] 
+
+late [ obstacle crown temp twinmaker ] [ twinmaker no temp no obstacle ] -> [ obstacle crown temp twinmaker ] [ obstacle crown twinmaker ]
+late [ obstacle temp twinmaker ] [ twinmaker no temp no obstacle ] -> [ obstacle temp twinmaker ] [ obstacle twinmaker ]
+late [obstacle temp ] -> [no crown]
+late [temp] -> [ ]
+
+late [crown no midas no goldmidas|midas] -> [|crown midas]
+late [crown Obstacle] [midas no crown] -> [obstacle] [crown midas]
+late [crown no midas no goldmidas] -> []
+
+LATE [ goldingblock ] -> [goldblock]
+LATE [ crown | wall ] -> [crown | goldingblock]
+LATE [ crown | water ] -> [ | water ]
+
+LATE [ crown | Daughter ] -> [ crown | GoldDaughter ]
+LATE [ crown | PlayerGround ] -> [ crown | GoldMidasGround ]
+LATE [ crown | JumpingMidas ] -> [ crown | GoldMidasJump1 ]
+late [crown | GirlFriend]->[crown|GoldGirlFriend]
+late[crown|player]->[crown|goldplayer]
+late[crown|Wife_Wedding]->[crown|GoldWife_Wedding]
+late[crown|Wife_Repulsed]->[crown|GoldWife_Repulsed]
+late[crown|Wife_Dying]->[crown|goldwife_dying]
+late[crown|Wife_Coffin]->[crown|goldcoffin]
+late[crown|UPolice]->[crown|GoldUPolice]
+late[crown|DPolice]->[crown|GoldDPolice]
+late[crown|LPolice]->[crown|GoldlPolice]
+late[crown|RPolice]->[crown|GoldRPolice]
+late[crown|suspect]->[crown|GoldSuspect]
+late[crown|cat]->[crown|goldcat]
+late[crown|fruit]->[crown|goldfruit]
+late[crown|playerbodyv]->[crown|GoldLimeBodyV]
+late[crown|PlayerBodyH]->[crown|GoldLimeBodyH]
+late[crown|limehead]->[crown|goldlimehead]
+late[crown|Limeresetter]->[crown|GoldLimeresetter]
+late[crown|robot] -> [crown|GoldRobot]
+late[crown|eyeball]->[crown|Goldeyeball]
+late[crown|whale]->[crown|Goldwhale]
+
+late [ lovebase] -> []
+late [love] -> []
+late [daughter] -> [daughter no endphack]
+LATE [ pusher|daughter ] -> [ pusher lovebase | daughter endphack ]
+LATE UP [ lovebase pusher | no love] -> [ pusher lovebase | love ]
+
+LATE DOWN [ JumpingMidas | Obstacle ] -> [ PlayerGround | Obstacle ]
+LATE DOWN [ JumpingMidas | octatspace no octatlegacy ] -> [ PlayerGround | octatspace ]
+
+late [endpoint no daughter no checkers] -> []
+
+late [matchblock no target] [target no coverer] -> [matchblock unhappymatchblock] [target]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on coverer
+all endpoint on endphack
+no fruit
+no goldfruit
+no trail
+no UnbrushedSand
+no whale
+no goldwhale
+no unhappymatchblock
+
+=======
+LEVELS
+=======
+
+
+####..
+#.O#..
+#..###
+#@p..#
+#..*.#
+#..###
+####..
+
+message ok uhh
+message now what
+message oh wait i know
+
+####..
+#.f#..
+#..###
+#fc..#
+#.pf.#
+#..###
+####..
+
+message haha i'm so awesome and original
+message let's see what other games i can completely come up with all by myself
+
+22222222222
+2"........2
+2..1.1o1..2
+2.1.1+1.1.2
+2.o1+.+1o.2
+2.1.1+1.1.2
+2..1o1.1..2
+2p........2
+22222222222
+
+zz.....j#zz
+z#########z
+##1111111#.
+j#1222221#.
+.#1222221#.
+.#1222221#.
+.#1222221#.
+.#1222221#j
+.#4111111##
+z#########z
+zz#j.....zz
+
+##########
+#.......a#
+#......."#
+#..*..*..#
+#...oo...#
+#...oo...#
+#..*..*..#
+#........#
+#d.......#
+,#########

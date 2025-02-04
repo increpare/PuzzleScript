@@ -1,0 +1,233 @@
+title IMS445 Puzzlescript Game "Buoy Deploy"
+author Breton Ballas
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+BLUE 
+00000
+00000
+00000
+00000
+00000
+
+
+Target
+YELLOW
+00000
+0...0
+0...0
+0...0
+00000
+
+Wall
+GREY DARKGREY
+00010
+11111
+01000
+11111
+00010
+
+Player
+WHITE LIGHTBROWN DARKBROWN 
+.000.
+..1..
+22222
+22222
+.222.
+
+Buoy
+Orange grey red
+..0..
+.010.
+01210
+.010.
+..0..
+
+Bomb
+Black Red
+..0..
+01110
+01110
+01110
+..0..
+
+Octopus
+pink 
+0.0.0
+.000.
+00000
+.000.
+0.0.0
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Buoy
+O = Target
+@ = Buoy and Target
+B = Bomb
+M = Octopus
+
+
+=======
+SOUNDS
+=======
+
+Buoy MOVE 4189907
+sfx0 85120702 (Bomb Explosion)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Buoy, Bomb, Octopus
+
+======
+RULES
+======
+
+(Player can push or pull Crates)
+[ >  Player | Buoy ] -> [  >  Player | > Buoy  ]
+
+[ <  Player | Buoy ] -> [  <  Player | < Buoy  ]
+
+
+(Player restarts if they touch a bomb)
+[ > Player | Bomb ] -> restart
+
+(Player restarts if they touch a Octopus)
+[ > Player | Octopus ] -> restart
+
+(When Crate touches Bomb, Bomb destroyed.)
+[ > Buoy | Bomb ] -> [ | ] sfx0
+
+(Octopus moves in random direction)
+[ Stationary Octopus ] -> [randomDir Octopus]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Buoy
+
+=======
+LEVELS
+=======
+
+MESSAGE Push the buoys into the correct positions but watch out for the bombs!
+
+#################
+#ob.............#
+#############*..#
+##############..#
+#p....###*####..#
+#...........b...#
+#######...#######
+#*b.......#######
+#*b.......#######
+#*.##############
+#################
+
+MESSAGE Great job Captain! Woah, watch out for those octupi!
+
+#################
+#...............#
+#...#m..#..m#...#
+#..###.###.###..#
+#...#...#...#...#
+#p..o.*.o.*.o..*#
+#...#m..#..m#...#
+#..###.###.###..#
+#...#...#...#...#
+#...............#
+#################
+
+MESSAGE Now it's going to get a little bit harder!
+
+#################
+#p....m.........#
+######.#####*...#
+#....###...####b#
+#o...b.......*#.#
+######....m####.#
+#*...........*#.#
+#*......#######.#
+######..#######.#
+#o...b..........#
+#....############
+#################
+
+MESSAGE Nice moves Captain; on to the next one!
+
+#################
+#...............#
+#...............#
+#.#..#######.#..#
+#.#..#p...m#.#..#
+#.#..#.....#o#..#
+#.#..#....*###bb#
+#*#..#m.........#
+###..#######....#
+#..........b....#
+#m.........b....#
+#################
+
+MESSAGE Tread carefully sir, get the buoy into position.
+
+#################
+#b...b...b......#
+#..b...b.....m..#
+#..#######*.....#
+#..#.....######b#
+#..#o.....*####.#
+#..#............#
+#..#######......#
+#........########
+#.m...m.........#
+#..............p#
+#################
+
+MESSAGE On to the next one! Almost done!
+
+#################
+#p....m.........#
+#...............#
+#*#.#*#.#*####bb#
+###########oo#bb#
+#.........#..#..#
+#.#####m.*#..#..#
+#.#*......#..#..#
+#.######b##..#..#
+#...............#
+#....m.........m#
+#################
+
+MESSAGE Last mission captain! Bring us home safe.
+
+#################
+#o...mb...bm...o#
+#..*..b.*.b..*..#
+#.....b.*.b.....#
+#bbbbbb.*.bbbbbb#
+#m......o......m#
+#.......o.......#
+#bbbbbb.*.bbbbbb#
+#.....b.*.b.....#
+#..*..b.*.b..*..#
+#o...mb.p.bm...o#
+#################
+
+MESSAGE Congradulations Captain! We've made it back to port.

@@ -1,0 +1,150 @@
+title Zombie Invasion
+author Owen
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+
+Background  (special, automatically placed in its own layer)
+darkgreen
+00000
+00000
+00000
+00000
+00000
+
+
+Player    (Required by game)
+PINK
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+
+Zombie
+gray
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+Goal
+black
+00000
+00000
+00000
+00000
+00000
+
+Wall
+GREEN
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+* = Zombie
+G = Goal
+# = Wall
+
+=========
+SOUNDS
+=========
+Player Move 92281305
+EndLevel 31700902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Zombie, Wall
+
+
+======
+RULES
+======
+
+[ Zombie | ... | Player ] -> [ > Zombie | ... | Player ]
+[ > Zombie | Wall ] -> [ < Zombie | Wall ]
+[ > Zombie | Player ] -> [ Zombie | Zombie ] message You got bitten! You're a zombie now. Press r to restart!
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Goal
+
+
+=======
+LEVELS
+=======
+#############
+#...........#
+#...........#
+#.........G.#
+#....*......#
+#...........#
+#...........#
+#..P........#
+#...........#
+#...........#
+#############
+
+message You escaped! For now...
+
+#############
+#...........#
+#...........#
+#.........G.#
+#....*......#
+#.......*...#
+#...........#
+#..P........#
+#...........#
+#...........#
+#############
+
+message Whew, that was a close one! But there are more coming!
+
+
+#############
+#...........#
+#...........#
+#.........G.#
+#....*......#
+#.......*...#
+#...*.......#
+#..P...*....#
+#...........#
+#...........#
+#############
+
+message Nice, you're still among the living. Look out behind you!
+
+#############
+#...........#
+#...........#
+#......*..G.#
+#....*......#
+#.......*...#
+#...*.......#
+#..P...*....#
+#...........#
+#.*..*...*..#
+#############
+
+message Wow, you escaped unscathed!

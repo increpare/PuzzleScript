@@ -1,0 +1,473 @@
+title Candy's Crushes Saga
+author Pierrec
+homepage www.puzzlescript.net
+require_player_movement
+youtube 90FpMLnzok8
+noaction
+
+========
+OBJECTS
+========
+
+Background
+GREEN Lightgreen
+00000
+00100
+01010
+00100
+00000
+
+Wall
+Green Brown Darkbrown
+00000
+01010
+21212
+01010
+01010
+
+
+Target
+lightgreen
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+Target2
+lightgreen
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+
+
+Player
+Pink yellow purple black
+.000.
+.010.
+22222
+.333.
+.3.3.
+
+HBoy
+brown yellow blue darkblue
+..00.
+..1..
+22222
+.333.
+.3.3.
+
+GBoy
+Orange yellow white pink
+..00.
+..1..
+22222
+.333.
+.3.3.
+
+BBoy
+Darkbrown Brown orange purple
+..00.
+..1..
+22222
+.333.
+.3.3.
+
+HGirl
+Yellow Orange lightblue pink
+.000.
+.010.
+22222
+.333.
+.3.3.
+
+GGirl
+Brown yellow darkblue grey
+.000.
+.010.
+22222
+.333.
+.3.3.
+
+BGirl
+Orange yellow red lightblue
+.000.
+.010.
+22222
+.333.
+.3.3.
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+BG = Background
+# = Wall
+WZ= Wall 
+* = Player
+H = HBoy
+G = GBoy
+R = HGirl
+L = GGirl
+B = BBoy
+S = BGirl
+Lover= HBoy or GGirl or Bboy or BGirl
+Foe= GBoy or HGirl
+X = Target
+T = Target2
+Person = Player or Lover or Foe
+
+=======
+SOUNDS
+=======
+
+Restart 55232902
+EndLevel 99771502
+
+================
+COLLISIONLAYERS
+================
+
+BG
+Target,Target2
+Player, WZ, Person
+
+
+
+======
+RULES
+======
+
+Horizontal [ >  Player | Lover ] -> [  >  Player | > Lover ]
+Horizontal [ <  Player | Lover ] -> [  <  Player | < Lover ]
+Horizontal [ ^  Player | Lover ] -> [  ^  Player | ^ Lover ]
+Horizontal [ v  Player | Lover ] -> [  v  Player | v Lover ]
+
+Horizontal [ v  HBoy | HGirl] -> [ HBoy |  HGirl  ]
+Horizontal [ ^  HBoy | HGirl] -> [ HBoy |  HGirl  ]
+
+Horizontal [ v  HBoy | BGirl] -> [ HBoy |  BGirl  ]
+Horizontal [ ^  HBoy | BGirl] -> [ HBoy |  BGirl  ]
+
+Horizontal [ v  GGirl | GGirl] -> [ GGirl |  GGirl  ]
+Horizontal [ ^  GGirl | GGirl] -> [ GGirl |  GGirl  ]
+
+Horizontal [ v  GGirl | BGirl] -> [ GGirl |  BGirl  ]
+Horizontal [ ^  GGirl | BGirl] -> [ GGirl |  BGirl  ]
+
+Horizontal [ v  BBoy | GBoy] -> [ BBoy |  GBoy  ]
+Horizontal [ ^  BBoy | GBoy] -> [ BBoy |  GBoy  ]
+
+Horizontal [ v  BBoy | BBoy] -> [ BBoy |  BBoy  ]
+Horizontal [ ^  BBoy | BBoy] -> [ BBoy |  BBoy  ]
+
+Horizontal [ v  BBoy | HGirl] -> [ BBoy |  HGirl  ]
+Horizontal [ ^  BBoy | HGirl] -> [ BBoy |  HGirl  ]
+
+Horizontal [ v  BBoy | BGirl] -> [ BBoy |  BGirl  ]
+Horizontal [ ^  BBoy | BGirl] -> [ BBoy |  BGirl  ]
+
+Horizontal [ v  BGirl | GGirl] -> [ BGirl |  GGirl  ]
+Horizontal [ ^  BGirl | GGirl] -> [ BGirl |  GGirl  ]
+
+Horizontal [ v  BGirl | BGirl] -> [ BGirl |  BGirl  ]
+Horizontal [ ^  BGirl | BGirl] -> [ BGirl |  BGirl  ]
+
+Horizontal [ v  BGirl | HBoy] -> [ BGirl |  HBoy  ]
+Horizontal [ ^  BGirl | HBoy] -> [ BGirl |  HBoy  ]
+
+Horizontal [ v  BGirl | BBoy] -> [ BGirl |  BBoy  ]
+Horizontal [ ^  BGirl | BBoy] -> [ BGirl |  BBoy  ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Person
+All Target2 on Player
+
+
+=======
+LEVELS
+=======
+
+
+
+
+
+message Meet Candy
+
+...X....
+........
+######.#
+........
+........
+#.######
+........
+....*...
+
+
+message The First Love
+
+###XX###
+........
+######..
+........
+..######
+H.......
+######..
+...*....
+
+...XX.#.
+.#.#....
+.....#..
+..#.....
+..#.#.#.
+...#....
+#.....#.
+..#H*...
+
+message The Break Up
+###XX...
+..####..
+.....#..
+..##.#..
+..##.#..
+..##....
+..####H.
+...H*###
+
+message The Long Term Relationship
+
+
+...XX...
+........
+........
+........
+........
+........
+........
+...H*...
+
+#..XX..#
+#......#
+#......#
+#......#
+#......#
+#......#
+#......#
+#..H*..#
+
+.#.XX.#.
+.#....#.
+.#....#.
+.#....#.
+.#....#.
+.#....#.
+.#....#.
+.#.H*.#.
+
+..#XX#..
+..#..#..
+..#..#..
+..#..#..
+..#..#..
+..#..#..
+..#..#..
+..#H*#..
+
+message The Bitch
+
+
+..#.X#..
+..#..#..
+..#..#..
+..#..#..
+..#..#..
+..R..#..
+..#..#..
+..#H*#..
+
+message The Wilderness
+...X#...
+.#HR#.#.
+..#...#.
+#...###.
+###HR...
+......#.
+.#RH##..
+....*.RH
+
+.H#.X#..
+..##H...
+..R..#..
+R...R#.#
+#..##..R
+....#..#
+..#.#.H#
+H..*...#
+
+....X#..
+R..##R..
+#H..##H.
+###H.H..
+..R#R...
+....R.HH
+#..H.H.#
+R...*..R
+
+....XR..
+..##.G..
+R..###H.
+GH...G#.
+#.##.....
+...###.#
+.G..G..R
+....*.H#
+
+
+message The Second Chance
+
+
+
+...XX...
+..#####.
+..#.....
+..#.####
+..R....#
+..####.#
+....HR.#
+####*...
+
+...XX...
+R..R#R..
+........
+..R##R..
+..R####.
+......#.
+..#R..#.
+..#H*...
+
+...XX...
+#R..G##.
+G#....#.
+...G...#
+..B#B..#
+...GG..#
+##.##..B
+...*H..G
+
+##.XX..#
+##..#..#
+...G...R
+..B#..B#
+..#B...G
+#.#G...G
+G..#B..#
+B..*H..#
+
+
+
+message The Doubt
+
+
+...XX#..
+R..#....
+...#.#..
+..##.#..
+..##.#..
+..##.#..
+..##.#..
+...H*..L
+
+#..XX..#
+#..###.#
+#..#....
+#..#....
+#..G....
+R...#.L#
+#..#..#.
+#..BH*..
+
+###XX###
+..G..G.L
+..B..BBB
+..G..G.B
+G..G.G..
+.B......
+##.#####
+...*H...
+
+message The Fun
+
+...XX..S
+.#######
+H.G.....
+..##.#B.
+.SL..#..
+B.......
+...###H.
+R..L*...
+
+...XX#..
+..G#..B.
+.....G..
+..###..R
+..#...H.
+..B..#..
+..#..#..
+.S#S*..S
+
+
+...XX##.
+G..##..R
+...##..H
+......#.
+...#..G.
+##.#...B
+..L#.#..
+...*S.B#
+
+
+...XXX..
+R..####.
+...#....
+........
+..#G..R#
+..##...H
+..#..B..
+.S#*B..#
+
+
+####T..#
+.H.R#G..
+..H.##B.
+.##.....
+.B.###.L
+#.L...#.
+#..G..#.
+#..S*H.R
+
+
+message The One
+
+..#XX#..
+........
+.L....S.
+........
+.B....H.
+........
+....*...
+
+message The End
+
+message Thank you for playing
+
+message And thanks to Lise for her Brassens Cover 
+

@@ -1,0 +1,849 @@
+(PuzzleScript)
+title Fireproof bomber
+author MarcinK
+youtube K6EJ2iPWfCA
+
+(verbose_logging)
+key_repeat_interval 0.3
+noundo
+
+text_color Blue
+
+========
+OBJECTS
+========
+(
+MAIN TILES
+)
+Background
+DarkBlue DarkGreen
+11101
+01111
+11101
+11111
+10111
+Bomberman
+DarkGray LightBlue White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+Cinderman
+Black LightBlue
+.000.
+.101.
+00000
+.000.
+.0.0.
+Crate
+Brown Lightbrown Darkbrown Black
+01012
+11111
+01012
+11111
+21213
+TNT
+DarkRed Red Black
+..22.
+.111.
+01010
+01010
+.101.
+ExitClosed
+Red
+.....
+.000.
+.0.0.
+.000.
+.....
+ExitOpen
+Lightgreen
+.....
+.000.
+.0.0.
+.000.
+.....
+(
+WALL TILES
+)
+WallSolid
+DarkBlue DarkGray Black
+00000
+02000
+00000
+00020
+00000
+WallLeft
+DarkBlue DarkGray Black
+10000
+12000
+12000
+12000
+10000
+WallRight
+DarkBlue DarkGray Black
+00001
+00021
+00021
+00021
+00001
+WallUp
+DarkBlue DarkGray Black
+11111
+02220
+00000
+00000
+00000
+WallDown
+DarkBlue DarkGray Black
+00000
+00000
+00000
+02220
+11111
+WallUpLeft
+DarkBlue DarkGray Black
+.1111
+12220
+12000
+12000
+10000
+WallUpRight
+DarkBlue DarkGray Black
+1111.
+02221
+00021
+00021
+00001
+WallDownLeft
+DarkBlue DarkGray Black
+10000
+12000
+12000
+12220
+.1111
+WallDownRight
+DarkBlue DarkGray Black
+00001
+00021
+00021
+02221
+1111.
+WallULeft
+DarkBlue DarkGray Black
+.1111
+12220
+12000
+12220
+.1111
+WallURight
+DarkBlue DarkGray Black
+1111.
+02221
+00021
+02221
+1111.
+WallUUp
+DarkBlue DarkGray Black
+.111.
+12221
+12021
+12021
+10001
+WallUdown
+DarkBlue DarkGray Black
+10001
+12021
+12021
+12221
+.111.
+WallVert
+DarkBlue DarkGray Black
+10001
+12021
+12021
+12021
+10001
+WallHoriz
+DarkBlue DarkGray Black
+11111
+02220
+00000
+02220
+11111
+WallO
+DarkBlue DarkGrey Black
+.111.
+12021
+10001
+12021
+.111.
+(
+ARMORY TILES
+)
+Armory0
+Grey Purple LightGrey
+.222.
+00000
+00000
+00000
+.222.
+Armory1
+Grey Purple LightGrey
+.222.
+00000
+00100
+00000
+.222.
+Armory2
+Grey Purple LightGrey
+.222.
+01000
+00000
+00010
+.222.
+Armory3
+Grey Purple LightGrey
+.222.
+00010
+00100
+01000
+.222.
+Armory4
+Grey Purple LightGrey
+.222.
+01010
+00000
+01010
+.222.
+Armory5
+Grey Purple LightGrey
+.222.
+01010
+00100
+01010
+.222.
+Armory6
+Grey Purple LightGrey
+.222.
+01010
+01010
+01010
+.222.
+Armory7
+Grey Purple LightGrey
+.222.
+01010
+01110
+01010
+.222.
+Armory8
+Grey Purple LightGrey
+.222.
+01110
+01110
+01010
+.222.
+Armory9
+Grey Purple LightGrey
+.222.
+01110
+01110
+01110
+.222.
+ArmoryI (Infinite bombs)
+Grey Purple LightGrey
+.222.
+01010
+10101
+01010
+.222.
+(
+BOMB TILES
+)
+BombPlaced
+Transparent
+Bomb1
+Pink Purple Orange
+...2.
+.011.
+.111.
+.111.
+.....
+Bomb1Dummy
+Transparent
+Bomb2
+Pink Purple Orange
+...2.
+.020.
+.111.
+.111.
+.....
+Bomb2Dummy
+Transparent
+Bomb3
+Pink Purple Orange
+...2.
+.020.
+.021.
+.111.
+.....
+Bomb3Dummy
+Transparent
+(
+FIREBALL TILES
+)
+(FIRE I)
+Fire1Center
+Orange Yellow Red
+10001
+00200
+02220
+00200
+10001
+Fire1CenterDummy
+Transparent
+Fire1Top
+Orange Yellow Red
+.....
+.....
+.....
+.....
+.111.
+Fire1TopDummy
+Transparent
+Fire1Bottom
+Orange Yellow Red
+.111.
+.....
+.....
+.....
+.....
+Fire1BottomDummy
+Transparent
+Fire1Right
+Orange Yellow Red
+.....
+1....
+1....
+1....
+.....
+Fire1RightDummy
+Transparent
+Fire1Left
+Orange Yellow Red
+.....
+....1
+....1
+....1
+.....
+Fire1LeftDummy
+Transparent
+((Fire II))
+Fire2Center
+Orange Yellow Red
+00200
+02220
+22222
+02220
+00200
+Fire2CenterDummy
+Transparent
+Fire2Top
+Orange Yellow Red
+.....
+.111.
+11111
+10001
+00000
+Fire2TopDummy
+Transparent
+Fire2Bottom
+Orange Yellow Red
+00000
+10001
+11111
+.111.
+.....
+Fire2BottomDummy
+Transparent
+Fire2Right
+Orange Yellow Red
+011..
+0011.
+0011.
+0011.
+011..
+Fire2RightDummy
+Transparent
+Fire2Left
+Orange Yellow Red
+..110
+.1100
+.1100
+.1100
+..110
+Fire2LeftDummy
+Transparent
+Fire2TopLeft
+Orange Yellow Red
+.....
+.....
+...11
+..111
+..110
+Fire2TopLeftDummy
+Transparent
+Fire2TopRight
+Orange Yellow Red
+.....
+.....
+11...
+111..
+011..
+Fire2TopRightDummy
+Transparent
+Fire2BottomLeft
+Orange Yellow Red
+..110
+..111
+...11
+.....
+.....
+Fire2BottomLeftDummy
+Transparent
+Fire2BottomRight
+Orange Yellow Red
+011..
+111..
+11...
+.....
+.....
+Fire2BottomRightDummy
+Transparent
+((Fire III))
+Fire3Center
+Orange Yellow Red Black
+10.0.
+.2.20
+.22..
+0.20.
+.1.0.
+Fire3CenterDummy
+Transparent
+Fire3Top
+Orange Yellow Red Black
+.....
+..11.
+..1.1
+11.01
+..0..
+Fire3TopDummy
+Transparent
+Fire3Bottom
+Orange Yellow Red Black
+.0..0
+10.0.
+.1.11
+.1...
+.....
+Fire3BottomDummy
+Transparent
+Fire3Right
+Orange Yellow Red Black
+.1...
+..11.
+0.1..
+0.0..
+..1..
+Fire3RightDummy
+Transparent
+Fire3Left
+Orange Yellow Red
+...1.
+..1.0
+.1...
+..10.
+..1.0
+Fire3LeftDummy
+Transparent
+Fire3TopLeft
+Orange Yellow Red Black
+.....
+.....
+...1.
+..1.0
+....0
+Fire3TopLeftDummy
+Transparent
+Fire3TopRight
+Orange Yellow Red Black
+.....
+.....
+.1...
+0....
+1.1..
+Fire3TopRightDummy
+Transparent
+Fire3BottomLeft
+Orange Yellow Red Black
+..0..
+..1..
+....1
+.....
+.....
+Fire3BottomLeftDummy
+Transparent
+Fire3BottomRight
+Orange Yellow Red Black
+..01.
+1..0.
+..1..
+.....
+.....
+Fire3BottomRightDummy
+Transparent
+(
+CINDER TILES
+)
+PlayerCinder1
+Black
+.000.
+.000.
+00000
+.000.
+.0.0.
+PlayerCinder1Dummy
+Transparent
+PlayerCinder2
+Black
+.000.
+.000.
+00000
+.000.
+.0.0.
+PlayerCinder2Dummy
+Transparent
+PlayerCinder3
+Black LightBlue
+.000.
+.100.
+00000
+.000.
+.0.0.
+PlayerCinder3Dummy
+Transparent
+PlayerCinder4
+Black LightBlue
+.000.
+.101.
+00000
+.000.
+.0.0.
+PlayerCinder4Dummy
+Transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+u = Crate
+i = ExitClosed
+k = ExitOpen
+o = TNT
+P = Bomberman
+(Wall normal)
+s = WallSolid
+w = WallUp
+x = WallDown
+a = WallLeft
+d = WallRight
+q = WallUpLeft
+e = WallUpRight
+z = WallDownLeft
+c = WallDownRight
+(Wall special)
+g = WallO
+t = WallUUp
+b = WallUDown
+f = WallULeft
+h = WallURight
+r = WallHoriz
+y = WallVert
+(Armory)
+0 = Armory0
+1 = Armory1
+2 = Armory2
+3 = Armory3
+4 = Armory4
+5 = Armory5
+6 = Armory6
+7 = Armory7
+8 = Armory8
+9 = Armory9
+j = ArmoryI
+
+Player = Cinderman or Bomberman
+
+Armory = Armory0 or Armory1 or Armory2 or Armory3 or Armory4 or Armory5 or Armory6 or Armory7 or Armory8 or Armory9 or ArmoryI
+
+Wall = WallSolid or WallUp or WallDown or WallLeft or WallRight or WallUpLeft or WallUpRight or WallDownLeft or WallDownRight or WallO or WallUUp or WallUDown or WallULeft or WallURight or WallHoriz or WallVert
+
+(All the fire tiles)
+Fire = Fire1Center or Fire1Top or Fire1Bottom or Fire1Left or Fire1Right or Fire2Center or Fire2Top or Fire2Bottom or Fire2Left or Fire2Right or Fire2TopRight or Fire2TopLeft or Fire2BottomRight or Fire2BottomLeft or Fire3Center or Fire3Top or Fire3Bottom or Fire3Left or Fire3Right or Fire3TopRight or Fire3TopLeft or Fire3BottomRight or Fire3BottomLeft
+
+FireDummy = Fire1CenterDummy or Fire1TopDummy or Fire1BottomDummy or Fire1LeftDummy or Fire1RightDummy or Fire2CenterDummy or Fire2TopDummy or Fire2BottomDummy or Fire2LeftDummy or Fire2RightDummy or Fire2TopRightDummy or Fire2TopLeftDummy or Fire2BottomRightDummy or Fire2BottomLeftDummy or Fire3CenterDummy or Fire3TopDummy or Fire3BottomDummy or Fire3LeftDummy or Fire3RightDummy or Fire3TopRightDummy or Fire3TopLeftDummy or Fire3BottomRightDummy or Fire3BottomLeftDummy
+
+(Fire which deals damage (All but fire 3 edges))
+FireDamage = Fire1Center or Fire1Top or Fire1Bottom or Fire1Left or Fire1Right or Fire2Center or Fire2Top or Fire2Bottom or Fire2Left or Fire2Right or Fire2TopRight or Fire2TopLeft or Fire2BottomRight or Fire2BottomLeft or Fire3Center
+=======
+SOUNDS
+=======
+
+Crate move 57980107 (Alt: 55553507)
+Endlevel 83115308 (Alt: 77202908)
+
+(Explosion)
+sfx0 24133102
+sfx1 80845302
+sfx2 3561102
+(Reload)
+sfx3 23799500
+(Place Bomb)
+sfx4 10532107
+(Bomb)
+sfx5 84375702
+(Hurt)
+sfx6 3541504
+sfx7 2372508 (Alt: 62159308)
+(Recover)
+sfx8 22236503
+(Destroy crate)
+Crate destroy 2734102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+ExitClosed,ExitOpen,BombPlaced
+
+Cinderman,Bomberman,Crate,WallSolid,WallUp,WallDown,WallLeft,WallRight,WallUUp,WallUDown,WallULeft,WallURight,WallHoriz,WallVert,WallO,WallUpLeft,WallUpRight,WallDownLeft,WallDownRight,TNT,Armory0,Armory1,Armory2,Armory3,Armory4,Armory5,Armory6,Armory7,Armory8,Armory9,ArmoryI
+
+(Breaking down fire into collision layer makes the fireballs look better (merge) when bombs are set off close to one another)
+Fire1Center,Fire1Top,Fire1Bottom,Fire1Left,Fire1Right,Fire1CenterDummy,Fire1TopDummy,Fire1BottomDummy,Fire1LeftDummy,Fire1RightDummy
+
+Fire2Center,Fire2Top,Fire2Bottom,Fire2Left,Fire2Right,Fire2CenterDummy,Fire2TopDummy,Fire2BottomDummy,Fire2LeftDummy,Fire2RightDummy,Fire2TopRight,Fire2TopRightDummy,Fire2TopLeft,Fire2TopLeftDummy,Fire2BottomRight,Fire2BottomRightDummy,Fire2BottomLeft,Fire2BottomLeftDummy
+
+Fire3Center,Fire3Top,Fire3Bottom,Fire3Left,Fire3Right,Fire3CenterDummy,Fire3TopDummy,Fire3BottomDummy,Fire3LeftDummy,Fire3RightDummy,Fire3TopRight,Fire3TopRightDummy,Fire3TopLeft,Fire3TopLeftDummy,Fire3BottomRight,Fire3BottomRightDummy,Fire3BottomLeft,Fire3BottomLeftDummy
+
+(Cindered player in front of the fire)
+PlayerCinder1,PlayerCinder1Dummy,PlayerCinder2,PlayerCinder2Dummy,PlayerCinder3,PlayerCinder3Dummy,PlayerCinder4,PlayerCinder4Dummy,Bomb1,Bomb2,Bomb3,Bomb1Dummy,Bomb2Dummy,Bomb3Dummy
+
+======
+RULES
+======
+
+(Push crates and TNT)
+[> Player | Crate] -> [Player | > Crate]
+[> Player | TNT]   -> [Player | > TNT]
+
+(Open exit when no crates)
+[ExitClosed] -> [ExitOpen]
+late [ExitOpen][Crate] -> [ExitClosed][Crate]
+
+(Place the bomb only if enough bombs in the armoury)
+[Action Player NO BombPlaced][ArmoryI] -> [Player BombPlaced][ArmoryI] sfx4
+[Action Player NO BombPlaced][Armory1] -> [Player BombPlaced][Armory0] sfx4
+[Action Player NO BombPlaced][Armory2] -> [Player BombPlaced][Armory1] sfx4
+[Action Player NO BombPlaced][Armory3] -> [Player BombPlaced][Armory2] sfx4
+[Action Player NO BombPlaced][Armory4] -> [Player BombPlaced][Armory3] sfx4
+[Action Player NO BombPlaced][Armory5] -> [Player BombPlaced][Armory4] sfx4
+[Action Player NO BombPlaced][Armory6] -> [Player BombPlaced][Armory5] sfx4
+[Action Player NO BombPlaced][Armory7] -> [Player BombPlaced][Armory6] sfx4
+[Action Player NO BombPlaced][Armory8] -> [Player BombPlaced][Armory7] sfx4
+[Action Player NO BombPlaced][Armory9] -> [Player BombPlaced][Armory8] sfx4
+
+(Reload on bombs by walking into the armoury)
+[> Player | Armory0] -> [Player | Armory1] sfx3
+[> Player | Armory1] -> [Player | Armory2] sfx3
+[> Player | Armory2] -> [Player | Armory3] sfx3
+[> Player | Armory3] -> [Player | Armory4] sfx3
+[> Player | Armory4] -> [Player | Armory5] sfx3
+[> Player | Armory5] -> [Player | Armory6] sfx3
+[> Player | Armory6] -> [Player | Armory7] sfx3
+[> Player | Armory7] -> [Player | Armory8] sfx3
+[> Player | Armory8] -> [Player | Armory9] sfx3
+
+(Light the fuse only when player on the neighbouring tile)
+late [Player | BombPlaced] -> [Player | Bomb1] sfx5
+[Bomb1] -> [Bomb1Dummy] sfx5
+      late [Bomb1Dummy] -> [Bomb2]
+[Bomb2] -> [Bomb2Dummy] sfx5
+      late [Bomb2Dummy] -> [Bomb3]
+[Bomb3] -> [Bomb3Dummy] sfx5
+
+(Fireball I propagation)
+[Fire1Center] -> [Fire1CenterDummy] sfx1
+            late [Fire1CenterDummy] -> [Fire2Center]
+[Fire1Top]    -> [Fire1TopDummy]
+            late [Fire1TopDummy]    -> [Fire2Top]
+[Fire1Bottom] -> [Fire1BottomDummy]
+            late [Fire1BottomDummy] -> [Fire2Bottom]
+[Fire1Left]   -> [Fire1LeftDummy]
+            late [Fire1LeftDummy]   -> [Fire2Left]
+[Fire1Right]  -> [Fire1RightDummy]
+            late [Fire1RightDummy]  -> [Fire2Right]       
+
+late LEFT  [Fire2Top | NO Fire NO Wall]        -> [Fire2Top | Fire2TopLeft]
+late RIGHT [Fire2Top | NO Fire NO Wall]       -> [Fire2Top | Fire2TopRight]
+late LEFT  [Fire2Bottom | NO Fire NO Wall]  -> [Fire2Bottom | Fire2BottomLeft]
+late RIGHT [Fire2Bottom | NO Fire NO Wall] -> [Fire2Bottom | Fire2BottomRight]
+late UP    [Fire2Left | NO Fire NO Wall]        -> [Fire2Left | Fire2TopLeft]
+late DOWN  [Fire2Left | NO Fire NO Wall]     -> [Fire2Left | Fire2BottomLeft]
+late UP    [Fire2Right | NO Fire NO Wall]      -> [Fire2Right | Fire2TopRight]
+late DOWN  [Fire2Right | NO Fire NO Wall]   -> [Fire2Right | Fire2BottomRight]
+
+(Fireball II propagation)
+[Fire2Center] -> [Fire2CenterDummy] sfx2
+            late [Fire2CenterDummy] -> [Fire3Center]
+[Fire2Top]    -> [Fire2TopDummy]
+            late [Fire2TopDummy]    -> [Fire3Top]
+[Fire2Bottom] -> [Fire2BottomDummy]
+            late [Fire2BottomDummy] -> [Fire3Bottom]
+[Fire2Left]   -> [Fire2LeftDummy]
+            late [Fire2LeftDummy]   -> [Fire3Left]
+[Fire2Right]  -> [Fire2RightDummy]
+            late [Fire2RightDummy]  -> [Fire3Right]
+[Fire2TopRight]    -> [Fire2TopRightDummy]
+                 late [Fire2TopRightDummy]    -> [Fire3TopRight]
+[Fire2TopLeft]     -> [Fire2TopLeftDummy]
+                 late [Fire2TopLeftDummy]     -> [Fire3TopLeft]
+[Fire2BottomRight] -> [Fire2BottomRightDummy]
+                 late [Fire2BottomRightDummy] -> [Fire3BottomRight]
+[Fire2BottomLeft]  -> [Fire2BottomLeftDummy]
+                 late [Fire2BottomLeftDummy]  -> [Fire3BottomLeft]
+
+(Dissipate the fireball)
+[Fire3Center]      -> []
+[Fire3Top]         -> []
+[Fire3Bottom]      -> []
+[Fire3Left]        -> []
+[Fire3Right]       -> []
+[Fire3TopLeft]     -> []
+[Fire3TopRight]    -> []
+[Fire3BottomLeft]  -> []
+[Fire3BottomRight] -> [] 
+
+(Create the fireball) (This happening after the propagation step makes exploding TNT look nicer)
+late [Bomb3Dummy] -> [Fire1Center] sfx0
+late UP    [Fire1Center | NO Wall] -> [Fire1Center | Fire1Top]
+late DOWN  [Fire1Center | NO Wall] -> [Fire1Center | Fire1Bottom]
+late LEFT  [Fire1Center | NO Wall] -> [Fire1Center | Fire1Left]
+late RIGHT [Fire1Center | NO Wall] -> [Fire1Center | Fire1Right]
+
+(Char the Bomberman with the fireball; Only Fire II edges can cinder the player)
+late [Bomberman FireDamage] -> [PlayerCinder1 FireDamage] sfx6
+
+(Stay charred if still in the fireball when charred)
+late [PlayerCinder1Dummy Fire] -> [PlayerCinder1 Fire]
+
+(Die if in fireball - The cinderman is fragile)
+late [Cinderman FireDamage] -> [FireDamage] sfx7
+
+(Recover from char. Become the cinderman)
+[PlayerCinder1] -> [PlayerCinder1Dummy]
+              late [PlayerCinder1Dummy] -> [PlayerCinder2]
+[PlayerCinder2] -> [PlayerCinder2Dummy]
+              late [PlayerCinder2Dummy] -> [PlayerCinder3] sfx8 (Blink)
+[PlayerCinder3] -> [PlayerCinder3Dummy] 
+              late [PlayerCinder3Dummy] -> [PlayerCinder4] sfx8 (Blink)
+[PlayerCinder4] -> [Cinderman]
+
+(Destroy crates; Fire 3 edges destroy crates too)
+late [Crate FireDamage] -> [FireDamage]
+
+(Blow up TNT; Even Fire 1 ignites TNT - it's really unstable)
+late [TNT Fire]    -> [Bomb3Dummy Fire]
+
+(You can blow up the exit...; Do not need to specify all the fireball interactions because the fireballs do not appear arbitrarily)
+late [ExitClosed FireDamage] -> [Fire1Center]
+late [ExitOpen FireDamage] -> [Fire1Center]
+
+(...and the armoury too!) (But only have to care about the collision with the edges of fire II)
+late [Armory FireDamage]  -> [Bomb3Dummy FireDamage]
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on ExitOpen
+
+=======
+LEVELS
+=======
+
+message Blow up the crates
+
+sxxxxxxxs
+d.......a
+d.i.....a
+d.....p.a
+d..u....a
+d.uuu...a
+d..u..qws
+d.....a1s
+swwwwwsss
+
+message Bombs are finite
+
+sxxxxxxs
+d......a
+d......a
+d.uuu..a
+d..iu..a
+d.uuu..a
+swe..p.a
+s2d....a
+ssswwwws
+
+message Chicken run
+
+sxxxxxxss
+d..uou.zs
+d..ouou.a
+d..uguoua
+dp.gu.uoa
+d..uguo.a
+d...ujuua
+d..u.u.ia
+swwwwwwws
+
+message Reload
+
+ssxsxsxss
+scububuzs
+duo...oua
+srrh.frrs
+dp.....ia
+srrh.frrs
+du.....ua
+seut0qwws
+sswswssss
+
+message Run
+
+sxsxsxxxsss
+duyib.o.zxs
+dob..ogo..a
+duo.o.ugopa
+swe.gog..ua
+sscouuo..qs
+sc...2go.zs
+d..ufhu...a
+d.fh......a
+d....qwwwws
+swwwwssssss

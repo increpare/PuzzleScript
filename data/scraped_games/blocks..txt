@@ -1,0 +1,92 @@
+title blocks.
+author Liam K. Sheehan
+homepage mywebspace.quinnipiac.edu/lksheehan/301
+========
+OBJECTS
+========
+
+Background
+lightgray
+00000
+00000
+00000
+00000
+00000
+
+Wall
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+
+Player
+darkblue white
+00000
+01010
+00000
+00000
+00000
+
+Goal
+yellow
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+W = Wall
+g = Goal
+
+
+
+=======
+SOUNDS
+=======
+
+Player MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Wall
+
+======
+RULES
+======
+
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal
+
+=======
+LEVELS
+=======
+wwwwwwwwwwwww
+w..gw...gw.pw
+w..ww...ww..w
+w..w..w..w..w
+wp....w....gw
+ww..wwwwwwwww
+wp.........gw
+w..w..w.wwwww
+w..w.......pw
+wp.w..gwwwwww
+wwwwwwwwwwwww
+
+

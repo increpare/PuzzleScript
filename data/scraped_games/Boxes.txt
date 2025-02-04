@@ -1,0 +1,276 @@
+title Boxes
+author THAT guy
+
+========
+OBJECTS
+========
+
+(obsticles)
+
+background
+green lightgreen
+11101
+11111
+11011
+01111
+11111
+
+wall
+grey lightgrey
+10111
+11101
+11011
+11110
+01111
+
+river1
+blue lightblue
+01100
+10010
+00001
+11000
+00101
+
+river2
+blue lightblue
+00011
+01100
+10001
+00110
+10000
+
+river3
+blue lightblue
+00110
+10001
+01100
+00011
+01000
+
+passagevert
+grey lightgrey
+1...0
+1...1
+1...1
+0...1
+1...1
+
+passagehoriz
+grey lightgrey
+11011
+.....
+.....
+.....
+11101
+
+(objects)
+
+player
+lightbrown red blue
+.000.
+.000.
+01110
+.112.
+.2.2.
+
+goal
+white
+00000
+0...0
+0...0
+0...0
+00000
+
+(boxes)
+
+pushbox
+brown lightbrown black
+00200
+01110
+21112
+01110
+00200
+
+pullbox
+brown lightbrown black
+00200
+02120
+21112
+02120
+00200
+
+bridge
+brown lightbrown black
+20102
+00100
+11111
+00100
+20102
+
+bridger
+brown lightbrown black
+20102
+00100
+11111
+00100
+20102
+
+=======
+LEGEND
+=======
+
+box = pushbox or pullbox or bridge
+river = river1 or river2 or river3
+passage = passagevert or passagehoriz
+
+. = background
+# = wall
+~ = river1
+p = player
+$ = pushbox
+% = pullbox
+0 = goal
+- = bridge
+t = bridger
+H = passagevert
+I = passagehoriz
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+background
+bridger
+goal
+player wall box river
+passage
+
+======
+RULES
+======
+
+late[river] -> [random river]
+
+[ > player | pushbox] -> [ > player | > pushbox]
+[ > player | bridge] -> [ > player | > bridge]
+[ > player | bridge | river] -> [ > player | | bridger]
+[ < player | pullbox] -> [ < player | < pullbox]
+[ > box | passage] -> [ stationary box | passage]
+
+horizontal[ > player | passagevert] -> [ stationary player | passagevert]
+vertical[ > player | passagehoriz] -> [ stationary player | passagehoriz]
+
+==============
+WINCONDITIONS
+==============
+
+all box on goal
+
+=======
+LEVELS
+=======
+
+message Move all boxes onto the goals.
+message Push boxes can be pushed.
+
+#######
+#.....#
+#p$.0.#
+#.....#
+#######
+
+message Pull boxes can be pulled.
+
+#######
+#.....#
+#p0.%.#
+#.....#
+#######
+
+message Now you try.
+
+#########
+#.0.#####
+#...#####
+#.%..####
+#....####
+#.......#
+#.p.$.0.#
+#.......#
+#########
+
+message You can't pass rivers.
+
+#######
+#..0..#
+#.....#
+#~~.~~#
+#...$.#
+#.p...#
+#######
+
+message I lied.
+message You can pass rivers with bridges.
+
+#######
+#p.~..#
+#..~0.#
+#..t..#
+#..~..#
+#%.~..#
+#######
+
+message Bridges act like push boxes.
+message Except that they are bridges.
+
+###########
+#.....~...#
+#.0.0.~...#
+#....%~.-.#
+#~~~~~~...#
+#...$.....#
+#......p..#
+###########
+
+message You can go through passages.
+
+#####
+#.%.#
+#.0.#
+##H##
+#..0#
+#p$.#
+#...#
+#####
+
+message But crates cannot.
+
+############
+#...I....###
+#.0.#~~~~###
+#%..#.-..###
+#####..p.###
+######H##..#
+#....#.-...#
+#0...#.....#
+#..$.#~~~~~#
+#....I..%..#
+######.0...#
+######.....#
+############
+
+message You can only pass through passages in the direction they're facing.
+message But that's common sense.
+
+#########
+#pII.#..#
+#II..#HH#
+#.I.II.H#
+#HI..I#H#
+#HH.HH#$#
+#..#..#0#
+#########

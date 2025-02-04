@@ -9,6 +9,9 @@ from dotenv import load_dotenv
 parser = ArgumentParser()
 parser.add_argument("--update", action="store_true", help="Update the list of PuzzleScript URLs")
 args = parser.parse_args()
+data_dir = 'data'
+scraped_games_dir = os.path.join('data', 'scraped_games')
+os.makedirs(scraped_games_dir, exist_ok = True)
 
 
 load_dotenv()
@@ -57,7 +60,6 @@ else:
     with open(visited_ps_links_path, "w") as f:
         f.write("")
         visited_ps_links = []
-os.makedirs('data/scraped_games', exist_ok = True)
 for link in ps_links:
     if link in visited_ps_links:
         print(f"Skipping {link}")
@@ -101,13 +103,30 @@ for link in ps_links:
             breakpoint()
         title = title_match.groups()[0]
         title = title.replace(' ', '_')
-        filename = f'{title}_{filename}'
-        script_path = os.path.join('/data/scraped_games', filename)
+        title = title.replace('/', '_')
+        filename = f'{title}'
+        script_path = os.path.join('data/scraped_games', filename)
+
+        dupe_filenames = {}
+
+        if os.path.isfile(script_path):
+            if filename not in dupe_filenames:
+                n_prev_dupes = 2
+                dupe_filenames[filename] = n_prev_dupes
+            else:
+                n_prev_dupes += 1
+                dupe_filenames[filename] += n_prev_dupes
+            filename = f'{title}_{n_prev_dupes}'
+        else:
+            filename = title
+        filename += '.txt'
+        script_path = os.path.join(scraped_games_dir, filename)
 
         with open(script_path, "w", encoding='utf-8') as f:
             f.write(script)
+        
         add_to_visited()
 
 # Count number of scripts
-script_files = os.listdir("data/scraped_games")
+script_files = os.listdir(scraped_games_dir)
 print(f"Total scripts: {len(script_files)}")

@@ -1,0 +1,1709 @@
+title Touchscreen
+author pickten
+homepage www.puzzlescript.net
+( background_color #444444 )
+noaction
+( color_palette whitingjp )
+( verbose_logging )
+
+again_interval 0.5
+
+========
+OBJECTS
+========
+
+Background
+darkgreen darkGREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+black
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+gray Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+GlueCrate
+yellow orange
+00000
+0...0
+0...0
+0...0
+00000
+
+GlassCrate
+White lightblue
+00000
+0..01
+0.0.1
+00..1
+01111
+
+TryMoveR
+transparent
+
+TryMoveW
+transparent
+
+Stopped
+red
+
+MotionL
+red
+.....
+0....
+0....
+0....
+.....
+
+MotionR
+red
+.....
+....0
+....0
+....0
+.....
+
+MotionU
+red
+.000.
+.....
+.....
+.....
+.....
+
+MotionD
+red
+.....
+.....
+.....
+.....
+.000.
+
+SrcLR
+blue
+.....
+0....
+0....
+0....
+.....
+
+SrcRR
+blue
+.....
+....0
+....0
+....0
+.....
+
+SrcUR
+blue
+.000.
+.....
+.....
+.....
+.....
+
+SrcDR
+blue
+.....
+.....
+.....
+.....
+.000.
+
+SrcLW
+blue
+.....
+0....
+0....
+0....
+.....
+
+SrcRW
+blue
+.....
+....0
+....0
+....0
+.....
+
+SrcUW
+blue
+.000.
+.....
+.....
+.....
+.....
+
+SrcDW
+blue
+.....
+.....
+.....
+.....
+.000.
+
+DidChange
+transparent
+
+DidNoChange
+transparent
+
+NeedWorkL
+transparent
+
+NeedWorkR
+transparent
+
+NeedWorkU
+transparent
+
+NeedWorkD
+transparent
+
+Active
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+8 = GlassCrate
+2 = GlassCrate and Target
+9 = GlueCrate
+3 = GlueCrate and Target
+O = Target
+
+Cratey = Crate or GlassCrate or GlueCrate
+
+Thing = Player or Cratey
+Thing2 = Thing
+
+Pusher = Cratey
+Pushee = Cratey
+
+Puller = Crate or GlassCrate
+Pullee = Crate or GlassCrate
+
+Slider = Player
+Slidee = Cratey
+
+GSlider = GlassCrate or Crate
+GSlidee = GlassCrate
+
+Sticker = Crate
+Stickee = Crate
+
+GSticker = GlueCrate
+GStickee = Cratey
+
+Stop = Thing or Wall
+TryMove = TryMoveR or TryMoveW
+Motion = MotionL or MotionR or MotionU or MotionD
+MotionNoL = MotionR or MotionU or MotionD
+MotionNoR = MotionL or MotionU or MotionD
+MotionNoU = MotionL or MotionR or MotionD
+MotionNoD = MotionL or MotionR or MotionU
+
+SrcLX = SrcLR or SrcLW
+SrcRX = SrcRR or SrcRW
+SrcUX = SrcUR or SrcUW
+SrcDX = SrcDR or SrcDW
+
+SrcXR = SrcLR or SrcRR or SrcUR or SrcDR
+SrcXW = SrcLW or SrcRW or SrcUW or SrcDW
+Src = SrcXR or SrcXW
+
+CheckChange = DidChange or DidNoChange
+NeedWork = NeedWorkL or NeedWorkR or NeedWorkU or NeedWorkD
+
+
+=======
+SOUNDS
+=======
+
+Cratey MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+TryMoveR
+TryMoveW
+
+CheckChange
+
+Background
+Target
+Stop
+
+NeedWorkL
+NeedWorkR
+NeedWorkU
+NeedWorkD
+Active
+MotionL
+MotionR
+MotionU
+MotionD
+SrcLR
+SrcRR
+SrcUR
+SrcDR
+SrcLW
+SrcRW
+SrcUW
+SrcDW
+
+Stopped
+
+======
+RULES
+======
+late [TryMove] -> []
+late [Stopped] -> []
+late [CheckChange] -> []
+( late [WorkRel] -> [] )
+late [Motion] -> []
+late [Src] -> []
+
+startloop
+( LOOP STRUCTURE: )
+( PHASE 0: Choose random object/dir which hasn't been processed )
+( PHASE 1: Derive ALL consequences of that move. )
+( PHASE 2: Update Work Queue )
+
+
+
+
+( PHASE 0 )
+random [NeedWorkL Thing] -> [left Thing Active]
++      [NeedWorkR Thing] -> [right Thing Active]
++      [NeedWorkU Thing] -> [up Thing Active]
++      [NeedWorkD Thing] -> [down Thing Active]
+
+
+( PHASE 1 )
+[parallel Pusher Active | Pushee] -> [parallel Pusher Active | parallel Pushee > TryMoveW]
+(
+[parallel Crate Active | Crate] -> [parallel Crate Active | parallel Crate > TryMoveW]
+[parallel GlassCrate Active | GlassCrate] -> [parallel GlassCrate Active | parallel GlassCrate > TryMoveW]
+)
+
+[^ Slider Active | Slidee] -> [^ Slider Active | v Slidee > TryMoveR]
+[v Slider Active | Slidee] -> [v Slider Active | ^ Slidee > TryMoveR]
+
+
+[^ GSlider Active | GSlidee] -> [^ GSlider Active | v GSlidee > TryMoveW]
+[v GSlider Active | GSlidee] -> [v GSlider Active | ^ GSlidee > TryMoveW]
+
+[^ GSlidee Active | GSlider] -> [^ GSlidee Active | v GSlider > TryMoveW]
+[v GSlidee Active | GSlider] -> [v GSlidee Active | ^ GSlider > TryMoveW]
+
+
+[^ Sticker Active | Stickee] -> [^ Sticker Active | ^ Stickee > TryMoveW]
+[v Sticker Active | Stickee] -> [v Sticker Active | V Stickee > TryMoveW]
+
+[^ Stickee Active | Sticker] -> [^ Stickee Active | ^ Sticker > TryMoveW]
+[v Stickee Active | Sticker] -> [v Stickee Active | V Sticker > TryMoveW]
+
+
+[^ GSticker Active | GStickee] -> [^ GSticker Active | ^ GStickee > TryMoveW]
+[v GSticker Active | GStickee] -> [v GSticker Active | V GStickee > TryMoveW]
+
+[^ GStickee Active | GSticker] -> [^ GStickee Active | ^ GSticker > TryMoveW]
+[v GStickee Active | GSticker] -> [v GStickee Active | V GSticker > TryMoveW]
+
+( [> Cratey Active | Cratey] -> [> Cratey Active | > Cratey > TryMoveW] )
+
+( PHASE 2 )
+
+[left Thing no MotionL] -> [Thing MotionL NeedWorkL]
+[right Thing no MotionR] -> [Thing MotionR NeedWorkR]
+[up Thing no MotionU] -> [Thing MotionU NeedWorkU]
+[down Thing no MotionD] -> [Thing MotionD NeedWorkD]
+[moving Thing] -> [stationary Thing]
+
+( update misc info )
+[left TryMoveR] -> [SrcLR]
+[right TryMoveR] -> [SrcRR]
+[up TryMoveR] -> [SrcUR]
+[down TryMoveR] -> [SrcDR]
+[left TryMoveW] -> [SrcLW]
+[right TryMoveW] -> [SrcRW]
+[up TryMoveW] -> [SrcUW]
+[down TryMoveW] -> [SrcDW]
+
+[Active] -> []
+
+
+endloop
+
+(prune out any conflicting moves)
+[MotionL MotionNoL] -> [Stopped]
+[MotionR MotionNoR] -> [Stopped]
+[MotionU MotionNoU] -> [Stopped]
+[MotionD MotionNoD] -> [Stopped]
+[Motion Stopped] -> [Stopped]
+[Src Stopped] -> [Stopped]
+
+(reinterpret the godawful MOTION/SRC format in [> Thing >' TryMove] form)
+
+
+[Thing MotionL] -> [left Thing]
+[Thing MotionR] -> [right Thing]
+[Thing MotionU] -> [up Thing]
+[Thing MotionD] -> [down Thing]
+
+[SrcLX] -> [left SrcLX]
+[SrcRX] -> [right SrcRX]
+[SrcUX] -> [up SrcUX]
+[SrcDX] -> [down SrcDX]
+
+
+
+startloop
+[stationary Thing Stopped | Thing2 > Src] -> [Thing Stopped | Thing2 Stopped]
+[stationary Thing | Thing2 > SrcXR] -> [Thing | stationary Thing2 Stopped]
+
+[> Thing | stationary Stop] -> [stationary Thing | stationary Stop]
+[> Thing | < Stop] -> [Thing | Stop]
+[> Thing | | < Stop] -> [stationary Thing | | stationary Stop]
+
+[Thing Stopped] -> [stationary Thing Stopped]
+
+([stationary Thing TryMove] -> [Thing])
+endloop
+
+(
+[left Thing] -> [Thing MotionL]
+[right Thing] -> [Thing MotionR]
+[up Thing] -> [Thing MotionU]
+[down Thing] -> [Thing MotionD]
+)
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Cratey
+( All Player on Crate )
+
+=======
+LEVELS
+=======
+
+(Message Swipe to move.)
+(
+Writing puzzles for this 
+has been some of the most satisfaction I've ever gotten doing game development.
+I started it right as the world shut down, and it's largely what's kept me sane(ish).
+So, well, if you're reading this, thank you!
+You're the motivation I needed for it.
+
+(Aside:
+This is not my only "full-size" project, 
+and the others will probably see a release as well. 
+One of those (TWRAY) has been shown off in public before. 
+If you've happened to play it before, you'll remember it as 
+"the game where everything rotates". 
+It's been in development since Sep 2019, and I even made a PuzzleScript fork for it 
+in order to have an overworld.
+I love it, but I'm too much of a perfectionist and got blocked on the last few levels.
+With luck, releasing this publicly is enough motivation 
+to get it over the finish line. 
+So if you played it and were wondering what happened, now you know.
+)
+
+Everything past this is purely for ease of development.
+)
+
+
+
+Message Part 1.
+Message Swipe to move.
+(TODO: REORDER LEVELS)
+
+
+(
+Message Level 1/7. Swipe.
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+)
+
+
+Message Level 1/6. Bend.
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#.#..#
+######
+
+
+(
+######
+#....#
+##.@##
+#*.@o#
+##.@##
+#...p#
+######
+)
+
+(
+Message Level 2/8. Flatten.
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+)
+
+
+Message Level 2/6. Build.
+###########
+##.......##
+#....o....#
+#..@#*#@..#
+###..#..###
+###..p..###
+###########
+
+Message Level 3/6. Scatter.
+(TOO EASY?)
+
+######
+#o..o#
+##.*##
+#o.**#
+##.*##
+#o..p#
+######
+
+
+Message Level 4/6. Deconstruct.
+
+###########
+##.......##
+##.......##
+#....o....#
+#...#.#...#
+#...#*#...#
+###.###.###
+###..@..###
+##.@.p.@.##
+##...#...##
+##...#...##
+##...#...##
+###########
+
+Message Level 5/6. Tunnel.
+###########
+#.........#
+#...*.p...#
+#.*##.##*.#
+#.*#...#*.#
+####.#.####
+####.o.####
+###########
+
+Message Level 6/6. Complete.
+#########
+#...o*..#
+#..#@#..#
+#..#@#..#
+#p*.@#*.#
+#..#@#..#
+#..#@#..#
+#...@...#
+#########
+
+
+
+(
+#####
+#..*#
+#.@##
+#.@o#
+#.@##
+#..p#
+#####
+
+######
+##..*#
+##.@##
+#..@o#
+##.@##
+##..p#
+######
+)
+
+
+
+
+Message Part 2.
+Message Glass is slippery.
+(
+Message Level 1/7.
+
+####..
+#.O#..
+#..###
+#2P..#
+#..8.#
+#..###
+####..
+)
+
+(
+Message Level 1/6.
+######
+#....#
+#.#P.#
+#.82.#
+#.O2.#
+#....#
+######
+)
+
+
+(
+Message Level 1/7. Complications.
+
+###########
+##.......##
+#....o....#
+#..2#8#2..#  
+###..#..###
+##...p...##
+##...#...##
+###########
+)
+
+(
+Message Level 2/5. 
+
+###########
+##.......##
+##.......##
+#....o....#
+#...#.#...#
+#...#8#...#
+###.###.###
+###..2..###
+##.2.p.2.##
+##...#...##
+##...#...##
+##...#...##
+###########
+)
+
+Message Level 1/6. Straighten.
+#####...
+#...####
+#88...p#
+#8.#OOO#
+#..#####
+####....
+
+
+
+Message Level 2/6. Shatter.
+######
+#o..o#
+##.8##
+#o.88#
+##.8##
+#o..p#
+######
+
+
+
+Message Level 3/6. Part.
+######
+##oo##
+#o88.#
+#o88p#
+######
+
+
+(
+#####
+#.p.#
+#o82#
+#o82#
+#...#
+#####
+)
+(
+Message Level 4/7. Confine.
+(TODO - better)
+
+###########
+#.........#
+#.........#
+#...8.8...#
+#.8##.##8.#
+#.8#.p.#8.#
+####.#.####
+####.o.####
+###########
+)
+
+
+Message Level 4/6. Hoist.
+
+###########
+#.........#
+#....2....#
+#.........#
+#.2##.##2.#
+#.2#.p.#2.#
+####...####
+####.o.####
+###..8..###
+###########
+
+
+
+
+(
+###############
+#.............#
+#......o......#
+#....22.22....#
+#.2####.####2.#
+#.2#...p...#2.#
+#####..#..#####
+#####..8..#####
+###############
+)
+
+Message Level 5/6. Deplete.
+(
+
+#########
+#...o8..#
+#..#2#..#
+#..#2#..#
+#p8.2#8.#
+#..#2#..#
+#..#2#..#
+#...2...#
+#########
+)
+(
+(TODO - better -- currently is 204 steps!)
+(udddu rluru lddrd drrrr uuruu ulrdd dddll llllu uuduu duudd ddrdr rrruu uuuud ddrdd ldllr lrlll uuluu ddduu durdu luduu urlrr lduld rdudl duddu ddurd luuud duddu drluu uuurr rdddr luuul ldldd duddd uduud uuduu duuur lrrld udlrd udldd uuduu drul)
+#########
+#..o.2..#
+#..#8#..#
+#..#8#..#
+#p8o8o8.#
+#..#8#..#
+#..#8#..#
+#..o8o..#
+#########
+
+)
+
+(TOO HARD?)
+#########
+#..o.2..#
+#..#8#..#
+#p8o8#..#
+#..#8#..#
+#..o8o..#
+#########
+
+
+
+(
+#####
+#..*#
+#.@##
+#.@o#
+#.@##
+#..p#
+#####
+
+######
+##..*#
+##.@##
+#..@o#
+##.@##
+##..p#
+######
+)
+
+(
+Message Level 8/8. Configure.
+(IMPOSSIBLE)
+######
+#...*#
+#.@@##
+#.@.o#
+#.@@##
+#...p#
+######
+)
+
+(
+Message Level 8/8.
+(TODO)
+(
+######
+#...8#
+#.22##
+#.2.o#
+#.22##
+#...p#
+######
+)
+)
+
+Message Level 6/6. Hide.
+######
+#p...#
+#.8..#
+#o88o#
+#o##o#
+#o88o#
+#.8..#
+#....#
+######
+
+
+Message Part 3.
+Message Most things are not very sticky.
+
+Message Level 1/6. Entwine.
+
+######
+##22##
+#o**.#
+#o..p#
+######
+
+
+
+Message Level 2/6. Minimize.
+
+#######
+##.22##
+#o.**.#
+#o.#.p#
+#######
+
+(
+Message Level 3/6. Over.
+(
+#######
+##...##
+##...##
+##*p*##
+##8.8##
+##.#.##
+#..o..#
+#.ooo.#
+#.....#
+#######
+)
+
+(63 steps, 8452 positions explored)
+(lrdul rddlu uurrl dudrd dlurl uuddu ldrdu rdddu dllud rrddu urddl uuddl rll)
+#######
+##...##
+##.p.##
+##.*.##
+##*8*##
+##.#.##
+#..o..#
+#.ooo.#
+#.....#
+#######
+
+(
+(87 steps, 38895 positions explored)
+(rdrdu luldl durlu rdrul llddu drrrd duuuu ddulr ldurd ddddu udlrr uluul llrrl lurrd rddud rddll llrrl rr)
+#######
+#..p..#
+#..*..#
+#.*8*.#
+##.#.##
+#..o..#
+#.ooo.#
+#.....#
+#######
+)
+)
+
+Message Level 3/6. Separate.
+(
+#######
+##.p.##
+##...##
+#.o8o.#
+#.@8@.#
+#.....#
+#######
+)
+
+#######
+##.p.##
+##...##
+##o*o##
+#.@8@.#
+#.....#
+#######
+
+(
+#######
+###o###
+###o###
+###o###
+###o###
+##...##
+##...##
+##.p.##
+##...##
+##.#.##
+#..8..#
+#.**8.#
+#.....#
+#######
+)
+
+(
+Message Level 5/6. Escape.
+#######
+##*8..#
+##*...#
+####..#
+##.*..#
+#.o2o.#
+#.p...#
+##..###
+#######
+)
+
+Message Level 4/6. Skate.
+(downside: does not require the player to do as much magic on the left hand side)
+(cf next puzzle for what that was)
+(believe it or not, the top is extremely necessary to prevent a sequence break)
+#############
+#.8.#####.8o#
+#..p#888##8##
+#.8.#*****.##
+#........o.o#
+##8888888...#
+##******#*.*#
+#########*8*#
+#############
+
+(
+##############
+##########.8o#
+#####8888##*##
+#####******..#
+###..p.8..o.o#
+##88888888...#
+##*******#*.*#
+##########*8*#
+##############
+)
+
+Message Level 5/6. Pocket.
+
+########
+#.8.####
+#..p####
+#.8.####
+#.o.o.##
+##.888.#
+##****##
+########
+
+
+Message Level 6/6. Save.
+(ruull llrlu dlrlu drrrr rdldu lrlud uuulr lddul dllrl rrrrl lludu rdrr)
+
+
+#########
+#o#@@.*8#
+#8.@..**#
+#.......#
+#####.2.#
+#####.p.#
+#########
+
+
+
+
+(
+###############
+#.8.######....#
+#.8.#8888######
+#.p.#..******##
+#.o.o.........#
+##o288888888.##
+##*******######
+##########....#
+###############
+
+)
+
+
+
+
+Message Part 4.
+Message Glue is really sticky.
+
+Message Level 1/6. Rub.
+
+######
+#....#
+#.83##
+#..oo#
+#.92##
+#...p#
+######
+
+Message Level 2/6. Wash.
+(TODO: replace? it's ok)
+
+#######
+##.p.##
+##...##
+##9o8##
+#.2o2.#
+#.....#
+#######
+
+Message Level 3/6. Intermingle.
+
+######
+#p...#
+#.8..#
+#o89o#
+#o..o#
+#o89o#
+#.8..#
+#....#
+######
+
+Message Level 4/6. Unlock.
+(TOO LONG?)
+
+#######
+#..p..#
+#.9.9.#
+#.999.#
+#.###.#
+#.888.#
+#.###.#
+#..o..#
+#.....#
+#.....#
+#######
+
+
+Message Level 5/6. Configure.
+(TOO HARD)
+######
+#...9#
+#.33##
+#.3.o#
+#.33##
+#...p#
+######
+
+Message Level 6/6. Lock. 
+(TOO FIDDLY. ALSO UGLY)
+
+#######
+#..p..#
+#o2.2o#
+#o2822#
+#.###9#
+#.9999#
+#.###.#
+#.....#
+#######
+
+(
+#######
+#.....#
+#..9..#
+#.333.#
+#.###.#
+#.opo.#
+#.###.#
+#.222.#
+#..8..#
+#.....#
+#######
+
+#######
+#.....#
+#.....#
+#.8o8.#
+#.###.#
+#.999.#
+#.###.#
+#..o..#
+#..p..#
+#.....#
+#######
+)
+
+(
+Message Level 5/5. Count.
+
+#######
+#..p..#
+#.....#
+#.22o.#
+#.#.#.#
+#.###.#
+#.#.#.#
+#.....#
+#.339.#
+#.....#
+#######
+)
+
+
+
+
+Message Part 5.
+Message Cover the targets in each level.
+
+Message Level 1/6. Corner.
+( UNNECESSARILY COMPLEX? )
+
+#####
+#9o##
+#.###
+#.@3#
+#8@o#
+#...#
+###p#
+#####
+
+Message Level 2/6. Teleport.
+(TODO -- should this steal the name SCREEN from PEEK?)
+(TODO: should I rotate it? or remove the unnecessary bottom space?)
+(... is that bottom space is actually unnecessary in this version?)
+
+(This version is more unique, but the end feels more clunky/harder)
+(
+######
+#....#
+#....#
+#.##.#
+#....#
+#.**.#
+#.23.#
+#....#
+#p##.#
+#....#
+#.22.#
+#.oo.#
+#....#
+#.##.#
+#....#
+#....#
+######
+)
+
+(Alt skins)
+(
+#################
+#.......p.......#
+#..#.*2.#.2o.#..#
+#..#.*3.#.2o.#..#
+#...............#
+#################
+)
+
+(TODO: verify that this is solvable)
+##############
+#.......p....#
+#..#.*2.#.2o.#
+#..#.*3.#.2o.#
+#............#
+##############
+
+(
+######
+#....#
+#....#
+#.##.#
+#....#
+#.**.#
+#.23.#
+#....#
+#p##.#
+#....#
+#.22.#
+#.oo.#
+#....#
+######
+)
+
+(
+(this version feels less unique -- it's solvable with both sides as the blocker)
+(however, the ending felt cleaner/less clunky?)
+######
+#....#
+#....#
+#.##.#
+#....#
+#.**.#
+#.23.#
+#....#
+#p##.#
+#....#
+#.2@.#
+#.oo.#
+#....#
+#.##.#
+#....#
+#....#
+######
+)
+
+
+Message Level 3/6. Insert.
+(
+(TOO HARD)
+(126 steps, 210349 positions explored)
+(luudl lrrlr rdulr ldllr ulrur lrrdu ldrud dulll dllrr lrudr rrllr ludll llrrr luudu ddllr lrrlu rdrru drrul dlulr duurl dldll rrlru druru rldud rlrld u)
+#########
+#..3#3..#
+#...o..8#
+#..@.@.p#
+#########
+)
+
+(better but not great)
+(98 steps, 89743 positions explored)
+(ludul lrrlr rldll ullrr lllrr drurr rudlr luddl rlllu drrur rudlr ldllr ulrud duduu rldld llrrl rudur rurld udrlr dlu)
+#########
+#..3#@..#
+#...o..8#
+#..3.@.p#
+#########
+
+Message Level 4/6. Touch.
+(used to be called JUSTIFY)
+(TODO: A LOT BETTER -- very fiddly and the bot-left is inelegant)
+
+#######
+#2@.oo#
+#33p@2#
+#...99#
+###...#
+#######
+
+(Simpler version?
+#######
+#8*...#
+#99p*8#
+#...99#
+#oo...#
+#######
+)
+
+(Backup version?
+(TOO HARD)
+
+#######
+#2@.oo#
+#33p@2#
+#...99#
+#.....#
+#######
+)
+
+(Draft version: 
+(TOO HARD)
+(242 steps, 162333 positions explored)
+(dlldr rrlrl rrlrl lrlud uurld lrrlr duuur ldudl ddudu rrudl ludur ldlru dduru dlurr lrllr dldru luudl drldr rludr luuru rldud dullr rrdul llddu rrudl rllrr uudlr ddulu dlrlr rludu urrdl ulrdu ldrll rduru llrdd rllrd urlld uurrl ddudr uulrr ldudl ulrrr dluld uldld urlrr lldrr lruur lurrl lr)
+
+#######
+#2@...#
+#33p*8#
+#...@3#
+#...oo#
+#######
+
+)
+
+(Draft version:
+(TOO HARD)
+(162 steps, 38791 positions explored)
+(ddrrl lrlrl rrlrl udlru duuur lduld ruddd uduuu rldur ldddl lrrlr uurld udrlr llldu rrduu udull lrrld lddru drrll urduu durrl rlddu rullr lrldl durlr duuur rddlr lrull dlrdu urldr lllrr lrurr ll)
+#######
+#2@...#
+#33p*8#
+#...33#
+#...oo#
+#######
+)
+
+
+Message Level 5/6. Screen.
+(used to be called PEEK)
+
+(55 steps, 2672 positions explored)
+(urrrr dduld lduru ullrl durrd drulu llldr urrdd durul ullld duurl)
+
+#######
+#.....#
+#p2#o.#
+#@@.9.#
+##...##
+#######
+
+(
+(99 steps, 10363 positions explored)
+(drrll rudrr ruudl rlddl ruldu lludr ludrd rurru ullld urrrd dulul llrdu rrddr luull rllrd uldru rrddd uruul llldd uurl)
+#######
+(###..##)
+#*9...#
+#p2#@.#
+#oo...#
+##...##
+#######
+)
+
+Message Level 6/6. End.
+(
+(it's solvable. trust me.
+)
+##############
+##8.8##*9*#8*#
+#..8..#*8*#8*#
+#*.....ooo98*#
+##*.#p.ooo98##
+#*.....ooo989#
+#..9..#*8*#89#
+##9.9##*9*#89#
+##############
+)
+
+(
+(this one i'm less sure about, but i think so)
+##############
+##8.8##*9*#8*#
+#..8..#*8*#8*#
+#*.....ooo98*#
+##*.##pooo98##
+#*.....ooo989#
+#..9..#*8*#89#
+##9.9##*9*#89#
+##############
+)
+
+
+(this one i'm even less sure about, but i think so)
+##############
+##8.8##*9*#8*#
+#.8.8.#*8*#8*#
+#......ooo98*#
+##9.##pooo98##
+#......ooo989#
+#.*.*.#*8*#89#
+##*.*##*9*#89#
+##############
+
+
+(TODO: variants on the level contents??? 
+e.g. 2 glue but 4 glass? seems a bit more planning required that way)
+
+(TODO: are the steps immediately to the left of the blockers required?
+That is, is the following solvable?)
+(
+(I don't think so -- in fact almost certainly not)
+##############
+##8.8##*9*#8*#
+#..8.##*8*#8*#
+#*.....ooo98*#
+##*.##pooo98##
+#*.....ooo989#
+#..9.##*8*#89#
+##9.9##*9*#89#
+##############
+)
+
+(
+(I want to believe this is doable, but it also probably isnt.)
+###############
+##8.8###*9*#8*#
+#..8.###*8*#8*#
+#*......ooo98*#
+##*.##.pooo98##
+#*......ooo989#
+#..9.###*8*#89#
+##9.9###*9*#89#
+###############
+)
+
+(
+(This is surprisingly hard! 
+I think it's probably a good level. Assuming it's solvable)
+##############
+##8.8##*9*#8*#
+#..8.##*8*#8*#
+#9.....ooo98*#
+##..##po.o98##
+#9.....ooo989#
+#..*.##*8*#89#
+##*.*##*9*#89#
+##############
+)
+
+(testing version for planning only)
+(
+##############
+##9.9##*9*#8*#
+#..9.##*8*#8*#
+#9.....ooo98*#
+##9.##pooo98##
+#9.....ooo989#
+#..9.##*8*#89#
+##9.9##*9*#89#
+##############
+)
+
+(
+(almost certainly boring)
+##############
+##8.8##*9*#8*#
+#..8.##*8*#8*#
+#*.....ooo98*#
+##*.#p.ooo98##
+#*.....ooo989#
+#..9.##*8*#89#
+##9.9##*9*#89#
+##############
+)
+
+
+(
+(123 steps, 9059 positions explored)
+(ddrrd rrudl ruldu lludu rlrud drrrr ruudu lrudl uruul lrulu lllrd urldr urdrd ulrdu dlrlu lllll lddud duddu drldr udrrd duldu lrrll rluud rlrdd uud)
+###########
+##......###
+#...***..##
+#..####...#
+#.8#ooo...#
+#.8#ooo#9.#
+#.p#ooo#9.#
+#....###..#
+##...99...#
+###......##
+###########
+)
+
+(
+(182 steps, 8479 positions explored)
+(rdduu dulru ullrd ludlr rdddd ldlru ldlrl udlul udrrr rruuu ulldd uduur uuull lrdur ldrud rrlrd uddul rlull lllld duddu drldu rdlrl rdudr rddlu dulrl rrllu udrrd lduud lulud uuduu duudu rlruu rlrrl rrlrr lrdud rrdud lr)
+###########
+##......###
+#...***..##
+#..####...#
+#.8#ooo...#
+#.8#ooo#p.#
+#.8#ooo#9.#
+#....###..#
+##...99...#
+###......##
+###########
+)
+
+(
+(145 steps, 100971 positions explored)
+(ddrdr rrudl ruldu lludu uddrr rrrur udlur udulr ululr ulull ldrur lrdur drlrd uddul rulll lllld duddu ddudr lrrlr ddduu dlulr rlrrl rdrrr ruuur luduu uddul rdddd dllll llurd)
+###########
+##......###
+#...***..##
+#..####...#
+#.8#ooo...#
+#.8#ooo#9.#
+#.p.ooo#9.#
+#....###..#
+##...99...#
+###......##
+###########
+)
+
+(
+(156 steps, 1120913 positions explored)
+(rdduu dulru lulrl lrldu uulll rdurl drurd rdudd udlll ddddd rrudl ruldu lludu llrrl uulud uudur lruur lrrlr rlrrl rdudd udrul lllld ddddu duudu udulr udulr lruud durlr rlrud rlrud udrrd u)
+###########
+##......###
+#..***...##
+#..###....#
+#.8#ooo...#
+#.8#ooo#p.#
+#.8#ooo#9.#
+#....###..#
+##...99...#
+###......##
+###########
+)
+
+(
+##############
+#......#88#*8#
+#.888..#**#*8#
+#.......ooo8##
+#.***.p.ooo8##
+#.......ooo8##
+#.999..#99#98#
+#......#88#98#
+##############
+)
+
+(
+##############
+##8.8##888#8*#
+#..8..#***#8*#
+#*.....ooo88*#
+##*.#p.ooo88##
+#*.....ooo889#
+#..9..#999#89#
+##9.9##888#89#
+##############
+)
+
+
+
+
+(
+##############
+##8.8##888#8*#
+#.....#***#8*#
+#*......oo88*#
+##..#p..oo88##
+#*......oo889#
+#.....#999#89#
+##9.9##888#89#
+##############
+)
+
+
+(TOO HARD)
+(
+(242 steps, 20081 positions explored)
+(urlur drulu rdurl ruudd urdrd uddud lrlrd duudu udulr ululr ldudl rrddd ddlrl lruld lruld ulduu lldrd udurr llrlu dullu duudu uduud rulrl ruurl rrlrd udull ddddd drrdr rrruu uuuul rdudl rdddd dllll ulluu uuurr urlrd udurr drddu udulr duddu lrlul ulrll rllrd luldl duddu ddudd urdlr ddrlr ud)
+###########
+##.9....###
+#..8.....##
+#9*####...#
+#..#ooo...#
+#..#o@o#..#
+#..#ooo#..#
+#...p###*9#
+##.....8..#
+###....9.##
+###########
+)
+
+
+(
+###########
+##.9....###
+#..8.....##
+#9*#####..#
+#..#ooo#..#
+#..#o@o#..#
+#...ooo#..#
+#..p.###*9#
+##.....8..#
+###....9.##
+###########
+)
+
+
+Message Congratulations!
+
+(Message This is still in development, so please let me know if you have comments!)
+
+(
+##############
+#......#88#*8#
+#.888..#**#*8#
+#.......ooo8##
+#.***.p.ooo8##
+#.......ooo8##
+#.999..#99#98#
+#......#88#98#
+##############
+)
+
+(
+(!)
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+)
+
+(
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+)
+
+(
+(!)
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+)
+
+(
+(!)
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+)
+
+(
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+)
+
+(
+(!)
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+)
+
+(
+(!)
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+)
+
+(
+###########
+###.....###
+#....o....#
+#..@#*#@..#
+###..#..###
+##...p...##
+##...#...##
+###########
+)
+
+(
+#######
+##.p.##
+##o.o##
+##.9.##
+#.282.#
+#.....#
+#######
+
+#######
+#.....#
+#..p..#
+##o.o##
+##.9.##
+#.292.#
+#.....#
+#######
+)
+(
+#######
+#..p..#
+#.o9o.#
+##8.8##
+#.o9o.#
+#.....#
+#######
+)

@@ -1,0 +1,1128 @@
+title Slime Squisher
+author Bagenzo
+homepage https://bagenzo.itch.io/
+
+========
+OBJECTS
+========
+
+Background
+#96461c #ab5020
+00000
+00100
+01000
+00010
+00000
+
+
+Wall
+#96831c
+
+Lilypad
+lightgreen #96461c #f05656 #196909
+30003
+00200
+22222
+00200
+30003
+
+Eaten
+lightgreen #96461c #f05656 #196909 #942b2b
+33333
+00000
+44444
+00000
+33333
+
+Sink
+#aeb0f1
+...0.
+..000
+.0.0.
+000..
+.0...
+
+Sunk
+#1c6c96
+...0.
+..000
+.0.0.
+000..
+.0...
+
+AntiPlayerWall
+black yellow
+00110
+01100
+11001
+10011
+00110
+
+PlayerUp
+#540707 #70c672 #81e484 #2db62d #509c4b #3f7a3b #2f5b2c #196909
+.010.
+.234.
+.345.
+.456.
+45.57
+
+PlayerRight
+#509c4b #3f7a3b #2db62d #81e484 #540707 #70c672 #2f5b2c #196909
+0....
+10234
+.1025
+16104
+7....
+
+PlayerLeft
+#196909 #540707 #509c4b #3f7a3b #2f5b2c #70c672 #2db62d #81e484
+....0
+12343
+5623.
+17623
+....2
+
+PlayerDown
+#196909 #3f7a3b #509c4b #2f5b2c #2db62d #81e484 #540707 #70c672
+01.12
+.312.
+.124.
+.245.
+.676.
+
+
+(Red Refuse)
+RedOne
+#942b2b #f05656 #e30000
+.....
+..0..
+.010.
+01120
+.000.
+
+RedTwo
+#942b2b #f05656 #e30000
+.....
+..0..
+.010.
+02120
+.000.
+
+RedThree
+#942b2b #e30000 #f05656
+.....
+..0..
+.010.
+01210
+.000.
+
+(Orange Ooze)
+OrangeOne
+#945f2b #f0a356 #e37100 
+..0..
+.010.
+01120
+.010.
+..0..
+
+OrangeTwo
+#945f2b #f0a356 #e37100 
+..0..
+.010.
+02120
+.010.
+..0..
+
+OrangeThree
+#945f2b #f0a356 #e37100 
+..0..
+.010.
+02120
+.020.
+..0..
+
+(Yellow Yuck)
+YellowOne
+#b9b80d #dedd8f #fffe25
+...1.
+..101
+.1001
+10021
+.111.
+
+YellowTwo
+#b9b80d #dedd8f #fffe25
+...1.
+..101
+.1001
+12021
+.111.
+
+YellowThree
+#b9b80d #dedd8f #fffe25
+...1.
+..121
+.1001
+12021
+.111.
+
+YellowDepleted
+#ffffff #f1f1d2
+...1.
+..101
+.1001
+10001
+.111.
+
+(Green Gunk)
+GreenOne
+#64b90d #9DBE7A #93ff25
+.000.
+01110
+01120
+01110
+.000.
+
+GreenTwo
+#64b90d #9DBE7A #93ff25
+.000.
+01110
+02120
+01110
+.000.
+
+GreenThree
+#64b90d #9DBE7A #93ff25
+.000.
+01110
+02120
+01210
+.000.
+
+(Blue Blobs)
+BlueOne
+#0d176e #4565cc #aeb0f1
+..0..
+.010.
+.010.
+01120
+.000.
+
+BlueTwo
+#0d176e #4565cc #aeb0f1
+..0..
+.010.
+.010.
+02120
+.000.
+
+BlueThree
+#0d176e #4565cc #aeb0f1
+..0..
+.010.
+.020.
+02120
+.000.
+
+Stopper
+#4565cc #96461c
+..0..
+.010.
+.010.
+01110
+.000.
+
+DeadStopper
+#f05656 #96461c
+..0..
+.010.
+.010.
+01110
+.000.
+
+DeadStopperCleanup
+#f05656 #96461c
+..0..
+.010.
+.010.
+01110
+.000.
+
+
+
+(Purple Pectin)
+IndigoOne
+#9a16d8 #da8bff #f9ebff
+..0..
+.010.
+.010.
+.020.
+..0..
+
+IndigoTwo
+#9a16d8 #da8bff #f9ebff
+..0..
+.020.
+.010.
+.020.
+..0..
+
+IndigoThree
+#9a16d8 #da8bff #f9ebff
+..0..
+.020.
+.020.
+.020.
+..0..
+
+IndigoDepleted
+#ffffff #da8bff #f9ebff
+..2..
+.200.
+.000.
+.002.
+..2..
+
+(Violet Alluvium)
+VioletOne
+#ff1493 #ff8bea #ffc0cb
+1...0
+.100.
+.020.
+.000.
+0...0
+
+VioletTwo
+#ff1493 #ff8bea #ffc0cb
+1...0
+.100.
+.020.
+.001.
+0...1
+
+VioletThree
+#ff1493 #ff8bea #ffc0cb
+1...0
+.100.
+.020.
+.101.
+1...1
+
+
+BlackOne
+black #e30000 #e37100 #fffe25 #93ff25 #4565cc #9a16d8 #ff1493
+..6..
+.102.
+..5..
+.304.
+..7..
+
+BlackTwo
+black #e30000 #e37100 #fffe25 #93ff25 #4565cc #9a16d8 #ff1493
+.060.
+.102.
+..5..
+.304.
+.070.
+
+BlackThree
+black #e30000 #e37100 #fffe25 #93ff25 #4565cc #9a16d8 #ff1493
+.060.
+.102.
+00500
+.304.
+.070.
+
+SlimeTarget
+lightgreen
+
+RightMove
+#196909 #2db62d
+.0.1.
+..0.1
+..0.1
+..0.1
+.0.1.
+
+LeftMove
+#2db62d #196909
+.0.1.
+0.1..
+0.1..
+0.1..
+.0.1.
+
+UpMove
+#2db62d #196909
+.000.
+0...0
+.111.
+1...1
+.....
+
+DownMove
+#196909 #2db62d
+.....
+0...0
+.000.
+1...1
+.111.
+
+DeadMove
+#ff1493
+.....
+.....
+.....
+.....
+.....
+
+
+RiverV
+#1c6c96 #207bab
+01110
+01110
+01110
+01110
+01110
+
+RiverH
+#1c6c96 #207bab
+00000
+11111
+11111
+11111
+00000
+
+RiverC
+#1c6c96 #207bab
+01110
+11111
+11111
+11111
+01110
+
+Pond
+#207bab #1c6c96 
+00000
+01110
+01110
+01110
+00000
+
+Lake
+#207bab
+
+VertLake
+#207bab
+
+LakeEdgeSouth
+#207bab #1c6c96 #5a2a10
+22222
+22222
+11111
+00000
+00000
+
+TargetRed !
+red
+
+TargetOrange @
+orange
+
+TargetYellow $
+yellow
+
+TargetGreen %
+green
+
+TargetBlue &
+blue
+
+TargetIndigo *
+purple
+
+TargetViolet +
+pink
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = PlayerDown
+A = AntiPlayerWall
+R = RedOne
+O = OrangeOne
+Y = YellowDepleted
+G = GreenOne
+B = BlueOne
+I = IndigoDepleted
+N = VioletOne
+M = BlackOne
+1 = RiverV
+2 = RiverH
+3 = RiverC
+4 = Pond
+5 = Lilypad
+6 = GreenOne and AntiPlayerWall
+7 = Lake
+8 = LakeEdgeSouth
+9 = VertLake
+
+MoveMarkers = LeftMove or RightMove or UpMove or DownMove
+
+Player = PlayerDown or PlayerLeft or PlayerRight or PlayerUp
+
+RedSlime = RedOne or RedTwo or RedThree
+OrangeSlime = OrangeOne or OrangeTwo or OrangeThree
+YellowSlime = YellowOne or YellowTwo or YellowThree
+GreenSlime = GreenOne or GreenTwo or GreenThree
+Blueslime = BlueOne or BlueTwo or BlueThree
+IndigoSlime = IndigoOne or IndigoTwo or IndigoThree or IndigoDepleted
+VioletSlime = VioletOne or VioletTwo or VioletThree
+BlackSlime = BlackOne or BlackTwo or BlackThree
+
+SlimeType = RedSlime or OrangeSlime or YellowSlime or YellowDepleted or Blueslime or IndigoSlime or IndigoDepleted or  VioletSlime or BlackSlime
+
+NotOrange = RedSlime or YellowSlime or GreenSlime or Blueslime or IndigoSlime or IndigoDepleted or VioletSlime or BlackOne
+NotIndigo = RedSlime or OrangeSlime or YellowSlime or GreenSlime or Blueslime
+NotBlue = RedSlime or OrangeSlime or YellowSlime or GreenSlime or IndigoSlime or VioletSlime or BlackOne
+NotViolet = RedSlime or OrangeSlime or YellowSlime or GreenSlime or IndigoSlime or IndigoDepleted or YellowDepleted or Blueslime
+
+Obstacle = SlimeType or Wall or GreenSlime
+ObstacleNoGreen = SlimeType or Wall
+Water = RiverV or RiverH or RiverC or Pond or Lake or LakeEdgeSouth or VertLake
+Targets = TargetRed or TargetOrange or TargetYellow or TargetGreen or TargetBlue or TargetIndigo or TargetViolet
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Lilypad Eaten
+Water
+Stopper, DeadStopper, DeadStopperCleanup
+Player, Wall, AntiPlayerWall
+SlimeType, GreenSlime
+SlimeTarget
+LeftMove
+RightMove
+DownMove
+UpMove
+Targets
+Sink, Sunk
+DeadMove
+
+======
+RULES
+======
+(win on action) (for testing)
+[action Player] -> [action Player] win
+
+
+
+(Collisions and workarounds)
+(sinking slime)
+late [GreenSlime Lilypad] -> [Eaten] again
+late [GreenSlime Water] -> [Water Sink] again
+(blueslime hits obstacles)
+[ MoveMarkers | Blueslime | Player | Obstacle] -> [| Blueslime | Player | Obstacle]
+(frog can't step on anti frog tile)
+[> Player | AntiPlayerWall] -> [Player | AntiPlayerWall]
+(slime is eaten by trap)
+late [SlimeType Lilypad] -> [Eaten]
+(no pushing slime through walls)
+[> Player | SlimeType | Wall] -> [Player | SlimeType | Wall]
+(greenslime hits walls)
+[> Player | GreenSlime | ObstacleNoGreen] -> [ Player | GreenSlime | ObstacleNoGreen]
+
+
+(
+[> Player | GreenSlime | GreenSlime | ObstacleNoGreen] -> [ Player | GreenSlime | GreenSlime | ObstacleNoGreen]
+)
+[> Player | GreenSlime | GreenSlime | GreenSlime | ObstacleNoGreen] -> [ Player | GreenSlime | GreenSlime | GreenSlime | ObstacleNoGreen]
+[> Player | GreenSlime | GreenSlime | GreenSlime | GreenSlime | ObstacleNoGreen] -> [ Player | GreenSlime | GreenSlime | GreenSlime | GreenSlime | ObstacleNoGreen]
+
+
+(player can't swim)
+[> Player | Water] -> [Player | Water]
+(zero-distance push cannot transform yellowdepelted into yellowone)
+[> Player | YellowDepleted |Obstacle] -> [Player | YellowDepleted |Obstacle]
+(animation for trap)
+[Eaten] -> [Lilypad]
+
+(Blueslime movement)
+[> Player | Blueslime] -> [Player | > Blueslime Stopper]
+[ Blueslime Stopper] [MoveMarkers] -> [Blueslime] []
+
+(stopper cleanup)
+
+[MoveMarkers | > Blueslime | Obstacle] [Stopper] -> [MoveMarkers |Blueslime | Obstacle] [DeadStopper]
+[> Player] [Stopper] -> [> Player] [DeadStopper]
+
+(Basic slime movement)
+[> Player | SlimeType] -> [Player | > SlimeType]
+
+(Greenslime workarounds)
+[> Player | GreenSlime | Wall] -> [Player | GreenSlime | Wall]
+
+(Slime combination)
+(Red 1+1=2)
+late right [RightMove RedOne | RedOne] -> [|RedTwo]
+late left [LeftMove RedOne | RedOne] -> [|RedTwo]
+late up [UpMove RedOne | RedOne] -> [|RedTwo]
+late down [DownMove RedOne | RedOne] -> [|RedTwo]
+(Red 2+1=3)
+late right [RightMove RedTwo | RedOne] -> [|RedThree]
+late left [LeftMove RedTwo | RedOne] -> [|RedThree]
+late up [UpMove RedTwo | RedOne] -> [|RedThree]
+late down [DownMove RedTwo | RedOne] -> [|RedThree]
+late right [RightMove RedOne | RedTwo] -> [|RedThree]
+late left [LeftMove RedOne | RedTwo] -> [|RedThree]
+late up [UpMove RedOne | RedTwo] -> [|RedThree]
+late down [DownMove RedOne | RedTwo] -> [|RedThree]
+(Red 2+2=Orange1)
+late right [RightMove RedTwo | RedTwo] -> [|OrangeOne]
+late left [LeftMove RedTwo | RedTwo] -> [|OrangeOne]
+late up [UpMove RedTwo | RedTwo] -> [|OrangeOne]
+late down [DownMove RedTwo | RedTwo] -> [|OrangeOne]
+(Red 3+1=Orange1)
+late right [RightMove RedOne | RedThree] -> [|OrangeOne]
+late left [LeftMove RedOne | RedThree] -> [|OrangeOne]
+late up [UpMove RedOne | RedThree] -> [|OrangeOne]
+late down [DownMove RedOne | RedThree] -> [|OrangeOne]
+late right [RightMove RedThree | RedOne] -> [|OrangeOne]
+late left [LeftMove RedThree | RedOne] -> [|OrangeOne]
+late up [UpMove RedThree | RedOne] -> [|OrangeOne]
+late down [DownMove RedThree | RedOne] -> [|OrangeOne]
+(Orange 1+1=2)
+late right [RightMove OrangeOne | OrangeOne] -> [|OrangeTwo]
+late left [LeftMove OrangeOne | OrangeOne] -> [|OrangeTwo]
+late up [UpMove OrangeOne | OrangeOne] -> [|OrangeTwo]
+late down [DownMove OrangeOne | OrangeOne] -> [|OrangeTwo]
+(Orange 2+1=3)
+late right [RightMove OrangeTwo | OrangeOne] -> [|OrangeThree]
+late left [LeftMove OrangeTwo | OrangeOne] -> [|OrangeThree]
+late up [UpMove OrangeTwo | OrangeOne] -> [|OrangeThree]
+late down [DownMove OrangeTwo | OrangeOne] -> [|OrangeThree]
+late right [RightMove OrangeOne | OrangeTwo] -> [|OrangeThree]
+late left [LeftMove OrangeOne | OrangeTwo] -> [|OrangeThree]
+late up [UpMove OrangeOne | OrangeTwo] -> [|OrangeThree]
+late down [DownMove OrangeOne | OrangeTwo] -> [|OrangeThree]
+(Orange 2+2=Yellow1)
+late right [RightMove OrangeTwo | OrangeTwo] -> [|YellowOne]
+late left [LeftMove OrangeTwo | OrangeTwo] -> [|YellowOne]
+late up [UpMove OrangeTwo | OrangeTwo] -> [|YellowOne]
+late down [DownMove OrangeTwo | OrangeTwo] -> [|YellowOne]
+(Orange 3+1=Yellow1)
+late right [RightMove OrangeOne | OrangeThree] -> [|YellowOne]
+late left [LeftMove OrangeOne | OrangeThree] -> [|YellowOne]
+late up [UpMove OrangeOne | OrangeThree] -> [|YellowOne]
+late down [DownMove OrangeOne | OrangeThree] -> [|YellowOne]
+late right [RightMove OrangeThree | OrangeOne] -> [|YellowOne]
+late left [LeftMove OrangeThree | OrangeOne] -> [|YellowOne]
+late up [UpMove OrangeThree | OrangeOne] -> [|YellowOne]
+late down [DownMove OrangeThree | OrangeOne] -> [|YellowOne]
+(Yellow 1+1=2)
+late right [RightMove YellowOne | YellowOne] -> [|YellowTwo]
+late left [LeftMove YellowOne | YellowOne] -> [|YellowTwo]
+late up [UpMove YellowOne | YellowOne] -> [|YellowTwo]
+late down [DownMove YellowOne | YellowOne] -> [|YellowTwo]
+(Yellow 2+1=3)
+late right [RightMove YellowTwo | YellowOne] -> [|YellowThree]
+late left [LeftMove YellowTwo | YellowOne] -> [|YellowThree]
+late up [UpMove YellowTwo | YellowOne] -> [|YellowThree]
+late down [DownMove YellowTwo | YellowOne] -> [|YellowThree]
+late right [RightMove YellowOne | YellowTwo] -> [|YellowThree]
+late left [LeftMove YellowOne | YellowTwo] -> [|YellowThree]
+late up [UpMove YellowOne | YellowTwo] -> [|YellowThree]
+late down [DownMove YellowOne | YellowTwo] -> [|YellowThree]
+(Yellow 2+2=Green1)
+late right [RightMove YellowTwo | YellowTwo] -> [|GreenOne]
+late left [LeftMove YellowTwo | YellowTwo] -> [|GreenOne]
+late up [UpMove YellowTwo | YellowTwo] -> [|GreenOne]
+late down [DownMove YellowTwo | YellowTwo] -> [|GreenOne]
+(Yellow 3+1=Green1)
+late right [RightMove YellowOne | YellowThree] -> [|GreenOne]
+late left [LeftMove YellowOne | YellowThree] -> [|GreenOne]
+late up [UpMove YellowOne | YellowThree] -> [|GreenOne]
+late down [DownMove YellowOne | YellowThree] -> [|GreenOne]
+late right [RightMove YellowThree | YellowOne] -> [|GreenOne]
+late left [LeftMove YellowThree | YellowOne] -> [|GreenOne]
+late up [UpMove YellowThree | YellowOne] -> [|GreenOne]
+late down [DownMove YellowThree | YellowOne] -> [|GreenOne]
+(Green 1+1=2)
+ right [> Player | GreenOne | GreenOne | ObstacleNoGreen] -> [|Player|GreenTwo| ObstacleNoGreen]
+ left [> Player | GreenOne | GreenOne| ObstacleNoGreen] -> [|Player|GreenTwo| ObstacleNoGreen]
+ up [> Player | GreenOne | GreenOne| ObstacleNoGreen] -> [|Player|GreenTwo| ObstacleNoGreen]
+ down [> Player | GreenOne | GreenOne| ObstacleNoGreen] -> [|Player|GreenTwo| ObstacleNoGreen]
+(Green 2+1=3)
+ right [> Player | GreenTwo | GreenOne| ObstacleNoGreen] -> [|Player|GreenThree| ObstacleNoGreen]
+ left [> Player | GreenTwo | GreenOne| ObstacleNoGreen] -> [|Player|GreenThree| ObstacleNoGreen]
+ up [> Player | GreenTwo | GreenOne| ObstacleNoGreen] -> [|Player|GreenThree| ObstacleNoGreen]
+ down [> Player | GreenTwo | GreenOne| ObstacleNoGreen] -> [|Player|GreenThree| ObstacleNoGreen]
+ right [> Player | GreenOne | GreenTwo| ObstacleNoGreen] -> [|Player|GreenThree| ObstacleNoGreen]
+ left [> Player | GreenOne | GreenTwo| ObstacleNoGreen] -> [|Player|GreenThree| ObstacleNoGreen]
+ up [> Player | GreenOne | GreenTwo| ObstacleNoGreen] -> [|Player|GreenThree| ObstacleNoGreen]
+ down [> Player | GreenOne | GreenTwo| ObstacleNoGreen] -> [|Player|GreenThree| ObstacleNoGreen]
+(Green 2+2=Blue1)
+ right [> Player | GreenTwo | GreenTwo| ObstacleNoGreen] -> [|Player|BlueOne| ObstacleNoGreen]
+ left [> Player | GreenTwo | GreenTwo| ObstacleNoGreen] -> [|Player|BlueOne| ObstacleNoGreen]
+ up [> Player | GreenTwo | GreenTwo| ObstacleNoGreen] -> [|Player|BlueOne| ObstacleNoGreen]
+ down [> Player | GreenTwo | GreenTwo| ObstacleNoGreen] -> [|Player|BlueOne| ObstacleNoGreen]
+(Green 3+1=Blue1)
+ right [> Player | GreenOne | GreenThree| ObstacleNoGreen] -> [|Player|BlueOne| ObstacleNoGreen]
+ left [> Player | GreenOne | GreenThree| ObstacleNoGreen] -> [|Player|BlueOne| ObstacleNoGreen]
+ up [> Player | GreenOne | GreenThree| ObstacleNoGreen] -> [|Player|BlueOne| ObstacleNoGreen]
+ down [> Player | GreenOne | GreenThree| ObstacleNoGreen] -> [|Player|BlueOne| ObstacleNoGreen]
+ right [> Player | GreenThree | GreenOne| ObstacleNoGreen] -> [|Player|BlueOne| ObstacleNoGreen]
+ left [> Player | GreenThree | GreenOne| ObstacleNoGreen] -> [|Player|BlueOne| ObstacleNoGreen]
+ up [> Player | GreenThree | GreenOne| ObstacleNoGreen] -> [|Player|BlueOne| ObstacleNoGreen]
+ down [> Player | GreenThree | GreenOne| ObstacleNoGreen] -> [|Player|BlueOne| ObstacleNoGreen]
+ (Blue 1+1=2)
+late right [RightMove BlueOne | BlueOne] -> [|BlueTwo Deadmove]
+late left [LeftMove BlueOne | BlueOne] -> [|BlueTwo Deadmove]
+late up [UpMove BlueOne | BlueOne] -> [|BlueTwo Deadmove]
+late down [DownMove BlueOne | BlueOne] -> [|BlueTwo Deadmove]
+(Blue 2+1=3)
+late right [RightMove BlueTwo | BlueOne] -> [|BlueThree Deadmove]
+late left [LeftMove BlueTwo | BlueOne] -> [|BlueThree Deadmove]
+late up [UpMove BlueTwo | BlueOne] -> [|BlueThree Deadmove]
+late down [DownMove BlueTwo | BlueOne] -> [|BlueThree Deadmove]
+late right [RightMove BlueOne | BlueTwo] -> [|BlueThree Deadmove]
+late left [LeftMove BlueOne | BlueTwo] -> [|BlueThree Deadmove]
+late up [UpMove BlueOne | BlueTwo] -> [|BlueThree Deadmove]
+late down [DownMove BlueOne | BlueTwo] -> [|BlueThree Deadmove]
+(Blue 2+2=Indigo1)
+late right [RightMove BlueTwo | BlueTwo] -> [|IndigoOne Deadmove]
+late left [LeftMove BlueTwo | BlueTwo] -> [|IndigoOne Deadmove]
+late up [UpMove BlueTwo | BlueTwo] -> [|IndigoOne Deadmove]
+late down [DownMove BlueTwo | BlueTwo] -> [|IndigoOne Deadmove]
+(Blue 3+1=Indigo1)
+late right [RightMove BlueOne | BlueThree] -> [|IndigoOne Deadmove]
+late left [LeftMove BlueOne | BlueThree] -> [|IndigoOne Deadmove]
+late up [UpMove BlueOne | BlueThree] -> [|IndigoOne Deadmove]
+late down [DownMove BlueOne | BlueThree] -> [|IndigoOne Deadmove]
+late right [RightMove BlueThree | BlueOne] -> [|IndigoOne Deadmove]
+late left [LeftMove BlueThree | BlueOne] -> [|IndigoOne Deadmove]
+late up [UpMove BlueThree | BlueOne] -> [|IndigoOne Deadmove]
+late down [DownMove BlueThree | BlueOne] -> [|IndigoOne Deadmove]
+ (Indigo 1+1=2)
+late right [RightMove IndigoOne | IndigoOne] -> [|IndigoTwo Deadmove]
+late left [LeftMove IndigoOne | IndigoOne] -> [|IndigoTwo Deadmove]
+late up [UpMove IndigoOne | IndigoOne] -> [|IndigoTwo Deadmove]
+late down [DownMove IndigoOne | IndigoOne] -> [|IndigoTwo Deadmove]
+(Indigo 2+1=3)
+late right [RightMove IndigoTwo | IndigoOne] -> [|IndigoThree Deadmove]
+late left [LeftMove IndigoTwo | IndigoOne] -> [|IndigoThree Deadmove]
+late up [UpMove IndigoTwo | IndigoOne] -> [|IndigoThree Deadmove]
+late down [DownMove IndigoTwo | IndigoOne] -> [|IndigoThree Deadmove]
+late right [RightMove IndigoOne | IndigoTwo] -> [|IndigoThree Deadmove]
+late left [LeftMove IndigoOne | IndigoTwo] -> [|IndigoThree Deadmove]
+late up [UpMove IndigoOne | IndigoTwo] -> [|IndigoThree Deadmove]
+late down [DownMove IndigoOne | IndigoTwo] -> [|IndigoThree Deadmove]
+(Indigo 2+2=Violet1)
+late right [RightMove IndigoTwo | IndigoTwo] -> [|VioletOne Deadmove]
+late left [LeftMove IndigoTwo | IndigoTwo] -> [|VioletOne Deadmove]
+late up [UpMove IndigoTwo | IndigoTwo] -> [|VioletOne Deadmove]
+late down [DownMove IndigoTwo | IndigoTwo] -> [|VioletOne Deadmove]
+(Indigo 3+1=Violet1)
+late right [RightMove IndigoOne | IndigoThree] -> [|VioletOne Deadmove]
+late left [LeftMove IndigoOne | IndigoThree] -> [|VioletOne Deadmove]
+late up [UpMove IndigoOne | IndigoThree] -> [|VioletOne Deadmove]
+late down [DownMove IndigoOne | IndigoThree] -> [|VioletOne Deadmove]
+late right [RightMove IndigoThree | IndigoOne] -> [|VioletOne Deadmove]
+late left [LeftMove IndigoThree | IndigoOne] -> [|VioletOne Deadmove]
+late up [UpMove IndigoThree | IndigoOne] -> [|VioletOne Deadmove]
+late down [DownMove IndigoThree | IndigoOne] -> [|VioletOne Deadmove]
+
+(unknown what to do with these)
+ (Violet 1+Whatever=2)
+late right [RightMove VioletOne | NotViolet] -> [|VioletTwo]
+late left [LeftMove VioletOne | NotViolet] -> [|VioletTwo]
+late up [UpMove VioletOne | NotViolet] -> [|VioletTwo]
+late down [DownMove VioletOne | NotViolet] -> [|VioletTwo]
+
+late right [RightMove VioletOne | VioletOne] -> [|VioletTwo]
+late left [LeftMove VioletOne | VioletOne] -> [|VioletTwo]
+late up [UpMove VioletOne | VioletOne] -> [|VioletTwo]
+late down [DownMove VioletOne | VioletOne] -> [|VioletTwo]
+(Violet 2+Whatever=3)
+late right [RightMove VioletTwo | NotViolet] -> [|VioletThree]
+late left [LeftMove VioletTwo | NotViolet] -> [|VioletThree]
+late up [UpMove VioletTwo | NotViolet] -> [|VioletThree]
+late down [DownMove VioletTwo | NotViolet] -> [|VioletThree]
+late right [RightMove VioletTwo | VioletOne] -> [|VioletThree]
+late left [LeftMove VioletTwo | VioletOne] -> [|VioletThree]
+late up [UpMove VioletTwo | VioletOne] -> [|VioletThree]
+late down [DownMove VioletTwo | VioletOne] -> [|VioletThree]
+late right [RightMove VioletOne | VioletTwo] -> [|VioletThree]
+late left [LeftMove VioletOne | VioletTwo] -> [|VioletThree]
+late up [UpMove VioletOne | VioletTwo] -> [|VioletThree]
+late down [DownMove VioletOne | VioletTwo] -> [|VioletThree]
+(Violet 2+2=Black1)
+late right [RightMove VioletTwo | VioletTwo] -> [|BlackOne]
+late left [LeftMove VioletTwo | VioletTwo] -> [|BlackOne]
+late up [UpMove VioletTwo | VioletTwo] -> [|BlackOne]
+late down [DownMove VioletTwo | VioletTwo] -> [|BlackOne]
+
+(Violet 3+Whatever=Black1)
+late right [RightMove VioletThree | NotViolet] -> [|BlackOne]
+late left [LeftMove VioletThree | NotViolet] -> [|BlackOne]
+late up [UpMove VioletThree | NotViolet] -> [|BlackOne]
+late down [DownMove VioletThree | NotViolet] -> [|BlackOne]
+
+late right [RightMove VioletOne | VioletThree] -> [|BlackOne]
+late left [LeftMove VioletOne | VioletThree] -> [|BlackOne]
+late up [UpMove VioletOne | VioletThree] -> [|BlackOne]
+late down [DownMove VioletOne | VioletThree] -> [|BlackOne]
+late right [RightMove VioletThree | VioletOne] -> [|BlackOne]
+late left [LeftMove VioletThree | VioletOne] -> [|BlackOne]
+late up [UpMove VioletThree | VioletOne] -> [|BlackOne]
+late down [DownMove VioletThree | VioletOne] -> [|BlackOne]
+(Player directions)
+up [> Player] -> [> PlayerUp]
+down [> Player] -> [> PlayerDown]
+left [> Player] -> [> PlayerLeft]
+right [> Player]-> [> PlayerRight]
+
+ (multi greenslime movement)
+[> Player | GreenSlime | GreenSlime |Greenslime | GreenSlime] -> [> Player | > GreenSlime | > GreenSlime | > GreenSlime | > GreenSlime]
+  [> Player | GreenSlime | GreenSlime |Greenslime] -> [> Player | > GreenSlime | > GreenSlime | > GreenSlime]
+   [> Player | GreenSlime | GreenSlime] -> [> Player | > GreenSlime | > GreenSlime]
+(basic greenslime movement)
+[> Player | GreenSlime] -> [> Player | > GreenSlime]
+
+(Slime movement)
+right [RightMove | SlimeType| no Wall] -> [| > SlimeType|]
+[RightMove] -> [ DeadMove]
+up [UpMove | SlimeType| no Wall] -> [| > SlimeType|]
+[UpMove] -> [DeadMove ]
+left [LeftMove | SlimeType| no Wall] -> [| > SlimeType|]
+[LeftMove] -> [ DeadMove]
+down [DownMove | SlimeType| no Wall] -> [| > SlimeType|]
+[DownMove] -> [ DeadMove]
+
+[right SlimeType] -> [right SlimeType RightMove] again
+[up SlimeType] -> [up SlimeType UpMove] again
+[down SlimeType] -> [down SlimeType DownMove] again
+[left SlimeType] -> [left SlimeType LeftMove] again
+
+
+(Yellow reversion)
+[MoveMarkers YellowDepleted] -> [MoveMarkers YellowOne]
+(orange/yellowdepleted/obstacle will reverse)
+[> OrangeSlime | YellowDepleted] -> [OrangeSlime | YellowOne]
+
+(Blueslime wraparounds)
+late horizontal [Blueslime RiverV |...|Background|Water] -> [Water|...|Background Blueslime| RightMove LeftMove RiverV]
+late vertical [Blueslime RiverH |...|Background|Water] -> [Water|...|Background Blueslime| UpMove DownMove RiverH]
+
+(Lake exception wraparounds)
+
+late vertical [Blueslime Lake |...|Background|LakeEdgeSouth] -> [Lake|...|Background Blueslime| UpMove DownMove LakeEdgeSouth]
+
+late vertical [Blueslime LakeEdgeSouth |...|Background|Lake] -> [LakeEdgeSouth|...|Background Blueslime| UpMove DownMove Lake]
+
+late horizontal [Blueslime Lake |...|Background|Water] -> [Lake|...|Background Blueslime| RightMove LeftMove Lake]
+
+[Blueslime Water] -> [Water Sink]
+
+
+(Indigo reversion)
+[IndigoDepleted] [no NotIndigo] -> [IndigoOne] [no NotIndigo] again
+[IndigoOne] [NotIndigo] -> [IndigoDepleted] [NotIndigo] again
+
+(Slime sinking)
+late [NotBlue Water] -> [Water Sink]
+
+(Croak can't pass through notorange)
+late [MoveMarkers NotOrange] -> [DeadMove NotOrange]
+
+(Victory)
+[RedSlime][TargetRed] -> [RedSlime][SlimeTarget]
+[OrangeSlime][TargetOrange] -> [OrangeSlime][SlimeTarget]
+[YellowSlime][TargetYellow] -> [YellowSlime][SlimeTarget]
+[GreenSlime][TargetGreen] -> [GreenSlime][SlimeTarget]
+[BlueSlime][TargetBlue] -> [BlueSlime][SlimeTarget]
+[IndigoSlime][TargetIndigo] -> [IndigoSlime][SlimeTarget]
+[VioletSlime][TargetViolet] -> [VioletSlime][SlimeTarget]
+
+(sinking animation)
+[Sunk] -> []
+[Sink] -> [Sunk] again
+
+(deadmove)
+[MoveMarkers] [DeadMove] -> [MoveMarkers] []
+[> Player] [DeadMove] -> [> Player] []
+[DeadMove] [Stopper] -> [] [DeadStopper]
+
+(bluestopper dies)
+[DeadStopperCleanup] -> []
+[DeadStopper] -> [DeadStopperCleanup] again
+
+==============
+WINCONDITIONS
+==============
+
+Some SlimeTarget
+
+=======
+LEVELS
+=======
+
+7777777777777
+7...........7
+7...........7
+7...........7
+7...........7
+7...........7
+7...........7
+7...........7
+7...........7
+7888888888887
+
+322222222222223
+1.............1
+1..r.......i..1
+1........b....1
+1r.o.y.g...i..1
+1........#....1
+1..p.......n..1
+1.............1
+1.............1
+322222222222223
+
+7777777777777
+7...........7
+7...b...#...7
+7.p.......b.7
+7...........7
+7...........7
+7.b.........7
+7.........b.7
+7...........7
+7888888888887
+
+32222222222223
+1%#....#.....1
+1..o.y...o...1
+1...r...#####1
+1..rp....oy.#1
+1.r.....#####1
+1......y..o..1
+1...#........1
+1............1
+32222222222223
+
+
+(tutorial)
+message The Puzzle Swamp has been completely overrun with slime...
+message ...so we've sent you, our stickiest, slimiest, most wart-covered puzzle frog to deal with the cleanup.
+message Use your sonic croak to squish all those slimes together!
+77777777777
+7@........7
+7....r....7
+7.........7
+7.........7
+7.r..r..r.7
+7.........7
+7....p....7
+7.........7
+78888888887
+message Four slimes combine into a slime of the next color. 
+message Create a slime of the highest color possible to advance to the next area.
+77777777
+7@.r.#.7
+7......7
+7.r#r..7
+7..p...7
+7.r..#.7
+7......7
+78888887
+(orange)
+message Each slime has special properties...
+77777777777777
+7$...........7
+7..######....7
+7.po..r.....r7
+7...####.....7
+7............7
+7.o.r...r....7
+7.......o....7
+7............7
+78888888888887
+
+(lillypad)
+message Venus fly traps will eat slime!
+message Thankfully, they won't eat frogs. Too crunchy.
+
+7777777777777
+7$...#......7
+7...o#...#..7
+7#r.....ro..7
+7...##......7
+7....#...p..7
+7....#......7
+7.r..5..ro..7
+7....#......7
+7888888888887
+
+
+
+message Frogs can't step on anti-frog tiles.
+
+7777777777777
+7$..........7
+7...oo.a#a..7
+7....o.aaa..7
+7......aaa..7
+7...........7
+7.o..p.aa#..7
+7......aa...7
+7..#....#...7
+7...........7
+7...........7
+7888888888887
+
+7777777777777
+7$..........7
+7...oo.a#a..7
+7....o.aaa..7
+7......aaa..7
+7...........7
+7.o..p.aa#..7
+7......aa...7
+7..#....#...7
+7888888888887
+
+
+
+(yellow)
+
+7777777777777
+7%..........7
+7.......#...7
+7..y........7
+7..y..p..#..7
+7..y.....#..7
+7.#y...#....7
+7...........7
+7888888888887
+
+7777777777777
+7%#.........7
+7.....#.....7
+7...r.##..#.7
+7....yy.....7
+7....##o.p..7
+7.oy.......#7
+7..r...y#...7
+7...........7
+7888888888887
+
+(green)
+
+77777777777777
+7&....#......7
+7..........#.7
+7......#.....7
+7.yyy.5#.#.y.7
+7......#.....7
+7#########..#7
+7#...g......#7
+7#.g######.##7
+7##.#.g......7
+7##p#........7
+78888888888887
+
+7777777777777
+7&..........7
+7..y......y.7
+7...........7
+7....og..g..7
+7.p.oy......7
+7...yo......7
+7.......g...7
+7...........7
+7888888888887
+
+77777777777
+7&........7
+7....g....7
+7...#r#...7
+7.a##p#.##7
+7..a..ggg#7
+7..#.##.##7
+7#gg.#....7
+7...##..o.7
+7..yyy....7
+7#####....7
+7####.....7
+7####.....7
+78888888887
+
+
+7777777777777
+7&..........7
+7.y###..g.o.7
+7..#pog...o.7
+7..#.#......7
+7..#g###5###7
+7..y.y...o..7
+7...........7
+7...........7
+7888888888887
+
+(blue)
+7777777777777
+7*......#...7
+7..g....#...7
+7.p.....#b..7
+7...g...#...7
+7....gb.#...7
+7a.a....#...7
+7abag...#...7
+7a.a....#...7
+7888888888887
+
+
+7777777777777
+7*......g...7
+7...........7
+7......#a##a7
+7.......b.o.7
+7b#....#.p.o7
+7rg....#....7
+7b#....#b###7
+7......#g...7
+7888888888887
+
+(purple)
+7777777777777
+7+......#...7
+7.......#b..7
+7..i.i..r...7
+7.......o...7
+7..i.b..y...7
+7.......g.b.7
+7...p...#b..7
+7.......#...7
+7888888888887
+
+777777777777
+7+...#.....7
+7..b.#.....7
+7p.#.#.....7
+7..b.##....7
+7....ii..i.7
+7.#...#....7
+7.g...###.r7
+7bgb..#....7
+788888888887
+
+(final)

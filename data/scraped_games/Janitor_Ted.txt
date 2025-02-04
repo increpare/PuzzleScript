@@ -1,0 +1,368 @@
+title Janitor Ted
+author Chris A. And Caitie V.
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+DarkGrey Black
+00000
+00000
+00000
+00000
+00000
+
+Pizza
+Orange Red Brown
+22222
+0010.
+.001.
+..10.
+....0
+
+TrashCan
+Grey DarkBlue
+..0..
+00000
+.010.
+.010.
+.010.
+
+Wall
+DarkBlue Grey
+00000
+01110
+00000
+01110
+00000
+
+Player
+Black Orange White Blue
+.3333
+.000.
+..0..
+.000.
+.0.0.
+
+Banana
+Yellow Brown Orange
+..1..
+..0..
+.000.
+00.00
+.....
+
+BananaN
+Yellow Brown Orange
+..1..
+..0..
+.000.
+00.00
+.....
+
+BananaR
+Yellow Brown Orange
+..1..
+..0..
+.000.
+00.00
+.....
+
+BananaD
+Yellow Brown Orange
+..1..
+..0..
+.000.
+00.00
+.....
+
+BananaL
+Yellow Brown Orange
+..1..
+..0..
+.000.
+00.00
+.....
+
+Button
+Red Black
+.....
+.000.
+00000
+10001
+11111
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Banana
+O = TrashCan
+T = Pizza
+a = BananaN
+b = BananaL
+c = BananaD
+d = BananaR
+x = Button
+
+
+=======
+SOUNDS
+=======
+
+(Banana)
+sfx0 36772507
+sfx1 530500
+sfx2 17589703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+TrashCan
+Player, Wall, Banana, Pizza, BananaN, BananaL, BananaD, BananaR, Button
+
+======
+RULES
+======
+
+[ >  Player | Banana ] -> [  >  Player | > Banana  ] sfx0
+[ >  Player | Button ] -> [  BananaL | > Background  ] sfx2
+[ > Player | Pizza ] -> [ > Player | > Pizza ]sfx0
+[ > Banana ] [ Banana ] -> [ > Banana ] [ > Banana ]
+late [ Pizza TrashCan ] -> [ TrashCan ] sfx1
+late [ Banana TrashCan ] -> [ TrashCan ] sfx1
+late [ BananaN TrashCan ] -> [ TrashCan ]sfx1
+late [ BananaL TrashCan ] -> [ TrashCan ]sfx1
+late [ BananaD TrashCan ] -> [ TrashCan ]sfx1
+late [ BananaR TrashCan ] -> [ TrashCan ]sfx1
+
+UP [ > Banana ] -> [ > BananaN ] sfx0
+down [ > Banana ] -> [ > BananaD ] sfx0
+left [ > Banana ] -> [ > BananaL ] sfx0
+right [ > Banana ] -> [ > BananaR ] sfx0
+
+
+UP [ BananaN ] -> [ > BananaN ] again
+[ > BananaN | Wall ] -> [ Banana | Wall]
+[ > BananaN | Player ] -> [ Banana | Player]
+[ > BananaN | Banana ] -> [ Banana | Banana ]
+[ > BananaN | Pizza ] -> [ Banana | Pizza ]
+
+down [ BananaD ] -> [ > BananaD ] again
+[ > BananaD | Wall ] -> [ Banana | Wall]
+[ > BananaD | Player ] -> [ Banana | Player]
+[ > BananaD | Banana ] -> [ Banana | Banana ]
+[ > BananaD | Pizza ] -> [ Banana | Pizza ]
+
+left [ BananaL ] -> [ > BananaL ] again
+[ > BananaL | Wall ] -> [ Banana | Wall]
+[ > BananaL | Player ] -> [ Banana | Player]
+[ > BananaL | Banana ] -> [ Banana | Banana ]
+[ > BananaL | Pizza ] -> [ Banana | Pizza ]
+
+right [ BananaR ] -> [ > BananaR ] again
+[ > BananaR | Wall ] -> [ Banana | Wall]
+[ > BananaR | Player ] -> [ Banana | Player]
+[ > BananaR | Banana ] -> [ Banana | Banana ]
+[ > BananaR | Pizza ] -> [ Banana | Pizza ]
+
+[ > Pizza | Pizza ] -> [ > Pizza | > Pizza ]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+no Banana
+no BananaN
+no BananaR
+no BananaD
+no BananaL
+no Pizza
+no Button
+
+=======
+LEVELS
+=======
+
+message Push the trash into the trash can!
+
+###
+#o#
+#.#
+#.#
+#.#
+#t#
+#p#
+#.#
+###
+
+message Stupid pizza...
+
+######
+#...O#
+#..###
+#..###
+#..###
+#.B###
+#p.###
+#.####
+######
+
+message Stupid banana peels...
+
+
+######
+#.p#o#
+#.b#.#
+#..#.#
+#....#
+#....#
+#.t..#
+#....#
+######
+
+message Ugh, look at all this crap!
+
+############
+###o#....###
+###.##....##
+###.##...b.#
+##......#..#
+#.t.......##
+#p....#..###
+############
+
+message Can't people be cleaner... please?
+
+##############
+####...#..o.##
+#....#.#..t.##
+#......#...###
+#..........###
+#..##..#....##
+#..##.########
+##...........#
+##.###....b.p#
+##...........#
+##############
+
+
+message Nobody thinks of the janitor.
+
+####################
+#p.##.....##b....o.#
+#......#...#.......#
+#.b#......##.......#
+#..#..##..##..##...#
+#..#..#o#..#.......#
+#..#..#.#..#.......#
+#....##....#....#..#
+###..##..#.#....#..#
+####################
+
+message *grumble* All this waste...
+
+
+###################
+#p...............##
+#..b.......#......#
+#...............#.#
+#####.....t.......#
+#.........##...####
+#.###...#.#########
+#.#o......#......##
+#.###.....#..#...##
+#........##..#..###
+####.t...##..#.o.##
+####...#####b....##
+###################
+
+message When will people learn?
+
+message It's about to get...
+message ...bananas!
+
+#######.#....######
+#..o#####...#o..#.#
+#....##o....#.#...#
+##.b..#.....#....##
+#.#...#.....#....b#
+#######....b#######
+#................o#
+#.................#
+#.....#######.....#
+#.....#....o#.....#
+#.....#.#...#.....#
+#.....#..p..#.....#
+#.....#.#b..#.....#
+#.....#.....#.....#
+#.....#######.....#
+#................b#
+#######.....#######
+#.#...#.....#....bo
+...#.##.....##...#.
+..#...#.....#..#...
+ob....#.....#....#.
+
+message Meet Todd...
+
+###############
+#####o...#...o#
+######...#....#
+#.............#
+#..p#.#..#..t.#
+#.#......#..p.#
+#...#.b..#....#
+#........#....#
+###############
+
+message The gang's all here!
+
+###########
+#o#########
+#.....#####
+#..p......#
+#......p..#
+#p..p.....#
+#......p..#
+#...p.....#
+#.p.......#
+#...p...t.#
+#.........#
+###########
+
+message Soccer time!
+
+############
+#......###.#
+#..........#
+#.......p..#
+#.......b..#
+#.p...o....#
+#..........#
+#..........#
+#..........#
+#..........#
+#..p....p..#
+#..........#
+#..........#
+#..........#
+############
+
+message What's this button do?
+
+################
+#op........x...#
+################
+
+message Ted was never seen again...
+message Thanks for playing!
+

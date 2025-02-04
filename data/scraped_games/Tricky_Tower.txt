@@ -1,0 +1,201 @@
+title Tricky Tower
+author Zithral
+homepage zithral.itch.io
+
+noaction
+key_repeat_interval 1
+again_interval 0.25
+
+========
+OBJECTS
+========
+
+Background
+darkblue
+
+Mask
+black
+
+Item
+black
+00000
+0...0
+0...0
+0...0
+00000
+
+LCon
+black
+00000
+00.00
+00..0
+00.0.
+00000
+
+MCon
+black
+00000
+00.00
+0.0.0
+.000.
+00000
+
+RCon
+black
+00000
+00.00
+0..00
+.0.00
+00000
+
+Active
+blue
+
+LeftArrow
+gray black
+11111
+11011
+10011
+11011
+11111
+
+UpArrow
+gray black
+11111
+11011
+10001
+11111
+11111
+
+RightArrow
+gray black
+11111
+11011
+11001
+11011
+11111
+
+Toggle
+transparent
+
+ToggleUp
+transparent
+
+Top
+transparent
+
+Flash1
+darkblue
+Flash2
+blue
+Flash3
+darkblue
+Flash4
+blue
+Flash5
+darkblue
+Flash6
+lightgreen
+Flash7
+lightgreen
+Flash8
+lightgreen
+Flash9
+lightgreen
+
+=======
+LEGEND
+=======
+
+. = Background and Mask
+1 = Background and LeftArrow
+2 = Background and UpArrow
+3 = Background and RightArrow
+\ = Background and LCon
+A = Background and MCon
+/ = Background and RCon
+L = Background and Item
+M = Background and Item
+R = Background and Item
+T = Background and Item and Top
+
+Player = LeftArrow or UpArrow or RightArrow
+Con = LCon or MCon or RCon
+Flash = Flash1 or Flash2 or Flash3 or Flash4 or Flash5 or Flash6 or Flash7 or Flash8 or Flash9
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Active
+Flash
+Player
+Mask, Item, Con
+Toggle
+ToggleUp
+Top
+
+======
+RULES
+======
+
+[left LeftArrow] -> [LeftArrow ToggleUp]
+[up UpArrow] -> [UpArrow ToggleUp]
+[right RightArrow] -> [RightArrow ToggleUp]
+[moving Player] -> [Player]
+
+right [Active Item | Active Item | Item] -> [ToggleUp Item | Item | Item]
+right [Active Item | Item | Active Item] -> [Item | ToggleUp Item | Item]
+right [Item | Active Item | Active Item] -> [Item | Item | ToggleUp Item]
+
+[Active no Item] -> [no Active no Item ToggleUp]
+
+down [no Toggle | ToggleUp] -> [Toggle | ]
+[Toggle Mask] -> [Mask]
+[Toggle no Active] -> [Active] again
+[Toggle Active] -> [no Active] again
+
+[Top Active] [Player] -> [Top Active] [Player Mask]
+[Flash9] -> win
+[Flash8] -> [Flash9] again
+[Flash7] -> [Flash8] again
+[Flash6] -> [Flash7] again
+[Flash5] -> [Flash6] again
+[Flash4] -> [Flash5] again
+[Flash3] -> [Flash4] again
+[Flash2] -> [Flash3] again
+[Flash1] -> [Flash2] again
+[Top Active no Flash] -> [Top Active Flash1] again
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+
+.....
+..T..
+.\A/.
+.LMR.
+.\A/.
+.LMR.
+.\A/.
+.LMR.
+.\A/.
+.LMR.
+.\A/.
+.LMR.
+.\A/.
+.LMR.
+.123.
+.....
+

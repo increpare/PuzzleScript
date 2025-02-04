@@ -1,0 +1,688 @@
+title Pixel Master
+author Dan Williams
+homepage www.activeupgames.com
+
+
+========
+OBJECTS
+========
+
+Background
+#00aa00 green
+11111
+01111
+11111
+11101
+11111
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+blue lightblue darkblue
+.111.
+10002
+10002
+10002
+.222.
+
+
+Player
+brown Orange red Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+blacktarget
+black
+.000.
+00000
+00000
+00000
+.000.
+
+whitetarget
+black
+.000.
+00000
+00000
+00000
+.000.
+
+blackpaint
+black
+.000.
+00000
+00000
+00000
+.000.
+
+whitepaint
+white
+.000.
+00000
+00000
+00000
+.000.
+
+border1
+blue
+.....
+.....
+.....
+.....
+....0
+
+border2
+blue
+.....
+.....
+.....
+.....
+00000
+
+border3
+blue
+.....
+.....
+.....
+.....
+0....
+
+border4
+blue
+....0
+....0
+....0
+....0
+....0
+
+border5
+blue
+0....
+0....
+0....
+0....
+0....
+
+border6
+blue
+....0
+.....
+.....
+.....
+.....
+
+border7
+blue
+00000
+.....
+.....
+.....
+.....
+
+border8
+blue
+0....
+.....
+.....
+.....
+.....
+
+power1
+yellow
+..0..
+..0..
+00000
+..0..
+..0..
+
+power2
+yellow black
+..1..
+..0..
+10101
+..0..
+..1..
+
+power3
+black
+..0..
+..0..
+00000
+..0..
+..0..
+
+power4
+yellow
+..0..
+..0..
+00.00
+..0..
+..0..
+
+power5
+black
+..0..
+..0..
+00.00
+..0..
+..0..
+
+power6
+yellow
+..0..
+.....
+0...0
+.....
+..0..
+
+power7
+black
+..0..
+.....
+0...0
+.....
+..0..
+
+button1
+darkgray gray
+.111.
+10001
+10101
+10001
+01110
+
+button2
+darkgray gray
+.111.
+10001
+10101
+10001
+01110
+
+button3
+darkgray gray
+.111.
+10001
+10101
+10001
+01110
+
+button4
+darkgray gray
+.111.
+10001
+10101
+10001
+01110
+
+button5
+darkgray gray
+.111.
+10001
+10101
+10001
+01110
+
+button6
+darkgray gray
+.111.
+10001
+10101
+10001
+01110
+
+button7
+darkgray gray
+.111.
+10001
+10101
+10001
+01110
+
+shape1
+black white
+00000
+01110
+01010
+01110
+00000
+
+shape2
+black white
+00100
+11111
+00100
+01010
+10001
+
+shape3
+black white
+10001
+01010
+00100
+01010
+10001
+
+shape4
+black white
+10001
+10001
+10001
+10001
+10001
+
+shape5
+black white
+11011
+10101
+01110
+10101
+11011
+
+shape6
+black white
+01110
+10001
+10101
+10001
+01110
+
+shape7
+black white
+11111
+01010
+01010
+10010
+00000
+
+shape8
+black white
+01110
+10001
+01110
+10001
+01110
+
+shape9
+black white
+01110
+01110
+11111
+01110
+01010
+
+shape10
+black white
+11111
+10101
+01010
+01110
+00100
+
+
+reverser1
+transparent
+
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+X = Target
+b = blacktarget
+w = whitetarget
+1 = border1
+2 = border2
+3 = border3
+4 = border4
+5 = border5
+6 = border6
+7 = border7
+8 = border8
+
++ = power1
+* = power2
+- = power3
+[ = power4
+] = power5
+{ = power6
+} = power7
+
+a = button1
+c = button2
+d = button3
+f = button4
+g = button5
+h = button6
+i = button7
+
+q = shape1
+e = shape2
+r = shape3
+t = shape4
+y = shape5
+u = shape6
+j = shape7
+o = shape8
+k = shape9
+s = shape10
+
+paint = blackpaint or whitepaint
+targ = blacktarget or whitetarget
+border = border1 or border2 or border3 or border4 or border5 or border6 or border7 or border8
+power = power1 or power2 or power3 or power4 or power5 or power6 or power7
+button = button1 or button2 or button3 or button4 or button5 or button6 or button7
+shape = shape1 or shape2 or shape3 or shape4 or shape5 or shape6 or shape7 or shape8 or shape9 or shape10
+
+=======
+SOUNDS
+=======
+
+player MOVE 29986507
+power create 8026309
+startgame 50407900
+restart 90013309
+closemessage 35794303
+undo 21150709
+
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, targ, border, button, shape
+reverser1
+Player, Wall, power, paint
+
+
+======
+RULES
+======
+
+[ >  Player | power ] -> [  >  Player | > power  ]
+[ > power | power ] -> [ > power | > power ]
+
+(power rules)
+late vertical [ no power | targ | ... | targ ] -> [ no power | targ blackpaint | ... | targ blackpaint ]
+late horizontal [ no power | targ | ... | targ ] -> [ no power | targ blackpaint | ... | targ blackpaint ]
+
+late vertical [ power1 | targ | ... | targ ] -> [ power1 | targ whitepaint | ... | targ whitepaint ] sfx0
+late horizontal [ power1 | targ | ... | targ ] -> [ power1 | targ whitepaint | ... | targ whitepaint ] sfx0
+
+late vertical [ power2 | targ | ... | targ ] -> [ power2 | targ reverser1 | ... | targ reverser1 ] 
+late horizontal [ power2 | targ | ... | targ ] -> [ power2 | targ reverser1 | ... | targ reverser1 ] 
+
+late vertical [ power3 | targ | ... | targ ] -> [ power3 | targ blackpaint | ... | targ blackpaint ]
+late horizontal [ power3 | targ | ... | targ ] -> [ power3 | targ blackpaint | ... | targ blackpaint ]
+
+late vertical [ power4 | targ | targ ] -> [ power4 | targ whitepaint | targ whitepaint ] 
+late horizontal [ power4 | targ | targ ] -> [ power4 | targ whitepaint | targ whitepaint ] 
+
+late vertical [ power5 | targ | targ ] -> [ power5 | targ blackpaint | targ blackpaint ]
+late horizontal [ power5 | targ | targ ] -> [ power5 | targ blackpaint | targ blackpaint ]
+
+late vertical [ power6 | targ ] -> [ power6 | targ whitepaint ] 
+late horizontal [ power6 | targ ] -> [ power6 | targ whitepaint ] 
+
+late vertical [ power7 | targ ] -> [ power7 | targ blackpaint ]
+late horizontal [ power7 | targ ] -> [ power7 | targ blackpaint ]
+
+
+
+
+startloop
+late [ reverser1 blackpaint ] -> [ whitepaint ] again
+late [ reverser1 whitepaint ] -> [ blackpaint ] again
+endloop
+
+
+(power generation)
+late up [ player button1 | no power ] -> [ player button1 | power1 ] 
+late up [ player button2 | no power ] -> [ player button2 | power2 ] 
+late up [ player button3 | no power ] -> [ player button3 | power3 ] 
+late up [ player button4 | no power ] -> [ player button4 | power4 ] 
+late up [ player button5 | no power ] -> [ player button5 | power5 ] 
+late up [ player button6 | no power ] -> [ player button6 | power6 ]
+late up [ player button7 | no power ] -> [ player button7 | power7 ]
+
+==============
+WINCONDITIONS
+==============
+
+All whitepaint on whitetarget
+All blackpaint on blacktarget
+All whitetarget on whitepaint
+All blacktarget on blackpaint
+
+=======
+LEVELS
+=======
+
+(default
+#################
+#...............#
+#...............#
+#.q....1222223..#
+#......45..#
+#......45..#
+#......45..#
+#......45..#
+#......45..#
+#......6777778..#
+#..p............#
+#...............#
+#.+.-.*.[.].{.}.#
+#.a.d.c.f.g.h.i.#
+#################)
+
+message Power the grid with different components to match the small tile. Step on buttons to generate new power pieces. Sometimes you may need to invert the colors with the third pawer piece.
+
+message Level 1 of 10
+
+#################
+#...............#
+#...............#
+#.123..1222223..#
+#.4t5..4wbbbw5..#
+#.678..4wbbbw5..#
+#......4wbbbw5..#
+#......4wbbbw5..#
+#......4wbbbw5..#
+#......6777778..#
+#..p............#
+#...............#
+#.+.-.*.[.].{.}.#
+#...............#
+#.a.d.c.f.g.h.i.#
+#################
+
+message Level 2 of 10
+
+#################
+#...............#
+#...............#
+#.123..1222223..#
+#.4q5..4bbbbb5..#
+#.678..4bwwwb5..#
+#......4bwbwb5..#
+#......4bwwwb5..#
+#......4bbbbb5..#
+#......6777778..#
+#..p............#
+#...............#
+#.+.-.*.[.].{.}.#
+#...............#
+#.a.d.c.f.g.h.i.#
+#################
+
+message Level 3 of 10
+
+#################
+#...............#
+#...............#
+#.123..1222223..#
+#.4o5..4bwwwb5..#
+#.678..4wbbbw5..#
+#......4bwwwb5..#
+#......4wbbbw5..#
+#......4bwwwb5..#
+#......6777778..#
+#..p............#
+#...............#
+#.+.-.*.[.].{.}.#
+#...............#
+#.a.d.c.f.g.h.i.#
+#################
+
+message Level 4 of 10
+
+
+#################
+#...............#
+#...............#
+#.123..1222223..#
+#.4k5..4bwwwb5..#
+#.678..4bwwwb5..#
+#......4wwwww5..#
+#......4bwwwb5..#
+#......4bwbwb5..#
+#......6777778..#
+#..p............#
+#...............#
+#.+.-.*.[.].{.}.#
+#...............#
+#.a.d.c.f.g.h.i.#
+#################
+
+message Level 5 of 10
+
+#################
+#...............#
+#...............#
+#.123..1222223..#
+#.4y5..4wwbww5..#
+#.678..4wbwbw5..#
+#......4bwwwb5..#
+#......4wbwbw5..#
+#......4wwbww5..#
+#......6777778..#
+#..p............#
+#...............#
+#.+.-.*.[.].{.}.#
+#...............#
+#.a.d.c.f.g.h.i.#
+#################
+
+message Level 6 of 10
+
+#################
+#...............#
+#...............#
+#.123..1222223..#
+#.4j5..4wwwww5..#
+#.678..4bwbwb5..#
+#......4bwbwb5..#
+#......4wbbwb5..#
+#......4bbbbb5..#
+#......6777778..#
+#..p............#
+#...............#
+#.+.-.*.[.].{.}.#
+#...............#
+#.a.d.c.f.g.h.i.#
+#################
+
+message Level 7 of 10
+
+#################
+#...............#
+#...............#
+#.123..1222223..#
+#.4u5..4bwwwb5..#
+#.678..4wbbbw5..#
+#......4wbwbw5..#
+#......4wbbbw5..#
+#......4bwwwb5..#
+#......6777778..#
+#..p............#
+#...............#
+#.+.-.*.[.].{.}.#
+#...............#
+#.a.d.c.f.g.h.i.#
+#################
+
+message Level 8 of 10
+
+#################
+#...............#
+#...............#
+#.123..1222223..#
+#.4e5..4bbwbb5..#
+#.678..4wwwww5..#
+#......4bbwbb5..#
+#......4bwbwb5..#
+#......4wbbbw5..#
+#......6777778..#
+#..p............#
+#...............#
+#.+.-.*.[.].{.}.#
+#...............#
+#.a.d.c.f.g.h.i.#
+#################
+
+message Level 9 of 10
+
+#################
+#...............#
+#...............#
+#.123..1222223..#
+#.4r5..4wbbbw5..#
+#.678..4bwbwb5..#
+#......4bbwbb5..#
+#......4bwbwb5..#
+#......4wbbbw5..#
+#......6777778..#
+#..p............#
+#...............#
+#.+.-.*.[.].{.}.#
+#...............#
+#.a.d.c.f.g.h.i.#
+#################
+
+message Level 10 of 10!
+
+#################
+#...............#
+#...............#
+#.123..1222223..#
+#.4s5..4wwwww5..#
+#.678..4wbwbw5..#
+#......4bwbwb5..#
+#......4bwwwb5..#
+#......4bbwbb5..#
+#......6777778..#
+#..p............#
+#...............#
+#.+.-.*.[.].{.}.#
+#...............#
+#.a.d.c.f.g.h.i.#
+#################
+
+message Your drawing skills are enviable. There is no art that you can't master!

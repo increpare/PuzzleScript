@@ -1,0 +1,179 @@
+title Muddy Sokoban Level Set I
+author Connorses
+homepage connorspuzzles.tumblr.com
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player1
+Black Orange brown Blue white
+.000.
+.111.
+43434
+.333.
+.2.2.
+
+player2
+Black Orange darkbrown Blue white
+.000.
+.111.
+43434
+.333.
+.2.2.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+mud
+darkbrown Darkred
+01011
+10110
+01001
+00100
+10001
+
+footprint
+darkbrown
+.....
+.0...
+....0
+.....
+..0..
+
+=======
+LEGEND
+=======
+player = player1 or player2
+. = Background
+# = Wall
+P = Player1
+* = Crate
+@ = Crate and Target
+O = Target
+! = mud
+& = target and mud
+? = crate and mud
+¿ = crate and mud and target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+sfx0 86463304 (97363508)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+footprint
+mud
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player no mud| Crate ] -> [  >  Player | > Crate  ]
+late [player mud no footprint] -> [player2 mud footprint]
+[player|footprint] -> [footprint player|footprint]
+late [player mud] -> [player mud] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+#######
+#.....#
+#...!.#
+#p.?.o#
+#...!.#
+#.....#
+#######
+
+#######
+#.!o.!#
+#!!.?p#
+#!.!!!#
+#!.!..#
+#!.!!!#
+#######
+
+#######
+####.o#
+##.#..#
+#&*.*.#
+#.!*!.#
+#.po..#
+#######
+
+#######
+#.....#
+###!*.#
+#oo*!p#
+##.!..#
+#.....#
+#######
+
+#######
+#..!!.#
+#.!!@.#
+#..@*p#
+#.!#..#
+#!.o..#
+#######
+
+#######
+##..###
+#..p..#
+#.*?!.#
+#.!@!.#
+#..oo.#
+#######
+
+#######
+##..P.#
+##.#!.#
+#..*@.#
+#..o@.#
+##....#
+#######

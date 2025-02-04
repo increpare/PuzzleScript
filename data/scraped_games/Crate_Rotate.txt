@@ -1,0 +1,257 @@
+title Crate Rotate
+author Adam Gates
+homepage www.puzzlescript.net
+(verbose_logging)
+
+========
+OBJECTS
+========
+
+Background .
+Darkgrey
+
+Empty -
+Black
+
+Target 
+DarkBlue    
+.000.
+00000
+00000
+00000
+.000.
+
+PlayerRight
+Blue lightblue
+.00..
+00001
+000..
+00001
+.00..
+
+PlayerLeft
+Blue lightblue
+..00.
+10000
+..000
+10000
+..00.
+
+PlayerUp
+Blue lightblue
+.1.1.
+.0.0.
+00000
+00000
+.000.
+
+PlayerDown
+Blue lightblue
+.000.
+00000
+00000
+.0.0.
+.1.1.
+
+PlayerDownTemp
+Red
+.....
+00000
+.000.
+..0..
+.....
+
+Wall 
+lightgrey grey
+11111
+00000
+00000
+00000
+00000
+
+Crate
+Orange Yellow
+.000.
+01110
+01010
+01110
+.000.
+
+Carry
+Red lightred
+.000.
+01110
+01010
+01110
+.000.
+
+CarryTemp
+Blue
+
+=======
+LEGEND
+=======
+
+# = Wall
+P = PlayerRight
+* = Crate
+@ = Crate and Target
+O = Target
+
+Player = PlayerRight or PlayerLeft or PlayerUp or PlayerDown
+Obstacle = Carry or Crate or Wall
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Empty, Target
+CarryTemp
+Player, PlayerDownTemp, Obstacle
+
+======
+RULES     
+======     
+
+[ LEFT  PlayerLeft  | Carry ] -> [ LEFT  PlayerLeft  | Down  CarryTemp ]
+[ RIGHT PlayerLeft  | Carry ] -> [ RIGHT PlayerLeft  | Up    CarryTemp ]
+[ LEFT  PlayerUp    | Carry ] -> [ LEFT   PlayerUp    | Left  CarryTemp ]
+[ RIGHT PlayerUp    | Carry ] -> [ RIGHT  PlayerUp    | Right CarryTemp ]
+[ LEFT  PlayerRight | Carry ] -> [ LEFT  PlayerRight | Up    CarryTemp ]
+[ RIGHT PlayerRight | Carry ] -> [ RIGHT PlayerRight | Down  CarryTemp ]
+[ LEFT  PlayerDown  | Carry ] -> [ LEFT  PlayerDown  | Right CarryTemp ]
+[ RIGHT PlayerDown  | Carry ] -> [ RIGHT PlayerDown  | Left  CarryTemp ]
+
+[ > CarryTemp | Obstacle ] -> [ CarryTemp | Obstacle ]
+
+[ Moving Player | Stationary CarryTemp ] -> [ Player | Carry ]
+
+[ Moving Player | Moving CarryTemp ] -> [ Moving Player Moving CarryTemp | no CarryTemp ]
+
+[ > CarryTemp | Obstacle ] -> [ CarryTemp | Obstacle ]
+
+[ Moving Player Stationary CarryTemp ] -> [ Player CarryTemp ]
+
+[ LEFT  PlayerLeft  ] -> [ PlayerDown  ]
+[ RIGHT PlayerLeft  ] -> [ PlayerUp    ]
+[ LEFT  PlayerUp    ] -> [ PlayerLeft  ]
+[ RIGHT PlayerUp    ] -> [ PlayerRight ]
+[ LEFT  PlayerRight ] -> [ PlayerUp    ]
+[ RIGHT PlayerRight ] -> [ PlayerDown  ]
+[ LEFT  PlayerDown  ] -> [ PlayerRight ]
+[ RIGHT PlayerDown  ] -> [ PlayerLeft  ]
+
+LEFT  [ PlayerLeft  CarryTemp | No Obstacle ] ->  [ PlayerLeft  | Carry ]
+UP    [ PlayerUp    CarryTemp | No Obstacle ] -> [ PlayerUp    | Carry ]
+RIGHT [ PlayerRight CarryTemp | No Obstacle ] -> [ PlayerRight | Carry ]
+DOWN  [ PlayerDown  CarryTemp | No Obstacle ] -> [ PlayerDown | Carry ]
+
+[ UP   PlayerLeft  ] -> [ LEFT  PlayerLeft     ]
+[ DOWN PlayerLeft  ] -> [ RIGHT PlayerLeft     ]
+[ UP   PlayerRight ] -> [ RIGHT PlayerRight    ]
+[ DOWN PlayerRight ] -> [ LEFT  PlayerRight    ]
+[ UP   PlayerDown  ] -> [ DOWN  PlayerDownTemp ]
+[ DOWN PlayerDown  ] -> [ UP    PlayerDown     ]
+
+[ PlayerDownTemp ] -> [ PlayerDown ]
+
+LEFT  [ Action PlayerLeft  | Crate ] -> [ PlayerLeft  | Carry ]
+UP    [ Action PlayerUp    | Crate ] -> [ PlayerUp    | Carry ]
+RIGHT [ Action PlayerRight | Crate ] -> [ PlayerRight | Carry ]
+DOWN  [ Action PlayerDown  | Crate ] -> [ PlayerDown  | Carry ]
+
+LEFT  [ Action PlayerLeft  | Carry ] -> [ PlayerLeft  | Crate ]
+UP    [ Action PlayerUp    | Carry ] -> [ PlayerUp    | Crate ]
+RIGHT [ Action PlayerRight | Carry ] -> [ PlayerRight | Crate ]
+DOWN  [ Action PlayerDown  | Carry ] -> [ PlayerDown  | Crate ]
+
+[ > Player | Carry ] -> [ > Player | > Carry ]
+[ < Player | Carry ] -> [ < Player | < Carry ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate     
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#.P.*..O#
+#.......#
+#########
+
+-########
+##......#
+#P.*....#
+##.O....#
+-########
+
+-########
+##......#
+#P.*....#
+##.O#...#
+-########
+
+-########
+##..#...#
+#P.*....#
+##.O#...#
+-########
+
+########
+#P.*...#
+#####..#
+----#..#
+----#O.#
+----####
+
+########
+#P.*...#
+#####..#
+----#..#
+----#.O#
+----####
+
+########
+#P.*...#
+#.###..#
+#.####.#
+#.....O#
+########
+
+#########
+#P.*....#
+#####.#.#
+----#...#
+----#..O#
+----#####
+
+#########
+#P.*....#
+#####.#.#
+----#...#
+----##.O#
+-----####
+
+#########
+#P.*....#
+#####.#.#
+#O###...#
+#..###..#
+#.......#
+#########
+
+#######
+#P.*.*#
+#.##..#
+#O...O#
+#######

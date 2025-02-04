@@ -1,0 +1,592 @@
+title Color Fill Land
+author bregehr 
+homepage www.puzzlescript.net
+run_rules_on_level_start
+key_repeat_interval 0.5
+
+
+========
+OBJECTS
+========
+
+Background
+#b4bac4
+
+Wall
+#dcdfe5
+
+Playermark
+white
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+n1
+#0e1c33
+.00..
+..0..
+..0..
+..0..
+.000.
+
+n2
+#0e1c33
+.000.
+...0.
+.000.
+.0...
+.000.
+
+n3
+#0e1c33
+.000.
+...0.
+.000.
+...0.
+.000.
+
+n4
+#0e1c33
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+n5
+#0e1c33
+.000.
+.0...
+.000.
+...0.
+.000.
+
+n6
+#0e1c33
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+n7
+#0e1c33
+.000.
+...0.
+..0..
+..0..
+..0..
+
+n8
+#0e1c33
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+n9
+#0e1c33
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+n0
+#0e1c33
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+redupedge
+#f76060
+00000
+.....
+.....
+.....
+.....
+
+reddownedge
+#e03c3c
+.....
+.....
+.....
+.....
+00000
+
+redleftedge
+#c63737
+0....
+0....
+0....
+0....
+0....
+
+redrightedge
+#ef6464
+....0
+....0
+....0
+....0
+....0
+
+
+blueupedge
+#5691ef
+00000
+.....
+.....
+.....
+.....
+
+bluedownedge
+#487cce
+.....
+.....
+.....
+.....
+00000
+
+blueleftedge
+#4577c6
+0....
+0....
+0....
+0....
+0....
+
+bluerightedge
+#5491f2
+....0
+....0
+....0
+....0
+....0
+
+yellowupedge
+#fff466
+00000
+.....
+.....
+.....
+.....
+
+yellowdownedge
+#e0d545
+.....
+.....
+.....
+.....
+00000
+
+yellowleftedge
+#c9bf42
+0....
+0....
+0....
+0....
+0....
+
+yellowrightedge
+#fcf15f
+....0
+....0
+....0
+....0
+....0
+
+greenupedge
+#5fe863
+00000
+.....
+.....
+.....
+.....
+
+greendownedge
+#3ab23e
+.....
+.....
+.....
+.....
+00000
+
+greenleftedge
+#3ea541
+0....
+0....
+0....
+0....
+0....
+
+greenrightedge
+#57db5b
+....0
+....0
+....0
+....0
+....0
+
+
+upedge
+#e8ebf2
+00000
+.....
+.....
+.....
+.....
+
+downedge
+#cdd0d6
+.....
+.....
+.....
+.....
+00000
+
+leftedge
+#babdc4
+0....
+0....
+0....
+0....
+0....
+
+rightedge
+#eff2f7
+....0
+....0
+....0
+....0
+....0
+
+
+
+player
+transparent
+
+playarea
+transparent
+
+subtract
+transparent
+
+startlevel
+transparent
+
+red
+#fc4b4b
+
+blue
+#4886ea
+
+green
+#49cc4d
+
+yellow
+#fff34f
+
+help1
+#fc4b4b black
+.010.
+01110
+10101
+00100
+.010.
+
+help2
+#4886ea black
+.010.
+00010
+11111
+00010
+.010.
+
+help3
+#49cc4d black
+.010.
+00100
+10101
+01110
+.010.
+
+help4
+#fff34f black
+.010.
+01000
+11111
+01000
+.010.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player and Playermark
+H = help1 and wall and startlevel
+1 = n1 and Wall
+2 = n2 and Wall
+3 = n3 and Wall
+4 = n4 and Wall
+5 = n5 and Wall
+6 = n6 and Wall
+7 = n7 and Wall
+8 = n8 and Wall
+9 = n9 and Wall
+0 = n0 and Wall
+color = red or blue or green or yellow
+help = help1 or help2 or help3 or help4
+number = n1 or n2 or n3 or n4 or n5 or n6 or n7 or n8 or n9 or n0
+edge = upedge or downedge or leftedge or rightedge
+coloredge = redupedge or reddownedge or redleftedge or redrightedge or blueupedge or bluedownedge or blueleftedge or bluerightedge or yellowupedge or yellowdownedge or yellowleftedge or yellowrightedge or greenupedge or greendownedge or greenleftedge or greenrightedge
+
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, color
+redrightedge
+reddownedge
+redleftedge
+redupedge
+bluerightedge
+bluedownedge
+blueleftedge
+blueupedge
+yellowrightedge
+yellowdownedge
+yellowleftedge
+yellowupedge
+greenrightedge
+greendownedge
+greenleftedge
+greenupedge
+rightedge
+downedge
+leftedge
+upedge
+number
+help
+playermark
+player
+playarea
+subtract
+startlevel
+
+======
+RULES
+======
+
+right [0 | 0][player] -> [0 | 0][]
+
+(generation)
+[no wall no color] -> [random color]
+[no wall] -> [playarea]
+down [help1 | no help3] -> [help1 | help3]
+right [ no help4 | help3 | no help2 ] -> [help4 | help3 | help2]
+
+up [wall no upedge | no wall] -> [wall upedge | ]
+down [wall no downedge | no wall] -> [wall downedge | ]
+left [wall no leftedge | no wall] -> [wall leftedge | ]
+right [wall no rightedge | no wall] -> [wall rightedge | ]
+
+
+
+
+
+
+(change color)
+[up player color] -> [player red]
+[right player color] -> [player blue]
+[down player color] -> [player green]
+[left player color] -> [player yellow]
+
+(spread)
+[player blue | no player blue] -> [player blue | player blue]
+[player red | no player red] -> [player red | player red]
+[player green | no player green] -> [player green | player green]
+[player yellow | no player yellow] -> [player yellow | player yellow]
+
+
+(numbers)
+right [help1 no startlevel][number | number][player] -> [help1][number | subtract number][player]
+right [number | subtract 0] -> [subtract number | 9]
+right [no number |subtract 0 | 9]->[ | 0 | 0 ]
+[subtract 1]->[0]
+[subtract 2]->[1]
+[subtract 3]->[2]
+[subtract 4]->[3]
+[subtract 5]->[4]
+[subtract 6]->[5]
+[subtract 7]->[6]
+[subtract 8]->[7]
+[subtract 9]->[8]
+
+(color edges)
+[coloredge] -> []
+up [red no redupedge | no red] -> [red redupedge | ]
+down [red no reddownedge | no red] -> [red reddownedge | ]
+left [red no redleftedge | no red] -> [red redleftedge | ]
+right [red no redrightedge | no red] -> [red redrightedge | ]
+
+up [blue no blueupedge | no blue] -> [blue blueupedge | ]
+down [blue no bluedownedge | no blue] -> [blue bluedownedge | ]
+left [blue no blueleftedge | no blue] -> [blue blueleftedge | ]
+right [blue no bluerightedge | no blue] -> [blue bluerightedge | ]
+
+up [yellow no yellowupedge | no yellow] -> [yellow yellowupedge | ]
+down [yellow no yellowdownedge | no yellow] -> [yellow yellowdownedge | ]
+left [yellow no yellowleftedge | no yellow] -> [yellow yellowleftedge | ]
+right [yellow no yellowrightedge | no yellow] -> [yellow yellowrightedge | ]
+
+up [green no greenupedge | no green] -> [green greenupedge | ]
+down [green no greendownedge | no green] -> [green greendownedge | ]
+left [green no greenleftedge | no green] -> [green greenleftedge | ]
+right [green no greenrightedge | no green] -> [green greenrightedge | ]
+
+[startlevel] -> []
+
+
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+all playarea on player
+
+=======
+LEVELS
+=======
+###08########
+###.........#
+###.........#
+#h#.........#
+###....p....#
+###.........#
+###.........#
+###.........#
+#############
+
+#08##########
+#....########
+#....########
+#...........#
+#.....p.....#
+#...........#
+#####h##....#
+########....#
+#############
+
+09#########
+#.........#
+#.........#
+#...#h#...#
+#...###...#
+#.........#
+#....p....#
+#.........#
+###########
+
+##13###########
+###p..........#
+#h#...........#
+###...#...#...#
+###...#...#...#
+###...#...#...#
+###...#...#...#
+###...........#
+###...........#
+###############
+
+07#############
+#.....#h#.....#
+#.....###.....#
+#..p.......p..#
+#.....###.....#
+#.....###.....#
+###############
+
+14############
+#p....##.....#
+#............#
+#............#
+##h#..##..####
+####..##..####
+#............#
+#............#
+#.....##....p#
+##############
+
+#13############
+###p..........#
+#h#...........#
+###...........#
+###.#########.#
+###...........#
+###############
+
+
+15###########
+###p........#
+#h#.#.#.#.#.#
+###.........#
+###.#.#.#.#.#
+###.........#
+###.#.#.#.#.#
+###.........#
+###.#.#.#.#.#
+###.........#
+#############
+
+13###########
+###.#.#.#.#.#
+#h#.#.#.#.#.#
+###.#.#.#.#.#
+###.........#
+###....p....#
+###.........#
+###.#.#.#.#.#
+###.#.#.#.#.#
+###.#.#.#.#.#
+#############
+
+
+10###########
+##p#h#p###p##
+##.###.###.##
+#...#...#...#
+#...#...#...#
+#...#...#...#
+#...........#
+##.........##
+###.......###
+####.....####
+#############
+
+07##########
+##h#.#.#.#.#
+####.#.#.#.#
+#.....p....#
+####.#.#.#.#
+####.#.#.#.#
+############
+
+

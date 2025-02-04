@@ -1,0 +1,336 @@
+title Pink Matter
+author Nico Saraintaris
+homepage www.beavl.com
+
+key_repeat_interval 0.15
+noaction
+Text_color pink
+COLOR_PALETTE C64   
+
+========
+OBJECTS
+========
+
+Background
+darkblue blue 
+00000
+00000
+00000
+00000
+00000
+
+
+1101
+pink darkblue pink
+11011
+12221
+02220
+12221
+11111
+
+0111
+pink darkblue pink
+11111
+12221
+02220
+12221
+11011
+
+0101
+pink darkblue pink
+11111
+12221
+02220
+12221
+11111
+
+0100
+pink darkblue pink
+11111
+12221
+12220
+12221
+11111
+
+0001
+pink darkblue pink
+11111
+12221
+02221
+12221
+11111
+
+1001
+pink darkblue pink
+11011
+12221
+02221
+12221
+11111
+
+1100
+pink darkblue pink
+11011
+12221
+12220
+12221
+11111
+
+1000
+pink darkblue pink
+11011
+12221
+12221
+12221
+11111
+
+0011
+pink darkblue pink
+11111
+12221
+02221
+12221
+11011
+
+0110
+pink darkblue pink
+11111
+12221
+12220
+12221
+11011
+
+0010
+pink darkblue pink
+11111
+12221
+12221
+12221
+11011
+
+Stone
+pink 
+00000
+00000
+00000
+00000
+00000
+
+
+Target
+lightblue pink
+.....
+.000.
+.010.
+.000.
+.....
+
+
+crate
+pink
+.....
+.000.
+.000.
+.000.
+.....
+
+dead
+pink darkblue pink
+11111
+12121
+11211
+12121
+11111
+
+temp
+pink darkblue pink
+11111
+11211
+12121
+11211
+11111
+
+
+=======
+LEGEND
+=======
+
+. = Background
+S = Stone
+Player = 1101 or 0111 or 0101 or 0100 or 0001 or 1001 or 1100 or 1000 or 0011 or 0110 or 0010 or temp
+U = 1101
+Y = 0111
+R = 0100
+E = 0001
+W = 1000
+Q = 0001
+A = 0110
+D = 0010
+F = 1101 
+G = 1100
+H = 0110
+J = 0011
+K = 1001
+C = crate
+@ = crate and Target
+O = Target
+
+
+
+=======
+SOUNDS
+=======
+
+Player DESTROY 25025902
+Restart 15255502
+CloseMessage 15255502
+EndGame 69843902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Dead
+Player, 1101, 0111, 0101, 0100, 0001, 1001, 1100, 1000, 0011, 0110, 0010,  stone, crate, stone, temp
+
+======
+RULES
+======
+
+[ dead ] -> [ ]
+
+UP [ > 1101 | crate ] -> [ 0101 | > crate ]
+RIGHT [ > 1101 | crate ] -> [ 1001 | > crate ]
+LEFT [ > 1101 | crate ] -> [ 1100 | > crate ]
+
+RIGHT [ > 0101 | crate ] -> [ 0001 | > crate ]
+LEFT [ > 0101 | crate ] -> [ 0100 | > crate ]
+
+LEFT [ > 0001 | crate ] -> [ temp | > crate ] again
+late [ temp ] -> [ dead ]
+RIGHT [ > 0100 | crate ] -> [ temp | > crate ] again
+late [ temp ] -> [ dead ]
+UP [ > 1001 | crate ] -> [ 0001 | > crate ]
+LEFT [ > 1001 | crate ] -> [ 1000 | > crate ] 
+
+UP [ > 1000 | crate ] -> [ temp | > crate ] again
+late [ temp ] -> [ dead ]
+
+UP [ > 1100 | crate ] -> [ 0100 | > crate ]
+RIGHT [ > 1100 | crate ] -> [ 1000 | > crate ]
+
+RIGHT [ > 0111 | crate ] -> [ 0011 | > crate ]
+DOWN [ > 0111 | crate ] -> [ 0101 | > crate ]
+LEFT [ > 0111 | crate ] -> [ 0110 | > crate ]
+
+DOWN [ > 0011 | crate ] -> [ 0001 | > crate ]
+LEFT [ > 0011 | crate ] -> [ 0010 | > crate ]
+DOWN [ > 0010 | crate ] -> [ temp | > crate ] again
+late [ temp ] -> [ dead ]
+
+RIGHT [ > 0110 | crate ] -> [ 0010 | > crate ]
+DOWN [ > 0110 | crate ] -> [ 0100 | > crate ] 
+
+[ > crate | target ] -> [ > stone |   ]
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on crate
+
+=======
+LEVELS
+=======
+
+message Portals detected! We are under attack, sir.
+
+message Droids use appendages to move pink matter. Pink matter closes portals.
+
+SSSOSSS
+SSSCSSS
+OC.U.CO
+SSSSSSS
+SSSSSSS
+
+
+message When a portal is closed, it turns into a wall. We cannot take any risk, sir.
+
+S....SS
+S.SSC.S
+YCOSO.S
+SSSSS.S
+SOC...S
+
+
+message Every time a droid moves pink matter -or tries to do so- it loses its appendage.
+...y.
+..c..
+.o...
+...co
+
+message Without their appendages, droids cease to exist.
+sososos
+scscscs
+rwdwdw.
+sscscs.
+ssosos.
+ss.....
+ss.ssss
+ss...co
+
+
+
+message Don't worry. Droids don't feel a thing.
+
+....W
+SOSE.
+.C.S.
+R..S.
+R.CO.
+
+message Walls are closing in, sir.
+js.co
+as.ss
+.s...
+.cocj
+.scss
+ososs
+
+message Portals are spawning all over the ship!
+
+sswsosars
+oces.s.co
+s.rs.swcs
+oces.s..o
+ssws.swss
+ssrscswss
+s..c.o.ss
+
+message Our intel is sending desperate reports. We are spawning droids following no defense plan whatsoever.
+
+ssosssso
+sscssssc
+oceo..s.
+ssrc.rco
+ssw.sss.
+sscesss.
+.cok..s.
+..sssocu
+........
+
+message We are flooding the machine room with pink matter. It's the only way.
+
+cccssccco
+cssssss..
+a...c..o.
+aasscsg..
+eess.swc.
+.ess..wwc
+csssos..s
+co..eec.s
+
+message Attacks suddenly stopped, but autodestruct protocol cannot be reverted. Goodbye, sir.

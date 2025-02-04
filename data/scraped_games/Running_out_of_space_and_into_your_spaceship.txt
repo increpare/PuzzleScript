@@ -1,0 +1,535 @@
+title Running out of space and into your spaceship
+author Leroyii
+homepage leroyii.itch.io
+
+realtime_interval 0.25
+throttle_movement
+zoomscreen 13x6
+
+========
+OBJECTS
+========
+
+Background
+White Black
+11111
+01111
+11111
+11011
+11111
+
+PlayerOff
+LIGHTGRAY BLACK BLUE
+.000.
+.010.
+02000
+.000.
+.0.0.
+
+PlayerOn
+LIGHTGRAY BLACK RED
+.000.
+.010.
+02000
+.000.
+.0.0.
+
+Move
+BLACK
+
+Ash
+DARKGRAY GRAY
+.....
+..0..
+.10..
+0010.
+00000
+
+
+
+Heat1
+LIGHTBROWN ORANGE
+00000
+01000
+00000
+00000
+00010
+
+Heat2
+LIGHTBROWN ORANGE
+10000
+00000
+00001
+01000
+00000
+
+Heat3
+LIGHTBROWN ORANGE
+00000
+00010
+00000
+00010
+00000
+
+Heat4
+LIGHTBROWN ORANGE
+00000
+00000
+00100
+00001
+00000
+
+HeatFront1
+LIGHTBROWN BLACK
+....1
+.....
+...11
+...11
+...11
+
+HeatFront2
+LIGHTBROWN BLACK
+...11
+...11
+....1
+.....
+....1
+
+HeatFront3
+LIGHTBROWN BLACK
+....1
+...11
+....1
+...11
+....1
+
+HeatFront4
+LIGHTBROWN BLACK
+....1
+....1
+....1
+...11
+....1
+
+
+
+HeatMeter0
+LIGHTBROWN ORANGE
+.....
+.....
+.....
+.....
+.....
+
+HeatMeter1
+LIGHTBROWN ORANGE
+.1111
+..111
+..111
+11111
+11111
+
+
+
+Wall
+GRAY
+00000
+00000
+00000
+00000
+00000
+
+WallDown
+GRAY LIGHTBLUE
+00000
+00000
+00000
+00000
+11111
+
+WallUR
+GRAY LIGHTGRAY
+10000
+.1000
+..100
+...10
+....1
+
+WallUL
+GRAY LIGHTGRAY
+00001
+0001.
+001..
+01...
+1....
+
+DeadDoorL
+GRAY LIGHTBLUE DARKGRAY
+1....
+10002
+10002
+10002
+1....
+
+DeadDoorR
+GRAY LIGHTBLUE DARKGRAY
+....1
+20001
+20001
+20001
+....1
+
+DoorL
+GRAY LIGHTBLUE BLACK DARKGRAY
+12222
+10322
+10322
+10322
+12222
+
+DoorR
+GRAY LIGHTBLUE BLACK DARKGRAY
+22221
+22301
+22301
+22301
+22221
+
+Emblem
+GRAY LIGHTBLUE BLUE
+01110
+10201
+10201
+01010
+00100
+
+
+
+Debris
+LIGHTGRAY GRAY
+.111.
+11011
+11111
+10111
+.111.
+
+LaserPickup
+RED
+.....
+.000.
+.000.
+.000.
+.....
+
+Laser1
+RED
+00000
+00000
+00000
+00000
+00000
+
+Laser2
+RED
+.....
+00000
+00000
+00000
+.....
+
+
+Laser3
+RED
+.....
+.....
+00000
+.....
+.....
+
+Mirror
+#d4e9ec DARKGRAY
+..011
+..011
+..011
+..011
+..011
+
+Laser1Reflect
+RED
+00000
+00000
+00000
+00000
+00000
+
+Laser2Reflect
+RED
+.....
+00000
+00000
+00000
+.....
+
+Laser3Reflect
+RED
+.....
+.....
+00000
+.....
+.....
+
+
+
+Change
+BLACK
+
+Spread
+BLACK
+
+Reflect
+BLACK
+
+Animate
+BLACK
+
+FrontAnimate
+BLACK
+
+Border
+BLACK
+
+BorderSpawn
+BLACK
+
+
+
+Message1
+WHITE
+..0..
+..0..
+..0..
+..0..
+..0..
+
+Message2
+WHITE
+.000.
+0...0
+...0.
+..0..
+00000
+
+Message3
+WHITE
+0000.
+....0
+0000.
+....0
+0000.
+
+DoorMessage
+WHITE
+0000.
+0...0
+0...0
+0...0
+0000.
+
+
+=======
+LEGEND
+=======
+
+Heatfront = HeatFront1 or HeatFront2 or HeatFront3 or HeatFront4
+Heat = Heat1 or Heat2 or Heat3 or Heat4
+Player = PlayerOff or PlayerOn
+Messages = Message1 or Message2 or Message3 or DoorMessage
+Walls = Wall or WallDown or WallUR or WallUL or DeadDoorL or DeadDoorR or Emblem or Mirror
+HeatMeter = HeatMeter0 or HeatMeter1
+AllHeat = HeatMeter or HeatFront or Heat
+Laser = Laser1 or Laser2 or Laser3 
+LaserReflect = Laser1Reflect or Laser2Reflect or Laser3Reflect
+Door = DoorL or DoorR
+
+. = Background
+# = Wall
+_ = WallDown
+\ = WallUR
+/ = WallUL
+J = DeadDoorL
+K = DeadDoorR
+E = Emblem
+
+Q = DoorL
+W = DoorR
+
+I = Mirror
+P = PlayerOff
+L = LaserPickup
+
+A = HeatFront1 and Heat1 and HeatMeter0
+B = HeatFront2 and Heat2 and HeatMeter0
+C = HeatFront3 and Heat3 and HeatMeter0
+D = HeatFront4 and Heat4 and HeatMeter0 and BorderSpawn
+
+M = HeatMeter0 and HeatFront1 and Heat1
+* = Debris
+
+0 = DoorMessage
+1 = Message1
+2 = Message2 and LaserPickup
+3 = Message3
+
+=======
+SOUNDS
+=======
+
+sfx0 89993107 (push)
+sfx1 313302 (die)
+sfx2 60507502 (heat spreads)
+sfx3 92175701 (laser)
+
+================
+COLLISIONLAYERS
+================
+
+Messages
+
+Border
+BorderSpawn
+
+Change
+Spread
+Move
+Animate
+FrontAnimate
+
+Reflect
+
+Background
+
+LaserPickup
+DoorL, DoorR
+Player, Ash, Walls, Debris
+Laser, LaserReflect
+Heat
+HeatMeter
+HeatFront
+
+======
+RULES
+======
+
+(Border)
+right[BorderSpawn | ... | ] -> [BorderSpawn | ... | Border]
+[BorderSpawn] -> []
+
+
+
+(Laser)
+[Laser] -> []
+[LaserReflect] -> []
+
+left[Reflect | ] -> [Reflect| Laser1Reflect]
+left[Laser1Reflect | ] -> [Laser1Reflect | Laser2Reflect]
+left[Laser2Reflect | ] -> [Laser2Reflect | Laser3Reflect]
+
+[Reflect][Player] -> [Reflect][Ash] sfx1
+[Reflect] -> []
+
+right[action PlayerOn | Mirror] -> [action PlayerOff | Mirror Reflect] sfx3
+right[action PlayerOn | no Mirror] -> [action PlayerOff | Laser1] sfx3
+
+right[Laser1 | Mirror] -> [Laser1 | Mirror Reflect]
+right[Laser1 | no Mirror] -> [Laser1 | Laser2]
+
+right[Laser2 | Mirror] -> [Laser2 | Mirror Reflect]
+right[Laser2 | no Mirror] -> [Laser2 | Laser3]
+
+[Laser Debris] -> [Laser]
+[Reflect][Laser] -> [Reflect][]
+
+
+
+(Pushing)
+[> Player | Debris] -> [> Player | > Debris] sfx0
+late [PlayerOff LaserPickup] -> [PlayerOn]
+
+
+
+(Messages)
+late[Player DoorMessage | DoorMessage] -> [Player | ] message Ok, guys, open the door...
+late[Player Message1] -> [Player] message ugh, there's so much debris
+late[Player Message2] -> [Player] message This laser should help with the debris (press x)
+late[Player Message3] -> [Player] message I bet this mirror will kill me if I shoot it
+
+
+
+(Cancelling)
+[> Player | Walls] -> cancel
+[> Debris | Debris] -> cancel
+[> Debris | Walls] -> cancel
+[> Debris | DoorL] -> cancel
+[> Debris | DoorR] -> cancel
+down[> Player Border] -> cancel
+down[> Debris Border] -> cancel
+([action PlayerOff][PlayerOff] -> cancel)
+
+
+
+(Heat Spread)
+[moving Player][HeatMeter0] -> [moving Player][HeatMeter1 Change]
+[moving Player][HeatMeter1 no Change] -> [moving Player][HeatMeter0 Change]
+
+right[HeatMeter0 Change no Spread | ] -> [random Heat | HeatMeter0 Change Spread random Heat] (sfx2)
+right[HeatFront no Spread | ][HeatMeter0 Change] -> [random Heat | HeatFront Spread random Heat][HeatMeter0 Change]
+
+late [Player AllHeat] -> [Ash AllHeat] sfx1
+late [Debris HeatFront] -> [HeatFront]
+
+[Ash][HeatMeter] -> [Ash][ HeatFront1]
+right[Ash][HeatFront no Change | ] -> [Ash][random Heat | HeatFront Change random Heat] again
+
+[Change] -> []
+[Spread] -> []
+
+
+
+(Heat animate)
+[stationary Heat1 no Animate] -> [Heat2 Animate]
+[stationary Heat2 no Animate] -> [Heat3 Animate]
+[stationary Heat3 no Animate] -> [Heat4 Animate]
+[stationary Heat4 no Animate] -> [Heat1 Animate]
+
+[stationary HeatFront1 no FrontAnimate] -> [HeatFront2 FrontAnimate]
+[stationary HeatFront2 no FrontAnimate] -> [HeatFront3 FrontAnimate]
+[stationary HeatFront3 no FrontAnimate] -> [HeatFront4 FrontAnimate]
+[stationary HeatFront4 no FrontAnimate] -> [HeatFront1 FrontAnimate]
+
+late[FrontAnimate] -> []
+late[Animate] -> []
+
+==============
+WINCONDITIONS
+==============
+
+some Player
+all Player on Door
+
+=======
+LEVELS
+=======
+
+message Ok, I'm finished with the repairs, you guys can let me back in now...
+message Guys?
+message Guess I'll just have to get in through the other door. There's a solar flare coming in, so I'll have to hurry!
+
+_jk_________________________________________________________________________qw____
+a00..***........***...........*.****.3l*.*i*....*i**..*....*********i......****...
+b....*.*........****....***...*.****.**.**.**...*i.***.*.**i.*******i.............
+m.p..*1*..*....*.*.*....***...*.****.********...*.******.**i.**l..**i.......l.....
+c....*.*.**.....**.*....**....*.****..*.*****i..*l**il**.**i.*.**.**i.............
+d....***.........*.*....**2...*.****.**.*l..**i..*.**.**.**i......**..............
+
+message Not funny guys! I almost died out there...
+message Guys?

@@ -1,0 +1,199 @@
+title Mirror Bounce
+author Chynna and Julia
+
+========
+OBJECTS
+========
+
+Background .
+#042C47
+
+MirrorLeft /
+LightBlue White Blue
+...00
+..10.
+.01..
+00...
+0....
+
+MirrorRight \
+LightBlue White Blue
+00...
+.01..
+..10.
+...00
+....0
+
+
+Player P
+#853525 #B36757 #E6B2A8
+.111.
+12210
+12110
+11110
+.000.
+
+
+Invisi I
+Gray White
+.....
+.....
+..1..
+.....
+.....
+
+Invisi2 *
+Gray White
+.....
+.....
+..1..
+.....
+.....
+
+
+Temp T
+Gray White
+.....
+.....
+.....
+.....
+.....
+
+Goal G
+#83C1D4 #296B80 #032C38
+00000
+01110
+01210
+01110
+00000
+
+Temp2 T2
+Gray White
+.....
+.....
+.....
+.....
+.....
+
+Temp3 T3
+Gray White
+.....
+.....
+.....
+.....
+.....
+
+Temp4 T4
+Gray White
+.....
+.....
+.....
+.....
+.....
+
+Dotmap E
+Gray White
+.....
+.....
+..1..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+Mirror = MirrorLeft or MirrorRight
+
+=========
+SOUNDS
+=========
+endlevel 97301508
+startgame 97301508
+endgame 97301508
+SFX0 54453707
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Invisi, Temp, Temp2, Goal, MirrorLeft
+MirrorRight, Temp3, Temp4, Invisi2
+Dotmap
+
+======
+RULES
+======
+[ > Player | Goal ] ->  [ ... |Player ]
+
+[ > Player | ... | MirrorLeft ] ->  [Temp2| ... | Player ] 
+late [Player | ... | Invisi ] ->  [Temp| ... | Player ]
+late [ Temp ] -> [ MirrorLeft ]
+late [Temp2] -> [Invisi] SFX0
+
+[ > Player | ... | MirrorRight ] ->  [Temp2| ... | Player ]
+late [Player | ... | Invisi2 ] ->  [Temp| ... | Player ]
+late [ Temp ] -> [ MirrorRight ]
+late[Temp2] -> [Invisi2] SFX0
+
+[ > Player ] -> [ Player]
+
+==============
+WINCONDITIONS
+==============
+No Goal
+
+=======
+LEVELS
+=======
+
+message level 1 of 4
+
+.../EEEI
+...E...E
+/EEEEeI/
+E..E....
+E..E....
+P..E....
+...I....
+...G....
+
+message level wow of 4
+
+G*\..............
+..*..............
+..E../EEEEI\.....
+..E..*.....E.....
+..E..E.....E.....
+..E..E.....EP....
+..E..E.....*E....
+..\IEEEEEEE/E....
+.....\IEEEEE/....
+
+message level 3 of 4
+
+..*EEEEEEEEEEEEE\
+..E./EEEEEEEEEEIE
+*EEEEEEEEEE\....E
+E.E.E......E....I
+E.\EEEEEEEEEEI..E
+E...E../E*.E.E..E
+\EEEPEEEEEEEE/..E
+.......I.E.E....E
+.......G.E.E....E    
+.........\EI.....
+message level 4 of 4
+
+..../EEEEEEEEE*E\
+.*EEEEEE\.....E.E
+....E...E../EEEE*
+/EEE*EEEEEEEE\E..
+E.......P..E.EE..
+E../EEEEEEGI.EE..
+E..E....E....*/..
+E..*....E........
+*EEEEEEE/........
+
+
+message Nicely Done!

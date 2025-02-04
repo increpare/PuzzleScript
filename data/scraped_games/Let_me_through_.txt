@@ -1,0 +1,556 @@
+title Let me through 
+author Le Slo
+homepage www.puzzlescript.net
+
+background_color #272a29
+
+run_rules_on_level_start
+verbose_logging
+
+again_interval 0.05
+
+========
+OBJECTS
+========
+FloorTL
+#8d9a95 #5e7e67
+00000
+01100
+01000
+00000
+00000
+
+FloorTR
+#8d9a95 #5e7e67
+00000
+00110
+00010
+00000
+00000
+
+FloorBL
+#8d9a95 #5e7e67
+00000
+00000
+01000
+01100
+00000
+
+FloorBR
+#8d9a95 #5e7e67
+00000
+00000
+00010
+00110
+00000
+
+PlayerTL
+#5d5dde #4c4cd4 #7377ff #3c3ca6 #313187
+....0
+...12
+..320
+.4100
+43110
+
+PlayerTR
+#5d5dde #7377ff
+0....
+10...
+110..
+0110.
+00110
+
+PlayerBL
+#313187 #3c3ca6 #4c4cd4
+01122
+.0112
+..011
+...01
+....0
+
+PlayerBR
+#5d5dde #7377ff #4c4cd4 #3c3ca6 #313187
+00010
+2012.
+223..
+34...
+4....
+
+PlayerAnim01
+#4545be
+.....
+.000.
+.000.
+.000.
+.....
+
+PlayerAnim02
+#39399d
+.....
+.....
+..0..
+.000.
+..0..
+
+
+PlayerAnim03
+#2c2c79
+.....
+.....
+.....
+.....
+..0..
+
+CrateL
+#a76b4e #c38155 #e29c5e #eeb05e
+.0011
+01223
+01222
+00111
+.0000
+
+CrateR
+#e29c5e #eeb05e #c38155 #a76b4e
+0000.
+11110
+01102
+22223
+3333.
+
+Crate
+#a76b4e #c38155 #e29c5e #eeb05e
+.012.
+01232
+01221
+00110
+.000.
+
+CrateT
+#a76b4e #c38155 #e29c5e #eeb05e
+.012.
+01232
+01332
+01332
+01232
+
+CrateB
+#a76b4e #c38155 #e29c5e #eeb05e
+01231
+01221
+01220
+01100
+.000.
+
+CrateAnim01
+#a76b4e #c38155 #e29c5e #eeb05e
+.....
+.012.
+.011.
+.000.
+.....
+
+CrateAnim02
+#a76b4e #c38155 #e29c5e #eeb05e
+.....
+.....
+..1..
+.011.
+..0..
+
+
+CrateAnim03
+#a76b4e #c38155 #e29c5e #eeb05e
+.....
+.....
+.....
+.....
+..0..
+
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+TargetTL
+#8d9a95 #414644
+00000
+01110
+01010
+01100
+00000
+
+TargetTR
+#8d9a95 #414644
+00000
+01110
+01010
+00110
+00000
+
+TargetBL
+#8d9a95 #414644
+00000
+01100
+01010
+01110
+00000
+
+TargetBR
+#8d9a95 #414644
+00000
+00110
+01010
+01110
+00000
+
+Target
+#8d9a95 #414644
+00000
+01110
+01010
+00110
+00000
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+HoleTL
+#717c78 #68716e #5f6764 #414644 #272a29
+00000
+33333
+44444
+44444
+44444
+
+HoleTR
+#717c78 #68716e #5f6764 #414644 #272a29
+00000
+33333
+44444
+44444
+44444
+
+Hole
+#272a29
+00000
+00000
+00000
+00000
+00000
+
+
+
+turn
+transparent
+
+R
+transparent
+
+L
+transparent
+
+U
+transparent
+
+D
+transparent
+
+start
+transparent
+
+stop
+transparent
+
+auxFall
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = PlayerTL and start and turn
+* = Crate
+h = hole
+y = CrateL
+z = crateT
+@ = Crate and Target
+O = Target
+
+Player = PlayerTL or PlayerTR or PlayerBL or PlayerBR
+crates = CrateL or CrateR or Crate or CrateT or CrateB
+floors = FloorTL or FloorTR or FloorBL or FloorBR
+dirs = R or L or U or D
+directions = turn or dirs
+animations = CrateAnim01 or CrateAnim02 or CrateAnim03 or PlayerAnim01 or PlayerAnim02 or PlayerAnim03
+holes = HoleTL or HoleTR or hole
+
+targets = TargetTL or TargetTR or TargetBL or TargetBR or target
+=======
+SOUNDS
+=======
+
+dirs create 37592107
+Crates MOVE 57019908
+CrateAnim01 create 80502508
+PlayerAnim01 create 80502508
+showmessage 50942708
+endlevel 85467908
+undo 21851307
+restart 26019708
+
+================
+COLLISIONLAYERS
+================
+
+Background
+start, auxFall
+stop
+floors
+holes
+animations
+directions
+Targets
+Player, Wall, Crates
+
+======
+RULES
+======
+
+(---------------Level construction-----------------------)
+right[PlayerTL | ][start] -> [PlayerTL | PlayerTR][start]
+down[PlayerTL | ][start] -> [PlayerTL | PlayerBL][start]
+down[PlayerTR | ][start] -> [PlayerTR | PlayerBR][start]
+
+[PlayerTL][start] -> [playerTL FloorTL][start]
+
+right[CrateL | no crateR][start] -> [crateL | crateR][start]
+down[CrateT | no crateB][start] -> [crateT | crateB][start]
+
+down [no holes| hole] -> [ | HoleTL]
+startLoop
+(Square)
+right[FloorTL | no floors][start] -> [FloorTL | FloorTR][start]
+down[FloorTL | no floors][start]-> [FloorTL | FloorBL][start]
+down[FloorTR | no floors][start] -> [FloorTR | FloorBR][start]
+
+right[FloorTR | no floors][start] -> [FloorTR | FloorTL][start]
+down[FloorBL | no floors][start] -> [FloorBL | FloorTL][start]
+
+up[FloorTL | | no floors][start] -> [FloorTL | | FloorTL][start]
+left[FloorTL | | no floors][start] -> [FloorTL | | FloorTL][start]
+endloop
+
+[target FloorTL][start] -> [TargetTL FloorTL][start]
+[target FloorTR][start] -> [TargetTR FloorTR][start]
+[target FloorBL][start] -> [TargetBL FloorBL][start]
+[target FloorBR][start] -> [TargetBR FloorBR][start]
+
+[start] -> []
+
+
+(------------------Double move-----------------)
+
+
+[right playerTL][turn] -> [right playerTL][R]
+[left playerTL][turn] -> [left playerTL][L]
+[up playerTL][turn] -> [up playerTL][U]
+[down playerTL][turn] -> [down playerTL][D]
+
+[stationary player][R] -> [right player][R stop]
+[stationary player][L] -> [left player][L stop]
+[stationary player][U] -> [up player][U stop]
+[stationary player][D] -> [down player][D stop]
+
+[stop dirs] -> [turn]
+
+(-----------------Crate Push------------------)
+
+(Normal push)
+
+right[ right  PlayerTR | CrateT ] -> [  >  PlayerTR | right CrateT  ]
+left[ left  PlayerTL | CrateT ] -> [  >  PlayerTL | left CrateT  ]
+right[ right  PlayerBR | CrateB ] -> [  >  PlayerBR | right CrateB  ]
+left[ left  PlayerBL | CrateB ] -> [  >  PlayerBL | left CrateB  ]
+
+up[ up  PlayerTR | CrateR ] -> [  up  PlayerTR | up CrateR  ]
+up[ up  PlayerTL | CrateL ] -> [  up  PlayerTL | up CrateL  ]
+down[ down PlayerBL | CrateL ] -> [  down  PlayerBL | down CrateL  ]
+down[ down  PlayerBR | CrateR ] -> [  down  PlayerBR | down CrateR  ]
+
+(Diagonal push)
+
+right[ right  PlayerTR | stationary Crates ] -> [  >  PlayerTR | up Crates  ]
+up[ up  PlayerTR | stationary Crates ] -> [  >  PlayerTR | right Crates  ]
+
+left[ left  PlayerTL | stationary Crates ] -> [  >  PlayerTL | up Crates  ]
+up[ up  PlayerTL | stationary Crates ] -> [  >  PlayerTL | left Crates  ]
+
+left[ left  PlayerBL | stationary Crates ] -> [  >  PlayerBL | down Crates  ]
+down[ down  PlayerBL | stationary Crates ] -> [  >  PlayerBL | left Crates  ]
+
+right[ right  PlayerBR | stationary Crates ] -> [  >  PlayerBR | down Crates  ]
+down[ down  PlayerBR | stationary Crates ] -> [  >  PlayerBR | right Crates  ]
+
+(--------------Crate multi push)
+startLoop
+[> crates | stationary crates] -> [> crates | > crates]
+
+right [ moving crateL | stationary crateR] -> [moving crateL | moving crateR]
+left [ moving crateR | stationary crateL] -> [moving crateR | moving crateL]
+down [ moving crateT | stationary crateB] -> [moving crateT | moving crateB]
+up [ moving crateB | stationary crateT] -> [moving crateB | moving crateT]
+endLoop
+
+(-------------------HOLES---------------------)
+
+late[PlayerAnim03] -> []
+late[PlayerAnim02] -> [PlayerAnim03]
+late[PlayerAnim01] -> [PlayerAnim02]
+
+
+late [player] -> [player auxFall]
+late [player auxFall no holes] -> [player]
+late [player no auxFall][player auxFall] -> [player][player]
+late [player auxFall] -> [PlayerAnim01]
+
+late[CrateAnim03] -> []
+late[CrateAnim02] -> [CrateAnim03]
+late[CrateAnim01] -> [CrateAnim02]
+
+late [crate holes] -> [CrateAnim01 holes]
+late right[crateL holes | crateR holes ] -> [CrateAnim01 holes | CrateAnim01 holes]
+late down[crateT holes | crateB holes ] -> [CrateAnim01 holes | CrateAnim01 holes]
+
+
+late [animations] -> again
+late [dirs] -> again
+
+==============
+WINCONDITIONS
+==============
+
+All Targets on Crates
+no animations
+no dirs
+
+=======
+LEVELS
+=======
+
+message 01/07
+
+hhhhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhhhh
+hhhhhhhh......hhhh
+hhhhhhhh......hhhh
+hhhhp..o*.....hhhh
+hhhh...o*.....hhhh
+hhhhhhhh......hhhh
+hhhhhhhh......hhhh
+hhhhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhhhh
+
+message 02 / 07
+
+hhhhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhhhh
+hhhhp.......hhhhhh
+hhhh........hhhhhh
+hhhh........hhhhhh
+hhhh...o*...hhhhhh
+hhhh...*o...hhhhhh
+hhhh...o*...hhhhhh
+hhhhhh.*o...hhhhhh
+hhhhhh......hhhhhh
+hhhhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhhhh
+
+message 03  /  07
+
+hhhhhhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhhhhhh
+hhhh............hhhh
+hhhh............hhhh
+hhhhp...........hhhh
+hhhh...*h*....o.hhhh
+hhhh....*.*h....hhhh
+hhhh............hhhh
+hhhh............hhhh
+hhhh............hhhh
+hhhhhhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhhhhhh
+
+message 04   /   07
+
+hhhhhhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhhhhhh
+hhhhp...........hhhh
+hhhh............hhhh
+hhhh....hh......hhhh
+hhhh....hh......hhhh
+hhhh.o..**..z.o.hhhh
+hhhh...........ohhhh
+hhhhhhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhhhhhh
+
+message 05    /    07
+
+hhhhhhhhhhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhhhhhhhhhh
+hhhh................hhhh
+hhhh................hhhh
+hhhh..p.............hhhh
+hhhh.....yyyy**..o..hhhh
+hhhh................hhhh
+hhhh................hhhh
+hhhh................hhhh
+hhhh................hhhh
+hhhhhhhhhhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhhhhhhhhhh
+
+message 06     /     07
+
+hhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhh
+hhhhp...h.hhhhhh
+hhhh....hhhhhhhh
+hhhh....*...hhhh
+hhhh.......ohhhh
+hhhh..y.....hhhh
+hhhh..*.....hhhh
+hhhh....hhhhhhhh
+hhhh....hhhhhhhh
+hhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhh
+
+message 07       /       07
+
+hhhhhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhhhhh
+hhhh.........h...hh
+hhhh....y....h...hh
+hhhhp........h...hh
+hhhh.........h..ohh
+hhhh.*...hhhhh..hhh
+hhhh..z..h......hhh
+hhhh.....h......hhh
+hhhh.....h......hhh
+hhhhhhhhhhhhhhhhhhh
+hhhhhhhhhhhhhhhhhhh
+
+message Pushing is wrong. Don't push.
+
+
+
+

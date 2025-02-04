@@ -1,0 +1,90 @@
+title Nom
+author Ollie
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background 
+GREEN  
+
+Wall 
+BLACK
+
+Player 
+Blue   
+
+Carno 
+RED WHITE
+01...
+00...
+.0000
+.000.
+.0.0.
+
+Herbi
+Brown WHITE
+.....
+.0.0.
+00000
+.0000
+.0..0
+
+HerbiPadock
+GREEN
+
+CarnoPadock
+GREEN
+
+=======
+LEGEND
+=======
+
+. = Background
+, = HerbiPadock
+- = CarnoPadock
+# = Wall
+P = Player
+C = Carno and HerbiPadock
+H = Herbi and CarnoPadock
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+HerbiPadock, CarnoPadock
+Player, Wall, Carno, Herbi
+
+======
+RULES     
+======     
+
+[ > Player | Herbi ] -> [ > Player | > Herbi ]
+[ Carno | ... | Herbi ] -> [  > Carno | ... | Herbi  ]
+[ > Carno | Herbi ] -> [ Carno | ]
+[ > Player | Carno ] -> [ > Player | > Carno ]
+
+==============
+WINCONDITIONS
+==============
+
+All Herbi on HerbiPadock
+All Carno on CarnoPadock
+Some Herbi
+
+=======     
+LEVELS
+=======
+
+,,,,,#-----
+,,,,,#-----
+,,,,.p.--H-
+,,C,...----
+,,,,,#-----
+,,,,,#-----

@@ -1,0 +1,272 @@
+title  I Have No Mouth, And I Cannot Push Two Boxes
+author Joel Box
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#000000 
+00000
+00000
+00000
+00000
+00000
+
+Target
+#7a79db
+.....
+.....
+.000.
+.0.0.
+.000.
+
+Wall
+#393875 #4f4e8d
+00000
+01000
+11111
+11111
+00000
+
+PlayerRight
+#990c33 #ffffff #c83242 #cf5c50 black
+.0000
+.2121
+22121
+23333
+.3..3
+
+PlayerLeft
+#990c33 #ffffff #c83242 #cf5c50 black
+0000.
+1212.
+12122
+33332
+3..3.
+
+Crate
+#f99596 #7a41c7 #f08687 black
+01310
+03130
+01310
+00000
+22222
+
+CrateOnTarget
+#7a79db
+..0..
+.0.0.
+..0..
+.....
+.....
+
+AboveCrate
+#f99596
+.....
+.....
+.....
+.....
+00000
+
+BelowCrate
+#f08687
+00000
+.....
+.....
+.....
+.....
+
+BelowWall
+#444
+00000
+.....
+.....
+.....
+.....
+
+AboveWall
+#93815f
+.....
+.....
+.....
+.....
+00000
+
+WallD
+#93815f #444
+.....
+.....
+.....
+00000
+11111
+
+WallL
+#93815f
+0....
+0....
+0....
+0....
+0....
+
+WallR
+#93815f
+....0
+....0
+....0
+....0
+....0
+
+WallLR
+#93815f
+0...0
+0...0
+0...0
+0...0
+0...0
+
+AboveWallL
+#93815f
+.....
+.....
+.....
+0....
+0....
+
+AboveWallR
+#93815f
+.....
+.....
+.....
+....0
+....0
+
+AboveWallLR
+#93815f
+.....
+.....
+.....
+0...0
+0...0
+
+
+
+AboveWallLRwithR
+#93815f
+....0
+....0
+....0
+0...0
+0...0
+
+AboveWallLRwithL
+#93815f
+0....
+0....
+0....
+0...0
+0...0
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = PlayerRight
+* = Crate
+@ = Crate and Target
+O = Target
+
+Player = PlayerRight or PlayerLeft
+
+AboveDecoration = AboveWall or AboveWallL or AboveWallR or WallL or WallR or WallLR
+
+=======
+SOUNDS
+=======
+
+Player MOVE 19191107
+Crate MOVE 19410707
+Player action 25912309
+Undo 34883507
+Restart 29257109
+endlevel 90138909
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BelowWall,BelowCrate
+Target
+Player, Wall, Crate
+CrateOnTarget
+AboveDecoration
+WallD, AboveWallLR, AboveWallLRwithR, AboveWallLRwithL
+AboveCrate
+
+======
+RULES
+======
+
+[ left Player ] -> [ left PlayerLeft ]
+[ right Player ] -> [ right PlayerRight ]
+([ up Player ] -> [ up PlayerUp ]
+[ down Player ] -> [ down PlayerDown ])
+
+[ action Player | no Wall ] -> [ action Player | Crate ]
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+
+(3D)
+
+late [ AboveCrate ] -> []
+late up [ Crate | ] -> [ Crate | AboveCrate ]
+late [ BelowCrate ] -> []
+late down [ Crate | ] -> [ Crate | BelowCrate ]
+late [ CrateOnTarget ] -> []
+late [ Crate Target ] -> [ Crate Target CrateOnTarget ]
+
+
+down [ Wall | no Wall ] -> [ Wall WallD | BelowWall ]
+up [ Wall | no Wall ] -> [ Wall | AboveWall ]
+left [ Wall | no Wall ] -> [ Wall WallL | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+right [ Wall no AboveDecoration | no Wall ] -> [ Wall WallR | ]
+
+up [ WallL | Wall no AboveDecoration ] -> [ WallL | Wall AboveWallL ]
+up [ WallR | Wall no AboveDecoration ] -> [ WallR | Wall AboveWallR ]
+up [ WallLR | Wall ] -> [ WallLR | Wall AboveWallLR ]
+
+up [ WallL | Wall WallR ] -> [ WallL | Wall AboveWallLRwithR ]
+up [ WallR | Wall WallL ] -> [ WallR | Wall AboveWallLRwithL ]
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Press X to create boxes.  Put a box on all targets.  You may have leftover boxes.
+
+............
+.##########.
+.#o.#..o..#.
+.#o.#p###.#.
+.#o.#.ooo.#.
+.#.##.ooo.#.
+.#.#..###.#.
+.#.#.####.#.
+.#........#.
+.##oo#oooo#.
+..#########.
+............

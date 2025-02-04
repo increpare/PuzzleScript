@@ -1,0 +1,362 @@
+title Rainbow Apples
+author Alexander In Uganda
+homepage alexanderinuganda.itch.io
+color_palette amstrad
+
+youtube y-JqH1M4Ya8
+
+debug
+
+========
+OBJECTS
+========
+
+BACKGROUND
+TRANSPARENT
+
+WALL
+BLACK WHITE
+00010
+11111
+10000
+11111
+00010
+
+RedPaint
+GREY RED
+00000
+01110
+01110
+01000
+00000
+
+GreenPaint
+GREY GREEN
+00000
+01110
+01110
+01000
+00000
+
+PurplePaint
+GREY PURPLE
+00000
+01110
+01110
+01000
+00000
+
+PinkPaint
+GREY PINK
+00000
+01110
+01110
+01000
+00000
+
+BluePaint
+GREY DARKBLUE
+00000
+01110
+01110
+01000
+00000
+
+
+
+RedTarget
+TRANSPARENT RED
+11011
+10001
+00000
+10001
+11011
+
+BlueTarget
+TRANSPARENT DarkBlue
+11011
+10001
+00000
+10001
+11011
+
+GreenTarget
+TRANSPARENT GREEN
+11011
+10001
+00000
+10001
+11011
+
+PurpleTarget
+TRANSPARENT PURPLE
+11011
+10001
+00000
+10001
+11011
+
+PinkTarget
+TRANSPARENT PINK
+11011
+10001
+00000
+10001
+11011
+
+RedApple
+TRANSPARENT RED BROWN
+00020
+01120
+11211
+11111
+01110
+
+BlueApple
+TRANSPARENT DARKBLUE BROWN
+00020
+01120
+11211
+11111
+01110
+
+GreenApple
+TRANSPARENT GREEN BROWN
+00020
+01120
+11211
+11111
+01110
+
+PurpleApple
+TRANSPARENT PURPLE BROWN
+00020
+01120
+11211
+11111
+01110
+
+PinkApple
+TRANSPARENT PINK BROWN
+00020
+01120
+11211
+11111
+01110
+
+
+RegPlayer 
+TRANSPARENT #FFA500 WHITE BLACK BLUE
+01010
+11111
+02120
+04140
+01310
+
+NegaPlayer 
+TRANSPARENT #32CD32 WHITE BLACK BLUE
+01010
+11111
+02120
+04140
+01310
+
+
+=======
+LEGEND
+=======
+
+r = RedApple
+b = BlueApple
+p = PurpleApple
+i = PinkApple
+g = GreenApple
+F = RedTarget
+H = BlueTarget
+L = PurpleTarget
+J = PinkTarget
+K = GreenTarget
+. = Background
+# = Wall
+X = RegPlayer
+A = RedPaint
+M = BluePaint
+C = PurplePaint
+D = PinkPaint
+E = GreenPaint
+@ = NegaPlayer
+Player = RegPlayer or NegaPlayer
+=======
+SOUNDS
+=======
+
+Player Move 56136907
+Player CantMove 93771704
+Undo 46241108
+sfx0 39647902
+endlevel 22716908
+
+================
+COLLISIONLAYERS
+================
+
+Background
+RedTarget, BlueTarget, GreenTarget, PinkTarget, PurpleTarget, RedPaint, BluePaint, GreenPaint, PinkPaint, PurplePaint
+Player, Wall, RedApple, BlueApple, GreenApple, PinkApple, PurpleApple, NegaPlayer
+
+======
+RULES     
+======     
+
+[ > Player | Wall ] -> [ Player | Wall ]
+
+[ >  RegPlayer | RedApple ] -> [  >  RegPlayer | > RedApple  ] 
+[ >  RegPlayer | BlueApple ] -> [  >  RegPlayer | > BlueApple  ]    
+[ >  RegPlayer | GreenApple ] -> [  >  RegPlayer | > GreenApple  ]    
+[ >  RegPlayer | PinkApple ] -> [  >  RegPlayer | > PinkApple  ]    
+[ >  RegPlayer | PurpleApple ] -> [  >  RegPlayer | > PurpleApple  ]
+
+[ >  NegaPlayer | RedApple ] -> [  >  NegaPlayer | > RedApple  ] 
+[ >  NegaPlayer | BlueApple ] -> [  >  NegaPlayer | > BlueApple  ]    
+[ >  NegaPlayer | GreenApple ] -> [  >  NegaPlayer | > GreenApple  ]    
+[ >  NegaPlayer | PinkApple ] -> [  >  NegaPlayer | > PinkApple  ]    
+[ >  NegaPlayer | PurpleApple ] -> [  >  NegaPlayer | > PurpleApple  ]
+
+[ >  RedApple | RedApple ] -> [  >  RedApple | > RedApple ]
+[ >  BlueApple | BlueApple ] -> [  >  BlueApple | > BlueApple  ]    
+[ >  GreenApple | GreenApple ] -> [  >  GreenApple | > GreenApple  ]    
+[ >  PinkApple | PinkApple ] -> [  >  PinkApple | > PinkApple  ]    
+[ >  PurpleApple | PurpleApple ] -> [  >  PurpleApple | > PurpleApple  ]
+
+late [ RedApple  BluePaint ] -> [BlueApple BluePaint] sfx0
+late [ RedApple  GreenPaint ] -> [GreenApple GreenPaint] sfx0
+late [ RedApple  PinkPaint ] -> [PinkApple PinkPaint] sfx0
+late [ RedApple  PurplePaint ] -> [BlueApple PurplePaint] sfx0
+late [ BlueApple  RedPaint ] -> [RedApple RedPaint] sfx0
+late [ BlueApple  GreenPaint ] -> [GreenApple GreenPaint] sfx0
+late [ BlueApple  PinkPaint ] -> [PinkApple PinkPaint] sfx0
+late [ BlueApple  PurplePaint ] -> [PurpleApple PurplePaint] sfx0
+late [ GreenApple  RedPaint ] -> [RedApple RedPaint] sfx0
+late [ GreenApple  BluePaint ] -> [BlueApple BluePaint] sfx0
+late [ GreenApple  PinkPaint ] -> [PinkApple PinkPaint] sfx0
+late [ GreenApple  PurplePaint ] -> [PurpleApple PurplePaint] sfx0
+late [ PinkApple  RedPaint ] -> [RedApple RedPaint] sfx0
+late [ PinkApple  GreenPaint ] -> [GreenApple GreenPaint] sfx0
+late [ PinkApple  BluePaint ] -> [BlueApple BluePaint] sfx0
+late [ PinkApple  PurplePaint ] -> [PurpleApple PurplePaint] sfx0
+late [ PurpleApple  RedPaint ] -> [RedApple RedPaint] sfx0
+late [ PurpleApple  GreenPaint ] -> [GreenApple GreenPaint] sfx0
+late [ PurpleApple  PinkPaint ] -> [PinkApple PinkPaint] sfx0
+late [ PurpleApple  BluePaint ] -> [BlueApple BluePaint] sfx0
+
+[ > RegPlayer ] [ NegaPlayer ] -> [ > RegPlayer ] [ < NegaPlayer ]
+
+
+==============
+WINCONDITIONS
+==============
+
+All RedTarget on RedApple
+All BlueTarget on BlueApple
+All GreenTarget on GreenApple
+All PinkTarget on PinkApple
+All PurpleTarget on PurpleApple
+
+
+=======     
+LEVELS
+=======
+
+MESSAGE Put the apples on the same-coloured targets!
+
+#########
+#.......#
+#.x.....#
+#.......#
+#.r...f.#
+#.......#
+#########
+
+MESSAGE All targets need to be covered to complete the level!
+
+#########
+#.f...h.#
+#.b...r.#
+#.......#
+#...x...#
+#.......#
+#########
+
+MESSAGE Use paint to change the colours of the apples!
+
+
+#########
+#xb..a.f#
+#########
+
+
+#########
+#.......#
+#....Mr.#
+#.X...H.#
+#.......#
+#.......#
+#########
+
+#########
+#.j...k.#
+#.......#
+#...x...#
+#.be.dr.#
+#.......#
+#########
+
+.#########.
+##.......##
+#f.x...g..#
+#j....mim.#
+#ha....p..#
+##.......##
+.#########.
+
+Message Same-coloured apples can be pushed together!
+
+#########
+#xr.bbbh#
+#...#####
+#r###....
+#r#......
+#r#......
+#f#......
+###......
+
+########
+#......#
+#x.iiic#
+######l#
+######l#
+######l#
+########
+
+.....#####...
+.#####kff#...
+.#..#..hj#...
+.#.g#b..h#...
+##..#..r##...
+#...x...#....
+#.i.##r.#....
+#..###..#####
+####.#..#...#
+.....#....b.#
+.....#..#####
+.....#####...
+
+#########
+#x..i..j#
+#########
+.........
+#########
+#h..b..@#
+#########
+
+MESSAGE Insert pretentious quote here.

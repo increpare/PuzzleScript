@@ -1,0 +1,386 @@
+title Graded Sir
+author Jeremiah 'CaptainKraft' Goerdt
+homepage www.gameskraft.com
+
+noundo
+text_color green
+zoomscreen 10x10
+
+========
+OBJECTS
+========
+
+background ,
+#968981 #9e9188
+
+01010
+10101
+01010
+10101
+01010
+
+background2 .
+#9e9188 #968981
+
+01010
+10101
+01010
+10101
+01010
+
+start *
+#9e9188 #968981
+
+01010
+10101
+01010
+10101
+01010
+
+winTarget w
+#8c613b #865930 #79512c #7b6d60
+
+00000
+00001
+00000
+03001
+22222
+
+restartTarget r
+#8c613b #865930 #79512c #7b6d60
+
+00000
+00001
+00000
+03001
+22222
+
+switchOn l
+#bcb0a4 #3e3b38 #2f2c29
+
+.....
+.210.
+.20..
+.21..
+.....
+
+switchOff o
+#bcb0a4 #3e3b38 #2f2c29
+
+.....
+.21..
+.20..
+.210.
+.....
+
+leverOn q
+#bcb0a4 #3e3b38 #2f2c29
+
+.....
+.0...
+.101.
+.222.
+.....
+
+leverOff f
+#bcb0a4 #3e3b38 #2f2c29
+
+.....
+...0.
+.101.
+.222.
+.....
+
+temp t
+#c0855d #a17050 #b17a55 #9b6b4b
+
+00000
+22222
+22222
+22222
+11111
+
+temp2 m
+#c0855d #a17050 #b17a55 #9b6b4b
+
+00000
+22222
+22222
+22222
+11111
+
+block b
+#946235 #ad794a #a1754d #865930 #97673c #a1754d #79512c #7d5939
+
+01010
+23435
+34343
+23235
+67676
+
+fakeDoor k
+#8c613b #865930 #79512c #7b6d60
+
+00000
+00001
+00000
+03001
+22222
+
+wallTopLeft #
+#c0855d #a17050 #b17a55 #9b6b4b
+
+00000
+12222
+12222
+12222
+12221
+
+wallTop $
+#c0855d #a17050 #b17a55 #9b6b4b
+
+00000
+22222
+22222
+22222
+11111
+
+wallLeft %
+#c0855d #a17050 #b17a55 #9b6b4b
+
+12221
+12221
+12221
+12221
+12221
+
+wallBottomLeft &
+#c0855d #a17050 #b17a55 #9b6b4b
+
+12221
+12222
+12222
+12222
+11111
+
+wallBottomRight -
+#c0855d #a17050 #b17a55 #9b6b4b
+
+12221
+22221
+22221
+22221
+11111
+
+wallTopRight +
+#c0855d #a17050 #b17a55 #9b6b4b
+
+00000
+22221
+22221
+22221
+12221
+
+player @
+#ad4936 #e3ae8b #923f30 #72838c #624b3b
+
+.....
+00100
+12221
+.333.
+.4.4.
+
+executioner x
+#618157 #e3ae8b #447b33 #72838c #2f2c29
+
+.....
+00100
+12221
+.333.
+.4.4.
+
+corpse c
+#ad4936 #e3ae8b #923f30 #72838c #624b3b
+
+..1..
+00000
+10001
+.333.
+.4.4.
+
+=======
+LEGEND
+=======
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+background
+background2
+start
+winTarget, restartTarget, fakeDoor
+player, wallTopLeft, wallTop, wallLeft, wallBottomLeft, wallBottomRight, wallTopRight, temp, temp2, switchOn, switchOff, leverOn, leverOff, block, executioner
+corpse
+
+======
+RULES     
+======
+
+(LEVEL 1) 
+(restart conditions)
+late RIGHT [start | ... | player restartTarget] -> [start player | ... | restartTarget]  message Well done. You have received an A for your latest grade. Now please exit to your right.
+
+(LEVEL 2)
+(restart conditions)
+late [switchOff][player restartTarget | ... | start] -> [switchOn][restartTarget | ... | player start]  message Well done. You have received an A for your latest grade. Now please flip the switch to the bottom-left and exit through the door to the South.
+
+(flip switches and levers on/off)
+[action player | switchOff] -> [player | switchOn]
+[action player | switchOn] -> [player | switchOff]
+[action player | leverOff] -> [player | leverOn]
+[action player | leverOn] -> [player | leverOff]
+
+(show winTarget when light is switched off)
+[switchOff][temp] -> [switchOff][winTarget]
+[switchOn][winTarget] -> [switchOn][temp]
+
+(LEVEL 3) 
+(restart conditions)
+late [leverOff][player restartTarget][start] -> [leverOn][restartTarget][player start]  message Well done. You get another A. Pull the lever to your right and exit north.
+
+(show winTarget when light is off and level is flipped)
+[switchOff][leverOff][temp2] -> [switchOff][leverOff][winTarget]
+[switchOn][leverOn][winTarget] -> [switchOn][leverOn][temp2]
+[switchOff][leverOn][winTarget] -> switchOff][leverOn][temp2]
+[switchOn][leverOff][winTarget] -> [switchOn][leverOff][temp2]
+
+(LEVEL 4)
+(restart conditions)
+[block restartTarget][fakeDoor] -> [block restartTarget][winTarget]
+late [start | ][block fakeDoor][player restartTarget] -> [block start | player][fakeDoor][restartTarget] message Well done. Another A. Please push the block into the left door and exit right.
+
+(moving the block)
+[> player | block] -> [> player | > block]
+
+(LEVEL 5)
+(restart conditions)
+late [executioner | ... | restartTarget player][start] -> [executioner | ... | restartTarget][player start] message It is good to see you obeying. Next, you will be required to exit South.
+late [executioner | player | winTarget] -> [executioner | corpse | winTarget] message The executioner has taken your life for disobediance.
+
+(moving the executioner)
+horizontal [> player | executioner] -> [> player | > executioner]
+
+==============
+WINCONDITIONS
+==============
+
+all player on winTarget     
+
+=======     
+LEVELS
+=======
+
+message Welcome to the obedience simulator. You will be graded on your ability to follow instructions. Let's begin.
+
+message Your first task is to exit through the door to the East.
+
+#$$$$$$$$$$$$$$$$$$$+
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+w.,.,.,.,*@.,.,.,.,.r
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+&$$$$$$$$$$$$$$$$$$$-
+
+message You have failed to follow the instructions and will receive a B for your latest grade.
+
+message For your next task, please flip the switch to the bottom-left. Then exit through the door to the South.
+
+#$t$$$$$$$$$$$$$$$$$+
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+l.,.,.,.,@*.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+&$$$$$$$$$r$$$$$$$$$-
+
+message Once again you fail me. Your grade has dropped to a C. If this behavior continues, there will be consequences.
+
+message Pull the lever to your right to unlock the door and exit North.
+
+#$$$$$$$$r$$$$$$$$$$+
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,*,.,.,.,.,%
+l.,.,.,.,.@.,.,.,.,q%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+&$$$$$$$$$m$$$$$$$$$-
+
+message Your situation is deteriorating quickly. Your grade of D is unacceptable.
+
+message The next task is important for your well-being. Push the block into the left door and exit right. I pray you don't disregard your instructions.
+
+#$$$$$$$$$$$$$$$$$$$+
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+k.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.@*,.,.,.,.%
+%,.,.,.,.,b,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.r
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+&$$$$$$$$$$$$$$$$$$$-
+
+message Unfortunately you have now received an F for your grade. You get one more chance to follow instructions.
+
+message The man in the room will execute you if you do not obey. Exit to the south.
+
+#$$$$$$$$$w$$$$$$$$$+
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,x,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.@.,.,.,.,.%
+%,.,.,.,.,*,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+%,.,.,.,.,.,.,.,.,.,%
+%.,.,.,.,.,.,.,.,.,.%
+&$$$$$$$$$r$$$$$$$$$-

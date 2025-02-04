@@ -1,0 +1,272 @@
+title Life is Hard
+author Marcos Donnantuoni
+homepage https://marcosd.itch.io
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+background
+grey
+
+player
+red
+.000.
+0...0
+0...0
+0...0
+.000.
+
+cell
+#ffff00 #eeee00 #dddd00 
+.000.
+01112
+01112
+01112
+.222.
+
+
+add
+green
+.....
+.....
+..0..
+.....
+.....
+
+
+del
+red
+.....
+.....
+..0..
+.....
+.....
+
+calc
+transparent
+
+c0
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+c1
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+c2
+transparent
+.....
+.0...
+.....
+...0.
+.....
+
+c3
+transparent
+.....
+.0...
+..0..
+...0.
+.....
+
+c4
+transparent
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+ml
+transparent
+mr
+transparent
+mlu
+transparent
+mld
+transparent
+mru
+transparent
+mrd
+transparent
+
+
+=======
+LEGEND
+=======
+
+. = background
+@ = player
+$ = player and cell
+c = cell
+mark = ml or mr or mlu or mld or mru or mrd
+count = c0 or c1 or c2 or c3 or c4
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+background
+cell
+player
+add
+del
+mark
+count
+calc
+
+======
+RULES
+======
+
+(
+[ action player no cell ] -> [ player      add c0 ]
+[ action player    cell ] -> [ player cell del c0 ]
+)
+
+
+[ action player cell del ] -> [ player ]
+
+[ action player add ] -> [ player cell ]
+
+
+[ add ] -> [ ]
+[ del ] -> [ ]
+[ calc ] -> [ ]
+[ count ] -> [ ]
+[ mark ] -> [ ]
+
+startloop
+[ calc ] -> [ ]
+random [ no count ] -> [ calc c0 ]
+[ mark ] -> [ ]
+
+left  [ calc c0 | ] -> [ calc c0 | ml ]
+right [ calc c0 | ] -> [ calc c0 | mr ]
+up   [ ml | ] -> [ ml | mlu ]
+down [ ml | ] -> [ ml | mld ]
+up   [ mr | ] -> [ mr | mru ]
+down [ mr | ] -> [ mr | mrd ]
+
+[ mlu cell ] [ calc c3 ] -> [ mlu cell ] [ calc c4 ]
+[ mlu cell ] [ calc c2 ] -> [ mlu cell ] [ calc c3 ]
+[ mlu cell ] [ calc c1 ] -> [ mlu cell ] [ calc c2 ]
+[ mlu cell ] [ calc c0 ] -> [ mlu cell ] [ calc c1 ]
+[ mld cell ] [ calc c3 ] -> [ mld cell ] [ calc c4 ]
+[ mld cell ] [ calc c2 ] -> [ mld cell ] [ calc c3 ]
+[ mld cell ] [ calc c1 ] -> [ mld cell ] [ calc c2 ]
+[ mld cell ] [ calc c0 ] -> [ mld cell ] [ calc c1 ]
+[ mru cell ] [ calc c3 ] -> [ mru cell ] [ calc c4 ]
+[ mru cell ] [ calc c2 ] -> [ mru cell ] [ calc c3 ]
+[ mru cell ] [ calc c1 ] -> [ mru cell ] [ calc c2 ]
+[ mru cell ] [ calc c0 ] -> [ mru cell ] [ calc c1 ]
+[ mrd cell ] [ calc c3 ] -> [ mrd cell ] [ calc c4 ]
+[ mrd cell ] [ calc c2 ] -> [ mrd cell ] [ calc c3 ]
+[ mrd cell ] [ calc c1 ] -> [ mrd cell ] [ calc c2 ]
+[ mrd cell ] [ calc c0 ] -> [ mrd cell ] [ calc c1 ]
+
+left  [ calc c3 | cell ] -> [ calc c4 | cell ]
+left  [ calc c2 | cell ] -> [ calc c3 | cell ]
+left  [ calc c1 | cell ] -> [ calc c2 | cell ]
+left  [ calc c0 | cell ] -> [ calc c1 | cell ]
+right [ calc c3 | cell ] -> [ calc c4 | cell ]
+right [ calc c2 | cell ] -> [ calc c3 | cell ]
+right [ calc c1 | cell ] -> [ calc c2 | cell ]
+right [ calc c0 | cell ] -> [ calc c1 | cell ]
+up    [ calc c3 | cell ] -> [ calc c4 | cell ]
+up    [ calc c2 | cell ] -> [ calc c3 | cell ]
+up    [ calc c1 | cell ] -> [ calc c2 | cell ]
+up    [ calc c0 | cell ] -> [ calc c1 | cell ]
+down  [ calc c3 | cell ] -> [ calc c4 | cell ]
+down  [ calc c2 | cell ] -> [ calc c3 | cell ]
+down  [ calc c1 | cell ] -> [ calc c2 | cell ]
+down  [ calc c0 | cell ] -> [ calc c1 | cell ]
+
+endloop
+
+[ cell c0 ] -> [ cell del ]
+[ cell c1 ] -> [ cell del ]
+[ cell c4 ] -> [ cell del ]
+
+[ no cell c3 ] -> [ add ]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+no cell
+
+
+=======
+LEVELS
+=======
+
+message Your goal is to kill all cells
+
+message You can kill the red-marked ones directly
+
+message But sometimes you'll need to grou new ones in the green-marked spaces
+
+.......
+.@.....
+..ccc..
+..ccc..
+..ccc..
+.......
+.......
+
+
+........
+.@.cc...
+...cc...
+.cc..cc.
+.cc..cc.
+........
+
+
+.......
+.@...c.
+...cc..
+..c.c..
+..cc...
+.c.....
+.......
+
+
+@.......
+.cc..cc.
+.cc..cc.
+...cc...
+...cc...
+.cc..cc.
+.cc..cc.
+........
+
+
+.........
+.cc.c.cc.
+.c.c.c.c.
+..cc.cc..
+.c..@..c.
+..cc.cc..
+.c.c.c.c.
+.cc.c.cc.
+.........
+

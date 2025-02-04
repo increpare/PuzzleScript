@@ -1,0 +1,386 @@
+title A Cog's Life
+author Dennis Au
+run_rules_on_level_start
+again_interval 0.10
+noaction
+
+========
+OBJECTS
+========
+
+Floor
+Black
+
+
+Rot0
+DarkGreen
+.....
+..0..
+.....
+.....
+.....
+
+Rot1
+DarkGreen
+.....
+.....
+...0.
+.....
+.....
+
+Rot2
+DarkGreen
+.....
+.....
+.....
+..0..
+.....
+
+Rot3
+DarkGreen
+.....
+.....
+.0...
+.....
+.....
+
+Player
+White
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Cog o
+LightGrey Grey DarkGrey
+..1..
+.000.
+20.01
+.000.
+..2..
+
+
+CWiser
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+ACWiser
+DarkBrown
+.....
+.000.
+.0.0.
+.000.
+.....
+
+RackV /
+DarkGrey
+.0...
+.0...
+00...
+.0...
+.0...
+
+RackH -
+Grey
+..0..
+00000
+.....
+.....
+.....
+
+MovementError
+Red
+0...0
+.....
+.....
+.....
+0...0
+
+goal g
+LightGrey Grey
+.....
+01010
+01010
+01010
+.....
+
+Wall #
+DarkBlue DarkGreen
+.1111
+01111
+00111
+00011
+0000.
+
+
+=======
+LEGEND
+=======
+. = Floor
+
+P = Player and Cog
+C = CWiser and Cog
+A = ACWiser and Cog
+1 = Player
+
+Background = Floor or Goal
+Rack = RackV or RackH
+Rotatable = Cog
+Obstacle = Wall or Cog
+VObstacle = Obstacle or RackH
+ObstacleH = Obstacle or RackV
+RotationState = Rot0 or Rot1 or Rot2 or Rot3
+Moveable = Cog or Rack
+Enemy = Cwiser or ACWiser
+
+=======
+SOUNDS
+=======
+sfx0 40497702
+
+================
+COLLISIONLAYERS
+================
+Background
+Rotatable, Rack, Wall
+Player, CWiser, ACWiser
+MovementError
+RotationState
+
+======
+RULES
+======
+
+[MovementError] -> []
+[Rotatable No RotationState] -> [Rotatable Random RotationState]
+
+(intro movement)
+[Player No Cog] -> [Down Player] again
+
+(rotate enemies before messing with player movement)
+[CWiser RotationState No MovementError][Moving Player] -> [CWiser Right RotationState][Moving Player]
+[ACWiser RotationState No MovementError][Moving Player] -> [ACWiser Left RotationState][Moving Player]
+
+(=================
+ Translation Phase
+ =================)
+
+(use cog for collision detection)
+[Up Player Cog Rot0] -> [Player Up Cog Rot0]
+[Up Player Cog Rot1] -> [Player Right Cog Rot1]
+[Up Player Cog Rot2] -> [Player Down Cog Rot2]
+[Up Player Cog Rot3] -> [Player Left Cog Rot3]
+
+[Down Player Cog Rot0] -> [Player Down Cog Rot0]
+[Down Player Cog Rot1] -> [Player Left Cog Rot1]
+[Down Player Cog Rot2] -> [Player Up Cog Rot2]
+[Down Player Cog Rot3] -> [Player Right Cog Rot3]
+
+Vertical [Player > Cog| RackV] -> [Player > Cog| > RackV]
+Vertical [> RackV| RackV] -> [> RackV| > RackV]
+Horizontal [Player > Cog| RackH] -> [Player > Cog| > RackH]
+Horizontal [> RackH| RackH] -> [> RackH| > RackH]
+
+(==============
+ Rotation Phase
+ ==============)
+
+(use rotationstate to transfer rotation)
+
+[Right Player RotationState] -> [Player Right RotationState]
+[Left Player RotationState] -> [Player Left RotationState]
+
+
+
+startloop
+
+(===============
+ Motion Transfer
+ ===============)
+
+(cog -> cog)
+[Left Rotationstate| stationary Rotationstate] -> [Left Rotationstate| Right Rotationstate]
++[Right RotationState | stationary RotationState] -> [Right RotationState| Left RotationState]
+
+(cog -> rack)
+Right [Right RotationState|RackV] -> [Right RotationState| Down RackV]
+Right [Left RotationState|RackV] -> [Left RotationState| Up RackV]
+
+Down [Right RotationState| RackH] -> [Right RotationState| Left RackH]
+Down [Left RotationState| RackH] -> [Left RotationState| Right RackH]
+
+(rack -> rack)
+Vertical [Parallel RackV| Stationary RackV] -> [Parallel RackV| Parallel RackV]
+Horizontal [Parallel RackH| Stationary RackH] -> [Parallel RackH| Parallel RackH]
+
+(rack -> cog)
+Right [RotationState|Down RackV] -> [Right RotationState| Down RackV]
+Right [RotationState|Up RackV] -> [Left RotationState| Up RackV]
+
+Down [RotationState| Left RackH] -> [Right RotationState| Left RackH]
+Down [RotationState| Right RackH] -> [Left RotationState| Right RackH]
+
+(=========================
+ Movement Error Generation
+ =========================)
+
+(opposing cogs)
+[left RotationState|left RotationState] -> [MovementError RotationState|MovementError RotationState]
+[right RotationState|right RotationState] -> [MovementError RotationState|MovementError RotationState]
+
+(split/crushed racks)
+Vertical [> RackV| < RackV] -> [MovementError RackV|MovementError RackV]
+Vertical [< RackV| > RackV] -> [MovementError RackV|MovementError RackV]
+
+Horizontal [> RackH| < RackH] -> [MovementError RackH|MovementError RackH]
+Horizontal [< RackH| > RackH] -> [MovementError RackH|MovementError RackH]
+
+(rack colliding with something)
+Vertical [> RackV| VObstacle] -> [MovementError RackV| VObstacle]
+Horizontal [> RackH| ObstacleH] -> [MovementError RackH| ObstacleH]
+
+(==========================
+ Movement Error Propogation
+ ==========================)
+
+(cog -> cog)
+[MovementError RotationState| RotationState] -> [MovementError RotationState| MovementError RotationState]
+
+(cog -> rack)
+Right [MovementError RotationState|RackV] -> [MovementError RotationState|MovementError RackV]
+Down [MovementError RotationState|RackH] -> [MovementError RotationState|MovementError RackH]
+
+(rack -> rack)
+Vertical [MovementError RackV| RackV] -> [MovementError RackV| MovementError RackV] 
+Horizontal [MovementError RackH| RackH] -> [MovementError RackH| MovementError RackH]
+
+(rack -> cog)
+Right [RotationState| movementError RackV] -> [MovementError RotationState|MovementError RackV]
+Down [RotationState| MovementError RackH] -> [MovementError RotationState|MovementError RackH]
+
+
+(Remove Movement)
+(with sfx if player)
+[Player MovementError] -> sfx0
+
+[MovementError Moveable] -> [MovementError Stationary Moveable] again
+[MovementError RotationState] -> [MovementError Stationary RotationState]
+
+endloop
+
+(process final rotation state)
+[right Rot0] -> [Rot1]
+[right Rot1] -> [Rot2]
+[right Rot2] -> [Rot3]
+[right Rot3] -> [Rot0]
+
+[left rot0] -> [rot3]
+[left rot3] -> [rot2]
+[left rot2] -> [rot1]
+[left rot1] -> [rot0]
+
+(process final translation state)
+rigid [Player > Cog |Cog RotationState] -> [Player > Cog| > Cog > RotationState]
+[> Cog > RotationState Enemy] -> [> Cog > RotationState > Enemy]
+rigid [Player > Cog RotationState] -> [> Player > Cog > RotationState]
+
+==============
+WINCONDITIONS
+==============
+all goal on player
+
+=======
+LEVELS
+=======
+
+
+.......coo........1
+.......o.o.........
+.......ooo.........
+.......o.o.........
+.......o.o.........
+.........--------.g
+
+coo.aoo.coo.a.coo.1
+o...o.o.o...o.o....
+o...o.o.o.....ooo..
+o...o.o.o.o.....o..
+ooo.ooo.ooo...ooo..
+..................g
+
+..c...a.coo.aoo...1
+..o...o.o...o......
+..o...o.ooo.ooo....
+..o...o.o...o......
+..ooo.o.o...ooo....
+..................g
+
+message I am but a cog.
+
+.######
+.#p./.#
+.#../.#
+####/.#
+#.../.#
+#g.o..#
+###o#.#
+..#...#
+..#####
+
+message A simple part of a complex whole.
+
+....#########
+#####..g#...#
+#...oo.##po.#
+#..#.o..#...#
+##.#.------##
+.#..........#
+.#..######..#
+.####....#..#
+.........####
+
+message I twist and turn searching for purpose.
+
+.#########
+.#....#g.#
+.#.po/#o/#
+##./-/#o.#
+#.---.#o.#
+#o##.##o.#
+#..--.#o.#
+##../o...#
+.#../----#
+.#########
+
+message Others turn as well.
+
+.############.
+.#.....#g..a#.
+##.#a.c#..a.#.
+#c.##..#.a..#.
+#o.a#..#.##.#.
+##.##..#a##.##
+#c.c#.a..#c.c#
+##.##..c.#a.a#
+#...##..ao..##
+#.p.##...#..##
+#############.
+
+message Are they searching for something too?
+
+....###########
+....#oooooo...#
+....#o.....--p#
+#####a........#
+#-----....#####
+##oo.c....#o/g#
+.#a...c.###o..#
+.#..ca.a..#o.##
+.#.o......oo.#.
+.#.o.a...-...#.
+.#############.

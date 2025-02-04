@@ -1,0 +1,1905 @@
+title The Adventure of Puzzler
+author Mathew Diaz
+homepage www.puzzlescript.net
+flickscreen 15x9
+========
+OBJECTS
+========
+
+Background 
+GREEN lightgreen yellow pink
+12101
+01111
+10121
+21011
+01210
+
+Background2
+GREEN lightgreen yellow pink
+12101
+01212
+10111
+21311
+01210
+
+Panel 
+DarkBlue red
+10001
+00000
+00000
+00000
+10001
+
+RightPanel 
+Blue  
+00000
+00000
+00000
+00000
+00000
+
+LeftPanel 
+Red  
+00000
+00000
+00000
+00000
+00000
+
+DirectionBlock
+gray
+00000
+0...0
+0...0
+0...0
+00000
+
+Wall 
+#9B724F #C18D62 #77573D
+21001
+10201
+10110
+21001
+12212
+
+EnemyWall 
+#9B724F #C18D62 #77573D
+21001
+10201
+10110
+21001
+12212
+
+Player 
+#84B3FF brown darkbrown orange darkgreen #6B92FF
+.000.
+.333.
+00055
+20552
+.2.2.
+
+
+
+Target
+white red lightred
+.111.
+10001
+10101
+10001
+.111.
+
+TargetLocked
+darkgray darkred lightred
+.111.
+10001
+10101
+10001
+.111.
+
+InventorySlot
+Black
+00000
+0...0
+0.0.0
+0...0
+00000
+
+InventorySlotBomb
+Black
+00000
+0...0
+0.0.0
+0...0
+00000
+
+InventorySlotBow
+Black
+00000
+0...0
+0.0.0
+0...0
+00000
+
+ItemPedestal
+darkgray gray
+00011
+.001.
+.011.
+.011.
+.011.
+
+Bomb
+blue gray red #1848CC
+...12
+..1..
+.003.
+00033
+.033.
+
+Bombstage1
+blue gray red #1848CC
+...12
+..1..
+.003.
+00033
+.033.
+
+
+Bombstage2
+blue gray red #1848CC yellow
+...4.
+..2..
+.003.
+00033
+.033.
+
+Bombstage3
+red gray red #A5212E yellow
+.....
+..4..
+.003.
+00033
+.033.
+
+Bombstage4
+red gray red #A5212E yellow
+.....
+..4..
+.003.
+00033
+.033.
+
+
+BombPickup
+blue gray red #1848CC
+...1.
+..1..
+.003.
+00033
+.033.
+
+Explosion
+red yellow orange
+..0..
+10101
+01210
+10101
+..0..
+
+Explosion2
+red yellow orange
+..0..
+10101
+01210
+10101
+..0..
+
+Bow
+orange gray #B54226
+11.22
+102.1
+.20.1
+.2.0.
+.21.0
+
+RightArrow
+orange gray
+.....
+...1.
+00001
+...1.
+.....
+
+LeftArrow
+orange gray
+.....
+.1...
+10000
+.1...
+.....
+
+ShadowLeftArrow
+black white
+.....
+.1...
+10000
+.1...
+.....
+
+ShadowRightArrow
+black white
+.....
+...1.
+00001
+...1.
+.....
+
+Water 
+blue
+00000
+00000
+00000
+00000
+00000
+
+EnemyWater 
+#305DFF #5E99FF
+10010
+01001
+10100
+01010
+00101
+
+Ice 
+lightblue white
+00001
+00010
+00100
+01000
+10000
+
+Crack
+darkblue lightblue white
+.0...
+..000
+0000.
+.000.
+.0..0
+
+Crate 
+Orange brown darkbrown
+20002
+02120
+01210
+02120
+20002
+
+
+StoneBlock3
+#1E1E1E black #333333
+.111.
+11002
+10002
+10022
+.222.
+
+StoneBlock2
+ darkgreen darkblue darkgray
+.111.
+11002
+10002
+10022
+.222.
+
+StoneBlock
+darkgray darkgreen gray
+.111.
+11002
+10002
+10022
+.222.
+
+StoneBlockMoved
+#9B7175 #774C51 #A58186
+.111.
+11002
+10002
+10022
+.222.
+
+BreakableStone 
+#993F21 #B75638  darkgreen
+.112.
+.1200
+12212
+20021
+00101
+
+BreakableFloor
+#D8A365 #C4935C #E0B98F
+20112
+02202
+22110
+01201
+20201 
+
+
+Door
+browndarkgreen lightbrown black
+.111.
+10001
+10001
+10001
+11111
+
+DoorArrow
+darkgray darkgreen red black
+.111.
+10001
+10201
+10001
+11111
+
+Health
+Red
+.....
+.0.0.
+.000.
+..0..
+.....
+
+HealthRemover
+Black
+.....
+..0..
+..0..
+..0..
+.....
+
+Healthless
+Black
+.....
+.000.
+.....
+.....
+.....
+
+Temp
+Black
+.....
+.....
+.....
+.....
+.....
+
+
+SwordUp
+lightgray brown white
+..2..
+.202.
+.202.
+.111.
+..1..
+
+SwordRight
+lightgray brown white
+.....
+.122.
+11002
+.122.
+.....
+
+SwordLeft
+lightgray brown white
+.....
+.221.
+20011
+.221.
+.....
+
+SwordDown
+lightgray brown white
+..1..
+.111.
+.202.
+.202.
+..2..
+
+Enemy
+darkred Red black lightred
+.000.
+03110
+02120
+01100
+.000.
+
+EnemyEye
+Red white blue black darkred
+.111.
+12321
+12321
+01110
+40004
+
+EnemyArmorUp
+#788A96 darkbrown #A0B1BC #87959E
+.332.
+.332.
+00022
+10221
+.1.1.
+EnemyArmorLeft
+#788A96 darkbrown #A0B1BC #87959E
+.332.
+.332.
+00022
+10221
+.1.1.
+EnemyArmorRight
+#788A96 darkbrown #A0B1BC #87959E
+.332.
+.332.
+00022
+10221
+.1.1.
+EnemyArmorDown
+#788A96 darkbrown #A0B1BC #87959E
+.332.
+.332.
+00022
+10221
+.1.1.
+
+EnemySpikeUp
+black white gray
+..1..
+..0..
+10101
+..0..
+..1..
+EnemySpikeLeft
+black white gray
+..1..
+..0..
+10101
+..0..
+..1..
+
+EnemySpikeRight
+black white gray
+..1..
+..0..
+10101
+..0..
+..1..
+EnemySpikeDown
+black white gray
+..1..
+..0..
+10101
+..0..
+..1..
+
+EnemyShadow
+darkgreen brown darkbrown black darkgreen darkbrown
+.000.
+.333.
+00055
+30553
+.3.3.
+
+EnemyWizard
+darkbrown Black brown
+.000.
+.010.
+00000
+02120
+.000.
+
+EnemyWizardMoveLeft
+darkbrown white brown
+.000.
+.010.
+00000
+02120
+.000.
+
+EnemyWizardMoveRight
+darkbrown white brown
+.000.
+.010.
+00000
+02120
+.000.
+
+EnemyWizardIdle
+darkbrown lightblue brown
+.000.
+.010.
+00000
+02120
+.000.
+
+EnemyWizardIdle2
+darkbrown blue brown
+.000.
+.010.
+00000
+02120
+.000.
+
+EnemyWizardIdle3
+darkbrown darkblue brown
+.000.
+.010.
+00000
+02120
+.000.
+
+EnemyWizardIdle4
+darkbrown darkgreen brown
+.000.
+.010.
+00000
+02120
+.000.
+
+EnemyWizardRecharged
+darkbrown Black brown
+.000.
+.010.
+00000
+02120
+.000.
+
+FireballLeft
+red orange yellow
+.....
+.020.
+02120
+.020.
+.....
+
+FireballRight
+red orange yellow
+.....
+.020.
+02120
+.020.
+.....
+
+PlayerFireballRight
+blue orange lightblue
+.....
+.020.
+02020
+.020.
+.....
+
+PlayerFireballLeft
+blue orange lightblue
+.....
+.020.
+02020
+.020.
+.....
+
+
+=======
+LEGEND
+=======
+Sword = SwordUp and SwordRight and SwordLeft and SwordDown
+0 = BombPickup
+1 = Bow
+[ = DirectionBlock and LeftPanel
+] = RightPanel
+. = Background
+# = Wall and EnemyWall
+* = Crate
+A = ItemPedestal
+B = InventorySlot and Wall and EnemyWall
+C = EnemyShadow
+D = Door
+E = Enemy
+F = StoneBlock2
+G = Background2
+H = Health and Wall and EnemyWall
+I = Ice
+J = DoorArrow
+K = BreakableStone
+L = BreakableFloor
+M = StoneBlock3
+O = Panel
+P = Player
+Q = EnemyArmorLeft
+R = EnemyEye
+S = StoneBlock
+T = target
+U = BreakableStone and BreakableFloor
+W = Water and EnemyWater
+X = HealthRemover and wall and EnemyWall
+Y = EnemyWizard
+Z = Health and Healthless and wall and EnemyWall
+5 = EnemySpikeLeft
+6 = EnemySpikeRight
+7 = EnemySpikeDown
+8 = EnemySpikeUp
+
+
+=======
+SOUNDS
+=======
+
+Player MOVE 34014107
+
+sfx0 93106303 (Item Use)
+
+sfx1 60979106 (Dink)
+
+sfx2 26278107 (Push)
+
+sfx3 42408904 (Hurt)
+
+sfx4 44807509 (Kill Enemy)
+
+sfx5 6543105 (Shadow Dodge)
+
+sfx6 88334109 (Wizard Dodge)
+
+sfx7 57075708 (Reflect)
+
+sfx8 46749301 (magic)
+
+sfx9 22908908 (Teleport)
+
+sfx10 48897302 (Explosion)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Background2
+Ice 
+BreakableFloor
+Panel
+RightPanel
+LeftPanel
+Explosion, Explosion2
+ItemPedestal
+Player, Wall, Door, Water, DirectionBlock, Crate, StoneBlock, StoneBlockMoved, BreakableStone, StoneBlock2, DoorArrow, StoneBlock3
+ShadowLeftArrow
+ShadowRightArrow
+Enemy, EnemyWall, EnemyWater, EnemyEye, Crack, EnemyArmorUp, EnemyArmorDown, EnemyArmorRight, EnemyArmorLeft, EnemySpikeDown, EnemySpikeRight, EnemySpikeUp, EnemySpikeLeft, EnemyShadow, EnemyWizard, EnemyWizardMoveRight, EnemyWizardMoveLeft, EnemyWizardRecharged EnemyWizardIdle, EnemyWizardIdle2, EnemyWizardIdle3, EnemyWizardIdle4
+FireballLeft
+FireballRight
+PlayerFireballLeft
+PlayerFireballRight
+Temp
+Bomb, Bombstage2, Bombstage3, Bombstage4, Bombstage1
+Target, TargetLocked
+RightArrow
+LeftArrow
+Healthless
+Health
+HealthRemover
+InventorySlot
+InventorySlotBomb
+InventorySlotBow
+Bow
+BombPickup
+SwordUp
+SwordRight
+SwordLeft
+SwordDown
+
+======
+RULES     
+======     
+
+(
+ATTACK
+)
+
+(Player's Attack)
+Up [action Player | Enemy] -> [Player | SwordUp] sfx4
+Right [action Player | Enemy] -> [Player |  SwordRight] sfx4
+Left [action Player | Enemy]-> [Player | Swordleft] sfx4
+Down [action Player | Enemy]-> [Player | SwordDown] sfx4
+
+(Attack on Fireballs)
+
+Right [action Player | FireballLeft] [FireballLeft]-> [Player | PlayerFireballRight] [SwordRight] sfx7
+Left [action Player | FireballLeft] [FireballLeft]-> [Player | PlayerFireballRight] [Swordleft] sfx7
+
+Right [action Player | FireballRight] [FireballRight]-> [Player | PlayerFireballLeft] [SwordRight] sfx7
+Left [action Player | FireballRight] [FireballRight]-> [Player | PlayerFireballLeft] [Swordleft] sfx7
+
+(Attack on Wizard)
+Up [action Player | EnemyWizard] [EnemyWizard]-> [Player | EnemyWizard] [EnemyWizard SwordUp] sfx6
+Right [action Player | EnemyWizard] [EnemyWizard]-> [Player |EnemyWizard ] [EnemyWizard SwordRight] sfx6
+Left [action Player | EnemyWizard] [EnemyWizard]-> [Player |EnemyWizard ] [EnemyWizard Swordleft] sfx6
+Down [action Player | EnemyWizard] [EnemyWizard]-> [Player |EnemyWizard ] [EnemyWizard SwordDown] sfx6
+
+Up [action Player | EnemyWizardMoveLeft] [EnemyWizardMoveLeft]-> [Player | EnemyWizard] [EnemyWizard SwordUp] sfx6
+Right [action Player | EnemyWizardMoveLeft] [EnemyWizardMoveLeft]-> [Player | EnemyWizard] [EnemyWizard SwordRight] sfx6
+Left [action Player | EnemyWizardMoveLeft] [EnemyWizardMoveLeft]-> [Player | EnemyWizard] [EnemyWizard Swordleft] sfx6
+Down [action Player | EnemyWizardMoveLeft] [EnemyWizardMoveLeft]-> [Player | EnemyWizard] [EnemyWizard SwordDown] sfx6
+
+Up [action Player | EnemyWizardMoveRight] [EnemyWizardMoveRight]-> [Player | EnemyWizard] [EnemyWizard SwordUp] sfx6
+Right [action Player | EnemyWizardMoveRight] [EnemyWizardMoveRight]-> [Player |EnemyWizard ] [EnemyWizard SwordRight] sfx6
+Left [action Player | EnemyWizardMoveRight] [EnemyWizardMoveRight]-> [Player | EnemyWizard] [EnemyWizard Swordleft] sfx6
+Down [action Player | EnemyWizardMoveRight] [EnemyWizardMoveRight]-> [Player | EnemyWizard] [EnemyWizard SwordDown] sfx6
+
+Up [action Player | EnemyWizardIdle] [EnemyWizardIdle]-> [Player | EnemyWizard] [EnemyWizard SwordUp] sfx6
+Right [action Player | EnemyWizardIdle] [EnemyWizardIdle]-> [Player |EnemyWizard ] [EnemyWizard SwordRight] sfx6
+Left [action Player | EnemyWizardIdle] [EnemyWizardIdle]-> [Player | EnemyWizard] [EnemyWizard Swordleft] sfx6
+Down [action Player | EnemyWizardIdle] [EnemyWizardIdle]-> [Player | EnemyWizard] [EnemyWizard SwordDown] sfx6
+
+Up [action Player | EnemyWizardIdle2] [EnemyWizardIdle2]-> [Player | EnemyWizard] [EnemyWizard SwordUp] sfx6
+Right [action Player | EnemyWizardIdle2] [EnemyWizardIdle2]-> [Player |EnemyWizard ] [EnemyWizard SwordRight] sfx6
+Left [action Player | EnemyWizardIdle2] [EnemyWizardIdle2]-> [Player | EnemyWizard] [EnemyWizard Swordleft] sfx6
+Down [action Player | EnemyWizardIdle2] [EnemyWizardIdle2]-> [Player | EnemyWizard] [EnemyWizard SwordDown] sfx6
+
+Up [action Player | EnemyWizardIdle3] [EnemyWizardIdle3]-> [Player | EnemyWizard] [EnemyWizard SwordUp] sfx6
+Right [action Player | EnemyWizardIdle3] [EnemyWizardIdle3]-> [Player |EnemyWizard ] [EnemyWizard SwordRight] sfx6
+Left [action Player | EnemyWizardIdle3] [EnemyWizardIdle3]-> [Player | EnemyWizard] [EnemyWizard Swordleft] sfx6
+Down [action Player | EnemyWizardIdle3] [EnemyWizardIdle3]-> [Player | EnemyWizard] [EnemyWizard SwordDown] sfx6
+
+Up [action Player | EnemyWizardIdle4] [EnemyWizardIdle4]-> [Player | EnemyWizard] [EnemyWizard SwordUp] sfx6
+Right [action Player | EnemyWizardIdle4] [EnemyWizardIdle4]-> [Player |EnemyWizard ] [EnemyWizard SwordRight] sfx6
+Left [action Player | EnemyWizardIdle4] [EnemyWizardIdle4]-> [Player | EnemyWizard] [EnemyWizard Swordleft] sfx6
+Down [action Player | EnemyWizardIdle4] [EnemyWizardIdle4]-> [Player | EnemyWizard] [EnemyWizard SwordDown] sfx6
+
+Up [action Player | EnemyWizardRecharged] [EnemyWizardRecharged]-> [Player | EnemyWizard] [EnemyWizard SwordUp] sfx6
+Right [action Player | EnemyWizardRecharged] [EnemyWizardRecharged]-> [Player |EnemyWizard ] [EnemyWizard SwordRight] sfx6
+Left [action Player | EnemyWizardRecharged] [EnemyWizardRecharged]-> [Player | EnemyWizard] [EnemyWizard Swordleft] sfx6
+Down [action Player | EnemyWizardRecharged] [EnemyWizardRecharged]-> [Player | EnemyWizard] [EnemyWizard SwordDown] sfx6
+
+[PlayerFireballRight EnemyWizard] -> [] sfx6
+[PlayerFireballRight EnemyWizardRecharged] -> [] sfx6
+[PlayerFireballRight EnemyWizardIdle] -> [] sfx6
+[PlayerFireballRight EnemyWizardIdle2] -> [] sfx6
+[PlayerFireballRight EnemyWizardIdle3] -> [] sfx6
+[PlayerFireballRight EnemyWizardIdle4] -> [] sfx6
+[PlayerFireballRight EnemyWizardMoveLeft] -> [] sfx6
+[PlayerFireballRight EnemyWizardMoveRight] -> [] sfx6
+
+[PlayerFireballLeft EnemyWizard] -> [] sfx6
+[PlayerFireballLeft EnemyWizardRecharged] -> [] sfx6
+[PlayerFireballLeft EnemyWizardIdle] -> [] sfx6
+[PlayerFireballLeft EnemyWizardIdle2] -> [] sfx6
+[PlayerFireballLeft EnemyWizardIdle3] -> [] sfx6
+[PlayerFireballLeft EnemyWizardIdle4] -> [] sfx6
+[PlayerFireballLeft EnemyWizardMoveLeft] -> [] sfx6
+[PlayerFireballLeft EnemyWizardMoveRight] -> [] sfx6
+
+
+(Attack on Armor)
+(Up)
+Up [action Player | EnemyArmorUp]-> [Player | SwordUp] sfx4
+Right [action Player | EnemyArmorUp]-> [Player | SwordRight]sfx4
+Left [action Player | EnemyArmorUp] -> [Player | Swordleft]  sfx4
+Down [action Player | EnemyArmorUp] -> [Player | SwordDown] sfx4
+(Down)
+Up [action Player | EnemyArmorDown]-> [Player | SwordUp] sfx4
+Right [action Player | EnemyArmorDown]-> [Player | SwordRight] sfx4
+Left [action Player | EnemyArmorDown] -> [Player | Swordleft]  sfx4
+Down [action Player | EnemyArmorDown] -> [Player | SwordDown] sfx4
+(Left)
+Up [action Player | EnemyArmorLeft] -> [Player | SwordUp] sfx4
+Right [action Player | EnemyArmorLeft] -> [Player | SwordRight] sfx4
+Left [action Player | EnemyArmorLeft] -> [Player | Swordleft] sfx4
+Down [action Player | EnemyArmorLeft] -> [Player | SwordDown] sfx4
+(right)
+Up [action Player | EnemyArmorRight]-> [Player | SwordUp]  sfx4
+Right [action Player | EnemyArmorRight] -> [Player | SwordRight]  sfx4
+Left [action Player | EnemyArmorRight] -> [Player | Swordleft]  sfx4
+Down [action Player | EnemyArmorRight] -> [Player | SwordDown] sfx4
+
+
+(Attack on spike)
+(Up)
+Up [action Player | EnemySpikeUp]-> [Player | EnemySpikeUp] sfx1
+Right [action Player | EnemySpikeUp]-> [Player |  EnemySpikeUp]sfx1
+Left [action Player | EnemySpikeUp] -> [Player | EnemySpikeUp]  sfx1
+Down [action Player | EnemySpikeUp] -> [Player | EnemySpikeUp] sfx1
+(Down)
+Up [action Player | EnemySpikeDown]-> [Player | EnemySpikeDown] sfx1
+Right [action Player | EnemySpikeDown]-> [Player |  EnemySpikeDown] sfx1
+Left [action Player | EnemySpikeDown] -> [Player |  EnemySpikeDown] sfx1
+Down [action Player | EnemySpikeDown] -> [Player | EnemySpikeDown] sfx1
+(Left)
+Up [action Player |EnemySpikeLeft] -> [Player |  EnemySpikeLeft] sfx1
+Right [action Player | EnemySpikeLeft] -> [Player | EnemySpikeLeft] sfx1
+Left [action Player | EnemySpikeLeft] -> [Player | EnemySpikeLeft] sfx1
+Down [action Player | EnemySpikeLeft] -> [Player | EnemySpikeLeft] sfx1
+(right)
+Up [action Player | EnemySpikeRight]-> [Player | EnemySpikeRight]  sfx1
+Right [action Player | EnemySpikeRight] -> [Player | EnemySpikeRight]  sfx1
+Left [action Player | EnemySpikeRight] -> [Player | EnemySpikeRight]  sfx1
+Down [action Player | EnemySpikeRight] -> [Player | EnemySpikeRight] sfx1
+
+(Attack on Shadow)
+Up [action Player | EnemyShadow] [EnemyShadow | ]-> [Player | left EnemyShadow] [EnemyShadow | down SwordUp] sfx5
+
+Right [action Player | EnemyShadow] [EnemyShadow | ]-> [Player | up EnemyShadow] [EnemyShadow | left SwordRight] sfx5
+
+Left [action Player | EnemyShadow] [EnemyShadow | ]-> [Player | Down EnemyShadow] [ EnemyShadow | right Swordleft] sfx5
+
+Down [action Player | EnemyShadow] [EnemyShadow | ]-> [Player | right EnemyShadow] [EnemyShadow | up SwordDown] sfx5
+
+[Swordup EnemyShadow] -> [Swordup] sfx4
+[SwordLeft EnemyShadow] -> [SwordLeft] sfx4
+[SwordRight EnemyShadow] -> [SwordRight] sfx4
+[SwordDown EnemyShadow] -> [SwordDown] sfx4
+
+(Sword Removes After 1 turn)
+[moving player][SwordLeft] -> [moving Player][]
+[moving player][SwordRight] -> [moving Player][]
+[moving player][SwordUp] -> [moving Player][]
+[moving player][SwordDown] -> [moving Player][]
+[Player SwordLeft]-> [Player]
+[Player SwordRight]-> [Player]
+[player SwordUp]-> [Player]
+[Player SwordDown]-> [Player]
+
+(
+INVENTORY
+)
+(Item Pickups)
+([Player BombPickup][InventorySlot] -> [Player][InventorySlotBomb BombPickup]
+
+[Player Bow][InventorySlot] -> [Player][InventorySlotBow Bow]
+
+
+
+[Player Bow][InventorySlotBomb BombPickup][Player | no BombPickup] -> [Player][InventorySlotBow bow][Player | BombPickup] 
+
+[Player BombPickup][InventorySlotBow bow][Player | no Bow] -> [Player][InventorySlotbomb BombPickup][Player | Bow])
+
+(Item Pickups)
+[> Player | BombPickup][InventorySlot] -> [> Player | ][InventorySlotBomb BombPickup]
+
+[> Player | Bow][InventorySlot] -> [> Player | ][InventorySlotBow Bow]
+
+(Picks up Bow)
+[> Player | Bow][InventorySlotBomb BombPickup][> Player | ] -> [ Player|][InventorySlotBow bow][ Player | BombPickup]
+
+(Picks up Bomb)
+[ > Player | BombPickup][InventorySlotBow bow][> Player | ] -> [> Player |][InventorySlotbomb BombPickup][ Player | Bow]
+
+
+
+(
+ICE
+)
+
+(Player on Ice)
+
+[Player Ice] -> [Player Ice Crack]
+
+(Prevents moving onto crack)
+[> Player | Crack] -> [Player | Crack ]
+
+(
+PLAYER FIREBALLS
+)
+[PlayerFireballRight] -> [Right PlayerFireballRight]
+
+[PlayerFireballleft] -> [left PlayerFireballleft]
+
+right [PlayerFireballRight | PlayerFireballRight] -> [|PlayerFireballRight]
+
+Left [PlayerFireballleft | PlayerFireballLeft] -> [|PlayerFireballleft]
+
+right [PlayerFireballRight | Wall] -> [|Wall]
+
+Left [PlayerFireballleft | Wall] -> [|Wall]
+
+
+(
+BOMBS
+)
+(Spawn Bomb right of player)
+[action Player no Bomb ] [RightPanel DirectionBlock] [InventorySlotBomb] -> [ Player right bomb][RightPanel DirectionBlock] [InventorySlotBomb] sfx0
+
+(Spawn Bomb left of player)
+[action Player no Bomb ] [LeftPanel DirectionBlock] [InventorySlotBomb] -> [ Player left bomb][LeftPanel DirectionBlock] [InventorySlotBomb] sfx0
+
+[Bombstage3] -> [Bombstage4]
+
+[Bombstage2] -> [Bombstage3]
+
+[Bombstage1] -> [Bombstage2]
+
+[bomb] -> [Bombstage1]
+
+[Bombstage4 | ] -> [Bombstage4 | Explosion]
+
+[Bombstage4] -> [ Explosion] sfx10
+
+[> Player][Explosion2] -> [> Player][]
+
+[> Player][Explosion] -> [> Player][Explosion2]
+
+
+late [Explosion2  Enemy] -> [ ] sfx4
+
+late [Explosion2  EnemyShadow] -> [] sfx4
+
+late [Explosion2  EnemyEye] -> [EnemyEye] sfx1
+
+
+late [Explosion2   EnemyArmorUp] -> [  EnemyArmorUp ]  sfx1
+
+late  [Explosion2  EnemyArmorDown] -> [  EnemyArmorDown ]  sfx1
+
+late  [Explosion2   EnemyArmorLeft] -> [  EnemyArmorLeft ]  sfx1
+
+late [Explosion2   EnemyArmorRight] -> [  EnemyArmorRight ]  sfx1
+
+
+late [Explosion2   EnemySpikeUp] -> [  EnemySpikeUp ]  sfx1
+
+late  [Explosion2  EnemySpikeDown] -> [  EnemySpikeDown ]  sfx1
+
+late  [Explosion2   EnemySpikeLeft] -> [  EnemySpikeLeft ]  sfx1
+
+late [Explosion2   EnemySpikeRight] -> [  EnemySpikeRight ]  sfx1
+
+late [Explosion2 EnemyWizard] -> [ ]  sfx4
+
+late [Explosion2 EnemyWizardMoveLeft] -> [ ]  sfx4
+
+late [Explosion2 EnemyWizardMoveRight] -> [ ]  sfx4
+
+late [Explosion2 EnemyWizardRecharged] -> [ ]  sfx4 
+
+late [Explosion2 EnemyWizardIdle] -> [ ]  sfx4
+
+late [Explosion2 EnemyWizardIdle2] -> [ ]  sfx4
+
+late [Explosion2 BreakableStone] -> [ ]  sfx4
+
+late [Explosion2 BreakableFloor] -> [Crack BreakableFloor]  sfx4
+
+late [Bombstage1 Crack] -> [Crack]
+
+
+(
+ARROW
+)
+
+(Moves the arrow DirectionBlock)
+[right Player] [DirectionBlock] -> [right Player][right DirectionBlock]
+
+[left Player] [DirectionBlock] -> [left Player][left DirectionBlock]
+
+(Spawn Right Arrow)
+[action Player  no rightArrow ] [RightPanel DirectionBlock] [InventorySlotBow] -> [ Player  rightArrow][RightPanel DirectionBlock] [InventorySlotBow] sfx0
+
+(Spawn Left Arrow)
+[action Player  no leftArrow ] [LeftPanel DirectionBlock] [InventorySlotBow] -> [ Player  leftArrow][LeftPanel DirectionBlock] [InventorySlotBow] sfx0
+
+(Spawn ShadowLeftArrow)
+late [Player | RightArrow][EnemyShadow ] -> [Player | RightArrow][EnemyShadow ShadowLeftArrow]sfx0
+
+(Spawn ShadowRightArrow)
+late [Player | LeftArrow][EnemyShadow ] -> [Player | LeftArrow] [EnemyShadow ShadowRightArrow]sfx0
+
+(right arrow movement)
+[rightArrow] -> [right rightArrow]
+
+[ShadowrightArrow] -> [right ShadowrightArrow]
+
+(left arrow movement)
+[leftArrow] -> [left LeftArrow]
+
+[ShadowLeftArrow] -> [left ShadowLeftArrow]
+
+(Right Arrow Collision)
+right[ rightArrow | Wall] -> [ | Wall] sfx1
+
+right[ rightArrow | Target][DoorArrow] -> [ | Targetlocked][] sfx1 
+
+right[ rightArrow | DoorArrow] -> [ | DoorArrow] sfx1
+
+right[ rightArrow | BreakableStone] -> [ | BreakableStone] sfx1
+
+late [ rightArrow BreakableStone] -> [ BreakableStone] sfx1
+
+right [ rightArrow | rightArrow] -> [ | rightArrow]
+
+right [rightArrow | Enemy] -> [ | ] sfx4
+
+late [rightArrow  Enemy] -> [ ] sfx4
+
+late [rightArrow  EnemyShadow] -> [] sfx4
+
+right [rightArrow | EnemyEye] -> [ | ] sfx4 
+
+late [rightArrow  EnemyEye] -> [] sfx4
+
+right [RightArrow | door] -> [ | Door ]  sfx1
+
+right [RightArrow | StoneBlock2] -> [ | StoneBlock2 ]  sfx1
+
+right [RightArrow | StoneBlock] -> [ | StoneBlock ]  sfx1
+
+right [RightArrow | StoneBlockMoved] -> [ | StoneBlockMoved ]  sfx1
+
+right [RightArrow | EnemyArmorUp] -> [ | EnemyArmorUp ]  sfx1
+
+right [RightArrow | EnemyArmorDown] -> [ | EnemyArmorDown ]  sfx1
+
+right [RightArrow | EnemyArmorLeft] -> [ | EnemyArmorLeft ]  sfx1
+
+right [RightArrow | EnemyArmorRight] -> [ | EnemyArmorRight ]  sfx1
+
+right [RightArrow  EnemyArmorUp] -> [  EnemyArmorUp ]  sfx1
+
+right [RightArrow  EnemyArmorDown] -> [  EnemyArmorDown ]  sfx1
+
+right [RightArrow  EnemyArmorLeft] -> [  EnemyArmorLeft ]  sfx1
+
+right [RightArrow  EnemyArmorRight] -> [  EnemyArmorRight ]  sfx1
+
+
+right [RightArrow | EnemySpikeUp] -> [ | EnemySpikeUp ]  sfx1
+
+right [RightArrow | EnemySpikeDown] -> [ | EnemySpikeDown ]  sfx1
+
+right [RightArrow | EnemySpikeLeft] -> [ | EnemySpikeLeft]  sfx1
+
+right [RightArrow | EnemySpikeRight] -> [ | EnemySpikeRight]  sfx1
+
+right [RightArrow  EnemySpikeUp] -> [  EnemySpikeUp ]  sfx1
+
+right [RightArrow  EnemySpikeDown] -> [  EnemySpikeDown ]  sfx1
+
+right [RightArrow  EnemySpikeLeft] -> [  EnemySpikeLeft]  sfx1
+
+right [RightArrow  EnemySpikeRight] -> [  EnemySpikeRight]  sfx1
+
+
+
+right [RightArrow  ShadowLeftArrow] -> [ ]  sfx1
+
+right [RightArrow | ShadowLeftArrow] -> [ | ]  sfx1
+
+right [RightArrow | FireballLeft] -> [ | ]  sfx1
+
+late [RightArrow FireballLeft] -> [ ]  sfx1
+
+right [RightArrow | EnemyWizard] -> [ | ]  sfx4
+
+late [RightArrow EnemyWizard] -> [ ]  sfx4
+
+right [RightArrow | EnemyWizardMoveLeft] -> [ | ]  sfx4
+
+late [RightArrow EnemyWizardMoveLeft] -> [ ]  sfx4
+
+right [RightArrow | EnemyWizardMoveRight] -> [ | ]  sfx4
+
+late [RightArrow EnemyWizardMoveRight] -> [ ]  sfx4
+
+right [rightArrow | EnemyWizardRecharged] -> [ | ]  sfx4
+
+late [RightArrow EnemyWizardRecharged] -> [ ]  sfx4
+
+right [RightArrow | EnemyWizardIdle] -> [ | ]  sfx4
+
+late [RightArrow EnemyWizardIdle] -> [ ]  sfx4
+
+right [RightArrow| EnemyWizardIdle2] -> [ | ]  sfx4
+
+late [RightArrow EnemyWizardIdle2] -> [ ]  sfx4
+
+right [RightArrow| EnemyWizardIdle3] -> [ | ]  sfx4
+
+late [RightArrow EnemyWizardIdle3] -> [ ]  sfx4
+
+right [RightArrow| EnemyWizardIdle4] -> [ | ]  sfx4
+
+late [RightArrow EnemyWizardIdle4] -> [ ]  sfx4
+
+
+(Left Arrow Collision)
+left [ leftArrow | Wall] -> [ | Wall]  sfx1
+
+left [ leftArrow | leftArrow] -> [ | leftArrow]
+
+left[ leftArrow | Target][DoorArrow] -> [ | Targetlocked][] sfx1
+
+left[ leftArrow | DoorArrow] -> [ | DoorArrow] sfx1
+
+left[ leftArrow | BreakableStone] -> [ | BreakableStone] sfx1
+
+late[ leftArrow BreakableStone] -> [ BreakableStone] sfx1
+
+left [leftArrow  Enemy] -> [] sfx4
+
+late [leftArrow  Enemy] -> []  sfx4
+
+late [leftArrow  EnemyShadow] -> [] sfx4
+
+left [leftArrow | EnemyEye] -> [ | ] sfx4
+
+late [leftArrow  EnemyEye] -> [] sfx4
+
+left  [LeftArrow | door] -> [ | Door ]
+
+Left [LeftArrow | StoneBlock] -> [ | StoneBlock ]  sfx1
+
+Left [LeftArrow | StoneBlock2] -> [ | StoneBlock2 ]  sfx1
+
+left [leftArrow | StoneBlockMoved] -> [ | StoneBlockMoved ]  sfx1
+
+left [leftArrow | EnemyArmorUp] -> [ | EnemyArmorUp ]  sfx1
+
+left [leftArrow | EnemyArmorDown] -> [ | EnemyArmorDown ]  sfx1
+
+left [leftArrow | EnemyArmorLeft] -> [ | EnemyArmorLeft ]  sfx1
+
+left [leftArrow | EnemyArmorRight] -> [ | EnemyArmorRight ]  sfx1
+
+left [leftArrow  EnemyArmorUp] -> [  EnemyArmorUp ]  sfx1
+
+left [leftArrow  EnemyArmorDown] -> [  EnemyArmorDown ]  sfx1
+
+left [leftArrow  EnemyArmorLeft] -> [  EnemyArmorLeft ]  sfx1
+
+left [leftArrow  EnemyArmorRight] -> [  EnemyArmorRight ]  sfx1
+
+
+Left [LeftArrow | EnemySpikeUp] -> [ | EnemySpikeUp ]  sfx1
+
+Left [LeftArrow | EnemySpikeDown] -> [ | EnemySpikeDown ]  sfx1
+
+Left [LeftArrow | EnemySpikeLeft] -> [ | EnemySpikeLeft]  sfx1
+
+Left[LeftArrow | EnemySpikeRight] -> [ | EnemySpikeRight]  sfx1
+
+Left [LeftArrow  EnemySpikeUp] -> [  EnemySpikeUp ]  sfx1
+
+Left [LeftArrow  EnemySpikeDown] -> [  EnemySpikeDown ]  sfx1
+
+Left [LeftArrow  EnemySpikeLeft] -> [  EnemySpikeLeft]  sfx1
+
+Left [LeftArrow  EnemySpikeRight] -> [  EnemySpikeRight]  sfx1
+
+
+
+left [leftArrow  ShadowRightArrow] -> [ ]  sfx1
+
+left [leftArrow | ShadowRightArrow] -> [ | ]  sfx1
+
+left [leftArrow | Fireballright] -> [ | ]  sfx1
+
+late [leftArrow Fireballright] -> [ ]  sfx1
+
+left [leftArrow | EnemyWizard] -> [ | ]  sfx4
+
+late [leftArrow EnemyWizard] -> [ ]  sfx4
+
+left [leftArrow | EnemyWizardMoveLeft] -> [ | ]  sfx4
+
+late [LeftArrow EnemyWizardMoveLeft] -> [ ]  sfx4
+
+left [leftArrow | EnemyWizardMoveRight] -> [ | ]  sfx4
+
+late [LeftArrow  EnemyWizardMoveRight] -> [ ]  sfx4
+
+left [leftArrow | EnemyWizardRecharged] -> [ | ]  sfx4
+
+late [LeftArrow  EnemyWizardRecharged] -> [ ]  sfx4
+
+left [leftArrow | EnemyWizardIdle] -> [ | ]  sfx4
+
+late [LeftArrow  EnemyWizardIdle] -> [ ]  sfx4
+
+left [leftArrow | EnemyWizardIdle2] -> [ | ]  sfx4
+
+late [LeftArrow  EnemyWizardIdle2] -> [ ]  sfx4
+
+left [leftArrow | EnemyWizardIdle3] -> [ | ]  sfx4
+
+late [LeftArrow  EnemyWizardIdle3] -> [ ]  sfx4
+
+left [leftArrow | EnemyWizardIdle4] -> [ | ]  sfx4
+
+late [LeftArrow  EnemyWizardIdle4] -> [ ]  sfx4
+
+
+(
+ShadowArrow Collision
+)
+
+(Shadow Right Arrow Collision)
+right[ ShadowrightArrow | Wall] -> [ | Wall] sfx1
+
+right [ ShadowrightArrow | ShadowrightArrow] -> [ | ShadowrightArrow]
+
+right [ShadowrightArrow | Enemy] -> [ | ] sfx4
+
+late [ShadowrightArrow  Enemy] -> [ ] sfx4
+
+right [ShadowRightArrow | door] -> [ | Door ]  sfx1
+
+right [ShadowRightArrow | StoneBlock] -> [ | StoneBlock ]  sfx1
+
+right [ShadowRightArrow | StoneBlockMoved] -> [ | StoneBlockMoved ]  sfx1
+
+right [ShadowRightArrow | EnemyArmorUp] -> [ | EnemyArmorUp ]  sfx1
+
+right [ShadowRightArrow | EnemyArmorDown] -> [ | EnemyArmorDown ]  sfx1
+
+right [ShadowRightArrow | EnemyArmorLeft] -> [ | EnemyArmorLeft ]  sfx1
+
+right [ShadowRightArrow | EnemyArmorRight] -> [ | EnemyArmorRight ]  sfx1
+
+right [ShadowRightArrow  EnemyArmorUp] -> [  EnemyArmorUp ]  sfx1
+
+right [ShadowRightArrow  EnemyArmorDown] -> [  EnemyArmorDown ]  sfx1
+
+right [ShadowRightArrow  EnemyArmorLeft] -> [  EnemyArmorLeft ]  sfx1
+
+right [ShadowRightArrow  EnemyArmorRight] -> [  EnemyArmorRight ]  sfx1
+
+left [ShadowRightArrow  Player] -> [  Player ]  sfx1
+
+(Shadow Left Arrow Collision)
+left [ ShadowleftArrow | Wall] -> [ | Wall]  sfx1
+
+left [ ShadowleftArrow | ShadowleftArrow] -> [ | ShadowleftArrow]
+
+left [ShadowleftArrow  Enemy] -> []
+
+late [ShadowleftArrow  Enemy] -> []
+
+left [ShadowLeftArrow | door] -> [ | Door ] 
+
+Left [ShadowLeftArrow | StoneBlock] -> [ | StoneBlock ]  sfx1
+
+left [ShadowleftArrow | StoneBlockMoved] -> [ | StoneBlockMoved ]  sfx1
+
+left [ShadowleftArrow | EnemyArmorUp] -> [ | EnemyArmorUp ]  sfx1
+
+left [ShadowleftArrow | EnemyArmorDown] -> [ | EnemyArmorDown ]  sfx1
+
+left [ShadowleftArrow | EnemyArmorLeft] -> [ | EnemyArmorLeft ]  sfx1
+
+left [ShadowleftArrow | EnemyArmorRight] -> [ | EnemyArmorRight ]  sfx1
+
+left [ShadowleftArrow  EnemyArmorUp] -> [  EnemyArmorUp ]  sfx1
+
+left [ShadowleftArrow  EnemyArmorDown] -> [  EnemyArmorDown ]  sfx1
+
+left [ShadowleftArrow  EnemyArmorLeft] -> [  EnemyArmorLeft ]  sfx1
+
+left [ShadowleftArrow  EnemyArmorRight] -> [  EnemyArmorRight ]  sfx1
+
+left [ShadowleftArrow  Player] -> [  Player ]  sfx1
+
+(
+CRATES
+)
+
+(Move Crate)
+[ > Player | Crate ] -> [ > Player | > Crate  ] sfx2
+
+[> Crate | Enemy] -> [Crate | Enemy ]
+
+[> Crate | Crack] -> [Crate | Crack ]
+
+[ > Player | StoneBlock ] -> [ > Player | > StoneBlockMoved  ] sfx2
+
+[ > Player | StoneBlock2 ] -> [ > Player | > StoneBlock  ] sfx2
+
+[ > Player | StoneBlock3 ] -> [ > Player | > StoneBlock2  ] sfx2
+
+([ > StoneBlock | StoneBlock ] -> [ StoneBlock | StoneBlock  ] sfx2)
+
+
+(left [> Crate | Enemy ] -> [> Crate | ])
+
+
+(
+ENEMIES
+)
+
+(Enemy's Random Movement)
+[stationary Enemy] -> [randomdir Enemy]
+
+[> Enemy | Crate] -> [Enemy | Crate ]
+
+[> Enemy | Door] -> [Enemy | Door]
+
+[> Enemy | BreakableStone] -> [Enemy | BreakableStone]
+
+[> Enemy | DoorArrow] -> [Enemy | DoorArrow]
+
+[> Enemy | StoneBlock] -> [Enemy | StoneBlock]
+
+[> Enemy | StoneBlockMoved] -> [Enemy | StoneBlockMoved]
+
+[> Enemy | StoneBlock2] -> [Enemy | StoneBlock2]
+
+(EnemyArmor's Movement)
+[stationary EnemyArmorLeft] -> [left EnemyArmorLeft]
+
+[stationary EnemyArmorRight] -> [Right EnemyArmorRight]
+
+[stationary EnemyArmorDown] -> [down EnemyArmorDown]
+
+[stationary EnemyArmorUp] -> [Up EnemyArmorUp]
+
+right [ wall |< EnemyArmorLeft ] -> [ wall | > EnemyArmorDown]
+
+up [ wall | < EnemyArmorDown ] -> [ wall | > EnemyArmorRight]
+
+right [ > EnemyArmorRight | Wall ] -> [ < EnemyArmorUp | Wall]
+
+Down[ wall | < EnemyArmorUp ] -> [ wall | > EnemyArmorLeft]
+
+[> Player | EnemyArmorLeft] -> [ Player | < EnemyArmorLeft] 
+
+[> Player | EnemyArmorRight] -> [ Player | < EnemyArmorRight] 
+
+[> Player | EnemyArmorUp] -> [ Player | < EnemyArmorUp] 
+
+[> Player | EnemyArmorDown] -> [ Player | < EnemyArmorDown] 
+
+[moving EnemyArmorLeft | Player] -> [ > EnemyArmorLeft | Player] 
+
+[moving EnemyArmorRight | Player] -> [ > EnemyArmorRight | Player] 
+
+[moving EnemyArmorUp | Player] -> [ > EnemyArmorUp | Player] 
+
+[moving EnemyArmorDown | Player] -> [ > EnemyArmorDown | Player] 
+
+[> EnemyArmorLeft | Crate] -> [EnemyArmorLeft | Down Crate ] 
+
+[> EnemyArmorRight | Crate] -> [EnemyArmorRight | Up Crate ] 
+
+[> EnemyArmorUp | Crate] -> [EnemyArmorUp | left Crate ] 
+
+[> EnemyArmorDown | Crate] -> [EnemyArmorDown | right Crate ] 
+
+right [ wall |< EnemyArmorLeft ] -> [ wall | > EnemyArmorDown] 
+
+up [ wall | < EnemyArmorDown ] -> [ wall | > EnemyArmorRight] 
+
+right [ > EnemyArmorRight | Wall ] -> [ < EnemyArmorUp | Wall] 
+
+Down[ wall | < EnemyArmorUp ] -> [ wall | > EnemyArmorLeft] 
+
+[> EnemyArmorUp | StoneBlock] -> [EnemyArmorUp | StoneBlock] 
+[> EnemyArmorDown | StoneBlock] -> [EnemyArmorDown | StoneBlock]
+[> EnemyArmorLeft | StoneBlock] -> [EnemyArmorLeft | StoneBlock]
+[> EnemyArmorRight | StoneBlock] -> [EnemyArmorRight | StoneBlock]
+
+[> EnemyArmorUp | StoneBlockMoved] -> [EnemyArmorUp | StoneBlockMoved] 
+[> EnemyArmorDown | StoneBlockMoved] -> [EnemyArmorDown | StoneBlockMoved]
+[> EnemyArmorLeft | StoneBlockMoved] -> [EnemyArmorLeft | StoneBlockMoved]
+[> EnemyArmorRight | StoneBlockMoved] -> [EnemyArmorRight | StoneBlockMoved]
+
+[> EnemyArmorUp | StoneBlock2] -> [EnemyArmorUp | StoneBlock2] 
+[> EnemyArmorDown | StoneBlock2] -> [EnemyArmorDown | StoneBlock2]
+[> EnemyArmorLeft | StoneBlock2] -> [EnemyArmorLeft | StoneBlock2]
+[> EnemyArmorRight | StoneBlock2] -> [EnemyArmorRight | StoneBlock2]
+
+(EnemySpike's Movement)
+[stationary EnemySpikeLeft] -> [left EnemySpikeLeft]
+
+[stationary EnemySpikeRight] -> [Right EnemySpikeRight]
+
+[stationary EnemySpikeDown] -> [down EnemySpikeDown]
+
+[stationary EnemySpikeUp] -> [Up EnemySpikeUp]
+
+right [ wall |< EnemySpikeLeft ] -> [ wall | > EnemySpikeDown]
+
+up [ wall | < EnemySpikeDown ] -> [ wall | > EnemySpikeRight]
+
+right [ > EnemySpikeRight | Wall ] -> [ < EnemySpikeUp | Wall]
+
+Down[ wall | < EnemySpikeUp ] -> [ wall | > EnemySpikeLeft]
+
+[> Player | EnemySpikeLeft] -> [ Player | < EnemySpikeLeft] 
+
+[> Player | EnemySpikeRight] -> [ Player | < EnemySpikeRight] 
+
+[> Player | EnemySpikeUp] -> [ Player | < EnemySpikeUp] 
+
+[> Player | EnemySpikeDown] -> [ Player | < EnemySpikeDown] 
+
+
+[> EnemySpikeLeft | Crate] -> [EnemySpikeDown | left Crate ] 
+
+[> EnemySpikeDown | Crate] -> [EnemySpikeRight | down Crate ] 
+
+[> EnemySpikeRight | Crate] -> [EnemySpikeUp | right Crate ] 
+
+[> EnemySpikeUp | Crate] -> [EnemySpikeLeft | up Crate ] 
+
+
+
+[> EnemySpikeLeft | StoneBlock] -> [EnemySpikeDown | StoneBlock ] 
+
+[> EnemySpikeDown | StoneBlock] -> [EnemySpikeRight | StoneBlock] 
+
+[> EnemySpikeRight | StoneBlock] -> [EnemySpikeUp | StoneBlock] 
+
+[> EnemySpikeUp | StoneBlock] -> [EnemySpikeLeft | StoneBlock] 
+
+
+
+[> EnemySpikeLeft | StoneBlockMoved] -> [EnemySpikeDown | StoneBlockMoved ] 
+
+[> EnemySpikeDown | StoneBlockMoved] -> [EnemySpikeRight | StoneBlockMoved] 
+
+[> EnemySpikeRight | StoneBlockMoved] -> [EnemySpikeUp | StoneBlockMoved] 
+
+[> EnemySpikeUp | StoneBlockMoved] -> [EnemySpikeLeft | StoneBlockMoved] 
+
+
+[> EnemySpikeLeft | StoneBlock2] -> [EnemySpikeDown | StoneBlock2 ] 
+
+[> EnemySpikeDown | StoneBlock2] -> [EnemySpikeRight | StoneBlock2] 
+
+[> EnemySpikeRight | StoneBlock2] -> [EnemySpikeUp | StoneBlock2] 
+
+[> EnemySpikeUp | StoneBlock2] -> [EnemySpikeLeft | StoneBlock2] 
+
+
+[> EnemySpikeLeft | StoneBlock3] -> [EnemySpikeDown | StoneBlock3 ] 
+
+[> EnemySpikeDown | StoneBlock3] -> [EnemySpikeRight | StoneBlock3] 
+
+[> EnemySpikeRight | StoneBlock3] -> [EnemySpikeUp | StoneBlock3] 
+
+[> EnemySpikeUp | StoneBlock3] -> [EnemySpikeLeft | StoneBlock3] 
+
+(EnemyEye's Movement)
+[EnemyEye |...| Player] -> [< EnemyEye |...| Player] 
+
+[ EnemyEye | parallel Player] -> [parallel EnemyEye | parallel Player] 
+
+[stationary EnemyEye] -> [randomdir EnemyEye]
+
+[ > EnemyEye | DoorArrow] -> [EnemyEye | DoorArrow]
+[ > EnemyEye | Door] -> [EnemyEye | Door]
+
+(EnemyShadow's Movement)
+[> Player][EnemyShadow] -> [> Player][< EnemyShadow] 
+ 
+[Player EnemyShadow] -> [Player randomdir EnemyShadow] 
+
+[> EnemyShadow | DoorArrow] -> [EnemyShadow | DoorArrow]
+
+[> EnemyShadow | Door] -> [EnemyShadow | Door]
+
+(Enemy's Attack Move)
+[Enemy | Player] -> [> Enemy | Player] 
+
+
+(Enemy Wizard's Behavior)
+
+(Fireball Move)
+[FireballRight] -> [right FireballRight]  
+
+[FireballLeft] -> [left FireballLeft] 
+
+[FireballLeft | FireballLeft] -> [|FireballLeft] 
+
+[FireballRight | FireballRight] -> [|FireballRight] 
+
+(Spawn Fireball)
+left [EnemyWizardMoveLeft | ] -> [EnemyWizardMoveLeft | FireballLeft] sfx8 
+
+right [EnemyWizardMoveRight | ] -> [EnemyWizardMoveRight | FireballRight] sfx8 
+
+(Fires 4 fireballs pretty neat)
+([EnemyWizardMoveLeft | ] -> [EnemyWizardMoveLeft | Left FireballLeft] 
+
+[EnemyWizardMoveRight | ] -> [EnemyWizardMoveRight | right FireballRight])
+
+
+[EnemyWizardRecharged] -> [EnemyWizard] 
+
+[EnemyWizardIdle4] -> [EnemyWizardRecharged] 
+
+[EnemyWizardIdle3] -> [EnemyWizardIdle4] 
+
+[EnemyWizardIdle2] -> [EnemyWizardIdle3] 
+
+[EnemyWizardIdle] -> [EnemyWizardIdle2] 
+
+
+
+[EnemyWizardMoveLeft] -> [EnemyWizardIdle] 
+
+[EnemyWizardMoveRight] -> [EnemyWizardIdle] 
+
+(Wizard's Teleport)
+
+late right [ EnemyWizard | ... | Player ] -> [ Temp | ... | EnemyWizardMoveLeft ] sfx9 
+
+late left [ EnemyWizard | ... | Player ] -> [ Temp | ... | EnemyWizardMoveRight ] sfx9 
+
+(This teleports if under wizard)
+(late up [ EnemyWizard | ... | Player ] -> [ Temp | ... | EnemyWizardMoveLeft ]
+
+late down [ EnemyWizard | ... | Player ] -> [ Temp | ... | EnemyWizardMoveRight ]) 
+
+late up [ EnemyWizard | Player ] -> [ Temp | EnemyWizardMoveLeft ] sfx9 
+
+late down [ EnemyWizard | Player ] -> [ Temp | EnemyWizardMoveRight ] sfx9 
+
+late [ Temp ] -> [ Player ] 
+
+(Enemy Removes Health on Player)
+(late [Enemy Player] [Health] -> [Enemy player] [HealthRemover])
+
+late [Enemy Player] [Health | HealthRemover] -> [Enemy player] [  | HealthRemover] sfx3 
+
+[Enemy Player] [HealthRemover] -> [Enemy player] [left HealthRemover]  
+
+(Enemy Armor)
+(Up)
+late [EnemyArmorUp Player] [Health | HealthRemover] -> [EnemyArmorUp player] [  | HealthRemover] sfx3 
+
+[EnemyArmorUp Player] [HealthRemover] -> [EnemyArmorUp player] [left HealthRemover] 
+
+(Down)
+late [EnemyArmorDown Player] [Health | HealthRemover] -> [EnemyArmorDown player] [  | HealthRemover] sfx3 
+
+[EnemyArmorDown Player] [HealthRemover] -> [EnemyArmorDown player] [left HealthRemover]  
+
+(Left)
+late [EnemyArmorLeft Player] [Health | HealthRemover] -> [EnemyArmorLeft player] [  | HealthRemover] sfx3 
+
+[EnemyArmorLeft Player] [HealthRemover] -> [EnemyArmorLeft player] [left HealthRemover]  
+
+(Right)
+late [EnemyArmorRight Player] [Health | HealthRemover] -> [EnemyArmorRight player] [  | HealthRemover] sfx3 
+
+[EnemyArmorRight Player] [HealthRemover] -> [EnemyArmorRight player] [left HealthRemover]  
+
+(Enemy spike)
+(Up)
+late [EnemySpikeUp Player] [Health | HealthRemover] -> [EnemySpikeUp player] [  | HealthRemover] sfx3 
+
+[EnemySpikeUp Player] [HealthRemover] -> [EnemySpikeUp player] [left HealthRemover] 
+
+(Down)
+late [EnemySpikeDown Player] [Health | HealthRemover] -> [EnemySpikeDown player] [  | HealthRemover] sfx3 
+
+[EnemySpikeDown Player] [HealthRemover] -> [EnemySpikeDown player] [left HealthRemover]  
+
+(Left)
+late [EnemySpikeLeft Player] [Health | HealthRemover] -> [EnemySpikeLeft player] [  | HealthRemover] sfx3 
+
+[EnemySpikeLeft Player] [HealthRemover] -> [EnemySpikeLeft player] [left HealthRemover]  
+
+(Right)
+late [EnemySpikeRight Player] [Health | HealthRemover] -> [EnemySpikeRight player] [  | HealthRemover] sfx3 
+
+[EnemySpikeRight Player] [HealthRemover] -> [EnemySpikeRight player] [left HealthRemover]  
+
+(Enemy Shadow)
+
+late [EnemyShadow Player] [Health | HealthRemover] -> [EnemyShadow player] [  | HealthRemover] sfx3 
+
+[EnemyShadow Player] [HealthRemover] -> [EnemyShadow player] [left HealthRemover]
+
+(Shadow Arrows)
+(Left)
+late [ShadowLeftArrow Player] [Health | HealthRemover] -> [ShadowLeftArrow  player] [  | HealthRemover]sfx3
+
+[ShadowLeftArrow  Player] [HealthRemover] -> [ShadowLeftArrow  player] [left HealthRemover]
+
+(Shadow Arrows)
+(Right)
+late [ShadowRightArrow Player] [Health | HealthRemover] -> [ShadowRightArrow  player] [  | HealthRemover]sfx3
+
+[ShadowRightArrow  Player] [HealthRemover] -> [ShadowRightArrow  player] [left HealthRemover]
+
+(EnemyEye)
+late [EnemyEye Player] [Health | HealthRemover] -> [EnemyEye  player] [ | HealthRemover] sfx3
+
+[EnemyEye  Player] [HealthRemover] -> [EnemyEye player] [left HealthRemover] 
+
+
+(EnemyWizard)
+(Right Fireball)
+[FireballRight Player] [Health | HealthRemover] -> [FireballRight  player] [  | HealthRemover] sfx3
+
+[FireballRight  Player] [HealthRemover] -> [FireballRight player] [left HealthRemover] 
+
+(Left Fireball)
+[FireballLeft Player] [Health | HealthRemover] -> [FireballLeft  player] [  | HealthRemover] sfx3
+
+[FireballLeft  Player] [HealthRemover] -> [FireballLeft player] [left HealthRemover] 
+
+[FireballLeft Player] -> [Player]
+
+[FireballRight Player] -> [Player]
+
+Left [FireballLeft | Wall] -> [| wall]
+
+Right [FireballRight | Wall] -> [| wall]
+
+(BombDamage)
+
+(late [Explosion Player] [Health | HealthRemover] -> [Explosion player] [  | HealthRemover] sfx3
+
+[Explosion Player] [HealthRemover] -> [Explosion player] [left HealthRemover])
+
+[Explosion2 Player] [Health | HealthRemover] -> [Explosion2 player] [  | HealthRemover] sfx3
+
+[Explosion2 Player] [HealthRemover] -> [Explosion2 player] [left HealthRemover]
+
+
+
+(Death)
+late [no Health Healthless] -> restart
+
+(
+BUTTONS
+)
+
+(Panel Opens Door)
+late [Panel Crate] [Door] -> [Panel Crate] []
+
+
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+(All Target on Crate) 
+No Enemy
+
+No EnemyArmorLeft
+
+No EnemyArmorRight
+
+No EnemyArmorUp
+
+No EnemyArmorDown
+
+No EnemyShadow
+
+NO EnemyEye
+
+no EnemyWizard
+
+no EnemyWizardMoveLeft
+
+no EnemyWizardMoveRight
+
+no EnemyWizardIdle
+
+no EnemyWizardIdle2
+
+no EnemyWizardIdle3
+
+no EnemyWizardIdle4
+
+no EnemyWizardRecharged
+
+=======     
+LEVELS
+=======
+message You must kill all enemies to win! Get close to an enemy and press X to attack.
+Message	Watch your health, if an enemy gets ontop of you they'll deal damage!
+bzhhx#ww###www#
+wwwwwww...wwww#
+ww..g........w#
+w............w#
+w.pg....g..e.w#
+w............w#
+w...........ww#
+#######wwwwww##
+##########www##
+[]#.......wwww.
+
+message Some enemies will be out of reach. Pick up a bow to fire arrows at them!
+message Some paths will be blocked off. Bombs can be used to open up new paths.
+message Only one item can be carried at a time, the other item will be dropped.
+message Arrow and bombs can only be shot from left to right and is dependent on which direction you moved last.
+
+bzhhx##wwwww###
+#01.##..wwwww##
+#aa..#...wwwww#
+#.g..#...www..#
+#....k...ww.e.#
+#.p.##.g.ww...#
+#...##...wwwww#
+#..###..wwwww##
+#########ww####
+#########wwww##
+##########www##
+[]#........www.
+
+
+message Some places can only be accessed by activating switches.
+message Some Switches must be activated by crates, others by arrows.
+#zhhxwwww######bzhhx#ww#ww####
+www..wwww..##o##....wwwww....#
+ww....ww....#.##....wwwww...*#
+ww...##..#..g.##....wwwww..*e#
+w........#....##....wwwwww..*#
+#p.*#....#..######j#ww###ww###
+#...#.........d....1wwg..w..t#
+#...#..#g#....##...aww###w####
+###################ww###ww####
+[]##################www#ww####
+
+message Ice breaks when you walk on it which prevents you from going across. Watch your step!
+#zhhxw#####ww##bzhhxww######ww
+#..g.w.ge.ww.o##..i#wwwwwwwww#
+#g...i..g.ww..##.#i#wiwwwwwww#
+#..#iwwiwwwg..##.#i#iiiwwwwgw#
+#.*#iwwiwww...d.1#i#iiiwww.gg#
+#.g#gw..ww...p##a#i#iiiwwggeg#
+#..#.i...i...#####i#iiiwwg..w#
+#..#ww...i.i######iiiiwwwwwww#
+####www#############wwwwwwwwww
+[]#..www............www###wwww
+
+
+message Stones only move a certain number of times and won't budge after. Think before you push stones!
+bzhhx###########zhhxwwwww#####
+ww.g..s..#######ww.s.wwww##e##
+wg....s.g...*........#ww###.##
+##sss#.#########......w####d##
+#....#g...s...####...f..###.##
+#g...#....s...##.#...ff..#..##
+#....f....s#..##of...f......##
+#....#.....#.p##.....#..w...##
+######################wwww####
+[]#.....................www..#
+
+message Some enemies require different tactics to destroy.
+message The Armored Enemies are not affected by bombs or arrows.
+Message The Floating Eyes are only affected by arrows.
+Message Wizards dodge sword attacks, but their spells can be reflected back with the sword!
+bzhhx###########zhhx#####wwwww
+#.01......g...##..........wwww
+#.aa..........*g............ww
+w......g......##.....g....g.ww
+ww...........w##.............w
+wwp.........ww##..g.........#w
+wwwwwwwwwwwwww####........y##w
+wwwwwwwwwwwwwwww####.....k##ww
+w###########wwww#########k##ww
+ww###########wwww########.##ww
+www..........w#ww.gg1.......ww
+wwww.#......q.##w.g.a......www
+wwww..........##g..........www
+wwww..........##..........www#
+wwww..........##......r...www#
+wwww..##......##..........www#
+wwwww.www###...*.........www.#
+....wwwwwwwwww###########www##
+###...........................
+[]#...........................
+
+
+
+message There are many more things, but now it's time to learn and adapt on your own.
+message Good Luck!
+#zhhx####ww#####..............
+###wwww#ww######..............
+#wwwwwwww#######..............
+#..wwwww...##.##..............
+#.ewww.......1##..............
+#wwww....e...a##..............
+#ww..........###..............
+#.....e....e.###..............
+########.#####################
+bzhhx###j#######zhhx##########
+###..s...0#..q###o.ggkk*i....#
+#.*..f...a#...fkg..ggk###....#
+#..#.######...###.f.gk.......#
+#p.#g#........####.########d##
+#.##.#.##...g..gm...#...r....#
+#.#..fk.#..g..###g#.#.g......#
+#.##.#..#.....##t...w.g....1.#
+###########################a##
+[]#..................########.
+
+#zhhx#####wwww#bzhhxwwwww###ww
+#####ioi###ww##ww1#wwwww#.....
+#..iiissdiiiwwww.a.###wwg.e...
+#..iii.i#wms.###...g.j.....w##
+#p*ii.si#..#....g.g..#wwwwww##
+#..iigiiw...g.g..gww#wwwwwww##
+#twwwwwwww..gggggwwwwwww.www#w
+wwwwwwwwwwwwwwwwwwwwwww..wwwww
+#######################..#####
+[]#...........................
+
+........www.####zhhx##########
+.........www..w#ww.#......#..#
+..........wwwwwww..g.....#...#
+...........www#w..g....g...g.#
+...........wwwwwg............#
+...........wwwww#......c...#.#
+..........wwww##0............#
+..........ww..##ag..#...g....#
+..........w...#############.##
+#zhhx###www####bzhhx#######j##
+#......www....###t...**...e..#
+#.e...wwww....##...qg##......#
+##k###ww......##..ww..##.#...#
+#p...www..........ww.gm...#..#
+#....www..g...##......#...#.1#
+#....www......##q...#kk...#ea#
+#....www...y..################
+######www#####################
+[]#...www.....................
+
+bzhhx#####wwww##zhhx#wwww######zhhx#####ww###
+#p......##ww..#######w#####.###..ww.........#
+#.......#ww..1##t....i...5..###.ggwg...ggc..#
+#....ss##w...a###7#########.###..gwg....gg..#
+#...#...#.....###.#########8.j...ggw.....g..#
+#..sss.sf.........#########.###..ggg....gg..#
+#.#...ss.#....###..........6.##..gggwg......#
+##........#...###7####www######...gw........#
+#####################wwwwww#######www###ww###
+[]#..................wwwwww........ww....ww..
+
+
+bzhhx###########zhhxwwww#######zhhx######www#
+#lllllluulull##llullwwwwgulu.g..llullll#www##
+#lllullullllul#lluullwwwgluuuu##lulllul#lw###
+#lullulullulul#llluuullwglluu##uullluu#lll###
+#lluululullulu#uuululuulwlllu#llue.glullel###
+###lullluuuuul#k.#lsuulluullu#ll#.gglullll###
+#0.kullululuklk.g#ll#lllluluu#el#gggul#lll###
+#p.l#lululllulk.g#ll#llllullu#ll#lllul#l#####
+#############################################
+[]#..........................................
+
+
+
+#zhhx###########zhhx##wwwwww##
+##........#######lll#iiiiill0#
+#..........#####llllulliillll#
+#..........#####l*lluwwilllll#
+#...c.....######llllliillllll#
+#........#######lliiwwi#lllll#
+#........dllllllllelww##lllll#
+##.##..ww##ll#l#llllww###lllo#
+#######ww##l########ww###l####
+#zhhx###ww#l###bzhhxww###l####
+#.......wwg..q#.....ww.##j####
+#...#....wwwwww..r.gww.##g####
+#......e..wwwww...gwww..gg####
+#..e.....e.wwwwwww.wwwwgggg1##
+#..........#wwwwwwwwwwwgggga##
+#....e....#wwwwwwwwwww...g.###
+#........##wwwwwwwwwww..ge...#
+#q.......#wwwwwwwwwwww.......#
+#zhhx....#wwwwwwzhhxwww......#
+#...#.q..#wwtwwwwwwwwww....#.#
+#..e.....#wwwwwwwwwwww#......#
+#........wwwwwwwwwwwww#....q.#
+#p.......wwwwwwwwwwwww...e...#
+#.........gwwwwwwg.w.........#
+#........#...iiii........g...#
+#..wwi.......iiii........wwww#
+###www#######wwwwwwwwwww#wwwww
+[]#www......wwwwwwwwwwwwwwwwww
+
+
+

@@ -1,0 +1,604 @@
+title Autumn
+run_rules_on_level_start
+background_color #C84202
+text_color #620
+again_interval 0.1
+========
+OBJECTS
+========
+
+Background 1
+grey
+
+
+lit
+#FFFB66
+
+it
+#FEB047
+
+autumn 
+#E45305 #6A2402
+.000.
+00000
+01010
+00000
+.000.
+
+summer
+#f41010 #600404 #FFB008
+.000.
+00000
+01010
+00000
+.000.
+
+l3
+#FF9800
+.....
+..0..
+.0...
+..0..
+.....
+
+bird m
+darkblue #4040FF lightblue black
+..1..
+2.1.2
+11111
+.010.
+..1..
+
+block w
+#C84202
+
+
+bunnyl <
+brown black pink white 
+.....
+.100.
+20003
+.100.
+.....
+
+bunnyr >
+brown black pink white
+.....
+.001.
+30002
+.001.
+.....
+
+nest ;
+brown lightbrown
+.000.
+01110
+01110
+01110
+.000.
+
+
+fella 
+#7E2D00
+.000.
+00000
+00000
+00000
+.000.
+
+fellb
+#9A0501
+.000.
+00000
+00000
+00000
+.000.
+
+fellc
+#CD0601
+.000.
+00000
+00000
+00000
+.000.
+
+felld
+#CCC926
+.000.
+00000
+00000
+00000
+.000.
+
+felle
+#F7C709
+.000.
+00000
+00000
+00000
+.000.
+
+fellf
+#F45305
+.000.
+00000
+00000
+00000
+.000.
+
+
+
+bloomed
+green
+.000.
+00000
+00000
+00000
+.000.
+
+door e
+#FD712D #C84202
+00011
+00001
+00000
+00001
+00011
+
+water
+blue
+
+lose
+blue brown
+00000
+00100
+01110
+00100
+00000
+
+hor
+#704418 blue
+11111
+00000
+00000
+00000
+11111
+
+ver
+#704418 blue
+10001
+10001
+10001
+10001
+10001
+
+
+nodoor
+transparent
+
+wins
+transparent
+
+start
+transparent
+
+connected
+transparent
+
+vert
+transparent
+
+moved 
+transparent
+
+first
+transparent
+
+notfirst
+transparent
+
+one
+transparent
+
+two
+transparent
+
+three
+transparent
+
+bmoved
+transparent
+
+=======
+LEGEND
+=======
+bunny = bunnyl or bunnyr
+fell =  fella or fellb or fellc or felld  or felle or fellf
+floor = lit or it
+crate =  block or water or nest 
+y =  lit
+g = bloomed
+f = autumn and start 
+k = water
+player = autumn
+x = summer
+z = l3
+
+=======
+SOUNDS
+=======
+
+SFX1 80425104
+SFX2 9697905
+
+================
+COLLISIONLAYERS
+================
+
+Background
+fella, felle
+floor
+vert
+nodoor, wins
+connected
+bmoved
+bloomed , moved
+start
+first, notfirst
+hor, ver
+water
+player, block, door, fell, bird, bunny , lose, nest, summer, l3
+one, two, three
+
+
+
+======
+RULES
+======
+
+
+
+[three] -> win
+[two] -> [three] again
+[one] -> [two] again
+[summer no one no two no three] -> [summer one] again
+
+
+[player][first] -> [player notfirst][]
+
+[no floor no door no block no first] -> [first]
+
+[> autumn|water] -> [autumn|water]
+[autumn][no floor no door no nodoor no block no water no hor no ver] -> [autumn][lit]
+[nest floor] -> [nest it]
+[no vert] -> [vert]
+down[vert|...|no block] -> [|...|]
+horizontal[vert|...|no vert] -> [|...|]
+
+down [nest no moved|] -> [nest moved|bird moved]
+
+[> player | bird|no bloomed no door no crate no fell no bird] -> [> player| > bird|]
+
+
+[> autumn|bloomed|no bloomed  no door no crate no fell no bird no bunny] -> [> autumn|random fell start|]
+horizontal [> autumn|bloomed|no bloomed  no door water no fell no bird no bunny] -> [|autumn|hor]
+vertical [> autumn|bloomed|no bloomed  no door water no fell no bird no bunny] -> [|autumn|ver]
+[> autumn|start fell] -> [> autumn|> fell]
+[> autumn|bloomed] -> cancel
+
+
+late [autumn][fell floor] -> [autumn][fell it]
+late [autumn floor] -> [autumn it]
+
+
+
+late [lose] -> restart
+late [moved no nest no bird] -> []
+late [bmoved] -> [moved]
+late right [notfirst][player|...|no bloomed  no bird no bunny no block no fell water|bunny no moved] -> [notfirst][player|...|lose|]
+late left [notfirst][player|...|no bloomed  no bird no bunny no block no fell water|bunny no moved] -> [notfirst][player|...|lose|]
+late right [notfirst][player|...|no bloomed  no bird no bunny no block no fell|bunny no moved] -> [notfirst][player|...|bunnyl moved|]
+late left [notfirst][player|...|no bloomed  no bird no bunny no block no fell|bunny no moved] -> [notfirst][player|...|bunnyr moved|]
+
+late down [bird no moved|no door no fell no block no bloomed  no player no bird no bunny] -> [|bird moved]
+late [bird vert] -> [] 
+
+late [connected] -> []
+late [player no connected] -> [player connected]
+late [connected][bird moved] -> [][bird moved]
+
++ late [connected|no connected no fell no bird no crate no door no bloomed no lose no bunny no ver no hor] -> [connected|connected]
+
+late [floor connected] -> [it connected]
+
+late [bird moved][bunny moved] -> [bird moved][bunny bmoved]
+late [bird moved] -> [bird] again
+
+
+late [autumn][door] -> [autumn][nodoor it]
+late [nodoor it][lit] -> [door][lit]
+late [nodoor it][bird] -> [door][bird]
+
+late [player nodoor] -> [wins player]
+
+late [wins][lose] -> [][lose]
+
+late [start][autumn wins floor] -> win
+
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+message Oh, is it time again already?
+
+fg1ww
+wgg1w
+w1g1w
+ww11e
+
+message Well then, I guess I'll get to it.
+
+message After all, all these leaves aren't going to color themselves.
+
+
+111www
+11111e
+1ggwww
+1g1111
+wwwgg1
+f11g11
+www111
+
+message And I don't think the bunnies are going to help anytime soon.
+
+message Unless the goal was to be as fluffy as possible, that is.
+
+message [BUNNIES MOVE LEFT OR RIGHT TOWARDS AUTUMN]
+
+wf11111111<e
+wwwww111wwww
+
+
+
+w1g11g1w
+w1g11g1w
+f1g11gzx
+w1g11g1w
+w1g11g1w
+
+
+message "She probably doesn't even have any idea how ANNOYING she is!"
+
+w1g11g1w
+w1g11g1w
+f1g11g1e
+w1g11g1w
+w1g11g1w
+
+message What? What was -- or rather, Who was that?
+
+message Am I not... 
+
+message Am I not the only one?
+
+
+
+w11111<w
+f11111<e
+w11111<w
+
+message And who was "she"?
+
+message Are there are a whole tribe of us?
+
+message [TREES CAN BE PUSHED IN THE RIVER TO MAKE A BRIDGE]
+
+w11g1kg1w
+wgggkk11w
+f11gk111e
+
+message Hmmmm. This is a lot to process all at once.
+
+
+f11k11k11w
+w1gk1gk11w
+wkkkkkkkkw
+w11kg1k11w
+w1gk1gk11w
+wkkkkkkkkw
+w11kg1k1gw
+w11k1gk11e
+
+message I just have so many questions.
+
+message I'm uncertain about everything I thought I knew now.
+
+message [BIRDS MUST MIGRATE SOUTH FOR WINTER]
+
+www;ww
+www1ww
+wwfg1w
+www11e
+w1111w
+111www
+w1g1ww
+ww1www
+wwwwww
+
+message I thought that I'm the one meant to make order from the chaos.
+
+message If there are many of us, what does that say about my role in life?
+
+wwww;;;;ww
+f1111111<e
+ww11111<ww
+ww1111<yww
+ww111<yyww
+ww11<yyyww
+
+
+
+
+
+message And should I try to join the others?
+
+message I've lived in serenity alone for so long, It's hard to even consider.
+wwww;wwww
+ww11111ww
+w111111<w
+w1111111w
+w111g111w
+f1wwwww1e
+
+
+
+
+message I've never had a desire for accompaniment before now.
+
+message Just because now I know it's available, why should that make a difference?
+
+w111111w
+w1ggg11w
+f1g11g1e
+w11ggg1w
+w111111w
+
+message The beauty of nature surrounding me is all I need to be happy.
+
+message And besides, from the one I heard, it doesn't sound like their lives are improved from being together.
+
+ww;;;;;ww
+w1111111w
+w111g111w
+f1g111g1e
+w11g1g11w
+
+
+message I don't think I need approval from others to be able to find meaning in life.
+
+message So for now I'll continue trying to find tranquility with the world.
+
+wwww1g111wwww
+wwww1g111wwww
+www11g1111www
+f111kg1<k111e
+www11g1111www
+wwww1g111wwww
+wwww1g111wwww
+
+
+
+
+message On the other hand...
+
+wwwwwww;ww
+wwwwwww1ww
+w11g111g1e
+w1g111g11w
+w111g1g1ww
+wg11gg1www
+w1g111wwww
+w1111wwwww
+fg11wwwwww
+w11wwwwwww
+w1wwwwwwww
+
+message If I join the tribe and dislike it,
+
+message I can always leave back into the wild, and nothing would change.
+
+
+wwww;w;wwww
+w111111111w
+f111111111w
+w111g1g111w
+w1111kkkkkw
+w>111k1111e
+w>111k1111w
+
+
+message After all, I can't know what I'm missing until I try.
+
+message For all I know, the tribe could be a very positive experience for me.
+
+f111111111<
+w1ww1ww1www
+>111111111<
+ww1ww1ww1ww
+>111111111e
+
+
+
+message Wait a second...
+
+message Which way did she go?
+
+f111111111111e
+w111111111111w
+w1kkkkkk11111w
+w1k1<wwk11111w
+w>11111k1g1g1w
+w>11111k1g1g1w
+w>11111k1g1g1w
+w>11111k1g1g1w
+w>11111k1g1g1w
+w>11111k1g1g1w
+
+
+message Oh well.
+
+message Scratch that plan then.
+
+ww;ww;ww
+w111111e
+w111111w
+w1gggg1w
+w111111w
+w1gggg1w
+w111111w
+wggggggw
+w111111w
+f111111w
+
+message I guess I'll continue to live as I used to,
+
+message but if I ever see another like me, I'll make my presence known.
+
+w1111g1111www
+f111g<g1111ww
+w1111g<g1111w
+ww1111g<g111e
+www1111g1111w
+
+message END OF PART THREE
+
+
+
+
+
+
+
+
+
+
+
+
+
+

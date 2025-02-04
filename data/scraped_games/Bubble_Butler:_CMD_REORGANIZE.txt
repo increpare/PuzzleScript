@@ -1,0 +1,873 @@
+title Bubble Butler: CMD REORGANIZE
+author John M. Williams
+homepage gate.itch.io
+ 
+key_repeat_interval 0.2
+run_rules_on_level_start
+ 
+========
+OBJECTS
+========
+
+One
+Darkblue
+...0.
+..00.
+...0.
+...0.
+..000
+
+Two
+Darkblue
+.000.
+....0
+..00.
+.0...
+.0000
+
+Three
+Darkblue
+.000.
+....0
+..000
+....0
+.000.
+
+Four
+Darkblue
+.0..0
+.0..0
+.0000
+....0
+....0
+
+Five
+Darkblue
+.0000
+.0...
+.000.
+....0
+.000.
+
+Six
+Darkblue
+..00.
+.0...
+.000.
+.0..0
+..00.
+
+Seven
+Darkblue
+.0000
+....0
+...0.
+..0..
+.0...
+
+Eight
+Darkblue
+..00.
+.0..0
+..00.
+.0..0
+..00.
+
+Nine
+Darkblue
+..00.
+.0..0
+..000
+....0
+..00.
+
+Zero
+Darkblue
+..00.
+.0..0
+.0..0
+.0..0
+..00.
+
+Question
+Grey
+.00..
+0..0.
+..0..
+.....
+..0..
+ 
+Background
+Green
+ 
+NoBubble
+LightGreen
+ 
+Warp
+Green LightGreen
+11111
+10001
+10101
+10001
+11111
+ 
+WallNormal
+DarkGreen Darkblue
+00000
+00000
+00000
+00000
+00000
+ 
+WallBottom
+DarkGreen Darkblue
+00000
+00000
+00000
+00000
+11111
+ 
+ 
+HoleNormal
+Black
+ 
+HoleTop
+Black #282117
+11111
+00000
+00000
+00000
+00000
+ 
+Lava
+Red DarkRed
+01000
+00010
+10000
+00100
+00001
+ 
+Fall
+Green Black
+00000
+01010
+00000
+01010
+00000
+ 
+PlayerU
+Gray Blue DarkGrey Red
+.111.
+00300
+00200
+20002
+.222.
+ 
+PlayerD
+Gray Blue DarkGrey Red DarkBlue
+.000.
+00300
+00200
+21112
+.444.
+ 
+PlayerL
+Gray Blue DarkGrey Red DarkBlue
+.000.
+10300
+10200
+40002
+.222.
+ 
+PlayerR
+Gray Blue DarkGrey Red DarkBlue
+.000.
+00301
+00201
+20004
+.222.
+ 
+Bubble9
+#571df7 #774EF4 White
+.000.
+01110
+01010
+01110
+.000.
+ 
+Bubble8
+#4e25f7 #7255F4 White
+.000.
+01110
+01110
+01110
+.000.
+ 
+Bubble7
+#462df7 #705FF4 White
+.000.
+01110
+01110
+01110
+.000.
+ 
+Bubble6
+#3e35f7 #6B66F4 White
+.000.
+01110
+01110
+01110
+.000.
+ 
+Bubble5
+#353ef7 #666DF4 White
+.000.
+01110
+01110
+01110
+.000.
+ 
+Bubble4
+#2d46f7 #5F73F4 White
+..0..
+.010.
+01110
+.010.
+..0..
+ 
+Bubble3
+#254ef7 #5575F4 White
+.....
+.000.
+.010.
+.000.
+.....
+ 
+Bubble2
+#1d57f7 #4E7AF4 White
+.....
+.000.
+.010.
+.000.
+.....
+ 
+Bubble1
+#1d57f7 #4E7AF4 White
+.....
+..0..
+.010.
+..0..
+.....
+ 
+BubblePop
+White
+0.0.0
+..0..
+00000
+..0..
+0.0.0
+ 
+Crate
+Brown Darkbrown
+00000
+01110
+0...0
+00000
+11111
+ 
+Target
+Yellow
+.....
+.....
+..0..
+.....
+.....
+ 
+Temp
+Grey
+ 
+PlayerRotated
+Grey
+ 
+PreviousPosition
+Grey
+ 
+Skip
+DarkBlue
+ 
+NoCreateBubble
+Red
+.....
+.....
+.....
+.....
+.....
+ 
+NoInflateBubble
+Red
+.....
+.....
+.....
+.....
+.....
+ 
+=======
+LEGEND
+=======
+ 
+Player = PlayerU or PlayerD or PlayerL or PlayerR
+Bubble = Bubble1 or Bubble2 or Bubble3 or Bubble4 or Bubble5 or Bubble6 or Bubble7 or Bubble8 or Bubble9
+BigBubble = Bubble5 or Bubble6 or Bubble7 or Bubble8 or Bubble9
+ 
+PumpTo9 = Bubble3 or Bubble4 or BigBubble
+PumpTo4 = Bubble2 or Bubble1
+PumpToPop = Bubble9 or Bubble8
+ 
+Hole = HoleNormal or HoleTop
+Pushable = Bubble or Crate
+Wall = WallNormal or WallBottom
+Solid = Wall or Hole or Lava
+Blocked = Wall or Pushable
+BubbleStop = Skip or NoBubble or NoCreateBubble
+Numbers = Zero or One or Two or Three or Four or Five or Six or Seven or Eight or Nine
+ 
+. = Background
+H = HoleNormal
+F = Fall
+L = Lava
+# = WallNormal
+P = PlayerU
+1 = One and WallNormal
+2 = Two and WallNormal
+3 = Three and WallNormal
+4 = Four and WallNormal
+5 = Five and WallNormal
+6 = Six and WallNormal
+7 = Seven and WallNormal
+8 = Eight and WallNormal
+9 = Nine and WallNormal
+0 = Zero and WallNormal
+C = Crate
+T = Target
+G = Crate and Target
+B = Bubble9
+N = NoBubble
+W = Warp
+S = Skip
+X = NoCreateBubble
+Y = NoInflateBubble
+? = Question
+ 
+=======
+SOUNDS
+=======
+ 
+Endlevel 31133902
+Fall Destroy 45215702
+Crate Move 61031707
+SFX0 85523704
+SFX1 96055904
+SFX2 94561302
+ 
+================
+COLLISIONLAYERS
+================
+ 
+Background
+NoCreateBubble, NoInflateBubble
+PreviousPosition, Temp
+PlayerRotated
+Hole, Lava, Fall, Target, Warp, NoBubble, Skip, Question
+Wall, Player, Crate, Bubble, BubblePop
+Numbers
+ 
+======
+RULES
+======
+ 
+(Rotate move)
+Up [ Up Player no PlayerU ] -> [ PlayerU PlayerRotated ]
+Down [ Down Player no PlayerD ] -> [ PlayerD PlayerRotated ]
+Left [ Left Player no PlayerL ] -> [ PlayerL PlayerRotated ]
+Right [ Right Player no PlayerR ] -> [ PlayerR PlayerRotated ]
+ 
+[ Player ] -> [ Player PreviousPosition ]
+[ Player no NoInflateBubble] [ NoInflateBubble ] -> [ Player NoInflateBubble ] [ ]
+[ Player no NoCreateBubble] [ NoCreateBubble ] -> [ Player NoCreateBubble ] [ ]
+ 
+(BubbleDown)
+[ Player no PlayerRotated ] [ BubblePop ] -> [ Player ] [ ]
+[ Player no PlayerRotated ] [ Bubble1 no Lava ] -> [ Player ] [ BubblePop ]
+[ Player no PlayerRotated ] [ Bubble2 no Lava ] -> [ Player ] [ Bubble1 ]
+[ Player no PlayerRotated ] [ Bubble3 no Lava ] -> [ Player ] [ Bubble2 ]
+[ Player no PlayerRotated ] [ Bubble4 no Lava ] -> [ Player ] [ Bubble3 ]
+[ Player no PlayerRotated ] [ Bubble5 no Lava ] -> [ Player ] [ Bubble4 ]
+[ Player no PlayerRotated ] [ Bubble6 no Lava ] -> [ Player ] [ Bubble5 ]
+[ Player no PlayerRotated ] [ Bubble7 no Lava ] -> [ Player ] [ Bubble6 ]
+[ Player no PlayerRotated ] [ Bubble8 no Lava ] -> [ Player ] [ Bubble7 ]
+[ Player no PlayerRotated ] [ Bubble9 no Lava ] -> [ Player ] [ Bubble8 ]
+ 
+(BubbleUp)
+[ Player no PlayerRotated ] [ Bubble9 Lava ] -> [ Player ] [ BubblePop Lava ]
+[ Player no PlayerRotated ] [ Bubble8 Lava ] -> [ Player ] [ Bubble9 Lava ]
+[ Player no PlayerRotated ] [ Bubble7 Lava ] -> [ Player ] [ Bubble8 Lava ]
+[ Player no PlayerRotated ] [ Bubble6 Lava ] -> [ Player ] [ Bubble7 Lava ]
+[ Player no PlayerRotated ] [ Bubble5 Lava ] -> [ Player ] [ Bubble6 Lava ]
+[ Player no PlayerRotated ] [ Bubble4 Lava ] -> [ Player ] [ Bubble5 Lava ]
+[ Player no PlayerRotated ] [ Bubble3 Lava ] -> [ Player ] [ Bubble4 Lava ]
+[ Player no PlayerRotated ] [ Bubble2 Lava ] -> [ Player ] [ Bubble3 Lava ]
+[ Player no PlayerRotated ] [ Bubble1 Lava ] -> [ Player ] [ Bubble2 Lava ]
+ 
+(PlayerPush)
+[ > Player no Skip | Pushable ] -> [ Player | > Pushable ]
+[ > Player | Solid ] -> [ Player | Solid ]
+[ > Pushable | Skip ] -> [ Pushable | Skip ]
+ 
+(Pump bubble)
+Up [ Action PlayerU no BubbleStop no NoInflateBubble | PumpToPop ] -> [ PlayerU | Temp ]
+Up [ Action PlayerU no BubbleStop no NoInflateBubble | PumpTo9 ] -> [ PlayerU | Bubble9 ]
+Up [ Action PlayerU no BubbleStop no NoInflateBubble | PumpTo4 ] -> [ PlayerU | Bubble4 ]
+Up [ Action PlayerU no BubbleStop no NoInflateBubble | Bubblepop no Lava ] -> [ PlayerU | Bubble3 ]
+ 
+Down [ Action PlayerD no BubbleStop no NoInflateBubble | PumpToPop ] -> [ PlayerD | Temp ]
+Down [ Action PlayerD no BubbleStop no NoInflateBubble | PumpTo9 ] -> [ PlayerD | Bubble9 ]
+Down [ Action PlayerD no BubbleStop no NoInflateBubble | PumpTo4 ] -> [ PlayerD | Bubble4 ]
+Down [ Action PlayerD no BubbleStop no NoInflateBubble | Bubblepop no Lava ] -> [ PlayerD | Bubble3 ]
+ 
+Left [ Action PlayerL no BubbleStop no NoInflateBubble | PumpToPop ] -> [ PlayerL | Temp ]
+Left [ Action PlayerL no BubbleStop no NoInflateBubble | PumpTo9 ] -> [ PlayerL | Bubble9 ]
+Left [ Action PlayerL no BubbleStop no NoInflateBubble | PumpTo4 ] -> [ PlayerL | Bubble4 ]
+Left [ Action PlayerL no BubbleStop no NoInflateBubble | Bubblepop no Lava ] -> [ PlayerL | Bubble3 ]
+ 
+Right [ Action PlayerR no BubbleStop no NoInflateBubble | PumpToPop ] -> [ PlayerR | Temp ]
+Right [ Action PlayerR no BubbleStop no NoInflateBubble | PumpTo9 ] -> [ PlayerR | Bubble9 ]
+Right [ Action PlayerR no BubbleStop no NoInflateBubble | PumpTo4 ] -> [ PlayerR | Bubble4 ]
+Right [ Action PlayerR no BubbleStop no NoInflateBubble | Bubblepop no Lava ] -> [ PlayerR | Bubble3 ]
+ 
+[ Temp ] -> [ BubblePop ]
+ 
+(Create bubble)
+Up [ Action PlayerU no BubbleStop | no Wall no Pushable no Bubblepop no Skip] -> [ PlayerU | Bubble1 ]
+Down [ Action PlayerD no BubbleStop | no Wall no Pushable no Bubblepop no Skip] -> [ PlayerD | Bubble1 ]
+Left [ Action PlayerL no BubbleStop | no Wall no Pushable no Bubblepop no Skip] -> [ PlayerL | Bubble1 ]
+Right [ Action PlayerR no BubbleStop | no Wall no Pushable no Bubblepop no Skip] -> [ PlayerR | Bubble1 ]
+ 
+(BubblePush)
+[ Player no PlayerRotated ] [ BubblePop | Pushable no Temp] -> [ Player ] [ Bubblepop | > Pushable Temp ]
+[ Temp ] -> [ ]
+ 
+[ > Pushable | Skip ] -> [ Pushable | Skip ]
+ 
+(Warp)
+late [ Player no PreviousPosition no Temp Warp | ... | Warp no Crate] -> [ Warp | ... | Warp Player Temp ] SFX2
+late [ Temp ] -> [ ]
+ 
+(Sounds)
+late [ Player no PlayerRotated ] [ BubblePop ] -> [ Player ] [ BubblePop ] SFX0
+late [ Player no PlayerRotated ] -> [ Player ] SFX1
+late [ PlayerRotated ] -> [ ]
+ 
+(Skip Level Button)
+late [ Player Skip no PreviousPosition] -> [ Player Skip ] Message Press 'X' while on this tile to skip this level
+
+(Help Buttons)
+right late [Player Question no PreviousPosition ] [Zero | One] -> [Player Question] [Zero | One] Message BUBBLE BUTLER! Push boxes by running into them.
+
+right late [Player Question no PreviousPosition ] [Zero | Zero] -> [Player Question] [Zero | Zero] Message BUBBLE BUTLER! You may skip subroutines you don't like.
+
+right late [Player Question no PreviousPosition ] [Zero | Two] -> [Player Question] [Zero | Two] Message BUBBLE BUTLER! Boxes are unaffected by holes.
+
+right late [Player Question no PreviousPosition ] [Zero | Four] -> [Player Question] [Zero | Four] Message BUBBLE BUTLER! Bubbles deflate over time. Bubbles will push adjacent objects when they pop.
+
+right late [Player Question no PreviousPosition ] [Zero | Five] -> [Player Question] [Zero | Five] Message new module installed: BBLSHOT.DLL: Press 'X' to use bubble launcher.
+
+right late [Player Question no PreviousPosition ] [Zero | Eight] -> [Player Question] [Zero | Eight] Message new module installed: INFLT.DLL: Press 'X' to inflate bubbles after making them.
+
+right late [Player Question no PreviousPosition ] [Zero | Nine] -> [Player Question] [Zero | Nine] Message BUBBLE BUTLER! Try pushing inflated bubbles.
+
+right late [Player Question no PreviousPosition ] [Two | Three] -> [Player Question] [Two | Three] Message BUBBLE BUTLER! Lava inflates bubbles. Boxes will be fine on lava. Please don't worry!
+ 
+(Make Trapdoors Fall)
+late [ Player PreviousPosition ] -> [ Player ]
+late [ PreviousPosition Fall ] -> [ HoleNormal ]
+late [ PreviousPosition ] -> [ ]
+ 
+(PrettyWalls)
+ 
+late Down [ WallNormal | no Wall ] -> [ WallBottom | ]
+late Down [ WallBottom | Wall ] -> [ WallNormal | Wall ]
+ 
+(PrettyHoles)
+ 
+late Up [ HoleNormal | no Hole ] -> [ HoleTop | ]
+late Up [ HoleTop | Hole ] -> [ HoleNormal | Hole ]
+ 
+[ Action Player Skip ] -> [ Action Player Skip ] Win
+ 
+==============
+WINCONDITIONS
+==============
+ 
+All Target on Crate
+ 
+=======
+LEVELS
+=======
+ 
+Message boot sequence started
+Message starting routine: REORGANIZE.EXE
+ 
+Message subroutine 1 OF 30
+ 
+#######
+#t.x.t#
+##.c.##
+h#.#.#h
+##.c.##
+#p...?#
+#####01
+ 
+Message interrupt 1 OF 1
+ 
+#######
+#c.x.t#
+#######
+#p.?..s
+#####00
+  
+MESSAGE subroutine 2 OF 30
+ 
+#######
+#t.x.t#
+#hh.hh#
+#.c.c.#
+sp...?#
+#####02
+ 
+MESSAGE subroutine 3 OF 30
+ 
+h######hh
+h###x.##h
+##.c...#h
+#..#thc##
+#..tct.t#
+##c#th..#
+h#...c.##
+h##p.###h
+hh#s##03h
+ 
+MESSAGE subroutine 4 OF 30
+ 
+######hh
+#x?#b###
+#.c....#
+#..#.ht#
+##..ch##
+hsp#t..#
+h#####04
+
+Message new module installed: BBLSHOT.DLL!
+ 
+MESSAGE subroutine 5 OF 30
+ 
+#######h
+#?#yhh#h
+#.c.hh##
+#.#.hht#
+sp..hh##
+#####05h
+ 
+Message subroutine 6 of 30
+ 
+hh######
+###hy..#
+#h.c.tt#
+#..h#ch#
+##.chhh#
+#sp..#t#
+######06
+ 
+MESSAGE subroutine 7 OF 30
+ 
+########h
+sp..y..#h
+#h.ht#t##
+##.#t.t.#
+h#c.chh.#
+h#..c.c.#
+h#..#.h.#
+h######07
+ 
+Message new module installed: INFLT.DLL!
+ 
+MESSAGE subroutine 8 OF 30
+ 
+h###hh###h
+##.####.##
+#.......##
+##..#....#
+h#..##.###
+h#c.?#.#.#
+##...hhht#
+sp..#hhh##
+#######08h
+ 
+MESSAGE subroutine 9 OF 30
+ 
+########
+#?##thh#
+#...#hh#
+#.#....#
+#.ch..##
+sp..#h##
+#####09h
+ 
+MESSAGE subroutine 10 OF 30
+ 
+h######h
+##....##
+#..hh..#
+#tchhct#
+#tchhct#
+#tchhct#
+sp.hh..#
+######10
+ 
+MESSAGE subroutine 11 OF 30
+ 
+hhhh####
+#####..#
+#h....t#
+##.###.#
+h#.chhh#
+hsp..hh#
+h#####11
+ 
+MESSAGE subroutine 12 OF 30
+ 
+#########
+#.......#
+#.hhhhh.#
+#.htcth.#
+#.hc.ch.#
+#.htcth.#
+#.hhhhh.#
+#...p...#
+####s##12
+ 
+MESSAGE subroutine 13 OF 30
+ 
+#######
+###t.##
+#.c.c##
+#t.p.t#
+##c.c.#
+##.t###
+###s#13
+ 
+MESSAGE subroutine 14 OF 30
+ 
+hhhhh####
+######..#
+#......t#
+##.####.#
+h#.chhhh#
+hsp..hhh#
+h######14
+ 
+MESSAGE subroutine 15 OF 30
+ 
+#########
+#.......#
+##...##.#
+#tchctct#
+##hhh##.#
+#tchctct#
+##...##.#
+#..p....#
+###s###15
+ 
+MESSAGE subroutine 16 OF 30
+ 
+hh###hhhhhhh
+###.####hhhh
+#.....t#####
+##hf####.#.#
+h#...c...h.#
+hs.p..#..f.#
+h#c...####.#
+h#...c##h#.#
+####fh##h#t#
+#t.....#h###
+########h#16
+ 
+MESSAGE subroutine 17 OF 30
+ 
+hhhhhhh####
+########..#
+#.........#
+##.#hh###t#
+#...hhhhhh#
+#.c.##hhhh#
+sp...####h#
+######hh#17
+ 
+MESSAGE subroutine 18 OF 30
+ 
+#######s##
+#t...t#p.#
+##hhh##c.#
+#hhhhh#hf#
+#hch#hhhf#
+#hhfffh#f#
+#.fffffff#
+##.......#
+########18
+ 
+MESSAGE subroutine 19 OF 30
+ 
+hhhhhhh####
+########..#
+#.........#
+##.##hh##t#
+h#...hhhhh#
+h#.c.##hhh#
+hsp...###h#
+h########19
+ 
+MESSAGE subroutine 20 OF 30
+ 
+hh###hh
+###t###
+#.....#
+##hfh##
+h#c..#h
+hs.pc#h
+###fh##
+#.....#
+###t###
+#####20
+ 
+MESSAGE subroutine 21 OF 30
+ 
+############
+#hhhhhhhh#t#
+#hhhhhhhh#h#
+#.c..fff.hh#
+#..hhhhhfhh#
+#..hhchhfhh#
+sp####hhfhh#
+###tt##c.hh#
+#.tc.f...f##
+###.hhh##..#
+hh######tc.#
+hhhhhhh###21
+ 
+MESSAGE subroutine 22 OF 30
+ 
+#######
+##ht.##
+##c.c##
+#t.p.t#
+##c.c##
+##.th##
+###s#22
+ 
+MESSAGE subroutine 23 OF 30
+ 
+hhhhhh####
+#######..#
+#l......t#
+##.#####.#
+#?.chhhhl#
+#sp..hhhl#
+########23
+ 
+MESSAGE subroutine 24 OF 30
+ 
+hhhhhh####
+#######..#
+#.......t#
+##.#####.#
+##.chhhlh#
+#sp..llhl#
+########24
+ 
+MESSAGE subroutine 25 OF 30
+ 
+##########
+#.c.ctttt#
+#hhhhh####
+#.c.c...#h
+##h#hh#.#h
+hsp.....#h
+h######25h
+ 
+MESSAGE subroutine 26 OF 30
+ 
+hhh###hhh
+####l#hhh
+#l...####
+#l.#.#t##
+#l.l....#
+##.###.##
+#lcl.l.#h
+sp...#.#h
+###l####h
+hh###h26h
+ 
+MESSAGE subroutine 27 OF 30
+ 
+########
+#hhhhhh#
+#h.t.hh#
+#h.t.hh#
+#h#c#hh#
+#hc.cht#
+#h#f#hh#
+#h...hh#
+#h.p.hh#
+#h...hh#
+#h#s#hh#
+######27
+ 
+MESSAGE subroutine 28 OF 30
+ 
+hhh###hhh
+####l#hhh
+#l...###h
+#l.#.#.##
+#l.l...t#
+##.###.##
+##.###.#h
+#lcl.l.#h
+sp...#.#h
+###l####h
+hh###h28h
+ 
+MESSAGE subroutine 29 OF 30
+ 
+h########hh
+h#l#h.lt#hh
+####c#hh#hh
+#.tc.f.t###
+####g#c.g.#
+h#l#.#.p###
+h######s#29
+ 
+MESSAGE subroutine 30 OF 30
+ 
+hhh###hhh
+####l#hhh
+#l...####
+#l.#.#.##
+#l.#t...#
+##.###.##
+#lcl.l.#h
+sp...#.#h
+###l####h
+hh###h30h
+ 
+MESSAGE downloading data package: CONGRATS.TXT
+MESSAGE BUBBLE BUTLER! Thank you for cleaning up.
+MESSAGE Good night.

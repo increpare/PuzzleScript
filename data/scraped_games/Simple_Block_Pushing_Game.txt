@@ -1,0 +1,186 @@
+title Simple Block Pushing Game
+author David Skinner
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#000022 #000055
+00000
+00000
+00000
+01110
+00000
+
+(randomness cocoons)
+
+PCocoon
+WHITE
+
+SpaceCocoon
+BLACK
+
+(real objects)
+
+Block
+BLUE
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+EdgeX
+BLACK
+
+PRD
+#00ff00
+.00..
+..00.
+...00
+..00.
+.00..
+
+PLD
+#00ff00
+..00.
+.00..
+00...
+.00..
+..00.
+
+PUD
+#00ff00
+..0..
+.000.
+00.00
+0...0
+.....
+
+PDD
+#00ff00
+.....
+0...0
+00.00
+.000.
+..0..
+
+PRDGlide
+#00ff00 white
+100..
+.100.
+..100
+.100.
+100..
+
+PLDGlide
+#00ff00 white
+..001
+.001.
+001..
+.001.
+..001
+
+PUDGlide
+#00ff00 white
+..0..
+.000.
+00100
+01.10
+1...1
+
+PDDGlide
+#00ff00 white
+1...1
+01.10
+00100
+.000.
+..0..
+=======
+LEGEND
+=======
+
+. = SpaceCocoon
+# = EdgeX
+
+(player)
+PlayerDash = PRD or PDD or PUD or PLD or PRDGlide or PLDGlide or PUDGlide or PDDGlide
+PRight = PRD or PRDGlide
+PLeft = PLD or PLDGlide
+PUp = PUD or PUDGlide
+PDown = PDD or PDDGlide
+Player = PlayerDash
+P = PCocoon
+PDGlide = PRDGlide or PLDGlide or PUDGlide or PDDGlide
+(/player)
+Edge = EdgeX
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, PCocoon, Edge, Block, SpaceCocoon
+
+======
+RULES
+======
+
+(cocoons)
+[ PCocoon ] -> [ random Player ]
+[ SpaceCocoon ] -> [ random Block random Background ]
+
+(player [multipart])
+(movement)
+[ left  PUD ] -> [ PLD ]  
+[ left  PDD ] -> [ PLD ] 
+[ right  PUD ] -> [ PRD ] 
+[ right  PDD ] -> [ PRD ] 
+[ up PRD ] -> [ PUD ] 
+[ up PLD ] -> [ PUD ] 
+[ down PRD ] -> [ PDD ] 
+[ down PLD ] -> [ PDD ] 
+(dash attacks)
+[ action PRD ] -> [PRDGlide]
+[ action PLD ] -> [PLDGlide]
+[ action PUD ] -> [PUDGlide]
+[ action PDD ] -> [PDDGlide]
+[ PRDGlide ] -> [ right PRDGlide ]
+[ PLDGlide ] -> [ left PLDGlide ]
+[ PUDGlide ] -> [ up PUDGlide ]
+[ PDDGlide ] -> [ down PDDGlide ]
+right [ PRDGlide | Block ] -> [ | PRD ]
+left [ PLDGlide | Block ] -> [ | PLD ]
+up [ PUDGlide | Block ] -> [ | PUD ]
+down [ PDDGlide | Block ] -> [ | PDD ]
+right [ PRDGlide | Edge ] -> [ PRD | Edge ]
+left [ PLDGlide | Edge ] -> [ PLD | Edge ]
+up [ PUDGlide | Edge ] -> [ PUD | Edge ]
+down [ PDDGlide | Edge ] -> [ PDD | Edge ]
+(sword attacks)
+(gun attacks)
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+################
+#..............#
+#..............#
+#.........p....#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+################

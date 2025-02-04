@@ -1,0 +1,137 @@
+title GASP
+author Alain Brobecker
+homepage abrobecker.free.fr
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Wall
+Black
+
+Player
+White
+00.00
+0...0
+.....
+0...0
+00.00
+
+
+On
+#88ff22 #44ff00 #11cc00
+.112.
+10012
+10012
+21122
+.222.
+
+Off
+#999999 #777777 #444444
+.112.
+10012
+10012
+21122
+.222.
+
+d0
+Red
+
+d1
+Red
+
+d2
+Red
+
+Empty
+Black
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+# = Wall
+p = Off and Player
+P = On and Player
+f = Off and Empty
+N = on and Empty
+
+=======
+SOUNDS
+=======
+
+sfx0 5160507 (move)
+sfx1 83704102 (wrong move)
+sfx2 16709508
+EndLevel 123413 (win)
+EndGame 10475908
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, On, Off
+Player, Empty, d0, d1, d2
+
+======
+RULES
+======
+
+[> Player | Empty] -> [ Empty | Player ] sfx1
+[Action Player] -> [d0]
+[d0 | Empty] -> [d0 | d1]
+[d1 | Empty] -> [d1 | d2]
+[d0 | d1 | d2] -> [d0 | d1 | Empty]
+[d2] -> [d1]
+[Off d1] -> [On Empty]
+[On d1] -> [Off Empty]
+[d0] -> [Player]
+
+==============
+WINCONDITIONS
+==============
+
+No Off
+
+=======
+LEVELS
+=======
+
+message X to change surrounding pawns. Invert all pawns!
+
+message 4x4, at least 6 actions
+
+ffff
+fpff
+ffff
+ffff
+
+message 6x6, at least 16 actions
+
+ffffff
+ffffff
+ffpfff
+ffffff
+ffffff
+ffffff
+
+
+message 8x8, at least 32 actions
+
+ffffffff
+ffffffff
+ffffffff
+ffpfffff
+ffffffff
+ffffffff
+ffffffff
+ffffffff

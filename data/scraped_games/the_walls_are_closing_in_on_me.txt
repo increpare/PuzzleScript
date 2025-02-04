@@ -1,0 +1,268 @@
+title the walls are closing in on me
+author Liam K. Sheehan
+homepage http://mywebspace.quinnipiac.edu/lksheehan/301/
+color_palette 1
+background_color black
+noaction
+========
+OBJECTS
+========
+
+Background
+blue
+00000
+00000
+00000
+00000
+00000
+
+Wall
+purple
+00000
+00000
+00000
+00000
+00000
+
+
+Player
+red white black transparent
+32223
+32223
+22222
+01010
+00000
+
+Crate
+brown white
+11111
+00000
+11111
+00000
+11111
+
+Enemy
+black white
+00000
+01010
+01010
+00000
+00000
+
+Friend
+red white 
+00000
+01010
+01010
+00000
+00000
+
+Goal
+yellow transparent
+00000
+01010
+00100
+01010
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+W = Wall
+c = Crate
+e = Enemy
+f = friend
+g = goal
+
+
+=======
+SOUNDS
+=======
+
+startgame 66589905
+undo 71935300
+restart 37053103
+EndLevel 17322103
+
+Player MOVE 18110107
+Player cantmove 45899307
+Crate move 58627507
+goal action 69548502
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Wall, Crate, Enemy, Friend
+
+======
+RULES
+======
+
+[ > player|crate] -> [ > player| > crate]
+[player|...|enemy] -> [player|...| < enemy] 
+[player|...|friend] -> [player|...| < friend]
+
+==============
+WINCONDITIONS
+==============
+
+All Player on Goal 
+All Crate on Goal
+
+
+=======
+LEVELS
+=======
+
+message The WALLS are after you! Don't get caught! Move to the GOAL.
+eeeee
+e...g
+p...g
+e...g
+eeeee
+
+message Imagine that this game features a very good soundtrack.
+
+eeeee.
+ew....
+e.....
+p.....
+ew...e
+eeee.g
+
+........
+.eeeeee.
+.w...pe.
+.e.eeee.
+.e......
+.eeewwee
+e......g
+
+e........
+ee.......
+eeeeeeg..
+eeewewe..
+ee...we..
+ee.......
+p....eeee
+eeeeeeeee
+
+message Some CRATES appear to be misplaced. Move them to their proper positions and move to the GOAL to proceed.
+
+.e.e.e.e.e
+e.........
+...gw.w.w.
+e....g....
+......w.w.
+e..c..cg..
+..p.....w.
+e.e.e.e.e.
+
+
+e..w.g......gg
+e..w......w...
+e..w......w...
+e.........wc..
+e..c..........
+e.............
+e.....cw......
+e..p...w......
+e......w.g..ee
+
+e.w.....g......ee
+e.w..............
+e.wg......c......
+e................
+e........wwwww.ww
+e.....c...w......
+e..p......w.c...g
+e.........ww.....
+e.........g......
+eee.eeeeeeeee.eee
+
+.gw.....g.......e
+..w.............e
+.cwg......c.....e
+..w.............e
+................e
+www...c.........e
+e..p....wwwwwwww.
+e.......w........
+e.......w..c....g
+e.......w..c....g
+e.......w........
+e................
+eee..........eeee
+.ce....w.....ege.
+..e....w.....eeee
+........g........
+.................
+
+
+
+message The WALL looks like it could use a hug :)
+
+eeeeeeeeeeeeeeeee
+e...............e
+e.........cg....e
+weeeeeee...eeeeew
+w......e........w
+w...g..e........w
+w......e...p....w
+.......e........w
+.c....ee....c...w
+......e.....g...w
+w....ee.........w
+weeeee..........w
+w...............w
+w...............w
+w...............w
+w....g..........w
+w...............w
+w...........eee.w
+w..c.......ee.eew
+we.........e...ew
+we.........e.g.ew
+weee.......e...ew
+
+message Almost there.
+
+e.............................e
+.g.............................
+..eeeweeeeeeeeeeeeeeeeeeeweee..
+..e..w...................w..e..
+..e.eweeeeeeeeeeeeeeeeeeewe.e..
+..e.e.....................e.e..
+..e.e.w.wwwwwwwwwwwwwww.w.e.e..
+..e.e.....................e.e..
+..e.e.w.................w.e.e..
+..e.e.w..p..............w.e.e..
+..e.e.w.................w.e.e..
+..e.e.w....eeeeeeeee....w.e.e..
+..e.e.w....e.......e....w.e.e..
+..e.e.w....e.wwwww.e....w.e.e..
+..e.e.w....e.weeew.e....w.e.e..
+..e.e.w....e.weeew.e....w.e.e..
+..e.e.w....e.wwwww.e....w.e.e..
+..e.e.w....e.......e....w.e.e..
+..e.e.w....eeeeeeeee....w.e.e..
+..e.e.w.................w.e.e..
+..e.e.w..............c..w.e.e..
+..e.e.w.................w.e.e..
+..e.e.....................e.e..
+..e.e.w.wwwwwwwwwwwwwww.w.e.e..
+..e.e.....................e.e..
+..e.eweeeeeeeeeeeeeeeeeeewe.e..
+..e..w...................w..e..
+..eeeweeeeeeeeeeeeeeeeeeeweee..
+.............................g.
+e.............................e
+
+

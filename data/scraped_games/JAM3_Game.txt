@@ -1,0 +1,709 @@
+title JAM3 Game
+author chaotic_iak
+homepage chaosatthesky.wordpress.com
+
+again_interval 0.07
+key_repeat_interval 0.2
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+background
+white
+
+target
+#ccc
+
+player
+black
+.....
+..0..
+.000.
+..0..
+.....
+
+gem1
+#c00 #f33
+.....
+.001.
+.000.
+.000.
+.....
+
+gem2
+#990 #cc3
+.....
+.001.
+.000.
+.000.
+.....
+
+gem3
+#0c0 #3f3
+.....
+.001.
+.000.
+.000.
+.....
+
+gem4
+#00c #33f
+.....
+.001.
+.000.
+.000.
+.....
+
+gem5
+#909 #c3c
+.....
+.001.
+.000.
+.000.
+.....
+
+gem1pop
+#c00
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+gem2pop
+#990
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+gem3pop
+#0c0
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+gem4pop
+#00c
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+gem5pop
+#909
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+wall0
+#333 white
+00000
+00000
+00000
+00000
+00100
+
+wall1
+#333 #f33
+00000
+00000
+00000
+00000
+00100
+
+wall2
+#333 #cc3
+00000
+00000
+00000
+00000
+00100
+
+wall3
+#333 #3f3
+00000
+00000
+00000
+00000
+00100
+
+wall4
+#333 #33f
+00000
+00000
+00000
+00000
+00100
+
+wall5
+#333 #c3c
+00000
+00000
+00000
+00000
+00100
+
+walls
+#333
+
+lv1
+white
+.00..
+..0..
+..0..
+..0..
+.000.
+
+lv2
+white
+.000.
+...0.
+.000.
+.0...
+.000.
+
+lv3
+white
+.000.
+...0.
+.000.
+...0.
+.000.
+
+lv4
+white
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+lv5
+white
+.000.
+.0...
+.000.
+...0.
+.000.
+
+lv6
+white
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+lv7
+white
+.000.
+...0.
+..0..
+..0..
+..0..
+
+lv8
+white
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+lv9
+white
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+lv10
+white
+0.000
+0.0.0
+0.0.0
+0.0.0
+0.000
+
+lv11
+white
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+
+lv12
+white
+0.000
+0...0
+0.000
+0.0..
+0.000
+
+lv13
+white
+0.000
+0...0
+0.000
+0...0
+0.000
+
+lv14
+white
+0.0.0
+0.0.0
+0.000
+0...0
+0...0
+
+lv15
+white
+0.000
+0.0..
+0.000
+0...0
+0.000
+
+lvbin0
+red
+
+lvbin1
+blue
+
+startlevel
+black
+
+pop
+black
+
+remnant
+black
+
+resume
+black
+
+skiplevel
+white blue
+01110
+00010
+00110
+00000
+00100
+
+winmarker
+black
+
+=======
+LEGEND
+=======
+. = background
+* = target
+# = walls
+p = wall0
+q = wall1
+w = wall2
+e = wall3
+r = wall4
+t = wall5
+& = player and startlevel
+0 = walls and lvbin0
+1 = walls and lvbin1
+
+gem = gem1 or gem2 or gem3 or gem4 or gem5
+gempop = gem1pop or gem2pop or gem3pop or gem4pop or gem5pop
+movable = player or gem
+wall = walls or wall0 or wall1 or wall2 or wall3 or wall4 or wall5
+object = player or gem or gempop or wall
+marker = startlevel or pop or remnant or winmarker
+lv = lv1 or lv2 or lv3 or lv4 or lv5 or lv6 or lv7 or lv8 or lv9 or lv10 or lv11 or lv12 or lv13 or lv14 or lv15
+
+=======
+SOUNDS
+=======
+gempop create 66716500
+sfx0 49292707 (move)
+sfx1 38953904 (hit wall)
+sfx2 54419303 (win)
+sfx3 14600703 (skip generation)
+sfx4 70706108 (skip level)
+
+================
+COLLISIONLAYERS
+================
+resume
+marker
+background
+target
+wall, player
+gem, gempop
+lv, lvbin0, lvbin1, skiplevel
+
+======
+RULES
+======
+(start level: generate gems)
+[startlevel][no wall no player no gem] -> [startlevel][random gem]
+startloop
+ [startlevel][gem1|gem1|gem1] -> [startlevel][random gem|random gem|random gem]
++[startlevel][gem2|gem2|gem2] -> [startlevel][random gem|random gem|random gem]
++[startlevel][gem3|gem3|gem3] -> [startlevel][random gem|random gem|random gem]
++[startlevel][gem4|gem4|gem4] -> [startlevel][random gem|random gem|random gem]
++[startlevel][gem5|gem5|gem5] -> [startlevel][random gem|random gem|random gem]
+  down [startlevel][wall1|gem no gem1] -> [startlevel][wall1|gem1]
++ down [startlevel][wall2|gem no gem2] -> [startlevel][wall2|gem2]
++ down [startlevel][wall3|gem no gem3] -> [startlevel][wall3|gem3]
++ down [startlevel][wall4|gem no gem4] -> [startlevel][wall4|gem4]
++ down [startlevel][wall5|gem no gem5] -> [startlevel][wall5|gem5]
+endloop
+
+(start level: generate level number)
+right [startlevel][lvbin0|lvbin0|lvbin0|lvbin1] -> [startlevel][lv1|||]
+right [startlevel][lvbin0|lvbin0|lvbin1|lvbin0] -> [startlevel][lv2|||]
+right [startlevel][lvbin0|lvbin0|lvbin1|lvbin1] -> [startlevel][lv3|||]
+right [startlevel][lvbin0|lvbin1|lvbin0|lvbin0] -> [startlevel][lv4|||]
+right [startlevel][lvbin0|lvbin1|lvbin0|lvbin1] -> [startlevel][lv5|||]
+right [startlevel][lvbin0|lvbin1|lvbin1|lvbin0] -> [startlevel][lv6|||]
+right [startlevel][lvbin0|lvbin1|lvbin1|lvbin1] -> [startlevel][lv7|||]
+right [startlevel][lvbin1|lvbin0|lvbin0|lvbin0] -> [startlevel][lv8|||]
+right [startlevel][lvbin1|lvbin0|lvbin0|lvbin1] -> [startlevel][lv9|||]
+right [startlevel][lvbin1|lvbin0|lvbin1|lvbin0] -> [startlevel][lv10|||]
+right [startlevel][lvbin1|lvbin0|lvbin1|lvbin1] -> [startlevel][lv11|||]
+right [startlevel][lvbin1|lvbin1|lvbin0|lvbin0] -> [startlevel][lv12|||]
+right [startlevel][lvbin1|lvbin1|lvbin0|lvbin1] -> [startlevel][lv13|||]
+right [startlevel][lvbin1|lvbin1|lvbin1|lvbin0] -> [startlevel][lv14|||]
+right [startlevel][lvbin1|lvbin1|lvbin1|lvbin1] -> [startlevel][lv15|||]
+[startlevel] -> []
+
+(skip level)
+[action player skiplevel] -> win sfx4
+
+(move)
+[action player no skiplevel] -> [player skiplevel] sfx3
+[orthogonal player skiplevel] -> [orthogonal player]
+[> player|gem] -> [gem|player] sfx0
+[> player|wall] -> [player|wall] sfx1
+
+(drop gems)
+[resume] -> []
+[lv][remnant] -> [lv resume][]
+down [movable|no object][lv] -> [> movable|][lv resume]
+down [movable|> movable][lv] -> [> movable|> movable][lv resume]
+
+(generate gems)
+late down [resume][wall0|no object] -> [resume][wall0|random gem] again
+late down [resume][wall1|no object] -> [resume][wall1|gem1] again
+late down [resume][wall2|no object] -> [resume][wall2|gem2] again
+late down [resume][wall3|no object] -> [resume][wall3|gem3] again
+late down [resume][wall4|no object] -> [resume][wall4|gem4] again
+late down [resume][wall5|no object] -> [resume][wall5|gem5] again
+
+(pop, with animation)
+late [gempop] -> [remnant] again
+late [gem1 pop] -> [gem1pop]
+late [gem2 pop] -> [gem2pop]
+late [gem3 pop] -> [gem3pop]
+late [gem4 pop] -> [gem4pop]
+late [gem5 pop] -> [gem5pop]
+late [gempop] -> again
+
+(win check)
+late [lv] -> [lv winmarker]
+late [winmarker][target player] -> [][target player]
+late [winmarker][target gem] -> [][target gem]
+late [winmarker][target no object] -> [][target]
+late [winmarker][target gem1pop][target gem2pop] -> [][target gem1pop][target gem2pop]
+late [winmarker][target gem1pop][target gem3pop] -> [][target gem1pop][target gem3pop]
+late [winmarker][target gem1pop][target gem4pop] -> [][target gem1pop][target gem4pop]
+late [winmarker][target gem1pop][target gem5pop] -> [][target gem1pop][target gem5pop]
+late [winmarker][target gem2pop][target gem3pop] -> [][target gem2pop][target gem3pop]
+late [winmarker][target gem2pop][target gem4pop] -> [][target gem2pop][target gem4pop]
+late [winmarker][target gem2pop][target gem5pop] -> [][target gem2pop][target gem5pop]
+late [winmarker][target gem3pop][target gem4pop] -> [][target gem3pop][target gem4pop]
+late [winmarker][target gem3pop][target gem5pop] -> [][target gem3pop][target gem5pop]
+late [winmarker][target gem4pop][target gem5pop] -> [][target gem4pop][target gem5pop]
+late [winmarker] -> sfx2
+
+(prepare popping)
+late [lv no resume][gem1|gem1|gem1] -> [lv][gem1 pop|gem1 pop|gem1 pop]
+late [lv no resume][gem2|gem2|gem2] -> [lv][gem2 pop|gem2 pop|gem2 pop]
+late [lv no resume][gem3|gem3|gem3] -> [lv][gem3 pop|gem3 pop|gem3 pop]
+late [lv no resume][gem4|gem4|gem4] -> [lv][gem4 pop|gem4 pop|gem4 pop]
+late [lv no resume][gem5|gem5|gem5] -> [lv][gem5 pop|gem5 pop|gem5 pop]
+late [gem pop] -> again
+
+==============
+WINCONDITIONS
+==============
+some winmarker
+
+=======
+LEVELS
+=======
+message JUST ANOTHER MATCH 3 GAME
+
+message X TWICE TO SKIP
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#...****...#
+#..........#
+#....&.....#
+#..........#
+0001########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#...*......#
+#...*......#
+#...***....#
+#..........#
+#....&.....#
+#..........#
+0010########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#...***....#
+#....*.....#
+#....*.....#
+#..........#
+#....&.....#
+#..........#
+0011########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..******..#
+#..........#
+#....&.....#
+#..........#
+0100########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#....*.....#
+#....*.....#
+#...***....#
+#..........#
+#....&.....#
+#..........#
+0101########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#....*.....#
+#...#*#....#
+#...#*#....#
+#...ppp....#
+#..........#
+#....&.....#
+#..........#
+0110########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#...#*#....#
+#...#*#....#
+#...#*#....#
+#...ppp....#
+#..........#
+#....&.....#
+#..........#
+0111########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..#q..r#..#
+#..#****#..#
+#..pp..pp..#
+#..........#
+#....&.....#
+#..........#
+1000########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#...qwr....#
+#...***....#
+#...ppp....#
+#..........#
+#....&.....#
+#..........#
+1001########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#...q......#
+#....wr#...#
+#...***#...#
+#...pppp...#
+#..........#
+#....&.....#
+#..........#
+1010########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#...***....#
+#..........#
+#..........#
+#...***....#
+#..........#
+#....&.....#
+#..........#
+1011########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#...***....#
+#...***....#
+#...***....#
+#..........#
+#....&.....#
+#..........#
+1100########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#...****...#
+#...qrqr...#
+#..........#
+#...****...#
+#...pppp...#
+#..........#
+#....&.....#
+#..........#
+1101########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#...*..*...#
+#...*..*...#
+#...*..*...#
+#...*..*...#
+#...*..*...#
+#...*..*...#
+#..........#
+#....&.....#
+#..........#
+1110########
+
+#pppppppppp#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..#.......#
+#..#*......#
+#..#*qr#...#
+#..#***#...#
+#..ppppp...#
+#..........#
+#....&.....#
+#..........#
+1111########

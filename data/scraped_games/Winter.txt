@@ -1,0 +1,681 @@
+title Winter
+run_rules_on_level_start
+again_interval 0.01
+background_color #6094B2
+text_color #336
+
+========
+OBJECTS
+========
+
+Background 1
+grey
+
+it u
+#EFC040
+
+nlit p
+#C0FFEE
+
+water s
+#101080
+
+ice
+#A0A0FF
+
+winter
+#1010B0 #101030
+.000.
+00000
+01010
+00000
+.000.
+
+autumn
+orange brown
+.000.
+00000
+01010
+00000
+.000.
+
+
+block w
+#6094B2
+
+crat 7
+darkbrown brown
+.000.
+01110
+01110
+01110
+.000.
+
+treea
+lightgreen
+.000.
+00000
+00000
+00000
+.000.
+
+
+treeb
+darkbrown
+.000.
+00000
+00000
+00000
+.000.
+
+
+treec
+red
+.000.
+00000
+00000
+00000
+.000.
+
+
+treed
+orange
+.000.
+00000
+00000
+00000
+.000.
+
+treee
+brown
+.000.
+00000
+00000
+00000
+.000.
+
+
+
+dead
+brown
+..0..
+..0..
+00000
+..0..
+..0..
+
+bunnyu
+pink brown white black
+..0..
+.313.
+.111.
+.111.
+..2..
+
+bunnyd
+pink brown white black
+..2..
+.111.
+.111.
+.313.
+..0..
+
+bunnyl
+pink brown white black
+.....
+.311.
+01112
+.311.
+.....
+
+bunnyr
+pink brown white black
+.....
+.113.
+21110
+.113.
+.....
+
+
+door e
+#6094B2 #5074A2
+11100
+11110
+11111
+11110
+11100
+
+nemir z
+darkgrey
+0....
+00...
+0.0..
+0..0.
+00000
+
+semir x
+darkgrey
+00000
+0..0.
+0.0..
+00...
+0....
+
+nwmir c
+darkgrey
+....0
+...00
+..0.0
+.0..0
+00000
+swmir v
+darkgrey
+00000
+.0..0
+..0.0
+...00
+....0
+
+diag b
+darkgrey
+00000
+00..0
+0.0.0
+0..00
+00000
+
+diago n
+darkgrey
+00000
+0..00
+0.0.0
+00..0
+00000
+
+lose
+#101080 brown
+00000
+00100
+01110
+00100
+00000
+
+nodoor
+transparent
+
+wins
+transparent
+
+start
+transparent
+
+vert
+transparent
+
+temp
+transparent
+
+temp2
+transparent
+
+lef
+transparent
+
+righ
+transparent
+
+dow
+transparent
+
+uq
+transparent
+
+moved
+transparent
+
+rtree 
+transparent
+
+bunn
+transparent
+
+iffy 
+transparent
+
+new
+transparent
+
+one
+transparent
+
+two
+transparent
+
+three
+transparent
+
+four
+transparent
+
+five
+transparent
+
+=======
+LEGEND
+=======
+
+floor =  it or nlit
+mirror = swmir or semir or nwmir or nemir
+diags = diag or diago
+bunny = bunnyu or bunnyl or bunnyr or bunnyd
+flow =dead
+tree = treea or treeb or treec or treed or treee
+crate = crat or block or tree or dead
+cra = crat or block  or mirror or diags or tree or dead or bunny
+cre = crat or diags or mirror or tree 
+0 = bunnyu
+- = rtree
+
+o = winter and start
+f = start
+l= dead and nlit
+, = autumn
+
+
+player =  winter
+
+=======
+SOUNDS
+=======
+
+SFX1 76816100
+SFX2 80022107
+SFX3 69745307
+SFX4 54283103
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+floor, 
+water, ice
+vert
+nodoor, wins
+flow
+start
+temp, temp2
+player,  crat, block, door,  mirror, diags, tree, bunny, autumn
+lef, righ, dow, uq
+moved, rtree, new, one, two, three, four, five
+bunn
+iffy
+lose
+======
+RULES
+======
+
+
+[rtree] -> [random tree]
+[winter][no floor no door no nodoor no block no flow] -> [winter][it]
+
+([> player | crat|no flower] -> [> player| > crat|]
+[> player | diags|no flower] -> [> player| > diags|])
+[> winter][ lose] -> restart
+[uq] [winter] -> [] [up winter]
+[dow] [winter] -> [] [down winter]
+[righ] [winter] -> [] [right winter]
+[lef] [winter] -> [] [left winter]
+
+[moved] -> []
+right [autumn no moved three|no block] -> [|autumn moved] again
+
+
+down [autumn no moved three|no block] -> [|autumn moved] again
+
+
+
+[autumn no moved three] -> win
+
+
+[autumn no moved two] -> [autumn three] again
+[autumn no moved one] -> [autumn two] again
+[autumn no moved no one no two no three no four no five] -> [autumn one] again
+
+
+[moved] -> []
+[bunn] -> []
+[bunny] -> [bunny bunn]
+
+
+
+[> winter floor no moved|no flow no door no cra ] -> [nlit |> winter moved] 
+
+
+
+right [> winter floor no moved| stationary swmir] -> [> temp2 nlit|v temp swmir]
+up [> winter floor no moved| stationary swmir] -> [> temp2 nlit|^ temp swmir]
+down [> winter floor no moved| stationary  nwmir] -> [> temp2 nlit|v temp nwmir]
+right [> winter floor no moved| stationary  nwmir] -> [> temp2 nlit|^ temp nwmir]
+left [> winter floor no moved| stationary  nemir] -> [> temp2 nlit|v temp nemir]
+down [> winter floor no moved| stationary  nemir] -> [> temp2 nlit|^ temp nemir]
+up [> winter floor no moved| stationary  semir] -> [> temp2 nlit|v temp semir]
+left [> winter floor no moved| stationary  semir] -> [> temp2 nlit|^ temp semir]
+
+startloop 
+right [> temp floor no moved| stationary swmir] -> [ nlit iffy|v temp swmir]
+up [> temp floor no moved| stationary swmir] -> [ nlit iffy|^ temp swmir]
+down [> temp floor no moved| stationary  nwmir] -> [ nlit iffy|v temp nwmir]
+right [> temp floor no moved| stationary  nwmir] -> [ nlit iffy|^ temp nwmir]
+left [> temp floor no moved| stationary  nemir] -> [ nlit iffy|v temp nemir]
+down [> temp floor no moved| stationary  nemir] -> [ nlit iffy|^ temp nemir]
+up [> temp floor no moved| stationary  semir] -> [ nlit iffy|v temp semir]
+left [> temp floor no moved| stationary  semir] -> [ nlit iffy |^ temp semir]
+
+endloop
+
+[> temp floor|no flow no door no cra ] -> [nlit|> winter moved] SFX1
+[temp][temp2][nlit iffy] -> [temp][temp2][it]
+[temp][> temp2] -> [][> winter]
+[temp] -> []
+[temp2] -> []
+
+[iffy] -> []
+
+[> winter floor no moved|cre|no flow no door no block ] -> [nlit > winter| > cre|]
+
+[winter it] -> [winter nlit]
+[> winter no moved| door] -> [winter moved| temp door] 
+[temp door][it] -> [door][it]
+[temp door][winter] -> [winter nodoor nlit][]
+
+
+[ winter| bunny] -> [winter|> bunny] 
+[> bunny| bunny] -> [> bunny| > bunny]
+[left bunny] -> [left bunnyl]
+[right bunny] -> [right bunnyr]
+[down bunny] -> [down bunnyd]
+[up bunny] -> [up bunnyu]
+
+[> bunny|water] -> [|lose]
+[> bunny|ice] -> [bunny|ice]
+
+
+
+late [bunny no bunn] -> SFX3
+
+
+[left winter moved] -> [lef winter] again
+[right winter moved] -> [righ winter] again
+[down winter moved] -> [dow winter] again
+[up winter moved] -> [uq winter] again
+
+[winter water uq] -> [winter ice]
+[winter water lef] -> [winter ice]
+[winter water dow] -> [winter ice]
+[winter water righ] -> [winter ice]
+[winter water] -> [winter ice]
+
+[moved] -> [] again
+
+
+
+
+
+right [> nemir| swmir] -> [|diag]
+up [> nemir| swmir] -> [|diag]
+down [> swmir| nemir] -> [|diag]
+left [> swmir| nemir] -> [|diag]
+left [> nwmir| semir] -> [|diago]
+up [> nwmir| semir] -> [|diago]
+down [> semir| nwmir] -> [|diago]
+right [> semir| nwmir] -> [|diago]
+[> cre| cre| no flow no door no block] -> [> cre| > cre| ]
+
+[> cre|stationary cra] -> [cre|cra]
+[> player| tree floor] -> [player|dead nlit] SFX2
+[> player|stationary cra] -> [player|cra]
+
+late [winter it] -> [winter nlit]
+late [winter][door] -> [winter][nodoor new nlit]
+late [nodoor new nlit][it] -> [door][it]
+late [nodoor new] -> [nodoor] SFX4
+late [player nodoor] -> [wins player]
+late [start][winter wins floor] -> win
+
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+
+message I am sorry.
+
+w11ww
+o111w
+w111e
+ww11w
+
+
+
+message I am sorry trees, I must now make you dormant.
+
+message It is not to be destructive. It is necessary so that you may survive.
+
+
+w1111ww
+o11-1ww
+ww1-11e
+ww1111w
+
+message I am sorry bunnies, but I do not know why you fear me.
+
+message I never intended to harm you.
+
+message [BUNNIES DISLIKE THE COLD AND MOVE AWAY]
+
+ww111e
+ww111w
+w101ww
+o111ww
+
+message I apologize for any transgression I may have made,
+
+message for I know not what I have done.
+
+w11111e
+w10101w
+w11011w
+w10101w
+o11111w
+
+message I believe the creatures who constructed these are also afraid of me, 
+
+message but were able to flee faster than the bunnies.
+
+message [EMPTY NESTS CAN BE PUSHED]
+
+o17111e
+w11111w
+w1---1w
+w11111w
+
+
+message I hope they do not mind that I moved their basket.
+
+
+o11v1w
+w1111w
+w1111w
+w1111e
+
+wwwwwww
+wwu,uww
+wuuuuuw
+ouu7uuu
+wuuuuuw
+wwuuuww
+wwwwwww
+
+message Oh, there is the one who calls himself Autumn again.
+
+message I assume that he fears me as well, as every time I have seen him, he has been moving away.
+
+wwwwwww
+wwuuuww
+wuuuuuw
+ouu7uue
+wuuuuuw
+wwuuuww
+wwwwwww
+
+message Because of this, I have only heard him a few times, and have never spoken back.
+
+message[WINTER DOES NOT SLIDE ON WATER, BUT DOES ONCE HE HAS TURNED IT INTO ICE]
+
+w111e
+w1w1w
+ws1sw
+w1w1w
+o111w
+
+message Perhaps it is possible I have a malicious lookalike.
+
+message It would explain why so many creatures avoid me before I have even met them.
+
+wxsssssvw
+ws11111sw
+ws11111sw
+os11111se
+ws11111sw
+ws11111sw
+wzssssscw
+
+message If I could only expain that I am not he who they believe me to be.
+
+w1s111w
+o1s111w
+w1sss1w
+w111s1e
+w111s1w
+
+message It is also concievable that animals see me remove leaves from the trees, which are unable to run away,
+
+message and make the assumption that I will harm them if they too do not run.
+
+o11111w
+w11111w
+w71117w
+w11111w
+w11111e
+
+message Perhaps if I could contact Autumn, I could gain insight into why he flees from me.
+
+
+wsssssswsw
+wwsssswssw
+wswssssssw
+ossssswsse
+wssssssssw
+wsswswswsw
+wssswssssw
+
+message Although I do not wish to risk appearing threatening by pursuing Autumn,
+
+message I think that it may be the only way for me to know what I have done wrong.
+
+wuuuuuuuue
+wusssuusuw
+wuuususuuw
+wuususssuw
+wususuuuuw
+wuusuusuuw
+wusussusuw
+o1suuuuuuw
+
+message Conversely, it may be possible that he knows not of my existence at all.
+
+
+ww-------ww
+w-1111111-w
+w-sssssss1e
+w-sususus-w
+o1sssssss-w
+w-uuuuu11-w
+ww-------ww
+
+message I can not be certain he knows of me. I have never directly heard him mention me.
+
+message Although it could be the case that this is solely because I have only heard him speak in rare cases.
+
+ou1ux1uvu1uw
+wu1uu11uu11w
+wx1uu1uuu1cw
+w11uu11uu1uw
+wu1uz1ucu1ue
+
+
+message From the fragments of speaking that I have heard from Autumn, 
+
+message it seems he knows of many creatures I have never encountered, such as "Ground-Hogs" or "Clore-O-Fills"
+
+
+w1s1111w
+w1s1111e
+w1ssss1w
+w1111s1w
+wsss1s1w
+w11s0s1w
+w1ss1s1w
+w1s11s1w
+w1ssss1w
+o111111w
+w111111w
+
+message I think that he may also have a purpose such as mine.
+
+wwwuwww
+wwuuuww
+wuuuuuw
+ou777ue
+wuuuuuw
+wwuuuww
+wwwuwww
+
+message No matter what the case may be,
+
+message I believe that communication may be beneficial to the both of us....
+
+
+
+wuusuw
+wussu-
+-usuuw
+wussue
+-uusuw
+wussuw
+ousuuw
+wussu-
+wuusuw
+-ussuw
+wusuuw
+
+message ...or perhaps I should say, "all of us"?
+
+w11111s111w
+w111sss1w1e
+w1sss11111w
+wss11111ssw
+w10111sss1w
+o1w1sss111w
+w111s11111w
+
+message END OF PART FOUR
+
+
+

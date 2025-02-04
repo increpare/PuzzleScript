@@ -1,0 +1,298 @@
+title Last day of the year
+author Le Slo
+homepage www.puzzlescript.net
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#fffde7 #fffde7
+11101
+01111
+10101
+11111
+10111
+
+Calendar01
+#fff5d2 #fffde7 #3a414e
+00011
+01121
+01111
+11111
+11111
+
+Calendar02
+#fff5d2 #fffde7 #3a414e
+00011
+01221
+01111
+11111
+11111
+
+CalendarEnd
+#fff5d2 #fffde7 #c75252
+00011
+01221
+01111
+11111
+11111
+
+calendarCross
+#4a614e
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Symbol01
+#c75252
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Symbol02
+#c75252
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+Symbol03
+#c75252
+.....
+.....
+..0..
+.....
+.....
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+December01
+#fffde7 #3a414e
+00110
+00101
+00101
+00110
+00000
+
+December02
+#fffde7 #3a414e
+01110
+01100
+01000
+01110
+00000
+
+December03
+#fffde7 #3a414e
+01101
+10001
+10001
+01101
+00000
+
+December04
+#3a414e #fffde7
+00101
+01100
+11101
+00101
+11111
+
+December05
+#3a414e #fffde7
+01001
+01000
+01010
+01000
+11111
+
+December06
+#fffde7 #3a414e
+01110
+01100
+01000
+01110
+00000
+
+December07
+#3a414e #fffde7
+00011
+01011
+00111
+01011
+11111
+
+check01
+transparent
+
+check02
+transparent
+
+check03
+transparent
+
+done
+transparent
+
+breakGroup
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player and Calendar01 and calendarCross
+* = Crate
+@ = Crate and Target
+O = Target
+1 = Calendar01
+2 = calendar02
+3 = CalendarEnd
+4 = Calendar01 and calendarCross
+5 = Calendar02 and calendarCross
+
+x = December01 and check01
+
+calendars = calendar01 or Calendar02 or CalendarEnd
+symbols = Symbol01 or Symbol02 or Symbol03
+checks = check01 or check02 or check03
+win = calendarCross or Symbol01
+decembers = December01 or December02 or December03 or December04 or December05 or December06 or December07
+
+=======
+SOUNDS
+=======
+
+symbol02 MOVE 37677708
+endlevel 62893108
+player move 1405308
+symbol01 create 30473708
+
+sfx0 80694504
+
+================
+COLLISIONLAYERS
+================
+
+Background
+breakGroup
+checks
+done
+Decembers
+Calendars
+calendarCross
+symbol01
+Symbol02
+symbol03
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+(--------------CREAR NIVEL---------------)
+right [december01 | no December02] -> [December01 | December02]
+right [december02 | no December03] -> [December02 | December03]
+right [december03 | no December04] -> [December03 | December04]
+right [december04 | no December05] -> [December04 | December05]
+right [december05 | no December06] -> [December05 | December06]
+right [december06 | no December07] -> [December06 | December07]
+
+
+
+
+([ > player | no calendars] -> [player | ])
+[ > player | symbol01] -> [player | symbol01] sfx0
+([ > player | symbol03] -> [player | symbol03])
+
+[ > Player | symbol02 | no symbol02 no Symbol01 calendars  no calendarCross] -> [> Player | > Symbol02 | calendars]
+[ > Player | symbol02 | symbol02] -> [ Player |  Symbol02 | Symbol02] sfx0
+[ > Player | symbol02 | symbol01] -> [ Player |  Symbol02 | Symbol01] sfx0
+[ > Player | symbol02 | calendarCross] -> [ Player |  Symbol02 | calendarCross] sfx0
+[ > Player | symbol02 | no calendars] -> [ Player |  Symbol02 | ] sfx0
+
+[ > Player calendars no symbols no calendarCross][check01 no done] -> [> Player calendars symbol01 ][check02 done]
+[ > Player calendars no symbols no calendarCross][check02 no done] -> [> Player calendars symbol02 ][check03 done]
+[ > Player calendars no symbols no calendarCross][check03 no done] -> [> Player calendars symbol03 ][check01 done]
+
+([symbol01 | symbol01 | symbol01] -> [symbol01 breakGroup | symbol01 breakGroup | symbol01 breakGroup]
+[symbol02 | symbol02 | symbol02] -> [symbol02 breakGroup | symbol02 breakGroup | symbol02 breakGroup]
+[symbol03 | symbol03 | symbol03] -> [symbol03 breakGroup | symbol03 breakGroup | symbol03 breakGroup])
+
+late[done] -> []
+late[symbols breakGroup] -> []
+
+late[symbol02 Symbol03] -> [Symbol01]
+
+==============
+WINCONDITIONS
+==============
+
+all calendar01 on win
+all calendar02 on win
+all calendarEnd on player
+
+=======
+LEVELS
+=======
+
+message "I forgot to cross the days in the calendar!"
+
+message Cross past days in the calendar. 
+
+message Some red ink patterns can be pushed or walk into.
+
+.........
+.x.......
+.........
+.p444444.
+.4455555.
+.5555222.
+.2222222.
+.223.....
+.........
+
+message Happy new year!
+
+

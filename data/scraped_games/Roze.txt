@@ -1,0 +1,127 @@
+title Roze
+author Rosa Francesca
+homepage instagram.com/rosafrancesca.art
+
+text_color pink
+========
+OBJECTS
+========
+
+Background
+lightblue blue
+00000
+00000
+00100
+00000
+00000
+
+Rose
+Pink red green
+.000.
+.101.
+..2..
+..2.2
+..22.
+
+
+
+Target
+Orange lightbrown
+1.0.1
+.101.
+00000
+.101.
+1.0.1
+
+Wall
+purple black lightred
+02222
+10002
+10002
+10002
+01110
+
+
+Player
+Black lightbrown white brown
+.000.
+03111
+03212
+03111
+..30.
+
+Crate
+Blue
+
+
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Rose
+O = Target
+
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 15906904
+Rose destroy  62283500
+closemessage 46850900
+endlevel  54890702
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, 
+Player, Wall, Crate
+Rose
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Player |  ] -> [ > Player | NO Rose ]
+==============
+WINCONDITIONS
+==============
+
+All Player on target 
+No rose 
+
+=======
+LEVELS
+=======
+
+message collect all the roses and find your way to the yellow target
+
+####################
+#.P...........@#@..#
+#...#...#@..#####.@#
+###.#@..###.##@##.##
+######..#@.....#@.@#
+#@#.#@#.#..#...#..##
+#.#.#.#@#@@#@.....@#
+#.#...#.#########..#
+#.#*..#@#@##@.@#...#
+#...###.#.##..@#.#@#
+##@.#@###.@#..##.###
+#@#.#.#@#.##..#@...#
+#.....#.#.....#....#
+#@............*...o#
+####################
+
+message Well done!

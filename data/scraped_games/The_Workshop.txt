@@ -1,0 +1,354 @@
+title The Workshop
+author bregehr
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+stonemarker
+#6b6a6a #565555
+11111
+10001
+10001
+10001
+11111
+
+woodmarker
+#d1a151 #a58042 #826432
+12212
+20001
+20001
+10002
+12121
+
+ironmarker
+#b7b7b7 #cecccc
+00000
+01110
+01110
+01110
+00000
+
+Wall
+#010c21
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+stone
+#828282 #727272 #606060
+...00
+.0000
+00001
+0011.
+11...
+
+wood
+#b7955f #93794e
+...00
+.0000
+00001
+0011.
+11...
+
+iron
+#d7dfed #b9c1ce
+...00
+.0000
+00001
+0011.
+11...
+
+cuttersup
+#ce4646 #d1d1d1
+1...1
+.1.1.
+.010.
+0...0
+0...0
+
+cuttersdown
+#ce4646 #d1d1d1
+0...0
+0...0
+.010.
+.1.1.
+1...1
+
+cuttersleft
+#ce4646 #d1d1d1
+1..00
+.10..
+..1..
+.10..
+1..00
+
+cuttersright
+#ce4646 #d1d1d1
+00..1
+..01.
+..1..
+..01.
+00..1
+
+beside
+YELLOW
+.....
+.....
+..0..
+.....
+.....
+
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+o = stone
+@ = stone and stonemarker
+$ = stone and woodmarker
+q = stone and ironmarker
+* = stonemarker
+& = wood and woodmarker
+` = wood and stonemarker
+1 = wood and ironmarker
+% = woodmarker
+- = wood
+I = iron
+x = ironmarker
+2 = iron and stonemarker
+3 = iron and woodmarker
+4 = iron and ironmarker
+U = cuttersup
+D = cuttersdown
+L = cuttersleft
+R = cuttersright
+cutters = cuttersup or cuttersdown or cuttersleft or cuttersright
+markers = stonemarker or woodmarker or ironmarker
+pushable = stone or wood or iron
+
+
+=======
+SOUNDS
+=======
+
+pushable MOVE 18757107
+wall destroy 24575107
+startlevel 74493908
+cutters move 22170307
+
+================
+COLLISIONLAYERS
+================
+
+Background
+markers
+Player, Wall, pushable
+cutters
+beside
+
+======
+RULES
+======
+
+[ >  Player | pushable] -> [  >  Player | > pushable  ]
+[ >  Player | cutters] -> [  >  Player | > cutters  ]
+[> cutters | cutters] -> [> cutters | > cutters]
+
+UP [ > player | cutters no cuttersup | wall] -> cancel
+DOWN [ > player | cutters no cuttersdown | wall] -> cancel
+LEFT [ > player | cutters no cuttersleft | wall] -> cancel
+RIGHT [ > player | cutters no cuttersright | wall] -> cancel
+[ > player | cutters | wall] -> [> player | | ]
+[ > cutters | cutters | wall] -> [> cutters | | ]
+
+
+
+[> pushable | pushable] -> [> pushable | > pushable ]
+[> pushable | cutters] -> [> pushable | > cutters ]
+[> cutters | pushable] -> [> cutters | > pushable]
+
+(cutters)
+ (checking if there are two cutters to grab, there shouldn't be)
+UP [action player no beside | no beside cuttersup] -> [action player beside | beside cuttersup ]
+DOWN [action player no beside | no beside cuttersdown] -> [action player beside | beside cuttersdown ]
+LEFT [action player no beside | no beside cuttersleft] -> [action player beside | beside cuttersleft ]
+RIGHT [action player no beside | no beside cuttersright] -> [action player beside | beside cuttersright ]
+
+UP [action player beside | no beside cuttersup] -> cancel
+DOWN [action player beside | no beside cuttersdown] -> cancel
+LEFT [action player beside | no beside cuttersleft] -> cancel
+RIGHT [action player beside | no beside cuttersright] -> cancel
+
+[beside] -> []
+
+ (Step one of moving cutter)
+UP [action player  | cuttersup] -> [player cuttersright | ]
+DOWN [action player  | cuttersdown] -> [player cuttersleft | ]
+LEFT [action player  | cuttersleft] -> [player cuttersup | ]
+RIGHT [action player | cuttersright] -> [player cuttersdown | ]
+
+ (Step two of moving cutter)
+RIGHT [player cuttersright | ] -> [player | cuttersright ]
+LEFT [player cuttersleft | ] -> [player | cuttersleft ]
+UP [player cuttersup | ] -> [player | cuttersup ]
+DOWN [player cuttersdown | ] -> [player | cuttersdown]
+
+[cutters wall] -> [wall]
+
+[cutters pushable] -> [pushable]
+
+
+==============
+WINCONDITIONS
+==============
+
+all stonemarker on stone
+all woodmarker on wood
+all ironmarker on iron
+
+=======
+LEVELS
+=======
+
+message Level 1 / 11
+
+#######
+#p.o.*#
+#######
+
+message Level 2 / 11
+
+#####
+#*.*#
+#.p.#
+#ooo#
+#...#
+#.*.#
+#####
+
+message Level 3 / 11
+
+########
+###..###
+#......#
+#p-*%o.#
+#......#
+########
+
+message Level 4 / 11
+
+#######
+#.....#
+#.`$*.#
+#.@$`.#
+#.p.o.#
+#.....#
+#######
+
+message Level 5 / 11
+
+######
+#...p#
+#.--.#
+#.q2.#
+#.--.#
+#....#
+######
+
+message Level 6 / 11
+
+#######
+#.....#
+#..-..#
+#.....#
+#.q2q.#
+#.2%2.#
+#.q2q.#
+#..p..#
+#######
+
+message Level 7 / 11
+
+############
+##....######
+##..p.######
+##....#...##
+##.%..#.-.##
+##....#...##
+##..r.######
+##....######
+############
+
+message Level 8 / 11
+message Press X at the handle to control the cutter.
+
+############
+##.........#
+#....u.p.*.#
+##.........#
+##.........#
+############
+########d.r#
+##...###...#
+##o.r###...#
+##...###...#
+############
+
+message Level 9 / 11
+
+############
+######uu####
+#..........#
+#.o.##.p#%.#
+#.i.#....x.#
+#.-.#..#.*.#
+#...#..#####
+############
+
+message Level 10 / 11
+
+####################
+#############..#####
+####.##..##.r..ooo##
+##.l.#....#.......##
+##.#.#..#.......p.##
+##.#.#....#.......##
+##.l.#.#.r#....***##
+####################
+####################
+
+message Level 11 / 11
+
+############
+##....r.####
+##.#.##.####
+##.......###
+##d#.u.i.###
+##...#######
+##...#######
+########.ux#
+##...###.p.#
+#....#.....#
+##.....#.###
+##...#...###
+############
+
+message Thank you for playing!
+message Please post feedback and tell me what you think!
+
+

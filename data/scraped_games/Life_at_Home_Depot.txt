@@ -1,0 +1,314 @@
+title Life at Home Depot
+author Leo Melendez
+homepage www.JokesterDev.net
+========
+OBJECTS
+========
+
+Background
+lightgray #AAAAAA
+00000
+01000
+00010
+01000
+00000
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+
+Player
+black darkbrown blue darkgray lightbrown orange
+.111.
+.444.
+35353
+.555.
+.2.2.
+
+
+Target
+black 
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Crate
+orange lightbrown
+00000
+01010
+01010
+01010
+00000
+Portali
+blue lightblue
+01110
+10001
+10101
+10001
+01110
+
+Portal
+blue lightblue
+10111
+10000
+10101
+00001
+11101
+Portal2
+blue lightblue
+11011
+10001
+00100
+10001
+11011
+Portal3
+blue lightblue
+11101
+00001
+10101
+10000
+10111
+
+
+SwapPortali
+green lightgreen
+01110
+10001
+10101
+10001
+01110
+SwapPortal
+green lightgreen
+10111
+10000
+10101
+00001
+11101
+SwapPortal2
+green lightgreen
+11011
+10001
+00100
+10001
+11011
+SwapPortal3
+green lightgreen
+11101
+00001
+10101
+10000
+10111
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+W = Wall
+C = Crate
+T = Target
+O = Portali
+S = SwapPortali
+E = Portal
+
+PortalAnim = Portali or Portal or Portal2 or Portal3
+SwapPortalAnim = SwapPortali or SwapPortal or SwapPortal2 or SwapPortal3
+
+=======
+SOUNDS
+=======
+
+Player MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+
+Target
+Portali
+SwapPortali
+PortalAnim
+SwapPortalAnim
+======
+RULES
+======
+
+(These make the animations happen each frame)
+[Portal3] -> [Portali]
+[Portal2] -> [Portal3] 
+[Portal] -> [Portal2] 
+[Portali] -> [Portal] 
+
+[SwapPortal3] -> [SwapPortali]
+[SwapPortal2] -> [SwapPortal3] 
+[SwapPortal] -> [SwapPortal2] 
+[SwapPortali] -> [SwapPortal] 
+(pushing a block, if player is next to a crate, player will push the crate)
+([ > Player | Crate] -> [ > Player | > Crate])
+
+[ > Player | Crate] -> [ > Player | > Crate]
+
+(pulling)
+[ < Player | Crate] -> [ < Player | < Crate]
+
+(Swap positions with crate)
+([> Player | Portal] -> [Portal | Player])
+
+(When player and crate are on same line and player moves towards the crate swap positions)
+[> Player | ... | Portali] -> [|... | Player]
+[> Player | ... | Portal] -> [|... | Player]
+[> Player | ... | Portal2] -> [|... | Player]
+[> Player | ... | Portal3] -> [|... | Player]
+
+
+
+(Player collision with all the swapPortals animation frames)
+[> Player | ... | SwapPortal3] -> [SwapPortal3|... | Player]
+[> Player | ... | SwapPortal2] -> [SwapPortal2|... | Player]
+[> Player | ... | SwapPortal] -> [SwapPortal|... | Player]
+[> Player | ... | SwapPortali] -> [SwapPortali|... | Player]
+
+[ Action Player | Crate] -> [Action Player | > Crate]
+
+(Crate collision with all the portal frames)
+[> Crate | ... | Portali] -> [Portali | ... | Crate]
+[> Crate | ... | Portal] -> [Portal | ... | Crate]
+[> Crate | ... | Portal2] -> [Portal2 | ... | Crate]
+[> Crate | ... | Portal3] -> [Portal3 | ... | Crate]
+
+
+(Crate collisions with all the swapPortal frames)
+[> Crate | ... | SwapPortal3] -> [SwapPortal3 | ... | Crate]
+[> Crate | ... | SwapPortal2] -> [SwapPortal2 | ... | Crate]
+[> Crate | ... | SwapPortal] -> [SwapPortal | ... | Crate]
+[> Crate | ... | SwapPortali] -> [SwapPortali | ... | Crate]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+MESSAGE Welcome to Home Depot Orientation here's your job:
+MESSAGE Push the Pallets on to the shipping block
+wwwwwwwww
+w.......w
+w..c....w
+w.......w
+w.p..t..w
+w.......w
+w.......w
+w.......w
+wwwwwwwww
+
+MESSAGE You know you can pull the pallets too dumb-dumb
+wwwwwwwww
+w.......w
+w.....c.w
+w..p....w
+w.......w
+w.......w
+w.......w
+w.t.c.t.w
+wwwwwwwww
+
+MESSAGE Use the blue one-time portal to get to the pallet
+wwwwwwwww
+w...w...w
+w.c.w...w
+w...w.p.w
+w...w...w
+w..tw...w
+w...w...w
+w.o.w...w
+wwwwwwwww
+
+MESSAGE You can shove the pallets with X. The green portals last forever
+wwwwwwwwwww
+w...w.....w
+w.t.w.....w
+w...w...o.w
+ww.w......w
+w.....wwwww
+w....w...cw
+w....w....w
+w..s.w....w
+w....wp...w
+wwwwwwwwwww
+
+MESSAGE You have 5 more floors to go, finish 'em or you're fired
+wwwwwwwwwww
+w..s.w...cw
+ww.tww....w
+w.w.w.....w
+w.........w
+wwww.c....w
+w..tw.....w
+ws..w.....w
+w...w..cwww
+wo..wp...tw
+wwwwwwwwwww
+
+wwwwwwwwwwwwwwwwwwwww
+wc...w........w.....w
+w.t.sw........wwwwwww
+w....w.............cw
+wwwwww........wwwwwww
+w...................w
+w...............wwwww
+w..........p....w...w
+wwwwwww......c..w.t.w
+w.....w.........w...w
+w.t.s.w.........w..sw
+wwwwwwwwwwwwwwwwwwwww
+
+wwwwwwwwwwwwwww
+w....w....w...w
+w.s..w....w.s.w
+w....w....wwwww
+wwwww.....w...w
+wc........w...w
+w....wwwwww...w
+w.o..w....w...w
+w....w.t..w.p.w
+w....w...ow...w
+wwwwwwwwwwwwwww
+
+wwwwwwwwwwwwwww
+wwtw.w.....w.ow
+wwow.w........w
+wwwwww...w..tww
+w...wc..wwwwwww
+w.....www.....w
+w.......w.....w
+w.c...........w
+w...www..s....w
+w............pw
+wwwwwwwwwwwwwww
+
+MESSAGE If you can't get this one you're fired
+wwwwwwwwwww
+ww.....ww.w
+ww.sw..wo.w
+wwt.w..ww.w
+wwwww...www
+w..p.c....w
+w......ww.w
+w....www..w
+w.owww....w
+w.........w
+wwwwwwwwwww

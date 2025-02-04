@@ -1,0 +1,391 @@
+title Sleeping Bear
+author Octavio Turra
+homepage www.puzzlescript.net
+color_palette atari
+
+========
+OBJECTS
+========
+
+Background 
+GREEN  
+
+BearSnore0
+Brown DARKBROWN White
+.....
+.0.0.
+.002.
+11011
+01010
+
+BearSnore1
+Brown DARKBROWN White
+.....
+.020.
+.000.
+11011
+01010
+
+BearSnore2
+Brown DARKBROWN White
+...2.
+.020.
+.000.
+11011
+01010
+
+BearSnore3
+Brown DARKBROWN White
+...2.
+.0.0.
+.000.
+11011
+01010
+
+EatingBear
+Brown DARKBROWN Blue Black Red
+.0.0.
+.303.
+40004
+41014
+41414
+
+
+Target
+YELLOW GREEN
+01010
+10110
+01011
+10001
+00011
+
+Wall 
+BROWN DARKGREEN
+..1..
+.111.
+11111
+.101.
+..0..
+
+Branch
+Brown
+.0...
+.0..0
+.000.
+.0...
+0....
+
+
+Player
+Blue BROWN BLACK RED
+.000.
+02120
+.111.
+33133
+.313.
+
+
+Crate 
+gray DARKGRAY
+.....
+..0..
+.000.
+0100.
+01110
+
+
+One
+Red
+0....
+.....
+.....
+.....
+.....
+
+Two
+Red
+00...
+.....
+.....
+.....
+.....
+
+Three
+Red
+000..
+.....
+.....
+.....
+.....
+
+Four
+Red
+0000.
+.....
+.....
+.....
+.....
+
+Five
+Orange
+00000
+.....
+.....
+.....
+.....
+
+Six
+Orange
+00000
+0....
+.....
+.....
+.....
+
+Seven
+Orange
+00000
+00...
+.....
+.....
+.....
+
+Eight
+Orange
+00000
+000..
+.....
+.....
+.....
+
+Nine
+Orange
+00000
+0000.
+.....
+.....
+.....
+
+Ten
+Orange
+00000
+00000
+.....
+.....
+.....
+
+Eleven
+Orange
+00000
+00000
+0....
+.....
+.....
+
+Twelve
+Orange
+00000
+00000
+00...
+.....
+.....
+
+Thirteen
+Orange
+00000
+00000
+000..
+.....
+.....
+
+Fourteen
+Orange
+00000
+00000
+0000.
+.....
+.....
+
+Fifteen
+Orange
+00000
+00000
+00000
+.....
+.....
+
+Sixteen
+Orange
+00000
+00000
+00000
+0....
+.....
+
+Seventeen
+Orange
+00000
+00000
+00000
+00...
+.....
+
+Eighteen
+Orange
+00000
+00000
+00000
+000..
+.....
+
+Nineteen
+Orange
+00000
+00000
+00000
+0000.
+.....
+
+Twenty
+Orange
+00000
+00000
+00000
+00000
+.....
+
+TwentyOne
+Orange
+00000
+00000
+00000
+00000
+0....
+
+TwentyTwo
+Orange
+00000
+00000
+00000
+00000
+00...
+
+TwentyThree
+Orange
+00000
+00000
+00000
+00000
+000..
+
+TwentyFour
+Orange
+00000
+00000
+00000
+00000
+0000.
+
+TwentyFive
+Orange
+00000
+00000
+00000
+00000
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Branch
+* = Crate
+@ = Crate and Target
+o = Target
+Bear = BearSnore0 or BearSnore1 or BearSnore2 or BearSnore3 or EatingBear
+x = BearSnore0
+Counter = one or Two or Three or Four or Five or Six or Seven or Eight or Nine or Ten or Eleven or Twelve or Thirteen or Fourteen or Fifteen or Sixteen or Seventeen or Eighteen or Nineteen or Twenty or TwentyOne or TwentyTwo or TwentyThree or TwentyFour or TwentyFive
+d = Crate or Branch
+2 = TwentyFive
+
+=======
+SOUNDS
+=======
+
+sfx0 38227704
+sfx1 81712307
+sfx2 4330103
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, Bear
+Player, Wall, Crate, Counter, branch
+
+======
+RULES     
+======     
+
+(movements)
+[ EatingBear ] -> cancel
+[ > Player | Branch ] -> [ > Player | > Branch  ] sfx2
+[ < Player | Crate no Target] -> [ < Player | < Crate no Target  ] sfx1
+[ Player Bear ] -> [ EatingBear ] sfx0 message "you've been eaten"
+
+(counter)
+late [ Player][one][ Bear ] -> [ EatingBear ] [][] sfx0 message "you've been eaten"
+late [ Player][two][ Bear ] -> [ Player ][ one ][ Bear]
+late [ Player][three][ Bear ] -> [  Player][ two ][ Bear]
+late [ Player][four][ Bear ] -> [  Player][ three ][ Bear]
+late [ Player][five][ Bear ] -> [  Player][ four ][ Bear]
+late [ Player][six][ Bear ] -> [  Player][ five ][ Bear]
+late [ Player][seven][ Bear ] -> [  Player][ six ][ Bear]
+late [ Player][eight][ Bear ] -> [  Player][ seven ][ Bear]
+late [ Player][nine][ Bear ] -> [  Player][ eight ][ Bear]
+late [ Player][ten][ Bear ] -> [  Player][ Nine ][ Bear]
+late [ Player][eleven][ Bear ] -> [  Player][ Ten ][ Bear]
+late [ Player][twelve][ Bear ] -> [  Player][ Eleven ][ Bear]
+late [ Player][Thirteen][ Bear ] -> [  Player][ Twelve ][ Bear]
+late [ Player][Fourteen][ Bear ] -> [  Player][ Thirteen ][ Bear]
+late [ Player][Fifteen][ Bear ] -> [  Player][ Fourteen ][ Bear]
+late [ Player][Sixteen][ Bear ] -> [  Player][ Fifteen ][ Bear]
+late [ Player][Seventeen][ Bear ] -> [  Player][ Sixteen ][ Bear]
+late [ Player][Eighteen][ Bear ] -> [  Player][ Seventeen ][ Bear]
+late [ Player][Nineteen][ Bear ] -> [  Player][ Eighteen ][ Bear]
+late [ Player][Twenty][ Bear ] -> [  Player][ Nineteen ][ Bear]
+late [ Player][TwentyOne][ Bear ] -> [  Player][ Twenty ][ Bear]
+late [ Player][TwentyTwo][ Bear ] -> [  Player][ TwentyOne ][ Bear]
+late [ Player][TwentyThree][ Bear ] -> [  Player][ TwentyTwo ][ Bear]
+late [ Player][TwentyFour][ Bear ] -> [  Player][ TwentyThree ][ Bear]
+late [ Player][TwentyFive][ Bear ] -> [  Player][ TwentyFour ][ Bear]
+
+(bear animation)
+late [ Player][BearSnore3] -> [ Player ][BearSnore0] again
+late [ Player][BearSnore2] -> [ Player ][BearSnore3]
+late [ Player][BearSnore1] -> [ Player ][BearSnore2]
+late [ Player][BearSnore0] -> [ Player ][BearSnore1]
+
+==============
+WINCONDITIONS
+==============
+
+All d on Target
+
+
+=======     
+LEVELS
+=======
+
+2##########
+#x........#
+#.......**#
+#.p.......#
+#......@oo#
+#....b.ooo#
+###########

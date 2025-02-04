@@ -1,0 +1,514 @@
+realtime_interval 0.25
+color_palette 4
+background_color lightblue
+text_color black
+noundo
+title No Ant Not Dead
+homepage berlinminijam.de
+
+========
+OBJECTS
+========
+
+Dirt
+brown darkbrown
+00001
+01000
+00000
+00010
+00000
+
+Sky
+lightblue blue
+11111
+11111
+00000
+11111
+00000
+
+Glass
+grey brown white yellow
+.....
+.00..
+02201
+.33..
+..3..
+
+LightH
+yellow
+.....
+.....
+00000
+.....
+.....
+
+LightV
+yellow
+..0..
+..0..
+..0..
+..0..
+..0..
+
+LightCornerUpRight
+yellow
+..0..
+..0..
+...00
+.....
+.....
+
+LightCornerUpLeft
+yellow
+..0..
+..0..
+00...
+.....
+.....
+
+LightCornerDownLeft
+yellow
+.....
+.....
+00...
+..0..
+..0..
+
+LightCornerDownRight
+yellow
+.....
+.....
+...00
+..0..
+..0..
+
+Grass
+Lightgreen brown darkbrown
+00000
+10100
+11111
+11121
+11111
+
+Tunnel
+darkbrown darkred
+10001
+01110
+00000
+11001
+00100
+
+MirrorUp
+darkblue lightblue
+...11
+..101
+.101.
+101..
+11...
+
+MirrorDown
+darkblue lightblue
+11...
+101..
+.101.
+..101
+...11
+
+MirrorHTUp
+lightblue
+....0
+...0.
+..0..
+.0...
+0....
+
+MirrorHTDown
+lightblue
+0....
+.0...
+..0..
+...0.
+....0
+
+Ant
+black
+.....
+.....
+0....
+.0000
+0.0.0
+
+AntBurning0
+black yellow orange red
+.....
+..2..
+0211.
+.0000
+0.0.0
+
+AntBurning1
+black yellow orange red
+3.333
+.3232
+32112
+22020
+0.0.0
+
+AntBurning2
+black yellow orange red
+..3.3
+.3332
+32123
+21113
+20202
+
+AntBurning3
+darkgrey orange black
+.....
+.....
+.100.
+10201
+22220
+
+PlayerGrab
+orange
+.000.
+0...0
+0...0
+0...0
+.000.
+
+PlayerFree
+white
+00.00
+0...0
+.....
+0...0
+00.00
+
+Sensor
+white red
+.....
+.010.
+.010.
+.000.
+.....
+
+SensorActivated
+white green
+.....
+.000.
+.010.
+.010.
+.....
+
+Gate
+lightgray darkgrey  black yellow
+23232
+01000
+01110
+01010
+32323
+
+GateOpen
+lightgray black yellow
+10.00
+11.10
+.....
+10.10
+21.21
+
+Tombstone
+Grey darkgrey
+.000.
+01100
+00000
+01110
+00000
+
+Stick
+brown yellow
+..0..
+00100
+..0..
+..0..
+..0..
+
+DirN
+transparent
+
+DirE
+transparent
+
+DirS
+transparent
+
+DirW
+transparent
+
+
+=======
+LEGEND
+=======
+
+Background = Sky or Tunnel
+Light = LightH or LightV or LightCornerUpRight or LightCornerUpLeft or LightCornerDownRight or LightCornerDownLeft
+Mirror = MirrorUp or MirrorDown or MirrorHTDown or MirrorHTup
+Player = playerFree or playerGrab
+AntsNotDead = Ant or Antburning0 or Antburning1 or Antburning2
+Ants = AntsNotDead or AntBurning3
+DirTag = dirn or dire or dirs or dirw
+LightBlocker = Dirt or Grass or AntBurning3 or Gate
+
+A = Sky
+O = Tombstone and Sky
+F = Stick and Sky
+. = Tunnel
+P = PlayerFree and Sky
+G = Grass
+# = Dirt
+T = Ant and tunnel
+D = MirrorDown and Tunnel
+U = MirrorUp and Tunnel
+B = MirrorHTDown and Tunnel
+C = MirrorHTUp and Tunnel
+S = Glass
+@ = Sensor and Tunnel
+X = Gate
+k = antburning3 and tunnel
+
+=======
+SOUNDS
+=======
+
+AntBurning0 create 8273908
+LightH create 44355300
+LightV create 44355300
+GateOpen create 39068107
+
+================
+COLLISIONLAYERS
+================
+
+Sky, Tunnel
+Grass, Dirt, Tombstone, Stick
+Mirror, Glass, Sensor, SensorActivated, Gate, GateOpen, Ants
+Light
+Player
+Dirn dire dirs dirw
+
+======
+RULES
+======
+(--------------------- player input ---------------------)
+(mirror placement)
+[ Action PlayerFree Mirror ] -> [ PlayerGrab Mirror ]
+[ Action PlayerGrab Mirror ] -> [ PlayerFree Mirror ]
+(move mirror only with player)
+rigid [ > PlayerGrab Mirror ] -> [ > PlayerGrab > Mirror ]
+[ > PlayerGrab stationary Mirror ] -> [ PlayerGrab  Mirror ]
+
+(avoid shooting multiple lights)
+[ Action Player Glass ] [Light] -> [> Player Glass] [Light]
+(reset ants on spawning light)
+[ Action Player Glass ] [Ants] -> [ Action Player Glass ] [Ant]
+(reset sensors)
+[ Action Player Glass ] [SensorActivated] -> [Action Player Glass] [Sensor]
+[ Action Player Glass ] [GateOpen] -> [ Action Player Glass ] [Gate]
+(spawn light)
+[ Action Player Glass ] -> [ Player Glass LightV DirS ]
+
+(--------------------- game tick ---------------------)
+(movement rules)
+[ stationary Player] [Light DirN] -> [Player] [up LightV up DirN]
+[ stationary Player] [Light DirE] -> [Player] [right LightH right DirE]
+[ stationary Player] [Light DirS] -> [Player] [down LightV down DirS]
+[ stationary Player] [Light DirW] -> [Player] [left LightH left DirW]
+
+(light blocking, repeated later)
+[ stationary Player ] [> Light | LightBlocker ] -> [Player] [ | LightBlocker]
+
+(--------------------- mirror rules ---------------------)
+(mirror up)
+[ stationary Player] [> Light DirN | MirrorUP] -> [Player] [ | LightCornerDownRight DirE MirrorUP]
+[ stationary Player] [> Light DirE | MirrorUP] -> [Player] [ | LightCornerUpLeft DirN MirrorUP]
+[ stationary Player] [> Light DirS | MirrorUP] -> [Player] [ | LightCornerUpLeft DirW MirrorUP]
+[ stationary Player] [> Light DirW | MirrorUP] -> [Player] [ | LightCornerDownRight DirS MirrorUP]
+(mirror down)
+[ stationary Player] [> Light DirN | Mirrordown] -> [Player] [ | LightCornerDownLeft DirW Mirrordown]
+[ stationary Player] [> Light DirE | Mirrordown] -> [Player] [ | LightCornerDownLeft DirS Mirrordown]
+[ stationary Player] [> Light DirS | Mirrordown] -> [Player] [ | LightCornerUpRight DirE Mirrordown]
+[ stationary Player] [> Light DirW | Mirrordown] -> [Player] [ | LightCornerUpRight DirN Mirrordown]
+(half transparent mirror down)
+[ stationary Player] [> Light DirN | MirrorHTdown | ] -> [Player] [ | LightCornerDownLeft DirW MirrorHTdown | LightV DirN]
+[ stationary Player] [> Light DirE | MirrorHTdown | ] -> [Player] [ | LightCornerDownLeft DirS MirrorHTdown | LightH DirE]
+[ stationary Player] [> Light DirS | MirrorHTdown | ] -> [Player] [ | LightCornerUpRight DirE MirrorHTdown | LightV DirS]
+[ stationary Player] [> Light DirW | MirrorHTdown | ] -> [Player] [ | LightCornerUpRight DirN MirrorHTdown | LightH DirW]
+(half transparent mirror up)
+[ stationary Player] [> Light DirN | MirrorHTup | ] -> [Player] [ | LightCornerDownRight DirE MirrorHTup | LightV DirN]
+[ stationary Player] [> Light DirE | MirrorHTup | ] -> [Player] [ | LightCornerUpLeft DirN MirrorHTup | LightH DirE]
+[ stationary Player] [> Light DirS | MirrorHTup | ] -> [Player] [ | LightCornerUpLeft DirW MirrorHTup | LightV DirS]
+[ stationary Player] [> Light DirW | MirrorHTup | ] -> [Player] [ | LightCornerDownRight DirS MirrorHTup | LightH DirW]
+
+(Dead ant)
+[ stationary Player] [AntBurning2] -> [Player] [AntBurning3]
+[ stationary Player] [AntBurning1] -> [Player] [AntBurning2]
+[ stationary Player] [AntBurning0] -> [Player] [AntBurning1]
+
+(light blocking)
+[ stationary Player ] [> Light | LightBlocker ] -> [Player] [ | LightBlocker]
+late [Light Lightblocker] -> [Lightblocker]
+(burning ants)
+[ stationary Player ] [> Light | Ant ] -> [Player] [ > Light | AntBurning0 ]
+[ stationary Player ] [Light Ant ] -> [Player] [ > Light AntBurning0 ]
+
+(sensors)
+[ stationary Player ] [> Light | Sensor ] -> [Player] [ | SensorActivated ]
+[ stationary Player ] [Light Sensor ] -> [Player] [SensorActivated ]
+[ stationary Player ][ SensorActivated | Gate ] -> [Player] [ SensorActivated | Tunnel GateOpen ]
+
+(delete remaining dirtags)
+late [dirtag no light] -> []
+
+==============
+WINCONDITIONS
+==============
+
+No AntsNotDead
+Any Player
+
+=======
+LEVELS
+=======
+
+message The ants have defied you!
+message Use your magnifying glass to retaliate!
+
+AAAASAAAPA
+GGGG.GGGGG
+####.#####
+####.#####
+#U..U#####
+#.########
+#D...T####
+##########
+
+message This one is hidden deep.
+message You'll have to place the mirrors yourself.
+
+aaaasaaapa
+gggg.ggggg
+####.####d
+####....#d
+#######.#u
+##......#u
+##.######d
+##.#######
+##....t###
+##########
+
+message Now place the mirrors to get them all with one shot.
+(message The dead will cover the living.)
+
+asaaaaaapa
+g.gggggggg
+#.#...###d
+#.#.#.###d
+#.#.t..t#d
+#.###.###u
+#.....###u
+##########
+
+message These anthills have lots of branches.
+message You will need to take multiple pathes in parallel.
+
+asaaapaaaa
+g.gggggggg
+#.......t#
+#.####.###
+#.##t..#u#
+#.######d#
+#...t###b#
+########b#
+
+message The dead will protect the living.
+
+asaapaaa
+g.#ggggg
+#.##t###
+#.#..#u#
+#b.tt#u#
+#.##.#d#
+#.##.###
+#....###
+########
+
+message Curses, they use blast doors with light sensors!
+message These ants are rather smart - or are they?
+
+asaaaaaapa
+g.gggggggg
+#..#######
+#..##bdd##
+#@x#######
+##......t#
+##########
+
+message Cowards!
+
+asaaaap
+g.ggggg
+#.....#
+#.....#
+#..#@##
+#...xt#
+#@x####
+##t##bb
+#####bd
+
+message Think! Think! Think!
+
+aaasapaaaa
+ggg.gggggg
+###..@...#
+#t...x...#
+##t......#
+###...####
+ud#t..#bb#
+uu#####bb#
+##########
+
+message Use what you learned to navigate this maze.
+
+aasapaaaaaaaaa
+dg.ggg.ggg.ggg
+u#.t.#t#...t.#
+b#.#.####@x#.#
+c#.........#.#
+u#......t..#.#
+u#...##.##.#.#
+dd##..t......#
+dd############
+
+message We have reached their home.
+
+aaaaasaaapa
+ggggg.ggggg
+#####.##t##
+#t....#t.##
+##.##t##.##
+##.#####.##
+##.......t#
+##t########
+####ccbcb##
+
+message What a massacre!
+message Was victory worth this price?
+
+aofooaof
+gggggggg
+#k#kk#k#
+###kk###
+#k#k##k#
+##kkkk##
+##kkkk##

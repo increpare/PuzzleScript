@@ -1,0 +1,449 @@
+title Towerfall
+run_rules_on_level_start
+noundo  
+norestart
+noaction
+realtime_interval 0.5
+========
+OBJECTS
+========
+Background
+darkblue
+
+F0
+lightgray
+F1
+lightgray gray
+00001
+00001
+00001
+00001
+00001
+F2
+lightgray gray
+00000
+00000
+00000
+00000
+11111
+F3
+lightgray gray
+00001
+00001
+00001
+00001
+11111
+F4
+lightgreen green orange brown
+00000
+00100
+23100
+23333
+33233
+F5
+brown orange
+01110
+10000
+10010
+10000
+00100
+Idle
+lightbrown brown black green pink
+11111
+02420
+00400
+.333.
+.1.1.
+Jump
+lightbrown brown black green pink
+12421
+00400
+00000
+.333.
+1...1
+Fall
+lightbrown brown black green pink
+11111
+11111
+02420
+13331
+.....
+IdleSkel
+white black lightgray
+00000
+01010
+20202
+.222.
+.0.0.
+JumpSkel
+white black lightgray
+01010
+00000
+20202
+.222.
+0...0
+FallSkel
+white black lightgray
+00000
+00000
+01010
+02220
+.....
+Gem
+blue white darkblue
+.010.
+01020
+00202
+.202.
+..2..
+Platform
+brown lightbrown darkbrown
+11110
+00000
+..2..
+.....
+.....
+Door
+black
+.000.
+00000
+00000
+00000
+00000
+
+B0
+gray
+B1
+gray darkgray
+00001
+00001
+00001
+00001
+00001
+B2
+gray darkgray
+00000
+00000
+00000
+00000
+11111
+B3
+gray darkgray
+00001
+00001
+00001
+00001
+11111
+
+N0
+white
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+N1
+white
+.00..
+..0..
+..0..
+..0..
+.000.
+N2
+white
+.000.
+...0.
+.000.
+.0...
+.000.
+N3
+white
+.000.
+...0.
+..00.
+...0.
+.000.
+N4
+white
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+N5
+white
+.000.
+.0...
+.000.
+...0.
+.000.
+N6
+white
+.000.
+.0...
+.000.
+.0.0.
+.000.
+N7
+white
+.000.
+...0.
+...0.
+...0.
+...0.
+N8
+white
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+N9
+white
+.000.
+.0.0.
+.000.
+...0.
+.000.
+U1
+white
+.....
+.....
+00000
+.....
+.....
+
+Plus
+transparent
+Minus
+transparent
+Next
+transparent
+BFall
+transparent
+.....
+.....
+..0..
+.....
+.....
+GeneratorY
+transparent
+.....
+.....
+..0..
+.....
+.....
+GeneratorX
+transparent
+.....
+.....
+..0..
+.....
+.....
+Count
+transparent
+.....
+.....
+..0..
+.....
+.....
+Scroll
+transparent
+.....
+.....
+..0..
+.....
+.....
+=======
+LEGEND
+=======
+Player=Idle or Jump or Fall
+Skl=IdleSkel or JumpSkel or FallSkel
+FG1=F0 or F1 or F2 or F3 or F4 or F5
+FG2=Gem or Platform or Door
+BG=B0 or B1 or B2 or B3
+Num=N0 or N1 or N2 or N3 or N4 or N5 or N6 or N7 or N8 or N9
+Ui=Num or U1
+Id=Plus or Minus or Next or BFall
+
+#1=F1 or B1
+#2=F2 or B2
+#3=F3 or B3
+
+Loot=Gem
+Ntt=Loot or Skl or Player
+
+Lvl=FG1 or FG2 or BG or Ntt
+Twr=FG1 or BG or Platform
+
+Flr=FG1 or Platform or Player or Skl
+
+Gen=F0 or B0
+
+
+
+
+
+║=F1 and BFall
+═=F2 and BFall
+╝=F3 and BFall
+`=F4
+i=Idle
+w=IdleSkel
+│=B1 and BFall
+─=B2 and BFall
+┘=B3 and BFall
+"=Platform
+?=GeneratorY and GeneratorX and Fall and BFall
+!=Scroll and Next
+-=U1 
+O=N0 and Count
+0=N0
+1=N1
+2=N2
+3=N3
+4=N4
+5=N5
+6=N6
+7=N7
+8=N8
+9=N9
+.=Background
+=======
+SOUNDS
+=======
+sfx0 46244507
+sfx1 55276902
+sfx2 65494704
+================
+COLLISIONLAYERS
+================
+Background
+BG
+FG2
+FG1,Player,Skl
+Ui
+Id
+Scroll
+GeneratorY 
+GeneratorX 
+Count
+======
+RULES
+======
+(Generation)
+[stationary GeneratorX]->[randomdir GeneratorX]
+[vertical GeneratorX]->[stationary GeneratorX]
+late random[GeneratorX|][Next]->[random Gen|random Gen][Next]
+late[GeneratorY][Next]->[GeneratorY GeneratorX][Next]
+
+
+late up[F0|Twr]->[F3 BFall|Twr]
+late up[B0|Twr]->[B3 BFall|Twr]
+
+late down[F0|Twr]->[F1 BFall|Twr]
+late down[B0|Twr]->[B1 BFall|Twr]
+
+late left[F0|Twr]->[F3 BFall|Twr]
+late left[B0|Twr]->[B3 BFall|Twr]
+
+late right[F0|Twr]->[F2 BFall|Twr]
+late right[B0|Twr]->[B2 BFall|Twr]
+
+late up[F4|F4]->[F5|F4]
+
+
+(Scrolling)
+horizontal[Scroll|...|no Scroll]->[Scroll|...|Scroll]
+[Scroll Next][Lvl]->[Scroll Next][down Lvl]
+
+[Next]->[]
+
+[moving lvl Ui]->[Ui]
+[Ntt Ui]->[Ui] sfx1
+[BFall Ui]->[Next Ui]
+
+
+(Physics)
+down[Twr|no Twr]->[> Twr|no Twr]
+down[Loot|no Twr]->[> Loot|no Twr]
+
+left[#3|stationary #2]->[stationary #3|stationary #2]
+left[stationary #3|#2]->[stationary #3|stationary #2]
+ 
+up[moving #3|#1]->[moving #3|moving #1]
+left[moving #3|#2]->[moving #3|moving #2]
+
+[moving Twr Id]->[moving Twr moving Id] 
+[stationary BFall]->[Next]
+
+
+(Player Physics)
+down[Player|Flr]->[Idle|Flr]
+down[Fall|no Flr]->[> Fall|no Flr] 
+[Jump]->[Fall]
+down[Idle|no Flr]->[Jump|no Flr]sfx0
+
+up horizontal[> Player|F1]->[Player|B1]sfx2
+up horizontal[> Player|F2]->[Player|B2]sfx2
+up horizontal[> Player|F3]->[Player|B3]sfx2
+
+
+(EnemyPhysics)
+[stationary Skl]->[randomdir Skl]
+[Skl|...|Player]->[> Skl|...|Player]
+
+down[Skl|Flr]->[IdleSkel|Flr]
+down[FallSkel|no Flr]->[> FallSkel|no Flr] 
+[JumpSkel]->[FallSkel]
+down[IdleSkel|no Flr]->[JumpSkel|no Flr]sfx0
+
+(Score)
+[Count][Next]->[Count Plus][Next]
+
+right[|N9 Plus]->[Plus|N0]
+[N8 Plus]->[N9]
+[N7 Plus]->[N8]
+[N6 Plus]->[N7]
+[N5 Plus]->[N6]
+[N4 Plus]->[N5]
+[N3 Plus]->[N4]
+[N2 Plus]->[N3]
+[N1 Plus]->[N2]
+[N0 Plus]->[N1]
+late[Plus]->[]
+==============
+WINCONDITIONS
+==============
+no Player 
+=======
+LEVELS
+=======
+
+.....?.....
+.....!.....
+.....!.....
+.....!.....
+.....!.....
+.....!.....
+.....!.....
+...........
+...........
+...........
+...........
+...........
+...````....
+...``````..
+..```````..
+--000000O--
+
+message Game Over !
+
+
+
+
+
+
+
+=======
+.

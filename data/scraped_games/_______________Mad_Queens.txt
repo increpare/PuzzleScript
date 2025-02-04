@@ -1,0 +1,344 @@
+title                Mad Queens
+author               Chris Pickel
+homepage             https://sfiera.net/
+text_color           DarkRed
+background_color 	 Gray
+key_repeat_interval  0.25
+again_interval       0.10
+noaction
+require_player_movement
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Black 
+#222
+
+White .
+#ddd
+
+Alice Player @ 
+Blue Brown White Yellow
+.333.
+.313.
+02020
+30203
+.000.
+
+King K
+Red DarkRed
+..0..
+.010.
+..0..
+00001
+.....
+
+Queen Q
+Red DarkRed
+0.0.1
+.001.
+..1..
+00001
+.....
+
+Rook R
+Red DarkRed
+0.0.1
+00001
+.111.
+00001
+.....
+
+Bishop B
+Red DarkRed
+..0..
+.101.
+.010.
+00001
+.....
+
+Knight N
+Red DarkRed
+.101.
+0000.
+..01.
+00001
+.....
+
+Pawn P
+Red DarkRed
+.....
+..0..
+..0..
+.001.
+.....
+
+Threatened
+Red
+.....
+.....
+..0..
+.....
+.....
+
+Dying
+Red
+
+HorizontalThreat
+Transparent
+
+VerticalThreat
+Transparent
+
+DownRightThreat
+Transparent
+
+DownLeftThreat
+Transparent
+
+UpLeftThreat
+Transparent
+
+UpRightThreat
+Transparent
+
+FurtherRight
+Transparent
+
+FurtherDownRight
+Transparent
+
+FurtherDown
+Transparent
+
+FurtherDownLeft
+Transparent
+
+FurtherLeft
+Transparent
+
+FurtherUpLeft
+Transparent
+
+FurtherUp
+Transparent
+
+FurtherUpRight
+Transparent
+
+=======
+LEGEND
+=======
+
+Background = Black or White
+
+Piece = King or Queen or Rook or Bishop or Knight or Pawn
+Solid = Alice or Piece
+
+Diagonally    = Bishop or Queen
+Orthogonally  = Rook or Queen
+Rightward     = Orthogonally or FurtherRight
+DownRightward = Diagonally   or FurtherDownRight
+Downward      = Orthogonally or FurtherDown
+DownLeftward  = Diagonally   or FurtherDownLeft
+Leftward      = Orthogonally or FurtherLeft
+UpLeftward    = Diagonally   or FurtherUpLeft
+Upward        = Orthogonally or FurtherUp
+UpRightward   = Diagonally   or FurtherUpRight
+
+Further   = FurtherRight or FurtherDownRight or FurtherDown or FurtherDownLeft or FurtherLeft or FurtherUpLeft or FurtherUp or FurtherUpRight
+Threat    = HorizontalThreat or VerticalThreat or DownRightThreat or DownLeftThreat or UpLeftThreat or UpRightThreat
+Temporary = Threat or Further
+
+=======
+SOUNDS
+=======
+
+Alice move    93593507
+Piece move    69693707
+Alice destroy 31577701
+Piece destroy 2057504
+startgame     92634708
+endlevel      63318705
+endgame       6260903
+undo          86245107
+restart       2571701
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Solid
+HorizontalThreat
+VerticalThreat
+DownRightThreat
+DownLeftThreat
+UpLeftThreat
+UpRightThreat
+Further
+Threatened
+Dying
+
+======
+RULES     
+======     
+
+[> Alice | Piece] -> [> Alice | > Piece]
+
+late [Dying Solid] -> []
+late [Threatened] -> []
+
+late up         [Pawn      |]   -> [Pawn      | HorizontalThreat]
+late vertical   [King      |]   -> [King      | Threatened HorizontalThreat]
+late horizontal [King      |]   -> [King      | Threatened VerticalThreat]
+late vertical   [Knight    | |] -> [Knight    | | HorizontalThreat]
+late horizontal [Knight    | |] -> [Knight    | | VerticalThreat]
+
+late horizontal [HorizontalThreat |] -> [HorizontalThreat | Threatened]
+late vertical   [VerticalThreat   |] -> [VerticalThreat   | Threatened]
+
+late right      [Rightward |]   -> [Rightward | Threatened FurtherRight]
+late down       [Downward  |]   -> [Downward  | Threatened FurtherDown]
+late left       [Leftward  |]   -> [Leftward  | Threatened FurtherLeft]
+late up         [Upward    |]   -> [Upward    | Threatened FurtherUp]
+
+late down       [DownRightward   |] -> [DownRightward   | DownRightThreat]
++ late right    [DownRightThreat |] -> [DownRightThreat | Threatened FurtherDownRight]
+late down       [DownLeftward    |] -> [DownLeftward    | DownLeftThreat]
++ late left     [DownLeftThreat  |] -> [DownLeftThreat  | Threatened FurtherDownLeft]
+late up         [UpLeftward      |] -> [UpLeftward      | UpLeftThreat]
++ late left     [UpLeftThreat    |] -> [UpLeftThreat    | Threatened FurtherUpLeft]
+late up         [UpRightward     |] -> [UpRightward     | UpRightThreat]
++ late right    [UpRightThreat   |] -> [UpRightThreat   | Threatened FurtherUpRight]
+
+late [Temporary] -> []
+
+late [Threatened Solid] -> [Dying Solid] again
+
+(Alice wins in the top row)
+late up [||||||| Alice no Dying] -> win
+
+(Make the checkerboard pattern)
+late right down [White | White] -> [White | Black]
+late down [Black | Black] -> [Black | White]
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+(0)
+........
+........
+........
+........
+........
+........
+........
+...@....
+
+(1)
+........
+........
+........
+........
+........
+........
+PPPPPPPP
+...@....
+
+(2)
+........
+.N......
+....N...
+.N.....N
+........
+.....N..
+........
+...@....
+
+(3)
+........
+....N...
+...N....
+......N.
+.N......
+........
+.P.PPPPP
+...@....
+
+(4)
+......R.
+.R......
+........
+........
+........
+........
+P.PPPP.P
+...@....
+
+(5)
+......R.
+.....R..
+....R...
+.N......
+........
+........
+PPPP...P
+...@....
+
+(6)
+......B.
+........
+..B.....
+........
+........
+........
+.PN..P.N
+...@....
+
+(7)
+.....Q..
+........
+........
+...N....
+R.......
+........
+.PPPP.PP
+...@....
+
+(8)
+...K....
+.....B.N
+........
+R.......
+........
+...N....
+......PP
+...@....
+
+(9)
+.B......
+......Q.
+........
+........
+....B...
+........
+P..PPP..
+...@....
+
+(10)
+.K......
+.....N..
+.BB...N.
+........
+........
+........
+PPPPP..P
+...@....

@@ -1,0 +1,559 @@
+title N Queens Puzzle
+author Daniel Sherlock
+(Note: The puzzle itself is by Max Bezzel, in 1848.)
+homepage https://en.wikipedia.org/wiki/Eight_queens_puzzle
+(I [the author] am temorarily lacking in webpage, so you can read all about the N Queens puzzle instead. It's good fun.)
+
+background_color DarkGreen
+run_rules_on_level_start
+key_repeat_interval 0.2
+
+
+========
+OBJECTS
+========
+
+(As you can probably tell, I've struggled to get reasonable colours and shapes for all the things. Suggestions welcome.)
+
+Background
+#6bb745 #45b758 #93b745
+10201
+00000
+20102
+00000
+10201
+
+Display
+darkgreen
+
+Board
+#ad914a #937b3e
+01000
+10000
+00001
+00010
+00100
+
+EdgeBoard_Top
+#ad914a #937b3e LightBrown
+22222
+10000
+00001
+00010
+00100
+
+EdgeBoard_Top_Right
+#ad914a #937b3e LightBrown
+2....
+12...
+002..
+0002.
+00102
+
+EdgeBoard_Right
+#ad914a #937b3e LightBrown
+01002
+10002
+00002
+00012
+00102
+
+EdgeBoard_Bottom_Right
+#ad914a #937b3e LightBrown
+01002
+1002.
+002..
+02...
+2....
+
+EdgeBoard_Bottom
+#ad914a #937b3e #8d712a
+01000
+10000
+00001
+00010
+22222
+
+EdgeBoard_Bottom_Left
+#ad914a #937b3e DarkBrown
+21000
+.2000
+..201
+...20
+....2
+
+EdgeBoard_Left
+#ad914a #937b3e DarkBrown
+21000
+20000
+20001
+20010
+20100
+
+EdgeBoard_Top_Left
+#ad914a #937b3e #8d712a
+....2
+...20
+..201
+.2010
+20100
+
+Black
+lightgray #BFBFBF grey darkgray
+32222
+20010
+20100
+21001
+20010
+
+White
+white #EFEFEF gray darkgray
+32222
+20100
+21001
+20010
+20100
+
+Queen
+#B62430 #992805 #703722 #443333
+1.0.1
+2.1.2
+23132
+22122
+.000.
+
+Invalid
+purple
+.....
+.....
+..00.
+..00.
+.....
+
+Invalid_DiagHelper
+transparent
+
+Player
+green darkgreen
+.....
+.0101
+.1..0
+.0..1
+.1010
+
+Queue
+lightgray
+0000.
+0..0.
+0..0.
+0.0..
+00.0.
+
+Ewe
+lightgray
+0..0.
+0..0.
+0..0.
+0..0.
+.00..
+
+Eeee
+lightgray
+0000.
+0....
+000..
+0....
+0000.
+
+Enn
+lightgray
+0..0.
+00.0.
+0000.
+0.00.
+0..0.
+
+Ess
+lightgray
+.000.
+0....
+.00..
+...0.
+000..
+
+Zero
+white
+.00..
+0..0.
+0..0.
+0..0.
+.00..
+
+One
+white
+..00.
+.0.0.
+...0.
+...0.
+...0.
+
+Two
+white
+.00..
+0..0.
+..0..
+.0...
+0000.
+
+Three
+white
+000..
+...0.
+.00..
+...0.
+000..
+
+Four
+white
+.0.0.
+0..0.
+0000.
+...0.
+...0.
+
+Five
+white
+0000.
+0....
+000..
+...0.
+000..
+
+Six
+white
+.00..
+0....
+000..
+0..0.
+.00..
+
+Seven
+white
+0000.
+...0.
+.000.
+..0..
+.0...
+
+Eight
+white
+.000.
+0...0
+.000.
+0...0
+.000.
+
+Nine
+white
+.000.
+0...0
+.0000
+...0.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+! = Board
+
+# = Black and Board
+' = White and Board
+
+P = Player and Black and Board
+O = Player and White and Board
+
+EdgeBoard = EdgeBoard_Top or EdgeBoard_Top_Right or EdgeBoard_Right or EdgeBoard_Bottom_Right or EdgeBoard_Bottom or EdgeBoard_Bottom_Left or EdgeBoard_Left or EdgeBoard_Top_Left
+
+AnyBoard = Board or EdgeBoard
+AnySquare = Black or White
+AnyBlock = Invalid or Queen
+NonZero = One or Two or Three or Four or Five or Six or Seven or Eight or Nine
+AnyNum = Zero or NonZero
+AnyChar = Queue or Ewe or Eeee or Enn or Ess or AnyNum
+
+Q = Queue and Display
+U = Ewe and Display
+E = Eeee and Display
+N = Enn and Display
+S = Ess and Display
+
+0 = Zero and Display
+1 = One and Display
+2 = Two and Display
+3 = Three and Display
+4 = Four and Display
+5 = Five and Display
+6 = Six and Display
+7 = Seven and Display
+8 = Eight and Display
+9 = Nine and Display
+
+_ = Display
+
+
+=======
+SOUNDS
+=======
+
+(I considered doing some sounds for various things, but was listening to music at the time, so didn't. As with above, suggestions are welcome.)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+AnyBoard, Display
+AnySquare, AnyChar
+Player
+Invalid_DiagHelper
+Queen, Invalid
+
+
+======
+RULES
+======
+
+[> Player | no Board] -> [Player |]
+
+right [AnyNum | no AnyNum] [NonZero] [action Player no Invalid no Queen] -> [v AnyNum |] [NonZero] [Player Queen]
+
+[v One] [Enn |] -> [Zero] [Enn | Ess]
++ [v Two] [Ess] -> [^ Zero] []
++ [v Three] -> [Two]
++ [v Four] -> [Three]
++ [v Five] -> [Four]
++ [v Six] -> [Five]
++ [v Seven] -> [Six]
++ [v Eight] -> [Seven]
++ [v Nine] -> [Eight]
++ [AnyNum | v Zero] -> [v AnyNum | Nine]
+
+[^ Zero] [NonZero] [Enn |] -> [^ Zero] [NonZero] [Enn | Ess]
+[^ Zero] -> [One]
+
+[Player Queen | AnySquare] -> [Player Queen | > Invalid AnySquare]
+[> Invalid | AnySquare] -> [Invalid | > Invalid AnySquare]
+[> Invalid] -> [Invalid]
+
+[Player Queen |] -> [Player Queen | > Invalid_DiagHelper]
+[v Invalid_DiagHelper | AnySquare] -> [| v Invalid AnySquare]
++ [> Invalid |] -> [Invalid | > Invalid_DiagHelper]
+[> Invalid_DiagHelper] -> []
+
+late up [Board | no AnyBoard] -> [EdgeBoard_Top |]
+late right [EdgeBoard_Top | no AnyBoard] -> [EdgeBoard_Top_Right |]
+late right [Board | no AnyBoard] -> [EdgeBoard_Right |]
+late down [EdgeBoard_Right | no AnyBoard] -> [EdgeBoard_Bottom_Right |]
+late down [Board | no AnyBoard] -> [EdgeBoard_Bottom |]
+late left [EdgeBoard_Bottom | no AnyBoard] -> [EdgeBoard_Bottom_Left |]
+late left [Board | no AnyBoard] -> [EdgeBoard_Left |]
+late left [EdgeBoard_Top | no AnyBoard] -> [EdgeBoard_Top_Left |]
+
+
+==============
+WINCONDITIONS
+==============
+
+no NonZero
+all AnySquare on AnyBlock
+
+
+=======
+LEVELS
+=======
+
+(
+--Tutorial:
+--Comment/Uncomment this as necessary.
+)
+
+message Hi.
+message The "N Queens Puzzle" is a classic chess puzzle, published by Max Bezzel in 1848.
+message In it, you must place N queens, without having any of them threaten any other.
+message Here's a practice round: arrow keys to select a valid square, "X" or "SPACE" to place a Queen, "R" to restart, "Z" to undo.
+
+.........
+..!!!!!..
+..!'#'!..
+..!#O#!..
+..!'#'!..
+..!!!!!..
+.........
+_________
+02_QUEENS
+
+message That was easy enough!
+message Usually, though, N is the size of the board, as well as the number of queens...
+
+(
+--End of tutorial.
+)
+
+message Try placing four queens on this four-by-four board:
+
+........
+.!!!!!!.
+.!'#'#!.
+.!#'#'!.
+.!'P'#!.
+.!#'#'!.
+.!!!!!!.
+........
+________
+4_QUEENS
+
+message Excellent!
+message Now though, a full-sized eight-by-eight board:
+
+............
+.!!!!!!!!!!.
+.!'#'#'#'#!.
+.!#'#'#'#'!.
+.!'#'#'#'#!.
+.!#'#'#'#'!.
+.!'#'#O#'#!.
+.!#'#'#'#'!.
+.!'#'#'#'#!.
+.!#'#'#'#'!.
+.!!!!!!!!!!.
+............
+____________
+__8_QUEENS__
+
+message Nicely done!
+message This time the challenge is on the same board, but with a twist...
+message ... Use only five queens to threaten the rest of the board!
+message This is known as the "Independant Dominating Sets" puzzle:
+
+............
+.!!!!!!!!!!.
+.!'#'#'#'#!.
+.!#'#'#'#'!.
+.!'#'#'#'#!.
+.!#'#'#'#'!.
+.!'#'#O#'#!.
+.!#'#'#'#'!.
+.!'#'#'#'#!.
+.!#'#'#'#'!.
+.!!!!!!!!!!.
+............
+____________
+__5_QUEENS__
+
+message Superb!
+message And now for something largely the same:
+message A few boards of larger sizes (and both puzzle-types) for you to try.
+
+...............
+.!!!!!!!!!!!!!.
+.!'#'#'#'#'#'!.
+.!#'#'#'#'#'#!.
+.!'#'#'#'#'#'!.
+.!#'#'#'#'#'#!.
+.!'#'#'#'#'#'!.
+.!#'#'#O#'#'#!.
+.!'#'#'#'#'#'!.
+.!#'#'#'#'#'#!.
+.!'#'#'#'#'#'!.
+.!#'#'#'#'#'#!.
+.!'#'#'#'#'#'!.
+.!!!!!!!!!!!!!.
+...............
+_______________
+___11_QUEENS___
+
+...............
+.!!!!!!!!!!!!!.
+.!'#'#'#'#'#'!.
+.!#'#'#'#'#'#!.
+.!'#'#'#'#'#'!.
+.!#'#'#'#'#'#!.
+.!'#'#'#'#'#'!.
+.!#'#'#O#'#'#!.
+.!'#'#'#'#'#'!.
+.!#'#'#'#'#'#!.
+.!'#'#'#'#'#'!.
+.!#'#'#'#'#'#!.
+.!'#'#'#'#'#'!.
+.!!!!!!!!!!!!!.
+...............
+_______________
+___05_QUEENS___
+
+......................
+.!!!!!!!!!!!!!!!!!!!!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'P'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!!!!!!!!!!!!!!!!!!!!.
+......................
+______________________
+______018_QUEENS______
+
+......................
+.!!!!!!!!!!!!!!!!!!!!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'P'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!'#'#'#'#'#'#'#'#'#!.
+.!#'#'#'#'#'#'#'#'#'!.
+.!!!!!!!!!!!!!!!!!!!!.
+......................
+______________________
+______010_QUEENS______
+
+message Wow, you did it! You solved every version I threw at you. Metaphorically thrown, obvs.
+message Seriously, that's very good.
+
+message If you still need more N Queen Puzzles, that's easy - why not make a board yourself...
+message 1. Find the source code for all this at https://gist.github.com/DanielSherlock/b679e445b90e3ef6282ecc74c33bcad3
+message 2. Copy and paste it into https://puzzlescript.net/editor.html
+message 3. Click "Level Editor" and draw to your heart's content. Then click "S" to save.
+message 4. Copy and past the output (in blue) into the source on the left, just under where it says "Levels".
+message 5. There is no step 5 - you can just run the new code (click "Run").
+
+message Oh, and I should say that...
+message ... other than the amazing PuzzleScript by https://www.increpare.com/ ...
+message ... the "Eight queens puzzle" page on Wikipedia was a massive help in writing this...
+message as was this paper: http://www.combinatorics.org/ojs/index.php/eljc/article/view/v8i1r29

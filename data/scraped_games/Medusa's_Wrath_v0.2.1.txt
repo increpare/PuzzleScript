@@ -1,0 +1,531 @@
+title Medusa's Wrath v0.2.1
+author Tom Hermans @Auroriax
+homepage auroriax.itch.io
+(run_rules_on_level_start)
+
+verbose_logging
+
+noaction
+
+(The Greek locked Medusa away the only way they know--by trapping her inside a gigantic maze, filled with puzzles. Nobody actually considered the fact that Medusa is a skilled puzzle solver...)
+
+========
+OBJECTS
+========
+
+Background .
+#CC876A
+
+Wall 0
+#006 Blue lightblue
+12222
+1...2
+1...2
+1...2
+00000
+
+Cliff H
+Black #28253C transparent
+11111
+00000
+00000
+00000
+20002
+
+
+PlayerDown P
+white black blue
+.000.
+00000
+00210
+00110
+.000.
+
+(LockedPlayerDown
+white black red
+.000.
+00000
+00210
+00110
+.000.)
+
+PlayerRight O
+white black blue
+.000.
+00210
+00110
+00000
+.000.
+
+(LockedPlayerRight
+white black red
+.000.
+00210
+00110
+00000
+.000.)
+
+PlayerLeft I
+white black blue
+.000.
+02100
+01100
+00000
+.000.
+
+(LockedPlayerLeft
+white black red
+.000.
+02100
+01100
+00000
+.000.)
+
+PlayerUp U
+white black blue
+.210.
+01100
+00000
+00000
+.000.
+
+(LockedPlayerUp
+white black red
+.210.
+01100
+00000
+00000
+.000.)
+
+LaserR
+yellow white
+.....
+.000.
+..000
+.000.
+.....
+
+LaserU
+yellow white
+..0..
+.000.
+.000.
+.0.0.
+.....
+
+LaserL
+yellow white
+.....
+..000
+.000.
+..000
+.....
+
+LaserD
+yellow white
+.....
+.0.0.
+.000.
+.000.
+..0..
+
+Mirror1 /
+black gray
+....0
+...01
+..01.
+.01..
+01...
+
+(FrozenMirror1
+blue white
+....0
+...01
+..01.
+.01..
+01...)
+
+Mirror2 \
+black gray
+0....
+10...
+.10..
+..10.
+...10
+
+(FrozenMirror2
+blue white
+0....
+10...
+.10..
+..10.
+...10)
+
+(SplitterR >
+gray
+0....
+000..
+00000
+000..
+0....)
+
+EmitR 6
+yellow
+0....
+000..
+00000
+000..
+0....
+
+(FrozenSplitterR
+blue
+0....
+000..
+00000
+000..
+0....)
+
+TeleportBlue b
+blue white
+.0.1.
+10100
+.101.
+00101
+.1.0.
+
+Citizen C
+white
+..0..
+.000.
+..0..
+.0.0.
+.0.0.
+
+Statue S
+black
+..0..
+.000.
+..0..
+.0.0.
+.0.0.
+
+GameOver
+gray black blue
+.000.
+00000
+00210
+00110
+.000.
+
+BulbOff +
+Gray Yellow
+.000.
+0...0
+0...0
+.0.0.
+.000.
+
+BulbOn
+Gray Orange
+.000.
+01110
+01110
+.010.
+.000.
+
+StartTile
+transparent red
+00000
+00000
+00000
+00000
+00001
+
+=======
+LEGEND
+=======
+
+(UnlockedPlayer = PlayerDown or PlayerRight or PlayerLeft or PlayerUp)
+(LockedPlayer = LockedPlayerDown or LockedPlayerRight or LockedPlayerLeft or LockedPlayerUp)
+Laser = LaserR or LaserU or LaserL or LaserD
+Mirror = Mirror1 or Mirror2 (or SplitterR) (or FrozenMirror1 or FrozenMirror2 or FrozenSplitterR)
+(FrozenMirror = FrozenMirror1 or FrozenMirror2 or FrozenSplitterR)
+Teleport = TeleportBlue
+
+Player = PlayerDown or PlayerRight or PlayerLeft or PlayerUp (or Mirror) (or LockedPlayerDown or LockedPlayerRight or LockedPlayerLeft or LockedPlayerUp)
+
+PLeft = PlayerLeft (or LockedPlayerLeft)
+PRight = PlayerRight (or LockedPlayerRight)
+PUp = PlayerUp (or LockedPlayerUp)
+PDown = PlayerDown (or LockedPlayerDown)
+
+M/ = Mirror1 (or FrozenMirror1)
+M\ = Mirror2 (or FrozenMirror2)
+(SR = SplitterR or FrozenSplitterR)
+
+Emit = EmitR
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Cliff
+LaserU
+LaserR
+LaserD
+LaserL
+Player, Wall, Mirror, Statue, Citizen, BulbOff, BulbOn, GameOver, Emit
+StartTile
+Teleport
+
+======
+RULES     
+======     
+
+[Laser] -> []
+[BulbOn] -> [BulbOff]
+[StartTile] -> []
+[GameOver] -> cancel
+
+(Rotate mirrors)
+([action player | mirror1] -> [player | mirror2]
++[action player | mirror2] -> [player | mirror1])
+
+(Push mirrors)
+
+
+(Move)
+(+right [> UnlockedPlayer ] -> [> PlayerRight]
++up [> UnlockedPlayer] -> [> PlayerUp]
++left [> UnlockedPlayer] -> [> PlayerLeft]
++down [> UnlockedPlayer] -> [> PlayerDown])
+
+(+[> LockedPlayer] [FrozenMirror] -> [> LockedPlayer] [> FrozenMirror])
+
+(Absorb player movement so I don't have to mess with late rules)
+[> Player | Mirror] -> [> Player | > Mirror]
+[> Mirror | Mirror] -> [> Mirror | > Mirror]
+[> Mirror | no wall no BulbOff no BulbOn no Mirror no Wall no Player] -> [ | Mirror]
+[> Mirror] -> [Mirror]
+[> Player | no wall no BulbOff no BulbOn no Mirror no Wall no Player] -> [ | Player]
+[> Player] -> [Player]
+
+(Dump stuff off cliffs)
+[Mirror Cliff] -> [Cliff]
+[Player Cliff] -> [Cliff]
+
+(Shoot lasers)
+random [Mirror] -> [Mirror action LaserL action LaserR StartTile]
+(up [PUp] -> [PUp LaserU next]
+left [PLeft] -> [PLeft LaserL next]
+down [PDown] -> [PDown LaserD next])
+
+(Continue laser)
+right [action LaserR | ] -> [LaserR | action LaserR]
++[action LaserR M/] -> [action LaserU M/]
++[action LaserR M\] -> [action LaserD M\]
++left [action LaserL | ] -> [LaserL | action LaserL]
++[action LaserL M/] -> [action LaserD M/]
++[action LaserL M\] -> [action LaserU M\]
+
+
++[action Laser StartTile] -> [Laser StartTile]
+
++up [action LaserU | ] -> [LaserU | action LaserU]
++[action LaserU M/] -> [action LaserR M/]
++[action LaserU M\] -> [action LaserL M\]
++down [action LaserD | ] -> [LaserD | action LaserD]
++[action LaserD M/] -> [action LaserL M/]
++[action LaserD M\] -> [action LaserR M\]
++[action Laser TeleportBlue] [TeleportBlue] -> [TeleportBlue] [action Laser TeleportBlue]
+
++[action Laser StartTile] -> [Laser StartTile]
+(+down [ | LaserL next SR | ] -> [ LaserU next| LaserL SR | LaserD Next ])
+
+(Lock rotation and mirrors you're looking at)
+([action Player] [Mirror1 Laser] -> [action Player] [FrozenMirror1 Laser]
++[action Player] [Mirror2 Laser] -> [action Player] [FrozenMirror2 Laser]
++[action Player] [SplitterR Laser] -> [action Player] [FrozenSplitterR Laser]
++[action PlayerRight] -> [LockedPlayerRight]
++[action PlayerUp] -> [LockedPlayerUp]
++[action PlayerLeft] -> [LockedPlayerLeft]
++[action PlayerDown] -> [LockedPlayerDown]
+
+[action LockedPlayer] [FrozenMirror1] -> [action LockedPlayer] [Mirror1]
++[action LockedPlayer] [FrozenMirror2] -> [action LockedPlayer] [Mirror2]
++[action LockedPlayer] [FrozenSplitterR] -> [action LockedPlayer] [SplitterR]
++[action LockedPlayerRight] -> [action PlayerRight]
++[action LockedPlayerUp] -> [action PlayerUp]
++[action LockedPlayerLeft] -> [action PlayerLeft]
++[action LockedPlayerDown] -> [action PlayerDown])
+
+(Activate bulbs)
+[Laser BulbOff] -> [Laser BulbOn]
+
+
+(Stone citizens)
+[Laser Citizen] -> [Laser Statue]
+
+(Freeze yourself)
+([Laser no LaserR PRight] -> [Laser GameOver]
+[Laser no LaserL PLeft] -> [Laser GameOver]
+[Laser no LaserU PUp] -> [Laser GameOver]
+[Laser no LaserD PDown] -> [Laser GameOver])
+
+
+==============
+WINCONDITIONS
+==============  
+
+No BulbOff
+Some BulbOn
+All Mirror on Laser
+
+=======     
+LEVELS
+=======
+
+000000
+0.+\.0
+0....0
+0o..00
+0.+/.0
+0000.0
+
+000.o...0
+000.\...0
+/+6./...0
+000..+..0
+000./...0
+\00./...0
+000.....0
+
+000.o...0
+000./\..0
+/+6.....0
+000.\/\.0
+000.....0
+\00..\/.0
+000.....0
+
+000.....0
+000\....0
+0.0/....0
+0o0..+..0
+0.0/....0
+0+0/....0
+000.....0
+
+000.....0
+000\....0
+0+0/....0
+0o0..+..0
+0.0/....0
+0.0/....0
+000.....0
+
+000.o...0
+000.\...0
+0/0./...0
+000..+..0
+000./...0
+0\0./...0
+000.....0
+
+(000.....0
+000.....0
+0.......0
+0...>..i0
+0.......0
+0.......0
+000.....0)
+
+0/000000\
+0p0....00
+000....00
+0\\....00
+0.\\...00
+0..\...0/
+000000000
+
+0..../.\.
+0........
+0.p.././.
+0........
+0.\../...
+0........
+000000000
+
+0........
+0../\....
+0.p//....
+0.\/.....
+0........
+0........
+000000000
+
+000........
+000../..\..
+0+0.../\...
+0.0./../...
+0.0..o/./..
+0.0.\./....
+000........
+
+(00000000000
+0..+..\...0
+0.........0
+0........00
+0.o.......0
+0..+../...0
+000000000.0)
+
+(.........
+.b.../...
+.........
+>o.../.b.
+.........)
+
+.........
+....+....
+.+.......
+.\...+./.
+.........
+
+0000000000
+0........0
+0.../+.\.0
+0........0
+0.../+./.0
+0........0
+0000000000
+
+...../.c\.
+.....c....
+..../..c/.
+../.c/....
+..c.......
+...c/.....
+../.......
+..........
+
+0000000000.....
+0........0...\.
+0........0/.+..
+0........0.....
+0........0.+.\.
+0........0/....
+0000000000.....
+
+(00000000000
+0..+..\...0
+0.........0
+0........00
+0.o.......0
+0..+../...0
+000000000.0)

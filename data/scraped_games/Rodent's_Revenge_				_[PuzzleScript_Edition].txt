@@ -1,0 +1,346 @@
+title Rodent's Revenge 				 [PuzzleScript Edition]
+author Ken Calder
+homepage www.kencaldermedia.com
+
+noundo
+realtime_interval 0.5
+key_repeat_interval 0.2
+
+(New in version 2: cats in realtime, trap multiple cats at once, slower key_repeat_interval, blocks crush cheese, blocks move cats, added mouse traps, added level 4)
+
+(Thanks to Chris Pickel who fixed the multiple cats getting trapped bug and helped getting the cats in realtime as well as generally making the code much cleaner and simpler)
+
+
+(TODO:)
+(add points system?)
+(add diagonal moves to cats)
+(add holes)
+(add mouse traps)
+(add yarn balls)
+
+(Push blocks to trap cats and turn them into cheese)
+========
+OBJECTS
+========
+Background
+#828C00
+
+mouse
+grey
+.....
+0.00.
+00000
+.000.
+.0.0.
+
+deadmouse
+grey
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+cat
+yellow
+0....
+0..00
+00000
+0000.
+0..0.
+
+block
+#ACD9B1 #009A00
+11111
+10001
+10001
+10001
+11111
+
+blocker
+#C2CFD4 #70DED9 #52BDB4
+11111
+10002
+10102
+10002
+12222
+
+cheese
+yellow orange
+..00.
+.0000
+00001
+.0011
+.111.
+
+mousetrap
+lightbrown grey
+.00..
+0100.
+00110
+.0110
+..00.
+
+Dist1
+Black
+Dist2
+Black
+Dist3
+Black
+Dist4
+Black
+Dist5
+Black
+Dist6
+Black
+Dist7
+Black
+Dist8
+Black
+Dist9
+Black
+Dist10
+Black
+Dist11
+Black
+Dist12
+Black
+Dist13
+Black
+Dist14
+Black
+Dist15
+Black
+
+EnemyGoal
+Black
+walled
+black
+
+=======
+LEGEND
+=======
+. = Background
+player = mouse
+enemy = cat
+m = mouse
+c = cat
+b = block
+# = blocker
+t = mousetrap
+
+
+PlayerObstacle = blocker or cat
+
+x = EnemyGoal
+Barrier = blocker or block or mousetrap
+Distance = Dist1 or Dist2 or Dist3 or Dist4 or Dist5 or Dist6 or Dist7 or Dist8 or Dist9 or Dist10 or Dist11 or Dist12 or Dist13 or Dist14 or Dist15
+
+=======
+SOUNDS
+=======
+startgame 4341307
+restart 13169505
+endlevel 28451909
+showmessage 11067706
+closemessage 15381906
+player move 99466507
+
+
+SFX0 64155304
+SFX1 25325703
+SFX2 11867702
+SFX3 32671108
+SFX4 33739502
+
+(
+SFX0 56178702
+SFX1 77637308
+SFX2 32671108
+SFX3 25325703
+SFX4 63880502
+SFX5 89927703
+SFX6 69561108
+SFX7 91728308
+SFX8 47532708
+SFX9 33926108
+SFX10 26057908
+)
+
+
+================
+COLLISIONLAYERS
+================
+background
+player, enemy, barrier, cheese, deadmouse, mousetrap
+walled
+Distance
+EnemyGoal
+
+======
+RULES
+======
+(mouse pushes a block and blocks push other blocks)
+[ > mouse | block ] -> [ > mouse | > block ]
+[ > block | block ] -> [ > block | > block ]
+[ > block | cheese] -> [ > block | ] SFX4
+(if mouse steps on cheese it eats it and makes a sound)
+[ > mouse | cheese ] -> [ | mouse ] SFX1
+
+[ > mouse | mousetrap ] -> [ | deadmouse ] SFX0
+
+[ > block | cat ] -> [ > block | > cat ]
+
+( now compute creature movement )
+(Thanks to Chris Pickel for helping make cats realtime and player seperate)
+[ stationary Player ] [ Enemy no x ] -> [ Player ] [ randomdir Enemy x ] (Got caught looping lots in a rule group :O)
+
+
+(Enemy follow code from "Dungeon Miner" by Sean Barrett http://www.puzzlescript.net/play.html?p=6958010)
+( compute distance to player )
+[ Player |             no Barrier ] -> [ Player | Dist1  ]
+[ Dist1  | no Distance no Barrier ] -> [ Dist1  | Dist2  ]
+[ Dist2  | no Distance no Barrier ] -> [ Dist2  | Dist3  ]
+[ Dist3  | no Distance no Barrier ] -> [ Dist3  | Dist4  ]
+[ Dist4  | no Distance no Barrier ] -> [ Dist4  | Dist5  ]
+[ Dist5  | no Distance no Barrier ] -> [ Dist5  | Dist6  ]
+[ Dist6  | no Distance no Barrier ] -> [ Dist6  | Dist7  ]
+[ Dist7  | no Distance no Barrier ] -> [ Dist7  | Dist8  ]
+[ Dist8  | no Distance no Barrier ] -> [ Dist8  | Dist9  ]
+[ Dist9  | no Distance no Barrier ] -> [ Dist9  | Dist10 ]
+[ Dist10 | no Distance no Barrier ] -> [ Dist10 | Dist11 ]
+[ Dist11 | no Distance no Barrier ] -> [ Dist11 | Dist12 ]
+[ Dist12 | no Distance no Barrier ] -> [ Dist12 | Dist13 ]
+[ Dist13 | no Distance no Barrier ] -> [ Dist13 | Dist14 ]
+[ Dist14 | no Distance no Barrier ] -> [ Dist14 | Dist15 ]
+
+( make enemy move in shortest direction )
+
+( place marker on enemy so we only execute each line once per enemy )
+[ x Enemy Dist15 | Dist14 ] -> [ > Enemy Dist15 | Dist14 ]
+[ x Enemy Dist14 | Dist13 ] -> [ > Enemy Dist14 | Dist13 ]
+[ x Enemy Dist13 | Dist12 ] -> [ > Enemy Dist13 | Dist12 ]
+[ x Enemy Dist12 | Dist11 ] -> [ > Enemy Dist12 | Dist11 ]
+[ x Enemy Dist11 | Dist10 ] -> [ > Enemy Dist11 | Dist10 ]
+[ x Enemy Dist10 | Dist9  ] -> [ > Enemy Dist10 | Dist9  ]
+[ x Enemy Dist9  | Dist8  ] -> [ > Enemy Dist9  | Dist8  ]
+[ x Enemy Dist8  | Dist7  ] -> [ > Enemy Dist8  | Dist7  ]
+[ x Enemy Dist7  | Dist6  ] -> [ > Enemy Dist7  | Dist6  ]
+[ x Enemy Dist6  | Dist5  ] -> [ > Enemy Dist6  | Dist5  ]
+[ x Enemy Dist5  | Dist4  ] -> [ > Enemy Dist5  | Dist4  ]
+[ x Enemy Dist4  | Dist3  ] -> [ > Enemy Dist4  | Dist3  ]
+[ x Enemy Dist3  | Dist2  ] -> [ > Enemy Dist3  | Dist2  ]
+[ x Enemy Dist2  | Dist1  ] -> [ > Enemy Dist2  | Dist1  ]
+[ x Enemy Dist1  | Player ] -> [ > Enemy Dist1  | Player ]
+
+
+( clear enemy marker )
+[ x ] -> [ ]
+( clear the distance markers since we're done with 'em )
+[ Distance ] -> [ ]
+
+
+[ > enemy | player] -> [ enemy | deadmouse ] SFX2
+
+(cat into cheese)
+(super huge thanks to Chris Pickel who provided this "cat into cheese" code!!)
+[ Cat ] -> [ Walled Cat ]
+[ Walled Cat | no Barrier no Cat ] -> [ Cat | ]
++ [ Walled Cat | no Walled Cat ] -> [ Cat | Cat ]
+[ Walled Cat ] -> [ Cheese ] SFX3
+
+
+==============
+WINCONDITIONS
+==============
+no cat
+
+=======
+LEVELS
+=======
+
+message Level 1: Trap the Cat
+
+###############
+#...c.........#
+#.............#
+#..bbbbbbbbb..#
+#..bbbbbbbbb..#
+#..bbbbbbbbb..#
+#..bbbbbbbbb..#
+#..bbbbmbbbb..#
+#..bbbbbbbbb..#
+#..bbbbbbbbb..#
+#..bbbbbbbbb..#
+#..bbbbbbbbb..#
+#.............#
+#.............#
+###############
+
+message Level 2: More Cats
+
+###################
+#.................#
+#.................#
+#.....c...........#
+#...bbbbbbbbbbb...#
+#...bbbbbbbbbbb...#
+#...bbbbbbbbbbb...#
+#...bbbbbbbbbbb...#
+#...bbbbbbbbbbb..c#
+#...bbbbbmbbbbb...#
+#...bbbbbbbbbbb...#
+#...bbbbbbbbbbb...#
+#...bbbbbbbbbbb...#
+#...bbbbbbbbbbb...#
+#...bbbbbbbbbbb...#
+#c................#
+#.................#
+#..........c......#
+###################
+
+message Level 3: Blockers
+
+###################
+#.................#
+#............c....#
+#.................#
+#...bbbbbbbbbbb...#
+#...bbbbbbbbb#b...#
+#...bbbbb#bbbbb...#
+#.c.bbbbbbbbbbb...#
+#...bbbbbbbbbbb...#
+#...bb#bbmbbbbb...#
+#...bbbbbbbbbbb...#
+#...bbbbbbbbbbb...#
+#...bbbbbbbb#bbc..#
+#...bbbb#bbbbbb...#
+#.c.bbbbbbbbbbb...#
+#.......c.........#
+#.................#
+#.................#
+###################
+
+message Level 4: Mouse Traps!
+
+###################
+#.................#
+#...t......c......#
+#.................#
+#...bbbbbbbbbbb...#
+#...bbbbbbbbbbb...#
+#...bbtbbbbbbbb...#
+#...bbbbbbbbbbb.t.#
+#...bbbb..tbbbb...#
+#.c.bbbb.m.bbbb...#
+#...bbbb...bbbb...#
+#...#bbbbbbbbbb...#
+#...bbbbbbbbtbb.c.#
+#...bbbbbbbbbbb...#
+#...bbbbbbbbbbb...#
+#.................#
+#.....c.....t.....#
+#.................#
+###################
+
+message Congratulations! You Won!

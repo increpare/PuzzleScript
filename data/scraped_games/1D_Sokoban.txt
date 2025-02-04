@@ -1,0 +1,134 @@
+title 1D Sokoban
+author Matthew VanDevander
+homepage www.lowtideproductions.com
+norepeat_action
+key_repeat_interval .15
+color_palette 7
+background_color #1f1f1f
+text_color Blue
+
+========
+OBJECTS
+========
+
+Background 
+(#d2e5ee)
+#a0a0bf
+
+Pit
+#3d546e
+
+Wall 
+#1f1f1f
+(Grey)
+
+
+Player
+DarkRed White #e04c82
+..1..
+.222.
+10001
+.222.
+.1.1.
+
+
+Crate
+Transparent #e04c82
+11111
+11011
+10001
+11011
+11111
+
+Target
+Transparent #e04c82
+00000
+00100
+01110
+00100
+00000
+
+Button
+TRANSPARENT Grey
+00000
+01110
+01110
+01110
+00000
+
+Door
+Transparent White
+10101
+10101
+10101
+10101
+11111
+
+OpenDoor
+Transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+0 = Pit
+# = Wall
+@ = Player
+D = Door
+o = OpenDoor
+C = Crate
+T = Target
+B = Button
+
+=======
+SOUNDS
+=======
+SFX0 76450904
+SFX1 48826307
+SFX2 16657500
+(Player Move 67334707)
+Player Move 82045307
+(Player CantMove 76450904)
+Player CantMove 19979507
+Undo 7619107
+Restart 8722109
+================
+COLLISIONLAYERS
+================
+
+Background
+Pit
+Target, Button, OpenDoor
+Player, Wall, Door, Crate
+
+
+======
+RULES     
+======    
+
+[Action Player][Crate]->[Crate][Player]
+[Crate Button][Door] -> [Crate Button][OpenDoor] SFX0
+[NO Crate Button][NO Crate No Player OpenDoor] ->[NO Crate Button][NO Crate No Player Door]
+
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on Target
+
+=======     
+LEVELS
+=======
+
+message "Press Action to..."
+
+
+@...##c..t
+
+c.b@d..t
+
+
+
+

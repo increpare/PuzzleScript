@@ -1,0 +1,587 @@
+title Puzzle Dash
+author Jere Majava
+homepage www.twitter.com/jjmajava
+key_repeat_interval 0.2
+realtime_interval 0.2
+noundo
+
+
+(
+
+2013-12-25:
+- Player animated
+- Explosions push rocks and diamonds arounds
+- Tweaks to Rocky Road 
+
+2013-12-20:
+- Diamonds roll too, to the left by default. Rocks roll the other way.
+- Diamonds are forever (can't be blown up)
+- Fixed a bug of rocks and gems getting overwitten in a cascade
+- New wall texture
+
+To do:
+- Faster growing slime. But not too fast!
+- Bombs. Pushable, will blow up if they fall or are hit by a rock.
+- Walls that can be blown up.
+- Different player sprites for all 4 directions.
+
+Bugs:
+- Really should have seperate token for falling rocks/gems to make sure they font start rolling mid air... And only falling rock would kill.
+
+Maybe:
+- Put explosions on an upper layer, clear non permanent stuff from below. Would need less sprites and rules...
+- Explosions could throw stuff around: push rocks, diamods, mob, player...
+- Instead of clear tokens, make the under roller different based on wether it has space on it's left, right or both sides.
+
+)
+
+========
+OBJECTS
+========
+
+Background
+darkblue black
+01111
+11101
+11111
+10111
+11111
+
+Sand
+darkbrown brown
+11111
+01111
+11101
+11111
+10111
+
+Slime
+lightgreen green darkgreen
+12111
+01111
+21101
+11121
+10111
+
+
+ClosedTarget
+lightblue blue darkblue
+11111
+12121
+11111
+12121
+11111
+
+
+Target
+white lightblue blue darkblue
+00000
+03330
+03320
+03110
+00000
+
+
+Explosion
+black yellow orange
+02220
+22122
+21112
+22122
+02220
+
+explosion2
+black yellow orange
+02220
+22122
+21112
+22122
+02220
+
+explosionh
+black yellow orange
+02220
+22122
+21112
+22122
+02220
+
+explosionv
+black yellow orange
+02220
+22122
+21112
+22122
+02220
+
+
+Wall
+darkgrey grey lightgrey white
+33020
+12010
+00000
+20230
+00000
+
+Playerdown
+lightblue orange darkgreen brown blue 
+.222.
+.313.
+.111.
+10001
+.4.4.
+
+Playerleft
+lightblue orange darkgreen brown blue 
+.222.
+.312.
+.111.
+1000.
+.4.4.
+
+Playerright
+lightblue orange darkgreen brown blue 
+.222.
+.213.
+.111.
+.0001
+.4.4.
+
+Playerup
+lightblue orange darkgreen brown blue 
+.222.
+.222.
+.111.
+10001
+.4.4.
+
+
+
+urobot
+grey red darkgrey darkred
+.000.
+00000
+.333.
+22222
+.222.
+
+drobot
+grey red darkgrey darkred
+.000.
+00000
+.313.
+22222
+.222.
+
+lrobot
+grey red darkgrey darkred
+.000.
+00000
+.133.
+22222
+.222.
+
+rrobot
+grey red darkgrey darkred
+.000.
+00000
+.331.
+22222
+.222.
+
+butterfly
+white lightgreen green
+22222
+20002
+20102
+20002
+22222
+
+
+stone
+grey DARKGREY lightgrey darkblue
+30023
+10002
+01000
+10100
+31113
+
+Rollingstone
+grey DARKGREY lightgrey
+.002.
+10002
+01000
+10100
+.111.
+
+Diamond
+lightblue blue white
+..2..
+.022.
+00222
+.100.
+..0..
+
+RollingDiamond
+lightblue blue white
+..2..
+.022.
+00222
+.100.
+..0..
+
+Clear
+green
+.....
+.....
+.....
+.....
+.....
+
+MaybeClear
+darkgreen
+.....
+.....
+.....
+.....
+.....
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+; = Sand 
+# = Wall
+P = Playerdown
+o = stone
+x = Target
+Z = ClosedTarget
++ = Diamond
+R = Rrobot
+S = Slime
+b = Butterfly
+
+
+Player = playerup or playerdown or playerleft or playerright
+Rock = Stone or Rollingstone
+Gem = Diamond or Rollingdiamond
+Heavy = Rock or Gem
+Roller = Rollingstone or Rollingdiamond
+Robot = urobot or drobot or lrobot or rrobot
+Mob = Butterfly or Robot
+Obstacle = Player or Mob or Wall or Heavy or Sand or Slime or target or Closedtarget
+Permanent = Wall or Closedtarget or Target or Gem
+Boom = explosion or explosion2 or explosionh or explosionv
+
+
+=======
+SOUNDS
+=======
+
+sfx0 12707307 (stone pushed)
+sfx1 37294902 (explosion)
+sfx2 53217507  (sand)
+sfx3 68227700 (get diamond)
+sfx4 71904104 (stone thumps)
+sfx5 931303   (target reached)
+sfx6 6851707  (player moves)
+sfx7 87136700 (diamond dings)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Clear, Maybeclear
+Target
+Player, Robot, Butterfly, Wall, stone, Rollingstone, Sand, Diamond, Rollingdiamond, Slime, Closedtarget explosion, explosion2, explosionh, explosionv
+
+
+======
+RULES
+======
+
+(Player "animation" )
+down [ > player ] -> [ > playerdown ]
+up [ > player ] -> [ > playerup ]
+left [ > player ] -> [ > playerleft ]
+right [ > player ] -> [ > playerright ]
+
+(Gravity)
+DOWN [ Heavy | no obstacle ] -> [ > Heavy | ]
+
+(Removing sand)
+[ > Player | Sand ] -> [  | Player ] sfx2
+
+(Pushing rocks)
+Horizontal [ > Player | stationary Rock ] -> [ >  Player | > Rock ] sfx0
+
+(Collecting diamonds)
+[ > Player | Gem ] -> [ | Player ] sfx3
+[ action player | gem ] -> [ playerdown | ] sfx3
+[ action player ] -> [ playerdown ]
+
+
+(Reaching target, just for the sound)
+[ > Player | Target ] -> WIN sfx5
+
+(Explosion dies off)
+[ explosionv ] -> []
+[ explosionh ] -> []
+[ explosion2 ] -> []
+[ explosion ]  -> []
+
+(Slime blows up mobs)
+  [ Slime | mob ] -> [ slime | explosion ] sfx1
+
+(Falling stone blows up player and mobs )
+  down [ > rock | no obstacle | player ] -> [ | | explosion ] Sfx1
+  down [ rock | mob ] -> [  | explosion ] Sfx1
+
+(Falling rock thumps)
+  down [ > rock | no obstacle | obstacle ] -> [ | rock | obstacle ] Sfx4
+
+(Falling diamond dings)
+  down [ > diamond | no obstacle | obstacle ] -> [ | diamond | obstacle ] Sfx7
+
+(Rocks and Diamonds roll)
+
+  (All clear, let's roll!)
+  right [ rollingstone | clear ] -> [ > stone | clear ]
+  left [ rollingstone | clear ] -> [ > stone | clear ]
+  left [ rollingdiamond | clear ] -> [ > diamond | clear ]
+  right [ rollingdiamond | clear ] -> [ > diamond | clear ]
+
+  (Getting back to normal)
+  [rollingstone] -> [stone]
+  [rollingdiamond] -> [diamond]
+  [maybeclear] -> []
+  [clear] -> []
+
+  (Check if stone wants to roll)
+  down [ stone | heavy ] -> [ rollingstone | heavy ]
+  down [ diamond | heavy ] -> [ rollingdiamond | heavy ]
+
+  (But only the topmost rock gets to roll)
+  down [ roller | rollingstone ] -> [ roller | stone ]
+  down [ roller | rollingdiamond ] -> [ roller | diamond ]
+  (Is there space on the sides?)
+  left [ Roller | no Obstacle ] -> [ Roller | Maybeclear ] 
+  right [ Roller | no Obstacle ] -> [ Roller | Maybeclear ]
+  (And below the sides?)
+  down [ maybeclear | no Obstacle ] -> [ clear | ] 
+
+
+(Player dies when touching enemies)
+[ Mob | Player ] -> [ Mob | Explosion ] sfx1
+
+(Explosion expands)
+up [ explosion | no permanent ] -> [ explosion | explosionh ]
+down [ explosion | no permanent ] -> [ explosion | explosionh ]
+left [ explosion | no permanent ] -> [ explosion | explosionv ]
+right [ explosion | no permanent ] -> [ explosion | explosionv ]
+
+left [ explosionh | no permanent ] -> [ explosionh | explosion2 ]
+right [ explosionh | no permanent ] -> [ explosionh | explosion2 ]
+
+up [ explosionv | no permanent ] -> [ explosionv | explosion2 ]
+down [ explosionv | no permanent ] -> [ explosionv | explosion2 ]
+
+(Explosion pushes stuff around)
+[boom | heavy] -> [boom | > heavy] 
+
+
+(Butterfly flutters)
+[ stationary butterfly ] -> [ randomdir butterfly ]
+
+(Robot movements)
+[ urobot ] -> [ up urobot ]
+[ drobot ] -> [ down drobot ]
+[ lrobot ] -> [ left lrobot ]
+[ rrobot ] -> [ right rrobot ]
+(Robot turning)
+[ > rrobot | obstacle ] -> [ urobot | obstacle ]
+[ > urobot | obstacle ] -> [ lrobot | obstacle ]
+[ > lrobot | obstacle ] -> [ drobot | obstacle ]
+[ > drobot | obstacle ] -> [ rrobot | obstacle ]
+
+
+(Slime growth)
+random [ Slime | NO Wall NO Player No Heavy no target no closedtarget ] -> [ Slime | Slime ]
+
+
+[ ClosedTarget ] -> [ Target ]
+[ Target ][ Gem ] -> [ ClosedTarget ][ Gem ]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Target 
+
+=======
+LEVELS
+=======
+
+
+message Get The Diamonds
+message Collect diamonds by walking into them or by pressing X when you're standing next to them.
+
+########################
+#p.....o.;;;;;;;.o.+;;;#
+#;;;;o.;;;;;+oo;;;;o;;o#
+#;o;;;;;.o.;;;.;;oo;;;+#
+#+;;;+.o;;o;;.;;.;o;.;;#
+#.;;;.+;;o;;oo;;.;;;;;;#
+#;;;;;.;o;;;.;;;o;;;.o;#
+#;o;;o;.;;;;;;;.o;;+o;;#
+#;;;;;oo;;o;;;+..;;;;;o#
+#oo;;oo;;;;;;;;;;;;o;;;#
+#+;;;ooo;o;o;;+;;;;;;;z#
+########################
+
+message Do not Touch The Apparatus
+ 
+########################
+#;;;;+o..;;;;o;.ro;;;;p#
+#+;;;;;..;;;;;;..;;;;;;#
+#oo;;o;..o;;;+o..+o;o;;#
+#;;;;;;..;;;;;;..;;;;;;#
+#......................#
+#...r..................#
+#;+;;;;..o;;;o;..o+;;o;#
+#;;;;;;..;;;;;o..;;;;;;#
+#;;;;o;..+;o;;;..;o;;;;#
+#z;;;;;.r;;;;;;..;;;;;;#
+########################
+
+message We Don't Know Where We're Going
+
+########################
+#;;o+oo;;.o;+;;o;oo....#
+#+;;;;;;;+;;.;;;.....b.#
+#;;;..o;;;;;o;;+.......#
+#;;....;;;.;;;.......o+#
+#.;....o;;o;;........;;#
+#.ob...;;o;;;.......;;;#
+#o;;....;;;;....;;.;;;o#
+#o;;o...;;....;;;;;;o;;#
+#;;.;........o;;o;.;;o;#
+#z;o;;......b;;;;;o.;;p#
+########################
+
+message Rocky Road
+
+################################
+#p;o;o..o.;;+oo.;;o;;o;.;;;;;+;#
+#;;;;oo;.;;;ooo;;;;;;;;o;;+;oo;#
+#;;;oo;ooo;;;;oo;;;oo..;;;;;;.o#
+#o+;;;;+ooo;;;;;..oo+oo;oo;;o;;#
+#####o######.o####oooo###;;;.;;#
+#zo.oo+oo;;oo;o#;;;oo;o+#;o;oo;#
+#oo;;o;;;;ooo;;;;;;;;ooo#;oo;;o#
+#o;;;;;o;;;oo;;#;;;;;;oo#+o;;;+#
+#o;;o;;;;;+;oo.#;;oo;;;o#oo;;;.#
+#;+ooo;oo;;;;;.o;;;oo;;;#+;;;;.#
+#;;ooo;;;;o;;oo#o;;;;o;+#o;;;;o#
+#.;;;oo+;;;;oo;#+;;;+ooo;;;;;..#
+#..o;oooo;;;;o+#;;o;;;;;...;ooo#
+#;;;+;;;;;;;;;+#;;;+;;;oo;;;+o;#
+################################
+
+
+message You Just Might Have to Run
+
+################################
+#xo;;;;;o+;;......;;;;#;;;oo;;p#
+#o;;;;;;;o;;.o;o+.;;.;#;;;;;;;;#
+#o;;;.;;;.;o.;;;;.;;o;#+;oo;;o;#
+#;o;;.o;;.;;..r...o;.;#.;;;;;.;#
+#;+;o.;;;o;;####;;+;;;##o;;o;;;#
+#o.;;.;;;;;;;o;;;;;;;;;;;;;o;;;#
+#.;;oo;;o;s;;;;;;o+;;;;;;;ooo;;#
+#.;;o;;;;;;;;;;;;;o;;;;o;;;;;;;#
+#;;;;;;;b;;;;;;s;;;;;#;;;;o.;;o#
+#;;+o;...;;.;;;;;;;o;#;;;;;;;;+#
+#;o;;;..+;;o;;;;;o;;;#;;;;;o;;;#
+#..;;....o;;;;;;o;;;o.o;;;ooo;;#
+#;o;;b....;;;..o;;;;;;;;;+;;;o;#
+#+oo;.....;;oo;;+#;;;;;;;;;;+;;#
+################################
+
+(message Maybe Your Best Course Would Be to Tread Lightly)
+message You Should Plan Ahead
+
+########################
+#r...;;;o;;;;;o+;;ooo+o#
+#;o;;;o..;;;o#####ooooo#
+#o;o;;#o.;;oo#oooo#o;oo#
+#o..;;########.;oo#;;;;#
+#+;.;;;;;p;;;;;;;;+;;;o#
+##;####;;;;x;#;#####o;##
+#+;o;.o;;;;;;#;;o#;;;;;#
+#.;ooo#;######;;+#...;;#
+#.o+o;#;;oo;+#o.o#...oo#
+#;;;;;#;;.;;;;;;;#r..;+#
+########################
+
+message You Rock! That was the last cave!
+message ...for now.
+
+( 
+
+########################
+#;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;#
+########################
+)
+
+
+################################
+#p;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;#
+#;;;;;;;;;;;;;;;;;;;;;;;;;;;;;x#
+################################
+
+################################
+#p;;oo;o#.;+o.#..........#;;;;;#
+#o;;;.;;..;;;r#..........#;;;;;#
+#+;;;;;+#.o;;.#..........;;;;;;#
+#.;o.;;;#.;;o.;...;;;o...#;;;;;#
+#;;;+;o;#r;;;.#..bo;+;...#######
+#;;;;;;;#.+;;.#...;;;;...#+o+++#
+###;#######;###..........#o++++#
+#+o;;oo#......#..........#++o++#
+#;;;;;;#.;o;;.#..........#++++o#
+#o;;;;;#.;;;o.#;#####;#####;####
+#;;oo;o;.;+;;.#;ooo+#;;;;;;;;;;#
+#;;;+;;#.;;o+.#;ooo;#;;;;;;;;;;#
+#;;;;;;#.;;;;.#;ooo;#;;;;;;;;;;#
+#s;;oo;#..r...#;;;;;#;;;;;;;;;x#
+################################
+

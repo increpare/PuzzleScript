@@ -1,0 +1,344 @@
+title Palette
+author Versial
+homepage www.versial.com
+noaction
+youtube hf1CknVpAFM
+background_color white
+text_color grey
+color_palette famicom  
+========
+OBJECTS
+========
+
+Background
+LightGrey White
+11111
+01111
+11111
+11110
+10111
+
+Wall
+Grey Lightgrey
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black
+00.00
+0...0
+..0..
+0...0
+00.00
+
+Blue
+Blue
+00000
+00.00
+0.0.0
+00.00
+00000
+
+TBlue
+Blue
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Red
+Red
+00000
+00.00
+0.0.0
+00.00
+00000
+
+TRed
+Red
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Purple
+Purple
+00000
+00.00
+0.0.0
+00.00
+00000
+
+TPurple
+Purple
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Green
+Green
+00000
+00.00
+0.0.0
+00.00
+00000
+
+TGreen
+Green
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Yellow
+Yellow
+00000
+00.00
+0.0.0
+00.00
+00000
+
+TYellow
+Yellow
+.....
+..0..
+.0.0.
+..0..
+.....
+
+Cyan
+LightBlue
+00000
+00.00
+0.0.0
+00.00
+00000
+
+TCyan
+LightBlue
+.....
+..0..
+.0.0.
+..0..
+.....
+
+White
+Black
+00000
+00.00
+0.0.0
+00.00
+00000
+
+TWhite
+Black
+.....
+..0..
+.0.0.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+Crate = Blue or Red or Green or Purple or Yellow or Cyan or White
+
+. = Background
+# = Wall
+P = Player
+
+
+B = Blue
+R = Red
+G = Green
+
+M = Purple
+Y = Yellow
+C = Cyan
+
+1 = TBlue
+2 = TRed
+3 = TGreen
+4 = TPurple
+5 = TCyan
+6 = TYellow
+7 = TWhite
+
+! = Blue and TBlue
+@ = Red and TRed
+
+=======
+SOUNDS
+=======
+Crate MOVE 36772507
+SFX0 97761303 
+EndLevel 70119503 
+Undo 25006101 
+
+================
+COLLISIONLAYERS
+================
+
+Background
+TRed, TBlue, TGreen, TPurple,TGreen, TYellow, TCyan, TWhite
+Player, Wall, Red, Blue, Red, Green, Yellow, Cyan, Purple, White, Crate
+
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [ > Player | > Crate]
+[ > Blue | Red] -> [ | Purple] SFX0
+[ > Red | Blue] -> [ | Purple] SFX0
+
+[ > Blue | Green] -> [ | Cyan] SFX0
+[ > Green | Blue] -> [ | Cyan] SFX0
+
+[ > Green | Red] -> [ | Yellow] SFX0
+[ > Red | Green] -> [ | Yellow] SFX0
+
+
+[ > Blue | Yellow] -> [ | White] SFX0
+[ > Yellow | Blue] -> [ | White] SFX0
+
+[ > Green | Purple] -> [ | White] SFX0
+[ > Purple | Green] -> [ | White] SFX0
+
+[ > Cyan | Red] -> [ | White] SFX0
+[ > Red | Cyan] -> [ | White] SFX0
+
+==============
+WINCONDITIONS
+==============
+
+All TRed on Red
+All TBlue on Blue
+All TGreen on Green
+
+All TPurple on Purple
+All TYellow on Yellow
+All TCyan on Cyan
+
+All TWhite on White
+
+=======
+LEVELS
+=======
+
+
+message "Mere color, unspoiled by meaning,   and unallied with definite form,  can speak to the soul in a          thousand different ways."                                                            - Oscar Wilde
+
+##########
+#........#
+#.P.R..2.#
+#........#
+##########
+
+##########
+#...#....#
+#.P.2..R.#
+#...#....#
+##########
+
+##########
+#.1....B.#
+#.P......#
+#.R....2.#
+##########
+
+##########
+#........#
+#.P.R....#
+#....B..4#
+##########
+
+##########
+#...#....#
+#.P.@..B##
+#...#...1#
+##########
+
+###########
+#.B.RP!@.4#
+#.........#
+###########
+
+#######
+###...#
+#.B...#
+#PRRRR#
+###1..#
+#####.#
+#######
+
+#######
+#.....#
+#.##..#
+#PRB..#
+#.RB.4#
+#..#.2#
+#######
+
+#########
+#.5...B.#
+#P.G.G..#
+#.R...6.#
+#########
+
+#########
+#.7R..B.#
+#P..GG..#
+#.R..B7.#
+#########
+
+#########
+#.RBG...#
+#PBGR.G.#
+#.GRBG7G#
+#########
+
+###########
+#.B.G.R..6#
+#P.R.B.G.5#
+#.G.R.B..4#
+###########
+
+######
+#....#
+#.GB4#
+#RY#R#
+#.PB5#
+#....#
+######
+
+#########
+#P.GRB..#
+#..#B#..#
+#.R.6.G.#
+#.#...#.#
+#.B.G.R4#
+#########
+
+##########
+#....#...#
+#.BRGR..5#
+#PGB#.R4##
+#.RGB.####
+#..B.#####
+##########
+
+message             ~the End~
+message "Why do two colors, put one next to the other, sing? Can one really explain this? No. Just as one can never learn how to paint."   -Pablo Picasso
+message Game by Versial               music by DeeJayJar
+message Email: VERSIAL at LIVE dot COM
+message Thanks for playing Palette.

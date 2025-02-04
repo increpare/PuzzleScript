@@ -1,0 +1,542 @@
+title Sokoslam
+author Aaron Steed
+homepage www.robotacid.com
+
+key_repeat_interval 0.18
+again_interval 0.08
+noaction
+background_color Black
+text_color Yellow
+(verbose_logging)
+
+========
+OBJECTS
+========
+
+Background
+#e5b679
+
+WallTop
+#d34900
+
+PitTop
+#c8601b #7b3a12 #000000 #ff0000 
+00000
+01010
+12121
+21212
+22222
+
+PitBottom
+Black
+
+WallBase
+#d32112 #820e00 #d34900 #9da3c7 
+22222
+22220
+01111
+11111
+11111
+
+BreakWall
+#ffd600 #ffa30d #b76800 #979594 
+10101
+00002
+12121
+21212
+12121
+
+BreakDebris1
+#ffd600 #ffa30d #b76800 #979594 
+10101
+0.0.2
+10.01
+0.0.2
+12121
+
+BreakDebris2
+#ffd600 #ffa30d #b76800 #979594 
+.0.0.
+0.0.2
+.0.0.
+0.0.2
+.2.2.
+
+BreakDebris3
+#ffd600 #ffa30d #b76800 #979594 
+.0.0.
+0...2
+.....
+0...2
+.2.2.
+
+PlayerStand
+#000000 #e72116 #ffffff #ff0000 
+00000
+00000
+02020
+.0000
+.1..1
+
+PlayerUp
+#000000 #e72116 #ffffff #ff0000 
+00000
+00000
+00000
+01001
+.1..1
+
+PlayerRight
+#000000 #e72116 #ffffff #ff0000 
+00000
+00020
+00002
+.1000
+1...1
+
+PlayerDown
+#000000 #e72116 #ffffff #ff0000 
+1...1
+00000
+00000
+00020
+02000
+
+PlayerLeft
+#000000 #e72116 #ffffff #ff0000 
+00000
+02000
+20000
+0001.
+1...1
+
+CrateBase
+#d32112 #ffa30d #ff8126 #c93700 
+.111.
+11122
+12223
+32233
+.333.
+
+CrateFall
+#d32112 #ffa30d #ff8126 #c93700 
+.....
+.222.
+23333
+3.3.3
+.3.3.
+
+Bomb
+#cc1d04 #7b3a12 #000000 #ffd600 
+.101.
+10302
+22022
+22222
+.222.
+
+Explosion
+#cc1d04 #ff8100 #000000 #ffca00 
+1.0.1
+.030.
+03330
+.030.
+1.0.1
+
+Marker
+#c8601b #e72116 #ffffff #ff0000 
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+onMarker
+#c8601b #e72116 #ffffff #ff0000 
+.....
+.2.2.
+..2..
+.2.2.
+.....
+
+Switch
+#ffd600 #ffa30d #d34900 #c93700 
+.....
+.001.
+.001.
+20012
+.222.
+
+GateClosed
+#ffd600 #ffa30d #a62514 #c93700 
+33333
+30012
+32222
+22222
+22222
+
+GateOpen
+#ffd600 #ffa30d #a62514 #c93700 
+3.3.3
+.....
+3...2
+.....
+2.2.2
+
+GateOpening
+Pink
+
+PlayerRest
+Green
+
+CrateRest
+Blue
+
+MoveUp
+#ffffff 
+.000.
+00.00
+0...0
+.....
+0...0
+
+MoveRight
+#ffffff
+0.00.
+...00
+....0
+...00
+0.00.
+
+MoveDown
+#ffffff 
+0...0
+.....
+0...0
+00.00
+.000.
+
+MoveLeft
+#ffffff 
+.00.0
+00...
+0....
+00...
+.00.0
+
+
+=======
+LEGEND
+=======
+
+
+. = Background
+# = WallBase
+h = WallTop
+@ = PlayerStand
+o = CrateBase
+c = Bomb
+e = Marker
+f = Switch
+g = GateClosed
+k = BreakWall
+a = PitTop
+b = PitBottom
+d = CrateBase and Marker and onMarker
+
+PlayerMove = PlayerUp or PlayerRight or PlayerDown or PlayerLeft
+Player = PlayerStand or PlayerMove
+Crate = CrateBase or Bomb
+Move = MoveUp or MoveRight or MoveLeft or MoveDown
+Wall = WallTop or WallBase
+Gate = GateOpen or GateClosed
+Item = Player or Wall or Crate or GateClosed or BreakWall or Bomb
+Debris = BreakDebris1 or BreakDebris2 or BreakDebris3
+Pit = PitTop or PitBottom
+Target = BreakWall or Crate or Bomb
+
+
+=======
+SOUNDS
+=======
+
+sfx0 8545502 (kick crate)
+sfx1 52801501 (crate in pit)
+sfx2 89521507 (crate hit wall)
+sfx3 46406102 (explosion)
+sfx5 83279102 (gate)
+sfx6 42954502 (break wall)
+sfx7 65686300 (on target)
+EndLevel 16340108 (win)
+
+
+================
+COLLISIONLAYERS
+================
+
+GateOpening
+PlayerRest, CrateRest
+Background
+Marker, Switch, GateOpen, Pit
+Player, Wall, Crate, GateClosed, BreakWall, CrateFall, Bomb, Explosion
+Debris, onMarker, Move
+
+======
+RULES
+======
+
+[ BreakDebris3 ] -> [ ]
+[ BreakDebris2 ] -> [ BreakDebris3 ] again
+[ BreakDebris1 ] -> [ BreakDebris2 ] again
+
+[ CrateFall ] -> [ ]
+
+
+(pits block player but not crates)
+[ > Player | Pit ] -> [ Player | Pit ]
+
+(CRATES)
+
+
+(init move)
+up [ up PlayerStand | Target ] -> [ PlayerUp | Target MoveUp ] sfx0
+right [ right PlayerStand | Target ] -> [ PlayerRight | Target MoveRight ] sfx0
+down [ down PlayerStand | Target ] -> [ PlayerDown | Target MoveDown ] sfx0
+left [ left PlayerStand | Target ] -> [ PlayerLeft | Target MoveLeft ] sfx0
+
+(moving)
+up [ Crate MoveUp | Target No MoveUp ] -> [ Crate CrateRest | Target MoveUp ] sfx0 again
+random up [ Crate MoveUp | Item ] -> [ Crate CrateRest | Item ] sfx2
+random up [ Crate MoveUp | No Item ] -> [ | Crate MoveUp ] again
+
+right [ Crate MoveRight | Target No MoveRight ] -> [ Crate CrateRest | Target MoveRight ] sfx0 again
+random right [ Crate MoveRight | Item ] -> [ Crate CrateRest | Item ] sfx2
+random right [ Crate MoveRight | No Item ] -> [ | Crate MoveRight ] again
+
+down [ Crate MoveDown | Target No MoveDown ] -> [ Crate CrateRest | Target MoveDown ] sfx0 again
+random down [ Crate MoveDown | Item ] -> [ Crate CrateRest | Item ] sfx2
+random down [ Crate MoveDown | No Item ] -> [ | Crate MoveDown ] again
+
+left [ Crate MoveLeft | Target No MoveLeft ] -> [ Crate CrateRest | Target MoveLeft ] sfx0 again
+random left [ Crate MoveLeft | Item ] -> [ Crate CrateRest | Item ] sfx2
+random left [ Crate MoveLeft | No Item ] -> [ | Crate MoveLeft ] again
+
+(bomb)
+up [ Explosion | Crate ] -> [ Explosion | Crate MoveUp ] again
+right [ Explosion | Crate ] -> [ Explosion | Crate MoveRight ] again
+down [ Explosion | Crate ] -> [ Explosion | Crate MoveDown ] again
+left [ Explosion | Crate ] -> [ Explosion | Crate MoveLeft ] again
+[ Explosion ] -> [ ] sfx3
+[ Bomb CrateRest ] -> [ Explosion ] again
+
+(fall in pit)
+[ Crate No Move Pit ] -> [ CrateFall Pit ] again sfx1
+[ CrateFall ] -> [ CrateFall ]
+
+(clean up)
+[ CrateRest ] -> [ ]
+
+
+(BREAKWALL)
+[ BreakWall Move ] -> [ BreakDebris1 ] sfx6 again
+
+(GATES)
+late [ Item No Move Switch ] [ GateClosed ] -> [ Item Switch ] [ GateClosed GateOpening ]
+late [ No Item Switch ] [ GateOpening ] -> [ Switch ] [ ]
+late [ GateOpening GateClosed ] -> [ GateOpen ] sfx5
+late [ No Item Switch ] [ GateOpen ] -> [ Switch ] [ GateClosed ] sfx5
+
+
+(highlight covered targets)
+late [ Crate Marker No onMarker No Move] -> [ Crate Marker onMarker ] sfx7
+late [ No Crate Marker onMarker ] -> [ Marker ]
+
+(return player to normal after shunting)
+[ PlayerMove ] [ Target No Move ] -> [ PlayerMove PlayerRest ] [ Target ]
+[ PlayerMove PlayerRest ] [ Target Move ] -> [ PlayerMove ] [ Target Move ]
+[ PlayerMove PlayerRest ] -> [ PlayerStand ]
+
+
+==============
+WINCONDITIONS
+==============
+
+All Marker on Crate
+No Move
+
+=======     
+LEVELS
+=======
+
+message my stupid brother has kicked all the rocks off of their places
+
+h#######h
+h...o..eh
+h.@.o..eh
+h...o..eh
+#########
+
+h#########h
+h...e.e...h
+h....@....h
+h..o.o.o..h
+h.........h
+###########
+
+h#######h
+h.@.e...h
+heoooooeh
+h...e...h
+#########
+
+h#######h
+h...@...h
+h.oaaao.h
+heobbboeh
+h.obbbo.h
+h.......h
+#########
+
+h#######h
+he......h
+h..@....h
+ho......h
+haaao.c.h
+ho.b....h
+h.eb....h
+#########
+
+h#######h
+h..eee..h
+h.#....eh
+h....@.eh
+h.ooo..eh
+h.ooo.#.h
+h.......h
+#########
+
+h########h
+he...e...h
+h...o....h
+h.....g..h
+h.o.f.g.eh
+h.....g..h
+h.@.o....h
+h........h
+##########
+
+h#######h
+h.......h
+h.o.o.o.h
+h..e....h
+h.o.@.o.h
+h....e..h
+h.o.o.o.h
+h.......h
+#########
+
+h#######h
+h..e....h
+h....@..h
+h.k.o.k.h
+he......h
+h.o.k.o.h
+h.......h
+h...e...h
+#########
+
+h#######h
+h.@.....h
+h..o.o..h
+h.o.c.o.h
+h..cec..h
+h.o.c.o.h
+h..o.o..h
+h.......h
+#########
+
+h#########h
+haaaaaaaaah
+hb.......bh
+hb.oo.oo.bh
+hb.o.@.o.bh
+hb...e...bh
+hb.o...o.bh
+hb.oo.oo.bh
+hb.......bh
+hbaaaaaaabh
+###########
+
+h#######h
+h.......h
+h..o.o..h
+h...g...h
+heg.....h
+he..@..fh
+h....g.eh
+h..go.o.h
+h.......h
+#########
+
+h#######h
+h..@....h
+h.o.k.o.h
+h..oeo..h
+h.keoek.h
+h..oeo..h
+h.o.k.o.h
+h.......h
+#########
+
+h########h
+h....a...h
+h....b.e.h
+h.ooob...h
+h@ooob.e.h
+h.ooob...h
+h....b.e.h
+h....b...h
+##########
+
+h######h
+h......h
+h..oeo.h
+h.oeoe.h
+h..oeo.h
+h.@.o..h
+h......h
+########
+
+h#######h
+h@..o...h
+h.e.o.e.h
+h...o...h
+hooo.oooh
+h...o...h
+h.e.o.e.h
+h...o...h
+#########
+
+h#######h
+h.......h
+h@.oco..h
+h.o...o.h
+h.c.e.c.h
+h.o...o.h
+h..oco..h
+h.......h
+#########
+
+h#########h
+h..@......h
+h.o.ogo.o.h
+h..aaaaa..h
+h.obooobo.h
+hegbooobgeh
+h.obooobo.h
+h..baaab..h
+h.o.o.o.o.h
+h....f....h
+###########
+
+message that's better
+

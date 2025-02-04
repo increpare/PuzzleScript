@@ -1,0 +1,769 @@
+title Star Burger Inc.
+author Tobin Mollett
+homepage www.puzzlescript.net
+
+again_interval 0.06
+key_repeat_interval 0.17
+run_rules_on_level_start
+
+youtube eIvWVqElrvI
+( youtube GyNdSQ9Rk1k )
+( youtube J5KvhYPNg )
+
+========
+OBJECTS
+========
+
+Background
+#aa86ba #a280ad #9b7ba8
+11201
+11201
+22222
+00200
+11201
+
+Ground1
+#273a6f #2c3262 #292e5c
+00001
+01112
+01212
+01112
+12222
+
+Ground2
+#273a6f #2c3262 #292e5c
+.012.
+00120
+11111
+22122
+.012.
+
+Perm_Left_Belt
+#f08c04 #fe7738 #fe6729 #273a6f #2c3262 #292e5c
+33210
+42104
+21044
+42104
+55210
+
+Perm_Right_Belt
+#f08c04 #fe7738 #fe6729 #273a6f #2c3262 #292e5c
+01233
+40124
+44012
+40124
+01255
+
+Grinder_Off
+#c7d9bd #b6c8ae #781908 #151c17 
+3...3
+30103
+32023
+30103
+33.33
+
+Grinder_On
+#DEB1B6 #D19BA0 #ff2600 #151c17
+3...3
+30103
+32023
+30103
+33.33
+
+Grass
+#78ab4c #689541 #623b37 #55351b 
+10101
+02021
+22223
+23222
+22322
+
+Earth
+#623b37 #55351b 
+10000
+00000
+00010
+01000
+00000
+
+Player_Off
+#daedcd #c7d9bd #b6c8ae #781908 #333554 
+3...3
+.001.
+01122
+34343
+.....
+
+Player_On
+#daedcd #c7d9bd #b6c8ae #ff2600 #82f9ec
+3...3
+.001.
+01122
+34343
+.....
+
+Down_Cow
+#fffbf3 #322b17 #ff8ad8
+..1.1
+..101
+10121
+1101.
+0..0.
+
+Up_Cow
+#a1d254 #74a11e #ff8ad8
+..1.1
+..101
+10121
+1101.
+0..0.
+
+Down_Rock
+#daedcd #c7d9bd #b6c8ae #67b1b8 #5fa4aa #58979d 
+00031
+01145
+34442
+01412
+12522
+
+Up_Rock
+#a1d254 #85B32D #74a11e #67b1b8 #5fa4aa #58979d 
+00031
+01145
+34442
+01412
+12522
+
+Down_Left_Belt
+#daedcd #2c3262 #b6c8ae #fe6729 #f08c04
+00002
+11341
+13411
+11341
+02222
+
+Down_Right_Belt
+#daedcd #2c3262 #b6c8ae #fe6729 #f08c04
+00002
+14311
+11431
+14311
+02222
+
+Up_Left_Belt
+#a1d254 #85B32D #74a11e #fe6729 #f08c04
+00000
+22342
+23422
+22342
+11111
+
+Up_Right_Belt
+#a1d254 #85B32D #74a11e #fe6729 #f08c04
+00000
+24322
+22432
+24322
+11111
+
+Down_Food
+#b1c9d7 #9cb2be #fffbf3 #322b17 #ff8ad8
+.001.
+.323.
+.323.
+.242.
+.001.
+
+Up_Food
+#a1d254 #a5b1a8 #85B32D #74a11e #ff8ad8
+.001.
+.323.
+.323.
+.242.
+.001.
+
+Target_Off
+#151c17 #00b636 #009329
+.010.
+02120
+.000.
+.....
+.....
+
+Target_On
+#151c17 #00f94d
+00100
+01110
+.000.
+.....
+.....
+
+Block_Button_Off
+#ab1602 #151c17
+10101
+10001
+11111
+.....
+.....
+
+Block_Button_On
+#ff2606 #151c17
+10101
+10001
+11111
+.....
+.....
+
+Block
+#ff2606 #e52104 #c61b03 #b81803 #ab1602
+00000
+01114
+01234
+01334
+04444
+
+Block_Ghost
+#ab1602
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+EMP
+#51b5df
+.0.0.
+0...0
+..0..
+0...0
+.0.0.
+
+Tunnel
+#2c3262 #D74EE3
+00.00
+0...0
+..1..
+0...0
+00.00
+
+Temp
+white
+.....
+.....
+.....
+.....
+.....
+
+Lift
+White
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = background
+# = ground1
+% = ground2
+W = Grass
+@ = Earth
+< = Perm_Left_Belt
+> = Perm_Right_Belt
+P = Player_Off
+C = Down_Cow
+x = EMP
+O = Down_Rock
+G = Grinder_Off
++ = Block
+{ = Down_Left_Belt
+} = Down_Right_Belt
+: = Tunnel
+
+T = Target_Off and ground1
+B = Block_Button_Off and ground1
+
+Player = Player_On or Player_Off
+Cow = Down_Cow or Up_Cow
+Rock = Down_Rock or Up_Rock
+Grinder = Grinder_on or Grinder_Off
+Food = Down_Food or Up_Food
+Ground = Ground1 or Ground2 or Grass or Earth
+Target = Target_Off or Target_On
+Block_Button = Block_Button_On or Block_Button_Off
+Left_Belt = Down_Left_Belt or Up_Left_Belt or Perm_Left_Belt
+Right_Belt = Down_Right_Belt or Up_Right_Belt or Perm_Right_Belt
+Movable_belt = down_left_belt or down_right_belt or up_right_belt or up_left_belt
+
+Permanent = Ground or Perm_Left_belt or Perm_Right_Belt or Grinder or Block
+Movable = Cow or Rock or Food or movable_belt
+Weight = Down_Cow or Down_Rock or Down_Food or Down_Left_Belt or Down_Right_Belt
+Float = Up_Cow or Up_Rock or Up_Food or Up_Left_Belt or Up_Right_Belt
+
+=======
+SOUNDS
+=======
+
+( tractor beam on )
+sfx0 21248903  
+
+( tractor beam off)
+sfx1 47737109 
+
+( grinding )
+sfx2 74268502 
+
+( conveyor belt )
+sfx3 15347107 
+
+( target turning on )
+sfx4 37749503 
+
+( blocks turning off )
+sfx5 24077703 
+
+( target turning off )
+sfx6 81512501  
+
+( EMP field collision )
+sfx7 87238302 
+
+( ufo can't lift things on its head! )
+sfx8 67093909 
+
+closemessage 18815703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Temp, Lift
+Player, Ground, Grass, Cow, Left_Belt, Right_Belt, Rock, Grinder, Food, Block
+Target
+EMP, Block_Ghost, Tunnel, Block_Button
+
+======
+RULES
+======
+
+( Player can't move through EMP fields, tunnels turn off tractor beams )
+
+[ > Player | EMP ] -> [ Player | EMP sfx7 ]
+
+[ > Player_On | Tunnel ] -> [ > Player_Off | Tunnel sfx1 ]
+
+
+( Player's movement stops when approaching a wall. Makes tractor beam stuff simpler. )
+
+[ > Player | permanent ] -> [ Player | permanent ]
+
+
+( Player can't move up if block is on it )
+
+up [ > Player | weight ] -> [ Player | weight sfx8 ]
+
+
+( Tractor Beam )
+
+DOWN [ Action Player_On | ... | Up_Cow ] -> [ Player_Off | ... | Down_Cow sfx1 ]
+DOWN [ Action Player_On | ... | Up_Rock ] -> [ Player_Off | ... | Down_Rock sfx1 ]
+DOWN [ Action Player_On | ... | Up_Food ] -> [ Player_Off | ... | Down_Food sfx1 ]
+DOWN [ Action Player_On | ... | Up_Left_Belt ] -> [ Player_Off | ... | Down_Left_Belt sfx1 ]
+DOWN [ Action Player_On | ... | Up_Right_Belt ] -> [ Player_Off | ... | Down_Right_Belt sfx1 ]
+
+[ Weight no Temp ] -> [ Weight Temp ]
+down [ Action Player_Off no Tunnel | ... | Temp ] -> [ Player_On | ... | Lift ]
+[ Temp ] -> [ ]
+
+[ Down_Rock Lift ] -> [ Up_Rock sfx0 ] again
+[ Down_Cow Lift ] -> [ Up_Cow sfx0 ] again
+[ Down_Food Lift ] -> [ Up_Food sfx0 ] again
+[ Down_Left_Belt Lift ] -> [ Up_Left_Belt sfx0 ] again
+[ Down_Right_Belt Lift ] -> [ Up_Right_Belt sfx0 ] again
+
+up [ > Player_On ] [ Float ] -> [ > Player_On ] [ > Float ] again
+left [ > Player_On ] [ Float ] -> [ > Player_On ] [ > Float ] again
+right [ > Player_On ] [ Float ] -> [ > Player_On ] [ > Float ] again
+down [ > Player_On | Float ] -> [ > Player_On | > Float ] again
+
+
+( Move stuff by bumping it )
+
+horizontal [ > player | weight ] -> [ > player Temp | > Weight ] again
+
+
+( Conveyor belts )
+
+left [ Left_Belt | Right_Belt ] -> [ Left_Belt temp | Right_Belt temp ]
+
+up [ Left_Belt no temp | Weight ] [ player no temp ] -> [ Left_Belt | ^ Weight ] [ player ] again 
+up [ Right_Belt no temp | Weight ] [ player no temp ] -> [ Right_Belt | v Weight ] [ player ] again 
+[ temp ] -> [ ]
+
+
+( stuff moves other stuff )
+
+horizontal [ > Movable | Weight ] -> [ > movable | > Weight ] again
+
+
+( Nothing but the ship can move through tunnels. Also turns off tractor beams. )
+
+[ > movable | tunnel ] -> [ movable | tunnel ]
+
+
+( Targets )
+
+late up [ Target_On | no Down_Food ] -> [ Target_Off | Sfx6 ]
+late up [ Target_Off | Down_Food ] -> [ Target_On | Down_Food Sfx4 ]
+
+
+( buttons turn blocks off )
+
+late down [ weight | block_button_off ] -> [ weight | block_button_on sfx5 ]
+late [ block ] [ block_button_on ] -> [ block_ghost ] [ block_button_on ]
+late up [ block_button_on | no weight ] -> [ block_button_off | sfx5 ] 
+late [ block_ghost no movable ] [ block_button_off ] -> [ block ] [ block_button_off ]
+
+
+( escaping objects )
+
+up [ float | no Player_On ] -> [ float Temp | ]
+[ float ] [ Player_Off ] -> [ float Temp ] [ Player_Off ]
+up [ float Temp | ... | Player_On ] -> [ float | ... | Player_On ]
+
+[ Player_On ] [ Temp ] -> [ Player_Off sfx1 ] [ Temp ]
+[ Up_Cow Temp ] -> [ Down_Cow ] again
+[ Up_Rock Temp ] -> [ Down_Rock ] again
+[ Up_Food Temp ] -> [ Down_Food ] again
+[ Up_Left_Belt Temp ] -> [ Down_Left_Belt ] again
+[ Up_Right_Belt Temp ] -> [ Down_Right_Belt ] again
+
+[ temp ] -> []
+
+
+( gravity and anti-gravity )
+
+up [ stationary float ] -> [ > float ] again
+down [ stationary Weight ] -> [ > Weight ] again
+down [ > weight | Player ] -> [ weight | Player ]
+
+
+( Grinders )
+
+down [ Grinder_On | ] -> [ Grinder_Off | Down_Food ] again
+down [ > Cow | Grinder_Off | no movable no permanent ] -> [ | Grinder_On | sfx2 ]
+
+
+( escaping objects )
+
+up [ float | no Player_On ] -> [ float Temp | ]
+up [ float Temp | ... | Player_On ] -> [ float | ... | Player_On ]
+
+[ Player_On ] [ Temp ] -> [ Player_Off sfx1 ] [ Temp ]
+[ Up_Cow Temp ] -> [ Down_Cow ] again
+[ Up_Rock Temp ] -> [ Down_Rock ] again
+[ Up_Food Temp ] -> [ Down_Food ] again
+[ Up_Left_Belt Temp ] -> [ Down_Left_Belt ] again
+[ Up_Right_Belt Temp ] -> [ Down_Right_Belt ] again
+
+[ temp ] -> []
+
+==============
+WINCONDITIONS
+==============
+
+No Target_Off
+
+=======
+LEVELS
+=======
+
+message Welcome to Star Burger, employee #3496527.
+
+message Your exciting opportunity begins now.
+
+message You have been hired as a Class D Associate Bovine Manipulator.
+
+message Your job is to process cows and deposit the product on a green Interstellar Pickup Beacon for delivery.
+
+message Move with WASD or arrow keys. Press X or Space to turn on/off tractor beam.
+
+..........#
+..........#
+..p.......#
+..........#
+..........#
+#t#...##g##
+###...#...#
+###.......#
+###.c.<<<<#
+###www#####
+
+message Do not worry, valuable employee.
+
+message Cows are non-feeling creatures.
+
+message Processing them into High-Class Grade AAA Star Burger Meat is painless.
+
+%#%#%#.......
+%#%#%#...p...
+######.......
+#............
+#..#.##......
+##g###.......
+#...##.....o.
+#...##..c..ww
+##t###wwwww@@
+
+message Your tractor beam is a marvel of patented Star Burger Inc. science.
+
+message Be careful not to damage it.
+
+#%%%#...#%%%#
+#####.p.#####
+#...#...#.#.#
+#.#...#.#...#
+#.#.#.#...#.#
+#############
+#.....#.....#
+#...#.#.###.#
+##g##...#...#
+#...#<<<#.###
+#...#.......#
+#...#.......#
+#...###...c.#
+##t##%#wwwww#
+
+message Employee take note:
+
+message All of our cows have been provided with an accurate high-tech ecosystem.
+
+message Their comfort is assured.
+
+#########...#
+#..:....#.p.#
+#..:....:...#
+#..:....#...#
+##.#....#...#
+#..#........#
+#....c..##g##
+#o##wwww#...#
+####@@@@#...#
+#%%#@@@@##t##
+
+message Breaks shall be limited to 15 minutes biannually.
+
+############
+%#...x..#...
+##...x..#.p.
+%#...x..#...
+##..<<<.#:##
+#..c.#.....#
+#.ww.:.....#
+#.@@.#####.#
+#.@@...#...#
+#..#...#.#g#
+#>.#.......#
+##T######<<#
+
+message Employee take note:
+
+message Some processing floors have been equipped with Anti-Gravity Quantum Impediment Blocks.
+
+message Place an object on a red Anti-Gravity Quantum Impediment Beacon to deactivate them.
+
+.........####
+.....p...#..#
+............#
+........+#+##
+..o......#..#
+wwww.....#..#
+#.....#+##g##
+#.#...#.#...#
+#.#...#c#...#
+#b#wwwww##t##
+
+message We are proud of our patented Anti-Gravity Quantum Impediment Blocks.
+
+#####.......###
+##%##.....p.#%#
+#%#%#...o...###
+#####..www..#%#
+#%#.........###
+###.#.......###
+#...+...c.....#
+#.#.##.www..#.#
+#g#b#......##.#
+#.###......##.#
+#.......o..##.#
+#>>>>#wwwww##t#
+
+message Announcing our official employee of the month:
+
+message The Anti-Gravity Quantum Impediment Block.
+
+#####....:o.##
+##..x..p.#++##
+##.<<<...#..##
+##......+#.###
+##>>b#..+x...#
+#o+.x...#>>>.#
+#>>.x...##...#
+....x....#g#<#
+....x....#...#
+..c.x....#>>.#
+wwwwwwwww###t#
+
+message Employee take note:
+
+message Some conveyor belts on underused processing floors are in disrepair.
+
+message It is advisable to repair them efficiently.
+
+message And then keep quiet about it.
+
+%#...#%
+##...#%
+%#.p.##
+%#...#%
+##}.{#%
+%##x###
+%#....#
+##>c>.#
+@@www.#
+#.....#
+#.<.<<#
+#gwwww@
+#.....#
+#>>>>T#
+
+message Complaints will be registered with the appropriate authorities.
+
+......#%#%#
+.p....#####
+...o.o+.o.#
+...#####B.#
+......#...#
+....c.#...#
+#wwwww#...#
+#.........#
+##G<..<...#
+#.....##{{#
+##T########
+
+message Animal rights activists are an important cog in the mechanism of interstellar economy.
+
+message You are encouraged to shoot them on sight.
+
+%#.....#%
+%#..p..#%
+%#.....#%
+%#.....#%
+%#.....#%
+%#.....#%
+%#xxxx##%
+%#.....#%
+%#.....#%
+%#.}<<<#%
+%#.#####%
+%#.....#%
+%#{>>#g#%
+%#oco#.#%
+%#####t#%
+
+message How many cows could the Moon Devourer devour if the Moon Devourer could devour cows?
+
+message The answer is 16,947.
+
+#####.....#
+#...#..p..#
+##.o......#
+#coc#.....#
+#bww#.....#
+##@@###+++#
+########g##
+#.........#
+#.........#
+##TT<<<<<<#
+
+message Employee take note:
+
+message Reports of cow hauntings are apocryphal.
+
+message Disregard ghostly lowing.
+
+%#%#%#...
+######...
+...#.....
+...#.#...
+...#T#+..
+...###...
+...+.....
+.o...#+..
+#g##b#...
+#++###...
+#....+.p.
+#.c.##...
+wwww#####
+
+message Please do not request a promotion. Promotions are offered at regular intervals by lottery. Purchase a lottery ticket today.
+
+.......#%#########
+.......#%#.......#
+..p....#%#####...#
+.......###...#.#G#
+.........#T..#.#.#
+.......#g##.T#...#
+.c.c.o.+........<#
+wwwwwwww>>b##<<<##
+
+message Attempts to unionize shall be reported to the appropriate authority.
+
+message The appropriate authority in this case is a pit full of radioactive bears.
+
+%%#.#%%
+###p###
+%#...#%
+##.#.##
+#.ooo.#
+#BoooB#
+##+++##
+###+###
+#.ooo.#
+#######
+#.....#
+#.c.c.#
+#wwgww#
+#.....#
+#.....#
+##T#T##
+
+message Keep this up, and you will be promoted to Class A Expert Associate Bovine Manipulator in no time!
+
+message Decided by lottery, of course.
+
+####....####
+#..:....:..#
+#..:..p.:..#
+#..:....:..#
+############
+#..........#
+#.>T.......#
+#..........#
+##g<...<<<.#
+#.........{#
+#...o...c.o#
+#}>>#>.>www#
+############
+
+message Congratulations on a day of Grade AAA quality employment.
+
+message Your efforts have been logged. Your payment has been transmitted to your cranial implant.
+
+message Thank you for choosing Star Burger for your survival needs.
+
+message See you tomorrow, employee #3496527!

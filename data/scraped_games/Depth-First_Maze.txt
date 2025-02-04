@@ -1,0 +1,117 @@
+title Depth-First Maze
+author Rob Glazebrook
+homepage www.canvasisaweso.me
+run_rules_on_level_start
+again_interval 0.01
+
+========
+OBJECTS
+========
+
+Background
+lightgray white
+00010
+10000
+00100
+00001
+01000
+
+Player
+blue
+.....
+.000.
+.000.
+.000.
+.....
+
+Wall
+black darkgray
+00000
+01000
+00000
+00010
+01000
+
+Maze
+transparent
+
+MazeMaker
+red
+.....
+.....
+..0..
+.....
+.....
+
+Visited
+green
+.....
+.0.0.
+.0.0.
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = background
+# = wall
+P = player and maze and mazemaker
+
+=======
+SOUNDS
+=======
+
+SFX0 89865904
+
+================
+COLLISIONLAYERS
+================
+
+Background
+maze
+mazemaker
+visited
+wall, player
+
+======
+RULES
+======
+
+
+startloop
+random [mazemaker | wall | wall] -> [maze visited | maze | maze mazemaker] 
+endloop
+
+random [mazemaker | no wall | visited] -> [maze | no wall | mazemaker] again
+
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+#####################
+#P###################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################

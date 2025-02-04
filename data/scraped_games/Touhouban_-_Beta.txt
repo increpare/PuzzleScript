@@ -1,0 +1,497 @@
+title Touhouban - Beta
+author Aaron Dobbe
+(noundo)
+realtime_interval 0.25
+run_rules_on_level_start
+youtube TZ_r-Fwl4kA
+
+========
+OBJECTS
+========
+
+Background
+#240035
+
+LPetal
+#240035 #EE78FF
+10000
+11000
+11000
+10010
+11000
+
+RPetal
+#240035 #EE78FF
+00011
+01001
+00011
+00011
+00001
+
+MiniPetal1
+#240035 #EE78FF
+00000
+00100
+00000
+00000
+00000
+
+MiniPetal2
+#240035 #EE78FF
+00000
+00000
+00000
+01000
+00000
+
+NWall
+#C4C4C4 #757575 #404040
+10000
+21100
+21110
+22110
+22221
+
+SWall
+#C4C4FF #7575FF #4040FF
+10000
+21100
+21110
+22110
+22221
+
+Reimu
+Black #FFFFD1 #D10000 #B03404 White
+20002
+21112
+01110
+.222.
+22222
+
+Marisa
+#E4DF40 #FFFFD1 Black White
+..22.
+22222
+01110
+.232.
+22222
+
+FairyDown
+#DFD550 #FFFFD1 #7395E7
+.000.
+01110
+01110
+.222.
+22222
+
+FairyUp
+#DFD550 #FFFFD1 #7395E7
+.000.
+00000
+00000
+.222.
+22222
+
+FairyLeft
+#DFD550 #FFFFD1 #7395E7
+000..
+1000.
+1000.
+222..
+2222.
+
+FairyRight
+#DFD550 #FFFFD1 #7395E7
+..000
+.0001
+.0001
+..222
+.2222
+
+BSpirit
+#C0C0FF #A4A4FF
+...0.
+..0..
+.010.
+01110
+.010.
+
+RSpirit
+#FFC0C0 #FFA4A4
+...0.
+..0..
+.010.
+01110
+.010.
+
+Circle
+darkgray
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Floor
+Gray Darkgray
+01100
+10111
+01100
+11001
+01101
+
+Ice
+lightblue blue white
+10211
+02111
+21110
+11102
+11021
+
+Charm
+LightRed Red DarkRed
+.....
+.000.
+.012.
+.222.
+.....
+
+PowerFlag
+Black
+.....
+.....
+.....
+.....
+.....
+
+PCount
+LightRed Red DarkRed
+.....
+.000.
+.012.
+.222.
+.....
+
+TimerWall
+Red
+.....
+.....
+.....
+.....
+.....
+
+Timer
+Red
+.....
+.....
+.....
+.....
+.....
+
+DBull
+White DarkRed
+.111.
+10001
+10001
+10001
+.111.
+
+UBull
+White DarkRed
+.111.
+10001
+10001
+10001
+.111.
+
+LBull
+White DarkRed
+.111.
+10001
+10001
+10001
+.111.
+
+RBull
+White DarkRed
+.111.
+10001
+10001
+10001
+.111.
+
+PChecker
+Red
+.....
+.....
+.....
+.....
+.....
+
+PCheckerTemp
+Red
+.....
+.....
+.....
+.....
+.....
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+, = MiniPetal1
+# = NWall
+[ = LPetal
+] = RPetal
+R = Reimu
+M = Marisa
+x = BSpirit
+y = RSpirit
+o = Circle
+p = Charm
+Z = PowerFlag
+s = FairyDown
+n = FairyUp
+w = fairyLeft
+e = fairyRight
+* = TimerWall
+T = Timer
+~ = Floor
+- = Ice
+Petal = LPetal or RPetal
+MiniPetal = Minipetal1 or Minipetal2
+Wall = NWall or SWall
+Player = Reimu or Marisa
+GUI = PowerFlag or PCount
+Fairy = FairyDown or FairyUp or FairyLeft or FairyRight
+Spirit = RSpirit or BSpirit
+Obstacle = Wall or Spirit or Floor
+Bullet = DBull or UBull or LBull or RBull
+
+=======
+SOUNDS
+=======
+
+Player Destroy 21081902
+Fairy Destroy 95114102
+Charm Destroy 20629703
+Spirit Destroy 14821508
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Petal, MiniPetal
+Circle, Charm, Floor, Timer, Ice
+Player, Spirit, Wall, Fairy, Bullet
+TimerWall, PChecker, PCheckerTemp
+GUI
+
+======
+RULES
+======
+
+(Setup flags for checking # charms in all directions)
+right [ PowerFlag ] -> [ PowerFlag PChecker ]
+right [ PChecker | PCount ] -> [ | PCount PCheckerTemp ]
++ right [ PChecker ] [ PowerFlag | ... | no PCount ] -> [ PChecker ] [ PowerFlag | ... | PowerFlag ]
++ down [ PChecker ] [ PowerFlag | ... | no PCount ] -> [ PChecker ] [ PowerFlag | ... | PowerFlag ]
++ [ PChecker ] -> [ ]
++ down [ PCheckerTemp ] [ PowerFlag | ... | PCount | no PCount ] -> [ PChecker ] [ PowerFlag | ... | PCount | PCount ]
++ down [ PCheckerTemp ] [ PowerFlag | no PCount ] -> [ PChecker ] [ PowerFlag | PCount ]
+
+( Setup/animate background)
+vertical [ LPetal | no LPetal ] -> [ LPetal | LPetal ]
+vertical [ RPetal | no RPetal ] -> [ RPetal | RPetal ]
+right [ no LPetal | LPetal ] -> [ LPetal | ]
+right [ RPetal | no RPetal ] -> [ | RPetal ]
+
+random [ MiniPetal ] -> [ randomDir MiniPetal ]
+random [ down MiniPetal ] -> [ random MiniPetal ]
+[ right MiniPetal ] -> [ stationary MiniPetal ]
+[ up MiniPetal ] -> [ left MiniPetal ]
+random left [ left MiniPetal | LPetal ] [ RPetal |  ] -> [ | LPetal ] [ RPetal | MiniPetal ]
+
+(Move bullets)
+[ stationary player ] [ Stationary DBull ] -> [ player ] [ down DBull ]
+[ stationary player ] [ Stationary UBull ] -> [ player ] [ up UBull ]
+[ stationary player ] [ Stationary LBull ] -> [ player ] [ left LBull ]
+[ stationary player ] [ Stationary RBull ] -> [ player ] [ right RBull ]
+
+(Push spirits)
+[ > Player | Spirit ] -> [ > Player | > Spirit ]
+[ > Spirit | Floor ] -> [ Spirit | Floor ]
+(Push sealed spirit if you're Reimu and have a charm in reserve)
+[ > Reimu | stationary SWall | no Obstacle ] [ PCount ] -> [ > Reimu | > SWall | ] [ PCount ]
+
+(Advance time)
+[ stationary player ] [ stationary Timer ] -> [ stationary player ] [ down Timer ]
+
+(Fairies: shoot bullets)
+down [ Timer TimerWall ] [ FairyDown | no Bullet no Wall no Fairy no Spirit no Player ] -> [ Timer TimerWall ] [ FairyDown | DBull ]
+down [ Timer TimerWall ] [ FairyDown | Player ] -> [ Timer TimerWall ] [ FairyDown | ] 
+down [ Timer TimerWall ] [ FairyDown | stationary Spirit ] -> [ Timer TimerWall ] [ FairyDown | > Spirit ]
+up [ Timer TimerWall ] [ FairyUp | no Bullet no Wall no Fairy no Spirit no Player ] -> [ Timer TimerWall ] [ FairyUp | UBull ]
+up [ Timer TimerWall ] [ FairyUp | Player ] -> [ Timer TimerWall ] [ FairyUp | ] 
+up [ Timer TimerWall ] [ FairyUp | stationary Spirit ] -> [ Timer TimerWall ] [ FairyUp | > Spirit ]
+left [ Timer TimerWall ] [ FairyLeft | no Bullet no Wall no Fairy no Spirit no Player ] -> [ Timer TimerWall ] [ FairyLeft | LBull ]
+left [ Timer TimerWall ] [ FairyLeft | Player ] -> [ Timer TimerWall ] [ FairyLeft | ] 
+left [ Timer TimerWall ] [ FairyLeft | stationary Spirit ] -> [ Timer TimerWall ] [ FairyLeft | > Spirit ]
+right [ Timer TimerWall ] [ FairyRight | no Bullet no Wall no Fairy no Spirit no Player ] -> [ Timer TimerWall ] [ FairyRight | RBull ]
+right [ Timer TimerWall ] [ FairyRight | Player ] -> [ Timer TimerWall ] [ FairyRight | ] 
+right [ Timer TimerWall ] [ FairyRight | stationary Spirit ] -> [ Timer TimerWall ] [ FairyLeft | > Spirit ]
+
+(Violence)
+[ > Bullet | Wall ] -> [ | Wall ]
+[ > Bullet | Spirit ] -> [ | > Spirit ]
+[ > Bullet | Player ] -> [ | ]
+[ > Spirit | Player ] -> [ | Spirit ]
+[ > Spirit | Fairy ] -> [ | > Spirit ]
+[ > Bullet | < Bullet ] -> [ | ]
+
+(Ice)
+[ > Spirit | Ice no Obstacle ] -> [ | Ice > Spirit ]
+[ > Player | Ice ] -> [ stationary Player | Ice ]
+
+(Marisa: move many spirits if you have charms)
+[ > Marisa | Spirit | stationary Spirit | stationary Spirit ] [ PowerFlag | PCount | PCount ] -> [ > Marisa | > Spirit | > Spirit | > Spirit ] [ PowerFlag | PCount | PCount ]
+[ > Marisa | Spirit | stationary Spirit ] [ PowerFlag | PCount ] -> [ > Marisa | > Spirit | > Spirit ] [ PowerFlag | PCount ]
+
+(Reset timer if we've hit the end of the cycle)
+down [ TimerWall | | ... | down Timer TimerWall ] -> [ TimerWall | stationary Timer | ... | TimerWall ]
+(Dismantle extra charm flags so it looks pretty)
+down [ GUI | ... | GUI ] -> [ GUI | ... | ]
+right [ PowerFlag | ... | PowerFlag ] -> [ PowerFlag | ... | ]
+random [ moving SWall ] [ PCount ] -> [ moving SWall ] [ ] 
+late [ BSpirit Circle ] -> [ SWall ]
+late [ RSpirit Circle ] -> [ Charm ]
+late right [ no PCount no PowerFlag | PCount ] -> [ PCount | ]
+late right [ Player Charm ] [ PCount | no PCount ] -> [ Player ] [ PCount | PCount ]
+late right [ Player Charm ] [ PowerFlag | no PCount ] -> [ Player ] [ PowerFlag | PCount ]
+
+==============
+WINCONDITIONS
+==============
+
+No Spirit
+
+=======
+LEVELS
+=======
+
+message Night Cherry Blossoms in the Netherworld
+message What are these divine spirits that are scattered and swept away by the cherry blossoms?
+message They only activate moments before death.
+[........,]
+.###.,.....
+.#o#######.
+.#.,xox.R#.
+.#.o.x.,x#.
+.#######o#.
+...,...###.
+.....,.....
+
+message Reimu Hakurei - Ability: Persuasion Needle
+message Use red charms to move sealed spirits.
+
+Z.,.........]
+[...,###.....
+.#####.###.,.
+.#oRx.oxo###.
+.##ox,x.o..#.
+..####.x..##.
+.,..,##x###..
+......#,#....
+..,..##p#....
+...,.#..#,...
+.....#pp#....
+.....#.o#.,..
+..,..####....
+.............
+
+message The fairies fear the divine spirits.
+
+Z..............
+[.,..########.]
+.....#.xsso.#.*
+.....#......#..
+.....###,.###..
+.....,#....#...
+..######..##.,.
+..#.ox,#..p#..T
+..##.x....##...
+...#####..##...
+....,..#..##...
+....####...##.*
+....#o.x..o.#..
+.####.##..###..
+.#R.,.#####....
+.#.xno#........
+.######.,......
+...............
+
+[......................]
+...,.,..###.###.........
+......###s###s##..,....*
+..#####........##.......
+.##.,.#,.....,.w#.......
+.#Rx.~o....,...##......T
+.##.~#e........#####,...
+.#..o##........##..####.
+.#.,###.,...,..w#.x~..#.
+.#..###...........~x..#*
+.#####e..,.....####o.##.
+...,.##........#..####..
+......#n###n####.,......
+.....,###.###...........
+........................
+
+message Marisa Kirisame - Ability: Illusion Laser
+message Use red charms to push multiple unsealed spirits.
+
+Z................
+[.....,...#####.]
+.##########...#..
+.#oM....xxx.oo#..
+.######.#.,...#..
+...####.####..#..
+..##o##,#.p#####.
+..#oxpx.#.x.x.o#.
+..##.,#.#x.x.xo#.
+...####.#.x.x.o#.
+.######.#x.x,xo#.
+.#oooo#.#.x.x.o#.
+.#......,x.x.xo#.
+.#.,..######,###.
+.######...#..o#..
+..........#..o#..
+.,......,.#..o#..
+...,......#..o#,.
+..........#..o#..
+.....,....#####..
+.................
+
+Z.....................
+..............###.....
+......,..###,.#o#.....
+[........#o#..#M#....]
+.#########s##.#.#....*
+.#o,..#e.x.o#.#.#.,...
+.#o.y.####.####.#####.
+.#o..x.x.#.#,x..x.oo#T
+.#o...x..#.x...x..o##.
+.####..###.######.##..
+..###..,.~.~.,...,#...
+..##.x########-#..#...
+..#....wwweee..####..*
+..#,...######..#......
+..######....####......
+......................
+
+message "The netherworld at night is as eerie as ever..."
+message All Clear! (for now)

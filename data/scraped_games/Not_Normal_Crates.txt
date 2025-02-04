@@ -1,0 +1,882 @@
+title Not Normal Crates
+author Alex35.8crk
+background_color black
+text_color orange
+flickscreen 10x10
+========
+OBJECTS
+========
+
+background
+white black
+10011
+00111
+01110
+11100
+11001
+
+transition
+black white
+01010
+01010
+01010
+01010
+01010
+
+wall
+gray lightgrey darkgray
+22222
+20001
+20001
+20001
+11111
+
+playerv
+orange yellow
+.000.
+.111.
+00000
+.000.
+.0.0.
+
+cratehorizontal
+gray lightgray darkgray blue
+22222
+20001
+23331
+20001
+11111
+
+cratevertical
+gray lightgray darkgray green
+22222
+20301
+20301
+20301
+11111
+
+bluebutton
+gray blue darkblue
+00000
+01110
+01110
+02220
+00000
+
+bluebuttonlocked
+gray blue
+00000
+01110
+01110
+01110
+00000
+
+bluedoor
+lightgray gray blue darkblue
+01010
+12321
+03330
+12321
+01010
+
+bluedoor2
+lightgray gray blue darkblue
+01010
+12321
+03330
+12321
+01010
+
+cratecount4
+gray lightgrey darkgray red
+22222
+23031
+23331
+20031
+11111
+
+cratecount3
+gray lightgrey darkgray red
+22222
+23331
+20331
+23331
+11111
+
+cratecount2
+gray lightgrey darkgray red
+22222
+23301
+20301
+20331
+11111
+
+cratecount1
+gray lightgrey darkgray red
+22222
+23301
+20301
+23331
+11111
+
+greenbutton
+gray lightgreen green
+00000
+01110
+01110
+02220
+00000
+
+greenbuttonlocked
+gray lightgreen green
+00000
+01110
+01110
+01110
+00000
+
+greendoor
+lightgray gray lightgreen green
+01010
+12321
+03330
+12321
+01010
+
+greendoor2
+lightgray gray lightgreen green
+01010
+12321
+03330
+12321
+01010
+
+cratereversed
+red lightred darkred
+22222
+20001
+20001
+20001
+11111
+
+space1
+black white
+00000
+10000
+00000
+00000
+00010
+
+space2
+black white
+00011
+10001
+00000
+00000
+00010
+
+space3
+black white
+10000
+00000
+00000
+00000
+00010
+
+space4
+black white
+00000
+10000
+00000
+00000
+00001
+
+spaceglassleft
+black white lightgrey
+22222
+20000
+20000
+20000
+22222
+
+spaceglassmiddle
+black white lightgray
+22222
+10000
+00000
+00000
+22222
+
+spaceglassright
+black white lightgrey
+22222
+10002
+00002
+00002
+22222
+
+message1
+transparent
+
+message2
+transparent
+
+message3
+transparent
+
+bed1
+brown grey red lightred
+..000
+.0323
+01323
+.0323
+..000
+
+bed2
+brown grey red lightred white
+000..
+2440.
+24410
+2440.
+000..
+
+bed1player
+brown grey red lightred orange yellow
+..000
+.0444
+01344
+.0444
+..000
+
+bed2player
+brown grey red lightred white orange yellow
+000..
+6540.
+65410
+6540.
+000..
+
+bed1after
+brown grey red darkred
+..000
+.0323
+01323
+.0323
+..000
+
+bed2after
+brown grey red darkred white
+000..
+2440.
+24410
+2440.
+000..
+
+earth1
+blue lightgreen yellow white black green
+44443
+34015
+40005
+40100
+00510
+
+earth2
+blue lightgreen yellow white black green
+34444
+00544
+00104
+00004
+15000
+
+railver
+darkgrey grey
+.010.
+.010.
+.010.
+.010.
+.010.
+
+railhor
+darkgrey grey
+.....
+00000
+11111
+00000
+.....
+
+raildr
+darkgrey grey
+.....
+.0000
+.0111
+.0100
+.010.
+
+raildl
+darkgrey grey
+.....
+0000.
+1110.
+0010.
+.010.
+
+railur
+darkgrey grey
+.010.
+.0100
+.0111
+.0000
+.....
+
+railul
+darkgrey grey
+.010.
+0010.
+1110.
+0000.
+.....
+
+craterail
+gray lightgrey darkgray black
+22222
+20001
+20301
+20001
+11111
+
+cratedown
+gray lightgrey darkgray red darkred lightred
+22222
+20301
+40305
+23331
+11511
+
+crateup
+gray lightgrey darkgray red darkred lightred
+22422
+23331
+40305
+20301
+11111
+
+crateleft
+gray lightgrey darkgray red darkred lightred
+22422
+23001
+43331
+23001
+11511
+
+crateright
+gray lightgrey darkgray red darkred lightred
+22422
+20031
+23335
+20031
+11511
+
+cratemashup3
+red lightred darkred green lightgreen darkgreen blue lightblue
+22222
+26761
+50764
+27771
+11411
+
+cratemashup2
+red lightred darkred green lightgreen darkgreen blue lightblue
+22222
+26701
+50704
+23771
+11411
+
+cratemashup1
+red lightred darkred green lightgreen darkgreen blue lightblue
+22222
+26701
+50704
+27771
+11411
+
+cratemashup0
+red lightred darkred green lightgreen darkgreen blue lightblue
+22222
+26761
+56364
+27771
+11411
+
+earth3
+blue lightgreen green yellow black white
+44444
+54444
+44440
+44400
+44200
+
+earth4
+blue lightgreen green yellow black white
+44445
+45555
+00000
+00221
+02100
+
+earth5
+blue lightgreen green yellow black white
+54444
+55554
+05000
+00022
+00012
+
+earthbg
+lightgreen green
+00000
+10000
+00000
+00000
+00010
+
+earthglassleft
+lightgreen green lightgrey
+22222
+20000
+20000
+20000
+22222
+
+earthglassmiddle
+lightgreen green lightgrey
+22222
+10000
+00000
+00000
+22222
+
+earthglassright
+lightgreen green lightgrey
+22222
+10002
+00002
+00002
+22222
+
+darkgrey
+darkgrey
+
+grey
+grey
+
+lightgrey
+lightgrey
+
+white
+white
+
+=======
+LEGEND
+=======
+
+player = playerv or bed1player
+crate = cratehorizontal or cratevertical or cratecount4 or cratecount3 or cratecount2 or cratecount1 or wall or cratereversed or craterail or crateup or cratedown or crateleft or crateright or cratemashup3 or cratemashup2 or cratemashup1 or cratemashup0
+space = space1 or space2 or space3 or space4 or spaceglassleft or spaceglassmiddle or spaceglassright or earth1 or earth2 or earth3 or earth4 or earth5
+rail = raildr or railhor or raildl or railver or railur or railul
+earth = earthbg or earthglassleft or earthglassmiddle or earthglassright
+
+. = background
+# = wall
+P = playerv
+- = cratehorizontal
+| = cratevertical
+* = transition
+& = bluebutton
+² = bluedoor
+☺ = bluedoor2 (alt+1)
+4 = cratecount4
+3 = cratecount3
+2 = cratecount2
+1 = cratecount1
+é = greenbutton
+~ = greendoor
+☻ = greendoor2 (alt+2)
+r = cratereversed
+% = space1
+ù = space2
+╚ = space3 (alt+200)
+╔ = space4 (alt+201)
+! = spaceglassleft
+: = spaceglassmiddle
+; = spaceglassright
+æ = message1 (alt+401)
+ô = message2 (alt+403)
+ö = message3 (alt+404)
+b = bed1
+n = bed2
+, = bed1after
+? = bed2after
+╩ = earth1 (alt+202)
+╦ = earth2 (alt+203)
+a = raildr
+z = railhor
+e = raildl
+q = railver
+w = railur
+c = railul
+x = railhor and craterail
+d = railver and craterail
+§ = railver and bluebutton (alt+501)
+÷ = railver and cratehorizontal (alt+502)
+¸ = railhor and bluebutton (alt+503)
+° = railhor and cratevertical (alt+504)
+¨ = railur and craterail (alt+505)
+t = crateup
+g = cratedown
+f = crateleft
+h = crateright
+m = railver and cratemashup3
+╠ = earth3 (204)
+═ = earth4 (205)
+╬ = earth5 (206)
+7 = earthglassleft
+8 = earthglassmiddle
+9 = earthglassright
++ = earthbg
+¢ = darkgrey
+¥ = grey
+┐ = lightgrey
+└ = white
+
+=======
+SOUNDS
+=======
+
+playerv move 34534307
+crate move 33839504
+sfx0 33839504
+bluedoor destroy 24963102
+
+================
+COLLISIONLAYERS
+================
+
+background
+rail
+transition , bluebutton , bluebuttonlocked , greenbutton , greenbuttonlocked , message1 , message2 , message3 , bed1 , bed2 , bed1player , bed2player , darkgrey , grey , lightgrey , white
+playerv , wall , crate , bluedoor , bluedoor2 , greendoor , greendoor2 , space , bed1after , bed2after , craterail , earth
+
+======
+RULES
+======
+
+horizontal [ > player | cratehorizontal ] -> [ > player |  > cratehorizontal ]
+vertical [ > player | cratevertical ] -> [ > playerv |  > cratevertical ]
+late [ crate bluebutton ] [ bluedoor ] [ bluedoor2 ] -> [ crate bluebuttonlocked ] [ ] [ ]
+late [ playerv transition ] -> win
+[ > player | stationary cratecount4 | no crate ] -> [ > player |  > cratecount3 | ]
+[ > player | stationary cratecount3 | no crate ] -> [ > player |  > cratecount2 | ]
+[ > player | stationary cratecount2 | no crate ] -> [ > player |  > cratecount1 | ]
+[ > player | stationary cratecount1 | no crate ] -> [ > player |  > wall | ] sfx0
+late [ crate greenbutton ] [ greendoor ] [ greendoor2 ] -> [ crate greenbuttonlocked ] [ ] [ ]
+[ > player | cratereversed ] -> [ < player | < cratereversed ]
+[ playerv message1 ] -> [ playerv ] message This is so beautiful.
+[ playerv message2 ] -> [ playerv ] message And , also , we are in space for a little hour.
+[ playerv message3 ] -> [ playerv ] message You'll be back on the earth , we promise.
+late [ playerv bed1 ] [ bed2 ] -> [ bed1player ] [ bed2player ] win
+late [ playerv bed2 ] [ bed1 ] -> [ bed2player ] [ bed1player ] win
+[ > player | craterail rail | rail ] -> [ > player | > craterail rail | rail ]
+up [ > player | crateup ] -> [ > player |  > crateup ]
+down [ > player | cratedown ] -> [ > player |  > cratedown ]
+left [ > player | crateleft ] -> [ > player |  > crateleft ]
+right [ > player | crateright ] -> [ > player |  > crateright ]
+up [ > player | stationary cratemashup3 ] -> [ < player | < cratemashup2 ]
+up [ > player | stationary cratemashup2 ] -> [ < player | < cratemashup1 ]
+up [ > player | stationary cratemashup1 ] -> [ < player | < cratemashup0 ] sfx0
+
+
+==============
+WINCONDITIONS
+==============
+
+some player on white
+
+=======
+LEVELS
+=======
+
+message Welcome to PuzzleScience Laboratories.
+message Thanks for choosing our tests.
+message Our devise is : "Ban Classic Sokoban.".
+message Our crates are very special.
+message These crates can only be pushed horizontally/vertically.
+
+##########
+#........#
+#.p..&...#
+#.......##
+#....-..²*
+#.......☺*
+#.......##
+#....|...#
+#........#
+##########
+
+message This puzzle was easy , right?
+message *laughs*
+message I hope you can resolve this one.
+
+##########
+#........#
+#...&....#
+#...-|...#
+...|-...²*
+p...-|..☺*
+#..|-....#
+#...|....#
+#........#
+##########
+
+message Good.
+message I named the next type of crate "Crate Counter".
+
+
+
+##########
+####&.####
+####..####
+#.....####
+...#2.#..*
+p...1.#..*
+#..#||#²☺#
+#........#
+#........#
+##########
+
+message I think you understood these crates.
+message Good luck on resolving this one.
+
+##########
+#####é####
+###&.1..##
+###.1.#.##
+...2.1.²~*
+p.#3.4#☺☻*
+#.#.#.#.##
+#........#
+#........#
+##########
+
+message Was it difficult?
+message ...
+message No?
+message Oh , I have a mashup test chamber.
+
+##########
+#......###
+#..|...###
+##.1.#####
+.#.2.#.²~*
+p..3...☺☻*
+#..4...###
+#&1.1-.###
+##.é.#####
+##########
+
+message You've made it!
+message "Reversed Crates".
+
+##########
+#........#
+#.é......#
+#.....r###
+.......²~*
+p......☺☻*
+#.....r###
+#.&......#
+#........#
+##########
+
+message Easy.
+
+##########
+###.....##
+###&###.##
+#..r###.##
+..#r..#²~*
+p.....#☺☻*
+#..r..####
+#.r.rr.é.#
+#...#....#
+##########
+
+message You can have a pause.
+message It's a gift.
+message You've made these puzzles so fast.
+
+%%%%╔%%%%%%%%%%%%%%%
+%╔%%ù╚%%%%%╔%%%%%╔%%
+%ù╚%%%%%%%%ù╚%%%%ù╚%
+#!::::::::::::::::;#
+......æ....ô....ö..*
+p.....æ....ô....ö..*
+#!::::::::::::::::;#
+%%%%%%%%%%%╔%%%%%%%%
+%%%╔%%%╔%%%ù╚%%╔%%%%
+%%%ù╚%%ù╚%%%╩╦%ù╚%%%
+
+message Enter and... get some rest.
+
+%%%%%%╔%%%
+%%╔%%%ù╚%%
+%%ù╚%%%%%%
+#!::::::;#
+.........²
+p........☺
+#........#
+#........#
+#...bn...#
+##########
+
+message 
+message 
+message 
+message 
+message 
+message 
+
+%%%%%%╔%%%
+%%╔%%%ù╚%%
+%%ù╚%%%%%%
+#!::::::;#
+.........*
+.........*
+#........#
+#...p....#
+#...,?...#
+##########
+
+message Hello!
+message Hope you are fine.
+message Are you ready for new crates?
+message "Rail Crate"
+
+##########
+#.....q.##
+#.aze.§.##
+#.÷.q.÷.##
+..q.÷.q.²*
+p.÷.q.÷.☺*
+#.q.÷.q.##
+#.d.wzc.##
+#.q.....##
+##########
+
+message Good!
+message The hardest puzzle comes after , as usual.
+
+##########
+###r######
+##axeaxe##
+##d.qd&q##
+..wxcwxc☺*
+p.#....#²*
+#........#
+#!::::::;#
+%%╔%%ù╚╔%%
+%%ù╚%%%ù╚%
+
+message Do I said "hardest"?
+message The next crates are really similar to the vertical/horizontal crates.
+message "One-way Crate"
+
+##########
+#......###
+#.g..é.###
+#....f.###
+.......²~*
+p......☺☻*
+#.h....###
+#.&..t.###
+#......###
+##########
+
+message Hard puzzle this time , I hope...
+
+##########
+##~☻...###
+##gf&g.###
+##.g.f.###
+........²*
+p.......☺*
+###.h.####
+###.té####
+###...####
+##########
+
+message I forgot to say you this was the last chamber...
+message But , I've created a little bonus!
+message Enjoy the "Mashup Crate"!
+
+##########
+#...q...##
+#...m...##
+#...q...##
+....q...²*
+p...&...☺*
+#...q...##
+#...q...##
+#!:::::;##
+%%%ù╚%%╠═╬
+
+message You can get some rest.
+
+%%%%%%╔%%%
+%%╔%%%ù╚%%
+%%ù╚%%%%%%
+#!::::::;#
+.........²
+p........☺
+#........#
+#........#
+#...bn...#
+##########
+
+message 
+message 
+message 
+message 
+message 
+message 
+
+++++++++++
+++++++++++
+++++++++++
+#78888889#
+.........*
+.........*
+#........#
+#...p....#
+#...,?...#
+##########
+
+message Thanks for participating to our research.
+
+++++++++++
+++++++++++
+++++++++++
+#78888889#
+.........#
+p........#
+#79#¢¢¢¢¢#
++++#¥¥¥¥¥#
++++#┐┐┐┐┐#
++++#└└└└└#
+
+message -- NOT NORMAL CRATES --
+message by Alex35.8crk / Alex76FR
+message on the Puzzlescript Engine
+message made by increpare
+message And...
+message Thanks for playing! ^o^

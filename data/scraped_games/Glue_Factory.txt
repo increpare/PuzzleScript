@@ -1,0 +1,129 @@
+title Glue Factory
+author Cale Bradbury
+homepage www.netgrindgames.com
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background 
+Gray  
+
+Glue
+White   
+
+Wall 
+BROWN
+
+Player 
+Blue   
+
+Shooter 
+Orange 
+
+Hole
+Black
+
+Guide
+#808080 #ff0000 #ff0000 #ff0000 
+0...0
+.....
+.....
+.....
+0...0
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Shooter
+O = Glue
+- = Hole
+g = Guide
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Glue
+Hole
+Player, Wall, Shooter
+Guide
+
+======
+RULES     
+======     
+
+late [player Glue] -> cancel
+late [player Hole] -> cancel
+late [Glue Hole] ->[]
+
+[ >  Player | Shooter|no wall ] -> [  >  Player | > Shooter| ]  
+
+[MOVING Shooter|...|Glue] ->[MOVING Shooter|...|MOVING Glue]
+[> Glue|Wall] -> [|Wall]
+[< Glue|Wall] -> [< Glue |< Glue wall]
+[Guide]->[]
+late [Shooter|...|no Guide]->[Shooter|...|guide]
+
+
+==============
+WINCONDITIONS
+==============
+
+No Hole
+No Glue
+
+=======     
+LEVELS
+=======
+
+#########
+#-#.....#
+#.#..p..#
+#.#.....#
+#.#..*..#
+#.#.....#
+#O#.....#
+#.#.....#
+#########
+
+#########
+#-......#
+#-...o..#
+#-......#
+#########
+#.......#
+#.......#
+#..p*...#
+#.......#
+#########
+
+#########
+#-..o...#
+#-......#
+#...*o.##
+#.p.....#
+#.......#
+#########
+
+#########
+#-..o...#
+##..P...#
+#...*...#
+##......#
+#...o...#
+#.....###
+#-......#
+#########

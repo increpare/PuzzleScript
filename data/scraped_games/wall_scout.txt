@@ -1,0 +1,146 @@
+Title wall scout
+Author demon greg
+throttle_movement
+========
+OBJECTS
+========
+background
+darkbrown
+
+tele
+blue
+player
+orange
+.0.0.
+.000.
+00000
+.000.
+.0.0.
+
+wall
+lightbrown
+
+dirt
+brown lightbrown
+10001
+01010
+11100
+00011
+00010
+
+crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+goal
+green
+.000.
+0...0
+0...0
+0...0
+.000.
+
+monster
+white red
+.000.
+00000
+01010
+00000
+00.00
+
+corpse
+red
+=======
+LEGEND
+=======
+. = background
+p = player
+# = wall
+% = dirt
+o = goal
+] = crate
+! = tele
+? = tele and crate
+& = tele and player
+m = monster
+
+solid = wall or dirt or crate or monster
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+background
+tele,goal
+player,wall,dirt,crate,monster
+corpse
+
+=====
+RULES
+=====
+
+[player corpse] -> restart
+
+[> player tele|...|no solid] -> [tele|...|player]
+[> player|crate] -> [> player|> crate]
+[> crate tele|...|no solid] -> [tele|...|crate]
+
+late [monster|player] -> [monster|player corpse]
+
+
+==============
+WINCONDITIONS
+==============
+all player on goal
+=======
+LEVELS
+=======
+
+##########
+#.##!..#!#
+#!######.#
+########.#
+#!###o##.#
+########.#
+##...###.#
+##..!###.#
+##.p.#####
+##########
+
+###############
+#....#!....#o.#
+#]]#.#..]..#..#
+####.#.....#..#
+#!!#.#.....#..#
+#..#.#.....#..#
+#.p#!#]#.]###.#
+###############
+
+########
+#.#..#.#
+########
+#.##.###
+###o####
+##p###.#
+########
+
+#######
+#.....#
+#..o..#
+#.....#
+#.....#
+#.....#
+#mm!mm#
+###!###
+#!!!!!#
+#.....#
+#.].].#
+#..p..#
+#.....#
+#######

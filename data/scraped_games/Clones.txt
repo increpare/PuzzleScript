@@ -1,0 +1,320 @@
+title Clones
+author Jack Fritz
+homepage www.playfulsystems.com
+========
+OBJECTS
+========
+
+Background
+black
+00000
+00000
+00000
+00000
+00000
+
+Wall
+yellow
+00000
+00000
+00000
+00000
+00000
+
+
+Player
+darkred white
+00000
+01010
+00000
+01110
+00000
+
+Crate
+lightblue
+00000
+0...0
+0...0
+0...0
+00000
+
+
+
+Target
+white
+.....
+.000.
+.000.
+.000.
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+W = Wall
+C = Crate
+T = Target
+
+
+
+=======
+SOUNDS
+=======
+
+Player MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+Target
+
+======
+RULES
+======
+(push)
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+(Wall Cling)
+([ Player | Wall ] -> [ > Player | ])
+
+(Respawn Wall)
+([ > Player | no Wall | ] -> [ > Player | | Wall ])
+
+(pull)
+([ < Player | Crate ] -> [ < Player | < Crate ])
+
+(Three Blocks Disappear)(Add one less line for each crate. 3 crates = 2 lines | |)
+(late [ Crate | Crate | Crate ] -> [ | | ])
+
+==============
+WINCONDITIONS
+==============
+All Target on Player
+
+=======
+LEVELS
+=======
+message Level 1: Tethered
+
+wwwwwwwwwwwwwwwwwwww
+w........w.........w
+w........w.........w
+wp....ct.wp......t.w
+w........w.........w
+w........w.........w
+wwwwwwwwwwwwwwwwwwww
+
+message Level 2: Adapt
+
+wwwwwwwwwwwwwwwwwwww
+w........w.........w
+w........w.........w
+wp.....t.wp......t.w
+w........w.........w
+w........w.........w
+wwwwwwwwwwwwwwwwwwww
+
+message Level 3: Another?
+
+wwwwwwwwwwwwwwwwwwww
+w........w.........w
+w........w.........w
+wp.....t.wp......t.w
+w........w.........w
+w........w.........w
+wwwwwwwwwwwwwwwwwwww
+w..................w
+wp.............t...w
+w..................w
+wwwwwwwwwwwwwwwwwwww
+
+message Level 4: Alright you can stop
+
+wwwwwwwwwwwwwwwwwwww
+wt.................w
+wpcccccccccccccccccw
+w..................w
+wwwwwwwwwwwwwwwwwwww
+wp.......w.........w
+w........w.........w
+w......t.wp......t.w
+w........w.........w
+w........w.........w
+wwwwwwwwwwwwwwwwwwww
+w..................w
+wp.............t...w
+w..................w
+w..................w
+wwwwwwwwwwwwwwwwwwww
+
+message Level 5: Flipped
+
+wwwwwwwwwwwwwwww
+w.c.w.....w....w
+w.c.w..t..w....w
+w.c.w.....w....w
+w.c.w.....w.t..w
+w.c.w.....w....w
+w.c.w.....w....w
+w.c.w.....w....w
+w.c.w.....w....w
+w.c.w..p..w....w
+w.c.wwwwwww....w
+w.c.w.....w....w
+w.c.w..t..w....w
+w.c.w.....w....w
+w.c.w.....w....w
+w.c.w.....w....w
+w.c.w.....w....w
+w.c.w.....w....w
+wtp.wp....w.p..w
+wwwwwwwwwwwwwwww
+
+message Level 6: I thought I told you to stop cloning yourself
+
+wwwwwwwwwwwwwwwwwwww
+wt.................w
+wpcccccccccccccccccw
+w..................w
+wwwwwwwwwwwwwwwwwwww
+wp.......w.........w
+w........w.........w
+w.......twp......t.w
+w........w.........w
+w........w.........w
+wwwwwwwwwwwwwwwwwwww
+w.........wp......tw
+wp......t.w....c...w
+w.........w..c.....w
+w.........w....c...w
+wwwwwwwwwwwwwwwwwwww
+w.................tw
+wcccccccccccccccccpw
+w..................w
+wwwwwwwwwwwwwwwwwwww
+
+message Level 7: It can't be stopped...
+
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w.................twt.................w
+wcccccccccccccccccpwpcccccccccccccccccw
+w..................w..................w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w.........wp......twp.......w.........w
+wp......t.w....c...w........w.........w
+w.........w..c.....w.......twp......t.w
+w.........w....c...w........w.........w
+wwwwwwwwwwwwwwwwwwww........w.........w
+wp.......w.........wwwwwwwwwwwwwwwwwwww
+w........w.........w.........wp......tw
+w.......twp......t.wp......t.w....c...w
+w........w.........w.........w..c.....w
+w........w.........w.........w....c...w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wt.................w.................tw
+wpcccccccccccccccccwcccccccccccccccccpw
+w..................w..................w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+message Level 8: ...it's self sustaining now
+
+wwwwwwwwwwwwwwwwwwww
+wtp.wt...w.....w.c.w
+w.c.w....w..t..w.c.w
+w.c.w....w.....w.c.w
+w.c.w.c.cw.....w.c.w
+w.c.w....w.....w.c.w
+w.c.w..c.w.....w.c.w
+w.c.w....w.....w.c.w
+w.c.wp...w.....w.c.w
+w.c.wwwwww..p..w.c.w
+w.c.w....wwwwwww.c.w
+w.c.w.t..w..t..w.c.w
+w.c.w....w.....w.c.w
+w.c.w....w.....w.c.w
+w.c.w....w.....w.c.w
+w.c.w....w.....w.c.w
+w.c.w....w.....w.c.w
+w.c.w....w.....w.c.w
+w.c.w.p..wp....wtp.w
+wwwwwwwwwwwwwwwwwwww
+w.c.w.....wt...wtp.w
+w.c.w..t..w....w.c.w
+w.c.w.....w....w.c.w
+w.c.w.....w.c.cw.c.w
+w.c.w.....w....w.c.w
+w.c.w.....w..c.w.c.w
+w.c.w.....w....w.c.w
+w.c.w.....wp...w.c.w
+w.c.w..p..wwwwww.c.w
+w.c.wwwwwww....w.c.w
+w.c.w..t..w.t..w.c.w
+w.c.w.....w....w.c.w
+w.c.w.....w....w.c.w
+w.c.w.....w....w.c.w
+w.c.w.....w....w.c.w
+w.c.w.....w....w.c.w
+w.c.w.....w....w.c.w
+wtp.wp....w.p..w.c.w
+wwwwwwwwwwwwwwwwwwww
+
+message Level 9: PULL THE PLUG!!!... I MEAN PUSH THE PLUG!!!
+
+...................................wwwwwwwwwwwwwwwwwwwwwwwwww.....
+...................................w....w....w....w....w....w.....
+...................................w...tw...tw...tw...tw...tw.....
+...................................w....w....w....w....w....w.....
+...................................w....w....w....w....w....w.....
+...................................w....w....w....w....w....w.....
+...................................w....w....w....w....w....w.....
+...................................w....w....w....w....w....w.....
+...................................w....w....w....w....w....w.....
+...................................w....w....w....w....w....w.....
+...................................w....w....w....w....w....w.....
+...................................w....w....w....w....w....w.....
+...................................w....w....w....w....w....w.....
+...................................w....w....w....w....w....w.....
+...................................w....w....w....w....w....w.....
+...................................w.p..w.p..w.p..w.p..w.p..w.....
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w....w....w....w....w....w....w....w....w....w....w....w....w....w
+wp..twpct.wp..twpct.wp..twpct.wp..twpct.wp..twpct.wp..twpct.wp..tw
+w....w....w....w....w....w....w....w....w....w....w....w....w....w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+.....w....w....w....w....w....w...................................
+.....w...tw...tw...tw...tw...tw...................................
+.....w....w....w....w....w....w...................................
+.....w....w....w....w....w....w...................................
+.....w....w....w....w....w....w...................................
+.....w....w....w....w....w....w...................................
+.....w....w....w....w....w....w...................................
+.....w....w....w....w....w....w...................................
+.....w....w....w....w....w....w...................................
+.....w....w....w....w....w....w...................................
+.....w....w....w....w....w....w...................................
+.....w....w....w....w....w....w...................................
+.....w....w....w....w....w....w...................................
+.....w....w....w....w....w....w...................................
+.....w.p..w.p..w.p..w.p..w.p..w...................................
+.....wwwwwwwwwwwwwwwwwwwwwwwwww...................................
+
+message Level 10: Is it over?
+
+wwwwwwwwwwwwwwwwwwww
+wp................tw
+wwwwwwwwwwwwwwwwwwww
+
+message The End
+
+
+
+
+
+

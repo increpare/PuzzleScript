@@ -1,0 +1,487 @@
+title Illuminate
+author Aaron Dobbe
+homepage nintendooutcast.tumblr.com
+(based on Light Up from Simon Tatham's Puzzle Collection:
+ http://www.chiark.greenend.org.uk/~sgtatham/puzzles/ )
+
+key_repeat_interval 0.5
+again_interval 0.0
+
+========
+OBJECTS
+========
+
+Background
+Red
+
+Player
+Blue Yellow Pink Black
+.010.
+.222.
+00000
+.333.
+.0.0.
+
+Unlit
+DarkGray Gray
+00000
+00000
+00100
+00000
+00000
+
+Lit
+Yellow
+
+Bulb
+Gray Yellow
+.000.
+01110
+01110
+01110
+.000.
+
+BlockX
+Black
+
+Block0
+Black White
+01110
+01010
+01010
+01010
+01110
+
+Block1
+Black White
+00100
+00100
+00100
+00100
+00100
+
+Block2
+Black White
+01110
+00010
+01110
+01000
+01110
+
+Block3
+Black White
+01110
+00010
+01110
+00010
+01110
+
+Block4
+Black White
+01010
+01010
+01110
+00010
+00010
+
+Incomplete
+Red
+.....
+.....
+.....
+.....
+.....
+
+VeryBad
+Red
+.....
+0...0
+0...0
+0...0
+.....
+
+LightNS
+Yellow
+..0..
+..0..
+..0..
+..0..
+..0..
+
+LightEW
+Yellow
+.....
+.....
+00000
+.....
+.....
+
+LightCross
+Yellow
+..0..
+..0..
+00000
+..0..
+..0..
+
+Counter1
+Black
+Counter2
+Black
+Counter3
+Black
+Counter4
+Black
+
+BulbCheck
+Black
+
+=======
+LEGEND
+=======
+
+P = Player and Unlit
+. = Unlit
+X = BlockX
+0 = Block0
+1 = Block1
+2 = Block2
+3 = Block3
+4 = Block4
+Block = BlockX or Block0 or Block1 or Block2 or Block3 or Block4
+Bad = Incomplete or VeryBad
+Light = LightNS or LightEW or LightCross
+LightVr = LightNS or LightCross
+LightHr = LightEW or LightCross
+Counter = Counter1 or Counter2 or Counter3 or Counter4
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Unlit, Lit, Counter
+Light
+Bulb, BulbCheck
+Block, Player
+Bad
+
+======
+RULES
+======
+
+(Bulb placement/removal)
+[ action Player ] [ Light ] -> [ action Player ] [ no Light ]
+[ action Player no Bulb ] -> [ Player Bulb ]
+[ action Player Bulb ] -> [ Player no Bulb ]
+
+(Reset light so we can figure out what's illuminated now)
+[ Lit ] -> [ Unlit ]
+
+(Shoot orthogonal beams from bulbs)
+[ Bulb no LightCross ] -> [ Bulb LightCross ]
+vertical [ LightVr | no Light no Block ] -> [ LightVr | LightNS ] again
+vertical [ LightVr | LightEW ] -> [ LightVr | LightCross ] again
+horizontal [ LightHr | no Light no Block ] -> [ LightHr | LightEW ] again
+horizontal [ LightHr | LightNS ] -> [ LightHr | LightCross ] again
+[ Light Unlit ] -> [ Light Lit ]
+
+(Figure out if puzzle rules have been broken)
+[ Bad ] -> [ no Bad ]
+
+[ Block no Bad ] -> [ Block Incomplete ]
+[ BlockX Bad ] -> [ BlockX no Bad ] (Blank blocks have no rules to break)
+
+(Count number of bulbs next to blocks)
+
+horizontal [ Bulb | Block no Counter | Bulb ] -> [ Bulb | Block Counter2 | Bulb ]
+horizontal [ Block no Counter | Bulb ] -> [ Block Counter1 | Bulb ]
+
+vertical [ Bulb | Block Counter2 | Bulb ] -> [ Bulb | Block Counter4 | Bulb ]
+
+vertical [ Block Counter2 | Bulb ] -> [ Block Counter3 | Bulb ]
+vertical [ Bulb | Block Counter1 | Bulb ] -> [ Bulb | Block Counter3 | Bulb ]
+vertical [ Block Counter1 | Bulb ] -> [ Block Counter2 | Bulb ]
+vertical [ Bulb | Block no Counter | Bulb ] -> [ Bulb | Block Counter2 | Bulb ]
+vertical [ Block no Counter | Bulb ] -> [ Block Counter1 | Bulb ]
+
+(Figure out if we have too few, too many, or the correct number
+ of bulbs next to each block.)
+[ Block0 Counter Incomplete ] -> [ Block0 Counter VeryBad ]
+[ Block0 no Counter Incomplete ] -> [ Block0 no Incomplete ]
+
+[ Block1 Counter Incomplete ] -> [ Block1 Counter VeryBad ]
+[ Block1 Counter1 Bad ] -> [ Block1 Counter1 no Bad ]
+
+[ Block2 Counter Incomplete ] -> [ Block2 Counter VeryBad ]
+[ Block2 Counter1 Bad ] -> [ Block2 Counter1 Incomplete ]
+[ Block2 Counter2 Bad ] -> [ Block2 Counter2 no Bad ]
+
+[ Block3 Counter4 Incomplete ] -> [ Block3 Counter4 VeryBad ]
+[ Block3 Counter3 Incomplete ] -> [ Block3 Counter3 no Incomplete ]
+
+[ Block4 Counter4 Incomplete ] -> [ Block4 Counter4 no Incomplete ]
+
+[ Block Counter ] -> [ Block no Counter ]
+
+(Make sure no two bulbs can see each other)
+right [ Bulb | no BulbCheck no Bulb no Block ] -> [ Bulb | BulbCheck ]
+right [ Bulb | Bulb ] -> [ Bulb | Bulb VeryBad ]
+right [ BulbCheck | no Block no Bulb ] -> [ no BulbCheck | BulbCheck ]
+right [ BulbCheck | Block ] -> [ no BulbCheck | Block ]
+right [ BulbCheck | Bulb no VeryBad ] -> [ no BulbCheck | Bulb VeryBad ]
+[ BulbCheck ] -> [ no BulbCheck ]
+up [ Bulb | no BulbCheck no Bulb no Block ] -> [ Bulb | BulbCheck ]
+up [ Bulb | Bulb ] -> [ Bulb | Bulb VeryBad ]
+up [ BulbCheck | no Block no Bulb ] -> [ no BulbCheck | BulbCheck ]
+up [ BulbCheck | Block ] -> [ no BulbCheck | Block ]
+up [ BulbCheck | Bulb no VeryBad ] -> [ no BulbCheck | Bulb VeryBad ]
+[ BulbCheck ] -> [ no BulbCheck ]
+left [ Bulb | no BulbCheck no Bulb no Block ] -> [ Bulb | BulbCheck ]
+left [ Bulb | Bulb ] -> [ Bulb | Bulb VeryBad ]
+left [ BulbCheck | no Block no Bulb ] -> [ no BulbCheck | BulbCheck ]
+left [ BulbCheck | Block ] -> [ no BulbCheck | Block ]
+left [ BulbCheck | Bulb no VeryBad ] -> [ no BulbCheck | Bulb VeryBad ]
+[ BulbCheck ] -> [ no BulbCheck ]
+down [ Bulb | no BulbCheck no Bulb no Block ] -> [ Bulb | BulbCheck ]
+down [ Bulb | Bulb ] -> [ Bulb | Bulb VeryBad ]
+down [ BulbCheck | no Block no Bulb ] -> [ no BulbCheck | BulbCheck ]
+down [ BulbCheck | Block ] -> [ no BulbCheck | Block ]
+down [ BulbCheck | Bulb no VeryBad ] -> [ no BulbCheck | Bulb VeryBad ]
+[ BulbCheck ] -> [ no BulbCheck ]
+
+
+==============
+WINCONDITIONS
+==============
+
+No Unlit
+No Bad
+
+=======
+LEVELS
+=======
+
+message Light up the museum.
+
+..P..
+
+message Don't let bulbs illuminate each other.
+
+...
+.P.
+...
+
+X...
+.PX.
+X...
+
+message No bulbs next to zeroes.
+
+P..
+.0.
+...
+
+0..
+.PX
+0..
+
+message Exactly one bulb next to ones.
+
+XXX1X
+..P..
+XXX1X
+
+1.X
+.P.
+X.X
+
+....
+.P1.
+.0..
+....
+
+message Exactly two bulbs next to twos.
+
+2..
+.P.
+...
+
+.2.
+.P.
+XX.
+
+..P..
+.2X2.
+.....
+
+....
+2.X1
+.P..
+1.X1
+....
+
+.....
+.2.0.
+..P..
+.0.2.
+.....
+
+message You get the idea.
+
+.P.
+.1.
+.3.
+...
+
+P.X..
+.....
+X.4.X
+.....
+..X..
+
+......
+.3P.2.
+......
+
+.0...
+....0
+..P..
+3....
+...X.
+
+.....
+.2.1.
+..P..
+.4.X.
+.....
+
+...2.
+0....
+.P0..
+....X
+.0...
+
+....1...
+.3.....X
+...P0..1
+X....1..
+...2....
+
+.....0..
+.11...X.
+X.....1.
+...P....
+........
+.2.....1
+.X...12.
+..2.....
+
+....0...
+..1.....
+...P....
+..X.X11.
+11......
+
+........
+..2..3..
+.3..2.X.
+..XP....
+.....X..
+.2.3..0.
+..3..1..
+........
+
+..2....X
+..X.....
+...P..3.
+.......2
+.X0..1..
+
+....X...
+.2..0.0.
+........
+X0......
+...P..2X
+........
+.2.1..4.
+...X....
+
+..2X....2X..
+.X..X..2..X.
+..X......X..
+..1..22..X..
+......P.....
+............
+..1..X0..0..
+..1......2..
+.1..1..X..X.
+..X0....XX..
+
+....0..1....
+...1....1...
+..X......1..
+1.2.X..2.1.1
+....XP.0....
+....X..X....
+2.0.X..X.2.1
+..X......1..
+...0....X...
+....X..X....
+
+.....0.0....
+.0..1..0....
+.X........2.
+...X0...0..1
+1.....P.....
+X...........
+...X1...0..3
+.1........X.
+.X..2..1....
+.....1.0....
+
+..........XX
+.1....2.2...
+....3..2X..0
+X.....XX...2
+1..X.P.XXX..
+X..0...XXX..
+X.....1X...X
+....1..X0..X
+.1....3.1...
+..........XX
+
+....1.......
+1.XX...0.01.
+..2...1....X
+....1.....X.
+2..X....0...
+...0.X.....1
+X....P0.X...
+...X....X..X
+.1.....X....
+X....1...1..
+.0X.X...21.X
+.......2....
+
+X....X0.XXXX
+X...0......0
+.....X......
+...2.X0X....
+0......X.2XX
+1.X..1PX..X.
+.....X1X..X.
+.X.X0....X..
+.....X....3.
+...1..X2....
+..1...2..2..
+X..0....X...
+
+message All clear!
+message Game based on Light Up from Simon Tatham's Puzzle Collection: http://www.chiark.greenend.org.uk/~sgtatham/puzzles/
+message Thanks for playing!

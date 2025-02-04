@@ -1,0 +1,351 @@
+title Cave Story Demake v2.3
+author SRP and Connorses
+homepage www.puzzlescript.net
+zoomscreen 15x17
+
+homepage http://www.cavestory.org/forums/index.php?/topic/5246-puzzle-script-super-easy-browser-puzzle-game-tool/?p=176124
+
+========
+OBJECTS
+========
+
+Background 
+darkblue
+black
+black
+Wall 
+blue darkgreen  #596dff
+00221
+12220
+11122
+01112
+21101
+
+
+PlayerGround
+Red White Black blue Green
+.1104
+0004.
+.311.
+12221
+.0.0.
+
+PlayerJump1
+Red White Black blue Green
+.1104
+0004.
+.311.
+12221
+.0.0.
+
+PlayerJump2
+Red White Black blue Green
+.1104
+0004.
+.311.
+12221
+.0.0.
+
+PlayerGroundR
+Red White Black blue Green
+4011.
+.4000
+.113.
+12221
+.0.0.
+
+PlayerJump1R
+Red White Black blue Green
+4011.
+.4000
+.113.
+12221
+.0.0.
+
+PlayerJump2R
+Red White Black blue Green
+4011.
+.4000
+.113.
+12221
+.0.0.
+
+Bullet
+White
+.....
+.....
+..0..
+.....
+.....
+Bullet1
+White
+.....
+.....
+..0..
+.....
+.....
+Bullet2
+White
+.....
+.....
+..0..
+.....
+.....
+Bullet3
+White
+.....
+.....
+..0..
+.....
+.....
+
+BulletR
+White
+.....
+.....
+..0..
+.....
+.....
+Bullet1R
+White
+.....
+.....
+..0..
+.....
+.....
+Bullet2R
+White
+.....
+.....
+..0..
+.....
+.....
+Bullet3R
+White
+.....
+.....
+..0..
+.....
+.....
+
+Critter
+Green White Black
+.....
+..1..
+.102.
+.000.
+.000.
+
+Door
+Brown Black darkbrown
+.000.
+00220
+00020
+00010
+00000
+
+Door1
+Brown Black darkbrown
+.000.
+00220
+00020
+00010
+00000
+
+Door2
+Brown Black darkbrown
+.000.
+00220
+00020
+00010
+00000
+
+Save
+Red Black White
+..0..
+.020.
+00100
+.000.
+..0..
+
+DBlock
+White purple
+01010
+10001
+10001
+01110
+11111
+
+Chest
+Yellow grey Orange red
+.....
+.....
+.221.
+21320
+23320
+
+OpenChest
+Yellow grey Orange Red
+.....
+.222.
+..231
+21320
+23320
+
+=======
+LEGEND
+=======
+
+
+Solids = Wall or critter or DBlock
+Shot = Bullet or Bullet1 or Bullet2 or Bullet3 or BulletR or Bullet1R or Bullet2R or Bullet3R
+
+Player = PlayerGround or PlayerJump1 or PlayerJump2 or PlayerGroundR or PlayerJump1R or PlayerJump2R
+
+PlayerL = PlayerGround or PlayerJump1 or PlayerJump2
+PlayerR = PlayerGroundR or PlayerJump1R or PlayerJump2R
+
+JumpingPlayer = PlayerJump1 or PlayerJump2 or PlayerJump1R or PlayerJump2R
+
+groundPlayer = PlayerGround or PlayerGroundR
+
+EitherJ1 = playerjump1 or playerjump1R
+EitherJ2 = playerjump2 or playerjump2R
+
+. = Background
+; = black
+# = Wall
+P = PlayerGroundR
+E = Critter
+D = Door
+S = Save
+B = DBlock
+1 = Door1
+2 = Door2
+C = Chest
+
+=======
+SOUNDS
+=======
+
+SFX0 84483502
+SFX1 25724701 (polar star)
+SFX2 41668105 (jump)
+SFX3 84483502
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Door, Door1, Door2, save, Chest, Openchest
+Wall, Shot, Critter, Player, DBlock, black
+
+======
+RULES     
+======
+
+down [playerL|solids] -> [playerground |solids]
+down [playerR|solids] -> [playergroundR|solids]
+down [playerground |no solids] -> [down playerjump2 | ]
+down [playergroundR|no solids] -> [down playerjump2R| ]
+[left playergroundR] -> [left playerground]
+[right playerground] -> [right playergroundR]
+
+
+(V Jumping V)
+up [no solids|> player] -> cancel
+
+up [solids|> playerground |no solids] -> [solids| |> playerjump1 ] Sfx2
+up [solids|> playergroundR|no solids] -> [solids| |> playerjump1R] Sfx2
+
+left  [> eitherJ2|no solids] -> [ |down playerjump2 ] 
+right [> eitherJ2|no solids] -> [ |down playerjump2R]
+
+left  [> eitherJ1] -> [> playerjump2 ]
+right [> eitherJ1] -> [> playerjump2R]
+
+
+
+(V ??? V)
+[ > Shot | Wall ] -> [ | Wall]
+[ > Shot | DBlock ] -> [ | ]
+[ Action Player | DBlock ] -> [ Player | ]
+[ > Shot | Player ] -> [ | Player]
+[ > Shot | Critter ] -> [ | ] SFX0
+
+[ > Player | Critter ] -> Restart
+
+[down Player  Save ] -> Checkpoint Message Game Saved
+
+[ > Player | Door1 ] -> Message This section is not currently in the demo. Sorry!
+[ down Player Door2 ] -> Message No going back!
+
+[ Player | Critter ] -> [ Player | < Critter ]
+[ Player | ... | Critter ] -> [ Player | ... | < Critter ]
+
+[ down Player Chest ] -> [ Player OpenChest ] Message Opened the treasure chest. You got the Polar Star! But it's not finished...
+
+[down Player Door][no chest] -> [Door][] Win
+
+==============
+WINCONDITIONS
+==============
+
+=======     
+LEVELS
+=======
+
+Message From somewhere, a transmission...
+Message Connecting to network... Logged on. Executing chat algorithm.
+MessageSue? You there? It's me. Kazuma! I managed to get away somehow, but I've gotten lost... I've found a shelter, but there's nothing here. If you can hear me, please answer!
+Message...Please?
+#############
+###....######
+##...D.######
+#...#########
+#..##########
+#...........#
+##.........s#
+####..p...###
+####.###.####
+####......###
+####....#####
+#############
+
+Message From somewhere, a transmission...
+Message Searching for user "Sue"...
+Message 1 user "Sue" found.
+MessageSue! Please respond! They're looking for you... Are you asleep?    Your brother is so lonely...
+########################################################################
+#..................................................#....#..............#
+#..................................................#....#..............#
+#.......................................................b.............1#
+#......................................2p..........b.e..#...e..e..e.####
+#......................................#################################
+#.........................e.....e.....##################################
+#............e.......###################################################
+#.........S.############################################################
+#........###############################################################
+#.......################################################################
+#e...e.#################################################################
+##...###################################################################
+###...##################################################################
+####...#################################################################
+#####...################################################################
+######e................................................................#
+#######................................................................#
+########...............................................................#
+#########.....e.........e........eee......ee......e......e.......d.....#
+########################################################################
+
+##########
+###.....##
+##.......#
+#........#
+#.dp....c#
+##########
+Message  From somewhere, a transmission...
+Message Suuuuue! Answer me! I'm so hungry... There's nothing to eat and I've been reduced to feeding on cockroaches. ...Ha-ha. That was a joke. Ha-ha.
+Message ...If I have to, though, I really will...
+Message That's the end of the demo. So yeah.

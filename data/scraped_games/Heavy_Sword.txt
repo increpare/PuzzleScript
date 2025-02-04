@@ -1,0 +1,415 @@
+title Heavy Sword
+author MagiMaster
+
+noaction
+
+========
+OBJECTS
+========
+
+Background
+DarkGreen DarkBrown
+00000
+00010
+00000
+01000
+00000
+
+Stain
+Red
+0.0.0
+.000.
+00000
+.000.
+0.0.0
+
+Outside
+Black
+
+Wall
+Red DarkRed Black
+00001
+01112
+01112
+01112
+12222
+
+SwordU
+White Blue
+..0..
+..0..
+..0..
+.000.
+..1..
+
+SwordD
+White Blue
+..1..
+.000.
+..0..
+..0..
+..0..
+
+SwordL
+White Blue
+.....
+...0.
+00001
+...0.
+.....
+
+SwordR
+White Blue
+.....
+.0...
+10000
+.0...
+.....
+
+Player
+LightBlue Blue DarkBlue Brown
+.333.
+.030.
+12221
+.222.
+.2.2.
+
+PlayerTarget
+DarkBlue
+.....
+.....
+..0..
+.....
+.....
+
+SwordTarget
+White
+.....
+.....
+..0..
+.....
+.....
+
+BugU
+Yellow Black
+.000.
+01010
+00000
+00000
+.000.
+
+BugD
+Yellow Black
+.000.
+00000
+00000
+01010
+.000.
+
+BugL
+Yellow Black
+.000.
+01000
+00000
+01000
+.000.
+
+BugR
+Yellow Black
+.000.
+00010
+00000
+00010
+.000.
+
+Eyeball
+White Black DarkRed
+.222.
+20102
+00100
+20102
+.222.
+
+Snake
+Green White
+.000.
+.1..0
+..00.
+.0000
+00000
+
+Golem
+DarkGrey Red
+.000.
+.101.
+00000
+.000.
+.0.0.
+
+Rock
+DarkGrey
+.....
+.....
+.000.
+00000
+00000
+
+Exit
+Brown Black
+.000.
+00000
+01000
+00000
+00000
+
+Smell3
+White
+
+Smell2
+LightGrey
+
+Smell1
+Grey
+
+=======
+LEGEND
+=======
+
+. = Background
+% = Outside
+# = Wall
+@ = Player
+i = SwordU
+j = SwordL
+k = SwordD
+; = SwordR
+u = BugU
+d = BugD
+l = BugL
+r = BugR
+E = Eyeball
+S = Snake
+G = Golem
+X = Exit
+* = Stain
+o = Rock
+Sword = SwordU or SwordD or SwordL or SwordR
+Bug = BugU or BugD or BugL or BugR
+Enemy = Bug or Eyeball or Snake or Golem
+Obstacle = Wall or Enemy or Rock
+Smell = Smell3 or Smell2 or Smell1
+Temporary = PlayerTarget or SwordTarget or Smell
+
+=======
+SOUNDS
+=======
+
+SFX0 59977507
+SFX1 26699907
+SFX3 16711302
+
+EndLevel 73135102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Smell3, Smell2, Smell1
+PlayerTarget, SwordTarget
+Outside, Exit, Stain
+Bug, Eyeball, Snake, Golem, Wall, Rock
+Player, Wall, Sword
+
+======
+RULES
+======
+
+( Player movement )
+[ > Player | Wall ] -> cancel
+[ > Player | Rock ] -> cancel
+[ > Player | Sword | Wall ] -> cancel
+
+[ > Player | ] -> [ > Player | PlayerTarget ]
+
+[ > Player | Sword ] -> [ > Player | > Sword ] SFX0
+[ < Player | Sword ] -> [ < Player | < Sword ] SFX1
+[ ^ Player | Sword ] -> [ ^ Player | < Sword ] SFX1
+[ v Player | Sword ] -> [ v Player | < Sword ] SFX1
+
+[ > Sword | ] -> [ > Sword | SwordTarget ]
+
+( Propagate Smells )
+[ PlayerTarget | no Smell no Obstacle ] -> [ PlayerTarget | Smell3 ]
+[ Smell3 | no Smell no Obstacle ] -> [ Smell3 | Smell2 ]
+[ Smell2 | no Smell no Obstacle ] -> [ Smell2 | Smell1 ]
+
+( Bug movement )
+UP [ BugU | no Obstacle ] -> [ > BugU | ]
++ UP [ BugU | Obstacle ] -> [ BugL | Obstacle ]
++ LEFT [ BugL | no Obstacle ] -> [ > BugL | ]
++ LEFT [ BugL | Obstacle ] -> [ BugD | Obstacle ]
++ DOWN [ BugD | no Obstacle ] -> [ > BugD | ]
++ DOWN [ BugD | Obstacle ] -> [ BugR | Obstacle ]
++ RIGHT [ BugR | no Obstacle ] -> [ > BugR | ]
++ RIGHT [ BugR | Obstacle ] -> [ BugU | Obstacle ]
+
+( Eyeball movement )
+[ Eyeball | ... | PlayerTarget ] -> [ > Eyeball | ... | PlayerTarget ]
+
+( Golem movement )
+UP [ Golem | Smell1 ] -> [ > Golem | Smell1 ]
+LEFT [ Golem | Smell1 ] -> [ > Golem | Smell1 ]
+DOWN [ Golem | Smell1 ] -> [ > Golem | Smell1 ]
+RIGHT [ Golem | Smell1 ] -> [ > Golem | Smell1 ]
+
+UP [ Golem | Smell2 ] -> [ > Golem | Smell2 ]
+LEFT [ Golem | Smell2 ] -> [ > Golem | Smell2 ]
+DOWN [ Golem | Smell2 ] -> [ > Golem | Smell2 ]
+RIGHT [ Golem | Smell2 ] -> [ > Golem | Smell2 ]
+
+UP [ Golem | Smell3 ] -> [ > Golem | Smell3 ]
+LEFT [ Golem | Smell3 ] -> [ > Golem | Smell3 ]
+DOWN [ Golem | Smell3 ] -> [ > Golem | Smell3 ]
+RIGHT [ Golem | Smell3 ] -> [ > Golem | Smell3 ]
+
+UP [ Golem | PlayerTarget ] -> [ > Golem | PlayerTarget ]
+LEFT [ Golem | PlayerTarget ] -> [ > Golem | PlayerTarget ]
+DOWN [ Golem | PlayerTarget ] -> [ > Golem | PlayerTarget ]
+RIGHT [ Golem | PlayerTarget ] -> [ > Golem | PlayerTarget ]
+
+[ Golem PlayerTarget ] -> [ stationary Golem PlayerTarget ]
+
+( Snake movement )
+[ Snake | PlayerTarget ] -> [ > Snake | PlayerTarget ]
+
+( Clean up )
+[ > Enemy SwordTarget ] -> [ Enemy SwordTarget ]
+[ > Enemy | SwordTarget ] -> [ Enemy | SwordTarget ]
+[ > Enemy | stationary Obstacle ] -> [ Enemy | Obstacle ]
+
+late [ Sword Golem ] -> [ Sword Rock ] SFX3
+late [ Sword Enemy ] -> [ Sword Stain ] SFX3
+late [ Player Enemy ] -> [ Enemy Stain ] SFX3
+late [ Temporary ] -> [ ]
+
+late UP [ Player | Sword ] -> [ Player | SwordU ]
+late DOWN [ Player | Sword ] -> [ Player | SwordD ]
+late LEFT [ Player | Sword ] -> [ Player | SwordL ]
+late RIGHT [ Player | Sword ] -> [ Player | SwordR ]
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Exit
+
+=======
+LEVELS
+=======
+
+message That sword looks heavy, but it's the only way past the snake.
+
+%#####%######%%
+##...###....##%
+#.....#..u...##
+#.i..@......SX#
+#.....#..d...##
+##...###....##%
+%#####%######%%
+
+###########
+#....S#.#X#
+##.#....#.#
+%#.i.S#.#.#
+%#.@###S#.#
+%#........#
+%##########
+
+#########
+#.......#
+#.#.....#
+#i.....E#
+#@#.#...#
+#.#....E#
+#E#.....#
+#X#######
+###%%%%%%
+
+%%#####%%%%
+%%#i..#%%%%
+%##@#.#####
+##......GX#
+#E...######
+######%%%%%
+
+%%###%%%%%
+###s######
+#si.ss...#
+#x@.o...##
+##.....##%
+%#s...u#%%
+%##s.ss#%%
+%%######%%
+
+#########
+#.......#
+#.#####.#
+#.#...#.#
+#.#e#.#.#
+#.#x#.#.#
+#.###.#.#
+#..j@...#
+##...#.##
+%###...#%
+%%%#####%
+
+%%#####
+%##...#
+%#....#
+%#.#..#
+%#@...#
+##k#sg#
+#xg####
+####%%%
+
+%%%%%%%%%%%###%%
+%%%%%#######.#%%
+%%%###.e..#..#%%
+%%%#.........#%%
+####..#.####s###
+#e......@;...sx#
+####..#.####s###
+%%%#..#...#..##%
+%%%#...e......#%
+%%%#######...s#%
+%%%%%%%%%######%
+
+%%%###%%
+%%%#.#%%
+%%%#x#%%
+%%##.###
+%##d.le#
+%#e...##
+####..e#
+#.@...##
+##k..##%
+%###.#%%
+%%%#.#%%
+%%%#e#%%
+%%%###%%
+
+message Is that a light ahead?
+
+%%#######%
+###.##..##
+#e......s#
+###i##...#
+%%#@##...#
+%##e.e...#
+%#e.#....#
+%##x####e#
+%%###%%###
+
+message Finally, freedom.
+message Congratulations and thanks for playing.

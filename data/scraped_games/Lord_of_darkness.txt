@@ -1,0 +1,286 @@
+title Lord of darkness
+author Boa heck art gent
+homepage www.puzzlescript.net
+background_color black
+require_player_movement
+========
+OBJECTS
+========
+
+Background .
+White 
+
+
+
+Wall #
+Darkgrey Grey lightgrey
+22221
+21110
+21110
+21110
+10000
+
+Dark X
+Black
+
+Player
+black orange darkbrown
+0.00.
+2.11.
+20000
+2.00.
+..00.
+
+HalfD \
+grey
+
+HalfL /
+grey
+
+Lighter L
+Lightgrey yellow lightbrown
+.00.0
+.11.2
+00002
+.00.2
+.00..
+
+door D
+grey brown darkbrown
+
+02120
+12121
+12101
+12121
+12121
+
+LG 1
+Lightgrey
+
+DG 2
+Darkgrey
+
+Or 3
+Orange
+
+Br 4
+Brown
+
+DB 5
+DarkBrown
+
+Gr 6
+Green
+
+Bl 7
+Blue
+
+Dgr 8
+Darkgreen
+
+Dbl 9
+DarkBlue
+
+Yl 0
+yellow
+
+Floor '
+DarkGreen DarkBlue
+10101
+01010
+00000
+10101
+01010
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player and floor
+I = lighter and floor
+
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+ floor
+HalfD,HalfL, Door,
+Player, Wall, Dark,
+Lighter, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0,
+
+======
+RULES     
+======     
+
+[> Player|\] -> restart
+[Player \] -> restart
+[> Player|X] -> [> Player|X]
+[\] -> [X]
+[> Player '] -> [> Player \]
+[/] -> [']
+late[ L X] -> [ L /]
+[Left Player] [L] -> [Left Player] [Right L]
+[Right Player] [L] -> [Right Player] [Left L]
+[up Player] [L] -> [up Player] [down L]
+[down Player] [L] -> [down Player] [up L]
+[> L|#] -> [L|#]
+[> L|#] -> [L|#]
+[> L|#] -> [ L|#]
+[> L|#] -> [L|#]
+==============
+WINCONDITIONS
+==============
+All D on Player
+
+All L on Player
+
+
+=======     
+LEVELS
+=======
+
+MessageI was alone...
+
+43043343344330330334
+0\0454445445044540\\
+101\\2\5555552\10\\1
+1\11\\2898xx2\2\0\11
+11\\\2\2584482\2\0\1
+1\\12\285xxxx\21\\11
+11\\\2\258xx22\\21\1
+1\1\\\2258xx8\2\\\11
+11\1\2\9999992\\1\11
+1\\899999999999981\1
+18898898989898989881
+88899889898989888988
+88888888888888888889
+89888988989898898888
+88888888888888888888
+
+#####
+#####
+#p''d
+#####
+#####
+MessageEverywhere I want I spread darkness...
+
+992\\2\889\2\1111\11
+2\22\\\89x\2\\\11211
+99222229xx42222\2\\\
+92\288\2\555\\\2\11\
+22\\8998899x4\121\1\
+992228989903x52\2\\\
+92\2\8889000354\1211
+2\\2\88990.0.555\2\1
+922228989000325542\\
+22\\898990033\\5551\
+922\989890445\\95542
+992289999900x29xx554
+2\\29989x99x1\99x255
+22\9999999x9x9xx1\11
+922999999x9xx9x2\2\\
+
+#######
+#p''''#
+#####'#
+#'''''#
+#'#####
+#'''''d
+#######
+
+MessageThen I saw her.
+
+45045545544550550554
+0\0534443543044340\\
+202\\1\3333331\10\\2
+2\22\\11.1..1\1\0\22
+22\\\1\1310011\1\0\2
+22221\113....\12\\22
+22\\\1\131..11\\12\2
+2\2\\\1131..1\1\\\22
+22\2\1\8888881\\2\22
+2\\988988888889892\2
+29989989898989898992
+99988998989898999899
+99899999999999999998
+98999889898889989999
+99999999999999999999
+
+#####
+#####
+#p'i#
+#####
+#####
+
+MessageEven though she was my oposite in every way...
+
+33030003033030003033
+3xxxxxxxxx....989x.3
+0xxx..x.xxx.899.x..0
+0xxx00x3xxx..x899.x0
+3xx....3xxx.9...89.3
+0xxx..x3xxx.....98.0
+0xxx..xxxx...9x.8.x0
+3xxx11xxxx....989..3
+0xx1x2xxxx..x.xx...0
+0xx2.1x.x...5.44...0
+3x.x2x1xx...5xxxx..3
+0x1xxx2xx...5.xx...0
+0.x2.1x1x.....xx...0
+3.x1xxxx.x.........3
+33030003033030003033
+
+#############
+#p''''''''#'#
+#'###'#'###'#
+#'#'''#'''#'#
+#####'#'#'#'#
+#'''''''#'''#
+#'#########'#
+#'''#'''''''#
+#'#'#'#####'#
+#'#'''#'''#'#
+#'#####'###'#
+#''''''''''i#
+#############
+
+MessageSomehow she cleared up the dark and made me smile.
+
+xxxxxxx9xxxxx9xxxxxx
+xxxxx9x98x99xx9xxxxx
+xxxx9989999998x9xxxx
+xxxxx8998889989xxxxx
+xxxx99988888989x9xxx
+8xx9x98881188999x9xx
+xxxx99981..18989xxxx
+xx9x98981..188999x9x
+xxx9x998811889989xxx
+xxxxx9998338999xx9xx
+xxxx9x88933998x99xx8
+xxx9x9x994499x9xxxxx
+xxxxxx9x94498x9x9xxx
+xxxxxxxx955x99xxxxxx
+xxxxx9xxx55xxx9xxxxx
+
+#############
+#p##''''''''#
+#''########'#
+#'''''''''#'#
+#''####'#'#'#
+#'#'''''#'#'#
+#'#'##x##'#'#
+#'#'#'''''#'#
+#'#'#'#####'#
+#'#'''''''''#
+#'########''#
+#''''''''''i#
+#############

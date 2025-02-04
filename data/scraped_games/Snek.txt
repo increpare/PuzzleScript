@@ -1,0 +1,530 @@
+title Snek
+author Aaron Steed
+homepage www.robotacid.com
+
+background_color black
+text_color lightgreen
+require_player_movement
+noaction
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+darkbrown black
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+Blue Black
+11111
+10101
+11011
+10101
+11111
+
+Wall
+brown lightbrown DarkBrown
+00022
+00002
+00002
+00002
+02222
+
+Spike
+grey darkgrey white black
+33333
+33233
+30213
+30213
+33333
+
+pup
+Green Red LightGreen yellow pink
+0.4.0
+00400
+00300
+03130
+.030.
+
+pright
+Green Red LightGreen yellow pink
+.0000
+0300.
+31344
+0300.
+.0000
+
+pdown
+Green Red LightGreen yellow pink
+.030.
+03130
+00300
+00400
+0.4.0
+
+pleft
+Green Red LightGreen yellow pink
+0000.
+.0030
+44313
+.0030
+0000.
+
+bod
+Green Red LightGreen
+.000.
+00200
+02220
+00200
+.000.
+
+blood
+red
+0.0.0
+.000.
+00000
+.000.
+0.0.0
+
+Apple
+Red Green LightRed
+..1..
+.000.
+02000
+00000
+.000.
+
+
+Crate
+darkgrey darkbrown white
+00000
+00001
+00001
+00001
+01111
+
+
+Covered
+red darkred white blue
+.....
+.3.3.
+..2..
+.3.3.
+.....
+
+UpMarker
+purple
+..0..
+.000.
+00000
+.....
+.....
+
+LeftMarker
+purple
+..0..
+.00..
+000..
+.00..
+..0..
+
+RightMarker
+purple
+..0..
+..00.
+..000
+..00.
+..0..
+
+DownMarker
+purple
+.....
+.....
+00000
+.000.
+..0..
+
+t_right_up
+pink
+.....
+0....
+00...
+.....
+.....
+
+t_right_down
+pink
+.....
+.....
+00...
+0....
+.....
+
+t_right_up_down
+pink
+.....
+0....
+0....
+0....
+.....
+
+t_left_up
+pink
+.....
+....0
+...00
+.....
+.....
+
+t_left_down
+pink
+.....
+.....
+...00
+....0
+.....
+
+t_left_up_down
+pink
+.....
+....0
+....0
+....0
+.....
+
+t_up_left
+pink
+.....
+.....
+.....
+..0..
+.00..
+
+t_up_right
+pink
+.....
+.....
+.....
+..0..
+..00.
+
+t_up_right_left
+pink
+.....
+.....
+.....
+.....
+.000.
+
+t_down_left
+pink
+.00..
+..0..
+.....
+.....
+.....
+
+t_down_right
+pink
+..00.
+..0..
+.....
+.....
+.....
+
+t_down_left_right
+pink
+.000.
+.....
+.....
+.....
+.....
+
+
+DirRight
+Transparent
+DirLeft
+Transparent
+DirDown
+Transparent
+DirUp
+Transparent
+
+tRight
+Transparent
+tLeft
+Transparent
+tDown
+Transparent
+tUp
+Transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+w = pright
+x = pdown
+y = pleft
+z = pup
+a = bod and rightmarker
+b = bod and downmarker
+c = bod and leftmarker
+d = bod and upmarker
+1 = apple
+2 = crate
+3 = target
+4 = spike
+
+Marker = UpMarker or LeftMarker or RightMarker or DownMarker
+Player = pup or pdown or pleft or pright
+PlayerPart = Player or bod
+turn = playerpart or wall
+obj = turn or crate
+tongue = t_right_up or t_down_right or t_down_left or t_up_right or t_up_left or t_left_down or t_left_up or t_right_down or t_up_right_left or t_down_left_right or t_left_up_down or t_right_up_down
+tmark = tup or tright or tdown or tleft
+dir = dirright or dirleft or dirdown or dirup
+=======
+SOUNDS
+=======
+
+SFX0 39407901
+sfx1 88210107
+sfx2 58884704
+Undo 77808908   
+Restart 63782908
+Player MOVE 97674907
+endlevel 12505308
+
+================
+COLLISIONLAYERS
+================
+
+
+Marker (Move to layer above Player when editing)
+
+Background
+dir
+tup
+tright
+tdown
+tleft
+Target, spike
+Player, Wall, bod, apple, crate, blood
+tongue
+covered
+======
+RULES
+======
+
+([no pleft] -> cancel)
+
+[ up Player ] -> [ Player ]
+[ down Player ] -> [ Player ]
+[blood] [moving player] -> [blood] [stationary player]
+
+(wiggle)
+left [ left player | turn ] -> [ up player | turn ]
+left [ left player | crate | obj ] -> [ up player | crate | obj ]
+up [ up player | turn ] -> [ down player | turn ]
+up [ up player | crate | obj ] -> [ down player | crate | obj ]
+right [ right player | turn ] -> [ down player | turn ]
+right [ right player | crate | obj ] -> [ down player | crate | obj ]
+down [ down player | turn ] -> [ up player | turn ]
+down [ down player | crate | obj ] -> [ up player | crate | obj ]
+
+(player face)
+[ up player ] -> [ up pup ]
+[ right player ] -> [ right pright ]
+[ down player ] -> [ down pdown ]
+[ left player ] -> [ left pleft ]
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+
+(simplified snake code from Snakeoban by Jack Lance)
+(https://www.puzzlescript.net/play.html?p=e5561ef165d87310166e)
+left [ > Player | Apple | ] -> [ bod Leftmarker | Player | SFX0]
+right [ > Player | Apple | ] -> [ bod Rightmarker | Player | SFX0 ]
+up [ > Player | Apple | ] -> [ bod Upmarker | Player | SFX0 ]
+down [ > Player | Apple | ] -> [ bod Downmarker | Player | SFX0 ]
+[ left Player ] -> [ left Player Leftmarker ]
+[ right Player ] -> [ right Player Rightmarker ]
+[ up Player ] -> [ up Player Upmarker ]
+[ down Player ] -> [ down Player Downmarker ]
+startloop
+late left [ bod Leftmarker | No PlayerPart ] -> [ Leftmarker | bod ]
+late right [ bod Rightmarker | No PlayerPart ] -> [ Rightmarker | bod ]
+late up [ bod Upmarker | No PlayerPart ] -> [ Upmarker | bod ]
+late down [ bod Downmarker | No PlayerPart ] -> [ Downmarker | bod ]
+endloop
+late [no playerpart marker] -> [ no playerpart no marker]
+
+(crate)
+late [no obj target covered] -> [no obj target no covered]
+late [obj target no covered] -> [obj target covered] sfx1
+
+(ui)
+(simulate movement using dummy tiles and record the result before painting the tongue)
+late [tongue]->[]
+late [dir]->[]
+late [tmark]->[]
+late [player]->[player dirleft]
+
+late left [ dirleft player | turn ] -> [ dirup player | turn ]
+late left [ dirleft player | crate | obj ] -> [ dirup player | crate | obj ]
+late up [ dirup player | turn ] -> [ dirdown player | turn ]
+late up [ dirup player | crate | obj ] -> [ dirdown player | crate | obj ]
+
+late [dirleft] [player] -> [dirleft] [player tleft]
+late [dirup] [player] -> [dirup] [player tup]
+late [dirdown] [player] -> [dirdown] [player tdown]
+
+late [player]->[player dirright]
+late right [ dirright player | turn ] -> [ dirdown player | turn ]
+late right [ dirright player | crate | obj ] -> [ dirdown player | crate | obj ]
+late down [ dirdown player | turn ] -> [ dirup player | turn ]
+late down [ dirdown player | crate | obj ] -> [ dirup player | crate | obj ]
+
+late [dirright] [player] -> [dirright] [player tright]
+late [dirup] [player] -> [dirup] [player tup]
+late [dirdown] [player] -> [dirdown] [player tdown]
+
+late up [pup|] [player tleft tright] -> [pup| t_up_right_left] [player]
+late up [pup|] [player tup tright] -> [pup| t_up_right] [player]
+late up [pup|] [player tleft tup] -> [pup| t_up_left] [player]
+
+late down [pdown|] [player tleft tright] -> [pdown| t_down_left_right] [player]
+late down [pdown|] [player tdown tright] -> [pdown| t_down_right] [player]
+late down [pdown|] [player tleft tdown] -> [pdown| t_down_left] [player]
+
+late left [pleft|] [player tup tdown] -> [pleft| t_left_up_down] [player]
+late left [pleft|] [player tdown tleft] -> [pleft| t_left_down] [player]
+late left [pleft|] [player tleft tup] -> [pleft| t_left_up] [player]
+
+late right [pright|] [player tup tdown] -> [pright| t_right_up_down] [player]
+late right [pright|] [player tdown tright] -> [pright| t_right_down] [player]
+late right [pright|] [player tright tup] -> [pright| t_right_up] [player]
+
+(death)
+late [playerpart spike] -> [blood spike] sfx2
+
+==============
+WINCONDITIONS
+==============
+
+all target on obj
+
+=======
+LEVELS
+=======
+
+#########
+#.ycccc.#
+#.......#
+#.......#
+#...3...#
+#.......#
+#.......#
+#.......#
+#########
+
+#############
+#...........#
+#...ycccc...#
+#...........#
+#...3...3...#
+#...........#
+#...........#
+#...........#
+#############
+
+#############
+#...........#
+#...ycccc...#
+#...........#
+#..3..2..3..#
+#...........#
+#...........#
+#...........#
+#############
+
+#############
+#...........#
+#.2...3...2.#
+#...........#
+#...ycccc...#
+#...........#
+#.3...2...3.#
+#...........#
+#############
+
+###########
+#.........#
+#..ycccc..#
+#.........#
+#...3.....#
+#.........#
+#...3.3...#
+#.........#
+#.........#
+#.........#
+###########
+
+#444444444#
+41.......14
+4..ycccc..4
+4.........4
+4...3.3...4
+4....3....4
+4...3.3...4
+4.........4
+4.........4
+41.......14
+#444444444#
+
+#444444444#
+4.........4
+4.3ycccc3.4
+4.........4
+4.........4
+4.2..3..2.4
+4.........4
+4.........4
+4.4..2..4.4
+4.........4
+#444444444#
+
+###########
+#.........#
+#.3..3..3.#
+#.........#
+#.........#
+#444.2.444#
+#.........#
+#.........#
+#..ycccc..#
+#.........#
+###########
+
+#444444444#
+4.........4
+4..aaaaw..4
+4..4.2.4..4
+4..43334..4
+4..43234..4
+4..43334..4
+4..44444..4
+4.1.....1.4
+4.........4
+#444444444#
+

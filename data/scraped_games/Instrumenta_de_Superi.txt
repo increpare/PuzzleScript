@@ -1,0 +1,705 @@
+title Instrumenta de Superi
+author Mark Richardson
+again_interval 0.1
+key_repeat_interval 0.2
+noaction
+realtime_interval 0.1
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+Background
+Brown
+
+Wall
+Orange
+
+Cliff
+#842 #632 #421 #211 #000
+00102
+12102
+12324
+34324
+34444
+
+Exit
+#408 #80F #C0F #F0F
+32221
+21110
+21110
+21110
+10000
+
+Water
+#00C
+
+Waterfall1
+#00A #007 #004 #001 #000
+00102
+12102
+12324
+34324
+34444
+
+Waterfall2
+#00A #007 #004 #001 #000
+20001
+22011
+42213
+44233
+44434
+
+Waterfall3
+#00A #007 #004 #001 #000
+01002
+21102
+23124
+43324
+44344
+
+Waterfall4
+#00A #007 #004 #001 #000
+00120
+01122
+21342
+23344
+43444
+
+Waterfall5
+#00A #007 #004 #001 #000
+10200
+11220
+31422
+33442
+43444
+
+Ice
+#44F #CCF
+00001
+01010
+10000
+00010
+00100
+
+Icefall
+#33C #229 #116 #003 #000
+00102
+12102
+12324
+34324
+34444
+
+Crack
+Brown Black
+00001
+01010
+10100
+00100
+01000
+
+Cracked
+Brown Black
+10001
+01010
+10100
+00101
+01010
+
+Chasm
+Black
+
+Vine
+#080 #0C0 #0F0
+..10.
+.1020
+02101
+101..
+..01.
+
+Fire
+#C00 #F00 #F40 #F80 #FC0 #FF0
+..54.
+.3434
+32323
+212..
+..10.
+
+Pedestal
+#333 #666 #999 #CCC
+32221
+21110
+21110
+21110
+10000
+
+WindU
+Transparent White
+..0..
+.000.
+.....
+.....
+.....
+
+WindD
+Transparent White
+.....
+.....
+.....
+.000.
+..0..
+
+WindL
+Transparent White
+.....
+.0...
+00...
+.0...
+.....
+
+WindR
+Transparent White
+.....
+...0.
+...00
+...0.
+.....
+
+WindV1
+Green
+...0.
+.0...
+.....
+...0.
+.....
+
+WindV2
+Green
+.....
+....0
+.0...
+.....
+..0..
+
+WindV3
+Green
+..0..
+.....
+....0
+.0...
+.....
+
+WindV4
+Green
+.....
+...0.
+.....
+....0
+0....
+
+WindV5
+Green
+0....
+.....
+...0.
+.....
+...0.
+
+WindH1
+Green
+.....
+.0..0
+.....
+...0.
+.....
+
+WindH2
+Green
+.....
+0.0..
+.....
+.....
+....0
+
+WindH3
+Green
+.0...
+...0.
+.....
+.....
+0....
+
+WindH4
+Green
+..0..
+.....
+....0
+.0...
+.....
+
+WindH5
+Green
+...0.
+.....
+0....
+..0..
+.....
+
+Naked
+Transparent
+
+Brace
+Yellow White
+.11..
+.00..
+0..0.
+0..0.
+.00..
+
+Wings
+#0C0 #0F0
+1...1
+00100
+00.00
+.0.0.
+.1.1.
+
+Torch
+Gray Red Yellow
+.1...
+121..
+.10..
+...0.
+....0
+
+Flake
+LightBlue
+0...0
+.000.
+00.00
+.000.
+0...0
+
+PlayerNaked
+Purple
+.....
+..00.
+.0000
+..00.
+.0..0
+
+PlayerBrace
+Purple Yellow White
+.....
+.200.
+.1000
+..00.
+.0..0
+
+PlayerWings
+Purple #0F0
+.1..1
+.1001
+.0000
+.1001
+.0..0
+
+PlayerTorch
+Purple Gray #F00
+2....
+1.00.
+10000
+..00.
+.0..0
+
+PlayerFlake
+Purple LightBlue
+.....
+1100.
+10000
+..00.
+.0..0
+
+Light1
+White
+.....
+...0.
+.....
+.....
+.....
+
+Light2
+White
+.....
+.0.0.
+.....
+0....
+..0..
+
+Light3
+White
+0....
+.0.00
+.0...
+0..0.
+..0.0
+
+Light4
+White
+0.0.0
+00.00
+.00.0
+00.0.
+.00.0
+
+Light5
+White
+
+
+=======
+LEGEND
+=======
+
+Ç = Background and PlayerNaked
+0 = Background and PlayerBrace
+1 = Background and PlayerWings
+2 = Background and PlayerTorch
+3 = Background and PlayerFlake
+ü = Pedestal and Naked
+4 = Pedestal and Brace
+5 = Pedestal and Wings
+6 = Pedestal and Torch
+7 = Pedestal and Flake
+8 = Exit
+9 = Exit and Vine
+` = Wall
+~ = Background
+! = Water
+@ = Ice
+# = Crack
+$ = Chasm
+% = Vine and Background
+& = Vine and Water
+* = Vine and Ice
+_ = Vine and Crack
+- = Vine and Chasm
++ = WindU and Background
+q = WindU and Water
+w = WindU and Ice
+e = WindU and Crack
+r = WindU and Chasm
+t = WindU and Vine and Background
+y = WindU and Vine and Water
+u = WindU and Vine and Ice
+i = WindU and Vine and Crack
+o = WindU and Vine and Chasm
+p = WindD and Background
+[ = WindD and Water
+] = WindD and Ice
+{ = WindD and Crack
+} = WindD and Chasm
+a = WindD and Vine and Background
+s = WindD and Vine and Water
+d = WindD and Vine and Ice
+f = WindD and Vine and Crack
+g = WindD and Vine and Chasm
+h = WindL and Background
+j = WindL and Water
+k = WindL and Ice
+l = WindL and Crack
+; = WindL and Chasm
+: = WindL and Vine and Background
+' = WindL and Vine and Water
+" = WindL and Vine and Ice
+z = WindL and Vine and Crack
+x = WindL and Vine and Chasm
+c = WindR and Background
+b = WindR and Water
+n = WindR and Ice
+m = WindR and Crack
+, = WindR and Chasm
+. = WindR and Vine and Background
+/ = WindR and Vine and Water
+? = WindR and Vine and Ice
+\ = WindR and Vine and Crack
+| = WindR and Vine and Chasm
+é = Light1 and Background
+â = Light1 and Chasm
+ä = Light2 and Background
+à = Light2 and Chasm
+å = Light3 and Background
+ê = Light3 and Chasm
+ë = Light4 and Background
+è = Light4 and Chasm
+ï = Light5 and Exit
+î = Light5 and Chasm
+
+Player = PlayerNaked or PlayerBrace or PlayerWings or PlayerTorch or PlayerFlake
+Obstacle = Wall or Vine or Fire or Pedestal
+Wind = WindU or WindD or WindL or WindR
+WindV = WindV1 or WindV2 or WindV3 or WindV4 or WindV5
+WindH = WindH1 or WindH2 or WindH3 or WindH4 or WindH5
+WindX = WindV or WindH
+Tool = Naked or Brace or Wings or Torch or Flake
+Waterfall = Waterfall1 or Waterfall2 or Waterfall3 or Waterfall4 or Waterfall5
+Light = Light1 or Light2 or Light3 or Light4 or Light5
+
+
+=======
+SOUNDS
+=======
+
+Cracked Create 47546308 (Standing on a cracked tile)
+Ice     Create 89632100 (Freezing water)
+Fire    Create 51371108 (Burning vines)
+SFX0           53552309 (Switching tools)
+SFX1           03957505 (Floating on the wind)
+SFX2           04971508 (Fall down chasm)
+SFX3           87099508 (Fall into water)
+EndLevel       18589508
+EndGame        87988708
+Restart        45760308
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit, Water, Ice, Chasm, Crack, Cracked, Pedestal
+Cliff, Waterfall, Icefall
+Player, Vine, Fire, Wall, Tool
+WindX
+Wind, Light
+
+
+======
+RULES
+======
+
+(Animate)
+[ Wind WindX ] -> [ action Wind WindX ]
+[ Waterfall ] -> [ action Waterfall ]
+[ moving Player ] [ action Wind ] -> [ moving Player ] [ Wind ]
+[ moving Player ] [ action Waterfall ] -> [ moving Player ] [ Waterfall ]
+[ action WindU WindV1 ] -> [ WindU WindV5 ]
+[ action WindU WindV2 ] -> [ WindU WindV1 ]
+[ action WindU WindV3 ] -> [ WindU WindV2 ]
+[ action WindU WindV4 ] -> [ WindU WindV3 ]
+[ action WindU WindV5 ] -> [ WindU WindV4 ]
+[ action WindD WindV1 ] -> [ WindD WindV2 ]
+[ action WindD WindV2 ] -> [ WindD WindV3 ]
+[ action WindD WindV3 ] -> [ WindD WindV4 ]
+[ action WindD WindV4 ] -> [ WindD WindV5 ]
+[ action WindD WindV5 ] -> [ WindD WindV1 ]
+[ action WindL WindH1 ] -> [ WindL WindH5 ]
+[ action WindL WindH2 ] -> [ WindL WindH1 ]
+[ action WindL WindH3 ] -> [ WindL WindH2 ]
+[ action WindL WindH4 ] -> [ WindL WindH3 ]
+[ action WindL WindH5 ] -> [ WindL WindH4 ]
+[ action WindR WindH1 ] -> [ WindR WindH2 ]
+[ action WindR WindH2 ] -> [ WindR WindH3 ]
+[ action WindR WindH3 ] -> [ WindR WindH4 ]
+[ action WindR WindH4 ] -> [ WindR WindH5 ]
+[ action WindR WindH5 ] -> [ WindR WindH1 ]
+[ action Waterfall1 ] -> [ Waterfall2 ]
+[ action Waterfall2 ] -> [ Waterfall3 ]
+[ action Waterfall3 ] -> [ Waterfall4 ]
+[ action Waterfall4 ] -> [ Waterfall5 ]
+[ action Waterfall5 ] -> [ Waterfall1 ]
+
+
+(Glide)
+up    [ PlayerWings WindU | no Obstacle ] -> [ > PlayerWings WindU | ] again
+down  [ PlayerWings WindD | no Obstacle ] -> [ > PlayerWings WindD | ] again
+left  [ PlayerWings WindL | no Obstacle ] -> [ > PlayerWings WindL | ] again
+right [ PlayerWings WindR | no Obstacle ] -> [ > PlayerWings WindR | ] again
+
+(Die)
+[ stationary Player Chasm ] -> [ Chasm ] SFX2
+[ stationary Player Water ] -> [ Water ] SFX3
+
+(Get tool)
+[ > PlayerNaked | Brace ] -> [ PlayerBrace | Naked ] SFX0
+[ > PlayerNaked | Wings ] -> [ PlayerWings | Naked ] SFX0
+[ > PlayerNaked | Torch ] -> [ PlayerTorch | Naked ] SFX0
+[ > PlayerNaked | Flake ] -> [ PlayerFlake | Naked ] SFX0
+[ > PlayerBrace | Naked ] -> [ PlayerNaked | Brace ] SFX0
+[ > PlayerBrace | Wings ] -> [ PlayerWings | Brace ] SFX0
+[ > PlayerBrace | Torch ] -> [ PlayerTorch | Brace ] SFX0
+[ > PlayerBrace | Flake ] -> [ PlayerFlake | Brace ] SFX0
+[ > PlayerWings | Naked ] -> [ PlayerNaked | Wings ] SFX0
+[ > PlayerWings | Brace ] -> [ PlayerBrace | Wings ] SFX0
+[ > PlayerWings | Torch ] -> [ PlayerTorch | Wings ] SFX0
+[ > PlayerWings | Flake ] -> [ PlayerFlake | Wings ] SFX0
+[ > PlayerTorch | Naked ] -> [ PlayerNaked | Torch ] SFX0
+[ > PlayerTorch | Brace ] -> [ PlayerBrace | Torch ] SFX0
+[ > PlayerTorch | Wings ] -> [ PlayerWings | Torch ] SFX0
+[ > PlayerTorch | Flake ] -> [ PlayerFlake | Torch ] SFX0
+[ > PlayerFlake | Naked ] -> [ PlayerNaked | Flake ] SFX0
+[ > PlayerFlake | Brace ] -> [ PlayerBrace | Flake ] SFX0
+[ > PlayerFlake | Wings ] -> [ PlayerWings | Flake ] SFX0
+[ > PlayerFlake | Torch ] -> [ PlayerTorch | Flake ] SFX0
+
+(Burn Vines)
+[ Fire ] -> [ action Fire ]
+[ action Fire Ice ] -> [ action Fire Water ]
+[ action Fire | Vine ] -> [ action Fire | Fire ] again
+[ action Fire ] -> [ ]
+[ > PlayerTorch | Vine ] -> [ PlayerTorch | Fire ] again
+
+(Modify map)
+[ stationary Player no PlayerBrace Crack ] -> [ stationary Player Cracked ]
+late [ Cracked no Player ] -> [ Chasm ]
+late [ PlayerFlake Water ] -> [ PlayerFlake Ice ]
+late [ PlayerTorch Ice ] -> [ PlayerTorch Water ] again
+late [ PlayerNaked Crack         ] -> [ PlayerNaked Cracked ]
+late [ PlayerWings Crack no Wind ] -> [ PlayerWings Cracked ]
+late [ PlayerFlake Crack         ] -> [ PlayerFlake Cracked ]
+late [ PlayerTorch Crack         ] -> [ PlayerTorch Cracked ]
+late down [ no Wall no Water no Ice no Crack no Cracked no Chasm | Chasm no Cliff ] -> [ | Chasm Cliff ]
+late down [ Wall  | Chasm no Cliff     ] -> [ Wall  | Chasm        Cliff     ]
+late down [ Water | Chasm no Waterfall ] -> [ Water | Chasm random Waterfall ]
+late down [ Ice   | Chasm no Icefall   ] -> [ Ice   | Chasm        Icefall   ]
+late up    [ PlayerWings WindU | no Obstacle ] -> SFX1 again
+late down  [ PlayerWings WindD | no Obstacle ] -> SFX1 again
+late left  [ PlayerWings WindL | no Obstacle ] -> SFX1 again
+late right [ PlayerWings WindR | no Obstacle ] -> SFX1 again
+startloop
+random late [ WindU no WindV ] -> [ WindU random WindV ]
+random late [ WindD no WindV ] -> [ WindD random WindV ]
+random late [ WindL no WindH ] -> [ WindL random WindH ]
+random late [ WindR no WindH ] -> [ WindR random WindH ]
+late vertical   [ WindU WindV | WindU no WindV ] -> [ WindU WindV | WindU WindV ]
+late vertical   [ WindD WindV | WindD no WindV ] -> [ WindD WindV | WindD WindV ]
+late horizontal [ WindL WindH | WindL no WindH ] -> [ WindL WindH | WindL WindH ]
+late horizontal [ WindR WindH | WindR no WindH ] -> [ WindR WindH | WindR WindH ]
+endloop
+
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Exit
+
+
+=======
+LEVELS
+=======
+
+(Tutorial)
+```$$$$$$$$$$$$$$
+Ç~~~$$$~~~$$$~~~$
+`~~~###~4~###~6~$
+$~~~$$$%%%$$$~~~$
+$$$$$$$-_-$$$}}}$
+$}};;;;xzx;;;;;;$
+$}}}$$$-_-$$$rrr$
+$~~~$$$%%%$$$!!!$
+$~8~$$$~7~###!5!$
+$~~~$$$~~~$$$!!!$
+$$$$$$$$$$$$$$$$$
+
+(Tornado chasm)
+`````````````
+`!!!~~~~~~~6`
+`!$$$$#$$$$~`
+`!$,,,{,}$$#`
+`~$r$`{$}$$~`
+`~$r$`~~}$$~`
+`~~+~71~[!!~`
+`#$r$`~~}$$~`
+`~$8;`:;;$$~`
+`~--&$%$$$$~`
+`~$$!$%$$$$~`
+`4~~~~~~~~~~`
+`````````````
+
+(Windy corridors)
+```````````````
+`~~7+~~~~~p6~~`
+`#``r``4``}``~`
+`#``r`````}``~`
+`#_#e##8``}``~`
+`#``r`````}``~`
+`#``r`````}``~`
+`~1~+~!!!~p~~~`
+```````````````
+
+(Quilted)
+$$$`````````````$$$
+$$#~jj~~~~~\\!!~#$$
+$#~~jj~~~~~\\!!2~#$
+$4#~##%%rrr!!__~#5$
+$#~~##%%rrr!!__~~#$
+$$#~%%rr+++rr##~#$$
+$$~~%%rr+8+rr##~~$$
+$$#~%%rr+++rr##~#$$
+$#~~##~~rrr~~__~~#$
+$6#~##~~rrr~~__~#7$
+$#~~,,!!%%%##,,~~#$
+$$#~,,!!%%%##,,~#$$
+$$$`````````````$$$
+
+(Ice pit)
+```````````
+`8&~~`~~~~`
+`&&~~4~~~~`
+`~~1#`#~~~`
+`~~mb,bm~~`
+````!$!`7``
+`~~lj;jl~~`
+`~~~#`#~~~`
+`~~~~5~~~~`
+`6~~~`~~~~`
+```````````
+
+(Target)
+$$```````````
+$``~~~~~~~%9`
+``~~,,b,,~~%`
+`~~,mmcmm,~~`
+`~,mm,,,mm,~`
+`~,m,mmm,m,~`
+`~,c4m6mbc,~`
+`~,m,mmm,m,~`
+`~,mm,,,mm,~`
+`~~,mmcmm,~~`
+``3~,,5,,~~``
+$``~~~~~~~``$
+$$`````````$$
+$$$$$$$$$$$$$
+
+(Crumbling temple)
+$$$$$$$$$$$$$$$$$$$$$
+$@!j;;;;;hhh;;;;;h~~$
+$@@!$$$$}p8p}$$$$~~~$
+$@@@$$$$}aaa}$$$$~~~$
+$$ü#$$$$}-@-}$$$$#ü$$
+$~~~$~~~,%~~;~~~$##$$
+$~~~ü~~~ü~~~ü~~~5###$
+$~~~$~~+#~~~#~~~$##$$
+$$4#$$$r$$ü$$$$$$#ü$$
+$~~~###e#~~~#####~~~$
+$~~~$$$e$~2~$###$~~~$
+$~~~$$#e$~~~$#$$$~~~$
+$$ü#$$$r$$ü$$$$-$!ü$$
+$~~~#~~+##~##~%%!!##$
+$~~~7~~~ü~#~ü%%%ü###$
+$~~~$~~~$###-%%~$##$$
+$$$$$$$$$$$$$-$$$$$$$
+
+(Into the light)
+èîïïïîè
+êèëëëèê
+àêåååêà
+âàäääàâ
+$âéééâ$
+$$~~~$$
+$$~~~$$
+$$~ç~$$
+$$~~~$$
+$$$$$$$

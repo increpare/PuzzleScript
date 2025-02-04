@@ -1,0 +1,123 @@
+title Escape The Haunted Mansion
+author Grant Hildreth
+homepage www.puzzlescript.net
+youtube LvpfP1sMbzM
+========
+OBJECTS
+========
+
+Background
+darkbrown lightbrown
+11111
+00000
+11111
+00000
+11111
+
+
+Target
+Brown yellow
+00000
+00000
+00001
+00000
+00000
+
+Wall
+BLACK GRAY
+00010
+11111
+01000
+11111
+00010
+
+Player
+Brown orange purpleblue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Ghost
+White gray
+.000.
+00100
+00010
+.001.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Target
+G = Ghost
+
+=======
+SOUNDS
+=======
+
+restart 21462704
+player move 33555107
+endlevel 59108903
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall
+Ghost
+======
+RULES
+======
+[ Player | | Ghost ] -> [  Player | Ghost|]
+[ Player Ghost] -> restart
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Player
+
+=======
+LEVELS
+=======
+
+
+#########
+#....####
+#.......#
+#.p...G.O
+#.......#
+##...G..#
+#########
+
+message Good Job! You beat the first level!
+
+##############
+#g..#...#...g#
+#...#...#..###
+#p......#.g.o#
+#.#....g...###
+#.#.....#...g#
+##############
+
+message Holy Guacamole You beat the second level! 
+
+############################
+#g......g....g.....g.......#
+#.......#....#......#...#..#
+#.......#...###.....#...#..#
+#p.##################...#.g#
+#...#.......##..g..g....####
+#...#........#..#..#...g..o#
+#g..g...........#..#....####
+############################
+
+message Cluth thy pearls and slap your grandmother with a thanksgiving turkey, you beat the third and final level!

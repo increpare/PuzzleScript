@@ -1,0 +1,454 @@
+title Luxbend
+author Max
+
+norepeat_action
+run_rules_on_level_start
+noundo
+key_repeat_interval 0.11
+(verbose_logging
+debug)
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Corner
+transparent
+
+LaserOn
+Transparent
+
+Reset
+transparent
+
+ToRight
+transparent
+
+ToLeft
+transparent
+
+ToUp
+transparent
+
+ToDown
+transparent
+
+ResetMirrorUR
+transparent
+
+ResetMirrorUL
+transparent
+
+JustGot
+transparent
+
+Hint1
+transparent
+
+Hint2
+transparent
+
+Cell
+#222
+.....
+.....
+..0..
+.....
+.....
+
+Player
+#bbb
+00.00
+0...0
+.....
+0...0
+00.00
+
+Gun
+#333 #666 #f00
+..2..
+..1..
+.000.
+.111.
+00000
+
+MirrorUL
+#888
+0....
+.0...
+..0..
+...0.
+....0
+
+MirrorUR
+#888
+....0
+...0.
+..0..
+.0...
+0....
+
+LaserUD
+#f00
+..0..
+..0..
+..0..
+..0..
+..0..
+
+LaserRL
+#f00
+.....
+.....
+00000
+.....
+.....
+
+LaserDR
+#f00
+.....
+.....
+..000
+..0..
+..0..
+
+LaserDL
+#f00
+.....
+.....
+000..
+..0..
+..0..
+
+LaserUR
+#f00
+..0..
+..0..
+..000
+.....
+.....
+
+LaserUL
+#f00
+..0..
+..0..
+000..
+.....
+.....
+
+NextGoal
+blue
+0...0
+.....
+.....
+.....
+0...0
+
+GoalFailed
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+GoalCompleted
+green
+.....
+....0
+...0.
+0.0..
+.0...
+
+One
+yellow
+..0..
+.00..
+..0..
+..0..
+..0..
+
+Two
+yellow
+.000.
+...0.
+..00.
+.0...
+.000.
+
+Three
+yellow
+.000.
+...0.
+..00.
+...0.
+.000.
+
+Four
+yellow
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+
+Five
+yellow
+.000.
+.0...
+.000.
+...0.
+.000.
+
+Six
+yellow
+..00.
+.0...
+.000.
+.0.0.
+.000.
+
+Seven
+yellow
+.000.
+...0.
+..0..
+..0..
+..0..
+
+Eight
+yellow
+.000.
+.0.0.
+..0..
+.0.0.
+.000.
+
+Nine
+yellow
+.000.
+.0.0.
+.000.
+...0.
+..0..
+
+Help
+#fff
+.000.
+...0.
+..0..
+.....
+..0..
+
+Clear
+#222
+.....
+.000.
+.0...
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+x = Corner
+# = Cell
+p = Player and Cell
+g = Gun
+? = Help and Corner
+c = Clear and Corner
+
+Directions = ToRight or ToLeft or ToUp or ToDown
+Laser = LaserUD or LaserRL or LaserUR or LaserUL or LaserDR or LaserDL
+GoalMarker = NextGoal or GoalCompleted or GoalFailed
+Goal = One or Two or Three or Four or Five or Six or seven or eight or nine
+Mirror = MirrorUR or MirrorUL
+ResetMirror = ResetMirrorUR or ResetMirrorUL
+
+
+=========
+SOUNDS
+=========
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Corner
+Clear
+Reset
+ResetMirror
+LaserOn
+JustGot
+Cell
+Goal
+ToLeft
+ToRight
+ToUp
+ToDown
+LaserRL
+LaserUD
+LaserUR
+LaserUL
+LaserDR
+LaserDL
+Mirror
+Gun
+NextGoal, GoalFailed, GoalCompleted
+Help
+Hint1, Hint2
+Player
+
+======
+RULES
+======
+
+[ Reset ] -> []
+
+[ Hint1 four ] -> [ four ] Message Keep going! Can you get all the way to 9?
+[ Hint1 three ] -> [ three ] Message Now set it up to hit 1, then 2, then 3, with exactly one rotation between each.
+[ Hint1 two ] -> [ two ] Message Set up mirrors so that the laser hits 1, then is redirected to 2 when a single mirror is rotated.
+[ Hint1 one ][ two ] -> [ one ][ Hint1 two ] Message You can add/remove mirrors while the gun is off. When it's on, you can only rotate them.
+
+( Make One if it doesn't exist yet )
+[ One ][ Gun ] -> [ One ][ action Gun ]
+random [ stationary Gun ][ no cell no goal no gun no corner ] -> [ action Gun ][ One ]
+[ action Gun ] -> [ Gun ]
+
+( Turn on Gun )
+[ Action Player Gun no LaserOn ] -> [ Player action Gun LaserOn Reset ]
+[ Action Player Gun LaserOn ] -> [ Player Gun ]
+
+( turn off laser if you've failed, when you attempt an action )
+[ action Player ][ GoalFailed ][ LaserOn ] -> [ action Player ][ action GoalFailed ][ ]
+( and prevent player's action )
+[ action Player ][ action GoalFailed ] -> [ Player ][ GoalFailed ]
+
+( detect Reseting )
+[ Gun no LaserOn ][ Laser ]  -> [ Gun Reset ][ Laser ]
+
+( Reset goal markers)
+[ Reset ][ GoalMarker ] -> [ Reset ][]
+[ Gun LaserOn ][ One no GoalMarker ] -> [ Gun LaserOn ][ One NextGoal ]
+
+( Propagate LaserOn everywhere )
+[ Gun LaserOn ] [ no LaserOn ] -> [ Gun LaserOn ][ LaserOn ]
+[ Gun no LaserOn ] [ LaserOn ] -> [ Gun ][]
+
+( Save mirror rotations )
+[ Reset LaserOn ][ ResetMirror ] -> [ Reset LaserOn ][]
+[ Reset LaserOn ][ MirrorUR ] -> [ Reset LaserOn ][ MirrorUR ResetMirrorUR ]
+[ Reset LaserOn ][ MirrorUL ] -> [ Reset LaserOn ][ MirrorUL ResetMirrorUL ]
+
+( Restore mirror rotations )
+[ Reset no LaserOn ][ Mirror ] -> [ Reset ][]
+[ Reset no LaserOn ][ ResetMirrorUR ] -> [ Reset ][ MirrorUR ]
+[ Reset no LaserOn ][ ResetMirrorUL ] -> [ Reset ][ MirrorUL ]
+
+( Place/rotate mirrors )
+[ no LaserOn Action Player Cell no Mirror ] -> [ Player Cell MirrorUR ]
+[ Action Player Cell MirrorUR ][ gun ] -> [ Player Cell MirrorUL ][ action gun ]
+[ no LaserOn Action Player Cell MirrorUL ] -> [ Player Cell ]
+[ LaserOn Action Player Cell MirrorUL ][ gun ] -> [ Player Cell MirrorUR ][ action gun ]
+( action gun means we just rotated something or turned on laser, so check failed )
+
+[ Directions ] -> []
+[ Laser ] -> []
+
+( Fire )
+[ LaserOn Gun ] -> [ LaserOn Gun ToUp ]
+
+startloop
+
+up [ ToUp | no Mirror ] -> [ | LaserUD ToUp ]
+up [ ToUp | MirrorUR ] -> [ | MirrorUR LaserDR ToRight ]
+up [ ToUp | MirrorUL ] -> [ | MirrorUL LaserDL ToLeft ]
+
+down [ ToDown | no Mirror ] -> [ | LaserUD ToDown ]
+down [ ToDown | MirrorUR ] -> [ | MirrorUR LaserUL ToLeft ]
+down [ ToDown | MirrorUL ] -> [ | MirrorUL LaserUR ToRight ]
+
+right [ ToRight | no Mirror ] -> [ | LaserRL ToRight ]
+right [ ToRight | MirrorUR ] -> [ | MirrorUR LaserUL ToUp ]
+right [ ToRight | MirrorUL ] -> [ | MirrorUL LaserDL ToDown ]
+
+left [ ToLeft | no Mirror ] -> [ | LaserRL ToLeft ]
+left [ ToLeft | MirrorUR ] -> [ | MirrorUR LaserDR ToDown ]
+left [ ToLeft | MirrorUL ] -> [ | MirrorUL LaserUR ToUp ]
+
+endloop
+
+[ JustGot ] -> []
+
+( Check completed )
+[ NextGoal Laser ] -> [ GoalCompleted Laser JustGot ]
+[ action gun ][ JustGot ] -> [ gun ][ JustGot ]
+
+( Activate next goal)
+[ JustGot One ][ Two ] -> [ One ][ NextGoal Two ]
+[ JustGot Two ][ Three ] -> [ Two ][ NextGoal Three ]
+[ JustGot Three ][ Four ] -> [ Three ][ NextGoal Four ]
+[ JustGot Four ][ Five ] -> [ Four ][ NextGoal Five ]
+[ JustGot Five ][ Six ] -> [ Five ][ NextGoal Six ]
+[ JustGot six ][ seven ] -> [ six ][ NextGoal seven ]
+[ JustGot seven ][ eight ] -> [ seven ][ NextGoal eight ]
+[ JustGot eight ][ nine ] -> [ eight ][ NextGoal nine ]
+
+( Check failed )
+[ action gun ][ NextGoal no Laser LaserOn ] -> [ gun ][ GoalFailed LaserOn ]
+
+( turn off laser upon success )
+([ JustGot ][ LaserOn ] -> [ JustGot ][])
+( turn off laser upon failure )
+( [ GoalFailed ][ LaserOn ] -> [ GoalFailed ][] )
+
+( And add a new goal )
+random [ JustGot One ][ no cell no goal no gun no corner ] -> [ Hint1 one ][ two nextgoal ]
+random [ JustGot Two ][ no cell no goal no gun no corner ] -> [ two ][ Hint1 three nextgoal ]
+random [ JustGot three ][ no cell no goal no gun no corner ] -> [ three ][ Hint1 four nextgoal ]
+random [ JustGot four ][ no cell no goal no gun no corner ] -> [ four ][ five nextgoal ]
+random [ JustGot five ][ no cell no goal no gun no corner ] -> [ five ][ six nextgoal ]
+random [ JustGot six ][ no cell no goal no gun no corner ] -> [ six ][ seven nextgoal ]
+random [ JustGot seven ][ no cell no goal no gun no corner ] -> [ seven ][ eight nextgoal ]
+random [ JustGot eight ][ no cell no goal no gun no corner ] -> [ eight ][ nine nextgoal ]
+
+(
+( Clear button )
+[ action Player clear ][ Mirror ] -> [ action Player clear ][]
+[ action Player clear ][ Laser ] -> [ action Player clear ][]
+[ action Player clear ][ LaserOn ] -> [ action Player clear ][]
+[ action Player clear ][ GoalMarker ] -> [ action Player clear ][]
+)
+
+( [ action Player Help ][ Two ] -> Message "halp" )
+
+==============
+WINCONDITIONS
+==============
+
+some JustGot
+
+
+=======
+LEVELS
+=======
+
+Message Place mirrors in the grid, then turn on the laser.
+
+x.....x
+.#####.
+.#####.
+.##p##.
+.#####.
+.#####.
+x..g..x
+
+Message Incredible!

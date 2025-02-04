@@ -1,0 +1,337 @@
+title Cannon Fodder
+author neptunepink
+(homepage www.puzzlescript.net)
+flickscreen 9x9
+run_rules_on_level_start
+
+key_repeat_interval 0.12
+throttle_movement
+
+========
+OBJECTS
+========
+
+Grass .
+GREEN
+
+
+Wall #
+Black Gray
+10111
+10101
+11111
+10101
+11101
+
+Water ~
+Blue
+
+
+Player @
+#322 Orange #eee #55f
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+PlayerDead
+Black #f22 #f88 Purple Orange
+..2..
+11233
+0123.
+14233
+..2..
+
+PlayerRez X
+Black #f22 #f88 Purple Orange
+..2..
+11233
+0123.
+14233
+..2.1
+
+Cannon
+#111 Pink #222
+0000.
+22000
+22000
+20200
+0000.
+
+CannonNoz =
+Gray #111 #222
+.1111
+..222
+...22
+..112
+.1111
+
+CannonNozLoaded
+Gray #111 #222
+.1111
+00111
+00022
+00112
+.1111
+
+CannonNozFire
+Gray #111 #222 Yellow
+.1111
+.3111
+..322
+.3111
+.1111
+
+FuseOff
+Brown
+.....
+0.0..
+.000.
+..0..
+.....
+
+Fuse1
+Brown Red Orange Yellow
+....2
+0.0..
+.000.
+..0..
+2...2
+
+Fuse2
+Brown Red Orange Yellow
+....1
+2.0..
+.010.
+.101.
+2...2
+
+Fuse3
+Brown Red Orange Yellow
+...21
+3.3..
+.33..
+..33.
+23..3
+
+Fuse4
+Brown Red Orange Yellow
+.....
+3.1..
+.23..
+..13.
+.....
+
+Fuse5
+Brown Red Orange Yellow
+.....
+3.1..
+.2...
+.....
+.....
+
+FuseFire
+Yellow Gray
+.1...
+0....
+.1...
+.....
+.....
+
+Ball o
+GRAY
+.....
+.000.
+.000.
+.000.
+.....
+
+FireBall
+GRAY white
+.....
+000.1
+000..
+000.1
+.....
+
+LaunchBall
+GRAY yellow
+..1..
+000.1
+0001.
+000.1
+..1..
+
+StuckBall *
+GRAY DARKGREEN
+..01.
+.000.
+.101.
+.....
+.....
+
+SunkBall
+GRAY DARKBLUE BLUE
+22222
+22012
+20002
+21012
+22222
+
+Goal !
+YELLOW
+.....
+0.0.0
+00000
+00000
+00000
+
+Goal2 ?
+YELLOW
+.....
+0.0.0
+00000
+00000
+00000
+
+Goal3
+YELLOW
+.....
+0.0.0
+00000
+00000
+00000
+
+SafeZone +
+BLACK
+
+Gap -
+BLACK
+
+=======
+LEGEND
+=======
+
+Background = Grass or SafeZone
+fuse_seq = Fuse1 or Fuse2 or Fuse3 or Fuse4 or Fuse5 or FuseFire
+fuses = FuseOff or fuse_seq
+noz = CannonNoz or CannonNozLoaded or CannonNozFire
+cannon_part = Cannon or noz
+players = Player or PlayerDead or PlayerRez
+ball_blocker = PlayerDead or PlayerRez or StuckBall
+ded = PlayerDead or PlayerRez
+pushable = Ball or ded
+c = cannon_part
+
+
+=======
+SOUNDS
+=======
+CannonNozFire create 2402302
+SunkBall create 57399704
+Wall destroy 3632701
+FuseFire destroy 51528102
+fuse_seq create 76551704 ( 76551704 56086103 )
+FireBall destroy 28930902
+CannonNozLoaded create 70923300
+(Player move 84784701 ( 1732700 ))
+titlescreen 70197903
+Sfx9 70197903
+( 79150308 )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Water
+SunkBall, StuckBall, fuses
+Goal, Goal2, Goal3
+FireBall, LaunchBall
+Player, PlayerDead, PlayerRez, Wall, cannon_part, Ball, Gap
+
+
+======
+RULES
+======
+
+[ > Player | pushable ] -> [  >  Player | > pushable ]
+[ > players | Water ] -> [ players | Water ]
+[ > players | SafeZone ] -> [ players | SafeZone ]
+[ > players | Gap ] -> [ players | Gap ]
+[ > FireBall | Gap ] -> [ | Gap ]
+right [ > Player | CannonNoz ] -> [ Player | CannonNoz ] message "I don't fit."
+right [ > ded | CannonNoz ] -> [ ded | CannonNoz ] message "He's a fat one!"
+
+( fuses )
+[ FuseFire ] -> []
+[ Fuse5 ] -> [ FuseFire ]
+[ Fuse4 ] -> [ Fuse5 ]
+[ Fuse3 ] -> [ Fuse4 ]
+[ Fuse2 ] -> [ Fuse3 ]
+[ Fuse1 ] -> [ Fuse2 ]
+[ Player FuseOff ] -> [ Player Fuse1 ]
+
+( bang )
+[ CannonNozLoaded | Cannon | FuseFire ] -> [ > CannonNozFire | > Cannon | ]
+right [ no ball_blocker | CannonNozFire ] -> [ | FireBall CannonNoz ]
+right [ no FireBall | stationary Cannon | no fuses no Player ] -> [ | Cannon | FuseOff ]
+
+right [ > ball | CannonNoz ] -> [ | CannonNozLoaded ]
+[ FireBall ] -> [ left FireBall ]
+
+
+( physics )
+
+[ > cannon_part | ball ] -> [ cannon_part | > ball ]
+[ > FireBall | ball ] -> [ ball | > FireBall ]
+[ FireBall |no c|no c|no c|no c|no c|no c| cannon_part ] -> [ StuckBall ||||||| cannon_part ]
+[ FireBall fuses ] -> [ Fuse5 ]
+
+
+[ Player FireBall ] -> [ PlayerDead ]
+[ > Player | < FireBall ] -> [ PlayerDead | ]
+
+
+[ > FireBall | Wall ] -> [ StuckBall | ]
+[ > FireBall | Ball ] -> [ Ball | > FireBall ]
+
+[ > FireBall | StuckBall Water ] -> [ | ]
+[ > FireBall | ball_blocker ] -> [ StuckBall | ball_blocker ]
+[ Ball Water ] -> [ SunkBall ]
+[ > ded | Water ] -> [ | > ded Water ]
+
+( init )
+right [ CannonNoz | no cannon_part | no fuses ] -> [ CannonNoz | Cannon | FuseOff ]
+
+
+( respawn? )
+[ PlayerDead | ... | SafeZone ] -> [ PlayerRez | ... | SafeZone Player ] Sfx9 message Such is war!
+
+( goals )
+[ > Player Goal | ... | no noz | Cannon | fuses ] -> [ PlayerRez | ... |     | Cannon | fuses ] message Ha! My guards shall dispatch you with ease!
+[ > Player Goal | ... |    noz | Cannon | fuses | ] -> [ Player  | ... | noz | Cannon | fuses | Goal2 ] message We'll disarm if you do!
+[ fuse_seq | Goal2 ] -> [ fuse_seq | > Goal2 ]
+
+right [ball_blocker | CannonNozFire | ... | Goal2 ] -> [ < ball_blocker || ... | Goal3 ] message Peace in our time!
+right [ball_blocker | CannonNozFire ] -> [ < ball_blocker | ] message We'll have to call a truce until we can get a replacement cannon shipped in.
+
+==============
+WINCONDITIONS
+==============
+
+Some Goal3
+
+=======
+LEVELS
+=======
+
+-##########~..............+
+-#......##.~~..o.....o....+
+-#...o.o##~~~.@...........+
+-#.!.....#.~~..=..........+
+-#......##.~~.o...........+
+-#......##.~~.......o.....+
+-#...#*.##.~.o............+
+-##########~..............+

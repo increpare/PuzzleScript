@@ -1,0 +1,341 @@
+(
+
+	PuzzleScript Cell Machine
+    By CST1229
+    A demake of Sam Hogan's Cell Machine
+    made in PuzzleScript
+    
+    Todo:
+    More types of cells
+    And more
+    
+)
+
+title PuzzleScript Cell Machine Test
+author CST1229
+homepage cst1229.github.io
+
+realtime_interval 0.4
+key_repeat_interval 0.2
+
+norepeat_action
+noundo
+throttle_movement
+
+========
+OBJECTS
+========
+
+Background 
+Black
+
+(Placer Stuff)
+
+PlacerChanger (Change what you place)
+Darkgray Lightgreen
+01110
+11111
+11111
+11111
+01110
+
+CanPlaceTile (You can only place stuff on this)
+Darkgray
+
+
+PlacerUp
+Transparent Darkblue Blue White
+02020
+20301
+03030
+20201
+01010
+
+PlacerDown
+Transparent Darkblue Blue White
+02020
+20201
+03030
+20301
+01010
+
+PlacerLeft
+Transparent Darkblue Blue White
+02020
+20301
+03020
+20301
+01010
+
+PlacerRight
+Transparent Darkblue Blue White
+02020
+20301
+02030
+20301
+01010
+
+
+(Actual Cells)
+
+Wall (just can't be moved)
+Transparent Darkgray Gray
+02220
+22121
+12221
+22211
+01110
+
+(Mover, just moves)
+
+MoverUp
+Transparent Darkblue Blue White
+02220
+22321
+23331
+22211
+01110
+
+MoverDown
+Transparent Darkblue Blue White
+02220
+22221
+23331
+22311
+01110
+
+MoverLeft
+Transparent Darkblue Blue White
+02220
+22321
+23321
+22311
+01110
+
+MoverRight
+Transparent Darkblue Blue White
+02220
+22321
+22331
+22311
+01110
+
+(Rotator, rotates cells)
+RotatorCW
+Transparent Orange Brown White
+01110
+13312
+31132
+11333
+02230
+
+RotatorCCW
+Transparent Orange Brown White
+01110
+11332
+13113
+33322
+03220
+
+PushCell (can be pushed by movers)
+Transparent Yellow Orange White
+01310
+11312
+33333
+11322
+02320
+
+TrashCell (deletes cells. New to this demake)
+Transparent Gray Darkgray White
+01310
+11312
+11312
+11122
+02320
+
+Enemy (cells destroy this)
+Transparent Darkred Red Black
+02320
+23231
+22221
+23331
+01110
+
+
+(temporary mover objects for rotation)
+MoverLeftTemp
+transparent
+
+MoverDownTemp
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+, = CanPlaceTile
+X = PlacerChanger
+# = Wall
+O = PlacerUp and CanPlaceTile
+! = Enemy
+w = MoverUp
+s = MoverDown
+a = MoverLeft
+d = MoverRight
+Q = RotatorCCW
+E = RotatorCW
+P = PushCell
+T = TrashCell
+
+Mover = MoverUp or MoverDown or MoverLeft or MoverRight or MoverLeftTemp or MoverDownTemp
+Rotator = RotatorCW or RotatorCCW
+Pushable = PushCell or Mover
+Cell = Mover or Rotator or Wall or Pushable
+
+Placer = PlacerUp or PlacerDown or PlacerLeft or PlacerRight
+Player = Placer (IS YOU)
+
+Anything = Cell or Player or Background or CanPlaceTile or PlacerChanger
+
+=======
+SOUNDS
+=======
+
+Cell Move 69985907
+Enemy Destroy 97781702
+Placer Move 61745904
+ShowMessage 36208306
+StartGame 23796900
+TitleScreen 83115300
+SFX0 81224104 (Changing placetile)
+SFX1 64214904 (Placing cells)
+SFX2 38281507 (Rotator rotating cells)
+SFX3 34432502 (Trash Cells destroying stuff)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+CanPlaceTile
+PlacerChanger
+TrashCell
+Enemy
+Cell
+Placer
+
+======
+RULES     
+======     
+
+
+(Rotating)
+(Clockwise)
+[MoverDown | RotatorCW] -> [MoverLeftTemp | RotatorCW] SFX2
+[MoverRight | RotatorCW] -> [MoverDown | RotatorCW] SFX2
+[MoverUp | RotatorCW] -> [MoverRight | RotatorCW] SFX2
+[MoverLeft | RotatorCW] -> [MoverUp | RotatorCW] SFX2
+(Counter-clockwise)
+[MoverLeft | RotatorCCW] -> [MoverDownTemp | RotatorCCW] SFX2
+[MoverUp | RotatorCCW] -> [MoverLeft | RotatorCCW] SFX2
+[MoverRight | RotatorCCW] -> [MoverUp | RotatorCCW] SFX2
+[MoverDown | RotatorCCW] -> [MoverRight | RotatorCCW] SFX2
+
+(Transform temp objects to correct rotation)
+[MoverLeftTemp] -> [MoverLeft]
+[MoverDownTemp] -> [MoverDownTemp]
+
+(Mover Cells)
+UP [MoverUp | ] -> [> MoverUp | ]
+DOWN [MoverDown | ] -> [> MoverDown | ]
+LEFT [MoverLeft | ] -> [> MoverLeft | ]
+RIGHT [MoverRight | ] -> [> MoverRight | ]
+
+(Pushing)
+[> Mover | Pushable] -> [> Mover | > Pushable]
+[> Pushable | Pushable] -> [> Pushable | > Pushable]
+
+(Fix movers pushing against eachother behavior)
+Right [MoverRight | > MoverLeft] -> [> MoverRight | MoverLeft]
+Down [MoverDown | MoverUp] ->  [ > MoverDown | MoverUp ]
+
+(Changing placetile)
+[Action PlacerUp PlacerChanger] -> [PlacerRight PlacerChanger ] SFX0 
+[Action PlacerRight PlacerChanger] -> [PlacerDown PlacerChanger] SFX0 
+[Action PlacerDown PlacerChanger] -> [PlacerLeft PlacerChanger] SFX0 
+[Action PlacerLeft PlacerChanger] -> [PlacerUp PlacerChanger] SFX0 
+
+(Placing cells)
+[Action PlacerUp CanPlaceTile ] -> [PlacerUp MoverUp CanPlaceTile] SFX1 
+[Action PlacerDown CanPlaceTile] -> [PlacerDown MoverDown CanPlaceTile] SFX1 
+[Action PlacerLeft CanPlaceTile] -> [PlacerLeft MoverLeft CanPlaceTile] SFX1 
+[Action PlacerRight CanPlaceTile ] -> [PlacerRight MoverRight CanPlaceTile] SFX1 
+
+(Killing enemies)
+late [Cell Enemy] -> []
+
+(Trash Cells)
+late [TrashCell Cell] -> [TrashCell] SFX3
+
+==============
+WINCONDITIONS
+==============
+
+No Enemy
+
+=======     
+LEVELS
+=======
+
+Message Cells do stuff automatically.
+Message Defeat all enemies (red).
+Message Press ACTION to place cells on the gray tiles (not walls),
+Message and if you press it on the green tile, you change what you place.
+
+Message Movers move.
+
+#########
+#...,,OX#
+#...,,,,#
+#!..,,,,#
+#...,,,,#
+#...,,,,#
+#########
+
+Message Rotators rotate cells.
+
+#########
+#.e.....#
+#.....!!#
+#...#####
+#e....ox#
+#.......#
+#########
+
+Message Push Cells are pushable.
+
+#########
+#.......#
+#xo,...e#
+#.......#
+#.......#
+#!!pp...#
+#.....e.#
+#########
+
+Message Trash (!) Cells, new to this demake, delete cells that come in contact with them.
+
+#########
+#......q#
+#.!.!.!.#
+#.tptpt.#
+#..p.p..#
+#.ppppp.#
+#,,,,,,,#
+#,,,o,,,#
+#,,,x,,,#
+#########
+
+Message You Win!
+

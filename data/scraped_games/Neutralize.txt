@@ -1,0 +1,273 @@
+title Neutralize
+author Madball
+
+========
+OBJECTS
+========
+
+None
+Black
+
+Background
+Gray DarkGray
+11111
+10000
+10000
+10000
+10000
+
+Wall 
+White LightGray
+11111
+10000
+10000
+10000
+10000
+
+Player
+Black Orange White LightGray
+.000.
+.111.
+22322
+22322
+.232.
+
+Fade
+Black
+
+FFade
+Black
+
+Red 
+LightGray Red 
+.000.
+01110
+01110
+01110
+.000.
+
+Blue
+LightGray Blue
+.000.
+01110
+01110
+01110
+.000.
+
+Green
+LightGray Green
+.000.
+01110
+01110
+01110
+.000.
+
+Yellow
+LightGray Yellow
+.000.
+01110
+01110
+01110
+.000.
+
+Portal
+Blue LightBlue DarkBlue
+.122.
+12012
+10001
+21021
+.221.
+
+Out
+Black
+
+Inactive
+Black
+
+=======
+LEGEND
+=======
+
+* = None
+. = Background
+# = Wall
+P = Player
+R = Red
+B = Blue
+G = Green
+Y = Yellow
+@ = Portal and Inactive
+
+Tile = Red or Blue or Green or Yellow
+
+=======
+SOUNDS
+=======
+
+SFX0 61375304
+SFX1 7629706
+
+================
+COLLISIONLAYERS
+================
+
+Fade,FFade,Out,Inactive
+Background
+Portal
+Red,Green,Blue,Yellow,Player,Wall,None
+
+======
+RULES
+======
+
+[ Action Player | Red ] -> [ Action Player | Fade Red ]
+[ Fade Red | Red ] -> [ Fade Red | FFade Red ]
+[ FFade Red | Fade Red ] -> [ FFade Red | FFade Red ]
+[ Red | FFade Red ] -> [ FFade Red | FFade Red ] SFX0
+[ FFade Red ] -> [ Background ]
+[ Fade Red ] -> [ Red ] SFX1
+
+[ Action Player | Blue ] -> [ Action Player | Fade Blue ]
+[ Fade Blue | Blue ] -> [ Fade Blue | FFade Blue ]
+[ FFade Blue | Fade Blue ] -> [ FFade Blue | FFade Blue ]
+[ Blue | FFade Blue ] -> [ FFade Blue | FFade Blue ] SFX0
+[ FFade Blue ] -> [ Background ]
+[ Fade Blue ] -> [ Blue ] SFX1
+
+[ Action Player | Green ] -> [ Action Player | Fade Green ]
+[ Fade Green | Green ] -> [ Fade Green | FFade Green ]
+[ FFade Green | Fade Green ] -> [ FFade Green | FFade Green ]
+[ Green | FFade Green ] -> [ FFade Green | FFade Green ] SFX0
+[ FFade Green ] -> [ Background ]
+[ Fade Green ] -> [ Green ] SFX1
+
+[ Action Player | Yellow ] -> [ Action Player | Fade Yellow ]
+[ Fade Yellow | Yellow ] -> [ Fade Yellow | FFade Yellow ]
+[ FFade Yellow | Fade Yellow ] -> [ FFade Yellow | FFade Yellow ]
+[ Yellow | FFade Yellow ] -> [ FFade Yellow | FFade Yellow ] SFX0
+[ FFade Yellow ] -> [ Background ]
+[ Fade Yellow ] -> [ Yellow ] SFX1
+
+[ > Player | Tile ] -> [ > Player | > Tile ]
+[ > Tile | Portal ] -> [ Tile | Portal ]
+
+[ > Player | Inactive Portal ] -> [ Background | Out Portal ]
+[ Out Portal ] [ Inactive Portal ] -> [ Inactive Portal ] [ Player Inactive Portal ]
+
+==============
+WINCONDITIONS
+==============
+
+no Tile
+
+=======
+LEVELS
+=======
+
+message Use arrow keys to move, X to neutralize acid.
+message You can only neutralize two or more barrels of each color.
+
+message Level 1
+
+######
+#P...#
+#BBGG#
+#BBRR#
+#GGRR#
+######
+
+message Level 2
+
+######
+#P...#
+#.BR.#
+#.RB.#
+#....#
+#.RB.#
+#.RB.#
+#....#
+#####
+
+message Level 3
+
+######
+#P...#
+#BRRG#
+#GBBG#
+#GG.G#
+######
+
+message Level 4
+
+####**####
+#..#**#..#
+#.r####.r#
+#pbg..gb.#
+#........#
+##########
+
+message Level 5
+
+#########
+#.p#r##g#
+#...r.r.#
+#..####.#
+#.gb.b..#
+#..##b#.#
+#########
+
+message Level 6
+
+#######
+#p....#
+#.rrr.#
+#.bbb.#
+#.ggg.#
+#.###.#
+#.r.g.#
+#..b..#
+#######
+
+message Level 7
+
+########
+#p.....#
+#....r.#
+#r#.r.r#
+#@#r.r@#
+########
+
+message Level 8
+
+#########
+#p.rr.r.#
+#..###..#
+#@b.bb.@#
+#########
+
+message Level 9
+
+**######**
+**#p..g#**
+###b..g###
+#@.grrb.@#
+###b..g###
+#..b..r#**
+#.####.#**
+#......#**
+########**
+
+message Level 10
+
+
+*###########*****
+*#p........#*****
+*#.rrr.bbb.#*****
+*#.r@r.bbb.######
+##.rrr.bbb.##...#
+#@..........rg..#
+##..ggg.yyy.#byr#
+*#..ggg.yyy.#...#
+*#..ggg.yyy.#####
+*#..........#****
+*############****

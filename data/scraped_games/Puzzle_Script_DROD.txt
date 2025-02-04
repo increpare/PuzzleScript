@@ -1,0 +1,583 @@
+title Puzzle Script DROD
+author Lukas
+again_interval 0.1
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+background
+#dddddd #cccccc
+00000
+00001
+00001
+00001
+01111
+
+player
+#ffcc00 orange black #dd6600
+..0..
+.111.
+01130
+.000.
+.2.2.
+
+walltop
+purple
+
+wallside
+purple darkbrown
+00000
+00000
+11111
+11111
+11111
+
+deeppit
+black
+
+sidepit
+black #222222 #444444 #666666
+33333
+22222
+11111
+00000
+00000
+
+trapdoor
+#883388 #662266
+11111
+10001
+10001
+10001
+11111
+
+door
+#ffcc00 #aa8800
+.000.
+00000
+10001
+11111
+.111.
+
+door_open
+#aa8800
+.....
+.....
+.000.
+00000
+.000.
+
+orb
+#ffcc00 #aa8800 #ffdd44
+.001.
+02201
+02201
+10011
+.111.
+
+roach_waiting
+#222222 #555555 #777777 yellow
+.000.
+02010
+02010
+03030
+.000.
+
+roach_moving
+#222222 #555555 #777777 yellow
+.000.
+02010
+02010
+03030
+.000.
+
+golem_waiting
+brown darkbrown blue
+.010.
+.202.
+10100
+01001
+.0.1.
+
+golem_moving
+brown darkbrown blue
+.010.
+.202.
+10100
+01001
+.0.1.
+
+corpse
+brown darkbrown
+.000.
+01000
+00010
+00000
+.010.
+
+sword_n
+#999999 #777777 brown
+..0..
+.001.
+.001.
+.001.
+22222
+
+sword_ne
+#999999 #777777 brown
+...00
+..001
+2001.
+201..
+222..
+
+sword_e
+#999999 #777777 brown
+2....
+2000.
+20000
+2111.
+2....
+
+sword_se
+#999999 #777777 brown
+222..
+210..
+2110.
+..110
+...11
+
+sword_s
+#999999 #777777 brown
+22222
+.001.
+.001.
+.001.
+..0..
+
+sword_sw
+#999999 #777777 brown
+..222
+..002
+.0012
+001..
+01...
+
+sword_w
+#999999 #777777 brown
+....2
+.0002
+00002
+.1112
+....2
+
+sword_nw
+#999999 #777777 brown
+00...
+100..
+.1002
+..102
+..222
+
+monster_blood
+red darkred lightred
+2.0.2
+.000.
+00100
+.000.
+2.0.2
+
+player_blood
+red
+
+indicator_move
+green darkgreen
+.....
+.000.
+.001.
+.011.
+.....
+
+indicator_turn
+yellow lightbrown
+.....
+.000.
+.001.
+.011.
+.....
+
+indicator_left
+white
+.....
+.....
+.....
+.....
+.....
+
+indicator_right
+white
+.....
+.....
+.....
+.....
+.....
+
+indicator_general
+white
+.....
+.....
+.....
+.....
+.....
+
+idle
+white
+.....
+.....
+.....
+.....
+.....
+
+shadow
+white
+.....
+.....
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+. = background
+a = player
+b = player and trapdoor
+1 = sword_n
+# = walltop
+* = indicator_move and walltop
+x = deeppit
+t = trapdoor
+d = door
+e = door_open
+o = orb
+r = roach_waiting and idle
+g = golem_waiting and idle
+
+
+wall = walltop or wallside or corpse
+pit = deeppit or sidepit
+overpit = pit or trapdoor
+
+roach = roach_waiting or roach_moving
+golem = golem_waiting or golem_moving
+monster = roach or golem
+monster_waiting = roach_waiting or golem_waiting
+monster_moving = roach_moving or golem_moving
+
+blood = player_blood or monster_blood
+
+sword = sword_n or sword_ne or sword_e or sword_se or sword_s or sword_sw or sword_w or sword_nw
+
+obstacle_player = wall or pit or monster or door or orb
+obstacle_monster = obstacle_player or sword
+
+indicator = indicator_move or indicator_turn or indicator_left or indicator_right or indicator_general
+
+=======
+SOUNDS
+=======
+
+player move 82421107
+player destroy 25677108
+indicator_left create 43166507
+indicator_right create 43166507
+endlevel 64265102
+sfx0 29486307
+sfx1 39054704
+sfx2 39944903
+
+
+================
+COLLISIONLAYERS
+================
+
+background
+pit, trapdoor, door_open, door
+wall, player, monster, orb
+sword
+shadow, idle, player_blood, monster_blood
+indicator
+
+======
+RULES     
+======
+
+[player trapdoor] -> [player trapdoor shadow]
+
+[action player][roach_waiting] -> [action player][roach_waiting idle]
+[action player][golem_waiting] -> [action player][golem_waiting idle]
+
+[sword orb][door no shadow][monster_moving] -> [sword orb][door_open shadow][monster_moving] sfx2
+[sword orb][door_open no shadow][monster_moving] -> [sword orb][door shadow][monster_moving] sfx2
+
+[action player][indicator_move no indicator_general] -> [player][indicator_turn]
+[action player][indicator_turn no indicator_general] -> [player][indicator_move]
+
+[roach_moving|player] -> [> roach_moving|player_blood] again
+[stationary roach_moving|obstacle_monster|...|player] -> [roach_waiting idle|obstacle_monster|...|player]
+[stationary roach_moving|...|player] -> [> roach_moving|...|player]
+vertical[stationary roach_moving|no obstacle_monster indicator_general] -> [> roach_moving|indicator_general]
+vertical[stationary roach_moving|no obstacle_monster|...|indicator_general] -> [> roach_moving||...|indicator_general]
+horizontal[stationary roach_moving|no obstacle_monster indicator_general] -> [> roach_moving|indicator_general]
+horizontal[stationary roach_moving|no obstacle_monster|...|indicator_general] -> [> roach_moving||...|indicator_general]
+[roach_moving] -> [roach_waiting idle]
+
+[golem_moving|player] -> [> golem_moving|player_blood] again
+[stationary golem_moving|obstacle_monster|...|player] -> [golem_waiting idle|obstacle_monster|...|player]
+[stationary golem_moving|...|player] -> [> golem_moving|...|player]
+[golem_moving] -> [golem_waiting idle]
+
+left[> player][indicator_turn] -> [player indicator_left][indicator_turn] 
+right[> player][indicator_turn] -> [player indicator_right][indicator_turn]
+
+right[sword_n|][indicator_right] -> [|sword_ne][]
+down[sword_ne|][indicator_right] -> [|sword_e][]
+down[sword_e|][indicator_right] -> [|sword_se][]
+left[sword_se|][indicator_right] -> [|sword_s][]
+left[sword_s|][indicator_right] -> [|sword_sw][]
+up[sword_sw|][indicator_right] -> [|sword_w][]
+up[sword_w|][indicator_right] -> [|sword_nw][]
+right[sword_nw|][indicator_right] -> [|sword_n][]
+
+left[sword_n|][indicator_left] -> [|sword_nw][]
+down[sword_nw|][indicator_left] -> [|sword_w][]
+down[sword_w|][indicator_left] -> [|sword_sw][]
+right[sword_sw|][indicator_left] -> [|sword_s][]
+right[sword_s|][indicator_left] -> [|sword_se][]
+up[sword_se|][indicator_left] -> [|sword_e][]
+up[sword_e|][indicator_left] -> [|sword_ne][]
+left[sword_ne|][indicator_left] -> [|sword_n][]
+
+[> player][indicator_turn] -> [player][indicator_turn]
+[> player|obstacle_player] -> [player|obstacle_player] sfx0
+
+[> player][sword] -> [> player][> sword]
+
+[player_blood indicator_general|no blood] -> [player_blood indicator_general|player_blood] again
+
+[roach_waiting no idle] -> [roach_moving] again
+[golem_waiting no idle] -> [golem_moving] again
+late [roach_waiting idle] -> [roach_waiting]
+late [golem_waiting idle] -> [golem_waiting]
+
+late [shadow door] -> [door]
+late [shadow door_open] -> [door_open]
+
+late [shadow trapdoor no player] -> [deeppit]
+late [shadow overpit] -> [overpit]
+
+late [monster_blood] -> []
+late [sword roach] -> [sword monster_blood] sfx1
+late [sword golem] -> [sword corpse monster_blood] sfx1
+
+late [indicator_general] -> []
+late [player_blood] -> [player_blood indicator_general]
+late [player|...|] -> [player|...|indicator_general]
+
+late down [walltop|no wall] -> [wallside|]
+late up [deeppit|no overpit] -> [sidepit|]
+
+
+==============
+WINCONDITIONS
+==============   
+
+No monster
+
+=======     
+LEVELS
+=======
+
+message My name is Beethro Budkin. I am a smitemaster.
+message I smite things to make a living.
+
+xxxx######*
+xxxx#g#r..#
+xxxx#.###.#
+#####.....#
+#...#.#####
+#r#t#....#x
+#.#t#.##.#x
+#.#t#....#x
+#1#t#.####x
+#a#...#xxxx
+#######xxxx
+
+message Sometimes I need to turn my sword.
+message (Press 'x' to toggle turning mode)
+
+xx###*
+###r.#
+#1##.#
+#a...#
+####.#
+xx#r.#
+xx####
+
+message My job often requires planning ahead.
+
+*####xxxx
+#r..#xxxx
+###.#####
+#...#r..#
+#t#####.#
+#.....#.#
+###t#.#.#
+#r#.#.#.#
+#.#.#.#.#
+#.t.#.t.#
+#.#.#t###
+#1#.#.#r#
+#a#.#.#.#
+###.#...#
+xx#######
+
+message I've been doing this long enough to know how to open doors.
+
+######*
+#g....#
+###eee#
+#.....#
+#.....#
+#o#ddd#
+#....1#
+#....a#
+#######
+
+message I sometimes wish I didn't.
+
+##############*
+#rrrrrrrrrrrrr#
+#rdddddddddddr#
+#rd.........dr#
+#rd.........dr#
+#rd..ttttt..dr#
+#rd..t...t..dr#
+#rd..t.o.t..dr#
+#rd..t...t..dr#
+#rd..ttttt..dr#
+#rd....1....dr#
+#rd....a....dr#
+#rdddddddddddr#
+#rrrrrrrrrrrrr#
+###############
+
+message I once cleared out King Dugan's entire dungeon.
+
+xx#######x*
+xx#rrrrr#x#
+xx#rrrrr#xx
+###ddddd###
+#.........#
+#1........#
+#a...o....#
+#.........#
+#.........#
+###ddddd###
+xx#rrrrr#xx
+#x#rrrrr#xx
+#x#######xx
+
+message Things were a bit different back then. I could still move diagonally.
+message Luckily, roaches forgot how to do that, too.
+
+##########*
+#rrr#t#rrr#
+#r#.....#r#
+#r#.....#r#
+#r#.....#r#
+#r#.....#r#
+#r#..1..#r#
+#rrr#b#rrr#
+###########
+
+message They still prefer moving vertically, though.
+
+#####xxxxxxxx##*
+#...#xxxxxxx##.#
+#t#t#########..#
+#......g....#..#
+#.........g.#..#
+#.....g.....#..#
+#........g..#..#
+#..........g#..#
+#.......g...#..#
+#1........g.#..#
+#a.......g..#.r#
+###t##########.#
+x#o...e...d....#
+x###############
+
+message Golem corpses can be quite helpful at times...
+
+*##xxxxxxxxxxx
+#r#xxxxxxxxxxx
+#d##########xx
+#..........#xx
+#g........g#xx
+#..........#xx
+#..g....g..#xx
+#..........#xx
+#....1.....#xx
+#....a.....#xx
+#..........#xx
+#..g....g..#xx
+#..........#xx
+#g........g###
+#........#.#g#
+#t########t#.#
+#....tt....t.#
+#o############
+
+message ... but most of the time they're just annoying.
+
+##############*
+#ggggggggggggg#
+#g...........g#
+#g...........g#
+#g...........g#
+#g...........g#
+#g.....1.....g#
+#g.....a.....g#
+#g...........g#
+#g...........g#
+#g...........g#
+#g...........g#
+#g...........g#
+#ggggggggggggg#
+###############
+
+message While clearing out Dugan's dungeon, I encounterd a door that couldn't be opened.
+
+################*
+#..........d.....
+#..........######
+#...#..#...######
+#...#gg#...##...#
+#...#rr#...##...#
+#...####........#
+#..........##...#
+#..........##...#
+#############...#
+#############...#
+#...............#
+#.......1.......#
+########a.#######
+
+message I managed to open it eventually. Behind it I found horrifying things.
+message But that is another story.
+message Thanks for playing! And definitely check out the original!

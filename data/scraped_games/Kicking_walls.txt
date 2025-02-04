@@ -1,0 +1,230 @@
+title Kicking walls
+author Jere Majava
+homepage www.twitter.com
+
+run_rules_on_level_start
+background_color darkblue
+========
+OBJECTS
+========
+
+Background .
+darkblue
+
+WallV !
+grey darkgrey
+0....
+0....
+0....
+0....
+0....
+WallH _
+grey darkgrey
+.....
+.....
+.....
+.....
+00000
+Dot
+grey
+.....
+.....
+.....
+.....
+0....
+
+FacadeV
+darkgrey
+0....
+0....
+.....
+.....
+.....
+FacadeH
+darkgrey
+00000
+00000
+.....
+.....
+.....
+
+Player p
+red Orange blue
+..00.
+..11.
+..22.
+.1221
+..22.
+Crate o
+darkbrown brown
+.....
+.1111
+.1111
+.0000
+.0000
+
+HappyCrate
+brown orange
+.....
+.1111
+.1111
+.0000
+.0000
+
+Target x
+darkgreen
+.....
+.....
+.0000
+.0..0
+.0000
+
+=======
+LEGEND
+=======
+
+
+Movable = Player or Crate
+
+
+L = WallH and WallV
+
+N = Target and Crate and Happycrate
+
+A = WallH and Crate
+B = WallV and Crate
+C = WallH and WallV and Crate
+
+D = WallH and Target
+E = WallV and Target
+F = WallH and WallV and Target
+
+G = WallH and Target and Crate and Happycrate 
+H = WallV and Target and Crate and Happycrate
+I = WallH and WallV and Target and Crate and Happycrate
+
+
+
+=======
+SOUNDS
+=======
+
+sfx0 89304304
+
+(Player move 88498507)
+Crate move 21130908
+
+Happycrate create 23265906
+Restart 86246108
+Endlevel 67687308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+FacadeH
+FacadeV
+Player Crate
+Happycrate
+WallH
+WallV
+Dot
+
+======
+RULES
+======
+
+( Make walls pretty )
+down [ WallH | ] -> [ WallH | FacadeH ]
+down [ WallV | ] -> [ WallV | FacadeV ]
+up   [ WallV | ] -> [ WallV | Dot ]
+
+( SOKOBAN! )
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+( Block movement through walls )
+up    [ > Movable | WallH ] -> [ Movable | WallH ] sfx0
+down  [ > Movable WallH | ] -> [ Movable WallH | ] sfx0
+left  [ > Movable WallV | ] -> [ Movable WallV | ] sfx0
+right [ > Movable | WallV ] -> [ Movable | WallV ] sfx0
+
+( Make crates happy when on target )
+late [ Happycrate no Crate ] -> [ ]
+late [ Crate Target no Happycrate ] -> [ Crate Target Happycrate ]
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+
+=======
+LEVELS
+=======
+
+
+
+message One of these again? This is getting tedious...
+
+__...
+!x!..
+!.l_.
+hp..!
+!.a_!
+l_!..
+
+message Wait... What?
+
+
+____.
+!x!x!
+!.c_!
+hp..!
+!.a_!
+l_!..
+
+message Such a mess
+
+_______.
+e_a_._.!
+!!o.po!!
+!bxxx..!
+!.xxn.!!
+!c_o_a!!
+l_____d!
+
+
+message This is NOT how you design a functional storage room
+
+_____.
+epx.x!
+!_o._!
+b!.!o!
+!aa!.!
+f___d!
+
+message Last one..
+
+_______.
+ep.d..x!
+b.oc_!_!
+la..oob!
+f__d__f!
+
+message Ok, Santa, take it away: All done here!
+
+(
+_______.
+!P.....!
+!......!
+!....x.!
+!......!
+!......!
+L______!
+
+)
+

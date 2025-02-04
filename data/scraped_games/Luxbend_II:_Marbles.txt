@@ -1,0 +1,369 @@
+title Luxbend II: Marbles
+author Max
+
+norepeat_action
+run_rules_on_level_start
+noundo
+key_repeat_interval 0.12
+realtime_interval 0.25
+( verbose_logging
+debug )
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Corner
+transparent
+
+GunOn
+Transparent
+
+Reset
+transparent
+
+ToRight
+transparent
+
+ToLeft
+transparent
+
+ToUp
+transparent
+
+ToDown
+transparent
+
+Flip
+transparent
+
+ResetMirrorUR
+transparent
+
+ResetMirrorUL
+transparent
+
+JustGot
+transparent
+
+NextGoal
+transparent
+
+Cell
+#222
+.....
+.....
+..0..
+.....
+.....
+
+Player
+#bbb
+00.00
+0...0
+.....
+0...0
+00.00
+
+Gun
+#333 #666 #f00
+0...0
+01110
+.000.
+.111.
+00000
+
+MirrorUL
+#888
+0....
+.0...
+..0..
+...0.
+....0
+
+MirrorUR
+#888
+....0
+...0.
+..0..
+.0...
+0....
+
+Marble
+#039 #06c
+.000.
+01100
+01000
+00000
+.000.
+
+GoalFailed
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+GoalCompleted
+#093 #0c6
+.000.
+01100
+01000
+00000
+.000.
+
+MarbleFailed
+#903 #c06
+.000.
+01100
+01000
+00000
+.000.
+
+One
+yellow
+..0..
+.00..
+..0..
+..0..
+..0..
+
+Two
+yellow
+.000.
+...0.
+..00.
+.0...
+.000.
+
+Three
+yellow
+.000.
+...0.
+..00.
+...0.
+.000.
+
+Four
+yellow
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+
+Five
+yellow
+.000.
+.0...
+.000.
+...0.
+.000.
+
+Six
+yellow
+..00.
+.0...
+.000.
+.0.0.
+.000.
+
+Seven
+yellow
+.000.
+...0.
+..0..
+..0..
+..0..
+
+Eight
+yellow
+.000.
+.0.0.
+..0..
+.0.0.
+.000.
+
+Nine
+yellow
+.000.
+.0.0.
+.000.
+...0.
+..0..
+
+
+=======
+LEGEND
+=======
+
+. = Background
+x = Corner
+# = Cell
+p = Player and Cell
+g = Gun
+
+Directions = ToRight or ToLeft or ToUp or ToDown
+GoalMarker = GoalCompleted or GoalFailed or NextGoal or MarbleFailed
+Goal = One or Two or Three or Four or Five or Six or seven or eight or nine
+Mirror = MirrorUR or MirrorUL
+ResetMirror = ResetMirrorUR or ResetMirrorUL
+
+
+=========
+SOUNDS
+=========
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Corner
+Reset
+ResetMirror
+GunOn
+ToUp, ToLeft, ToRight, ToDown
+JustGot
+Cell
+Goal
+Flip
+Marble
+Mirror
+Gun
+GoalFailed, GoalCompleted, NextGoal
+MarbleFailed
+Player
+
+======
+RULES
+======
+
+[ Reset ] -> []
+
+( Make One if it doesn't exist yet )
+[ One ][ Gun ] -> [ One ][ action Gun ]
+random [ stationary Gun ][ no cell no goal no gun no corner ] -> [ action Gun ][ One ]
+[ action Gun ] -> [ Gun ]
+
+( Turn on Gun )
+[ action Player Gun no GunOn ] -> [ Player Gun GunOn Reset ]
+[ action Player Gun GunOn ] -> [ Player Gun Reset ]
+
+( or if we just failed, action Player resets gun to off )
+[ action Player Gun GunOn ][ MarbleFailed ] -> [ Player Gun Reset ][]
+( even not on Gun )
+[ action Player ][ Gun GunOn ][ MarbleFailed ] -> [ Player ][ Gun Reset ][]
+
+( Player can't move while there's a Marble )
+( [ moving Player ][ Marble ] -> cancel )
+
+[ Reset ][ GoalMarker ] -> [ Reset ][]
+
+( Propagate GunOn everywhere )
+[ Gun GunOn ][ no GunOn ] -> [ Gun GunOn ][ GunOn ]
+[ Gun no GunOn ][ GunOn ] -> [ Gun ][]
+
+( Place/rotate mirrors )
+[ no GunOn action Player Cell no Mirror ] -> [ Player Cell MirrorUR ]
+[ no GunOn action Player Cell MirrorUR ] -> [ Player Cell MirrorUL ]
+[ no GunOn action Player Cell MirrorUL ] -> [ Player Cell ]
+
+( If gun just turned off, restore mirror rotations )
+[ Reset no GunOn ][ Mirror ] -> [ Reset ][]
+[ Reset no GunOn ][ ResetMirrorUR ] -> [ Reset ][ MirrorUR ]
+[ Reset no GunOn ][ ResetMirrorUL ] -> [ Reset ][ MirrorUL ]
+
+( And remove Marbles )
+[ Reset no GunOn ][ Marble ] -> [ Reset ][]
+
+( If just turned on, save mirror rotations )
+[ Reset GunOn ][ ResetMirror ] -> [ Reset GunOn ][]
+[ Reset GunOn ][ MirrorUR ] -> [ Reset GunOn ][ MirrorUR ResetMirrorUR ]
+[ Reset GunOn ][ MirrorUL ] -> [ Reset GunOn ][ MirrorUL ResetMirrorUL ]
+
+( And reset NextGoal )
+[ Reset GunOn ][ NextGoal ] -> [ Reset GunOn ][]
+[ Reset GunOn ][ One ] -> [ Reset GunOn ][ NextGoal One ]
+
+( And fire )
+[ Reset GunOn Gun ] -> [ Reset GunOn Gun Marble ToUp ]
+
+[ ToRight Marble ] -> [ right Marble ]
+[ ToLeft Marble ] -> [ left Marble ]
+[ ToUp Marble ] -> [ up Marble ]
+[ ToDown Marble ] -> [ down Marble ]
+
+( Remove any dangling directions )
+[ Directions ] -> []
+
+right [ up Marble MirrorUR | ] -> [ MirrorUL | ToRight Marble ]
+right [ down Marble MirrorUL | ] -> [ MirrorUR | ToRight Marble ]
+up [ right Marble MirrorUR | ] -> [ MirrorUL | ToUp Marble ]
+up [ left Marble MirrorUL | ] -> [ MirrorUR | ToUp Marble ]
+left [ up Marble MirrorUL | ] -> [ MirrorUR | ToLeft Marble ]
+left [ down Marble MirrorUR | ] -> [ MirrorUL | ToLeft Marble ]
+down [ right Marble MirrorUL | ] -> [ MirrorUR | ToDown Marble ]
+down [ left Marble MirrorUR | ] -> [ MirrorUL | ToDown Marble ]
+
+[ right Marble ] -> [ right Marble right ToRight]
+[ left Marble ] -> [ left Marble left ToLeft]
+[ down Marble ] -> [ down Marble down ToDown]
+[ up Marble ] -> [ up Marble up ToUp]
+
+[ JustGot ] -> []
+
+( Check completed + Send another Marble )
+[ NextGoal Marble ][ Gun ] -> [ GoalCompleted JustGot ][ Reset Gun up Marble up ToUp ]
+
+( Activate next goal)
+[ JustGot One ][ Two ] -> [ One ][ NextGoal Two ]
+[ JustGot Two ][ Three ] -> [ Two ][ NextGoal Three ]
+[ JustGot Three ][ Four ] -> [ Three ][ NextGoal Four ]
+[ JustGot Four ][ Five ] -> [ Four ][ NextGoal Five ]
+[ JustGot Five ][ Six ] -> [ Five ][ NextGoal Six ]
+[ JustGot six ][ seven ] -> [ six ][ NextGoal seven ]
+[ JustGot seven ][ eight ] -> [ seven ][ NextGoal eight ]
+[ JustGot eight ][ nine ] -> [ eight ][ NextGoal nine ]
+
+( Check failed )
+late [ Marble no Cell no NextGoal ][ NextGoal ] -> [ MarbleFailed ][ GoalFailed ]
+
+( Add a new goal )
+random [ JustGot One ][ no cell no goal no gun no corner ] -> [ one ][ two nextgoal ]
+random [ JustGot Two ][ no cell no goal no gun no corner ] -> [ two ][ three nextgoal ]
+random [ JustGot three ][ no cell no goal no gun no corner ] -> [ three ][ four nextgoal ]
+random [ JustGot four ][ no cell no goal no gun no corner ] -> [ four ][ five nextgoal ]
+random [ JustGot five ][ no cell no goal no gun no corner ] -> [ five ][ six nextgoal ]
+(
+random [ JustGot six ][ no cell no goal no gun no corner ] -> [ six ][ seven nextgoal ]
+random [ JustGot seven ][ no cell no goal no gun no corner ] -> [ seven ][ eight nextgoal ]
+random [ JustGot eight ][ no cell no goal no gun no corner ] -> [ eight ][ nine nextgoal ]
+)
+
+==============
+WINCONDITIONS
+==============
+
+some JustGot
+
+
+=======
+LEVELS
+=======
+
+x.....x
+.#####.
+.#####.
+.##p##.
+.#####.
+.#####.
+x..g..x
+
+Message Wow!

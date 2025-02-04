@@ -1,0 +1,99 @@
+title Thirty-Two Nanobots
+author Jonah Ostroff
+Background_Color Black
+
+========
+OBJECTS
+========
+Background
+#FFF #CCC
+00000
+01010
+00000
+01010
+00000
+
+Spawn
+#FF0000 #FF4444 #FF8888
+.000.
+01110
+01210
+01110
+.000.
+
+Player
+Blue #66F
+.....
+.000.
+.010.
+.000.
+.....
+
+Border
+Black
+
+Checker
+Black
+
+Box
+White
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Check
+#F00
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+. = Background
+@ = Player
+# = Border
+! = Checker and Box and Border
+B = Box and Border
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Spawn
+Player Border
+Checker
+Box
+Check
+======
+RULES
+======
+[> Player | Border] -> Cancel
+[Action Player Spawn] -> Cancel
+[Action Player][Spawn][Checker] -> [Action Player][Spawn][Down Checker]
+[Action Player][Spawn no Player] -> [Spawn Player][Spawn Player]
+[Action Player] -> [Spawn Player]
+[Down Checker] -> [Down Checker Check]
+==============
+WINCONDITIONS
+==============
+All Box on Check
+=======
+LEVELS
+=======
+############
+#.......####
+#.......#!##
+#.......#B##
+#...@...#B##
+#.......#B##
+#.......#B##
+#.......####
+############

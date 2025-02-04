@@ -1,0 +1,318 @@
+title Stand III
+author Connorses [Loneship Games]
+homepage connorspuzzles.tumblr.com
+run_rules_on_level_start
+noaction
+background_color #110018
+text_color purple
+
+========
+OBJECTS
+========
+
+Background 
+GREEN #3c833d
+00000
+01110
+01110
+01110
+00000
+
+
+Target1
+DarkBlue Blue
+.....
+00000
+01110
+00000
+.....
+
+Target2
+Darkgreen lightgreen
+.....
+00000
+01110
+00000
+.....
+
+Wall1 
+BROWN
+
+Wall2
+Brown
+00000
+00000
+00000
+00000
+.....
+
+Player 
+lightblue
+.000.
+00000
+.0.0.
+.....
+.....
+
+Crate 
+Brown lightbrown
+1..01
+1.0.1
+10..1
+11111
+.....
+
+CrateTop
+Brown lightbrown
+.....
+.....
+.....
+.....
+11111
+
+
+BigCrate
+Black grey
+1.0.0
+00100
+0.0.1
+10010
+.....
+
+BigCrateTop
+black Grey
+.....
+.....
+.....
+.....
+01001
+
+hole
+black #170220
+11111
+00000
+10001
+00000
+01010
+
+lose
+darkblue
+.....
+.000.
+00000
+.0.0.
+.....
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall1
+% = Wall2
+P = Player
+* = Crate
++ = BigCrate
+@ = Crate and Target1
+& = BigCrate and Target1
+O = Target1
+Q = Target1 and player
+X = hole
+
+falls = crate or bigcrate
+
+=======
+SOUNDS
+=======
+Target2 Destroy 67186706
+Target2 Create 74302900
+StartGame 13756108
+EndLevel 23510908
+EndGame  84025508
+Player Move 81570907
+Crate Move 22518904 (73907102 3366707)
+BigCrate Move 89017902
+sfx0 93887302 (falling)
+================
+COLLISIONLAYERS
+================
+
+
+Background
+Target1, Target2,hole
+Player, Wall1, Wall2 Crate, BigCrate, lose
+cratetop, bigcrateTop
+
+======
+RULES     
+======     
+(2 Crates that push in different ways)
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Player | BigCrate] -> [ Player | > BigCrate ]
+
+(Targets toggle on and off)
+late [Target1 Player] -> [Target2 Player]
+late [Target2 no Player] -> [Target1]
+
+(stuff dissapears in holes, characters can't fall in or it resets)
+late [falls hole] -> [hole] sfx0
+late [player hole] -> [lose hole] sfx0
+[lose hole] -> restart
+
+(graphical thing so I can draw crates 1 square higher)
+late [CrateTop] -> [   ]
+late [Bigcratetop] -> [   ]
+late up [crate|no crateTop] -> [Crate|Cratetop]
+late up [BiGcRaTe|NO Bigcratetop] -> [BIGCRATE|bigCratetop]
+==============
+WINCONDITIONS
+==============
+
+No Target1
+
+=======     
+LEVELS
+=======
+xxxxxxxxx
+x...x
+x.x.
+x..#o#.x
+xx.###x
+x..xp.x.x
+x......x
+xxxxxx
+message Oh, he1!0 I d$dn't s˙e yˆˆ µhere. J¨$t li˚3 be4: Ge† all the little guys *x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x**x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x
+message Remember, you can undo with Z
+message and restart w¥©ˆ˙ø¥ R
+
+xxxxxxxxxxx
+xxp......xx
+xx.......xx
+xx%.....oxx
+xx....#..xx
+xxxxxxxxxxx
+xxp......xx
+xx.......xx
+xx....o..xx
+xx...#...xx
+xxxxxxxxxxx
+
+x...xx..x.
+.##xx#%%#x
+x#.....o#.
+.x.#..#.#.
+.#p#p.#.#.
+.#o#..#.#.
+x#o#..#pxx
+xx.%x%x%%.
+xx.xxxx..x
+xxxxxxxxxx
+
+#######x
+#p.@x*.x
+#p.*.oxx
+###.###x
+
+###p.##
+#x##o##
+#**..o#
+#p##x##
+###xx#x
+
+message Did we mention you can push the l¡ttle sokoban crates? You T%/}-u+ ç4n
+
+x..xxxxx
+x......x
+x.op..px
+x...*..x
+x..*..ox
+x......x
+xxxxxxxx
+
+
+
+message Sorry about that, we had some technical difficulties. You may now return to your regularly scheduled puzzle game.
+message Oh, and don't step in the holes.
+
+x##############
+x########.*.###
+xoppo..o....###
+x#########*####
+x########xp####
+x##############
+
+xxxxx#xx
+xp.o+o.x
+xp.....x
+xxxxx..x
+
+xxxxxxxxxx
+x........x
+x.pp.....x
+x........x
+x...++...x
+x........x
+xo......ox
+x%xxxxxx%x
+
+
+#%##%%%####
+#px#...####
+#.xx.#.%%x#
+#....x....#
+####%%%%%.#
+###xq...+o#
+#%%%%#%%%%#
+#...#%....#
+#.#.%..#%.#
+#p#...x%o.#
+%xx%%%%%%%%
+
+xxxxxxxxxx
+x.....o..x
+x......p.x
+x..p....+x
+x.....o.+x
+x.+.....xx
+x.......xx
+xxxxxxxxxx
+message Wait a minute, half of these puzzles are just edited levels from the other games!
+
+xx#x#########
+xp.*&p...o..#
+xx#p#########
+
+xxxxxxx
+x.....x
+x.+p+.x
+x.p.p.x
+x.+p+.x
+xoooo.x
+xxxxxxx
+
+#.*pp####
+##.*p#..o
+.#*.*#..o
+...###..o
+...###..o
+p.*...*.o
+p..*..*.o
+..##..*#o
+#.*.##...
+..*pp##..
+
+message Huh, that was a bit cluttered.
+
+message Here's something more orderly.
+
+##%%%%%%%%#
+##........#
+##o.p*....#
+##........#
+###%%%%.###
+###po+op###
+#%%.%%%%%##
+#........##
+#o..p*...##
+#........##
+###########
+message Part III Complete!

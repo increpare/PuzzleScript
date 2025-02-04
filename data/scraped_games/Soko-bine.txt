@@ -1,0 +1,187 @@
+title Soko-bine
+author Aarex
+homepage sites.google.com/site/aarexnumbers
+debug
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+SmallCrate
+Orange Yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+TinyCrate
+Orange Yellow
+.....
+.....
+..0..
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+AllCrate = Crate or SmallCrate or TinyCrate
+. = Background
+# = Wall
+P = Player
+* = Crate
+& = SmallCrate
+^ = TinyCrate
+@ = Crate and Target
+/ = SmallCrate and Target
+\ = TinyCrate and Target
+O = Target
+Q = Player and Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, AllCrate
+
+======
+RULES
+======
+
+[ > Player|TinyCrate|TinyCrate] -> [ > Player||SmallCrate]
+[ > Player|SmallCrate|SmallCrate] -> [ > Player||Crate]
+[ >  Player | AllCrate ] -> [  >  Player | > AllCrate  ]
+
+==============
+WINCONDITIONS
+==============
+
+Some Crate
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message There is 8 levels in this game.
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+#######
+#P.#..#
+#.&#..#
+#.../.#
+#######
+
+######
+#....#
+#.#P.#
+#./&.#
+#.O*.#
+#....#
+######
+
+############
+#Q.........#
+#.##&###&#.#
+#.##.###.#.#
+#.##.###.#.#
+#O..*......#
+#...########
+#####.......
+
+######
+#P..O#
+##.^^#
+.#.^^#
+.#...#
+.#####
+
+########
+#P.....#
+#..^...#
+#..##^.#
+#.^##..#
+#...^..#
+#.....O#
+########
+
+########
+#P.....#
+#.####.#
+#.#....#
+#..^.#.#
+#.####.#
+#..^.#.#
+#.#....#
+#.####.#
+#O.&...#
+########

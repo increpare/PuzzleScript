@@ -1,0 +1,428 @@
+title I'm too far gone
+
+
+zoomscreen 11x11
+run_rules_on_level_start
+========
+OBJECTS
+========
+
+Background
+white
+
+b1
+white #dddddd
+00000
+00010
+00000
+10000
+00000
+
+b2
+white #dddddd
+00000
+00000
+00100
+00000
+00000
+
+b3
+white #dddddd
+01000
+00000
+00000
+00100
+00000
+
+b4
+white #dddddd
+00000
+00000
+00000
+00000
+00001
+
+b5
+white #dddddd
+00000
+10000
+00000
+00100
+00000
+
+floor
+darkgrey
+
+Ee
+darkgrey yellow
+01110
+01000
+01110
+01000
+01110
+
+Nn
+darkgrey yellow
+00000
+01110
+01010
+01010
+00000
+
+Dd
+darkgrey yellow
+01100
+01010
+01010
+01010
+01100
+
+wall
+grey
+
+redgen
+red lightgrey
+11011
+11011
+01010
+10001
+11011
+
+bluegen
+blue lightgrey
+11011
+10001
+01010
+11011
+11011
+
+red
+lightred red
+.111.
+10001
+10001
+10001
+.111.
+
+blue
+lightblue blue
+.111.
+10001
+10001
+10001
+.111.
+
+red1
+red darkred
+11111
+10001
+10001
+10001
+11111
+
+blue1
+blue darkblue
+11111
+10001
+10001
+10001
+11111
+
+ru
+lightred red
+10001
+.....
+.....
+.....
+.....
+
+rd
+lightred red
+.....
+.....
+.....
+.....
+10001
+
+rr
+lightred red
+....1
+....0
+....0
+....0
+....1
+
+rl
+lightred red
+1....
+0....
+0....
+0....
+1....
+
+bu
+lightblue blue
+10001
+.....
+.....
+.....
+.....
+
+bd
+lightblue blue
+.....
+.....
+.....
+.....
+10001
+
+br
+lightblue blue
+....1
+....0
+....0
+....0
+....1
+
+bl
+lightblue blue
+1....
+0....
+0....
+0....
+1....
+
+ded
+brown
+.....
+.000.
+.000.
+.000.
+.....
+
+ru1
+red darkred
+10001
+.....
+.....
+.....
+.....
+
+rd1
+red darkred
+.....
+.....
+.....
+.....
+10001
+
+rr1
+red darkred
+....1
+....0
+....0
+....0
+....1
+
+rl1
+red darkred
+1....
+0....
+0....
+0....
+1....
+
+bu1
+blue darkblue
+10001
+.....
+.....
+.....
+.....
+
+bd1
+blue darkblue
+.....
+.....
+.....
+.....
+10001
+
+br1
+blue darkblue
+....1
+....0
+....0
+....0
+....1
+
+bl1
+blue darkblue
+1....
+0....
+0....
+0....
+1....
+
+
+player
+yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+supp
+transparent
+
+movee
+transparent
+
+moven
+transparent
+
+moved
+transparent
+
+mem
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall and floor
+r = redgen and wall
+b = bluegen and wall
+- = floor
+p = player and floor
+E = Ee
+N = Nn 
+D = Dd 
+col = red or blue
+col1 = red1 or blue1
+xx = rr or rl or ru or rd or br or bl or bd or bu
+xx1 = rr1 or rl1 or ru1 or rd1 or br1 or bl1 or bd1 or bu1
+end = ee or nn or dd
+! = red and floor
+? = mem
+bx = b1 or b2 or b3 or b4 or b5
+=======
+SOUNDS
+=======
+SFX1 9924503
+SFX2 79825304
+SFX3 17145902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+bx
+floor, red1, blue1, ded
+rr1
+rl1
+ru1
+rd1
+br1
+bl1
+bd1
+bu1
+Player, Wall, red, blue, 
+rr
+rl
+ru
+rd
+br
+bl
+bd
+bu
+redgen, bluegen, Ee, Nn, Dd
+supp
+movee
+moven
+moved
+mem
+======
+RULES
+======
+[background no bx] -> [background random bx]
+late down [redgen|no player no red no blue] -> [redgen|red movee moven moved] SFX1
+late up [bluegen|no player no red no blue] -> [bluegen|blue movee moven moved] SFX1
+
+late right[movee][ee|] -> [][|ee]
+late right[moven][nn|] -> [][|nn]
+late right[moved][dd|] -> [][|dd]
+
+[> player | red] -> [> player| > red]
+[> player | blue] -> [> player| > blue]
+
+[moving red | red] -> [moving red | moving red]
++[moving blue | blue] -> [moving blue | moving blue]
++[moving red1 | red1] -> [moving red1 | moving red1]
++[moving blue1 | blue1] -> [moving blue1 | moving blue1]
++[moving red red1] -> [moving red moving red1]
++[moving blue blue1] -> [moving blue moving blue1]
++[ red moving red1] -> [moving red moving red1]
++[ blue moving blue1] -> [moving blue moving blue1]
++[> red | blue] -> [> red | > blue]
++[> blue | red] -> [> blue | > red]
++[> red1 | blue1] -> [> red1 | > blue1]
++[> blue1 | red1] -> [> blue1 | > red1]
+
+[player moving col1] -> cancel
+[> col | wall] -> cancel
+[> col1 | floor] -> cancel
+
+late [supp] -> []
+late [col floor] -> [col supp floor]
+late [col col1] -> [col supp col1]
+late [red supp | red] -> [red supp | red supp]
+late [blue supp | blue] -> [blue supp | blue supp]
+
+late [red no supp] -> [red1] SFX2
+late [blue no supp] -> [blue1] SFX2
+late [player no col1 no floor] -> [ded] SFX3
+
+late [xx] -> []
+late [xx1] -> []
+
+late up [red | red] -> [red ru | red rd]
+late left [red | red] -> [red rl | red rr]
+late up [blue | blue] -> [blue bu | blue bd]
+late left [blue | blue] -> [blue bl | blue br]
+late up [red1 | red1] -> [red1 ru1 | red1 rd1]
+late left [red1 | red1] -> [red1 rl1 | red1 rr1]
+late up [blue1 | blue1] -> [blue1 bu1 | blue1 bd1]
+late left [blue1 | blue1] -> [blue1 bl1 | blue1 br1]
+
+late [nn mem][player] -> [nn mem][ded] message YOU'VE GONE TOO FAR (THIS IS NOT A WIN)
+==============
+WINCONDITIONS
+==============
+
+all player on end
+no ded
+=======
+LEVELS
+=======
+
+
+message Level 25 of 25
+
+##########################################################################################################################################################################
+#.........................................................................................................................................................................
+#.-------.................................................................................................................................................................
+#.---r---.................................................................................................................................................................
+#.---!---E................................................................................................................................................................
+#.-----p-N...............................................................................................................................................................?
+#.-------D................................................................................................................................................................
+#.---b---.................................................................................................................................................................
+#.-------.................................................................................................................................................................
+#.........................................................................................................................................................................
+##########################################################################################################################################################################
+
+

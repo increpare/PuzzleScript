@@ -1,0 +1,357 @@
+title Coin Eater
+
+========
+OBJECTS
+========
+Background
+Grey Black
+00100
+01110
+11111
+01110
+00100
+
+Player1
+LightBlue White
+11011
+11011
+00000
+11011
+11011
+
+Wall
+DarkRed Brown
+11111
+10001
+10001
+10001
+11111
+
+Coins
+Yellow Brown
+.111.
+10000
+10100
+00000
+.000.
+
+Temp
+White
+.....
+.....
+.....
+.....
+.....
+
+Fluid1
+White
+.....
+.....
+.....
+.....
+.....
+
+Hole
+Grey White Black
+11111
+10201
+12221
+10201
+11111
+
+AAAA
+LightBlue White #add8e6 Blue
+11111
+12021
+10301
+12021
+11111
+
+DoorUnlock
+Green Red
+.111.
+.101.
+.101.
+.000.
+.000.
+
+GateLock
+Black
+..000
+..00.
+.00..
+000..
+00000
+
+DoorScanner
+Green Red
+.....
+11111
+1...0
+00000
+.....
+
+GateGroove
+Grey Black
+00100
+00100
+11111
+00100
+00100
+
+GateGrooveVertical
+Grey Black
+00100
+00100
+11111
+00100
+00100
+
+OpenDoor
+Green Red
+.....
+1....
+.....
+....0
+.....
+
+ClosedGateHorizontal
+Grey Black #cccccc
+00222
+02222
+22222
+00100
+00100
+
+ClosedGateVertical
+Grey Black #cccccc
+22200
+22200
+22211
+02200
+00200
+
+PlayerWithPass
+LightBlue White
+11011
+11011
+00000
+11011
+11011
+
+PlayerWithKey
+LightBlue White
+11011
+11011
+00000
+11011
+11011
+
+PlayerWithPassandKey
+LightBlue White
+11011
+11011
+00000
+11011
+11011
+
+PlayeronGroove
+LightBlue White
+11011
+11011
+00000
+11011
+11011
+
+PlayeronDoor
+LightBlue White
+11011
+11011
+00000
+11011
+11011
+
+PlayeronVertical
+LightBlue White
+11011
+11011
+00000
+11011
+11011
+
+BallLightning
+LightBlue White
+.101.
+10010
+00000
+10011
+.100.
+
+ChargedPlayer
+LightBlue White
+11011
+11010
+00000
+01011
+10011
+
+Insulator
+Black
+00000
+00000
+00000
+00000
+00000
+
+Wall1
+DarkRed Brown
+11111
+10001
+10001
+10001
+11111
+
+=======
+LEGEND
+=======
+
+. = Background
+, = Fluid1
+P = Player1
+W = Wall and Wall1
+C = Coins
+H = Hole
+D = DoorUnlock
+G = GateLock
+S = DoorScanner
+- = GateGroove
+I = GateGrooveVertical
+B = BallLightning
+E = Insulator
+
+PeopleWithKeys = PlayerWithKey or PlayerWithPassandKey
+PeopleWithPasses = PlayerWithPass or PlayerWithPassandKey
+Thing = GateGroove or GateGrooveVertical or OpenDoor or DoorScanner or ClosedGateHorizontal or ClosedGateVertical
+PlayeronThing = PlayeronGroove or PlayeronVertical or PlayeronDoor
+Player = Player1 or PlayerWithPass or PlayerWithKey or playerwithpassandkey or Chargedplayer
+PeopleWithoutKeys = Player1 or PlayerWithPass
+PeopleWithoutPass = player1 or PlayerWithKey
+CalmPlayer = Player1 or PlayerWithPass or PlayerWithKey or Playerwithpassandkey
+Fluid = Fluid1 or Hole or Insulator or GateGroove or GateGrooveVertical or OpenDoor
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player1, Coins, Wall, PlayerWithKey, PlayerWithPass, PlayerWithPassandKey, DoorScanner, ClosedGateHorizontal, ClosedGateVertical, PlayeronGroove, PlayeronDoor, PlayeronVertical
+Temp
+Fluid1
+Hole
+AAAA
+DoorUnlock, GateLock, GateGroove, GateGrooveVertical, OpenDoor
+ChargedPlayer, Insulator, Coins, BallLightning, Wall1
+
+======
+RULES
+======
+
+[> Player|Fluid1] -> [Fluid1|> player]
+[> Player|Fluid| ] -> [ |Fluid|> player]
+[> Player1|GateGroove] -> [Fluid1|> PlayeronGroove]
+[> Player1|GateGrooveVertical] -> [Fluid1|> PlayeronVertical]
+[> player1|OpenDoor] -> [Fluid1|> PlayeronDoor]
+[> PlayeronGroove|Fluid] -> [GateGroove|> Player1]
+[> PlayeronVertical|Fluid] -> [GateGrooveVertical|> Player1]
+[> playerondoor|Fluid] -> [OpenDoor|> Player1]
+[ |STATIONARY PlayeronGroove] -> [Player1|GateGroove]
+[ |STATIONARY PlayeronVertical] -> [Player1|GateGrooveVertical]
+[ |STATIONARY PlayeronDoor] -> [Player1|OpenDoor]
+[> Player|Coins] -> [Fluid1|> player]
+[> CalmPlayer|Hole] -> [ |AAAA]
+[AAAA] -> restart
+[> Player1|DoorUnlock] -> [ |> PlayerWithPass]
+[> PlayerWithKey|DoorUnlock] -> [ |> PlayerWithPassandKey]
+[> Player1|GateLock] -> [ |> PlayerWithKey]
+[> PlayerWithPass|GateLock] -> [ |> PlayerwithPassandKey]
+[> PeopleWithPasses|DoorScanner] -> [> PeopleWithPasses|OpenDoor]
+[> PeopleWithKeys|GateGroove] -> [PeopleWithKeys|ClosedGateHorizontal]
+[> PeopleWithKeys|GateGrooveVertical] -> [PeopleWithKeys|ClosedGateVertical]
+[> Player|BallLightning] -> [Fluid1|> ChargedPlayer]
+[Action ChargedPlayer] -> [Player1]
+[> ChargedPlayer|Thing] -> [Fluid1|> ChargedPlayer]
+
+==============
+WINCONDITIONS
+==============
+
+No Coins
+
+=======
+LEVELS
+=======
+
+message collect all the coins. you will move until you hit a wall or slide past a coin.
+
+,,,,,,,WWP
+,,,,,,,,,,
+,,,,,,,,,W
+WWWWWWCWCW
+
+message level 2 of 50
+
+P,WC,,,
+,,,W,,,
+,,,CW,P
+
+message don't fall in the holes!
+
+P,C,HC
+,,,,,,
+
+message level 4 of 50
+
+P,CCH
+,,W,,
+WC,,C
+C,,C,
+
+message level 5 of 50
+
+,,W,,,W,
+,,,,W,WW
+PCCCCCCH
+,,,W,,,W
+
+message Doors open with passes. Gates close with keys. If you don't have a key, you could always use something like a pin...
+
+,,,i,,w,,,
+,wdw,,,sh,
+,,w,,,,,h,
+w,c,,w,,h,
+p,w,w,,ch,
+sw,,,,,ih,
+g,,ih,s,,,
+
+message Ball lightning is dangerous. It flares you up. You lose your access to passes and keys, as these burn up while you are charged, but you can bypass 
+
+message doors and locked gates. Insulators, however, act as walls while you are charged. Press X to release all electric charge.
+
+wwwse,whch
+pdgbw,,,e,
+www-ww,e,,
+,be,wc,e,w
+hewwwwww,,
+--,,,,hww,
+eb,,cehw,,
+geeeeehw,w
+,,,,,,hwbc
+
+
+
+
+

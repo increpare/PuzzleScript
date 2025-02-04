@@ -1,0 +1,146 @@
+title Nirvana
+author Sky Chan
+homepage https://skyychann.itch.io/
+
+norepeat_action
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White brown
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+PlayerGrey
+blue blue blue blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Nirvana
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+Obstacles = Wall or Player or Crate
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Nirvana
+Target
+Player, Wall, Crate, PlayerGrey
+
+======
+RULES
+======
+
+[ action Player ] [ Nirvana ] -> [ Player ] [ ]
+[ action Player ] [ no Nirvana ] -> [ Player ] [ Nirvana ]
+
+late [ no Nirvana ] [ PlayerGrey ] -> [ ] [ ]
+late [ Nirvana ] [ no Obstacles ] -> [ Nirvana ] [ PlayerGrey ]
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player | ... | PlayerGrey ] -> [ PlayerGrey | ... | Player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+######
+#.*op#
+#o*..#
+######
+
+####..
+#..#..
+#o*###
+#o*..#
+#o*.p#
+######
+
+####
+#p.#
+#**#
+#..#
+#**#
+#..#
+#@@#
+#oo#
+#oo#
+####
+
+#######
+#..o*o#
+#..*@*#
+##.o*o#
+##.p..#
+#######
+
+

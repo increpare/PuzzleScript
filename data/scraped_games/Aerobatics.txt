@@ -1,0 +1,616 @@
+title Aerobatics
+author Mark Richardson
+again_interval 0.2
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+Background
+#531
+
+TurnL1
+Transparent
+
+TurnL2
+Transparent
+
+TurnR1
+Transparent
+
+TurnR2
+Transparent
+
+TurnD1
+Transparent
+
+TurnD2
+Transparent
+
+HUD
+Transparent
+
+PlaneU
+White LightBlue
+..1..
+..1..
+00000
+..0..
+.000.
+
+PlaneD
+White LightBlue
+.000.
+..0..
+00000
+..1..
+..1..
+
+PlaneL
+White LightBlue
+..0..
+..0.0
+11000
+..0.0
+..0..
+
+PlaneR
+White LightBlue
+..0..
+0.0..
+00011
+0.0..
+..0..
+
+PlaneUL
+White LightBlue
+1..0.
+.10..
+.00..
+0..00
+...0.
+
+PlaneUR
+White LightBlue
+.0..1
+..01.
+..00.
+00..0
+.0...
+
+PlaneDL
+White LightBlue
+...0.
+0..00
+.00..
+.10..
+1..0.
+
+PlaneDR
+White LightBlue
+.0...
+00..0
+..00.
+..01.
+.0..1
+
+Ring
+#F00 #A21
+.000.
+01.10
+0...0
+01.10
+.000.
+
+ExplosionX
+Transparent
+
+ExplosionU
+Red Orange Yellow
+.000.
+11011
+.21..
+2..1.
+...2.
+
+ExplosionD
+Red Orange Yellow
+.2...
+.1..1
+..12.
+11011
+.000.
+
+ExplosionL
+Red Orange Yellow
+.1...
+01.12
+001..
+012..
+.1.1.
+
+ExplosionR
+Red Orange Yellow
+.1.1.
+..210
+..100
+21.10
+...1.
+
+WallX
+Brown
+00000
+00000
+00000
+00000
+00000
+
+WallU
+Brown
+.000.
+00000
+00000
+00000
+00000
+
+WallD
+Brown
+00000
+00000
+00000
+00000
+.000.
+
+WallL
+Brown
+.0000
+00000
+00000
+00000
+.0000
+
+WallR
+Brown
+0000.
+00000
+00000
+00000
+0000.
+
+WallUL
+Brown
+.000.
+00000
+00000
+00000
+.0000
+
+WallUR
+Brown
+.000.
+00000
+00000
+00000
+0000.
+
+WallDL
+Brown
+.0000
+00000
+00000
+00000
+.000.
+
+WallDR
+Brown
+0000.
+00000
+00000
+00000
+.000.
+
+WallO
+Brown
+.000.
+00000
+00000
+00000
+.000.
+
+Player
+Transparent
+
+StepH
+#0C0
+.....
+.....
+.0.0.
+.....
+.....
+
+StepV
+#0C0
+.....
+..0..
+.....
+..0..
+.....
+
+StepUL
+#0C0
+.....
+.0...
+.....
+.....
+.....
+
+StepUR
+#0C0
+.....
+...0.
+.....
+.....
+.....
+
+StepDL
+#0C0
+.....
+.....
+.....
+.0...
+.....
+
+StepDR
+#0C0
+.....
+.....
+.....
+...0.
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+! = WallX and HUD
+# = WallX
+O = Ring
+U = Player and PlaneU
+D = Player and PlaneD
+L = Player and PlaneL
+R = Player and PlaneR
+Q = Player and PlaneUR
+
+Plane = PlaneU or PlaneD or PlaneL or PlaneR or PlaneUL or PlaneUR or PlaneDL or PlaneDR
+Turn = TurnL1 or TurnL2 or TurnR1 or TurnR2 or TurnD1 or TurnD2
+Explosion = ExplosionX or ExplosionU or ExplosionD or ExplosionL or ExplosionR
+Wall = WallX or WallU or WallD or WallL or WallR or WallUL or WallUR or WallDL or WallDR or WallO
+Step = StepH or StepV or StepUL or StepUR or StepDL or StepDR
+
+
+=======
+SOUNDS
+=======
+
+Ring Destroy     58849900
+Explosion Create 93930908
+EndLevel         72547908
+SFX0             22603503 (Turning)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Turn, HUD
+Wall, Plane, Ring, Explosion
+Player, Step
+
+
+======
+RULES
+======
+
+( Decorate walls )
+up    [ WallX  | no Wall ] -> [ WallU  | ]
+down  [ WallX  | no Wall ] -> [ WallD  | ]
+down  [ WallU  | no Wall ] -> [ WallO  | ]
+left  [ WallX  | no Wall ] -> [ WallL  | ]
+left  [ WallU  | no Wall ] -> [ WallUL | ]
+left  [ WallD  | no Wall ] -> [ WallDL | ]
+right [ WallX  | no Wall ] -> [ WallR  | ]
+right [ WallU  | no Wall ] -> [ WallUR | ]
+right [ WallD  | no Wall ] -> [ WallDR | ]
+right [ WallL  | no Wall ] -> [ WallO  | ]
+right [ WallUL | no Wall ] -> [ WallO  | ]
+right [ WallDL | no Wall ] -> [ WallO  | ]
+
+( Clear flight plan )
+[ Step ] -> [ ]
+
+( Toggle HUD )
+[ action Player ] [ HUD ] -> [ Player ] [ ]
+random [ action Player ] [ Wall ] -> [ Player ] [ Wall HUD ]
+
+( Generalise plane )
+[ PlaneU  ] -> [ up    PlaneU  ]
+[ PlaneD  ] -> [ down  PlaneD  ]
+[ PlaneL  ] -> [ left  PlaneL  ]
+[ PlaneR  ] -> [ right PlaneR  ]
+[ PlaneUL ] -> [ up    PlaneUL ]
+[ PlaneDR ] -> [ down  PlaneDR ]
+[ PlaneDL ] -> [ left  PlaneDL ]
+[ PlaneUR ] -> [ right PlaneUR ]
+
+( Complete turning )
+[ v Plane Player TurnL2 | Wall ] -> [ > ExplosionX | Wall ]
+[ > Plane Player TurnR2 | Wall ] -> [ > ExplosionX | Wall ]
+[ > Plane Player TurnD2 | Wall ] -> [ > ExplosionX | Wall ]
+[ v Plane Player TurnL2 |      ] -> [ | > Plane Player ]
+[ > Plane Player TurnR2 |      ] -> [ | > Plane Player ]
+[ > Plane Player TurnD2 |      ] -> [ | > Plane Player ]
+
+( Continue turning )
+[ > Plane Player TurnL1 | Wall ] -> [ > ExplosionX | Wall ]
+[ v Plane Player TurnR1 | Wall ] -> [ > ExplosionX | Wall ]
+[ > Plane Player TurnD1 | Wall ] -> [ > ExplosionX | Wall ]
+[ > Plane Player TurnL1 |      ] -> [ | > Plane Player TurnL2 ] again
+[ v Plane Player TurnR1 |      ] -> [ | v Plane Player TurnR2 ] again
+[ > Plane Player TurnD1 |      ] -> [ | < Plane Player TurnD2 ] again
+
+( Start turning )
+[ > Plane > Player | Wall ] -> [ > ExplosionX | Wall ]
+[ v Plane > Player | Wall ] -> [ > ExplosionX | Wall ] SFX0
+[ ^ Plane > Player | Wall ] -> [ > ExplosionX | Wall ] SFX0
+[ > Plane < Player | Wall ] -> [ > ExplosionX | Wall ] SFX0
+[ > Plane > Player |      ] -> [ | > Plane Player ]
+[ v Plane > Player |      ] -> [ | v Plane Player TurnL1 ] SFX0 again
+[ ^ Plane > Player |      ] -> [ | > Plane Player TurnR1 ] SFX0 again
+[ > Plane < Player |      ] -> [ | > Plane Player TurnD1 ] SFX0 again
+
+( Draw flight plan )
+[ HUD ] [ > Plane no Turn | | ] -> [ HUD ] [ > Plane | > StepV | StepV ]
+[ v StepV | | ] -> [ v StepV | StepDL | StepH ]
+[ ^ StepV | | ] -> [ ^ StepV | StepDR | StepH ]
+[ HUD ] [ v Plane no Turn | ] -> [ HUD ] [ v Plane | action StepUR ]
+[ HUD ] [ ^ Plane no Turn | ] -> [ HUD ] [ ^ Plane | action StepUL ]
+[ action Step | Step ] -> [ Step | Step ]
+[ action Step ] -> [ ]
+[ > Step ] -> [ Step ]
+( reorient steps )
+[ > Plane ] [ Step ] -> [ > Plane ] [ > Step ]
+[ up    Step   ] -> [ Step   ]
+[ down  StepUL ] -> [ StepDR ]
+[ down  StepUR ] -> [ StepDL ]
+[ down  StepDL ] -> [ StepUR ]
+[ down  StepDR ] -> [ StepUL ]
+[ left  StepUL ] -> [ StepDL ]
+[ left  StepUR ] -> [ StepUL ]
+[ left  StepDL ] -> [ StepDR ]
+[ left  StepDR ] -> [ StepUR ]
+[ right StepUL ] -> [ StepUR ]
+[ right StepUR ] -> [ StepDR ]
+[ right StepDL ] -> [ StepUL ]
+[ right StepDR ] -> [ StepDL ]
+[ vertical   StepV ] -> [ StepV ]
+[ horizontal StepV ] -> [ StepH ]
+[ vertical   StepH ] -> [ StepH ]
+[ horizontal StepH ] -> [ StepV ]
+
+( Select plane sprite )
+[ up    Plane no Turn ] -> [ PlaneU       ]
+[ down  Plane no Turn ] -> [ PlaneD       ]
+[ left  Plane no Turn ] -> [ PlaneL       ]
+[ right Plane no Turn ] -> [ PlaneR       ]
+[ up    Plane    Turn ] -> [ PlaneUL Turn ]
+[ down  Plane    Turn ] -> [ PlaneDR Turn ]
+[ left  Plane    Turn ] -> [ PlaneDL Turn ]
+[ right Plane    Turn ] -> [ PlaneUR Turn ]
+[ up    ExplosionX    ] -> [ ExplosionU   ]
+[ down  ExplosionX    ] -> [ ExplosionD   ]
+[ left  ExplosionX    ] -> [ ExplosionL   ]
+[ right ExplosionX    ] -> [ ExplosionR   ]
+
+
+==============
+WINCONDITIONS
+==============
+
+no Ring
+no Turn
+some Plane
+
+
+=======
+LEVELS
+=======
+
+message Flight Training
+
+!#########
+######...#
+######.O.#
+######...#
+#####....#
+##.......#
+#.....O..#
+#.O.....##
+#....#####
+#...######
+#.U.######
+#...######
+##########
+
+message Loop-de-loop
+
+!##########
+####...####
+####.O.####
+####...####
+#.........#
+#.R.....O.#
+#.........#
+####...####
+####.O.####
+####...####
+###########
+
+message Canyon
+
+!#############
+##........O.##
+#............#
+#..#####O...O#
+#.O#####.....#
+#..######.O.##
+#......#######
+##..O...######
+######..######
+######.O######
+######..######
+######...O...#
+#######.....L#
+##############
+
+message Spelunk
+
+!###################
+###########.###..###
+##...######.##....##
+#..#..#####.##....##
+#..##.#####..##...O#
+#O...O.....O....#.##
+#.###.##O##.#####.##
+#..#..##.##.#####.##
+#....###....#####.##
+#.######...######.##
+#.######..###.....##
+#.######.###..##..##
+#..#####..#..####.##
+##..O...#...#####.##
+#######..########O##
+########..##########
+#########.LO########
+####################
+
+message Checkpoint
+
+!################
+#.......O.......#
+#.......#.......#
+#.......O.......#
+#.......#......U#
+#.............#O#
+#...#O#.....#...#
+#...........O...#
+#.#O#...#...#...#
+#.......O.......#
+#....#..#.......#
+#....O.....#....#
+#....#.....O....#
+#..........#....#
+#......#O#......#
+#...............#
+#################
+
+message Down Town
+
+!################
+#....O..........#
+#...............#
+#..........O....#
+#...###...###...#
+#O..###..O###O..#
+#...###...###...#
+#..........O....#
+#...............#
+#....O..........#
+#...###...###...#
+#..O###OU.###..O#
+#...###...###...#
+#....O..........#
+#...............#
+#..........O....#
+#################
+
+message Swiss Cheese
+
+!################
+#...............#
+#...............#
+#..........O....#
+######O######O###
+#...............#
+#.R...........O.#
+#...............#
+####.####O#######
+#............O..#
+#...............#
+#...............#
+##O####.#####.###
+#...............#
+#.........O.....#
+#...............#
+#################
+
+message Indoors
+
+!##############
+#.............#
+#.#..#...#..#.#
+#....#...#....#
+#....O...O....#
+#.##O##.##O##.#
+#....#...#....#
+#.............#
+#....#...#....#
+#.##O##.##O##.#
+#....O.U.O....#
+#....#...#....#
+#.#..#...#..#.#
+#.............#
+###############
+
+message Spires
+
+!############
+#...........#
+#.O.#..#.#..#
+##...#......#
+#...#....#..#
+#......#..#.#
+##...#......#
+#..#....#..##
+#....#.#....#
+#..#.....#..#
+##....#...O.#
+#..#....#...#
+#.R..#....#.#
+#...........#
+#############
+
+message Championship
+
+!############
+##....#.....#
+#..#.#...#..#
+##O......#..#
+#.##..##....#
+#..#..#..#.##
+#....#..###.#
+##.#...#.#..#
+#.O.#.#O....#
+#..#R..#....#
+#...........#
+#..#...####.#
+#...##.#....#
+#....#..##.##
+#....#......#
+##....#..#..#
+#......#O#..#
+#############

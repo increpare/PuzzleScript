@@ -1,0 +1,779 @@
+title Flower Bed
+author Theta Games
+homepage http://theta.freehostia.com
+color_palette c64
+key_repeat_interval 0.25
+(background_color #0A0705) (darker)
+background_color #120C08
+text_color #399E24
+
+
+
+
+(
+PURPLE     #D149CF
+RED        #911919
+DARKGREEN  #335E2A
+GREEN      #399E24
+WHITE      #F7EDF2
+LIGHTGREEN #8AFA34
+DARKBROWN  #403227
+BROWN      #61503E
+LIGHTBROWN #8A7054
+DARKGREY   #4A4643
+GREY       #948D87
+DARKBLUE   #2763A3
+BLUE       #47A2DE
+SILT       #384F75
+)
+
+========
+OBJECTS
+========
+
+Background
+TRANSPARENT
+
+Border #
+TRANSPARENT
+
+Player
+(White)
+#F7EDF2
+00...
+00...
+000..
+0....
+00...
+
+(#9933CC)
+
+
+ShownFlower
+#D149CF #399E24
+(PURPLE GREEN)
+..0..
+.000.
+.10..
+..11.
+..1..
+
+Seed
+#399E24 #8AFA34
+(GREEN LIGHTGREEN)
+.....
+.....
+.....
+..1..
+..0..
+
+Soil
+#403227 #61503E #4A4643
+(DARKBROWN BROWN DARKGREY)
+00000
+01000
+00000
+00020
+00000
+
+
+
+Target
+#911919
+(RED)
+00.00
+0...0
+.....
+0...0
+00.00
+
+
+Rock O
+#403227 #948D87 #4A4643
+(DARKBROWN GREY DARKGREY)
+00000
+01100
+11111
+11112
+02220
+
+Water W
+(DARKBROWN DARKBLUE BLUE SILT)
+#403227 #2763A3 #47A2DE #344563
+00330
+03113
+32113
+31123
+03330
+
+Dirtblock D
+#8A7054 #61503E
+(LIGHTBROWN BROWN)
+11111
+10001
+10001
+10001
+11111
+
+ShownWeed 
+(DARKGREEN GREEN)
+#335E2A #399E24
+.100.
+.0.10
+10...
+..01.
+..0..
+
+BugRight
+#911919 #399E24 #335E2A
+(RED GREEN DARKGREEN)
+2.2..
+00011
+00011
+2.2..
+.....
+
+BugDown
+#911919 #399E24 #335E2A
+(RED GREEN BROWN)
+.2002
+..00.
+.2002
+..11.
+..11.
+
+BugLeft
+#911919 #399E24 #335E2A
+(RED GREEN BROWN)
+.....
+..2.2
+11000
+11000
+..2.2
+
+BugUp
+#911919 #399E24 #335E2A
+(RED GREEN BROWN)
+.11..
+.11..
+2002.
+.00..
+2002.
+
+
+
+
+Counter0
+TRANSPARENT
+
+Counter1
+TRANSPARENT
+
+Counter2
+TRANSPARENT
+
+Counter3
+TRANSPARENT
+
+Counter4
+TRANSPARENT
+
+LeftCounted
+TRANSPARENT
+
+RightCounted
+TRANSPARENT
+
+UpCounted
+TRANSPARENT
+
+DownCounted
+TRANSPARENT
+
+Flower
+TRANSPARENT
+
+Weed
+TRANSPARENT
+
+WCounter0
+TRANSPARENT
+
+WCounter1
+TRANSPARENT
+
+WCounter2
+TRANSPARENT
+
+WCounter3
+TRANSPARENT
+
+WCounter4
+TRANSPARENT
+
+WLeftCounted
+TRANSPARENT
+
+WRightCounted
+TRANSPARENT
+
+WUpCounted
+TRANSPARENT
+
+WDownCounted
+TRANSPARENT
+
+BugMoved
+TRANSPARENT
+
+BugParent
+TRANSPARENT
+
+BugResidue
+TRANSPARENT
+
+
+
+
+
+
+
+
+
+
+=======
+LEGEND
+=======
+
+T = Soil and Target
+. = Soil
+P = Player and Soil
+F = ShownFlower and Soil
+X = ShownWeed and Soil
+4 = BugLeft and Soil
+6 = BugRight and Soil
+2 = BugDown and Soil
+8 = BugUp and Soil
+
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Border
+Soil
+Target
+Rock, Water
+Seed
+ShownFlower, ShownWeed
+BugLeft, BugRight, BugUp, BugDown
+Dirtblock, Player
+Counter0, Counter1, Counter2, Counter3, Counter4
+WCounter0, WCounter1, WCounter2, WCounter3, WCounter4
+LeftCounted, RightCounted, UpCounted, DownCounted
+WLeftCounted, WRightCounted, WUpCounted, WDownCounted
+BugMoved
+BugParent
+BugResidue
+Flower, Weed
+
+
+
+
+======
+RULES
+======
+
+(seeds grow)
+[Seed] -> [ShownFlower]
+
+
+[Soil] -> [Soil Counter0 WCounter0]
+[action Player No Seed] -> [ Player Flower Seed]
+
+(don't step on flowers)
+[> Player | ShownFlower] -> [ | Player No ShownFlower]
+
+(do step on weeds)
+[> Player | ShownWeed] -> [ | Player No ShownWeed]
+
+(step on bugs)
+[> Player | BugLeft] -> [ | Player No BugLeft]
+[> Player | BugRight] -> [ | Player No BugRight]
+[> Player | BugUp] -> [ | Player No BugUp]
+[> Player | BugDown] -> [ | Player No BugDown]
+
+(flowers don't like weeds)
+[ShownWeed | ShownFlower] -> [ShownWeed | No ShownFlower]
+
+
+
+(collisions)
+[> Player | Rock] -> [Player | Rock]
+[> Player | Water] -> [Player | Water]
+[> Player | Border] -> [Player | Border]
+
+(pushing blocks)
+[> Player | Dirtblock | Soil] -> [ | Soil Player | Dirtblock]
+[> Player | Dirtblock | ShownFlower Soil] -> [ | Soil Player | Dirtblock No Soil No ShownFlower]
+[> Player | Dirtblock | ShownWeed Soil] -> [ | Soil Player | Dirtblock No Soil No ShownWeed]
+[> Player | Dirtblock | No Soil No Water] -> [Player | Dirtblock | ]
+[> Player | Dirtblock | Water] -> [ | Soil Player | Soil No Water]
+
+
+[BugLeft] -> [BugLeft BugParent]
+[BugRight] -> [BugRight BugParent]
+[BugUp] -> [BugUp BugParent]
+[BugDown] -> [BugDown BugParent]
+
+(moving bugs)
+down [BugDown No BugMoved | Soil No Player No BugParent] -> [No BugParent BugResidue| BugDown Soil BugMoved BugParent]
+down [BugDown No BugMoved| No Soil] -> [BugLeft BugMoved| ]
+down [BugDown No BugMoved| Player] -> [BugLeft BugMoved| Player]
+down [BugDown No BugMoved| BugParent] -> [BugLeft BugMoved| BugParent]
+
+right [BugRight No BugMoved| Soil No Player No BugParent] -> [No BugParent BugResidue | BugRight Soil BugMoved BugParent]
+right [BugRight No BugMoved| No Soil] -> [BugDown BugMoved| ]
+right [BugRight No BugMoved| Player] -> [BugDown BugMoved| Player]
+right [BugRight No BugMoved| BugParent] -> [BugDown BugMoved| BugParent]
+
+up [BugUp No BugMoved| Soil No Player No BugParent] -> [No BugParent BugResidue| BugUp Soil BugMoved BugParent]
+up [BugUp No BugMoved| No Soil] -> [BugRight BugMoved| ]
+up [BugUp No BugMoved| Player] -> [BugRight BugMoved| Player]
+up [BugUp No BugMoved| BugParent] -> [BugRight BugMoved| BugParent]
+
+left [BugLeft No BugMoved| Soil No Player No BugParent] -> [No BugParent BugResidue| BugLeft Soil BugMoved BugParent]
+left [BugLeft No BugMoved| No Soil] -> [BugUp BugMoved| ]
+left [BugLeft No BugMoved| Player] -> [BugUp BugMoved| Player]
+left [BugLeft No BugMoved| BugParent] -> [BugUp BugMoved| BugParent]
+
+
+(Flower is an invisible object for counting, same with Weed)
+[ShownFlower] -> [ShownFlower Flower]
+[ShownWeed] -> [ShownWeed Weed]
+[Water] -> [Water Flower]
+
+
+(counting Flowers)
+left  [Soil Counter0 No LeftCounted | Flower] -> [Soil Counter1 LeftCounted | Flower]
+left  [Soil Counter1 No LeftCounted | Flower] -> [Soil Counter2 LeftCounted | Flower]
+left  [Soil Counter2 No LeftCounted | Flower] -> [Soil Counter3 LeftCounted | Flower]
+left  [Soil Counter3 No LeftCounted | Flower] -> [Soil Counter4 LeftCounted | Flower]
+
+right [Soil Counter0 No RightCounted | Flower] -> [Soil Counter1 RightCounted | Flower]
+right [Soil Counter1 No RightCounted | Flower] -> [Soil Counter2 RightCounted | Flower]
+right [Soil Counter2 No RightCounted | Flower] -> [Soil Counter3 RightCounted | Flower]
+right [Soil Counter3 No RightCounted | Flower] -> [Soil Counter4 RightCounted | Flower]
+
+up [Soil Counter0 No UpCounted | Flower] -> [Soil Counter1 UpCounted | Flower]
+up [Soil Counter1 No UpCounted | Flower] -> [Soil Counter2 UpCounted | Flower]
+up [Soil Counter2 No UpCounted | Flower] -> [Soil Counter3 UpCounted | Flower]
+up [Soil Counter3 No UpCounted | Flower] -> [Soil Counter4 UpCounted | Flower]
+
+down [Soil Counter0 No DownCounted | Flower] -> [Soil Counter1 DownCounted | Flower]
+down [Soil Counter1 No DownCounted | Flower] -> [Soil Counter2 DownCounted | Flower]
+down [Soil Counter2 No DownCounted | Flower] -> [Soil Counter3 DownCounted | Flower]
+down [Soil Counter3 No DownCounted | Flower] -> [Soil Counter4 DownCounted | Flower]
+
+
+(counting Weeds)
+left  [Soil WCounter0 No WLeftCounted | Weed] -> [Soil WCounter1 WLeftCounted | Weed]
+left  [Soil WCounter1 No WLeftCounted | Weed] -> [Soil WCounter2 WLeftCounted | Weed]
+left  [Soil WCounter2 No WLeftCounted | Weed] -> [Soil WCounter3 WLeftCounted | Weed]
+left  [Soil WCounter3 No WLeftCounted | Weed] -> [Soil WCounter4 WLeftCounted | Weed]
+
+right [Soil WCounter0 No WRightCounted | Weed] -> [Soil WCounter1 WRightCounted | Weed]
+right [Soil WCounter1 No WRightCounted | Weed] -> [Soil WCounter2 WRightCounted | Weed]
+right [Soil WCounter2 No WRightCounted | Weed] -> [Soil WCounter3 WRightCounted | Weed]
+right [Soil WCounter3 No WRightCounted | Weed] -> [Soil WCounter4 WRightCounted | Weed]
+
+up [Soil WCounter0 No WUpCounted | Weed] -> [Soil WCounter1 WUpCounted | Weed]
+up [Soil WCounter1 No WUpCounted | Weed] -> [Soil WCounter2 WUpCounted | Weed]
+up [Soil WCounter2 No WUpCounted | Weed] -> [Soil WCounter3 WUpCounted | Weed]
+up [Soil WCounter3 No WUpCounted | Weed] -> [Soil WCounter4 WUpCounted | Weed]
+
+down [Soil WCounter0 No WDownCounted | Weed] -> [Soil WCounter1 WDownCounted | Weed]
+down [Soil WCounter1 No WDownCounted | Weed] -> [Soil WCounter2 WDownCounted | Weed]
+down [Soil WCounter2 No WDownCounted | Weed] -> [Soil WCounter3 WDownCounted | Weed]
+down [Soil WCounter3 No WDownCounted | Weed] -> [Soil WCounter4 WDownCounted | Weed]
+
+
+
+(bugs eat flowers)
+late [BugParent ShownFlower] -> [BugParent No ShownFlower]
+late [BugParent Counter0] -> [BugParent No Counter0]
+late [BugParent Counter1] -> [BugParent No Counter0]
+late [BugParent Counter2] -> [BugParent No Counter0]
+late [BugParent Counter3] -> [BugParent No Counter0]
+late [BugParent Counter4] -> [BugParent No Counter0]
+
+(bugs eat weeds)
+late [BugParent ShownWeed] -> [BugParent No ShownWeed]
+late [BugParent WCounter0] -> [BugParent No WCounter4]
+late [BugParent WCounter1] -> [BugParent No WCounter4]
+late [BugParent WCounter2] -> [BugParent No WCounter4]
+late [BugParent WCounter3] -> [BugParent No WCounter4]
+late [BugParent WCounter4] -> [BugParent No WCounter4]
+
+
+(cellular automata - Flowers)
+
+late [Soil No ShownWeed No ShownFlower  Counter0 No BugResidue] -> [Soil No Counter0 No ShownFlower]
+late [Soil No ShownWeed No ShownFlower  Counter1 No BugResidue] -> [Soil No Counter1 No ShownFlower]
+late [Soil No ShownWeed No ShownFlower  Counter2 No BugResidue] -> [Soil No Counter2 ShownFlower]
+late [Soil No ShownWeed No ShownFlower  Counter3 No BugResidue] -> [Soil No Counter3 No ShownFlower]
+late [Soil No ShownWeed No ShownFlower  Counter4 No BugResidue] -> [Soil No Counter4 No ShownFlower]
+
+late [Soil ShownFlower Counter0 No BugResidue] -> [Soil No Counter0 No ShownFlower]
+late [Soil ShownFlower Counter1 No BugResidue] -> [Soil No Counter1 ShownFlower]
+late [Soil ShownFlower Counter2 No BugResidue] -> [Soil No Counter2 ShownFlower]
+late [Soil ShownFlower Counter3 No BugResidue] -> [Soil No Counter3 No ShownFlower]
+late [Soil ShownFlower Counter4 No BugResidue] -> [Soil No Counter4 No ShownFlower]
+
+
+(cellular automata - Weeds)
+
+
+late [Soil No ShownWeed  WCounter0 No BugResidue] -> [Soil No WCounter0 No ShownWeed]
+late [Soil No ShownWeed  WCounter1 No BugResidue] -> [Soil No WCounter1 ShownWeed]
+late [Soil No ShownWeed  WCounter2 No BugResidue] -> [Soil No WCounter2 ShownWeed]
+late [Soil No ShownWeed  WCounter3 No BugResidue] -> [Soil No WCounter3 No ShownWeed]
+late [Soil No ShownWeed  WCounter4 No BugResidue] -> [Soil No WCounter4 No ShownWeed]
+
+late [Soil ShownWeed WCounter0 No BugResidue] -> [Soil No WCounter0 ShownWeed]
+late [Soil ShownWeed WCounter1 No BugResidue] -> [Soil No WCounter1 ShownWeed]
+late [Soil ShownWeed WCounter2 No BugResidue] -> [Soil No WCounter2 ShownWeed]
+late [Soil ShownWeed WCounter3 No BugResidue] -> [Soil No WCounter3 No ShownWeed]
+late [Soil ShownWeed WCounter4 No BugResidue] -> [Soil No WCounter4 No ShownWeed]
+
+
+
+
+(not needed anymore)
+late [Flower] -> []
+late [Weed] -> []
+
+
+(don't step on flowers)
+late [Player ShownFlower] -> [Player No ShownFlower]
+
+(don't leave blocks on flowers)
+late [Dirtblock ShownFlower] -> [Dirtblock No ShownFlower]
+
+(stomp them out!)
+late [Dirtblock ShownWeed] -> [Dirtblock No ShownWeed]
+late [Player ShownWeed] -> [Player No ShownWeed]
+late [Player BugLeft] -> [Player No BugLeft]
+late [Player BugRight] -> [Player No BugRight]
+late [Player BugUp] -> [Player No BugUp]
+late [Player BugDown] -> [Player No BugDown]
+
+
+(flowers don't like weeds)
+late [ShownWeed | ShownFlower] -> [ShownWeed | No ShownFlower]
+
+
+
+(removing temp stuff)
+late [LeftCounted] -> []
+late [RightCounted] -> []
+late [UpCounted] -> []
+late [DownCounted] -> []
+
+late [WLeftCounted] -> []
+late [WRightCounted] -> []
+late [WUpCounted] -> []
+late [WDownCounted] -> []
+
+late [BugMoved] -> []
+late [BugParent] -> []
+late [BugResidue] -> []
+
+
+
+==============
+WINCONDITIONS
+==============
+
+all Target on ShownFlower
+
+
+=======
+LEVELS
+=======
+
+
+MESSAGE Press X to plant a flower!
+MESSAGE Grow flowers in the red flowerbed!
+MESSAGE If the soil has exactly two flowers nearby, a new flower will grow!
+MESSAGE If a flower has one or two neighbors, it will stay alive.
+MESSAGE If a flower has no neighbors, it will be lonely :(
+MESSAGE If a flower has three or four neighbors, it will be too crowded :(
+MESSAGE Please don't step on the flowers.
+
+
+MESSAGE 1:  Linear
+
+###########
+#FF.P...T.#
+###########
+
+MESSAGE 2:  Square Bed
+
+########
+#P.....#
+#......#
+#..TT..#
+#..TT..#
+#.....F#
+#.....F#
+########
+
+MESSAGE 3:  Rocks
+
+########
+#F....P#
+#F.O...#
+#F.O..T#
+#F.....#
+########
+
+MESSAGE 4:  Why are there so many rocks in my garden?
+
+#########
+#.....P.#
+#O.OO...#
+#..OO.F.#
+#TO...F.#
+#TT.....#
+#########
+
+MESSAGE 5:  Please don't wilter, flowers!
+
+###########
+#........O#
+#.........#
+#.FPO.....#
+#.......TT#
+#....O..TT#
+###########
+
+MESSAGE 6:  Crowded Bed
+
+##########
+#FF.FF.FT#
+#.FFOFF.F#
+#OFFOFFOF#
+#P.OFO.O.#
+#O.FOF..O#
+#.FF.O.FF#
+#T.O..FFF#
+##########
+
+MESSAGE 7:  Rockwall
+
+##########
+#OT.....T#
+#T.O...O.#
+#..OP....#
+#..O...OO#
+#T..O..FF#
+##########
+
+MESSAGE 8:  Dancing Flowers
+
+################
+#P.....TOOOOOOO#
+#..FFFO.......T#
+#T.FFFO.OOOO.OT#
+#..FFFO.......T#
+#......TOOOOOOO#
+################
+
+MESSAGE 9:  Growing up
+
+######
+#T..T#
+#T..T#
+#TOOT#
+#.OO.#
+#....#
+#....#
+#....#
+#....#
+#P.FF#
+######
+
+MESSAGE 10:  Flowers like water
+
+########
+#T.....#
+#......#
+#....P.#
+#......#
+#.W....#
+#......#
+########
+
+MESSAGE 11:  Stream by the Garden
+
+############
+#..........#
+#.O........#
+#..P....TOT#
+#.......TOT#
+#.......WWW#
+#TT.WWWWWWW#
+#TWWWWW..O.#
+############
+
+MESSAGE 12:  To the East!
+
+#################
+#.........T.....#
+#....P..........#
+#...............#
+#.OOO.OOOOOOOOOO#
+#WWWWWWWWWWWWWWW#
+#W............T.#
+#################
+
+MESSAGE 13:  Rocky Bank
+
+#############
+#WWWWWWWWWWW#
+#WWOOOOOOOWT#
+#WOTT....OW.#
+#WOTT....OW.#
+#WWO...P.OW.#
+#WWWO....OW.#
+#WOO........#
+#############
+
+MESSAGE 14:  lol chip's challenge
+
+###############
+#.........WW.T#
+#.........WW..#
+#..P.D....WW..#
+#....D....WW..#
+#.........WW..#
+#.........WW.T#
+###############
+
+MESSAGE 15:  Vase
+
+#########
+#.......#
+#.P...D.#
+#.......#
+#..O.O..#
+#..OWO..#
+#..O.O..#
+#..OTTO.#
+#..OTTO.#
+#########
+
+MESSAGE 16:  Flowers don't like weeds :(
+
+###############
+#.......FFP...#
+#.............#
+#.............#
+#X...........T#
+###############
+
+MESSAGE 17:  They can get everywhere!
+
+########
+#OWWWWO#
+#......#
+#.P....#
+#......#
+#DDDDDD#
+#......#
+#......#
+#..OO..#
+#T....T#
+#X.OO.X#
+########
+
+MESSAGE 18:  Bramble and Brook
+
+###########
+#...D...XW#
+#...D...W.#
+#..P..WW..#
+#....W..D.#
+#.....W...#
+#.....W.TT#
+#......WTT#
+#.OOOOOOOO#
+#........X#
+###########
+
+MESSAGE 19:  Growing Among Rocks
+
+###########
+#...O...O.#
+#...O.D.W.#
+#...D...O.#
+#.PO.O..O.#
+#.O...O.O.#
+#.OX.O..O.#
+#..OOWOOW.#
+#..D.TOT.T#
+#....TOT.T#
+###########
+
+MESSAGE 20:  Little Garden
+
+######
+#.X.W#
+#..PT#
+#.D..#
+#....#
+######
+
+MESSAGE 21:  Bugs like to eat flowers
+
+############
+#6.FF.P..T.#
+############
+
+MESSAGE 22:  Bugs only turn right
+
+########
+#.O.O..#
+#O.FFO.#
+#....PT#
+#O8..O.#
+#.O.O..#
+########
+
+MESSAGE 23:  Bugs also like to eat weeds!
+
+##############
+#..6.......X.#
+#P.6.........#
+#..6........T#
+#..6........W#
+##############
+
+MESSAGE 24:  Why are there so many bugs in my garden?
+
+##########
+#FF..P...#
+#.....2..#
+#.2..TT.O#
+#8..6TT..#
+#.O..6..2#
+#4..8.4..#
+#....2...#
+##########

@@ -1,0 +1,300 @@
+title Diagonal Block Pushing Prototype
+author Zithral
+homepage www.puzzlescript.net
+
+key_repeat_interval 10
+realtime_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+..0..
+.000.
+..0..
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+.000.
+00.00
+0...0
+00.00
+.000.
+
+( Half-directions )
+N
+transparent
+S
+transparent
+W
+transparent
+E
+transparent
+( Full-directions )
+NN
+transparent
+SS
+transparent
+WW
+transparent
+EE
+transparent
+NW
+transparent
+NE
+transparent
+SW
+transparent
+SE
+transparent
+
+ArrowN
+transparent
+.....
+..0..
+.000.
+.....
+.....
+
+ArrowS
+transparent
+.....
+.....
+.000.
+..0..
+.....
+
+ArrowW
+transparent
+.....
+..0..
+.00..
+..0..
+.....
+
+ArrowE
+transparent
+.....
+..0..
+..00.
+..0..
+.....
+
+MidArrow
+transparent
+Src
+transparent
+HalfDst
+transparent
+Dst
+transparent
+Abort
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+HalfDir = N or S or W or E
+NorS = N or S
+WorE = W or E
+FullDir = NN or SS or WW or EE or NW or NE or SW or SE
+DiagN = NW or NE
+DiagS = SW or SE
+DiagW = NW or SW
+DiagE = NE or SE
+Dir = HalfDir or FullDir
+
+Arrow = ArrowN or ArrowS or ArrowW or ArrowE
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall, Crate
+Player
+NorS
+WorE
+FullDir
+Src, HalfDst, Dst, Abort
+Arrow
+MidArrow
+
+======
+RULES
+======
+
+( Going back cancels )
+[ up Player S ] -> [ Player ]
+[ down Player N ] -> [ Player ]
+[ left Player E ] -> [ Player ]
+[ right Player W ] -> [ Player ]
+( Letting go of all keys confirms an orthogonal move )
+[ stationary Player N ] -> [ Player NN ]
+[ stationary Player S ] -> [ Player SS ]
+[ stationary Player W ] -> [ Player WW ]
+[ stationary Player E ] -> [ Player EE ]
+( Same direction twice confirms )
+[ up Player N ] -> [ Player NN ]
+[ down Player S ] -> [ Player SS ]
+[ left Player W ] -> [ Player WW ]
+[ right Player E ] -> [ Player EE ]
+( Going perpendicular to first move results in diagonal )
+[ up Player WorE ] -> [ Player WorE N ]
+[ down Player WorE ] -> [ Player WorE S ]
+[ left Player NorS ] -> [ Player NorS W ]
+[ right Player NorS ] -> [ Player NorS E ]
+[ Player N W ] -> [ Player NW ]
+[ Player N E ] -> [ Player NE ]
+[ Player S W ] -> [ Player SW ]
+[ Player S E ] -> [ Player SE ]
+
+( Do first half of the move )
+[ up Player no Dir ] -> [ Player N ]
+[ down Player no Dir ] -> [ Player S ]
+[ left Player no Dir ] -> [ Player W ]
+[ right Player no Dir ] -> [ Player E ]
+
+( Move direction marker )
+[ FullDir ] -> [ FullDir Src ]
+up [ NN | ] -> [ NN | Dst ]
+down [ SS | ] -> [ SS | Dst ]
+left [ WW | ] -> [ WW | Dst ]
+right [ EE | ] -> [ EE | Dst ]
+up [ DiagN | ] -> [ DiagN | HalfDst ]
+down [ DiagS | ] -> [ DiagS | HalfDst ]
+left [ HalfDst | ] [ DiagW ] -> [ | Dst ] [ DiagW ]
+right [ HalfDst | ] [ DiagE ] -> [ | Dst ] [ DiagE ]
+[ FullDir Src ] [ Dst ] -> [ Src ] [ FullDir Dst ]
+( Cancel diagonal movement against edge of the map )
+[ FullDir no Dst ] -> [ ]
+[ HalfDst ] -> [ ]
+[ Dst ] -> [ ]
+
+( If moving onto blank spot, just do it )
+[ Player ] [ FullDir no Crate no Wall ] -> [ ] [ Player ]
+
+( If moving onto wall, cancel )
+[ FullDir Wall ] -> [ Wall ]
+
+( If moving onto crate, tell crate to move )
+( Move direction marker )
+[ FullDir ] -> [ FullDir Src ]
+up [ NN | ] -> [ NN | Dst ]
+down [ SS | ] -> [ SS | Dst ]
+left [ WW | ] -> [ WW | Dst ]
+right [ EE | ] -> [ EE | Dst ]
+up [ DiagN | ] -> [ DiagN | HalfDst ]
+down [ DiagS | ] -> [ DiagS | HalfDst ]
+left [ HalfDst | ] [ DiagW ] -> [ | Dst ] [ DiagW ]
+right [ HalfDst | ] [ DiagE ] -> [ | Dst ] [ DiagE ]
+[ FullDir Src ] [ Dst ] -> [ Src ] [ FullDir Dst ]
+( Cancel diagonal movement against edge of the map )
+[ FullDir no Dst ] -> [ ]
+[ HalfDst ] -> [ ]
+[ Dst ] -> [ ]
+
+( If crate move is valid, move everything )
+[ Player ] [ Src Crate ] [ FullDir no Crate no Wall ] -> [ ] [ Player ] [ Crate ]
+
+( If crate move is not valid, cancel )
+[ FullDir Crate ] -> [ Crate ]
+[ FullDir Wall ] -> [ Wall ]
+
+( Should be unnecessary, but just in case... )
+[ FullDir ] -> [ ]
+
+
+( Mark directions after half-move )
+[ MidArrow ] -> [ ]
+[ Arrow ] -> [ ]
+up [ Player N | ] -> [ Player N | ArrowN MidArrow ]
+down [ Player S | ] -> [ Player S | ArrowS MidArrow ]
+left [ Player W | ] -> [ Player W | ArrowW MidArrow ]
+right [ Player E | ] -> [ Player E | ArrowE MidArrow ]
+up [ MidArrow no ArrowN no ArrowS | ] -> [ MidArrow | ArrowN ]
+down [ MidArrow no ArrowN no ArrowS | ] -> [ MidArrow | ArrowS ]
+left [ MidArrow no ArrowW no ArrowE | ] -> [ MidArrow | ArrowW ]
+right [ MidArrow no ArrowW no ArrowE | ] -> [ MidArrow | ArrowE ]
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+#####..
+##.o#..
+##..###
+##@p.##
+#.#.*.#
+#..####
+#####..
+
+######
+#....#
+###p.#
+#.*@.#
+#.o@.#
+#.#..#
+######
+
+#####################
+#.....#########.....#
+#..*......#.....o...#
+#.****..#...##.oooo.#
+#..*...#.#.#....o...#
+#..*...##...#...o...#
+#..*.*.#.....#..o.o.#
+#...*...##.##....o..#
+#p..................#
+#####################

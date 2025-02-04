@@ -401,7 +401,7 @@ if __name__ == "__main__":
         filepath = os.path.join(games_dir, filename)
         with open(filepath, 'r') as f:
             ps_text = f.read()
-        simp_filename = filename.strip('.txt') + '_simplified.txt' 
+        simp_filename = filename[:-4] + '_simplified.txt' 
         if filename in parsed_games or filename in games_to_skip:
             print(f"Skipping {filepath}")
             continue
@@ -439,7 +439,7 @@ if __name__ == "__main__":
             continue
 
         min_parse_tree = StripPuzzleScript().transform(parse_tree)
-        min_tree_path = os.path.join(trees_dir, filename.strip('.txt') + '.pkl')
+        min_tree_path = os.path.join(trees_dir, filename[:-3] + 'pkl')
         with open(min_tree_path, "wb") as f:
             pickle.dump(min_parse_tree, f)
         pretty_parse_tree_str = min_parse_tree.pretty()

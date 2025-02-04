@@ -1,0 +1,1771 @@
+title Beams and Flowers
+author BoredMatt
+homepage https://boredmatt.itch.io
+
+run_rules_on_level_start
+background_color black
+text_color #5efc82
+
+
+========
+OBJECTS
+========
+
+Background
+#5d6877 #718091
+00111
+00000
+00000
+00111
+00101
+
+Void
+black
+
+VoidBorderUp
+#1a0e2d
+00000
+.....
+.....
+.....
+.....
+
+VoidBorderDown
+#1a0e2d
+.....
+.....
+.....
+.....
+00000
+
+VoidBorderLeft
+#1a0e2d
+0....
+0....
+0....
+0....
+0....
+
+VoidBorderRight
+#1a0e2d
+....0
+....0
+....0
+....0
+....0
+
+RustedFloor
+#772e2c #a95a55 #5d6877 #718091
+20113
+00000
+00000
+00111
+20103
+
+CollapsedRustedFloor
+#772e2c #a95a55 black #5d6877 #718091
+23024
+02102
+21324
+24140
+31202
+
+Wall
+#7d7d7d #515151 #292929
+00001
+01112
+01112
+01112
+12222
+
+PlayerRight
+#ff1744 #4dd0e1
+00...
+1000.
+11100
+1000.
+00...
+
+PlayerLeft
+#ff1744 #4dd0e1
+...00
+.0001
+00111
+.0001
+...00
+
+PlayerUp
+#ff1744 #4dd0e1
+..0..
+.000.
+.010.
+00100
+01110
+
+PlayerDown
+#ff1744 #4dd0e1
+01110
+00100
+.010.
+.000.
+..0..
+
+DestroyedPlayer
+#ff1744 #4dd0e1
+.1010
+1.00.
+.01.0
+10.01
+0.1.0
+
+CheckGate
+#5efc82
+00.00
+0...0
+.....
+0...0
+00.00
+
+CheckGateIcon
+#5efc82 black
+00100
+01110
+11111
+01110
+00100
+
+DestroyedCheckGate
+#5efc82
+...00
+00...
+.0.0.
+0...0
+.00.0
+
+Flower
+#9c4dcc #6a1b9a #38006b
+.222.
+2.1.2
+21012
+2.1.2
+.222.
+
+FlowerIcon
+#9c4dcc #6a1b9a #38006b black
+32223
+23132
+21012
+23132
+32223
+
+DestroyedFlower
+#9c4dcc #6a1b9a #38006b
+2.12.
+12..1
+...2.
+01..2
+.2..1
+
+RMirrorNE
+yellow #ffffb3 #ff1744 #f4ff81
+1....
+01...
+001..
+2001.
+22331
+
+RMirrorNW
+yellow #ffffb3 #ff1744 #f4ff81
+....1
+...13
+..103
+.1002
+10022
+
+RMirrorSW
+yellow #ffffb3 #ff1744 #f4ff81
+13322
+.1002
+..100
+...10
+....1
+
+RMirrorSE
+yellow #ffffb3 #ff1744 #f4ff81
+22001
+2001.
+301..
+31...
+1....
+
+PMirrorNE
+yellow #ffffb3 #1ebfff #f4ff81
+1....
+01...
+001..
+2001.
+22331
+
+PMirrorNW
+yellow #ffffb3 #1ebfff #f4ff81
+....1
+...13
+..103
+.1002
+10022
+
+PMirrorSW
+yellow #ffffb3 #1ebfff #f4ff81
+13322
+.1002
+..100
+...10
+....1
+
+PMirrorSE
+yellow #ffffb3 #1ebfff #f4ff81
+22001
+2001.
+301..
+31...
+1....
+
+SMirrorNE
+yellow #ffffb3 #f4ff81
+1....
+01...
+001..
+0001.
+22221
+
+SMirrorNW
+yellow #ffffb3 #f4ff81
+....1
+...12
+..102
+.1002
+10002
+
+SMirrorSW
+yellow #ffffb3 #f4ff81
+12222
+.1000
+..100
+...10
+....1
+
+SMirrorSE
+yellow #ffffb3 #f4ff81
+20001
+2001.
+201..
+21...
+1....
+
+LaserLeft
+white red pink #fce4ec
+.....
+.3300
+20001
+.3300
+.....
+
+LaserRight
+white red pink #fce4ec
+.....
+0033.
+10002
+0033.
+.....
+
+LaserDown
+white red pink #fce4ec
+.010.
+.000.
+.303.
+.303.
+..2..
+
+LaserUp
+white red pink #fce4ec
+..2..
+.303.
+.303.
+.000.
+.010.
+
+DestroyedLaser
+white red #fce4ec
+.12.0
+20.1.
+1..02
+.20.1
+0.12.
+
+RayUp
+pink
+..0..
+..0..
+..0..
+..0..
+..0..
+
+RayRight
+pink
+.....
+.....
+00000
+.....
+.....
+
+RayLeft
+pink
+.....
+.....
+00000
+.....
+.....
+
+RayDown
+pink
+..0..
+..0..
+..0..
+..0..
+..0..
+
+RayNE
+pink
+..0..
+..0..
+..000
+.....
+.....
+
+RayEN
+pink
+..0..
+..0..
+..000
+.....
+.....
+
+RayNW
+pink
+..0..
+..0..
+000..
+.....
+.....
+
+RayWN
+pink
+..0..
+..0..
+000..
+.....
+.....
+
+RaySW
+pink
+.....
+.....
+000..
+..0..
+..0..
+
+RayWS
+pink
+.....
+.....
+000..
+..0..
+..0..
+
+RaySE
+pink
+.....
+.....
+..000
+..0..
+..0..
+
+RayES
+pink
+.....
+.....
+..000
+..0..
+..0..
+
+WhiteBlock
+#f1f8e9 white #bec5b7
+11110
+10002
+10002
+10002
+02222
+
+IceBlock
+#c3fdff #90caf9 #5d99c6
+00001
+01112
+01112
+01112
+12222
+
+DestroyedIceBlock
+#c3fdff #90caf9 #5d99c6
+.2..0
+1..2.
+.0...
+.2..1
+1.0..
+
+GoldenBlock
+#fffd50 #ffca00 #c79a00
+00001
+01112
+01112
+01112
+12222
+
+One
+black
+00.00
+0..00
+00.00
+00.00
+0...0
+
+Two
+black
+....0
+000.0
+....0
+.0000
+....0
+
+Three
+black
+....0
+000.0
+0...0
+000.0
+....0
+
+Four
+black
+.00.0
+.00.0
+....0
+000.0
+000.0
+
+Five
+black
+....0
+.0000
+....0
+000.0
+....0
+
+Six
+black
+....0
+.0000
+....0
+.00.0
+....0
+
+Seven
+black
+....0
+000.0
+000.0
+000.0
+000.0
+
+Eight
+black
+....0
+.00.0
+....0
+.00.0
+....0
+
+Nine
+black
+....0
+.00.0
+....0
+000.0
+....0
+
+Zero
+black
+....0
+.00.0
+.00.0
+.00.0
+....0
+
+Mask
+black
+
+CheckGateCount
+#5efc82
+
+FlowerCount
+#6a1b9a
+
+TargetRight
+transparent
+
+TargetLeft
+transparent
+
+TargetUp
+transparent
+
+TargetDown
+transparent
+
+MovableOnRustedFloor
+transparent
+
+Counted
+transparent
+
+Add1
+transparent
+
+
+=======
+LEGEND
+=======
+
+Player = PlayerRight or PlayerLeft or PlayerUp or PlayerDown
+RotatingMirror = RMirrorNE or RMirrorNW or RMirrorSW or RMirrorSE
+PushableMirror = PMirrorNE or PMirrorNW or PMirrorSW or PMirrorSE
+StaticMirror = SMirrorNE or SMirrorNW or SMirrorSW or SMirrorSE
+MirrorNE = RMirrorNE or SMirrorNE or PMirrorNE
+MirrorNW = RMirrorNW or SMirrorNW or PMirrorNW
+MirrorSE = RMirrorSE or SMirrorSE or PMirrorSE
+MirrorSW = RMirrorSW or SMirrorSW or PMirrorSW
+Mirror = RotatingMirror or StaticMirror or PushableMirror
+Laser = LaserRight or LaserLeft or LaserUp or LaserDown
+Target = TargetRight or TargetLeft or TargetUp or TargetDown
+Ray = RayRight or RayLeft or RayUp or RayDown or RayNE or RayEN or RayNW or RayWN or RaySW or RayWS or RaySE or RayES
+RayE = RayRight or RayNE or RaySE
+RayN = RayUp or RayEN or RayWN
+RayW = RayLeft or RayNW or RaySW
+RayS = RayDown or RayWS or RayES
+LaserObstacle = Mirror or Wall or WhiteBlock or GoldenBlock
+ActionObstacle = Mirror or Wall or WhiteBlock or IceBlock or GoldenBlock or CheckGate or Flower or Laser
+Movable = Mirror or WhiteBlock or IceBlock or GoldenBlock or Player
+Number = One or Two or Three or Four or Five or Six or Seven or Eight or Nine or Zero
+VoidBorder = VoidBorderUp or VoidBorderDown or VoidBorderLeft or VoidBorderRight
+
+. = Background
+$ = RustedFloor
+# = Wall
+_ = Void
+& = PlayerRight
+* = CheckGate
++ = CheckGate and RustedFloor
+- = Flower
+a = IceBlock
+b = WhiteBlock
+! = WhiteBlock and RustedFloor
+c = LaserRight
+d = LaserLeft
+e = LaserUp
+f = LaserDown
+g = LaserRight and Void
+h = LaserLeft and Void
+i = LaserUp and Void
+j = LaserDown and Void
+k = RMirrorNE
+l = RMirrorNW
+m = RMirrorSW
+n = RMirrorSE
+o = SMirrorNE
+0 = SMirrorNE and RustedFloor
+p = SMirrorNW
+q = SMirrorSW
+r = SMirrorSE
+s = GoldenBlock
+t = CheckGateCount and Void
+u = FlowerCount and Void
+w = CheckGateIcon and Void
+x = FlowerIcon and Void
+y = GoldenBlock and RustedFloor
+z = Flower and RustedFloor
+/ = PMirrorNE
+\ = PMirrorNW
+? = PMirrorSW
+¿ = PMirrorSE
+{ = PMirrorNE and RustedFloor
+} = PMirrorNW and RustedFloor
+é = PMirrorSW and RustedFloor
+è = PMirrorSE and RustedFloor
+à = RMirrorSW and Void
+
+
+=======
+SOUNDS
+=======
+
+sfx0 53949700 ( player passes through a checkopint )
+sfx1 2635107 ( player changes direction )
+sfx2 2037502 ( player destroyed by a laser )
+sfx3 85699703 ( player eats a flower )
+sfx4 42206102 ( ice block destroyed or rusted floor collapsed )
+sfx5 71865501 ( flower destroyed )
+sfx6 57453902 ( checkpoint destroyed )
+sfx7 40601501 ( laser destroyed )
+sfx8 77242706 ( mirror rotated )
+sfx9 40475907 ( golden block pushed with action )
+Player move 2635107 (same as sfx1 )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+MovableOnRustedFloor, Counted
+Add1
+Void
+VoidBorderUp
+VoidBorderDown
+VoidBorderLeft
+VoidBorderRight
+RustedFloor, CollapsedRustedFloor, CheckGateCount, FlowerCount, CheckGateIcon, FlowerIcon
+Number, Mask, DestroyedCheckGate, DestroyedFlower, DestroyedPlayer, DestroyedLaser, DestroyedIceBlock
+Target
+RayRight
+RayLeft
+RayUp
+RayDown
+RayNE
+RayEN
+RayNW
+RayWN
+RaySW
+RayWS
+RaySE
+RayES
+Player, Wall, Mirror, Laser, WhiteBlock, IceBlock, CheckGate, Flower, GoldenBlock
+
+
+======
+RULES     
+======     
+
+( Restart if the player or some checkpoint has been destroyed, remove other destroyed objects )
+[ DestroyedCheckGate ] -> restart
+[ DestroyedPlayer ] -> restart
+[ DestroyedLaser ] -> [ ]
+[ DestroyedIceBlock ] -> [ ]
+[ DestroyedFlower ] -> [ ]
+[ CollapsedRustedFloor ] -> [ Void ]
+
+( Place Void borders )
+[ VoidBorder ] -> [ ]
+up [ Void no VoidBorderUp | no Void ] -> [ Void VoidBorderUp | no Void ]
+down [ Void no VoidBorderDown | no Void ] -> [ Void VoidBorderDown | no Void ]
+left [ Void no VoidBorderLeft | no Void ] -> [ Void VoidBorderLeft | no Void ]
+right [ Void no VoidBorderRight | no Void ] -> [ Void VoidBorderRight | no Void ]
+
+( If an object or player leaves a cell with rusted floor, the floor collapses )
+[ RustedFloor Movable ] -> [ RustedFloor Movable MovableOnRustedFloor ]
+late [ RustedFloor MovableOnRustedFloor no Movable ] -> [ CollapsedRustedFloor ] sfx4
+
+( The player only moves if already facing movement direction, push stuff if needed )
+UP [ UP PlayerUp | Movable | no Void ] -> [ UP PlayerUp | UP Movable | no Void ]
+[ UP PlayerRight ] -> [ PlayerUp ]   sfx1
+[ UP PlayerLeft ] -> [ PlayerUp ]   sfx1
+[ UP PlayerDown ] -> [ PlayerUp ]   sfx1
+
+[ DOWN PlayerUp ] -> [ PlayerDown ]	sfx1
+[ DOWN PlayerRight ] -> [ PlayerDown ]	sfx1
+[ DOWN PlayerLeft ] -> [ PlayerDown ]	sfx1
+DOWN [ DOWN PlayerDown | Movable | no Void ] -> [ DOWN PlayerDown | DOWN Movable | no Void ]
+
+[ LEFT PlayerUp ] -> [ PlayerLeft ]	sfx1
+[ LEFT PlayerRight ] -> [ PlayerLeft ]	sfx1
+LEFT [ LEFT PlayerLeft | Movable | no Void ] -> [ LEFT PlayerLeft | LEFT Movable | no Void ]
+[ LEFT PlayerDown ] -> [ PlayerLeft ]	sfx1
+
+[ RIGHT PlayerUp ] -> [ PlayerRight ]	sfx1
+RIGHT [ RIGHT PlayerRight | Movable | no Void ] -> [ RIGHT PlayerRight | RIGHT Movable | no Void ]
+[ RIGHT PlayerLeft ] -> [ PlayerRight ]	sfx1
+[ RIGHT PlayerDown ] -> [ PlayerRight ]	sfx1
+
+( The player cannot step on Void )
+[ > Player | Void ] -> [ Player | Void ]
+
+( Check if the player has passed through a checkpoint or eaten a flower )
+[ > Player | CheckGate ] -> [ | Player ]	sfx0
+[ > Player | Flower ] -> [ | DestroyedPlayer ]	sfx3
+
+( Mark the path the player is facing as a target for an action )
+[ ACTION PlayerRight ] -> [ PlayerRight TargetRight ]
+[ ACTION PlayerLeft ] -> [ PlayerLeft TargetLeft ]
+[ ACTION PlayerUp ] -> [ PlayerUp TargetUp ]
+[ ACTION PlayerDown ] -> [ PlayerDown TargetDown ]
+RIGHT [ TargetRight | no ActionObstacle ] -> [ | TargetRight ]
+LEFT [ TargetLeft | no ActionObstacle ] -> [ | TargetLeft ]
+UP [ TargetUp | no ActionObstacle ] -> [ | TargetUp ]
+DOWN [ TargetDown | no ActionObstacle ] -> [ | TargetDown ]
+
+( Mirrors turn anti-clockwise if the player makes an action while facing them )
+RIGHT [ TargetRight | RMirrorNE ] -> [ | RMirrorNW ]	sfx8
+RIGHT [ TargetRight | RMirrorNW ] -> [ | RMirrorSW ]	sfx8
+RIGHT [ TargetRight | RMirrorSW ] -> [ | RMirrorSE ]	sfx8
+RIGHT [ TargetRight | RMirrorSE ] -> [ | RMirrorNE ]	sfx8
+
+LEFT [ TargetLeft | RMirrorNE ] -> [ | RMirrorNW ]	sfx8
+LEFT [ TargetLeft | RMirrorNW ] -> [ | RMirrorSW ]	sfx8
+LEFT [ TargetLeft | RMirrorSW ] -> [ | RMirrorSE ]	sfx8
+LEFT [ TargetLeft | RMirrorSE ] -> [ | RMirrorNE ]	sfx8
+
+UP [ TargetUp | RMirrorNE ] -> [ | RMirrorNW ]	sfx8
+UP [ TargetUp | RMirrorNW ] -> [ | RMirrorSW ]	sfx8
+UP [ TargetUp | RMirrorSW ] -> [ | RMirrorSE ]	sfx8
+UP [ TargetUp | RMirrorSE ] -> [ | RMirrorNE ]	sfx8
+
+DOWN [ TargetDown | RMirrorNE ] -> [ | RMirrorNW ]	sfx8
+DOWN [ TargetDown | RMirrorNW ] -> [ | RMirrorSW ]	sfx8
+DOWN [ TargetDown | RMirrorSW ] -> [ | RMirrorSE ]	sfx8
+DOWN [ TargetDown | RMirrorSE ] -> [ | RMirrorNE ]	sfx8
+
+( Golden blocks and pushable mirrors are pushed back if the player makes an action while facing them )
+RIGHT [ TargetRight | GoldenBlock | no Void ] -> [ | RIGHT GoldenBlock | no Void ]	sfx9
+LEFT [ TargetLeft | GoldenBlock | no Void ] -> [ | LEFT GoldenBlock | no Void ]	sfx9
+UP [ TargetUp | GoldenBlock | no Void ] -> [ | UP GoldenBlock | no Void ]	sfx9
+DOWN [ TargetDown | GoldenBlock | no Void ] -> [ | DOWN GoldenBlock | no Void ]	sfx9
+
+RIGHT [ TargetRight | PushableMirror | no Void ] -> [ | RIGHT PushableMirror | no Void ]	sfx9
+LEFT [ TargetLeft | PushableMirror | no Void ] -> [ | LEFT PushableMirror | no Void ]	sfx9
+UP [ TargetUp | PushableMirror | no Void ] -> [ | UP PushableMirror | no Void ]	sfx9
+DOWN [ TargetDown | PushableMirror | no Void ] -> [ | DOWN PushableMirror | no Void ]	sfx9
+
+( Lasers )
+late [ Ray ] -> [ ]
+late [ LaserRight ] -> [ LaserRight RayRight ]
+late [ LaserLeft ] -> [ LaserLeft RayLeft ]
+late [ LaserUp ] -> [ LaserUp RayUp ]
+late [ LaserDown ] -> [ LaserDown RayDown ]
+
+startLoop ( Loop needed for when a Laser reflects on a Mirror )
+	late RIGHT [ RayE | no LaserObstacle ] -> [ RayE | RayRight ]
+	late LEFT [ RayW | no LaserObstacle ] -> [ RayW | RayLeft ]
+	late UP [ RayN | no LaserObstacle ] -> [ RayN | RayUp ]
+	late DOWN [ RayS | no LaserObstacle ] -> [ RayS | RayDown ]
+
+	late RIGHT [ RayE | MirrorNW ] -> [ RayE | RayWN MirrorNW ]
+	late RIGHT [ RayE | MirrorSW ] -> [ RayE | RayWS MirrorSW ]
+	late LEFT [ RayW | MirrorNE ] -> [ RayW | RayEN MirrorNE ]
+	late LEFT [ RayW | MirrorSE ] -> [ RayW | RayES MirrorSE ]
+	late UP [ RayN | MirrorSE ] -> [ RayN | RaySE MirrorSE ]
+	late UP [ RayN | MirrorSW ] -> [ RayN | RaySW MirrorSW ]
+	late DOWN [ RayS | MirrorNE ] -> [ RayS | RayNE MirrorNE ]
+	late DOWN [ RayS | MirrorNW ] -> [ RayS | RayNW MirrorNW ]
+endLoop
+
+( Destroying what needs to be destroyed )
+late RIGHT [ RayE | CheckGate ] -> [ RayE | DestroyedCheckGate ]	sfx6
+late LEFT [ RayW | CheckGate ] -> [ RayW | DestroyedCheckGate ]	sfx6
+late UP [ RayN | CheckGate ] -> [ RayN | DestroyedCheckGate ]	sfx6
+late DOWN [ RayS | CheckGate ] -> [ RayS | DestroyedCheckGate ]	sfx6
+
+late RIGHT [ RayE | Flower ] -> [ RayE | DestroyedFlower ]	sfx5
+late LEFT [ RayW | Flower ] -> [ RayW | DestroyedFlower ]	sfx5
+late UP [ RayN | Flower ] -> [ RayN | DestroyedFlower ]	sfx5
+late DOWN [ RayS | Flower ] -> [ RayS | DestroyedFlower ]	sfx5
+
+late RIGHT [ RayE | Laser ] -> [ RayE | DestroyedLaser ]	sfx7
+late LEFT [ RayW | Laser ] -> [ RayW | DestroyedLaser ]	sfx7
+late UP [ RayN | Laser ] -> [ RayN | DestroyedLaser ]	sfx7
+late DOWN [ RayS | Laser ] -> [ RayS | DestroyedLaser ]	sfx7
+
+late RIGHT [ RayE | IceBlock ] -> [ RayE | DestroyedIceBlock ]	sfx4
+late LEFT [ RayW | IceBlock ] -> [ RayW | DestroyedIceBlock ]	sfx4
+late UP [ RayN | IceBlock ] -> [ RayN | DestroyedIceBlock ]	sfx4
+late DOWN [ RayS | IceBlock ] -> [ RayS | DestroyedIceBlock ]	sfx4
+
+late RIGHT [ RayE | Player ] -> [ RayE | DestroyedPlayer ]	sfx2
+late LEFT [ RayW | Player ] -> [ RayW | DestroyedPlayer ]	sfx2
+late UP [ RayN | Player ] -> [ RayN | DestroyedPlayer ]	sfx2
+late DOWN [ RayS | Player ] -> [ RayS | DestroyedPlayer ]	sfx2
+
+( Lasers again, because some lasers might have been destroyed )
+late [ Ray ] -> [ ]
+late [ LaserRight ] -> [ LaserRight RayRight ]
+late [ LaserLeft ] -> [ LaserLeft RayLeft ]
+late [ LaserUp ] -> [ LaserUp RayUp ]
+late [ LaserDown ] -> [ LaserDown RayDown ]
+
+startLoop
+	late RIGHT [ RayE | no LaserObstacle ] -> [ RayE | RayRight ]
+	late LEFT [ RayW | no LaserObstacle ] -> [ RayW | RayLeft ]
+	late UP [ RayN | no LaserObstacle ] -> [ RayN | RayUp ]
+	late DOWN [ RayS | no LaserObstacle ] -> [ RayS | RayDown ]
+
+	late RIGHT [ RayE | MirrorNW ] -> [ RayE | RayWN MirrorNW ]
+	late RIGHT [ RayE | MirrorSW ] -> [ RayE | RayWS MirrorSW ]
+	late LEFT [ RayW | MirrorNE ] -> [ RayW | RayEN MirrorNE ]
+	late LEFT [ RayW | MirrorSE ] -> [ RayW | RayES MirrorSE ]
+	late UP [ RayN | MirrorSE ] -> [ RayN | RaySE MirrorSE ]
+	late UP [ RayN | MirrorSW ] -> [ RayN | RaySW MirrorSW ]
+	late DOWN [ RayS | MirrorNE ] -> [ RayS | RayNE MirrorNE ]
+	late DOWN [ RayS | MirrorNW ] -> [ RayS | RayNW MirrorNW ]
+endLoop
+
+( Count remaining checkpoints and flowers )
+late [ CheckGateCount ] -> [ CheckGateCount Mask ]
+late [ CheckGate no Counted] -> [ CheckGate Counted ]
+late right [ CheckGateCount | no CheckGateCount ] -> [ CheckGateCount Zero | ]
+startloop
+late [Add1] -> []
+late right [ CheckGateCount no Add1 | no CheckGateCount ] [ Counted ] -> [ CheckGateCount Add1 | ] [ ]
+late [ CheckGateCount Mask Add1 ] -> [ CheckGateCount One ]
++ late [ CheckGateCount Zero Add1 ] -> [ CheckGateCount One ]
++ late [ CheckGateCount One Add1 ] -> [ CheckGateCount Two ]
++ late [ CheckGateCount Two Add1 ] -> [ CheckGateCount Three ]
++ late [ CheckGateCount Three Add1 ] -> [ CheckGateCount Four ]
++ late [ CheckGateCount Four Add1 ] -> [ CheckGateCount Five ]
++ late [ CheckGateCount Five Add1 ] -> [ CheckGateCount Six ]
++ late [ CheckGateCount Six Add1 ] -> [ CheckGateCount Seven ]
++ late [ CheckGateCount Seven Add1 ] -> [ CheckGateCount Eight ]
++ late [ CheckGateCount Eight Add1 ] -> [ CheckGateCount Nine ]
++ late right [ CheckGateCount | CheckGateCount Nine Add1 ] -> [ CheckGateCount Add1 | CheckGateCount Zero ]
+endloop
+late right [ CheckGateCount no Number | CheckGateCount Number ] -> [ CheckGateCount Number | CheckGateCount Mask ]
+
+late [ FlowerCount ] -> [ FlowerCount Mask ]
+late [ Flower no Counted] -> [ Flower Counted ]
+late right [ FlowerCount | no FlowerCount ] -> [ FlowerCount Zero | ]
+startloop
+late [Add1] -> []
+late right [ FlowerCount no Add1 | no FlowerCount ] [ Counted ] -> [ FlowerCount Add1 | ] [ ]
+late [ FlowerCount Mask Add1 ] -> [ FlowerCount One ]
++ late [ FlowerCount Zero Add1 ] -> [ FlowerCount One ]
++ late [ FlowerCount One Add1 ] -> [ FlowerCount Two ]
++ late [ FlowerCount Two Add1 ] -> [ FlowerCount Three ]
++ late [ FlowerCount Three Add1 ] -> [ FlowerCount Four ]
++ late [ FlowerCount Four Add1 ] -> [ FlowerCount Five ]
++ late [ FlowerCount Five Add1 ] -> [ FlowerCount Six ]
++ late [ FlowerCount Six Add1 ] -> [ FlowerCount Seven ]
++ late [ FlowerCount Seven Add1 ] -> [ FlowerCount Eight ]
++ late [ FlowerCount Eight Add1 ] -> [ FlowerCount Nine ]
++ late right [ FlowerCount | FlowerCount Nine Add1 ] -> [ FlowerCount Add1 | FlowerCount Zero ]
+endloop
+
+( Remove tags )
+late [ Target ] -> [ ]
+late [ MovableOnRustedFloor ] -> [ ]
+late [ Counted ] -> [ ]
+
+
+==============
+WINCONDITIONS
+==============
+
+Some Player
+No DestroyedCheckGate
+No CheckGate
+No Flower
+     
+
+=======     
+LEVELS
+=======
+( Format 20x20 )
+
+message Undo ( Z ) and Restart ( R ) are your best friends.
+
+message White blocks can be pushed one at a time. You must pass through all checkpoints.
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+___####_#####_###___
+___#*.###...###*#___
+___#....b.....b&#___
+___##############___
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Watch your step, the floor can be a bit rusty.
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+_____#########______
+_____#*#*#...#______
+_____#.#$&.#$#______
+_____#.###!#.#______
+_____#.......#______
+_____#########______
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Beware, deadly laser beam ahead.
+____________________
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+__________#####_____
+________###&f*#_____
+____####$$$...#_____
+____#.....#._.#_____
+____#.....b...#_____
+____#..########_____
+____####____________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Mirrors can be pushed too. Please do not destroy any checkpoint.
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+_____########_______
+_____#&.##..##______
+_____#.p.....#______
+_____#c...q..#______
+_____##.#*_.##______
+_____##.###..#______
+_____#.......#______
+_____#...##..#______
+_____#########______
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Lasers can destroy each other.
+____________________
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+________######______
+_____####.._*#______
+_____#....r_.#______
+_____#$#_...d#______
+_____#$#c..._#______
+_____#...p&###______
+_____###...#________
+_______#####________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message You can't leave before destroying all the purple flowers. They look poisonous enough to kill a robot.
+____________________
+____________________
+____________________
+____________________
+____________________
+________u_x_________
+____________________
+_____##########_____
+_____#.......-#_____
+____##.o####f.#_____
+____#...####.-#_____
+____#&.p......#_____
+____#..##.....#_____
+____###########_____
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Red mirrors can be rotated from afar by pressing the action key while facing them.
+____________________
+____________________
+____________________
+____________________
+______w_t__u_x______
+____________________
+______########______
+______#*.....#______
+______###_##.#______
+______#...-#.#______
+______#.#.&#.#______
+______#..n.d.#______
+______#.#_*..#______
+______#....###______
+______######________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Laser beams can melt ice blocks.
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+______########______
+______#*$&$*f#______
+______#a__...#______
+______#.a.al.#______
+______#.##...#______
+______########______
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Golden blocks can be pushed from afar by pressing the action key.
+____________________
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+________#####_______
+______###..*#_______
+______#....d#_______
+______#.as_&#_______
+______#.$##.#_______
+______#.....#_______
+______#######_______
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Blue mirrors can be pushed from afar by pressing the action key.
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+________######______
+____#####fff*#______
+____#........##_____
+____#./_#....d#_____
+____#...#....d#_____
+____#..s.....d#_____
+____#.._.#_#.##_____
+____#.......&#______
+____#####.#.##______
+________#...#_______
+________#####_______
+____________________
+____________________
+____________________
+____________________
+
+message Make your way
+____________________
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+_____#########______
+_____#&..b...#______
+_____#.b.b.!*#______
+_____#b#b.b$##______
+_____#$*b.#..#______
+_____#.#..#.*#______
+_____#########______
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Switching around
+____________________
+____________________
+____________________
+____________________
+____________________
+________u_x_________
+____________________
+______#######_______
+______#-m.n.#_______
+______#._.nsd_______
+______#....&#_______
+______#n...n#_______
+______#nn.._#_______
+______#n_..n#_______
+______#######_______
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Don't get fried.
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+_____#########______
+_____#&..__.*#______
+_____#b#.....d______
+_____#..#b.$.#______
+_____#....b#.#______
+_____c.._..#.#______
+_____#*.#..d*#______
+_____#..#.*###______
+_____#########______
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Under fire
+____________________
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+__________######____
+___########..$$##___
+__##...........f##__
+__#&b_._.__._.._d#__
+__#.b....#.......#__
+__###....#...#..*#__
+__################__
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message The cell
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+_____#####f###______
+_____#$$#...*#______
+_____#$!#....#______
+_____#&......#______
+_____#..#....#______
+_____#.r....*#______
+_____#$$.....#______
+_____###e##e##______
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Small room
+____________________
+____________________
+____________________
+____________________
+____________________
+______w_t_u_x_______
+____________________
+______#######_______
+______#...-*#_______
+______#.$...d_______
+______#..b$&#_______
+______#._$o.#_______
+______#.....#_______
+______#######_______
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Tight security
+____________________
+____________________
+____________________
+____________________
+_____w_t___u_x______
+____________________
+____######f####_____
+____#.b...._-*#_____
+____#.&b#..n..d_____
+____#bb.#.....#_____
+____#..b......#_____
+____########..#_____
+____#*...-#...d_____
+____c....n....d_____
+____#*..-....*#_____
+____###########_____
+____________________
+____________________
+____________________
+____________________
+
+message The guard
+____________________
+____________________
+____________________
+____________________
+______w_t_u_x_______
+____________________
+______#######_______
+______#.....#_______
+______#&s#$$#_______
+______c.._l.#_______
+______#.....#_______
+______#...-.#_______
+______####.##_______
+______#*#...#_______
+______#....d#_______
+______#######_______
+____________________
+____________________
+____________________
+____________________
+
+message Deviation
+____________________
+____________________
+____________________
+____________________
+____________________
+_____w_t___u_x______
+____________________
+____###########_____
+____#r.......-#_____
+____#*#########_____
+____#........d#_____
+____#...m-.n..#_____
+____#o......&.#_____
+____###########_____
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Set me free
+____________________
+____________________
+____________________
+________u_x_________
+____________________
+________####________
+_____####..####_____
+_____#.__bb...#_____
+_____#.a.a.qa_#_____
+____##.r....._##____
+____#.b.aaaaab.#____
+____#.saa&a..b.#____
+____##_.aaa.p.##____
+_____#___..aa.#_____
+_____#o..d-__.#_____
+_____##########_____
+____________________
+____________________
+____________________
+____________________
+
+message The vault
+____________________
+____________________
+____________________
+____________________
+______w_t__u_x______
+____________________
+_____####f#f#_______
+_____#.a....#_______
+_____#.rb...d#______
+_____#.a....###_____
+_____#&b....a-#_____
+_____#.a....#*#_____
+_____#.b....d##_____
+_____#......#_______
+_____###e#e##_______
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message The old church
+____________________
+____________________
+____________________
+____________________
+_______w_tt_________
+____________________
+_______$$.$$________
+______$+_+_+$_______
+______$__+__$_______
+____$$.++.++.$$_____
+____$_$__+__$_$_____
+____+_$+_+_+$_+_____
+____$__$$.$$__$_____
+____$____$____$_____
+____.$$+$$$+$$&_____
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Friendly fire.
+____________________
+____________________
+____________________
+____________________
+____________________
+______w_t_u_x_______
+____________________
+_____#########______
+_____#&....._#______
+_____#.mmmmm.#______
+_____#-...._.#______
+_____#.......#______
+_____#cpopoe*#______
+_____#.......#______
+_____#########______
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Mirror island
+____________________
+____________________
+____________________
+____________________
+________u_x_________
+____________________
+_____####f#####_____
+_____#&...-...#_____
+____##.______.#_____
+____#-._._.._.#_____
+____##._\k/?_-#_____
+_____#._...._.#_____
+_____#.______.#_____
+_____#........#_____
+_____##########_____
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Obstruction
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+##f#f#f#f#f#f#f#f#*_
+..................._
+..babab...........d_
+.a..a..a..........._
+&.baaaa............_
+.a..a..a..........._
+..oabab...........d_
+..................._
+############..#####_
+___________####_____
+____________________
+____________________
+____________________
+____________________
+
+message The tortoise
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+________####________
+_____####..####_____
+_____#*.#.....####__
+____###.#.#...#*.#__
+____#.*s_b##b###.#__
+_####.#$....b.b..#__
+_#*f#..#.#.......#__
+_#........&.#.##e#__
+_#....#####._.d###__
+_####e#___#*####____
+____###___###_______
+____________________
+____________________
+____________________
+____________________
+
+message Golden path.
+____________________
+____________________
+_____w_t___u_x______
+____________________
+____________________
+_____##########_____
+_____#......f*#_____
+_____#.____s..#_____
+_____#.__f*..##_____
+_____#._____.##_____
+____##..__s_..#_____
+____#c.._.._m-#_____
+____#*s...*_.*#_____
+____##__&____##_____
+_____#.s.____#______
+_____##.######______
+______###___________
+____________________
+____________________
+____________________
+
+message Resource management
+____________________
+____________________
+____________________
+_____w_t____u_x_____
+____________________
+_______#########____
+_______#$......#____
+____####&s#$$#.#____
+____#f#c...l$#.#____
+___##.#......#.##___
+___#*...s--z...*#___
+___##..#$##-##.##___
+____####+#.-##e#____
+_______#.....d##____
+_______#####-##_____
+___________###______
+____________________
+____________________
+____________________
+____________________
+
+message Meltdown
+____________________
+____________________
+____________________
+____________________
+____________________
+______w_t__u_x______
+____________________
+_____#######f##_____
+_____#..a....*#_____
+_____#a._-_...#_____
+_____#.am..__d#_____
+_____#&baa_..##_____
+_____#.a..e..*#_____
+_____##########_____
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+
+message Mirror island 2
+____________________
+____________________
+____________________
+________uu_x________
+____________________
+_______######_______
+_____###----###_____
+_____#........#_____
+____##.______&##____
+____#-._k.?n_sd#____
+____#-.$../._.-#____
+____#-._...._.-#____
+____#-._k..l_.-#____
+____##.___$__.##____
+_____#........#_____
+_____###---####_____
+_______#####________
+____________________
+____________________
+____________________
+
+message Ray tracing
+____________________
+____________________
+____________________
+____________________
+________u_x_________
+____________________
+_________###________
+_______###-#####____
+____####....-q##____
+____#$..o.-.-p.#____
+____#$_..r..__sd____
+____#$#&.#o.##_#____
+____#$##...###_#____
+____#$########_#____
+____#$$$$$$$$$$#____
+____############____
+____________________
+____________________
+____________________
+____________________
+
+message Sideways attack
+____________________
+____________________
+____________________
+____________________
+________w_t_________
+____________________
+_____##########_____
+_____#........#_____
+_____#.____.#.#_____
+_____#./..?...#_____
+_____#._.$_...#_____
+_____#._.._...#_____
+_____#._c._...#_____
+_____#&__._.e*#_____
+_____#######*##_____
+___________###______
+____________________
+____________________
+____________________
+____________________
+
+message Travelling mirrors
+____________________
+____________________
+___w_t_______u_x____
+____________________
+_#################__
+_#............*#*#__
+_#............d#.#__
+_#.............#.#__
+_#............##.#__
+_#.........ab#-..#__
+_#&........a....a#__
+_#......_###k#-..#__
+_####m##.s_...##.#__
+_#.$b.-#.#.....#.#__
+_#.-..a#.#....d#.#__
+_#*..a.#e#....*#*#__
+_#################__
+____________________
+____________________
+____________________
+
+message Restricted movement
+____________________
+____________________
+____________________
+______w_t_u_x_______
+____________________
+_____#########______
+_____#*..._..#______
+_____c.._....#______
+_____#.._....#______
+_____#.##.#-.#______
+_____#...-*p.#______
+_____#._...d.#______
+_____#..b$$#.#______
+_____#._$/&#q#______
+_____#.......#______
+_____#########______
+____________________
+____________________
+____________________
+____________________
+
+message Roundabout
+____________________
+____________________
+____________________
+____w_t_____u_x_____
+____________________
+__###############___
+__#....f....*#..#___
+__#.$$s..$..-#..#___
+__#.._....#e.#..#___
+__#&.#___.####¿##___
+__#..._à_.......#___
+__#..#___#.aaaa.#___
+__#.$$...$$....-#___
+__#.__s.._.aaaaa#___
+__#....e........#___
+__###############___
+____________________
+____________________
+____________________
+____________________
+
+message Not afraid
+____________________
+____________________
+_____w_t___u_x______
+____________________
+___#f#######f###____
+___#.rqr.q.q.r-#____
+___#.......o..q#____
+___#.o..q.r..q.#____
+___#.r...p.....#____
+___#o...p_.r..p#____
+___#r..p.&o...q#____
+___#.o.q..r..p.#____
+___#.r..qr.poq.#____
+___#..po....q..#____
+___#op..op..o.q#____
+___c_.....po.p.#____
+___###########e#____
+____________________
+____________________
+____________________
+
+message The Spiral
+____________________
+____________________
+__w_t__________u_x__
+____________________
+$$$$_______________*
+._..............$._.
+._.____________._._.
+._._$$$$$$z$$$_._._.
+._._$________$_._._.
+._._$_......_$_._._.
+._._+_.-..l._$_._*_.
+._&_$_..s....s.._._.
+._._$_.......____$_.
+._._$$$$$$$$$$$d$$_.
+._.____________+__r.
+._.......*.....$$$$.
+$_______i_i_______i$
+$$................$$
+____________________
+____________________
+
+message Rusty center
+____________________
+____________________
+_____w_t____u_x_____
+____________________
+____###_____________
+____#.##########____
+____#.*_...$$a.#____
+____#$_&¿..$#a*#____
+____#..$#$_$#.a#____
+____#.b.$$_$__$#____
+____#...$$$.y$$##___
+____#.#.$$$$#$..#___
+____#...$___*$p##___
+____#.c........q#___
+___##..........p#___
+___#-e......aa.##___
+___#########*###____
+___________###______
+____________________
+____________________
+
+message Clean up your room
+____________________
+____________________
+____________________
+______w_t_u_x_______
+____________________
+_____#########______
+_____#&o.....d______
+_____#rpaa#-.#______
+_____#..r..#.#______
+_____#.npr.#.#______
+_____#....-#*#______
+_____##a#b##.#______
+_____c.$.s_..#______
+_____#*_b.#r.#______
+_____#.s.....#______
+_____#.....d##______
+_____#########______
+____________________
+____________________
+____________________
+
+message Mission impossible
+____________________
+____________________
+__w_t_________u_x___
+____________________
+#####f#############_
+#-.._.#.k.k.#..._*#_
+#.br..#-..b._._.b.#_
+#....\#b....d.....#_
+#c......$0.....?..d_
+#__...#.....#_.b.*#_
+####.#*#######e####_
+#....$c..$..#$....#_
+#.....#..#....s_s.#_
+#...........#&s.s.#_
+#....#c..#..d__.s$#_
+#*..e##*.#*-#+...+#_
+##ee###############_
+____________________
+____________________
+____________________
+
+message Thank you for playing
+

@@ -1,0 +1,622 @@
+title Microbe Destroyers
+author Epic Slayers
+homepage www.puzzlescript.net
+========
+OBJECTS
+========
+
+Background 
+#4a0a0a 
+
+GateOpenG
+#4a0a0a 
+
+GateOpenP
+#4a0a0a 
+
+Wall 
+darkred
+
+GateG
+lightgreen
+
+SwitchG
+lightgreen
+.....
+.000.
+.000.
+.000.
+.....
+
+GateP
+pink
+
+SwitchP
+pink
+.....
+.000.
+.000.
+.000.
+.....
+
+HR
+red
+.....
+.....
+..0..
+.....
+.....
+
+HG
+green
+.....
+.....
+..0..
+.....
+.....
+
+HY
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+HB
+blue
+.....
+.....
+..0..
+.....
+.....
+
+Arrow
+black
+.....
+...0.
+00000
+...0.
+.....
+
+Player 
+red orange
+1.0.1
+.000.
+00000
+.000.
+1.0.1
+
+CG
+green orange
+1.0.1
+.000.
+00000
+.000.
+1.0.1
+
+CY
+yellow orange
+1.0.1
+.000.
+00000
+.000.
+1.0.1
+
+CB
+blue orange
+1.0.1
+.000.
+00000
+.000.
+1.0.1
+
+MG
+green
+..0..
+.000.
+.000.
+.000.
+..0..
+
+MY
+yellow
+..0..
+.000.
+0.0.0
+.000.
+..0..
+
+MB
+blue
+..0..
+.0.0.
+00000
+.0.0.
+..0..
+
+YWall1
+yellow orange
+..1..
+.0.0.
+..1..
+.0.0.
+..1..
+
+BWall1
+blue darkgreen
+..1..
+.0.0.
+..1..
+.0.0.
+..1..
+
+GWall1
+green darkbrown
+..1..
+.0.0.
+..1..
+.0.0.
+..1..
+
+YWall2
+yellow orange
+.....
+.0.0.
+1.1.1
+.0.0.
+.....
+
+BWall2
+blue darkgreen
+.....
+.0.0.
+1.1.1
+.0.0.
+.....
+
+GWall2
+green darkbrown
+.....
+.0.0.
+1.1.1
+.0.0.
+.....
+
+RiverDown1
+#bd0202 #f73831 #4a0000
+.002.
+.210.
+.012.
+.111.
+.010.
+
+RiverDown2
+#bd0202 #f73831 #4a0000
+.010.
+.002.
+.210.
+.012.
+.111.
+
+RiverDown3
+#bd0202 #f73831 #4a0000
+.111.
+.010.
+.002.
+.210.
+.012.
+
+RiverDown4
+#bd0202 #f73831 #4a0000
+.012.
+.111.
+.010.
+.002.
+.210.
+
+RiverDown5
+#bd0202 #f73831 #4a0000
+.210.
+.012.
+.111.
+.010.
+.202.
+
+RiverUp5
+#bd0202 #f73831 #4a0000
+.002.
+.210.
+.012.
+.111.
+.010.
+
+RiverUp4
+#bd0202 #f73831 #4a0000
+.010.
+.002.
+.210.
+.012.
+.111.
+
+RiverUp3
+#bd0202 #f73831 #4a0000
+.111.
+.010.
+.002.
+.210.
+.012.
+
+RiverUp2
+#bd0202 #f73831 #4a0000
+.012.
+.111.
+.010.
+.002.
+.210.
+
+RiverUp1
+#bd0202 #f73831 #4a0000
+.210.
+.012.
+.111.
+.010.
+.202.
+
+RiverLeft1
+#bd0202 #f73831 #4a0000
+.....
+02102
+11110
+20100
+.....
+
+RiverLeft2
+#bd0202 #f73831 #4a0000
+.....
+21020
+11101
+01002
+.....
+
+RiverLeft3
+#bd0202 #f73831 #4a0000
+.....
+10202
+11011
+10020
+.....
+
+RiverLeft4
+#bd0202 #f73831 #4a0000
+.....
+02021
+10111
+00201
+.....
+
+RiverLeft5
+#bd0202 #f73831 #4a0000
+.....
+20210
+01111
+02010
+.....
+
+RiverRight5
+#bd0202 #f73831 #4a0000
+.....
+02102
+11110
+20100
+.....
+
+RiverRight4
+#bd0202 #f73831 #4a0000
+.....
+21020
+11101
+01002
+.....
+
+RiverRight3
+#bd0202 #f73831 #4a0000
+.....
+10202
+11011
+10020
+.....
+
+RiverRight2
+#bd0202 #f73831 #4a0000
+.....
+02021
+10111
+00201
+.....
+
+RiverRight1
+#bd0202 #f73831 #4a0000
+.....
+20210
+01111
+02010
+.....
+
+temp
+white
+
+stateRiver
+white
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+1 = MG
+2 = MY
+3 = MB
+r = HR
+a = Arrow
+g = HG
+y = HY
+b = HB
+d = GateG
+s = SwitchG
+e = GateP
+t = SwitchP
+, = RiverDown1
+` = RiverUp1
+' = RiverLeft1
+" = RiverRight1
+o = YWall1
+w = GWall1
+i = BWall1
+\ = YWall2
+- = GWall2
+_ = BWall2
+RiversDown = RiverDown1 or RiverDown2 or RiverDown3 or RiverDown4 or RiverDown5
+RiversUp = RiverUp1 or RiverUp2 or RiverUp3 or RiverUp4 or RiverUp5
+RiversRight = RiverRight1 or RiverRight2 or RiverRight3 or RiverRight4 or RiverRight5
+RiversLeft = RiverLeft1 or RiverLeft2 or RiverLeft3 or RiverLeft4 or RiverLeft5
+YWall = YWall1 or YWall2
+GWall = GWall1 or GWall2
+BWall = BWall1 or BWall2
+Viruses = Player or CG or CB or CY
+Viruses_G = Player or CB or CY
+Viruses_B = Player or CG or CY
+Viruses_Y = Player or CG or CB 
+
+=======
+SOUNDS
+=======
+
+CG create 28683503
+CY create 54138103
+CB create 1041500
+CG destroy 18760504
+CY destroy 18760504
+CB destroy 18760504
+GateG destroy 13203109
+GateP destroy 13203109
+viruses move 48084307
+viruses destroy 18760504
+stateRiver destroy 94161103
+================
+COLLISIONLAYERS
+================
+
+Background
+SwitchG, SwitchP, GateOpenG, GateOpenP
+HR, Arrow, HG, HY, HB
+Player, Wall, CG, MG, MB, CB, CY, MY, 
+GateG, GateP, YWall, GWall, BWall
+RiversDown, RiversUp, RiversLeft, RiversRight
+temp,stateRiver
+======
+RULES     
+======       
+
+[ MOVING Player ][ STATIONARY Viruses ] -> [ MOVING Player ][ MOVING Viruses ]  
+
+late [ Player | MG ] -> [   Player | CG ]
+late [ CG | MY ] -> [  CG | CY ] 
+late [ CY | MB ] -> [  CY | CB ] 
+
+[> Player | MB ] -> [ | MB ]
+[> Player | MY ] -> [ | MY ]
+[> CB | MY ] -> [ | MY ] 
+[> CY | MG ] -> [ | MG ] 
+
+[ > Viruses_G | GWall] -> [ Viruses_G | GWall]
+[ > Viruses_B | BWall] -> [ Viruses_B | BWall]
+[ > Viruses_Y | YWall] -> [ Viruses_Y | YWall]
+
+[ > CG | MG ] -> [  >  CG | > MG  ]
+[ > CY | MY ] -> [  >  CY | > MY  ]
+[ > CB | MB ] -> [  >  CB | > MB  ]
+
+
+late [ Viruses | SwitchG ][GateOpenG] -> [ Viruses | SwitchG ][GateG]
+late [ Viruses SwitchG ][GateG] -> [ Viruses SwitchG ][ GateOpenG ]
+late [ Viruses | SwitchP ][GateOpenP] -> [ Viruses | SwitchP ][ GateP]
+late [ Viruses SwitchP ][GateP] -> [ Viruses SwitchP ][ GateOpenP ]
+
+[ Viruses RiversDown ][] -> [ down Viruses RiversDown][stateRiver]
+[ Viruses RiversUp ][] -> [ up Viruses RiversUp][stateRiver]
+[ Viruses RiversRight ][] -> [ right Viruses RiversRight][stateRiver]
+[ Viruses RiversLeft ][] -> [ left Viruses RiversLeft][stateRiver]
+[Viruses|RiversDown][stateRiver] -> [Viruses|RiversDown][] 
+[Viruses|RiversUp][stateRiver] -> [Viruses|RiversUp][] 
+[Viruses|RiversRight][stateRiver] -> [Viruses|RiversRight][] 
+[Viruses|RiversLeft][stateRiver] -> [Viruses|RiversLeft][] 
+[ > Viruses | GateG] -> [ Viruses | GateG]
+[ > Viruses | GateP] -> [ Viruses | GateP]
+
+[RiverDown1 no temp] -> [RiverDown2 temp] 
+[RiverUp1 no temp] -> [RiverUp2 temp] 
+[RiverRight1 no temp] -> [RiverRight2 temp] 
+[RiverLeft1 no temp] -> [RiverLeft2 temp] 
+[RiverDown2 no temp] -> [RiverDown3 temp]
+[RiverUp2 no temp] -> [RiverUp3 temp] 
+[RiverRight2 no temp] -> [RiverRight3 temp] 
+[RiverLeft2 no temp] -> [RiverLeft3 temp] 
+[RiverDown3 no temp] -> [RiverDown4 temp]
+[RiverUp3 no temp] -> [RiverUp4 temp] 
+[RiverRight3 no temp] -> [RiverRight4 temp] 
+[RiverLeft3 no temp] -> [RiverLeft4 temp] 
+[RiverDown4 no temp] -> [RiverDown5 temp]
+[RiverUp4 no temp] -> [RiverUp5 temp] 
+[RiverRight4 no temp] -> [RiverRight5 temp] 
+[RiverLeft4 no temp] -> [RiverLeft5 temp] 
+[RiverDown5 no temp] -> [RiverDown1 temp]
+[RiverUp5 no temp] -> [RiverUp1 temp] 
+[RiverRight5 no temp] -> [RiverRight1 temp] 
+[RiverLeft5 no temp] -> [RiverLeft1 temp] 
+
+late [RiversDown temp] -> [RiversDown]
+late [RiversUp temp] -> [RiversUp]
+late [RiversRight temp] -> [RiversRight]
+late [RiversLeft temp] -> [RiversLeft]
+
+late [ Viruses GateG] -> [GateG]
+late [ Viruses GateP] -> [GateP]
+==============
+WINCONDITIONS
+==============
+
+No MG
+No MB
+No MY
+=======     
+LEVELS
+=======
+
+
+message Level 1-1: First Recruit
+
+#####rag#####
+#############
+######..#####
+#...#.....#.#
+#.....##...1.
+#...######.##
+#.....#.p####
+#..##...#####
+#############
+#############
+#############
+#############
+
+message Level 1-2: Natural Selection
+
+#####rag#####
+#############
+#############
+########1.###
+#########.###
+p...###...###
+###.#...#####
+###.#1..#####
+###......####
+########-####
+#######..1.##
+#######....##
+
+message Level 1-3: Viral Teamwork
+
+#####rag#p###
+#########.###
+####..1##.###
+####.####.###
+####d###...s#
+####...#.####
+####...#.####
+###......#1##
+###1...###..#
+#####...###d#
+#1....#.....#
+#############
+
+message Level 2-2: Locked Room
+
+###########
+###ragay###
+###########
+##.2.#...##
+###d##...##
+##..#.1..##
+##......###
+##.p....s##
+###########
+###########
+
+message Level 3-1: Sometimes it is Best to Get Stuck in the Flow
+
+###ragay###
+###########
+##.......##
+#s,#.....##
+#.1#.p..,##
+##,#...#d##
+##....##.##
+##.....#2##
+###########
+
+message Level 3-2: There's More in the Back
+
+#############
+##ragayabar##
+#############
+######..1#2##
+######3###.##
+....##.###.##
+###.#...'...#
+###.#...#...#
+###p....w...#
+######1###..#
+########.1..#
+########....#
+#############
+
+
+message Level 3-3: Test bloodriver Level - double heroes
+
+..##ragayabar######
+..#################
+,''.p......########
+,##.##.##.#####.###
+,##.##.##.#####_###
+,##........2..-.#.#
+,###..........###-#
+,###..........\...#
+,#####........#####
+,###......st..o.###
+,###..###.#####.###
+,"".......de.3#_###
+.1################# 
+
+message Test Playground
+
+######ragayabar######
+#####################
+##...........########
+##,#`###.########.###
+##,#`###.########_###
+##,#`#1..2..3...i.#.#
+##,#`#..........###-#
+##,#`...........w...#
+##,#`###p.......#####
+##..........st..o.###
+##.###..###.#####\###
+##.'''..""".de..#.###
+#####################
+

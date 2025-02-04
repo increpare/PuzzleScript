@@ -1,0 +1,446 @@
+title Twinkle, Twinkle Little Square
+author Mark Richardson
+norepeat_action
+norestart
+noundo
+realtime_interval 0.5
+run_rules_on_level_start
+youtube bycKYGMubqo
+
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Wall
+Black
+
+StarA
+#888 #444 #222
+.111.
+12121
+11011
+12121
+.111.
+
+Star0
+#888 #444 #222
+.111.
+12121
+11011
+12121
+.111.
+
+Star1
+#F88 #F00 #800
+.111.
+12121
+11011
+12121
+.111.
+
+Star2
+#8F8 #0F0 #080
+.111.
+12121
+11011
+12121
+.111.
+
+Star3
+#88F #00F #008
+.111.
+12121
+11011
+12121
+.111.
+
+Star4
+#FF0 #880 #440
+.111.
+12121
+11011
+12121
+.111.
+
+Star5
+#F0F #808 #404
+.111.
+12121
+11011
+12121
+.111.
+
+Star6
+#0FF #088 #044
+.111.
+12121
+11011
+12121
+.111.
+
+Star7
+#FFF #888 #444
+.111.
+12121
+11011
+12121
+.111.
+
+Twinkle1
+Black
+000.0
+....0
+0...0
+0....
+0.000
+
+Twinkle2
+Black
+00.00
+0...0
+.....
+0...0
+00.00
+
+Twinkle3
+Black
+0.000
+0....
+0...0
+....0
+000.0
+
+Cursor1
+White
+.0.0.
+0...0
+.....
+0...0
+.0.0.
+
+Cursor2
+White
+00.00
+0...0
+.....
+0...0
+00.00
+
+Cursor3
+White
+0...0
+.....
+.....
+.....
+0...0
+
+Cursor4
+White
+0...0
+.....
+.....
+.....
+0...0
+
+Player
+White
+00.00
+0...0
+.....
+0...0
+00.00
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+* = Star0
+P = Player and Cursor1
+Q = Player and Cursor1 and Star0
+
+StarX = Star1 or Star2 or Star3 or Star4 or Star5 or Star6 or Star7
+StarZ = Star0 or StarX
+TwinkleX = Twinkle1 or Twinkle2 or Twinkle3
+CursorX = Cursor2 or Cursor3 or Cursor4
+
+
+=======
+SOUNDS
+=======
+
+SFX0           96768300 (Square to Point cursor)
+StarX Create   98626500
+StarX Destroy  10679500
+EndLevel       71348100
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+StarA, StarZ
+TwinkleX
+Cursor1, CursorX
+Player, Wall
+
+======
+RULES
+======
+
+(Twinkle)
+[StarZ no TwinkleX] -> [StarZ random TwinkleX]
+[stationary Player][stationary TwinkleX] -> [stationary Player][randomdir TwinkleX]
+[up TwinkleX] -> [random TwinkleX]
+[moving TwinkleX] -> [TwinkleX]
+
+(Move point cursor)
+[> Player Cursor1] -> [> Player > Cursor1]
+[> Cursor1|Wall] -> cancel
+
+(Move square cursor)
+[> Player Cursor2|Cursor1][Cursor3][Cursor4] -> [|Player Cursor1][][] SFX0
+[> Player Cursor2|Wall] -> cancel
+[> Player Cursor2][Cursor4|Wall] -> cancel
+[> Player Cursor2|Cursor4|no Wall][stationary Cursor3] -> [|Player Cursor2|v Cursor4][v Cursor3]
+[> Player Cursor2|no Wall][stationary Cursor3][stationary Cursor4|no Wall] -> [|Player Cursor2][v Cursor3][|v Cursor4]
+[> CursorX|Wall] -> cancel
+
+(Delete constellation with point cursor)
+[action Player Cursor1 Star1][no Player Star1] -> [action Player Cursor1 Star1][Star0]
+[action Player Cursor1 Star2][no Player Star2] -> [action Player Cursor1 Star2][Star0]
+[action Player Cursor1 Star3][no Player Star3] -> [action Player Cursor1 Star3][Star0]
+[action Player Cursor1 Star4][no Player Star4] -> [action Player Cursor1 Star4][Star0]
+[action Player Cursor1 Star5][no Player Star5] -> [action Player Cursor1 Star5][Star0]
+[action Player Cursor1 Star6][no Player Star6] -> [action Player Cursor1 Star6][Star0]
+[action Player Cursor1 Star7][no Player Star7] -> [action Player Cursor1 Star7][Star0]
+[action Player Cursor1 StarX] -> [Player Cursor1 Star0]
+
+(Delete constellation with square cursor)
+[action Player Cursor2 StarZ][Cursor3 StarZ][Cursor4 StarZ] -> [action Player Cursor2 action StarZ][Cursor3 action StarZ][Cursor4 action StarZ]
+[action Star1][stationary Star1] -> [action Star1][Star0]
+[action Star2][stationary Star2] -> [action Star2][Star0]
+[action Star3][stationary Star3] -> [action Star3][Star0]
+[action Star4][stationary Star4] -> [action Star4][Star0]
+[action Star5][stationary Star5] -> [action Star5][Star0]
+[action Star6][stationary Star6] -> [action Star6][Star0]
+[action Star7][stationary Star7] -> [action Star7][Star0]
+[action StarZ] -> [Star0]
+
+(Turn point cursor into a square cursor)
+right [action Player Cursor1 Star0|no Wall] -> [action Cursor1 Star0|Player Cursor2]
+down [action Cursor1|Wall] -> cancel
+down [action Cursor1|] -> [Cursor1|action Cursor3]
+right [action Cursor3|Wall] -> cancel
+right [action Cursor3|] -> [Cursor3|Cursor4] SFX0
+
+(Create constellation)
+[action Player Cursor2 Star0][Cursor1 Star0][Cursor3 Star0][Cursor4 Star0] -> [action Player Cursor1 StarA][StarA][StarA][StarA]
+[action Player Cursor1 StarA][Star1][Star2][Star3][Star4][Star5][Star6] -> [action Player Cursor1 Star7][Star1][Star2][Star3][Star4][Star5][Star6]
+[action Player Cursor1 StarA][Star1][Star2][Star3][Star4][Star5] -> [action Player Cursor1 Star6][Star1][Star2][Star3][Star4][Star5]
+[action Player Cursor1 StarA][Star1][Star2][Star3][Star4] -> [action Player Cursor1 Star5][Star1][Star2][Star3][Star4]
+[action Player Cursor1 StarA][Star1][Star2][Star3] -> [action Player Cursor1 Star4][Star1][Star2][Star3]
+[action Player Cursor1 StarA][Star1][Star2] -> [action Player Cursor1 Star3][Star1][Star2]
+[action Player Cursor1 StarA][Star1] -> [action Player Cursor1 Star2][Star1]
+[action Player Cursor1 StarA] -> [action Player Cursor1 Star1]
+[action Player Cursor1 StarX][StarA] -> [action Player Cursor1 StarX][StarX]
+
+(Turn square cursor into a point cursor)
+[action Player Cursor2][Cursor1][Cursor3][Cursor4] -> [action Player Cursor1][][][] SFX0
+
+
+==============
+WINCONDITIONS
+==============
+
+no Star0
+
+
+=======
+LEVELS
+=======
+
+message ♪Twinkle, twinkle little square, how I wonder why you're there?
+
+###################
+#.................#
+#.................#
+#.....*...........#
+#.................#
+#.*....*..........#
+#.................#
+#.......*.....*...#
+#.................#
+#...*....P........#
+#.................#
+#.................#
+#....*............#
+#.................#
+#...........*.....#
+#.................#
+#.................#
+#.................#
+###################
+
+message ♪ Is your arrangement but a sign, that the sky is by design?
+
+###################
+#.................#
+#.................#
+#.................#
+#........*........#
+#.................#
+#....*.........*..#
+#.................#
+#..........*......#
+#........P........#
+#......*..........#
+#.................#
+#..*.........*....#
+#.................#
+#........*........#
+#.................#
+#.................#
+#.................#
+###################
+
+message ♪Twinkle, twinkle little square, why, I wonder, are you there?
+
+###################
+#.................#
+#.............*...#
+#.................#
+#.*.....*.......*.#
+#.................#
+#.................#
+#....*............#
+#.................#
+#........P........#
+#.*.....*.........#
+#.................#
+#.......*.......*.#
+#....*............#
+#...............*.#
+#.................#
+#...*.............#
+#.................#
+###################
+
+message The books say light travels fast, but that we see your distant past.
+
+###################
+#.................#
+#.................#
+#.................#
+#.........*.......#
+#......*..........#
+#...........*.....#
+#.*.*.............#
+#........*........#
+#.*...*..P....*...#
+#.....*...........#
+#...*......*......#
+#............*....#
+#.......*.........#
+#............*....#
+#....*............#
+#.................#
+#.................#
+###################
+
+message A massive ball of nuclear fusion, knowledge shared but never proven.
+
+###################
+#.................#
+#.................#
+#.................#
+#.................#
+#.......***.......#
+#......*..........#
+#.........*.*.....#
+#....*.*...*.*....#
+#....*...P...*....#
+#......*.....*....#
+#.....*.*.*.......#
+#..........*......#
+#........**.......#
+#.................#
+#.................#
+#.................#
+#.................#
+###################
+
+message ♪ Twinkle, twinkle little star, ♪how can I trust what you are?
+
+###################
+#.................#
+#.....*..*........#
+#.................#
+#......*...**.....#
+#............*....#
+#....**..*...*....#
+#........P*.....*.#
+#...*..*...*......#
+#.........*...*...#
+#........***.*....#
+#.................#
+#......*..........#
+#...*.............#
+#.................#
+#.................#
+#............*....#
+#.................#
+###################
+
+message ♪ Your equal sides just bring me             grief,          ♪precision that's beyond belief.
+
+###################
+#.................#
+#......*...*......#
+#...........*.....#
+#.................#
+#...........*.....#
+#......*..........#
+#.*.**..*.......*.#
+#.......*..*......#
+#.....*.*P........#
+#....*...*........#
+#.*....*....**..*.#
+#.............*...#
+#.....*...........#
+#..*..*...........#
+#.........*.......#
+#......*...*......#
+#.................#
+###################
+
+message ♪   Was your creator galactic,   or sinisterly domestic?
+
+###################
+#..........*......#
+#.................#
+#.................#
+#.........*.......#
+#..*....*....*....#
+#*....*....*......#
+#...*....*........#
+#......*....*.....#
+#....*...P*....*..#
+#..*....*....*....#
+#.....*....*....*.#
+#...*....*....*...#
+#......*..........#
+#.........*.......#
+#.......*.........#
+#.....*...........#
+#.................#
+###################
+
+message ♪ Twinkle, twinkle little square.   I can't sleep knowing you're there.

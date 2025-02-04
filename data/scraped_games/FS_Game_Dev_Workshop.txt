@@ -1,0 +1,268 @@
+title FS Game Dev Workshop
+author Stephen Lavelle
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightblue white
+11111
+11111
+11101
+11011
+11111
+
+Ice
+lightblue white
+11111
+11111
+11111
+11111
+11111
+
+CornerTL
+White Red LightGray
+01100
+11000
+10000
+00000
+00000
+
+TopSide
+White Red LightGray
+11111
+00000
+00000
+00000
+00000
+
+BotSide
+White Red LightGray
+00000
+00000
+00000
+00000
+11111
+
+LeftSide
+White Red LightGray
+10000
+10000
+10000
+10000
+10000
+
+RightSide
+White Red LightGray
+00001
+00001
+00001
+00001
+00001
+
+BlueBlock
+Blue White LightGray
+00000
+00000
+00010
+00100
+00000
+
+WhiteBlock
+White LightBlue LightGray
+00000
+00000
+00020
+00200
+00000
+
+RedBlock
+Red LightGray LightRed
+00000
+00000
+00020
+00200
+00000
+
+RedPuck
+DarkRed Red LightRed Gray
+.....
+.332.
+..02.
+01110
+.000.
+
+BluePuck
+DarkBlue Blue LightBlue Gray
+.....
+.332.
+..02.
+01110
+.000.
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange LightBlue Blue
+..00.
+..11.
+2222.
+.3322
+33.3.
+
+Brushers
+Black Orange Blue DarkBlue Brown
+..00.
+4211.
+.422.
+.3412
+3.300
+
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+UpPad
+LightBlue Yellow
+.....
+..0..
+.0.0.
+0.0.0
+.....
+
+RightPad
+LightBlue Yellow
+.0...
+..0..
+.0.0.
+..0..
+.0...
+
+DownPad
+LightBlue Yellow
+.....
+0.0.0
+.0.0.
+..0..
+.....
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Brushers
+I = Ice
+U = UpPad
+D = DownPad
+R = RightPad
+1 = CornerTL
+2 = BlueBlock
+3 = RedBlock
+4 = WhiteBlock
+5 = TopSide
+6 = BotSide
+7 = LeftSide
+8 = RightSide
+* = Crate
+9 = BluePuck
+@ = RightPad and BlueBlock
+! = Brushers and RightPad
+0 = RedPuck
+(Classes of objects)
+Pads = UpPad or RightPad or DownPad
+Brushable = Pads or Brushers
+Pucks = RedPuck or BluePuck
+
+=======
+SOUNDS
+=======
+
+Pucks MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background 
+CornerTL, BlueBlock, RedBlock, WhiteBlock, Ice, TopSide, BotSide, LeftSide, RightSide
+RightPad, UpPad, DownPad
+Player, Wall, Crate, Brushers, Pucks
+
+======
+RULES
+======
+
+(Player moves pucks)
+[ >  Player | Pucks ] -> [  >  Player | > Pucks ]
+[ <  Player | Pucks ] -> [  <  Player | < Pucks ]
+
+(Grab and move from the side)
+[ Vertical Player | Pucks] -> [ Vertical Player | Vertical Pucks]
+
+(Player pushes brushers)
+Vertical [ >  Player | Brushers ] -> [  >  Player | > Brushers ]
+Vertical [ <  Player | Brushers ] -> [  <  Player | < Brushers ]
+(Brushers brush their column)
+Vertical [ > Brushers |...| Brushable] -> [  >  Brushers |...| > Brushable]
+Vertical [ < Brushers |...| Brushable] -> [  <  Brushers |...| < Brushable]
+
+(Pucks slide on ice)
+[ Pucks UpPad    ] -> [ UP    Pucks UpPad   ]
+[ Pucks RightPad ] -> [ RIGHT Pucks RightPad]
+[ Pucks DownPad  ] -> [ DOWN  Pucks DownPad ]
+
+(Moving pucks push pucks)
+[ > Pucks | Pucks ] -> [ > Pucks | > Pucks ]
+
+(Player rides the puck)
+Right [ Player RightPad | Pucks] -> [ RIGHT Player RightPad | Pucks ]
+Right [ Player | Pucks RightPad ] -> [ Right Player | Pucks RightPad ]
+
+(Keep sliding)
+Late [Pucks Pads] -> [Pucks Pads] Again
+Late [ Player RightPad ] -> [ Player RightPad ] Again
+
+==============
+WINCONDITIONS
+==============
+
+ALL BluePuck on Crate
+ALL RedPuck on Crate
+
+=======
+LEVELS
+=======
+....................................
+....................................
+....................................
+............................22222...
+..p........................2222222..
+....666666666666666666666.222iii222.
+..98.b.b.b.b.b.b.b.b.b.b.@@@ri3ii222
+..08rrurrurdrrrrrrudrrrur@@ur333ii22
+..9rrrurrrurrdurrrrrrrurr@@d33i33i22
+..08rrrrrrrurrdrurdrrrdrr@@du333ii22
+..98b.b.b.b.b.b.b.b.b.b.b@@@ui3ii222
+..0.555555555555555555555.222iii222.
+...........................2222222..
+............................22222...
+....................................
+....................................

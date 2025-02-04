@@ -1,0 +1,153 @@
+title Bottomless puzzle-adventure
+author Builder17
+verbose_logging
+(debug)
+norepeat_action
+run_rules_on_level_start
+========
+OBJECTS
+========
+	Cursor
+    red white
+    00000
+    01010
+    00100
+    01010
+    00000
+    
+    Bottomless
+    black
+    Walkable
+    white lightgreen
+	00000
+    01110
+    01110
+    01110
+    00000
+    
+    Player1
+    red white
+    11111
+    10001
+    10001
+    10001
+    11111
+    Pit
+    transparent
+    Background
+    transparent
+    Temp
+    transparent
+    Player2
+    transparent
+    Zero
+    transparent
+    Death
+    transparent
+    
+    Goal
+    blue white
+    11111
+    10001
+    10001
+    10001
+    10001
+    
+    One
+    white
+    ..0..
+    ..0..
+    ..0..
+    ..0..
+    ..0..
+    Two
+    white
+    .000.
+    ...0.
+    .000.
+    .0...
+    .000.
+    Three
+    white
+    .0000
+    ....0
+    .0000
+    ....0
+    .0000
+    Four
+    white
+    0..0.
+    0..0.
+    0000.
+    ...0.
+    ...0.
+    
+
+=======
+LEGEND
+=======
+	P = Player2 and Walkable
+    G = Goal
+    C = Cursor and Walkable
+    B = Bottomless
+    W = Walkable
+    X = Pit and Walkable
+    0 = Zero
+    1 = One
+    2 = Two
+    3 = Three
+    4 = Four
+    . = Background
+    
+    Player = Player1 and Cursor
+
+=======
+SOUNDS
+=======
+	sfx0 49296902
+
+================
+COLLISIONLAYERS
+================
+	Background
+	Bottomless, Walkable, Temp
+    Pit, Player2
+    0,1,2,3,4,Player1,Death
+    Cursor
+    Goal
+
+======
+RULES
+======
+	(Inspirated by Picross)
+    [action Cursor Walkable] -> [action Cursor Temp]
+    [action Cursor Bottomless] -> [action Cursor Walkable]
+    [Temp] -> [Bottomless]
+    [Death] -> restart
+    
+    late [Player1 Pit] -> [Death Bottomless] message Oops, you fell into bottomless pit!
+    late [Cursor Goal] [Player2] -> [Goal] [Player1]
+    ([] -> [])
+
+==============
+WINCONDITIONS
+==============
+	all Player1 on Goal
+    no Cursor
+    no Death
+
+=======
+LEVELS
+=======
+	.1211
+    4XXXX
+    1PXWW
+    0WWCG
+    
+    .14231
+    4PXXXX
+    1WXWWW
+    2WXWXW
+    1WWWXC
+    3XXXXG
+    

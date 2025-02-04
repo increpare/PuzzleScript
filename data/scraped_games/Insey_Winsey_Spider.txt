@@ -1,0 +1,544 @@
+title Insey Winsey Spider
+author Mark Richardson
+again_interval 0.02
+noaction
+require_player_movement
+run_rules_on_level_start
+(verbose_logging)
+
+
+========
+OBJECTS
+========
+
+Background
+#AAA
+
+Player
+Black #222
+1.1.1
+.000.
+10001
+.000.
+1.1.1
+
+Wall
+#642
+
+Grate
+#555
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+Crate
+#686 #464 #242
+00001
+01112
+01112
+01112
+12222
+
+Sky
+#AAF
+
+EmptyTank
+#AAF
+
+Inlet1
+White
+.....
+.....
+.....
+.....
+..000
+
+Inlet2
+White
+.....
+.....
+.....
+.....
+00000
+
+Inlet3
+White
+.....
+.....
+.....
+.....
+000..
+
+Inlet4
+White
+..0..
+..0.0
+..0.0
+..0.0
+....0
+
+Inlet5
+#AAF
+
+Inlet6
+White
+..0..
+0.0..
+0.0..
+0.0..
+0....
+
+Outlet
+Transparent
+
+Exit
+Transparent
+
+Water0
+#55F
+.....
+.....
+.....
+.....
+.....
+
+Water1
+#55F
+.....
+.....
+.....
+.....
+00000
+
+Water2
+#55F
+.....
+.....
+.....
+00000
+00000
+
+Water3
+#55F
+.....
+.....
+00000
+00000
+00000
+
+Water4
+#55F
+.....
+00000
+00000
+00000
+00000
+
+Water5
+#55F
+00000
+00000
+00000
+00000
+00000
+
+WaterD
+#55F
+00000
+00000
+00000
+00000
+00000
+
+WaterL
+#55F
+00000
+00000
+00000
+00000
+00000
+
+WaterR
+#55F
+00000
+00000
+00000
+00000
+00000
+
+WaterH
+#55F
+00000
+00000
+00000
+00000
+00000
+
+Waterfall1
+#55F #AAF
+00111
+10011
+11011
+11001
+11101
+
+Waterfall4
+#55F #AAF #88F
+11101
+11101
+11101
+12101
+21101
+
+Waterfall5
+#55F #AAF #88F
+11111
+11111
+11111
+21111
+12111
+
+Draining
+Transparent
+
+Grass
+#0A0 #060 #080 #AAF
+33333
+03333
+03132
+02102
+02102
+
+Sun00 q
+#AAF #BAE #DAA
+00012
+00012
+00012
+00012
+00012
+
+Sun10 w
+#EA7 #FB4 #FC3 #FD2 #FE1
+01123
+01234
+01234
+01234
+01123
+
+Sun20 e
+#FE1 yEllow
+01110
+11111
+11111
+11111
+01110
+
+Sun30 r
+#FD2 #FC3 #FB4 #EA7 #FE1
+01223
+40123
+40123
+40123
+01223
+
+Sun40 t
+#DAA #BAE #AAF
+01222
+01222
+01222
+01222
+01222
+
+Sun01 a
+#AAF #BAE
+00001
+00001
+00000
+00000
+00000
+
+Sun11 s
+#DAA #EA7 #FB4 #FC3 #BAE #AAF
+01233
+01223
+40122
+44011
+54400
+
+Sun21 d
+#FD2 #FE1 #FC3 #FB4 #EA7
+01110
+20002
+32223
+33333
+44444
+
+Sun31 f
+#FC3 #FB4 #EA7 #DAA #BAE #AAF
+00123
+01123
+11234
+22344
+33445
+
+Sun41 g
+#BAE #AAF
+01111
+01111
+11111
+11111
+11111
+
+Sun12 z
+#AAF #BAE
+00011
+00000
+00000
+00000
+00000
+
+Sun22 x
+#DAA #BAE #AAF
+00000
+11111
+22222
+22222
+22222
+
+Sun32 c
+#BAE #AAF
+00111
+11111
+11111
+11111
+11111
+
+
+=======
+LEGEND
+=======
+
+. = Background
+@ = Player
+U = Exit
+# = Wall
++ = Grate
+O = Crate
+- = Sky
+~ = EmptyTank and Water0
+/ = Inlet1 and Sky
+_ = Inlet2 and Sky
+\ = Inlet3 and Sky
+{ = Inlet4 and EmptyTank and Water0
+! = Inlet5
+} = Inlet6 and EmptyTank and Water0
+1 = Waterfall1
+4 = Waterfall4 and Water0
+5 = Waterfall5 and Water0
+: = Outlet
+" = Grass
+' = Grass and Exit
+
+WaterFlow = WaterD or WaterL or WaterR
+Tank = EmptyTank or Waterfall4 or Waterfall5
+Inlet = Inlet1 or Inlet2 or Inlet3 or Inlet4 or Inlet6
+TankWater = Water0 or Water1 or Water2 or Water3 or Water4 or Water5
+Drainable = Player or Crate or WaterFlow
+SolidObstacle = Player or Wall or Grate or Crate
+WaterObstacle = Wall or Crate or Inlet4 or Inlet6
+Sun = Sun00 or Sun10 or Sun20 or Sun30 or Sun40 or Sun01 or Sun11 or Sun21 or Sun31 or Sun41 or Sun12 or Sun22 or Sun32
+
+
+=======
+SOUNDS
+=======
+
+Player Move            8898507
+Crate Move Horizontal 69151107
+Draining Create       29362508
+EndLevel              48612503
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Tank, Sky, Waterfall1, Inlet5, WaterH, Grass, Sun
+TankWater, WaterFlow
+SolidObstacle
+Inlet1, Inlet2, Inlet3, Inlet4, Inlet6, Outlet, Exit, Draining
+
+
+======
+RULES
+======
+
+(Move crates)
+horizontal [> Player|Crate]->[> Player|> Crate]
+down [stationary Crate]->[> Crate]
+late down [Crate|no SolidObstacle]->again
+late [Crate Outlet]->again
+
+(Fill tank)
+[moving Player][Tank]->[moving Player][action Tank]
+[action Tank Water0]->[Tank Water1]
+[action Tank Water1]->[Tank Water2]
+[action Tank Water2]->[Tank Water3]
+[action Tank Water3]->[Tank Water4]
+[action Tank Water4]->[Tank Water5]
+random [action Tank Water5][Wall]->[Tank Water5][Wall Draining]
+[action Tank]->[Tank]
+
+(Drain tank)
+[Draining][Tank]->[Draining][action Tank]
+[action Tank Water5]->[Tank Water4]
+[action Tank Water4]->[Tank Water3]
+[action Tank Water3]->[Tank Water2]
+[action Tank Water2]->[Tank Water1]
+[action Tank Water1]->[Tank Water0]
+late [Draining][Inlet5 no WaterD]->[Draining][Inlet5 WaterD]again
+late [Draining][Water0]->[][Water0]
+
+(Move water)
+[WaterFlow]->[action WaterFlow]
+
+down  [action WaterFlow|no WaterObstacle]->[> WaterD|]
+left  [action WaterL|WaterObstacle]->[|WaterObstacle]
+right [action WaterR|WaterObstacle]->[|WaterObstacle]
+right [no WaterObstacle|action WaterD|no WaterObstacle]->[|WaterH|]
+left  [action WaterD|no WaterObstacle]->[> WaterL|]
+right [action WaterD|no WaterObstacle]->[> WaterR|]
+left  [action WaterL|no WaterObstacle]->[> WaterL|]
+right [action WaterR|no WaterObstacle]->[> WaterR|]
+[action WaterD]->[]
+right [WaterR|WaterL]->[|]
+[> WaterFlow Player]->[> WaterFlow > Player]
+[WaterH Player]->[WaterH left Player]
+[> WaterFlow]->again
+late right [|WaterH|]->[WaterL||WaterR]again
+
+(Empty outlet)
+[Outlet Drainable]->[Outlet]again
+
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Exit
+
+
+=======
+LEVELS
+=======
+
+###1----/_\-----#U#
+###45~~~{!}~~~~~#.#
+#########+#######.#
+#####.............#
+#####.###.#########
+#####.###.#########
+#####.###+#########
+#.................#
+#+###########+###.#
+:.#######.###.###.#
+#########.###.###.#
+#.................#
+#.###.###########+#
+#.###.###########.#
+#........@#######.:
+#+#######+#########
+#:#######:#########
+
+###1----/_\-----#U#
+###45~~~{!}~~~~~#.#
+#########+#######.#
+#########.........#
+#########.#########
+#####.....#########
+#####.###.#########
+#####.###+#########
+#####.###..O..#####
+#####.....###.#####
+########.####.#####
+########...##.#####
+##########....#####
+#########..########
+#########@#########
+#########+#########
+#########:#########
+
+###1----/_\-----#U#
+###45~~~{!}~~~~~#.#
+#########+#######.#
+########+.+######.#
+#..O..............#
+#.#####+###.#####+#
+#.#####.###.#####.#
+#.+###+.##+.+###+.#
+#.......#+.....O..#
+##.######.######.##
+##.+####+.+####+.##
+##...............##
+###.##.#####.##.###
+###....+###+....###
+######...@...######
+#########+#########
+#########:#########
+
+###1----/_\-----#U#
+###45~~~{!}~~~~~#.#
+#########+#######.#
+#########.........#
+#########.#########
+###...O.#.#.O...###
+###.###.#.#.###.###
+###.#...O.O...#.###
+###.#.#+#.++#.#.###
+###.#.#...#.#.#.###
+###.#.#.#...#.#.###
+###.#.#...#.#.#.###
+#.......#.........#
+#.###############.#
+#.......@.........#
+########+##########
+########:##########
+
+###1----/_\-----#U#
+###45~~~{!}~~~~~#.#
+#########+#######.#
+##................#
+##.#####.#######.##
+#..........####...#
+#.########.####.#.#
+#.....O...........#
+###+#####.####+++##
+#...#####........##
+#.######+++###...##
+#.....O.....##...##
+#.#.###+###.##.+.##
+#.#.....###....O.##
+#.#.#######.##+#.##
+#@..........##...##
+#:##############:##
+
+------qwert--------
+------asdfg--------
+-------zxc---------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+""""""""'""""""""""
+########.##########
+########.##########
+########.##########
+########.##########
+########.##########
+########.##########
+########@##########
+########.##########

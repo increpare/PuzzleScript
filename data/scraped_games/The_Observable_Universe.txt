@@ -1,0 +1,355 @@
+title The Observable Universe
+author Paul Jeffrey
+homepage www.paulevanjeffrey.com
+youtube ZWUlLHv7-64
+
+
+========
+OBJECTS
+========
+
+Background
+Pink
+00000
+00000
+00000
+00000
+00000
+
+Background2
+White
+00000
+00000
+00000
+00000
+00000
+
+
+Target
+White Pink
+11111
+11111
+11011
+11111
+11111
+
+Target2
+Pink White
+11111
+11111
+11011
+11111
+11111
+
+Wall
+White Black
+00000
+00000
+00000
+00000
+00000
+
+Wall2
+Pink Black
+00000
+00000
+00000
+00000
+00000
+
+WallR
+Black
+.....
+.....
+.....
+.....
+.....
+
+Player
+White Pink
+00000
+00000
+00100
+00000
+00000
+
+PlayerR
+White Pink
+00000
+00000
+00100
+00000
+00000
+
+Player2
+Pink White
+00000
+00000
+00100
+00000
+00000
+
+Player2R
+Pink White
+00000
+00000
+00100
+00000
+00000
+
+Crate2
+White Pink
+00000
+01110
+01110
+01110
+00000
+
+Crate3
+Pink White
+00000
+01110
+01110
+01110
+00000
+
+
+Arrow1
+Pink White
+00100
+00100
+10101
+01110
+00100
+
+Arrow2
+White Pink 
+00100
+01110
+10101
+00100
+00100
+
+ArrowL
+White Pink 
+00100
+01000
+11111
+01000
+00100
+
+ArrowR
+Pink White
+00100
+00010
+11111
+00010
+00100
+
+
+=======
+LEGEND
+=======
+
+. = Background
+" = Background2
+# = Wall
+$ = Wall2
+P = Player
+R = Player and PlayerR
+* = Player2 and Player2R
+2 = Crate2 and Background
+B = Crate2 and Arrow1
+C = Crate2 and ArrowR
+3 = Crate3 and Background2
+N = Crate3 and Arrow2
+D = Crate3 and ArrowL
+@ = Player2 and Background2
+O = Wall2 and Target
+L = Wall and Target2
+F = WallR
+A = Arrow1
+W = Arrow2
+
+=======
+SOUNDS
+=======
+
+Player move 41608706
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Background2, Arrow1, Arrow2, ArrowR, ArrowL
+Player, Wall, Crate2
+Player2, Wall2, Crate3, WallR
+Target, Target2
+PlayerR, Player2R
+
+
+======
+RULES
+======
+
+
+[ > Player ] [ Player2 ] -> [ > Player ] [ < Player2 ]
++ [ > Player ] [ PlayerR ] -> [ > Player ] [ > PlayerR ]
++ [ > Player ] [ Player2R ] -> [ > Player ] [ < Player2R ]
++ [ > Player2 ] [ Player2R ] -> [ > Player2 ] [ > Player2R ]
+
+[ > Player | Crate2 ] -> [ > Player | > Crate2 ]
+[ > PlayerR | Crate2 ] -> [ > PlayerR | > Crate2 ]
+[ > Crate2 | Crate2 ] -> [ > Crate2 | > Crate2 ]
+
+[ > Player | Crate3 ] -> [  Player |  Crate3 ]
+[ > PlayerR | Crate3 ] -> [  PlayerR |  Crate3 ]
+[ > Crate2 | Crate3 ] -> [ Crate2 | Crate3 ]
+
+[ > Player2 | Crate3 ] -> [ > Player2 | > Crate3 ]
+[ > Player2R | Crate3 ] -> [ > Player2R | > Crate3 ]
+[ > Crate3 | Crate3 ] -> [ > Crate3 | > Crate3 ]
+
+[ > Player2 | Crate2 ] -> [ Player2 | Crate2 ]
+[ > Player2R | Crate2 ] -> [ Player2R | Crate2 ]
+[ > Crate3 | Crate2 ] -> [ Crate3 | Crate2 ]
+
+
+
+
+
+
+[ > PlayerR | Wall ] -> cancel
+[ > PlayerR | Crate2 | Wall ] -> cancel
+[ > Player2 | Wall2 ] -> cancel
+[ > Player2 | WallR ] -> cancel
+[ > Player2R | Wall2 ] -> cancel
+[ > Player2R | WallR ] -> cancel
+[ > Crate2 | Wall ] -> cancel
+[ > Crate3 | Wall2 ] -> cancel
+[ > Crate3 | WallR ] -> cancel
+[ > Crate2 | Target ] -> cancel
+[ > Crate3 | Target2 ] -> cancel
+
+
+
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+Some Target on Player2 and
+Some Target on Player
+
+
+=======
+LEVELS
+=======
+
+Message The multiverse (or meta-universe) is the hypothetical set of infinite or finite possible universes that together comprise everything that exists and can exist.
+
+Message  The various universes within the multiverse are sometimes called parallel or MIRROR universes.
+
+#####$$$$$
+#R..OL""@$
+#####$$$$$
+
+Message The entirety of space, time, matter, and energy as well as the physical laws and constants that describe them are included in these mirror universes.
+
+#####$$$$$
+#r..F#"""$
+#..AF#"""$
+#..22#"""$
+#..Co33""$
+#..22lD""$
+#...F33""$
+#...F#W""$
+#...F#""@$
+#####$$$$$
+
+Message Multiple universes have been hypothesized in the following:
+
+Message cosmology,
+
+##########$$$$$$$$$$
+####.....$#"""""$$$$
+###...####$$$$"""$$$
+##...#####$$$$$"""$$
+#...###..$#@"$$$"""$
+#..###..##$$""$$$""$
+#.###o.###$$$""$$$"$
+#.##..####$$$$""$$"$
+#.##..####$$$$"3$$"$
+#.##.#####$$$$$"$$"$
+#.##.#####$$$$$"$$"$
+#.##..####$$$$""$$"$
+#.##..####$$$$""$$"$
+#.###..###$$$"l$$$"$
+#..###..##$$""$$$""$
+#...###.r$#""$$$"""$
+##...#####$$$$$"""$$
+###...####$$$$"""$$$
+####.....$#"""""$$$$
+##########$$$$$$$$$$
+
+Message energy,
+
+#####$$$$$
+#...F#"3"$
+#.R.F#3L3$
+#...F333"$
+#...F#""3$
+#...F#"""$
+#.222#"""$
+#2O2F#"@"$
+#.2.F#"""$
+#####$$$$$
+
+Message religion,
+
+#####$$$$$
+#...#$"""$
+#2R.#$"L3$
+#.2.#$"33$
+#...#$"""$
+#2..#$"3"$
+#2O##$$@3$
+#2###$$$3$
+#...#$"""$
+#####$$$$$
+
+Message space,
+
+###########$$$$
+#...2.....F#""$
+#2##.....F#3"3$
+#.O#.R..F#33""$
+#.##...F#"333"$
+#.22..F#"""$$"$
+#..22F#""@"$L"$
+#2.2F#"""""$$3$
+#.2F#"""""3"""$
+####$$$$$$$$$$$
+
+Message and time,
+
+###############
+#R..2.....#.2.#
+#..#.....2.2.2#
+#.............#
+#FFFFFF2F2F2FO#
+$L############$
+$"""3"3"""""3"$
+$""$"""""3""""$
+$"3"3"3""""""@$
+$$$$$$$$$$$$$$$
+
+
+
+
+
+

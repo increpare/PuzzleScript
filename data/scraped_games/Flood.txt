@@ -1,0 +1,280 @@
+title Flood
+author Franklin P. Dyer
+
+========
+OBJECTS
+========
+
+Background .
+#a8a8a8 #939393 #7e7e7e
+11110
+10002
+10002
+10002
+02222
+
+Player @
+#cc0000 #b20000 #990000
+11110
+10002
+10002
+10002
+02222
+
+Wall x
+#696969 #545454 #3f3f3f
+11110
+10002
+10002
+10002
+02222
+
+Closed
+#696969 #545454 #3f3f3f
+11110
+10002
+10002
+10002
+02222
+
+Wave1 a
+#7f7fff #6666ff #4c4cff
+11110
+10002
+10002
+10002
+02222
+
+Wave2
+#7f7fff #6666ff #4c4cff
+11110
+10002
+10002
+10002
+02222
+
+Wave3
+#7f7fff #6666ff #4c4cff
+11110
+10002
+10002
+10002
+02222
+
+Wave4
+#7f7fff #6666ff #4c4cff
+11110
+10002
+10002
+10002
+02222
+
+Block b
+#5b3b13 #4e3310 #412a0e
+11110
+10002
+10002
+10002
+02222
+
+Button c
+#cb0000 #b10000 #930000
+.....
+.110.
+.102.
+.022.
+.....
+
+Open #
+#696969 #545454 #3f3f3f
+1.1.0
+.0.0.
+1.0.2
+.0.0.
+0.2.2
+
+=======
+LEGEND
+=======
+
+Wave = Wave1 or Wave2 or Wave3 or Wave4
+Waterproof = Wall or Wave or Block or Closed
+Pusher = Block or Player
+
+& = Block and Button
+
+=======
+SOUNDS
+=======
+
+TitleScreen 37335108
+Startlevel 3559508
+Player Destroy 89374908
+Block Move 11575907
+Endlevel 48475708
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Button, Open
+Wall, Player, Wave, Block, Closed
+
+======
+RULES
+======
+(Interaction)
+[> Player|Block] -> [> Player|> Block]
+[> Block|Block] -> [> Block|> Block]
+([> Block|Wave] -> [|Block])
+[Pusher Button] [Open] -> [Pusher Button] [Closed]
+[No Pusher Button] [Closed] -> [No Pusher Button] [Open]
+
+
+(Wave Physics)
+[Wave3] -> [Wave1]
+
+VERTICAL [Waterproof|Wave4|Waterproof] -> [Waterproof|Wave2|Waterproof]
+HORIZONTAL [Waterproof|Wave2|Waterproof] -> [Waterproof|No Wave|Waterproof]
+
+LEFT [Wave1|No Waterproof] -> [Wave1|Wave3]
+RIGHT [Wave1|No Waterproof] -> [Wave1|Wave3]
+UP [Wave1|No Waterproof] -> [Wave1|Wave3]
+DOWN [Wave1|No Waterproof] -> [Wave4|Wave3]
+
+[Wave Open] -> [Wave No Open]
+
+==============
+WINCONDITIONS
+==============
+
+No Wave3
+Some Player
+
+=======
+LEVELS
+=======
+
+message Save yourself from the flood!
+
+message Level 1: Blockage
+xxxxxxx
+x...@.x
+x...b.x
+x.xxxxx
+x.....x
+x....ax
+xxxxxxx
+
+message Level 2: Close the door behind you
+xxxxxxx
+x...b.x
+x...b@x
+xxxxx.x
+xa....x
+x.....x
+xxxxxxx
+
+message Level 3: Barricade
+xxxxxxxxxxxxx
+x...........x
+x.....xxxx..x
+x.....x..x..x
+x...@b..bxx.x
+x.xx.b......x
+x.x.....b...x
+x.x..b....x.x
+x.xx.x.bx.x.x
+x....x......x
+x....x..x.x.x
+xa...x....x.x
+xxxxxxxxxxxxx
+
+message Level 4: Button
+xxxxxxx
+x...xxx
+xcx..@x
+x#xxxxx
+x.x...x
+x...xax
+xxxxxxx
+
+message Level 5: Button or Bust
+xxxxxxxxxxxxxx
+xxxx..xxxxxxxx
+x...b.......xx
+x..b...##...xx
+x...b...#...xx
+xxx...x.#.xxxx
+x.b..xc.x...xx
+x....xb.x.#.xx
+x..@....x##.xx
+x.......x...xx
+xxxxxxxxxx.xxx
+x...x.......xx
+xa....###...xx
+xxxxxxxxxxxxxx
+
+message Level 6: Busted Pipe
+xxxxxxxxxxxxx
+x...........x
+x#xxxxxxxxx.x
+x....b..ccx.x
+x..@bbb..cx.x
+x....b..ccx.x
+xxxxxxxxxxx.x
+x...........x
+x.xxxx.xx.xxx
+x...........x
+xxxxxxxxxxx.x
+xa..........x
+xxxxxxxxxxxxx
+
+message Level 7: Hidden Switch
+xxxxxxxxxxxxx
+x...........x
+x.xxxx#xxxx.x
+x.xxxx#x..x.x
+x.x.b.......x
+x.x....bx&x.x
+x..b....x...x
+x.x.......xxx
+x.xb.@....x.x
+x.x.......x.x
+x.x.xxxxxxx.x
+x.....a.....x
+xxxxxxxxxxxxx
+
+message Level 8: Simpler than it Seems
+xxxxxxxxxxxxx
+x....ax.....x
+x.xxxxx...b.x
+x......b....x
+xxx.bbbbbb.bx
+x...........x
+xb....@...b.x
+x.....b.....x
+x...bbbbb...x
+x...........x
+x..b........x
+x.......b...x
+xxxxxxxxxxxxx
+
+xxxxxxxxxxxxxxxx
+xa....x.x...xxxx
+xx.xx.x.x.xxxxxx
+xx.xx...x...xxxx
+xx.xx.x.x.xxxxxx
+xx.xx.x.....xxxx
+xxxxxxxxxxx.xxxx
+x...x...x.x...xx
+x.xxx.x.x.x.x..x
+x...x.x.x.x.xx.x
+x.xxx.x.x.x.x..x
+x.....x.......xx
+xxxxxxxxxxxxxxxx
+x@..........xxxx
+xxxxxxxxxxxxxxxx
+
+message You win!

@@ -1,0 +1,1625 @@
+title City Founder
+author Xavier Direz
+homepage www.lafaceobscuredupixel.fr
+realtime_interval 1.0
+noundo
+zoomscreen 25x17
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background 
+black
+
+Wall 
+BROWN
+
+Player 
+Blue   
+
+taxflag
+red
+
+taxedFoodFlag
+red
+
+notTaxedFoodFlag
+green
+
+man
+#ffae88 #ff0000 #ffc6aa #264a8c #1f3d74 #d20000
+.551.
+.002.
+54331
+04432
+.4.4.
+
+woman
+#c49343 #f2a52b #ffc6aa #e89e7b #d20000 red
+.111.
+.121.
+34552
+.445.
+44455
+
+man2
+#671082 #c530e3 #d49172 #e6b299 #7c1e9e #b304bf
+.001.
+.223.
+04551
+24453
+.4.4.
+
+woman2
+#e3277e #e6b299 #ab745b #671082 #c530e3
+.000.
+.010.
+23441
+.334.
+33344
+
+man3
+#651082 #c530e3 #d49172 #e6b299 #7c1e5e #b304bf
+.001.
+.223.
+04551
+24453
+.4.4.
+
+woman3
+#e3247e #e6b299 #ab745b #651082 #c530e3
+.000.
+.010.
+23441
+.334.
+33344
+
+guard
+#0046b9 #e6d50c #0085e6 #ffae88 #ffc6aa
+.012.
+.334.
+00222
+30024
+.0.2.
+
+
+
+food
+brown white darkbrown
+.....
+.000.
+10001
+.000.
+.....
+
+gold
+yellow #fffbce orange
+.011.
+00001
+20001
+20000
+.220.
+
+goldFlag
+yellow #fffbce orange
+.011.
+00001
+20001
+20000
+.220.
+
+payFlag
+orange
+
+walletSlot
+red
+
+calamitySlot
+red
+
+calamityPointer
+yellow
+.....
+..0..
+.0.0.
+..0..
+.....
+
+thiefFlag
+green
+
+calamityStockSlot
+red
+
+thief
+black #96ccd6 #f9ddb0
+.0001
+.2201
+00002
+20000
+.0.0.
+
+
+
+
+cursor
+black white
+11.11
+1...1
+.....
+1...1
+11.11
+
+waitup
+black white
+.....
+00000
+0...0
+01110
+.010.
+
+waitdown
+black white
+.010.
+0.1.0
+01110
+00000
+.....
+
+populationLogo
+black darkgrey #ffc6aa
+01110
+11111
+02220
+11111
+11111
+
+countedFlag
+blue
+
+goldLogo
+yellow #fffbce orange black
+30113
+00001
+20001
+20000
+32203
+
+pointedCellFlag
+blue
+
+powerDownFlag
+blue
+
+powerDownWarning
+black #fd4
+...01
+..01.
+..01.
+..1..
+.1...
+
+exploredFlag
+yellow
+0...0
+.0.0.
+.....
+.0.0.
+0...0
+
+exploredLogo
+black #c6bb7b white #dfd28a #a75641
+01230
+13133
+23412
+11313
+01230
+
+
+movedFlag
+blue
+
+evenDayFlag
+blue
+
+evenDaySlot
+red
+
+endMonthSlot
+red
+
+endMonthFlag
+blue
+
+founderEraFlag
+blue
+founderEraSlot
+red
+
+prodDaySlot
+red
+
+prodDayFlag
+blue
+
+founderSlot
+red
+
+productionFlag
+blue
+
+oneBuildingSlot
+red
+
+oneBuildingFlag
+blue
+
+toolDemolish
+#ffaac4 black
+01110
+10101
+11011
+10101
+01110
+
+toolRoad
+#d9e5ff black
+00000
+11111
+01010
+11111
+00000
+
+toolHouse
+black #d9e5ff
+00000
+11111
+11111
+10101
+10111
+
+toolFactory
+black #ffaac4
+01001
+01001
+11111
+10101
+11111
+
+toolBank
+black #ffaac4
+00100
+01010
+11111
+10101
+10101
+
+toolPowerSupply
+black #d9e5ff
+00100
+01110
+01110
+01110
+01110
+
+toolInfo
+black #d9e5ff
+00100
+00000
+01110
+00100
+01110
+
+(population tools)
+toolGuardRecruit
+black #0085e6 #a8cce6 #0046b9
+01120
+31112
+31112
+03110
+00300
+
+
+
+
+toolDismiss
+#ffaac4 black
+01110
+10101
+11011
+10101
+01110
+
+(tax gauge)
+taxSlot
+black
+
+tax
+yellow
+
+donttax
+black
+
+powerSupply
+darkgrey #6a6675 #aea9c1 #e5e1f2 #807023 #37363d #fd4 #c4ab35
+..1..
+.123.
+.456.
+.575.
+.123.
+
+house
+green #ad3222 #f74830 #d8cdab black #fff2ca
+.....
+12222
+33333
+34543
+34555
+
+bank
+green #b45113 #6e391d #fd4 #d8cdab #361c0e #fff2ca
+..1..
+.231.
+22111
+45454
+45656
+
+factory
+green #bea5a1 #e1c4bf #6f615e
+.1..1
+.1..1
+22222
+13232
+11112
+
+lakeSummer
+#3166d9
+
+desertSummer
+#b38555 #76573a
+00010
+10000
+00000
+00100
+00001
+
+fieldSummer
+green
+
+mountainSummer
+white #93A98D green
+22222
+22222
+22022
+21112
+11111
+
+lakeSpring
+#3166d9
+
+desertSpring
+#b38555 #76573a
+00010
+10000
+00000
+00100
+00001
+
+fieldSpring
+#5DA626
+
+mountainSpring
+#5DA626 white #7E853E
+00000
+00000
+00100
+01110
+22222
+
+lakeAutumn
+#5534d9
+
+
+desertAutumn
+#b37754 #76573a
+00010
+10000
+00000
+00100
+00001
+
+fieldAutumn
+#806e12
+
+mountainAutumn
+#806e12 white #a99b93
+00000
+00000
+00100
+02220
+22222
+
+lakeWinter
+#7e96d9
+
+desertWinter
+#b3a698 #998677
+00010
+10000
+00000
+00100
+00001
+
+fieldWinter
+#5c8065 white
+00010
+01000
+00000
+00100
+00000
+
+mountainWinter
+#5c8065 white lightGrey
+00000
+00000
+00100
+01110
+11222
+
+roadIsolated
+#aaabb0 white
+.000.
+00100
+01010
+00100
+.000.
+
+roadLeftRight
+#aaabb0 white
+.....
+00000
+10101
+00000
+.....
+
+roadRight
+#aaabb0 white
+.....
+.0000
+00101
+.0000
+.....
+
+roadLeft
+#aaabb0 white
+.....
+0000.
+10100
+0000.
+.....
+
+
+roadUpDown
+#aaabb0 white
+.010.
+.000.
+.010.
+.000.
+.010.
+
+roadUp
+#aaabb0 white
+.010.
+.000.
+.010.
+.000.
+..0..
+
+roadDown
+#aaabb0 white
+..0..
+.000.
+.010.
+.000.
+.010.
+
+roadUpRight
+#aaabb0 white
+.010.
+.0000
+.0101
+.0000
+.....
+
+roadUpLeft
+#aaabb0 white
+.010.
+0000.
+1010.
+0000.
+.....
+
+roadDownRight
+#aaabb0 white
+.....
+.0000
+.0101
+.0000
+.010.
+
+roadDownLeft
+#aaabb0 white
+.....
+0000.
+1010.
+0000.
+.010.
+
+roadUpLeftRight
+#aaabb0 white
+.010.
+00000
+10101
+00000
+.....
+
+roadDownLeftRight
+#aaabb0 white
+.....
+00000
+10101
+00000
+.010.
+
+roadUpDownRight
+#aaabb0 white
+.010.
+.0000
+.0101
+.0000
+.010.
+
+roadUpDownLeft
+#aaabb0 white
+.010.
+0000.
+1010.
+0000.
+.010.
+
+roadUpDownLeftRight
+#aaabb0 white
+.010.
+00000
+10101
+00000
+.010.
+
+roadupFlag
+blue
+roadDownFlag
+blue
+roadLeftFlag
+blue
+roadRightFlag
+blue
+
+fog1
+lightgrey
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+fog2
+lightgrey grey
+01000
+00010
+10000
+00100
+00001
+
+Year
+black white
+00001
+00010
+00100
+01000
+00000
+
+Month
+black white
+00001
+00010
+00100
+01000
+00000
+
+Day
+black
+
+scrollerRight
+black white
+01000
+01100
+01110
+01100
+01000
+
+scrollerLeft
+black white
+00010
+00110
+01110
+00110
+00010
+
+scrollerUp
+black white
+00000
+00100
+01110
+11111
+00000
+
+scrollerDown
+black white
+00000
+11111
+01110
+00100
+00000
+
+k
+white black
+10001
+10101
+10101
+10001
+11111
+
+1
+white black
+11011
+10011
+11011
+10001
+11111
+2
+white black
+11001
+10001
+10111
+10001
+11111
+3
+white black
+10001
+11001
+11101
+10001
+11111
+4
+white black
+10111
+10101
+10001
+11101
+11111
+5
+white black
+10011
+10001
+11101
+10001
+11111
+6
+white black
+10001
+10011
+10101
+10001
+11111
+7
+white black
+10001
+11101
+11011
+10111
+11111
+8
+white black
+10001
+10001
+10101
+10001
+11111
+9
+white black
+10001
+10101
+11001
+10001
+11111
+0
+white black
+10001
+10101
+10101
+10001
+11111
+
+
+letterT
+white black
+10001
+11011
+11011
+11011
+11111
+
+letterA
+white black
+11001
+10101
+10001
+10101
+11111
+
+letterX
+white black
+10101
+11011
+10101
+10101
+11111
+
+=======
+LEGEND
+=======
+
+. = Background and fog2
+# = Wall
+P = Player and powerSupply
+
+Y = Year and fog2
+M = Month and fog2
+D = Day and fog2
++ = cursor and fog2
+n = scrollerUp and fog2
+> = scrollerRight and fog2
+v = scrollerDown and fog2
+< = scrollerLeft and fog2
+% = scrollerUp and scrollerLeft and fog2
+! = scrollerUp and scrollerRight and fog2
+; = scrollerDown and scrollerLeft and fog2
+: = scrollerDown and scrollerRight and fog2
+w = waitup and fog2
+z = waitdown and fog2
+_ = taxSlot and dontTax and fog2
+- = taxSlot and tax and fog2
+* = walletSlot
+o = 2 and fog2
+b = 0 and fog2
+c = 5 and fog2
+e = 1 and fog2
+h = 6 and fog2
+f = endMonthSlot
+g = prodDaySlot
+s = founderEraFlag and founderEraSlot
+q = oneBuildingSlot
+$ = gold
+j = woman and founderSlot
+i = man and founderSlot
+
+t = letterT and fog2
+a = letterA and fog2
+x = letterX and fog2
+? = evenDaySlot
+
+r = populationLogo and fog2
+u = goldLogo and fog2
+L = exploredLogo and fog2
+
+' = calamityStockSlot and thiefFlag
+, = calamitySlot
+wait = waitup or waitdown
+digit = 0 or 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9 or k
+scroller = scrollerRight or scrollerLeft or scrollerUp or scrollerDown
+
+visibleHud = digit or Year or Month or day or tax or dontTax or taxSlot or letterT or letterA or letterX or populationLogo or goldLogo or exploredLogo
+
+hud = visibleHud or scroller
+
+tool = pointedCellFlag or toolDemolish or toolRoad or toolHouse or toolFactory or toolBank or toolPowerSupply  or toolInfo or toolGuardRecruit or toolDismiss
+landscapeWinter = fieldWinter or mountainWinter or desertWinter or lakeWinter
+landscapeSummer = fieldSummer or mountainSummer or desertSummer or lakeSummer
+landscapeSpring = fieldSpring or mountainSpring or desertSpring or lakeSpring
+landscapeAutumn = fieldAutumn or mountainAutumn or desertAutumn or lakeAutumn
+field = fieldWinter or fieldSummer or fieldSpring or fieldAutumn
+mountain = mountainWinter or mountainSummer or mountainSpring or mountainAutumn
+desert = desertWinter or desertSummer or desertSpring or desertAutumn
+lake = lakeWinter or lakeSummer or lakeSpring or lakeAutumn
+landscape = field or mountain or desert or lake
+
+road = roadIsolated or roadLeftRight or roadRight or roadLeft or roadUpDown or roadUp or roadDown or roadUpRight or roadUpLeft or roadDownRight or roadDownLeft or roadUpLeftRight or roadDownLeftRight or roadUpDownRight or roadUpDownLeft or roadUpDownLeftRight
+
+building = house or powerSupply or road or bank or factory
+
+populationRich = man or woman
+populationPoor =  man2 or woman2
+populationDead =  man3 or woman3
+population = populationRich or populationPoor or populationDead
+
+ressource = population or gold or food
+good = gold or food
+
+
+fog = fog1 or fog2
+blockingConstruction = visibleHud or building or mountain or lake or fog or wall
+blockingFog = mountain or lake or wall
+blockingProduction = building or wall or fog or ressource or desert
+blockingPopulation = building or wall or fog or ressource or lake
+blockingGold = building or wall or fog or ressource
+calamityFlag = thiefFlag
+
+slot = endMonthSlot or  prodDaySlot or founderSlot or founderEraSlot or evenDaySlot or oneBuildingSlot or calamitySlot or walletSlot
+=======
+SOUNDS
+=======
+sfx0 17712106
+sfx1 12277502
+sfx3 39273701
+sfx4 1908909
+sfx5 5062309
+sfx6 4091900
+sfx7 75714701
+sfx8 11345103
+sfx9 35818708
+================
+COLLISIONLAYERS
+================
+
+Background
+
+(slots)
+taxSlot, endMonthSlot, prodDaySlot
+founderSlot
+founderEraSlot
+evenDaySlot
+oneBuildingSlot
+
+
+(invisible flags)
+taxflag, endMonthFlag, prodDayFlag
+taxedFoodFlag
+notTaxedFoodFlag
+founderEraFlag
+productionFlag
+countedFlag
+movedFlag
+powerDownFlag
+evenDayFlag
+roadupFlag
+roadDownFlag
+roadLeftFlag
+roadRightFlag
+pointedCellFlag
+oneBuildingFlag
+exploredFlag
+
+
+Player
+
+(horizontal scrollers)
+scrollerRight, scrollerLeft
+(vertical scrollers)
+scrollerUp, scrollerDown
+landscape
+(constructions)
+building
+
+powerDownWarning
+
+(ressources)
+gold, population, food
+
+(actors)
+guard, thief
+
+fog
+
+(hud)
+Year, Month, Day,digit
+letterT, letterA, letterX, tax, dontTax
+populationLogo, goldLogo, exploredLogo
+
+toolDemolish, toolHouse, toolRoad, toolFactory, toolBank, toolPowerSupply, toolInfo, toolGuardRecruit, toolDismiss
+
+(informations)
+wait
+(cursor)
+cursor, Wall
+(visible flags)
+
+walletSlot
+goldFlag
+payFlag
+
+calamitySlot
+calamityStockSlot
+calamityFlag
+calamityPointer
+
+======
+RULES     
+======     
+
+( Year )
+( hundreds )
+
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][8 | 9|9| Year] -> [Player][3 |0| Day][1 |2| Month][9|k |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][7 | 9|9| Year] -> [Player][3 |0| Day][1 |2| Month][8|k |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][6 | 9|9| Year] -> [Player][3 |0| Day][1 |2| Month][7|k |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][5 | 9|9| Year] -> [Player][3 |0| Day][1 |2| Month][6|k |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][4 | 9|9| Year] -> [Player][3 |0| Day][1 |2| Month][5|k |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][3 | 9|9| Year] -> [Player][3 |0| Day][1 |2| Month][4|k |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][2 | 9|9| Year] -> [Player][3 |0| Day][1 |2| Month][3|k |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][1 | 9|9| Year] -> [Player][3 |0| Day][1 |2| Month][2|k |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][0 | 9|9| Year] -> [Player][3 |0| Day][1 |2| Month][1|k |k | Year]
+
+( tens )
+
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][8 |9| Year] -> [Player][3 |0| Day][1 |2| Month][9 |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][7 |9| Year] -> [Player][3 |0| Day][1 |2| Month][8 |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][6 |9| Year] -> [Player][3 |0| Day][1 |2| Month][7 |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][5 |9| Year] -> [Player][3 |0| Day][1 |2| Month][6 |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][4 |9| Year] -> [Player][3 |0| Day][1 |2| Month][5 |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][3 |9| Year] -> [Player][3 |0| Day][1 |2| Month][4 |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][2 |9| Year] -> [Player][3 |0| Day][1 |2| Month][3 |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][1 |9| Year] -> [Player][3 |0| Day][1 |2| Month][2 |k | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][k |9| Year] -> [Player][3 |0| Day][1 |2| Month][0 |9 | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][0 |9| Year] -> [Player][3 |0| Day][1 |2| Month][1 |k | Year]
+
+( units )
+
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][8 | Year] -> [Player][3 |0| Day][1 |2| Month][9 | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][7 | Year] -> [Player][3 |0| Day][1 |2| Month][8 | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][6 | Year] -> [Player][3 |0| Day][1 |2| Month][7 | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][5 | Year] -> [Player][3 |0| Day][1 |2| Month][6 | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][4 | Year] -> [Player][3 |0| Day][1 |2| Month][5 | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][3 | Year] -> [Player][3 |0| Day][1 |2| Month][4 | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][2 | Year] -> [Player][3 |0| Day][1 |2| Month][3 | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][1 | Year] -> [Player][3 |0| Day][1 |2| Month][2 | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][0 | Year] -> [Player][3 |0| Day][1 |2| Month][1 | Year]
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month][k | Year] -> [Player][3 |0| Day][1 |2| Month][0 | Year]
+
+(month)
+
+
+RIGHT [ stationary Player ][3 |0| Day][1 |2| Month] -> [Player][3 |0| Day][0 |0| Month]
+
+( tens )
+
+RIGHT [ stationary Player ][3 |0| Day][8 |9| Month] -> [Player][3 |0| Day][9 |k | Month]
+RIGHT [ stationary Player ][3 |0| Day][7 |9| Month] -> [Player][3 |0| Day][8 |k | Month]
+RIGHT [ stationary Player ][3 |0| Day][6 |9| Month] -> [Player][3 |0| Day][7 |k | Month]
+RIGHT [ stationary Player ][3 |0| Day][5 |9| Month] -> [Player][3 |0| Day][6 |k | Month]
+RIGHT [ stationary Player ][3 |0| Day][4 |9| Month] -> [Player][3 |0| Day][5 |k | Month]
+RIGHT [ stationary Player ][3 |0| Day][3 |9| Month] -> [Player][3 |0| Day][4 |k | Month]
+RIGHT [ stationary Player ][3 |0| Day][2 |9| Month] -> [Player][3 |0| Day][3 |k | Month]
+RIGHT [ stationary Player ][3 |0| Day][1 |9| Month] -> [Player][3 |0| Day][2 |k | Month]
+RIGHT [ stationary Player ][3 |0| Day][k |9| Month] -> [Player][3 |0| Day][0 |9 | Month]
+RIGHT [ stationary Player ][3 |0| Day][0 |9| Month] -> [Player][3 |0| Day][1 |k | Month]
+
+
+( units )
+
+RIGHT [ stationary Player ][3 |0| Day][8 | Month] -> [Player][3 |0| Day][9 | Month]
+RIGHT [ stationary Player ][3 |0| Day][7 | Month] -> [Player][3 |0| Day][8 | Month]
+RIGHT [ stationary Player ][3 |0| Day][6 | Month] -> [Player][3 |0| Day][7 | Month]
+RIGHT [ stationary Player ][3 |0| Day][5 | Month] -> [Player][3 |0| Day][6 | Month]
+RIGHT [ stationary Player ][3 |0| Day][4 | Month] -> [Player][3 |0| Day][5 | Month]
+RIGHT [ stationary Player ][3 |0| Day][3 | Month] -> [Player][3 |0| Day][4 | Month]
+RIGHT [ stationary Player ][3 |0| Day][2 | Month] -> [Player][3 |0| Day][3 | Month]
+RIGHT [ stationary Player ][3 |0| Day][1 | Month] -> [Player][3 |0| Day][2 | Month]
+RIGHT [ stationary Player ][3 |0| Day][0 | Month] -> [Player][3 |0| Day][1 | Month]
+RIGHT [ stationary Player ][3 |0| Day][k | Month] -> [Player][3 |0| Day][0 | Month]
+
+(day)
+
+
+RIGHT [ stationary Player ][3 |0| Day] -> [Player][0 |0 | Day]
+
+( tens )
+
+RIGHT [ stationary Player ][8 |9| Day] -> [Player][9 |k | Day]
+RIGHT [ stationary Player ][7 |9| Day] -> [Player][8 |k | Day]
+RIGHT [ stationary Player ][6 |9| Day] -> [Player][7 |k | Day]
+RIGHT [ stationary Player ][5 |9| Day] -> [Player][6 |k | Day]
+RIGHT [ stationary Player ][4 |9| Day] -> [Player][5 |k | Day]
+RIGHT [ stationary Player ][3 |9| Day] -> [Player][4 |k | Day]
+RIGHT [ stationary Player ][2 |9| Day] -> [Player][3 |k | Day]
+RIGHT [ stationary Player ][1 |9| Day] -> [Player][2 |k | Day]
+RIGHT [ stationary Player ][k |9| Day] -> [Player][0 |9 | Day]
+RIGHT [ stationary Player ][0 |9| Day] -> [Player][1 |k | Day]
+
+
+( units )
+
+RIGHT [ stationary Player ][8 | Day] -> [Player][9 | Day]
+RIGHT [ stationary Player ][7 | Day] -> [Player][8 | Day]
+RIGHT [ stationary Player ][6 | Day] -> [Player][7 | Day]
+RIGHT [ stationary Player ][5 | Day] -> [Player][6 | Day]
+RIGHT [ stationary Player ][4 | Day] -> [Player][5 | Day]
+RIGHT [ stationary Player ][3 | Day] -> [Player][4 | Day]
+RIGHT [ stationary Player ][2 | Day] -> [Player][3 | Day]
+RIGHT [ stationary Player ][1 | Day] -> [Player][2 | Day]
+RIGHT [ stationary Player ][0 | Day] -> [Player][1 | Day]
+RIGHT [ stationary Player ][k | Day] -> [Player][0 | Day]
+  
+
+( Did we reach the end of the month ? )
+[stationary player][endMonthFlag]->[player][no endMonthFlag]
+[stationary player][3 |0| Day][endMonthSlot]->[player][3 |0| Day][endMonthSlot endMonthFlag] sfx4
+
+( Did we reach a production day ? Production take place on YYYY/MM/05, YYYY/MM/15 and YYYY/MM/25)
+( if we are in winter, there is only 1 production day per month )
+[stationary player][prodDayFlag]->[player][no prodDayFlag]
+right random [stationary player][0|5| Day][prodDaySlot][landscape no landscapeWinter]->[player][0|5| Day][prodDaySlot prodDayFlag][landscape] sfx5
+right random [stationary player][1|5| Day][prodDaySlot]->[player][1|5| Day][prodDaySlot prodDayFlag] sfx5
+right random [stationary player][2|5| Day][prodDaySlot][landscape no landscapeWinter]->[player][2|5| Day][prodDaySlot prodDayFlag][landscape] sfx5
+
+(does the day is even)
+[stationary player][stationary cursor][evenDaySlot evenDayFlag]->[player][cursor][evenDaySlot no evenDayFlag]
+right [stationary player][stationary cursor][0|Day][evenDaySlot]->[player][cursor][0|D][evenDaySlot evenDayFlag]
+right [stationary player][stationary cursor][2|Day][evenDaySlot]->[player][cursor][2|D][evenDaySlot evenDayFlag]
+right [stationary player][stationary cursor][4|Day][evenDaySlot]->[player][cursor][4|D][evenDaySlot evenDayFlag]
+right [stationary player][stationary cursor][6|Day][evenDaySlot]->[player][cursor][6|D][evenDaySlot evenDayFlag]
+right [stationary player][stationary cursor][8|Day][evenDaySlot]->[player][cursor][8|D][evenDaySlot evenDayFlag]
+
+(init)
+ 
+[ no wall no landscape no evenDaySlot no slot] -> [random landscapeSummer]
+
+
+( Init landscape around the first powerSupply so it can't be landlocked )
+[stationary Player][powerSupply|no desert][waitup]->[Player][powerSupply|desertSummer][waitup]
+[stationary Player][powerSupply no desert][waitup]->[Player][powerSupply desertSummer][waitup]
+
+[wait]->[]
+
+
+(change season)
+( winter )
+right [1|2|M|2|1][lake]->[1|2|M|2|1][lakeWinter]
+right [1|2|M|2|1][desert]->[1|2|M|2|1][desertWinter]
+right [1|2|M|2|1][field]->[1|2|M|2|1][fieldWinter]
+right [1|2|M|2|1][mountain]->[1|2|M|2|1][mountainWinter]
+
+( spring )
+right [0|3|M|2|1][lake]->[0|3|M|2|1][lakeSpring]
+right [0|3|M|2|1][desert]->[0|3|M|2|1][desertSpring]
+right [0|3|M|2|1][field]->[0|3|M|2|1][fieldSpring]
+right [0|3|M|2|1][mountain]->[0|3|M|2|1][mountainSpring]
+
+( summer )
+right [0|6|M|2|1][lake]->[0|6|M|2|1][lakeSummer]
+right [0|6|M|2|1][desert]->[0|6|M|2|1][desertSummer]
+right [0|6|M|2|1][field]->[0|6|M|2|1][fieldSummer]
+right [0|6|M|2|1][mountain]->[0|6|M|2|1][mountainSummer]
+
+( autumn )
+right [0|9|M|2|1][lake]->[0|9|M|2|1][lakeAutumn]
+right [0|9|M|2|1][desert]->[0|9|M|2|1][desertAutumn]
+right [0|9|M|2|1][field]->[0|9|M|2|1][fieldAutumn]
+right [0|9|M|2|1][mountain]->[0|9|M|2|1][mountainAutumn]
+
+( add calamity from stock)
+right random [ stationary Player ][ stationary cursor ][0|5|M|0|2|D][calamityStockSlot calamityFlag][calamitySlot no calamityFlag]->[Player ][ cursor ][0|5|M|0|2|D][calamityStockSlot no calamityFlag][calamitySlot calamityFlag]
+
+
+(change calamity)
+[ stationary Player ][ stationary cursor ][calamityPointer]->[Player ][ cursor ][no calamityPointer]
+random [ stationary Player ][ stationary cursor ][calamitySlot]->[Player ][ cursor ][calamitySlot calamityPointer]
+
+(apply calamity)
+random [ stationary Player ][ stationary cursor ][endMonthFlag][calamitySlot calamityPointer thiefFlag][road no guard no thief]->[Player ][ cursor ][endMonthFlag][calamitySlot calamityPointer thiefFlag][road thief]
+
+(Population counting)
+
+[ stationary Player ][Population countedFlag]->[Player][Population no countedFlag]
+RIGHT [ stationary Player ][digit | digit| digit| populationLogo] -> [Player][0|0 |0 | populationLogo]
+
+startloop
+( hundreds )
+RIGHT [ stationary Player ][8 | 9|9| populationLogo] -> [Player][9|k |k | populationLogo]
+RIGHT [ stationary Player ][7 | 9|9| populationLogo] -> [Player][8|k |k | populationLogo]
+RIGHT [ stationary Player ][6 | 9|9| populationLogo] -> [Player][7|k |k | populationLogo]
+RIGHT [ stationary Player ][5 | 9|9| populationLogo] -> [Player][6|k |k | populationLogo]
+RIGHT [ stationary Player ][4 | 9|9| populationLogo] -> [Player][5|k |k | populationLogo]
+RIGHT [ stationary Player ][3 | 9|9| populationLogo] -> [Player][4|k |k | populationLogo]
+RIGHT [ stationary Player ][2 | 9|9| populationLogo] -> [Player][3|k |k | populationLogo]
+RIGHT [ stationary Player ][1 | 9|9| populationLogo] -> [Player][2|k |k | populationLogo]
+RIGHT [ stationary Player ][0 | 9|9| populationLogo] -> [Player][1|k |k | populationLogo]
+
+( tens )
+
+RIGHT [ stationary Player ][8 |9| populationLogo] -> [Player][9 |k | populationLogo]
+RIGHT [ stationary Player ][7 |9| populationLogo] -> [Player][8 |k | populationLogo]
+RIGHT [ stationary Player ][6 |9| populationLogo] -> [Player][7 |k | populationLogo]
+RIGHT [ stationary Player ][5 |9| populationLogo] -> [Player][6 |k | populationLogo]
+RIGHT [ stationary Player ][4 |9| populationLogo] -> [Player][5 |k | populationLogo]
+RIGHT [ stationary Player ][3 |9| populationLogo] -> [Player][4 |k | populationLogo]
+RIGHT [ stationary Player ][2 |9| populationLogo] -> [Player][3 |k | populationLogo]
+RIGHT [ stationary Player ][1 |9| populationLogo] -> [Player][2 |k | populationLogo]
+RIGHT [ stationary Player ][k |9| populationLogo] -> [Player][0 |9 | populationLogo]
+RIGHT [ stationary Player ][0 |9| populationLogo] -> [Player][1 |k | populationLogo]
+
+( units )
+
+RIGHT [ stationary Player ][population no countedFlag][8 | populationLogo] -> [Player][population countedFlag][9 | populationLogo]
+RIGHT [ stationary Player ][population no countedFlag][7 | populationLogo] -> [Player][population countedFlag][8 | populationLogo]
+RIGHT [ stationary Player ][population no countedFlag][6 | populationLogo] -> [Player][population countedFlag][7 | populationLogo]
+RIGHT [ stationary Player ][population no countedFlag][5 | populationLogo] -> [Player][population countedFlag][6 | populationLogo]
+RIGHT [ stationary Player ][population no countedFlag][4 | populationLogo] -> [Player][population countedFlag][5 | populationLogo]
+RIGHT [ stationary Player ][population no countedFlag][3 | populationLogo] -> [Player][population countedFlag][4 | populationLogo]
+RIGHT [ stationary Player ][population no countedFlag][2 | populationLogo] -> [Player][population countedFlag][3 | populationLogo]
+RIGHT [ stationary Player ][population no countedFlag][1 | populationLogo] -> [Player][population countedFlag][2 | populationLogo]
+RIGHT [ stationary Player ][population no countedFlag][0 | populationLogo] -> [Player][population countedFlag][1 | populationLogo]
+RIGHT [ stationary Player ][population no countedFlag][k | populationLogo] -> [Player][population countedFlag][0 | populationLogo]
+endloop
+
+(explored Counting)
+
+startloop
+( tens )
+
+RIGHT [ stationary Player ][8 |9| exploredLogo] -> [Player][9 |k | exploredLogo]
+RIGHT [ stationary Player ][7 |9| exploredLogo] -> [Player][8 |k | exploredLogo]
+RIGHT [ stationary Player ][6 |9| exploredLogo] -> [Player][7 |k | exploredLogo]
+RIGHT [ stationary Player ][5 |9| exploredLogo] -> [Player][6 |k | exploredLogo]
+RIGHT [ stationary Player ][4 |9| exploredLogo] -> [Player][5 |k | exploredLogo]
+RIGHT [ stationary Player ][3 |9| exploredLogo] -> [Player][4 |k | exploredLogo]
+RIGHT [ stationary Player ][2 |9| exploredLogo] -> [Player][3 |k | exploredLogo]
+RIGHT [ stationary Player ][1 |9| exploredLogo] -> [Player][2 |k | exploredLogo]
+RIGHT [ stationary Player ][k |9| exploredLogo] -> [Player][0 |9 | exploredLogo]
+RIGHT [ stationary Player ][0 |9| exploredLogo] -> [Player][1 |k | exploredLogo]
+
+( units )
+
+RIGHT [ stationary Player ][landscape no fog no exploredFlag][8 | exploredLogo] -> [Player][landscape exploredFlag][9 | exploredLogo]
+RIGHT [ stationary Player ][landscape no fog no exploredFlag no wall][7 | exploredLogo] -> [Player][landscape exploredFlag][8 | exploredLogo]
+RIGHT [ stationary Player ][landscape no fog no exploredFlag no wall][6 | exploredLogo] -> [Player][landscape exploredFlag][7 | exploredLogo]
+RIGHT [ stationary Player ][landscape no fog no exploredFlag no wall][5 | exploredLogo] -> [Player][landscape exploredFlag][6 | exploredLogo]
+RIGHT [ stationary Player ][landscape no fog no exploredFlag no wall][4 | exploredLogo] -> [Player][landscape exploredFlag][5 | exploredLogo]
+RIGHT [ stationary Player ][landscape no fog no exploredFlag no wall][3 | exploredLogo] -> [Player][landscape exploredFlag][4 | exploredLogo]
+RIGHT [ stationary Player ][landscape no fog no exploredFlag no wall][2 | exploredLogo] -> [Player][landscape exploredFlag][3 | exploredLogo]
+RIGHT [ stationary Player ][landscape no fog no exploredFlag no wall][1 | exploredLogo] -> [Player][landscape exploredFlag][2 | exploredLogo]
+RIGHT [ stationary Player ][landscape no fog no exploredFlag no wall][0 | exploredLogo] -> [Player][landscape exploredFlag][1 | exploredLogo]
+RIGHT [ stationary Player ][landscape no fog no exploredFlag no wall][k | exploredLogo] -> [Player][landscape exploredFlag][0 | exploredLogo]
+endloop
+
+(consume explored Counter)
+right[ stationary Player ][9 |9 | exploredLogo]->[Player][0 |0 | exploredLogo]
+
+(Gold counting)
+
+[ stationary Player ][gold countedFlag]->[Player][gold no countedFlag]
+RIGHT [ stationary Player ][digit | digit| digit| goldLogo] -> [Player][0|0 |0 | goldLogo]
+
+startloop
+( hundreds )
+RIGHT [ stationary Player ][8 | 9|9| goldLogo] -> [Player][9|k |k | goldLogo]
+RIGHT [ stationary Player ][7 | 9|9| goldLogo] -> [Player][8|k |k | goldLogo]
+RIGHT [ stationary Player ][6 | 9|9| goldLogo] -> [Player][7|k |k | goldLogo]
+RIGHT [ stationary Player ][5 | 9|9| goldLogo] -> [Player][6|k |k | goldLogo]
+RIGHT [ stationary Player ][4 | 9|9| goldLogo] -> [Player][5|k |k | goldLogo]
+RIGHT [ stationary Player ][3 | 9|9| goldLogo] -> [Player][4|k |k | goldLogo]
+RIGHT [ stationary Player ][2 | 9|9| goldLogo] -> [Player][3|k |k | goldLogo]
+RIGHT [ stationary Player ][1 | 9|9| goldLogo] -> [Player][2|k |k | goldLogo]
+RIGHT [ stationary Player ][0 | 9|9| goldLogo] -> [Player][1|k |k | goldLogo]
+
+( tens )
+
+RIGHT [ stationary Player ][8 |9| goldLogo] -> [Player][9 |k | goldLogo]
+RIGHT [ stationary Player ][7 |9| goldLogo] -> [Player][8 |k | goldLogo]
+RIGHT [ stationary Player ][6 |9| goldLogo] -> [Player][7 |k | goldLogo]
+RIGHT [ stationary Player ][5 |9| goldLogo] -> [Player][6 |k | goldLogo]
+RIGHT [ stationary Player ][4 |9| goldLogo] -> [Player][5 |k | goldLogo]
+RIGHT [ stationary Player ][3 |9| goldLogo] -> [Player][4 |k | goldLogo]
+RIGHT [ stationary Player ][2 |9| goldLogo] -> [Player][3 |k | goldLogo]
+RIGHT [ stationary Player ][1 |9| goldLogo] -> [Player][2 |k | goldLogo]
+RIGHT [ stationary Player ][k |9| goldLogo] -> [Player][0 |9 | goldLogo]
+RIGHT [ stationary Player ][0 |9| goldLogo] -> [Player][1 |k | goldLogo]
+
+( units )
+
+RIGHT [ stationary Player ][gold no countedFlag][8 | goldLogo] -> [Player][gold countedFlag][9 | goldLogo]
+RIGHT [ stationary Player ][gold no countedFlag][7 | goldLogo] -> [Player][gold countedFlag][8 | goldLogo]
+RIGHT [ stationary Player ][gold no countedFlag][6 | goldLogo] -> [Player][gold countedFlag][7 | goldLogo]
+RIGHT [ stationary Player ][gold no countedFlag][5 | goldLogo] -> [Player][gold countedFlag][6 | goldLogo]
+RIGHT [ stationary Player ][gold no countedFlag][4 | goldLogo] -> [Player][gold countedFlag][5 | goldLogo]
+RIGHT [ stationary Player ][gold no countedFlag][3 | goldLogo] -> [Player][gold countedFlag][4 | goldLogo]
+RIGHT [ stationary Player ][gold no countedFlag][2 | goldLogo] -> [Player][gold countedFlag][3 | goldLogo]
+RIGHT [ stationary Player ][gold no countedFlag][1 | goldLogo] -> [Player][gold countedFlag][2 | goldLogo]
+RIGHT [ stationary Player ][gold no countedFlag][0 | goldLogo] -> [Player][gold countedFlag][1 | goldLogo]
+RIGHT [ stationary Player ][gold no countedFlag][k | goldLogo] -> [Player][gold countedFlag][0 | goldLogo]
+endloop
+
+( update fog )
+
+[ Stationary player ][ building no powerDownFlag| fog ] -> [Player][building | no fog]
+[ Stationary player ][ no fog blockingFog no wall| fog2 ] -> [Player][ blockingFog| fog1]
+[ Stationary player ][ no fog no blockingFog | fog1 ] -> [Player][ | no fog]
+[ Stationary player ][ no fog no blockingFog | fog2 ] -> [Player][ | fog1 ]
+
+( road display management )
+
+[stationary Player][road]->[Player][roadIsolated no roadupFlag no roadDownFlag no roadLeftFlag no roadRightFlag]
+startLoop
+up[stationary Player][road|road]->[Player][road roadupFlag|road]
+down[stationary Player][road|road]->[Player][road roaddownFlag|road]
+left[stationary Player][road|road]->[Player][road roadleftFlag|road]
+right[stationary Player][road|road]->[Player][road roadrightFlag|road]
+endLoop
+
+[stationary Player][road roadupFlag]->[Player][roadup roadupFlag]
+[stationary Player][road roaddownFlag]->[Player][roaddown roaddownFlag]
+[stationary Player][road roadleftFlag]->[Player][roadleft roadleftFlag]
+[stationary Player][road roadrightFlag]->[Player][roadright roadrightFlag]
+
+[stationary Player][road roadupFlag roaddownFlag]->[Player][roadupdown roadupFlag roaddownFlag]
+[stationary Player][road roadleftFlag roadrightFlag]->[Player][roadleftright roadleftFlag roadrightFlag]
+
+[stationary Player][road roadupFlag roadrightFlag]->[Player][roadupright roadupFlag roadrightFlag]
+[stationary Player][road roadupFlag roadleftFlag]->[Player][roadupleft roadupFlag roadleftFlag]
+
+[stationary Player][road roaddownFlag roadrightFlag]->[Player][roaddownright roaddownFlag roadrightFlag]
+[stationary Player][road roaddownFlag roadleftFlag]->[Player][roaddownleft roaddownFlag roadleftFlag]
+
+[stationary Player][road roadupFlag roadleftFlag roadrightFlag]->[Player][roadupleftright roadupFlag roadleftFlag roadrightFlag]
+[stationary Player][road roaddownFlag roadleftFlag roadrightFlag]->[Player][roadDownLeftRight roaddownFlag roadleftFlag roadrightFlag]
+[stationary Player][road roadupFlag roadDownFlag roadrightFlag]->[Player][roadUpDownRight roadupFlag roadDownFlag roadrightFlag]
+[stationary Player][road roadupFlag roaddownFlag roadleftFlag ]->[Player][roadUpDownLeft roadupFlag roaddownFlag roadleftFlag]
+
+[stationary Player][road roadupFlag roaddownFlag roadleftFlag roadrightFlag ]->[Player][roadUpDownLeftRight roadupFlag roaddownFlag roadleftFlag roadrightFlag]
+
+( manage power supply flags )
+
+[stationary Player][stationary cursor][endMonthFlag][building no powerSupply]->[Player][cursor][endMonthFlag][building powerDownFlag]
+
+startLoop
+[stationary Player][stationary cursor][endMonthFlag][building powerDownFlag|building no powerDownFlag]->[Player][cursor][endMonthFlag][building no powerDownFlag| building no powerDownFlag]
+endLoop
+
+[stationary Player][stationary cursor][evenDaySlot no evenDayFlag][building powerDownFlag powerDownWarning]->[Player][cursor][evenDaySlot no evenDayFlag][building powerDownFlag no powerDownWarning]
+[stationary Player][stationary cursor][evenDaySlot evenDayFlag][building powerDownFlag]->[Player][cursor][evenDaySlot evenDayFlag][building powerDownFlag powerDownWarning]
+
+
+( manage scrolling)
+
+right [> Player][cursor scrollerRight] -> [> Player][> cursor scrollerRight]
+right [> Player][cursor no scrollerRight] -> [ Player][> cursor]
+
+left [> Player][cursor scrollerLeft] -> [> Player][> cursor scrollerLeft]
+left [> Player][cursor no scrollerLeft] -> [ Player][> cursor]
+
+up [> Player][cursor scrollerup] -> [> Player][> cursor scrollerup]
+up [> Player][cursor no scrollerup] -> [ Player][> cursor]
+
+down [> Player][cursor scrollerdown] -> [> Player][> cursor scrollerdown]
+down [> Player][cursor no scrollerdown] -> [ Player][> cursor]
+
+[ >  Player][ hud ] -> [  >  Player] [ > hud  ]     
+[ Moving hud | hud ] -> [ Moving hud | MOVING hud ]
+
+( guard movement)
+[movedFlag]->[no movedFlag]
+startloop
+random [stationary player][stationary cursor][guard no movedFlag|road no guard no thief]->[player][cursor][| guard road movedFlag]
+endloop
+
+(guard attack)
+[movedFlag]->[no movedFlag]
+startloop
+random [stationary player][stationary cursor][guard no movedFlag|thief]->[player][cursor][guard movedFlag|no thief] sfx7
+endloop
+
+( thief movement)
+[movedFlag]->[no movedFlag]
+startloop
+random [stationary player][stationary cursor][thief no movedFlag|road no thief no guard]->[player][cursor][| thief road movedFlag]
+endloop
+
+(thief robbing good)
+[movedFlag]->[no movedFlag]
+startloop
+random [stationary player][stationary cursor][thief no movedFlag|good]->[player][cursor][thief movedFlag|no good] sfx9
+endloop
+
+[stationary player][stationary cursor][guard |thief]->[player][cursor][guard |thief] sfx6
+
+( distribution )
+
+( delete founderEraFlag when reaching the end of the founder Era)
+right random [ Stationary player ][endMonthFlag][1|Y][founderEraFlag][population founderSlot ]->[Player][endMonthFlag][1|Y][no founderEraFlag][population founderSlot ] message The founders are now too busy to help you in your production. From now on, You have to count only on your population.
+
+( Ones we reach the end of the founder Era, the founders can be removed )
+[ Stationary player ][endMonthFlag][founderEraSlot no founderEraFlag ][population founderSlot]->[Player][endMonthFlag][founderEraSlot no founderEraFlag ][no population founderSlot]
+
+
+(reset tax gauge flags)
+[ Stationary player ][stationary cursor][endMonthFlag][taxFlag]->[Player][cursor][endMonthFlag][no taxFlag]
+
+startloop
+( flaging one random food as not taxed if there is a dontTax slot remaining in tax gauge)
+random [stationary Player][stationary cursor][endMonthFlag][donttax no taxFlag][food no taxedFoodFlag no notTaxedFoodFlag]->[Player][cursor][endMonthFlag][donttax taxFlag][food notTaxedFoodFlag]
+
+( flaging one random food as taxed  if there is a tax slot remaining in tax gauge)
+random [stationary Player][stationary cursor][endMonthFlag][tax no taxFlag][food no taxedFoodFlag no notTaxedFoodFlag ]->[Player][cursor][endMonthFlag][tax taxFlag][food taxedFoodFlag]
+
+( every 10 elements, we reset tax gauge)
+right [stationary Player][stationary cursor][endMonthFlag] [taxFlag|taxFlag|taxFlag|taxFlag|taxFlag|taxFlag|taxFlag|taxFlag|taxFlag|taxFlag]->[Player][cursor][endMonthFlag][|||||||||]
+endloop
+
+( now that all food are marked with taxedFoodFlag or notTaxedFoodFlag, we can convert taxed food to gold until there is no more bank space available )
+
+startloop
+random [ Stationary player ][stationary cursor][endMonthFlag][food taxedFoodFlag][bank no powerDownFlag| no blockingGold no gold] ->[Player][cursor][endMonthFlag][no food no taxedFoodFlag][bank| gold]
+endloop
+
+(remove remainging taxedFoodFlag and notTaxedFoodFlag)
+[ Stationary player ][stationary cursor][endMonthFlag][taxedFoodFlag]->[Player][cursor][endMonthFlag][no taxedFoodFlag]
+[ Stationary player ][stationary cursor][endMonthFlag][notTaxedFoodFlag]->[Player][cursor][endMonthFlag][no notTaxedFoodFlag]
+
+( tax have been withdrawn. We can now feed our existing population with remaining food)
+
+( downgrading all population before food distribution )
+[ stationary Player ][stationary cursor][endMonthFlag][Population countedFlag no founderSlot]->[Player][cursor][endMonthFlag][Population no countedFlag]
+startloop
+random [ stationary Player ][stationary cursor][endMonthFlag][PopulationPoor no PopulationDead no countedFlag no founderSlot] -> [Player][cursor][endMonthFlag][random PopulationDead no PopulationPoor countedFlag ]
+random [ stationary Player ][stationary cursor][endMonthFlag][PopulationRich no PopulationPoor no countedFlag no founderSlot] -> [Player][cursor][endMonthFlag][random PopulationPoor no PopulationRich countedFlag]
+endloop
+
+( init countedFlag for all population so we feed each only ones)
+[ stationary Player ][stationary cursor][endMonthFlag][Population countedFlag no founderSlot]->[Player][cursor][endMonthFlag][Population no countedFlag]
+
+( feeding existing potentially dead population )
+startloop
+	( promote populationDead to populationPoor using one food )
+	random [ Stationary player ][stationary cursor][endMonthFlag][food][donttax no taxFlag][populationDead no populationPoor no countedFlag no founderSlot]->[Player][cursor][endMonthFlag][no food][donttax taxFlag][random populationPoor no populationDead countedFlag]
+endLoop
+
+(if there are some food remaining, we can use it to create new population)
+startLoop
+	random [ Stationary player ][stationary cursor][endMonthFlag][food][house no powerDownFlag| no blockingPopulation no population]->[Player][cursor][endMonthFlag][no food][house| random populationPoor countedFlag]
+endLoop
+
+( feeding existing potentially poor population )
+[ stationary Player ][stationary cursor][endMonthFlag][Population countedFlag no founderSlot]->[Player][cursor][endMonthFlag][Population no countedFlag]
+startloop
+	( promote populationPoor to populationRich using one food )
+	random [ Stationary player ][stationary cursor][endMonthFlag][food][donttax no taxFlag][populationPoor no populationRich no countedFlag no founderSlot]->[Player][cursor][endMonthFlag][no food][donttax taxFlag][random populationRich no populationPoor countedFlag]
+endLoop
+
+(freeing remaining food)
+[ Stationary player ][stationary cursor][endMonthFlag][food]->[Player][cursor][endMonthFlag][no food]
+
+(freeing remainging dead population)
+[ stationary Player ][PopulationDead]->[Player][no PopulationDead no countedFlag]
+
+( production )
+
+[ Stationary player ][stationary cursor][prodDayFlag][productionFlag]->[Player][cursor][prodDayFlag][no productionFlag]
+
+( for a factory to produce, you need 1 available population ) 
+startloop
+random [ Stationary player ][stationary cursor][prodDayFlag][factory no powerDownFlag no productionFlag | no blockingProduction][population no productionFlag]->[Player][cursor][prodDayFlag][factory productionFlag| food][population productionFlag]
+endloop
+
+( tutorial )
+[stationary Player][stationary cursor][oneBuildingSlot ][factory|field no building]->[Player][cursor][oneBuildingSlot oneBuildingFlag][factory|field]
+[stationary Player][stationary cursor][oneBuildingSlot ][factory|mountain no building]->[Player][cursor][oneBuildingSlot oneBuildingFlag][factory|mountain]
+[stationary Player][stationary cursor][oneBuildingSlot ][factory|lake no building]->[Player][cursor][oneBuildingSlot oneBuildingFlag][factory|lake]
+right [stationary Player][stationary cursor][0|5|0|Y|0|7|M|0|1][oneBuildingSlot no oneBuildingFlag]->[Player][cursor][0|5|0|Y|0|7|M|0|1][oneBuildingSlot] message To produce food, you need a factory near a field, a mountain or a lake.
+[stationary Player][stationary cursor][oneBuildingSlot oneBuildingFlag]->[Player][cursor][oneBuildingSlot no oneBuildingFlag]
+
+right random [stationary Player][stationary cursor][0|5|0|Y|0|8|M|0|1][building powerDownFlag]->[Player][cursor][0|5|0|Y|0|8|M|0|1][building powerDownFlag] message To be up and running, a building must be connected to a Power Plant directly or indirectly. It take effect next month.
+
+[stationary Player][stationary cursor][oneBuildingSlot ][house|field no building]->[Player][cursor][oneBuildingSlot oneBuildingFlag][house|field]
+[stationary Player][stationary cursor][oneBuildingSlot ][house|mountain no building]->[Player][cursor][oneBuildingSlot oneBuildingFlag][house|mountain]
+[stationary Player][stationary cursor][oneBuildingSlot ][house|desert no building]->[Player][cursor][oneBuildingSlot oneBuildingFlag][house|desert]
+right [stationary Player][stationary cursor][0|5|0|Y|0|9|M|0|1][oneBuildingSlot no oneBuildingFlag]->[Player][cursor][0|5|0|Y|0|9|M|0|1][oneBuildingSlot] message Build some houses near a mountain, a field or a desert. Without any population, there will be nobody to work in your factories
+[stationary Player][stationary cursor][oneBuildingSlot oneBuildingFlag]->[Player][cursor][oneBuildingSlot no oneBuildingFlag]
+
+[stationary Player][stationary cursor][oneBuildingSlot ][bank|  no building]->[Player][cursor][oneBuildingSlot oneBuildingFlag][bank|]
+right [stationary Player][stationary cursor][0|5|0|Y|1|0|M|0|1][oneBuildingSlot no oneBuildingFlag]->[Player][cursor][0|5|0|Y|1|0|M|0|1][oneBuildingSlot] message Build some banks to collect tax on the production
+[stationary Player][stationary cursor][oneBuildingSlot oneBuildingFlag]->[Player][cursor][oneBuildingSlot no oneBuildingFlag]
+
+right [stationary Player][stationary cursor][0|5|0|Y|1|1|M|0|1]->[Player][cursor][0|5|0|Y|1|1|M|0|1] message Adjusting tax rate allow you to strike a balance between gold and population.
+
+( on player Action, update wallet to prepare paiement)
+[ Action player ][walletSlot goldFlag]->[Action Player][walletSlot no goldFlag]
+[ Action player ][gold no goldFlag]->[ Action player ][gold goldFlag]
+
+[ Action player ][walletSlot no goldFlag][gold goldFlag]->[Action Player][walletSlot goldFlag][gold no goldFlag]
+ 
+[ Action player ][gold goldFlag]->[ Action player ][gold no goldFlag]
+
+( Changing tax gauge )
+
+(reduce tax)
+right [Action Player][cursor tax no tool|tax] -> [Player][cursor tax|donttax] sfx0
+startloop
+right[donttax|tax]->[donttax|donttax]
+endloop
+
+(raise tax)
+left [Action Player][cursor donttax no tool] -> [Player][cursor tax] sfx0
+startloop
+left[tax|donttax]->[tax|tax]
+endloop
+
+(selecting current tool)
+
+(Contextual Menu)
+
+
+right [Action Player][no tool| no tool | cursor no population no guard no thief no visibleHud no tool no fog| no tool| no tool ]->[Action Player][toolPowerSupply|toolFactory| cursor pointedCellFlag|  toolBank  |toolInfo ]
+down [Action Player][no tool | cursor no population no visibleHud pointedCellFlag no fog| no tool| no tool ]->[Player][toolHouse| cursor pointedCellFlag|  toolRoad | toolDemolish ]
+
+right [Action Player][no tool | cursor population no visibleHud no tool no fog | no tool ]->[Action Player][toolGuardRecruit| cursor population pointedCellFlag|  toolGuardRecruit ]
+down [Action Player][no tool | cursor population no visibleHud pointedCellFlag no fog| no tool| no tool ]->[Player][toolGuardRecruit| cursor population pointedCellFlag|  toolGuardRecruit | toolDismiss ]
+
+(delete contextual Menu when leaving it)
+[ > cursor | no tool][tool]->[> cursor|][no tool]
+[Action Player][cursor pointedCellFlag][tool]->[Player][cursor no pointedCellFlag][no tool]
+
+( adding an house)
+[Action Player][pointedCellFlag no blockingConstruction][cursor toolHouse][wall|goldFlag no payFlag|goldFlag no payFlag] ->  [Player][cursor no pointedCellFlag House powerDownFlag no ressource][toolHouse][wall|goldFlag payFlag|goldFlag payFlag] sfx3
+
+( adding a road)
+random [Action Player][pointedCellFlag no blockingConstruction][cursor toolRoad][wall|goldFlag no payFlag] ->  [Player][cursor no pointedCellFlag roadIsolated powerDownFlag no ressource][ toolroad ][wall|goldFlag payFlag] sfx3
+
+( adding a bridge)
+random [Action Player][pointedCellFlag lake no fog][cursor toolRoad][wall|goldFlag no payFlag|goldFlag no payFlag] ->  [Player][cursor no pointedCellFlag roadIsolated powerDownFlag lake no ressource][ toolroad][wall|goldFlag payFlag|goldFlag payFlag] sfx3
+
+( adding a bank)
+random [Action Player][pointedCellFlag no blockingConstruction][cursor toolBank][wall|goldFlag no payFlag|goldFlag no payFlag|goldFlag no payFlag] ->  [Player][cursor no pointedCellFlag bank powerDownFlag no ressource][ toolBank][wall|goldFlag payFlag|goldFlag payFlag|goldFlag payFlag] sfx3
+
+( adding a factory)
+random [Action Player][pointedCellFlag no blockingConstruction][cursor toolFactory][wall|goldFlag no payFlag|goldFlag no payFlag|goldFlag no payFlag] ->  [Player][cursor no pointedCellFlag factory powerDownFlag no ressource][ toolFactory][wall|goldFlag payFlag|goldFlag payFlag|goldFlag payFlag] sfx3
+
+( adding a powerSupply)
+random [Action Player][pointedCellFlag no blockingConstruction][cursor toolpowerSupply][wall|goldFlag no payFlag|goldFlag no payFlag|goldFlag no payFlag|goldFlag no payFlag|goldFlag no payFlag|goldFlag no payFlag|goldFlag no payFlag|goldFlag no payFlag|goldFlag no payFlag|goldFlag no payFlag] ->  [Player][cursor no pointedCellFlag powerSupply no powerDownFlag no ressource][ toolpowerSupply][wall|goldFlag payFlag|goldFlag payFlag|goldFlag payFlag|goldFlag payFlag|goldFlag payFlag|goldFlag payFlag|goldFlag payFlag|goldFlag payFlag|goldFlag payFlag|goldFlag payFlag] sfx3
+
+( delete a building)
+random [Action Player][pointedCellFlag building][cursor toolDemolish][wall|goldFlag no payFlag] ->  [Player][cursor no pointedCellFlag no building no powerDownFlag no ressource no powerDownWarning][ toolDemolish][wall|goldFlag payFlag] sfx1
+
+
+(recruiting a guard)
+random [Action Player][pointedCellFlag population][cursor toolGuardRecruit road no guard][wall|goldFlag no payFlag|goldFlag no payFlag] ->  [Player][cursor no pointedCellFlag no population][guard toolGuardRecruit road][wall|goldFlag payFlag|goldFlag payFlag] sfx8
+
+( delete a population)
+random [Action Player][pointedCellFlag population][cursor toolDismiss][wall|goldFlag no payFlag] ->  [Player][cursor no pointedCellFlag no population][ toolDismiss][wall|goldFlag payFlag] sfx1
+
+( infos)
+[Action Player][pointedCellFlag mountain no building no fog2 no wall][cursor toolInfo] ->  [Player][cursor no pointedCellFlag mountain][ toolInfo] message It's a mountain. You can't construct any building here
+
+[Action Player][pointedCellFlag lake no building no fog2 no wall][cursor toolInfo] ->  [Player][cursor no pointedCellFlag lake][ toolInfo] message It's a lake. You can build a bridge for 2 golds using the Road tool
+
+[Action Player][pointedCellFlag desert no building no fog2 no wall][cursor toolInfo] ->  [Player][cursor no pointedCellFlag desert][ toolInfo] message It's a desert. You can't produce any food here
+
+[Action Player][pointedCellFlag field no building no fog2 no wall][cursor toolInfo] ->  [Player][cursor no pointedCellFlag field][ toolInfo] message It's a field: a fertile ground for food production
+
+[Action Player][pointedCellFlag fog2][cursor toolInfo] ->  [Player][cursor no pointedCellFlag fog2][ toolInfo] message You didn't discover this area yet
+
+[Action Player][pointedCellFlag powerSupply no fog][cursor toolInfo] ->  [Player][cursor no pointedCellFlag powerSupply][ toolInfo] message It's a Power Plant. Link all your buildings to it or they will not work
+
+[Action Player][pointedCellFlag house no fog][cursor toolInfo] ->  [Player][cursor no pointedCellFlag house][ toolInfo] message An house where your people can live
+
+[Action Player][pointedCellFlag factory no fog][cursor toolInfo] ->  [Player][cursor no pointedCellFlag factory][ toolInfo] message A factory: it produce food on each condiguous area but not on deserts
+
+[Action Player][pointedCellFlag bank no fog][cursor toolInfo] ->  [Player][cursor no pointedCellFlag bank][ toolInfo] message It's a bank. Each bank can store up to 3 golds
+
+[Action Player][pointedCellFlag road no fog no lake][cursor toolInfo] ->  [Player][cursor no pointedCellFlag road][ toolInfo] message It's a road.
+
+[Action Player][pointedCellFlag road no fog lake][cursor toolInfo] ->  [Player][cursor no pointedCellFlag road lake][ toolInfo] message It's a bridge.
+
+[Action Player][cursor thief]->[Player][cursor thief] message it's a thief !
+(Pay current Action)
+startLoop
+random [payFlag][gold]->[no payFlag][no gold]
+endLoop
+
+(delete contextual Menu when cursor not on any tool)
+[ cursor no tool][tool]->[ cursor][no tool]
+
+(convert buildings)
+(TODO)
+
+(checkpoint)
+(I will decide later if I make a checkpoint every mounth or every year)
+([1|2|Month][3|0|Day] ->CHECKPOINT)
+[3|0|Day] ->CHECKPOINT
+
+==============
+WINCONDITIONS
+==============
+no population
+
+=======     
+LEVELS
+=======
+
+(Screen template)
+(
+%nnnnnnnnnnnnnnnnnnnnnnn!
+<obcbYbhMbeD........bbbr>
+<.......................>
+<.......................>
+<.......................>
+<.......................>
+<...........+...........>
+<.......................>
+<...........P...........>
+<.......................>
+<.......................>
+<.......................>
+<.......................>
+<.......................>
+<.......................>
+<tax---_______......bbbu>
+;vvvvvvvvvvvvvvvvvvvvvvv:
+)
+
+
+message In the years 20xx...
+message After a mysterious worldwide epidemic, the human leaders leaved the Earth to seek refuge in an orbital station.
+message On Earth, Humanity has almost been decimated.
+message You are one of the few people immune from the Virus.
+message Your mission is to found some kind of new civilization.
+message Good Luck...
+#####################################################################################################
+#...................................................................................................#
+#...................................................................................................#
+#...................................................................................................#
+#...................................................................................................#
+#...................................................................................................#
+#...................................................................................................#
+#.....................................%nnnnnnnnnnnnnnnnnnnnnnn!.....................................#
+#.....................................<obcbYbhMbeD........bbbr>.....................................#
+#.....................................<.......................>.....................................#
+#.....................................<.......................>.....................................#
+#.....................................<............w..........>.....................................#
+#.....................................<............z..........>.....................................#
+#.....................................<...........+...........>.....................................#
+#.....................................<.......................>.....................................#
+#.....................................<...........P...........>.....................................#
+#.....................................<.......................>.....................................#
+#.....................................<.......................>.....................................#
+#.....................................<.......................>.....................................#
+#.....................................<.......................>.....................................#
+#.....................................<.......................>.....................................#
+#.....................................<.......................>.....................................#
+#.....................................<tax---_______......bbbu>.....................................#
+#.....................................;vvvvvvvvvvvvvvvvvvvvvvv:.....................................#
+#..........................................................bbL......................................#
+#...................................................................................................#
+#...................................................................................................#
+#...................................................................................................#
+#...................................................................................................#
+#...................................................................................................#
+#####################################################################################################
+#?fgsq$$$$$$$$$$$$$$$$$$$$$$$$$##,,,,,,,,,,#'''''###############################jijijijijijijijijiji#
+#####################################################################################################
+#*************************###########################################################################
+#####################################################################################################
+
+message Your city has been deserted
+message Game Over
+

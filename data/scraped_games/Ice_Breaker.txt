@@ -1,0 +1,180 @@
+title Ice Breaker
+author Aarex
+homepage sites.google.com/site/aarexnumbers
+again_interval 0
+run_rules_on_level_start  (make the random walk begin)
+========
+OBJECTS
+========
+
+Background
+Lightblue
+
+Water
+Lightblue
+
+Player
+grey white
+.111.
+.101.
+01110
+.000.
+.0.0.
+
+Player2
+grey white
+.....
+.....
+.111.
+.101.
+01110
+
+Player3
+white
+.....
+.....
+.....
+.....
+.000.
+
+Finish
+black orange red
+01220
+01220
+01000
+01000
+01000
+
+Ice1
+Blue Darkblue
+01000
+01001
+00110
+00100
+01000
+
+Ice2
+Darkblue Black
+01000
+01001
+00110
+00100
+01000
+
+Ice3
+Black
+00000
+00000
+00000
+00000
+00000
+
+Ice4
+Black #3F3F3F
+00000
+01110
+01110
+01110
+00000
+
+Ice5
+Black #3F3F3F Grey
+00000
+01110
+01210
+01110
+00000
+
+Ice6
+#3F3F3F Grey Grey
+00000
+01110
+01210
+01110
+00000
+
+Placer
+white
+.....
+.0.0.
+..0..
+.0.0.
+.....
+ma
+red
+.....
+..0..
+.0.0.
+..0..
+.....
+=======
+LEGEND
+=======
+
+Ice = Ice1 or Ice2 or Ice3 or Ice4 or Ice5 or Ice6
+# = Water
+F = Finish
+Q = Placer and Ice1
+M = Player and Ice1
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Water
+Ice, Finish
+Player, Player2, Player3
+Placer
+ma
+======
+RULES
+======
+[ma] -> []
+random [Placer no ma|ice5 no player] -> [|Placer ice6 ma] again 
++ random [Placer no ma|ice4 no player] -> [|Placer ice5 ma] again 
++ random [Placer no ma|ice3 no player] -> [|Placer ice4 ma] again 
++ random [Placer no ma|ice2 no player] -> [|Placer ice3 ma] again 
++ random [Placer no ma|ice1 no player] -> [|Placer ice2 ma] again
++ random [Placer no ma|no ice no player] -> [|Placer Ice1 ma] again
+
+[> Player Ice1|] [finish] -> [ Water|Player][finish]
+[> Player Ice2|] [finish] -> [Ice1|Player] [finish]
+[> Player Ice3|] [finish] -> [Ice2|Player] [finish]
+[> Player Ice4|] [finish] -> [Ice3|Player] [finish]
+[> Player Ice5|] [finish] -> [Ice4|Player] [finish]
+[> Player Ice6|] [finish] -> [Ice5|Player] [finish]
+late [Player3] -> restart
+late [Player2] -> [Player3]
+late [Player no ice no finish] -> [Player2]
+late [placer no ma] -> [finish]
+==============
+WINCONDITIONS
+==============
+
+some player on finish
+
+no ice
+
+=======
+LEVELS
+=======
+
+MQ#############
+###############
+###############
+###############
+###############
+###############
+###############
+###############
+###############
+###############
+###############
+###############
+###############
+###############
+###############

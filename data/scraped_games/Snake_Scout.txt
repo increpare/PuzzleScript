@@ -1,0 +1,197 @@
+Author Connorses
+Title Snake Scout
+require_player_movement
+background_color darkbrown
+========
+OBJECTS
+========
+background
+black
+player
+blue
+.000.
+00000
+0.0.0
+00000
+.000.
+bodyU
+darkblue
+00000
+00.00
+00000
+00000
+.000.
+bodyD
+darkblue
+.000.
+00000
+00000
+00.00
+00000
+bodyL
+darkblue
+0000.
+00000
+0.000
+00000
+0000.
+bodyR
+darkblue
+.0000
+00000
+000.0
+00000
+.0000
+tailU
+blue
+00000
+00000
+00000
+.000.
+..0..
+tailD
+blue
+..0..
+.000.
+00000
+00000
+00000
+tailL
+blue
+000..
+0000.
+00000
+0000.
+000..
+tailR
+blue
+..000
+.0000
+00000
+.0000
+..000
+wall
+lightgrey
+fall
+transparent
+grow
+lightgreen green
+..0..
+.101.
+00000
+.101.
+..0..
+shrink
+lightred red
+.....
+11111
+00000
+11111
+.....
+=======
+LEGEND
+=======
+. = background
+# = wall
+p = player
+u = bodyu
+d = bodyd
+l = bodyl
+r = bodyr
+1 = tailu
+2 = taild
+3 = taill
+4 = tailr
++ = grow
+- = shrink
+body = bodyU or bodyD or bodyL or bodyR
+tail = tailU or tailD or tailL or tailR
+snake = player or body or tail
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+background
+player, wall
+body, tail
+fall
+grow,shrink
+======
+RULES
+======
+
+[snake fall] -> [down snake down fall]
+
+[> player no fall|body] -> cancel
+[> player no fall|tail] -> cancel
+[> player no fall|wall] -> cancel
+(add body when player moves)
+[up    player no fall] -> [up    player bodyU]
+[down  player no fall] -> [down  player bodyD]
+[left  player no fall] -> [left  player bodyL]
+[right player no fall] -> [right player bodyR]
+(make tail move toward rear body)
+[moving player no fall] [tailU] -> [moving player] [up    tailU]
+[moving player no fall] [tailD] -> [moving player] [down  tailD]
+[moving player no fall] [tailL] -> [moving player] [left  tailL]
+[moving player no fall] [tailR] -> [moving player] [right tailR]
+
+[> player|grow] [moving tail] -> [> player|   ] [stationary tail]
+[> player|shrink] [moving tail] -> [> player|   ] [moving tail shrink]
+[> tail shrink] -> [> tail > shrink]
+
+[> tail no fall|bodyU] -> [   |tailU]
+[> tail no fall|bodyD] -> [   |tailD]
+[> tail no fall|bodyL] -> [   |tailL]
+[> tail no fall|bodyR] -> [   |tailR]
+
+(tail moves forward an extra time if you're shrinking)
+
+late up    [tailU shrink|bodyU] -> [   |tailU]
+late down  [tailD shrink|bodyU] -> [   |tailU]
+late left  [tailL shrink|bodyU] -> [   |tailU]
+late right [tailR shrink|bodyU] -> [   |tailU]
+
+late up    [tailU shrink|bodyD] -> [   |tailD]
+late down  [tailD shrink|bodyD] -> [   |tailD]
+late left  [tailL shrink|bodyD] -> [   |tailD]
+late right [tailR shrink|bodyD] -> [   |tailD]
+
+late up    [tailU shrink|bodyL] -> [   |tailL]
+late down  [tailD shrink|bodyL] -> [   |tailL]
+late left  [tailL shrink|bodyL] -> [   |tailL]
+late right [tailR shrink|bodyL] -> [   |tailL]
+
+late up    [tailU shrink|bodyR] -> [   |tailR]
+late down  [tailD shrink|bodyR] -> [   |tailR]
+late left  [tailL shrink|bodyR] -> [   |tailR]
+late right [tailR shrink|bodyR] -> [   |tailR]
+
+(check for any pieces that are above a wall, if none, fall)
+
+late [fall] -> [   ]
+late down [snake|no wall] -> [snake fall|   ]
+late [snake fall|snake no fall] -> [snake|snake]
+late [snake fall] -> [snake fall] again
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+#########
+#.....--#
+#.....--#
+#.......#
+##.....##
+.#.....##
+.#...++##
+.#.#.++##
+.#.....#.
+.#plll3#.
+.#######.

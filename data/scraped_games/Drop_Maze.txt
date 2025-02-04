@@ -1,0 +1,434 @@
+title Drop Maze
+author Guy Walker
+homepage www.cr31.co.uk
+
+flickscreen 11x11
+again_interval 0.2
+
+========
+OBJECTS
+========
+
+Background
+#474
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall0
+#852 #630 #a74
+20001
+00000
+00000
+00000
+11111
+
+Wall1
+#852 #630 #a74
+20002
+20000
+20000
+20000
+20001
+
+Wall2
+#852 #630 #a74
+22222
+00000
+00000
+00000
+20001
+
+Wall3
+#852 #630 #a74
+20001
+00001
+00001
+00001
+10001
+
+Wall4
+#852 #630 #a74
+22222
+00000
+00000
+00000
+11111
+
+Wall5
+#852 #630 #a74
+20001
+20001
+20001
+20001
+20001
+
+Wall6
+#852 #630 #a74
+22220
+20001
+20001
+20001
+20001
+
+Wall7
+#852 #630 #a74
+22220
+00001
+00001
+00001
+11111
+
+Wall8
+#852 #630 #a74
+20001
+20001
+20001
+20001
+01111
+
+Wall9
+#852 #630 #a74
+22222
+20000
+20000
+20000
+01111
+
+WallNW
+#852 #630 #a74
+22222
+20000
+20000
+20000
+20001
+
+WallNE
+#852 #630 #a74
+22220
+00001
+00001
+00001
+10001
+
+WallSE
+#852 #630 #a74
+20001
+00001
+00001
+00001
+11111
+
+WallSW
+#852 #630 #a74
+20001
+20000
+20000
+20000
+01111
+
+Block
+#852 #630 #a74
+22220
+20001
+20001
+20001
+01111
+
+BallD
+#c22 #d99
+.000.
+01000
+00000
+00000
+.000.
+
+BallL
+#c22 #d99
+.000.
+01000
+00000
+00000
+.000.
+
+BallU
+#c22 #d99
+.000.
+01000
+00000
+00000
+.000.
+
+BallR
+#c22 #d99
+.000.
+01000
+00000
+00000
+.000.
+
+Player
+#852
+.....
+.....
+..0..
+.....
+.....
+
+Mark
+blue
+.....
+.....
+..0..
+.....
+.....
+
+MarkL
+blue
+.....
+.....
+0....
+.....
+.....
+
+MarkR
+blue
+.....
+.....
+....0
+.....
+.....
+
+Wait
+#c22
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+0 = Wall0
+1 = Wall1
+2 = Wall2
+3 = Wall3
+4 = Wall4
+5 = Wall5
+6 = Wall6
+7 = Wall7
+8 = Wall8
+9 = Wall9
+h = WallNW
+i = WallNE
+j = WallSE
+k = WallSW
+P = WallSE and Player
+B = Block
+X = Target
+D = BallD
+L = BallL
+U = BallU
+R = BallR
+
+Wall = Wall0 or Wall1 or Wall2 or Wall3 or Wall4 or Wall5 or Wall6 or Wall7 or Wall8 or Wall9 or WallNW or WallNE or WallSE or WallSW or Block
+Ball = BallU or BallL or BallD or BallR
+Marks = MarkL or MarkR or Mark
+Obj = Wall or Ball
+
+=======
+SOUNDS
+=======
+
+SFX0 27574503
+SFX1 56952107
+SFX2 47307906
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BallD, BallL, BallU, BallR, Wall0, Wall1, Wall2, Wall3, Wall4, Wall5, Wall6, Wall7, Wall8, Wall9, WallNW, WallNE, WallSE, WallSW, Block
+Player, Target
+MarkL, MarkR, Mark, Wait
+
+======
+RULES
+======
+
+(cancel input)
+[ VERTICAL  Player ] -> CANCEL
+[ >  Player ]  [ Wait ] -> CANCEL
+
+(move player and so correctly flick screen)
+[ RIGHT Player WallNE ] -> [ UP    Player WallNE MarkR ] (above)
+[ LEFT  Player WallNE ] -> [ RIGHT Player WallNE MarkL ] (below)
+[ LEFT  Player WallSE ] -> [ DOWN  Player WallSE MarkL ]
+[ LEFT  Player WallSW ] -> [ LEFT  Player WallSW MarkL ]
+[ LEFT  Player WallNW ] -> [ UP    Player WallNW MarkL ]
+[ RIGHT Player WallSE ] -> [ RIGHT Player WallSE MarkR ]
+[ RIGHT Player WallNW ] -> [ LEFT  Player WallNW MarkR ]
+[ RIGHT Player WallSW ] -> [ DOWN  Player WallSW MarkR ]
+
+(cycle balls right or left)
+[ MarkR ] [BallD NO Mark] [BallL NO Mark] [BallU NO Mark] [BallR NO Mark] -> [ MarkR ] [BallR Mark] [BallD Mark] [BallL Mark] [BallU Mark] 
+[ MarkL ] [BallD NO Mark] [BallL NO Mark] [BallU NO Mark] [BallR NO Mark] -> [ MarkL ] [BallL Mark] [BallU Mark] [BallR Mark] [BallD Mark]
+
+(cremove marks)
+[Marks] -> [ ] 
+
+(ball drop)
+DOWN  [ BallD | NO Obj ] -> [ > BallD  > Wait |  ]  again
+LEFT  [ BallL |  ] -> [ > BallL |  ]
+UP    [ BallU |  ] -> [ > BallU |  ]
+RIGHT [ BallR |  ] -> [ > BallR |  ]
+
+(ball hit)
+DOWN  [ BallD Wait | Wall ] -> [ BallD | Wall ]  SFX1
+DOWN  [ BallD Wait | Ball ] -> [ BallD | Ball ]  (SFX2)
+
+==============
+WINCONDITIONS
+==============
+
+All Ball on Target
+
+=======
+LEVELS
+=======
+
+Message 1/5 turn and drop
+
+h444244444ih444244424i
+5X..5.....55...5...5X5
+147.8.947.55...8...8.5
+5.........55.........5
+5...947.6.5147...6.943
+5.......5.55.....5...5
+147.....8.55.6...8.6.5
+5.........55.5.....5.5
+5...6.947.55.8.947.8.5
+5...5....D55L........5
+k444044444Pk444444444j
+h444444444ih444442444i
+5........R55U....5...5
+5.6.947.6.55.947.8...5
+5.5.....5.55.........5
+5.8.6...8.55.6.....943
+5...5.....55.5.......5
+147.8...9435.8.947...5
+5.........55.........5
+5.6...6...55.947.6.943
+5X5...5...55.....5..X5
+k404440444jk444440444j
+
+Message 2/5 too easy?
+
+h444424444ih442442444i
+5....5....55..8..8...5
+5..94j..9435.........5
+5.........517....6.6.5
+17.947..6X55.....5.5.5
+5.......k435L.h7.8.k43
+5....6....517.8......5
+17...k7...55.........5
+5.........517...h7.6.5
+5..6.D6.6.55....5X.5.5
+k440440404Pk444404404j
+h424424444ih424244244i
+5.5.X5....55.8.8U.8..5
+5.8.9j...935.........5
+5.........55...9i...93
+5......6.935....8....5
+14i.6.9j.R514i.......5
+5.5.5.....55X8..947.93
+5.8.8....935.........5
+5.........5147..h47..5
+5...6..6..55....5....5
+k444044044jk444404444j
+
+Message 3/5 open spaces
+
+h442442444ih444444244i
+5..8..8...55......8..5
+5.......B.55.B.B.....5
+17.B......55......B.93
+5...B....935..6..B...5
+5........X55..8L.....5
+5.B..D...935........93
+5...97....55.........5
+5.B.......517......B.5
+5.......6.55...6X6...5
+k444444404Pk444040444j
+h444242444ih424444444i
+5...8X8...55.8.......5
+5.B......935.......B.5
+5.........55....97...5
+17........517...U..B.5
+5.....R6..55X........5
+5...B..8..517....B...5
+17.B......55......B.93
+5.....B.B.55.B.......5
+5..6......55...6..6..5
+k440444444jk444044044j
+
+Message 4/5 double trouble
+
+h444244444ih444244424i
+5...5.....55...5XX.5.5
+147.8.947.55...8...8.5
+5.........55L........5
+5X..947.6.5147...6.943
+5X......5.55.....5...5
+147.....8.55.6...8.6.5
+5.........55.5.....5.5
+5...6.947.55.8.947.8.5
+5..D5....D55L........5
+k444044444Pk444444444j
+h444444444ih444442444i
+5........R55U....5U..5
+5.6.947.6.55.947.8...5
+5.5.....5.55.........5
+5.8.6...8.55.6.....943
+5...5.....55.5......X5
+147.8...9435.8.947..X5
+5........R55.........5
+5.6...6...55.947.6.943
+5.5.XX5...55.....5...5
+k404440444jk444440444j
+
+Message 5/5 multi ball
+
+h442442444ih444444244i
+5D.8..8.D.55XXXXXX8LL5
+5D......B.55.BLB.....5
+17.BD.....55......B.93
+5X..B....935..6..BL..5
+5X........55..8L.....5
+5XB..D..B.55........93
+5XD.97....55.........5
+5XB.......517..B...BL5
+5X......6.55.....6...5
+k444444404Pk444440444j
+h444244444ih424444444i
+5...8.....55.8......X5
+5RB...B..935.......BX5
+5.........55....97.UX5
+17........55.B..U..BX5
+5.....R6..55........X5
+5..RB..8..517....B..X5
+17.B......55.....UB.93
+5.....BRB.55.B......U5
+5RR6XXXXXX55.U.6..6.U5
+k440444444jk444044044j
+
+Message All done!

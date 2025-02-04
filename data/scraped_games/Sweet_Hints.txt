@@ -1,0 +1,633 @@
+title Sweet Hints
+author Marcos Donnantuoni
+homepage https://marcosd.itch.io
+
+noaction
+key_repeat_interval 0.11
+
+========
+OBJECTS
+========
+
+Background
+blue
+00000
+00000
+00000
+00000
+00000
+
+border
+blue
+00000
+00000
+00000
+00000
+00000
+
+wall
+darkgreen
+00000
+00000
+00000
+00000
+00000
+
+lineL
+white
+00000
+00000
+00000
+00000
+00000
+
+lineR
+white
+00000
+00000
+00000
+00000
+00000
+
+lineD
+white
+00000
+00000
+00000
+00000
+00000
+
+lineU
+white
+00000
+00000
+00000
+00000
+00000
+
+playerS
+white
+.000.
+00000
+00000
+00000
+.000.
+
+playerR
+white
+0000.
+00000
+00000
+00000
+0000.
+
+playerL
+white
+.0000
+00000
+00000
+00000
+.0000
+
+playerU
+white
+.000.
+00000
+00000
+00000
+00000
+
+playerD
+white
+00000
+00000
+00000
+00000
+.000.
+
+targetU
+grey
+.000.
+00000
+00000
+00000
+00000
+
+targetR
+grey
+0000.
+00000
+00000
+00000
+0000.
+
+targetL
+grey
+.0000
+00000
+00000
+00000
+.0000
+
+targetD
+grey
+00000
+00000
+00000
+00000
+.000.
+
+space
+grey
+00000
+00000
+00000
+00000
+00000
+
+dot
+#222222 grey
+.....
+..00.
+.000.
+.00..
+.....
+
+sq1
+#222222
+.....
+.000.
+.000.
+.000.
+.....
+
+sq2
+white
+.....
+.000.
+.000.
+.000.
+.....
+
+sq3
+lightgreen
+.....
+.000.
+.000.
+.000.
+.....
+
+st1
+#222222
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+st2
+white
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+st3
+lightgreen
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+sqmark
+transparent
+
+amark
+transparent
+
+bmark
+transparent
+
+cmark
+transparent
+
+dmark
+transparent
+
+emark
+transparent
+
+fmark
+transparent
+
+error
+red
+00000
+0...0
+0...0
+0...0
+00000
+
+endmark
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = wall
+b = border
+
+p = playerS
+q = playerS and space
+
+u = targetU
+r = targetR
+d = targetD
+l = targetL
+
+s = space
+h = dot
+i = dot and space
+target = targetU or targetD or targetL or targetR
+line = lineL or lineR or lineU or lineD
+player = playerS or playerL or playerR or playerU or playerD
+sep = wall or border or line or player
+1 = sq1
+2 = sq2
+3 = sq3
+square = sq1 or sq2 or sq3
+* = st1
+& = st2
+% = st3
+st1comp = st1 or sq1
+st2comp = st2 or sq2
+st3comp = st3 or sq3
+stmark = amark or bmark or cmark or dmark or emark or fmark
+floor = space or target
+
+=======
+SOUNDS
+=======
+
+endlevel 50433303
+sfx0 44622304
+
+================
+COLLISIONLAYERS
+================
+
+Background
+wall, border
+space, target
+sq1, sq2, sq3
+st1, st2, st3
+dot
+player, line, lineL, lineR, lineU, lineD
+sqmark
+amark
+bmark
+cmark
+dmark
+emark
+fmark
+error
+endmark
+
+======
+RULES
+======
+
+
+[ error ] -> [ ]
+
+(direct movement)
+right [ right player | floor ] -> [ lineR no floor | player floor ]
+left  [ left  player | floor ] -> [ lineL no floor | player floor ]
+up    [ up    player | floor ] -> [ lineU no floor | player floor ]
+down  [ down  player | floor ] -> [ lineD no floor | player floor ]
+(reverse movement)
+right [ right player floor | lineL ] -> [ no player floor | player space ]
+left  [ left  player floor | lineR ] -> [ no player floor | player space ]
+up    [ up    player floor | lineD ] -> [ no player floor | player space ]
+down  [ down  player floor | lineU ] -> [ no player floor | player space ]
+
+[ player | lineL ] -> [ playerL | lineL ]
+[ player | lineR ] -> [ playerR | lineR ]
+[ player | lineU ] -> [ playerU | lineU ]
+[ player | lineD ] -> [ playerD | lineD ]
+
+[ > player | no space ] -> cancel
+
+(line end marker)
+
+[ endmark ] -> [ ]
+[ player target ] -> [ player target endmark ]
+[ endmark | no endmark ] -> [ endmark | endmark ]
+
+(dot rules)
+
+[ dot endmark no line ] -> [ dot error ]
+
+
+(colored square rules)
+
+(white squares)
+[ sqmark ] -> [ ]
+[ sq1 ] -> [ sq1 sqmark ]
+[ sqmark | no sep no sqmark ] -> [ sqmark | sqmark ]
+[ square no sq1 endmark sqmark ] -> [ square endmark sqmark error ]
+
+(black squares)
+[ sqmark ] -> [ ]
+[ sq2 ] -> [ sq2 sqmark ]
+[ sqmark | no sep no sqmark ] -> [ sqmark | sqmark ]
+[ square no sq2 endmark sqmark ] -> [ square endmark sqmark error ]
+
+(green squares)
+[ sqmark ] -> [ ]
+[ sq3 ] -> [ sq3 sqmark ]
+[ sqmark | no sep no sqmark ] -> [ sqmark | sqmark ]
+[ square no sq3 endmark sqmark ] -> [ square endmark sqmark error ]
+
+
+(star rules)
+(work for up to six star-group-objects per level)
+
+(white stars)
+[ amark ] -> [ ]
+[ bmark ] -> [ ]
+[ cmark ] -> [ ]
+[ dmark ] -> [ ]
+[ emark ] -> [ ]
+[ fmark ] -> [ ]
+random [ st1comp no stmark ] -> [ st1comp amark ]
+random [ st1comp no stmark ] -> [ st1comp bmark ]
+random [ st1comp no stmark ] -> [ st1comp cmark ]
+random [ st1comp no stmark ] -> [ st1comp dmark ]
+random [ st1comp no stmark ] -> [ st1comp emark ]
+random [ st1comp no stmark ] -> [ st1comp fmark ]
+
+[ amark | no sep no amark ] -> [ amark | amark ]
+[ bmark | no sep no bmark ] -> [ bmark | bmark ]
+[ cmark | no sep no cmark ] -> [ cmark | cmark ]
+[ dmark | no sep no dmark ] -> [ dmark | dmark ]
+[ emark | no sep no emark ] -> [ emark | emark ]
+[ fmark | no sep no fmark ] -> [ fmark | fmark ]
+
+[ endmark st1 amark bmark cmark ] -> [ st1 error ]
+[ endmark st1 amark bmark dmark ] -> [ st1 error ]
+[ endmark st1 amark bmark emark ] -> [ st1 error ]
+[ endmark st1 amark bmark fmark ] -> [ st1 error ]
+[ endmark st1 amark cmark dmark ] -> [ st1 error ]
+[ endmark st1 amark cmark fmark ] -> [ st1 error ]
+[ endmark st1 amark dmark emark ] -> [ st1 error ]
+[ endmark st1 amark dmark fmark ] -> [ st1 error ]
+[ endmark st1 amark emark fmark ] -> [ st1 error ]
+[ endmark st1 bmark cmark dmark ] -> [ st1 error ]
+[ endmark st1 bmark cmark emark ] -> [ st1 error ]
+[ endmark st1 bmark cmark fmark ] -> [ st1 error ]
+[ endmark st1 bmark dmark emark ] -> [ st1 error ]
+[ endmark st1 bmark dmark fmark ] -> [ st1 error ]
+[ endmark st1 bmark emark fmark ] -> [ st1 error ]
+[ endmark st1 cmark dmark emark ] -> [ st1 error ]
+[ endmark st1 cmark dmark fmark ] -> [ st1 error ]
+[ endmark st1 cmark emark fmark ] -> [ st1 error ]
+[ endmark st1 dmark emark fmark ] -> [ st1 error ]
+
+[ endmark st1    amark no bmark no cmark no dmark no emark no fmark ] -> [ st1 error ]
+[ endmark st1 no amark    bmark no cmark no dmark no emark no fmark ] -> [ st1 error ]
+[ endmark st1 no amark no bmark    cmark no dmark no emark no fmark ] -> [ st1 error ]
+[ endmark st1 no amark no bmark no cmark    dmark no emark no fmark ] -> [ st1 error ]
+[ endmark st1 no amark no bmark no cmark no dmark    emark no fmark ] -> [ st1 error ]
+[ endmark st1 no amark no bmark no cmark no dmark no emark    fmark ] -> [ st1 error ]
+
+
+(black star)
+[ amark ] -> [ ]
+[ bmark ] -> [ ]
+[ cmark ] -> [ ]
+[ dmark ] -> [ ]
+[ emark ] -> [ ]
+[ fmark ] -> [ ]
+random [ st2comp no stmark ] -> [ st2comp amark ]
+random [ st2comp no stmark ] -> [ st2comp bmark ]
+random [ st2comp no stmark ] -> [ st2comp cmark ]
+random [ st2comp no stmark ] -> [ st2comp dmark ]
+random [ st2comp no stmark ] -> [ st2comp emark ]
+random [ st2comp no stmark ] -> [ st2comp fmark ]
+
+[ amark | no sep no amark ] -> [ amark | amark ]
+[ bmark | no sep no bmark ] -> [ bmark | bmark ]
+[ cmark | no sep no cmark ] -> [ cmark | cmark ]
+[ dmark | no sep no dmark ] -> [ dmark | dmark ]
+[ emark | no sep no emark ] -> [ emark | emark ]
+[ fmark | no sep no fmark ] -> [ fmark | fmark ]
+
+[ endmark st2 amark bmark cmark ] -> [ st2 error ]
+[ endmark st2 amark bmark dmark ] -> [ st2 error ]
+[ endmark st2 amark bmark emark ] -> [ st2 error ]
+[ endmark st2 amark bmark fmark ] -> [ st2 error ]
+[ endmark st2 amark cmark dmark ] -> [ st2 error ]
+[ endmark st2 amark cmark fmark ] -> [ st2 error ]
+[ endmark st2 amark dmark emark ] -> [ st2 error ]
+[ endmark st2 amark dmark fmark ] -> [ st2 error ]
+[ endmark st2 amark emark fmark ] -> [ st2 error ]
+[ endmark st2 bmark cmark dmark ] -> [ st2 error ]
+[ endmark st2 bmark cmark emark ] -> [ st2 error ]
+[ endmark st2 bmark cmark fmark ] -> [ st2 error ]
+[ endmark st2 bmark dmark emark ] -> [ st2 error ]
+[ endmark st2 bmark dmark fmark ] -> [ st2 error ]
+[ endmark st2 bmark emark fmark ] -> [ st2 error ]
+[ endmark st2 cmark dmark emark ] -> [ st2 error ]
+[ endmark st2 cmark dmark fmark ] -> [ st2 error ]
+[ endmark st2 cmark emark fmark ] -> [ st2 error ]
+[ endmark st2 dmark emark fmark ] -> [ st2 error ]
+
+[ endmark st2    amark no bmark no cmark no dmark no emark no fmark ] -> [ st2 error ]
+[ endmark st2 no amark    bmark no cmark no dmark no emark no fmark ] -> [ st2 error ]
+[ endmark st2 no amark no bmark    cmark no dmark no emark no fmark ] -> [ st2 error ]
+[ endmark st2 no amark no bmark no cmark    dmark no emark no fmark ] -> [ st2 error ]
+[ endmark st2 no amark no bmark no cmark no dmark    emark no fmark ] -> [ st2 error ]
+[ endmark st2 no amark no bmark no cmark no dmark no emark    fmark ] -> [ st2 error ]
+
+(green star)
+[ amark ] -> [ ]
+[ bmark ] -> [ ]
+[ cmark ] -> [ ]
+[ dmark ] -> [ ]
+[ emark ] -> [ ]
+[ fmark ] -> [ ]
+random [ st3comp no stmark ] -> [ st3comp amark ]
+random [ st3comp no stmark ] -> [ st3comp bmark ]
+random [ st3comp no stmark ] -> [ st3comp cmark ]
+random [ st3comp no stmark ] -> [ st3comp dmark ]
+random [ st3comp no stmark ] -> [ st3comp emark ]
+random [ st3comp no stmark ] -> [ st3comp fmark ]
+
+[ amark | no sep no amark ] -> [ amark | amark ]
+[ bmark | no sep no bmark ] -> [ bmark | bmark ]
+[ cmark | no sep no cmark ] -> [ cmark | cmark ]
+[ dmark | no sep no dmark ] -> [ dmark | dmark ]
+[ emark | no sep no emark ] -> [ emark | emark ]
+[ fmark | no sep no fmark ] -> [ fmark | fmark ]
+
+[ endmark st3 amark bmark cmark ] -> [ st3 error ]
+[ endmark st3 amark bmark dmark ] -> [ st3 error ]
+[ endmark st3 amark bmark emark ] -> [ st3 error ]
+[ endmark st3 amark bmark fmark ] -> [ st3 error ]
+[ endmark st3 amark cmark dmark ] -> [ st3 error ]
+[ endmark st3 amark cmark fmark ] -> [ st3 error ]
+[ endmark st3 amark dmark emark ] -> [ st3 error ]
+[ endmark st3 amark dmark fmark ] -> [ st3 error ]
+[ endmark st3 amark emark fmark ] -> [ st3 error ]
+[ endmark st3 bmark cmark dmark ] -> [ st3 error ]
+[ endmark st3 bmark cmark emark ] -> [ st3 error ]
+[ endmark st3 bmark cmark fmark ] -> [ st3 error ]
+[ endmark st3 bmark dmark emark ] -> [ st3 error ]
+[ endmark st3 bmark dmark fmark ] -> [ st3 error ]
+[ endmark st3 bmark emark fmark ] -> [ st3 error ]
+[ endmark st3 cmark dmark emark ] -> [ st3 error ]
+[ endmark st3 cmark dmark fmark ] -> [ st3 error ]
+[ endmark st3 cmark emark fmark ] -> [ st3 error ]
+[ endmark st3 dmark emark fmark ] -> [ st3 error ]
+
+[ endmark st3    amark no bmark no cmark no dmark no emark no fmark ] -> [ st3 error ]
+[ endmark st3 no amark    bmark no cmark no dmark no emark no fmark ] -> [ st3 error ]
+[ endmark st3 no amark no bmark    cmark no dmark no emark no fmark ] -> [ st3 error ]
+[ endmark st3 no amark no bmark no cmark    dmark no emark no fmark ] -> [ st3 error ]
+[ endmark st3 no amark no bmark no cmark no dmark    emark no fmark ] -> [ st3 error ]
+[ endmark st3 no amark no bmark no cmark no dmark no emark    fmark ] -> [ st3 error ]
+
+
+[ error ] -> sfx0
+
+
+==============
+WINCONDITIONS
+==============
+all player on target
+no error
+
+=======
+LEVELS
+=======
+
+
+message Life is easy without decisions
+
+#########
+#.......#
+#.......#
+#.......#
+#.qsssr.#
+#.......#
+#.......#
+#.......#
+#########
+
+
+message But then you must take the wheel
+
+#########
+#.......#
+#.lssss.#
+#.....s.#
+#.....s.#
+#.....s.#
+#.....q.#
+#.......#
+#########
+
+
+message And learn to find the correct path
+
+###########
+#.....u...#
+#.sss.sss.#
+#.s.s...s.#
+#.s.s.sss.#
+#...s.s.s.#
+#.sssss.s.#
+#.s.....s.#
+#.q.sssss.#
+#.........#
+###########
+
+
+message Sometimes you must cover your mistakes
+
+###########
+#.........#
+#.sisssssr#
+#.s...s.s.#
+#.sssis.s.#
+#...s.s.s.#
+#.sis.s.s.#
+#.s.s.s.s.#
+#.qssisss.#
+#.........#
+###########
+
+
+message Other times you may cause controversy and division
+
+###########
+#bbbbbbbbb#
+#bsssssssb#
+#bs2s.s1sb#
+#bsssssssr#
+#bs1s2s1sb#
+#bsssssssb#
+#bs1s.s2sb#
+#bqssssssb#
+#bbbbbbbbb#
+###########
+
+
+message They tell you each person has their perfect life partner
+
+#############
+#bbbbbbbbbub#
+#bsssssssssb#
+#bs.s.s*s.sb#
+#bsssssssssb#
+#bs.s.s*s.sb#
+#bsssssssssb#
+#bs.s&s*s.sb#
+#bsssssssssb#
+#bs&s&s&s*sb#
+#bqssssssssb#
+#bbbbbbbbbbb#
+#############
+
+
+message Sometimes finding them can be a complex task
+
+#############
+#bbbbbbbbbub#
+#bsssssssssb#
+#bs.s.s&s.sb#
+#bissssssssb#
+#bs.s2s.s*sb#
+#bsssssisssb#
+#bs.s.s1s.sb#
+#bsssssssssb#
+#bs.s1s.s2sb#
+#bqssssssssb#
+#bbbbbbbbbbb#
+#############
+
+message But when you do, life is sweeter
+message Because you are a winner
+
+
+
+
+
+
+
+

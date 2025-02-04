@@ -1,0 +1,303 @@
+title Escape the Void Full 
+(Solve Puzzles. Escape while you can.)
+author Croubble
+homepage www.puzzlescript.net
+background_color darkblue
+verbose_logging
+run_rules_on_level_start
+========
+OBJECTS
+========
+
+Background
+#050505
+
+
+Target
+Red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+White White White White Red
+.000.
+.141.
+22222
+.333.
+.3.3.
+
+Crate2 
+Orange
+00000
+0...0
+0.0.0
+0...0
+00000
+
+Crate1
+Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Water
+#FAFAFA
+
+
+
+=======
+LEGEND
+=======
+Cratey = Crate1 or Crate2
+
+. = Background
+# = Water
+P = Player
+O = Target
+y = Crate1
+x = Crate1 and Target
+w = Wall
+s = Crate2
+t = Crate2 and Target
+a = Crate1 and Target
+b = Crate2 and Target
+=======
+SOUNDS
+=======
+
+Cratey MOVE 36772507
+EndLevel 41533300
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate1, Crate2, Water
+
+======
+RULES
+======
+
+[ < Player | Crate1 ] -> [ < Player | < Crate1] (2: Players pull pull crates)
+[ > Player | Crate2] -> [ > Player | > Crate2] (3: Players can push push crates)
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Cratey
+=======
+LEVELS
+=======
+
+message Push
+#######
+####..#
+#.....#
+#.....#
+##.####
+##s####
+##p####
+##o####
+#######
+
+message Pull
+#######
+#..####
+#..####
+#..####
+##..o.#
+#...y##
+#.#p###
+#...###
+#######
+
+
+message Act 1 - Edge of Nowhere
+
+message 1/15 - Fresh Breeze
+
+#######
+#...###
+#.t.###
+##s.o.#
+##.p#.#
+###...#
+#######
+
+
+
+message 2/15 - Infinity Corridor
+
+######
+##..##
+##.o.#
+##p.##
+##yy##
+##..##
+#.o.##
+#...##
+######
+
+message 3/15 - Storm Drain
+
+#########
+######..#
+###.....#
+#...#...#
+#..soo###
+#...s.###
+####p####
+#########
+
+
+message 4/15 - Storage Void
+##########
+####..####
+####..####
+##....####
+##o#o##..#
+#........#
+#....#yy.#
+######p..#
+##########
+
+message [5-6]/15 - David Skinner Microban 1 Remix
+######
+######
+#.o###
+#..###
+#tp..#
+#..s.#
+#..###
+######
+
+######
+#..###
+#.o###
+#.p###
+#x...#
+#..y.#
+#..###
+######
+
+message 7/15 - Overwrought Loop 
+
+##########
+#####....#
+#...ooo..#
+#.#.sss.##
+#.###.####
+#.p...####
+##########
+
+message 8/15 - Alien Key
+########
+###..###
+###..###
+###.yo.#
+#.o...p#
+###y.###
+###..###
+########
+
+
+message Act 2 - Escape The Void
+
+message 9/15 - Pit Stop
+######
+##..##
+#.o..#
+#.xs.#
+##.p##
+######
+
+message 10/15 - Silent Maze
+
+########
+###ox###
+###...##
+#ps...x#
+##x...##
+###x####
+########
+
+
+message 11/15 - Mystery Box
+
+#######
+#.py.##
+#.#ooy#
+#.soo##
+#...y##
+#######
+
+
+
+message 12/15 - Chromatic Foundry
+
+#######
+##..###
+##.o.##
+##.####
+#..p..#
+#.stx.#
+#.....#
+####..#
+#######
+
+
+
+message 13/15 - Flickering Hallway
+
+######
+###..#
+#.y..#
+#.oso#
+###.##
+##.p##
+##..##
+##..##
+######
+
+message 14/15 - Abstract Train
+
+######
+##o###
+##.###
+##..##
+##..##
+##.s.#
+##...#
+##b###
+##p###
+##a###
+######
+
+message FINALE/FINALE - Last Stop 
+
+########
+####x###
+###.px##
+##x.sx##
+###..o.#
+##...#.#
+##.#.#.#
+#y.o...#
+########
+
+message Victory! Thank you for playing escape the void.

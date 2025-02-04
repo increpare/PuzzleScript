@@ -1,0 +1,336 @@
+title Sokubunny and the colored Boxes
+author Lucas Boedeker
+homepage www.l-boe.de
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+RedTarget
+black Red
+.....
+.000.
+.010.
+.000.
+.....
+
+BlueTarget
+black Blue
+.....
+.000.
+.010.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+White Orange White Blue
+.0.0.
+.0.0.
+.000.
+23332
+.3.3.
+
+RedCrate
+Red
+00000
+0...0
+0...0
+0...0
+00000
+
+BlueCrate
+Blue
+00000
+0...0
+0...0
+0...0
+00000
+
+
+
+=======
+LEGEND
+=======
+
+Crate = RedCrate or BlueCrate
+Target = RedTarget or BlueTarget
+
+. = Background
+# = Wall
+P = Player
+R = RedCrate
+B = BlueCrate
+N = BlueTarget
+@ = RedCrate and BlueTarget
+T = RedTarget
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+==============
+WINCONDITIONS
+==============
+
+All RedTarget on RedCrate
+All BlueTarget on BlueCrate
+
+=======
+LEVELS
+=======
+
+message 1 
+(16 - minimal and nice 9/10)
+
+######
+#....#
+#.NRT#
+#p.B##
+##..##
+######
+
+message 2
+(05 - stashaway1)
+
+########
+###.t..#
+###.p#.#
+#..rb..#
+#.#..###
+#..n.###
+########
+
+message 3
+(07 - veryclose single spot 1)
+
+########
+####t..#
+#..#...#
+#.p#..##
+#.@.b.##
+#..#..##
+########
+
+message 4
+(20 - stashaway and many steps turnaround)
+
+######
+##.T##
+##R..#
+##.N.#
+#..B.#
+#P..##
+######
+
+message 5
+(24 - (3) stashaway on correct target)
+
+#######
+#.T..T#
+#.R.#.#
+#N.R..#
+##B.###
+##P####
+#######
+
+message this are my 5 levels
+message now follow: the levels that did not make it
+
+message 09 - stashaway2
+
+#########
+#####.P.#
+#...#.#.#
+#.N.R...#
+#..B.####
+###T.####
+#########
+
+message 11 - stashaway3
+
+#######
+###N..#
+#PR...#
+#...###
+##B.T##
+##...##
+#######
+
+message 18 - stashaway4
+
+#######
+###T..#
+#...BN#
+#..#.##
+##PR..#
+#.....#
+#######
+message 00 - keller
+
+######
+#..###
+#rn###
+#tbp.#
+#....#
+######
+
+message 03 - telefon
+
+########
+###..###
+#....###
+#.#..###
+#..rb###
+###.pnt#
+###..###
+########
+
+message 04 - banane
+
+#######
+##n.p.#
+#tbr..#
+#..####
+#..####
+#######
+#######
+
+message 06 - balls
+
+#########
+##...n.##
+#...##.##
+#.prtb..#
+#...##..#
+#########
+
+message 12 - corridor
+
+######
+#....#
+#.PB.#
+#.R..#
+###N##
+###T##
+
+message 15 - smallTwist
+
+#######
+##....#
+##.B..#
+#.RP#N#
+#..T###
+#######
+
+
+message 17 - gready
+
+..NP#
+.R.B.
+.#.T.
+...#.
+###.#
+
+message 19 - okay
+
+#N..#
+..TB#
+#....
+#P.R.
+#..##
+
+message 21-  (3) there is only one way
+
+....P
+.B.RT
+.T.R#
+##N.#
+
+message 22 - (3) only spot
+
+N#...
+P..#R
+.RB.T
+...T.
+##.##
+
+message 23 - (3) step by step
+
+##.N#
+T.#.#
+...R.
+.BR.T
+#.P..
+
+message 10 - looks hard but is easy + many steps
+
+#######
+#TN...#
+#...R.#
+##.#B.#
+##P..##
+#######
+
+message 14 - looks easy and is easy2
+
+######
+#..###
+#.R.N#
+#T.B.#
+#P..##
+######
+
+message 13 - looks easy and is easy1
+
+#######
+#...###
+#.BR..#
+#NTP..#
+#######
+
+message 08 - looks hard but is easy
+
+####.#
+#P#.#.
+.....#
+.BRT..
+..#..#
+N..##.
+
+
+
+

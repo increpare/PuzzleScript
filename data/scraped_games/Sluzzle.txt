@@ -1,0 +1,389 @@
+title Sluzzle
+author Hannes Petri
+(homepage)
+noaction
+
+========
+OBJECTS
+========
+
+Background 
+BLACK  
+
+Player 
+BLACK
+
+
+One
+BLUE RED
+00000
+00000
+00100
+00000
+00000
+
+Two
+BLUE RED
+00000
+01000
+00000
+00010
+00000
+
+Three
+BLUE RED
+00000
+01000
+00100
+00010
+00000
+
+Four
+BLUE RED
+00000
+01010
+00000
+01010
+00000
+
+Five
+BLUE RED
+00000
+01010
+00100
+01010
+00000
+
+Six
+BLUE RED
+00000
+01010
+01010
+01010
+00000
+
+Seven
+BLUE RED
+00000
+01010
+01110
+01010
+00000
+
+Eight
+BLUE RED
+00000
+01110
+01010
+01110
+00000
+
+OneM
+TRANSPARENT
+
+FourM
+TRANSPARENT
+
+SevenM
+TRANSPARENT
+
+Deleter
+TRANSPARENT
+
+=======
+LEGEND
+=======
+
+. = Background
+1 = One
+2 = Two
+3 = Three
+4 = Four
+5 = Five
+6 = Six
+7 = Seven
+8 = Eight
+@ = Player
+Tile = One OR Two OR Three OR Four OR Five OR Six OR Seven OR Eight
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Tile, OneM, FourM, SevenM, Deleter
+
+======
+RULES
+======     
+
+[ < Player | Tile ] -> [ Tile | Player ]
+RIGHT [ One | Two | Three ] -> [ OneM | Two | Three ]
+RIGHT [ Four | Five | Six ] -> [ FourM | Five | Six ]
+RIGHT [ Seven | Eight | Player ] -> [ SevenM | Eight | Player ]
+DOWN [ OneM | FourM | SevenM ] -> [ Deleter | Deleter | Deleter ]
+[ Deleter | ... | Tile ] -> [ Deleter | ... |] 
+[ OneM ] -> [ One ]
+[ FourM ] -> [ Four ]
+[ SevenM ] -> [ Seven ]
+
+==============
+WINCONDITIONS
+==============
+
+NO Tile
+
+=======     
+LEVELS
+=======
+
+MESSAGE Level 1
+2@3
+146
+758
+
+MESSAGE Level 2
+23@
+148
+765
+
+MESSAGE Level 3
+385
+217
+4@6
+
+MESSAGE Level 4
+@51
+837
+426
+
+MESSAGE Level 5
+@61
+387
+542
+
+MESSAGE Level 6
+172
+384
+56@
+
+MESSAGE Level 7
+@81
+324
+567
+
+MESSAGE Level 8
+712
+48@
+356
+
+MESSAGE Level 9
+148
+@75
+326
+
+MESSAGE Level 10
+@85
+463
+721
+
+MESSAGE Level 11
+461
+7@2
+835
+
+MESSAGE Level 12
+546
+732
+18@
+
+MESSAGE Level 13
+574
+813
+62@
+
+MESSAGE Level 14
+536
+74@
+812
+
+MESSAGE Level 15
+248
+71@
+563
+
+MESSAGE Level 16
+134
+@56
+278
+
+MESSAGE Level 17
+642
+35@
+187
+
+MESSAGE Level 18
+286
+@75
+341
+
+MESSAGE Level 19
+15@
+728
+346
+
+MESSAGE Level 20
+@73
+862
+451
+
+MESSAGE Level 21
+762
+5@8
+341
+
+MESSAGE Level 22
+635
+@27
+418
+
+MESSAGE Level 23
+823
+145
+7@6
+
+MESSAGE Level 24
+613
+485
+@72
+
+MESSAGE Level 25
+687
+143
+@52
+
+MESSAGE Level 26
+76@
+513
+248
+
+MESSAGE Level 27
+256
+743
+81@
+
+MESSAGE Level 28
+174
+265
+38@
+
+MESSAGE Level 29
+385
+462
+@17
+
+MESSAGE Level 30
+415
+7@3
+628
+
+MESSAGE Level 31
+375
+28@
+146
+
+MESSAGE Level 32
+817
+53@
+624
+
+MESSAGE Level 33
+51@
+687
+234
+
+MESSAGE Level 34
+5@1
+234
+867
+
+MESSAGE Level 35
+781
+453
+62@
+
+MESSAGE Level 36
+@65
+278
+341
+
+MESSAGE Level 37
+647
+125
+@83
+
+MESSAGE Level 38
+314
+25@
+876
+
+MESSAGE Level 39
+5@6
+137
+284
+
+MESSAGE Level 40
+285
+471
+63@
+
+MESSAGE Level 41
+654
+321
+8@7
+
+MESSAGE Level 42
+865
+1@7
+243
+
+MESSAGE Level 43
+135
+@84
+726
+
+MESSAGE Level 44
+643
+2@5
+781
+
+MESSAGE Level 45
+157
+@82
+364
+
+MESSAGE Level 46
+8@1
+647
+352
+
+MESSAGE Level 47
+163
+7@4
+852
+
+MESSAGE Level 48
+178
+532
+46@
+
+MESSAGE Level 49
+431
+726
+85@
+
+MESSAGE Well sluzzled!

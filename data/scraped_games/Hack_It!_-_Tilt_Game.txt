@@ -1,0 +1,149 @@
+(Legacy:
+Aarex:
+ Base
+ 
+James N:
+ Wall swap
+ 
+James P:
+ Graphics
+ Level
+ Prettified source
+ 
+Meow:
+ Crates
+ Pits
+ Modified levels
+ This thing
+ 
+Aarex:
+ No more pits!
+ 
+Jonah:
+ Finish respawns!
+
+Mark R (Hand-E-Food):
+ Added timer object
+ Timer primer
+ Timer reset
+ Timer countdown
+ Randomize finish on timer 
+
+Christopher
+ Crates don't destroy objects they pass through
+ Modified level
+ Changed timer appearance to be more subtle
+ No undo. No more rerolling random numbers!
+ 
+Aarex:
+ The level bigger
+ Made 10x5 zoomscreen
+)
+
+(Note:
+Aarex:
+ Timer have WxH level moves.
+)
+
+title Hack It! - Tilt Game
+author Everyone
+noundo
+zoomscreen 10x5
+
+========
+OBJECTS
+========
+Background .
+Green
+
+Finish O
+Red DarkRed
+00000
+01110
+01..0
+01..0
+00000
+
+Wall #
+Brown DarkBrown
+00000
+01110
+01..0
+01..0
+00000
+
+Crate C
+Brown DarkBrown
+.....
+.000.
+.0001
+.0001
+..111
+
+Player @
+Orange Blue
+.000.
+01010
+00000
+00000
+.000.
+
+Timer
+#309800
+
+=======
+LEGEND
+=======
+Solid = Player or Wall or Crate
+=======
+SOUNDS
+=======
+
+SFX1 57192908
+SFX2 8014908
+SFX3 61815708
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Timer
+Finish
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ Finish ] -> [ action Finish ]
+random [ action Finish ] [ Timer ] -> [ Finish ] [ ]
+random [ action Finish ] [ Wall ] -> [ Wall ] [ action Finish ]
+[ action Finish ] [ no Timer ] -> [ action Finish ] [ Timer ]
+
+[> Player | no Solid] -> [ | > Player]
++ [> Player | Crate | no Solid no Finish] -> [ | > Player | Crate ]
+
+
+[ | > Player Finish | Wall ] -> [ Finish | Wall | Player ] SFX2
+[> Player | Wall] -> [Wall | Player] SFX3
+
+random [Player Finish][Wall] -> [Player][Finish]
+
+[ Player finish ] -> SFX1 win
+
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+C################c
+#.#...c#o.ccc.#..#
+##c....c..###.#..#
+##c.@#..#.###....#
+##c....c..###.#..#
+#.#...c##.ccc.#..#
+c################c

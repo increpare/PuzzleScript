@@ -1,0 +1,405 @@
+title Hitori
+author Drew Besse
+
+
+========
+OBJECTS
+========
+
+Background .
+LightGrey
+
+One
+green
+00.00
+00.00
+00.00
+00.00
+00.00
+
+Two
+yellow
+0...0
+000.0
+0...0
+0.000
+0...0
+
+Three
+orange
+0...0
+000.0
+00..0
+000.0
+0...0
+
+Four
+red
+0.0.0
+0.0.0
+0...0
+000.0
+000.0
+
+Five
+purple
+0...0
+0.000
+0...0
+000.0
+0...0
+
+Six
+lightblue
+0...0
+0.000
+0...0
+0.0.0
+0...0
+
+Seven
+Pink
+0...0
+000.0
+000.0
+000.0
+000.0
+
+Eight
+Brown
+0...0
+0.0.0
+0...0
+0.0.0
+0...0
+
+Nine
+blue
+0...0
+0.0.0
+0...0
+000.0
+000.0
+
+
+Error
+Red
+.....
+.....
+.....
+.....
+.....
+
+
+Player
+White
+00.00
+0...0
+0...0
+0...0
+00.00
+
+TempPlayer
+White
+00.00
+0...0
+0...0
+0...0
+00.00
+
+Covered
+Black
+00000
+00000
+00000
+00000
+00000
+
+Saved
+LightGreen
+00000
+00000
+00000
+00000
+00000
+
+Fill
+Green
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+1 = One
+2 = Two
+3 = Three
+4 = Four
+5 = Five
+6 = Six
+7 = Seven
+8 = Eight
+9 = Nine
+A = One and Player
+B = Two and Player
+C = Three and Player
+D = Four and Player
+E = Five and Player
+F = Six and Player
+G = Seven and Player
+H = Eight and Player
+I = Eight and Player
+
+
+=========
+SOUNDS
+=========
+endlevel 78887103
+startgame 33832706
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Saved
+One Two Three Four Five Six Seven Eight Nine
+Covered, Fill
+Error
+Player, TempPlayer
+
+======
+RULES
+======
+
+[Action Player No Covered No Saved] -> [Player Covered No Saved]
+[Action Player Covered] -> [Player Saved]
+[Action Player Saved] -> [Player]
+
+[Error] -> []
+[Fill] -> []
+
+(Rule 1: No row or column can have two uncovered copies of any number)
+late [ One No Covered | ... | One No Covered ] -> [ One Error | ... | One Error ]
+late [ Two No Covered | ... | Two No Covered ] -> [ Two Error | ... | Two Error ]
+late [ Three No Covered | ... | Three No Covered ] -> [ Three Error | ... | Three Error ]
+late [ Four No Covered | ... | Four No Covered ] -> [ Four Error | ... | Four Error ]
+late [ Five No Covered | ... | Five No Covered ] -> [ Five Error | ... | Five Error ]
+late [ Six No Covered | ... | Six No Covered ] -> [ Six Error | ... | Six Error ]
+late [ Seven No Covered | ... | Seven No Covered ] -> [ Seven Error | ... | Seven Error ]
+late [ Eight No Covered | ... | Eight No Covered ] -> [ Eight Error | ... | Eight Error ]
+late [ Nine No Covered | ... | Nine No Covered ] -> [ Nine Error | ... | Nine Error ]
+
+(Rule 2: No two covered cells can touch)
+late [ Covered | Covered ] -> [Covered Error | Covered Error]
+
+(Rule 3: Uncovered cells must form contigous region)
+
+(Step 1: Mark one cell as Filled. Either pick the cell the player is in [if it is not covered], the cell to their right, or the cell to their left [if there is no cell to the right])
+
+late right [ Player No Covered] -> [TempPlayer Fill No Covered] 
+late right [ Player Covered | No Fill No Covered ] -> [TempPlayer Covered | Fill No Covered]
+late left [ Player Covered | No Fill No Covered ] -> [Player Covered | Fill No Covered]
+late [TempPlayer] -> [Player]
+
+(Ste 2: Fill all uncovered cells touching a filled cell)
+
+late [ Fill No Covered | No Fill No Covered ] -> [ Fill No Covered | Fill ]
+
+(Step 3: mark any cells that are not covered and not filled as errors)
+late [ No Fill No Covered ] -> [No Fill No Covered Error]
+
+==============
+WINCONDITIONS
+==============
+No Error
+
+=======
+LEVELS
+=======
+
+(you can use http://www.menneske.no/hitori/eng/ to generate more puzzles)
+
+message Press x to cover or flag cells
+
+message Same number cannot be left uncovered in same row or column
+
+message Covered cells cannot touch
+
+message Uncovered cells must form continuous region
+
+message 4x4
+
+4412
+3114
+2324
+124C
+
+message 5x5
+
+42132
+32351
+24412
+51242
+2352C
+
+message 5x5
+
+42331
+33254
+44534
+52412
+2511C
+
+message 6x6
+
+231262
+463123
+613154
+124612
+426241
+14253F
+
+message 6x6
+
+415132
+326431
+544516
+313615
+155363
+34132C
+
+message 8x8
+
+3A364425
+32523857
+25842361
+28766422
+55325741
+83815374
+57435118
+1458753F
+
+message 8x8
+
+82646354
+54168523
+56776247
+63273164
+68455131
+45812567
+21683445
+3455411B
+
+message 8x8
+
+12315767
+38142714
+47231325
+71524376
+25143554
+63417558
+75163172
+3375684A
+
+message 8x8
+
+25172483
+23155778
+57648272
+48431675
+62112347
+86236153
+31163823
+1475356F
+
+message 9x9
+
+562692813
+618272834
+162342798
+369418263
+497481324
+237857348
+525153429
+711638285
+98321475B
+
+message 9x9
+
+381685698
+498617715
+669241388
+721983467
+137466932
+715594387
+836822142
+263729151
+95481657D
+
+message 9x9
+
+771268582
+163274798
+762143983
+498752154
+246855327
+239611824
+688921735
+118486259
+82213247C
+
+message 9x9
+
+674923475
+497547328
+747386251
+981825462
+354272119
+268154746
+682817964
+813249678
+12362855G
+
+message 9x9
+
+647549259
+495283178
+737591452
+342784193
+851437139
+923615884
+364657912
+527876361
+16694284E
+
+message 9x9
+
+629415856
+264836691
+693458227
+173916757
+546782329
+115694239
+932172964
+976263165
+46712928C
+
+message 9x9
+
+439525386
+724756953
+252693412
+386812134
+162183149
+627264396
+814935246
+745769821
+39147872B
+
+
+message congratulations!

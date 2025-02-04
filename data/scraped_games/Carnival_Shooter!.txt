@@ -1,0 +1,65 @@
+title Carnival Shooter!
+author joe gigs
+background_color #022327
+
+
+========
+OBJECTS
+========
+Background
+DARKGREEN
+
+Player
+black red
+00100
+0...0
+1...1
+0...0
+00100
+
+Duck
+#ffff32
+..0.0
+.0.0.
+..0.0
+..0..
+.....
+
+=======
+LEGEND
+=======
+. = Background
+p = Player 
+d = Duck
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Duck
+Player
+======
+RULES
+======
+[action Player | Duck] -> [player |]
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+..............
+..............
+.d.d.p........
+..............
+..............
+..............
+..............
+
+
+

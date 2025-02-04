@@ -1,0 +1,146 @@
+title Shield Game
+author Alan Hazelden
+homepage www.draknek.org
+require_player_movement
+noaction
+
+========
+OBJECTS
+========
+
+Background 
+GREEN  
+
+Wall 
+BROWN
+
+Player 
+Blue
+.....
+..0..
+.000.
+.0.0.
+.....
+
+Shield
+Red DarkBlue White
+.111.
+12221
+12221
+.121.
+..1..
+
+ShieldL
+DarkBlue
+.....
+0....
+0....
+0....
+.....
+
+ShieldR
+DarkBlue
+.....
+....0
+....0
+....0
+.....
+
+ShieldU
+DarkBlue
+.000.
+.....
+.....
+.....
+.....
+
+ShieldD
+DarkBlue
+.....
+.....
+.....
+.....
+.000.
+
+ShieldedPlayer
+Red
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = Shield
+ShieldDir = ShieldL or ShieldR or ShieldU or ShieldD
+Solid = Player or Wall or Shield
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Shield, ShieldedPlayer
+ShieldL
+ShieldR
+ShieldU
+ShieldD
+
+======
+RULES     
+======     
+
+[ > Player ShieldDir ] -> [ > Player > ShieldDir ]
+
+left [ > Player ShieldL ] -> [ > ShieldedPlayer > ShieldL ]
+right [ > Player ShieldR ] -> [ > ShieldedPlayer > ShieldR ]
+up [ > Player ShieldU ] -> [ > ShieldedPlayer > ShieldU ]
+down [ > Player ShieldD ] -> [ > ShieldedPlayer > ShieldD ]
+
+[ > ShieldedPlayer | Shield ] -> [ > ShieldedPlayer | > Shield ]
+
+[ ShieldedPlayer ] -> [ Player ]
+
+left [ > Player | stationary Shield ] -> [ | Player ShieldL ]
+right [ > Player | stationary Shield ] -> [ | Player ShieldR ]
+up [ > Player | stationary Shield ] -> [ | Player ShieldU ]
+down [ > Player | stationary Shield ] -> [ | Player ShieldD ]
+
+==============
+WINCONDITIONS
+==============
+
+No Shield
+
+=======     
+LEVELS
+=======
+
+#########
+#.......#
+#.s...s.#
+#...p...#
+#.s...s.#
+#.......#
+#########
+
+#######
+#..s..#
+#.###.#
+#s.p.s#
+#.###.#
+#..s..#
+#######
+
+########
+#....s##
+#.###..#
+#p.s.s.#
+#.###..#
+#....s##
+########

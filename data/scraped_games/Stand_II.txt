@@ -1,0 +1,281 @@
+title Stand II
+author Connorses [Loneship Games]
+homepage connorspuzzles.tumblr.com
+run_rules_on_level_start
+noaction
+background_color #030f00
+text_color #2cff44
+
+========
+OBJECTS
+========
+
+Background 
+GREEN #3c833d
+00000
+01110
+01110
+01110
+00000
+
+
+Target1
+DarkBlue Blue
+.....
+00000
+01110
+00000
+.....
+
+Target2
+Darkgreen lightgreen
+.....
+00000
+01110
+00000
+.....
+
+Wall1 
+BROWN
+
+Wall2
+Brown
+00000
+00000
+00000
+00000
+.....
+
+Player 
+lightblue
+.000.
+00000
+.0.0.
+.....
+.....
+
+Crate 
+Brown lightbrown
+1..01
+1.0.1
+10..1
+11111
+.....
+
+CrateTop
+Brown lightbrown
+.....
+.....
+.....
+.....
+11111
+
+
+BigCrate
+Black grey
+1.0.0
+00100
+0.0.1
+10010
+.....
+
+BigCrateTop
+black Grey
+.....
+.....
+.....
+.....
+01001
+
+hole
+black purple
+11111
+00000
+10001
+00000
+10101
+
+lose
+darkblue
+.....
+.000.
+00000
+.0.0.
+.....
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall1
+% = Wall2
+P = Player
+* = Crate
++ = BigCrate
+@ = Crate and Target1
+O = Target1
+Q = Target1 and player
+X = hole
+
+falls = crate or bigcrate
+
+=======
+SOUNDS
+=======
+Target2 Destroy 67186706
+Target2 Create 74302900
+StartGame 13756108
+EndLevel 23510908
+EndGame  84025508
+Player Move 81570907
+Crate Move 22518904 (73907102 3366707)
+BigCrate Move 89017902
+sfx0 93887302 (falling)
+================
+COLLISIONLAYERS
+================
+
+
+Background
+Target1, Target2,hole
+Player, Wall1, Wall2 Crate, BigCrate, lose
+cratetop, bigcrateTop
+
+======
+RULES     
+======     
+(2 Crates that push in different ways)
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > Player | BigCrate] -> [ Player | > BigCrate ]
+
+(Targets toggle on and off)
+late [Target1 Player] -> [Target2 Player]
+late [Target2 no Player] -> [Target1]
+
+(stuff dissapears in holes, characters can't fall in or it resets)
+late [falls hole] -> [hole] sfx0
+late [player hole] -> [lose hole] sfx0
+[lose hole] -> restart
+
+(graphical thing so I can draw crates 1 square higher)
+late [CrateTop] -> [   ]
+late [Bigcratetop] -> [   ]
+late up [crate|no crateTop] -> [Crate|Cratetop]
+late up [BiGcRaTe|NO Bigcratetop] -> [BIGCRATE|bigCratetop]
+==============
+WINCONDITIONS
+==============
+
+No Target1
+
+=======     
+LEVELS
+=======
+
+.......
+...*...
+..#o#..
+..###..
+...p...
+.......
+message Oh, hello I didn't see you there. Just like before: Get all the little guys onto the blue lights to continue!
+message Remember, you can undo with Z
+message and restart with R
+..........
+.#%%%%%%#.
+.#.....o#.
+.#.#..#.#.
+.#p#p.#.#.
+.#o#..#.#.
+.#o#..#p#.
+.%%%%%%%%.
+..........
+
+########
+#p.@.*.#
+#p.*.o.#
+########
+
+###p.##
+#.##o##
+#**..o#
+#p##.##
+###..##
+
+message Did we mention you can push the little sokoban crates? You totally can.
+
+########
+#......#
+#.op..p#
+#...*..#
+#..*..o#
+#......#
+########
+
+message You can't push two crates in a row though.
+
+##############
+########.*.###
+#qpo.o.....###
+#########*####
+#########p####
+##############
+
+########
+#p.o+..#
+#p...o.#
+########
+
+##############
+##############
+##############
+##############
+#.o..........#
+#...p.p......#
+#......o.....#
+###..+..######
+####...#######
+##############
+##############
+message Press
+#%##%%%####.
+#p##...####.
+#.%%.#.%%%#.
+#....#....#.
+####%%%%%.#.
+####q...+o#.
+#%%%%#%%%%#.
+#...#%....#.
+#.#.%..#%.#.
+#p#...#%o.#.
+%%%%%%%%%%%.
+
+message Ah, yeah, uh, the.. um... You can push metal crates but they're heavy and slow you down :)
+
+#.*pp####
+##.*p#..o
+.#*.*#..o
+...###..o
+...###..o
+p.*...*.o
+p..*..*.o
+..##..*#o
+#.*.##...
+..*pp##..
+
+message Huh, that was a bit cluttered.
+
+message Here's something more orderly.
+
+##%%%%%%%%#
+##........#
+##o.p*....#
+##........#
+###%%%%.###
+###po+op###
+#%%.%%%%%##
+#........##
+#o..p*...##
+#........##
+###########
+message Part II Complete!

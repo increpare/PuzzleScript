@@ -1,0 +1,369 @@
+title Blow the ship down!
+author Ethan Clark
+homepage www.puzzlescript.net
+
+zoomscreen 15x15
+
+run_rules_on_level_start
+
+again_interval 0.1
+
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+water
+darkblue
+
+bg1
+lightblue white
+00000
+00000
+00000
+00000
+00000
+
+bg2
+lightblue white
+00000
+00010
+00000
+00000
+01000
+
+bg3
+lightblue white
+00000
+00010
+00000
+10000
+00000
+
+wood0
+orange brown
+00000
+00000
+00000
+00000
+00000
+
+wood1
+orange brown
+00000
+00000
+01100
+00000
+00000
+
+wood2
+orange brown
+00000
+00010
+01100
+00010
+00000
+
+wood3
+orange brown
+00000
+00010
+01110
+01010
+00000
+
+wood4
+orange brown
+00000
+01110
+01110
+01010
+00000
+
+wood5
+orange brown
+00000
+01110
+01110
+01110
+00100
+
+wood6
+orange brown
+00000
+01110
+11111
+01110
+00100
+
+wood7
+orange brown
+00000
+11111
+11111
+01110
+00100
+
+wood8
+orange brown
+00000
+11111
+11111
+11111
+00100
+
+wood9
+orange brown
+01010
+11111
+11111
+11111
+00100
+
+wood10
+orange brown
+11011
+11111
+11111
+11111
+00100
+
+wood11
+orange brown
+11111
+11111
+11111
+11111
+01100
+
+wood12
+orange brown
+11111
+11111
+11111
+11111
+01111
+
+wood13
+orange brown
+11111
+11111
+11111
+11111
+11111
+
+playerR
+red black
+..00.
+.001.
+.000.
+..0..
+..0..
+
+playerL
+red black
+.00..
+.100.
+.000.
+..0..
+..0..
+
+cloud
+white
+.000.
+00000
+00000
+00000
+.000.
+
+WoodNear
+transparent
+
+WoodRot
+transparent
+
+WoodMoved
+transparent
+
+=======
+LEGEND
+=======
+
+player = playerL or playerR
+
+wood = wood0 or wood1 or wood2 or wood3 or wood4 or wood5 or wood6 or wood7 or wood8 or wood9 or wood10 or wood11 or wood12 or wood13
+bg = bg1 or bg2 or bg3
+
+. = Background
+0 = water
+w = wood0
+p = playerR
+c = cloud
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+bg
+water
+player
+wood
+WoodNear
+WoodRot
+WoodMoved
+cloud
+
+======
+RULES
+======
+
+[wood3] -> []
+
+[WoodMoved] -> []
+
+[no bg] -> [random bg]
+
+[left player] -> [left playerL]
+[right player] -> [right playerR]
+
+left [action playerL | no wood] -> [playerL | wood0]
+right [action playerR | no wood] -> [playerR | wood0]
+
+late up [player wood | no wood] -> [wood | player]
+late right [playerL wood | ] -> [wood | playerL]
+late left [playerR wood | ] -> [wood | playerR]
+
+late [WoodNear] -> []
+
+(startloop)
+
+late [wood | water] -> [wood WoodNear | water]
+late [wood WoodNear | no WoodNear] -> [wood WoodNear| WoodNear]
+
+late down [wood no WoodNear no woodMoved | no wood no water no player] -> [ | wood woodMoved]
+late [woodMoved] -> again
+
+(endloop)
+
+late [WoodNear] -> []
+late horizontal [wood | ] -> [wood|WoodNear]
+late [wood ] -> [wood WoodNear]
+
+(late down [player | no WoodNear] -> [ | player])
+late down [player | no wood] -> [ | player]
+
+
+(startloop
+late random [TurnParity1 wood no wood0 no WoodRot| wood0] -> [TurnParity1 wood WoodRot | wood1]
+endloop)
+(late up [TurnParity1 wood no wood0 no WoodRot| wood0] -> [TurnParity1 wood WoodRot | wood1])
+
+(late [TurnParity1] -> [WoodRot TurnParity1] )
+
+late [woodMoved | ] -> [WoodMoved | WoodMoved]
+
+late [wood no woodMoved] -> [wood0]
+
+late right [no woodMoved wood | wood] -> [wood | wood WoodRot]
+
+late [wood0 woodRot] -> [wood1]
+(late [wood1 woodRot] -> [wood2]
+late [wood2 woodRot] -> [wood3]
+late [wood3 woodRot] -> [wood4])
+
+late left [no woodMoved wood | wood] -> [wood | wood WoodRot]
+
+late [wood0 woodRot] -> [wood1]
+late [wood1 woodRot] -> [wood2]
+(late [wood2 woodRot] -> [wood3]
+late [wood3 woodRot] -> [wood4])
+
+late up [no woodMoved wood | wood] -> [wood | wood WoodRot]
+
+late [wood0 woodRot] -> [wood1]
+late [wood1 woodRot] -> [wood2]
+late [wood2 woodRot] -> [wood3]
+(late [wood3 woodRot] -> [wood4])
+
+late down [no woodMoved wood | wood] -> [wood | wood WoodRot]
+
+late [wood0 woodRot] -> [wood1]
+late [wood1 woodRot] -> [wood2]
+late [wood2 woodRot] -> [wood3]
+late [wood3 woodRot] -> [wood4]
+
+late [wood3 | wood4] -> [wood0 | wood4] 
+
+late [wood3] -> [wood3 ] again
+
+late [player water] -> [water]
+
+(late [wood4] -> [] again)
+
+(late [wood0 woodRot] -> [wood2]
+late [wood1 woodRot] -> [wood2]
+late [wood2 woodRot] -> [wood3]
+late [wood3 woodRot] -> [wood4]
+late [wood4 woodRot] -> [wood5]
+late [wood5 woodRot] -> [wood6]
+late [wood6 woodRot] -> [wood7]
+late [wood7 woodRot] -> [wood8]
+late [wood8 woodRot] -> [wood9]
+late [wood9 woodRot] -> [wood10]
+late [wood10 woodRot] -> [wood11]
+late [wood11 woodRot] -> [wood12]
+late [wood12 woodRot] -> [wood13]
+late [wood13 woodRot] -> []
+late [water | wood0] -> [water | wood1])
+
+
+==============
+WINCONDITIONS
+==============
+
+(some wood4)
+some player on cloud
+
+=======
+LEVELS
+=======
+
+message Arrow keys to move, x to build blocks.
+message Blocks surrounded by exactly three blocks will be removed, unless touching a block surrounded by exactly four blocks
+message Try to ascend to the clouds!
+
+ccccccccccccccc
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+.......p.......
+......www......
+000000000000000
+
+(xrxrx rxxll lrxxr xxlx)
+

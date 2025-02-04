@@ -1,0 +1,114 @@
+title Path Finder
+author Mark Richardson
+
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Exit
+Black White
+01010
+10101
+01010
+10101
+01010
+
+Wall
+Brown
+
+Player
+Yellow Black
+.000.
+01010
+00000
+01110
+.000.
+
+Monster
+Orange
+.....
+0..0.
+.00..
+0000.
+0..0.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+X = Exit
+# = Wall
+P = Player
+M = Monster
+
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Exit
+Player, Monster, Wall
+
+
+======
+RULES
+======
+
+[ Monster ] -> [ action Monster ]
+[ Background no Wall ] -> [ up Background ]
+[ Player Background ] -> [ Player left Background ]
+startloop
+[ action Monster | left Background ] -> [ > Monster | left Background ]
+[ down Background ] -> [ Background ]
+[ left Background ] -> [ down Background ]
+[ up Background | down Background ] -> [ left Background | down Background ]
+endloop
+[ action Monster ] -> [ Monster ]
+[ up Background ] -> [ Background ]
+late [ Monster | Player ] -> [ Monster | ]
+
+
+==============
+WINCONDITIONS
+==============
+
+all Exit on Player
+
+
+=======
+LEVELS
+=======
+
+#####################
+#...#...#...#...#...#
+#.P.#.............M.#
+#...#...#...#...#...#
+##.###.##############
+#...#...#...#...#...#
+#...#...............#
+#...#...#...#...#...#
+##.###############.##
+#...#...#...#...#...#
+#...................#
+#...#...#...#...#...#
+##########.#######.##
+#...#...#...#...#...#
+#.......#.......#...#
+#...#...#...#...#...#
+##.###.#######.###.##
+#...#...#...#...#...#
+#.M.#...........#.X.#
+#...#...#...#...#...#
+#####################

@@ -1,0 +1,117 @@
+title Minimalist
+author Marcos Perez
+color_palette ega
+text_color green
+========
+OBJECTS
+========
+Player
+lightblue
+Background
+blue
+Finish
+red
+Block
+white
+=======
+LEGEND
+=======
+P = Player
+B = Block
+. = Background
+V = Finish
+=======
+SOUNDS
+=======
+Player move 54158907
+startgame 53877700
+endlevel 45563303
+endgame 80365502
+================
+COLLISIONLAYERS
+================
+Background
+Finish
+Player,Block
+======
+RULES
+======
+[ > Player ] -> [ > Player ]
+==============
+WINCONDITIONS
+==============
+all Player on Finish
+=======
+LEVELS
+=======
+Message Level 1/10
+.....
+.v...
+..p..
+.....
+.....
+Message Level 2/10
+.....
+...v.
+b.bbb
+...p.
+.....
+Message Level 3/10
+.v
+.b
+..
+b.
+p.
+Message Level 4/10
+vb...
+.b.b.
+...b.
+bbbb.
+p....
+Message Level 5/10
+.......
+.bbbbb.
+....vb.
+bbbbbb.
+p......
+Message Level 6/10
+...b...
+.b.b.b.
+vb...b.
+bbbbbb.
+pb...b.
+.b.b.b.
+...b...
+Message Level 7/10
+......v
+.bbbbbb
+.......
+bbbbbb.
+p......
+Message Level 8/10
+......v
+.bbbbbb
+...b...
+..bb.b.
+b....b.
+.bbbbb.
+p......
+Message Level 9/10
+pb...bv
+.b.b.b.
+...b.b.
+bbbb.b.
+.....b.
+.bbbbb.
+.......
+Message Level 10/10
+pbbb.....
+.b...bbb.
+...bbb...
+bbbb...bb
+.....bbb.
+.bbbbb...
+.......b.
+bbbbbbbb.
+v........
+Message Thanks For Playing This Little Game!!! :)

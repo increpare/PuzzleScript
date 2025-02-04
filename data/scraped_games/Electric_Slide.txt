@@ -1,0 +1,252 @@
+title Electric Slide
+author Tobin Mollett
+homepage www.puzzlescript.net
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+powercell
+red lightblue
+10001
+01.10
+0.1.0
+01.10
+10001
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Door
+grey darkgrey red
+20102
+00100
+11111
+00100
+20102
+
+No_Door
+red
+0...0
+.....
+.....
+.....
+0...0
+
+Exit
+Purple
+..0..
+.0.0.
+0.0.0
+.0.0.
+..0..
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+nocharge
+black
+00000
+00000
+00000
+00000
+00000
+
+charge
+blue
+00000
+00000
+00000
+00000
+00000
+
+simpleblock
+orange
+00000
+00000
+00000
+00000
+00000
+
+nsblock
+orange
+00.00
+00.00
+00.00
+00.00
+00.00
+
+ewblock
+orange
+00000
+00000
+.....
+00000
+00000
+
+nwblock
+orange
+00.00
+00.00
+...00
+00000
+00000
+
+neblock
+orange
+00.00
+00.00
+00...
+00000
+00000
+
+seblock
+orange
+00000
+00000
+00...
+00.00
+00.00
+
+swblock
+orange
+00000
+00000
+...00
+00.00
+00.00
+
+turnoff
+white
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+! = Door
+? = Exit
+@ = Player and turnoff
+* = powercell
+i = nsblock
+- = ewblock
+p = seblock
+q = swblock
+4 = nwblock
+6 = neblock
+8 = simpleblock
+
+northblock = nsblock or nwblock or neblock or powercell or door or no_door
+southblock = nsblock or swblock or seblock or powercell or door or no_door
+westblock = ewblock or nwblock or swblock or powercell or door or no_door
+eastblock = ewblock or neblock or seblock or powercell or door or no_door
+
+state = charge or nocharge
+
+block = nsblock or ewblock or seblock or swblock or nwblock or neblock or nsblock or ewblock or seblock or swblock or nwblock or neblock or simpleblock
+
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+nocharge, charge
+Exit, No_Door
+Player, Wall, block, powercell, Door
+turnoff
+
+======
+RULES
+======
+
+[ >  Player | block charge ] -> [  >  Player > turnoff | > block ]
+[ > Player | block no charge ] -> [ > Player | > block ]
+
+late [ Player turnoff ] [ charge ] -> [ Player turnoff ] [ nocharge ]
+late [ block no state ] -> [ block nocharge ]
+late [ turnoff ] -> []
+
+late [ powercell no charge ] -> [ powercell charge ]
+
+late down [ southblock charge | northblock ] -> [ southblock charge | northblock charge ] again
+late up [ northblock charge | southblock ] -> [ northblock charge | southblock charge ] again
+late left [ westblock charge | eastblock ] -> [ westblock charge | eastblock charge ] again
+late right [ eastblock charge | westblock ] -> [ eastblock charge | westblock charge ] again
+
+late [ no_door no charge no block no player ] -> [ door ] again
+late [ door charge ] -> [ no_door nocharge ] again
+
+late [ no_door charge no block ] -> [ no_door ]
+
+late [ nocharge no block ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+All Exit on Player
+
+=======
+LEVELS
+=======
+
+..####.
+..#?.##
+..##!-q
+###...4
+#..p..#
+#.#i.i#
+#@...*#
+#######
+
+...######
+.###....#
+##..q##.#
+#?!@..!.#
+###.*.4.#
+#.....8.#
+#.#-..###
+#...###..
+#####....
+
+####....
+#?.####.
+##!...##
+#...q6##
+#.#*.!.#
+#.-.@..#
+#.#...##
+#....##.
+######..

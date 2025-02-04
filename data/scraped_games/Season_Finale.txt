@@ -1,0 +1,1483 @@
+title Season Finale
+run_rules_on_level_start
+background_color #222
+text_color #DDD
+again_interval 0
+
+========
+OBJECTS
+========
+
+Background 1
+black
+
+sunlit 
+#78D448
+
+munlit
+#70F044
+
+snlit 
+#58BBE0
+
+wnlit
+#C0FFEE
+
+ait
+#FEB047
+
+wit 
+#EFC040
+
+mlit 
+#FBFB68
+
+alit
+#FFFB66
+
+ablock
+#C84202
+
+sblock w
+#043804
+
+mblock
+#14D0D0
+
+wblock
+#6094B2
+
+wdoor
+#6094B2 #5074A2
+11100
+11110
+11111
+11110
+11100
+
+adoor 
+#FD712D #C84202
+00011
+00001
+00000
+00001
+00011
+
+sdoor e
+#109010 #043804
+00011
+00001
+00000
+00001
+00011
+
+mdoor
+#80F4F4 #14D0D0
+00011
+00001
+00000
+00001
+00011
+
+spring
+#109010 #041904
+.000.
+00000
+01010
+00000
+.000.
+
+bunnyd  ,
+#745004  black pink white
+..3..
+.000.
+.000.
+.101.
+..2..
+
+bunnyl <
+#745004  black pink white 
+.....
+.100.
+20003
+.100.
+.....
+
+bunnyu .
+#745004  black pink white
+..2..
+.101.
+.000.
+.000.
+..3..
+
+bunnyr >
+#745004  black pink white
+.....
+.001.
+30002
+.001.
+.....
+
+
+
+crat 7
+#745004 #C47004
+.000.
+01110
+01110
+01110
+.000.
+
+glass q
+#745004 #C47004 white
+.000.
+02110
+02120
+01120
+.000.
+
+flower
+#043804 #109010
+.....
+..1..
+.101.
+..1..
+.....
+
+water o
+#1040E0 
+
+ice p
+lightblue
+
+
+
+drowned
+#1040E0 #745004 
+00000
+00100
+01110
+00100
+00000
+
+nodoor
+transparent
+
+start
+transparent
+
+vert
+transparent
+
+moved
+transparent
+
+nomoved
+transparent
+
+
+
+eaten
+transparent
+
+watermark
+transparent
+
+
+
+
+
+summer
+#f41010 #600404 #FFB008
+.000.
+00000
+01010
+00000
+.000.
+
+
+
+lightu 
+#FFC008
+.....
+..0..
+.0.0.
+.....
+.....
+
+
+
+lightr 
+#FFC008
+.....
+..0..
+...0.
+..0..
+.....
+
+lightl 
+#FFC008
+.....
+..0..
+.0...
+..0..
+.....
+
+lightd 
+#FFC008
+.....
+.....
+.0.0.
+..0..
+.....
+
+
+u1
+#FF5800
+.....
+..0..
+.0.0.
+.....
+.....
+
+r1
+#FF5800
+.....
+..0..
+...0.
+..0..
+.....
+
+l1
+#FF5800
+.....
+..0..
+.0...
+..0..
+.....
+
+d1
+#FF5800
+.....
+.....
+.0.0.
+..0..
+.....
+
+u2
+#FF7800
+.....
+..0..
+.0.0.
+.....
+.....
+
+r2
+#FF7800
+.....
+..0..
+...0.
+..0..
+.....
+
+l2
+#FF7800
+.....
+..0..
+.0...
+..0..
+.....
+
+d2
+#FF7800
+.....
+.....
+.0.0.
+..0..
+.....
+
+u3
+#FF9800
+.....
+..0..
+.0.0.
+.....
+.....
+
+r3
+#FF9800
+.....
+..0..
+...0.
+..0..
+.....
+
+l3
+#FF9800
+.....
+..0..
+.0...
+..0..
+.....
+
+d3
+#FF9800
+.....
+.....
+.0.0.
+..0..
+.....
+
+u4
+#FFA800
+.....
+..0..
+.0.0.
+.....
+.....
+
+r4
+#FFA800
+.....
+..0..
+...0.
+..0..
+.....
+
+l4
+#FFA800
+.....
+..0..
+.0...
+..0..
+.....
+
+d4
+#FFA800
+.....
+.....
+.0.0.
+..0..
+.....
+
+x0
+transparent
+
+x1
+transparent
+
+x2
+transparent
+
+x3
+transparent
+
+x4
+transparent
+
+x5
+transparent
+
+plusone
+transparent
+
+
+ver
+#1040E0 #A07004
+01110
+01110
+01110
+01110
+01110
+
+hor
+#1040E0 #A07004
+00000
+11111
+11111
+11111
+00000
+
+wver
+lightblue #A07004
+01110
+01110
+01110
+01110
+01110
+
+whor
+lightblue #A07004
+00000
+11111
+11111
+11111
+00000
+
+bloomed
+#209A00
+.000.
+00000
+00000
+00000
+.000.
+
+
+
+
+bad
+#985000 white #ff5064
+..2..
+.000.
+.000.
+.000.
+..1..
+
+
+
+
+lose
+#985000 white #ff5064 black
+..2..
+.303.
+.000.
+.000.
+..1..
+
+nemir z
+#985000 #14D0D0
+0....
+00...
+0.0..
+0..0.
+00000
+
+semir x
+#985000 #14D0D0
+00000
+0..0.
+0.0..
+00...
+0....
+
+nwmir c
+#985000 #14D0D0
+....0
+...00
+..0.0
+.0..0
+00000
+swmir v
+#985000 #14D0D0
+00000
+.0..0
+..0.0
+...00
+....0
+
+diag b
+#985000 #14D0D0
+00000
+00..0
+0.0.0
+0..00
+00000
+
+diago n
+#985000 #14D0D0
+00000
+0..00
+0.0.0
+00..0
+00000
+
+
+wins
+transparent
+
+new
+transparent
+
+more
+transparent
+
+
+
+autumn 
+#F45305 #6A2402
+.000.
+00000
+01010
+00000
+.000.
+
+
+bird m
+darkblue blue lightblue black
+..1..
+2.1.2
+11111
+.010.
+..1..
+
+
+
+fella
+#7E2D00
+.000.
+00000
+00000
+00000
+.000.
+
+fellb
+#9A0501
+.000.
+00000
+00000
+00000
+.000.
+
+fellc
+#CD0601
+.000.
+00000
+00000
+00000
+.000.
+
+felld
+#CCC926
+.000.
+00000
+00000
+00000
+.000.
+
+felle
+#F7C709
+.000.
+00000
+00000
+00000
+.000.
+
+fellf
+#F45305
+.000.
+00000
+00000
+00000
+.000.
+
+fellg
+#DA4528
+.000.
+00000
+00000
+00000
+.000.
+
+fellh
+#FD712D
+.000.
+00000
+00000
+00000
+.000.
+
+connected
+transparent
+
+first
+transparent
+
+notfirst
+transparent
+
+
+winter
+#1010B0 #101030
+.000.
+00000
+01010
+00000
+.000.
+
+
+dead
+brown
+..0..
+..0..
+00000
+..0..
+..0..
+
+temp
+transparent
+
+temp2
+transparent
+
+lef
+transparent
+
+righ
+transparent
+
+dow
+transparent
+
+uq
+transparent
+
+bunn
+transparent
+
+iffy 
+transparent
+
+winner1
+transparent
+
+winner2
+transparent
+
+winner3
+transparent
+=======
+LEGEND
+=======
+
+bunny = bunnyl or bunnyr or bunnyd or bunnyu
+aqua = water or ice
+
+fell =  fella or fellb or fellc or felld  or felle or fellh or fellg or fellf
+flow = flower or bloomed or dead
+
+i = spring and start
+
+player = spring or summer or autumn or winter
+
+mirror = swmir or semir or nwmir or nemir
+
+diags = diag or diago
+light = lightu or lightd or lightr or lightl 
+block = sblock or ablock or wblock or mblock
+lit = alit or mlit
+unlit = munlit or sunlit
+nlit = snlit or wnlit
+it = wit or ait
+floor = unlit or nlit or lit or it
+l= snlit
+a = flower and snlit
+winner = winner1 or winner2 or winner3
+door = sdoor or adoor or mdoor or wdoor
+cra = crat or block  or mirror or diags or fell or dead or bunny
+cratd = crat or block or fell or dead
+cred = crat or diags or mirror or fell
+cre = spring or block or crat or glass or door or bunny or ice or mirror or diags
+crae = block or glass or bad or flow
+crate = crat or block or glass or aqua
+crated =  block or glass or mirror or bad or diags or summer or flow
+push =  mirror or diags
+t = bad and mlit
+fir = u1 or d1 or l1 or r1
+sec = u2 or d2 or l2 or r2
+thi = u3 or d3 or l3 or r3
+fou = u4 or d4 or l4 or r4
+xs = x0 or x1 or x2 or x3 or x4 or x5
+2 = summer and start
+
+k= water 
+
+
+
+
+
+=======
+SOUNDS
+=======
+SFX1 80425104
+SFX2 16467501
+SFX3 80127507
+SFX4 71317504
+SFX5 25216505
+SFX6 16917301
+SFX7 92204307
+SFX8 54283103
+SFX9 32265107
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+vert
+nodoor,wins, lose
+watermark, connected
+floor
+ice
+moved, nomoved
+flow, eaten
+water,
+hor, ver, whor, wver
+lightu, first, notfirst
+lightr
+lightd
+lightl
+more
+bad
+start, new
+temp, temp2
+player, glass, crat, block, door, bunny, mirror, diags, fell, bird,
+winner
+lef, righ, dow, uq
+bunn
+iffy
+start, drowned
+plusone
+x0
+x1
+x2
+x3
+x4
+x5
+u1, u2, u3, u4
+d1, d2, d3, d4
+l1, l2, l3, l4
+r1, r2, r3, r4
+
+
+
+======
+RULES
+======
+
+
+
+[spring][start watermark] -> restart
+[spring][drowned][start] -> [spring][drowned][start watermark]
+
+[action spring no unlit no flower no aqua] -> [spring flower] SFX1
+[action spring flower] -> [spring eaten]
+
+[spring][floor] -> [spring][]
+[> spring| water] -> [spring|water]
+[> spring | crat| no cre no aqua flower] -> [|spring|crat] SFX3
+[> spring | crat| no cre no aqua] -> [|spring|crat] SFX7
+[> spring | mirror| no cre no aqua flower] -> [|spring|mirror] SFX3
+[> spring | mirror| no cre no aqua] -> [|spring|mirror] SFX7
+[spring][vert] ->[spring][]
+[spring][eaten]->[spring][]
+[spring][nomoved] -> [spring][]
+[spring][moved] -> [spring][]
+
+late [spring ice] -> [spring ice watermark]
+late [spring][no spring ice watermark] -> [spring][water watermark] SFX2
+
+late [spring][bunny watermark] -> [spring][drowned] SFX6
+
+late up [spring][bunnyu no moved |no cre flower] ->[spring] [|bunnyu moved eaten] SFX3 
+late left [spring][bunnyl no moved |no cre flower] -> [spring][|bunnyl moved eaten] SFX3 
+late right [spring][bunnyr no moved |no cre flower] -> [spring][|bunnyr moved eaten] SFX3 
+late down [spring][bunnyd no moved |no cre flower] -> [spring][|bunnyd moved eaten] SFX3
+
+
+late up [spring][bunnyu no moved |no cre no flower] ->[spring] [|bunnyu moved] 
+late left [spring][bunnyl no moved |no cre no flower] -> [spring][|bunnyl moved] 
+late right [spring][bunnyr no moved |no cre no flower] -> [spring][|bunnyr moved] 
+late down [spring][bunnyd no moved |no cre no flower] -> [spring][|bunnyd moved] 
+
+late right [|nodoor  spring][eaten] -> [spring|sdoor][eaten]
+late [spring][nodoor][eaten] -> [spring][sdoor][eaten]
+
+late [spring] -> [spring nomoved]
+late [nomoved spring][moved] -> [spring][moved]
+late [spring][moved no spring]->[spring moved][] again
+
+
+late [spring][no block no aqua] -> [spring][snlit]
+late [spring][nodoor floor] -> [spring][nodoor sunlit]
+late [spring][start floor] -> [spring][start sunlit]
+
+late [spring][flow nlit] -> [spring][flow sunlit]
+late [spring][flow |nlit] -> [spring][flow|sunlit]
+late [spring][flow |ice] -> [spring][flow |water watermark]
+late vertical [spring][flower|] -> [spring][flower|vert]
+late horizontal [spring][vert|nlit] -> [spring][vert|sunlit]
+late horizontal [spring][vert|ice] -> [spring][vert|water watermark]
+
+late up [spring][nomoved][bunnyu | cre] -> [spring][nomoved][bunnyr|cre]
+late right [spring][nomoved][bunnyr|cre] -> [spring][nomoved][bunnyd| cre]
+late down [spring][nomoved][bunnyd| cre] -> [spring][nomoved][bunnyl| cre]
+late left [spring][nomoved][bunnyl| cre] -> [spring][nomoved][bunnyu| cre]
+late up [spring][nomoved][bunnyu | cre] -> [spring][nomoved][bunnyr|cre]
+late right [spring][nomoved][bunnyr|cre] -> [spring][nomoved][bunnyd| cre]
+late down [spring][nomoved][bunnyd| cre] -> [spring][nomoved][bunnyl| cre]
+late left [spring][nomoved][bunnyl| cre] -> [spring][nomoved][bunnyu| cre]
+late up [spring][nomoved][bunnyu | cre] -> [spring][nomoved][bunnyr|cre]
+late right [spring][nomoved][bunnyr|cre] -> [spring][nomoved][bunnyd| cre]
+late down [spring][nomoved][bunnyd| cre] -> [spring][nomoved][bunnyl| cre]
+late left [spring][nomoved][bunnyl| cre] -> [spring][nomoved][bunnyu| cre]
+late up [spring][nomoved][bunnyu | cre] -> [spring][nomoved][bunnyr|cre]
+late right [spring][nomoved][bunnyr|cre] -> [spring][nomoved][bunnyd| cre]
+late down [spring][nomoved][bunnyd| cre] -> [spring][nomoved][bunnyl| cre]
+late left [spring][nomoved][bunnyl| cre] -> [spring][nomoved][bunnyu| cre]
+
+late [spring][door] -> [spring][nodoor vert sunlit]
+late [spring][nodoor vert floor no player][nlit] -> [spring][sdoor][snlit]
+late [spring][nodoor vert floor no player][ice] -> [spring][sdoor][ice]
+late [spring][nodoor floor no player][snlit] -> [spring][sdoor][snlit]
+late [spring][nodoor floor no player][ice] -> [spring][sdoor][ice]
+late [spring][nodoor vert] -> [spring][nodoor] SFX8
+
+late [drowned][spring nodoor] -> [drowned][spring nodoor watermark]
+
+
+
+
+
+
+late [start summer][bunny] -> [start summer][mlit bad]
+late [summer][sunlit] -> [summer][munlit]
+late [summer][sblock] -> [summer][mblock]
+
+[xs] -> []
+[fir] -> []
+[sec] -> []
+[thi] -> []
+[fou] -> []
+
+
+[summer][no floor no door no nodoor no block] -> [summer][munlit]
+
+
+[summer][new] -> [summer][]
+[light]->[]
+
+
+
+
+
+
+[> summer| water] -> cancel
+[> summer| flow] -> cancel
+[> summer| push| no crae no water] -> [> summer|> push|] SFX3
+startloop
+right [summer][> nemir| swmir] -> [summer][|stationary diag]
+up [summer][> nemir| swmir] -> [summer][|stationary diag]
+down [summer][> swmir| nemir] -> [summer][|stationary diag]
+left [summer][> swmir| nemir] -> [summer][|stationary diag]
+left [summer][> nwmir| semir] -> [summer][|stationary diago]
+up [summer][> nwmir| semir] -> [summer][|stationary diago]
+down [summer][> semir| nwmir] -> [summer][|stationary diago]
+right [summer][> semir| nwmir] -> [summer][|stationary diago]
+
+[summer][> push|push| no crae no water] -> [summer][> push|> push|]
+endloop
+[summer][> push| stationary push] -> cancel
+[> summer| stationary push] -> cancel
+
+late [summer] -> [summer lightu lightr lightd lightl x0]
+
+
+
+startloop 
+
+late [light more] -> [light]
+
+late up [lightu xs no flow  no more|no lightu no cre no door ] -> [lightu xs| lightu more xs plusone]
+late down [lightd xs no flow  no more|no lightd no cre no door  ] -> [lightd xs| lightd more xs plusone]
+late left [lightl xs no flow  no more|no lightl no cre no door  ] -> [lightl xs| lightl more xs plusone]
+late right [lightr xs no flow  no more|no lightr no cre no door  ] -> [lightr xs| lightr more xs plusone]
+
+
+late up[lightu no more no flow xs|semir no lightr] -> [lightu xs|lightr more semir xs plusone]
+late up[lightu no more no flow xs|swmir no lightl] -> [lightu xs|lightl more swmir xs plusone]
+late down[lightd no more no flow xs|nemir no lightr] -> [lightd xs|lightr more nemir xs plusone]
+late down[lightd no more no flow xs|nwmir no lightl] -> [lightd xs|lightl more nwmir xs plusone]
+late left[lightl no more no flow xs|semir no lightd] -> [lightl xs|lightd more semir xs plusone]
+late left[lightl no more no flow xs|nemir no lightu] -> [lightl xs|lightu more nemir xs plusone]
+late right[lightr no more no flow xs|swmir no lightd] -> [lightr xs|lightd more swmir xs plusone]
+late right[lightr no more no flow xs|nwmir no lightu] -> [lightr xs|lightu more nwmir xs plusone]
+
+
+late up [lightu no crae mirror|flow no new] -> [lightu mirror|bloomed new]  
+late down [lightd no crae mirror|flow no new] -> [lightd mirror|bloomed new] 
+late left [lightl no crae mirror|flow no new] -> [lightl mirror| bloomed new] 
+late right [lightr no crae mirror|flow no new] -> [lightr mirror|bloomed new] 
+
+late up [lightu no crae summer|flow no new] -> [lightu summer|bloomed new]  
+late down [lightd no crae summer|flow no new] -> [lightd summer|bloomed new]  
+late left [lightl no crae summer|flow no new] -> [lightl summer| bloomed new] 
+late right [lightr no crae summer|flow no new] -> [lightr summer|bloomed new]
+
+
+late up [lightu no crated water|flow no new floor] -> [ver|mlit] SFX4 again
+late down [lightd no crated water|flow no new floor] -> [ver|mlit] SFX4 again
+late left [lightl no crated water|flow no new floor] -> [hor|mlit] SFX4 again
+late right [lightr no crated water|flow no new floor] -> [hor|mlit] SFX4 again
+
+
+late up [lightu no crated no water no hor no ver|flow no new floor] -> [bloomed new|mlit] again SFX9
+late down [lightd no crated no water  no hor no ver|flow no new floor] -> [bloomed new|mlit] again SFX9
+late left [lightl no crated no water  no hor no ver|flow no new floor] -> [bloomed new|mlit] again SFX9
+late right [lightr no crated no water  no hor no ver|flow no new floor] -> [bloomed new|mlit] again SFX9
+
+late [x0 plusone] -> [x1]
+late [x1 plusone] -> [x2]
+late [x2 plusone] -> [x3]
+late [x3 plusone] -> [x4]
+late [x4 plusone] -> [x5]
+
+
+endloop
+
+
+late [summer unlit] -> [summer mlit]
+late [light unlit] -> [light mlit]
+late [summer|flower] -> [summer| bloomed]
+late [light flow] -> [bloomed]
+
+late up [lightu|crat floor] -> [lightu|glass mlit]
+late down [lightd|crat floor] -> [lightd|glass mlit]
+late right [lightr|crat floor] -> [lightr|glass mlit]
+late left [lightl|crat floor] -> [lightl|glass mlit]
+late up [lightu|glass floor] -> [lightu|glass mlit]
+late down [lightd|glass floor] -> [lightd|glass mlit]
+late right [lightr|glass  floor] -> [lightr|glass mlit]
+late left [lightl|glass floor] -> [lightl|glass mlit]
+
+
+late [lightu x4] -> [lightu u4 x4]
+late [lightd x4] -> [lightd d4 x4]
+late [lightl x4] -> [lightl l4 x4]
+late [lightr x4] -> [lightr r4 x4]
+late [lightu x3] -> [lightu u3 x3]
+late [lightd x3] -> [lightd d3 x3]
+late [lightl x3] -> [lightl l3 x3]
+late [lightr x3] -> [lightr r3 x3]
+late [lightu x2] -> [lightu u2 x2]
+late [lightd x2] -> [lightd d2 x2]
+late [lightl x2] -> [lightl l2 x2]
+late [lightr x2] -> [lightr r2 x2]
+
+late [lightu x1] -> [lightu u1 x1]
+late [lightd x1] -> [lightd d1 x1]
+late [lightl x1] -> [lightl l1 x1]
+late [lightr x1] -> [lightr r1 x1]
+
+
+
+
+
+late [summer][door] -> [summer][nodoor new mlit]
+
+late [summer][nodoor new lit][unlit] -> [summer][mdoor][munlit]
+late [summer][lose]->restart
+late [light bad] -> [light lose] SFX5
+late [summer][nodoor new] -> [summer][nodoor] SFX8
+late [summer nodoor] -> [wins summer]
+
+
+
+
+late [autumn][xs] -> [autumn][]
+late [autumn][fir] -> [autumn][]
+late [autumn][sec] -> [autumn][]
+late [autumn][thi] -> [autumn][]
+late [autumn][fou] -> [autumn][]
+late [autumn][mlit] -> [autumn][alit]
+late [autumn][mblock] -> [autumn][ablock]
+
+
+[> autumn | crat| no cre no aqua] -> [| autumn |crat] SFX7
+[> autumn | mirror| no cre no aqua] -> [| autumn |mirror] SFX7
+
+late [autumn][bad] -> [autumn][bunnyr]
+
+[first][autumn] -> [][autumn notfirst]
+
+
+[> autumn|crat|no block no bunny no bird no flow no door no crat no glass] -> [|autumn|crat]
+[> autumn|water] -> [autumn|water]
+
+[autumn][water floor] -> [autumn][water]
+[autumn][hor floor] -> [autumn][hor]
+[autumn][ver floor] -> [autumn][ver]
+[autumn][no floor no door no nodoor no block no water no hor no ver] -> [autumn][alit]
+late [autumn][glass floor] -> [autumn][glass ait]
+[autumn][no vert] -> [autumn][vert]
+down[autumn][vert|...|no block] -> [autumn][|...|]
+horizontal[autumn][vert|...|no vert] -> [autumn][|...|]
+
+late down [autumn][glass|no bloomed no player no bunny no bad no ablock] -> [autumn][crat|bird moved]
+
+[> autumn | bird|no bloomed no door no crate no fell no bird ] -> [> autumn| > bird|]
+
+
+[> autumn|bloomed|no bloomed  no door no crate no fell no bird no bunny] -> [> autumn|random fell start|]
+horizontal [> autumn|bloomed|no bloomed  no door water no fell no bird no bunny] -> [|autumn|hor]
+vertical [> autumn|bloomed|no bloomed  no door water no fell no bird no bunny] -> [|autumn|ver]
+[> autumn|start fell] -> [> autumn|> fell]
+[> autumn|bloomed] -> cancel
+
+
+late [autumn][fell floor] -> [autumn][fell ait]
+late [autumn floor] -> [autumn ait]
+
+
+
+late [autumn][drowned] -> restart
+late [autumn][moved no crat no bird] -> [autumn][]
+late right [notfirst][autumn|...|no bloomed  no bird no bunny no block no fell water|bunny no moved] -> [notfirst][autumn|...|drowned|]
+late left [notfirst][autumn|...|no bloomed  no bird no bunny no block no fell water|bunny no moved] -> [notfirst][autumn|...|drowned|]
+late right [notfirst][autumn|...|no bloomed  no bird no bunny no block no fell|bunny no moved] -> [notfirst][autumn|...|bunnyl moved|]
+late left [][autumn|...|no bloomed  no bird no bunny no block no fell|bunny no moved] -> [notfirst][autumn|...|bunnyr moved|]
+
+late down [autumn][bird no moved|no door no fell no block no bloomed  no player no bird no bunny] -> [autumn][|bird moved]
+late [autumn][bird vert] -> [autumn][] 
+
+late [autumn][connected] -> [autumn][]
+late [autumn no connected] -> [autumn connected]
+
++ late [autumn][connected|no connected no fell no bird no crate no door no bloomed  no bunny no ver no hor] -> [autumn][connected|connected]
+
+late [autumn][floor connected] -> [autumn][ait connected]
+
+late [autumn][bird moved] -> [autumn][bird] again
+
+
+late [autumn][door] -> [autumn][nodoor ait]
+late [autumn][nodoor it][lit] -> [autumn][adoor][alit]
+late [autumn][nodoor it][bird] -> [autumn][adoor][bird]
+late [autumn][nodoor it][glass] -> [autumn][adoor][glass]
+
+late [autumn nodoor] -> [wins autumn]
+
+
+late [winter][ait] -> [winter][wit]
+late [winter][ablock] -> [winter][wblock]
+
+[winter][no floor no door no nodoor no block no flow] -> [winter][ait]
+
+([> player | crat|no flower] -> [> player| > crat|]
+[> player | diags|no flower] -> [> player| > diags|])
+[> winter][ lose] -> restart
+[uq] [winter] -> [] [up winter]
+[dow] [winter] -> [] [down winter]
+[righ] [winter] -> [] [right winter]
+[lef] [winter] -> [] [left winter]
+
+[moved] [winter]  -> [] [winter] 
+[bunn] [winter]  -> [] [winter] 
+[bunny] [winter]  -> [bunny bunn] [winter] 
+
+
+
+[> winter floor no moved|no flow no door no cra ] -> [wnlit |> winter moved] 
+
+
+
+right [> winter floor no moved| stationary swmir] -> [> temp2 wnlit|v temp swmir]
+up [> winter floor no moved| stationary swmir] -> [> temp2 wnlit|^ temp swmir]
+down [> winter floor no moved| stationary  nwmir] -> [> temp2 wnlit|v temp nwmir]
+right [> winter floor no moved| stationary  nwmir] -> [> temp2 wnlit|^ temp nwmir]
+left [> winter floor no moved| stationary  nemir] -> [> temp2 wnlit|v temp nemir]
+down [> winter floor no moved| stationary  nemir] -> [> temp2 wnlit|^ temp nemir]
+up [> winter floor no moved| stationary  semir] -> [> temp2 wnlit|v temp semir]
+left [> winter floor no moved| stationary  semir] -> [> temp2 wnlit|^ temp semir]
+
+startloop 
+right [> temp floor no moved| stationary swmir] -> [ wnlit iffy|v temp swmir]
+up [> temp floor no moved| stationary swmir] -> [ wnlit iffy|^ temp swmir]
+down [> temp floor no moved| stationary  nwmir] -> [ wnlit iffy|v temp nwmir]
+right [> temp floor no moved| stationary  nwmir] -> [ wnlit iffy|^ temp nwmir]
+left [> temp floor no moved| stationary  nemir] -> [ wnlit iffy|v temp nemir]
+down [> temp floor no moved| stationary  nemir] -> [ wnlit iffy|^ temp nemir]
+up [> temp floor no moved| stationary  semir] -> [ wnlit iffy|v temp semir]
+left [> temp floor no moved| stationary  semir] -> [ wnlit iffy |^ temp semir]
+
+endloop
+
+[> temp floor|no flow no door no cra ] -> [wnlit|> winter moved] SFX1
+[temp][temp2][nlit iffy] -> [temp][temp2][wit]
+[temp][> temp2] -> [][> winter]
+[temp] -> []
+[temp2] -> []
+
+[iffy] -> []
+
+[> winter floor no moved|cred|no flow no door no block ] -> [wnlit > winter| > cred|]
+
+[winter it] -> [winter wnlit]
+[> winter no moved| door] -> [winter moved| temp door] 
+[temp door] [winter] [it] -> [door] [winter] [it]
+[temp door][winter] -> [winter nodoor wnlit][]
+
+
+[ winter| bunny] -> [winter|> bunny] 
+ [winter] [> bunny| bunny] ->  [winter] [> bunny| > bunny]
+ [winter] [left bunny] ->  [winter] [left bunnyl]
+ [winter] [right bunny] ->  [winter] [right bunnyr]
+ [winter] [down bunny] ->  [winter] [down bunnyd]
+ [winter] [up bunny] ->  [winter] [up bunnyu]
+
+ [winter] [> bunny|water] ->  [winter][|lose]
+ [winter] [> bunny|ice] ->  [winter][bunny|ice]
+
+late [winter hor] -> [winter whor]
+late [winter ver] -> [winter wver]
+
+late  [winter][bunny no bunn] -> SFX3
+
+
+[left winter moved] -> [lef winter] again
+[right winter moved] -> [righ winter] again
+[down winter moved] -> [dow winter] again
+[up winter moved] -> [uq winter] again
+
+[winter water uq] -> [winter ice]
+[winter water lef] -> [winter ice]
+[winter water dow] -> [winter ice]
+[winter water righ] -> [winter ice]
+[winter water] -> [winter ice]
+
+[winter][moved] -> [winter][] again
+
+
+
+
+
+right [winter][> nemir| swmir] -> [winter][|diag]
+up [winter][> nemir| swmir] -> [winter][|diag]
+down [winter][> swmir| nemir] -> [winter][|diag]
+left [winter][> swmir| nemir] -> [winter][|diag]
+left [winter][> nwmir| semir] -> [winter][|diago]
+up [winter][> nwmir| semir] -> [winter][|diago]
+down [winter][> semir| nwmir] -> [winter][|diago]
+right [winter][> semir| nwmir] -> [winter][|diago]
+[winter][> cre| cre| no flow no door no block] -> [winter][> cre| > cre| ]
+
+[winter][> cre|stationary cra] -> [winter][cre|cra]
+[> winter| fell floor] -> [winter|dead wnlit] SFX3
+[> winter|stationary cra] -> [winter|cra]
+
+late [winter it] -> [winter wnlit]
+late [winter][door] -> [winter][nodoor new wnlit]
+late [winter][nodoor new nlit][it] -> [winter][wdoor][wit]
+late [winter][nodoor new] -> [winter][nodoor] SFX8
+late [winter nodoor] -> [wins winter]
+late [start][winter wins floor] -> win
+
+late [fell hor] -> cancel
+late [fell ver] -> cancel
+
+late [spring no moved nodoor] -> [winner1]
+late [summer wins ] -> [winner2]
+late [autumn wins] -> [winner3]
+
+late [ winner1 no watermark no moved no first][start][sblock] -> [winner1  first][start][mblock] again
+late [ winner1 no watermark no moved no first][start][mblock] -> [mdoor ][start summer][mblock] again
+late [ winner2 no watermark no moved no first][start][mblock] -> [winner2  first][start][ablock] again
+
+late [winner2 no watermark no moved no first][start][ablock] -> [adoor ][start first autumn][ablock] again
+late [ winner3 no watermark no moved no first][start][ablock] -> [winner3  first][start][wblock] again
+
+late [winner3 no watermark no moved no first][start][wblock] -> [adoor ][start first winter][wblock] again
+
+late [winner first] -> [winner no first]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+
+message Spring: "Wow, I can't believe that it's only been 82 thousand years! It feels like I've known about all of you for such a long time! "
+
+message Summer: "What I can't believe is that I've been able to put up with you for that long!"
+
+message Autumn: "Come on, there's no reason to be mean."
+
+message Winter: "I assume that you are being hyperbolic again, Summer.”
+message Winter: "I do not see what other option you would have had, as there is no other place that you could go."
+
+wwwwww
+i1111w
+w1111w
+w1111e
+wwwwww
+
+message Spring: "I still remember it as if it were only a decade ago."
+message Spring: "Oh! Autumn, you might be able to see one of my favorite comets soon!
+
+message Summer: "Argh! Why do these things always seem to just miss me?"
+
+message Autumn: "I just saw it. The view was marvelous! Thanks for the heads up."
+
+message Winter: "Speaking of our initial introductions, I have a question for you, Spring."
+message Winter: "Did you actually think that I was an animal? Do I look more distinct from the rest of you than I had previously believed?"
+
+
+
+wwwwwww
+wl1p11w
+wl1pppw
+i11p11e
+wwwwwww
+message Spring: "Nope, You look just like us!"
+message Spring: "Even though now it's hard for me to even imagine life without knowing all of you friends,"
+message Spring: "At the time, I had no idea there was anything else like me!"
+message Spring: "You also slid by so fast, so that's why I assumed I must have seen an animal."
+
+message Summer: "I guess none of us can blame you for making a wrong assumption Spring, 'cause we all did the same."
+message Summer: "I still say that my guess was better than all of yours though!"
+
+message Autumn: "I can also hardly remember not knowing about you too, Spring."
+message Autumn: "The intermediate time, when I only knew Summer, was a hard time for me, but your optimism and enthusiasm never ceases to inspire me."
+
+message Winter: "Yes, I can imagine that the interim went..."
+message Winter: "...well..."
+message Winter: "...poorly, to say the least."
+
+
+
+wwwwwww
+w11q11w
+w11l11w
+i11l1le
+wwwwwww
+
+message Spring: "This year is going to be the best year ever!"
+
+message Summer: "We GET IT already!"
+message Summer: "Do you have to say that EVERY SINGLE TIME?"
+
+message Autumn: "I agree with Spring."
+message Autumn: "I think we should strive to make every year better than the last."
+
+message Winter: "But I do not see any evidence that this year would be any different."
+message Winter: "It will most likely not have any major improvements or regression."
+
+wwwwwww
+w1ppp1w
+w1ppp1e
+wp111pw
+wp111pw
+w1ppp1w
+ip111pw
+wp111pw
+wwwwwww
+
+message Spring: "Autumn, I wish that one day I could finally meet you, instead of having to leave these messages."
+message Spring: "You sound so beautiful!"
+message Spring: "Summer or Winter, can you please describe how Autumn looks again for me?"
+
+message Summer: "He's orange."
+
+message Autumn: "Quite the way with words as always, Summer."
+
+message Winter: "I believe his skin looks closer to that of a tangerine than an orange."
+message Winter: "And his eyes have a similar color to the seed coat of a peanut."
+
+
+
+wwwwwww
+www1eww
+wwi1www
+www1www
+wwl1l1w
+w111llw
+w111llw
+w111www
+wwwwwww
+
+message Spring: "You must look so gorgeous Autumn!"
+message Spring: "I'd also wish that I could see you change the leaves' color sometime too, it seems so magical!"
+
+message Spring: "Hey Summer and Winter, what about you two? Do you ever think about wanting to meet each other?"
+
+message Summer: "Definitely not! It sounds like he's FREEZING!"
+
+message Autumn: "Awwww, Spring. I would be blushing if I could."
+
+message Winter: "I will not lie and say that I am not curious about Summer's brightness"
+message Winter: "But I worry that your head may be full of dangerous thoughts, Spring"
+
+
+
+wwwwwww
+wx11lle
+w1l1l1w
+wll111w
+il111cw
+wwwwwww
+
+message Spring: "What?"
+message Spring: "What do you mean?"
+
+message Summer: "He's trying to say you're SCARING US!"
+message Summer: "All this talk about meeting our counterparts!"
+
+message Autumn: "I think you're overreacting a bit."
+
+message Winter: "I do not believe she is."
+message Winter: "We have no idea what could happen if one of us were to ignore our purpose."
+
+
+
+wwwwwwww
+ilql11ww
+wllll11w
+wlllll1w
+wwwwlllw
+wwww11le
+wwwwww1w
+
+message Spring: "I'm..."
+message Spring: "I'm so sorry Winter! I never meant to upset you!"
+message Spring: "I'll never mention it again!"
+
+message Summer: "GOOD!"
+message Summer: "I was getting sick of hearing you rambling on about it."
+
+message Autumn: "Hey, don't talk to her that way!"
+message Autumn: "Winter, I agree that we have no idea what could happen."
+message Autumn: "But that might just mean that it could be nothing!"
+message Autumn: "None of us can remember a time before our purposes, so none of us can know why we are doing it."
+message Autumn: "It could all just be arbitrary and meaningless."
+
+message Winter: "Autumn, please do not make any rash decisions because of your emotions."
+message Winter: "Although it is true none of us know the meaning of the cycle, something must have set the chain in motion."
+message Winter: "I do not believe that it all could lack meaning."
+
+
+
+
+wwwwwww
+w1111lw
+w111wlw
+w111wle
+w1111lw
+wl1lllw
+il1lllw
+wwwwwww
+
+message Spring: "Please stop fighting you guys! I hate seeing when you argue!"
+
+message Summer: "Do like Spring said, and just stop being stupid about this Autumn!"
+
+message Autumn: "Spring didn't say I was being stupid."
+message Autumn: "And I don't mean to start an argument, but I think that it's important to sort out what should be believed."
+message Autumn: "We don't actually have any reason to believe that we even have a purpose."
+message Autumn: "We'll never know unless we break the chain, and I don't think I want to live an eternity without you, Spring."
+
+message Winter: "Be reasonable Autumn! This could affect the entire balance of the planet."
+message Winter: "And it is not true that my claims are based on no evidence."
+message Winter: "Do you think it is just coincidence that, with no knowledge of each other,"
+message Winter: "We all began to travel around the Earth along the same path, in the same direction, and with the same interval?"
+
+
+
+wwwwwwww
+wllpllww
+wl1p11ww
+wppwppww
+w11pl1ww
+i1lpllww
+wppwppww
+wllpllww
+wl1p11ew
+wwwwwwww
+
+message Spring: "Autumn..."
+message Spring: "Winter..."
+message Spring: "I..."
+message Spring: "I don't know what to do!"
+message Spring: "I don't know who to believe!"
+message Spring: "Can't we all just go back to being friends again?"
+
+message Summer: "UGHHHH"
+message Summer: "This is getting ridiculous."
+message Summer: "If you two are going to abandon everything we know and meet each other, just DO IT already!"
+message Summer: "Otherwise..."
+message Summer: "SHUT THE HELL UP ABOUT IT ALREADY!"
+
+message Autumn: "I'm willing to meet you if you are, Spring"
+message Autumn: "If anything goes wrong, I just need you to know..."
+message Autumn: "I love you!"
+
+message Winter: "You must not!"
+message Winter: "You are putting us all at risk for nothing!"
+
+
+
+
+
+wwwwwwwww
+wi1>1wwww
+ww111l1ww
+www11l1ew
+ww111l1ww
+ww1l1lwww
+wwwwwwwww
+wwwwwwwww
+
+message Spring: "I..."
+message Spring: "I love you too!"
+message Spring: "I'm so excited to finally get to talk to you face to face!"
+message Spring: "Nothing will go wrong Autumn! I believe that love can conquer anything!"
+
+message Summer: "HEY!"
+message Summer: "Why should I have to keep working if they're going to stop!?"
+message Summer: "If they're going to quit, then I QUIT TOO!"
+
+message Autumn: "I sure hope you're right, Spring."
+
+message Winter: "I should try to minimize the risk of catastrophe."
+message Winter: "I will try to take up the purposes of all of us,"
+message Winter: "Although there are things I already am aware I will not be able to do as well."
+
+
+wwwwwwwwww
+wwwwwwwwww
+w111wwwwww
+i111ewwwww
+w111wwwwww
+w1l1wwwwww
+wlllwwwwww
+wlll1lll1w
+wlllwwwwww
+wwwwwwwwww
+
+message Winter: "I do hope they return some day, but until then..."
+message Winter: "...I suppose that it is the beginning of an Age of Ice."
+
+
+
+
+
+wwwwww
+www1ww
+ww11ww
+w111ww
+i1llww
+w1llww
+ww1lww
+ww1llw
+ww1lle
+ww111w
+ww11ww
+ww1www
+wwwwww
+
+message END OF PART 5
+
+

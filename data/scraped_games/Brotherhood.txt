@@ -1,0 +1,510 @@
+title Brotherhood
+author Son Nguyen
+homepage https://www.facebook.com/sonnguyen48
+========
+OBJECTS
+========
+
+Background1
+#def6ff #e8fffc
+00000
+01110
+00110
+01010
+00000
+
+Background2
+#221b2e #261d36
+01010
+10101
+01010
+10101
+01010
+
+Background3
+#556B2F #6B8E23
+00000
+00100
+01000
+00010
+00000
+
+Wall1
+darkblue black
+00010
+11111
+01000
+11111
+00010
+
+Wall2
+darkgreen darkbrown
+.000.
+.000.
+.000.
+.000.
+..1..
+
+Wall3
+#04aed9 #c5e0f5 #0478a1
+..10.
+.1100
+11002
+00002
+02222
+
+Player1
+red black #ffe0bd darkred gray
+.030.
+00000
+01210
+44444
+42224
+
+Player2
+#0080ff  black #ffe0bd darkblue gray
+.030. 
+00000
+01210
+02220
+22222
+
+Player3
+orange black #ffe0bd darkbrown
+.030.
+00000
+01210
+22222
+02220
+
+Player4
+pink black #ffe0bd white
+.000.
+00000
+01210
+02220
+02220
+
+Enemy1
+black red #ffe0bd
+00000
+01210
+02220
+00000
+00000
+
+Enemy2
+white brown #ffe0bd black
+00000
+03230
+02120
+01110
+00000
+
+King
+yellow black #ffe0bd white
+0.0.0
+00000
+21212
+33333
+32223
+
+Soldier
+gray black #ffe0bd darkgray
+.030.
+00000
+01210
+22222
+02220
+
+Banner
+darkred red darkbrown
+00000
+01110
+01110
+.000.
+..2..
+
+Goal1
+black red
+00000
+00100
+01010
+00100
+00000
+
+Goal2
+black blue
+00000
+00100
+01010
+00100
+00000
+
+Goal3
+black orange
+00000
+00100
+01010
+00100
+00000
+
+Goal4
+black pink
+00000
+00100
+01010
+00100
+00000
+
+Portal1a
+red black
+00000
+11110
+00010
+01110
+00000
+
+Portal1b
+red black 
+00000
+01110
+01110
+01110
+00000
+
+Portal2a
+blue black
+00000
+11110
+00010
+01110
+00000
+
+Portal2b
+blue black
+00000
+01110
+01110
+01110
+00000
+
+Portal3a
+orange black
+00000
+11110
+00010
+01110
+00000
+
+Portal3b
+orange black
+00000
+01110
+01110
+01110
+00000
+
+Portal4a
+pink black
+00000
+11110
+00010
+01110
+00000
+
+Portal4b
+pink black
+00000
+01110
+01110
+01110
+00000
+=======
+LEGEND
+=======
+
+. = Background1
+, = Background2
+' = Background3
+a = Player1
+b = Player2
+c = Player3
+d = Player4
+W = Wall1
+t = Wall2
+q = Wall3
+x = Goal1
+y = Goal2
+z = Goal3
+s = Goal4
+1 = Enemy1
+2 = Enemy2
+3 = King
+4 = Soldier
+5 = Banner
+
+j = Portal1a
+k = Portal2a
+l = Portal3a
+h = Portal4a
+
+u = Portal1b
+i = Portal2b
+o = Portal3b
+p = Portal4b
+
+
+Player = Player1 or Player2 or Player3 or Player4
+Goal = Goal1 or Goal2 or Goal3 or Goal4
+Background = Background1 or Background2 or Background3
+Wall = Wall1 or Wall2 or Wall3
+=======
+SOUNDS
+=======
+
+Player MOVE 31363904
+EndLevel 6417822
+Restart 7865435
+Startlevel 765436
+TitleScreen 876543
+Undo 436234
+
+
+================
+COLLISIONLAYERS
+================
+
+Background 
+Player1, Player2, Player3, Player4, Wall, Enemy1, Enemy2, King, Soldier, Banner
+Goal1, Goal2, Goal3, Goal4
+Portal1a, Portal2a, Portal3a, Portal4a, Portal1b, Portal2b, Portal3b, Portal4b
+
+======
+RULES
+======
+[Player1 | Player2 | Player3 | Player4]->[> Player1 | > Player2 | > Player3 | > Player4]
+
+[Player1 Portal1a]...[Portal1b] -> [Portal1a]...[Player1 Portal1b]
+[Player2 Portal2a]...[Portal2b] -> [Portal2a]...[Player2 Portal2b]
+[Player3 Portal3a]...[Portal3b] -> [Portal3a]...[Player3 Portal3b]
+[Player4 Portal4a]...[Portal4b] -> [Portal4a]...[Player4 Portal4b]
+
+[ > Player1 | Enemy1 ] -> [  Player1 |  ]
+[ > Player2 | Enemy1 ] -> [  Player2 |  ]
+
+
+[ > Player1 | Enemy2 ] -> [  Player1 |  ]
+
+[ > Player3 | Enemy2 ] -> [  Player3 |  ]
+
+==============
+WINCONDITIONS
+==============
+
+all Player on Goal 
+
+
+=======
+LEVELS
+=======
+
+message How to Play: Move all characters into their goals (same color)
+message Level 1
+message Once upon a time, in the Asgard kingdom, there are three princes
+tttttttttt
+t''''''''t
+ta''''''xt
+t''''''''t
+tb''''''yt
+t''''''''t
+tc''''''zt
+t''''''''t
+tttttttttt
+
+message Level 2
+message One day, the enemy kingdom kinapped their sister. They have to follow the enemy to get their sister back.
+tttttttttt
+t''''''''t
+ta'''''''t
+t'''''''xt
+tb''tt'''t
+t'''t'''yt
+tc''''''zt
+t''''''''t
+tttttttttt
+
+message Level 3
+message They start a dangerous journey to rescue their sister.
+tttttttttt
+tb'''c'''t
+t''''''''t
+t''''z'''t
+t''''t''yt
+t''''x'''t
+t''''''''t
+t''''a'''t
+tttttttttt
+
+message Level 4
+message They have to pass through a big icy field.
+
+qqqqqqqqqq
+q.......xq
+qa.......q
+q...q....q
+qb..q....q
+q.......yq
+qc.....q.q
+q.......zq
+qqqqqqqqqq
+
+message Level 5
+message There are some Yetis approaching.
+
+qqqqqqqqqq
+q...a....q
+qb...q..yq
+q........q
+q2.......q
+q........q
+qc..2..qzq
+qq..x....q
+qqqqqqqqqq
+
+message Level 6
+message Yetis smell three princes. They are attacking them.
+
+qqqqqqqqqq
+q.....2..q
+qa...xq..q
+q........q
+qb.....yqq
+q...q....q
+qc.2.....q
+q..z2..2.q
+qqqqqqqqqq
+
+
+message Level 7
+message Three princes got surrounded. Someone needs to break the situation.
+
+
+qqqqqqqqqq
+qx.....y.q
+q.q......q
+q..222q..q
+q..2ab2..q
+q..2c22..q
+q...q..z.q
+q........q
+qqqqqqqqqq
+
+
+message Level 8
+message "There is it. This cave is the location of our sister. Be careful!"
+
+qqqqqqqqqwwwwwwwwwwww
+q....q...qwwu..wwwwww
+qa.q....jwww..,,,,,xw
+q....q...qwwi.w.w,w,w
+qb.q....kwww.,2,2,,yw
+q....q...qwwo.w,w,w,w
+qc.q....lwww.....,,zw
+q....q...qww..,wwwwww
+qqqqqqqqqwwwwwwwwwwww
+
+message Level 9
+message "There are a lot of trap. Be careful" - Big bro said.
+
+wwwwwwwwwwwwwwwwwwwww
+wb,,,,o,,wwttt,,l,ttw
+wt,,,,,,jwwtt,,,1,,tw
+wtt,a,,,,wwt,,,,,,,,w
+wttt,,w,,wwwu,,,1,,iw
+wtt,,,,,1www,,w,,,w,w
+wt,,,,,1zwwtc,y,1,x,w
+wt,k,,,,1wwt,,,,,,,tw
+wwwwwwwwwwwwwwwwwwwww
+
+message Level 10
+message Boommmmmmmmm. The cave is collapsing.
+
+wwwwwwwwwwwwwwwwwwwww
+wa,,tt,,lwwt,,,2y2ttw
+w,,,t,,,,wtt,,,,w,,tw
+ww,,,,,,,wtt,,,,,,,tw
+wb,,,,,,kwwti,,,,,,tw
+w,,,,,,,,wwt,,,,,w,,w
+wt,,w,,,twtt,,,,1z1,w
+wc,,,x,ttwwwo,,,1,1tw
+wwwwwwwwwwwwwwwwwwwww
+
+message Level 11
+message Big bro pushes his brother away to save him. Unluckily, Big bro got stuck. Big bro sacrificed himself.
+
+wwwwwwwwwwwwwwwwwwwww
+wi,,,,,,lwwt,,,,,ow,w
+wwww,,,,,wwtt,,,,,,,w
+wttw212tttww,,,,1,,,w
+wttw121tttwwb,,1z1,,w
+wc,,,,,,,,ww,,,,1,,,w
+w,,,,,,,,,wtt,,,,,,,w
+w,,,,,,,y,wtk,,ttt,,w
+wwwwwwwwwwwwwwwwwwwww
+
+message Level 12
+message Two princes find out where the enemy keep their sister. They're preparing to attack.
+
+wwwwwwwwwwwwwwwwwwwww
+wtt,,1,,ttwwttwtt,,,w
+wt,,1,w11twwt,w,,,,sw
+w,,,,1w,kwwwi,,,1,,,w
+wb,,1,w11tww,,,1dw,yw
+w,,,,1w,lwwwo,,,1,,,w
+wc,,1,w11twwt,w,,,,zw
+w,,,,1,,ttwwttwtt,,,w
+wwwwwwwwwwwwwwwwwwwww
+
+message Level 13
+message We need to find the way out before the reinforcement.
+
+wwwwwwwwwwwwwwwwwwwww
+wd,,1,,,lwtwp,,1s1,,w
+w,,,t,,,,t1t,,,,w,,,w
+wt1t1,,,,wtw,,,,,,,,w
+w,,,,,,,it1tk,b,w,,,w
+wy,,,w,,,wtw,,,,z,,,w
+w,,,,,,,,t1t,,,,,,,,w
+wc,,,,,,hwtwo,,,,,,,w
+wwwwwwwwwwwwwwwwwwwww
+
+message Level 14
+message There is an exit. Hurry up!
+
+wwwwwwwwwwwwttttttttt
+w',,'1,,'twt''''''''t
+w,',w1,1'twt''t''''it
+wd,',1w,kwww'''''ts't
+wb,,w1h1'wwwpy''''''t
+w,,,,1w,lwww''''''''t
+wc,'w1'1'twto'''''''t
+w,,,'1,''twt'''tz'''t
+wwwwwwwwwwwwttttttttt
+
+message Level 15
+message The king has came. We are saved.
+
+ttttttttttttttttttttt
+ttt'''''545454545454t
+td'''''''''''''''''zt
+tt''''''545454545454t
+tb''''3''''''''''''st
+tt''''''545454545454t
+tc'''''''''''''''''yt
+ttt'''''545454545454t
+ttttttttttttttttttttt
+
+message In memory of Big bro
+message Thank you 
+message The End

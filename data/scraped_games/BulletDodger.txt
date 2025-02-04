@@ -1,0 +1,716 @@
+title BulletDodger
+author GarthBowden
+homepage www.puzzlescript.net
+
+noaction
+noundo
+
+========
+OBJECTS
+========
+
+Background 
+darkblue 
+
+Wall 
+brown orange
+11000
+01000
+01110
+00010
+00011
+
+LowWallEW
+darkblue brown
+.....
+11111
+11111
+11111
+.....
+
+LowWallNS
+darkblue brown
+.111.
+.111.
+.111.
+.111.
+.111.
+
+LowWallCorner
+darkblue brown
+.111.
+11111
+11111
+11111
+.111.
+
+Player 
+darkblue black darkgrey lightbrown   
+..3..
+11211
+13121
+.1.1.
+.2.2.
+
+DeadPlayer
+darkblue black darkgrey lightbrown red
+.434.
+41214
+43124
+41414
+.2.2.
+
+Crate 
+Orange brown
+00000
+01110
+01110
+01110
+00000
+
+SavePoint
+blue pink yellow
+.010.
+01210
+12021
+01210
+01210
+
+Bumper
+lightbrown yellow pink darkred
+32223
+2.1.2
+21012
+2.1.2
+32223
+
+temp
+darkblue
+.....
+.....
+..0..
+.....
+.....
+
+BumperTemp0
+darkblue lightbrown
+.....
+.....
+.....
+.....
+.010.
+
+BumperTemp1
+darkblue lightbrown
+.....
+0....
+1....
+0....
+.....
+
+BumperTemp2
+darkblue lightbrown
+.010.
+.....
+.....
+.....
+.....
+
+BumperTemp3
+darkblue lightbrown
+.....
+....0
+....1
+....0
+.....
+
+
+BumperTempN
+lightbrown yellow pink darkred
+..1..
+..0..
+..1..
+..0..
+32223
+
+BumperTempE
+lightbrown yellow pink darkred
+3....
+2....
+20101
+2....
+3....
+
+BumperTempS
+lightbrown yellow pink darkred
+32223
+..0..
+..1..
+..0..
+..1..
+
+BumperTempW
+lightbrown yellow pink darkred
+....3
+....2
+10102
+....2
+....3
+
+NorthBullet 
+darkblue lightgrey grey darkgrey
+..1..
+.121.
+.121.
+.333.
+.....
+
+NorthBadGuy0
+darkblue lightgrey lightblue white lightgreen brown yellow orange red
+..6..
+.252.
+12321
+.222.
+.2.2.
+
+NorthBadGuy1
+darkblue lightgrey lightblue white lightgreen brown yellow orange red
+..7..
+.252.
+12321
+.222.
+.2.2.
+
+NorthBadGuy2
+darkblue lightgrey lightblue white lightgreen brown yellow orange red
+..8..
+.252.
+12321
+.222.
+.2.2.
+
+EastBullet
+darkblue lightgrey grey darkgrey
+.....
+.311.
+.3221
+.311.
+.....
+
+EastBadGuy0
+darkblue lightgrey lightblue white lightgreen brown yellow orange red
+.4...
+122..
+12136
+2.2..
+2..2.
+
+EastBadGuy1
+darkblue lightgrey lightblue white lightgreen brown yellow orange red
+.4...
+122..
+12137
+2.2..
+2..2.
+
+EastBadGuy2
+darkblue lightgrey lightblue white lightgreen brown yellow orange red
+.4...
+122..
+12138
+2.2..
+2..2.
+
+SouthBullet
+darkblue lightgrey grey darkgrey
+.....
+.333.
+.121.
+.121.
+..1..
+
+
+SouthBadGuy0
+darkblue lightgrey lightblue white lightgreen brown yellow orange red
+.....
+.242.
+12221
+21312
+2.6.2
+
+SouthBadGuy1
+darkblue lightgrey lightblue white lightgreen brown yellow orange red
+.....
+.242.
+12221
+21312
+2.7.2
+
+SouthBadGuy2
+darkblue lightgrey lightblue white lightgreen brown yellow orange red
+.....
+.242.
+12221
+21312
+2.8.2
+
+WestBullet
+darkblue lightgrey grey darkgrey
+.....
+.113.
+1223.
+.113.
+.....
+
+WestBadGuy0
+darkblue lightgrey lightblue white lightgreen brown yellow orange red
+...4.
+..221
+63121
+..2.2
+.2..2
+
+WestBadGuy1
+darkblue lightgrey lightblue white lightgreen brown yellow orange red
+...4.
+..221
+73121
+..2.2
+.2..2
+
+WestBadGuy2
+darkblue lightgrey lightblue white lightgreen brown yellow orange red
+...4.
+..221
+83121
+..2.2
+.2..2
+
+SpinningBaddieN
+purple blue lightblue green red
+..4..
+.030.
+02120
+.0.0.
+.0.0.
+
+SpinningBaddieE
+purple blue lightblue green red
+.....
+.030.
+02124
+.0.0.
+.0.0.
+
+SpinningBaddieS
+purple blue lightblue green red
+.....
+.030.
+02120
+.0.0.
+.040.
+
+SpinningBaddieW
+purple blue lightblue green red
+.....
+.030.
+42120
+.0.0.
+.0.0.
+
+SpinningBaddieNCCW
+purple orange lightblue blue red
+..4..
+.030.
+02120
+.0.0.
+.0.0.
+
+SpinningBaddieECCW
+purple orange lightblue blue red
+.....
+.030.
+02124
+.0.0.
+.0.0.
+
+SpinningBaddieSCCW
+purple orange lightblue blue red
+.....
+.030.
+02120
+.0.0.
+.040.
+
+SpinningBaddieWCCW
+purple orange lightblue blue red
+.....
+.030.
+42120
+.0.0.
+.0.0.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+n = NorthBullet
+e = EastBullet
+s = SouthBullet
+w = WestBullet
+1 = NorthBadGuy0
+2 = EastBadGuy0
+3 = SouthBadGuy0
+4 = WestBadGuy0
+5 = NorthBadGuy1
+6 = EastBadGuy1
+7 = SouthBadGuy1
+8 = WestBadGuy1
+9 = NorthBadGuy2
+0 = EastBadGuy2
+r = SouthBadGuy2
+t = WestBadGuy2
+h = SpinningBaddieN
+j = SpinningBaddieE
+k = SpinningBaddieS
+L = SpinningBaddieW
+z = SpinningBaddieNCCW 
+x = SpinningBaddieECCW 
+u = SpinningBaddieSCCW 
+m = SpinningBaddieWCCW 
+- = LowWallEW
+i = LowWallNS
+c = LowWallCorner
+g = SavePoint
+b = Bumper
+
+Badguy = NorthBadGuy0 or EastBadGuy0 or WestBadGuy0 or SouthBadGuy0 or NorthBadGuy1 or EastBadGuy1 or WestBadGuy1 or SouthBadGuy1 or NorthBadGuy2 or EastBadGuy2 or WestBadGuy2 or SouthBadGuy2 or SpinningBaddieN or SpinningBaddieE or SpinningBaddieS or SpinningBaddieW or SpinningBaddieNCCW or SpinningBaddieECCW or SpinningBaddieSCCW or SpinningBaddieWCCW
+Bullet = NorthBullet or EastBullet or SouthBullet or WestBullet
+Barrier = Crate or wall or Bumper
+LowWalls = LowWallEW or LowWallNS or LowWallCorner
+BumperEffects = BumperTemp0 or BumperTemp1 or BumperTemp2 or BumperTemp3 or BumperTempN or BumperTempE or BumperTempS or BumperTempW
+Pushable = Player or Crate
+
+=======
+SOUNDS
+=======
+
+sfx0 21847503 (Player Dies)
+sfx1 46795101 (Bullet Fired)
+startlevel 24365506
+sfx2 83041304 (Kill badGuy)
+player move 45168704
+crate move 52406102
+sfx3 99435103
+
+================
+COLLISIONLAYERS
+================
+
+Background
+SavePoint
+Badguy, Player, Wall, Crate, LowWalls, Bumper
+Bumpertemp0, Bumpertemp1, Bumpertemp2, Bumpertemp3
+BumpertempN
+BumperTempE
+BumperTempS
+BumperTempW
+NorthBullet
+EastBullet
+SouthBullet
+Westbullet
+DeadPlayer, temp
+
+======
+RULES     
+======     
+
+[NorthBadGuy0]->[NorthBadGuy1 temp]
+[NorthBadGuy2]->[NorthBadGuy0 NorthBullet] sfx1
+[NorthBadGuy1 no temp]->[NorthBadGuy2]
+
+[EastBadGuy0]->[EastBadGuy1 temp]
+[EastBadGuy2]->[EastBadGuy0 EastBullet] sfx1
+[EastBadGuy1 no temp]->[EastBadGuy2]
+
+[SouthBadGuy0]->[SouthBadGuy1 temp]
+[SouthBadGuy2]->[SouthBadGuy0 SouthBullet] sfx1
+[SouthBadGuy1 no temp]->[SouthBadGuy2]
+
+[WestBadGuy0]->[WestBadGuy1 temp]
+[WestBadGuy2]->[WestBadGuy0 WestBullet] sfx1
+[WestBadGuy1 no temp]->[WestBadGuy2]
+
+[SpinningBaddieW]->[SpinningBaddieN WestBullet temp] sfx1
+[SpinningBaddieS]->[SpinningBaddieW SouthBullet] sfx1
+[SpinningBaddieE]->[SpinningBaddieS EastBullet] sfx1
+[SpinningBaddieN no temp]->[SpinningBaddieE NorthBullet] sfx1
+
+[SpinningBaddieECCW]->[SpinningBaddieNCCW EastBullet temp] sfx1
+[SpinningBaddieSCCW]->[SpinningBaddieECCW SouthBullet] sfx1
+[SpinningBaddieWCCW]->[SpinningBaddieSCCW WestBullet] sfx1
+[SpinningBaddieNCCW no temp]->[SpinningBaddieWCCW NorthBullet] sfx1
+
+[temp]->[]
+
+[NorthBullet]->[UP NorthBullet]
+[EastBullet]->[RIGHT EastBullet]
+[SouthBullet]->[DOWN SouthBullet]
+[WestBullet]->[LEFT WestBullet]
+
+[DeadPlayer] -> restart
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Player | Crate | Bullet] -> [> Player | > Crate | ]
+[ > Player | BadGuy] -> [ > Player | ] sfx2
+[Player SavePoint] -> checkpoint 
+late [BumperEffects] -> [ ]
+late [Bullet Barrier] -> [Barrier]
+late UP [No LowWalls No Barrier No Player| Pushable | Bumper] -> [Pushable | bumpertempN | Bumper bumpertemp0] sfx3
+late RIGHT [No LowWalls No Barrier No Player| Pushable | Bumper] -> [Pushable | bumpertempE | Bumper bumpertemp1] sfx3
+late DOWN [No LowWalls No Barrier No Player| Pushable | Bumper] -> [Pushable | bumpertempS | Bumper bumpertemp2] sfx3
+late LEFT [No LowWalls No Barrier No Player| Pushable | Bumper] -> [Pushable | bumpertempW | Bumper bumpertemp3] sfx3
+late [Player Bullet] -> [DeadPlayer] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+No BadGuy
+
+=======     
+LEVELS
+=======
+
+message "Are you saying I can dodge bullets!?"
+###########
+#.........#
+#.........#
+#2...e...p#
+#.........#
+#.........#
+###########
+
+..##...####
+#pi....i.4#
+#.i..i....#
+#....i.4..#
+###########
+
+#########
+#...#...#
+22....i.#
+###...#.p
+
+.....#..#...
+............
+..c------c..
+#.i4....1i..
+..i......i..
+..i..-c..i..
+..i..1i..i..
+..i3.2i..i.#
+..c---c..i..
+......#.....
+...#..p#....
+
+#########
+#2sss...#
+#e......#
+#e.p...4#
+#e......#
+#2nnn..1#
+#########
+
+#3####...s#
+2..##2....#
+#..3###.c.#
+##....#2i.#
+##...4#.#..
+#2....#.#..
+#....4#2i.#
+#....##.#..
+#1##.g..##p
+
+##########
+#..*r*...#
+#*......*#
+#2..p...t#
+#*...*..*#
+#.*......#
+#..*5*...#
+##########
+
+#####...##
+#......8.#
+#.c....88#
+22i....###
+66i....*.#
+00i.....p#
+##########
+
+#####3#####
+#....s....#
+#.#....i444
+#.*....c--#
+#.2...e..p#
+#..#......#
+###########
+
+##########
+#.i..3...#
+#2i.3....#
+#..3..2i.#
+#------c.#
+#........#
+p.########
+
+message "I'm saying that when you are ready, you won't have to..."
+#########
+2......p#
+#########
+
+#########
+#3*....4#
+#.3c...##
+#..i....#
+#..i....#
+#..i.4..#
+#..i....#
+#..i4...#
+p..i..1.#
+#########
+
+############
+#2i..3.....#
+#.c.c-c....#
+#.*........#
+#..........#
+#...42....3#
+##.....s.c-#
+2i....e....#
+.#.*--c.##.#
+.#..12i...p#
+...#########
+
+###.##
+#3r*7#
+#060r#
+#660p#
+#2069#
+#901*.
+######
+
+############
+#u..i......#
+#.i.i.---c.#
+#.ihi....i.#
+#.i.###..ip#
+#.i.#0i..###
+#.i.#.i..i8#
+#.i......i.#
+#.cc.....#.#
+#.ji...zh..#
+############
+
+....23.....#
+....#..4....
+..22i..#....
+...#c.3i4...
+..2i...c#...
+..#c....i44.
+.2i.....c#..
+.#c......i4.
+2i..*....c#.
+#####.....i4
+#p....#...c#
+############
+
+.#########
+p#2..3.3.#
+.#22.....#
+.#---..44#
+......*..#
+.#---c...#
+##...c--.#
+##.#.....#
+g.1#1#1#1#
+
+...#3...3..
+....3##--c.
+....3#...i.
+.........i.
+#........i4
+222......c#
+.##.......#
+2i.....*..#
+-c..*......
+...1#11##.p
+
+######..###3
+#..*....#3..
+#.c.-c#.#-#.
+#.i23i....#.
+#.i14i....i4
+#.c--c...s#.
+#.........i4
+#---c.....#.
+#222..eeep#.
+##.###.###..
+g..........#
+
+############
+2..........#
+#.##....##p#
+#.2.....####
+#..c----####
+#..i......##
+#..i1.1..44#
+#..i.11-c.44
+#.*.11..i4.4
+#.......i...
+
+#############
+#...b...b...#
+#.0.....2...#
+#..6.....2..#
+#....b...b*p#
+#############
+
+###########
+#....b....#
+#0........#
+#..u..ij.p#
+#2........#
+#....b....#
+###########
+
+####b#####
+0..e.ie.p#
+#.c-.i...#
+#.izxi...b
+#.imui...#
+#.c--b.n.#
+#.....n.n#
+#.-------#
+#.....595#
+##########
+
+###########
+#..hr.klc-#
+#.c--c--c-#
+#ji.pi...h#
+#2i..i..il#
+#ki..b..i4#
+#hi..i..i4#
+#0i..i..iu#
+#2i..b..it#
+#.i.u...i.#
+#.c.....i..
+#..#######.
+##.........
+
+message "Congratulations! You've beaten all the levels that I've created so far!"

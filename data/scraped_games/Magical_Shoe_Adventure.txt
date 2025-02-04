@@ -1,0 +1,542 @@
+title Magical Shoe Adventure
+author Tobin Mollett
+homepage www.puzzlescript.net
+
+require_player_movement
+again_interval 0.08
+noundo
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Grass
+green lightgreen
+00000
+00010
+00000
+00100
+00000
+
+Exit
+DarkRed
+.000.
+00000
+00000
+00000
+00000
+
+Gate
+White
+0.0.0
+00000
+0.0.0
+00000
+0.0.0
+
+Entrance
+White
+0.0.0
+00000
+0.0.0
+00000
+0.0.0
+
+Wall
+Grey Darkgrey
+10000
+00111
+11000
+00011
+01100
+
+Floor
+#261B12
+
+Player
+Yellow Red Pink Blue White
+.000.
+.020.
+.111.
+23332
+.4.4.
+
+PlayerUp
+Yellow Red Pink Blue White
+.000.
+.000.
+21112
+.333.
+.4.4.
+
+PlayerDown
+Yellow Red Pink Blue White
+.000.
+.020.
+21112
+.333.
+.4.4.
+
+PlayerLeft
+Yellow Red Pink Blue White
+..00.
+..20.
+2111.
+..33.
+...44
+
+PlayerRight
+Yellow Red Pink Blue White
+.00..
+.02..
+.1112
+.33..
+44...
+
+Bush
+darkgreen Red
+..00.
+.0000
+00010
+01000
+.000.
+
+Tree
+darkgreen darkbrown
+..0..
+.000.
+00000
+0.1.0
+.111.
+
+SwitchUp
+Grey Darkgrey Darkblue Black Red
+12420
+02321
+12320
+02221
+02220
+
+SwitchDown
+Grey Darkgrey DarkBlue Black Red
+12220
+02221
+12320
+02321
+02420
+
+Statue
+Darkblue DarkRed
+0...0
+01010
+.000.
+.000.
+0.0.0
+
+StatueOn
+Darkblue Red
+0...0
+01010
+.000.
+.000.
+0.0.0
+
+Boulder
+DarkGrey DarkBlue
+.000.
+01000
+00000
+00010
+.000.
+
+BoulderOn
+Blue
+.....
+.0...
+.....
+...0.
+.....
+
+BoulderUp
+DarkGrey DarkBlue
+.000.
+01000
+00000
+00010
+.000.
+
+BoulderDown
+DarkGrey DarkBlue
+.000.
+01000
+00000
+00010
+.000.
+
+BoulderRight
+DarkGrey DarkBlue
+.000.
+01000
+00000
+00010
+.000.
+
+BoulderLeft
+DarkGrey DarkBlue
+.000.
+01000
+00000
+00010
+.000.
+
+FloorPanel
+Purple DarkRed
+.....
+..0..
+.010.
+..0..
+.....
+
+ForceField
+Blue
+.0.0.
+0.0.0
+.....
+.0.0.
+0.0.0
+
+OpenForceField
+Purple
+.....
+.....
+.0.0.
+.....
+.....
+
+SpikeTrap
+LightBlue White
+.....
+.....
+.....
+..0..
+0.1.0
+
+Spikes
+White LightBlue
+..1..
+1.0.1
+0.0.0
+0.0.0
+0...0
+
+TriggerSpikes
+White
+.....
+.....
+.....
+..0..
+0...0
+
+ShadowGate
+Black
+.....
+.....
+.....
+.....
+.....
+
+ShadowField
+Black
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+- = Background
+. = Floor
+# = Wall
+* = Entrance
+, = Grass
+P = Player and Floor
+R = Player and Grass
+X = Gate and Exit
+B = Bush and Grass
+T = Tree and Grass
+U = SwitchUp
+D = SwitchDown
+S = Statue and Floor
+Z = StatueOn and FloorPanel and Floor
+O = Boulder and Floor
+Q = Boulder and BoulderOn and FloorPanel
+F = FloorPanel and Floor
+% = ForceField and Floor
+K = SpikeTrap and Floor
+
+Immovable = Wall or Bush or Tree or SwitchUp or Switchdown or Gate or Forcefield  or Entrance or Spikes
+Movable = Statue or StatueOn or Boulder
+Weight = PlayerUp or PlayerDown or PlayerLeft or PlayerRight or Player or Statue or StatueOn or Boulder or BoulderUp or BoulderDown or BoulderRight or BoulderLeft
+
+=======
+SOUNDS
+=======
+
+( Gate opening )
+Sfx0 94191702
+
+( Switch flipping )
+Sfx1 99768904
+
+( Statue moving )
+Sfx2 80097301
+
+( Forcefield opening )
+Sfx3 55900709
+
+( ForceField closing )
+Sfx4 17645103
+
+( Boulder hitting a wall )
+Sfx5 14620302
+
+( SpikeTrap Springing )
+Sfx6 9748102
+
+( Winning a level! )
+Sfx9 29086103
+
+( Player hitting a wall )
+Sfx10 75256507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ShadowGate, ShadowField
+Floor, Grass
+Exit, FloorPanel, OpenForceField, SpikeTrap, TriggerSpikes
+Player, PlayerUp, PlayerDown, PlayerLeft, PlayerRight, Wall, Bush, Tree, SwitchUp, SwitchDown, Gate, Statue, Forcefield, StatueOn, Boulder, BoulderUp, BoulderDown, BoulderLeft, BoulderRight, Entrance, Spikes
+BoulderOn
+
+======
+RULES
+======
+
+( Player movement )
+
+[ UP Player ] -> [ PlayerUp ]
+[ RIGHT Player ] -> [ PlayerRight ]
+[ DOWN Player ] -> [ PlayerDown ]
+[ LEFT Player ] -> [ PlayerLeft ]
+
+UP [ PlayerUp | SwitchUp ] -> [ Player | SwitchDown Sfx1 ]
+RIGHT [ PlayerRight | SwitchUp ] -> [ Player | SwitchDown Sfx1 ]
+DOWN [ PlayerDown | SwitchUp ] -> [ Player | SwitchDown Sfx1 ]
+LEFT [ PlayerLeft | SwitchUp ] -> [ Player | SwitchDown Sfx1 ]
+
+UP [ PlayerUp | Movable ] -> [ Player | UP Movable Sfx2 ]
+RIGHT [ PlayerRight | Movable ] -> [ Player | RIGHT Movable Sfx2 ]
+DOWN [ PlayerDown | Movable ] -> [ Player | DOWN Movable Sfx2 ]
+LEFT [ PlayerLeft | Movable ] -> [ Player | LEFT Movable Sfx2 ]
+
+UP [ PlayerUp | Immovable ] -> [ Player | Immovable Sfx10 ]
+RIGHT [ PlayerRight | Immovable ] -> [ Player | Immovable Sfx10 ]
+DOWN [ PlayerDown | Immovable ] -> [ Player | Immovable Sfx10 ]
+LEFT [ PlayerLeft | Immovable ] -> [ Player | Immovable Sfx10 ]
+
+[ PlayerUp ] -> [ UP PlayerUp ] again
+[ PlayerRight ] -> [ RIGHT PlayerRight ] again
+[ PlayerDown ] -> [ DOWN PlayerDown ] again
+[ PlayerLeft ] -> [ LEFT PlayerLeft ] again
+
+
+
+( Spiketraps )
+
+[ Weight SpikeTrap ] -> [ Weight TriggerSpikes ]
+[ TriggerSpikes no Weight ] -> [ Spikes Sfx6 ]
+
+
+( Boulders roll )
+
+UP [ BoulderUp | SwitchUp ] -> [ Boulder | SwitchDown Sfx1 ]
+RIGHT [ BoulderRight | SwitchUp ] -> [ Boulder | SwitchDown Sfx1 ]
+DOWN [ BoulderDown | SwitchUp ] -> [ Boulder | SwitchDown Sfx1 ]
+LEFT [ BoulderLeft | SwitchUp ] -> [ Boulder | SwitchDown Sfx1 ]
+
+UP [ BoulderUp | Immovable ] -> [ Boulder | Immovable Sfx5 ]
+RIGHT [ BoulderRight | Immovable ] -> [ Boulder | Immovable Sfx5 ]
+DOWN [ BoulderDown | Immovable ] -> [ Boulder | Immovable Sfx5 ]
+LEFT [ BoulderLeft | Immovable ] -> [ Boulder | Immovable Sfx5 ]
+
+UP [ BoulderUp | Movable ] -> [ Boulder | UP Movable Sfx2 ]
+RIGHT [ BoulderRight | Movable ] -> [ Boulder | Right Movable Sfx2 ]
+DOWN [ BoulderDown | Movable ] -> [ Boulder | Down Movable Sfx2 ]
+LEFT [ BoulderLeft | Movable ] -> [ Boulder | Left Movable Sfx2 ]
+
+[ UP Boulder ] -> [ BoulderUp ]
+[ DOWN Boulder ] -> [ BoulderDown ]
+[ RIGHT Boulder ] -> [ BoulderRight ]
+[ LEFT Boulder ] -> [ BoulderLeft ]
+
+[ BoulderUp ] -> [ UP BoulderUp ] again
+[ BoulderRight ] -> [ RIGHT BoulderRight ] again
+[ BoulderLeft ] -> [ LEFT BoulderLeft ] again
+[ BoulderDown ] -> [ DOWN BoulderDown ] again
+
+
+( Switches and Gates )
+
+late [ SwitchDown ] [ Gate ] -> [ SwitchDown ] [ Gate ShadowGate ]
+late [ SwitchUp ] [ ShadowGate ] -> [ SwitchUp ] [ no ShadowGate ]
+late [ Gate ShadowGate ] -> [ no Gate no ShadowGate Sfx0 ]
+
+
+( Floor Panels and Forcefields )
+
+late [ Weight FloorPanel ] [ Forcefield ] -> [ Weight FloorPanel ] [ ForceField ShadowField ]
+late [ FloorPanel no Weight ] [ ShadowField ] -> [ FloorPanel ] [ no ShadowField ]
+late [ ForceField ShadowField ] -> [ OpenForceField no ShadowField Sfx3 ]
+
+late [ FloorPanel no Weight ] [ OpenForceField ] -> [ FloorPanel] [ ForceField Sfx4 ]
+
+
+( Statues light up on Panels )
+
+late [ Statue FloorPanel ] -> [ StatueOn FloorPanel ]
+late [ StatueOn no FloorPanel ] -> [ Statue ]
+
+
+( Boulders light up on Panels )
+
+late [ Boulder FloorPanel ] -> [ Boulder FloorPanel BoulderOn ]
+late [ BoulderOn no Boulder ] -> [ no BoulderOn ]
+
+
+( Winning a level )
+
+late [ Player Exit ] -> [ Player Exit Sfx9 ]
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Exit
+
+=======
+LEVELS
+=======
+
+message When you wear your new magical shoes, you just can't stop moving! You should explore the old castle in the forest!
+
+----------------
+----------------
+----------------
+################
+#####U######U###
+#####,#XXX##,###
+TT,,,,,,,,B,,,,T
+T,,,,,,,,,,,,,,T
+T,,B,,,,,,,,,,,T
+T,,,,,BB,,,,,B,T
+T,B,,,,,R,,B,,,T
+TTTTTTTTTTTTTTTT
+----------------
+----------------
+----------------
+----------------
+
+------#####-----
+------##X##-----
+------#...#-----
+------#...#----
+#######%%%######
+#..............#
+#.#....f.f...#.#
+#........s.....#
+#.#....s.......#
+#.........#..#.#
+#######........#
+------#..#######
+------##..####--
+------#.....u#--
+------#.p.####--
+------#***#-----
+
+----------------
+----------------
+-------#########
+-------#....#.##
+----####......##
+---##.........X#
+--##......#...##
+###...#........#
+#u.............#
+###......#.....#
+--##.........#.#
+---##......#...#
+----###U.#####.#
+------##.......#
+------##P#######
+------##*##-----
+
+---#############
+---##X#.......u#
+####......######
+#.........o...u#
+#.###.....######
+*P#,#.....#-----
+#.#,#.....#-----
+#.#,#.....#-----
+#.###.....#-----
+#......#..#-----
+#.........#-----
+#########o#-----
+--------#.#-----
+--------#u#-----
+--------###-----
+----------------
+
+################
+#.....#######x##
+#.###...##U##%##
+#.###....#.#..##
+#.#....f.#.#...#
+#.#...#..#.#...#
+#....s...#.#...#
+##.........#.z.#
+###.....##.#...#
+#####.####.#...#
+####..####.##..#
+####...###.##..#
+####.......##.##
+---#...######.##
+---#.p..%%%...##
+---##*##########
+
+################
+#X###u##...#.u.#
+#.#u#.##.#k#...#
+#..........#...#
+#......#.#.##k##
+###.#o.#.#.#...#
+#.k......#.#...#
+#####.##o#.#..##
+#u..o..o...k.o.#
+###.#.#..#.##..#
+###......#.#...#
+#u#.#.##.#.#..##
+#.....k..#.##..#
+#.#.####k#.#...#
+#...#..#.#u#.p.#
+#############*##
+
+message You found a magical hat! When you wear it, you can't stop thinking! Congratulations!

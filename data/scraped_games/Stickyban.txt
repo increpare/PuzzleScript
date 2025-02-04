@@ -1,0 +1,172 @@
+title Stickyban
+author Connorses / Loneship Games
+homepage www.puzzlescript.net
+text_color #5F259F
+========
+OBJECTS
+========
+
+Background
+#549c0f GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#8d4d0c #602700
+00010
+11111
+01000
+11111
+00010
+
+Player
+brown Orange purple Blue
+.000.
+.111.
+22222
+.222.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+wallHit
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+wallHit
+
+======
+RULES
+======
+[> player|wall] -> cancel
+[ moving Player | Crate ] -> [ moving Player | moving Crate ]
+[ moving Crate | Crate ] -> [ moving Crate | moving Crate ]
+
+[ > Crate | Wall ] -> [ Crate wallHit | Wall ]
+[ Crate wallHit | Crate ] -> [ Crate wallHit | Crate wallHit ]
+[ moving Crate wallHit ] -> [ Crate wallHit ]
+[ > player | wallHit ] -> cancel
+
+
+late [ Crate wallHit ] -> [ Crate ]
+late [ wallHit ] -> []
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+######
+#...*#
+#..###
+#.p#.#
+#..###
+#...o#
+######
+
+######
+#.oo.#
+#.#op#
+#.**.#
+#..*.#
+#....#
+######
+
+#########
+#...*...#
+#..###..#
+#.*.....#
+#.p.oo..#
+#.*.oo..#
+#.......#
+#..###..#
+#...*...#
+#########
+
+####..
+#.O#..
+#.O###
+#*P..#
+#..*.#
+#..###
+####..
+
+#######
+#..o..#
+#.po*.#
+##.o..#
+####*.#
+##*...#
+#######
+
+###########
+#..##.....#
+#..##....p#
+#..#o....*#
+#*.#.#....#
+#...*.o...#
+#..#*..####
+#..**.#####
+#..#..#####
+#.........#
+#.........#
+###########
+
+########
+#.....p#
+#.#...*#
+#.*....#
+#......#
+##.###.#
+.#.###.#
+.#*....#
+.#.#####
+.#.....#
+.#*...o#
+.#######

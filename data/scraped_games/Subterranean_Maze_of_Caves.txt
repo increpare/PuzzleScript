@@ -1,0 +1,397 @@
+Title Subterranean Maze of Caves
+Author Connor McHarney
+homepage connorspuzzles.tumblr.com
+again_interval 0.1
+========
+OBJECTS
+========
+background
+transparent
+
+p_ground
+purple
+.....
+.000.
+.000.
+.000.
+.0.0.
+
+p_jump
+purple
+.000.
+.000.
+.000.
+0...0
+.....
+
+p_fall
+purple
+.000.
+.000.
+00000
+.....
+.....
+
+ground
+#4b3407 #3c2a07
+10101
+00000
+00000
+00000
+00000
+
+ladder
+darkbrown
+0...0
+00000
+0...0
+00000
+0...0
+
+goal
+yellow #220000 #110000 #290f0f
+.000.
+0...0
+02220
+01110
+03330
+
+turn1
+transparent
+turn2
+transparent
+turn3
+transparent
+
+crate
+#d0a111 #947d38
+00000
+01110
+00000
+01110
+00000
+
+walker_r
+white black
+.000.
+.001.
+.000.
+..0..
+..0..
+
+walker_l
+white black
+.000.
+.100.
+.000.
+..0..
+..0..
+
+
+walker2_r
+green darkblue black
+.000.
+.002.
+.000.
+..110
+..0..
+
+walker2_l
+green darkblue black
+.000.
+.200.
+.000.
+011..
+..0..
+
+mark
+black
+.....
+.....
+.....
+00.00
+.....
+
+bat_l
+darkblue red
+00.00
+0...0
+.000.
+.100.
+.0.0.
+
+bat_r
+darkblue red
+00.00
+0...0
+.000.
+.001.
+.0.0.
+
+bat_u
+darkblue red
+00.00
+0...0
+.101.
+.000.
+.0.0.
+
+bat_d
+darkblue red
+00.00
+0...0
+.000.
+.101.
+.0.0.
+
+open1
+lightbrown
+0...0
+.....
+.....
+.....
+0...0
+door1
+#ffff00
+
+button1
+grey
+00000
+.....
+.....
+.....
+.....
+button1_top
+#ffff00 
+.....
+.....
+.....
+.....
+.000.
+
+corpse
+red
+.....
+.000.
+.000.
+.000.
+.0.0.
+
+
+check
+red white
+0111.
+00000
+01110
+01110
+00000
+check2
+darkred grey
+0111.
+00000
+01110
+01110
+00000
+=======
+LEGEND
+=======
+. = background
+p = p_ground
+# = ground
+! = ground and turn1
+g = goal
+- = ladder
+/ = crate
+S = check
+$ = crate and check
+A = button1 and ground
+_ = button1_top
+B = open1 and door1
+1 = walker_R
+2 = walker_L
+3 = bat_L
+4 = bat_R
+5 = walker2_L
+6 = walker2_R
+7 = bat_u
+8 = bat_d
+
+player = p_ground or p_jump or p_fall
+turn = turn1 or turn2 or turn3
+walker = walker_r or walker_l
+bat = bat_L or bat_R or bat_U or bat_D
+walker2 = walker2_L or walker2_R
+
+door = door1
+
+solid = walker or ground or crate or door or bat or walker2
+
+deadly = bat or walker or walker2
+
+weight = player or crate or walker
+=======
+SOUNDS
+=======
+sfx0 12032308
+================
+COLLISIONLAYERS
+================
+background
+goal,ladder,check,check2
+ground,player,crate,door
+walker, walker2, bat, bat_u, bat_d
+button1
+open1,button1_top
+turn,corpse
+mark
+======
+RULES
+======
+[open1 door1] -> [open1]
+[button1_top] -> [   ]
+up [button1|no weight] [open1] -> [button1|button1_top] [open1 door1]
+
+
+(monster movements go here in turn2)
+
+left  [walker_L|solid] [turn2] -> [walker_r|solid] [turn2]
+right [walker_R|solid] [turn2] -> [walker_l|solid] [turn2]
+
+right [walker_r|no solid] [turn2] -> [> walker_r|   ] [turn2]
+left  [walker_L|no solid] [turn2] -> [> walker_L|   ] [turn2]
+(walker2)
+left  [walker2_L|solid] [turn2] -> [walker2_r|solid] [turn2]
+right [walker2_R|solid] [turn2] -> [walker2_l|solid] [turn2]
+
+right [walker2_r mark|no solid] [turn2] -> [> walker2_r|   ] [turn2]
+left  [walker2_L mark|no solid] [turn2] -> [> walker2_L|   ] [turn2]
+
+[stationary walker2 no mark] [turn2] -> [walker2 mark] [turn2]
+(bat horizontal)
+left  [bat_L|solid] [turn2] -> [bat_r|solid] [turn2]
+right [bat_R|solid] [turn2] -> [bat_l|solid] [turn2]
+
+right [bat_r|no solid] [turn2] -> [> bat_r|   ] [turn2]
+left  [bat_L|no solid] [turn2] -> [> bat_L|   ] [turn2]
+(bat vertical)
+up  [bat_U|solid] [turn2] -> [bat_D|solid] [turn2]
+down [bat_D|solid] [turn2] -> [bat_U|solid] [turn2]
+(up[bat_U|player] [turn2] -> [bat_D|player] [turn2])
+up [bat_U|no solid] [turn2] -> [> bat_U|   ] [turn2]
+down [player no ladder|bat_D|no solid] [turn2] -> [down player|down bat_D|   ] [turn2]
+down  [bat_D|no solid] [turn2] -> [> bat_D|   ] [turn2]
+(falling)
+down  [walker |no solid] [turn2] -> [down walker |   ] [turn2]
+down  [walker2|no solid] [turn2] -> [down walker2|   ] [turn2]
+
+[turn3] -> [turn1]
+[turn2] -> [turn3] again
+
+(player movements go here in turn1)
+horizontal [> player|solid no crate] [turn1] -> [player|solid] [turn2] again
+vertical [> player|solid] [turn1] -> [player|solid] [turn2] again
+down [crate|no solid] [turn1] -> [down crate|   ] [turn1]
+down [p_fall|no solid] [turn1] -> [down p_fall|   ] [turn2] again
+[horizontal p_ground] [turn1] -> [horizontal p_ground] [turn2] again
+[up p_ground] [turn1] -> [up p_jump] [turn2] again
+[horizontal p_jump] [turn1] -> [horizontal p_fall] [turn2] again
+[vertical p_jump] [turn1] -> [down p_fall] [turn2] again
+[action player] [turn1] -> [player] [turn2] again
+[down player ladder] [turn1] -> [down player ladder] [turn2] again
+[down player|solid no bat_D] [turn1] -> [player|solid] [turn2] again
+horizontal [> player|crate|no solid] -> [> player|> crate|   ]
+(player hits ground)
+late down [p_ground|no solid] -> [p_fall|   ]
+late down [player|solid] -> [p_ground|solid]
+late [player ladder] -> [p_ground ladder]
+
+late [turn3] [player deadly] -> [turn3] [corpse deadly]
+
+[player check] [check2] -> [player check] [check]
+[player check] -> [player check2] checkpoint message "Game Saved!]
+
+==============
+WINCONDITIONS
+==============
+some player on goal
+=======
+LEVELS
+=======
+###################
+###################
+#######....########
+#######..g.###!####
+#####.-.###########
+#####.-############
+######-........####
+#######-.......####
+#######..p.-.######
+#######.###-#######
+#######....-.######
+#######....########
+###################
+###################
+###################
+
+!#################
+#.........g......#
+#........#####-..#
+#.p..............#
+#####.......#..5##
+######6....#######
+##################
+
+(#########################
+#!#######################
+####.##..####.##.#.b...##
+##....#....#..#....#4...#
+##................##..4.#
+#-.....#.###...Sp#####g##
+#-#..2...b2#6..##########
+#-#######################
+#-..#####################
+##..#.....3##..$_########
+###....#...#...#a########
+#########........2#######
+#########################
+#########################
+#########################)
+
+!#########
+##..-b.g##
+##p/-#####
+####-....#
+#...-/1..#
+#_._######
+#a#a######
+
+###########
+####......#
+#####.4..g#
+###4....###
+####..3..##
+###..3..###
+#...#######
+#..########
+!..3.##.###
+##...#...##
+###.....p##
+###3...####
+##......###
+###########
+
+###################
+###################
+#######....########
+#####.........!####
+####..........#####
+####...........####
+####...........####
+####...........####
+######.....3#######
+##4..p...##########
+######.3......#####
+#####.........#####
+###################
+###################
+###################

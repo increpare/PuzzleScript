@@ -1,0 +1,1222 @@
+title Trains Love Snowmen
+
+(key_repeat_interval .16
+again_interval .08
+realtime_interval .16)
+
+(verbose_logging)
+
+noaction
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+#9FD279
+00000
+00000
+00000
+00000
+00000
+
+Snow
+#F0F0E7
+00000
+00000
+00000
+00000
+00000
+
+
+
+
+Small
+#FFFFFF
+.....
+.....
+..0..
+.....
+.....
+
+Medium
+#E4DFDF
+.....
+.000.
+.000.
+.000.
+.....
+
+Large
+#D5CCC4
+.000.
+00000
+00000
+00000
+.000.
+
+wall
+grey
+
+BoxL
+#eb8931 #e8872f #e5842d #e1812b #de7e28 #d67823 #d37521 #cf721e #ce711e #d9c554
+01234
+92345
+93456
+94567
+45678
+
+BoxR
+#eb8931 #e8872f #e5842d #e1812b #de7e28 #d67823 #d37521 #cf721e #ce711e #edd964
+01234
+12349
+23459
+34569
+45678
+
+BoxU
+#eb8931 #e8872f #e5842d #e1812b #de7e28 #d67823 #d37521 #cf721e #ce711e #d9c554
+09994
+12345
+23456
+34567
+45678
+
+BoxD
+#eb8931 #e8872f #e5842d #e1812b #de7e28 #d67823 #d37521 #cf721e #ce711e #edd964
+01234
+12345
+23456
+34567
+49998
+
+
+SplatU
+red
+00000
+.....
+.....
+.....
+.....
+
+wSplatU
+white
+00000
+.....
+.....
+.....
+.....
+
+wSplatL2
+white
+0....
+0....
+0....
+0....
+0....
+
+wSplatR2
+white
+....0
+....0
+....0
+....0
+....0
+
+wSplatU2
+white
+00000
+.....
+.....
+.....
+.....
+
+wSplatD2
+white
+.....
+.....
+.....
+.....
+00000
+
+SplatL2
+red
+0....
+0....
+0....
+0....
+0....
+
+SplatR2
+red
+....0
+....0
+....0
+....0
+....0
+
+SplatU2
+red
+00000
+.....
+.....
+.....
+.....
+
+SplatD2
+red
+.....
+.....
+.....
+.....
+00000
+
+GloveL
+#f2de68 #edd964 #e9d460 #e4cf5b #dfca57 #d9c554 #d5c14f #e5842d
+.012.
+01734
+12777
+23756
+.456.
+
+GloveR
+#f2de68 #edd964 #e9d460 #e4cf5b #dfca57 #d9c554 #d5c14f #d37521
+.012.
+01734
+77745
+23756
+.456.
+
+GloveU
+#f2de68 #edd964 #e9d460 #e4cf5b #dfca57 #d9c554 #d5c14f #e5842d
+.012.
+01234
+17775
+23756
+.476.
+
+GloveD
+#f2de68 #edd964 #e9d460 #e4cf5b #dfca57 #d9c554 #d5c14f #d37521
+.072.
+01734
+17775
+23456
+.456.
+
+
+TriggeredTemp
+#eb8931 #e8872f #e5842d #e1812b #de7e28 #d67823 #d37521 #cf721e #ce711e #d9c554
+..2..
+.234.
+23456
+.456.
+..6..
+
+TriggeredFinal
+#eb8931 #e8872f #e5842d #e1812b #de7e28 #d67823 #d37521 Brown White
+..2..
+.777.
+27876
+.777.
+..6..
+
+WallL
+DarkGrey
+0....
+0....
+0....
+0....
+0....
+
+WallR
+DarkGrey
+....0
+....0
+....0
+....0
+....0
+
+WallU
+DarkGrey
+00000
+.....
+.....
+.....
+.....
+
+WallD
+DarkGrey
+.....
+.....
+.....
+.....
+00000
+
+WallLR
+DarkGrey
+0...0
+0...0
+0...0
+0...0
+0...0
+
+WallUD
+DarkGrey
+00000
+.....
+.....
+.....
+00000
+ 
+WallUL
+DarkGrey
+0....
+.....
+.....
+.....
+.....
+ 
+WallUR
+DarkGrey
+....0
+.....
+.....
+.....
+.....
+ 
+WallDL
+DarkGrey
+.....
+.....
+.....
+.....
+0....
+ 
+WallDR
+DarkGrey
+.....
+.....
+.....
+.....
+....0
+ 
+WallDLR
+DarkGrey
+.....
+.....
+.....
+.....
+0...0
+ 
+WallULR
+DarkGrey
+0...0
+.....
+.....
+.....
+.....
+ 
+WallLUD
+DarkGrey
+0....
+.....
+.....
+.....
+0....
+ 
+WallRUD
+DarkGrey
+....0
+.....
+.....
+.....
+....0
+
+
+Once
+Brown #dddddd
+.....
+.000.
+.010.
+.000.
+.....
+
+canthardup
+transparent
+
+cantharddown
+transparent
+
+canthardright
+transparent
+
+canthardleft
+transparent
+
+cantsoftup
+transparent
+
+cantsoftdown
+transparent
+
+cantsoftright
+transparent
+
+cantsoftleft
+transparent
+
+connectup
+transparent
+
+connectdown
+transparent
+
+connectright
+transparent
+
+connectleft
+transparent
+
+noagained
+transparent
+
+cantrigger
+transparent
+
+nochosen
+transparent
+
+agained
+transparent
+
+wentup
+transparent
+
+wentleft
+transparent
+
+wentdown
+transparent
+
+wentright
+transparent
+
+hardmove
+transparent
+
+nothinghappened
+transparent
+
+Start
+transparent
+
+Delay
+transparent
+
+MoveTrigger
+transparent
+
+triggerwent
+transparent
+
+startsnow
+transparent
+
+fail
+transparent
+
+PickupBG
+lightgrey lightgreen
+00000
+01110
+01110
+01110
+00000
+
+Notrack
+#a46422 #495e2b #493c2b #000000 grey darkbrown
+..0..
+.111.
+01110
+02220
+.2.2.
+
+FromD
+#a46422 #495e2b #493c2b #000000 grey darkbrown
+..0..
+.111.
+01110
+02220
+42.24
+
+FromU
+#a46422 #495e2b #493c2b #000000 grey darkbrown
+4.0.4
+41114
+01110
+02220
+.2.2.
+
+FromL
+#a46422 #495e2b #493c2b #000000 grey darkbrown
+440..
+.111.
+01110
+02220
+4252.
+
+FromR
+#a46422 #495e2b #493c2b #000000 grey darkbrown
+..044
+.111.
+01110
+02220
+.2524
+
+
+VTrack
+grey darkbrown
+0...0
+0...0
+01110
+0...0
+0...0
+
+HTrack
+grey darkbrown
+00000
+..1..
+..1..
+..1..
+00000
+
+Crossing
+grey grey
+01110
+1...1
+1...1
+1...1
+01110
+
+DRTrack
+grey darkbrown
+...00
+..0..
+.01..
+0..1.
+0...1
+
+DLTrack
+grey darkbrown
+00...
+..0..
+..10.
+.1..0
+1...0
+
+ULTrack
+grey darkbrown
+1...0
+.1..0
+..10.
+..0..
+00...
+
+URTrack
+grey darkbrown
+0...1
+0..1.
+.01..
+..0..
+...00
+
+UTrain
+red black darkred
+.000.
+01110
+00000
+00100
+00000
+
+RTrain
+red black darkred
+0000.
+00010
+01010
+00010
+0000.
+
+LTrain
+red black darkred
+.0000
+01000
+01010
+01000
+.0000
+
+DTrain
+red black darkred
+00000
+00100
+00000
+01110
+.000.
+
+Cart
+red black darkred
+22222
+21112
+21112
+21112
+22222
+
+
+BluePassengerWaiting
+DarkBrown Blue DarkBrown DarkBlue
+..0..
+.111.
+21112
+23332
+.3.3.
+
+BluePassengerOnCart
+DarkBrown Blue DarkBrown DarkBlue
+.....
+..0..
+.111.
+.111.
+.....
+
+BlueTarget
+lightblue darkbrown
+00000
+01110
+01110
+01110
+00000
+
+RedPassengerWaiting
+DarkBrown Red DarkBrown DarkRed
+..0..
+.111.
+21112
+23332
+.3.3.
+
+RedPassengerOnCart
+DarkBrown Red DarkBrown DarkRed
+.....
+..0..
+.111.
+.111.
+.....
+
+RedTarget
+lightRed darkbrown
+00000
+01110
+01110
+01110
+00000
+
+=======
+LEGEND
+=======
+
+Ball = Small or Medium or Large
+
+box = BoxL or BoxR or BoxU or BoxD
+
+Glove = GloveL or GloveR or GloveU or GloveD
+
+Player = FromD or FromU or FromL or FromR or notrack
+
+Track = VTrack or HTrack or URTrack or ULTrack or DRTrack or DLTrack or Crossing
+
+Train = UTrain or DTrain or LTrain or RTrain
+
+Target = BlueTarget or RedTarget
+
+PassengerWaiting = BluePassengerWaiting or RedPassengerWaiting
+PassengerOnCart = BluePassengerOnCart or RedPassengerOnCart
+
+Passenger = PassengerWaiting or PassengerOnCart
+
+Movable = box or Glove or Player or ball or train or cart
+notmovable =  wall or target or pickupbg
+
+hard = box or glove or train or cart
+
+soft = player or ball
+
+Splat1 = splatu or wsplatu
+Splat2 = SplatL2 or SplatR2 or SplatU2 or SplatD2 or wSplatL2 or wSplatR2 or wSplatU2 or wSplatD2
+
+
+
+Triggered = TriggeredTemp or TriggeredFinal
+
+~ = Background
+` = Wall
+! = FromL and Start
+r = notrack
+
+@ = boxl
+2 = boxr
+# = boxd
+3 = boxu
+ 
+$ = BoxL and Once
+4 = BoxR and Once
+% = BoxU and Once
+5 = BoxD and Once
+
+WallCoverLR = WallL or WallR or WallLR
+WallCoverUD = WallU or WallD or WallUD
+WallCoverCorner = WallUL or WallUR or WallDL or WallDR or WallDLR or WallLUD or WallRUD or WallULR
+WallCover = WallCoverLR or WallCoverUD or WallCoverCorner
+
+CoverLR = WallCoverLR
+CoverUD = WallCoverUD
+
+
+boxv = boxu or boxd
+boxh = boxl or boxr
+wentver = wentup or wentdown
+wenthor = wentleft or wentright
+went = wentver or wenthor
+
+^ = Snow
+6 = FromL and Snow and Start
+& = Small
+7 = Medium
+* = Small and Medium
+8 = Large
+9 = Large and Small
+t = small and medium and large
+
+
+connect = connectup or connectdown or connectleft or connectright
+canthard = canthardup or cantharddown or canthardleft or canthardright
+cantsoft = cantsoftup or cantsoftdown or cantsoftleft or cantsoftright
+
+0 = VTrack
+- = HTrack
+_ = Crossing
+
+
+ConnectsL = DLTrack or ULTrack or HTrack
+ConnectsR = DRTrack or URTrack or HTrack
+ConnectsU = ULTrack or URTrack or VTrack
+ConnectsD = DLTrack or DRTrack or VTrack
+
+
++ = BluePassengerWaiting and PickupBG
+q = BlueTarget
+
+w = RedPassengerWaiting and PickupBG
+e = RedTarget
+
+
+
+
+
+
+=======
+SOUNDS
+=======
+
+restart 26040109
+undo 54997907
+
+endlevel 7293908
+
+Player move 88095307
+box move 5814507
+
+Glove create 55998304
+Splat1 create 2968302
+(67932504)
+
+sfx1 32201704 ( can't move )
+sfx2 5814507 ( crate move )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Track
+snow
+large
+medium
+small
+Player, Wall, box, Glove, Train, Cart, Target, PickupBG
+Passengerwaiting
+Passengeroncart
+Start, Delay, MoveTrigger,
+Triggered
+WallCoverUD
+WallCoverCorner
+Once
+WallCoverLR
+Splat1, Splat2
+agained
+canthardup
+canthardleft
+cantharddown
+canthardright
+cantsoftup
+cantsoftdown
+cantsoftleft
+cantsoftright
+connectup
+connectdown
+connectleft
+connectright
+nochosen
+noagained
+cantrigger
+went
+hardmove
+nothinghappened
+triggerwent
+startsnow
+fail
+======
+RULES
+======
+
+
+
+(start train)
+
+[ MoveTrigger ] [ UTrain ] -> [ MoveTrigger ] [ up UTrain ]
+[ MoveTrigger ] [ DTrain ] -> [ MoveTrigger ] [ down DTrain ]
+[ MoveTrigger ] [ LTrain ] -> [ MoveTrigger ] [ left LTrain ]
+[ MoveTrigger ] [ RTrain ] -> [ MoveTrigger ] [ right RTrain ]
+
+([ Delay ] [ moving Train ] -> [ Delay ] [ Train ])
+
+[ Delay ] [ MoveTrigger ] -> [  ] [ action MoveTrigger ]
+
+[ > Train | Wall ] -> cancel
+[ > Train | Passenger  no cart] -> cancel
+
+(train turns when starting on a corners)
+late    [ UTrain DRTrack ] -> [ RTrain DRTrack ]
+late    [ UTrain DLTrack ] -> [ LTrain DLTrack ]
+
+late [ RTrain DLTrack ] -> [ DTrain DLTrack ]
+late [ RTrain ULTrack ] -> [ UTrain ULTrack ]
+
+late  [ DTrain URTrack ] -> [ RTrain URTrack ]
+late  [ DTrain ULTrack ] -> [ LTrain ULTrack ]
+
+late  [ LTrain DRTrack ] -> [ DTrain DRTrack ]
+late  [ LTrain URTrack ] -> [ UTrain URTrack ]
+
+(cart follows train)
+
+
+
+left [ MoveTrigger Cart ConnectsL | Cart ] ->  [ MoveTrigger < Cart ConnectsL | Cart ]
+right [ MoveTrigger Cart ConnectsR | Cart ] ->  [ MoveTrigger < Cart ConnectsR | Cart ]
+up [ MoveTrigger Cart ConnectsU | Cart ] ->  [ MoveTrigger < Cart ConnectsU | Cart ]
+down [ MoveTrigger Cart ConnectsD | Cart ] ->  [ MoveTrigger < Cart ConnectsD | Cart ]
+
+[ stationary Cart | moving Train ] -> [ > Cart | moving Train ] again
+[ stationary Cart | moving Cart ] -> [ > Cart | moving Cart ]
+
+[ PassengerOnCart moving Cart ] -> [ moving PassengerOnCart moving Cart ]
+
+(Passengers get on/off)
+
+late [  no PassengerWaiting no PassengerOnCart ] -> [] again
+
+late [ BluePassengerWaiting  no Cart no Target | Cart no PassengerOnCart ] -> [ Delay | Cart BluePassengerOnCart ] again
+late [ RedPassengerWaiting  no Cart no Target | Cart no PassengerOnCart ] -> [ Delay | Cart RedPassengerOnCart ] again
+
+late [ PassengerWaiting  no Cart no Target | Cart PassengerOnCart ] -> [ PassengerWaiting | Cart PassengerOnCart ] again
+late [ PassengerWaiting no Cart no Delay no Target | Cart no PassengerOnCart ] -> [ PassengerWaiting Delay | Cart ] again
+
+late [ BluePassengerOnCart  Cart | no PassengerWaiting BlueTarget ] -> [ Delay Cart | BluePassengerWaiting BlueTarget ] again
+late [ RedPassengerOnCart  Cart | no PassengerWaiting RedTarget ] -> [ Delay Cart | RedPassengerWaiting RedTarget ] again
+
+late [ BluePassengerOnCart Cart no Delay | no PassengerWaiting BlueTarget ] -> [ BluePassengerOnCart Cart Delay | BlueTarget ] again
+late [ RedPassengerOnCart Cart no Delay | no PassengerWaiting RedTarget ] -> [ RedPassengerOnCart Cart Delay | RedTarget ] again
+
+(Train leaves world)
+
+[ stationary MoveTrigger Train ] -> [ MoveTrigger ] again
+[ MoveTrigger Cart no passengeroncart] -> [ MoveTrigger ] again
+([ MoveTrigger PassengerOnCart ] -> [ MoveTrigger passengeroncart] again)
+
+left [ Wall no WallCoverLR | no Wall ] -> [ Wall WallL | ]
+right [ Wall no WallCoverLR | no Wall ] -> [ Wall WallR | ]
+right [ Wall WallL | no Wall ] -> [ Wall WallLR | ]
+
+up [ Wall no WallCoverUD | no Wall ] -> [ Wall WallU | ]
+down [ Wall no WallCoverUD | no Wall ] -> [ Wall WallD | ]
+down [ Wall WallU | no Wall ] -> [ Wall WallUD | ]
+
+left [ Wall no WallCoverCorner no WallUD | WallUD ] -> [ Wall WallLUD | WallUD ]
+right [ Wall no WallCoverCorner no WallUD | WallUD ] -> [ Wall WallRUD | WallUD ]
+up [ Wall no WallCoverCorner no WallLR | WallLR ] -> [ Wall WallULR | WallLR ]
+down [ Wall no WallCoverCorner no WallLR | WallLR ] -> [ Wall WallDLR | WallLR ]
+
+right [ WallD | Wall no WallCoverCorner no WallCoverUD ] -> [ WallD | Wall WallDL ]
+left [ WallD | Wall no WallCoverCorner no WallCoverUD ] -> [ WallD | Wall WallDR ]
+ 
+right [ WallU | Wall no WallCoverCorner no WallCoverUD ] -> [ WallU | Wall WallUL ]
+left [ WallU | Wall no WallCoverCorner no WallCoverUD ] -> [ WallU | Wall WallUR ]
+
+[notmovable] -> [notmovable canthardup cantharddown canthardleft canthardright cantsoftleft cantsoftright cantsoftup cantsoftdown]
+
+[player] -> [player agained]
+[> player agained] -> [> player]
+[action player agained] -> [action player]
+[player no agained] -> [player noagained]
+[player agained] -> [player agained nochosen]
+[player] -> [player nothinghappened]
+[train] -> [train nothinghappened]
+[player nothinghappened][train nothinghappened] -> [player nothinghappened][train]
+[player no startsnow][ball] -> [player startsnow][ball]
+
+
+up [boxu | gloveu] -> [boxu connectup | gloveu connectdown]
+down [boxd | gloved] -> [boxd connectdown | gloved connectup]
+left [boxl | glovel] -> [boxl connectleft | glovel connectright]
+right [boxr | glover] -> [boxr connectright | glover connectleft]
+
+down [cart connectsD | cart] -> [cart connectsD connectDown | cart connectUp]
+right [cart connectsR | cart] -> [cart connectsR connectRight | cart connectLeft]
+down [cart connectsD | train] -> [cart connectsD connectDown | train connectUp]
+right [cart connectsR | train] -> [cart connectsR connectRight | train connectLeft]
+up [cart connectsU | train] -> [cart connectsU connectUp | train connectDown]
+left [cart connectsL | train] -> [cart connectsL connectLeft | train connectRight]
+
+[connectup] -> [up connectup]
+[connectdown] -> [down connectdown]
+[connectleft] -> [left connectleft]
+[connectright] -> [right connectright]
+
+
+up [hard | notmovable] -> [canthardup hard | notmovable]
+down [hard | notmovable] -> [cantharddown hard | notmovable]
+left [hard | notmovable] -> [canthardleft hard | notmovable]
+right [hard | notmovable] -> [canthardright hard | notmovable]
+
+up [movable | notmovable] -> [cantsoftup movable | notmovable]
+down [movable | notmovable] -> [cantsoftdown movable | notmovable]
+left [movable | notmovable] -> [cantsoftleft movable | notmovable]
+right [movable | notmovable] -> [cantsoftright movable | notmovable]
+
+up [player | track] -> [cantsoftup player | track]
+down [player | track] -> [cantsoftdown player | track]
+left [player | track] -> [cantsoftleft player | track]
+right [player | track] -> [cantsoftright player | track]
+
+
+up [hard | canthardup] -> [canthardup hard| canthardup]
++ down [hard | cantharddown] -> [cantharddown hard| cantharddown]
++ left [hard | canthardleft] -> [canthardleft hard| canthardleft]
++ right [hard | canthardright] -> [canthardright hard| canthardright]
++ [> connect | canthard] -> [> connect canthard | canthard]
+
+
+
+up [movable no connectup| movable] -> [cantsoftup movable | movable]
+down [movable no connectdown| movable] -> [cantsoftdown movable | movable]
+left [movable no connectleft| movable] -> [cantsoftleft movable | movable]
+right [movable no connectright| movable] -> [cantsoftright movable | movable]
+[> connect | cantsoft] -> [> connect cantsoft | cantsoft]
+
+
+
+up [small cantsoftup | ball no small] -> [small | ball]
+up [medium cantsoftup | ball no small no medium] -> [medium | ball]
+down [small cantsoftdown | ball no small] -> [small | ball]
+down [medium cantsoftdown | ball no small no medium] -> [medium | ball]
+left [small cantsoftleft | ball no small] -> [small | ball]
+left [medium cantsoftleft | ball no small no medium] -> [medium | ball]
+right [small cantsoftright | ball no small] -> [small | ball]
+right [medium cantsoftright | ball no small no medium] -> [medium | ball]
+
+up[up player no hardmove| cantsoftup] -> [stationary player | cantsoftup]
+down[down player no hardmove| cantsoftdown] -> [stationary player | cantsoftdown]
+left[left player no hardmove| cantsoftleft] -> [stationary player | cantsoftleft]
+right[right player no hardmove| cantsoftright] -> [stationary player | cantsoftright]
+
+
+up[ player cantsoftup| no cantsoftup] -> [ player | ]
+down[ player cantsoftdown| no cantsoftdown] -> [ player | ]
+left[ player cantsoftleft| no cantsoftleft] -> [ player | ]
+right[ player cantsoftright| no cantsoftright] -> [ player | ]
+
+up [boxu no triggered | movable] -> [boxu cantrigger | movable]
+down [boxd no triggered | movable] -> [boxd cantrigger | movable]
+left [boxl no triggered | movable] -> [boxl cantrigger | movable]
+right [boxr no triggered | movable] -> [boxr cantrigger | movable]
+
+[noagained][cantrigger] -> [noagained][]
+[cantrigger triggered] -> [triggered]
+
+[boxv canthardup cantharddown cantrigger] -> [boxv canthardup cantharddown]
+[boxh canthardleft canthardright cantrigger] -> [boxh canthardleft canthardright]
+
+up [boxu cantrigger|boxu cantrigger] -> [boxu cantrigger|boxu]
+down [boxd cantrigger|boxd cantrigger] -> [boxd cantrigger|boxd]
+left [boxl cantrigger|boxl cantrigger] -> [boxl cantrigger|boxl]
+right [boxr cantrigger|boxr cantrigger] -> [boxr cantrigger|boxr]
+
+[wentver][boxv cantrigger][boxh cantrigger] ->[wentver][boxv cantrigger][boxh]
+[wenthor][boxv cantrigger][boxh cantrigger] ->[wenthor][boxv][boxh cantrigger]
+
+[wentup][boxu cantrigger][boxd cantrigger] ->[wentup][boxu cantrigger][boxd]
+[wentdown][boxu cantrigger][boxd cantrigger] ->[wentdown][boxu][boxd cantrigger]
+[wentleft][boxl cantrigger][boxr cantrigger] ->[wentleft][boxl cantrigger][boxr]
+[wentright][boxl cantrigger][boxr cantrigger] ->[wentright][boxl][boxr cantrigger]
+
+[nothinghappened][box cantrigger] -> [][box triggeredtemp cantrigger] again
+
+up [boxu triggeredtemp cantrigger| movable no cantsoftup ] -> [boxu cantrigger triggeredtemp triggerwent|> movable]
+down [boxd triggeredtemp cantrigger| movable no cantsoftdown ] -> [boxd cantrigger triggerwent triggeredtemp |> movable]
+left [boxl triggeredtemp cantrigger | movable no cantsoftleft ] -> [boxl cantrigger triggerwent triggeredtemp |> movable]
+right [boxr triggeredtemp cantrigger| movable  no cantsoftright ] -> [boxr cantrigger triggerwent triggeredtemp |> movable]
+
+[cantrigger triggerwent] -> []
+
+down [boxu triggeredtemp cantrigger| no cantsoftdown ] -> [ > boxu cantrigger triggerwent triggeredtemp | ]
+up [ boxd triggeredtemp cantrigger| no cantsoftup ] -> [ > boxd cantrigger triggerwent triggeredtemp| ]
+right [boxl triggeredtemp cantrigger| no cantsoftright ] -> [ > boxl cantrigger triggerwent triggeredtemp| ]
+left [ boxr triggeredtemp cantrigger| no cantsoftleft ] -> [ > boxr cantrigger triggerwent triggeredtemp| ]
+
+[cantrigger triggerwent] -> []
+
+up [boxu triggeredtemp no canthardup cantrigger| movable ] -> [boxu cantrigger triggerwent triggeredtemp |> movable hardmove]
+down [boxd triggeredtemp no cantharddown cantrigger| movable ] -> [boxd cantrigger triggerwent triggeredtemp |> movable hardmove]
+left [boxl triggeredtemp no canthardleft cantrigger| movable ] -> [boxl cantrigger triggerwent triggeredtemp |> movable hardmove]
+right [boxr triggeredtemp no canthardright cantrigger| movable ] -> [boxr cantrigger triggerwent triggeredtemp |> movable hardmove]
+
+[cantrigger triggerwent] -> []
+
+down [boxu triggeredtemp cantrigger] -> [> boxu cantrigger triggerwent triggeredtemp hardmove]
+up [boxd triggeredtemp cantrigger] -> [> boxd cantrigger triggerwent triggeredtemp hardmove]
+right [boxl triggeredtemp cantrigger] -> [> boxl cantrigger triggerwent triggeredtemp hardmove]
+left [boxr triggeredtemp cantrigger] -> [> boxr cantrigger triggerwent triggeredtemp hardmove]
+
+[cantrigger triggerwent] -> []
+
+
+
+[> player no hardmove| small medium] -> [player | > small medium]
+[> player no hardmove| small large] -> [player | > small large]
+[> player no hardmove| no small medium large] -> [player | > medium large]
+
+up [boxu triggeredtemp| > train] ->  [boxu triggeredtemp| > train hardmove]
+up [boxu triggeredtemp| > cart] ->  [boxu triggeredtemp| > cart hardmove]
+left [boxl triggeredtemp| > train] ->  [boxl triggeredtemp| > train hardmove]
+left [boxl triggeredtemp| > cart] ->  [boxl triggeredtemp| > cart hardmove]
+down [boxd triggeredtemp| > train] ->  [boxd triggeredtemp| > train hardmove]
+down [boxd triggeredtemp| > cart] ->  [boxd triggeredtemp| > cart hardmove]
+right [boxr triggeredtemp| > train] ->  [boxr triggeredtemp| > train hardmove]
+right [boxr triggeredtemp| > cart] ->  [boxr triggeredtemp| > cart hardmove]
+
+up [> train | canthardup] -> cancel
+left [> train | canthardleft] -> cancel
+right [> train | canthardright] -> cancel
+down [> train | cantharddown] -> cancel
+
+[> train | movable] -> [> train | > movable hardmove]
+
+
+[> hard hardmove|movable] -> [> hard hardmove | > movable hardmove]
++ [> player hardmove|soft] -> [> player hardmove | > soft hardmove]
++ [> soft hardmove|player] -> [> soft hardmove | > player hardmove]
++ [> medium hardmove|small] -> [> medium hardmove | > small hardmove]
++ [> large hardmove|medium] -> [> large hardmove | > medium hardmove]
++ [> large hardmove|small] -> [> large hardmove | > small hardmove]
++ [> medium hardmove|medium] -> [> medium hardmove | > medium hardmove]
++ [> large hardmove|large] -> [> large hardmove | > large hardmove]
++ [> small hardmove|small] -> [> small hardmove | > small hardmove]
++ [> player hardmove|hard] -> [ > splatu| hard]  
++ [> ball hardmove|hard] -> [ > wsplatu| hard] 
++ [> player hardmove|notmovable] -> [ > splatu| notmovable]  
++ [> ball hardmove|notmovable] -> [ > wsplatu| notmovable] 
++ [> connect movable | moving movable hardmove] -> [> connect moving movable hardmove| moving movable hardmove]
+ [> box | movable] -> [> box | > movable]
+
+[left splatu] -> [splatl2]
+[right splatu] -> [splatr2]
+[up splatu] -> [splatu2]
+[down splatu] -> [splatd2]
+[left wsplatu] -> [wsplatl2]
+[right wsplatu] -> [wsplatr2]
+[up wsplatu] -> [wsplatu2]
+[down wsplatu] -> [wsplatd2]
+
+[> player | movable] -> [> player | > movable] 
+
+([> connect movable| moving box no train no cart] -> [> connect moving movable | moving movable])
+
+[> box triggered] -> [> box > triggered]
+[> cart passenger] -> [> cart > passenger]
+
+late up [boxu triggered|] -> [boxu triggered | gloveu]
+late down [boxd triggered|] -> [boxd triggered | gloved]
+late left [boxl triggered|] -> [boxl triggered | glovel]
+late right [boxr triggered|] -> [boxr triggered | glover]
+
+[nothinghappened][glove] -> [nothinghappened][]
+[nothinghappened][triggered] -> [nothinghappened][]
+
+
+(spawn train)
+
+left [ Track | Start Player ] -> [ LTrain Track Start | Player ] 
+right [ Track | Start Player ] -> [ RTrain Track Start | Player ] 
+up [ Track | Start Player ] -> [ UTrain Track Start | Player ]
+down [ Track | Start Player ] -> [ DTrain Track Start | Player ]
+
+[ Start | Track no Train no Cart ] -> [ Start | Track Cart Start ]
+
+[ Start ] -> []
+
+(lay track)
+
+
+left [ ConnectsL | < FromD ] -> [ ConnectsL MoveTrigger | DRtrack]
+left [ ConnectsL | < FromU ] -> [ ConnectsL MoveTrigger | URtrack]
+left [ ConnectsL | < FromL ] -> [ ConnectsL MoveTrigger | Htrack]
+
+right [ ConnectsR | < FromD] -> [ ConnectsR MoveTrigger | DLtrack]
+right [ ConnectsR | < FromU] -> [ ConnectsR MoveTrigger | ULtrack]
+right [ ConnectsR | < FromR] -> [ ConnectsR MoveTrigger | Htrack]
+
+up [ ConnectsU | < FromL ] -> [ ConnectsU MoveTrigger | DLtrack]
+up [ ConnectsU | < FromR ] -> [ ConnectsU MoveTrigger | DRtrack]
+up [ ConnectsU | < FromU ] -> [ ConnectsU MoveTrigger | Vtrack]
+
+down [ ConnectsD | < FromL] -> [ ConnectsD MoveTrigger | ULtrack]
+down [ ConnectsD | < FromR] -> [ ConnectsD MoveTrigger | URtrack]
+down [ ConnectsD | < FromD] -> [ ConnectsD MoveTrigger | Vtrack]
+
+[> player | track] -> [stationary player | track]
+
+[ left FromU no Track ] -> [ left FromR ULTrack ]
+[ right FromU no Track ] -> [ right FromL URTrack ]
+[ down FromU no Track ] -> [ down FromU VTrack ]
+
+[ left FromD no Track ] -> [ left FromR DLTrack ]
+[ right FromD no Track ] -> [ right FromL DRTrack ]
+[ up FromD no Track ] -> [ up FromD VTrack ]
+
+[ up FromL no Track ] -> [ up FromD ULTrack ]
+[ down FromL no Track ] -> [ down FromU DLTrack ]
+[ right FromL no Track ] -> [ right FromL HTrack ]
+
+[ up FromR no Track ] -> [ up FromD URTrack ]
+[ down FromR no Track ] -> [ down FromU DRTrack ]
+[ left FromR no Track ] -> [ left FromR HTrack ]
+
+late [snow small no medium no large] -> [medium]
+late [snow medium no large] -> [large]
+late [snow large] -> [large]
+
+[noagained] -> [] again
+[canthard] -> []
+[cantsoft] -> []
+[agained] -> []
+[hardmove] -> []
+[nothinghappened] -> []
+
+[connect] -> []
+
+[startsnow] -> [startsnow fail]
+[fail][ball] -> [][ball]
+
+==============
+WINCONDITIONS
+==============
+no fail
+all passenger on target
+no cart
+no train
+all small on medium
+all medium on large
+all large on medium
+all medium on small
+
+=======
+LEVELS
+=======
+
+
+
+```````````
+--!~~~~~~--
+`~~~~~~~~~`
+`~~~&~7~~~`
+`~~~~8~~~~`
+```````````
+
+
+
+``````
+`~~~~`
+`~~*~`
+`r~@``
+`~~8~`
+`~~~~`
+``````
+
+
+`````````
+`~~`e`~~`
+`~~`~`~~`
+`~~~~~~~`
+`~~~~~~~`
+`~~~~~~~`
+---!~~~~-
+`~~~3~~~`
+`~~~~~~~`
+`~~~~~~~`
+`~~~~~~~`
+`~~~~~~~`
+`~~wew~~`
+`~~~~~~~`
+`````````
+(
+
+`````````
+`~~~~~~~`
+`~~e~q~~`
+`~~~~~~~`
+--!~~~~~`
+```+~w`~`
+`~~~3~~~`
+`~~~~~~~`
+`0```````
+
+````````````
+`~+~~~~~~q~`
+`~~~~~~~~~~`
+`~~~~~~~~~~`
+--!~~&78~~--
+`~~~~~~~~~~`
+`~~~~~~~~~~`
+`~w~~~~~~e~`
+````````````
+
+`````````
+`~~~~~~~`
+`~~e~q~~`
+`~~~~~~~`
+--!~~~~~`
+```+~w`~`
+`~~~3~~~`
+`~~~~~~~`
+`0```````)

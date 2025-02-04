@@ -1,0 +1,152 @@
+title Tempting Fate
+author arrogantgamer & edderiofer
+homepage www.puzzlescript.net
+norepeat_action
+
+========
+OBJECTS
+========
+
+Background
+lightgreen
+
+water
+lightblue
+
+player
+red
+
+tree
+green
+
+stump
+LIGHTBROWN
+
+LogH
+brown
+.....
+00000
+00000
+00000
+.....
+
+LogV
+brown
+.000.
+.000.
+.000.
+.000.
+.000.
+
+BridgeH
+brown lightblue
+11111
+00000
+00000
+00000
+11111
+
+BridgeV
+brown lightblue
+10001
+10001
+10001
+10001
+10001
+
+stone
+grey
+
+
+Momentum
+TRANSPARENT
+
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+~ = water
+T = tree
+s = stone
+
+Log = LogV or LogH
+Bridge = BridgeV or BridgeH
+Obstacle = Log or Tree or Stone
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Water
+Stump, Bridge, Stone
+Player, Tree, Log
+Momentum
+
+======
+RULES
+======
+
+[ > player | water ] -> [ player | water ]
+
+vertical [ > player | logV ] -> [ > player | > logV ]
+horizontal [ > player | logH ] -> [ > player | > logH ]
+
+( rolling: this could be cleaned up )
+vertical [ > player | logH ] -> [ player Momentum | logH ]
+horizontal [ > player | logV ] -> [ player Momentum| logV ]
+
+( roll logs horizontally )
+horizontal [ Momentum | logV | no Obstacle no Water ] -> [ no Momentum | Momentum  | logV ]
+horizontal [ Momentum | logV | Obstacle    ] -> [ no Momentum | logV    | Obstacle ]
+horizontal [ Momentum | logV | Water       ] -> [ no Momentum | no logV | logV Water ]
+
+( roll logs horizontally )
+vertical [ Momentum | logH | no Obstacle no Water ] -> [ no Momentum | Momentum  | logH ]
+vertical [ Momentum | logH | Obstacle    ] -> [ no Momentum | logH    | Obstacle ]
+vertical [ Momentum | logH | Water       ] -> [ no Momentum | no logH | logH Water ]
+
+late [ water logV ] -> [ bridgeV ]
+late [ water logH ] -> [ bridgeH ]
+
+vertical [action player | tree | ] -> [player | stump | LogV ]
+horizontal [action player | tree | ] -> [player | stump | LogH ]
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~..~~~~~~~~~
+~~~~~~~~~~~~~~~~....~~~~~~~~
+~~~~~~~~~~~~~~~~..PT.~~~~~~~
+~~~~~~~~~~~~~~~~~....~~~~~~~
+~~~~~..~~~~~~~~~~~T~~~~~~~~~
+~~......~~~~~~~~~~~~~~~~~~~~
+~...s...~~~~~~~~~..~~~~~~~~~
+~.T..~..~~~~~~~~~...~~~~~~~~
+~~..~~~~~~~~~~~~~~.s~..~~~~~
+~~~~~~~.~~~~~~~~~.T....~~~~~
+~~~~~~.....~~~~~~.....~~~~~~
+~~~~~~..s...~~~~~~~..~..~~~~
+~~~~~~~...T..~~~~~~~~~..T.~~
+~~~~~~~~~...~~~...~~~~....~~
+~~~~~~~~~~~~~~.....~~.s...~~
+~~~~~~~~~~..~~..T..~.....~~~
+~~~~~~~~~..........~...s.~~~
+~~~~~~~~~..........~~...~~~~
+~~~~~~~~~~.....s..~~~~~~~~~~
+~~~~~~~~~~~s....~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~

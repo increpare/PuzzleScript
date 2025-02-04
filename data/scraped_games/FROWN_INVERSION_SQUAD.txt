@@ -1,0 +1,826 @@
+title FROWN INVERSION SQUAD
+author Jim Palmeri
+homepage twitter.com/JimPalmeri
+again_interval .1
+
+========
+OBJECTS
+========
+
+Background
+#bbbbbb #aaaaaa
+11111
+01111
+11101
+11111
+10111
+
+Wall
+#222222 #272727
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange Green Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+FaceSad
+Yellow Red
+.000.
+01010
+00000
+01110
+.000.
+
+FaceHappy
+Yellow Green
+.000.
+01010
+00000
+01010
+.010.
+
+Heart
+Red
+.0.0.
+00000
+00000
+.000.
+..0..
+
+HeartAnim1
+Red
+.....
+.0.0.
+.000.
+..0..
+.....
+
+HeartAnim2
+Red
+.....
+.....
+..0..
+.....
+.....
+
+HeartAnim3
+Red
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+HeartAnim4
+Red
+0...0
+.....
+.....
+.....
+0...0
+
+HeartLeft
+Red
+.0...
+000..
+00...
+.00..
+..0..
+
+HeartRight
+Red
+...0.
+...00
+..000
+...0.
+..0..
+
+AnimMarker
+Red
+.....
+.....
+.....
+.....
+.....
+
+WallHappy
+White
+.....
+.0.0.
+.....
+.0.0.
+..0..
+
+WallSad
+#888888
+.....
+.0.0.
+.....
+.000.
+.....
+
+BigFace1
+#777777 #555555
+..000
+.0000
+00110
+00110
+00000
+
+BigFace2
+#777777 #555555
+000..
+0000.
+01100
+01100
+00000
+
+BigFace3
+#777777 #555555
+00000
+00100
+00011
+.0000
+..000
+
+BigFace4
+#777777 #555555
+00000
+00100
+11000
+0000.
+000..
+
+BigFace1a
+#777777 #555555 Yellow Green
+..000
+.0000
+00110
+00110
+00002
+
+BigFace1b
+#777777 #555555 Yellow Green
+..000
+.0000
+00110
+00132
+00022
+
+BigFace1c
+#777777 #555555 Yellow Green
+..000
+.0000
+00132
+00332
+00222
+
+BigFace1d
+#777777 #555555 Yellow Green
+..000
+.0222
+02332
+02332
+02222
+
+BigFace2a
+#777777 #555555 Yellow Green
+000..
+0000.
+01100
+01100
+20000
+
+BigFace2b
+#777777 #555555 Yellow Green
+000..
+0000.
+01100
+23100
+22000
+
+BigFace2c
+#777777 #555555 Yellow Green
+000..
+0000.
+23100
+23300
+22200
+
+BigFace2d
+#777777 #555555 Yellow Green
+000..
+2220.
+23320
+23320
+22220
+
+BigFace3a
+#777777 #555555 Yellow Green
+00002
+00100
+00011
+.0000
+..000
+
+BigFace3b
+#777777 #555555 Yellow Green
+00022
+00122
+00011
+.0000
+..000
+
+BigFace3c
+#777777 #555555 Yellow Green
+00222
+00322
+00033
+.0000
+..000
+
+BigFace3d
+#777777 #555555 Yellow Green
+02222
+02322
+02233
+.0222
+..000
+
+BigFace4a
+#777777 #555555 Yellow Green
+20000
+00100
+11000
+0000.
+000..
+
+BigFace4b
+#777777 #555555 Yellow Green
+22000
+22100
+11000
+0000.
+000..
+
+BigFace4c
+#777777 #555555 Yellow Green
+22200
+22300
+33000
+0000.
+000..
+
+BigFace4d
+#777777 #555555 Yellow Green
+22220
+22320
+33220
+2220.
+000..
+
+BigFaceTL
+Yellow Green
+..000
+.0000
+00110
+00110
+00000
+
+BigFaceTR
+Yellow Green
+000..
+0000.
+01100
+01100
+00000
+
+BigFaceBL
+Yellow Green
+00000
+00100
+00011
+.0000
+..000
+
+BigFaceBR
+Yellow Green
+00000
+00100
+11000
+0000.
+000..
+
+FaceMarker
+Blue
+.....
+.....
+.....
+.....
+.....
+
+BeamVert1
+Yellow Orange
+.010.
+.101.
+.010.
+.101.
+.010.
+
+BeamVert2
+Yellow Orange
+..1..
+..0..
+..1..
+..0..
+..1..
+
+BeamVert3
+Yellow Orange
+..1..
+.....
+..1..
+.....
+..1..
+
+BeamHoriz1
+Yellow Orange
+.....
+01010
+10101
+01010
+.....
+
+BeamHoriz2
+Yellow Orange
+.....
+.....
+10101
+.....
+.....
+
+BeamHoriz3
+Yellow Orange
+.....
+.....
+1.1.1
+.....
+.....
+
+MoveMarker
+Green
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+S = FaceSad
+H = FaceHappy
+L = Heart
+{ = HeartLeft
+} = HeartRight
+D = WallSad and Wall
+Y = WallHappy and Wall
+F = BigFace1
+A = BigFace2
+C = BigFace3
+E = BigFace4
+Face = FaceSad or FaceHappy
+Sadness = FaceSad or WallSad
+Animation = HeartAnim1 or HeartAnim2 or HeartAnim3 or HeartAnim4 or BigFace1a or BigFace1b or BigFace1c or BigFace1d or BigFace2a or BigFace2b or BigFace2c or BigFace2d or BigFace3a or BigFace3b or BigFace3c or BigFace3d or BigFace4a or BigFace4b or BigFace4c or BigFace4d
+Marker = AnimMarker or FaceMarker or MoveMarker
+Hearts = Heart or HeartLeft or HeartRight
+BigFace = BigFace1 or BigFace2 or BigFace3 or BigFace4 or BigFaceTL or BigFaceTR or BigFaceBL or BigFaceBR
+BigFaceParts = BigFace1 or BigFace2 or BigFace3 or BigFace4
+BigFaceFull = BigFaceTL or BigFaceTR or BigFaceBL or BigFaceBR
+SolidObject = Wall or Face or Hearts or Player
+BeamBlocker = Wall or Face or Hearts or Player or BigFace
+BeamHoriz = BeamHoriz1 or BeamHoriz2 or BeamHoriz3
+BeamVert = BeamVert1 or BeamVert2 or BeamVert3
+
+=======
+SOUNDS
+=======
+(Cool explosion sound: 8491708) 
+
+FaceHappy Create 99943700
+WallHappy Create 99943700
+BigFace1a Create 55169103
+BigFaceFull Create 61033502
+BeamHoriz Create 60069109
+BeamVert Create 60069109
+Heart Create 35345302
+Heart Destroy 6128508
+
+SFX0 64346508
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Face, Heart, HeartLeft, HeartRight, BigFace
+WallSad, WallHappy
+Animation
+BeamHoriz
+BeamVert
+Marker
+
+======
+RULES
+======
+
+(Handle animation)
+(Hearts)
+[ HeartAnim4 ] -> [ ] again
+[ HeartAnim3 ] -> [ HeartAnim4 ] again
+[ HeartAnim2 ] -> [ HeartAnim3 ] again
+[ HeartAnim1 ] -> [ HeartAnim2 ] again
+[ Heart AnimMarker ] -> [ HeartAnim1 ] again
+(Faces)
+[ BigFace1d ] -> [ BigFaceTL MoveMarker ] again
+[ BigFace1c ] -> [ BigFace1d ] again
+[ BigFace1b ] -> [ BigFace1c ] again
+[ BigFace1a ] -> [ BigFace1b ] again
+[ BigFace1 AnimMarker ] -> [ BigFace1a ] again
+[ BigFace2d ] -> [ BigFaceTR MoveMarker ] again
+[ BigFace2c ] -> [ BigFace2d ] again
+[ BigFace2b ] -> [ BigFace2c ] again
+[ BigFace2a ] -> [ BigFace2b ] again
+[ BigFace2 AnimMarker ] -> [ BigFace2a ] again
+[ BigFace3d ] -> [ BigFaceBL MoveMarker ] again
+[ BigFace3c ] -> [ BigFace3d ] again
+[ BigFace3b ] -> [ BigFace3c ] again
+[ BigFace3a ] -> [ BigFace3b ] again
+[ BigFace3 AnimMarker ] -> [ BigFace3a ] again
+[ BigFace4d ] -> [ BigFaceBR MoveMarker ] again
+[ BigFace4c ] -> [ BigFace4d ] again
+[ BigFace4b ] -> [ BigFace4c ] again
+[ BigFace4a ] -> [ BigFace4b ] again
+[ BigFace4 AnimMarker ] -> [ BigFace4a ] again
+(Beams)
+[ BeamVert3 ] -> [ ] again
+[ BeamVert2 ] -> [ BeamVert3 ] again
+[ BeamVert1 ] -> [ BeamVert2 ] again
+[ BeamHoriz3 ] -> [ ] again
+[ BeamHoriz2 ] -> [ BeamHoriz3 ] again
+[ BeamHoriz1 ] -> [ BeamHoriz2 ] again
+
+(Push small happy faces)
+[ > Player | FaceHappy ] -> [ > Player | > FaceHappy ]
+
+(Push hearts)
+[ > Player | Hearts ] -> [ > Player | > Hearts ]
+
+(Merge heart pieces)
+right [ > HeartLeft | HeartRight ] -> [ | Heart ]
+right [ HeartLeft | < HeartRight ] -> [ Heart | ]
+
+(Push big face)
+[ > Player | BigFace ] -> [ > Player | > BigFace ]
+
+(Complete big face moves as a unit)
+[ moving BigFaceFull | BigFaceFull ] -> [ moving BigFaceFull | moving BigFaceFull ]
+[ > BigFaceFull | stationary SolidObject ] -> cancel
+
+(Complete moving big face fires happiness beams)
+(First, mark moving big face)
+[ moving BigFaceFull ] -> [ moving BigFaceFull moving MoveMarker ]
+(Next, fire beams from marked faces)
+late left [ BigFaceTL MoveMarker | no BeamBlocker ] -> [ BigFaceTL MoveMarker | BeamHoriz1 ] again
+late left [ BigFaceBL MoveMarker | no BeamBlocker ] -> [ BigFaceBL MoveMarker | BeamHoriz1 ] again 
+late right [ BigFaceTR MoveMarker | no BeamBlocker ] -> [ BigFaceTR MoveMarker | BeamHoriz1 ] again 
+late right [ BigFaceBR MoveMarker | no BeamBlocker ] -> [ BigFaceBR MoveMarker | BeamHoriz1 ] again
+late up [ BigFaceTL MoveMarker | no BeamBlocker ] -> [ BigFaceTL MoveMarker | BeamVert1 ] again
+late up [ BigFaceTR MoveMarker | no BeamBlocker ] -> [ BigFaceTR MoveMarker | BeamVert1 ] again
+late down [ BigFaceBL MoveMarker | no BeamBlocker ] -> [ BigFaceBL MoveMarker | BeamVert1 ] again
+late down [ BigFaceBR MoveMarker | no BeamBlocker ] -> [ BigFaceBR MoveMarker | BeamVert1 ] again
+(Propagate beams)
+startloop
+late horizontal [ BeamHoriz1 | no BeamBlocker ] -> [ BeamHoriz1 | BeamHoriz1 ]
+late vertical [ BeamVert1 | no BeamBlocker ] -> [ BeamVert1 | BeamVert1 ]
+endloop
+(Clear move markers)
+late [ BigFaceFull MoveMarker ] -> [ BigFaceFull ]
+
+(Things hit by beams become happy)
+late horizontal [ BeamHoriz | FaceSad ] -> [ BeamHoriz | FaceHappy ]
+late horizontal [ BeamHoriz | WallSad ] -> [ BeamHoriz | WallHappy ]
+late vertical [ BeamVert | FaceSad ] -> [ BeamVert | FaceHappy ]
+late vertical [ BeamVert | WallSad ] -> [ BeamVert | WallHappy ]
+
+(If a small sad face is adjacent to a small happy face, it will become happy)
+late [ FaceSad | FaceHappy ] -> [ FaceHappy | FaceHappy ]
+
+(Happy faces can also make walls happy)
+late [ FaceHappy | WallSad ] -> [ FaceHappy | WallHappy ]
+
+(Complete big faces can make things happy)
+late [ BigFaceFull | FaceSad ] -> [ BigFaceFull | FaceHappy ]
+late [ BigFaceFull | WallSad ] -> [ BigFaceFull | WallHappy ]
+
+(If two faces have a heart between them, they will turn happy and the heart will disappear)
+late [ Face | Heart | Face ] -> [ FaceHappy | Heart AnimMarker | FaceHappy ] again
+
+(Check for big faces)
+late right [ BigFace1 | BigFace2 ] -> [ BigFace1 FaceMarker | BigFace2 FaceMarker ]
+late right [ BigFace3 | BigFace4 ] -> [ BigFace3 FaceMarker | BigFace4 FaceMarker ]
+late down [ BigFace1 FaceMarker | BigFace3 FaceMarker ] -> [ BigFace1 AnimMarker | BigFace3 AnimMarker ]
+late down [ BigFace2 FaceMarker | BigFace4 FaceMarker ] -> [ BigFace2 AnimMarker | BigFace4 AnimMarker ] again
+late [ FaceMarker ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+No Sadness
+No Animation
+No AnimMarker
+No BigFaceParts
+No BeamHoriz
+No BeamVert
+
+=======
+LEVELS
+=======
+
+message It looks like some people are sad.  Fortunately, happiness is contagious!
+message Move with the arrow keys.  Make everyone happy!
+message - Level 1 of 20 -
+
+#######
+#..#..#
+#..#..#
+#p.h.s#
+#..#..#
+#..#..#
+#######
+
+message If someone is sad, don't push them!  Cheer them up first!
+message - Level 2 of 20 -
+
+#########
+#...#..s#
+#.p.#...#
+#...s...#
+#.h.#...#
+#...#..s#
+#########
+
+message The world needs cheering up, and only YOU can do it!
+message - Level 3 of 20 -
+
+##########
+#.....s.s#
+#...p..#.#
+#..h##..s#
+#s..##h..#
+#.#......#
+#s.s.....#
+##########
+
+message Hmmm...it looks like everyone is sad here. :(
+message But never fear!  Love is in the air!
+message - Level 4 of 20 -
+
+#######
+#..#..#
+#.###s#
+#p.l..#
+#.###s#
+#..#..#
+#######
+
+message Happy or sad, it doesn't matter!  Everyone can use some love!
+message - Level 5 of 20 -
+
+###########
+#...#.#.#.#
+#...#h#h#s#
+#p.l......#
+#...#h#h#s#
+#...#.#.#.#
+###########
+
+message Spread the love!
+message - Level 6 of 20 -
+
+###########
+#s.s...s.s#
+#.........#
+#...#p##..#
+#..#.l..#.#
+#.#....#..#
+#..#.h..#.#
+#...#.##..#
+#.........#
+#s.s...s.s#
+###########
+
+message Sometimes, we can help mend broken hearts.
+message - Level 7 of 20 -
+
+#########
+##..#..##
+#..###.s#
+#p.{.}..#
+#..###.s#
+##..#..##
+#########
+
+message There's only one way to fix broken hearts, but don't worry.  It isn't brain surgery.
+message - Level 8 of 20 -
+
+#########
+#s.s#s.s#
+#..{.}..#
+#...#...#
+#..}.{..#
+#p..#...#
+#########
+
+message Frown Inversion Squad Go Go Go!
+message - Level 9 of 20 -
+
+###########
+#p...#.s.s#
+#.#.}..#..#
+#...#.h..##
+##....#...#
+#s.#....#.#
+#....#..{.#
+#s#....#s.#
+###########
+
+message Oh no!  The walls are being possessed by :| emoticons!
+message Better make them happy, too! :D
+message - Level 10 of 20 -
+
+#######
+#.....#
+d..s..d
+d.p.l.d
+d..s..d
+#.....#
+#######
+
+message :D
+message - Level 11 of 20 -
+
+#########
+##.....##
+#.......#
+#.d.dd..#
+#...d.d.#
+#ph.d.d.#
+#...d.d.#
+#.d.dd..#
+#.......#
+#.......#
+#########
+
+message You're doing great!  Keep it up!
+message - Level 12 of 20 -
+
+#############
+#s....#....s#
+#.}d#.s..{..#
+#.....d..d.s#
+#d.#...#....#
+#..#.d..}.###
+#......#ds..#
+##.d.{......#
+#p.....d.sd.#
+#d.s.#......#
+#############
+
+message Hmmm.  The sadness epidemic is worse than expected.  Time to bring out the weapons of mass delight!
+message That's all I'll say on the matter...it's up to you to put the pieces together!
+message - Level 13 of 20 -
+
+#######
+#.....#
+#.f.a.#
+#..p..#
+#.c.e.#
+#.....#
+#######
+
+message Behold...the Frown Inverter 7000!  It shoots happiness beams that can cheer up even the grumpiest of grumps!
+message - Level 14 of 20 -
+
+##ddddd##
+#s......#
+d.f...a.d
+d...p...d
+d.c...e.d
+#......s#
+##ddddd##
+
+message This thing's a little bulky at times...
+message - Level 15 of 20 -
+
+###########
+#....#....#
+d..e.#.c..d
+d....#....d
+d.p..h....d
+d....#....d
+d..a.#.f..d
+#....#....#
+###########
+
+message ...but it gets the job done!
+message - Level 16 of 20 -
+
+#############
+#pd.......d.#
+#.d.fdd.es..#
+#.....c..df.#
+#d...s...d..#
+#..a..d.s.d.#
+#.dd........#
+#..c..dds.d.#
+#d...e...a..#
+#..d.....d..#
+#############
+
+message The happiness is spreading like wildfire!
+message - Level 17 of 20 -
+
+#ddd#ddddddd#
+d...d.......d
+d...e.......d
+d....dp..cd.d
+d.......d...d
+d...s}s{s...d
+d...d.......d
+d.da..sd....d
+d.......f...d
+d.......d...d
+#ddddddd#ddd#
+
+message You're almost there!  Three to go!
+message - Level 18 of 20 -
+
+#############
+##..ddddd..##
+#.f.......a.#
+#...f...a...#
+#d..sc.es..d#
+#d.#.}p{.#.d#
+#d..sf.as..d#
+#...c...e...#
+#.c.......e.#
+##..ddddd..##
+#############
+
+message You're so close!  Just two levels to go!
+message - Level 19 of 20 -
+
+#############
+#p..#s.s#...#
+#.e..#s#..c.#
+##.........##
+#s#.l.l.l.#s#
+#.sl.l.l.ls.#
+#s#.l.l.l.#s#
+##.........##
+#.a..#s#..f.#
+#...#s.s#...#
+#############
+
+message This is it!  Give it all you've got!
+message - Final Level -
+
+#############
+#p..........#
+#.a.ded.d.c.#
+#..s....es..#
+#.d.d.dfd.d.#
+#..c..h..e..#
+#.d.dfd.d.d.#
+#.as.....s..#
+#.f.d.dcd.a.#
+#...........#
+#############
+
+message The whole world is happy thanks to you!  You're the best!
+message Congratulations, you won! :D
+message Thanks for playing!! - Jim

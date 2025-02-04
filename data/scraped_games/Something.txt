@@ -1,0 +1,543 @@
+title something
+author Dan $ations
+youtube NoRB6zN3ZbY
+noaction
+norepeat_action
+
+(color palette 10 is good for graveyards, 11 looks like lavender town)
+
+
+========
+OBJECTS
+========
+
+background
+White #f8f8f8 #f6f6f6 #f3f3f3 #fef5e9
+01312
+34311
+32033
+13412
+13221
+
+Wall
+Green #4b961d #85c525
+00010
+21000
+00002
+00210
+10000
+
+Man
+Black Red DarkBlue
+..2..
+.111.
+.000.
+.1.1.
+.....
+
+LockedPlayer
+Black LightRed DarkBlue
+..2..
+.111.
+.000.
+.1.1.
+.....
+
+TrigScene
+White
+
+Facer
+Black 
+00.00
+00.00
+..0..
+00.00
+00.00
+
+Facer1
+Black
+00.00
+00.00
+..0..
+00.00
+00.00
+
+facer2
+black
+00.00
+00.00
+..0..
+00.00
+00.00
+
+LockedFacer
+black darkred
+00.00
+01.10
+..0..
+01.10
+00.00
+
+LFnoAction
+black darkred
+00.00
+01.10
+..0..
+01.10
+00.00
+
+Border
+black
+
+TargetDark
+Grey Lightgrey Darkgrey
+11211
+10001
+12221
+10101
+11111
+
+TargetLit
+#fdf000 LightBlue Yellow
+11211
+10001
+12221
+10101
+11111
+
+StickyButton
+DarkRed Black LightGrey #d9d9d9
+22122
+23032
+10201
+23032
+22122
+
+SlippyButton
+LightBlue Black LightGrey #d9d9d9 
+22122
+23032
+10.01
+23032
+22122
+
+LitButton
+yellow Grey
+11011
+11011
+00.00
+11011
+11011
+
+
+LitBox
+grey DarkRed
+00.00
+01.10
+..0..
+01.10
+00.00
+
+Scene1
+Transparent
+
+Scene2
+Transparent
+
+Scene3
+Transparent
+
+Scene4
+Transparent
+
+Scene5
+Transparent
+
+Scene6
+Transparent
+
+Scene7
+Transparent
+
+Scene8
+Transparent
+
+Scene9
+Transparent
+
+Scene10
+Transparent
+
+Black
+Black
+
+White
+White
+
+LR
+LightRed
+
+DB
+DarkBlue
+
+=======
+LEGEND
+=======
+Scenes = Scene1 or Scene2 or Scene3 or Scene4 or Scene5 or Scene6 or Scene7 or Scene8 or Scene9 or Scene10
+Colors = Black or White or LR or DB
+Player = Man or LockedPlayer or TrigScene
+Button = StickyButton or SlippyButton
+Boxes = Litbox or LockedFacer or LFnoAction or Facer or Facer1 or Facer2
+
+. = Background
+P = Man
+L = LockedPlayer
+F = Facer1
+* = LockedFacer
+A = LFnoAction
+w = Wall
+# = border
+T = TargetDark
+B = StickyButton
+& = SlippyButton
+@ = scene1 and border
+$ = TrigScene
+
+% = TargetLit
+! = LitButton and LFNoAction
+
+[ = black
+] = white
+; = lr
+' = db
+
+=======
+SOUNDS
+=======
+
+SFX0 73988507
+SFX1 2151107
+SFX2 15630509
+SFX3 35651102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+TrigScene
+TargetDark, TargetLit, Button, LitButton
+Border, Player, Boxes, Wall
+Scenes, Colors
+
+======
+RULES
+======
+
+[> player] -> SFX0
+
+(cancellations)
+
+[> Player | Wall] -> cancel
+[> Player | Border] -> cancel
+
+(scene countdown)
+
+[scene6] -> win
+[scene5] -> [scene6]
+[scene4] -> [scene5]
+[scene3] -> [scene4]
+[scene2] -> [scene3]
+[scene1] -> [scene2]
+
+[action TrigScene] -> win
+
+(On Action)
+
+[action Man | Facer1] -> [LockedPlayer | LockedFacer]
+[action Man | Facer2] -> [LockedPlayer | LockedFacer]
+[action LockedPlayer | LockedFacer] -> [Man | Facer]
+
+(Man direction map)
+
+[> Man | Facer1 ] -> [ > Man | > Facer1]
+[> Man | Facer2] -> [> Man | > Facer1]
+[> Man | no facer1 no facer2 ] -> [ Man |  Facer]
+[facer2] -> []
+[Facer1] -> [facer2]
+[Facer] -> [Facer1]
+late[facer2] [facer1] -> [] [facer1]
+
+(LockedPlayer Map)
+
+[ up LockedPlayer | LockedFacer] -> [ up LockedPlayer | up LockedFacer]
+[ down LockedPlayer | LockedFacer] -> [down LockedPlayer | down LockedFacer]
+[ left LockedPlayer | LockedFacer] -> [ left LockedPlayer | left LockedFacer]
+[ right LockedPlayer | LockedFacer] -> [ right LockedPlayer | right LockedFacer]
+
+[ up LockedPlayer | LFnoAction] -> [ up LockedPlayer | up  LFnoAction]
+[ down LockedPlayer |  LFnoAction] -> [down LockedPlayer | down  LFnoAction]
+[ left LockedPlayer |  LFnoAction] -> [ left LockedPlayer | left  LFnoAction]
+[ right LockedPlayer |  LFnoAction] -> [ right LockedPlayer | right  LFnoAction]
+
+(Transformations)
+
+late[LockedFacer StickyButton][TargetDark] -> [LitBox LitButton][TargetLit] SFX3
+late[LFnoAction StickyButton][TargetDark]  -> [LitBox LitButton][TargetLit] SFX3
+
+late[LockedFacer SlippyButton][TargetDark] -> [LockedFacer LitButton][TargetLit] SFX1
+late[LFnoAction SlippyButton][TargetDark]  -> [LFnoAction LitButton][TargetLit] SFX1
+late[LFnoAction SlippyButton][LfnoAction SlippyButton] -> [LFnoAction LitButton][LFnoAction LitButton]
+
+late[LitButton no LockedFacer no LFnoAction no Litbox] -> [SlippyButton]
+late[Button] [TargetLit] -> [Button] [TargetDark]
+
+late[player targetlit] -> SFX2
+==============
+WINCONDITIONS
+==============
+
+all Player on TargetLit 
+all LitButton on Boxes
+no button
+
+=======
+LEVELS
+=======
+(
+message This is you.
+
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]$]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]''']]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]''']]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]''']]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]];;;;;;;;;]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]];;;;;;;;;]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]];;;;;;;;;]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]][[[[[[[[[]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]][[[[[[[[[]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]][[[[[[[[[]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]];;;]]];;;]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]];;;]]];;;]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]];;;]]];;;]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[][[[][[[[[[[][[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[][[[[[[][[[[[[[[[[[[[[[[]][[[[[[
+[[[[[[[[[][][[[[[[[]]][[[[]][[[[[[[]]][[[]][[[[]][[[]]][[[[[[[[[[]][[[][[][[][[][[[[[
+[[[[[[[[[[][[[[[[[[[][[[[][[][[[[[][[[[[][[][[][[][[[][[[[[]][[[][[][[][[][[]]][[[[[[
+[[[[[[[[[][][[[[[[[[][[][][[][[[[[][[[[[][[][[][[][[[][[][[[][[[][[][[][[][[][[[[[[[[
+[[[[[[[[][[[][[[[[[[[]][[[]][[[[[[[]]][[[]][[[][[][[[[]][[[]]][[][[][[[]]][[[]][[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+
+message You stick to this block.  Move Around
+
+#########
+#wwwwwww#
+#w.lA..w#
+#w.....w#
+#w.....w#
+#w.....w#
+#wwwwwww#
+@######## 
+
+)
+
+message Place the block on the button to open the exit.
+
+wwwwwww
+wb..*.w
+wwwwwlw
+wt....w
+wwwwwww
+
+(message 1)
+message Also, the block is a little sticky..
+
+wwwbwwww
+w.....tw
+w.l....w
+w.....ww
+w.....aw
+w......w
+wwwwwwww
+
+wwwwwwww
+wb.....w
+wwwww..w
+ww.....w
+wl..w.ww
+wwaw...w
+w.....tw
+wwwwwwww
+
+wwwwwwwwww
+w....wbwtw
+w.wa...w.w
+w.w....w.w
+w.w....w.w
+w.w.w..w.w
+wlw.w....w
+wwwwwwwwww
+ 
+wwwwwww
+w...wtw
+wla.w.w
+w...&.w
+ww....w
+wwwwwww
+
+(wwwwwww
+w..a..w
+wl.w..w
+w..!..w
+ww...ww
+w.....w
+w%....w
+wwwwwww)
+
+
+####wwwwww
+###w...wtw
+##w......w
+#w...al..w
+w......w.w
+wwwww.wwww
+###w.....w
+##w......w
+#w......ww
+w.......&w
+wwwwwwwwww
+
+wwwwwwwwwwwww
+ww.bw......ww
+ww..w..w....w
+w..ww..w....w
+w...w..w....w
+w...w..wwww.w
+w..wwl...aw.w
+w.wwwwwwwww.w
+w...........w
+w...wwwwww..w
+w..w.w......w
+wtw..w......w
+ww...ww..w..w
+wwwwwwwwwwwww
+
+(this level might be too confusing...
+wwwwwwwwwwwwwwww
+wb............tw
+w...wwwwwwwww..w
+w..w........w..w
+w..w..w..w..w..w
+walw........w..w
+wa.w...ww...w..w
+w..w.w....w.w..w
+w..w..wwww..w..w
+w..wwwwwwwwww..w
+w&.............w
+wwwwwwwwwwwwwwww)
+
+message Don't forget: R to restart and Z to undo
+
+wwwwwwwwwww
+ww.&wb...aw
+w.....www.w
+wl.w..awt.w
+w.w....w..w
+w...w.....w
+wwwwwwwwwww
+
+####wwwww##
+####w...w##
+wwwww..&www
+wl...aw...w
+w.....w&wtw
+wwwa.wwww.w
+##w.......w
+##wwwwwwwww
+
+wwwwwwwwwww
+ww...w..atw
+w.la.w....w
+w....&....w
+w....w..w.w
+wwwwwwwwwww
+
+wwwwwwww
+wb.....w
+w..tw..w
+w..ww..w
+wa.ww..w
+walww..w
+w..ww..w
+w..ww..w
+w&.....w
+wwwwwwww
+
+
+wwwwwww
+wb.&.bw
+w..w..w
+w.....w
+wwaaaww
+ww...ww
+wt.l..w
+wwwwwww
+
+wwwwwwwww
+wa..l..aw
+w.......w
+w.w.&.w.w
+w.w&t&w.w
+w.w.&.w.w
+w.......w
+wa.....aw
+wwwwwwwww
+
+wwwwwwwww
+w...a...w
+w..&w&..w
+wawwwwwaw
+w...w...w
+w..la...w
+wt..w...w
+wwwwwwwww
+
+message This is all I have so far. Thx for playing
+
+(message if you hit x or the space bar next to a block, it will change the way you interact with it.
+
+wwwwwwwww
+w......tw
+ww&wwwbww
+w.......w
+wwwwww*ww
+wl.....*w
+wwwwwwwww)

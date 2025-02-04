@@ -1,0 +1,683 @@
+Title Darn gifs for my game
+author Battle Pillow
+realtime_interval 0.15
+key_repeat_interval 0.15
+again_interval 0.01
+background_color #F9F9F9
+text_color #786D5F
+noundo
+youtube j1w69c0Ef-U
+========
+OBJECTS
+========
+
+Background 
+grey darkgrey
+00000
+11111
+00000
+11111
+00000
+
+WireLR
+#D8D8D8 white
+.....
+.....
+00000
+.....
+.....
+
+WireUD
+#D8D8D8 white
+..0..
+..0..
+..0..
+..0..
+..0..
+
+WireLD
+#D8D8D8 white
+.....
+.....
+000..
+..0..
+..0..
+
+WireRD
+#D8D8D8 white
+.....
+.....
+..000
+..0..
+..0..
+
+WireLU
+#D8D8D8 white
+..0..
+..0..
+000..
+.....
+.....
+
+WireRU
+#D8D8D8 white
+..0..
+..0..
+..000
+.....
+.....
+
+CLock
+white black red
+00000
+00002
+01110
+00000
+00000
+
+OLock
+white black blue
+00000
+00002
+01110
+00000
+00000
+
+onTarget 
+white lightblue blue #D8D8D8  
+30003
+00200
+02120
+00200
+30003
+
+offTarget 
+white #A9F5F2 lightblue #D8D8D8 
+30003
+00200
+02120
+00200
+30003
+
+TestWall 
+grey white
+11111
+10001
+10001
+10001
+11111
+
+Player
+black #FF8000 red #F79F81 white
+.222.
+.333.
+31143
+.111.
+.1.1.
+
+Bunshin1
+black #0040FF #01A9DB
+.001.
+.000.
+00100
+2000.
+.0.0.
+
+
+Bunshin2
+black #0040FF #01A9DB
+.0102
+.000.
+00010
+.000.
+.1.0.
+
+Bunshin3
+black #0040FF #01A9DB
+.001.
+.010.
+01001
+.000.
+20.0.
+
+Bunshin4
+black #0040FF #01A9DB
+2000.
+.010.
+01000
+.0102
+.0.0.
+
+Crate 
+darkbrown brown red
+
+01110
+10001
+10201
+10001
+01110
+
+Crateunlock
+darkbrown white blue
+
+01110
+10001
+10201
+10001
+01110
+
+Dumbot
+white #E6E6E6 #FF0000 #F6CECE #F78181
+.141.
+13231
+42324
+13231
+.141.
+
+Door
+blue #0404B4
+00000
+1...1
+0...0
+1...1
+00000
+
+Key
+yellow
+.....
+.....
+.000.
+.....
+.....
+
+button
+white black yellow #D8D8D8
+30003
+02220
+02220
+02220
+30003
+
+
+Tele
+white lightblue blue #A9F5F2
+3.2.3
+.212.
+21012
+.212.
+3.2.3
+
+Bomb
+blue white #D8D8D8 
+
+.....
+.212.
+.101.
+.212.
+.....
+
+activebomb
+#FF0000 #F6CECE #D8D8D8 
+
+.....
+.212.
+.101.
+.212.
+.....
+
+deactivebomb
+black white #D8D8D8 
+.....
+.212.
+.101.
+.212.
+.....
+
+keyoff
+grey white black
+
+11111
+10001
+12221
+10001
+11111
+
+keyon
+grey white yellow
+
+11111
+10001
+12221
+10001
+11111
+
+Boom
+orange yellow
+
+.010.
+01110
+11111
+01110
+.010.
+
+CopyBot
+white #40FF00  #A9F5A9 
+.000.
+00200
+02120
+00200
+.000.
+
+Stalker
+white red #BDBDBD
+.010.
+.101.
+20002
+.202.
+.0.0.
+
+
+
+=======
+LEGEND
+=======
+Lockx = Olock or Clock
+bombx = bomb or activebomb
+Wirex = wireUD or WireLR or WireLD or WireRD or WireLU or WireRU
+Bunshin   = Bunshin1 or Bunshin2 or Bunshin3 or Bunshin4
+B = Bunshin1
+. = Background
+# = testWall
+P = Player
+* = Crate
+- = offTarget
++ = onTarget
+R = Dumbot
+{ = CLock and wireUD
+} = Clock and wireLR
+[ = Clock and WireLU
+] = Clock and WireRU
+K = Key
+1 = WireLR
+2 = WireUD
+3 = WireLD
+4 = WireRD
+5 = WireLU
+6 = WireRU
+I = Button and WireLR
+O = Button and WireLU
+U = Button and WireUD
+% = Button and WireRU
+: = Keyoff
+E = Bomb
+C = Copybot
+D = Door
+S = Stalker
+L = crateunlock
+=======
+SOUNDS
+=======
+
+sfx1 8222288
+sfx2 64516508
+sfx3 81255702
+sfx5 88823532888
+sfx6 908
+sfx7 18168708
+startlevel 83888888
+Ontarget create 41303100
+Olock create 88823532888 
+Tele create  24544508
+Boom create 81255702
+Stalker move 2125808
+TitleScreen 4150108
+restart 83888888
+================
+COLLISIONLAYERS
+================
+
+(background layers)
+Background
+(ground objects)
+offTarget, onTarget, WireLR, WireLD, WireRD, WireUD, WireLU, WireRU
+(higher objects)
+button, CLock, OLock
+(key)
+key
+(phsycial objects)
+Player, testWall, Crate, Crateunlock, Bunshin1, bunshin2, bunshin3, bunshin4, Dumbot, Tele, bomb, activebomb, deactivebomb, keyon, keyoff, Copybot, Door, Stalker
+(overlay)
+boom
+
+======
+RULES     
+====== 
+
+(boom mechanics)
+[ boom player ] -> restart
+
+vertical late [ boom| no testwall  no clock no olock no offtarget no ontarget no button no bunshin ] -> [boom|boom]
+horizontal late [ boom| no testwall  no clock no olock no offtarget no ontarget no button no bunshin ] -> [boom|boom]
+
+late [boom crate] -> [boom]
+[boom bombx] -> [ Activebomb key boom]
+[boom] -> []
+(key interaction)
+
+[ > Player | Key Lockx ] [keyoff] -> [ Player | Lockx ] [keyoff]
+[ > Player | Key ][Keyoff] -> [ > Player| ][keyon] sfx6
+[ Olock key WireUD ] -> [ Olock WireUD ]
+[ Olock key WireRU ] -> [ Olock WireRU ]
+[ Olock key WireLU ] -> [ Olock WireLU ]
+[ Olock WireLR key ] -> [ Olock WireLR ]
+[ Olock WireLR ] -> [ Clock WireLR ]
+[ action Player | Clock ][keyon] -> [Player | OLock  key][keyoff]
+
+(AI)
+[ Stalker |...| Player] -> [ > Stalker |...| Player ] 
+[ > Stalker | Player ] -> [ > Stalker | ]
+[ action player |...| Stalker] -> [action player |...| stalker]
+[stationary player][Dumbot]->[player][randomdir Dumbot]
+[stationary player][ > Dumbot | Player ] -> [player][ > Dumbot |] sfx7
+[stationary player][ > Player | Dumbot ] -> [player][ | Dumbot ]  sfx7
+[ > Player ] [ copybot ] -> [ > Player ] [ > copybot ]
+
+(crate interaction)
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Copybot | Crate ] -> [ > Copybot | > Crate ]
+[ > Crate | Crate] -> [ > Crate | > Crate]
+[ > Player | > Crate | offTarget ] -> [ Player | stationary Crate | offTarget]
+
+
+
+(bomb interaction)
+[ Activebomb key ] -> [ boom ]
+[ > Player | Activebomb ] -> [ Player | Activebomb key ] sfx2
+[ > Player | bomb ] -> [ >  Player | > activebomb ]
+[ > Player | deactivebomb ] -> [ > Player | > deactivebomb]
+[ > Crate | activebomb ] -> [ Crate | boom ]
+[ > Crate | bomb ] -> [ > Crate | > activebomb ]
+[ > Crate | deactivebomb ] -> [ > Crate | > deactivebomb ]
+[ > Copybot | activebomb ] -> [ > Copybot | boom ]
+[ > Copybot | bomb ] -> [ > Copybot | > activebomb ] 
+[ > Copybot | deactivebomb ] -> [ > Copybot | > deactivebomb ]
+(in rows)
+[ > activebomb | bomb | bomb | bomb | bomb ] -> [ activebomb | activebomb | activebomb | activebomb| activebomb ]
+[ > activebomb | bomb | bomb | bomb ] -> [ activebomb | activebomb | activebomb | activebomb ]
+[ > activebomb | bomb | bomb] -> [ activebomb | activebomb | activebomb]
+[ > activebomb | bomb ] -> [ activebomb | activebomb ]
+(must be able to push dead bombs)
+[ > deactivebomb | deactivebomb ] -> [ > deactivebomb | > deactivebomb ]
+
+(bunshin interaction)
+[ action Player ][ Bunshin ] -> [ Bunshin ][ Player ] sfx1
+[Bunshin1]->[random Bunshin]
+[Bunshin2]->[random Bunshin]
+[Bunshin3]->[random Bunshin]
+[Bunshin4]->[random Bunshin]
+
+(crate button interaction)
+
+late [Crate Button] -> [Crateunlock]
+[ > player | Crateunlock] -> [ > player  | button > Crate ]
+
+(Doors)
+[Crateunlock WireLU][door] -> [Crateunlock wireLU][] sfx5
+[Olock WireLU][door] ->[Olock WireLU][] sfx5
+
+(win condition activation)
+[ > Player | Ontarget  ] -> [ | Tele Ontarget ]
+
+late [Olock WireUD][offtarget] -> [Olock WireUD][ontarget]
+late [Crateunlock WireUD][offtarget] -> [crateunlock WireUD][ontarget] 
+late [Crateunlock WireRU][offtarget][Olock WireRU] -> [Crate Button WireRU][Ontarget][Olock WireRU]
+late [button WireUD][ontarget] -> [button WireUD][offtarget]
+
+
+
+(wire lock bomb)
+[Olock WireLR][ deactivebomb wirex ] -> [Olock WireLR][ bomb wirex ] sfx5
+[Olock WireLR][ bombx wirex ] -> [Olock WireLR][ deactivebomb wirex ] sfx5
+
+(Wire button bomb)
+[Crateunlock WireLR][ bombx wirex ] -> [ Crateunlock WireLR][ deactivebomb wirex ]
+[ Crateunlock WireLR][ deactivebomb wirex ] -> [ Crateunlock WireLR][ bomb wirex ]
+
+(	lock LR 	= bomb defusal/arming
+	lock UD 	= target unlocking
+    Button LR	= bomb defusal/arming
+    Button UD	= target unlocking
+    Button LU	= Doors
+	lock RU + Button RU	= combined target unlock
+)
+
+
+( sophistic layer rules)
+[ > Player | lockx ] -> [ Player | lockx ]
+[ > Crate | lockx ] -> [ Crate | lockx ]
+[ > Dumbot | lockx ] -> [ Dumbot | lockx ]
+[ > Copybot | lockx ] -> [ Copybot | lockx ]
+[ > Crate | ontarget] -> [ Crate | ontarget ] 
+[ > Crate | offtarget] -> [ Crate | offtarget]
+[ > Stalker | ontarget] -> [ Stalker | ontarget ] 
+[ > Stalker | offtarget] -> [ Stalker | offtarget]
+[ > Stalker | lockx ] -> [ Stalker | lockx ]
+==============
+WINCONDITIONS
+==============
+
+Some Tele 
+
+=======     
+LEVELS
+=======
+(
+message - "How do you feel?"
+message "... Where am..."
+message - "Test passed: Subject is conscious, but shows slight memory loss"
+message - "Can you move?"
+message Level 1: Memory
+message Use the arrow keys to move
+
+:#########
+#P......+#
+##########
+
+message - "Good it seems like you still know how to walk, sort off..."
+message - "Can you still use your Bunshin?"
+message "I don't know what..."
+message - "Come on just do it, we are sure you'll remember"
+message Level 2: An Old Friend
+message Use X to swap with your Bunshin
+
+:##########
+#....#....#
+#....#....#
+#P...#B..+#
+#....#....#
+#....#....#
+###########
+
+message Your Bunshin can be used to block space.
+message - "Let's speed the procedure up"
+message - "Throw some energy coil keys, Copy bots and crates at him
+Message Level 3: Mirror
+message Use X next to a lock to activate it, this wil consume the key from your key holder in the top left corner.
+message When a crate is pushed on a button, it will become fortified and resistant to explosions.
+message however it cannot be pushed indirectly anymore
+
+:###########
+#.411#1U.###
+#.2..#...*%#
+#P2.[#...*##
+#.2.2#..%**#
+#.2.6#DD...#
+#K61-#CD...#
+############
+
+message - "Now well introduce you to some deadly hazards."
+message "DEADLY?!"
+message - "Well... yeah, explosions, blade equiped robots and cyber assasins seem kind of deadly to us "
+message - "Here are two Dumbots to start with"
+message Level 4: Unpredictable Directions
+
+:###########
+#....R..U13#
+#.......*.-#
+#P.........#
+#..........#
+#....R.....#
+############
+
+message - "Well done, you're still intact"
+message - "Here come some explosives"
+message - "The defuser can only be used once, since there is only one key"
+message - "Remember: watch the copybot"
+message Level 5: Fire Pit
+
+:#########
+#...E2KC-#
+#...E2EE{#
+#PK.E6111#
+#.#.EEEEE#
+#.}..B...#
+#.2......#
+##########
+
+message - "If You are fast enough you can swap with the bushin during the blast"
+message Level 6: V = Meters Per Instant
+
+:########
+#CD.-EEE#
+####2#EE#
+####]#..#
+#B.*%#.P#
+#.#[*#KK#
+#..*E..E#
+#########
+
+message - "Let us show you our new cyber assasin"
+message - " It is quite a big test room, we know"
+message - "You'll need the travel time as they move twice as fast"
+Message Level 7: Unwelcome Hallway
+
+
+:########
+#...-...#
+#.......#
+#K..P..{#
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#..SSS..#
+#########
+
+message "Can i leave?"
+message - "Oh we are just getting started"
+message - "Now we'll put you in some real tests chambers"
+message Level 8: Close Shielding
+
+:#########
+#{11113#-#
+#..K..615#
+#...EEP..#
+#.S.E#####
+#...E#...#
+#..CE#R..#
+##########
+
+
+
+message - "If you're lucky they'll only move once."
+message - "This one is about patience"
+message Level 9: Patience And Temptation
+
+:##########
+##S########
+#..#...DDR#
+#..#.K.DDD#
+#3.#...DDD#
+#[.#411#3.#
+#..D2##-5.#
+#..{##B#.##
+#..#K###.##
+#........S#
+#.....P#.##
+########S##
+###########
+
+message - "Oh this is one of our favorites"
+message - "Remember seeing is believing..."
+message - "... to them."
+message Level 10: Illusions
+)
+:######################
+#.....................#
+#.B.................s.#
+#...#......411111%#.*.#
+#...#.]##11-11###k#.p.#
+#...#.611115.....o#...#
+#.s........s.....2....#
+#................2....#
+#######################
+
+message - "What a mess!"
+message Level 11: The Mess
+
+:######################
+#...##E....EEE.E...S..#
+#.P.##EE.E.EE..E.E...E#
+#....EE..EE..E.......E#
+###EE*..E..E#..E.E..E.#
+#E.E..EEE.E.E.E.E...###
+#.EEEE.E.EK..E.E.E411-#
+#E..E.EEEE.E.EE..E2.###
+#...{.E.E.E.E.E4115.E.#
+#...2..E..E.E.45E.E..E#
+#E..2E.E.E...E2E...S..#
+#######################
+
+message - "It's is like they are waiting for a start sign..."
+message - "...and by the way, how do you feel?"
+message "I'm ti..."
+message - "GOOD"
+message Level 12: Home Moving
+
+:##################
+#########-#413..2.#
+##.****.#.D5#2..2.#
+#.***K*...DS#O.*2.#
+]P*****B..DS#**#%.#
+#.*.E**...DS#C...O#
+##**.**.##D##*...2#
+##########2##O...2#
+##########615######
+
+
+
+message - "You have proven to be a worthy Bunshin user"
+message - "You can leave soon"
+message "Really?"
+message "Thank you!"
+message h8$a@ 13: I7F[.A327
+
+:#########
+#P......+#
+##########
+
+message "This looks familiar"
+message - #$% Correct F85
+message - hgdfu5 I said you could leave soon... gn@sa
+message - 001010 not 120jjh34
+message - 
+message - NOW!
+message Bunshin Master
+message By Battlepillow
+message Thank you for playing our game
+message If you want to create your own levels
+message You can click the link on our website
+message Located underneath the game link
+
+

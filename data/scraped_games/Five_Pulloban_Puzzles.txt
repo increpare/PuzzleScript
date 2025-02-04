@@ -1,0 +1,214 @@
+title Five Pulloban Puzzles
+author Croubble
+homepage www.puzzlescript.net
+verbose_logging
+flickscreen 11x10
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+Blue Blue
+00000
+10000
+00010
+00000
+01000
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+PullCrate
+Yellow 
+00000
+0...0
+0...0
+0...0
+00000
+
+Raft
+DarkBrown 
+.....
+.....
+..0..
+.....
+.....
+
+ActiveRaft
+LightBrown Brown
+11111
+10001
+10001
+10001
+11111
+
+
+Pulse
+White
+.....
+.....
+..0..
+.....
+.....
+
+Failure
+transparent
+
+Success
+transparent
+
+StartToken
+transparent
+
+PullCrateToken
+transparent
+
+CrateToken
+transparent
+
+Save
+transparent
+
+SitTillFinishedLevel
+transparent
+
+Realtime
+transparent
+
+=======
+LEGEND
+=======
+Crateish = PullCrate or Crate
+SuccessDelete = Crateish or CrateToken or PullCrateToken or Target
+. = Background
+# = Wall
+P = Player and StartToken and Player
+* = PullCrate
+@ = PullCrate and Target
+O = Target
+r = Raft and Wall and Save
+s = Raft and Wall and Save
+=======
+SOUNDS
+=======
+
+Crateish MOVE 36772507
+
+sfx0 31094700
+sfx1 76105709
+================
+COLLISIONLAYERS
+================
+
+Background
+REALTIME
+SitTillFinishedLevel
+Player
+Save
+CrateToken,PullCrateToken,StartToken
+Success
+Failure
+Pulse
+Target
+ActiveRaft
+Player, Wall, Crate, PullCrate
+Raft
+
+======
+RULES
+======
+
+(camera modes)
+	(1: player follow)
+    (2: sit position)
+    (3: )
+    
+
+(camera work)
+
+(end camera work)
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ < Player | PullCrate ] -> [ < Player | < PullCrate ]
+
+(we pulse out from the Player)
+
+late [Player no Raft no ActiveRaft] -> [Player Pulse]
+late [Pulse no Raft no ActiveRaft | no Pulse no Wall] -> [Pulse|Pulse]
+late [Pulse | Raft no Pulse] -> [Pulse | Pulse Raft]
+
+late [Target Pulse no Crateish] -> [Target Pulse Failure]
+
+late [Player] | [Pulse Target] -> [Player Success] | [Pulse Target]
+late [Player Success] [Failure] -> [Player] [Failure]
+late [Player Success] -> [Player Success] sfx0 checkpoint
+
+late [SuccessDelete Pulse] [Success] -> [Pulse] [Success]
+late [Raft Pulse] [Success] -> [ActiveRaft Pulse no Wall] [Success]
+
+late [Failure] [ActiveRaft] -> [Failure] [Wall] sfx1 
+late [Pulse] -> []
+late [Failure] -> []
+late [Success] -> []
+
+
+late [Player Save] [Crate] -> [Player Save] []
+late [Player Save] [PullCrate] -> [Player Save] []
+late [Player Save] [CrateToken] -> [Player Save] [CrateToken Crate]
+late [Player Save] [PullCrateToken] -> [Player Save] [PullCrateToken PullCrate]
+late [Player Save] -> [Player Save] checkpoint
+
+[StartToken] [Crate] -> [StartToken] [Crate CrateToken]
+[StartToken] [PullCrate] -> [StartToken] [PullCrate PullCrateToken]
+[StartToken] -> []
+==============
+WINCONDITIONS
+==============
+no Target
+=======
+LEVELS
+=======
+
+message Press R to restart current island. 
+
+#######################################################
+######################rrrrrrrr#########################
+##############..######r######r#rrrrrr#rrrrrrrrrrrrr####
+##############.o.rrrrrr##...#...####r#r###########r####
+###..#########..#########o#o#**.####r#r#######..##r####
+###*.########.**#######.........##.......####*o@.#r####
+##..p.o.#####...#######.#...##..##..*o*o.#####.......##
+##..@...######o.#######...##########.#.#@#####.@.@...##
+#######rrrrrrr..####################...################
+#######################################################
+
+message Victory! Thanks for playing.

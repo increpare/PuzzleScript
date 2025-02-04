@@ -1,0 +1,130 @@
+title Undertale X/O Puzzle
+author Toby Fox, transcribed by PKRB
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightblue white
+11111
+01111
+11101
+11111
+10111
+
+
+TargetFresh
+blue darkblue
+01.10
+10101
+.101.
+10101
+01.10
+
+TargetBaked
+red darkred
+10001
+01110
+01.10
+01110
+10001
+
+TargetBurnt
+green darkgreen
+.101.
+10101
+10101
+01110
+00000
+
+Button
+gray darkgray
+.....
+.....
+.000.
+.111.
+.....
+
+Wall
+darkblue lightblue blue
+.22..
+0112.
+01112
+01112
+.000.
+
+Player
+brown yellow pink Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+X = TargetFresh
+: = Button
+Target = TargetFresh or TargetBaked or TargetBurnt
+
+=======
+SOUNDS
+=======
+
+TargetBaked create 43049507
+TargetBurnt create 43794102
+sfx0 59967502
+endlevel 25515703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, Button
+Player, Wall
+
+======
+RULES
+======
+
+late [ Player TargetBaked ] -> [ Player TargetBurnt ]
+
+late [ Player TargetFresh ] -> [ Player TargetBaked ]
+
+[ Player Button ] [ Target ] -> [ Player Button ] [ TargetFresh ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+No TargetFresh
+No TargetBurnt
+All Player on Button
+
+=======
+LEVELS
+=======
+
+P...:....
+.#######.
+..X.#.X..
+.#######.
+.........
+
+............
+P..####.##..
+..#.X..X.X#.
+..#.###X#X#.
+:.#..X.XXX#.
+....X##X.#..
+....XXXX....
+...#######..

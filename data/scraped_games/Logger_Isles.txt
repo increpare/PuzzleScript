@@ -1,0 +1,254 @@
+title Logger Isles
+author draknek, demake by infinitenutshell
+zoomscreen 10x10
+
+========
+OBJECTS
+========
+
+Background 
+blue
+
+land
+lightgreen green
+00000
+01000
+00000
+00100
+00000
+
+rock
+grey lightgreen green
+11111
+11121
+10011
+00001
+00000
+
+floatsmall
+brown lightbrown
+.....
+.000.
+.010.
+.010.
+.000.
+
+Player friend
+black
+.....
+.000.
+00000
+.000.
+.0.0.
+
+tree
+green brown
+..0..
+.000.
+00000
+.111.
+.111.
+
+log
+brown lightbrown
+.....
+00000
+11111
+00000
+.....
+
+exit
+TRANSPARENT
+
+talltree
+green white
+.000.
+.111.
+.111.
+.111.
+.111.
+
+branches
+green
+.....
+.000.
+00000
+00000
+00000
+
+logleft
+white
+.....
+00000
+00000
+00000
+.....
+
+logright
+white
+.....
+00000
+00000
+00000
+.....
+
+logup
+white
+.000.
+.000.
+.000.
+.000.
+.000.
+
+logdown
+white
+.000.
+.000.
+.000.
+.000.
+.000.
+
+floatleftright
+LIGHTGRAY
+.....
+00000
+00000
+00000
+.....
+
+floatupdown
+LIGHTGRAY
+.000.
+.000.
+.000.
+.000.
+.000.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+- = land
++ = rock and land
+@ = Player and land
+T = tree and land
+e = exit
+
+I = talltree and land
+O = branches and land
+
+float = floatsmall or floatleftright or floatupdown
+logany = log or logleft or logright or logup or logdown
+obstacle = rock or tree or talltree or logany
+
+=======
+SOUNDS
+=======
+
+sfx0 38414100
+sfx1 57003504
+
+================
+COLLISIONLAYERS
+================
+
+Background
+land float
+player obstacle
+exit branches
+
+======
+RULES     
+======     
+
+(player can chop down trees)
+[ > player | tree ] -> [ player | log ] sfx0
+
+right [ > player | talltree | no obstacle ] -> [ player | logleft | logright ] sfx0
+left [ > player | talltree | no obstacle ] -> [ player | logright | logleft ] sfx0
+up [ > player | talltree | no obstacle ] -> [ player | logdown | logup ] sfx0
+down [ > player | talltree | no obstacle ] -> [ player | logup | logdown ] sfx0
+
+
+(branches disappear once their tree is chopped down)
+down [ branches | no talltree ] -> [ | ]
+
+(player and logs can push logs)
+[ > player | logany ] -> [ > player | > logany ]
++ [ > logany | logany ] -> [ > logany | > logany ]
++ rigid right [ moving logleft | logright ] -> [ moving logleft | moving logright ]
++ rigid left [ moving logright | logleft ] -> [ moving logright | moving logleft ]
++ rigid up [ moving logdown | logup ] -> [ moving logdown | moving logup ]
++ rigid down [ moving logup | logdown ] -> [ moving logup | moving logdown ]
+
+(player can't go in the water)
+[ > player | no land no float ] -> [ player | ] sfx1
+
+
+(logs can fall in the water)
+late [ log no land no float ] -> [ floatsmall ]
+
+late right [ logleft no land no float | logright no land no float ] -> [ floatleftright | floatleftright ]
+
+late up [ logdown no land no float | logup no land no float ] -> [ floatupdown | floatupdown ]
+
+==============
+WINCONDITIONS
+==============
+
+all player on exit
+
+=======     
+LEVELS
+=======
+
+...........---.--+----............
+.........----T.----T--............
+.........-T---.---.--.............
+.........----.....................
+............e.....................
+...........-T.....................
+..........-----...................
+..........------..................
+...........--+--........--........
+...........----........----.......
+............--.........--@--......
+........................----......
+............--...........T........
+.........------....--.............
+........---+---....--+..--........
+........-T--.--....----.---.......
+.........--.........---..-+.--....
+..............-.....--..-T----....
+.............-----......-----.....
+.............--+---.......--.--...
+..............---T--.........--T-.
+................---...---....----.
+.....................-----..-+---.
+.................--..--T--.-----..
+................----------.---+-..
+................----------..---...
+.................-----+--.........
+..................+----...........
+
+message "Let's skip ahead a bit, shall we?"
+
+....................
+....+T-.............
+...-----............
+...---O---..........
+...---I---..........
+....--.--...........
+...............---..
+....--.---....-O--@.
+....--+O+---..-I---.
+.....-+I--O--.--+-..
+.....--..-I--..--...
+..........--........
+.....---............
+....-----...........
+...---+--...........
+...-O--.............
+....I-..............

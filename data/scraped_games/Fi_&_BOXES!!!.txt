@@ -1,0 +1,612 @@
+title Fi & BOXES!!!
+author YBlu
+realtime_interval 0.125
+noundo
+
+========
+OBJECTS
+========
+
+Background
+#8781bd
+
+Frame
+#322c66
+
+Backframe
+#322c66
+
+Boxframe
+#322c66
+
+Head
+black #4080E0 #80b0ff
+0002.
+22012
+00000
+00222
+20002
+
+Body
+black #80b0ff
+1...1
+01111
+10000
+11000
+00011
+
+Tail
+black #80b0ff
+...11
+11100
+00011
+111.1
+...10
+
+TailTip
+black #80b0ff
+..111
+.1000
+..111
+.....
+.....
+
+Body2
+black #80b0ff
+....1
+11111
+00000
+11000
+00011
+
+Tail2
+black #80b0ff
+111..
+00011
+11100
+...11
+...10
+
+TailTip2
+black #80b0ff
+.....
+..111
+.1000
+..111
+.....
+
+Glow0
+#80b0ff
+.....
+.....
+.....
+.....
+000..
+
+Glow1
+#80b0ff
+....0
+.....
+.....
+.....
+.....
+
+Glow2
+#80b0ff
+000..
+.....
+.....
+.....
+.....
+
+Glow3
+#80b0ff
+.000.
+.....
+.....
+.....
+.....
+
+Glow4
+#80b0ff
+.....
+.....
+0....
+.....
+.....
+
+Until1up
+lightblue
+.....
+.....
+..0..
+.....
+.....
+
+Box1
+#a08060 #c0a080
+00000
+01110
+01110
+01110
+00000
+
+Box2
+#c08060 #e0a080
+00000
+01110
+01110
+01110
+00000
+
+Box3
+#908060 #b0a080
+00000
+01110
+01110
+01110
+00000
+
+Box4
+#a08060 #b0a080
+00000
+01110
+01110
+01110
+00000
+
+1UpBox
+#4080E0 #80b0ff
+00000
+00100
+01110
+00100
+00000
+
+Snatched
+#a08060 #c0a080
+00000
+01110
+01110
+01110
+00000
+
+1UpLauncher
+darkblue
+
+Missed
+transparent
+
+Almost
+pink
+
+Ready
+purple
+
+NewBox
+blue
+
+PseudoHead
+black #4080E0 #60a0ff
+0002.
+22012
+00000
+00222
+20002
+
+0pt
+#322c66
+00000
+00000
+00000
+00000
+00000
+
+1pt
+#322c66
+00000
+00000
+00000
+00000
+0..00
+
+2pt
+#322c66
+00000
+00000
+00000
+0..00
+0..00
+
+3pt
+#322c66
+00000
+00000
+0..00
+0..00
+0..00
+
+4pt
+#322c66
+00000
+0..00
+0..00
+0..00
+0..00
+
+5pt
+#322c66
+0..00
+0..00
+0..00
+0..00
+0..00
+
+Gold
+#ffc000
+
+Silver
+#c0c0c0
+
+Bronze
+#c08060
+
+Life
+#4080E0
+.....
+.0...
+.0...
+.0...
+.....
+
+TwoLives
+#4080E0
+.....
+.0.0.
+.0.0.
+.0.0.
+.....
+
+ThirdLife
+#4080E0
+.....
+0....
+0....
+0....
+.....
+
+Shield
+lightblue
+
+Shielded
+#8F819E #9A8BA9
+00000
+01110
+01110
+01110
+00000
+
+LetterS
+white
+.000.
+.0...
+.000.
+...0.
+.000.
+
+LetterC
+white
+.000.
+.0...
+.0...
+.0...
+.000.
+
+LetterO
+white
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+LetterR
+white
+.00..
+.0.0.
+.00..
+.0.0.
+.0.0.
+
+LetterE
+white
+.000.
+.0...
+.000.
+.0...
+.000.
+
+Colon
+white
+.....
+.0...
+.....
+.0...
+.....
+
+Number0
+white
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+Number1
+white
+...0.
+...0.
+...0.
+...0.
+...0.
+
+Number2
+white
+.000.
+...0.
+.000.
+.0...
+.000.
+
+Number3
+white
+.000.
+...0.
+.000.
+...0.
+.000.
+
+Number4
+white
+.0.0.
+.0.0.
+.000.
+...0.
+...0.
+
+Number5
+white
+.000.
+.0...
+.000.
+...0.
+.000.
+
+Number6
+white
+.000.
+.0...
+.000.
+.0.0.
+.000.
+
+Number7
+white
+.000.
+...0.
+...0.
+...0.
+...0.
+
+Number8
+white
+.000.
+.0.0.
+.000.
+.0.0.
+.000.
+
+Number9
+white
+.000.
+.0.0.
+.000.
+...0.
+.000.
+
+CarryOne
+darkred
+
+TheEnd
+#322c66
+
+=======
+LEGEND
+=======
+
+, = Frame and Backframe and Boxframe and Until1up
+. = Background
+w = TailTip
+a = Tail
+r = Body
+p = Head
+g = Almost and Gold and 0pt and Frame and Boxframe and Until1up
+s = Silver and 0pt and Frame and Boxframe and Until1up
+b = Bronze and 0pt and Frame and Boxframe and Until1up
+0 = Glow0
+1 = Glow1
+2 = Glow2
+3 = Glow3
+4 = Glow4
+5 = LetterS and Frame and Backframe and Boxframe and Until1up
+6 = LetterC and Frame and Backframe and Boxframe and Until1up
+7 = LetterO and Frame and Backframe and Boxframe and Until1up
+8 = LetterR and Frame and Backframe and Boxframe and Until1up
+9 = LetterE and Frame and Backframe and Boxframe and Until1up
+: = Colon and Frame and Backframe and Boxframe and Until1up
+_ = Number0 and Frame and Backframe and Boxframe and Until1up
+@ = TwoLives and Frame and Backframe and Boxframe and Until1up
+# = ThirdLife and Frame and Backframe and Boxframe and Until1up
+Player = Tail or Body or Head or Body2 or Tail2 or PseudoHead or TailTip or TailTip2
+Box = Box1 or Box2 or Box3 or Box4
+Box+ = Box1 or Box2 or Box3 or Box4 or 1UpBox
+Box++ = Box1 or Box2 or Box3 or Box4 or 1UpBox or Shielded
+Spawner = Almost or Ready
+Grab = Head or Body or Body2
+Points = 0pt or 1pt or 2pt or 3pt or 4pt or 5pt
+Glow = Glow0 or Glow1 or Glow2 or Glow3 or Glow4
+Letter = LetterS or LetterC or LetterO or LetterR or LetterE or Colon
+Number = Number0 or Number1 or Number2 or Number3 or Number4 or Number5 or Number6 or Number7 or Number8 or Number9
+LifeOrTwo = Life or TwoLives
+
+=======
+SOUNDS
+=======
+
+sfx0 39178103 (box snatched)
+sfx1 68146303 (game over)
+sfx2 32472704 (box missed)
+sfx3 24176103 (1up)
+
+================
+COLLISIONLAYERS
+================
+
+Shield
+Ready, NewBox, Backframe
+Almost, 1UpLauncher
+Background
+Box, Snatched, Boxframe, Missed
+Shielded
+Until1up
+Glow
+Player, Frame
+Gold, Silver, Bronze
+Points, Life, TwoLives, ThirdLife
+TheEnd
+Letter
+Number
+CarryOne
+1UpBox
+
+======
+RULES
+======
+
+(Movement)
+[> Player|Frame] -> [Player|Frame]
+[> Player][Glow] -> [> Player][> Glow]
+[stationary Player][Glow] -> [stationary Player][stationary Glow]
+
+(Generating boxes)
+[NewBox] -> [Almost]
+down [Spawner|no Backframe] -> [action Spawner|]
+down [Backframe|no Backframe||Almost] -> [Backframe|Ready||]
+down [Backframe|no Backframe||Ready] -> [Backframe|NewBox|NewBox|NewBox]
+random [Newbox] -> [random Box]
+
+right [LifeOrTwo][||||||||||Box][1UpLauncher] -> [LifeOrTwo][||||||||||1UpBox][]
+[1UpLauncher][ThirdLife] -> [][ThirdLife]
+
+down [action Spawner|no Backframe] -> [|Spawner]
+random vertical [NewBox|...|no Newbox no Backframe][NewBox] -> [Almost|...|][]
+
+(Boxes)
+[Tail2][Box] -> [Tail2][left Box]
+late [Grab Box][Colon|||Number] -> [Grab Snatched][Colon|||Number CarryOne] sfx0
+late [Grab Shielded][Colon|||Number] -> [Grab Snatched][Colon|||Number CarryOne] sfx0
+late right [Grab 1UpBox][TwoLives|no ThirdLife] -> [Grab Snatched][TwoLives|ThirdLife] sfx3
+late right [Grab 1UpBox][Life] -> [Grab Snatched][TwoLives] sfx3
+late [CarryOne][Bronze 5pt] -> [CarryOne][Bronze 5pt CarryOne]
+late [CarryOne][Silver 5pt] -> [CarryOne][Silver 5pt CarryOne]
+late [CarryOne][Gold 5pt] -> [CarryOne][Gold 5pt CarryOne]
+[Box++] -> [left Box++]
+
+(Missed)
+startloop
+right [Box|||||||||] -> [Missed|||||||||] sfx2
+right [1UpBox|||||||||] -> [|||||||||]
+[Missed][Points|Points|Points] ->[Missed][0pt|0pt|0pt]
+
+right [Missed][Frame|||||] -> [Missed][Frame|Shield|Shield|Shield|Shield|Shield]
+[Shield Box] -> [Shielded]
+[Shield no Box] -> []
+[Shielded Frame] -> [Frame]
+
+[Missed][Life][Head] -> [][][Head TheEnd]
+right [Missed][TwoLives|no ThirdLife] -> [][Life|]
+[Missed][ThirdLife] -> [][]
+endloop
+
+(Tail)
+[Head] -> [PseudoHead]
+[TailTip|Tail|Body|PseudoHead] -> [TailTip2|Tail2|Body2|Head]
+[TailTip2|Tail2|Body2|PseudoHead] -> [TailTip|Tail|Body|Head]
+
+(Combo)
+[Snatched][4pt] -> [][5pt]
+[Snatched][3pt] -> [][4pt]
+[Snatched][2pt] -> [][3pt]
+[Snatched][1pt] -> [][2pt]
+[Snatched][0pt] -> [][1pt]
+down [Points|0pt] -> [0pt|Points]
+[Snatched] -> []
+
+(Score)
+startloop
+late right [|CarryOne Number9] -> [CarryOne|Number0]
+late [CarryOne Number8] -> [Number9]
+late [CarryOne Number7] -> [Number8]
+late [CarryOne Number6] -> [Number7]
+late [CarryOne Number5] -> [Number6]
+late [CarryOne Number4] -> [Number5]
+late [CarryOne Number3] -> [Number4]
+late [CarryOne Number2] -> [Number3]
+late [CarryOne Number1] -> [Number2]
+late [CarryOne Number0] -> [Number1]
+late [CarryOne|Number0] -> [Number1|Number0]
+late right [Bronze CarryOne][Colon|||no CarryOne] -> [Bronze][Colon|||CarryOne]
+late right [Silver CarryOne][Colon|||no CarryOne] -> [Silver][Colon|||CarryOne]
+late right [Gold CarryOne][Colon|||no CarryOne] -> [Gold][Colon|||CarryOne]
+endloop
+
+(1up)
+late right [1UpBox|Frame] -> [random Box+|Frame]
+[Head] -> [Head 1UpLauncher]
+[Until1up][1UpLauncher] -> [Until1up][]
+[ThirdLife][1UpLauncher] -> [ThirdLife][]
+late random [Until1up] -> []
+right [Life|no ThirdLife][Frame][1UpBox] -> [Life|][Frame Until1up][1UpBox]
+right [TwoLives|no ThirdLife][Frame][1UpBox] -> [TwoLives|][Frame Until1up][1UpBox]
+
+(Game over)
+late [TheEnd][Spawner] -> [TheEnd][]
+late [TheEnd][NewBox] -> [TheEnd][]
+late [TheEnd][Box++] -> [TheEnd][]
+late [TheEnd][] -> [TheEnd][TheEnd]
+late down [TheEnd][Letter|||||] -> [TheEnd][||Letter|||] sfx1
+late down [TheEnd][Number|||||] -> [TheEnd][||Number|||]
+[action Player] -> restart
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+message Use the arrow keys to control Fi
+message Snatch as many BOXES as you can
+message Earn extra points for combos
+message Missing a BOX will cost you a life
+message ...however, lives can be regained by collecting special BLUE BOXES
+message Press 'Space' or 'R' at any time to start a new game
+
+@#,,,,,,,,,
+,56789:,,_,
+,,,,,,,,,,,
+,...0.....g
+,warp4....s
+,.123.....b
+,,,,,,,,,,,

@@ -1,0 +1,270 @@
+title Polyomino Puzzles
+author Zithral
+homepage zithral.itch.io
+
+norepeat_action
+run_rules_on_level_start
+key_repeat_interval 0.15
+
+text_color black
+background_color lightgray
+
+
+========
+OBJECTS
+========
+
+Background
+#ffffff #f5f5f5
+11111
+10001
+10001
+10001
+11111
+
+Wall
+lightgray
+
+Target
+#a2a2a2 #b2b2b2
+11111
+10001
+10001
+10001
+11111
+
+PlayerSeek
+black
+.....
+..0..
+.000.
+..0..
+.....
+
+PlayerDrag
+black
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+a
+lightblue
+
+b
+blue
+
+c
+orange
+
+d
+yellow
+
+e
+lightgreen
+
+f
+pink
+
+g
+red
+
+LoSquare
+#333333
+0...0
+.....
+.....
+.....
+0...0
+
+EdgeN
+#333333
+00000
+.....
+.....
+.....
+.....
+
+EdgeS
+#333333
+.....
+.....
+.....
+.....
+00000
+
+EdgeW
+#333333
+0....
+0....
+0....
+0....
+0....
+
+EdgeE
+#333333
+....0
+....0
+....0
+....0
+....0
+
+LowerSquare
+pink
+
+RaiseSquare
+purple
+
+HiSquare
+black
+00000
+0...0
+0...0
+0...0
+00000
+
+Single
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+w = Background and Wall
+t = Background and Target
+0 = LowerSquare
+p = PlayerSeek
+x = Background and Wall and Single
+
+Color = a or b or c or d or e or f or g
+Square = HiSquare or LoSquare or RaiseSquare or LowerSquare
+Edge = EdgeN or EdgeS or EdgeW or EdgeE
+Player = PlayerSeek or PlayerDrag
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Color
+Wall
+LoSquare, LowerSquare
+EdgeN
+EdgeS
+EdgeW
+EdgeE
+HiSquare, RaiseSquare
+Player, Single
+
+======
+RULES
+======
+
+[Color no Single no LoSquare] -> [Color LowerSquare]
+
+( Can't action over nothing )
+[action PlayerSeek no LoSquare] -> cancel
+
+( Action over a piece to pick it up )
+[action PlayerSeek LoSquare] -> [PlayerDrag RaiseSquare]
+right [RaiseSquare no EdgeE | LoSquare] -> [RaiseSquare | RaiseSquare] 
++ right [LoSquare | no EdgeW RaiseSquare] -> [RaiseSquare | RaiseSquare]
++ down [RaiseSquare no EdgeS | LoSquare] -> [RaiseSquare | RaiseSquare] 
++ down [LoSquare | no EdgeN RaiseSquare] -> [RaiseSquare | RaiseSquare]
+[RaiseSquare Edge] -> [RaiseSquare]
+[Single] [RaiseSquare Color] -> [Single Color] [RaiseSquare]
+[RaiseSquare Color] -> [RaiseSquare]
+[RaiseSquare] -> [HiSquare]
+
+( Drag a piece )
+[> PlayerDrag] [HiSquare] -> [> PlayerDrag] [> HiSquare]
+
+( Drop a piece )
+[action PlayerDrag] [HiSquare LoSquare] -> cancel
+[action PlayerDrag] [HiSquare] -> [action PlayerDrag] [LowerSquare]
+[action PlayerDrag] -> [PlayerSeek]
+
+( Add edges to dropped piece )
+[LowerSquare] -> [LowerSquare EdgeN EdgeS EdgeW EdgeE]
+right [LowerSquare EdgeE | EdgeW LowerSquare] -> [LowerSquare | LowerSquare]
+down [LowerSquare EdgeS | EdgeN LowerSquare] -> [LowerSquare | LowerSquare]
+[LowerSquare Target] [LowerSquare no Target] -> cancel (must not cross target border)
+[Single Color] [LowerSquare no Color] -> [Single Color] [LowerSquare Color]
+[Single Color] [LowerSquare] -> [Single] [LowerSquare]
+[LowerSquare] -> [LoSquare]
+
+( Stop things moving out of bounds )
+late [Square Wall] -> cancel
+late [Player Wall] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+all Target on LoSquare
+
+=======
+LEVELS
+=======
+
+message  Press X to grab and drop pieces
+
+
+xwwwwwwwwww
+w.........w
+w.........w
+w.........w
+w.g.ttt...w
+w.g.ttt.p.w
+w...ttt...w
+w.d.....a.w
+w.dd.ee.a.w
+w.........w
+wwwwwwwwwww
+
+xwwwwwwwwwwwww
+w............w
+w......ee....w
+w..gg.ee.....w
+w............w
+w....tttt....w
+w.dd.tttt.a..w
+w..d.tttt.a..w
+w....tttt.a..w
+w............w
+w..p.ccc.....w
+w....c.......w
+w............w
+wwwwwwwwwwwwww
+
+
+xwwwwwwwwwwwwwwwwwwww
+w...................w
+w.c.cc.ccc.bbb.bb.b.w
+w.c..c.c.....b.b..b.w
+w.cc.c...c.b...b.bb.w
+w......ccc.bbb......w
+w..f.............dd.w
+w.ff.ttttttttttt.dd.w
+w..f.ttttttttttt....w
+w....ttttttttttt....w
+w.f..tttttpttttt.a..w
+w.ff.ttttttttttt.a..w
+w.f..ttttttttttt.a..w
+w....ttttttttttt.a..w
+w..f................w
+w.fff..g....e..aaaa.w
+w.....gg....ee......w
+w.fff.g..gg..e..ee..w
+w..f......gg...ee...w
+w...................w
+wwwwwwwwwwwwwwwwwwwww
+

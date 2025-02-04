@@ -1,0 +1,232 @@
+title  Tour de Four
+author Chris Pickel
+homepage sfiera.net
+again_interval 0.08
+background_color #222
+
+========
+OBJECTS
+========
+
+Background .
+Black
+
+Player @
+White Black
+.000.
+.010.
+00000
+.000.
+.0.0.
+
+Red R
+Red DarkRed
+00000
+00000
+00100
+00000
+00000
+
+Blue B
+Blue Purple
+00000
+00000
+01010
+00000
+00000
+
+Yellow Y
+Yellow Brown
+00000
+00100
+00000
+01010
+00000
+
+Cleared
+White
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Unchecked
+Transparent
+
+Checking
+Transparent
+
+One
+Transparent
+
+Two
+Transparent
+
+Three
+Transparent
+
+Four
+Transparent
+
+=======
+LEGEND
+=======
+
+Block   = Red or Blue or Yellow
+Movable = Player or Block
+Number  = One or Two or Three or Four
+
+=======
+SOUNDS
+=======
+
+Block   move   34341907
+Cleared create 3567303
+endlevel       18798902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Block, Cleared
+Unchecked, Checking
+Number
+
+======
+RULES     
+======     
+
+(clear blocks after “again” happens)
+[Cleared] -> []
+
+(push transitively)
+[> Movable | Movable] -> [> Movable | > Movable]
+
+(mark all blocks for checking)
+late [Block] ->  [Unchecked Block]
+
+startloop
+(pick a random origin block)
+late random [Unchecked Block] -> [One Checking Block]
+
+(flood fill across like-colored blocks, incrementing up to four)
+late [One]   [Checking Red    | Unchecked Red   ] -> [Two]   [Checking Red    | Checking Red   ]
+late [Two]   [Checking Red    | Unchecked Red   ] -> [Three] [Checking Red    | Checking Red   ]
+late [Three] [Checking Red    | Unchecked Red   ] -> [Four]  [Checking Red    | Checking Red   ]
+late         [Checking Red    | Unchecked Red   ] ->         [Checking Red    | Checking Red   ]
+late [One]   [Checking Blue   | Unchecked Blue  ] -> [Two]   [Checking Blue   | Checking Blue  ]
+late [Two]   [Checking Blue   | Unchecked Blue  ] -> [Three] [Checking Blue   | Checking Blue  ]
+late [Three] [Checking Blue   | Unchecked Blue  ] -> [Four]  [Checking Blue   | Checking Blue  ]
+late         [Checking Blue   | Unchecked Blue  ] ->         [Checking Blue   | Checking Blue  ]
+late [One]   [Checking Yellow | Unchecked Yellow] -> [Two]   [Checking Yellow | Checking Yellow]
+late [Two]   [Checking Yellow | Unchecked Yellow] -> [Three] [Checking Yellow | Checking Yellow]
+late [Three] [Checking Yellow | Unchecked Yellow] -> [Four]  [Checking Yellow | Checking Yellow]
+late         [Checking Yellow | Unchecked Yellow] ->         [Checking Yellow | Checking Yellow]
+
+(if four was reached, mark all blocks that were checked this time through to be cleared during “again”)
+late [Four] [Checking] -> [Four] [Cleared] again
+
+(otherwise clean up everything in preparation for another iteration)
+late [] -> [no Number no Checking]
+
+endloop
+
+==============
+WINCONDITIONS
+==============
+
+No Block
+No Cleared
+
+=======     
+LEVELS
+=======
+
+@....
+.R.R.
+.....
+.R.R.
+.....
+
+@....
+.RBR.
+.B.B.
+.RBR.
+.....
+
+@.....
+.RBRB.
+.BRBR.
+.RBRB.
+.BRBR.
+......
+
+@....BRB
+.RBR..BR
+..BRB..B
+R..RBR..
+BR..BRB.
+RBR.....
+
+@..BRB
+RBR.BR
+.BRB.B
+R.RBR.
+BR.BRB
+RBR...
+
+@....
+.RRR.
+.....
+.RRR.
+.....
+
+@.....
+..BR..
+.BRBR.
+.RBRB.
+..RB..
+......
+
+@...B
+..BRB
+.R.R.
+.BB..
+RR...
+
+@.....
+.BBRR.
+.RRYY.
+.YYRR.
+.RRBB.
+......
+
+@......
+...Y...
+..RBR..
+.YBYBY.
+..RBR..
+...Y...
+.......
+
+@..Y...
+..RBR..
+.YBYBY.
+..RBR..
+...Y...
+
+@.....
+.RBYR.
+.YRBY.
+.BYRB.
+.RBYR.
+......
+
+@....Y
+.RYYB.
+.YRBY.
+.YBRY.
+.BYYR.
+Y....Y

@@ -1,0 +1,540 @@
+title Quantum Childminding - Expanded Levelset
+author Mark Richardson & Nils Jung
+noaction
+require_player_movement
+run_rules_on_level_start
+(verbose_logging)
+
+
+========
+OBJECTS
+========
+
+Background ,
+Black
+
+Player @
+White Gray Pink Green
+.000.
+.323.
+00000
+.111.
+11111
+
+Wave .
+Pink
+.....
+.....
+..0..
+.....
+.....
+
+Child
+Brown Yellow Pink
+.....
+.000.
+11111
+.222.
+22222
+
+Move1
+Transparent
+
+Move2
+Transparent
+
+WallA A
+LightGray
+
+WallB B
+LightGray LightBlue
+11011
+11011
+00000
+11011
+11011
+
+WallC C
+Blue DarkBlue LightBlue
+00101
+10110
+01010
+10101
+10100
+
+Level1 1
+Brown Black
+00000
+01110
+01110
+01110
+00000
+
+Level1A
+Brown #F00 #D00
+01210
+02120
+01210
+02120
+00000
+
+Level1B
+Brown #F80 #D70
+01210
+02120
+01210
+02120
+00000
+
+Level1C
+Brown #FF0 #DD0
+01210
+02120
+01210
+02120
+00000
+
+Level1D
+Brown #8F0 #7D0
+01210
+02120
+01210
+02120
+00000
+
+Level1E
+Brown #0F0 #0D0
+01210
+02120
+01210
+02120
+00000
+
+Level2 2
+Brown Black
+11111
+11111
+00000
+11111
+00000
+
+Level2A
+Brown DarkGreen Purple LightBlue Orange
+34412
+34412
+00000
+12334
+00000
+
+Level2B
+Brown Red White Black Blue
+34412
+34412
+00000
+12334
+00000
+
+Level2C
+Brown LightGreen Green Yellow LightRed
+34412
+34412
+00000
+12334
+00000
+
+Level2D
+Brown Pink DarkBrown DarkBlue Grey
+34412
+34412
+00000
+12334
+00000
+
+Level2E
+Brown LightGrey LightBrown DarkGrey DarkRed
+34412
+34412
+00000
+12334
+00000
+
+Level3 3
+Brown Black
+00000
+01110
+01110
+01110
+00000
+
+Level3A
+Brown LightBlue
+00000
+01110
+01110
+01110
+00000
+
+Level3B
+Brown Grey LightGrey
+00000
+01210
+02120
+01210
+00000
+
+Level3C
+Brown LightBrown
+..1..
+.100.
+..1..
+.100.
+.100.
+
+Level3D
+White Red Black
+00000
+.000.
+11121
+12111
+.000.
+
+Level3E
+Brown DarkBrown
+00000
+11011
+00000
+01101
+00000
+
+Level4 4
+Green DarkGreen LightGreen
+00100
+10001
+01011
+01001
+11010
+
+Level4A
+Green DarkGreen LightGreen
+10100
+10000
+00100
+10011
+01010
+
+Level4B
+Green DarkGreen LightGreen
+10010
+02010
+00100
+00221
+01010
+
+Level4C
+Green DarkGreen LightGreen
+10120
+10000
+00100
+20011
+01010
+
+Level4D
+Green DarkGreen LightGreen Red
+01032
+31001
+00131
+13000
+01020
+
+Level4E
+Green DarkGreen LightGreen Yellow
+01312
+03001
+00103
+10300
+01020
+
+Crate #
+brown orange DarkBrown
+22122
+21012
+10101
+21012
+22122
+
+Escape E
+brown yellow lightgray
+20002
+00000
+00010
+00000
+00000
+
+EscapedChild
+pink yellow lightgray
+20002
+00000
+00010
+00000
+00000
+
+=======
+LEGEND
+=======
+
+Level1X = Level1A or Level1B or Level1C or Level1D or Level1E
+Level2X = Level2A or Level2B or Level2C or Level2D or Level2E
+Level3X = Level3A or Level3B or Level3C or Level3D or Level3E
+Level4X = Level4A or Level4B or Level4C or Level4D or Level4E
+Wall = A or B or C or 1 or Level1X or 2 or Level2X or 3 or Level3X or 4 or Level4X or Crate
+
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Escape, EscapedChild
+Wave, Child, Move1, Move2
+Player, Wall
+
+
+======
+RULES
+======
+
+(No escape)
+[> Player|Escape] -> CANCEL (added)
+
+(It's over)
+[EscapedChild] -> CANCEL (added)
+late [Child Escape] -> [EscapedChild]
+late [Wave Escape] -> [EscapedChild]
+
+(Decorate level)
+[Level1]->[random Level1X]
+[Level2]->[random Level2X]
+[Level3]->[random Level3X]
+[Level4]->[random Level4X]
+
+(Change Move counter)
+[Move1]->[]
+random [Wall]->[action Wall]
+[Move2][action Wall]->[][stationary Wall Move1]
+[action Wall]->[stationary Wall Move2]
+
+(Move Nanny)
+[> Player|no Wall]->[|stationary Player]
+[> Player|Crate|no Wall no Wave]->[|stationary Player|Crate] (added)
+
+(Expand Wave)
+[Child no Player]->[Wave]
+[Move1][stationary Wave]->[Move1][action Wave]
+[action Wave|no Wave no Wall no Player]->[action Wave|stationary Wave]
+[action Wave]->[stationary Wave]
+
+(Observe Wave)
+(... at Nanny's location)
+[Player Wave]->[Player up Wave]
+[up Wave][stationary Wave]->[][stationary Wave]
+[up Wave]->[stationary Child]
+(... in Nanny's line of sight)
+[Player|no Wall stationary Background]->[Player|> Background]
+startloop
+[moving Background stationary Wave]->[moving Background action Wave]
+[> Background|no Wall stationary Background]->[> Background|action Background]
+[> Background|stationary Background]->[stationary Background|stationary Background]
+[> Background|action Background]->[stationary Background|> Background]
+random[action Wave]->[up Wave]
+[action Wave]->[]
+[up Wave][stationary Wave]->[][stationary Wave]
+[up Wave]->[stationary Child]
+endloop
+
+
+==============
+WINCONDITIONS
+==============
+
+some Player on Child
+
+
+=======
+LEVELS
+=======
+
+message ♪     Schrodinger's daughter     ♪ ♪      is a difficult girl.      ♪ ♪                                ♪ ♪     Look away for a second     ♪ ♪      and you'll lose her.      ♪
+
+message ♪     She could be anywhere.     ♪ ♪                                ♪ ♪   She's actually everywhere!   ♪ ♪                                ♪ ♪     At least she is until      ♪ ♪        proven otherwise.       ♪
+
+message Schrodinger's nanny always finds her in the last place she looks, and only after exhausting all other possibilities.
+
+message Grocery Store
+
+AAAAAAAAAAA
+A111111111B
+A1.......1B
+A1.11111.1A
+A1.11111.1B
+A1.......1A
+A1.11111.1B
+A1.11111.1A
+A1...@...1B
+A111111111B
+AAAAAAAAAAA
+
+message Toy Shop
+
+AABBAAAAAAABBAA
+A222222A222222A
+A2.....A.....2A
+A2.222.A.222.2A
+A2.222...222.2A
+A2.222.A.222.2A
+A2@....A.....2A
+AAAAAAAAAA.AAAA
+A2.....A.....2A
+A2.222.A.222.2A
+A2.222...222.2A
+A2.222.A.222.2A
+A2.....A.....2A
+A222222A222222A
+ABBBBBBABBBBBBA
+
+message Museum
+
+AABBBAAABBBAAABBBAA
+A.....A.....A.....A
+B.3.3.A.3.3.A.3.3.B
+B.....A..@..A.....B
+B33.33A33.33A33.33B
+A33.33A33.33A33.33A
+AAA.AAAAA.AAAAA.AAA
+A...33A33.33A33...A
+B.3.33A33.33A33.3.B
+B.3.............3.B
+B.3.33A.333.A33.3.B
+A...33A.....A33...A
+AABBBAAABBBAAABBBAA
+
+message Park
+
+CCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCC
+CCBBBBBBBBBBBBBBBBBCC
+CCB444444444444444BCC
+CCB444444444444444BCC
+CCB4444.......4444BCC
+CCB4444.44444.4444BCC
+CCB44..@........44BCC
+CCB44.4.44444.4.44BCC
+CCB44.4.44444.4.44BCC
+CCB44.4.44444.4.44BCC
+CCB44.4.44444.4.44BCC
+CCB44.4.44444.4.44BCC
+CCB44...........44BCC
+CCB4444.44444.4444BCC
+CCB4444.......4444BCC
+CCB444444444444444BCC
+CCB444444444444444BCC
+CCBBBBBBBBBBBBBBBBBCC
+CCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCC
+
+message For goodness sake, child!  I'm putting a bell on you so I never lose you again.
+
+message About a fortnight later...                                   Goodness, that child has run off again!
+
+message Introducing: Crates! Crates can be pushed by the nanny and are too heavy to be moved by the girl.
+
+message However, you must not hit the girl with a crate! Make absolutely sure that there is nobody behind the crate before pushing it.
+
+message Grocer's Shoppe
+
+AAAAAAAAAAAAAAA
+A1111111111111B
+A1...........1B
+A1.11.1#1.11.1A
+A1.11.....11.1B
+A1....111....1A
+A1.11.....11.1B
+A1.11.1#1.11.1A
+A1.....@.....1B
+A1111111111111B
+AAAAAAAAAAAAAAA
+
+message Introducing: Doors... If you let the girl reaches the door, she will run outside; who knows if you would never find her again!
+
+message Toy Shop, Diversions Galore!
+
+AABBAAAAAAABBAA
+A22222AAA22222A
+A2...2...2...2A
+A2.2.2.A.2.2.2A
+A2.2...A...2.2A
+A2.2.2...2.2.2A
+A2...2A.A2...2A
+AAAAAAA.AAAAAAA
+A2...........2A
+A2.2222.2222.2A
+A2.22.....22.2A
+A2.22.2.2.22.2A
+A2.....@.....2A
+A222222E222222A
+ABBBBBBABBBBBBA
+
+message Museum, Exhibits Archive
+
+AABBBAAABBBAAABBBAA
+A.....A..#..A.....A
+B.3.3.A.3.3.A.3.3.B
+B........@........B
+B33.33A33.33A33.33B
+A33.33A33.33A33.33A
+AAA.AAAAA.AAAAA.AAA
+A...33A33.33A33...A
+B.3.33A33.33A33.3.B
+B.3.............3.B
+B.3.33A.3#3.A33.3.B
+A...33A.....A33...A
+AABBBAAABBBAAABBBAA
+
+message Child! Stop right there! Don't you DARE!
+
+message Hedgerow Labyrinth
+
+CCCCCCCCCCCCCCCCCCCCC
+CBBBBBBBBBBBBBBBBBBBC
+CB44444444444444444BC
+CB444,,,,,,,,,,,444BC
+CB4,,,444,4,444,,,4BC
+CB4,44444,4,44444,4BC
+CB4,44444,4,44444,4BC
+CB4,4,,,4,,,4,,,4,4BC
+CB4,4,4,44,44,4,4,4BC
+CB4,4,,,,,,,,,,,4,4BC
+CB4,4,4,44,44,4,4,4BC
+CB4,4,,,,,,,,,,,4,4BC
+CB4,4,4,44444,4,4,4BC
+CB4,,,,,,,,,,,,,,,4BC
+CB4,444444.444444,4BC
+CB4,,,,,,,,,,,,,,@4BC
+CBBBBEBBBBEBBBBEBBBBC
+CCCCBABCCBABCCBABCCCC
+
+message For goodness sake, child!  You'll be the death of me!  She mutters to herself: I'm altogether too old for this nonsense.
+
+message As soon as the tired, part incorrigibly devious, part thoroughly chagrined pair return home...
+
+message Schrodinger! I am retiring from childminding. Keep track of her yourself!!
+
+message The next day...                                                     The nanny is on a much deserved holiday, sitting at the beach peacfully reading a book.  The surf is calming and her story is engaging.  She looks out at the sun above the water and sighs peacefully.
+
+message Out of the corner of her trained eyes she notices a young one running away with his parents in tow.  A wry smile plays across her lips as her eyes fall back to the her book.                                                            Thank you for playing!
+
+message Credits:  Mark Richardson, originating author. Nils Jung, crates and doors mechanics and levels. Wajeemba, Park level and expanded levelset compilation and story. C4t5_4_3v3r, expanded texture set.  Contribute on gist! https://gist.github.com/wajeemba/04abfab3c595f83a2faa5e40c919aeac

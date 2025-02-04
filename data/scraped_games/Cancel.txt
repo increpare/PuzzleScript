@@ -1,0 +1,175 @@
+title Cancel
+author Dean Huff
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background 
+BLACK  
+
+Target 
+DarkBlue    
+
+Wall 
+Orange
+
+Player 
+DarkGray   
+
+Earth
+Green
+
+Water
+Blue
+
+Fire
+Red
+
+Air
+White
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+E = Earth
+W = Water
+F = Fire
+A = Air
+@ = Target
+
+=======
+SOUNDS
+=======
+
+Earth move 70783902
+Water move 12162703
+SFX0 62607304
+Fire move 62607304
+Air move 49347309
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Earth, Water, Fire, Air
+
+======
+RULES     
+======     
+
+[ > Player | Earth ] -> [ > Player | > Earth ]
+[ < Player | Water ] -> [ < Player | < Water ]
+[ > Player | Fire ] -> [ Fire | Player ] SFX0
+[ V Player | Air ] -> [ V Player | < Air ]
+[ ^ Player | Air ] -> [ ^ Player | < Air ]
+
+late [ Fire | Water ] -> [ | ]
+late [ Earth | Air ] -> [ | ]
+
+==============
+WINCONDITIONS
+==============
+
+No Earth
+No Water
+No Fire
+No Air
+
+=======     
+LEVELS
+=======
+
+MESSAGE Earth cancels Air
+
+####..###
+#P##.....
+#E#...#..
+#.#.A.#.#
+..#####.#
+........#
+######..#
+
+MESSAGE Water cancels Fire
+
+######..#
+#W#.....#
+#P#...#.#
+#.#.F.#.#
+#.#####..
+#........
+#..######
+
+MESSAGE Fire cancels Water
+
+#####....
+.F#......
+.P##.#...
+..#W..#..
+..###....
+.........
+.........
+
+MESSAGE Air cancels Earth
+
+#####....
+.A##.....
+.P#...#..
+..#.E.#..
+..#####..
+.........
+.........
+
+MESSAGE Barometric pressure
+
+P.E#E#E..
+..#...#..
+E..AAA..E
+.#AA#AA#.
+E..AAA..E
+..#...#..
+..E#E#E..
+
+MESSAGE Bucket brigade
+
+W........##.
+##..##......
+FF#...#.#.#.
+PF##..#.#...
+.F...#..W..#
+##.#..#.##..
+W.......W..#
+#########..#
+
+MESSAGE Boiling point
+
+P.FFFF
+.####.
+.#....
+.W.W#W
+.#....
+W#W#W.
+......
+.####W
+..FFF.
+
+MESSAGE Blustery day
+
+P..A...#.
+.#..A#...
+...#...#E
+.#.A.#...
+.A.#...#E
+.#...##..
+.A.#....E
+....E.E..
+
+MESSAGE Contgratulations! Now that wasn't so bad was it?

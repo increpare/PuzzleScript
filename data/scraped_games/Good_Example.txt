@@ -1,0 +1,194 @@
+title Good Example
+flickscreen 8x9
+verbose_logging
+
+========
+OBJECTS
+========
+Wall W
+BLUE LIGHTBLUE
+01000
+11111
+00001
+11111
+01000
+
+Box B
+PURPLE PINK LIGHTRED
+00000
+00210
+01010
+01200
+00000
+
+Player P
+Yellow gray
+..0..
+.101.
+00000
+.000.
+..0..
+
+Background .
+black #222222
+00001
+00001
+00001
+00001
+11111
+
+Target1 T
+White
+00000
+0...0
+0...0
+0...0
+00000
+
+Target2 Y
+White
+00000
+0...0
+0...0
+0...0
+00000
+
+Target3 U
+White
+00000
+0...0
+0...0
+0...0
+00000
+
+Door1 d
+brown white
+.000.
+00000
+00000
+00010
+00000
+
+Door2 f
+brown white
+.000.
+00000
+00000
+00010
+00000
+
+Check1 C
+TRANSPARENT
+
+Check2 O
+TRANSPARENT
+
+Zero 0
+TRANSPARENT
+..0.0
+...0.
+..0.0
+.....
+.....
+
+One 1
+TRANSPARENT
+....0
+.....
+.....
+.....
+.....
+
+Two 2
+TRANSPARENT
+..0.0
+.....
+.....
+.....
+.....
+
+Three 3
+TRANSPARENT
+
+Four 4
+TRANSPARENT
+
+Five 5
+TRANSPARENT
+
+Six 6
+TRANSPARENT
+
+Counted L
+TRANSPARENT
+
+
+=======
+LEGEND
+=======
+
+Target = Target1 or Target2 or Target3
+Door = Door1 or Door2
+Number = 0 or 1 or 2 or 3 or 4 or 5 or 6
+Check = Check1 or Check2
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall Box Player Door
+Target Check
+Number Counted
+
+======
+RULES
+======
+
+[> Player | Box] -> [> Player | > Box]
+
+[Number] -> []
+[Counted] -> []
+
+late[Door] -> [Door Zero]
+late[Box Target1 no Counted] [Door1 Zero] -> [Box Target1 counted] [Door1 One]
+late[Box Target1 no Counted] [Door1 One] -> [Box Target1 Counted] [Door1 Two]
+late[Box Target1 no Counted] [Door1 Two] -> [Box Target1 Counted] [Door1 Three]
+late[Box Target1 no Counted] [Door1 Three] -> [Box Target1 Counted] []
+
+late[Box Target2 no Counted] [Door2 0] -> [Box Target2 counted] [Door2 1]
+late[Box Target2 no Counted] [Door2 1] -> [Box Target2 counted] [Door2 2]
+late[Box Target2 no Counted] [Door2 2] -> [Box Target2 counted] [Door2 3]
+late[Box Target2 no Counted] [Door2 3] -> [Box Target2 counted] [Door2 4]
+late[Box Target2 no Counted] [Door2 4] -> [Box Target2 counted] [Door2 5]
+late[Box Target2 no Counted] [Door2 5] -> [Box Target2 counted] []
+
+late [Player Check1] -> [Player] checkpoint message Level 2 of 3
+late [Player Check2] -> [Player] checkpoint message Level 3 of 3
+
+==============
+WINCONDITIONS
+==============
+
+All Box on Target
+
+=======
+LEVELS
+=======
+
+message Level 1 of 3
+.wwwwww.wwwwww..........
+.wwwwwwwwwu..ww.........
+.w.....wwo.bb.w..wwwwwww
+.w.yby.f..w...w..w.....w
+.w.byb.wwwww..w..w.tbt.w
+.w.yby.wwwwwwuwwww.bpb.w
+.w.byb.ww...wwwww..tbt.w
+.w....c...w.....d......w
+.wwwwwwwwwwwwwwwwwwwwwww
+
+message Solved!

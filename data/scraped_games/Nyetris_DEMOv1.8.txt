@@ -1,0 +1,449 @@
+title Nyetris DEMOv1.8
+homepage https://tinyurl.com/srrtarq
+author haechsoft
+color_palette arnecolors
+background_color black
+text_color orange
+=======
+OBJECTS
+=======
+
+Background
+white
+
+Player
+pink darkred white purple
+02220
+23031
+20001
+20301
+01110
+
+Box1
+red darkred lightred
+02220
+20001
+20001
+20001
+01110
+
+Box2
+green darkgreen lightgreen
+02220
+20001
+20001
+20001
+01110
+
+Box3
+blue darkblue lightblue
+02220
+20001
+20001
+20001
+01110
+
+Box4
+orange red yellow
+02220
+20001
+20001
+20001
+01110
+
+Box5
+lightbrown brown yellow
+02220
+20001
+20001
+20001
+01110
+
+Box6
+lightgray gray white
+02220
+20001
+20001
+20001
+01110
+
+Box7
+purple black pink
+02220
+20001
+20001
+20001
+01110
+
+Box8
+darkgray black gray
+02220
+20001
+20001
+20001
+01110
+
+Box9
+brown darkbrown lightbrown
+02220
+20001
+20001
+20001
+01110
+
+Box0
+darkblue black blue transparent
+02220
+20001
+20001
+20001
+01110
+
+Wall1
+grey darkgray
+11111
+00000
+11001
+00110
+00000
+
+Wall2
+grey darkgray
+11111
+11011
+10101
+11011
+11111
+
+Wall3
+grey darkgray
+00000
+11011
+10101
+11011
+11111
+
+Wall4
+grey darkgray
+00000
+00000
+11001
+00110
+00000
+
+======
+LEGEND
+======
+
+. = Background
+@ = Player
+1 = Box1
+2 = Box2
+3 = Box3
+4 = Box4
+5 = Box5
+6 = Box6
+7 = Box7
+8 = Box8
+9 = Box9
+0 = Box0
+a = Wall1
+b = Wall2
+c = Wall3
+d = Wall4
+
+Box = Box1 or Box2 or Box3 or Box4 or Box5 or Box6 or Box7 or Box8 or Box9 or Box0
+Wall = Wall1 or Wall2 or Wall3 or Wall4
+
+======
+SOUNDS
+======
+
+(Player move 85548502)
+Box move 95240902
+Box destroy 6126576680 
+endlevel 4206966613708
+endgame 34893108
+titlescreen 49317908
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Box, Wall
+
+=====
+RULES
+=====
+
+[ > Player | Box ] -> [ > Player | > Box ]
+late [ Box | Box | Box | Box | Box | Box | Box | Box | Box | Box | Box | Box ] -> [ | | | | | | | | | | | ]
+late [ Box | Box | Box | Box | Box | Box | Box | Box | Box | Box | Box ] -> [ | | | | | | | | | | ]
+late [ Box | Box | Box | Box | Box | Box | Box | Box | Box | Box ] -> [ | | | | | | | | | ]
+late [ Box | Box | Box | Box | Box | Box | Box | Box | Box ] -> [ | | | | | | | | ]
+late [ Box | Box | Box | Box | Box | Box | Box | Box ] -> [ | | | | | | | ]
+late [ Box | Box | Box | Box | Box | Box | Box ] -> [ | | | | | | ]
+late [ Box | Box | Box | Box | Box | Box ] -> [ | | | | | ]
+late [ Box | Box | Box | Box | Box ] -> [ | | | | ]
+
+startloop
+
+[ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
+[ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
+[ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
+[ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
+[ moving Box5 | Box5 ] -> [ moving Box5 | moving Box5 ]
+[ moving Box6 | Box6 ] -> [ moving Box6 | moving Box6 ]
+[ moving Box7 | Box7 ] -> [ moving Box7 | moving Box7 ]
+[ moving Box8 | Box8 ] -> [ moving Box8 | moving Box8 ]
+[ moving Box9 | Box9 ] -> [ moving Box9 | moving Box9 ]
+[ moving Box0 | Box0 ] -> [ moving Box0 | moving Box0 ]
+
+[ > Box | Box ] -> [ > Box | > Box ]
+
+endloop
+
+[ > Box | Wall ] -> cancel
+
+=============
+WINCONDITIONS
+=============
+
+no Box
+
+======
+LEVELS
+======
+
+message Push the blocks. 
+message If you get 5 or more in a row they will disappear.
+message You win when there are no more blocks onscreen.
+
+.......
+.......
+.@.....
+.1.....
+...111.
+..1....
+.......
+
+message Also the same coloured blocks kind of "stick" so keep that in mind.
+
+..........
+..........
+..31...3..
+....333...
+...@......
+....111...
+..13...1..
+..........
+..........
+
+message TETRO
+
+baaaaaaaaaaaaaab
+b..............b
+b..............b
+b..............b
+b...@..222.....b
+b......2.......b
+b...3.....1....b
+b..33.....1....b
+b..3.....11....b
+b....4.........b
+b...444........b
+b..............b
+bccccccccccccccb
+
+message TRO
+
+bbbaaabaaaaaaaab
+bba...b........b
+ba....a......3.b
+b..............b
+b....@.222.....b
+ba........aaaaab
+b.aa...........b
+b..33.....1...ab
+b..3......1....b
+b........a1....b
+b..............b
+b..c..........cb
+bccbccccccccccbb
+
+message DO
+
+baaaaaaaaaaaaaaab
+b@.1..........33b
+b...............b
+b...............b
+b...............b
+b...............b
+b...............b
+b...............b
+b...............b
+babaaab.c.......b
+b.a...a.aa......b
+b....1..........b
+baaaaaa.aa......b
+b....1.........1b
+b.33.1..ba....c1b
+b.......b.....b.b
+bcccccccbcccccbcb
+
+message HEXO
+
+baaaaaaaaaaaab
+b............b
+b............b
+b......2.....b
+b...@..222...b
+b......2.2...b
+b.3.3.....11.b
+b.333.....1..b
+b..3.....11..b
+b...444...1..b
+b...444.....ab
+b............b
+b............b
+b...5...6....b
+b...5...6666.b
+bc..55.....6.b
+ba...5.......b
+b....5.......b
+ba...........b
+b............b
+b............b
+b...........cb
+bc......ccccbb
+bbccccccbbbbbb
+
+message PENTO
+
+baaaaaaaaaaaaaab
+b..............b
+b..............b
+b..............b
+b......22.@....b
+b......2.......b
+b......2..1....b
+b.3333.2.11....b
+b..3.....11....b
+b..............b
+b.....4........b
+b....444..555..b
+b.....4...5....b
+b.........5....b
+b..............b
+bccccccccccccccb
+
+message HEPTO
+
+baaaaaaaaaaaaaaaaaaaaab
+b.........7...........b
+b.......7777..........b
+b........77...........b
+b....@.....3....6.....b
+b..........3...66.....b
+b........3333...666...b
+b..........3.....6....b
+b...1.1...............b
+b...111...22...555....b
+b...1.1...2.2...55....b
+b.........222..55.....b
+b.....................b
+b.....44.44...........b
+b......444............b
+b.....................b
+bcccccccccccccccccccccb
+
+message MONO
+
+baaaaaaaaaaaaaaab
+b...............b
+b.1....1......1.b
+b...1.1.1...1...b
+b.1..1.c..1.....b
+b......b.......cb
+b.1.baabaab.1111b
+b...a.....b....ab
+b..1..a.a.a.....b
+b.1.c..1...1....b
+b..1b.a.a.c.....b
+b.1.b.....b.....b
+b...aaabaaa.....b
+b.1.1..b........b
+b......b.1.1.1..b
+b.@.1..b........b
+b......b........b
+bccccccbccccccccb
+
+message OCTO
+
+baaaaaaaaaaaabaaaaab
+b8.8.........b.....b
+b8888........b.333.b
+b8...........b.3.3.b
+b8.111.1.....b.333.b
+b..1.111.....b.....b
+b.......55...b.....b
+b........5555b.....b
+b....aa.55...b.....b
+b...c..c....@b.....b
+b...a..a.....a.....b
+b....aa............b
+b...c..c.4444c.....b
+b...a..a.4...b.....b
+b.77.aa..4...b.....b
+b.77.........b.....b
+b.77.........b.....b
+b.77..2...6..b.....b
+b...222...66.b.....b
+b....222...6.b.....b
+b....2....66.b.....b
+b........66..b.....b
+b............b.....b
+bccccccccccccbcccccb
+
+message NONO
+
+baaaaaaaaaaaaaaaaaaaaab
+b...................9.b
+b@..........666....999b
+b.1111..222.6.6.....99b
+b....11..22.6.666....9b
+b...11..22..........99b
+b...1..22......7777...b
+b...........7777..7...b
+b..333..8888..........b
+b..333.4..8..5.55.....b
+b..333.4.888.555......b
+b......44.8.55.5......b
+b...4444..............b
+b.....4...............b
+bcccccccccccccccccccccb
+
+message DECO
+
+baaaaaaaaaaaaaaaaabaaaaaaab
+b........33.......b..0....b
+b.111...333...444.b..0....b
+b...111.3333..4...9..0....b
+b.111.1...3...4...9..00...b
+b.............44..9...00..b
+b.222.baaaaab..44.99..00..b
+b.222.b.....b...4..9..0...b
+b..2..b.ccc.b.88...9......b
+b.222.b..@b.b8888.99......b
+b.....aaaaa.b8888.9.......b
+b...........b.....b.......b
+b.5...aaaaaaa.7777b.......b
+b.555.........7...b.......b
+b.5.5...666..7777.b.......b
+b.555..6666...7...b.......b
+b...5...666.......a.......b
+b.........................b
+bcccccccccccccccccccccccccb
+
+message Well, that's all. Thanks for playing!

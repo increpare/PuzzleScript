@@ -1,0 +1,315 @@
+title Slidyyyyyyy
+author mokesmoe
+homepage www.puzzlescript.net
+
+
+again_interval 0.02
+
+========
+OBJECTS
+========
+
+Background
+white lightblue
+11111
+01111
+11101
+11111
+10111
+
+marker
+black
+.....
+.....
+.....
+.....
+.....
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+red orange black
+.000.
+.010.
+20002
+.000.
+.2.2.
+
+pl1
+red orange black
+..000
+.2010
+..000
+..000
+...22
+
+pl2
+red orange black
+...00
+...01
+..200
+...00
+..2..
+
+pl3
+red orange black
+....0
+....0
+....0
+...20
+....2
+
+pl4
+red orange black
+.....
+....2
+.....
+.....
+....2
+
+pr1
+red orange black
+000..
+010..
+000..
+0002.
+.2...
+
+pr2
+red orange black
+00...
+102..
+00...
+00...
+..2..
+
+pr3
+red orange black
+0....
+0....
+02...
+0....
+.....
+
+pr4
+red orange black
+.....
+.....
+.....
+2....
+.....
+
+pu1
+red orange black
+.....
+.000.
+2010.
+.000.
+.0002
+
+pu2
+red orange black
+.....
+.....
+.000.
+.010.
+20002
+
+pu3
+red orange black
+.....
+.....
+.....
+.000.
+.0102
+
+pu4
+red orange black
+.....
+.....
+.....
+.....
+.000.
+
+pd1
+red orange black
+2010.
+.000.
+.0002
+2.2..
+.....
+
+pd2
+red orange black
+.000.
+2000.
+.2..2
+.....
+.....
+
+pd3
+red orange black
+.000.
+2..2.
+.....
+.....
+.....
+
+pd4
+red orange black
+..22.
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+right = pr1 or pr2 or pr3 or pr4
+left  = pl1 or pl2 or pl3 or pl4
+up    = pu1 or pu2 or pu3 or pu4
+down  = pd1 or pd2 or pd3 or pd4
+part = right or left or up or down
+
+
+. = Background
+# = Wall
+P = Player
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, part
+marker
+
+======
+RULES
+======
+
+[player | marker] -> [> player | marker]
+
+right[pl4 | pr1 marker | ] -> [ | player | marker] again
+left [pr4 | pl1 marker | ] -> [ | player | marker] again
+up   [pd4 | pu1 marker | ] -> [ | player | marker] again
+down [pu4 | pd1 marker | ] -> [ | player | marker] again
+
+right[pl3 | pr2 marker] -> [pl4 | pr1 marker] again
+left [pr3 | pl2 marker] -> [pr4 | pl1 marker] again
+up   [pd3 | pu2 marker] -> [pd4 | pu1 marker] again
+down [pu3 | pd2 marker] -> [pu4 | pd1 marker] again
+
+right[pl2 | pr3 marker] -> [pl3 | pr2 marker] again
+left [pr2 | pl3 marker] -> [pr3 | pl2 marker] again
+up   [pd2 | pu3 marker] -> [pd3 | pu2 marker] again
+down [pu2 | pd3 marker] -> [pu3 | pd2 marker] again
+
+right[pl1 | pr4 marker] -> [pl2 | pr3 marker] again
+left [pr1 | pl4 marker] -> [pr2 | pl3 marker] again
+up   [pd1 | pu4 marker] -> [pd2 | pu3 marker] again
+down [pu1 | pd4 marker] -> [pu2 | pd3 marker] again
+
+right[> player | no wall] -> [pl1 | pr4 marker] again
+left [> player | no wall] -> [pr1 | pl4 marker] again
+up   [> player | no wall] -> [pd1 | pu4 marker] again
+down [> player | no wall] -> [pu1 | pd4 marker] again
+
+[marker wall] -> [wall]
+
+==============
+WINCONDITIONS
+==============
+
+All player on target
+no marker
+
+=======
+LEVELS
+=======
+
+
+##########
+#..o.....#
+#....#...#
+#.......##
+#...#....#
+#.#......#
+#..#.....#
+#.p....#.#
+#........#
+##########
+
+
+###########
+#o..#.....#
+###.#.###.#
+#.........#
+#...###.#.#
+#.......#.#
+###.....#.#
+#.........#
+#...#.###.#
+#...#....p#
+###########
+
+
+###########
+#....#....#
+#..###..###
+#.........#
+##.###..#o#
+#.......###
+#....#....#
+##...##...#
+#.........#
+#..#.p#.#.#
+###########
+
+
+###########
+#..#..#...#
+#.......#.#
+##.#......#
+#...#....##
+#........o#
+#.#..p...##
+#...##....#
+#.#.......#
+#.......#.#
+###########
+
+
+#################
+#.....#..o..#...#
+#.....#.........#
+#.............#.#
+##..#........#..#
+#p...#....#..#..#
+#......###......#
+#################

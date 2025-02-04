@@ -1,0 +1,1719 @@
+title Kiri's Garden
+author Tim Knauf
+
+realtime_interval 0.2
+key_repeat_interval 0.2
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Water
+#42A2DD #58AADD #6EB3DD 
+10111
+11112
+11011
+21111
+11111
+
+Player
+(Hair Skin Dress)
+#462909 #DD7600 #DD3100
+.000.
+.010.
+12221
+.222.
+.1.1.
+
+
+Stone
+#DDDDDD #DDBBB1 #DD9885
+22111
+21110
+11110
+11110
+10000
+
+VerticalBridge
+#DDBBB1
+00000
+.....
+00000
+.....
+00000
+
+HorizontalBridge
+#DDBBB1
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+
+HorizontalBridgeBroken
+#DDBBB1 #DD9885
+0.0.0
+..011
+..1..
+0....
+110.0
+
+HorizontalBridgeRepairing1
+#DDBBB1 #DD9885 #BC85DD #CCB1DD #B1CCDD #85BBDD
+040.0
+2.011
+2.1..
+0..4.
+210.0
+
+HorizontalBridgeRepairing2
+#DDBBB1 #DD9885 #BC85DD #CCB1DD #B1CCDD #85BBDD
+050.0
+3.011
+3.1..
+04.5.
+320.0
+
+HorizontalBridgeRepairing3
+#DDBBB1 #DD9885 #BC85DD #CCB1DD #B1CCDD #85BBDD
+0.0.0
+0.011
+0.2.4
+052..
+030.0
+
+HorizontalBridgeRepairing4
+#DDBBB1 #DD9885 #BC85DD #CCB1DD #B1CCDD #85BBDD
+040.0
+0.021
+0.3.5
+0.3..
+0.0.0
+
+HorizontalBridgeRepairing5
+#DDBBB1 #DD9885 #BC85DD #CCB1DD #B1CCDD #85BBDD
+050.0
+0.032
+0.0.2
+0.0.2
+0.040
+
+HorizontalBridgeRepairing6
+#DDBBB1 #DD9885 #BC85DD #CCB1DD #B1CCDD #85BBDD
+0.0.0
+0.0.3
+0.0.3
+0.0.3
+0.050
+
+VerticalBridgeBroken
+#DDBBB1 #DD9885
+10..0
+1....
+0.100
+...1.
+0..10
+
+VerticalBridgeRepairing1
+#DDBBB1 #DD9885 #BC85DD #CCB1DD #B1CCDD #85BBDD
+20220
+1..4.
+0.100
+.4.1.
+0..10
+
+VerticalBridgeRepairing2
+#DDBBB1 #DD9885 #BC85DD #CCB1DD #B1CCDD #85BBDD
+30330
+2..5.
+0.100
+.5.14
+0..10
+
+VerticalBridgeRepairing3
+#DDBBB1 #DD9885 #BC85DD #CCB1DD #B1CCDD #85BBDD
+00000
+34...
+02200
+...15
+0..10
+
+VerticalBridgeRepairing4
+#DDBBB1 #DD9885 #BC85DD #CCB1DD #B1CCDD #85BBDD
+00000
+.5...
+03300
+4..2.
+0..10
+
+VerticalBridgeRepairing5
+#DDBBB1 #DD9885 #BC85DD #CCB1DD #B1CCDD #85BBDD
+00000
+....4
+00000
+5..3.
+02220
+
+VerticalBridgeRepairing6
+#DDBBB1 #DD9885 #BC85DD #CCB1DD #B1CCDD #85BBDD
+00000
+....5
+00000
+.....
+03330
+
+Earth
+#DD8B2C #DDA058
+00000
+00010
+00000
+01000
+00000
+
+Shore
+#DDA058 #DDB485 #DDC8B1
+11111
+10121
+11111
+12111
+11111
+
+GrassResource
+#6FDD00 #85DD2C #DD9885
+22222
+22212
+20202
+20002
+22222
+
+GrassCarried
+#6FDD00 #85DD2C
+....1
+..0.0
+..000
+.....
+.....
+
+GrassYoung
+#6FDD00 #85DD2C #69D100
+.....
+.....
+..1..
+.10..
+.002.
+
+GrassMatureStraight
+#6FDD00 #85DD2C #69D100
+.....
+....1
+.1..0
+.0.20
+22222
+
+GrassMatureRustle1
+#6FDD00 #85DD2C #69D100
+.....
+.....
+.10..
+0200.
+22222
+
+GrassMatureRustle2
+#6FDD00 #85DD2C #69D100
+.....
+.....
+...10
+.1020
+22222
+
+ReedResource
+#DADD00 #DBDD58 #DD9885 
+22222
+21212
+20202
+20002
+22222
+
+ReedCarried
+#DADD00 #DBDD58
+....1
+..1.0
+..0.0
+..000
+.....
+
+ReedYoung
+#DADD00 #DBDD58
+.....
+.....
+...1.
+..10.
+.000.
+
+ReedMatureStraight
+#DADD00 #DBDD58
+...1.
+.1.1.
+.0.0.
+.0.0.
+00000
+
+ReedMatureRustle1
+#DADD00 #DBDD58
+.....
+.....
+.....
+0000.
+00000
+
+ReedMatureRustle2
+#DADD00 #DBDD58
+.....
+.....
+.11..
+.000.
+00000
+
+FlowerResource
+#DD3100 #DADD00 #6FDD00 #DD9885
+33333
+30303
+33133
+30203
+33333
+
+FlowerCarried
+#DD3100 #DADD00 #6FDD00
+..0.0
+...1.
+..020
+...2.
+.....
+
+FlowerStraight
+#DD3100 #DADD00 #6FDD00 #69D100
+.....
+.0.0.
+..1..
+.020.
+.223.
+
+FlowerRustle1
+#DD3100 #DADD00 #6FDD00 #69D100
+.....
+.....
+.0.0.
+..1..
+.030.
+
+FlowerRustle2
+#DD3100 #DADD00 #6FDD00 #69D100
+.0.0.
+..1..
+.020.
+..2..
+.223.
+
+KumaraResource
+#8900DD #6FDD00 #DD9885
+22222
+20022
+20002
+22002
+22222
+
+KumaraCarried
+#8900DD #6FDD00
+..00.
+..000
+...00
+.....
+.....
+
+KumaraYoung
+#8900DD #6FDD00
+.....
+.....
+.....
+.11..
+.100.
+
+KumaraMatureStraight
+#8900DD #6FDD00 #69D100
+.....
+1...1
+1111.
+1002.
+20002
+
+KumaraMatureRustle1
+#8900DD #6FDD00 #69D100
+1...1
+1111.
+1122.
+1002.
+20002
+
+KumaraMatureRustle2
+#8900DD #6FDD00 #69D100
+.....
+.....
+1...1
+1111.
+20002
+
+TomatoResource
+#DD2C2C #6FDD00 #DD9885
+22222
+20002
+20002
+20012
+22222
+
+TomatoCarried
+#DD2C2C #6FDD00
+..000
+..000
+..001
+.....
+.....
+
+TomatoYoung
+#DD2C2C #6FDD00
+.....
+.1...
+.01..
+.00..
+..1..
+
+TomatoMatureStraight
+#DD2C2C #6FDD00 #69D100 #DD5858 #DD0000
+301..
+0011.
+11101
+.1104
+.12..
+
+TomatoMatureRustle1
+#DD2C2C #6FDD00 #69D100 #DD5858 #DD0000
+0011.
+11101
+.1100
+.11..
+.12..
+
+TomatoMatureRustle2
+#DD2C2C #6FDD00 #69D100 #DD5858 #DD0000
+.....
+30...
+0011.
+.1101
+.1204
+
+MushroomResource
+#9A2CDD #AB58DD #CCB1DD #DD9885
+33333
+32213
+21111
+30003
+33333
+
+MushroomCarried
+#9A2CDD #AB58DD #CCB1DD
+.221.
+21111
+.000.
+.....
+.....
+
+MushroomMiniStraight
+#9A2CDD #AB58DD #CCB1DD
+.....
+.....
+..1..
+.111.
+..0..
+
+MushroomMiniRustle1
+#9A2CDD #AB58DD #CCB1DD
+.....
+..1..
+.111.
+..0..
+..0..
+
+MushroomMiniRustle2
+#9A2CDD #AB58DD #CCB1DD
+.....
+.....
+.....
+..1..
+.111.
+
+MushroomLargeStraight
+#9A2CDD #AB58DD #CCB1DD
+.....
+.221.
+22111
+.000.
+.000.
+
+MushroomLargeRustle1
+#9A2CDD #AB58DD #CCB1DD
+.221.
+21111
+.000.
+.000.
+.000.
+
+MushroomLargeRustle2
+#9A2CDD #AB58DD #CCB1DD
+.....
+.....
+.222.
+22111
+.000.
+
+MushroomChanged
+Transparent
+
+NoMushroomChanged
+Transparent
+
+TreeResource
+#462909 #06462A #85DD2C #DD9885
+33333
+31113
+31113
+33033
+33333
+
+TreeCarried
+#462909 #06462A #85DD2C
+..111
+..111
+...0.
+...0.
+.....
+
+TreeCrownLeft
+#DD7600 #DD8B2C #06462A #85DD2C
+.....
+...22
+..232
+..222
+...22
+
+TreeCrownRight
+#DD7600 #DD8B2C #06462A #85DD2C
+.....
+22...
+222..
+222..
+22...
+
+TreeCrownMiddle
+#DD7600 #DD8B2C #06462A #85DD2C
+.222.
+23222
+23222
+22223
+22222
+
+TreeBase
+#462909 #DD8B2C
+.000.
+.000.
+.000.
+00.00
+000.0
+
+TreeGoal
+Transparent
+
+TreeGoalMarkerNotReady
+#B1CCDD #CCB1DD
+0.1.0
+.....
+1...1
+.....
+0.1.0
+
+TreeGoalMarkerBlocked
+#DD5858 #CCB1DD
+0.1.0
+.....
+1...1
+.....
+0.1.0
+
+TreeGoalMarkerReady1
+#B1CCDD #CCB1DD
+0.1.0
+.....
+1...1
+.....
+0.1.0
+
+TreeGoalMarkerReady2
+#BCD0DD #D0BCDD
+0.1.0
+.....
+1...1
+.....
+0.1.0
+
+TreeGoalMarkerReady3
+#C7D4DD #D4C7DD
+0.1.0
+.....
+1...1
+.....
+0.1.0
+
+TreeGoalMarkerReady4
+#BCD0DD #D0BCDD
+0.1.0
+.....
+1...1
+.....
+0.1.0
+
+TreeGoalMarkerReady5
+#B1CCDD #CCB1DD
+0.1.0
+.....
+1...1
+.....
+0.1.0
+
+TreeGoalMarkerReady6
+#B1CCDD #CCB1DD
+0.1.0
+.....
+1...1
+.....
+0.1.0
+
+GrowthParticles1
+#DDC8B1 #DDB485 #DDA058
+.....
+.....
+....0
+0....
+..0..
+
+GrowthParticles2
+#DDC8B1 #DDB485 #DDA058
+.....
+....0
+0...1
+1.0..
+..1..
+
+GrowthParticles3
+#DDC8B1 #DDB485 #DDA058
+.....
+....1
+1...2
+2.1..
+..2..
+
+GrowthParticles4
+#DDC8B1 #DDB485 #DDA058
+.....
+....2
+2....
+..2..
+.....
+
+GrowthParticlesAlt1
+#DDC8B1 #DDB485 #DDA058
+.....
+.....
+.0...
+....0
+...0.
+
+GrowthParticlesAlt2
+#DDC8B1 #DDB485 #DDA058
+.....
+.0...
+.1..0
+...01
+...1.
+
+GrowthParticlesAlt3
+#DDC8B1 #DDB485 #DDA058
+.....
+.1...
+.2..1
+...12
+...2.
+
+GrowthParticlesAlt4
+#DDC8B1 #DDB485 #DDA058
+.....
+.2...
+....2
+...2.
+.....
+
+TreeParticles1
+#CCB1DD #BC85DD #AB58DD
+.....
+.....
+....0
+0....
+..0..
+
+TreeParticles2
+#CCB1DD #BC85DD #AB58DD
+.....
+....0
+0...1
+1.0..
+..1..
+
+TreeParticles3
+#CCB1DD #BC85DD #AB58DD
+....0
+0...1
+1.0.2
+2.1..
+..2..
+
+TreeParticles4
+#CCB1DD #BC85DD #AB58DD
+....1
+1...2
+2.1..
+..2..
+.....
+
+TreeParticles5
+#CCB1DD #BC85DD #AB58DD
+....2
+2....
+..2..
+.....
+.....
+
+CantPlantSymbol1
+#DDB1B1
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+CantPlantSymbol2
+#DD5858
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+CantPlantSymbol3
+#DD0000
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+NeedToWaitSymbol1
+#CCB1DD #BC85DD
+..0..
+..0..
+110..
+.....
+.....
+
+NeedToWaitSymbol2
+#CCB1DD #BC85DD
+.....
+.....
+11000
+.....
+.....
+
+NeedToWaitSymbol3
+#CCB1DD #BC85DD
+.....
+.....
+110..
+..0..
+..0..
+
+NeedToWaitSymbol4
+#CCB1DD #BC85DD
+.....
+.....
+000..
+.....
+.....
+
+NeedToWaitViable
+Transparent
+
+SunsetTop
+#8900DD #0088DD #2C99DD #58AADD #85BBDD
+11111
+11111
+22222
+33333
+44444
+
+SunsetBottom
+#b1ccdd #ccb1dd #ddb1b1 #ddc8b1 #dcddb1
+00000
+11111
+22222
+33333
+44444
+
+HouseRoof
+#ddb485 #dda058 #dd8b2c #dd3100
+01010
+12121
+12121
+12121
+33333
+
+HouseRoofAlt
+#ddb485 #dda058 #dd8b2c #dd3100
+10101
+21212
+21212
+21212
+33333
+
+HouseRoofLeft
+#ddb485 #dda058 #dd8b2c #dd3100
+....1
+....2
+....2
+....2
+....3
+
+HouseRoofRight
+#ddb485 #dda058 #dd8b2c #dd3100
+1....
+2....
+2....
+2....
+3....
+
+HouseDoorShut
+#dd3100 #dd522c #dd7600
+11111
+10021
+10001
+10001
+00000
+
+HouseDoorOpen
+#dd3100 #dd522c #dd7600 #462909
+11111
+10331
+10331
+10331
+10331
+
+HouseWindow
+#dd3100 #dd522c #dd9885 #dd7558
+11111
+12221
+13331
+11111
+00000
+
+Gravestone
+#999999 #666666 #333333 #06462a
+.330.
+30000
+01110
+00000
+12221
+
+StillViable
+Transparent
+
+GoalSurroundsReady
+Transparent
+
+GoalReady
+Transparent
+
+AllGoalsReady
+Transparent
+
+GoalSurround
+Transparent
+
+GoalAdjacent
+Transparent
+
+RepairOnGoalsReady
+Transparent
+
+RepairOnExitReady
+Transparent
+
+ExitLeft
+Transparent
+
+ExitLeftIndicator
+#DCDDB1
+..0..
+...0.
+00000
+...0.
+..0..
+
+ExitLeftDesignTool
+#DCDDB1
+..0..
+...0.
+00000
+...0.
+..0..
+
+ExitRight
+Transparent
+
+ExitRightIndicator
+#DCDDB1
+..0..
+.0...
+00000
+.0...
+..0..
+
+ExitRightDesignTool
+#DCDDB1
+..0..
+.0...
+00000
+.0...
+..0..
+
+ExitUp
+Transparent
+
+ExitUpIndicator
+#DCDDB1
+..0..
+.000.
+0.0.0
+..0..
+..0..
+
+ExitUpDesignTool
+#DCDDB1
+..0..
+.000.
+0.0.0
+..0..
+..0..
+
+ExitDown
+Transparent
+
+ExitDownIndicator
+#DCDDB1
+..0..
+..0..
+0.0.0
+.000.
+..0..
+
+ExitDownDesignTool
+#DCDDB1
+..0..
+..0..
+0.0.0
+.000.
+..0..
+
+RepairOnGoalsReadyDesignTool
+White
+..000
+..0..
+..0.0
+..0.0
+..000
+
+RepairOnExitReadyDesignTool
+White
+..000
+..0..
+..000
+..0..
+..000
+
+AnimationLooping
+Transparent
+
+FootstepSoundEarth
+Transparent
+
+FootstepSoundShore
+Transparent
+
+FootstepSoundStone
+Transparent
+
+FootstepSoundPlant
+Transparent
+
+FootstepSoundBridge
+Transparent
+
+(*** Convenience markers. ***)
+
+(stationary Player. Shortened for brevity because it's used so much.)
+_SP
+Transparent
+
+GrowingCrops
+Transparent
+
+InitialSetup
+Transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+~ = Water
+@ = Player and InitialSetup and Stone
+$ = Player and InitialSetup and HorizontalBridge and Water
+` = Player and InitialSetup and VerticalBridge and Water
+# = Stone
+_ = Earth
+% = Shore
+G = GrassResource and Stone
+R = ReedResource and Stone
+F = FlowerResource and Stone
+K = KumaraResource and Stone
+O = TomatoResource and Stone
+S = MushroomResource and Stone
+T = TreeResource and Stone
+- = HorizontalBridge and Water
+/ = HorizontalBridgeBroken and Water and RepairOnExitReady and RepairOnExitReadyDesignTool
+Y = VerticalBridgeBroken and Water and RepairOnExitReady and RepairOnExitReadyDesignTool
+X = HorizontalBridge and Water and ExitRight and ExitRightDesignTool
+U = HorizontalBridge and Water and ExitLeft and ExitLeftDesignTool
+D = VerticalBridge and Water and ExitUp and ExitUpDesignTool
+W = VerticalBridge and Water and ExitDown and ExitDownDesignTool
+\ = VerticalBridgeBroken and Water and RepairOnGoalsReady and RepairOnGoalsReadyDesignTool
+H = HorizontalBridgeBroken and Water and RepairOnGoalsReady and RepairOnGoalsReadyDesignTool
+! = VerticalBridge and Water
+* = TreeGoal and TreeGoalMarkerNotReady and Earth
+; = FlowerStraight and Earth
+: = FlowerStraight and Shore
+{ = ReedMatureStraight and Shore
+} = GrassMatureStraight and Earth
+M = GrassMatureStraight and Shore
+P = TomatoMatureStraight and Earth
+L = MushroomLargeStraight and Earth
+I = MushroomLargeStraight and Shore
+A = KumaraMatureStraight and Earth
+1 = SunsetTop
+2 = SunsetBottom
+3 = HouseRoof
+4 = HouseRoofAlt
+5 = HouseDoorShut and Stone and RepairOnExitReady
+6 = HouseWindow and Stone
+7 = HouseRoofLeft and SunsetBottom
+8 = HouseRoofRight and SunsetBottom
+9 = Gravestone and Earth
+
+GrowthParticles = GrowthParticles1 or GrowthParticles2 or GrowthParticles3 or GrowthParticles4 or GrowthParticlesAlt1 or GrowthParticlesAlt2 or GrowthParticlesAlt3 or GrowthParticlesAlt4
+
+RandomGrowthParticles1 = GrowthParticles1 or GrowthParticlesAlt1
+
+TreeParticles = TreeParticles1 or TreeParticles2 or TreeParticles3 or TreeParticles4 or TreeParticles5
+
+VerticalBridgeRepairing = VerticalBridgeRepairing1 or VerticalBridgeRepairing2 or VerticalBridgeRepairing3 or VerticalBridgeRepairing4 or VerticalBridgeRepairing5 or VerticalBridgeRepairing6 
+HorizontalBridgeRepairing = HorizontalBridgeRepairing1 or HorizontalBridgeRepairing2 or HorizontalBridgeRepairing3 or HorizontalBridgeRepairing4 or HorizontalBridgeRepairing5 or HorizontalBridgeRepairing6
+
+Bridge = VerticalBridge or VerticalBridgeRepairing or HorizontalBridge or HorizontalBridgeRepairing
+BridgeBroken = VerticalBridgeBroken or HorizontalBridgeBroken
+Walkable = Earth or Shore or Stone or Bridge
+Arable = Earth or Shore
+
+Resource = GrassResource or ReedResource or FlowerResource or KumaraResource or TomatoResource or MushroomResource or TreeResource
+Carried = GrassCarried or ReedCarried or FlowerCarried or KumaraCarried or TomatoCarried or MushroomCarried or TreeCarried
+StandardArableCarried = GrassCarried or FlowerCarried or KumaraCarried or TomatoCarried or MushroomCarried
+FlowerRustle = FlowerRustle1 or FlowerRustle2
+Flower = FlowerStraight or FlowerRustle
+GrassMatureRustle = GrassMatureRustle1 or GrassMatureRustle2
+GrassMature = GrassMatureStraight or GrassMatureRustle
+Grass = GrassYoung or GrassMature
+ReedMatureRustle = ReedMatureRustle1 or ReedMatureRustle2
+ReedMature = ReedMatureStraight or ReedMatureRustle
+Reed = ReedYoung or ReedMature
+KumaraMatureRustle = KumaraMatureRustle1 or KumaraMatureRustle2
+KumaraMature = KumaraMatureStraight or KumaraMatureRustle
+Kumara = KumaraYoung or KumaraMature
+TomatoMatureRustle = TomatoMatureRustle1 or TomatoMatureRustle2
+TomatoMature = TomatoMatureStraight or TomatoMatureRustle
+Tomato = TomatoYoung or TomatoMature
+MushroomLargeRustle = MushroomLargeRustle1 or MushroomLargeRustle2
+MushroomLarge = MushroomLargeStraight or MushroomLargeRustle
+MushroomMiniRustle = MushroomMiniRustle1 or MushroomMiniRustle2
+MushroomMini = MushroomMiniStraight or MushroomMiniRustle
+Mushroom = MushroomMini or MushroomLarge
+
+Blocker = Grass or Reed or Flower or Kumara or Tomato or Mushroom or TreeBase
+Young = GrassYoung or ReedYoung or KumaraYoung or TomatoYoung
+Mature = GrassMature or ReedMature or Flower or KumaraMature or TomatoMature or Mushroom
+
+CantPlantSymbol = CantPlantSymbol1 or CantPlantSymbol2 or CantPlantSymbol3
+NeedToWaitSymbol = NeedToWaitSymbol1 or NeedToWaitSymbol2 or NeedToWaitSymbol3 or NeedToWaitSymbol4
+
+RepairStarting = HorizontalBridgeRepairing1 or VerticalBridgeRepairing1
+
+TreeGoalMarkerReady = TreeGoalMarkerReady1 or TreeGoalMarkerReady2 or TreeGoalMarkerReady3 or TreeGoalMarkerReady4 or TreeGoalMarkerReady5 or TreeGoalMarkerReady6
+TreeGoalMarker = TreeGoalMarkerNotReady or TreeGoalMarkerBlocked or TreeGoalMarkerReady
+
+TreeCrown = TreeCrownMiddle or TreeCrownLeft or TreeCrownRight
+
+Sky = SunsetTop or SunsetBottom
+House = HouseRoof or HouseRoofAlt or HouseDoorShut or HouseDoorOpen or HouseWindow or HouseRoofLeft or HouseRoofRight
+
+Exit = ExitLeft or ExitRight or ExitUp or ExitDown
+ExitIndicator = ExitLeftIndicator or ExitRightIndicator or ExitUpIndicator or ExitDownIndicator
+
+FootstepSound = FootstepSoundEarth or FootstepSoundShore or FootstepSoundBridge or FootstepSoundStone or FootstepSoundPlant
+
+(DesignTools are level design tools, just making the functions clearer in the level editor.)
+ExitDesignTool = ExitLeftDesignTool or ExitRightDesignTool or ExitUpDesignTool or ExitDownDesignTool
+DesignTool = ExitDesignTool or RepairOnGoalsReadyDesignTool or RepairOnExitReadyDesignTool
+
+=======
+SOUNDS
+=======
+
+TitleScreen 95445909
+StartGame 19073909
+ShowMessage 81176109 (7999500)
+StartLevel 67340508 (68685109) (24488908)
+EndLevel 90998109 (4436300)
+EndGame 24729308
+
+(Undo 35024309)
+Restart 57588909
+
+FootstepSoundEarth Create 75298707
+FootstepSoundShore Create 49745107 (35454907) (82022907)
+FootstepSoundBridge Create 63002907 (54128907)
+FootstepSoundStone Create 5256307
+FootstepSoundPlant Create 76285107 (71804907) (62181307) (69766707)
+
+Carried Create 70294508 (25821900)
+Carried Destroy 91056709 (83306308)
+(TreeBase Create 24766908 (86655108) (65762103) (82864303))
+TreeCrownMiddle Create 72260508
+
+RepairStarting Create 2725909
+
+(cute: 98625508)
+(triplet: 61518108)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Water
+Sky
+Walkable, BridgeBroken
+House
+ExitIndicator
+TreeGoalMarker
+GrowthParticles
+Gravestone
+Resource, Blocker
+TreeParticles
+Player
+Carried
+TreeCrownLeft
+TreeCrownMiddle
+TreeCrownRight
+Exit
+TreeGoal
+CantPlantSymbol, NeedToWaitSymbol
+NeedToWaitViable
+RepairOnGoalsReady, RepairOnExitReady
+GoalSurround, GoalReady
+GoalAdjacent,
+GoalSurroundsReady
+AllGoalsReady
+FootstepSound
+StillViable
+MushroomChanged
+NoMushroomChanged
+AnimationLooping
+_SP
+GrowingCrops
+InitialSetup
+DesignTool
+
+======
+RULES
+======
+
+(*** Per-level set-up. ***)
+
+(Hide all the level design tools.)
+[ InitialSetup ] [ DesignTool ] -> [ InitialSetup ] [ ]
+
+(Identify the entire square - including diagonals - around the goal.)
+[ InitialSetup ] [ | TreeGoal | ] -> [ InitialSetup ] [ GoalAdjacent GoalSurround | TreeGoal | GoalAdjacent GoalSurround ]
+[ InitialSetup ] [ no TreeGoal | GoalAdjacent | no TreeGoal ] -> [ InitialSetup ] [ GoalSurround | GoalAdjacent | GoalSurround ]
+
+[ InitialSetup ] -> [ ]
+
+(*** Per-turn set-up. ***)
+
+[ FootstepSound ] -> [ ]
+
+(Convenience markers.)
+[ stationary Player ] -> [ Player _SP ]
+[ Young ] [ Player ] -> [ Young ] [ Player GrowingCrops ]
+
+[ Player ] -> [ Player NoMushroomChanged ]
+[ MushroomChanged ] [ NoMushroomChanged ] -> [ MushroomChanged ] [ ]
+[ MushroomChanged ] -> [ ]
+
+(Animations.)
+[ _SP ] [ GrassMatureRustle2 ] -> [ _SP ] [ GrassMatureStraight ]
+[ _SP ] [ GrassMatureRustle1 ] -> [ _SP ] [ GrassMatureRustle2 ]
+
+[ _SP ] [ ReedMatureRustle2 ] -> [ _SP ] [ ReedMatureStraight ]
+[ _SP ] [ ReedMatureRustle1 ] -> [ _SP ] [ ReedMatureRustle2 ]
+
+[ _SP ] [ FlowerRustle2 ] -> [ _SP ] [ FlowerStraight ]
+[ _SP ] [ FlowerRustle1 ] -> [ _SP ] [ FlowerRustle2 ]
+
+[ _SP ] [ TomatoMatureRustle2 ] -> [ _SP ] [ TomatoMatureStraight ]
+[ _SP ] [ TomatoMatureRustle1 ] -> [ _SP ] [ TomatoMatureRustle2 ]
+
+[ _SP ] [ KumaraMatureRustle2 ] -> [ _SP ] [ KumaraMatureStraight ]
+[ _SP ] [ KumaraMatureRustle1 ] -> [ _SP ] [ KumaraMatureRustle2 ]
+
+[ _SP ] [ MushroomLargeRustle2 ] -> [ _SP ] [ MushroomLargeStraight ]
+[ _SP ] [ MushroomLargeRustle1 ] -> [ _SP ] [ MushroomLargeRustle2 ]
+
+[ _SP ] [ MushroomMiniRustle2 ] -> [ _SP ] [ MushroomMiniStraight ]
+[ _SP ] [ MushroomMiniRustle1 ] -> [ _SP ] [ MushroomMiniRustle2 ]
+
+[ _SP ] [ TreeParticles5 ] -> [ _SP ] [ ]
+[ _SP ] [ TreeParticles4 ] -> [ _SP ] [ TreeParticles5 ]
+[ _SP ] [ TreeParticles3 ] -> [ _SP ] [ TreeParticles4 ]
+[ _SP ] [ TreeParticles2 ] -> [ _SP ] [ TreeParticles3 ]
+[ _SP ] [ TreeParticles1 ] -> [ _SP ] [ TreeParticles2 ]
+
+[ _SP ] [ GrowthParticles4 ] -> [ _SP ] [ ]
+[ _SP ] [ GrowthParticles3 ] -> [ _SP ] [ GrowthParticles4 ]
+[ _SP ] [ GrowthParticles2 ] -> [ _SP ] [ GrowthParticles3 ]
+[ _SP ] [ GrowthParticles1 ] -> [ _SP ] [ GrowthParticles2 ]
+
+[ _SP ] [ GrowthParticlesAlt4 ] -> [ _SP ] [ ]
+[ _SP ] [ GrowthParticlesAlt3 ] -> [ _SP ] [ GrowthParticlesAlt4 ]
+[ _SP ] [ GrowthParticlesAlt2 ] -> [ _SP ] [ GrowthParticlesAlt3 ]
+[ _SP ] [ GrowthParticlesAlt1 ] -> [ _SP ] [ GrowthParticlesAlt2 ]
+
+[ _SP ] [ VerticalBridgeRepairing6 ] -> [ _SP ] [ VerticalBridge ]
+[ _SP ] [ VerticalBridgeRepairing5 ] -> [ _SP ] [ VerticalBridgeRepairing6 ]
+[ _SP ] [ VerticalBridgeRepairing4 ] -> [ _SP ] [ VerticalBridgeRepairing5 ]
+[ _SP ] [ VerticalBridgeRepairing3 ] -> [ _SP ] [ VerticalBridgeRepairing4 ]
+[ _SP ] [ VerticalBridgeRepairing2 ] -> [ _SP ] [ VerticalBridgeRepairing3 ]
+[ _SP ] [ VerticalBridgeRepairing1 ] -> [ _SP ] [ VerticalBridgeRepairing2 ]
+
+[ _SP ] [ HorizontalBridgeRepairing6 ] -> [ _SP ] [ HorizontalBridge ]
+[ _SP ] [ HorizontalBridgeRepairing5 ] -> [ _SP ] [ HorizontalBridgeRepairing6 ]
+[ _SP ] [ HorizontalBridgeRepairing4 ] -> [ _SP ] [ HorizontalBridgeRepairing5 ]
+[ _SP ] [ HorizontalBridgeRepairing3 ] -> [ _SP ] [ HorizontalBridgeRepairing4 ]
+[ _SP ] [ HorizontalBridgeRepairing2 ] -> [ _SP ] [ HorizontalBridgeRepairing3 ]
+[ _SP ] [ HorizontalBridgeRepairing1 ] -> [ _SP ] [ HorizontalBridgeRepairing2 ]
+
+[ _SP ] [ TreeGoalMarkerReady6 ] -> [ _SP ] [ TreeGoalMarkerReady1 AnimationLooping ]
+[ _SP ] [ TreeGoalMarkerReady5 ] -> [ _SP ] [ TreeGoalMarkerReady6 ]
+[ _SP ] [ TreeGoalMarkerReady4 ] -> [ _SP ] [ TreeGoalMarkerReady5 ]
+[ _SP ] [ TreeGoalMarkerReady3 ] -> [ _SP ] [ TreeGoalMarkerReady4 ]
+[ _SP ] [ TreeGoalMarkerReady2 ] -> [ _SP ] [ TreeGoalMarkerReady3 ]
+[ _SP ] [ TreeGoalMarkerReady1 no AnimationLooping ] -> [ _SP ] [ TreeGoalMarkerReady2 ]
+
+[ _SP ] [ CantPlantSymbol3 ] -> [ _SP ] [ ]
+[ _SP ] [ CantPlantSymbol2 ] -> [ _SP ] [ CantPlantSymbol3 ]
+[ _SP ] [ CantPlantSymbol1 ] -> [ _SP ] [ CantPlantSymbol2 ]
+
+[ _SP ] [ NeedToWaitSymbol4 ] -> [ _SP ] [ NeedToWaitSymbol1 AnimationLooping ]
+[ _SP ] [ NeedToWaitSymbol3 ] -> [ _SP ] [ NeedToWaitSymbol4 ]
+[ _SP ] [ NeedToWaitSymbol2 ] -> [ _SP ] [ NeedToWaitSymbol3 ]
+[ _SP ] [ NeedToWaitSymbol1 no AnimationLooping ] -> [ _SP ] [ NeedToWaitSymbol2 ]
+
+[ _SP ] [ AnimationLooping ] -> [ _SP ] [ ]
+
+(*** Gameplay. ***)
+
+(Planting)
+[ action Player GrassCarried Arable no Blocker no GrowingCrops ] -> [ Player Arable GrassYoung ]
+[ action Player ReedCarried Shore no Blocker no GrowingCrops ] -> [ Player Shore ReedYoung ]
+[ action Player FlowerCarried Arable no Blocker no GrowingCrops ] -> [ Player Arable FlowerStraight GrowthParticles1 ]
+[ action Player KumaraCarried Arable no Blocker no GrowingCrops ] -> [ Player Arable KumaraYoung ]
+[ action Player TomatoCarried Arable no Blocker no GrowingCrops ] -> [ Player Arable TomatoYoung ]
+[ action Player MushroomCarried Arable no Blocker no GrowingCrops ] -> [ Player Arable MushroomLargeStraight MushroomChanged random RandomGrowthParticles1 ]
+[ action Player TreeCarried TreeGoal TreeGoalMarker no Blocker no GrowingCrops ] -> [ Player TreeGoal TreeBase random TreeParticles1 ]
+
+up [ TreeBase | ] -> [ TreeBase | TreeCrownMiddle ]
+right [ | TreeCrownMiddle | ] -> [ TreeCrownLeft | TreeCrownMiddle | TreeCrownRight ]
+
+(Putting back)
+[ action Player GrassCarried Stone no Resource ] -> [ Player GrassResource Stone ]
+[ action Player ReedCarried Stone no Resource ] -> [ Player ReedResource Stone ]
+[ action Player FlowerCarried Stone no Resource ] -> [ Player FlowerResource Stone ]
+[ action Player KumaraCarried Stone no Resource ] -> [ Player KumaraResource Stone ]
+[ action Player TomatoCarried Stone no Resource ] -> [ Player TomatoResource Stone ]
+[ action Player MushroomCarried Stone no Resource ] -> [ Player MushroomResource Stone ]
+[ action Player TreeCarried Stone no Resource ] -> [ Player TreeResource Stone ]
+
+(Is the exit ready, all tree goals filled with a base?)
+[ ExitLeft ] -> [ ExitLeft ExitLeftIndicator ]
+[ ExitRight ] -> [ ExitRight ExitRightIndicator ]
+[ ExitUp ] -> [ ExitUp ExitUpIndicator ]
+[ ExitDown ] -> [ ExitDown ExitDownIndicator ]
+[ HouseDoorShut ] -> [ HouseDoorShut ExitUpIndicator ]
+[ Exit ExitIndicator ] [ TreeGoal no TreeBase ] -> [ Exit ] [ TreeGoal ]
+[ HouseDoorShut ExitIndicator ] [ TreeGoal no TreeBase ] -> [ HouseDoorShut ] [ TreeGoal ]
+(Repair appropriate bridges.)
+[ ExitIndicator ] [ RepairOnExitReady HorizontalBridgeBroken ] -> [ ExitIndicator ] [ HorizontalBridgeRepairing1 ]
+[ ExitIndicator ] [ RepairOnExitReady VerticalBridgeBroken ] -> [ ExitIndicator ] [ VerticalBridgeRepairing1 ]
+[ HouseDoorShut ExitIndicator ] -> [ HouseDoorOpen ExitUp ]
+[ HouseDoorOpen ExitIndicator ] -> [ HouseDoorOpen ]
+
+(Grass growing and spreading)
+[ _SP ] [ GrassYoung ] -> [ _SP ] [ GrassMatureStraight random RandomGrowthParticles1 ]
+[ _SP ] [ GrassMature | Arable no Blocker ] -> [ _SP ] [ GrassMature | Arable GrassYoung ]
+
+(Kumara growing and spreading horizontally)
+[ _SP ] [ KumaraYoung ] -> [ _SP ] [ KumaraMatureStraight random RandomGrowthParticles1 ]
+horizontal [ _SP ] [ KumaraMature | Arable no Blocker ] -> [ _SP ] [ KumaraMature | Arable KumaraYoung ]
+
+(Mushrooms spreading a bit differently. Minis grow into large if they're touching 2+ large.)
+[ _SP ] [ MushroomLarge | MushroomMini | MushroomLarge ] -> [ _SP ] [ MushroomLarge | MushroomLargeStraight MushroomChanged random RandomGrowthParticles1 | MushroomLarge ]
+horizontal [ _SP ] [ MushroomLarge | MushroomMini ] -> [ _SP ] [ MushroomLarge | MushroomMini StillViable ]
+vertical [ _SP ] [ MushroomLarge | MushroomMini StillViable ] -> [ _SP ] [ MushroomLarge | MushroomLarge MushroomChanged random RandomGrowthParticles1 ]
+[ _SP ] [ MushroomMini StillViable ] -> [ _SP ] [ MushroomMini ]
+[ _SP ] [ MushroomLarge | Arable no Blocker ] -> [ _SP ] [ MushroomLarge | Arable MushroomMiniStraight MushroomChanged random RandomGrowthParticles1 ]
+
+(Reeds growning and spreading)
+[ _SP ] [ ReedYoung ] -> [ _SP ] [ ReedMatureStraight random RandomGrowthParticles1 ]
+(Grow around the shoreline.)
+[ _SP ] [ ReedMature Shore | Shore no Blocker ] -> [ _SP ] [ ReedMature Shore | Shore ReedYoung ]
+
+[ _SP ] [ TomatoYoung ] -> [ _SP ] [ TomatoMatureStraight random RandomGrowthParticles1 ]
+(GROSS. But gets the job done easier than any alternative, what with all the edge cases.)
+[ _SP ] [ TomatoMature | Arable no Blocker | Flower ] -> [ _SP ] [ TomatoMature | Arable TomatoYoung | Flower ]
+[ _SP ] [ TomatoMature | Arable no Blocker | Arable no Blocker | Flower ] -> [ _SP ] [ TomatoMature | Arable TomatoYoung | Arable | Flower ]
+[ _SP ] [ TomatoMature | Arable no Blocker | Arable no Blocker | Arable no Blocker | Flower ] -> [ _SP ] [ TomatoMature | Arable TomatoYoung | Arable | Arable | Flower ]
+[ _SP ] [ TomatoMature | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Flower ] -> [ _SP ] [ TomatoMature | Arable TomatoYoung | Arable | Arable | Arable | Flower ]
+[ _SP ] [ TomatoMature | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Flower ] -> [ _SP ] [ TomatoMature | Arable TomatoYoung | Arable | Arable | Arable | Arable | Flower ]
+[ _SP ] [ TomatoMature | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Flower ] -> [ _SP ] [ TomatoMature | Arable TomatoYoung | Arable | Arable | Arable | Arable | Arable | Flower ]
+[ _SP ] [ TomatoMature | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Flower ] -> [ _SP ] [ TomatoMature | Arable TomatoYoung | Arable | Arable | Arable | Arable | Arable | Arable | Flower ]
+[ _SP ] [ TomatoMature | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Flower ] -> [ _SP ] [ TomatoMature | Arable TomatoYoung | Arable | Arable | Arable | Arable | Arable | Arable | Arable | Flower ]
+[ _SP ] [ TomatoMature | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Flower ] -> [ _SP ] [ TomatoMature | Arable TomatoYoung | Arable | Arable | Arable | Arable | Arable | Arable | Arable | Arable | Flower ]
+[ _SP ] [ TomatoMature | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Flower ] -> [ _SP ] [ TomatoMature | Arable TomatoYoung | Arable | Arable | Arable | Arable | Arable | Arable | Arable | Arable | Arable | Flower ]
+[ _SP ] [ TomatoMature | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Arable no Blocker | Flower ] -> [ _SP ] [ TomatoMature | Arable TomatoYoung | Arable | Arable | Arable | Arable | Arable | Arable | Arable | Arable | Arable | Arable | Flower ]
+
+(Picking up)
+[ action Player GrassResource no Carried ] -> [ Player GrassCarried ]
+[ action Player ReedResource no Carried ] -> [ Player ReedCarried ]
+[ action Player FlowerResource no Carried ] -> [ Player FlowerCarried ]
+[ action Player KumaraResource no Carried ] -> [ Player KumaraCarried ]
+[ action Player TomatoResource no Carried ] -> [ Player TomatoCarried ]
+[ action Player MushroomResource no Carried ] -> [ Player MushroomCarried ]
+[ action Player TreeResource no Carried ] -> [ Player TreeCarried ]
+
+(If a goal is blocked, mark it as such.)
+[ TreeGoal TreeGoalMarker Blocker no TreeBase ] -> [ TreeGoal TreeGoalMarkerBlocked Blocker ]
+
+(Is a goal ready for a tree?)
+[ GoalSurround Mature | GoalAdjacent Mature | GoalSurround Mature ] -> [ GoalSurround Mature | GoalAdjacent Mature GoalSurroundsReady | GoalSurround Mature ]
+[ NoMushroomChanged ] [ TreeGoal no GoalReady no Blocker | no MushroomLarge ] -> [ NoMushroomChanged ] [ TreeGoal StillViable | ]
+[ TreeGoal StillViable | no GoalSurroundsReady ] -> [ TreeGoal | ]
+[ TreeGoal StillViable TreeGoalMarkerNotReady ] -> [ TreeGoal GoalReady TreeGoalMarkerReady1 ]
+
+(Are all goals ready?)
+[ Player ] -> [ Player AllGoalsReady ]
+[ AllGoalsReady ] [ TreeGoal no GoalReady ] -> [ ] [ TreeGoal ]
+
+[ AllGoalsReady ] [ RepairOnGoalsReady VerticalBridgeBroken ] -> [ AllGoalsReady ] [ VerticalBridgeRepairing1 ]
+[ AllGoalsReady ] [ RepairOnGoalsReady HorizontalBridgeBroken ] -> [ AllGoalsReady ] [ HorizontalBridgeRepairing1 ]
+[ AllGoalsReady ] -> [ ]
+
+(If action and still carrying, probably can't do that thing here...)
+[ action Player Carried no NeedToWaitSymbol ] -> [ action Player Carried CantPlantSymbol1 ]
+
+(...but maybe you just need to wait. NeedToWaitSymbol replaces CantPlantSymbol on same layer.)
+[ GrowingCrops ] [ action Player StandardArableCarried Arable no Blocker ] -> [ GrowingCrops ] [ action Player StandardArableCarried Arable NeedToWaitSymbol1 ]
+[ GrowingCrops ] [ action Player ReedCarried Shore no Blocker ] -> [ GrowingCrops ] [ action Player ReedCarried Shore NeedToWaitSymbol1 ]
+[ GrowingCrops ] [ action Player TreeCarried TreeGoal no Blocker ] -> [ GrowingCrops ] [ action Player TreeCarried TreeGoal NeedToWaitSymbol1 ]
+
+[ GrowingCrops ] [ NeedToWaitSymbol ] -> [ GrowingCrops ] [ NeedToWaitSymbol NeedToWaitViable ]
+[ NeedToWaitSymbol no NeedToWaitViable ] -> [ ]
+[ NeedToWaitViable ] -> [ ]
+
+[ > Player NeedToWaitSymbol ] -> [ > Player > NeedToWaitSymbol ]
+
+(Walking)
+[ > Player | Shore no Blocker ] -> [ > Player | Shore FootstepSoundShore ]
+[ > Player | Earth no Blocker ] -> [ > Player | Earth FootstepSoundEarth ]
+[ > Player | Arable Blocker ] -> [ > Player | Arable Blocker FootstepSoundPlant ]
+[ > Player | Bridge ] -> [ > Player | Bridge FootstepSoundBridge ]
+[ > Player | Stone ] -> [ > Player | Stone FootstepSoundStone ]
+
+[ > Player Arable no Blocker no GrowthParticles ] -> [ > Player Arable random RandomGrowthParticles1 ]
+[ < Player GrassMature ] -> [ < Player GrassMatureRustle1 ]
+[ < Player ReedMature ] -> [ < Player ReedMatureRustle1 ]
+[ < Player TomatoMature ] -> [ < Player TomatoMatureRustle1 ]
+[ < Player KumaraMature ] -> [ < Player KumaraMatureRustle1 ]
+[ < Player MushroomLarge ] -> [ < Player MushroomLargeRustle1 ]
+[ < Player MushroomMini ] -> [ < Player MushroomMiniRustle1 ]
+[ < Player Flower ] -> [ < Player FlowerRustle1 ]
+[ > Player Carried ] -> [ > Player > Carried ]
+[ > Player | Gravestone ] -> cancel
+[ > Player | no Walkable ] -> cancel
+
+(*** Per-turn teardown. ***)
+
+late [ _SP ] -> [ ]
+late [ GrowingCrops ] -> [ ]
+late [ NoMushroomChanged ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+all Player on Exit
+
+=======
+LEVELS
+=======
+
+message 1/21 Tree
+
+~~~d~~~~~~~
+~~~y~~~~~~~
+~~{{{{{{{~~
+{{{__;__{{~
+{}__;*;__{{
+{{{__;___}{
+~~{{_____{{
+~~~{{{{{{{~
+~~~~~~~!~~~
+~~~~~~###~~
+$-----#t#~~
+~~~~~~###~~
+
+message 2/21 Trees love friends
+
+{{{{~~{{{{~~
+{}}{{{{}}{~~
+{{}{~~{;}{~~
+~{}{{{{*{{/u
+~{}}}};__{~~
+~{{{}}}{{{~~
+~~~{{{{{~!~~
+~~~~~!~~~\~~
+~~~~f#f~#t#~
+~~~~~`~~~~~~
+
+message 3/21 Grass loves to spread
+
+~~~~~~~t#t~~~
+~~:%%%~~\~~~~
+$-%__%%%%%:~~
+~~%%______%%~
+~~~%_;*;*;_%~
+~~:%_{{{;__%~
+f~%__{~{{_;%~
+g-%__{~~{_%%~
+f~%__{{{{_%~~
+~~%:______:/u
+~~~:%%%%:::~~
+
+message 4/21 Welcome
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~%%~~~~%%%~~~%%%~~~~%%~~~~
+~~~~%%{{{{{%%%%{{{%%%%%%%%~~~~
+~~%%%%{;{{;%;%;_p{p{*{p;%~~~~~
+~%%_%%{_{;%%_%_{_{_%;{_{%~###~
+~%_l_%{_;%%%_%__;%_%%{;p%~#t#~
+~%%_%%{_{;%{_{_;%%_%~{%_%~###~
+~~%%%~{p{{;{p{p{;%;%~%;;%~~!~~
+~~~~~~%%%%%%%%%%%%%%%%%%%~~\~~
+~~~~~{%a_______________%~~~!~~
+$--{{{{{{{%%%%%%%%%%%%%%%%{{/u
+~~~%___{___%___%__{{__%_%%_{~~
+~~%%_{{{_{_%_{_%_{_{_%%__%_%%~
+~~%%_{_%___%___%_{_{__%_{__%%~
+~~%{_{_%_{_{__{{_{}{_{{_{{_{%~
+~~%{}__{_{}{}{}{}_{{_}{}{{}{%~
+~~~{{{{{{{{{{{{{{{%{{{{{{{{{~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+message 5/21 Reeds love the shore
+
+~~~~~~~`~~~~~~
+~%%%~~~%%%%~~~
+~%;%%~%%_;%%~~
+~%;*%%%%___%%%
+~%%%%~~%;___;%
+~~~!~~%%*;__%%
+#t~r#~%_;__%%~
+t#h#g~%___%%~~
+~~~y~~%%_%%~~~
+~~~w~~~%%%~~~~
+
+message 6/21 Sweet potato rows
+
+~~~`~~~~~~~
+~~%%%%%%-/u
+~~%____%~~~
+~:%*;%%%%%~
+%%_______%~
+%______;*%:
+%%______;_%
+~%%%%%%___%
+~~!~~~%%%%%
+~#g#~~~~\~~
+#krk#~~t#t~
+
+message 7/21 Mushrooms
+
+$---k~d~t
+~~~~r~y~#
+{{{~s~#ht
+{}{~!~!~~
+{_:%%%%%~
+{__l_;_%%
+:;;_*___%
+%______*%
+%%%%%%%%%
+
+message 8/21 Bloom
+
+~%%%{{{{{{{~
+%%________{~
+%_l_%%%%%_{{
+%%_*:~~~%__{
+~:__%%~~%__{
+~%___%~%%_{{
+~%_l_%%%__%~
+~:%%_____%%~
+~~~%_____%~~
+#--%%%%:%%-#
+!~~~!~~~\~~y
+`~~s#g~#t#~w
+
+message 9/21 Colony
+
+{{{{~###~~`~
+{;_{-#s#--#~
+{_l{~###~~~~
+{__{~~~~~~~~
+{_li{{{{~###
+{____;}{h#t#
+{____*;{~###
+{;_l_;}{~~~~
+{{{{{{{{--/u
+
+message 10/21 Tomatoes love flowers
+
+k#o~%:{%%%%~~
+~!~~%_{:{*%%i
+~%%{%_*_____%
+~:_______;%%%
+~{{_*__%%%{~~
+~~{__li%~~\~~
+$-{_%%%~~~##t
+~~{;%~y~~~#t#
+~~%%%~w~~~t##
+
+message 11/21 Winding
+
+##~~###~~`~
+tt-h#o#--#~
+##~~###~~~~
+~~~~~!~~~~~
+~~:~~!~{{{{
+%~%%%:{{__{
+i%%*_{{}__{
+%:___*{{__{
+~{{{__;{{{{
+~~~{:{{{~y~
+~~~~~~~~~w~
+
+message 12/21 Explosion
+
+~~%~~~~~%~~`
+%%i%~~:%i%~!
+%;%~~~%*_%%%
+%_%%%%%%__;%
+%_%%%%%%%_%%
+%_%~~~~~%_%~
+%_%--g#~%_%~
+%_%~~or-%_%~
+%_%:~~~~%_%%
+%_*%%%%%%_*%
+%__i%%:%%_%%
+%%_l_____;%~
+~%%_*;_%%%%~
+~~%%%%%%~~~~
+~~~\~~~:~~~~
+~#t#t#~y~~~~
+~t###t~w~~~~
+
+message 13/21 Twin islands
+
+~~~~~`~~~~~~
+~~#t~ro~{{{{
+x/t#~sk~{~~{
+~~~\~!~~{{{{
+{{:%%%%~{__:
+:___%~%-{_*%
+%%*;%~%~{_%%
+~%%%%%%~{::~
+
+message 14/21 Guidance
+
+#t~~%%%%~~
+t#h-%;_%~~
+~~~~%*_%%~
+gs--%___%$
+fo~~%___%~
+~~~%%___%~
+x/-%___;%~
+~~~%_*__%~
+i%%%__;_%~
+%_______%~
+%__%%%%%%~
+%%_%~~~%%~
+~%_%%%%%%~
+~%_____%~~
+~%{___%%~~
+~~%%%%:~~~
+
+message 15/21 Mushroom minefield
+
+~~~~~ttt~srs~~
+~~%i~~\~~~!~~~
+%i%%%%%%%%%%-$
+%_%%i_____l%~~
+%*%~%__%%%_%%i
+%%%~%l_%~i__%i
+~~%~%__i~%%*%~
+%i%%i__%~~%_i~
+%_*%___%%~i%%~
+i%____l%%~~y~~
+~%i%%%%%~~~w~~
+
+message 16/21 Salad
+
+~~~`~~~%%i~~
+ss~!~~~%*%~~
+ok-#~~:%%:~t
+ff~!~~:%%~~t
+~~~!~~:*:-ht
+%%%%%%%%%~~t
+%*_____:~~~~
+i%____*%-/#~
+~%%{%%%i~~w~
+
+message 17/21 You go first
+
+`~ko~~~~~~~~
+#-rg~~%%%~~~
+!~~~~%%_%%%~
+%%%%~%;___%~
+%*;%%%*%%%%~
+%____%_%~%~~
+%____%_:~%/u
+%%*;%%%%%%~~
+~%%%%~~~\~~~
+~~~~~~t#t#t~
+
+message 18/21 Waterside
+
+~~~~t#t~~
+~~~~~\~~~
+~fs~:::~~
+$ko-%%%%~
+~~~~~:*%~
+~:%%%%%%:
+~:__*%~!~
+~%%:%%~y~
+~~~~%%~!~
+~~~~ii~w~
+
+message 19/21 Halfmoon Bay
+
+sgs~`~t#t~~
+rk#-#h###/u
+s#o~!~t#t~~
+~~~~!~~~~~~
+~~~%%%%%%~~
+~:%%____%%%
+{{____l__*%
+{________%%
+{____*_%%%~
+{____;%%~~~
+{_;___%~~~~
+{___*_%%~~~
+{____;;%~~~
+{{_____%%~~
+~{{:%*_%%%%
+~~:%%__%%%%
+~~~%%%%%%%~
+
+message 20/21 Remembering
+
+~~~d~~~~~~~
+~~~y~~~~~~~
+~~{:{{{{{~~
+{{{___;9{{~
+{};_;*;_;{{
+{{:______;{
+~~{%*___*%{
+~~~%%ii%%%~
+~~~!~~~\~~~
+~~##o~t#t~~
+$-###~###~~
+~~f##~#t#~~
+
+message 21/21 Return
+
+1111111111111111
+2222734382222222
+~~~~{656;;{~~~~~
+~~~{{:#;__{~~~~~
+s#~{}##_;_{{~~##
+o#-{}#___*;{{ht#
+k#~{{#{{____{~##
+~~~~~!~{{{{{{~~~
+~~~~~`~~~~~~~~~~
+
+message Thanks for playing! Get in touch: @timknauf / timknauf@gmail.com Special thanks to: Tristan Clark Additional testers: Dan Kyles, Sharon + Jay + Zoe Knauf

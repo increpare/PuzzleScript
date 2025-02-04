@@ -1,0 +1,511 @@
+title Mini Nomerads 2: Constructaballs
+author Dan Williams
+homepage www.activeupgames.com
+(game is about grinding ghosts into ectoplasm and building shapes)
+
+
+========
+OBJECTS
+========
+
+Background
+#11aa11 GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+00.00
+0...0
+.....
+0...0
+00.00
+
+Wall
+lightgray gray darkgray
+00020
+11121
+22222
+12111
+12111
+
+Player
+Black red White Blue
+.222.
+.020.
+11111
+.333.
+.3.3.
+
+ballcore
+pink red #ff4444
+.000.
+02120
+01110
+02110
+.000.
+
+ballwall
+pink orange #ff6622
+.000.
+02120
+01110
+02110
+.000.
+
+ballgen
+darkblue yellow
+.0.0.
+0...0
+..1..
+0...0
+.0.0.
+
+balllarva1
+pink red
+.000.
+01110
+01110
+01110
+.000.
+
+conright
+white gray darkgray
+20112
+11011
+11101
+11011
+20112
+
+condown
+white gray darkgray
+21112
+01110
+10101
+11011
+21112
+
+conleft
+white gray darkgray
+21102
+11011
+10111
+11011
+21102
+
+conup
+white gray darkgray
+21112
+11011
+10101
+01110
+21112
+
+
+button1
+darkgray gray
+.111.
+10001
+10101
+10001
+01110
+
+button2
+darkgray gray
+.111.
+10001
+10101
+10001
+01110
+
+button3
+darkgray gray
+.111.
+10001
+10101
+10001
+01110
+
+button4
+darkgray gray
+.111.
+10001
+10101
+10001
+01110
+
+button5
+darkgray gray
+.111.
+10001
+10101
+10001
+01110
+
+
+ballright
+transparent
+
+balldown
+transparent
+
+ballleft
+transparent
+
+ballup
+transparent
+
+bgright
+yellow
+..0..
+...0.
+0.0.0
+...0.
+..0..
+
+bgdown
+yellow
+..0..
+.....
+0.0.0
+.0.0.
+..0..
+
+bgleft
+yellow
+..0..
+.0...
+0.0.0
+.0...
+..0..
+
+bgup
+yellow
+..0..
+.0.0.
+0.0.0
+.....
+..0..
+
+bggen
+yellow
+.0.0.
+0...0
+..0..
+0...0
+.0.0.
+
+stopper
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+X = Target
+
+a = conright
+b = condown
+c = conleft
+d = conup
+
+* = ballcore
+O = ballwall
+@ = ballgen
+
+1 = button1
+2 = button2
+3 = button3
+4 = button4
+5 = button5
+
+6 = bgright
+7 = bgdown
+8 = bgleft
+9 = bgup
+0 = bggen
+
+
+ball = ballcore or ballwall
+cons = conright or condown or conleft or conup
+balldir = ballright or balldown or ballleft or ballup
+button = button1 or button2 or button3 or button4 or button5
+block = cons or ballgen
+bgs = bgright or bgdown or bgleft or bgup or bggen
+
+=======
+SOUNDS
+=======
+
+player MOVE 29986507
+block create 8026309
+startgame 50407900
+restart 90013309
+closemessage 35794303
+undo 21150709
+endlevel 24543300
+
+sfx0 437309 (balsl stick to each other)
+sfx1 21946837 (push block)
+sfx2 6213103 (get redirected)
+sfx3 74507102 (push block into wall)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target, button, bgs
+cons, ballgen
+Player, Wall, ball, balllarva1
+balldir
+stopper
+
+======
+RULES
+======
+
+[ > Player | ball ] -> [ > Player | > ball ] sfx1
+[ > ball | ball ] -> [ > ball | > ball ] 
+[ > player | block ] -> [ > player | > block ] sfx1
+
+[ > ball | wall ] -> [ | wall ]
+
+late [ block wall ] -> [ wall ] sfx3
+
+[ > block | target ] -> [ block | target ]
+
+
+late [ balldir | ballgen ] -> [ balldir | ballwall ] sfx0
+
+(ball movement)
+
+[ ballcore balldir conright ] -> [ ballcore ballright conright ] again sfx2
+[ ballcore balldir condown ] -> [ ballcore balldown condown ] again sfx2
+[ ballcore balldir conleft ] -> [ ballcore ballleft conleft ] again sfx2
+[ ballcore balldir conup ] -> [ ballcore ballup conup ] again sfx2
+
+startloop
+[ ball ballup | ballwall ] -> [ ball ballup | ballwall ballup ]
+[ ball balldown | ballwall ] -> [ ball balldown | ballwall balldown ]
+[ ball ballleft | ballwall ] -> [ ball ballleft | ballwall ballleft ]
+[ ball ballright | ballwall ] -> [ ball ballright | ballwall ballright ]
+endloop
+
+
+[UP    ballcore  ]  -> [ballcore ballup  ]
+[DOWN  ballcore  ]  -> [ballcore balldown  ]
+[LEFT  ballcore  ]  -> [ballcore ballleft  ]
+[RIGHT ballcore  ]  -> [ballcore ballright  ]
+
+
+
+UP  [ ball ballup no stopper  | no ball no Wall  ] ->     [  |  ballup stopper    ball ] again
+DOWN  [ ball balldown no stopper  | no ball no Wall  ] -> [  |  balldown stopper  ball ] again
+LEFT  [ ball ballleft no stopper  | no ball no Wall  ] -> [  |  ballleft stopper  ball ] again
+RIGHT [ ball ballright no stopper  | no ball no Wall  ] -> [  |  ballright stopper  ball ] again
+
+[ balllarva1 ] -> [ ballwall ]
+
+late up [ player button1 | no block ] -> [ player button1 | conright ] 
+late up [ player button2 | no block ] -> [ player button2 | condown ] 
+late up [ player button3 | no block ] -> [ player button3 | conleft ] 
+late up [ player button4 | no block ] -> [ player button4 | conup ] 
+late up [ player button5 | no block ] -> [ player button5 | ballgen ] 
+
+
+[stopper]->[]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on ball
+All ball on target
+
+=======
+LEVELS
+=======
+
+message Video games.
+
+message Level 1
+
+message Push the balls into the targets. 
+
+###########
+#.........#
+#..p.*..X.#
+#.........#
+###########
+
+message Level 2
+
+message You can push blocks around. To get rid of them, push them into the wall.
+
+###############
+#.............#
+#....d....X...#
+#.............#
+#..p.*........#
+#.............#
+###############
+
+message Level 3
+
+message Balls that pass by a generator will create one and drag it along
+
+###############
+#.............#
+#.......@...X.#
+#..p.*......X.#
+#...@.......X.#
+#.............#
+###############
+
+message Level 4
+
+message Step on buttons to generate objects.
+
+###############
+#.............#
+#..p.*......X.#
+#...........X.#
+#..0........X.#
+#..5..........#
+###############
+
+message Good luck!
+
+message Level 4
+
+###############
+#.............#
+#..p.*........#
+#.............#
+#.............#
+#.6.7.0...XXX.#
+#.1.2.5.......#
+###############
+
+message Level 5
+
+#############
+#...........#
+#....XX.....#
+#....X......#
+#...........#
+#...........#
+#...........#
+#..p.*......#
+#...........#
+#...........#
+#.6.7.8.9.0.#
+#.1.2.3.4.5.#
+#############
+
+message Level 6
+
+#############
+#........X..#
+#.......XXX.#
+#........X..#
+#...........#
+#...........#
+#...........#
+#..p.*......#
+#...........#
+#...........#
+#.6.7.8.9.0.#
+#.1.2.3.4.5.#
+#############
+
+message Level 7
+
+###############
+#.............#
+#.............#
+#....XXXXX....#
+#.......X.....#
+#.............#
+#.............#
+#...p.*.......#
+#.............#
+#.............#
+#..6.7.8.9.0..#
+#..1.2.3.4.5..#
+###############
+
+message Level 8
+
+#############
+#...........#
+#..xxx......#
+#..x.x......#
+#..xxx......#
+#...........#
+#...........#
+#..p.*......#
+#...........#
+#...........#
+#.6.7.8.9.0.#
+#.1.2.3.4.5.#
+#############
+
+message Level 9
+
+#############
+#...........#
+#.......xxx.#
+#.......x...#
+#.......x.x.#
+#.......xxx.#
+#...........#
+#..p.*......#
+#...........#
+#...........#
+#.6.7.8.9.0.#
+#.1.2.3.4.5.#
+#############
+
+message Level 10
+
+#############
+#...........#
+#......x....#
+#...x..xx...#
+#...xxxx....#
+#....x.x....#
+#...........#
+#..p.*......#
+#...........#
+#...........#
+#.6.7.8.9.0.#
+#.1.2.3.4.5.#
+#############
+
+message Congratulations! You are an engineering prodigy. I hope you make a spaceship one day! 
+
+(#############
+#...........#
+#....XX.....#
+#....X......#
+#...........#
+#...........#
+#...........#
+#..p.*......#
+#...........#
+#...........#
+#.6.7.8.9.0.#
+#.1.2.3.4.5.#
+#############
+)
+

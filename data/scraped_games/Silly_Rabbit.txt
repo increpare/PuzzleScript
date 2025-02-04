@@ -1,0 +1,148 @@
+title Silly Rabbit
+author Jere Majava
+homepage twitter.com/jjmajava
+
+========
+OBJECTS
+========
+
+Background
+brown
+
+Target
+DarkBlue darkbrown
+.....
+.11..
+1001.
+1001.
+.....
+
+Tree
+DARKBROWN darkgreen green
+.12..
+1212.
+1121.
+1111.
+.00..
+
+Player
+white lightgrey lightblue pink
+.0.0.
+.0.0.
+.202.
+.010.
+10001
+
+rock
+grey darkgrey darkgreen
+.....
+.10..
+2110.
+2211.
+.....
+
+Water
+blue
+00000
+00000
+00000
+00000
+00000
+
+
+splash
+lightblue blue
+11111
+10011
+01101
+10011
+11111
+
+
+
+
+
+
+
+=======
+LEGEND 
+=======
+
+. = Background
+A = Tree
+B = Player
+* = rock
+O = Target
+- = water
+
+=======
+SOUNDS
+=======
+
+player create  8752105
+player move 78422704
+splash create 6483903
+endlevel 6581508
+================
+COLLISIONLAYERS
+================
+
+Background
+Water
+Target, splash
+Player, Tree, Rock
+
+======
+RULES
+======
+
+[ >  Player | no Tree | no tree no rock ] -> [ | | Player ]
+late [ player water ] -> [ water splash ]
+
+==============
+WINCONDITIONS
+==============
+
+all target on player
+
+=======
+LEVELS
+=======
+
+message Silly rabbit, why do you have to make such long jumps?
+
+...A*.A
+AB.....
+.*A..*.
+*...A..
+.o.....
+.......
+
+..*.A*..A
+.*.....*.
+A.A...A..
+........B
+..*.O..A.
+.........
+
+message Silly rabbit, you know you can't swim?
+
+-.....A..
+---*o*...
+..--.----
+A..---.--
+.*...---.
+...*.....
+.A..B....
+
+....-..*A
+*..--*...
+-----A.*.
+-*..----.
+..A...---
+.....AO..
+B*.......
+
+
+
+

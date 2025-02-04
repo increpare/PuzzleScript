@@ -1,0 +1,166 @@
+title N Step Punt
+author Toombler
+homepage https://www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+FillU
+black
+
+FillD
+black
+
+FillR
+black
+
+FillL
+black
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+Solid = Player or Wall or Crate
+Fill = FillU or FillD or FillR or FillL
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+FillU
+FillD
+FillR
+FillL
+
+======
+RULES
+======
+
+(number moved depends on number of crates:
+    on the player's side of the crate ) 
+
+up 		[ > Player | Crate ] -> [ > Player FillD | > Crate ] 
+down 	[ > Player | Crate ] -> [ > Player FillU | > Crate ]
+right 	[ > Player | Crate ] -> [ > Player FillL | > Crate ]
+left 	[ > Player | Crate ] -> [ > Player FillR | > Crate ] 
+
+up 		[ FillU | ] -> [ FillU | FillU ]
++left 	[ FillU | ] -> [ FillU | FillU ]
++right 	[ FillU | ] -> [ FillU | FillU ]
+
+down 	[ FillD | ] -> [ FillD | FillD ]
++left 	[ FillD | ] -> [ FillD | FillD ]
++right 	[ FillD | ] -> [ FillD | FillD ]
+
+right	[ FillR | ] -> [ FillR | FillR ]
++up 	[ FillR | ] -> [ FillR | FillR ]
++down 	[ FillR | ] -> [ FillR | FillR ]
+
+left	[ FillL | ] -> [ FillL | FillL ]
++up 	[ FillL | ] -> [ FillL | FillL ]
++down 	[ FillL | ] -> [ FillL | FillL ]
+
+
+[ Crate Fill ][ Player | ... | > Crate | no Solid ] -> [ Crate ][ Player | ... | | > Crate ]  
+
+[ Fill ] -> [] 
+
+(
+up [ Player | Crate PushU | no Solid ] -> [ Player | | Crate PushU ]  
+
+[ >  Player | Crate | no Solid ] -> [  >  Player | | > Crate  ]
+)
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+
+
+
+#########
+#.......#
+#.*...o.#
+#.*...o.#
+#.*.....#
+#...p.o.#
+#.......#
+#########
+
+#########
+#.......#
+#.*...o.#
+#.o.p.*.#
+#.o...*.#
+#.*...o.#
+#.......#
+#########
+
+
+

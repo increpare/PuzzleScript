@@ -1,0 +1,587 @@
+title The Legend of Zokoban
+author Joshua Minor [v3]
+homepage pixelverse.org
+flickscreen 9x7
+
+========
+OBJECTS
+========
+
+Sand 
+yellow orange
+00000
+00100
+10000
+00010
+01000
+
+Sand2 
+yellow orange
+00000
+01000
+00000
+00010
+00000
+
+StoneFloor 
+#222222 #333333
+01110
+10000
+10000
+00000
+00000
+
+Grass
+green lightgreen
+.....
+00...
+.0.11
+.001.
+.001.
+
+Water1
+blue lightblue
+00000
+01000
+00001
+00100
+10000
+
+Water2
+blue lightblue
+00000
+00100
+10000
+00010
+01000
+
+Temp
+blue lightblue
+.....
+.....
+.....
+.....
+.....
+
+Fire1
+red orange yellow
+..0..
+.010.
+01220
+02210
+.120.
+
+Fire2
+red orange yellow
+..0..
+.010.
+02210
+01220
+.021.
+
+Cave 
+DarkBlue
+00000
+00000
+00000
+00000
+00000
+
+Goal 
+DarkBlue red
+01110
+10001
+00000
+10001
+01110
+
+RockWall 
+BROWN Orange
+01110
+10000
+10010
+10000
+00100
+
+StoneWall 
+darkgrey grey
+01110
+10000
+10010
+10000
+00100
+
+AlivePlayer
+GREEN lightgreen yellow
+.00..
+.000.
+00000
+.111.
+00.00
+
+DeadPlayer
+GREEN lightgreen red
+.....
+.....
+.000.
+00220
+01120
+
+OldWoman
+brown red grey
+..22.
+.200.
+00000
+.111.
+11111
+
+Held
+red
+.....
+.....
+.....
+.....
+.....
+
+Mystery
+red
+.....
+.....
+.....
+.....
+.....
+
+Sword 
+grey white 
+...1.
+...1.
+..111
+...0.
+.....
+
+Shield 
+darkgrey grey 
+.....
+000..
+010..
+.0...
+.....
+
+Hook 
+darkgrey grey 
+.1.1.
+1.1.1
+..0..
+..0..
+.....
+
+Block  
+BROWN Orange darkgrey
+.111.
+10001
+10002
+10002
+.222.
+
+Pot  
+grey blue purple
+1112.
+.12..
+1102.
+1022.
+.22..
+
+EasyBaddie
+white red 
+.111.
+10101
+11111
+11111
+11.11
+
+Money
+white lightblue
+..1..
+.001.
+10111
+.111.
+..1..
+
+Heart
+red
+.....
+00.00
+00000
+.000.
+..0..
+
+Shooter
+black grey
+.000.
+01110
+0...0
+01110
+.000.
+
+ArrowTrail
+lightgrey
+.....
+.....
+..0..
+.....
+.....
+
+ArrowR
+brown white
+.....
+0..1.
+.0001
+0..1.
+.....
+
+ArrowL
+brown white
+.....
+.1..0
+1000.
+.1..0
+.....
+
+HGaze
+yellow (invisible)
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+Player = AlivePlayer or DeadPlayer
+Background = Sand or Sand2 or StoneFloor
+Water = Water1 or Water2
+Fire = Fire1 or Fire2
+Wall = StoneWall or RockWall
+Solid = Wall or Block or Shooter or Pot
+Baddie = EasyBaddie
+AlivePerson = AlivePlayer or OldWoman or Baddie
+Person = Player or OldWoman or Baddie or DeadPlayer
+Arrow = ArrowL or ArrowR
+Danger = Fire or Arrow
+Obstacle = Solid or Water or Person or Fire
+Weapon = Sword or Hook
+Armor = Shield
+Equipment = Weapon or Armor
+Loot = Money or Heart
+LootDrop = Money or Heart or Temp or Temp
+Pushable = Block or Pot
+Pullable = Block or Pot or Loot or Equipment or Person or Shooter
+Gaze = HGaze
+
+(Outside)
+
+P = AlivePlayer
+. = Sand
+, = Sand2
+" = Grass
+# = RockWall
+* = Block
+O = Cave
+w = Water1
+1 = EasyBaddie
+G = Goal
+H = Hook
+M = Money
+` = Mystery
+~ = Mystery and Water1
+
+(Inside)
+
+S = StoneWall
+_ = StoneFloor
+! = EasyBaddie and StoneFloor
++ = Sword and StoneFloor
+[ = Shield and StoneFloor
+D = OldWoman and StoneFloor
+Z = AlivePlayer and Sword and Shield and Held
+& = Block and StoneFloor
+q = Pot and StoneFloor
+f = Fire1 and StoneFloor
+^ = Shooter and StoneFloor
+
+=======
+SOUNDS
+=======
+
+StartLevel 40430108 (music-ish)
+SFX0 16358103 (power up)
+SFX1 87860707 (push)
+SFX2 35038302 (stairs)
+SFX3 21293301 (fight)
+SFX4 15978502 (hurt)
+SFX5 47598700 (money)
+SFX6 65949102 (smash)
+SFX7 56302302 (fall)
+SFX8 45471508 mystery
+(49521903 hurt)
+(97829708 whistle)
+(90505508 teleport)
+(15960108 stampede)
+ShowMessage 82693708 (you win!)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Cave, Goal, Mystery, Temp (these are things you can walk on)
+Obstacle, Loot, Grass (this is the main object layer)
+Weapon (equipment slot 1)
+Armor (equipment slot 2)
+Held, HGaze, Arrow, ArrowTrail (these are things that float on top)
+
+======
+RULES     
+======     
+
+(can't move while dead)
+[ Action DeadPlayer ] -> [ DeadPlayer ] message Press R to restart or hold Z to rewind.
+[ Moving DeadPlayer ] -> [ DeadPlayer ]
+
+(water animates)
+[ Temp ] -> []
+[ Water ] -> [ Temp ]
+[ Temp ] -> [ random Water ]
+
+(fire animates)
+[ Fire ] -> [ Temp ]
+[ Temp ] -> [ random Fire ]
+
+
+(baddies move at random)
+[ Stationary Baddie ] -> [ RandomDir Baddie ]
+
+(player can push blocks & pots)
+[ > Player | Pushable ] -> [ > Player | > Pushable ] SFX1
+
+(blocks pushed into water become land)
+[ > Block | Water ] -> [ | ] SFX7
+
+(if you are next to a baddie, it will always attack you)
+(this makes the game too hard! especially when a baddie is just off the
+ edge of the screen, or next to the exit of a cave. also you can't make use
+ of your sword without a shield also.
+[ Baddie | Player ] -> [ > Baddie | Player ])
+
+(baddies can attack & kill the player unless he/she has a shield)
+[ > Baddie | Player No Armor ] -> [ Baddie | DeadPlayer ] SFX4
+[ > Player No Armor No Weapon | Baddie ] -> [ DeadPlayer | Baddie ] SFX4
+
+
+(shooters shoot arrows)
+(this makes the arrows move one tile per turn - too easy to dodge)
+(
+left [ stationary ArrowL ] -> [ > ArrowL ]
+left [ > ArrowL | Solid ] -> [ | Solid ]
+left [ Shooter | No Solid ] -> [ Shooter | ArrowL ]
+)
+
+(this makes arrows detect movement & fire quickly)
+(but it has problems since "again" causes other things to happen, like monsters
+ walking around - also it triggers due to stuff in other faraway rooms...
+late left [ ArrowL | Solid ] -> [ | Solid ]
+late left [ Shooter No Arrow No ArrowTrail | ... | AlivePerson ] -> [ Shooter ArrowL | ... | AlivePerson ]
+late random left [ ArrowL | No Solid ] -> [ ArrowTrailL | ArrowL ] again
+late random left [ ArrowL | AlivePlayer ] -> [ ArrowL | DeadPlayer ] SFX4
+late random left [ ArrowL | AlivePerson ] -> [ ArrowL | ] SFX4
+late left [ ArrowTrailL | No Arrow No ArrowTrail ] -> [ | ]
+
+late right [ ArrowR | Solid ] -> [ | Solid ]
+late right [ Shooter No Arrow No ArrowTrail | ... | AlivePerson ] -> [ Shooter ArrowR | ... | AlivePerson ]
+late random right [ ArrowR | No Solid ] -> [ ArrowTrailR | ArrowR ] again
+late random right [ ArrowR | AlivePlayer ] -> [ ArrowR | DeadPlayer ] SFX4
+late random right [ ArrowR | AlivePerson ] -> [ ArrowR | ] SFX4
+late right [ ArrowTrailR | No Arrow No ArrowTrail ] -> [ | ]
+)
+
+(remove all gaze, arrows and arrow trails)
+[ Gaze ] -> []
+[ Arrow ] -> []
+[ ArrowTrail ] -> []
+(compute gaze via line-of-sight - thanks @toph_wells)
+late [ Shooter ] -> [ Shooter HGaze ]
+late Horizontal [ HGaze | no Solid no HGaze no Arrow no AlivePerson ] -> [ HGaze | HGaze ]
+(did the shooter see something to the right? shoot it.)
+late right [ HGaze | AlivePlayer ] -> [ ArrowR | DeadPlayer ] SFX4
+late right [ HGaze | AlivePerson ] -> [ ArrowR | random Loot ] SFX4
+(did the shooter see something to the left? shoot it.)
+late left [ HGaze | AlivePlayer ] -> [ ArrowL | DeadPlayer ] SFX4
+late left [ HGaze | AlivePerson ] -> [ ArrowL | random Loot ] SFX4
+(fill in a trail behind the arrow so the player understands where it came from)
+late right [ HGaze | ArrowR ] -> [ ArrowTrail | ArrowR ]
+late left [ HGaze | ArrowL ] -> [ ArrowTrail | ArrowL ]
+late Horizontal [ HGaze | ArrowTrail ] -> [ ArrowTrail | ArrowTrail ]
+
+(dangerous things hurt the player - but only if they collide head on)
+[ > Player | stationary Danger ] -> [ DeadPlayer | Danger ] SFX4
+[ > Player | < Danger ] -> [ DeadPlayer | Danger ] SFX4
+
+(old woman gives advice)
+[ > Player | OldWoman ] -> [ Player | OldWoman ] message Take this advice, young one... Hold Z to rewind or press R to restart.
+
+(mystery just once)
+[ > Player | Mystery ] -> [ > Player | ] SFX8
+
+(player can pick up equipment)
+[ > Player | Sword ] -> [ | Player Held Sword ] SFX0 message A sword!
+[ > Player | Shield ] -> [ | Player Held Shield ] SFX0 message A shield!
+[ > Player | Hook ] -> [ No Sword | Player Held Hook ] SFX0 message A grappling hook! Press X to throw it, walk around to pull on objects and press X again to unhook it.
+[ > Player | Equipment ] -> [ | Player Equipment Held ] SFX0 (anything else)
+
+(put a marker on the player, so we can track what equipment is being held)
+([ > Player No Held ] -> [ > Player > Held ]
+[ Player No Held ] -> [ Player Held ]
+)
+[ Player No Held ] -> [ Player Held ]
+
+(player can cut the grass)
+[ > Player | Grass ] -> [ Player | random LootDrop ] SFX1
+
+(player with sword can kill baddies & leave loot)
+[ > Player Held Weapon | Baddie ] -> [ Player Held Weapon | random LootDrop ] SFX3
+
+(player can push pots into an obstacle & leave loot)
+[ > Player | Pot | Obstacle ] -> [ Player | random LootDrop | Obstacle ] SFX6
+
+(throw the hook towards a block if possible)
+random [ Action Player Held Hook | No Obstacle | Pullable ] -> [ Player Held > Hook | | Pullable ] SFX1
+(throw the hook in a random direction)
+random [ Action Player Held Hook | No Obstacle ] -> [ Player Held > Hook | ] SFX1
+(pull the hook back to the player)
+random [ Action Player | Hook ] -> [ Player Held | < Hook ] SFX1
+(hook follows behind you when you move)
+[ < Player | stationary Hook ] -> [ < Player | < Hook ]
+[ perpendicular Player | stationary Hook ] -> [ perpendicular Player | < Hook ]
+(hook pulls things behind it when it moves)
+[ < Hook No Held | stationary Pullable ] -> [ < Hook No Held | < Pullable ]
+[ perpendicular Hook No Held | stationary Pullable ] -> [ perpendicular Hook No Held | < Pullable ]
+
+(when you move, your equipment & the held marker move too.
+ note: this doesn't handle teleportation, but is needed in order
+ for the hook pulling stuff above to work properly - otherwise the hook
+ runs into a left-behind held marker and jumps onto the player.) 
+[ > Player Held Equipment ] -> [ > Player > Held > Equipment ]
+[ > Player Held ] -> [ > Player > Held ]
+
+(player can pick up loot)
+[ > Player | Loot ] -> [ | Player ] SFX5
+
+(players can enter caves - teleporting to horizontally matching cave)
+late random horizontal [ Player Cave | ... | Cave No Obstacle ] -> [ Cave | ... | Player Cave ] SFX2
+(then the player must step out of the cave entrance)
++ [ Player Cave | No Obstacle ] -> [ Cave | Player ]
+
+(blocks pushed into caves, teleport to other end of cave)
+late random horizontal [ Block Cave | ... | Cave No Obstacle ] -> [ Cave | ... | Block Cave ] SFX2
+(blocks sitting on cave exits will roll aside to let player follow them)
++ [ Block Cave | No Obstacle ] -> [ Cave | Block ]
+
+(held equipment moves with player - no matter where the player has gone)
+late [ Held Equipment No Player ] [ Player ] -> [ Held ] [ Player Held Equipment ]
+late [ Held No Player ] -> []
+
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Goal     
+
+=======     
+LEVELS
+=======
+
+(this is just a test level for arrows)
+(
+sssssssssssssssss
+s____f_wDw_f____s
+s______www______s
+^_______________^
+s_____*_________s
+^_______________s
+s_______^_______s
+s___z***________s
+s______________gs
+sssssssssssssssss
+)
+
+(message Don't forget. Hold Z to rewind and press R to reload.)
+
+(shhh, don't tell anyone about those secret islands!)
+
+.wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww#wwwwwwww*...wwwwww#wwwww
+wwwwwwwwwwwwwwwwwwwwwwww#www.MMMM*wwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwww*MMMM.wwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww#wwwwww....wwwwwwww#www
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww`wwwwwwwwwwwwwww
+sssssssss####################wwwwwwwwwwwwwwww
+sss_____s#1#####.###"#1#....."wwwwwwwwswwwwww
+s_q_sqs_o#.##o##.##1111...,...,.whwwwwwwwwwww
+s_s_sss_s#...".".##1#1#......wwwwwwwwwwwwwwww
+s+s___s_s#".,..."##1111.,...wwwwwwwwwwwwwswww
+s_q_s__!s##.".".,###1#1#....wwwwwwwwwwwwwwwww
+sssssssss######.########..wwwwwwwwwwwwwwwwwww
+ssswsssss######.########""wwwwwwwwwwwwwwwwwww
+ss&wqs__o#1.."...#o..1..1.wwwww..wwwwwwswwwww
+s__w&___s#"..,...##.#.#.#.wwww..,*ww.wwwwwwww
+s__w____s#..".....,..,......ww....wwwwwwwwsww
+s[sw!__ss#*.,.......#.*,#...ww...1wwwwswwwwww
+ssswsqsss##"...,..........wwwwww,wwwwwwwswwww
+ssswsssss#####..#####.,...wwwwwwwwwwwwwwwwwww
+sssssssss#####,.#####...,.wwwww.~wwwwwwwwwwww
+ssf___sss#####..####.,1..wwwws,..swwwwwwwwsww
+s______os##o#..."##"..#..wwws"..."swwwwwwwwww
+sD_&___ss#..,..,.##*..,..wwws.,.1,swwwwswwwww
+s______ss#...p....,......wwws"sgs"swwwwwwwwww
+ssss__sss##,....###,1#..wwwwwssssswwwwwwwwwww
+sssssssss###############wwwwwwwwwwwwwwwwwwwww
+ssssssssswwwwwwww#wwwwww`wwwwwwwwwwwwwwwwwwww
+sqqqqqqqsww#www#wwwwww...wwwwwwwwwwwwwwwwwwww
+sq&qqq&qswwwwwwwwwwww.""".wwwww#wwwwwwwwwwwww
+sqqqqqqqowww#wwwwwwww.sos.wwwwwwwwwwwwwwwwwww
+sq&qqq&qswwwwwww#wwwwwssswwwwwwwww#wwwwwwwwww
+sqqqqqqqsw#wwwwwwwwwwwwwwwwww#wwwwwwwwwwwwwww
+ssssssssswwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+message I'll use my hook to lower myself down to...
+message The Dungeon!
+
+
+ssssssssssssssssssssssssssssssssssss
+s__q_________^__________q____wwwwwws
+swww_wwwsswwwwwwwsswwww_wwss_______s
+o_*w_w**_____1_______w*w_1sswww_ww_o
+swwwqwwwss__www__sswwwww_wsswww_wwws
+s___1______w_h_w_ss____w_*sswww_wwws
+sssssssssssss_sssss_sssssssssss_ssss
+sssssssssssss_sssss_sssssssssss_ssss
+s_______^sq___w_____*****_ssww___wws
+s__www__ss____w__ss*wwwww*ssw_____ws
+s__www________w__ss*w___w*s^w_____w^
+s_____wwsswww_w__ss*w_g_w*ssw_____ws
+sq____wwsswww_w_qss*w_w_w*ssww___wws
+ssss_sssssssssssssssss_ssssssss_ssss
+ssss_sssssssssssssssss_ssssssss_ssss
+^____wwwssf_q_q_fss_______ss____q__s
+s__f_wwwss_______ss_1___1_ss____q1_s
+sq___w*______z________q__________qqs
+s__f_w__ss_______ss_1___1_ss____q1_s
+s____w_qssf_q_q_fss_______ss____q__s
+ssssssssssssssssssssssssssssssssssss
+
+message Congratulations!
+

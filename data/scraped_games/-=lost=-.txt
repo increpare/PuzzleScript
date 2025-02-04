@@ -1,0 +1,377 @@
+title -=lost=-
+author radiosoap
+youtube l46tiFyvbc4
+homepage https://radiosoap.tumblr.com/
+ZOOMscreen 9x9
+
+========
+OBJECTS
+========
+player
+blue lightblue lightbrown black
+.333.
+.222.
+11111
+.000.
+.0.0.
+
+deadplayer
+grey lightgrey grey darkgrey
+.333.
+.222.
+11111
+.000.
+.0.0.
+
+wall
+grey darkgrey lightgrey
+02101
+20102
+11020
+21002
+21010
+
+background
+green lightgreen darkgreen
+02102
+10210
+20102
+22012
+11201
+
+sign1
+brown lightbrown
+01111
+01111
+01111
+..1..
+..1..
+
+sign2
+brown lightbrown
+01111
+01111
+01111
+..1..
+..1..
+
+sign3
+brown lightbrown
+01111
+01111
+01111
+..1..
+..1..
+
+sign4
+brown lightbrown
+01111
+01111
+01111
+..1..
+..1..
+
+exit
+red lightred darkred
+.021.
+21021
+11021
+22102
+.201.
+
+water
+blue lightblue darkblue
+02000
+00100
+01010
+00000
+20000
+
+void
+black
+
+voidwall
+darkgrey black
+00111
+01111
+01111
+01111
+01111
+
+plank
+brown lightbrown
+10000
+10000
+10000
+10000
+10000
+
+breakablewall
+lightred red
+01111
+01111
+01111
+01111
+01111
+
+gate
+grey
+.000.
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+
+gateopen
+grey
+.000.
+0...0
+0...0
+0...0
+0...0
+
+savepoint
+blue lightblue white
+11000
+10200
+12220
+10200
+10000
+
+orb (red orbs)
+red lightred grey
+.100.
+10202
+10000
+10222
+.100.
+
+=======
+LEGEND
+=======
+
+& = player
+# = wall
+. = background
+1 = sign1
+2 = sign2
+3 = sign3
+4 = sign4
+0 = exit
+w = water
+- = void
+p = voidwall
+\ = plank
+b = breakablewall
+c = gate
+f = gateopen
+s = savepoint
+d = orb
+=======
+SOUNDS
+=======
+SFX1 11749508
+SFX2 69315108
+SFX3 89697708
+SFX4 64299108
+SFX5 37736700
+SFX6 82123107
+startgame 68018908
+endlevel 99406108
+SFX7 31059508
+================
+COLLISIONLAYERS
+================
+background
+void
+exit
+plank
+savepoint
+gateopen
+deadplayer
+player,wall,sign1,sign2,sign3,sign4,water,voidwall,breakablewall,gate,orb
+
+======
+RULES
+======
+
+[ >  Player | sign1 ] -> [    Player | sign1 ] SFX1 message im fine , its alright.
+[ >  Player | sign2 ] -> [    Player | sign2 ] SFX2 message im scared , where are you?
+[ >  Player | sign3 ] -> [    Player | sign3 ] SFX3 message im alone , please dont go..
+[ >  Player | sign4 ] -> [    Player | sign4 ] SFX4 message im lost , im waiting for you
+[ >  player | breakablewall ] -> [ player |  ]
+[ > player | gate ] -> [ player | gateopen ] SFX6
+[ Action Player Savepoint ] -> [ Player Savepoint ] checkpoint SFX5
+[ orb | ... | Player ] -> [ > orb | ... | Player ]
+[ > orb | Player ] -> Restart 
+
+==============
+WINCONDITIONS
+==============
+all player on exit
+
+=======
+LEVELS
+=======
+
+message
+message
+message
+message where am i?
+message this world is huge
+message i should explore , maybe i'll found the exit
+
+##############################################################################################################
+#...&......##...........#..............####.....................#...#....b..........##....###....#....##..0..#
+#.......................##...........bbbbb.......##.........##..##..##..##.###.....####....##.##...##.###....#
+#.........#####....########......###..####......####......s####..##..#..#####......###....###.#....#...#.....#
+#........###......####.....www\wwwwwwwww###......###.....####.....##....###..###....##.....##..##..##..###...#
+ww\##########www\wwwwwwwwwwwww\wwwwwwwwww#####wwwwwww\www#####............##\www\w######wwwwwwwwwwwwwwwwwww\ww
+ww\ww#####wwwwww\wwwwwwwwwwwww\wwwwwwwwwwww##wwwwwwww\wwww###www\wwwww\ww##w\www\###wwwwwwwwwwwwwwwwwwwwwww\ww
+ww\wwwwwwwwwwwww\wwwwwwwwwwwww\wwwwwwwwwwwwwwwwwwwwww\wwwwwwwwww\wwwww\wwwww\www\wwwwwwwwwwwwwwwwwwwwwwwwww\ww
+ww\wwwwwwwwwwwww\wwwwwwwwww#.....###########..###wwww\wwwwwwwwww\wwwww\wwwww\www\wwwwwwwwwwwwwwwwwwwwwwwwww\ww
+##...#####........############....########.....####.......####ww\wwwww\www....##..###.............########...#
+#......###........#########s........#####........#.........####...###...########..########...........######cc#
+##....###..........####.........##.....##.......####.........c.....##.##########.................##########..#
+##.....1.............##...##...####....##........##........####.....###############..........##..#########...#
+#...................###..####...###.....#.......######.....##..........########.............##.......##......#
+#...................###..####....##.....#......####.........##..........#########...........####.............#
+#####........bb.......#...##...#####.....#.....########....###......###########.............####.........#####
+##..........bbbb....###.........###......#.......#######.....#........#######................##..............#
+##..........bbbb.....####.......#.......##......##########...#..........###..................##......#########
+###..........bb.....########.#############.......######.....####........######......###########......#######.#
+####...................c......########............#####.....###............##......###############..##########
+######.................c.......#########..................#####..........#####################################
+##############################################################################################################
+
+message what are they?
+message theyre just floating orbs...
+message yet , i feel sufficated.
+message i shouldnt touch them.
+message -=The handmade caverns=-
+message a cave made by mankind.
+
+#####################################b########################
+#--------#-----#------------------------------c----------b---#
+#--------#---d-#wwwwwwwwwwwwwwwwwww\wwwwwwwwww#----------b---#
+&--------c-----#------------------------------#----------b---#
+#-------2#-----#------------------------------#----------b---#
+#--------#-----#------------------d-----------#----------b---#
+#--------#-----#s----------d------------------#----------#---#
+#####b####-----###############c#####b###################.#---#
+#--------#-----#-------------#----------------#----#.....#---#
+#--------------c-------------#----------------#----#.....#---#
+#--------------#-------d-----#----------------#----#.www.#---#
+#--------#-----#------------------------------#----#wwwww#---#
+#--------b-----#-----------------------d-----------#wwwww#---#
+#--------#-----#------------------------------#----#wwwww#-0-#
+##############################################################
+
+message hahaha...
+message funny , isnt it?
+message im scared , ive been like this for years.
+message it hurts
+message -=edge of the world=-
+message an empty void.
+
+###############p###p##ppp#pppp#ppppppppppppppppppppppppppppppppppppppppppppppppp
+#.&...###...#---..-....--#----##------pppp-pp----ppppp------p----ppppp--------pp
+#..#####..####---p--##-.###.---##..---#pp#pp----#-ppppp--d--pp#-----ppp------0pp
+#....##---##----ppp--#--p---p---------pp--------pppp----------ppp-------pppppppp
+#w\\wwwwwwwwwwwwwwww--w--w------ppppppppppppppppppppppppp\pppppppppp\ppppppppppp
+ww\\wwwwwwwwwwpwpwpwpppppwppppwwwwwwwwwwwwwwwwwwwwwwpwppw\\\\wpwpw\\\\w-w-wppwpw
+#.....3.....###....###pppp-------.pppp.....--------------------------ppppppppppp
+p------------ppp----ppppppppp------pppp----pppppp-ppppppppppppppp---pppppppppppp
+ps-----------pd----ppppppppp-------ppppppcppppppppppppppppppppppppcppppppppppppp
+p------------p---------------------ppp----------ppppp------------------ppppppppp
+p-----------ppp------ppppppppppp---------pppppppppppppps--------------pppppppppp
+p---------------------ppppppp--------------ppppppppppp-----------------ppppppppp
+pp-------------------------------d----------ppppppppp-----------------pppppppppp
+pppd----d----------------------------------ppppppp---------------------ppppppppp
+pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp
+
+message
+message
+message
+message where am i?
+message wait , ive been here before....
+message what happened?
+
+##############################################################################################################
+#...&......##...........#..............####.....................#...#....b..........##....###....#....##..0..#
+#.......................##...........bbbbb.......##.........##..##..##..##.###.....####....##.##...##.###....#
+#.........#####....########......###..####......####......s####..##..#..#####......###....###.#....#...#.....#
+#........###......####.....www\wwwwwwwww###......###.....####.....##....###..###....##.....##..##..##..###...#
+ww\##########www\wwwwwwwwwwwww\wwwwwwwwww#####wwwwwww\www#####............##\www\w######wwwwwwwwwwwwwwwwwww\ww
+ww\ww#####wwwwww\wwwwwwwwwwwww\wwwwwwwwwwww##wwwwwwww\wwww###www\wwwww\ww##w\www\###wwwwwwwwwwwwwwwwwwwwwww\ww
+ww\wwwwwwwwwwwww\wwwwwwwwwwwww\wwwwwwwwwwwwwwwwwwwwww\wwwwwwwwww\wwwww\wwwww\www\wwwwwwwwwwwwwwwwwwwwwwwwww\ww
+ww\wwwwwwwwwwwww\wwwwwwwwww#.....###########..###wwww\wwwwwwwwww\wwwww\wwwww\www\wwwwwwwwwwwwwwwwwwwwwwwwww\ww
+##...#####........############....########.....####.......####ww\wwwww\www....##..###.............########...#
+--------------------------------------------------------------------------------------------------------------
+##.....1.............##...##...####....##........##........####.....###############..........##..#########...#
+#...................###..####...###.....#.......######.....##..........########.............##.......##......#
+#####........bb.......#...##...#####.....#.....########....###......###########.............####.........#####
+##..........bbbb....###.........###......#.......#######.....#........#######................##..............#
+##..........bbbb.....####.......#.......##......##########...#..........###..................##......#########
+###..........bb.....########.#############.......######.....####........######......###########......#######.#
+######.................c.......#########..................#####..........#####################################
+##############################################################################################################
+
+message
+message
+message
+message where am i?
+message oh no.
+message im lost in a time loop!
+
+##############################################################################################################
+#...&......##...........#..............####.....................#...#....b..........##....###....#....##..0..#
+--------------------------------------------------------------------------------------------------------------
+#........###......####.....www\wwwwwwwww###......###.....####.....##....###..###....##.....##..##..##..###...#
+ww\wwwwwwwwwwwww\wwwwwwwwww#.....###########..###wwww\wwwwwwwwww\wwwww\wwwww\www\wwwwwwwwwwwwwwwwwwwwwwwwww\ww
+##...#####........############....####----.....####.......####ww\wwwww\www....##..###.............########...#
+--------------------------------------------------------------------------------------------------------------
+##....###..........####.........##.....##.......####.........c.....##.##########.................##########..#
+##.....1.............##...##...####....##........##........####.....###############..........##..#########...#
+--------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------d------------------d----------------------------d------
+##..........bbbb....###.........###......#.......#######.....#........#######................##..............#
+##..........bbbb.....####.......#.......##......##########...#..........###..................##......#########
+--------------------------------------------------------------------------------------------------------------
+---------------------..c......########............#####.....###............##......###############..##########
+######.................c.......#########..................#####..........#####################################
+##############################################################################################################
+
+message
+message
+message
+message where am i?
+message everything is diffrent than before...
+-----------
+-----------
+&-----4---0
+-----------
+-----------
+
+message "hello? are you lost?"
+message "ill guide you , young kid!"
+message "whats your name?"
+message "oh? your name i---"
+message im lost
+message hello?
+message
+message "hey kid! , are you alright?"
+message "im fine , its alright."
+message
+message "sir? , hello?"
+message "im scared , where are you?"
+message
+message "kid? where are ya?"
+message "im alone , please dont go.."
+message 
+message "im lost , im waiting for you"
+message
+message i dont want to go.
+message please stay...
+message
+message-=the end=-

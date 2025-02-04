@@ -1,0 +1,179 @@
+title Teh Interwebs
+author Sean Kelloff and Karl Prinz
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background 
+blue
+
+background2
+Blue white
+00000
+00100
+00100
+00100
+00000
+
+background3
+blue white
+00000
+01110
+01010
+01110
+00000
+
+
+Target
+Blue Red Green Yellow
+.111.
+21133
+22033
+22233
+.233.
+
+Wall 
+darkblue
+
+Dead
+White
+00000
+.0.0.
+..0..
+.0.0.
+00000
+
+
+PlayerLive
+White
+000..
+00...
+0.0..
+...0.
+.....
+
+Enemy
+lightblue
+.000.
+0...0
+00000
+0....
+.000.
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+P = PlayerLive
+O = Target
+i = Enemy
+D = Dead
+g = background2
+l = background3
+Player = PlayerLive or Dead
+
+=======
+SOUNDS
+=======
+Player 61670104
+
+================
+COLLISIONLAYERS
+================
+
+Background
+background2, background3
+Target,
+Player, Wall, Dead, Enemy
+
+======
+RULES     
+======    
+[ > Player | Enemy ] -> [ Player | Enemy ]
++ late [ Enemy | Player ] -> [ Enemy | Dead ]
+[ Enemy |...| Player ] -> [ > Enemy |...| Player ]
+[ Dead ] -> Restart
+==============
+WINCONDITIONS
+==============
+
+All Player on Target
+
+=======     
+LEVELS
+=======
+
+Message click on Chrome before Internet Explorer lags your computer!
+
+########
+#P.....#
+#......#
+#.....O#
+########
+
+Message Time to check Facebook
+
+##############
+#............#
+#............#
+#.P..iO......#
+#............#
+#............#
+##############
+
+Message This lag is !@#$%^& annoying!!!!
+
+################
+#..............#
+#.....#P#......#
+#.....#.#......#
+#i.....O......i#
+#.....#i#......#
+#..............#
+################
+
+Message OH NO I NEED TUMBLR!!!
+
+##################
+#i........i......#
+#.###........###.#
+#.#...i........#.#
+#...#.#.O........#
+#.#.#...i......#.#
+#.###...####.###.#
+#P..............i#
+#................#
+#................#
+##################
+
+Message This is insanity! NO THIS IS SPARTAAA!!!!
+
+#######################
+#...........i.........#
+#.i................P..#
+#.i............#####..#
+#########.#####....#..#
+#.........#........#..#
+#.....##.##........#..#
+#......i.i....#...##..#
+#....i....O...i.i.i..i#
+#######################
+
+Message This is the end for you my friend.
+
+###############################
+#P#..i..i...i.................#
+#......i#..#..#.##########....#
+###.#...#..#..#...............#
+#...#....#.#...#..............#
+#...####.###...#..............#
+#....#.........#..............#
+#.........i#...#..............#
+##i###..##....i.###############
+#...i..........i#lggllllglgglg#
+#..######......i#glgggllglllgg#
+#.............iO#gggllglgllgll#
+###############################

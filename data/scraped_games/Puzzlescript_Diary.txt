@@ -1,0 +1,724 @@
+title Puzzlescript Diary
+author David Cherepov
+homepage www.puzzlescript.net
+flickscreen 10x10
+
+========
+OBJECTS
+========
+
+CowFrame1
+white black red yellow
+3...3
+.3.3.
+02020
+10010
+11001
+CowFrame2
+purple orange green blue
+3...3
+.3.3.
+02020
+10010
+11001
+CowFrame3
+Brown Black Yellow lightgreen
+3...3
+.3.3.
+02020
+10010
+11001
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+MoveablePlayer1
+Black Orange White Blue
+..00.
+..11.
+..222
+..33.
+...3.
+
+StaticPlayer1
+Black Orange White Blue
+..00.
+..00.
+..000
+..00.
+...0.
+
+MoveablePlayer2
+Black Orange White Blue
+.0...
+.1...
+22...
+.3...
+.3...
+
+StaticPlayer2
+Black Orange White Blue
+.0...
+.0...
+00...
+.0...
+.0...
+
+Superman
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+WhiteSwitch
+White Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+BlueSwitch
+Blue Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+RedCutter
+Red
+0....
+.0...
+..0..
+...0.
+....0
+
+
+WoodenWall
+LightBrown
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+ClosedWoodenWall
+LightBrown Brown
+01010
+10101
+01010
+10101
+01010
+
+SmallerPlayerDoorCollidingLayer
+BROWN Darkbrown
+..111
+..111
+..000
+..111
+..000
+
+SmallerPlayerDoorNotCollidingLayer
+BROWN DarkBrown
+..000
+..111
+..000
+..111
+..000
+
+LargerPlayerDoorCollidingLayer
+BROWN DarkBrown
+11...
+11...
+00...
+11...
+00...
+
+LargerPlayerDoorNotCollidingLayer
+BROWN DarkBrown
+00...
+11...
+00...
+11...
+00...
+
+Teleporter
+Purple
+0....
+.0...
+..0..
+...0.
+....0
+
+TeleporterSwitch
+Purple
+.....
+.000.
+.000.
+.000.
+.....
+target2
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+=======
+LEGEND
+=======
+
+Player = MoveablePlayer1 or MoveablePlayer2 or Superman
+Static = StaticPlayer1 or StaticPlayer2
+
+Collideable = Wall or ClosedWoodenWall
+Pushable = StaticPlayer2 or Crate
+Holey = SmallerPlayerDoorCollidingLayer or LargerPlayerDoorCollidingLayer
+SomeCollideable = Player or Static or  Wall or ClosedWoodenWall or Crate
+AllCollideable = SomeCollideable or Holey
+. = Background
+# = Wall
+P = MoveablePlayer1
+Q = MoveablePlayer2
+R = StaticPlayer1
+S = StaticPlayer2
+* = WhiteSwitch
+O = Target
+W = WoodenWall
+C = ClosedWoodenWall
+Z = RedCutter
+E = SmallerPlayerDoorCollidingLayer
+F = LargerPlayerDoorCollidingLayer
+D = Superman
+X = Crate
++ = Crate and Target
+~ = SmallerPlayerDoorCollidingLayer and WhiteSwitch
+(Y = target2) 
+(L = crate and target2)
+crateOrStatic = crate or static
+playerOrStatic = player or static
+Cow = cowframe1 or cowframe2 or cowframe3
+$ = cowframe1
+% = cowframe2
+4 = staticplayer1 and target
+door = SmallerPlayerDoorNotCollidingLayer or LargerPlayerDoorNotCollidingLayer
+| = Target and redcutter 
+& = WoodenWall and WhiteSwitch
+@ = redCutter and WoodenWall
+
+
+=======
+SOUNDS
+=======
+Player move 579904
+Sfx0 91469100
+Endlevel 28734302
+Sfx1 66399906
+Sfx2 92172900
+Sfx3 15129100
+sfx4 39252702
+sfx5 44827700
+sfx6 12721302
+sfx7 235304
+sfx8 579904 (same as move, used for half-doorways)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+Cow
+
+
+
+WoodenWall, SmallerPlayerDoorNotCollidingLayer,LargerPlayerDoorNotCollidingLayer, Teleporter, TeleporterSwitch
+
+WhiteSwitch, , RedCutter BlueSwitch
+
+Target, target2
+
+Player, Static,  Wall, ClosedWoodenWall, SmallerPlayerDoorCollidingLayer, LargerPlayerDoorCollidingLayer, Crate
+
+======
+RULES
+======
+late [cowframe3] -> [cowframe1]
+late [cowframe2] -> [cowframe3]
+late [cowframe1] -> [cowframe2]
+(left [ > player | door ] -> left [ player | door]
+right [ > player | door ] -> right [ player | door])
+
+(Simplicity and clarity in the scripting encourages the same in the game design which i initially succeeded at but then failed at because of wanting to fix edge cases, but whatever)
+
+
+(Superman can push normal-sized crates and static players)
+(first line is for exception for when player is on a wooden wall)
+[ > Superman WoodenWall | Crateorstatic no RedCutter |no AllCollideable] -> [ ClosedWoodenWall sfx6| Superman |Crateorstatic]
+(next lines are for when there is a cutter)
+down [ > Superman WoodenWall | Crateorstatic RedCutter |no AllCollideable] -> down[ WoodenWall StaticPlayer1 sfx4| MoveablePlayer2 RedCutter |Crateorstatic]
+left [ > Superman WoodenWall | Crateorstatic RedCutter |no AllCollideable] -> left[ WoodenWall StaticPlayer1 sfx4| MoveablePlayer2 RedCutter|Crateorstatic]
+up [ > Superman WoodenWall | Crateorstatic RedCutter |no AllCollideable] -> up[ WoodenWall StaticPlayer1 sfx4| MoveablePlayer2 RedCutter|Crateorstatic]
+right [ > Superman WoodenWall | Crateorstatic RedCutter |no AllCollideable] -> right[ WoodenWall StaticPlayer2 sfx4| MoveablePlayer1 RedCutter|Crateorstatic]
+(exception for pushing static players through teeny doors)
+(remember to make sure it's just up& down)
+(up [ up Superman | StaticPlayer1 no RedCutter |LargerPlayerDoorCollidingLayer] -> up [ | Superman  |StaticPlayer1 LargerPlayerDoorNotCollidingLayer]
+
+down [ down Superman | StaticPlayer1 no RedCutter |LargerPlayerDoorCollidingLayer] -> down [ | Superman  |StaticPlayer1 LargerPlayerDoorNotCollidingLayer]
+
+up[ up Superman | StaticPlayer2 no RedCutter |SmallerPlayerDoorCollidingLayer] -> up[|  Superman |StaticPlayer2 SmallerPlayerDoorNotCollidingLayer]
+
+down[ down Superman | StaticPlayer2 no RedCutter |SmallerPlayerDoorCollidingLayer] -> down[|  Superman |StaticPlayer2 SmallerPlayerDoorNotCollidingLayer])
+
+
+[ > Superman | Crate] -> [ > Superman | > Crate]
+[ > superman | static]  -> [ > superman | > static]
+(Theses lines fuse the halves of the player)
+
+
+left [ > MoveablePlayer1 no door| StaticPlayer2 ] -> left[|Superman sfx0]
+up [ > MoveablePlayer1 no door| StaticPlayer2 ]  -> up[|Superman sfx0]
+down [ > MoveablePlayer1 no door| StaticPlayer2 ] ->  down [|Superman sfx0]
+
+right [ > MoveablePlayer2 no door| StaticPlayer1 ] -> right[|Superman sfx0]
+up [ > MoveablePlayer2 no door| StaticPlayer1 ] ->  up[|Superman sfx0]
+down [ > MoveablePlayer2 no door| StaticPlayer1 ] -> down [|Superman sfx0]
+
+(exception for fusing halves of player when player is on door)
+
+left [ > MoveablePlayer1 largerplayerdoornotcollidinglayer| StaticPlayer2 ] -> left[largerplayerdoorcollidinglayer|Superman sfx0]
+up [ > MoveablePlayer1 largerplayerdoornotcollidinglayer| StaticPlayer2 ]  -> up[largerplayerdoorcollidinglayer|Superman sfx0]
+down [ > MoveablePlayer1 largerplayerdoornotcollidinglayer| StaticPlayer2 ] ->  down [largerplayerdoorcollidinglayer|Superman sfx0]
+
+right [ > MoveablePlayer2 smallerplayerdoornotcollidinglayer| StaticPlayer1 ] -> right[smallerplayerdoorcollidinglayer|Superman sfx0]
+up [ > MoveablePlayer2 smallerplayerdoornotcollidinglayer| StaticPlayer1 ] ->  up[smallerplayerdoorcollidinglayer|Superman sfx0]
+down [ > MoveablePlayer2 smallerplayerdoornotcollidinglayer| StaticPlayer1 ] -> down [smallerplayerdoorcollidinglayer|Superman sfx0]
+
+(next line is exception for what's below)
+(right [ > MoveablePlayer1 | StaticPlayer2 ] -> [ > MoveablePlayer1|  > StaticPlayer2 ])
+(next line lets the bigger half push the smaller half)
+right [ > MoveablePlayer1 | StaticPlayer2 ] -> [ > MoveablePlayer1|  > StaticPlayer2 ]
+(The next ones alternate ( switch ) control between the parts of the player)
+
+(first part is if there are two other statics)
+[ >  MoveablePlayer1 | WhiteSwitch no SomeCollideable ]  [StaticPlayer2] [StaticPlayer2] -> [  >  StaticPlayer1 | WhiteSwitch ] [MoveablePlayer2 sfx5] [MoveablePlayer2]
+
+[ >  MoveablePlayer2 | WhiteSwitch no SomeCollideable]  [StaticPlayer1] [StaticPlayer1] -> [  >  StaticPlayer2 | WhiteSwitch ] [MoveablePlayer1 sfx5] [MoveablePlayer1]
+
+[ >  MoveablePlayer1 | Target no SomeCollideable]  [StaticPlayer2] [StaticPlayer2] -> [  >  StaticPlayer1 | Target ] [MoveablePlayer2 sfx5] [MoveablePlayer2]
+
+[ >  MoveablePlayer2 | Target no SomeCollideable]  [StaticPlayer1] [StaticPlayer1] -> [  >  StaticPlayer2 | Target ] [MoveablePlayer1 sfx5] [MoveablePlayer1]
+
+
+
+(second part is only one other one)
+
+([ >  MoveablePlayer1 | WhiteSwitch no SomeCollideable ]  [StaticPlayer2] -> [  >  StaticPlayer1 | WhiteSwitch ] [MoveablePlayer2 sfx5]
+
+[ >  MoveablePlayer2 | WhiteSwitch no SomeCollideable]  [StaticPlayer1] -> [  >  StaticPlayer2 | WhiteSwitch ] [MoveablePlayer1 sfx5]
+
+[ >  MoveablePlayer1 | Target no SomeCollideable]  [StaticPlayer2] -> [  >  StaticPlayer1 | Target ] [MoveablePlayer2 sfx5]
+
+[ >  MoveablePlayer2 | Target no SomeCollideable]  [StaticPlayer1] -> [  >  StaticPlayer2 | Target ] [MoveablePlayer1 sfx5]) 
+
+
+
+(Wooden wall stuff)
+(Look to LEGEND for definition of collideable, this is all wall type things)
+
+
+( First exceptions for smaller and larger half doorways and walking through a wooden wall)
+(larger player)
+up [> MoveablePlayer1 WoodenWall | LargerPlayerDoorCollidingLayer ] -> [ClosedWoodenWall | MoveablePlayer1 LargerPlayerDoorNotCollidingLayer sfx8]
+
+down [> MoveablePlayer1 WoodenWall | LargerPlayerDoorCollidingLayer ] -> [ClosedWoodenWall | MoveablePlayer1 LargerPlayerDoorNotCollidingLayer sfx8]
+
+
+(smaller player)
+up [> MoveablePlayer2 WoodenWall | SmallerPlayerDoorCollidingLayer ] -> [ClosedWoodenWall | MoveablePlayer2 SmallerPlayerDoorNotCollidingLayer sfx8]
+
+down [> MoveablePlayer2 WoodenWall | SmallerPlayerDoorCollidingLayer ] -> [ClosedWoodenWall | MoveablePlayer1 SmallerPlayerDoorNotCollidingLayer sfx8]
+
+(now exceptions for left and right into any colliding layer thing)
+left [> MoveablePlayer1 WoodenWall | AllCollideable] -> [MoveablePlayer1 WoodenWall | AllCollideable]
+
+right [> MoveablePlayer1 WoodenWall | AllCollideable] -> [MoveablePlayer1 WoodenWall | AllCollideable]
+
+left [> MoveablePlayer2 WoodenWall | AllCollideable] -> [MoveablePlayer2 WoodenWall | AllCollideable]
+
+right [> MoveablePlayer2 WoodenWall | AllCollideable] -> [MoveablePlayer2 WoodenWall | AllCollideable]
+
+(now exceptions for colliding into non-doorway things)
+[ > Player WoodenWall| SomeCollideable] -> [Player WoodenWall | SomeCollideable]
+
+(then exceptions for wrong player colliding up or down into a doorway)
+[ > MoveablePlayer1 WoodenWall| SmallerPlayerDoorCollidingLayer] -> [ MoveablePlayer1 WoodenWall| SmallerPlayerDoorCollidingLayer]
+
+[ > MoveablePlayer2 WoodenWall| LargerPlayerDoorCollidingLayer] -> [ MoveablePlayer2 WoodenWall| LargerPlayerDoorCollidingLayer]
+
+(Then exceptions for when there is a cutter on a wooden wall)
+
+[> Player WoodenWall RedCutter | no Collideable RedCutter] -> [ClosedWoodenWall | Player RedCutter sfx6]
+
+(finally the basic case, what a mess, but i sorta wanted it that way)
+
+[> Player WoodenWall |no Collideable no RedCutter] -> [ClosedWoodenWall | Player sfx6]
+
+(up [> Player WoodenWall |no Collideable RedCutter] -> [ClosedWoodenWall | Player sfx6])
+(Another part to make it so that static player moving away from woodenwall closes wooden wall)
+
+(Warning: THIS MAY BREAK THINGS SO REMOVE IF NECESSARY)
+
+[No AllCollideable|< StaticPlayer2  WoodenWall|No player]-> [ StaticPlayer2 |ClosedWoodenWall|no player ]
+[No AllCollideable|< StaticPlayer1  WoodenWall|no player]-> [ StaticPlayer1 |ClosedWoodenWall|no player ]
+
+(for when the player is trying to walk into a closed wall)
+ [ > Player | ClosedWoodenWall ] -> [Player | ClosedWoodenWall sfx7]
+ 
+ 
+
+(The cutter) (It cuts the player in half when it is in superman form)
+  (The simplest case for the cutter is at the bottom because it needs
+  to check the weird cases first)
+  
+  (The next lines are for the case when a crate is on a cutter)
+	down [> Superman| RedCutter Crateorstatic |no AllCollideable] [-> down [ StaticPlayer1 | 		MoveablePlayer2 RedCutter |  Crateorstatic sfx4]
+	left [> Superman| RedCutter Crateorstatic |no AllCollideable] -> left [ StaticPlayer1 |  		MoveablePlayer2 RedCutter |   Crateorstatic sfx4]
+	up [> Superman| RedCutter Crateorstatic |no AllCollideable] -> up [ StaticPlayer1 |  			MoveablePlayer2 RedCutter |  Crateorstatic sfx4]
+	right [> Superman| RedCutter Crateorstatic|no AllCollideable] -> right [ StaticPlayer2 |  			MoveablePlayer1 RedCutter|  Crateorstatic sfx4]
+    (when a crate is on a cutter and the player is pushing it into a collideable thing, do nothing)
+    down [> Superman| RedCutter Crateorstatic |AllCollideable] [-> down [Superman| RedCutter Crateorstatic |AllCollideable ]
+	left [> Superman| RedCutter Crateorstatic |AllCollideable] -> left [Superman| RedCutter Crateorstatic |AllCollideable ]
+	up [> Superman| RedCutter Crateorstatic |AllCollideable] -> up [Superman| RedCutter Crateorstatic |AllCollideable ]
+	right [> Superman| RedCutter Crateorstatic|AllCollideable] -> right [Superman| RedCutter Crateorstatic |AllCollideable ]
+  
+
+   (normal case cutter rules)
+   down [> Superman| RedCutter no Crate] -> down [ StaticPlayer1 | MoveablePlayer2    RedCutter sfx4]
+   left [> Superman| RedCutter no Crate] -> left [ StaticPlayer1 | MoveablePlayer2    RedCutter sfx4]
+   up [> Superman| RedCutter no Crate] -> up [ StaticPlayer1 | MoveablePlayer2        RedCutter sfx4]
+   right [> Superman| RedCutter no Crate] -> right [ StaticPlayer2 |                  MoveablePlayer1 RedCutter sfx4]
+
+
+
+
+(Door for smaller player, first opening then closing)
+up [> MoveablePlayer2| SmallerPlayerDoorCollidingLayer] -> up [> MoveablePlayer2 sfx8| SmallerPlayerDoorNotCollidingLayer]
+down [> MoveablePlayer2| SmallerPlayerDoorCollidingLayer] -> down [> MoveablePlayer2 sfx8| SmallerPlayerDoorNotCollidingLayer]
+right[> MoveablePlayer2| SmallerPlayerDoorCollidingLayer] -> right [ | sfx8 MoveablePlayer2  SmallerPlayerDoorNotCollidingLayer]
+
+right [> MoveablePlayer2 SmallerPlayerDoorNotCollidingLayer | No AllCollideable ] ->  [ MoveablePlayer2 SmallerPlayerDoorNotCollidingLayer| No AllCollideable ]
+
+up [> MoveablePlayer2 SmallerPlayerDoorNotCollidingLayer | No AllCollideable ] -> up [ sfx8 SmallerPlayerDoorCollidingLayer| MoveablePlayer2]
+down [> MoveablePlayer2 SmallerPlayerDoorNotCollidingLayer | No AllCollideable ] ->  down [ sfx8 SmallerPlayerDoorCollidingLayer| MoveablePlayer2]
+ left[> MoveablePlayer2 SmallerPlayerDoorNotCollidingLayer | No AllCollideable ] -> left [ SmallerPlayerDoorCollidingLayer| MoveablePlayer2]
+
+([SmallerPlayerDoorNotCollidingLayer | StaticPlayer2] -> [  SmallerPlayerDoorCollidingLayer| StaticPlayer2])
+
+(Door that opens for both smaller and larger, larger rules first)
+up [> MoveablePlayer1| LargerPlayerDoorCollidingLayer] -> up [> MoveablePlayer1 | sfx8 LargerPlayerDoorNotCollidingLayer]
+down[> MoveablePlayer1| LargerPlayerDoorCollidingLayer] -> down [> MoveablePlayer1 | sfx8 LargerPlayerDoorNotCollidingLayer]
+left[> MoveablePlayer1| LargerPlayerDoorCollidingLayer] -> left [> MoveablePlayer1 | sfx8 LargerPlayerDoorNotCollidingLayer]
+
+
+left [> MoveablePlayer1 LargerPlayerDoorNotCollidingLayer | No AllCollideable ] ->  [ MoveablePlayer1 LargerPlayerDoorNotCollidingLayer| No AllCollideable ]
+
+up [> MoveablePlayer1 LargerPlayerDoorNotCollidingLayer | No AllCollideable ] -> up [  sfx8 LargerPlayerDoorCollidingLayer| MoveablePlayer1]
+
+down[> MoveablePlayer1 LargerPlayerDoorNotCollidingLayer | No AllCollideable ] -> down[  sfx8 LargerPlayerDoorCollidingLayer| MoveablePlayer1]
+
+  right[> MoveablePlayer1 LargerPlayerDoorNotCollidingLayer | No AllCollideable ] -> right[  sfx8 LargerPlayerDoorCollidingLayer| MoveablePlayer1]
+ 
+
+([LargerPlayerDoorNotCollidingLayer | StaticPlayer1] -> [  LargerPlayerDoorCollidingLayer| StaticPlayer1])
+
+==============
+WINCONDITIONS
+==============
+
+all playerorstatic on target
+all target2 on playerorstatic
+(All Player on Target
+All Static on Target)
+
+=======
+LEVELS
+=======
+
+(Templates:
+
+#######
+#.....#
+#.....#
+#.....#
+#######
+
+############
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+############
+
+
+
+)
+message There are currently 8 levels in the game.
+message Fill the target with the player
+
+message Level 1.
+#######
+#O.#.O#
+#..#..#
+#.P#S.#
+#######
+
+(message Today I decided to start making this diary of sorts.
+message It came from a general sense of inaction and laziness in my life. I aim to keep making a level every night.
+message I made this level in 20 minutes, partly copying from Heroes of Sokoban.
+message Even if it's simple and partially a ripoff, it's encouraging to do what you set out to do.
+message Last week was more self-indulgent than usual. I played a lot of video games and sat around and got 2 comics.
+message I played Oxenfree because it seemed like reminiscent of Kentucky Route Zero. It's tangentially similar with some aesthetic choices and both are story-heavy point and click games, but the specific feel is very different.
+
+message Even though the idea was to make 1 level today, i got an idea i like so I'm making a 2nd level.
+
+message
+message I also revised the first level to fit the mechanic i made.
+message This idea is turning out differently than i anticipated,
+message but that excites me (and probably bores you, but i don't give a shit).
+
+message . 
+message ..)
+message Level 2.
+
+#######
+#o...o#
+###w###
+#.....#
+#.....#
+#s.#.p#
+#######
+(message I haven't been able to sleep well recently.
+message 
+message Today I got a text that said i could sleep until 1, but that doesn't appeal to me.
+message I got some ideas for this so that's what I'm going to do now.
+
+message *time passes*
+message I spent 30 minutes redesigning it to fit my new idea which seems like a final thing, because it's a satisfying and reasonably clear idea
+message At this point i'm thinking i'll edit out all these messages if i show it to people, but i'll keep doing it for myself)
+
+message Level 3.
+
+##########
+#o########
+#e#.######
+#..x..#o##
+##..#z#f##
+###d.x...#
+##########
+
+message Level 4.
+
+(Maybe this one is too mediocre, i dunno)
+
+#######
+#..o..#
+#.###f#
+#e...*#
+#e.z..#
+#.#x#f#
+#.#d..#
+#....##
+#######
+
+message Level 5.
+
+###########
+f........##
+f###.#.#.##
+f#f..#.#.##
+f#.+*#f#.##
+f.w###..x.#
+##.###.z###
+#..zdz...##
+###########
+
+message Out the window.
+
+
+4#####$##########
+#4#..s..#..#$.$%4
+4#......##.#$$%4#
+#..##x######%%.#.
+#f#.#.######%$##.
+.f#w#w#wwww###...
+.f#w#w#wwwwx....+
+.f#w#w#wwww###...
+.f#4wwwwwww#%z##.
+.f#wwwwwwww#.%z#.
+ef##.#####%.%w#4#
+ef#.x.####...z##%
+ef#....###www#4#z
+ezz...zzf#.%..#..
+e..f..z.f#.......
+ee.z..z.f#.#.....
+ee....z.f##4#...#
+ee..zzz.f#.#.%.#4
+ez.zz...f#......#
+ezz.zzz.f#.......
+ez.z.zz.f#.......
+ez....z.f#..%....
+ez......f#.......
+e...p...f#.......
+ee......f#.....##
+e##~#~~~#########
+
+message Shutting the window and returning to the empty room.
+message Level 7.
+
+#####
+##o##
+##f##
+#.r.#
+#w|w#
+#www#
+#www#
+#w|w#
+#.d.#
+#####
+
+message Level 8
+
+*z#o#z*
+z*@@@*z
+*z@@@z*
+z*z*z*z
+*z*z*z*
+z*z.z*z
+###*###
+..#z#..
+..#*#..
+..#z#..
+..#*#..
+..#z#..
+..#*#..
+..#z#..
+..#*#..
+..#z#..
+..#*#..
+..#z#..
+..#*#..
+..#z#..
+..#*#..
+..#z#..
+..#*#..
+..#d#.
+
+(exploring interactions between wooden wall and cutter would be interesting)
+
+(Also the consequences of the current rules for wooden wall)
+
+(abortive idea 1)
+(
+#######
+#zzzzz#
+#..#..#
+#zz.d.#
+#######)
+
+(abortive idea 2)
+
+(####
+#oo#
+#ef#
+#z.#
+#d##
+####)
+
+(abortive? idea 3)
+(......
+.ddzzz
+......
+zzzzz.
+......
+......)
+
+(toy thing)
+(another idea that is impossible)
+(#######
+#ww*ww#
+#wwzww#
+#*z+z*#
+#wwzww#
+#qw*wr#
+#######)
+
+(another)
+(*z*z*
+z*z*z
+*z*z*
+z*.*z
+*z*z*)
+
+(Something about this could be REALLY GOOD if i figured out what to do to make it possible)
+
+(...#...
+..o#o..
+##e#f##
+wwwwxww
+wwewwew
+wzwwwww
+###w###
+..#d#..
+..###..)
+
+(efficiency ideas can come from this but efficiency is not necessarily intriguing in large doses) 
+(wwwwwww
+wsxwwww
+w.wpw&w
+w@wwwww
+wwwwwww)
+
+
+
+
+
+
+

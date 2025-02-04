@@ -1,0 +1,174 @@
+title Deserted Island
+author Elaina Trapatsos
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+lightbrown yellow
+01111
+11101
+11111
+10110
+11101
+
+Target
+orange lightblue black
+.....
+0.00.
+00010
+00000
+0.00.
+
+Water
+blue darkblue lightblue white 
+02000
+00202
+02020
+20002
+02020
+
+Player
+yellow orange purple pink black darkred green
+.555.
+54145
+53135
+12221
+22222
+
+Cat
+blue pink white black
+2.2.2
+2.323
+22212
+2222.
+2..2.
+
+Plastic
+white lightblue darkblue
+..2..
+.100.
+..0..
+.100.
+.100.
+
+Crab
+red darkred lightred black
+.0.0.
+0...0
+03030
+00000
+0...0
+
+shipl
+brown darkbrown lightbrown white blue lightblue 
+45433
+44333
+45454
+50000
+45000
+
+shipr
+brown darkbrown lightbrown white blue lightblue
+31444
+31545
+41444
+00005
+00054
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Water
+P = Player
+O = Cat
+W = Target
+I = Plastic
+C = Crab
+L = shipl
+R = shipr
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background, 
+Target, shipr, shipl
+Player, Water, Cat, plastic, crab 
+
+======
+RULES
+======
+
+[ Cat| ... | Player ] -> [ > Cat| ... | Player ] SFX0
+[ >  Player | Cat] -> [  >  Player | > Cat ]
+[ Crab| ...| Player ] -> [ > Crab|... | Player ] SFX0
+
+==============
+WINCONDITIONS
+==============
+
+All cat on target
+
+=======
+LEVELS
+=======
+message This kitty seems hungry, I should bring him to some food.
+#########
+#.......#
+#....W..#
+#.P.....#
+#.......#
+#...O...#
+#########
+message This island is so dirty!
+#########
+#......##
+#...I...#
+#.P...I.#
+#.I...WI#
+##.IOII.#
+#########
+message Evil crabs!
+#########
+##...CW##
+#C....C.#
+#.P.....#
+#.......#
+##O.C..##
+#########
+message I think I see a rescue ship!
+#########
+##I..CW##
+##C...C.#
+#...P...#
+#IC..I.##
+##....O##
+#######LR
+
+message Use the ship to get across!
+##########...##
+###..C###...W.#
+##.I...##W....#
+#..OP.CLR.....#
+#I....I##..W..#
+###.C.###....W#
+###############
+message Freedom!
+
+
+
+
+
+
+
+

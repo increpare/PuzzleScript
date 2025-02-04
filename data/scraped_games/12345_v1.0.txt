@@ -1,0 +1,539 @@
+title 12345 v1.0
+author chaotic_iak
+homepage chaosatthesky.wordpress.com
+
+(
+12345, a puzzle game where 2+2=3 and 5+5=0. Merge boxes and utilize special blocks to achieve a perfect cover.
+
+Changelog
+16-Jan-2014: First release
+)
+
+key_repeat_interval 0.25
+noaction
+
+========
+OBJECTS
+========
+Background
+white
+00000
+00000
+00000
+00000
+00000
+
+Wall
+black
+00000
+00000
+00000
+00000
+00000
+
+Box1
+#ff8080 #800000
+00000
+00000
+00100
+00000
+00000
+
+Box2
+#ffff80 #808000
+00000
+01000
+00000
+00010
+00000
+
+Box3
+#80ff80 #008000
+00000
+01000
+00100
+00010
+00000
+
+Box4
+#80ffff #008080
+00000
+01010
+00000
+01010
+00000
+
+Box5
+#8080ff #000080
+00000
+01010
+00100
+01010
+00000
+
+Zero
+#008000 #40c040
+00000
+01110
+01110
+01110
+00000
+
+Minus
+#000080 #4040c0
+00000
+00000
+01110
+00000
+00000
+
+Plus
+#800000 #c04040
+00000
+00100
+01110
+00100
+00000
+
+Death
+#800080 #c040c0
+00000
+01010
+00100
+01010
+00000
+
+Corpse
+black #800080
+00000
+01010
+00100
+01010
+00000
+
+Target
+#c0c0c0 white
+00000
+01110
+01010
+01110
+00000
+
+=======
+LEGEND
+=======
+. = Background
+# = Wall
+1 = Box1
+2 = Box2
+3 = Box3
+4 = Box4
+5 = Box5
+~ = Target
+0 = Zero
+- = Minus
++ = Plus
+d = Death
+
+Box = Box1 or Box2 or Box3 or Box4 or Box5
+Special = Zero or Minus or Plus or Death
+Player = Box or Special
+
+=======
+SOUNDS
+=======
+EndLevel 82179903
+SFX0 94850106 (Merge)
+SFX1 15824902 (Death)
+
+================
+COLLISIONLAYERS
+================
+Background
+Target
+Wall, Box, Special, Corpse
+
+======
+RULES
+======
+[Corpse] -> restart
+
+startloop
+
+[> Player | Wall] -> [Player | Wall]
+
+[> Box1 | STATIONARY Box1] -> [| Box2] SFX0
+[> Box1 | STATIONARY Box2] -> [Box1 | Box2]
+[> Box1 | STATIONARY Box3] -> [Box1 | Box3]
+[> Box1 | STATIONARY Box4] -> [Box1 | Box4]
+[> Box1 | STATIONARY Box5] -> [Box1 | Box5]
+
+[> Box2 | STATIONARY Box1] -> [Box2 | Box1]
+[> Box2 | STATIONARY Box2] -> [| Box3] SFX0
+[> Box2 | STATIONARY Box3] -> [Box2 | Box3]
+[> Box2 | STATIONARY Box4] -> [Box2 | Box4]
+[> Box2 | STATIONARY Box5] -> [Box2 | Box5]
+
+[> Box3 | STATIONARY Box1] -> [Box3 | Box1]
+[> Box3 | STATIONARY Box2] -> [Box3 | Box2]
+[> Box3 | STATIONARY Box3] -> [| Box4] SFX0
+[> Box3 | STATIONARY Box4] -> [Box3 | Box4]
+[> Box3 | STATIONARY Box5] -> [Box3 | Box5]
+
+[> Box4 | STATIONARY Box1] -> [Box4 | Box1]
+[> Box4 | STATIONARY Box2] -> [Box4 | Box2]
+[> Box4 | STATIONARY Box3] -> [Box4 | Box3]
+[> Box4 | STATIONARY Box4] -> [| Box5] SFX0
+[> Box4 | STATIONARY Box5] -> [Box4 | Box5]
+
+[> Box5 | STATIONARY Box1] -> [Box5 | Box1]
+[> Box5 | STATIONARY Box2] -> [Box5 | Box2]
+[> Box5 | STATIONARY Box3] -> [Box5 | Box3]
+[> Box5 | STATIONARY Box4] -> [Box5 | Box4]
+[> Box5 | STATIONARY Box5] -> [|] SFX0
+
+[> Box | STATIONARY Zero] -> [|] SFX0
+[> Zero | STATIONARY Box] -> [|] SFX0
+
+[> Box1 | STATIONARY Minus] -> [|] SFX0
+[> Box2 | STATIONARY Minus] -> [| Box1] SFX0
+[> Box3 | STATIONARY Minus] -> [| Box2] SFX0
+[> Box4 | STATIONARY Minus] -> [| Box3] SFX0
+[> Box5 | STATIONARY Minus] -> [| Box4] SFX0
+[> Minus | STATIONARY Box1] -> [|] SFX0
+[> Minus | STATIONARY Box2] -> [| Box1] SFX0
+[> Minus | STATIONARY Box3] -> [| Box2] SFX0
+[> Minus | STATIONARY Box4] -> [| Box3] SFX0
+[> Minus | STATIONARY Box5] -> [| Box4] SFX0
+
+[> Box1 | STATIONARY Plus] -> [| Box2] SFX0
+[> Box2 | STATIONARY Plus] -> [| Box3] SFX0
+[> Box3 | STATIONARY Plus] -> [| Box4] SFX0
+[> Box4 | STATIONARY Plus] -> [| Box5] SFX0
+[> Box5 | STATIONARY Plus] -> [|] SFX0
+[> Plus | STATIONARY Box1] -> [| Box2] SFX0
+[> Plus | STATIONARY Box2] -> [| Box3] SFX0
+[> Plus | STATIONARY Box3] -> [| Box4] SFX0
+[> Plus | STATIONARY Box4] -> [| Box5] SFX0
+[> Plus | STATIONARY Box5] -> [|] SFX0
+
+[> Box | STATIONARY Death] -> [| Corpse] SFX1
+[> Death | STATIONARY Box] -> [| Corpse] SFX1
+
+[> Special | STATIONARY Special] -> [Special | Special]
+
+endloop
+
+==============
+WINCONDITIONS
+==============
+All Box on Target
+All Target on Box
+No Corpse
+
+=======
+LEVELS
+=======
+message Only arrow keys required, but figure out the rules. Enjoy.
+
+message Level 1: Mutual Annihilation
+
+#######
+###.5##
+###.#5#
+#.....#
+#5#.###
+##5.###
+#######
+
+message Level 2: Matching Pennies
+
+#######
+#..5..#
+#1...2#
+#..#..#
+#3...4#
+#..1..#
+#######
+
+message Level 3: Crowd Dispersal
+
+#######
+##...##
+#.234.#
+#.121.#
+#.432.#
+##...##
+#######
+
+message Level 4: Target Practice
+
+#######
+#..#..#
+#1.#~##
+#..#..#
+##~#.1#
+#..#..#
+#######
+
+message Level 5: Mixup
+
+#######
+#..~..#
+#1...2#
+#..#..#
+#3...4#
+#..1..#
+#######
+
+message Level 6: Feeding The Lion
+
+#######
+#32323#
+#2###1#
+#3#####
+#2#...#
+#321..#
+#######
+
+message Level 7: Perfect Cover
+
+#######
+#12..##
+#3.~..#
+##~~~##
+#..~.1#
+##..23#
+#######
+
+message Level 8: Climb
+
+#######
+###1.4#
+#~##..#
+#~#5.3#
+#1#..##
+#1#2.1#
+#######
+
+message Level 9: Don't Be Greedy
+
+#######
+##111##
+#1.~.1#
+#1~~~1#
+#1.~.1#
+##111##
+#######
+
+message Level 10: Thou Shalt Vanish
+
+#######
+##454##
+#4.~.4#
+#5~~~5#
+#4.~.4#
+##454##
+#######
+
+message Level 11: Magic Eraser
+
+#######
+##.0.##
+#..1..#
+#..2..#
+#..1..#
+##...##
+#######
+
+message Level 12: Too Much Zeroes
+
+#######
+##.0.##
+#..1..#
+#..2..#
+#..1..#
+##.0.##
+#######
+
+message Level 13: Grenade
+
+#######
+#21212#
+#32323#
+#21212#
+###.###
+###0###
+#######
+
+message Level 14: Locked
+
+#######
+#~0#.1#
+#1#.3.#
+##.0..#
+#.2.#.#
+#1....#
+#######
+
+message Level 15: Not Quite Helpful
+
+#######
+##.1.##
+#..0..#
+#00000#
+#..0..#
+##.~.##
+#######
+
+message Level 16: Arithmetics
+
+#######
+#..+#.#
+#34.#.#
+#~.#.~#
+#.#.12#
+#.#-..#
+#######
+
+message Level 17: Out of Bounds
+
+#######
+##.+.##
+#.4...#
+#4.~.1#
+#...3.#
+##.-.##
+#######
+
+message Level 18: Proper Addition
+
+#######
+##...##
+#1+2.3#
+#.....#
+#2+3.5#
+##...##
+#######
+
+message Level 19: Deja Vu
+
+#######
+##.-.##
+#..1..#
+#..3..#
+#..1..#
+##.0.##
+#######
+
+message Level 20: Not Quite Deja Vu
+
+#######
+##.+.##
+#..1..#
+#..3..#
+#..1..#
+##.0.##
+#######
+
+message Level 21: These Pairs
+
+#######
+##.+.##
+#..4..#
+#..4..#
+#..3..#
+##.-.##
+#######
+
+message Level 22: Division
+
+#######
+#.54#-#
+#.32#.#
+#..#..#
+#.#54.#
+#+#34.#
+#######
+
+message Level 23: Step One
+
+#######
+#######
+##132##
+##2+4##
+##413##
+#######
+#######
+
+message Level 24: Onefield
+
+#######
+#11111#
+#12111#
+#12+11#
+#12211#
+#11111#
+#######
+
+message Level 25: Sink
+
+#######
+#34543#
+###4###
+#-...-#
+##---##
+#######
+#######
+
+message Level 26: Death Lurking Behind
+
+#######
+##.d.##
+#..5..#
+#.....#
+#..d..#
+##.5.##
+#######
+
+message Level 27: Bound To Devil
+
+#######
+#..#..#
+#.d#.##
+#..#13#
+##~#41#
+#1.#25#
+#######
+
+message Level 28: Squeeze Play
+
+#######
+#dddd.#
+#d###~#
+#d#.#.#
+#d#.#.#
+#1#...#
+#######
+
+message Level 29: Capture the Flag
+
+#######
+##ddd##
+#dd+dd#
+#.ddd.#
+#.....#
+##.5.##
+#######
+
+message Level 30: Poisoned Sink
+
+#######
+#34543#
+###4###
+#d...d#
+##-d-##
+#######
+#######
+
+message Game complete. Well done.

@@ -1,0 +1,855 @@
+title The Great Emu War
+author Pierrec. Music by Armel Lardeau
+homepage http://abunchofgames.wordpress.com
+
+youtube hTFYASsJb-k
+
+========
+OBJECTS
+========
+
+powerup
+transparent
+
+invisible
+transparent
+
+blocker
+transparent
+
+Background 
+#CFAB88
+00000
+00000
+00000
+00000
+00000
+
+
+Water
+#3C7382 #88BFCF
+00000
+00000
+11000
+00110
+00000
+
+
+Border
+#826549
+00000
+00000
+00000
+00000
+00000
+
+Player 
+#A55E31 #956F53
+.111.
+.000.
+11111
+11111
+11111
+
+Johnny
+#A55E31 #956F53
+.111.
+.000.
+11111
+11111
+11111
+
+JohnnyGun
+#4F4234
+.....
+.....
+00000
+..0.0
+.....
+
+DeadJohnny
+#A55E31 #956F53
+..111
+10111
+10111
+10111
+..111
+
+Johnnydeadgun
+#4F4234
+.....
+.....
+00000
+..0.0
+.....
+
+Target1
+transparent
+
+Target2
+transparent
+
+Target3
+transparent
+
+Target4
+transparent
+
+Target5
+transparent
+
+
+
+Skull
+#A55E31 #956F53
+..111
+10111
+10111
+10111
+..111
+
+EmuL
+#773D27 #120A18
+11...
+.1...
+.000.
+.0000
+..0..
+
+EmuR
+#773D27 #120A18
+...11
+...1.
+.000.
+0000.
+.0...
+
+EndEmuL
+#773D27 #120A18
+11...
+.1...
+.000.
+.0000
+..0..
+
+EndEmuR
+#773D27 #120A18
+...11
+...1.
+.000.
+0000.
+.0...
+
+Rock
+#4F4234
+.....
+..00.
+.000.
+.0000
+.....
+
+Rockemu
+#4F4234
+.....
+..00.
+.000.
+.0000
+.....
+
+GunAR
+#4F4234
+.....
+.....
+00000
+0.0..
+.....
+
+GunAL
+#4F4234
+.....
+.....
+00000
+..0.0
+.....
+
+
+GunAU
+#4F4234
+.....
+..0..
+..0..
+..0..
+..0..
+
+GunAD
+#4F4234
+..0..
+..0..
+..0..
+..0..
+.....
+
+DeadGunA
+#4F4234
+..0..
+..0..
+.00..
+..0..
+.00..
+
+
+GunBR
+#4F4234
+.....
+.....
+00000
+0.0..
+.....
+
+GunBL
+#4F4234
+.....
+.....
+00000
+..0.0
+.....
+
+
+GunBU
+#4F4234
+.....
+..0..
+..0..
+..0..
+..0..
+
+GunBD
+#4F4234
+..0..
+..0..
+..0..
+..0..
+.....
+
+DeadGunB
+#4F4234
+..0..
+..0..
+.00..
+..0..
+.00..
+
+BulletN
+White
+.....
+.....
+..0..
+.....
+.....
+
+BulletH
+White
+.....
+.....
+..0..
+.....
+.....
+
+BulletV
+White
+.....
+.....
+..0..
+.....
+.....
+
+BulletX
+White
+.....
+.....
+..0..
+.....
+.....
+
+house
+#A25D52 #AC6F57
+11000
+01100
+00110
+00011
+10001
+
+
+houseemu
+#A25D52 #AC6F57
+11000
+01100
+00110
+00011
+10001
+=======
+LEGEND
+=======
+
+. = Background
+S = Skull
+W = water
+# = Border
+P = Player 
+X = Player and powerup
+Z = Player and blocker
+E = EmuL
+R = Rock and RockEmu
+H = house and houseemu
+G = GunAR
+6 = gunBL
+J = johnny
+Y = Johnnygun
+1 = Target1
+2 = EmuL and Target2
+3 = Target3
+4 = Target4
+5 = Target5
+I = Invisible and Border
+b = EndemuR
+d = EndemuL
+Target = Target1 or Target2 or Target3 or Target4 or Target5
+GunB =gunBr or gunBl or gunbu or gunbd or deadgunb
+GunA = gunAr or gunAl or gunau or gunad or deadguna
+Gun = GunA or GunB
+Emu = EmuL or EmuR
+bullet = bulletH or bulletv or bulletn or bulletx
+
+Obstacle = Rock  or Emu or house or rockemu or houseemu or player
+Wallemu = Rock  or house or rockemu or houseemu or emu
+=======
+SOUNDS
+=======
+
+
+bullet create 92009302
+(sfx0 39446309)
+sfx0 74034509
+skull create 74034509
+
+================
+COLLISIONLAYERS
+================
+
+Background
+bulletn, bulleth, bulletv, bulletx, target, blocker
+Border,powerup,johnnygun,Johnnydeadgun
+Player, Rock, Skull, house, johnny,water, deadjohnny
+GunA, Emu, RockEmu, houseemu, endemuL, endemuR
+GunB, Invisible
+======
+RULES     
+======     
+
+ [> Player Blocker] -> [Player Blocker]
+
+ [Powerup|...|Player] -> [ |...|Player  Powerup]
+
+
+(movements)
+
+Right [no GunB|> Player no blocker | GunA ] -> [no GunB| > Player | > GunAR]
+Right [no GunB| < Player no blocker| GunA ] -> [no GunB| < GunAL Player|]
+Right [no GunB| ^ Player no blocker| Guna ] -> [no GunB| Player ^ GunAU |]
+Right [no GunB| v Player no blocker| GunA ] -> [no GunB| Player v GunAD |]
+
+Left [no GunB| > Player no blocker| GunA ] -> [no GunB| > Player | > GunAL]
+Left [no GunB| < Player no blocker| GunA ] -> [no GunB| < GunAR  Player |]
+Left [no GunB| ^ Player no blocker| GunA ] -> [no GunB| Player ^ GunAD |]
+Left [no GunB| v Player no blocker| GunA ] -> [no GunB| Player v GunAU |]
+
+Up [no GunB| > Player no blocker| GunA ] -> [no GunB| > Player  | > GunAU]
+Up [no GunB| < Player no blocker| GunA ] -> [no GunB| < GunAD   Player|]
+Up [no GunB| ^ Player no blocker| GunA ] -> [no GunB| Player ^ GunAL |]
+Up [no GunB| v Player no blocker| GunA ] -> [no GunB| Player v GunAR |]
+
+Down [no GunB| > Player no blocker| GunA ] -> [no GunB| > Player  | > GunAD]
+Down [no GunB| < Player no blocker| GunA ] -> [no GunB| < GunAU Player|]
+Down [no GunB| ^ Player no blocker| GunA ] -> [no GunB| Player ^ GunAR |]
+Down [no GunB| v Player no blocker| GunA ] -> [no GunB| Player v GunAL | ]
+
+
+
+horizontal [GunB| > Player no blocker| GunA ] -> [ > GunBL|> Player | > GunAR]
+horizontal [GunB| < Player no blocker| GunA ] -> [ < GunBL |< Player |< GunAR]
+horizontal [GunB| ^ Player no blocker| GunA ] -> [ |Player ^ GunAU v GunBD|]
+horizontal [GunB| v Player no blocker| GunA ] -> [ |Player ^ GunAU v GunBD|]
+
+Vertical [GunB| > Player no blocker| GunA ] -> [ > GunBD |> Player  | > GunAU]
+vertical [GunB| < Player no blocker| GunA ] -> [ < GunBD  |< Player | < GunAU]
+vertical [GunB| ^ Player no blocker| GunA ] -> [ |Player v GunAR ^ GunBL|]
+vertical [GunB| v Player no blocker| GunA ] -> [ |Player v GunAR ^ GunBL|]
+
+
+
+[ > Player | Gun Border ] -> cancel
+[ > Player | Border ] -> cancel
+[Player border] -> cancel
+[ > Gun | Wallemu ] -> cancel
+ 
+(Emu movement)
+
+ [ Emu | ... | Player ] -> [ > Emu  | ... | Player ]
+ [> Emu | Gun | Player] ->  [Emu | Gun | Player]
+ 
+
+
+ (Bullets)
+ 
+ 
+ 
+ [bullet] -> [   ]
+ 
+ (shooting 1 gun)
+ 
+[action player no powerup no blocker|gunA|emu|no obstacle] -> [player|gunA|bulletn > emu |]Sfx0
+
+horizontal[action player no powerup no blocker|gunA|no bulleth no obstacle] -> [player|gunA|bulleth]
+horizontal[player no powerup no blocker][gun][bulleth|no obstacle] -> [player][gun][bulleth|bulleth]
+horizontal[bulleth|emu] -> [bulleth| bulletn > emu]Sfx0
+
+
+
+vertical [action player no powerup|gun|no bulletv no obstacle] -> [player|gun|bulletv]
+vertical[player no powerup][gun][bulletv|no obstacle] -> [player][gun][bulletv|bulletv]
+vertical[bulletv|emu] -> [bulletv| bulletn > emu]Sfx0
+
+
+
+(shooting 2 guns)
+
+
+
+ [emu|gun|action player no blocker|gun|emu] ->[< emu bulletn|gun| player|gun|bulletn > emu ]Sfx0
+
+ [no emu|gun|action player no blocker|gun|emu] ->[bulleth|gun| player|gun|bulletn > emu ]Sfx0
+
+horizontal[action player powerup|gunA|no bulleth no wallemu] -> [player powerup|gunA|bulleth]
+horizontal[player powerup][gun][bulleth|no wallemu] -> [player powerup][gun][bulleth|bulleth]
+horizontal[bulleth|emu] -> [bulleth| bulletn > emu]Sfx0
+
+
+
+vertical [action player  powerup|gun|no bulletv no wallemu] -> [player powerup|gun|bulletv]
+vertical[player  powerup][gun][bulletv|no wallemu] -> [player powerup][gun][bulletv|bulletv]
+vertical[bulletv|emu] -> [bulletv| bulletn > emu]Sfx0
+
+
+
+
+
+
+(magic trick to avoid gun and emu moving same time)
+
+right [  > Emu | no obstacle  ] -> [  | EmuR ]
+left [  > Emu | no obstacle  ] -> [  | EmuL ]
+vertical [  > Emu | no obstacle  ] -> [  | Emu ]
+(or [ Player > Gun |   ] -> [ Player | Gun ] for the opposite we'll see)
+
+
+ (death)
+late vertical [Emu | Player] ->[Emu | Skull]
+late right [Emu | Player] ->[EmuR | Skull]
+late left [Emu | Player] ->[EmuL | Skull]
+
+
+
+  [> Emu  |Player] -> [Emu  |Player]
+
+
+
+
+(Emu facing left/right)
+
+[ Right Emu] -> [Right EmuR]
+[ Left Emu] -> [Left EmuL]
+[ up Emu] -> [up Emu]
+[ down Emu] -> [down Emu]
+
+(Emu disapear)
+
+[ Emu Border] -> [no Emu Border]
+
+
+
+(Johnny)
+
+
+right[> Player] [no rock|johnnyGun|Johnny] -> [> Player] [no rock|< johnnyGun|< Johnny]
+
+[johnnygun|Johnny Target1]-> [johnnydeadgun|deadjohnny Target1]
+
+
+
+[| Player|deadjohnny gunA][johnnydeadgun]->[gunAU|Player Powerup|deadjohnny gunBD][] message Mitchum! Nooooooooo! 
+
+[> Player | Deadjohnny] -> cancel 
+
+
+(ending)
+
+
+==============
+WINCONDITIONS
+==============
+
+no Emu
+
+=======     
+LEVELS
+=======
+
+
+
+wwwwwwwwwwwwwww
+wwwww..ww.wwwww
+www.....w..wwww
+ww.........wwww
+w...........www
+w............ww
+w............ww
+w............ww
+ww..wwww.....ww
+wwwwwwwww...www
+wwwwwwwwwwwwwww
+wwwwwwwwww..www
+wwwwwwwwwwwwwww
+
+Message Somewhere in Australia, year 1932
+Message -At ease Sergent. I'm major Meredith.
+Message -As you probably know, the situation is critical : we've got twenty thousands emus devastating our crops, thinking they're at home. We gotta show 'em who's the boss!
+Message  -Yes, sir!
+Message  -I want you to bring me a hundred skins of these motherfuckers by the end of the day.
+Message -Yes, sir! 
+Message -Be careful though : they might look like stupid giant birds, but they are in fact stupid giant fucking dangerous birds. Don't get too close.
+Message -I won't, sir! 
+Message -Remember : X to shoot, R to restart in case you fuck up. 
+Message -That won't happen, sir!
+
+
+#########
+#.......#
+#.......#
+#.......#
+#PG...E.#
+#.......#
+#.......#
+#.......#
+#########
+
+
+#########
+#.......#
+#....E..#
+#...E...#
+#PG.....#
+#..E....#
+#...E...#
+#.......#
+#########
+
+#########
+#.......#
+#.......#
+#.E.....#
+#PG....E#
+#....E..#
+#...E...#
+#EE.....#
+#########
+
+Message -So, how many did you get?
+Message -None, sir.
+Message -None? Is that a fucking joke sergeant?
+Message -They're fast, sir.
+Message -I don't care how fast they are! Just bring me their motherfuckin skins! 
+Message -...yes, sir. 
+
+
+#########
+#.......#
+#..R....#
+#.R.....#
+#PG.ER..#
+#.R.....#
+#..R...R#
+#.......#
+#########
+
+#########
+#.R.R...#
+#.E..R.E#
+#.......#
+#PG.....#
+#..R....#
+#.E....E#
+#...R...#
+#########
+
+#########
+#.......#
+#.E.....#
+#..E....#
+#PG.ER..#
+#....E..#
+#.....E.#
+#......E#
+#########
+
+
+
+message -Sergeant! Where are my skins?!
+message -I'm sorry, sir...
+message -I don't need your appologies, I need to send a message to these birds
+message - Yes, sir. 
+message -And right now the message sounds like "please come devastate our crops because we're huge pussies!"
+message -But they seem to be bulletproof sir!
+message -And what about your ass? Is it bulletproof? Because if you don't bring me a bunch of skins real soon I'll might want to see by myself! 
+message Yes sir...
+
+
+#########
+#....R..#
+#.......#
+#.......#
+#PG.....#
+#...EE..#
+#R..EE..#
+#.......#
+#########
+
+#########
+#.......#
+#.......#
+#....EEE#
+#PG..EEE#
+#....EEE#
+#.......#
+#.......#
+#########
+
+#########
+#..EEE..#
+#.......#
+#......E#
+#PG....E#
+#......E#
+#.......#
+#..EEE..#
+#########
+
+message -Hmm...no skin. Why am I not surprised by your incompetence?
+message -They've changed their strategy, sir. They're more and more agressive. 
+message - Yes. I know. Looks like we underestimated them, but this is over! I've decided to double our strength.
+message - Caporal Mitchum will be waiting for you in Campion. I believe you know each other...
+message - Yes, sir! We fought together in Gallipoli, sir! 
+message - Perfect. So kick those emus' asses like they were fucking Ottomans! And remember : strength is in numbers!
+
+#########
+#...EE..#
+#.HH.HH.#
+#.HH.HH.#
+#PG...EE#
+#.HH.HHR#
+#.HH.HH.#
+#...E...#
+#########
+
+
+#########
+#E.E....#
+#..HHH..#
+#..HHH..#
+#PG...ER#
+#.R.HH..#
+#...HH..#
+#.....E.#
+#########
+
+
+#########
+#HH.HHH.#
+#HH.HHH.#
+#PG...E.#
+#.HHEHH.#
+#.HH.HH.#
+#EHH.HH.#
+#.......#
+#########
+
+
+message - Mitchum?
+
+
+############
+#E.EE.....E#
+#.HH.HH.HHH#
+#.HH.HH.HHH#
+#.HH.HH...E#
+#PG..E.....#
+#.HH.HH...E#
+#.HH.HH.HHH#
+#.HH.HHEHHH#
+#E..ER.1.YJ#
+#######I####
+
+message -I thought I told you to team with Caporal Mitchum!
+message -Mitchum's dead, sir.
+message -Dead? Damn...why didn't he use the R key? That Mitchum...always so proud.
+message -It's a tragedy, sir. 
+message -Hmmm...well, this doesn't change the plan. Strenght is in numbers, and now you have two guns, right? 
+message -Mine and Mitchum's, sir.
+message -So go kill those feathered piles of shit and claim this land once and for all! They're gethering in the north for a massive offensive. This is our last chance.
+message -I'll do my best, sir. 
+
+
+###########
+#EEE.E.EEE#
+#EE.E.E.EE#
+#E.......E#
+#.E.....E.#
+#E..6XG..E#
+#.E.....E.#
+#E.......E#
+#EE.E.E.EE#
+#EEE.E.EEE#
+###########
+
+
+message *clic clic*
+
+###########
+#.........#
+#.........#
+#.........#
+#.........#
+#...6ZG...#
+#.........#
+#.........#
+#.........#
+#.........#
+###########
+
+message Shit! Those were the last rounds of ammunition...
+
+###########
+#b.......d#
+#.........#
+#.........#
+#.........#
+#...6ZG...#
+#.........#
+#.........#
+#.........#
+#b.......d#
+###########
+
+message Shit...
+
+
+###########
+#bb.....dd#
+#b.......d#
+#.........#
+#.........#
+#...6ZG...#
+#.........#
+#.........#
+#b.......d#
+#bb.....dd#
+###########
+
+message Shit shit shit...
+
+
+###########
+#bbb...ddd#
+#bb.....dd#
+#b.......d#
+#.........#
+#...6ZG...#
+#.........#
+#b.......d#
+#bb.....dd#
+#bbb...ddd#
+###########
+
+###########
+#bbbb.dddd#
+#bbb...ddd#
+#bb.....dd#
+#b.......d#
+#b..6ZG..d#
+#b.......d#
+#bb.....dd#
+#bbb...ddd#
+#bbbb.dddd#
+###########
+
+###########
+#bbbbddddd#
+#bbbbddddd#
+#bbb...ddd#
+#bb.....dd#
+#bb.6ZG.dd#
+#bb.....dd#
+#bbb...ddd#
+#bbbbbdddd#
+#bbbbbdddd#
+###########
+
+###########
+#bbbbddddd#
+#bbbbddddd#
+#bbbbddddd#
+#bbbbddddd#
+#bbb6ZGddd#
+#bbbbbdddd#
+#bbbbbdddd#
+#bbbbbdddd#
+#bbbbbdddd#
+###########
+
+###########
+#bbbbddddd#
+#bbbbddddd#
+#bbbbddddd#
+#bbbbddddd#
+#bbbbSdddd#
+#bbbbbdddd#
+#bbbbbdddd#
+#bbbbbdddd#
+#bbbbbdddd#
+###########
+
+message And this is how the Royal Australian Artillery lost The Great Emu War. 
+message Based on actual events. 
+
+wwwwwwwwwwwwwww
+wwwwwbbwwbwwwww
+wwwbbbbbwbbwwww
+wwbbbbbbbbbwwww
+wbbbbbbbbbbbwww
+wbbbbbbbbbbbbww
+wbbbbbbbbbbbbww
+wbbbbbbbbbbbbww
+wwwwwwwwbbbbbww
+wwwwwwwwwbbbwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwbbwww
+wwwwwwwwwwwwwww
+
+
+
+
+
+
+
+
+
+

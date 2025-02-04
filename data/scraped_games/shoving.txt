@@ -1,0 +1,258 @@
+title shoving
+author Aaron Steed
+homepage www.puzzlescript.net
+
+key_repeat_interval 0.23
+noaction
+
+========
+OBJECTS
+========
+
+Background
+#212121
+
+Void
+Black
+
+Wall 
+#9b9b9b
+.....
+.000.
+.0.0.
+.000.
+.....
+
+
+Player 
+#9b9b9b White   
+11111
+10001
+10111
+10000
+11111
+
+
+Virus
+White
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Debris1
+#cccccc White
+.....
+.0.0.
+..1..
+.0.0.
+.....
+
+Debris2
+#cccccc
+0...0
+.....
+.....
+.....
+0...0
+
+UpWalker
+#ffffff #9b9b9b
+00000
+.000.
+.000.
+..1..
+..1..
+
+RightWalker
+#ffffff #9b9b9b
+....0
+..000
+11000
+..000
+....0
+
+DownWalker
+#ffffff #9b9b9b
+..1..
+..1..
+.000.
+.000.
+00000
+
+LeftWalker
+#ffffff #9b9b9b
+0....
+000..
+00011
+000..
+0....
+
+UpTrap
+#ffffff #9b9b9b
+00000
+..1..
+.1.1.
+..1..
+.....
+
+RightTrap
+#ffffff #9b9b9b
+....0
+..1.0
+.1.10
+..1.0
+....0
+
+DownTrap
+#ffffff #9b9b9b
+.....
+..1..
+.1.1.
+..1..
+00000
+
+LeftTrap
+#ffffff #9b9b9b
+0....
+0.1..
+01.1.
+0.1..
+0....
+
+
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+@ = Player
+o = Virus
+1 = UpWalker
+2 = RightWalker
+3 = DownWalker
+4 = LeftWalker
+5 = UpTrap
+6 = RightTrap
+7 = DownTrap
+8 = LeftTrap
+n = Void
+
+UpEnemy = UpWalker or UpTrap
+RightEnemy = RightWalker or RightTrap
+DownEnemy = DownWalker or DownTrap
+LeftEnemy = LeftWalker or LeftTrap
+Enemy = Virus or UpEnemy or RightEnemy or DownEnemy or LeftEnemy
+Item = Enemy or Player or Wall
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Void
+Debris1, Debris2
+Player, Wall, Virus, UpWalker, RightWalker, DownWalker, LeftWalker, UpTrap, RightTrap, DownTrap, LeftTrap
+
+======
+RULES
+======
+
+
+(PLAYER TURN)
+(animate debris)
+[ Debris2 ] -> [ ]
+[ Debris1 ] -> [ Debris2 ]
+(enemy pinned = death)
+[ > Player | Enemy ] -> [ > Player | > Enemy ]
+[ > Player | Enemy | Item ] -> [ Player | Debris1 | Item ]
+
+[ moving Player ] -> again
+
+(ENEMY TURN)
+(walkers)
+[ stationary Player ] [ stationary UpWalker ] -> [ stationary Player ] [ UP UpWalker ]
+[ stationary Player ] [ stationary RightWalker ] -> [ stationary Player ] [ RIGHT RightWalker ]
+[ stationary Player ] [ stationary DownWalker ] -> [ stationary Player ] [ DOWN DownWalker ]
+[ stationary Player ] [ stationary LeftWalker ] -> [ stationary Player ] [ LEFT LeftWalker ]
+(push player)
+UP [ UpEnemy | stationary Player ] -> [ UP UpEnemy | UP Player ]
+RIGHT [ RightEnemy | stationary Player ] -> [ RIGHT RightEnemy | RIGHT Player ]
+DOWN [ DownEnemy | stationary Player ] -> [ DOWN DownEnemy | DOWN Player ]
+LEFT [ LeftEnemy | stationary Player ] -> [ LEFT LeftEnemy | LEFT Player ]
+
+(player bumped = death)
+([ > Enemy | Player ] -> [ Enemy | Debris1])
+
+(player pinned = death)
+[ > Enemy | Player | Item ] -> [ Enemy | Debris1 | Item ]
+
+(left [ > Enemy | Player ] -> [ Enemy | Debris1 ])
+
+
+==============
+WINCONDITIONS
+==============
+
+No Enemy    
+
+=======     
+LEVELS
+=======
+
+MESSAGE 00
+
+#######
+#.....#
+#.o.o.#
+#..@..#
+#.o.o.#
+#.....#
+#######
+
+MESSAGE 01
+
+#######
+#.7..7#
+#..@..#
+#5..5.#
+#######
+
+MESSAGE 02
+
+#########
+#......4#
+#.@....4#
+#......4#
+#########
+
+MESSAGE 03
+
+#####
+#333#
+#...#
+#...#
+#.@.#
+#...#
+#...#
+#111#
+#####
+
+MESSAGE 04
+
+#######
+#6...8#
+#6.@.8#
+#6...8#
+#######
+
+

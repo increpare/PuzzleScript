@@ -1,0 +1,1457 @@
+title Atomix demake
+author Recher
+homepage https://recher.wordpress.com/2016/12/01/demake-de-atomix-fait-avec-puzzlescript/
+
+
+(HOW TO MAKE LEVELS)
+
+(Condition 1 : a level must have two zones : )
+( - the "arena" zone, which contains the player and the atoms to move)
+( - the "model" zone, which shows the final pattern to make with the atoms)
+(The game automatically detects the two zones from the Player initial position. The "arena" zone is where the Player is.)
+(The arena zone and the model zone MUST be separated by a vertical or horizontal line of wall that passes through the whole level.)
+()
+(If this condition is not fulfilled, an error message will be written at the beginning of the level, and the Player will disappear)
+
+(Condition 2 : there must have at least one square not in any zone.)
+(After the "arena" and the "model" zones are determined, there must be at least one "no-zone" square left.)
+(This square will be used to put the GlobalTags.)
+(Be aware that the "arena" zone, after it has been determined, is extended of one tile at every border, and diagonally of one tile at every corner.)
+(To make sure this condition is fulfilled, just add one more tile line at the top of the level.)
+()
+(If this condition is not fulfilled, an error message will be written at the beginning of the level, and the Player will disappear)
+
+(Condition 3 : a level must have at least one unique element)
+(An "element" = the atom and the links on one single square)
+(In order to perform the pattern comparrison between the model and the arena, the game must have a unique element from where to start.)
+(This element is automatically detected at the beginning of the level. But there MUST have one at least.)
+(Example of a model with no unique element)
+(         )
+(  H--H   )
+(         )
+(         )
+(  H--H   )
+(         )
+(There are 4 elements : two of them are consisted of a Hydrogen with a link on the left,)
+(the two others are a Hydrogen with a link on the right. There is no unique element. This model is not usable.)
+(Example of a model with many unique element)
+(         )
+(  H--H   )
+(  |      )
+(  |      )
+(  H--H   )
+(         )
+(There are 4 elements : two of them are consisted of a Hydrogen with a link on the left, one is a Hydrogen with a link on the right and a link to the up, one last is a Hydrogen with a link on the right and a link to the bottom)
+(This model has 2 unique elements. It is usable. It would still be usable even with only one unique element.)
+()
+(Real-word example of a model with no unique element :)
+(https://en.wikipedia.org/wiki/Cyclobutane)
+(used in a level of the "katomic" pack : https://github.com/figlief/kp-atomix/blob/master/levels/katomic.json , Cyclobutane, id 42)
+()
+(If this condition is not fullfilled, an error message will be written at the beginning of the level, and the Player will disappear)
+
+(Info : the double & diagonal links and the triple & diagonal links do not exist in this demake.)
+(I was just too lazy to add them, and it would be hard to represent them on a 5x5 pixel square.)
+(Some level need them, and thus can not be integrated in this demake.)
+(https://github.com/figlief/kp-atomix/blob/master/levels/mystery.json, Kai - Benzol, id 48)
+
+(Info : no check is made on link coherency)
+(Your model can have something like this :)
+( H- H )
+(The First hydrogen has a link to the right, so the second Hydrogen is supposed to have a link to the left. But he has not.)
+
+(Info : no check is made on level feasability)
+(Your model can have a Hydrogen atom, without having one in the arena.)
+(Your level can not be won. But the game does not check this case and does not send message about it.)
+
+(debug only)
+(verbose_logging)
+again_interval 0.2
+
+run_rules_on_level_start
+norepeat_action
+
+========
+OBJECTS
+========
+
+Background
+black
+
+WallBrick
+#494949 #707070 #9E9E9E #D3D3D3
+33331
+31110
+31110
+31110
+10000
+
+WallBlack
+black
+
+WallBlueBarMain
+black #000073 #0002AE #0061AE
+00123
+01232
+12321
+23210
+32100
+
+WallBlueBarUp
+black #000073 #0002AE #0061AE
+00000
+00000
+00000
+00001
+00012
+
+WallBlueBarDown
+black #000073 #0002AE #0061AE
+21000
+10000
+00000
+00000
+00000
+
+WallBlueBarEndUp
+black #000073 #0002AE #0061AE
+00110
+01221
+12321
+23210
+32100
+
+WallBlueBarEndDown
+black #000073 #0002AE #0061AE
+00123
+01232
+12321
+12210
+01100
+
+ModelZone
+(debug = darkgray. release = transparent)
+transparent
+(darkgray)
+
+ArenaZone
+#392900
+
+Hydrogen
+transparent #4460FF #2646FF #0026FF #001ECC #0019AA
+00000
+01230
+02340
+03450
+00000
+
+Carbon
+transparent #B9B9B9 #A4A4A4 #8B8B8B #6C6C6C #5F5F5F
+00000
+01230
+02340
+03450
+00000
+
+Oxygen
+transparent #FF5E5E #FF4747 #FF0000 #D90000 #B60000
+00000
+01230
+02340
+03450
+00000
+
+Nitrogen
+transparent #8CFF8C #66FF66 #00FF00 #00DD00 #00C600
+00000
+01230
+02340
+03450
+00000
+
+Sulfur
+transparent #FF9756 #FF8A42 #FF741E #EA671C #DB611A
+00000
+01230
+02340
+03450
+00000
+
+Chlorine
+transparent #FDFDFD #E9E9E9 #D7D7D7 #C3C3C3 #ACACAC
+00000
+01230
+02340
+03450
+00000
+
+Phosphore
+transparent #CC5EFF #C447FF #AE00FF #9200D6 #8200BF
+00000
+01230
+02340
+03450
+00000
+
+Cristal
+transparent #87FFFD #5EFFFC #00FFFA #00D8D5 #00C4C1
+00000
+01230
+02340
+03450
+00000
+
+(Useful to have elements with link only)
+(Putting an EmptyAtom with no link in a level would not be nice.)
+EmptyAtom
+transparent
+
+Fluorine
+transparent #FFF69E #FFF370 #FFE900 #E5D200 #D6C400
+00000
+01230
+02340
+03450
+00000
+
+AtomTagged
+transparent
+
+AtomCheckedOK
+transparent
+
+MovingAtom
+transparent #FF6A00 #FF8A38 #FFA566
+23212
+10003
+20002
+30001
+21232
+
+SelectedAtom
+transparent yellow
+10101
+00000
+10001
+00000
+10101
+
+Player
+transparent #FF0000
+01010
+10001
+00000
+10001
+01010
+
+UniqueAtomStartCheck
+(debug = red point. release = transparent)
+transparent
+(transparent red)
+(00000)
+(00000)
+(00100)
+(00000)
+(00000)
+
+CopyToRight
+transparent
+
+CopyToUp
+transparent
+
+CopyToDown
+transparent
+
+CopyToLeft
+transparent
+
+CheckZone
+(debug = purple. release = transparent)
+transparent
+(purple)
+
+LinkLeftSimple
+transparent #eeeeee
+00000
+00000
+11100
+00000
+00000
+
+LinkLeftDouble
+transparent #eeeeee
+00000
+11100
+00000
+11100
+00000
+
+LinkLeftTriple
+transparent #eeeeee
+00000
+11100
+11100
+11100
+00000
+
+LinkLeftTagged
+transparent
+
+LinkLeftCheckedOK
+transparent
+
+LinkRightSimple
+transparent #eeeeee
+00000
+00000
+00111
+00000
+00000
+
+LinkRightDouble
+transparent #eeeeee
+00000
+00111
+00000
+00111
+00000
+
+LinkRightTriple
+transparent #eeeeee
+00000
+00111
+00111
+00111
+00000
+
+LinkRightTagged
+transparent
+
+LinkRightCheckedOK
+transparent
+
+LinkUpSimple
+transparent #eeeeee
+00100
+00100
+00100
+00000
+00000
+
+LinkUpDouble
+transparent #eeeeee
+01010
+01010
+01010
+00000
+00000
+
+LinkUpTriple
+transparent #eeeeee
+01110
+01110
+01110
+00000
+00000
+
+LinkUpTagged
+transparent
+
+LinkUpCheckedOK
+transparent
+
+LinkDownSimple
+transparent #eeeeee
+00000
+00000
+00100
+00100
+00100
+
+LinkDownDouble
+transparent #eeeeee
+00000
+00000
+01010
+01010
+01010
+
+LinkDownTriple
+transparent #eeeeee
+00000
+00000
+01110
+01110
+01110
+
+LinkDownTagged
+transparent
+
+LinkDownCheckedOK
+transparent
+
+LinkUpRightSimple
+transparent #eeeeee
+00001
+00010
+00100
+00000
+00000
+
+LinkUpRightTagged
+transparent
+
+LinkUpRightCheckedOK
+transparent
+
+LinkDownRightSimple
+transparent #eeeeee
+00000
+00000
+00100
+00010
+00001
+
+LinkDownRightTagged
+transparent
+
+LinkDownRightCheckedOK
+transparent
+
+LinkDownLeftSimple
+transparent #eeeeee
+00000
+00000
+00100
+01000
+10000
+
+LinkDownLeftTagged
+transparent
+
+LinkDownLeftCheckedOK
+transparent
+
+LinkUpLeftSimple
+transparent #eeeeee
+10000
+01000
+00100
+00000
+00000
+
+LinkUpLeftTagged
+transparent
+
+LinkUpLeftCheckedOK
+transparent
+
+
+GlobalTags
+(debug = #FF00FF. release = transparent)
+transparent
+(#FF00FF)
+
+
+GlobalTagFoundUniqueAtom
+transparent
+
+GlobalTagSearchUniqueFail
+transparent
+
+GlobalTagLoopIteration
+transparent
+
+GlobalTagRecalculateCheckZone
+transparent
+
+GlobalTagCheckZoneUncomplete
+transparent
+
+GlobalTagCheckFailed
+transparent
+
+LoopIterationToDo
+transparent
+
+LoopIterationCurrent
+transparent
+
+PlayerTagMustDoInit
+transparent
+
+PropagateVertical
+transparent
+
+PropagateHorizontal
+transparent
+
+CurrentCheckedOK
+(debug = pink. release = transparent)
+transparent
+(pink)
+
+PropagateDiagonalHalfWay
+transparent
+
+GlobalTagBorderModelMade
+transparent
+
+GlobalTagSlideLeft
+transparent
+
+GlobalTagSlideRight
+transparent
+
+GlobalTagSlideUp
+transparent
+
+GlobalTagSlideDown
+transparent
+
+GlobalTagMustCheckPattern
+transparent
+
+GlobalTagModelZoneExists
+transparent
+
+GlobalTagWon
+transparent
+
+WinStar0
+transparent
+
+WinStar1
+transparent #224FCC #00A5FF
+00000
+00100
+01210
+00100
+00000
+
+WinStar2
+transparent #245CEF #2494EF #24D0EF
+00100
+01210
+12321
+01210
+00100
+
+WinStar3
+transparent #366AFF #34A4FF #53E3FF #82FFFF
+01210
+12321
+23432
+12321
+01210
+
+WinStar4
+transparent
+
+BorderModelLeft
+transparent white gray #cccccc black
+00124
+00124
+00124
+00124
+00124
+
+BorderModelRight
+transparent white gray #cccccc black
+41200
+41200
+41200
+41200
+41200
+
+BorderModelUp
+transparent white gray #cccccc black
+00000
+00000
+11111
+22222
+44444
+
+BorderModelDown
+transparent white gray #cccccc black
+44444
+11111
+22222
+00000
+00000
+
+BorderModelUpRight
+transparent white gray #cccccc black
+00000
+00000
+11300
+22200
+41200
+
+BorderModelDownRight
+transparent white gray #cccccc black
+41200
+11200
+22200
+00000
+00000
+
+BorderModelDownLeft
+transparent white gray #cccccc black
+00124
+00121
+00322
+00000
+00000
+
+BorderModelUpLeft
+transparent white gray #cccccc black
+00000
+00000
+00111
+00122
+00124
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = WallBrick
+, = WallBlack
+% = WallBlueBarMain
+/ = WallBlueBarUp
+\ = WallBlueBarDown
++ = WallBlueBarEndUp
+- = WallBlueBarEndDown
+* = Player and PlayerTagMustDoInit
+
+(Insert here the legend generated by the python script kpjson_to_puzzle)
+
+0 = Oxygen and LinkDownDouble
+1 = Carbon and LinkUpDouble and LinkDownRightSimple and LinkDownLeftSimple
+2 = Oxygen and LinkUpRightSimple and LinkUpLeftSimple
+a = Oxygen and LinkRightDouble
+b = Carbon and LinkRightDouble and LinkLeftDouble
+c = Oxygen and LinkLeftDouble
+d = Hydrogen and LinkRightSimple
+e = Oxygen and LinkLeftSimple and LinkDownRightSimple
+f = Hydrogen and LinkUpLeftSimple
+g = Hydrogen and LinkDownRightSimple
+h = Oxygen and LinkUpLeftSimple and LinkRightSimple
+i = Hydrogen and LinkDownSimple
+j = Oxygen and LinkUpSimple and LinkDownSimple
+k = Nitrogen and LinkUpSimple and LinkDownRightSimple and LinkDownLeftSimple
+l = Hydrogen and LinkUpRightSimple
+m = Hydrogen and LinkDownLeftSimple
+n = Carbon and LinkUpRightSimple and LinkDownRightSimple and LinkDownLeftSimple and LinkUpLeftSimple
+o = Oxygen and LinkUpLeftSimple and LinkDownRightSimple
+p = Carbon and LinkUpSimple and LinkRightSimple and LinkDownSimple and LinkLeftSimple
+q = Hydrogen and LinkLeftSimple
+r = Hydrogen and LinkUpSimple
+s = Carbon and LinkRightDouble and LinkDownLeftSimple and LinkUpLeftSimple
+t = Carbon and LinkLeftDouble and LinkDownRightSimple and LinkUpRightSimple
+u = Carbon and LinkUpSimple and LinkDownSimple and LinkRightDouble
+w = Carbon and LinkLeftDouble and LinkUpSimple and LinkDownSimple
+x = Carbon and LinkLeftDouble and LinkUpRightSimple and LinkDownRightSimple
+y = Nitrogen and LinkUpLeftSimple and LinkRightDouble
+z = Nitrogen and LinkLeftDouble and LinkDownRightSimple
+
+(End of legend generated by the python script kpjson_to_puzzle)
+
+Wall = WallBrick or WallBlack or WallBlueBarMain or WallBlueBarUp or WallBlueBarDown or WallBlueBarEndUp or WallBlueBarEndDown
+Atom = Hydrogen or Carbon or Oxygen or Nitrogen or Sulfur or Chlorine or Phosphore or Cristal or EmptyAtom or Fluorine
+
+LinkLeft = LinkLeftSimple or LinkLeftDouble or LinkLeftTriple
+LinkRight = LinkRightSimple or LinkRightDouble or LinkRightTriple
+LinkUp = LinkUpSimple or LinkUpDouble or LinkUpTriple
+LinkDown = LinkDownSimple or LinkDownDouble or LinkDownTriple
+LinkUpRight = LinkUpRightSimple
+LinkDownRight = LinkDownRightSimple
+LinkDownLeft = LinkDownLeftSimple
+LinkUpLeft = LinkUpLeftSimple
+Link = LinkLeft or LinkRight or LinkUp or LinkDown or LinkUpRight or LinkDownRight or LinkDownLeft or LinkUpLeft
+
+Obstacle = Wall or Atom or Link
+
+GlobalTagSlide = GlobalTagSlideLeft or GlobalTagSlideRight or GlobalTagSlideUp or GlobalTagSlideDown
+
+LinkTagged = LinkLeftTagged or LinkRightTagged or LinkUpTagged or LinkDownTagged or LinkUpRightTagged or LinkDownRightTagged or LinkDownLeftTagged or LinkUpLeftTagged
+
+WinStar = WinStar0 or WinStar1 or WinStar2 or WinStar3 or WinStar4
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+ModelZone
+ArenaZone
+
+CheckZone
+
+CurrentCheckedOK
+
+LinkLeftSimple, LinkLeftDouble, LinkLeftTriple
+LinkLeftTagged
+LinkLeftCheckedOK
+LinkRightSimple, LinkRightDouble, LinkRightTriple
+LinkRightTagged
+LinkRightCheckedOK
+LinkUpSimple, LinkUpDouble, LinkUpTriple
+LinkUpTagged
+LinkUpCheckedOK
+LinkDownSimple, LinkDownDouble, LinkDownTriple
+LinkDownTagged
+LinkDownCheckedOK
+
+LinkUpRightSimple
+LinkUpRightTagged
+LinkUpRightCheckedOK
+LinkDownRightSimple
+LinkDownRightTagged
+LinkDownRightCheckedOK
+LinkDownLeftSimple
+LinkDownLeftTagged
+LinkDownLeftCheckedOK
+LinkUpLeftSimple
+LinkUpLeftTagged
+LinkUpLeftCheckedOK
+
+Wall, Atom, WinStar
+AtomTagged
+AtomCheckedOK
+
+Player
+SelectedAtom
+MovingAtom
+
+UniqueAtomStartCheck
+
+CopyToRight
+CopyToUp
+CopyToDown
+CopyToLeft
+
+GlobalTags
+GlobalTagBorderModelMade
+GlobalTagFoundUniqueAtom
+GlobalTagSearchUniqueFail
+GlobalTagLoopIteration
+GlobalTagRecalculateCheckZone
+GlobalTagCheckZoneUncomplete
+GlobalTagCheckFailed
+GlobalTagSlideLeft, GlobalTagSlideRight, GlobalTagSlideUp, GlobalTagSlideDown
+GlobalTagMustCheckPattern
+GlobalTagModelZoneExists
+GlobalTagWon
+
+LoopIterationToDo
+LoopIterationCurrent
+
+PlayerTagMustDoInit
+
+PropagateVertical
+PropagateHorizontal
+PropagateDiagonalHalfWay
+
+BorderModelLeft, BorderModelRight, BorderModelUp, BorderModelDown, BorderModelUpRight, BorderModelDownRight, BorderModelDownLeft, BorderModelUpLeft
+
+
+======
+RULES
+======
+
+
+( --- Detects the ArenaZone ---)
+
+( Global tags does not exist at the beginning of the game,)
+(so we use a global tag on the player.)
+
+[ Player PlayerTagMustDoInit ] -> [ Player PlayerTagMustDoInit ArenaZone ]
+
+(propagates ArenaZone, starting from player)
+(Propagation can be made diagonally. Like in the first level of Draknek)
+startLoop
+    [ Player PlayerTagMustDoInit ][ ArenaZone | no Wall ] -> [ Player PlayerTagMustDoInit ][ ArenaZone | ArenaZone ]
+    VERTICAL [ Player PlayerTagMustDoInit ][ ArenaZone | ] -> [ Player PlayerTagMustDoInit ][ ArenaZone | PropagateDiagonalHalfWay ]
+    HORIZONTAL [ Player PlayerTagMustDoInit ][ PropagateDiagonalHalfWay | no Wall ] -> [ Player PlayerTagMustDoInit ][ PropagateDiagonalHalfWay | ArenaZone ]
+endLoop
+
+[ Player PlayerTagMustDoInit ][ PropagateDiagonalHalfWay ] -> [ Player PlayerTagMustDoInit ][ ]
+
+(The ArenaZone is now determined in the level.)
+(It is consisted of one block of adjacent tiles. (possibly "diagonnaly adjacent").)
+
+(Extends the ArenaZone to its bounding rectangle, in order to simplify further processings :)
+( - The CheckZone initialization and the Pattern Check)
+( - The Player will be able to move in the whole rectangle, allowing him to do "shortcuts" when not carrying atoms.)
+(To extend the zone, we draw a vertical line and a horizontal line passing through the whole level, at each existing ArenaZone tile)
+(Every tile where a vertical line crosses a horizontal line is considered an ArenaZone tile. (It may already is))
+(This algorithm works only if the starting shape is consisted of [possibly adjacent] tiles, which is the case here.)
+[ Player PlayerTagMustDoInit ][ ArenaZone ] -> [ Player PlayerTagMustDoInit ][ ArenaZone PropagateVertical PropagateHorizontal ]
+(draws lines)
+VERTICAL [ PropagateVertical | ] -> [ PropagateVertical | PropagateVertical ]
+HORIZONTAL [ PropagateHorizontal | ] -> [ PropagateHorizontal | PropagateHorizontal ]
+(adds an ArenaZone everywhere two lines cross)
+[ PropagateHorizontal PropagateVertical ] -> [ ArenaZone ]
+(cleans the drawn lines)
+[ PropagateVertical ] -> [ ]
+[ PropagateHorizontal ] -> [ ]
+
+(Extend the ArenaZone of one tile at every border and diagonally)
+VERTICAL [ Player PlayerTagMustDoInit ][ ArenaZone | no ArenaZone ] -> [ Player PlayerTagMustDoInit ][ ArenaZone | PropagateVertical ]
+HORIZONTAL [ Player PlayerTagMustDoInit ][ ArenaZone | no ArenaZone ] -> [ Player PlayerTagMustDoInit ][ ArenaZone | PropagateHorizontal ]
+HORIZONTAL [ Player PlayerTagMustDoInit ][ PropagateVertical | no PropagateVertical ] -> [ Player PlayerTagMustDoInit ][ PropagateVertical | PropagateDiagonalHalfWay ]
+[ Player PlayerTagMustDoInit ][ PropagateVertical ] -> [ Player PlayerTagMustDoInit ][ ArenaZone ]
+[ Player PlayerTagMustDoInit ][ PropagateHorizontal ] -> [ Player PlayerTagMustDoInit ][ ArenaZone ]
+[ Player PlayerTagMustDoInit ][ PropagateDiagonalHalfWay ] -> [ Player PlayerTagMustDoInit ][ ArenaZone ]
+
+
+( --- Detects the ModelZone ---)
+
+[ Player PlayerTagMustDoInit ][ Atom no ArenaZone ] -> [ Player PlayerTagMustDoInit ][ Atom ModelZone ]
+[ Player PlayerTagMustDoInit ][ Link no ArenaZone ] -> [ Player PlayerTagMustDoInit ][ Link ModelZone ]
+
+(Extends the ModelZone to its bounding rectangle, same algorithm as the ArenaZone extension.)
+[ Player PlayerTagMustDoInit ][ ModelZone ] -> [ Player PlayerTagMustDoInit ][ ModelZone PropagateVertical PropagateHorizontal ]
+VERTICAL [ PropagateVertical | ] -> [ PropagateVertical | PropagateVertical ]
+HORIZONTAL [ PropagateHorizontal | ] -> [ PropagateHorizontal | PropagateHorizontal ]
+[ PropagateHorizontal PropagateVertical ] -> [ ModelZone ]
+[ PropagateVertical ] -> [ ]
+[ PropagateHorizontal ] -> [ ]
+(For the ModelZone extension, one more step is needed.)
+(The atoms of the model may be scattered through the level. And the initial ModelZone may not be consisted of one block of adjacent tiles)
+(The previous algorithm may have left whole lines (vertical or horizontal) of not-ModelZone in the middle of the bounding rect).
+(So, the gaps between the pieces of bounding rect must be filled)
+[ Player PlayerTagMustDoInit ][ ModelZone |  | ... | ModelZone ] -> [ Player PlayerTagMustDoInit ][ ModelZone | ModelZone | ... | ModelZone ]
+
+(Raises exception if the two zones overlaps)
+[ Player PlayerTagMustDoInit ][ ArenaZone ModelZone ] -> [ ][ ArenaZone ModelZone ] message ERROR : zone overlapping. The model zone and the arena zone must be separated by a horizontal or vertical line of wall passing through the whole level
+
+
+(--- Puts the GlobalTag anywhere in a "nothing-zone" --- )
+
+(Adds also the global tag to recalculate the CheckZone a first time, and to do a first pattern check, just for fun.)
+[ Player PlayerTagMustDoInit ][no ArenaZone no ModelZone ] -> [ Player ][ GlobalTags GlobalTagRecalculateCheckZone GlobalTagMustCheckPattern ]
+
+(Raises exception if the global tag was not created.)
+(It never happens when there is a line of wall, because this line is not a model zone nor an arean zone.)
+[ Player PlayerTagMustDoInit ] -> [ ] message ERROR : unable to find a "no-zone" square. The model zone and the arena zone must be separated by a horizontal or vertical line of wall passing through the whole level, and there must have an empty line of wall on top of the level.
+
+(Raises exception if there is no ModelZone)
+[ GlobalTags ][ ModelZone ] -> [ GlobalTags GlobalTagModelZoneExists ][ ModelZone ]
+[ GlobalTags no GlobalTagModelZoneExists ][ Player ] -> [ GlobalTags ][ ] message ERROR : no model zone. The model zone and the arena zone must be separated by a horizontal or vertical line of wall passing through the whole level, and there must have an empty line of wall on top of the level.
+
+
+( --- Adds Borders around the ModelZone --- )
+
+LEFT [ GlobalTags no GlobalTagBorderModelMade ][ ModelZone | no ModelZone ] -> [ GlobalTags ][ ModelZone | BorderModelLeft ]
+RIGHT [ GlobalTags no GlobalTagBorderModelMade ][ ModelZone | no ModelZone ] -> [ GlobalTags ][ ModelZone | BorderModelRight ]
+UP [ GlobalTags no GlobalTagBorderModelMade ][ ModelZone | no ModelZone ] -> [ GlobalTags ][ ModelZone | BorderModelUp ]
+DOWN [ GlobalTags no GlobalTagBorderModelMade ][ ModelZone | no ModelZone ] -> [ GlobalTags ][ ModelZone | BorderModelDown ]
+
+RIGHT [ GlobalTags no GlobalTagBorderModelMade ][ no BorderModelUp | BorderModelUp | ... | BorderModelUp | no BorderModelUp ] -> [ GlobalTags ][ BorderModelUpLeft | BorderModelUp | ... | BorderModelUp | BorderModelUpRight ]
+RIGHT [ GlobalTags no GlobalTagBorderModelMade ][ no BorderModelDown | BorderModelDown | ... | BorderModelDown | no BorderModelDown ] -> [ GlobalTags ][ BorderModelDownLeft | BorderModelDown | ... | BorderModelDown | BorderModelDownRight ]
+
+[ GlobalTags ] -> [ GlobalTags GlobalTagBorderModelMade ]
+
+
+( --- Searches for a unique atom in the ModelZone --- )
+
+(Initiate a loop on all the Atoms and Link of the ModelZone)
+[ GlobalTags no GlobalTagFoundUniqueAtom ][ ModelZone Atom ] -> [ GlobalTags ][ ModelZone Atom LoopIterationToDo ]
+[ GlobalTags no GlobalTagFoundUniqueAtom ][ ModelZone Link ] -> [ GlobalTags ][ ModelZone Link LoopIterationToDo ]
+
+(Starts one loop iteration, while no unique atom is found.)
+startLoop
+
+    [ GlobalTags no GlobalTagFoundUniqueAtom no GlobalTagLoopIteration ][ LoopIterationToDo ] -> [ GlobalTags GlobalTagLoopIteration ][ LoopIterationCurrent ]
+
+    (Tags all the atoms that are the same as the current one, in the ModelZone and the ArenaZone. (including the 'no Atom' case))
+    [ LoopIterationCurrent Hydrogen ][ Hydrogen ] -> [ LoopIterationCurrent Hydrogen ][ Hydrogen AtomTagged ]
+    [ LoopIterationCurrent Carbon ][ Carbon ] -> [ LoopIterationCurrent Carbon ][ Carbon AtomTagged ]
+    [ LoopIterationCurrent Oxygen ][ Oxygen ] -> [ LoopIterationCurrent Oxygen ][ Oxygen AtomTagged ]
+    [ LoopIterationCurrent Nitrogen ][ Nitrogen ] -> [ LoopIterationCurrent Nitrogen ][ Nitrogen AtomTagged ]
+    [ LoopIterationCurrent Sulfur ][ Sulfur ] -> [ LoopIterationCurrent Sulfur ][ Sulfur AtomTagged ]
+    [ LoopIterationCurrent Chlorine ][ Chlorine ] -> [ LoopIterationCurrent Chlorine ][ Chlorine AtomTagged ]
+    [ LoopIterationCurrent Phosphore ][ Phosphore ] -> [ LoopIterationCurrent Phosphore ][ Phosphore AtomTagged ]
+    [ LoopIterationCurrent Cristal ][ Cristal ] -> [ LoopIterationCurrent Cristal ][ Cristal AtomTagged ]
+    [ LoopIterationCurrent EmptyAtom ][ EmptyAtom ] -> [ LoopIterationCurrent EmptyAtom ][ EmptyAtom AtomTagged ]
+    [ LoopIterationCurrent Fluorine ][ Fluorine ] -> [ LoopIterationCurrent Fluorine ][ Fluorine AtomTagged ]
+    [ LoopIterationCurrent no Atom ][ no Atom ] -> [ LoopIterationCurrent no Atom ][ no Atom AtomTagged ]
+
+    (Tags all the LinkLeft that are the same as the current one, in the ModelZone and the ArenaZone. (including the 'no LinkLeft' case))
+    [ LoopIterationCurrent LinkLeftSimple ][ LinkLeftSimple ] -> [ LoopIterationCurrent LinkLeftSimple ][ LinkLeftSimple LinkLeftTagged ]
+    [ LoopIterationCurrent LinkLeftDouble ][ LinkLeftDouble ] -> [ LoopIterationCurrent LinkLeftDouble ][ LinkLeftDouble LinkLeftTagged ]
+    [ LoopIterationCurrent LinkLeftTriple ][ LinkLeftTriple ] -> [ LoopIterationCurrent LinkLeftTriple ][ LinkLeftTriple LinkLeftTagged ]
+    [ LoopIterationCurrent no LinkLeft ][ no LinkLeft ] -> [ LoopIterationCurrent no LinkLeft ][ no LinkLeft LinkLeftTagged ]
+
+    (Tags all the LinkRight, etc.)
+    [ LoopIterationCurrent LinkRightSimple ][ LinkRightSimple ] -> [ LoopIterationCurrent LinkRightSimple ][ LinkRightSimple LinkRightTagged ]
+    [ LoopIterationCurrent LinkRightDouble ][ LinkRightDouble ] -> [ LoopIterationCurrent LinkRightDouble ][ LinkRightDouble LinkRightTagged ]
+    [ LoopIterationCurrent LinkRightTriple ][ LinkRightTriple ] -> [ LoopIterationCurrent LinkRightTriple ][ LinkRightTriple LinkRightTagged ]
+    [ LoopIterationCurrent no LinkRight ][ no LinkRight ] -> [ LoopIterationCurrent no LinkRight ][ no LinkRight LinkRightTagged ]
+
+    (etc.)
+    [ LoopIterationCurrent LinkUpSimple ][ LinkUpSimple ] -> [ LoopIterationCurrent LinkUpSimple ][ LinkUpSimple LinkUpTagged ]
+    [ LoopIterationCurrent LinkUpDouble ][ LinkUpDouble ] -> [ LoopIterationCurrent LinkUpDouble ][ LinkUpDouble LinkUpTagged ]
+    [ LoopIterationCurrent LinkUpTriple ][ LinkUpTriple ] -> [ LoopIterationCurrent LinkUpTriple ][ LinkUpTriple LinkUpTagged ]
+    [ LoopIterationCurrent no LinkUp ][ no LinkUp ] -> [ LoopIterationCurrent no LinkUp ][ no LinkUp LinkUpTagged ]
+
+    (etc.)
+    [ LoopIterationCurrent LinkDownSimple ][ LinkDownSimple ] -> [ LoopIterationCurrent LinkDownSimple ][ LinkDownSimple LinkDownTagged ]
+    [ LoopIterationCurrent LinkDownDouble ][ LinkDownDouble ] -> [ LoopIterationCurrent LinkDownDouble ][ LinkDownDouble LinkDownTagged ]
+    [ LoopIterationCurrent LinkDownTriple ][ LinkDownTriple ] -> [ LoopIterationCurrent LinkDownTriple ][ LinkDownTriple LinkDownTagged ]
+    [ LoopIterationCurrent no LinkDown ][ no LinkDown ] -> [ LoopIterationCurrent no LinkDown ][ no LinkDown LinkDownTagged ]
+
+    (etc. with diagonal links)
+    [ LoopIterationCurrent LinkUpRightSimple ][ LinkUpRightSimple ] -> [ LoopIterationCurrent LinkUpRightSimple ][ LinkUpRightSimple LinkUpRightTagged ]
+    [ LoopIterationCurrent no LinkUpRight ][ no LinkUpRight ] -> [ LoopIterationCurrent no LinkUpRight ][ no LinkUpRight LinkUpRightTagged ]
+
+    (etc.)
+    [ LoopIterationCurrent LinkDownRightSimple ][ LinkDownRightSimple ] -> [ LoopIterationCurrent LinkDownRightSimple ][ LinkDownRightSimple LinkDownRightTagged ]
+    [ LoopIterationCurrent no LinkDownRight ][ no LinkDownRight ] -> [ LoopIterationCurrent no LinkDownRight ][ no LinkDownRight LinkDownRightTagged ]
+
+    (etc.)
+    [ LoopIterationCurrent LinkDownLeftSimple ][ LinkDownLeftSimple ] -> [ LoopIterationCurrent LinkDownLeftSimple ][ LinkDownLeftSimple LinkDownLeftTagged ]
+    [ LoopIterationCurrent no LinkDownLeft ][ no LinkDownLeft ] -> [ LoopIterationCurrent no LinkDownLeft ][ no LinkDownLeft LinkDownLeftTagged ]
+
+    (etc.)
+    [ LoopIterationCurrent LinkUpLeftSimple ][ LinkUpLeftSimple ] -> [ LoopIterationCurrent LinkUpLeftSimple ][ LinkUpLeftSimple LinkUpLeftTagged ]
+    [ LoopIterationCurrent no LinkUpLeft ][ no LinkUpLeft ] -> [ LoopIterationCurrent no LinkUpLeft ][ no LinkUpLeft LinkUpLeftTagged ]
+
+    (If another Atom in the ModelZone has all its characteristics tagged, it means the current Atom is not Unique.)
+    (This loop iteration is a fail.)
+    [ GlobalTags no GlobalTagFoundUniqueAtom ][ no LoopIterationCurrent ModelZone AtomTagged LinkLeftTagged LinkRightTagged LinkUpTagged LinkDownTagged LinkUpRightTagged LinkDownRightTagged LinkDownLeftTagged LinkUpLeftTagged ] -> [ GlobalTags no GlobalTagFoundUniqueAtom GlobalTagSearchUniqueFail ][ ModelZone AtomTagged LinkLeftTagged LinkRightTagged LinkUpTagged LinkDownTagged LinkUpRightTagged LinkDownRightTagged LinkDownLeftTagged LinkUpLeftTagged ]
+
+    (If this loop iteration is not a fail, declares the current atom as unique.)
+    (The following rule is executed twice : once in the ModelZone, once in the ArenaZone.)
+    (So that the position of the unique atom is known in both zones.)
+    [ GlobalTags no GlobalTagFoundUniqueAtom no GlobalTagSearchUniqueFail ][ AtomTagged LinkLeftTagged LinkRightTagged LinkUpTagged LinkDownTagged LinkUpRightTagged LinkDownRightTagged LinkDownLeftTagged LinkUpLeftTagged ] -> [ GlobalTags ][ UniqueAtomStartCheck ]
+
+    (Declares that a unique atom has been found.)
+    [ GlobalTags no GlobalTagFoundUniqueAtom no GlobalTagSearchUniqueFail ][ LoopIterationCurrent ] -> [ GlobalTags GlobalTagFoundUniqueAtom ][ LoopIterationCurrent ]
+
+    (End of loop iteration. Cleans all : tags, loop objects, fail tag.)
+    [ AtomTagged ] -> [ ]
+    [ LinkTagged ] -> [ ]
+    [ LoopIterationCurrent ] -> [ ]
+    [ GlobalTagLoopIteration ] -> [ ]
+    [ GlobalTagSearchUniqueFail ] -> [ ]
+
+endLoop
+
+(Raise exception if no unique atom is found.)
+[ GlobalTags no GlobalTagFoundUniqueAtom ][ Player ] -> [ GlobalTags no GlobalTagFoundUniqueAtom ][ ] message ERROR : no unique element (atom+links). A level must have at least one unique element.
+
+(Cleans all the loop elements that may be left after the search of a unique atom)
+[ LoopIterationToDo ] -> [ ]
+
+
+( --- Handles player and atom/links moves --- )
+
+[ > Player | no ArenaZone ] -> cancel
+
+(Prepares tags to have the "again" rule when player moves an atom.)
+(Prepares tags to enable the pattern check when a move is finished.)
+LEFT [ GlobalTagSlideLeft ][ Player | no Obstacle ] -> [ GlobalTagSlideLeft ][ LEFT Player | ]
+LEFT [ GlobalTags GlobalTagSlideLeft ][ Player | Obstacle ] -> [ GlobalTags GlobalTagMustCheckPattern ][ Player | Obstacle ]
+RIGHT [ GlobalTagSlideRight ][ Player | no Obstacle ] -> [ GlobalTagSlideRight ][ RIGHT Player | ]
+RIGHT [ GlobalTags GlobalTagSlideRight ][ Player | Obstacle ] -> [ GlobalTags GlobalTagMustCheckPattern ][ Player | Obstacle ]
+UP [ GlobalTagSlideUp ][ Player | no Obstacle ] -> [ GlobalTagSlideUp ][ UP Player | ]
+UP [ GlobalTags GlobalTagSlideUp ][ Player | Obstacle ] -> [ GlobalTags GlobalTagMustCheckPattern ][ Player | Obstacle ]
+DOWN [ GlobalTagSlideDown ][ Player | no Obstacle ] -> [ GlobalTagSlideDown ][ DOWN Player | ]
+DOWN [ GlobalTags GlobalTagSlideDown ][ Player | Obstacle ] -> [ GlobalTags GlobalTagMustCheckPattern ][ Player | Obstacle ]
+
+[ GlobalTags GlobalTagMustCheckPattern ][ MovingAtom ] -> [ GlobalTags GlobalTagMustCheckPattern ][ ]
+
+[ > Player SelectedAtom Atom ] -> [ > Player > SelectedAtom > Atom ]
+[ > Player SelectedAtom Link ] -> [ > Player > SelectedAtom > Link ]
+[ > Player > SelectedAtom ] -> [ > Player > SelectedAtom > MovingAtom ]
+[ > Player SelectedAtom UniqueAtomStartCheck ] -> [ > Player SelectedAtom > UniqueAtomStartCheck ]
+
+[ > Atom | Obstacle ] -> cancel
+[ > Link | Obstacle ] -> cancel
+
+[ GlobalTags no GlobalTagSlideLeft ][ LEFT SelectedAtom ] -> [ GlobalTags GlobalTagSlideLeft ][ LEFT SelectedAtom ]
+[ GlobalTags no GlobalTagSlideRight ][ RIGHT SelectedAtom ] -> [ GlobalTags GlobalTagSlideRight ][ RIGHT SelectedAtom ]
+[ GlobalTags no GlobalTagSlideUp ][ UP SelectedAtom ] -> [ GlobalTags GlobalTagSlideUp ][ UP SelectedAtom ]
+[ GlobalTags no GlobalTagSlideDown ][ DOWN SelectedAtom ] -> [ GlobalTags GlobalTagSlideDown ][ DOWN SelectedAtom ]
+[ GlobalTagSlide ] -> again
+
+[ GlobalTags ][ > UniqueAtomStartCheck ] -> [ GlobalTags GlobalTagRecalculateCheckZone ][ > UniqueAtomStartCheck ]
+
+( --- Grabs or releases selected atom --- )
+
+[ Action Player SelectedAtom ] -> [ Player no SelectedAtom ]
+[ Action Player Atom no SelectedAtom ] -> [ Player Atom SelectedAtom ]
+
+
+( --- Calculates CheckZone --- )
+(The checkzone is calculated only if the unique atom moved and if the current sliding is done)
+(This is why we always check for both "GlobalTags" "GlobalTagRecalculateCheckZone" during the calculation.)
+
+late [ GlobalTagMustCheckPattern GlobalTagRecalculateCheckZone ][ CheckZone ] -> [ GlobalTagMustCheckPattern GlobalTagRecalculateCheckZone ][ ]
+
+late [ GlobalTagMustCheckPattern GlobalTagRecalculateCheckZone ][ UniqueAtomStartCheck ] -> [ GlobalTagMustCheckPattern GlobalTagRecalculateCheckZone ][ UniqueAtomStartCheck CopyToRight CopyToUp CopyToDown CopyToLeft ]
+late [ GlobalTagMustCheckPattern GlobalTagRecalculateCheckZone ][ UniqueAtomStartCheck ArenaZone ] -> [ GlobalTagMustCheckPattern GlobalTagRecalculateCheckZone ][ UniqueAtomStartCheck ArenaZone CheckZone ]
+
+late RIGHT [ ModelZone CopyToRight | ModelZone ][ ArenaZone CopyToRight |  ] -> [ ModelZone | CopyToRight ModelZone ][ ArenaZone | CopyToRight CheckZone ]
+late LEFT [ ModelZone CopyToLeft | ModelZone ][ ArenaZone CopyToLeft |  ] -> [ ModelZone | CopyToLeft ModelZone ][ ArenaZone | CopyToLeft CheckZone ]
+late UP [ ModelZone CopyToUp | ModelZone ][ ArenaZone CopyToUp |  ] -> [ ModelZone | CopyToUp ModelZone ][ ArenaZone | CopyToUp CheckZone ]
+late DOWN [ ModelZone CopyToDown | ModelZone ][ ArenaZone CopyToDown |  ] -> [ ModelZone | CopyToDown ModelZone ][ ArenaZone | CopyToDown CheckZone ]
+
+late [ CopyToUp ] -> [ ]
+late [ CopyToRight ] -> [ ]
+late [ CopyToDown ] -> [ ]
+late [ CopyToLeft ] -> [ ]
+
+(Extend the CheckZone to its bounding rect.)
+(No need to fill the gap, because the initial CheckZone is consisted of a cross, which is one block of adjacent tiles.)
+late [ GlobalTagMustCheckPattern GlobalTagRecalculateCheckZone ][ CheckZone ] -> [ GlobalTagMustCheckPattern GlobalTagRecalculateCheckZone ][ CheckZone PropagateVertical PropagateHorizontal ]
+late VERTICAL [ PropagateVertical | ] -> [ PropagateVertical | PropagateVertical ]
+late HORIZONTAL [ PropagateHorizontal | ] -> [ PropagateHorizontal | PropagateHorizontal ]
+late [ PropagateHorizontal PropagateVertical ] -> [ CheckZone ]
+late [ PropagateVertical ] -> [ ]
+late [ PropagateHorizontal ] -> [ ]
+
+late [ GlobalTagMustCheckPattern GlobalTagRecalculateCheckZone ] -> [ GlobalTagMustCheckPattern ]
+
+
+( --- Checks equality between ModelZone and CheckZone --- )
+
+(Debug only. Comment on release)
+([ CurrentCheckedOK ] -> [ ])
+
+(Initiates a loop on every squares of the ModelZone and CheckZone)
+(The LoopIterationToDo objects are added two by two, one on the ModelZone and one on the CheckZone.)
+(So that there is always the same number of "looped" ModelZone and "looped" CheckZone.)
+late [ GlobalTagMustCheckPattern ][ ModelZone no LoopIterationToDo ][ CheckZone no LoopIterationToDo ] -> [ GlobalTagMustCheckPattern ][ ModelZone LoopIterationToDo ][ CheckZone LoopIterationToDo ]
+(Checks if there is the same quantity of looped ModelZones and CheckZones. If not, add a GlobalTagCheckZoneUncomplete.)
+(In that case, no need to check the pattern, it will inevitably fail.)
+(That case may happen if the unique atom is near a border.)
+late [ GlobalTags GlobalTagMustCheckPattern ][ ModelZone no LoopIterationToDo ][ CheckZone LoopIterationToDo ] -> [ GlobalTags GlobalTagMustCheckPattern GlobalTagCheckZoneUncomplete ][ ModelZone ][ CheckZone LoopIterationToDo ]
+(CheckZone is not complete. We cancel all the pattern-check loop.)
+late [ GlobalTagCheckZoneUncomplete ][ LoopIterationToDo ] -> [ GlobalTagCheckZoneUncomplete ][ ]
+late [ GlobalTags GlobalTagCheckZoneUncomplete ] -> [ GlobalTags GlobalTagCheckFailed ]
+
+(Starts one loop iteration, on ModelZone and CheckZone at the same time.)
+startLoop
+
+late [ GlobalTags no GlobalTagLoopIteration no GlobalTagCheckFailed ][ LoopIterationToDo ModelZone ][ LoopIterationToDo CheckZone ] -> [ GlobalTags GlobalTagLoopIteration ][ LoopIterationCurrent ModelZone ][     LoopIterationCurrent CheckZone ]
+
+    (PuzzleScript, why you no have variables ?)
+    late [ LoopIterationCurrent ModelZone no Atom ][ LoopIterationCurrent CheckZone no Atom ] -> [ LoopIterationCurrent ModelZone no Atom CurrentCheckedOK ][ LoopIterationCurrent CheckZone no Atom ]
+    late [ LoopIterationCurrent ModelZone Hydrogen ][ LoopIterationCurrent CheckZone Hydrogen ] -> [ LoopIterationCurrent ModelZone Hydrogen CurrentCheckedOK ][ LoopIterationCurrent CheckZone Hydrogen ]
+    late [ LoopIterationCurrent ModelZone Carbon ][ LoopIterationCurrent CheckZone Carbon ] -> [ LoopIterationCurrent ModelZone Carbon CurrentCheckedOK ][ LoopIterationCurrent CheckZone Carbon ]
+    late [ LoopIterationCurrent ModelZone Oxygen ][ LoopIterationCurrent CheckZone Oxygen ] -> [ LoopIterationCurrent ModelZone Oxygen CurrentCheckedOK ][ LoopIterationCurrent CheckZone Oxygen ]
+    late [ LoopIterationCurrent ModelZone Nitrogen ][ LoopIterationCurrent CheckZone Nitrogen ] -> [ LoopIterationCurrent ModelZone Nitrogen CurrentCheckedOK ][ LoopIterationCurrent CheckZone Nitrogen ]
+    late [ LoopIterationCurrent ModelZone Sulfur ][ LoopIterationCurrent CheckZone Sulfur ] -> [ LoopIterationCurrent ModelZone Sulfur CurrentCheckedOK ][ LoopIterationCurrent CheckZone Sulfur ]
+    late [ LoopIterationCurrent ModelZone Chlorine ][ LoopIterationCurrent CheckZone Chlorine ] -> [ LoopIterationCurrent ModelZone Chlorine CurrentCheckedOK ][ LoopIterationCurrent CheckZone Chlorine ]
+    late [ LoopIterationCurrent ModelZone Phosphore ][ LoopIterationCurrent CheckZone Phosphore ] -> [ LoopIterationCurrent ModelZone Phosphore CurrentCheckedOK ][ LoopIterationCurrent CheckZone Phosphore ]
+    late [ LoopIterationCurrent ModelZone Cristal ][ LoopIterationCurrent CheckZone Cristal ] -> [ LoopIterationCurrent ModelZone Cristal CurrentCheckedOK ][ LoopIterationCurrent CheckZone Cristal ]
+    late [ LoopIterationCurrent ModelZone EmptyAtom ][ LoopIterationCurrent CheckZone EmptyAtom ] -> [ LoopIterationCurrent ModelZone EmptyAtom CurrentCheckedOK ][ LoopIterationCurrent CheckZone EmptyAtom ]
+    late [ LoopIterationCurrent ModelZone Fluorine ][ LoopIterationCurrent CheckZone Fluorine ] -> [ LoopIterationCurrent ModelZone Fluorine CurrentCheckedOK ][ LoopIterationCurrent CheckZone Fluorine ]
+
+    late [ GlobalTags ][ LoopIterationCurrent ModelZone no CurrentCheckedOK ] -> [ GlobalTags GlobalTagCheckFailed ][ LoopIterationCurrent ModelZone ]
+    late [ LoopIterationCurrent CurrentCheckedOK ] -> [ LoopIterationCurrent ]
+
+    (checks 4-dirs links.)
+
+    late [ LoopIterationCurrent ModelZone no LinkLeft ][ LoopIterationCurrent CheckZone no LinkLeft ] -> [ LoopIterationCurrent ModelZone no LinkLeft CurrentCheckedOK ][ LoopIterationCurrent CheckZone no LinkLeft ]
+    late [ LoopIterationCurrent ModelZone LinkLeftSimple ][ LoopIterationCurrent CheckZone LinkLeftSimple ] -> [ LoopIterationCurrent ModelZone LinkLeftSimple CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkLeftSimple ]
+    late [ LoopIterationCurrent ModelZone LinkLeftDouble ][ LoopIterationCurrent CheckZone LinkLeftDouble ] -> [ LoopIterationCurrent ModelZone LinkLeftDouble CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkLeftDouble ]
+    late [ LoopIterationCurrent ModelZone LinkLeftTriple ][ LoopIterationCurrent CheckZone LinkLeftTriple ] -> [ LoopIterationCurrent ModelZone LinkLeftTriple CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkLeftTriple ]
+
+    late [ GlobalTags ][ LoopIterationCurrent ModelZone no CurrentCheckedOK ] -> [ GlobalTags GlobalTagCheckFailed ][ LoopIterationCurrent ModelZone ]
+    late [ LoopIterationCurrent CurrentCheckedOK ] -> [ LoopIterationCurrent ]
+
+    late [ LoopIterationCurrent ModelZone no LinkRight ][ LoopIterationCurrent CheckZone no LinkRight ] -> [ LoopIterationCurrent ModelZone no LinkRight CurrentCheckedOK ][ LoopIterationCurrent CheckZone no LinkRight ]
+    late [ LoopIterationCurrent ModelZone LinkRightSimple ][ LoopIterationCurrent CheckZone LinkRightSimple ] -> [ LoopIterationCurrent ModelZone LinkRightSimple CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkRightSimple ]
+    late [ LoopIterationCurrent ModelZone LinkRightDouble ][ LoopIterationCurrent CheckZone LinkRightDouble ] -> [ LoopIterationCurrent ModelZone LinkRightDouble CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkRightDouble ]
+    late [ LoopIterationCurrent ModelZone LinkRightTriple ][ LoopIterationCurrent CheckZone LinkRightTriple ] -> [ LoopIterationCurrent ModelZone LinkRightTriple CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkRightTriple ]
+
+    late [ GlobalTags ][ LoopIterationCurrent ModelZone no CurrentCheckedOK ] -> [ GlobalTags GlobalTagCheckFailed ][ LoopIterationCurrent ModelZone ]
+    late [ LoopIterationCurrent CurrentCheckedOK ] -> [ LoopIterationCurrent ]
+
+    late [ LoopIterationCurrent ModelZone no LinkUp ][ LoopIterationCurrent CheckZone no LinkUp ] -> [ LoopIterationCurrent ModelZone no LinkUp CurrentCheckedOK ][ LoopIterationCurrent CheckZone no LinkUp ]
+    late [ LoopIterationCurrent ModelZone LinkUpSimple ][ LoopIterationCurrent CheckZone LinkUpSimple ] -> [ LoopIterationCurrent ModelZone LinkUpSimple CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkUpSimple ]
+    late [ LoopIterationCurrent ModelZone LinkUpDouble ][ LoopIterationCurrent CheckZone LinkUpDouble ] -> [ LoopIterationCurrent ModelZone LinkUpDouble CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkUpDouble ]
+    late [ LoopIterationCurrent ModelZone LinkUpTriple ][ LoopIterationCurrent CheckZone LinkUpTriple ] -> [ LoopIterationCurrent ModelZone LinkUpTriple CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkUpTriple ]
+
+    late [ GlobalTags ][ LoopIterationCurrent ModelZone no CurrentCheckedOK ] -> [ GlobalTags GlobalTagCheckFailed ][ LoopIterationCurrent ModelZone ]
+    late [ LoopIterationCurrent CurrentCheckedOK ] -> [ LoopIterationCurrent ]
+
+    late [ LoopIterationCurrent ModelZone no LinkDown ][ LoopIterationCurrent CheckZone no LinkDown ] -> [ LoopIterationCurrent ModelZone no LinkDown CurrentCheckedOK ][ LoopIterationCurrent CheckZone no LinkDown ]
+    late [ LoopIterationCurrent ModelZone LinkDownSimple ][ LoopIterationCurrent CheckZone LinkDownSimple ] -> [ LoopIterationCurrent ModelZone LinkDownSimple CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkDownSimple ]
+    late [ LoopIterationCurrent ModelZone LinkDownDouble ][ LoopIterationCurrent CheckZone LinkDownDouble ] -> [ LoopIterationCurrent ModelZone LinkDownDouble CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkDownDouble ]
+    late [ LoopIterationCurrent ModelZone LinkDownTriple ][ LoopIterationCurrent CheckZone LinkDownTriple ] -> [ LoopIterationCurrent ModelZone LinkDownTriple CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkDownTriple ]
+
+    late [ GlobalTags ][ LoopIterationCurrent ModelZone no CurrentCheckedOK ] -> [ GlobalTags GlobalTagCheckFailed ][ LoopIterationCurrent ModelZone ]
+    late [ LoopIterationCurrent CurrentCheckedOK ] -> [ LoopIterationCurrent ]
+
+    (checks diagonal links.)
+
+    late [ LoopIterationCurrent ModelZone no LinkUpRight ][ LoopIterationCurrent CheckZone no LinkUpRight ] -> [ LoopIterationCurrent ModelZone no LinkUpRight CurrentCheckedOK ][ LoopIterationCurrent CheckZone no LinkUpRight ]
+    late [ LoopIterationCurrent ModelZone LinkUpRightSimple ][ LoopIterationCurrent CheckZone LinkUpRightSimple ] -> [ LoopIterationCurrent ModelZone LinkUpRightSimple CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkUpRightSimple ]
+
+    late [ GlobalTags ][ LoopIterationCurrent ModelZone no CurrentCheckedOK ] -> [ GlobalTags GlobalTagCheckFailed ][ LoopIterationCurrent ModelZone ]
+    late [ LoopIterationCurrent CurrentCheckedOK ] -> [ LoopIterationCurrent ]
+
+    late [ LoopIterationCurrent ModelZone no LinkDownRight ][ LoopIterationCurrent CheckZone no LinkDownRight ] -> [ LoopIterationCurrent ModelZone no LinkDownRight CurrentCheckedOK ][ LoopIterationCurrent CheckZone no LinkDownRight ]
+    late [ LoopIterationCurrent ModelZone LinkDownRightSimple ][ LoopIterationCurrent CheckZone LinkDownRightSimple ] -> [ LoopIterationCurrent ModelZone LinkDownRightSimple CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkDownRightSimple ]
+
+    late [ GlobalTags ][ LoopIterationCurrent ModelZone no CurrentCheckedOK ] -> [ GlobalTags GlobalTagCheckFailed ][ LoopIterationCurrent ModelZone ]
+    late [ LoopIterationCurrent CurrentCheckedOK ] -> [ LoopIterationCurrent ]
+
+    late [ LoopIterationCurrent ModelZone no LinkDownLeft ][ LoopIterationCurrent CheckZone no LinkDownLeft ] -> [ LoopIterationCurrent ModelZone no LinkDownLeft CurrentCheckedOK ][ LoopIterationCurrent CheckZone no LinkDownLeft ]
+    late [ LoopIterationCurrent ModelZone LinkDownLeftSimple ][ LoopIterationCurrent CheckZone LinkDownLeftSimple ] -> [ LoopIterationCurrent ModelZone LinkDownLeftSimple CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkDownLeftSimple ]
+
+    late [ GlobalTags ][ LoopIterationCurrent ModelZone no CurrentCheckedOK ] -> [ GlobalTags GlobalTagCheckFailed ][ LoopIterationCurrent ModelZone ]
+    late [ LoopIterationCurrent CurrentCheckedOK ] -> [ LoopIterationCurrent ]
+
+    late [ LoopIterationCurrent ModelZone no LinkUpLeft ][ LoopIterationCurrent CheckZone no LinkUpLeft ] -> [ LoopIterationCurrent ModelZone no LinkUpLeft CurrentCheckedOK ][ LoopIterationCurrent CheckZone no LinkUpLeft ]
+    late [ LoopIterationCurrent ModelZone LinkUpLeftSimple ][ LoopIterationCurrent CheckZone LinkUpLeftSimple ] -> [ LoopIterationCurrent ModelZone LinkUpLeftSimple CurrentCheckedOK ][ LoopIterationCurrent CheckZone LinkUpLeftSimple ]
+
+    late [ GlobalTags ][ LoopIterationCurrent ModelZone no CurrentCheckedOK ] -> [ GlobalTags GlobalTagCheckFailed ][ LoopIterationCurrent ModelZone ]
+    late [ LoopIterationCurrent CurrentCheckedOK ] -> [ LoopIterationCurrent ]
+
+    (Debug only. Comment on release)
+    (late [ GlobalTags no GlobalTagCheckFailed ][ LoopIterationCurrent ] -> [ GlobalTags ][ LoopIterationCurrent CurrentCheckedOK ])
+
+    late [ LoopIterationCurrent ] -> [ ]
+    late [ GlobalTagLoopIteration ] -> [ ]
+
+endLoop
+
+late random [ GlobalTags GlobalTagMustCheckPattern no GlobalTagCheckFailed ][ ArenaZone Atom ] -> [ GlobalTags GlobalTagMustCheckPattern GlobalTagWon ][ ArenaZone WinStar0 ]
+late [ GlobalTagWon ][ Player SelectedAtom ] -> [ GlobalTagWon ][ ]
+
+late [ GlobalTagCheckFailed] -> [ ]
+late [ LoopIterationToDo] -> [ ]
+late [ GlobalTagMustCheckPattern ] -> [ ]
+
+(The evolution of WinStars must be written in reversed order, to prevent a WinStar0 to be replaced by a WinStar3 in one turn)
+(Anyway, because it loops, the 3 following actions are made in one turn :)
+(removing of WinStar4, creation of  WinStar0, replacement of WinStar0 by WinStar1)
+(This is why WinStar0 is a transparent object)
+late random [ WinStar4 ][ ArenaZone Atom ] -> [ ][ ArenaZone WinStar0 ]
+late [ WinStar4 ] -> [ ]
+late [ WinStar3 ] -> [ WinStar4 ]
+late [ WinStar2 ] -> [ WinStar3 ]
+late [ WinStar1 ] -> [ WinStar2 ]
+late [ WinStar0 ] -> [ WinStar1 ]
+late [ GlobalTagWon ] -> again
+
+late [ WinStar Link ] -> [ WinStar ]
+
+==============
+WINCONDITIONS
+==============
+
+Some GlobalTagWon
+no Atom on ArenaZone
+no WinStar
+
+
+=======
+LEVELS
+=======
+
+(Test to validate the detection of zones overlapping)
+(#######)
+(#....A#)
+(#.#####)
+(#.#.AB#)
+(#B#...#)
+(###*..#)
+(###...#)
+(###...#)
+(#######)
+
+(Test to validate the detection of lack of model zone)
+(FUTURE : this level raises an exception, but not the good one.)
+(Need to find where is the problem : in the code or in the test.)
+(#######)
+(#....A#)
+(#.#####)
+(#.#.AB#)
+(#B....#)
+(###*..#)
+(###...#)
+(###...#)
+(#######)
+
+(Test to validate the detection of lack of global tag)
+(FUTURE : this test fails too.)
+(It wins instantly. And does not raise any error message)
+(..A#..)
+(..##.*)
+(..#...)
+(B.##AB)
+
+(Test to validate the detection of lack of unique element)
+(FUTURE : this test semi-fails.)
+(An error message is raised, but the level is won just after.)
+(#######)
+(#..#.*#)
+(#AB#AA#)
+(#AB#BB#)
+(#######)
+
+(Test to validate all the atom-related rules, and the atoms appearance)
+(Must have the following values in the legend)
+(0 = Hydrogen)
+(1 = Carbon)
+(2 = Oxygen)
+(3 = Nitrogen)
+(4 = Sulfur)
+(5 = Chlorine)
+(6 = Phosphore)
+(7 = Cristal)
+(8 = EmptyAtom and LinkUpSimple and LinkDownSimple)
+(9 = Fluorine)
+()
+(############)
+(#0123456789#)
+(############)
+(#....*.....#)
+(#5742690138#)
+(############)
+
+
+(The global background where to put levels,)
+(if you want to have sort of the look and feel of the original Atomix game.)
+(Totally optional. You may use a background filled with "#" or "," if you prefer.)
+(/+,,,-\,-\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%)
+(%\/+,/+,,,-\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\)
+(\/%\/%\/+,,,-\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/)
+(/%\/%\/%\,,,,/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%)
+(%\/%\/%\/+,,,-\,-\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\)
+(\/%\/%\/%\/+,/+,,,-\/%\/%\/%\/%\/%\/%\/%\/%\/%\/)
+(/%\/%\/%\/%\/%\/+,,,-\/%\/%\/%\/%\/%\/%\/%\/%\/%)
+(%\/%\/%\/%\/%\/%\/+,,,-\/%\/%\/%\/%\/%\/%\/%\/%\)
+(\/%\/%\/%\/%\/%\/%\,,,,/%\/%\/%\/%\/%\/%\/%\/%\/)
+(/%\/%\/%\/%\/%\/%\/+,,,-\/%\/%\/%\/%\/%\/%\/%\/%)
+(%\/%\/%\/%\/%\/%\/%\/+,,,-\,-\/%\/%\/%\/%\/%\/%\)
+(\/%\/%\/%\/%\/%\/%\/%\/+,/+,,,-\/%\/%\/%\/%\/%\/)
+(/%\/%\/%\/%\/%\/%\/%\/%\/%\,,,,/%\/%\/%\/%\/%\/%)
+(%\/%\/%\/%\/%\/%\/%\/%\/%\/+,,,-\,-\/%\/%\/%\/%\)
+(\/%\/%\/%\/%\/%\/%\/%\/%\/%\/+,/+,,,-\,-\/%\/%\/)
+(/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/+,,,,,/%\/%\/%)
+(%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/+,,,-\/%\/%\)
+(\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/+,,,-\/%\/)
+(/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\,,,,/%\/%)
+(%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/+,,,-\,-\)
+(\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/+,/+,,,)
+(/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/+,)
+(%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/%\/)
+
+(Simple example)
+
+(.......)
+(..AB...)
+(....C..)
+(.......)
+(#######)
+(#..A###)
+(#....##)
+(#.*..##)
+(#...B##)
+(#...#C#)
+(#######)
+
+
+(Insert here the levels generated by the python script kpjson_to_puzzle)
+
+message Original game : Atomix.
+
+message https://en.wikipedia.org/wiki/Atomix_(video_game)
+
+message Level pack made by Draknek.
+
+message http://blog.draknek.org/post/93360531842/if-i-wanted-to-clone-atomix-this-is-where-id
+
+message Let's start with "Carbon Dioxide".
+
+,,,-\,-\/%\/%\
+/+,/+,,,###%\/
+%\/%\,,,#.#\/%
+\/%\/+###.###\
+/%\/%\#*cba.#,
+%abc\/#######,
+\/%\/%\/%\/%\/
+
+
+message Water
+
+,/%\/%\/%\/%\/
+,-\,-\#####\/%
+,/+,,,#d..##%\
+/%\/+,#....#\/
+%\/%\/#*...##%
+\de./%#e..#f#\
+/..f%\#######/
+%\/%\/%\/+,,,-
+
+
+message Hydrogen Peroxide
+
+,-\/%\/%\/%\/%\
+,,,-\/%#######/
+,,,,/%\#g...h#%
++g...\/#..*..#\
+\.he.,-#e...f#/
+/...f,/#######%
+%\/%\/%\,,,,/%\
+
+
+message Hydroxylamine
+
+,-\/%\/%\/%\/%
+,,,-\/#######\
+,,,,/%#..#..#/
++.i.-\#..i*.#%
+\.j./+#..k..#\
+/.k.%\#l#j#f#/
+%l.f\/#######-
+\/%\/%\/%\,,,,
+
+
+message Methane
+
+-\,-\/%\/%\/%\
+/+,,,-#######/
+%\,,,,#g...m#%
+\/+,,,#.....#\
+/%\/+,#*#n#.#,
+%g.m\/#..#..#,
+\.n./%#l...f#,
+/l.f%\#######+
+%\/%\/%\/%\/%\
+
+
+message Water 2
+
+,,,-\,-\/%\/%\
+/+,/+,,#####\/
+%\/%\,##g..##%
+\/%\/+#.....#\
+/%\/%\#..o*.#,
+%g..\/#....f#,
+\.o./%##...##/
+/..f%\/#####/%
+%\/%\/%\/%\/%\
+
+
+message Methanol
+
+-\,-\/%\/%\/%\/
+/+,,,-\#######%
+%\/+,,,#..i..#\
+\/%\,,,#..h..#/
+/%\/+,,#.q#g*#%
+%g.i./+#..p..#\
+\.hpq%\#..r..#,
+/..r.\/#######,
+%\/%\/%\/%\/%\,
+
+
+message Ethylene
+
+-\/%\/%\/%\/%\/
+,,-\/%\#######%
++,,,-\/#g...m#\
+\,,,,/%#..s..#/
+/g..m-\#*.t..#%
+%.st./+#l...f#\
+\l..f%\#######/
+/%\/%\/%\/+,,,-
+
+
+message Ammonia
+
+-\,-\/%\/%\/%\
+/+,,,-\/###%\/
+%\,,,,/##i##/%
+\/+,,,##...##\
+/%\/+,#f.*.l#,
+%.i.\/##...##,
+\.k./%\##k##,,
+/l.f%\/%###\/+
+%\/%\/%\/%\/%\
+
+
+message Propadiene
+
+/+,,,-\/%\/%\/%\
+%\/+,,#########/
+\/%\/+#.i.#.i.#%
+/%\/%\#...#...#\
+%\/%\/#.w.b*u.#/
+\i.i/%#...#...#-
+/ubw%\#.r.#.r.#,
+%r.r\/#########,
+\/%\/%\/%\/%\/+,
+
+
+message Formaldehyde
+
+-\,-\/%\/%\/%\
+/+,,,-\/%####/
+%\,,,,/%\#.m#%
+\/+,,,####..#\
+/%\/+,#.*x.a#,
+%..m\/####..#,
+\ax./%\/%#.f#,
+/..f%\/%\####+
+%\/%\/%\/%\/%\
+
+
+message Hyponitrous acid
+
+\,-\/%\/%\/%\/%\/%
++,,,-\/%\########\
+\,,,,/%\/#y....d#/
+/+,,,-\,-#..##..#%
+%\/+,/+,,#..he*.#\
+\de..../+#..##..#/
+/..yz..%\#q....z#%
+%....hq\/########\
+\/%\/%\/%\/%\,,,,/
+
+
+message Carbonic acid
+
+\/%\/%\/%\/%\/%\
+,-\/%\/%#######/
+,,,-\/%\#g...m#%
+/+,,,-\/#..1..#\
+%..0..,-#*.0..#/
+\g.1.m,,#2...2#%
+/.2.2.,,#######\
+%\/%\/+,,,-\,-\/
+
+
+message Methane 2
+
+,,,-\/%\/%\/%\
+/+,,,-#######/
+%\,,,,#g#.#m#%
+\/+,,,#.....#\
+/%\/+,#..n*.#/
+%g.m\/#.....#-
+\.n./%#l#.#f#,
+/l.f%\#######,
+%\/%\/%\/%\/+,
+
+message Congratulations ! You won !!

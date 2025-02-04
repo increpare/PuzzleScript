@@ -1,0 +1,109 @@
+title Kill the eyes
+author Johan
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+EyeBall
+White Blue Red
+.000.
+00100
+01110
+20102
+.202.
+
+Lava
+Orange Yellow
+01010
+10101
+01010
+10101
+01010
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = EyeBall
+L = Lava
+
+=======
+SOUNDS
+=======
+
+SFX0 67117309
+
+================
+COLLISIONLAYERS
+================
+
+Background 
+Lava
+Target
+Player, Wall, EyeBall
+
+======
+RULES
+======
+
+[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ]
+[ Player Lava ] -> Restart
+[ Eyeball Lava ] -> [ Background ]
+
+==============
+WINCONDITIONS
+==============
+
+All Eyeball on Lava
+
+=======
+LEVELS
+=======
+
+#########
+#.O.....#
+#...LO..#
+#.P.....#
+#.....L.#
+#.......#
+#########
+
+Message You win!

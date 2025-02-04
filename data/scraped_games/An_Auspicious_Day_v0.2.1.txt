@@ -1,0 +1,622 @@
+title An Auspicious Day v0.2.1
+author arrogant.gamer
+homepage www.arrogantgamer.com
+flickscreen 20x10
+
+color_palette proteus_rich
+
+========
+OBJECTS
+========
+
+Sky
+White lightblue lightblue
+22222
+22222
+22222
+22222
+22222
+
+Grass
+LightGreen Green
+11101
+10000
+.01..
+.....
+.....
+
+Dirt
+lightbrown brown darkbrown
+10000
+11111
+01211
+10211
+21212
+
+Ladder
+lightbrown brown darkbrown grey darkgrey
+40004
+43334
+41214
+43334
+41214
+
+Leaves ( maybe simplify tree model )
+pink lightred red
+.0000
+12101
+00020
+0.00.
+.01..
+
+Trunk
+#ee6246 #c05540 pink
+.1110
+.112.
+.101.
+.111.
+11101
+
+Root ( maybe remove root )
+#ee6246 #c05540 pink
+.....
+.....
+.....
+.2011
+11..0
+
+Stump ( maybe replace stump with rock )
+#ee6246 #c05540 #834538 pink
+.11..
+013..
+1101.
+1111.
+12102
+
+TallGrass
+lightgreen yellow
+.....
+.....
+.....
+.1.1.
+01001
+
+Flowers
+lightgreen purple blue
+.....
+.....
+1..2.
+0.20.
+0..0.
+
+FolkLeft
+lightgrey grey darkgrey blue lightblue
+44111
+22231
+23231
+23211
+22211
+
+FolkCenter
+lightgrey grey darkgrey blue lightblue
+44444
+44111
+22131
+23131
+22111
+
+FolkRight
+lightgrey grey darkgrey blue lightblue
+41114
+41314
+41314
+21114
+21114
+
+BluePlayer
+lightgrey grey darkgrey blue
+.....
+.000.
+.030.
+.030.
+.000.
+
+RedPlayer
+lightgrey grey darkgrey red
+.....
+.000.
+.030.
+.030.
+.000.
+
+GreenPlayer
+lightgrey grey darkgrey green
+.....
+.000.
+.030.
+.030.
+.000.
+
+OrangePlayer
+lightgrey grey darkgrey orange
+.....
+.000.
+.030.
+.030.
+.000.
+
+ClosedOracle
+lightgrey grey darkgrey black
+.222.
+.232.
+.232.
+.222.
+.222.
+
+OpenOracle
+lightblue darkgrey
+00000
+00000
+01010
+01110
+01110
+
+OracleCap
+lightgrey grey darkgrey orange
+.....
+.....
+.222.
+.2.2.
+.....
+
+Orange
+orange
+..0..
+..0..
+.....
+.....
+.....
+
+Blue
+blue
+..0..
+..0..
+.....
+.....
+.....
+
+Red
+red
+..0..
+..0..
+.....
+.....
+.....
+
+Green
+green
+..0..
+..0..
+.....
+.....
+.....
+
+OrangeCrystalDOWN
+orange
+.....
+..0..
+..0..
+.....
+.....
+
+BlueCrystalDOWN
+blue
+.....
+..0..
+..0..
+.....
+.....
+
+RedCrystalDOWN
+red
+.....
+..0..
+..0..
+.....
+.....
+
+GreenCrystalDOWN
+green
+.....
+..0..
+..0..
+.....
+.....
+
+Sun
+yellow
+00000
+00000
+00000
+00000
+00000
+
+Rock
+lightgrey grey darkgrey lightgreen green
+.....
+.11..
+.101.
+11101
+44132
+
+Water
+lightblue blue darkblue lightgreen
+11111
+11111
+11111
+11111
+11331
+
+Cloud
+#DDEEFF
+00000
+00000
+00000
+00000
+00000
+
+=======
+LEGEND
+=======
+
+Background = Sky
+DirtyCap = OracleCap and Dirt
+
+( Oracles )
+ClosedOrangeOracle = Sky and OrangeCrystalDown and ClosedOracle
+OpenOrangeOracle = Orange and OpenOracle
+
+ClosedGreenOracle = Sky and GreenCrystalDown and ClosedOracle
+OpenGreenOracle = Green and OpenOracle
+
+ClosedBlueOracle = Sky and BlueCrystalDown and ClosedOracle
+OpenBlueOracle = Blue and OpenOracle
+
+ClosedRedOracle = Sky and RedCrystalDown and ClosedOracle
+OpenRedOracle = Red and OpenOracle
+
+Crystal = Orange or Blue or Red or Green
+
+Ↄ = OpenOracle
+ɷ = OracleCap
+
+D = Dirt
+_ = Dirt and Grass
+L = Ladder
+~ = Water and Sky
+? = Cloud and Sky
+
+| = Sky and TallGrass
+! = Sky and Flowers
+: = Dirt and TallGrass
+; = Dirt and Flowers
+
+] = Sky and Root and TallGrass
+@ = Sky and Root
+& = Dirt and Root
+
+^ = Rock
+i = Rock and Dirt
+
+[ = Sky and Trunk and Flowers
+
+T = Sky and Trunk
+/ = Sky and Leaves
+# = Sky and Leaves
+\ = Sky and Leaves
+
+y = Dirt and Trunk
+< = Dirt and Leaves
+% = Dirt and Leaves
+> = Dirt and Leaves
+
+` = Leaves and Trunk and Dirt
+" = Leaves and Trunk and Dirt
+' = Leaves and Trunk and Dirt
+
+{ = Leaves and Trunk and Sky
+- = Leaves and Trunk and Sky
+} = Leaves and Trunk and Sky
+
+u = Leaves and Ladder
+c = Leaves and Sun
+n = Leaves and Sun
+m = Leaves and Sun
+
+S = Sky and Stump
+$ = Dirt and Stump
+* = Sun
+
+q = FolkLeft
+w = FolkCenter
+e = FolkRight
+f = FolkCenter and BluePlayer
+2 = FolkCenter
+3 = FolkCenter
+4 = FolkCenter
+
+0 = Dirt and Root
+1 = Dirt and Rock
+
+Folk = FolkCenter or FolkLeft or FolkRight
+
+. = Background
+
+Player = BluePlayer or OrangePlayer or RedPlayer or GreenPlayer
++ = BluePlayer
+
+BlueToOrange = BluePlayer and Orange and openOracle
+BlueToRed = BluePlayer and Red and openOracle
+BlueToGreen = BluePlayer and Green and openOracle
+
+OrangeToBlue = OrangePlayer and Blue and openOracle
+OrangeToRed = OrangePlayer and Red and openOracle
+OrangeToGreen = OrangePlayer and Green and openOracle
+
+RedToOrange = RedPlayer and Orange and openOracle
+RedToBlue = RedPlayer and Blue and openOracle
+RedToGreen = RedPlayer and Green and openOracle
+
+GreenToOrange = GreenPlayer and Orange and openOracle
+GreenToRed = GreenPlayer and Red and openOracle
+GreenToBlue = GreenPlayer and Blue and openOracle
+
+P = BluePlayer and FolkCenter
+O = ClosedOrangeOracle
+B = ClosedBlueOracle
+R = ClosedRedOracle
+G = ClosedGreenOracle
+
+RedCollision = Leaves
+GreenCollision = TallGrass or Water or Flowers
+OrangeCollision = Trunk or Root or Stump or Sun
+BlueCollision = ClosedOracle or Rock or Cloud
+DownCrystals = OrangeCrystalDOWN or BlueCrystalDOWN or RedCrystalDown or GreenCrystalDown
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+(background)
+Sky, Dirt, openOracle, Ladder, FolkLeft, FolkCenter, FolkRight (9)
+(background details) ( TODO move graves to the background and rename them )
+OrangePlayer, Trunk, Root, Sun, Stump (3)
+(passable objects)
+RedPlayer, Leaves, OracleCap, DownCrystals (7)
+(action layer)
+GreenPlayer, TallGrass, Flowers, Water (4)
+(foreground)
+BluePlayer, ClosedOracle, Rock, Cloud (3)
+( Crystals )
+Orange, Blue, Red, Green, Grass (5)
+
+( this looks like 31 objects to me )
+
+======
+RULES
+======
+
+( player can "summon" the crystal into their square )
+( but we guard against accidentally destroying crystals this way )
+[ no Crystal | Up Player | Crystal ] -> [ | UP Player Crystal | ]
+[ no Crystal | down Player | Crystal ] -> [ | DOWN Player Crystal | ]
+
+( player can't jump, only climb )
+[ UP Player no Ladder ] -> [ Player ]
+[ DOWN Player no Ladder ] -> [ Player ]
+
+( since the player may not always be on the same layer, but 
+  grass must always be a barrier )
+[ > player | grass ] -> [ player | grass ]
+
+( I haven't been able to get the player to enter a ladder from above,
+  only horizontally, so this next rule prevents players from climbing
+  up into the sky )
+[ UP Player Ladder | Sky ] -> [ Player Ladder | Sky ]
+
+( we need gravity for the player: they should fall through anything they
+  do not collide with; but everyone collides with grass )
+DOWN [ BluePlayer no Ladder | no Grass no BlueCollision ] -> [ down BluePlayer no Ladder | ] again
+DOWN [ RedPlayer no Ladder | no Grass no RedCollision ] -> [ down RedPlayer no Ladder | ] again
+DOWN [ GreenPlayer no Ladder | no Grass no GreenCollision ] -> [ down GreenPlayer no Ladder | ] again
+DOWN [ OrangePlayer no Ladder | no Grass no OrangeCollision ] -> [ down OrangePlayer no Ladder | ] again
+
+( a climbing player can only move up or down )
+vertical [ Ladder | left Player | Ladder ] -> [ Ladder | Player | Ladder ]
+vertical [ Ladder | right Player | Ladder ] -> [ Ladder | Player | Ladder ]
+
+( OPENING / CLOSING ORACLES )
+[ Action Player | ClosedOrangeOracle ] -> [ Player | OpenOrangeOracle ]
+late vertical [ OpenOrangeOracle | ] -> [ OpenOrangeOracle | OracleCap ]
+
+[ Action Player | OpenOrangeOracle ] -> [ Player | ClosedOrangeOracle ]
+late vertical [ ClosedOrangeOracle | OracleCap ] -> [ ClosedOrangeOracle | Sky ]
+
+[ Action Player | ClosedBlueOracle ] -> [ Player | OpenBlueOracle ]
+late vertical [ OpenBlueOracle | ] -> [ OpenBlueOracle | OracleCap ]
+
+[ Action Player | OpenBlueOracle ] -> [ Player | ClosedBlueOracle ]
+late vertical [ ClosedBlueOracle | OracleCap ] -> [ ClosedBlueOracle | Sky ]
+
+[ Action Player | ClosedRedOracle ] -> [ Player | OpenRedOracle ]
+late vertical [ OpenRedOracle | ] -> [ OpenRedOracle | OracleCap ]
+
+[ Action Player | OpenRedOracle ] -> [ Player | ClosedRedOracle ]
+late vertical [ ClosedRedOracle | OracleCap ] -> [ ClosedRedOracle | Sky ]
+
+[ Action Player | ClosedGreenOracle ] -> [ Player | OpenGreenOracle ]
+late vertical [ OpenGreenOracle | ] -> [ OpenGreenOracle | OracleCap ]
+
+[ Action Player | OpenGreenOracle ] -> [ Player | ClosedGreenOracle ]
+late vertical [ ClosedGreenOracle | OracleCap ] -> [ ClosedGreenOracle | Sky ]
+
+late [ DirtyCap ] -> [ _ ] ( clean up the damn dirty cap )
+
+( crystals should follow player and other crystals )
+[ Crystal | >  Player ] -> [ > Crystal | >  Player ]
+[ perpendicular Player | Crystal ] -> [ perpendicular Player | < Crystal ]
+
+([ Crystal | > Player ] -> [ > Crystal | > Player ]
+[ Crystal | > Player | Ladder ] -> [ | | Player Ladder Crystal ])
+
+( crystals should act on one another )
+( Caylay table )
+(              )
+(   B G R O    )
+( B B G R O    )
+( G G B O R    )
+( R R O B G    )
+( O O R G B    )
+
+late horizontal [ Crystal | Blue   ] -> [ Crystal | ]
+late horizontal [ Orange  | Orange ] -> [ Blue    | ]
+late horizontal [ Red     | Red    ] -> [ Blue    | ]
+late horizontal [ Green   | Green  ] -> [ Blue    | ]
+late horizontal [ Red     | Orange ] -> [ Green   | ]
+late horizontal [ Red     | Green  ] -> [ Orange  | ]
+late horizontal [ Orange  | Green  ] -> [ Red     | ]
+
+( swapping crystals )
+[ action BluePlayer Orange no OrangeCollision ] -> [ OrangePlayer Blue ]
+[ action BluePlayer Red no RedCollision ] -> [ RedPlayer Blue ]
+[ action BluePlayer Green no GreenCollision ] -> [ GreenPlayer Blue ]
+
+[ action OrangePlayer Green no GreenCollision ] -> [ GreenPlayer Orange ]
+[ action OrangePlayer Red no RedCollision ] -> [ RedPlayer Orange ]
+[ action OrangePlayer Blue no BlueCollision ] -> [ BluePlayer Orange ]
+
+[ action RedPlayer Green no GreenCollision ] -> [ GreenPlayer Red ]
+[ action RedPlayer Orange no OrangeCollision ] -> [ OrangePlayer Red ]
+[ action RedPlayer Blue no BlueCollision ] -> [ BluePlayer Red ]
+
+[ action GreenPlayer Orange no OrangeCollision ] -> [ OrangePlayer Green ]
+[ action GreenPlayer Red no RedCollision ] -> [ RedPlayer Green ]
+[ action GreenPlayer Blue no BlueCollision ] -> [ BluePlayer Green ]
+
+[ action Player ] -> [ Player ]
+down [ Player Folk ] [ Player | ... | rock ] -> [ Player Folk ] [ Player | ... | action rock ]
+
+( speaking to dudes acts as a checkpoint )
+down [ action rock sky ] -> checkpoint
+
+down [ action rock | 0 | 0 | 0 | 0 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message Something feels different. The sky? Do you feel it?
+down [ action rock | 0 | 0 | 0 | 1 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message That rock up ahead was blocking the path, so we built a ladder.
+down [ action rock | 0 | 0 | 0 | 1 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message The oracle who stands over there once had a brilliant green gem.
+down [ action rock | 0 | 0 | 1 | 0 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message That ladder is broken... I guess your journey ends here.
+down [ action rock | 0 | 0 | 1 | 0 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message You... you passed behind that rock? How!?
+down [ action rock | 0 | 0 | 1 | 1 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message We once met a red Oracle. She could walk in the branches of trees.
+down [ action rock | 0 | 0 | 1 | 1 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message Orange oracles were keyed to wood. They are all grey now...
+
+down [ action rock | 0 | 1 | 0 | 0 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message If you get really stuck, press 'r' to go back to a checkpoint.
+down [ action rock | 0 | 1 | 0 | 0 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message Vibrations. When the gems come together, they fuse into new gems.
+down [ action rock | 0 | 1 | 0 | 1 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message With the right pair of gems, an oracle could go anywhere.
+down [ action rock | 0 | 1 | 0 | 1 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message Our oracle tried to teach us... but we could never understand gem fusion.
+down [ action rock | 0 | 1 | 1 | 0 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message Oracles, with the right gems, never feel stuck.
+down [ action rock | 0 | 1 | 1 | 0 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message It must be nice...
+down [ action rock | 0 | 1 | 1 | 1 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message We blue folk once lived in the sky... now we are trapped here by our ignorance.
+down [ action rock | 0 | 1 | 1 | 1 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message Our blue gem is the identity.
+
+down [ action rock | 1 | 0 | 0 | 0 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message A gem is its own negative image.
+down [ action rock | 1 | 0 | 0 | 0 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message Don't rush to fuse gems: go as far as you can with what you have.
+down [ action rock | 1 | 0 | 0 | 1 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message The other side of this valley is a sacred place.
+down [ action rock | 1 | 0 | 0 | 1 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message That's it for now... this is as far as it goes!
+down [ action rock | 1 | 0 | 1 | 0 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message Something has happened to the oracles... I think?
+down [ action rock | 1 | 0 | 1 | 0 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message I came here long ago. It is quite, and I like that.
+down [ action rock | 1 | 0 | 1 | 1 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message We are the people of the sky. Never forget.
+down [ action rock | 1 | 0 | 1 | 1 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message Meditating here, I realized... gems are trigon symmetries!
+down [ action rock | 1 | 1 | 0 | 0 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message You can go down and get stuck... but,
+down [ action rock | 1 | 1 | 0 | 0 | 1 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message I wonder if there is a way to go up, and get stuck?
+down [ action rock | 1 | 1 | 0 | 1 | 0 ] -> [ rock | 0 | 0 | 0 | 0 | 0 ] message Do you like my garden? It needs space to grow.
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+message The oracles' gems have faded...
+message     today is an auspicious day
+
+............................................................................................................................................................................................................_DDLDDD..D__............................................................................................................................
+..........................................................................................................................................................................................................??D:DLD_??..D..**.........................................................................................................................
+............................................................................................................................................................................................................?_DLDD.......**.........................................................................................................................
+...............................................................................................................................................................................................................L....................................................................................................................................
+........................................................................................................................................................................................................................???.........................................................................................................................
+...........................................................................................................................................................................................................\#-/.........................................................................................................................DLLD........
+.............................................................................................................................................................................................................T......???.................................................................................................................DLLD........
+............................................................................................................................................................................................................^T.L........................................................................................................................DLLD........
+..........................................................................................................................................................................................................??___L__......................................................................................................................DLLD........
+............................................................................................................................................................................................................DDDLDD......................................................................................................................DLLD........
+............................................................................................................................................................................................................:DDLDD???...................................................................................................................DLLD........
+........................................................................................................................................................................................................??.__DDLD_....!^................................................................................................................DLLD........
+............................................................................................................................................................................................................DDDL<%-#/____**................???..........................................................................................DLLD........
+...........................................................................................................................................................................................................\"%%uDDT.._DDD*c#-#/.........................................................................................................DLLD........
+.........................................................................................................................................................................................................???yDDLD&T.._DDD...T..\-##/....??..............................................................................................DLLD........
+............................................................................................................................................................................................................y$DL___?.DD%%/..TR.LT..**..........................................................................................\#-#/....DLLD....\#-#
+............................................................................................................................................................................................................__DLD__..D<%'______L_..**............................................................................................T.._____LL_____..T.
+............................................................................................................................................................................................................DDDLDD..|<%'yiDDDDDLD................................................................................................T._DDDDDLLDDDDD_.T.
+............................................................................................................................................................................................................LD$LDD.!_Dyy__DDDLDL:...............................................................................................___D....DLLD....D___
+..........................................................................................................................................................................................................._L____DD_DD_DDD__DL___...............................................................................................DDD.....DLLD.....DDD
+...........................................................................................................................................................................................................DLDDD::DDDDDDDDDDDLDDDD.........\-/............................................................................._____DDD.ɷ..ɷDLLDɷ..ɷ.DDD
+......................????...........**..................**...........?.???..**..................**...????..??.......**...__.............**...............????*..................**..\#-/............**....DLDD_______DD__DD;LDLDD..\##-#-\#-#/...................**......................................................DDDDDDDDD.Ↄ..ↃDLLDↃ..Ↄ.DDD
+...........???.......................**..................**..................**..................**......??..........**..?DD??...........**..................**.........????.?...**....TL.!.........|_*....;L<"%%>DLDDDDDDD____L_D.....T.S..T....\#-#/...\#-/.....**..................................................______________________________
+......??.........................................................................\-/...........................L....weq...DD.........................L...\###/.....!|L................._L__......G.L__....____T..D_L_<"%>DDDDDDLDDqwe.\-->_D%%/....T.......T..........................................................DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+.................**......L...!w................................\-/.......L........T.L........................._L_____________...S.\-/..............._L_~~~_y.......__L___\##-/.........DLDD.\-/..__LDD....D__DT...DLDDyDD____________..T\">""_-/..LT....w.RT@...???.................................................__DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+..\-#/...........**....._L______..\#-#/....!L..q..........L....!T......._L__________L_...\##-/..............L.DLDDDDDDDDDDDDDS..T..T!..^..L..eew..GLDLD___<"-#/..!.LDLDLD...T\-#/.qe..GDLD<-/T...DDLDD....DDDD_...DLD:yD$&DDDDDDDD:DD.@T.y_yyDT..DL_<"%>_____........................................................DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+...T..\-/...............DLDDDDDD....T......_L____........_L_______......DDDDDDDDDDDDLD......T.............._L_____....DDDDDDDy____________L________L___DDDDyy______L___L_...T.T.._______LDDTST...DDLDD....DDDDDewqDL______________________________LDDyDDDDDD_.\#-#/..................................................DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+qfe[.S|T@!...|!.....we..DLDDiDDD...|T.@....DLDDDD..S@|.G.DLDDDDDDD.ewe..DLDDiDDDDDDDLD..||!|T..^..qw....R..DLDDDD.qwe.DDDDD:DyDDDD;DDDDDDDL_DDDD_DDLDDDD:;D__DDDDDDLD__LDwweT@TG!_DDDDDDLDDD__~~~~~_<">_____________DDD:DDDDDDDDDDD$DDDDDDDDDDDDDDLiDyDDDDDDDL..T....................................................DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+____________________________________________________________________________________________________________________________________<%"%>___DDDDD__________DD______________________DDDD_LDD_DD__~~_D&yD_DDDDDDD__DDDDD____DDD&DDDDD__DDDD;:_DDDDD_L_D_<%"%>__L_!T..............................................._____DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDyDDDDDDD__DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD___DDDDD__DD___DDDDDDDDDDDDDDDDDDDDD___DDDDDDDDDD__DDDDDDDLDDDDDyDDDDLD__................................................DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+.^...................^........^................^....................^.............................^................^.^..DDD<">DDDDiDDDyDD_DD..^^..........................^.......^^DDDDDDDDDDDDDDDDDDDD........^..................^............DDLDDDDDyDDDDLDDD......ɷ..........................................DDDDDDDDDDDDDD....................
+.0...................0........1................0....................0.............................0................0.0..DDDDyDD_____DD_DDDDD..00..........................0.......00DDDDDD;&DDDDDDDDDDDD........0..................0............_DLDDD___DDiDLD;:.qwe..Ↄ..B...L__....**...........................DDDDDDDDDDDDDD....................
+.0...................0........0................0....................0.............................0................0.0..DDD___DDDDDDDDDDD__D..11..........................1.......11DDDDD____DDDD___..DD........1..................1............D_____DDDDD___________________LDD?...**...........................DDDDDDDDDDDDDD....................
+.0...................0........1................0....................1.............................1................1.1..DDDDD;DDDD_......DDD..00..........................0.......11DDDD_DDDDD_......\-/........1..................1............DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDL_????............................__DDDDDDDDDDDDDD....................
+.0...................1........0................1....................0.............................0................1.1..DDDDD_D..........D:D..01..........................1.......00DDDDDD_D...._..^.wT_........1..................1............DDD<%">DDDDD___DDDDiDD<%"%>DD___.....???......................._DDDDDDDDDDDDDDDD....................
+.1...................0........0................1....................0.............................1................0.1...........\-/.....D__..10..........................1.......01D_D..........______D........0..................1............DDDDDy&DDDDDDDD<">D__DDLyDD<">DD_......?.......................DDDDDDDDDDDDDDDDD....................
+................................................................................................................................._T@..w.DD_D.............................................???........DD:D........................................iDDDD__~~~~~_DDDyDDDDDDL___"y_DDD_.........................____DDDDDDDDDDDDDDDDD....................
+.................................................................................................................................D________DD.................................................??......._D........................................__D:;DD_~~__DDD__DDDDDDLDD___D..DD\-/......................DDDDDDDDDDDDDDDDDDDDD....................
+....................................................................................................................................DDD__DDD....................................................................................................DD___DDD__DDDDDDDDDDD;DLDDDDD.e.DD.T@.........................DDDDDDDDDDDDDDDDDD....................
+.....................................................................................................................................DDDD_DD....................................................................................................DDDDDDDDDDDDDDDDDDD___________________.........................DDDDDDDDDDDDDDDDD....................
+......................................................................................................................................i..............................................................i........................D_D......__D.......DDDDDDDDDDDDDDDDDDDDDDDDDDDD...DDDDDD......ɷ...................DDDDDDDDDDDDDDDD....................
+......................................................................................................................................0..............................................................1......................................???....DDDDDDDD&$DD_DDDDDDDDDDDDL.G:DDDDDD....L.Ↄ............**.....DDDDDDDDDDDDDDDD....................
+......................................................................................................................................1..............................................................0.......................???.\-/...\#-/.........DDDDDD_____DDDDDD<">DD__L____~~~~_____L__\#-#/.......**...__DDDDDDDDDDDDDDDD....................
+......................................................................................................................................0..............................................................1...........................@T......T.wq^.________~~_DDDDDDD;:_DDy;D_DDLDDDD__~~_DDDDLDD..T........L.....DDDDDDDDDDDDDDDDDD....................
+......................................................................................................................................0..............................................................0.........................|.___..___T_____DDD...DD__DDDDDD_____DD___DDDDD...<">_DDD<"uDD_.T.._~~~~_L_....DDDDDDDDDDDDDDDDDD....................
+......................................................................................................................................0..............................................................1......................~~~__D.....DD_D:DDDDD..\#-/DD..DD:_DDD..DDDDDDDDLD.G.DyDDDD&DyLDDD.___D_~~_DLD..._DDDDDDDDDDDDDDDDDD....................
+............................................................................................................................................................................................................................___D?....???DDD__DD?.....T......__D.\-/.DD__DDDi___________________DDDDD__DDLD...DDDDDDDDDDDDDDDDDDD....................
+............................................................................................................................................................................................................................DDD???.....??DDDDD?......_!.....|!.q.T..DDD:DD__DDDD::DDDDDDDDDD__DDDDDDDDiDLD.q.DDDDDDDDDDDDDDDDDDD....................
+............................................................................................................................................................................................................................_D............D_.......??D_~~~~~______~~~~~_D_DDDD_____DDDDD;DDDD_DDD:DDDD_______DDDDDDDDDDDDDDDDDDD....................
+............................................................................................................................................................................................................................D.......................??D_____DDDDDD_____DDDDDDDDDDDDDDD____DDDDDD__DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD....................
+.......................................................................................................................................................................................................................................................DDDDDDDDDDDDDDDDiDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD........................................
+.........................................................................................................................................................................................................................................................__DD:DD_DDDD___DD<">DDDD___....................DDDD........................................
+...........................................................................................................................................................................................................................................................DD_DDDDDDDDDDDD&y_DD........................|:D_D........................................
+.....................................................................................................................................................................................................................................................????......DDDD&DD______DD.\#"#/...?????.....ew.._____DD........................................
+................................................................................................................................................................................................................................................................______DD.........T.............._____DDDDDDD........................................
+......................................................................................................................................................................................................................................................_|..!q|!._DDDDDD???......._T@.^..!......!__DDDDD<%"%>D........................................
+....................................................................................................................................................................................................................................................??D_~~_____D..DDD??........._________~~~~__DDDDiDDDDyDDD........................................
+......................................................................................................................................................................................................................................................?D__DDDDD...DD..........???DDDD:DDD_~~_DDDD____DDDy&DD........................................
+................................................................................................................................................................................................................................................................................??.?D_DDDD__DDDD__DDDDD____D........................................
+....................................................................................................................................................................................................................................................................................??DDDDDDDDDDDDDDDDDDDDDD........................................
+...........................................................................................................................................................................................................................................i............^..i...i...^..........^..................ii........^........................................
+...........................................................................................................................................................................................................................................1............1..1...1...1..........1..................11........1........................................
+...........................................................................................................................................................................................................................................0............0..1...0...0..........0..................11........0........................................
+...........................................................................................................................................................................................................................................1............0..0...1...0..........0..................00........0........................................
+...........................................................................................................................................................................................................................................1............0..1...1...0..........1..................00........1........................................
+...........................................................................................................................................................................................................................................0............0..0...1...1..........0..................10........1........................................

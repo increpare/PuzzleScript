@@ -1,0 +1,285 @@
+title A Unexamined Life Is Not Worth Meowing
+author Sky Chan
+homepage https://skyychann.itch.io
+
+norepeat_action
+realtime_interval 3.0
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11011
+11111
+01111
+11101
+11111
+
+Goal
+yellow
+.0000
+.0000
+.0000
+.0...
+0000.
+
+GoalIdea
+yellow
+.0000
+.0000
+.0000
+.0...
+0000.
+
+Trap
+grey white
+00000
+00100
+01110
+01110
+00000
+
+Key
+yellow
+.....
+.....
+00.0.
+0.000
+00...
+
+KeyIdea
+yellow
+.....
+.....
+00.0.
+0.000
+00...
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+WallIdea
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Socatties
+orange black pink
+0.0..
+101..
+000.0
+.0000
+.0..0
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+CrateIdea
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Door
+lightred grey darkgray
+.222.
+20002
+20012
+20002
+20002
+
+DoorIdea
+lightred grey darkgray
+.222.
+20002
+20012
+20002
+20002
+
+Idea
+white
+00000
+00000
+00000
+00000
+00000
+
+CornerIdea
+transparent
+
+EdgeIdea
+transparent
+
+Daydream
+transparent
+
+Taken
+white
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Socatties
+* = Crate
+@ = Crate and Goal
+O = Goal
+d = Door
+k = Key
+
+Player = Socatties
+
+Obj = Key or Door or Crate or Wall or Goal
+
+Ideas = KeyIdea or DoorIdea or CrateIdea or WallIdea or GoalIdea
+
+Obstacles = Door or Wall
+ObstaclesIdea = DoorIdea or WallIdea
+
+Goals = Goal or GoalIdea
+
+=======
+SOUNDS
+=======
+
+Crate move 36772507
+endlevel 83744503
+startgame 92244503
+
+sfx0 65850700
+sfx1 64016103
+sfx2 7638305
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Idea
+Goal, Trap
+Wall, Crate, Key, Door
+Taken
+GoalIdea
+Socatties, WallIdea, CrateIdea, KeyIdea, DoorIdea
+CornerIdea, EdgeIdea
+Daydream
+
+
+======
+RULES
+======
+
+[ > Socatties no Idea | Key ] -> [ > Socatties | > Key ]
+[ > Socatties Idea | KeyIdea ] -> [ > Socatties Idea | > KeyIdea Taken ]
+
+
+
+[ > Key | Key ] -> [ > Key | > Key ]
+[ > Key | Door ] -> [ | ] sfx0
+[ > KeyIdea | KeyIdea ] -> [ > KeyIdea | > KeyIdea ]
+[ > KeyIdea | DoorIdea no Taken ] -> [ | Taken ] sfx0
+[ > KeyIdea | Door no Taken ] -> [ | Door Taken ] sfx0
+
+[ > Socatties no Idea | Obstacles ] -> cancel
+[ > Key no Idea | Obstacles ] -> cancel
+[ > Socatties Idea | ObstaclesIdea ] -> cancel
+
+[ Idea ] -> [ ]
+[ CornerIdea ] -> [ ]
+[ EdgeIdea ] -> [ ]
+
+[ action Socatties no Daydream ] -> [ Socatties Daydream ]
+[ action Socatties Daydream ] -> [ Socatties ]
+
+[ > Socatties Idea | KeyIdea ] -> [ > Socatties | > KeyIdea ]
+[ > Socatties Idea | ObstaclesIdea ] -> cancel
+
+late [ Daydream no Socatties ] [ Socatties ] -> [ ] [ Socatties Daydream ]
+
+late up [ Daydream Socatties | no Idea ] -> [ Daydream Socatties | Idea ]
+late down [ Daydream Socatties | no Idea ] -> [ Daydream Socatties | Idea ]
+late left [ Daydream Socatties | no Idea ] -> [ Daydream Socatties | Idea ]
+late right [ Daydream Socatties | no Idea ] -> [ Daydream Socatties | Idea ]
+
+late up [ Daydream Socatties | Idea | no Idea ] -> [ Daydream Socatties | Idea | Idea ]
+late down [ Daydream Socatties | Idea | no Idea ] -> [ Daydream Socatties | Idea | Idea ]
+late left [ Daydream Socatties | Idea | no Idea ] -> [ Daydream Socatties | Idea | Idea EdgeIdea ]
+late right [ Daydream Socatties | Idea | no Idea ] -> [ Daydream Socatties | Idea | Idea EdgeIdea ]
+
+late vertical [ Socatties | Idea ] -> [ Socatties | CornerIdea Idea ]
+
+late vertical [ Socatties | Idea | Idea ] -> [ Socatties | Idea | CornerIdea Idea ]
+late vertical [ EdgeIdea | no Idea ] -> [ EdgeIdea | Idea ] 
+late vertical [ EdgeIdea | Idea | no Idea ] -> [ EdgeIdea | Idea | Idea ] 
+
+late horizontal [ CornerIdea | no Idea ] -> [ CornerIdea | Idea ]
+late [ Daydream Socatties ] -> [ Daydream Socatties Idea ]
+
+late [ Ideas no Idea ] -> [ ]
+late [ Taken no Idea ] -> [ ]
+late [ Idea no Socatties Key no Taken ] -> [ Idea Key KeyIdea ]
+late [ Idea no Socatties Door no Taken ] -> [ Idea Door DoorIdea ]
+late [ Idea no Socatties Wall no Taken ] -> [ Idea Wall WallIdea ]
+
+
+(
+up [ stationary Socatties | Todream no Daydream ] -> [ SocattiesDaydreaming | Daydream ] sfx1
+up [ stationary Socatties | no Todream ] -> [ Socatties | Todream ]
+
+[ up SocattiesDaydreaming ] [ Daydreams ]-> [ Socatties ] [ Daydreams ]
+[ down SocattiesDaydreaming ] [ Daydreams ] -> [ Socatties ] [ Daydreams ]
+
+
+up [ left SocattiesDaydreaming | Daydreams ] [ Key ] [ Door ] -> [ SocattiesDaydreaming | random KeyDream random DoorDream random Daydream ] [ Key ] [ Door ]
+up [ right SocattiesDaydreaming | Daydreams ] [ Key ] [ Door ] -> [ SocattiesDaydreaming | random KeyDream random DoorDream random Daydream ] [ Key ] [ Door ]
+
+up [ left SocattiesDaydreaming | Daydreams ] [ Key ] -> [ SocattiesDaydreaming | random KeyDream random Daydream ] [ Key ]
+up [ right SocattiesDaydreaming | Daydreams ] [ Key ] -> [ SocattiesDaydreaming | random KeyDream random Daydream ] [ Key ]
+up [ left SocattiesDaydreaming | Daydreams ] [ Door ] -> [ SocattiesDaydreaming | random DoorDream random Daydream ] [ Door ]
+up [ right SocattiesDaydreaming | Daydreams ] [ Door ] -> [ SocattiesDaydreaming | random DoorDream random Daydream ] [ Door ]
+
+up [ left SocattiesDaydreaming | Daydreams ] [ no Obj ] -> [ left SocattiesDaydreaming | Daydreams ] [ ]
+up [ right SocattiesDaydreaming | Daydreams ] [ no Obj ] -> [ right SocattiesDaydreaming | Daydreams ] [ ])
+
+
+
+
+==============
+WINCONDITIONS
+==============
+
+All Goals on Socatties
+
+
+=======
+LEVELS
+=======
+
+##############
+#.....########
+#.....#...#..#
+#..k..d...d.o#
+#.....#...#..#
+#..p..########
+##############
+

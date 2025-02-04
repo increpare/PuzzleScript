@@ -1,0 +1,391 @@
+title Game Loading
+author Ricky Cruz
+homepage www.puzzlescript.net
+verbose_logging
+background_color #0000FF
+
+========
+OBJECTS
+========
+
+Background
+DARKGREEN
+
+WindowBackground
+LIGHTGRAY
+
+HeaderBackground1
+#112472 #1E42CE #1835A5
+00000
+11111
+22222
+22222
+00000
+
+HeaderBackground2
+#112472 ORANGE YELLOW #1E42CE #1835A5
+00000
+31113
+41414
+41214
+00000
+
+HeaderBackground3
+#112472 LIGHTGREEN #1E42CE #1835A5
+00000
+22112
+33113
+31133
+00000
+
+BarBackground
+#828282
+
+StartBackground
+#007F0E #00AD11 #00960C
+00000
+11111
+22222
+22222
+00000
+
+Player
+WHITE GRAY LIGHTGRAY
+1....
+11...
+101..
+1001.
+121..
+
+BarStart1
+PURPLE
+.....
+.....
+..0..
+.....
+.....
+
+BarEnd1
+PINK
+.....
+.....
+..0..
+.....
+.....
+
+LoadingBar1
+#007F0E #00EA17 #00CE14 #00AD11
+00000
+11111
+22222
+33333
+00000
+
+LoadingMarker1
+TRANSPARENT
+.....
+.....
+..0..
+.....
+.....
+
+
+BarStart2
+YELLOW
+.....
+.....
+..0..
+.....
+.....
+
+BarEnd2
+ORANGE
+.....
+.....
+..0..
+.....
+.....
+
+LoadingBar2
+DARKBLUE
+
+LoadingMarker2
+TRANSPARENT
+.....
+.....
+..0..
+.....
+.....
+
+Flag1
+TRANSPARENT
+
+Flag2
+TRANSPARENT
+
+DeleteFlag1
+TRANSPARENT
+
+DeleteFlag2
+TRANSPARENT
+
+GrabFlag
+TRANSPARENT
+
+ClickFlag
+TRANSPARENT
+
+CorruptFlag
+TRANSPARENT
+
+XButton1
+RED WHITE
+00000
+01010
+00100
+01010
+00000
+
+XButton2
+RED YELLOW
+00000
+01010
+00100
+01010
+00000
+
+GarbageDoc
+LIGHTGRAY BLACK ORANGE
+22...
+22000
+.0110
+.0000
+.0110
+
+CorruptDoc
+#FF00FF BLACK
+01010
+10101
+01010
+10101
+01010
+
+Trash
+#2323A0 #2E2ED3 WHITE
+00000
+.111.
+.121.
+.111.
+.111.
+
+CleanFolder
+LIGHTBROWN
+00...
+0000.
+0000.
+0000.
+.....
+
+GarbageFolder
+LIGHTGRAY
+00...
+0000.
+0000.
+0000.
+.....
+=======
+LEGEND
+=======
+
+. = Background
+, = WindowBackground
+- = HeaderBackground1
+/ = HeaderBackground2
+\ = HeaderBackground3
++ = StartBackground
+_ = BarBackground
+M = Player and CorruptFlag
+T = Trash
+
+G = GarbageDoc
+
+{ = BarStart1
+} = BarEnd1
+$ = BarStart1 and LoadingMarker1 and LoadingBar1 and BarBackground
+% = LoadingMarker1 and LoadingBar1 and WindowBackground
+? = WindowBackground and BarEnd1
+X = XButton1
+
+6 = BarStart2
+7 = BarEnd2
+8 = BarStart2 and LoadingMarker2 and LoadingBar2 and WindowBackground
+9 = LoadingMarker2 and LoadingBar2 and WindowBackground
+0 = WindowBackground and BarEnd2
+* = XButton2
+
+GarbageFile = GarbageDoc or GarbageFolder
+Folder = CleanFolder or GarbageFolder
+File = GarbageFile or Folder
+HeaderBackground = HeaderBackground1 or HeaderBackground2 or HeaderBackground3
+Window = WindowBackground or HeaderBackground or BarBackground
+LoadingBar = LoadingBar1 or LoadingBar2
+LoadingMarker = LoadingMarker1 or LoadingMarker2
+XButton = XButton1 or XButton2
+
+=======
+SOUNDS
+=======
+
+Player action 76304301
+XButton destroy 76304301
+GrabFlag create 76304301
+File destroy 63141304
+cancel 88504304
+sfx0 76304301
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Trash
+File
+WindowBackground, HeaderBackground, BarBackground, StartBackground
+XButton
+Player
+LoadingBar1
+LoadingBar2
+CorruptDoc
+LoadingMarker1
+LoadingMarker2
+BarStart1, BarEnd1
+BarStart2, BarEnd2
+Flag1
+Flag2
+DeleteFlag1
+DeleteFlag2
+GrabFlag
+ClickFlag
+CorruptFlag
+
+======
+RULES
+======
+right[LoadingMarker1 no Flag1| no LoadingBar1] -> [ | LoadingBar1 LoadingMarker1 Flag1]
+right [LoadingMarker1 BarEnd1 no Flag1] [BarStart1] -> [BarEnd1 LoadingBar1] [BarStart1 LoadingBar1 LoadingMarker1 Flag1]
+down[BarEnd1 no Flag1 LoadingBar1 | ] -> [LoadingBar1 | BarEnd1]
+down[BarStart1 LoadingBar1 | ] -> [LoadingBar1 | BarStart1]
+
+right[LoadingMarker2 no Flag1| no LoadingBar2] -> [ | LoadingBar2 LoadingMarker2 Flag1]
+right [LoadingMarker2 BarEnd2 no Flag1] [BarStart2] -> [BarEnd2 LoadingBar2] [BarStart2 LoadingBar2 LoadingMarker2 Flag1]
+down[BarEnd2 no Flag1 LoadingBar2 | ] -> [LoadingBar2 | BarEnd2]
+down[BarStart2 LoadingBar2 | ] -> [LoadingBar2 | BarStart2]
+
+[Flag1] -> []
+
+[> Player | LoadingBar no LoadingMarker] -> cancel
+
+[action Player XButton1 no GrabFlag] [CorruptFlag] -> [Player DeleteFlag1] [CorruptFlag]
+[DeleteFlag1 | Window] -> [DeleteFlag1 | DeleteFlag1]
+[DeleteFlag1] [LoadingBar1] -> [DeleteFlag1] []
+[DeleteFlag1] [BarStart1] [BarEnd1] [LoadingMarker1] -> [DeleteFlag1] [] [] []
+[DeleteFlag1] -> []
+
+[action Player XButton2 no GrabFlag] [CorruptFlag] -> [Player DeleteFlag2] [CorruptFlag]
+[DeleteFlag2 | Window] -> [DeleteFlag2 | DeleteFlag2]
+[DeleteFlag2] [LoadingBar2] -> [DeleteFlag2] []
+[DeleteFlag2] [BarStart2] [BarEnd2] [LoadingMarker2] -> [DeleteFlag2] [] [] []
+[DeleteFlag2] -> []
+
+[action Player File no GrabFlag no XButton no Window] -> [Player File GrabFlag ClickFlag]
+[> Player File GrabFlag] -> [> Player > File > GrabFlag]
+late[ClickFlag no Player] -> []
+
+[action Player File GrabFlag] -> [Player File] sfx0
+[File no GrabFlag Trash] -> [Trash]
+
+late [Player LoadingBar] -> [LoadingBar]
+late [GarbageDoc LoadingBar] -> [CorruptDoc LoadingBar]
+late [CorruptDoc] [CorruptFlag] -> [CorruptDoc] []
+
+random[no Player] -> [Flag2]
+[Flag2 no Player] [Player] -> [] [Flag2 Player]
+[Flag2 no Player] -> cancel
+[Flag2] -> []
+==============
+WINCONDITIONS
+==============
+
+no XButton
+no GarbageFile
+
+=======
+LEVELS
+=======
+
+message [Disclaimer: This is most likely not how computers work.]
+message ...
+message Yeah, the loading bars just aren't working.
+message They overflow. Mhm, they go outside the bar. It's freaking me out.
+message Ha, if only I knew the cause. So can you come by and fix it then?
+message Not till tomorrow? Okay, fine. I'll just deal with it for now.
+message I'll have to close all of my loading programs, though.
+message [CONTROLS]
+message [Arrow Keys/WASD to move. Enter/Space/X to click.] 
+message [U to undo, R to restart.]
+
+...........
+...........
+.../----x..
+...,,,,,,..
+...,%___,.}
+{..,,,,,,..
+...........
+......m....
+...........
+...........
+++---------
+
+message *sigh* I really should've installed a pop-up blocker on this thing.
+
+................
+................
+................
+..----x.........
+..,,,,,.........
+..,%__,........}
+{.,,,,,....---*.
+...........,,,,.
+...........,9_,7
+6..........,,,,.
+......m.........
+................
+................
+++--------------
+
+message I wonder if some of these junk files might be causing this.
+message I definitely don't need them anymore, so I'll try deleting all of them.
+message [JUNK FILES]
+message [Click once on a file to start dragging it. Click again to release the file.]
+message [All junk files must be trashed, and all loading windows must be closed.]
+
+..............
+..............
+..............
+........\---*.
+.....m..,,,,,.
+........,9__,7
+6.......,,,,,.
+..............
+...g..t.......
+..............
+++------------
+
+message Ooh, hold on a second. There's a forum thread from someone who had the same problem.
+message Dang, there's no info on how to solve it.
+message Wait, what's this?
+message "THE BAR ALSO CORUPTED MY FI LES! NOW I CANT CLOSE ANY OFMY WINDOWS!!"
+message "what that guy said, deleting the corrupt files doesn't even help."
+message "Yeah, and it ate my trash too! I can't even delete anything now! DX"
+message This could be bad.
+

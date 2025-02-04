@@ -1,0 +1,424 @@
+Title Rocketmen
+Author Connorses
+homepage https://sites.google.com/site/loneshipgames/
+background_color darkbrown
+again_interval 0.08
+noaction
+
+(noundo)
+
+========
+OBJECTS
+========
+background
+lightblue
+player1
+black red blue
+.....
+.222.
+10001
+10001
+.0.0.
+player2
+black red yellow blue
+.333.
+10001
+10001
+20.02
+2...2
+
+player3
+black red yellow blue
+2211.
+.0003
+..003
+.0003
+2211.
+player4
+black red yellow blue
+.1122
+3000.
+300..
+3000.
+.1122
+
+player5
+black red yellow blue
+.....
+.0.0.
+10001
+10001
+.333.
+
+wall
+#857240 #907d5c #957058 #ff0000 
+22222
+12221
+11111
+01110
+00000
+
+bouncy
+blue grey
+.000.
+0.1.0
+01110
+0.1.0
+.000.
+
+break
+red darkbrown
+00010
+00101
+11001
+00110
+00010
+
+break2
+red darkbrown
+00...
+...0.
+..00.
+.....
+00..0
+
+plat1u (platform up)
+lightbrown
+00000
+0...0
+.....
+.....
+.....
+plat1l
+lightbrown
+00...
+0....
+0....
+0....
+00...
+plat1r
+lightbrown
+...00
+....0
+....0
+....0
+...00
+plat1d
+lightbrown
+.....
+.....
+.....
+0...0
+00000
+
+plat2u (platform 2 - breakable)
+red
+00000
+0...0
+.....
+.....
+.....
+plat2ub
+red darkbrown
+10101
+0...0
+.....
+.....
+.....
+plat2l
+red
+00...
+0....
+0....
+0....
+00...
+plat2r
+red
+...00
+....0
+....0
+....0
+...00
+plat2d
+red
+.....
+.....
+.....
+0...0
+00000
+
+goal
+green
+goalwin
+lightgreen
+
+s1
+grey
+.....
+.000.
+.0.0.
+.000.
+.....
+s2
+grey
+.....
+..0..
+.000.
+..0..
+.....
+=======
+LEGEND
+=======
+. = background
+p = player1
+$ = wall
+# = goal and plat1r and plat1l and plat1d and plat1u
+- = plat1u
+_ = plat1d
+[ = plat1l
+] = plat1r
+h = plat1d and plat1u
+| = plat1l and plat1r
+\ = plat1r and plat1u
+r = plat1u and plat1l
+J = plat1r and plat1l
+L = plat1l and plat1d
+B = break
+& = player1 and plat1u
+* = plat2u and plat1l
+{ = plat2l
+} = plat2r
+: = plat2d
+" = plat2u
+! = Bouncy
+
+platu = plat1u or plat2u or plat2ub
+platr = plat1r or plat2r
+platd = plat1d or plat2d
+platl = plat1l or plat2l
+
+player = player1
+flying = player2 or player3 or player4 or player5
+plat = platu or platl or platr or platd
+smoke = s1 or s2
+=======
+SOUNDS
+=======
+sfx0 20984702 (8300502 launch)
+sfx1 12172702 (24686702 939502 70310707 flight)
+================
+COLLISIONLAYERS
+================
+background
+platd
+platl
+platr
+platu
+s1, s2,player,flying,wall,goal,goalwin,break,break2,bouncy
+
+======
+RULES
+======
+(stuff that dissapears)
+up [plat2ub|no player] -> [|]
+[break2] -> []
+[s2] -> []
+(don't fly with a wall right there, but don't cancel because there could be multiple guys)
+[> player|wall] -> [player|wall]
+([> player|bouncy] -> [player|bouncy])
+right[right player|platl] -> [player|platl]
+left [left  player|platr] -> [player|platr]
+up   [up    player|platd] -> [player|platd]
+down [down  player|platu] -> [player|platu]
+(breaking blocks using rockets)
+[< player|break] -> [< player|break2]
+(flying)
+[up    player1] -> [player2] sfx0
+[right player1] -> [player3] sfx0
+[left  player1] -> [player4] sfx0
+[down  player1] -> [player5]
+
+[player5] -> [down  player5] again
+[player2] -> [up    player2] sfx1 again
+[player3] -> [right player3] sfx1 again
+[player4] -> [left  player4] sfx1 again
+(Bouncy tile)
+[> player2|bouncy] -> [< player1|bouncy] again
+[> player3|bouncy] -> [< player4|bouncy] again
+[> player4|bouncy] -> [< player3|bouncy] again
+[> player5|bouncy] -> [< player2|bouncy] again
+(fading smoke)
+[s1] -> [s2] again
+(create smoke)
+[no wall no goal no goalwin no player no flying no break no break2 no bouncy|> flying] -> [s1|> flying]
+(falling)
+down [player1|no platu no wall no bouncy] -> [> player5|] again
+(breakable walls)
+[> player3|plat2l] -> [player1|] again
+[> player4|plat2r] -> [player1|] again
+[> player2|plat2d] -> [player1|] again
+(specific collisions)
+[> flying |wall ] -> [player1|wall ] again
+[> flying |break] -> [player1|break] again
+[> flying |player]-> [player1|player] again
+[> player3|platl] -> [player1|platl] again
+[> player4|platr] -> [player1|platr] again
+[> player2|platd] -> [player1|platd] again
+[> flying|< flying] -> [player1|player1] again (bunp!)
+[> flying|smoke] -> [> flying|]
+(1 way floor)
+down [> player5|platu] -> [player1|platu] again
+(goal lights up when you're on it)
+down [player|goal] -> [player|goalwin]
+up [goalwin|no player] -> [goal|]
+(breakable floors)
+down[player1|plat2u] -> [player1|plat2ub]
+==============
+WINCONDITIONS
+==============
+no goal
+=======
+LEVELS
+=======
+
+(Bounce Level)
+$$$..............
+$$...............
+$.p.............$
+$$$$........$$$#$
+$$$...........$$$
+$$.............$$
+$$.............$$
+$$..............$
+$...............$
+$...............$
+$$............$$$
+$$$..........$$$$
+
+$$.$$$..$$
+$........$
+$........$
+$#$$-$$$$$
+..........
+$..].....$
+$......$-$
+....-$$$..
+..........
+$p.......$
+$$$......$
+$$$$$$$$$$
+
+$$$$$$$$$$
+$.p].....$
+$$$$...-.$
+$..$#....$
+$-..[..[-$
+$$]|-....$
+$$.-....$$
+$$$....-.$
+$$$..-...$
+$$$..$$$-$
+$$$......$
+$$$$$$$$$$
+
+$$$$$$$$$$$
+$..$$$.[$$$
+$....$-...$
+$#.-.$#..-$
+$$...$$...$
+$$...$$...$
+$.].[$..].$
+$..$-$-..$$
+$....$....$
+$....$..._$
+$p...$p.].$
+$$$$$$$$$$$
+
+$$$$$...$..$$$
+$$..........$$
+$$$.........$$
+$..-......$$$$
+$......$...$$$
+$$$.....*##.$$
+$$$p..]-.[..$$
+$$.$....-...$$
+$..\..-\.[...$
+$.-]...-b...$$
+$$.....]....$$
+$$......p[.$$$
+$$$$$$$$$$$$$$
+
+$$$$$$$$$$$$$$
+$............$
+!..........$$$
+$$$...-.....$$
+$$.....-.....$
+$............$
+!p..........p!
+$$.-......-.$$
+$$..........$$
+$............$
+$............$
+$............$
+$............$
+$$$$##$$$$$$$$
+
+$$$$$$$$$$$$$$$$
+$....$....$....!
+$--$.$_...$...-$
+$p].[$p...$....$
+$$$$.$$$$.$.$$.$
+$....$....$..].$
+$....$....$..].$
+$....$....$".].$
+$....$....$..$.$
+$.$$$$.$$$$$#$.$
+$....$....$....$
+$....$....$....$
+$....$..].!p...$
+$b$$#$b$$#$$$$$$
+
+$$$$$$$$$$$$$$$$
+$$.............$
+$$...[......]..$
+$$..-......-..$$
+$..............$
+$..............$
+$!............!$
+$$$$.........$$$
+$...-.......-..$
+$..............$
+$..............$
+$..............$
+$p...b....].p..$
+$$$$$$$##$$$$$$$
+
+$$$$$$$$$$$$$$$$
+$$.............$
+$$...[......]..$
+$$..-.....-...$$
+$..............$
+$..............$
+$!............!$
+$$##......:..$$$
+$$..-.......-..$
+$..-......-....$
+$..............$
+$..............$
+$p...!.....[p..$
+$$$$$$$$$$$$$$$$
+
+$$$$$$......$$$$$
+$.].............$
+$.]...._.._.....$
+$p]..........!..$
+$$$$$..-..-...$$$
+$$$............$$
+$.]............$$
+$.]............$$
+$p]......]......$
+$$$$............$
+$$$$$$$.........$
+$$$$$$.....$$$$$$
+$$$$$$.....$$$$$$
+$$$$$$$$##$$$$$$$

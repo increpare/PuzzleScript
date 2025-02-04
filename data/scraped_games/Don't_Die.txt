@@ -1,0 +1,491 @@
+title Don't Die
+author Guillem G T
+noaction
+
+========
+OBJECTS
+========
+
+Background 
+Grey
+
+Target 
+DarkBlue    
+
+Wall 
+Black
+
+Player 
+#333333 #FFBB99 DarkBrown Brown
+.333.
+.111.
+00000
+.000.
+.2.2.
+
+DeadPlayer 
+#333333 #FFBB99 DarkBrown Brown Red
+.3334
+41114
+00440
+40044
+.2444
+
+Crate 
+Orange 
+
+Time0
+Orange Grey Black
+.000.
+01210
+01210
+01110
+.000.
+
+Time1
+Yellow White Black
+.000.
+01120
+01210
+01110
+.000.
+
+Time2
+Yellow White Black
+.000.
+01110
+01220
+01110
+.000.
+
+Time3
+Yellow White Black
+.000.
+01110
+01210
+01120
+.000.
+
+Time4
+Yellow White Black
+.000.
+01110
+01210
+01210
+.000.
+
+Time5
+Yellow White Black
+.000.
+01110
+01210
+02110
+.000.
+
+Time6
+Yellow White Black
+.000.
+01110
+02210
+01110
+.000.
+
+Time7
+Yellow White Black
+.000.
+02110
+01210
+01110
+.000.
+
+Time8
+Yellow White Black
+.000.
+01210
+01210
+01110
+.000.
+
+WasActiveTime
+Transparent
+
+Zombie
+#333333 #77BB77 DarkBrown #446600
+.333.
+.111.
+00000
+.000.
+.2.2.
+
+CannonDown8
+Black Yellow White
+.222.
+.2022
+.0002
+.0002
+.111.
+
+CannonDown7
+Black Yellow White
+.222.
+.2022
+.0002
+.000.
+.111.
+
+CannonDown6
+Black Yellow White
+.222.
+.2022
+.000.
+.000.
+.111.
+
+CannonDown5
+Black Yellow White
+.222.
+.202.
+.000.
+.000.
+.111.
+
+CannonDown4
+Black Yellow White
+.222.
+.20..
+.000.
+.000.
+.111.
+
+CannonDown3
+Black Yellow White
+.22..
+.20..
+.000.
+.000.
+.111.
+
+CannonDown2
+Black Yellow White
+.2...
+.20..
+.000.
+.000.
+.111.
+
+CannonDown1
+Black Yellow White
+.....
+.20..
+.000.
+.000.
+.111.
+
+CannonDown0
+Black Orange White
+.....
+..0..
+.000.
+.000.
+.111.
+
+CannonDownUsed
+Black Yellow White
+.....
+..0..
+.000.
+.000.
+.111.
+
+
+CannonUp8
+Black Yellow White
+.111.
+2000.
+2000.
+2202.
+.222.
+
+CannonUp7
+Black Yellow White
+.111.
+.000.
+2000.
+2202.
+.222.
+
+CannonUp6
+Black Yellow White
+.111.
+.000.
+.000.
+2202.
+.222.
+
+CannonUp5
+Black Yellow White
+.111.
+.000.
+.000.
+.202.
+.222.
+
+CannonUp4
+Black Yellow White
+.111.
+.000.
+.000.
+..02.
+.222.
+
+CannonUp3
+Black Yellow White
+.111.
+.000.
+.000.
+..02.
+..22.
+
+CannonUp2
+Black Yellow White
+.111.
+.000.
+.000.
+..02.
+...2.
+
+CannonUp1
+Black Yellow White
+.111.
+.000.
+.000.
+..02.
+.....
+
+CannonUp0
+Black Orange White
+.111.
+.000.
+.000.
+..0..
+.....
+
+CannonUpUsed
+Black Yellow White
+.111.
+.000.
+.000.
+..0..
+.....
+
+VerticalCannonBeam
+Red Orange Yellow
+01210
+01210
+01210
+01210
+01210
+
+=======
+LEGEND
+=======
+
+ActiveTime = Time1 or Time2 or Time3 or Time4 or Time5 or Time6 or Time7 or Time8
+Time = Time0 or ActiveTime
+
+CannonDown = CannonDown0 or CannonDown1 or CannonDown2 or CannonDown3 or CannonDown4 or CannonDown5 or CannonDown6 or CannonDown7 or CannonDown8 or CannonDownUsed
+
+CannonUp = CannonUp0 or CannonUp1 or CannonUp2 or CannonUp3 or CannonUp4 or CannonUp5 or CannonUp6 or CannonUp7 or CannonUp8 or CannonUpUsed
+
+Cannon = CannonDown or CannonUp
+CannonBeam = VerticalCannonBeam
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+Z = Zombie
+
+0 = Time0 and Wall
+1 = Time1 and Wall
+2 = Time2 and Wall
+3 = Time3 and Wall
+4 = Time4 and Wall
+5 = Time5 and Wall
+6 = Time6 and Wall
+7 = Time7 and Wall
+8 = Time8 and Wall
+
+a = CannonDown0
+b = CannonDown1
+c = CannonDown2
+d = CannonDown3
+e = CannonDown4
+f = CannonDown5
+g = CannonDown6
+h = CannonDown7
+i = CannonDown8
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+WasActiveTime,
+Target,
+Player, Wall, Crate, Zombie, DeadPlayer, Cannon
+Time, VerticalCannonBeam
+
+======
+RULES     
+======     
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ Player | ... | Zombie ] -> [ Player | ... | < Zombie ]
+[ > Player | Cannon ] -> [ > Player | > Cannon ]
+
+late [ Player | Zombie ] -> [ DeadPlayer | Zombie ]
+
+[ ActiveTime ] -> [ ActiveTime WasActiveTime]
+
+Right [ Time1 | no WasActiveTime ] [ Player ] -> [ Time0 | ] [ Player ]
+Right [ Time2 | no WasActiveTime ] [ Player ] -> [ Time1 | ] [ Player ]
+Right [ Time3 | no WasActiveTime ] [ Player ] -> [ Time2 | ] [ Player ]
+Right [ Time4 | no WasActiveTime ] [ Player ] -> [ Time3 | ] [ Player ]
+Right [ Time5 | no WasActiveTime ] [ Player ] -> [ Time4 | ] [ Player ]
+Right [ Time6 | no WasActiveTime ] [ Player ] -> [ Time5 | ] [ Player ]
+Right [ Time7 | no WasActiveTime ] [ Player ] -> [ Time6 | ] [ Player ]
+Right [ Time8 | no WasActiveTime ] [ Player ] -> [ Time7 | ] [ Player ]
+
+[ WasActiveTime ] -> [  ]
+
+
+[ VerticalCannonBeam ] -> []
+
+Down [ CannonDown0 | ... | ] -> [ CannonDown0 | ... | VerticalCannonBeam ]
+[ CannonDown0 ] -> [ CannonDownUsed ]
+[ CannonDown1 ] -> [ CannonDown0 ]
+[ CannonDown2 ] -> [ CannonDown1 ]
+[ CannonDown3 ] -> [ CannonDown2 ]
+[ CannonDown4 ] -> [ CannonDown3 ]
+[ CannonDown5 ] -> [ CannonDown4 ]
+[ CannonDown6 ] -> [ CannonDown5 ]
+[ CannonDown7 ] -> [ CannonDown6 ]
+[ CannonDown8 ] -> [ CannonDown7 ]
+Up [ CannonUp0 | ... | ] -> [ CannonUp0 | ... | VerticalCannonBeam ]
+[ CannonUp0 ] -> [ CannonUpUsed ]
+[ CannonUp1 ] -> [ CannonUp0 ]
+[ CannonUp2 ] -> [ CannonUp1 ]
+[ CannonUp3 ] -> [ CannonUp2 ]
+[ CannonUp4 ] -> [ CannonUp3 ]
+[ CannonUp5 ] -> [ CannonUp4 ]
+[ CannonUp6 ] -> [ CannonUp5 ]
+[ CannonUp7 ] -> [ CannonUp6 ]
+[ CannonUp8 ] -> [ CannonUp7 ]
+
+late [ Player CannonBeam ] -> [ DeadPlayer CannonBeam ]
+late [ Zombie CannonBeam ] -> [ CannonBeam ]
+
+==============
+WINCONDITIONS
+==============
+
+No ActiveTime
+Some Player
+
+=======     
+LEVELS
+=======
+
+message Survive until time runs out
+
+#4#######
+ZZZZZZZZZ
+Z.......Z
+Z.......Z
+Z.......Z
+Z...P...Z
+Z.......Z
+Z.......Z
+Z.......Z
+ZZZZZZZZZ
+
+#8#########
+ZZZZZZZZZZZ
+Z.........Z
+Z.........Z
+Z.........Z
+Z.........Z
+Z....P....Z
+Z.........Z
+Z.........Z
+Z.........Z
+Z.........Z
+ZZZZZZZZZZZ
+
+#88##########
+ZZZZZZZZZZZZZ
+Z...........Z
+Z...........Z
+Z...........Z
+Z...........Z
+Z...........Z
+Z.....P.....Z
+Z...........Z
+Z...........Z
+Z...........Z
+Z...........Z
+Z...........Z
+ZZZZZZZZZZZZZ
+
+#887########
+#######Z####
+#######.####
+#######.####
+#######.####
+Z...P...####
+####.##.####
+####.##.####
+####.......Z
+####.#######
+####.#######
+####.#######
+####Z#######
+
+#888888######
+.i.i.i.i.i.i.
+ZZZZZZZZZZZZZ
+Z...........Z
+Z...........Z
+Z...........Z
+Z...........Z
+Z...........Z
+Z.....P.....Z
+Z...........Z
+Z...........Z
+Z...........Z
+Z...........Z
+Z...........Z
+ZZZZZZZZZZZZZ
+
+#88888888####
+.a.a.a.a.a.a.
+ZZZZZZZZZZZZZ
+Z...........Z
+Z...........Z
+Z...........Z
+Z...........Z
+Z...........Z
+Z.....P.....Z
+Z...........Z
+Z...........Z
+Z...........Z
+Z...........Z
+Z...........Z
+ZZZZZZZZZZZZZ

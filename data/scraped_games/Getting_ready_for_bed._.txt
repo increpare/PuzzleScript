@@ -1,0 +1,397 @@
+title Getting ready for bed. 
+author Dan $ations
+youtube ZMuHPpG7OwY
+norestart
+noundo
+realtime_interval .05
+
+========
+OBJECTS
+========
+
+background
+#ecd8c6 #ecd8c6 #ffe680
+00100
+00021
+10000
+00010
+02100
+
+BodyD
+brown lightbrown green
+.000.
+.101.
+.222.
+.1.1.
+.....
+
+BodyU
+brown lightbrown green
+.000.
+.000.
+.222.
+.1.1.
+.....
+
+BodyH
+brown lightbrown green
+.000.
+.010.
+.222.
+.1.1.
+.....
+
+HeadR
+Black lightbrown darkgrey
+.....
+..22.
+.0000
+.0011
+2211.
+
+HeadL
+Black lightbrown darkgrey
+.....
+.22..
+0000.
+1100.
+.1122
+
+HeadU
+Black DarkGrey
+.....
+.111.
+00000
+00000
+11111
+
+HeadD
+Black DarkGrey LightBrown
+.....
+.111.
+00200
+02220
+12221
+
+Player
+transparent
+
+Door
+brown lightbrown darkbrown
+12221
+20002
+20012
+20002
+20002
+
+wallu 
+orange lightbrown
+00000
+00001
+00000
+01000
+11111
+
+wallul 
+orange lightbrown
+00100
+00101
+00100
+00100
+00111
+
+wallur 
+orange lightbrown
+00100
+00100
+00101
+01100
+11100
+
+walld
+lightbrown brown
+0000.
+00010
+00100
+01000
+10000
+
+walld2
+lightbrown
+
+walldr
+lightbrown brown
+0000.
+0001.
+0011.
+0111.
+1111.
+
+walllr
+#ecd8c6 #ecd8c6 #ffe680
+00100
+00021
+10000
+00010
+02100
+
+walllu
+orange lightbrown
+01...
+01...
+1....
+1....
+.....
+
+wallru
+orange lightbrown
+...10
+...10
+....1
+....1
+.....
+
+MouseU
+grey pink red
+.....
+.....
+.00..
+0000.
+0110.
+
+MouseD
+grey pink red
+.11..
+..1..
+.00..
+2002.
+0000.
+
+MouseL
+grey pink red
+.....
+.....
+..0..
+.200.
+.0001
+
+MouseR
+grey pink red
+.....
+.....
+..0..
+.002.
+1000.
+
+TailU
+pink
+..0..
+..0..
+.0...
+.....
+.....
+
+TailD
+pink
+.....
+.....
+.....
+.0...
+.0...
+
+TailL
+pink
+.....
+.....
+.....
+.0...
+0.0..
+
+TailR
+pink
+.....
+.....
+.....
+..0..
+...00
+
+dresser1
+lightbrown brown black white
+.....
+.....
+..000
+.0022
+00222
+
+dresser2
+lightbrown brown black white
+.....
+.....
+00000
+30001
+00011
+
+dresser3
+lightbrown brown darkbrown
+00011
+22011
+22011
+..01.
+..0..
+
+dresser4
+lightbrown brown darkbrown
+00000
+02222
+02222
+02...
+0....
+
+table1
+lightbrown brown red pink
+.....
+.....
+..000
+.0032
+00322
+
+table2
+lightbrown brown red pink
+.....
+.....
+00000
+22301
+23011
+
+table3
+lightbrown brown darkbrown
+00011
+22011
+22011
+..01.
+..0..
+
+table4
+lightbrown brown darkbrown
+00000
+02222
+02222
+02...
+0....
+
+=======
+LEGEND
+=======
+
+wall = wallu or wallul or wallur or walld or walld or walld2 or walldr or walllu or wallru or Door
+body = bodyh or bodyu or bodyd
+head = headr or headl or headd or headu
+Mouse = MouseU or MouseD or MouseL or MouseR
+Tail = TailU or TailD or TailL or TailR
+furniture1 = dresser1 or dresser2 or table1 or table2
+furniture2 = dresser3 or dresser4 or table3 or table4
+
+. = background
+n = bodyd and player
+o = headD
+# = wallu
+x = walllr
+{ = wallul
+} = wallur
+D = walld
+W = walld2
+] = walldr
+/ = walllu
+\ = wallru
+Q = Door
+s = mouser
+~ = tailr
+1 = dresser1 and wallu
+2 = dresser2 and wallu
+3 = dresser3
+4 = dresser4
+! = table1 and wallu
+@ = table2 and wallu
+E = table3
+$ = table4
+
+=======
+SOUNDS
+=======
+
+
+
+================
+COLLISIONLAYERS
+================
+
+background
+walllr
+mouse, tail
+player, wall, furniture2
+body
+head 
+furniture1
+
+======
+RULES
+======
+
+[> player| wall] -> cancel
+[> player| walllr] -> cancel
+[> player| furniture2] -> cancel
+
+[action player|mouse] -> message you grabbed the mouse.. but it got away.
+[action player|tail] -> message so close.
+[action player|door] -> [player no body|no head door] message Leaving is best.  This is my life.
+
+[stationary player|...|mouse] -> [stationary player|...|> mouse]
+[stationary player][mouse wall] -> [stationary player][randomdir mouse wall]
+[stationary player][mouse walllr] -> [stationary player][randomdir mouse walllr]
+[stationary player no body][mouse] -> [stationary player no body][randomdir mouse]
+
+
+[up player][body][head] -> [up player][up bodyu][up headu]
+[down player][body][head] -> [down player][down bodyd][down headd]
+[right player][body][head] -> [right player][right bodyh][right headr]
+[left player][body][head] -> [left player][left bodyh][left headl]
+
+[moving player][body] -> [moving player][moving body]
+[moving body][head] -> [moving body][moving head]
+
+[up mouse] -> [up mouseu]
+[down mouse] -> [down moused]
+[right mouse] -> [right mouser]
+[left mouse] -> [left mousel]
+
+
+late [tail] -> []
+
+late up[moused|no tail]->[moused|taild]
+late down[mouseu|no tail]->[mouseu|tailu]
+late left[no tail|mousel]->[taill|mousel]
+late right[no tail|mouser]->[tailr|mouser]
+
+==============
+WINCONDITIONS
+==============
+
+(There is no winning, barefoot at 5am.)
+
+=======
+LEVELS
+=======
+
+{#12!@##Q!@12}
+/.43$E...$E43\
+x............x
+x...~s.......x
+x............x
+x............x
+x............x
+x............x
+x........o...x
+x........n...x
+x............x
+x............x
+DWDWDWDWDWDWDW

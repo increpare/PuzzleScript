@@ -1,0 +1,235 @@
+Title Blind Ninja
+Author Connorses
+background_color black
+text_color red
+noundo
+========
+OBJECTS
+========
+background
+brown
+
+player
+black grey
+.000.
+.111.
+1000.
+.0.0.
+.....
+
+Enemy1
+black white
+.000.
+.101.
+.000.
+.0.0.
+.....
+s1
+white
+.00..
+.000.
+0..0.
+....0
+.....
+s2
+white
+..0..
+...0.
+...00
+..000
+.0...
+s3
+white
+.....
+0....
+.0..0
+.000.
+.00..
+s4
+white
+...0.
+.00..
+00...
+00...
+..0..
+a
+red
+.....
+.....
+.....
+.....
+.....
+b
+green
+.....
+.....
+..0..
+.....
+.....
+c
+yellow
+.....
+.....
+.0.0.
+.....
+.....
+
+block1
+lightblue
+.0.0.
+0...0
+.....
+0...0
+.0.0.
+
+
+=======
+LEGEND
+=======
+enemy = enemy1
+enemyc = enemy and c
+s = s1 or s2 or s3 or s4
+playera = player and a
+
+. = background
+p = player
+e = enemy1
+
+=======
+SOUNDS
+=======
+sfx0 48771506
+sfx1 86111107
+(sfx1 17190907)
+
+s1 create 95730307
+block1 create 59837900
+
+================
+COLLISIONLAYERS
+================
+background
+enemy, player
+a
+b, block1
+s
+c
+
+======
+RULES
+======
+
+[s] -> []
+[a] -> []
+[block1] -> []
+up    [> player||enemy1] -> [|playera|s1] (x4)
+right [> player||enemy1] -> [|playera|s2]
+down  [> player||enemy1] -> [|playera|s3]
+left  [> player||enemy1] -> [|playera|s4]
+
+up    [> player|enemy]   -> [playera|s1](x4)
+right [> player|enemy]   -> [playera|s2]
+down  [> player|enemy]   -> [playera|s3]
+left  [> player|enemy]   -> [playera|s4]
+
+([enemy|s] -> [< enemy|s] still considering using this one)
+
+[> player|no enemy] ->[|player] sfx1
+[player|...|no b] -> [player|...|b]
+horizontal [enemy no c|...|b] -> [> enemy > c|...|b]
+vertical [enemy no c|...|b] -> [> enemy > c|...|b]
+
+[enemy|...|player] -> [> enemy > c|...|player]
+[moving enemy|player] -> [stationary enemy|player]
+late [enemy no a|player no block1] -> [enemy a|player block1] (x4?)
+late up   [enemy no a|player block1] -> [enemy|s1] sfx0
+late right[enemy no a|player block1] -> [enemy|s2] sfx0
+late down [enemy no a|player block1] -> [enemy|s3] sfx0
+late left [enemy no a|player block1] -> [enemy|s4] sfx0
+
+late up   [enemy|playera] -> [enemy|s1] sfx0
+late right[enemy|playera] -> [enemy|s2] sfx0
+late down [enemy|playera] -> [enemy|s3] sfx0
+late left [enemy|playera] -> [enemy|s4] sfx0
+late [b] -> []
+late [c] -> []
+==============
+WINCONDITIONS
+==============
+no enemy
+=======
+LEVELS
+=======
+
+Message A truly skilled duelist will not allow the fight to last for more than a single stroke.
+Message It happens so fast, you can barely see it.
+...
+.e.
+...
+...
+...
+.p.
+...
+Message You can block an attack from a single opponent.
+......e
+.p.e...
+.....e.
+Message Do not allow them to flank you.
+.....
+.....
+.ep.e
+.....
+.....
+Message You cannot block multiple attacks!
+.......
+.e.....
+.e.....
+.......
+....e..
+....e..
+.......
+...e...
+...e...
+.......
+...p...
+.......
+.......
+Message Watch carefully, your opponent, and anticipate his every move.
+e...e
+.....
+.....
+...p.
+e...e
+
+.....
+.e...
+...pe
+.e...
+.....
+
+e.....e
+..e....
+.e.....
+...p.e.
+.......
+.......
+e.....e
+
+.......
+...e...
+.......
+.a.....
+ee.....
+...p.ee
+.......
+
+
+....e....
+.........
+e.......e
+.........
+....p....
+.........
+e.......e
+.........
+....e....

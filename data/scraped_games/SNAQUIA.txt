@@ -1,0 +1,211 @@
+title SNAQUIA
+author aparrish
+homepage www.decontextualize.com
+
+noaction
+color_palette atari
+
+========
+OBJECTS
+========
+
+Background
+Black DarkGrey
+00000
+00000
+00000
+00000
+00000
+
+Wall
+Black DarkGrey
+00000
+00000
+11111
+00000
+00000
+
+Red
+Black DarkRed Red
+00000
+02220
+02120
+02220
+00000
+
+Blue
+Black DarkBlue Blue
+00000
+02120
+02120
+02120
+00000
+
+Green
+Black DarkGreen Green
+00000
+01110
+01210
+01110
+00000
+
+Purple
+Black Purple Pink
+00000
+01210
+02120
+01210
+00000
+
+White
+Black Grey LightGrey White
+00000
+01210
+02320
+01210
+00000
+
+Orange
+Black Orange Yellow White
+00000
+01230
+01220
+01110
+00000
+
+
+Neutral
+Black DarkGrey
+00000
+01110
+01110
+01110
+00000
+
+Neutral2
+Black DarkGrey
+00000
+01010
+00000
+01010
+00000
+
+
+Player
+Black Grey
+00000
+00000
+00000
+00000
+00000
+
+Temp
+Black Grey
+00000
+01110
+01110
+01110
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+R = Red
+B = Blue
+G = Green
+P = Purple
+@ = Player
+T = Temp
+
+Block = Red or Blue or Green or Purple or White or Orange or Neutral or Neutral2
+ColorBlock = Red or Blue or Green or Purple or White or Orange
+TypicalColorBlock = Red or Blue or Green or Purple
+RareColorBlock = White or Orange
+
+=======
+SOUNDS
+=======
+
+Red destroy 69632106
+Blue destroy 44194500
+Green destroy 25945700
+Purple destroy 43433103
+White destroy 20804709
+Orange destroy 6860303
+Player move 36460105
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Block, Player, Temp, Wall
+
+======
+RULES
+======
+
+random [ Neutral2 ] -> [ random ColorBlock ]
+[ Neutral2 ] -> [ random TypicalColorBlock ]
+[ Neutral ] -> [ Neutral2 ]
+
+HORIZONTAL [ > Player | Block ] -> [ > Temp | > Block ]
+HORIZONTAL [ > Block | Block ] -> [ > Block | > Block ]
+HORIZONTAL [ > Temp | | | | | ] -> [ | | | | | > Player ]
+
+[ Vertical Player | Block ] -> [ Vertical Player | Vertical Block ]
+
+late [ No Player | Red | Red | Red | Red | Red | No Player ] -> [ | Neutral | Neutral | Neutral | Neutral | Neutral | ]
+late [ No Player | Red | Red | Red | Red | No Player ] -> [ | Neutral | Neutral | Neutral | Neutral | ]
+late [ No Player | Red | Red | Red | No Player ] -> [ | Neutral | Neutral | Neutral | ]
+
+late [ No Player | Green | Green | Green | Green | Green | No Player ] -> [ | Neutral | Neutral | Neutral | Neutral | Neutral | ]
+late [ No Player | Green | Green | Green | Green | No Player ] -> [ | Neutral | Neutral | Neutral | Neutral | ]
+late [ No Player | Green | Green | Green | No Player ] -> [ | Neutral | Neutral | Neutral | ]
+
+late [ No Player | Blue | Blue | Blue | Blue | Blue | No Player ] -> [ | Neutral | Neutral | Neutral | Neutral | Neutral | ]
+late [ No Player | Blue | Blue | Blue | Blue | No Player ] -> [ | Neutral | Neutral | Neutral | Neutral | ]
+late [ No Player | Blue | Blue | Blue | No Player ] -> [ | Neutral | Neutral | Neutral | ]
+
+late [ No Player | Purple | Purple | Purple | Purple | Purple | No Player ] -> [ | Neutral | Neutral | Neutral | Neutral | Neutral | ]
+late [ No Player | Purple | Purple | Purple | Purple | No Player ] -> [ | Neutral | Neutral | Neutral | Neutral | ]
+late [ No Player | Purple | Purple | Purple | No Player ] -> [ | Neutral | Neutral | Neutral | ]
+
+late [ No Player | White | White | White | White | White | No Player ] -> [ | Neutral | Neutral | Neutral | Neutral | Neutral | ]
+late [ No Player | White | White | White | White | No Player ] -> [ | Neutral | Neutral | Neutral | Neutral | ]
+late [ No Player | White | White | White | No Player ] -> [ | Neutral | Neutral | Neutral | ]
+
+late [ No Player | Orange | Orange | Orange | Orange | Orange | No Player ] -> [ | Neutral | Neutral | Neutral | Neutral | Neutral | ]
+late [ No Player | Orange | Orange | Orange | Orange | No Player ] -> [ | Neutral | Neutral | Neutral | Neutral | ]
+late [ No Player | Orange | Orange | Orange | No Player ] -> [ | Neutral | Neutral | Neutral | ]
+
+
+late [ Temp ] -> [ Player ]
+
+
+==============
+WINCONDITIONS
+==============
+
+(No ColorBlock)
+
+=======
+LEVELS
+=======
+
+message A simple PuzzleScript cover of skip Ltd.'s Art Style: Aquia. There's no win condition! Enjoy.
+
+#######
+..RBR..
+..BRB..
+..GGR..
+@GRGG..
+..BBG..
+..RGR..
+..BRG..
+#######
+

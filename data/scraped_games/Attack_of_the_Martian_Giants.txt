@@ -1,0 +1,673 @@
+title Attack of the Martian Giants
+author Mark Richardson
+noundo
+realtime_interval 0.5
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+Milestone
+#090 #0F0
+111..
+0....
+.....
+.....
+.....
+
+Count5
+#00B #00D #00F #22F #44F
+..444
+..333
+..222
+..111
+..000
+
+Count4
+#00B #00D #00F #22F
+.....
+..333
+..222
+..111
+..000
+
+Count3
+#00B #00D #00F
+.....
+.....
+..222
+..111
+..000
+
+Count2
+#00B #00D
+.....
+.....
+.....
+..111
+..000
+
+Count1
+#00B
+.....
+.....
+.....
+.....
+..000
+
+Count0
+#00B
+.....
+.....
+.....
+.....
+.....
+
+Spawn
+DarkGray
+0....
+0....
+0....
+0....
+0....
+
+Spawn2
+Gray DarkGray Black
+00001
+00011
+00121
+01221
+12221
+
+RoadU
+Yellow Black
+11111
+11011
+11011
+11111
+11111
+
+RoadD
+Yellow Black
+11111
+11111
+11011
+11011
+11111
+
+RoadL
+Yellow Black
+11111
+11111
+10011
+11111
+11111
+
+RoadR
+Yellow Black
+11111
+11111
+11001
+11111
+11111
+
+Wall
+Gray
+
+BaseGood
+Gray DarkGray Black
+0000.
+0000.
+1111.
+1221.
+1221.
+
+BaseRuin
+Gray DarkGray Red Yellow
+11111
+13011
+02103
+10102
+00011
+
+LaserTower
+Gray LightGray Red
+00200
+01210
+22122
+01210
+00200
+
+FireTower
+Gray LightGray Red
+02220
+21112
+21112
+21112
+02220
+
+GunTower
+Gray LightGray Yellow
+00100
+00200
+12121
+00200
+00100
+
+MortarTower
+Gray LightGray Black
+00100
+01110
+11211
+01110
+00100
+
+HarvesterTower
+Gray LightGray #22F #00D
+00200
+01310
+23132
+01310
+00200
+
+CompactorTower
+Gray Yellow DarkGray
+12121
+20002
+10001
+20002
+12121
+
+Enemy
+LightGreen DarkGray Red
+.111.
+.020.
+00000
+.000.
+00.00
+
+LaserH
+#F00 #800
+.....
+11111
+00000
+11111
+.....
+
+LaserV
+#F00 #800
+.101.
+.101.
+.101.
+.101.
+.101.
+
+LaserX
+#F00 #800
+.101.
+11011
+00000
+11011
+.101.
+
+Fire
+Red Orange Yellow
+.212.
+21012
+10001
+21012
+.212.
+
+Compacted
+DarkGray Yellow DarkGray
+.212.
+10001
+20002
+10001
+.212.
+
+Selection
+#00B #00D #00F #22F #44F
+.....
+01.10
+.232.
+..4..
+.....
+
+Player
+White
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+
+=======
+LEGEND
+=======
+
+. = Background
+u = RoadU
+d = RoadD
+l = RoadL
+r = RoadR
+c = Count5 and Milestone
+z = Count0 and Milestone
+e = Count5 and Wall
+f = Count0 and Wall
+h = Count1 and Wall
+a = Milestone and Count5 and Wall
+g = Milestone and Count0 and Wall
+# = Wall and RoadR (Road is for mortar)
+b = BaseGood and Count5 and Player
+s = Spawn and RoadR
+n = Spawn2 and Count1
+m = Spawn2 and Count2
+o = Spawn2 and Count3
+p = Spawn2 and Count4
+q = Spawn2 and Count5
+t = Spawn2
+1 = LaserTower
+2 = FireTower
+3 = GunTower
+4 = MortarTower
+5 = HarvesterTower
+6 = CompactorTower
+y = Selection
+
+Road = RoadU or RoadD or RoadL or RoadR
+Count = Count0 or Count1 or Count2 or Count3 or Count4 or Count5
+Tower = LaserTower or FireTower or GunTower or MortarTower or HarvesterTower or CompactorTower
+Base = BaseGood or BaseRuin
+Structure = Wall or Base or Tower or Spawn or Spawn2
+Laser = LaserH or LaserV or LaserX
+Weapon = Laser or Fire or Compacted
+Dynamic = Tower or Milestone or Enemy or Weapon
+
+
+=======
+SOUNDS
+=======
+
+SFX0 88932302 (Base damaged)
+SFX1 81395702 (Base destroyed)
+SFX2 68640103 (Build)
+SFX3 90300703 (Upgrade)
+SFX4 41939501 (Laser)
+SFX5 96499502 (Fire)
+SFX6 43616502 (Gun)
+SFX7 34750701 (Mortar)
+SFX8 82756702 (Compactor)
+SFX9 20819100 (Harvester)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Count, Selection
+Road, Milestone
+Wall, Base, Tower, Enemy, Spawn2
+Spawn, Weapon
+Player
+
+
+======
+RULES
+======
+
+(Prime dynamic objects)
+[ Tower Count ][ Dynamic ] -> [ Tower Count ][ action Dynamic ]
+[ action Dynamic ][ action Player ] -> [ Dynamic ][ action Player ]
+[ action Dynamic ][      > Player ] -> [ Dynamic ][      > Player ]
+[ action Milestone no Wall ] -> [ Milestone ]
+
+(Remove weapons)
+[ action Weapon ] -> [ ]
+
+(Buy tower)
+up [ action Player Wall no Count ][BaseGood][ Tower | Selection ][ no Tower | Selection | Count5 ] -> [ Player Tower Count5 ][BaseGood][ Tower | Selection ][ | Selection | ] SFX2
+up [ no Tower | Selection | ... | no Count | Count ] -> [ | Selection | ... | Count | ]
+up [ no Tower | Selection | ... | no Count ] -> [ | Selection | ... | Count0 ]
+(Select tower)
+up [ action Player Tower no Count | no Selection ][ Tower | Selection ] -> [ Player Tower | Selection ][ Tower | ]
+
+(Enemies select direction)
+[ action Enemy RoadU ] -> [ up    Enemy RoadU ]
+[ action Enemy RoadD ] -> [ down  Enemy RoadD ]
+[ action Enemy RoadL ] -> [ left  Enemy RoadL ]
+[ action Enemy RoadR ] -> [ right Enemy RoadR ]
+
+(Enemies attack)
+[ > Enemy Count | BaseGood Count5 ] -> [ | BaseGood Count4 ] SFX0
+[ > Enemy Count | BaseGood Count4 ] -> [ | BaseGood Count3 ] SFX0
+[ > Enemy Count | BaseGood Count3 ] -> [ | BaseGood Count2 ] SFX0
+[ > Enemy Count | BaseGood Count2 ] -> [ | BaseGood Count1 ] SFX0
+[ > Enemy Count | BaseGood Count1 ] -> [ | BaseRuin Count0 ] SFX1
+[ > Enemy Count | BaseRuin Count0 ] -> [ | BaseRuin Count0 ]
+
+(Enemies walk)
+[ > Enemy Count | no Structure no Enemy ] -> [ | Enemy Count ]
+
+(Tower cool down)
+[ action Tower Count1 ] -> [ Tower Count0 ]
+[ action Tower Count2 ] -> [ Tower Count1 ]
+[ action Tower Count3 ] -> [ Tower Count2 ]
+[ action Tower Count4 ] -> [ Tower Count3 ]
+[ action Tower Count5 ] -> [ Tower Count4 ]
+
+(Spawn enemy)
+startloop
+random up [ action Milestone Wall Count1 | Wall Count0 ][ Spawn no Enemy ] -> [ down Milestone Wall Count0 | Wall Count0 ][ Spawn Enemy ]
+     + up [ action Milestone Wall Count2 | Wall Count0 ][ Spawn no Enemy ] -> [ down Milestone Wall Count1 | Wall Count0 ][ Spawn Enemy ]
+     + up [ action Milestone Wall Count3 | Wall Count0 ][ Spawn no Enemy ] -> [ down Milestone Wall Count2 | Wall Count0 ][ Spawn Enemy ]
+     + up [ action Milestone Wall Count4 | Wall Count0 ][ Spawn no Enemy ] -> [ down Milestone Wall Count3 | Wall Count0 ][ Spawn Enemy ]
+     + up [ action Milestone Wall Count5 | Wall Count0 ][ Spawn no Enemy ] -> [ down Milestone Wall Count4 | Wall Count0 ][ Spawn Enemy ]
+endloop
+[ Spawn2 Count ][ Spawn Enemy no Count ] -> [ Spawn2 Count ][ Spawn Enemy Count ]
+up [ action Milestone Wall Count5 | Wall Count  | Wall Count0 ] -> [ Wall Count5 | Wall Count Milestone | Wall Count0          ]
+up [ action Milestone Wall Count5 | Wall Count5 | Wall Count  ] -> [ Wall Count5 | Wall Count5          | Wall Count Milestone ]
+up [ action Milestone Wall Count0 | Wall Count  ] -> [ Wall Count0 | Wall Count Milestone ]
+up [ no Wall | Wall Count | ... | down Milestone ] -> [ | Wall Count Milestone | ... | ]
+[ down Milestone ] -> [ Milestone ]
+
+(Start harvester tower)
+startloop
+random [ action HarvesterTower Count0 | Enemy Count1 no Structure ] -> [ up HarvesterTower Count5 | Fire Enemy Count0 ] SFX8
+     + [ action HarvesterTower Count0 | Enemy Count2 no Structure ] -> [ up HarvesterTower Count5 | Fire Enemy Count1 ] SFX8
+     + [ action HarvesterTower Count0 | Enemy Count3 no Structure ] -> [ up HarvesterTower Count5 | Fire Enemy Count2 ] SFX8
+     + [ action HarvesterTower Count0 | Enemy Count4 no Structure ] -> [ up HarvesterTower Count5 | Fire Enemy Count3 ] SFX8
+     + [ action HarvesterTower Count0 | Enemy Count5 no Structure ] -> [ up HarvesterTower Count5 | Fire Enemy Count4 ] SFX8
+(Cash in harvest)
+up [ up HarvesterTower ][ no Tower | Selection | ... | Count4 ] -> [ HarvesterTower ][ | Selection | ... | Count5 ]
+up [ up HarvesterTower ][ no Tower | Selection | ... | Count3 ] -> [ HarvesterTower ][ | Selection | ... | Count4 ]
+up [ up HarvesterTower ][ no Tower | Selection | ... | Count2 ] -> [ HarvesterTower ][ | Selection | ... | Count3 ]
+up [ up HarvesterTower ][ no Tower | Selection | ... | Count1 ] -> [ HarvesterTower ][ | Selection | ... | Count2 ]
+up [ up HarvesterTower ][ no Tower | Selection | ... | Count0 ] -> [ HarvesterTower ][ | Selection | ... | Count1 ]
+   [ up HarvesterTower ]                                        -> [ HarvesterTower ]
+(Cash in killed enemy)
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count4 ] -> [ ][ | Selection | ... | Count5 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count3 ] -> [ ][ | Selection | ... | Count4 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count2 ] -> [ ][ | Selection | ... | Count3 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count1 ] -> [ ][ | Selection | ... | Count2 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count0 ] -> [ ][ | Selection | ... | Count1 ]
+   [ Enemy Count0 ]                                        -> [ ]
+endloop
+[ action HarvesterTower ] -> [ HarvesterTower ]
+
+(Start fire tower)
+[ action FireTower Count0 | Enemy no Structure ] -> [ up FireTower Count5 | Enemy ] SFX5
+[ up FireTower | no Structure no Fire ] -> [ up FireTower | action Fire ]
+[ up FireTower ]                        -> [    FireTower ]
+(Cash in killed enemies)
+startloop
+random [ action Fire Enemy Count1 ] -> [ Fire Enemy Count0 ]
+     + [ action Fire Enemy Count2 ] -> [ Fire Enemy Count1 ]
+     + [ action Fire Enemy Count3 ] -> [ Fire Enemy Count2 ]
+     + [ action Fire Enemy Count4 ] -> [ Fire Enemy Count3 ]
+     + [ action Fire Enemy Count5 ] -> [ Fire Enemy Count4 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count4 ] -> [ ][ | Selection | ... | Count5 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count3 ] -> [ ][ | Selection | ... | Count4 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count2 ] -> [ ][ | Selection | ... | Count3 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count1 ] -> [ ][ | Selection | ... | Count2 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count0 ] -> [ ][ | Selection | ... | Count1 ]
+   [ Enemy Count0 ]                                        -> [ ]
+endloop
+[ action FireTower ] -> [ FireTower ]
+[ action Fire      ] -> [ Fire      ]
+
+(Start gun tower)
+startloop
+random [ action GunTower Count0 | Enemy Count1 no Structure ] -> [ GunTower Count3 | Fire Enemy Count0 ] SFX6
+     + [ action GunTower Count0 | Enemy Count2 no Structure ] -> [ GunTower Count3 | Fire Enemy Count1 ] SFX6
+     + [ action GunTower Count0 | Enemy Count3 no Structure ] -> [ GunTower Count3 | Fire Enemy Count2 ] SFX6
+     + [ action GunTower Count0 | Enemy Count4 no Structure ] -> [ GunTower Count3 | Fire Enemy Count3 ] SFX6
+     + [ action GunTower Count0 | Enemy Count5 no Structure ] -> [ GunTower Count3 | Fire Enemy Count4 ] SFX6
+(Cash in killed enemy)
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count4 ] -> [ ][ | Selection | ... | Count5 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count3 ] -> [ ][ | Selection | ... | Count4 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count2 ] -> [ ][ | Selection | ... | Count3 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count1 ] -> [ ][ | Selection | ... | Count2 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count0 ] -> [ ][ | Selection | ... | Count1 ]
+   [ Enemy Count0 ]                                        -> [ ]
+endloop
+[ action GunTower ] -> [ GunTower ]
+
+(Start laser tower)
+startloop
+random     [ action LaserTower Count0 ] -> [ up LaserTower Count0 ]
+(Start laser)
+horizontal [ up LaserTower | Road no Structure ] -> [ up LaserTower | left Road ]
+vertical   [ up LaserTower | Road no Structure ] -> [ up LaserTower | up   Road ]
+(Extend laser)
+horizontal [ left Road no Enemy | Road no Structure ] -> [ left Road | left Road ]
+vertical   [ up   Road no Enemy | Road no Structure ] -> [ up   Road | up   Road ]
+(Use laser if enemy hit)
+[ Enemy Count1 left Road ][ up LaserTower Count0 ] -> [ Enemy Count0 right Road ][ up LaserTower Count5 ] SFX4
+[ Enemy Count2 left Road ][ up LaserTower Count0 ] -> [ Enemy Count1 right Road ][ up LaserTower Count5 ] SFX4
+[ Enemy Count3 left Road ][ up LaserTower Count0 ] -> [ Enemy Count2 right Road ][ up LaserTower Count5 ] SFX4
+[ Enemy Count4 left Road ][ up LaserTower Count0 ] -> [ Enemy Count3 right Road ][ up LaserTower Count5 ] SFX4
+[ Enemy Count5 left Road ][ up LaserTower Count0 ] -> [ Enemy Count4 right Road ][ up LaserTower Count5 ] SFX4
+[ Enemy Count1 up   Road ][ up LaserTower Count0 ] -> [ Enemy Count0 down  Road ][ up LaserTower Count5 ] SFX4
+[ Enemy Count2 up   Road ][ up LaserTower Count0 ] -> [ Enemy Count1 down  Road ][ up LaserTower Count5 ] SFX4
+[ Enemy Count3 up   Road ][ up LaserTower Count0 ] -> [ Enemy Count2 down  Road ][ up LaserTower Count5 ] SFX4
+[ Enemy Count4 up   Road ][ up LaserTower Count0 ] -> [ Enemy Count3 down  Road ][ up LaserTower Count5 ] SFX4
+[ Enemy Count5 up   Road ][ up LaserTower Count0 ] -> [ Enemy Count4 down  Road ][ up LaserTower Count5 ] SFX4
+(Cash in killed enemy)
+up [ Enemy Count0 right Road ][ no Tower | Selection | ... | Count4 ] -> [ right Road ][ | Selection | ... | Count5 ]
+up [ Enemy Count0 right Road ][ no Tower | Selection | ... | Count3 ] -> [ right Road ][ | Selection | ... | Count4 ]
+up [ Enemy Count0 right Road ][ no Tower | Selection | ... | Count2 ] -> [ right Road ][ | Selection | ... | Count3 ]
+up [ Enemy Count0 right Road ][ no Tower | Selection | ... | Count1 ] -> [ right Road ][ | Selection | ... | Count2 ]
+up [ Enemy Count0 right Road ][ no Tower | Selection | ... | Count0 ] -> [ right Road ][ | Selection | ... | Count1 ]
+   [ Enemy Count0 right Road ]                                        -> [ right Road ]
+up [ Enemy Count0 down  Road ][ no Tower | Selection | ... | Count4 ] -> [ down  Road ][ | Selection | ... | Count5 ]
+up [ Enemy Count0 down  Road ][ no Tower | Selection | ... | Count3 ] -> [ down  Road ][ | Selection | ... | Count4 ]
+up [ Enemy Count0 down  Road ][ no Tower | Selection | ... | Count2 ] -> [ down  Road ][ | Selection | ... | Count3 ]
+up [ Enemy Count0 down  Road ][ no Tower | Selection | ... | Count1 ] -> [ down  Road ][ | Selection | ... | Count2 ]
+up [ Enemy Count0 down  Road ][ no Tower | Selection | ... | Count0 ] -> [ down  Road ][ | Selection | ... | Count1 ]
+   [ Enemy Count0 down  Road ]                                        -> [ down  Road ]
+(Draw laser)
+horizontal [ right Road | left Road ] -> [ right Road | right Road ]
+vertical   [ down  Road | up   Road ] -> [ down  Road | down  Road ]
+[ right Road LaserX ] -> [ Road LaserX ]
+[ down  Road LaserX ] -> [ Road LaserX ]
+[ right Road LaserV ] -> [ Road LaserX ]
+[ down  Road LaserH ] -> [ Road LaserX ]
+[ right Road        ] -> [ Road LaserH ]
+[ down  Road        ] -> [ Road LaserV ]
+[ > Road ] -> [ Road ]
+(Stop laser tower)
+[ up LaserTower ] -> [ LaserTower ]
+endloop
+[ action LaserTower ] -> [ LaserTower ]
+
+(Start mortar tower)
+startloop
+random [ action MortarTower Count0 ] -> [ up MortarTower Count0 ]
+[ up MortarTower | stationary Road ] -> [ up MortarTower | up    Road ]
+[ up    Road     | stationary Road ] -> [ up    Road     | left  Road ]
+[ up    Road ] -> [ action Road ]
+[ left  Road ] -> [ action Road ]
+[ action Road Enemy Count1 no Structure ][ up MortarTower Count0 ] -> [ action Road Fire Enemy Count0 ][ up MortarTower Count5 ] SFX7
+[ action Road Enemy Count2 no Structure ][ up MortarTower Count0 ] -> [ action Road Fire Enemy Count1 ][ up MortarTower Count5 ] SFX7
+[ action Road Enemy Count3 no Structure ][ up MortarTower Count0 ] -> [ action Road Fire Enemy Count2 ][ up MortarTower Count5 ] SFX7
+[ action Road Enemy Count4 no Structure ][ up MortarTower Count0 ] -> [ action Road Fire Enemy Count3 ][ up MortarTower Count5 ] SFX7
+[ action Road Enemy Count5 no Structure ][ up MortarTower Count0 ] -> [ action Road Fire Enemy Count4 ][ up MortarTower Count5 ] SFX7
+(Cash in killed enemy)
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count4 ] -> [ ][ | Selection | ... | Count5 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count3 ] -> [ ][ | Selection | ... | Count4 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count2 ] -> [ ][ | Selection | ... | Count3 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count1 ] -> [ ][ | Selection | ... | Count2 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count0 ] -> [ ][ | Selection | ... | Count1 ]
+   [ Enemy Count0 ]                                        -> [ ]
+[ action Road ] -> [ Road ]
+[ up MortarTower ] -> [ MortarTower ]
+endloop
+[ action MortarTower ] -> [ MortarTower ]
+
+(Start compactor tower)
+startloop
+random [ action CompactorTower Count0 | Enemy Count1 no Structure ] -> [ CompactorTower Count5 | Compacted Enemy Count0 ] SFX6
+     + [ action CompactorTower Count0 | Enemy Count2 no Structure ] -> [ CompactorTower Count5 | Compacted Enemy Count0 ] SFX6
+     + [ action CompactorTower Count0 | Enemy Count3 no Structure ] -> [ CompactorTower Count5 | Compacted Enemy Count1 ] SFX6
+     + [ action CompactorTower Count0 | Enemy Count4 no Structure ] -> [ CompactorTower Count5 | Compacted Enemy Count2 ] SFX6
+     + [ action CompactorTower Count0 | Enemy Count5 no Structure ] -> [ CompactorTower Count5 | Compacted Enemy Count3 ] SFX6
+(Cash in killed enemy)
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count4 ] -> [ ][ | Selection | ... | Count5 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count3 ] -> [ ][ | Selection | ... | Count4 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count2 ] -> [ ][ | Selection | ... | Count3 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count1 ] -> [ ][ | Selection | ... | Count2 ]
+up [ Enemy Count0 ][ no Tower | Selection | ... | Count0 ] -> [ ][ | Selection | ... | Count1 ]
+   [ Enemy Count0 ]                                        -> [ ]
+endloop
+[ action CompactorTower ] -> [ CompactorTower ]
+
+
+==============
+WINCONDITIONS
+==============
+
+no Count5 on Wall
+no Count4 on Wall
+no Count3 on Wall
+no Count2 on Wall
+no Count1 on Wall
+no Enemy
+no BaseRuin
+
+
+=======
+LEVELS
+=======
+
+message Giant Martian monsters are storming our outposts!  It's up to you to defend the base.
+message Utilise the following armaments: 1. long range SolTec laser cannon 2. wide area napalm storage tanks 3. rapid fire explosive shell gun 4. precision guided mortar shells 5. Harvester resource mining rigs 6. Garbotron 990X trash compactor
+message Collect resources from fallen Martians. Select your weapons and build them on the roadside.
+message Sector 1
+
+f##############.z
+e##rrrrrrrrd###.z
+em#u#######d###.z
+esru#dllllll#b#.z
+e####d#######u#.c
+e####rrrrrrrru#.c
+a##############.c
+...y............y
+...1.2.3.4.5.6...
+
+message Sector 2
+
+f################.z
+e##rrrd##rrrd####.z
+e##u##d##u##d####.z
+em#u##d##u##d####.z
+esru##d##u##d##b#.z
+e#####d##u##d##u#.z
+e#####d##u##d##u#.c
+e#####rrru##rrru#.c
+a################.c
+....y.............y
+....1.2.3.4.5.6....
+
+message Keep at it.  Those Martians are getting stronger!
+message Sector 3
+
+ff#############.z
+ee#rrrrrrrrrrd#.z
+ee#urrrrrrrrdd#.z
+ee#uu#######dd#.z
+ee#uulll#dllld#.z
+ee#ulllu#ddlll#.z
+ee#t##uu#dd####.z
+eeosd#uu#dd#rb#.z
+eesdd#uu#dd#uu#.c
+ea#drruu#drruu#.c
+ee#rrrru#rrrru#.c
+ae#############.c
+...y............y
+...1.2.3.4.5.6...
+
+message Sector 4
+
+fff######################.z
+eee#####rrrd##rrrd##rrrd#.z
+eee#####u##rrru##rrru##d#.z
+eee##t##u##############d#.z
+eee#tsrrudrdrdrd#dllllll#.z
+eeeosrrrrdududurrrrrrrrrb.z
+eeasrrrrdrururuu#ullllll#.c
+eee#####d##############u#.c
+eae#####d##rrrd##rrrd##u#.c
+eee#####rrru##rrru##rrru#.c
+aee######################.c
+........y.................y
+........1.2.3.4.5.6........
+
+message They got sector 5.  They were more resistant to our weapons than anticipated.
+message Sector 6
+
+ff################t####.z
+ee###rrd##########srrd#.z
+eet#ru#rd############d#.z
+eesru###rd###########d#.z
+ee#######rd##dllllllll#.z
+eep#######rd#d#########.z
+eesrrrrrrrrrrrrrrrrrrrb.z
+ee########ru#u#########.c
+eet######ru##ullllllll#.c
+eesrd###ru###########u#.c
+ee##rd#ru#########t##u#.c
+ee###rru##########srru#.c
+aa#####################.c
+.......y................y
+.......1.2.3.4.5.6.......
+
+message Sector 7
+
+fff##t##########################.z
+eee#tsrrrrd#rrrrrrrrrrrrrrd#rrb#.z
+eeepsrrrrdd#urrrrrrrrrrrrdd#uuu#.z
+eeesrrrrddd#uurrrrrrrrrrddd#uuu#.z
+eee#####ddd#uuu#########ddd#uuu#.z
+eee#dlllldd#uuullllllll#ddd#uuu#.z
+eee#ddlllld#uullllllllu#ddd#uuu#.z
+eee#dddllll#ulllllllluu#ddd#uuu#.z
+eea#ddd#############uuu#ddd#uuu#.z
+eee#ddrrrrrrrrrrrrrruuu#ddrruuu#.c
+eae#drrrrrrrrrrrrrrrruu#drrrruu#.c
+eee#rrrrrrrrrrrrrrrrrru#rrrrrru#.c
+aee#############################.c
+...........y.....................y
+...........1.2.3.4.5.6............
+
+message Our scouts have detected a organised team of 14 Martians approaching.  They reportedly have a subdermal armour, evident from scars on the skin and the complete blocking of X-ray scans.  They're coming quick.  Hit them hard!
+message Sector 8
+
+ff#################.z
+hh#rrd#rrd#rrd#rrd#.z
+ff#u#d#u#d#u#d#u#d#.z
+ff#u#rru#d#u#rru#d#.z
+ff#u#####d#u#####d#.z
+ff#ull#dll#ull#dll#.z
+ff###u#d#####u#d###.z
+ff#rru#rrrrrru#rrd#.z
+ff#u#############d#.z
+ff#u#dllll#dllll#d#.z
+ff#u#d###u#d###u#d#.z
+ff#ull#rru#rrd#ull#.z
+ff#####u#####d#####.c
+ff#rrd#ull#dll#rrd#.c
+ggqu#d###u#d###u#d#.c
+hhsu#rrrru#rrrru#rb.c
+ee#################.c
+.....y..............y
+.....1.2.3.4.5.6.....
+
+message Excellent work!  You have defended all of our outposts.  Have a drink on me!

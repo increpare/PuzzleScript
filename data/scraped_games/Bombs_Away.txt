@@ -1,0 +1,571 @@
+title Bombs Away
+run_rules_on_level_start
+again_interval 0.05
+
+========
+OBJECTS
+========
+
+Background
+LightBlue
+
+Stone
+DARKGRAY
+
+PlayerLeft
+YELLOW BLACK
+.....
+.000.
+.100.
+.000.
+.000.
+
+PlayerRight
+YELLOW BLACK
+.....
+.000.
+.001.
+.000.
+.000.
+
+Grass
+GREEN
+
+Possible
+BLACK
+.....
+.....
+.....
+.....
+.....
+
+Forbidden
+BLACK
+.....
+.....
+.....
+.....
+.....
+
+Dropper1
+BLACK
+.....
+.....
+.....
+.....
+.....
+
+Dropper2
+BLACK
+.....
+.....
+.....
+.....
+.....
+
+Dropper3
+BLACK
+.....
+.....
+.....
+.....
+.....
+
+Bomb1
+BLACK
+.....
+.000.
+.000.
+.000.
+.....
+
+Bomb2
+BLACK RED
+.000.
+01110
+01110
+01110
+.000.
+
+Bomb3
+BLACK RED YELLOW
+.202.
+.020.
+.202.
+.111.
+..1..
+
+
+Explosion1
+RED
+
+Explosion2
+RED
+
+Explosion3
+RED
+
+Counter
+BLACK
+.....
+.....
+.....
+.....
+.....
+
+ECounter1
+RED
+.....
+.....
+.....
+.....
+.....
+
+ECounter2
+RED
+.....
+.....
+.....
+.....
+.....
+
+ECounter3
+RED
+.....
+.....
+.....
+.....
+.....
+
+Ladder
+BROWN
+0...0
+00000
+0...0
+0..00
+000.0
+
+Dirt
+DARKBROWN
+
+Goal
+DARKBROWN #444 #222 BLACK
+00000
+03330
+03330
+02220
+01110
+
+Cloud
+WHITE
+
+Spawner1
+BLACK
+
+Spawner2
+BLACK
+
+Spawner3
+BLACK
+
+Marker
+BLACK
+.....
+.....
+.....
+.....
+.....
+
+Shadow
+BLACK
+00000
+.000.
+.....
+.....
+.....
+
+Gold
+#DED121 #C9BD12
+.....
+.001.
+.001.
+.111.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Stone
+P = PlayerRight
+G = Goal
+| = Ladder
+" = Grass
+* = Possible
+@ = Forbidden
+[ = Counter
+1 = ECounter1
+2 = ECounter2
+3 = ECounter3
+C = Cloud
+{ = Spawner1
+} = Spawner2
+~ = Spawner3
+! = Gold
+
+Player = PlayerLeft or PlayerRight
+Bomb = Bomb1 or Bomb2 or Bomb3
+Explosion = Explosion1 or Explosion2 or Explosion3
+BE = Bomb or Explosion
+HardTerrain = Grass or Stone
+Terrain = HardTerrain or Dirt
+Solid = Player or Bomb or Terrain or Stone
+PlayerSolid = Solid or Cloud
+Spawner = Spawner1 or Spawner2 or Spawner3
+Dropper = Dropper1 or Dropper2 or Dropper3
+ECounter = ECounter1 or ECounter2 or ECounter3
+
+=======
+SOUNDS
+=======
+
+sfx0 54781700 (Gold get)
+sfx1 30908302 (Explosion1)
+sfx2 77803308 (Explosion2)
+sfx3 74395708 (Explosion3)
+sfx4 31424107 (Ladder place)
+EndLevel 51589500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Possible, Forbidden, Dropper, Counter, ECounter, Spawner
+Ladder, Goal, Cloud, Marker, Gold
+Solid
+Shadow
+Explosion
+
+======
+RULES
+======
+
+(Randomly place droppers)
+startloop
+random [ Possible ] [ Spawner1 ] -> [ Dropper1 ] [ ]
+random [ Possible ] [ Spawner2 ] -> [ Dropper2 ] [ ]
+random [ Possible ] [ Spawner3 ] -> [ Dropper3 ] [ ]
+endloop
+[ Possible ] -> [ ]
+
+(Change character sprite)
+[ RIGHT PlayerLeft ] -> [ PlayerRight]
+[ LEFT PlayerRight ] -> [ PlayerLeft ]
+
+(Player movement)
+[ > Player ] [ BE ] -> [ Player ] [ BE ]
+LEFT RIGHT [ > Player | NO PlayerSolid ] -> [ | Player ]
+LEFT RIGHT [ > Player | PlayerSolid ] -> [ Player | PlayerSolid ]
+DOWN [ > Player | NO PlayerSolid ] -> [ | Player ]
+DOWN [ > Player | PlayerSolid ] -> [ Player | PlayerSolid ]
+DOWN [ Player NO Ladder | NO PlayerSolid NO Ladder ] -> [  | Player ]
+UP [ > Player | NO PlayerSolid ] -> [ | Player ]
+UP [ > Player | PlayerSolid ] -> [ Player | PlayerSolid ]
+
+[ Player Gold ] -> [ Player ] sfx0
+
+(Actions)
+UP [ ACTION Player NO Ladder | NO PlayerSolid NO Goal ] -> [ > Player Ladder | ] sfx4
+RIGHT [ ACTION PlayerRight Ladder | NO PlayerSolid NO Ladder NO Goal ] -> [ > PlayerRight Ladder | Ladder ] sfx4
+LEFT [ ACTION PlayerLeft Ladder | NO PlayerSolid NO Ladder NO Goal ] -> [ > PlayerLeft Ladder | Ladder ] sfx4
+
+(Counting)
+[ STATIONARY Counter ] -> [ RIGHT Counter ]
+[ RIGHT Counter ] [ BE ] -> [ Counter ] [ BE ]
+RIGHT [ RIGHT Counter | NO Counter ] -> [ Counter | Counter ]
+[ RIGHT Counter ] -> [ Counter ]
+RIGHT [ Counter | Counter | Counter | Counter | Counter | Counter | Counter ] [ Dropper1 NO Bomb1 ]-> [ Counter | Counter | Counter | Counter | Counter | Counter | Counter ] [ Dropper1 Bomb1 ] again
+RIGHT [ Counter | Counter | Counter | Counter | Counter | Counter | Counter ] [ Dropper2 NO Bomb2 ]-> [ Counter | Counter | Counter | Counter | Counter | Counter | Counter ] [ Dropper2 Bomb2 ] again
+RIGHT [ Counter | Counter | Counter | Counter | Counter | Counter | Counter ] [ Dropper3 NO Bomb3 ]-> [ Counter | Counter | Counter | Counter | Counter | Counter | Counter ] [ Dropper3 Bomb3 ] again
+late RIGHT [ Counter | Counter | Counter | Counter | Counter | Counter | Counter ] -> [ Counter ||||||]
+
+(Move dropper)
+random HORIZONTAL [ Dropper | NO Forbidden ] -> [ > Dropper | ]
+HORIZONTAL [ > Dropper BE ] -> [ Dropper BE ]
+HORIZONTAL [ > Dropper ] [ BE ] -> [ Dropper ] [ BE ]
+
+(ECounting)
+[ STATIONARY ECounter1 ] [ Explosion1 ] -> [ RIGHT ECounter1 ] [ Explosion1 ]
+[ STATIONARY ECounter2 ] [ Explosion2 ] -> [ RIGHT ECounter2 ] [ Explosion2 ]
+[ STATIONARY ECounter3 ] [ Explosion3 ] -> [ RIGHT ECounter3 ] [ Explosion3 ]
+RIGHT [ RIGHT ECounter | NO ECounter ] -> [ ECounter | ECounter ]
+[ RIGHT ECounter ] -> [ ECounter ]
+(1)
+RIGHT [ ECounter1 | ECounter1 | ECounter1 ] [ Explosion1 ] -> [ ECounter1 | ECounter1 | ECounter1 ] [  ]
+late RIGHT [ ECounter1 | ECounter1 | ECounter1 ] -> [ ECounter1 ||]
+(2)
+RIGHT [ ECounter2 | ECounter2 | ECounter2 | ECounter2 ] [ Explosion2 ] -> [ ECounter2 | ECounter2 | ECounter2 | ECounter2 ] [  ]
+late RIGHT [ ECounter2 | ECounter2 | ECounter2 | ECounter2 ] -> [ ECounter2 |||]
+(3)
+RIGHT [ ECounter3 | ECounter3 | ECounter3 | ECounter3 | ECounter3 | ECounter3 ] [ Explosion3 ] -> [ ECounter3 | ECounter3 | ECounter3 | ECounter3 | ECounter3 | ECounter3 ] [  ]
+late RIGHT [ ECounter3 | ECounter3 | ECounter3 | ECounter3 | ECounter3 | ECounter3 ] -> [ ECounter3 |||||]
+
+(Bomb drop)
+DOWN [ Bomb | NO Solid ] -> [ > Bomb | ] again
+DOWN [ Bomb1 | Solid ] -> [ > Explosion1 | Solid ] sfx1 again
+DOWN [ Bomb2 | Solid ] -> [ > Explosion2 | Solid ] sfx2 again
+DOWN [ Bomb3 | Solid ] -> [ > Explosion3 | Solid ] sfx3 again
+[ STATIONARY Explosion | NO HardTerrain NO Explosion ] -> [ Explosion | > Explosion ] again
+([ STATIONARY Explosion | Dirt ] -> [ Explosion | ])
+[ STATIONARY Explosion | Grass ] -> [ Explosion | Dirt ]
+[ > Explosion ] -> [ Explosion ]
+[ Explosion Dirt ] -> [ Explosion ]
+[ Explosion Ladder ] -> [ Explosion ]
+[ Explosion Player ] -> restart
+
+(Shadow)
+late [ Shadow ] -> [ ]
+late [ Marker ] -> [ ]
+late [ Terrain ] -> [ Terrain Marker ]
+late DOWN [ Dropper NO Marker | ... | Marker ] -> [ Dropper Marker | ... | Shadow ]
+late [ Dropper Marker ] -> [ Dropper ]
+
+==============
+WINCONDITIONS
+==============
+
+ALL Player ON Goal
+
+=======
+LEVELS
+=======
+
+message Avoid the bombs. Get to the goal.
+
+message Press X to place a ladder.
+
+message When already on a ladder, X places ladder to the side.
+
+message For an extra challenge, collect the gold coin in each level.
+
+message LEVEL ONE
+
+@@@.....************.@@@
+[.......................
+1.......................
+{......!#...............
+.......##.......CC......
+..............CCCCC.....
+...............CCC......
+........................
+........................
+........................
+........................
+........................
+..P.....................
+."".....................
+""""""".............G...
+""""""""""........"###..
+""""""""""""....""""""""
+""""""""""""""""""""""""
+########################
+
+message LEVEL TWO
+
+@@@........*********..@@
+[.......................
+1................C...G..
+{..CC....|""""CCCCC"###"
+{|CCCCC.#|....CCCCC.....
+!|CCCC..#|......C.......
+###.....###.............
+.................."""...
+........................
+......."""""""".........
+.........."""...........
+........................
+........................
+........................
+###|##..................
+#..|.#................""
+#P.|.#""......."""""""""
+""""""""""""""""""""""""
+########################
+
+message LEVEL THREE
+
+@@@**...************...@
+[.......................
+1..........C............
+{........CCCC...........
+{.......CCCCCC..........
+......|CCCCCC...........
+......|..............G..
+......|...."""""""""###"
+......|....."""""."""#""
+.....###....""....""""""
+.......CC.......""""""""
+......CCCC..|"""""""""""
+.......CCCC.|"""!""...""
+...........|""""""""".""
+...........|."""""""".""
+...........|..........""
+".P.""""...|."""..."""""
+""""""""""""""""""""""""
+########################
+
+message LEVEL FOUR
+
+@@@...**************.@@@
+[.......................
+2.......................
+}...CC............CC!...
+...CCCC...........CCC...
+.....C..................
+........................
+........................
+...........CC...........
+..........CCCCC.........
+.P.."""".CCCCCC"""""""""
+.""""""##.....##"""|""""
+"""""""""....."""""|""""
+""""""""".....""""..."""
+""""""""G............"""
+""""""""""""""""""""""""
+""""""""""""""""""""""""
+""""""""""""""""""""""""
+########################
+
+message LEVEL FIVE
+
+@@@.****************.@@@
+[.......................
+1.......................
+2...........C...........
+{P........CCC...........
+}""""""".CCCCC..........
+""""""""............G...
+"""""""........""""###""
+""###"........."""""""""
+""#!."...""|".."""""""""
+"""""""..."|....""""""""
+"""""""""..|....""""""""
+""""""""...|....."""""""
+"""""""....""..|""""""""
+"""""""........|""""""""
+""""""".......|"""""""""
+"""""""#......|"""""""""
+""""""""#...#.""""""""""
+########################
+
+message LEVEL SIX
+
+@@@@@******..*******@@@@
+[.......................
+2.......................
+}.......................
+}.#.#..........CC...#!#.
+..###...""""..CCCCC.###.
+...#.......#...CCC...#..
+...#...C...#.........#..
+...#..CCCC|#""###""|.#..
+...#...C..|#..G....|.#..
+...#......|#..###CCC.#..
+...#......|#......C..#..
+...#...""""#"........#..
+...#...#...########|.#..
+...#...#...#.......|.#..
+.P.....#...........|.#..
+""""""""""""""""""""""""
+""""""""""""""""""""""""
+########################
+
+message LEVEL SEVEN
+
+@@@..******...******.@@@
+[.......................
+1..........CC...........
+2.........CCCCCCC.......
+{..P.....CCCCC#CCCC.....
+{.""""........#.........
+}.....".......#.........
+..............#...G.....
+....."""......""""#"....
+...."""""......"""".....
+...""""""...............
+....""""C.."""".........
+......CCCC....."...C....
+.................."!""..
+.......""""......"CCC...
+......"...""............
+........................
+........................
+########################
+
+message LEVEL EIGHT
+
+@@@..******...******.@@@
+[.......................
+1..................!....
+3.....CG..........CCC...
+{""""CCCC......""""CCC..
+~.""..C###......""CC....
+........................
+............|##.........
+....CCC.....|...........
+..CCCCCC|""###""""......
+"...CC..|.""""#"..."""".
+""".....|.."".......""""
+........|...............
+|"""""""######|""""""""|
+|"""".........|""""""""|
+|""""|"""""""""""""""""|
+|""".|..."""""""...""""|
+|....|....P............|
+########################
+
+message LEVEL NINE
+
+@..*****************..@@
+[.......................
+1.................CCCP..
+2.....CC........CCCCCC..
+{..C.CCC........#####C##
+}|CCCCCC...........""...
+}|."""""#"..."""#""""...
+}|......#"""""""#."""...
+.|......#""!""""#.......
+."""""..#""#""#"#.......
+.."""...................
+............CCC.....C|C.
+...........CCCCC...CC|C.
+."".........CC....CCC|CC
+"""""""............CC|CC
+""""""""""........CCC|CC
+""""""""""""......CCCGCC
+""""""""""""""""""""""""
+########################
+
+message LEVEL TEN
+
+@@@..***************.@@@
+[.......................
+3P.."""""...."""........
+""""""""""""""""""""""|.
+""""""""""""""""""""""|.
+####".""."""..""""""..|"
+....................."""
+..""""""".."""""....""""
+|"""""""""""""""""""""""
+|"""""..""""""""""..####
+|.......................
+|....C.........."....CC.
+|....CCC.CCC.......CCCCC
+|..CCCCCCCCCCC....CCCC!C
+#######""#"##""####"##"#
+~..###........|...####..
+~G......""""""|.........
+""""""""""""""""""""""""
+########################

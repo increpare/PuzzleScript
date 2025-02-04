@@ -1,0 +1,3543 @@
+title Vertebrae
+author Ali Nikkhah
+
+noaction
+background_color #000000
+text_color #a98c47
+youtube No3kOKsgIXE (dpndP-cBE60)
+run_rules_on_level_start
+again_interval 0.05
+key_repeat_interval 0.12
+
+========
+OBJECTS
+========
+
+Background
+White
+.....
+.....
+..0..
+.....
+.....
+
+Ground 
+#ac9071
+00000
+00000
+00000
+00000
+00000
+
+GroundCornerTRG
+#a99b8c #ac9071
+....0
+.....
+.....
+.....
+.....
+
+GroundCornerTRW
+#a99b8c #246894
+.11..
+...1.
+....1
+....1
+.....
+
+GroundCornerTLG
+#a99b8c #ac9071
+0....
+.....
+.....
+.....
+.....
+
+GroundCornerTLW
+#a99b8c #246894
+..11.
+.1...
+1....
+1....
+.....
+
+GroundCornerBRG
+#a99b8c #ac9071
+.....
+.....
+.....
+.....
+....0
+
+GroundCornerBRW
+#a99b8c #246894
+.....
+....1
+....1
+...1.
+.11..
+
+GroundCornerBLG
+#a99b8c #ac9071
+.....
+.....
+.....
+.....
+0....
+
+GroundCornerBLW
+#a99b8c #246894
+.....
+1....
+1....
+.1...
+..11.
+
+GroundEdgeUG
+#a99b8c #246894
+00000
+.....
+.....
+.....
+.....
+
+GroundEdgeUW
+#a99b8c #246894
+11111
+.....
+.....
+.....
+.....
+
+GroundEdgeRG
+#a99b8c #246894
+....0
+....0
+....0
+....0
+....0
+
+GroundEdgeRW
+#a99b8c #246894
+....1
+....1
+....1
+....1
+....1
+
+GroundEdgeDG
+#a99b8c #246894
+.....
+.....
+.....
+.....
+00000
+
+GroundEdgeDW
+#a99b8c #246894
+.....
+.....
+.....
+.....
+11111
+
+GroundEdgeLG
+#a99b8c #246894
+0....
+0....
+0....
+0....
+0....
+
+GroundEdgeLW
+#a99b8c #246894
+1....
+1....
+1....
+1....
+1....
+
+DirtWall 
+#392800 #5a4000 #5e412b #433021 #4f3622 #744d2e #8b5a33
+.655.
+65122
+15243
+21443
+24433
+
+DoorVertical
+#d89005
+.000.
+.000.
+.000.
+.000.
+.000.
+
+OpenDoorVertical
+#d68708
+.0.0.
+.....
+.....
+.....
+.0.0.
+
+DoorHorizontal
+#d89005
+.....
+00000
+00000
+00000
+.....
+
+OpenDoorHorizontal
+#d68708
+.....
+0...0
+.....
+0...0
+.....
+
+Goal
+DarkBlue
+.....
+.....
+.....
+.....
+.....
+
+Trigger
+DarkBlue
+.....
+.....
+.....
+.....
+.....
+
+open
+transparent
+
+close
+transparent
+
+Water
+#1780c5 LightBlue
+10000
+00010
+01000
+00001
+00000
+
+WaterCornerTR
+#246894 #a99b8c
+.1110
+...11
+....1
+....1
+.....
+
+WaterCornerTL
+#246894 #a99b8c
+0111.
+11...
+1....
+1....
+.....
+
+WaterCornerBR
+#246894 #a99b8c
+.....
+....1
+....1
+...11
+.1110
+
+WaterCornerBL
+#246894 #a99b8c
+.....
+1....
+1....
+11...
+0111.
+
+Lava
+#dd4e00 #ea5d00
+10000
+00010
+01000
+00001
+00000
+
+blood
+Darkred
+.000.
+00000
+00000
+00000
+.000.
+
+PlayerL
+Black Brown Pink
+.....
+...2.
+2101.
+.1111
+11111
+
+PlayerU
+Black Brown Pink
+..2..
+.010.
+21112
+11111
+.111.
+
+PlayerR
+Black Brown Pink
+.....
+.2...
+.1012
+1111.
+11111
+
+PlayerD
+Black Brown Pink
+.111.
+11111
+21112
+.010.
+..2..
+
+HeadL
+White
+.000.
+0.000
+...00
+..00.
+000..
+
+HeadD
+White
+.000.
+00000
+0.0.0
+0.0.0
+.000.
+
+HeadU
+White
+.000.
+0.0.0
+0.0.0
+00000
+.000.
+
+HeadR
+White
+.000.
+000.0
+00...
+.00..
+..000
+
+BodyRL
+White LightGrey
+.....
+..1..
+00000
+..1..
+.....
+
+BodyUD
+White LightGrey
+..0..
+..0..
+.101.
+..0..
+..0..
+
+BodyDR
+White LightGrey
+.....
+.1...
+..000
+..01.
+..0..
+
+BodyDL
+White LightGrey
+.....
+...1.
+000..
+.10..
+..0..
+
+BodyUR
+White LightGrey
+..0..
+..01.
+..000
+.1...
+.....
+
+BodyUL
+White LightGrey
+..0..
+.10..
+000..
+...1.
+.....
+
+TailL
+White LightGrey
+.....
+..1..
+0000.
+..1..
+.....
+
+TailR
+White LightGrey
+.....
+..1..
+.0000
+..1..
+.....
+
+TailU
+White LightGrey
+..0..
+..0..
+.101.
+..0..
+.....
+
+TailD
+White LightGrey
+.....
+..0..
+.101.
+..0..
+..0..
+
+DetachedTail
+White LightGray
+.....
+..0..
+.101.
+..0..
+.....
+
+Box
+#694632 #7c543d #563428
+.....
+.212.
+.101.
+.212.
+.....
+
+BoxBondU
+#766846
+..0..
+.....
+.....
+.....
+.....
+
+BoxBondR
+#766846
+.....
+.....
+....0
+.....
+.....
+
+BoxBondD
+#766846
+.....
+.....
+.....
+.....
+..0..
+
+BoxBondL
+#766846
+.....
+.....
+0....
+.....
+.....
+
+Step
+#9f835d #927051
+.111.
+10001
+10001
+10001
+.111.
+
+Button
+#7157df #360d8b Gray
+00011
+02221
+12221
+12220
+11000
+
+DartWallU
+Black DarkGray Gray
+.....
+.112.
+12111
+11212
+11112
+
+DartWallL
+Black DarkGray Gray
+.....
+.111.
+12112
+10112
+10111
+
+DartWallR
+Black DarkGray Gray
+.....
+.111.
+21121
+21101
+11101
+
+DartWallD
+Black DarkGray Gray
+.....
+.112.
+12111
+11012
+11012
+
+DartU
+LightGray
+.....
+..0..
+..0..
+.....
+.....
+
+DartR
+LightGray
+.....
+.....
+..00.
+.....
+.....
+
+DartD
+LightGray
+.....
+.....
+..0..
+..0..
+.....
+
+DartL
+LightGray
+.....
+.....
+.00..
+.....
+.....
+
+N1
+Black
+..0..
+.00..
+..0..
+..0..
+.000.
+
+N2
+Black
+000..
+...0.
+.00..
+0....
+0000.
+
+N3
+Black
+000..
+...0.
+.00..
+...0.
+000..
+
+N4
+Black
+...0.
+..00.
+.0.0.
+00000
+...0.
+
+N5
+Black
+0000.
+0....
+000..
+...0.
+000..
+
+N6
+Black
+.00..
+0....
+000..
+0..0.
+.00..
+
+N7
+Black
+0000.
+...0.
+..0..
+.0...
+0....
+
+N8
+Black
+.00..
+0..0.
+.00..
+0..0.
+.00..
+
+N9
+Black
+.00..
+0..0.
+.000.
+...0.
+.00..
+
+N0
+Black
+.00..
+0..0.
+0..0.
+0..0.
+.00..
+
+AttachR
+transparent
+
+AttachL
+transparent
+
+AttachD
+transparent
+
+AttachU
+transparent
+
+ArrowU
+transparent
+
+ArrowL
+transparent
+
+ArrowR
+transparent
+
+ArrowD
+transparent
+
+break
+transparent
+
+clear
+transparent
+
+continue
+transparent
+
+pull
+transparent
+
+onGround
+transparent
+
+blockedU
+transparent
+
+blockedR
+transparent
+
+blockedD
+transparent
+
+blockedL
+transparent
+
+stopU
+transparent
+
+stopR
+transparent
+
+stopD
+transparent
+
+stopL
+transparent
+
+tailit
+transparent
+
+pink
+transparent
+
+green
+transparent
+
+start
+transparent
+
+rayU
+transparent
+
+rayR
+transparent
+
+rayD
+transparent
+
+rayL
+transparent
+
+rayreturnU
+transparent
+
+rayreturnR
+transparent
+
+rayreturnD
+transparent
+
+rayreturnL
+transparent
+
+
+message0
+transparent
+
+message1
+transparent
+
+message2
+transparent
+
+message3
+transparent
+
+savepoint
+transparent
+
+
+edgeU
+transparent
+
+edgeR
+transparent
+
+edgeD
+transparent
+
+edgeL
+transparent
+
+free
+transparent
+
+redDot
+Red
+.....
+.....
+..0..
+.....
+.....
+
+blueDot
+blue
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+! = HeadL and ground
+& = HeadR and Water
+¤ = DetachedTail and Water
+
+w = water
+l = Lava
+. = ground
+# = DirtWall and ground
+p = PlayerR and start and ground
+> = PlayerR and HeadR and start and ground
+^ = PlayerU and HeadU and start and ground
+v = PlayerD and HeadD and start and ground
+< = PlayerL and HeadL and start and ground
+d = DetachedTail and ground
+? = DetachedTail and Step and Water
+" = DetachedTail and Box and Button and ground
+j = DetachedTail and Box and ground
+i = DetachedTail and Box and Step and Water
+b = box and ground
+n = box and button and ground
+m = box and water
+u = box and Step and water
+x = button and ground
+g = Step and Water
+$ = box and button and OpenDoorHorizontal and ground
+
+t = DoorVertical and ground
+z = DoorHorizontal and ground
+1 = DoorVertical and Step and Water
+2 = DoorHorizontal and Step and Water
+
+o = Goal and ground
+0 = Goal and Step and Water
+- = Trigger and ground
+_ = trigger and water
+/ = trigger and DirtWall and ground
+: = Trigger and Step and Water
+
+A = DartWallU and ground
+Y = DartWallR and ground
+K = DartWallD and ground
+7 = DartWallL and ground
+
+۱ = N1 and Water
+۲ = N2 and Water
+۳ = N3 and Water
+۴ = N4 and Water
+۵ = N5 and Water
+۶ = N6 and Water
+۷ = N7 and Water
+۸ = N8 and Water
+۹ = N9 and Water
+۰ = N0 and Water
+
+Marker = ArrowL or ArrowR or ArrowU or ArrowD
+AttachMarker = AttachU or AttachR or AttachD or AttachL
+BlockMarker = blockedU or blockedR or blockedD or blockedL
+
+BoxBondMarker = BoxBondU or BoxBondR or BoxBondD or BoxBondL
+
+Player = PlayerL or PlayerR or PlayerU or PlayerD
+Tail = TailD or TailU or TailL or TailR
+Head = HeadL or HeadD or HeadR or HeadU
+Vertebra = BodyRL or BodyUD or BodyUL or BodyDL or BodyUR or BodyDR or Tail
+Moveable = Vertebra or Head or DetachedTail or Box
+
+VertebraU = TailU or BodyUL or BodyUR or BodyUD
+VertebraR = TailR or BodyUR or BodyDR or BodyRL
+VertebraD = TailD or BodyDL or BodyDR or BodyUD
+VertebraL = TailL or BodyUL or BodyDL or BodyRL
+
+Attachable = Tail or DetachedTail
+
+Door = DoorHorizontal or DoorVertical
+OpenDoor = OpenDoorHorizontal or OpenDoorVertical
+
+DartWall = DartWallU or DartWallR or DartWallD or DartWallL
+Dart = DartU or DartR or DartD or DartL
+
+Wall = DirtWall or Door or DartWall
+RayBlocker = Wall or Box or Vertebra or Dart or DetachedTail
+Ray = rayU or rayR or rayD or rayL or rayreturnU or rayreturnR or rayreturnD or rayreturnL
+
+MapBackground = Water or Ground
+Walkable = Step or Ground
+NoGround = Button or DirtWall or Step
+
+WaterCorner = WaterCornerTR or WaterCornerTL or WaterCornerBR or WaterCornerBL
+GroundCorner = GroundCornerTRG or GroundCornerTLG or GroundCornerBRG or GroundCornerBLG or GroundCornerTRW or GroundCornerTLW or GroundCornerBRW or GroundCornerBLW
+GroundCornerU = GroundCornerTRG or GroundCornerTLG
+GroundCornerR = GroundCornerTRG or GroundCornerBRG
+GroundCornerD = GroundCornerBRG or GroundCornerBLG
+GroundCornerL = GroundCornerBLG or GroundCornerBRG
+
+edge = edgeU or edgeR or edgeD or edgeL
+=======
+SOUNDS
+=======
+
+Undo 33805504
+
+TitleScreen 92220309
+
+sfx1 98765764
+sfx2 74917107 (30004904)
+sfx3 3004904
+sfx4 32969702
+sfx5 75918304
+sfx6 88800304
+sfx7 1729107
+sfx8 30678307
+
+================
+COLLISIONLAYERS
+================
+
+AttachU
+AttachD
+AttachL
+AttachR
+
+blockedU
+blockedR
+blockedD
+blockedL
+
+stopU
+stopR
+stopD
+stopL
+
+ArrowU
+ArrowR
+ArrowD
+ArrowL
+
+break
+clear
+continue
+pull
+start
+onground
+
+tailit
+
+pink 
+green
+
+Background
+Water
+Lava
+Ground
+
+GroundCornerTRW
+GroundCornerTLW
+GroundCornerBRW
+GroundCornerBLW
+GroundEdgeUW
+GroundEdgeRW
+GroundEdgeDW
+GroundEdgeLW
+
+GroundCornerTRG
+GroundCornerTLG
+GroundCornerBRG
+GroundCornerBLG
+GroundEdgeUG
+GroundEdgeRG
+GroundEdgeDG
+GroundEdgeLG
+
+WaterCornerTR
+WaterCornerTL
+WaterCornerBR
+WaterCornerBL
+
+N0,N1,N2,N3,N4,N5,N6,N7,N8,N9
+
+Step
+goal
+Button
+Blood
+OpenDoor
+Player
+Wall, BodyRL, BodyUD, BodyUL, BodyDL, BodyUR, BodyDR, Head, DetachedTail 
+Tail
+Box
+
+BoxBondU
+BoxBondR
+BoxBondD
+BoxBondL
+
+Dart
+
+trigger
+open
+close
+
+ray
+
+redDot
+bluedot
+
+message0
+message1
+message2
+message3
+savepoint
+
+edgeU
+edgeR
+edgeD
+edgeL
+
+free
+
+======
+RULES     
+======
+
+up    [ start ] [ Wall | Water no Wall ] -> [ start ] [ Wall WaterCornerTR WaterCornerTL | Water no GroundCornerBRG GroundCornerBLG ]
+
+[ start ] [ ] -> [ start ] [ edgeU edgeR edgeD edgeL ]
+
+up    [ start ] [ edgeU | MapBackground ] -> [ start ] [ | MapBackground ]
+right [ start ] [ edgeR | MapBackground ] -> [ start ] [ | MapBackground ]
+down  [ start ] [ edgeD | MapBackground ] -> [ start ] [ | MapBackground ]
+left  [ start ] [ edgeL | MapBackground ] -> [ start ] [ | MapBackground ]
+
+[ start ] [ Step | Ground no NoGround | Step ] -> [ start ] [ Step | Step Water | Step ]
+
+up    [ start ] [ DirtWall | Water no clear ] -> [ start ] [ Dirtwall no Ground | Water clear ]
+[ Water clear ] -> [ Water ]
+
+[ start ] [ Ground ] -> [ start ] [ Ground WaterCornerTR WaterCornerTL WaterCornerBR WaterCornerBL ]
+[ start ] [ Water ] -> [ start ] [ Water GroundCornerTRG GroundCornerTLG GroundCornerBRG GroundCornerBLG ]
+
+up    [ start ] [ Ground | Ground ] -> [ start ] [ Ground no WaterCornerTL no WaterCornerTR | Ground no WaterCornerBL no WaterCornerBR ]
+right [ start ] [ Ground | Ground ] -> [ start ] [ Ground no WaterCornerTR no WaterCornerBR | Ground no WaterCornerBL no WaterCornerTL ]
+
+up    [ start ] [ Water | Water ] -> [ start ] [ Water no GroundCornerTLG no GroundCornerTRG | Water no GroundCornerBLG no GroundCornerBRG ]
+right [ start ] [ Water | Water ] -> [ start ] [ Water no GroundCornerTRG no GroundCornerBRG | Water no GroundCornerBLG no GroundCornerTLG ]
+
+up    [ start ] [ Water | DirtWall ] -> [ start ] [ Water no GroundCornerTLG no GroundCornerTRG | DirtWall ]
+right [ start ] [ Water | DirtWall ] -> [ start ] [ Water no GroundCornerTRG no GroundCornerBRG | DirtWall ]
+down  [ start ] [ Water | DirtWall ] -> [ start ] [ Water no GroundCornerBLG no GroundCornerBRG | DirtWall ]
+left  [ start ] [ Water | DirtWall ] -> [ start ] [ Water no GroundCornerTLG no GroundCornerBLG | DirtWall ]
+
+up    [ start ] [ Ground | NoGround ] -> [ start ] [ Ground no WaterCornerTL no WaterCornerTR | NoGround ]
+right [ start ] [ Ground | NoGround ] -> [ start ] [ Ground no WaterCornerTR no WaterCornerBR | NoGround ]
+down  [ start ] [ Ground | NoGround ] -> [ start ] [ Ground no WaterCornerBL no WaterCornerBR | NoGround ]
+left  [ start ] [ Ground | NoGround ] -> [ start ] [ Ground no WaterCornerTL no WaterCornerBL | NoGround ]
+
+[ start ] [ Step WaterCorner ] -> [ start ] [ Step ]
+
+[ start ] [ Ground edgeD ] -> [ start ] [ Ground no WaterCornerBL no WaterCornerBR edgeD ]
+[ start ] [ Ground edgeL ] -> [ start ] [ Ground no WaterCornerTL no WaterCornerBL edgeL ]
+[ start ] [ Ground edgeU ] -> [ start ] [ Ground no WaterCornerTL no WaterCornerTR edgeU ]
+[ start ] [ Ground edgeR ] -> [ start ] [ Ground no WaterCornerTR no WaterCornerBR edgeR ]
+
+[ start ] [ Water edgeD ] -> [ start ] [ Water no GroundCornerBLG no GroundCornerBRG edgeD ]
+[ start ] [ Water edgeL ] -> [ start ] [ Water no GroundCornerTLG no GroundCornerBLG edgeL ]
+[ start ] [ Water edgeU ] -> [ start ] [ Water no GroundCornerTLG no GroundCornerTRG edgeU ]
+[ start ] [ Water edgeR ] -> [ start ] [ Water no GroundCornerTRG no GroundCornerBRG edgeR ]
+
+up    [ start ] [ Water | Ground ] -> [ start ] [ Water GroundEdgeUW | Ground GroundEdgeDG ]
+right [ start ] [ Water | Ground ] -> [ start ] [ Water GroundEdgeRW | Ground GroundEdgeLG ]
+down  [ start ] [ Water | Ground ] -> [ start ] [ Water GroundEdgeDW | Ground GroundEdgeUG ]
+left  [ start ] [ Water | Ground ] -> [ start ] [ Water GroundEdgeLW | Ground GroundEdgeRG ]
+
+[ start ] [ GroundCornerTRG ] -> [ start ] [ GroundCornerTRG GroundCornerTRW ]
+[ start ] [ GroundCornerTLG ] -> [ start ] [ GroundCornerTLG GroundCornerTLW ]
+[ start ] [ GroundCornerBRG ] -> [ start ] [ GroundCornerBRG GroundCornerBRW ]
+[ start ] [ GroundCornerBLG ] -> [ start ] [ GroundCornerBLG GroundCornerBLW ]
+
+[ start ] [ GroundEdgeUG ] -> [ start ] [ GroundEdgeUG GroundEdgeUW ]
+[ start ] [ GroundEdgeRG ] -> [ start ] [ GroundEdgeRG GroundEdgeRW ]
+[ start ] [ GroundEdgeDG ] -> [ start ] [ GroundEdgeDG GroundEdgeDW ]
+[ start ] [ GroundEdgeLG ] -> [ start ] [ GroundEdgeLG GroundEdgeLW ]
+
+[ start ] [ GroundCorner | Button ] -> [ start ] [ | Button ]
+[ start ] [  | Button ] -> [ start ] [ | Button ]
+
+[ start ] [ no Ground ] -> [ start ] [ Water ]
+
+[ Player ] -> [ free Player ]
+
+up    [ HeadU edgeU ] [ > Player ] -> [ HeadU  edgeU ] [ no free > Player ]
+right [ HeadR edgeR ] [ > Player ] -> [ HeadR edgeR ] [ no free > Player ]
+down  [ HeadD edgeD ] [ > Player ] -> [ HeadD edgeD ] [ no free > Player ]
+left  [ HeadL edgeL ] [ > Player ] -> [ HeadL edgeL ] [ no free > Player ]
+
+up    [ > Player no ArrowD ] -> [ free > Player ]
+right [ > Player no ArrowL ] -> [ free > Player ]
+down  [ > Player no ArrowU ] -> [ free > Player ]
+left  [ > Player no ArrowR ] -> [ free > Player ]  
+
+late [ Player Head savepoint ] -> [ Player Head ] checkpoint
+[ > Player Head message3 ] -> [ > Player Head > savepoint ] message "Let's see what else is around here..."
+[ Player Head message2 ] -> [ Player Head message3 ] message "It's a bit too big, but I can use it if I fit my whole body into it."
+[ > Player message1 | Head ] -> [ > Player | Head message2 ] again message "Oh, this skull seems like a fine helmet to wear."
+[ > Player no message0 | | Head ] -> [ > Player message0 | message1 | Head ] again message A predator! But no worry, it seems to have been dead for a long time!
+
+up    [ Head start | DetachedTail no start ] -> [ Head start | start AttachD DetachedTail ]
+right [ Head start | DetachedTail no start ] -> [ Head start | start AttachL DetachedTail ]
+down  [ Head start | DetachedTail no start ] -> [ Head start | start AttachU DetachedTail ]
+left  [ Head start | DetachedTail no start ] -> [ Head start | start AttachR DetachedTail ]
+
+(Change player moving direction on corners)
+[ up    Player HeadU WaterCornerTR no WaterCornerTL ] -> [ left  Player HeadU WaterCornerTR ]
+[ up    Player HeadU WaterCornerTL no WaterCornerTR ] -> [ right Player HeadU WaterCornerTL ]
+
+[ right Player HeadR WaterCornerTR no WaterCornerBR ] -> [ down  Player HeadR WaterCornerTR ]
+[ right Player HeadR WaterCornerBR no WaterCornerTR ] -> [ up    Player HeadR WaterCornerBR ]
+
+[ down  Player HeadD WaterCornerBR no WaterCornerBL ] -> [ left  Player HeadD WaterCornerBR ]
+[ down  Player HeadD WaterCornerBL no WaterCornerBR ] -> [ right Player HeadD WaterCornerBL ]
+
+[ left  Player HeadL WaterCornerTL no WaterCornerBL ] -> [ down  Player HeadL WaterCornerTL ]
+[ left  Player HeadL WaterCornerBL no WaterCornerTL ] -> [ up    Player HeadL WaterCornerBL ]
+
+(Change sprite direction based on moving direction)
+up    [ > Player ] -> [ > PlayerU ]
+right [ > Player ] -> [ > PlayerR ]
+down  [ > Player ] -> [ > PlayerD ]
+left  [ > Player ] -> [ > PlayerL ]
+
+(Stop player when moving toward water or leading the skeleton out of the map)
+[ > Player | no Walkable ] -> [ stationary Player | ]
+[ > Player no free ] -> [ stationary Player ]
+[ free ] -> []
+
+[ DartU ] -> [ up    DartU ] again
+[ DartR ] -> [ right DartR ] again
+[ DartD ] -> [ down  DartD ] again
+[ DartL ] -> [ left  DartL ] again
+
+[ Dart Player ] -> [ Blood clear ] sfx6 again (Shot)
+
+up    [ DartU | RayBlocker ] -> [ | Rayblocker ]
+right [ DartR | RayBlocker ] -> [ | Rayblocker ]
+down  [ DartD | RayBlocker ] -> [ | Rayblocker ]
+left  [ DartL | RayBlocker ] -> [ | Rayblocker ]
+
+[ > Player | Wall ] -> [ stationary Player | Wall ]
+[ > Player Head ] -> [ > Player > Head ]
+
+late [ BlockMarker ] -> [ ]
+
+(Remove the direction and tail markers from the skeleton if the player is pushing, and not pulling, the skelleton)
+up    [ > Head | VertebraD ] -> [ > Head clear | clear VertebraD ]
+right [ > Head | VertebraL ] -> [ > Head clear | clear VertebraL ] 
+down  [ > Head | VertebraU ] -> [ > Head clear | clear VertebraU ]
+left  [ > Head | VertebraR ] -> [ > Head clear | clear VertebraR ]
+
+startloop
+
+up    [ clear VertebraU | VertebraD ] -> [ clear VertebraU | clear VertebraD ]
+right [ clear VertebraR | VertebraL ] -> [ clear VertebraR | clear VertebraL ]
+down  [ clear VertebraD | VertebraU ] -> [ clear VertebraD | clear VertebraU ]
+left  [ clear VertebraL | VertebraR ] -> [ clear VertebraL | clear VertebraR ]
+
+endloop
+
+[ clear Marker ] -> []
+[ clear break ] -> [] (break is also a marker for the tail)
+
+(Determine in which direction which objects represent an obstacle)
+startloop
+
+up    [ Moveable no break no Marker | Wall ] -> [ Moveable blockedD | Wall ]
+right [ Moveable no break no Marker | Wall ] -> [ Moveable blockedL | Wall ]
+down  [ Moveable no break no Marker | Wall ] -> [ Moveable blockedU | Wall ]
+left  [ Moveable no break no Marker | Wall ] -> [ Moveable blockedR | Wall ]
+
+up    [ Moveable no break | Head Marker ] -> [ Moveable blockedD | Head Marker ] 
+right [ Moveable no break | Head Marker ] -> [ Moveable blockedL | Head Marker ]
+down  [ Moveable no break | Head Marker ] -> [ Moveable blockedU | Head Marker ]
+left  [ Moveable no break | Head Marker ] -> [ Moveable blockedR | Head Marker]
+
+up    [ Moveable no break | blockedD ] -> [ Moveable blockedD | blockedD ]
+right [ Moveable no break | blockedL ] -> [ Moveable blockedL | blockedL ]
+down  [ Moveable no break | blockedU ] -> [ Moveable blockedU | blockedU ]
+left  [ Moveable no break | blockedR ] -> [ Moveable blockedR | blockedR ]
+
+up    [ ArrowD | Tail break | Wall ] -> [ ArrowD | Tail break blockedD | Wall ]
+right [ ArrowL | Tail break | Wall ] -> [ ArrowL | Tail break blockedL | Wall ]
+down  [ ArrowU | Tail break | Wall ] -> [ ArrowU | Tail break blockedU | Wall ]
+left  [ ArrowR | Tail break | Wall ] -> [ ArrowR | Tail break blockedR | Wall ] 
+
+up    [ ArrowD | Tail break | Head Marker ] -> [ ArrowD | Tail break blockedD | Head Marker ]
+right [ ArrowL | Tail break | Head Marker ] -> [ ArrowL | Tail break blockedL | Head Marker ]
+down  [ ArrowU | Tail break | Head Marker ] -> [ ArrowU | Tail break blockedU | Head Marker ]
+left  [ ArrowR | Tail break | Head Marker ] -> [ ArrowR | Tail break blockedR | Head Marker ] 
+
+up    [ ArrowD | Tail break | blockedD ] -> [ ArrowD | Tail break blockedD | blockedD ]
+right [ ArrowL | Tail break | blockedL ] -> [ ArrowL | Tail break blockedL | blockedL ]
+down  [ ArrowU | Tail break | blockedU ] -> [ ArrowU | Tail break blockedU | blockedU ]
+left  [ ArrowR | Tail break | blockedR ] -> [ ArrowR | Tail break blockedR | blockedR ] 
+
+endloop
+
+(If head moves onto a vertebra directly, break the spine at that location)
+up    [ > Head | Vertebra Marker no break ] -> [ > Head | break Marker ] sfx3
+right [ > Head | Vertebra Marker no break ] -> [ > Head | break Marker ] sfx3
+down  [ > Head | Vertebra Marker no break ] -> [ > Head | break Marker ] sfx3
+left  [ > Head | Vertebra Marker no break ] -> [ > Head | break Marker ] sfx3
+
+(Determine what object moves onto a moving vertebra indirectly)
+startloop
+
+[ > Moveable | Moveable no Marker no break ] -> [ > Moveable | > Moveable ]
+
+up    [ left  VertebraU no blockedR | VertebraD no blockedR ] -> [ left  VertebraU | left  VertebraD ]
+up    [ right VertebraU no blockedL | VertebraD no blockedL] -> [ right VertebraU | right VertebraD ]
+
+right [ up    VertebraR no blockedD | VertebraL no blockedD] -> [ up    VertebraR | up    VertebraL ]
+right [ down  VertebraR no blockedU | VertebraL no blockedU] -> [ down  VertebraR | down  VertebraL ]
+
+down  [ left  VertebraD no blockedR | VertebraU no blockedR] -> [ left  VertebraD | left  VertebraU ]
+down  [ right VertebraD no blockedL | VertebraU no blockedL] -> [ right VertebraD | right VertebraU ]
+
+left  [ up    VertebraL no BlockedD | VertebraR no blockedD] -> [ up    VertebraL | up    VertebraR ]
+left  [ down  VertebraL no blockedU | VertebraR no blockedU] -> [ down  VertebraL | down  VertebraR ]
+
+up    [ down  VertebraU | VertebraD ] -> [ down  VertebraU | down  VertebraD ]
+right [ left  VertebraR | VertebraL ] -> [ left  VertebraR | left  VertebraL ]
+down  [ up    VertebraD | VertebraU ] -> [ up    VertebraD | up    VertebraU ]
+left  [ right VertebraL | VertebraR ] -> [ right VertebraL | right VertebraR ]
+
+endloop
+
+(Break the spine indirectly) 
+up    [ > Moveable no break | Marker no break ] -> [ > Moveable | break  Marker ] sfx3
+right [ > Moveable no break | Marker no break ] -> [ > Moveable | break  Marker ] sfx3
+down  [ > Moveable no break | Marker no break ] -> [ > Moveable | break  Marker ] sfx3
+left  [ > Moveable no break | Marker no break ] -> [ > Moveable | break  Marker ] sfx3
+
+(Removing the tail marker so that it doesn't interfere with the breaking process, it's add back later)
+[ Tail break ] -> [ Tail ]
+
+(Finding the broken spot nearest to the head to determine what chunk of the tail/body to cut off)
+startloop
+
+up    [ break VertebraU ArrowD | ] -> [ break VertebraU ArrowD | break ]
+right [ break VertebraR ArrowL | ] -> [ break VertebraR ArrowL | break ]
+down  [ break VertebraD ArrowU | ] -> [ break VertebraD ArrowU | break ]
+left  [ break VertebraL ArrowR | ] -> [ break VertebraL ArrowR | break ]
+
+endloop
+
+[ Tail break ] -> [ Tail break clear ]
+
+startloop
+
+up    [ break clear | break ArrowU ] -> [ | clear break ArrowU ]
+right [ break clear | break ArrowR ] -> [ | clear break ArrowR ]
+down  [ break clear | break ArrowD ] -> [ | clear break ArrowD ]
+left  [ break clear | break ArrowL ] -> [ | clear break ArrowL ]
+
+endloop
+
+[ break ] -> [ break bluedot ]
+[ no break ] -> [ no bluedot ]
+
+(Doing all the work again in case we break off a part that was actually supposed to block us from moving, thus also from breaking anything in the first place)
+[ > Moveable ] -> [ stationary Moveable ] 
+[ > Player Head ] -> [ > Player > Head ] 
+
+startloop
+
+up    [ Moveable no break | Wall ] -> [ Moveable blockedD | Wall ]
+right [ Moveable no break | Wall ] -> [ Moveable blockedL | Wall ]
+down  [ Moveable no break | Wall ] -> [ Moveable blockedU | Wall ]
+left  [ Moveable no break | Wall ] -> [ Moveable blockedR | Wall ]
+
+up    [ Moveable no break | Head Marker ] -> [ Moveable blockedD | Head Marker ] 
+right [ Moveable no break | Head Marker ] -> [ Moveable blockedL | Head Marker ]
+down  [ Moveable no break | Head Marker ] -> [ Moveable blockedU | Head Marker ]
+left  [ Moveable no break | Head Marker ] -> [ Moveable blockedR | Head Marker]
+
+up    [ Moveable no break | blockedD ] -> [ Moveable blockedD | blockedD ]
+right [ Moveable no break | blockedL ] -> [ Moveable blockedL | blockedL ]
+down  [ Moveable no break | blockedU ] -> [ Moveable blockedU | blockedU ]
+left  [ Moveable no break | blockedR ] -> [ Moveable blockedR | blockedR ]
+
+up    [ ArrowD | Tail break | Wall ] -> [ ArrowD | Tail break blockedD | Wall ]
+right [ ArrowL | Tail break | Wall ] -> [ ArrowL | Tail break blockedL | Wall ]
+down  [ ArrowU | Tail break | Wall ] -> [ ArrowU | Tail break blockedU | Wall ]
+left  [ ArrowR | Tail break | Wall ] -> [ ArrowR | Tail break blockedR | Wall ] 
+
+up    [ ArrowD | Tail break | Head Marker ] -> [ ArrowD | Tail break blockedD | Head Marker ]
+right [ ArrowL | Tail break | Head Marker ] -> [ ArrowL | Tail break blockedL | Head Marker ]
+down  [ ArrowU | Tail break | Head Marker ] -> [ ArrowU | Tail break blockedU | Head Marker ]
+left  [ ArrowR | Tail break | Head Marker ] -> [ ArrowR | Tail break blockedR | Head Marker ] 
+
+up    [ ArrowD | Tail break | blockedD ] -> [ ArrowD | Tail break blockedD | blockedD ]
+right [ ArrowL | Tail break | blockedL ] -> [ ArrowL | Tail break blockedL | blockedL ]
+down  [ ArrowU | Tail break | blockedU ] -> [ ArrowU | Tail break blockedU | blockedU ]
+left  [ ArrowR | Tail break | blockedR ] -> [ ArrowR | Tail break blockedR | blockedR ] 
+
+endloop
+
+startloop
+
+[ > Moveable | Moveable no Marker no break ] -> [ > Moveable | > Moveable ]
+
+up    [ left  VertebraU no blockedR | VertebraD no blockedR ] -> [ left  VertebraU | left  VertebraD ]
+up    [ right VertebraU no blockedL | VertebraD no blockedL] -> [ right VertebraU | right VertebraD ]
+
+right [ up    VertebraR no blockedD | VertebraL no blockedD] -> [ up    VertebraR | up    VertebraL ]
+right [ down  VertebraR no blockedU | VertebraL no blockedU] -> [ down  VertebraR | down  VertebraL ]
+
+down  [ left  VertebraD no blockedR | VertebraU no blockedR] -> [ left  VertebraD | left  VertebraU ]
+down  [ right VertebraD no blockedL | VertebraU no blockedL] -> [ right VertebraD | right VertebraU ]
+
+left  [ up    VertebraL no BlockedD | VertebraR no blockedD] -> [ up    VertebraL | up    VertebraR ]
+left  [ down  VertebraL no blockedU | VertebraR no blockedU] -> [ down  VertebraL | down  VertebraR ]
+
+up    [ down  VertebraU | VertebraD ] -> [ down  VertebraU | down  VertebraD ]
+right [ left  VertebraR | VertebraL ] -> [ left  VertebraR | left  VertebraL ]
+down  [ up    VertebraD | VertebraU ] -> [ up    VertebraD | up    VertebraU ]
+left  [ right VertebraL | VertebraR ] -> [ right VertebraL | right VertebraR ]
+
+endloop
+
+(Cancel the breaking in case we weren't supposed to break)
+[ > Head ] [ stationary Moveable | break ] -> [ > Head ] [ Moveable | ]
+
+(Find the spot that needs to be separated and do the action)
+[ > Vertebra ] -> [ stationary Vertebra ]
+[ > Attachable ] -> [ stationary Attachable ]
+[ > Box ] -> [ stationary Box ]
+[ Tail break ] -> [ Tail ]
+[ Vertebra break ] -> [ break ]
+
+random up [ break | ArrowU ] -> [ break TailU | ArrowU ]
++right    [ break | ArrowR ] -> [ break TailR | ArrowR ]
++down     [ break | ArrowD ] -> [ break TailD | ArrowD ]
++left     [ break | ArrowL ] -> [ break TailL | ArrowL ]
+
+random up [ Tail | ArrowU break ] -> [ DetachedTail | break ]
++right    [ Tail | ArrowR break ] -> [ DetachedTail | break ]
++down     [ Tail | ArrowD break ] -> [ DetachedTail | break ]
++left     [ Tail | ArrowL break ] -> [ DetachedTail | break ]
+
+random up [ Vertebra | ArrowU break ] -> [ break Vertebra | break ] 
++right    [ Vertebra | ArrowR break ] -> [ break Vertebra | break ]
++down     [ Vertebra | ArrowD break ] -> [ break Vertebra | break ]
++left     [ Vertebra | ArrowL break ] -> [ break Vertebra | break ]
+
+[ Vertebra ArrowU break ] -> [ TailD clear ]
+[ Vertebra ArrowR break ] -> [ TailL clear ]
+[ Vertebra ArrowD break ] -> [ TailU clear ]
+[ Vertebra ArrowL break ] -> [ TailR clear ]
+
+up    [ break TailU | no ArrowU ] -> [ TailU |]
+right [ break TailR | no ArrowR ] -> [ TailR |]
+down  [ break TailD | no ArrowD ] -> [ TailD |]
+left  [ break TailL | no ArrowL ] -> [ TailL |]
+
+(Clearing markers on the detached rest)
+startloop
+
+up    [ VertebraU clear | VertebraD Marker ] -> [ VertebraU | VertebraD clear ]
+right [ VertebraR clear | VertebraL Marker ] -> [ VertebraR | VertebraL clear ]
+down  [ VertebraD clear | VertebraU Marker ] -> [ VertebraD | VertebraU clear ]
+left  [ VertebraL clear | VertebraR Marker ] -> [ VertebraL | VertebraR clear ]
+
+endloop
+
+[ clear ] -> []
+
+(Marking the new tail)
+up    [ TailU | ArrowU ] -> [ break TailU | ArrowU ]
+right [ TailR | ArrowR ] -> [ break TailR | ArrowR ]
+down  [ TailD | ArrowD ] -> [ break TailD | ArrowD ]
+left  [ TailL | ArrowL ] -> [ break TailL | ArrowL ]
+
+[ blockMarker ] -> []
+
+(Determine in which direction which objects represent an obstacle, this time if we are to block movement/break other sections)
+startloop
+
+up    [ Moveable no break no Marker | Wall ] -> [ Moveable blockedD | Wall ]
+right [ Moveable no break no Marker | Wall ] -> [ Moveable blockedL | Wall ]
+down  [ Moveable no break no Marker | Wall ] -> [ Moveable blockedU | Wall ]
+left  [ Moveable no break no Marker | Wall ] -> [ Moveable blockedR | Wall ]
+
+up    [ Moveable no break | Head Marker ] -> [ Moveable blockedD | Head Marker ] 
+right [ Moveable no break | Head Marker ] -> [ Moveable blockedL | Head Marker ]
+down  [ Moveable no break | Head Marker ] -> [ Moveable blockedU | Head Marker ]
+left  [ Moveable no break | Head Marker ] -> [ Moveable blockedR | Head Marker ]
+
+up    [ Moveable no break | blockedD ] -> [ Moveable blockedD | blockedD ]
+right [ Moveable no break | blockedL ] -> [ Moveable blockedL | blockedL ]
+down  [ Moveable no break | blockedU ] -> [ Moveable blockedU | blockedU ]
+left  [ Moveable no break | blockedR ] -> [ Moveable blockedR | blockedR ]
+
+up    [ ArrowD | Tail break | Wall ] -> [ ArrowD | Tail break blockedD | Wall ]
+right [ ArrowL | Tail break | Wall ] -> [ ArrowL | Tail break blockedL | Wall ]
+down  [ ArrowU | Tail break | Wall ] -> [ ArrowU | Tail break blockedU | Wall ]
+left  [ ArrowR | Tail break | Wall ] -> [ ArrowR | Tail break blockedR | Wall ] 
+
+up    [ ArrowD | Tail break | Head Marker ] -> [ ArrowD | Tail break blockedD | Head Marker ]
+right [ ArrowL | Tail break | Head Marker ] -> [ ArrowL | Tail break blockedL | Head Marker ]
+down  [ ArrowU | Tail break | Head Marker ] -> [ ArrowU | Tail break blockedU | Head Marker ]
+left  [ ArrowR | Tail break | Head Marker ] -> [ ArrowR | Tail break blockedR | Head Marker ] 
+
+up    [ ArrowD | Tail break | blockedD ] -> [ ArrowD | Tail break blockedD | blockedD ]
+right [ ArrowL | Tail break | blockedL ] -> [ ArrowL | Tail break blockedL | blockedL ]
+down  [ ArrowU | Tail break | blockedU ] -> [ ArrowU | Tail break blockedU | blockedU ]
+left  [ ArrowR | Tail break | blockedR ] -> [ ArrowR | Tail break blockedR | blockedR ]
+
+endloop
+
+(Determining which spots are supposed to break and which spots are supposed to be connected)
+startloop
+
+[ > Moveable | Moveable no Marker no break ] -> [ > Moveable | > Moveable ]
+
+[ up    Moveable Marker blockedD ] -> [ stationary Moveable Marker blockedD ]
+[ right Moveable Marker blockedL ] -> [ stationary Moveable Marker blockedL ]
+[ down  Moveable Marker blockedU ] -> [ stationary Moveable Marker blockedU ]
+[ left  Moveable Marker blockedR ] -> [ stationary Moveable Marker blockedR ]
+
+up    [ left  VertebraU no blockedR | VertebraD blockedR ] -> [ left  VertebraU tailit | VertebraD tailit blockedR ]
+up    [ right VertebraU no blockedL | VertebraD blockedL ] -> [ right VertebraU tailit | VertebraD tailit blockedL ]
+
+right [ up    VertebraR no blockedD | VertebraL blockedD ] -> [ up    VertebraR tailit | VertebraL tailit blockedD ]
+right [ down  VertebraR no blockedU | VertebraL blockedU ] -> [ down  VertebraR tailit | VertebraL tailit blockedU ]
+
+down  [ left  VertebraD no blockedR | VertebraU blockedR ] -> [ left  VertebraD tailit | VertebraU tailit blockedR ]
+down  [ right VertebraD no blockedL | VertebraU blockedL ] -> [ right VertebraD tailit | VertebraU tailit blockedL ]
+
+left  [ up    VertebraL no blockedD | VertebraR blockedD ] -> [ up    VertebraL tailit | VertebraR tailit blockedD ]
+left  [ down  VertebraL no blockedU | VertebraR blockedU ] -> [ down  VertebraL tailit | VertebraR tailit blockedU ]
+
+up    [ left  VertebraU no blockedR | VertebraD ] -> [ left  VertebraU | left  VertebraD ]
+up    [ right VertebraU no blockedL | VertebraD ] -> [ right VertebraU | right VertebraD ]
+
+right [ up    VertebraR no blockedD | VertebraL ] -> [ up    VertebraR | up    VertebraL ]
+right [ down  VertebraR no blockedU | VertebraL ] -> [ down  VertebraR | down  VertebraL ]
+
+down  [ left  VertebraD no blockedR | VertebraU ] -> [ left  VertebraD | left  VertebraU ]
+down  [ right VertebraD no blockedL | VertebraU ] -> [ right VertebraD | right VertebraU ]
+
+left  [ up    VertebraL no BlockedD | VertebraR ] -> [ up    VertebraL | up    VertebraR ]
+left  [ down  VertebraL no blockedU | VertebraR ] -> [ down  VertebraL | down  VertebraR ]
+
+up    [ down  VertebraU | VertebraD ] -> [ down  VertebraU | down  VertebraD ]
+right [ left  VertebraR | VertebraL ] -> [ left  VertebraR | left  VertebraL ]
+down  [ up    VertebraD | VertebraU ] -> [ up    VertebraD | up    VertebraU ]
+left  [ right VertebraL | VertebraR ] -> [ right VertebraL | right VertebraR ]
+
+up    [ > Vertebra tailit | Vertebra tailit no break ] -> [ > Vertebra tailit AttachU | > Vertebra tailit AttachD ]
+right [ > Vertebra tailit | Vertebra tailit no break ] -> [ > Vertebra tailit AttachR | > Vertebra tailit AttachL ]
+down  [ > Vertebra tailit | Vertebra tailit no break ] -> [ > Vertebra tailit AttachD | > Vertebra tailit AttachU ]
+left  [ > Vertebra tailit | Vertebra tailit no break ] -> [ > Vertebra tailit AttachL | > Vertebra tailit AttachR ]
+
+up    [ > Vertebra tailit | Attachable no break ] -> [ > Vertebra tailit AttachU | > Attachable AttachD ]
+right [ > Vertebra tailit | Attachable no break ] -> [ > Vertebra tailit AttachR | > Attachable  AttachL ]
+down  [ > Vertebra tailit | Attachable no break ] -> [ > Vertebra tailit AttachD | > Attachable AttachU ]
+left  [ > Vertebra tailit | Attachable no break ] -> [ > Vertebra tailit AttachL | > Attachable AttachR ]
+
+up    [ > Attachable | Vertebra tailit ] -> [ > Attachable AttachU | > Vertebra tailit AttachD ]
+right [ > Attachable | Vertebra tailit ] -> [ > Attachable AttachR | > Vertebra tailit  AttachL ]
+down  [ > Attachable | Vertebra tailit ] -> [ > Attachable AttachD | > Vertebra tailit AttachU ]
+left  [ > Attachable | Vertebra tailit ] -> [ > Attachable AttachL | > Vertebra tailit AttachR ]
+
+endloop
+
+(Cancel movement if pushed against the edge of the map)
+up    [ > Moveable edgeU ] [ > Player ] -> cancel
+right [ > Moveable edgeR ] [ > Player ] -> cancel
+down  [ > Moveable edgeD ] [ > Player ] -> cancel
+left  [ > Moveable edgeL ] [ > Player ] -> cancel
+
+up    [ > Head edgeU ] [ > Player ] -> cancel
+right [ > Head edgeR ] [ > Player ] -> cancel
+down  [ > Head edgeD ] [ > Player ] -> cancel
+left  [ > Head edgeL ] [ > Player ] -> cancel
+
+up    [ TailU AttachU ] -> [ TailU ]
+right [ TailR AttachR ] -> [ TailR ]
+down  [ TailD AttachD ] -> [ TailD ]
+left  [ TailL AttachL ] -> [ TailL ]
+
+()()()()
+
+[ tailit | perpendicular Vertebra tailit | tailit ] -> [ tailit | perpendicular DetachedTail | tailit ] sfx3
+[ perpendicular tailit | stationary Vertebra tailit | perpendicular tailit ] -> [ perpendicular tailit | DetachedTail | perpendicular tailit ] sfx3
+
+up    [ moving Vertebra tailit | VertebraD no tailit ] -> [ moving TailU | VertebraD ] sfx3
+right [ moving Vertebra tailit | VertebraL no tailit ] -> [ moving TailR | VertebraL ] sfx3
+down  [ moving Vertebra tailit | VertebraU no tailit ] -> [ moving TailD | VertebraU ] sfx3
+left  [ moving Vertebra tailit | VertebraR no tailit ] -> [ moving TailL | VertebraR ] sfx3
+
+up    [ stationary VertebraU tailit | stationary VertebraD tailit ] -> [ TailU | TailD ] sfx3
+right [ stationary VertebraR tailit | stationary VertebraL tailit ] -> [ TailR | TailL ] sfx3
+down  [ stationary VertebraD tailit | stationary VertebraU tailit ] -> [ TailD | TailU ] sfx3
+left  [ stationary VertebraL tailit | stationary VertebraR tailit ] -> [ TailL | TailR ] sfx3
+
+up    [ > VertebraU tailit | > VertebraD tailit ] -> [ > TailU | > TailD ] sfx3
+right [ > VertebraR tailit | > VertebraL tailit ] -> [ > TailR | > TailL ] sfx3
+down  [ > VertebraD tailit | > VertebraU tailit ] -> [ > TailD | > TailU ] sfx3
+left  [ > VertebraL tailit | > VertebraR tailit ] -> [ > TailL | > TailR ] sfx3
+
+up    [ moving Vertebra tailit | HeadU no tailit ] -> [ moving TailU | HeadU ] sfx3
+right [ moving Vertebra tailit | HeadR no tailit ] -> [ moving TailR | HeadR ] sfx3
+down  [ moving Vertebra tailit | HeadD no tailit ] -> [ moving TailD | HeadD ] sfx3
+left  [ moving Vertebra tailit | HeadL no tailit ] -> [ moving TailL | HeadL ] sfx3
+
+up    [ stationary Vertebra tailit | VertebraD no tailit ] -> [ TailU | VertebraD ] sfx3
+right [ stationary Vertebra tailit | VertebraL no tailit ] -> [ TailR | VertebraL ] sfx3
+down  [ stationary Vertebra tailit | VertebraU no tailit ] -> [ TailD | VertebraU ] sfx3
+left  [ stationary Vertebra tailit | VertebraR no tailit ] -> [ TailL | VertebraR ] sfx3
+
+[ stationary Tail tailit ] -> [ DetachedTail ] sfx3
+[ > Tail tailit ] -> [ > DetachedTail ] sfx3
+
+up    [ > Attachable | Attachable no break ] -> [ > Attachable AttachU | AttachD > Attachable ]
+right [ > Attachable | Attachable no break ] -> [ > Attachable AttachR | AttachL > Attachable ]
+down  [ > Attachable | Attachable no break ] -> [ > Attachable AttachD | AttachU > Attachable ]
+left  [ > Attachable | Attachable no break ] -> [ > Attachable AttachL | AttachR > Attachable ]
+
+up    [ TailU AttachU ] -> [ TailU ]
+right [ TailR AttachR ] -> [ TailR ]
+down  [ TailD AttachD ] -> [ TailD ]
+left  [ TailL AttachL ] -> [ TailL ]
+
+(A clever trick to stop loop formation when two ends of one piece come to gether.)
+startloop 
+
+[ > Head | no pink Moveable ] -> [ > Head | pink Moveable ]
+up    [ pink VertebraU | no pink VertebraD ] -> [ pink VertebraU | pink VertebraD ]
+right [ pink VertebraR | no pink VertebraL ] -> [ pink VertebraR | pink VertebraL ]
+down  [ pink VertebraD | no pink VertebraU ] -> [ pink VertebraD | pink VertebraU ]
+left  [ pink VertebraL | no pink VertebraR ] -> [ pink VertebraL | pink VertebraR ]
+
+down  [ > Head ] [ pink | no pink no AttachU Moveable ] -> [ > Head ] [ pink | pink Moveable ]
+left  [ > Head ] [ pink | no pink no AttachR Moveable ] -> [ > Head ] [ pink | pink Moveable ]
+up    [ > Head ] [ pink | no pink no AttachD Moveable ] -> [ > Head ] [ pink | pink Moveable ]
+right [ > Head ] [ pink | no pink no AttachL Moveable ] -> [ > Head ] [ pink | pink Moveable ]
+
+down  [ > Head ] [ AttachD | pink AttachU ] -> [ > Head ] [ green AttachD | pink AttachU ]
+left  [ > Head ] [ AttachL | pink AttachR ] -> [ > Head ] [ green AttachL | pink AttachR ]
+up    [ > Head ] [ AttachU | pink AttachD ] -> [ > Head ] [ green AttachU | pink AttachD ]
+right [ > Head ] [ AttachR | pink AttachL ] -> [ > Head ] [ green AttachR | pink AttachL ] 
+
+up    [ green VertebraU | no green no pink VertebraD ] -> [ green VertebraU | green VertebraD ]
+right [ green VertebraR | no green no pink VertebraL ] -> [ green VertebraR | green VertebraL ]
+down  [ green VertebraD | no green no pink VertebraU ] -> [ green VertebraD | green VertebraU ]
+left  [ green VertebraL | no green no pink VertebraR ] -> [ green VertebraL | green VertebraR ]
+
+down  [ > Head ] [ pink AttachD | green AttachU ] -> [ > Head ] [ pink AttachD | pink green AttachU ]
+left  [ > Head ] [ pink AttachL | green AttachR ] -> [ > Head ] [ pink AttachL | pink green AttachR ]
+up    [ > Head ] [ pink AttachU | green AttachD ] -> [ > Head ] [ pink AttachU | pink green AttachD ]
+right [ > Head ] [ pink AttachR | green AttachL ] -> [ > Head ] [ pink AttachR | pink green AttachL ]
+
+endloop
+
+down  [ pink green AttachD | pink no green AttachU ] -> [ pink green | pink ]
+left  [ pink green AttachL | pink no green AttachR ] -> [ pink green | pink ]
+up    [ pink green AttachU | pink no green AttachD ] -> [ pink green | pink ]
+right [ pink green AttachR | pink no green AttachL ] -> [ pink green | pink ] 
+
+[ pink ] -> []
+[ green ] -> []
+
+(Prevent many attachables in a row to all attach together, if one in a row is already attached the attachment between it and the next one should be canceled)
+startloop
+
+up    [ no AttachU | > Tail AttachU | Tail AttachU | ] -> [ | > Tail AttachU | Tail AttachD | no AttachD ]
+right [ no AttachR | > Tail AttachR | Tail AttachR | ] -> [ | > Tail AttachR | Tail AttachL | no AttachL ]
+down  [ no AttachD | > Tail AttachD | Tail AttachD | ] -> [ | > Tail AttachD | Tail AttachU | no AttachU ]
+left  [ no AttachL | > Tail AttachL | Tail AttachL | ] -> [ | > Tail AttachL | Tail AttachR | no AttachR ]
+
+up    [ | > DetachedTail AttachU | Tail AttachU | ] -> [ | > DetachedTail AttachU | Tail AttachD | no AttachD ]
+right [ | > DetachedTail AttachR | Tail AttachR | ] -> [ | > DetachedTail AttachR | Tail AttachL | no AttachL ]
+down  [ | > DetachedTail AttachD | Tail AttachD | ] -> [ | > DetachedTail AttachD | Tail AttachU | no AttachU ]
+left  [ | > DetachedTail AttachL | Tail AttachL | ] -> [ | > DetachedTail AttachL | Tail AttachR | no AttachR ]
+
+up    [ > Head no Marker | no TailD Tail AttachU | ] -> [ > Head | Tail AttachD | no AttachD ]
+right [ > Head no Marker | no TailL Tail AttachR | ] -> [ > Head | Tail AttachL | no AttachL ]
+down  [ > Head no Marker | no TailU Tail AttachD | ] -> [ > Head | Tail AttachU | no AttachU ]
+left  [ > Head no Marker | no TailR Tail AttachL | ] -> [ > Head | Tail AttachR | no AttachR ]
+
+endloop
+
+(Boxes can't reattach once they are detached)
+up    [ Box AttachU | AttachD ] -> [ Box | ]
+right [ Box AttachR | AttachL ] -> [ Box | ]
+down  [ Box AttachD | AttachU ] -> [ Box | ]
+left  [ Box AttachL | AttachR ] -> [ Box | ]
+late [ Box DetachedTail ] -> [ Box ]
+
+(Attach all separated vertebrae at the start to make up the skeleton)
+[ start ] [ DetachedTail ] -> [ start ] [ start DetachedTail ]
+
+up    [ DetachedTail start | DetachedTail start ] -> [ DetachedTail AttachU start | start AttachD DetachedTail ]
+right [ DetachedTail start | DetachedTail start ] -> [ DetachedTail AttachR start | start AttachL DetachedTail ]
+down  [ DetachedTail start | DetachedTail start ] -> [ DetachedTail AttachD start | start AttachU DetachedTail ]
+left  [ DetachedTail start | DetachedTail start ] -> [ DetachedTail AttachL start | start AttachR DetachedTail ]
+
+[ start ] -> []
+
+(Attach head to vertebra / spine)
+up    [ > Head no Marker | Attachable no Box ] -> [ > HeadD | AttachD Attachable ] sfx1
+right [ > Head no Marker | Attachable no Box ] -> [ > HeadL | AttachL Attachable ] sfx1
+down  [ > Head no Marker | Attachable no Box ] -> [ > HeadU | AttachU Attachable ] sfx1
+left  [ > Head no Marker | Attachable no Box ] -> [ > HeadR | AttachR Attachable ] sfx1
+
+()
+
+[ > TailU ] -> [ > TailU AttachU ]
+[ > TailR ] -> [ > TailR AttachR ]
+[ > TailD ] -> [ > TailD AttachD ]
+[ > TailL ] -> [ > TailL AttachL ]
+
+(The process of attaching tails and vertebrae)
+
+[ > Attachable AttachU AttachR ] -> [ > BodyUR AttachU AttachR ] sfx1
+[ > Attachable AttachU AttachL ] -> [ > BodyUL AttachU AttachL ] sfx1
+[ > Attachable AttachD AttachR ] -> [ > BodyDR AttachD AttachR ] sfx1
+[ > Attachable AttachD AttachL ] -> [ > BodyDL AttachD AttachL ] sfx1
+[ > Attachable AttachL AttachR ] -> [ > BodyRL AttachL AttachR ] sfx1
+[ > Attachable AttachU AttachD ] -> [ > BodyUD AttachU AttachD ] sfx1
+
+[ > Attachable AttachU ] -> [ > TailU AttachU ] sfx1
+[ > Attachable AttachR ] -> [ > TailR AttachR ] sfx1
+[ > Attachable AttachD ] -> [ > TailD AttachD ] sfx1
+[ > Attachable AttachL ] -> [ > TailL AttachL ] sfx1
+
+[ Attachable AttachU AttachR ] -> [ BodyUR AttachU AttachR ] sfx1
+[ Attachable AttachU AttachL ] -> [ BodyUL AttachU AttachL ] sfx1
+[ Attachable AttachD AttachR ] -> [ BodyDR AttachD AttachR ] sfx1
+[ Attachable AttachD AttachL ] -> [ BodyDL AttachD AttachL ] sfx1
+[ Attachable AttachL AttachR ] -> [ BodyRL AttachL AttachR ] sfx1
+[ Attachable AttachU AttachD ] -> [ BodyUD AttachU AttachD ] sfx1
+
+[ Attachable AttachU ] -> [ TailU AttachU ] sfx1
+[ Attachable AttachR ] -> [ TailR AttachR ] sfx1
+[ Attachable AttachD ] -> [ TailD AttachD ] sfx1
+[ Attachable AttachL ] -> [ TailL AttachL ] sfx1
+
+up    [ Attachable AttachU | no Attachable no VertebraD ] -> [ Attachable | ] sfx1
+right [ Attachable AttachR | no Attachable no VertebraL ] -> [ Attachable | ] sfx1
+down  [ Attachable AttachD | no Attachable no VertebraU ] -> [ Attachable | ] sfx1
+left  [ Attachable AttachL | no Attachable no VertebraR ] -> [ Attachable | ] sfx1
+
+()()()()
+
+[ AttachMarker ] -> []
+
+[ up    Moveable blockedD ] -> [ stationary Moveable blockedD ]
+[ right Moveable blockedL ] -> [ stationary Moveable blockedL ]
+[ down  Moveable blockedU ] -> [ stationary Moveable blockedU ]
+[ left  Moveable blockedR ] -> [ stationary Moveable blockedR ]
+
+up    [ > Head | no VertebraD ] -> [ > HeadU | ]
+right [ > Head | no VertebraL ] -> [ > HeadR | ]
+down  [ > Head | no VertebraU ] -> [ > HeadD | ]
+left  [ > Head | no VertebraR ] -> [ > HeadL | ]
+
+[ Marker ] -> [ no Marker ]
+
+(Marking the body, each part points in the reverse direction of the next part relative to itself (that means the direction the body is "moving" at that point))
+startloop
+
+up    [ Head no Marker | VertebraD ] -> [ Head ArrowD | VertebraD continue ]
+right [ Head no Marker | VertebraL ] -> [ Head ArrowL | VertebraL continue ]
+down  [ Head no Marker | VertebraU ] -> [ Head ArrowU | VertebraU continue ]
+left  [ Head no Marker | VertebraR ] -> [ Head ArrowR | VertebraR continue ]
+
+up    [ Vertebra continue | VertebraD no Marker ] -> [ Vertebra ArrowD | VertebraD continue ]
+right [ Vertebra continue | VertebraL no Marker ] -> [ Vertebra ArrowL | VertebraL continue ]
+down  [ Vertebra continue | VertebraU no Marker ] -> [ Vertebra ArrowU | VertebraU continue ]
+left  [ Vertebra continue | VertebraR no Marker ] -> [ Vertebra ArrowR | VertebraR continue ]
+
+[ Tail continue ] -> [ break Tail ]
+
+endloop
+
+[ continue ] -> []
+
+(If the head is pulling the body and not pushing it)
+up    [ > Head no ArrowD ] -> [ > Head pull] sfx2
+right [ > Head no ArrowL ] -> [ > Head pull] sfx2
+down  [ > Head no ArrowU ] -> [ > Head pull] sfx2
+left  [ > Head no ArrowR ] -> [ > Head pull] sfx2
+
+(Pull the spine)
+startloop
+
+up    [ stationary Vertebra | moving Moveable ArrowU pull ] -> [ > Vertebra pull | moving Moveable ArrowU pull ]
+right [ stationary Vertebra | moving Moveable ArrowR pull ] -> [ > Vertebra pull | moving Moveable ArrowR pull ]
+down  [ stationary Vertebra | moving Moveable ArrowD pull ] -> [ > Vertebra pull | moving Moveable ArrowD pull ]
+left  [ stationary Vertebra | moving Moveable ArrowL pull ] -> [ > Vertebra pull | moving Moveable ArrowL pull ]
+
+endloop
+
+(New markers for the new positions)
+startloop
+
+[ up    Moveable Marker pull ] -> [ up    Moveable ArrowU pull ]
+[ right Moveable Marker pull ] -> [ right Moveable ArrowR pull ]
+[ down  Moveable Marker pull ] -> [ down  Moveable ArrowD pull ]
+[ left  Moveable Marker pull ] -> [ left  Moveable ArrowL pull ]
+
+endloop
+
+[ Head pull ] -> [ Head ]
+
+[ > Vertebra Box ] -> [ > Vertebra > Box ]
+[ > Moveable Marker ] -> [ > Moveable > Marker ]
+
+[ > Moveable pull ] -> [ > Moveable > pull ]
+[ > Tail break ] -> [ > Tail > break ]
+
+[ Player stationary Head ] -> [ stationary Player stationary Head ]
+
+[ > Box ground ] -> [ > Box ground ] sfx8
+[ > Box water no Step ] -> [ > Box water ] sfx7
+
+(Creating the new skeleton)
+startloop
+
+late up    [ Vertebra ArrowU pull | ArrowU no pull ] -> [ BodyUD ArrowU | ArrowU ]
+late up    [ Vertebra ArrowR pull | ArrowU no pull ] -> [ BodyUL ArrowR | ArrowU ]
+late up    [ Vertebra ArrowL pull | ArrowU no pull ] -> [ BodyUR ArrowL | ArrowU ]
+
+late right [ Vertebra ArrowR pull | ArrowR no pull ] -> [ BodyRL ArrowR | ArrowR ]
+late right [ Vertebra ArrowU pull | ArrowR no pull ] -> [ BodyDR ArrowU | ArrowR ]
+late right [ Vertebra ArrowD pull | ArrowR no pull ] -> [ BodyUR ArrowD | ArrowR ]
+
+late down  [ Vertebra ArrowD pull | ArrowD no pull ] -> [ BodyUD ArrowD | ArrowD ]
+late down  [ Vertebra ArrowR pull | ArrowD no pull ] -> [ BodyDL ArrowR | ArrowD ]
+late down  [ Vertebra ArrowL pull | ArrowD no pull ] -> [ BodyDR ArrowL | ArrowD ]
+
+late left  [ Vertebra ArrowL pull | ArrowL no pull ] -> [ BodyRL ArrowL | ArrowL ]
+late left  [ Vertebra ArrowU pull | ArrowL no pull ] -> [ BodyDL ArrowU | ArrowL ]
+late left  [ Vertebra ArrowD pull | ArrowL no pull ] -> [ BodyUL ArrowD | ArrowL ]
+
+late up    [ Tail pull | ArrowU no pull ] -> [ TailU | ArrowU ]
+late right [ Tail pull | ArrowR no pull ] -> [ TailR | ArrowR ]
+late down  [ Tail pull | ArrowD no pull ] -> [ TailD | ArrowD ]
+late left  [ Tail pull | ArrowL no pull ] -> [ TailL | ArrowL ]
+
+endloop
+
+(Marking attached boxes' bonds to their neighboring attached boxes)
+late [ BoxBondMarker ] -> []
+late [ Box VertebraU ] -> [ Box BoxBondU VertebraU ]
+late [ Box VertebraR ] -> [ Box BoxBondR VertebraR ]
+late [ Box VertebraD ] -> [ Box BoxBondD VertebraD ]
+late [ Box VertebraL ] -> [ Box BoxBondL VertebraL ] 
+
+(Door/Button action)
+late [ Head Button ] -> [ Head open Button ]
+late [ Box Button ] -> [ Box open Button ]
+
+startloop
+
+late [ Button open | Trigger ] -> [ Button | Trigger open ]
+late [ Trigger open | Trigger ] -> [ Trigger open | Trigger open ]
+late [ Trigger open | DoorVertical ] -> [ Trigger | OpenDoorVertical ]
+late [ Trigger open | DoorHorizontal ] -> [ Trigger | OpenDoorHorizontal ]
+
+endloop
+
+late [ Button no Head no Box ] -> [ Button close ]
+
+startloop
+
+late [ Button close | Trigger ] -> [ Button close | Trigger close ]
+late [ Trigger close | Trigger ] -> [ Trigger close | Trigger close ]
+late [ Trigger close | OpenDoor no close ] -> [ Trigger close | OpenDoor close ]
+
+endloop
+
+late [ close OpenDoor Box ] -> [ OpenDoor Box ]
+
+late up    [ VertebraU | close OpenDoor ] -> [ tailit VertebraU | close OpenDoor ]
+late right [ VertebraR | close OpenDoor ] -> [ tailit VertebraR | close OpenDoor ]
+late down  [ VertebraD | close OpenDoor ] -> [ tailit VertebraD | close OpenDoor ]
+late left  [ VertebraL | close OpenDoor ] -> [ tailit VertebraL | close OpenDoor ]
+
+late up    [ HeadD | close OpenDoor ] -> [ no Marker HeadD | close OpenDoor ]
+late right [ HeadL | close OpenDoor ] -> [ no Marker HeadL | close OpenDoor ]
+late down  [ HeadU | close OpenDoor ] -> [ no Marker HeadU | close OpenDoor ]
+late left  [ HeadR | close OpenDoor ] -> [ no Marker HeadR | close OpenDoor ]
+
+late [ close OpenDoor Player ] -> [ close OpenDoor no Player Blood ] sfx5 message Crushed!
+late [ close OpenDoor Moveable ] -> [ close OpenDoor no break no Marker ] sfx3
+
+late [ close OpenDoorVertical ] -> [ DoorVertical ]
+late [ close OpenDoorHorizontal ] -> [ DoorHorizontal ] 
+
+late [ open ] -> []
+late [ close ] -> []
+
+(Breaking the spots that broke by closing doors)
+late up    [ VertebraU | Vertebra tailit ] -> [ VertebraU | TailD ]
+late right [ VertebraR | Vertebra tailit ] -> [ VertebraR | TailL ]
+late down  [ VertebraD | Vertebra tailit ] -> [ VertebraD | TailU ]
+late left  [ VertebraL | Vertebra tailit ] -> [ VertebraL | TailR ]
+
+late up    [ HeadD | Vertebra tailit ] -> [ HeadD | TailD ]
+late right [ HeadL | Vertebra tailit ] -> [ HeadL | TailL ]
+late down  [ HeadU | Vertebra tailit ] -> [ HeadU | TailU ]
+late left  [ HeadR | Vertebra tailit ] -> [ HeadR | TailR ]
+
+[tailit ] -> []
+[ break no Tail ] -> [ no break ]
+
+late [ Tail tailit ] -> [ DetachedTail ]
+
+(Lava action (not used in the game))
+late [ Head ] -> [ onGround Head ]
+late [ Vertebra Ground ] -> [ Vertebra onGround Ground ]
+late up    [ onGround | VertebraD ] -> [ onGround | VertebraD onGround ]
+late right [ onGround | VertebraL ] -> [ onGround | VertebraL onGround ]
+late down  [ onGround | VertebraU ] -> [ onGround | VertebraU onGround ]
+late left  [ onGround | VertebraR ] -> [ onGround | VertebraR onGround ]
+
+late [ Vertebra Lava no onGround ] -> [ Lava ] sfx4
+late [ DetachedTail Lava ] -> [ Lava ] sfx4
+
+late [ onGround ] -> []
+
+late up    [ DartWallU ] -> [ DartWallU rayU ]
+late right [ DartWallR ] -> [ DartWallR rayR ]
+late down  [ DartWallD ] -> [ DartWallD rayD ]
+late left  [ DartWallL ] -> [ DartWallL rayL ]
+
+(Dart shooting action (not used in the game))
+startloop
+
+late up    [ rayU | no RayBlocker no Player ] -> [ | rayU ]
+late right [ rayR | no RayBlocker no Player ] -> [ | rayR ]
+late down  [ rayD | no RayBlocker no Player ] -> [ | rayD ]
+late left  [ rayL | no RayBlocker no Player ] -> [ | rayL ] 
+
+late up    [ rayU | rayBlocker no DartWallD ] -> [ | rayBlocker ]
+late right [ rayR | rayBlocker no DartWallL ] -> [ | rayBlocker ]
+late down  [ rayD | rayBlocker no DartWallU ] -> [ | rayBlocker ]
+late left  [ rayL | rayBlocker no DartWallR ] -> [ | rayBlocker ] 
+
+late up    [ rayU | Player ] -> [ | rayreturnD Player ]
+late right [ rayR | Player ] -> [ | rayreturnL Player ]
+late down  [ rayD | Player ] -> [ | rayreturnU Player ]
+late left  [ rayL | Player ] -> [ | rayreturnR Player ] 
+
+late up    [ rayreturnU | no rayBlocker no DartWallD ] -> [ | rayreturnU ]
+late right [ rayreturnR | no rayBlocker no DartWallL ] -> [ | rayreturnR ]
+late down  [ rayreturnD | no rayBlocker no DartWallU ] -> [ | rayreturnD ]
+late left  [ rayreturnL | no rayBlocker no DartWallR ] -> [ | rayreturnL ] 
+
+endloop
+
+late up    [ rayreturnU | DartWall ] -> [ | DartD DartWall ] again
+late right [ rayreturnR | DartWall ] -> [ DartL | DartWall ] again
+late down  [ rayreturnD | DartWall ] -> [ DartU | DartWall ] again
+late left  [ rayreturnL | DartWall ] -> [ DartR | DartWall ] again
+
+==============
+WINCONDITIONS
+==============
+
+all Player on Goal
+no Blood
+
+=======     
+LEVELS
+=======
+
+message It was a beautiful, quiet day on the Puzzle Islands. One could say the water almost didn't move.
+message A tiny curious mouse was running around looking for things to play with.
+
+(1 - 1)
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+w#..wwwwwwwwwwwwwwwwwwwwwww
+www.#wwwwwwwwwwwwwwwwwwwwww
+.w#..wwwwwwwwwwwwwwwwwwwwww
+..##wwwwwwwwwwwwwwwwwwwwwww
+.#.#wwwwwwwwwwwwwwwwwwwwwww
+..#.wwww.....wwwwwww...wwww
+##.pw#........w...w.....www
+.##...#..b..b.w.x-_-----www
+.#.#.#........w...w..d.-1g0
+#.#...!..x----:---w.....www
+.##..##.......www:1gwwwwwww
+#.#.##ww.....wwwwwwwwwwwwww
+##.#wwwwwwwwwwwwwwwwwwwwwww
+#.wwwwwwwwwwwwwwwwwwwwwwwww
+.#wwwwwwwwwwwwwwwwwwwwwwwww
+##w#wwwwwwwwwwwwwwwwwwwww۱w
+#wwww#wwwwwwwwwwwwwwwwwwwww
+
+(2 - 2)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwx_wwwwwwwwwx__wwwww
+wwwwwwwwwwwwww_wwwwwwwwwww_wwwww
+wwwggggggggwwm_wwwwwwww#m#_...ww
+www2wwwwwwgw..t.#.....1...1...ww
+www:wwgggwgw..#...#..._...wwmgww
+www:gggwgwgg..#w#m##ww_wwwwwwg10
+www_wwx/gwww.d#wwx_____wwwwwww_w
+www_www_2www###wwwwwwwwwwwwwx__w
+www___nwgwwwwwwwwwwwwwwwwwwwwwww
+g?>gggg#gwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwgggwwwwwwwwwwwwwwwwwwwwwww
+w۲wwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+(3 - 2)
+wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwww_______wwwww
+wwwwwwwwwww_wwwww_wwwww
+wwwwwwwwwww_wwwww_wwwww
+wwwwww...ww_wwwww_wwx_w
+wwwww.bb..w_w##ww_www_w
+wwwww.bb..wxwx#ww_wwm_w
+g??>g...w.ggg::1111gg10
+wwwww...#._xxwww_w_wgww
+wwwww....._w_www_w_wgww
+wwwwww...w_w_____w_wwww
+wwwwwwwwww_wwwwwww_wwww
+wwwwwwwwww_________wwww
+wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww
+w۳wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww
+
+(4 - 3)
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwww..wwwwwww
+wwwwwwwww...gwwwwww
+wwwwww.....wggwwww#
+wwwwgg..#wwwgwww###
+wwwwgwwwwm#wggg:tto
+g???>gww#wwwwww_w/#
+wwwww...wwwwx___w_#
+wwwww..b.wwxwwwww_w
+wwwwww...ww_______w
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+w۴wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+
+message "My head feels dizzy..."
+
+(5 - 3)
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+ww#......wwwwww
+w##.###...wwwww
+###.#...#..wwww
+###...#.#...w##
+ddd>#b#.#...t.o
+#####.#.#...//#
+###wwgw....ww/#
+#wwwww#.#.www_w
+wwwwww...wwww_w
+wwwwww...wwww_w
+www__x#..wwww_w
+www_wwwwwwwww_w
+www_wwwwwwwww_w
+w۵w___________w
+wwwwwwwwwwwwwww
+
+(wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+#www#......wwwwww
+#ww##.###...wwwww
+##w##.#...#..wwww
+#####...#.#...w##
+dd>.#.#b#.#.d.###
+##....#.#.#...t.o
+#######.#.#.../##
+#w###ww.w....w_##
+wwwwwwww#.#.ww_ww
+wwwwwwww...www_ww
+wwwwwwww...www_ww
+wwwwwwww..wwww_ww
+wwwwwwx##wwwww_ww
+wwwwww_________ww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwww.....wwwww
+#www#.......wwwww
+#ww##.###....wwww
+##w##.#...#..wwww
+#####...#.#...w##
+dd>.#.#b#.#.b.###
+##....#.#.#.d-tto
+#######.#.#..-#/#
+#w###ww.w.w.._w/#
+wwwwwww.w.#.w_w_w
+wwwwwww.w..ww_w_w
+wwwwwwww#..ww_w_w
+wwwwwwww...ww_w_w
+wwwwwwww...ww_w_w
+wwwxx___--____w_w
+www_wwww#wwwwww_w
+www_____________w
+wwwwwwwwwwwwwwwww)
+
+(6 - 3)
+wwwwwwwwwwwwwwwww##
+wwwwwwwwwwwwwwww###
+wwwwwwwwwwwwwwggt.o
+wwww........wwgw/##
+wwww.###.....ggw_##
+wwww.#....#..www_ww
+wwww..wmww#..www_ww
+wwww..ww###..www_ww
+wwww...x-----____ww
+wwwww......wwwwwwww
+wwwwwgwwwwwwwwwwwww
+wwwwwgwwwwwwwwwwwww
+wwwwwgwwwwwwwwwwwww
+www##.wwwwwwwwwwwww
+#w##d^#wwwwwwwwww۶w
+##wdd##wwwwwwwwwwww
+
+message "Good thing the snake is not alive!"
+message "Breaking its spine that many times has to be really painful."
+
+(7 - 3)
+wwwwwwwwwwwwwwwwwwwwwo###
+wwwwwwwwwwwwwwwwwwwww.##w
+wwwwwwwwwwwwwwwwwwwww.#ww
+wwwwwwwwwwwwwwwwwwwww2_ww
+wwwwwww###ww_________g_ww
+wwwwww##....-wwwwwww2g_ww
+###w###..###-ggwwwww2w_ww
+#####...#..--wgw:::::w_ww
+.ddd>.#...#_.w..-wwwww_ww
+#####...#b#_ww..-wwwww_ww
+#######..n__ww.--wwwww_ww
+##wwwwwwwxwww.b-wwwwx__ww
+wwwwwwwww____---wwwwwwwww
+#wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww
+w۷wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww
+
+message "I assume once there lived something else on these islands."
+
+(8 - 3)
+#o###wwwwwwwww
+#.##xwwwwwwwww
+#gww_wwwwwwwww
+wgww_wwwwwwwww
+wgww_wwwm.wwww
+wg1::.t--..www
+wwwww.ww_w.www
+wwwww...n..ww#
+wwwww.....<ddd
+wwwww.....ww##
+wwwwwwwwwwwwww
+w۸wwwwwwwwwwww
+wwwwwwwwwwwwww
+
+(9 - 3)
+wwwwwwwwwwww____wwwwwwww
+wwwwwwx____w_ww_wwwwwwww
+wwww__2www_w_ww_wwwwwwww
+wwww_wwwww_w_wx22_mwgg10
+wwww_wwwww_w_w/wx_wwgw_w
+wwww_wwwww_w_w_wwwwwgw_w
+wwww_...ww_w_w______:__w
+wwww_.b.ww_w_.....wwgwww
+???>:...gg1g:..nb.gggwww
+wwww_-n.wwww_---..wwwwww
+wwwww...wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+w۹wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+
+message "Someone must have built all the bridges and tunnels here."
+
+(10 - 3)
+wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwgggggggggggwwww
+wwwwwwwwwgwwww_____2wwww
+wwww......wwww_wwwwgwwww
+wwww.####.wwww_wwwwggg10
+wwww..##..wwwwxwwww¤ww_w
+wwww#....#wwwwwwwwwmww_w
+wwww#g##mwwwwwwwwwwwww_w
+wwwwggwwx:gww...wwwx___w
+???>gwwww_gww.b.wwwwwwww
+wwwwggg..-gww...wwwwwwww
+wwwwwww..-www...wwwwwwww
+wwwwwww..-::1...wwwwwwww
+wwwwwww...www...wwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+w۱۰wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+
+(11 - 3)
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwx_______www
+wwwwwwwwwwwwwwwww_www
+wwwwwwwwwwwwwwwww_www
+wwwwwwwwwwwwwwwww_www
+wwwwwwwwwwwwwwwww_www
+wwwwwww.......www_www
+wwwww__---x...ggg11g0
+wwwww_w..b.b..wwww_ww
+wwwww_w#.....#wwww_ww
+wwwww_w###z###wwww_ww
+wwwww_wwww:wgwwwww_ww
+wwwww_wwww:#ggggg#_ww
+wwwww_www#:gg#wwgw_ww
+???>g_wwww:#mwwwgw_ww
+wwwwg_wwww:_xwwwgw_ww
+wwwwg_wwwwgwwwwwgw_ww
+wwwwg:::---..ggggw_ww
+wwwwwwww##z##wwwww_ww
+wwwwwwww#...#wwwww_ww
+wwwwwwww..b..wwwww_ww
+wwwwwwww.....wwwww_ww
+wwwwwwwwwwx________ww
+wwwwwwwwwwwwwwwwwwwww
+w۱۱wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+
+message "They probably are also the ones who've set up these complicated systems of doors and buttons."
+
+(12 - 3)
+wwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwww
+www...wwww...wwwwwwwwwwwww
+www.b.xwww...wwwwwwwwwwwww
+www..._www...1gggggg10gggg
+???>..1g1:n.._wwwwww_wwwww
+www...wwww...___xx___wwwww
+wwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwww
+w۱۲wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwww
+
+((13 - 3)
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+wwww____w____wwwwwwww
+wwww_##_w_ww_wwwwwwww
+wwww_#x2w2$w_wgggg1g0
+wwww_#/wwxww_wgwww_ww
+wwww_w__w____wgwww_ww
+wwww_ww__wwwwwgwww_ww
+wwww_--.--------___ww
+???>g.-x.bbbb...wwwww
+wwwww...........wwwww
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww)
+
+(13 - 3)
+wgwwwwwwwwwwwwwwwwwww
+w0______wwwwwwwwwwwww
+wg_wwwwxwwwwwwwwwwwww
+wg_wwwwww__/_wwwwwwww
+wg1g..w#w_wgxggggggww
+wwww.....tggwwww#gwww
+wwww.....#wwwww..gwww
+wwwwg#####wwwgw..wwww
+wwwwgwwwwwwww....wwww
+wwwwgwww......bb<???g
+wwwwgggg.........wwww
+w۱۳wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+
+(14 - 4)
+wwwwwwwwwwwwwwwwwww__________w
+wwwwwwwwwwwwwwwwwww_wwwwwwww_w
+wwwwwwwwwwwwwwwwwww_w///___w_w
+wwwwwwwwwwwwwwwwwwwx#/###w_w_w
+wwwwwwwwwwwwwwwxwwwwg:ggg111:0
+wwwwwwwwwwwwwww_wwwx/:##w_wwww
+wwwwwwwwwwwwwww_wwwwwgwww_wwww
+wwwwwwwwwwwwwww______:____wwww
+???>ggwggggwwwwwwwwwwgwwwwwwww
+wwwwwgwgwgwwwwwww.....wwwwwwww
+wwwwwgggw?gg1::ng..b..wwwwwwww
+wwwwwwwwwwwwwwwww.b..wwwwwwwww
+wwwwwwwwwwwwwwwww....wwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w۱۴wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+message "I wonder what would happen if a live snake bit itself."
+
+(15 - 4)
+wwwwwwwwwwwwwwwwwwwwwww0w
+wwwwwwwwwwwwwwwwwwwwwwwgw
+wwwwwwwwwwwwwwwwwwwwwwwgw
+wwwwwwwwwwwwwwwwww___::2w
+wwwwwwwwww...wwwww_wwgwww
+wwwwwww....#.gggww_wwgwww
+#www#...###..wwgww_#2gwww
+##w##.##....wwgggg:g:wwww
+.dd##....#wwwwggww_w_wwww
+##dd>.##b#wwwwgwww_w_wwww
+########x#wwwggwww_w___ww
+#w#w#www_wwwwguwww_www_ww
+#wwwwwww_wwwwggwww__xw_ww
+wwwwwwww_wwwwwwwwwwwww_ww
+wwwwwwww_______________ww
+wwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww
+w۱۵wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww
+
+(16 - 4)
+wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww
+ww___xwwwwwwwwww
+ww_wwww#wwwwwwww
+0g1ggggg....wwww
+wwwwwwwg###.wwww
+wwwwwwwgw##.wwww
+wwwwwgwgww#.wwww
+wwwwggg1....wwww
+wwwwwg#---..wwww
+wwwwwgg.wxw.wwww
+wwwwww#...b.wwww
+wwwwwww....<??ww
+wwwwwwwwwwwww?ww
+wwwwwwwwwwwww?ww
+w۱۶wwwwwwwwwwgww
+wwwwwwwwwwwwwgww
+
+(17 - 5)
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+w__xwwwwwwwwwwwwwwwww
+w_wwwwwwwwwwwwwwwwwww
+w_wwwwww#.##wwwwwwwww
+w_www_xww.....wwwwwww
+w_www_w#ww##.wwwwwwww
+w_wmw_w#www...wwwwwww
+01ggw_w#.www.wwwwwwww
+wwwgw_w#.##.b-www??gg
+www1::g....-d-g<??www
+wwwwwwww.wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+w۱۷wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+
+(18 - 5)
+
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwx_____ww
+wwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwx_________w_ww
+wwww..b..wwwwwwww....._w_ww
+wwww.....wwwwwwww....._w_ww
+????d>...wwww#www.....:11g0
+wwww...w.gggg1:::n....wwwww
+wwwwwwwwwwwww#wwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+w۱۸wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+
+(19 - 5)
+wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwgwwwwwwww
+wwwwwwwwggggggggggwwwwww
+wwwwwwwwg##wwwwgwgwwwwww
+wwwwwww....wwwwgwgwwwwww
+?????>g.#..ggwwgwgwwwwww
+wwwwwww....wwwwgwgwwwwww
+wwwwwww/2##wwwwwwgwwwwww
+wwwwwww_n#wwwwwwwgwwwwww
+wwwwwwwwg#wwwggggggwwwww
+wwwwwww.....wwwwwwwwwwww
+wx_____-----1gggggg0gggg
+wwwwwww.....wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+w۱۹wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww
+
+(20 - 5)
+wwwwwwwwwwwwwwwwwwwww0w
+wwwwwwwwwwwwwwwww____gw
+wwwwwwwwwwwwwwwww_ww_gw
+wwwwwwwwwwwww##/xxxw_gw
+wwwwwwwwwwwwx..-gg:111w
+wwwwwwwwwwww_..-wwwww_w
+wwwwwww..ggg1..-______w
+wwwwwww..wwww###wwwwwww
+wwwwwww..wwww##wwwwwwww
+wwwwwwwb.b.b.##wwwwwwww
+wwwwwww..^...#wwwwwwwww
+wwwwwwwww?wwwwwwwwwwwww
+wwwwwwwww?wwwwwwwwwwwww
+wwwwwwwww???ggggggggggg
+w۲۰wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww
+
+(21 - 5)
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwww_xwwww
+w#wwwwwwwwwwww_1ggg0
+wwwwwwwwwwwwwwwgwwww
+#wwwwwww.....wwgwwww
+ww#wwwww.....gggwwww
+##wwwwww..#.#wwwwwww
+w#wwwwwwwgwwwwwwwwww
+#wwwwwwwwx_wwwwwwwww
+##wwwwwww2_wwwwwwwww
+#w#wwwwwwgwwwwwwwwww
+#####www....wwwwwwww
+###d>www.#..wwwwwwww
+dddd.www.#..wwwwwwww
+#.#gwgg1n..wwwwwwwww
+wwwgggw_-..wwwwwwwww
+#wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+w۲۱wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+
+(22 - 5)
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwww####wwwwww
+wwwww#...wwwwww
+g?????>b.wwwwww
+wwwwww...wwwwww
+wwwwwwwxwwwwwww
+wwwwww.-.wwwwww
+wwwwww.-.wwwwww
+wwwwwww:wwwwwww
+wwwwwww2wwwwwww
+wwwwww...wwwwww
+wwwwww.d.ggggg0
+wwwwww...#wwwww
+wwwwww####wwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+w۲۲wwwwwwwwwwww
+wwwwwwwwwwwwwww
+
+(23 - 5)
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwww...#wwwww
+??????>b.#wwwww
+wwwww#...#wwwww
+wwwww#wxw#wwwww
+wwwww#.-.#wwwww
+wwwww#.-.#wwwww
+wwwww#.2.#wwwww
+wwwww#wgw#wwwww
+wwwww#...#wwwww
+wwwww#...ggggg0
+wwwww#...wwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+w۲۳wwwwwwwwwwww
+wwwwwwwwwwwwwww
+
+(wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwww...#wwwww
+??????>b.#wwwww
+wwwww#...#wwwww
+wwwww#wxw#wwwww
+wwwww#w:w#wwwww
+wwwww#w:w#wwwww
+wwwww#w:w#wwwww
+wwwww#w:w#wwwww
+wwwww#.2.#wwwww
+wwwww#...ggggg0
+wwwww#...wwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww)
+
+(24 - 6)
+wwwwwwwwwwwwwwwwwgw
+wwwwwwwwwwwwwwwwwgw
+wwwwwwwwwwwwwwwwwgw
+www####wwwwwwwwwwgw
+www#gggggg<??????gw
+www#gmgwwwwwwwwwwww
+www#gggggggggwwwwww
+wwwwwwgwwwgwgwwwwww
+wwwwwwwwgggggwwwwww
+wwwwwwwwgwgwwwwwwww
+wwwwwwwwgggwwwwwwww
+wwwwwwwwgwwwwwwwwww
+wwwwwwggggwwwwwwwww
+wwwwwwgxgwwwwwwwwww
+www1::::gwwwwwwwwww
+wwwg#####wwwwwwwwww
+wwwgwwwwwwwwwwwwwww
+wwwgwwwwwwwwwwww۲۴w
+www0wwwwwwwwwwwwwww
+
+(25 - 6)
+wwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww____www
+wwwww###wwwwwwwwwwxww_www
+wwwwwd>.wwwwwwwww.b.w_www
+g????d#.gggggwwww...w_www
+wgwww...wwww1::::n..w_www
+wgwww###wwwwwwwwwwwww_www
+wgwwwwwwwwwwwwwwwwwww_www
+w2____________________www
+wgwwwwwwwwwwwwwwwwwwwwwww
+wgwwwwwwwwwwwwwwwwwwww۲۵w
+w0wwwwwwwwwwwwwwwwwwwwwww
+
+(26 - 6)
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwww######wwwwwwwww
+wwwwwww#....#wwwwwwwww
+wwwwwww#....#wwwwwwwww
+wwwwwww#....wwwwwwwwww
+wwwwwww##g#wwwwwwwww#.
+g??????>g2#wwwwwwww.to
+wwwwwwww#:#wwwwwww../.
+wwwwwwwww:wwwwwww..w_w
+wwwwwwwww:wwwwww..ww_w
+wwwwwwwww:wwwww..www_w
+wwwwwwww.nwwww..wwww_w
+wwwwwwww..www..wwwww_w
+wwwwwwwww..w..wwwwwwxw
+wwwwwwwwww...wwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+w۲۶wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+
+(27 - 6)
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwx_____:1gg0
+wwwwwwwwwwwwwwwgwwww
+wwwwwwwx___:::1gwwww
+wwwwwwwwwwwgwwwwwwww
+wwwwwwwwwwwgwwwwwwww
+wwwwwwwwwwwgwwwwwwww
+wwwwwwwwwwwgwwwwwwww
+wwwwwwwwwgggggwwwwww
+wwwwwwww_nw##gwwwwww
+wwwwwwww_2wwwgwwwwww
+wwwwwwggggwwwgwwwwww
+wwwwwwgwwwwwwgwwwwww
+wwwwwwgwwwwwwgwwwwww
+wwwwwwgwwwwg#g#wwwww
+wwwwwwggggggwggwwwww
+wwwwwwwnww#w#wwwwwww
+wwwwwww:www#wwwwwwww
+wwwwwww:wwwwwwwwwwww
+wwwwwww:wwmwwwwwwwww
+wwwwwww:w....wwwwwww
+wwwwwww2...^..wwwwww
+wwwwwwww...d..wwwwww
+wwwwwwwww..d.wwwwwww
+wwwwwwwwwww?wwwwwwww
+wwwwwwwwwww?wwwwwwww
+wwwwwwwwwww?wwwwwwww
+w۲۷wwwwwwww?wwwwwwww
+wwwwwwwwwwwgwwwwwwww
+
+(28 - 6)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwx___w
+wwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwww......wwwwggg10
+wwwwwwwgggggggg......gggggwwww
+??????>gmwwwwww......#wwwwwwww
+wwwwwwwwwwwwwwwww#####wwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwww#wwwwwwwwwwwwww
+w۲۸wwwwwwww#ww#wwwwwwwwwwwwwww
+wwwwwwww#w#w###wwwwwwwwwwwwwww
+
+(29 - 6)
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww#wwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwx_ww
+wwwwwwwwwwwwwwwwwwww###w_ww
+wwwwwwwwwwwwwwwww..ggggg1g0
+wwwwwwwwwwwwwww....wwwwwwww
+wwwwwwwwwwwwwww...wwwwwwwww
+wwwwwwwwwwwwwww...gwwwwwwww
+wwwwwwwwwwwwwwwwwwgwwwwwwww
+wwwwwwwwwwwwwwwwwwgwwwwwwww
+wwwwwwwwwwwwwwwwwwgwwwwwwww
+wwwwwwwwwwwwwwwwwwgwwwwwwww
+??????>g....wwwwwwgwwwwwwww
+wwwwwwww....wwwwwwgwwwwwwww
+wwwwwwww....gggggggwwwwwwww
+wwwwwwww....wwwwwwwwwwwwwww
+wwwwwwwmwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+w۲۹wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+
+(30 - 8)
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwmwwwwwwwwww
+wwww####wwwwwwwwwww
+g?????????>.wwwwwww
+w#######ww..wwwwwww
+#w#####wwwgwwwwwwww
+w#w###wwwwgwwwwwwww
+#w#w#wwwww..wwwwwww
+wwwwwwwwww..ww###..
+wwwwwwwwww..g1-..o.
+wwwwwwwww#wwwx_www.
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+w۳۰wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww
+
+(32 - 9)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww.wwwwwwwww...www
+wwwwwwwwww..............ww_____-x.www
+wwwwwwwwww.##.#######.#.ww_wwww...www
+wwwwwwwwww.#......www.#.ww_wwwwwwwwww
+wwwwwwwwww.#wwwwwwwwww#.ww_wwwwwwwwww
+wwwwwwwww.....wwwwwwww#.ww_wwwwwwwwww
+wwwwwwwwww.#www####wwww..._wwwwwwwwww
+wwwwwwwwww.#.wwwww#wwww...1ggggggggg0
+wwwwwwwwww.#.wwwww........wwwwwwwwwww
+wwwwwwwwww.#.wwwww.########wwwwwwwwww
+wwwwwwwwww.#.www....wwwwwwwwwwwwwwwww
+wwwwwwwwww.#.###.ww.wwwwwwwwwwwwwwwww
+wwwwwwwwww..........wwwwwwwwwwwwwwwww
+wwwwwwwwwwww.wwwwwgwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwgwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwgwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwgwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwgwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwgwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwgwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww...#wwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww....dddwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww..^bd.dwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww..ddd.dwwwwwwwwwwww
+w۳۱wwwwwwwwwwwwwww.......wwwwwwwwwwww
+wwwwwwwwwwwwwwwwww.......wwwwwwwwwwww
+
+(32 - 9)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx_____
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwww__xwwwwwwwwww2__w_w
+wwwwwwwwwwwwwwwwwww_wx__________2w_w_w
+#####wwwwwwwwwwwwww_wxwwwwwwwwww2w_w_w
+########wwwwwwwwwww_w____________w_w_w
+#########wwgggwwwww_wwwwwwwwwwwwww_w_w
+..........wgwgwwwww________________w_w
+..bdddb...#gwwwwwwwwwwwwwwwwwwwwwwww_w
+.dddbddd>.#.wwwwwwwwwwwwwwwwwwwwwwww_w
+..........#..wwwwwwwwwwwwwwwww....ww_w
+#########.##.wwwwwwwwwwwwwwwww.....w_w
+########w.##.wwwwwwwww#wwwwww#.....w_w
+######www....gggggggg1:::::::n.....g10
+###wwwwwww##wwwwwwwwwg#wwwwww#.....www
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w۳۲wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+(wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww#####wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwww...............wwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwww......wwwww#ww..wwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwww..dd..wwwww#ww..wwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwww..........##ww..wwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwww......###.#www..wwwwwwwwwwwww...wwwwwwwwwwwww#
+#wwwwwwwwwwwwwww#######.wwww..w########wwww..#wwwwwwwwwwwwww
+wwwwwwwwwwwwwwww###ww##.wwww...t--##.........#wwwwwwwwwwwwww
+w#wwwwwwwwwwww#ww##www#.wwww...ww-##.##..dd..#wwwwwwwwwwwww#
+dddddd>..wwwww#w##wwww#.wwwwwwwww-##.##.dd...#wwwwwwwwwwww#w
+#wwwww...wwww######www#.wwwwwwwww---n.#......#wwwwwwwwwwwww#
+wwwwww..........####w##.wwwwwwwwwwwww##wwwww.#wwwwwwwwwwwwww
+wwwwww...ww####.#######.##wwwwwwwwwwwwwwwwww.#wwwwwwwwwwww##
+wwwwwmwwwwwww##..t-----n.#wwwwwwwwwwwwwwwwww.#wwwwwwwww...to
+#wwwwwwwwwwwww#######ww###wwwwwwwwwwwwwwwwww.#wwwwwwwww.///w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.#....wwwww./#ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.#.....wwww./#ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.#.....wwww./www
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#............/www
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##wwwwwwww##x/www
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###www
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww)
+
+(33 - 11)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwx__________ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwww......wwwwwwwwwwwwww_ww
+wwwwwwww......wwwwwwwwwwwwww_ww
+wwwwwwww......wwwwwwww....ww_ww
+????????ddd>..gggg1:ng..#ggg1g0
+wwwwwwww......wwwwwwww....wwwww
+wwwwwwww......wwwwwwwwwwwwwwwww
+wwwwwwww......wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w۳۳wwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+(34 - 12)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwx__________ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww_ww
+wwwwwwwww......wwwwwwwwwwwwww_ww
+wwwwwwwww......wwwwwwwwwwwwww_ww
+wwwwwwwww......wwww__ww...www_ww
+?????????ddd>..gggg1ngg...ggg1g0
+wwwwwwwww......wwwwwwww...wwwwww
+wwwwwwwww......wwwwwwwwwwwwwwwww
+wwwwwwwww......wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w۳۴wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+(35 - 11)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgggggggggggggggggggggggggggggwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwww.....wwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwww.....wwwwwwwwwwwgwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwww....bggggggggggggwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwww.....wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwww#^#wwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwww#d#wwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwww#d##wwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwww#d#####wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwww#ddddddd?ggggggggggggggggggg
+wwwwwwwwwwwgwwwwwwwwwww#########wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgggggggggggggg..wwwwwwwwwwwxwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwww_wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwww_wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww--____________wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwz#wwwwwwwwwwwwwwwwwwwwwwww
+w۳۵wwwwwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwoooowwwwwwwwwwwwwwwwwwwwwww
+
+(36 - 14)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwgggggggggggggggggggggggggggwwwwww
+wwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwww
+wwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwwgwwwwww
+wwwwwwgwwwwwwwwwwwwwwwwwwwwww##wgwwwwww
+wwwwwwgwwwwwwwwwwwwwwwwwwwwww#wwgwwwwww
+wwwwwwgwwwwwwwwwwwwwwwwwwwwww#wwgwwwwww
+wwwwwwgwwwwwgggggggggggggggww#wwgwwwwww
+wwwwwwgwwwwwgwwwwwwwwwwwwwgww#wwgwwwwww
+wwwwwwgwwwwwgwwwwwwwwwwwwwgww#wwgwwwwww
+wwwwwwgwwwwwgwww########wwgww#wwgwwwwww
+wwwwwwgwwwwwgwwww.....wwwwgww#wwgwwwwww
+wwwwwwgwwwwwgwwww...b.wwwwgww#wwgwwwwww
+wwwwwwgwwwwwgwwww.....gggggww#wwgwwwwww
+wwwwwwgwwwwwgwwww..^..wwwwwww#wwgwwwwww
+wwwwwwgwwwwwgwww###?##########wwgwwwwww
+wwwwwwgwwwwwgwww#ww?wwwwwwwwwwwwgwwwwww
+wwwwwwgwwwwwgwww#ww?wwwwwwwwwwwwgwwwwww
+wwwwwwgwwwwwgwww#ww?wwwwwwwwwwwwgwwwwww
+wwwwwwgwwwwwgwww#ww?wwwwwwwwwwwwgwwwwww
+wwwwwwgggggggwww#ww?wwwwwwwwwwwwgwwwwww
+wwwwwwwwwwwwwwww#ww?wwwwwwwwwwwwgwwwwww
+wwwwwwwwwwwwwwww#ww?wwwwwwwwwwwwg_____w
+wwwwwwwwwwwwwwww#wx?wwwwwwwwwwwwg:www_w
+wwwwwwwwwwwwwwww#w_?wwwwwwwwwwwwg:g:tg0
+wwwwwwwwwwwwwwww#w_?_wwwwwwwwwwww_w_#ww
+wwwwwwwwwwwwwwwwww_?_wwwwwwwwwwww_w_www
+wwwwwwwwwwwwwwwwww_?______________w_www
+wwwwwwwwwwwwwwwwww_?wwwwwwwwwwwwwww_www
+wwwwwwwwwwwwwwwwww_:________________www
+wwwwwwwwwwwwwwwwwwwgwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwgwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwgwwwwwwwwwwwwwwwwwww
+w۳۶wwwwwwwwwwwwwwwwgwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwgwwwwwwwwwwwwwwwwwww
+
+(37 - 15)
+wwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwx_______ww
+wwwwwwwwwwwwwwwwwwmwwwwww_ww
+wwwwwwwwwwwwwwwww_2wwwwww_ww
+wwwwwwwwwwwwwwwww_gwwwwww_ww
+wwwwwwwwwwwwwwwwwxgwwwwww_ww
+wwwwwwwwwwwwwwwwwwgwwwwww_ww
+wwwwwwwwwwwwwwwwwwgwwwwww_ww
+wwwgggggggggww##wwgww#www_ww
+wwwgwwwwwwwgwwwwwwgww#www_ww
+wwwgwwwwwwwgwwwwwwgww#www_ww
+wwwgwwwwwwwgwwwwwwgww#www_ww
+wwwgww##wwwggggggggww#www_ww
+wwwgwwwwwwwwwwwwwwwww#www_ww
+wwwgwwwwwwwwwwwwwwwww#www_ww
+wwwgww################www_ww
+wwwgwwwwwwwwwwwwwwwwwwwww_ww
+wwwgwwwwwwwwwwwwwwwwwwwww_ww
+wwwgwwww...........wwwwww_ww
+wwwgwwww...........wwwwww_ww
+wwwggggg...........wwwwww_ww
+wwwwwwww...........wwwwww_ww
+wwwwwwww.......b...wwwwww_ww
+wwwwwwww...#...n---1ggggg1g0
+wwwwwwww.......b...wwwwwwwww
+wwwwwwww.........^.wwwwwwwww
+wwwwwwww....ddd.dd.wwwwwwwww
+wwwwwwww....d.ddd..wwwwwwwww
+wwwwwwww....dd.....wwwwwwwww
+wwwwwwwwwwwww?wwwwwwwwwwwwww
+wwwwwwwwwwwww?wwwwwwwwwwwwww
+wwwwwwwwwwwww?wwwwwwwwwwwwww
+wwwwwwwwwwwww?wwwwwwwwwwwwww
+w۳۷wwwwwwwwwwgwwwwwwwwwwwwww
+wwwwwwwwwwwwwgwwwwwwwwwwwwww
+
+(wwwwwwwwwwwwwwwwwwwwgwwwwww
+wwwwwwwx____________2wwwwww
+wwwwwwwx____________2wwwwww
+wwwwwwwx____________2wwwwww
+wwwwwwwwwwwwwwwwwwwwgwwwwww
+wwwwwwwwwwwwwwwwwww...wwwww
+wwwwwwwwwwwwwwwwww.....wwww
+wwwwwwwwwwwwwwwwww.....wwww
+wwwwwwwwwwwwwwwwww.....wwww
+wwwwwwwwwwwwwwwwwww...wwwww
+wwwwwwwwwwwwwwwwwwwwgwwwwww
+www###wwwwwwwwwwwwwwgwwwwww
+wwwwwwwwwwwwwwwwwggggwwwwww
+wwwgggggggwwggggwgwwwwwwwww
+wwwgwwwwwgwggwwgwggwgggwwww
+wwwgwwwwwgwgwwggwwgwgwgwwww
+wwwgwwwwwgwggwgwwwgggwgwwww
+wwwgwwwwwgwwgwggwwwwwwgwwww
+wwwgwwwwwggggwwggggggggwwww
+wwwgwwwwwwwwwwwwwwwwwwwwwww
+wwwgwwwwwwwwwwwwwwwwwwwwwww
+wwwgwwwwwwwwwwwwwwwwwwwwwww
+wwwgww###################ww
+wwwgwwwwwwwwwwwwwwwwwwwwwww
+wwwgwwwwwwwwwwwwwwwwwwwwwww
+wwwgwwwwwwwwwwwwwwwwwwwwwww
+wwwgwwwwww...........wwwwww
+wwwggggggg...........wwwwww
+wwwwwwwwww...........wwwwww
+wwwwwwwwww...........wwwwww
+wwwwwwwwww.......b...wwwwww
+wwwwwwwwww...#...n---1wwwww
+wwwwwwwwww.......b...wwwwww
+wwwwwwwwww........^..wwwwww
+wwwwwwwwww....ddd.d..wwwwww
+wwwwwwwwww....d.ddd..wwwwww
+wwwwwwwwww....dd.....wwwwww
+wwwwwwwwwwwwwww?wwwwwwwwwww
+wwwwwwwwwwwwwww?wwwwwwwwwww
+wwwwwwwwwwwwwww?wwwwwwwwwww
+wwwwwwwwwwwwwww?wwwwwwwwwww
+wwwwwwwwwwwwwww?wwwwwwwwwww
+wwwwwwwwwwwwwwwgwwwwwwwwwww)
+
+(38 - 17)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwgggggggggggggggggggggggggggggggg....www
+wwgwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww...x-_w
+wwgwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww....._w
+wwgwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww....._w
+wwgwww########################wwww.....10
+wwgwwwwwwwwwwwwwwwwwwwwwwwwww##wwwwwwwwww
+wwgggggggggggggggggggwwwwwwwww##wwwwwwwww
+wwwwwwwwwwwwwwwwwwwwgwwwwwwwwww##wwwwwwww
+gggggggggggggggggggwgwwwwwwwwwww##wwwwwww
+wwwwwwwwwwwwwwwwwwgwgwwwwwwwwwwww##wwwwww
+wwwwwwwwwwwwgggggwgwgggggggggwwwww##wwwww
+wwwwwwwwwwwggwwwgwgwwwwwwwwwggwwwww#wwwww
+wwwwwwwwwwggwwwwgwgwwwwwwwwwwggwwww#wwwww
+wwwwwwwwwwgwwwwwgwgwwwwwwwwwwwgwwww#wwwww
+wwwwwwwwwwgwww............wwwwgwwww#wwwww
+wwwwwwwwwwgwww.............wwwgwwww#wwwww
+wwwwwwwwwwgwww.............w#wggggwwwwwww
+wwww#wgggggwww....dddddd...wwwwwwggwwwwww
+wwwwwwgwwwwwww....d....d...wwwwwwwgwwwwww
+wwwwwwgwww#www....d....d...wwwwwwwgwwwwww
+wwwwwwgwwwwwww......$..d...www#wwwgwwwwww
+wwwwwwgwwwwwww.........d...wwwwwwwgwwwwww
+wwwwwwgwwwwwww......^..d...wwwwwwwgwwwwww
+wwwwwwgggggw#w......dddd...wwwgggggw#wwww
+wwwwwwwwwwgwww.............wwwgwwwwwwwwww
+wwwwww#wwwgwww.............wwwgwwwwwwwwww
+wwwwwwwwwwgwww.............wwwgwwwwwwwwww
+wwwwwwwwwwgwwwwwwwwwwww#wwwwwwgwwwwwwwwww
+wwwwwwwwwwggwwwwwwwwwwwwwwwwwggwwwwwwwwww
+wwwwwwwwwwwggwwwwwwwwwgggwwwggwwwwwwwwwww
+wwwwwwwwwwwwggggggw#wwgwgggggwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwgwwwwggwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwgwwwwwgwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwgwwwwwgwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwgggggggw#wwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww#wwwwwwwwwwwwwwwwwwwwwww
+w۳۸wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+(39 - 12~18)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww#wwwwwwwwwwwwwwwwww#
+#wwwwwwwwwwwwwwwwwww.#wwwwwwwwwwwwwwwww#.
+##wwwwwwwwwwwwwwwwww.#wwwwwwwwwwwwwwwww.o
+wwwwwwwwwwwwwwwwwww#.#wwwwwwwwwwwwwwwww.#
+wwwwwwwwwwwwwwwwwww#d#wwwwww#wwwwwwwwww.o
+wwwwwwmwwww...wwwww#d#wwwwww#......-::t.o
+.w#####wwww..#wwwww#d#wwwwww#......xwww.o
+dww#dd>......#wwwww#d#wwwwww#......wwww#.
+d..wd##......#wwwww#d#wwwwww#......wwwww.
+ddd.d##......#wwwww#d#wwwwww#......wwww#w
+..ddd##......#wwwww#z#wwwwww#.....wwwwww#
+..w####wwwww.#wwwwww_wwwwwww#.wwwwwwwwwww
+.w##wwwwwwww.#wwwwww_wwwwwww#.wwwwwwwwwww
+##wwwwwwwwww.#wwwwww_wwwwwww#.wwwwwwwwww#
+#w#wwwwwwwww.#wwwwww_wwwwwww#.wwwwwwwwwww
+##wwwwwwwwww.#wwwwww_wwwwwww#.wwwwwwwwwww
+#wwwwwwwwwww.#.....w_wwwwwww#.wwwwwwwwwww
+wwwwwwwwwwww.#......-wwwwww##.wwwwwwwwwww
+wwwwwwwwwww#........-gggggg...#wwwwwwwwww
+wwwwwwwwwww##wwwwwwwxwwwwwwww##wwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w۳۹wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+message "I get the point already... this snake was very large!"
+
+(40 - 27)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww...-...wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww....-....wwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww.....-.....wwwwwwwwwwwwww
+####wwwwwwwwwww......-......wwwwwwwwwwwww
+#####wwwwwwwww.......-.......wwwwwwwwwwww
+######wwwwwww....####z####....wwwwwwwwwww
+#dddd#...........#.......#....wwwwwwwwwww
+#d##d#........d>.#.......#....wwwwwwwwwww
+#dd#d#......ddd..#...b...#....wwwwwwwwwww
+##d#d#...dddd....#.......#....wwwwwwwwwww
+.dd#dddddd.......#.......#....wwwwwwwwwww
+######...........#.......#....wwwwwwwwwww
+######wwwwwwwwwwwww.....wwwwwwwwwwwwwwwww
+#####wwwwwwwwwwwwwww...wwwwwwwwwwwwwwwwww
+####wwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww##.##wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww.......wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww.........wwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww...........wwwwwwwwwwwwww
+w۴۰wwwwwwwwwwwww...........wwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwooooooooooowwwwwwwwwwwwww
+
+message Thank you for playing...
+message ...
+
+(wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwdwwwwwwwwwwwww
+wwwwwwwwwwwwx__ww
+wwwwd>....wwmw_ww
+wwwwd.w...w..._ww
+......yw....#._..
+wwww..w...ww#.t.#
+wwww###...wwww###
+wwwwwwwwwwwwwww##
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww
+
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+www.....wwwwwwwwwwwwwwwwwww.....www
+ww..www.wwwwwww..w..wwwwwww.www..ww
+ww..www..wwwww.......wwwww..www..ww
+.d>.yww......w.ww#ww.w......ww7...o
+dd..wwwwwww....wwwww....wwwwwww...o
+wwwwwwwwwwwww.wwwwwww.wwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww)
+
+message "Where am I?"
+message "I don't know what happened..."
+message "I barely remember anything..."
+
+(1*)
+wwwwwwwww###.###wwwwwwwww
+wwwwwwwwww##.##wwwwwwwwww
+wwwwwwwwwww#o#wwwwwwwwwww
+wwwwwwwwww##.##wwwwwwwwww
+wwwwwwwww_/x.x/_wwwwwwwww
+wwwwwwwww_#...#_wwwwwwwww
+wwwwwwwww_#...#_wwwwwwwww
+wwwwwwwww_w...w_wwwwwwwww
+wwwwwwwww_w...w_wwwwwwwww
+wwwwwwwww_#...#_wwwwwwwww
+wwwwwwww.-#-x.#-.wwwwwwww
+wwwwwww..-./z/--..wwwwwww
+www......-..-.........www
+www......----.........www
+www...................www
+www...................www
+www...................www
+www.......jjjjj.......www
+www.......j...j.......www
+www....#..j.^.j..#....www
+www....##.j.d.j.##....www
+www...#.##j...j####...www
+www.#.##.#jjjjj##.#.#.www
+ww##.##.#########..#..#ww
+w##.####.###..#.###.####w
+##.#..####.##..##.#..#.##
+.######.#####.##.####.###
+#..##.########.##.#####..
+..#######.#########.####.
+
+message "I have only faint memories of where I was..."
+
+(2*)
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwxx______ww
+wwwwwwwwww_www#gg110
+wwwwwwwwww_wwwggww_w
+wwwwwwwwww____:____w
+wwwwwwwwwwwwwwgwwwww
+wwwwwwwwwww....wwwww
+wwwwwwwwwww....wwwww
+wwwwwwwwwww....gwwww
+wwwwwwwwwww..wwgwwww
+wwwwwwwwww#..wwgwwww
+wwwwwwwwww#..wwgwwww
+wwwwwwwww_/2wwwgwwww
+wwwwwww..-.w#wwgwwww
+wwwwwww..-.wwwwgwwww
+wwwwwww..x.wwwwgwwww
+wwwww...d..wwwwgwwww
+g??>g.b.j..ggggg#www
+wwwww...d..wwwww#www
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+
+message "...and of the puzzles I solved."
+
+(3*)
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww_____w
+wwwwwwwwwwwwwwwwww__xxwww_w
+ww##########wwwwww_wxx__w_w
+ww#........#wwwwww_w_ww_w_w
+ww#........1::::ng:g::w_w_w
+ww#........#gwwwww_ww_w_w_w
+ww####wz//##gwwwww_ww_w_w_w
+wwwww#...-.#gwwwww_ww_w_w_w
+wwwww#...-.#gggggg:gg:g_w_w
+wwwww#.b.x.#wwwwgw:wg_w_w_w
+wwwww#.....#wwwwgg:gg:g_w_w
+wwwww#.....#wwwwww_wg_w_w_w
+wwwww#.^...#wwwwww_wg_w_w_w
+wwwww##?####wwwwww_wg1111:0
+wwwwwww?wwwwwwwwww_www_wwww
+wwwwwww?wwwwwwwwww_____wwww
+ggggiii?wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+
+(4*)
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+wwwww########wwwwwww
+wwwww#wwwwww#wwwwwww
+w_xxw#......#wxx___w
+w_w_ww.jj...ww_www_w
+w_w_w#...jj.#w_www_w
+w_w_w#wwwgww#w___w_w
+w_w_w####g###www_w_w
+w_w______:_____w_w_w
+w_wwwwwwwgwwww_w_w_w
+w________:___w_w_w_w
+wwwwwwwwwgww_w_w_w_w
+wwwwww...gww_w_w_w_w
+www.^....ggg:11w_w_w
+jjw.j..wwwwwwwgg11:0
+.jjwj.wwwwwwwwwwwwww
+..jjj.wwwwwwwwwwwwww
+.....wwwwwwwwwwwwwww
+...wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww
+
+message "Some of them keep coming back."
+
+(5*)
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww_____
+wwwwwwwwwwwwwwww_www_
+wwwwwwwwwwwwwwwxxxww_
+wwwwwwwwwwwwwww_w__w_
+wwwwwww.......w__w_w_
+g?iiiii>......gg1110:
+wwwwwww.......www_ww_
+wwwwwwww..d..wwww____
+wwwwwwww..d..wwwwwwww
+wwwwwwwww#d#wwwwwwwww
+wwwwwwwww#d#wwwwwwwww
+wwwwwwww#####wwwwwwww
+wwwwwww#######wwwwwww
+
+(6*)
+wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww
+wwwwwwwwwww____w
+wwwwwwwwwww_ww_w
+wwwwwwww_xxxxw_w
+wwwwwwww_w_w_w_w
+wwwwwwww_w_w_w_w
+.jj..d>.-1111.-o
+..jjdd...ww_w.-o
+wwwwwwwwwww___-o
+wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww
+
+message "I have to think hard to remember the more difficult ones."
+
+(7*)
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwww______www
+wwwwwwwwwwwww_wwww_www
+wwwwwwwwww_xxxxx_w_www
+wwwwwggggg-._w_w_w_www
+wwwwwgwwww-t1111:g:www
+wwwwwgwwwwwww_wwww:www
+wwwwwgwwwwwww_____:www
+wwwwwgwwwwwwwwwwwwggg0
+wwwwwgwwwwwwwwwww#mwww
+www..........wwww#xwww
+www..jd>.#...wwww###ww
+www..j.......wwwwwwwww
+ggijdd.......wwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+
+message "I feel very tired, I had to drag strings of connected boxes for hours."
+
+(8*)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwgggggwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwww__-:.______wwwwwwwwwwwww
+wwwwwwwwwwwwww_w.-._wwww_wwwwwwwwwwwww
+wwwww..ddd....-.xxxxxx_w_wwwwwwwwwwwww
+wwwww..d.jd>..-.-._w_w_w_wwwwwwwwwwwww
+gj???d.d......-.tt1111:g:gggggggggbgxw
+wwwwwjjj......-..-w_wwww_wwwwwwwwwww_w
+wwwwww.....2..---_w______wwwwwwwwwww_w
+wwwwwwwwwww:wwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwww:_________________________w
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwgwwwwwwwwwwwwwwwwwwwwwwwwww
+g0ggggggggggwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+(
+(9*)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwww#####wwww#####wwwwwwwwwwwwwwwwwwwwww
+..ww################wwwwwwwwwwwwwwwwwwwww
+.....########wwwwww#wwwwwwx_____________w
+..jjj.......#......#wwwwwwwwwwwwwwwwwww_w
+..j.jj>.jjj.w.ww$w.#wwwwwwwwwwwww.....w_w
+.dd.........#.wwww.wwwwwwwwwwwwww.....g10
+.....#####.#.......wwwwwwwwwwwwww.....www
+..w#######...#####wwwwwwwwwwwwwww.....www
+wwww###wwwwgwwwwwwwwwwwwwwwwwwwwwwwgwwwww
+wwwwwwwwwwwgggggggggggggg1ngggggggggwwwww
+wwwwwwwwwwwwwwwwwwgwwwwww__wwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+(10*)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx___w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww_w
+wwwww#####wwwwwwwwwwwwwwwwwwwwwwwww_w
+..ww##########wwwwwwwwwwwwwwwwwwwww_w
+.....############wwwwwwwwwwwwwwwwww_w
+djj.........#.......wwwwwwwwwwww.ww_w
+d.j.jj>.jjj.w.www$w.wwwwwwwwwww...w_w
+..jjj.......#.wwwww.w#wwwwwwww.....10
+...########.#.......wwwwwwwwwww...www
+..ww#######...wwwwwwwwwwwwwwwwww.wwww
+wwwwwwwwwwwwgwwwwwwwww__wwwwwwwwgwwww
+wwwwwwwwwwwwgggggggggg1ngggggggggwwww
+wwwwwwwwwwwwwwwwwwwwgwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+)
+message "They tied them to me to wear me down..."
+
+(11*)
+w0wwwwwwwwwwwwww
+wgwwww///wwwwwww
+wgwww//xxwwwwwww
+wgggg1xxx1_wwwww
+wwwww/xx/g_wwwww
+wwwww////g_wwwww
+wwwwwwwwwg_wwwww
+wwwwwwwwwg_wwwww
+wwwwwwwwwg_wwwww
+wwwwwwwwwg_wwwww
+wwwwwwwwwg_wwwww
+ww_______:_wwwww
+ww_w#wwwwgwwwwww
+wwxwwwwmw$.wwwww
+wwwwwwww#...wwww
+wwwwwwww#.^.wwww
+wwwwwwwwwwiwwwww
+wwwwwwwwwwiiiiii
+wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww
+
+message "... and I couldn't get out of my skull."
+
+(12*)
+wwwwwwwwwwwwwwwwwwwwwwwww
+wwww/////wwwwwwwwwwwwwwww
+www//xxxxwwwwwwwwwwwwwwww
+0gg1xxxxx1_wwwwwwwwwwwwww
+www/xxxx/g_wwwwwwwwwwwwww
+www//////g_wwwwwwwwwwwwww
+wwwwwwwwwg_wwwwwwwwwwwwww
+www______:_wwwwwwwwwwwwww
+www_wwwwwgwwwwwwwwwwwwwww
+www_wwwwwgwwwwwwwwwwwwwww
+www_wwwwwgwwwwwwwwwwwwwww
+www_wwwwwgwwwwwwwwwwwwwww
+www_wwwwwgwwwwwwwwwwwwwww
+wwwxwwwww$wwwwwwwwwwwwwww
+wwwwwwwwwgwwwwwwwwwwwwwww
+wwwwwww##gwwwwwwwwwwwwwww
+wwwwwww##gggggg....wwwwww
+wwwwwwww#wwwwww.j..wwwwww
+wwwwwwwwwwwwwww...<iiiiiw
+wwwwwwwwwwwwwww....wwwwiw
+wwwwwwwwwwwwwwwwwwwwwiiiw
+wwwwwwwwwwwwwwwwwwwwwiwww
+wwwwwwwwwwwwwwwwwwwwwiiig
+wwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww
+
+message "For some reason I couldn't resist myself..." 
+
+(13*)
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwww///////wwwwwwwwww
+wwww///xxxx/wwwwwwwwww
+0ggg1xxxxxxx1_wwwwwwww
+wwww//xxxx//g_wwwwwwww
+wwwww//////wg_wwwwwwww
+wwwwwwwwwwwwg_wwwwwwww
+wwwwww______:_wwwwwwww
+wwwwww_wwwwwgwwwwwwwww
+wwwwww_wwwwwgwwwwwwwww
+wwwwww_wwwwwgwwwwwwwww
+wwwwww_wwww#gwwwwwwwww
+wwwwww_wwwwwgwwwwww###
+wwwwww_ww#wwgwwww#####
+wwwwww/wwwwwgwwww...##
+wwwwwwxwwmww$...jjj..#
+wwwwwwwwwwww#...j.j...
+wwwwwwwwwwww#.<jj.j.jj
+wwwwwwwwwwww#.....j.j.
+wwwwwwwwwwwwwwwwwwjjj.
+wwwwwwwwwwwwwwwwwww...
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww
+
+message "I couldn't stop. I had to go on."
+
+(14*)
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+01:::wwwwwwwwwwwwwwwwwwwwww
+wwww:wwww_________wwwwwwwww
+wwww:wwww_wwwwwww_wwwwwwwww
+wwww:wwww_w___www_wwwwwwwww
+wwww:wwwwxw_wxwww_wwwwwwwww
+wwww:wwwwiw_wgwww_wwwwwwwww
+wwww:wwwwgw_w2__w_wwwwwwwww
+wwwwxg1gg..-..w_w_wwwwwwwww
+wwwwww_ww..-..w_w_wwwwwwwww
+wwwwww_ww..-..w_w_wwwwwwwww
+wwwwww_ww..-..w_w_wwwwwwwww
+wwwwww_ww..-.$.-.-wwwwwwwww
+wwwwww_wwww_w..-.-wwwwwwwww
+wwwwww_wwww_w..-.-wwwwwwwww
+wwwwww_wwww_w..-.-wwwwwwwww
+wwwwww_wwww_w..-.-gg<iiwwww
+wwwwww_wwww__2w_w2wwwwiwwww
+wwwwww_wwwwwwiw_wiwwwwiwwww
+wwwwww_______xw__xwwwwiwwww
+wwwwwwwwwwwwwwwwwwwwwwiwwww
+wwwwwwwwwwwwwwwwwwwwwwiwwww
+wwwwwwwwwwwwwwwwwwwwwwiwwww
+wwwwwwwwwwwwwwwwwwwwwwiiggg
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww
+
+message "They trapped me before I could eat..."
+
+(15*)
+wwwwwwwwwwwwwooowwwwwwwwwwwww
+wwwwwwwwwwwww.o.wwwwwwwwwwwww
+wwwwwwwwwwwww...wwwwwwwwwwwww
+wwwwwwwwwwwwwwgwwwwwwwwwwwwww
+wwwwwwwwwwwwwwgwwwwwwwwwwwwww
+wwwwwwww______2______wwwwwwww
+wwwwwwww_xxxxxxxxxxx_wwwwwwww
+wwwwwwww_x---------x_wwwwwwww
+wwwwwwww_x/......./x_wwwwwwww
+wwwwwwww_x-.......-x_wwwwwwww
+wwwwwwww_x-.......-x_wwwwwwww
+wwwwwwww_x-.......-x_wwwwwwww
+wwwwwwww_x-.......-x_wwwwwwww
+wwwwwwww_x-.......-x_wwwwwwww
+wwwwwwww_x/......./x_wwwwwwww
+wwwwwwww_x---------x_wwwwwwww
+wwwwwwww_xxx_wgw_xxx_wwwwwwww
+wwwwwwww_____wgw_____wwwwwwww
+wwwwwwwwww#wwwgwww#########ww
+wwwwwwwwww#wwwgwwwwwwwwwww#ww
+wwwwwwwwww#wwwgwwwwwwwwwww#ww
+wwwwwwwwww#wwwgwwwwwwwwwww#ww
+wwwwwwwwww#wwwgggggggggwww#ww
+wwwwwwwwww#wwwwwwwwwwwgwww#ww
+wwwwwwwwww#wwwwwwwwwwwgwww#ww
+wwwwwwwwww#wwwwwwwwwwwgwww#ww
+wwwwwwwwww#########wwwgwww#ww
+wwwwwwwwwwwwwwwwwwwwwwgwwwwww
+wwwwwwwwwwwwwwwwwwwwwwgwwwwww
+wwwwwwwwwwwwwwwwwwwwwwgwwwwww
+wwwx_2gggggggggggggggggwwwwww
+wwwwwgwwwwwwwwwwwwwwwwwwwwwww
+wwwwwgwwwwwwwwiiiiiiiii"igggg
+wwwwwgwwwwwwwwiwwwwwwww_wwwww
+wwwwwgwwww....j...ggggg1wwwww
+wwwwwgwwww....jj...wwwwgwwwww
+wwwwwgwwww..^..jj..wwwwgwwwww
+wwwwwgwwww.jj...jj.wwwwgwwwww
+wwwwwgwwww.j..j..j.wwwwgwwwww
+wwwwwgwwww.jj...jj.wwwwgwwwww
+wwwwwgwwww..jj.jj..wwwwgwwwww
+wwwwwgwwww...jjj...wwwwgwwwww
+wwwwwgwwww.........wwwwgwwwww
+wwwwwgwwwww#wwwwwwwwwwwgwwwww
+wwwwwgwwwwwwwwwwwwwwwwwgwwwww
+wwwwwgwwwwwwwwwwwwwwwwwgwwwww
+wwwwwgwwwwwwwwwwwwwwwwwgwwwww
+wwwww1ggggggggggggggggg2_xwww
+wwwww_wwwwwwwwwwwwwwwwwwwwwww
+wwwwwxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+message "They are made of bones" Just like me...
+message But I was able to break out...
+message ...and devour them all.
+
+wwwwwwwww¤wwwww#ww#
+wwwwwwwwwwwwwww##w#
+wwwwww¤www¤www#w¤##
+w¤wwwwwwwwwwww##w##
+wwwwwww¤wwwww##w#ww
+wwwwwwwwww#w######w
+wwwwwwww...#..#.###
+wwwwwww...#..####.#
+wwwwww.........#.#.
+wwwwww..........#o.
+ww¤www...........o.
+wwww¤w........#..o.
+wwwwww..........#o.
+wwwwww.........#...
+wwwwww....p..#..#.#
+wwwwww.......ww#w##
+wwwwwww.....ww#¤#w#
+wwwwwwwww2ww&w#####
+wwwwwwww#d#ww¤##w#w
+wwwwwww##.#ww##w#w#
+wwwww####.########w
+wwww#w###.##w######
+
+Message Thank you for playing.

@@ -1,0 +1,307 @@
+Title Tumblebox
+Author Connorses
+background_color #5c4117
+
+========
+OBJECTS
+========
+background
+purple #332206
+10000
+10000
+10000
+10000
+10000
+
+player (pointer)
+lightgreen
+.0.0.
+0...0
+..0..
+0...0
+.0.0.
+
+goal
+green
+00000
+0...0
+0...0
+0...0
+00000
+
+marbleS (stationary - not rolling right or left)
+lightblue blue white
+.022.
+01000
+01002
+00110
+.000.
+
+marbleL
+lightblue blue white
+.022.
+01022
+21002
+02112
+.000.
+
+marbleR
+lightblue blue white
+.222.
+01022
+01002
+02110
+.020.
+
+wall
+blue
+
+rampr
+blue
+.....
+0....
+00...
+000..
+0000.
+
+rampl
+blue
+.....
+....0
+...00
+..000
+.0000
+
+leverL
+brown
+0....
+.0...
+..0..
+...00
+...00
+
+leverR
+brown
+....0
+...0.
+..0..
+00...
+00...
+
+cupL
+grey lightgrey brown
+01100
+.000.
+..2..
+...2.
+....2
+
+cupR
+grey lightgrey brown
+01100
+.000.
+..2..
+.2...
+2....
+
+M   (marker)
+red
+.....
+.....
+.....
+.....
+.....
+
+L   (marker)
+red
+.....
+.....
+0....
+00...
+.....
+
+R   (marker)
+red
+.....
+.....
+....0
+...00
+.....
+
+B   (marker)
+darkblue
+00000
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+. = background
+# = wall
+O = marbleS
+\ = rampr
+/ = rampl
++ = player
+- = cupL
+_ = cupR
+` = leverL
+' = leverR
+U = goal
+marble = marbleS or marbleR or marbleL
+solid = wall or cupL or cupR
+ramp = rampl or rampr
+=======
+SOUNDS
+=======
+sfx0 84259306
+
+sfx1 80106900
+
+sfx2 7755909
+
+sfx3 27812708
+
+sfx4 18346900
+================
+COLLISIONLAYERS
+================
+background
+rampl, rampr, leverL, leverR
+marble, wall, cupL, cupR
+player,U,m
+b,l
+r(Must sometimes occupy same space as L)
+======
+RULES
+======
+[M] -> [ ]
+[L] -> [ ]
+[R] -> [ ]
+[B] -> [ ]
+(added markers to take place of diagonal rules)
+down [solid|no b] -> [solid|b]
+down [ramp|no b] -> [ramp|b]
+
+
+vertical [> player] -> cancel
+
+(
+if (rolling) {
+  keepRolling();
+  }
+)
+
+down [marbleR|solid] -> [right marbleR|solid] again
+down [marbleL|solid] -> [left marbleL|solid] again
+down [marbleR|marble] -> [right marbleR|marble] again
+down [marbleL|marble] -> [left marbleL|marble] again
+
+(marbles push eachother on the ground)
+right [right marbleR|marbleS] -> [marbleS|right marbleR]
+left  [left marbleL|marbleS] -> [marbleS|left marbleL]
+
+(marbles hit things and stop) (might change so they roll uphill once)
+right [> marbleR|no solid no marble|solid] -> [|marbleS|solid] again
+left [> marbleL|no solid no marble|solid] -> [|marbleS|solid] again
+right [right marbleR|solid] -> [marbleS|solid] again
+left [left marbleL|solid] -> [marbleS|solid] again
+right [marbleR|marbleL] -> [marbleS|marbleS] again
+
+(any marble falls  straight down)
+down [no ramp marble|no solid no marble] -> [down marble|] again
+(roll on ramps)
+[marble rampR] -> [right marbleR rampR] again sfx1
+[marble rampL] -> [left marbleL rampL] again sfx1
+
+(l r markers are for cascading effect)
+right [marbleS | no solid no ramp no marble no B] -> [marbleS R| ]
+right [no solid no ramp no marble no B| marbleS] -> [ |marbleS L]
+down  [marbleS|marble R] -> [right marbleR|marble R] again
+down  [marbleS|marble L] -> [left marbleL |marble L] again
+
+(Player places marbles) (change to limit number of marbles?)
+[action player no marble] -> [player marbleS] sfx0 again
+
+(Levers)
+left  [left  marble leverL no m| ] -> [ | marbleL leverR m]  again
+right [right marble leverR no m| ] -> [ | marbleR leverL m] again
+left  [down marble leverL no m| ] -> [down marble|leverR m]  again
+right [down marble leverR no m| ] -> [down marble|leverL m] again
+
+late down [cupL|leverR] -> [cupL m|leverR] sfx2
+late down [cupR|leverL] -> [cupR m|leverL] sfx2
+late right [cupL m|no marble] -> [ |cupR]
+late right [no marble|cupR m] -> [cupL| ]
+
+
+
+==============
+WINCONDITIONS
+==============
+all goal on marble
+=======
+LEVELS
+=======
+.o...+....
+..........
+........o.
+.\....../.
+..##...#..
+..........
+....###...
+..........
+......./..
+....####..
+.\........
+.##.#.....
+..###.....
+..........
+
++........
+.........
+\......./
+........#
+..#######
+..#......
+.........
+._#......
+'.####.##
+.........
+.........
+\........
+#u##u##u#
+
++......
+.......
+.####.#
+.......
+...../.
+....##.
+\.._##.
+##'....
+##.....
+##..##.
+#.-....
+#..`../
+#u....#
+##uu###
+#######
+
+...........+
+............
+..-.-.-.-...
+...`.`.`.`..
+............
+.._._._._._.
+.'.'.'.'.'..
+............
+-.-.-.-.-.-.
+.`.`.`.`.`.`
+............
+............
+............
+............
+............

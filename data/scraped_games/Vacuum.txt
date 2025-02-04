@@ -1,0 +1,995 @@
+title Vacuum
+author Mark Richardson
+again_interval 0.3
+flickscreen 9x9
+key_repeat_interval 0.15
+noaction
+(verbose_logging)
+
+
+========
+OBJECTS
+========
+
+Background
+Black
+
+SpacemanD
+White Black
+.000.
+.010.
+00000
+.000.
+00.00
+
+SpacemanL
+White Black
+0.0..
+00000
+.0010
+00000
+0.0..
+
+SpacemanR
+White Black
+..0.0
+00000
+0100.
+00000
+..0.0
+
+SpacemanU
+White Black
+00.00
+.000.
+00000
+.010.
+.000.
+
+Corpse
+White Black
+.....
+.....
+000..
+01000
+00000
+
+DoorwaySpace
+Transparent
+
+DoorwayGrate
+#333 #222
+.....
+.001.
+.0...
+.1...
+.....
+
+Grate
+#333 #222
+.....
+.001.
+.0...
+.1...
+.....
+
+Space
+Black
+
+Air7
+#003870
+
+Air6
+#003060
+
+Air5
+#002850
+
+Air4
+#002040
+
+Air3
+#001830
+
+Air2
+#001020
+
+Air1
+#000810
+
+Air0
+#000000
+
+Wall
+White
+
+Cracks
+White #AAA #888
+02000
+01000
+20102
+00010
+00020
+
+Window
+#8EF #0DE
+00000
+01111
+01111
+01111
+01111
+
+CrateS
+#AAA #888 #666 #444 #222
+10001
+02420
+04230
+02320
+10001
+
+CrateL
+#AAA #888 #666 #444 #222
+10000
+02444
+04222
+02333
+10000
+
+CrateR
+#AAA #888 #666 #444 #222
+00001
+44420
+22230
+33320
+00001
+
+CrateU
+#AAA #888 #666 #444 #222
+10001
+02420
+04230
+04230
+04230
+
+CrateD
+#AAA #888 #666 #444 #222
+04230
+04230
+04230
+02320
+10001
+
+CrateUL
+#AAA #888 #666 #444 #222
+10000
+02444
+04222
+04222
+04222
+
+CrateUR
+#AAA #888 #666 #444 #222
+00001
+44420
+22230
+22230
+22230
+
+CrateDL
+#AAA #888 #666 #444 #222
+04222
+04222
+04222
+02333
+10000
+
+CrateDR
+#AAA #888 #666 #444 #222
+22230
+22230
+22230
+33320
+00001
+
+DoorD
+#AAA #555
+..1..
+.101.
+.101.
+.101.
+.101.
+
+DoorL
+#AAA #555
+.....
+1111.
+00001
+1111.
+.....
+
+DoorR
+#AAA #555
+.....
+.1111
+10000
+.1111
+.....
+
+DoorU
+#AAA #555
+.101.
+.101.
+.101.
+.101.
+..1..
+
+DoorDR
+#AAA #555
+.....
+.11..
+.101.
+..101
+...10
+
+DoorDL
+#AAA #555
+.....
+..11.
+.101.
+101..
+01...
+
+DoorUR
+#AAA #555
+...10
+..101
+.101.
+.11..
+.....
+
+DoorUL
+#AAA #555
+01...
+101..
+.101.
+..11.
+.....
+
+AirlockO
+#AAA White
+.....
+....0
+....0
+....0
+.....
+
+AirlockC
+#AAA #A50
+.....
+00000
+01110
+00000
+.....
+
+AirlockG
+#AAA #0A0
+.....
+00000
+01110
+00000
+.....
+
+AirlockL
+#AAA #A00
+.....
+00000
+01110
+00000
+.....
+
+Log
+White Green Black
+00000
+12121
+21212
+12121
+00000
+
+LogAction
+White Black Green
+00000
+12121
+21212
+12121
+00000
+
+AirlockOn
+White #0A0
+00100
+01100
+01110
+00110
+00100
+
+AirlockOff
+White #A00
+00000
+00000
+01110
+00000
+00000
+
+ClampOnL
+White #0A0
+01100
+00100
+01110
+00100
+01100
+
+ClampOnR
+White #0A0
+00110
+00100
+01110
+00100
+00110
+
+ClampOffL
+White #A00
+00100
+00100
+00110
+00100
+00100
+
+ClampOffR
+White #A00
+00100
+00100
+01100
+00100
+00100
+
+Number0
+#0A0
+.00..
+0..0.
+0..0.
+0..0.
+.00..
+
+Number1
+#0A0
+..0..
+.00..
+..0..
+..0..
+.000.
+
+Number2
+#0A0
+000..
+...0.
+.00..
+0....
+0000.
+
+Number3
+#0A0
+000..
+...0.
+.00..
+...0.
+000..
+
+Number4
+#0A0
+0....
+0..0.
+0000.
+...0.
+...0.
+
+Number5
+#0A0
+0000.
+0....
+000..
+...0.
+000..
+
+Number6
+#0A0
+.00..
+0....
+000..
+0..0.
+.00..
+
+Number7
+#0A0
+0000.
+...0.
+..0..
+.0...
+0....
+
+Number8
+#0A0
+.00..
+0..0.
+.00..
+0..0.
+.00..
+
+Number9
+#0A0
+.00..
+0..0.
+.000.
+...0.
+.00..
+
+ClampArm
+#AAA #888 #555
+.....
+00000
+11111
+22222
+.....
+
+ClampL
+#AAA #888 #555 Yellow Black
+...33
+00034
+11133
+22234
+...33
+
+ClampR
+#AAA #888 #555 Yellow Black
+33...
+43000
+33111
+43222
+33...
+
+Player
+Transparent
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+Story1
+Transparent
+
+Story2
+Transparent
+
+Story3
+Transparent
+
+Story4
+Transparent
+
+Story5
+Transparent
+
+Story6
+Transparent
+
+Story7
+Transparent
+
+Story8
+Transparent
+
+Story9
+Transparent
+
+DockU
+Transparent
+
+DockD
+Transparent
+
+Goal
+Transparent
+
+Flip
+Transparent
+
+Breech
+Transparent
+
+ThrusterL [
+#AAA #999 #888 #777
+00123
+01223
+01223
+01223
+00123
+
+ThrusterR ]
+#777 #666 #555 #444
+01233
+01123
+01123
+01123
+01233
+
+WingUR `
+#FFF #EEE #DDD #BBB
+32100
+.2100
+..100
+...00
+....0
+
+WingUL '
+#FFF #EEE #DDD #BBB
+00123
+0012.
+001..
+00...
+0....
+
+WingDR /
+#FFF #EEE #DDD #BBB
+....0
+...00
+..100
+.2100
+32100
+
+WingDL \
+#FFF #EEE #DDD #BBB
+0....
+00...
+001..
+0012.
+00123
+
+ShuttleL {
+#FFF #EEE #DDD #BBB
+32100
+32100
+32100
+32100
+32100
+
+ShuttleR }
+#FFF #EEE #DDD #BBB
+00123
+00123
+00123
+00123
+00123
+
+Wall1 α
+White #AAA
+00000
+00001
+11111
+01001
+00000
+
+Wall2 β
+White #AAA
+00000
+01001
+10101
+10101
+10011
+
+Wall3 γ
+White #AAA
+00000
+01010
+10101
+10101
+10001
+
+Wall4 δ
+White #AAA
+00000
+01111
+00100
+00100
+11100
+
+Wall5 ε
+White #AAA
+00000
+10010
+10101
+10101
+11101
+
+PlanetUL ┌
+#F60 #A40 #520
+..221
+.2110
+21110
+21100
+21100
+
+PlanetUR ┐
+#F60 #A40 #520
+112..
+0011.
+00012
+00001
+00001
+
+PlanetDL └
+#F60 #A40 #520
+21100
+21100
+21110
+.2110
+..221
+
+PlanetDR ┘
+#F60 #A40 #520
+00001
+00001
+00012
+0011.
+112..
+
+Star
+#FFA #FF5 #AA0 #550
+...3.
+3212.
+.101.
+.2123
+.3...
+
+
+=======
+LEGEND
+=======
+
+. = Air0
+░ = Space
+, = Air0 and DoorwaySpace
+* = Air0 and Grate
+" = Air0 and Flip
+¤ = Air0 and Star
+█ = Wall
+▒ = Window
+▓ = Cracks
+! = Wall and Number9
+$ = Air0 and Number9
+~ = Air7
+↓ = DoorD and DoorwayGrate and Air0
+← = DoorL and DoorwayGrate and Air0
+→ = DoorR and DoorwayGrate and Air0
+↑ = DoorU and DoorwayGrate and Air0
+□ = Air0 and CrateS
+╞ = Air0 and CrateL
+╡ = Air0 and CrateR
+╥ = Air0 and CrateU
+╨ = Air0 and CrateD
+╔ = Air0 and CrateUL
+╗ = Air0 and CrateUR
+╚ = Air0 and CrateDL
+╝ = Air0 and CrateDR
+a = Player and SpacemanD and Air7
+b = Story1 and Log
+c = DockU and AirlockG and Air7
+e = DockU and AirlockC and Air0 and DoorwayGrate
+f = DockU and AirlockOn
+g = DockU and ClampOnL
+h = DockU and ClampL and Air0
+i = DockU and ClampR and Air0
+j = DockU and ClampArm and Air0
+m = Player and SpacemanD and Air0
+n = Air0 and DoorwayGrate and Breech
+o = DockD and ClampArm and Air0
+p = DockD and ClampL and Air0
+q = DockD and ClampR and Air0
+s = DockD and AirlockOff
+t = DockD and ClampOnR
+w = DockD and AirlockL and Air0 and DoorwayGrate
+x = DockD and AirlockL and Air7
+y = Story9 and Log
+z = Goal and Air7
+2 = Story2 and Air0
+3 = Story3 and Air0
+4 = Story4 and Air0
+5 = Story5 and Air0
+6 = Story6 and Air0
+7 = Story7 and Air0
+8 = Story8 and Air0
+
+AirT = Air1 or Air2 or Air3 or Air4 or Air5 or Air6
+AirlockA = AirlockC or AirlockG or AirlockO or AirlockL
+AirlockU = AirlockC or AirlockG or AirlockO
+AirlockControl = AirlockOn or AirlockOff
+Clamp = ClampL or ClampR
+ClampOn = ClampOnL or ClampOnR
+ClampOff = ClampOffL or ClampOffR
+ClampControl = ClampOn or ClampOff
+Crate = CrateS or CrateD or CrateL or CrateR or CrateU or CrateDL or CrateDR or CrateUL or CrateUR
+CrateDX = CrateD or CrateDL or CrateDR
+CrateLX = CrateL or CrateDL or CrateUL
+CrateRX = CrateR or CrateDR or CrateUR
+CrateUX = CrateU or CrateUL or CrateUR
+Dock = DockU or DockD
+Door = DoorD or DoorL or DoorR or DoorU or DoorDL or DoorDR or DoorUL or DoorUR
+DoorH = DoorL or DoorR
+DoorV = DoorD or DoorU
+DoorS = DoorDL or DoorDR or DoorUL or DoorUR
+Doorway = DoorwayGrate or DoorwaySpace
+Number = Number0 or Number1 or Number2 or Number3 or Number4 or Number5 or Number6 or Number7 or Number8 or Number9
+Planet = PlanetDL or PlanetDR or PlanetUL or PlanetUR
+Shuttle = ThrusterL or ThrusterR or WingDL or WingDR or WingUL or WingUR or ShuttleL or ShuttleR
+Spaceman = SpacemanD or SpacemanL or SpacemanR or SpacemanU or Corpse
+Story = Story1 or Story2 or Story3 or Story4 or Story5 or Story6 or Story7 or Story8 or Story9
+Immovable = Wall or Window or Cracks or Space or AirlockL or ClampArm or Shuttle or Wall1 or Wall2 or Wall3 or Wall4 or Wall5
+Obstruction = Immovable or Crate or Door or AirlockC or AirlockG or Log or LogAction or AirlockControl or ClampControl
+PushObstruction = Obstruction or Grate or DoorwayGrate
+
+
+=======
+SOUNDS
+=======
+
+sfx0             92775908 (Depressrisaion)
+sfx1             28333308 (Repressrisaion)
+sfx3              5427908 (Power down airlock)
+sfx4             68678908 (Power up airlock)
+LogAction Create 35901509 (Checkpoint)
+ClampL Move      95348908 (Engage/release clamp)
+AirlockO Create  12359908 (Open airlock)
+AirlockO Destroy 12359908 (Close airlock)
+Door Destroy     12359908 (Open door)
+Crate Move       58179108 (Crate pushed)
+EndLevel         63640708 (Start of win)
+EndGame          87777508 (Finished win!)
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Air0, AirT, Air7
+DoorwaySpace, DoorwayGrate, Grate, Goal, Flip, Planet, Star
+Player, Obstruction
+Dock
+Spaceman
+AirlockO, Clamp, Number, Story, Breech
+
+
+======
+RULES
+======
+
+[> Player Corpse]->cancel
+[> Player|Immovable]->cancel
+
+(Crates)
+[> Player|Crate]->[> Player|> Crate]
+up   [moving CrateDX|stationary CrateUX]->[moving CrateDX|moving CrateUX]
+down [moving CrateUX|stationary CrateDX]->[moving CrateUX|moving CrateDX]
+left [moving CrateRX|stationary CrateLX]->[moving CrateRX|moving CrateLX]
+right[moving CrateLX|stationary CrateRX]->[moving CrateLX|moving CrateRX]
+[> Crate|stationary PushObstruction]->cancel
+
+(Doors)
+vertical  [> Player|DoorH]->[> Player|> DoorH]
+horizontal[> Player|DoorV]->[> Player|> DoorV]
+[> Player|DoorS]->[> Player|> DoorS]
+[> Door|Door]->[|> Door]
+[horizontal DoorH]->cancel
+[vertical   DoorV]->cancel
+[up    DoorDL]->[left  DoorDL]
+[right DoorDL]->[down  DoorDL]
+[up    DoorDR]->[right DoorDR]
+[left  DoorDR]->[down  DoorDR]
+[down  DoorUL]->[left  DoorUL]
+[right DoorUL]->[up    DoorUL]
+[down  DoorUR]->[right DoorUR]
+[left  DoorUR]->[up    DoorUR]
+up   [> DoorL|no Obstruction]->[|DoorDL]
+down [> DoorL|no Obstruction]->[|DoorUL]
+up   [> DoorR|no Obstruction]->[|DoorDR]
+down [> DoorR|no Obstruction]->[|DoorUR]
+left [> DoorU|no Obstruction]->[|DoorUR]
+right[> DoorU|no Obstruction]->[|DoorUL]
+left [> DoorD|no Obstruction]->[|DoorDR]
+right[> DoorD|no Obstruction]->[|DoorDL]
+down [> DoorDL|no Obstruction]->[|DoorL]
+left [> DoorDL|no Obstruction]->[|DoorD]
+down [> DoorDR|no Obstruction]->[|DoorR]
+right[> DoorDR|no Obstruction]->[|DoorD]
+up   [> DoorUL|no Obstruction]->[|DoorL]
+left [> DoorUL|no Obstruction]->[|DoorU]
+up   [> DoorUR|no Obstruction]->[|DoorR]
+right[> DoorUR|no Obstruction]->[|DoorU]
+[Door DoorwayGrate|no Door DoorwayGrate]->[Door DoorwayGrate|Door DoorwayGrate]
+[> Door|Obstruction]->cancel
+
+(Airlock)
+[> Player|AirlockG]->[Player|AirlockO]
+[AirlockO|AirlockU]->[AirlockO|AirlockO]
+
+(Repressurisation)
+[Air7|Spaceman Air6|]->[Air7|Spaceman Air7|Air7]
+[Air7|Spaceman Air5|]->[Air7|Spaceman Air6|Air6]again
+[Air7|Spaceman Air4|]->[Air7|Spaceman Air5|Air5]again
+[Air7|Spaceman Air3|]->[Air7|Spaceman Air4|Air4]again
+[Air7|Spaceman Air2|]->[Air7|Spaceman Air3|Air3]again
+[Air7|Spaceman Air1|]->[Air7|Spaceman Air2|Air2]again
+[AirlockC Air7|< Player||AirlockU Air0]->[AirlockC Air7|Player Air1|Air1|AirlockC Air0]sfx1 again
+
+(Oxygen)
+right[Number0|Number0][Player Spaceman]->[Number0|Number0][Player Corpse]
+right[Number|Number]->[Number|down Number]
+[Corpse][down Number]->[Corpse][Number]
+[stationary Player AirT][down Number]->[stationary Player AirT][Number]
+[> Player Doorway|Doorway][down Number]->[> Player Doorway|Doorway][Number]
+right[Number|down Number0]->[down Number|Number9]
+right[no Number|down Number0|Number9]->[|Number0|Number0]
+[down Number1]->[Number0]
+[down Number2]->[Number1]
+[down Number3]->[Number2]
+[down Number4]->[Number3]
+[down Number5]->[Number4]
+[down Number6]->[Number5]
+[down Number7]->[Number6]
+[down Number8]->[Number7]
+[down Number9]->[Number8]
+[Spaceman Air7][Number]->[SpacemanD Air7][Number9]
+
+(Depressurisation)
+[Air0|Spaceman Air1|]->[Air0|Spaceman Air0|Air0]
+[Air0|Spaceman Air2|]->[Air0|Spaceman Air1|Air1]again
+[Air0|Spaceman Air3|]->[Air0|Spaceman Air2|Air2]again
+[Air0|Spaceman Air4|]->[Air0|Spaceman Air3|Air3]again
+[Air0|Spaceman Air5|]->[Air0|Spaceman Air4|Air4]again
+[Air0|Spaceman Air6|]->[Air0|Spaceman Air5|Air5]again
+[AirlockC Air0|< Player||AirlockU Air7]->[AirlockC Air0|Player Air6|Air6|AirlockC Air7]sfx0 again
+
+(Airlock link)
+[Air7|AirlockC Air7|Air7]->[Air7|AirlockG Air7|Air7]
+[Air0|AirlockC Air0|Air0]->[Air0|AirlockG Air0|Air0]
+[AirlockC|AirlockO]->[AirlockC|AirlockC]
+
+(Log)
+[LogAction]->[Log]checkpoint
+[> Player|Log no Story]->[> Player|LogAction]again
+[Player Air6|Log Story1]->[Player Air6|Log]again checkpoint message Press [R] to rewind to your last log entry.  If you really stuff up, start a new game.
+[> Player Air7|Log Story1]->[Player Air5|Log Story1]again message I record a log of my experiences. It may be useful if I need to retrace my steps.
+
+(Story)
+late[Player|Story2]->[Player|]message The station is devoid of air. The micro-meteors must have hit here too.
+late[Player|Story3]->[Player|]message I'll have to find the other shuttle quickly.
+late[Player|Story4]->[Player|]message These are typical zero-G crates that clamp to the floor when not being moved.
+late[Player|Story5]->[Player|]message Let's see what useful stuff they're full of...
+late[Player|Story6]->[Player|]message They're full of vacuum cleaners!
+late[Player|Story7]->[Player|]message This looks promising!
+late[Player|Story8]->[Player|]message They just don't make space stations like they used to.
+late[Player|Story9]->[Player|]message Now I just need to release the docking clamps.
+
+(Power up/down airlock)
+[> Player|AirlockOff][AirlockOn]->[Player|AirlockOff][AirlockOn]message ERROR: Only one airlock may be powered at a time.
+[> Player|AirlockControl DockU][AirlockA DockU]->[> Player|AirlockControl DockU][action AirlockA DockU]
+[> Player|AirlockControl DockD][AirlockA DockD]->[> Player|AirlockControl DockD][action AirlockA DockD]
+[action AirlockU]->[AirlockL]
+[action AirlockL]->[AirlockC]
+[Air0|Air0 AirlockC|Air0]->[Air0|Air0 AirlockG|Air0]
+[> Player|AirlockOn]->[Player|AirlockOff]sfx3
+[> Player|AirlockOff]->[Player|AirlockOn]sfx4
+
+(Clamp/release new shuttle)
+[> Player|ClampOn DockU]->[Player|ClampOn DockU]message No, I'm not releasing the docking clamp on my shuttle.  That's my only life line right now.
+[> Player|ClampOn  DockD][ClampL DockD][ClampR DockD]->[Player|action ClampOn  DockD][left  ClampL DockD][right ClampR DockD]
+[> Player|ClampOff DockD][ClampL DockD][ClampR DockD]->[Player|action ClampOff DockD][right ClampL DockD][left  ClampR DockD]
+[action ClampOnL ]->[ClampOffL]
+[action ClampOnR ]->[ClampOffR]
+[action ClampOffL]->[ClampOnL ]
+[action ClampOffR]->[ClampOnR ]
+
+(Space walking)
+right[> Player SpacemanR Breech|Breech]->[Breech|Player SpacemanD Breech]
+right[Breech|< Player SpacemanD Breech]->[Player SpacemanR Breech|Breech]
+down [> Player SpacemanD Breech|Breech]->[Breech|Player SpacemanU Breech]
+down [Breech|< Player SpacemanU Breech]->[Player SpacemanD Breech|Breech]
+left [> Player SpacemanD|Flip]->[|Flip down  Player down  SpacemanR]
+right[> Player SpacemanD|Flip]->[|Flip down  Player down  SpacemanL]
+down [> Player SpacemanL|Flip]->[|Flip left  Player left  SpacemanU]
+up   [> Player SpacemanL|Flip]->[|Flip left  Player left  SpacemanD]
+down [> Player SpacemanR|Flip]->[|Flip right Player right SpacemanU]
+up   [> Player SpacemanR|Flip]->[|Flip right Player right SpacemanD]
+left [> Player SpacemanU|Flip]->[|Flip up    Player up    SpacemanR]
+right[> Player SpacemanU|Flip]->[|Flip up    Player up    SpacemanL]
+
+(Move spaceman)
+late[Spaceman][no Spaceman Player]->[][Spaceman Player]
+
+
+==============
+WINCONDITIONS
+==============
+
+all Goal on Player
+no ClampOn on DockD
+
+
+=======
+LEVELS
+=======
+
+message That micro-meteor storm came out of nowhere!
+message My shuttle is badly damaged.  My engines are stuttering.  My comms are out.  I need help fast.
+message There's a space station with another shuttle docked there.  I have to dock there.
+message The station's docking clamps automatically guide me in and affix me to the airlock.
+
+...............................................................
+...............................................................
+...............................................................
+...............................................................
+...............................................................
+.¤........¤........¤........¤........¤........¤........¤.......
+......░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░......
+......░",,.......,,.......,,".....".,,......,,.......,,"░......
+...┌┐.░$!██▒███▒!!██▒███▒!!█,[]█[]$!██▒███▒!!██▒███▒!!█,░....$$
+......░,█α█▒███▒██β█▒███▒██γ,[]█[],█δ█▒███▒██ε█▒███▒███,░......
+......░.█α╞╡...*.█α╥......█α.`{b}'.█α...□...█α.....□.██.░......
+......░.▒▒.╞╡.╞╡.██╨...╔╗.██.░{a}░.██.╞╡....██□..□.□.▒▒.░......
+......░.██...╥...██╔╗╥.╚╝.██jh{~}ij██.....□*██...□...██.░......
+......░.██.□.╨╞╡*↑↑╚╝╨..╥.██▒▒{~}▒▒██□╞╡╞╡╞╡↑↑5□.□□..██.░......
+.¤....░.██.╥╔╗.□.██.╞╡□.╨*██.▒`c'▒.██.□...╥.██□╞╡.□.□██¤░......
+......░.▒▒*╨╚╝.╞╡██......□↓↓.f/~\g.↓↓.╥...╨.██.□..□..▒▒.░......
+...┌┐.░.██......□██╞╡.....██.▒{~}▒.██.╨.4...██.□□....██.░......
+...└┘.░$!████→██!!████←██!!████e██!!████←██!!████→██!!█,░....$$
+......░,█α███→████β███←████γ███e████δ███←████ε███→█████,░......
+......░.█β□.□...□█β....□..█β..*2*..█β.......█β.╥.6...██.░......
+......░.▒▒.□.□.□.██..╥.╥..██..*.*..██□□□□□□□██*╨..╔╗*▒▒.░......
+......░.██□.□.□.□██╞╡╨.╨╞╡██.╥..□..██.......██..╞╡╚╝.██.░......
+......░.██.□.□.□.↓↓..□.□..↓↓.╨╔╗...↓↓3╞╡.╞╡.↓↓.╞╡╥...██.░......
+.¤....░.██□.□.□.□██╞╡╥.╥╞╡██**╚╝.**██.╞╡.╞╡.██╞╡.╨...██¤░......
+...┌┐.░.▒▒.□.□.□.██..╨.╨..██..*╞╡..██□□□□□□.██.╞╡.□□□▒▒.░......
+...└┘.░.██□.□.□.□██....□..██..*....██.......██.......██.░......
+......░$!████→██!!████←██!!████→██!!████←██!!████→██!!█,░....$$
+......░,█α███→████β███←████γ███→████δ███←████ε███→█████,░......
+......░.█γ.....╞╡█γ*.*.*.*█γ..╥..╞╡█γ╥.□....█γ.......██.░......
+......░.▒▒╞╡.....██.╥.╞╡╥□██.*╨╔╗.□██╨╥.....██.╔╗.╔╗.▒▒.░......
+......░.██.╞╡╞╡╔╗██*╨*.*╨*██..*╚╝..██.╨╥...□██.╚╝.╚╝.██.░......
+......░.██.....╚╝↑↑...╥╞╡.↑↑...*╞╡.↑↑..╨╥...↑↑.╔╗.╔╗.██.░......
+.¤.┌┐.░.██.╞╡╔╗..██*□*╨*╥*██....*..██╔╗.╨╥..██.╚╝.╚╝.██¤░......
+...└┘.░.▒▒...╚╝..██..╞╡.╨.██.....*.██╚╝..╨╔╗██.╔╗.╔╗.▒▒.░......
+......░.██╞╡....□██*□*.*.*██.......██.....╚╝██.╚╝.╚╝.██.░......
+......░$!████→██!!████←██!!████w██!!████←██!!████→██!!█,░....$$
+......░,█α███→████β███←████γ███w████δ███←████ε███→█████,░......
+......░.█δ□..8..□█δ╥..╞╡..█δ.▒{.}▒.█δ.╔╗.╔╗.█δ..╥....██.░......
+......░.▒▒╔╗.*...██╨╞╡....↑↑.t`.'s7↑↑.╚╝.╚╝.██.╥╨╞╡╥.▒▒.░......
+......░.██╚╝╞╡□╔╗██╥......██.▒/x\▒.██.╥.╥...██.╨...╨.██.░......
+...┌┐.░.██...*.╚╝↓↓╨......██▒▒{~}▒▒██.╨.╨╔╗.↓↓.╞╡.╥╞╡██.░......
+.¤.└┘.░.▓▓..╞╡□..██.......██op{~}qo██.╥..╚╝.██.□..╨..██¤░......
+......░.nn...*...██.......██.░{z}░.██.╨...╔╗██...╥...▒▒.░......
+......░.▓▓□.╞╡..□██.......██./{y}\.██...□.╚╝██..□╨...██.░......
+......░$!██▒███▒!!█▓n▓██▒!!█,[]█[]$!██▒███▒!!██▒███▒!!█,░....$$
+......░,███▒███▒███▓n▓██▒███,[]█[],███▒███▒████▒███▒███,░......
+......░",,.......,,.......,,".....",,.......,,.......,,"░......
+......░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░......
+...┌┐......┌┐......┌┐......┌┐.......┐..........................
+...└┘......└┘......└┘......└┘.......┘..........................
+.¤........¤........¤........¤........¤........¤........¤.......
+...............................................................
+...............................................................
+.......$$.......$$.......$$.......$$.......$$.......$$.......$$
+
+message Life support: CHECK
+message Clamp released: CHECK
+message Airlock disengaged: CHECK
+message Engine power: CHECK
+message Still alive: ...
+message CHECK!

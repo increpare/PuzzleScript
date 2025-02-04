@@ -1,0 +1,819 @@
+title A Rose for Icy Heart
+author dizzykei
+homepage kidalt.tk
+realtime_interval .1
+run_rules_on_level_start
+zoomscreen 12x10
+
+========
+OBJECTS
+========
+
+TrueBackground .
+black
+
+Dark ,
+#404040
+
+Dizzy
+white red
+..0..
+.000.
+10001
+..0..
+11.11
+
+CDizzy
+white red
+..0..
+.000.
+10001
+..0..
+11.11
+
+NDizzy
+white red
+..0..
+.000.
+10001
+..0..
+11.11
+
+FDizzy
+white red
+..0..
+.000.
+10001
+..0..
+11.11
+
+Torch
+white red orange yellow
+..0.3
+.0002
+10001
+..0..
+11.11
+
+Sword
+white red blue lightblue
+..0.3
+.0003
+10002
+..0..
+11.11
+
+Daisy
+white red #FFFF00 pink
+..23.
+.000.
+10001
+..0..
+11.11
+
+DarkDaisy
+white red #FFFF00 pink #404040
+44234
+40004
+10001
+44044
+11411
+
+Doppy 
+darkgrey darkred
+..0..
+.000.
+10001
+..0..
+11.11
+
+Denzil
+white blue
+..0..
+.111.
+10001
+..0..
+11.11
+
+GDizzy
+white brown darkgrey
+..0..
+.000.
+10001
+..2..
+11.11
+
+Brick
+transparent
+
+Brick1
+transparent
+
+VisibleBrick
+lightgrey grey
+00000
+10101
+01010
+.....
+.....
+
+VisibleBrick1
+lightgrey grey
+00000
+01010
+10101
+.....
+.....
+
+Treasure 
+brown yellow
+00000
+01010
+01110
+01110
+00000
+
+Tides
+blue lightblue
+01010
+10101
+00000
+00000
+00000
+
+Water 
+blue
+
+Bridge 
+lightbrown brown
+00000
+00100
+01010
+00100
+00000
+
+Star1
+white purple
+..0..
+01110
+.101.
+01110
+..0..
+
+Star2
+white
+..0..
+0...0
+..0..
+0...0
+..0..
+
+Moon
+lightgrey
+.0000
+000..
+00...
+000..
+.0000
+
+Sun
+#fff44f
+0.0.0
+.000.
+00000
+.000.
+0.0.0
+
+Maze 
+green lightgreen
+00000
+01110
+01010
+01110
+00000
+
+Ladder
+lightbrown brown
+0...0
+01110
+0...0
+01110
+0...0
+
+Wall
+lightblue
+0...0
+00000
+00000
+00000
+0...0
+
+Ice
+lightblue
+0....
+.0...
+..0..
+...0.
+....0
+
+Spike
+red
+..0..
+.0...
+0....
+.0...
+..0..
+
+Chandelier
+darkbrown yellow white orange
+..0..
+..0..
+3.3.3
+1.1.1
+22222
+
+DHead
+red darkblue
+.0.0.
+.000.
+00100
+.0000
+..000
+
+DBody
+red
+...00
+.000.
+00000
+00000
+00000
+
+DTail
+red
+....0
+...0.
+..0..
+00...
+0....
+
+Fire
+yellow red
+...10
+..10.
+1110.
+..10.
+...10
+
+Stone
+darkgreen darkgrey
+00000
+01000
+00010
+01000
+00000
+
+Bucket
+purple blue lightblue
+0...0
+02220
+01110
+01110
+00000
+
+Stalo
+darkblue lightblue
+0...0
+00.00
+..0..
+..1..
+..1..
+
+Zap
+yellow
+..0..
+.0...
+0000.
+..0..
+.0...
+
+Heart
+white red
+.0.0.
+01010
+01110
+.010.
+..0..
+
+Bat
+lightgrey grey
+.....
+01.10
+..0..
+.....
+.....
+
+Sunlight
+yellow
+00000
+.0000
+..000
+...00
+....0
+
+Sunlight2
+yellow
+0....
+00...
+000..
+0000.
+00000
+
+Rose
+Red #2E7D32
+..0..
+.000.
+.000.
+..0..
+..1..
+
+LightHalf
+black
+...0.
+0....
+..0..
+....0
+.0...
+
+LightQuarter
+black
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+Wood
+darkbrown brown lightbrown
+11111
+22222
+00000
+11111
+22222
+
+HouseWall
+orange lightbrown
+00000
+11111
+00000
+11111
+00000
+
+Glass
+white lightblue
+11011
+10001
+00000
+10001
+11011
+
+Pot
+#7986CB #FFFF00 grey #2E7D32 brown
+..3..
+44344
+00100
+01110
+00100
+
+E1
+green yellow
+00000
+0..1.
+0.1.1
+0..1.
+00000
+
+E2
+green yellow
+00000
+..1.0
+.1.10
+..1.0
+00000
+
+Cassette
+blue lightblue grey
+00000
+.2120
+02220
+.2120
+00000
+
+Newspaper
+white grey
+00011
+0.011
+00000
+0...0
+00000
+
+Death
+transparent
+
+Talk
+transparent
+
+Platform
+black
+
+LightSource
+transparent
+
+LightFull
+transparent
+
+LightNone
+black
+
+Bank
+blue
+
+Won
+transparent
+
+CastleRoof
+#3caa3c #d1e231
+..0..
+..0..
+.010.
+01110
+00000
+
+CastleWall
+#979aaa #808080
+00011
+11000
+00011
+11000
+00011
+
+CastleDoor
+brown lightbrown
+00000
+0...0
+0..10
+0...0
+00000
+
+Rockwart
+green
+0...0
+.000.
+00000
+00000
+.0.0.
+
+Zaks
+purple pink white brown lightbrown
+..0..
+4000.
+3212.
+11211
+.0.0.
+
+IceFloor
+lightblue
+
+=======
+LEGEND
+=======
+
+@=Sword
+\=E1
+/=E2
+_=Platform and Ladder
+#=Wall
+%=HouseWall
+:=Ice
+~=Water
++=Tides
+*=Star1
+-=Doppy
+$=Bank
+[=Cassette
+]=Newspaper
+`=Sun
+"=IceFloor
+&=Rose
+a=Stalo
+b=Bridge
+c=Chandelier
+d=Daisy
+e=Bucket
+f=Brick and VisibleBrick
+g=Glass
+h=Ladder
+i=Heart
+j=Death
+k=Spike
+l=Moon
+m=Maze
+n=Sunlight2
+o=Wood
+p=Dizzy
+q=Bat
+r=DarkDaisy
+s=Pot
+t=Treasure
+u=Sunlight
+w=Brick1 and VisibleBrick1
+x=Fire
+y=Torch
+z=Zap
+0=Stone
+1=DHead
+2=DBody
+3=DTail
+4=Denzil and Talk
+5=GDizzy and Talk
+6=CastleRoof
+7=CastleWall
+8=CastleDoor
+9=Rockwart
+!=Zaks
+|=FDizzy
+
+Background = TrueBackground or Dark or DarkDaisy or Brick or Brick1
+
+Elevator = E1 or E2
+
+Player = Dizzy or Torch or CDizzy or NDizzy or Sword
+
+Stars = Star1 or Star2
+
+Solid = Brick or Treasure or Bridge or Maze or Wall or Ice or Spike or Stone or Elevator or HouseWall or CastleWall or IceFloor
+
+Light = LightFull or LightHalf or LightSource or LightQuarter
+
+Light1 = LightFull or LightSource
+Light2 = Light1 or LightHalf
+Light3 = Light2 or LightQuarter
+
+=======
+SOUNDS
+=======
+
+Doppy MOVE 36772507 (doppelganger step)
+sfx0 82757704 (treasure box moving)
+sfx1 37448708 (fire breath)
+sfx2 64815700 (bucket moving)
+sfx3 72413700 (troll run)
+sfx4 10475908 (zaks' death)
+sfx5 66429708 (dragon's death)
+Restart 43148708
+CloseMessage 59578908
+EndLevel 307503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Light,LightNone,LightQuarter
+Water,Tides,Bank,Stars,Moon,Ladder,Spike,Chandelier,DBody,DTail,Bucket,Stalo,Talk,Bat,Fire,Cassette,Newspaper,Sun,CastleRoof,CastleDoor
+Platform,Sunlight,Sunlight2,Zap
+Dizzy,Doppy,Bridge,Maze,Wall,Ice, DHead,Stone,Denzil,GDizzy,VisibleBrick,VisibleBrick1,Torch,Daisy,Wood,Glass,Pot,E1,E2,Rose,HouseWall,CDizzy,NDizzy,Rockwart,Sword,Zaks,IceFloor,CastleWall,FDizzy,Heart
+Death,Treasure,Won
+
+======
+RULES     
+======
+
+(lighting)
+late[no Light]->[LightNone]
+late[Light]->[LightNone]
+late[Torch no LightSource]->[Torch LightSource]
+late[LightSource|no Light1]->[LightSource|LightFull]
+late[LightFull|no Light2]->[LightFull|LightHalf]
+late[LightHalf|no Light3]->[LightHalf|LightQuarter]
+late[VisibleBrick]->[no VisibleBrick]
+late[Brick Light no VisibleBrick]->[Brick Light VisibleBrick]
+late[VisibleBrick1]->[no VisibleBrick1]
+late[Brick1 Light no VisibleBrick1]->[Brick1 Light VisibleBrick1]
+
+(gravity)
+down[stationary Player no Ladder]->[> Player no Ladder]
+late down[Player no Ladder|no Solid]->again
+
+(no jumps)
+[up Player no Ladder]->[Player]
+
+(treasure box moving)
+[parallel Player|Treasure]->[parallel Player|parallel Treasure] sfx0
+[Player Treasure]->[Player right Treasure]
+[> Treasure|Daisy]->[down Treasure|Daisy]
+[Treasure Tides]->[down Treasure Tides]
+[Treasure Water]->[down Treasure Water]
+[Treasure Bank]->[Bank]
+
+(stars shining)
+[> Player][Stars]->[> Player][random Stars]
+
+(Daisy levels)
+[> Player|DarkDaisy]->[Player|DarkDaisy] win
+[> Player|Daisy]->[Player|Daisy] win
+
+(doppelganger fight)
+[orthogonal Player][Doppy]->[orthogonal Player] [orthogonal Doppy]
+[> Doppy|Spike]->[> Doppy|] win
+
+(dragon puzzle)
+[action Player|Bucket]->[Player|right Bucket] sfx2
+[> Player][Fire]->[> Player][left Fire]sfx1
+[left Fire|Bucket]->[|Bucket]
+[Player|DHead]->restart
+[> Bucket|DHead]->[Bucket|DHead] sfx5 win
+
+(elevator moving)
+[parallel Player|Pot]->[parallel Player|parallel Pot]
+[action Player|E1]->[down Player|down E1]
+[down E1|E2]->[down E1|down E2]
+[down E2|Pot]->[down E2|down Pot]
+
+(rose growing)
+[left Player|Pot|Sunlight2]->[Player|right Pot|up Rose] win
+
+(damn bat)
+[stationary Bat]->[randomDir Bat]
+[Player Bat]->restart
+
+(talking with NPC)
+[Won]->win
+[> Player|Denzil Talk]->[Player|Denzil] message "What's up, dude?! My cool band 'Kicking Tunes' recorded the Brand New Album. But I lost it somewhere in the house. Can you bring it back?"
+[> CDizzy|Denzil]->[CDizzy|Denzil] message "Yeah, sing it, child!!! You are my saviour! I know, cassette was on the first floor, but I'm so lazy to pick it up. How nice of you to bring it back."
+[> Player|GDizzy Talk]->[Player|GDizzy] message "Howdy, stranger! I'm thirsty for recent news! My time is ticking, and I want to know what's happening in the world right now. While I still can."
+[> NDizzy|GDizzy][no Won]->[NDizzy|GDizzy][Won] message "Holy Yolk! Daisy in need of a hero. I'm too wise, I mean, I'm too old for saving damsel in distress. But maybe you can rescue her? What do you think, brave egg?"
+[action Player Cassette]->[CDizzy] message "You Found a Cassette With Label: 'Kicking Tunes: Penguin's Bride'."
+[action Player Newspaper]->[NDizzy] message "Tagline of Newspaper Says: 'Wizard Zaks Blamed for Kidnapping One Blonde Girl'."
+
+(fight with troll)
+[Rockwart|...|Player]->[> Rockwart|...|Player] sfx3
+[Player|Rockwart]->[Player|] message "He Silently Jump on My Sword... What a Horrible Death! Why Did He Do It? Is Zaks So Cruelsome Employer?"
+[Player|CastleDoor]->win
+
+(thunder hazards)
+[Zap|...|Player]->[> Zap|...|Player]
+[Player Zap]->restart
+
+[Player|Zaks]->[Player|] sfx4 message "My Burning Love, Unanswered or Not, Melted Evil Wizard. So Many Meaningless Deaths... I Don't Even Want to Think About It."
+
+[Player Death]->restart
+
+==============
+WINCONDITIONS
+==============   
+
+=======     
+LEVELS
+=======
+
+Message I Saw Her in the Dark...
+
+,y,,,,,,,,,,,,,
+,fw,,,,,,,,,,,,
+,,,fw,,,,,,,,,,
+,,,,,fw,,,,,,,,
+,,,,,,,fw,,,,,,
+,,,,,,,,,fw,,,,
+,,,,,,,,,,,fw,r
+j,,,,,,,,,,,,fw
+
+Message She Was Fabulous and Fantastic. I Fell in Love at First Sight. But She is Completely Ignored Me.
+
+Message I Gave Her All My Treasures...
+
+...*..*..*...l.
+...............
+.p.t..........d
+bbbbbbbbbbbbbbb
++++++++++++++++
+~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~$~
+
+Message She Didn't Take Them. And Try to Hide From Me in the Maze.
+mmmmmmmmmmmmmmmmmmmmmmmm
+mmmm.._.mmmmm.._.m._.mmm
+mmmmmmhmmmmmm.mhmmmhmmmm
+m_....h.._....mh._.hmmmm
+mhmmmmmmmhmmmmmmmhmmh.Dm
+mh...._m.h...._..h..hmmm
+mhmmmmhm.mmmmmhmmmmmmmhm
+mh._..h.._.m..h......_hm
+mmmhmmmmmhmmmmmmmmmmmhmm
+m_.h....mh.._.._._m..h_m
+mhmmmmm.mmmmhmmhmhmmmmhm
+mh._..m._._mh..hmh.._.hm
+mmmhm.mmhmhmmmmmmhmmhmmm
+mp.hm...hmh......h..h..m
+mmmmmmmmmmmmmmmmmmmmmmmm
+
+Message I Found Her. It Wasn't That Hard.
+Message But Then a Challenger Appears Before Me...
+
+###############
+#..c.......c..#
+#.............#
+#....p..-....k#
+#:::::::::::::#
+###############
+
+Message He Was a Coward. And Not a Rival For Me.
+Message Daisy Noticed Me. But She Wants More. And So I Walk Right Into the Dragon's Lair... Only Small Bucket of Water Left Here From the Previous Hero.
+
+000000000000000
+0aaaaaaaaaaaaa0
+0.............0
+0.............0
+0p...e....x1230
+000000000000000
+
+Message The Mighty Lizard Has Been Defeated So Easily. I Asked Daisy For a Date and She Is... Agreed.
+Message I Went to the Greenhouse to Find a Rose For Her, But Flower is Nowhere to be Found...
+
+ooooooooooooooooooo
+o_.......s........o
+ohoooooooooooooo\/o
+oh....._..........o
+ooooooohoooooooo..o
+gn.....h..........o
+oun....h..........o
+o.un...h....p.....o
+oooooooooooooooojjo
+
+Message I Got a Rose, But She Didn't Come. Maybe I'm Not Good For Her?
+Message I Was Sad For a While. And Then Decided to Meet With Her Friends...
+
+%%%%%%%%%%%%%%%%%%%
+%.._............5.g
+%%%h%%%%%%%%%%%%%%%
+g..h........_....]%
+%%%%%%%%%%%%h%%%%%%
+%.4..._.....h.....g
+%%%%%%h%%%%%%%%%%%%
+g.....h......._...%
+%%%%%%%%%%%%%%h%%%%
+%[.......p....h...g
+%%%%%%%%%%%%%%%%%%%
+
+Message Strange Fellas, Indeed. Anyway, Now I, Probably, Know, Why Daisy Didn't Come. But Do I Really Need to Save Her? Is It Worth It? I Really Don't Know, What She Think About Me. Maybe I Will Regret About This, But There is Only One Way to Know.
+Message I Borrowed Grandpa's Sword and Came to the Castle of Zaks. Guard Patiently Await Me on the Bridge.
+
+......`.......6
+..............7
+.@........9...8
+bbbbbbbbbbbbbbb
++++++++++++++++
+~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
+
+Message Summer Outside, Winter Inside. Interior of the Castle Was Cold. Ice Covered All the Walls and Floor. I Made Last Warm Breath and Started to Ascend.
+
+77777777777777
+7...q.......17
+7""""""""""""7
+7_..........87
+7h"""""""""""7
+7h.........._7
+7"""""""""""h7
+7_..........h7
+7h"""""""""""7
+7h.........._7
+7"""""""""""h7
+7..P........h7
+7""""""""""""7
+
+Message Presence of a Wizard Sent Shivers Down My Spine. But Suddenly I Feel Calm... 'cause I Saw Her... Again.
+Message Love is Irrational Thing. Even If She Reject Me, I Still Thanks Heaven For a Chance to See Her Again. What a Fool I am.
+
+777777777777777777777777777777777777777777777777
+7.....z.....z......z...z...z.......z...........7
+7..............................................7
+7.........q..............q.............q.......7
+7..............................................7
+7..............................................7
+7P.....................................!......D7
+7""""""""""""""""""""""""""""""""""""""""""""""7
+
+Message It Was She. Beautiful, Mysterious, Unknown. She Looked At Me. I Feel Nervous. Don't Know What to Say, Don't Know What to Do.
+Message And Then I Give Her a Rose... And Finally, Her Icy Heart Was Melt. For Her It Was Not a Love at First Sight, But Something Different. However, That Adventure Was a Start of Something New and, Probably, Wonderful.
+Message I Feel Warm and Happiness. No More Sorrow, No More Pain, No More Crazy Thoughts, I'm in Love and I Like It.
+
+.............
+.............
+...........l.
+.....i.......
+.............
+.....&.......
+.4..|sd...5..
+0000000000000
++++++++++++++
+~~~~~~~~~~~~~

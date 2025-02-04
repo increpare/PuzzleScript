@@ -1,0 +1,626 @@
+title "Let's Part, E" Contest Ver.
+author Dennis Au
+again_interval 0
+(background_color grey)
+
+========
+OBJECTS
+========
+Background
+Green
+
+Wall
+Black
+
+Border
+Black Black
+11011
+11111
+11111
+11111
+11011
+
+A
+White LightGrey
+.00..
+0..0.
+0000.
+0..0.
+1..1.
+
+B
+white LightGrey
+000..
+0..0.
+000..
+0..0.
+111..
+
+C
+white LightGrey
+.000.
+0....
+0....
+0....
+.111.
+
+D
+white LightGrey
+000..
+0..0.
+0..0.
+0..0.
+111..
+
+E
+white LightGrey
+0000.
+0....
+0000.
+0....
+1111.
+
+F
+white LightGrey
+0000.
+0....
+0000.
+0....
+1....
+
+G
+white LightGrey
+.000.
+0....
+0.00.
+0..0.
+.111.
+
+H
+white LightGrey
+0..0.
+0..0.
+0000.
+0..0.
+1..1.
+
+I
+white LightGrey
+.000.
+..0..
+..0..
+..0..
+.111.
+
+J
+white LightGrey
+0000.
+..0..
+..0..
+..0..
+111..
+
+K
+white LightGrey
+0..0.
+0.0..
+00...
+0.0..
+1..1.
+
+L
+white LightGrey
+0....
+0....
+0....
+0....
+1111.
+
+(
+M
+white
+00000
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+)
+
+N
+white LightGrey
+0..0.
+00.0.
+0000.
+0.00.
+1..1.
+
+O
+white LightGrey
+0000.
+0..0.
+0..0.
+0..0.
+1111.
+
+P
+white LightGrey
+0000.
+0..0.
+0000.
+0....
+1....
+
+R
+white LightGrey
+000..
+0..0.
+000..
+0..0.
+1..1.
+
+S
+white LightGrey
+.000.
+0....
+.00..
+...0.
+111..
+
+T
+white LightGrey
+00000
+..0..
+..0..
+..0..
+..1..
+
+U
+white LightGrey
+0..0.
+0..0.
+0..0.
+0..0.
+1111.
+
+Vee
+white LightGrey
+0..0.
+0..0.
+0..0.
+.00..
+.11..
+
+(
+W
+white
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+.0.0.
+)
+
+X
+white LightGrey
+0..0.
+0..0.
+.00..
+0..0.
+1..1.
+
+Y
+white LightGrey
+0..0.
+0..0.
+0000.
+...0.
+1111.
+
+PlayerE
+Red
+0000.
+0....
+0000.
+0....
+0000.
+
+PlayerM
+Red
+.....
+00000
+0.0.0
+0.0.0
+0.0.0
+
+Match
+Blue
+00...
+.....
+.....
+.....
+.....
+
+Matching
+Blue
+0....
+.....
+.....
+.....
+.....
+
+
+WordPointer
+White
+.....
+.....
+.....
+.....
+.....
+(..0..
+...0.
+....0
+...0.
+..0..)
+
+=======
+LEGEND
+=======
+Letter = A or B or C or D or E or F or G or H or I or J or K or L or N or O or P or R or S or T or U or Vee or X or Y (or M or W or Q or Z)
+
+. = Background
+# = Wall
+@ = PlayerE
+! = PlayerM
+Player = PlayerE or PlayerM
+| = Border
+- = Vee
+(- = WordPointer and Border)
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+Background
+Player, Letter, Wall, Border
+Match, Matching
+WordPointer
+
+======
+RULES
+======
+
+(Start of turn cleanup)
+
+[moving PlayerE][wordpointer] -> [moving PlayerE][]
+
+(position word pointer to first word)
+
+Right [Moving PlayerE][Border|Wall] -> [Moving PlayerE][WordPointer Border|Wall]
+
+(==========
+ Horizontal
+ Word Match
+ ==========)
+
+(match left of E)
+Right [WordPointer|...|E] -> [WordPointer|...|< Matching E]
+Right [Matching E][PlayerE] -> [Matching E][< Match PlayerE]
+
+startloop
+Left [> Matching|] -> [|Matching]
+Left [> Match|] -> [|Match]
+Left [Match A][Matching A] -> [> Match A][> Matching A]
+Left [Match B][Matching B] -> [> Match B][> Matching B]
+Left [Match C][Matching C] -> [> Match C][> Matching C]
+Left [Match D][Matching D] -> [> Match D][> Matching D]
+Left [Match E][Matching E] -> [> Match E][> Matching E]
+Left [Match F][Matching F] -> [> Match F][> Matching F]
+Left [Match G][Matching G] -> [> Match G][> Matching G]
+Left [Match H][Matching H] -> [> Match H][> Matching H]
+Left [Match I][Matching I] -> [> Match I][> Matching I]
+Left [Match J][Matching J] -> [> Match J][> Matching J]
+Left [Match K][Matching K] -> [> Match K][> Matching K]
+Left [Match L][Matching L] -> [> Match L][> Matching L]
+(Left [Match M][Matching M] -> [> Match M][> Matching M])
+Left [Match N][Matching N] -> [> Match N][> Matching N]
+Left [Match O][Matching O] -> [> Match O][> Matching O]
+Left [Match P][Matching P] -> [> Match P][> Matching P]
+Left [Match R][Matching R] -> [> Match R][> Matching R]
+Left [Match S][Matching S] -> [> Match S][> Matching S]
+Left [Match T][Matching T] -> [> Match T][> Matching T]
+Left [Match U][Matching U] -> [> Match U][> Matching U]
+Left [Match Vee][Matching Vee] -> [> Match Vee][> Matching Vee]
+(Left [Match W][Matching W] -> [> Match W][> Matching W])
+Left [Match X][Matching X] -> [> Match X][> Matching X]
+Left [Match Y][Matching Y] -> [> Match Y][> Matching Y]
+endloop
+
+(if matching matches to the border, LHS to E is a match
+so start to match right of e)
+Right [Matching Border|...|E] -> [Border|...|> Matching E]
+Right [Matching E][stationary Match][PlayerE] -> [Matching E][][> Match PlayerE]
+(else stop matching)
+[stationary Matching][stationary match] -> [][]
+
+(match right of e)
+startloop
+Right [> Matching|] -> [|Matching]
+Right [> Match|] -> [|Match]
+Right [Match A][Matching A] -> [> Match A][> Matching A]
+Right [Match B][Matching B] -> [> Match B][> Matching B]
+Right [Match C][Matching C] -> [> Match C][> Matching C]
+Right [Match D][Matching D] -> [> Match D][> Matching D]
+Right [Match E][Matching E] -> [> Match E][> Matching E]
+Right [Match F][Matching F] -> [> Match F][> Matching F]
+Right [Match G][Matching G] -> [> Match G][> Matching G]
+Right [Match H][Matching H] -> [> Match H][> Matching H]
+Right [Match I][Matching I] -> [> Match I][> Matching I]
+Right [Match J][Matching J] -> [> Match J][> Matching J]
+Right [Match K][Matching K] -> [> Match K][> Matching K]
+Right [Match L][Matching L] -> [> Match L][> Matching L]
+(Right [Match M][Matching M] -> [> Match M][> Matching M])
+Right [Match N][Matching N] -> [> Match N][> Matching N]
+Right [Match O][Matching O] -> [> Match O][> Matching O]
+Right [Match P][Matching P] -> [> Match P][> Matching P]
+Right [Match R][Matching R] -> [> Match R][> Matching R]
+Right [Match S][Matching S] -> [> Match S][> Matching S]
+Right [Match T][Matching T] -> [> Match T][> Matching T]
+Right [Match U][Matching U] -> [> Match U][> Matching U]
+Right [Match Vee][Matching Vee] -> [> Match Vee][> Matching Vee]
+(Right [Match W][Matching W] -> [> Match W][> Matching W])
+Right [Match X][Matching X] -> [> Match X][> Matching X]
+Right [Match Y][Matching Y] -> [> Match Y][> Matching Y]
+endloop
+
+(no match)
+[Matching Letter][Match] -> [Letter][]
+
+(matched, so remove letters)
+right [|stationary matching] -> [< Matching|]
+right [|stationary match] -> [< Match|]
+
+startloop
+right [|< Match PlayerE][|< Matching Letter] -> [Match|PlayerE][ Matching|]
+right [|< Match Letter] -> [Match|]
+right [|< Matching Letter] -> [Matching|]
+
+right [matching] -> [< matching]
+right [match] -> [< match]
+right [< matching border][match] -> [stationary matching border][]
+endloop
+
+(slide words up if we've eliminated one)
+right [Matching Border][WordPointer|...|] -> [Matching Border][WordPointer|...|Match]
+down [Match|...|Letter] -> [Match|...|Up Letter]
+
+(cleanup)
+[matching] -> []
+[match][wordpointer|] -> [][|wordpointer]
+[match] -> []
+
+(==========
+ Vertical
+ Word Match
+ ==========)
+
+(match above E)
+Right [WordPointer|...|E] -> [WordPointer|...|< Matching E]
+Up [Matching E][PlayerE] -> [Matching E][> Match PlayerE]
+
+startloop
+Left [> Matching|] -> [|Matching]
+Up [> Match|] -> [|Match]
+
+Left [Match A][Matching A] -> [v Match A][> Matching A]
+Left [Match B][Matching B] -> [v Match B][> Matching B]
+Left [Match C][Matching C] -> [v Match C][> Matching C]
+Left [Match D][Matching D] -> [v Match D][> Matching D]
+Left [Match E][Matching E] -> [v Match E][> Matching E]
+Left [Match F][Matching F] -> [v Match F][> Matching F]
+Left [Match G][Matching G] -> [v Match G][> Matching G]
+Left [Match H][Matching H] -> [v Match H][> Matching H]
+Left [Match I][Matching I] -> [v Match I][> Matching I]
+Left [Match J][Matching J] -> [v Match J][> Matching J]
+Left [Match K][Matching K] -> [v Match K][> Matching K]
+Left [Match L][Matching L] -> [v Match L][> Matching L]
+(Left [Match M][Matching M] -> [v Match M][> Matching M])
+Left [Match N][Matching N] -> [v Match N][> Matching N]
+Left [Match O][Matching O] -> [v Match O][> Matching O]
+Left [Match P][Matching P] -> [v Match P][> Matching P]
+Left [Match R][Matching R] -> [v Match R][> Matching R]
+Left [Match S][Matching S] -> [v Match S][> Matching S]
+Left [Match T][Matching T] -> [v Match T][> Matching T]
+Left [Match U][Matching U] -> [v Match U][> Matching U]
+Left [Match Vee][Matching Vee] -> [v Match Vee][> Matching Vee]
+(Left [Match W][Matching W] -> [v Match W][> Matching W])
+Left [Match X][Matching X] -> [v Match X][> Matching X]
+Left [Match Y][Matching Y] -> [v Match Y][> Matching Y]
+endloop
+
+(if matching matches to the border, Above E is a match
+so start to match below E)
+Right [Matching Border|...|E] -> [Border|...|> Matching E]
+Right [Matching E][stationary Match][PlayerE] -> [Matching E][][v Match PlayerE]
+(else stop matching)
+[stationary Matching][stationary match] -> [][]
+
+(match below E)
+startloop
+Right [> Matching|] -> [|Matching]
+Down [> Match|] -> [|Match]
+Right [Match A][Matching A] -> [v Match A][> Matching A]
+Right [Match B][Matching B] -> [v Match B][> Matching B]
+Right [Match C][Matching C] -> [v Match C][> Matching C]
+Right [Match D][Matching D] -> [v Match D][> Matching D]
+Right [Match E][Matching E] -> [v Match E][> Matching E]
+Right [Match F][Matching F] -> [v Match F][> Matching F]
+Right [Match G][Matching G] -> [v Match G][> Matching G]
+Right [Match H][Matching H] -> [v Match H][> Matching H]
+Right [Match I][Matching I] -> [v Match I][> Matching I]
+Right [Match J][Matching J] -> [v Match J][> Matching J]
+Right [Match K][Matching K] -> [v Match K][> Matching K]
+Right [Match L][Matching L] -> [v Match L][> Matching L]
+(Right [Match M][Matching M] -> [v Match M][> Matching M])
+Right [Match N][Matching N] -> [v Match N][> Matching N]
+Right [Match O][Matching O] -> [v Match O][> Matching O]
+Right [Match P][Matching P] -> [v Match P][> Matching P]
+Right [Match R][Matching R] -> [v Match R][> Matching R]
+Right [Match S][Matching S] -> [v Match S][> Matching S]
+Right [Match T][Matching T] -> [v Match T][> Matching T]
+Right [Match U][Matching U] -> [v Match U][> Matching U]
+Right [Match Vee][Matching Vee] -> [v Match Vee][> Matching Vee]
+(Right [Match W][Matching W] -> [v Match W][> Matching W])
+Right [Match X][Matching X] -> [v Match X][> Matching X]
+Right [Match Y][Matching Y] -> [v Match Y][> Matching Y]
+endloop
+
+(no match)
+[Matching Letter][Match] -> [Letter][]
+
+(matched, so remove letters)
+right [|stationary matching] -> [< Matching|]
+down [|stationary match] -> [< Match|]
+
+startloop
+down [|< Match PlayerE][Matching Letter] -> [stationary Match|PlayerE][Matching Letter]
+down [|< Match Letter] -> [Match|]
+right [|< Matching Letter] -> [Matching|]
+
+right [matching] -> [< matching]
+down [match] -> [< match]
+right [< matching border][match] -> [stationary matching border][]
+endloop
+
+(slide words up if we've eliminated one)
+right [Matching Border][WordPointer|...|] -> [Matching Border][WordPointer|...|Match]
+down [Match|...|Letter] -> [Match|...|Up Letter]
+
+(cleanup)
+[matching] -> []
+[match][wordpointer|] -> [][|wordpointer]
+[match] -> []
+
+(cycle through the word list)
+late random down [WordPointer|Border] -> [|Wordpointer Border] again
+
+
+[> Player|Letter] -> [> Player|> Letter]
+
+==============
+WINCONDITIONS
+==============
+No Letter
+
+=======
+LEVELS
+=======
+(
+########
+#...|..#
+#.@.|..#
+#...|..#
+########
+)
+
+Message E was sad.
+####|####
+#r@.|rue#
+#.u.#...#
+##..#...#
+#########
+
+Message She didn't understand.
+###|###
+#@.|EH#
+##H#..#
+#######
+
+Message Why did they say it?
+
+####|####
+#...|HEY#
+#Y..#...#
+#.H@#...#
+#...#...#
+#########
+
+Message "Let's Part, E."
+
+########|######
+#.....l.|later#
+#part.@.|pest.#
+#.....t.#.....#
+#.....s.#.....#
+###############
+
+Message Why?
+
+#####|######
+#....|tears#
+#.p..|lept.#
+#.a..#.....#
+#.r..#.....#
+##t..#.....#
+#l@ts#.....#
+#...##.....#
+############
+
+Message It's okay she told herself.
+
+#########|#######
+#......##|bra-e.#
+#..ab....|bra-e.#
+#...a.-..|facade#
+##car-@d.#......#
+##....r.##......#
+##..fab.##......#
+##......##......#
+#################
+
+Message Really, I'm okay.
+
+######|#####
+#.....|lies#
+#.il.i|lies#
+#.l..s|lies#
+#.l.ss#....#
+###.###....#
+###...#....#
+###@i.#....#
+###...#....#
+############
+
+Message Still, she struggled on.
+
+#################|#######
+#####..h.....####|broken#
+#####..i..##.o..#|heart.#
+#####..d...#..k..|aside.#
+#...a.t@ar.#n##..#......#
+#...#..s...r..b..#......#
+###########.....##......#
+#########################
+
+Message Till one day, she found hope.
+
+########|########
+#...t...|another#
+#an.h...|like...#
+#ho!@...|her....#
+#.r.ilk.#.......#
+#...r...#.......#
+#################
+
+Message Well close enough, anyways.
+
+########|####
+#.!##..@|the#
+#h....t.|end#
+#.n.#..d#...#
+#...#####...#
+#############
+
+Message Thanks for playing. I hope you had fun!

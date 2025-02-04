@@ -1,0 +1,213 @@
+title Circulando
+author Marcos Donnantuoni
+homepage https://marcosd.itch.io
+
+========
+objects
+========
+
+background
+gray
+
+target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+wall
+brown
+
+player
+yellow
+.....
+..0..
+.000.
+.0.0.
+.....
+
+crate
+orange yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+m1
+lightgray
+.....
+..0..
+..0..
+.....
+.....
+
+m2
+lightgray
+.....
+.....
+.00..
+.....
+.....
+
+m3
+lightgray
+.....
+.....
+.00..
+.....
+.....
+
+m4
+lightgray
+.....
+..0..
+..0..
+.....
+.....
+
+m6
+lightgray
+.....
+.....
+..0..
+..0..
+.....
+
+m7
+lightgray
+.....
+.....
+..00.
+.....
+.....
+
+m8
+lightgray
+.....
+.....
+..00.
+.....
+.....
+
+m9
+lightgray
+.....
+.....
+..0..
+..0..
+.....
+
+=======
+legend
+=======
+
+. = background
+# = wall
+p = player
+* = crate
+@ = crate and target
+o = target
+mark = m1 or m2 or m3 or m4 or m6 or m7 or m8 or m9
+obst = wall or player
+
+=======
+sounds
+=======
+
+crate move 92970108
+cancel 76474702
+
+
+================
+collisionlayers
+================
+
+background
+target
+player, wall, crate
+mark
+
+======
+rules
+======
+
+[ > player | crate ] -> cancel
+[ > player | wall  ] -> cancel
+
+[ mark ] -> [ ]
+
+left  [ action player | ] -> [ action player | m4 ]
+right [ action player | ] -> [ action player | m6 ]
+up    [ action player | ] -> [ action player | m8 ]
+down  [ action player | ] -> [ action player | m2 ]
+
+up    [ m4 | ] -> [ m4 | m7 ]
+up    [ m6 | ] -> [ m6 | m9 ]
+down  [ m4 | ] -> [ m4 | m1 ]
+down  [ m6 | ] -> [ m6 | m3 ]
+
+up    [ crate m1 | obst ] -> cancel
+left  [ crate m2 | obst ] -> cancel
+left  [ crate m3 | obst ] -> cancel
+up    [ crate m4 | obst ] -> cancel
+down  [ crate m6 | obst ] -> cancel
+right [ crate m7 | obst ] -> cancel
+right [ crate m8 | obst ] -> cancel
+down  [ crate m9 | obst ] -> cancel
+
+[ crate m1 ] -> [ up    crate m1 ]
+[ crate m2 ] -> [ left  crate m2 ]
+[ crate m3 ] -> [ left  crate m3 ]
+[ crate m4 ] -> [ up    crate m4 ]
+[ crate m6 ] -> [ down  crate m6 ]
+[ crate m7 ] -> [ right crate m7 ]
+[ crate m8 ] -> [ right crate m8 ]
+[ crate m9 ] -> [ down  crate m9 ]
+
+==============
+winconditions
+==============
+
+all target on crate
+all crate on target
+
+=======
+levels
+=======
+
+message Press X to engage circling
+
+message 1 of 3
+
+#######
+#.***.#
+#.....#
+#..p..#
+#.....#
+#.ooo.#
+#######
+
+message 2 of 3
+
+#######
+#**.**#
+#*.p.*#
+#..#..#
+#o...o#
+#oo.oo#
+#######
+
+message 3 of 3
+
+#######
+#*****#
+#.....#
+##.p.##
+#.....#
+#ooooo#
+#######
+
+

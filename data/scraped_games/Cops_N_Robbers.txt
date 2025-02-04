@@ -1,0 +1,310 @@
+Title Cops N Robbers
+author Ibrahim Chowdhury
+text_color #FFEC8B
+background_color #000616
+homepage www.puzzlescript.net
+color_palette arnecolors         
+key_repeat_interval 0.12 
+noundo 
+Youtube B_xnkegXtXA&list=PLEDCD460358ACDA5C
+
+
+========
+OBJECTS
+========
+Background
+#A66846 #955C3E #845237 #633C29
+
+01010
+12321
+03030
+12321
+01010
+
+Player
+#0A0A0A #E8C782    white 
+
+.000.
+.111.
+00200
+.000.
+.0.0.
+
+Cop !
+#4973AB #E8C782 #3D3D3D
+
+.000.
+.111.
+00000
+.000.
+.2.2.
+
+Stone Wall
+#969696 #7A7A7A #868686 #6F6F6F  #7F7F7F #909090
+ 
+54245
+43134
+12021
+43134
+54245
+
+Door
+#691F10  #691F10 #FBEC5D   #691F19 #691F14
+
+.000.
+01430
+01430
+02430
+01430
+
+Money
+#FFC125
+
+.....
+.....
+..0..
+.000.
+.000.
+
+ShouldMove
+WHITE
+.....
+.....
+.....
+.....
+.....
+
+Dog
+orange
+.0...
+00...
+.000.
+.0000
+.0..0
+
+Dog1
+orange
+.0...
+00...
+.000.
+.0000
+.0..0
+
+Dog2
+orange
+.0...
+00...
+.000.
+.0000
+.0..0
+
+Playershine
+White 
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+. = Background
+P = Player
+# = Wall
+X = Door 
+$ = Money
+! = Cop
+D = Dog
+
+
+=======
+SOUNDS
+=======
+Money MOVE 84599107 
+Endlevel 19797700
+Restart 84768702
+
+Player CantMove up 41234
+Money CantMove 41234
+
+
+
+================
+COLLISIONLAYERS
+================
+Background
+ShouldMove
+Door 
+Player, Wall, Money
+Cop,Dog , Dog1, Dog2
+Playershine
+======
+RULES
+======
+[! ShouldMove |...| Money] -> [> !|...|Money]
+
+[! ShouldMove |...| Player] -> [> !|...|Player]
+
+[D ShouldMove |...| Money] -> [> D|...|Money]
+
+[ > Player | Money ] -> [ > Player | > Money ]
+
+[< Player | Money ] -> [< Player |< Money]
+
+late[! Money] -> Restart
+
+late[D Player] -> Restart
+
+[> !|Wall] -> [! |Wall]
+
+[> D|Wall] -> [D |Wall]
+
+[> Player ] [ ! ] -> [ > Player ] [ ! ShouldMove ] again 
+
+[> Player ] [ D ] -> [ > Player ] [ D ShouldMove ] again
+
+[ Stationary dog ] -> [randomDir dog]
+
+[> Dog|Wall] -> [Dog |Wall]
+
+[> Dog|Money] -> [Dog |Money]
+
+[> Dog|Cop] -> [Dog |Cop]
+
+[> Dog|Money] -> [Dog |Money]
+
+[> Player|Cop] -> [Player |Cop]
+
+[> Cop|Player] -> [Cop|Player]
+
+[> Player|Dog] -> [Player |Dog]
+
+[Player | ... | NO PlayerShine] -> [Player | ... | PlayerShine]
+ 
+[Dog | ... | Player] -> [> Dog2 | ... | Player]
+
+[Dog | ... | PlayerShine] -> [> Dog2 | ... | PlayerShine]
+
+[Dog ] -> [Dog2]
+==============
+WINCONDITIONS
+==============
+
+All Money on Door
+
+=======
+LEVELS
+=======
+Message Info: If the money is taken by a cop the level will reset
+
+MessageGet out with the money without being detected by the cops!
+           
+#########
+#!...#x##
+#.#.##..#
+#.#.....#
+#...#...#
+#p$.....#
+#########
+
+Message Smooth moves but you've got double the trouble now.
+
+###########
+#.#.#!#.#x#
+#..!#.....#
+#.#.#.#.#.#
+#.#.#.#.#.#
+#.#...#...#
+#$p.......#
+###########
+
+
+Message Oh god more of them
+
+
+################
+#...#.....!#...#
+#..........#...#
+#...##.....#...#
+#!.............#
+#.......#......#
+#........#.....#
+#...##....#....#
+#..##......#...#
+#..#......##..x#
+#..#!.....#..###
+#.##......##...#
+###........#...#
+#..........#...#
+#p.........$#..#
+################
+
+Message I see the student has now become the master.
+
+#########
+#..#....#
+#......!#
+#..##...#
+#..#....#
+#x.#..#.#
+####..#.#
+#!...$..#
+#....p..#
+#########
+
+Message Your on your own now
+
+##########
+#......x##
+#.......##
+#!#....###
+#.##...#.#
+#..##..!.#
+##.......#
+#...#....#
+#....#..!#
+##....#..#
+#.##..#..#
+#..#.....#
+#$p......#
+##########
+Message Rule: If you are bitten by a dog the level will reset
+Message *Bark* *Bark*
+################
+#.............$#
+#..............#
+#..............#
+#...d......d...#
+#..............#
+#..............#
+#......xp......#
+#..............#
+#..............#
+#...d......d...#
+#..............#
+#..............#
+#..............#
+#..............#
+################
+Message Look at all that $$$$$$
+#x###############
+#...............x
+#..........d....#
+#...............#
+#......#$#......#
+#.....#...#..!..#
+p.....$...$.....#
+#.....#...#.....#
+#......#$#......#
+#...............#
+#......d........#
+x...............#
+###############x#
+
+
+
+
+Message Thanks for Playing! More levels still to come! Feedback is much appreciated!
+
+Message Any queries here please tell me.

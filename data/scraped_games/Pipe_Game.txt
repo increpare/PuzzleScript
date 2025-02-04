@@ -1,0 +1,250 @@
+title Pipe Game
+author Thomas Withaar
+homepage www.puzzlescript.net
+realtime_interval 0.5
+noundo
+
+========
+OBJECTS
+========
+
+Background 
+DARKBLUE
+
+Target 
+RED
+
+TargetWater
+RED BLUE
+00100
+01110
+11111
+01110
+00100
+
+Player
+WHITE
+..0..
+.0.0.
+0...0
+.0.0.
+..0..
+
+VerticalPipe
+GRAY
+00000
+.000.
+.000.
+.000.
+00000
+
+HorizontalPipe
+GRAY
+0...0
+00000
+00000
+00000
+0...0
+
+VerticalPipeWater
+GRAY BLUE
+00100
+.010.
+.010.
+.010.
+00100
+
+HorizontalPipeWater
+GRAY BLUE
+0...0
+00000
+11111
+00000
+0...0
+
+UpRightPipe
+GRAY
+00000
+.0000
+.0000
+..000
+....0
+
+UpRightPipeWater
+GRAY BLUE
+00100
+.0100
+.0011
+..000
+....0
+
+RightDownPipe
+GRAY
+....0
+..000
+.0000
+.0000
+00000
+
+RightDownPipeWater
+GRAY BLUE
+....0
+..000
+.0011
+.0100
+00100
+
+DownLeftPipe
+GRAY
+0....
+000..
+0000.
+0000.
+00000
+
+DownLeftPipeWater
+GRAY BLUE
+0....
+000..
+1100.
+0010.
+00100
+
+LeftUpPipe
+GRAY
+00000
+0000.
+0000.
+000..
+0....
+
+LeftUpPipeWater
+GRAY BLUE
+00100
+0010.
+1100.
+000..
+0....
+
+=======
+LEGEND
+=======
+
+. = Background
+1 = VerticalPipe
+2 = VerticalPipeWater
+3 = HorizontalPipe
+4 = HorizontalPipeWater
+5 = UpRightPipe
+6 = UpRightPipeWater
+7 = RightDownPipe
+8 = RightDownPipeWater
+9 = DownLeftPipe
+0 = DownLeftPipeWater
+a = LeftUpPipe
+b = LeftUpPipeWater
+X = Target
+P = Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+HorizontalPipe, HorizontalPipeWater, VerticalPipe, VerticalPipeWater, UpRightPipe, UpRightPipeWater, RightDownPipe, RightDownPipeWater, DownLeftPipe, DownLeftPipeWater, LeftUpPipe, LeftUpPipeWater
+Target, TargetWater
+Player
+
+======
+RULES     
+======     
+
+HORIZONTAL [ HorizontalPipeWater | HorizontalPipe ] -> [ HorizontalPipeWater | HorizontalPipeWater ]
+RIGHT [ HorizontalPipeWater | DownLeftPipe ] -> [ HorizontalPipeWater | DownLeftPipeWater ]
+LEFT [ HorizontalPipeWater | RightDownPipe ] -> [ HorizontalPipeWater | RightDownPipeWater ]
+
+DOWN [ VerticalPipeWater | VerticalPipe ] -> [ VerticalPipeWater | VerticalPipeWater ]
+DOWN [ VerticalPipeWater | UpRightPipe ] -> [ VerticalPipeWater | UpRightPipeWater ]
+DOWN [ VerticalPipeWater | LeftUpPipe ] -> [ VerticalPipeWater | LeftUpPipeWater ]
+
+RIGHT [ UpRightPipeWater | HorizontalPipe ] -> [ UpRightPipeWater | HorizontalPipeWater ]
+RIGHT [ UpRightPipeWater | DownLeftPipe ] -> [ UpRightPipeWater | DownLeftPipeWater ]
+
+DOWN [ RightDownPipeWater | VerticalPipe ] -> [ RightDownPipeWater | VerticalPipeWater ]
+DOWN [ RightDownPipeWater | UpRightPipe ] -> [ RightDownPipeWater | UpRightPipeWater ]
+DOWN [ RightDownPipeWater | LeftUpPipe ] -> [ RightDownPipeWater | LeftUpPipeWater ]
+
+DOWN [ DownLeftPipeWater | VerticalPipe ] -> [ DownLeftPipeWater | VerticalPipeWater ]
+DOWN [ DownLeftPipeWater | UpRightPipe ] -> [ DownLeftPipeWater | UpRightPipeWater ]
+DOWN [ DownLeftPipeWater | LeftUpPipe ] -> [ DownLeftPipeWater | LeftUpPipeWater ]
+
+LEFT [ LeftUpPipeWater | HorizontalPipe ] -> [ LeftUpPipeWater | HorizontalPipeWater ]
+LEFT [ LeftUpPipeWater | RightDownPipe ] -> [ LeftUpPipeWater | RightDownPipeWater ]
+
+[ Action Player HorizontalPipe ] -> [ Player VerticalPipe ]
+[ Action Player HorizontalPipeWater ] -> [ Player VerticalPipe ]
+[ Action Player VerticalPipe ] -> [ Player HorizontalPipe ]
+[ Action Player VerticalPipeWater ] -> [ Player HorizontalPipe ]
+
+[ Action Player UpRightPipe ] -> [ Player RightDownPipe ]
+[ Action Player UpRightPipeWater ] -> [ Player RightDownPipe ]
+[ Action Player RightDownPipe ] -> [ Player DownLeftPipe ]
+[ Action Player RightDownPipeWater ] -> [ Player DownLeftPipe ]
+[ Action Player DownLeftPipe ] -> [ Player LeftUpPipe ]
+[ Action Player DownLeftPipeWater ] -> [ Player LeftUpPipe ]
+[ Action Player LeftUpPipe ] -> [ Player UpRightPipe ]
+[ Action Player LeftUpPipeWater ] -> [ Player UpRightPipe ]
+
+HORIZONTAL [ HorizontalPipeWater | Target ] -> [ HorizontalPipeWater | TargetWater ]
+DOWN [ VerticalPipeWater | Target ] -> [ VerticalPipeWater | TargetWater ]
+RIGHT [ UpRightPipeWater | Target ] -> [ UpRightPipeWater | TargetWater ]
+DOWN [ RightDownPipeWater | Target ] -> [ RightDownPipeWater | TargetWater ]
+DOWN [ DownLeftPipeWater | Target ] -> [ DownLeftPipeWater | TargetWater ]
+LEFT [ LeftUpPipeWater | Target ] -> [ LeftUpPipeWater | TargetWater ]
+
+==============
+WINCONDITIONS
+==============
+
+NO Target
+
+=======     
+LEVELS
+=======
+
+p......
+.71219.
+.11211.
+.17391.
+.13131.
+.153a1.
+.11111.
+.11111.
+.51x1a.
+.......
+
+p..........
+.633133337.
+.933331335.
+.a31333335.
+.931333337.
+.a33313335.
+.933333137.
+.a33113335.
+.93333333x.
+...........
+
+p......
+.219a5.
+.93793.
+.315a3.
+.13311.
+.97531.
+.13177.
+.11111.
+.71a1x.
+.......

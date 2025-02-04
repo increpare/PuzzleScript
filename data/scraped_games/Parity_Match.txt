@@ -1,0 +1,597 @@
+title Parity Match
+author Le Slo
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Blackground
+#000000 #000000
+10101
+01111
+11111
+01111
+11111
+
+Background
+#16243b #050b14
+10101
+01111
+11111
+01111
+11111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN lightBROWN #302f25 #7a5f33
+4	2	2	2	2
+3	4	0	0	2
+3	1	4	0	2
+3	1	1	4	2
+3	3	3	3	4
+
+WallN
+#4d2112 #0f0826 #372869 #100b24
+01010
+11111
+01111
+11111
+01111
+
+
+
+Player
+#aad47f #55aa00 #005953 Blue
+10000
+21110
+21110
+21110
+22221
+
+
+
+One
+#F54489 #f98eb8
+00011
+00001
+00.00
+00000
+00000
+Two
+#0f7c7e #6fb0b1
+00011
+0.001
+00000
+000.0
+00000
+
+Three
+#ffff44 #ffffa1
+00011
+0.001
+00.00
+000.0
+00000
+
+Four
+#4614ff #9072ff
+00011
+0.0.1
+00000
+0.0.0
+00000
+
+OneM
+#F54489
+.....
+.....
+..0..
+.....
+.....
+
+TwoM
+#0f7c7e
+.....
+.0...
+.....
+...0.
+.....
+
+ThreeM
+#ffff44
+.....
+.0...
+..0..
+...0.
+.....
+
+FourM
+#4614ff
+.....
+.0.0.
+.....
+.0.0.
+.....
+OneNM
+#F54489
+.....
+.....
+..0..
+.....
+.....
+
+TwoNM
+#0f7c7e
+.....
+.0...
+.....
+...0.
+.....
+
+ThreeNM
+#ffff44
+.....
+.0...
+..0..
+...0.
+.....
+
+FourNM
+#4614ff
+.....
+.0.0.
+.....
+.0.0.
+.....
+OneT
+#F54489
+.....
+.....
+..0..
+.....
+.....
+
+TwoT
+#0f7c7e
+.....
+.0...
+.....
+...0.
+.....
+
+ThreeT 
+#ffff44
+.....
+.0...
+..0..
+...0.
+.....
+
+FourT
+#4614ff
+.....
+.0.0.
+.....
+.0.0.
+.....
+OneG
+#F54489
+.....
+.....
+..0..
+.....
+.....
+
+TwoG
+#0f7c7e
+.....
+.0...
+.....
+...0.
+.....
+
+ThreeG
+#ffff44
+.....
+.0...
+..0..
+...0.
+.....
+
+FourG
+#e5fbfa
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+OneB
+#F54489 #f98eb8 red
+00011
+00001
+00200
+00000
+00000
+TwoB
+#0f7c7e #6fb0b1 red
+00011
+02001
+00000
+00020
+00000
+
+ThreeB
+#ffff44 #ffffa1 red
+00011
+02001
+00200
+00020
+00000
+
+FourB
+#4614ff #9072ff red
+00011
+02021
+00000
+02020
+00000
+
+OneB2
+#F54489 #f98eb8 red
+00011
+00001
+00200
+00000
+00000
+TwoB2
+#0f7c7e #6fb0b1 red
+00011
+02001
+00000
+00020
+00000
+
+ThreeB2
+#ffff44 #ffffa1 red
+00011
+02001
+00200
+00020
+00000
+
+FourB2
+#4614ff #9072ff red
+00011
+02021
+00000
+02020
+00000
+
+GroupAnim1
+#e5fbfa
+.....
+..0..
+.000.
+..0..
+.....
+
+GroupAnim2
+#e5fbfa
+0...0
+..0..
+.0.0.
+..0..
+0...0
+
+GroupAnim3
+#e5fbfa
+..0..
+.....
+0...0
+.....
+..0..
+
+
+=======
+LEGEND
+=======
+
+. = Background
+% = Blackground
+# = Wall
+* = WallN
+P = Player and Background
+O = Target
+
+
+
+1 = one
+2 = two
+3 = three
+4 = Four
+
+gAnim = GroupAnim1 or GroupAnim2 or GroupAnim3
+
+Walls = Wall or WallN
+NumberT = oneT or twoT or threeT or fourT
+
+Number = one or two or three or four
+NumberM = oneM or twoM or threeM or fourM
+NumberNM = oneNM or twoNM or threeNM or fourNM
+NumberG = oneG or twoG or threeG or fourG
+NumberB = oneB or twoB or threeB or fourB or oneB2 or twoB2 or threeB2 or fourB2
+
+oneTemp = oneG or one
+twoTemp = twoG or two
+threeTemp = threeG or three
+fourTemp = fourG or Four
+
+=======
+SOUNDS
+=======
+
+sfx0 36301705
+sfx1 59349504
+Player Move 7827507
+sfx2 5235907
+
+endlevel 62072708
+================
+COLLISIONLAYERS
+================
+NumberT
+Background
+
+Target
+Walls
+Blackground
+Player, Number, numberM, numberNM, numberG, gAnim, numberB
+
+======
+RULES
+======
+
+[ >  Player | Wall ] 	-> [  Player | Wall  ]
+
+Startloop
+
+[ >  Player | One ] 	-> [  >  Player | > OneM  ]
+[ >  Player | Two ] 	-> [  >  Player | > TwoM  ]
+[ >  Player | Three ] 	-> [  >  Player | > ThreeM  ]
+[ >  Player | Four ] 	-> [  >  Player | > FourM  ]
+
+[ >  OneM | One ] 		-> [ OneB | OneB ] sfx1
+[ >  TwoM | Two ] 		-> [ TwoB | TwoB ]sfx1
+[ >  ThreeM | Three ] 	-> [ ThreeB | ThreeB  ]sfx1
+[ >  FourM | Four ] 	-> [ FourB | FourB  ] sfx1
+
+[ >  OneM | Two ] 		-> [ >  OneM | > TwoM ] 	
+[ >  OneM | Three ] 	-> [ >  OneM | > ThreeM ]
+[ >  OneM | Four ] 		-> [ >  OneM | > FourM ]
+
+[ >  TwoM | One ] 		-> [ >  TwoM | > OneM ] 	
+[ >  TwoM | Three ] 	-> [ >  TwoM | > ThreeM ]
+[ >  TwoM | Four ] 		-> [ >  TwoM | > FourM ]
+
+[ >  ThreeM | Two ] 	-> [ >  ThreeM | > TwoM ]
+[ >  ThreeM | One ] 	-> [ >  ThreeM | > OneM ]
+[ >  ThreeM | Four ] 	-> [ >  ThreeM | > FourM ]
+
+[ >  FourM | Two ] 		-> [ >  FourM | > TwoM ]
+[ >  FourM | One ] 		-> [ >  FourM | > OneM ]
+[ >  FourM | Three ] 	-> [ >  FourM | > ThreeM ]
+
+
+[ >  OneM | Walls ] 		-> [  OneB | Walls ]
+[ >  TwoM | Walls ] 		-> [  TwoB | Walls ]
+[ >  ThreeM | Walls ] 	-> [  ThreeB | Walls ]
+[ >  FourM | Walls ] 	-> [  FourB | Walls ]
+
+[ >  OneM | NumberNM ] 	-> [  OneNM | NumberNM ]
+[ >  TwoM | NumberNM ] 	-> [  TwoNM | NumberNM ]
+[ >  ThreeM | NumberNM ] -> [  ThreeNM | NumberNM ]
+[ >  fourM | NumberNM ] -> [  fourNM | NumberNM ]
+
+[ >  OneM | NumberB ] 	-> [  OneNM | NumberB ]
+[ >  TwoM | NumberB ] 	-> [  TwoNM | NumberB ]
+[ >  ThreeM | NumberB ] -> [  ThreeNM | NumberB ]
+[ >  fourM | NumberB ] -> [  fourNM | NumberB ]
+
+[ >  Player | OneNM ] 	-> [ Player | OneNM  ]
+[ >  Player | TwoNM ] 	-> [ Player | TwoNM  ]
+[ >  Player | ThreeNM ] -> [  Player | ThreeNM  ]
+[ >  Player | fourNM ] -> [  Player | fourNM  ]
+
+endloop
+
+[ >  Player | > OneM ] 	-> [  >  Player | > TwoNM  ] sfx2
+[ >  Player | > TwoM ] 	-> [  >  Player | > ThreeNM  ] sfx2
+[ >  Player | > ThreeM ] 	-> [  >  Player | > fourNM  ] sfx2
+[ >  Player | > fourM ] 	-> [  >  Player | > oneNM  ] sfx2
+
+[ oneM] 	-> [ One]
+[ twoM] 	-> [ Two]
+[ threeM] 	-> [ Three]
+[ fourM] 	-> [ four]
+
+[ OneNM] 	-> [ One]
+[ TwoNM] 	-> [ Two]
+[ threeNM] 	-> [ Three]
+[ fourNM] 	-> [ four]
+
+
+
+
+late[Onetemp | Onetemp | Onetemp] -> [ OneG| OneG| OneG] sfx0 
+late[Twotemp | Twotemp | Twotemp] -> [ TwoG| TwoG| TwoG] sfx0
+late[Threetemp | Threetemp | Threetemp] -> [ ThreeG| ThreeG| ThreeG] sfx0
+late[fourtemp | fourtemp | fourtemp] -> [ fourG| fourG| fourG] sfx0
+
+late[oneG] -> [GroupAnim1] again 
+late[twoG] -> [GroupAnim1] again 
+late[threeG] -> [GroupAnim1] again 
+late[fourG] -> [GroupAnim1] again 
+
+late [oneB2] -> [one]	 
+late [twoB2] -> [two]	  
+late [threeB2] -> [three]
+late [fourB2] -> [four]  
+
+
+late[oneB] 		-> [oneB2] 	 again 
+late[twoB] 		-> [twoB2] 	 again 
+late[threeB] 	-> [threeB2] again 
+late[fourB] 	-> [fourB2]  again 
+
+
+late[GroupAnim3] -> []
+late[GroupAnim2] -> [GroupAnim3] again
+late[GroupAnim1] -> [GroupAnim2] again
+
+
+==============
+WINCONDITIONS
+==============
+No One
+No Two 
+No Three
+No Four
+No gAnim
+
+=======
+LEVELS
+=======
+
+message 1/12
+
+%###%%%%%%%
+#...####%%%
+#.......##%
+#.1p....44#
+#.......##%
+#...####%%%
+%###%%%%%%%
+
+message 2/12
+
+%%%#####%%%
+%%#..#..#%%
+%##..#..##%
+#p14.....2#
+%##..#..##%
+%%#..#..#%%
+%%%#####%%%
+
+message 3/12
+
+%####%
+#....#
+#..p.#
+#.11.#
+#....#
+%#23#%
+%#23#%
+%%##%%
+
+message 4/12
+
+%##%%%##%
+#..###..#
+#..323..#
+#...p...#
+%#######%
+
+message 5/12
+
+%%%#####%
+%%#*****#
+%##*..4*#
+#p.*2*.*#
+%##*..4*#
+%%#*****#
+%%%#####%
+
+message 6/12
+
+%####%
+#****#
+#*#p*#
+#*11*#
+#*.1*#
+#****#
+%####%
+
+message 7/12
+
+%#####%
+#*****#
+#*.1p*#
+#**2**#
+#*.3.*#
+#*****#
+%#####%
+
+message 8/12
+%####%
+#*..*#
+#*.p*#
+#*24*#
+#*13*#
+#*..*#
+%####%
+
+message 9/12
+
+%##%%%##%
+#**#%#**#
+#..###..#
+#..323..#
+%#..p..#%
+%%#####%%
+
+
+message 10/12 
+
+%#####%
+#*****#
+#..3.*#
+#p343*#
+#..3.*#
+#*****#
+%#####%
+
+message 11/12
+
+%########%
+#..#..#..#
+#..#..1..#
+#p11..#..#
+#..#..1..#
+#..#..#..#
+%########%
+
+message 12/12
+
+%%%##%%%%%%%
+%##..####%%%
+#**.4#...##%
+#p.....4..3#
+#**.4#...##%
+%##..####%%%
+%%%##%%%%%%%
+
+
+
+
+
+
