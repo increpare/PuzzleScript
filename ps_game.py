@@ -90,7 +90,7 @@ class PSGame:
         self.verbose_logging = verbose_logging
 
         self.objects = objects               # Dict[object_name -> PSObject]
-        self.legends = legend               # List[LegendEntry]
+        self.legend = legend               # List[LegendEntry]
         self.collision_layers = collision_layers   # List of Lists of object_names
         self.rules = rules                   # List[Rule]
         self.win_conditions = win_conditions # List[WinCondition]
@@ -104,7 +104,7 @@ class PSGame:
     
     def __repr__(self):
         return (f"PSGame(title={self.title!r}, objects={self.objects}, "
-                f"legends={self.legends}, layers={self.collision_layers}, "
+                f"legends={self.legend}, layers={self.collision_layers}, "
                 f"rules={self.rules}, wcs={self.win_conditions}, "
                 f"levels=...)")
 

@@ -1,5 +1,7 @@
 from argparse import ArgumentParser
+import glob
 import os
+import shutil
 import requests
 import re
 
@@ -13,6 +15,11 @@ data_dir = 'data'
 scraped_games_dir = os.path.join('data', 'scraped_games')
 os.makedirs(scraped_games_dir, exist_ok = True)
 
+example_games_dir = os.path.join('src', 'demo')
+
+example_games = glob.glob(os.path.join(example_games_dir, '*.txt'))
+for eg in example_games:
+    shutil.copy(eg, os.path.join(scraped_games_dir, os.path.basename(eg)))
 
 load_dotenv()
 
