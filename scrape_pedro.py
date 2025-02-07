@@ -20,6 +20,7 @@ example_games_dir = os.path.join('src', 'demo')
 example_games = glob.glob(os.path.join(example_games_dir, '*.txt'))
 for eg in example_games:
     shutil.copy(eg, os.path.join(scraped_games_dir, os.path.basename(eg)))
+    print(f"Copied {eg} from PuzzleScript.net gallery.")
 
 load_dotenv()
 

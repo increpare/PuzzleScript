@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+from functools import partial
 import os
 import pickle
 import re
@@ -7,10 +9,12 @@ import random
 
 import cv2
 from einops import rearrange
+import jax
 from lark import Token, Transformer, Tree
 import numpy as np
 from PIL import Image
 
+from parse_lark import test_games
 from ps_game import LegendEntry, PSGame, PSObject, Rule, RuleBlock, WinCondition
 
 class GenPSTree(Transformer):
@@ -218,7 +222,7 @@ def level_to_multihot(level):
 def assign_vecs_to_objs(collision_layers):
     n_lyrs = len(collision_layers)
     n_objs = sum([len(lyr) for lyr in collision_layers])
-    coll_masks = np.zeros((n_lyrs, n_objs))
+    coll_masks = np.zeros((n_lyrs, n_objs), dtype=np.uint8)
     objs_to_idxs = {}
     # vecs = np.eye(n_objs, dtype=np.uint8)
     # obj_vec_dict = {}
@@ -270,6 +274,214 @@ def expand_collision_layers(collision_layers, meta_tiles):
                 j += 1
     return collision_layers
 
+def gen_check_win(win_conditions, obj_to_idxs):
+    def check_all(lvl, src, trg):
+        return np.sum((lvl[src] == 1) * (lvl[trg] == 0)) == 0
+
+    def check_some(lvl, src, trg):
+        return np.sum(lvl[src] == 1 * lvl[trg] == 1) > 0
+
+    funcs = []
+    for win_condition in win_conditions:
+        src, trg = win_condition.src_obj, win_condition.trg_obj
+        src, trg = obj_to_idxs[src], obj_to_idxs[trg]
+        if win_condition.quantifier == 'all':
+            func = partial(check_all, src=src, trg=trg)
+        elif win_condition.quantifier == 'some':
+            func = partial(check_some, src=src, trg=trg)
+        funcs.append(func)
+
+    def check_win(lvl):
+        return all([func(lvl) for func in funcs])
+    return check_win
+        
+        
+def gen_rules(obj_to_idxs, coll_mat, tree_rules):
+    n_objs = len(obj_to_idxs)
+    rules = []
+    assert len(tree_rules) == 1
+    rule_blocks = tree_rules[0]
+    for rule_block in rule_blocks:
+        assert rule_block.looping == False
+        for rule in rule_block.rules:
+            assert len(rule.prefixes) == 0
+            lp = rule.left_patterns
+            rp = rule.right_patterns
+            n_kernels = len(lp)
+            assert n_kernels == 1
+            assert len(rp) == n_kernels
+            lp = lp[0]
+            rp = rp[0]
+            n_cells = len(lp)
+            assert len(rp) == n_cells
+
+            lr_in = np.zeros((n_objs + (n_objs * 4), 1, n_cells), dtype=np.int8)
+            rr_in = np.zeros_like(lr_in)
+            ur_in = np.zeros((n_objs + (n_objs * 4), n_cells, 1), dtype=np.int8)
+            dr_in = np.zeros_like(ur_in)
+            for i, cell in enumerate(lp):
+                assert len(cell) == 1 #???
+                cell = cell[0]
+                cell = cell.split(' ')
+                force = False
+                for obj in cell:
+                    if obj in obj_to_idxs:
+                        obj_i = obj_to_idxs[obj]
+                        lr_in[obj_i, 0, i] = 1
+                        rr_in[obj_i, 0, n_cells-1-i] = 1
+                        ur_in[obj_i, i, 0] = 1
+                        dr_in[obj_i, n_cells-1-i, 0] = 1
+                    elif obj == '>':
+                        force = True
+                    else: raise Exception(f'Invalid object `{obj}` in rule.')
+                if force:
+                    lr_in[n_objs + (obj_i * 4) + 2, 0, i] = 1
+                    rr_in[n_objs + (obj_i * 4) + 0, 0, n_cells-1-i] = 1
+                    ur_in[n_objs + (obj_i * 4) + 1, i, 0] = 1
+                    dr_in[n_objs + (obj_i * 4) + 3, n_cells-1-i, 0] = 1
+            lr_out = np.zeros_like(lr_in)
+            rr_out = np.zeros_like(rr_in)
+            ur_out = np.zeros_like(ur_in)
+            dr_out = np.zeros_like(dr_in)
+            for i, cell in enumerate(rp):
+                assert len(cell) == 1 #???
+                cell = cell[0]
+                cell = cell.split(' ')
+                force = False
+                for obj in cell:
+                    if obj in obj_to_idxs:
+                        obj_i = obj_to_idxs[obj]
+                        print('DEBUG', obj, obj_i, dr_out.shape)
+                        lr_out[obj_i, 0, i] = 1
+                        rr_out[obj_i, 0, n_cells-1-i] = 1
+                        ur_out[obj_i, i, 0] = 1
+                        dr_out[obj_i, n_cells-1-i, 0] = 1
+                    elif obj == '>':
+                        force = True
+                    else: raise Exception('Invalid object in rule.')
+                if force:
+                    lr_out[n_objs + (obj_i * 4) + 2, 0, i] = 1
+                    rr_out[n_objs + (obj_i * 4) + 0, 0, n_cells-1-i] = 1
+                    ur_out[n_objs + (obj_i * 4) + 1, i, 0] = 1
+                    dr_out[n_objs + (obj_i * 4) + 3, n_cells-1-i, 0] = 1
+            lr_out = lr_out - np.clip(lr_in, 0, 1)
+            rr_out = rr_out - np.clip(rr_in, 0, 1)
+            ur_out = ur_out - np.clip(ur_in, 0, 1)
+            dr_out = dr_out - np.clip(dr_in, 0, 1)
+            lr_rule = np.stack((lr_in, lr_out), axis=0)
+            rr_rule = np.stack((rr_in, rr_out), axis=0)
+            ur_rule = np.stack((ur_in, ur_out), axis=0)
+            dr_rule = np.stack((dr_in, dr_out), axis=0)
+            rules += [lr_rule, rr_rule, ur_rule, dr_rule]
+    return rules
+
+def gen_move_rules(obj_to_idxs, coll_mat):
+    n_objs = len(obj_to_idxs)
+    rules = []
+    for obj, idx in obj_to_idxs.items():
+        if obj == 'Background':
+            continue
+        coll_vector = coll_mat[idx]
+
+        left_rule_in = np.zeros((n_objs + (n_objs * 4), 1, 2), dtype=np.int8)
+        # object must be present in right cell
+        left_rule_in[idx, 0, 1] = 1
+        # leftward force
+        left_rule_in[n_objs + (idx * 4) + 0, 0, 1] = 1
+        # absence of collidable tiles in the left cell
+        left_rule_in[:n_objs, 0, 0] = -coll_vector
+        left_rule_out = np.zeros_like(left_rule_in)
+        # object moves to left cell
+        left_rule_out[idx, 0, 0] = 1
+        # remove anything that was present in the input (i.e. the object and force)
+        left_rule_out -= np.clip(left_rule_in, 0, 1)
+        left_rule = np.stack((left_rule_in, left_rule_out), axis=0)
+
+        # FIXME: Actually this is the down rule and vice versa, and we've relabelled actions accordingly. Hack. Can't figure out what's wrong here.
+        # Something to do with flipping output kernel?
+        up_rule_in = np.zeros((n_objs + (n_objs * 4), 2, 1), dtype=np.int8)
+        # object must be present in lower cell
+        up_rule_in[idx, 0] = 1
+        # upward force
+        up_rule_in[n_objs + (idx * 4) + 1, 0] = 1
+        # absence of collidable tiles in the upper cell
+        up_rule_in[:n_objs, 1, 0] = -coll_vector
+        up_rule_out = np.zeros_like(up_rule_in)
+        # object moves to upper cell
+        up_rule_out[idx, 1] = 1
+        # remove anything that was present in the input
+        up_rule_out -= np.clip(up_rule_in, 0, 1)
+        up_rule = np.stack((up_rule_in, up_rule_out), axis=0)
+
+        right_rule_in = np.zeros((n_objs + (n_objs * 4), 1, 2), dtype=np.int8)
+        # object must be present in left cell
+        right_rule_in[idx, 0, 0] = 1
+        # rightward force
+        right_rule_in[n_objs + (idx * 4) + 2, 0, 0] = 1
+        # absence of collidable tiles in the right cell
+        right_rule_in[:n_objs, 0, 1] = -coll_vector
+        right_rule_out = np.zeros_like(right_rule_in)
+        # object moves to right cell
+        right_rule_out[idx, 0, 1] = 1
+        # remove anything that was present in the input
+        right_rule_out -= np.clip(right_rule_in, 0, 1)
+        right_rule = np.stack((right_rule_in, right_rule_out), axis=0)
+
+        down_rule_in = np.zeros((n_objs + (n_objs * 4), 2, 1), dtype=np.int8)
+        # object must be present in upper cell
+        down_rule_in[idx, 1] = 1
+        # downward force
+        down_rule_in[n_objs + (idx * 4) + 3, 1] = 1
+        # absence of collidable tiles in the lower cell
+        down_rule_in[:n_objs, 0, 0] = -coll_vector
+        down_rule_out = np.zeros_like(down_rule_in)
+        # object moves to lower cell
+        down_rule_out[idx, 0] = 1
+        # remove anything that was present in the input
+        down_rule_out -= np.clip(down_rule_in, 0, 1)
+        down_rule = np.stack((down_rule_in, down_rule_out), axis=0)
+
+        # rules += [left_rule, right_rule, up_rule, down_rule]
+        rules += [left_rule, right_rule, up_rule, down_rule]
+    return rules
+
+def apply_rule(lvl, move_rule, rule_i):
+    lvl = lvl[None].astype(np.int8)
+    inp = move_rule[0]
+    ink = inp[None]
+    activations = jax.lax.conv(lvl, ink, window_strides=(1,1), padding='SAME')
+    thresh_act = np.sum(np.clip(inp, 0, 1))
+    bin_activations = (activations == thresh_act).astype(np.int8)
+
+    non_zero_activations = np.argwhere(bin_activations != 0)
+    if non_zero_activations.size > 0:
+        print(f"Non-zero activations detected: {non_zero_activations}. Rule_i: {rule_i}")
+        # if rule_i == 1:
+        #     breakpoint()
+
+    outp = move_rule[1]
+    outk = outp[:, None]
+    # flip along width and height
+    outk = np.flip(outk, axis=(2, 3))
+    out = jax.lax.conv_transpose(bin_activations, outk, (1, 1), 'SAME',
+                                        dimension_numbers=('NCHW', 'OIHW', 'NCHW'))
+    # if out.sum() != 0:
+    #     print('lvl')
+    #     print(lvl[0,2])
+    #     print('out')
+    #     print(out[0,2])
+    #     breakpoint()
+    lvl += out
+
+    return lvl[0]
+
+    
+
+@dataclass
+class PSState:
+    multihot_level: np.ndarray
+    win: bool
+
 class PSEnv:
     def __init__(self, tree: PSGame):
         self.title = tree.title
@@ -277,6 +489,12 @@ class PSEnv:
         obj_legend, meta_tiles, joint_tiles = process_legend(tree.legend)
         collision_layers = expand_collision_layers(tree.collision_layers, meta_tiles)
         self.obj_to_idxs, coll_masks = assign_vecs_to_objs(collision_layers)
+        self.n_objs = len(self.obj_to_idxs)
+        coll_mat = np.einsum('ij,ik->jk', coll_masks, coll_masks, dtype=np.uint8)
+        rules = gen_rules(self.obj_to_idxs, coll_mat, tree.rules)
+        self.rules = rules + gen_move_rules(self.obj_to_idxs, coll_mat)
+        self.check_win = gen_check_win(tree.win_conditions, self.obj_to_idxs)
+        self.player_idx = self.obj_to_idxs['Player']
         sprite_stack = []
         for obj_name in self.obj_to_idxs:
             obj = tree.objects[obj_name]
@@ -324,17 +542,106 @@ class PSEnv:
 
         return im
 
-def human_loop(env):
-    for i, level in enumerate(env.levels):
-        level = level[0]
-        multihot_level = env.char_level_to_multihot(level)
-        im = env.render(multihot_level)
-        im_im = Image.fromarray(im)
-        # im_path = os.path.join(scratch_dir, f'im_{i}.png')
-        # im_im.save(im_path)
-        cv2.imshow(env.title, im_im)
-        breakpoint()
+    def reset(self, multihot_level):
+        return PSState(
+            multihot_level=multihot_level,
+            win = False,
+        )
 
+    def step(self, action, state: PSState):
+        multihot_level = state.multihot_level
+        player_pos = np.argwhere(multihot_level[self.player_idx] == 1)[0]
+        force_map = np.zeros((4 * multihot_level.shape[0], *multihot_level.shape[1:]), dtype=np.uint8)
+        if action >= 4:
+            # Apply action
+            pass
+        else:
+            force_map[self.player_idx * 4 + action, player_pos[0], player_pos[1]] = 1
+
+        lvl = np.concatenate((multihot_level, force_map), axis=0)
+
+        lvl_changed = True
+        n_apps = 0
+        while lvl_changed and n_apps < 100:
+            lvl_changed = False
+            for i, mr in enumerate(self.rules):
+                # Detect input activations
+                new_lvl = apply_rule(lvl, mr, i)
+                new_lvl = np.clip(new_lvl, 0, 1)
+                if not np.array_equal(new_lvl, lvl):
+                    lvl = new_lvl
+                    lvl_changed = True
+                    print("Rule applied")
+            n_apps += 1
+
+        multihot_level = lvl[:self.n_objs]
+
+        win = self.check_win(multihot_level)
+        if win:
+            print("You win!")
+        else:
+            print("You not win yet!")
+        return PSState(
+            multihot_level=multihot_level,
+            win=win,
+        )
+
+def human_loop(env: PSEnv):
+    # Get the first level from env.levels
+    level = env.levels[1]
+    level = level[0]
+    
+    # Convert the level to a multihot representation and render it
+    multihot_level = env.char_level_to_multihot(level)
+    state = env.reset(multihot_level)
+    im = env.render(multihot_level)
+    
+    # Resize the image by a factor of 5
+    new_h, new_w = tuple(np.array(im.shape[:2]) * 10)
+    im = cv2.resize(im, (new_w, new_h), interpolation=cv2.INTER_NEAREST)
+    
+    # Display the image in an OpenCV window
+    cv2.imshow(env.title, im)
+    print("Press an arrow key or 'x' (ESC to exit).")
+    
+    # Loop waiting for key presses
+    while True:
+        # cv2.waitKey(0) waits indefinitely until a key is pressed.
+        # Mask with 0xFF to get the lowest 8 bits (common practice).
+        key = cv2.waitKey(0)
+
+        # If the user presses ESC (ASCII 27), exit the loop.
+        if key == 27:
+            break
+        elif key == ord('x'):
+            print("x")
+            action = 4
+        elif key == 97:
+            print("left arrow")
+            action = 0
+        elif key == 119:
+            print("up arrow")
+            action = 3
+        elif key == 100:
+            print("right arrow")
+            action = 2
+        elif key == 115:
+            print("down arrow")
+            action = 1
+        elif key == ord('r'):
+            print("Restarting level...")
+            state = env.reset(multihot_level)
+            action = 5
+        else:
+            print("Other key pressed:", key)
+            action = 5
+    
+        state = env.step(action, state)
+        im = env.render(state.multihot_level)
+        im = cv2.resize(im, (new_w, new_h), interpolation=cv2.INTER_NEAREST)
+        cv2.imshow(env.title, im)
+    # Close the image window
+    cv2.destroyAllWindows()
 
 scratch_dir = 'scratch'
 os.makedirs(scratch_dir, exist_ok = True)
@@ -342,7 +649,6 @@ if __name__ == '__main__':
     tree_paths = glob.glob(os.path.join(trees_dir, '*'))
     trees = []
     tree_paths = sorted(tree_paths, reverse=True)
-    test_games = ['sokoban_basic']
     test_game_paths = [os.path.join(trees_dir, tg + '.pkl') for tg in test_games]
     tree_paths = test_game_paths + tree_paths
     for tree_path in tree_paths:

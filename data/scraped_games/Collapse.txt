@@ -24,11 +24,11 @@ Black
 .....
 .....
 
-OutdoorBackground 
+OutdoorBackground
 lightred
 
-IndoorBackground 
-white lightgray 
+IndoorBackground
+white lightgray
 11011
 11011
 11011
@@ -101,7 +101,7 @@ Red #BB0000
 01110
 10001
 
-Blood 
+Blood
 #FF0000 #AA0000
 10101
 01110
@@ -109,7 +109,7 @@ Blood
 01110
 10101
 
-Blood2 
+Blood2
 #FF0000 #AA0000
 01010
 10101
@@ -142,7 +142,7 @@ Black
 .000.
 0...0
 
-PlayerHoverLeft 
+PlayerHoverLeft
 Black
 .000.
 0000.
@@ -150,7 +150,7 @@ Black
 .000.
 ..0.0
 
-PlayerHoverRight 
+PlayerHoverRight
 Black
 .000.
 .0000
@@ -175,6 +175,7 @@ ObstacleExMine = Wall or SolidWall or Door
 . = OutdoorBackground
 , = IndoorBackground
 # = Wall
+P = Player
 k = Key and IndoorBackground
 
 =======
@@ -193,14 +194,14 @@ sfx6 77665108 (collapse)
 COLLISIONLAYERS
 ================
 
-Background 
+Background
 Jettrail1, Jettrail2, Exit
 Player, Wall, Solidwall, temp, playerhoverleft, playerhoverright, mine, Key, Flower, Door
 blood, blood2
 
 ======
-RULES     
-======     
+RULES
+======
 
 right [ moving Playerdead] -> [PlayerDead]
 
@@ -254,7 +255,7 @@ WINCONDITIONS
 No Flower
 All Player on Exit
 
-=======     
+=======
 LEVELS
 =======
 

@@ -14,9 +14,12 @@ from lark.reconstruct import Reconstructor
 parser = argparse.ArgumentParser(description='Parse PuzzleScript files')
 parser.add_argument('--overwrite', '-o', action='store_true', help='Overwrite existing parsed_games.txt')
 args = parser.parse_args()
+games_to_skip = set({'easyenigma', 'A_Plaid_Puzzle'})
+test_games = ['sokoban_basic']
 
 from lark import Lark, Transformer, Tree, Token, Visitor
 import numpy as np
+
 
 @contextlib.contextmanager
 def timeout_handler(seconds: int):
@@ -363,6 +366,7 @@ games_dir = os.path.join(data_dir, 'scraped_games')
 min_games_dir = os.path.join(data_dir, 'min_games')
 simpd_dir = os.path.join(data_dir, 'simplified_games')
 trees_dir = os.path.join(data_dir, 'game_trees')
+os.makedirs(trees_dir, exist_ok=True)
 
 # Usage example
 if __name__ == "__main__":
@@ -371,8 +375,6 @@ if __name__ == "__main__":
     # min_parser = Lark(min_puzzlescript_grammar, start="ps_game")
 
     # games_dir = os.path.join('script-doctor','games')
-
-    games_to_skip = set({'easyenigma.txt'})
 
     os.makedirs(trees_dir, exist_ok=True)
     os.makedirs(min_games_dir, exist_ok=True)
@@ -390,6 +392,8 @@ if __name__ == "__main__":
     game_files = os.listdir(games_dir)
     # sort them alphabetically
     game_files.sort()
+    test_game_files = [f"{test_game}.txt" for test_game in test_games]
+    game_files = test_game_files + game_files
 
     if not os.path.isdir(simpd_dir):
         os.mkdir(simpd_dir)
@@ -399,10 +403,10 @@ if __name__ == "__main__":
     simpd_games = set(os.listdir(simpd_dir))
     for i, filename in enumerate(game_files):
         filepath = os.path.join(games_dir, filename)
-        with open(filepath, 'r') as f:
+        with open(filepath, 'r', encoding='utf-8') as f:
             ps_text = f.read()
         simp_filename = filename[:-4] + '_simplified.txt' 
-        if filename in parsed_games or filename in games_to_skip:
+        if filename in parsed_games or os.path.basename(filename) in games_to_skip:
             print(f"Skipping {filepath}")
             continue
 
@@ -419,9 +423,20 @@ if __name__ == "__main__":
         print(f"Parsing {simp_filepath}")
 
         log_filename = os.path.join(scrape_log_dir, filename + '.log')
+
+        # This timeout functionality only works on Unix
+        if os.name != 'nt':
+            def parse_attempt_fn():
+                with timeout_handler(10):
+                    parse_tree = parser.parse(content)
+                return parse_tree
+        else:
+            def parse_attempt_fn():
+                return parser.parse(content)
+
         try:
-            with timeout_handler(10):
-                parse_tree = parser.parse(content)
+            parse_tree = parse_attempt_fn()
+
         except TimeoutError:
             with open(log_filename, 'w') as file:
                 file.write("timeout")
@@ -434,9 +449,10 @@ if __name__ == "__main__":
                 traceback.print_exc(file=file)
 
             print(f"Error parsing {simp_filepath}:\n{e}")
-            with open(parsed_games_filename, 'a') as file:
+            with open(parsed_games_filename, 'a', encoding='utf-8') as file:
                 file.write(filename + "\n")
             continue
+
 
         min_parse_tree = StripPuzzleScript().transform(parse_tree)
         min_tree_path = os.path.join(trees_dir, filename[:-3] + 'pkl')
@@ -445,13 +461,13 @@ if __name__ == "__main__":
         pretty_parse_tree_str = min_parse_tree.pretty()
         pretty_tree_filename = os.path.join('pretty_trees', filename)
         print(f"Writing pretty tree to {pretty_tree_filename}")
-        with open(pretty_tree_filename, "w") as file:
+        with open(pretty_tree_filename, "w", encoding='utf-8') as file:
             file.write(pretty_parse_tree_str)
         # print(min_parse_tree.pretty())
         ps_str = PrintPuzzleScript().transform(min_parse_tree)
         min_filename = os.path.join(min_games_dir, filename)
         print(f"Writing minified game to {min_filename}")
-        with open(min_filename, "w") as file:
+        with open(min_filename, "w", encoding='utf-8') as file:
             file.write(ps_str)
 
         with open(parsed_games_filename, 'a') as file:

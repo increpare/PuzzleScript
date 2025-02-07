@@ -1,13 +1,15 @@
 title Kettle
-author stephen lavelle
+author increpare
 homepage www.increpare.com
 
 color_palette gameboycolour
 
-(a port of a flash game of mine, the original of which can be played here:
-http://ded.increpare.com/~locus/kettle
-)
+(
 
+A port of a flash game of mine, the original of which can be played here:
+http://ded.increpare.com/~locus/kettle
+
+)
 
 ========
 OBJECTS
@@ -23,7 +25,6 @@ yellow
 0...0
 0...0
 00000
-
 
 UPolice
 black
@@ -65,7 +66,7 @@ blue
 .000.
 .0.0.
 
-wall
+Wall
 black
 
 =======
@@ -73,22 +74,22 @@ LEGEND
 =======
 
 . = Background
-player = upolice or dpolice or lpolice or rpolice
-i = upolice
-k = dpolice
-j = lpolice
-l = rpolice
+player = UPolice or DPolice or LPolice or RPolice
+i = UPolice
+k = DPolice
+j = LPolice
+l = RPolice
 c = Crate
 @ = Crate and Target
 t = Target
-# = wall
-
+# = Wall
 
 =========
 SOUNDS
 =========
-target move 59810707
-player move 86872107
+
+Target move 59810707
+Player move 86872107
 startlevel 63638302
 endlevel 86642102
 endgame 63929902
@@ -102,37 +103,38 @@ COLLISIONLAYERS
 
 Background
 Target
-player, Crate, wall
+Player, Crate, Wall
 
 ======
 RULES
 ======
 
-(the idea is simple: lots of players, each of which only responds to a particular input direction)
+(The idea is simple: lots of Players, each of which only responds to a particular input direction.)
 
-[ up rpolice] -> [rpolice]
-[ down rpolice] -> [rpolice]
-[ left rpolice] -> [rpolice]
+[ up RPolice ] -> [ RPolice ] 
+[ down RPolice ] -> [ RPolice ] 
+[ left RPolice ] -> [ RPolice ] 
 
-[ down upolice] -> [upolice]
-[ left upolice] -> [upolice]
-[ right upolice] -> [upolice]
+[ down UPolice ] -> [ UPolice ] 
+[ left UPolice ] -> [ UPolice ] 
+[ right UPolice ] -> [ UPolice ] 
 
-[ up lpolice] -> [lpolice]
-[ down lpolice] -> [lpolice]
-[ right lpolice] -> [lpolice]
+[ up LPolice ] -> [ LPolice ] 
+[ down LPolice ] -> [ LPolice ] 
+[ right LPolice ] -> [ LPolice ] 
 
-[ up dpolice] -> [dpolice]
-[ left dpolice] -> [dpolice]
-[ right dpolice] -> [dpolice]
+[ up DPolice ] -> [ DPolice ] 
+[ left DPolice ] -> [ DPolice ] 
+[ right DPolice ] -> [ DPolice ] 
 
-[ >  Player | Crate ] -> [  >  Player | > Crate  ]
-[ >  crate | Crate ] -> [  >  crate | > Crate  ]
+[ > Player | Crate ] -> [ > Player | > Crate ] 
+[ > Crate | Crate ] -> [ > Crate | > Crate ] 
 
 ==============
 WINCONDITIONS
 ==============
-all target on crate
+
+all target on Crate
 
 =======
 LEVELS
@@ -188,7 +190,6 @@ message We didn't see nothing!
 #.............#
 ###############
 
-
 message Area Secure
 message You'll be late for class, eh!
 
@@ -209,7 +210,6 @@ message You'll be late for class, eh!
 message Area Secure
 message Ha! You shat yourself!
 
-
 ###############
 #.............#
 #.............#
@@ -227,7 +227,6 @@ message Ha! You shat yourself!
 message Area Secure
 message Have to confiscate your camera!
 
-
 ###############
 #.............#
 #.............#
@@ -242,10 +241,8 @@ message Have to confiscate your camera!
 #.............#
 ###############
 
-
 message Area Secure
 message Keeping the peace is hard work
-
 
 ###############
 #.............#
@@ -261,11 +258,8 @@ message Keeping the peace is hard work
 #.............#
 ###############
 
-
 message Area Secure
 message You should've packed lunch!
-
-
 
 ###############
 #.............#
@@ -280,7 +274,6 @@ message You should've packed lunch!
 #.lc..cc...j..#
 #..iiiiiiii...#
 ###############
-
 
 message Area Secure
 message I want to hit you
@@ -300,10 +293,8 @@ message I want to hit you
 #..iiiiiiiii..#
 ###############
 
-
 message Area Secure
 message Don't be naughty!
-
 
 ###############
 #.kkkkkkkkkk..#
@@ -322,8 +313,6 @@ message Don't be naughty!
 
 message Area Secure
 message I'm upholding human rights!
-
-
 
 ###############
 #.kkkkkkkkkkk.#
@@ -344,4 +333,3 @@ message I'm upholding human rights!
 message Area Secure
 message I'm all out of lines, matey:
 message It's game over for you
-

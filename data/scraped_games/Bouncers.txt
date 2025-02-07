@@ -107,10 +107,10 @@ White White Blue
 HudBG
 black
 
-Empty 
+Empty
 black
 
-PlayEmpty 
+PlayEmpty
 black
 .....
 .....
@@ -198,10 +198,10 @@ K = BallDown
 Player = Selection
 
 
-PlacedLeftbouncer = LeftBouncer and Selection 
-PlacedRightbouncer = RightBouncer and Selection 
-PlacedUpbouncer = UpBouncer and Selection 
-PlacedDownbouncer = DownBouncer and Selection 
+PlacedLeftbouncer = LeftBouncer and Selection
+PlacedRightbouncer = RightBouncer and Selection
+PlacedUpbouncer = UpBouncer and Selection
+PlacedDownbouncer = DownBouncer and Selection
 
 Bouncer = LeftBouncer or RightBouncer or UpBouncer or DownBouncer
 
@@ -276,7 +276,7 @@ right [Empty | Bouncer] -> [Bouncer | Empty]
 [action selection iconGO] -> [gameGoing] again SFX1
 
 (make genericball match the direction of the bouncer)
-[ballSwitchLeft]->[ballSwitchedLeft] again 
+[ballSwitchLeft]->[ballSwitchedLeft] again
 [ballSwitchRight]->[ballSwitchedRight] again
 [ballSwitchUp]->[ballSwitchedUp] again
 [ballSwitchDown]->[ballSwitchedDown] again

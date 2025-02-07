@@ -1,11 +1,15 @@
 title Midas
 author wanderlands
-homepage www.wanderlands.org
+homepage https://web.archive.org/web/20160706204929/http://wanderlands.org/
 
-(A port of the luxuriant Wanderlands game, Midas, with permission of the authors.  It's a bit messy, if you can find a way to tidy it up, let me know :]
+(
+
+A port of the luxuriant Wanderlands game, Midas, with permission of the authors.  It's a bit messy, if you can find a way to tidy it UP, let me know : ] 
 
 the original is here
-http://wanderlands.org/main/midas
+https://web.archive.org/web/20120219201941/http://wanderlands.org/main/midas
+
+update: uh, it's flash, so not a playable link any more...also the original developer site is gone.
 
 )
 
@@ -14,22 +18,21 @@ OBJECTS
 ========
 
 Background
-WHITE
+white
 
-lovebase
+Lovebase
 white
 
 Target
-BLACK
+black
 .....
 ..0..
 .000.
 ..0..
 .0.0.
 
-
 GoldTarget
-ORANGE
+orange
 .....
 ..0..
 .000.
@@ -37,7 +40,7 @@ ORANGE
 .0.0.
 
 PlayerGround
-BLACK
+black
 .....
 ..0..
 .000.
@@ -45,7 +48,7 @@ BLACK
 .0.0.
 
 PlayerJump1
-BLACK
+black
 .....
 ..0..
 00000
@@ -53,7 +56,7 @@ BLACK
 .0.0.
 
 PlayerJump2
-BLACK
+black
 .....
 ..0..
 00000
@@ -61,28 +64,26 @@ BLACK
 .0.0.
 
 Crown
-Orange
+orange
 .000.
 .0.0.
 .....
 .....
 .....
 
-
 GoldBlock
-Orange
-
+orange
 
 GoldingBlock
 brown
 
 Water
-Blue
+blue
 
 Wall
-GRAY
+gray
 
-love
+Love
 pink
 .0.0.
 00000
@@ -106,13 +107,13 @@ W = Water
 G = GoldBlock
 D = GoldingBlock
 
-
 =========
 SOUNDS
 =========
-SFX0 28219707 (touch water)
-SFX1 45545307 (golding)
-SFX2 42491507 (make lady gold :/ )
+
+sfx0 28219707 (touch Water)
+sfx1 45545307 (golding)
+sfx2 42491507 (make lady gold :/ )
 StartGame 8892900
 EndLevel 28067900
 EndGame 28067900
@@ -123,39 +124,40 @@ COLLISIONLAYERS
 ================
 
 Background
-lovebase
+Lovebase
 PlayerGround, PlayerJump1,PlayerJump2, Wall, Water, GoldBlock, Target, GoldTarget, GoldingBlock
 Crown
-love
+Love
 
 ======
 RULES
 ======
 
-UP [ Up PlayerGround | No Obstacle ] -> [ Up PlayerJump2 | ]
-DOWN [ Up JumpingPlayer | no obstacle ] -> [ JumpingPlayer | ]
-DOWN [ Up PlayerJump2 | no obstacle ] -> [ PlayerJump2 | ]
+UP [ UP PlayerGround | NO Obstacle ] -> [ UP PlayerJump2 | ] 
+DOWN [ UP JumpingPlayer | NO Obstacle ] -> [ JumpingPlayer | ] 
+DOWN [ UP PlayerJump2 | NO Obstacle ] -> [ PlayerJump2 | ] 
 
-[ Stationary CanFall ] -> [ Down CanFall ]
+[ STATIONARY CanFall ] -> [ Down CanFall ] 
 
-HORIZONTAL [ > PlayerJump1 | NO obstacle ] -> [ | PlayerGround ]
-HORIZONTAL [ > PlayerJump2 | NO obstacle ] -> [ | PlayerJump1 ]
-LATE DOWN [ PlayerGround | NO obstacle ] -> [ | playerground ]
+HORIZONTAL [ > PlayerJump1 | NO Obstacle ] -> [ | PlayerGround ] 
+HORIZONTAL [ > PlayerJump2 | NO Obstacle ] -> [ | PlayerJump1 ] 
+LATE DOWN [ PlayerGround | NO Obstacle ] -> [ | PlayerGround ] 
 
-LATE [ crown no player ] [ player ] -> [ ] [ crown player ]
-LATE [ goldingblock ] -> [goldblock]
-LATE [ crown | wall ] -> [crown | goldingblock] SFX1
-LATE [ crown | water ] -> [ | water ] SFX0
-LATE [ crown | target ] -> [ crown | goldtarget ] SFX2
-LATE DOWN [ JumpingPlayer | Obstacle ] -> [ PlayerGround | Obstacle ]
+LATE [ Crown NO Player ] [ Player ] -> [ ] [ Crown Player ] 
+LATE [ GoldingBlock ] -> [ GoldBlock ] 
+LATE [ Crown | Wall ] -> [ Crown | GoldingBlock ] sfx1
+LATE [ Crown | Water ] -> [ | Water ] sfx0
+LATE [ Crown | Target ] -> [ Crown | GoldTarget ] sfx2
+LATE DOWN [ JumpingPlayer | Obstacle ] -> [ PlayerGround | Obstacle ] 
 
-LATE [ player | target ] -> [ player lovebase | target ]
-LATE UP [ lovebase | ] -> [ | love ]
+LATE [ Player | Target ] -> [ Player Lovebase | Target ] 
+LATE UP [ Lovebase | ] -> [ | Love ] 
 
 ==============
 WINCONDITIONS
 ==============
-some love (Awwww!)
+
+some Love (Awwww!)
 
 =======
 LEVELS
@@ -321,9 +323,7 @@ message And she feels so distant
 #...................#
 #####################
 
-
 message I live on borrowed time
-
 
 #####################
 #...................#
@@ -339,9 +339,7 @@ message I live on borrowed time
 #.......###W#.......#
 #####################
 
-
 message Is she still waiting?
-
 
 #####################
 #...................#
@@ -360,8 +358,7 @@ message Is she still waiting?
 #...................#
 #####################
 
-message Is love just fool's gold?
-
+message Is Love just fool's gold?
 
 #####################
 #...................#
@@ -377,6 +374,5 @@ message Is love just fool's gold?
 #...................#
 #...................#
 #####################
-
 
 message Midas
