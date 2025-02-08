@@ -23,7 +23,7 @@ class GenPSTree(Transformer):
     """
     def object_data(self, items):
         name_line = items[0]
-        name = str(name_line.children[0].children[0])
+        name = str(name_line.children[0].children[0]).lower()
         colors = []
         color_line = items[1]
         legend_key = str(name_line.children[1].children[0]) if len(name_line.children) > 1 else None
@@ -86,6 +86,11 @@ class GenPSTree(Transformer):
 
         return LegendEntry(key=key, obj_names=obj_names, operator=operator)
 
+    def prefix(self, items):
+        out = str(items[0])
+        if out.lower().startswith('sfx'):
+            return None
+
     def rule_data(self, items):
         ps = []
         l = []
@@ -96,6 +101,8 @@ class GenPSTree(Transformer):
                 r = items[i+1:]
                 break
             l.append(item)
+        l = [it for it in l if it is not None]
+        r = [it for it in r if it is not None]
         rule = Rule(
             left_patterns = l,
             right_patterns = r,
@@ -112,7 +119,7 @@ class GenPSTree(Transformer):
         return {it.key: it for it in items}
     
     def layer_data(self, items):
-        obj_names = [str(it.children[0]) for it in items]
+        obj_names = [str(it.children[0]).lower() for it in items]
         return obj_names
 
     def condition_data(self, items):
@@ -325,6 +332,7 @@ def gen_rules(obj_to_idxs, coll_mat, tree_rules):
                 cell = cell.split(' ')
                 force = False
                 for obj in cell:
+                    obj = obj.lower()
                     if obj in obj_to_idxs:
                         obj_i = obj_to_idxs[obj]
                         lr_in[obj_i, 0, i] = 1
@@ -349,6 +357,7 @@ def gen_rules(obj_to_idxs, coll_mat, tree_rules):
                 cell = cell.split(' ')
                 force = False
                 for obj in cell:
+                    obj = obj.lower()
                     if obj in obj_to_idxs:
                         obj_i = obj_to_idxs[obj]
                         print('DEBUG', obj, obj_i, dr_out.shape)
