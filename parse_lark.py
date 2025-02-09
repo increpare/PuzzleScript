@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser(description='Parse PuzzleScript files')
 parser.add_argument('--overwrite', '-o', action='store_true', help='Overwrite existing parsed_games.txt')
 args = parser.parse_args()
 games_to_skip = set({'easyenigma', 'A_Plaid_Puzzle'})
-test_games = ['sokoban_eyeball', 'sokoban_basic']
+test_games = ['notsnake', 'sokoban_eyeball', 'sokoban_basic']
 
 from lark import Lark, Transformer, Tree, Token, Visitor
 import numpy as np
@@ -366,7 +366,7 @@ games_dir = os.path.join(data_dir, 'scraped_games')
 min_games_dir = os.path.join(data_dir, 'min_games')
 simpd_dir = os.path.join(data_dir, 'simplified_games')
 trees_dir = os.path.join(data_dir, 'game_trees')
-os.makedirs(trees_dir, exist_ok=True)
+pretty_trees_dir = os.path.join(data_dir, 'pretty_trees')
 
 # Usage example
 if __name__ == "__main__":
@@ -377,6 +377,7 @@ if __name__ == "__main__":
     # games_dir = os.path.join('script-doctor','games')
 
     os.makedirs(trees_dir, exist_ok=True)
+    os.makedirs(pretty_trees_dir, exist_ok=True)
     os.makedirs(min_games_dir, exist_ok=True)
     parsed_games_filename = "parsed_games.txt"
     # min_grammar = os.path.join('syntax_generate.lark')
@@ -386,8 +387,6 @@ if __name__ == "__main__":
     with open(parsed_games_filename, "r", encoding='utf-8') as file:
         # Get the set of all lines from this text file
         parsed_games = set(file.read().splitlines())
-    if not os.path.isdir('pretty_trees'):
-        os.mkdir('pretty_trees')
     # for i, filename in enumerate(['blank.txt'] + os.listdir(demo_games_dir)):
     game_files = os.listdir(games_dir)
     # sort them alphabetically
@@ -459,7 +458,7 @@ if __name__ == "__main__":
         with open(min_tree_path, "wb") as f:
             pickle.dump(min_parse_tree, f)
         pretty_parse_tree_str = min_parse_tree.pretty()
-        pretty_tree_filename = os.path.join('pretty_trees', filename)
+        pretty_tree_filename = os.path.join(pretty_trees_dir, filename)
         print(f"Writing pretty tree to {pretty_tree_filename}")
         with open(pretty_tree_filename, "w", encoding='utf-8') as file:
             file.write(pretty_parse_tree_str)
