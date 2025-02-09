@@ -2434,6 +2434,10 @@ function printRules(state) {
     var discardcount = 0;
     for (var i = 0; i < state.rules.length; i++) {
         var rule = state.rules[i];
+        if (loopEnd !== -1 && loopEnd < rule.lineNumber) {
+            output += "ENDLOOP<br>";
+            loopEnd = -1;
+        }
         if (loopIndex < state.loops.length) {
             if (state.loops[loopIndex][0] < rule.lineNumber) {
                 output += "STARTLOOP<br>";
@@ -2443,10 +2447,6 @@ function printRules(state) {
                     loopIndex++;
                 }
             }
-        }
-        if (loopEnd !== -1 && loopEnd < rule.lineNumber) {
-            output += "ENDLOOP<br>";
-            loopEnd = -1;
         }
         if (rule.hasOwnProperty('discard')) {
             discardcount++;
