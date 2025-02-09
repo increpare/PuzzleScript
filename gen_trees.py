@@ -68,15 +68,14 @@ class GenPSTree(Transformer):
 
     def legend_data(self, items):
         key = items[0]
-        key = re.search(r'(.+)=', key).groups()[0]
         # The first entry in this legend key's mapping is just an object name
         assert len(items[1].children) == 1
-        obj_names = [str(items[1].children[0])]
+        obj_names = [str(items[1].children[0]).lower()]
         # Every subsequent item is preceded by an AND or OR legend operator.
         # They should all be the same
         operator = None
         for it in items[2:]:
-            obj_name = str(it.children[1].children[0])
+            obj_name = str(it.children[1].children[0]).lower()
             obj_names.append(obj_name)
             new_op = str(it.children[0])
             if operator is not None:
@@ -124,10 +123,10 @@ class GenPSTree(Transformer):
 
     def condition_data(self, items):
         quant = str(items[0])
-        src_obj = str(items[1].children[0])
+        src_obj = str(items[1].children[0]).lower()
         trg_obj = None
         if len(items) > 2:
-            trg_obj = str(items[3].children[0])
+            trg_obj = str(items[3].children[0]).lower()
         return WinCondition(quantifier=quant, src_obj=src_obj, trg_obj=trg_obj)
 
     level_data = levels_section = collisionlayers_section = rule_block = rules_section \
@@ -207,6 +206,17 @@ def replace_bg_tiles(x):
     else:
         return int(x) + 1
 
+def render_solid_color(color):
+    color = color.lower()
+    if color in color_hex_map:
+        c = color_hex_map[color]
+    else:
+        c = '#000000'
+    c = hex_to_rgba(c, 255)
+    im = np.zeros((16, 16, 4), dtype=np.uint8)
+    im[:, :, :] = np.array(c)
+    return im
+
 def render_sprite(colors, sprite):
     sprite = np.vectorize(replace_bg_tiles)(sprite)
     colors = np.array(['transparent'] + colors)
@@ -254,6 +264,7 @@ def process_legend(legend):
     meta_tiles = {}
     conjoined_tiles = {}
     for k, v in legend.items():
+        k = k.split(' ')[0]
         v: LegendEntry
         if v.operator is None:
             assert len(v.obj_names) == 1
@@ -288,14 +299,23 @@ def gen_check_win(win_conditions, obj_to_idxs):
     def check_some(lvl, src, trg):
         return np.sum(lvl[src] == 1 * lvl[trg] == 1) > 0
 
+    def check_none(lvl, src):
+        return np.sum(lvl[src] == 1) == 0
+
     funcs = []
     for win_condition in win_conditions:
         src, trg = win_condition.src_obj, win_condition.trg_obj
-        src, trg = obj_to_idxs[src], obj_to_idxs[trg]
+        src = obj_to_idxs[src]
+        if trg is not None:
+            trg = obj_to_idxs[trg]
         if win_condition.quantifier == 'all':
             func = partial(check_all, src=src, trg=trg)
         elif win_condition.quantifier == 'some':
             func = partial(check_some, src=src, trg=trg)
+        elif win_condition.quantifier == 'no':
+            func = partial(check_none, src=src)
+        else:
+            raise Exception('Invalid quantifier.')
         funcs.append(func)
 
     def check_win(lvl):
@@ -306,82 +326,99 @@ def gen_check_win(win_conditions, obj_to_idxs):
 def gen_rules(obj_to_idxs, coll_mat, tree_rules):
     n_objs = len(obj_to_idxs)
     rules = []
-    assert len(tree_rules) == 1
-    rule_blocks = tree_rules[0]
-    for rule_block in rule_blocks:
-        assert rule_block.looping == False
-        for rule in rule_block.rules:
-            assert len(rule.prefixes) == 0
-            lp = rule.left_patterns
-            rp = rule.right_patterns
-            n_kernels = len(lp)
-            assert n_kernels == 1
-            assert len(rp) == n_kernels
-            lp = lp[0]
-            rp = rp[0]
-            n_cells = len(lp)
-            assert len(rp) == n_cells
+    if len(tree_rules) == 0:
+        pass
+    elif len(tree_rules) == 1:
+        rule_blocks = tree_rules[0]
+        for rule_block in rule_blocks:
+            assert rule_block.looping == False
+            for rule in rule_block.rules:
+                assert len(rule.prefixes) == 0
+                lp = rule.left_patterns
+                rp = rule.right_patterns
+                n_kernels = len(lp)
+                assert n_kernels == 1
+                assert len(rp) == n_kernels
+                lp = lp[0]
+                rp = rp[0]
+                n_cells = len(lp)
+                assert len(rp) == n_cells
 
-            lr_in = np.zeros((n_objs + (n_objs * 4), 1, n_cells), dtype=np.int8)
-            rr_in = np.zeros_like(lr_in)
-            ur_in = np.zeros((n_objs + (n_objs * 4), n_cells, 1), dtype=np.int8)
-            dr_in = np.zeros_like(ur_in)
-            for i, cell in enumerate(lp):
-                assert len(cell) == 1 #???
-                cell = cell[0]
-                cell = cell.split(' ')
-                force = False
-                for obj in cell:
-                    obj = obj.lower()
-                    if obj in obj_to_idxs:
-                        obj_i = obj_to_idxs[obj]
-                        lr_in[obj_i, 0, i] = 1
-                        rr_in[obj_i, 0, n_cells-1-i] = 1
-                        ur_in[obj_i, i, 0] = 1
-                        dr_in[obj_i, n_cells-1-i, 0] = 1
-                    elif obj == '>':
-                        force = True
-                    else: raise Exception(f'Invalid object `{obj}` in rule.')
-                if force:
-                    lr_in[n_objs + (obj_i * 4) + 2, 0, i] = 1
-                    rr_in[n_objs + (obj_i * 4) + 0, 0, n_cells-1-i] = 1
-                    ur_in[n_objs + (obj_i * 4) + 1, i, 0] = 1
-                    dr_in[n_objs + (obj_i * 4) + 3, n_cells-1-i, 0] = 1
-            lr_out = np.zeros_like(lr_in)
-            rr_out = np.zeros_like(rr_in)
-            ur_out = np.zeros_like(ur_in)
-            dr_out = np.zeros_like(dr_in)
-            for i, cell in enumerate(rp):
-                assert len(cell) == 1 #???
-                cell = cell[0]
-                cell = cell.split(' ')
-                force = False
-                for obj in cell:
-                    obj = obj.lower()
-                    if obj in obj_to_idxs:
-                        obj_i = obj_to_idxs[obj]
-                        print('DEBUG', obj, obj_i, dr_out.shape)
-                        lr_out[obj_i, 0, i] = 1
-                        rr_out[obj_i, 0, n_cells-1-i] = 1
-                        ur_out[obj_i, i, 0] = 1
-                        dr_out[obj_i, n_cells-1-i, 0] = 1
-                    elif obj == '>':
-                        force = True
-                    else: raise Exception('Invalid object in rule.')
-                if force:
-                    lr_out[n_objs + (obj_i * 4) + 2, 0, i] = 1
-                    rr_out[n_objs + (obj_i * 4) + 0, 0, n_cells-1-i] = 1
-                    ur_out[n_objs + (obj_i * 4) + 1, i, 0] = 1
-                    dr_out[n_objs + (obj_i * 4) + 3, n_cells-1-i, 0] = 1
-            lr_out = lr_out - np.clip(lr_in, 0, 1)
-            rr_out = rr_out - np.clip(rr_in, 0, 1)
-            ur_out = ur_out - np.clip(ur_in, 0, 1)
-            dr_out = dr_out - np.clip(dr_in, 0, 1)
-            lr_rule = np.stack((lr_in, lr_out), axis=0)
-            rr_rule = np.stack((rr_in, rr_out), axis=0)
-            ur_rule = np.stack((ur_in, ur_out), axis=0)
-            dr_rule = np.stack((dr_in, dr_out), axis=0)
-            rules += [lr_rule, rr_rule, ur_rule, dr_rule]
+                lr_in = np.zeros((n_objs + (n_objs * 4), 1, n_cells), dtype=np.int8)
+                rr_in = np.zeros_like(lr_in)
+                ur_in = np.zeros((n_objs + (n_objs * 4), n_cells, 1), dtype=np.int8)
+                dr_in = np.zeros_like(ur_in)
+                lr_out = np.zeros_like(lr_in)
+                rr_out = np.zeros_like(rr_in)
+                ur_out = np.zeros_like(ur_in)
+                dr_out = np.zeros_like(dr_in)
+                for i, (l_cell, r_cell) in enumerate(zip(lp, rp)):
+                    # Left cell
+                    if len(l_cell) == 1:
+                        l_cell = l_cell[0]
+                        l_cell = l_cell.split(' ')
+                    l_force = False
+                    l_no = False
+                    for obj in l_cell:
+                        obj = obj.lower()
+                        if obj in obj_to_idxs:
+                            fill_val = 1
+                            if l_no:
+                                fill_val = -1
+                            obj_i = obj_to_idxs[obj]
+                            lr_in[obj_i, 0, i] = fill_val
+                            rr_in[obj_i, 0, n_cells-1-i] = fill_val
+                            ur_in[obj_i, i, 0] = fill_val
+                            dr_in[obj_i, n_cells-1-i, 0] = fill_val
+                            if l_force:
+                                lr_in[n_objs + (obj_i * 4) + 2, 0, i] = 1
+                                rr_in[n_objs + (obj_i * 4) + 0, 0, n_cells-1-i] = 1
+                                ur_in[n_objs + (obj_i * 4) + 1, i, 0] = 1
+                                dr_in[n_objs + (obj_i * 4) + 3, n_cells-1-i, 0] = 1
+                            l_force, l_no = False, False
+                        elif obj == '>':
+                            l_force = True
+                        elif obj == 'no':
+                            l_no = True
+                        else: raise Exception(f'Invalid object `{obj}` in rule.')
+                    # Right cell
+                    if len(r_cell) == 1:
+                        r_cell = r_cell[0]
+                        r_cell = r_cell.split(' ')
+                    r_force = False
+                    r_no = False
+                    for obj in r_cell:
+                        obj = obj.lower()
+                        if obj in obj_to_idxs:
+                            fill_val = 1
+                            if r_no:
+                                fill_val = -1
+                            obj_i = obj_to_idxs[obj]
+                            print('DEBUG', obj, obj_i, dr_out.shape)
+                            lr_out[obj_i, 0, i] = fill_val
+                            rr_out[obj_i, 0, n_cells-1-i] = fill_val
+                            ur_out[obj_i, i, 0] = fill_val
+                            dr_out[obj_i, n_cells-1-i, 0] = fill_val
+                            if r_force:
+                                lr_out[n_objs + (obj_i * 4) + 2, 0, i] = 1
+                                rr_out[n_objs + (obj_i * 4) + 0, 0, n_cells-1-i] = 1
+                                ur_out[n_objs + (obj_i * 4) + 1, i, 0] = 1
+                                dr_out[n_objs + (obj_i * 4) + 3, n_cells-1-i, 0] = 1
+                            r_force, r_no = False, False
+                        elif obj == '>':
+                            r_force = True
+                        elif obj == 'no':
+                            r_no = True
+                        else: raise Exception('Invalid object in rule.')
+                lr_out = lr_out - np.clip(lr_in, 0, 1)
+                rr_out = rr_out - np.clip(rr_in, 0, 1)
+                ur_out = ur_out - np.clip(ur_in, 0, 1)
+                dr_out = dr_out - np.clip(dr_in, 0, 1)
+                lr_rule = np.stack((lr_in, lr_out), axis=0)
+                rr_rule = np.stack((rr_in, rr_out), axis=0)
+                ur_rule = np.stack((ur_in, ur_out), axis=0)
+                dr_rule = np.stack((dr_in, dr_out), axis=0)
+                rules += [lr_rule, rr_rule, ur_rule, dr_rule]
     return rules
 
 def gen_move_rules(obj_to_idxs, coll_mat):
@@ -458,7 +495,7 @@ def apply_rule(lvl, move_rule, rule_i):
     lvl = lvl[None].astype(np.int8)
     inp = move_rule[0]
     ink = inp[None]
-    activations = jax.lax.conv(lvl, ink, window_strides=(1,1), padding='SAME')
+    activations = jax.lax.conv(lvl, ink, window_strides=(1,1), padding='VALID')
     thresh_act = np.sum(np.clip(inp, 0, 1))
     bin_activations = (activations == thresh_act).astype(np.int8)
 
@@ -472,7 +509,7 @@ def apply_rule(lvl, move_rule, rule_i):
     outk = outp[:, None]
     # flip along width and height
     outk = np.flip(outk, axis=(2, 3))
-    out = jax.lax.conv_transpose(bin_activations, outk, (1, 1), 'SAME',
+    out = jax.lax.conv_transpose(bin_activations, outk, (1, 1), padding='VALID',
                                         dimension_numbers=('NCHW', 'OIHW', 'NCHW'))
     # if out.sum() != 0:
     #     print('lvl')
@@ -503,11 +540,15 @@ class PSEnv:
         rules = gen_rules(self.obj_to_idxs, coll_mat, tree.rules)
         self.rules = rules + gen_move_rules(self.obj_to_idxs, coll_mat)
         self.check_win = gen_check_win(tree.win_conditions, self.obj_to_idxs)
-        self.player_idx = self.obj_to_idxs['Player']
+        self.player_idx = self.obj_to_idxs['player']
         sprite_stack = []
         for obj_name in self.obj_to_idxs:
             obj = tree.objects[obj_name]
-            im = render_sprite(obj.colors, obj.sprite)
+            if obj.sprite is not None:
+                im = render_sprite(obj.colors, obj.sprite)
+            else:
+                assert len(obj.colors) == 1
+                im = render_solid_color(obj.colors[0])
             sprite_stack.append(im)
         self.sprite_stack = np.array(sprite_stack)
         n_objs = len(self.obj_to_idxs)
@@ -526,13 +567,14 @@ class PSEnv:
     def char_level_to_multihot(self, level):
         int_level = np.vectorize(lambda x: self.chars_to_idxs[x])(level)
         multihot_level = self.obj_vecs[int_level]
-        bg_idx = self.obj_to_idxs['Background']
+        bg_idx = self.obj_to_idxs['background']
         multihot_level = rearrange(multihot_level, "h w c -> c h w")
         multihot_level[bg_idx] = 1
         return multihot_level
 
-    def render(self, multihot_level):
-        level_height, level_width = multihot_level.shape[1:]
+    def render(self, state: PSState):
+        lvl = state.multihot_level
+        level_height, level_width = lvl.shape[1:]
         sprite_height, sprite_width = self.sprite_stack.shape[1:3]
         im = np.zeros((level_height * sprite_height, level_width * sprite_width, 4), dtype=np.uint8)
         im_lyrs = []
@@ -540,7 +582,7 @@ class PSEnv:
             sprite_stack_i = np.stack(
                 (np.zeros_like(sprite), sprite)
             )
-            lyr = multihot_level[i]
+            lyr = lvl[i]
             im_lyr = sprite_stack_i[lyr]
             im_lyr = rearrange(im_lyr, "lh lw sh sw c -> (lh sh) (lw sw) c")
             im_lyr_im = Image.fromarray(im_lyr)
@@ -551,9 +593,10 @@ class PSEnv:
 
         return im
 
-    def reset(self, multihot_level):
+    def reset(self, lvl_i):
+        lvl = self.get_level(lvl_i)
         return PSState(
-            multihot_level=multihot_level,
+            multihot_level=lvl,
             win = False,
         )
 
@@ -595,15 +638,16 @@ class PSEnv:
             win=win,
         )
 
+    def get_level(self, level_idx):
+        level = self.levels[level_idx][0]
+        # Convert the level to a multihot representation and render it
+        multihot_level = env.char_level_to_multihot(level)
+        return multihot_level
+
 def human_loop(env: PSEnv):
-    # Get the first level from env.levels
-    level = env.levels[1]
-    level = level[0]
-    
-    # Convert the level to a multihot representation and render it
-    multihot_level = env.char_level_to_multihot(level)
-    state = env.reset(multihot_level)
-    im = env.render(multihot_level)
+    lvl_i = 0 
+    state = env.reset(lvl_i)
+    im = env.render(state)
     
     # Resize the image by a factor of 5
     new_h, new_w = tuple(np.array(im.shape[:2]) * 10)
@@ -618,6 +662,8 @@ def human_loop(env: PSEnv):
         # cv2.waitKey(0) waits indefinitely until a key is pressed.
         # Mask with 0xFF to get the lowest 8 bits (common practice).
         key = cv2.waitKey(0)
+        action = None
+        do_reset = False
 
         # If the user presses ESC (ASCII 27), exit the loop.
         if key == 27:
@@ -639,14 +685,28 @@ def human_loop(env: PSEnv):
             action = 1
         elif key == ord('r'):
             print("Restarting level...")
-            state = env.reset(multihot_level)
-            action = 5
+            do_reset = True
+        elif key == ord('n'):
+            print("Advancing level...")
+            lvl_i += 1
+            do_reset = True
         else:
             print("Other key pressed:", key)
-            action = 5
+
+        if lvl_i >= len(env.levels):
+            print("No more levels!")
+            break
+
+        elif do_reset:
+            state = env.reset(lvl_i)
     
-        state = env.step(action, state)
-        im = env.render(state.multihot_level)
+        elif action is not None:
+            state: PSState = env.step(action, state)
+
+        if state.win:
+            lvl_i += 1
+            state = env.reset(lvl_i)
+        im = env.render(state)
         im = cv2.resize(im, (new_w, new_h), interpolation=cv2.INTER_NEAREST)
         cv2.imshow(env.title, im)
     # Close the image window

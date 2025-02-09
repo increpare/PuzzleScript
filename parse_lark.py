@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser(description='Parse PuzzleScript files')
 parser.add_argument('--overwrite', '-o', action='store_true', help='Overwrite existing parsed_games.txt')
 args = parser.parse_args()
 games_to_skip = set({'easyenigma', 'A_Plaid_Puzzle'})
-test_games = ['notsnake', 'sokoban_eyeball', 'sokoban_basic']
+test_games = ['notsnake', 'sokoban_basic']
 
 from lark import Lark, Transformer, Tree, Token, Visitor
 import numpy as np
@@ -367,6 +367,7 @@ min_games_dir = os.path.join(data_dir, 'min_games')
 simpd_dir = os.path.join(data_dir, 'simplified_games')
 trees_dir = os.path.join(data_dir, 'game_trees')
 pretty_trees_dir = os.path.join(data_dir, 'pretty_trees')
+parsed_games_filename = os.path.join(data_dir, "parsed_games.txt")
 
 # Usage example
 if __name__ == "__main__":
@@ -379,7 +380,6 @@ if __name__ == "__main__":
     os.makedirs(trees_dir, exist_ok=True)
     os.makedirs(pretty_trees_dir, exist_ok=True)
     os.makedirs(min_games_dir, exist_ok=True)
-    parsed_games_filename = "parsed_games.txt"
     # min_grammar = os.path.join('syntax_generate.lark')
     if args.overwrite or not os.path.exists(parsed_games_filename):
         with open(parsed_games_filename, "w") as file:

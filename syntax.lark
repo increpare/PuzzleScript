@@ -23,7 +23,7 @@ objects_section: "OBJECTS"i NEWLINES object_data+
 legend_section: "LEGEND"i NEWLINES legend_data+
 sounds_section: "SOUNDS"i NEWLINES sound_data*
 collisionlayers_section: "COLLISIONLAYERS"i NEWLINES layer_data+
-rules_section: "RULES"i NEWLINES rule_block+
+rules_section: "RULES"i NEWLINES rule_block*
 winconditions_section: "WINCONDITIONS"i NEWLINES condition_data*
 levels_section: "LEVELS"i NEWLINES level_data+
 
