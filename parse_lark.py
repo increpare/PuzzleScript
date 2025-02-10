@@ -15,7 +15,9 @@ parser = argparse.ArgumentParser(description='Parse PuzzleScript files')
 parser.add_argument('--overwrite', '-o', action='store_true', help='Overwrite existing parsed_games.txt')
 args = parser.parse_args()
 games_to_skip = set({'easyenigma', 'A_Plaid_Puzzle'})
-test_games = ['notsnake', 'sokoban_basic']
+
+# test_games = ['blockfaker', 'sokoban_match3', 'notsnake', 'sokoban_basic']
+test_games = ['sokoban_match3', 'notsnake', 'sokoban_basic']
 
 from lark import Lark, Transformer, Tree, Token, Visitor
 import numpy as np

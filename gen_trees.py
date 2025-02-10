@@ -3,6 +3,7 @@ from functools import partial
 import os
 import pickle
 import re
+import time
 from typing import List, Dict, Optional, Any, Set, Tuple
 import copy
 import random
@@ -67,7 +68,7 @@ class GenPSTree(Transformer):
         return cells
 
     def legend_data(self, items):
-        key = items[0]
+        key = items[0].lower()
         # The first entry in this legend key's mapping is just an object name
         assert len(items[1].children) == 1
         obj_names = [str(items[1].children[0]).lower()]
@@ -129,8 +130,11 @@ class GenPSTree(Transformer):
             trg_obj = str(items[3].children[0]).lower()
         return WinCondition(quantifier=quant, src_obj=src_obj, trg_obj=trg_obj)
 
-    level_data = levels_section = collisionlayers_section = rule_block = rules_section \
+    levels_section = collisionlayers_section = rule_block = rules_section \
         = winconditions_section = return_items_lst
+
+    def level_data(self, items):
+        return np.vectorize(lambda x: str(x).lower())(items)
 
     def ps_game(self, items):
         prelude_items = items[0].children
@@ -213,7 +217,7 @@ def render_solid_color(color):
     else:
         c = '#000000'
     c = hex_to_rgba(c, 255)
-    im = np.zeros((16, 16, 4), dtype=np.uint8)
+    im = np.zeros((5, 5, 4), dtype=np.uint8)
     im[:, :, :] = np.array(c)
     return im
 
@@ -292,12 +296,21 @@ def expand_collision_layers(collision_layers, meta_tiles):
                 j += 1
     return collision_layers
 
+def expand_meta_tiles(tile_list, obj_to_idxs, meta_tiles):
+    expanded_meta_tiles = []
+    for mt in tile_list:
+        if mt in obj_to_idxs:
+            expanded_meta_tiles.append(mt)
+        elif mt in tile_list:
+            expanded_meta_tiles += expand_meta_tiles(meta_tiles[mt], obj_to_idxs, meta_tiles)
+    return expanded_meta_tiles
+
 def gen_check_win(win_conditions, obj_to_idxs):
     def check_all(lvl, src, trg):
         return np.sum((lvl[src] == 1) * (lvl[trg] == 0)) == 0
 
     def check_some(lvl, src, trg):
-        return np.sum(lvl[src] == 1 * lvl[trg] == 1) > 0
+        return np.sum((lvl[src] == 1) * (lvl[trg] == 1)) > 0
 
     def check_none(lvl, src):
         return np.sum(lvl[src] == 1) == 0
@@ -321,11 +334,220 @@ def gen_check_win(win_conditions, obj_to_idxs):
     def check_win(lvl):
         return all([func(lvl) for func in funcs])
     return check_win
+
+
+def gen_subrule(rule, n_objs, obj_to_idxs, meta_tiles):
+    assert len(rule.prefixes) == 0
+    lp = rule.left_patterns
+    rp = rule.right_patterns
+    n_kernels = len(lp)
+    assert n_kernels == 1
+    assert len(rp) == n_kernels
+    lp = lp[0]
+    rp = rp[0]
+    n_cells = len(lp)
+    assert len(rp) == n_cells
+
+    lr_in = np.zeros((n_objs + (n_objs * 4), 1, n_cells), dtype=np.int8)
+    rr_in = np.zeros_like(lr_in)
+    ur_in = np.zeros((n_objs + (n_objs * 4), n_cells, 1), dtype=np.int8)
+    dr_in = np.zeros_like(ur_in)
+    lr_out = np.zeros_like(lr_in)
+    rr_out = np.zeros_like(rr_in)
+    ur_out = np.zeros_like(ur_in)
+    dr_out = np.zeros_like(dr_in)
+    for i, (l_cell, r_cell) in enumerate(zip(lp, rp)):
+        # Left cell
+        if len(l_cell) == 1:
+            l_cell = l_cell[0]
+            l_cell = l_cell.split(' ')
+        l_force = False
+        l_no = False
+        for obj in l_cell:
+            obj = obj.lower()
+            if obj in meta_tiles:
+                return None
+            if obj in obj_to_idxs:
+                fill_val = 1
+                if l_no:
+                    fill_val = -1
+                obj_i = obj_to_idxs[obj]
+                lr_in[obj_i, 0, i] = fill_val
+                rr_in[obj_i, 0, n_cells-1-i] = fill_val
+                ur_in[obj_i, i, 0] = fill_val
+                dr_in[obj_i, n_cells-1-i, 0] = fill_val
+                if l_force:
+                    lr_in[n_objs + (obj_i * 4) + 2, 0, i] = 1
+                    rr_in[n_objs + (obj_i * 4) + 0, 0, n_cells-1-i] = 1
+                    ur_in[n_objs + (obj_i * 4) + 1, i, 0] = 1
+                    dr_in[n_objs + (obj_i * 4) + 3, n_cells-1-i, 0] = 1
+                l_force, l_no = False, False
+            elif obj == '>':
+                l_force = True
+            elif obj == 'no':
+                l_no = True
+            else: raise Exception(f'Invalid object `{obj}` in rule.')
+        # Right cell
+        if len(r_cell) == 1:
+            r_cell = r_cell[0]
+            r_cell = r_cell.split(' ')
+        r_force = False
+        r_no = False
+        for obj in r_cell:
+            obj = obj.lower()
+            # NOTE: Should never have a meta-tile here if we didn't already see one on the left side (?)
+            if obj in obj_to_idxs:
+                fill_val = 1
+                if r_no:
+                    fill_val = -1
+                obj_i = obj_to_idxs[obj]
+                lr_out[obj_i, 0, i] = fill_val
+                rr_out[obj_i, 0, n_cells-1-i] = fill_val
+                ur_out[obj_i, i, 0] = fill_val
+                dr_out[obj_i, n_cells-1-i, 0] = fill_val
+                if r_force:
+                    lr_out[n_objs + (obj_i * 4) + 2, 0, i] = 1
+                    rr_out[n_objs + (obj_i * 4) + 0, 0, n_cells-1-i] = 1
+                    ur_out[n_objs + (obj_i * 4) + 1, i, 0] = 1
+                    dr_out[n_objs + (obj_i * 4) + 3, n_cells-1-i, 0] = 1
+                r_force, r_no = False, False
+            elif obj == '>':
+                r_force = True
+            elif obj == 'no':
+                r_no = True
+            else: raise Exception('Invalid object in rule.')
+    lr_out = lr_out - np.clip(lr_in, 0, 1)
+    rr_out = rr_out - np.clip(rr_in, 0, 1)
+    ur_out = ur_out - np.clip(ur_in, 0, 1)
+    dr_out = dr_out - np.clip(dr_in, 0, 1)
+    lr_rule = np.stack((lr_in, lr_out), axis=0)
+    rr_rule = np.stack((rr_in, rr_out), axis=0)
+    ur_rule = np.stack((ur_in, ur_out), axis=0)
+    dr_rule = np.stack((dr_in, dr_out), axis=0)
+    # TODO: If horizontal/vertical etc. has been specified, filter out unnecessary rules here
+    rules = [lr_rule, rr_rule, ur_rule, dr_rule]
+    rule_names = [f"{rule}_{dir}" for dir in enumerate(['lr', 'rr', 'ur', 'dr'])]
+    rule_fns = [partial(apply_rule, move_rule=rule, rule_name=rule_name) 
+                    for rule, rule_name in zip(rules, rule_names)]
+    return rule_fns
+
+
+def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
+    assert len(rule.prefixes) == 0
+
+    def detect_obj_in_cell(obj_idx, m_cell):
+        return m_cell[obj_idx] == 1
+
+    def detect_any_objs_in_cell(objs_vec, m_cell):
+        """Given a multi-hot vector indicating a set of objects, return the index of the object contained in this cell."""
+        # for detecting meta-tiles
+        detected_vec_idxs = np.argwhere(np.sum(objs_vec[:, None, None] * m_cell, axis=0) > 0)[0]
+        if len(detected_vec_idxs) == 0:
+            return False, []
+        else:
+            return True, detected_vec_idxs[0]
+
+    def detect_all_objs_in_cell(objs_vec, m_cell):
+        # for detecting overlapping objects (not necessary?)
+        return np.all(objs_vec[:, None, None] == m_cell), []
+
+    def detect_no_objs_in_cell(objs_vec, m_cell):
+        return np.sum(objs_vec[:, None, None] * m_cell) == 0, []
+
+    def detect_no_obj_in_cell(obj_idx, m_cell):
+        return m_cell[obj_idx] == 0, []
+
+    def detect_force_on_obj(obj_idx, force_idx, m_cell):
+        return (m_cell[obj_idx] == 1) \
+            and (m_cell[n_objs * 4 + force_idx] == 1), []
+
+    def detect_force_on_meta(obj_idxs, force_idx, m_cell):
+        force_obj_vecs = []
+        for obj_idx in obj_idxs:
+            force_obj_vec = np.zeros(n_objs + n_objs * 4, dtype=np.int8)
+            force_obj_vec[obj_idx] = 1
+            force_obj_vec[obj_idx * 4 + force_idx] = 1
+            force_obj_vecs.append(force_obj_vec)
+        obj_activations = np.sum(np.array(force_obj_vecs)[:, None, None] * m_cell, axis=0) 
+        if np.all(obj_activations < 2):
+            return False, []
+        detected_vec_idx = np.argwhere(obj_activations == 2)[0][0]
+        return True, detected_vec_idx
+
+    def gen_cell_detection_fn(l_cell):
+        fns = []
+        if len(l_cell) == 1:
+            l_cell = l_cell[0]
+            l_cell = l_cell.split(' ')
+        no, force = False, False
+        for obj in l_cell:
+            obj = obj.lower()
+            if obj == 'no':
+                no = True
+            elif obj == '>':
+                force = True
+            elif obj in obj_to_idxs:
+                obj_idx = obj_to_idxs[obj]
+                if no:
+                    fns.append(partial(detect_no_obj_in_cell, obj_idx))
+                elif force:
+                    fns.append(partial(detect_force_on_obj, obj_idx))
+                else:
+                    fns.append(partial(detect_obj_in_cell, obj_idx))
+            elif obj in meta_tiles:
+                sub_objs = expand_meta_tiles([obj], obj_to_idxs, meta_tiles)
+                sub_obj_idxs = [obj_to_idxs[so] for so in sub_objs]
+                sub_objs_vec = np.zeros((n_objs + n_objs * 4), dtype=np.int8)
+                sub_objs_vec[sub_obj_idxs] = 1
+                if no:
+                    fns.append(partial(detect_no_objs_in_cell, sub_objs_vec))
+                elif force:
+                    fns.append(partial(detect_force_on_meta, sub_obj_idxs))
+                else:
+                    fns.append(partial(detect_any_objs_in_cell, sub_objs_vec))
+        
+        def cell_detection_fn(m_cell):
+            fn_outs = [fn(m_cell) for fn in fns]
+            activated = all(fn_outs)
+            return activated, fn_outs
+
+        return cell_detection_fn
+
+
+    def gen_pattern_detection_fn(lp):
+        cell_fns = []
+        for i, l_cell in enumerate(lp):
+            cell_fns.append(gen_cell_detection_fn(l_cell))
+
+        def pattern_detection_fn(lvl):
+            in_patch_shape = lp.shape
+            in_patches = jax.lax.conv_general_dilated_patches(
+                lvl, in_patch_shape, window_strides=(1, 1), padding='VALID',
+            )
+            # TODO vmap across the patches
+            breakpoint()
+            patch_activations, cell_outs  = [], []
+            for in_patch in in_patches:
+                pattern_activated = True
+                for i, cell_fn in enumerate(cell_fns):
+                    m_cell = in_patch[i]
+                    cell_activated, cell_outs = cell_fn(m_cell)
+                    if not cell_activated:
+                        pattern_activated = False
+                        break
+                patch_activations.append(pattern_activated)
+                cell_outs.append(cell_outs)
+
+            return patch_activations, cell_outs
+
+        return pattern_detection_fn
+
         
         
-def gen_rules(obj_to_idxs, coll_mat, tree_rules):
+def gen_rules(obj_to_idxs, coll_mat, tree_rules, meta_tiles):
     n_objs = len(obj_to_idxs)
-    rules = []
+    rule_fns = []
+    meta_tile_rules = []
     if len(tree_rules) == 0:
         pass
     elif len(tree_rules) == 1:
@@ -333,97 +555,21 @@ def gen_rules(obj_to_idxs, coll_mat, tree_rules):
         for rule_block in rule_blocks:
             assert rule_block.looping == False
             for rule in rule_block.rules:
-                assert len(rule.prefixes) == 0
-                lp = rule.left_patterns
-                rp = rule.right_patterns
-                n_kernels = len(lp)
-                assert n_kernels == 1
-                assert len(rp) == n_kernels
-                lp = lp[0]
-                rp = rp[0]
-                n_cells = len(lp)
-                assert len(rp) == n_cells
+                # TODO: rule-block and loop logics
+                sub_rule_fns = gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles)
+                rule_fns.append(sub_rule_fns)
 
-                lr_in = np.zeros((n_objs + (n_objs * 4), 1, n_cells), dtype=np.int8)
-                rr_in = np.zeros_like(lr_in)
-                ur_in = np.zeros((n_objs + (n_objs * 4), n_cells, 1), dtype=np.int8)
-                dr_in = np.zeros_like(ur_in)
-                lr_out = np.zeros_like(lr_in)
-                rr_out = np.zeros_like(rr_in)
-                ur_out = np.zeros_like(ur_in)
-                dr_out = np.zeros_like(dr_in)
-                for i, (l_cell, r_cell) in enumerate(zip(lp, rp)):
-                    # Left cell
-                    if len(l_cell) == 1:
-                        l_cell = l_cell[0]
-                        l_cell = l_cell.split(' ')
-                    l_force = False
-                    l_no = False
-                    for obj in l_cell:
-                        obj = obj.lower()
-                        if obj in obj_to_idxs:
-                            fill_val = 1
-                            if l_no:
-                                fill_val = -1
-                            obj_i = obj_to_idxs[obj]
-                            lr_in[obj_i, 0, i] = fill_val
-                            rr_in[obj_i, 0, n_cells-1-i] = fill_val
-                            ur_in[obj_i, i, 0] = fill_val
-                            dr_in[obj_i, n_cells-1-i, 0] = fill_val
-                            if l_force:
-                                lr_in[n_objs + (obj_i * 4) + 2, 0, i] = 1
-                                rr_in[n_objs + (obj_i * 4) + 0, 0, n_cells-1-i] = 1
-                                ur_in[n_objs + (obj_i * 4) + 1, i, 0] = 1
-                                dr_in[n_objs + (obj_i * 4) + 3, n_cells-1-i, 0] = 1
-                            l_force, l_no = False, False
-                        elif obj == '>':
-                            l_force = True
-                        elif obj == 'no':
-                            l_no = True
-                        else: raise Exception(f'Invalid object `{obj}` in rule.')
-                    # Right cell
-                    if len(r_cell) == 1:
-                        r_cell = r_cell[0]
-                        r_cell = r_cell.split(' ')
-                    r_force = False
-                    r_no = False
-                    for obj in r_cell:
-                        obj = obj.lower()
-                        if obj in obj_to_idxs:
-                            fill_val = 1
-                            if r_no:
-                                fill_val = -1
-                            obj_i = obj_to_idxs[obj]
-                            print('DEBUG', obj, obj_i, dr_out.shape)
-                            lr_out[obj_i, 0, i] = fill_val
-                            rr_out[obj_i, 0, n_cells-1-i] = fill_val
-                            ur_out[obj_i, i, 0] = fill_val
-                            dr_out[obj_i, n_cells-1-i, 0] = fill_val
-                            if r_force:
-                                lr_out[n_objs + (obj_i * 4) + 2, 0, i] = 1
-                                rr_out[n_objs + (obj_i * 4) + 0, 0, n_cells-1-i] = 1
-                                ur_out[n_objs + (obj_i * 4) + 1, i, 0] = 1
-                                dr_out[n_objs + (obj_i * 4) + 3, n_cells-1-i, 0] = 1
-                            r_force, r_no = False, False
-                        elif obj == '>':
-                            r_force = True
-                        elif obj == 'no':
-                            r_no = True
-                        else: raise Exception('Invalid object in rule.')
-                lr_out = lr_out - np.clip(lr_in, 0, 1)
-                rr_out = rr_out - np.clip(rr_in, 0, 1)
-                ur_out = ur_out - np.clip(ur_in, 0, 1)
-                dr_out = dr_out - np.clip(dr_in, 0, 1)
-                lr_rule = np.stack((lr_in, lr_out), axis=0)
-                rr_rule = np.stack((rr_in, rr_out), axis=0)
-                ur_rule = np.stack((ur_in, ur_out), axis=0)
-                dr_rule = np.stack((dr_in, dr_out), axis=0)
-                rules += [lr_rule, rr_rule, ur_rule, dr_rule]
-    return rules
+    def rule_fn(lvl):
+        lvl = lvl[None].astype(np.int8)
+        for rule_fn in rule_fns:
+            lvl = rule_fn(lvl)
+        return lvl[0]
+
+    return rule_fn
 
 def gen_move_rules(obj_to_idxs, coll_mat):
     n_objs = len(obj_to_idxs)
-    rules = []
+    rule_fns = []
     for obj, idx in obj_to_idxs.items():
         if obj == 'Background':
             continue
@@ -488,10 +634,13 @@ def gen_move_rules(obj_to_idxs, coll_mat):
         down_rule = np.stack((down_rule_in, down_rule_out), axis=0)
 
         # rules += [left_rule, right_rule, up_rule, down_rule]
-        rules += [left_rule, right_rule, up_rule, down_rule]
-    return rules
+        rules = [left_rule, right_rule, up_rule, down_rule]
+        rule_names = [f"{obj}_move_{j}" for j in ['left', 'right', 'up', 'down']]
+        rule_fns += [partial(apply_rule, move_rule=rule, rule_name=rule_name)
+                     for rule, rule_name in zip(rules, rule_names)]
+    return rule_fns
 
-def apply_rule(lvl, move_rule, rule_i):
+def apply_rule(lvl, move_rule, rule_name):
     lvl = lvl[None].astype(np.int8)
     inp = move_rule[0]
     ink = inp[None]
@@ -501,7 +650,7 @@ def apply_rule(lvl, move_rule, rule_i):
 
     non_zero_activations = np.argwhere(bin_activations != 0)
     if non_zero_activations.size > 0:
-        print(f"Non-zero activations detected: {non_zero_activations}. Rule_i: {rule_i}")
+        print(f"Non-zero activations detected: {non_zero_activations}. Rule_i: {rule_name}")
         # if rule_i == 1:
         #     breakpoint()
 
@@ -537,8 +686,8 @@ class PSEnv:
         self.obj_to_idxs, coll_masks = assign_vecs_to_objs(collision_layers)
         self.n_objs = len(self.obj_to_idxs)
         coll_mat = np.einsum('ij,ik->jk', coll_masks, coll_masks, dtype=np.uint8)
-        rules = gen_rules(self.obj_to_idxs, coll_mat, tree.rules)
-        self.rules = rules + gen_move_rules(self.obj_to_idxs, coll_mat)
+        rule_fns = gen_rules(self.obj_to_idxs, coll_mat, tree.rules, meta_tiles)
+        self.rule_fns = rule_fns + gen_move_rules(self.obj_to_idxs, coll_mat)
         self.check_win = gen_check_win(tree.win_conditions, self.obj_to_idxs)
         self.player_idx = self.obj_to_idxs['player']
         sprite_stack = []
@@ -572,7 +721,7 @@ class PSEnv:
         multihot_level[bg_idx] = 1
         return multihot_level
 
-    def render(self, state: PSState):
+    def render(self, state: PSState, cv2=True):
         lvl = state.multihot_level
         level_height, level_width = lvl.shape[1:]
         sprite_height, sprite_width = self.sprite_stack.shape[1:3]
@@ -591,6 +740,10 @@ class PSEnv:
             overwrite_mask = im_lyr[:, :, 3] == 255
             im = np.where(np.repeat(overwrite_mask[:, :, None], 4, 2), im_lyr, im)
 
+        if cv2:
+            # swap the red and blue channels
+            im = im[:, :, [2, 1, 0, 3]]
+
         return im
 
     def reset(self, lvl_i):
@@ -600,7 +753,7 @@ class PSEnv:
             win = False,
         )
 
-    def step(self, action, state: PSState):
+    def apply_player_force(self, action, state: PSState):
         multihot_level = state.multihot_level
         player_pos = np.argwhere(multihot_level[self.player_idx] == 1)[0]
         force_map = np.zeros((4 * multihot_level.shape[0], *multihot_level.shape[1:]), dtype=np.uint8)
@@ -609,21 +762,16 @@ class PSEnv:
             pass
         else:
             force_map[self.player_idx * 4 + action, player_pos[0], player_pos[1]] = 1
-
         lvl = np.concatenate((multihot_level, force_map), axis=0)
+        return lvl
 
+    def step(self, action, state: PSState):
+        lvl = self.apply_player_force(action, state)
         lvl_changed = True
         n_apps = 0
         while lvl_changed and n_apps < 100:
             lvl_changed = False
-            for i, mr in enumerate(self.rules):
-                # Detect input activations
-                new_lvl = apply_rule(lvl, mr, i)
-                new_lvl = np.clip(new_lvl, 0, 1)
-                if not np.array_equal(new_lvl, lvl):
-                    lvl = new_lvl
-                    lvl_changed = True
-                    print("Rule applied")
+            lvl, lvl_changed = substep(lvl, self.rule_fns)
             n_apps += 1
 
         multihot_level = lvl[:self.n_objs]
@@ -644,6 +792,20 @@ class PSEnv:
         multihot_level = env.char_level_to_multihot(level)
         return multihot_level
 
+
+def substep(lvl, rule_fns):
+    lvl_changed = False
+    for i, rule_fn in enumerate(rule_fns):
+        # Detect input activations
+        new_lvl = rule_fn(lvl)
+        new_lvl = np.clip(new_lvl, 0, 1)
+        if not np.array_equal(new_lvl, lvl):
+            lvl = new_lvl
+            lvl_changed = True
+            print("Rule applied")
+    return lvl, lvl_changed
+
+
 def human_loop(env: PSEnv):
     lvl_i = 0 
     state = env.reset(lvl_i)
@@ -652,6 +814,7 @@ def human_loop(env: PSEnv):
     # Resize the image by a factor of 5
     new_h, new_w = tuple(np.array(im.shape[:2]) * 10)
     im = cv2.resize(im, (new_w, new_h), interpolation=cv2.INTER_NEAREST)
+    state_hist = []
     
     # Display the image in an OpenCV window
     cv2.imshow(env.title, im)
@@ -690,6 +853,15 @@ def human_loop(env: PSEnv):
             print("Advancing level...")
             lvl_i += 1
             do_reset = True
+        elif key == ord('z'):
+            print("Undoing last action...")
+            if len(state_hist) > 1:
+                state_hist.pop()
+                state = state_hist[-1]
+            im = env.render(state)
+            im = cv2.resize(im, (new_w, new_h), interpolation=cv2.INTER_NEAREST)
+            cv2.imshow(env.title, im)
+
         else:
             print("Other key pressed:", key)
 
@@ -699,16 +871,52 @@ def human_loop(env: PSEnv):
 
         elif do_reset:
             state = env.reset(lvl_i)
+            state_hist.append(state)
+            im = env.render(state)
+            im = cv2.resize(im, (new_w, new_h), interpolation=cv2.INTER_NEAREST)
+            cv2.imshow(env.title, im)
     
         elif action is not None:
-            state: PSState = env.step(action, state)
+            lvl = env.apply_player_force(action, state)
+            vis_lvl = lvl[:env.n_objs]
+            lvl_changed = True
+            n_vis_apps = 0
+            while lvl_changed:
+                lvl_changed = False
+                vis_lvl_changed = False
+                lvl, lvl_changed = substep(lvl, env.rule_fns)
+                new_vis_lvl = lvl[:env.n_objs]
+                if not np.array_equal(new_vis_lvl, vis_lvl):
+                    vis_lvl = new_vis_lvl
+                    vis_lvl_changed = True
+                    if n_vis_apps > 1 and vis_lvl_changed:
+                        print('sleep')
+                        cv2.waitKey(1)  # waits for 1000 ms (1 second)
+                    n_vis_apps += 1
+                    print('Rule visibly applied')
+                state.multihot_level = vis_lvl
+                im = env.render(state)
+                im = cv2.resize(im, (new_w, new_h), interpolation=cv2.INTER_NEAREST)
+                cv2.imshow(env.title, im)
+                # Add a short waitKey here to allow the window to update.
+                cv2.waitKey(1)  # 1 ms delay; adjust as necessary
+            win = env.check_win(vis_lvl)
+            if win:
+                print("You win!")
+            else:
+                print("You not win yet!")
+            state = PSState(
+                multihot_level=vis_lvl,
+                win=win,
+            )
+            state_hist.append(state)
 
         if state.win:
             lvl_i += 1
             state = env.reset(lvl_i)
-        im = env.render(state)
-        im = cv2.resize(im, (new_w, new_h), interpolation=cv2.INTER_NEAREST)
-        cv2.imshow(env.title, im)
+            im = env.render(state)
+            im = cv2.resize(im, (new_w, new_h), interpolation=cv2.INTER_NEAREST)
+            cv2.imshow(env.title, im)
     # Close the image window
     cv2.destroyAllWindows()
 
