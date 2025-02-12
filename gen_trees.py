@@ -457,9 +457,12 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
     def detect_no_obj_in_cell(obj_idx, m_cell):
         return m_cell[obj_idx] == 0, []
 
-    def detect_force_on_obj(obj_idx, force_idx, m_cell):
-        return (m_cell[obj_idx] == 1) \
-            and (m_cell[n_objs * 4 + force_idx] == 1), []
+    def detect_force_on_obj(obj_idx, m_cell):
+        obj_is_present = m_cell[obj_idx] == 1
+        force_idx = np.argwhere(m_cell[n_objs + (obj_idx * 4):n_objs + (obj_idx * 4) + 4] == 1)
+        assert len(force_idx) <= 1
+        is_force_on_obj = obj_is_present and len(force_idx) > 0
+        return is_force_on_obj, [force_idx]
 
     def detect_force_on_meta(obj_idxs, force_idx, m_cell):
         force_obj_vecs = []
@@ -515,6 +518,7 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
 
 
     def gen_pattern_detection_fn(lp):
+        lp = np.array(lp)
         cell_fns = []
         for i, l_cell in enumerate(lp):
             cell_fns.append(gen_cell_detection_fn(l_cell))
@@ -524,23 +528,37 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
             in_patches = jax.lax.conv_general_dilated_patches(
                 lvl, in_patch_shape, window_strides=(1, 1), padding='VALID',
             )
+            assert in_patches.shape[0] == 1
+            in_patches = in_patches[0]
+            in_patches = rearrange(in_patches, "c h w -> h w c")
             # TODO vmap across the patches
-            breakpoint()
             patch_activations, cell_outs  = [], []
-            for in_patch in in_patches:
-                pattern_activated = True
-                for i, cell_fn in enumerate(cell_fns):
-                    m_cell = in_patch[i]
-                    cell_activated, cell_outs = cell_fn(m_cell)
-                    if not cell_activated:
-                        pattern_activated = False
-                        break
-                patch_activations.append(pattern_activated)
-                cell_outs.append(cell_outs)
+            for in_patch_row in in_patches:
+                patch_activations_row = []
+                cell_outs_row = []
+                for in_patch in in_patches:
+                    pattern_activated = True
+                    for i, cell_fn in enumerate(cell_fns):
+                        m_cell = in_patch[i]
+                        cell_activated, cell_outs = cell_fn(m_cell)
+                        if not cell_activated:
+                            pattern_activated = False
+                            break
+                    patch_activations_row.append(pattern_activated)
+                    cell_outs_row.append(cell_outs)
+                patch_activations.append(patch_activations_row)
+                cell_outs.append(cell_outs_row)
 
             return patch_activations, cell_outs
 
         return pattern_detection_fn
+
+    def gen_pattern_generation_fn(lp, rp):
+        pass
+
+    pattern_detection_fns = [gen_pattern_detection_fn(lp) for lp in rule.left_patterns]
+    
+    return pattern_detection_fns
 
         
         
@@ -557,12 +575,14 @@ def gen_rules(obj_to_idxs, coll_mat, tree_rules, meta_tiles):
             for rule in rule_block.rules:
                 # TODO: rule-block and loop logics
                 sub_rule_fns = gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles)
-                rule_fns.append(sub_rule_fns)
+                rule_fns += sub_rule_fns
 
     def rule_fn(lvl):
         lvl = lvl[None].astype(np.int8)
         for rule_fn in rule_fns:
+            print(lvl)
             lvl = rule_fn(lvl)
+            breakpoint()
         return lvl[0]
 
     return rule_fn
@@ -687,7 +707,7 @@ class PSEnv:
         self.n_objs = len(self.obj_to_idxs)
         coll_mat = np.einsum('ij,ik->jk', coll_masks, coll_masks, dtype=np.uint8)
         rule_fns = gen_rules(self.obj_to_idxs, coll_mat, tree.rules, meta_tiles)
-        self.rule_fns = rule_fns + gen_move_rules(self.obj_to_idxs, coll_mat)
+        self.rule_fns = [rule_fns] + gen_move_rules(self.obj_to_idxs, coll_mat)
         self.check_win = gen_check_win(tree.win_conditions, self.obj_to_idxs)
         self.player_idx = self.obj_to_idxs['player']
         sprite_stack = []

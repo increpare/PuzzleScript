@@ -56,7 +56,7 @@ class StripPuzzleScript(Transformer):
     def strip_newlines_data(self, items, data_name):
         """Remove any instances of section data that are newlines/comments"""
         items = [item for item in items if not (isinstance(item, Tree) and item.data == "newlines_or_comments")]
-        items = [item for item in items if not (isinstance(item, Token) and item.type == "NEWLINES")]
+        items = [item for item in items if not (isinstance(item, Token) and (item.type == "NEWLINES" or item.type == "NEWLINE"))]
         if len(items) > 0:
             return Tree(data_name, items)
 

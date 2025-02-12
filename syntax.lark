@@ -32,7 +32,7 @@ STRING: /[^\n]+/
 // Object Data
 object_line: object_name legend_key?
 color_line: color+ 
-object_data: object_line NEWLINES color_line NEWLINES (sprite NEWLINES)?
+object_data: object_line NEWLINE color_line NEWLINE sprite? NEWLINE
 
 SPRITE_PIXEL: /[0-9.]/
 colors: color+
