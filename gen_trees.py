@@ -696,9 +696,16 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                 patch_activations[*first_a] = 1
                 detect_outs = detect_outs[first_a[0]][first_a[1]]
 
+                # Apply projection functions to the affected cells
                 out_cell_idxs = np.indices(in_patch_shape)
+                out_cell_idxs = rearrange(out_cell_idxs, "xy h w -> h w xy")
+                if is_vertical:
+                    out_cell_idxs = out_cell_idxs[:, 0]
+                elif is_horizontal:
+                    out_cell_idxs = out_cell_idxs[0, :]
+
                 for idxs in out_cell_idxs:
-                    idxs = idxs[0] + first_a
+                    idxs += first_a
                     map_cells = patches[*idxs]
                     map_cells = map_cells.reshape((n_chan, -1))
                     out_cells = []
@@ -708,9 +715,19 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                         out_cells.append(out_cell)
                     out_cells = np.array(out_cells).reshape(-1)
                     patches = patches.at[*idxs].set(out_cells)
+                    print(idxs)
 
-                # Now, to reconstruct the level, we create an identity kernel (using `in_patch_shape`) and perform a transposed convolution
-                # TODO
+
+                for idxs in out_cell_idxs:
+                    outk = np.zeros((n_chan, n_chan * np.array(in_patch_shape).size, *in_patch_shape), dtype=np.int8)
+                    breakpoint()
+                    print(outk[:, :n_chan, *idxs]).shape
+                    breakpoint()
+
+                patches = rearrange(patches, "h w c -> 1 c h w")
+                lvl = jax.lax.conv_transpose(patches, outk, (1, 1), padding='VALID',
+                                                    dimension_numbers=('NCHW', 'OIHW', 'NCHW'))
+
 
 
             return lvl
@@ -966,7 +983,7 @@ class PSEnv:
         if win:
             print("You win!")
         else:
-            print("You not win yet!")
+            print("You don't win yet!")
         return PSState(
             multihot_level=multihot_level,
             win=win,
@@ -1090,7 +1107,7 @@ def human_loop(env: PSEnv):
             if win:
                 print("You win!")
             else:
-                print("You not win yet!")
+                print("You don't win yet!")
             state = PSState(
                 multihot_level=vis_lvl,
                 win=win,
