@@ -472,8 +472,6 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
         # assert len(force_idx) <= 1
         is_force_on_obj = obj_is_present and force_is_present
         if is_force_on_obj:
-            print('detected force on obj')
-            print(force_idx, m_cell.shape)
             return is_force_on_obj, ObjFnReturn(
                 # force_idx=force_idx[0], 
                 obj_idx=obj_idx)
@@ -525,9 +523,8 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
 
     def gen_cell_detection_fn(l_cell, force_idx):
         fns = []
-        if len(l_cell) == 1:
-            l_cell = l_cell[0]
-            l_cell = l_cell.split(' ')
+            # l_cell = l_cell[0]
+        l_cell = l_cell.split(' ')
         no, force = False, False
         obj_names = []
         for obj in l_cell:
@@ -557,6 +554,8 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                         fns.append(partial(detect_force_on_meta, sub_obj_idxs, force_idx))
                     else:
                         fns.append(partial(detect_any_objs_in_cell, sub_objs_vec))
+                else:
+                    raise Exception(f'Invalid object `{obj}` in rule.')
         
         def cell_detection_fn(m_cell):
             # TODO: can vmap this
@@ -565,7 +564,6 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
             fn_outs: List[ObjFnReturn] = [f[1] for f in fn_outs]
             detected = np.zeros(m_cell.shape, dtype=np.int8)
             for i, f in enumerate(fn_outs):
-
                 if f.obj_idx is not None:
                     detected[f.obj_idx] = 1
                 if f.force_idx is not None:
@@ -583,8 +581,9 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
         return cell_detection_fn
 
     def disambiguate_meta(obj, meta_objs):
-        if obj in meta_objs:
-            return obj_to_idxs[meta_objs[obj]]
+        return meta_objs[obj].item()
+        # if obj in meta_objs:
+        #     return obj_to_idxs[meta_objs[obj]]
 
     def project_obj(m_cell, obj, meta_objs):
         obj_idx = disambiguate_meta(obj, meta_objs)
@@ -596,10 +595,11 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
         m_cell[obj_idx] = 0
         return m_cell
 
-    def project_force_on_obj(m_cell, obj, force_idx, meta_objs):
+    def project_force_on_obj(m_cell, detect_out, obj, force_idx):
+        meta_objs = detect_out.meta_objs
         obj_idx = disambiguate_meta(obj, meta_objs)
-        m_cell[obj_idx] = 1
-        m_cell[n_objs + (obj_idx * 4) + force_idx] = 1
+        m_cell = m_cell.at[obj_idx].set(1)
+        m_cell = m_cell.at[n_objs + (obj_idx * 4) + force_idx].set(1)
         return m_cell
 
     def gen_cell_projection_fn(r_cell, force_idx):
@@ -618,7 +618,7 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                 if no:
                     fns.append(partial(project_no_obj, obj))
                 elif force:
-                    fns.append(partial(project_force_on_obj, obj, force_idx))
+                    fns.append(partial(project_force_on_obj, obj=obj, force_idx=force_idx))
                 else:
                     fns.append(partial(project_obj, obj))
         
@@ -634,31 +634,34 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
 
     def gen_rule_fn(lp, rp, rot):
         lp = np.array(lp)
-        force_idx = rot
+        force_idx = [1, 0, 2, 3][rot]
         is_horizontal = lp.shape[0] == 1
         is_vertical = lp.shape[1] == 1
-        assert is_horizontal or is_vertical
+        assert is_horizontal ^ is_vertical
+        in_patch_shape = lp.shape
+        # TODO: kernels. We assume just 1 here.
+        if is_horizontal:
+            lp = lp[0, :]
+        elif is_vertical:
+            lp = lp[:, 0]
         cell_detection_fns = []
         cell_projection_fns = []
-        # TODO: kernels. We assume just 1 here.
         for i, l_cell in enumerate(lp):
             cell_detection_fns.append(gen_cell_detection_fn(l_cell, force_idx))
-
         for i, r_cell in enumerate(rp):
             cell_projection_fns.append(gen_cell_projection_fn(r_cell, force_idx))
 
         def rule_fn(lvl):
             n_chan = lvl.shape[1]
-            in_patch_shape = lp.shape
-            in_patches = jax.lax.conv_general_dilated_patches(
+            patches = jax.lax.conv_general_dilated_patches(
                 lvl, in_patch_shape, window_strides=(1, 1), padding='VALID',
             )
-            assert in_patches.shape[0] == 1
-            in_patches = in_patches[0]
-            in_patches = rearrange(in_patches, "c h w -> h w c")
+            assert patches.shape[0] == 1
+            patches = patches[0]
+            patches = rearrange(patches, "c h w -> h w c")
             # TODO vmap across the patches
-            patch_activations, cell_outs  = [], []
-            for xi, in_patch_row in enumerate(in_patches):
+            patch_activations, detect_outs  = [], []
+            for xi, in_patch_row in enumerate(patches):
                 patch_activations_row = []
                 cell_outs_row = []
                 for yi, in_patch in enumerate(in_patch_row):
@@ -678,7 +681,7 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                     patch_activations_row.append(pattern_activated)
                     cell_outs_row.append(cell_outs_patch)
                 patch_activations.append(patch_activations_row)
-                cell_outs.append(cell_outs_row)
+                detect_outs.append(cell_outs_row)
 
             # eliminate all but one activation
 
@@ -691,11 +694,24 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                 first_a = np.argwhere(patch_activations == 1)[0]
                 patch_activations = np.zeros_like(patch_activations)
                 patch_activations[*first_a] = 1
-                cell_outs = cell_outs[first_a[0]][first_a[1]]
-                breakpoint()
+                detect_outs = detect_outs[first_a[0]][first_a[1]]
 
-                out_patches = in_patches
-                out_patches[*first_a] = pattern_projection_fn()
+                out_cell_idxs = np.indices(in_patch_shape)
+                for idxs in out_cell_idxs:
+                    idxs = idxs[0] + first_a
+                    map_cells = patches[*idxs]
+                    map_cells = map_cells.reshape((n_chan, -1))
+                    out_cells = []
+                    for i, (detect_out, cell_projection_fn) in enumerate(zip(detect_outs, cell_projection_fns)):
+                        out_cell = map_cells[:, i]
+                        out_cell = cell_projection_fn(out_cell, detect_out)
+                        out_cells.append(out_cell)
+                    out_cells = np.array(out_cells).reshape(-1)
+                    patches = patches.at[*idxs].set(out_cells)
+
+                # Now, to reconstruct the level, we create an identity kernel (using `in_patch_shape`) and perform a transposed convolution
+                # TODO
+
 
             return lvl
 
@@ -703,14 +719,14 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
     
     rule_fns = []
     for lp, rp in zip(rule.left_patterns, rule.right_patterns):
-        for rot in [2,1,0,3]:
+        # for rot in [0,1,0,0]:
+        for rot in [0]:
             # rotate the patterns
             lp = np.rot90(lp, rot)
             rp = np.rot90(rp, rot)
             rule_fns.append(gen_rule_fn(lp, rp, rot))
 
     return rule_fns
-
         
         
 def gen_rules(obj_to_idxs, coll_mat, tree_rules, meta_tiles):
@@ -930,6 +946,7 @@ class PSEnv:
             # Apply action
             pass
         else:
+            action = [0, 1, 2, 3][action]
             force_map[self.player_idx * 4 + action, player_pos[0], player_pos[1]] = 1
         lvl = np.concatenate((multihot_level, force_map), axis=0)
         return lvl
