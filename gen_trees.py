@@ -11,6 +11,7 @@ import random
 import cv2
 from einops import rearrange
 import jax
+import jax.numpy as jnp
 from lark import Token, Transformer, Tree
 import numpy as np
 from PIL import Image
@@ -487,11 +488,11 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
         else:
             obj_idx = detected_vec_idxs[0]
 
-            return True, {'obj_idx': obj_idx}
+            return True, ObjFnReturn(obj_idx=obj_idx)
 
     def detect_no_objs_in_cell(objs_vec, m_cell):
         detected = np.zeros(m_cell.shape, dtype=np.int8)
-        return np.sum(objs_vec[:, None, None] * m_cell) == 0, ObjFnReturn
+        return np.sum(objs_vec[:, None, None] * m_cell) == 0, ObjFnReturn()
 
     def detect_force_on_meta(obj_idxs, force_idx, m_cell):
         force_obj_vecs = []
@@ -523,7 +524,6 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
 
     def gen_cell_detection_fn(l_cell, force_idx):
         fns = []
-            # l_cell = l_cell[0]
         l_cell = l_cell.split(' ')
         no, force = False, False
         obj_names = []
@@ -581,16 +581,19 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
         return cell_detection_fn
 
     def disambiguate_meta(obj, meta_objs):
-        return meta_objs[obj].item()
-        # if obj in meta_objs:
-        #     return obj_to_idxs[meta_objs[obj]]
+        if obj in meta_objs:
+            return meta_objs[obj].item()
+        else:
+            return obj_to_idxs[obj]
 
-    def project_obj(m_cell, obj, meta_objs):
+    def project_obj(m_cell, detect_out, obj):
+        meta_objs = detect_out.meta_objs
         obj_idx = disambiguate_meta(obj, meta_objs)
-        m_cell[obj_idx] = 1
+        m_cell = m_cell.at[obj_idx].set(1)
         return m_cell
 
-    def project_no_obj(m_cell, obj, meta_objs):
+    def project_no_obj(m_cell, detect_out, obj):
+        meta_objs = detect_out.meta_objs
         obj_idx = disambiguate_meta(obj, meta_objs)
         m_cell[obj_idx] = 0
         return m_cell
@@ -604,8 +607,9 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
 
     def gen_cell_projection_fn(r_cell, force_idx):
         fns = []
-        if len(r_cell) == 1:
-            r_cell = r_cell[0]
+        if r_cell is None:
+            r_cell = []
+        else:
             r_cell = r_cell.split(' ')
         no, force = False, False
         for obj in r_cell:
@@ -616,11 +620,11 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                 force = True
             elif obj in obj_to_idxs:
                 if no:
-                    fns.append(partial(project_no_obj, obj))
+                    fns.append(partial(project_no_obj, obj=obj))
                 elif force:
                     fns.append(partial(project_force_on_obj, obj=obj, force_idx=force_idx))
                 else:
-                    fns.append(partial(project_obj, obj))
+                    fns.append(partial(project_obj, obj=obj))
         
         def cell_projection_fn(m_cell, detect_out):
             m_cell -= detect_out.detected
@@ -634,7 +638,9 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
 
     def gen_rule_fn(lp, rp, rot):
         lp = np.array(lp)
-        force_idx = [1, 0, 2, 3][rot]
+        # Here we map force directions to corresponding rule rotations
+        rot_to_force = [1, 2, 0, 3]
+        force_idx = rot_to_force[rot]
         is_horizontal = lp.shape[0] == 1
         is_vertical = lp.shape[1] == 1
         assert is_horizontal ^ is_vertical
@@ -642,8 +648,10 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
         # TODO: kernels. We assume just 1 here.
         if is_horizontal:
             lp = lp[0, :]
+            rp = rp[0, :]
         elif is_vertical:
             lp = lp[:, 0]
+            rp = rp[:, 0]
         cell_detection_fns = []
         cell_projection_fns = []
         for i, l_cell in enumerate(lp):
@@ -704,40 +712,33 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                 elif is_horizontal:
                     out_cell_idxs = out_cell_idxs[0, :]
 
-                for idxs in out_cell_idxs:
-                    idxs += first_a
-                    map_cells = patches[*idxs]
-                    map_cells = map_cells.reshape((n_chan, -1))
-                    out_cells = []
-                    for i, (detect_out, cell_projection_fn) in enumerate(zip(detect_outs, cell_projection_fns)):
-                        out_cell = map_cells[:, i]
-                        out_cell = cell_projection_fn(out_cell, detect_out)
-                        out_cells.append(out_cell)
-                    out_cells = np.array(out_cells).reshape(-1)
-                    patches = patches.at[*idxs].set(out_cells)
-                    print(idxs)
-
-
-                for idxs in out_cell_idxs:
-                    outk = np.zeros((n_chan, n_chan * np.array(in_patch_shape).size, *in_patch_shape), dtype=np.int8)
+                lvl = jnp.array(lvl)
+                # assert len(detect_outs) == len(out_cell_idxs) == len(cell_projection_fns):
+                if not len(detect_outs) == len(out_cell_idxs) == len(cell_projection_fns):
                     breakpoint()
-                    print(outk[:, :n_chan, *idxs]).shape
-                    breakpoint()
-
-                patches = rearrange(patches, "h w c -> 1 c h w")
-                lvl = jax.lax.conv_transpose(patches, outk, (1, 1), padding='VALID',
-                                                    dimension_numbers=('NCHW', 'OIHW', 'NCHW'))
-
-
+                for out_cell_idx, detect_out, cell_proj_fn in zip(out_cell_idxs, detect_outs, cell_projection_fns):
+                    out_cell_idx += first_a
+                    m_cell = lvl[0, :, *out_cell_idx]
+                    m_cell = jnp.array(m_cell)
+                    m_cell = cell_proj_fn(m_cell, detect_out)
+                    lvl = lvl.at[0, :, *out_cell_idx].set(m_cell)
 
             return lvl
 
         return rule_fn
     
     rule_fns = []
+    print('RULE PATTERNS', rule.left_patterns, rule.right_patterns)
     for lp, rp in zip(rule.left_patterns, rule.right_patterns):
-        # for rot in [0,1,0,0]:
-        for rot in [0]:
+        # Replace any empty lists in lp and rp with a None
+        lp = [[None] if len(l) == 0 else [' '.join(l)] for l in lp]
+        rp = [[None] if len(l) == 0 else [' '.join(l)] for l in rp]
+        lp, rp = np.array(lp), np.array(rp)
+        if len(lp) > 1 or len(rp) > 1:
+            rots = [0, 1, 2, 3]
+        else:
+            rots = [0]
+        for rot in rots:
             # rotate the patterns
             lp = np.rot90(lp, rot)
             rp = np.rot90(rp, rot)
