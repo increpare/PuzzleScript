@@ -10,6 +10,7 @@ import random
 
 import cv2
 from einops import rearrange
+import flax
 import jax
 import jax.numpy as jnp
 from lark import Token, Transformer, Tree
@@ -291,7 +292,7 @@ def expand_collision_layers(collision_layers, meta_tiles):
                 l = l[:j] + subtiles + l[j+1:]
                 collision_layers[i] = l
                 # HACK: we could do this more efficiently
-                expand_collision_layers(collision_layers)
+                expand_collision_layers(collision_layers, meta_tiles=meta_tiles)
                 j += len(subtiles)
             else:
                 j += 1
@@ -433,14 +434,15 @@ def gen_subrule(rule, n_objs, obj_to_idxs, meta_tiles):
     return rule_fns
 
 
-@dataclass
+@flax.struct.dataclass
 class ObjFnReturn:
+    active: bool = False
     # detected object/force indices
     force_idx: int = None
     obj_idx: int = None
 
 
-@dataclass
+@flax.struct.dataclass
 class CellFnReturn:
     # A list of indices of objects that were detected
     # Return these so that we can remove them in output cells (before projecting output pattern)
@@ -460,40 +462,49 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
     #     return np.all(objs_vec[:, None, None] == m_cell), []
 
     ### Functions for detecting regular atomic objects
+    @partial(jax.jit, static_argnums=(0,))
     def detect_obj_in_cell(obj_idx, m_cell):
-        return m_cell[obj_idx] == 1, ObjFnReturn(obj_idx=obj_idx)
+        active = m_cell[obj_idx] == 1
+        return ObjFnReturn(active=active, obj_idx=obj_idx)
 
+    @partial(jax.jit, static_argnums=(0,))
     def detect_no_obj_in_cell(obj_idx, m_cell):
-        return m_cell[obj_idx] == 0, ObjFnReturn()
+        active = m_cell[obj_idx] == 0
+        return ObjFnReturn(active=active, obj_idx=obj_idx)
 
+    @partial(jax.jit, static_argnums=(0, 1))
     def detect_force_on_obj(obj_idx, force_idx, m_cell):
         obj_is_present = m_cell[obj_idx] == 1
         force_is_present = m_cell[n_objs + (obj_idx * 4) + force_idx] == 1
         # force_idx = np.argwhere(m_cell[n_objs + (obj_idx * 4):n_objs + (obj_idx * 4) + 4] == 1)
         # assert len(force_idx) <= 1
-        is_force_on_obj = obj_is_present and force_is_present
-        if is_force_on_obj:
-            return is_force_on_obj, ObjFnReturn(
-                # force_idx=force_idx[0], 
-                obj_idx=obj_idx)
-        else:
-            return is_force_on_obj, ObjFnReturn()
+        active = obj_is_present & force_is_present
+        obj_idx = jax.lax.select(
+            active,
+            obj_idx,
+            -1,
+        )
+        return ObjFnReturn(active=active, obj_idx=obj_idx)
 
     ### Functions for detecting meta-objects
+    @partial(jax.jit, static_argnums=())
     def detect_any_objs_in_cell(objs_vec, m_cell):
         """Given a multi-hot vector indicating a set of objects, return the index of the object contained in this cell."""
-        detected_vec_idxs = np.argwhere(np.sum(objs_vec[:, None, None] * m_cell, axis=0) > 0)[0]
-        if len(detected_vec_idxs) == 0:
-            return False, {}
-        else:
-            obj_idx = detected_vec_idxs[0]
+        detected_vec_idx = jnp.argwhere(objs_vec * m_cell > 0, size=1, fill_value=-1)[0, 0]
+        active = detected_vec_idx != -1
+        obj_idx = jax.lax.select(
+            active,
+            detected_vec_idx,
+            -1,
+        )
+        return ObjFnReturn(active=active, obj_idx=obj_idx)
 
-            return True, ObjFnReturn(obj_idx=obj_idx)
-
+    @partial(jax.jit, static_argnums=())
     def detect_no_objs_in_cell(objs_vec, m_cell):
-        detected = np.zeros(m_cell.shape, dtype=np.int8)
-        return np.sum(objs_vec[:, None, None] * m_cell) == 0, ObjFnReturn()
+        active = np.sum(objs_vec[:, None, None] * m_cell) == 0
+        return ObjFnReturn(active=active)
 
+    @partial(jax.jit, static_argnums=(0, 1))
     def detect_force_on_meta(obj_idxs, force_idx, m_cell):
         force_obj_vecs = []
         for obj_idx in obj_idxs:
@@ -501,17 +512,15 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
             force_obj_vec[obj_idx] = 1
             force_obj_vec[n_objs + obj_idx * 4 + force_idx] = 1
             force_obj_vecs.append(force_obj_vec)
-        obj_activations = np.sum(np.array(force_obj_vecs)[:, None, None] * m_cell, axis=0) 
-        if np.all(obj_activations < 2):
-            return False, ObjFnReturn()
-        obj_idx = np.argwhere(obj_activations == 2)[0][0]
-        force_idx = np.argwhere(m_cell[n_objs + (obj_idx * 4):n_objs + (obj_idx * 4) + 4] == 1)[0]
-        detected = np.zeros_like(m_cell)
-        detected[obj_idx] = 1
-        detected[force_idx] = 1
-        return True, ObjFnReturn(
-            # force_idx=force_idx,
-            obj_idx=obj_idx)
+        obj_activations = jnp.sum(jnp.array(force_obj_vecs) * m_cell[None], axis=1) 
+        active = jnp.any(obj_activations == 2)
+
+        obj_idx = jax.lax.select(
+            active,
+            -1,
+            jnp.argwhere(obj_activations == 2, size=1)[0][0]
+        )
+        return ObjFnReturn(active=active, obj_idx=obj_idx)
 
     ### Function for projecting onto cells
     def project_cell(detect_out: CellFnReturn, m_cell):
@@ -538,39 +547,40 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                 if obj in obj_to_idxs:
                     obj_idx = obj_to_idxs[obj]
                     if no:
-                        fns.append(partial(detect_no_obj_in_cell, obj_idx))
+                        fns.append(partial(detect_no_obj_in_cell, obj_idx=obj_idx))
                     elif force:
-                        fns.append(partial(detect_force_on_obj, obj_idx, force_idx))
+                        fns.append(partial(detect_force_on_obj, obj_idx=obj_idx, force_idx=force_idx))
                     else:
-                        fns.append(partial(detect_obj_in_cell, obj_idx))
+                        fns.append(partial(detect_obj_in_cell, obj_idx=obj_idx))
                 elif obj in meta_tiles:
                     sub_objs = expand_meta_tiles([obj], obj_to_idxs, meta_tiles)
                     sub_obj_idxs = [obj_to_idxs[so] for so in sub_objs]
                     sub_objs_vec = np.zeros((n_objs + n_objs * 4), dtype=np.int8)
                     sub_objs_vec[sub_obj_idxs] = 1
                     if no:
-                        fns.append(partial(detect_no_objs_in_cell, sub_objs_vec))
+                        fns.append(partial(detect_no_objs_in_cell, objs_vec=sub_objs_vec))
                     elif force:
-                        fns.append(partial(detect_force_on_meta, sub_obj_idxs, force_idx))
+                        fns.append(partial(detect_force_on_meta, obj_idxs=tuple(sub_obj_idxs), force_idx=force_idx))
                     else:
-                        fns.append(partial(detect_any_objs_in_cell, sub_objs_vec))
+                        fns.append(partial(detect_any_objs_in_cell, objs_vec=sub_objs_vec))
                 else:
                     raise Exception(f'Invalid object `{obj}` in rule.')
         
+        @partial(jax.jit, static_argnums=())
         def cell_detection_fn(m_cell):
             # TODO: can vmap this
-            fn_outs = [fn(m_cell) for fn in fns]
-            activated = all([f[0] for f in fn_outs])
-            fn_outs: List[ObjFnReturn] = [f[1] for f in fn_outs]
-            detected = np.zeros(m_cell.shape, dtype=np.int8)
+            fn_outs: List[ObjFnReturn] = [fn(m_cell=m_cell) for fn in fns]
+            activated = jnp.all(jnp.array([f.active for f in fn_outs]))
+            detected = jnp.zeros(m_cell.shape, dtype=np.int8)
+            force_idx = None
             for i, f in enumerate(fn_outs):
                 if f.obj_idx is not None:
-                    detected[f.obj_idx] = 1
+                    detected = detected.at[f.obj_idx].set(1)
                 if f.force_idx is not None:
-                    detected[f.force_idx] = 1
-            force_idxs = [np.array([f.force_idx for f in fn_outs if f.force_idx is not None])]
-            force_idx = force_idxs[0] if len(force_idxs) > 0 else None
-            meta_objs = {k: np.array([f.obj_idx for f in fn_outs if f.obj_idx is not None]) for k in obj_names}
+                    detected = detected.at[f.force_idx].set(1)
+                    if force_idx is None:
+                        force_idx = f.force_idx
+            meta_objs = {k: fn_out.obj_idx for k, fn_out in zip(obj_names, fn_outs)}
             ret = CellFnReturn(
                 detected=detected,
                 force_idx=force_idx,
@@ -580,24 +590,27 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
 
         return cell_detection_fn
 
+    @partial(jax.jit, static_argnums=(0))
     def disambiguate_meta(obj, meta_objs):
-        if obj in meta_objs:
-            return meta_objs[obj].item()
-        else:
+        if obj in obj_to_idxs:
             return obj_to_idxs[obj]
+        return meta_objs[obj]
 
+    @partial(jax.jit, static_argnums=(2))
     def project_obj(m_cell, detect_out, obj):
         meta_objs = detect_out.meta_objs
         obj_idx = disambiguate_meta(obj, meta_objs)
         m_cell = m_cell.at[obj_idx].set(1)
         return m_cell
 
+    @partial(jax.jit, static_argnums=(2))
     def project_no_obj(m_cell, detect_out, obj):
         meta_objs = detect_out.meta_objs
         obj_idx = disambiguate_meta(obj, meta_objs)
         m_cell[obj_idx] = 0
         return m_cell
 
+    @partial(jax.jit, static_argnums=(2))
     def project_force_on_obj(m_cell, detect_out, obj, force_idx):
         meta_objs = detect_out.meta_objs
         obj_idx = disambiguate_meta(obj, meta_objs)
@@ -626,14 +639,15 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                 else:
                     fns.append(partial(project_obj, obj=obj))
         
+        @partial(jax.jit, static_argnums=())
         def cell_projection_fn(m_cell, detect_out):
             m_cell -= detect_out.detected
             # vmap
             for proj_fn in fns:
-                m_cell = proj_fn(m_cell, detect_out)
+                m_cell = proj_fn(m_cell=m_cell, detect_out=detect_out)
             return m_cell
 
-        return cell_projection_fn
+        return jax.jit(cell_projection_fn)
 
 
     def gen_rule_fn(lp, rp, rot):
@@ -659,50 +673,45 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
         for i, r_cell in enumerate(rp):
             cell_projection_fns.append(gen_cell_projection_fn(r_cell, force_idx))
 
+        @jax.jit
         def rule_fn(lvl):
             n_chan = lvl.shape[1]
+
+            @jax.jit
+            def detect_cells(in_patch):
+                cell_outs_patch = []
+                patch_active = True
+                for i, cell_fn in enumerate(cell_detection_fns):
+                    in_patch = in_patch.reshape((n_chan, *in_patch_shape))
+                    if is_vertical:
+                        m_cell = in_patch[:, i, 0]
+                    if is_horizontal:
+                        m_cell = in_patch[:, 0, i]
+                    cell_active, cell_out = cell_fn(m_cell=m_cell)
+                    patch_active = patch_active & cell_active
+                    cell_outs_patch.append(cell_out)
+                return patch_active, cell_outs_patch
+
             patches = jax.lax.conv_general_dilated_patches(
                 lvl, in_patch_shape, window_strides=(1, 1), padding='VALID',
             )
             assert patches.shape[0] == 1
             patches = patches[0]
             patches = rearrange(patches, "c h w -> h w c")
-            # TODO vmap across the patches
-            patch_activations, detect_outs  = [], []
-            for xi, in_patch_row in enumerate(patches):
-                patch_activations_row = []
-                cell_outs_row = []
-                for yi, in_patch in enumerate(in_patch_row):
-                    pattern_activated = True
-                    cell_outs_patch = []
-                    for i, cell_fn in enumerate(cell_detection_fns):
-                        in_patch = in_patch.reshape((n_chan, *in_patch_shape))
-                        if is_vertical:
-                            m_cell = in_patch[:, i, 0]
-                        if is_horizontal:
-                            m_cell = in_patch[:, 0, i]
-                        cell_activated, outs = cell_fn(m_cell)
-                        if not cell_activated:
-                            pattern_activated = False
-                            # break
-                        cell_outs_patch.append(outs)
-                    patch_activations_row.append(pattern_activated)
-                    cell_outs_row.append(cell_outs_patch)
-                patch_activations.append(patch_activations_row)
-                detect_outs.append(cell_outs_row)
+            patch_activations, detect_outs = jax.vmap(jax.vmap(detect_cells))(patches)
 
-            # eliminate all but one activation
-
-            # return patch_activations, cell_outs
-            patch_activations = np.array(patch_activations)
-            if patch_activations.sum() > 0:
+            @jax.jit
+            def project_cells(lvl, patch_activations, detect_outs):
+                print('NONZERO ACTIVATIONS')
                 print(lp, rp, force_idx)
+                print(jnp.argwhere(patch_activations, size=1))
 
                 # Mask out everything but the position of the "first" activation
-                first_a = np.argwhere(patch_activations == 1)[0]
-                patch_activations = np.zeros_like(patch_activations)
-                patch_activations[*first_a] = 1
-                detect_outs = detect_outs[first_a[0]][first_a[1]]
+                first_a = jnp.argwhere(patch_activations == 1, size=1)[0]
+                patch_activations = jnp.zeros_like(patch_activations)
+                patch_activations = patch_activations.at[*first_a].set(1)
+                # detect_outs = detect_outs[first_a[0]][first_a[1]]
+                detect_outs = jax.tree_map(lambda x: x[first_a[0]][first_a[1]], detect_outs)
 
                 # Apply projection functions to the affected cells
                 out_cell_idxs = np.indices(in_patch_shape)
@@ -722,6 +731,15 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                     m_cell = jnp.array(m_cell)
                     m_cell = cell_proj_fn(m_cell, detect_out)
                     lvl = lvl.at[0, :, *out_cell_idx].set(m_cell)
+                return lvl
+
+            # eliminate all but one activation
+            lp_detected = patch_activations.sum() > 0
+            lvl = jax.lax.select(
+                lp_detected,
+                project_cells(lvl, patch_activations, detect_outs),
+                lvl,
+            )
 
             return lvl
 
@@ -762,6 +780,7 @@ def gen_rules(obj_to_idxs, coll_mat, tree_rules, meta_tiles):
                 sub_rule_fns = gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles)
                 rule_fns += sub_rule_fns
 
+    @jax.jit
     def rule_fn(lvl):
         lvl = lvl[None].astype(np.int8)
         for rule_fn in rule_fns:
@@ -999,14 +1018,16 @@ class PSEnv:
 
 def substep(lvl, rule_fns):
     lvl_changed = False
-    for i, rule_fn in enumerate(rule_fns):
-        # Detect input activations
-        new_lvl = rule_fn(lvl)
-        new_lvl = np.clip(new_lvl, 0, 1)
-        if not np.array_equal(new_lvl, lvl):
-            lvl = new_lvl
-            lvl_changed = True
-            print("Rule applied")
+    # for i, rule_fn in enumerate(rule_fns):
+    #     # Detect input activations
+    #     new_lvl = rule_fn(lvl)
+    #     new_lvl = np.clip(new_lvl, 0, 1)
+    #     if not np.array_equal(new_lvl, lvl):
+    #         lvl = new_lvl
+    #         lvl_changed = True
+    #         print("Rule applied")
+    lvls = jax.vmap(lambda rule_fn: rule_fn(lvl))(rule_fns)
+    breakpoint()
     return lvl, lvl_changed
 
 
