@@ -916,6 +916,7 @@ class PSEnv:
         coll_mat = np.einsum('ij,ik->jk', coll_masks, coll_masks, dtype=np.uint8)
         rule_fns = gen_rules(self.obj_to_idxs, coll_mat, tree.rules, meta_tiles)
         self.rule_fns = [rule_fns] + gen_move_rules(self.obj_to_idxs, coll_mat)
+        self.rule_fns = tuple(self.rule_fns)
         self.check_win = gen_check_win(tree.win_conditions, self.obj_to_idxs)
         self.player_idx = self.obj_to_idxs['player']
         sprite_stack = []
@@ -1022,7 +1023,7 @@ class PSEnv:
         return multihot_level
 
 
-# @partial(jax.jit, static_argnums=(1,))
+@partial(jax.jit, static_argnums=(1))
 def substep(lvl, rule_fns):
     lvl_changed = False
     # for i, rule_fn in enumerate(rule_fns):
@@ -1037,15 +1038,19 @@ def substep(lvl, rule_fns):
     def apply_rule_fn(i, lvl):
         new_lvl, changed = jax.lax.switch(i, rule_fns, lvl)
         new_lvl = jnp.clip(new_lvl, 0, 1)
+        # TODO: The `changed` above seems to return false negatives
+        changed = jnp.any(new_lvl != lvl)
         return new_lvl, changed
     
-    lvls = jax.vmap(apply_rule_fn, in_axes=(0, None))(np.arange(len(rule_fns)), lvl)
-    for lvl_i in lvls:
-        if not np.array_equal(lvl_i, lvl):
-            lvl = lvl_i
-            lvl_changed = True
-            print("Rule applied")
-            break
+    lvls, changed = jax.vmap(apply_rule_fn, in_axes=(0, None))(np.arange(len(rule_fns)), lvl)
+    changed_i = jnp.argwhere(changed, size=1, fill_value=-1)[0]
+    lvl_changed = changed_i != -1
+    lvl = jnp.where(
+        lvl_changed,
+        lvls[changed_i],
+        lvl,
+    )
+    lvl = lvl[0]
 
     return lvl, lvl_changed
 
