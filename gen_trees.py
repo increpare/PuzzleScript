@@ -702,9 +702,9 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
 
             @jax.jit
             def project_cells(lvl, patch_activations, detect_outs):
-                print('NONZERO ACTIVATIONS')
-                print(lp, rp, force_idx)
-                print(jnp.argwhere(patch_activations, size=1))
+                # print('NONZERO ACTIVATIONS')
+                # print(lp, rp, force_idx)
+                # print(jnp.argwhere(patch_activations, size=1))
 
                 # Mask out everything but the position of the "first" activation
                 first_a = jnp.argwhere(patch_activations == 1, size=1)[0]
@@ -741,7 +741,7 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                 lvl,
             )
 
-            return lvl
+            return lvl, lp_detected
 
         return rule_fn
     
@@ -784,8 +784,8 @@ def gen_rules(obj_to_idxs, coll_mat, tree_rules, meta_tiles):
     def rule_fn(lvl):
         lvl = lvl[None].astype(np.int8)
         for rule_fn in rule_fns:
-            lvl = rule_fn(lvl)
-        return lvl[0]
+            lvl, changed = rule_fn(lvl)
+        return lvl[0], changed
 
     return rule_fn
 
@@ -857,22 +857,26 @@ def gen_move_rules(obj_to_idxs, coll_mat):
 
         # rules += [left_rule, right_rule, up_rule, down_rule]
         rules = [left_rule, right_rule, up_rule, down_rule]
-        rule_names = [f"{obj}_move_{j}" for j in ['left', 'right', 'up', 'down']]
-        rule_fns += [partial(apply_rule, move_rule=rule, rule_name=rule_name)
-                     for rule, rule_name in zip(rules, rule_names)]
+        # rule_names = [f"{obj}_move_{j}" for j in ['left', 'right', 'up', 'down']]
+        rule_fns += [partial(apply_rule, move_rule=rule)
+                     for rule in rules]
     return rule_fns
 
-def apply_rule(lvl, move_rule, rule_name):
+def apply_rule(lvl, move_rule):
     lvl = lvl[None].astype(np.int8)
     inp = move_rule[0]
     ink = inp[None]
-    activations = jax.lax.conv(lvl, ink, window_strides=(1,1), padding='VALID')
+    activations = jax.lax.conv(lvl, ink, window_strides=(1,1), padding='VALID')[0, 0]
     thresh_act = np.sum(np.clip(inp, 0, 1))
     bin_activations = (activations == thresh_act).astype(np.int8)
 
-    non_zero_activations = np.argwhere(bin_activations != 0)
-    if non_zero_activations.size > 0:
-        print(f"Non-zero activations detected: {non_zero_activations}. Rule_i: {rule_name}")
+    non_zero_activation = jnp.argwhere(bin_activations != 0, size=1, fill_value=-1)[0]
+    # jax.lax.cond(jnp.all(non_zero_activation == -1), lambda _: None, 
+    #              lambda _: jax.debug.print(
+    #                  'Non-zero activation detected: {non_zero_activation}. Rule_i: {rule_name}',
+    #                  non_zero_activation=non_zero_activation, rule_name=rule_name), None)
+    # if non_zero_activations.size > 0:
+    #     print(f"Non-zero activations detected: {non_zero_activations}. Rule_i: {rule_name}")
         # if rule_i == 1:
         #     breakpoint()
 
@@ -880,6 +884,8 @@ def apply_rule(lvl, move_rule, rule_name):
     outk = outp[:, None]
     # flip along width and height
     outk = np.flip(outk, axis=(2, 3))
+    bin_activations = bin_activations[None, None]
+    changed = bin_activations.sum() > 0
     out = jax.lax.conv_transpose(bin_activations, outk, (1, 1), padding='VALID',
                                         dimension_numbers=('NCHW', 'OIHW', 'NCHW'))
     # if out.sum() != 0:
@@ -890,7 +896,7 @@ def apply_rule(lvl, move_rule, rule_name):
     #     breakpoint()
     lvl += out
 
-    return lvl[0]
+    return lvl[0], changed
 
     
 
@@ -1016,6 +1022,7 @@ class PSEnv:
         return multihot_level
 
 
+# @partial(jax.jit, static_argnums=(1,))
 def substep(lvl, rule_fns):
     lvl_changed = False
     # for i, rule_fn in enumerate(rule_fns):
@@ -1026,8 +1033,20 @@ def substep(lvl, rule_fns):
     #         lvl = new_lvl
     #         lvl_changed = True
     #         print("Rule applied")
-    lvls = jax.vmap(lambda rule_fn: rule_fn(lvl))(rule_fns)
-    breakpoint()
+
+    def apply_rule_fn(i, lvl):
+        new_lvl, changed = jax.lax.switch(i, rule_fns, lvl)
+        new_lvl = jnp.clip(new_lvl, 0, 1)
+        return new_lvl, changed
+    
+    lvls = jax.vmap(apply_rule_fn, in_axes=(0, None))(np.arange(len(rule_fns)), lvl)
+    for lvl_i in lvls:
+        if not np.array_equal(lvl_i, lvl):
+            lvl = lvl_i
+            lvl_changed = True
+            print("Rule applied")
+            break
+
     return lvl, lvl_changed
 
 
@@ -1109,7 +1128,7 @@ def human_loop(env: PSEnv):
             while lvl_changed:
                 lvl_changed = False
                 vis_lvl_changed = False
-                lvl, lvl_changed = substep(lvl, env.rule_fns)
+                lvl, lvl_changed = substep(jnp.array(lvl), env.rule_fns)
                 new_vis_lvl = lvl[:env.n_objs]
                 if not np.array_equal(new_vis_lvl, vis_lvl):
                     vis_lvl = new_vis_lvl
