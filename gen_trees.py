@@ -997,29 +997,36 @@ class PSEnv:
 
     def step(self, action, state: PSState):
         lvl = self.apply_player_force(action, state)
-        lvl_changed = True
-        n_apps = 0
-        while lvl_changed and n_apps < 100:
-            lvl_changed = False
-            lvl, lvl_changed = substep(lvl, self.rule_fns)
-            n_apps += 1
-
-        multihot_level = lvl[:self.n_objs]
-
+        
+        # Define loop condition and body functions
+        def cond_fun(loop_state):
+            lvl, lvl_changed, n_apps = loop_state
+            return jax.numpy.logical_and(lvl_changed, n_apps < 100)
+            
+        def body_fun(loop_state):
+            lvl, _, n_apps = loop_state
+            new_lvl, lvl_changed = substep(lvl, self.rule_fns)
+            return (new_lvl, lvl_changed, n_apps + 1)
+        
+        # Initial state for the while loop
+        init_state = (lvl, True, 0)
+        
+        # Run the while loop using lax
+        final_lvl, _, _ = jax.lax.while_loop(cond_fun, body_fun, init_state)
+        
+        multihot_level = final_lvl[:self.n_objs]
+        
         win = self.check_win(multihot_level)
-        if win:
-            print("You win!")
-        else:
-            print("You don't win yet!")
-        return PSState(
+        state = PSState(
             multihot_level=multihot_level,
             win=win,
         )
+        return state
 
     def get_level(self, level_idx):
         level = self.levels[level_idx][0]
         # Convert the level to a multihot representation and render it
-        multihot_level = env.char_level_to_multihot(level)
+        multihot_level = self.char_level_to_multihot(level)
         return multihot_level
 
 
