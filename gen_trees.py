@@ -245,7 +245,7 @@ def level_to_multihot(level):
 def assign_vecs_to_objs(collision_layers):
     n_lyrs = len(collision_layers)
     n_objs = sum([len(lyr) for lyr in collision_layers])
-    coll_masks = np.zeros((n_lyrs, n_objs), dtype=np.uint8)
+    coll_masks = np.zeros((n_lyrs, n_objs), dtype=np.int8)
     objs_to_idxs = {}
     # vecs = np.eye(n_objs, dtype=np.uint8)
     # obj_vec_dict = {}
@@ -309,13 +309,13 @@ def expand_meta_tiles(tile_list, obj_to_idxs, meta_tiles):
 
 def gen_check_win(win_conditions, obj_to_idxs):
     def check_all(lvl, src, trg):
-        return np.sum((lvl[src] == 1) * (lvl[trg] == 0)) == 0
+        return jnp.sum((lvl[src] == 1) * (lvl[trg] == 0)) == 0
 
     def check_some(lvl, src, trg):
-        return np.sum((lvl[src] == 1) * (lvl[trg] == 1)) > 0
+        return jnp.sum((lvl[src] == 1) * (lvl[trg] == 1)) > 0
 
     def check_none(lvl, src):
-        return np.sum(lvl[src] == 1) == 0
+        return jnp.sum(lvl[src] == 1) == 0
 
     funcs = []
     for win_condition in win_conditions:
@@ -334,7 +334,13 @@ def gen_check_win(win_conditions, obj_to_idxs):
         funcs.append(func)
 
     def check_win(lvl):
-        return all([func(lvl) for func in funcs])
+        
+        def apply_win_condition_func(i, lvl):
+            return jax.lax.switch(i, funcs, lvl)
+
+        func_returns = jax.vmap(apply_win_condition_func, in_axes=(0, None))(jnp.arange(len(funcs)), lvl)
+        return jnp.all(func_returns)
+
     return check_win
 
 
@@ -429,7 +435,7 @@ def gen_subrule(rule, n_objs, obj_to_idxs, meta_tiles):
     # TODO: If horizontal/vertical etc. has been specified, filter out unnecessary rules here
     rules = [lr_rule, rr_rule, ur_rule, dr_rule]
     rule_names = [f"{rule}_{dir}" for dir in enumerate(['lr', 'rr', 'ur', 'dr'])]
-    rule_fns = [partial(apply_rule, move_rule=rule, rule_name=rule_name) 
+    rule_fns = [partial(apply_move_rule, move_rule=rule, rule_name=rule_name) 
                     for rule, rule_name in zip(rules, rule_names)]
     return rule_fns
 
@@ -517,8 +523,8 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
 
         obj_idx = jax.lax.select(
             active,
+            jnp.argwhere(obj_activations == 2, size=1)[0][0],
             -1,
-            jnp.argwhere(obj_activations == 2, size=1)[0][0]
         )
         return ObjFnReturn(active=active, obj_idx=obj_idx)
 
@@ -631,13 +637,15 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
                 no = True
             elif obj == '>':
                 force = True
-            elif obj in obj_to_idxs:
+            elif (obj in obj_to_idxs) or (obj in meta_tiles):
                 if no:
                     fns.append(partial(project_no_obj, obj=obj))
                 elif force:
                     fns.append(partial(project_force_on_obj, obj=obj, force_idx=force_idx))
                 else:
                     fns.append(partial(project_obj, obj=obj))
+            else:
+                raise Exception(f'Invalid object `{obj}` in rule.')
         
         @partial(jax.jit, static_argnums=())
         def cell_projection_fn(m_cell, detect_out):
@@ -650,7 +658,7 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
         return jax.jit(cell_projection_fn)
 
 
-    def gen_rule_fn(lp, rp, rot):
+    def gen_rotated_rule_fn(lp, rp, rot):
         lp = np.array(lp)
         # Here we map force directions to corresponding rule rotations
         rot_to_force = [1, 2, 0, 3]
@@ -735,13 +743,16 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
 
             # eliminate all but one activation
             lp_detected = patch_activations.sum() > 0
-            lvl = jax.lax.select(
+            new_lvl = jax.lax.cond(
                 lp_detected,
-                project_cells(lvl, patch_activations, detect_outs),
-                lvl,
+                project_cells,
+                lambda lvl, _, __: lvl,
+                lvl, patch_activations, detect_outs
             )
+            rule_applied = jnp.any(new_lvl != lvl)
+            lvl = new_lvl.astype(np.float32)
 
-            return lvl, lp_detected
+            return lvl, rule_applied
 
         return rule_fn
     
@@ -760,15 +771,14 @@ def gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles):
             # rotate the patterns
             lp = np.rot90(lp, rot)
             rp = np.rot90(rp, rot)
-            rule_fns.append(gen_rule_fn(lp, rp, rot))
+            rule_fns.append(gen_rotated_rule_fn(lp, rp, rot))
 
     return rule_fns
         
         
-def gen_rules(obj_to_idxs, coll_mat, tree_rules, meta_tiles):
+def gen_rule_fn(obj_to_idxs, coll_mat, tree_rules, meta_tiles):
     n_objs = len(obj_to_idxs)
-    rule_fns = []
-    meta_tile_rules = []
+    rule_grps = []
     if len(tree_rules) == 0:
         pass
     elif len(tree_rules) == 1:
@@ -778,13 +788,31 @@ def gen_rules(obj_to_idxs, coll_mat, tree_rules, meta_tiles):
             for rule in rule_block.rules:
                 # TODO: rule-block and loop logics
                 sub_rule_fns = gen_subrules_meta(rule, n_objs, obj_to_idxs, meta_tiles)
-                rule_fns += sub_rule_fns
+                rule_grps.append(sub_rule_fns)
+
+    rule_grps.append(gen_move_rules(obj_to_idxs, coll_mat))
+
 
     @jax.jit
     def rule_fn(lvl):
-        lvl = lvl[None].astype(np.int8)
-        for rule_fn in rule_fns:
-            lvl, changed = rule_fn(lvl)
+        changed = False
+        lvl = lvl[None].astype(np.float32)
+        for rule_grp in rule_grps:
+            grp_applied = True
+
+            def apply_rule_grp(carry):
+                lvl, grp_applied = carry
+                grp_applied = False
+                for rule_fn in rule_grp:
+                    lvl, rule_applied = rule_fn(lvl)
+                    grp_applied = jnp.logical_or(grp_applied, rule_applied)
+                return (lvl, grp_applied)
+
+            lvl, changed = jax.lax.while_loop(
+                cond_fun=lambda x: x[1],
+                body_fun=apply_rule_grp,
+                init_val=(lvl, grp_applied),
+            )
         return lvl[0], changed
 
     return rule_fn
@@ -858,17 +886,19 @@ def gen_move_rules(obj_to_idxs, coll_mat):
         # rules += [left_rule, right_rule, up_rule, down_rule]
         rules = [left_rule, right_rule, up_rule, down_rule]
         # rule_names = [f"{obj}_move_{j}" for j in ['left', 'right', 'up', 'down']]
-        rule_fns += [partial(apply_rule, move_rule=rule)
+        rule_fns += [partial(apply_move_rule, move_rule=rule)
                      for rule in rules]
     return rule_fns
 
-def apply_rule(lvl, move_rule):
-    lvl = lvl[None].astype(np.int8)
+def apply_move_rule(lvl, move_rule):
     inp = move_rule[0]
     ink = inp[None]
+    lvl = lvl.astype(np.float32)
+    ink = ink.astype(np.float32)
+    # jax.debug.print('lvl: {lvl}', lvl=(lvl.min(), lvl.max(), lvl.shape))
     activations = jax.lax.conv(lvl, ink, window_strides=(1,1), padding='VALID')[0, 0]
     thresh_act = np.sum(np.clip(inp, 0, 1))
-    bin_activations = (activations == thresh_act).astype(np.int8)
+    bin_activations = (activations == thresh_act).astype(np.float32)
 
     non_zero_activation = jnp.argwhere(bin_activations != 0, size=1, fill_value=-1)[0]
     # jax.lax.cond(jnp.all(non_zero_activation == -1), lambda _: None, 
@@ -882,6 +912,7 @@ def apply_rule(lvl, move_rule):
 
     outp = move_rule[1]
     outk = outp[:, None]
+    outk = outk.astype(np.float32)
     # flip along width and height
     outk = np.flip(outk, axis=(2, 3))
     bin_activations = bin_activations[None, None]
@@ -896,11 +927,11 @@ def apply_rule(lvl, move_rule):
     #     breakpoint()
     lvl += out
 
-    return lvl[0], changed
+    return lvl, changed
 
     
 
-@dataclass
+@flax.struct.dataclass
 class PSState:
     multihot_level: np.ndarray
     win: bool
@@ -913,10 +944,8 @@ class PSEnv:
         collision_layers = expand_collision_layers(tree.collision_layers, meta_tiles)
         self.obj_to_idxs, coll_masks = assign_vecs_to_objs(collision_layers)
         self.n_objs = len(self.obj_to_idxs)
-        coll_mat = np.einsum('ij,ik->jk', coll_masks, coll_masks, dtype=np.uint8)
-        rule_fns = gen_rules(self.obj_to_idxs, coll_mat, tree.rules, meta_tiles)
-        self.rule_fns = [rule_fns] + gen_move_rules(self.obj_to_idxs, coll_mat)
-        self.rule_fns = tuple(self.rule_fns)
+        coll_mat = np.einsum('ij,ik->jk', coll_masks, coll_masks, dtype=np.int8)
+        self.rule_fn = gen_rule_fn(self.obj_to_idxs, coll_mat, tree.rules, meta_tiles)
         self.check_win = gen_check_win(tree.win_conditions, self.obj_to_idxs)
         self.player_idx = self.obj_to_idxs['player']
         sprite_stack = []
@@ -931,11 +960,11 @@ class PSEnv:
         self.sprite_stack = np.array(sprite_stack)
         n_objs = len(self.obj_to_idxs)
         char_legend = {v: k for k, v in obj_legend.items()}
-        self.obj_vecs = np.eye(n_objs, dtype=np.uint8)
+        self.obj_vecs = np.eye(n_objs, dtype=np.int8)
         joint_obj_vecs = []
         self.chars_to_idxs = {obj_legend[k]: v for k, v in self.obj_to_idxs.items()}
         for jo, subobjects in joint_tiles.items():
-            vec = np.zeros(n_objs, dtype=np.uint8)
+            vec = np.zeros(n_objs, dtype=np.int8)
             for so in subobjects:
                 vec += self.obj_vecs[self.obj_to_idxs[so]]
             assert jo not in self.chars_to_idxs
@@ -948,26 +977,24 @@ class PSEnv:
         bg_idx = self.obj_to_idxs['background']
         multihot_level = rearrange(multihot_level, "h w c -> c h w")
         multihot_level[bg_idx] = 1
+        multihot_level = multihot_level.astype(np.float32)
         return multihot_level
 
     def render(self, state: PSState, cv2=True):
         lvl = state.multihot_level
         level_height, level_width = lvl.shape[1:]
         sprite_height, sprite_width = self.sprite_stack.shape[1:3]
-        im = np.zeros((level_height * sprite_height, level_width * sprite_width, 4), dtype=np.uint8)
+        im = np.zeros((level_height * sprite_height, level_width * sprite_width, 4), dtype=np.int8)
         im_lyrs = []
         for i, sprite in enumerate(self.sprite_stack):
             sprite_stack_i = np.stack(
                 (np.zeros_like(sprite), sprite)
             )
             lyr = lvl[i]
-            im_lyr = sprite_stack_i[lyr]
+            im_lyr = jnp.array(sprite_stack_i)[lyr.astype(int)]
             im_lyr = rearrange(im_lyr, "lh lw sh sw c -> (lh sh) (lw sw) c")
-            im_lyr_im = Image.fromarray(im_lyr)
-            lyr_path = os.path.join(scratch_dir, f'lyr_{i}.png')
-            im_lyr_im.save(lyr_path)
             overwrite_mask = im_lyr[:, :, 3] == 255
-            im = np.where(np.repeat(overwrite_mask[:, :, None], 4, 2), im_lyr, im)
+            im = jnp.where(jnp.repeat(overwrite_mask[:, :, None], 4, 2), im_lyr, im)
 
         if cv2:
             # swap the red and blue channels
@@ -979,22 +1006,32 @@ class PSEnv:
         lvl = self.get_level(lvl_i)
         return PSState(
             multihot_level=lvl,
-            win = False,
+            win = jnp.array(False),
         )
 
+    @partial(jax.jit, static_argnums=(0))
     def apply_player_force(self, action, state: PSState):
         multihot_level = state.multihot_level
-        player_pos = np.argwhere(multihot_level[self.player_idx] == 1)[0]
-        force_map = np.zeros((4 * multihot_level.shape[0], *multihot_level.shape[1:]), dtype=np.uint8)
-        if action >= 4:
-            # Apply action
-            pass
-        else:
-            action = [0, 1, 2, 3][action]
-            force_map[self.player_idx * 4 + action, player_pos[0], player_pos[1]] = 1
-        lvl = np.concatenate((multihot_level, force_map), axis=0)
+        player_pos = jnp.argwhere(multihot_level[self.player_idx] == 1, size=1)[0]
+        force_map = jnp.zeros((4 * multihot_level.shape[0], *multihot_level.shape[1:]), dtype=np.int8)
+
+        def place_force(force_map, action):
+            action = jnp.array([0, 1, 2, 3])[action]
+            force_map = force_map.at[self.player_idx * 4 + action, player_pos[0], player_pos[1]].set(1)
+            return force_map
+
+        force_map = jax.lax.cond(
+            action < 4, 
+            place_force,
+            lambda force_map, action: force_map,
+            force_map, action
+        )
+
+        lvl = jnp.concatenate((multihot_level, force_map), axis=0)
+        lvl = lvl.astype(np.float32)
         return lvl
 
+    @partial(jax.jit, static_argnums=(0))
     def step(self, action, state: PSState):
         lvl = self.apply_player_force(action, state)
         
@@ -1004,14 +1041,13 @@ class PSEnv:
             return jax.numpy.logical_and(lvl_changed, n_apps < 100)
             
         def body_fun(loop_state):
-            lvl, _, n_apps = loop_state
-            new_lvl, lvl_changed = substep(lvl, self.rule_fns)
+            lvl, lvl_changed_last, n_apps = loop_state
+            new_lvl, lvl_changed = substep(lvl, self.rule_fn)
             return (new_lvl, lvl_changed, n_apps + 1)
         
         # Initial state for the while loop
         init_state = (lvl, True, 0)
         
-        # Run the while loop using lax
         final_lvl, _, _ = jax.lax.while_loop(cond_fun, body_fun, init_state)
         
         multihot_level = final_lvl[:self.n_objs]
@@ -1031,35 +1067,40 @@ class PSEnv:
 
 
 @partial(jax.jit, static_argnums=(1))
-def substep(lvl, rule_fns):
-    lvl_changed = False
+def substep(lvl, rule_fn):
+
+    # def apply_rule_fn(i, lvl):
+    #     lvl = lvl.astype(np.float32)
+    #     new_lvl, changed = jax.lax.switch(i, rule_fns, lvl)
+    #     new_lvl = jnp.clip(new_lvl, 0, 1)
+    #     # TODO: The `changed` above seems to return false negatives
+    #     changed = jnp.any(new_lvl != lvl)
+    #     return new_lvl, changed
+
+    # lvls, changed = jax.vmap(apply_rule_fn, in_axes=(0, None))(np.arange(len(rule_fns)), lvl)
+    # changed_i = jnp.argwhere(changed, size=1, fill_value=-1)[0]
+    # jax.debug.print('changed_i: {changed_i}', changed_i=changed_i)
+    # lvl_changed = changed_i != -1
+    # lvl = jnp.where(
+    #     lvl_changed,
+    #     lvls[changed_i],
+    #     lvl,
+    # )
+    # lvl = lvl[0]
+    # lvl_changed = lvl_changed[0]
+
+    # lvl_changed = False
     # for i, rule_fn in enumerate(rule_fns):
     #     # Detect input activations
-    #     new_lvl = rule_fn(lvl)
+    #     # new_lvl, changed = rule_fn(lvl)
+    #     new_lvl, changed = apply_rule_fn(i, lvl)
     #     new_lvl = np.clip(new_lvl, 0, 1)
     #     if not np.array_equal(new_lvl, lvl):
     #         lvl = new_lvl
     #         lvl_changed = True
     #         print("Rule applied")
-
-    def apply_rule_fn(i, lvl):
-        new_lvl, changed = jax.lax.switch(i, rule_fns, lvl)
-        new_lvl = jnp.clip(new_lvl, 0, 1)
-        # TODO: The `changed` above seems to return false negatives
-        changed = jnp.any(new_lvl != lvl)
-        return new_lvl, changed
     
-    lvls, changed = jax.vmap(apply_rule_fn, in_axes=(0, None))(np.arange(len(rule_fns)), lvl)
-    changed_i = jnp.argwhere(changed, size=1, fill_value=-1)[0]
-    lvl_changed = changed_i != -1
-    lvl = jnp.where(
-        lvl_changed,
-        lvls[changed_i],
-        lvl,
-    )
-    lvl = lvl[0]
-
-    return lvl, lvl_changed
+    return rule_fn(lvl)
 
 
 def human_loop(env: PSEnv):
@@ -1140,7 +1181,7 @@ def human_loop(env: PSEnv):
             while lvl_changed:
                 lvl_changed = False
                 vis_lvl_changed = False
-                lvl, lvl_changed = substep(jnp.array(lvl), env.rule_fns)
+                lvl, lvl_changed = substep(jnp.array(lvl), env.rule_fn)
                 new_vis_lvl = lvl[:env.n_objs]
                 if not np.array_equal(new_vis_lvl, vis_lvl):
                     vis_lvl = new_vis_lvl
