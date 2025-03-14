@@ -241,6 +241,171 @@ async function solveLevelBFS(level) {
   return [sol, i];
 }
 
+class MCTSNode{
+  constructor(action=-1, parent=null, max_children=5) {
+    this.parent = parent;
+    this.action = action;
+    this.children = [];
+    for(let i=0; i<max_children; i++){
+      this.children.push(null);
+    }
+    this.visits = 0;
+    this.score = 0;
+  }
+
+  ucb_score(c = Math.sqrt(2)) {
+    if(this.parent == null){
+      return this.score / this.visits;
+    }
+    return this.score / this.visits + c * Math.sqrt(Math.log(this.parent.visits) / this.visits);
+  }
+
+  select(){
+    if(!this.is_fully_expanded()){
+      return null;
+    }
+    let index = 0;
+    for(let i=0; i<this.children.length; i++){
+      if(this.children[i].ucb_score() > this.children[index].ucb_score()){
+        index = i;
+      }
+    }
+    return this.children[index];
+  }
+
+  is_fully_expanded(){
+    for(let child of this.children){
+      if(child == null){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  expand(){
+    if(this.is_fully_expanded()){
+      return null;
+    }
+    for(let i=0; i<this.children.length; i++){
+      if(this.children[i] == null){
+        let changed = processInputSearch(i);
+        let level = this.level;
+        if(changed){
+          level = backupLevel();
+        }
+        this.children[i] = new MCTSNode(i, this, this.children.length)
+        return this.children[i];
+      }
+    }
+    return null;
+  }
+
+  backup(score){
+    this.score += score;
+    this.visits += 1;
+    if(this.parent != null){
+      this.parent.backup(score);
+    }
+  }
+
+  simulate(max_length, score_fn){
+    let changes = 0;
+    for(let i=0; i<max_length; i++){
+      let changed = processInputSearch(Math.min(5, Math.floor(Math.random() * 6)));
+      if(changed){
+        changes += 1;
+      }
+      if(winning){
+        return 1000 + changes / max_length;
+      }
+    }
+    if(score_fn){
+      return score_fn() + changes / max_length;
+    }
+    return changes / max_length;
+  }
+
+  get_actions(){
+    let sol = [];
+    let current = this;
+    while(current.parent != null){
+      sol.push(current.action);
+      current = current.parent;
+    }
+    return sol.reverse();
+  }
+}
+
+async function solveLevelMCTS(level, max_sim_length, score_fn=null, max_iterations=-1) {
+  // Load the level
+  compile(['loadLevel', level], editor.getValue());
+  init_level = backupLevel();
+  init_level_map = init_level['dat'];
+  let rootNode = new MCTSNode();
+  let i = 0;
+  let deadend_nodes = 1;
+  let start_time = Date.now();
+  while(max_iterations > 0 && i < max_iterations){
+    // start from th root
+    currentNode = rootNode;
+    restoreLevel(init_level);
+    let changed = true;
+    // selecting next node
+    while(currentNode.is_fully_expanded()){
+      currentNode = currentNode.select()
+      changed = processInputSearch(currentNode.action);
+      if(winning){
+        let sol = current.get_actions();
+        console.log(`Winning! Solution:, ${sol}\n Iterations: ${i}`);
+        console.log('FPS:', (i / (Date.now() - start_time) * 1000).toFixed(2));
+        return [sol, i];
+      }
+      if(!changed){
+        break;
+      }
+    }
+
+    // if node is deadend, punish it
+    if(!changed){
+      currentNode.backup(-1000);
+      deadend_nodes += 1;
+    }
+    //otherwise expand
+    else{
+      currentNode = currentNode.expand();
+      changed = processInputSearch(current.action);
+      if(winning){
+        let sol = current.get_actions();
+        console.log(`Winning! Solution:, ${sol}\n Iterations: ${i}`);
+        console.log('FPS:', (i / (Date.now() - start_time) * 1000).toFixed(2));
+        return [sol, i];
+      }
+      // if node is deadend, punish it
+      if(!changed){
+        currentNode.backup(-1000);
+        deadend_nodes += 1;
+        
+      }
+      //otherwise simulate then backup
+      else{
+        let value = currentNode.simulate(max_sim_length, score_fn);
+        currentNode.backup(value);
+      }
+    }
+    // print progress
+    if (i % 10000 == 0) {
+      now = Date.now();
+      console.log('Iteration:', i);
+      console.log('FPS:', (i / (now - start_time) * 1000).toFixed(2));
+      console.log(`Visited Deadends: ${deadend_nodes}`);
+      // console.log(`Visited states: ${visited.size}`);
+      // await new Promise(resolve => setTimeout(resolve, 1)); // Small delay for live feedback
+      // redraw();
+    }
+    i+= 1;
+  }
+  return [[], max_iterations];
+}
 
 async function solveLevelAStar(captureStates=false, gameHash=0, levelI=0, maxIters=1_000_000) {
 	// if (levelEditorOpened) return;
