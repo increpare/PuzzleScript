@@ -150,7 +150,7 @@ def gen_game_from_plan(seed, save_dir, game_idea, n_iter):
     return code, sols, skip
 
 
-def gen_game(seed, fewshot, cot, save_dir, gen_mode, parents, code, from_idea, game_idea, console_text, 
+def gen_game(seed, fewshot, cot, save_dir, gen_mode, parents, code, from_idea, game_idea, lark_error, console_text, 
              solver_text, compilation_success, n_iter):
     cot_prompt_text = cot_prompt if cot else ''
     log_dir = 'logs'
@@ -173,8 +173,12 @@ def gen_game(seed, fewshot, cot, save_dir, gen_mode, parents, code, from_idea, g
             elif gen_mode == 'crossover':
                 prompt = game_crossover_prompt.format(parents=parents_text, cot_prompt=cot_prompt_text)    
         elif not compilation_success:
+            if lark_error is None:
+                lark_error_prompt = ''
+            else:
+                lark_error_prompt = f"""{("It also resulted in the following error when we attempted to parse the code as a context free grammar using lark:\n```\n{lark_error}\n```\n" if lark_error is not None else "")}"""
             prompt = game_compile_repair_prompt.format(code=code, console_text=console_text, cot_prompt=cot_prompt_text,
-                                                       game_idea=game_idea)
+                                                       game_idea=game_idea, lark_error_prompt=lark_error_prompt)
         else:
             prompt = game_solvability_repair_prompt.format(code=code, solver_text=solver_text,
                                                            game_idea=game_idea)

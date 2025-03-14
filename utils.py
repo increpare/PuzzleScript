@@ -34,6 +34,11 @@ def extract_ps_code(text):
     code_block = re.search(r'(.*)```plaintext\n(.*)```(.*)', text, re.DOTALL)
     if code_block:
         plaintext = code_block.group(1) + "..." + code_block.group(3)
+    else:
+        # Match the code block without the final ``` delimiter, in case the the block was never closed for some reason
+        code_block = re.search(r'(.*)```plaintext\n(.*)$', text, re.DOTALL)
+        plaintext = code_block.group(1)
+    if code_block:
         code = code_block.group(2)
         return code, plaintext
     else:
@@ -42,7 +47,7 @@ def extract_ps_code(text):
         return None, None
 
 
-def gen_fewshot_examples(system_prompt, prompt, max_tokens=128_000):
+def gen_fewshot_examples(system_prompt, prompt, max_tokens=30_000):
     # Randomly add fewshot examples to the system prompt (within our token limit)
     with open('example_games.json', 'r') as f:
         example_games = json.load(f)
@@ -52,7 +57,7 @@ def gen_fewshot_examples(system_prompt, prompt, max_tokens=128_000):
     while num_tokens_from_string(system_prompt + fewshot_examples_prompt_i + prompt, 'gpt-4o') < n_tokens_avail:
         last_fewshot_examples_prompt_i = fewshot_examples_prompt_i
         rand_example_i = random.randint(0, len(example_games) - 1)
-        fewshot_examples_prompt_i += '\n\n' + example_games.pop(rand_example_i)
+        fewshot_examples_prompt_i += '\n```\n' + example_games.pop(rand_example_i) + '\n```\n'
     fewshot_examples_prompt_i = last_fewshot_examples_prompt_i
     return fewshot_examples_prompt_i
 
@@ -75,8 +80,10 @@ def llm_text_query(system_prompt, prompt, seed):
         "top_p": 0.95,
     }
     try:
+        print('Querying openai...')
         response = requests.post(GPT4V_ENDPOINT, headers=headers, json=payload)
         response.raise_for_status() # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
+        print('Query completed.')
     except requests.RequestException as e:
         raise SystemExit(f"Failed to make the request. Error: {e}")
 

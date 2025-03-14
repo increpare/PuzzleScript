@@ -1,23 +1,26 @@
-comments_note = "Any comments must be in the form `(comment)`."
-formatting_prompt = \
+comments_note = " Any comments must be in the form `(comment)`."
+full_game_formatting_prompt = (
     """Return your code in full, inside a ```plaintext code block."""
+    # + comments_note
+)
 game_gen_system_prompt = (
     "You are a creative and resourceful indie puzzle game designer, familiar with the PuzzleScript game description language. "
     """Recall that comments in PuzzleScript are enclosed in parentheses. (E.g. this is a comment.) """
-    f"""Here are the docs: {open('all_documentation.txt', 'r').read()}\n"""
+    # f"""Here are the docs: {open('all_documentation.txt', 'r').read()}\n"""
 )
 fewshow_examples_prompt = (
     "Here are some example games, for inspiration (do not reproduce these games exactly):"""
 )
 gen_game_prompt = (
     """Output the code for a complete PuzzleScript game. """
+    """Do not include any sound effects for now. """
     """The game should be unique and slightly unconventional, with inventive mechanics. """
     """{from_idea_prompt} {cot_prompt}"""
-    + formatting_prompt
+    + full_game_formatting_prompt
 )
 gen_game_from_idea_prompt = (
     """Create a simplified `demake` of the following game idea in PuzzleScript: {game_idea}. {cot_prompt}"""
-    + formatting_prompt
+    + full_game_formatting_prompt
 )
 from_idea_repair_prompt = (
     """We are trying to create the following game: {game_idea}. """
@@ -28,26 +31,28 @@ cot_prompt = (
 game_mutate_prompt = (
     """Consider the code for the following PuzzleScript game:\n\n{parents}\n\n"""
     """Create a variation on this game, making it more complex. {cot_prompt}"""
-    + formatting_prompt
+    + full_game_formatting_prompt
 )
 game_crossover_prompt = (
     """Consider the code for the following PuzzleScript games:\n\n{parents}\n\n"""
     """Create a new, more complex game by combining elements of these games. {cot_prompt}"""
-    + formatting_prompt
+    + full_game_formatting_prompt
 )
 game_compile_repair_prompt = (
     """{from_idea_repair_prompt}"""
     """The following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
-    """produced the following console output:\n```\n{console_text}\n```\n"""
+    """produced the following console output in the online PuzzleScript editor:\n```\n{console_text}\n```\n"""
+    """{lark_error_prompt}"""
     """Return a repaired version of the code that addresses these errors. {cot_prompt}"""
-    + formatting_prompt
+    + full_game_formatting_prompt
 )
 from_idea_prompt = """The game should be a simplified `demake` of the following game idea: {game_idea}"""
 game_solvability_repair_prompt = (
     """{from_idea_repair_prompt}"""
     """The following PuzzleScript game code:\n```plaintext\n{code}\n```\n"""
     """compiled, but a solvability check returned the following:\n```\n{solver_text}\n```\n"""
-    + formatting_prompt
+    """Return a repaired version of the code that addresses these errors. {cot_prompt}"""
+    + full_game_formatting_prompt
 )
 # plan_game_prompt = (
 #     "Generate a plan for a PuzzleScript game. Describe the game's story/theme, the necessary sprites, "
@@ -107,5 +112,5 @@ gen_finalize_prompt = (
     "Consider the following PuzzleScript game development plan:\n```\n{game_plan}\n```\n"
     ", and the following partially complete PuzzleScript code:\n```plaintext\n{code}\n```\n"
     ". Complete the code to implement the game. "
-    + formatting_prompt
+    + full_game_formatting_prompt
 )

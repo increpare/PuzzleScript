@@ -156,10 +156,11 @@ def gen_game():
     compilation_success = data['compilation_success']
     console_text = data['console_text']
     solver_text = data['solver_text']
+    lark_error = data['lark_error']
     n_iter = data['n_iter']
     gen_game_output_path = os.path.join(save_dir, f'{n_iter}b_code.txt')
     gen_game_code_output_path = os.path.join(save_dir, f'{n_iter}b_code.txt')
-    print(gen_game_code_output_path)
+    print(f"Saving code at {gen_game_code_output_path}")
     if not os.path.isfile(gen_game_code_output_path):
         gen_game_prompt_output_path = os.path.join(save_dir, f'{n_iter}a_prompt.txt')
         system_prompt = game_gen_system_prompt
@@ -173,11 +174,16 @@ def gen_game():
             elif gen_mode == 'crossover':
                 prompt = game_crossover_prompt.format(parents=parents_text, cot_prompt=cot_prompt_text)    
         elif not compilation_success:
+            if lark_error is None:
+                lark_error_prompt = ''
+            else:
+                lark_error_prompt = f"""{(f"It also resulted in the following error when we attempted to parse the code as a context free grammar using lark:\n```\n{lark_error}\n```\n" if lark_error is not None else "")}"""
             prompt = game_compile_repair_prompt.format(code=code, console_text=console_text, cot_prompt=cot_prompt_text,
+                                                       game_idea=game_idea, lark_error_prompt=lark_error_prompt,
                                                        from_idea_repair_prompt=from_idea_prompt_i)
         else:
             prompt = game_solvability_repair_prompt.format(code=code, solver_text=solver_text,
-                                                           from_idea_repair_prompt=from_idea_prompt_i)
+                                                           from_idea_repair_prompt=from_idea_prompt_i, cot_prompt=cot_prompt)
         # if not gen_mode == GenModes.ZERO_SHOT:
         if fewshot:
             system_prompt += gen_fewshot_examples(system_prompt, prompt)
@@ -207,19 +213,32 @@ def gen_game():
     with open(simp_filepath, "w", encoding='utf-8') as file:
         print(f"Writing to {simp_filepath}")
         file.write(simp_code)
-    parse_tree = lark_parser.parse(simp_code)
-    min_parse_tree = StripPuzzleScript().transform(parse_tree)
-    pretty_parse_tree_str = min_parse_tree.pretty()
-    pretty_tree_filename = os.path.join(save_dir, f'{n_iter}b2_code_tree.txt')
-    print(f"Writing pretty tree to {pretty_tree_filename}")
-    with open(pretty_tree_filename, "w") as file:
-        file.write(pretty_parse_tree_str)
-    repaired_parse_tree = RepairPuzzleScript().transform(min_parse_tree)
-    min_code = PrintPuzzleScript().transform(repaired_parse_tree)
-    min_code = add_empty_sounds_section(min_code)
-    min_filename = os.path.join(save_dir, f'{n_iter}b3_code_min.txt')
-    with open(min_filename, "w") as file:
-        file.write(min_code)
+    successful_lark_parse = False
+    min_code = None
+    lark_error = None
+    try:
+        parse_tree = lark_parser.parse(simp_code)
+        successful_lark_parse = True
+    except lark.exceptions.ParseError as e:
+        print(f"Faile to parse code with lark: {e}")
+        lark_error = str(e)
+    except lark.exceptions.UnexpectedCharacters as e:
+        print(f"Failed to parse code with lark, UnexpectedCharacters: {e}")
+        lark_error = str(e)
+    if successful_lark_parse:
+        lark_error = None
+        min_parse_tree = StripPuzzleScript().transform(parse_tree)
+        pretty_parse_tree_str = min_parse_tree.pretty()
+        pretty_tree_filename = os.path.join(save_dir, f'{n_iter}b2_code_tree.txt')
+        print(f"Writing pretty tree to {pretty_tree_filename}")
+        with open(pretty_tree_filename, "w") as file:
+            file.write(pretty_parse_tree_str)
+        repaired_parse_tree = RepairPuzzleScript().transform(min_parse_tree)
+        min_code = PrintPuzzleScript().transform(repaired_parse_tree)
+        min_code = add_empty_sounds_section(min_code)
+        min_filename = os.path.join(save_dir, f'{n_iter}b3_code_min.txt')
+        with open(min_filename, "w") as file:
+            file.write(min_code)
 
     return jsonify({
         'code': code,
@@ -227,6 +246,7 @@ def gen_game():
         'text': plaintext,
         'sols': sols,
         'skip': skip,
+        'lark_error': lark_error,
     })
 
 
@@ -243,7 +263,7 @@ def gen_game_from_plan():
     save_dir = os.path.join(log_dir, data['save_dir'])
     os.makedirs(save_dir, exist_ok=True)
     plan_output_path = os.path.join(save_dir, f'0b_plan.txt')
-    print(plan_output_path)
+    print(f"Saving plan at: {plan_output_path}")
     if not os.path.isfile(plan_output_path):
         plan_prompt_output_path = os.path.join(save_dir, f'0a_prompt.txt')
         plan_system_prompt = game_gen_system_prompt

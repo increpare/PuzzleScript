@@ -166,22 +166,28 @@ class StripPuzzleScript(Transformer):
 
 
 class RepairPuzzleScript(Transformer):
+    # def color_line(self, items):
+    #     breakpoint()
+    #     pass
+
     def object_data(self, items):
         # If we're missing colors, add random ones
         child_trees = [i for i in items if isinstance(i, Tree)]
         child_tree_names = [i.data for i in child_trees]
-        colors = [i for i in child_trees if i.data == 'colors'][0]
-        n_colors = len(colors.children)
+        colors = [i for i in child_trees if i.data == 'color_line']
+        n_colors = 0
+        if len(colors) > 0:
+            colors = colors[0]
+            n_colors = len(colors.children)
         if 'sprite' in child_tree_names:
             sprite = [i for i in child_trees if i.data == 'sprite'][0]
-            sprite_arr = sprite.children
-            unique_sprite_pixels = set(np.unique(sprite_arr))
-            unique_sprite_pixels.discard('.')
-            n_unique_pixels = len(unique_sprite_pixels)
-            while n_unique_pixels - 1 > n_colors:
+            sprite_arr = np.array(sprite.children)
+            if sprite_arr.shape != (5, 5):
+                breakpoint()
+            n_unique_pixels = np.vectorize(lambda x: int(x) if x != '.' else 0)(sprite_arr).max() + 1
+            while n_unique_pixels > n_colors:
                 colors.children.append(Token('COLOR', f'#{np.random.randint(0, 0xFFFFFF):06X}'))
                 n_colors += 1
-                breakpoint()
         return Tree('object_data', items)
 
 
@@ -231,13 +237,13 @@ class PrintPuzzleScript(Transformer):
 
     def legend_data(self, items):
         # Omitting final NEWLINES
-        return str(items[0])[:-1].strip() + ' = ' + ' or '.join(items[1:])
+        return str(items[0])[:-1].strip() + ' = ' + ' '.join(items[1:])
 
     def legend_operation(self, items):
         if len(items) == 1:
             return items[0]
         else:
-            return ' or '.join(items)
+            return ' '.join(items)
 
     def legend_key(self, items):
         return items[0].value
@@ -246,7 +252,7 @@ class PrintPuzzleScript(Transformer):
         return items[0].value
 
     def sprite(self, arr):
-        return array_2d_to_str(arr)[:-2]
+        return array_2d_to_str(arr)[:-1]
 
     def level_data(self, items):
         return '\n'.join(items)
@@ -267,13 +273,13 @@ class PrintPuzzleScript(Transformer):
         return ', '.join(items)
 
     def rule_part(self, items):
-        return '[ ' + ''.join(items) + ' ]'
+        return '[ ' + ' '.join(items) + ' ]'
 
     def rule_block(self, items):
         return items[0]
 
     def rule_block_once(self, items):
-        return ''.join([item for item in items if item])
+        return '\n'.join([item for item in items if item])
 
     def rule_block_loop(self, items):
         return ''.join(items)
@@ -311,11 +317,15 @@ class PrintPuzzleScript(Transformer):
 
 
 def add_empty_sounds_section(txt):
-    txt = re.sub(r'COLLISIONLAYERS', 'SOUNDS\n\nCOLLISIONLAYERS', txt)
+    ret = re.search(r'^SOUNDS\n', txt, re.MULTILINE)
+    if ret is None:
+        txt = re.sub(r'COLLISIONLAYERS', 'SOUNDS\n\nCOLLISIONLAYERS', txt)
     return txt
 
 
 def preprocess_ps(txt):
+    txt = add_empty_sounds_section(txt)
+
     # Remove whitespace at end of any line
     txt = re.sub(r'[ \t]+$', '', txt, flags=re.MULTILINE)
 
@@ -450,7 +460,7 @@ if __name__ == "__main__":
                 traceback.print_exc(file=file)
 
             print(f"Error parsing {simp_filepath}:\n{e}")
-            with open(parsed_games_filename, 'a', encoding='utf-8') as file:
+            with open(parsed_games_filename, 'a') as file:
                 file.write(filename + "\n")
             continue
 
