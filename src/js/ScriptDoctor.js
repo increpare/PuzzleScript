@@ -242,7 +242,7 @@ async function solveLevelBFS(level) {
 }
 
 class MCTSNode{
-  constructor(action=-1, parent=null, max_children=5) {
+  constructor(action, parent, max_children) {
     this.parent = parent;
     this.action = action;
     this.children = [];
@@ -253,20 +253,20 @@ class MCTSNode{
     this.score = 0;
   }
 
-  ucb_score(c = Math.sqrt(2)) {
+  ucb_score(c) {
     if(this.parent == null){
       return this.score / this.visits;
     }
     return this.score / this.visits + c * Math.sqrt(Math.log(this.parent.visits) / this.visits);
   }
 
-  select(){
+  select(c){
     if(!this.is_fully_expanded()){
       return null;
     }
     let index = 0;
     for(let i=0; i<this.children.length; i++){
-      if(this.children[i].ucb_score() > this.children[index].ucb_score()){
+      if(this.children[i].ucb_score(c) > this.children[index].ucb_score(c)){
         index = i;
       }
     }
@@ -316,11 +316,11 @@ class MCTSNode{
         changes += 1;
       }
       if(winning){
-        return 1000 + changes / max_length;
+        return 1000;
       }
     }
     if(score_fn){
-      return score_fn() + changes / max_length;
+      return score_fn() + 0.01 * changes / max_length;
     }
     return changes / max_length;
   }
@@ -336,12 +336,17 @@ class MCTSNode{
   }
 }
 
-async function solveLevelMCTS(level, max_sim_length, score_fn=null, max_iterations=-1) {
+// level: is the starting level
+// max_sim_length: maximum number of random simulation before stopping and backpropagate
+// score_fn: if you want to use heuristic function which is advisable and make sure the values are always between 0 and 1
+// c: is the MCTS constant that balance between exploitation and exploration
+// max_iterations: max number of iterations before you consider the solution is not available
+async function solveLevelMCTS(level, max_sim_length, score_fn=null, c=Math.sqrt(2), max_iterations=-1) {
   // Load the level
   compile(['loadLevel', level], editor.getValue());
   init_level = backupLevel();
   init_level_map = init_level['dat'];
-  let rootNode = new MCTSNode();
+  let rootNode = new MCTSNode(-1, null, 5);
   let i = 0;
   let deadend_nodes = 1;
   let start_time = Date.now();
@@ -352,7 +357,7 @@ async function solveLevelMCTS(level, max_sim_length, score_fn=null, max_iteratio
     let changed = true;
     // selecting next node
     while(currentNode.is_fully_expanded()){
-      currentNode = currentNode.select()
+      currentNode = currentNode.select(c);
       changed = processInputSearch(currentNode.action);
       if(winning){
         let sol = current.get_actions();
