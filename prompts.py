@@ -1,6 +1,6 @@
 comments_note = " Any comments must be in the form `(comment)`."
 full_game_formatting_prompt = (
-    """Return your code in full, inside a ```plaintext code block."""
+    """Do not include more than 5 levels. Return your code in full, inside a ```plaintext code block."""
     # + comments_note
 )
 game_gen_system_prompt = (

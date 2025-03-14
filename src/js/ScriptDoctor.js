@@ -20,8 +20,9 @@ function getConsoleText() {
 }
 
 class GameIndividual {
-  constructor(code, fitness, compiledIters, solvedIters, skipped) {
+  constructor(code, minCode, fitness, compiledIters, solvedIters, skipped) {
     this.code = code;
+    this.minCode = minCode;
     this.fitness = fitness;
     this.compiledIters = compiledIters;
     this.solvedIters = solvedIters;
@@ -435,7 +436,7 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
   compiledIters = [];
   solvedIters = [];
 
-  bestIndividual = new GameIndividual('', -Infinity, [], [], true);
+  bestIndividual = new GameIndividual('', null, -Infinity, [], [], true);
   while (nGenAttempts < maxGenAttempts & (nGenAttempts == 0 | !compilationSuccess | !solvable)) {
     console.log(`Game ${saveDir}, attempt ${nGenAttempts}.`);
 
@@ -484,20 +485,21 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
     // for (const line of data.text.split('\n')) {
     //   consolePrint(line);
     // }
+    code = data.code;
+    minCode = null;
     // if min_code is not None, then use this
     if (data.min_code) {
-      code = data.min_code;
-    } else {
-      code = data.code;
+      minCode = data.min_code;
     }
     sols = data.sols;
     larkError = data.lark_error
     if (data.skip) {
-      return new GameIndividual(code, -1, [], [], true);
+      return new GameIndividual(code, minCode, -1, [], [], true);
     }
     errorLoadingLevel = false;
     try {
-      editor.setValue(code);
+      codeToCompile = minCode ? minCode : code;
+      editor.setValue(codeToCompile);
       editor.clearHistory();
       clearConsole();
       setEditorClean();
@@ -510,7 +512,7 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
     }
     if (!errorLoadingLevel) {
       try {
-        compile(['restart'], code);
+        compile(['restart'], codeToCompile);
       } catch (e) {
         console.log('Error while compiling code:', e);
       }
@@ -619,7 +621,7 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
     }
 
     nGenAttempts++;
-    individual = new GameIndividual(code, fitness, compiledIters, solvedIters, false);
+    individual = new GameIndividual(code, minCode, fitness, compiledIters, solvedIters, false);
     bestIndividual = bestIndividual.fitness < individual.fitness ? individual : bestIndividual;
 
   }
@@ -852,7 +854,7 @@ function generateClick() {
   expFn();
 }
 
- const expSeed = 20;
+ const expSeed = 21;
 
 sweep();
 // fromIdeaSweep();

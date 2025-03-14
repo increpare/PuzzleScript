@@ -2,6 +2,7 @@ import json
 import os
 import random
 import re
+import time
 import requests
 import tiktoken
 
@@ -79,13 +80,19 @@ def llm_text_query(system_prompt, prompt, seed):
         "temperature": 0.7,
         "top_p": 0.95,
     }
-    try:
-        print('Querying openai...')
-        response = requests.post(GPT4V_ENDPOINT, headers=headers, json=payload)
-        response.raise_for_status() # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
-        print('Query completed.')
-    except requests.RequestException as e:
-        raise SystemExit(f"Failed to make the request. Error: {e}")
+    successful_query = False
+    while not successful_query:
+        try:
+            print('Querying openai...')
+            response = requests.post(GPT4V_ENDPOINT, headers=headers, json=payload)
+            response.raise_for_status() # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
+            successful_query = True
+            print('Query completed.')
+        except requests.RequestException as e:
+            print(f"Failed to make the request. RequestException: {e}")
+        except requests.HTTPError as e:
+            print(f"HTTPError: {e}")
+        time.sleep(5)
 
     return response.json()['choices'][0]['message']['content']
 
