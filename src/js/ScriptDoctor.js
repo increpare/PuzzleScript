@@ -321,9 +321,9 @@ class MCTSNode{
       }
     }
     if(score_fn){
-      return (score_fn() + 0.01 * changes / max_length) / win_bonus;
+      return score_fn();
     }
-    return (changes / max_length) / win_bonus;
+    return (changes / max_length);
   }
 
   get_actions(){
