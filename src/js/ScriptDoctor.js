@@ -374,7 +374,7 @@ async function solveLevelMCTS(level, options = {}) {
     "max_sim_length": 1000,
     "score_fn": null, 
     "explore_deadends": false, 
-    "deadend_bonus": -1, 
+    "deadend_bonus": -100, 
     "win_bonus": 100, 
     "c": Math.sqrt(2), 
     "max_iterations": -1
@@ -413,7 +413,8 @@ async function solveLevelMCTS(level, options = {}) {
 
     // if node is deadend, punish it
     if(!options.explore_deadends && !changed){
-      currentNode.backup(options.deadend_bonus);
+      currentNode.score += options.deadend_bonus;
+      currentNode.backup(0);
       deadend_nodes += 1;
     }
     //otherwise expand
@@ -428,7 +429,8 @@ async function solveLevelMCTS(level, options = {}) {
       }
       // if node is deadend, punish it
       if(!options.explore_deadends && !changed){
-        currentNode.backup(options.deadend_bonus);
+        currentNode.score += options.deadend_bonus;
+        currentNode.backup(0);
         deadend_nodes += 1;
         
       }
@@ -465,7 +467,7 @@ async function testMCTS() {
   const n_level = 0;
   compile(['loadLevel', n_level], editor.getValue());
   console.log('Solving level:', n_level, ' with MCTS');
-  let heuristic = getScore;
+  let heuristic = getScoreNormalized;
   if(heuristic != null){
     precalcDistances();
   }

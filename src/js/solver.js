@@ -250,3 +250,46 @@ function getScore() {
 	// console.log(score);
 	return score;
 }
+
+function getScoreNormalized() {
+	var score = 0.0;
+	var maxDistance = level.width + level.height;
+	var normal_value = 0.0;
+	if (state.winconditions.length > 0) {
+		for (var wcIndex = 0; wcIndex < state.winconditions.length; wcIndex++) {
+			var wincondition = state.winconditions[wcIndex];
+			var filter1 = wincondition[1];
+			var filter2 = wincondition[2];
+			if (wincondition[0] == -1) {
+				// "no" conditions
+				for (var i = 0; i < level.n_tiles; i++) {
+					var cell = level.getCellInto(i, _o10);
+					if ((!filter1.bitsClearInArray(cell.data)) && (!filter2.bitsClearInArray(cell.data))) {
+						score += 1.0; // penalization for each case
+						normal_value += maxDistance;
+					}
+					
+				}
+			} else {
+				// "some" or "all" conditions
+				for (var i = 0; i < level.n_tiles; i++) {
+					if (!filter1.bitsClearInArray(level.getCellInto(i, _o10).data)) {
+						var minDistance = maxDistance;
+						for (var j = 0; j < level.n_tiles; j++) {
+							if (!filter2.bitsClearInArray(level.getCellInto(j, _o10).data)) {
+								var dist = distanceTable[i][j];
+								if (dist < minDistance) {
+									minDistance = dist;
+								}
+							}
+						}
+						score += minDistance;
+						normal_value += maxDistance;
+					}
+				}
+			}
+		}
+	}
+	// console.log(score);
+	return score / normal_value;
+}
