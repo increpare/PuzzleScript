@@ -11,9 +11,6 @@ from typing import Optional
 import lark
 from lark.reconstruct import Reconstructor
 
-parser = argparse.ArgumentParser(description='Parse PuzzleScript files')
-parser.add_argument('--overwrite', '-o', action='store_true', help='Overwrite existing parsed_games.txt')
-args = parser.parse_args()
 games_to_skip = set({'easyenigma', 'A_Plaid_Puzzle'})
 
 # test_games = ['blockfaker', 'sokoban_match3', 'notsnake', 'sokoban_basic']
@@ -383,6 +380,10 @@ parsed_games_filename = os.path.join(data_dir, "parsed_games.txt")
 
 # Usage example
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Parse PuzzleScript files')
+    parser.add_argument('--overwrite', '-o', action='store_true', help='Overwrite existing parsed_games.txt')
+    args = parser.parse_args()
+
     # Initialize the Lark parser with the PuzzleScript grammar
     parser = Lark(puzzlescript_grammar, start="ps_game", maybe_placeholders=False)
     # min_parser = Lark(min_puzzlescript_grammar, start="ps_game")

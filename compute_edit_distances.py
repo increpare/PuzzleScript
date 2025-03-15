@@ -3,8 +3,7 @@ import Levenshtein
 import os
 
 
-seed = 12
-max_gen_attempts = 20
+seed = 21
 
 sweep_dir = os.path.join('logs', f'sweep-{seed}')
 with open(os.path.join(sweep_dir, 'stats.json')) as f:

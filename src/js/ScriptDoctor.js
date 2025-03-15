@@ -20,12 +20,13 @@ function getConsoleText() {
 }
 
 class GameIndividual {
-  constructor(code, minCode, fitness, compiledIters, solvedIters, skipped) {
+  constructor(code, minCode, fitness, compiledIters, solvedIters, anySolvedIters, skipped) {
     this.code = code;
     this.minCode = minCode;
     this.fitness = fitness;
     this.compiledIters = compiledIters;
     this.solvedIters = solvedIters;
+    this.anySolvedIters = anySolvedIters;
     this.skipped = skipped;
   }
 }
@@ -595,6 +596,7 @@ async function processStateTransition(gameHash, parentState, childState, action)
 
 
 async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
+  /* This funciton will recursively call itself to iterate on broken (uncompilable or unsolvable (or too simply solvable)) games. */
   fromIdea=false, idea='', fromPlan=false, maxGenAttempts=10) {
   consoleText = '';
   larkError = '';
@@ -605,6 +607,7 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
   solverText = '';
   compiledIters = [];
   solvedIters = [];
+  anySolvedIters = [];
 
   bestIndividual = new GameIndividual('', null, -Infinity, [], [], true);
   while (nGenAttempts < maxGenAttempts & (nGenAttempts == 0 | !compilationSuccess | !solvable)) {
@@ -749,12 +752,12 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
           // console.log('Level is solvable.');
           // solverText += `Found solution for level ${level_i} in ${n_search_iters} iterations: ${sol}.\n`
           solverText += `Found solution for level ${level_i} in ${n_search_iters} iterations. Solution is ${sol.length} moves long.\n`
+          if (sol.length > 1) {
+            anySolvable = true;
+          }
           if (sol.length < 10) {
             solverText += `Solution is very short. Please make it a bit more complex.\n`
             solvable = false;
-          }
-          else {
-            anySolvable = true;
           }
         } else if (sol == -1) {
           solvable = false;
@@ -768,9 +771,13 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
           solvable = false;
           solverText += ` Level ${level_i} is not solvable. Please repair it.\n`
         }
-        if (solvable) {
-          solvedIters.push(nGenAttempts)
-        }
+      }
+      if (solvable) {
+        // If all levels are solvable
+        solvedIters.push(nGenAttempts)
+      }
+      if (anySolvable) {
+        anySolvedIters.push(nGenAttempts)
       }
     }
     response = await fetch('/log_gen_results', {
@@ -791,7 +798,7 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
     }
 
     nGenAttempts++;
-    individual = new GameIndividual(code, minCode, fitness, compiledIters, solvedIters, false);
+    individual = new GameIndividual(code, minCode, fitness, compiledIters, solvedIters, anySolvedIters, false);
     bestIndividual = bestIndividual.fitness < individual.fitness ? individual : bestIndividual;
 
   }
@@ -859,6 +866,19 @@ async function saveStats(saveDir, results) {
       results: results,
     }),
   });
+}
+
+async function sweepGeneral() {
+  isDone = false;
+  while (!isDone) {
+    response = await fetch('/get_sweep_args', {
+      method: 'GET',
+    });
+    args = await response.json();
+    gameInd = await genGame('init', [], args.gameStr,
+      args.gameIdx, args.fewshot, args.cot, args.fromIdea, args.gameIdea, args.fromPlan);
+    isDone = args.done;
+  }
 }
 
 async function sweep() {
@@ -1026,7 +1046,8 @@ function generateClick() {
 
  const expSeed = 21;
 
-sweep();
+sweepGeneral();
+// sweep();
 // fromIdeaSweep();
 // fromPlanSweep();
 // playTest();

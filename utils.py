@@ -3,11 +3,14 @@ import os
 import random
 import re
 import time
+import dotenv
+from openai import AzureOpenAI
 import requests
 import tiktoken
 
 from prompts import *
 
+dotenv.load_dotenv()
 
 def num_tokens_from_string(string: str, model_name: str) -> int:
     encoding = tiktoken.encoding_for_model(model_name)
@@ -48,7 +51,7 @@ def extract_ps_code(text):
         return None, None
 
 
-def gen_fewshot_examples(system_prompt, prompt, max_tokens=30_000):
+def gen_fewshot_examples(system_prompt, prompt, max_tokens):
     # Randomly add fewshot examples to the system prompt (within our token limit)
     with open('example_games.json', 'r') as f:
         example_games = json.load(f)
@@ -70,31 +73,64 @@ headers = {
     "api-key": GPT4V_KEY,
 }
 
-def llm_text_query(system_prompt, prompt, seed):
+o_endpoint = os.getenv("ENDPOINT_URL", "https://sc-pn-m898m3wl-eastus2.openai.azure.com/")
+o_key = os.getenv("O3_MINI_KEY")
+
+client = AzureOpenAI(  
+    azure_endpoint=o_endpoint,  
+    api_key=o_key,  
+    api_version="2024-12-01-preview",
+)
+
+def llm_text_query(system_prompt, prompt, seed, model):
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": prompt},
     ]
-    payload = {
-        "messages": messages,
-        "temperature": 0.7,
-        "top_p": 0.95,
-    }
-    successful_query = False
-    while not successful_query:
-        try:
-            print('Querying openai...')
-            response = requests.post(GPT4V_ENDPOINT, headers=headers, json=payload)
-            response.raise_for_status() # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
-            successful_query = True
-            print('Query completed.')
-        except requests.RequestException as e:
-            print(f"Failed to make the request. RequestException: {e}")
-        except requests.HTTPError as e:
-            print(f"HTTPError: {e}")
-        time.sleep(5)
+    if model == 'gpt-4o':
+        payload = {
+            "messages": messages,
+            "temperature": 0.7,
+            "top_p": 0.95,
+        }
+        successful_query = False
+        while not successful_query:
+            try:
+                print('Querying openai...')
+                response = requests.post(GPT4V_ENDPOINT, headers=headers, json=payload)
+                response.raise_for_status() # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
+                successful_query = True
+                print('Query completed.')
+            except requests.RequestException as e:
+                print(f"Failed to make the request. RequestException: {e}")
+            except requests.HTTPError as e:
+                print(f"HTTPError: {e}")
+            time.sleep(5)
 
-    return response.json()['choices'][0]['message']['content']
+        return response.json()['choices'][0]['message']['content']
+
+    else:
+        assert model in ['o1', 'o3-mini']
+        deployment = os.getenv('DEPLOYMENT_NAME', model)
+        successful_query = False
+        while not successful_query:
+            print('Querying openai...')
+            completion = client.chat.completions.create(  
+                model=deployment,
+                messages=messages,
+                max_completion_tokens=100000,
+                stop=None,  
+                stream=False
+            )
+            successful_query = True
+            # if completion.status_code == 200:
+            #     successful_query = True
+            #     print('Query completed.')
+            # else:
+            #     print(f"Failed to make the request. Status code: {completion.status_code}")
+            #     time.sleep(5)
+        return completion.choices[0].message.content
+        
 
     global openai_client
     if openai_client is None:

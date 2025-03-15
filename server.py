@@ -1,7 +1,10 @@
 import base64
 import binascii as ba
+from dataclasses import dataclass
 from enum import IntEnum
 import io
+import inspect
+import itertools
 import json
 import os
 import random
@@ -15,6 +18,8 @@ import threading  # Add this import
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
+import hydra
+from hydra.core.config_store import ConfigStore
 from PIL import Image
 import openai
 import requests
@@ -23,6 +28,15 @@ import game_gen
 from parse_lark import PrintPuzzleScript, RepairPuzzleScript, StripPuzzleScript, add_empty_sounds_section, preprocess_ps
 from prompts import *
 from utils import extract_ps_code, gen_fewshot_examples, llm_text_query, num_tokens_from_string, save_prompts, truncate_str_to_token_len
+
+
+@dataclass
+class Config:
+    port: int = 8000
+    sweep: str = 'models'
+
+cs = ConfigStore.instance()
+cs.store(name="config", node=Config)
 
 
 load_dotenv()
@@ -186,9 +200,9 @@ def gen_game():
                                                            from_idea_repair_prompt=from_idea_prompt_i, cot_prompt=cot_prompt)
         # if not gen_mode == GenModes.ZERO_SHOT:
         if fewshot:
-            system_prompt += gen_fewshot_examples(system_prompt, prompt)
+            system_prompt += gen_fewshot_examples(system_prompt, prompt, max_tokens=exp_config.context_len)
         save_prompts(system_prompt, prompt, gen_game_prompt_output_path)
-        text = llm_text_query(system_prompt, prompt, seed)
+        text = llm_text_query(system_prompt, prompt, seed, model=exp_config.model)
         with open(gen_game_code_output_path, 'w', encoding='utf-8') as f:
             f.write(text)
     else:
@@ -270,7 +284,7 @@ def gen_game_from_plan():
         from_idea_prompt_i = from_idea_prompt.format(game_idea=game_idea)
         prompt = plan_game_prompt.format(from_idea_prompt=from_idea_prompt_i)
         if fewshot:
-            plan_system_prompt += gen_fewshot_examples(plan_system_prompt, prompt)   
+            plan_system_prompt += gen_fewshot_examples(plan_system_prompt, prompt, max_tokens=exp_config.context_len)
         save_prompts(plan_system_prompt, prompt, plan_prompt_output_path)
         game_plan = llm_text_query(plan_system_prompt, prompt, seed)
         with open(plan_output_path, 'w', encoding='utf-8') as f:
@@ -280,7 +294,7 @@ def gen_game_from_plan():
             game_plan = f.read()
     sprites_system_prompt = game_gen_system_prompt
     if fewshot:
-        sprites_system_prompt += gen_fewshot_examples(sprites_system_prompt, '') 
+        sprites_system_prompt += gen_fewshot_examples(sprites_system_prompt, '', max_tokens=exp_config.context_len) 
     with open('example_sprite_names.txt', 'r', encoding='utf-8') as f:
         sprite_names = f.read()
     with open('example_sprites.json', 'r') as f:
@@ -311,7 +325,7 @@ def gen_game_from_plan():
 
     rules_system_prompt = game_gen_system_prompt
     if fewshot:
-        rules_system_prompt += gen_fewshot_examples(rules_system_prompt, '')
+        rules_system_prompt += gen_fewshot_examples(rules_system_prompt, '', max_tokens=exp_config.context_len)
     rules_prompt = gen_rules_prompt.format(game_plan=game_plan, object_legend=object_legend)
     rules_output_path = os.path.join(save_dir, f'0e_rules.txt')
     if not os.path.isfile(rules_output_path):
@@ -341,7 +355,7 @@ def gen_game_from_plan():
 
     levels_system_prompt = game_gen_system_prompt
     if fewshot:
-        levels_system_prompt += gen_fewshot_examples(levels_system_prompt, '')
+        levels_system_prompt += gen_fewshot_examples(levels_system_prompt, '', max_tokens=exp_config.context_len)
     levels_prompt = gen_levels_prompt.format(game_plan=game_plan, code=partial_code)
     levels_output_path = os.path.join(save_dir, f'0g_levels.txt')
     if not os.path.isfile(levels_output_path):
@@ -367,7 +381,7 @@ def gen_game_from_plan():
 
     finalize_system_prompt = game_gen_system_prompt
     if fewshot:
-        finalize_system_prompt += gen_fewshot_examples(finalize_system_prompt, '')
+        finalize_system_prompt += gen_fewshot_examples(finalize_system_prompt, '', max_tokens=exp_config.context_len)
     finalize_prompt = gen_finalize_prompt.format(game_plan=game_plan, code=partial_code)
     finalize_output_path = os.path.join(save_dir, f'0i_code.txt')
     if not os.path.isfile(finalize_output_path):
@@ -471,6 +485,78 @@ def save_transition():
         
     return jsonify({'status': 'success'})
 
+sweep_i = 21
+hypers_i = 0
+hypers_ks, hypers_lst = [], []
+
+class ExpConfig:
+    model = 'gpt-4o'
+    game_i = 0
+    cot = True
+    fewshot = True
+    from_idea = False
+    context_len = 30_000
+
+class Sweep:
+    game_i = list(range(10))
+
+class ModelSweep(Sweep):
+    model = ['gpt-4o', 'o1', 'o3-mini']
+    context_len = [10_000]
+
+exp_config = ExpConfig()
+
+all_hypers = {
+    'models': ModelSweep()
+}
+
+@app.route('/get_sweep_args', methods=['GET'])
+def get_sweep_args():
+    global hypers_i, exp_config
+    save_dir = f'sweep-{sweep_i}'
+
+    done = hypers_i == len(hypers_lst) - 1
+    hyper_vals = hypers_lst[hypers_i] if not done else None
+    hyper_dict = {k: v for k, v in zip(hypers_ks, hyper_vals)}
+    for k in hyper_dict:
+        setattr(exp_config, k, hyper_dict[k])
+
+    if exp_config.model in ['o1', 'o3-mini']:
+        exp_config.cot = False
+
+    exp_dir = os.path.join(
+        save_dir, 
+        (f'fromIdea-{int(exp_config.from_idea)}_' if exp_config.from_idea else '') + \
+        f'fewshot-{int(exp_config.fewshot)}_cot-{int(exp_config.cot)}' + \
+        (f'_{exp_config.model}' if exp_config.model != 'gpt-4o' else '') + \
+        (f'_ctx-{exp_config.context_len}' if exp_config.context_len != 30_000 else '')
+    )
+    game_dir = os.path.join(exp_dir, f'game-{exp_config.game_i}')
+
+    hypers_i += 1
+    return jsonify({
+        'hypers': hyper_dict,
+        'done': done,
+        'gameStr': game_dir,
+        'fewshot': exp_config.fewshot,
+        'cot': exp_config.cot,
+        'gameIdx': exp_config.game_i,
+        'fromIdea': exp_config.from_idea,
+        'fromPlan': False,
+    })
+
+def instance_to_dict(instance):
+    return {k: v for k, v in inspect.getmembers(instance) if not k.startswith('__') and not inspect.ismethod(k)}
+
+@hydra.main(config_name="config", version_base="1.3")
+def main(cfg: Config):
+    hypers = all_hypers[cfg.sweep]
+    global hypers_ks, hypers_lst
+    sweep_dict = instance_to_dict(hypers)
+    hypers_ks = list(sweep_dict)
+    hypers_lst = list(itertools.product(*sweep_dict.values()))
+    app.run(port=cfg.port)
+
 
 if __name__ == '__main__':
-    app.run(port=8000)
+    main()

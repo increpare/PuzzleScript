@@ -5,8 +5,8 @@ import numpy as np
 import pandas as pd
 
 
-seed = 12
-max_gen_attempts = 20
+seed = 21
+max_gen_attempts = 10
 
 sweep_dir = os.path.join('logs', f'sweep-{seed}')
 with open(os.path.join(sweep_dir, 'stats_and_dists.json')) as f:
