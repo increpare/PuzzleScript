@@ -309,7 +309,7 @@ class MCTSNode{
     }
   }
 
-  simulate(max_length, score_fn){
+  simulate(max_length, score_fn, win_bonus){
     let changes = 0;
     for(let i=0; i<max_length; i++){
       let changed = processInputSearch(Math.min(5, Math.floor(Math.random() * 6)));
@@ -317,7 +317,7 @@ class MCTSNode{
         changes += 1;
       }
       if(winning){
-        return 1000;
+        return win_bonus;
       }
     }
     if(score_fn){
@@ -340,9 +340,11 @@ class MCTSNode{
 // level: is the starting level
 // max_sim_length: maximum number of random simulation before stopping and backpropagate
 // score_fn: if you want to use heuristic function which is advisable and make sure the values are always between 0 and 1
+// deadend_bonus: bonus when you find a deadend node (usually negative number to avoid)
+// win_bonus: bonus when you find a winning node
 // c: is the MCTS constant that balance between exploitation and exploration
 // max_iterations: max number of iterations before you consider the solution is not available
-async function solveLevelMCTS(level, max_sim_length, score_fn=null, c=Math.sqrt(2), max_iterations=-1) {
+async function solveLevelMCTS(level, max_sim_length, score_fn=null, deadend_bonus=-0.1, win_bonus=1000, c=Math.sqrt(2), max_iterations=-1) {
   // Load the level
   compile(['loadLevel', level], editor.getValue());
   init_level = backupLevel();
@@ -373,7 +375,7 @@ async function solveLevelMCTS(level, max_sim_length, score_fn=null, c=Math.sqrt(
 
     // if node is deadend, punish it
     if(!changed){
-      currentNode.backup(-1000);
+      currentNode.backup(deadend_bonus);
       deadend_nodes += 1;
     }
     //otherwise expand
@@ -388,13 +390,13 @@ async function solveLevelMCTS(level, max_sim_length, score_fn=null, c=Math.sqrt(
       }
       // if node is deadend, punish it
       if(!changed){
-        currentNode.backup(-1000);
+        currentNode.backup(deadend_bonus);
         deadend_nodes += 1;
         
       }
       //otherwise simulate then backup
       else{
-        let value = currentNode.simulate(max_sim_length, score_fn);
+        let value = currentNode.simulate(max_sim_length, score_fn, win_bonus);
         currentNode.backup(value);
       }
     }
