@@ -321,9 +321,9 @@ class MCTSNode{
       }
     }
     if(score_fn){
-      return score_fn() + 0.01 * changes / max_length;
+      return (score_fn() + 0.01 * changes / max_length) / win_bonus;
     }
-    return changes / max_length;
+    return (changes / max_length) / win_bonus;
   }
 
   get_actions(){
@@ -335,16 +335,37 @@ class MCTSNode{
     }
     return sol.reverse();
   }
+
+  get_most_visited_action(){
+    let max_action = 0;
+    for(let i=0; i<this.children.length; i++){
+      if(this.children[i].visits > this.children[max_action].visits){
+        max_action = i;
+      }
+    }
+    return max_action;
+  }
+
+  get_best_action(){
+    let max_action = 0;
+    for(let i=0; i<this.children.length; i++){
+      if(this.children[i].score / this.children[i].visited > this.children[max_action].score / this.children[max_action].visited){
+        max_action = i;
+      }
+    }
+    return max_action;
+  }
 }
 
 // level: is the starting level
 // max_sim_length: maximum number of random simulation before stopping and backpropagate
 // score_fn: if you want to use heuristic function which is advisable and make sure the values are always between 0 and 1
+// explore_deadends: if you want to explore deadends by default, the search don't continue in deadends
 // deadend_bonus: bonus when you find a deadend node (usually negative number to avoid)
 // win_bonus: bonus when you find a winning node
 // c: is the MCTS constant that balance between exploitation and exploration
 // max_iterations: max number of iterations before you consider the solution is not available
-async function solveLevelMCTS(level, max_sim_length, score_fn=null, deadend_bonus=-0.1, win_bonus=1000, c=Math.sqrt(2), max_iterations=-1) {
+async function solveLevelMCTS(level, max_sim_length, score_fn=null, explore_deadends=false, deadend_bonus=-1, win_bonus=100, c=1, max_iterations=-1) {
   // Load the level
   compile(['loadLevel', level], editor.getValue());
   init_level = backupLevel();
@@ -368,13 +389,13 @@ async function solveLevelMCTS(level, max_sim_length, score_fn=null, deadend_bonu
         console.log('FPS:', (i / (Date.now() - start_time) * 1000).toFixed(2));
         return [sol, i];
       }
-      if(!changed){
+      if(!explore_deadends && !changed){
         break;
       }
     }
 
     // if node is deadend, punish it
-    if(!changed){
+    if(!explore_deadends && !changed){
       currentNode.backup(deadend_bonus);
       deadend_nodes += 1;
     }
@@ -389,7 +410,7 @@ async function solveLevelMCTS(level, max_sim_length, score_fn=null, deadend_bonu
         return [sol, i];
       }
       // if node is deadend, punish it
-      if(!changed){
+      if(!explore_deadends && !changed){
         currentNode.backup(deadend_bonus);
         deadend_nodes += 1;
         
@@ -412,7 +433,14 @@ async function solveLevelMCTS(level, max_sim_length, score_fn=null, deadend_bonu
     }
     i+= 1;
   }
-  return [[], max_iterations];
+  let actions = [];
+  currentNode = rootNode;
+  while(currentNode.is_fully_expanded()){
+    let action = currentNode.get_most_visited_action();
+    actions.push(action);
+    currentNode = currentNode.children[action];
+  }
+  return [actions, max_iterations];
 }
 
 async function testMCTS() {
@@ -420,7 +448,11 @@ async function testMCTS() {
   const n_level = 0;
   compile(['loadLevel', n_level], editor.getValue());
   console.log('Solving level:', n_level, ' with MCTS');
-  var [sol_a, n_search_iters_a] = await solveLevelMCTS(level_i=n_level, max_sim_length=1000);
+  let heuristic = getScore;
+  if(heuristic != null){
+    precalcDistances();
+  }
+  var [sol_a, n_search_iters_a] = await solveLevelMCTS(level_i=n_level, max_sim_length=1000, heuristic);
   console.log('Solution:', sol_a);
 }
 
