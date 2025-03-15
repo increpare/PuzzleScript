@@ -76,11 +76,11 @@ headers = {
 o_endpoint = os.getenv("ENDPOINT_URL", "https://sc-pn-m898m3wl-eastus2.openai.azure.com/")
 o_key = os.getenv("O3_MINI_KEY")
 
-client = AzureOpenAI(  
-    azure_endpoint=o_endpoint,  
-    api_key=o_key,  
-    api_version="2024-12-01-preview",
-)
+# client = AzureOpenAI(  
+#     azure_endpoint=o_endpoint,  
+#     api_key=o_key,  
+#     api_version="2024-12-01-preview",
+# )
 
 def llm_text_query(system_prompt, prompt, seed, model):
     messages = [

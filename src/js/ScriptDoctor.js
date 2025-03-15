@@ -351,7 +351,7 @@ async function solveLevelMCTS(level, max_sim_length, score_fn=null, c=Math.sqrt(
   let i = 0;
   let deadend_nodes = 1;
   let start_time = Date.now();
-  while(max_iterations > 0 && i < max_iterations){
+  while(max_iterations <= 0 || (max_iterations > 0 && i < max_iterations)){
     // start from th root
     currentNode = rootNode;
     restoreLevel(init_level);
