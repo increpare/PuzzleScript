@@ -362,6 +362,7 @@ class MCTSNode{
 // score_fn: if you want to use heuristic function which is advisable and make sure the values are always between 0 and 1
 // explore_deadends: if you want to explore deadends by default, the search don't continue in deadends
 // deadend_bonus: bonus when you find a deadend node (usually negative number to avoid)
+// most_visited: decide to return most visited action or best value action
 // win_bonus: bonus when you find a winning node
 // c: is the MCTS constant that balance between exploitation and exploration
 // max_iterations: max number of iterations before you consider the solution is not available
@@ -375,7 +376,8 @@ async function solveLevelMCTS(level, options = {}) {
     "score_fn": null, 
     "explore_deadends": false, 
     "deadend_bonus": -100, 
-    "win_bonus": 100, 
+    "win_bonus": 100,
+    "most_visited": true,
     "c": Math.sqrt(2), 
     "max_iterations": -1
   };
@@ -455,7 +457,13 @@ async function solveLevelMCTS(level, options = {}) {
   let actions = [];
   currentNode = rootNode;
   while(currentNode.is_fully_expanded()){
-    let action = currentNode.get_most_visited_action();
+    let action = -1;
+    if(options.most_visited){
+      action = currentNode.get_most_visited_action();
+    }
+    else{
+      action = currentNode.get_best_action();
+    }
     actions.push(action);
     currentNode = currentNode.children[action];
   }
@@ -471,7 +479,7 @@ async function testMCTS() {
   if(heuristic != null){
     precalcDistances();
   }
-  var [sol_a, n_search_iters_a] = await solveLevelMCTS(level_i=n_level, {"score_fn": heuristic, "max_iterations": 1000000});
+  var [sol_a, n_search_iters_a] = await solveLevelMCTS(level_i=n_level, {"score_fn": heuristic, "max_iterations": 100000});
   console.log('Solution:', sol_a);
 }
 
