@@ -76,11 +76,7 @@ headers = {
 o_endpoint = os.getenv("ENDPOINT_URL", "https://sc-pn-m898m3wl-eastus2.openai.azure.com/")
 o_key = os.getenv("O3_MINI_KEY")
 
-# client = AzureOpenAI(  
-#     azure_endpoint=o_endpoint,  
-#     api_key=o_key,  
-#     api_version="2024-12-01-preview",
-# )
+client = None
 
 def llm_text_query(system_prompt, prompt, seed, model):
     messages = [
@@ -110,6 +106,13 @@ def llm_text_query(system_prompt, prompt, seed, model):
         return response.json()['choices'][0]['message']['content']
 
     else:
+        global client
+        if client is None:
+            client = AzureOpenAI(  
+                azure_endpoint=o_endpoint,  
+                api_key=o_key,  
+                api_version="2024-12-01-preview",
+            )
         assert model in ['o1', 'o3-mini']
         deployment = os.getenv('DEPLOYMENT_NAME', model)
         successful_query = False

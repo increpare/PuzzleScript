@@ -20,10 +20,11 @@ function getConsoleText() {
 }
 
 class GameIndividual {
-  constructor(code, minCode, fitness, compiledIters, solvedIters, anySolvedIters, skipped) {
+  constructor(code, minCode, fitness, maxMeanSolComplexity, compiledIters, solvedIters, anySolvedIters, skipped) {
     this.code = code;
     this.minCode = minCode;
     this.fitness = fitness;
+    this.maxMeanSolComplexity = maxMeanSolComplexity;
     this.compiledIters = compiledIters;
     this.solvedIters = solvedIters;
     this.anySolvedIters = anySolvedIters;
@@ -679,8 +680,9 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
   compiledIters = [];
   solvedIters = [];
   anySolvedIters = [];
+  maxMeanSolComplexity = 0;
 
-  bestIndividual = new GameIndividual('', null, -Infinity, [], [], true);
+  bestIndividual = new GameIndividual('', null, -Infinity, 0, [], [], true);
   while (nGenAttempts < maxGenAttempts & (nGenAttempts == 0 | !compilationSuccess | !solvable)) {
     console.log(`Game ${saveDir}, attempt ${nGenAttempts}.`);
 
@@ -738,7 +740,7 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
     sols = data.sols;
     larkError = data.lark_error
     if (data.skip) {
-      return new GameIndividual(code, minCode, -1, [], [], true);
+      return new GameIndividual(code, minCode, -1, 0, [], [], true);
     }
     errorLoadingLevel = false;
     try {
@@ -778,8 +780,10 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
       dataURLs = [];
       var anySolvable = false;
       var sol;
-      var n_search_iters;
+      var nSearchIters;
       // console.log('No compilation errors. Performing playtest.');
+      fitness = 0
+      solComplexities = []
       for (level_i in state.levels) {
         // console.log('Levels:', state.levels);
         // Check if type `Level` or dict
@@ -791,11 +795,11 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
           // Check if level_i is in sols
         if (sols.hasOwnProperty(level_i)) {
           // console.log('Using cached solution.');
-          [sol, n_search_iters] = sols[level_i];
+          [sol, nSearchIters] = sols[level_i];
         } else {
           clearConsole();
           console.log(`Solving level ${level_i}...`);
-          [sol, n_search_iters] = await solveLevelBFS(level_i);
+          [sol, nSearchIters] = await solveLevelBFS(level_i);
           if (sol.length > 0) {
             console.log(`Solution for level ${level_i}:`, sol);
             console.log(`Saving gif for level ${level_i}.`);
@@ -815,14 +819,16 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
         if (!sol) {
           console.log(`sol undefined`);
         }
-        sols[level_i] = [sol, n_search_iters];
-        fitness = n_search_iters
+        sols[level_i] = [sol, nSearchIters];
         // console.log('Solution:', sol);
         // check if sol is undefined
+        solComplexity = 0;
         if (sol.length > 0) {
+          fitness += nSearchIters;
+          solComplexity = nSearchIters;
           // console.log('Level is solvable.');
           // solverText += `Found solution for level ${level_i} in ${n_search_iters} iterations: ${sol}.\n`
-          solverText += `Found solution for level ${level_i} in ${n_search_iters} iterations. Solution is ${sol.length} moves long.\n`
+          solverText += `Found solution for level ${level_i} in ${nSearchIters} iterations. Solution is ${sol.length} moves long.\n`
           if (sol.length > 1) {
             anySolvable = true;
           }
@@ -842,7 +848,13 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
           solvable = false;
           solverText += ` Level ${level_i} is not solvable. Please repair it.\n`
         }
+        solComplexities.push(solComplexity);
       }
+      if (solComplexities.length == 0) {
+        solComplexities = [0];
+      }
+      meanSolComplexity = solComplexities.reduce((a, b) => a + b, 0) / solComplexities.length;
+      maxMeanSolComplexity = Math.max(maxMeanSolComplexity, meanSolComplexity);
       if (solvable) {
         // If all levels are solvable
         solvedIters.push(nGenAttempts)
@@ -869,7 +881,7 @@ async function genGame(genMode, parents, saveDir, expSeed, fewshot, cot,
     }
 
     nGenAttempts++;
-    individual = new GameIndividual(code, minCode, fitness, compiledIters, solvedIters, anySolvedIters, false);
+    individual = new GameIndividual(code, minCode, fitness, maxMeanSolComplexity, compiledIters, solvedIters, anySolvedIters, false);
     bestIndividual = bestIndividual.fitness < individual.fitness ? individual : bestIndividual;
 
   }
@@ -940,15 +952,29 @@ async function saveStats(saveDir, results) {
 }
 
 async function sweepGeneral() {
+  await fetch('/reset_sweep', {
+    method: 'POST',
+  });
   isDone = false;
   while (!isDone) {
     response = await fetch('/get_sweep_args', {
       method: 'GET',
     });
     args = await response.json();
-    gameInd = await genGame('init', [], args.gameStr,
-      args.gameIdx, args.fewshot, args.cot, args.fromIdea, args.gameIdea, args.fromPlan);
     isDone = args.done;
+    if (!isDone) {
+      gameInd = await genGame('init', [], args.gameDir,
+        args.gameIdx, args.fewshot, args.cot, args.fromIdea, args.gameIdea, args.fromPlan);
+      await fetch('/save_game_stats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          gameDir: args.gameDir,
+          expDir: args.expDir,
+          gameInd: gameInd,
+        }),
+      });
+    }
   }
 }
 
@@ -1082,11 +1108,11 @@ async function processAllGames() {
     await collectGameData(game);
   }
 }
-var experimentDropdown = document.getElementById("experimentDropdown");
-experimentDropdown.addEventListener("change", experimentDropdownChange, false);
+// var experimentDropdown = document.getElementById("experimentDropdown");
+// experimentDropdown.addEventListener("change", experimentDropdownChange, false);
 
-var generateClickLink = document.getElementById("generateClickLink");
-generateClickLink.addEventListener("click", generateClick, false);
+var sweepClickLink = document.getElementById("sweepClickLink");
+sweepClickLink.addEventListener("click", sweepClick, false);
 
 var MCTSClickLink = document.getElementById("MCTSClickLink");
 MCTSClickLink.addEventListener("click", testMCTS, false);
@@ -1113,9 +1139,10 @@ function experimentDropdownChange() {
   }
 }
 
-function generateClick() {
-  console.log('Generate clicked');
-  expFn();
+function sweepClick() {
+  console.log('Sweep clicked');
+  // expFn();
+  sweepGeneral();
 }
 
  const expSeed = 21;

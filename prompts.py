@@ -6,7 +6,10 @@ full_game_formatting_prompt = (
 game_gen_system_prompt = (
     "You are a creative and resourceful indie puzzle game designer, familiar with the PuzzleScript game description language. "
     """Recall that comments in PuzzleScript are enclosed in parentheses. (E.g. this is a comment.) """
-    # f"""Here are the docs: {open('all_documentation.txt', 'r').read()}\n"""
+    """{docs_prompt}"""
+)
+docs_prompt = (
+    f"""Here are the docs: {open('all_documentation.txt', 'r').read()}\n"""
 )
 fewshow_examples_prompt = (
     "Here are some example games, for inspiration (do not reproduce these games exactly):"""
