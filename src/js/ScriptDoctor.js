@@ -379,7 +379,7 @@ async function solveLevelMCTS(level, max_sim_length, score_fn=null, c=Math.sqrt(
     //otherwise expand
     else{
       currentNode = currentNode.expand();
-      changed = processInputSearch(current.action);
+      changed = processInputSearch(currentNode.action);
       if(winning){
         let sol = current.get_actions();
         console.log(`Winning! Solution:, ${sol}\n Iterations: ${i}`);
