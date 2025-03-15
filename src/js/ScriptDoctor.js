@@ -413,6 +413,16 @@ async function solveLevelMCTS(level, max_sim_length, score_fn=null, c=Math.sqrt(
   return [[], max_iterations];
 }
 
+async function testMCTS() {
+  console.log('Testing MCTS...');
+  const n_level = 0;
+  compile(['loadLevel', n_level], editor.getValue());
+  console.log('Solving level:', n_level, ' with MCTS');
+  var [sol_a, n_search_iters_a] = await solveLevelMCTS(level_i=n_level, max_sim_length=1000);
+  console.log('Solution:', sol_a);
+}
+
+
 async function solveLevelAStar(captureStates=false, gameHash=0, levelI=0, maxIters=1_000_000) {
 	// if (levelEditorOpened) return;
 	// if (showingSolution) return;
@@ -1017,6 +1027,9 @@ experimentDropdown.addEventListener("change", experimentDropdownChange, false);
 var generateClickLink = document.getElementById("generateClickLink");
 generateClickLink.addEventListener("click", generateClick, false);
 
+var MCTSClickLink = document.getElementById("MCTSClickLink");
+MCTSClickLink.addEventListener("click", testMCTS, false);
+
 var solveClickLink = document.getElementById("solveClickLink");
 solveClickLink.addEventListener("click", playTest, false);
 
@@ -1046,7 +1059,7 @@ function generateClick() {
 
  const expSeed = 21;
 
-sweepGeneral();
+// sweepGeneral();
 // sweep();
 // fromIdeaSweep();
 // fromPlanSweep();
