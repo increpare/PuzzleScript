@@ -469,7 +469,7 @@ async function testMCTS() {
   if(heuristic != null){
     precalcDistances();
   }
-  var [sol_a, n_search_iters_a] = await solveLevelMCTS(level_i=n_level, {"score_fn": heuristic, "max_iterations": 10000});
+  var [sol_a, n_search_iters_a] = await solveLevelMCTS(level_i=n_level, {"score_fn": heuristic, "max_iterations": 1000000});
   console.log('Solution:', sol_a);
 }
 
