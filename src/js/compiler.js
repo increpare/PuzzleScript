@@ -2489,36 +2489,30 @@ function removeDuplicateRules(state) {
 }
 
 function generateLoopPoints(state) {
-    var loopPoint = {};
-    var loopPointIndex = 0;
-    var outside = true;
-    var source = 0;
-    var target = 0;
-    if (state.loops.length > 0) {
-        for (var i=0;i<state.loops.length;i++){
-            var loop = state.loops[i];
-            if (i%2===0){
-                if (loop[1]===-1){         
-                    logError("Found an ENDLOOP, but I'm not in a loop?",loop[0]);
-                }
-            } else {
-                if (loop[1]===1){         
-                    logError("Found a STARTLOOP, but I'm already inside a loop? (Puzzlescript can't nest loops, FWIW).",loop[0]);
-                }
+    //run through to check loops aren't nested and are properly closed
+    for (var group_i=0;group_i<state.loops.length;group_i++){
+        var loop = state.loops[group_i];
+        if (group_i%2===0){
+            if (loop[1]===-1){         
+                logError("Found an ENDLOOP, but I'm not in a loop?",loop[0]);
+            }
+        } else {
+            if (loop[1]===1){         
+                logError("Found a STARTLOOP, but I'm already inside a loop? (Puzzlescript can't nest loops, FWIW).",loop[0]);
             }
         }
-        var lastloop=state.loops[state.loops.length-1];
-        if (lastloop[1]!==-1){
-            logError("Yo I found a STARTLOOP without a corresponding ENDLOOP.",lastloop[0]);
-
-        }
-        // logError("Have to have matching number of  'startLoop' and 'endLoop' loop points.",state.loops[state.loops.length-1][0]);
+    }
+    if ((state.loops.length%2)!==0){
+        logError("Yo I found a STARTLOOP without a corresponding ENDLOOP.",lastloop[0]);
     }
 
-    for (var j = 0; j < state.loops.length; j++) {
-        var loop = state.loops[j];
-        for (var i = 0; i < state.rules.length; i++) {
-            var ruleGroup = state.rules[i];
+    var loopPoint = {};
+    for (let j = 0; j < state.loops.length; j+=2) {
+        var loop_start_line = state.loops[j][0]; //for each startloop/endloop
+        var loop_end_line = state.loops[j+1][0];
+        var init_group_index=-1
+        for (let group_i = 0; group_i < state.rules.length; group_i++) {
+            var ruleGroup = state.rules[group_i];
 
             var firstRule = ruleGroup[0];
             var lastRule = ruleGroup[ruleGroup.length - 1];
@@ -2526,37 +2520,45 @@ function generateLoopPoints(state) {
             var firstRuleLine = firstRule.lineNumber;
             var lastRuleLine = lastRule.lineNumber;
 
-            if (loop[0] >= firstRuleLine && loop[0] <= lastRuleLine) {
-                logWarning("Found a loop point in the middle of a rule. You probably don't want to do this, right?", loop[0]);
+            if (
+                (loop_start_line >= firstRuleLine && loop_start_line <= lastRuleLine) ||
+                (loop_end_line >= firstRuleLine && loop_end_line <= lastRuleLine) )
+            {
+                logError("Found a loop point in the middle of a rule. You probably don't want to do this, right?", loop[0]);
             }
-            if (outside) {
-                if (firstRuleLine >= loop[0]) {
-                    target = i;
-                    outside = false;
-                    break;
+
+            var rule_before_loop = loop_start_line > firstRuleLine;
+            var rule_in_loop = loop_start_line <= firstRuleLine && firstRuleLine <= loop_end_line;
+            var rule_after_loop = loop_end_line < firstRuleLine;
+
+            if (rule_after_loop)
+                break;
+            
+
+            if (rule_in_loop){
+                if (init_group_index===-1){
+                    init_group_index = group_i
                 }
-            } else {
-                if (firstRuleLine >= loop[0]) {
-                    source = i - 1;
-                    loopPoint[source] = target;
-                    outside = true;
-                    break;
+                // only the last rulegroup in a loop should be the loop point - 
+                // this is a bit lazy, but basically we look back, and if the 
+                // previous rule-group has the same loop point, we remove it.
+                if (group_i>0 && loopPoint[group_i-1] !== undefined && loopPoint[group_i-1] === init_group_index){
+                    loopPoint[group_i-1] = undefined;
                 }
+                loopPoint[group_i] = init_group_index;
             }
         }
     }
-    if (outside === false) {
-        var source = state.rules.length;
-        loopPoint[source] = target;
-    } else {}
     state.loopPoint = loopPoint;
 
+    // now for LATE
     loopPoint = {};
-    outside = true;
-    for (var j = 0; j < state.loops.length; j++) {
-        var loop = state.loops[j];
-        for (var i = 0; i < state.lateRules.length; i++) {
-            var ruleGroup = state.lateRules[i];
+    for (let j = 0; j < state.loops.length; j+=2) {
+        var loop_start_line = state.loops[j][0]; //for each startloop/endloop
+        var loop_end_line = state.loops[j+1][0];
+        var init_group_index=-1
+        for (let group_i = 0; group_i < state.lateRules.length; group_i++) {
+            var ruleGroup = state.lateRules[group_i];
 
             var firstRule = ruleGroup[0];
             var lastRule = ruleGroup[ruleGroup.length - 1];
@@ -2564,26 +2566,35 @@ function generateLoopPoints(state) {
             var firstRuleLine = firstRule.lineNumber;
             var lastRuleLine = lastRule.lineNumber;
 
-            if (outside) {
-                if (firstRuleLine >= loop[0]) {
-                    target = i;
-                    outside = false;
-                    break;
+            if (
+                (loop_start_line >= firstRuleLine && loop_start_line <= lastRuleLine) ||
+                (loop_end_line >= firstRuleLine && loop_end_line <= lastRuleLine) )
+            {
+                logError("Found a loop point in the middle of a rule. You probably don't want to do this, right?", loop[0]);
+            }
+
+            var rule_before_loop = loop_start_line > firstRuleLine;
+            var rule_in_loop = loop_start_line <= firstRuleLine && firstRuleLine <= loop_end_line;
+            var rule_after_loop = loop_end_line < firstRuleLine;
+
+            if (rule_after_loop)
+                break;
+            
+            if (rule_in_loop){
+                if (init_group_index===-1){
+                    init_group_index = group_i
                 }
-            } else {
-                if (firstRuleLine >= loop[0]) {
-                    source = i - 1;
-                    loopPoint[source] = target;
-                    outside = true;
-                    break;
+                // only the last rulegroup in a loop should be the loop point - 
+                // this is a bit lazy, but basically we look back, and if the 
+                // previous rule-group has the same loop point, we remove it.
+                if (group_i>0 && loopPoint[group_i-1] !== undefined && loopPoint[group_i-1] === init_group_index){
+                    loopPoint[group_i-1] = undefined;
                 }
+                loopPoint[group_i] = init_group_index;
             }
         }
     }
-    if (outside === false) {
-        var source = state.lateRules.length;
-        loopPoint[source] = target;
-    } else {}
+
     state.lateLoopPoint = loopPoint;
 }
 
