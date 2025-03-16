@@ -291,5 +291,5 @@ function getScoreNormalized() {
 		}
 	}
 	// console.log(score);
-	return score / normal_value;
+	return 1 - score / normal_value;
 }
