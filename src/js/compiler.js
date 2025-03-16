@@ -2531,7 +2531,7 @@ function generateLoopPoints(state) {
         }
     }
     if ((state.loops.length%2)!==0){
-        logError("Yo I found a STARTLOOP without a corresponding ENDLOOP.",lastloop[0]);
+        logError("Yo I found a STARTLOOP without a corresponding ENDLOOP.",state.loops[state.loops.length-1][0]);
     }
 
     var loopPoint = {};
@@ -2951,6 +2951,8 @@ function loadFile(str) {
 
     formatHomePage(state);
 
+    addSpecializedFunctions(state);
+
     //delete intermediate representations
     delete state.commentLevel;
     delete state.line_should_end;
@@ -2974,6 +2976,16 @@ function loadFile(str) {
     window.console.log(sections);
     var sss = generateSemiStructuredSections(sections);*/
     return state;
+}
+
+
+
+
+
+function addSpecializedFunctions(state) {
+    const OBJECT_SIZE = Math.ceil(state.objectCount / 32);
+    const MOVEMENT_SIZE = Math.ceil(state.layerCount / 5);
+    state.moveEntitiesAtIndex = generate_moveEntitiesAtIndex(OBJECT_SIZE,MOVEMENT_SIZE);
 }
 
 var ifrm;

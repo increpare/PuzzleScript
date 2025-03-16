@@ -909,10 +909,10 @@ function restoreLevel(lev) {
     level.commandQueueSourceRules=[];
 }
 
-let zoomscreen=false;
-let flickscreen=false;
-let screenwidth=0;
-let screenheight=0;
+var zoomscreen=false;
+var flickscreen=false;
+var screenwidth=0;
+var screenheight=0;
 
 //compresses 'before' into diff
 function consolidateDiff(before,after){
@@ -1082,9 +1082,21 @@ function getLayersOfMask(cellMask) {
     return layers;
 }
 
-function moveEntitiesAtIndex(positionIndex, entityMask, dirMask) {
+// this function is used to unroll loops in parallel from bitvec - it returns a string
+// representation of the javascript unrolled code
+function UNROLL(command, array_size){
+	var toks = command.split(" ");
+	var result=""
+	for (let i=0;i<array_size;i++) {
+		result+=`${toks[0]}.data[${i}] ${toks[1]} ${toks[2]}.data[${i}];\n`;
+	}
+	return result;
+}
+
+function generate_moveEntitiesAtIndex(OBJECT_SIZE,MOVEMENT_SIZE){	
+	var fn = `
     let cellMask = level.getCell(positionIndex);
-    cellMask.iand(entityMask);
+	${UNROLL("cellMask &= entityMask",OBJECT_SIZE)}
     let layers = getLayersOfMask(cellMask);
 
     let movementMask = level.getMovements(positionIndex);
@@ -1093,11 +1105,14 @@ function moveEntitiesAtIndex(positionIndex, entityMask, dirMask) {
     }
     level.setMovements(positionIndex, movementMask);
 
-	let colIndex=(positionIndex/level.height)|0;
-	let rowIndex=(positionIndex%level.height);
-	level.colCellContents_Movements[colIndex].ior(movementMask);
-	level.rowCellContents_Movements[rowIndex].ior(movementMask);
-	level.mapCellContents_Movements.ior(movementMask);
+	const colIndex=(positionIndex/level.height)|0;
+	const rowIndex=(positionIndex%level.height);
+	${UNROLL("level.colCellContents_Movements[colIndex] |= movementMask",MOVEMENT_SIZE)}
+	${UNROLL("level.rowCellContents_Movements[rowIndex] |= movementMask",MOVEMENT_SIZE)}
+	${UNROLL("level.mapCellContents_Movements |= movementMask",MOVEMENT_SIZE)}
+	`
+	var func = new Function("level","positionIndex", "entityMask", "dirMask", fn);
+	return func;
 }
 
 
@@ -1106,7 +1121,7 @@ function startMovement(dir) {
     let playerPositions = getPlayerPositions();
     for (let i=0;i<playerPositions.length;i++) {
         let playerPosIndex = playerPositions[i];
-        moveEntitiesAtIndex(playerPosIndex,state.playerMask,dir);
+        state.moveEntitiesAtIndex(level,playerPosIndex,state.playerMask,dir);
     }
     return playerPositions;
 }
@@ -1225,7 +1240,10 @@ function Rule(rule) {
 	this.isRandom = rule[8];
 	this.cellRowMasks = rule[9];
 	this.cellRowMasks_Movements = rule[10];
-	this.ruleMask = this.cellRowMasks.reduce( (acc, m) => { acc.ior(m); return acc }, new BitVec(STRIDE_OBJ) );
+	this.ruleMask = new BitVec(STRIDE_OBJ);
+	for (let m of this.cellRowMasks) {
+		this.ruleMask.ior(m);
+	}
 
 	/*I tried out doing a ruleMask_movements as well along the lines of the above,
 	but it didn't help at all - I guess because almost every tick there are movements 
@@ -1238,6 +1256,8 @@ function Rule(rule) {
 	}
 	/* TODO: eliminate isRigid, groupNumber, isRandom
 	from this class by moving them up into a RuleGroup class */
+
+	this.findMatches = this.generateFindMatchesFunction();
 }
 
 
@@ -1271,25 +1291,26 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,ellipsisCount) 
 	} else if (ellipsisCount===1){
 		let cr_l = cellRow.length;
 
-		let fn = "let result = [];\n"
-		fn += "if(cellRow[0].matches(i, objects, movements)";
+		let fn = `let result = [];
+if(cellRow[0].matches(i, objects, movements)`;
 		let cellIndex=1;
 		for (;cellRow[cellIndex]!==ellipsisPattern;cellIndex++) {
 			fn+="&&cellRow["+cellIndex+"].matches(i+"+cellIndex+"*d, objects, movements)";
 		}
 		cellIndex++;
-		fn+=") {\n";
-		fn+="\tfor (let k=kmin;k<kmax;k++) {\n"
-		fn+="\t\tif(cellRow["+cellIndex+"].matches((i+d*(k+"+(cellIndex-1)+")), objects, movements)";
+		fn+=`) {
+	for (let k=kmin;k<kmax;k++) {
+		if(cellRow[`+cellIndex+`].matches((i+d*(k+`+(cellIndex-1)+`)), objects, movements)`;
 		cellIndex++;
 		for (;cellIndex<cr_l;cellIndex++) {
 			fn+="&&cellRow["+cellIndex+"].matches((i+d*(k+"+(cellIndex-1)+")), objects, movements)";			
 		}
-		fn+="){\n";
-		fn+="\t\t\tresult.push([i,k]);\n";
-		fn+="\t\t}\n"
-		fn+="\t}\n";				
-		fn+="}\n";		
+		fn+=`){
+			result.push([i,k]);
+		}
+	}
+}
+`;		
 		fn+="return result;"
 
 
@@ -1314,8 +1335,8 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,ellipsisCount) 
 			}
 		}
 
-		let fn = "let result = [];\n"
-		fn += "if(cellRow[0].matches(i, objects, movements)";
+		let fn = `let result = [];
+if(cellRow[0].matches(i, objects, movements)`;
 
 		for (let idx=1;idx<ellipsis_index_1;idx++) {
 			fn+="&&cellRow["+idx+"].matches(i+"+idx+"*d, objects, movements)";
@@ -1323,27 +1344,30 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,ellipsisCount) 
 		fn+=") {\n";
 
 		//try match middle part
-		fn+="	for (let k1=k1min;k1<k1max;k1++) {\n"
-		fn+="		if(cellRow["+(ellipsis_index_1+1)+"].matches((i+d*(k1+"+(ellipsis_index_1+1-1)+")), objects, movements)";
+		fn+=`
+	for (let k1=k1min;k1<k1max;k1++) {
+		if(cellRow[`+(ellipsis_index_1+1)+`].matches((i+d*(k1+`+(ellipsis_index_1+1-1)+`)), objects, movements)`;
 		for (let idx=ellipsis_index_1+2;idx<ellipsis_index_2;idx++) {
 			fn+="&&cellRow["+idx+"].matches((i+d*(k1+"+(idx-1)+")), objects, movements)";			
 		}
 		fn+="		){\n";
 		//try match right part
 
-		fn+="			for (let k2=k2min;k1+k2<kmax && k2<k2max;k2++) {\n"
-		fn+="				if(cellRow["+(ellipsis_index_2+1)+"].matches((i+d*(k1+k2+"+(ellipsis_index_2+1-2)+")), objects, movements)";
+		fn+=`
+			for (let k2=k2min;k1+k2<kmax && k2<k2max;k2++) {
+				if(cellRow[`+(ellipsis_index_2+1)+`].matches((i+d*(k1+k2+`+(ellipsis_index_2+1-2)+`)), objects, movements)`;
 		for (let idx=ellipsis_index_2+2;idx<cr_l;idx++) {
 			fn+="&&cellRow["+idx+"].matches((i+d*(k1+k2+"+(idx-2)+")), objects, movements)";			
 		}
-		fn+="				){\n";
-		fn+="					result.push([i,k1,k2]);\n";
-		fn+="				}\n"
-		fn+="			}\n"
-		fn+="		}\n"
-		fn+="	}\n";				
-		fn+="}\n";		
-		fn+="return result;"
+		fn+=`
+				){
+					result.push([i,k1,k2]);
+				}
+			}
+		}
+	}			
+}	
+return result;`;
 
 
 		if (fn in matchCache) {
@@ -1353,24 +1377,6 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,ellipsisCount) 
 		return matchCache[fn] = new Function("cellRow","i","kmax","kmin", "k1max","k1min","k2max","k2min", 'd', "objects", "movements",fn);
 
 	}
-//say cellRow has length 3, with a split in the middle
-/*
-function cellRowMatchesWildcardFunctionGenerate(direction,cellRow,i, maxk, mink) {
-
-	let result = [];
-	let matchfirsthalf = cellRow[0].matches(i);
-	if (matchfirsthalf) {
-		for (let k=mink;k<maxk;k++) {
-			if (cellRow[2].matches((i+d*(k+0)))) {
-				result.push([i,k]);
-			}
-		}
-	}
-	return result;
-}
-*/
-	
-
 }
 
 
@@ -1398,7 +1404,7 @@ function CellReplacement(row) {
 };
 
 
-let matchCache = {};
+var matchCache = {};
 
 
 
@@ -1463,109 +1469,136 @@ let _o1,_o2,_o2_5,_o3,_o4,_o5,_o6,_o7,_o8,_o9,_o10,_o11,_o12;
 let _m1,_m2,_m3;
 
 CellPattern.prototype.replace = function(rule, currentIndex) {
-	let replace = this.replacement;
+    let replace = this.replacement;
+    if (replace === null) {
+        return false;
+    }
 
-	if (replace === null) {
-		return false;
+    let replace_RandomEntityMask = replace.randomEntityMask;
+    let replace_RandomDirMask = replace.randomDirMask;
+
+	const OBJECT_SIZE = replace.objectsSet.data.length;
+	const MOVEMENT_SIZE = replace.movementsSet.data.length;
+
+
+    // Inline the BitVec cloning operations directly on the Int32Arrays
+    for (let i = 0; i < OBJECT_SIZE; i++) {
+        _o1.data[i] = replace.objectsSet.data[i];
+        _o2.data[i] = replace.objectsClear.data[i];
 	}
+	for (let i = 0; i < MOVEMENT_SIZE; i++) {
+        _m1.data[i] = replace.movementsSet.data[i];
+        _m2.data[i] = replace.movementsClear.data[i] | replace.movementsLayerMask.data[i];
+    }
 
-	let replace_RandomEntityMask = replace.randomEntityMask;
-	let replace_RandomDirMask = replace.randomDirMask;
+    if (!replace_RandomEntityMask.iszero()) {
+        let choices = [];
+        for (let i = 0; i < 32 * STRIDE_OBJ; i++) {
+            if (replace_RandomEntityMask.get(i)) {
+                choices.push(i);
+            }
+        }
+        let rand = choices[Math.floor(RandomGen.uniform() * choices.length)];
+        let n = state.idDict[rand];
+        let o = state.objects[n];
+        
+        // Inline ibitset(rand)
+        _o1.data[rand >>> 5] |= 1 << (rand & 31);
+        
+        // Inline ior(state.layerMasks[o.layer])
+        const layerMask = state.layerMasks[o.layer].data;
+        for (let i = 0; i < OBJECT_SIZE; i++) {
+            _o2.data[i] |= layerMask[i];
+        }
+        
+        // Inline ishiftor(0x1f, 5 * o.layer)
+        const shift = 5 * o.layer;
+        const wordIndex = shift >>> 5;
+        const bitOffset = shift & 31;
+        if (bitOffset === 0) {
+            _m2.data[wordIndex] |= 0x1f;
+        } else {
+            _m2.data[wordIndex] |= (0x1f << bitOffset);
+        }
+    }
+    if (!replace_RandomDirMask.iszero()) {
+        for (let layerIndex = 0; layerIndex < level.layerCount; layerIndex++) {
+            if (replace_RandomDirMask.get(5 * layerIndex)) {
+                let randomDir = Math.floor(RandomGen.uniform() * 4);
+                _m1.ibitset(randomDir + 5 * layerIndex);
+            }
+        }
+    }
 
-	let objectsSet = replace.objectsSet.cloneInto(_o1);
-	let objectsClear = replace.objectsClear.cloneInto(_o2);
+    let curCellMask = level.getCellInto(currentIndex, _o2_5);
+    let curMovementMask = level.getMovements(currentIndex);
 
-	let movementsSet = replace.movementsSet.cloneInto(_m1);
-	let movementsClear = replace.movementsClear.cloneInto(_m2);
-	movementsClear.ior(replace.movementsLayerMask);
-
-	if (!replace_RandomEntityMask.iszero()) {
-		let choices=[];
-		for (let i=0;i<32*STRIDE_OBJ;i++) {
-			if (replace_RandomEntityMask.get(i)) {
-				choices.push(i);
-			}
-		}
-		let rand = choices[Math.floor(RandomGen.uniform() * choices.length)];
-		let n = state.idDict[rand];
-		let o = state.objects[n];
-		objectsSet.ibitset(rand);
-		objectsClear.ior(state.layerMasks[o.layer]);
-		movementsClear.ishiftor(0x1f, 5 * o.layer);
+    // Inline cloning for oldCellMask and oldMovementMask
+    for (let i = 0; i < OBJECT_SIZE; i++) {
+        _o3.data[i] = curCellMask.data[i];
 	}
-	if (!replace_RandomDirMask.iszero()) {
-		for (let layerIndex=0;layerIndex<level.layerCount;layerIndex++){
-			if (replace_RandomDirMask.get(5*layerIndex)) {
-				let randomDir = Math.floor(RandomGen.uniform()*4);
-				movementsSet.ibitset(randomDir + 5 * layerIndex);
-			}
-		}
-	}
-	
-	let curCellMask = level.getCellInto(currentIndex,_o2_5);
-	let curMovementMask = level.getMovements(currentIndex);
+	for (let i = 0; i < MOVEMENT_SIZE; i++) {
+        _m3.data[i] = curMovementMask.data[i];
+    }
 
-	let oldCellMask = curCellMask.cloneInto(_o3);
-	let oldMovementMask = curMovementMask.cloneInto(_m3);
+    curCellMask.iclear(_o2);
+    curCellMask.ior(_o1);
 
-	curCellMask.iclear(objectsClear);
-	curCellMask.ior(objectsSet);
+    curMovementMask.iclear(_m2);
+    curMovementMask.ior(_m1);
 
-	curMovementMask.iclear(movementsClear);
-	curMovementMask.ior(movementsSet);
+    let rigidchange=false;
+    let curRigidGroupIndexMask =0;
+    let curRigidMovementAppliedMask =0;
+    if (rule.isRigid) {
+        let rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];
+        rigidGroupIndex++;//don't forget to -- it when decoding :O
+        let rigidMask = new BitVec(STRIDE_MOV);
+        for (let layer = 0; layer < level.layerCount; layer++) {
+            rigidMask.ishiftor(rigidGroupIndex, layer * 5);
+        }
+        rigidMask.iand(replace.movementsLayerMask);
+        curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE_MOV);
+        curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE_MOV);
 
-	let rigidchange=false;
-	let curRigidGroupIndexMask =0;
-	let curRigidMovementAppliedMask =0;
-	if (rule.isRigid) {
-		let rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];
-		rigidGroupIndex++;//don't forget to -- it when decoding :O
-		let rigidMask = new BitVec(STRIDE_MOV);
-		for (let layer = 0; layer < level.layerCount; layer++) {
-			rigidMask.ishiftor(rigidGroupIndex, layer * 5);
-		}
-		rigidMask.iand(replace.movementsLayerMask);
-		curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE_MOV);
-		curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE_MOV);
+        if (!rigidMask.bitsSetInArray(curRigidGroupIndexMask.data) &&
+            !replace.movementsLayerMask.bitsSetInArray(curRigidMovementAppliedMask.data) ) {
+            curRigidGroupIndexMask.ior(rigidMask);
+            curRigidMovementAppliedMask.ior(replace.movementsLayerMask);
+            rigidchange=true;
 
-		if (!rigidMask.bitsSetInArray(curRigidGroupIndexMask.data) &&
-			!replace.movementsLayerMask.bitsSetInArray(curRigidMovementAppliedMask.data) ) {
-			curRigidGroupIndexMask.ior(rigidMask);
-			curRigidMovementAppliedMask.ior(replace.movementsLayerMask);
-			rigidchange=true;
+        }
+    }
 
-		}
-	}
+    let result = false;
 
-	let result = false;
+    //check if it's changed
+    if (!_o3.equals(curCellMask) || !_m3.equals(curMovementMask) || rigidchange) { 
+        result=true;
+        if (rigidchange) {
+            level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
+            level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
+        }
 
-	//check if it's changed
-	if (!oldCellMask.equals(curCellMask) || !oldMovementMask.equals(curMovementMask) || rigidchange) { 
-		result=true;
-		if (rigidchange) {
-			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
-			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
-		}
+        let created = curCellMask.cloneInto(_o4);
+        created.iclear(_o3);
+        sfxCreateMask.ior(created);
+        let destroyed = _o3.cloneInto(_o5);
+        destroyed.iclear(curCellMask);
+        sfxDestroyMask.ior(destroyed);
 
-		let created = curCellMask.cloneInto(_o4);
-		created.iclear(oldCellMask);
-		sfxCreateMask.ior(created);
-		let destroyed = oldCellMask.cloneInto(_o5);
-		destroyed.iclear(curCellMask);
-		sfxDestroyMask.ior(destroyed);
+        level.setCell(currentIndex, curCellMask);
+        level.setMovements(currentIndex, curMovementMask);
 
-		level.setCell(currentIndex, curCellMask);
-		level.setMovements(currentIndex, curMovementMask);
+        let colIndex=(currentIndex/level.height)|0;
+        let rowIndex=(currentIndex%level.height);
+        level.colCellContents[colIndex].ior(curCellMask);
+        level.rowCellContents[rowIndex].ior(curCellMask);
+        level.mapCellContents.ior(curCellMask);
 
-		let colIndex=(currentIndex/level.height)|0;
-		let rowIndex=(currentIndex%level.height);
-		level.colCellContents[colIndex].ior(curCellMask);
-		level.rowCellContents[rowIndex].ior(curCellMask);
-		level.mapCellContents.ior(curCellMask);
+    }
 
-	}
-
-	return result;
+    return result;
 }
 
 
@@ -1891,7 +1924,7 @@ Rule.prototype.applyAt = function(level,tuple,check,delta) {
 		let inspect_ID =  addToDebugTimeline(level,this.lineNumber);
 		let gapMessage="";
 		
-		let logString = `<font color="green">Rule <a onclick="jumpToLine(${this.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied${gapMessage}.</font>`;
+		let logString = `<font color="green">Rule <a onclick="jumpToLine(${this.lineNumber});"  href="javascript:void(0);">${this.lineNumber}</a> ${ruleDirection} applied${gapMessage}.</font>`;
 		consolePrint(logString,false,this.lineNumber,inspect_ID);
 		
 	}
@@ -1903,7 +1936,7 @@ Rule.prototype.tryApply = function(level) {
 	const delta = level.delta_index(this.direction);
 
     //get all cellrow matches
-    let matches = this.findMatches();
+    let matches = this.findMatches(level);
     if (matches.length===0) {
     	return false;
     }
@@ -2017,7 +2050,7 @@ function applyRandomRuleGroup(level,ruleGroup) {
 	let matches=[];
 	for (let ruleIndex=0;ruleIndex<ruleGroup.length;ruleIndex++) {
 		let rule=ruleGroup[ruleIndex];
-		let ruleMatches = rule.findMatches();
+		let ruleMatches = rule.findMatches(level);
 		if (ruleMatches.length>0) {
 	    	let tuples  = generateTuples(ruleMatches);
 	    	for (let j=0;j<tuples.length;j++) {
@@ -2448,7 +2481,7 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 		if (verbose_logging && runrulesonlevelstart_phase) {
 			let r = level.commandQueueSourceRules[restartIndex];
 			logWarning(
-				'A "restart" command is being triggered in the "run_rules_on_level_start" section of level creation, which would cause an infinite loop if it was actually triggered, but it’s being ignored.',
+				'A "restart" command is being triggered in the "run_rules_on_level_start" section of level creation, which would cause an infinite loop if it was actually triggered, but it\'s being ignored.',
 				r.lineNumber,
 				true
 			);
@@ -2540,7 +2573,7 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 			} else {
 				verbose_logging = oldVerboseLogging;
 				if (verbose_logging) {
-					consolePrintFromRule('AGAIN command not executed, it wouldn’t make any changes.', r);
+					consolePrintFromRule("AGAIN command not executed, it wouldn't make any changes.", r);
 				}
 			}
 			verbose_logging = oldVerboseLogging;
@@ -2763,6 +2796,47 @@ function goToTitleScreen(){
 	if (canvas!==null){//otherwise triggers error in cat bastard test
 		regenSpriteImages();
 	}
+}
+
+Rule.prototype.generateFindMatchesFunction = function() {
+    let fn = '';
+    
+    // Initial mask check
+    fn += 'if (!this.ruleMask.bitsSetInArray(level.mapCellContents.data)) return [];\n';
+    fn += 'const d = level.delta_index(this.direction);\n';
+    fn += 'const matches = [];\n';
+    
+    // Unroll the pattern matching loop
+    for (let i = 0; i < this.patterns.length; i++) {
+        fn += `let match${i};\n`;
+        
+        // Generate specialized matching code based on ellipsis count
+        if (this.ellipsisCount[i] === 0) {
+            fn += `match${i} = matchCellRow(this.direction, this.cellRowMatches[${i}], ` +
+                  `this.patterns[${i}], this.cellRowMasks[${i}], ` +
+                  `this.cellRowMasks_Movements[${i}], d);\n`;
+        } else if (this.ellipsisCount[i] === 1) {
+            fn += `match${i} = matchCellRowWildCard(this.direction, this.cellRowMatches[${i}], ` +
+                  `this.patterns[${i}], this.cellRowMasks[${i}], ` +
+                  `this.cellRowMasks_Movements[${i}], d, 1);\n`;
+        } else { // ellipsisCount === 2
+            fn += `match${i} = matchCellRowWildCard(this.direction, this.cellRowMatches[${i}], ` +
+                  `this.patterns[${i}], this.cellRowMasks[${i}], ` +
+                  `this.cellRowMasks_Movements[${i}], d, 2);\n`;
+        }
+        
+        // Early return if no matches
+        fn += `if (match${i}.length === 0) return [];\n`;
+        fn += `matches.push(match${i});\n`;
+    }
+    
+    fn += 'return matches;';
+    
+    // Cache the generated function like you do with matchCache
+    if (fn in matchCache) {
+        return matchCache[fn];
+    }
+    return matchCache[fn] = new Function('level', fn);
 }
 
 
