@@ -2429,25 +2429,52 @@ function cacheAllRuleNames(state) {
 
 function printRules(state) {
     var output = "";
-    var loopIndex = 0;
-    var loopEnd = -1;
+    var loopIndex = -1;
+    var outsideLoop = true
     var discardcount = 0;
     for (var i = 0; i < state.rules.length; i++) {
         var rule = state.rules[i];
-        if (loopIndex < state.loops.length) {
-            if (state.loops[loopIndex][0] < rule.lineNumber) {
-                output += "STARTLOOP<br>";
-                loopIndex++;
-                if (loopIndex < state.loops.length) { // don't die with mismatched loops
-                    loopEnd = state.loops[loopIndex][0];
-                    loopIndex++;
+
+        if (!outsideLoop) {
+            //decide if we print ENDLOOP
+            if (loopIndex + 1 < state.loops.length) {
+                var nextLoop = state.loops[loopIndex + 1];
+                if (nextLoop[0] < rule.lineNumber) {
+                    output += "ENDLOOP<br>";
+                    outsideLoop = true;
+                    loopIndex++
                 }
             }
         }
-        if (loopEnd !== -1 && loopEnd < rule.lineNumber) {
-            output += "ENDLOOP<br>";
-            loopEnd = -1;
-        }
+        // We *don't* have an else here because we might have 
+        // two loops side-by-side.
+        // ( cf  https://github.com/increpare/PuzzleScript/issues/1048 )
+        if (outsideLoop) {
+
+            // if there are multiple empty startloop/endloop pairs in a row,
+            // we should skip past them
+            // (e.g. https://www.puzzlescript.net/editor.html?hack=7e521a3c8d22f5dc5643ad5852f6cd22)
+            if (loopIndex + 1 < state.loops.length) {
+                var nextLoop = state.loops[loopIndex + 1];
+                var loopEnd = state.loops[loopIndex + 2];
+                while ( loopIndex + 1 < state.loops.length && loopEnd[0] < rule.lineNumber) {
+                    loopIndex+=2;
+                    nextLoop = state.loops[loopIndex + 1];
+                    loopEnd = state.loops[loopIndex + 2];
+                }
+            }            
+
+            //trying to decide if we print STARTLOOP
+            if (loopIndex + 1 < state.loops.length) {
+                var nextLoop = state.loops[loopIndex + 1];
+                if (nextLoop[0] < rule.lineNumber) {
+                    output += "STARTLOOP<br>";
+                    outsideLoop = false;
+                    loopIndex++;
+                }
+            }
+        } 
+
         if (rule.hasOwnProperty('discard')) {
             discardcount++;
         } else {
@@ -2460,9 +2487,10 @@ function printRules(state) {
             output += rule.stringRep + "<br>";
         }
     }
-    if (loopEnd !== -1) { // no more rules after loop end
+    if (!outsideLoop) {
         output += "ENDLOOP<br>";
     }
+
     output += "===========<br>";
     output = "<br>Rule Assembly : (" + (state.rules.length - discardcount) + " rules)<br>===========<br>" + output;
     consolePrint(output);
