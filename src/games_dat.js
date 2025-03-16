@@ -899,4 +899,11 @@ var games_gallery = [
     "author": "NinaBirb",
     "homepage": "https://ninabirb.itch.io/transition/"
   },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=be5d4f8a38062b1ac9d795c85979e4b6",
+    "thumb": "yukiasobi.gif",
+    "title": "YukiAsobi",
+    "author": "nebu soku",
+    "homepage": "https://nebu-soku.itch.io/yukiasobi"
+  },
 ]
