@@ -8,7 +8,7 @@ function makeGIF() {
 	gifcanvas.style.width=screenwidth*cellwidth;
 	gifcanvas.style.height=screenheight*cellheight;
 
-	var gifctx = gifcanvas.getContext('2d');
+	var gifctx = gifcanvas.getContext('2d', {willReadFrequently: true});
 
 	var inputDat = inputHistory.concat([]);
 	var soundDat = soundHistory.concat([]);
