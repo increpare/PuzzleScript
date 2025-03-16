@@ -2600,7 +2600,6 @@ function processInput(dir,dontDoWin,dontModify) {
 			if (!dontModify){
 	    		DoRestart(true);
 			}
-    		return true;
 		} 
 		
 		
@@ -2619,7 +2618,7 @@ function processInput(dir,dontDoWin,dontModify) {
 						addUndoState(bak);
 					} else if (backups.length > 0) {
 						// This is for the case that diffs break the undo buffer for real-time games 
-						// ( c f https://github.com/increpare/PuzzleScript/pull/796 ),
+						// ( c.f. https://github.com/increpare/PuzzleScript/pull/796 ),
 						// because realtime ticks are ignored when the user presses undo and the backup
 						// array reflects this structure.  
 						backups[backups.length - 1] = unconsolidateDiff(backups[backups.length - 1], bak);					
@@ -2630,7 +2629,7 @@ function processInput(dir,dontDoWin,dontModify) {
 	    	}
 	    }
 
-		if (dontModify && level.commandQueue.indexOf('win')>=0) {	
+		if (dontModify && (level.commandQueue.indexOf('win')>=0 || level.commandQueue.indexOf('restart')>=0) ) {	
 	    	return true;	
 		}
 		
