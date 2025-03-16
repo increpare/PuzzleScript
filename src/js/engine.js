@@ -12,7 +12,7 @@ z to undo, r to restart...........
 */
 
 
-var RandomGen = new RNG();
+let RandomGen = new RNG();
 
 const intro_template = [
 	"..................................",
@@ -137,14 +137,14 @@ const titletemplate_select1_selected = [
 	".Z to undo, R to restart..........",
 	"................................."];
 
-var titleImage=[];
+let titleImage=[];
 const titleWidth=titletemplate_select1[0].length;
 const titleHeight=titletemplate_select1.length;
-var textMode=true;
-var titleScreen=true;
-var titleMode=0;//1 means there are options
-var titleSelection=0;
-var titleSelected=false;
+let textMode=true;
+let titleScreen=true;
+let titleMode=0;//1 means there are options
+let titleSelection=0;
+let titleSelected=false;
 
 function showContinueOptionOnTitleScreen(){
 	return (curlevel>0||curlevelTarget!==null)&&(curlevel in state.levels);
@@ -169,7 +169,7 @@ function generateTitleScreen()
 		return;
 	}
 
-	var title = "PuzzleScript Game";
+	let title = "PuzzleScript Game";
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title;
 	}
@@ -196,9 +196,9 @@ function generateTitleScreen()
 		}
 	}
 
-	var noAction = 'noaction' in state.metadata;	
-	var noUndo = 'noundo' in state.metadata;
-	var noRestart = 'norestart' in state.metadata;
+	let noAction = 'noaction' in state.metadata;	
+	let noUndo = 'noundo' in state.metadata;
+	let noRestart = 'norestart' in state.metadata;
 	if (noUndo && noRestart) {
 		titleImage[11]="..............................................";
 	} else if (noUndo) {
@@ -209,13 +209,13 @@ function generateTitleScreen()
 	if (noAction) {
 		titleImage[10]=".......X to select............................";
 	}
-	for (var i=0;i<titleImage.length;i++)
+	for (let i=0;i<titleImage.length;i++)
 	{
 		titleImage[i]=titleImage[i].replace(/\./g, ' ');
 	}
 
-	var width = titleImage[0].length;
-	var titlelines=wordwrap(title,titleImage[0].length);
+	let width = titleImage[0].length;
+	let titlelines=wordwrap(title,titleImage[0].length);
 	if (state.metadata.author!==undefined){
 		if ( titlelines.length>3){
 			titlelines.splice(3);
@@ -228,17 +228,17 @@ function generateTitleScreen()
 		}
 
 	}
-	for (var i=0;i<titlelines.length;i++) {
-		var titleline=titlelines[i];
-		var titleLength=titleline.length;
-		var lmargin = ((width-titleLength)/2)|0;
-		var rmargin = width-titleLength-lmargin;
-		var row = titleImage[1+i];
+	for (let i=0;i<titlelines.length;i++) {
+		let titleline=titlelines[i];
+		let titleLength=titleline.length;
+		let lmargin = ((width-titleLength)/2)|0;
+		let rmargin = width-titleLength-lmargin;
+		let row = titleImage[1+i];
 		titleImage[1+i]=row.slice(0,lmargin)+titleline+row.slice(lmargin+titleline.length);
 	}
 	if (state.metadata.author!==undefined) {
-		var attribution="by "+state.metadata.author;
-		var attributionsplit = wordwrap(attribution,titleImage[0].length);
+		let attribution="by "+state.metadata.author;
+		let attributionsplit = wordwrap(attribution,titleImage[0].length);
 		if (attributionsplit[0].length<titleImage[0].length){
 			attributionsplit[0]=" "+attributionsplit[0];
 		}
@@ -246,12 +246,12 @@ function generateTitleScreen()
 			attributionsplit.splice(3);
 			logWarning("Author list too long to fit on screen, truncating to three lines.",state.metadata_lines.author,true);
 		}
-		for (var i=0;i<attributionsplit.length;i++) {
-			var line = attributionsplit[i]+" ";
+		for (let i=0;i<attributionsplit.length;i++) {
+			let line = attributionsplit[i]+" ";
 			if (line.length>width){
 				line=line.slice(0,width);
 			}
-			var row = titleImage[3+i];
+			let row = titleImage[3+i];
 			titleImage[3+i]=row.slice(0,width-line.length)+line;
 		}
 	}
@@ -268,12 +268,12 @@ const introstate = {
    	fgcolor:"#FFFFFF"
 };
 
-var state = introstate;
+let state = introstate;
 
 function deepClone(item) {
     if (!item) { return item; } // null, undefined values check
 
-    var types = [ Number, String, Boolean ], 
+    let types = [ Number, String, Boolean ], 
         result;
 
     // normalizing primitives if someone did new String('aaa'), or new Number('444');
@@ -292,14 +292,14 @@ function deepClone(item) {
         } else if (typeof item == "object") {
             // testing that this is DOM
             if (item.nodeType && typeof item.cloneNode == "function") {
-                var result = item.cloneNode( true );    
+                let result = item.cloneNode( true );    
             } else if (!item.prototype) { // check that this is a literal
                 if (item instanceof Date) {
                     result = new Date(item);
                 } else {
                     // it is an object literal
                     result = {};
-                    for (var i in item) {
+                    for (let i in item) {
                         result[i] = deepClone( item[i] );
                     }
                 }
@@ -324,38 +324,38 @@ function deepClone(item) {
 function wordwrap( str, width ) {
  
     width = width || 75;
-    var cut = true;
+    let cut = true;
  
     if (!str) { return str; }
  
-    var regex = '.{1,' +width+ '}(\\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\\S+?(\\s|$)');
+    let regex = '.{1,' +width+ '}(\\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\\S+?(\\s|$)');
  
     return str.match( RegExp(regex, 'g') );
  
 }
 
-var splitMessage=[];
+let splitMessage=[];
 
 function drawMessageScreen() {
 	titleMode=0;
 	textMode=true;
 	titleImage = deepClone(messagecontainer_template);
 
-	for (var i=0;i<titleImage.length;i++)
+	for (let i=0;i<titleImage.length;i++)
 	{
 		titleImage[i]=titleImage[i].replace(/\./g, ' ');
 	}
 
-	var emptyLineStr = titleImage[9];
-	var xToContinueStr = titleImage[10];
+	let emptyLineStr = titleImage[9];
+	let xToContinueStr = titleImage[10];
 
 	titleImage[10]=emptyLineStr;
 
-	var width = titleImage[0].length;
+	let width = titleImage[0].length;
 
-	var message;
+	let message;
 	if (messagetext==="") {
-		var leveldat = state.levels[curlevel];
+		let leveldat = state.levels[curlevel];
 		message = leveldat.message.trim();
 	} else {
 		message = messagetext;
@@ -364,23 +364,23 @@ function drawMessageScreen() {
 	splitMessage = wordwrap(message,titleImage[0].length);
 
 
-	var offset = 5-((splitMessage.length/2)|0);
+	let offset = 5-((splitMessage.length/2)|0);
 	if (offset<0){
 		offset=0;
 	}
 
-	var count = Math.min(splitMessage.length,12);
-	for (var i=0;i<count;i++) {
-		var m = splitMessage[i];
-		var row = offset+i;	
-		var messageLength=m.length;
-		var lmargin = ((width-messageLength)/2)|0;
-		var rmargin = width-messageLength-lmargin;
-		var rowtext = titleImage[row];
+	let count = Math.min(splitMessage.length,12);
+	for (let i=0;i<count;i++) {
+		let m = splitMessage[i];
+		let row = offset+i;	
+		let messageLength=m.length;
+		let lmargin = ((width-messageLength)/2)|0;
+		let rmargin = width-messageLength-lmargin;
+		let rowtext = titleImage[row];
 		titleImage[row]=rowtext.slice(0,lmargin)+m+rowtext.slice(lmargin+m.length);		
 	}
 
-	var endPos = 10;
+	let endPos = 10;
 	if (count>=10) {
 		if (count<12){
 			endPos = count + 1;
@@ -397,7 +397,7 @@ function drawMessageScreen() {
 	canvasResize();
 }
 
-var loadedLevelSeed=0;
+let loadedLevelSeed=0;
 
 function loadLevelFromLevelDat(state,leveldat,randomseed,clearinputhistory) {	
 	if (randomseed==null) {
@@ -464,7 +464,7 @@ function loadLevelFromLevelDat(state,leveldat,randomseed,clearinputhistory) {
 }
 
 function loadLevelFromStateTarget(state,levelindex,target,randomseed) {	
-    var leveldat = target;    
+    let leveldat = target;    
 	curlevel=levelindex;
 	curlevelTarget=target;
     if (leveldat.message===undefined) {
@@ -480,7 +480,7 @@ function loadLevelFromStateTarget(state,levelindex,target,randomseed) {
 }
 
 function loadLevelFromState(state,levelindex,randomseed) {	
-    var leveldat = state.levels[levelindex];    
+    let leveldat = state.levels[levelindex];    
 	curlevel=levelindex;
 	curlevelTarget=null;
     if (leveldat!==undefined && leveldat.message===undefined) {
@@ -493,7 +493,7 @@ function loadLevelFromState(state,levelindex,randomseed) {
     loadLevelFromLevelDat(state,leveldat,randomseed);
 }
 
-var sprites = [
+let sprites = [
 {
     color: '#423563',
     dat: [
@@ -526,7 +526,7 @@ canvasResize();
 
 function tryPlaySimpleSound(soundname) {
 	if (state.sfx_Events[soundname]!==undefined) {
-		var seed = state.sfx_Events[soundname];
+		let seed = state.sfx_Events[soundname];
 		playSound(seed,true);
 	}
 }
@@ -570,11 +570,11 @@ function tryPlayCloseMessageSound(){
 	tryPlaySimpleSound("closemessage");
 }
 
-var backups=[];
-var restartTarget;
+let backups=[];
+let restartTarget;
 
 function backupLevel() {
-	var ret = {
+	let ret = {
 		dat : new Int32Array(level.objects),
 		width : level.width,
 		height : level.height,
@@ -584,7 +584,7 @@ function backupLevel() {
 }
 
 function level4Serialization() {
-	var ret = {
+	let ret = {
 		dat : Array.from(level.objects),
 		width : level.width,
 		height : level.height,
@@ -631,10 +631,10 @@ function setGameState(_state, command, randomseed) {
     }
     //set sprites
     sprites = [];
-    for (var n in state.objects) {
+    for (let n in state.objects) {
         if (state.objects.hasOwnProperty(n)) {
-            var object = state.objects[n];
-            var sprite = {
+            let object = state.objects[n];
+            let sprite = {
                 colors: object.colors,
                 dat: object.spritematrix
             };
@@ -691,11 +691,11 @@ function setGameState(_state, command, randomseed) {
 			break;
 		}
 		case "loadFirstNonMessageLevel":{
-			for (var i=0;i<state.levels.length;i++){
+			for (let i=0;i<state.levels.length;i++){
 				if (state.levels[i].hasOwnProperty("message")){
 					continue;
 				}
-				var targetLevel = i;
+				let targetLevel = i;
 				curlevel=targetLevel;
 				curlevelTarget=null;
 			    winning=false;
@@ -715,7 +715,7 @@ function setGameState(_state, command, randomseed) {
 		}
 		case "loadLevel":
 		{
-			var targetLevel = command[1];
+			let targetLevel = command[1];
 			curlevel=targetLevel;
 			curlevelTarget=null;
 		    winning=false;
@@ -733,9 +733,9 @@ function setGameState(_state, command, randomseed) {
 		}
 		case "levelline":
 		{
-			var targetLine = command[1];
-			for (var i=state.levels.length-1;i>=0;i--) {
-				var level= state.levels[i];
+			let targetLine = command[1];
+			for (let i=state.levels.length-1;i>=0;i--) {
+				let level= state.levels[i];
 				if(level.lineNumber<=targetLine+1) {
 					curlevel=i;
 					curlevelTarget=null;
@@ -806,40 +806,40 @@ function RebuildLevelArrays() {
 	_m3 = new BitVec(STRIDE_MOV);
 	
 
-    for (var i=0;i<level.height;i++) {
+    for (let i=0;i<level.height;i++) {
     	level.rowCellContents[i]=new BitVec(STRIDE_OBJ);	    	
     }
-    for (var i=0;i<level.width;i++) {
+    for (let i=0;i<level.width;i++) {
     	level.colCellContents[i]=new BitVec(STRIDE_OBJ);	    	
     }
 
-    for (var i=0;i<level.height;i++) {
+    for (let i=0;i<level.height;i++) {
     	level.rowCellContents_Movements[i]=new BitVec(STRIDE_MOV);	    	
     }
-    for (var i=0;i<level.width;i++) {
+    for (let i=0;i<level.width;i++) {
     	level.colCellContents_Movements[i]=new BitVec(STRIDE_MOV);	    	
     }
 
-    for (var i=0;i<level.n_tiles;i++)
+    for (let i=0;i<level.n_tiles;i++)
     {
         level.rigidMovementAppliedMask[i]=new BitVec(STRIDE_MOV);
         level.rigidGroupIndexMask[i]=new BitVec(STRIDE_MOV);
     }
 }
 
-var messagetext="";
+let messagetext="";
 
 function applyDiff(diff, level_objects) {
 
-	var index=0;
+	let index=0;
 	
 	while (index<diff.dat.length){
-		var start_index = diff.dat[index];
-		var copy_length = diff.dat[index+1];
+		let start_index = diff.dat[index];
+		let copy_length = diff.dat[index+1];
 		if (copy_length===0){
 			break;//tail of buffer is all 0s
 		}
-		for (var j=0;j<copy_length;j++){
+		for (let j=0;j<copy_length;j++){
 			level_objects[start_index+j]=diff.dat[index+2+j];
 		}
 		index += 2 + copy_length;
@@ -855,7 +855,7 @@ function unconsolidateDiff(before,after) {
 		return before;
 	}
 
-	var after_objects = new Int32Array(after.dat);
+	let after_objects = new Int32Array(after.dat);
 	applyDiff(before, after_objects);
 
 	return {
@@ -867,7 +867,7 @@ function unconsolidateDiff(before,after) {
 }
 
 function restoreLevel(lev) {
-	var diffing = lev.hasOwnProperty("diff");
+	let diffing = lev.hasOwnProperty("diff");
 
 	oldflickscreendat=lev.oldflickscreendat.concat([]);
 
@@ -888,18 +888,18 @@ function restoreLevel(lev) {
 	{
 	// layercount doesn't change
 
-		for (var i=0;i<level.n_tiles;i++) {
+		for (let i=0;i<level.n_tiles;i++) {
 			level.movements[i]=0;
 			level.rigidMovementAppliedMask[i].setZero();
 			level.rigidGroupIndexMask[i].setZero();
 		}	
 
-	    for (var i=0;i<level.height;i++) {
-	    	var rcc = level.rowCellContents[i];
+	    for (let i=0;i<level.height;i++) {
+	    	let rcc = level.rowCellContents[i];
 	    	rcc.setZero();
 	    }
-	    for (var i=0;i<level.width;i++) {
-	    	var ccc = level.colCellContents[i];
+	    for (let i=0;i<level.width;i++) {
+	    	let ccc = level.colCellContents[i];
 	    	ccc.setZero();
 	    }
 	}
@@ -909,10 +909,10 @@ function restoreLevel(lev) {
     level.commandQueueSourceRules=[];
 }
 
-var zoomscreen=false;
-var flickscreen=false;
-var screenwidth=0;
-var screenheight=0;
+let zoomscreen=false;
+let flickscreen=false;
+let screenwidth=0;
+let screenheight=0;
 
 //compresses 'before' into diff
 function consolidateDiff(before,after){
@@ -927,20 +927,20 @@ function consolidateDiff(before,after){
 		return before;
 	}
 	//diff structure: repeating ( start,length, [ data ] )
-	var result = new Int32Array(128);
-	var position=0;
-	var chain=false;
-	var chain_start_idx_in_diff=-1;
-	var before_dat = before.dat;
-	var after_dat = after.dat;
-	for (var i=0;i<before_dat.length;i++){
+	let result = new Int32Array(128);
+	let position=0;
+	let chain=false;
+	let chain_start_idx_in_diff=-1;
+	let before_dat = before.dat;
+	let after_dat = after.dat;
+	for (let i=0;i<before_dat.length;i++){
 		if (chain===false){
 			if (before_dat[i]!==after_dat[i]){
 				chain=true;
 				chain_start_idx_in_diff = position;
 
 				if (result.length<position+4){
-					var doubled = new Int32Array(2*result.length);
+					let doubled = new Int32Array(2*result.length);
 					doubled.set(result);
 					result = doubled;
 				}
@@ -955,7 +955,7 @@ function consolidateDiff(before,after){
 				
 				if (position+1>=result.length){
 					if (result.length<position+4){
-						var doubled = new Int32Array(2*result.length);
+						let doubled = new Int32Array(2*result.length);
 						doubled.set(result);
 						result = doubled;
 					}	
@@ -1020,12 +1020,12 @@ function backupDiffers(){
 	if (backups.length==0){
 		return true;
 	}
-	var bak = backups[backups.length-1];
+	let bak = backups[backups.length-1];
 
 	if (bak.hasOwnProperty("diff")){
 		return bak.dat.length!==0 && bak.dat[1]!==0;//if it's empty or if it's all 0s
 	} else {
-		for (var i=0;i<level.objects.length;i++) {
+		for (let i=0;i<level.objects.length;i++) {
 			if (level.objects[i]!==bak.dat[i]) {
 				return true;
 			}
@@ -1049,7 +1049,7 @@ function DoUndo(force,ignoreDuplicates) {
 	}
 
 	if (backups.length>0) {
-		var torestore = backups[backups.length-1];
+		let torestore = backups[backups.length-1];
 		restoreLevel(torestore);
 		backups = backups.splice(0,backups.length-1);
 		if (! force) {
@@ -1405,12 +1405,12 @@ let matchCache = {};
 CellPattern.prototype.generateMatchString = function() {
 	let fn = "(true";
 	for (let i = 0; i < Math.max(STRIDE_OBJ, STRIDE_MOV); ++i) {
-		let co = 'cellObjects' + i;
-		let cm = 'cellMovements' + i;
-		let op = this.objectsPresent.data[i];
-		let om = this.objectsMissing.data[i];
-		let mp = this.movementsPresent.data[i];
-		let mm = this.movementsMissing.data[i];
+		const co = 'cellObjects' + i;
+		const cm = 'cellMovements' + i;
+		const op = this.objectsPresent.data[i];
+		const om = this.objectsMissing.data[i];
+		const mp = this.movementsPresent.data[i];
+		const mm = this.movementsMissing.data[i];
 		if (op) {
 			if (op&(op-1))
 				fn += '\t\t&& ((' + co + '&' + op + ')===' + op + ')\n';
@@ -1431,7 +1431,7 @@ CellPattern.prototype.generateMatchString = function() {
 	for (let j = 0; j < this.anyObjectsPresent.length; j++) {
 		fn += "\t\t&& (0";
 		for (let i = 0; i < STRIDE_OBJ; ++i) {
-			let aop = this.anyObjectsPresent[j].data[i];
+			const aop = this.anyObjectsPresent[j].data[i];
 			if (aop)
 				fn += "|(cellObjects" + i + "&" + aop + ")";
 		}
@@ -1442,15 +1442,14 @@ CellPattern.prototype.generateMatchString = function() {
 }
 
 CellPattern.prototype.generateMatchFunction = function() {
-	let i;
 	let fn = '';
 	let mul = STRIDE_OBJ === 1 ? '' : '*'+STRIDE_OBJ;	
 	for (let i = 0; i < STRIDE_OBJ; ++i) {
-		fn += '\tvar cellObjects' + i + ' = objects[i' + mul + (i ? '+'+i: '') + '];\n';
+		fn += '\tconst cellObjects' + i + ' = objects[i' + mul + (i ? '+'+i: '') + '];\n';
 	}
 	mul = STRIDE_MOV === 1 ? '' : '*'+STRIDE_MOV;
 	for (let i = 0; i < STRIDE_MOV; ++i) {
-		fn += '\tvar cellMovements' + i + ' = movements[i' + mul + (i ? '+'+i: '') + '];\n';
+		fn += '\tconst cellMovements' + i + ' = movements[i' + mul + (i ? '+'+i: '') + '];\n';
 	}
 	fn += "return " + this.generateMatchString()+';';
 	if (fn in matchCache) {
@@ -1612,7 +1611,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask,cellRowMask_
     	}
     }
 
-    let horizontal=direction>2;
+    const horizontal=direction>2;
     if (horizontal) {
 		for (let y=ymin;y<ymax;y++) {
 			if (!cellRowMask.bitsSetInArray(level.rowCellContents[y].data) 
@@ -1621,7 +1620,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask,cellRowMask_
 			}
 
 			for (let x=xmin;x<xmax;x++) {
-				let i = x*level.height+y;
+				const i = x*level.height+y;
 				if (cellRowMatch(cellRow,i,d, level.objects, level.movements))
 				{
 					result.push(i);
@@ -1636,7 +1635,7 @@ function matchCellRow(direction, cellRowMatch, cellRow, cellRowMask,cellRowMask_
 			}
 
 			for (let y=ymin;y<ymax;y++) {
-				let i = x*level.height+y;
+				const i = x*level.height+y;
 				if (cellRowMatch(	cellRow,i, d, level.objects, level.movements))
 				{
 					result.push(i);
@@ -1689,9 +1688,7 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
     	}
     }
 
-
-
-    let horizontal=direction>2;
+    const horizontal=direction>2;
     if (horizontal) {
 		for (let y=ymin;y<ymax;y++) {
 			if (!cellRowMask.bitsSetInArray(level.rowCellContents[y].data)
@@ -1700,7 +1697,7 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
 			}
 
 			for (let x=xmin;x<xmax;x++) {
-				let i = x*level.height+y;
+				const i = x*level.height+y;
 				let kmax;
 
 				if (direction === 4) { //left
@@ -1726,7 +1723,7 @@ function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellR
 			}
 
 			for (let y=ymin;y<ymax;y++) {
-				let i = x*level.height+y;
+				const i = x*level.height+y;
 				let kmax;
 
 				if (direction === 2) { // down
@@ -1753,13 +1750,13 @@ function generateTuples(lists) {
 
     for (let i=0;i<lists.length;i++)
     {
-        let row = lists[i];
-        let newtuples=[];
+        const row = lists[i];
+        const newtuples=[];
         for (let j=0;j<row.length;j++) {
             let valtoappend = row[j];
             for (let k=0;k<tuples.length;k++) {
-                let tuple=tuples[k];
-                let newtuple = tuple.concat([valtoappend]);
+                const tuple=tuples[k];
+                const newtuple = tuple.concat([valtoappend]);
                 newtuples.push(newtuple);
             }
         }
@@ -1777,11 +1774,11 @@ Rule.prototype.findMatches = function() {
 	const d = level.delta_index(this.direction)
 
 	let matches=[];
-	let cellRowMasks=this.cellRowMasks;
-	let cellRowMasks_Movements=this.cellRowMasks_Movements;
+	const cellRowMasks=this.cellRowMasks;
+	const cellRowMasks_Movements=this.cellRowMasks_Movements;
     for (let cellRowIndex=0;cellRowIndex<this.patterns.length;cellRowIndex++) {
-        let cellRow = this.patterns[cellRowIndex];
-        let matchFunction = this.cellRowMatches[cellRowIndex];
+        const cellRow = this.patterns[cellRowIndex];
+        const matchFunction = this.cellRowMatches[cellRowIndex];
 		let match;
         if (this.ellipsisCount[cellRowIndex]===1) {//if ellipsis     
         	match = matchCellRowWildCard(this.direction,matchFunction,cellRow,cellRowMasks[cellRowIndex],cellRowMasks_Movements[cellRowIndex],d,this.ellipsisCount[cellRowIndex]);  
@@ -1802,7 +1799,7 @@ Rule.prototype.findMatches = function() {
 Rule.prototype.directional = function(){
 	//Check if other rules in its rulegroup with the same line number.
 	for (let i=0;i<state.rules.length;i++){
-		let rg = state.rules[i];
+		const rg = state.rules[i];
 		let copyCount=0;
 		for (let j=0;j<rg.length;j++){
 			if (this.lineNumber===rg[j].lineNumber){
@@ -1818,7 +1815,6 @@ Rule.prototype.directional = function(){
 }
 
 Rule.prototype.applyAt = function(level,tuple,check,delta) {
-	let rule = this;
 	//have to double check they apply 
 	//(cf test ellipsis bug: rule matches two candidates, first replacement invalidates second)
 	if (check)
@@ -1864,59 +1860,39 @@ Rule.prototype.applyAt = function(level,tuple,check,delta) {
 	let anyellipses=false;
 
     //APPLY THE RULE
-    for (let cellRowIndex=0;cellRowIndex<rule.patterns.length;cellRowIndex++) {
-        let preRow = rule.patterns[cellRowIndex];
+    for (let cellRowIndex=0;cellRowIndex<this.patterns.length;cellRowIndex++) {
+        const preRow = this.patterns[cellRowIndex];
     	let ellipse_index=0;
 
-        let currentIndex = rule.ellipsisCount[cellRowIndex]>0 ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
+        let currentIndex = this.ellipsisCount[cellRowIndex]>0 ? tuple[cellRowIndex][0] : tuple[cellRowIndex];
         for (let cellIndex=0;cellIndex<preRow.length;cellIndex++) {
-            let preCell = preRow[cellIndex];
+            const preCell = preRow[cellIndex];
 
             if (preCell === ellipsisPattern) {
-            	let k = tuple[cellRowIndex][1+ellipse_index];
+            	const k = tuple[cellRowIndex][1+ellipse_index];
 				ellipse_index++;
 				anyellipses=true;
             	currentIndex += delta*k;
             	continue;
             }
 
-            result = preCell.replace(rule, currentIndex) || result;
+            result = preCell.replace(this, currentIndex) || result;
 
             currentIndex += delta;
         }
     }
 
 	if (verbose_logging && result){
-		let ruleDirection = dirMaskName[rule.direction];
-		if (!rule.directional()){
+		let ruleDirection = dirMaskName[this.direction];
+		if (!this.directional()){
 			ruleDirection="";
 		}
 
-		let inspect_ID =  addToDebugTimeline(level,rule.lineNumber);
+		let inspect_ID =  addToDebugTimeline(level,this.lineNumber);
 		let gapMessage="";
-		// let gapcount=0;
-		// if (anyellipses){
-		// 	let added=0;
-		// 	for(let i=0;i<tuple.length;i++){
-		// 		let tuples_cellrow = tuple[i];
-		// 		//Start at index 1 because index 0 just is the index where the rule starts.
-		// 		for (let j=1;j<tuples_cellrow.length;j++){
-		// 			added++;
-		// 			if (gapMessage.length>0){
-		// 				gapMessage+=", ";
-		// 			}
-		// 			gapMessage+=tuples_cellrow[j];
-		// 		}			
-		// 	}
-		// 	if (added===1){
-		// 		gapMessage = " (ellipsis gap of length "+gapMessage+")";
-		// 	} else {
-		// 		gapMessage = " (ellipsis gaps of length "+gapMessage+")";
-		// 	}
-		// }
 		
-		let logString = `<font color="green">Rule <a onclick="jumpToLine(${rule.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied${gapMessage}.</font>`;
-		consolePrint(logString,false,rule.lineNumber,inspect_ID);
+		let logString = `<font color="green">Rule <a onclick="jumpToLine(${this.lineNumber});"  href="javascript:void(0);">${rule.lineNumber}</a> ${ruleDirection} applied${gapMessage}.</font>`;
+		consolePrint(logString,false,this.lineNumber,inspect_ID);
 		
 	}
 
@@ -1950,9 +1926,8 @@ Rule.prototype.tryApply = function(level) {
 };
 
 Rule.prototype.queueCommands = function() {
-	let commands = this.commands;
 	
-	if (commands.length==0){
+	if (this.commands.length==0){
 		return;
 	}
 
@@ -1962,8 +1937,8 @@ Rule.prototype.queueCommands = function() {
 	
 	let currule_cancel = false;
 	let currule_restart = false;
-	for (let i=0;i<commands.length;i++){
-		let cmd = commands[i][0];
+	for (let i=0;i<this.commands.length;i++){
+		let cmd = this.commands[i][0];
 		if (cmd==="cancel"){
 			currule_cancel=true;
 		} else if (cmd==="restart"){
@@ -1988,8 +1963,8 @@ Rule.prototype.queueCommands = function() {
 		messagetext="";
 	}
 
-	for(let i=0;i<commands.length;i++) {
-		let command=commands[i];
+	for(let i=0;i<this.commands.length;i++) {
+		const command=this.commands[i];
 		let already=false;
 		if (level.commandQueue.indexOf(command[0])>=0) {
 			continue;
@@ -1998,9 +1973,9 @@ Rule.prototype.queueCommands = function() {
 		level.commandQueueSourceRules.push(this);
 
 		if (verbose_logging){
-			let lineNumber = this.lineNumber;
-			let ruleDirection = dirMaskName[this.direction];
-			let logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> triggers command '+command[0]+'.</font>';
+			const lineNumber = this.lineNumber;
+			const ruleDirection = dirMaskName[this.direction];
+			const logString = '<font color="green">Rule <a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);">' + lineNumber.toString() + '</a> triggers command '+command[0]+'.</font>';
 			consolePrint(logString,false,lineNumber,null);
 		}
 
@@ -2268,9 +2243,9 @@ function calculateRowColMasks() {
 function processInput(dir, dontDoWin, dontModify) {
 	againing = false;
 
-	var bak = backupLevel();
-	var inputindex = dir;
-	var playerPositions = [];
+	let bak = backupLevel();
+	let inputindex = dir;
+	let playerPositions = [];
 
 	if (verbose_logging) { 
 		debugger_turnIndex++;
@@ -2300,7 +2275,7 @@ function processInput(dir, dontDoWin, dontModify) {
 
 	if (verbose_logging) {
 		consolePrint('Applying rules');
-		var inspect_ID = addToDebugTimeline(level, -1);
+		let inspect_ID = addToDebugTimeline(level, -1);
 		if (dir === -1) {
 			consolePrint(`Turn starts with no input.`, false, null, inspect_ID);
 		} else {
@@ -2308,11 +2283,11 @@ function processInput(dir, dontDoWin, dontModify) {
 		}
 	}
 
-	var bannedGroup = [];
+	let bannedGroup = [];
 	level.commandQueue = [];
 	level.commandQueueSourceRules = [];
-	var startRuleGroupIndex = 0;
-	var rigidloop = false;
+	let startRuleGroupIndex = 0;
+	let rigidloop = false;
 	const startState = {
 		objects: new Int32Array(level.objects),
 		movements: new Int32Array(level.movements),
@@ -2326,31 +2301,31 @@ function processInput(dir, dontDoWin, dontModify) {
 	seedsToPlay_CanMove = [];
 	seedsToPlay_CantMove = [];
 	calculateRowColMasks();
-	var alreadyResolved = [];
+	let alreadyResolved = [];
 
-	var i = 0;
+	let i = 0;
 	do {
 		rigidloop = false;
 		i++;
 
 		//everything outside of these two lines in this loop is rigid-body nonsense
 		applyRules(state.rules, state.loopPoint, startRuleGroupIndex, bannedGroup);
-		var shouldUndo = resolveMovements(level, bannedGroup);
+		let shouldUndo = resolveMovements(level, bannedGroup);
 
 		if (shouldUndo) {
 			rigidloop = true;
 
 			// trackback
 			if (IDE) {
-				var newBannedGroups = [];
-				for (var key in bannedGroup) {
+				let newBannedGroups = [];
+				for (let key in bannedGroup) {
 					if (!alreadyResolved.includes(key)) {
 						newBannedGroups.push(key);
 						alreadyResolved.push(key);
 					}
 				}
-				var bannedLineNumbers = newBannedGroups.map(rgi => state.rules[rgi][0].lineNumber);
-				var ts = bannedLineNumbers.length > 1 ? "lines " : "line ";
+				let bannedLineNumbers = newBannedGroups.map(rgi => state.rules[rgi][0].lineNumber);
+				let ts = bannedLineNumbers.length > 1 ? "lines " : "line ";
 				ts += bannedLineNumbers.map(ln => `<a onclick="jumpToLine(${ln});" href="javascript:void(0);">${ln}</a>`).join(", ");
 				consolePrint(`Rigid movement application failed in rule-Group starting from ${ts}, and will be disabled in resimulation. Rolling back...`);
 			}
@@ -2372,8 +2347,8 @@ function processInput(dir, dontDoWin, dontModify) {
 			startRuleGroupIndex = 0;
 		} else {
 			if (verbose_logging) {
-				var eof_idx = debug_visualisation_array[debugger_turnIndex].length + 1;
-				var inspect_ID = addToDebugTimeline(level, eof_idx);
+				let eof_idx = debug_visualisation_array[debugger_turnIndex].length + 1;
+				let inspect_ID = addToDebugTimeline(level, eof_idx);
 				consolePrint(`Processed movements.`, false, null, inspect_ID);
 
 				if (state.lateRules.length > 0) {
@@ -2392,10 +2367,10 @@ function processInput(dir, dontDoWin, dontModify) {
 	}
 
 	if (playerPositions.length > 0 && state.metadata.require_player_movement !== undefined) {
-		var somemoved = false;
-		for (var i = 0; i < playerPositions.length; i++) {
-			var pos = playerPositions[i];
-			var val = level.getCell(pos);
+		let somemoved = false;
+		for (let i = 0; i < playerPositions.length; i++) {
+			let pos = playerPositions[i];
+			let val = level.getCell(pos);
 			if (state.playerMask.bitsClearInArray(val.data)) {
 				somemoved = true;
 				break;
@@ -2415,7 +2390,7 @@ function processInput(dir, dontDoWin, dontModify) {
 	}
 
 	// Factorized command-queue processing
-	var modified = processCommandQueue(bak, dontModify, dontDoWin, inputindex);
+	let modified = processCommandQueue(bak, dontModify, dontDoWin, inputindex);
 
 	if (verbose_logging) {
 		consoleCacheDump();
@@ -2428,20 +2403,20 @@ function processInput(dir, dontDoWin, dontModify) {
 }
 
 function playSounds(seedsToPlay_CantMove, seedsToPlay_CanMove, sfx_CreationMasks, sfx_DestructionMasks, sfxCreateMask, sfxDestroyMask) {
-	for (var i = 0; i < seedsToPlay_CantMove.length; i++) {
+	for (let i = 0; i < seedsToPlay_CantMove.length; i++) {
 		playSound(seedsToPlay_CantMove[i]);
 	}
-	for (var i = 0; i < seedsToPlay_CanMove.length; i++) {
+	for (let i = 0; i < seedsToPlay_CanMove.length; i++) {
 		playSound(seedsToPlay_CanMove[i]);
 	}
-	for (var i = 0; i < sfx_CreationMasks.length; i++) {
-		var entry = sfx_CreationMasks[i];
+	for (let i = 0; i < sfx_CreationMasks.length; i++) {
+		let entry = sfx_CreationMasks[i];
 		if (sfxCreateMask.anyBitsInCommon(entry.objectMask)) {
 			playSound(entry.seed);
 		}
 	}
-	for (var i = 0; i < sfx_DestructionMasks.length; i++) {
-		var entry = sfx_DestructionMasks[i];
+	for (let i = 0; i < sfx_DestructionMasks.length; i++) {
+		let entry = sfx_DestructionMasks[i];
 		if (sfxDestroyMask.anyBitsInCommon(entry.objectMask)) {
 			playSound(entry.seed);
 		}
@@ -2454,13 +2429,13 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 	if (cancelIndex >= 0) {
 		if (verbose_logging) {
 			consoleCacheDump();
-			var cancelRule = level.commandQueueSourceRules[cancelIndex];
+			let cancelRule = level.commandQueueSourceRules[cancelIndex];
 			consolePrintFromRule('CANCEL command executed, cancelling turn.', cancelRule, true);
 		}
 		if (!dontModify) {
 			processOutputCommands(level.commandQueue);
 		}
-		var commandsLeft = level.commandQueue.length > 1;
+		let commandsLeft = level.commandQueue.length > 1;
 		addUndoState(bak);
 		DoUndo(true, false);
 		tryPlayCancelSound();
@@ -2471,7 +2446,7 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 	const restartIndex = level.commandQueue.indexOf('restart');
 	if (restartIndex >= 0) {
 		if (verbose_logging && runrulesonlevelstart_phase) {
-			var r = level.commandQueueSourceRules[restartIndex];
+			let r = level.commandQueueSourceRules[restartIndex];
 			logWarning(
 				'A "restart" command is being triggered in the "run_rules_on_level_start" section of level creation, which would cause an infinite loop if it was actually triggered, but it’s being ignored.',
 				r.lineNumber,
@@ -2479,7 +2454,7 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 			);
 		}
 		if (verbose_logging) {
-			var r = level.commandQueueSourceRules[restartIndex];
+			let r = level.commandQueueSourceRules[restartIndex];
 			consolePrintFromRule('RESTART command executed, reverting to restart state.', r);
 			consoleCacheDump();
 		}
@@ -2493,8 +2468,8 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 	}
 
 	// Check for modifications comparing level.objects to backup
-	var modified = false;
-	for (var i = 0; i < level.objects.length; i++) {
+	let modified = false;
+	for (let i = 0; i < level.objects.length; i++) {
 		if (level.objects[i] !== bak.dat[i]) {
 			if (dontModify) {
 				if (verbose_logging) {
@@ -2536,24 +2511,24 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 
 	// If not winning, process checkpoints and AGAIN command.
 	if (!winning) {
-		var checkpointIndex = level.commandQueue.indexOf('checkpoint');
+		let checkpointIndex = level.commandQueue.indexOf('checkpoint');
 		if (checkpointIndex >= 0) {
 			if (verbose_logging) {
-				var r = level.commandQueueSourceRules[checkpointIndex];
+				let r = level.commandQueueSourceRules[checkpointIndex];
 				consolePrintFromRule('CHECKPOINT command executed, saving current state to the restart state.', r);
 			}
 			restartTarget = level4Serialization();
 			hasUsedCheckpoint = true;
-			var backupStr = JSON.stringify(restartTarget);
+			let backupStr = JSON.stringify(restartTarget);
 			storage_set(document.URL + '_checkpoint', backupStr);
 			storage_set(document.URL, curlevel);
 		}
 
-		var againIndex = level.commandQueue.indexOf('again');
+		let againIndex = level.commandQueue.indexOf('again');
 		if (againIndex >= 0 && modified) {
-			var r = level.commandQueueSourceRules[againIndex];
-			var oldVerboseLogging = verbose_logging;
-			var oldMessageText = messagetext;
+			let r = level.commandQueueSourceRules[againIndex];
+			let oldVerboseLogging = verbose_logging;
+			let oldMessageText = messagetext;
 			verbose_logging = false;
 			if (processInput(-1, true, true)) {
 				verbose_logging = oldVerboseLogging;
@@ -2600,17 +2575,17 @@ function checkWin(dontDoWin) {
 		return;
 	}
 
-	var won= false;
+	let won= false;
 	if (state.winconditions.length>0)  {
-		var passed=true;
-		for (var wcIndex=0;wcIndex<state.winconditions.length;wcIndex++) {
-			var wincondition = state.winconditions[wcIndex];
-			var filter1 = wincondition[1];
-			var filter2 = wincondition[2];
-			var aggr1 = wincondition[4];
-			var aggr2 = wincondition[5];
+		let passed=true;
+		for (let wcIndex=0;wcIndex<state.winconditions.length;wcIndex++) {
+			let wincondition = state.winconditions[wcIndex];
+			let filter1 = wincondition[1];
+			let filter2 = wincondition[2];
+			let aggr1 = wincondition[4];
+			let aggr2 = wincondition[5];
 
-			var rulePassed=true;
+			let rulePassed=true;
 			
 			const f1 = aggr1 ? c=>filter1.bitsSetInArray(c) : c=>!filter1.bitsClearInArray(c);
 			const f2 = aggr2 ? c=>filter2.bitsSetInArray(c) : c=>!filter2.bitsClearInArray(c);
@@ -2618,8 +2593,8 @@ function checkWin(dontDoWin) {
 			switch(wincondition[0]) {
 				case -1://NO
 				{
-					for (var i=0;i<level.n_tiles;i++) {
-						var cell = level.getCellInto(i,_o10);
+					for (let i=0;i<level.n_tiles;i++) {
+						let cell = level.getCellInto(i,_o10);
 						if ( (f1(cell.data)) &&  
 							 (f2(cell.data)) ) {
 							rulePassed=false;
@@ -2631,9 +2606,9 @@ function checkWin(dontDoWin) {
 				}
 				case 0://SOME
 				{
-					var passedTest=false;
-					for (var i=0;i<level.n_tiles;i++) {
-						var cell = level.getCellInto(i,_o10);
+					let passedTest=false;
+					for (let i=0;i<level.n_tiles;i++) {
+						let cell = level.getCellInto(i,_o10);
 						if ( (f1(cell.data)) &&  
 							 (f2(cell.data)) ) {
 							passedTest=true;
@@ -2647,8 +2622,8 @@ function checkWin(dontDoWin) {
 				}
 				case 1://ALL
 				{
-					for (var i=0;i<level.n_tiles;i++) {
-						var cell = level.getCellInto(i,_o10);
+					for (let i=0;i<level.n_tiles;i++) {
+						let cell = level.getCellInto(i,_o10);
 						if ( (f1(cell.data)) &&  
 							 (!f2(cell.data)) ) {
 							rulePassed=false;
@@ -2695,7 +2670,7 @@ function DoWin() {
 /*
 //this function isn't valid after refactoring, but also isn't used.
 function anyMovements() {	
-    for (var i=0;i<level.movementMask.length;i++) {
+    for (let i=0;i<level.movementMask.length;i++) {
         if (level.movementMask[i]!==0) {
         	return true;
         }
@@ -2761,7 +2736,7 @@ function nextLevel() {
 		storage_set(document.URL,curlevel);
 		if (curlevelTarget!==null){
 			restartTarget=level4Serialization();
-			var backupStr = JSON.stringify(restartTarget);
+			let backupStr = JSON.stringify(restartTarget);
 			storage_set(document.URL+'_checkpoint',backupStr);
 		} else {
 			storage_remove(document.URL+"_checkpoint");
