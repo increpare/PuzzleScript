@@ -1633,11 +1633,15 @@ CellPattern.prototype.generateMatchString = function () {
 }
 
 let CACHE_CELLPATTERN_MATCHFUNCTION = new Map();
+var _generateMatchFunction_key_array = new Uint32Array(0);
 CellPattern.prototype.generateMatchFunction = function() {
     // Calculate total size needed for the key array
     const keyLength = STRIDE_OBJ * 2 + STRIDE_MOV * 2 + 
                      this.anyObjectsPresent.length * STRIDE_OBJ + 2;
-    const keyArray = new Uint32Array(keyLength);
+	if (keyLength!==_generateMatchFunction_key_array.length) {
+		_generateMatchFunction_key_array = new Uint32Array(keyLength);
+	}
+    const keyArray = _generateMatchFunction_key_array;
     let keyIndex = 0;
 
     // Fill the array with data
@@ -1656,9 +1660,11 @@ CellPattern.prototype.generateMatchFunction = function() {
     }
     keyArray[keyIndex++] = STRIDE_OBJ;
     keyArray[keyIndex++] = STRIDE_MOV;
-	var str_key = keyArray.join('|');
+	var str_key = keyArray.toString();
 
+	CACHE_CHECK_COUNT++;
     if (CACHE_CELLPATTERN_MATCHFUNCTION.has(str_key)) {
+		CACHE_HIT_COUNT++;
         return CACHE_CELLPATTERN_MATCHFUNCTION.get(str_key);
     }
 
@@ -1686,19 +1692,35 @@ let _o1, _o2, _o2_5, _o3, _o4, _o5, _o6, _o7, _o8, _o9, _o10, _o11, _o12;
 let _m1, _m2, _m3;
 
 let CACHE_CELLPATTERN_REPLACEFUNCTION = {}
+let CACHE_CHECK_COUNT=0;
+let CACHE_HIT_COUNT=0;
+let _replace_function_key_array = new Uint32Array(0);
 CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_SIZE) {
-	//this function is called so often that I cache it in a smart way.
-	const hash = this.replacement ? [
-        ...(this.replacement.objectsSet.data),
-        ...(this.replacement.objectsClear.data),
-        ...(this.replacement.movementsSet.data),
-        ...(this.replacement.movementsClear.data),
-        ...(this.replacement.movementsLayerMask.data),
-        ...(this.replacement.randomEntityMask.data),
-        ...(this.replacement.randomDirMask.data),
-        OBJECT_SIZE,
-        MOVEMENT_SIZE
-    ].join('|') : [OBJECT_SIZE, MOVEMENT_SIZE].join('|');
+	let hash;
+	if (this.replacement!==null) {
+		const array_len = 3*OBJECT_SIZE + 4*MOVEMENT_SIZE + 2;
+		if (array_len!==_replace_function_key_array.length) {
+			_replace_function_key_array = new Uint32Array(array_len);
+		}
+
+		const key_array = _replace_function_key_array;
+		for (let i = 0; i < OBJECT_SIZE; i++) {
+			key_array[i] = this.replacement.objectsSet.data[i] || 0;
+			key_array[i+OBJECT_SIZE] = this.replacement.objectsClear.data[i] || 0;
+			key_array[i+2*OBJECT_SIZE+3*MOVEMENT_SIZE] = this.replacement.randomEntityMask.data[i] || 0;
+		}
+		for (let i = 0; i < MOVEMENT_SIZE; i++) {
+			key_array[i+2*OBJECT_SIZE] = this.replacement.movementsSet.data[i] || 0;
+			key_array[i+2*OBJECT_SIZE+MOVEMENT_SIZE] = this.replacement.movementsClear.data[i] || 0;
+			key_array[i+2*OBJECT_SIZE+2*MOVEMENT_SIZE] = this.replacement.movementsLayerMask.data[i] || 0;
+			key_array[i+3*OBJECT_SIZE+3*MOVEMENT_SIZE] = this.replacement.randomDirMask.data[i] || 0;
+		}
+		key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE] = OBJECT_SIZE;
+		key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE+1] = MOVEMENT_SIZE;
+		hash = key_array.toString();
+	} else {
+		hash = OBJECT_SIZE + '|' + MOVEMENT_SIZE;
+	}
 
 	if (hash in CACHE_CELLPATTERN_REPLACEFUNCTION) {
 		return CACHE_CELLPATTERN_REPLACEFUNCTION[hash];
