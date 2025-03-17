@@ -1258,8 +1258,10 @@ function generate_moveEntitiesAtIndex(OBJECT_SIZE,MOVEMENT_SIZE){
 	${UNROLL("level.rowCellContents_Movements[rowIndex] |= movementMask",MOVEMENT_SIZE)}
 	${UNROLL("level.mapCellContents_Movements |= movementMask",MOVEMENT_SIZE)}
 	`
-	var func = new Function("level","positionIndex", "entityMask", "dirMask", fn);
-	return func;
+	if (fn in matchCache) {
+		return matchCache[fn];
+	}
+	return matchCache[fn] = new Function("level","positionIndex", "entityMask", "dirMask", fn);
 }
 
 
@@ -1299,8 +1301,10 @@ function generate_calculateRowColMasks(OBJECT_SIZE,MOVEMENT_SIZE) {
 				${UNROLL("level.colCellContents_Movements[i] |= mapCellContents_Movements",MOVEMENT_SIZE)}
 			}
 		}`
-	var func = new Function("level", fn);
-	return func;
+	if (fn in matchCache) {
+		return matchCache[fn];
+	}
+	return matchCache[fn] = new Function("level", fn);
 }
 
 function startMovement(dir) {
@@ -1428,7 +1432,7 @@ function Rule(rule) {
 	this.cellRowMasks = rule[9];
 	this.cellRowMasks_Movements = rule[10];
 	this.ruleMask = new BitVec(STRIDE_OBJ);
-	this.applyAt = this.generateApplyAt(this.patterns,STRIDE_OBJ,STRIDE_MOV);
+	this.applyAt = this.generateApplyAt(this.patterns,this.ellipsisCount,STRIDE_OBJ,STRIDE_MOV);
 	for (let m of this.cellRowMasks) {
 		this.ruleMask.ior(m);
 	}
@@ -1474,7 +1478,6 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,ellipsisCount) 
 		if (fn in matchCache) {
 			return matchCache[fn];
 		}
-		//console.log(fn.replace(/\s+/g, ' '));
 		return matchCache[fn] = new Function("cellRow","i", 'd', 'objects', 'movements',fn);
 	} else if (ellipsisCount===1){
 		let cr_l = cellRow.length;
@@ -1505,7 +1508,6 @@ if(cellRow[0].matches(i, objects, movements)`;
 		if (fn in matchCache) {
 			return matchCache[fn];
 		}
-		//console.log(fn.replace(/\s+/g, ' '));
 		return matchCache[fn] = new Function("cellRow","i","kmax","kmin", 'd', "objects", "movements",fn);
 	} else { //ellipsisCount===2
 		let cr_l = cellRow.length;
@@ -1561,9 +1563,7 @@ return result;`;
 		if (fn in matchCache) {
 			return matchCache[fn];
 		}
-		//console.log(fn.replace(/\s+/g, ' '));
 		return matchCache[fn] = new Function("cellRow","i","kmax","kmin", "k1max","k1min","k2max","k2min", 'd', "objects", "movements",fn);
-
 	}
 }
 
@@ -1651,7 +1651,6 @@ CellPattern.prototype.generateMatchFunction = function() {
 	if (fn in matchCache) {
 		return matchCache[fn];
 	}
-	//console.log(fn.replace(/\s+/g, ' '));
 	return matchCache[fn] = new Function("i", "objects", "movements", fn);
 }
 
@@ -1778,8 +1777,10 @@ CellPattern.prototype.generateReplaceFunction = function(OBJECT_SIZE,MOVEMENT_SI
 
 		return result;
 	`
-	var func = new Function("level", "rule", "currentIndex", fn);
-	return func;
+	if (fn in matchCache) {
+		return matchCache[fn];
+	}
+	return matchCache[fn] = new Function("level", "rule", "currentIndex", fn);
 }
 
 
@@ -1860,7 +1861,10 @@ function generateMatchCellRow(OBJECT_SIZE,MOVEMENT_SIZE) {
 	}
 
 	return result;`
-	return new Function("level", "direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", fn);
+	if (fn in matchCache) {
+		return matchCache[fn];
+	}
+	return matchCache[fn] = new Function("level", "direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", fn);
 }
 
 function generateMatchCellRowWildCard(OBJECT_SIZE,MOVEMENT_SIZE) {
@@ -1960,7 +1964,10 @@ var fn=`
 
 	return result;`
 	//function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellRowMask_Movements,d,wildcardCount) {
-	return new Function("direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", "wildcardCount", fn);
+		if (fn in matchCache) {
+			return matchCache[fn];
+		}
+		return matchCache[fn] = new Function("direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", "wildcardCount", fn);
 }
 
 function generateTuples(lists) {
@@ -2070,79 +2077,77 @@ function FOR(start,end,fn){
 }
 
 
-Rule.prototype.generateApplyAt = function(patterns,OBJECT_SIZE,MOVEMENT_SIZE) {
+Rule.prototype.generateApplyAt = function(patterns,ellipsisCount,OBJECT_SIZE,MOVEMENT_SIZE) {
 	var fn =`
 	//have to double check they apply 
 	//(cf test ellipsis bug: rule matches two candidates, first replacement invalidates second)
 	if (check)
 	{
-		for (let cellRowIndex=0; cellRowIndex<this.patterns.length; cellRowIndex++)
+	${FOR(0,patterns.length,cellRowIndex =>`
 		{
-			if (this.ellipsisCount[cellRowIndex]===1)
-			{
-				if ( this.cellRowMatches[cellRowIndex](
-						this.patterns[cellRowIndex], 
-						tuple[cellRowIndex][0], 
-						tuple[cellRowIndex][1]+1, 
-							tuple[cellRowIndex][1], 
-						delta, level.objects, level.movements
-					).length == 0 )
-					return false
-			} else if (this.ellipsisCount[cellRowIndex]===2){
-				if ( this.cellRowMatches[cellRowIndex](
-					this.patterns[cellRowIndex], 
-						tuple[cellRowIndex][0],  
-						tuple[cellRowIndex][1]+tuple[cellRowIndex][2]+1, 
-							tuple[cellRowIndex][1]+tuple[cellRowIndex][2], 
-						tuple[cellRowIndex][1]+1, 
-							tuple[cellRowIndex][1],  
-						tuple[cellRowIndex][2]+1, 
-							tuple[cellRowIndex][2], 
-							delta, level.objects, level.movements
-						).length == 0 )
-					return false
-			} else {
-				if ( ! this.cellRowMatches[cellRowIndex](
-					this.patterns[cellRowIndex], 
-						tuple[cellRowIndex], 
+			${IF(ellipsisCount[cellRowIndex]==0)}
+				if ( ! this.cellRowMatches[${cellRowIndex}](
+					this.patterns[${cellRowIndex}], 
+						tuple[${cellRowIndex}], 
 						delta, level.objects, level.movements
 						) )
 				return false
-			}
-		}
+			${ENDIF(ellipsisCount[cellRowIndex]==0)}
+			${IF(ellipsisCount[cellRowIndex]===1)}
+				if ( this.cellRowMatches[${cellRowIndex}](
+						this.patterns[${cellRowIndex}], 
+						tuple[${cellRowIndex}][0], 
+						tuple[${cellRowIndex}][1]+1, 
+							tuple[${cellRowIndex}][1], 
+						delta, level.objects, level.movements
+					).length == 0 )
+					return false
+			${ENDIF(ellipsisCount[cellRowIndex]===1)}
+			${IF(ellipsisCount[cellRowIndex]===2)}
+				if ( this.cellRowMatches[${cellRowIndex}](
+						this.patterns[${cellRowIndex}], 
+						tuple[${cellRowIndex}][0],  
+						tuple[${cellRowIndex}][1]+tuple[${cellRowIndex}][2]+1, 
+							tuple[${cellRowIndex}][1]+tuple[${cellRowIndex}][2], 
+						tuple[${cellRowIndex}][1]+1, 
+							tuple[${cellRowIndex}][1],  
+						tuple[${cellRowIndex}][2]+1, 
+							tuple[${cellRowIndex}][2], 
+							delta, level.objects, level.movements
+						).length == 0 )
+					return false
+			${ENDIF(ellipsisCount[cellRowIndex]===2)}
+		}`)}
 	}
-
 
     let result=false;
 	let anyellipses=false;
 
-    //APPLY THE RULE`
-
-    for (let cellRowIndex=0;cellRowIndex<patterns.length;cellRowIndex++) {
+    //APPLY THE RULE
+	${FOR(0,patterns.length,cellRowIndex => {
 		var preRow = patterns[cellRowIndex];
+		return `
+			{
+				let ellipse_index=0;
+				let currentIndex = ${ ellipsisCount[cellRowIndex]>0 ? `tuple[${cellRowIndex}][0]` : `tuple[${cellRowIndex}]` }
+				${FOR(0,preRow.length,cellIndex => `
+					{
+						${IF(preRow[cellIndex] === ellipsisPattern)}
+							const k = tuple[${cellRowIndex}][1+ellipse_index];
+							ellipse_index++;
+							anyellipses=true;
+							currentIndex += delta*k;
+						${ELSE(preRow[cellIndex] === ellipsisPattern)}
+							const preCell = this.patterns[${cellRowIndex}][${cellIndex}];
+							result = preCell.replace(level,this, currentIndex) || result;
+							currentIndex += delta;
+						${ENDELSE(preRow[cellIndex] === ellipsisPattern)}
+					}
+				`)}
+			}`
+		}
+    )}
 
-		fn+=`
-		{
-			let ellipse_index=0;
-			let currentIndex = this.ellipsisCount[${cellRowIndex}]>0 ? tuple[${cellRowIndex}][0] : tuple[${cellRowIndex}];
-			${FOR(0,preRow.length,cellIndex => `
-				{
-					${IF(preRow[cellIndex] === ellipsisPattern)}
-						const k = tuple[${cellRowIndex}][1+ellipse_index];
-						ellipse_index++;
-						anyellipses=true;
-						currentIndex += delta*k;
-					${ELSE(preRow[cellIndex] === ellipsisPattern)}
-						const preCell = this.patterns[${cellRowIndex}][${cellIndex}];
-						result = preCell.replace(level,this, currentIndex) || result;
-						currentIndex += delta;
-					${ENDELSE(preRow[cellIndex] === ellipsisPattern)}
-				}
-			`)}
-		}`
-    }
-
-	fn+=`
 	if (verbose_logging && result){
 		let ruleDirection = dirMaskName[this.direction];
 		if (!this.directional()){
@@ -2159,7 +2164,10 @@ Rule.prototype.generateApplyAt = function(patterns,OBJECT_SIZE,MOVEMENT_SIZE) {
 
     return result;
 	`
-	return new Function("level", "tuple", "check", "delta", fn);
+	if (fn in matchCache) {
+		return matchCache[fn];
+	}
+	return matchCache[fn] = new Function("level", "tuple", "check", "delta", fn);
 };
 
 Rule.prototype.tryApply = function(level) {
@@ -2524,8 +2532,12 @@ function generate_resolveMovements(OBJECT_SIZE,MOVEMENT_SIZE){
 		return doUndo;
 	`
 	//	function resolveMovements(level, bannedGroup){
-	return new Function("level","bannedGroup",fn);
+	if (fn in matchCache) {
+		return matchCache[fn];
+	}
+	return matchCache[fn] = new Function("level","bannedGroup",fn);
 }
+
 let sfxCreateMask=null;
 let sfxDestroyMask=null;
 

@@ -1586,9 +1586,6 @@ var dirMasks = {
 };
 
 function rulesToMask(state) {
-    /*
-
-    */
     var layerCount = state.collisionLayers.length;
     var layerTemplate = [];
     for (var i = 0; i < layerCount; i++) {
@@ -2516,6 +2513,54 @@ function removeDuplicateRules(state) {
     }
 }
 
+function calculateLoopPoints(state,rulegroup_collection){
+    var loopPoint = {};
+    for (let j = 0; j < state.loops.length; j+=2) {
+        var loop_start_line = state.loops[j][0]; //for each startloop/endloop
+        var loop_end_line = state.loops[j+1][0];
+        var init_group_index=-1
+        for (let group_i = 0; group_i < rulegroup_collection.length; group_i++) {
+            var ruleGroup = rulegroup_collection[group_i];
+
+            var firstRule = ruleGroup[0];
+            var lastRule = ruleGroup[ruleGroup.length - 1];
+
+            var firstRuleLine = firstRule.lineNumber;
+            var lastRuleLine = lastRule.lineNumber;
+
+            if (firstRuleLine <= loop_start_line&& loop_start_line <= lastRuleLine) 
+            {
+                logError("Found a loop point in the middle of a rule. You probably don't want to do this, right?",loop_start_line)
+            } else if (firstRuleLine <= loop_end_line&& loop_end_line <= lastRuleLine) 
+            {
+                logError("Found a loop point in the middle of a rule. You probably don't want to do this, right?",loop_start_line)
+            }
+
+            var rule_before_loop = loop_start_line > firstRuleLine;
+            var rule_in_loop = loop_start_line <= firstRuleLine && firstRuleLine <= loop_end_line;
+            var rule_after_loop = loop_end_line < firstRuleLine;
+
+            if (rule_after_loop)
+                break;
+            
+
+            if (rule_in_loop){
+                if (init_group_index===-1){
+                    init_group_index = group_i
+                }
+                // only the last rulegroup in a loop should be the loop point - 
+                // this is a bit lazy, but basically we look back, and if the 
+                // previous rule-group has the same loop point, we remove it.
+                if (group_i>0 && loopPoint[group_i-1] !== undefined && loopPoint[group_i-1] === init_group_index){
+                    loopPoint[group_i-1] = undefined;
+                }
+                loopPoint[group_i] = init_group_index;
+            }
+        }
+    }
+    return loopPoint;
+}
+
 function generateLoopPoints(state) {
     //run through to check loops aren't nested and are properly closed
     for (var group_i=0;group_i<state.loops.length;group_i++){
@@ -2534,96 +2579,10 @@ function generateLoopPoints(state) {
         logError("Yo I found a STARTLOOP without a corresponding ENDLOOP.",state.loops[state.loops.length-1][0]);
     }
 
-    var loopPoint = {};
-    for (let j = 0; j < state.loops.length; j+=2) {
-        var loop_start_line = state.loops[j][0]; //for each startloop/endloop
-        var loop_end_line = state.loops[j+1][0];
-        var init_group_index=-1
-        for (let group_i = 0; group_i < state.rules.length; group_i++) {
-            var ruleGroup = state.rules[group_i];
+    
+    state.loopPoint = calculateLoopPoints(state,state.rules);
+    state.lateLoopPoint = calculateLoopPoints(state,state.lateRules);
 
-            var firstRule = ruleGroup[0];
-            var lastRule = ruleGroup[ruleGroup.length - 1];
-
-            var firstRuleLine = firstRule.lineNumber;
-            var lastRuleLine = lastRule.lineNumber;
-
-            if (
-                (loop_start_line >= firstRuleLine && loop_start_line <= lastRuleLine) ||
-                (loop_end_line >= firstRuleLine && loop_end_line <= lastRuleLine) )
-            {
-                logError("Found a loop point in the middle of a rule. You probably don't want to do this, right?", loop[0]);
-            }
-
-            var rule_before_loop = loop_start_line > firstRuleLine;
-            var rule_in_loop = loop_start_line <= firstRuleLine && firstRuleLine <= loop_end_line;
-            var rule_after_loop = loop_end_line < firstRuleLine;
-
-            if (rule_after_loop)
-                break;
-            
-
-            if (rule_in_loop){
-                if (init_group_index===-1){
-                    init_group_index = group_i
-                }
-                // only the last rulegroup in a loop should be the loop point - 
-                // this is a bit lazy, but basically we look back, and if the 
-                // previous rule-group has the same loop point, we remove it.
-                if (group_i>0 && loopPoint[group_i-1] !== undefined && loopPoint[group_i-1] === init_group_index){
-                    loopPoint[group_i-1] = undefined;
-                }
-                loopPoint[group_i] = init_group_index;
-            }
-        }
-    }
-    state.loopPoint = loopPoint;
-
-    // now for LATE
-    loopPoint = {};
-    for (let j = 0; j < state.loops.length; j+=2) {
-        var loop_start_line = state.loops[j][0]; //for each startloop/endloop
-        var loop_end_line = state.loops[j+1][0];
-        var init_group_index=-1
-        for (let group_i = 0; group_i < state.lateRules.length; group_i++) {
-            var ruleGroup = state.lateRules[group_i];
-
-            var firstRule = ruleGroup[0];
-            var lastRule = ruleGroup[ruleGroup.length - 1];
-
-            var firstRuleLine = firstRule.lineNumber;
-            var lastRuleLine = lastRule.lineNumber;
-
-            if (
-                (loop_start_line >= firstRuleLine && loop_start_line <= lastRuleLine) ||
-                (loop_end_line >= firstRuleLine && loop_end_line <= lastRuleLine) )
-            {
-                logError("Found a loop point in the middle of a rule. You probably don't want to do this, right?", loop[0]);
-            }
-
-            var rule_before_loop = loop_start_line > firstRuleLine;
-            var rule_in_loop = loop_start_line <= firstRuleLine && firstRuleLine <= loop_end_line;
-            var rule_after_loop = loop_end_line < firstRuleLine;
-
-            if (rule_after_loop)
-                break;
-            
-            if (rule_in_loop){
-                if (init_group_index===-1){
-                    init_group_index = group_i
-                }
-                // only the last rulegroup in a loop should be the loop point - 
-                // this is a bit lazy, but basically we look back, and if the 
-                // previous rule-group has the same loop point, we remove it.
-                if (group_i>0 && loopPoint[group_i-1] !== undefined && loopPoint[group_i-1] === init_group_index){
-                    loopPoint[group_i-1] = undefined;
-                }
-                loopPoint[group_i] = init_group_index;
-            }
-        }
-    }
-
-    state.lateLoopPoint = loopPoint;
 }
 
 var soundDirectionIndicatorMasks = {
