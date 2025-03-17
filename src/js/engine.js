@@ -1236,6 +1236,8 @@ function LEVEL_SET_CELL(level,index,vec,array_size){
 	return result;
 }
 
+var CACHE_MOVEENTITIESATINDEX = {}
+
 function generate_moveEntitiesAtIndex(OBJECT_SIZE,MOVEMENT_SIZE){	
 	var fn = `
     let cellMask = level.getCell(positionIndex);
@@ -1258,13 +1260,14 @@ function generate_moveEntitiesAtIndex(OBJECT_SIZE,MOVEMENT_SIZE){
 	${UNROLL("level.rowCellContents_Movements[rowIndex] |= movementMask",MOVEMENT_SIZE)}
 	${UNROLL("level.mapCellContents_Movements |= movementMask",MOVEMENT_SIZE)}
 	`
-	if (fn in matchCache) {
-		return matchCache[fn];
+	if (fn in CACHE_MOVEENTITIESATINDEX) {
+		return CACHE_MOVEENTITIESATINDEX[fn];
 	}
-	return matchCache[fn] = new Function("level","positionIndex", "entityMask", "dirMask", fn);
+	return CACHE_MOVEENTITIESATINDEX[fn] = new Function("level","positionIndex", "entityMask", "dirMask", fn);
 }
 
 
+var CACHE_CALCULATEROWCOLMASKS = {}
 function generate_calculateRowColMasks(OBJECT_SIZE,MOVEMENT_SIZE) {
 	var fn =`
 		for(let i=0;i<level.mapCellContents.data.length;i++) {
@@ -1301,10 +1304,10 @@ function generate_calculateRowColMasks(OBJECT_SIZE,MOVEMENT_SIZE) {
 				${UNROLL("level.colCellContents_Movements[i] |= mapCellContents_Movements",MOVEMENT_SIZE)}
 			}
 		}`
-	if (fn in matchCache) {
-		return matchCache[fn];
+	if (fn in CACHE_CALCULATEROWCOLMASKS) {
+		return CACHE_CALCULATEROWCOLMASKS[fn];
 	}
-	return matchCache[fn] = new Function("level", fn);
+	return CACHE_CALCULATEROWCOLMASKS[fn] = new Function("level", fn);
 }
 
 function startMovement(dir) {
@@ -1453,6 +1456,7 @@ function Rule(rule) {
 }
 
 
+var CACHE_RULE_CELLROWMATCHESFUNCTION = {}
 Rule.prototype.generateCellRowMatchesFunction = function(cellRow,ellipsisCount)  {
 	if (ellipsisCount===0) {
 		let cr_l = cellRow.length;
@@ -1475,10 +1479,10 @@ Rule.prototype.generateCellRowMatchesFunction = function(cellRow,ellipsisCount) 
 		}
 		fn+=";";
 
-		if (fn in matchCache) {
-			return matchCache[fn];
+		if (fn in CACHE_RULE_CELLROWMATCHESFUNCTION) {
+			return CACHE_RULE_CELLROWMATCHESFUNCTION[fn];
 		}
-		return matchCache[fn] = new Function("cellRow","i", 'd', 'objects', 'movements',fn);
+		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("cellRow","i", 'd', 'objects', 'movements',fn);
 	} else if (ellipsisCount===1){
 		let cr_l = cellRow.length;
 
@@ -1505,10 +1509,10 @@ if(cellRow[0].matches(i, objects, movements)`;
 		fn+="return result;"
 
 
-		if (fn in matchCache) {
-			return matchCache[fn];
+		if (fn in CACHE_RULE_CELLROWMATCHESFUNCTION) {
+			return CACHE_RULE_CELLROWMATCHESFUNCTION[fn];
 		}
-		return matchCache[fn] = new Function("cellRow","i","kmax","kmin", 'd', "objects", "movements",fn);
+		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("cellRow","i","kmax","kmin", 'd', "objects", "movements",fn);
 	} else { //ellipsisCount===2
 		let cr_l = cellRow.length;
 
@@ -1560,10 +1564,10 @@ if(cellRow[0].matches(i, objects, movements)`;
 return result;`;
 
 
-		if (fn in matchCache) {
-			return matchCache[fn];
+		if (fn in CACHE_RULE_CELLROWMATCHESFUNCTION) {
+			return CACHE_RULE_CELLROWMATCHESFUNCTION[fn];
 		}
-		return matchCache[fn] = new Function("cellRow","i","kmax","kmin", "k1max","k1min","k2max","k2min", 'd', "objects", "movements",fn);
+		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("cellRow","i","kmax","kmin", "k1max","k1min","k2max","k2min", 'd', "objects", "movements",fn);
 	}
 }
 
@@ -1593,8 +1597,6 @@ function CellReplacement(row) {
 	this.randomDirMask = row[6];
 };
 
-
-var matchCache = {};
 
 
 
@@ -1637,6 +1639,7 @@ CellPattern.prototype.generateMatchString = function() {
 	return fn;
 }
 
+var CACHE_CELLPATTERN_MATCHFUNCTION = {}
 CellPattern.prototype.generateMatchFunction = function() {
 	let fn = '';
 	let mul = STRIDE_OBJ === 1 ? '' : '*'+STRIDE_OBJ;	
@@ -1648,15 +1651,16 @@ CellPattern.prototype.generateMatchFunction = function() {
 		fn += '\tconst cellMovements' + i + ' = movements[i' + mul + (i ? '+'+i: '') + '];\n';
 	}
 	fn += "return " + this.generateMatchString()+';';
-	if (fn in matchCache) {
-		return matchCache[fn];
+	if (fn in CACHE_CELLPATTERN_MATCHFUNCTION) {
+		return CACHE_CELLPATTERN_MATCHFUNCTION[fn];
 	}
-	return matchCache[fn] = new Function("i", "objects", "movements", fn);
+	return CACHE_CELLPATTERN_MATCHFUNCTION[fn] = new Function("i", "objects", "movements", fn);
 }
 
 let _o1,_o2,_o2_5,_o3,_o4,_o5,_o6,_o7,_o8,_o9,_o10,_o11,_o12;
 let _m1,_m2,_m3;
 
+var CACHE_CELLPATTERN_REPLACEFUNCTION = {}
 CellPattern.prototype.generateReplaceFunction = function(OBJECT_SIZE,MOVEMENT_SIZE) {
 	let fn = `	
 		var replace = this.replacement;
@@ -1777,13 +1781,14 @@ CellPattern.prototype.generateReplaceFunction = function(OBJECT_SIZE,MOVEMENT_SI
 
 		return result;
 	`
-	if (fn in matchCache) {
-		return matchCache[fn];
+	if (fn in CACHE_CELLPATTERN_REPLACEFUNCTION) {
+		return CACHE_CELLPATTERN_REPLACEFUNCTION[fn];
 	}
-	return matchCache[fn] = new Function("level", "rule", "currentIndex", fn);
+	return CACHE_CELLPATTERN_REPLACEFUNCTION[fn] = new Function("level", "rule", "currentIndex", fn);
 }
 
 
+var CACHE_MATCHCELLROW = {}
 function generateMatchCellRow(OBJECT_SIZE,MOVEMENT_SIZE) {
 	var fn =`
 	let result=[];
@@ -1861,12 +1866,13 @@ function generateMatchCellRow(OBJECT_SIZE,MOVEMENT_SIZE) {
 	}
 
 	return result;`
-	if (fn in matchCache) {
-		return matchCache[fn];
+	if (fn in CACHE_MATCHCELLROW) {
+		return CACHE_MATCHCELLROW[fn];
 	}
-	return matchCache[fn] = new Function("level", "direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", fn);
+	return CACHE_MATCHCELLROW[fn] = new Function("level", "direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", fn);
 }
 
+var CACHE_MATCHCELLROWWILDCARD = {}
 function generateMatchCellRowWildCard(OBJECT_SIZE,MOVEMENT_SIZE) {
 var fn=`
 	let result=[];
@@ -1964,10 +1970,10 @@ var fn=`
 
 	return result;`
 	//function matchCellRowWildCard(direction, cellRowMatch, cellRow,cellRowMask,cellRowMask_Movements,d,wildcardCount) {
-		if (fn in matchCache) {
-			return matchCache[fn];
+		if (fn in CACHE_MATCHCELLROWWILDCARD) {
+			return CACHE_MATCHCELLROWWILDCARD[fn];
 		}
-		return matchCache[fn] = new Function("direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", "wildcardCount", fn);
+		return CACHE_MATCHCELLROWWILDCARD[fn] = new Function("direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", "wildcardCount", fn);
 }
 
 function generateTuples(lists) {
@@ -2077,6 +2083,7 @@ function FOR(start,end,fn){
 }
 
 
+var CACHE_RULE_APPLYAT = {}
 Rule.prototype.generateApplyAt = function(patterns,ellipsisCount,OBJECT_SIZE,MOVEMENT_SIZE) {
 	var fn =`
 	//have to double check they apply 
@@ -2164,10 +2171,10 @@ Rule.prototype.generateApplyAt = function(patterns,ellipsisCount,OBJECT_SIZE,MOV
 
     return result;
 	`
-	if (fn in matchCache) {
-		return matchCache[fn];
+	if (fn in CACHE_RULE_APPLYAT) {
+		return CACHE_RULE_APPLYAT[fn];
 	}
-	return matchCache[fn] = new Function("level", "tuple", "check", "delta", fn);
+	return CACHE_RULE_APPLYAT[fn] = new Function("level", "tuple", "check", "delta", fn);
 };
 
 Rule.prototype.tryApply = function(level) {
@@ -2471,6 +2478,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
 //     return doUndo;
 // }
 
+var CACHE_RESOLVEMOVEMENTS = {}
 function generate_resolveMovements(OBJECT_SIZE,MOVEMENT_SIZE){
 	var fn = `
 		let moved=true;
@@ -2532,10 +2540,10 @@ function generate_resolveMovements(OBJECT_SIZE,MOVEMENT_SIZE){
 		return doUndo;
 	`
 	//	function resolveMovements(level, bannedGroup){
-	if (fn in matchCache) {
-		return matchCache[fn];
+	if (fn in CACHE_RESOLVEMOVEMENTS) {
+		return CACHE_RESOLVEMOVEMENTS[fn];
 	}
-	return matchCache[fn] = new Function("level","bannedGroup",fn);
+	return CACHE_RESOLVEMOVEMENTS[fn] = new Function("level","bannedGroup",fn);
 }
 
 let sfxCreateMask=null;
@@ -3067,6 +3075,7 @@ function goToTitleScreen(){
 	}
 }
 
+var CACHE_RULE_FINDMATCHES = {}
 Rule.prototype.generateFindMatchesFunction = function() {
     let fn = '';
     
@@ -3101,11 +3110,10 @@ Rule.prototype.generateFindMatchesFunction = function() {
     
     fn += 'return matches;';
     
-    // Cache the generated function like you do with matchCache
-    if (fn in matchCache) {
-        return matchCache[fn];
+    if (fn in CACHE_RULE_FINDMATCHES) {
+        return CACHE_RULE_FINDMATCHES[fn];
     }
-    return matchCache[fn] = new Function('level', fn);
+    return CACHE_RULE_FINDMATCHES[fn] = new Function('level', fn);
 }
 
 
