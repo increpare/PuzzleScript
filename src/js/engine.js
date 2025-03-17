@@ -607,6 +607,7 @@ function setGameState(_state, command, randomseed) {
 	STRIDE_MOV = _state.STRIDE_MOV;
 	STRIDE_OBJ = _state.STRIDE_OBJ;
 	LAYER_COUNT = _state.LAYER_COUNT;
+	RebuildGameArrays();
 
 	sfxCreateMask = new BitVec(STRIDE_OBJ);
 	sfxDestroyMask = new BitVec(STRIDE_OBJ);
@@ -769,23 +770,7 @@ function setGameState(_state, command, randomseed) {
 
 }
 
-function RebuildLevelArrays() {
-	level.movements = new Int32Array(level.n_tiles * STRIDE_MOV);
-
-	level.rigidMovementAppliedMask = [];
-	level.rigidGroupIndexMask = [];
-	level.rowCellContents = [];
-	level.rowCellContents_Movements = [];
-	level.colCellContents = [];
-	level.colCellContents_Movements = [];
-	level.mapCellContents = new BitVec(STRIDE_OBJ);
-	level.mapCellContents_Movements = new BitVec(STRIDE_MOV);
-
-	//I have these to avoid dynamic allocation - I generate 3 because why not, 
-	//but according to my tests I never seem to call this while a previous copy is still in scope
-	_movementVecs = [new BitVec(STRIDE_MOV), new BitVec(STRIDE_MOV), new BitVec(STRIDE_MOV)];
-	_rigidVecs = [new BitVec(STRIDE_MOV), new BitVec(STRIDE_MOV), new BitVec(STRIDE_MOV)];
-
+function RebuildGameArrays(){
 	_o1 = new BitVec(STRIDE_OBJ);
 	_o2 = new BitVec(STRIDE_OBJ);
 	_o2_5 = new BitVec(STRIDE_OBJ);
@@ -802,7 +787,24 @@ function RebuildLevelArrays() {
 	_m1 = new BitVec(STRIDE_MOV);
 	_m2 = new BitVec(STRIDE_MOV);
 	_m3 = new BitVec(STRIDE_MOV);
+}
 
+function RebuildLevelArrays() {
+	level.movements = new Int32Array(level.n_tiles * STRIDE_MOV);
+
+	level.rigidMovementAppliedMask = [];
+	level.rigidGroupIndexMask = [];
+	level.rowCellContents = [];
+	level.rowCellContents_Movements = [];
+	level.colCellContents = [];
+	level.colCellContents_Movements = [];
+	level.mapCellContents = new BitVec(STRIDE_OBJ);
+	level.mapCellContents_Movements = new BitVec(STRIDE_MOV);
+
+	//I have these to avoid dynamic allocation - I generate 3 because why not, 
+	//but according to my tests I never seem to call this while a previous copy is still in scope
+	_movementVecs = [new BitVec(STRIDE_MOV), new BitVec(STRIDE_MOV), new BitVec(STRIDE_MOV)];
+	_rigidVecs = [new BitVec(STRIDE_MOV), new BitVec(STRIDE_MOV), new BitVec(STRIDE_MOV)];
 
 	for (let i = 0; i < level.height; i++) {
 		level.rowCellContents[i] = new BitVec(STRIDE_OBJ);
@@ -2160,6 +2162,14 @@ function FOR(start, end, fn) {
 	var result = "";
 	for (let i = start; i < end; i++) {
 		result += fn(i);
+	}
+	return result;
+}
+
+function IMPORT_COMPILE_TIME_ARRAY(compiletime,runtime,array_size){
+	var result="";
+	for (let i = 0; i < array_size; i++) {
+		result += `${runtime}.data[${i}] = ${compiletime.data[i]};`
 	}
 	return result;
 }

@@ -79,7 +79,8 @@ function generateExtraMembers(state) {
     state.STRIDE_OBJ = STRIDE_OBJ;
     state.STRIDE_MOV = STRIDE_MOV;
     state.LAYER_COUNT = LAYER_COUNT;
-
+    RebuildGameArrays();
+    
     //get colorpalette name
     debugMode = false;
     verbose_logging = false;
@@ -1828,7 +1829,8 @@ function rulesToMask(state) {
                                  !rhsBitVectors.randomDirMask_r.iszero();
 
                 if (hasChanges) {
-                    cellrow_l[colIndex].replacement = new CellReplacement([
+                    const target_cell_pattern = cellrow_l[colIndex];
+                    target_cell_pattern.replacement = new CellReplacement([
                         rhsBitVectors.objectsClear,
                         rhsBitVectors.objectsSet,
                         rhsBitVectors.movementsClear,
@@ -1837,6 +1839,7 @@ function rulesToMask(state) {
                         rhsBitVectors.randomMask_r,
                         rhsBitVectors.randomDirMask_r
                     ]);
+                    target_cell_pattern.replace = target_cell_pattern.generateReplaceFunction(STRIDE_OBJ, STRIDE_MOV);
                 }
             }
         }
