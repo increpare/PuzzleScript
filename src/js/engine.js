@@ -1694,7 +1694,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		return FALSE_FUNCTION;
 	}
 
-	const array_len = 3*OBJECT_SIZE + 4*MOVEMENT_SIZE + 2;
+	const array_len = 3*OBJECT_SIZE + 4*MOVEMENT_SIZE + 3;
 	if (array_len!==_replace_function_key_array.length) {
 		_replace_function_key_array = new Uint32Array(array_len);
 	}
@@ -1713,6 +1713,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 	}
 	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE] = OBJECT_SIZE;
 	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE+1] = MOVEMENT_SIZE;
+	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE+2] = rule.rigid;
 	hash = key_array.toString();
 
 	if (hash in CACHE_CELLPATTERN_REPLACEFUNCTION) {
@@ -1792,7 +1793,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		var curRigidGroupIndexMask =0;
 		var curRigidMovementAppliedMask =0;
 		let rigidchange=false;		
-		if (rule.rigid){
+		${IF_LAZY(rule.rigid,()=>`
 			let rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1;
 			const rigidMask = new BitVec(STRIDE_MOV);
 			for (let layer = 0; layer < level.layerCount; layer++) {
@@ -1810,7 +1811,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 				${UNROLL("curRigidMovementAppliedMask |= replace.movementsLayerMask", MOVEMENT_SIZE)}
 				rigidchange=true;
 			}
-		}
+		`)}
 
 		let result = false;
 
