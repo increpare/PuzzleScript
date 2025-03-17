@@ -1206,9 +1206,9 @@ function LEVEL_SET_MOVEMENTS(level, index, vec, array_size) {
 	const colIndex=(${index}/${level}.height)|0;
 	const rowIndex=(${index}%${level}.height);
 
-	${level}.colCellContents_Movements[colIndex].ior(${vec});
-	${level}.rowCellContents_Movements[rowIndex].ior(${vec});
-	${level}.mapCellContents_Movements.ior(${vec});
+	${UNROLL(`${level}.colCellContents_Movements[colIndex] |= ${vec}`, array_size)}
+	${UNROLL(`${level}.rowCellContents_Movements[rowIndex] |= ${vec}`, array_size)}
+	${UNROLL(`${level}.mapCellContents_Movements |= ${vec}`, array_size)}
 
 }`
 
@@ -1656,6 +1656,23 @@ let _m1, _m2, _m3;
 
 var CACHE_CELLPATTERN_REPLACEFUNCTION = {}
 CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_SIZE) {
+	//this function is called so often that I cache it in a smart way.
+	const hash = [
+        this.replacement?.objectsSet?.data?.join(','),
+        this.replacement?.objectsClear?.data?.join(','),
+        this.replacement?.movementsSet?.data?.join(','),
+        this.replacement?.movementsClear?.data?.join(','),
+        this.replacement?.movementsLayerMask?.data?.join(','),
+        this.replacement?.randomEntityMask?.data?.join(','),
+        this.replacement?.randomDirMask?.data?.join(','),
+        OBJECT_SIZE,
+        MOVEMENT_SIZE
+    ].join('|');
+
+	if (hash in CACHE_CELLPATTERN_REPLACEFUNCTION) {
+		return CACHE_CELLPATTERN_REPLACEFUNCTION[hash];
+	}
+
 	let fn = `	
 		var replace = this.replacement;
 
@@ -1775,10 +1792,8 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 
 		return result;
 	`
-	if (fn in CACHE_CELLPATTERN_REPLACEFUNCTION) {
-		return CACHE_CELLPATTERN_REPLACEFUNCTION[fn];
-	}
-	return CACHE_CELLPATTERN_REPLACEFUNCTION[fn] = new Function("level", "rule", "currentIndex", fn);
+
+	return CACHE_CELLPATTERN_REPLACEFUNCTION[hash] = new Function("level", "rule", "currentIndex", fn);
 }
 
 
