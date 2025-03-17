@@ -96,12 +96,12 @@ function generateExtraMembers(state) {
                 colorPalette = colorPalettes[val];
             }
         } else if (key === 'debug') {
-            if (IDE && unitTesting===false){
+            if (IDE && unitTesting === false) {
                 debugMode = true;
                 cache_console_messages = true;
             }
         } else if (key === 'verbose_logging') {
-            if (IDE && unitTesting===false){
+            if (IDE && unitTesting === false) {
                 verbose_logging = true;
                 cache_console_messages = true;
             }
@@ -165,13 +165,12 @@ function generateExtraMembers(state) {
             var mask = blankMask.concat([]);
             mask[o.layer] = o.id;
             glyphDict[n] = mask;
-            glyphOrder.push([o.lineNumber,n]);
+            glyphOrder.push([o.lineNumber, n]);
         }
     }
-    
+
     var added = true;
-    while (added) 
-    {
+    while (added) {
         added = false;
 
         //then, synonyms
@@ -182,8 +181,8 @@ function generateExtraMembers(state) {
             if ((!(key in glyphDict) || (glyphDict[key] === undefined)) && (glyphDict[val] !== undefined)) {
                 added = true;
                 glyphDict[key] = glyphDict[val];
-                glyphOrder.push([dat.lineNumber,key]);
-            } 
+                glyphOrder.push([dat.lineNumber, key]);
+            }
         }
 
         //then, aggregates
@@ -217,25 +216,25 @@ function generateExtraMembers(state) {
                             var n1 = n.toUpperCase();
                             var n2 = state.idDict[mask[o.layer]].toUpperCase();
                             // if (n1 !== n2) {
-                                logError(
-                                    'Trying to create an aggregate object (something defined in the LEGEND section using AND) with both "' +
-                                    n1 + '" and "' + n2 + '", which are on the same layer and therefore can\'t coexist.',
-                                    dat.lineNumber
-                                );
+                            logError(
+                                'Trying to create an aggregate object (something defined in the LEGEND section using AND) with both "' +
+                                n1 + '" and "' + n2 + '", which are on the same layer and therefore can\'t coexist.',
+                                dat.lineNumber
+                            );
                             // }
                         }
                     }
                 }
                 added = true;
                 glyphDict[dat[0]] = mask;
-                glyphOrder.push([dat.lineNumber,key]);
+                glyphOrder.push([dat.lineNumber, key]);
             }
         }
     }
-    
+
     //sort glyphs line number
-    glyphOrder.sort((a,b)=>a[0] - b[0]);
-    glyphOrder = glyphOrder.map(a=>a[1]);
+    glyphOrder.sort((a, b) => a[0] - b[0]);
+    glyphOrder = glyphOrder.map(a => a[1]);
 
     state.glyphDict = glyphDict;
     state.glyphOrder = glyphOrder;
@@ -381,12 +380,12 @@ function generateExtraMembers(state) {
             var o = state.objects[n];
             backgroundid = o.id;
             backgroundlayer = o.layer;
-            for (var i=1;i<backgrounddef.length;i++){
+            for (var i = 1; i < backgrounddef.length; i++) {
                 var nnew = backgrounddef[i];
                 var onew = state.objects[nnew];
                 if (onew.layer !== backgroundlayer) {
                     var lineNumber = state.original_line_numbers['background'];
-                    logError('Background objects must be on the same layer',lineNumber);
+                    logError('Background objects must be on the same layer', lineNumber);
                 }
             }
         } else if ('background' in state.aggregatesDict) {
@@ -394,11 +393,11 @@ function generateExtraMembers(state) {
             backgroundid = o.id;
             backgroundlayer = o.layer;
             var lineNumber = state.original_line_numbers['background'];
-            logError("background cannot be an aggregate (declared with 'and'), it has to be a simple type, or property (declared in terms of others using 'or').",lineNumber);
+            logError("background cannot be an aggregate (declared with 'and'), it has to be a simple type, or property (declared in terms of others using 'or').", lineNumber);
         } else {
             //background doesn't exist. Error already printed elsewhere.
             var o = state.objects[state.idDict[0]];
-            if (o!=null){
+            if (o != null) {
                 backgroundid = o.id;
                 backgroundlayer = o.layer;
             }
@@ -550,9 +549,9 @@ function findIndexAfterToken(str, tokens, tokenIndex) {
     }
     return curIndex;
 }
-function rightBracketToRightOf(tokens,i){
-    for(;i<tokens.length;i++){
-        if (tokens[i]==="]"){
+function rightBracketToRightOf(tokens, i) {
+    for (; i < tokens.length; i++) {
+        if (tokens[i] === "]") {
             return true;
         }
     }
@@ -562,16 +561,16 @@ function rightBracketToRightOf(tokens,i){
 function processRuleString(rule, state, curRules) {
     /*
 
-    	intermediate structure
-    		dirs: Directions[]
-    		pre : CellMask[]
-    		post : CellMask[]
+        intermediate structure
+            dirs: Directions[]
+            pre : CellMask[]
+            post : CellMask[]
 
-    		//pre/post pairs must have same lengths
-    	final rule structure
-    		dir: Direction
-    		pre : CellMask[]
-    		post : CellMask[]
+            //pre/post pairs must have same lengths
+        final rule structure
+            dir: Direction
+            pre : CellMask[]
+            post : CellMask[]
     */
     var line = rule[0];
     var lineNumber = rule[1];
@@ -583,7 +582,7 @@ function processRuleString(rule, state, curRules) {
     if (line[0] === '+') {
         line = line.substring(0, 1) + " " + line.substring(1, line.length);
     }
-    var tokens = line.split(/\s/).filter(function(v) { return v !== '' });
+    var tokens = line.split(/\s/).filter(function (v) { return v !== '' });
 
     if (tokens.length == 0) {
         logError('Spooky error!  Empty line passed to rule function.', lineNumber);
@@ -592,11 +591,11 @@ function processRuleString(rule, state, curRules) {
 
     // STEP TWO, READ DIRECTIONS
     /*
-    	STATE
-    	0 - scanning for initial directions
-    	LHS
-    	1 - reading cell contents LHS
-    	2 - reading cell contents RHS
+        STATE
+        0 - scanning for initial directions
+        LHS
+        1 - reading cell contents LHS
+        2 - reading cell contents RHS
     */
     var parsestate = 0;
     var directions = [];
@@ -615,7 +614,7 @@ function processRuleString(rule, state, curRules) {
     var groupNumber = lineNumber;
     var commands = [];
     var randomRule = false;
-	var has_plus = false;
+    var has_plus = false;
 
     if (tokens.length === 1) {
         if (tokens[0] === "startloop") {
@@ -644,16 +643,16 @@ function processRuleString(rule, state, curRules) {
                 {
                     //read initial directions
                     if (token === '+') {
-                        has_plus=true;
+                        has_plus = true;
                         if (groupNumber === lineNumber) {
                             if (curRules.length == 0) {
                                 logError('The "+" symbol, for joining a rule with the group of the previous rule, needs a previous rule to be applied to.', lineNumber);
-                                has_plus=false;
+                                has_plus = false;
                             }
                             if (i !== 0) {
                                 logError('The "+" symbol, for joining a rule with the group of the previous rule, must be the first symbol on the line ', lineNumber);
                             }
-                            if (has_plus){
+                            if (has_plus) {
                                 groupNumber = curRules[curRules.length - 1].groupNumber;
                             }
                         } else {
@@ -662,14 +661,13 @@ function processRuleString(rule, state, curRules) {
                     } else if (token in directionaggregates) {
                         directions = directions.concat(directionaggregates[token]);
                     } else if (token === 'late') {
-                        late = true;                        
+                        late = true;
                     } else if (token === 'rigid') {
                         rigid = true;
                     } else if (token === 'random') {
                         randomRule = true;
-                        if (has_plus)
-                        {
-                            logError(`A rule-group can only be marked random by the opening rule in the group (aka, a '+' and 'random' can't appear as rule modifiers on the same line).  Why? Well, you see "random" isn't a property of individual rules, but of whole rule groups.  It indicates that a single possible application of some rule from the whole group should be applied at random.`, lineNumber) 
+                        if (has_plus) {
+                            logError(`A rule-group can only be marked random by the opening rule in the group (aka, a '+' and 'random' can't appear as rule modifiers on the same line).  Why? Well, you see "random" isn't a property of individual rules, but of whole rule groups.  It indicates that a single possible application of some rule from the whole group should be applied at random.`, lineNumber)
                         }
 
                     } else if (simpleAbsoluteDirections.indexOf(token) >= 0) {
@@ -688,7 +686,7 @@ function processRuleString(rule, state, curRules) {
                     break;
                 }
             case 1:
-                {                                        
+                {
                     if (token == '[') {
                         bracketbalance++;
                         if (bracketbalance > 1) {
@@ -704,7 +702,7 @@ function processRuleString(rule, state, curRules) {
                             logError("Error, an item can only have one direction/action at a time, but you're looking for several at once!", lineNumber);
                         } else if (!incellrow) {
                             logWarning("Invalid syntax. Directions should be placed at the start of a rule.", lineNumber);
-                        } else if (late && token!=='no' && token!=='random' && token!=='randomdir') {
+                        } else if (late && token !== 'no' && token !== 'random' && token !== 'randomdir') {
                             logError("Movements cannot appear in late rules.", lineNumber);
                         } else {
                             curcell.push(token);
@@ -748,11 +746,11 @@ function processRuleString(rule, state, curRules) {
 
                         if (groupNumber !== lineNumber) {
                             var parentrule = curRules[curRules.length - 1];
-                            if (parentrule.late!==late){
+                            if (parentrule.late !== late) {
                                 logWarning('Oh gosh you can mix late and non-late rules in a rule-group if you really want to, but gosh why would you want to do that?  What do you expect to accomplish?', lineNumber);
                             }
                         }
-                        
+
                         if (incellrow) {
                             logWarning('Encountered an unexpected "->" inside square brackets.  It\'s used to separate states, it has no place inside them >:| .', lineNumber);
                         } else if (rhs) {
@@ -780,7 +778,7 @@ function processRuleString(rule, state, curRules) {
                     } else if (commandwords.indexOf(token) >= 0) {
                         if (rhs === false) {
                             logError("Commands should only appear at the end of rules, not in or before the pattern-detection/-replacement sections.", lineNumber);
-                        } else if (incellrow || rightBracketToRightOf(tokens,i)){//only a warning for legacy support reasons.
+                        } else if (incellrow || rightBracketToRightOf(tokens, i)) {//only a warning for legacy support reasons.
                             logWarning("Commands should only appear at the end of rules, not in or before the pattern-detection/-replacement sections.", lineNumber);
                         }
                         if (token === 'message') {
@@ -795,15 +793,15 @@ function processRuleString(rule, state, curRules) {
                         } else {
                             if (commandwords_sfx.indexOf(token) >= 0) {
                                 //check defined
-                                var found=false;
-                                for (var j = 0; j < state.sounds.length;j++){
+                                var found = false;
+                                for (var j = 0; j < state.sounds.length; j++) {
                                     var sound = state.sounds[j];
-                                    if (sound[0][0] === token){
-                                        found=true;
+                                    if (sound[0][0] === token) {
+                                        found = true;
                                     }
                                 }
-                                if (!found){
-                                    logWarning('Sound effect "' + token + '" not defined.', lineNumber);                            
+                                if (!found) {
+                                    logWarning('Sound effect "' + token + '" not defined.', lineNumber);
                                 }
                             }
                             commands.push([token]);
@@ -816,10 +814,10 @@ function processRuleString(rule, state, curRules) {
         }
     }
 
-    if (late && rigid){
+    if (late && rigid) {
         logError("Late rules cannot be marked as rigid (rigid rules are all about dealing with the consequences of unresolvable movements, and late rules can't even have movements).", lineNumber);
     }
-    
+
     if (lhs_cells.length != rhs_cells.length) {
         if (commands.length > 0 && rhs_cells.length == 0) {
             //ok
@@ -830,7 +828,7 @@ function processRuleString(rule, state, curRules) {
         for (var i = 0; i < lhs_cells.length; i++) {
             if (lhs_cells[i].length != rhs_cells[i].length) {
                 logError('In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).', lineNumber);
-                state.invalid=true;
+                state.invalid = true;
             }
             if (lhs_cells[i].length == 0) {
                 logError("You have an totally empty pattern on the left-hand side.  This will match *everything*.  You certainly don't want this.");
@@ -854,7 +852,7 @@ function processRuleString(rule, state, curRules) {
         randomRule: randomRule
     };
 
-    if (directionalRule(rule_line) === false && rule_line.directions.length>1) {
+    if (directionalRule(rule_line) === false && rule_line.directions.length > 1) {
         rule_line.directions.splice(1);
     }
 
@@ -864,7 +862,7 @@ function processRuleString(rule, state, curRules) {
 }
 
 function deepCloneHS(HS) {
-    var cloneHS = HS.map(function(arr) { return arr.map(function(deepArr) { return deepArr.slice(); }); });
+    var cloneHS = HS.map(function (arr) { return arr.map(function (deepArr) { return deepArr.slice(); }); });
     return cloneHS;
 }
 
@@ -890,7 +888,7 @@ function rulesToArray(state) {
     for (var i = 0; i < oldrules.length; i++) {
         var lineNumber = oldrules[i][1];
         var newrule = processRuleString(oldrules[i], state, rules);
-        if (newrule==null){
+        if (newrule == null) {
             continue;//error in processing string.
         }
         if (newrule.bracket !== undefined) {
@@ -935,10 +933,10 @@ function rulesToArray(state) {
         //replace aggregates with what they mean
         atomizeAggregates(state, rule);
 
-        if (state.invalid){
+        if (state.invalid) {
             return;
         }
-        
+
         //replace synonyms with what they mean
         rephraseSynonyms(state, rule);
     }
@@ -957,8 +955,8 @@ function rulesToArray(state) {
 
     }
 
-    for (var i=0;i<rules4.length;i++){
-        makeSpawnedObjectsStationary(state,rules4[i],rule.lineNumber);
+    for (var i = 0; i < rules4.length; i++) {
+        makeSpawnedObjectsStationary(state, rules4[i], rule.lineNumber);
     }
     state.rules = rules4;
 }
@@ -1000,7 +998,7 @@ function getPossibleObjectsFromCell(state, cell) {
     for (var j = 0; j < cell.length; j += 2) {
         var dir = cell[j];
         var name = cell[j + 1];
-        if (name in state.objects){
+        if (name in state.objects) {
             result.push(name);
         }
         else if (name in state.propertiesDict) {
@@ -1008,7 +1006,7 @@ function getPossibleObjectsFromCell(state, cell) {
             for (var k = 0; k < aliases.length; k++) {
                 var alias = aliases[k];
                 result.push(alias);
-            }        
+            }
         }
     }
     return result;
@@ -1243,12 +1241,12 @@ function concretizePropertyRule(state, rule, lineNumber) {
     return result;
 }
 
-function makeSpawnedObjectsStationary(state,rule,lineNumber){
+function makeSpawnedObjectsStationary(state, rule, lineNumber) {
     //movement not getting correctly cleared from tile #492
     //[ > Player | ] -> [ Crate | Player ] if there was a player already in the second cell, it's not replaced with a stationary player.
     //if there are properties remaining by this stage, just ignore them ( c.f. "[ >  Moveable | Moveable ] -> [ > Moveable | > Moveable ]" in block faker, what's left in this form) - this only happens IIRC when the properties span a single layer so it's)
     //if am object without moving-annotations appears on the RHS, and that object is not present on the lhs (either explicitly as an object, or implicitly in a property), add a 'stationary'
-    if (rule.late){
+    if (rule.late) {
         return;
     }
 
@@ -1256,23 +1254,23 @@ function makeSpawnedObjectsStationary(state,rule,lineNumber){
         var row_l = rule.lhs[j];
         var row_r = rule.rhs[j];
         for (var k = 0; k < row_r.length; k++) {
-            var cell=row_r[k];
+            var cell = row_r[k];
 
             //this is super intricate. uff. 
             var objects_l = getPossibleObjectsFromCell(state, row_l[k]);
-            var layers = objects_l.map(n=>state.objects[n].layer);
+            var layers = objects_l.map(n => state.objects[n].layer);
             for (var l = 0; l < cell.length; l += 2) {
                 var dir = cell[l];
-                if (dir!==""){
+                if (dir !== "") {
                     continue;
                 }
                 var name = cell[l + 1];
-                if (name in state.propertiesDict || objects_l.indexOf(name)>=0){
+                if (name in state.propertiesDict || objects_l.indexOf(name) >= 0) {
                     continue;
                 }
                 var r_layer = state.objects[name].layer;
-                if (layers.indexOf(r_layer)===-1){
-                    cell[l]='stationary';
+                if (layers.indexOf(r_layer) === -1) {
+                    cell[l] = 'stationary';
                 }
             }
         }
@@ -1313,7 +1311,7 @@ function concretizeMovingRule(state, rule, lineNumber) {
                             for (var moveTerm in cur_rule.movingReplacement) {
                                 if (cur_rule.movingReplacement.hasOwnProperty(moveTerm)) {
                                     var moveDat = cur_rule.movingReplacement[moveTerm];
-                                    newrule.movingReplacement[moveTerm] = [moveDat[0], moveDat[1], moveDat[2],moveDat[3],moveDat[4],moveDat[5]];
+                                    newrule.movingReplacement[moveTerm] = [moveDat[0], moveDat[1], moveDat[2], moveDat[3], moveDat[4], moveDat[5]];
                                 }
                             }
                             newrule.aggregateDirReplacement = {};
@@ -1321,7 +1319,7 @@ function concretizeMovingRule(state, rule, lineNumber) {
                                 if (cur_rule.aggregateDirReplacement.hasOwnProperty(moveTerm)) {
                                     var moveDat = cur_rule.aggregateDirReplacement[moveTerm];
                                     newrule.aggregateDirReplacement[moveTerm] = [moveDat[0], moveDat[1], moveDat[2]];
-                                }                                
+                                }
                             }
 
                             concretizeMovingInCell(newrule.lhs[j][k], ambiguous_dir, cand_name, concreteDirection);
@@ -1329,11 +1327,11 @@ function concretizeMovingRule(state, rule, lineNumber) {
                                 concretizeMovingInCell(newrule.rhs[j][k], ambiguous_dir, cand_name, concreteDirection); //do for the corresponding rhs cell as well
                             }
 
-                            if (newrule.movingReplacement[cand_name+ambiguous_dir] === undefined) {
-                                newrule.movingReplacement[cand_name+ambiguous_dir] = [concreteDirection, 1, ambiguous_dir,cand_name,j,k];
+                            if (newrule.movingReplacement[cand_name + ambiguous_dir] === undefined) {
+                                newrule.movingReplacement[cand_name + ambiguous_dir] = [concreteDirection, 1, ambiguous_dir, cand_name, j, k];
                             } else {
-                                var mr = newrule.movingReplacement[cand_name+ambiguous_dir];
-                                if (j!==mr[4] || k!==mr[5]){
+                                var mr = newrule.movingReplacement[cand_name + ambiguous_dir];
+                                if (j !== mr[4] || k !== mr[5]) {
                                     mr[1] = mr[1] + 1;
                                 }
                             }
@@ -1402,7 +1400,7 @@ function concretizeMovingRule(state, rule, lineNumber) {
                     ambiguous_movement_names_dict[ambiguousMovement] = concreteMovement
                 }
             }
-        }        
+        }
 
         //for each ambiguous word, if there's a single ambiguous movement specified in the whole lhs, then replace that wholesale
         for (var ambiguousMovement in ambiguous_movement_dict) {
@@ -1421,7 +1419,7 @@ function concretizeMovingRule(state, rule, lineNumber) {
             }
         }
 
-        
+
         //further replacements - if a movement word appears once on the left, can use to disambiguate remaining ones on the right
         for (var ambiguousMovement in ambiguous_movement_names_dict) {
             if (ambiguous_movement_names_dict.hasOwnProperty(ambiguousMovement) && ambiguousMovement !== "INVALID") {
@@ -1460,7 +1458,7 @@ function concretizeMovingRule(state, rule, lineNumber) {
 
     if (rhsAmbiguousMovementsRemain.length > 0) {
         logError('This rule has an ambiguous movement on the right-hand side, \"' + rhsAmbiguousMovementsRemain + "\", that can't be inferred from the left-hand side.  (either for every ambiguous movement associated to an entity on the right there has to be a corresponding one on the left attached to the same entity, OR, if there's a single occurrence of a particular ambiguous movement on the left, all properties of the same movement attached to the same object on the right are assumed to be the same (or something like that)).", lineNumber);
-        state.invalid=true;
+        state.invalid = true;
     }
 
     return result;
@@ -1563,12 +1561,12 @@ function absolutifyRuleCell(forward, cell) {
     }
 }
 /*
-	direction mask
-	UP parseInt('%1', 2);
-	DOWN parseInt('0', 2);
-	LEFT parseInt('0', 2);
-	RIGHT parseInt('0', 2);
-	?  parseInt('', 2);
+    direction mask
+    UP parseInt('%1', 2);
+    DOWN parseInt('0', 2);
+    LEFT parseInt('0', 2);
+    RIGHT parseInt('0', 2);
+    ?  parseInt('', 2);
 
 */
 
@@ -1640,7 +1638,7 @@ function rulesToMask(state) {
                         var layerIndex = state.propertiesSingleLayer[object_name];
                     }
 
-                    if (typeof(layerIndex) === "undefined") {
+                    if (typeof (layerIndex) === "undefined") {
                         logError("Oops!  " + object_name.toUpperCase() + " not assigned to a layer.", rule.lineNumber);
                     }
 
@@ -1649,7 +1647,7 @@ function rulesToMask(state) {
                     } else {
                         var existingname = layersUsed_l[layerIndex];
                         if (existingname !== null) {
-                            rule.discard=[object_name.toUpperCase(), existingname.toUpperCase()];
+                            rule.discard = [object_name.toUpperCase(), existingname.toUpperCase()];
                         }
 
                         layersUsed_l[layerIndex] = object_name;
@@ -1693,19 +1691,19 @@ function rulesToMask(state) {
                 }
 
                 //if X no X, then cancel
-                if (objectsPresent.anyBitsInCommon(objectsMissing)){
+                if (objectsPresent.anyBitsInCommon(objectsMissing)) {
                     //if I'm about the remove the last representative of this line number, throw an error
                     var ln = rule.lineNumber;
-                    if ( (i>0 && state.rules[i-1].lineNumber===ln) || ( (i+1<state.rules.length) && state.rules[i+1].lineNumber===ln)){
+                    if ((i > 0 && state.rules[i - 1].lineNumber === ln) || ((i + 1 < state.rules.length) && state.rules[i + 1].lineNumber === ln)) {
                         //all good
                     } else {
                         logWarning('This rule has some content of the form "X no X" (either directly or maybe indirectly - check closely how the terms are defined if nothing stands out) which can never match and so the rule is getting removed during compilation.', rule.lineNumber);
                     }
-                    state.rules.splice(i,1);
+                    state.rules.splice(i, 1);
                     i--;
                     continue;
                 }
-                
+
                 if (rule.rhs.length === 0) {
                     continue;
                 }
@@ -1806,7 +1804,7 @@ function rulesToMask(state) {
                         //possibility - if object not present on lhs in same position, clear movement
                         if (object_dir === 'stationary') {
                             movementsClear.ishiftor(0x1f, 5 * layerIndex);
-                        }                
+                        }
                         if (object_dir === 'randomdir') {
                             randomDirMask_r.ishiftor(dirMasks[object_dir], 5 * layerIndex);
                         } else {
@@ -1832,7 +1830,7 @@ function rulesToMask(state) {
                     [ > Player | ] -> [ Crate | Player ]
                 (bug #492)
                 */
-               
+
                 for (var l = 0; l < layerCount; l++) {
                     if (layersUsed_l[l] !== null && layersUsed_r[l] === null) {
                         // a layer matched on the lhs, but not on the rhs
@@ -1847,7 +1845,7 @@ function rulesToMask(state) {
                 if (!objectsClear.iszero() || !objectsSet.iszero() || !movementsClear.iszero() || !movementsSet.iszero() || !postMovementsLayerMask_r.iszero() || !randomMask_r.iszero() || !randomDirMask_r.iszero()) {
                     // only set a replacement if something would change
                     cellrow_l[k].replacement = new CellReplacement([objectsClear, objectsSet, movementsClear, movementsSet, postMovementsLayerMask_r, randomMask_r, randomDirMask_r]);
-                } 
+                }
             }
         }
     }
@@ -1869,7 +1867,7 @@ function cellRowMasks(rule) {
     return ruleMasks;
 }
 
-function cellRowMasks_Movements(rule){
+function cellRowMasks_Movements(rule) {
     var ruleMasks_mov = [];
     var lhs = rule[1];
     for (var i = 0; i < lhs.length; i++) {
@@ -1890,7 +1888,7 @@ function collapseRules(groups) {
         var rules = groups[gn];
         for (var i = 0; i < rules.length; i++) {
             var oldrule = rules[i];
-            var newrule = [0, [], oldrule.rhs.length > 0, oldrule.lineNumber /*ellipses,group number,rigid,commands,randomrule,[cellrowmasks]*/ ];
+            var newrule = [0, [], oldrule.rhs.length > 0, oldrule.lineNumber /*ellipses,group number,rigid,commands,randomrule,[cellrowmasks]*/];
             var ellipses = [];
             for (var j = 0; j < oldrule.lhs.length; j++) {
                 ellipses.push(0);
@@ -1901,11 +1899,11 @@ function collapseRules(groups) {
                 var cellrow_l = oldrule.lhs[j];
                 for (var k = 0; k < cellrow_l.length; k++) {
                     if (cellrow_l[k] === ellipsisPattern) {
-                        ellipses[j] ++;
-                        if (ellipses[j]>2) {
+                        ellipses[j]++;
+                        if (ellipses[j] > 2) {
                             logError("You can't use more than two ellipses in a single cell match pattern.", oldrule.lineNumber);
                         } else {
-                            if (k>0 && cellrow_l[k-1]===ellipsisPattern){
+                            if (k > 0 && cellrow_l[k - 1] === ellipsisPattern) {
                                 logWarning("Why would you go and have two ellipses in a row like that? It's exactly the same as just having a single ellipsis, right?", oldrule.lineNumber);
                             }
                         }
@@ -1930,44 +1928,44 @@ function collapseRules(groups) {
 function ruleGroupDiscardOverlappingTest(ruleGroup) {
     if (ruleGroup.length === 0)
         return;
-    
-    var discards=[];
+
+    var discards = [];
 
     for (var i = 0; i < ruleGroup.length; i++) {
         var rule = ruleGroup[i];
         if (rule.hasOwnProperty('discard')) {
-            
-            var beforesame = i===0 ? false : ruleGroup[i-1].lineNumber === rule.lineNumber;
-            var aftersame = i===(ruleGroup.length-1) ? false : ruleGroup[i+1].lineNumber === rule.lineNumber;
+
+            var beforesame = i === 0 ? false : ruleGroup[i - 1].lineNumber === rule.lineNumber;
+            var aftersame = i === (ruleGroup.length - 1) ? false : ruleGroup[i + 1].lineNumber === rule.lineNumber;
 
             ruleGroup.splice(i, 1);
-            
-            var found=false;
-            for(var j=0;j<discards.length;j++){
-                var discard=discards[j];
-                if (discard[0]===rule.discard[0] && discard[1]===rule.discard[1]){
-                    found=true;
+
+            var found = false;
+            for (var j = 0; j < discards.length; j++) {
+                var discard = discards[j];
+                if (discard[0] === rule.discard[0] && discard[1] === rule.discard[1]) {
+                    found = true;
                     break;
                 }
             }
-            if(!found){
+            if (!found) {
                 discards.push(rule.discard)
             }
 
             //if rule before isn't of same linenumber, and rule after isn't of same linenumber, 
             //then a rule has been totally erased and you should throw an error!
-            if ( !(beforesame||aftersame) || ruleGroup.length===0) {
-                
+            if (!(beforesame || aftersame) || ruleGroup.length === 0) {
+
                 const example = discards[0];
-                
+
                 var parenthetical = "";
-                if (discards.length>1){
+                if (discards.length > 1) {
                     parenthetical = " (ditto for ";
-                    for (var j=1;j<discards.length;j++){
-                        if (j>1){
-                            parenthetical+=", "
-                            
-                            if (j===discards.length-1){
+                    for (var j = 1; j < discards.length; j++) {
+                        if (j > 1) {
+                            parenthetical += ", "
+
+                            if (j === discards.length - 1) {
                                 parenthetical += "and ";
                             }
                         }
@@ -1977,8 +1975,8 @@ function ruleGroupDiscardOverlappingTest(ruleGroup) {
                         const p2 = thisdiscard[1];
                         parenthetical += `${p1}/${p2}`;
 
-                        if (j===3 && discards.length>4){
-                            parenthetical+=" etc.";
+                        if (j === 3 && discards.length > 4) {
+                            parenthetical += " etc.";
                             break;
                         }
                     }
@@ -2071,31 +2069,31 @@ function generateRigidGroupList(state) {
 }
 
 function isObjectDefined(state, name) {
-    
-    var result = name in state.objects || 
-    (state.aggregatesDict!==undefined && (name in state.aggregatesDict)) || 
-    (state.propertiesDict!==undefined && (name in state.propertiesDict)) || 
-    (state.synonymsDict!==undefined && (name in state.synonymsDict));
 
-    if (state.legend_aggregates!==undefined){
-        for (var i=0;i<state.legend_aggregates.length;i++){
-            if (state.legend_aggregates[i][0]===name){
+    var result = name in state.objects ||
+        (state.aggregatesDict !== undefined && (name in state.aggregatesDict)) ||
+        (state.propertiesDict !== undefined && (name in state.propertiesDict)) ||
+        (state.synonymsDict !== undefined && (name in state.synonymsDict));
+
+    if (state.legend_aggregates !== undefined) {
+        for (var i = 0; i < state.legend_aggregates.length; i++) {
+            if (state.legend_aggregates[i][0] === name) {
                 result = true;
                 break;
             }
         }
     }
-    if (state.legend_properties!==undefined){
-        for (var i=0;i<state.legend_properties.length;i++){
-            if (state.legend_properties[i][0]===name){
+    if (state.legend_properties !== undefined) {
+        for (var i = 0; i < state.legend_properties.length; i++) {
+            if (state.legend_properties[i][0] === name) {
                 result = true;
                 break;
             }
         }
     }
-    if (state.legend_synonyms!==undefined){
-        for (var i=0;i<state.legend_synonyms.length;i++){
-            if (state.legend_synonyms[i][0]===name){
+    if (state.legend_synonyms !== undefined) {
+        for (var i = 0; i < state.legend_synonyms.length; i++) {
+            if (state.legend_synonyms[i][0] === name) {
                 result = true;
                 break;
             }
@@ -2172,7 +2170,7 @@ function generateMasks(state) {
     // Process them in order by combining & sorting by linenumber.
 
     var synonyms_and_properties = state.legend_synonyms.concat(state.legend_properties);
-    synonyms_and_properties.sort(function(a, b) {
+    synonyms_and_properties.sort(function (a, b) {
         return a.lineNumber - b.lineNumber;
     });
 
@@ -2199,13 +2197,13 @@ function generateMasks(state) {
 
     state.objectMasks = objectMask;
 
-    
+
     state.aggregateMasks = {};
 
     //set aggregate masks similarly
     for (var aggregateName of Object.keys(state.aggregatesDict)) {
         var objectnames = state.aggregatesDict[aggregateName];
-        
+
         var aggregateMask = new BitVec(STRIDE_OBJ);
         for (var i = 0; i < objectnames.length; i++) {
             var n = objectnames[i];
@@ -2241,7 +2239,7 @@ function checkObjectsAreLayered(state) {
 }
 
 function isInt(value) {
-return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
+    return !isNaN(value) && (function (x) { return (x | 0) === x; })(parseFloat(value))
 }
 
 function twiddleMetaData(state) {
@@ -2253,33 +2251,33 @@ function twiddleMetaData(state) {
     }
 
 
-    const getIntCheckedPositive = function(s,lineNumber){
-        if (!isFinite(s) || !isInt(s)){
-            logWarning(`Wasn't able to make sense of "${s}" as a (whole number) dimension.`,lineNumber);
+    const getIntCheckedPositive = function (s, lineNumber) {
+        if (!isFinite(s) || !isInt(s)) {
+            logWarning(`Wasn't able to make sense of "${s}" as a (whole number) dimension.`, lineNumber);
             return NaN;
         }
         var result = parseInt(s);
-        if (isNaN(result)){
-            logWarning(`Wasn't able to make sense of "${s}" as a dimension.`,lineNumber);
+        if (isNaN(result)) {
+            logWarning(`Wasn't able to make sense of "${s}" as a dimension.`, lineNumber);
         }
-        if (result<=0){
-            logWarning(`The dimension given to me (you gave "${s}") is baad - it should be greater than 0.`,lineNumber);
+        if (result <= 0) {
+            logWarning(`The dimension given to me (you gave "${s}") is baad - it should be greater than 0.`, lineNumber);
         }
         return result;
     }
-    const getCoords = function(str,lineNumber){
+    const getCoords = function (str, lineNumber) {
         var coords = val.split('x');
-        if (coords.length!==2){
-            logWarning("Dimensions must be of the form AxB.",lineNumber);
+        if (coords.length !== 2) {
+            logWarning("Dimensions must be of the form AxB.", lineNumber);
             return null;
         } else {
-            var intcoords = [getIntCheckedPositive(coords[0],lineNumber), getIntCheckedPositive(coords[1],lineNumber)];
+            var intcoords = [getIntCheckedPositive(coords[0], lineNumber), getIntCheckedPositive(coords[1], lineNumber)];
             if (!isFinite(coords[0]) || !isFinite(coords[1]) || isNaN(intcoords[0]) || isNaN(intcoords[1])) {
-                logWarning(`Couldn't understand the dimensions given to me (you gave "${val}") - should be of the form AxB.`,lineNumber);
+                logWarning(`Couldn't understand the dimensions given to me (you gave "${val}") - should be of the form AxB.`, lineNumber);
                 return null
             } else {
-                if (intcoords[0]<=0 || intcoords[1]<=0){
-                    logWarning(`The dimensions given to me (you gave "${val}") are baad - they should be > 0.`,lineNumber);
+                if (intcoords[0] <= 0 || intcoords[1] <= 0) {
+                    logWarning(`The dimensions given to me (you gave "${val}") are baad - they should be > 0.`, lineNumber);
                 }
                 return intcoords;
             }
@@ -2287,15 +2285,15 @@ function twiddleMetaData(state) {
     }
     if (newmetadata.flickscreen !== undefined) {
         var val = newmetadata.flickscreen;
-        newmetadata.flickscreen = getCoords(val,state.metadata_lines.flickscreen);
-        if (newmetadata.flickscreen===null){
+        newmetadata.flickscreen = getCoords(val, state.metadata_lines.flickscreen);
+        if (newmetadata.flickscreen === null) {
             delete newmetadata.flickscreen;
         }
     }
     if (newmetadata.zoomscreen !== undefined) {
         var val = newmetadata.zoomscreen;
-        newmetadata.zoomscreen = getCoords(val,state.metadata_lines.zoomscreen);
-        if (newmetadata.zoomscreen===null){
+        newmetadata.zoomscreen = getCoords(val, state.metadata_lines.zoomscreen);
+        if (newmetadata.zoomscreen === null) {
             delete newmetadata.zoomscreen;
         }
     }
@@ -2335,25 +2333,25 @@ function processWinConditions(state) {
         var aggr1 = false;
         var aggr2 = false;
 
-        if (wincondition.length <=2 ){
+        if (wincondition.length <= 2) {
             logError('Win conditions is badly formatted - needs to look something like "No Fruit", "All Target On Crate", "Some Fruit", "Some Gold on Chest", "No Gold on Chest", or the like.', lineNumber);
         }
         else if (n1 in state.objectMasks) {
             aggr1 = false;
             mask1 = state.objectMasks[n1];
-        } else if (n1 in state.aggregateMasks){
+        } else if (n1 in state.aggregateMasks) {
             aggr1 = true;
             mask1 = state.aggregateMasks[n1];
         } else {
             logError('Unwelcome term "' + n1 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
         }
         if (n2 in state.objectMasks) {
-            aggr2=false;
+            aggr2 = false;
             mask2 = state.objectMasks[n2];
-        } else if (n2 in state.aggregateMasks){
+        } else if (n2 in state.aggregateMasks) {
             aggr2 = true;
             mask2 = state.aggregateMasks[n2];
-        } else  {
+        } else {
             logError('Unwelcome term "' + n1 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
         }
         var newcondition = [num, mask1, mask2, lineNumber, aggr1, aggr2];
@@ -2453,12 +2451,12 @@ function printRules(state) {
             if (loopIndex + 1 < state.loops.length) {
                 var nextLoop = state.loops[loopIndex + 1];
                 var loopEnd = state.loops[loopIndex + 2];
-                while ( loopIndex + 1 < state.loops.length && loopEnd[0] < rule.lineNumber) {
-                    loopIndex+=2;
+                while (loopIndex + 1 < state.loops.length && loopEnd[0] < rule.lineNumber) {
+                    loopIndex += 2;
                     nextLoop = state.loops[loopIndex + 1];
                     loopEnd = state.loops[loopIndex + 2];
                 }
-            }            
+            }
 
             //trying to decide if we print STARTLOOP
             if (loopIndex + 1 < state.loops.length) {
@@ -2469,13 +2467,13 @@ function printRules(state) {
                     loopIndex++;
                 }
             }
-        } 
+        }
 
         if (rule.hasOwnProperty('discard')) {
             discardcount++;
         } else {
-            var sameGroupAsPrevious = i>0 && state.rules[i-1].groupNumber === rule.groupNumber;
-            if (sameGroupAsPrevious){
+            var sameGroupAsPrevious = i > 0 && state.rules[i - 1].groupNumber === rule.groupNumber;
+            if (sameGroupAsPrevious) {
                 output += '+ ';
             } else {
                 output += '&nbsp;&nbsp;';
@@ -2512,12 +2510,12 @@ function removeDuplicateRules(state) {
     }
 }
 
-function calculateLoopPoints(state,rulegroup_collection){
+function calculateLoopPoints(state, rulegroup_collection) {
     var loopPoint = {};
-    for (let j = 0; j < state.loops.length; j+=2) {
+    for (let j = 0; j < state.loops.length; j += 2) {
         var loop_start_line = state.loops[j][0]; //for each startloop/endloop
-        var loop_end_line = state.loops[j+1][0];
-        var init_group_index=-1
+        var loop_end_line = state.loops[j + 1][0];
+        var init_group_index = -1
         for (let group_i = 0; group_i < rulegroup_collection.length; group_i++) {
             var ruleGroup = rulegroup_collection[group_i];
 
@@ -2527,12 +2525,10 @@ function calculateLoopPoints(state,rulegroup_collection){
             var firstRuleLine = firstRule.lineNumber;
             var lastRuleLine = lastRule.lineNumber;
 
-            if (firstRuleLine <= loop_start_line&& loop_start_line <= lastRuleLine) 
-            {
-                logError("Found a loop point in the middle of a rule. You probably don't want to do this, right?",loop_start_line)
-            } else if (firstRuleLine <= loop_end_line&& loop_end_line <= lastRuleLine) 
-            {
-                logError("Found a loop point in the middle of a rule. You probably don't want to do this, right?",loop_start_line)
+            if (firstRuleLine <= loop_start_line && loop_start_line <= lastRuleLine) {
+                logError("Found a loop point in the middle of a rule. You probably don't want to do this, right?", loop_start_line)
+            } else if (firstRuleLine <= loop_end_line && loop_end_line <= lastRuleLine) {
+                logError("Found a loop point in the middle of a rule. You probably don't want to do this, right?", loop_start_line)
             }
 
             var rule_before_loop = loop_start_line > firstRuleLine;
@@ -2541,17 +2537,17 @@ function calculateLoopPoints(state,rulegroup_collection){
 
             if (rule_after_loop)
                 break;
-            
 
-            if (rule_in_loop){
-                if (init_group_index===-1){
+
+            if (rule_in_loop) {
+                if (init_group_index === -1) {
                     init_group_index = group_i
                 }
                 // only the last rulegroup in a loop should be the loop point - 
                 // this is a bit lazy, but basically we look back, and if the 
                 // previous rule-group has the same loop point, we remove it.
-                if (group_i>0 && loopPoint[group_i-1] !== undefined && loopPoint[group_i-1] === init_group_index){
-                    loopPoint[group_i-1] = undefined;
+                if (group_i > 0 && loopPoint[group_i - 1] !== undefined && loopPoint[group_i - 1] === init_group_index) {
+                    loopPoint[group_i - 1] = undefined;
                 }
                 loopPoint[group_i] = init_group_index;
             }
@@ -2562,25 +2558,25 @@ function calculateLoopPoints(state,rulegroup_collection){
 
 function generateLoopPoints(state) {
     //run through to check loops aren't nested and are properly closed
-    for (var group_i=0;group_i<state.loops.length;group_i++){
+    for (var group_i = 0; group_i < state.loops.length; group_i++) {
         var loop = state.loops[group_i];
-        if (group_i%2===0){
-            if (loop[1]===-1){         
-                logError("Found an ENDLOOP, but I'm not in a loop?",loop[0]);
+        if (group_i % 2 === 0) {
+            if (loop[1] === -1) {
+                logError("Found an ENDLOOP, but I'm not in a loop?", loop[0]);
             }
         } else {
-            if (loop[1]===1){         
-                logError("Found a STARTLOOP, but I'm already inside a loop? (Puzzlescript can't nest loops, FWIW).",loop[0]);
+            if (loop[1] === 1) {
+                logError("Found a STARTLOOP, but I'm already inside a loop? (Puzzlescript can't nest loops, FWIW).", loop[0]);
             }
         }
     }
-    if ((state.loops.length%2)!==0){
-        logError("Yo I found a STARTLOOP without a corresponding ENDLOOP.",state.loops[state.loops.length-1][0]);
+    if ((state.loops.length % 2) !== 0) {
+        logError("Yo I found a STARTLOOP without a corresponding ENDLOOP.", state.loops[state.loops.length - 1][0]);
     }
 
-    
-    state.loopPoint = calculateLoopPoints(state,state.rules);
-    state.lateLoopPoint = calculateLoopPoints(state,state.lateRules);
+
+    state.loopPoint = calculateLoopPoints(state, state.rules);
+    state.lateLoopPoint = calculateLoopPoints(state, state.lateRules);
 
 }
 
@@ -2618,11 +2614,11 @@ function generateSoundData(state) {
             continue;
         }
 
-        const v0=sound[0][0].trim();
-        const t0=sound[0][1].trim();
-        const v1=sound[1][0].trim();
-        const t1=sound[1][1].trim();
-        
+        const v0 = sound[0][0].trim();
+        const t0 = sound[0][1].trim();
+        const v1 = sound[1][0].trim();
+        const t1 = sound[1][1].trim();
+
         var seed = sound[sound.length - 2][0];
         var seed_t = sound[sound.length - 2][1];
         if (seed_t !== 'SOUND') {
@@ -2653,9 +2649,9 @@ function generateSoundData(state) {
             var target = v0;
             var verb = v1;
             var directions = [];
-            for (var j=2;j<sound.length-2;j++){//avoid last sound declaration as well as the linenumber element at the end
+            for (var j = 2; j < sound.length - 2; j++) {//avoid last sound declaration as well as the linenumber element at the end
                 if (sound[j][1] === 'DIRECTION') {
-                    directions.push(sound[j][0]);      
+                    directions.push(sound[j][0]);
                 } else {
                     //Don't think I can get here, but just in case
                     logError(`Expected a direction here, but found instead "$(sound[j][0])".`, lineNumber);
@@ -2674,7 +2670,7 @@ function generateSoundData(state) {
             if (directions.length == 0) {
                 directions = ["orthogonal"];
             }
-            
+
 
             if (target in state.aggregatesDict) {
                 logError('cannot assign sound events to aggregate objects (declared with "and"), only to regular objects, or properties, things defined in terms of "or" ("' + target + '").', lineNumber);
@@ -2721,7 +2717,7 @@ function generateSoundData(state) {
                     }
                 }
             }
-            
+
             //if verb in soundverbs_directional
             if (verb === 'move' || verb === 'cantmove') {
                 for (var j = 0; j < targets.length; j++) {
@@ -2738,7 +2734,7 @@ function generateSoundData(state) {
                     var o = {
                         objectMask: objectMask,
                         directionMask: shiftedDirectionMask,
-                        layer:targetLayer,
+                        layer: targetLayer,
                         seed: seed
                     };
 
@@ -2797,11 +2793,11 @@ function formatHomePage(state) {
     }
 
     if (isColor(state.fgcolor) === false) {
-        logError("text_color in incorrect format - found " + state.fgcolor + ", but I expect a color name (like 'pink') or hex-formatted color (like '#1412FA').  Defaulting to white.",state.metadata_lines.text_color)
+        logError("text_color in incorrect format - found " + state.fgcolor + ", but I expect a color name (like 'pink') or hex-formatted color (like '#1412FA').  Defaulting to white.", state.metadata_lines.text_color)
         state.fgcolor = "#FFFFFF";
     }
     if (isColor(state.bgcolor) === false) {
-        logError("background_color in incorrect format - found " + state.bgcolor + ", but I expect a color name (like 'pink') or hex-formatted color (like '#1412FA').  Defaulting to black.",state.metadata_lines.background_color)
+        logError("background_color in incorrect format - found " + state.bgcolor + ", but I expect a color name (like 'pink') or hex-formatted color (like '#1412FA').  Defaulting to black.", state.metadata_lines.background_color)
         state.bgcolor = "#000000";
     }
 
@@ -2860,11 +2856,11 @@ function loadFile(str) {
     }
 
     //check if player defined
-    if (!isObjectDefined(state,"player")){            
+    if (!isObjectDefined(state, "player")) {
         logErrorNoLine("Error, didn't find any object called player, either in the objects section, or the legends section. There must be a player!");
     }
     //check if background
-    if (!isObjectDefined(state,"background")){
+    if (!isObjectDefined(state, "background")) {
         logErrorNoLine("Error, didn't find any object called background, either in the objects section, or the legends section. There must be a background!");
     }
 
@@ -2877,7 +2873,7 @@ function loadFile(str) {
     generateMasks(state);
     levelsToArray(state);
     rulesToArray(state);
-    if (state.invalid>0){
+    if (state.invalid > 0) {
         return null;
     }
 
@@ -2940,11 +2936,11 @@ function loadFile(str) {
 function addSpecializedFunctions(state) {
     const OBJECT_SIZE = Math.ceil(state.objectCount / 32);
     const MOVEMENT_SIZE = Math.ceil(state.collisionLayers.length / 5);
-    state.moveEntitiesAtIndex = generate_moveEntitiesAtIndex(OBJECT_SIZE,MOVEMENT_SIZE);
-    state.calculateRowColMasks = generate_calculateRowColMasks(OBJECT_SIZE,MOVEMENT_SIZE);
-    state.resolveMovements = generate_resolveMovements(OBJECT_SIZE,MOVEMENT_SIZE);
-    state.matchCellRow = generateMatchCellRow(OBJECT_SIZE,MOVEMENT_SIZE);
-    state.matchCellRowWildCard = generateMatchCellRowWildCard(OBJECT_SIZE,MOVEMENT_SIZE);
+    state.moveEntitiesAtIndex = generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE);
+    state.calculateRowColMasks = generate_calculateRowColMasks(OBJECT_SIZE, MOVEMENT_SIZE);
+    state.resolveMovements = generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE);
+    state.matchCellRow = generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE);
+    state.matchCellRowWildCard = generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE);
 }
 
 var ifrm;
@@ -2976,7 +2972,7 @@ function compile(command, text, randomseed) {
     consolePrint('=================================');
     try {
         var state = loadFile(text);
-    } catch(error){
+    } catch (error) {
         consolePrint(error);
         console.log(error);
     } finally {
@@ -2987,17 +2983,17 @@ function compile(command, text, randomseed) {
         logError('No levels found.  Add some levels!', undefined, true);
     }
 
-    
+
 
     if (errorCount > 0) {
-        if (IDE===false){            
-            if (state==null){
+        if (IDE === false) {
+            if (state == null) {
                 consoleError('<span class="systemMessage">Errors detected during compilation; I can\'t salvage anything playable from it.  If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.</span>');
             } else {
                 consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly. If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.</span>');
             }
         } else {
-            if (state==null){
+            if (state == null) {
                 consoleError('<span class="systemMessage">Errors detected during compilation; I can\'t salvage anything playable from it.</span>');
             } else {
                 consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.</span>');
@@ -3022,15 +3018,15 @@ function compile(command, text, randomseed) {
         }
 
 
-        
-        if (IDE){
-            if (state.metadata.title!==undefined) {
-                document.title="PuzzleScript - " + state.metadata.title;
+
+        if (IDE) {
+            if (state.metadata.title !== undefined) {
+                document.title = "PuzzleScript - " + state.metadata.title;
             }
         }
     }
 
-    if (state!==null){//otherwise error
+    if (state !== null) {//otherwise error
         setGameState(state, command, randomseed);
     }
 
@@ -3072,7 +3068,7 @@ function manage_compilation_caches() {
     }
     if (Object.keys(CACHE_MATCHCELLROW).length > 200) {
         CACHE_MATCHCELLROW = {};
-    }   
+    }
     if (Object.keys(CACHE_MATCHCELLROWWILDCARD).length > 200) {
         CACHE_MATCHCELLROWWILDCARD = {};
     }
@@ -3084,7 +3080,7 @@ function manage_compilation_caches() {
     }
     if (Object.keys(CACHE_RULE_FINDMATCHES).length > 200) {
         CACHE_RULE_FINDMATCHES = {};
-    }        
+    }
 }
 
 
