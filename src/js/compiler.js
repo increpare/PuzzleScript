@@ -2943,8 +2943,6 @@ function addSpecializedFunctions(state) {
     state.matchCellRowWildCard = generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE);
 }
 
-var ifrm;
-
 function compile(command, text, randomseed) {
     forceRegenImages = true;
     if (command === undefined) {
