@@ -907,10 +907,10 @@ function restoreLevel(lev) {
 	level.commandQueueSourceRules = [];
 }
 
-var zoomscreen = false;
-var flickscreen = false;
-var screenwidth = 0;
-var screenheight = 0;
+let zoomscreen = false;
+let flickscreen = false;
+let screenwidth = 0;
+let screenheight = 0;
 
 //compresses 'before' into diff
 function consolidateDiff(before, after) {
@@ -1083,8 +1083,8 @@ function getLayersOfMask(cellMask) {
 // this function is used to unroll loops in parallel from bitvec - it returns a string
 // representation of the javascript unrolled code
 function UNROLL(command, array_size) {
-	var toks = command.split(" ");
-	var result = "";
+	const toks = command.split(" ");
+	let result = "";
 	for (let i = 0; i < array_size; i++) {
 		result += `${toks[0]}.data[${i}] ${toks[1]} ${toks[2]}.data[${i}];\n`;
 	}
@@ -1092,7 +1092,7 @@ function UNROLL(command, array_size) {
 }
 
 function IS_ZERO(tok, array_size) {
-	var result = "(true";
+	let result = "(true";
 	for (let i = 0; i < array_size; i++) {
 		result += `&&(${tok}.data[${i}]===0)`;
 	}
@@ -1218,14 +1218,6 @@ function LEVEL_SET_MOVEMENTS(level, index, vec, array_size) {
 	return result;
 }
 
-/*
-Level.prototype.setCell = function(index, vec) {
-	for (var i = 0; i < vec.data.length; ++i) {
-		this.objects[index * STRIDE_OBJ + i] = vec.data[i];
-	}
-}
-	*/
-
 function LEVEL_SET_CELL(level, index, vec, array_size) {
 	var result = "";
 	for (let i = 0; i < array_size; i++) {
@@ -1237,7 +1229,7 @@ function LEVEL_SET_CELL(level, index, vec, array_size) {
 let CACHE_MOVEENTITIESATINDEX = {}
 function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 	
-	var fn = `
+	const fn = `
     let cellMask = level.getCell(positionIndex);
 	${UNROLL("cellMask &= entityMask", OBJECT_SIZE)}
     let layers = getLayersOfMask(cellMask);
@@ -1267,7 +1259,7 @@ function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 
 let CACHE_CALCULATEROWCOLMASKS = {}
 function generate_calculateRowColMasks(OBJECT_SIZE, MOVEMENT_SIZE) {
-	var fn = `
+	const fn = `
 		for(let i=0;i<level.mapCellContents.data.length;i++) {
 			level.mapCellContents.data[i]=0;
 			level.mapCellContents_Movements.data[i]=0;	
@@ -1572,6 +1564,7 @@ return result;`;
 let STRIDE_OBJ = 1;
 let STRIDE_MOV = 1;
 let LAYER_COUNT = 1;
+const FALSE_FUNCTION = new Function("return false;");
 
 function CellPattern(row) {
 	this.objectsPresent = row[0];
@@ -1582,7 +1575,7 @@ function CellPattern(row) {
 	this.matches = this.generateMatchFunction();
 	this.replacement = row[5];
 
-	this.replace = this.generateReplaceFunction(STRIDE_OBJ, STRIDE_MOV);
+	this.replace = FALSE_FUNCTION;
 };
 
 function CellReplacement(row) {
@@ -1698,31 +1691,30 @@ let CACHE_CHECK_COUNT=0;
 let CACHE_HIT_COUNT=0;
 let _replace_function_key_array = new Uint32Array(0);
 CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_SIZE) {
-	let hash;
-	if (this.replacement!==null) {
-		const array_len = 3*OBJECT_SIZE + 4*MOVEMENT_SIZE + 2;
-		if (array_len!==_replace_function_key_array.length) {
-			_replace_function_key_array = new Uint32Array(array_len);
-		}
-
-		const key_array = _replace_function_key_array;
-		for (let i = 0; i < OBJECT_SIZE; i++) {
-			key_array[i] = this.replacement.objectsSet.data[i] || 0;
-			key_array[i+OBJECT_SIZE] = this.replacement.objectsClear.data[i] || 0;
-			key_array[i+2*OBJECT_SIZE+3*MOVEMENT_SIZE] = this.replacement.randomEntityMask.data[i] || 0;
-		}
-		for (let i = 0; i < MOVEMENT_SIZE; i++) {
-			key_array[i+2*OBJECT_SIZE] = this.replacement.movementsSet.data[i] || 0;
-			key_array[i+2*OBJECT_SIZE+MOVEMENT_SIZE] = this.replacement.movementsClear.data[i] || 0;
-			key_array[i+2*OBJECT_SIZE+2*MOVEMENT_SIZE] = this.replacement.movementsLayerMask.data[i] || 0;
-			key_array[i+3*OBJECT_SIZE+3*MOVEMENT_SIZE] = this.replacement.randomDirMask.data[i] || 0;
-		}
-		key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE] = OBJECT_SIZE;
-		key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE+1] = MOVEMENT_SIZE;
-		hash = key_array.toString();
-	} else {
-		hash = OBJECT_SIZE + '|' + MOVEMENT_SIZE;
+	if (this.replacement===null){
+		return FALSE_FUNCTION;
 	}
+
+	const array_len = 3*OBJECT_SIZE + 4*MOVEMENT_SIZE + 2;
+	if (array_len!==_replace_function_key_array.length) {
+		_replace_function_key_array = new Uint32Array(array_len);
+	}
+
+	const key_array = _replace_function_key_array;
+	for (let i = 0; i < OBJECT_SIZE; i++) {
+		key_array[i] = this.replacement.objectsSet.data[i] || 0;
+		key_array[i+OBJECT_SIZE] = this.replacement.objectsClear.data[i] || 0;
+		key_array[i+2*OBJECT_SIZE+3*MOVEMENT_SIZE] = this.replacement.randomEntityMask.data[i] || 0;
+	}
+	for (let i = 0; i < MOVEMENT_SIZE; i++) {
+		key_array[i+2*OBJECT_SIZE] = this.replacement.movementsSet.data[i] || 0;
+		key_array[i+2*OBJECT_SIZE+MOVEMENT_SIZE] = this.replacement.movementsClear.data[i] || 0;
+		key_array[i+2*OBJECT_SIZE+2*MOVEMENT_SIZE] = this.replacement.movementsLayerMask.data[i] || 0;
+		key_array[i+3*OBJECT_SIZE+3*MOVEMENT_SIZE] = this.replacement.randomDirMask.data[i] || 0;
+	}
+	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE] = OBJECT_SIZE;
+	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE+1] = MOVEMENT_SIZE;
+	hash = key_array.toString();
 
 	if (hash in CACHE_CELLPATTERN_REPLACEFUNCTION) {
 		return CACHE_CELLPATTERN_REPLACEFUNCTION[hash];
@@ -1858,7 +1850,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 
 let CACHE_MATCHCELLROW = {}
 function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
-	var fn = `
+	const fn = `
 	let result=[];
 	
 	if ((!${BITS_SET_IN_ARRAY("cellRowMask", "level.mapCellContents.data", OBJECT_SIZE)})||
@@ -1942,7 +1934,7 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 
 let CACHE_MATCHCELLROWWILDCARD = {}
 function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
-	var fn = `
+	const fn = `
 	let result=[];
 	if ((!${BITS_SET_IN_ARRAY("cellRowMask", "level.mapCellContents.data", OBJECT_SIZE)})||
 	(!${BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.mapCellContents_Movements.data", MOVEMENT_SIZE)})) {
@@ -2177,7 +2169,7 @@ function IMPORT_COMPILE_TIME_ARRAY(compiletime,runtime,array_size){
 
 let CACHE_RULE_APPLYAT = {}
 Rule.prototype.generateApplyAt = function (patterns, ellipsisCount, OBJECT_SIZE, MOVEMENT_SIZE) {
-	var fn = `
+	const fn = `
 	//have to double check they apply 
 	//(cf test ellipsis bug: rule matches two candidates, first replacement invalidates second)
 	if (check)
@@ -2224,7 +2216,7 @@ Rule.prototype.generateApplyAt = function (patterns, ellipsisCount, OBJECT_SIZE,
 
     //APPLY THE RULE
 	${FOR(0, patterns.length, cellRowIndex => {
-		var preRow = patterns[cellRowIndex];
+		const preRow = patterns[cellRowIndex];
 		return `
 			{
 				let ellipse_index=0;
@@ -2570,7 +2562,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup) {
 
 let CACHE_RESOLVEMOVEMENTS = {}
 function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE) {
-	var fn = `
+	const fn = `
 		let moved=true;
 		while(moved){
 			moved=false;
@@ -2620,7 +2612,7 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE) {
 				}
 			}
 
-			for (var j=0;j<STRIDE_MOV;j++) {
+			for (let j=0;j<STRIDE_MOV;j++) {
 				level.movements[j+i*STRIDE_MOV]=0;
 			}
 			${SET_ZERO("level.rigidGroupIndexMask[i]", MOVEMENT_SIZE)}
