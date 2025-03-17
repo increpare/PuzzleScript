@@ -1086,9 +1086,161 @@ function getLayersOfMask(cellMask) {
 // representation of the javascript unrolled code
 function UNROLL(command, array_size){
 	var toks = command.split(" ");
-	var result=""
+	var result = "";
 	for (let i=0;i<array_size;i++) {
 		result+=`${toks[0]}.data[${i}] ${toks[1]} ${toks[2]}.data[${i}];\n`;
+	}
+	return result;
+}
+
+function IS_ZERO(tok, array_size){
+	var result= "(";
+	for (let i=0;i<array_size;i++) {
+		result+=`${tok}.data[${i}]===0`;
+		if (i<array_size-1) {
+			result+="&&";
+		}
+	}
+	return result+")";
+}
+
+function GET(tok, index){
+	return `((${tok}.data[${index}>>5] & 1 << (${index} & 31)) !== 0)`;
+}
+
+
+function IBITSET(tok, index){
+	return `${tok}.data[${index}>>5] |= 1 << (${index} & 31);`;
+}
+
+function ISHIFTOR(tok, mask, shift){
+	return `{
+		let toshift = ${shift}&31;
+		let low = ${mask} << toshift;
+		${tok}.data[${shift}>>5] |= low;
+		if (toshift) {
+			var high = ${mask} >> (32 - toshift);
+			${tok}.data[(${shift}>>5)+1] |= high;
+		}
+	}`;
+}
+
+function GETSHIFTOR(tok, mask, shift){
+	//this returns a value, so can't have loops or wahtever
+	var toshift = `(${shift}&31)`;
+	return `(${toshift}
+		?( 
+			( ${tok}.data[${shift}>>5] >>> ${toshift} ) 
+			| ( ${tok}.data[(${shift}>>5)+1] << (32 - ${toshift}) ) 
+		) : 
+		( 
+			${tok}.data[${shift}>>5] >>> ${toshift} 
+		)
+	) & ${mask}`
+}
+
+function EQUALS(tok, other, array_size){
+	var result = "(";
+	for (let i=0;i<array_size;i++) {
+		result += `(${tok}.data[${i}] === ${other}.data[${i}])`;
+		if (i<array_size-1) {
+			result+="&&";
+		}
+	}
+	return result+")";
+}
+
+function BITS_SET_IN_ARRAY(tok, arr, array_size){
+	
+	var result = "(";
+	for (let i=0;i<array_size;i++) {
+		result += `((${tok}.data[${i}] & ${arr}[${i}]) === ${tok}.data[${i}])`;
+		if (i<array_size-1) {
+			result+="&&";
+		}
+	}
+	return result+")";
+}
+
+
+function BITS_CLEAR_IN_ARRAY(tok, arr, array_size){
+	if (array_size===0)
+		return "true";
+	var result = "(true";
+	for (let i=0;i<array_size;i++) {
+		result += `&&((${tok}.data[${i}] & ${arr}.data[${i}]) === 0)`;
+	}
+	return result+")";
+}
+
+function ANY_BITS_IN_COMMON(tok, arr, array_size){
+	return "(!"+BITS_CLEAR_IN_ARRAY(tok, arr, array_size)+")";
+}
+
+function ARRAY_SET_ZERO(tok, array_size){
+	var result = "";
+	for (let i=0;i<array_size;i++) {
+		result += `${tok}[${i}]=0;\n`;
+	}
+	return result;
+}
+
+function SET_ZERO(tok, array_size){
+	var result = "";
+	for (let i=0;i<array_size;i++) {
+		result += `${tok}.data[${i}]=0;\n`;
+	}
+	return result;
+}
+
+function LEVEL_GET_CELL_INTO(level,index,targetarray,OBJECT_SIZE){
+	var result = "";
+	for (let i=0;i<OBJECT_SIZE;i++) {
+		result += `${targetarray}.data[${i}]=level.objects[${index}*${OBJECT_SIZE}+${i}];\n`;
+	}
+	return result;
+}
+
+
+function LEVEL_GET_MOVEMENTS_INTO(level,index,targetarray,MOVEMENT_SIZE){
+	var result = "";
+	for (let i=0;i<MOVEMENT_SIZE;i++) {
+		result += `${targetarray}.data[${i}]=level.movements[${index}*${MOVEMENT_SIZE}+${i}];\n`;
+	}
+	return result;
+}
+
+function LEVEL_SET_MOVEMENTS(level,index,vec,array_size){
+	var result = "{";
+	for (let i=0;i<array_size;i++) {
+		result += `\t${level}.movements[${index}*${array_size}+${i}]=${vec}.data[${i}];\n`;
+	}
+	result += `\tconst targetIndex = ${index}*${array_size}+${i};
+
+	const colIndex=(${index}/${level}.height)|0;
+	const rowIndex=(${index}%${level}.height);
+
+	${level}.colCellContents_Movements[colIndex].ior(${vec});
+	${level}.rowCellContents_Movements[rowIndex].ior(${vec});
+	${level}.mapCellContents_Movements.ior(${vec});
+
+}`
+
+	return result;
+}
+
+/*
+Level.prototype.setCell = function(index, vec) {
+	for (var i = 0; i < vec.data.length; ++i) {
+		this.objects[index * STRIDE_OBJ + i] = vec.data[i];
+	}
+}
+	*/
+	
+function LEVEL_SET_CELL(level,index,vec,array_size){
+	var result = "";
+	for (let i=0;i<array_size;i++) {
+		result += `\t${level}.objects[${index}*${array_size}+${i}]=${vec}.data[${i}];\n`;
 	}
 	return result;
 }
@@ -1099,11 +1251,15 @@ function generate_moveEntitiesAtIndex(OBJECT_SIZE,MOVEMENT_SIZE){
 	${UNROLL("cellMask &= entityMask",OBJECT_SIZE)}
     let layers = getLayersOfMask(cellMask);
 
-    let movementMask = level.getMovements(positionIndex);
+	var movementMask=_movementVecs[_movementVecIndex];
+	_movementVecIndex=(_movementVecIndex+1)%_movementVecs.length;
+	${LEVEL_GET_MOVEMENTS_INTO("level","positionIndex","movementMask",MOVEMENT_SIZE)}
+
     for (let i=0;i<layers.length;i++) {
-    	movementMask.ishiftor(dirMask, 5 * layers[i]);
+    	${ISHIFTOR("movementMask","dirMask","(5 * layers[i])")}
     }
-    level.setMovements(positionIndex, movementMask);
+		
+    ${LEVEL_SET_MOVEMENTS("level","positionIndex", "movementMask",MOVEMENT_SIZE)}
 
 	const colIndex=(positionIndex/level.height)|0;
 	const rowIndex=(positionIndex%level.height);
@@ -1115,6 +1271,46 @@ function generate_moveEntitiesAtIndex(OBJECT_SIZE,MOVEMENT_SIZE){
 	return func;
 }
 
+
+function generate_calculateRowColMasks(OBJECT_SIZE,MOVEMENT_SIZE) {
+	var fn =`
+		for(let i=0;i<level.mapCellContents.data.length;i++) {
+			level.mapCellContents.data[i]=0;
+			level.mapCellContents_Movements.data[i]=0;	
+		}
+
+		for (let i=0;i<level.width;i++) {
+			let ccc = level.colCellContents[i];
+			${SET_ZERO("ccc",OBJECT_SIZE)}
+			let ccc_Movements = level.colCellContents_Movements[i];
+			${SET_ZERO("ccc_Movements",MOVEMENT_SIZE)}
+		}
+
+		for (let i=0;i<level.height;i++) {
+			let rcc = level.rowCellContents[i];
+			${SET_ZERO("rcc",OBJECT_SIZE)}
+			let rcc_Movements = level.rowCellContents_Movements[i];
+			${SET_ZERO("rcc_Movements",MOVEMENT_SIZE)}
+		}
+
+		for (let i=0;i<level.width;i++) {
+			for (let j=0;j<level.height;j++) {
+				let index = j+i*level.height;
+				let cellContents=_o9;
+				${LEVEL_GET_CELL_INTO("level","index","cellContents",OBJECT_SIZE)}
+				${UNROLL("level.mapCellContents |= cellContents",OBJECT_SIZE)}
+				${UNROLL("level.rowCellContents[j] |= cellContents",OBJECT_SIZE)}
+				${UNROLL("level.colCellContents[i] |= cellContents",OBJECT_SIZE)}
+				
+				let mapCellContents_Movements=level.getMovementsInto(index,_m1);
+				${UNROLL("level.mapCellContents_Movements |= mapCellContents_Movements",MOVEMENT_SIZE)}
+				${UNROLL("level.rowCellContents_Movements[j] |= mapCellContents_Movements",MOVEMENT_SIZE)}
+				${UNROLL("level.colCellContents_Movements[i] |= mapCellContents_Movements",MOVEMENT_SIZE)}
+			}
+		}`
+	var func = new Function("level", fn);
+	return func;
+}
 
 function startMovement(dir) {
 	let movedany=false;
@@ -1391,6 +1587,8 @@ function CellPattern(row) {
 	this.movementsMissing = row[4];
 	this.matches = this.generateMatchFunction();
 	this.replacement = row[5];
+
+	this.replace = this.generateReplaceFunction(STRIDE_OBJ,STRIDE_MOV);
 };
 
 function CellReplacement(row) {
@@ -1468,137 +1666,128 @@ CellPattern.prototype.generateMatchFunction = function() {
 let _o1,_o2,_o2_5,_o3,_o4,_o5,_o6,_o7,_o8,_o9,_o10,_o11,_o12;
 let _m1,_m2,_m3;
 
-CellPattern.prototype.replace = function(rule, currentIndex) {
-    let replace = this.replacement;
-    if (replace === null) {
-        return false;
-    }
+CellPattern.prototype.generateReplaceFunction = function(OBJECT_SIZE,MOVEMENT_SIZE) {
+	let fn = `	
+		var replace = this.replacement;
 
-    let replace_RandomEntityMask = replace.randomEntityMask;
-    let replace_RandomDirMask = replace.randomDirMask;
+		if (replace === null) {
+			return false;
+		}
 
-	const OBJECT_SIZE = replace.objectsSet.data.length;
-	const MOVEMENT_SIZE = replace.movementsSet.data.length;
+		var replace_RandomEntityMask = replace.randomEntityMask;
+		var replace_RandomDirMask = replace.randomDirMask;
 
+		var objectsSet = _o1;	
+		${UNROLL("objectsSet = replace.objectsSet",OBJECT_SIZE)}
+	
+		var objectsClear = _o2;
+		${UNROLL("objectsClear = replace.objectsClear",OBJECT_SIZE)}
 
-    // Inline the BitVec cloning operations directly on the Int32Arrays
-    for (let i = 0; i < OBJECT_SIZE; i++) {
-        _o1.data[i] = replace.objectsSet.data[i];
-        _o2.data[i] = replace.objectsClear.data[i];
-	}
-	for (let i = 0; i < MOVEMENT_SIZE; i++) {
-        _m1.data[i] = replace.movementsSet.data[i];
-        _m2.data[i] = replace.movementsClear.data[i] | replace.movementsLayerMask.data[i];
-    }
+		var movementsSet = _m1;
+		${UNROLL("movementsSet = replace.movementsSet",MOVEMENT_SIZE)}
+		
+		var movementsClear = _m2;
+		${UNROLL("movementsClear = replace.movementsClear",MOVEMENT_SIZE)}
 
-    if (!replace_RandomEntityMask.iszero()) {
-        let choices = [];
-        for (let i = 0; i < 32 * STRIDE_OBJ; i++) {
-            if (replace_RandomEntityMask.get(i)) {
-                choices.push(i);
-            }
-        }
-        let rand = choices[Math.floor(RandomGen.uniform() * choices.length)];
-        let n = state.idDict[rand];
-        let o = state.objects[n];
-        
-        // Inline ibitset(rand)
-        _o1.data[rand >>> 5] |= 1 << (rand & 31);
-        
-        // Inline ior(state.layerMasks[o.layer])
-        const layerMask = state.layerMasks[o.layer].data;
-        for (let i = 0; i < OBJECT_SIZE; i++) {
-            _o2.data[i] |= layerMask[i];
-        }
-        
-        // Inline ishiftor(0x1f, 5 * o.layer)
-        const shift = 5 * o.layer;
-        const wordIndex = shift >>> 5;
-        const bitOffset = shift & 31;
-        if (bitOffset === 0) {
-            _m2.data[wordIndex] |= 0x1f;
-        } else {
-            _m2.data[wordIndex] |= (0x1f << bitOffset);
-        }
-    }
-    if (!replace_RandomDirMask.iszero()) {
-        for (let layerIndex = 0; layerIndex < level.layerCount; layerIndex++) {
-            if (replace_RandomDirMask.get(5 * layerIndex)) {
-                let randomDir = Math.floor(RandomGen.uniform() * 4);
-                _m1.ibitset(randomDir + 5 * layerIndex);
-            }
-        }
-    }
+		${UNROLL("movementsClear |= replace.movementsLayerMask",MOVEMENT_SIZE)}
 
-    let curCellMask = level.getCellInto(currentIndex, _o2_5);
-    let curMovementMask = level.getMovements(currentIndex);
+		if (!${IS_ZERO("replace_RandomEntityMask",OBJECT_SIZE)}) {
+			var choices=[];
+			for (var i=0;i<32*STRIDE_OBJ;i++) {
+				if (${GET("replace_RandomEntityMask","i")}) {
+					choices.push(i);
+				}
+			}
+			var rand = choices[Math.floor(RandomGen.uniform() * choices.length)];
+			var n = state.idDict[rand];
+			var o = state.objects[n];
+			${IBITSET("objectsSet","rand")}
+			${UNROLL("objectsClear |= state.layerMasks[o.layer]",OBJECT_SIZE)}
+			${ISHIFTOR("movementsClear","0x1f","(5 * o.layer)")}
+		}
+		if (!${IS_ZERO("replace_RandomDirMask",OBJECT_SIZE)}) {
+			for (var layerIndex=0;layerIndex<level.layerCount;layerIndex++){
+				if (${GET("replace_RandomDirMask","(5*layerIndex)")}) {
+					var randomDir = Math.floor(RandomGen.uniform()*4);
+					${IBITSET("movementsSet","(randomDir + 5 * layerIndex)")}
+				}
+			}
+		}
+		
+		var curCellMask = _o2_5
+		${LEVEL_GET_CELL_INTO("level","currentIndex","curCellMask",OBJECT_SIZE)}
+		var curMovementMask = level.getMovements(currentIndex);
 
-    // Inline cloning for oldCellMask and oldMovementMask
-    for (let i = 0; i < OBJECT_SIZE; i++) {
-        _o3.data[i] = curCellMask.data[i];
-	}
-	for (let i = 0; i < MOVEMENT_SIZE; i++) {
-        _m3.data[i] = curMovementMask.data[i];
-    }
+		var oldCellMask = _o3
+		${UNROLL("oldCellMask = curCellMask",OBJECT_SIZE)}
+		var oldMovementMask = _m3;
+		${UNROLL("oldMovementMask = curMovementMask",MOVEMENT_SIZE)}
 
-    curCellMask.iclear(_o2);
-    curCellMask.ior(_o1);
+		${UNROLL("curCellMask &= ~objectsClear",OBJECT_SIZE)}
+		${UNROLL("curCellMask |= objectsSet",OBJECT_SIZE)}
+		
+		${UNROLL("curMovementMask &= ~movementsClear",MOVEMENT_SIZE)}
+		${UNROLL("curMovementMask |= movementsSet",MOVEMENT_SIZE)}
 
-    curMovementMask.iclear(_m2);
-    curMovementMask.ior(_m1);
+		var rigidchange=false;
+		var curRigidGroupIndexMask =0;
+		var curRigidMovementAppliedMask =0;
+		if (rule.isRigid) {
+			var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];
+			rigidGroupIndex++;//don't forget to -- it when decoding :O
+			var rigidMask = new BitVec(STRIDE_MOV);
+			for (var layer = 0; layer < level.layerCount; layer++) {
+				${ISHIFTOR("rigidMask","rigidGroupIndex","(layer * 5)")}
+			}
+			${UNROLL("rigidMask &= replace.movementsLayerMask",MOVEMENT_SIZE)}
+			
+			curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE_MOV);
+			curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE_MOV);
 
-    let rigidchange=false;
-    let curRigidGroupIndexMask =0;
-    let curRigidMovementAppliedMask =0;
-    if (rule.isRigid) {
-        let rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];
-        rigidGroupIndex++;//don't forget to -- it when decoding :O
-        let rigidMask = new BitVec(STRIDE_MOV);
-        for (let layer = 0; layer < level.layerCount; layer++) {
-            rigidMask.ishiftor(rigidGroupIndex, layer * 5);
-        }
-        rigidMask.iand(replace.movementsLayerMask);
-        curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE_MOV);
-        curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE_MOV);
+				if (!${BITS_SET_IN_ARRAY("rigidMask","curRigidGroupIndexMask.data",MOVEMENT_SIZE)} &&
+				!${BITS_SET_IN_ARRAY("replace.movementsLayerMask","curRigidMovementAppliedMask.data",MOVEMENT_SIZE)}) {
+				${UNROLL("curRigidGroupIndexMask |= rigidMask",MOVEMENT_SIZE)}
+				${UNROLL("curRigidMovementAppliedMask |= replace.movementsLayerMask",MOVEMENT_SIZE)}
+				rigidchange=true;
 
-        if (!rigidMask.bitsSetInArray(curRigidGroupIndexMask.data) &&
-            !replace.movementsLayerMask.bitsSetInArray(curRigidMovementAppliedMask.data) ) {
-            curRigidGroupIndexMask.ior(rigidMask);
-            curRigidMovementAppliedMask.ior(replace.movementsLayerMask);
-            rigidchange=true;
+			}
+		}
 
-        }
-    }
+		var result = false;
 
-    let result = false;
+		//check if it's changed
+		if (!${EQUALS("oldCellMask","curCellMask", OBJECT_SIZE)} || !${EQUALS("oldMovementMask","curMovementMask", MOVEMENT_SIZE)} || rigidchange) { 
+			result=true;
+			if (rigidchange) {
+				level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
+				level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
+			}
 
-    //check if it's changed
-    if (!_o3.equals(curCellMask) || !_m3.equals(curMovementMask) || rigidchange) { 
-        result=true;
-        if (rigidchange) {
-            level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
-            level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
-        }
+			const created = _o4;
+			${UNROLL("created = curCellMask",OBJECT_SIZE)}
+			${UNROLL("created &= ~oldCellMask",OBJECT_SIZE)}
+			${UNROLL("sfxCreateMask |= created",OBJECT_SIZE)}
+			
+			const destroyed = _o5;
+			${UNROLL("destroyed = oldCellMask",OBJECT_SIZE)}
+			${UNROLL("destroyed &= ~curCellMask",OBJECT_SIZE)}
+			${UNROLL("sfxDestroyMask |= destroyed",OBJECT_SIZE)}
 
-        let created = curCellMask.cloneInto(_o4);
-        created.iclear(_o3);
-        sfxCreateMask.ior(created);
-        let destroyed = _o3.cloneInto(_o5);
-        destroyed.iclear(curCellMask);
-        sfxDestroyMask.ior(destroyed);
+			${LEVEL_SET_CELL("level","currentIndex","curCellMask",OBJECT_SIZE)}
+			${LEVEL_SET_MOVEMENTS("level","currentIndex","curMovementMask",MOVEMENT_SIZE)}
 
-        level.setCell(currentIndex, curCellMask);
-        level.setMovements(currentIndex, curMovementMask);
+			var colIndex=(currentIndex/level.height)|0;
+			var rowIndex=(currentIndex%level.height);
 
-        let colIndex=(currentIndex/level.height)|0;
-        let rowIndex=(currentIndex%level.height);
-        level.colCellContents[colIndex].ior(curCellMask);
-        level.rowCellContents[rowIndex].ior(curCellMask);
-        level.mapCellContents.ior(curCellMask);
+			${UNROLL("level.colCellContents[colIndex] |= curCellMask",OBJECT_SIZE)}
+			${UNROLL("level.rowCellContents[rowIndex] |= curCellMask",OBJECT_SIZE)}
+			${UNROLL("level.mapCellContents |= curCellMask",OBJECT_SIZE)}
+		}
 
-    }
-
-    return result;
+		return result;
+	`
+	var func = new Function("level", "rule", "currentIndex", fn);
+	return func;
 }
 
 
@@ -1909,7 +2098,7 @@ Rule.prototype.applyAt = function(level,tuple,check,delta) {
             	continue;
             }
 
-            result = preCell.replace(this, currentIndex) || result;
+            result = preCell.replace(level,this, currentIndex) || result;
 
             currentIndex += delta;
         }
@@ -2174,104 +2363,131 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup){
 
 
 //if this returns!=null, need to go back and reprocess
-function resolveMovements(level, bannedGroup){
-    let moved=true;
-    while(moved){
-        moved=false;
-        for (let i=0;i<level.n_tiles;i++) {
-        	moved = repositionEntitiesAtCell(i) || moved;
-        }
-    }
-    let doUndo=false;
+// function resolveMovements(level, bannedGroup){
+//     let moved=true;
+//     while(moved){
+//         moved=false;
+//         for (let i=0;i<level.n_tiles;i++) {
+//         	moved = repositionEntitiesAtCell(i) || moved;
+//         }
+//     }
+//     let doUndo=false;
 
-	//Search for any rigidly-caused movements remaining
-	for (let i=0;i<level.n_tiles;i++) {
-		let cellMask = level.getCellInto(i,_o6);
-		let movementMask = level.getMovements(i);
-		if (!movementMask.iszero()) {
-			let rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
-			if (!rigidMovementAppliedMask.iszero()) {
-				movementMask.iand(rigidMovementAppliedMask);
-				if (!movementMask.iszero()) {
-					//find what layer was restricted
-					for (let j=0;j<level.layerCount;j++) {
-						let layerSection = movementMask.getshiftor(0x1f, 5*j);
-						if (layerSection!==0) {
-							//this is our layer!
-							let rigidGroupIndexMask = level.rigidGroupIndexMask[i];
-							let rigidGroupIndex = rigidGroupIndexMask.getshiftor(0x1f, 5*j);
-							rigidGroupIndex--;//group indices start at zero, but are incremented for storing in the bitfield
-							let groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
-							if (bannedGroup[groupIndex]!==true){
-								bannedGroup[groupIndex]=true
-								//backtrackTarget = rigidBackups[rigidGroupIndex];
-								doUndo=true;
+// 	//Search for any rigidly-caused movements remaining
+// 	for (let i=0;i<level.n_tiles;i++) {
+// 		let cellMask = level.getCellInto(i,_o6);
+// 		let movementMask = level.getMovements(i);
+// 		if (!movementMask.iszero()) {
+// 			let rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
+// 			if (!rigidMovementAppliedMask.iszero()) {
+// 				movementMask.iand(rigidMovementAppliedMask);
+// 				if (!movementMask.iszero()) {
+// 					//find what layer was restricted
+// 					for (let j=0;j<level.layerCount;j++) {
+// 						let layerSection = movementMask.getshiftor(0x1f, 5*j);
+// 						if (layerSection!==0) {
+// 							//this is our layer!
+// 							let rigidGroupIndexMask = level.rigidGroupIndexMask[i];
+// 							let rigidGroupIndex = rigidGroupIndexMask.getshiftor(0x1f, 5*j);
+// 							rigidGroupIndex--;//group indices start at zero, but are incremented for storing in the bitfield
+// 							let groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
+// 							if (bannedGroup[groupIndex]!==true){
+// 								bannedGroup[groupIndex]=true
+// 								//backtrackTarget = rigidBackups[rigidGroupIndex];
+// 								doUndo=true;
+// 							}
+// 							break;
+// 						}
+// 					}
+// 				}
+// 			}
+// 			for (let j=0;j<state.sfx_MovementFailureMasks.length;j++) {
+// 				let o = state.sfx_MovementFailureMasks[j];
+// 				let objectMask = o.objectMask;
+// 				if (objectMask.anyBitsInCommon(cellMask)) {
+// 					let directionMask = o.directionMask;
+// 					if (movementMask.anyBitsInCommon(directionMask) && seedsToPlay_CantMove.indexOf(o.seed)===-1) {
+// 						seedsToPlay_CantMove.push(o.seed);
+// 					}
+// 				}
+// 			}
+//     	}
+
+//     	for (let j=0;j<STRIDE_MOV;j++) {
+//     		level.movements[j+i*STRIDE_MOV]=0;
+//     	}
+// 	    level.rigidGroupIndexMask[i].setZero();
+// 	    level.rigidMovementAppliedMask[i].setZero();
+//     }
+//     return doUndo;
+// }
+
+function generate_resolveMovements(OBJECT_SIZE,MOVEMENT_SIZE){
+	var fn = `
+		let moved=true;
+		while(moved){
+			moved=false;
+			for (let i=0;i<level.n_tiles;i++) {
+				moved = repositionEntitiesAtCell(i) || moved;
+			}
+		}
+		let doUndo=false;
+	
+		//Search for any rigidly-caused movements remaining
+		for (let i=0;i<level.n_tiles;i++) {
+			let cellMask = level.getCellInto(i,_o6);
+			let movementMask = level.getMovements(i);
+			if (!${IS_ZERO("movementMask",MOVEMENT_SIZE)}) {
+				let rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
+				if (!${IS_ZERO("rigidMovementAppliedMask",MOVEMENT_SIZE)}) {
+					${UNROLL("movementMask &= rigidMovementAppliedMask",MOVEMENT_SIZE)}
+					if (!${IS_ZERO("movementMask",MOVEMENT_SIZE)}) {
+						//find what layer was restricted
+						for (let j=0;j<level.layerCount;j++) {
+							let layerSection = ${GETSHIFTOR("movementMask","0x1f", "(5*j)")};
+							if (layerSection!==0) {
+								//this is our layer!
+								let rigidGroupIndexMask = level.rigidGroupIndexMask[i];
+								let rigidGroupIndex = ${GETSHIFTOR("rigidGroupIndexMask","0x1f", "(5*j)")};
+								rigidGroupIndex--;//group indices start at zero, but are incremented for storing in the bitfield
+								let groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
+								if (bannedGroup[groupIndex]!==true){
+									bannedGroup[groupIndex]=true
+									//backtrackTarget = rigidBackups[rigidGroupIndex];
+									doUndo=true;
+								}
+								break;
 							}
-							break;
+						}
+					}
+				}
+				for (let j=0;j<state.sfx_MovementFailureMasks.length;j++) {
+					let o = state.sfx_MovementFailureMasks[j];
+					let objectMask = o.objectMask;
+					if (${ANY_BITS_IN_COMMON("objectMask","cellMask",OBJECT_SIZE)}) {
+						let directionMask = o.directionMask;
+						if (${ANY_BITS_IN_COMMON("movementMask","directionMask",MOVEMENT_SIZE)} && seedsToPlay_CantMove.indexOf(o.seed)===-1) {
+							seedsToPlay_CantMove.push(o.seed);
 						}
 					}
 				}
 			}
-			for (let j=0;j<state.sfx_MovementFailureMasks.length;j++) {
-				let o = state.sfx_MovementFailureMasks[j];
-				let objectMask = o.objectMask;
-				if (objectMask.anyBitsInCommon(cellMask)) {
-					let directionMask = o.directionMask;
-					if (movementMask.anyBitsInCommon(directionMask) && seedsToPlay_CantMove.indexOf(o.seed)===-1) {
-						seedsToPlay_CantMove.push(o.seed);
-					}
-				}
+
+			for (var j=0;j<STRIDE_MOV;j++) {
+				level.movements[j+i*STRIDE_MOV]=0;
 			}
-    	}
+			${SET_ZERO("level.rigidGroupIndexMask[i]",MOVEMENT_SIZE)}
+			${SET_ZERO("level.rigidMovementAppliedMask[i]",MOVEMENT_SIZE)}
 
-    	for (let j=0;j<STRIDE_MOV;j++) {
-    		level.movements[j+i*STRIDE_MOV]=0;
-    	}
-	    level.rigidGroupIndexMask[i].setZero();
-	    level.rigidMovementAppliedMask[i].setZero();
-    }
-    return doUndo;
+		}
+		return doUndo;
+	`
+	//	function resolveMovements(level, bannedGroup){
+	return new Function("level","bannedGroup",fn);
 }
-
 let sfxCreateMask=null;
 let sfxDestroyMask=null;
 
-function calculateRowColMasks() {
-	for(let i=0;i<level.mapCellContents.data.length;i++) {
-		level.mapCellContents.data[i]=0;
-		level.mapCellContents_Movements.data[i]=0;	
-	}
-
-	for (let i=0;i<level.width;i++) {
-		let ccc = level.colCellContents[i];
-		ccc.setZero();
-		let ccc_Movements = level.colCellContents_Movements[i];
-		ccc_Movements.setZero();
-	}
-
-	for (let i=0;i<level.height;i++) {
-		let rcc = level.rowCellContents[i];
-		rcc.setZero();
-		let rcc_Movements = level.rowCellContents_Movements[i];
-		rcc_Movements.setZero();
-	}
-
-	for (let i=0;i<level.width;i++) {
-		for (let j=0;j<level.height;j++) {
-			let index = j+i*level.height;
-			let cellContents=level.getCellInto(index,_o9);
-			level.mapCellContents.ior(cellContents);
-			level.rowCellContents[j].ior(cellContents);
-			level.colCellContents[i].ior(cellContents);
-
-			
-			let mapCellContents_Movements=level.getMovementsInto(index,_m1);
-			level.mapCellContents_Movements.ior(mapCellContents_Movements);
-			level.rowCellContents_Movements[j].ior(mapCellContents_Movements);
-			level.colCellContents_Movements[i].ior(mapCellContents_Movements);
-		}
-	}
-}
 /* returns a bool indicating if anything changed */
 function processInput(dir, dontDoWin, dontModify) {
 	againing = false;
@@ -2333,7 +2549,7 @@ function processInput(dir, dontDoWin, dontModify) {
 	sfxDestroyMask.setZero();
 	seedsToPlay_CanMove = [];
 	seedsToPlay_CantMove = [];
-	calculateRowColMasks();
+	state.calculateRowColMasks(level);
 	let alreadyResolved = [];
 
 	let i = 0;
@@ -2343,7 +2559,7 @@ function processInput(dir, dontDoWin, dontModify) {
 
 		//everything outside of these two lines in this loop is rigid-body nonsense
 		applyRules(state.rules, state.loopPoint, startRuleGroupIndex, bannedGroup);
-		let shouldUndo = resolveMovements(level, bannedGroup);
+		let shouldUndo = state.resolveMovements(level, bannedGroup);
 
 		if (shouldUndo) {
 			rigidloop = true;
@@ -2802,7 +3018,7 @@ Rule.prototype.generateFindMatchesFunction = function() {
     let fn = '';
     
     // Initial mask check
-    fn += 'if (!this.ruleMask.bitsSetInArray(level.mapCellContents.data)) return [];\n';
+    fn += `if (!${BITS_SET_IN_ARRAY("this.ruleMask","level.mapCellContents.data",STRIDE_OBJ)}) return [];\n`;
     fn += 'const d = level.delta_index(this.direction);\n';
     fn += 'const matches = [];\n';
     
