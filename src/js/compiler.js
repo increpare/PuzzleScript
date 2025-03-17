@@ -1463,59 +1463,55 @@ function concretizeMovingRule(state, rule, lineNumber) {
 }
 
 function rephraseSynonyms(state, rule) {
-    for (let i = 0; i < rule.lhs.length; i++) {
-        let cellrow_l = rule.lhs[i];
-        let cellrow_r = rule.rhs[i];
-        for (let j = 0; j < cellrow_l.length; j++) {
-            let cell_l = cellrow_l[j];
-            for (let k = 1; k < cell_l.length; k += 2) {
-                let name = cell_l[k];
-                if (name in state.synonymsDict) {
-                    cell_l[k] = state.synonymsDict[cell_l[k]];
-                }
+    const processCell = (cell) => {
+        for (let i = 1; i < cell.length; i += 2) {
+            const name = cell[i];
+            if (name in state.synonymsDict) {
+                cell[i] = state.synonymsDict[name];
             }
+        }
+    };
+
+    for (let i = 0; i < rule.lhs.length; i++) {
+        const cellrow_l = rule.lhs[i];
+        const cellrow_r = rule.rhs[i];
+        
+        for (let j = 0; j < cellrow_l.length; j++) {
+            processCell(cellrow_l[j]);
             if (rule.rhs.length > 0) {
-                let cell_r = cellrow_r[j];
-                for (let k = 1; k < cell_r.length; k += 2) {
-                    let name = cell_r[k];
-                    if (name in state.synonymsDict) {
-                        cell_r[k] = state.synonymsDict[cell_r[k]];
-                    }
-                }
+                processCell(cellrow_r[j]);
             }
         }
     }
 }
 
 function atomizeAggregates(state, rule) {
-    for (let i = 0; i < rule.lhs.length; i++) {
-        let cellrow = rule.lhs[i];
+    const processCellRow = (cellrow) => {
         for (let j = 0; j < cellrow.length; j++) {
-            let cell = cellrow[j];
-            atomizeCellAggregates(state, cell, rule.lineNumber);
+            atomizeCellAggregates(state, cellrow[j], rule.lineNumber);
         }
+    };
+
+    for (let i = 0; i < rule.lhs.length; i++) {
+        processCellRow(rule.lhs[i]);
     }
     for (let i = 0; i < rule.rhs.length; i++) {
-        let cellrow = rule.rhs[i];
-        for (let j = 0; j < cellrow.length; j++) {
-            let cell = cellrow[j];
-            atomizeCellAggregates(state, cell, rule.lineNumber);
-        }
+        processCellRow(rule.rhs[i]);
     }
 }
 
 function atomizeCellAggregates(state, cell, lineNumber) {
     for (let i = 0; i < cell.length; i += 2) {
-        let dir = cell[i];
-        let c = cell[i + 1];
-        if (c in state.aggregatesDict) {
+        const dir = cell[i];
+        const name = cell[i + 1];
+        if (name in state.aggregatesDict) {
             if (dir === 'no') {
-                logError("You cannot use 'no' to exclude the aggregate object " + c.toUpperCase() + " (defined using 'AND'), only regular objects, or properties (objects defined using 'OR').  If you want to do this, you'll have to write it out yourself the long way.", lineNumber);
+                logError("You cannot use 'no' to exclude the aggregate object " + name.toUpperCase() + " (defined using 'AND'), only regular objects, or properties (objects defined using 'OR').  If you want to do this, you'll have to write it out yourself the long way.", lineNumber);
             }
-            let equivs = state.aggregatesDict[c];
+            const equivs = state.aggregatesDict[name];
             cell[i + 1] = equivs[0];
             for (let j = 1; j < equivs.length; j++) {
-                cell.push(cell[i]); //push the direction
+                cell.push(dir); //push the direction
                 cell.push(equivs[j]);
             }
         }
@@ -1540,7 +1536,7 @@ function convertRelativeDirsToAbsolute(rule) {
     }
 }
 
-let relativeDirs = ['^', 'v', '<', '>', 'parallel', 'perpendicular']; //used to index the following
+const relativeDirs = ['^', 'v', '<', '>', 'parallel', 'perpendicular']; //used to index the following
 //I use _par/_perp just to keep track of providence for replacement purposes later.
 const relativeDict = {
     'right': ['up', 'down', 'left', 'right', 'horizontal_par', 'vertical_perp'],
