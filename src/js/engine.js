@@ -519,7 +519,6 @@ if (titleMode > 0) {
 	titleSelection = 1;
 }
 
-canvasResize();
 
 function tryPlaySimpleSound(soundname) {
 	if (state.sfx_Events[soundname] !== undefined) {
@@ -1719,8 +1718,11 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 	if (hash in CACHE_CELLPATTERN_REPLACEFUNCTION) {
 		return CACHE_CELLPATTERN_REPLACEFUNCTION[hash];
 	}
+	
+	const replace_randomEntityMask_zero = this.replacement.randomEntityMask.iszero()
+	const replace_randomDirMask_zero = this.replacement.randomDirMask.iszero()
+	var deterministic = replace_randomEntityMask_zero && replace_randomDirMask_zero;
 
-	const replace_RandomEntityMask_zero = this.replacement?.randomEntityMask.iszero()
 	let fn = `	
 		var replace = this.replacement;
 
@@ -1745,7 +1747,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 
 		${UNROLL("movementsClear |= replace.movementsLayerMask", MOVEMENT_SIZE)}
 
-		if (!${IS_ZERO("replace_RandomEntityMask", OBJECT_SIZE)}) {
+		${IF_LAZY(!replace_randomEntityMask_zero,()=>`
 			const choices=[];
 			${FOR(0,(32*OBJECT_SIZE),i =>
 			`{
@@ -1760,8 +1762,8 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 			${IBITSET("objectsSet", "rand")}
 			${UNROLL("objectsClear |= state.layerMasks[o.layer]", OBJECT_SIZE)}
 			${ISHIFTOR("movementsClear", "0x1f", "(5 * o.layer)")}
-		}
-		if (!${IS_ZERO("replace_RandomDirMask", OBJECT_SIZE)}) {
+		`)}
+		${IF_LAZY(!replace_randomDirMask_zero,()=>`
 			${FOR(0, LAYER_COUNT, layerIndex =>
 			`{
 				if (${GET("replace_RandomDirMask", 5*layerIndex )}) {
@@ -1770,7 +1772,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 				}
 			}`
 			)}
-		}
+		`)}
 		
 		const curCellMask = _o2_5
 		${LEVEL_GET_CELL_INTO("level", "currentIndex", "curCellMask", OBJECT_SIZE)}
