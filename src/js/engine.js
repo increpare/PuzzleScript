@@ -606,6 +606,7 @@ function setGameState(_state, command, randomseed) {
 	messageselected = false;
 	STRIDE_MOV = _state.STRIDE_MOV;
 	STRIDE_OBJ = _state.STRIDE_OBJ;
+	LAYER_COUNT = _state.LAYER_COUNT;
 
 	sfxCreateMask = new BitVec(STRIDE_OBJ);
 	sfxDestroyMask = new BitVec(STRIDE_OBJ);
@@ -1568,6 +1569,7 @@ return result;`;
 
 let STRIDE_OBJ = 1;
 let STRIDE_MOV = 1;
+let LAYER_COUNT = 1;
 
 function CellPattern(row) {
 	this.objectsPresent = row[0];
@@ -1711,12 +1713,14 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 			${ISHIFTOR("movementsClear", "0x1f", "(5 * o.layer)")}
 		}
 		if (!${IS_ZERO("replace_RandomDirMask", OBJECT_SIZE)}) {
-			for (var layerIndex=0;layerIndex<level.layerCount;layerIndex++){
-				if (${GET("replace_RandomDirMask", "(5*layerIndex)")}) {
+			${FOR(0, LAYER_COUNT, layerIndex =>
+			`{
+				if (${GET("replace_RandomDirMask", 5*layerIndex )}) {
 					var randomDir = Math.floor(RandomGen.uniform()*4);
-					${IBITSET("movementsSet", "(randomDir + 5 * layerIndex)")}
+					${IBITSET("movementsSet", `(randomDir + 5 * ${layerIndex})`)}
 				}
-			}
+			}`
+			)}
 		}
 		
 		var curCellMask = _o2_5
