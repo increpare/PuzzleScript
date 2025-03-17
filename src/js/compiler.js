@@ -1439,16 +1439,15 @@ function concretizeMovingRule(state, rule, lineNumber) {
 
     //if any properties remain on the RHSes, bleep loudly
     let rhsAmbiguousMovementsRemain = '';
-    for (let i = 0; i < result.length; i++) {
-        let cur_rule = result[i];
-        delete cur_rule.movingReplacement;
-        for (let j = 0; j < cur_rule.rhs.length; j++) {
-            let cur_rulerow = cur_rule.rhs[j];
-            for (let k = 0; k < cur_rulerow.length; k++) {
-                let cur_cell = cur_rulerow[k];
-                let movings = getMovings(state, cur_cell);
+    
+    outerloop: for (const currentRule of result) {
+        delete currentRule.movingReplacement;        
+        for (const ruleRow of currentRule.rhs) {
+            for (const cell of ruleRow) {
+                const movings = getMovings(state, cell);
                 if (movings.length > 0) {
                     rhsAmbiguousMovementsRemain = movings[0][1];
+                    break outerloop;
                 }
             }
         }
