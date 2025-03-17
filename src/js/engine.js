@@ -1392,25 +1392,25 @@ function repositionEntitiesOnLayer(positionIndex, layer, dirMask) {
 }
 
 function repositionEntitiesAtCell(positionIndex) {
-	let movementMask = level.getMovements(positionIndex);
-	if (movementMask.iszero())
-		return false;
+    const movementMask = level.getMovements(positionIndex);
+    if (movementMask.iszero())
+        return false;
 
-	let moved = false;
-	for (let layer = 0; layer < level.layerCount; layer++) {
-		let layerMovement = movementMask.getshiftor(0x1f, 5 * layer);
-		if (layerMovement !== 0) {
-			let thismoved = repositionEntitiesOnLayer(positionIndex, layer, layerMovement);
-			if (thismoved) {
-				movementMask.ishiftclear(layerMovement, 5 * layer);
-				moved = true;
-			}
-		}
-	}
+    let moved = false;
+    for (let layer = 0; layer < level.layerCount; layer++) {
+        const layerMovement = movementMask.getshiftor(0x1f, 5*layer);
+        if (layerMovement !== 0) {
+            const thismoved = repositionEntitiesOnLayer(positionIndex, layer, layerMovement);
+            if (thismoved) {
+                movementMask.ishiftclear(layerMovement, 5*layer);
+                moved = true;
+            }
+        }
+    }
 
-	level.setMovements(positionIndex, movementMask);
+    level.setMovements(positionIndex, movementMask);
 
-	return moved;
+    return moved;
 }
 
 let ellipsisPattern = ['ellipsis'];
@@ -1430,7 +1430,7 @@ function Rule(rule) {
 	this.cellRowMasks_Movements = rule[10];
 	this.ruleMask = new BitVec(STRIDE_OBJ);
 	this.applyAt = this.generateApplyAt(this.patterns, this.ellipsisCount, STRIDE_OBJ, STRIDE_MOV);
-	for (let m of this.cellRowMasks) {
+	for (const m of this.cellRowMasks) {
 		this.ruleMask.ior(m);
 	}
 

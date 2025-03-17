@@ -995,17 +995,17 @@ function rewriteUpLeftRules(rule) {
 
 //expands all properties to list of all things it could be, filterio
 function getPossibleObjectsFromCell(state, cell) {
-    let result = [];
+    const result = [];
     for (let j = 0; j < cell.length; j += 2) {
-        let dir = cell[j];
-        let name = cell[j + 1];
+        const dir = cell[j];
+        const name = cell[j + 1];
         if (name in state.objects) {
             result.push(name);
         }
         else if (name in state.propertiesDict) {
-            let aliases = state.propertiesDict[name];
+            const aliases = state.propertiesDict[name];
             for (let k = 0; k < aliases.length; k++) {
-                let alias = aliases[k];
+                const alias = aliases[k];
                 result.push(alias);
             }
         }
@@ -1699,7 +1699,6 @@ function rulesToMask(state) {
                 if (rule.rhs.length === 0) continue;
                 const cell_r = cellrow_r[colIndex];
 
-                
                 // Check for mismatched ellipsis
                 if (cell_r[0] === '...' && cell_l[0] !== '...') {
                     logError("An ellipsis on the right must be matched by one in the corresponding place on the left.", rule.lineNumber);
@@ -1843,11 +1842,11 @@ function rulesToMask(state) {
 }
 
 function cellRowMasks(rule) {
-    let ruleMasks = [];
-    let lhs = rule[1];
+    const ruleMasks = [];
+    const lhs = rule[1];
     for (let i = 0; i < lhs.length; i++) {
-        let cellRow = lhs[i];
-        let rowMask = new BitVec(STRIDE_OBJ);
+        const cellRow = lhs[i];
+        const rowMask = new BitVec(STRIDE_OBJ);
         for (let j = 0; j < cellRow.length; j++) {
             if (cellRow[j] === ellipsisPattern)
                 continue;
@@ -1859,11 +1858,11 @@ function cellRowMasks(rule) {
 }
 
 function cellRowMasks_Movements(rule) {
-    let ruleMasks_mov = [];
-    let lhs = rule[1];
+    const ruleMasks_mov = [];
+    const lhs = rule[1];
     for (let i = 0; i < lhs.length; i++) {
-        let cellRow = lhs[i];
-        let rowMask = new BitVec(STRIDE_MOV);
+        const cellRow = lhs[i];
+        const rowMask = new BitVec(STRIDE_MOV);
         for (let j = 0; j < cellRow.length; j++) {
             if (cellRow[j] === ellipsisPattern)
                 continue;
@@ -1876,18 +1875,18 @@ function cellRowMasks_Movements(rule) {
 
 function collapseRules(groups) {
     for (let gn = 0; gn < groups.length; gn++) {
-        let rules = groups[gn];
+        const rules = groups[gn];
         for (let i = 0; i < rules.length; i++) {
-            let oldrule = rules[i];
-            let newrule = [0, [], oldrule.rhs.length > 0, oldrule.lineNumber /*ellipses,group number,rigid,commands,randomrule,[cellrowmasks]*/];
-            let ellipses = [];
+            const oldrule = rules[i];
+            const newrule = [0, [], oldrule.rhs.length > 0, oldrule.lineNumber /*ellipses,group number,rigid,commands,randomrule,[cellrowmasks]*/];
+            const ellipses = [];
             for (let j = 0; j < oldrule.lhs.length; j++) {
                 ellipses.push(0);
             }
 
             newrule[0] = dirMasks[oldrule.direction];
             for (let j = 0; j < oldrule.lhs.length; j++) {
-                let cellrow_l = oldrule.lhs[j];
+                const cellrow_l = oldrule.lhs[j];
                 for (let k = 0; k < cellrow_l.length; k++) {
                     if (cellrow_l[k] === ellipsisPattern) {
                         ellipses[j]++;
@@ -2094,33 +2093,33 @@ function isObjectDefined(state, name) {
 }
 
 function getMaskFromName(state, name) {
-    let objectMask = new BitVec(STRIDE_OBJ);
+    const objectMask = new BitVec(STRIDE_OBJ);
     if (name in state.objects) {
-        let o = state.objects[name];
+        const o = state.objects[name];
         objectMask.ibitset(o.id);
     }
 
     if (name in state.aggregatesDict) {
-        let objectnames = state.aggregatesDict[name];
+        const objectnames = state.aggregatesDict[name];
         for (let i = 0; i < objectnames.length; i++) {
-            let n = objectnames[i];
-            let o = state.objects[n];
+            const n = objectnames[i];
+            const o = state.objects[n];
             objectMask.ibitset(o.id);
         }
     }
 
     if (name in state.propertiesDict) {
-        let objectnames = state.propertiesDict[name];
+        const objectnames = state.propertiesDict[name];
         for (let i = 0; i < objectnames.length; i++) {
-            let n = objectnames[i];
-            let o = state.objects[n];
+            const n = objectnames[i];
+            const o = state.objects[n];
             objectMask.ibitset(o.id);
         }
     }
 
     if (name in state.synonymsDict) {
-        let n = state.synonymsDict[name];
-        let o = state.objects[n];
+        const n = state.synonymsDict[name];
+        const o = state.objects[n];
         objectMask.ibitset(o.id);
     }
 
@@ -2210,7 +2209,7 @@ function checkObjectsAreLayered(state) {
         if (state.objects.hasOwnProperty(n)) {
             let found = false;
             for (let i = 0; i < state.collisionLayers.length; i++) {
-                let layer = state.collisionLayers[i];
+                const layer = state.collisionLayers[i];
                 for (let j = 0; j < layer.length; j++) {
                     if (layer[j] === n) {
                         found = true;
@@ -2219,7 +2218,7 @@ function checkObjectsAreLayered(state) {
                 }
             }
             if (found === false) {
-                let o = state.objects[n];
+                const o = state.objects[n];
                 logError('Object "' + n.toUpperCase() + '" has been defined, but not assigned to a layer.', o.lineNumber);
             }
         }
@@ -2231,20 +2230,19 @@ function isInt(value) {
 }
 
 function twiddleMetaData(state) {
-    let newmetadata = {};
+    const newmetadata = {};
     for (let i = 0; i < state.metadata.length; i += 2) {
-        let key = state.metadata[i];
-        let val = state.metadata[i + 1];
+        const key = state.metadata[i];
+        const val = state.metadata[i + 1];
         newmetadata[key] = val;
     }
-
 
     const getIntCheckedPositive = function (s, lineNumber) {
         if (!isFinite(s) || !isInt(s)) {
             logWarning(`Wasn't able to make sense of "${s}" as a (whole number) dimension.`, lineNumber);
             return NaN;
         }
-        let result = parseInt(s);
+        const result = parseInt(s);
         if (isNaN(result)) {
             logWarning(`Wasn't able to make sense of "${s}" as a dimension.`, lineNumber);
         }
@@ -2253,16 +2251,17 @@ function twiddleMetaData(state) {
         }
         return result;
     }
+
     const getCoords = function (val, lineNumber) {
-        let coords = val.split('x');
+        const coords = val.split('x');
         if (coords.length !== 2) {
             logWarning("Dimensions must be of the form AxB.", lineNumber);
             return null;
         } else {
-            let intcoords = [getIntCheckedPositive(coords[0], lineNumber), getIntCheckedPositive(coords[1], lineNumber)];
+            const intcoords = [getIntCheckedPositive(coords[0], lineNumber), getIntCheckedPositive(coords[1], lineNumber)];
             if (!isFinite(coords[0]) || !isFinite(coords[1]) || isNaN(intcoords[0]) || isNaN(intcoords[1])) {
                 logWarning(`Couldn't understand the dimensions given to me (you gave "${val}") - should be of the form AxB.`, lineNumber);
-                return null
+                return null;
             } else {
                 if (intcoords[0] <= 0 || intcoords[1] <= 0) {
                     logWarning(`The dimensions given to me (you gave "${val}") are baad - they should be > 0.`, lineNumber);
@@ -2271,15 +2270,16 @@ function twiddleMetaData(state) {
             }
         }
     }
+
     if (newmetadata.flickscreen !== undefined) {
-        let val = newmetadata.flickscreen;
+        const val = newmetadata.flickscreen;
         newmetadata.flickscreen = getCoords(val, state.metadata_lines.flickscreen);
         if (newmetadata.flickscreen === null) {
             delete newmetadata.flickscreen;
         }
     }
     if (newmetadata.zoomscreen !== undefined) {
-        let val = newmetadata.zoomscreen;
+        const val = newmetadata.zoomscreen;
         newmetadata.zoomscreen = getCoords(val, state.metadata_lines.zoomscreen);
         if (newmetadata.zoomscreen === null) {
             delete newmetadata.zoomscreen;
@@ -3077,3 +3077,5 @@ function qualifyURL(url) {
     a.href = url;
     return a.href;
 }
+
+
