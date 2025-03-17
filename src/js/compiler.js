@@ -1523,18 +1523,18 @@ function atomizeCellAggregates(state, cell, lineNumber) {
 }
 
 function convertRelativeDirsToAbsolute(rule) {
-    let forward = rule.direction;
+    const forward = rule.direction;
     for (let i = 0; i < rule.lhs.length; i++) {
-        let cellrow = rule.lhs[i];
+        const cellrow = rule.lhs[i];
         for (let j = 0; j < cellrow.length; j++) {
-            let cell = cellrow[j];
+            const cell = cellrow[j];
             absolutifyRuleCell(forward, cell);
         }
     }
     for (let i = 0; i < rule.rhs.length; i++) {
-        let cellrow = rule.rhs[i];
+        const cellrow = rule.rhs[i];
         for (let j = 0; j < cellrow.length; j++) {
-            let cell = cellrow[j];
+            const cell = cellrow[j];
             absolutifyRuleCell(forward, cell);
         }
     }
@@ -1542,7 +1542,7 @@ function convertRelativeDirsToAbsolute(rule) {
 
 let relativeDirs = ['^', 'v', '<', '>', 'parallel', 'perpendicular']; //used to index the following
 //I use _par/_perp just to keep track of providence for replacement purposes later.
-let relativeDict = {
+const relativeDict = {
     'right': ['up', 'down', 'left', 'right', 'horizontal_par', 'vertical_perp'],
     'up': ['left', 'right', 'down', 'up', 'vertical_par', 'horizontal_perp'],
     'down': ['right', 'left', 'up', 'down', 'vertical_par', 'horizontal_perp'],
@@ -1551,8 +1551,8 @@ let relativeDict = {
 
 function absolutifyRuleCell(forward, cell) {
     for (let i = 0; i < cell.length; i += 2) {
-        let c = cell[i];
-        let index = relativeDirs.indexOf(c);
+        const c = cell[i];
+        const index = relativeDirs.indexOf(c);
         if (index >= 0) {
             cell[i] = relativeDict[forward][index];
         }
@@ -1568,7 +1568,7 @@ function absolutifyRuleCell(forward, cell) {
 
 */
 
-let dirMasks = {
+const dirMasks = {
     'up': parseInt('00001', 2),
     'down': parseInt('00010', 2),
     'left': parseInt('00100', 2),
