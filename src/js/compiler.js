@@ -1839,7 +1839,7 @@ function rulesToMask(state) {
                         rhsBitVectors.randomMask_r,
                         rhsBitVectors.randomDirMask_r
                     ]);
-                    target_cell_pattern.replace = target_cell_pattern.generateReplaceFunction(STRIDE_OBJ, STRIDE_MOV);
+                    target_cell_pattern.replace = target_cell_pattern.generateReplaceFunction(STRIDE_OBJ, STRIDE_MOV,rule);
                 }
             }
         }
@@ -2038,7 +2038,7 @@ function generateRigidGroupList(state) {
         let rigidFound = false;
         for (let j = 0; j < ruleset.length; j++) {
             let rule = ruleset[j];
-            if (rule.isRigid) {
+            if (rule.rigid) {
                 rigidFound = true;
             }
         }
@@ -2871,11 +2871,8 @@ function loadFile(str) {
     }
 
     cacheAllRuleNames(state);
-
     removeDuplicateRules(state);
-
     rulesToMask(state);
-
 
     if (debugMode) {
         printRules(state);

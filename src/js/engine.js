@@ -1417,7 +1417,7 @@ function Rule(rule) {
 	this.lineNumber = rule[3];		/* rule source for debugging */
 	this.ellipsisCount = rule[4];		/* number of ellipses present */
 	this.groupNumber = rule[5];		/* execution group number of rule */
-	this.isRigid = rule[6];
+	this.rigid = rule[6];
 	this.commands = rule[7];		/* cancel, restart, sfx, etc */
 	this.isRandom = rule[8];
 	this.cellRowMasks = rule[9];
@@ -1437,7 +1437,7 @@ function Rule(rule) {
 	for (let i = 0; i < this.patterns.length; i++) {
 		this.cellRowMatches.push(this.generateCellRowMatchesFunction(this.patterns[i], this.ellipsisCount[i]));
 	}
-	/* TODO: eliminate isRigid, groupNumber, isRandom
+	/* TODO: eliminate rigid, groupNumber, isRandom
 	from this class by moving them up into a RuleGroup class */
 
 	this.findMatches = this.generateFindMatchesFunction();
@@ -1689,7 +1689,7 @@ let CACHE_CELLPATTERN_REPLACEFUNCTION = {}
 let CACHE_CHECK_COUNT=0;
 let CACHE_HIT_COUNT=0;
 let _replace_function_key_array = new Uint32Array(0);
-CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_SIZE) {
+CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_SIZE,rule) {
 	if (this.replacement===null){
 		return FALSE_FUNCTION;
 	}
@@ -1791,8 +1791,8 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 
 		var curRigidGroupIndexMask =0;
 		var curRigidMovementAppliedMask =0;
-		let rigidchange=false;
-		if (rule.isRigid) {
+		let rigidchange=false;		
+		if (rule.rigid){
 			let rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1;
 			const rigidMask = new BitVec(STRIDE_MOV);
 			for (let layer = 0; layer < level.layerCount; layer++) {
