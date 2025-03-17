@@ -2979,15 +2979,14 @@ function loadFile(str) {
 }
 
 
-
-
-
 function addSpecializedFunctions(state) {
     const OBJECT_SIZE = Math.ceil(state.objectCount / 32);
     const MOVEMENT_SIZE = Math.ceil(state.collisionLayers.length / 5);
     state.moveEntitiesAtIndex = generate_moveEntitiesAtIndex(OBJECT_SIZE,MOVEMENT_SIZE);
     state.calculateRowColMasks = generate_calculateRowColMasks(OBJECT_SIZE,MOVEMENT_SIZE);
     state.resolveMovements = generate_resolveMovements(OBJECT_SIZE,MOVEMENT_SIZE);
+    state.matchCellRow = generateMatchCellRow(OBJECT_SIZE,MOVEMENT_SIZE);
+    state.matchCellRowWildCard = generateMatchCellRowWildCard(OBJECT_SIZE,MOVEMENT_SIZE);
 }
 
 var ifrm;
