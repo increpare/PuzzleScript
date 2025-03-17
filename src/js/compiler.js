@@ -2215,7 +2215,7 @@ function generateMasks(state) {
 }
 
 function checkObjectsAreLayered(state) {
-    for (var n in state.objects) {
+    outer: for (var n in state.objects) {
         if (state.objects.hasOwnProperty(n)) {
             var found = false;
             for (var i = 0; i < state.collisionLayers.length; i++) {
@@ -2223,11 +2223,8 @@ function checkObjectsAreLayered(state) {
                 for (var j = 0; j < layer.length; j++) {
                     if (layer[j] === n) {
                         found = true;
-                        break;
+                        continue outer;
                     }
-                }
-                if (found) {
-                    break;
                 }
             }
             if (found === false) {
