@@ -1582,64 +1582,74 @@ let dirMasks = {
 };
 
 function rulesToMask(state) {
-    let layerCount = state.collisionLayers.length;
-    let layerTemplate = [];
-    for (let i = 0; i < layerCount; i++) {
-        layerTemplate.push(null);
-    }
+    const layerCount = state.collisionLayers.length;
+    const layerTemplate = Array(layerCount).fill(null);
+    const STRIDE_5 = 5; // Magic number for bit shifting
 
-    outerloop: for (let i = 0; i < state.rules.length; i++) {
-        let rule = state.rules[i];
-        for (let j = 0; j < rule.lhs.length; j++) {
-            let cellrow_l = rule.lhs[j];
-            let cellrow_r = rule.rhs[j];
-            for (let k = 0; k < cellrow_l.length; k++) {
-                let cell_l = cellrow_l[k];
-                let layersUsed_l = layerTemplate.concat([]);
-                let objectsPresent = new BitVec(STRIDE_OBJ);
-                let objectsMissing = new BitVec(STRIDE_OBJ);
-                let anyObjectsPresent = [];
-                let movementsPresent = new BitVec(STRIDE_MOV);
-                let movementsMissing = new BitVec(STRIDE_MOV);
+    outerloop: for (let ruleIndex = 0; ruleIndex < state.rules.length; ruleIndex++) {
+        const rule = state.rules[ruleIndex];
+        
+        for (let rowIndex = 0; rowIndex < rule.lhs.length; rowIndex++) {
+            const [cellrow_l, cellrow_r] = [rule.lhs[rowIndex], rule.rhs[rowIndex]];
+            
+            for (let colIndex = 0; colIndex < cellrow_l.length; colIndex++) {
+                const cell_l = cellrow_l[colIndex];
+                const layersUsed_l = [...layerTemplate];
+                
+                // Initialize bit vectors for the current cell
+                const bitVectors = {
+                    objectsPresent: new BitVec(STRIDE_OBJ),
+                    objectsMissing: new BitVec(STRIDE_OBJ),
+                    movementsPresent: new BitVec(STRIDE_MOV),
+                    movementsMissing: new BitVec(STRIDE_MOV),
+                    objectlayers_l: new BitVec(STRIDE_MOV)
+                };
+                
+                const anyObjectsPresent = [];
 
-                let objectlayers_l = new BitVec(STRIDE_MOV);
-                for (let l = 0; l < cell_l.length; l += 2) {
-                    let object_dir = cell_l[l];
+                // Process left-hand side cell
+                for (let i = 0; i < cell_l.length; i += 2) {
+                    const [object_dir, object_name] = [cell_l[i], cell_l[i + 1]];
+                    
+                    // Handle special cases
                     if (object_dir === '...') {
-                        objectsPresent = ellipsisPattern;
                         if (cell_l.length !== 2) {
                             logError("You can't have anything in with an ellipsis. Sorry.", rule.lineNumber);
-                            //delete the rule
-                            state.rules.splice(i, 1);
-                            i--;
+                            state.rules.splice(ruleIndex, 1);
+                            ruleIndex--;
                             continue outerloop;
-                        } else if ((k === 0) || (k === cellrow_l.length - 1)) {
+                        }
+                        if (colIndex === 0 || colIndex === cellrow_l.length - 1) {
                             logError("There's no point in putting an ellipsis at the very start or the end of a rule", rule.lineNumber);
-                        } else if (rule.rhs.length > 0) {
-                            let rhscell = cellrow_r[k];
+                        }
+                        if (rule.rhs.length > 0) {
+                            const rhscell = cellrow_r[colIndex];
                             if (rhscell.length !== 2 || rhscell[0] !== '...') {
                                 logError("An ellipsis on the left must be matched by one in the corresponding place on the right.", rule.lineNumber);
                             }
                         }
+                        bitVectors.objectsPresent = ellipsisPattern;
                         break;
-                    } else if (object_dir === 'random') {
+                    }
+                    
+                    if (object_dir === 'random') {
                         logError("RANDOM cannot be matched on the left-hand side, it can only appear on the right", rule.lineNumber);
                         continue;
                     }
 
-                    let object_name = cell_l[l + 1];
-                    let object = state.objects[object_name];
-                    let objectMask = state.objectMasks[object_name];
-                    let layerIndex =  object ? (object.layer | 0) : state.propertiesSingleLayer[object_name]
+                    // Process regular object
+                    const object = state.objects[object_name];
+                    const objectMask = state.objectMasks[object_name];
+                    const layerIndex = object ? (object.layer | 0) : state.propertiesSingleLayer[object_name];
 
-                    if (typeof (layerIndex) === "undefined") {
-                        logError("Oops!  " + object_name.toUpperCase() + " not assigned to a layer.", rule.lineNumber);
+                    if (typeof layerIndex === "undefined") {
+                        logError(`Oops! ${object_name.toUpperCase()} not assigned to a layer.`, rule.lineNumber);
                     }
 
                     if (object_dir === 'no') {
-                        objectsMissing.ior(objectMask);
+                        bitVectors.objectsMissing.ior(objectMask);
                     } else {
-                        let existingname = layersUsed_l[layerIndex];
+                        const existingname = layersUsed_l[layerIndex];
                         if (existingname !== null) {
                             rule.discard = [object_name.toUpperCase(), existingname.toUpperCase()];
                         }
@@ -1647,193 +1657,189 @@ function rulesToMask(state) {
                         layersUsed_l[layerIndex] = object_name;
 
                         if (object) {
-                            objectsPresent.ior(objectMask);
-                            objectlayers_l.ishiftor(0x1f, 5 * layerIndex);
+                            bitVectors.objectsPresent.ior(objectMask);
+                            bitVectors.objectlayers_l.ishiftor(0x1f, STRIDE_5 * layerIndex);
                         } else {
                             anyObjectsPresent.push(objectMask);
                         }
 
-                        if (object_dir === 'stationary') {
-                            movementsMissing.ishiftor(0x1f, 5 * layerIndex);
-                        } else {
-                            movementsPresent.ishiftor(dirMasks[object_dir], 5 * layerIndex);
-                        }
+                        const movementMask = object_dir === 'stationary' ? 
+                            bitVectors.movementsMissing : bitVectors.movementsPresent;
+                        movementMask.ishiftor(object_dir === 'stationary' ? 0x1f : dirMasks[object_dir], 
+                                           STRIDE_5 * layerIndex);
                     }
                 }
 
-                if (rule.rhs.length > 0) {
-                    let rhscell = cellrow_r[k];
-                    let lhscell = cellrow_l[k];
-                    if (rhscell[0] === '...' && lhscell[0] !== '...') {
-                        logError("An ellipsis on the right must be matched by one in the corresponding place on the left.", rule.lineNumber);
-                    }
-                    for (let l = 0; l < rhscell.length; l += 2) {
-                        let content = rhscell[l];
-                        if (content === '...') {
-                            if (rhscell.length !== 2) {
-                                logError("You can't have anything in with an ellipsis. Sorry.", rule.lineNumber);
-                            }
-                        }
-                    }
-                }
-
-                if (objectsPresent === ellipsisPattern) {
-                    cellrow_l[k] = ellipsisPattern;
+                // Handle ellipsis pattern
+                if (bitVectors.objectsPresent === ellipsisPattern) {
+                    cellrow_l[colIndex] = ellipsisPattern;
                     continue;
-                } else {
-                    cellrow_l[k] = new CellPattern([objectsPresent, objectsMissing, anyObjectsPresent, movementsPresent, movementsMissing, null]);
                 }
 
-                //if X no X, then cancel
-                if (objectsPresent.anyBitsInCommon(objectsMissing)) {
-                    //if I'm about the remove the last representative of this line number, throw an error
-                    let ln = rule.lineNumber;
-                    if ((i > 0 && state.rules[i - 1].lineNumber === ln) || ((i + 1 < state.rules.length) && state.rules[i + 1].lineNumber === ln)) {
-                        //all good
-                    } else {
+                // Create cell pattern
+                cellrow_l[colIndex] = new CellPattern([
+                    bitVectors.objectsPresent,
+                    bitVectors.objectsMissing,
+                    anyObjectsPresent,
+                    bitVectors.movementsPresent,
+                    bitVectors.movementsMissing,
+                    null
+                ]);
+
+                // Check for invalid patterns
+                if (bitVectors.objectsPresent.anyBitsInCommon(bitVectors.objectsMissing)) {
+                    const ln = rule.lineNumber;
+                    const hasAdjacentRule = (ruleIndex > 0 && state.rules[ruleIndex - 1].lineNumber === ln) || 
+                                         (ruleIndex + 1 < state.rules.length && state.rules[ruleIndex + 1].lineNumber === ln);
+                    
+                    if (!hasAdjacentRule) {
                         logWarning('This rule has some content of the form "X no X" (either directly or maybe indirectly - check closely how the terms are defined if nothing stands out) which can never match and so the rule is getting removed during compilation.', rule.lineNumber);
                     }
-                    state.rules.splice(i, 1);
-                    i--;
+                    state.rules.splice(ruleIndex, 1);
+                    ruleIndex--;
                     continue;
                 }
 
-                if (rule.rhs.length === 0) {
-                    continue;
+                if (rule.rhs.length === 0) continue;
+                const cell_r = cellrow_r[colIndex];
+
+                
+                // Check for mismatched ellipsis
+                if (cell_r[0] === '...' && cell_l[0] !== '...') {
+                    logError("An ellipsis on the right must be matched by one in the corresponding place on the left.", rule.lineNumber);
+                }
+                
+                // Validate ellipsis in right-hand side
+                for (let i = 0; i < cell_r.length; i += 2) {
+                    if (cell_r[i] === '...' && cell_r.length !== 2) {
+                        logError("You can't have anything in with an ellipsis. Sorry.", rule.lineNumber);
+                    }
                 }
 
-                let cell_r = cellrow_r[k];
-                let layersUsed_r = layerTemplate.concat([]);
-                let layersUsedRand_r = layerTemplate.concat([]);
+                const layersUsed_r = [...layerTemplate];
+                const layersUsedRand_r = [...layerTemplate];
 
-                let objectsClear = new BitVec(STRIDE_OBJ);
-                let objectsSet = new BitVec(STRIDE_OBJ);
-                let movementsClear = new BitVec(STRIDE_MOV);
-                let movementsSet = new BitVec(STRIDE_MOV);
+                const rhsBitVectors = {
+                    objectsClear: new BitVec(STRIDE_OBJ),
+                    objectsSet: new BitVec(STRIDE_OBJ),
+                    movementsClear: new BitVec(STRIDE_MOV),
+                    movementsSet: new BitVec(STRIDE_MOV),
+                    objectlayers_r: new BitVec(STRIDE_MOV),
+                    randomMask_r: new BitVec(STRIDE_OBJ),
+                    postMovementsLayerMask_r: new BitVec(STRIDE_MOV),
+                    randomDirMask_r: new BitVec(STRIDE_MOV)
+                };
 
-                let objectlayers_r = new BitVec(STRIDE_MOV);
-                let randomMask_r = new BitVec(STRIDE_OBJ);
-                let postMovementsLayerMask_r = new BitVec(STRIDE_MOV);
-                let randomDirMask_r = new BitVec(STRIDE_MOV);
-                for (let l = 0; l < cell_r.length; l += 2) {
-                    let object_dir = cell_r[l];
-                    let object_name = cell_r[l + 1];
+                // Process right-hand side cell
+                for (let i = 0; i < cell_r.length; i += 2) {
+                    const [object_dir, object_name] = [cell_r[i], cell_r[i + 1]];
 
-                    if (object_dir === '...') {
-                        //logError("spooky ellipsis found! (should never hit this)");
-                        break;
-                    } else if (object_dir === 'random') {
+                    if (object_dir === '...') break;
+                    
+                    if (object_dir === 'random') {
                         if (object_name in state.objectMasks) {
-                            let mask = state.objectMasks[object_name];
-                            randomMask_r.ior(mask);
-                            let values;
-                            if (state.propertiesDict.hasOwnProperty(object_name)) {
-                                values = state.propertiesDict[object_name];
-                            } else {
-                                //get line number declaration of object_name
-                                logWarning(`In this rule you're asking me to spawn a random ${object_name.toUpperCase()} for you, but that's already a concrete single object.  You wanna be using random with properties (things defined in terms of OR in the legend) so there's some things to select between.`, rule.lineNumber);
-                                values = [object_name];
+                            const mask = state.objectMasks[object_name];
+                            rhsBitVectors.randomMask_r.ior(mask);
+                            
+                            const values = state.propertiesDict.hasOwnProperty(object_name) ? 
+                                state.propertiesDict[object_name] : [object_name];
+                            
+                            if (values.length === 1) {
+                                logWarning(`In this rule you're asking me to spawn a random ${object_name.toUpperCase()} for you, but that's already a concrete single object. You wanna be using random with properties (things defined in terms of OR in the legend) so there's some things to select between.`, rule.lineNumber);
                             }
-                            for (let m = 0; m < values.length; m++) {
-                                let subobject = values[m];
-                                let layerIndex = state.objects[subobject].layer | 0;
-                                let existingname = layersUsed_r[layerIndex];
+
+                            for (const subobject of values) {
+                                const layerIndex = state.objects[subobject].layer | 0;
+                                const existingname = layersUsed_r[layerIndex];
+                                
                                 if (existingname !== null) {
-                                    let o1 = subobject.toUpperCase();
-                                    let o2 = existingname.toUpperCase();
+                                    const [o1, o2] = [subobject.toUpperCase(), existingname.toUpperCase()];
                                     if (o1 !== o2) {
-                                        logWarning("This rule may try to spawn a " + o1 + " with random, but also requires a " + o2 + " be here, which is on the same layer - they shouldn't be able to coexist!", rule.lineNumber);
+                                        logWarning(`This rule may try to spawn a ${o1} with random, but also requires a ${o2} be here, which is on the same layer - they shouldn't be able to coexist!`, rule.lineNumber);
                                     }
                                 }
-
                                 layersUsedRand_r[layerIndex] = subobject;
                             }
-
                         } else {
-                            logError('You want to spawn a random "' + object_name.toUpperCase() + '", but I don\'t know how to do that', rule.lineNumber);
+                            logError(`You want to spawn a random "${object_name.toUpperCase()}", but I don't know how to do that`, rule.lineNumber);
                         }
                         continue;
                     }
 
-                    let object = state.objects[object_name];
-                    let objectMask = state.objectMasks[object_name];
-                    let layerIndex =  object ? (object.layer | 0) : state.propertiesSingleLayer[object_name]
+                    const object = state.objects[object_name];
+                    const objectMask = state.objectMasks[object_name];
+                    const layerIndex = object ? (object.layer | 0) : state.propertiesSingleLayer[object_name];
 
-                    if (object_dir == 'no') {
-                        objectsClear.ior(objectMask);
+                    if (object_dir === 'no') {
+                        rhsBitVectors.objectsClear.ior(objectMask);
                     } else {
-                        let existingname = layersUsed_r[layerIndex];
-                        if (existingname === null) {
-                            existingname = layersUsedRand_r[layerIndex];
-                        }
-
-                        if (existingname !== null) {
-                            if (rule.hasOwnProperty('discard')) {
-
-                            } else {
-                                logError('Rule matches object types that can\'t overlap: "' + object_name.toUpperCase() + '" and "' + existingname.toUpperCase() + '".', rule.lineNumber);
-                            }
+                        const existingname = layersUsed_r[layerIndex] || layersUsedRand_r[layerIndex];
+                        if (existingname !== null && !rule.hasOwnProperty('discard')) {
+                            logError(`Rule matches object types that can't overlap: "${object_name.toUpperCase()}" and "${existingname.toUpperCase()}".`, rule.lineNumber);
                         }
 
                         layersUsed_r[layerIndex] = object_name;
 
                         if (object_dir.length > 0) {
-                            postMovementsLayerMask_r.ishiftor(0x1f, 5 * layerIndex);
+                            rhsBitVectors.postMovementsLayerMask_r.ishiftor(0x1f, STRIDE_5 * layerIndex);
                         }
 
-                        let layerMask = state.layerMasks[layerIndex];
+                        const layerMask = state.layerMasks[layerIndex];
 
                         if (object) {
-                            objectsSet.ibitset(object.id);
-                            objectsClear.ior(layerMask);
-                            objectlayers_r.ishiftor(0x1f, 5 * layerIndex);
-                        } else {
-                            // shouldn't need to do anything here...
+                            rhsBitVectors.objectsSet.ibitset(object.id);
+                            rhsBitVectors.objectsClear.ior(layerMask);
+                            rhsBitVectors.objectlayers_r.ishiftor(0x1f, STRIDE_5 * layerIndex);
                         }
-                        //possibility - if object not present on lhs in same position, clear movement
+
                         if (object_dir === 'stationary') {
-                            movementsClear.ishiftor(0x1f, 5 * layerIndex);
-                        }
-                        if (object_dir === 'randomdir') {
-                            randomDirMask_r.ishiftor(dirMasks[object_dir], 5 * layerIndex);
+                            rhsBitVectors.movementsClear.ishiftor(0x1f, STRIDE_5 * layerIndex);
+                        } else if (object_dir === 'randomdir') {
+                            rhsBitVectors.randomDirMask_r.ishiftor(dirMasks[object_dir], STRIDE_5 * layerIndex);
                         } else {
-                            movementsSet.ishiftor(dirMasks[object_dir], 5 * layerIndex);
-                        };
+                            rhsBitVectors.movementsSet.ishiftor(dirMasks[object_dir], STRIDE_5 * layerIndex);
+                        }
                     }
                 }
 
-                //I don't know why these two ifs here are needed.
-                if (!(objectsPresent.bitsSetInArray(objectsSet.data))) {
-                    objectsClear.ior(objectsPresent); // clear out old objects
+                // Clear old objects and movements if needed
+                if (!bitVectors.objectsPresent.bitsSetInArray(rhsBitVectors.objectsSet.data)) {
+                    rhsBitVectors.objectsClear.ior(bitVectors.objectsPresent);
                 }
-                if (!(movementsPresent.bitsSetInArray(movementsSet.data))) {
-                    movementsClear.ior(movementsPresent); // ... and movements
+                if (!bitVectors.movementsPresent.bitsSetInArray(rhsBitVectors.movementsSet.data)) {
+                    rhsBitVectors.movementsClear.ior(bitVectors.movementsPresent);
                 }
 
-                /*
-                for rules like this I want to clear movements on newly-spawned entities
-                    [ >  Player | Crate ] -> [  >  Player | > Crate  ]
-                    [ > Player | ] -> [ Crate | Player ]
-
-                WITHOUT havin this rule remove movements
-                    [ > Player | ] -> [ Crate | Player ]
-                (bug #492)
-                */
-
-                for (let l = 0; l < layerCount; l++) {
-                    if (layersUsed_l[l] !== null && layersUsed_r[l] === null) {
-                        // a layer matched on the lhs, but not on the rhs
-                        objectsClear.ior(state.layerMasks[l]);
-                        postMovementsLayerMask_r.ishiftor(0x1f, 5 * l);
+                // Handle layer-specific clearing
+                for (let layerIndex = 0; layerIndex < layerCount; layerIndex++) {
+                    if (layersUsed_l[layerIndex] !== null && layersUsed_r[layerIndex] === null) {
+                        rhsBitVectors.objectsClear.ior(state.layerMasks[layerIndex]);
+                        rhsBitVectors.postMovementsLayerMask_r.ishiftor(0x1f, STRIDE_5 * layerIndex);
                     }
                 }
 
-                objectlayers_l.iclear(objectlayers_r);
+                bitVectors.objectlayers_l.iclear(rhsBitVectors.objectlayers_r);
+                rhsBitVectors.postMovementsLayerMask_r.ior(bitVectors.objectlayers_l);
 
-                postMovementsLayerMask_r.ior(objectlayers_l);
-                if (!objectsClear.iszero() || !objectsSet.iszero() || !movementsClear.iszero() || !movementsSet.iszero() || !postMovementsLayerMask_r.iszero() || !randomMask_r.iszero() || !randomDirMask_r.iszero()) {
-                    // only set a replacement if something would change
-                    cellrow_l[k].replacement = new CellReplacement([objectsClear, objectsSet, movementsClear, movementsSet, postMovementsLayerMask_r, randomMask_r, randomDirMask_r]);
+                // Set replacement if any changes would occur
+                const hasChanges = !rhsBitVectors.objectsClear.iszero() || 
+                                 !rhsBitVectors.objectsSet.iszero() || 
+                                 !rhsBitVectors.movementsClear.iszero() || 
+                                 !rhsBitVectors.movementsSet.iszero() || 
+                                 !rhsBitVectors.postMovementsLayerMask_r.iszero() || 
+                                 !rhsBitVectors.randomMask_r.iszero() || 
+                                 !rhsBitVectors.randomDirMask_r.iszero();
+
+                if (hasChanges) {
+                    cellrow_l[colIndex].replacement = new CellReplacement([
+                        rhsBitVectors.objectsClear,
+                        rhsBitVectors.objectsSet,
+                        rhsBitVectors.movementsClear,
+                        rhsBitVectors.movementsSet,
+                        rhsBitVectors.postMovementsLayerMask_r,
+                        rhsBitVectors.randomMask_r,
+                        rhsBitVectors.randomDirMask_r
+                    ]);
                 }
             }
         }

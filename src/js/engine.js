@@ -1591,9 +1591,6 @@ function CellReplacement(row) {
 	this.randomDirMask = row[6];
 };
 
-
-
-
 CellPattern.prototype.generateMatchString = function () {
 	let fn = "(true";
 	for (let i = 0; i < Math.max(STRIDE_OBJ, STRIDE_MOV); ++i) {
