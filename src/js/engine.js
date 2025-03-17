@@ -1696,11 +1696,13 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 
 		if (!${IS_ZERO("replace_RandomEntityMask", OBJECT_SIZE)}) {
 			var choices=[];
-			for (var i=0;i<32*STRIDE_OBJ;i++) {
-				if (${GET("replace_RandomEntityMask", "i")}) {
-					choices.push(i);
+			${FOR(0,(32*OBJECT_SIZE),i =>
+			`{
+				if (${GET("replace_RandomEntityMask", i)}) {
+					choices.push(${i});
 				}
-			}
+			}`
+			)}
 			var rand = choices[Math.floor(RandomGen.uniform() * choices.length)];
 			var n = state.idDict[rand];
 			var o = state.objects[n];
