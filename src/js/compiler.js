@@ -3027,49 +3027,59 @@ function compile(command, text, randomseed) {
 
 }
 
+const cache_CHECK_RATE=10;
+let cache_checkCount=0;
 function manage_compilation_caches() {
-    // console.log("CACHE_CELLPATTERN_MATCHFUNCTION size: " + Object.keys(CACHE_CELLPATTERN_MATCHFUNCTION).length);
-    // console.log("CACHE_MOVEENTITIESATINDEX size: " + Object.keys(CACHE_MOVEENTITIESATINDEX).length);
-    // console.log("CACHE_CALCULATEROWCOLMASKS size: " + Object.keys(CACHE_CALCULATEROWCOLMASKS).length);
-    // console.log("CACHE_RULE_CELLROWMATCHESFUNCTION size: " + Object.keys(CACHE_RULE_CELLROWMATCHESFUNCTION).length);
-    // console.log("CACHE_CELLPATTERN_REPLACEFUNCTION size: " + Object.keys(CACHE_CELLPATTERN_REPLACEFUNCTION).length);
-    // console.log("CACHE_MATCHCELLROW size: " + Object.keys(CACHE_MATCHCELLROW).length);
-    // console.log("CACHE_MATCHCELLROWWILDCARD size: " + Object.keys(CACHE_MATCHCELLROWWILDCARD).length);
-    // console.log("CACHE_RULE_APPLYAT size: " + Object.keys(CACHE_RULE_APPLYAT).length);
-    // console.log("CACHE_RESOLVEMOVEMENTS size: " + Object.keys(CACHE_RESOLVEMOVEMENTS).length);
-    // console.log("CACHE_RULE_FINDMATCHES size: " + Object.keys(CACHE_RULE_FINDMATCHES).length);
+    // console.log("CACHE_hitrate: " + CACHE_hit_count + " / " + CACHE_check_count + " = " + (CACHE_hit_count / CACHE_check_count));
+    
+    // cache_checkCount = (cache_checkCount + 1) % cache_CHECK_RATE;
+    // if (cache_checkCount !== 0) {
+    //     return;
+    // }
+    console.log("CACHE_CELLPATTERN_MATCHFUNCTION size: " + Object.keys(CACHE_CELLPATTERN_MATCHFUNCTION).length);
+    console.log("CACHE_MOVEENTITIESATINDEX size: " + Object.keys(CACHE_MOVEENTITIESATINDEX).length);
+    console.log("CACHE_CALCULATEROWCOLMASKS size: " + Object.keys(CACHE_CALCULATEROWCOLMASKS).length);
+    console.log("CACHE_RULE_CELLROWMATCHESFUNCTION size: " + Object.keys(CACHE_RULE_CELLROWMATCHESFUNCTION).length);
+    console.log("CACHE_CELLPATTERN_REPLACEFUNCTION size: " + Object.keys(CACHE_CELLPATTERN_REPLACEFUNCTION).length);
+    console.log("CACHE_MATCHCELLROW size: " + Object.keys(CACHE_MATCHCELLROW).length);
+    console.log("CACHE_MATCHCELLROWWILDCARD size: " + Object.keys(CACHE_MATCHCELLROWWILDCARD).length);
+    console.log("CACHE_RULE_APPLYAT size: " + Object.keys(CACHE_RULE_APPLYAT).length);
+    console.log("CACHE_RESOLVEMOVEMENTS size: " + Object.keys(CACHE_RESOLVEMOVEMENTS).length);
+    console.log("CACHE_RULE_FINDMATCHES size: " + Object.keys(CACHE_RULE_FINDMATCHES).length);
+
+
 
     // CACHE_CELLPATTERN_MATCHFUNCTION>10000, reset, for the others the limit is say 200
-    if (Object.keys(CACHE_CELLPATTERN_MATCHFUNCTION).length > 10000) {
-        CACHE_CELLPATTERN_MATCHFUNCTION = {};
-    }
-    if (Object.keys(CACHE_MOVEENTITIESATINDEX).length > 200) {
-        CACHE_MOVEENTITIESATINDEX = {};
-    }
-    if (Object.keys(CACHE_CALCULATEROWCOLMASKS).length > 200) {
-        CACHE_CALCULATEROWCOLMASKS = {};
-    }
-    if (Object.keys(CACHE_RULE_CELLROWMATCHESFUNCTION).length > 200) {
-        CACHE_RULE_CELLROWMATCHESFUNCTION = {};
-    }
-    if (Object.keys(CACHE_CELLPATTERN_REPLACEFUNCTION).length > 200) {
-        CACHE_CELLPATTERN_REPLACEFUNCTION = {};
-    }
-    if (Object.keys(CACHE_MATCHCELLROW).length > 200) {
-        CACHE_MATCHCELLROW = {};
-    }
-    if (Object.keys(CACHE_MATCHCELLROWWILDCARD).length > 200) {
-        CACHE_MATCHCELLROWWILDCARD = {};
-    }
-    if (Object.keys(CACHE_RULE_APPLYAT).length > 200) {
-        CACHE_RULE_APPLYAT = {};
-    }
-    if (Object.keys(CACHE_RESOLVEMOVEMENTS).length > 200) {
-        CACHE_RESOLVEMOVEMENTS = {};
-    }
-    if (Object.keys(CACHE_RULE_FINDMATCHES).length > 200) {
-        CACHE_RULE_FINDMATCHES = {};
-    }
+    // if (Object.keys(CACHE_CELLPATTERN_MATCHFUNCTION).length > 10000) {
+    //     CACHE_CELLPATTERN_MATCHFUNCTION = {};
+    // }
+    // if (Object.keys(CACHE_MOVEENTITIESATINDEX).length > 200) {
+    //     CACHE_MOVEENTITIESATINDEX = {};
+    // }
+    // if (Object.keys(CACHE_CALCULATEROWCOLMASKS).length > 200) {
+    //     CACHE_CALCULATEROWCOLMASKS = {};
+    // }
+    // if (Object.keys(CACHE_RULE_CELLROWMATCHESFUNCTION).length > 1000) {
+    //     CACHE_RULE_CELLROWMATCHESFUNCTION = {};
+    // }
+    // if (Object.keys(CACHE_CELLPATTERN_REPLACEFUNCTION).length > 200) {
+    //     CACHE_CELLPATTERN_REPLACEFUNCTION = {};
+    // }
+    // if (Object.keys(CACHE_MATCHCELLROW).length > 200) {
+    //     CACHE_MATCHCELLROW = {};
+    // }
+    // if (Object.keys(CACHE_MATCHCELLROWWILDCARD).length > 200) {
+    //     CACHE_MATCHCELLROWWILDCARD = {};
+    // }
+    // if (Object.keys(CACHE_RULE_APPLYAT).length > 200) {
+    //     CACHE_RULE_APPLYAT = {};
+    // }
+    // if (Object.keys(CACHE_RESOLVEMOVEMENTS).length > 200) {
+    //     CACHE_RESOLVEMOVEMENTS = {};
+    // }
+    // if (Object.keys(CACHE_RULE_FINDMATCHES).length > 200) {
+    //     CACHE_RULE_FINDMATCHES = {};
+    // }
 }
 
 

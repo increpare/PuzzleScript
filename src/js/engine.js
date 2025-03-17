@@ -1232,9 +1232,9 @@ function LEVEL_SET_CELL(level, index, vec, array_size) {
 	return result;
 }
 
-var CACHE_MOVEENTITIESATINDEX = {}
-
+let CACHE_MOVEENTITIESATINDEX = {}
 function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
+	
 	var fn = `
     let cellMask = level.getCell(positionIndex);
 	${UNROLL("cellMask &= entityMask", OBJECT_SIZE)}
@@ -1263,7 +1263,7 @@ function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 }
 
 
-var CACHE_CALCULATEROWCOLMASKS = {}
+let CACHE_CALCULATEROWCOLMASKS = {}
 function generate_calculateRowColMasks(OBJECT_SIZE, MOVEMENT_SIZE) {
 	var fn = `
 		for(let i=0;i<level.mapCellContents.data.length;i++) {
@@ -1451,7 +1451,7 @@ function Rule(rule) {
 }
 
 
-var CACHE_RULE_CELLROWMATCHESFUNCTION = {}
+let CACHE_RULE_CELLROWMATCHESFUNCTION = {}
 Rule.prototype.generateCellRowMatchesFunction = function (cellRow, ellipsisCount) {
 	if (ellipsisCount === 0) {
 		let cr_l = cellRow.length;
@@ -1632,46 +1632,79 @@ CellPattern.prototype.generateMatchString = function () {
 	return fn;
 }
 
-var CACHE_CELLPATTERN_MATCHFUNCTION = {}
-CellPattern.prototype.generateMatchFunction = function () {
-	let fn = '';
-	let mul = STRIDE_OBJ === 1 ? '' : '*' + STRIDE_OBJ;
-	for (let i = 0; i < STRIDE_OBJ; ++i) {
-		fn += '\tconst cellObjects' + i + ' = objects[i' + mul + (i ? '+' + i : '') + '];\n';
-	}
-	mul = STRIDE_MOV === 1 ? '' : '*' + STRIDE_MOV;
-	for (let i = 0; i < STRIDE_MOV; ++i) {
-		fn += '\tconst cellMovements' + i + ' = movements[i' + mul + (i ? '+' + i : '') + '];\n';
-	}
-	fn += "return " + this.generateMatchString() + ';';
-	if (fn in CACHE_CELLPATTERN_MATCHFUNCTION) {
-		return CACHE_CELLPATTERN_MATCHFUNCTION[fn];
-	}
-	return CACHE_CELLPATTERN_MATCHFUNCTION[fn] = new Function("i", "objects", "movements", fn);
+let CACHE_CELLPATTERN_MATCHFUNCTION = new Map();
+CellPattern.prototype.generateMatchFunction = function() {
+    // Calculate total size needed for the key array
+    const keyLength = STRIDE_OBJ * 2 + STRIDE_MOV * 2 + 
+                     this.anyObjectsPresent.length * STRIDE_OBJ + 2;
+    const keyArray = new Uint32Array(keyLength);
+    let keyIndex = 0;
+
+    // Fill the array with data
+    for (let i = 0; i < STRIDE_OBJ; i++) {
+        keyArray[keyIndex++] = this.objectsPresent.data[i] || 0;
+        keyArray[keyIndex++] = this.objectsMissing.data[i] || 0;
+    }
+    for (let i = 0; i < STRIDE_MOV; i++) {
+        keyArray[keyIndex++] = this.movementsPresent.data[i] || 0;
+        keyArray[keyIndex++] = this.movementsMissing.data[i] || 0;
+    }
+    for (let i = 0; i < this.anyObjectsPresent.length; i++) {
+        for (let j = 0; j < STRIDE_OBJ; j++) {
+            keyArray[keyIndex++] = this.anyObjectsPresent[i].data[j] || 0;
+        }
+    }
+    keyArray[keyIndex++] = STRIDE_OBJ;
+    keyArray[keyIndex++] = STRIDE_MOV;
+	var str_key = keyArray.join('|');
+
+    if (CACHE_CELLPATTERN_MATCHFUNCTION.has(str_key)) {
+        return CACHE_CELLPATTERN_MATCHFUNCTION.get(str_key);
+    }
+
+    const objStride = STRIDE_OBJ === 1 ? '' : `*${STRIDE_OBJ}`;
+    const movStride = STRIDE_MOV === 1 ? '' : `*${STRIDE_MOV}`;
+    
+    let fn = '';
+    
+    for (let i = 0; i < STRIDE_OBJ; ++i) {
+        fn += `const cellObjects${i} = objects[i${objStride}${i ? '+' + i : ''}];\n`;
+    }
+    
+    for (let i = 0; i < STRIDE_MOV; ++i) {
+        fn += `const cellMovements${i} = movements[i${movStride}${i ? '+' + i : ''}];\n`;
+    }
+    
+    fn += `return ${this.generateMatchString()};`;
+
+    const result = new Function("i", "objects", "movements", fn);
+    CACHE_CELLPATTERN_MATCHFUNCTION.set(str_key, result);
+    return result;
 }
 
 let _o1, _o2, _o2_5, _o3, _o4, _o5, _o6, _o7, _o8, _o9, _o10, _o11, _o12;
 let _m1, _m2, _m3;
 
-var CACHE_CELLPATTERN_REPLACEFUNCTION = {}
+let CACHE_CELLPATTERN_REPLACEFUNCTION = {}
 CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_SIZE) {
 	//this function is called so often that I cache it in a smart way.
-	const hash = [
-        this.replacement?.objectsSet?.data?.join(','),
-        this.replacement?.objectsClear?.data?.join(','),
-        this.replacement?.movementsSet?.data?.join(','),
-        this.replacement?.movementsClear?.data?.join(','),
-        this.replacement?.movementsLayerMask?.data?.join(','),
-        this.replacement?.randomEntityMask?.data?.join(','),
-        this.replacement?.randomDirMask?.data?.join(','),
+	const hash = this.replacement ? [
+        ...(this.replacement.objectsSet.data),
+        ...(this.replacement.objectsClear.data),
+        ...(this.replacement.movementsSet.data),
+        ...(this.replacement.movementsClear.data),
+        ...(this.replacement.movementsLayerMask.data),
+        ...(this.replacement.randomEntityMask.data),
+        ...(this.replacement.randomDirMask.data),
         OBJECT_SIZE,
         MOVEMENT_SIZE
-    ].join('|');
+    ].join('|') : [OBJECT_SIZE, MOVEMENT_SIZE].join('|');
 
 	if (hash in CACHE_CELLPATTERN_REPLACEFUNCTION) {
 		return CACHE_CELLPATTERN_REPLACEFUNCTION[hash];
 	}
 
+	const replace_RandomEntityMask_zero = this.replacement?.randomEntityMask.iszero()
 	let fn = `	
 		var replace = this.replacement;
 
@@ -1679,25 +1712,25 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 			return false;
 		}
 
-		var replace_RandomEntityMask = replace.randomEntityMask;
-		var replace_RandomDirMask = replace.randomDirMask;
+		const replace_RandomEntityMask = replace.randomEntityMask;
+		const replace_RandomDirMask = replace.randomDirMask;
 
-		var objectsSet = _o1;	
+		const objectsSet = _o1;	
 		${UNROLL("objectsSet = replace.objectsSet", OBJECT_SIZE)}
 	
-		var objectsClear = _o2;
+		const objectsClear = _o2;
 		${UNROLL("objectsClear = replace.objectsClear", OBJECT_SIZE)}
 
-		var movementsSet = _m1;
+		const movementsSet = _m1;
 		${UNROLL("movementsSet = replace.movementsSet", MOVEMENT_SIZE)}
 		
-		var movementsClear = _m2;
+		const movementsClear = _m2;
 		${UNROLL("movementsClear = replace.movementsClear", MOVEMENT_SIZE)}
 
 		${UNROLL("movementsClear |= replace.movementsLayerMask", MOVEMENT_SIZE)}
 
 		if (!${IS_ZERO("replace_RandomEntityMask", OBJECT_SIZE)}) {
-			var choices=[];
+			const choices=[];
 			${FOR(0,(32*OBJECT_SIZE),i =>
 			`{
 				if (${GET("replace_RandomEntityMask", i)}) {
@@ -1705,9 +1738,9 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 				}
 			}`
 			)}
-			var rand = choices[Math.floor(RandomGen.uniform() * choices.length)];
-			var n = state.idDict[rand];
-			var o = state.objects[n];
+			const rand = choices[Math.floor(RandomGen.uniform() * choices.length)];
+			const n = state.idDict[rand];
+			const o = state.objects[n];
 			${IBITSET("objectsSet", "rand")}
 			${UNROLL("objectsClear |= state.layerMasks[o.layer]", OBJECT_SIZE)}
 			${ISHIFTOR("movementsClear", "0x1f", "(5 * o.layer)")}
@@ -1716,20 +1749,20 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 			${FOR(0, LAYER_COUNT, layerIndex =>
 			`{
 				if (${GET("replace_RandomDirMask", 5*layerIndex )}) {
-					var randomDir = Math.floor(RandomGen.uniform()*4);
+					const randomDir = Math.floor(RandomGen.uniform()*4);
 					${IBITSET("movementsSet", `(randomDir + 5 * ${layerIndex})`)}
 				}
 			}`
 			)}
 		}
 		
-		var curCellMask = _o2_5
+		const curCellMask = _o2_5
 		${LEVEL_GET_CELL_INTO("level", "currentIndex", "curCellMask", OBJECT_SIZE)}
-		var curMovementMask = level.getMovements(currentIndex);
+		const curMovementMask = level.getMovements(currentIndex);
 
-		var oldCellMask = _o3
+		const oldCellMask = _o3
 		${UNROLL("oldCellMask = curCellMask", OBJECT_SIZE)}
-		var oldMovementMask = _m3;
+		const oldMovementMask = _m3;
 		${UNROLL("oldMovementMask = curMovementMask", MOVEMENT_SIZE)}
 
 		${UNROLL("curCellMask &= ~objectsClear", OBJECT_SIZE)}
@@ -1738,14 +1771,13 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		${UNROLL("curMovementMask &= ~movementsClear", MOVEMENT_SIZE)}
 		${UNROLL("curMovementMask |= movementsSet", MOVEMENT_SIZE)}
 
-		var rigidchange=false;
 		var curRigidGroupIndexMask =0;
 		var curRigidMovementAppliedMask =0;
+		let rigidchange=false;
 		if (rule.isRigid) {
-			var rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber];
-			rigidGroupIndex++;//don't forget to -- it when decoding :O
-			var rigidMask = new BitVec(STRIDE_MOV);
-			for (var layer = 0; layer < level.layerCount; layer++) {
+			let rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1;
+			const rigidMask = new BitVec(STRIDE_MOV);
+			for (let layer = 0; layer < level.layerCount; layer++) {
 				${ISHIFTOR("rigidMask", "rigidGroupIndex", "(layer * 5)")}
 			}
 			${UNROLL("rigidMask &= replace.movementsLayerMask", MOVEMENT_SIZE)}
@@ -1753,16 +1785,16 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 			curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE_MOV);
 			curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE_MOV);
 
-				if (!${BITS_SET_IN_ARRAY("rigidMask", "curRigidGroupIndexMask.data", MOVEMENT_SIZE)} &&
-				!${BITS_SET_IN_ARRAY("replace.movementsLayerMask", "curRigidMovementAppliedMask.data", MOVEMENT_SIZE)}) {
+			if (!${BITS_SET_IN_ARRAY("rigidMask", "curRigidGroupIndexMask.data", MOVEMENT_SIZE)} &&
+				!${BITS_SET_IN_ARRAY("replace.movementsLayerMask", "curRigidMovementAppliedMask.data", MOVEMENT_SIZE)}) 
+			{
 				${UNROLL("curRigidGroupIndexMask |= rigidMask", MOVEMENT_SIZE)}
 				${UNROLL("curRigidMovementAppliedMask |= replace.movementsLayerMask", MOVEMENT_SIZE)}
 				rigidchange=true;
-
 			}
 		}
 
-		var result = false;
+		let result = false;
 
 		//check if it's changed
 		if (!${EQUALS("oldCellMask", "curCellMask", OBJECT_SIZE)} || !${EQUALS("oldMovementMask", "curMovementMask", MOVEMENT_SIZE)} || rigidchange) { 
@@ -1785,8 +1817,8 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 			${LEVEL_SET_CELL("level", "currentIndex", "curCellMask", OBJECT_SIZE)}
 			${LEVEL_SET_MOVEMENTS("level", "currentIndex", "curMovementMask", MOVEMENT_SIZE)}
 
-			var colIndex=(currentIndex/level.height)|0;
-			var rowIndex=(currentIndex%level.height);
+			const colIndex=(currentIndex/level.height)|0;
+			const rowIndex=(currentIndex%level.height);
 
 			${UNROLL("level.colCellContents[colIndex] |= curCellMask", OBJECT_SIZE)}
 			${UNROLL("level.rowCellContents[rowIndex] |= curCellMask", OBJECT_SIZE)}
@@ -1800,7 +1832,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 }
 
 
-var CACHE_MATCHCELLROW = {}
+let CACHE_MATCHCELLROW = {}
 function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 	var fn = `
 	let result=[];
@@ -1884,7 +1916,7 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 	return CACHE_MATCHCELLROW[fn] = new Function("level", "direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", fn);
 }
 
-var CACHE_MATCHCELLROWWILDCARD = {}
+let CACHE_MATCHCELLROWWILDCARD = {}
 function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 	var fn = `
 	let result=[];
@@ -2063,6 +2095,23 @@ function IF(condition) {
 		return "/*";
 	}
 }
+
+function IF_LAZY(condition, fn) {
+	if (condition) {
+		return fn();
+	} else {
+		return "";
+	}
+}
+
+function IF_ELSE_LAZY(condition, fn_if, fn_else) {
+	if (condition) {
+		return fn_if();
+	} else {
+		return fn_else();
+	}
+}
+
 function ENDIF(condition) {
 	if (condition) {
 		return "";
@@ -2094,7 +2143,7 @@ function FOR(start, end, fn) {
 }
 
 
-var CACHE_RULE_APPLYAT = {}
+let CACHE_RULE_APPLYAT = {}
 Rule.prototype.generateApplyAt = function (patterns, ellipsisCount, OBJECT_SIZE, MOVEMENT_SIZE) {
 	var fn = `
 	//have to double check they apply 
@@ -2487,7 +2536,7 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup) {
 //     return doUndo;
 // }
 
-var CACHE_RESOLVEMOVEMENTS = {}
+let CACHE_RESOLVEMOVEMENTS = {}
 function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE) {
 	var fn = `
 		let moved=true;
@@ -3083,7 +3132,7 @@ function goToTitleScreen() {
 	}
 }
 
-var CACHE_RULE_FINDMATCHES = {}
+let CACHE_RULE_FINDMATCHES = {}
 Rule.prototype.generateFindMatchesFunction = function () {
 	let fn = '';
 
