@@ -1195,19 +1195,17 @@ function concretizePropertyRule(state, rule, lineNumber) {
         }
 
         //for each property replacement in that rule
-        for (let property in cur_rule.propertyReplacement) {
-            if (cur_rule.propertyReplacement.hasOwnProperty(property)) {
-                let replacementInfo = cur_rule.propertyReplacement[property];
-                let concreteType = replacementInfo[0];
-                let occurrenceCount = replacementInfo[1];
-                if (occurrenceCount === 1) {
-                    //do the replacement
-                    for (let j = 0; j < cur_rule.rhs.length; j++) {
-                        let cellRow_rhs = cur_rule.rhs[j];
-                        for (let k = 0; k < cellRow_rhs.length; k++) {
-                            let cell = cellRow_rhs[k];
-                            concretizePropertyInCell(cell, property, concreteType);
-                        }
+        for (let property of Object.keys(cur_rule.propertyReplacement)) {
+            let replacementInfo = cur_rule.propertyReplacement[property];
+            let concreteType = replacementInfo[0];
+            let occurrenceCount = replacementInfo[1];
+            if (occurrenceCount === 1) {
+                //do the replacement
+                for (let j = 0; j < cur_rule.rhs.length; j++) {
+                    let cellRow_rhs = cur_rule.rhs[j];
+                    for (let k = 0; k < cellRow_rhs.length; k++) {
+                        let cell = cellRow_rhs[k];
+                        concretizePropertyInCell(cell, property, concreteType);
                     }
                 }
             }
@@ -1218,7 +1216,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
     let rhsPropertyRemains = '';
     for (let i = 0; i < result.length; i++) {
         let cur_rule = result[i];
-        delete result.propertyReplacement;
+        delete cur_rule.propertyReplacement;
         for (let j = 0; j < cur_rule.rhs.length; j++) {
             let cur_rulerow = cur_rule.rhs[j];
             for (let k = 0; k < cur_rulerow.length; k++) {
@@ -1235,7 +1233,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
 
 
     if (rhsPropertyRemains.length > 0) {
-        logError('This rule has a property on the right-hand side, \"' + rhsPropertyRemains.toUpperCase() + "\", that can't be inferred from the left-hand side.  (either for every property on the right there has to be a corresponding one on the left in the same cell, OR, if there's a single occurrence of a particular property name on the left, all properties of the same name on the right are assumed to be the same).", lineNumber);
+        logError('This rule has a property on the right-hand side, "' + rhsPropertyRemains.toUpperCase() + "\", that can't be inferred from the left-hand side.  (either for every property on the right there has to be a corresponding one on the left in the same cell, OR, if there's a single occurrence of a particular property name on the left, all properties of the same name on the right are assumed to be the same).", lineNumber);
         return [];
     }
 
@@ -1443,7 +1441,7 @@ function concretizeMovingRule(state, rule, lineNumber) {
     let rhsAmbiguousMovementsRemain = '';
     for (let i = 0; i < result.length; i++) {
         let cur_rule = result[i];
-        delete result.movingReplacement;
+        delete cur_rule.movingReplacement;
         for (let j = 0; j < cur_rule.rhs.length; j++) {
             let cur_rulerow = cur_rule.rhs[j];
             for (let k = 0; k < cur_rulerow.length; k++) {
@@ -1458,7 +1456,7 @@ function concretizeMovingRule(state, rule, lineNumber) {
 
 
     if (rhsAmbiguousMovementsRemain.length > 0) {
-        logError('This rule has an ambiguous movement on the right-hand side, \"' + rhsAmbiguousMovementsRemain + "\", that can't be inferred from the left-hand side.  (either for every ambiguous movement associated to an entity on the right there has to be a corresponding one on the left attached to the same entity, OR, if there's a single occurrence of a particular ambiguous movement on the left, all properties of the same movement attached to the same object on the right are assumed to be the same (or something like that)).", lineNumber);
+        logError('This rule has an ambiguous movement on the right-hand side, "' + rhsAmbiguousMovementsRemain + "\", that can't be inferred from the left-hand side.  (either for every ambiguous movement associated to an entity on the right there has to be a corresponding one on the left attached to the same entity, OR, if there's a single occurrence of a particular ambiguous movement on the left, all properties of the same movement attached to the same object on the right are assumed to be the same (or something like that)).", lineNumber);
         state.invalid = true;
     }
 
