@@ -2448,44 +2448,49 @@ function applyRandomRuleGroup(level, ruleGroup) {
 
 
 function applyRuleGroup(ruleGroup) {
-	if (ruleGroup[0].isRandom) {
-		return applyRandomRuleGroup(level, ruleGroup);
-	}
+    if (ruleGroup[0].isRandom) {
+        return applyRandomRuleGroup(level, ruleGroup);
+    }
 
-	let loopPropagated = false;
-	let propagated = true;
-	let loopcount = 0;
-	let nothing_happened_counter = -1;
-	while (propagated) {
-		loopcount++;
-		if (loopcount > 200) {
-			logErrorCacheable("Got caught looping lots in a rule group :O", ruleGroup[0].lineNumber, true);
-			break;
-		}
-		propagated = false;
+    const MAX_LOOP_COUNT = 200;
+    const GROUP_LENGTH = ruleGroup.length;
+    let hasChanges = false;        // Track if any iteration made changes
+    let madeChangeThisLoop = true; // Start true to enter first loop
+    let loopcount = 0;
+    
+    while (madeChangeThisLoop) {
+        if (++loopcount > MAX_LOOP_COUNT) {
+            logErrorCacheable("Got caught looping lots in a rule group :O", ruleGroup[0].lineNumber, true);
+            break;
+        }
 
-		for (let ruleIndex = 0; ruleIndex < ruleGroup.length; ruleIndex++) {
-			let rule = ruleGroup[ruleIndex];
-			if (rule.tryApply(level)) {
-				propagated = true;
-				nothing_happened_counter = 0;//why am I resetting to 1 rather than 0? because I've just verified that applications of the current rule are exhausted
-			} else {
-				nothing_happened_counter++;
-			}
-			if (nothing_happened_counter === ruleGroup.length)
-				break;
-		}
-		if (propagated) {
-			loopPropagated = true;
+        madeChangeThisLoop = false;
+        let consecutiveFailures = 0;
 
-			if (verbose_logging) {
-				debugger_turnIndex++;
-				addToDebugTimeline(level, -2);//pre-movement-applied debug state
-			}
-		}
-	}
+        for (let ruleIndex = 0; ruleIndex < GROUP_LENGTH; ruleIndex++) {
+            const rule = ruleGroup[ruleIndex];
+            
+            if (rule.tryApply(level)) {
+                madeChangeThisLoop = true;
+                consecutiveFailures = 0;
+            } else {
+                consecutiveFailures++;
+                if (consecutiveFailures === GROUP_LENGTH) {
+                    break; // No rule can apply - exit early
+                }
+            }            
+        }
 
-	return loopPropagated;
+        if (madeChangeThisLoop) {
+            hasChanges = true;
+            if (verbose_logging) {
+                debugger_turnIndex++;
+                addToDebugTimeline(level, -2);
+            }
+        }
+    }
+
+    return hasChanges;
 }
 
 function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup) {
