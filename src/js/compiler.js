@@ -29,7 +29,7 @@ function generateSpriteMatrix(dat) {
         let row = [];
         for (let j = 0; j < dat.length; j++) {
             let ch = dat[i].charAt(j);
-            if (ch == '.') {
+            if (ch === '.') {
                 row.push(-1);
             } else {
                 row.push(ch);
@@ -207,10 +207,10 @@ function generateExtraMembers(state) {
                 for (let j = 1; j < dat.length; j++) {
                     let n = dat[j];
                     let o = state.objects[n];
-                    if (o == undefined) {
+                    if (o === undefined) {
                         logError('Object not found with name ' + n, state.lineNumber);
                     }
-                    if (mask[o.layer] == -1) {
+                    if (mask[o.layer] === -1) {
                         mask[o.layer] = o.id;
                     } else {
                         if (o.layer === undefined) {
@@ -429,7 +429,7 @@ function levelFromString(state, level) {
             }
             let mask = state.glyphDict[ch];
 
-            if (mask == undefined) {
+            if (mask === undefined) {
                 if (state.propertiesDict[ch] === undefined) {
                     logError('Error, symbol "' + ch + '", used in map, not found.', level[0] + j);
                 } else {
@@ -471,7 +471,7 @@ function levelsToArray(state) {
         if (level.length === 0) {
             continue;
         }
-        if (level[0] == '\n') {
+        if (level[0] === '\n') {
 
             let o = {
                 message: level[1]
@@ -633,7 +633,7 @@ function processRuleString(rule, state, curRules) {
         }
     }
 
-    if (tokens.indexOf('->') == -1) {
+    if (tokens.indexOf('->') === -1) {
         logError("A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird", lineNumber);
     }
 
@@ -677,7 +677,7 @@ function processRuleString(rule, state, curRules) {
                         directions.push(token);
                     } else if (simpleRelativeDirections.indexOf(token) >= 0) {
                         logError('You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions', lineNumber);
-                    } else if (token == '[') {
+                    } else if (token === '[') {
                         if (directions.length === 0) {
                             directions = directions.concat(directionaggregates['orthogonal']);
                         }
@@ -690,7 +690,7 @@ function processRuleString(rule, state, curRules) {
                 }
             case 1:
                 {
-                    if (token == '[') {
+                    if (token === '[') {
                         bracketbalance++;
                         if (bracketbalance > 1) {
                             logWarning("Multiple opening brackets without closing brackets.  Something fishy here.  Every '[' has to be closed by a ']', and you can't nest them.", lineNumber);
@@ -701,7 +701,7 @@ function processRuleString(rule, state, curRules) {
                         incellrow = true;
                         curcell = [];
                     } else if (reg_directions_only.exec(token)) {
-                        if (curcell.length % 2 == 1) {
+                        if (curcell.length % 2 === 1) {
                             logError("Error, an item can only have one direction/action at a time, but you're looking for several at once!", lineNumber);
                         } else if (!incellrow) {
                             logWarning("Invalid syntax. Directions should be placed at the start of a rule.", lineNumber);
@@ -710,10 +710,10 @@ function processRuleString(rule, state, curRules) {
                         } else {
                             curcell.push(token);
                         }
-                    } else if (token == '|') {
+                    } else if (token === '|') {
                         if (!incellrow) {
                             logWarning('Janky syntax.  "|" should only be used inside cell rows (the square brackety bits).', lineNumber);
-                        } else if (curcell.length % 2 == 1) {
+                        } else if (curcell.length % 2 === 1) {
                             logError('In a rule, if you specify a movement, it has to act on an object.', lineNumber);
                         } else {
                             curcellrow.push(curcell);
@@ -727,7 +727,7 @@ function processRuleString(rule, state, curRules) {
                             return null;
                         }
 
-                        if (curcell.length % 2 == 1) {
+                        if (curcell.length % 2 === 1) {
                             if (curcell[0] === '...') {
                                 logError('Cannot end a rule with ellipses.', lineNumber);
                             } else {
@@ -765,10 +765,10 @@ function processRuleString(rule, state, curRules) {
                     } else if (state.names.indexOf(token) >= 0) {
                         if (!incellrow) {
                             logWarning("Invalid token " + token.toUpperCase() + ". Object names should only be used within cells (square brackets).", lineNumber);
-                        } else if (curcell.length % 2 == 0) {
+                        } else if (curcell.length % 2 === 0) {
                             curcell.push('');
                             curcell.push(token);
-                        } else if (curcell.length % 2 == 1) {
+                        } else if (curcell.length % 2 === 1) {
                             curcell.push(token);
                         }
                     } else if (token === '...') {
@@ -891,7 +891,7 @@ function rulesToArray(state) {
     for (let i = 0; i < oldrules.length; i++) {
         let lineNumber = oldrules[i][1];
         let newrule = processRuleString(oldrules[i], state, rules);
-        if (newrule == null) {
+        if (newrule === null) {
             continue;//error in processing string.
         }
         if (newrule.bracket !== undefined) {
@@ -980,9 +980,9 @@ function rewriteUpLeftRules(rule) {
         return;
     }
 
-    if (rule.direction == 'up') {
+    if (rule.direction === 'up') {
         rule.direction = 'down';
-    } else if (rule.direction == 'left') {
+    } else if (rule.direction === 'left') {
         rule.direction = 'right';
     } else {
         return;
@@ -1021,7 +1021,7 @@ function getPropertiesFromCell(state, cell) {
     for (let j = 0; j < cell.length; j += 2) {
         let dir = cell[j];
         let name = cell[j + 1];
-        if (dir == "random") {
+        if (dir === "random") {
             continue;
         }
         if (name in state.propertiesDict) {
@@ -1116,7 +1116,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
             let properties_r = getPropertiesFromCell(state, row_r[k]);
             for (let prop_n = 0; prop_n < properties_r.length; prop_n++) {
                 let property = properties_r[prop_n];
-                if (properties_l.indexOf(property) == -1) {
+                if (properties_l.indexOf(property) === -1) {
                     ambiguousProperties[property] = true;
                 }
             }
@@ -1995,7 +1995,7 @@ function arrangeRulesByGroupNumber(state) {
             targetArray = aggregates_late;
         }
 
-        if (targetArray[rule.groupNumber] == undefined) {
+        if (targetArray[rule.groupNumber] === undefined) {
             targetArray[rule.groupNumber] = [];
         }
         targetArray[rule.groupNumber].push(rule);
@@ -2144,7 +2144,7 @@ function generateMasks(state) {
         for (let j = 0; j < state.objectCount; j++) {
             let n = state.idDict[j];
             let o = state.objects[n];
-            if (o.layer == layer) {
+            if (o.layer === layer) {
                 layerMask.ibitset(o.id);
             }
         }
@@ -2976,13 +2976,13 @@ function compile(command, text, randomseed) {
 
     if (errorCount > 0) {
         if (IDE === false) {
-            if (state == null) {
+            if (state === null) {
                 consoleError('<span class="systemMessage">Errors detected during compilation; I can\'t salvage anything playable from it.  If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.</span>');
             } else {
                 consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly. If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.</span>');
             }
         } else {
-            if (state == null) {
+            if (state === null) {
                 consoleError('<span class="systemMessage">Errors detected during compilation; I can\'t salvage anything playable from it.</span>');
             } else {
                 consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.</span>');
@@ -2999,7 +2999,7 @@ function compile(command, text, randomseed) {
         for (let i = 0; i < state.lateRules.length; i++) {
             ruleCount += state.lateRules[i].length;
         }
-        if (command[0] == "restart") {
+        if (command[0] === "restart") {
             consolePrint('<span class="systemMessage">Successful Compilation, generated ' + ruleCount + ' instructions.</span>');
         } else {
             consolePrint('<span class="systemMessage">Successful live recompilation, generated ' + ruleCount + ' instructions.</span>');

@@ -397,7 +397,7 @@ function drawMessageScreen() {
 let loadedLevelSeed = 0;
 
 function loadLevelFromLevelDat(state, leveldat, randomseed, clearinputhistory) {
-	if (randomseed == null) {
+	if (!randomseed) {
 		randomseed = (Math.random() + Date.now()).toString();
 	}
 	loadedLevelSeed = randomseed;
@@ -1040,7 +1040,7 @@ function DoUndo(force, ignoreDuplicates) {
 	}
 
 	if (ignoreDuplicates) {
-		while (backupDiffers() == false) {
+		while (backupDiffers() === false) {
 			backups.pop();
 		}
 	}
@@ -2216,14 +2216,14 @@ Rule.prototype.generateApplyAt = function (patterns, ellipsisCount, OBJECT_SIZE,
 	{
 	${FOR(0, patterns.length, cellRowIndex => `
 		{
-			${IF(ellipsisCount[cellRowIndex] == 0)}
+			${IF(ellipsisCount[cellRowIndex] === 0)}
 				if ( ! this.cellRowMatches[${cellRowIndex}](
 					this.patterns[${cellRowIndex}], 
 						tuple[${cellRowIndex}], 
 						delta, level.objects, level.movements
 						) )
 				return false
-			${ENDIF(ellipsisCount[cellRowIndex] == 0)}
+			${ENDIF(ellipsisCount[cellRowIndex] === 0)}
 			${IF(ellipsisCount[cellRowIndex] === 1)}
 				if ( this.cellRowMatches[${cellRowIndex}](
 						this.patterns[${cellRowIndex}], 
