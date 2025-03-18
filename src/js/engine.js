@@ -2454,16 +2454,12 @@ function applyRuleGroup(ruleGroup) {
 
     const MAX_LOOP_COUNT = 200;
     const GROUP_LENGTH = ruleGroup.length;
-    let hasChanges = false;        // Track if any iteration made changes
-    let madeChangeThisLoop = true; // Start true to enter first loop
+    const shouldLog = verbose_logging;
+    let hasChanges = false;        
+    let madeChangeThisLoop = true; 
     let loopcount = 0;
     
-    while (madeChangeThisLoop) {
-        if (++loopcount > MAX_LOOP_COUNT) {
-            logErrorCacheable("Got caught looping lots in a rule group :O", ruleGroup[0].lineNumber, true);
-            break;
-        }
-
+    while (madeChangeThisLoop && loopcount++ < MAX_LOOP_COUNT) {
         madeChangeThisLoop = false;
         let consecutiveFailures = 0;
 
@@ -2476,18 +2472,22 @@ function applyRuleGroup(ruleGroup) {
             } else {
                 consecutiveFailures++;
                 if (consecutiveFailures === GROUP_LENGTH) {
-                    break; // No rule can apply - exit early
+                    break;  // No rule can apply - exit early
                 }
             }            
         }
 
         if (madeChangeThisLoop) {
             hasChanges = true;
-            if (verbose_logging) {
+            if (shouldLog) {
                 debugger_turnIndex++;
                 addToDebugTimeline(level, -2);
             }
         }
+    }
+
+    if (loopcount >= MAX_LOOP_COUNT) {
+        logErrorCacheable("Got caught looping lots in a rule group :O", ruleGroup[0].lineNumber, true);
     }
 
     return hasChanges;
