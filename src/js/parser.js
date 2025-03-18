@@ -770,18 +770,18 @@ var codeMirrorFn = function() {
                     else if (state.section === 'levels') {
                         //populate character abbreviations
                         for (var n in state.objects) {
-                            if (state.objects.hasOwnProperty(n) && n.length == 1) {
+                            if (state.objects.hasOwnProperty(n) && n.length === 1) {
                                 state.abbrevNames.push(n);
                             }
                         }
 
                         for (var i = 0; i < state.legend_synonyms.length; i++) {
-                            if (state.legend_synonyms[i][0].length == 1) {
+                            if (state.legend_synonyms[i][0].length === 1) {
                                 state.abbrevNames.push(state.legend_synonyms[i][0]);
                             }
                         }
                         for (var i = 0; i < state.legend_aggregates.length; i++) {
-                            if (state.legend_aggregates[i][0].length == 1) {
+                            if (state.legend_aggregates[i][0].length === 1) {
                                 state.abbrevNames.push(state.legend_aggregates[i][0]);
                             }
                         }
@@ -921,7 +921,7 @@ var codeMirrorFn = function() {
                                 return null;
                             }
                             o.spritematrix = state.objects_spritematrix;
-                            if (spritematrix.length === 5 && spritematrix[spritematrix.length - 1].length == 5) {
+                            if (spritematrix.length === 5 && spritematrix[spritematrix.length - 1].length === 5) {
                                 state.objects_section = 0;
                             }
 
@@ -1457,7 +1457,7 @@ var codeMirrorFn = function() {
                         if (stream.match(/[\p{Z}\s]*message\b[\p{Z}\s]*/u, true)) {
                             state.tokenIndex = -4;//-4/2 = message/level
                             var newdat = ['\n', mixedCase.slice(stream.pos).trim(),state.lineNumber];
-                            if (state.levels[state.levels.length - 1].length == 0) {
+                            if (state.levels[state.levels.length - 1].length === 0) {
                                 state.levels.splice(state.levels.length - 1, 0, newdat);
                             } else {
                                 state.levels.push(newdat);
@@ -1467,7 +1467,7 @@ var codeMirrorFn = function() {
                             logWarning("You probably meant to put a space after 'message' innit.  That's ok, I'll still interpret it as a message, but you probably want to put a space there.",state.lineNumber);
                             state.tokenIndex = -4;//-4/2 = message/level
                             var newdat = ['\n', mixedCase.slice(stream.pos).trim(),state.lineNumber];
-                            if (state.levels[state.levels.length - 1].length == 0) {
+                            if (state.levels[state.levels.length - 1].length === 0) {
                                 state.levels.splice(state.levels.length - 1, 0, newdat);
                             } else {
                                 //don't seem to ever reach this.

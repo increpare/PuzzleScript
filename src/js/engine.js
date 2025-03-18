@@ -761,7 +761,7 @@ function setGameState(_state, command, randomseed) {
 	canvasResize();
 
 
-	if (state.sounds.length == 0) {
+	if (state.sounds.length === 0) {
 		killAudioButton();
 	} else {
 		showAudioButton();
@@ -1014,7 +1014,7 @@ function DoRestart(force) {
 }
 
 function backupDiffers() {
-	if (backups.length == 0) {
+	if (backups.length === 0) {
 		return true;
 	}
 	let bak = backups[backups.length - 1];
@@ -2231,7 +2231,7 @@ Rule.prototype.generateApplyAt = function (patterns, ellipsisCount, OBJECT_SIZE,
 						tuple[${cellRowIndex}][1]+1, 
 							tuple[${cellRowIndex}][1], 
 						delta, level.objects, level.movements
-					).length == 0 )
+					).length === 0 )
 					return false
 			${ENDIF(ellipsisCount[cellRowIndex] === 1)}
 			${IF(ellipsisCount[cellRowIndex] === 2)}
@@ -2245,7 +2245,7 @@ Rule.prototype.generateApplyAt = function (patterns, ellipsisCount, OBJECT_SIZE,
 						tuple[${cellRowIndex}][2]+1, 
 							tuple[${cellRowIndex}][2], 
 							delta, level.objects, level.movements
-						).length == 0 )
+						).length === 0 )
 					return false
 			${ENDIF(ellipsisCount[cellRowIndex] === 2)}
 		}`)}
@@ -2329,7 +2329,7 @@ Rule.prototype.tryApply = function (level) {
 
 Rule.prototype.queueCommands = function () {
 
-	if (this.commands.length == 0) {
+	if (this.commands.length === 0) {
 		return;
 	}
 
@@ -2935,7 +2935,7 @@ function checkWin(dontDoWin) {
 		dontDoWin = true;
 	}
 
-	if (state.winconditions.length == 0) {
+	if (state.winconditions.length === 0) {
 		return false;
 	}
 

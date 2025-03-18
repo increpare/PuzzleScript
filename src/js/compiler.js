@@ -138,7 +138,7 @@ function generateExtraMembers(state) {
     for (let n in state.objects) {
         if (state.objects.hasOwnProperty(n)) {
             let o = state.objects[n];
-            if (o.colors.length == 0) {
+            if (o.colors.length === 0) {
                 logError('color not specified for object "' + n + '".', o.lineNumber);
                 o.colors = ["#ff00ff"];
             }
@@ -424,7 +424,7 @@ function levelFromString(state, level) {
     for (let i = 0; i < o.width; i++) {
         for (let j = 0; j < o.height; j++) {
             let ch = level[j + 1].charAt(i);
-            if (ch.length == 0) {
+            if (ch.length === 0) {
                 ch = level[j + 1].charAt(level[j + 1].length - 1);
             }
             let mask = state.glyphDict[ch];
@@ -468,7 +468,7 @@ function levelsToArray(state) {
 
     for (let levelIndex = 0; levelIndex < levels.length; levelIndex++) {
         let level = levels[levelIndex];
-        if (level.length == 0) {
+        if (level.length === 0) {
             continue;
         }
         if (level[0] == '\n') {
@@ -587,7 +587,7 @@ function processRuleString(rule, state, curRules) {
     }
     let tokens = line.split(/\s/).filter(function (v) { return v !== '' });
 
-    if (tokens.length == 0) {
+    if (tokens.length === 0) {
         logError('Spooky error!  Empty line passed to rule function.', lineNumber);
     }
 
@@ -648,7 +648,7 @@ function processRuleString(rule, state, curRules) {
                     if (token === '+') {
                         has_plus = true;
                         if (groupNumber === lineNumber) {
-                            if (curRules.length == 0) {
+                            if (curRules.length === 0) {
                                 logError('The "+" symbol, for joining a rule with the group of the previous rule, needs a previous rule to be applied to.', lineNumber);
                                 has_plus = false;
                             }
@@ -678,7 +678,7 @@ function processRuleString(rule, state, curRules) {
                     } else if (simpleRelativeDirections.indexOf(token) >= 0) {
                         logError('You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions', lineNumber);
                     } else if (token == '[') {
-                        if (directions.length == 0) {
+                        if (directions.length === 0) {
                             directions = directions.concat(directionaggregates['orthogonal']);
                         }
                         parsestate = 1;
@@ -822,7 +822,7 @@ function processRuleString(rule, state, curRules) {
     }
 
     if (lhs_cells.length != rhs_cells.length) {
-        if (commands.length > 0 && rhs_cells.length == 0) {
+        if (commands.length > 0 && rhs_cells.length === 0) {
             //ok
         } else {
             logWarning('Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right', lineNumber);
@@ -833,13 +833,13 @@ function processRuleString(rule, state, curRules) {
                 logError('In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).', lineNumber);
                 state.invalid = true;
             }
-            if (lhs_cells[i].length == 0) {
+            if (lhs_cells[i].length === 0) {
                 logError("You have an totally empty pattern on the left-hand side.  This will match *everything*.  You certainly don't want this.");
             }
         }
     }
 
-    if (lhs_cells.length == 0) {
+    if (lhs_cells.length === 0) {
         logError('This rule refers to nothing.  What the heck? :O', lineNumber);
     }
 
@@ -2171,7 +2171,7 @@ function generateMasks(state) {
 
     for (let i = 0; i < synonyms_and_properties.length; i++) {
         let synprop = synonyms_and_properties[i];
-        if (synprop.length == 2) {
+        if (synprop.length === 2) {
             // synonym (a = b)
             objectMask[synprop[0]] = objectMask[synprop[1]];
         } else {
@@ -2299,7 +2299,7 @@ function processWinConditions(state) {
     let newconditions = [];
     for (let i = 0; i < state.winconditions.length; i++) {
         let wincondition = state.winconditions[i];
-        if (wincondition.length == 0) {
+        if (wincondition.length === 0) {
             //I feel like here should never be reached, right? Not sure if it warrants an error though.
             return;
         }
@@ -2315,7 +2315,7 @@ function processWinConditions(state) {
 
         let n1 = wincondition[1];
         let n2;
-        if (wincondition.length == 5) {
+        if (wincondition.length === 5) {
             n2 = wincondition[3];
         } else {
             n2 = '\nall\n';
@@ -2660,7 +2660,7 @@ function generateSoundData(state) {
                 directions = ['___action____'];
             }
 
-            if (directions.length == 0) {
+            if (directions.length === 0) {
                 directions = ["orthogonal"];
             }
 
