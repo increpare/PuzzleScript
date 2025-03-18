@@ -1127,8 +1127,8 @@ function ISHIFTOR(tok, mask, shift) {
 	}`;
 }
 
+/*
 function GETSHIFTOR(tok, mask, shift) {
-	//this returns a value, so can't have loops or wahtever
 	var toshift = `(${shift}&31)`;
 	return `(${toshift}
 		?( 
@@ -1139,6 +1139,17 @@ function GETSHIFTOR(tok, mask, shift) {
 			${tok}.data[${shift}>>5] >>> ${toshift} 
 		)
 	) & ${mask}`
+}
+*/
+
+function GETSHIFTOR(tok, mask, shift) {
+    const toshift = shift&31;
+    const shift_5 = shift>>5;
+    if (toshift) {
+        return `${mask}&((${tok}.data[${shift_5}] >>> ${toshift}) | (${tok}.data[${shift_5}+1] << (32-${toshift})))`;
+    } else {
+        return `${mask}&(${tok}.data[${shift_5}] >>> ${toshift})`;
+    }
 }
 
 function EQUALS(tok, other, array_size) {
@@ -2548,14 +2559,15 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE) {
 				let rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
 				if (${IS_NONZERO("rigidMovementAppliedMask", MOVEMENT_SIZE)}) {
 					${UNROLL("movementMask &= rigidMovementAppliedMask", MOVEMENT_SIZE)}
-					if (${IS_NONZERO("movementMask", MOVEMENT_SIZE)}) {
+					if (${IS_NONZERO("movementMask", MOVEMENT_SIZE)}) 
+					outer_area: {
 						//find what layer was restricted
-						for (let j=0;j<level.layerCount;j++) {
-							let layerSection = ${GETSHIFTOR("movementMask", "0x1f", "(5*j)")};
+						${FOR(0,LAYER_COUNT,j=>`{
+							let layerSection = ${GETSHIFTOR("movementMask", 0x1f, 5*j)};
 							if (layerSection!==0) {
 								//this is our layer!
 								let rigidGroupIndexMask = level.rigidGroupIndexMask[i];
-								let rigidGroupIndex = ${GETSHIFTOR("rigidGroupIndexMask", "0x1f", "(5*j)")};
+								let rigidGroupIndex = ${GETSHIFTOR("rigidGroupIndexMask", 0x1f, 5*j)};
 								rigidGroupIndex--;//group indices start at zero, but are incremented for storing in the bitfield
 								let groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
 								if (bannedGroup[groupIndex]!==true){
@@ -2563,9 +2575,9 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE) {
 									//backtrackTarget = rigidBackups[rigidGroupIndex];
 									doUndo=true;
 								}
-								break;
+								break outer_area;
 							}
-						}
+						}`)}
 					}
 				}
 				for (let j=0;j<state.sfx_MovementFailureMasks.length;j++) {
