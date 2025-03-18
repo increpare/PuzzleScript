@@ -92,14 +92,12 @@ BitVec.prototype.equals = function(other) {
 }
 
 BitVec.prototype.setZero = function() {
-	for (let i = 0; i < this.data.length; ++i) {
-		this.data[i]=0;
-	}
+	this.data.fill(0);
 }
 
 BitVec.prototype.iszero = function() {
 	for (let i = 0; i < this.data.length; ++i) {
-		if (this.data[i])
+		if (this.data[i]!==0)
 			return false;
 	}
 	return true;
