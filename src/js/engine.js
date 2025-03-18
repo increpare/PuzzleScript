@@ -1107,7 +1107,9 @@ function IS_NONZERO(tok, array_size) {
 }
 
 function GET(tok, index) {
-	return `((${tok}.data[${index}>>5] & 1 << (${index} & 31)) !== 0)`;
+    const shift_5 = index >> 5;
+    const bit_position = 1 << (index & 31);
+    return `((${tok}.data[${shift_5}] & ${bit_position}) !== 0)`;
 }
 
 
@@ -1219,33 +1221,33 @@ function SET_ZERO(tok, array_size) {
 function LEVEL_GET_CELL_INTO(level, index, targetarray, OBJECT_SIZE) {
 	var result = "";
 	for (let i = 0; i < OBJECT_SIZE; i++) {
-		result += `${targetarray}.data[${i}]=level.objects[${index}*${OBJECT_SIZE}+${i}];\n`;
+		result += targetarray+`.data[${i}]=level.objects[${index}*${OBJECT_SIZE}+${i}];\n`;
 	}
 	return result;
 }
 
 
-function LEVEL_GET_MOVEMENTS_INTO(level, index, targetarray, MOVEMENT_SIZE) {
+function LEVEL_GET_MOVEMENTS_INTO( index, targetarray, MOVEMENT_SIZE) {
 	var result = "";
 	for (let i = 0; i < MOVEMENT_SIZE; i++) {
-		result += `${targetarray}.data[${i}]=level.movements[${index}*${MOVEMENT_SIZE}+${i}];\n`;
+		result += targetarray+`.data[${i}]=level.movements[${index}*${MOVEMENT_SIZE}+${i}];\n`;
 	}
 	return result;
 }
 
-function LEVEL_SET_MOVEMENTS(level, index, vec, array_size) {
+function LEVEL_SET_MOVEMENTS(index, vec, array_size) {
 	var result = "{";
 	for (let i = 0; i < array_size; i++) {
-		result += `\t${level}.movements[${index}*${array_size}+${i}]=${vec}.data[${i}];\n`;
+		result += `\tlevel.movements[${index}*${array_size}+${i}]=${vec}.data[${i}];\n`;
 	}
 	result += `\tconst targetIndex = ${index}*${array_size}+${i};
 
-	const colIndex=(${index}/${level}.height)|0;
-	const rowIndex=(${index}%${level}.height);
+	const colIndex=(${index}/level.height)|0;
+	const rowIndex=(${index}%level.height);
 
-	${UNROLL(`${level}.colCellContents_Movements[colIndex] |= ${vec}`, array_size)}
-	${UNROLL(`${level}.rowCellContents_Movements[rowIndex] |= ${vec}`, array_size)}
-	${UNROLL(`${level}.mapCellContents_Movements |= ${vec}`, array_size)}
+	${UNROLL(`level.colCellContents_Movements[colIndex] |= ${vec}`, array_size)}
+	${UNROLL(`level.rowCellContents_Movements[rowIndex] |= ${vec}`, array_size)}
+	${UNROLL(`level.mapCellContents_Movements |= ${vec}`, array_size)}
 
 }`
 
@@ -1270,13 +1272,13 @@ function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 
 	var movementMask=_movementVecs[_movementVecIndex];
 	_movementVecIndex=(_movementVecIndex+1)%_movementVecs.length;
-	${LEVEL_GET_MOVEMENTS_INTO("level", "positionIndex", "movementMask", MOVEMENT_SIZE)}
+	${LEVEL_GET_MOVEMENTS_INTO( "positionIndex", "movementMask", MOVEMENT_SIZE)}
 
     for (let i=0;i<layers.length;i++) {
     	${ISHIFTOR("movementMask", "dirMask", "(5 * layers[i])")}
     }
 		
-    ${LEVEL_SET_MOVEMENTS("level", "positionIndex", "movementMask", MOVEMENT_SIZE)}
+    ${LEVEL_SET_MOVEMENTS( "positionIndex", "movementMask", MOVEMENT_SIZE)}
 
 	const colIndex=(positionIndex/level.height)|0;
 	const rowIndex=(positionIndex%level.height);
@@ -1871,7 +1873,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 			${UNROLL("sfxDestroyMask |= destroyed", OBJECT_SIZE)}
 
 			${LEVEL_SET_CELL("level", "currentIndex", "curCellMask", OBJECT_SIZE)}
-			${LEVEL_SET_MOVEMENTS("level", "currentIndex", "curMovementMask", MOVEMENT_SIZE)}
+			${LEVEL_SET_MOVEMENTS( "currentIndex", "curMovementMask", MOVEMENT_SIZE)}
 
 			const colIndex=(currentIndex/level.height)|0;
 			const rowIndex=(currentIndex%level.height);
