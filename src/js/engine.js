@@ -2530,67 +2530,6 @@ function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup) {
 	}
 }
 
-
-//if this returns!=null, need to go back and reprocess
-// function resolveMovements(level, bannedGroup){
-//     let moved=true;
-//     while(moved){
-//         moved=false;
-//         for (let i=0;i<level.n_tiles;i++) {
-//         	moved = repositionEntitiesAtCell(i) || moved;
-//         }
-//     }
-//     let doUndo=false;
-
-// 	//Search for any rigidly-caused movements remaining
-// 	for (let i=0;i<level.n_tiles;i++) {
-// 		let cellMask = level.getCellInto(i,_o6);
-// 		let movementMask = level.getMovements(i);
-// 		if (!movementMask.iszero()) {
-// 			let rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
-// 			if (!rigidMovementAppliedMask.iszero()) {
-// 				movementMask.iand(rigidMovementAppliedMask);
-// 				if (!movementMask.iszero()) {
-// 					//find what layer was restricted
-// 					for (let j=0;j<level.layerCount;j++) {
-// 						let layerSection = movementMask.getshiftor(0x1f, 5*j);
-// 						if (layerSection!==0) {
-// 							//this is our layer!
-// 							let rigidGroupIndexMask = level.rigidGroupIndexMask[i];
-// 							let rigidGroupIndex = rigidGroupIndexMask.getshiftor(0x1f, 5*j);
-// 							rigidGroupIndex--;//group indices start at zero, but are incremented for storing in the bitfield
-// 							let groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
-// 							if (bannedGroup[groupIndex]!==true){
-// 								bannedGroup[groupIndex]=true
-// 								//backtrackTarget = rigidBackups[rigidGroupIndex];
-// 								doUndo=true;
-// 							}
-// 							break;
-// 						}
-// 					}
-// 				}
-// 			}
-// 			for (let j=0;j<state.sfx_MovementFailureMasks.length;j++) {
-// 				let o = state.sfx_MovementFailureMasks[j];
-// 				let objectMask = o.objectMask;
-// 				if (objectMask.anyBitsInCommon(cellMask)) {
-// 					let directionMask = o.directionMask;
-// 					if (movementMask.anyBitsInCommon(directionMask) && seedsToPlay_CantMove.indexOf(o.seed)===-1) {
-// 						seedsToPlay_CantMove.push(o.seed);
-// 					}
-// 				}
-// 			}
-//     	}
-
-//     	for (let j=0;j<STRIDE_MOV;j++) {
-//     		level.movements[j+i*STRIDE_MOV]=0;
-//     	}
-// 	    level.rigidGroupIndexMask[i].setZero();
-// 	    level.rigidMovementAppliedMask[i].setZero();
-//     }
-//     return doUndo;
-// }
-
 let CACHE_RESOLVEMOVEMENTS = {}
 function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE) {
 	const fn = `
