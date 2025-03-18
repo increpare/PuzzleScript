@@ -2056,7 +2056,7 @@ function generateRigidGroupList(state) {
         let group_index = rigidGroupIndex_to_GroupIndex[30];
         logError("There can't be more than 30 rigid groups (rule groups containing rigid members).", state.rules[group_index][0].lineNumber);
     }
-
+    state.hasRigidRules = groupIndex_to_RigidGroupIndex.length > 0;
     state.rigidGroups = rigidGroups;
     state.rigidGroupIndex_to_GroupIndex = rigidGroupIndex_to_GroupIndex;
     state.groupNumber_to_RigidGroupIndex = groupNumber_to_RigidGroupIndex;

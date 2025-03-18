@@ -2493,55 +2493,60 @@ function applyRuleGroup(ruleGroup) {
     return hasChanges;
 }
 
-function applyRules(rules, loopPoint, startRuleGroupindex, bannedGroup) {
-	//for each rule
-	//try to match it
+function applyRules(rules, loopPoint, bannedGroup) {
+    let loopPropagated = false;
+    let loopCount = 0;
+    let ruleGroupIndex = 0;
+	const RULES_COUNT = rules.length;
+    while (ruleGroupIndex < RULES_COUNT) {
+        // Apply rules if not banned
+        if (!bannedGroup || !bannedGroup[ruleGroupIndex]) {
+            loopPropagated = applyRuleGroup(rules[ruleGroupIndex]) || loopPropagated;
+        }
 
-	//when we're going back in, let's loop, to be sure to be sure
-	let loopPropagated = startRuleGroupindex > 0;
-	let loopCount = 0;
-	for (let ruleGroupIndex = startRuleGroupindex; ruleGroupIndex < rules.length;) {
-		if (bannedGroup && bannedGroup[ruleGroupIndex]) {
-			//do nothing
-		} else {
-			let ruleGroup = rules[ruleGroupIndex];
-			loopPropagated = applyRuleGroup(ruleGroup) || loopPropagated;
-		}
-		if (loopPropagated && loopPoint[ruleGroupIndex] !== undefined) {
-			ruleGroupIndex = loopPoint[ruleGroupIndex];
-			loopPropagated = false;
-			loopCount++;
-			if (loopCount > 200) {
-				let ruleGroup = rules[ruleGroupIndex];
-				logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber, true);
-				break;
-			}
+        // Handle mid-sequence loop point
+        if (loopPropagated && loopPoint[ruleGroupIndex] !== undefined) {
+            ruleGroupIndex = loopPoint[ruleGroupIndex];
+            loopPropagated = false;
+            loopCount++;
+            
+            if (loopCount > 200) {
+                logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", rules[ruleGroupIndex][0].lineNumber, true);
+                break;
+            }
 
-			if (verbose_logging) {
-				debugger_turnIndex++;
-				addToDebugTimeline(level, -2);//pre-movement-applied debug state
-			}
-		} else {
-			ruleGroupIndex++;
-			if (ruleGroupIndex === rules.length) {
-				if (loopPropagated && loopPoint[ruleGroupIndex] !== undefined) {
-					ruleGroupIndex = loopPoint[ruleGroupIndex];
-					loopPropagated = false;
-					loopCount++;
-					if (loopCount > 200) {
-						let ruleGroup = rules[ruleGroupIndex];
-						logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", ruleGroup[0].lineNumber, true);
-						break;
-					}
-				}
-			}
+            if (verbose_logging) {
+                debugger_turnIndex++;
+                addToDebugTimeline(level, -2);
+            }
+            continue;
+        }
 
-			if (verbose_logging) {
-				debugger_turnIndex++;
-				addToDebugTimeline(level, -2);//pre-movement-applied debug state
-			}
-		}
-	}
+        ruleGroupIndex++;
+        
+        // Handle end-sequence loop point
+        if (ruleGroupIndex === rules.length && loopPropagated && loopPoint[ruleGroupIndex] !== undefined) {
+            ruleGroupIndex = loopPoint[ruleGroupIndex];
+            loopPropagated = false;
+            loopCount++;
+            
+            if (loopCount > 200) {
+                logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", rules[ruleGroupIndex][0].lineNumber, true);
+                break;
+            }
+
+            if (verbose_logging) {
+                debugger_turnIndex++;
+                addToDebugTimeline(level, -2);
+            }
+            continue;
+        }
+
+        if (verbose_logging) {
+            debugger_turnIndex++;
+            addToDebugTimeline(level, -2);
+        }
+    }
 }
 
 let CACHE_RESOLVEMOVEMENTS = {}
@@ -2662,7 +2667,6 @@ function processInput(dir, dontDoWin, dontModify) {
 	let bannedGroup = [];
 	level.commandQueue = [];
 	level.commandQueueSourceRules = [];
-	let startRuleGroupIndex = 0;
 	let rigidloop = false;
 	const startState = {
 		objects: new Int32Array(level.objects),
@@ -2685,7 +2689,7 @@ function processInput(dir, dontDoWin, dontModify) {
 		i++;
 
 		//everything outside of these two lines in this loop is rigid-body nonsense
-		applyRules(state.rules, state.loopPoint, startRuleGroupIndex, bannedGroup);
+		applyRules(state.rules, state.loopPoint, bannedGroup);
 		let shouldUndo = state.resolveMovements(level, bannedGroup);
 
 		if (shouldUndo) {
@@ -2720,7 +2724,6 @@ function processInput(dir, dontDoWin, dontModify) {
 				addToDebugTimeline(level, -2); // pre-movement-applied debug state
 			}
 
-			startRuleGroupIndex = 0;
 		} else {
 			if (verbose_logging) {
 				let eof_idx = debug_visualisation_array[debugger_turnIndex].length + 1;
@@ -2733,8 +2736,7 @@ function processInput(dir, dontDoWin, dontModify) {
 					consolePrint('Applying late rules');
 				}
 			}
-			applyRules(state.lateRules, state.lateLoopPoint, 0);
-			startRuleGroupIndex = 0;
+			applyRules(state.lateRules, state.lateLoopPoint);
 		}
 	} while (i < 50 && rigidloop);
 
