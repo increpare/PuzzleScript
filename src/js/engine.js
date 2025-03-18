@@ -2935,6 +2935,10 @@ function checkWin(dontDoWin) {
 		dontDoWin = true;
 	}
 
+	if (state.winconditions.length == 0) {
+		return false;
+	}
+
 	if (level.commandQueue.indexOf('win') >= 0) {
 		if (runrulesonlevelstart_phase) {
 			consolePrint("Win Condition Satisfied (However this is in the run_rules_on_level_start rule pass, so I'm going to ignore it for you.  Why would you want to complete a level before it's already started?!)");
@@ -2948,69 +2952,69 @@ function checkWin(dontDoWin) {
 	}
 
 	let won = false;
-	if (state.winconditions.length > 0) {
-		let passed = true;
-		for (let wcIndex = 0; wcIndex < state.winconditions.length; wcIndex++) {
-			let wincondition = state.winconditions[wcIndex];
-			let filter1 = wincondition[1];
-			let filter2 = wincondition[2];
-			let aggr1 = wincondition[4];
-			let aggr2 = wincondition[5];
 
-			let rulePassed = true;
+	let passed = true;
+	const WINCONDITIONS_LENGTH = state.winconditions.length;
+	for (let wcIndex = 0; wcIndex < WINCONDITIONS_LENGTH; wcIndex++) {
+		let wincondition = state.winconditions[wcIndex];
+		let filter1 = wincondition[1];
+		let filter2 = wincondition[2];
+		let aggr1 = wincondition[4];
+		let aggr2 = wincondition[5];
 
-			const f1 = aggr1 ? c => filter1.bitsSetInArray(c) : c => !filter1.bitsClearInArray(c);
-			const f2 = aggr2 ? c => filter2.bitsSetInArray(c) : c => !filter2.bitsClearInArray(c);
+		let rulePassed = true;
 
-			switch (wincondition[0]) {
-				case -1://NO
-					{
-						for (let i = 0; i < level.n_tiles; i++) {
-							let cell = level.getCellInto(i, _o10);
-							if ((f1(cell.data)) &&
-								(f2(cell.data))) {
-								rulePassed = false;
-								break;
-							}
-						}
+		const f1 = aggr1 ? c => filter1.bitsSetInArray(c) : c => !filter1.bitsClearInArray(c);
+		const f2 = aggr2 ? c => filter2.bitsSetInArray(c) : c => !filter2.bitsClearInArray(c);
 
-						break;
-					}
-				case 0://SOME
-					{
-						let passedTest = false;
-						for (let i = 0; i < level.n_tiles; i++) {
-							let cell = level.getCellInto(i, _o10);
-							if ((f1(cell.data)) &&
-								(f2(cell.data))) {
-								passedTest = true;
-								break;
-							}
-						}
-						if (passedTest === false) {
+		switch (wincondition[0]) {
+			case -1://NO
+				{
+					for (let i = 0; i < level.n_tiles; i++) {
+						let cell = level.getCellInto(i, _o10);
+						if ((f1(cell.data)) &&
+							(f2(cell.data))) {
 							rulePassed = false;
+							break;
 						}
-						break;
 					}
-				case 1://ALL
-					{
-						for (let i = 0; i < level.n_tiles; i++) {
-							let cell = level.getCellInto(i, _o10);
-							if ((f1(cell.data)) &&
-								(!f2(cell.data))) {
-								rulePassed = false;
-								break;
-							}
+
+					break;
+				}
+			case 0://SOME
+				{
+					let passedTest = false;
+					for (let i = 0; i < level.n_tiles; i++) {
+						let cell = level.getCellInto(i, _o10);
+						if ((f1(cell.data)) &&
+							(f2(cell.data))) {
+							passedTest = true;
+							break;
 						}
-						break;
 					}
-			}
-			if (rulePassed === false) {
-				passed = false;
-			}
+					if (passedTest === false) {
+						rulePassed = false;
+					}
+					break;
+				}
+			case 1://ALL
+				{
+					for (let i = 0; i < level.n_tiles; i++) {
+						let cell = level.getCellInto(i, _o10);
+						if ((f1(cell.data)) &&
+							(!f2(cell.data))) {
+							rulePassed = false;
+							break;
+						}
+					}
+					break;
+				}
 		}
-		won = passed;
+		if (rulePassed === false) {
+			passed = false;
+		}
 	}
+	won = passed;
 
 	if (won) {
 		if (runrulesonlevelstart_phase) {
