@@ -2931,6 +2931,7 @@ function addSpecializedFunctions(state) {
     state.resolveMovements = generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE);
     state.matchCellRow = generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE);
     state.matchCellRowWildCard = generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE);
+    state.repositionEntitiesAtCell = generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE);
 }
 
 function compile(command, text, randomseed) {

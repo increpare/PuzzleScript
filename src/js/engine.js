@@ -911,6 +911,7 @@ let flickscreen = false;
 let screenwidth = 0;
 let screenheight = 0;
 
+
 //compresses 'before' into diff
 function consolidateDiff(before, after) {
 	if (before.width !== after.width || before.height !== after.height || before.dat.length !== after.dat.length) {
@@ -1079,215 +1080,6 @@ function getLayersOfMask(cellMask) {
 	return layers;
 }
 
-// this function is used to unroll loops in parallel from bitvec - it returns a string
-// representation of the javascript unrolled code
-function UNROLL(command, array_size) {
-	const toks = command.split(" ");
-	let result = "";
-	for (let i = 0; i < array_size; i++) {
-		result += `${toks[0]}.data[${i}] ${toks[1]} ${toks[2]}.data[${i}];\n`;
-	}
-	return result;
-}
-
-function IS_ZERO(tok, array_size) {
-	let result = "(true";
-	for (let i = 0; i < array_size; i++) {
-		result += `&&(${tok}.data[${i}]===0)`;
-	}
-	return result + ")";
-}
-
-function IS_NONZERO(tok, array_size) {
-	let result = "(false";
-	for (let i = 0; i < array_size; i++) {
-		result += `||(${tok}.data[${i}]!==0)`;
-	}
-	return result + ")";
-}
-
-function GET(tok, index) {
-    const shift_5 = index >> 5;
-    const bit_position = 1 << (index & 31);
-    return `((${tok}.data[${shift_5}] & ${bit_position}) !== 0)`;
-}
-
-
-function IBITSET(tok, index) {
-	return `${tok}.data[${index}>>5] |= 1 << (${index} & 31);`;
-}
-
-function ISHIFTOR(tok, mask, shift) {
-	return `{
-		let toshift = ${shift}&31;
-		let low = ${mask} << toshift;
-		${tok}.data[${shift}>>5] |= low;
-		if (toshift) {
-			var high = ${mask} >> (32 - toshift);
-			${tok}.data[(${shift}>>5)+1] |= high;
-		}
-	}`;
-}
-
-/*
-function GETSHIFTOR(tok, mask, shift) {
-	var toshift = `(${shift}&31)`;
-	return `(${toshift}
-		?( 
-			( ${tok}.data[${shift}>>5] >>> ${toshift} ) 
-			| ( ${tok}.data[(${shift}>>5)+1] << (32 - ${toshift}) ) 
-		) : 
-		( 
-			${tok}.data[${shift}>>5] >>> ${toshift} 
-		)
-	) & ${mask}`
-}
-*/
-
-function GETSHIFTOR(tok, mask, shift) {
-    const toshift = shift&31;
-    const shift_5 = shift>>5;
-    if (toshift) {
-        return `${mask}&((${tok}.data[${shift_5}] >>> ${toshift}) | (${tok}.data[${shift_5}+1] << (32-${toshift})))`;
-    } else {
-        return `${mask}&(${tok}.data[${shift_5}] >>> ${toshift})`;
-    }
-}
-
-function EQUALS(tok, other, array_size) {
-	var result = "(true";
-	for (let i = 0; i < array_size; i++) {
-		result += `&&(${tok}.data[${i}] === ${other}.data[${i}])`;
-	}
-	return result + ")";
-}
-
-function EQUALS_TOK_REAL(tok, other) {
-	var result = "(true";
-	for (let i = 0; i < tok.data.length; i++) {
-		result += `&&(${tok}.data[o] === ${other.data[i]})`;
-	}
-	return result + ")";
-}
-
-function NOT_EQUALS(tok, other, array_size) {
-	var result = "(false";
-	for (let i = 0; i < array_size; i++) {
-		result += `||(${tok}.data[${i}] !== ${other}.data[${i}])`;
-	}
-	return result + ")";
-}
-
-function BITS_SET_IN_ARRAY(tok, arr, array_size) {
-
-	var result = "(true";
-	for (let i = 0; i < array_size; i++) {
-		result += `&&((${tok}.data[${i}] & ${arr}[${i}]) === ${tok}.data[${i}])`;
-	}
-	return result + ")";
-}
-
-function NOT_BITS_SET_IN_ARRAY(tok, arr, array_size) {
-	var result = "(false";
-	for (let i = 0; i < array_size; i++) {
-		result += `||((${tok}.data[${i}] & ${arr}[${i}]) !== ${tok}.data[${i}])`;
-	}
-	return result + ")";
-}
-
-
-function BITS_CLEAR_IN_ARRAY(tok, arr, array_size) {
-	if (array_size === 0)
-		return "true";
-	var result = "(true";
-	for (let i = 0; i < array_size; i++) {
-		result += `&&((${tok}.data[${i}] & ${arr}.data[${i}]) === 0)`;
-	}
-	return result + ")";
-}
-
-function ANY_BITS_IN_COMMON(tok, arr, array_size) {
-	if (array_size === 0) {
-		return "false";
-	}
-	var result = "(false";
-	for (let i = 0; i < array_size; i++) {
-		result += `||((${tok}.data[${i}] & ${arr}.data[${i}]) !== 0)`;
-	}
-	return result + ")";
-}
-
-function ANY_BITS_IN_COMMON_TOK_REAL(tok, arr) {
-	if (arr.length === 0) {
-		return "false";
-	}
-	var result = "(false";
-	for (let i = 0; i < arr.length; i++) {
-		result += `||((${tok}.data[${i}] & ${arr[i]}) !== 0)`;
-	}
-	return result + ")";
-}
-
-function ARRAY_SET_ZERO(tok, array_size) {
-	var result = "";
-	for (let i = 0; i < array_size; i++) {
-		result += `${tok}[${i}]=0;\n`;
-	}
-	return result;
-}
-
-function SET_ZERO(tok, array_size) {
-	var result = "";
-	for (let i = 0; i < array_size; i++) {
-		result += `${tok}.data[${i}]=0;\n`;
-	}
-	return result;
-}
-
-function LEVEL_GET_CELL_INTO(level, index, targetarray, OBJECT_SIZE) {
-	var result = "";
-	for (let i = 0; i < OBJECT_SIZE; i++) {
-		result += targetarray+`.data[${i}]=level.objects[${index}*${OBJECT_SIZE}+${i}];\n`;
-	}
-	return result;
-}
-
-
-function LEVEL_GET_MOVEMENTS_INTO( index, targetarray, MOVEMENT_SIZE) {
-	var result = "";
-	for (let i = 0; i < MOVEMENT_SIZE; i++) {
-		result += targetarray+`.data[${i}]=level.movements[${index}*${MOVEMENT_SIZE}+${i}];\n`;
-	}
-	return result;
-}
-
-function LEVEL_SET_MOVEMENTS(index, vec, array_size) {
-	var result = "{";
-	for (let i = 0; i < array_size; i++) {
-		result += `\tlevel.movements[${index}*${array_size}+${i}]=${vec}.data[${i}];\n`;
-	}
-	result += `\tconst targetIndex = ${index}*${array_size}+${i};
-
-	const colIndex=(${index}/level.height)|0;
-	const rowIndex=(${index}%level.height);
-
-	${UNROLL(`level.colCellContents_Movements[colIndex] |= ${vec}`, array_size)}
-	${UNROLL(`level.rowCellContents_Movements[rowIndex] |= ${vec}`, array_size)}
-	${UNROLL(`level.mapCellContents_Movements |= ${vec}`, array_size)}
-
-}`
-
-	return result;
-}
-
-function LEVEL_SET_CELL(level, index, vec, array_size) {
-	var result = "";
-	for (let i = 0; i < array_size; i++) {
-		result += `\t${level}.objects[${index}*${array_size}+${i}]=${vec}.data[${i}];\n`;
-	}
-	return result;
-}
-
 let CACHE_MOVEENTITIESATINDEX = {}
 function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 	
@@ -1446,26 +1238,44 @@ function repositionEntitiesOnLayer(positionIndex, layer, dirMask) {
 	return true;
 }
 
-function repositionEntitiesAtCell(positionIndex) {
+var CACHE_REPOSITIONENTITIESATCELL = {}
+function generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE) {
+	var fn = `
     const movementMask = level.getMovements(positionIndex);
-    if (movementMask.iszero())
+    if (${IS_ZERO("movementMask",MOVEMENT_SIZE)}){
         return false;
+	}
 
     let moved = false;
-    for (let layer = 0; layer < level.layerCount; layer++) {
-        const layerMovement = movementMask.getshiftor(0x1f, 5*layer);
+    ${FOR(0,LAYER_COUNT,layer=>`{
+        const layerMovement = ${GETSHIFTOR("movementMask",0x1f, 5*layer)};
         if (layerMovement !== 0) {
-            const thismoved = repositionEntitiesOnLayer(positionIndex, layer, layerMovement);
+            const thismoved = repositionEntitiesOnLayer(positionIndex, ${layer}, layerMovement);
             if (thismoved) {
-                movementMask.ishiftclear(layerMovement, 5*layer);
+                ${ISHIFTCLEAR("movementMask","layerMovement", 5*layer)}
                 moved = true;
             }
         }
-    }
+	}`)}
 
-    level.setMovements(positionIndex, movementMask);
+	${FOR(0,MOVEMENT_SIZE,i=>`
+		level.movements[positionIndex * STRIDE_MOV + ${i}] = movementMask.data[${i}];
+	`)}
 
-    return moved;
+	var targetIndex = positionIndex*STRIDE_MOV + i;
+		
+	//corresponding object stuff in repositionEntitiesOnLayer
+	const colIndex=(positionIndex/this.height)|0;
+	const rowIndex=(positionIndex%level.height);
+	${UNROLL("level.colCellContents_Movements[colIndex] |= movementMask",MOVEMENT_SIZE)}
+	${UNROLL("level.rowCellContents_Movements[rowIndex] |= movementMask",MOVEMENT_SIZE)}
+	${UNROLL("level.mapCellContents_Movements |= movementMask",MOVEMENT_SIZE)}
+	
+    return moved;`
+	if (fn in CACHE_REPOSITIONENTITIESATCELL) {
+		return CACHE_REPOSITIONENTITIESATCELL[fn];
+	}
+	return CACHE_REPOSITIONENTITIESATCELL[fn] = new Function("level", "positionIndex", fn);
 }
 
 let ellipsisPattern = ['ellipsis'];
@@ -2574,7 +2384,7 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE) {
 		while(moved){
 			moved=false;
 			for (let i=0;i<level.n_tiles;i++) {
-				moved = repositionEntitiesAtCell(i) || moved;
+				moved = state.repositionEntitiesAtCell(level,i) || moved;
 			}
 		}
 		let doUndo=false;
