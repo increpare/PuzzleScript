@@ -1680,9 +1680,7 @@ CellPattern.prototype.generateMatchFunction = function() {
     keyArray[keyIndex++] = STRIDE_MOV;
 	var str_key = keyArray.toString();
 
-	CACHE_CHECK_COUNT++;
     if (CACHE_CELLPATTERN_MATCHFUNCTION.has(str_key)) {
-		CACHE_HIT_COUNT++;
         return CACHE_CELLPATTERN_MATCHFUNCTION.get(str_key);
     }
 

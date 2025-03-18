@@ -3027,11 +3027,9 @@ function compile(command, text, randomseed) {
 
 }
 
-const cache_CHECK_RATE=10;
+const cache_CHECK_RATE=20;
 let cache_checkCount=0;
-function manage_compilation_caches() {
-    console.log("CACHE_hitrate: " + CACHE_HIT_COUNT + " / " + CACHE_CHECK_COUNT + " = " + (CACHE_HIT_COUNT / CACHE_CHECK_COUNT));
-    
+function manage_compilation_caches() {    
     cache_checkCount = (cache_checkCount + 1) % cache_CHECK_RATE;
     if (cache_checkCount !== 0) {
         return;
