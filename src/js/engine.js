@@ -1664,13 +1664,13 @@ CellPattern.prototype.generateMatchString = function () {
 }
 
 let CACHE_CELLPATTERN_MATCHFUNCTION = new Map();
-var _generateMatchFunction_key_array = new Uint32Array(0);
+var _generateMatchFunction_key_array = new Int32Array(0);
 CellPattern.prototype.generateMatchFunction = function() {
     // Calculate total size needed for the key array
     const keyLength = STRIDE_OBJ * 2 + STRIDE_MOV * 2 + 
                      this.anyObjectsPresent.length * STRIDE_OBJ + 2;
 	if (keyLength!==_generateMatchFunction_key_array.length) {
-		_generateMatchFunction_key_array = new Uint32Array(keyLength);
+		_generateMatchFunction_key_array = new Int32Array(keyLength);
 	}
     const keyArray = _generateMatchFunction_key_array;
     let keyIndex = 0;
@@ -1723,7 +1723,7 @@ let _m1, _m2, _m3;
 let CACHE_CELLPATTERN_REPLACEFUNCTION = {}
 let CACHE_CHECK_COUNT=0;
 let CACHE_HIT_COUNT=0;
-let _replace_function_key_array = new Uint32Array(0);
+let _replace_function_key_array = new Int32Array(0);
 
 
 CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_SIZE,rule) {
@@ -1733,7 +1733,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 
 	const array_len = 3*OBJECT_SIZE + 4*MOVEMENT_SIZE + 3;
 	if (array_len!==_replace_function_key_array.length) {
-		_replace_function_key_array = new Uint32Array(array_len);
+		_replace_function_key_array = new Int32Array(array_len);
 	}
 
 	const key_array = _replace_function_key_array;

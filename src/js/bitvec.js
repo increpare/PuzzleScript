@@ -4,7 +4,7 @@ function BitVec(init) {
 }
 
 BitVec.prototype.cloneInto = function(target) {
-	for (var i=0;i<this.data.length;++i) {
+	for (let i=0;i<this.data.length;++i) {
 		target.data[i]=this.data[i];
 	}
 	return target;
@@ -14,26 +14,26 @@ BitVec.prototype.clone = function() {
 }
 
 BitVec.prototype.iand = function(other) {
-	for (var i = 0; i < this.data.length; ++i) {
+	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i] &= other.data[i];
 	}
 }
 
 
 BitVec.prototype.inot = function() {
-	for (var i = 0; i < this.data.length; ++i) {
+	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i] = ~this.data[i];
 	}
 }
 
 BitVec.prototype.ior = function(other) {
-	for (var i = 0; i < this.data.length; ++i) {
+	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i] |= other.data[i];
 	}
 }
 
 BitVec.prototype.iclear = function(other) {
-	for (var i = 0; i < this.data.length; ++i) {
+	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i] &= ~other.data[i];
 	}
 }
@@ -51,8 +51,8 @@ BitVec.prototype.get = function(ind) {
 }
 
 BitVec.prototype.getshiftor = function(mask, shift) {
-	var toshift = shift & 31;
-	var ret = this.data[shift>>5] >>> (toshift);
+	const toshift = shift & 31;
+	let ret = this.data[shift>>5] >>> (toshift);
 	if (toshift) {
 		ret |= this.data[(shift>>5)+1] << (32 - toshift);
 	}
@@ -60,29 +60,31 @@ BitVec.prototype.getshiftor = function(mask, shift) {
 }
 
 BitVec.prototype.ishiftor = function(mask, shift) {
-	var toshift = shift&31;
-	var low = mask << toshift;
-	this.data[shift>>5] |= low;
+	const toshift = shift&31;
+	const shift_5 = shift>>5;
+	let low = mask << toshift;
+	this.data[shift_5] |= low;
 	if (toshift) {
-		var high = mask >> (32 - toshift);
-		this.data[(shift>>5)+1] |= high;
+		let high = mask >> (32 - toshift);
+		this.data[shift_5+1] |= high;
 	}
 }
 
 BitVec.prototype.ishiftclear = function(mask, shift) {
-	var toshift = shift & 31;
-	var low = mask << toshift;
-	this.data[shift>>5] &= ~low;
+	const toshift = shift & 31;
+	const shift_5 = shift>>5;
+	const low = mask << toshift;
+	this.data[sshift_5] &= ~low;
 	if (toshift){
-		var high = mask >> (32 - (shift & 31));
-		this.data[(shift>>5)+1] &= ~high;
+		let high = mask >> (32 - (shift & 31));
+		this.data[shift_5+1] &= ~high;
 	}
 }
 
 BitVec.prototype.equals = function(other) {
 	if (this.data.length !== other.data.length)
 		return false;
-	for (var i = 0; i < this.data.length; ++i) {
+	for (let i = 0; i < this.data.length; ++i) {
 		if (this.data[i] !== other.data[i])
 			return false;
 	}
@@ -90,13 +92,13 @@ BitVec.prototype.equals = function(other) {
 }
 
 BitVec.prototype.setZero = function() {
-	for (var i = 0; i < this.data.length; ++i) {
+	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i]=0;
 	}
 }
 
 BitVec.prototype.iszero = function() {
-	for (var i = 0; i < this.data.length; ++i) {
+	for (let i = 0; i < this.data.length; ++i) {
 		if (this.data[i])
 			return false;
 	}
@@ -104,7 +106,7 @@ BitVec.prototype.iszero = function() {
 }
 
 BitVec.prototype.bitsSetInArray = function(arr) {
-	for (var i = 0; i < this.data.length; ++i) {
+	for (let i = 0; i < this.data.length; ++i) {
 		if ((this.data[i] & arr[i]) !== this.data[i]) {
 			return false;
 		}
@@ -113,7 +115,7 @@ BitVec.prototype.bitsSetInArray = function(arr) {
 }
 
 BitVec.prototype.bitsClearInArray = function(arr) {
-	for (var i = 0; i < this.data.length; ++i) {
+	for (let i = 0; i < this.data.length; ++i) {
 		if (this.data[i] & arr[i]) {
 			return false;
 		}
@@ -122,5 +124,10 @@ BitVec.prototype.bitsClearInArray = function(arr) {
 }
 
 BitVec.prototype.anyBitsInCommon = function(other) {
-	return !this.bitsClearInArray(other.data);
+	for (let i = 0; i < this.data.length; ++i) {
+		if (this.data[i] & other.data[i]) {
+			return true;
+		}
+	}
+	return false;
 }
