@@ -2562,7 +2562,7 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE) {
 				if (${IS_NONZERO("rigidMovementAppliedMask", MOVEMENT_SIZE)}) {
 					${UNROLL("movementMask &= rigidMovementAppliedMask", MOVEMENT_SIZE)}
 					if (${IS_NONZERO("movementMask", MOVEMENT_SIZE)}) 
-					outer_area: {
+				outer_area: {
 						//find what layer was restricted
 						${FOR(0,LAYER_COUNT,j=>`{
 							let layerSection = ${GETSHIFTOR("movementMask", 0x1f, 5*j)};
@@ -3040,18 +3040,6 @@ function DoWin() {
 	winning = true;
 	timer = 0;
 }
-
-/*
-//this function isn't valid after refactoring, but also isn't used.
-function anyMovements() {	
-	for (let i=0;i<level.movementMask.length;i++) {
-		if (level.movementMask[i]!==0) {
-			return true;
-		}
-	}
-	return false;
-}*/
-
 
 function nextLevel() {
 	againing = false;
