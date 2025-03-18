@@ -1713,6 +1713,8 @@ let CACHE_CELLPATTERN_REPLACEFUNCTION = {}
 let CACHE_CHECK_COUNT=0;
 let CACHE_HIT_COUNT=0;
 let _replace_function_key_array = new Uint32Array(0);
+
+
 CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_SIZE,rule) {
 	if (this.replacement===null){
 		return FALSE_FUNCTION;
@@ -1738,10 +1740,10 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE] = OBJECT_SIZE;
 	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE+1] = MOVEMENT_SIZE;
 	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE+2] = rule.rigid;
-	hash = key_array.toString();
 
-	if (hash in CACHE_CELLPATTERN_REPLACEFUNCTION) {
-		return CACHE_CELLPATTERN_REPLACEFUNCTION[hash];
+	const key = key_array.toString();
+	if (key in CACHE_CELLPATTERN_REPLACEFUNCTION) {
+		return CACHE_CELLPATTERN_REPLACEFUNCTION[key];
 	}
 	
 	const replace_randomEntityMask_zero = this.replacement.randomEntityMask.iszero()
@@ -1802,18 +1804,19 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		
 		const curCellMask = _o2_5
 		${LEVEL_GET_CELL_INTO("level", "currentIndex", "curCellMask", OBJECT_SIZE)}
-		const curMovementMask = level.getMovements(currentIndex);
+		const oldMovementMask = level.getMovements(currentIndex);
 
 		const oldCellMask = _o3
 		${UNROLL("oldCellMask = curCellMask", OBJECT_SIZE)}
-		const oldMovementMask = _m3;
-		${UNROLL("oldMovementMask = curMovementMask", MOVEMENT_SIZE)}
 
 		${UNROLL("curCellMask &= ~objectsClear", OBJECT_SIZE)}
 		${UNROLL("curCellMask |= objectsSet", OBJECT_SIZE)}
-		
-		${UNROLL("curMovementMask &= ~movementsClear", MOVEMENT_SIZE)}
-		${UNROLL("curMovementMask |= movementsSet", MOVEMENT_SIZE)}
+
+		const curMovementMask = _m3;
+		${FOR(0, MOVEMENT_SIZE, i => `
+			curMovementMask.data[${i}] = (oldMovementMask.data[${i}] & (~movementsClear.data[${i}])) | movementsSet.data[${i}]
+		`)}
+
 
 		var curRigidGroupIndexMask =0;
 		var curRigidMovementAppliedMask =0;
@@ -1872,7 +1875,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		return result;
 	`
 
-	return CACHE_CELLPATTERN_REPLACEFUNCTION[hash] = new Function("level", "rule", "currentIndex", fn);
+	return CACHE_CELLPATTERN_REPLACEFUNCTION[key] = new Function("level", "rule", "currentIndex", fn);
 }
 
 
