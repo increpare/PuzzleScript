@@ -2534,12 +2534,6 @@ function applyRules(rules, loopPoint, bannedGroup) {
                 logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", rules[ruleGroupIndex][0].lineNumber, true);
                 break;
             }
-
-            if (verbose_logging) {
-                debugger_turnIndex++;
-                addToDebugTimeline(level, -2);
-            }
-            continue;
         }
 
         if (verbose_logging) {
