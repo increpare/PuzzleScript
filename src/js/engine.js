@@ -1098,6 +1098,14 @@ function IS_ZERO(tok, array_size) {
 	return result + ")";
 }
 
+function IS_NONZERO(tok, array_size) {
+	let result = "(false";
+	for (let i = 0; i < array_size; i++) {
+		result += `||(${tok}.data[${i}]!==0)`;
+	}
+	return result + ")";
+}
+
 function GET(tok, index) {
 	return `((${tok}.data[${index}>>5] & 1 << (${index} & 31)) !== 0)`;
 }
@@ -1141,11 +1149,27 @@ function EQUALS(tok, other, array_size) {
 	return result + ")";
 }
 
+function NOT_EQUALS(tok, other, array_size) {
+	var result = "(false";
+	for (let i = 0; i < array_size; i++) {
+		result += `||(${tok}.data[${i}] !== ${other}.data[${i}])`;
+	}
+	return result + ")";
+}
+
 function BITS_SET_IN_ARRAY(tok, arr, array_size) {
 
 	var result = "(true";
 	for (let i = 0; i < array_size; i++) {
 		result += `&&((${tok}.data[${i}] & ${arr}[${i}]) === ${tok}.data[${i}])`;
+	}
+	return result + ")";
+}
+
+function NOT_BITS_SET_IN_ARRAY(tok, arr, array_size) {
+	var result = "(false";
+	for (let i = 0; i < array_size; i++) {
+		result += `||((${tok}.data[${i}] & ${arr}[${i}]) !== ${tok}.data[${i}])`;
 	}
 	return result + ")";
 }
@@ -1744,9 +1768,10 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		${UNROLL("movementsSet = replace.movementsSet", MOVEMENT_SIZE)}
 		
 		const movementsClear = _m2;
-		${UNROLL("movementsClear = replace.movementsClear", MOVEMENT_SIZE)}
-
-		${UNROLL("movementsClear |= replace.movementsLayerMask", MOVEMENT_SIZE)}
+		
+		${FOR(0,MOVEMENT_SIZE,i=>
+			"movementsClear.data["+i+"] = replace.movementsClear.data["+i+"] | replace.movementsLayerMask.data["+i+"];\n"
+		)}
 
 		${IF_LAZY(!replace_randomEntityMask_zero,()=>`
 			const choices=[];
@@ -1804,8 +1829,8 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 			curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE_MOV);
 			curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE_MOV);
 
-			if (!${BITS_SET_IN_ARRAY("rigidMask", "curRigidGroupIndexMask.data", MOVEMENT_SIZE)} &&
-				!${BITS_SET_IN_ARRAY("replace.movementsLayerMask", "curRigidMovementAppliedMask.data", MOVEMENT_SIZE)}) 
+			if (${NOT_BITS_SET_IN_ARRAY("rigidMask", "curRigidGroupIndexMask.data", MOVEMENT_SIZE)} &&
+				${NOT_BITS_SET_IN_ARRAY("replace.movementsLayerMask", "curRigidMovementAppliedMask.data", MOVEMENT_SIZE)}) 
 			{
 				${UNROLL("curRigidGroupIndexMask |= rigidMask", MOVEMENT_SIZE)}
 				${UNROLL("curRigidMovementAppliedMask |= replace.movementsLayerMask", MOVEMENT_SIZE)}
@@ -1816,7 +1841,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		let result = false;
 
 		//check if it's changed
-		if (!${EQUALS("oldCellMask", "curCellMask", OBJECT_SIZE)} || !${EQUALS("oldMovementMask", "curMovementMask", MOVEMENT_SIZE)} || rigidchange) { 
+		if (${NOT_EQUALS("oldCellMask", "curCellMask", OBJECT_SIZE)} || ${NOT_EQUALS("oldMovementMask", "curMovementMask", MOVEMENT_SIZE)} || rigidchange) { 
 			result=true;
 			if (rigidchange) {
 				level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
@@ -1856,8 +1881,8 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 	const fn = `
 	let result=[];
 	
-	if ((!${BITS_SET_IN_ARRAY("cellRowMask", "level.mapCellContents.data", OBJECT_SIZE)})||
-	(!${BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.mapCellContents_Movements.data", MOVEMENT_SIZE)})) {
+	if ((${NOT_BITS_SET_IN_ARRAY("cellRowMask", "level.mapCellContents.data", OBJECT_SIZE)})||
+	(${NOT_BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.mapCellContents_Movements.data", MOVEMENT_SIZE)})) {
 		return result;
 	}
 
@@ -1898,8 +1923,8 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
     const horizontal=direction>2;
     if (horizontal) {
 		for (let y=ymin;y<ymax;y++) {
-			if (!${BITS_SET_IN_ARRAY("cellRowMask", "level.rowCellContents[y].data", OBJECT_SIZE)} 
-			|| !${BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.rowCellContents_Movements[y].data", MOVEMENT_SIZE)}) {
+			if (${NOT_BITS_SET_IN_ARRAY("cellRowMask", "level.rowCellContents[y].data", OBJECT_SIZE)} 
+			|| ${NOT_BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.rowCellContents_Movements[y].data", MOVEMENT_SIZE)}) {
 				continue;
 			}
 
@@ -1913,8 +1938,8 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 		}
 	} else {
 		for (let x=xmin;x<xmax;x++) {
-			if (!${BITS_SET_IN_ARRAY("cellRowMask", "level.colCellContents[x].data", OBJECT_SIZE)}
-			|| !${BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.colCellContents_Movements[x].data", MOVEMENT_SIZE)}) {
+			if (${NOT_BITS_SET_IN_ARRAY("cellRowMask", "level.colCellContents[x].data", OBJECT_SIZE)}
+			|| ${NOT_BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.colCellContents_Movements[x].data", MOVEMENT_SIZE)}) {
 				continue;
 			}
 
@@ -1939,8 +1964,8 @@ let CACHE_MATCHCELLROWWILDCARD = {}
 function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 	const fn = `
 	let result=[];
-	if ((!${BITS_SET_IN_ARRAY("cellRowMask", "level.mapCellContents.data", OBJECT_SIZE)})||
-	(!${BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.mapCellContents_Movements.data", MOVEMENT_SIZE)})) {
+	if ((${NOT_BITS_SET_IN_ARRAY("cellRowMask", "level.mapCellContents.data", OBJECT_SIZE)})||
+	(${NOT_BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.mapCellContents_Movements.data", MOVEMENT_SIZE)})) {
 		return result;
 	}
 	
@@ -1980,8 +2005,8 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
     const horizontal=direction>2;
     if (horizontal) {
 		for (let y=ymin;y<ymax;y++) {
-			if (!${BITS_SET_IN_ARRAY("cellRowMask", "level.rowCellContents[y].data", OBJECT_SIZE)}
-			|| !${BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.rowCellContents_Movements[y].data", MOVEMENT_SIZE)}) {
+			if (${NOT_BITS_SET_IN_ARRAY("cellRowMask", "level.rowCellContents[y].data", OBJECT_SIZE)}
+			|| ${NOT_BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.rowCellContents_Movements[y].data", MOVEMENT_SIZE)}) {
 				continue;
 			}
 
@@ -2006,8 +2031,8 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 		}
 	} else {
 		for (let x=xmin;x<xmax;x++) {
-			if (!${BITS_SET_IN_ARRAY("cellRowMask", "level.colCellContents[x].data", OBJECT_SIZE)}
-			|| !${BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.colCellContents_Movements[x].data", MOVEMENT_SIZE)}) {
+			if (${NOT_BITS_SET_IN_ARRAY("cellRowMask", "level.colCellContents[x].data", OBJECT_SIZE)}
+			|| ${NOT_BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.colCellContents_Movements[x].data", MOVEMENT_SIZE)}) {
 				continue;
 			}
 
@@ -2164,7 +2189,7 @@ function FOR(start, end, fn) {
 function IMPORT_COMPILE_TIME_ARRAY(compiletime,runtime,array_size){
 	var result="";
 	for (let i = 0; i < array_size; i++) {
-		result += `${runtime}.data[${i}] = ${compiletime.data[i]};`
+		result += runtime+".data["+i+"] = "+compiletime.data[i]+";\n";
 	}
 	return result;
 }
@@ -2579,11 +2604,11 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE) {
 		for (let i=0;i<level.n_tiles;i++) {
 			let cellMask = level.getCellInto(i,_o6);
 			let movementMask = level.getMovements(i);
-			if (!${IS_ZERO("movementMask", MOVEMENT_SIZE)}) {
+			if (${IS_NONZERO("movementMask", MOVEMENT_SIZE)}) {
 				let rigidMovementAppliedMask = level.rigidMovementAppliedMask[i];
-				if (!${IS_ZERO("rigidMovementAppliedMask", MOVEMENT_SIZE)}) {
+				if (${IS_NONZERO("rigidMovementAppliedMask", MOVEMENT_SIZE)}) {
 					${UNROLL("movementMask &= rigidMovementAppliedMask", MOVEMENT_SIZE)}
-					if (!${IS_ZERO("movementMask", MOVEMENT_SIZE)}) {
+					if (${IS_NONZERO("movementMask", MOVEMENT_SIZE)}) {
 						//find what layer was restricted
 						for (let j=0;j<level.layerCount;j++) {
 							let layerSection = ${GETSHIFTOR("movementMask", "0x1f", "(5*j)")};
@@ -3164,7 +3189,7 @@ Rule.prototype.generateFindMatchesFunction = function () {
 	let fn = '';
 
 	// Initial mask check
-	fn += `if (!${BITS_SET_IN_ARRAY("this.ruleMask", "level.mapCellContents.data", STRIDE_OBJ)}) return [];\n`;
+	fn += `if (${NOT_BITS_SET_IN_ARRAY("this.ruleMask", "level.mapCellContents.data", STRIDE_OBJ)}) return [];\n`;
 	fn += 'const d = level.delta_index(this.direction);\n';
 	fn += 'const matches = [];\n';
 
