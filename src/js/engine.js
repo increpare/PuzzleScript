@@ -2574,7 +2574,6 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE) {
 								let groupIndex = state.rigidGroupIndex_to_GroupIndex[rigidGroupIndex];
 								if (bannedGroup[groupIndex]!==true){
 									bannedGroup[groupIndex]=true
-									//backtrackTarget = rigidBackups[rigidGroupIndex];
 									doUndo=true;
 								}
 								break outer_area;
@@ -3071,12 +3070,7 @@ function nextLevel() {
 			titleScreen = false;
 			quittingMessageScreen = false;
 			messageselected = false;
-
-			if (curlevelTarget !== null) {
-				loadLevelFromStateTarget(state, curlevel, curlevelTarget);
-			} else {
-				loadLevelFromState(state, curlevel);
-			}
+			loadLevelFromState(state, curlevel);			
 		} else {
 			try {
 				storage_remove(document.URL);
@@ -3093,7 +3087,6 @@ function nextLevel() {
 		//continue existing game
 	}
 	try {
-
 		storage_set(document.URL, curlevel);
 		if (curlevelTarget !== null) {
 			restartTarget = level4Serialization();
@@ -3102,7 +3095,6 @@ function nextLevel() {
 		} else {
 			storage_remove(document.URL + "_checkpoint");
 		}
-
 	} catch (ex) {
 
 	}
