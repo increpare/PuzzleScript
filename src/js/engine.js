@@ -1685,39 +1685,39 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 				rigidchange=true;
 			}
 		`)}
-
-		let result = false;
-
-		//check if it's changed
-		if (${NOT_EQUALS("oldCellMask", "curCellMask", OBJECT_SIZE)} || ${NOT_EQUALS("oldMovementMask", "curMovementMask", MOVEMENT_SIZE)} || rigidchange) { 
-			result=true;
-			if (rigidchange) {
-				level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
-				level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
-			}
-
-			const created = _o4;
-			${UNROLL("created = curCellMask", OBJECT_SIZE)}
-			${UNROLL("created &= ~oldCellMask", OBJECT_SIZE)}
-			${UNROLL("sfxCreateMask |= created", OBJECT_SIZE)}
-			
-			const destroyed = _o5;
-			${UNROLL("destroyed = oldCellMask", OBJECT_SIZE)}
-			${UNROLL("destroyed &= ~curCellMask", OBJECT_SIZE)}
-			${UNROLL("sfxDestroyMask |= destroyed", OBJECT_SIZE)}
-
-			${LEVEL_SET_CELL("level", "currentIndex", "curCellMask", OBJECT_SIZE)}
-			${LEVEL_SET_MOVEMENTS( "currentIndex", "curMovementMask", MOVEMENT_SIZE)}
-
-			const colIndex=(currentIndex/level.height)|0;
-			const rowIndex=(currentIndex%level.height);
-
-			${UNROLL("level.colCellContents[colIndex] |= curCellMask", OBJECT_SIZE)}
-			${UNROLL("level.rowCellContents[rowIndex] |= curCellMask", OBJECT_SIZE)}
-			${UNROLL("level.mapCellContents |= curCellMask", OBJECT_SIZE)}
+		
+		if (${EQUALS("oldCellMask", "curCellMask", OBJECT_SIZE)} 
+			&& ${EQUALS("oldMovementMask", "curMovementMask", MOVEMENT_SIZE)} 
+			&& !rigidchange) { 
+			//nothing changed
+			return false;
+		}
+				
+		if (rigidchange) {
+			level.rigidGroupIndexMask[currentIndex] = curRigidGroupIndexMask;
+			level.rigidMovementAppliedMask[currentIndex] = curRigidMovementAppliedMask;
 		}
 
-		return result;
+		const created = _o4;
+		${UNROLL("created = curCellMask", OBJECT_SIZE)}
+		${UNROLL("created &= ~oldCellMask", OBJECT_SIZE)}
+		${UNROLL("sfxCreateMask |= created", OBJECT_SIZE)}
+		
+		const destroyed = _o5;
+		${UNROLL("destroyed = oldCellMask", OBJECT_SIZE)}
+		${UNROLL("destroyed &= ~curCellMask", OBJECT_SIZE)}
+		${UNROLL("sfxDestroyMask |= destroyed", OBJECT_SIZE)}
+
+		${LEVEL_SET_CELL("level", "currentIndex", "curCellMask", OBJECT_SIZE)}
+		${LEVEL_SET_MOVEMENTS( "currentIndex", "curMovementMask", MOVEMENT_SIZE)}
+
+		const colIndex=(currentIndex/level.height)|0;
+		const rowIndex=(currentIndex%level.height);
+
+		${UNROLL("level.colCellContents[colIndex] |= curCellMask", OBJECT_SIZE)}
+		${UNROLL("level.rowCellContents[rowIndex] |= curCellMask", OBJECT_SIZE)}
+		${UNROLL("level.mapCellContents |= curCellMask", OBJECT_SIZE)}
+		return true;	
 	`
 
 	return CACHE_CELLPATTERN_REPLACEFUNCTION[key] = new Function("level", "rule", "currentIndex", fn);
