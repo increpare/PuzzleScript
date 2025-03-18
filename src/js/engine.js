@@ -1162,6 +1162,14 @@ function EQUALS(tok, other, array_size) {
 	return result + ")";
 }
 
+function EQUALS_TOK_REAL(tok, other) {
+	var result = "(true";
+	for (let i = 0; i < tok.data.length; i++) {
+		result += `&&(${tok}.data[o] === ${other.data[i]})`;
+	}
+	return result + ")";
+}
+
 function NOT_EQUALS(tok, other, array_size) {
 	var result = "(false";
 	for (let i = 0; i < array_size; i++) {
@@ -1199,7 +1207,25 @@ function BITS_CLEAR_IN_ARRAY(tok, arr, array_size) {
 }
 
 function ANY_BITS_IN_COMMON(tok, arr, array_size) {
-	return "(!" + BITS_CLEAR_IN_ARRAY(tok, arr, array_size) + ")";
+	if (array_size === 0) {
+		return "false";
+	}
+	var result = "(false";
+	for (let i = 0; i < array_size; i++) {
+		result += `||((${tok}.data[${i}] & ${arr}.data[${i}]) !== 0)`;
+	}
+	return result + ")";
+}
+
+function ANY_BITS_IN_COMMON_TOK_REAL(tok, arr) {
+	if (arr.length === 0) {
+		return "false";
+	}
+	var result = "(false";
+	for (let i = 0; i < arr.length; i++) {
+		result += `||((${tok}.data[${i}] & ${arr[i]}) !== 0)`;
+	}
+	return result + ")";
 }
 
 function ARRAY_SET_ZERO(tok, array_size) {
@@ -1296,10 +1322,8 @@ function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 let CACHE_CALCULATEROWCOLMASKS = {}
 function generate_calculateRowColMasks(OBJECT_SIZE, MOVEMENT_SIZE) {
 	const fn = `
-		for(let i=0;i<level.mapCellContents.data.length;i++) {
-			level.mapCellContents.data[i]=0;
-			level.mapCellContents_Movements.data[i]=0;	
-		}
+		level.mapCellContents.data.fill(0);
+		level.mapCellContents_Movements.data.fill(0);
 
 		for (let i=0;i<level.width;i++) {
 			let ccc = level.colCellContents[i];
@@ -2586,11 +2610,11 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE) {
 				for (let j=0;j<state.sfx_MovementFailureMasks.length;j++) {
 					let o = state.sfx_MovementFailureMasks[j];
 					let objectMask = o.objectMask;
-					if (${ANY_BITS_IN_COMMON("objectMask", "cellMask", OBJECT_SIZE)}) {
-						let directionMask = o.directionMask;
-						if (${ANY_BITS_IN_COMMON("movementMask", "directionMask", MOVEMENT_SIZE)} && seedsToPlay_CantMove.indexOf(o.seed)===-1) {
-							seedsToPlay_CantMove.push(o.seed);
-						}
+		
+					if (${ANY_BITS_IN_COMMON("cellMask", "objectMask", OBJECT_SIZE)} 
+					&& ${ANY_BITS_IN_COMMON("o.directionMask","movementMask", MOVEMENT_SIZE)} 
+					&& seedsToPlay_CantMove.indexOf(o.seed)===-1) {
+						seedsToPlay_CantMove.push(o.seed);
 					}
 				}
 			}

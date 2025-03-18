@@ -74,7 +74,7 @@ BitVec.prototype.ishiftclear = function(mask, shift) {
 	const toshift = shift & 31;
 	const shift_5 = shift>>5;
 	const low = mask << toshift;
-	this.data[sshift_5] &= ~low;
+	this.data[shift_5] &= ~low;
 	if (toshift){
 		let high = mask >> (32 - (shift & 31));
 		this.data[shift_5+1] &= ~high;
