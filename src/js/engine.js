@@ -2112,11 +2112,9 @@ Rule.prototype.findMatches = function () {
 		const cellRow = this.patterns[cellRowIndex];
 		const matchFunction = this.cellRowMatches[cellRowIndex];
 		let match;
-		if (this.ellipsisCount[cellRowIndex] === 1) {//if ellipsis     
-			match = state.matchCellRowWildCard(this.direction, matchFunction, cellRow, cellRowMasks[cellRowIndex], cellRowMasks_Movements[cellRowIndex], d, this.ellipsisCount[cellRowIndex]);
-		} else if (this.ellipsisCount[cellRowIndex] === 0) {
+		if (this.ellipsisCount[cellRowIndex] === 0) {
 			match = state.matchCellRow(level, this.direction, matchFunction, cellRow, cellRowMasks[cellRowIndex], cellRowMasks_Movements[cellRowIndex], d);
-		} else { // ellipsiscount===2
+		} else { // ellipsiscount===1/2
 			match = state.matchCellRowWildCard(this.direction, matchFunction, cellRow, cellRowMasks[cellRowIndex], cellRowMasks_Movements[cellRowIndex], d, this.ellipsisCount[cellRowIndex]);
 		}
 		if (match.length === 0) {
