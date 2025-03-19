@@ -341,9 +341,9 @@ function LEVEL_SET_CELL(level, index, vec, array_size) {
 
 
 function IMPORT_COMPILE_TIME_ARRAY(runtime,compiletime,array_size){
-	var result="";
+	const values = [];
 	for (let i = 0; i < array_size; i++) {
-		result += runtime+".data["+i+"] = "+compiletime.data[i]+";\n";
+		values.push(compiletime.data[i]);
 	}
-	return result;
+	return runtime+".data = ["+values.join(",")+"];\n";
 }

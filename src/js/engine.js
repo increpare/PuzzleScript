@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 ..................................
 .............SOKOBAN..............
@@ -803,7 +805,6 @@ function RebuildLevelArrays() {
 	//I have these to avoid dynamic allocation - I generate 3 because why not, 
 	//but according to my tests I never seem to call this while a previous copy is still in scope
 	_movementVecs = [new BitVec(STRIDE_MOV), new BitVec(STRIDE_MOV), new BitVec(STRIDE_MOV)];
-	_rigidVecs = [new BitVec(STRIDE_MOV), new BitVec(STRIDE_MOV), new BitVec(STRIDE_MOV)];
 
 	for (let i = 0; i < level.height; i++) {
 		level.rowCellContents[i] = new BitVec(STRIDE_OBJ);
@@ -1083,7 +1084,7 @@ function getLayersOfMask(cellMask) {
 let CACHE_MOVEENTITIESATINDEX = {}
 function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 	
-	const fn = `
+	const fn = `'use strict';
     let cellMask = level.getCell(positionIndex);
 	${UNROLL("cellMask &= entityMask", OBJECT_SIZE)}
     let layers = getLayersOfMask(cellMask);
@@ -1113,7 +1114,7 @@ function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 
 let CACHE_CALCULATEROWCOLMASKS = {}
 function generate_calculateRowColMasks(OBJECT_SIZE, MOVEMENT_SIZE) {
-	const fn = `
+	const fn = `'use strict';
 		level.mapCellContents.data.fill(0);
 		level.mapCellContents_Movements.data.fill(0);
 
@@ -1470,7 +1471,6 @@ function CellPattern(row) {
 	this.matches = this.generateMatchFunction();
 	this.replacement = row[5];
 
-	this.replace = FALSE_FUNCTION;
 };
 
 function CellReplacement(row) {
@@ -1481,7 +1481,18 @@ function CellReplacement(row) {
 	this.movementsLayerMask = row[4];
 	this.randomEntityMask = row[5];
 	this.randomDirMask = row[6];
+	this.replace = null;
 };
+
+CellPattern.prototype.replace = function (level, rule, currentIndex) {
+	var fn = this.generateReplaceFunction(
+			STRIDE_OBJ,
+			STRIDE_MOV,
+			rule
+		);
+	this.replace = fn;
+	return this.replace(level, rule, currentIndex);
+}
 
 CellPattern.prototype.generateMatchString = function () {
 	let fn = "(true";
@@ -1752,7 +1763,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 
 let CACHE_MATCHCELLROW = {}
 function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
-	const fn = `
+	const fn = `'use strict';
 	let result=[];
 	
 	if ((${NOT_BITS_SET_IN_ARRAY("cellRowMask", "level.mapCellContents.data", OBJECT_SIZE)})||
@@ -1836,7 +1847,7 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 
 let CACHE_MATCHCELLROWWILDCARD = {}
 function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
-	const fn = `
+	const fn = `'use strict';
 	let result=[];
 	if ((${NOT_BITS_SET_IN_ARRAY("cellRowMask", "level.mapCellContents.data", OBJECT_SIZE)})||
 	(${NOT_BITS_SET_IN_ARRAY("cellRowMask_Movements", "level.mapCellContents_Movements.data", MOVEMENT_SIZE)})) {
@@ -2060,7 +2071,7 @@ function FOR(start, end, fn) {
 
 let CACHE_RULE_APPLYAT = {}
 Rule.prototype.generateApplyAt = function (patterns, ellipsisCount, OBJECT_SIZE, MOVEMENT_SIZE) {
-	const fn = `
+	const fn = `'use strict';
 	//have to double check they apply 
 	//(cf test ellipsis bug: rule matches two candidates, first replacement invalidates second)
 	if (check)
@@ -2396,7 +2407,7 @@ function applyRules(rules, loopPoint, bannedGroup) {
 
 let CACHE_RESOLVEMOVEMENTS = {}
 function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE,state) {
-	const fn = `
+	const fn = `'use strict';
 		let moved=true;
 		while(moved){
 			moved=false;

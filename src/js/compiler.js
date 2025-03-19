@@ -1839,7 +1839,6 @@ function rulesToMask(state) {
                         rhsBitVectors.randomMask_r,
                         rhsBitVectors.randomDirMask_r
                     ]);
-                    target_cell_pattern.replace = target_cell_pattern.generateReplaceFunction(STRIDE_OBJ, STRIDE_MOV,rule,state);
                 }
             }
         }
