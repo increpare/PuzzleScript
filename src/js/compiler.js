@@ -113,63 +113,53 @@ function generateExtraMembers(state) {
         }
     }
 
-    //convert colors to hex
-    for (let n in state.objects) {
-        if (state.objects.hasOwnProperty(n)) {
-            //convert color to hex
-            let o = state.objects[n];
-            if (o.colors.length > 10) {
-                logError("a sprite cannot have more than 10 colors.  Why you would want more than 10 is beyond me.", o.lineNumber + 1);
-            }
-            for (let i = 0; i < o.colors.length; i++) {
-                let c = o.colors[i];
-                if (isColor(c)) {
-                    c = colorToHex(colorPalette, c);
-                    o.colors[i] = c;
-                } else {
-                    logError('Invalid color specified for object "' + n + '", namely "' + o.colors[i] + '".', o.lineNumber + 1);
-                    o.colors[i] = '#ff00ff'; // magenta error color
-                }
-            }
-        }
-    }
-
-    //generate sprite matrix
-    for (let n in state.objects) {
-        if (state.objects.hasOwnProperty(n)) {
-            let o = state.objects[n];
-            if (o.colors.length === 0) {
-                logError('color not specified for object "' + n + '".', o.lineNumber);
-                o.colors = ["#ff00ff"];
-            }
-            if (o.spritematrix.length === 0) {
-                o.spritematrix = [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ];
-            } else {
-                if (o.spritematrix.length !== 5 || o.spritematrix[0].length !== 5 || o.spritematrix[1].length !== 5 || o.spritematrix[2].length !== 5 || o.spritematrix[3].length !== 5 || o.spritematrix[4].length !== 5) {
-                    logWarning("Sprite graphics must be 5 wide and 5 high exactly.", o.lineNumber);
-                }
-                o.spritematrix = generateSpriteMatrix(o.spritematrix);
-            }
-        }
-    }
-
     let glyphOrder = [];
-    //calculate glyph dictionary
     let glyphDict = {};
-    for (let n in state.objects) {
-        if (state.objects.hasOwnProperty(n)) {
-            let o = state.objects[n];
-            let mask = blankMask.concat([]);
-            mask[o.layer] = o.id;
-            glyphDict[n] = mask;
-            glyphOrder.push([o.lineNumber, n]);
+
+    //convert colors to hex
+    const state_object_keys = Object.keys(state.objects);
+    const state_object_keys_l = state_object_keys.length;
+    for (let k_i = 0; k_i < state_object_keys_l; k_i++) {
+        const n = state_object_keys[k_i];
+        //convert color to hex
+        let o = state.objects[n];
+        if (o.colors.length > 10) {
+            logError("a sprite cannot have more than 10 colors.  Why you would want more than 10 is beyond me.", o.lineNumber + 1);
         }
+        for (let i = 0; i < o.colors.length; i++) {
+            let c = o.colors[i];
+            if (isColor(c)) {
+                c = colorToHex(colorPalette, c);
+                o.colors[i] = c;
+            } else {
+                logError('Invalid color specified for object "' + n + '", namely "' + o.colors[i] + '".', o.lineNumber + 1);
+                o.colors[i] = '#ff00ff'; // magenta error color
+            }
+        }        
+
+        if (o.colors.length === 0) {
+            logError('color not specified for object "' + n + '".', o.lineNumber);
+            o.colors = ["#ff00ff"];
+        }
+        if (o.spritematrix.length === 0) {
+            o.spritematrix = [
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ];
+        } else {
+            if (o.spritematrix.length !== 5 || o.spritematrix[0].length !== 5 || o.spritematrix[1].length !== 5 || o.spritematrix[2].length !== 5 || o.spritematrix[3].length !== 5 || o.spritematrix[4].length !== 5) {
+                logWarning("Sprite graphics must be 5 wide and 5 high exactly.", o.lineNumber);
+            }
+            o.spritematrix = generateSpriteMatrix(o.spritematrix);
+        }    
+
+        let mask = blankMask.concat([]);
+        mask[o.layer] = o.id;
+        glyphDict[n] = mask;
+        glyphOrder.push([o.lineNumber, n]);    
     }
 
     let added = true;

@@ -631,15 +631,16 @@ function setGameState(_state, command, randomseed) {
 	}
 	//set sprites
 	sprites = [];
-	for (let n in state.objects) {
-		if (state.objects.hasOwnProperty(n)) {
-			let object = state.objects[n];
-			let sprite = {
-				colors: object.colors,
-				dat: object.spritematrix
-			};
-			sprites[object.id] = sprite;
-		}
+	var keys = Object.keys(state.objects);
+	var keys_l = keys.length;
+	for (let k_i = 0; k_i < keys_l; k_i++) {
+		const k = keys[k_i];
+		let object = state.objects[k];
+		let sprite = {
+			colors: object.colors,
+			dat: object.spritematrix
+		};
+		sprites[object.id] = sprite;
 	}
 	if (state.metadata.realtime_interval !== undefined) {
 		autotick = 0;
