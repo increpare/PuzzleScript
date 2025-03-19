@@ -170,11 +170,11 @@ BitVec.prototype.setZero = function() {
 	this.data.fill(0);
 }
 
-function ARRAY_SET_ZERO(tok, array_size) {
+function ARRAY_SET_ZERO(tok) {
 	return tok+".fill(0);\n";
 }
 
-function SET_ZERO(tok, array_size) {
+function SET_ZERO(tok) {
 	return tok+".data.fill(0);\n";
 }
 
@@ -289,6 +289,14 @@ function UNROLL(command, array_size) {
 	return result;
 }
 
+function UNROLL_TOK_REAL(tok, op, val, array_size) {
+	let result = "";
+	for (let i = 0; i < array_size; i++) {
+		result += tok + ".data[" + i + "]" + op + val.data[i]+";\n";
+	}
+	return result;
+}
+
 function LEVEL_GET_CELL_INTO(level, index, targetarray, OBJECT_SIZE) {
 	var result = "";
 	for (let i = 0; i < OBJECT_SIZE; i++) {
@@ -327,6 +335,15 @@ function LEVEL_SET_CELL(level, index, vec, array_size) {
 	var result = "";
 	for (let i = 0; i < array_size; i++) {
 		result += `\t${level}.objects[${index}*${array_size}+${i}]=${vec}.data[${i}];\n`;
+	}
+	return result;
+}
+
+
+function IMPORT_COMPILE_TIME_ARRAY(runtime,compiletime,array_size){
+	var result="";
+	for (let i = 0; i < array_size; i++) {
+		result += runtime+".data["+i+"] = "+compiletime.data[i]+";\n";
 	}
 	return result;
 }

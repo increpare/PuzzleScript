@@ -14,7 +14,7 @@ const { execFileSync } = require('child_process');
 
 const rimraf = require('rimraf');
 const compress_images = require("compress-images");
-var webResourceInliner = require("web-resource-inliner");
+let webResourceInliner = require("web-resource-inliner");
 const ncp = require('ncp').ncp;
 const gifsicle = require('gifsicle');
 const concat = require('concat');
@@ -25,8 +25,8 @@ const htmlminify = require('html-minifier-terser').minify;
 const glob = require("glob")
 
 //print all paths to all modules above
-var lines = fs.readFileSync(".build/buildnumber.txt", encoding = 'utf-8');
-var buildnum = parseInt(lines);
+let lines = fs.readFileSync(".build/buildnumber.txt", encoding = 'utf-8');
+let buildnum = parseInt(lines);
 buildnum++;
 fs.writeFileSync(".build/buildnumber.txt", buildnum.toString(), encoding = 'utf-8');
 
@@ -34,7 +34,7 @@ fs.writeFileSync(".build/buildnumber.txt", buildnum.toString(), encoding = 'utf-
 console.log("===========================");
 console.log('build number ' + buildnum)
 
-var start = new Date()
+let start = new Date()
 
 console.log("removing bin")
 
@@ -120,26 +120,26 @@ ncp("./src", "./bin/", function (err) {
 
 
 
-            var css = fs.readFileSync("./bin/css/combined.css", encoding = 'utf8');
-            var min = cssmin(css);
+            let css = fs.readFileSync("./bin/css/combined.css", encoding = 'utf8');
+            let min = cssmin(css);
             fs.writeFileSync("./bin/css/combined.css", min, encoding = "utf8");
 
-            var css = fs.readFileSync("./bin/Documentation/css/bootstrap.css", encoding = 'utf8');
-            var min = cssmin(css);
+            let css = fs.readFileSync("./bin/Documentation/css/bootstrap.css", encoding = 'utf8');
+            let min = cssmin(css);
             fs.writeFileSync("./bin/Documentation/css/bootstrap.css", min, encoding = "utf8");
 
             console.log("running js minification");
 
             async function generateFrom(toinclude, output_src, output_bin) {
-                var files = toinclude;
+                let files = toinclude;
 
-                var corpus = {};
-                for (var i = 0; i < files.length; i++) {
-                    var fpath = files[i];
+                let corpus = {};
+                for (let i = 0; i < files.length; i++) {
+                    let fpath = files[i];
                     corpus["source/" + fpath.slice(9)] = fs.readFileSync(fpath, encoding = 'utf-8');
                 }
 
-                var result = await minify(
+                let result = await minify(
                     corpus,
                     {
                         sourceMap: {
@@ -152,7 +152,7 @@ ncp("./src", "./bin/", function (err) {
                 fs.writeFileSync(output_bin + ".map", result.map);
             };
 
-            var includes_editor = [
+            let includes_editor = [
                 "./src/js/Blob.js",
                 "./src/js/FileSaver.js",
                 "./src/js/jsgif/LZWEncoder.js",
@@ -200,7 +200,7 @@ ncp("./src", "./bin/", function (err) {
                 "./bin/js/scripts_compiled.js");
 
 
-            var includes_play = [
+            let includes_play = [
                 "./src/js/storagewrapper.js",
                 "./src/js/bitvec.js",
                 "./src/js/level.js",
@@ -233,7 +233,7 @@ ncp("./src", "./bin/", function (err) {
 
             console.log("compilation done");
 
-            var editor = fs.readFileSync("./bin/editor.html", encoding = 'utf8');
+            let editor = fs.readFileSync("./bin/editor.html", encoding = 'utf8');
             editor = editor.replace(/<script src="js\/[A-Za-z0-9_\/-]*\.js"><\/script>/g, "");
             editor = editor.replace(/<!--___SCRIPTINSERT___-->/g, '<script src="js\/scripts_compiled.js"><\/script>');
             editor = editor.replace(/<link rel="stylesheet" href="[A-Za-z0-9_\/-]*\.css">/g, '');
@@ -243,7 +243,7 @@ ncp("./src", "./bin/", function (err) {
             editor = editor.replace(/<!--BUILDNUMBER-->/g, `build ${buildnum.toString()}, ${d.getDate()}-${monthname[d.getMonth()]}-${d.getFullYear()}`);
             fs.writeFileSync("./bin/editor.html", editor, encoding = 'utf8');
 
-            var player = fs.readFileSync("./bin/play.html", encoding = 'utf8');
+            let player = fs.readFileSync("./bin/play.html", encoding = 'utf8');
             player = player.replace(/<script src="js\/[A-Za-z0-9_\/-]*\.js"><\/script>/g, "");
             player = player.replace(/<!--___SCRIPTINSERT___-->/g, '<script src="js\/scripts_play_compiled.js"><\/script>');
             fs.writeFileSync("./bin/play.html", player, encoding = 'utf8');
@@ -251,7 +251,7 @@ ncp("./src", "./bin/", function (err) {
             console.log("inlining standalone template")
 
             //src one first:
-            var standalone_raw = fs.readFileSync("./src/standalone.html", 'utf8');
+            let standalone_raw = fs.readFileSync("./src/standalone.html", 'utf8');
 
             webResourceInliner.html({
                 fileContent: standalone_raw,
@@ -276,7 +276,7 @@ ncp("./src", "./bin/", function (err) {
                     if (err) {
                         console.log(err)
                     } else {
-                        var minified = await htmlminify(inlined,
+                        let minified = await htmlminify(inlined,
                             {
                                 collapseBooleanAttributes: true,
                                 collapseWhitespace: true,
@@ -296,8 +296,8 @@ ncp("./src", "./bin/", function (err) {
 
                     glob("./bin/*.html", {}, async function (er, files) {
                         for (filename of files) {
-                            var lines = fs.readFileSync(filename, encoding = 'utf8');
-                            var result = await htmlminify(lines);
+                            let lines = fs.readFileSync(filename, encoding = 'utf8');
+                            let result = await htmlminify(lines);
                             fs.writeFileSync(filename, result);
                         }
                     });
@@ -309,9 +309,9 @@ ncp("./src", "./bin/", function (err) {
                         files = files.concat(glob.sync("./bin/**/*.css"));
                         files = files.concat(glob.sync("./bin/**/*.txt"));
 
-                        for (var i = 0; i < files.length; i++) {
-                            var file = files[i];
-                            var comp = new Compress(file);
+                        for (let i = 0; i < files.length; i++) {
+                            let file = files[i];
+                            let comp = new Compress(file);
                             await comp.run();
                         }
 

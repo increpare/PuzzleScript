@@ -1839,7 +1839,7 @@ function rulesToMask(state) {
                         rhsBitVectors.randomMask_r,
                         rhsBitVectors.randomDirMask_r
                     ]);
-                    target_cell_pattern.replace = target_cell_pattern.generateReplaceFunction(STRIDE_OBJ, STRIDE_MOV,rule);
+                    target_cell_pattern.replace = target_cell_pattern.generateReplaceFunction(STRIDE_OBJ, STRIDE_MOV,rule,state);
                 }
             }
         }
@@ -2056,7 +2056,7 @@ function generateRigidGroupList(state) {
         let group_index = rigidGroupIndex_to_GroupIndex[30];
         logError("There can't be more than 30 rigid groups (rule groups containing rigid members).", state.rules[group_index][0].lineNumber);
     }
-    state.hasRigidRules = groupIndex_to_RigidGroupIndex.length > 0;
+    state.rigid = groupIndex_to_RigidGroupIndex.length > 0;
     state.rigidGroups = rigidGroups;
     state.rigidGroupIndex_to_GroupIndex = rigidGroupIndex_to_GroupIndex;
     state.groupNumber_to_RigidGroupIndex = groupNumber_to_RigidGroupIndex;
@@ -2928,11 +2928,114 @@ function addSpecializedFunctions(state) {
     const MOVEMENT_SIZE = Math.ceil(state.collisionLayers.length / 5);
     state.moveEntitiesAtIndex = generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE);
     state.calculateRowColMasks = generate_calculateRowColMasks(OBJECT_SIZE, MOVEMENT_SIZE);
-    state.resolveMovements = generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE);
+    state.resolveMovements = generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE,state);
     state.matchCellRow = generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE);
     state.matchCellRowWildCard = generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE);
     state.repositionEntitiesAtCell = generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE);
 }
+
+
+// function diffLevelStates(basis, current){
+//     const diff = []
+//     for (let i = 0; i < basis.length; i++) {
+//         if (basis[i] !== current[i]) {
+//             diff.push(i);
+//             diff.push(current[i]);
+//         }
+//     }
+//     return diff.toString();
+// }
+
+// function simulation_tickInput(val){
+//     processInput(val);
+//     while (againing) {
+//         againing=false;
+//         processInput(-1,false);			
+//     }
+// }
+
+// function solveLevel(state){
+//     //disable sfx
+//     var oldmuted=muted;
+//     muted = true;
+//     /* this is a pathfinding algorithm that will try to solve the level - it does a depth first search of the level */
+//     const visited_states = new Set();
+//     const states_to_leave = [];
+//     const MOVE_COUNT=5;//up down left right action  
+
+//     const desired_level = curlevel;
+//     loadLevelFromState(state,curlevel,null);
+// 	while (againing) {//in case some stuff to do at the start
+// 		againing=false;
+// 		processInput(-1);			
+// 	}
+
+//     const initial_level_state = new Int32Array(level.objects);
+//     const initial_state_key = diffLevelStates(initial_level_state, initial_level_state);
+//     visited_states.add(initial_state_key);
+//     states_to_leave.push({
+//             state:initial_level_state,
+//             input_sequence:""
+//         });
+
+
+//     let won = false;
+//     var solution = "";
+
+//     while (states_to_leave.length > 0){
+//         var o = states_to_leave.shift();
+//         var level_state = o.state;
+//         var input_sequence = o.input_sequence;
+//         for (let input=0; input<MOVE_COUNT; input++){
+//             level.objects.set(level_state);            
+//             simulation_tickInput(input);
+//             const new_state = level.objects;
+//             const new_state_key = diffLevelStates(initial_level_state,new_state);
+//             if (visited_states.has(new_state_key)){
+//                 continue;
+//             }
+//             var new_input_sequence = input_sequence + input;
+//             visited_states.add(new_state_key);
+//             states_to_leave.push({
+//                 state:new Int32Array(new_state),
+//                 input_sequence:new_input_sequence
+//             });
+//             if (winning){
+//                 won = true;
+//                 solution = new_input_sequence;
+//                 break;
+//             }
+//         }
+//     }
+//     if (won){
+//         consolePrint("Solution found");
+//         consolePrint("States Visited: " + visited_states.size);
+//         consolePrint(pretty_print_solution(solution));
+//     } else {
+//         consolePrint("No solution found");
+//         consolePrint("States Visited: " + visited_states.size);
+//     }
+
+//     curlevel=desired_level;
+//     winning=false;
+//     loadLevelFromState(state,curlevel,null);
+//     consolePrint("loaded level"+curlevel);
+//     muted = oldmuted;
+// }
+
+// function pretty_print_solution(solution){
+//     const move_names = ["U","L","D","R","A"];
+//     var result=""
+//     //group in fives
+//     for (let i = 0; i < solution.length; i ++) {
+//         const move_name = move_names[solution[i]];
+//         result += move_name;
+//         if ((i + 1) % 5 === 0) {
+//             result += " ";
+//         }
+//     }
+//     return result;
+// }
 
 function compile(command, text, randomseed) {
     forceRegenImages = true;
@@ -3004,7 +3107,6 @@ function compile(command, text, randomseed) {
             consolePrint('<span class="systemMessage">Successful Compilation, generated ' + ruleCount + ' instructions.</span>');
         } else {
             consolePrint('<span class="systemMessage">Successful live recompilation, generated ' + ruleCount + ' instructions.</span>');
-
         }
 
 
