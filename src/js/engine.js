@@ -1968,8 +1968,6 @@ function generateTuples(lists) {
 	return tuples;
 }
 
-
-
 Rule.prototype.findMatches = function () {
 	if (!this.ruleMask.bitsSetInArray(level.mapCellContents.data))
 		return [];
