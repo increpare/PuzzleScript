@@ -257,30 +257,34 @@
                         */
 
                         if (curWord==="->" || curWord==="-"){
-                            //ignore first half until the [
-                            var first_half_start = lineToCursor.indexOf("[");
-                            var first_half_end = lineToCursor.lastIndexOf("]");
-                            var excerpt = lineToCursor.substring(first_half_start,first_half_end+1);
-                            //we should strip all substrings of the form "no XYZ" (case insensitive), removing both the "no" and the word that follows it
-                            var no_words = excerpt.match(/no\s+[^\s]+\s*/gi);
-                            if (no_words){
-                                for (var i=0;i<no_words.length;i++){
-                                    var no_word = no_words[i];
-                                    //repace the whole kaboodle with an empty string
-                                    excerpt = excerpt.replace(no_word, "");
+                            //check there's nother other than whitespace to the right of the cursor
+                            var right_of_cursor = curLine.substring(cur.ch);
+                            if (right_of_cursor.trim().length===0){
+                                //ignore first half until the [
+                                var first_half_start = lineToCursor.indexOf("[");
+                                var first_half_end = lineToCursor.lastIndexOf("]");
+                                var excerpt = lineToCursor.substring(first_half_start,first_half_end+1);
+                                //we should strip all substrings of the form "no XYZ" (case insensitive), removing both the "no" and the word that follows it
+                                var no_words = excerpt.match(/no\s+[^\s]+\s*/gi);
+                                if (no_words){
+                                    for (var i=0;i<no_words.length;i++){
+                                        var no_word = no_words[i];
+                                        //repace the whole kaboodle with an empty string
+                                        excerpt = excerpt.replace(no_word, "");
+                                    }
                                 }
+                                
+                                //stripped excerpt - strip everything except for []|.
+                                var stripped_excerpt = excerpt.replace(/[^\[\]\.\|]/g, " ");
+                                //in both excerpt and stripped excerpt, reduce all whitespace to a single space
+                                excerpt = excerpt.replace(/\s+/g, " ");
+                                stripped_excerpt = stripped_excerpt.replace(/\s+/g, " ");
+                                var results = ["LOGICWORD","-> "+excerpt];
+                                if (excerpt!==stripped_excerpt){
+                                    results.push("-> "+stripped_excerpt);
+                                }
+                                candlists.push(results);
                             }
-                            
-                            //stripped excerpt - strip everything except for []|.
-                            var stripped_excerpt = excerpt.replace(/[^\[\]\.\|]/g, " ");
-                            //in both excerpt and stripped excerpt, reduce all whitespace to a single space
-                            excerpt = excerpt.replace(/\s+/g, " ");
-                            stripped_excerpt = stripped_excerpt.replace(/\s+/g, " ");
-                            var results = ["LOGICWORD","-> "+excerpt];
-                            if (excerpt!==stripped_excerpt){
-                                results.push("-> "+stripped_excerpt);
-                            }
-                            candlists.push(results);
 
                         }
                         //if inside of roles,can use some extra directions
