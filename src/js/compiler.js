@@ -265,92 +265,96 @@ function generateExtraMembers(state) {
     let modified = true;
     while (modified) {
         modified = false;
-        for (let n in synonymsDict) {
-            if (synonymsDict.hasOwnProperty(n)) {
-                let value = synonymsDict[n];
-                if (value in propertiesDict) {
-                    delete synonymsDict[n];
-                    propertiesDict[n] = propertiesDict[value];
+
+        const synonymsDict_keys = Object.keys(synonymsDict);
+        const synonymsDict_keys_l = synonymsDict_keys.length;   
+        for (let k_i = 0; k_i < synonymsDict_keys_l; k_i++) {
+            const n = synonymsDict_keys[k_i];
+            let value = synonymsDict[n];
+            if (value in propertiesDict) {
+                delete synonymsDict[n];
+                propertiesDict[n] = propertiesDict[value];
+                modified = true;
+            } else if (value in aggregatesDict) {
+                delete aggregatesDict[n];
+                aggregatesDict[n] = aggregatesDict[value];
+                modified = true;
+            } else if (value in synonymsDict) {
+                synonymsDict[n] = synonymsDict[value];
+            }            
+        }
+
+        const propertiesDict_keys = Object.keys(propertiesDict);
+        const propertiesDict_keys_l = propertiesDict_keys.length;
+        for (let k_i = 0; k_i < propertiesDict_keys_l; k_i++) {
+            const n = propertiesDict_keys[k_i];
+            let values = propertiesDict[n];
+            for (let i = 0; i < values.length; i++) {
+                let value = values[i];
+                if (value in synonymsDict) {
+                    values[i] = synonymsDict[value];
+                    modified = true;
+                } else if (value in propertiesDict) {
+                    values.splice(i, 1);
+                    let newvalues = propertiesDict[value];
+                    for (let j = 0; j < newvalues.length; j++) {
+                        let newvalue = newvalues[j];
+                        if (values.indexOf(newvalue) === -1) {
+                            values.push(newvalue);
+                        }
+                    }
+                    modified = true;
+                }
+                if (value in aggregatesDict) {
+                    logError('Trying to define property "' + n.toUpperCase() + '" in terms of aggregate "' + value.toUpperCase() + '".');
+                }
+            }        
+        }
+
+        const aggregatesDict_keys = Object.keys(aggregatesDict);
+        const aggregatesDict_keys_l = aggregatesDict_keys.length;
+        for (let k_i = 0; k_i < aggregatesDict_keys_l; k_i++) {
+            const n = aggregatesDict_keys[k_i];
+            let values = aggregatesDict[n];
+            for (let i = 0; i < values.length; i++) {
+                let value = values[i];
+                if (value in synonymsDict) {
+                    values[i] = synonymsDict[value];
                     modified = true;
                 } else if (value in aggregatesDict) {
-                    delete aggregatesDict[n];
-                    aggregatesDict[n] = aggregatesDict[value];
+                    values.splice(i, 1);
+                    let newvalues = aggregatesDict[value];
+                    for (let j = 0; j < newvalues.length; j++) {
+                        let newvalue = newvalues[j];
+                        if (values.indexOf(newvalue) === -1) {
+                            values.push(newvalue);
+                        }
+                    }
                     modified = true;
-                } else if (value in synonymsDict) {
-                    synonymsDict[n] = synonymsDict[value];
                 }
-            }
-        }
-
-        for (let n in propertiesDict) {
-            if (propertiesDict.hasOwnProperty(n)) {
-                let values = propertiesDict[n];
-                for (let i = 0; i < values.length; i++) {
-                    let value = values[i];
-                    if (value in synonymsDict) {
-                        values[i] = synonymsDict[value];
-                        modified = true;
-                    } else if (value in propertiesDict) {
-                        values.splice(i, 1);
-                        let newvalues = propertiesDict[value];
-                        for (let j = 0; j < newvalues.length; j++) {
-                            let newvalue = newvalues[j];
-                            if (values.indexOf(newvalue) === -1) {
-                                values.push(newvalue);
-                            }
-                        }
-                        modified = true;
-                    }
-                    if (value in aggregatesDict) {
-                        logError('Trying to define property "' + n.toUpperCase() + '" in terms of aggregate "' + value.toUpperCase() + '".');
-                    }
+                if (value in propertiesDict) {
+                    logError('Trying to define aggregate "' + n.toUpperCase() + '" in terms of property "' + value.toUpperCase() + '".');
                 }
-            }
-        }
-
-
-        for (let n in aggregatesDict) {
-            if (aggregatesDict.hasOwnProperty(n)) {
-                let values = aggregatesDict[n];
-                for (let i = 0; i < values.length; i++) {
-                    let value = values[i];
-                    if (value in synonymsDict) {
-                        values[i] = synonymsDict[value];
-                        modified = true;
-                    } else if (value in aggregatesDict) {
-                        values.splice(i, 1);
-                        let newvalues = aggregatesDict[value];
-                        for (let j = 0; j < newvalues.length; j++) {
-                            let newvalue = newvalues[j];
-                            if (values.indexOf(newvalue) === -1) {
-                                values.push(newvalue);
-                            }
-                        }
-                        modified = true;
-                    }
-                    if (value in propertiesDict) {
-                        logError('Trying to define aggregate "' + n.toUpperCase() + '" in terms of property "' + value.toUpperCase() + '".');
-                    }
-                }
-            }
+            }        
         }
     }
 
     /* determine which properties specify objects all on one layer */
     state.propertiesSingleLayer = {};
-    for (let key in propertiesDict) {
-        if (propertiesDict.hasOwnProperty(key)) {
-            let values = propertiesDict[key];
-            let sameLayer = true;
-            for (let i = 1; i < values.length; i++) {
-                if ((state.objects[values[i - 1]].layer !== state.objects[values[i]].layer)) {
-                    sameLayer = false;
-                    break;
-                }
+    const propertiesDict_keys = Object.keys(propertiesDict);
+    const propertiesDict_keys_l = propertiesDict_keys.length;
+    for (let k_i = 0; k_i < propertiesDict_keys_l; k_i++) {
+        const key = propertiesDict_keys[k_i];
+        let values = propertiesDict[key];
+        let sameLayer = true;
+        for (let i = 1; i < values.length; i++) {
+            if ((state.objects[values[i - 1]].layer !== state.objects[values[i]].layer)) {
+                sameLayer = false;
+                break;
             }
-            if (sameLayer) {
-                state.propertiesSingleLayer[key] = state.objects[values[0]].layer;
-            }
+        }
+        if (sameLayer) {
+            state.propertiesSingleLayer[key] = state.objects[values[0]].layer;        
         }
     }
 
@@ -1147,10 +1151,13 @@ function concretizePropertyRule(state, rule, lineNumber) {
                             let concreteType = aliases[l];
                             let newrule = deepCloneRule(cur_rule);
                             newrule.propertyReplacement = {};
-                            for (let prop in cur_rule.propertyReplacement) {
-                                if (cur_rule.propertyReplacement.hasOwnProperty(prop)) {
-                                    let propDat = cur_rule.propertyReplacement[prop];
-                                    newrule.propertyReplacement[prop] = [propDat[0], propDat[1]];
+                            if (cur_rule.propertyReplacement){
+                                const cur_rule_propertyReplacement_keys = Object.keys(cur_rule.propertyReplacement);
+                                const cur_rule_propertyReplacement_keys_l = cur_rule_propertyReplacement_keys.length;
+                                for (let k_i = 0; k_i < cur_rule_propertyReplacement_keys_l; k_i++) {
+                                    const prop = cur_rule_propertyReplacement_keys[k_i];
+                                    const propDat = cur_rule.propertyReplacement[prop];
+                                    newrule.propertyReplacement[prop] = [propDat[0], propDat[1]];                                
                                 }
                             }
 
@@ -1300,17 +1307,25 @@ function concretizeMovingRule(state, rule, lineNumber) {
 
                             //deep copy replacements
                             newrule.movingReplacement = {};
-                            for (let moveTerm in cur_rule.movingReplacement) {
-                                if (cur_rule.movingReplacement.hasOwnProperty(moveTerm)) {
+
+                            if(cur_rule.movingReplacement){
+                                const cur_rule_movingReplacement_keys = Object.keys(cur_rule.movingReplacement);
+                                const cur_rule_movingReplacement_keys_l = cur_rule_movingReplacement_keys.length;
+                                for (let k_i = 0; k_i < cur_rule_movingReplacement_keys_l; k_i++) {
+                                    const moveTerm = cur_rule_movingReplacement_keys[k_i];
                                     let moveDat = cur_rule.movingReplacement[moveTerm];
-                                    newrule.movingReplacement[moveTerm] = [moveDat[0], moveDat[1], moveDat[2], moveDat[3], moveDat[4], moveDat[5]];
+                                    newrule.movingReplacement[moveTerm] = [moveDat[0], moveDat[1], moveDat[2], moveDat[3], moveDat[4], moveDat[5]];                            
                                 }
                             }
+
                             newrule.aggregateDirReplacement = {};
-                            for (let moveTerm in cur_rule.aggregateDirReplacement) {
-                                if (cur_rule.aggregateDirReplacement.hasOwnProperty(moveTerm)) {
+                            if (cur_rule.aggregateDirReplacement){
+                                const cur_rule_aggregateDirReplacement_keys = Object.keys(cur_rule.aggregateDirReplacement);
+                                const cur_rule_aggregateDirReplacement_keys_l = cur_rule_aggregateDirReplacement_keys.length;
+                                for (let k_i = 0; k_i < cur_rule_aggregateDirReplacement_keys_l; k_i++) {
+                                    const moveTerm = cur_rule_aggregateDirReplacement_keys[k_i];
                                     let moveDat = cur_rule.aggregateDirReplacement[moveTerm];
-                                    newrule.aggregateDirReplacement[moveTerm] = [moveDat[0], moveDat[1], moveDat[2]];
+                                    newrule.aggregateDirReplacement[moveTerm] = [moveDat[0], moveDat[1], moveDat[2]];                            
                                 }
                             }
 
@@ -1355,9 +1370,13 @@ function concretizeMovingRule(state, rule, lineNumber) {
         let ambiguous_movement_dict = {};
         //strict first - matches movement direction to objects
         //for each property replacement in that rule
-        for (let cand_name in cur_rule.movingReplacement) {
-            if (cur_rule.movingReplacement.hasOwnProperty(cand_name)) {
-                let replacementInfo = cur_rule.movingReplacement[cand_name];
+
+        const cur_rule_movingReplacement_keys = Object.keys(cur_rule.movingReplacement);
+        if (cur_rule.movingReplacement){
+            const cur_rule_movingReplacement_keys_l = cur_rule_movingReplacement_keys.length;
+            for (let k_i = 0; k_i < cur_rule_movingReplacement_keys_l; k_i++) {
+                const moveTerm = cur_rule_movingReplacement_keys[k_i];
+                let replacementInfo = cur_rule.movingReplacement[moveTerm];
                 let concreteMovement = replacementInfo[0];
                 let occurrenceCount = replacementInfo[1];
                 let ambiguousMovement = replacementInfo[2];
@@ -1372,31 +1391,35 @@ function concretizeMovingRule(state, rule, lineNumber) {
                             concretizeMovingInCell(cell, ambiguousMovement, ambiguousMovement_attachedObject, concreteMovement);
                         }
                     }
-                }
-
+                }        
             }
         }
 
         //I don't fully understand why the following part is needed (and I wrote this yesterday), but it's not obviously malicious.
         let ambiguous_movement_names_dict = {};
-        for (let cand_name in cur_rule.aggregateDirReplacement) {
-            if (cur_rule.aggregateDirReplacement.hasOwnProperty(cand_name)) {
-                let replacementInfo = cur_rule.aggregateDirReplacement[cand_name];
-                let concreteMovement = replacementInfo[0];
-                let occurrenceCount = replacementInfo[1];
-                let ambiguousMovement = replacementInfo[2];
-                //are both the following boolean bits necessary, or just the latter? ah well, no harm it seems.
-                if ((ambiguousMovement in ambiguous_movement_names_dict) || (occurrenceCount !== 1)) {
-                    ambiguous_movement_names_dict[ambiguousMovement] = "INVALID";
-                } else {
-                    ambiguous_movement_names_dict[ambiguousMovement] = concreteMovement
-                }
-            }
+
+        const cur_rule_aggregateDirReplacement_keys = Object.keys(cur_rule.aggregateDirReplacement);
+        const cur_rule_aggregateDirReplacement_keys_l = cur_rule_aggregateDirReplacement_keys.length;
+        for (let k_i = 0; k_i < cur_rule_aggregateDirReplacement_keys_l; k_i++) {
+            const moveTerm = cur_rule_aggregateDirReplacement_keys[k_i];
+            let replacementInfo = cur_rule.aggregateDirReplacement[moveTerm];
+            let concreteMovement = replacementInfo[0];
+            let occurrenceCount = replacementInfo[1];
+            let ambiguousMovement = replacementInfo[2];
+            //are both the following boolean bits necessary, or just the latter? ah well, no harm it seems.
+            if ((ambiguousMovement in ambiguous_movement_names_dict) || (occurrenceCount !== 1)) {
+                ambiguous_movement_names_dict[ambiguousMovement] = "INVALID";
+            } else {
+                ambiguous_movement_names_dict[ambiguousMovement] = concreteMovement
+            }        
         }
 
+        const ambiguous_movement_dict_keys = Object.keys(ambiguous_movement_dict);
+        const ambiguous_movement_dict_keys_l = ambiguous_movement_dict_keys.length;
+        for (let k_i = 0; k_i < ambiguous_movement_dict_keys_l; k_i++) {
+            const ambiguousMovement = ambiguous_movement_dict_keys[k_i];
         //for each ambiguous word, if there's a single ambiguous movement specified in the whole lhs, then replace that wholesale
-        for (let ambiguousMovement in ambiguous_movement_dict) {
-            if (ambiguous_movement_dict.hasOwnProperty(ambiguousMovement) && ambiguousMovement !== "INVALID") {
+            if (ambiguousMovement !== "INVALID") {
                 concreteMovement = ambiguous_movement_dict[ambiguousMovement];
                 if (concreteMovement === "INVALID") {
                     continue;
@@ -1411,10 +1434,12 @@ function concretizeMovingRule(state, rule, lineNumber) {
             }
         }
 
-
-        //further replacements - if a movement word appears once on the left, can use to disambiguate remaining ones on the right
-        for (let ambiguousMovement in ambiguous_movement_names_dict) {
-            if (ambiguous_movement_names_dict.hasOwnProperty(ambiguousMovement) && ambiguousMovement !== "INVALID") {
+        const ambiguous_movement_names_dict_keys = Object.keys(ambiguous_movement_names_dict);
+        const ambiguous_movement_names_dict_keys_l = ambiguous_movement_names_dict_keys.length;
+        for (let k_i = 0; k_i < ambiguous_movement_names_dict_keys_l; k_i++) {
+            const ambiguousMovement = ambiguous_movement_names_dict_keys[k_i];
+            //further replacements - if a movement word appears once on the left, can use to disambiguate remaining ones on the right
+            if (ambiguousMovement !== "INVALID") {
                 let concreteMovement = ambiguous_movement_names_dict[ambiguousMovement];
                 if (concreteMovement === "INVALID") {
                     continue;
@@ -1991,24 +2016,29 @@ function arrangeRulesByGroupNumber(state) {
     }
 
     let result = [];
-    for (let groupNumber in aggregates) {
-        if (aggregates.hasOwnProperty(groupNumber)) {
-            let ruleGroup = aggregates[groupNumber];
-            ruleGroupDiscardOverlappingTest(ruleGroup);
-            if (ruleGroup.length > 0) {
-                result.push(ruleGroup);
-            }
-        }
+
+    const aggregate_keys = Object.keys(aggregates);
+    const aggregate_keys_l = aggregate_keys.length;
+    for (let k_i = 0; k_i < aggregate_keys_l; k_i++) {
+        const groupNumber = aggregate_keys[k_i];
+        let ruleGroup = aggregates[groupNumber];
+        ruleGroupDiscardOverlappingTest(ruleGroup);
+        if (ruleGroup.length > 0) {
+            result.push(ruleGroup);
+        }        
     }
+
     let result_late = [];
-    for (let groupNumber in aggregates_late) {
-        if (aggregates_late.hasOwnProperty(groupNumber)) {
-            let ruleGroup = aggregates_late[groupNumber];
-            ruleGroupDiscardOverlappingTest(ruleGroup);
-            if (ruleGroup.length > 0) {
-                result_late.push(ruleGroup);
-            }
-        }
+
+    const aggregate_keys_late = Object.keys(aggregates_late);
+    const aggregate_keys_late_l = aggregate_keys_late.length;
+    for (let k_i = 0; k_i < aggregate_keys_late_l; k_i++) {
+        const groupNumber = aggregate_keys_late[k_i];
+        let ruleGroup = aggregates_late[groupNumber];
+        ruleGroupDiscardOverlappingTest(ruleGroup);
+        if (ruleGroup.length > 0) {
+            result_late.push(ruleGroup);
+        }        
     }
     state.rules = result;
 
@@ -2142,12 +2172,14 @@ function generateMasks(state) {
     state.layerMasks = layerMasks;
 
     let objectMask = {};
-    for (let n in state.objects) {
-        if (state.objects.hasOwnProperty(n)) {
-            let o = state.objects[n];
-            objectMask[n] = new BitVec(STRIDE_OBJ);
-            objectMask[n].ibitset(o.id);
-        }
+
+    const object_keys = Object.keys(state.objects);
+    const object_keys_l = object_keys.length;
+    for (let k_i = 0; k_i < object_keys_l; k_i++) {
+        const n = object_keys[k_i];
+        let o = state.objects[n];
+        objectMask[n] = new BitVec(STRIDE_OBJ);
+        objectMask[n].ibitset(o.id);    
     }
 
     // Synonyms can depend on properties, and properties can depend on synonyms.
@@ -2199,24 +2231,26 @@ function generateMasks(state) {
 }
 
 function checkObjectsAreLayered(state) {
-    outer: for (let n in state.objects) {
-        if (state.objects.hasOwnProperty(n)) {
-            let found = false;
-            for (let i = 0; i < state.collisionLayers.length; i++) {
-                const layer = state.collisionLayers[i];
-                for (let j = 0; j < layer.length; j++) {
-                    if (layer[j] === n) {
-                        found = true;
-                        continue outer;
-                    }
+    const object_keys = Object.keys(state.objects);
+    const object_keys_l = object_keys.length;
+    outer: for (let k_i = 0; k_i < object_keys_l; k_i++) {
+        const n = object_keys[k_i];
+        let found = false;
+        for (let i = 0; i < state.collisionLayers.length; i++) {
+            const layer = state.collisionLayers[i];
+            for (let j = 0; j < layer.length; j++) {
+                if (layer[j] === n) {
+                    found = true;
+                    continue outer;
                 }
             }
-            if (found === false) {
-                const o = state.objects[n];
-                logError('Object "' + n.toUpperCase() + '" has been defined, but not assigned to a layer.', o.lineNumber);
-            }
+        }
+        if (found === false) {
+            const o = state.objects[n];
+            logError('Object "' + n.toUpperCase() + '" has been defined, but not assigned to a layer.', o.lineNumber);
         }
     }
+    
 }
 
 function isInt(value) {
