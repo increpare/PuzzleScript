@@ -21,7 +21,7 @@ const intro_template = [
 	"..................................",
 	"..................................",
 	"......Puzzle Script Terminal......",
-	"..............v 1.7...............",
+	"..............v 1.8...............",
 	"..................................",
 	"..................................",
 	"..................................",
@@ -101,7 +101,7 @@ const titletemplate_firstgo_selected = [
 	"..................................",
 	"..................................",
 	"..................................",
-	"###########.start game.###########",
+	"-----------.start game.-----------",
 	"..................................",
 	"..................................",
 	".arrow keys to move...............",
@@ -115,7 +115,7 @@ const titletemplate_select0_selected = [
 	"..................................",
 	"..................................",
 	"..................................",
-	"############.new game.############",
+	"------------.new game.------------",
 	"..................................",
 	".............continue.............",
 	"..................................",
@@ -132,12 +132,14 @@ const titletemplate_select1_selected = [
 	"..................................",
 	".............new game.............",
 	"..................................",
-	"############.continue.############",
+	"------------.continue.------------",
 	"..................................",
 	".arrow keys to move...............",
 	".X to action......................",
 	".Z to undo, R to restart..........",
 	"................................."];
+
+const loading_line = "------------ loading  ------------";
 
 let titleImage = [];
 const titleWidth = titletemplate_select1[0].length;
@@ -174,22 +176,26 @@ function generateTitleScreen() {
 		title = state.metadata.title;
 	}
 
+	let selection_row;
 	if (titleMode === 0) {
 		if (titleSelected) {
-			titleImage = deepClone(titletemplate_firstgo_selected);
+			titleImage = deepClone(titletemplate_firstgo_selected);		
+			selection_row = 6;
 		} else {
 			titleImage = deepClone(titletemplate_firstgo);
 		}
 	} else {
 		if (titleSelection === 0) {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select0_selected);
+				titleImage = deepClone(titletemplate_select0_selected);				
+				selection_row = 5;
 			} else {
 				titleImage = deepClone(titletemplate_select0);
 			}
 		} else {
 			if (titleSelected) {
 				titleImage = deepClone(titletemplate_select1_selected);
+				selection_row = 7;
 			} else {
 				titleImage = deepClone(titletemplate_select1);
 			}
@@ -211,6 +217,29 @@ function generateTitleScreen() {
 	}
 	for (let i = 0; i < titleImage.length; i++) {
 		titleImage[i] = titleImage[i].replace(/\./g, ' ');
+	}
+
+	if (titleSelected){		
+		var frame = get_title_animation_frame()+2;
+		console.log("animating with frame", frame);
+		// frame = frame % 12; // loops not pingpong
+		//want it to pingpong, not loop
+		if (frame > 12) {
+			titleImage[selection_row] = loading_line;
+		}
+		frame = frame % 23;
+		if (frame > 11) {
+			frame = (11-(frame % 12));
+		}
+		const left_index_to_replace = 11-frame;
+		const right_index_to_replace = 22+frame;
+		titleImage[selection_row] = 
+			titleImage[selection_row].slice(0, left_index_to_replace) 
+			+ '#' 
+			+ titleImage[selection_row].slice(left_index_to_replace + 1, right_index_to_replace) 
+			+ '#' 
+			+ titleImage[selection_row].slice(right_index_to_replace + 1);
+
 	}
 
 	let width = titleImage[0].length;
@@ -418,6 +447,7 @@ function loadLevelFromLevelDat(state, leveldat, randomseed, clearinputhistory) {
 	if (leveldat.message === undefined) {
 		titleMode = 0;
 		textMode = false;
+		tick_lazy_function_generation(false);
 		level = leveldat.clone();
 		RebuildLevelArrays();
 
@@ -702,6 +732,7 @@ function setGameState(_state, command, randomseed) {
 				timer = 0;
 				titleScreen = false;
 				textMode = false;
+				tick_lazy_function_generation(false);
 				titleSelection = showContinueOptionOnTitleScreen() ? 1 : 0;
 				titleSelected = false;
 				quittingMessageScreen = false;
@@ -722,6 +753,7 @@ function setGameState(_state, command, randomseed) {
 				timer = 0;
 				titleScreen = false;
 				textMode = false;
+				tick_lazy_function_generation(false);
 				titleSelection = showContinueOptionOnTitleScreen() ? 1 : 0;
 				titleSelected = false;
 				quittingMessageScreen = false;
@@ -743,6 +775,7 @@ function setGameState(_state, command, randomseed) {
 						timer = 0;
 						titleScreen = false;
 						textMode = false;
+						tick_lazy_function_generation(false);
 						titleSelection = showContinueOptionOnTitleScreen() ? 1 : 0;
 						titleSelected = false;
 						quittingMessageScreen = false;
@@ -2640,6 +2673,7 @@ function processInput(dir, dontDoWin, dontModify) {
 			DoUndo(true, false);
 			messagetext = "";
 			textMode = false;
+			tick_lazy_function_generation(false);
 			return false;
 		}
 	}
@@ -2954,6 +2988,8 @@ function nextLevel() {
 			curlevel++;
 			curlevelTarget = null;
 			textMode = false;
+			tick_lazy_function_generation(false);
+			tick_lazy_function_generation(false);
 			titleScreen = false;
 			quittingMessageScreen = false;
 			messageselected = false;

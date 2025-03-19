@@ -67,23 +67,22 @@ function tick_lazy_function_generation(iterative_generation=false){
 	// spent a maximum of 10ms on lazy function generation
 	let start = performance.now();
 	var generated_count=0;
-	while (performance.now() - start < 10 || !iterative_generation) {
-		if (WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length > 0) {
-			const object = WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.shift();
-            //depending on type of object
-            //if CellPattern, call generateMatchFunction
-            //if Rule, call generate_all_MatchFunctions
-            if (object instanceof CellPattern) {
-                object.matches = object.generateMatchFunction();
-            } else if (object instanceof Rule) {
-                object.generate_all_MatchFunctions();
-            } else {
-                throw new Error("Unknown object type: " + object);
-            }
-			generated_count++;
-		}
+	while (
+        ((performance.now() - start < 20) || !iterative_generation) 
+            && WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length > 0) {
+        const object = WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.shift();
+        //depending on type of object
+        //if CellPattern, call generateMatchFunction
+        //if Rule, call generate_all_MatchFunctions
+        if (object instanceof CellPattern) {
+            object.matches = object.generateMatchFunction();
+        } else if (object instanceof Rule) {
+            object.generate_all_MatchFunctions();
+        } else {
+            throw new Error("Unknown object type: " + object);
+        }
+        generated_count++;		
 	}
-	window.console.log("generated "+generated_count+" match functions");
 }
 
 function lazy_function_generation_clear_backlog(){
