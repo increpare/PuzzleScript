@@ -1641,14 +1641,16 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		const replace_RandomEntityMask = replace.randomEntityMask;
 		const replace_RandomDirMask = replace.randomDirMask;
 
+		// Using IMPORT_COMPILE_TIME_ARRAY should make the following three declarations faster,
+		// but it really slows down the compiler.
 		const objectsSet = _o1;	
-		${IMPORT_COMPILE_TIME_ARRAY("objectsSet", this.replacement.objectsSet, OBJECT_SIZE)}
+		${UNROLL("objectsSet = replace.objectsSet", OBJECT_SIZE)}
 	
 		const objectsClear = _o2;
-		${IMPORT_COMPILE_TIME_ARRAY("objectsClear", this.replacement.objectsClear, OBJECT_SIZE)}
+		${UNROLL("objectsClear = replace.objectsClear", OBJECT_SIZE)}
 
 		const movementsSet = _m1;
-		${IMPORT_COMPILE_TIME_ARRAY("movementsSet", this.replacement.movementsSet, MOVEMENT_SIZE)}
+		${UNROLL("movementsSet = replace.movementsSet", MOVEMENT_SIZE)}
 		
 		const movementsClear = _m2;
 		
