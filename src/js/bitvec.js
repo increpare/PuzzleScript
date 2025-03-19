@@ -1,3 +1,5 @@
+'use strict';
+
 function BitVec(init) {
 	this.data = new Int32Array(init);
 }
@@ -313,23 +315,6 @@ function LEVEL_GET_MOVEMENTS_INTO( index, targetarray, MOVEMENT_SIZE) {
 	return result;
 }
 
-function LEVEL_SET_MOVEMENTS(index, vec, array_size) {
-	var result = "{";
-	for (let i = 0; i < array_size; i++) {
-		result += `\tlevel.movements[${index}*${array_size}+${i}]=${vec}.data[${i}];\n`;
-	}
-	result += `\tconst targetIndex = ${index}*${array_size}+${i};
-
-	const colIndex=(${index}/level.height)|0;
-	const rowIndex=(${index}%level.height);
-
-	${UNROLL(`level.colCellContents_Movements[colIndex] |= ${vec}`, array_size)}
-	${UNROLL(`level.rowCellContents_Movements[rowIndex] |= ${vec}`, array_size)}
-	${UNROLL(`level.mapCellContents_Movements |= ${vec}`, array_size)}
-}`
-
-	return result;
-}
 
 function LEVEL_SET_CELL(level, index, vec, array_size) {
 	var result = "";

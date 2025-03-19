@@ -67,8 +67,6 @@ Level.prototype.setMovements = function(index, vec) {
 	for (let i = 0; i < vec.data.length; ++i) {
 		this.movements[index * STRIDE_MOV + i] = vec.data[i];
 	}
-
-	let targetIndex = index*STRIDE_MOV + i;
 		
 	//corresponding object stuff in repositionEntitiesOnLayer
 	let colIndex=(index/this.height)|0;
@@ -76,6 +74,24 @@ Level.prototype.setMovements = function(index, vec) {
 	level.colCellContents_Movements[colIndex].ior(vec);
 	level.rowCellContents_Movements[rowIndex].ior(vec);
 	level.mapCellContents_Movements.ior(vec);
+}
+
+
+function LEVEL_SET_MOVEMENTS(index, vec, array_size) {
+	var result = "{";
+	for (let i = 0; i < array_size; i++) {
+		result += `\tlevel.movements[${index}*${array_size}+${i}]=${vec}.data[${i}];\n`;
+	}
+	result += `
+	const colIndex=(${index}/level.height)|0;
+	const rowIndex=(${index}%level.height);
+
+	${UNROLL(`level.colCellContents_Movements[colIndex] |= ${vec}`, array_size)}
+	${UNROLL(`level.rowCellContents_Movements[rowIndex] |= ${vec}`, array_size)}
+	${UNROLL(`level.mapCellContents_Movements |= ${vec}`, array_size)}
+}`
+
+	return result;
 }
 
 Level.prototype.calcBackgroundMask = function(state) {    

@@ -3061,6 +3061,8 @@ function addSpecializedFunctions(state) {
 // }
 
 function compile(command, text, randomseed) {
+    lazy_function_generation_clear_backlog();
+
     forceRegenImages = true;
     if (command === undefined) {
         command = ["restart"];

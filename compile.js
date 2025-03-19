@@ -124,8 +124,8 @@ ncp("./src", "./bin/", function (err) {
             let min = cssmin(css);
             fs.writeFileSync("./bin/css/combined.css", min, encoding = "utf8");
 
-            let css = fs.readFileSync("./bin/Documentation/css/bootstrap.css", encoding = 'utf8');
-            let min = cssmin(css);
+            css = fs.readFileSync("./bin/Documentation/css/bootstrap.css", encoding = 'utf8');
+            min = cssmin(css);
             fs.writeFileSync("./bin/Documentation/css/bootstrap.css", min, encoding = "utf8");
 
             console.log("running js minification");

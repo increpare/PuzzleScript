@@ -814,6 +814,8 @@ function checkKey(e,justPressed) {
 
 
 function update() {
+	const iterative_generation = textMode && !unitTesting;
+	tick_lazy_function_generation(iterative_generation);
     timer+=deltatime;
     input_throttle_timer+=deltatime;
     if (quittingTitleScreen) {

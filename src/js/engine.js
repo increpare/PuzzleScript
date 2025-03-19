@@ -142,7 +142,6 @@ const titletemplate_select1_selected = [
 let titleImage = [];
 const titleWidth = titletemplate_select1[0].length;
 const titleHeight = titletemplate_select1.length;
-let textMode = true;
 let titleScreen = true;
 let titleMode = 0;//1 means there are options
 let titleSelection = 0;
@@ -1242,7 +1241,7 @@ function repositionEntitiesOnLayer(positionIndex, layer, dirMask) {
 
 var CACHE_REPOSITIONENTITIESATCELL = {}
 function generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE) {
-	var fn = `
+	let fn = `'use strict';
     const movementMask = level.getMovements(positionIndex);
     if (${IS_ZERO("movementMask",MOVEMENT_SIZE)}){
         return false;
@@ -1263,8 +1262,6 @@ function generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE) {
 	${FOR(0,MOVEMENT_SIZE,i=>`
 		level.movements[positionIndex * STRIDE_MOV + ${i}] = movementMask.data[${i}];
 	`)}
-
-	var targetIndex = positionIndex*STRIDE_MOV + i;
 		
 	//corresponding object stuff in repositionEntitiesOnLayer
 	const colIndex=(positionIndex/this.height)|0;
@@ -1306,9 +1303,13 @@ function Rule(rule) {
 	somewhere on the board - move filtering works well at a row/col level, but is pretty 
 	useless (or worse than useless) on a boardwide level*/
 
+	
 	this.cellRowMatches = [];
-	for (let i = 0; i < this.patterns.length; i++) {
-		this.cellRowMatches.push(this.generateCellRowMatchesFunction(this.patterns[i], this.ellipsisCount[i]));
+	
+	if (lazyFunctionGeneration){
+		WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.push(this);
+	} else {
+		this.generate_all_MatchFunctions();
 	}
 	/* TODO: eliminate rigid, groupNumber, isRandom
 	from this class by moving them up into a RuleGroup class */
@@ -1316,6 +1317,11 @@ function Rule(rule) {
 	this.findMatches = this.generateFindMatchesFunction();
 }
 
+Rule.prototype.generate_all_MatchFunctions = function(){
+	for (let i = 0; i < this.patterns.length; i++) {
+		this.cellRowMatches.push(this.generateCellRowMatchesFunction(this.patterns[i], this.ellipsisCount[i]));
+	}
+}
 
 let CACHE_RULE_CELLROWMATCHESFUNCTION = {}
 Rule.prototype.generateCellRowMatchesFunction = function (cellRow, ellipsisCount) {
@@ -1463,16 +1469,23 @@ let STRIDE_MOV = 1;
 let LAYER_COUNT = 1;
 const FALSE_FUNCTION = new Function("return false;");
 
+// We don't generate the matches functions all at once at initailization, we generate them in the background/as needed
+
 function CellPattern(row) {
 	this.objectsPresent = row[0];
 	this.objectsMissing = row[1];
 	this.anyObjectsPresent = row[2];
 	this.movementsPresent = row[3];
 	this.movementsMissing = row[4];
-	this.matches = this.generateMatchFunction();
+	if (lazyFunctionGeneration){
+		WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.push(this);
+	} else {
+		this.matches = this.generateMatchFunction();
+	}
 	this.replacement = row[5];
 
 };
+
 
 function CellReplacement(row) {
 	this.objectsClear = row[0];
@@ -2919,6 +2932,7 @@ function nextLevel() {
 	if (state && state.levels && (curlevel > state.levels.length)) {
 		curlevel = state.levels.length - 1;
 	}
+
 	ignoreNotJustPressedAction = true;
 	if (titleScreen) {
 		if (titleSelection === 0) {
