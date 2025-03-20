@@ -221,7 +221,6 @@ function generateTitleScreen() {
 
 	if (titleSelected){		
 		var frame = get_title_animation_frame()+2;
-		console.log("animating with frame", frame);
 		// frame = frame % 12; // loops not pingpong
 		//want it to pingpong, not loop
 		if (frame > 12) {
