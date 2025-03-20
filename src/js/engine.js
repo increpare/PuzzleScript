@@ -219,12 +219,18 @@ function generateTitleScreen() {
 		titleImage[i] = titleImage[i].replace(/\./g, ' ');
 	}
 
+	let regen_letters = false;
 	if (titleSelected){		
 		var frame = get_title_animation_frame()+2;
 		// frame = frame % 12; // loops not pingpong
 		//want it to pingpong, not loop
 		if (frame > 12) {
+
 			titleImage[selection_row] = loading_line;
+			if (frame === 13){
+				//in case it has new characters...
+				regen_letters=true;
+			}
 		}
 		frame = frame % 23;
 		if (frame > 11) {
@@ -239,9 +245,9 @@ function generateTitleScreen() {
 			+ '#' 
 			+ titleImage[selection_row].slice(right_index_to_replace + 1);
 
-		if (frame==2){
+		if (frame === 2){
 			//when animation starts playing (on frame 2), 
-			regenSpriteImages();
+			regen_letters=true;
 		}
 	}
 
@@ -287,7 +293,9 @@ function generateTitleScreen() {
 		}
 	}
 
-
+	if (regen_letters){
+		regenSpriteImages();
+	}
 }
 
 const introstate = {
