@@ -179,25 +179,25 @@ function generateTitleScreen() {
 	let selection_row;
 	if (titleMode === 0) {
 		if (titleSelected) {
-			titleImage = deepClone(titletemplate_firstgo_selected);		
+			titleImage = titletemplate_firstgo_selected.slice();		
 			selection_row = 6;
 		} else {
-			titleImage = deepClone(titletemplate_firstgo);
+			titleImage = titletemplate_firstgo.slice();
 		}
 	} else {
 		if (titleSelection === 0) {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select0_selected);				
+				titleImage = titletemplate_select0_selected.slice();				
 				selection_row = 5;
 			} else {
-				titleImage = deepClone(titletemplate_select0);
+				titleImage = titletemplate_select0.slice();
 			}
 		} else {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select1_selected);
+				titleImage = titletemplate_select1_selected.slice();
 				selection_row = 7;
 			} else {
-				titleImage = deepClone(titletemplate_select1);
+				titleImage = titletemplate_select1.slice();
 			}
 		}
 	}
@@ -243,7 +243,7 @@ function generateTitleScreen() {
 	}
 
 	let width = titleImage[0].length;
-	let titlelines = wordwrap(title, titleImage[0].length);
+	let titlelines = wordwrap(expandCJKCharacters(title), titleImage[0].length);
 	if (state.metadata.author !== undefined) {
 		if (titlelines.length > 3) {
 			titlelines.splice(3);
@@ -265,7 +265,7 @@ function generateTitleScreen() {
 		titleImage[1 + i] = row.slice(0, lmargin) + titleline + row.slice(lmargin + titleline.length);
 	}
 	if (state.metadata.author !== undefined) {
-		let attribution = "by " + state.metadata.author;
+		let attribution = "by " + expandCJKCharacters(state.metadata.author);
 		let attributionsplit = wordwrap(attribution, titleImage[0].length);
 		if (attributionsplit[0].length < titleImage[0].length) {
 			attributionsplit[0] = " " + attributionsplit[0];
@@ -283,6 +283,7 @@ function generateTitleScreen() {
 			titleImage[3 + i] = row.slice(0, width - line.length) + line;
 		}
 	}
+
 
 }
 
@@ -364,6 +365,19 @@ function wordwrap(str, width) {
 
 let splitMessage = [];
 
+function expandCJKCharacters(message) {
+	//CJK characters are 2 characters wide, so we need to insert a space after
+	//each one to give them space
+	let expandedMessage = "";
+	for (let i = 0; i < message.length; i++) {
+		let char = message[i];
+		expandedMessage += char;
+		if (!font.hasOwnProperty(char)) {
+			expandedMessage +=  " ";
+		}
+	}
+	return expandedMessage;
+}
 function drawMessageScreen() {
 	titleMode = 0;
 	textMode = true;
@@ -388,7 +402,7 @@ function drawMessageScreen() {
 		message = messagetext;
 	}
 
-	splitMessage = wordwrap(message, titleImage[0].length);
+	splitMessage = wordwrap(expandCJKCharacters(message), titleImage[0].length);
 
 
 	let offset = 5 - ((splitMessage.length / 2) | 0);

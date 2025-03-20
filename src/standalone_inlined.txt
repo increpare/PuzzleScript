@@ -799,7 +799,6 @@ function tick_lazy_function_generation(iterative_generation=false){
         }
         generated_count++;		
 	}
-	window.console.log("generated "+generated_count+" match functions");
 }
 
 function lazy_function_generation_clear_backlog(){
@@ -8540,7 +8539,7 @@ const intro_template = [
 	"..................................",
 	"..................................",
 	"......Puzzle Script Terminal......",
-	"..............v 1.7...............",
+	"..............v 1.8...............",
 	"..................................",
 	"..................................",
 	"..................................",

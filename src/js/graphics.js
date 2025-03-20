@@ -20,7 +20,7 @@ function createSprite(name,spritegrid, colors, padding) {
     for (var j = 0; j < h; j++) {
         for (var k = 0; k < w; k++) {
             var val = spritegrid[j][k];
-            if (val >= 0) {
+            if (val > 0) {
                 var cy = (j * ch)|0;
                 var cx = (k * cw)|0;
                 spritectx.fillStyle = colors[val];
@@ -32,6 +32,31 @@ function createSprite(name,spritegrid, colors, padding) {
     return sprite;
 }
 
+function renderCJKCharacter(char,padding) {
+    //character not present in pixel font, so we need to render it from scratc
+    const colors = [state.bgcolor, state.fgcolor];
+
+    var sprite = makeSpriteCanvas("specialchar_"+char);
+    sprite.width = 2*cellwidth;
+
+	var spritectx = sprite.getContext('2d');
+
+    spritectx.clearRect(0, 0, 2*cellwidth, cellheight);
+    // spritectx.fillStyle = "red";
+    // spritectx.fillRect(0, 0, 2*cellwidth, cellheight);
+
+    //render the character using a font
+    //filltext
+    spritectx.fillStyle = state.fgcolor;
+    //we need the size of the character to fit the box
+    const font_height = cellheight-4*padding;
+    spritectx.font = font_height + 'px Arial';
+    spritectx.textAlign = 'center';
+    spritectx.fillText(char, cellwidth, font_height+padding);
+
+    return sprite;
+}
+
 function regenText(spritecanvas,spritectx) {
 	textImages={};
 
@@ -39,10 +64,15 @@ function regenText(spritecanvas,spritectx) {
         var row=titleImage[rowidx];
         for (var nidx in row) {
             var n = row[nidx];
-            if (font.hasOwnProperty(n) && !textImages.hasOwnProperty(n)) {
-                fontstr = font[n].split('\n').map(a=>a.trim().split('').map(t=>parseInt(t)));
-                fontstr.shift();
-                textImages[n] = createSprite('char'+n,fontstr, undefined, 1);
+            if (!textImages.hasOwnProperty(n)){
+                if (font.hasOwnProperty(n)) {
+                    fontstr = font[n].split('\n').map(a=>a.trim().split('').map(t=>parseInt(t)));
+                    fontstr.shift();
+                    textImages[n] = createSprite('char'+n,fontstr, undefined, 1);
+                } else {
+                    //the character was not found, so
+                    textImages[n] = renderCJKCharacter(n,1)
+                }
             }
         }
     }
