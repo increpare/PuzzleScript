@@ -24,9 +24,6 @@ function createSprite(name,spritegrid, colors, padding) {
                 var cy = (j * ch)|0;
                 var cx = (k * cw)|0;
                 const color = colors[val];
-                if (color==state.bgcolor) {
-                    continue;
-                }
                 spritectx.fillStyle = color;                
                 spritectx.fillRect(cx, cy, cw, pixh);
             }
@@ -72,7 +69,7 @@ function regenText(spritecanvas,spritectx) {
                 if (font.hasOwnProperty(n)) {
                     fontstr = font[n].split('\n').map(a=>a.trim().split('').map(t=>parseInt(t)));
                     fontstr.shift();
-                    textImages[n] = createSprite('char'+n,fontstr, undefined, 1);
+                    textImages[n] = createSprite('char'+n,fontstr, ["#00000000", state.fgcolor], 1);
                 } else {
                     //the character was not found, so
                     textImages[n] = renderCJKCharacter(n,1)
