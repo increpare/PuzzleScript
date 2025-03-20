@@ -3097,7 +3097,7 @@ function compile(command, text, randomseed) {
         state = loadFile(text);
     } catch (error) {
         consolePrint(error);
-        console.log(error);
+        console.error(error);
     } finally {
         compiling = false;
     }
