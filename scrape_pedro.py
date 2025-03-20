@@ -127,6 +127,10 @@ for link in ps_links:
             filename = f'{title}_{n_prev_dupes}'
         else:
             filename = title
+        
+        #sanitize filename - replace all non-alphanumeric characters with underscores
+        filename = re.sub(r'[^a-zA-Z0-9_]', '_', filename)
+        
         filename += '.txt'
         script_path = os.path.join(scraped_games_dir, filename)
 
