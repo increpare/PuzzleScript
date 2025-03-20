@@ -240,6 +240,10 @@ function generateTitleScreen() {
 			+ '#' 
 			+ titleImage[selection_row].slice(right_index_to_replace + 1);
 
+		if (frame==2){
+			//when animation starts playing (on frame 2), new characters might appear
+			regenSpriteImages();
+		}
 	}
 
 	let width = titleImage[0].length;
