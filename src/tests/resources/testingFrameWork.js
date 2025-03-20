@@ -86,7 +86,7 @@ function runCompilationTest(dataarray,testname) {
 	try{
 		compile(["restart"],levelString);
 	} catch (error){
-		console.log(error);
+		console.error(error);
 	}
 
 	
