@@ -1,3 +1,5 @@
+'use strict';
+
 let unitTesting=false;
 let lazyFunctionGeneration=true;
 let curlevel=0;
@@ -88,3 +90,4 @@ function tick_lazy_function_generation(iterative_generation=false){
 function lazy_function_generation_clear_backlog(){
     WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR = [];
 }
+

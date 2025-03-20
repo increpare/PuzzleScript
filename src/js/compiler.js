@@ -5,7 +5,7 @@ function isColor(str) {
     str = str.trim();
     if (str in colorPalettes.arnecolors)
         return true;
-    if (/^#([0-9A-F]{3}){1,2}$/i.test(str))
+    if (REGEX_HEX.test(str))
         return true;
     if (str === "transparent")
         return true;
@@ -485,28 +485,6 @@ function levelsToArray(state) {
 
     state.levels = processedLevels;
 }
-
-let directionaggregates = {
-    'horizontal': ['left', 'right'],
-    'horizontal_par': ['left', 'right'],
-    'horizontal_perp': ['left', 'right'],
-    'vertical': ['up', 'down'],
-    'vertical_par': ['up', 'down'],
-    'vertical_perp': ['up', 'down'],
-    'moving': ['up', 'down', 'left', 'right', 'action'],
-    'orthogonal': ['up', 'down', 'left', 'right'],
-    'perpendicular': ['^', 'v'],
-    'parallel': ['<', '>']
-};
-
-let relativeDirections = ['^', 'v', '<', '>', 'perpendicular', 'parallel'];
-let simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
-let simpleRelativeDirections = ['^', 'v', '<', '>'];
-let reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
-//redeclaring here, i don't know why
-let commandwords = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again"];
-let commandwords_sfx = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"];
-
 
 function directionalRule(rule) {
     for (let i = 0; i < rule.lhs.length; i++) {
