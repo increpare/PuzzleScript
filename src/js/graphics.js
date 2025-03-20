@@ -20,10 +20,14 @@ function createSprite(name,spritegrid, colors, padding) {
     for (var j = 0; j < h; j++) {
         for (var k = 0; k < w; k++) {
             var val = spritegrid[j][k];
-            if (val > 0) {
+            if (val >= 0) {
                 var cy = (j * ch)|0;
                 var cx = (k * cw)|0;
-                spritectx.fillStyle = colors[val];
+                const color = colors[val];
+                if (color==state.bgcolor) {
+                    continue;
+                }
+                spritectx.fillStyle = color;                
                 spritectx.fillRect(cx, cy, cw, pixh);
             }
         }
