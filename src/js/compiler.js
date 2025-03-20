@@ -3076,8 +3076,9 @@ function compile(command, text, randomseed) {
     try {
         state = loadFile(text);
     } catch (error) {
-        consolePrint(error);
+        consoleError(error.stack,true);
         console.error(error);
+        UnitTestingThrow(error);
     } finally {
         compiling = false;
     }

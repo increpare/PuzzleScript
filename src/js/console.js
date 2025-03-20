@@ -180,3 +180,5 @@ function clearConsole() {
 
 var clearConsoleClick = document.getElementById("clearConsoleClick");
 clearConsoleClick.addEventListener("click", clearConsole, false);
+
+function UnitTestingThrow(error){}

@@ -29,6 +29,8 @@ function consoleCacheDump(str){
 	
 }
 
+function UnitTestingThrow(error){}
+
 function consoleError(str,lineNumber){
 	var errorText = document.getElementById("errormessage");
 	str=stripTags(str);
