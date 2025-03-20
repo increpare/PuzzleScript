@@ -21,32 +21,39 @@ function runTest(dataarray,testname) {
 	if (targetlevel===undefined) {
 		targetlevel=0;
 	}
-	compile(["loadLevel",targetlevel],levelString,randomseed);
+	try {
+		compile(["loadLevel",targetlevel],levelString,randomseed);
 
-	while (againing) {
-		againing=false;
-		processInput(-1);			
-	}
-	
-	for(var i=0;i<inputDat.length;i++) {
-		var val=inputDat[i];
-		if (val==="undo") {
-			DoUndo(false,true);
-		} else if (val==="restart") {
-			DoRestart();
-		} else if (val==="tick") {
-			processInput(-1);
-		} else {
-			processInput(val);
-		}
 		while (againing) {
 			againing=false;
 			processInput(-1);			
 		}
+		
+		for(var i=0;i<inputDat.length;i++) {
+			var val=inputDat[i];
+			if (val==="undo") {
+				DoUndo(false,true);
+			} else if (val==="restart") {
+				DoRestart();
+			} else if (val==="tick") {
+				processInput(-1);
+			} else {
+				processInput(val);
+			}
+			while (againing) {
+				againing=false;
+				processInput(-1);			
+			}
+		}
+	} catch (error) {
+		//send error to QUnit
+		QUnit.push(false,false,false,error.stack);
+		console.error(error);
+		return false;
+	} finally {
+		unitTesting=false;
+		lazyFunctionGeneration=true;
 	}
-
-	unitTesting=false;
-	lazyFunctionGeneration=true;
 	
 	var levelString = convertLevelToString();
 	var success = levelString == dataarray[2];
@@ -86,6 +93,7 @@ function runCompilationTest(dataarray,testname) {
 	try{
 		compile(["restart"],levelString);
 	} catch (error){
+		QUnit.push(false,false,false,error.stack);
 		console.error(error);
 	}
 
