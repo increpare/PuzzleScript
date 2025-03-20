@@ -1106,11 +1106,20 @@ function DoUndo(force, ignoreDuplicates) {
 
 function getPlayerPositions() {
 	let result = [];
-	let playerMask = state.playerMask;
-	for (let i = 0; i < level.n_tiles; i++) {
-		level.getCellInto(i, _o11);
-		if (playerMask.anyBitsInCommon(_o11)) {
-			result.push(i);
+	let [aggregate,playerMask] = state.playerMask;
+	if (aggregate){
+		for (let i = 0; i < level.n_tiles; i++) {
+			level.getCellInto(i, _o11);
+			if (playerMask.bitsSetInArray(_o11.data)) {
+				result.push(i);
+			}
+		}
+	} else {
+		for (let i = 0; i < level.n_tiles; i++) {
+			level.getCellInto(i, _o11);
+			if (playerMask.anyBitsInCommon(_o11)) {
+				result.push(i);
+			}
 		}
 	}
 	return result;
@@ -1205,7 +1214,7 @@ function startMovement(dir) {
 	let playerPositions = getPlayerPositions();
 	for (let i = 0; i < playerPositions.length; i++) {
 		let playerPosIndex = playerPositions[i];
-		state.moveEntitiesAtIndex(level, playerPosIndex, state.playerMask, dir);
+		state.moveEntitiesAtIndex(level, playerPosIndex, state.playerMask[1], dir);
 	}
 	return playerPositions;
 }
@@ -2673,7 +2682,7 @@ function processInput(dir, dontDoWin, dontModify) {
 		for (let i = 0; i < playerPositions.length; i++) {
 			let pos = playerPositions[i];
 			let val = level.getCell(pos);
-			if (state.playerMask.bitsClearInArray(val.data)) {
+			if (state.playerMask[1].bitsClearInArray(val.data)) {
 				somemoved = true;
 				break;
 			}

@@ -2118,6 +2118,7 @@ function isObjectDefined(state, name) {
 
 function getMaskFromName(state, name) {
     const objectMask = new BitVec(STRIDE_OBJ);
+    let aggregate = false;
     if (name in state.objects) {
         const o = state.objects[name];
         objectMask.ibitset(o.id);
@@ -2125,6 +2126,7 @@ function getMaskFromName(state, name) {
 
     if (name in state.aggregatesDict) {
         const objectnames = state.aggregatesDict[name];
+        aggregate = true;
         for (let i = 0; i < objectnames.length; i++) {
             const n = objectnames[i];
             const o = state.objects[n];
@@ -2150,7 +2152,7 @@ function getMaskFromName(state, name) {
     if (objectMask.iszero()) {
         logErrorNoLine(`Error, didn't find any object called ${name}, either in the objects section, or the legends section.`);
     }
-    return objectMask;
+    return [aggregate,objectMask];
 }
 
 function generateMasks(state) {
