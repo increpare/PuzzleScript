@@ -16,7 +16,7 @@ Level.prototype.delta_index = function(direction)
 }
 
 Level.prototype.clone = function() {
-	var clone = new Level(this.lineNumber, this.width, this.height, this.layerCount, null);
+	let clone = new Level(this.lineNumber, this.width, this.height, this.layerCount, null);
 	clone.objects = new Int32Array(this.objects);
 	return clone;
 }
@@ -26,25 +26,25 @@ Level.prototype.getCell = function(index) {
 }
 
 Level.prototype.getCellInto = function(index,targetarray) {
-	for (var i=0;i<STRIDE_OBJ;i++) {
+	for (let i=0;i<STRIDE_OBJ;i++) {
 		targetarray.data[i]=this.objects[index*STRIDE_OBJ+i];	
 	}
 	return targetarray;
 }
 
 Level.prototype.setCell = function(index, vec) {
-	for (var i = 0; i < vec.data.length; ++i) {
+	for (let i = 0; i < vec.data.length; ++i) {
 		this.objects[index * STRIDE_OBJ + i] = vec.data[i];
 	}
 }
 
-var _movementVecs;
-var _movementVecIndex=0;
+let _movementVecs;
+let _movementVecIndex=0;
 Level.prototype.getMovements = function(index) {
-	var _movementsVec=_movementVecs[_movementVecIndex];
+	let _movementsVec=_movementVecs[_movementVecIndex];
 	_movementVecIndex=(_movementVecIndex+1)%_movementVecs.length;
 
-	for (var i=0;i<STRIDE_MOV;i++) {
+	for (let i=0;i<STRIDE_MOV;i++) {
 		_movementsVec.data[i]= this.movements[index*STRIDE_MOV+i];	
 	}
 	return _movementsVec;
@@ -55,27 +55,43 @@ Level.prototype.getRigids = function(index) {
 }
 
 Level.prototype.getMovementsInto = function(index,targetarray) {
-	var _movementsVec=targetarray;
+	let _movementsVec=targetarray;
 
-	for (var i=0;i<STRIDE_MOV;i++) {
+	for (let i=0;i<STRIDE_MOV;i++) {
 		_movementsVec.data[i]=this.movements[index*STRIDE_MOV+i];	
 	}
 	return _movementsVec;
 }
 
 Level.prototype.setMovements = function(index, vec) {
-	for (var i = 0; i < vec.data.length; ++i) {
+	for (let i = 0; i < vec.data.length; ++i) {
 		this.movements[index * STRIDE_MOV + i] = vec.data[i];
 	}
-
-	var targetIndex = index*STRIDE_MOV + i;
 		
 	//corresponding object stuff in repositionEntitiesOnLayer
-	var colIndex=(index/this.height)|0;
-	var rowIndex=(index%this.height);
+	let colIndex=(index/this.height)|0;
+	let rowIndex=(index%this.height);
 	level.colCellContents_Movements[colIndex].ior(vec);
 	level.rowCellContents_Movements[rowIndex].ior(vec);
 	level.mapCellContents_Movements.ior(vec);
+}
+
+
+function LEVEL_SET_MOVEMENTS(index, vec, array_size) {
+	var result = "{";
+	for (let i = 0; i < array_size; i++) {
+		result += `\tlevel.movements[${index}*${array_size}+${i}]=${vec}.data[${i}];\n`;
+	}
+	result += `
+	const colIndex=(${index}/level.height)|0;
+	const rowIndex=(${index}%level.height);
+
+	${UNROLL(`level.colCellContents_Movements[colIndex] |= ${vec}`, array_size)}
+	${UNROLL(`level.rowCellContents_Movements[rowIndex] |= ${vec}`, array_size)}
+	${UNROLL(`level.mapCellContents_Movements |= ${vec}`, array_size)}
+}`
+
+	return result;
 }
 
 Level.prototype.calcBackgroundMask = function(state) {    
@@ -83,9 +99,9 @@ Level.prototype.calcBackgroundMask = function(state) {
         logError("you have to have a background layer");
     }
 
-    var backgroundMask = state.layerMasks[state.backgroundlayer];
-    for (var i = 0; i < this.n_tiles; i++) {
-        var cell = this.getCell(i);
+    let backgroundMask = state.layerMasks[state.backgroundlayer];
+    for (let i = 0; i < this.n_tiles; i++) {
+        let cell = this.getCell(i);
         cell.iand(backgroundMask);
         if (!cell.iszero()) {
             return cell;

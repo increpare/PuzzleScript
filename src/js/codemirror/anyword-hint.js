@@ -10,7 +10,7 @@
 })(function(CodeMirror) {
         "use strict";
 
-        var WORD = /[\w$#]+/,
+        var WORD = /[\w$#>-]+/,
             RANGE = 500;
 
         var PRELUDE_COMMAND_WORDS = [
@@ -157,6 +157,12 @@
                 // }            
             }
 
+            // case insensitive
+            curWord = curWord.toLowerCase();
+
+            var list = options && options.list || [],
+                seen = {};
+
             var addObjects = false;
             var excludeProperties = false;
             var excludeAggregates = false;
@@ -244,6 +250,43 @@
                     }
                 case 'rules':
                     {   
+
+                        /* rules look like this: 
+                           blah blah [ a | b | c d ] [ e f | g ] -> [ a | b | c d ] [ e f | g ]
+                            so, if the curword is ->, we want to show the commands that can follow that, mirroring the first half o the line
+                        */
+
+                        if (curWord==="->" || curWord==="-"){
+                            //check there's nother other than whitespace to the right of the cursor
+                            var right_of_cursor = curLine.substring(cur.ch);
+                            if (right_of_cursor.trim().length===0){
+                                //ignore first half until the [
+                                var first_half_start = lineToCursor.indexOf("[");
+                                var first_half_end = lineToCursor.lastIndexOf("]");
+                                var excerpt = lineToCursor.substring(first_half_start,first_half_end+1);
+                                //we should strip all substrings of the form "no XYZ" (case insensitive), removing both the "no" and the word that follows it
+                                var no_words = excerpt.match(/no\s+[^\s]+\s*/gi);
+                                if (no_words){
+                                    for (var i=0;i<no_words.length;i++){
+                                        var no_word = no_words[i];
+                                        //repace the whole kaboodle with an empty string
+                                        excerpt = excerpt.replace(no_word, "");
+                                    }
+                                }
+                                
+                                //stripped excerpt - strip everything except for []|.
+                                var stripped_excerpt = excerpt.replace(/[^\[\]\.\|]/g, " ");
+                                //in both excerpt and stripped excerpt, reduce all whitespace to a single space
+                                excerpt = excerpt.replace(/\s+/g, " ");
+                                stripped_excerpt = stripped_excerpt.replace(/\s+/g, " ");
+                                var results = ["LOGICWORD","-> "+excerpt];
+                                if (excerpt!==stripped_excerpt){
+                                    results.push("-> "+stripped_excerpt);
+                                }
+                                candlists.push(results);
+                            }
+
+                        }
                         //if inside of roles,can use some extra directions
                         if (lineToCursor.indexOf("[")==-1) {
                             candlists.push(RULE_DIRECTION_WORDS);
@@ -302,11 +345,6 @@
                         break;
                     }
             }
-            // case insensitive
-            curWord = curWord.toLowerCase();
-
-            var list = options && options.list || [],
-                seen = {};
 
             //first, add objects if needed
             if (addObjects){
@@ -468,10 +506,10 @@
         "187": "equalsign",
         "188": "comma",
         // "189": "dash",
-        "190": "period",
+        // "190": "period", on UK/US keyboard . is shift+>, which wants to trigger autocomplete
         "191": "slash",
         "192": "graveaccent",
         "220": "backslash",
-        "222": "quote"
+        // "222": "quote" -used on german keyboard for > I think...
     }
 });
