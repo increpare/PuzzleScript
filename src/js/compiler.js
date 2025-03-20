@@ -737,11 +737,22 @@ function processRuleString(rule, state, curRules) {
                     } else if (state.names.indexOf(token) >= 0) {
                         if (!incellrow) {
                             logWarning("Invalid token " + token.toUpperCase() + ". Object names should only be used within cells (square brackets).", lineNumber);
-                        } else if (curcell.length % 2 === 0) {
-                            curcell.push('');
-                            curcell.push(token);
-                        } else if (curcell.length % 2 === 1) {
-                            curcell.push(token);
+                        } else {
+                            //check that the object is not already present in the cell
+                            for (let j = 0; j < curcell.length; j += 2) {
+                                if (curcell[j + 1] === token) {
+                                    logError(`You cannot specify the same object more than once in a single cell (in this case ${token} occurs mutliple times).`, lineNumber);
+                                    if (token in state.propertiesDict){
+                                        logWarningNoLine(`( However, noticing that you're committing this crime with <i>properties</i>, and not being able to help but acknowledge that you <i>may</i> be trying to do something esoteric and <i>clever</i> with the property inference system,  I might be brought to suggest that you consider this: you can have multiple equivalent properties with different names. )`);
+                                    } 
+                                }
+                            }
+                            if (curcell.length % 2 === 0) {
+                                curcell.push('');
+                                curcell.push(token);
+                            } else if (curcell.length % 2 === 1) {
+                                curcell.push(token);
+                            } 
                         }
                     } else if (token === '...') {
                         if (!incellrow) {
