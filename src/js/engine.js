@@ -241,7 +241,7 @@ function generateTitleScreen() {
 			+ titleImage[selection_row].slice(right_index_to_replace + 1);
 
 		if (frame==2){
-			//when animation starts playing (on frame 2), new characters might appear
+			//when animation starts playing (on frame 2), 
 			regenSpriteImages();
 		}
 	}
@@ -871,9 +871,11 @@ function RebuildLevelArrays() {
 		level.colCellContents_Movements[i] = new BitVec(STRIDE_MOV);
 	}
 
-	for (let i = 0; i < level.n_tiles; i++) {
-		level.rigidMovementAppliedMask[i] = new BitVec(STRIDE_MOV);
-		level.rigidGroupIndexMask[i] = new BitVec(STRIDE_MOV);
+	if (state.rigid){
+		for (let i = 0; i < level.n_tiles; i++) {
+			level.rigidMovementAppliedMask[i] = new BitVec(STRIDE_MOV);
+			level.rigidGroupIndexMask[i] = new BitVec(STRIDE_MOV);
+		}
 	}
 }
 
@@ -939,8 +941,13 @@ function restoreLevel(lev) {
 
 		for (let i = 0; i < level.n_tiles; i++) {
 			level.movements[i] = 0;
-			level.rigidMovementAppliedMask[i].setZero();
-			level.rigidGroupIndexMask[i].setZero();
+		}
+
+		if (state.rigid){
+			for (let i = 0; i < level.n_tiles; i++) {
+				level.rigidMovementAppliedMask[i].setZero();
+				level.rigidGroupIndexMask[i].setZero();
+			}
 		}
 
 		for (let i = 0; i < level.height; i++) {
@@ -1776,8 +1783,8 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		`)}
 
 
-		var curRigidGroupIndexMask =0;
-		var curRigidMovementAppliedMask =0;
+		var curRigidGroupIndexMask;
+		var curRigidMovementAppliedMask;
 		let rigidchange=false;		
 		${IF_LAZY(rule.rigid,()=>`
 			let rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1;
