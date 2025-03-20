@@ -2590,6 +2590,8 @@ function generateLoopPoints(state) {
     }
     if ((state.loops.length % 2) !== 0) {
         logError("Yo I found a STARTLOOP without a corresponding ENDLOOP.", state.loops[state.loops.length - 1][0]);
+        //patch up by adding an ENDLOOP
+        state.loops.push([state.loops[state.loops.length - 1][0], -1]);
     }
 
 
