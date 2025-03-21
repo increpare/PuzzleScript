@@ -808,9 +808,6 @@ function checkKey(e, justPressed) {
 	return prevent(e);
 }
 
-function get_title_animation_frame(){
-	return Math.floor(((timer / 1000) / 0.3)*10)
-}
 function update() {
 	const iterative_generation = textMode && !unitTesting;
 	tick_lazy_function_generation(iterative_generation);

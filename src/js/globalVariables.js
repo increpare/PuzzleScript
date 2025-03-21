@@ -60,6 +60,9 @@ let textImages = {};
 let level = new Level(); //just give it some starting state
 
 
+function get_title_animation_frame(){
+	return Math.floor(((timer / 1000) / 0.3)*10)
+}
 
 var WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR = [];
 function tick_lazy_function_generation(iterative_generation = false) {
