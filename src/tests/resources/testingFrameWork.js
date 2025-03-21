@@ -47,7 +47,7 @@ function runTest(dataarray,testname) {
 		}
 	} catch (error) {
 		//send error to QUnit
-		QUnit.push(false,false,false,error.stack);
+		QUnit.push(false,false,false,error.message+"\n"+error.stack);
 		console.error(error);
 		return false;
 	} finally {
@@ -93,7 +93,7 @@ function runCompilationTest(dataarray,testname) {
 	try{
 		compile(["restart"],levelString);
 	} catch (error){
-		QUnit.push(false,false,false,error.stack);
+		QUnit.push(false,false,false,error.message+"\n"+error.stack);
 		console.error(error);
 	}
 

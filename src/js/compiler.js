@@ -2854,7 +2854,6 @@ function loadFile(str) {
     let lines = str.split('\n');
     for (let i = 0; i < lines.length; i++) {
         let line = lines[i];
-        state.lineNumber = i + 1;
         let ss = new CodeMirror.StringStream(line, 4);
         do {
             processor.token(ss, state);
@@ -3087,7 +3086,7 @@ function compile(command, text, randomseed) {
     try {
         state = loadFile(text);
     } catch (error) {
-        consoleError(error.stack,true);
+        consoleError(error.message+"\n"+error.stack,true);
         console.error(error);
         UnitTestingThrow(error);
     } finally {
