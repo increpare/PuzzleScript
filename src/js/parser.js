@@ -566,18 +566,11 @@ var codeMirrorFn = function() {
            	var mixedCase = stream.string;
             var sol = stream.sol();
             if (sol) {
-                
+                state.lineNumber++;                
                 state.current_line_wip_array = [];
                 stream.string = stream.string.toLowerCase();
                 state.tokenIndex=0;
                 state.line_should_end = false;
-                /*   if (state.lineNumber==undefined) {
-                        state.lineNumber=1;
-                }
-                else {
-                    state.lineNumber++;
-                }*/
-
             }
             if (state.sol_after_comment){
                 sol = true;
