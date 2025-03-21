@@ -2615,6 +2615,7 @@ function processInput(dir, dontDoWin, dontModify) {
 		}
 	}
 
+	// Initialize the variables we make use of in the course of our turn
 	let bannedGroup = [];
 	level.commandQueue = [];
 	level.commandQueueSourceRules = [];
@@ -2634,6 +2635,8 @@ function processInput(dir, dontDoWin, dontModify) {
 	state.calculateRowColMasks(level);
 	let alreadyResolved = [];
 
+	// The main loop (dominated by rigid, but if you ignore that nonsense, it's
+	// not too complicated)!
 	let i = 0;
 	do {
 		rigidloop = false;
@@ -2695,6 +2698,7 @@ function processInput(dir, dontDoWin, dontModify) {
 		consolePrint("Looped through 50 times, gave up.  too many loops!");
 	}
 
+	// Post move stuff
 	if (playerPositions.length > 0 && state.metadata.require_player_movement !== undefined) {
 		let somemoved = false;
 		for (let i = 0; i < playerPositions.length; i++) {
