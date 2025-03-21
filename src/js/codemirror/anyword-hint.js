@@ -15,36 +15,36 @@
 
         var PRELUDE_COMMAND_WORDS = [
             "METADATA",//tag
-            ["author", "Gill Bloggs", "Your name goes here. This will appear in the title screen of the game."],
-            ["color_palette", "arne", "By default, when you use colour names, they are pulled from a variation of <a href='http://androidarts.com/palette/16pal.htm'>Arne</a>'s 16-Colour palette. However, there are other palettes to choose from: <p> <ul> <li>1 - mastersystem </li> <li>2 - gameboycolour </li> <li>3 - amiga </li> <li>4 - arnecolors </li> <li>5 - famicom </li> <li>6 - atari </li> <li>7 - pastel </li> <li>8 - ega </li> <li>9 - amstrad </li> <li>10 - proteus_mellow </li> <li>11 - proteus_rich </li> <li>12 - proteus_night </li> <li>13 - c64 </li> <li>14 - whitingjp </li> </ul> <p> (you can also refer to them by their numerical index)"],
-            ["again_interval", "0.1", "The amount of time it takes an 'again' event to trigger."],
-            ["background_color", "blue", "Can accept a color name or hex code (in the form #412bbc). Controls the background color of title/message screens, as well as the background color of the website. Text_color is its sibling."],
-            ["debug", "", "This outputs the compiled instructions whenever you build your file."],
-            ["flickscreen", "8x5", "Setting flickscreen divides each level into WxH grids, and zooms the camera in so that the player can only see one at a time"],
-            ["homepage", "www.puzzlescript.net", "A link to your homepage!"],
-            ["key_repeat_interval", "0.1", "When you hold down a key, how long is the delay between repeated presses getting sent to the game (in seconds)?"],
-            ["noaction", "", "Hides the action key (X) instruction from the title screen, and does not respond when the player pressed it (outside of menus and cutscenes and the like)."],
-            ["norepeat_action", "", "The action button will only respond to individual presses, and not auto-trigger when held down."],
-            ["noundo", "", "Disables the undo key (Z)"],
-            ["norestart", "", "Disables the restart key (R)"],
-            ["realtime_interval", "", "The number indicates how long each realtime frame should be."],
-            ["require_player_movement", "", "If the player doesn't move, cancel the whole move."],
-            ["run_rules_on_level_start", "", "Applies the rules once on level-load, before the player has moved"],
-            ["scanline", "", "Applies a scanline visual effect"],
-            ["text_color", "orange", "Can accept a color name or hex code (in the form #412bbc). Controls the font color of title/message screens, as well as the font color in the website. Background_color is its sibling."],
-            ["title", "My Amazing Puzzle Game", "The name of your game. Appears on the title screen."],
-            ["throttle_movement", "", "For use in conjunction with realtime_interval - this stops you from moving crazy fast - repeated keypresses of the same movement direction will not increase your speed. This doesn't apply to the action button."],
-            ["verbose_logging", "", "As you play the game, spits out information about all rules applied as you play, and also allows visual inspection of what exactly the rules do by hovering over them with your mouse (or tapping them on touchscreen)."],
-            ["zoomscreen", "WxH", "Zooms the camera in to a WxH section of the map around the player, centered on the player."]
+            ["again_interval", "0.1"],
+            ["author", "Gill Bloggs"],
+            ["background_color", "blue"],
+            ["color_palette", "arne"],
+            ["debug", ""],
+            ["flickscreen", "8x5"],
+            ["homepage", "www.puzzlescript.net"],
+            ["key_repeat_interval", "0.1"],
+            ["noaction", ""],
+            ["norepeat_action", ""],
+            ["norestart", ""],
+            ["noundo", ""],
+            ["realtime_interval", ""],
+            ["require_player_movement", ""],
+            ["run_rules_on_level_start", ""],
+            ["scanline", ""],
+            ["text_color", "orange"],
+            ["throttle_movement", ""],
+            ["title", "My Amazing Puzzle Game"],
+            ["verbose_logging", ""],
+            ["zoomscreen", "WxH"]                    
         ];
 
         var COLOR_WORDS = [
             "COLOR",//special tag
-            "black", "white", "darkgray", "lightgray", "gray", "red", "darkred", "lightred", "brown", "darkbrown", "lightbrown", "orange", "yellow", "green", "darkgreen", "lightgreen", "blue", "lightblue", "darkblue", "purple", "pink", "transparent"];
+            "black", "blue", "brown", "darkblue", "darkbrown", "darkgray", "darkgreen", "darkred", "gray", "green", "lightblue", "lightbrown", "lightgray", "lightgreen", "lightred", "orange", "pink", "purple", "red", "transparent", "white", "yellow"];
         var RULE_COMMAND_WORDS = [
             "COMMAND",
             //sfx added manually based on definitions
-            "cancel", "checkpoint", "restart", "win", "message", "again"];
+            "again", "cancel", "checkpoint", "message", "restart", "win"];
         var SFX_COMMAND_LIST = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"];
 
         var CARDINAL_DIRECTION_WORDS = [
@@ -66,12 +66,12 @@
 
         var SOUND_EVENTS = [
             "SOUNDEVENT",
-            "undo", "restart", "titlescreen", "startgame", "cancel", "endgame", "startlevel", "endlevel", "showmessage", "closemessage", "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"
+            "cancel", "closemessage", "endgame", "endlevel", "restart", "showmessage", "startgame", "startlevel", "titlescreen", "undo", "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"
         ];
 
         var SOUND_VERBS = [
             "SOUNDVERB",
-            "move", "action", "create", "destroy", "cantmove"
+            "action", "cantmove", "create", "destroy", "move"
         ];
 
         var SOUND_DIRECTIONS = [
@@ -88,7 +88,7 @@
             ]
 
         var PRELUDE_COLOR_PALETTE_WORDS = [
-            "mastersystem", "gameboycolour", "amiga", "arnecolors", "famicom", "atari", "pastel", "ega", "amstrad", "proteus_mellow", "proteus_rich", "proteus_night", "c64", "whitingjp"
+            "amiga", "amstrad", "arnecolors", "atari", "c64", "ega", "famicom", "gameboycolour", "mastersystem", "pastel", "proteus_mellow", "proteus_night", "proteus_rich", "whitingjp"
         ]
 
         function renderHint(elt,data,cur){
