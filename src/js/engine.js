@@ -224,7 +224,8 @@ function generateTitleScreen() {
 		var frame = get_title_animation_frame()+2;
 		// frame = frame % 12; // loops not pingpong
 		//want it to pingpong, not loop
-		if (frame > 12) {
+		const loading_text = frame > 12;
+		if (loading_text) {
 
 			titleImage[selection_row] = loading_line;
 			if (frame === 13){
@@ -238,12 +239,19 @@ function generateTitleScreen() {
 		}
 		const left_index_to_replace = 11-frame;
 		const right_index_to_replace = 22+frame;
-		titleImage[selection_row] = 
-			titleImage[selection_row].slice(0, left_index_to_replace) 
-			+ '#' 
-			+ titleImage[selection_row].slice(left_index_to_replace + 1, right_index_to_replace) 
-			+ '#' 
-			+ titleImage[selection_row].slice(right_index_to_replace + 1);
+		if (!loading_text){
+			//generate a string with "left_index_to_replace" spaces
+			const spaces = ' '.repeat(left_index_to_replace);
+			titleImage[selection_row] = spaces + '#' + titleImage[selection_row].slice(left_index_to_replace + 1, right_index_to_replace) + '#' + spaces;
+			
+		} else {
+			titleImage[selection_row] = 
+				titleImage[selection_row].slice(0, left_index_to_replace) 
+				+ '#' 
+				+ titleImage[selection_row].slice(left_index_to_replace + 1, right_index_to_replace) 
+				+ '#' 
+				+ titleImage[selection_row].slice(right_index_to_replace + 1);
+		}
 
 		if (frame === 2){
 			//when animation starts playing (on frame 2), 
