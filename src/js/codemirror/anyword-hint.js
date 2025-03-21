@@ -171,7 +171,70 @@
             switch (state.section) {
                 case 'objects':
                     {
-                        if (state.objects_section==2){
+                        // if objects.section==1 
+                        // * and objects.candname is start of last declared object,
+                        // * and the last declared object name ends with Up/UP/up/_u 
+                        // then suggest as autocomplete the declaration of the Down/Left/Right objects
+                        if (state.objects_section==1){
+                            
+
+                            // STEP 1, find name of last declared object
+                            // Original_line_numbers being a dictionary[Name,LineNumber] 
+                            // makes this a bit indirect...
+                            var object_names_lowercase = Object.keys(state.original_line_numbers);
+                            if (object_names_lowercase.length==0){
+                                break;
+                            }
+                            //in state.original_linenumbers, find the line number of the last declared object
+                            let max_line_number_name_lowercase = object_names_lowercase[0];
+                            let max_line_number = state.original_line_numbers[max_line_number_name_lowercase];
+                            for (var i=1;i<object_names_lowercase.length;i++){
+                                const this_name = object_names_lowercase[i]
+                                const this_line_number = state.original_line_numbers[this_name];
+                                if (this_line_number!==state.lineNumber && this_line_number>max_line_number){
+                                    max_line_number_name_lowercase = this_name;
+                                    max_line_number = this_line_number;
+                                }
+                            }
+
+                            var previous_object_data = state.objects[max_line_number_name_lowercase];
+                            var previous_object_casename = state.original_case_names[max_line_number_name_lowercase];
+
+                            // only bother with all this if the curword is a prefix 
+                            // of max_line_number_name_lowercase
+                            if (!max_line_number_name_lowercase.startsWith(curWord)){
+                                break;
+                            }
+
+                            const pairings = [ ["Up",["Down","Left","Right"]],
+                                                ["UP",["DOWN","LEFT","RIGHT"]],
+                                                ["up",["down","left","right"]],
+                                                ["_u",["_d","_l","_r"]],
+                                                ["_U",["_D","_L","_R"]] ];
+                            for (var i=0;i<pairings.length;i++){
+                                const suffix = pairings[i][0];
+                                // STEP 2, if casename ends with suffix, suggest the corresonding pairings
+                                if (previous_object_casename.endsWith(suffix)){
+                                    //FOUND a match.
+                                    let to_suggest = "";
+                                    const stem = previous_object_casename.slice(0,-suffix.length);
+                                    const further_endings = pairings[i][1];
+                                    const previous_object = state.objects[max_line_number_name_lowercase];
+
+                                    for (var j=0;j<further_endings.length;j++){
+                                        const pairing = further_endings[j];
+                                        to_suggest += stem+pairing+"\n";
+                                        //print colros
+                                        to_suggest += previous_object.colors.join(" ")+"\n";
+
+                                        to_suggest += previous_object.spritematrix.join("\n");
+                                        to_suggest += "\n\n";
+                                        
+                                    }
+                                    candlists.push(["comment",to_suggest]);
+                                }                                    
+                            }                                                                                                                    
+                        } else if (state.objects_section==2){
                             candlists.push(COLOR_WORDS);
                         }
                         break;
