@@ -227,9 +227,11 @@
                                         //print colros
                                         to_suggest += previous_object.colors.join(" ")+"\n";
 
-                                        to_suggest += previous_object.spritematrix.join("\n");
-                                        to_suggest += "\n\n";
-                                        
+                                        if (previous_object.spritematrix.length>0){
+                                            to_suggest += previous_object.spritematrix.join("\n");
+                                            to_suggest += "\n";
+                                        } 
+                                        to_suggest += "\n";
                                     }
                                     candlists.push(["comment",to_suggest]);
                                 }                                    
