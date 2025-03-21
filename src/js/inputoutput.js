@@ -808,6 +808,8 @@ function checkKey(e, justPressed) {
 			return prevent(e);
 		}
 	}
+	
+	return prevent(e);
 }
 
 function get_title_animation_frame(){
