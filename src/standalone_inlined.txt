@@ -714,78 +714,131 @@ Level.prototype.calcBackgroundMask = function(state) {
 }
 </script>
 <script>
-let unitTesting=false;
-let lazyFunctionGeneration=true;
-let curlevel=0;
-let curlevelTarget=null;
-let hasUsedCheckpoint=false;
-let levelEditorOpened=false;
-let muted=0;
-let runrulesonlevelstart_phase=false;
-let ignoreNotJustPressedAction=true;
+const relativedirs = ['^', 'v', '<', '>', 'moving','stationary','parallel','perpendicular', 'no'];
+const sectionNames = ['objects', 'legend', 'sounds', 'collisionlayers', 'rules', 'winconditions', 'levels'];
+const commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
+const commandwords_sfx = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"];
+const reg_name = /[\p{L}\p{N}_]+[\p{Z}\s]*/u;///\w*[a-uw-zA-UW-Z0-9_]/;
+const reg_soundseed = /\d+\b/u;
+const reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|winconditions|levels)(?![\p{L}\p{N}_])[\p{Z}\s]*/u;
+const reg_equalsrow = /[\=]+/;
+const reg_notcommentstart = /[^\(]+/;
+const reg_match_until_commentstart_or_whitespace = /[^\p{Z}\s\()]+[\p{Z}\s]*/u;
+const reg_csv_separators = /[ \,]*/;
+const reg_soundverbs = /(move|action|create|destroy|cantmove)\b[\p{Z}\s]*/u;
+const soundverbs_directional = ['move','cantmove'];
+const reg_soundevents = /(undo|restart|titlescreen|startgame|cancel|endgame|startlevel|endlevel|showmessage|closemessage|sfx0|sfx1|sfx2|sfx3|sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10)\b[\p{Z}\s]*/u;
+const reg_directions = /^(action|up|down|left|right|\^|v|\<|\>|moving|stationary|parallel|perpendicular|horizontal|orthogonal|vertical|no|randomdir|random)$/;
+const reg_loopmarker = /^(startloop|endloop)$/;
+const reg_ruledirectionindicators = /^(up|down|left|right|horizontal|vertical|orthogonal|late|rigid)$/;
+const reg_sounddirectionindicators = /[\p{Z}\s]*(up|down|left|right|horizontal|vertical|orthogonal)(?![\p{L}\p{N}_])[\p{Z}\s]*/u;
+const reg_winconditionquantifiers = /^(all|any|no|some)$/;
+const keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message', "move", "action", "create", "destroy", "cantmove", "sfx0", "sfx1", "sfx2", "sfx3", "Sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again", "undo", "restart", "titlescreen", "startgame", "cancel", "endgame", "startlevel", "endlevel", "showmessage", "closemessage"];
+
+const  directionaggregates = {
+    'horizontal': ['left', 'right'],
+    'horizontal_par': ['left', 'right'],
+    'horizontal_perp': ['left', 'right'],
+    'vertical': ['up', 'down'],
+    'vertical_par': ['up', 'down'],
+    'vertical_perp': ['up', 'down'],
+    'moving': ['up', 'down', 'left', 'right', 'action'],
+    'orthogonal': ['up', 'down', 'left', 'right'],
+    'perpendicular': ['^', 'v'],
+    'parallel': ['<', '>']
+};
+
+const relativeDirections = ['^', 'v', '<', '>', 'perpendicular', 'parallel'];
+const simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
+const simpleRelativeDirections = ['^', 'v', '<', '>'];
+const reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;//redeclaring here, i don't know wh
+
+const REGEX_HEX = /^#([0-9A-F]{3}){1,2}$/i;
+
+var reg_color = /(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-f]{3}){1,2})\s*/;
+
+// lots of hardcoded stuff for autocomplete in anyword-hint also, but 
+// it's not including here because I don't want to bloat the standalone
+// runtime unnecessarily.
+</script>
+<script>
+'use strict';
+
+let unitTesting = false;
+let lazyFunctionGeneration = true;
+let curlevel = 0;
+let curlevelTarget = null;
+let hasUsedCheckpoint = false;
+let levelEditorOpened = false;
+let muted = 0;
+let runrulesonlevelstart_phase = false;
+let ignoreNotJustPressedAction = true;
 let textMode = true;
 
-function doSetupTitleScreenLevelContinue(){
+function doSetupTitleScreenLevelContinue() {
     try {
         if (storage_has(document.URL)) {
-            if (storage_has(document.URL+'_checkpoint')){
-                let backupStr = storage_get(document.URL+'_checkpoint');
+            if (storage_has(document.URL + '_checkpoint')) {
+                let backupStr = storage_get(document.URL + '_checkpoint');
                 curlevelTarget = JSON.parse(backupStr);
-                
+
                 let arr = [];
-                for(let p in Object.keys(curlevelTarget.dat)) {
+                for (let p in Object.keys(curlevelTarget.dat)) {
                     arr[p] = curlevelTarget.dat[p];
                 }
                 curlevelTarget.dat = new Int32Array(arr);
 
             }
-            curlevel = storage_get(document.URL); 
+            curlevel = storage_get(document.URL);
         }
-    } catch(ex) {
+    } catch (ex) {
     }
 }
 
 doSetupTitleScreenLevelContinue();
 
 
-let verbose_logging=false;
-let throttle_movement=false;
-let cache_console_messages=false;
-let quittingTitleScreen=false;
-let quittingMessageScreen=false;
-let deltatime=17; // this gets updated every frame; see loop()
-let timer=0;
-let repeatinterval=150;
-let autotick=0;
-let autotickinterval=0;
-let winning=false;
-let againing=false;
-let againinterval=150;
-let norepeat_action=false;
-let oldflickscreendat=[];//used for buffering old flickscreen/scrollscreen positions, in case player vanishes
+let verbose_logging = false;
+let throttle_movement = false;
+let cache_console_messages = false;
+let quittingTitleScreen = false;
+let quittingMessageScreen = false;
+let deltatime = 17; // this gets updated every frame; see loop()
+let timer = 0;
+let repeatinterval = 150;
+let autotick = 0;
+let autotickinterval = 0;
+let winning = false;
+let againing = false;
+let againinterval = 150;
+let norepeat_action = false;
+let oldflickscreendat = [];//used for buffering old flickscreen/scrollscreen positions, in case player vanishes
 let keybuffer = [];
 
-let restarting=false;
+let restarting = false;
 
-let messageselected=false;
+let messageselected = false;
 
-let textImages={};
+let textImages = {};
 
 let level = new Level(); //just give it some starting state
 
 
+function get_title_animation_frame(){
+	return Math.floor(((timer / 1000) / 0.3)*10)
+}
 
 var WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR = [];
-function tick_lazy_function_generation(iterative_generation=false){
-	if (WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length===0){
-		return;
-	}
-	// spent a maximum of 10ms on lazy function generation
-	let start = performance.now();
-	var generated_count=0;
-	while (
-        ((performance.now() - start < 20) || !iterative_generation) 
-            && WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length > 0) {
+function tick_lazy_function_generation(iterative_generation = false) {
+    if (WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length === 0) {
+        return;
+    }
+    // spent a maximum of 10ms on lazy function generation
+    let start = performance.now();
+    var generated_count = 0;
+    while (
+        ((performance.now() - start < 20) || !iterative_generation)
+        && WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length > 0) {
         const object = WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.shift();
         //depending on type of object
         //if CellPattern, call generateMatchFunction
@@ -797,13 +850,14 @@ function tick_lazy_function_generation(iterative_generation=false){
         } else {
             throw new Error("Unknown object type: " + object);
         }
-        generated_count++;		
-	}
+        generated_count++;
+    }
 }
 
-function lazy_function_generation_clear_backlog(){
+function lazy_function_generation_clear_backlog() {
     WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR = [];
 }
+
 
 </script>
 <script>
@@ -837,6 +891,8 @@ function consolePrintFromRule(str,rule,urgent){
 function consoleCacheDump(str){
 	
 }
+
+function UnitTestingThrow(error){}
 
 function consoleError(str,lineNumber){
 	var errorText = document.getElementById("errormessage");
@@ -5959,6 +6015,19 @@ var font = {
 10001
 00000
 00000`,
+	'☺':`
+00000
+00000
+00000
+00000
+00000
+01110
+10101
+11111
+10001
+01110
+00000
+00000`
 }
 
 </script>
@@ -7883,9 +7952,6 @@ whitingjp : {
 }
 };
 
-var reg_color_names = /(black|white|darkgray|lightgray|gray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent)\s*/;
-
-var reg_color = /(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-f]{3}){1,2})\s*/;
 
 
 
@@ -7919,11 +7985,37 @@ function createSprite(name,spritegrid, colors, padding) {
             if (val >= 0) {
                 var cy = (j * ch)|0;
                 var cx = (k * cw)|0;
-                spritectx.fillStyle = colors[val];
+                const color = colors[val];
+                spritectx.fillStyle = color;                
                 spritectx.fillRect(cx, cy, cw, pixh);
             }
         }
     }
+
+    return sprite;
+}
+
+function renderCJKCharacter(char,padding) {
+    //character not present in pixel font, so we need to render it from scratc
+    const colors = [state.bgcolor, state.fgcolor];
+
+    var sprite = makeSpriteCanvas("specialchar_"+char);
+    sprite.width = 2*cellwidth;
+
+	var spritectx = sprite.getContext('2d');
+
+    spritectx.clearRect(0, 0, 2*cellwidth, cellheight);
+    // spritectx.fillStyle = "red";
+    // spritectx.fillRect(0, 0, 2*cellwidth, cellheight);
+
+    //render the character using a font
+    //filltext
+    spritectx.fillStyle = state.fgcolor;
+    //we need the size of the character to fit the box
+    const font_height = cellheight-4*padding;
+    spritectx.font = font_height + 'px Arial';
+    spritectx.textAlign = 'center';
+    spritectx.fillText(char, cellwidth, font_height+padding);
 
     return sprite;
 }
@@ -7935,10 +8027,15 @@ function regenText(spritecanvas,spritectx) {
         var row=titleImage[rowidx];
         for (var nidx in row) {
             var n = row[nidx];
-            if (font.hasOwnProperty(n) && !textImages.hasOwnProperty(n)) {
-                fontstr = font[n].split('\n').map(a=>a.trim().split('').map(t=>parseInt(t)));
-                fontstr.shift();
-                textImages[n] = createSprite('char'+n,fontstr, undefined, 1);
+            if (!textImages.hasOwnProperty(n)){
+                if (font.hasOwnProperty(n)) {
+                    fontstr = font[n].split('\n').map(a=>a.trim().split('').map(t=>parseInt(t)));
+                    fontstr.shift();
+                    textImages[n] = createSprite('char'+n,fontstr, ["#00000000", state.fgcolor], 1);
+                } else {
+                    //the character was not found, so
+                    textImages[n] = renderCJKCharacter(n,1)
+                }
             }
         }
     }
@@ -8685,6 +8782,14 @@ function generateTitleScreen() {
 	titleMode = showContinueOptionOnTitleScreen() ? 1 : 0;
 
 	if (state.levels.length === 0) {
+		//if body has light-theme, set fgcolor to black, bgcolor to white
+		if (document.body.classList.contains('light-theme')) {
+			state.fgcolor = '#000000';
+			state.bgcolor = '#FFFFFF';
+		} else {
+			state.fgcolor = '#FFFFFF';
+			state.bgcolor = '#000000';
+		}
 		titleImage = intro_template;
 		return;
 	}
@@ -8697,25 +8802,25 @@ function generateTitleScreen() {
 	let selection_row;
 	if (titleMode === 0) {
 		if (titleSelected) {
-			titleImage = deepClone(titletemplate_firstgo_selected);		
+			titleImage = titletemplate_firstgo_selected.slice();		
 			selection_row = 6;
 		} else {
-			titleImage = deepClone(titletemplate_firstgo);
+			titleImage = titletemplate_firstgo.slice();
 		}
 	} else {
 		if (titleSelection === 0) {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select0_selected);				
+				titleImage = titletemplate_select0_selected.slice();				
 				selection_row = 5;
 			} else {
-				titleImage = deepClone(titletemplate_select0);
+				titleImage = titletemplate_select0.slice();
 			}
 		} else {
 			if (titleSelected) {
-				titleImage = deepClone(titletemplate_select1_selected);
+				titleImage = titletemplate_select1_selected.slice();
 				selection_row = 7;
 			} else {
-				titleImage = deepClone(titletemplate_select1);
+				titleImage = titletemplate_select1.slice();
 			}
 		}
 	}
@@ -8737,13 +8842,19 @@ function generateTitleScreen() {
 		titleImage[i] = titleImage[i].replace(/\./g, ' ');
 	}
 
+	let regen_letters = false;
 	if (titleSelected){		
 		var frame = get_title_animation_frame()+2;
-		console.log("animating with frame", frame);
 		// frame = frame % 12; // loops not pingpong
 		//want it to pingpong, not loop
-		if (frame > 12) {
+		const loading_text = frame > 12;
+		if (loading_text) {
+
 			titleImage[selection_row] = loading_line;
+			if (frame === 13){
+				//in case it has new characters...
+				regen_letters=true;
+			}
 		}
 		frame = frame % 23;
 		if (frame > 11) {
@@ -8751,17 +8862,28 @@ function generateTitleScreen() {
 		}
 		const left_index_to_replace = 11-frame;
 		const right_index_to_replace = 22+frame;
-		titleImage[selection_row] = 
-			titleImage[selection_row].slice(0, left_index_to_replace) 
-			+ '#' 
-			+ titleImage[selection_row].slice(left_index_to_replace + 1, right_index_to_replace) 
-			+ '#' 
-			+ titleImage[selection_row].slice(right_index_to_replace + 1);
+		if (!loading_text){
+			//generate a string with "left_index_to_replace" spaces
+			const spaces = ' '.repeat(left_index_to_replace);
+			titleImage[selection_row] = spaces + '#' + titleImage[selection_row].slice(left_index_to_replace + 1, right_index_to_replace) + '#' + spaces;
+			
+		} else {
+			titleImage[selection_row] = 
+				titleImage[selection_row].slice(0, left_index_to_replace) 
+				+ '#' 
+				+ titleImage[selection_row].slice(left_index_to_replace + 1, right_index_to_replace) 
+				+ '#' 
+				+ titleImage[selection_row].slice(right_index_to_replace + 1);
+		}
 
+		if (frame === 2){
+			//when animation starts playing (on frame 2), 
+			regen_letters=true;
+		}
 	}
 
 	let width = titleImage[0].length;
-	let titlelines = wordwrap(title, titleImage[0].length);
+	let titlelines = wordwrap(expandCJKCharacters(title), titleImage[0].length);
 	if (state.metadata.author !== undefined) {
 		if (titlelines.length > 3) {
 			titlelines.splice(3);
@@ -8783,7 +8905,7 @@ function generateTitleScreen() {
 		titleImage[1 + i] = row.slice(0, lmargin) + titleline + row.slice(lmargin + titleline.length);
 	}
 	if (state.metadata.author !== undefined) {
-		let attribution = "by " + state.metadata.author;
+		let attribution = "by " + expandCJKCharacters(state.metadata.author);
 		let attributionsplit = wordwrap(attribution, titleImage[0].length);
 		if (attributionsplit[0].length < titleImage[0].length) {
 			attributionsplit[0] = " " + attributionsplit[0];
@@ -8802,6 +8924,9 @@ function generateTitleScreen() {
 		}
 	}
 
+	if (regen_letters){
+		regenSpriteImages();
+	}
 }
 
 const introstate = {
@@ -8882,6 +9007,19 @@ function wordwrap(str, width) {
 
 let splitMessage = [];
 
+function expandCJKCharacters(message) {
+	//CJK characters are 2 characters wide, so we need to insert a space after
+	//each one to give them space
+	let expandedMessage = "";
+	for (let i = 0; i < message.length; i++) {
+		let char = message[i];
+		expandedMessage += char;
+		if (!font.hasOwnProperty(char)) {
+			expandedMessage +=  " ";
+		}
+	}
+	return expandedMessage;
+}
 function drawMessageScreen() {
 	titleMode = 0;
 	textMode = true;
@@ -8906,7 +9044,7 @@ function drawMessageScreen() {
 		message = messagetext;
 	}
 
-	splitMessage = wordwrap(message, titleImage[0].length);
+	splitMessage = wordwrap(expandCJKCharacters(message), titleImage[0].length);
 
 
 	let offset = 5 - ((splitMessage.length / 2) | 0);
@@ -9371,9 +9509,11 @@ function RebuildLevelArrays() {
 		level.colCellContents_Movements[i] = new BitVec(STRIDE_MOV);
 	}
 
-	for (let i = 0; i < level.n_tiles; i++) {
-		level.rigidMovementAppliedMask[i] = new BitVec(STRIDE_MOV);
-		level.rigidGroupIndexMask[i] = new BitVec(STRIDE_MOV);
+	if (state.rigid){
+		for (let i = 0; i < level.n_tiles; i++) {
+			level.rigidMovementAppliedMask[i] = new BitVec(STRIDE_MOV);
+			level.rigidGroupIndexMask[i] = new BitVec(STRIDE_MOV);
+		}
 	}
 }
 
@@ -9439,8 +9579,13 @@ function restoreLevel(lev) {
 
 		for (let i = 0; i < level.n_tiles; i++) {
 			level.movements[i] = 0;
-			level.rigidMovementAppliedMask[i].setZero();
-			level.rigidGroupIndexMask[i].setZero();
+		}
+
+		if (state.rigid){
+			for (let i = 0; i < level.n_tiles; i++) {
+				level.rigidMovementAppliedMask[i].setZero();
+				level.rigidGroupIndexMask[i].setZero();
+			}
 		}
 
 		for (let i = 0; i < level.height; i++) {
@@ -9610,11 +9755,20 @@ function DoUndo(force, ignoreDuplicates) {
 
 function getPlayerPositions() {
 	let result = [];
-	let playerMask = state.playerMask;
-	for (let i = 0; i < level.n_tiles; i++) {
-		level.getCellInto(i, _o11);
-		if (playerMask.anyBitsInCommon(_o11)) {
-			result.push(i);
+	let [aggregate,playerMask] = state.playerMask;
+	if (aggregate){
+		for (let i = 0; i < level.n_tiles; i++) {
+			level.getCellInto(i, _o11);
+			if (playerMask.bitsSetInArray(_o11.data)) {
+				result.push(i);
+			}
+		}
+	} else {
+		for (let i = 0; i < level.n_tiles; i++) {
+			level.getCellInto(i, _o11);
+			if (playerMask.anyBitsInCommon(_o11)) {
+				result.push(i);
+			}
 		}
 	}
 	return result;
@@ -9709,7 +9863,7 @@ function startMovement(dir) {
 	let playerPositions = getPlayerPositions();
 	for (let i = 0; i < playerPositions.length; i++) {
 		let playerPosIndex = playerPositions[i];
-		state.moveEntitiesAtIndex(level, playerPosIndex, state.playerMask, dir);
+		state.moveEntitiesAtIndex(level, playerPosIndex, state.playerMask[1], dir);
 	}
 	return playerPositions;
 }
@@ -10267,8 +10421,8 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		`)}
 
 
-		var curRigidGroupIndexMask =0;
-		var curRigidMovementAppliedMask =0;
+		var curRigidGroupIndexMask;
+		var curRigidMovementAppliedMask;
 		let rigidchange=false;		
 		${IF_LAZY(rule.rigid,()=>`
 			let rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1;
@@ -11092,6 +11246,7 @@ function processInput(dir, dontDoWin, dontModify) {
 		}
 	}
 
+	// Initialize the variables we make use of in the course of our turn
 	let bannedGroup = [];
 	level.commandQueue = [];
 	level.commandQueueSourceRules = [];
@@ -11111,6 +11266,8 @@ function processInput(dir, dontDoWin, dontModify) {
 	state.calculateRowColMasks(level);
 	let alreadyResolved = [];
 
+	// The main loop (dominated by rigid, but if you ignore that nonsense, it's
+	// not too complicated)!
 	let i = 0;
 	do {
 		rigidloop = false;
@@ -11172,12 +11329,13 @@ function processInput(dir, dontDoWin, dontModify) {
 		consolePrint("Looped through 50 times, gave up.  too many loops!");
 	}
 
+	// Post move stuff
 	if (playerPositions.length > 0 && state.metadata.require_player_movement !== undefined) {
 		let somemoved = false;
 		for (let i = 0; i < playerPositions.length; i++) {
 			let pos = playerPositions[i];
 			let val = level.getCell(pos);
-			if (state.playerMask.bitsClearInArray(val.data)) {
+			if (state.playerMask[1].bitsClearInArray(val.data)) {
 				somemoved = true;
 				break;
 			}
@@ -11835,35 +11993,6 @@ var codeMirrorFn = function() {
         }
     }
 
-    const absolutedirs = ['up', 'down', 'right', 'left'];
-    const relativedirs = ['^', 'v', '<', '>', 'moving','stationary','parallel','perpendicular', 'no'];
-    const logicWords = ['all', 'no', 'on', 'some'];
-    const sectionNames = ['objects', 'legend', 'sounds', 'collisionlayers', 'rules', 'winconditions', 'levels'];
-	const commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
-    const reg_commands = /[\p{Z}\s]*(sfx0|sfx1|sfx2|sfx3|Sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10|cancel|checkpoint|restart|win|message|again)[\p{Z}\s]*/u;
-    const reg_name = /[\p{L}\p{N}_]+[\p{Z}\s]*/u;///\w*[a-uw-zA-UW-Z0-9_]/;
-    const reg_number = /[\d]+/;
-    const reg_soundseed = /\d+\b/u;
-    const reg_spriterow = /[\.0-9]{5}[\p{Z}\s]*/u;
-    const reg_sectionNames = /(objects|collisionlayers|legend|sounds|rules|winconditions|levels)(?![\p{L}\p{N}_])[\p{Z}\s]*/u;
-    const reg_equalsrow = /[\=]+/;
-    const reg_notcommentstart = /[^\(]+/;
-    const reg_match_until_commentstart_or_whitespace = /[^\p{Z}\s\()]+[\p{Z}\s]*/u;
-    const reg_csv_separators = /[ \,]*/;
-    const reg_soundverbs = /(move|action|create|destroy|cantmove)\b[\p{Z}\s]*/u;
-    const soundverbs_directional = ['move','cantmove'];
-    const reg_soundverbs_directional = /(move|cantmove)\b[\p{Z}\s]*/u;
-    const reg_soundverbs_nondirectional = /(action|create|destroy)\b[\p{Z}\s]*/u;
-    const reg_soundevents = /(undo|restart|titlescreen|startgame|cancel|endgame|startlevel|endlevel|showmessage|closemessage|sfx0|sfx1|sfx2|sfx3|sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10)\b[\p{Z}\s]*/u;
-
-    const reg_directions = /^(action|up|down|left|right|\^|v|\<|\>|moving|stationary|parallel|perpendicular|horizontal|orthogonal|vertical|no|randomdir|random)$/;
-    const reg_loopmarker = /^(startloop|endloop)$/;
-    const reg_ruledirectionindicators = /^(up|down|left|right|horizontal|vertical|orthogonal|late|rigid)$/;
-    const reg_sounddirectionindicators = /[\p{Z}\s]*(up|down|left|right|horizontal|vertical|orthogonal)(?![\p{L}\p{N}_])[\p{Z}\s]*/u;
-    const reg_winconditionquantifiers = /^(all|any|no|some)$/;
-    const reg_keywords = /(checkpoint|objects|collisionlayers|legend|sounds|rules|winconditions|\.\.\.|levels|up|down|left|right|^|\||\[|\]|v|\>|\<|no|horizontal|orthogonal|vertical|any|all|no|some|moving|stationary|parallel|perpendicular|action|move|action|create|destroy|cantmove|sfx0|sfx1|sfx2|sfx3|Sfx4|sfx5|sfx6|sfx7|sfx8|sfx9|sfx10|cancel|checkpoint|restart|win|message|again|undo|restart|titlescreen|startgame|cancel|endgame|startlevel|endlevel|showmessage|closemessage)/;
-    const keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message', "move", "action", "create", "destroy", "cantmove", "sfx0", "sfx1", "sfx2", "sfx3", "Sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again", "undo", "restart", "titlescreen", "startgame", "cancel", "endgame", "startlevel", "endlevel", "showmessage", "closemessage"];
-
     function errorFallbackMatchToken(stream){
         var match=stream.match(reg_match_until_commentstart_or_whitespace, true);
         if (match===null){
@@ -12198,18 +12327,11 @@ var codeMirrorFn = function() {
            	var mixedCase = stream.string;
             var sol = stream.sol();
             if (sol) {
-                
+                state.lineNumber++;                
                 state.current_line_wip_array = [];
                 stream.string = stream.string.toLowerCase();
                 state.tokenIndex=0;
                 state.line_should_end = false;
-                /*   if (state.lineNumber==undefined) {
-                        state.lineNumber=1;
-                }
-                else {
-                    state.lineNumber++;
-                }*/
-
             }
             if (state.sol_after_comment){
                 sol = true;
@@ -12572,7 +12694,7 @@ var codeMirrorFn = function() {
                         }
                         stream.match(/[\p{Z}\s]*/u, true);
                         state.tokenIndex++;
-                        resultToken = 'ASSSIGNMENT';
+                        resultToken = 'ASSIGNMENT';
                     } else if (state.tokenIndex >= 3 && ((state.tokenIndex % 2) === 1)) {
                         //matches AND/OR
                         match_name = stream.match(reg_name, true);
@@ -13300,7 +13422,7 @@ function isColor(str) {
     str = str.trim();
     if (str in colorPalettes.arnecolors)
         return true;
-    if (/^#([0-9A-F]{3}){1,2}$/i.test(str))
+    if (REGEX_HEX.test(str))
         return true;
     if (str === "transparent")
         return true;
@@ -13781,28 +13903,6 @@ function levelsToArray(state) {
     state.levels = processedLevels;
 }
 
-let directionaggregates = {
-    'horizontal': ['left', 'right'],
-    'horizontal_par': ['left', 'right'],
-    'horizontal_perp': ['left', 'right'],
-    'vertical': ['up', 'down'],
-    'vertical_par': ['up', 'down'],
-    'vertical_perp': ['up', 'down'],
-    'moving': ['up', 'down', 'left', 'right', 'action'],
-    'orthogonal': ['up', 'down', 'left', 'right'],
-    'perpendicular': ['^', 'v'],
-    'parallel': ['<', '>']
-};
-
-let relativeDirections = ['^', 'v', '<', '>', 'perpendicular', 'parallel'];
-let simpleAbsoluteDirections = ['up', 'down', 'left', 'right'];
-let simpleRelativeDirections = ['^', 'v', '<', '>'];
-let reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|no|randomdir|random|horizontal|vertical|orthogonal|perpendicular|parallel|action)$/;
-//redeclaring here, i don't know why
-let commandwords = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again"];
-let commandwords_sfx = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"];
-
-
 function directionalRule(rule) {
     for (let i = 0; i < rule.lhs.length; i++) {
         let cellRow = rule.lhs[i];
@@ -14054,11 +14154,22 @@ function processRuleString(rule, state, curRules) {
                     } else if (state.names.indexOf(token) >= 0) {
                         if (!incellrow) {
                             logWarning("Invalid token " + token.toUpperCase() + ". Object names should only be used within cells (square brackets).", lineNumber);
-                        } else if (curcell.length % 2 === 0) {
-                            curcell.push('');
-                            curcell.push(token);
-                        } else if (curcell.length % 2 === 1) {
-                            curcell.push(token);
+                        } else {
+                            //check that the object is not already present in the cell
+                            for (let j = 0; j < curcell.length; j += 2) {
+                                if (curcell[j + 1] === token) {
+                                    logError(`You cannot specify the same object more than once in a single cell (in this case ${token} occurs mutliple times).`, lineNumber);
+                                    if (token in state.propertiesDict){
+                                        logWarningNoLine(`( However, noticing that you're committing this crime with <i>properties</i>, and not being able to help but acknowledge that you <i>may</i> be trying to do something esoteric and <i>clever</i> with the property inference system,  I might be brought to suggest that you consider this: you can have multiple equivalent properties with different names. )`);
+                                    } 
+                                }
+                            }
+                            if (curcell.length % 2 === 0) {
+                                curcell.push('');
+                                curcell.push(token);
+                            } else if (curcell.length % 2 === 1) {
+                                curcell.push(token);
+                            } 
                         }
                     } else if (token === '...') {
                         if (!incellrow) {
@@ -15413,6 +15524,7 @@ function isObjectDefined(state, name) {
 
 function getMaskFromName(state, name) {
     const objectMask = new BitVec(STRIDE_OBJ);
+    let aggregate = false;
     if (name in state.objects) {
         const o = state.objects[name];
         objectMask.ibitset(o.id);
@@ -15420,6 +15532,7 @@ function getMaskFromName(state, name) {
 
     if (name in state.aggregatesDict) {
         const objectnames = state.aggregatesDict[name];
+        aggregate = true;
         for (let i = 0; i < objectnames.length; i++) {
             const n = objectnames[i];
             const o = state.objects[n];
@@ -15445,7 +15558,7 @@ function getMaskFromName(state, name) {
     if (objectMask.iszero()) {
         logErrorNoLine(`Error, didn't find any object called ${name}, either in the objects section, or the legends section.`);
     }
-    return objectMask;
+    return [aggregate,objectMask];
 }
 
 function generateMasks(state) {
@@ -15883,6 +15996,8 @@ function generateLoopPoints(state) {
     }
     if ((state.loops.length % 2) !== 0) {
         logError("Yo I found a STARTLOOP without a corresponding ENDLOOP.", state.loops[state.loops.length - 1][0]);
+        //patch up by adding an ENDLOOP
+        state.loops.push([state.loops[state.loops.length - 1][0], -1]);
     }
 
 
@@ -16035,6 +16150,9 @@ function generateSoundData(state) {
                     let targetName = targets[j];
                     let targetDat = state.objects[targetName];
                     let targetLayer = targetDat.layer;
+                    let this_object_mask = new BitVec(STRIDE_OBJ);
+                    this_object_mask.ibitset(targetDat.id)
+
                     //if not found, continue - probably from the error ""aggr" is an aggregate (defined using "and"), and cannot be added to a single layer because its constituent objects must be able to coexist."
                     if (targetLayer === undefined) {
                         continue;
@@ -16043,7 +16161,7 @@ function generateSoundData(state) {
                     shiftedDirectionMask.ishiftor(directionMask, 5 * targetLayer);
 
                     let o = {
-                        objectMask: objectMask,
+                        objectMask: this_object_mask,
                         directionMask: shiftedDirectionMask,
                         layer: targetLayer,
                         seed: seed
@@ -16153,7 +16271,6 @@ function loadFile(str) {
     let lines = str.split('\n');
     for (let i = 0; i < lines.length; i++) {
         let line = lines[i];
-        state.lineNumber = i + 1;
         let ss = new CodeMirror.StringStream(line, 4);
         do {
             processor.token(ss, state);
@@ -16386,8 +16503,9 @@ function compile(command, text, randomseed) {
     try {
         state = loadFile(text);
     } catch (error) {
-        consolePrint(error);
-        console.log(error);
+        consoleError(error.message+"\n"+error.stack,true);
+        console.error(error);
+        UnitTestingThrow(error);
     } finally {
         compiling = false;
     }
@@ -17091,28 +17209,25 @@ function checkKey(e, justPressed) {
 		case 65://a
 		case 37: //left
 			{
-				//            window.console.log("LEFT");
 				inputdir = 1;
 				break;
 			}
 		case 38: //up
 		case 87: //w
 			{
-				//            window.console.log("UP");
 				inputdir = 0;
 				break;
 			}
 		case 68://d
 		case 39: //right
 			{
-				//            window.console.log("RIGHT");
 				inputdir = 3;
 				break;
 			}
 		case 83://s
 		case 40: //down
 			{
-				//            window.console.log("DOWN");
+
 				inputdir = 2;
 				break;
 			}
@@ -17322,14 +17437,12 @@ function checkKey(e, justPressed) {
 					redraw();
 				}
 			}
-			return prevent(e);
 		}
 	}
+	
+	return prevent(e);
 }
 
-function get_title_animation_frame(){
-	return Math.floor(((timer / 1000) / 0.3)*10)
-}
 function update() {
 	const iterative_generation = textMode && !unitTesting;
 	tick_lazy_function_generation(iterative_generation);
