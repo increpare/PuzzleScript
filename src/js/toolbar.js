@@ -183,6 +183,37 @@ function levelEditorClick_Fn() {
     lastDownTarget=canvas;	
 }
 
+let lightMode = localStorage.getItem("lightMode") == "true"; //returns stored value or null if not set
+
+if(lightMode){
+	document.body.style.colorScheme = 'light'
+	document.body.classList.add('light-theme');
+} else {
+	document.body.style.colorScheme = 'dark'
+	document.body.classList.add('dark-theme');
+}
+generateTitleScreen();
+regenSpriteImages();
+
+
+function toggleThemeClick() {
+	if (document.body.style.colorScheme === 'light') {
+		document.body.style.colorScheme = 'dark';
+		document.body.classList.remove('light-theme');
+		document.body.classList.add('dark-theme');
+	} else {
+		document.body.style.colorScheme = 'light';
+		document.body.classList.remove('dark-theme');
+		document.body.classList.add('light-theme');
+	}
+	localStorage.setItem("lightMode", document.body.style.colorScheme==='light');
+	if (state.levels.length===0){
+		generateTitleScreen();
+		regenSpriteImages();
+		redraw();
+	}
+}
+
 function printUnauthorized(){
 	var authUrl = github_authURL();
 	consolePrint(

@@ -167,6 +167,14 @@ function generateTitleScreen() {
 	titleMode = showContinueOptionOnTitleScreen() ? 1 : 0;
 
 	if (state.levels.length === 0) {
+		//if body has light-theme, set fgcolor to black, bgcolor to white
+		if (document.body.classList.contains('light-theme')) {
+			state.fgcolor = '#000000';
+			state.bgcolor = '#FFFFFF';
+		} else {
+			state.fgcolor = '#FFFFFF';
+			state.bgcolor = '#000000';
+		}
 		titleImage = intro_template;
 		return;
 	}

@@ -43,7 +43,8 @@ HTML, BODY
 	right: 0px;
 	height: 30px;
 	top: 0px;
-	background-color: #444444;
+	color:light-dark(rgb(120, 85, 85),black);
+	background-color: light-dark(rgb(191, 218, 255),#444444);
 	overflow: hidden;
     overflow-x: scroll;
     white-space: nowrap;
@@ -61,12 +62,12 @@ HTML, BODY
 	height: 20px;
 
 	padding-top:1px;
-	background-color:#444444;
+	background-color:light-dark(rgb(191, 218, 255),#444444);
 }
 .lowerarea
 {
-	color: #808080;
-	background-color: #0F192A;
+	color: light-dark(black,#808080);
+	background-color: light-dark(#f4f4f4,#0F192A);
 	position: absolute;
 	top: 21px;
 	bottom: 0px;
@@ -79,7 +80,7 @@ HTML, BODY
 	position: absolute;
 	top: 30px;
 	left: 50%;
-	background-color:#555555;
+	background-color:light-dark(#999999,#555555);
 	height: 100%;
 	float: left;
 	width: 3px;
@@ -87,7 +88,7 @@ HTML, BODY
 }
 #horizontaldragbar {
 	position: absolute;
-	background-color:#555555;
+	background-color:light-dark(#999999,#555555);
 	top: 50%;
 	left: 50%;
 	right: 0;

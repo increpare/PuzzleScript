@@ -10,7 +10,12 @@
 }*/
 
 
-
+#uppertoolbar img {
+	/*scale down to fit vertically*/
+	height: 15px;
+	/*center vertically*/
+	vertical-align: middle;
+}
 #uppertoolbar {
 	image-rendering: -moz-crisp-edges;
 	image-rendering: -webkit-crisp-edges;

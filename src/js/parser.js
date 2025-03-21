@@ -933,7 +933,7 @@ var codeMirrorFn = function() {
                         }
                         stream.match(/[\p{Z}\s]*/u, true);
                         state.tokenIndex++;
-                        resultToken = 'ASSSIGNMENT';
+                        resultToken = 'ASSIGNMENT';
                     } else if (state.tokenIndex >= 3 && ((state.tokenIndex % 2) === 1)) {
                         //matches AND/OR
                         match_name = stream.match(reg_name, true);

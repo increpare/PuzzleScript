@@ -23,6 +23,26 @@
 }
 
 
+.light-theme .lowertoolbar  img {
+		-webkit-filter: invert(1);
+   		filter: invert(1);
+	}
+
+.light-theme #uppertoolbar img {
+		-webkit-filter: invert(1);
+   		filter: invert(1);
+	}
+
+.dark-theme	.lowertoolbar  img {
+		-webkit-filter: none;
+   		filter: none;	
+	}
+
+.dark-theme	#uppertoolbar img {
+		-webkit-filter: none;
+   		filter: none;
+	}
+
 .lowertoolbar  #clickMe{
 	padding:0px;
 	margin:0px;

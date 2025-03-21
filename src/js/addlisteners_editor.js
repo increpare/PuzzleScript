@@ -23,6 +23,9 @@ shareClickLink.addEventListener("click", shareClick, false);
 var levelEditorClickLink = document.getElementById("levelEditorClickLink");
 levelEditorClickLink.addEventListener("click", levelEditorClick_Fn, false);
 
+var toggleThemeClickLinks = document.getElementById("toggleThemeClickLinks");
+toggleThemeClickLinks.addEventListener("click", toggleThemeClick, false);
+
 var exportClickLink = document.getElementById("exportClickLink");
 exportClickLink.addEventListener("click", exportClick, false);
 
