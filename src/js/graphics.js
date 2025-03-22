@@ -322,8 +322,8 @@ function redraw() {
         ctx.fillStyle = state.bgcolor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        for (var i = 0; i < titleWidth; i++) {
-            for (var j = 0; j < titleHeight; j++) {
+        for (var i = 0; i < TERMINAL_WIDTH; i++) {
+            for (var j = 0; j < TERMINAL_HEIGHT; j++) {
                 var ch = titleImage[j].charAt(i);
                 if (ch in textImages) {
                     var sprite = textImages[ch];
@@ -593,8 +593,8 @@ function canvasResize(displaylevel) {
 	}
 
     if (textMode) {
-        screenwidth=titleWidth;
-        screenheight=titleHeight;
+        screenwidth=TERMINAL_WIDTH;
+        screenheight=TERMINAL_HEIGHT;
     }
     
     cellwidth = canvas.width / screenwidth;

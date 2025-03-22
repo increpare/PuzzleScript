@@ -48,102 +48,45 @@ const messagecontainer_template = [
 	".................................."
 ];
 
-const titletemplate_firstgo = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
+const blank_row = "..................................";
+
+const titletemplate_menu_startgame = [
+	"............start game............",
 	"..........#.start game.#..........",
-	"..................................",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
+	"-----------.start game.-----------"
+]
 
-const titletemplate_select0 = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
+const titletemplate_menu_newgame = [
+	".............new game.............",
 	"...........#.new game.#...........",
-	"..................................",
-	".............continue.............",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
-
-const titletemplate_select1 = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	".............new game.............",
-	"..................................",
-	"...........#.continue.#...........",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
-
-
-const titletemplate_firstgo_selected = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"-----------.start game.-----------",
-	"..................................",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
-
-const titletemplate_select0_selected = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
 	"------------.new game.------------",
-	"..................................",
-	".............continue.............",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	".................................."];
 
-const titletemplate_select1_selected = [
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	"..................................",
-	".............new game.............",
-	"..................................",
+]
+
+const titletemplate_menu_continue = [
+	".............continue.............",
+	"...........#.continue.#...........",
 	"------------.continue.------------",
-	"..................................",
-	".arrow keys to move...............",
-	".X to action......................",
-	".Z to undo, R to restart..........",
-	"................................."];
+]
+
+const titletemplate_controls = {
+	arrows:
+		".arrow keys to move...............",
+	action:
+		".X to action......................",
+	undorestart:
+		".Z to undo, R to restart..........",
+	undo: 
+		".Z to undo........................",
+	restart: 
+		".R to restart.....................",
+};
 
 const loading_line = "------------ loading  ------------";
 
 let titleImage = [];
-const titleWidth = titletemplate_select1[0].length;
-const titleHeight = titletemplate_select1.length;
+const TERMINAL_WIDTH = intro_template[0].length;
+const TERMINAL_HEIGHT = intro_template.length;
 let titleScreen = true;
 let titleMode = 0;//1 means there are options
 let titleSelection = 0;
@@ -163,9 +106,31 @@ function unloadGame() {
 	redraw();
 }
 
-function generateTitleScreen() {
-	titleMode = showContinueOptionOnTitleScreen() ? 1 : 0;
 
+function align_centre(str, width) {
+	if (str.length>=width){
+		return str;
+	}
+	var free_space = width - str.length;
+	var left_space = Math.floor(free_space / 2);
+	var right_space = free_space - left_space;
+	return '.'.repeat(left_space) + str + '.'.repeat(right_space);
+}
+
+function align_right(str,width) {
+	if (str.length>=width){
+		return str;
+	}
+	//first, if possible, add single space to right
+	if (str.length<width-1){
+		str = str + '.';
+	}
+	return str.padStart(width,'.');
+}
+
+function generateTitleScreen() {	
+	titleMode = showContinueOptionOnTitleScreen() ? 1 : 0;
+	
 	if (state.levels.length === 0) {
 		//if body has light-theme, set fgcolor to black, bgcolor to white
 		if (document.body.classList.contains('light-theme')) {
@@ -184,48 +149,167 @@ function generateTitleScreen() {
 		title = state.metadata.title;
 	}
 
-	let selection_row;
-	if (titleMode === 0) {
-		if (titleSelected) {
-			titleImage = titletemplate_firstgo_selected.slice();		
-			selection_row = 6;
+	let title_lines = wordwrap(expandCJKCharacters(title), TERMINAL_WIDTH);
+	title_lines = title_lines.map(l => align_centre(l,TERMINAL_WIDTH));
+	var author_lines = [];
+	if (state.metadata.author !== undefined) {
+		author_lines = wordwrap(expandCJKCharacters("by " + state.metadata.author), TERMINAL_WIDTH);
+		author_lines = author_lines.map(l => align_right(l,TERMINAL_WIDTH));
+	}
+	
+
+	var layout_rows = {
+		header: null,
+		menu_options: [],
+		controls: [titletemplate_controls.arrows],
+	}	
+
+	if (titleMode===0){
+		if (titleSelected){
+			layout_rows.menu_options.push(blank_row);
+			layout_rows.menu_options.push(titletemplate_menu_startgame[2]);
+			layout_rows.menu_options.push(blank_row);
 		} else {
-			titleImage = titletemplate_firstgo.slice();
+			layout_rows.menu_options.push(blank_row);
+			layout_rows.menu_options.push(titletemplate_menu_startgame[1]);
+			layout_rows.menu_options.push(blank_row);
 		}
 	} else {
-		if (titleSelection === 0) {
-			if (titleSelected) {
-				titleImage = titletemplate_select0_selected.slice();				
-				selection_row = 5;
-			} else {
-				titleImage = titletemplate_select0.slice();
-			}
+		if (titleSelection===0){
+			layout_rows.menu_options.push(titletemplate_menu_newgame[titleSelected?2:1]);
+			layout_rows.menu_options.push(blank_row);
+			layout_rows.menu_options.push(titletemplate_menu_continue[0]);
 		} else {
-			if (titleSelected) {
-				titleImage = titletemplate_select1_selected.slice();
-				selection_row = 7;
-			} else {
-				titleImage = titletemplate_select1.slice();
-			}
+			layout_rows.menu_options.push(titletemplate_menu_newgame[0]);
+			layout_rows.menu_options.push(blank_row);
+			layout_rows.menu_options.push(titletemplate_menu_continue[titleSelected?2:1]);
 		}
 	}
 
-	let noAction = 'noaction' in state.metadata;
-	let noUndo = 'noundo' in state.metadata;
-	let noRestart = 'norestart' in state.metadata;
-	if (noUndo && noRestart) {
-		titleImage[11] = "..............................................";
-	} else if (noUndo) {
-		titleImage[11] = ".......R to restart...........................";
-	} else if (noRestart) {
-		titleImage[11] = ".Z to undo.....................";
+	const has_action = !('noaction' in state.metadata);
+	const has_undo = !('noundo' in state.metadata);
+	const has_restart = !('norestart' in state.metadata);
+
+	let extra_header_rows = 0;
+	if (has_action){
+		layout_rows.controls.push(titletemplate_controls.action);
+	} else {
+		extra_header_rows++;
 	}
-	if (noAction) {
-		titleImage[10] = ".......X to select............................";
+	if (has_undo && has_restart){
+		layout_rows.controls.push(titletemplate_controls.undorestart);
 	}
-	for (let i = 0; i < titleImage.length; i++) {
-		titleImage[i] = titleImage[i].replace(/\./g, ' ');
+	else if (has_restart){
+		layout_rows.controls.push(titletemplate_controls.restart);
+	} else if (has_undo){
+		layout_rows.controls.push(titletemplate_controls.undo);
+	} else {
+		extra_header_rows++;
 	}
+
+	if (extra_header_rows>1){
+		extra_header_rows--;
+		layout_rows.controls.push(blank_row);
+	}
+	var header_size = 5 + extra_header_rows;
+	//I have five rows to allocate to title + author
+	let bs=0;
+	let t_len = title_lines.length;
+	let bm=0;
+	let a_len = author_lines.length;
+	let be=0;
+
+	if (bs+t_len+bm+a_len+be<header_size){
+		be++;
+	}
+	if (bs+t_len+bm+a_len+be<header_size){
+		bm++;
+	}
+	if (bs+t_len+bm+a_len+be<header_size){
+		bs++;
+	}
+
+	// if we've removed input options, we
+	// allocate space above and below
+	if (bs+t_len+bm+a_len+be<header_size){
+		bs++;
+	}
+	
+	//if they're too long, need to trim
+	if (bs+t_len+bm+a_len+be>header_size){
+		let title_trimmed=false;
+		let author_trimmed=false;
+		while (bs+t_len+bm+a_len+be>header_size){
+			if (author_lines.length>1){
+				author_lines.pop();
+				author_trimmed=true;
+				a_len--;
+			} else if (title_lines.length>1){
+				title_lines.pop();
+				title_trimmed=true;
+				t_len--;
+			}
+		}
+		if (title_trimmed){
+			logWarning("Game title is too long to fit on screen, truncating to fit.", state.metadata_lines.title, true);
+		}
+		if (author_trimmed){
+			logWarning("Game author is too long to fit on screen, truncating to fit.", state.metadata_lines.author, true);
+		}
+	}
+
+	var header = [];
+	for (let i=0;i<bs;i++){
+		header.push(blank_row);
+	}
+	for (let i=0;i<t_len;i++){
+		header.push(title_lines[i]);
+	}
+	for (let i=0;i<bm;i++){
+		header.push(blank_row);
+	}
+	for (let i=0;i<a_len;i++){
+		header.push(author_lines[i]);
+	}
+	for (let i=0;i<be;i++){
+		header.push(blank_row);
+	}
+	
+	layout_rows.header = header;
+
+	let selection_row = 0;
+	/*now to build up the screen */
+	titleImage = [];
+		
+
+	for (let i=0;i<layout_rows.header.length;i++){
+		titleImage.push(layout_rows.header[i]);
+	}
+
+	for (let i=0;i<layout_rows.menu_options.length;i++){
+
+		var cur_row = layout_rows.menu_options[i];
+		if (cur_row.indexOf('---') !== -1){
+			selection_row = titleImage.length;
+		}
+
+		titleImage.push(cur_row);
+
+	}
+
+	titleImage.push(blank_row);
+
+	for (let i=0;i<layout_rows.controls.length;i++){
+		titleImage.push(layout_rows.controls[i]);
+	}
+
+	titleImage.push(blank_row);
+
+	while (titleImage.length<TERMINAL_HEIGHT){
+		titleImage.push(blank_row);
+	}
+	
+	titleImage.push(blank_row);
 
 	let regen_letters = false;
 	if (titleSelected){		
@@ -267,46 +351,11 @@ function generateTitleScreen() {
 		}
 	}
 
-	let width = titleImage[0].length;
-	let titlelines = wordwrap(expandCJKCharacters(title), titleImage[0].length);
-	if (state.metadata.author !== undefined) {
-		if (titlelines.length > 3) {
-			titlelines.splice(3);
-			logWarning("Game title is too long to fit on screen, truncating to three lines.", state.metadata_lines.title, true);
-		}
-	} else {
-		if (titlelines.length > 5) {
-			titlelines.splice(5);
-			logWarning("Game title is too long to fit on screen, truncating to five lines.", state.metadata_lines.title, true);
-		}
 
-	}
-	for (let i = 0; i < titlelines.length; i++) {
-		let titleline = titlelines[i];
-		let titleLength = titleline.length;
-		let lmargin = ((width - titleLength) / 2) | 0;
-		let rmargin = width - titleLength - lmargin;
-		let row = titleImage[1 + i];
-		titleImage[1 + i] = row.slice(0, lmargin) + titleline + row.slice(lmargin + titleline.length);
-	}
-	if (state.metadata.author !== undefined) {
-		let attribution = "by " + expandCJKCharacters(state.metadata.author);
-		let attributionsplit = wordwrap(attribution, titleImage[0].length);
-		if (attributionsplit[0].length < titleImage[0].length) {
-			attributionsplit[0] = " " + attributionsplit[0];
-		}
-		if (attributionsplit.length > 3) {
-			attributionsplit.splice(3);
-			logWarning("Author list too long to fit on screen, truncating to three lines.", state.metadata_lines.author, true);
-		}
-		for (let i = 0; i < attributionsplit.length; i++) {
-			let line = attributionsplit[i] + " ";
-			if (line.length > width) {
-				line = line.slice(0, width);
-			}
-			let row = titleImage[3 + i];
-			titleImage[3 + i] = row.slice(0, width - line.length) + line;
-		}
+	
+
+	for (let i=0;i<titleImage.length;i++){
+		titleImage[i] = titleImage[i].replace(/\./g, ' ');
 	}
 
 	if (regen_letters){
@@ -758,7 +807,9 @@ function setGameState(_state, command, randomseed) {
 			}
 		case "rebuild":
 			{
-				//do nothing
+				if (titleScreen) {
+					generateTitleScreen();
+				}
 				break;
 			}
 		case "loadFirstNonMessageLevel": {
