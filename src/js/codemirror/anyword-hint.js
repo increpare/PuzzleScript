@@ -385,7 +385,7 @@
                                     var first_half_end = lineToCursor.lastIndexOf("]");
                                     var excerpt = lineToCursor.substring(first_half_start,first_half_end+1);
                                     //we should strip all substrings of the form "no XYZ" (case insensitive), removing both the "no" and the word that follows it
-                                    var no_words = excerpt.match(/no\s+[^\s]+\s*/gi);
+                                    var no_words = excerpt.match(/\bno\s+[^\s]+\s*/gi);
                                     if (no_words){
                                         for (var i=0;i<no_words.length;i++){
                                             var no_word = no_words[i];
@@ -393,7 +393,15 @@
                                             excerpt = excerpt.replace(no_word, "");
                                         }
                                     }
-                                    
+                                    //if we have 'stationary X' on the lhs, we can remove stationary from the rhs
+                                    var stationary_words = excerpt.match(/\bstationary\s+/gi);
+                                    if (stationary_words){
+                                        for (var i=0;i<stationary_words.length;i++){
+                                            var stationary_word = stationary_words[i];
+                                            //repace the whole kaboodle with an empty string
+                                            excerpt = excerpt.replace(stationary_word, "");
+                                        }
+                                    }
                                     //stripped excerpt - strip everything except for []|.
                                     var stripped_excerpt = excerpt.replace(/[^\[\]\.\|]/g, " ");
                                     //in both excerpt and stripped excerpt, reduce all whitespace to a single space
