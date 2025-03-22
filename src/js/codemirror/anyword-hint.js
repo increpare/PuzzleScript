@@ -125,6 +125,44 @@
             }
         }
 
+        //rotates clockwise 90 degrees n times
+        function rotate_2d_array(array,amount){
+            amount = amount %4;
+            switch(amount){                    
+                case 0:{
+                    return array;
+                }
+                case 1:{
+                    let result = [];
+                    for (let i=0;i<array.length;i++) {
+                        let new_row = "";
+                        for (let j=0;j<array[i].length;j++) {
+                            new_row+=array[j][i];
+                        }
+                        result.push(new_row);
+                    }
+                    return result;
+                }
+                case 2:{
+                    //reverse both array and all the strings it contains
+                    let result = array.reverse().map(row => row.split('').reverse().join(''));
+                    return result;
+                }
+                case 3:{
+                    //rotate 3 times
+                    let result = [];
+                    for (let i=0;i<array.length;i++) {
+                        let new_row = "";
+                        for (let j=0;j<array[i].length;j++) {
+                            new_row+=array[array.length-1-j][array.length-1-i];
+                        }
+                        result.push(new_row);
+                    }
+                    return result;
+                }
+            }
+        }
+
         CodeMirror.registerHelper("hint", "anyword", function(editor, options) {
 
             var word = options && options.word || WORD;
@@ -221,14 +259,24 @@
                                     const further_endings = pairings[i][1];
                                     const previous_object = state.objects[max_line_number_name_lowercase];
 
-                                    for (var j=0;j<further_endings.length;j++){
+                                    //generate rotations of previous_object
+                                    const rotations = [ 
+                                        //DOWN
+                                        rotate_2d_array(previous_object.spritematrix,2),
+                                        //LEFT
+                                        rotate_2d_array(previous_object.spritematrix,3),
+                                        //RIGHT
+                                        rotate_2d_array(previous_object.spritematrix,1),
+                                    ];
+
+                                    for (let j=0;j<further_endings.length;j++){
                                         const pairing = further_endings[j];
                                         to_suggest += stem+pairing+"\n";
                                         //print colros
                                         to_suggest += previous_object.colors.join(" ")+"\n";
 
                                         if (previous_object.spritematrix.length>0){
-                                            to_suggest += previous_object.spritematrix.join("\n");
+                                            to_suggest += rotations[j].join("\n");
                                             to_suggest += "\n";
                                         } 
                                         to_suggest += "\n";
