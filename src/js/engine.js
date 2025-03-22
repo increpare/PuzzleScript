@@ -251,10 +251,10 @@ function generateTitleScreen() {
 			}
 		}
 		if (title_trimmed){
-			logWarning("Game title is too long to fit on screen, truncating to fit.", state.metadata_lines.title, true);
+			logWarning("Game title is too long to fit on screen; truncating to fit.", state.metadata_lines.title, true);
 		}
 		if (author_trimmed){
-			logWarning("Game author is too long to fit on screen, truncating to fit.", state.metadata_lines.author, true);
+			logWarning("Author name is too long to fit on screen; truncating to fit.", state.metadata_lines.author, true);
 		}
 	}
 
