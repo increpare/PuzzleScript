@@ -5,7 +5,7 @@ OAUTH_CLIENT_ID = "211570277eb588cddf44";
 
 function github_authURL() {
 	// Generates 32 letters of random data, like "liVsr/e+luK9tC02fUob75zEKaL4VpQn".
-	var randomState = window.btoa(Array.prototype.map.call(
+	let randomState = window.btoa(Array.prototype.map.call(
 		window.crypto.getRandomValues(new Uint8Array(24)),
 		function(x) { return String.fromCharCode(x); }).join(""));
 
@@ -21,14 +21,14 @@ function github_signOut(){
 }
 
 function github_isSignedIn() {
-	var token = storage_get("oauth_access_token");
+	let token = storage_get("oauth_access_token");
 	return typeof token === "string";
 }
 
 function github_load(id, done) { 
-	var githubURL = "https://api.github.com/gists/"+id;
+	let githubURL = "https://api.github.com/gists/"+id;
 
-	var githubHTTPClient = new XMLHttpRequest();
+	let githubHTTPClient = new XMLHttpRequest();
 	githubHTTPClient.open("GET", githubURL);
 	githubHTTPClient.onreadystatechange = function() {
 		if (githubHTTPClient.readyState!=4) {
@@ -38,12 +38,12 @@ function github_load(id, done) {
 			return;
 		}
 
-		var limit = window.parseInt(githubHTTPClient.getResponseHeader("x-ratelimit-limit"));
-		var used = window.parseInt(githubHTTPClient.getResponseHeader("x-ratelimit-used"));
-		var reset = new Date(1000 * window.parseInt(githubHTTPClient.getResponseHeader("x-ratelimit-reset")));
+		let limit = window.parseInt(githubHTTPClient.getResponseHeader("x-ratelimit-limit"));
+		let used = window.parseInt(githubHTTPClient.getResponseHeader("x-ratelimit-used"));
+		let reset = new Date(1000 * window.parseInt(githubHTTPClient.getResponseHeader("x-ratelimit-reset")));
 		console.log("Rate limit used " + used + "/" + limit + " (resets " + reset.toISOString() + ")");
 
-		var result = JSON.parse(githubHTTPClient.responseText);
+		let result = JSON.parse(githubHTTPClient.responseText);
 		if (githubHTTPClient.status===403) {
 			if (!github_isSignedIn() && (result.message.indexOf("rate limit") !== -1)) {
 				done(null, "Exceeded GitHub rate limits. Try signing in from the editor.");
@@ -58,14 +58,14 @@ function github_load(id, done) {
 		} else if (githubHTTPClient.status!==200 && githubHTTPClient.status!==201) {
 			done(null, "HTTP Error "+ githubHTTPClient.status + " - " + githubHTTPClient.statusText);
 		} else {
-			var result = JSON.parse(githubHTTPClient.responseText);
-			var code=result["files"]["script.txt"]["content"];
+			let result = JSON.parse(githubHTTPClient.responseText);
+			let code=result["files"]["script.txt"]["content"];
 			done(code, null);
 		}
 	}
 
 	if (github_isSignedIn()) {
-		var oauthAccessToken = storage_get("oauth_access_token");
+		let oauthAccessToken = storage_get("oauth_access_token");
 		githubHTTPClient.setRequestHeader("Authorization", "Token "+oauthAccessToken);
 	}
 	githubHTTPClient.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -73,13 +73,13 @@ function github_load(id, done) {
 }
 
 function github_save(title, code, done) {
-	var oauthAccessToken = storage_get("oauth_access_token");
+	let oauthAccessToken = storage_get("oauth_access_token");
 	if (typeof oauthAccessToken !== "string") {
 		printUnauthorized();
 		return;
 	}
 
-	var gistToCreate = {
+	let gistToCreate = {
 		"description" : title,
 		"public" : true,
 		"files": {
@@ -92,14 +92,14 @@ function github_save(title, code, done) {
 		}
 	};
 
-	var githubURL = "https://api.github.com/gists";
-	var githubHTTPClient = new XMLHttpRequest();
+	let githubURL = "https://api.github.com/gists";
+	let githubHTTPClient = new XMLHttpRequest();
 	githubHTTPClient.open("POST", githubURL);
 	githubHTTPClient.onreadystatechange = function() {		
 		if(githubHTTPClient.readyState!=4) {
 			return;
 		}		
-		var result = JSON.parse(githubHTTPClient.responseText);
+		let result = JSON.parse(githubHTTPClient.responseText);
 		if (githubHTTPClient.status===403) {
 			done(null, result.message);
 		} else if (githubHTTPClient.status===401) {
@@ -116,6 +116,6 @@ function github_save(title, code, done) {
 	}
 	githubHTTPClient.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	githubHTTPClient.setRequestHeader("Authorization", "Token "+oauthAccessToken);
-	var stringifiedGist = JSON.stringify(gistToCreate);
+	let stringifiedGist = JSON.stringify(gistToCreate);
 	githubHTTPClient.send(stringifiedGist);
 }

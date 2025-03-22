@@ -804,7 +804,7 @@ function checkKey(e, justPressed) {
 			}
 		}
 	}
-	
+
 	return prevent(e);
 }
 
@@ -816,10 +816,10 @@ function update() {
 	input_throttle_timer += deltatime;
 	if (quittingTitleScreen) {
 		const thisFrame = get_title_animation_frame();
-		if ((timer / 1000 > 0.3)&&WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length===0) {
+		if ((timer / 1000 > 0.3) && WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length === 0) {
 			quittingTitleScreen = false;
 			nextLevel();
-		} else if (thisFrame > lastframe){
+		} else if (thisFrame > lastframe) {
 			generateTitleScreen();
 			redraw();
 		}

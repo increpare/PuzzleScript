@@ -111,9 +111,9 @@ function align_centre(str, width) {
 	if (str.length>=width){
 		return str;
 	}
-	var free_space = width - str.length;
-	var left_space = Math.floor(free_space / 2);
-	var right_space = free_space - left_space;
+	let free_space = width - str.length;
+	let left_space = Math.floor(free_space / 2);
+	let right_space = free_space - left_space;
 	return '.'.repeat(left_space) + str + '.'.repeat(right_space);
 }
 
@@ -151,14 +151,14 @@ function generateTitleScreen() {
 
 	let title_lines = wordwrap(expandCJKCharacters(title), TERMINAL_WIDTH);
 	title_lines = title_lines.map(l => align_centre(l,TERMINAL_WIDTH));
-	var author_lines = [];
+	let author_lines = [];
 	if (state.metadata.author !== undefined) {
 		author_lines = wordwrap(expandCJKCharacters("by " + state.metadata.author), TERMINAL_WIDTH);
 		author_lines = author_lines.map(l => align_right(l,TERMINAL_WIDTH));
 	}
 	
 
-	var layout_rows = {
+	let layout_rows = {
 		header: null,
 		menu_options: [],
 		controls: [titletemplate_controls.arrows],
@@ -211,7 +211,7 @@ function generateTitleScreen() {
 		extra_header_rows--;
 		layout_rows.controls.push(blank_row);
 	}
-	var header_size = 5 + extra_header_rows;
+	let header_size = 5 + extra_header_rows;
 	//I have five rows to allocate to title + author
 	let bs=0;
 	let t_len = title_lines.length;
@@ -258,7 +258,7 @@ function generateTitleScreen() {
 		}
 	}
 
-	var header = [];
+	let header = [];
 	for (let i=0;i<bs;i++){
 		header.push(blank_row);
 	}
@@ -288,7 +288,7 @@ function generateTitleScreen() {
 
 	for (let i=0;i<layout_rows.menu_options.length;i++){
 
-		var cur_row = layout_rows.menu_options[i];
+		let cur_row = layout_rows.menu_options[i];
 		if (cur_row.indexOf('---') !== -1){
 			selection_row = titleImage.length;
 		}
@@ -313,7 +313,7 @@ function generateTitleScreen() {
 
 	let regen_letters = false;
 	if (titleSelected){		
-		var frame = get_title_animation_frame()+2;
+		let frame = get_title_animation_frame()+2;
 		// frame = frame % 12; // loops not pingpong
 		//want it to pingpong, not loop
 		const loading_text = frame > 12;
@@ -750,8 +750,8 @@ function setGameState(_state, command, randomseed) {
 	}
 	//set sprites
 	sprites = [];
-	var keys = Object.keys(state.objects);
-	var keys_l = keys.length;
+	let keys = Object.keys(state.objects);
+	let keys_l = keys.length;
 	for (let k_i = 0; k_i < keys_l; k_i++) {
 		const k = keys[k_i];
 		let object = state.objects[k];
@@ -1230,7 +1230,7 @@ function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 	${UNROLL("cellMask &= entityMask", OBJECT_SIZE)}
     let layers = getLayersOfMask(cellMask);
 
-	var movementMask=_movementVecs[_movementVecIndex];
+	let movementMask=_movementVecs[_movementVecIndex];
 	_movementVecIndex=(_movementVecIndex+1)%_movementVecs.length;
 	${LEVEL_GET_MOVEMENTS_INTO( "positionIndex", "movementMask", MOVEMENT_SIZE)}
 
@@ -1380,7 +1380,7 @@ function repositionEntitiesOnLayer(positionIndex, layer, dirMask) {
 	return true;
 }
 
-var CACHE_REPOSITIONENTITIESATCELL = {}
+let CACHE_REPOSITIONENTITIESATCELL = {}
 function generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE) {
 	let fn = `'use strict';
     const movementMask = level.getMovements(positionIndex);
@@ -1640,7 +1640,7 @@ function CellReplacement(row) {
 };
 
 CellPattern.prototype.replace = function (level, rule, currentIndex) {
-	var fn = this.generateReplaceFunction(
+	let fn = this.generateReplaceFunction(
 			STRIDE_OBJ,
 			STRIDE_MOV,
 			rule
@@ -1689,7 +1689,7 @@ CellPattern.prototype.generateMatchString = function () {
 }
 
 let CACHE_CELLPATTERN_MATCHFUNCTION = new Map();
-var _generateMatchFunction_key_array = new Int32Array(0);
+let _generateMatchFunction_key_array = new Int32Array(0);
 CellPattern.prototype.generateMatchFunction = function() {
     // Calculate total size needed for the key array
     const keyLength = STRIDE_OBJ * 2 + STRIDE_MOV * 2 + 
@@ -1716,7 +1716,7 @@ CellPattern.prototype.generateMatchFunction = function() {
     }
     keyArray[keyIndex++] = STRIDE_OBJ;
     keyArray[keyIndex++] = STRIDE_MOV;
-	var str_key = keyArray.toString();
+	let str_key = keyArray.toString();
 
     if (CACHE_CELLPATTERN_MATCHFUNCTION.has(str_key)) {
         return CACHE_CELLPATTERN_MATCHFUNCTION.get(str_key);
@@ -1784,10 +1784,10 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 	
 	const replace_randomEntityMask_zero = this.replacement.randomEntityMask.iszero()
 	const replace_randomDirMask_zero = this.replacement.randomDirMask.iszero()
-	var deterministic = replace_randomEntityMask_zero && replace_randomDirMask_zero;
+	let deterministic = replace_randomEntityMask_zero && replace_randomDirMask_zero;
 
 	let fn = `	
-		var replace = this.replacement;
+		let replace = this.replacement;
 
 		if (replace === null) {
 			return false;
@@ -1857,8 +1857,8 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		`)}
 
 
-		var curRigidGroupIndexMask;
-		var curRigidMovementAppliedMask;
+		let curRigidGroupIndexMask;
+		let curRigidMovementAppliedMask;
 		let rigidchange=false;		
 		${IF_LAZY(rule.rigid,()=>`
 			let rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1;
@@ -2217,7 +2217,7 @@ function ENDELSE(condition) {
 }
 
 function FOR(start, end, fn) {
-	var result = "";
+	let result = "";
 	for (let i = start; i < end; i++) {
 		result += fn(i);
 	}

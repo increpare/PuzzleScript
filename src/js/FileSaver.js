@@ -1,8 +1,8 @@
 function saveAs(text, type, filename) {
-    var element = document.createElement('a');
+    let element = document.createElement('a');
     //encode text as blob
-    var blob = new Blob([text], {type: type});
-    var url = URL.createObjectURL(blob);
+    let blob = new Blob([text], {type: type});
+    let url = URL.createObjectURL(blob);
     element.setAttribute('href', url);
     element.setAttribute('download', filename);
 

@@ -1,25 +1,25 @@
-var canSetHTMLColors=true;
-var canDump=false;
-var canOpenEditor=false;
-var IDE=false;
+let canSetHTMLColors=true;
+let canDump=false;
+let canOpenEditor=false;
+let IDE=false;
 const diffToVisualize=null;
 
 function stripTags(str) {
-	var div = document.createElement("div");
+	let div = document.createElement("div");
 	div.innerHTML = str;
-	var result = div.textContent || div.innerText || "";
+	let result = div.textContent || div.innerText || "";
 	return result;
 }
 
 function consolePrint(linenumber,inspect_ID){
-/*	var errorText = document.getElementById("errormessage");
+/*	let errorText = document.getElementById("errormessage");
 	
 	str=stripTags(str);
 	errorText.innerHTML+=str+"<br>";*/
 }
 
 function consolePrintFromRule(str,rule,urgent){
-/*	var errorText = document.getElementById("errormessage");
+/*	let errorText = document.getElementById("errormessage");
 	
 	str=stripTags(str);
 	errorText.innerHTML+=str+"<br>";*/
@@ -32,13 +32,13 @@ function consoleCacheDump(str){
 function UnitTestingThrow(error){}
 
 function consoleError(str,lineNumber){
-	var errorText = document.getElementById("errormessage");
+	let errorText = document.getElementById("errormessage");
 	str=stripTags(str);
 	errorText.innerHTML+=str+"<br>";
 }
 
 function logErrorNoLine(str){
-	var errorText = document.getElementById("errormessage");
+	let errorText = document.getElementById("errormessage");
 	str=stripTags(str);
 	errorText.innerHTML+=str+"<br>";
 }

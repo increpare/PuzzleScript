@@ -4,12 +4,12 @@ function runClick() {
 }
 
 function dateToReadable(title,time) {
-	var year = time.getFullYear();
-	var month = time.getMonth()+1;
-	var date1 = time.getDate();
-	var hour = time.getHours();
-	var minutes = time.getMinutes();
-	var seconds = time.getSeconds();
+	let year = time.getFullYear();
+	let month = time.getMonth()+1;
+	let date1 = time.getDate();
+	let hour = time.getHours();
+	let minutes = time.getMinutes();
+	let seconds = time.getSeconds();
 
 	if (month < 10) {
     	month = "0"+month;
@@ -27,7 +27,7 @@ function dateToReadable(title,time) {
 		seconds = "0"+seconds;
 	}
 
-	var result = hour+":"+minutes+" "+year + "-" + month+"-"+date1+" "+title;
+	let result = hour+":"+minutes+" "+year + "-" + month+"-"+date1+" "+title;
 	return result;
 }
 
@@ -38,20 +38,20 @@ function saveClick() {
 	} catch (error) {
 		console.log(error);
 	}
-	var title = "Untitled";
+	let title = "Untitled";
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title;
 	}
-	var text=editor.getValue();
-	var saveDat = {
+	let text=editor.getValue();
+	let saveDat = {
 		title:title,
 		text:text,
 		date: new Date()
 	}
 
-	var curSaveArray = [];
+	let curSaveArray = [];
 	if (storage_has('saves')) {
-		var curSaveArray = JSON.parse(storage_get('saves'));
+		let curSaveArray = JSON.parse(storage_get('saves'));
 	}
 
 	if (curSaveArray.length>20) {
@@ -60,12 +60,12 @@ function saveClick() {
 	curSaveArray.push(saveDat);
 
 
-	var savesDatStr = JSON.stringify(curSaveArray);
+	let savesDatStr = JSON.stringify(curSaveArray);
 	storage_set('saves',savesDatStr);
 
 	repopulateSaveDropdown(curSaveArray);
 
-	var loadDropdown = document.getElementById('loadDropDown');
+	let loadDropdown = document.getElementById('loadDropDown');
 	loadDropdown.selectedIndex=0;
 
 	setEditorClean();
@@ -73,9 +73,9 @@ function saveClick() {
 	consolePrint("saved file to local storage",true);
 
 	if (window.location.href.indexOf("?hack")>=0){
-		var currURL= window.location.href; 
-		var afterDomain= currURL.substring(currURL.lastIndexOf('/') + 1);
-		var beforeQueryString= afterDomain.split("?")[0];  
+		let currURL= window.location.href; 
+		let afterDomain= currURL.substring(currURL.lastIndexOf('/') + 1);
+		let beforeQueryString= afterDomain.split("?")[0];  
  
 		window.history.pushState({}, document.title, "./" +beforeQueryString);
 	}
@@ -86,7 +86,7 @@ function saveClick() {
 }
 
 window.addEventListener( "pageshow", function ( event ) {
-	var historyTraversal = event.persisted || 
+	let historyTraversal = event.persisted || 
 						   ( typeof window.performance != "undefined" && 
 								window.performance.navigation.type === 2 );
 	if ( historyTraversal ) {
@@ -107,23 +107,23 @@ function loadDropDownChange() {
  		return;
  	}
 
-	var saveString = storage_get('saves');
+	let saveString = storage_get('saves');
 	if (saveString === null) {
 			consolePrint("Eek, trying to load a file, but there's no local storage found. Eek!",true);
 	} 
 
 	saves = JSON.parse(saveString);
 	
-	for (var i=0;i<saves.length;i++) {
-		var sd = saves[i];
-	    var key = dateToReadable(sd.title,new Date(sd.date));
+	for (let i=0;i<saves.length;i++) {
+		let sd = saves[i];
+	    let key = dateToReadable(sd.title,new Date(sd.date));
 	    if (key==this.value) {
 
-	    	var saveText = sd.text;
+	    	let saveText = sd.text;
 			editor.setValue(saveText);
 			clearConsole();
 			setEditorClean();
-			var loadDropdown = document.getElementById('loadDropDown');
+			let loadDropdown = document.getElementById('loadDropDown');
 			loadDropdown.selectedIndex=0;
 			unloadGame();
 			compile(["restart"]);
@@ -136,7 +136,7 @@ function loadDropDownChange() {
 
 
 function repopulateSaveDropdown(saves) {
-	var loadDropdown = document.getElementById('loadDropDown');
+	let loadDropdown = document.getElementById('loadDropDown');
 	loadDropdown.options.length = 0;
 
 	if (saves===undefined) {
@@ -151,15 +151,15 @@ function repopulateSaveDropdown(saves) {
 		}
 	}
 
-    var optn = document.createElement("OPTION");
+    let optn = document.createElement("OPTION");
     optn.text = "Load";
     optn.value = "Load";
     loadDropdown.options.add(optn);  
 
-	for (var i=saves.length-1;i>=0;i--) {			
-		var sd = saves[i];
-	    var optn = document.createElement("OPTION");
-	    var key = dateToReadable(sd.title,new Date(sd.date));
+	for (let i=saves.length-1;i>=0;i--) {			
+		let sd = saves[i];
+	    let optn = document.createElement("OPTION");
+	    let key = dateToReadable(sd.title,new Date(sd.date));
 	    optn.text = key;
 	    optn.value = key;
 	    loadDropdown.options.add(optn);  
@@ -168,7 +168,7 @@ function repopulateSaveDropdown(saves) {
 }
 
 repopulateSaveDropdown();
-var loadDropdown = document.getElementById('loadDropDown');
+let loadDropdown = document.getElementById('loadDropDown');
 loadDropdown.selectedIndex=0;
 
 function levelEditorClick_Fn() {
@@ -220,7 +220,7 @@ function toggleThemeClick() {
 
 
 function printUnauthorized(){
-	var authUrl = github_authURL();
+	let authUrl = github_authURL();
 	consolePrint(
 			"<br>" +
 			"PuzzleScript needs permission to share games through GitHub:<br>" +
@@ -236,14 +236,14 @@ function shareClick() {
 	}
 
 	consolePrint("<br>Sending code to github...",true)
-	var title = "Untitled PuzzleScript Script";
+	let title = "Untitled PuzzleScript Script";
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title + " (PuzzleScript Script)";
 	}
 	
 	compile(["rebuild"]);
 
-	var source=editor.getValue();
+	let source=editor.getValue();
 	github_save(title, source, function(id, e) {
 		if (e !== null) {
 			consoleError(e);
@@ -253,9 +253,9 @@ function shareClick() {
 			return;
 		}
 
-		var url = qualifyURL("play.html?p="+id);
-		var editurl = qualifyURL("editor.html?hack="+id);
-		var sourceCodeLink = "Link to source code:<br><a target=\"_blank\"  href=\""+editurl+"\">"+editurl+"</a>";
+		let url = qualifyURL("play.html?p="+id);
+		let editurl = qualifyURL("editor.html?hack="+id);
+		let sourceCodeLink = "Link to source code:<br><a target=\"_blank\"  href=\""+editurl+"\">"+editurl+"</a>";
 
 		consolePrint('GitHub (<a onclick="githubLogOut();"  href="javascript:void(0);">log out</a>) submission successful.<br>',true);
 		consolePrint('<br>'+sourceCodeLink,true);
@@ -273,7 +273,7 @@ function shareClick() {
 function githubLogOut(){
 	github_signOut();
 
-	var authUrl = github_authURL();
+	let authUrl = github_authURL();
 	consolePrint(
 		"<br>Logged out of Github.<br>" +
 		"<ul>" +
@@ -291,13 +291,13 @@ function post_to_url(path, params, method) {
 
     // The rest of this code assumes you are not using a library.
     // It can be made less wordy if you use one.
-    var form = document.createElement("form");
+    let form = document.createElement("form");
     form.setAttribute("method", method);
     form.setAttribute("action", path);
 
-    for(var key in params) {
+    for(let key in params) {
         if(params.hasOwnProperty(key)) {
-            var hiddenField = document.createElement("input");
+            let hiddenField = document.createElement("input");
             hiddenField.setAttribute("type", "hidden");
             hiddenField.setAttribute("name", key);
             hiddenField.setAttribute("value", params[key]);
@@ -311,11 +311,11 @@ function post_to_url(path, params, method) {
 }
 
 function exportClick() {
-	var sourceCode = editor.getValue();
+	let sourceCode = editor.getValue();
 
 	compile("restart");
 
-	var sourceString = JSON.stringify(sourceCode);
+	let sourceString = JSON.stringify(sourceCode);
 	
 	buildStandalone(sourceString);
 }

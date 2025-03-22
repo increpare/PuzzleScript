@@ -3,7 +3,7 @@
     onmousemove="mouseMove(event)" 
     onmouseout="mouseOut()"
 
-var el = document.getElementById("gameCanvas");
+let el = document.getElementById("gameCanvas");
 if (el.addEventListener) {
     el.addEventListener("contextmenu", rightClickCanvas, false);
     el.addEventListener("mousemove", mouseMove, false);

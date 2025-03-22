@@ -1,14 +1,14 @@
 function jumpToLine(i) {
 
-    var code = parent.form1.code;
+    let code = parent.form1.code;
 
-    var editor = code.editorreference;
+    let editor = code.editorreference;
 
     // editor.getLineHandle does not help as it does not return the reference of line.
-    var ll = editor.doc.lastLine();
-    var low=i-1-10;    
-    var high=i-1+10;    
-    var mid=i-1;
+    let ll = editor.doc.lastLine();
+    let low=i-1-10;    
+    let high=i-1+10;    
+    let mid=i-1;
     if (low<0){
     	low=0;
     }
@@ -25,7 +25,7 @@ function jumpToLine(i) {
     editor.setCursor(mid, 0);
 }
 
-var consolecache = [];
+let consolecache = [];
 
 
 function consolePrintFromRule(text,rule,urgent) {
@@ -35,9 +35,9 @@ function consolePrintFromRule(text,rule,urgent) {
 	}
 
 
-	var ruleDirection = dirMaskName[rule.direction];
+	let ruleDirection = dirMaskName[rule.direction];
 
-	var logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');"  href="javascript:void(0);">' + 
+	let logString = '<font color="green">Rule <a onclick="jumpToLine(' + rule.lineNumber + ');"  href="javascript:void(0);">' + 
 			rule.lineNumber + '</a> ' + ruleDirection + " : "  + text + '</font>';
 
 	if (cache_console_messages&&urgent==false) {		
@@ -63,7 +63,7 @@ function consolePrint(text,urgent,linenumber,inspect_ID) {
 }
 
 
-var cache_n = 0;
+let cache_n = 0;
 
 function addToConsole(text) {
 	cache = document.createElement("div");
@@ -71,10 +71,10 @@ function addToConsole(text) {
 	cache.innerHTML = text;
 	cache_n++;
 	
-	var code = document.getElementById('consoletextarea');
+	let code = document.getElementById('consoletextarea');
 	code.appendChild(cache);
 	consolecache=[];
-	var objDiv = document.getElementById('lowerarea');
+	let objDiv = document.getElementById('lowerarea');
 	objDiv.scrollTop = objDiv.scrollHeight;
 }
 
@@ -84,12 +84,12 @@ function consoleCacheDump() {
 	}
 	
 	//pass 1 : aggregate identical messages
-	for (var i = 0; i < consolecache.length-1; i++) {
-		var this_row = consolecache[i];
-		var this_row_text=this_row[0];
+	for (let i = 0; i < consolecache.length-1; i++) {
+		let this_row = consolecache[i];
+		let this_row_text=this_row[0];
 
-		var next_row = consolecache[i+1];
-		var next_row_text=next_row[0];
+		let next_row = consolecache[i+1];
+		let next_row_text=next_row[0];
 
 		if (this_row_text===next_row_text){			
 			consolecache.splice(i,1);
@@ -99,16 +99,16 @@ function consoleCacheDump() {
 		}
 	}
 
-	var batched_messages=[];
-	var current_batch_row=[];
+	let batched_messages=[];
+	let current_batch_row=[];
 	//pass 2 : group by debug visibility
-	for (var i=0;i<consolecache.length;i++){
-		var row = consolecache[i];
+	for (let i=0;i<consolecache.length;i++){
+		let row = consolecache[i];
 
-		var message = row[0];
-		var lineNumber = row[1];
-		var inspector_ID = row[2];
-		var count = row[3];
+		let message = row[0];
+		let lineNumber = row[1];
+		let inspector_ID = row[2];
+		let count = row[3];
 		
 		if (i===0||lineNumber==null){
 			current_batch_row=[lineNumber,inspector_ID,[row]]; 
@@ -116,8 +116,8 @@ function consoleCacheDump() {
 			continue;
 		} 
 
-		var batch_lineNumber = current_batch_row[0];
-		var batch_inspector_ID = current_batch_row[1];
+		let batch_lineNumber = current_batch_row[0];
+		let batch_inspector_ID = current_batch_row[1];
 
 		if (inspector_ID===null && lineNumber==batch_lineNumber){
 			current_batch_row[2].push(row);
@@ -127,26 +127,26 @@ function consoleCacheDump() {
 		}
 	}
 
-	var summarised_message = "<br>";
-	for (var j=0;j<batched_messages.length;j++){
-		var batch_row = batched_messages[j];
-		var batch_lineNumber = batch_row[0];
-		var inspector_ID = batch_row[1];
-		var batch_messages = batch_row[2];
+	let summarised_message = "<br>";
+	for (let j=0;j<batched_messages.length;j++){
+		let batch_row = batched_messages[j];
+		let batch_lineNumber = batch_row[0];
+		let inspector_ID = batch_row[1];
+		let batch_messages = batch_row[2];
 		
 		summarised_message+="<br>"
 
 		if (inspector_ID!= null){
 			summarised_message+=`<span class="hoverpreview" onmouseover="debugPreview(${inspector_ID})" onmouseleave="debugUnpreview()">`;
 		}
-		for (var i = 0; i < batch_messages.length; i++) {
+		for (let i = 0; i < batch_messages.length; i++) {
 
 			if(i>0){
 				summarised_message+=`<br><span class="noeye_indent"></span>`
 			}
-			var curdata = batch_messages[i];
-			var curline = curdata[0];
-			var times_repeated = curdata[3];
+			let curdata = batch_messages[i];
+			let curline = curdata[0];
+			let times_repeated = curdata[3];
 			if (times_repeated>1){
 				curline += ` (x${times_repeated})`;
 			}
@@ -163,13 +163,13 @@ function consoleCacheDump() {
 }
 
 function consoleError(text) {	
-        var errorString = '<span class="errorText">' + text + '</span>';
+        let errorString = '<span class="errorText">' + text + '</span>';
         consolePrint(errorString,true);
 }
 function clearConsole() {
-	var code = document.getElementById('consoletextarea');
+	let code = document.getElementById('consoletextarea');
 	code.innerHTML = '';
-	var objDiv = document.getElementById('lowerarea');
+	let objDiv = document.getElementById('lowerarea');
 	objDiv.scrollTop = objDiv.scrollHeight;
 		
 	//clear up debug stuff.
@@ -178,7 +178,7 @@ function clearConsole() {
 	diffToVisualize=null;
 }
 
-var clearConsoleClick = document.getElementById("clearConsoleClick");
+let clearConsoleClick = document.getElementById("clearConsoleClick");
 clearConsoleClick.addEventListener("click", clearConsole, false);
 
 function UnitTestingThrow(error){}

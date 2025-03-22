@@ -9,68 +9,67 @@ function Level(lineNumber, width, height, layerCount, objects) {
 	this.commandQueueSourceRules = [];
 }
 
-Level.prototype.delta_index = function(direction)
-{
+Level.prototype.delta_index = function (direction) {
 	const [dx, dy] = dirMasksDelta[direction]
-	return dx*this.height + dy
+	return dx * this.height + dy
 }
 
-Level.prototype.clone = function() {
+Level.prototype.clone = function () {
 	let clone = new Level(this.lineNumber, this.width, this.height, this.layerCount, null);
 	clone.objects = new Int32Array(this.objects);
 	return clone;
 }
 
-Level.prototype.getCell = function(index) {
+Level.prototype.getCell = function (index) {
 	return new BitVec(this.objects.subarray(index * STRIDE_OBJ, index * STRIDE_OBJ + STRIDE_OBJ));
 }
 
-Level.prototype.getCellInto = function(index,targetarray) {
-	for (let i=0;i<STRIDE_OBJ;i++) {
-		targetarray.data[i]=this.objects[index*STRIDE_OBJ+i];	
+Level.prototype.getCellInto = function (index, targetarray) {
+	for (let i = 0; i < STRIDE_OBJ; i++) {
+		targetarray.data[i] = this.objects[index * STRIDE_OBJ + i];
 	}
 	return targetarray;
 }
 
-Level.prototype.setCell = function(index, vec) {
+Level.prototype.setCell = function (index, vec) {
 	for (let i = 0; i < vec.data.length; ++i) {
 		this.objects[index * STRIDE_OBJ + i] = vec.data[i];
 	}
 }
 
 let _movementVecs;
-let _movementVecIndex=0;
-Level.prototype.getMovements = function(index) {
-	let _movementsVec=_movementVecs[_movementVecIndex];
-	_movementVecIndex=(_movementVecIndex+1)%_movementVecs.length;
+let _movementVecIndex = 0;
+Level.prototype.getMovements = function (index) {
+	let _movementsVec = _movementVecs[_movementVecIndex];
+	_movementVecIndex = (_movementVecIndex + 1) % _movementVecs.length;
 
-	for (let i=0;i<STRIDE_MOV;i++) {
-		_movementsVec.data[i]= this.movements[index*STRIDE_MOV+i];	
+	for (let i = 0; i < STRIDE_MOV; i++) {
+		_movementsVec.data[i] = this.movements[index * STRIDE_MOV + i];
 	}
 	return _movementsVec;
 }
 
-Level.prototype.getRigids = function(index) {
+Level.prototype.getRigids = function (index) {
 	return this.rigidMovementAppliedMask[index].clone();
 }
 
-Level.prototype.getMovementsInto = function(index,targetarray) {
-	let _movementsVec=targetarray;
+Level.prototype.getMovementsInto = function (index, targetarray) {
+	let _movementsVec = targetarray;
 
-	for (let i=0;i<STRIDE_MOV;i++) {
-		_movementsVec.data[i]=this.movements[index*STRIDE_MOV+i];	
+	for (let i = 0; i < STRIDE_MOV; i++) {
+		_movementsVec.data[i] = this.movements[index * STRIDE_MOV + i];
 	}
 	return _movementsVec;
 }
 
-Level.prototype.setMovements = function(index, vec) {
+Level.prototype.setMovements = function (index, vec) {
 	for (let i = 0; i < vec.data.length; ++i) {
 		this.movements[index * STRIDE_MOV + i] = vec.data[i];
 	}
-		
+
 	//corresponding object stuff in repositionEntitiesOnLayer
-	let colIndex=(index/this.height)|0;
-	let rowIndex=(index%this.height);
+	let colIndex = (index / this.height) | 0;
+	let rowIndex = (index % this.height);
 	level.colCellContents_Movements[colIndex].ior(vec);
 	level.rowCellContents_Movements[rowIndex].ior(vec);
 	level.mapCellContents_Movements.ior(vec);
@@ -94,20 +93,20 @@ function LEVEL_SET_MOVEMENTS(index, vec, array_size) {
 	return result;
 }
 
-Level.prototype.calcBackgroundMask = function(state) {    
-    if (state.backgroundlayer === undefined) {
-        logError("you have to have a background layer");
-    }
+Level.prototype.calcBackgroundMask = function (state) {
+	if (state.backgroundlayer === undefined) {
+		logError("you have to have a background layer");
+	}
 
-    let backgroundMask = state.layerMasks[state.backgroundlayer];
-    for (let i = 0; i < this.n_tiles; i++) {
-        let cell = this.getCell(i);
-        cell.iand(backgroundMask);
-        if (!cell.iszero()) {
-            return cell;
-        }
-    }
-    cell = new BitVec(STRIDE_OBJ);
-    cell.ibitset(state.backgroundid);
-    return cell;
+	let backgroundMask = state.layerMasks[state.backgroundlayer];
+	for (let i = 0; i < this.n_tiles; i++) {
+		let cell = this.getCell(i);
+		cell.iand(backgroundMask);
+		if (!cell.iszero()) {
+			return cell;
+		}
+	}
+	cell = new BitVec(STRIDE_OBJ);
+	cell.ibitset(state.backgroundid);
+	return cell;
 }

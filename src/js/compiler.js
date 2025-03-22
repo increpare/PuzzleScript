@@ -3056,6 +3056,12 @@ function addSpecializedFunctions(state) {
 // }
 
 function compile(command, text, randomseed) {
+
+    //if the editor is opened, we should print the contents
+    if (levelEditorOpened){
+        //print the contents of the level
+        
+    }
     lazy_function_generation_clear_backlog();
 
     forceRegenImages = true;

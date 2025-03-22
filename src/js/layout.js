@@ -1,11 +1,11 @@
-var soundbarwidth = 100;
-var lowerbarheight = document.getElementById("soundbar").clientHeight;
-var upperbarheight = document.getElementById("uppertoolbar").clientHeight;
-var winwidth = window.innerWidth;
-var winheight = window.innerHeight;
-var verticaldragbarWidth = document.getElementById("verticaldragbar").clientWidth;
-var horizontaldragbarHeight = document.getElementById("horizontaldragbar").clientHeight;
-var minimumDimension = 100;
+let soundbarwidth = 100;
+let lowerbarheight = document.getElementById("soundbar").clientHeight;
+let upperbarheight = document.getElementById("uppertoolbar").clientHeight;
+let winwidth = window.innerWidth;
+let winheight = window.innerHeight;
+let verticaldragbarWidth = document.getElementById("verticaldragbar").clientWidth;
+let horizontaldragbarHeight = document.getElementById("horizontaldragbar").clientHeight;
+let minimumDimension = 100;
 
 function resize_widths(verticaldragbarX){
 	document.getElementById("leftpanel").style.width = verticaldragbarX + "px";

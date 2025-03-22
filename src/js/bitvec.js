@@ -101,7 +101,7 @@ function ISHIFTOR(tok, mask, shift) {
 		let low = ${mask} << toshift;
 		${tok}.data[${shift}>>5] |= low;
 		if (toshift) {
-			var high = ${mask} >> (32 - toshift);
+			let high = ${mask} >> (32 - toshift);
 			${tok}.data[(${shift}>>5)+1] |= high;
 		}
 	}`;
@@ -144,7 +144,7 @@ BitVec.prototype.equals = function(other) {
 
 
 function EQUALS(tok, other, array_size) {
-	var result = "(true";
+	let result = "(true";
 	for (let i = 0; i < array_size; i++) {
 		result += `&&(${tok}.data[${i}] === ${other}.data[${i}])`;
 	}
@@ -152,7 +152,7 @@ function EQUALS(tok, other, array_size) {
 }
 
 function EQUALS_TOK_REAL(tok, other) {
-	var result = "(true";
+	let result = "(true";
 	for (let i = 0; i < other.data.length; i++) {
 		result += `&&(${tok}.data[o] === ${other.data[i]})`;
 	}
@@ -160,7 +160,7 @@ function EQUALS_TOK_REAL(tok, other) {
 }
 
 function NOT_EQUALS(tok, other, array_size) {
-	var result = "(false";
+	let result = "(false";
 	for (let i = 0; i < array_size; i++) {
 		result += `||(${tok}.data[${i}] !== ${other}.data[${i}])`;
 	}
@@ -215,7 +215,7 @@ BitVec.prototype.bitsSetInArray = function(arr) {
 
 function BITS_SET_IN_ARRAY(tok, arr, array_size) {
 
-	var result = "(true";
+	let result = "(true";
 	for (let i = 0; i < array_size; i++) {
 		result += `&&((${tok}.data[${i}] & ${arr}[${i}]) === ${tok}.data[${i}])`;
 	}
@@ -223,7 +223,7 @@ function BITS_SET_IN_ARRAY(tok, arr, array_size) {
 }
 
 function NOT_BITS_SET_IN_ARRAY(tok, arr, array_size) {
-	var result = "(false";
+	let result = "(false";
 	for (let i = 0; i < array_size; i++) {
 		result += `||((${tok}.data[${i}] & ${arr}[${i}]) !== ${tok}.data[${i}])`;
 	}
@@ -242,7 +242,7 @@ BitVec.prototype.bitsClearInArray = function(arr) {
 function BITS_CLEAR_IN_ARRAY(tok, arr, array_size) {
 	if (array_size === 0)
 		return "true";
-	var result = "(true";
+	let result = "(true";
 	for (let i = 0; i < array_size; i++) {
 		result += `&&((${tok}.data[${i}] & ${arr}.data[${i}]) === 0)`;
 	}
@@ -262,7 +262,7 @@ function ANY_BITS_IN_COMMON(tok, arr, array_size) {
 	if (array_size === 0) {
 		return "false";
 	}
-	var result = "(false";
+	let result = "(false";
 	for (let i = 0; i < array_size; i++) {
 		result += `||((${tok}.data[${i}] & ${arr}.data[${i}]) !== 0)`;
 	}
@@ -273,7 +273,7 @@ function ANY_BITS_IN_COMMON_TOK_REAL(tok, arr) {
 	if (arr.length === 0) {
 		return "false";
 	}
-	var result = "(false";
+	let result = "(false";
 	for (let i = 0; i < arr.length; i++) {
 		result += `||((${tok}.data[${i}] & ${arr[i]}) !== 0)`;
 	}
@@ -300,7 +300,7 @@ function UNROLL_TOK_REAL(tok, op, val, array_size) {
 }
 
 function LEVEL_GET_CELL_INTO(level, index, targetarray, OBJECT_SIZE) {
-	var result = "";
+	let result = "";
 	for (let i = 0; i < OBJECT_SIZE; i++) {
 		result += targetarray+`.data[${i}]=level.objects[${index}*${OBJECT_SIZE}+${i}];\n`;
 	}
@@ -308,7 +308,7 @@ function LEVEL_GET_CELL_INTO(level, index, targetarray, OBJECT_SIZE) {
 }
 
 function LEVEL_GET_MOVEMENTS_INTO( index, targetarray, MOVEMENT_SIZE) {
-	var result = "";
+	let result = "";
 	for (let i = 0; i < MOVEMENT_SIZE; i++) {
 		result += targetarray+`.data[${i}]=level.movements[${index}*${MOVEMENT_SIZE}+${i}];\n`;
 	}
@@ -317,7 +317,7 @@ function LEVEL_GET_MOVEMENTS_INTO( index, targetarray, MOVEMENT_SIZE) {
 
 
 function LEVEL_SET_CELL(level, index, vec, array_size) {
-	var result = "";
+	let result = "";
 	for (let i = 0; i < array_size; i++) {
 		result += `\t${level}.objects[${index}*${array_size}+${i}]=${vec}.data[${i}];\n`;
 	}
@@ -326,7 +326,7 @@ function LEVEL_SET_CELL(level, index, vec, array_size) {
 
 
 function IMPORT_COMPILE_TIME_ARRAY(runtime,compiletime,array_size){
-	var result = "";
+	let result = "";
 	for (let i = 0; i < array_size; i++) {
 		result+=`${runtime}.data[${i}]=${compiletime.data[i]};\n`;
 	}

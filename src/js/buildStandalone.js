@@ -1,6 +1,6 @@
-var standalone_HTML_String="";
+let standalone_HTML_String="";
 
-var clientStandaloneRequest = new XMLHttpRequest();
+let clientStandaloneRequest = new XMLHttpRequest();
 
 clientStandaloneRequest.open('GET', 'standalone_inlined.txt');
 clientStandaloneRequest.onreadystatechange = function() {
@@ -31,28 +31,28 @@ function buildStandalone(sourceCode) {
 		return;
 	}
 
-	var htmlString = standalone_HTML_String.concat("");
-	var title = "PuzzleScript Game";
+	let htmlString = standalone_HTML_String.concat("");
+	let title = "PuzzleScript Game";
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title;
 	}
-	var homepage = "https://www.puzzlescript.net";
+	let homepage = "https://www.puzzlescript.net";
 	if (state.metadata.homepage!==undefined) {
 		homepage=state.metadata.homepage;
 		if (!homepage.match(/^https?:\/\//)) {
 			homepage = "https://" + homepage;
 		}
 	}
-	var homepage_stripped = homepage.replace(/^https?:\/\//,'');
+	let homepage_stripped = homepage.replace(/^https?:\/\//,'');
 	homepage_stripped = escapeHtmlChars(homepage_stripped);
 
-	var background_color="black";
+	let background_color="black";
 	if ('background_color' in state.metadata) {
 		background_color=state.bgcolor;		
 	}
 	htmlString = htmlString.replace(/___BGCOLOR___/g,background_color);	
 
-	var text_color="lightblue";
+	let text_color="lightblue";
 	if ('text_color' in state.metadata) {
 		text_color = state.fgcolor;	
 	}
