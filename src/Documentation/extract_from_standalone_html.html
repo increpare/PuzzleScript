@@ -60,6 +60,10 @@
         <p>
 <h1>Tool for extracting source code from exported standalone games</h1>
 <p>
+<div class="alert alert-info">
+    <strong>Update:</strong> This tool is legacy. You can just drag+drop files into the editor to load them :).
+</div>
+<p>
     Kept a copy of a playable copy of your puzzlescript game as a HTML file around, but lost the source code? Worry no more, just drop the HTML file here and it'll give you the original puzzlescript code :)
 <p>
 
@@ -96,7 +100,7 @@
             return parsedStr ;
         }
 
-        function rip(s){
+        function rip_source_from_html(s){
             var prebit=`sourceCode="`;
             var preindex = s.indexOf(prebit)+prebit.length;
             s = s.substring(preindex);

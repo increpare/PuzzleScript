@@ -182,8 +182,11 @@ function levelEditorClick_Fn() {
     }
     lastDownTarget=canvas;	
 }
+let lightMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
 
-let lightMode = localStorage.getItem("lightMode") == "true"; //returns stored value or null if not set
+if (localStorage.hasOwnProperty("lightMode")){
+	lightMode = localStorage.getItem("lightMode") == "true"; //returns stored value or null if not set
+}
 
 if(lightMode){
 	document.body.style.colorScheme = 'light'
@@ -213,6 +216,27 @@ function toggleThemeClick() {
 		redraw();
 	}
 }
+
+window.matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', event => {
+		
+  //delete light-theme setting
+  localStorage.removeItem("lightMode");  
+  if (event.matches) {    
+	document.body.style.colorScheme = 'dark';
+	document.body.classList.remove('light-theme');
+	document.body.classList.add('dark-theme');
+  } else {
+	document.body.style.colorScheme = 'light';
+	document.body.classList.remove('dark-theme');
+	document.body.classList.add('light-theme');
+  }
+  if (state.levels.length===0){
+	generateTitleScreen();
+	regenSpriteImages();
+	redraw();
+  }
+})
 
 function printUnauthorized(){
 	var authUrl = github_authURL();

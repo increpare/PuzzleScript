@@ -240,6 +240,61 @@ editor.on('keyup', function (editor, event) {
 	}
 });
 
+function unescapeSlashes(str) {
+	// add another escaped slash if the string ends with an odd
+	// number of escaped slashes which will crash JSON.parse
+	let parsedStr = str.replace(/(^|[^\\])(\\\\)*\\$/, "$&\\");
+
+	// escape unescaped double quotes to prevent error with
+	// added double quotes in json string
+	parsedStr = parsedStr.replace(/(^|[^\\])((\\\\)*")/g, "$1\\$2");
+
+	try {
+		parsedStr = JSON.parse(`"${parsedStr}"`);
+	} catch(e) {
+		return str;
+	}
+	return parsedStr ;
+}
+
+function rip_source_from_html(s){
+	var prebit=`sourceCode="`;
+	var preindex = s.indexOf(prebit)+prebit.length;
+	s = s.substring(preindex);
+	var postbit=`";compile\(\["restart"\]`;
+	var postindex = s.indexOf(postbit);
+	s = s.substring(0,postindex);
+	return unescapeSlashes(s);
+}
+
+editor.on("drop", function(editor, event) {
+	files = event.dataTransfer.files;
+	if (files.length > 0) {
+		const file=files[0];
+		try{
+			reader = new FileReader();
+			reader.onload = function(e) {
+				var source_text = reader.result;
+				//if filename ends with .html
+				if (file.name.endsWith(".html")) {
+					source_text = rip_source_from_html(source_text);
+				} else if (!file.name.endsWith(".txt")) {
+					consoleError("Only .html and .txt files are supported");
+					return;
+				} 
+				editor.setValue(source_text);
+				editor.clearHistory();
+				consolePrint("Loaded file: " + file.name);
+			};
+			reader.readAsText(file);
+		} catch(e) {
+			consoleError(e);
+		} finally{
+			prevent(event);
+		}
+	}
+});
+
 
 function debugPreview(turnIndex,lineNumber){
 	diffToVisualize=debug_visualisation_array[turnIndex][lineNumber];
