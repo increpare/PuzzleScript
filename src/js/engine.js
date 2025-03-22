@@ -97,6 +97,9 @@ function showContinueOptionOnTitleScreen() {
 }
 
 function unloadGame() {
+	if (levelEditorOpened){
+		printLevel();
+	}
 	levelEditorOpened = false;
 	state = introstate;
 	level = new Level(0, 5, 5, 2, null);

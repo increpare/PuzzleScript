@@ -3057,11 +3057,8 @@ function addSpecializedFunctions(state) {
 
 function compile(command, text, randomseed) {
 
-    //if the editor is opened, we should print the contents
-    if (levelEditorOpened){
-        //print the contents of the level
-        
-    }
+
+
     lazy_function_generation_clear_backlog();
 
     forceRegenImages = true;
@@ -3072,6 +3069,12 @@ function compile(command, text, randomseed) {
         randomseed = null;
     }
     lastDownTarget = canvas;
+
+    //if the editor is opened, we should print the contents
+    if ( command[0] === "restart" && levelEditorOpened){
+        //print the contents of the level before recompiling
+        printLevel();
+    }
 
     if (text === undefined) {
         let code = window.form1.code;
