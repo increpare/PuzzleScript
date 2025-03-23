@@ -1,3 +1,5 @@
+'use strict';
+
 let canSetHTMLColors=false;
 let canDump=true;
 let recordingStartsFromLevel=0;

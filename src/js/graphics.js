@@ -1,3 +1,5 @@
+'use strict';
+
 function createSprite(name, spritegrid, colors, padding) {
     if (colors === undefined) {
         colors = [state.bgcolor, state.fgcolor];
@@ -67,7 +69,7 @@ function regenText(spritecanvas, spritectx) {
             var n = row[nidx];
             if (!textImages.hasOwnProperty(n)) {
                 if (font.hasOwnProperty(n)) {
-                    fontstr = font[n].split('\n').map(a => a.trim().split('').map(t => parseInt(t)));
+                    const fontstr = font[n].split('\n').map(a => a.trim().split('').map(t => parseInt(t)));
                     fontstr.shift();
                     textImages[n] = createSprite('char' + n, fontstr, ["#00000000", state.fgcolor], 1);
                 } else {
@@ -143,7 +145,7 @@ function generateGlyphImages() {
     glyphImagesCorrespondance = [];
     glyphImages = [];
 
-    seenobjects = {};
+    const seenobjects = {};
     for (var n of state.glyphOrder) {
         if (n.length == 1 && state.glyphDict.hasOwnProperty(n)) {
             var g = state.glyphDict[n];

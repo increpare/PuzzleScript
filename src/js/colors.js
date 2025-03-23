@@ -1,4 +1,6 @@
-colorPalettesAliases = {
+'use strict';
+
+const colorPalettesAliases = {
 	1 : "mastersystem",
 	2 : "gameboycolour",
 	3 : "amiga",
@@ -15,7 +17,7 @@ colorPalettesAliases = {
 	14 : "whitingjp"
 };
 
-colorPalettes = {
+const colorPalettes = {
 	mastersystem : {
 	black   		: "#000000",
 	white			: "#FFFFFF",

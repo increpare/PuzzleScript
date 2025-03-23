@@ -1,3 +1,5 @@
+'use strict';
+
 function Level(lineNumber, width, height, layerCount, objects) {
 	this.lineNumber = lineNumber;
 	this.width = width;
@@ -106,7 +108,7 @@ Level.prototype.calcBackgroundMask = function (state) {
 			return cell;
 		}
 	}
-	cell = new BitVec(STRIDE_OBJ);
+	const cell = new BitVec(STRIDE_OBJ);
 	cell.ibitset(state.backgroundid);
 	return cell;
 }

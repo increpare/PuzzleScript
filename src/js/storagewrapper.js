@@ -1,3 +1,5 @@
+'use strict';
+
 function storage_has(key) {
     return localStorage.getItem(key) !== null;
 }

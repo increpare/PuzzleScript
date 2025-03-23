@@ -1,3 +1,5 @@
+'use strict';
+
 function jumpToLine(i) {
 
     let code = parent.form1.code;
@@ -66,7 +68,7 @@ function consolePrint(text,urgent,linenumber,inspect_ID) {
 let cache_n = 0;
 
 function addToConsole(text) {
-	cache = document.createElement("div");
+	const cache = document.createElement("div");
 	cache.id = "cache" + cache_n;
 	cache.innerHTML = text;
 	cache_n++;

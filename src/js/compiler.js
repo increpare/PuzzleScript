@@ -445,7 +445,7 @@ function levelFromString(state, level) {
         }
     }
 
-    let levelBackgroundMask = o.calcBackgroundMask(state);
+    const levelBackgroundMask = o.calcBackgroundMask(state);
     for (let i = 0; i < o.n_tiles; i++) {
         let cell = o.getCell(i);
         if (!backgroundLayerMask.anyBitsInCommon(cell)) {
@@ -867,6 +867,151 @@ function deepCloneRule(rule) {
     return clonedRule;
 }
 
+
+function checkSuperfluousCoincidences(state,rules){
+
+    /*
+First, let's check for 'X no ' on the RHS, where 
+    */
+// check that that we don't have an object on one layer required, and at the same time
+// 'no X' where x is also on that layer - it's   "no wall" and player in the same cell - for then "no wall" is
+// superfluous.
+// for each rule
+
+    //first, find a list of layers where we *know* something has to be
+    let required_layers = new BitVec(Math.ceil(LAYER_COUNT/5)|0);
+    let required_objects = new BitVec(STRIDE_OBJ);
+    
+    const rules_l = rules.length;
+    for (let i=0;i<rules_l;i++){
+        let rule = rules[i];
+        const lhs_len = rule.lhs.length;
+        for (let j=0;j<lhs_len;j++){
+            let lhs_group = rule.lhs[j];
+            const lhs_group_len = lhs_group.length; 
+            for (let k=0;k<lhs_group_len;k++){
+                let cell = lhs_group[k];
+                // cell is an array of pairs - it looks like:
+                // ["", "player", "no", "wall", "", "target"]
+
+                required_layers.setZero();
+                required_objects.setZero();
+
+                let occupier={};
+                for (let l=0;l<cell.length;l+=2){
+                    let entity_modifier = cell[l];
+                    if (entity_modifier==="no"){
+                        continue;
+                    }
+                    let entity_name = cell[l+1]
+                    let layer=[];
+                    //if it's a single-layer property
+                    if (state.propertiesSingleLayer.hasOwnProperty(entity_name)){
+                        let layer = state.propertiesSingleLayer[entity_name];
+                        required_layers.ibitset(layer);
+                        let property_obs = state.propertiesDict[entity_name];
+                        const property_obs_len = property_obs.length;
+                        for (let m=0;m<property_obs_len;m++){
+                            required_objects.ibitset(property_obs[m].id);
+                        }
+                        occupier[layer]=entity_name;
+                    } else if (state.objects.hasOwnProperty(entity_name)){
+                        let layer = state.objects[entity_name].layer;
+                        let ob_id = state.objects[entity_name].id;
+                        required_layers.ibitset(layer);
+                        required_objects.ibitset(ob_id);
+                        occupier[layer]=entity_name;
+                    } else if (state.aggregatesDict.hasOwnProperty(entity_name)){
+                        let aggregate_obs = state.aggregatesDict[entity_name];
+                        for (let m=0;m<aggregate_obs.length;m++){
+                            let object_info = state.objects[aggregate_obs[m]];
+                            let layer = object_info.layer;
+                            let ob_id = object_info.id;
+                            required_layers.ibitset(layer);
+                            required_objects.ibitset(ob_id);
+                            occupier[layer]=entity_name;
+                        }
+                    }
+                }
+
+                
+                let no_objecs = [];
+                //find all objects qualified by 'no'
+                for (let l=0;l<cell.length;l+=2){
+                    let item = cell[l];
+                    if (item.startsWith("no")){
+                        let no_name = cell[l+1]
+                        let remove = false;
+                        if (state.objects.hasOwnProperty(no_name)){
+                            let o = state.objects[no_name];
+                            let layer = o.layer;
+                            if (required_layers.get(layer)&&occupier[layer]!==no_name){
+                                logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " (on layer " + (layer+1) + ") but there is also a requirement that " + occupier[layer].toUpperCase() + " be here, which is on the same layer, so you can leave this out.", rule.lineNumber,false);
+                                remove=true;
+                            }
+                        } else if (state.propertiesSingleLayer.hasOwnProperty(no_name)){
+                            let layer = state.propertiesSingleLayer[no_name];
+                            if (required_layers.get(layer)&&occupier[layer]!==no_name){
+
+                                // I now need to make sure there's no partial overlap with the positive object
+                                let property_obs = state.propertiesDict[no_name];
+                                let obs_mask = new BitVec(STRIDE_OBJ);
+                                for (let m=0;m<property_obs.length;m++){
+                                    let ob_data = state.objects[property_obs[m]];
+                                    let layer = ob_data.layer;
+                                    let id = ob_data.id;
+                                    obs_mask.ibitset(id);
+                                }
+                                const disjoint = !obs_mask.anyBitsInCommon(required_objects);
+                                if (disjoint){
+                                    logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " (on layer " + (layer+1) + ") but there is also a requirement that " + occupier[layer].toUpperCase() + " be here, which is on the same layer, so you can leave this out.", rule.lineNumber,false);
+                                    remove=true;
+                                }
+                            }
+                        } else if (state.propertiesDict.hasOwnProperty(no_name)){
+                            let property_obs = state.propertiesDict[no_name];
+                            // TOFIX: if *all* the layers are already required, then this no statement is pointless
+                            // so we can remove it, UNLESS the negative object overlaps with the positive one
+                            // (in terms of objects, not layer occupancy).
+                            // to do  this i'l need to build up object masks, not just layer occupancy masks.
+
+                            let obs_present = [];
+                            let layers_present = [];
+                            let properties_mask = new BitVec(Math.ceil(LAYER_COUNT/5)|0)
+                            let obs_mask = new BitVec(STRIDE_OBJ);
+                            for (let m=0;m<property_obs.length;m++){
+                                let ob_data = state.objects[property_obs[m]];
+                                let layer = ob_data.layer;
+                                let id = ob_data.id;
+                                if (layers_present.indexOf(layer) === -1){
+                                    layers_present.push(layer);
+                                }
+
+                                properties_mask.ibitset(layer);
+                                obs_mask.ibitset(id);
+                                obs_present.push(occupier[layer]);
+                            }
+                    
+                            const disjoint = !obs_mask.anyBitsInCommon(required_objects);
+                            if (properties_mask.bitsSetInArray(required_layers.data) && disjoint){
+                                logWarning(`You have specified that there should be NO ${no_name.toUpperCase()} but there is also a requirement that ${obs_present.join(", ").toUpperCase()} be there, which collectively occupy the same layers (Layers ${layers_present.map(l=>l+1).join(", ")}), so you can leave this out.`, rule.lineNumber);
+                                remove=true;
+                            }
+                        } //don't need to check aggregates - 'no A_and_B' is not allowed.
+                        if (remove){
+                            // cell.splice(l,2);
+                            // l-=2;
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+
+
+}
+
 function rulesToArray(state) {
     let oldrules = state.rules;
     let rules = [];
@@ -884,6 +1029,8 @@ function rulesToArray(state) {
         rules.push(newrule);
     }
     state.loops = loops;
+
+    checkSuperfluousCoincidences(state,rules);
 
     //now expand out rules with multiple directions
     let rules2 = [];
@@ -1584,6 +1731,17 @@ const dirMasks = {
     '': parseInt('00000', 2)
 };
 
+function getOverlapObjectNames(state, objects1,objects2){
+    //given two bitvecs, return an array of object names that are present in both
+    let result=[];
+    for (let i=0;i<state.objectCount;i++){
+        if (objects1.get(i) && objects2.get(i)){
+            result.push(state.idDict[i]);
+        }
+    }
+    return result;
+}
+
 function rulesToMask(state) {
     const layerCount = state.collisionLayers.length;
     const layerTemplate = Array(layerCount).fill(null);
@@ -1690,17 +1848,18 @@ function rulesToMask(state) {
                 ]);
 
                 // Check for invalid patterns
-                if (bitVectors.objectsPresent.anyBitsInCommon(bitVectors.objectsMissing)) {
-                    const ln = rule.lineNumber;
-                    const hasAdjacentRule = (ruleIndex > 0 && state.rules[ruleIndex - 1].lineNumber === ln) || 
-                                         (ruleIndex + 1 < state.rules.length && state.rules[ruleIndex + 1].lineNumber === ln);
-                    
-                    if (!hasAdjacentRule) {
-                        logWarning('This rule has some content of the form "X no X" (either directly or maybe indirectly - check closely how the terms are defined if nothing stands out) which can never match and so the rule is getting removed during compilation.', rule.lineNumber);
+                if (!bitVectors.objectsPresent.iszero()) {
+                    if (bitVectors.objectsPresent.anyBitsInCommon(bitVectors.objectsMissing)) {
+                        const ln = rule.lineNumber;
+
+                        const overlap = getOverlapObjectNames(state, bitVectors.objectsPresent, bitVectors.objectsMissing);
+                        var x_no_x_list = overlap.map(x => x+" NO "+x).join(', ').toUpperCase();
+                        logWarning(`This rule has something amounting to "${x_no_x_list}" on the left-hand-side,which can never match, so the rule is getting removed during compilation.`, rule.lineNumber);
+
+                        state.rules.splice(ruleIndex, 1);
+                        ruleIndex--;
+                        continue;
                     }
-                    state.rules.splice(ruleIndex, 1);
-                    ruleIndex--;
-                    continue;
                 }
 
                 if (rule.rhs.length === 0) continue;
@@ -1731,6 +1890,7 @@ function rulesToMask(state) {
                     postMovementsLayerMask_r: new BitVec(STRIDE_MOV),
                     randomDirMask_r: new BitVec(STRIDE_MOV)
                 };
+
 
                 // Process right-hand side cell
                 for (let i = 0; i < cell_r.length; i += 2) {
@@ -1803,7 +1963,7 @@ function rulesToMask(state) {
                         }
                     }
                 }
-
+        
                 // Clear old objects and movements if needed
                 if (!bitVectors.objectsPresent.bitsSetInArray(rhsBitVectors.objectsSet.data)) {
                     rhsBitVectors.objectsClear.ior(bitVectors.objectsPresent);
@@ -2974,7 +3134,7 @@ function addSpecializedFunctions(state) {
 
 // function solveLevel(state){
 //     //disable sfx
-//     var oldmuted=muted;
+//     let oldmuted=muted;
 //     muted = true;
 //     /* this is a pathfinding algorithm that will try to solve the level - it does a depth first search of the level */
 //     const visited_states = new Set();
@@ -2998,12 +3158,12 @@ function addSpecializedFunctions(state) {
 
 
 //     let won = false;
-//     var solution = "";
+//     let solution = "";
 
 //     while (states_to_leave.length > 0){
-//         var o = states_to_leave.shift();
-//         var level_state = o.state;
-//         var input_sequence = o.input_sequence;
+//         let o = states_to_leave.shift();
+//         let level_state = o.state;
+//         let input_sequence = o.input_sequence;
 //         for (let input=0; input<MOVE_COUNT; input++){
 //             level.objects.set(level_state);            
 //             simulation_tickInput(input);
@@ -3012,7 +3172,7 @@ function addSpecializedFunctions(state) {
 //             if (visited_states.has(new_state_key)){
 //                 continue;
 //             }
-//             var new_input_sequence = input_sequence + input;
+//             let new_input_sequence = input_sequence + input;
 //             visited_states.add(new_state_key);
 //             states_to_leave.push({
 //                 state:new Int32Array(new_state),
@@ -3043,7 +3203,7 @@ function addSpecializedFunctions(state) {
 
 // function pretty_print_solution(solution){
 //     const move_names = ["U","L","D","R","A"];
-//     var result=""
+//     let result=""
 //     //group in fives
 //     for (let i = 0; i < solution.length; i ++) {
 //         const move_name = move_names[solution[i]];

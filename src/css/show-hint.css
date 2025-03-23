@@ -11,9 +11,9 @@
   -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
   box-shadow: 2px 3px 5px rgba(0,0,0,.2);
   border-radius: 3px;
-  border: 1px solid silver;
+  border: 1px solid light-dark(black, silver);
 
-  background: #0F192A;
+  background: light-dark(white, #0F192A);
   font-size: 90%;
   font-family: monospace;
 
@@ -26,16 +26,16 @@
   padding: 0 4px;
   border-radius: 2px;
   white-space: pre;
-  color: #FFc540;
+  color: light-dark(#c38a06, #FFc540);
   cursor: pointer;
 }
 
 li.CodeMirror-hint-active {
-  background: #3f5883;
-  color: orange;
+  background: light-dark(#e8f2ff, #3f5883);
+  color: light-dark(rgb(233, 105, 0), orange);
 }
 
 
 .CodeMirror-hint-active .cm-s-midnight span.cm-COLOR-BLACK {
-    color: black;
+    color: light-dark(white, black);
 }

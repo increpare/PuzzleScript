@@ -1,3 +1,5 @@
+'use strict';
+
 let code = document.getElementById('code');
 let _editorDirty = false;
 let _editorCleanState = "";

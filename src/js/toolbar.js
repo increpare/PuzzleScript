@@ -1,3 +1,5 @@
+'use strict';
+
 function runClick() {
 	clearConsole();
 	compile(["restart"]);
@@ -51,7 +53,7 @@ function saveClick() {
 
 	let curSaveArray = [];
 	if (storage_has('saves')) {
-		let curSaveArray = JSON.parse(storage_get('saves'));
+		curSaveArray = JSON.parse(storage_get('saves'));
 	}
 
 	if (curSaveArray.length>20) {
@@ -112,7 +114,7 @@ function loadDropDownChange() {
 			consolePrint("Eek, trying to load a file, but there's no local storage found. Eek!",true);
 	} 
 
-	saves = JSON.parse(saveString);
+	const saves = JSON.parse(saveString);
 	
 	for (let i=0;i<saves.length;i++) {
 		let sd = saves[i];
@@ -189,31 +191,27 @@ if (localStorage.hasOwnProperty("lightMode")){
 	lightMode = localStorage.getItem("lightMode") == "true"; //returns stored value or null if not set
 }
 
-if(lightMode){
-	document.body.style.colorScheme = 'light'
-	document.body.classList.add('light-theme');
-} else {
-	document.body.style.colorScheme = 'dark'
-	document.body.classList.add('dark-theme');
-}
-generateTitleScreen();
-regenSpriteImages();
+setColorScheme(lightMode);
 
-
-function toggleThemeClick() {
-	if (document.body.style.colorScheme === 'light') {
-		document.body.style.colorScheme = 'dark';
-		document.body.classList.remove('light-theme');
-		document.body.classList.add('dark-theme');
-	} else {
+function setColorScheme(light){
+	if (light){
 		document.body.style.colorScheme = 'light';
-		document.body.classList.remove('dark-theme');
 		document.body.classList.add('light-theme');
+		document.body.classList.remove('dark-theme');
+	} else {
+		document.body.style.colorScheme = 'dark'
+		document.body.classList.add('dark-theme');
+		document.body.classList.remove('light-theme');		
 	}
-	localStorage.setItem("lightMode", document.body.style.colorScheme==='light');
+	generateTitleScreen();
+	regenSpriteImages();
+}
+function toggleThemeClick() {
+	let lightMode = document.body.style.colorScheme === 'light';
+	lightMode = !lightMode;
+	localStorage.setItem("lightMode", lightMode);
+	setColorScheme(lightMode);
 	if (state.levels.length===0){
-		generateTitleScreen();
-		regenSpriteImages();
 		redraw();
 	}
 }

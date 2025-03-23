@@ -1,3 +1,5 @@
+'use strict';
+
 let SOUND_VOL = 0.25;
 let SAMPLE_RATE = 5512;
 let BIT_DEPTH = 8;
@@ -106,7 +108,7 @@ function rnd(max) {
 }
 
 
-pickupCoin = function () {
+function pickupCoin() {
   let result = Params();
   result.wave_type = Math.floor(frnd(SHAPES.length));
   if (result.wave_type === 3) {
@@ -127,7 +129,7 @@ pickupCoin = function () {
 };
 
 
-laserShoot = function () {
+const laserShoot = function () {
   let result = Params();
   result.wave_type = rnd(2);
   if (result.wave_type === SINE && rnd(1))
@@ -170,7 +172,7 @@ laserShoot = function () {
   return result;
 };
 
-explosion = function () {
+function explosion() {
   let result = Params();
 
   if (rnd(1)) {
@@ -205,7 +207,7 @@ explosion = function () {
   return result;
 };
 //9675111
-birdSound = function () {
+function birdSound() {
   let result = Params();
 
   if (frnd(10) < 1) {
@@ -397,7 +399,7 @@ birdSound = function () {
 };
 
 
-pushSound = function () {
+function pushSound() {
   let result = Params();
   result.wave_type = Math.floor(frnd(SHAPES.length));//TRIANGLE;
   if (result.wave_type === 2) {
@@ -425,7 +427,7 @@ pushSound = function () {
 
 
 
-powerUp = function () {
+function powerUp() {
   let result = Params();
   if (rnd(1))
     result.wave_type = SAWTOOTH;
@@ -455,7 +457,7 @@ powerUp = function () {
   return result;
 };
 
-hitHurt = function () {
+function hitHurt() {
   result = Params();
   result.wave_type = rnd(2);
   if (result.wave_type === SINE)
@@ -474,7 +476,7 @@ hitHurt = function () {
 };
 
 
-jump = function () {
+function jump() {
   result = Params();
   result.wave_type = SQUARE;
   result.wave_type = Math.floor(frnd(SHAPES.length));
@@ -494,7 +496,7 @@ jump = function () {
   return result;
 };
 
-blipSelect = function () {
+function blipSelect() {
   result = Params();
   result.wave_type = rnd(1);
   result.wave_type = Math.floor(frnd(SHAPES.length));
@@ -511,7 +513,7 @@ blipSelect = function () {
   return result;
 };
 
-random = function () {
+function random() {
   result = Params();
   result.wave_type = Math.floor(frnd(SHAPES.length));
   result.p_base_freq = Math.pow(frnd(2.0) - 1.0, 2.0);
@@ -580,7 +582,7 @@ let generatorNames = [
 /*
 i like 9675111
 */
-generateFromSeed = function (seed) {
+function generateFromSeed(seed) {
   rng = new RNG((seed / 100) | 0);
   let generatorindex = seed % 100;
   let soundGenerator = generators[generatorindex % generators.length];
@@ -801,6 +803,8 @@ SoundEffect.generate = function (ps) {
   }
   let buffer = sound.getBuffer();
 
+  let sample = 0.0;
+  
   for (let t = 0; ; ++t) {
 
     // Repeats
@@ -867,7 +871,6 @@ SoundEffect.generate = function (ps) {
     }
 
     // 8x supersampling
-    let sample = 0.0;
     for (let si = 0; si < 8; ++si) {
       let sub_sample = 0.0;
       phase++;
