@@ -869,6 +869,10 @@ function deepCloneRule(rule) {
 
 
 function checkSuperfluousCoincidences(state,rules){
+
+    /*
+First, let's check for 'X no ' on the RHS, where 
+    */
 // check that that we don't have an object on one layer required, and at the same time
 // 'no X' where x is also on that layer - it's   "no wall" and player in the same cell - for then "no wall" is
 // superfluous.
@@ -995,8 +999,8 @@ function checkSuperfluousCoincidences(state,rules){
                             }
                         } //don't need to check aggregates - 'no A_and_B' is not allowed.
                         if (remove){
-                            cell.splice(l,2);
-                            l-=2;
+                            // cell.splice(l,2);
+                            // l-=2;
                         }
                     }
                 }
@@ -1727,6 +1731,17 @@ const dirMasks = {
     '': parseInt('00000', 2)
 };
 
+function getOverlapObjectNames(state, objects1,objects2){
+    //given two bitvecs, return an array of object names that are present in both
+    let result=[];
+    for (let i=0;i<state.objectCount;i++){
+        if (objects1.get(i) && objects2.get(i)){
+            result.push(state.idDict[i]);
+        }
+    }
+    return result;
+}
+
 function rulesToMask(state) {
     const layerCount = state.collisionLayers.length;
     const layerTemplate = Array(layerCount).fill(null);
@@ -1833,17 +1848,18 @@ function rulesToMask(state) {
                 ]);
 
                 // Check for invalid patterns
-                if (bitVectors.objectsPresent.anyBitsInCommon(bitVectors.objectsMissing)) {
-                    const ln = rule.lineNumber;
-                    const hasAdjacentRule = (ruleIndex > 0 && state.rules[ruleIndex - 1].lineNumber === ln) || 
-                                         (ruleIndex + 1 < state.rules.length && state.rules[ruleIndex + 1].lineNumber === ln);
-                    
-                    if (!hasAdjacentRule) {
-                        logWarning('This rule has some content of the form "X no X" (either directly or maybe indirectly - check closely how the terms are defined if nothing stands out) which can never match and so the rule is getting removed during compilation.', rule.lineNumber);
+                if (!bitVectors.objectsPresent.iszero()) {
+                    if (bitVectors.objectsPresent.anyBitsInCommon(bitVectors.objectsMissing)) {
+                        const ln = rule.lineNumber;
+
+                        const overlap = getOverlapObjectNames(state, bitVectors.objectsPresent, bitVectors.objectsMissing);
+                        var x_no_x_list = overlap.map(x => x+" NO "+x).join(', ').toUpperCase();
+                        logWarning(`This rule has something amounting to "${x_no_x_list}" on the left-hand-side,which can never match, so the rule is getting removed during compilation.`, rule.lineNumber);
+
+                        state.rules.splice(ruleIndex, 1);
+                        ruleIndex--;
+                        continue;
                     }
-                    state.rules.splice(ruleIndex, 1);
-                    ruleIndex--;
-                    continue;
                 }
 
                 if (rule.rhs.length === 0) continue;
@@ -1874,6 +1890,7 @@ function rulesToMask(state) {
                     postMovementsLayerMask_r: new BitVec(STRIDE_MOV),
                     randomDirMask_r: new BitVec(STRIDE_MOV)
                 };
+
 
                 // Process right-hand side cell
                 for (let i = 0; i < cell_r.length; i += 2) {
@@ -1946,7 +1963,7 @@ function rulesToMask(state) {
                         }
                     }
                 }
-
+        
                 // Clear old objects and movements if needed
                 if (!bitVectors.objectsPresent.bitsSetInArray(rhsBitVectors.objectsSet.data)) {
                     rhsBitVectors.objectsClear.ior(bitVectors.objectsPresent);
