@@ -41,7 +41,7 @@ const reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|n
 
 const REGEX_HEX = /^#([0-9A-F]{3}){1,2}$/i;
 
-let reg_color = /(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-f]{3}){1,2})\s*/;
+const reg_color = /(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-f]{3}){1,2})\s*/;
 
 // lots of hardcoded stuff for autocomplete in anyword-hint also, but 
 // it's not including here because I don't want to bloat the standalone

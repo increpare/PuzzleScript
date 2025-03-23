@@ -873,6 +873,11 @@ function checkSuperfluousCoincidences(state,rules){
 // 'no X' where x is also on that layer - it's   "no wall" and player in the same cell - for then "no wall" is
 // superfluous.
 // for each rule
+
+    //first, find a list of layers where we *know* something has to be
+    let required_layers = new BitVec(Math.ceil(LAYER_COUNT/5)|0);
+    let required_objects = new BitVec(STRIDE_OBJ);
+    
     const rules_l = rules.length;
     for (let i=0;i<rules_l;i++){
         let rule = rules[i];
@@ -885,11 +890,12 @@ function checkSuperfluousCoincidences(state,rules){
                 // cell is an array of pairs - it looks like:
                 // ["", "player", "no", "wall", "", "target"]
 
-                //first, find a list of layers where we *know* something has to be
-                let required_layers = new BitVec(STRIDE_MOV);
-                var occupier={};
+                required_layers.setZero();
+                required_objects.setZero();
+
+                let occupier={};
                 for (let l=0;l<cell.length;l+=2){
-                    var entity_modifier = cell[l];
+                    let entity_modifier = cell[l];
                     if (entity_modifier==="no"){
                         continue;
                     }
@@ -899,16 +905,26 @@ function checkSuperfluousCoincidences(state,rules){
                     if (state.propertiesSingleLayer.hasOwnProperty(entity_name)){
                         let layer = state.propertiesSingleLayer[entity_name];
                         required_layers.ibitset(layer);
+                        let property_obs = state.propertiesDict[entity_name];
+                        const property_obs_len = property_obs.length;
+                        for (let m=0;m<property_obs_len;m++){
+                            required_objects.ibitset(property_obs[m].id);
+                        }
                         occupier[layer]=entity_name;
                     } else if (state.objects.hasOwnProperty(entity_name)){
                         let layer = state.objects[entity_name].layer;
+                        let ob_id = state.objects[entity_name].id;
                         required_layers.ibitset(layer);
+                        required_objects.ibitset(ob_id);
                         occupier[layer]=entity_name;
                     } else if (state.aggregatesDict.hasOwnProperty(entity_name)){
                         let aggregate_obs = state.aggregatesDict[entity_name];
                         for (let m=0;m<aggregate_obs.length;m++){
-                            let layer = state.objects[aggregate_obs[m]].layer;
+                            let object_info = state.objects[aggregate_obs[m]];
+                            let layer = object_info.layer;
+                            let ob_id = object_info.id;
                             required_layers.ibitset(layer);
+                            required_objects.ibitset(ob_id);
                             occupier[layer]=entity_name;
                         }
                     }
@@ -921,36 +937,54 @@ function checkSuperfluousCoincidences(state,rules){
                     let item = cell[l];
                     if (item.startsWith("no")){
                         let no_name = cell[l+1]
-
+                        let remove = false;
                         if (state.objects.hasOwnProperty(no_name)){
                             let o = state.objects[no_name];
-                            var o_layer = o.layer;
-                            if (required_layers.get(o_layer)){
-                                logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " on layer " + (o_layer+1) + " but there is also a requirement that " + occupier[o_layer].toUpperCase() + " be there, so you can leave this out.", rule.lineNumber,false);
+                            let layer = o.layer;
+                            if (required_layers.get(layer)&&occupier[layer]!==no_name){
+                                logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " (on layer " + (layer+1) + ") but there is also a requirement that " + occupier[layer].toUpperCase() + " be on the same layer, so you can leave this out.", rule.lineNumber,false);
+                                remove=true;
                             }
                         } else if (state.propertiesSingleLayer.hasOwnProperty(no_name)){
                             let layer = state.propertiesSingleLayer[no_name];
-                            if (required_layers.get(layer)){
-                                logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " on layer " + (layer+1) + " but there is also a requirement that " + occupier[layer].toUpperCase() + " be there, so you can leave this out.", rule.lineNumber,false);
+                            if (required_layers.get(layer)&&occupier[layer]!==no_name){
+                                logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " (on layer " + (layer+1) + ") but there is also a requirement that " + occupier[layer].toUpperCase() + " be on the same layer, so you can leave this out.", rule.lineNumber,false);
+                                remove=true;
                             }
                         } else if (state.propertiesDict.hasOwnProperty(no_name)){
                             let property_obs = state.propertiesDict[no_name];
-                            //if *all* the layers are already required, then this no statement is pointless
-                            var obs_present = [];
-                            var layers_present = [];
-                            var properties_mask = new BitVec(STRIDE_OBJ)
+                            // TOFIX: if *all* the layers are already required, then this no statement is pointless
+                            // so we can remove it, UNLESS the negative object overlaps with the positive one
+                            // (in terms of objects, not layer occupancy).
+                            // to do  this i'l need to build up object masks, not just layer occupancy masks.
+
+                            let obs_present = [];
+                            let layers_present = [];
+                            let properties_mask = new BitVec(Math.ceil(LAYER_COUNT/5)|0)
+                            let obs_mask = new BitVec(STRIDE_OBJ);
                             for (let m=0;m<property_obs.length;m++){
-                                let layer = state.objects[property_obs[m]].layer;
+                                let ob_data = state.objects[property_obs[m]];
+                                let layer = ob_data.layer;
+                                let id = ob_data.id;
                                 if (layers_present.indexOf(layer) === -1){
                                     layers_present.push(layer);
                                 }
+
                                 properties_mask.ibitset(layer);
+                                obs_mask.ibitset(id);
                                 obs_present.push(occupier[layer]);
                             }
-                            if (properties_mask.bitsSetInArray(required_layers.data)){
+                    
+                            const disjoint = !obs_mask.anyBitsInCommon(required_objects);
+                            if (properties_mask.bitsSetInArray(required_layers.data) && disjoint){
                                 logWarning(`You have specified that there should be NO ${no_name.toUpperCase()} but there is also a requirement that ${obs_present.join(", ").toUpperCase()} be there, which collectively occupy the same layers (Layers ${layers_present.map(l=>l+1).join(", ")}), so you can leave this out.`, rule.lineNumber);
+                                remove=true;
                             }
                         } //don't need to check aggregates - 'no A_and_B' is not allowed.
+                        if (remove){
+                            cell.splice(l,2);
+                            l-=2;
+                        }
                     }
                 }
                 
@@ -3070,7 +3104,7 @@ function addSpecializedFunctions(state) {
 
 // function solveLevel(state){
 //     //disable sfx
-//     var oldmuted=muted;
+//     let oldmuted=muted;
 //     muted = true;
 //     /* this is a pathfinding algorithm that will try to solve the level - it does a depth first search of the level */
 //     const visited_states = new Set();
@@ -3094,12 +3128,12 @@ function addSpecializedFunctions(state) {
 
 
 //     let won = false;
-//     var solution = "";
+//     let solution = "";
 
 //     while (states_to_leave.length > 0){
-//         var o = states_to_leave.shift();
-//         var level_state = o.state;
-//         var input_sequence = o.input_sequence;
+//         let o = states_to_leave.shift();
+//         let level_state = o.state;
+//         let input_sequence = o.input_sequence;
 //         for (let input=0; input<MOVE_COUNT; input++){
 //             level.objects.set(level_state);            
 //             simulation_tickInput(input);
@@ -3108,7 +3142,7 @@ function addSpecializedFunctions(state) {
 //             if (visited_states.has(new_state_key)){
 //                 continue;
 //             }
-//             var new_input_sequence = input_sequence + input;
+//             let new_input_sequence = input_sequence + input;
 //             visited_states.add(new_state_key);
 //             states_to_leave.push({
 //                 state:new Int32Array(new_state),
@@ -3139,7 +3173,7 @@ function addSpecializedFunctions(state) {
 
 // function pretty_print_solution(solution){
 //     const move_names = ["U","L","D","R","A"];
-//     var result=""
+//     let result=""
 //     //group in fives
 //     for (let i = 0; i < solution.length; i ++) {
 //         const move_name = move_names[solution[i]];

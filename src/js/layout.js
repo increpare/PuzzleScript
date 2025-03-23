@@ -32,7 +32,7 @@ function resize_all(e){
 	const smallmovelimit = 100;
 	
 	const hdiff = window.innerWidth - winwidth;
-	const verticaldragbarX = parseInt(document.getElementById("verticaldragbar").style.left.replace("px",""));
+	let verticaldragbarX = parseInt(document.getElementById("verticaldragbar").style.left.replace("px",""));
 	
 	if(hdiff > -smallmovelimit && hdiff < smallmovelimit){
 		verticaldragbarX += hdiff;
@@ -47,8 +47,8 @@ function resize_all(e){
 	};
 	resize_widths(verticaldragbarX);
 	
-	const horizontaldragbarY = parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
 	const vdiff = window.innerHeight - winheight;
+	let horizontaldragbarY = parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
 	
 	if(vdiff > -smallmovelimit && vdiff < smallmovelimit){
 		horizontaldragbarY += vdiff;

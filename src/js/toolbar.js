@@ -191,31 +191,27 @@ if (localStorage.hasOwnProperty("lightMode")){
 	lightMode = localStorage.getItem("lightMode") == "true"; //returns stored value or null if not set
 }
 
-if(lightMode){
-	document.body.style.colorScheme = 'light'
-	document.body.classList.add('light-theme');
-} else {
-	document.body.style.colorScheme = 'dark'
-	document.body.classList.add('dark-theme');
-}
-generateTitleScreen();
-regenSpriteImages();
+setColorScheme(lightMode);
 
-
-function toggleThemeClick() {
-	if (document.body.style.colorScheme === 'light') {
-		document.body.style.colorScheme = 'dark';
-		document.body.classList.remove('light-theme');
-		document.body.classList.add('dark-theme');
-	} else {
+function setColorScheme(light){
+	if (light){
 		document.body.style.colorScheme = 'light';
-		document.body.classList.remove('dark-theme');
 		document.body.classList.add('light-theme');
+		document.body.classList.remove('dark-theme');
+	} else {
+		document.body.style.colorScheme = 'dark'
+		document.body.classList.add('dark-theme');
+		document.body.classList.remove('light-theme');		
 	}
-	localStorage.setItem("lightMode", document.body.style.colorScheme==='light');
+	generateTitleScreen();
+	regenSpriteImages();
+}
+function toggleThemeClick() {
+	var lightMode = document.body.style.colorScheme === 'light';
+	lightMode = !lightMode;
+	localStorage.setItem("lightMode", lightMode);
+	setColorScheme(lightMode);
 	if (state.levels.length===0){
-		generateTitleScreen();
-		regenSpriteImages();
 		redraw();
 	}
 }
