@@ -1,3 +1,5 @@
+'use strict';
+
 function Level(lineNumber, width, height, layerCount, objects) {
 	this.lineNumber = lineNumber;
 	this.width = width;

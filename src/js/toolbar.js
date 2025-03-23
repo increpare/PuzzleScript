@@ -1,3 +1,5 @@
+'use strict';
+
 function runClick() {
 	clearConsole();
 	compile(["restart"]);
@@ -112,7 +114,7 @@ function loadDropDownChange() {
 			consolePrint("Eek, trying to load a file, but there's no local storage found. Eek!",true);
 	} 
 
-	saves = JSON.parse(saveString);
+	const saves = JSON.parse(saveString);
 	
 	for (let i=0;i<saves.length;i++) {
 		let sd = saves[i];

@@ -1,3 +1,5 @@
+'use strict';
+
 let canSetHTMLColors=true;
 let canDump=false;
 let canOpenEditor=false;

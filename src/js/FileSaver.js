@@ -1,3 +1,5 @@
+'use strict';
+
 function saveAs(text, type, filename) {
     let element = document.createElement('a');
     //encode text as blob

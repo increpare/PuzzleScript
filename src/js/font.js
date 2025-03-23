@@ -1,3 +1,4 @@
+'use strict';
 
 let font = {
 	'0': `

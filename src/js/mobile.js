@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Add gesture support for mobile devices.
  */

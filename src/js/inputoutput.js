@@ -1,29 +1,31 @@
-var keyRepeatTimer = 0;
-var keyRepeatIndex = 0;
-var input_throttle_timer = 0.0;
-var lastinput = -100;
+'use strict';
 
-var dragging = false;
-var rightdragging = false;
-var columnAdded = false;
+let keyRepeatTimer = 0;
+let keyRepeatIndex = 0;
+let input_throttle_timer = 0.0;
+let lastinput = -100;
+
+let dragging = false;
+let rightdragging = false;
+let columnAdded = false;
 
 function selectText(containerid, e) {
 	e = e || window.event;
-	var myspan = document.getElementById(containerid);
+	let myspan = document.getElementById(containerid);
 	if (e && (e.ctrlKey || e.metaKey)) {
-		var levelarr = ["console"].concat(myspan.innerText.split("\n"));
-		var leveldat = levelFromString(state, levelarr);
+		const levelarr = ["console"].concat(myspan.innerText.split("\n"));
+		const leveldat = levelFromString(state, levelarr);
 		loadLevelFromLevelDat(state, leveldat, null);
 		canvasResize();
 	} else {
 		if (document.selection) {
-			var range = document.body.createTextRange();
+			const range = document.body.createTextRange();
 			range.moveToElementText(myspan);
 			range.select();
 		} else if (window.getSelection) {
-			var range = document.createRange();
+			const range = document.createRange();
 			range.selectNode(myspan);
-			var selection = window.getSelection();
+			const selection = window.getSelection();
 			//why removeallranges? https://stackoverflow.com/a/43443101 whatever...
 			selection.removeAllRanges();
 			selection.addRange(range);
@@ -41,14 +43,14 @@ function arrCopy(from, fromoffset, to, tooffset, len) {
 
 function adjustLevel(level, widthdelta, heightdelta) {
 	backups.push(backupLevel());
-	var oldlevel = level.clone();
+	const oldlevel = level.clone();
 	level.width += widthdelta;
 	level.height += heightdelta;
 	level.n_tiles = level.width * level.height;
 	level.objects = new Int32Array(level.n_tiles * STRIDE_OBJ);
-	var bgMask = new BitVec(STRIDE_OBJ);
+	const bgMask = new BitVec(STRIDE_OBJ);
 	bgMask.ibitset(state.backgroundid);
-	for (var i = 0; i < level.n_tiles; ++i)
+	for (let i = 0; i < level.n_tiles; ++i)
 		level.setCell(i, bgMask);
 	level.movements = new Int32Array(level.objects.length);
 	columnAdded = true;
@@ -57,40 +59,40 @@ function adjustLevel(level, widthdelta, heightdelta) {
 }
 
 function addLeftColumn() {
-	var oldlevel = adjustLevel(level, 1, 0);
-	for (var x = 1; x < level.width; ++x) {
-		for (var y = 0; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, 1, 0);
+	for (let x = 1; x < level.width; ++x) {
+		for (let y = 0; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index - level.height))
 		}
 	}
 }
 
 function addRightColumn() {
-	var oldlevel = adjustLevel(level, 1, 0);
-	for (var x = 0; x < level.width - 1; ++x) {
-		for (var y = 0; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, 1, 0);
+	for (let x = 0; x < level.width - 1; ++x) {
+		for (let y = 0; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index))
 		}
 	}
 }
 
 function addTopRow() {
-	var oldlevel = adjustLevel(level, 0, 1);
-	for (var x = 0; x < level.width; ++x) {
-		for (var y = 1; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, 0, 1);
+	for (let x = 0; x < level.width; ++x) {
+		for (let y = 1; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index - x - 1))
 		}
 	}
 }
 
 function addBottomRow() {
-	var oldlevel = adjustLevel(level, 0, 1);
-	for (var x = 0; x < level.width; ++x) {
-		for (var y = 0; y < level.height - 1; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, 0, 1);
+	for (let x = 0; x < level.width; ++x) {
+		for (let y = 0; y < level.height - 1; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index - x));
 		}
 	}
@@ -100,10 +102,10 @@ function removeLeftColumn() {
 	if (level.width <= 1) {
 		return;
 	}
-	var oldlevel = adjustLevel(level, -1, 0);
-	for (var x = 0; x < level.width; ++x) {
-		for (var y = 0; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, -1, 0);
+	for (let x = 0; x < level.width; ++x) {
+		for (let y = 0; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index + level.height))
 		}
 	}
@@ -113,10 +115,10 @@ function removeRightColumn() {
 	if (level.width <= 1) {
 		return;
 	}
-	var oldlevel = adjustLevel(level, -1, 0);
-	for (var x = 0; x < level.width; ++x) {
-		for (var y = 0; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, -1, 0);
+	for (let x = 0; x < level.width; ++x) {
+		for (let y = 0; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index))
 		}
 	}
@@ -126,10 +128,10 @@ function removeTopRow() {
 	if (level.height <= 1) {
 		return;
 	}
-	var oldlevel = adjustLevel(level, 0, -1);
-	for (var x = 0; x < level.width; ++x) {
-		for (var y = 0; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, 0, -1);
+	for (let x = 0; x < level.width; ++x) {
+		for (let y = 0; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index + x + 1))
 		}
 	}
@@ -138,10 +140,10 @@ function removeBottomRow() {
 	if (level.height <= 1) {
 		return;
 	}
-	var oldlevel = adjustLevel(level, 0, -1);
-	for (var x = 0; x < level.width; ++x) {
-		for (var y = 0; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, 0, -1);
+	for (let x = 0; x < level.width; ++x) {
+		for (let y = 0; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index + x))
 		}
 	}
@@ -149,16 +151,16 @@ function removeBottomRow() {
 
 function matchGlyph(inputmask, glyphAndMask) {
 	// find mask with closest match
-	var highestbitcount = -1;
-	var highestmask;
-	for (var i = 0; i < glyphAndMask.length; ++i) {
-		var glyphname = glyphAndMask[i][0];
-		var glyphmask = glyphAndMask[i][1];
-		var glyphbits = glyphAndMask[i][2];
+	let highestbitcount = -1;
+	let highestmask;
+	for (let i = 0; i < glyphAndMask.length; ++i) {
+		const glyphname = glyphAndMask[i][0];
+		const glyphmask = glyphAndMask[i][1];
+		const glyphbits = glyphAndMask[i][2];
 		//require all bits of glyph to be in input
 		if (glyphmask.bitsSetInArray(inputmask.data)) {
-			var bitcount = 0;
-			for (var bit = 0; bit < 32 * STRIDE_OBJ; ++bit) {
+			let bitcount = 0;
+			for (let bit = 0; bit < 32 * STRIDE_OBJ; ++bit) {
 				if (glyphbits.get(bit) && inputmask.get(bit))
 					bitcount++;
 				if (glyphmask.get(bit) && inputmask.get(bit))
@@ -180,7 +182,7 @@ function matchGlyph(inputmask, glyphAndMask) {
 	return '.';
 }
 
-var htmlEntityMap = {
+let htmlEntityMap = {
 	"&": "&amp;",
 	"<": "&lt;",
 	">": "&gt;",
@@ -189,39 +191,39 @@ var htmlEntityMap = {
 	"/": '&#x2F;'
 };
 
-var selectableint = 0;
+let selectableint = 0;
 
 function printLevel() {
 	try {
 		errorCount = 0;
 		errorStrings = [];
-		var glyphMasks = [];
+		const glyphMasks = [];
 
-		for (var glyphName in state.glyphDict) {
+		for (const glyphName in state.glyphDict) {
 			if (state.glyphDict.hasOwnProperty(glyphName) && glyphName.length === 1) {
-				var glyph = state.glyphDict[glyphName];
-				var glyphmask = new BitVec(STRIDE_OBJ);
-				for (var i = 0; i < glyph.length; i++) {
-					var id = glyph[i];
+				const glyph = state.glyphDict[glyphName];
+				const glyphmask = new BitVec(STRIDE_OBJ);
+				for (let i = 0; i < glyph.length; i++) {
+					const id = glyph[i];
 					if (id >= 0) {
 						glyphmask.ibitset(id);
 					}
 				}
-				var glyphbits = glyphmask.clone();
+				const glyphbits = glyphmask.clone();
 				//register the same - backgroundmask with the same name
-				var bgMask = state.layerMasks[state.backgroundlayer];
+				const bgMask = state.layerMasks[state.backgroundlayer];
 				glyphmask.iclear(bgMask);
 				glyphMasks.push([glyphName, glyphmask, glyphbits]);
 			}
 		}
 		selectableint++;
-		var tag = 'selectable' + selectableint;
-		var output = "Printing level contents:<br><br><span id=\"" + tag + "\" onclick=\"selectText('" + tag + "',event)\">";
-		for (var j = 0; j < level.height; j++) {
-			for (var i = 0; i < level.width; i++) {
-				var cellIndex = j + i * level.height;
-				var cellMask = level.getCell(cellIndex);
-				var glyph = matchGlyph(cellMask, glyphMasks);
+		const tag = 'selectable' + selectableint;
+		const output = "Printing level contents:<br><br><span id=\"" + tag + "\" onclick=\"selectText('" + tag + "',event)\">";
+		for (let j = 0; j < level.height; j++) {
+			for (let i = 0; i < level.width; i++) {
+				const cellIndex = j + i * level.height;
+				const cellMask = level.getCell(cellIndex);
+				const glyph = matchGlyph(cellMask, glyphMasks);
 				if (glyph in htmlEntityMap) {
 					glyph = htmlEntityMap[glyph];
 				}
@@ -240,8 +242,8 @@ function printLevel() {
 
 function levelEditorClick(event, click) {
 	if (mouseCoordY <= -2) {
-		var ypos = editorRowCount - (-mouseCoordY - 2) - 1;
-		var newindex = mouseCoordX + (screenwidth - 1) * ypos;
+		const ypos = editorRowCount - (-mouseCoordY - 2) - 1;
+		const newindex = mouseCoordX + (screenwidth - 1) * ypos;
 		if (mouseCoordX === -1) {
 			printLevel();
 		} else if (mouseCoordX >= 0 && newindex < glyphImages.length) {
@@ -250,25 +252,25 @@ function levelEditorClick(event, click) {
 		}
 
 	} else if (mouseCoordX > -1 && mouseCoordY > -1 && mouseCoordX < screenwidth - 2 && mouseCoordY < screenheight - 2 - editorRowCount) {
-		var glyphname = glyphImagesCorrespondance[glyphSelectedIndex];
-		var glyph = state.glyphDict[glyphname];
-		var glyphmask = new BitVec(STRIDE_OBJ);
-		for (var i = 0; i < glyph.length; i++) {
-			var id = glyph[i];
+		const glyphname = glyphImagesCorrespondance[glyphSelectedIndex];
+		const glyph = state.glyphDict[glyphname];
+		const glyphmask = new BitVec(STRIDE_OBJ);
+		for (let i = 0; i < glyph.length; i++) {
+			const id = glyph[i];
 			if (id >= 0) {
 				glyphmask.ibitset(id);
 			}
 		}
 
-		var backgroundMask = state.layerMasks[state.backgroundlayer];
+		const backgroundMask = state.layerMasks[state.backgroundlayer];
 		if (glyphmask.bitsClearInArray(backgroundMask.data)) {
 			// If we don't already have a background layer, mix in
 			// the default one.
 			glyphmask.ibitset(state.backgroundid);
 		}
 
-		var coordIndex = mouseCoordY + mouseCoordX * level.height;
-		var getcell = level.getCell(coordIndex);
+		const coordIndex = mouseCoordY + mouseCoordX * level.height;
+		const getcell = level.getCell(coordIndex);
 		if (getcell.equals(glyphmask)) {
 			return;
 		} else {
@@ -306,8 +308,8 @@ function levelEditorRightClick(event, click) {
 			redraw();
 		}
 	} else if (mouseCoordX > -1 && mouseCoordY > -1 && mouseCoordX < screenwidth - 2 && mouseCoordY < screenheight - 2 - editorRowCount) {
-		var coordIndex = mouseCoordY + mouseCoordX * level.height;
-		var glyphmask = new BitVec(STRIDE_OBJ);
+		const coordIndex = mouseCoordY + mouseCoordX * level.height;
+		const glyphmask = new BitVec(STRIDE_OBJ);
 		glyphmask.ibitset(state.backgroundid);
 		level.setCell(coordIndex, glyphmask);
 		redraw();
@@ -331,7 +333,7 @@ function levelEditorRightClick(event, click) {
 	}
 }
 
-var anyEditsSinceMouseDown = false;
+let anyEditsSinceMouseDown = false;
 
 function onMouseDown(event) {
 
@@ -341,8 +343,8 @@ function onMouseDown(event) {
 
 	ULBS();
 
-	var lmb = event.button === 0;
-	var rmb = event.button === 2;
+	let lmb = event.button === 0;
+	let rmb = event.button === 2;
 	if (event.type == "touchstart") {
 		lmb = true;
 	}
@@ -454,11 +456,11 @@ function onKeyDown(event) {
 }
 
 function relMouseCoords(event) {
-	var totalOffsetX = 0;
-	var totalOffsetY = 0;
-	var canvasX = 0;
-	var canvasY = 0;
-	var currentElement = this;
+	let totalOffsetX = 0;
+	let totalOffsetY = 0;
+	let canvasX = 0;
+	let canvasY = 0;
+	let currentElement = this;
 
 	do {
 		totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
@@ -481,7 +483,7 @@ HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
 
 function onKeyUp(event) {
 	event = event || window.event;
-	var index = keybuffer.indexOf(event.keyCode);
+	let index = keybuffer.indexOf(event.keyCode);
 	if (index >= 0) {
 		keybuffer.splice(index, 1);
 		if (keyRepeatIndex >= index) {
@@ -502,11 +504,11 @@ function onMyBlur(event) {
 	keyRepeatTimer = 0;
 }
 
-var mouseCoordX = 0;
-var mouseCoordY = 0;
+let mouseCoordX = 0;
+let mouseCoordY = 0;
 
 function setMouseCoord(e) {
-	var coords = canvas.relMouseCoords(e);
+	const coords = canvas.relMouseCoords(e);
 	mouseCoordX = coords.x - xoffset;
 	mouseCoordY = coords.y - yoffset;
 	mouseCoordX = Math.floor(mouseCoordX / cellwidth);
@@ -569,7 +571,7 @@ function checkKey(e, justPressed) {
 		return;
 	}
 
-	var inputdir = -1;
+	let inputdir = -1;
 	switch (e.keyCode) {
 		case 65://a
 		case 37: //left
@@ -687,7 +689,7 @@ function checkKey(e, justPressed) {
 		case 57://9
 			{
 				if (levelEditorOpened && justPressed) {
-					var num = 9;
+					let num = 9;
 					if (e.keyCode >= 49) {
 						num = e.keyCode - 49;
 					}
@@ -859,11 +861,11 @@ function update() {
 	}
 	if (keybuffer.length > 0) {
 		keyRepeatTimer += deltatime;
-		var ticklength = throttle_movement ? repeatinterval : repeatinterval / (Math.sqrt(keybuffer.length));
+		const ticklength = throttle_movement ? repeatinterval : repeatinterval / (Math.sqrt(keybuffer.length));
 		if (keyRepeatTimer > ticklength) {
 			keyRepeatTimer = 0;
 			keyRepeatIndex = (keyRepeatIndex + 1) % keybuffer.length;
-			var key = keybuffer[keyRepeatIndex];
+			const key = keybuffer[keyRepeatIndex];
 			checkKey({ keyCode: key }, false);
 		}
 	}
@@ -880,9 +882,9 @@ function update() {
 	}
 }
 
-var prevTimestamp;
+let prevTimestamp;
 // Lights, camera…function!
-var loop = function (timestamp) {
+function loop(timestamp) {
 	if (prevTimestamp !== undefined) {
 		deltatime = timestamp - prevTimestamp
 	}
