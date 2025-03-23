@@ -207,7 +207,7 @@ function setColorScheme(light){
 	regenSpriteImages();
 }
 function toggleThemeClick() {
-	var lightMode = document.body.style.colorScheme === 'light';
+	let lightMode = document.body.style.colorScheme === 'light';
 	lightMode = !lightMode;
 	localStorage.setItem("lightMode", lightMode);
 	setColorScheme(lightMode);

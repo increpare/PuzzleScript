@@ -445,7 +445,7 @@ function levelFromString(state, level) {
         }
     }
 
-    let levelBackgroundMask = o.calcBackgroundMask(state);
+    const levelBackgroundMask = o.calcBackgroundMask(state);
     for (let i = 0; i < o.n_tiles; i++) {
         let cell = o.getCell(i);
         if (!backgroundLayerMask.anyBitsInCommon(cell)) {
