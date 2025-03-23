@@ -867,11 +867,10 @@ function deepCloneRule(rule) {
     return clonedRule;
 }
 
-
 function checkSuperfluousCoincidences(state,rules){
 
     /*
-First, let's check for 'X no ' on the RHS, where 
+First, let's check for 'X no X' on the RHS.
     */
 // check that that we don't have an object on one layer required, and at the same time
 // 'no X' where x is also on that layer - it's   "no wall" and player in the same cell - for then "no wall" is
@@ -879,12 +878,93 @@ First, let's check for 'X no ' on the RHS, where
 // for each rule
 
     //first, find a list of layers where we *know* something has to be
-    let required_layers = new BitVec(Math.ceil(LAYER_COUNT/5)|0);
+    let required_layers = new BitVec(Math.ceil(LAYER_COUNT/32)|0);
     let required_objects = new BitVec(STRIDE_OBJ);
     
     const rules_l = rules.length;
     for (let i=0;i<rules_l;i++){
         let rule = rules[i];
+
+        // First do a RHS check - you shouldn't have something amounting to
+        // X no X on the RHS. (even if the engine does it internally a lot later)
+        const rhs_len = rule.rhs.length;
+        for (let j=0;j<rhs_len;j++){
+            let rhs_group = rule.rhs[j];
+            const rhs_group_len = rhs_group.length;
+            for (let k=0;k<rhs_group_len;k++){
+                let cell = rhs_group[k];
+                var objects_present = [];
+                var objects_present_mask = new BitVec(STRIDE_OBJ);
+                for (let l=0;l<cell.length;l+=2){
+                    let item = cell[l];
+                    if (!item.startsWith("no")){
+                        let no_name = cell[l+1];
+                        if (state.objects.hasOwnProperty(no_name)){
+                            objects_present.push(no_name);
+                            objects_present_mask.ibitset(state.objects[no_name].id);
+                        } else if (state.propertiesSingleLayer.hasOwnProperty(no_name)){
+                            // objects_present.push(no_name);
+                            // let property_obs = state.propertiesDict[no_name];
+                            // for (let m=0;m<property_obs.length;m++){
+                            //     let ob_data = state.objects[property_obs[m]];
+                            //     objects_present_mask.ibitset(ob_data.id);
+                            // }
+                        } else if (state.propertiesDict.hasOwnProperty(no_name)){
+                            // this is more complicated a case, right?
+                            // let property_obs = state.propertiesDict[no_name];
+                            // for (let m=0;m<property_obs.length;m++){
+                            //     let ob_data = state.objects[property_obs[m]];
+                            //     objects_present_mask.ibitset(ob_data.id);
+                            // }
+                        }
+                    }
+                }
+                //for each 'no' object
+                for (let l=0;l<cell.length;l+=2){
+                    let item = cell[l];
+                    if (item.startsWith("no")){
+                        let no_name = cell[l+1];
+                        var no_name_mask = state.objectMasks[no_name];
+
+                        //if no_name overlaps with any objects_present, then we have a problem.
+                        if (no_name_mask.anyBitsInCommon(objects_present_mask)){
+                            logError(`You have specified that there should be NO ${no_name.toUpperCase()} but there is also a requirement that ${objects_present.join(", ").toUpperCase()} be here.  This is a mistake right?`, rule.lineNumber);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        //secondly, for all 'no X' on the LHS, can remove any corresponding verbatim 'no X' on the RHS.
+        for (let j=0;j<rhs_len;j++){
+            let rhs_group = rule.rhs[j];
+            const rhs_group_len = rhs_group.length;
+            for (let k=0;k<rhs_group_len;k++){
+                let cell = rhs_group[k];
+                for (let l=0;l<cell.length;l+=2){
+                    let item = cell[l];
+                    if (item.startsWith("no")){
+                        let no_name = cell[l+1];
+                        //look for a 'no X' on the LHS in the same position
+                        const lhs_cell = rule.lhs[j][k];
+                        for (let m=0;m<lhs_cell.length;m+=2){
+                            if (lhs_cell[m].startsWith("no") && lhs_cell[m+1] === no_name){
+                                //we have a match - remove the 'no X' from the LHS
+                                cell.splice(l,2);
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    
+
+
+        // thirdly, trim unnecessary 'no X's on the LHS - e.g. [ player no wall ]
+
         const lhs_len = rule.lhs.length;
         for (let j=0;j<lhs_len;j++){
             let lhs_group = rule.lhs[j];
@@ -912,7 +992,9 @@ First, let's check for 'X no ' on the RHS, where
                         let property_obs = state.propertiesDict[entity_name];
                         const property_obs_len = property_obs.length;
                         for (let m=0;m<property_obs_len;m++){
-                            required_objects.ibitset(property_obs[m].id);
+                            const object_name = property_obs[m];
+                            const object_data = state.objects[object_name];
+                            required_objects.ibitset(object_data.id);
                         }
                         occupier[layer]=entity_name;
                     } else if (state.objects.hasOwnProperty(entity_name)){
@@ -935,76 +1017,42 @@ First, let's check for 'X no ' on the RHS, where
                 }
 
                 
-                let no_objecs = [];
                 //find all objects qualified by 'no'
                 for (let l=0;l<cell.length;l+=2){
                     let item = cell[l];
                     if (item.startsWith("no")){
                         let no_name = cell[l+1]
                         let remove = false;
-                        if (state.objects.hasOwnProperty(no_name)){
-                            let o = state.objects[no_name];
-                            let layer = o.layer;
-                            if (required_layers.get(layer)&&occupier[layer]!==no_name){
-                                logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " (on layer " + (layer+1) + ") but there is also a requirement that " + occupier[layer].toUpperCase() + " be here, which is on the same layer, so you can leave this out.", rule.lineNumber,false);
-                                remove=true;
+                        if (!state.objectMasks.hasOwnProperty(no_name)){
+                            continue;//error, should have been caught earlier - e.g. You cannot use 'no' to exclude the aggregate objec
+                        }
+                        let no_object_mask = state.objectMasks[no_name];
+                        let no_object_layer_mask = new BitVec(Math.ceil(LAYER_COUNT/32)|0);                        
+                        for (let m=0;m<state.layerMasks.length;m++){
+                            if (state.layerMasks[m].anyBitsInCommon(no_object_mask)){
+                                no_object_layer_mask.ibitset(m);
                             }
-                        } else if (state.propertiesSingleLayer.hasOwnProperty(no_name)){
-                            let layer = state.propertiesSingleLayer[no_name];
-                            if (required_layers.get(layer)&&occupier[layer]!==no_name){
+                        }                        
 
-                                // I now need to make sure there's no partial overlap with the positive object
-                                let property_obs = state.propertiesDict[no_name];
-                                let obs_mask = new BitVec(STRIDE_OBJ);
-                                for (let m=0;m<property_obs.length;m++){
-                                    let ob_data = state.objects[property_obs[m]];
-                                    let layer = ob_data.layer;
-                                    let id = ob_data.id;
-                                    obs_mask.ibitset(id);
-                                }
-                                const disjoint = !obs_mask.anyBitsInCommon(required_objects);
-                                if (disjoint){
-                                    logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " (on layer " + (layer+1) + ") but there is also a requirement that " + occupier[layer].toUpperCase() + " be here, which is on the same layer, so you can leave this out.", rule.lineNumber,false);
-                                    remove=true;
+                        const object_layers_disjoint = !no_object_mask.anyBitsInCommon(required_objects);
+                        const no_object_covered_by_required_layers = no_object_layer_mask.bitsSetInArray(required_layers.data);      
+
+                        if (no_object_covered_by_required_layers && object_layers_disjoint){
+
+                            const obs_present = [];
+                            const layers_present = [];
+                            for (let m=0;m<state.layerMasks.length;m++){
+                                if (occupier[m]){
+                                    obs_present.push(occupier[m]);
+                                    layers_present.push(m);
                                 }
                             }
-                        } else if (state.propertiesDict.hasOwnProperty(no_name)){
-                            let property_obs = state.propertiesDict[no_name];
-                            // TOFIX: if *all* the layers are already required, then this no statement is pointless
-                            // so we can remove it, UNLESS the negative object overlaps with the positive one
-                            // (in terms of objects, not layer occupancy).
-                            // to do  this i'l need to build up object masks, not just layer occupancy masks.
-
-                            let obs_present = [];
-                            let layers_present = [];
-                            let properties_mask = new BitVec(Math.ceil(LAYER_COUNT/5)|0)
-                            let obs_mask = new BitVec(STRIDE_OBJ);
-                            for (let m=0;m<property_obs.length;m++){
-                                let ob_data = state.objects[property_obs[m]];
-                                let layer = ob_data.layer;
-                                let id = ob_data.id;
-                                if (layers_present.indexOf(layer) === -1){
-                                    layers_present.push(layer);
-                                }
-
-                                properties_mask.ibitset(layer);
-                                obs_mask.ibitset(id);
-                                obs_present.push(occupier[layer]);
-                            }
-                    
-                            const disjoint = !obs_mask.anyBitsInCommon(required_objects);
-                            if (properties_mask.bitsSetInArray(required_layers.data) && disjoint){
-                                logWarning(`You have specified that there should be NO ${no_name.toUpperCase()} but there is also a requirement that ${obs_present.join(", ").toUpperCase()} be there, which collectively occupy the same layers (Layers ${layers_present.map(l=>l+1).join(", ")}), so you can leave this out.`, rule.lineNumber);
-                                remove=true;
-                            }
-                        } //don't need to check aggregates - 'no A_and_B' is not allowed.
-                        if (remove){
-                            // cell.splice(l,2);
-                            // l-=2;
+                            logWarning(`You have specified that there should be NO ${no_name.toUpperCase()} but there is also a requirement that ${obs_present.join(", ").toUpperCase()} be there, which collectively occupies the same layers (Layers ${layers_present.map(l=>l+1).join(", ")}), so you can leave this out.`, rule.lineNumber);
+                            cell.splice(l,2);
+                            l-=2;
                         }
                     }
-                }
-                
+                }                
             }
         }
     }

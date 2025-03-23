@@ -258,6 +258,18 @@ BitVec.prototype.anyBitsInCommon = function(other) {
 	return false;
 }
 
+BitVec.prototype.prettyPrint = function() {
+	var result="";
+	//print string as bit array, grouped into fives
+	for (let i = 0; i < this.data.length; i++) {
+		for (let j = 0; j < 32; j++) {
+			result += (this.data[i] & (1 << j)) ? "1" : "0";
+		}
+		result += " ";
+	}
+	return result;
+}
+
 function ANY_BITS_IN_COMMON(tok, arr, array_size) {
 	if (array_size === 0) {
 		return "false";
@@ -332,3 +344,4 @@ function IMPORT_COMPILE_TIME_ARRAY(runtime,compiletime,array_size){
 	}
 	return result;
 }
+
