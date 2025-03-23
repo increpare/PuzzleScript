@@ -867,6 +867,100 @@ function deepCloneRule(rule) {
     return clonedRule;
 }
 
+
+function checkSuperfluousCoincidences(state,rules){
+// check that that we don't have an object on one layer required, and at the same time
+// 'no X' where x is also on that layer - it's   "no wall" and player in the same cell - for then "no wall" is
+// superfluous.
+// for each rule
+    const rules_l = rules.length;
+    for (let i=0;i<rules_l;i++){
+        let rule = rules[i];
+        const lhs_len = rule.lhs.length;
+        for (let j=0;j<lhs_len;j++){
+            let lhs_group = rule.lhs[j];
+            const lhs_group_len = lhs_group.length; 
+            for (let k=0;k<lhs_group_len;k++){
+                let cell = lhs_group[k];
+                // cell is an array of pairs - it looks like:
+                // ["", "player", "no", "wall", "", "target"]
+
+                //first, find a list of layers where we *know* something has to be
+                let required_layers = new BitVec(STRIDE_MOV);
+                var occupier={};
+                for (let l=0;l<cell.length;l+=2){
+                    var entity_modifier = cell[l];
+                    if (entity_modifier==="no"){
+                        continue;
+                    }
+                    let entity_name = cell[l+1]
+                    let layer=[];
+                    //if it's a single-layer property
+                    if (state.propertiesSingleLayer.hasOwnProperty(entity_name)){
+                        let layer = state.propertiesSingleLayer[entity_name];
+                        required_layers.ibitset(layer);
+                        occupier[layer]=entity_name;
+                    } else if (state.objects.hasOwnProperty(entity_name)){
+                        let layer = state.objects[entity_name].layer;
+                        required_layers.ibitset(layer);
+                        occupier[layer]=entity_name;
+                    } else if (state.aggregatesDict.hasOwnProperty(entity_name)){
+                        let aggregate_obs = state.aggregatesDict[entity_name];
+                        for (let m=0;m<aggregate_obs.length;m++){
+                            let layer = state.objects[aggregate_obs[m]].layer;
+                            required_layers.ibitset(layer);
+                            occupier[layer]=entity_name;
+                        }
+                    }
+                }
+
+                
+                let no_objecs = [];
+                //find all objects qualified by 'no'
+                for (let l=0;l<cell.length;l+=2){
+                    let item = cell[l];
+                    if (item.startsWith("no")){
+                        let no_name = cell[l+1]
+
+                        if (state.objects.hasOwnProperty(no_name)){
+                            let o = state.objects[no_name];
+                            var o_layer = o.layer;
+                            if (required_layers.get(o_layer)){
+                                logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " on layer " + (o_layer+1) + " but there is also a requirement that " + occupier[o_layer].toUpperCase() + " be there, so you can leave this out.", rule.lineNumber,false);
+                            }
+                        } else if (state.propertiesSingleLayer.hasOwnProperty(no_name)){
+                            let layer = state.propertiesSingleLayer[no_name];
+                            if (required_layers.get(layer)){
+                                logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " on layer " + (layer+1) + " but there is also a requirement that " + occupier[layer].toUpperCase() + " be there, so you can leave this out.", rule.lineNumber,false);
+                            }
+                        } else if (state.propertiesDict.hasOwnProperty(no_name)){
+                            let property_obs = state.propertiesDict[no_name];
+                            //if *all* the layers are already required, then this no statement is pointless
+                            var obs_present = [];
+                            var layers_present = [];
+                            var properties_mask = new BitVec(STRIDE_OBJ)
+                            for (let m=0;m<property_obs.length;m++){
+                                let layer = state.objects[property_obs[m]].layer;
+                                if (layers_present.indexOf(layer) === -1){
+                                    layers_present.push(layer);
+                                }
+                                properties_mask.ibitset(layer);
+                                obs_present.push(occupier[layer]);
+                            }
+                            if (properties_mask.bitsSetInArray(required_layers.data)){
+                                logWarning(`You have specified that there should be NO ${no_name.toUpperCase()} but there is also a requirement that ${obs_present.join(", ").toUpperCase()} be there, which collectively occupy the same layers (Layers ${layers_present.map(l=>l+1).join(", ")}), so you can leave this out.`, rule.lineNumber);
+                            }
+                        } //don't need to check aggregates - 'no A_and_B' is not allowed.
+                    }
+                }
+                
+            }
+        }
+    }
+
+
+}
+
 function rulesToArray(state) {
     let oldrules = state.rules;
     let rules = [];
@@ -884,6 +978,8 @@ function rulesToArray(state) {
         rules.push(newrule);
     }
     state.loops = loops;
+
+    checkSuperfluousCoincidences(state,rules);
 
     //now expand out rules with multiple directions
     let rules2 = [];
