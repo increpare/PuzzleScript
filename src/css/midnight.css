@@ -28,6 +28,10 @@ body {
     font-family: 'Consolas', 'Lucida Console', monospace;
 }
 
+.nocolorlink, .nocolorlink:visited, .nocolorlink .quasilink{
+    color: inherit;
+}
+
 .cm-s-midnight span.cm-COLOR {}
 
 .light-theme .cm-s-midnight span.cm-BOLDCOLOR {
