@@ -36,6 +36,7 @@ doSetupTitleScreenLevelContinue();
 
 let verbose_logging = false;
 let throttle_movement = false;
+let suppress_all_console_output = false;
 let cache_console_messages = false;
 let quittingTitleScreen = false;
 let quittingMessageScreen = false;

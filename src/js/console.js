@@ -49,7 +49,7 @@ function consolePrintFromRule(text,rule,urgent) {
 	}
 }
 
-function consolePrint(text,urgent,linenumber,inspect_ID) {
+function consolePrint(text,urgent,linenumber,inspect_ID,scrolldown=true) {
 
 	if (urgent===undefined) {
 		urgent=false;
@@ -59,15 +59,18 @@ function consolePrint(text,urgent,linenumber,inspect_ID) {
 	if (cache_console_messages && urgent===false) {		
 		consolecache.push([text,linenumber,inspect_ID,1]);
 	} else {
-		consoleCacheDump();
-		addToConsole(text);
+		consoleCacheDump(scrolldown);
+		addToConsole(text,scrolldown);
 	}
 }
 
 
 let cache_n = 0;
 
-function addToConsole(text) {
+function addToConsole(text,scrolldown=true) {
+	if (suppress_all_console_output){
+		return;
+	}
 	const cache = document.createElement("div");
 	cache.id = "cache" + cache_n;
 	cache.innerHTML = text;
@@ -76,11 +79,16 @@ function addToConsole(text) {
 	let code = document.getElementById('consoletextarea');
 	code.appendChild(cache);
 	consolecache=[];
-	let objDiv = document.getElementById('lowerarea');
-	objDiv.scrollTop = objDiv.scrollHeight;
+	if (scrolldown){
+		let objDiv = document.getElementById('lowerarea');
+		objDiv.scrollTop = objDiv.scrollHeight;
+	}
 }
 
-function consoleCacheDump() {
+function consoleCacheDump(scrolldown=true) {
+	if (suppress_all_console_output){
+		return;
+	}
 	if (cache_console_messages===false) {
 		return;
 	}
@@ -161,7 +169,7 @@ function consoleCacheDump() {
 	}
 
 
-	addToConsole(summarised_message);
+	addToConsole(summarised_message,scrolldown);
 }
 
 function consoleError(text) {	

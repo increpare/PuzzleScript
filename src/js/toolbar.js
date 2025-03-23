@@ -33,10 +33,41 @@ function dateToReadable(title,time) {
 	return result;
 }
 
+
 function saveClick() {
+	suppress_all_console_output = true;
+	if (saveToGroup("saves",true)){ 
+		suppress_all_console_output = false;
+		consolecache=[];
+		consolePrint("saved file to local storage",true);
+	} else{
+		suppress_all_console_output = false;
+		consolecache=[];
+		consolePrint("no need to save, file is identical to last save",true);
+	}
+}
+
+//every five minutes, do an autosave
+function autosave(){
+	suppress_all_console_output = true;
+	if (saveToGroup("autosaves",false)){
+		suppress_all_console_output = false;
+		consolecache=[];
+		consolePrint("autosaved file to local storage",true,undefined,undefined,false);
+	} else{
+		//no need to say anything
+		suppress_all_console_output = false;
+	}
+}
+
+setInterval(autosave, 10*60*1000);
+
+function saveToGroup(savegroup,rebuild){
 	// I never want a game causing the compiler to somehow throw errors to stopping you from saving it
-	try {		
-		compile(["rebuild"]);//to regenerate/extract title
+	try {	
+		if (rebuild){	
+			compile(["rebuild"]);//to regenerate/extract title
+		}
 	} catch (error) {
 		console.log(error);
 	}
@@ -52,10 +83,17 @@ function saveClick() {
 	}
 
 	let curSaveArray = [];
-	if (storage_has('saves')) {
-		curSaveArray = JSON.parse(storage_get('saves'));
+	if (storage_has(savegroup)) {
+		curSaveArray = JSON.parse(storage_get(savegroup));
 	}
 
+	//if you try to save a file that's identical as the last time you saved, delete the older version
+	if (curSaveArray.length>0){
+		if (curSaveArray[curSaveArray.length-1].text===text){
+			return false;
+		}
+	}
+	
 	if (curSaveArray.length>20) {
 		curSaveArray.splice(0,1);
 	}
@@ -63,16 +101,15 @@ function saveClick() {
 
 
 	let savesDatStr = JSON.stringify(curSaveArray);
-	storage_set('saves',savesDatStr);
+	storage_set(savegroup,savesDatStr);
 
-	repopulateSaveDropdown(curSaveArray);
+	repopulateSaveDropdown();
 
 	let loadDropdown = document.getElementById('loadDropDown');
 	loadDropdown.selectedIndex=0;
 
 	setEditorClean();
 
-	consolePrint("saved file to local storage",true);
 
 	if (window.location.href.indexOf("?hack")>=0){
 		let currURL= window.location.href; 
@@ -81,10 +118,7 @@ function saveClick() {
  
 		window.history.pushState({}, document.title, "./" +beforeQueryString);
 	}
-	//clear parameters from url bar if any present
-	if (curSaveArray.length===20){
-		consolePrint("WARNING: your <i>locally saved file list</i> has reached its maximum capacity of 20 files - older saved files will be deleted when you save in future.",true);
-	}
+	return true;
 }
 
 window.addEventListener( "pageshow", function ( event ) {
@@ -102,70 +136,94 @@ window.addEventListener("popstate", function(event){
 	location.reload();
 });
 
-function loadDropDownChange() {
-
-	if(!canExit()) {
- 		this.selectedIndex = 0;
- 		return;
- 	}
-
-	let saveString = storage_get('saves');
-	if (saveString === null) {
-			consolePrint("Eek, trying to load a file, but there's no local storage found. Eek!",true);
-	} 
-
-	const saves = JSON.parse(saveString);
-	
-	for (let i=0;i<saves.length;i++) {
-		let sd = saves[i];
-	    let key = dateToReadable(sd.title,new Date(sd.date));
-	    if (key==this.value) {
-
-	    	let saveText = sd.text;
-			editor.setValue(saveText);
-			clearConsole();
-			setEditorClean();
-			let loadDropdown = document.getElementById('loadDropDown');
-			loadDropdown.selectedIndex=0;
-			unloadGame();
-			compile(["restart"]);
-			return;
-	    }
-	}		
-
-	consolePrint("Eek, trying to load a save, but couldn't find it. :(",true);
+//change event for select element
+function loadDropDownChange(event) {
+    if(!canExit()) {
+        this.selectedIndex = 0;
+        return;
+    }
+    
+    // Get the selected option and determine which optgroup it belongs to
+    let selectedOption = this.options[this.selectedIndex];
+    let parentOptgroup = selectedOption.parentNode;
+    
+    // Skip if the "Load" option (not in an optgroup) is selected
+    if (parentOptgroup.tagName !== 'OPTGROUP') {
+        return;
+    }
+    
+    // Determine which storage group to load from based on optgroup id
+    let storageGroup = 'saves';
+    if (parentOptgroup.id === 'loadDropdown_autosaves') {
+        storageGroup = 'autosaves';
+    }
+    
+    let saveString = storage_get(storageGroup);
+    if (saveString === null) {
+        consolePrint(`Eek, trying to load a file, but there's no local storage found for ${storageGroup}. Eek!`, true);
+        return;
+    }
+    
+    const saves = JSON.parse(saveString);
+    
+    for (let i = 0; i < saves.length; i++) {
+        let sd = saves[i];
+        let key = dateToReadable(sd.title, new Date(sd.date));
+        if (key == this.value) {
+            let saveText = sd.text;
+            editor.setValue(saveText);
+            clearConsole();
+            setEditorClean();
+            let loadDropdown = document.getElementById('loadDropDown');
+            loadDropdown.selectedIndex = 0;
+            unloadGame();
+            compile(["restart"]);
+            return;
+        }
+    }
+    
+    consolePrint("Eek, trying to load a save, but couldn't find it. :(", true);
 }
 
 
-function repopulateSaveDropdown(saves) {
+function repopulateSaveDropdown() {
 	let loadDropdown = document.getElementById('loadDropDown');
+
 	loadDropdown.options.length = 0;
 
-	if (saves===undefined) {
+	let optn = document.createElement("OPTION");
+	optn.text = "Load";
+	optn.value = "Load";
+	loadDropdown.insertBefore(optn,loadDropdown.firstChild);  
+
+	function populateDropdownSection(optgroup_name,savegroup_name){
+		let loadDropdownGroup = document.getElementById(optgroup_name);
+		let saves;
 		try {
-			if (!storage_has('saves')) {
+			if (!storage_has(savegroup_name)) {
 				return;
 			} else {
-				saves = JSON.parse(storage_get("saves"));
+				saves = JSON.parse(storage_get(savegroup_name));
 			}
 		} catch (ex) {
 			return;
 		}
+		
+		for (let i=saves.length-1;i>=0;i--) {			
+			let sd = saves[i];
+			let optn = document.createElement("OPTION");
+			let key = dateToReadable(sd.title,new Date(sd.date));
+			optn.text = key;
+			optn.value = key;
+			loadDropdownGroup.appendChild(optn);
+		}	
 	}
 
-    let optn = document.createElement("OPTION");
-    optn.text = "Load";
-    optn.value = "Load";
-    loadDropdown.options.add(optn);  
+	populateDropdownSection("loadDropdown_userSaves","saves");
+	populateDropdownSection("loadDropdown_autosaves","autosaves");
 
-	for (let i=saves.length-1;i>=0;i--) {			
-		let sd = saves[i];
-	    let optn = document.createElement("OPTION");
-	    let key = dateToReadable(sd.title,new Date(sd.date));
-	    optn.text = key;
-	    optn.value = key;
-	    loadDropdown.options.add(optn);  
-	}
+	//now for autosaves 
+	// firstly, create a separator
 	loadDropdown.selectedIndex=0;
 }
 
