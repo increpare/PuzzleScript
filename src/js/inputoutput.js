@@ -367,23 +367,28 @@ function onMouseDown(event) {
 		}
 		dragging = false;
 		rightdragging = false;
+		event.handled = true;
 	} else if (rmb) {
 		if (event.target === canvas || event.target.className === "tapFocusIndicator") {
 			setMouseCoord(event);
 			dragging = false;
 			rightdragging = true;
 			if (levelEditorOpened) {
+				event.handled = true;
 				return levelEditorRightClick(event, true);
 			}
 		}
 	}
 
-	event.handled = true;
 
 }
 
 function rightClickCanvas(event) {
-	return prevent(event);
+	if (levelEditorOpened){
+		return prevent(event);
+	} else {
+		return true;
+	}
 }
 
 function onMouseUp(event) {
