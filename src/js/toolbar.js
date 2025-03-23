@@ -51,7 +51,7 @@ function saveClick() {
 
 	let curSaveArray = [];
 	if (storage_has('saves')) {
-		let curSaveArray = JSON.parse(storage_get('saves'));
+		curSaveArray = JSON.parse(storage_get('saves'));
 	}
 
 	if (curSaveArray.length>20) {
