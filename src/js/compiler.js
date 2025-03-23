@@ -942,14 +942,27 @@ function checkSuperfluousCoincidences(state,rules){
                             let o = state.objects[no_name];
                             let layer = o.layer;
                             if (required_layers.get(layer)&&occupier[layer]!==no_name){
-                                logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " (on layer " + (layer+1) + ") but there is also a requirement that " + occupier[layer].toUpperCase() + " be on the same layer, so you can leave this out.", rule.lineNumber,false);
+                                logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " (on layer " + (layer+1) + ") but there is also a requirement that " + occupier[layer].toUpperCase() + " be here, which is on the same layer, so you can leave this out.", rule.lineNumber,false);
                                 remove=true;
                             }
                         } else if (state.propertiesSingleLayer.hasOwnProperty(no_name)){
                             let layer = state.propertiesSingleLayer[no_name];
                             if (required_layers.get(layer)&&occupier[layer]!==no_name){
-                                logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " (on layer " + (layer+1) + ") but there is also a requirement that " + occupier[layer].toUpperCase() + " be on the same layer, so you can leave this out.", rule.lineNumber,false);
-                                remove=true;
+
+                                // I now need to make sure there's no partial overlap with the positive object
+                                let property_obs = state.propertiesDict[no_name];
+                                let obs_mask = new BitVec(STRIDE_OBJ);
+                                for (let m=0;m<property_obs.length;m++){
+                                    let ob_data = state.objects[property_obs[m]];
+                                    let layer = ob_data.layer;
+                                    let id = ob_data.id;
+                                    obs_mask.ibitset(id);
+                                }
+                                const disjoint = !obs_mask.anyBitsInCommon(required_objects);
+                                if (disjoint){
+                                    logWarning("You have specified that there should be NO " + no_name.toUpperCase() + " (on layer " + (layer+1) + ") but there is also a requirement that " + occupier[layer].toUpperCase() + " be here, which is on the same layer, so you can leave this out.", rule.lineNumber,false);
+                                    remove=true;
+                                }
                             }
                         } else if (state.propertiesDict.hasOwnProperty(no_name)){
                             let property_obs = state.propertiesDict[no_name];
