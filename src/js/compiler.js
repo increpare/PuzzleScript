@@ -2597,7 +2597,21 @@ function printCellRow(cellRow) {
 }
 
 function cacheRuleStringRep(rule) {
-    let result = "(<a onclick=\"jumpToLine('" + rule.lineNumber.toString() + "');\"  href=\"javascript:void(0);\">" + rule.lineNumber + "</a>) " + rule.direction.toString().toUpperCase() + " ";
+    let result = "(<a onclick=\"jumpToLine('" + rule.lineNumber.toString() + "');\"  href=\"javascript:void(0);\">" + rule.lineNumber + "</a>) ";
+
+    //only print rule-direction if some lhs cellrow has length>1
+    let directed=false;
+    for (let i=0;i<rule.lhs.length;i++){
+        let cellRow = rule.lhs[i];
+        if (cellRow.length>1){
+            directed=true;
+            break;
+        }
+    }
+
+    if (directed){
+        result += rule.direction.toString().toUpperCase() + " ";
+    }
     if (rule.rigid) {
         result = "RIGID " + result + " ";
     }
