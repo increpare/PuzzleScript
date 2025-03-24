@@ -455,14 +455,16 @@ function redraw() {
             }
 
             //draw rigid applciations!
-            for (var i = mini; i < maxi; i++) {
-                for (var j = minj; j < maxj; j++) {
-                    var posIndex = j + i * curlevel.height;
-                    var rigidbitvec = curlevel.getRigids(posIndex);
-                    for (var layer = 0; layer < curlevel.layerCount; layer++) {
-                        var layerRigid = rigidbitvec.getshiftor(0x1f, 5 * layer);
-                        if (layerRigid !== 0) {
-                            ctx.drawImage(editorGlyphMovements[5], xoffset + (i - mini) * cellwidth, yoffset + (j - minj) * cellheight);
+            if (state.rigid){
+                for (var i = mini; i < maxi; i++) {
+                    for (var j = minj; j < maxj; j++) {
+                        var posIndex = j + i * curlevel.height;
+                        var rigidbitvec = curlevel.getRigids(posIndex);
+                        for (var layer = 0; layer < curlevel.layerCount; layer++) {
+                            var layerRigid = rigidbitvec.getshiftor(0x1f, 5 * layer);
+                            if (layerRigid !== 0) {
+                                ctx.drawImage(editorGlyphMovements[5], xoffset + (i - mini) * cellwidth, yoffset + (j - minj) * cellheight);
+                            }
                         }
                     }
                 }
