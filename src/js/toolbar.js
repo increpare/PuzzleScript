@@ -292,13 +292,15 @@ function shareClick() {
 	}
 
 	consolePrint("<br>Sending code to github...",true)
+
+	
+	compile(["rebuild"]);
+
 	let title = "Untitled PuzzleScript Script";
 	if (state.metadata.title!==undefined) {
 		title=state.metadata.title + " (PuzzleScript Script)";
 	}
 	
-	compile(["rebuild"]);
-
 	let source=editor.getValue();
 	github_save(title, source, function(id, e) {
 		if (e !== null) {
