@@ -1,7 +1,7 @@
+'use strict';
 
-
-    onmousemove="mouseMove(event)" 
-    onmouseout="mouseOut()"
+onmousemove="mouseMove(event)" 
+onmouseout="mouseOut()"
 
 let el = document.getElementById("gameCanvas");
 if (el.addEventListener) {
