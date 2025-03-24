@@ -1864,15 +1864,15 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		let curRigidMovementAppliedMask;
 		let rigidchange=false;		
 		${IF_LAZY(rule.rigid,()=>`
-			let rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1;
-			const rigidMask = new BitVec(STRIDE_MOV);
-			for (let layer = 0; layer < level.layerCount; layer++) {
-				${ISHIFTOR("rigidMask", "rigidGroupIndex", "(layer * 5)")}
-			}
+			const rigidGroupIndex = ${state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1};
+			const rigidMask = new BitVec(${STRIDE_MOV});
+			${FOR(0,level.layerCount,layer=>`
+				${ISHIFTOR("rigidMask", "rigidGroupIndex", layer * 5)}
+			`)}
 			${UNROLL("rigidMask &= replace.movementsLayerMask", MOVEMENT_SIZE)}
 			
-			curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE_MOV);
-			curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE_MOV);
+			curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(${STRIDE_MOV});
+			curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(${STRIDE_MOV});
 
 			if (${NOT_BITS_SET_IN_ARRAY("rigidMask", "curRigidGroupIndexMask.data", MOVEMENT_SIZE)} &&
 				${NOT_BITS_SET_IN_ARRAY("replace.movementsLayerMask", "curRigidMovementAppliedMask.data", MOVEMENT_SIZE)}) 
@@ -1990,7 +1990,7 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 
 			for (let y=ymin;y<ymax;y++) {
 				const i = x*level.height+y;
-				if (cellRowMatch(	cellRow,i, d, level.objects, level.movements))
+				if (cellRowMatch(cellRow,i, d, level.objects, level.movements))
 				{
 					result.push(i);
 				}
