@@ -218,7 +218,7 @@ function printLevel() {
 		}
 		selectableint++;
 		const tag = 'selectable' + selectableint;
-		const output = "Printing level contents:<br><br><span id=\"" + tag + "\" onclick=\"selectText('" + tag + "',event)\">";
+		let output = "Printing level contents:<br><br><span id=\"" + tag + "\" onclick=\"selectText('" + tag + "',event)\">";
 		for (let j = 0; j < level.height; j++) {
 			for (let i = 0; i < level.width; i++) {
 				const cellIndex = j + i * level.height;
@@ -236,6 +236,7 @@ function printLevel() {
 		output += "</span><br><br>"
 		consolePrint(output, true);
 	} catch (e) {
+		console.error(e);
 		consolePrint("unable to print level contents because of errors", true);
 	}
 }
