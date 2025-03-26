@@ -2967,10 +2967,6 @@ function checkWin(dontDoWin) {
 		dontDoWin = true;
 	}
 
-	if (state.winconditions.length === 0) {
-		return false;
-	}
-
 	if (level.commandQueue.indexOf('win') >= 0) {
 		if (runrulesonlevelstart_phase) {
 			consolePrint("Win Condition Satisfied (However this is in the run_rules_on_level_start rule pass, so I'm going to ignore it for you.  Why would you want to complete a level before it's already started?!)");
@@ -2981,6 +2977,10 @@ function checkWin(dontDoWin) {
 			DoWin();
 		}
 		return;
+	}
+
+	if (state.winconditions.length === 0) {
+		return false;
 	}
 
 	let won = false;

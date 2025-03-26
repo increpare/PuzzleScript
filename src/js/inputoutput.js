@@ -223,7 +223,7 @@ function printLevel() {
 			for (let i = 0; i < level.width; i++) {
 				const cellIndex = j + i * level.height;
 				const cellMask = level.getCell(cellIndex);
-				const glyph = matchGlyph(cellMask, glyphMasks);
+				let glyph = matchGlyph(cellMask, glyphMasks);
 				if (glyph in htmlEntityMap) {
 					glyph = htmlEntityMap[glyph];
 				}
