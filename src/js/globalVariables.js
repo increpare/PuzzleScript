@@ -1,56 +1,97 @@
-var unitTesting=false;
-var curlevel=0;
-var curlevelTarget=null;
-var hasUsedCheckpoint=false;
-var levelEditorOpened=false;
-var muted=0;
-var runrulesonlevelstart_phase=false;
-var ignoreNotJustPressedAction=true;
+'use strict';
 
-function doSetupTitleScreenLevelContinue(){
+let unitTesting = false;
+let lazyFunctionGeneration = true;
+let curlevel = 0;
+let curlevelTarget = null;
+let hasUsedCheckpoint = false;
+let levelEditorOpened = false;
+let muted = 0;
+let runrulesonlevelstart_phase = false;
+let ignoreNotJustPressedAction = true;
+let textMode = true;
+
+function doSetupTitleScreenLevelContinue() {
     try {
         if (storage_has(document.URL)) {
-            if (storage_has(document.URL+'_checkpoint')){
-                var backupStr = storage_get(document.URL+'_checkpoint');
+            if (storage_has(document.URL + '_checkpoint')) {
+                let backupStr = storage_get(document.URL + '_checkpoint');
                 curlevelTarget = JSON.parse(backupStr);
-                
-                var arr = [];
-                for(var p in Object.keys(curlevelTarget.dat)) {
+
+                let arr = [];
+                for (let p in Object.keys(curlevelTarget.dat)) {
                     arr[p] = curlevelTarget.dat[p];
                 }
                 curlevelTarget.dat = new Int32Array(arr);
 
             }
-            curlevel = storage_get(document.URL); 
+            curlevel = storage_get(document.URL);
         }
-    } catch(ex) {
+    } catch (ex) {
     }
 }
 
 doSetupTitleScreenLevelContinue();
 
 
-var verbose_logging=false;
-var throttle_movement=false;
-var cache_console_messages=false;
-var quittingTitleScreen=false;
-var quittingMessageScreen=false;
-var deltatime=17; // this gets updated every frame; see loop()
-var timer=0;
-var repeatinterval=150;
-var autotick=0;
-var autotickinterval=0;
-var winning=false;
-var againing=false;
-var againinterval=150;
-var norepeat_action=false;
-var oldflickscreendat=[];//used for buffering old flickscreen/scrollscreen positions, in case player vanishes
-var keybuffer = [];
+let verbose_logging = false;
+let throttle_movement = false;
+let suppress_all_console_output = false;
+let cache_console_messages = false;
+let quittingTitleScreen = false;
+let quittingMessageScreen = false;
+let deltatime = 17; // this gets updated every frame; see loop()
+let timer = 0;
+let repeatinterval = 150;
+let autotick = 0;
+let autotickinterval = 0;
+let winning = false;
+let againing = false;
+let againinterval = 150;
+let norepeat_action = false;
+let oldflickscreendat = [];//used for buffering old flickscreen/scrollscreen positions, in case player vanishes
+let keybuffer = [];
 
-var restarting=false;
+let restarting = false;
 
-var messageselected=false;
+let messageselected = false;
 
-var textImages={};
+let textImages = {};
 
-var level = new Level(); //just give it some starting state
+let level = new Level(); //just give it some starting state
+
+
+function get_title_animation_frame() {
+    return Math.floor(((timer / 1000) / 0.3) * 10)
+}
+
+var WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR = [];
+function tick_lazy_function_generation(iterative_generation = false) {
+    if (WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length === 0) {
+        return;
+    }
+    // spent a maximum of 10ms on lazy function generation
+    let start = performance.now();
+    var generated_count = 0;
+    while (
+        ((performance.now() - start < 20) || !iterative_generation)
+        && WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length > 0) {
+        const object = WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.shift();
+        //depending on type of object
+        //if CellPattern, call generateMatchFunction
+        //if Rule, call generate_all_MatchFunctions
+        if (object instanceof CellPattern) {
+            object.matches = object.generateMatchFunction();
+        } else if (object instanceof Rule) {
+            object.generate_all_MatchFunctions();
+        } else {
+            throw new Error("Unknown object type: " + object);
+        }
+        generated_count++;
+    }
+}
+
+function lazy_function_generation_clear_backlog() {
+    WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR = [];
+}
+

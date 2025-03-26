@@ -24,9 +24,16 @@ function consoleError(text) {
 //	window.console.log(text);
 }
 
-function consoleCacheDump() {}
+function consoleCacheDump(error) {
+}
 var editor = {
 	getValue : function () { return levelString }
 }
 
 function addToDebugTimeline(level, lineNumber){}
+
+function UnitTestingThrow(error){
+
+	QUnit.push(false,false,false,error.message+"\n"+error.stack);
+	console.error(error);
+}

@@ -1,11 +1,13 @@
-var soundbarwidth = 100;
-var lowerbarheight = document.getElementById("soundbar").clientHeight;
-var upperbarheight = document.getElementById("uppertoolbar").clientHeight;
-var winwidth = window.innerWidth;
-var winheight = window.innerHeight;
-var verticaldragbarWidth = document.getElementById("verticaldragbar").clientWidth;
-var horizontaldragbarHeight = document.getElementById("horizontaldragbar").clientHeight;
-var minimumDimension = 100;
+'use strict';
+
+let soundbarwidth = 100;
+let lowerbarheight = document.getElementById("soundbar").clientHeight;
+let upperbarheight = document.getElementById("uppertoolbar").clientHeight;
+let winwidth = window.innerWidth;
+let winheight = window.innerHeight;
+let verticaldragbarWidth = document.getElementById("verticaldragbar").clientWidth;
+let horizontaldragbarHeight = document.getElementById("horizontaldragbar").clientHeight;
+let minimumDimension = 100;
 
 function resize_widths(verticaldragbarX){
 	document.getElementById("leftpanel").style.width = verticaldragbarX + "px";
@@ -27,10 +29,10 @@ function resize_heights(horizontaldragbarY){
 }
 
 function resize_all(e){
-	smallmovelimit = 100;
+	const smallmovelimit = 100;
 	
-	hdiff = window.innerWidth - winwidth;
-	verticaldragbarX = parseInt(document.getElementById("verticaldragbar").style.left.replace("px",""));
+	const hdiff = window.innerWidth - winwidth;
+	let verticaldragbarX = parseInt(document.getElementById("verticaldragbar").style.left.replace("px",""));
 	
 	if(hdiff > -smallmovelimit && hdiff < smallmovelimit){
 		verticaldragbarX += hdiff;
@@ -45,10 +47,8 @@ function resize_all(e){
 	};
 	resize_widths(verticaldragbarX);
 	
-	
-	
-	horizontaldragbarY = parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
-	vdiff = window.innerHeight - winheight;
+	const vdiff = window.innerHeight - winheight;
+	let horizontaldragbarY = parseInt(document.getElementById("horizontaldragbar").style.top.replace("px",""));
 	
 	if(vdiff > -smallmovelimit && vdiff < smallmovelimit){
 		horizontaldragbarY += vdiff;

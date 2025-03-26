@@ -30,7 +30,7 @@ SECTION, ARTICLE
 }
 BODY
 {
-	background: black;
+	background: light-dark(rgb(191, 218, 255),black);
 	font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
 	line-height: 1.5;
 }
@@ -40,7 +40,7 @@ P
 }
 H2, H3
 {
-	color: #ffffff;
+	color: light-dark(rgb(57, 56, 143),#ffffff);
 	font-weight: normal;
 	text-decoration: underline;
 	margin-bottom: 0.7em;
@@ -64,7 +64,7 @@ ARTICLE > H2:first-child, SECTION:first-child > H2
 }
 A, A:visited, A:link, .quasilink
 {
-	color: #e06f8b;
+	color: light-dark(#f75500,#e06f8b);
 }
 .quasilink
 {
@@ -75,7 +75,7 @@ ARTICLE
 	margin: 0 auto;
 	padding: 0px;
 	border: 0px;
-	background: #2A363B;
+	background: light-dark(#e8f2ff,#2A363B);
 	z-index: 2;
 	position: relative;
 	min-height: 100%;
@@ -116,7 +116,7 @@ TH
 .rel-note
 {
 	margin-top: 0;
-	color: #2A363B;
+	color: light-dark(#e8f2ff,#2A363B);
 }
 PRE
 {

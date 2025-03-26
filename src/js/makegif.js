@@ -1,25 +1,27 @@
+'use strict';
+
 function makeGIF() {
-	var randomseed = RandomGen.seed;
+	const randomseed = RandomGen.seed;
 	levelEditorOpened=false;
-	var targetlevel=curlevel;
-	var gifcanvas = document.createElement('canvas');
+	const targetlevel=curlevel;
+	const gifcanvas = document.createElement('canvas');
 	gifcanvas.width=screenwidth*cellwidth;
 	gifcanvas.height=screenheight*cellheight;
 	gifcanvas.style.width=screenwidth*cellwidth;
 	gifcanvas.style.height=screenheight*cellheight;
 
-	var gifctx = gifcanvas.getContext('2d');
+	const gifctx = gifcanvas.getContext('2d', {willReadFrequently: true});
 
-	var inputDat = inputHistory.concat([]);
-	var soundDat = soundHistory.concat([]);
+	const inputDat = inputHistory.concat([]);
+	const soundDat = soundHistory.concat([]);
 	
 
 	unitTesting=true;
-	levelString=compiledText;
+	const levelString=compiledText;
 
 
 
-	var encoder = new GIFEncoder();
+	const encoder = new GIFEncoder();
 	encoder.setRepeat(0); //auto-loop
 	encoder.setDelay(200);
 	encoder.start();
@@ -29,11 +31,11 @@ function makeGIF() {
 	redraw();
 	gifctx.drawImage(canvas,-xoffset,-yoffset);
   	encoder.addFrame(gifctx);
-	var autotimer=0;
+	let autotimer=0;
 
-  	for(var i=0;i<inputDat.length;i++) {
-  		var realtimeframe=false;
-		var val=inputDat[i];
+  	for(let i=0;i<inputDat.length;i++) {
+  		let realtimeframe=false;
+		const val=inputDat[i];
 		if (val==="undo") {
 			DoUndo(false,true);
 		} else if (val==="restart") {
@@ -61,12 +63,12 @@ function makeGIF() {
 
 	encoder.finish();
 	const data_url = 'data:image/gif;base64,'+btoa(encoder.stream().getData());
-	consolePrint('<img class="generatedgif" src="'+data_url+'">');
+	consolePrint(`<img class="generatedgif" src="${data_url}" width="${gifcanvas.width}px" height="${gifcanvas.height}px">`,true);
 	const gametitle = state.metadata.title ? state.metadata.title : 'puzzlescript-anim';
-	var filename = gametitle.replace(/\s+/g, '-').toLowerCase()+'.gif';
+	let filename = gametitle.replace(/\s+/g, '-').toLowerCase()+'.gif';
 	//also remove double-quotes (this actually the only important bit tbh)
 	filename = filename.replace(/"/g,'');
-	consolePrint('<a href="'+data_url+'" download="'+filename+'">Download GIF</a>');
+	consolePrint('<a href="'+data_url+'" download="'+filename+'">Download GIF</a>',true);
   	
   	unitTesting = false;
 

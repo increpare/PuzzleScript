@@ -1,6 +1,7 @@
 function runTest(dataarray,testname) {
 	console.log("Running test "+testname);
 	unitTesting=true;
+	lazyFunctionGeneration=false;
 	levelString=dataarray[0];
 	errorStrings = [];
 	errorCount=0;
@@ -20,31 +21,40 @@ function runTest(dataarray,testname) {
 	if (targetlevel===undefined) {
 		targetlevel=0;
 	}
-	compile(["loadLevel",targetlevel],levelString,randomseed);
+	try {
+		compile(["loadLevel",targetlevel],levelString,randomseed);
 
-	while (againing) {
-		againing=false;
-		processInput(-1);			
-	}
-	
-	for(var i=0;i<inputDat.length;i++) {
-		var val=inputDat[i];
-		if (val==="undo") {
-			DoUndo(false,true);
-		} else if (val==="restart") {
-			DoRestart();
-		} else if (val==="tick") {
-			processInput(-1);
-		} else {
-			processInput(val);
-		}
 		while (againing) {
 			againing=false;
 			processInput(-1);			
 		}
+		
+		for(var i=0;i<inputDat.length;i++) {
+			var val=inputDat[i];
+			if (val==="undo") {
+				DoUndo(false,true);
+			} else if (val==="restart") {
+				DoRestart();
+			} else if (val==="tick") {
+				processInput(-1);
+			} else {
+				processInput(val);
+			}
+			while (againing) {
+				againing=false;
+				processInput(-1);			
+			}
+		}
+	} catch (error) {
+		//send error to QUnit
+		QUnit.push(false,false,false,error.message+"\n"+error.stack);
+		console.error(error);
+		return false;
+	} finally {
+		unitTesting=false;
+		lazyFunctionGeneration=true;
 	}
-
-	unitTesting=false;
+	
 	var levelString = convertLevelToString();
 	var success = levelString == dataarray[2];
 	var success=true;
@@ -73,6 +83,7 @@ function runTest(dataarray,testname) {
 function runCompilationTest(dataarray,testname) {
 	console.log("Running test "+testname);
 	unitTesting=true;
+	lazyFunctionGeneration=false;
 	levelString=dataarray[0];
 	var recordedErrorStrings=dataarray[1];
 	var recordedErrorCount=dataarray[2];
@@ -82,8 +93,13 @@ function runCompilationTest(dataarray,testname) {
 	try{
 		compile(["restart"],levelString);
 	} catch (error){
-		console.log(error);
+		QUnit.push(false,false,false,error.message+"\n"+error.stack);
+		console.error(error);
 	}
+
+	
+	unitTesting=true;
+	lazyFunctionGeneration=false;
 
 	var strippedErrorStrings = errorStrings.map(stripHTMLTags);
 	if (errorCount!==recordedErrorCount){

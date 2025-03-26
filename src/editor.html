@@ -99,9 +99,11 @@ LEVELS
 <div id="verticaldragbar"></div>
 
 <div id="uppertoolbar">
-	&nbsp;&nbsp;&nbsp;<a href="index.html"><h2>PuzzleScript</h2></a> - <a id="saveClickLink" href="javascript:void(0);">SAVE</a> - 
+	&nbsp;&nbsp;&nbsp;<a class="nocolorlink" href="index.html"><h2>PuzzleScript</h2></a> - <a id="saveClickLink" href="javascript:void(0);">SAVE</a> - 
 
-	<form action="" style="display:inline;"><select id="loadDropDown" name="default" style="display:inline; width:100px"> -
+	<form action="" style="display:inline;"><select id="loadDropDown" name="default" style="display:inline; width:100px"> 
+		<optgroup label="user saves" id="loadDropdown_userSaves"> - </optgroup>
+		<optgroup label="autosaves" id="loadDropdown_autosaves"> </optgroup>
 </select></form> - <form action="" style="display:inline;"> <select  id="exampleDropdown"  name="default" style="display:inline; width:150px">
 <option value="sokoban_basic">Load Example</option>
 <optgroup label="Tutorial">
@@ -141,6 +143,7 @@ LEVELS
  - <a title="Come hang out!" href="https://groups.google.com/forum/#!forum/puzzlescript">FORUM</a>
  - <a id="solveClickLink" title="Automatically solves the current level." href="javascript:void('Solve the Level');">SOLVE</a>
  - <a id="cancelClickLink" hidden>- STOP SOLVER</a> <span id="solvingProgress"></span> 
+ - <a  id="toggleThemeClickLinks" title="Toggle Light/Dark mode" href="javascript:void('Toggle Light/Dark mode');"><img src="images/themechange.gif"></a>
 </div>
 
 <div id="righttophalf">	
@@ -170,7 +173,9 @@ LEVELS
 =================================<br>
 &nbsp;&nbsp;&nbsp;PuzzleScript Terminal<br>
 &nbsp;&nbsp;&nbsp;<!--BUILDNUMBER--><br>
-=================================<br>
+=================================<br><br>
+( Support the Project : <a href="https://github.com/sponsors/increpare" target="_blank">github sponsors</a> | <a href="https://www.paypal.com/donate/?hosted_button_id=YA56567J52BM4" target="_blank">paypal</a> )
+<br>
 </div>
 	</div>
 </div>
@@ -187,6 +192,7 @@ LEVELS
 <script src="js/debug.js"></script>
 <script src="js/bitvec.js"></script>
 <script src="js/level.js"></script>
+<script src="js/languageConstants.js"></script>
 <script src="js/globalVariables.js"></script>
 <script src="js/font.js"></script>
 <script src="js/rng.js"></script>

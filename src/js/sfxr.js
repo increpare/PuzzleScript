@@ -1,19 +1,21 @@
-var SOUND_VOL = 0.25;
-var SAMPLE_RATE = 5512;
-var BIT_DEPTH = 8;
+'use strict';
 
-var SQUARE = 0;
-var SAWTOOTH = 1;
-var SINE = 2;
-var NOISE = 3;
-var TRIANGLE = 4;
-var BREAKER = 5;
+const SOUND_VOL = 0.25;
+const SAMPLE_RATE = 5512;
+const BIT_DEPTH = 8;
 
-var SHAPES = [
+const SQUARE = 0;
+const SAWTOOTH = 1;
+const SINE = 2;
+const NOISE = 3;
+const TRIANGLE = 4;
+const BREAKER = 5;
+
+const SHAPES = [
   'square', 'sawtooth', 'sine', 'noise', 'triangle', 'breaker'
 ];
 
-var AUDIO_CONTEXT;
+let AUDIO_CONTEXT;
 
 function checkAudioContextExists(){
   try{
@@ -33,11 +35,11 @@ function checkAudioContextExists(){
 checkAudioContextExists();
 
 // Playback volume
-var masterVolume = 1.0;
+let masterVolume = 1.0;
 
 // Sound generation parameters are on [0,1] unless noted SIGNED, & thus [-1,1]
 function Params() {
-  var result={};
+  const result={};
   // Wave shape
   result.wave_type = SQUARE;
 
@@ -86,8 +88,8 @@ function Params() {
   return result;
 }
 
-var rng;
-var seeded = false;
+let rng;
+let seeded = false;
 function frnd(range) {
   if (seeded) {
     return rng.uniform() * range;
@@ -106,8 +108,8 @@ function rnd(max) {
 }
 
 
-pickupCoin = function() {
-  var result=Params();
+function pickupCoin() {
+  const result=Params();
   result.wave_type = Math.floor(frnd(SHAPES.length));
   if (result.wave_type === 3) {
     result.wave_type = 0;
@@ -119,16 +121,16 @@ pickupCoin = function() {
   result.p_env_punch = 0.3 + frnd(0.3);
   if (rnd(1)) {
     result.p_arp_speed = 0.5 + frnd(0.2);
-    var num = (frnd(7) | 1) + 1;
-    var den = num + (frnd(7) | 1) + 2;
+    let num = (frnd(7) | 1) + 1;
+    let den = num + (frnd(7) | 1) + 2;
     result.p_arp_mod = (+num) / (+den); //0.2 + frnd(0.4);
   }
   return result;
 };
 
 
-laserShoot = function() {
-  var result=Params();
+function laserShoot() {
+  const result=Params();
   result.wave_type = rnd(2);
   if (result.wave_type === SINE && rnd(1))
     result.wave_type = rnd(1);
@@ -174,8 +176,8 @@ laserShoot = function() {
   return result;
 };
 
-explosion = function() {
-  var result=Params();
+function explosion() {
+  const result=Params();
 
   if (rnd(1)) {
     result.p_base_freq = 0.1 + frnd(0.4);
@@ -209,8 +211,8 @@ explosion = function() {
   return result;
 };
 //9675111
-birdSound = function() {
-  var result=Params();
+function birdSound() {
+  const result=Params();
 
 if (frnd(10) < 1) {
     result.wave_type = Math.floor(frnd(SHAPES.length));
@@ -401,8 +403,8 @@ return result;
 };
 
 
-pushSound = function() {
-  var result=Params();
+function pushSound() {
+  const result=Params();
   result.wave_type = Math.floor(frnd(SHAPES.length));//TRIANGLE;
   if (result.wave_type === 2) {
     result.wave_type++;
@@ -429,8 +431,8 @@ pushSound = function() {
 
 
 
-powerUp = function() {
-  var result=Params();
+function powerUp() {
+  const result=Params();
   if (rnd(1))
     result.wave_type = SAWTOOTH;
   else
@@ -462,8 +464,8 @@ powerUp = function() {
   return result;
 };
 
-hitHurt = function() {
-  result = Params();
+function hitHurt() {
+  const result = Params();
   result.wave_type = rnd(2);
   if (result.wave_type === SINE)
     result.wave_type = NOISE;
@@ -481,8 +483,8 @@ hitHurt = function() {
 };
 
 
-jump = function() {
-  result = Params();
+function jump() {
+  const result = Params();
   result.wave_type = SQUARE;
   result.wave_type = Math.floor(frnd(SHAPES.length));
   if (result.wave_type === 3) {
@@ -501,8 +503,8 @@ jump = function() {
   return result;
 };
 
-blipSelect = function() {
-  result = Params();
+function blipSelect() {
+  const result = Params();
   result.wave_type = rnd(1);
   result.wave_type = Math.floor(frnd(SHAPES.length));
   if (result.wave_type === 3) {
@@ -518,8 +520,8 @@ blipSelect = function() {
   return result;
 };
 
-random = function() {
-  result = Params();
+function random() {
+  const result = Params();
   result.wave_type = Math.floor(frnd(SHAPES.length));
   result.p_base_freq = Math.pow(frnd(2.0) - 1.0, 2.0);
   if (rnd(1))
@@ -558,7 +560,7 @@ random = function() {
   return result;
 };
 
-var generators = [
+const generators = [
 pickupCoin,
 laserShoot,
 explosion,
@@ -571,7 +573,7 @@ random,
 birdSound
 ];
 
-var generatorNames = [
+const generatorNames = [
 'pickupCoin',
 'laserShoot',
 'explosion',
@@ -587,12 +589,12 @@ var generatorNames = [
 /*
 i like 9675111
 */
-generateFromSeed = function(seed) {
+function generateFromSeed(seed) {
   rng = new RNG((seed / 100) | 0);
-  var generatorindex = seed % 100;
-  var soundGenerator = generators[generatorindex % generators.length];
+  const generatorindex = seed % 100;
+  const soundGenerator = generators[generatorindex % generators.length];
   seeded = true;
-  var result = soundGenerator();
+  const result = soundGenerator();
   result.seed = seed;
   seeded = false;
   return result;
@@ -611,7 +613,7 @@ SoundEffect.prototype.getBuffer = function() {
 function ULBS(){   
   if (AUDIO_CONTEXT.state === 'suspended')
   {
-      var unlock = function()
+      const unlock = function()
       {
         AUDIO_CONTEXT.resume().then(function()
           {
@@ -636,10 +638,10 @@ function ULBS(){
 SoundEffect.prototype.play = function() {
   ULBS();
 
-  var source = AUDIO_CONTEXT.createBufferSource();
-  var filter1 = AUDIO_CONTEXT.createBiquadFilter();
-  var filter2 = AUDIO_CONTEXT.createBiquadFilter();
-  var filter3 = AUDIO_CONTEXT.createBiquadFilter();
+  const source = AUDIO_CONTEXT.createBufferSource();
+  const filter1 = AUDIO_CONTEXT.createBiquadFilter();
+  const filter2 = AUDIO_CONTEXT.createBiquadFilter();
+  const filter3 = AUDIO_CONTEXT.createBiquadFilter();
 
   source.buffer = this._buffer;
   source.connect(filter1);
@@ -651,7 +653,7 @@ SoundEffect.prototype.play = function() {
   filter1.connect(filter2);
   filter2.connect(filter3);
   filter3.connect(AUDIO_CONTEXT.destination);
-  var t = AUDIO_CONTEXT.currentTime;
+  const t = AUDIO_CONTEXT.currentTime;
   if (typeof source.start != 'undefined') {
     source.start(t);
   } else {
@@ -680,11 +682,11 @@ if (typeof AUDIO_CONTEXT == 'undefined') {
     if (this._audioElement) {
       this._audioElement.cloneNode(false).play();
     } else {
-      for (var i = 0; i < this._buffer.length; i++) {
+      for (let i = 0; i < this._buffer.length; i++) {
         // bit_depth is always 8, rescale [-1.0, 1.0) to [0, 256)
         this._buffer[i] = 255 & Math.floor(128 * Math.max(0, Math.min(this._buffer[i] + 1, 2)));
       }
-      var wav = MakeRiff(this._sample_rate, BIT_DEPTH, this._buffer);
+      let wav = MakeRiff(this._sample_rate, BIT_DEPTH, this._buffer);
       this._audioElement = new Audio();
       this._audioElement.src = wav.dataURI;
       this._audioElement.play();
@@ -697,8 +699,8 @@ if (typeof AUDIO_CONTEXT == 'undefined') {
 SoundEffect.generate = function(ps) {
 /*  window.console.log(ps.wave_type + "\t" + ps.seed);
 
-  var psstring="";
-  for (var n in ps) {
+  let psstring="";
+  for (let n in ps) {
     if (ps.hasOwnProperty(n)) {
       psstring = psstring +"result." + n+" = " + ps[n] + ";\n";
     }
@@ -728,90 +730,91 @@ window.console.log(psstring);*/
       arp_limit = 0;
   };
 
-  var rep_time;
-  var fperiod, period, fmaxperiod;
-  var fslide, fdslide;
-  var square_duty, square_slide;
-  var arp_mod, arp_time, arp_limit;
+  let rep_time;
+  let fperiod, period, fmaxperiod;
+  let fslide, fdslide;
+  let square_duty, square_slide;
+  let arp_mod, arp_time, arp_limit;
   repeat();  // First time through, this is a bit of a misnomer
 
   // Filter
-  var fltp = 0.0;
-  var fltdp = 0.0;
-  var fltw = Math.pow(ps.p_lpf_freq, 3.0) * 0.1;
-  var fltw_d = 1.0 + ps.p_lpf_ramp * 0.0001;
-  var fltdmp = 5.0 / (1.0 + Math.pow(ps.p_lpf_resonance, 2.0) * 20.0) *
+  let fltp = 0.0;
+  let fltdp = 0.0;
+  let fltw = Math.pow(ps.p_lpf_freq, 3.0) * 0.1;
+  let fltw_d = 1.0 + ps.p_lpf_ramp * 0.0001;
+  let fltdmp = 5.0 / (1.0 + Math.pow(ps.p_lpf_resonance, 2.0) * 20.0) *
     (0.01 + fltw);
   if (fltdmp > 0.8) fltdmp = 0.8;
-  var fltphp = 0.0;
-  var flthp = Math.pow(ps.p_hpf_freq, 2.0) * 0.1;
-  var flthp_d = 1.0 + ps.p_hpf_ramp * 0.0003;
+  let fltphp = 0.0;
+  let flthp = Math.pow(ps.p_hpf_freq, 2.0) * 0.1;
+  let flthp_d = 1.0 + ps.p_hpf_ramp * 0.0003;
 
   // Vibrato
-  var vib_phase = 0.0;
-  var vib_speed = Math.pow(ps.p_vib_speed, 2.0) * 0.01;
-  var vib_amp = ps.p_vib_strength * 0.5;
+  let vib_phase = 0.0;
+  let vib_speed = Math.pow(ps.p_vib_speed, 2.0) * 0.01;
+  let vib_amp = ps.p_vib_strength * 0.5;
 
   // Envelope
-  var env_vol = 0.0;
-  var env_stage = 0;
-  var env_time = 0;
-  var env_length = [
+  let env_vol = 0.0;
+  let env_stage = 0;
+  let env_time = 0;
+  let env_length = [
     Math.floor(ps.p_env_attack * ps.p_env_attack * 100000.0),
     Math.floor(ps.p_env_sustain * ps.p_env_sustain * 100000.0),
     Math.floor(ps.p_env_decay * ps.p_env_decay * 100000.0)
   ];
-  var env_total_length = env_length[0] + env_length[1] + env_length[2];
+  let env_total_length = env_length[0] + env_length[1] + env_length[2];
 
   // Phaser
-  var phase = 0;
-  var fphase = Math.pow(ps.p_pha_offset, 2.0) * 1020.0;
+  let phase = 0;
+  let fphase = Math.pow(ps.p_pha_offset, 2.0) * 1020.0;
   if (ps.p_pha_offset < 0.0) fphase = -fphase;
-  var fdphase = Math.pow(ps.p_pha_ramp, 2.0) * 1.0;
+  let fdphase = Math.pow(ps.p_pha_ramp, 2.0) * 1.0;
   if (ps.p_pha_ramp < 0.0) fdphase = -fdphase;
-  var iphase = Math.abs(Math.floor(fphase));
-  var ipp = 0;
-  var phaser_buffer = [];
-  for (var i = 0; i < 1024; ++i)
+  let iphase = Math.abs(Math.floor(fphase));
+  let ipp = 0;
+  let phaser_buffer = [];
+  for (let i = 0; i < 1024; ++i)
     phaser_buffer[i] = 0.0;
 
   // Noise
-  var noise_buffer = [];
-  for (var i = 0; i < 32; ++i)
+  let noise_buffer = [];
+  for (let i = 0; i < 32; ++i)
     noise_buffer[i] = Math.random() * 2.0 - 1.0;
 
   // Repeat
-  var rep_limit = Math.floor(Math.pow(1.0 - ps.p_repeat_speed, 2.0) * 20000
+  let rep_limit = Math.floor(Math.pow(1.0 - ps.p_repeat_speed, 2.0) * 20000
                              + 32);
   if (ps.p_repeat_speed == 0.0)
     rep_limit = 0;
 
-  //var gain = 2.0 * Math.log(1 + (Math.E - 1) * ps.sound_vol);
-  var gain = 2.0 * ps.sound_vol;
-  var gain = Math.exp(ps.sound_vol) - 1;
+  //let gain = 2.0 * Math.log(1 + (Math.E - 1) * ps.sound_vol);
+  // let gain = 2.0 * ps.sound_vol;
+  let gain = Math.exp(ps.sound_vol) - 1;
 
-  var num_clipped = 0;
+  let num_clipped = 0;
 
   // ...end of initialization. Generate samples.
 
-  var sample_sum = 0;
-  var num_summed = 0;
-  var summands = Math.floor(44100 / ps.sample_rate);
+  let sample_sum = 0;
+  let num_summed = 0;
+  let summands = Math.floor(44100 / ps.sample_rate);
 
-  var buffer_i = 0;
-  var buffer_length = Math.ceil(env_total_length / summands);
-  var buffer_complete = false;
+  let buffer_i = 0;
+  let buffer_length = Math.ceil(env_total_length / summands);
+  let buffer_complete = false;
 
-  var sound;
+  let sound;
   if (ps.sample_rate < SoundEffect.MIN_SAMPLE_RATE) {
     // Assume 4x gets close enough to MIN_SAMPLE_RATE
     sound = new SoundEffect(4 * buffer_length, SoundEffect.MIN_SAMPLE_RATE);
   } else {
     sound = new SoundEffect(buffer_length, ps.sample_rate)
   }
-  var buffer = sound.getBuffer();
+  let buffer = sound.getBuffer();
 
-  for (var t = 0;; ++t) {
+  let sample=0;
+  for (let t = 0;; ++t) {
 
     // Repeats
     if (rep_limit != 0 && ++rep_time >= rep_limit)
@@ -833,7 +836,7 @@ window.console.log(psstring);*/
     }
 
     // Vibrato
-    var rfperiod = fperiod;
+    let rfperiod = fperiod;
     if (vib_amp > 0.0) {
       vib_phase += vib_speed;
       rfperiod = fperiod * (1.0 + Math.sin(vib_phase) * vib_amp);
@@ -877,19 +880,19 @@ window.console.log(psstring);*/
     }
 
     // 8x supersampling
-    var sample = 0.0;
-    for (var si = 0; si < 8; ++si) {
-      var sub_sample = 0.0;
+    sample = 0.0;
+    for (let si = 0; si < 8; ++si) {
+      let sub_sample = 0.0;
       phase++;
       if (phase >= period) {
         phase %= period;
         if (ps.wave_type === NOISE)
-          for (var i = 0; i < 32; ++i)
+          for (let i = 0; i < 32; ++i)
             noise_buffer[i] = Math.random() * 2.0 - 1.0;
       }
 
       // Base waveform
-      var fp = phase / period;
+      let fp = phase / period;
       if (ps.wave_type === SQUARE) {
         if (fp < square_duty)
           sub_sample = 0.5;
@@ -910,7 +913,7 @@ window.console.log(psstring);*/
       }
 
       // Low-pass filter
-      var pp = fltp;
+      let pp = fltp;
       fltw *= fltw_d;
       if (fltw < 0.0) fltw = 0.0;
       if (fltw > 0.1) fltw = 0.1;
@@ -979,31 +982,31 @@ window.console.log(psstring);*/
 
 if (typeof exports != 'undefined') {
   // For node.js
-  var RIFFWAVE = require('./riffwave').RIFFWAVE;
+  let RIFFWAVE = require('./riffwave').RIFFWAVE;
   exports.Params = Params;
   exports.generate = generate;
 }
 
-var sfxCache = {};
-var cachedSeeds = [];
-var CACHE_MAX = 50;
+const sfxCache = {};
+let cachedSeeds = [];
+const CACHE_MAX = 50;
 
 function cacheSeed(seed){
   if (seed in sfxCache) {
     return sfxCache[seed];
   }
 
-  var params = generateFromSeed(seed);
+  const params = generateFromSeed(seed);
   params.sound_vol = SOUND_VOL;
   params.sample_rate = SAMPLE_RATE;
   params.bit_depth = BIT_DEPTH;
 
-  var sound = SoundEffect.generate(params);
+  const sound = SoundEffect.generate(params);
   sfxCache[seed] = sound;
   cachedSeeds.push(seed);
 
   while (cachedSeeds.length>CACHE_MAX) {
-    var toRemove=cachedSeeds[0];
+    const toRemove=cachedSeeds[0];
     cachedSeeds = cachedSeeds.slice(1);
     delete sfxCache[toRemove];
   }
@@ -1021,15 +1024,15 @@ function playSound(seed,ignore) {
   }
   checkAudioContextExists();
   if (unitTesting) return;
-  var sound = cacheSeed(seed);
+  const sound = cacheSeed(seed);
   sound.play();
 }
 
 
 
 function killAudioButton(){
-  var mb = document.getElementById("muteButton");
-  var umb = document.getElementById("unMuteButton");
+  const mb = document.getElementById("muteButton");
+  const umb = document.getElementById("unMuteButton");
   if (mb){
     mb.remove();
     umb.remove();
@@ -1037,8 +1040,8 @@ function killAudioButton(){
 }
 
 function showAudioButton(){
-  var mb = document.getElementById("muteButton");
-  var umb = document.getElementById("unMuteButton");
+  const mb = document.getElementById("muteButton");
+  const umb = document.getElementById("unMuteButton");
   if (mb){
     mb.style.display="block"; 
     umb.style.display="none";
@@ -1056,8 +1059,8 @@ function toggleMute() {
 
 function muteAudio() {
   muted=1; 
-  var mb = document.getElementById("muteButton");
-  var umb = document.getElementById("unMuteButton");
+  const mb = document.getElementById("muteButton");
+  const umb = document.getElementById("unMuteButton");
   if (mb){
     mb.style.display="none"; 
     umb.style.display="block";
@@ -1065,8 +1068,8 @@ function muteAudio() {
 }
 function unMuteAudio() {
   muted=0; 
-  var mb = document.getElementById("muteButton");
-  var umb = document.getElementById("unMuteButton");
+  const mb = document.getElementById("muteButton");
+  const umb = document.getElementById("unMuteButton");
   if (mb){
     mb.style.display="block"; 
     umb.style.display="none";

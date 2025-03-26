@@ -10,41 +10,41 @@
 })(function(CodeMirror) {
         "use strict";
 
-        var WORD = /[\w$#]+/,
+        var WORD = /[\w$#>-]+/,
             RANGE = 500;
 
         var PRELUDE_COMMAND_WORDS = [
             "METADATA",//tag
-            ["author", "Gill Bloggs", "Your name goes here. This will appear in the title screen of the game."],
-            ["color_palette", "arne", "By default, when you use colour names, they are pulled from a variation of <a href='http://androidarts.com/palette/16pal.htm'>Arne</a>'s 16-Colour palette. However, there are other palettes to choose from: <p> <ul> <li>1 - mastersystem </li> <li>2 - gameboycolour </li> <li>3 - amiga </li> <li>4 - arnecolors </li> <li>5 - famicom </li> <li>6 - atari </li> <li>7 - pastel </li> <li>8 - ega </li> <li>9 - amstrad </li> <li>10 - proteus_mellow </li> <li>11 - proteus_rich </li> <li>12 - proteus_night </li> <li>13 - c64 </li> <li>14 - whitingjp </li> </ul> <p> (you can also refer to them by their numerical index)"],
-            ["again_interval", "0.1", "The amount of time it takes an 'again' event to trigger."],
-            ["background_color", "blue", "Can accept a color name or hex code (in the form #412bbc). Controls the background color of title/message screens, as well as the background color of the website. Text_color is its sibling."],
-            ["debug", "", "This outputs the compiled instructions whenever you build your file."],
-            ["flickscreen", "8x5", "Setting flickscreen divides each level into WxH grids, and zooms the camera in so that the player can only see one at a time"],
-            ["homepage", "www.puzzlescript.net", "A link to your homepage!"],
-            ["key_repeat_interval", "0.1", "When you hold down a key, how long is the delay between repeated presses getting sent to the game (in seconds)?"],
-            ["noaction", "", "Hides the action key (X) instruction from the title screen, and does not respond when the player pressed it (outside of menus and cutscenes and the like)."],
-            ["norepeat_action", "", "The action button will only respond to individual presses, and not auto-trigger when held down."],
-            ["noundo", "", "Disables the undo key (Z)"],
-            ["norestart", "", "Disables the restart key (R)"],
-            ["realtime_interval", "", "The number indicates how long each realtime frame should be."],
-            ["require_player_movement", "", "If the player doesn't move, cancel the whole move."],
-            ["run_rules_on_level_start", "", "Applies the rules once on level-load, before the player has moved"],
-            ["scanline", "", "Applies a scanline visual effect"],
-            ["text_color", "orange", "Can accept a color name or hex code (in the form #412bbc). Controls the font color of title/message screens, as well as the font color in the website. Background_color is its sibling."],
-            ["title", "My Amazing Puzzle Game", "The name of your game. Appears on the title screen."],
-            ["throttle_movement", "", "For use in conjunction with realtime_interval - this stops you from moving crazy fast - repeated keypresses of the same movement direction will not increase your speed. This doesn't apply to the action button."],
-            ["verbose_logging", "", "As you play the game, spits out information about all rules applied as you play, and also allows visual inspection of what exactly the rules do by hovering over them with your mouse (or tapping them on touchscreen)."],
-            ["zoomscreen", "WxH", "Zooms the camera in to a WxH section of the map around the player, centered on the player."]
+            ["again_interval", "0.1"],
+            ["author", "Gill Bloggs"],
+            ["background_color", "blue"],
+            ["color_palette", "arne"],
+            ["debug", ""],
+            ["flickscreen", "8x5"],
+            ["homepage", "www.puzzlescript.net"],
+            ["key_repeat_interval", "0.1"],
+            ["noaction", ""],
+            ["norepeat_action", ""],
+            ["norestart", ""],
+            ["noundo", ""],
+            ["realtime_interval", ""],
+            ["require_player_movement", ""],
+            ["run_rules_on_level_start", ""],
+            ["scanline", ""],
+            ["text_color", "orange"],
+            ["throttle_movement", ""],
+            ["title", "My Amazing Puzzle Game"],
+            ["verbose_logging", ""],
+            ["zoomscreen", "WxH"]                    
         ];
 
         var COLOR_WORDS = [
             "COLOR",//special tag
-            "black", "white", "darkgray", "lightgray", "gray", "red", "darkred", "lightred", "brown", "darkbrown", "lightbrown", "orange", "yellow", "green", "darkgreen", "lightgreen", "blue", "lightblue", "darkblue", "purple", "pink", "transparent"];
+            "black", "blue", "brown", "darkblue", "darkbrown", "darkgray", "darkgreen", "darkred", "gray", "green", "lightblue", "lightbrown", "lightgray", "lightgreen", "lightred", "orange", "pink", "purple", "red", "transparent", "white", "yellow"];
         var RULE_COMMAND_WORDS = [
             "COMMAND",
             //sfx added manually based on definitions
-            "cancel", "checkpoint", "restart", "win", "message", "again"];
+            "again", "cancel", "checkpoint", "message", "restart", "win"];
         var SFX_COMMAND_LIST = ["sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"];
 
         var CARDINAL_DIRECTION_WORDS = [
@@ -66,12 +66,12 @@
 
         var SOUND_EVENTS = [
             "SOUNDEVENT",
-            "undo", "restart", "titlescreen", "startgame", "cancel", "endgame", "startlevel", "endlevel", "showmessage", "closemessage", "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"
+            "cancel", "closemessage", "endgame", "endlevel", "restart", "showmessage", "startgame", "startlevel", "titlescreen", "undo", "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10"
         ];
 
         var SOUND_VERBS = [
             "SOUNDVERB",
-            "move", "action", "create", "destroy", "cantmove"
+            "action", "cantmove", "create", "destroy", "move"
         ];
 
         var SOUND_DIRECTIONS = [
@@ -88,7 +88,7 @@
             ]
 
         var PRELUDE_COLOR_PALETTE_WORDS = [
-            "mastersystem", "gameboycolour", "amiga", "arnecolors", "famicom", "atari", "pastel", "ega", "amstrad", "proteus_mellow", "proteus_rich", "proteus_night", "c64", "whitingjp"
+            "amiga", "amstrad", "arnecolors", "atari", "c64", "ega", "famicom", "gameboycolour", "mastersystem", "pastel", "proteus_mellow", "proteus_night", "proteus_rich", "whitingjp"
         ]
 
         function renderHint(elt,data,cur){
@@ -125,6 +125,44 @@
             }
         }
 
+        //rotates clockwise 90 degrees n times
+        function rotate_2d_array(array,amount){
+            amount = amount %4;
+            switch(amount){                    
+                case 0:{
+                    return array;
+                }
+                case 1:{
+                    let result = [];
+                    for (let i=0;i<array.length;i++) {
+                        let new_row = "";
+                        for (let j=0;j<array[i].length;j++) {
+                            new_row+=array[j][i];
+                        }
+                        result.push(new_row);
+                    }
+                    return result;
+                }
+                case 2:{
+                    //reverse both array and all the strings it contains
+                    let result = array.reverse().map(row => row.split('').reverse().join(''));
+                    return result;
+                }
+                case 3:{
+                    //rotate 3 times
+                    let result = [];
+                    for (let i=0;i<array.length;i++) {
+                        let new_row = "";
+                        for (let j=0;j<array[i].length;j++) {
+                            new_row+=array[array.length-1-j][array.length-1-i];
+                        }
+                        result.push(new_row);
+                    }
+                    return result;
+                }
+            }
+        }
+
         CodeMirror.registerHelper("hint", "anyword", function(editor, options) {
 
             var word = options && options.word || WORD;
@@ -157,6 +195,12 @@
                 // }            
             }
 
+            // case insensitive
+            curWord = curWord.toLowerCase();
+
+            var list = options && options.list || [],
+                seen = {};
+
             var addObjects = false;
             var excludeProperties = false;
             var excludeAggregates = false;
@@ -165,7 +209,82 @@
             switch (state.section) {
                 case 'objects':
                     {
-                        if (state.objects_section==2){
+                        // if objects.section==1 
+                        // * and objects.candname is start of last declared object,
+                        // * and the last declared object name ends with Up/UP/up/_u 
+                        // then suggest as autocomplete the declaration of the Down/Left/Right objects
+                        if (state.objects_section==1){
+                            
+
+                            // STEP 1, find name of last declared object
+                            // Original_line_numbers being a dictionary[Name,LineNumber] 
+                            // makes this a bit indirect...
+                            var object_names_lowercase = Object.keys(state.original_line_numbers);
+                            if (object_names_lowercase.length==0){
+                                break;
+                            }
+                            //in state.original_linenumbers, find the line number of the last declared object
+                            let max_line_number_name_lowercase = object_names_lowercase[0];
+                            let max_line_number = state.original_line_numbers[max_line_number_name_lowercase];
+                            for (var i=1;i<object_names_lowercase.length;i++){
+                                const this_name = object_names_lowercase[i]
+                                const this_line_number = state.original_line_numbers[this_name];
+                                if (this_line_number!==state.lineNumber && this_line_number>max_line_number){
+                                    max_line_number_name_lowercase = this_name;
+                                    max_line_number = this_line_number;
+                                }
+                            }
+
+                            var previous_object_data = state.objects[max_line_number_name_lowercase];
+                            var previous_object_casename = state.original_case_names[max_line_number_name_lowercase];
+
+                            // only bother with all this if the curword is a prefix 
+                            // of max_line_number_name_lowercase
+                            if (!max_line_number_name_lowercase.startsWith(curWord)){
+                                break;
+                            }
+
+                            const pairings = [ ["Up",["Down","Left","Right"]],
+                                                ["UP",["DOWN","LEFT","RIGHT"]],
+                                                ["up",["down","left","right"]],
+                                                ["_u",["_d","_l","_r"]],
+                                                ["_U",["_D","_L","_R"]] ];
+                            for (var i=0;i<pairings.length;i++){
+                                const suffix = pairings[i][0];
+                                // STEP 2, if casename ends with suffix, suggest the corresonding pairings
+                                if (previous_object_casename.endsWith(suffix)){
+                                    //FOUND a match.
+                                    let to_suggest = "";
+                                    const stem = previous_object_casename.slice(0,-suffix.length);
+                                    const further_endings = pairings[i][1];
+                                    const previous_object = state.objects[max_line_number_name_lowercase];
+
+                                    //generate rotations of previous_object
+                                    const rotations = [ 
+                                        //DOWN
+                                        rotate_2d_array(previous_object.spritematrix,2),
+                                        //LEFT
+                                        rotate_2d_array(previous_object.spritematrix,3),
+                                        //RIGHT
+                                        rotate_2d_array(previous_object.spritematrix,1),
+                                    ];
+
+                                    for (let j=0;j<further_endings.length;j++){
+                                        const pairing = further_endings[j];
+                                        to_suggest += stem+pairing+"\n";
+                                        //print colros
+                                        to_suggest += previous_object.colors.join(" ")+"\n";
+
+                                        if (previous_object.spritematrix.length>0){
+                                            to_suggest += rotations[j].join("\n");
+                                            to_suggest += "\n";
+                                        } 
+                                        to_suggest += "\n";
+                                    }
+                                    candlists.push(["comment",to_suggest]);
+                                }                                    
+                            }                                                                                                                    
+                        } else if (state.objects_section==2){
                             candlists.push(COLOR_WORDS);
                         }
                         break;
@@ -244,6 +363,58 @@
                     }
                 case 'rules':
                     {   
+
+                        /* rules look like this: 
+                           blah blah [ a | b | c d ] [ e f | g ] -> [ a | b | c d ] [ e f | g ]
+                            so, if the curword is ->, we want to show the commands that can follow that, mirroring the first half o the line
+                        */
+
+                        if (curWord==="->" || curWord==="-"){
+                            const line_until_curword = curLine.substring(0,start);
+                            var previous_arrow_idx = line_until_curword.indexOf("->");
+                            //if there is a previous arrow on the line, don't suggest anything.
+                            if (previous_arrow_idx>=0){
+                                //nothing
+                            } else {
+                                
+                                //check there's nother other than whitespace to the right of the cursor
+                                var right_of_cursor = curLine.substring(cur.ch);
+                                if (right_of_cursor.trim().length===0){
+                                    //ignore first half until the [
+                                    var first_half_start = lineToCursor.indexOf("[");
+                                    var first_half_end = lineToCursor.lastIndexOf("]");
+                                    var excerpt = lineToCursor.substring(first_half_start,first_half_end+1);
+                                    //we should strip all substrings of the form "no XYZ" (case insensitive), removing both the "no" and the word that follows it
+                                    var no_words = excerpt.match(/\bno\s+[^\s]+\s*/gi);
+                                    if (no_words){
+                                        for (var i=0;i<no_words.length;i++){
+                                            var no_word = no_words[i];
+                                            //repace the whole kaboodle with an empty string
+                                            excerpt = excerpt.replace(no_word, "");
+                                        }
+                                    }
+                                    //if we have 'stationary X' on the lhs, we can remove stationary from the rhs
+                                    var stationary_words = excerpt.match(/\bstationary\s+/gi);
+                                    if (stationary_words){
+                                        for (var i=0;i<stationary_words.length;i++){
+                                            var stationary_word = stationary_words[i];
+                                            //repace the whole kaboodle with an empty string
+                                            excerpt = excerpt.replace(stationary_word, "");
+                                        }
+                                    }
+                                    //stripped excerpt - strip everything except for []|.
+                                    var stripped_excerpt = excerpt.replace(/[^\[\]\.\|]/g, " ");
+                                    //in both excerpt and stripped excerpt, reduce all whitespace to a single space
+                                    excerpt = excerpt.replace(/\s+/g, " ");
+                                    stripped_excerpt = stripped_excerpt.replace(/\s+/g, " ");
+                                    var results = ["LOGICWORD","-> "+excerpt];
+                                    if (excerpt!==stripped_excerpt){
+                                        results.push("-> "+stripped_excerpt);
+                                    }
+                                    candlists.push(results);
+                                }
+                            }
+                        }
                         //if inside of roles,can use some extra directions
                         if (lineToCursor.indexOf("[")==-1) {
                             candlists.push(RULE_DIRECTION_WORDS);
@@ -302,11 +473,6 @@
                         break;
                     }
             }
-            // case insensitive
-            curWord = curWord.toLowerCase();
-
-            var list = options && options.list || [],
-                seen = {};
 
             //first, add objects if needed
             if (addObjects){
@@ -468,10 +634,10 @@
         "187": "equalsign",
         "188": "comma",
         // "189": "dash",
-        "190": "period",
+        // "190": "period", on UK/US keyboard . is shift+>, which wants to trigger autocomplete
         "191": "slash",
         "192": "graveaccent",
         "220": "backslash",
-        "222": "quote"
+        // "222": "quote" -used on german keyboard for > I think...
     }
 });

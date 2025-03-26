@@ -1,20 +1,21 @@
+'use strict';
 
-for (var i=0;i<10;i++) {
-	var idname = "newsound"+i;
-	var el = document.getElementById(idname);
+for (let i=0;i<10;i++) {
+	let idname = "newsound"+i;
+	let el = document.getElementById(idname);
     el.addEventListener("click", (function(n){return function(){return newSound(n);};})(i), false);
 }
 
-//var soundButtonPress = document.getElementById("soundButtonPress");
+//let soundButtonPress = document.getElementById("soundButtonPress");
 //soundButtonPress.addEventListener("click", buttonPress, false);
 
-var runClickLink = document.getElementById("runClickLink");
+let runClickLink = document.getElementById("runClickLink");
 runClickLink.addEventListener("click", runClick, false);
 
-var saveClickLink = document.getElementById("saveClickLink");
+let saveClickLink = document.getElementById("saveClickLink");
 saveClickLink.addEventListener("click", saveClick, false);
 
-var rebuildClickLink = document.getElementById("rebuildClickLink");
+let rebuildClickLink = document.getElementById("rebuildClickLink");
 rebuildClickLink.addEventListener("click", rebuildClick, false);
 
 var solveClickLink = document.getElementById("solveClickLink");
@@ -23,25 +24,28 @@ solveClickLink.addEventListener("click", solveClick, false);
 var cancelClickLink = document.getElementById("cancelClickLink");
 cancelClickLink.addEventListener("click", stopSolving, false);
 
-var shareClickLink = document.getElementById("shareClickLink");
+let shareClickLink = document.getElementById("shareClickLink");
 shareClickLink.addEventListener("click", shareClick, false);
 
-var levelEditorClickLink = document.getElementById("levelEditorClickLink");
+let levelEditorClickLink = document.getElementById("levelEditorClickLink");
 levelEditorClickLink.addEventListener("click", levelEditorClick_Fn, false);
 
-var exportClickLink = document.getElementById("exportClickLink");
+let toggleThemeClickLinks = document.getElementById("toggleThemeClickLinks");
+toggleThemeClickLinks.addEventListener("click", toggleThemeClick, false);
+
+let exportClickLink = document.getElementById("exportClickLink");
 exportClickLink.addEventListener("click", exportClick, false);
 
-var exampleDropdown = document.getElementById("exampleDropdown");
+let exampleDropdown = document.getElementById("exampleDropdown");
 exampleDropdown.addEventListener("change", dropdownChange, false);
 
-var loadDropDown = document.getElementById("loadDropDown");
+let loadDropDown = document.getElementById("loadDropDown");
 loadDropDown.addEventListener("change", loadDropDownChange, false);
 
-var horizontalDragbar = document.getElementById("horizontaldragbar");
+let horizontalDragbar = document.getElementById("horizontaldragbar");
 horizontalDragbar.addEventListener("mousedown", horizontalDragbarMouseDown, false);
 
-var verticalDragbar = document.getElementById("verticaldragbar");
+let verticalDragbar = document.getElementById("verticaldragbar");
 verticalDragbar.addEventListener("mousedown", verticalDragbarMouseDown, false);
 
 window.addEventListener("resize", resize_all, false);
@@ -49,8 +53,8 @@ window.addEventListener("load", reset_panels, false);
 
 /* https://github.com/ndrake/PuzzleScript/commit/de4ac2a38865b74e66c1d711a25f0691079a290d */
 window.onbeforeunload = function (e) {
-  var e = e || window.event;
-  var msg = 'You have unsaved changes!';
+  e = e || window.event;
+  let msg = 'You have unsaved changes!';
 
   if(_editorDirty) {      
 
@@ -65,7 +69,7 @@ window.onbeforeunload = function (e) {
   }
 };
 
-var gestureHandler = Mobile.enable();
+let gestureHandler = Mobile.enable();
 if (gestureHandler) {
     gestureHandler.setFocusElement(document.getElementById('gameCanvas'));
 }

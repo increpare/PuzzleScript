@@ -1,25 +1,27 @@
-var canSetHTMLColors=false;
-var canDump=true;
-var recordingStartsFromLevel=0;
-var inputHistory=[];
-var soundHistory=[];
-var compiledText;
-var canOpenEditor=true;
-var IDE=true;
+'use strict';
 
-var debugger_turnIndex=0;
-var debug_visualisation_array=[];
-var diffToVisualize=null;
+let canSetHTMLColors=false;
+let canDump=true;
+let recordingStartsFromLevel=0;
+let inputHistory=[];
+let soundHistory=[];
+let compiledText;
+let canOpenEditor=true;
+let IDE=true;
+
+let debugger_turnIndex=0;
+let debug_visualisation_array=[];
+let diffToVisualize=null;
 
 function convertLevelToString() {
-	var out = '';
-	var seenCells = {};
-	var i = 0;
-	for (var y = 0; y < level.height; y++) {
-		for (var x = 0; x < level.width; x++) {
-			var bitmask = level.getCell(x + y * level.width);
-			var objs = [];
-			for (var bit = 0; bit < 32 * STRIDE_OBJ; ++bit) {
+	let out = '';
+	let seenCells = {};
+	let i = 0;
+	for (let y = 0; y < level.height; y++) {
+		for (let x = 0; x < level.width; x++) {
+			let bitmask = level.getCell(x + y * level.width);
+			let objs = [];
+			for (let bit = 0; bit < 32 * STRIDE_OBJ; ++bit) {
 				if (bitmask.get(bit)) {
 					objs.push(state.idDict[bit])
 				}
@@ -39,39 +41,39 @@ function convertLevelToString() {
 }
 
 function stripHTMLTags(html_str){
-	var div = document.createElement("div");
+	let div = document.createElement("div");
 	div.innerHTML = html_str;
-	var text = div.textContent || div.innerText || "";
+	let text = div.textContent || div.innerText || "";
 	return text.trim();
 }
 
 function dumpTestCase() {
 	//compiler error data
-	var levelDat = compiledText;
-	var errorStrings_stripped = errorStrings.map(stripHTMLTags);
-	var resultarray = [levelDat,errorStrings_stripped,errorCount];
-	var resultstring = JSON.stringify(resultarray);
-	var escapedtitle = (state.metadata.title||"untitled test").replace(/"/g, '\\"');
+	let levelDat = compiledText;
+	let errorStrings_stripped = errorStrings.map(stripHTMLTags);
+	let resultarray = [levelDat,errorStrings_stripped,errorCount];
+	let resultstring = JSON.stringify(resultarray);
+	let escapedtitle = (state.metadata.title||"untitled test").replace(/"/g, '\\"');
 	resultstring = `<br>
 	[<br>
 		"${escapedtitle}",<br>
 		${resultstring}<br>
 	],`;
 	selectableint++;
-	var tag = 'selectable'+selectableint;
+	let tag = 'selectable'+selectableint;
 	consolePrint("<br>Compilation error/warning data (for error message tests - errormessage_testdata.js):<br><br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">"+resultstring+"</span><br><br><br>",true);
 
 	
 	//if the game is currently running and not on the title screen, dump the recording data
 	if (!titleScreen) {
 		//normal session recording data
-		var levelDat = compiledText;
-		var input = inputHistory.concat([]);
-		var sounds = soundHistory.concat([]);
-		var outputDat = convertLevelToString();
+		let levelDat = compiledText;
+		let input = inputHistory.concat([]);
+		let sounds = soundHistory.concat([]);
+		let outputDat = convertLevelToString();
 
-		var resultarray = [levelDat,input,outputDat,recordingStartsFromLevel,loadedLevelSeed,sounds];
-		var resultstring = JSON.stringify(resultarray);
+		let resultarray = [levelDat,input,outputDat,recordingStartsFromLevel,loadedLevelSeed,sounds];
+		let resultstring = JSON.stringify(resultarray);
 		resultstring = `<br>
 		[<br>
 			"${state.metadata.title||"untitled test"}",<br>
@@ -79,7 +81,7 @@ function dumpTestCase() {
 		],`;
 		
 		selectableint++;
-		var tag = 'selectable'+selectableint;
+		let tag = 'selectable'+selectableint;
 		
 		consolePrint("<br>Recorded play session data (for play session tests - testdata.js):<br><br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">"+resultstring+"</span><br><br><br>",true);
 	}
