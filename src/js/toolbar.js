@@ -5,12 +5,6 @@ function runClick() {
 	compile(["restart"]);
 }
 
-function solveClick() {
-	clearConsole();
-	// compile(["rebuild"]);
-	//don't need to rebuild/compile - run it live!
-	solve();
-}
 
 function dateToReadable(title,time) {
 	let year = time.getFullYear();
@@ -39,7 +33,6 @@ function dateToReadable(title,time) {
 	let result = hour+":"+minutes+" "+year + "-" + month+"-"+date1+" "+title;
 	return result;
 }
-
 
 function saveClick() {
 	suppress_all_console_output = true;

@@ -3279,8 +3279,6 @@ function addSpecializedFunctions(state) {
 
 function compile(command, text, randomseed) {
 
-
-
     lazy_function_generation_clear_backlog();
 
     forceRegenImages = true;
@@ -3345,7 +3343,7 @@ function compile(command, text, randomseed) {
             }
         }
         if (errorCount > MAX_ERRORS) {
-            return;
+            return state;
         }
     } else {
         let ruleCount = 0;
@@ -3380,6 +3378,7 @@ function compile(command, text, randomseed) {
 
     manage_compilation_caches();
 
+    return state;
 }
 
 const cache_CHECK_RATE=20;

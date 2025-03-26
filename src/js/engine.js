@@ -136,7 +136,7 @@ function generateTitleScreen() {
 	
 	if (state.levels.length === 0) {
 		//if body has light-theme, set fgcolor to black, bgcolor to white
-		if (document.body.classList.contains('light-theme')) {
+		if (document.body && document.body.classList.contains('light-theme')) {
 			state.fgcolor = '#000000';
 			state.bgcolor = '#FFFFFF';
 		} else {
