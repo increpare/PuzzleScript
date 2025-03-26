@@ -3,6 +3,13 @@ function runClick() {
 	compile(["restart"]);
 }
 
+function solveClick() {
+	clearConsole();
+	// compile(["rebuild"]);
+	//don't need to rebuild/compile - run it live!
+	solve();
+}
+
 function dateToReadable(title,time) {
 	var year = time.getFullYear();
 	var month = time.getMonth()+1;
