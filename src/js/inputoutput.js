@@ -428,7 +428,7 @@ function onKeyDown(event) {
 
 	if (lastDownTarget === canvas || (window.Mobile && (lastDownTarget === window.Mobile.focusIndicator))) {
 		if (keybuffer.indexOf(event.keyCode) === -1) {
-			if (event && (event.ctrlKey || event.metaKey)) {
+			if (event && ((event.ctrlKey&&event.keyCode!==90) || event.metaKey)) {
 			} else {
 				keybuffer.splice(keyRepeatIndex, 0, event.keyCode);
 				keyRepeatTimer = 0;
@@ -573,7 +573,7 @@ function checkKey(e, justPressed) {
 	if (winning) {
 		return;
 	}
-	if (e && (e.ctrlKey || e.metaKey || e.altKey)) {
+	if (e && ( (e.ctrlKey&&e.keyCode!==90) || e.metaKey || e.altKey)) {
 		return;
 	}
 
