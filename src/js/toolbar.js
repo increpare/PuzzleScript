@@ -5,13 +5,6 @@ function runClick() {
 	compile(["restart"]);
 }
 
-function solveClick() {
-	clearConsole();
-	// compile(["rebuild"]);
-	//don't need to rebuild/compile - run it live!
-	solve();
-}
-
 function dateToReadable(title,time) {
 	let year = time.getFullYear();
 	let month = time.getMonth()+1;
