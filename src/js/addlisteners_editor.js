@@ -18,6 +18,12 @@ saveClickLink.addEventListener("click", saveClick, false);
 let rebuildClickLink = document.getElementById("rebuildClickLink");
 rebuildClickLink.addEventListener("click", rebuildClick, false);
 
+var solveClickLink = document.getElementById("solveClickLink");
+solveClickLink.addEventListener("click", solveClick, false);
+
+var cancelClickLink = document.getElementById("cancelClickLink");
+cancelClickLink.addEventListener("click", stopSolving, false);
+
 let shareClickLink = document.getElementById("shareClickLink");
 shareClickLink.addEventListener("click", shareClick, false);
 
