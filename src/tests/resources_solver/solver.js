@@ -13,10 +13,10 @@ function byScoreAndLength(a, b) {
 
 var distanceTable;
 
-async function solve() {
-	if(levelEditorOpened) return;
-	if(solving) return;
-	if(textMode || state.levels.length === 0) return;
+async function solve(sync = false) {
+	if(levelEditorOpened) return false;
+	if(solving) return false;
+	if(textMode || state.levels.length === 0) return false;
 	var was_verbose_logging = false;
 	if (verbose_logging) {
 		verbose_logging = false;
@@ -44,9 +44,9 @@ async function solve() {
 	var queue = new FastPriorityQueue(byScoreAndLength);
 	queue.add([0, level.objects.slice(0), ""]);
 	consolePrint("searching...");
-	var solvingProgress = document.getElementById("solvingProgress");
-	var cancelLink = document.getElementById("cancelClickLink");
-	cancelLink.hidden = false;
+	// var solvingProgress = document.getElementById("solvingProgress");
+	// var cancelLink = document.getElementById("cancelClickLink");
+	// cancelLink.hidden = false;
 	// console.log("searching...");
 	var iters = 0;
 	var size = 1;
@@ -63,11 +63,11 @@ async function solve() {
 			break;
 		}
 		iters++;
-		if(iters > 250) {
+		if((!sync) && (iters > 250)) {
 			iters = 0;
 			// consolePrint("searched: " + size + " queue: " + discovered);
 			// console.log(discovered, size);
-			solvingProgress.innerHTML = "searched: " + size;
+			// solvingProgress.innerHTML = "searched: " + size;
 			redraw();
 			await timeout(1);
 		}
@@ -148,7 +148,7 @@ async function solve() {
 						}
 					}			
 
-					solvingProgress.innerHTML = "";
+					// solvingProgress.innerHTML = "";
 					deltatime = oldDT;
 					DoRestart();
 
@@ -162,7 +162,7 @@ async function solve() {
 
 					redraw();
 					cancelLink.hidden = true;
-					return;
+					return true;
 				}
 				exploredStates[level.objects] = true;
 				size++;
@@ -182,11 +182,12 @@ async function solve() {
 	verbose_logging = was_verbose_logging;
 	cache_console_messages = was_verbose_logging;
 
-	solvingProgress.innerHTML = "";
+	// solvingProgress.innerHTML = "";
 	deltatime = oldDT;
 	playSound(52291704);
 	redraw();
-	cancelLink.hidden = true;
+	// cancelLink.hidden = true;
+	return false;
 }
 
 function stopSolving() {

@@ -1,0 +1,67 @@
+title Notsnake
+author Terry Cavanagh
+homepage www.distractionware.com
+
+color_palette c64
+require_player_movement
+
+========
+OBJECTS
+========
+
+Background
+blue
+
+Player
+lightblue
+
+Trail
+purple
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+O = Trail
+
+=======
+SOUNDS
+=======
+
+startgame 50287705
+sfx0 660507
+sfx1 41058704
+endgame 74955903
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Trail
+Player
+
+======
+RULES
+======
+
+[ > Player | No Trail ] -> [ Trail | Player ] sfx0
+[ > Player | Trail ] -> [ | Player ] sfx1
+
+==============
+WINCONDITIONS
+==============
+
+no Trail
+
+=======
+LEVELS
+=======
+
+OOOOOOOO
+OOOOOOOO
+O..POO.O
+OOOOOOOO
+OOOOOOOO

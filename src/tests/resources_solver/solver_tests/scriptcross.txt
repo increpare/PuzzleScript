@@ -1,0 +1,205 @@
+title ScriptCross
+author Dennis Au
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+White
+
+Target
+Black
+
+Fill
+Black
+
+Cross
+LightGrey
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+
+Player
+Green
+00000
+0...0
+0...0
+0...0
+00000
+
+Border #
+LightGrey
+
+(Clues 0-9)
+Clue0 0
+LightGrey
+
+Clue1 1
+LightGrey Black
+00000
+0...0
+0.1.0
+0...0
+00000
+
+Clue2 2
+LightGrey Black
+00000
+0..10
+0...0
+01..0
+00000
+
+Clue3 3
+LightGrey Black
+00000
+0..10
+0.1.0
+01..0
+00000
+
+Clue4 4
+LightGrey Black
+00000
+01.10
+0...0
+01.10
+00000
+
+Clue5 5
+LightGrey Black
+00000
+01.10
+0.1.0
+01.10
+00000
+
+Clue6 6
+LightGrey Black
+00000
+01.10
+01.10
+01.10
+00000
+
+Clue7 7
+LightGrey Black
+00000
+01110
+0.1.0
+01110
+00000
+
+Clue8 8
+LightGrey Black
+00000
+01110
+0.110
+01110
+00000
+
+Clue9 9
+LightGrey Black
+00000
+01110
+01110
+01110
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Border
+b = Target
+Clue = Clue0 or Clue1 or Clue2 or Clue3 or Clue4 or Clue5 or Clue6 or Clue7 or Clue8 or Clue9
+NoEmpty = Fill or Cross or Clue or Border
+
+=======
+SOUNDS
+=======
+EndLevel 37348103
+EndGame 64173909
+
+================
+COLLISIONLAYERS
+================
+
+(switch order of target and background to see the solutions)
+Target
+Background
+Border, Clue, Fill, Cross
+Player
+
+
+======
+RULES
+======
+
+[Action Player no NoEmpty] -> [Player Fill]
+[Action Player Fill] -> [Player Cross]
+[Action Player Cross] -> [Player]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Fill
+All Fill on Target
+
+=======
+LEVELS
+=======
+
+(P123456789)
+
+message level 1 - oh so stable
+
+P12
+1.b
+2bb
+
+message level 2 - it is what it is
+P#1###
+##113#
+##311#
+3.bbb.
+1...b.
+3.bbb.
+1.b...
+3.bbb.
+
+message level 3 - i see you!
+P##1#1#
+###111#
+##.....
+11.b.b.
+##.....
+#3.bbb.
+##.....
+
+message level 4 - that's ace
+P#######1####
+#######111###
+######14141##
+#####8111118#
+###8.bbbbbbb.
+##11.b.....b.
+#131.b.bbb.b.
+1111.b.b.b.b.
+#131.b.bbb.b.
+1111.b.b.b.b.
+##11.b.....b.
+###8.bbbbbbb.
+####.........
+
+message congratulations!

@@ -24,7 +24,7 @@ function consoleError(text) {
 //	window.console.log(text);
 }
 
-function consoleCacheDump(error) {
+function consoleCacheDump(scrolldown=true) {
 }
 var editor = {
 	getValue : function () { return levelString }
