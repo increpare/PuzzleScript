@@ -245,6 +245,8 @@ a {
 
 <!--___SCRIPTINSERT___-->
 <script>
+'use strict';
+
 function storage_has(key) {
     return localStorage.getItem(key) !== null;
 }
@@ -522,6 +524,18 @@ BitVec.prototype.anyBitsInCommon = function(other) {
 	return false;
 }
 
+BitVec.prototype.prettyPrint = function() {
+	var result="";
+	//print string as bit array, grouped into fives
+	for (let i = 0; i < this.data.length; i++) {
+		for (let j = 0; j < 32; j++) {
+			result += (this.data[i] & (1 << j)) ? "1" : "0";
+		}
+		result += " ";
+	}
+	return result;
+}
+
 function ANY_BITS_IN_COMMON(tok, arr, array_size) {
 	if (array_size === 0) {
 		return "false";
@@ -597,8 +611,11 @@ function IMPORT_COMPILE_TIME_ARRAY(runtime,compiletime,array_size){
 	return result;
 }
 
+
 </script>
 <script>
+'use strict';
+
 function Level(lineNumber, width, height, layerCount, objects) {
 	this.lineNumber = lineNumber;
 	this.width = width;
@@ -707,12 +724,14 @@ Level.prototype.calcBackgroundMask = function (state) {
 			return cell;
 		}
 	}
-	cell = new BitVec(STRIDE_OBJ);
+	const cell = new BitVec(STRIDE_OBJ);
 	cell.ibitset(state.backgroundid);
 	return cell;
 }
 </script>
 <script>
+'use strict';
+
 const relativedirs = ['^', 'v', '<', '>', 'moving','stationary','parallel','perpendicular', 'no'];
 const sectionNames = ['objects', 'legend', 'sounds', 'collisionlayers', 'rules', 'winconditions', 'levels'];
 const commandwords = ["sfx0","sfx1","sfx2","sfx3","sfx4","sfx5","sfx6","sfx7","sfx8","sfx9","sfx10","cancel","checkpoint","restart","win","message","again"];
@@ -754,7 +773,7 @@ const reg_directions_only = /^(\>|\<|\^|v|up|down|left|right|moving|stationary|n
 
 const REGEX_HEX = /^#([0-9A-F]{3}){1,2}$/i;
 
-let reg_color = /(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-f]{3}){1,2})\s*/;
+const reg_color = /(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-f]{3}){1,2})\s*/;
 
 // lots of hardcoded stuff for autocomplete in anyword-hint also, but 
 // it's not including here because I don't want to bloat the standalone
@@ -799,6 +818,7 @@ doSetupTitleScreenLevelContinue();
 
 let verbose_logging = false;
 let throttle_movement = false;
+let suppress_all_console_output = false;
 let cache_console_messages = false;
 let quittingTitleScreen = false;
 let quittingMessageScreen = false;
@@ -860,6 +880,8 @@ function lazy_function_generation_clear_backlog() {
 
 </script>
 <script>
+'use strict';
+
 let canSetHTMLColors=true;
 let canDump=false;
 let canOpenEditor=false;
@@ -911,6 +933,7 @@ function pushSoundToHistory(seed) {}
 
 </script>
 <script>
+'use strict';
 
 let font = {
 	'0': `
@@ -6031,13 +6054,15 @@ let font = {
 
 </script>
 <script>
+'use strict';
+
 /**
  * Seedable random number generator functions.
  * @version 1.0.0
  * @license Public Domain
  *
  * @example
- * var rng = new RNG('Example');
+ * let rng = new RNG('Example');
  * rng.random(40, 50);  // =>  42
  * rng.uniform();       // =>  0.7972798995050903
  * rng.normal();        // => -0.6698504543216376
@@ -6051,10 +6076,10 @@ let font = {
  * @return {Array} An array of bytes
  */
 String.prototype.getBytes = function() {
-    var output = [];
-    for (var i = 0; i < this.length; i++) {
-        var c = this.charCodeAt(i);
-        var bytes = [];
+    let output = [];
+    for (let i = 0; i < this.length; i++) {
+        let c = this.charCodeAt(i);
+        let bytes = [];
         do {
             bytes.push(c & 0xFF);
             c = c >> 8;
@@ -6072,7 +6097,7 @@ function RC4(seed) {
     this.s = new Array(256);
     this.i = 0;
     this.j = 0;
-    for (var i = 0; i < 256; i++) {
+    for (let i = 0; i < 256; i++) {
         this.s[i] = i;
     }
     if (seed) {
@@ -6081,7 +6106,7 @@ function RC4(seed) {
 }
 
 RC4.prototype._swap = function(i, j) {
-    var tmp = this.s[i];
+    let tmp = this.s[i];
     this.s[i] = this.s[j];
     this.s[j] = tmp;
 };
@@ -6091,9 +6116,9 @@ RC4.prototype._swap = function(i, j) {
  * @param {String} seed
  */
 RC4.prototype.mix = function(seed) {
-    var input = seed.getBytes();
-    var j = 0;
-    for (var i = 0; i < this.s.length; i++) {
+    let input = seed.getBytes();
+    let j = 0;
+    for (let i = 0; i < this.s.length; i++) {
         j += this.s[i] + input[i % input.length];
         j %= 256;
         this._swap(i, j);
@@ -6111,8 +6136,8 @@ RC4.prototype.next = function() {
 };
 
 function print_call_stack() {
-  var e = new Error();
-  var stack = e.stack;
+  let e = new Error();
+  let stack = e.stack;
   console.log( stack );
 }
 /**
@@ -6161,9 +6186,9 @@ RNG.prototype.nextByte = function() {
  * @return {number} Uniform random number between 0 and 1.
  */
 RNG.prototype.uniform = function() {
-    var BYTES = 7; // 56 bits to make a 53-bit double
-    var output = 0;
-    for (var i = 0; i < BYTES; i++) {
+    let BYTES = 7; // 56 bits to make a 53-bit double
+    let output = 0;
+    for (let i = 0; i < BYTES; i++) {
         output *= 256;
         output += this.nextByte();
     }
@@ -6192,12 +6217,12 @@ RNG.prototype.random = function(n, m) {
  */
 RNG.prototype.normal = function() {
     if (this._normal !== null) {
-        var n = this._normal;
+        let n = this._normal;
         this._normal = null;
         return n;
     } else {
-        var x = this.uniform() || Math.pow(2, -53); // can't be exactly 0
-        var y = this.uniform();
+        let x = this.uniform() || Math.pow(2, -53); // can't be exactly 0
+        let y = this.uniform();
         this._normal = Math.sqrt(-2 * Math.log(x)) * Math.sin(2 * Math.PI * y);
         return Math.sqrt(-2 * Math.log(x)) * Math.cos(2 * Math.PI * y);
     }
@@ -6217,8 +6242,8 @@ RNG.prototype.exponential = function() {
  * @return {number} Number from the Poisson distribution.
  */
 RNG.prototype.poisson = function(mean) {
-    var L = Math.exp(-(mean || 1));
-    var k = 0, p = 1;
+    let L = Math.exp(-(mean || 1));
+    let k = 0, p = 1;
     do {
         k++;
         p *= this.uniform();
@@ -6233,15 +6258,15 @@ RNG.prototype.poisson = function(mean) {
  * @return {number} Number from the gamma distribution.
  */
 RNG.prototype.gamma = function(a) {
-    var d = (a < 1 ? 1 + a : a) - 1 / 3;
-    var c = 1 / Math.sqrt(9 * d);
+    let d = (a < 1 ? 1 + a : a) - 1 / 3;
+    let c = 1 / Math.sqrt(9 * d);
     do {
         do {
-            var x = this.normal();
-            var v = Math.pow(c * x + 1, 3);
+            let x = this.normal();
+            let v = Math.pow(c * x + 1, 3);
         } while (v <= 0);
-        var u = this.uniform();
-        var x2 = Math.pow(x, 2);
+        let u = this.uniform();
+        let x2 = Math.pow(x, 2);
     } while (u >= 1 - 0.0331 * x2 * x2 &&
              Math.log(u) >= 0.5 * x2 + d * (1 - v + Math.log(v)));
     if (a < 1) {
@@ -6259,14 +6284,14 @@ RNG.prototype.gamma = function(a) {
  * @return {Function}
  */
 RNG.roller = function(expr, rng) {
-    var parts = expr.split(/(\d+)?d(\d+)([+-]\d+)?/).slice(1);
-    var dice = parseFloat(parts[0]) || 1;
-    var sides = parseFloat(parts[1]);
-    var mod = parseFloat(parts[2]) || 0;
+    let parts = expr.split(/(\d+)?d(\d+)([+-]\d+)?/).slice(1);
+    let dice = parseFloat(parts[0]) || 1;
+    let sides = parseFloat(parts[1]);
+    let mod = parseFloat(parts[2]) || 0;
     rng = rng || new RNG();
     return function() {
-        var total = dice + mod;
-        for (var i = 0; i < dice; i++) {
+        let total = dice + mod;
+        for (let i = 0; i < dice; i++) {
             total += rng.random(sides);
         }
         return total;
@@ -6398,26 +6423,28 @@ if (typeof exports != 'undefined')  // For node.js
 
 </script>
 <script>
-let SOUND_VOL = 0.25;
-let SAMPLE_RATE = 5512;
-let BIT_DEPTH = 8;
+'use strict';
 
-let SQUARE = 0;
-let SAWTOOTH = 1;
-let SINE = 2;
-let NOISE = 3;
-let TRIANGLE = 4;
-let BREAKER = 5;
+const SOUND_VOL = 0.25;
+const SAMPLE_RATE = 5512;
+const BIT_DEPTH = 8;
 
-let SHAPES = [
+const SQUARE = 0;
+const SAWTOOTH = 1;
+const SINE = 2;
+const NOISE = 3;
+const TRIANGLE = 4;
+const BREAKER = 5;
+
+const SHAPES = [
   'square', 'sawtooth', 'sine', 'noise', 'triangle', 'breaker'
 ];
 
 let AUDIO_CONTEXT;
 
-function checkAudioContextExists() {
-  try {
-    if (AUDIO_CONTEXT == null) {
+function checkAudioContextExists(){
+  try{
+    if (AUDIO_CONTEXT==null){
       if (typeof AudioContext != 'undefined') {
         AUDIO_CONTEXT = new AudioContext();
       } else if (typeof webkitAudioContext != 'undefined') {
@@ -6425,7 +6452,7 @@ function checkAudioContextExists() {
       }
     }
   }
-  catch (ex) {
+  catch (ex){
     window.console.log(ex)
   }
 }
@@ -6437,7 +6464,7 @@ let masterVolume = 1.0;
 
 // Sound generation parameters are on [0,1] unless noted SIGNED, & thus [-1,1]
 function Params() {
-  let result = {};
+  const result={};
   // Wave shape
   result.wave_type = SQUARE;
 
@@ -6499,15 +6526,15 @@ function frnd(range) {
 
 function rnd(max) {
   if (seeded) {
-    return Math.floor(rng.uniform() * (max + 1));
+  return Math.floor(rng.uniform() * (max + 1));
   } else {
     return Math.floor(Math.random() * (max + 1));
   }
 }
 
 
-pickupCoin = function () {
-  let result = Params();
+function pickupCoin() {
+  const result=Params();
   result.wave_type = Math.floor(frnd(SHAPES.length));
   if (result.wave_type === 3) {
     result.wave_type = 0;
@@ -6527,8 +6554,8 @@ pickupCoin = function () {
 };
 
 
-laserShoot = function () {
-  let result = Params();
+function laserShoot() {
+  const result=Params();
   result.wave_type = rnd(2);
   if (result.wave_type === SINE && rnd(1))
     result.wave_type = rnd(1);
@@ -6542,16 +6569,19 @@ laserShoot = function () {
   result.p_freq_limit = result.p_base_freq - 0.2 - frnd(0.6);
   if (result.p_freq_limit < 0.2) result.p_freq_limit = 0.2;
   result.p_freq_ramp = -0.15 - frnd(0.2);
-  if (rnd(2) === 0) {
+  if (rnd(2) === 0)
+  {
     result.p_base_freq = 0.3 + frnd(0.6);
     result.p_freq_limit = frnd(0.1);
     result.p_freq_ramp = -0.35 - frnd(0.3);
   }
-  if (rnd(1)) {
+  if (rnd(1))
+  {
     result.p_duty = frnd(0.5);
     result.p_duty_ramp = frnd(0.2);
   }
-  else {
+  else
+  {
     result.p_duty = 0.4 + frnd(0.5);
     result.p_duty_ramp = -frnd(0.7);
   }
@@ -6560,7 +6590,8 @@ laserShoot = function () {
   result.p_env_decay = frnd(0.4);
   if (rnd(1))
     result.p_env_punch = frnd(0.3);
-  if (rnd(2) === 0) {
+  if (rnd(2) === 0)
+  {
     result.p_pha_offset = frnd(0.2);
     result.p_pha_ramp = -frnd(0.2);
   }
@@ -6570,8 +6601,8 @@ laserShoot = function () {
   return result;
 };
 
-explosion = function () {
-  let result = Params();
+function explosion() {
+  const result=Params();
 
   if (rnd(1)) {
     result.p_base_freq = 0.1 + frnd(0.4);
@@ -6605,103 +6636,103 @@ explosion = function () {
   return result;
 };
 //9675111
-birdSound = function () {
-  let result = Params();
+function birdSound() {
+  const result=Params();
 
-  if (frnd(10) < 1) {
+if (frnd(10) < 1) {
     result.wave_type = Math.floor(frnd(SHAPES.length));
     if (result.wave_type === 3) {
       result.wave_type = SQUARE;
     }
-    result.p_env_attack = 0.4304400932967592 + frnd(0.2) - 0.1;
-    result.p_env_sustain = 0.15739346034252394 + frnd(0.2) - 0.1;
-    result.p_env_punch = 0.004488201744871758 + frnd(0.2) - 0.1;
-    result.p_env_decay = 0.07478075528212291 + frnd(0.2) - 0.1;
-    result.p_base_freq = 0.9865265720147687 + frnd(0.2) - 0.1;
-    result.p_freq_limit = 0 + frnd(0.2) - 0.1;
-    result.p_freq_ramp = -0.2995018224359539 + frnd(0.2) - 0.1;
-    if (frnd(1.0) < 0.5) {
-      result.p_freq_ramp = 0.1 + frnd(0.15);
-    }
-    result.p_freq_dramp = 0.004598608156964473 + frnd(0.1) - 0.05;
-    result.p_vib_strength = -0.2202799497929496 + frnd(0.2) - 0.1;
-    result.p_vib_speed = 0.8084998703158364 + frnd(0.2) - 0.1;
-    result.p_arp_mod = 0;//-0.46410459213693644+frnd(0.2)-0.1;
-    result.p_arp_speed = 0;//-0.10955361249587248+frnd(0.2)-0.1;
-    result.p_duty = -0.9031808754347107 + frnd(0.2) - 0.1;
-    result.p_duty_ramp = -0.8128699999808343 + frnd(0.2) - 0.1;
-    result.p_repeat_speed = 0.6014860189319991 + frnd(0.2) - 0.1;
-    result.p_pha_offset = -0.9424902314367765 + frnd(0.2) - 0.1;
-    result.p_pha_ramp = -0.1055482222272056 + frnd(0.2) - 0.1;
-    result.p_lpf_freq = 0.9989765717851521 + frnd(0.2) - 0.1;
-    result.p_lpf_ramp = -0.25051720626043017 + frnd(0.2) - 0.1;
-    result.p_lpf_resonance = 0.32777871505494693 + frnd(0.2) - 0.1;
-    result.p_hpf_freq = 0.0023548750981756753 + frnd(0.2) - 0.1;
-    result.p_hpf_ramp = -0.002375673204842568 + frnd(0.2) - 0.1;
-    return result;
-  }
+result.p_env_attack = 0.4304400932967592 + frnd(0.2) - 0.1;
+result.p_env_sustain = 0.15739346034252394 + frnd(0.2) - 0.1;
+result.p_env_punch = 0.004488201744871758 + frnd(0.2) - 0.1;
+result.p_env_decay = 0.07478075528212291 + frnd(0.2) - 0.1;
+result.p_base_freq = 0.9865265720147687 + frnd(0.2) - 0.1;
+result.p_freq_limit = 0 + frnd(0.2) - 0.1;
+result.p_freq_ramp = -0.2995018224359539 + frnd(0.2) - 0.1;
+if (frnd(1.0) < 0.5) {
+  result.p_freq_ramp = 0.1 + frnd(0.15);
+}
+result.p_freq_dramp = 0.004598608156964473 + frnd(0.1) - 0.05;
+result.p_vib_strength = -0.2202799497929496 + frnd(0.2) - 0.1;
+result.p_vib_speed = 0.8084998703158364 + frnd(0.2) - 0.1;
+result.p_arp_mod = 0;//-0.46410459213693644+frnd(0.2)-0.1;
+result.p_arp_speed = 0;//-0.10955361249587248+frnd(0.2)-0.1;
+result.p_duty = -0.9031808754347107 + frnd(0.2) - 0.1;
+result.p_duty_ramp = -0.8128699999808343 + frnd(0.2) - 0.1;
+result.p_repeat_speed = 0.6014860189319991 + frnd(0.2) - 0.1;
+result.p_pha_offset = -0.9424902314367765 + frnd(0.2) - 0.1;
+result.p_pha_ramp = -0.1055482222272056 + frnd(0.2) - 0.1;
+result.p_lpf_freq = 0.9989765717851521 + frnd(0.2) - 0.1;
+result.p_lpf_ramp = -0.25051720626043017 + frnd(0.2) - 0.1;
+result.p_lpf_resonance = 0.32777871505494693 + frnd(0.2) - 0.1;
+result.p_hpf_freq = 0.0023548750981756753 + frnd(0.2) - 0.1;
+result.p_hpf_ramp = -0.002375673204842568 + frnd(0.2) - 0.1;
+return result;
+}
 
-  if (frnd(10) < 1) {
+if (frnd(10) < 1) {
     result.wave_type = Math.floor(frnd(SHAPES.length));
     if (result.wave_type === 3) {
       result.wave_type = SQUARE;
     }
-    result.p_env_attack = 0.5277795946672003 + frnd(0.2) - 0.1;
-    result.p_env_sustain = 0.18243733568468432 + frnd(0.2) - 0.1;
-    result.p_env_punch = -0.020159754546840117 + frnd(0.2) - 0.1;
-    result.p_env_decay = 0.1561353422051903 + frnd(0.2) - 0.1;
-    result.p_base_freq = 0.9028855606533718 + frnd(0.2) - 0.1;
-    result.p_freq_limit = -0.008842787837148716;
-    result.p_freq_ramp = -0.1;
-    result.p_freq_dramp = -0.012891241489551925;
-    result.p_vib_strength = -0.17923136138403065 + frnd(0.2) - 0.1;
-    result.p_vib_speed = 0.908263385610142 + frnd(0.2) - 0.1;
-    result.p_arp_mod = 0.41690153355414894 + frnd(0.2) - 0.1;
-    result.p_arp_speed = 0.0010766233195860703 + frnd(0.2) - 0.1;
-    result.p_duty = -0.8735363011184684 + frnd(0.2) - 0.1;
-    result.p_duty_ramp = -0.7397985366747507 + frnd(0.2) - 0.1;
-    result.p_repeat_speed = 0.0591789344172107 + frnd(0.2) - 0.1;
-    result.p_pha_offset = -0.9961184222777699 + frnd(0.2) - 0.1;
-    result.p_pha_ramp = -0.08234769395850523 + frnd(0.2) - 0.1;
-    result.p_lpf_freq = 0.9412475115697335 + frnd(0.2) - 0.1;
-    result.p_lpf_ramp = -0.18261358925834958 + frnd(0.2) - 0.1;
-    result.p_lpf_resonance = 0.24541438107389477 + frnd(0.2) - 0.1;
-    result.p_hpf_freq = -0.01831940280978611 + frnd(0.2) - 0.1;
-    result.p_hpf_ramp = -0.03857383633171346 + frnd(0.2) - 0.1;
-    return result;
+result.p_env_attack = 0.5277795946672003 + frnd(0.2) - 0.1;
+result.p_env_sustain = 0.18243733568468432 + frnd(0.2) - 0.1;
+result.p_env_punch = -0.020159754546840117 + frnd(0.2) - 0.1;
+result.p_env_decay = 0.1561353422051903 + frnd(0.2) - 0.1;
+result.p_base_freq = 0.9028855606533718 + frnd(0.2) - 0.1;
+result.p_freq_limit = -0.008842787837148716;
+result.p_freq_ramp = -0.1;
+result.p_freq_dramp = -0.012891241489551925;
+result.p_vib_strength = -0.17923136138403065 + frnd(0.2) - 0.1;
+result.p_vib_speed = 0.908263385610142 + frnd(0.2) - 0.1;
+result.p_arp_mod = 0.41690153355414894 + frnd(0.2) - 0.1;
+result.p_arp_speed = 0.0010766233195860703 + frnd(0.2) - 0.1;
+result.p_duty = -0.8735363011184684 + frnd(0.2) - 0.1;
+result.p_duty_ramp = -0.7397985366747507 + frnd(0.2) - 0.1;
+result.p_repeat_speed = 0.0591789344172107 + frnd(0.2) - 0.1;
+result.p_pha_offset = -0.9961184222777699 + frnd(0.2) - 0.1;
+result.p_pha_ramp = -0.08234769395850523 + frnd(0.2) - 0.1;
+result.p_lpf_freq = 0.9412475115697335 + frnd(0.2) - 0.1;
+result.p_lpf_ramp = -0.18261358925834958 + frnd(0.2) - 0.1;
+result.p_lpf_resonance = 0.24541438107389477 + frnd(0.2) - 0.1;
+result.p_hpf_freq = -0.01831940280978611 + frnd(0.2) - 0.1;
+result.p_hpf_ramp = -0.03857383633171346 + frnd(0.2) - 0.1;
+return result;
 
-  }
+}
   if (frnd(10) < 1) {
-    //result.wave_type = 4;
+//result.wave_type = 4;
     result.wave_type = Math.floor(frnd(SHAPES.length));
 
     if (result.wave_type === 3) {
       result.wave_type = SQUARE;
     }
-    result.p_env_attack = 0.4304400932967592 + frnd(0.2) - 0.1;
-    result.p_env_sustain = 0.15739346034252394 + frnd(0.2) - 0.1;
-    result.p_env_punch = 0.004488201744871758 + frnd(0.2) - 0.1;
-    result.p_env_decay = 0.07478075528212291 + frnd(0.2) - 0.1;
-    result.p_base_freq = 0.9865265720147687 + frnd(0.2) - 0.1;
-    result.p_freq_limit = 0 + frnd(0.2) - 0.1;
-    result.p_freq_ramp = -0.2995018224359539 + frnd(0.2) - 0.1;
-    result.p_freq_dramp = 0.004598608156964473 + frnd(0.2) - 0.1;
-    result.p_vib_strength = -0.2202799497929496 + frnd(0.2) - 0.1;
-    result.p_vib_speed = 0.8084998703158364 + frnd(0.2) - 0.1;
-    result.p_arp_mod = -0.46410459213693644 + frnd(0.2) - 0.1;
-    result.p_arp_speed = -0.10955361249587248 + frnd(0.2) - 0.1;
-    result.p_duty = -0.9031808754347107 + frnd(0.2) - 0.1;
-    result.p_duty_ramp = -0.8128699999808343 + frnd(0.2) - 0.1;
-    result.p_repeat_speed = 0.7014860189319991 + frnd(0.2) - 0.1;
-    result.p_pha_offset = -0.9424902314367765 + frnd(0.2) - 0.1;
-    result.p_pha_ramp = -0.1055482222272056 + frnd(0.2) - 0.1;
-    result.p_lpf_freq = 0.9989765717851521 + frnd(0.2) - 0.1;
-    result.p_lpf_ramp = -0.25051720626043017 + frnd(0.2) - 0.1;
-    result.p_lpf_resonance = 0.32777871505494693 + frnd(0.2) - 0.1;
-    result.p_hpf_freq = 0.0023548750981756753 + frnd(0.2) - 0.1;
-    result.p_hpf_ramp = -0.002375673204842568 + frnd(0.2) - 0.1;
-    return result;
-  }
+result.p_env_attack = 0.4304400932967592 + frnd(0.2) - 0.1;
+result.p_env_sustain = 0.15739346034252394 + frnd(0.2) - 0.1;
+result.p_env_punch = 0.004488201744871758 + frnd(0.2) - 0.1;
+result.p_env_decay = 0.07478075528212291 + frnd(0.2) - 0.1;
+result.p_base_freq = 0.9865265720147687 + frnd(0.2) - 0.1;
+result.p_freq_limit = 0 + frnd(0.2) - 0.1;
+result.p_freq_ramp = -0.2995018224359539 + frnd(0.2) - 0.1;
+result.p_freq_dramp = 0.004598608156964473 + frnd(0.2) - 0.1;
+result.p_vib_strength = -0.2202799497929496 + frnd(0.2) - 0.1;
+result.p_vib_speed = 0.8084998703158364 + frnd(0.2) - 0.1;
+result.p_arp_mod = -0.46410459213693644 + frnd(0.2) - 0.1;
+result.p_arp_speed = -0.10955361249587248 + frnd(0.2) - 0.1;
+result.p_duty = -0.9031808754347107 + frnd(0.2) - 0.1;
+result.p_duty_ramp = -0.8128699999808343 + frnd(0.2) - 0.1;
+result.p_repeat_speed = 0.7014860189319991 + frnd(0.2) - 0.1;
+result.p_pha_offset = -0.9424902314367765 + frnd(0.2) - 0.1;
+result.p_pha_ramp = -0.1055482222272056 + frnd(0.2) - 0.1;
+result.p_lpf_freq = 0.9989765717851521 + frnd(0.2) - 0.1;
+result.p_lpf_ramp = -0.25051720626043017 + frnd(0.2) - 0.1;
+result.p_lpf_resonance = 0.32777871505494693 + frnd(0.2) - 0.1;
+result.p_hpf_freq = 0.0023548750981756753 + frnd(0.2) - 0.1;
+result.p_hpf_ramp = -0.002375673204842568 + frnd(0.2) - 0.1;
+return result;
+}
   if (frnd(5) > 1) {
     result.wave_type = Math.floor(frnd(SHAPES.length));
 
@@ -6766,7 +6797,7 @@ birdSound = function () {
   //new
   result.p_base_freq = 0.85 + frnd(0.15);
   result.p_freq_ramp = 0.3 + frnd(0.15);
-  //  result.p_freq_dramp = 0.3+frnd(2.0);
+//  result.p_freq_dramp = 0.3+frnd(2.0);
 
   result.p_env_attack = 0 + frnd(0.09);
   result.p_env_sustain = 0.2 + frnd(0.3);
@@ -6797,8 +6828,8 @@ birdSound = function () {
 };
 
 
-pushSound = function () {
-  let result = Params();
+function pushSound() {
+  const result=Params();
   result.wave_type = Math.floor(frnd(SHAPES.length));//TRIANGLE;
   if (result.wave_type === 2) {
     result.wave_type++;
@@ -6825,8 +6856,8 @@ pushSound = function () {
 
 
 
-powerUp = function () {
-  let result = Params();
+function powerUp() {
+  const result=Params();
   if (rnd(1))
     result.wave_type = SAWTOOTH;
   else
@@ -6835,15 +6866,18 @@ powerUp = function () {
   if (result.wave_type === 3) {
     result.wave_type = SQUARE;
   }
-  if (rnd(1)) {
+  if (rnd(1))
+  {
     result.p_base_freq = 0.2 + frnd(0.3);
     result.p_freq_ramp = 0.1 + frnd(0.4);
     result.p_repeat_speed = 0.4 + frnd(0.4);
   }
-  else {
+  else
+  {
     result.p_base_freq = 0.2 + frnd(0.3);
     result.p_freq_ramp = 0.05 + frnd(0.2);
-    if (rnd(1)) {
+    if (rnd(1))
+    {
       result.p_vib_strength = frnd(0.7);
       result.p_vib_speed = frnd(0.6);
     }
@@ -6855,8 +6889,8 @@ powerUp = function () {
   return result;
 };
 
-hitHurt = function () {
-  result = Params();
+function hitHurt() {
+  const result = Params();
   result.wave_type = rnd(2);
   if (result.wave_type === SINE)
     result.wave_type = NOISE;
@@ -6874,8 +6908,8 @@ hitHurt = function () {
 };
 
 
-jump = function () {
-  result = Params();
+function jump() {
+  const result = Params();
   result.wave_type = SQUARE;
   result.wave_type = Math.floor(frnd(SHAPES.length));
   if (result.wave_type === 3) {
@@ -6894,8 +6928,8 @@ jump = function () {
   return result;
 };
 
-blipSelect = function () {
-  result = Params();
+function blipSelect() {
+  const result = Params();
   result.wave_type = rnd(1);
   result.wave_type = Math.floor(frnd(SHAPES.length));
   if (result.wave_type === 3) {
@@ -6911,8 +6945,8 @@ blipSelect = function () {
   return result;
 };
 
-random = function () {
-  result = Params();
+function random() {
+  const result = Params();
   result.wave_type = Math.floor(frnd(SHAPES.length));
   result.p_base_freq = Math.pow(frnd(2.0) - 1.0, 2.0);
   if (rnd(1))
@@ -6951,41 +6985,41 @@ random = function () {
   return result;
 };
 
-let generators = [
-  pickupCoin,
-  laserShoot,
-  explosion,
-  powerUp,
-  hitHurt,
-  jump,
-  blipSelect,
-  pushSound,
-  random,
-  birdSound
+const generators = [
+pickupCoin,
+laserShoot,
+explosion,
+powerUp,
+hitHurt,
+jump,
+blipSelect,
+pushSound,
+random,
+birdSound
 ];
 
-let generatorNames = [
-  'pickupCoin',
-  'laserShoot',
-  'explosion',
-  'powerUp',
-  'hitHurt',
-  'jump',
-  'blipSelect',
-  'pushSound',
-  'random',
-  'birdSound'
+const generatorNames = [
+'pickupCoin',
+'laserShoot',
+'explosion',
+'powerUp',
+'hitHurt',
+'jump',
+'blipSelect',
+'pushSound',
+'random',
+'birdSound'
 ];
 
 /*
 i like 9675111
 */
-generateFromSeed = function (seed) {
+function generateFromSeed(seed) {
   rng = new RNG((seed / 100) | 0);
-  let generatorindex = seed % 100;
-  let soundGenerator = generators[generatorindex % generators.length];
+  const generatorindex = seed % 100;
+  const soundGenerator = generators[generatorindex % generators.length];
   seeded = true;
-  let result = soundGenerator();
+  const result = soundGenerator();
   result.seed = seed;
   seeded = false;
   return result;
@@ -6995,41 +7029,44 @@ function SoundEffect(length, sample_rate) {
   this._buffer = AUDIO_CONTEXT.createBuffer(1, length, sample_rate);
 }
 
-SoundEffect.prototype.getBuffer = function () {
+SoundEffect.prototype.getBuffer = function() {
   return this._buffer.getChannelData(0);
 };
 
 
 //unlock bullshit
-function ULBS() {
-  if (AUDIO_CONTEXT.state === 'suspended') {
-    let unlock = function () {
-      AUDIO_CONTEXT.resume().then(function () {
-        document.body.removeEventListener('touchstart', unlock);
-        document.body.removeEventListener('touchend', unlock);
-        document.body.removeEventListener('mousedown', unlock);
-        document.body.removeEventListener('mouseup', unlock);
-        document.body.removeEventListener('keydown', unlock);
-        document.body.removeEventListener('keyup', unlock);
-      });
-    };
+function ULBS(){   
+  if (AUDIO_CONTEXT.state === 'suspended')
+  {
+      const unlock = function()
+      {
+        AUDIO_CONTEXT.resume().then(function()
+          {
+            document.body.removeEventListener('touchstart', unlock);
+            document.body.removeEventListener('touchend', unlock);
+            document.body.removeEventListener('mousedown', unlock);
+            document.body.removeEventListener('mouseup', unlock);
+            document.body.removeEventListener('keydown', unlock);
+            document.body.removeEventListener('keyup', unlock);
+          });
+      };
 
-    document.body.addEventListener('touchstart', unlock, false);
-    document.body.addEventListener('touchend', unlock, false);
-    document.body.addEventListener('mousedown', unlock, false);
-    document.body.addEventListener('mouseup', unlock, false);
-    document.body.addEventListener('keydown', unlock, false);
-    document.body.addEventListener('keyup', unlock, false);
+      document.body.addEventListener('touchstart', unlock, false);
+      document.body.addEventListener('touchend', unlock, false);
+      document.body.addEventListener('mousedown', unlock, false);
+      document.body.addEventListener('mouseup', unlock, false);
+      document.body.addEventListener('keydown', unlock, false);
+      document.body.addEventListener('keyup', unlock, false);
   }
 }
 
-SoundEffect.prototype.play = function () {
+SoundEffect.prototype.play = function() {
   ULBS();
 
-  let source = AUDIO_CONTEXT.createBufferSource();
-  let filter1 = AUDIO_CONTEXT.createBiquadFilter();
-  let filter2 = AUDIO_CONTEXT.createBiquadFilter();
-  let filter3 = AUDIO_CONTEXT.createBiquadFilter();
+  const source = AUDIO_CONTEXT.createBufferSource();
+  const filter1 = AUDIO_CONTEXT.createBiquadFilter();
+  const filter2 = AUDIO_CONTEXT.createBiquadFilter();
+  const filter3 = AUDIO_CONTEXT.createBiquadFilter();
 
   source.buffer = this._buffer;
   source.connect(filter1);
@@ -7041,13 +7078,13 @@ SoundEffect.prototype.play = function () {
   filter1.connect(filter2);
   filter2.connect(filter3);
   filter3.connect(AUDIO_CONTEXT.destination);
-  let t = AUDIO_CONTEXT.currentTime;
+  const t = AUDIO_CONTEXT.currentTime;
   if (typeof source.start != 'undefined') {
     source.start(t);
   } else {
     source.noteOn(t);
   }
-  source.onended = function () {
+  source.onended = function() {
     filter3.disconnect()
   }
 };
@@ -7061,12 +7098,12 @@ if (typeof AUDIO_CONTEXT == 'undefined') {
     this._audioElement = null;
   };
 
-  SoundEffect.prototype.getBuffer = function () {
+  SoundEffect.prototype.getBuffer = function() {
     this._audioElement = null;
     return this._buffer;
   };
 
-  SoundEffect.prototype.play = function () {
+  SoundEffect.prototype.play = function() {
     if (this._audioElement) {
       this._audioElement.cloneNode(false).play();
     } else {
@@ -7084,17 +7121,17 @@ if (typeof AUDIO_CONTEXT == 'undefined') {
   SoundEffect.MIN_SAMPLE_RATE = 1;
 }
 
-SoundEffect.generate = function (ps) {
-  /*  window.console.log(ps.wave_type + "\t" + ps.seed);
-  
-    let psstring="";
-    for (let n in ps) {
-      if (ps.hasOwnProperty(n)) {
-        psstring = psstring +"result." + n+" = " + ps[n] + ";\n";
-      }
+SoundEffect.generate = function(ps) {
+/*  window.console.log(ps.wave_type + "\t" + ps.seed);
+
+  let psstring="";
+  for (let n in ps) {
+    if (ps.hasOwnProperty(n)) {
+      psstring = psstring +"result." + n+" = " + ps[n] + ";\n";
     }
-  window.console.log(ps);
-  window.console.log(psstring);*/
+  }
+window.console.log(ps);
+window.console.log(psstring);*/
   function repeat() {
     rep_time = 0;
 
@@ -7172,7 +7209,7 @@ SoundEffect.generate = function (ps) {
 
   // Repeat
   let rep_limit = Math.floor(Math.pow(1.0 - ps.p_repeat_speed, 2.0) * 20000
-    + 32);
+                             + 32);
   if (ps.p_repeat_speed == 0.0)
     rep_limit = 0;
 
@@ -7201,7 +7238,8 @@ SoundEffect.generate = function (ps) {
   }
   let buffer = sound.getBuffer();
 
-  for (let t = 0; ; ++t) {
+  let sample=0;
+  for (let t = 0;; ++t) {
 
     // Repeats
     if (rep_limit != 0 && ++rep_time >= rep_limit)
@@ -7241,7 +7279,7 @@ SoundEffect.generate = function (ps) {
       env_time = 1;
       env_stage++;
       while (env_stage < 3 && env_length[env_stage] === 0)
-        env_stage++;
+	env_stage++;
       if (env_stage === 3)
         break;
     }
@@ -7249,7 +7287,7 @@ SoundEffect.generate = function (ps) {
       env_vol = env_time / env_length[0];
     else if (env_stage === 1)
       env_vol = 1.0 + Math.pow(1.0 - env_time / env_length[1],
-        1.0) * 2.0 * ps.p_env_punch;
+                               1.0) * 2.0 * ps.p_env_punch;
     else  // env_stage == 2
       env_vol = 1.0 - env_time / env_length[2];
 
@@ -7267,7 +7305,7 @@ SoundEffect.generate = function (ps) {
     }
 
     // 8x supersampling
-    let sample = 0.0;
+    sample = 0.0;
     for (let si = 0; si < 8; ++si) {
       let sub_sample = 0.0;
       phase++;
@@ -7374,26 +7412,26 @@ if (typeof exports != 'undefined') {
   exports.generate = generate;
 }
 
-let sfxCache = {};
+const sfxCache = {};
 let cachedSeeds = [];
-let CACHE_MAX = 50;
+const CACHE_MAX = 50;
 
-function cacheSeed(seed) {
+function cacheSeed(seed){
   if (seed in sfxCache) {
     return sfxCache[seed];
   }
 
-  let params = generateFromSeed(seed);
+  const params = generateFromSeed(seed);
   params.sound_vol = SOUND_VOL;
   params.sample_rate = SAMPLE_RATE;
   params.bit_depth = BIT_DEPTH;
 
-  let sound = SoundEffect.generate(params);
+  const sound = SoundEffect.generate(params);
   sfxCache[seed] = sound;
   cachedSeeds.push(seed);
 
-  while (cachedSeeds.length > CACHE_MAX) {
-    let toRemove = cachedSeeds[0];
+  while (cachedSeeds.length>CACHE_MAX) {
+    const toRemove=cachedSeeds[0];
     cachedSeeds = cachedSeeds.slice(1);
     delete sfxCache[toRemove];
   }
@@ -7402,42 +7440,42 @@ function cacheSeed(seed) {
 }
 
 
-function playSound(seed, ignore) {
-  if (ignore !== true) {
+function playSound(seed,ignore) {
+  if (ignore!==true){
     pushSoundToHistory(seed);
   }
-  if (muted) {
+  if (muted){
     return;
   }
   checkAudioContextExists();
   if (unitTesting) return;
-  let sound = cacheSeed(seed);
+  const sound = cacheSeed(seed);
   sound.play();
 }
 
 
 
-function killAudioButton() {
-  let mb = document.getElementById("muteButton");
-  let umb = document.getElementById("unMuteButton");
-  if (mb) {
+function killAudioButton(){
+  const mb = document.getElementById("muteButton");
+  const umb = document.getElementById("unMuteButton");
+  if (mb){
     mb.remove();
     umb.remove();
   }
 }
 
-function showAudioButton() {
-  let mb = document.getElementById("muteButton");
-  let umb = document.getElementById("unMuteButton");
-  if (mb) {
-    mb.style.display = "block";
-    umb.style.display = "none";
+function showAudioButton(){
+  const mb = document.getElementById("muteButton");
+  const umb = document.getElementById("unMuteButton");
+  if (mb){
+    mb.style.display="block"; 
+    umb.style.display="none";
   }
 }
 
 
 function toggleMute() {
-  if (muted === 0) {
+  if (muted===0){
     muteAudio();
   } else {
     unMuteAudio();
@@ -7445,22 +7483,21 @@ function toggleMute() {
 }
 
 function muteAudio() {
-  muted = 1;
-  let mb = document.getElementById("muteButton");
-  let umb = document.getElementById("unMuteButton");
-  if (mb) {
-    mb.style.display = "none";
-    umb.style.display = "block";
+  muted=1; 
+  const mb = document.getElementById("muteButton");
+  const umb = document.getElementById("unMuteButton");
+  if (mb){
+    mb.style.display="none"; 
+    umb.style.display="block";
   }
 }
-
 function unMuteAudio() {
-  muted = 0;
-  let mb = document.getElementById("muteButton");
-  let umb = document.getElementById("unMuteButton");
-  if (mb) {
-    mb.style.display = "block";
-    umb.style.display = "none";
+  muted=0; 
+  const mb = document.getElementById("muteButton");
+  const umb = document.getElementById("unMuteButton");
+  if (mb){
+    mb.style.display="block"; 
+    umb.style.display="none";
   }
 }
 </script>
@@ -7544,7 +7581,9 @@ var StringStream = CodeMirror.StringStream = function(string, tabSize) {
   };
 </script>
 <script>
-colorPalettesAliases = {
+'use strict';
+
+const colorPalettesAliases = {
 	1 : "mastersystem",
 	2 : "gameboycolour",
 	3 : "amiga",
@@ -7561,7 +7600,7 @@ colorPalettesAliases = {
 	14 : "whitingjp"
 };
 
-colorPalettes = {
+const colorPalettes = {
 	mastersystem : {
 	black   		: "#000000",
 	white			: "#FFFFFF",
@@ -7950,6 +7989,8 @@ whitingjp : {
 
 </script>
 <script>
+'use strict';
+
 function createSprite(name, spritegrid, colors, padding) {
     if (colors === undefined) {
         colors = [state.bgcolor, state.fgcolor];
@@ -8019,7 +8060,7 @@ function regenText(spritecanvas, spritectx) {
             var n = row[nidx];
             if (!textImages.hasOwnProperty(n)) {
                 if (font.hasOwnProperty(n)) {
-                    fontstr = font[n].split('\n').map(a => a.trim().split('').map(t => parseInt(t)));
+                    const fontstr = font[n].split('\n').map(a => a.trim().split('').map(t => parseInt(t)));
                     fontstr.shift();
                     textImages[n] = createSprite('char' + n, fontstr, ["#00000000", state.fgcolor], 1);
                 } else {
@@ -8095,7 +8136,7 @@ function generateGlyphImages() {
     glyphImagesCorrespondance = [];
     glyphImages = [];
 
-    seenobjects = {};
+    const seenobjects = {};
     for (var n of state.glyphOrder) {
         if (n.length == 1 && state.glyphDict.hasOwnProperty(n)) {
             var g = state.glyphDict[n];
@@ -8405,14 +8446,16 @@ function redraw() {
             }
 
             //draw rigid applciations!
-            for (var i = mini; i < maxi; i++) {
-                for (var j = minj; j < maxj; j++) {
-                    var posIndex = j + i * curlevel.height;
-                    var rigidbitvec = curlevel.getRigids(posIndex);
-                    for (var layer = 0; layer < curlevel.layerCount; layer++) {
-                        var layerRigid = rigidbitvec.getshiftor(0x1f, 5 * layer);
-                        if (layerRigid !== 0) {
-                            ctx.drawImage(editorGlyphMovements[5], xoffset + (i - mini) * cellwidth, yoffset + (j - minj) * cellheight);
+            if (state.rigid){
+                for (var i = mini; i < maxi; i++) {
+                    for (var j = minj; j < maxj; j++) {
+                        var posIndex = j + i * curlevel.height;
+                        var rigidbitvec = curlevel.getRigids(posIndex);
+                        for (var layer = 0; layer < curlevel.layerCount; layer++) {
+                            var layerRigid = rigidbitvec.getshiftor(0x1f, 5 * layer);
+                            if (layerRigid !== 0) {
+                                ctx.drawImage(editorGlyphMovements[5], xoffset + (i - mini) * cellwidth, yoffset + (j - minj) * cellheight);
+                            }
                         }
                     }
                 }
@@ -8697,6 +8740,9 @@ function showContinueOptionOnTitleScreen() {
 }
 
 function unloadGame() {
+	if (levelEditorOpened){
+		printLevel();
+	}
 	levelEditorOpened = false;
 	state = introstate;
 	level = new Level(0, 5, 5, 2, null);
@@ -10461,15 +10507,15 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		let curRigidMovementAppliedMask;
 		let rigidchange=false;		
 		${IF_LAZY(rule.rigid,()=>`
-			let rigidGroupIndex = state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1;
-			const rigidMask = new BitVec(STRIDE_MOV);
-			for (let layer = 0; layer < level.layerCount; layer++) {
-				${ISHIFTOR("rigidMask", "rigidGroupIndex", "(layer * 5)")}
-			}
+			const rigidGroupIndex = ${state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1};
+			const rigidMask = new BitVec(${STRIDE_MOV});
+			${FOR(0,level.layerCount,layer=>`
+				${ISHIFTOR("rigidMask", "rigidGroupIndex", layer * 5)}
+			`)}
 			${UNROLL("rigidMask &= replace.movementsLayerMask", MOVEMENT_SIZE)}
 			
-			curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(STRIDE_MOV);
-			curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(STRIDE_MOV);
+			curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(${STRIDE_MOV});
+			curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(${STRIDE_MOV});
 
 			if (${NOT_BITS_SET_IN_ARRAY("rigidMask", "curRigidGroupIndexMask.data", MOVEMENT_SIZE)} &&
 				${NOT_BITS_SET_IN_ARRAY("replace.movementsLayerMask", "curRigidMovementAppliedMask.data", MOVEMENT_SIZE)}) 
@@ -10587,7 +10633,7 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 
 			for (let y=ymin;y<ymax;y++) {
 				const i = x*level.height+y;
-				if (cellRowMatch(	cellRow,i, d, level.objects, level.movements))
+				if (cellRowMatch(cellRow,i, d, level.objects, level.movements))
 				{
 					result.push(i);
 				}
@@ -11564,10 +11610,6 @@ function checkWin(dontDoWin) {
 		dontDoWin = true;
 	}
 
-	if (state.winconditions.length === 0) {
-		return false;
-	}
-
 	if (level.commandQueue.indexOf('win') >= 0) {
 		if (runrulesonlevelstart_phase) {
 			consolePrint("Win Condition Satisfied (However this is in the run_rules_on_level_start rule pass, so I'm going to ignore it for you.  Why would you want to complete a level before it's already started?!)");
@@ -11578,6 +11620,10 @@ function checkWin(dontDoWin) {
 			DoWin();
 		}
 		return;
+	}
+
+	if (state.winconditions.length === 0) {
+		return false;
 	}
 
 	let won = false;
@@ -11795,6 +11841,8 @@ Rule.prototype.generateFindMatchesFunction = function () {
 }
 </script>
 <script>
+'use strict';
+
 /*
 credits
 
@@ -13889,7 +13937,7 @@ function levelFromString(state, level) {
         }
     }
 
-    let levelBackgroundMask = o.calcBackgroundMask(state);
+    const levelBackgroundMask = o.calcBackgroundMask(state);
     for (let i = 0; i < o.n_tiles; i++) {
         let cell = o.getCell(i);
         if (!backgroundLayerMask.anyBitsInCommon(cell)) {
@@ -14311,6 +14359,199 @@ function deepCloneRule(rule) {
     return clonedRule;
 }
 
+function checkSuperfluousCoincidences(state,rules){
+
+    /*
+First, let's check for 'X no X' on the RHS.
+    */
+// check that that we don't have an object on one layer required, and at the same time
+// 'no X' where x is also on that layer - it's   "no wall" and player in the same cell - for then "no wall" is
+// superfluous.
+// for each rule
+
+    //first, find a list of layers where we *know* something has to be
+    let required_layers = new BitVec(Math.ceil(LAYER_COUNT/32)|0);
+    let required_objects = new BitVec(STRIDE_OBJ);
+    
+    const rules_l = rules.length;
+    for (let i=0;i<rules_l;i++){
+        let rule = rules[i];
+
+        // First do a RHS check - you shouldn't have something amounting to
+        // X no X on the RHS. (even if the engine does it internally a lot later)
+        const rhs_len = rule.rhs.length;
+        for (let j=0;j<rhs_len;j++){
+            let rhs_group = rule.rhs[j];
+            const rhs_group_len = rhs_group.length;
+            for (let k=0;k<rhs_group_len;k++){
+                let cell = rhs_group[k];
+                var objects_present = [];
+                var objects_present_mask = new BitVec(STRIDE_OBJ);
+                for (let l=0;l<cell.length;l+=2){
+                    let item = cell[l];
+                    if (!item.startsWith("no")){
+                        let no_name = cell[l+1];
+                        if (state.objects.hasOwnProperty(no_name)){
+                            objects_present.push(no_name);
+                            objects_present_mask.ibitset(state.objects[no_name].id);
+                        } else if (state.propertiesSingleLayer.hasOwnProperty(no_name)){
+                            // objects_present.push(no_name);
+                            // let property_obs = state.propertiesDict[no_name];
+                            // for (let m=0;m<property_obs.length;m++){
+                            //     let ob_data = state.objects[property_obs[m]];
+                            //     objects_present_mask.ibitset(ob_data.id);
+                            // }
+                        } else if (state.propertiesDict.hasOwnProperty(no_name)){
+                            // this is more complicated a case, right?
+                            // let property_obs = state.propertiesDict[no_name];
+                            // for (let m=0;m<property_obs.length;m++){
+                            //     let ob_data = state.objects[property_obs[m]];
+                            //     objects_present_mask.ibitset(ob_data.id);
+                            // }
+                        }
+                    }
+                }
+                //for each 'no' object
+                for (let l=0;l<cell.length;l+=2){
+                    let item = cell[l];
+                    if (item.startsWith("no")){
+                        let no_name = cell[l+1];
+                        var no_name_mask = state.objectMasks[no_name];
+
+                        //if no_name overlaps with any objects_present, then we have a problem.
+                        if (no_name_mask.anyBitsInCommon(objects_present_mask)){
+                            logError(`You have specified that there should be NO ${no_name.toUpperCase()} but there is also a requirement that ${objects_present.join(", ").toUpperCase()} be here.  This is a mistake right?`, rule.lineNumber);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        //secondly, for all 'no X' on the LHS, can remove any corresponding verbatim 'no X' on the RHS.
+        for (let j=0;j<rhs_len;j++){
+            let rhs_group = rule.rhs[j];
+            const rhs_group_len = rhs_group.length;
+            for (let k=0;k<rhs_group_len;k++){
+                let cell = rhs_group[k];
+                for (let l=0;l<cell.length;l+=2){
+                    let item = cell[l];
+                    if (item.startsWith("no")){
+                        let no_name = cell[l+1];
+                        //look for a 'no X' on the LHS in the same position
+                        const lhs_cell = rule.lhs[j][k];
+                        for (let m=0;m<lhs_cell.length;m+=2){
+                            if (lhs_cell[m].startsWith("no") && lhs_cell[m+1] === no_name){
+                                //we have a match - remove the 'no X' from the LHS
+                                cell.splice(l,2);
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    
+
+
+        // thirdly, trim unnecessary 'no X's on the LHS - e.g. [ player no wall ]
+
+        const lhs_len = rule.lhs.length;
+        for (let j=0;j<lhs_len;j++){
+            let lhs_group = rule.lhs[j];
+            const lhs_group_len = lhs_group.length; 
+            for (let k=0;k<lhs_group_len;k++){
+                let cell = lhs_group[k];
+                // cell is an array of pairs - it looks like:
+                // ["", "player", "no", "wall", "", "target"]
+
+                required_layers.setZero();
+                required_objects.setZero();
+
+                let occupier={};
+                for (let l=0;l<cell.length;l+=2){
+                    let entity_modifier = cell[l];
+                    if (entity_modifier==="no"){
+                        continue;
+                    }
+                    let entity_name = cell[l+1]
+                    let layer=[];
+                    //if it's a single-layer property
+                    if (state.propertiesSingleLayer.hasOwnProperty(entity_name)){
+                        let layer = state.propertiesSingleLayer[entity_name];
+                        required_layers.ibitset(layer);
+                        let property_obs = state.propertiesDict[entity_name];
+                        const property_obs_len = property_obs.length;
+                        for (let m=0;m<property_obs_len;m++){
+                            const object_name = property_obs[m];
+                            const object_data = state.objects[object_name];
+                            required_objects.ibitset(object_data.id);
+                        }
+                        occupier[layer]=entity_name;
+                    } else if (state.objects.hasOwnProperty(entity_name)){
+                        let layer = state.objects[entity_name].layer;
+                        let ob_id = state.objects[entity_name].id;
+                        required_layers.ibitset(layer);
+                        required_objects.ibitset(ob_id);
+                        occupier[layer]=entity_name;
+                    } else if (state.aggregatesDict.hasOwnProperty(entity_name)){
+                        let aggregate_obs = state.aggregatesDict[entity_name];
+                        for (let m=0;m<aggregate_obs.length;m++){
+                            let object_info = state.objects[aggregate_obs[m]];
+                            let layer = object_info.layer;
+                            let ob_id = object_info.id;
+                            required_layers.ibitset(layer);
+                            required_objects.ibitset(ob_id);
+                            occupier[layer]=entity_name;
+                        }
+                    }
+                }
+
+                
+                //find all objects qualified by 'no'
+                for (let l=0;l<cell.length;l+=2){
+                    let item = cell[l];
+                    if (item.startsWith("no")){
+                        let no_name = cell[l+1]
+                        let remove = false;
+                        if (!state.objectMasks.hasOwnProperty(no_name)){
+                            continue;//error, should have been caught earlier - e.g. You cannot use 'no' to exclude the aggregate objec
+                        }
+                        let no_object_mask = state.objectMasks[no_name];
+                        let no_object_layer_mask = new BitVec(Math.ceil(LAYER_COUNT/32)|0);                        
+                        for (let m=0;m<state.layerMasks.length;m++){
+                            if (state.layerMasks[m].anyBitsInCommon(no_object_mask)){
+                                no_object_layer_mask.ibitset(m);
+                            }
+                        }                        
+
+                        const object_layers_disjoint = !no_object_mask.anyBitsInCommon(required_objects);
+                        const no_object_covered_by_required_layers = no_object_layer_mask.bitsSetInArray(required_layers.data);      
+
+                        if (no_object_covered_by_required_layers && object_layers_disjoint){
+
+                            const obs_present = [];
+                            const layers_present = [];
+                            for (let m=0;m<state.layerMasks.length;m++){
+                                if (occupier[m]){
+                                    obs_present.push(occupier[m]);
+                                    layers_present.push(m);
+                                }
+                            }
+                            logWarning(`You have specified that there should be NO ${no_name.toUpperCase()} but there is also a requirement that ${obs_present.join(", ").toUpperCase()} be there, which collectively occupies the same layers (Layers ${layers_present.map(l=>l+1).join(", ")}), so you can leave this out.`, rule.lineNumber);
+                            cell.splice(l,2);
+                            l-=2;
+                        }
+                    }
+                }                
+            }
+        }
+    }
+
+
+}
+
 function rulesToArray(state) {
     let oldrules = state.rules;
     let rules = [];
@@ -14328,6 +14569,8 @@ function rulesToArray(state) {
         rules.push(newrule);
     }
     state.loops = loops;
+
+    checkSuperfluousCoincidences(state,rules);
 
     //now expand out rules with multiple directions
     let rules2 = [];
@@ -15028,6 +15271,17 @@ const dirMasks = {
     '': parseInt('00000', 2)
 };
 
+function getOverlapObjectNames(state, objects1,objects2){
+    //given two bitvecs, return an array of object names that are present in both
+    let result=[];
+    for (let i=0;i<state.objectCount;i++){
+        if (objects1.get(i) && objects2.get(i)){
+            result.push(state.idDict[i]);
+        }
+    }
+    return result;
+}
+
 function rulesToMask(state) {
     const layerCount = state.collisionLayers.length;
     const layerTemplate = Array(layerCount).fill(null);
@@ -15134,17 +15388,18 @@ function rulesToMask(state) {
                 ]);
 
                 // Check for invalid patterns
-                if (bitVectors.objectsPresent.anyBitsInCommon(bitVectors.objectsMissing)) {
-                    const ln = rule.lineNumber;
-                    const hasAdjacentRule = (ruleIndex > 0 && state.rules[ruleIndex - 1].lineNumber === ln) || 
-                                         (ruleIndex + 1 < state.rules.length && state.rules[ruleIndex + 1].lineNumber === ln);
-                    
-                    if (!hasAdjacentRule) {
-                        logWarning('This rule has some content of the form "X no X" (either directly or maybe indirectly - check closely how the terms are defined if nothing stands out) which can never match and so the rule is getting removed during compilation.', rule.lineNumber);
+                if (!bitVectors.objectsPresent.iszero()) {
+                    if (bitVectors.objectsPresent.anyBitsInCommon(bitVectors.objectsMissing)) {
+                        const ln = rule.lineNumber;
+
+                        const overlap = getOverlapObjectNames(state, bitVectors.objectsPresent, bitVectors.objectsMissing);
+                        var x_no_x_list = overlap.map(x => x+" NO "+x).join(', ').toUpperCase();
+                        logWarning(`This rule has something amounting to "${x_no_x_list}" on the left-hand-side,which can never match, so the rule is getting removed during compilation.`, rule.lineNumber);
+
+                        state.rules.splice(ruleIndex, 1);
+                        ruleIndex--;
+                        continue;
                     }
-                    state.rules.splice(ruleIndex, 1);
-                    ruleIndex--;
-                    continue;
                 }
 
                 if (rule.rhs.length === 0) continue;
@@ -15175,6 +15430,7 @@ function rulesToMask(state) {
                     postMovementsLayerMask_r: new BitVec(STRIDE_MOV),
                     randomDirMask_r: new BitVec(STRIDE_MOV)
                 };
+
 
                 // Process right-hand side cell
                 for (let i = 0; i < cell_r.length; i += 2) {
@@ -15247,7 +15503,7 @@ function rulesToMask(state) {
                         }
                     }
                 }
-
+        
                 // Clear old objects and movements if needed
                 if (!bitVectors.objectsPresent.bitsSetInArray(rhsBitVectors.objectsSet.data)) {
                     rhsBitVectors.objectsClear.ior(bitVectors.objectsPresent);
@@ -15833,7 +16089,21 @@ function printCellRow(cellRow) {
 }
 
 function cacheRuleStringRep(rule) {
-    let result = "(<a onclick=\"jumpToLine('" + rule.lineNumber.toString() + "');\"  href=\"javascript:void(0);\">" + rule.lineNumber + "</a>) " + rule.direction.toString().toUpperCase() + " ";
+    let result = "(<a onclick=\"jumpToLine('" + rule.lineNumber.toString() + "');\"  href=\"javascript:void(0);\">" + rule.lineNumber + "</a>) ";
+
+    //only print rule-direction if some lhs cellrow has length>1
+    let directed=false;
+    for (let i=0;i<rule.lhs.length;i++){
+        let cellRow = rule.lhs[i];
+        if (cellRow.length>1){
+            directed=true;
+            break;
+        }
+    }
+
+    if (directed){
+        result += rule.direction.toString().toUpperCase() + " ";
+    }
     if (rule.rigid) {
         result = "RIGID " + result + " ";
     }
@@ -16418,7 +16688,7 @@ function addSpecializedFunctions(state) {
 
 // function solveLevel(state){
 //     //disable sfx
-//     var oldmuted=muted;
+//     let oldmuted=muted;
 //     muted = true;
 //     /* this is a pathfinding algorithm that will try to solve the level - it does a depth first search of the level */
 //     const visited_states = new Set();
@@ -16442,12 +16712,12 @@ function addSpecializedFunctions(state) {
 
 
 //     let won = false;
-//     var solution = "";
+//     let solution = "";
 
 //     while (states_to_leave.length > 0){
-//         var o = states_to_leave.shift();
-//         var level_state = o.state;
-//         var input_sequence = o.input_sequence;
+//         let o = states_to_leave.shift();
+//         let level_state = o.state;
+//         let input_sequence = o.input_sequence;
 //         for (let input=0; input<MOVE_COUNT; input++){
 //             level.objects.set(level_state);            
 //             simulation_tickInput(input);
@@ -16456,7 +16726,7 @@ function addSpecializedFunctions(state) {
 //             if (visited_states.has(new_state_key)){
 //                 continue;
 //             }
-//             var new_input_sequence = input_sequence + input;
+//             let new_input_sequence = input_sequence + input;
 //             visited_states.add(new_state_key);
 //             states_to_leave.push({
 //                 state:new Int32Array(new_state),
@@ -16487,7 +16757,7 @@ function addSpecializedFunctions(state) {
 
 // function pretty_print_solution(solution){
 //     const move_names = ["U","L","D","R","A"];
-//     var result=""
+//     let result=""
 //     //group in fives
 //     for (let i = 0; i < solution.length; i ++) {
 //         const move_name = move_names[solution[i]];
@@ -16501,11 +16771,8 @@ function addSpecializedFunctions(state) {
 
 function compile(command, text, randomseed) {
 
-    //if the editor is opened, we should print the contents
-    if (levelEditorOpened){
-        //print the contents of the level
-        
-    }
+
+
     lazy_function_generation_clear_backlog();
 
     forceRegenImages = true;
@@ -16516,6 +16783,12 @@ function compile(command, text, randomseed) {
         randomseed = null;
     }
     lastDownTarget = canvas;
+
+    //if the editor is opened, we should print the contents
+    if ( command[0] === "restart" && levelEditorOpened){
+        //print the contents of the level before recompiling
+        printLevel();
+    }
 
     if (text === undefined) {
         let code = window.form1.code;
@@ -16666,32 +16939,34 @@ function qualifyURL(url) {
 
 </script>
 <script>
-var keyRepeatTimer = 0;
-var keyRepeatIndex = 0;
-var input_throttle_timer = 0.0;
-var lastinput = -100;
+'use strict';
 
-var dragging = false;
-var rightdragging = false;
-var columnAdded = false;
+let keyRepeatTimer = 0;
+let keyRepeatIndex = 0;
+let input_throttle_timer = 0.0;
+let lastinput = -100;
+
+let dragging = false;
+let rightdragging = false;
+let columnAdded = false;
 
 function selectText(containerid, e) {
 	e = e || window.event;
-	var myspan = document.getElementById(containerid);
+	let myspan = document.getElementById(containerid);
 	if (e && (e.ctrlKey || e.metaKey)) {
-		var levelarr = ["console"].concat(myspan.innerText.split("\n"));
-		var leveldat = levelFromString(state, levelarr);
+		const levelarr = ["console"].concat(myspan.innerText.split("\n"));
+		const leveldat = levelFromString(state, levelarr);
 		loadLevelFromLevelDat(state, leveldat, null);
 		canvasResize();
 	} else {
 		if (document.selection) {
-			var range = document.body.createTextRange();
+			const range = document.body.createTextRange();
 			range.moveToElementText(myspan);
 			range.select();
 		} else if (window.getSelection) {
-			var range = document.createRange();
+			const range = document.createRange();
 			range.selectNode(myspan);
-			var selection = window.getSelection();
+			const selection = window.getSelection();
 			//why removeallranges? https://stackoverflow.com/a/43443101 whatever...
 			selection.removeAllRanges();
 			selection.addRange(range);
@@ -16709,14 +16984,14 @@ function arrCopy(from, fromoffset, to, tooffset, len) {
 
 function adjustLevel(level, widthdelta, heightdelta) {
 	backups.push(backupLevel());
-	var oldlevel = level.clone();
+	const oldlevel = level.clone();
 	level.width += widthdelta;
 	level.height += heightdelta;
 	level.n_tiles = level.width * level.height;
 	level.objects = new Int32Array(level.n_tiles * STRIDE_OBJ);
-	var bgMask = new BitVec(STRIDE_OBJ);
+	const bgMask = new BitVec(STRIDE_OBJ);
 	bgMask.ibitset(state.backgroundid);
-	for (var i = 0; i < level.n_tiles; ++i)
+	for (let i = 0; i < level.n_tiles; ++i)
 		level.setCell(i, bgMask);
 	level.movements = new Int32Array(level.objects.length);
 	columnAdded = true;
@@ -16725,40 +17000,40 @@ function adjustLevel(level, widthdelta, heightdelta) {
 }
 
 function addLeftColumn() {
-	var oldlevel = adjustLevel(level, 1, 0);
-	for (var x = 1; x < level.width; ++x) {
-		for (var y = 0; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, 1, 0);
+	for (let x = 1; x < level.width; ++x) {
+		for (let y = 0; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index - level.height))
 		}
 	}
 }
 
 function addRightColumn() {
-	var oldlevel = adjustLevel(level, 1, 0);
-	for (var x = 0; x < level.width - 1; ++x) {
-		for (var y = 0; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, 1, 0);
+	for (let x = 0; x < level.width - 1; ++x) {
+		for (let y = 0; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index))
 		}
 	}
 }
 
 function addTopRow() {
-	var oldlevel = adjustLevel(level, 0, 1);
-	for (var x = 0; x < level.width; ++x) {
-		for (var y = 1; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, 0, 1);
+	for (let x = 0; x < level.width; ++x) {
+		for (let y = 1; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index - x - 1))
 		}
 	}
 }
 
 function addBottomRow() {
-	var oldlevel = adjustLevel(level, 0, 1);
-	for (var x = 0; x < level.width; ++x) {
-		for (var y = 0; y < level.height - 1; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, 0, 1);
+	for (let x = 0; x < level.width; ++x) {
+		for (let y = 0; y < level.height - 1; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index - x));
 		}
 	}
@@ -16768,10 +17043,10 @@ function removeLeftColumn() {
 	if (level.width <= 1) {
 		return;
 	}
-	var oldlevel = adjustLevel(level, -1, 0);
-	for (var x = 0; x < level.width; ++x) {
-		for (var y = 0; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, -1, 0);
+	for (let x = 0; x < level.width; ++x) {
+		for (let y = 0; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index + level.height))
 		}
 	}
@@ -16781,10 +17056,10 @@ function removeRightColumn() {
 	if (level.width <= 1) {
 		return;
 	}
-	var oldlevel = adjustLevel(level, -1, 0);
-	for (var x = 0; x < level.width; ++x) {
-		for (var y = 0; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, -1, 0);
+	for (let x = 0; x < level.width; ++x) {
+		for (let y = 0; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index))
 		}
 	}
@@ -16794,10 +17069,10 @@ function removeTopRow() {
 	if (level.height <= 1) {
 		return;
 	}
-	var oldlevel = adjustLevel(level, 0, -1);
-	for (var x = 0; x < level.width; ++x) {
-		for (var y = 0; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, 0, -1);
+	for (let x = 0; x < level.width; ++x) {
+		for (let y = 0; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index + x + 1))
 		}
 	}
@@ -16806,10 +17081,10 @@ function removeBottomRow() {
 	if (level.height <= 1) {
 		return;
 	}
-	var oldlevel = adjustLevel(level, 0, -1);
-	for (var x = 0; x < level.width; ++x) {
-		for (var y = 0; y < level.height; ++y) {
-			var index = x * level.height + y;
+	const oldlevel = adjustLevel(level, 0, -1);
+	for (let x = 0; x < level.width; ++x) {
+		for (let y = 0; y < level.height; ++y) {
+			const index = x * level.height + y;
 			level.setCell(index, oldlevel.getCell(index + x))
 		}
 	}
@@ -16817,16 +17092,16 @@ function removeBottomRow() {
 
 function matchGlyph(inputmask, glyphAndMask) {
 	// find mask with closest match
-	var highestbitcount = -1;
-	var highestmask;
-	for (var i = 0; i < glyphAndMask.length; ++i) {
-		var glyphname = glyphAndMask[i][0];
-		var glyphmask = glyphAndMask[i][1];
-		var glyphbits = glyphAndMask[i][2];
+	let highestbitcount = -1;
+	let highestmask;
+	for (let i = 0; i < glyphAndMask.length; ++i) {
+		const glyphname = glyphAndMask[i][0];
+		const glyphmask = glyphAndMask[i][1];
+		const glyphbits = glyphAndMask[i][2];
 		//require all bits of glyph to be in input
 		if (glyphmask.bitsSetInArray(inputmask.data)) {
-			var bitcount = 0;
-			for (var bit = 0; bit < 32 * STRIDE_OBJ; ++bit) {
+			let bitcount = 0;
+			for (let bit = 0; bit < 32 * STRIDE_OBJ; ++bit) {
 				if (glyphbits.get(bit) && inputmask.get(bit))
 					bitcount++;
 				if (glyphmask.get(bit) && inputmask.get(bit))
@@ -16848,7 +17123,7 @@ function matchGlyph(inputmask, glyphAndMask) {
 	return '.';
 }
 
-var htmlEntityMap = {
+let htmlEntityMap = {
 	"&": "&amp;",
 	"<": "&lt;",
 	">": "&gt;",
@@ -16857,39 +17132,39 @@ var htmlEntityMap = {
 	"/": '&#x2F;'
 };
 
-var selectableint = 0;
+let selectableint = 0;
 
 function printLevel() {
 	try {
 		errorCount = 0;
 		errorStrings = [];
-		var glyphMasks = [];
+		const glyphMasks = [];
 
-		for (var glyphName in state.glyphDict) {
+		for (const glyphName in state.glyphDict) {
 			if (state.glyphDict.hasOwnProperty(glyphName) && glyphName.length === 1) {
-				var glyph = state.glyphDict[glyphName];
-				var glyphmask = new BitVec(STRIDE_OBJ);
-				for (var i = 0; i < glyph.length; i++) {
-					var id = glyph[i];
+				const glyph = state.glyphDict[glyphName];
+				const glyphmask = new BitVec(STRIDE_OBJ);
+				for (let i = 0; i < glyph.length; i++) {
+					const id = glyph[i];
 					if (id >= 0) {
 						glyphmask.ibitset(id);
 					}
 				}
-				var glyphbits = glyphmask.clone();
+				const glyphbits = glyphmask.clone();
 				//register the same - backgroundmask with the same name
-				var bgMask = state.layerMasks[state.backgroundlayer];
+				const bgMask = state.layerMasks[state.backgroundlayer];
 				glyphmask.iclear(bgMask);
 				glyphMasks.push([glyphName, glyphmask, glyphbits]);
 			}
 		}
 		selectableint++;
-		var tag = 'selectable' + selectableint;
-		var output = "Printing level contents:<br><br><span id=\"" + tag + "\" onclick=\"selectText('" + tag + "',event)\">";
-		for (var j = 0; j < level.height; j++) {
-			for (var i = 0; i < level.width; i++) {
-				var cellIndex = j + i * level.height;
-				var cellMask = level.getCell(cellIndex);
-				var glyph = matchGlyph(cellMask, glyphMasks);
+		const tag = 'selectable' + selectableint;
+		let output = "Printing level contents:<br><br><span id=\"" + tag + "\" onclick=\"selectText('" + tag + "',event)\">";
+		for (let j = 0; j < level.height; j++) {
+			for (let i = 0; i < level.width; i++) {
+				const cellIndex = j + i * level.height;
+				const cellMask = level.getCell(cellIndex);
+				let glyph = matchGlyph(cellMask, glyphMasks);
 				if (glyph in htmlEntityMap) {
 					glyph = htmlEntityMap[glyph];
 				}
@@ -16902,14 +17177,15 @@ function printLevel() {
 		output += "</span><br><br>"
 		consolePrint(output, true);
 	} catch (e) {
+		console.error(e);
 		consolePrint("unable to print level contents because of errors", true);
 	}
 }
 
 function levelEditorClick(event, click) {
 	if (mouseCoordY <= -2) {
-		var ypos = editorRowCount - (-mouseCoordY - 2) - 1;
-		var newindex = mouseCoordX + (screenwidth - 1) * ypos;
+		const ypos = editorRowCount - (-mouseCoordY - 2) - 1;
+		const newindex = mouseCoordX + (screenwidth - 1) * ypos;
 		if (mouseCoordX === -1) {
 			printLevel();
 		} else if (mouseCoordX >= 0 && newindex < glyphImages.length) {
@@ -16918,25 +17194,25 @@ function levelEditorClick(event, click) {
 		}
 
 	} else if (mouseCoordX > -1 && mouseCoordY > -1 && mouseCoordX < screenwidth - 2 && mouseCoordY < screenheight - 2 - editorRowCount) {
-		var glyphname = glyphImagesCorrespondance[glyphSelectedIndex];
-		var glyph = state.glyphDict[glyphname];
-		var glyphmask = new BitVec(STRIDE_OBJ);
-		for (var i = 0; i < glyph.length; i++) {
-			var id = glyph[i];
+		const glyphname = glyphImagesCorrespondance[glyphSelectedIndex];
+		const glyph = state.glyphDict[glyphname];
+		const glyphmask = new BitVec(STRIDE_OBJ);
+		for (let i = 0; i < glyph.length; i++) {
+			const id = glyph[i];
 			if (id >= 0) {
 				glyphmask.ibitset(id);
 			}
 		}
 
-		var backgroundMask = state.layerMasks[state.backgroundlayer];
+		const backgroundMask = state.layerMasks[state.backgroundlayer];
 		if (glyphmask.bitsClearInArray(backgroundMask.data)) {
 			// If we don't already have a background layer, mix in
 			// the default one.
 			glyphmask.ibitset(state.backgroundid);
 		}
 
-		var coordIndex = mouseCoordY + mouseCoordX * level.height;
-		var getcell = level.getCell(coordIndex);
+		const coordIndex = mouseCoordY + mouseCoordX * level.height;
+		const getcell = level.getCell(coordIndex);
 		if (getcell.equals(glyphmask)) {
 			return;
 		} else {
@@ -16974,8 +17250,8 @@ function levelEditorRightClick(event, click) {
 			redraw();
 		}
 	} else if (mouseCoordX > -1 && mouseCoordY > -1 && mouseCoordX < screenwidth - 2 && mouseCoordY < screenheight - 2 - editorRowCount) {
-		var coordIndex = mouseCoordY + mouseCoordX * level.height;
-		var glyphmask = new BitVec(STRIDE_OBJ);
+		const coordIndex = mouseCoordY + mouseCoordX * level.height;
+		const glyphmask = new BitVec(STRIDE_OBJ);
 		glyphmask.ibitset(state.backgroundid);
 		level.setCell(coordIndex, glyphmask);
 		redraw();
@@ -16999,7 +17275,7 @@ function levelEditorRightClick(event, click) {
 	}
 }
 
-var anyEditsSinceMouseDown = false;
+let anyEditsSinceMouseDown = false;
 
 function onMouseDown(event) {
 
@@ -17009,8 +17285,8 @@ function onMouseDown(event) {
 
 	ULBS();
 
-	var lmb = event.button === 0;
-	var rmb = event.button === 2;
+	let lmb = event.button === 0;
+	let rmb = event.button === 2;
 	if (event.type == "touchstart") {
 		lmb = true;
 	}
@@ -17033,23 +17309,28 @@ function onMouseDown(event) {
 		}
 		dragging = false;
 		rightdragging = false;
+		event.handled = true;
 	} else if (rmb) {
 		if (event.target === canvas || event.target.className === "tapFocusIndicator") {
 			setMouseCoord(event);
 			dragging = false;
 			rightdragging = true;
 			if (levelEditorOpened) {
+				event.handled = true;
 				return levelEditorRightClick(event, true);
 			}
 		}
 	}
 
-	event.handled = true;
 
 }
 
 function rightClickCanvas(event) {
-	return prevent(event);
+	if (levelEditorOpened){
+		return prevent(event);
+	} else {
+		return true;
+	}
 }
 
 function onMouseUp(event) {
@@ -17088,7 +17369,7 @@ function onKeyDown(event) {
 
 	if (lastDownTarget === canvas || (window.Mobile && (lastDownTarget === window.Mobile.focusIndicator))) {
 		if (keybuffer.indexOf(event.keyCode) === -1) {
-			if (event && (event.ctrlKey || event.metaKey)) {
+			if (event && ((event.ctrlKey&&event.keyCode!==90) || event.metaKey)) {
 			} else {
 				keybuffer.splice(keyRepeatIndex, 0, event.keyCode);
 				keyRepeatTimer = 0;
@@ -17122,11 +17403,11 @@ function onKeyDown(event) {
 }
 
 function relMouseCoords(event) {
-	var totalOffsetX = 0;
-	var totalOffsetY = 0;
-	var canvasX = 0;
-	var canvasY = 0;
-	var currentElement = this;
+	let totalOffsetX = 0;
+	let totalOffsetY = 0;
+	let canvasX = 0;
+	let canvasY = 0;
+	let currentElement = this;
 
 	do {
 		totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
@@ -17149,7 +17430,7 @@ HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
 
 function onKeyUp(event) {
 	event = event || window.event;
-	var index = keybuffer.indexOf(event.keyCode);
+	let index = keybuffer.indexOf(event.keyCode);
 	if (index >= 0) {
 		keybuffer.splice(index, 1);
 		if (keyRepeatIndex >= index) {
@@ -17170,11 +17451,11 @@ function onMyBlur(event) {
 	keyRepeatTimer = 0;
 }
 
-var mouseCoordX = 0;
-var mouseCoordY = 0;
+let mouseCoordX = 0;
+let mouseCoordY = 0;
 
 function setMouseCoord(e) {
-	var coords = canvas.relMouseCoords(e);
+	const coords = canvas.relMouseCoords(e);
 	mouseCoordX = coords.x - xoffset;
 	mouseCoordY = coords.y - yoffset;
 	mouseCoordX = Math.floor(mouseCoordX / cellwidth);
@@ -17227,17 +17508,130 @@ function prevent(e) {
 	return false;
 }
 
+var gamepadKeys = []; // used to store keys held at previous frame
+
+function pollGamepads() {
+	function buttonCheck(buttons, i) {
+		if(buttons.length <= i) {
+			return false;
+		}
+		
+		if(typeof(buttons[i]) == "object") {
+			return buttons[i].pressed;
+		}
+	
+		return buttons[i] == 1.0;
+	}
+	function axisCheck(axes, i, dir) {
+		if(axes.length <= i) {
+			return false;
+		}
+		
+		return axes[i] * dir > 0.5;
+	}
+
+	var newGamepadKeys = [];
+
+	function keyPressed(keycode) {
+    	if(keybuffer.indexOf(keycode) === -1) {
+    		keybuffer.splice(keyRepeatIndex, 0, keycode);
+	    	keyRepeatTimer = 0;
+	    	checkKey({keyCode: keycode}, true);
+		}
+
+		newGamepadKeys.splice(0, 0, keycode);
+	}
+
+	// clear any keys previously pressed but no longer held:
+	function clear() {
+		for(var k = 0; k < gamepadKeys.length; k++) {
+			if(newGamepadKeys.indexOf(gamepadKeys[k]) >= 0) {
+				continue;
+			}
+
+			var index = keybuffer.indexOf(gamepadKeys[k]);
+			if(index >= 0) {
+				keybuffer.splice(index, 1);
+				if(keyRepeatIndex >= index) {
+					keyRepeatIndex--;
+				}
+			}
+		}
+
+		gamepadKeys = newGamepadKeys;
+	}
+
+	var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+	if(gamepads == null || gamepads.length == 0) {
+		clear();
+		return;
+	}
+
+	for(var i = 0; i < gamepads.length; i++) {
+		var gamepad = gamepads[i];
+		
+		if(!gamepad || !gamepad.connected) {
+			continue;
+		}
+		if(buttonCheck(gamepad.buttons, 3) // Y
+			|| buttonCheck(gamepad.buttons, 4)) { // LB
+			
+			keyPressed(82); // restart
+		}
+		if(buttonCheck(gamepad.buttons, 1) // B
+			|| axisCheck(gamepad.axes, 2, 1)) { // LT
+			
+			keyPressed(90); // undo
+		}
+		if(buttonCheck(gamepad.buttons, 2) // X
+			|| buttonCheck(gamepad.buttons, 0) // A
+			|| buttonCheck(gamepad.buttons, 5) // RB
+			|| axisCheck(gamepad.axes, 1, 1)) { // RT
+			
+			keyPressed(88); // action
+		}
+		if(buttonCheck(gamepad.buttons, 7)||buttonCheck(gamepad.buttons, 8)) { // menu button
+			keyPressed(27); // exit
+		}
+		if(buttonCheck(gamepad.buttons, 6)) { // change view button
+			keyPressed(69); // edit
+		}
+		if(axisCheck(gamepad.axes, 1, -1) // up
+			|| axisCheck(gamepad.axes, 7, -1) || buttonCheck(gamepad.buttons, 12)) { // D-pad up
+			
+			keyPressed(38); // up
+		}
+		if(axisCheck(gamepad.axes, 1, 1) // down
+			|| axisCheck(gamepad.axes, 7, 1) || buttonCheck(gamepad.buttons, 13)) { // D-pad down
+			
+			keyPressed(40); // down
+		}
+		if(axisCheck(gamepad.axes, 0, -1) // left
+			|| axisCheck(gamepad.axes, 6, -1) || buttonCheck(gamepad.buttons, 14)) { // D-pad left
+			
+			keyPressed(37); // left
+		}
+		if(axisCheck(gamepad.axes, 0, 1) // right
+			|| axisCheck(gamepad.axes, 6, 1) || buttonCheck(gamepad.buttons, 15)) { // D-pad right
+			
+			keyPressed(39); // right
+		}
+	}
+
+	clear();
+}
+
 function checkKey(e, justPressed) {
 	ULBS();
 
 	if (winning) {
 		return;
 	}
-	if (e && (e.ctrlKey || e.metaKey || e.altKey)) {
+	if (e && ( (e.ctrlKey&&e.keyCode!==90) || e.metaKey || e.altKey)) {
 		return;
 	}
 
-	var inputdir = -1;
+	let inputdir = -1;
 	switch (e.keyCode) {
 		case 65://a
 		case 37: //left
@@ -17355,7 +17749,7 @@ function checkKey(e, justPressed) {
 		case 57://9
 			{
 				if (levelEditorOpened && justPressed) {
-					var num = 9;
+					let num = 9;
 					if (e.keyCode >= 49) {
 						num = e.keyCode - 49;
 					}
@@ -17525,13 +17919,16 @@ function update() {
 			nextLevel();
 		}
 	}
+	
+	pollGamepads();
+	
 	if (keybuffer.length > 0) {
 		keyRepeatTimer += deltatime;
-		var ticklength = throttle_movement ? repeatinterval : repeatinterval / (Math.sqrt(keybuffer.length));
+		const ticklength = throttle_movement ? repeatinterval : repeatinterval / (Math.sqrt(keybuffer.length));
 		if (keyRepeatTimer > ticklength) {
 			keyRepeatTimer = 0;
 			keyRepeatIndex = (keyRepeatIndex + 1) % keybuffer.length;
-			var key = keybuffer[keyRepeatIndex];
+			const key = keybuffer[keyRepeatIndex];
 			checkKey({ keyCode: key }, false);
 		}
 	}
@@ -17548,9 +17945,9 @@ function update() {
 	}
 }
 
-var prevTimestamp;
+let prevTimestamp;
 // Lights, camera…function!
-var loop = function (timestamp) {
+function loop(timestamp) {
 	if (prevTimestamp !== undefined) {
 		deltatime = timestamp - prevTimestamp
 	}
@@ -17566,6 +17963,8 @@ window.requestAnimationFrame(loop);
 
 </script>
 <script>
+'use strict';
+
 /*
  * Add gesture support for mobile devices.
  */
