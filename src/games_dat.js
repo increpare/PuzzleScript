@@ -1,4 +1,5 @@
-const games_gallery = [
+//do not change go const...is modified elsewhere
+let games_gallery = [
   {
     "url": "https://www.puzzlescript.net/play.html?p=6841165",
     "thumb": "6841165.gif",
