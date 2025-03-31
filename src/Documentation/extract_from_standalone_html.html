@@ -124,7 +124,7 @@
 
             filecontent = evt.target.result;
 
-            document.forms['myform'].elements['text'].value = rip(evt.target.result);
+            document.forms['myform'].elements['text'].value = rip_source_from_html(evt.target.result);
         };
 
         reader.readAsText(evt.target.files[0]);
