@@ -77,5 +77,5 @@ function buildStandalone(sourceCode) {
 	// Then when we substitute them, the doubled $'s will be reduced to single ones.
 	htmlString = htmlString.replace(/"__GAMEDAT__"/g,sourceCode);
 
-	saveAs(htmlString, 'data:text/html;charset=utf-8',title+".html");
+	saveAs(htmlString, 'text/html;charset=utf-8',title+".html");
 }
