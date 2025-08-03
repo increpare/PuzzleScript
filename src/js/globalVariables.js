@@ -25,7 +25,7 @@ function doSetupTitleScreenLevelContinue() {
                 curlevelTarget.dat = new Int32Array(arr);
 
             }
-            curlevel = storage_get(document.URL);
+            curlevel = storage_get_int(document.URL, 0);
         }
     } catch (ex) {
     }
