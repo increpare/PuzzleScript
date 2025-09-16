@@ -27,7 +27,39 @@ function github_isSignedIn() {
 	return typeof token === "string";
 }
 
-function github_load(id, done) { 
+function github_load(id, done) {
+	// Use server-side proxy to fetch gist content without client authentication
+	let proxyURL = "https://ded.increpare.com/cgi-bin/gist_proxy.py?id=" + id;
+	
+	let httpClient = new XMLHttpRequest();
+	httpClient.open("GET", proxyURL);
+	httpClient.onreadystatechange = function() {
+		if (httpClient.readyState != 4) {
+			return;
+		}
+		
+		if (httpClient.status === 200) {
+			try {
+				let response = JSON.parse(httpClient.responseText);
+				if (response.error) {
+					done(null, response.error);
+				} else if (response.content) {
+					done(response.content, null);
+				} else {
+					done(null, "Invalid proxy response");
+				}
+			} catch (e) {
+				done(null, "Failed to parse proxy response");
+			}
+		} else {
+			done(null, "Proxy request failed with status " + httpClient.status);
+		}
+	}
+	httpClient.send();
+}
+
+
+function github_load_api(id, done) { 
 	let githubURL = "https://api.github.com/gists/"+id;
 
 	let githubHTTPClient = new XMLHttpRequest();
@@ -53,8 +85,7 @@ function github_load(id, done) {
 				done(null, result.message);
 			}
 		} else if (githubHTTPClient.status===401) {
-			github_signOut();
-			done(null, "Authorization check failed.  Try reloading or signing back in from the editor.");
+			done(null, "This gist requires authentication. Please sign in from the editor to access it.");
 		} else if (githubHTTPClient.status>=500) {
 			done(null, "HTTP Error "+ githubHTTPClient.status + " - " + githubHTTPClient.statusText + ".");
 		} else if (githubHTTPClient.status!==200 && githubHTTPClient.status!==201) {
@@ -68,7 +99,7 @@ function github_load(id, done) {
 
 	if (github_isSignedIn()) {
 		let oauthAccessToken = storage_get("oauth_access_token");
-		githubHTTPClient.setRequestHeader("Authorization", "Token "+oauthAccessToken);
+		githubHTTPClient.setRequestHeader("Authorization", "Bearer "+oauthAccessToken);
 	}
 	githubHTTPClient.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	githubHTTPClient.send();
