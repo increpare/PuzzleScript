@@ -17585,14 +17585,14 @@ function pollGamepads() {
 			keyPressed(82); // restart
 		}
 		if(buttonCheck(gamepad.buttons, 1) // B
-			|| axisCheck(gamepad.axes, 2, 1)) { // LT
+			|| buttonCheck(gamepad.buttons, 6)) { // LT
 			
 			keyPressed(90); // undo
 		}
 		if(buttonCheck(gamepad.buttons, 2) // X
 			|| buttonCheck(gamepad.buttons, 0) // A
 			|| buttonCheck(gamepad.buttons, 5) // RB
-			|| axisCheck(gamepad.axes, 1, 1)) { // RT
+			|| buttonCheck(gamepad.buttons, 7)) { // RT
 			
 			keyPressed(88); // action
 		}
