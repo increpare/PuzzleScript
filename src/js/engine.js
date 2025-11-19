@@ -1221,7 +1221,7 @@ function getLayersOfMask(cellMask) {
 			let o = state.objects[n];
 			layers.push(o.layer)
 		}
-	}
+	}	
 	return layers;
 }
 
@@ -1252,7 +1252,7 @@ function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 	if (fn in CACHE_MOVEENTITIESATINDEX) {
 		return CACHE_MOVEENTITIESATINDEX[fn];
 	}
-	return CACHE_MOVEENTITIESATINDEX[fn] = new Function("level", "positionIndex", "entityMask", "dirMask", fn);
+	return CACHE_MOVEENTITIESATINDEX[fn] = new Function("return function moveEntitiesAtIndex(level, positionIndex, entityMask, dirMask) {\n" + fn + "\n}")();
 }
 
 
@@ -1294,7 +1294,7 @@ function generate_calculateRowColMasks(OBJECT_SIZE, MOVEMENT_SIZE) {
 	if (fn in CACHE_CALCULATEROWCOLMASKS) {
 		return CACHE_CALCULATEROWCOLMASKS[fn];
 	}
-	return CACHE_CALCULATEROWCOLMASKS[fn] = new Function("level", fn);
+	return CACHE_CALCULATEROWCOLMASKS[fn] = new Function("return function calculateRowColMasks(level) {\n" + fn + "\n}")();
 }
 
 function startMovement(dir) {
@@ -1418,7 +1418,7 @@ function generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE) {
 	if (fn in CACHE_REPOSITIONENTITIESATCELL) {
 		return CACHE_REPOSITIONENTITIESATCELL[fn];
 	}
-	return CACHE_REPOSITIONENTITIESATCELL[fn] = new Function("level", "positionIndex", fn);
+	return CACHE_REPOSITIONENTITIESATCELL[fn] = new Function("return function repositionEntitiesAtCell(level, positionIndex) {\n" + fn + "\n}")();
 }
 
 let ellipsisPattern = ['ellipsis'];
@@ -1473,27 +1473,38 @@ Rule.prototype.generateCellRowMatchesFunction = function (cellRow, ellipsisCount
 		let cr_l = cellRow.length;
 
 		// Find which object and movement indices are actually used
-		let usedObjectIndices = new Set();
-		let usedMovementIndices = new Set();
+		// Use arrays instead of Sets for better performance with small collections
+		let usedObjectIndices = [];
+		let usedObjectIndicesSet = new Uint8Array(STRIDE_OBJ);
+		let usedMovementIndices = [];
+		let usedMovementIndicesSet = new Uint8Array(STRIDE_MOV);
 		
 		for (let i = 0; i < cr_l; i++) {
 			const pattern = cellRow[i];
+			const opd = pattern.objectsPresent.data;
+			const omd = pattern.objectsMissing.data;
 			for (let j = 0; j < STRIDE_OBJ; j++) {
-				if (pattern.objectsPresent.data[j] || pattern.objectsMissing.data[j]) {
-					usedObjectIndices.add(j);
+				if ((opd[j] || omd[j]) && !usedObjectIndicesSet[j]) {
+					usedObjectIndicesSet[j] = 1;
+					usedObjectIndices.push(j);
 				}
 			}
 			//and anyObjectsPresent
 			for (let j = 0; j < pattern.anyObjectsPresent.length; j++) {
+				const aopd = pattern.anyObjectsPresent[j].data;
 				for (let k = 0; k < STRIDE_OBJ; k++) {
-					if (pattern.anyObjectsPresent[j].data[k]) {
-						usedObjectIndices.add(k);
+					if (aopd[k] && !usedObjectIndicesSet[k]) {
+						usedObjectIndicesSet[k] = 1;
+						usedObjectIndices.push(k);
 					}
 				}
 			}
+			const mpd = pattern.movementsPresent.data;
+			const mmd = pattern.movementsMissing.data;
 			for (let j = 0; j < STRIDE_MOV; j++) {
-				if (pattern.movementsPresent.data[j] || pattern.movementsMissing.data[j]) {
-					usedMovementIndices.add(j);
+				if ((mpd[j] || mmd[j]) && !usedMovementIndicesSet[j]) {
+					usedMovementIndicesSet[j] = 1;
+					usedMovementIndices.push(j);
 				}
 			}
 		}
@@ -1503,10 +1514,12 @@ Rule.prototype.generateCellRowMatchesFunction = function (cellRow, ellipsisCount
 		const objStride = STRIDE_OBJ === 1 ? '' : '*' + STRIDE_OBJ;
 		const movStride = STRIDE_MOV === 1 ? '' : '*' + STRIDE_MOV;
 		
-		for (let i of usedObjectIndices) {
+		for (let idx = 0; idx < usedObjectIndices.length; idx++) {
+			const i = usedObjectIndices[idx];
 			fn += 'let cellObjects' + i + ' = objects[i' + objStride + (i ? '+' + i : '') + '];\n';
 		}
-		for (let i of usedMovementIndices) {
+		for (let idx = 0; idx < usedMovementIndices.length; idx++) {
+			const i = usedMovementIndices[idx];
 			fn += 'let cellMovements' + i + ' = movements[i' + movStride + (i ? '+' + i : '') + '];\n';
 		}
 		
@@ -1519,7 +1532,7 @@ Rule.prototype.generateCellRowMatchesFunction = function (cellRow, ellipsisCount
 		if (fn in CACHE_RULE_CELLROWMATCHESFUNCTION) {
 			return CACHE_RULE_CELLROWMATCHESFUNCTION[fn];
 		}
-		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("cellRow", "i", 'd', 'objects', 'movements', fn);
+		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("return function cellRowMatchesFunction(cellRow, i, d, objects, movements) {\n" + fn + "\n}")();
 	} else if (ellipsisCount === 1) {
 		let cr_l = cellRow.length;
 
@@ -1549,7 +1562,7 @@ if(cellRow[0].matches(i, objects, movements)`;
 		if (fn in CACHE_RULE_CELLROWMATCHESFUNCTION) {
 			return CACHE_RULE_CELLROWMATCHESFUNCTION[fn];
 		}
-		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("cellRow", "i", "kmax", "kmin", 'd', "objects", "movements", fn);
+		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("return function cellRowMatchesFunction_k(cellRow, i, kmax, kmin, d, objects, movements) {\n" + fn + "\n}")();
 	} else { //ellipsisCount===2
 		let cr_l = cellRow.length;
 
@@ -1603,7 +1616,7 @@ return result;`;
 		if (fn in CACHE_RULE_CELLROWMATCHESFUNCTION) {
 			return CACHE_RULE_CELLROWMATCHESFUNCTION[fn];
 		}
-		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("cellRow", "i", "kmax", "kmin", "k1max", "k1min", "k2max", "k2min", 'd', "objects", "movements", fn);
+		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("return function cellRowMatchesFunction_wildcard(cellRow, i, kmax, kmin, k1max, k1min, k2max, k2min, d, objects, movements) {\n" + fn + "\n}")();
 	}
 }
 
@@ -1611,7 +1624,7 @@ return result;`;
 let STRIDE_OBJ = 1;
 let STRIDE_MOV = 1;
 let LAYER_COUNT = 1;
-const FALSE_FUNCTION = new Function("return false;");
+const FALSE_FUNCTION = function FALSE_FUNCTION() { return false; };
 
 // We don't generate the matches functions all at once at initailization, we generate them in the background/as needed
 
@@ -1704,22 +1717,34 @@ CellPattern.prototype.generateMatchFunction = function() {
     let keyIndex = 0;
 
     // Fill the array with data
+    const opd = this.objectsPresent.data;
+    const omd = this.objectsMissing.data;
+    const mpd = this.movementsPresent.data;
+    const mmd = this.movementsMissing.data;
+    
     for (let i = 0; i < STRIDE_OBJ; i++) {
-        keyArray[keyIndex++] = this.objectsPresent.data[i] || 0;
-        keyArray[keyIndex++] = this.objectsMissing.data[i] || 0;
+        keyArray[keyIndex++] = opd[i] || 0;
+        keyArray[keyIndex++] = omd[i] || 0;
     }
     for (let i = 0; i < STRIDE_MOV; i++) {
-        keyArray[keyIndex++] = this.movementsPresent.data[i] || 0;
-        keyArray[keyIndex++] = this.movementsMissing.data[i] || 0;
+        keyArray[keyIndex++] = mpd[i] || 0;
+        keyArray[keyIndex++] = mmd[i] || 0;
     }
     for (let i = 0; i < this.anyObjectsPresent.length; i++) {
+        const aopd = this.anyObjectsPresent[i].data;
         for (let j = 0; j < STRIDE_OBJ; j++) {
-            keyArray[keyIndex++] = this.anyObjectsPresent[i].data[j] || 0;
+            keyArray[keyIndex++] = aopd[j] || 0;
         }
     }
     keyArray[keyIndex++] = STRIDE_OBJ;
     keyArray[keyIndex++] = STRIDE_MOV;
-	let str_key = keyArray.toString();
+	
+	// Build string key efficiently - faster than toString() on Int32Array
+	let str_key = '';
+	for (let i = 0; i < keyLength; i++) {
+		if (i > 0) str_key += ',';
+		str_key += keyArray[i];
+	}
 
     if (CACHE_CELLPATTERN_MATCHFUNCTION.has(str_key)) {
         return CACHE_CELLPATTERN_MATCHFUNCTION.get(str_key);
@@ -1740,7 +1765,7 @@ CellPattern.prototype.generateMatchFunction = function() {
     
     fn += `return ${this.generateMatchString()};`;
 
-    const result = new Function("i", "objects", "movements", fn);
+    const result = new Function("return function matchFunction(i, objects, movements) {\n" + fn + "\n}")();
     CACHE_CELLPATTERN_MATCHFUNCTION.set(str_key, result);
     return result;
 }
@@ -1853,10 +1878,11 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 			curCellMask.data[${i}] = (oldCellMask.data[${i}] & (~objectsClear.data[${i}])) | objectsSet.data[${i}];
 		`)}
 
-		const oldMovementMask = level.getMovements(currentIndex);
 		const curMovementMask = _m3;
+		const oldMovementMask_data = level.movements;
+		const oldMovementMask_base = currentIndex * ${MOVEMENT_SIZE};
 		${FOR(0, MOVEMENT_SIZE, i => `
-			curMovementMask.data[${i}] = (oldMovementMask.data[${i}] & (~movementsClear.data[${i}])) | movementsSet.data[${i}]
+			curMovementMask.data[${i}] = (oldMovementMask_data[oldMovementMask_base + ${i}] & (~movementsClear.data[${i}])) | movementsSet.data[${i}]
 		`)}
 
 
@@ -1883,8 +1909,14 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 			}
 		`)}
 		
+		let movementsEqual = true;
+		${FOR(0, MOVEMENT_SIZE, i => `
+			if (oldMovementMask_data[oldMovementMask_base + ${i}] !== curMovementMask.data[${i}]) {
+				movementsEqual = false;
+			}
+		`)}
 		if (${EQUALS("oldCellMask", "curCellMask", OBJECT_SIZE)} 
-			&& ${EQUALS("oldMovementMask", "curMovementMask", MOVEMENT_SIZE)} 
+			&& movementsEqual
 			&& !rigidchange) { 
 			//nothing changed
 			return false;
@@ -1917,7 +1949,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		return true;	
 	`
 
-	return CACHE_CELLPATTERN_REPLACEFUNCTION[key] = new Function("level", "rule", "currentIndex", fn);
+	return CACHE_CELLPATTERN_REPLACEFUNCTION[key] = new Function("return function replaceFunction(level, rule, currentIndex) {\n" + fn + "\n}")();
 }
 
 
@@ -2002,7 +2034,7 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 	if (fn in CACHE_MATCHCELLROW) {
 		return CACHE_MATCHCELLROW[fn];
 	}
-	return CACHE_MATCHCELLROW[fn] = new Function("level", "direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", fn);
+	return CACHE_MATCHCELLROW[fn] = new Function("return function matchCellRow(level, direction, cellRowMatch, cellRow, cellRowMask, cellRowMask_Movements, d) {\n" + fn + "\n}")();
 }
 
 let CACHE_MATCHCELLROWWILDCARD = {}
@@ -2106,7 +2138,7 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 	if (fn in CACHE_MATCHCELLROWWILDCARD) {
 		return CACHE_MATCHCELLROWWILDCARD[fn];
 	}
-	return CACHE_MATCHCELLROWWILDCARD[fn] = new Function("direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", "wildcardCount", fn);
+	return CACHE_MATCHCELLROWWILDCARD[fn] = new Function("return function matchCellRowWildCard(direction, cellRowMatch, cellRow, cellRowMask, cellRowMask_Movements, d, wildcardCount) {\n" + fn + "\n}")();
 }
 
 function generateTuples(lists) {
@@ -2318,7 +2350,7 @@ Rule.prototype.generateApplyAt = function (patterns, ellipsisCount, OBJECT_SIZE,
 	if (fn in CACHE_RULE_APPLYAT) {
 		return CACHE_RULE_APPLYAT[fn];
 	}
-	return CACHE_RULE_APPLYAT[fn] = new Function("level", "tuple", "check", "delta", fn);
+	return CACHE_RULE_APPLYAT[fn] = new Function("return function applyAt(level, tuple, check, delta) {\n" + fn + "\n}")();
 };
 
 Rule.prototype.tryApply = function (level) {
@@ -2635,7 +2667,7 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE,state) {
 	if (fn in CACHE_RESOLVEMOVEMENTS) {
 		return CACHE_RESOLVEMOVEMENTS[fn];
 	}
-	return CACHE_RESOLVEMOVEMENTS[fn] = new Function("level", "bannedGroup", fn);
+	return CACHE_RESOLVEMOVEMENTS[fn] = new Function("return function resolveMovements(level, bannedGroup) {\n" + fn + "\n}")();
 }
 
 let sfxCreateMask = null;
@@ -3194,5 +3226,5 @@ Rule.prototype.generateFindMatchesFunction = function () {
 	if (fn in CACHE_RULE_FINDMATCHES) {
 		return CACHE_RULE_FINDMATCHES[fn];
 	}
-	return CACHE_RULE_FINDMATCHES[fn] = new Function('level', fn);
+	return CACHE_RULE_FINDMATCHES[fn] = new Function("return function findMatches(level) {\n" + fn + "\n}")();
 }
