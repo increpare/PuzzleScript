@@ -518,13 +518,13 @@ let codeMirrorFn = function () {
                 line_should_end: state.line_should_end,
                 line_should_end_because: state.line_should_end_because,
                 sol_after_comment: state.sol_after_comment,
+                inside_cell: state.inside_cell,
 
                 objects_candname: state.objects_candname,
                 objects_section: state.objects_section,
                 objects_spritematrix: state.objects_spritematrix.concat([]),
 
                 tokenIndex: state.tokenIndex,
-
                 current_line_wip_array: state.current_line_wip_array.concat([]),
 
                 legend_synonyms: legend_synonymsCopy,
@@ -1312,6 +1312,12 @@ let codeMirrorFn = function () {
                             return 'ARROW';
                         }
                         if (ch === '[' || ch === '|' || ch === ']' || ch === '+') {
+                            if (ch === '[') {
+                                state.inside_cell = true;
+                            } else if (ch === ']') {
+                                state.inside_cell = false;
+                            }
+
                             if (ch !== '+') {
                                 state.tokenIndex = 1;
                             }
@@ -1606,6 +1612,8 @@ let codeMirrorFn = function () {
                 line_should_end: false,
                 line_should_end_because: '',
                 sol_after_comment: false,
+
+                inside_cell: false,
 
                 objects_candname: '',
                 objects_section: 0, //whether reading name/color/spritematrix

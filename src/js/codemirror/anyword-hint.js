@@ -436,7 +436,9 @@
                             }
                             candlists.push(RULE_COMMAND_WORDS);
                         }
-                        addObjects=true;
+                        if (state.inside_cell===true){
+                            addObjects=true;
+                        }
                         break;
                     }
                 case 'winconditions':
