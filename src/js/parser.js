@@ -518,7 +518,10 @@ let codeMirrorFn = function () {
                 line_should_end: state.line_should_end,
                 line_should_end_because: state.line_should_end_because,
                 sol_after_comment: state.sol_after_comment,
+
                 inside_cell: state.inside_cell,
+                bracket_balance: state.bracket_balance,
+                arrow_passed: state.arrow_passed,
 
                 objects_candname: state.objects_candname,
                 objects_section: state.objects_section,
@@ -1302,6 +1305,9 @@ let codeMirrorFn = function () {
                             let rule = reg_notcommentstart.exec(stream.string)[0];
                             state.rules.push([rule, state.lineNumber, mixedCase]);
                             state.tokenIndex = 0;//in rules, records whether bracket has been found or not
+                            state.inside_cell = false;
+                            state.arrow_passed = false;
+                            state.bracket_balance = 0;
                         }
 
                         if (state.tokenIndex === -4) {
@@ -1309,6 +1315,7 @@ let codeMirrorFn = function () {
                             return 'MESSAGE';
                         }
                         if (stream.match(/[\p{Z}\s]*->[\p{Z}\s]*/u, true)) {
+                            state.arrow_passed = true;
                             return 'ARROW';
                         }
                         if (ch === '[' || ch === '|' || ch === ']' || ch === '+') {
@@ -1316,6 +1323,12 @@ let codeMirrorFn = function () {
                                 state.inside_cell = true;
                             } else if (ch === ']') {
                                 state.inside_cell = false;
+                                //used to detect if we've reached the final ']'
+                                if (state.arrow_passed) {
+                                    state.bracket_balance--;
+                                } else {
+                                    state.bracket_balance++;
+                                }
                             }
 
                             if (ch !== '+') {
@@ -1614,6 +1627,8 @@ let codeMirrorFn = function () {
                 sol_after_comment: false,
 
                 inside_cell: false,
+                bracket_balance: 0,
+                arrow_passed: false,
 
                 objects_candname: '',
                 objects_section: 0, //whether reading name/color/spritematrix

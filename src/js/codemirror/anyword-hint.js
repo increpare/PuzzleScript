@@ -415,30 +415,32 @@
                                 }
                             }
                         }
-                        //if inside of roles,can use some extra directions
-                        if (lineToCursor.indexOf("[")==-1) {
+                        //if inside of rules ,can use some extra directions
+                        if (state.inside_cell==false) {
                             candlists.push(RULE_DIRECTION_WORDS);
                             candlists.push(LOOP_WORDS);
-                        } else {
-                            candlists.push(PATTERN_DIRECTION_WORDS);                            
-                        }
-                        
-                        if (lineToCursor.indexOf("->")>=0) {
-                            var my_commands = RULE_COMMAND_WORDS;
-                            for (var i=0;i<SFX_COMMAND_LIST.length;i++){
-                                var sfxcommand = SFX_COMMAND_LIST[i];
-                                for (var j=0;j<state.sounds.length;j++){
-                                    var sfx = state.sounds[j][0][0];
-                                    if (sfxcommand===sfx){
-                                        my_commands.push(sfxcommand);
+                            
+                            // we should only hint commands once we've reached the final ']'                         
+                            if (state.arrow_passed==true && state.bracket_balance===0) {
+                                var my_commands = RULE_COMMAND_WORDS;
+                                for (var i=0;i<SFX_COMMAND_LIST.length;i++){
+                                    var sfxcommand = SFX_COMMAND_LIST[i];
+                                    for (var j=0;j<state.sounds.length;j++){
+                                        var sfx = state.sounds[j][0][0];
+                                        if (sfxcommand===sfx){
+                                            my_commands.push(sfxcommand);
+                                        }
                                     }
                                 }
+                                candlists.push(RULE_COMMAND_WORDS);
                             }
-                            candlists.push(RULE_COMMAND_WORDS);
+
+                        } else {
+                            candlists.push(PATTERN_DIRECTION_WORDS);  
+                            addObjects=true;                          
                         }
-                        if (state.inside_cell===true){
-                            addObjects=true;
-                        }
+                        
+                        
                         break;
                     }
                 case 'winconditions':
