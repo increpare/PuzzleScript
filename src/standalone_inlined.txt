@@ -12356,12 +12356,15 @@ let codeMirrorFn = function () {
                 line_should_end_because: state.line_should_end_because,
                 sol_after_comment: state.sol_after_comment,
 
+                inside_cell: state.inside_cell,
+                bracket_balance: state.bracket_balance,
+                arrow_passed: state.arrow_passed,
+
                 objects_candname: state.objects_candname,
                 objects_section: state.objects_section,
                 objects_spritematrix: state.objects_spritematrix.concat([]),
 
                 tokenIndex: state.tokenIndex,
-
                 current_line_wip_array: state.current_line_wip_array.concat([]),
 
                 legend_synonyms: legend_synonymsCopy,
@@ -13139,6 +13142,9 @@ let codeMirrorFn = function () {
                             let rule = reg_notcommentstart.exec(stream.string)[0];
                             state.rules.push([rule, state.lineNumber, mixedCase]);
                             state.tokenIndex = 0;//in rules, records whether bracket has been found or not
+                            state.inside_cell = false;
+                            state.arrow_passed = false;
+                            state.bracket_balance = 0;
                         }
 
                         if (state.tokenIndex === -4) {
@@ -13146,9 +13152,22 @@ let codeMirrorFn = function () {
                             return 'MESSAGE';
                         }
                         if (stream.match(/[\p{Z}\s]*->[\p{Z}\s]*/u, true)) {
+                            state.arrow_passed = true;
                             return 'ARROW';
                         }
                         if (ch === '[' || ch === '|' || ch === ']' || ch === '+') {
+                            if (ch === '[') {
+                                state.inside_cell = true;
+                            } else if (ch === ']') {
+                                state.inside_cell = false;
+                                //used to detect if we've reached the final ']'
+                                if (state.arrow_passed) {
+                                    state.bracket_balance--;
+                                } else {
+                                    state.bracket_balance++;
+                                }
+                            }
+
                             if (ch !== '+') {
                                 state.tokenIndex = 1;
                             }
@@ -13443,6 +13462,10 @@ let codeMirrorFn = function () {
                 line_should_end: false,
                 line_should_end_because: '',
                 sol_after_comment: false,
+
+                inside_cell: false,
+                bracket_balance: 0,
+                arrow_passed: false,
 
                 objects_candname: '',
                 objects_section: 0, //whether reading name/color/spritematrix
@@ -15675,7 +15698,7 @@ function ruleGroupDiscardOverlappingTest(ruleGroup) {
                     parenthetical += ")";
                 }
 
-                logError(`${example[0]} and ${example[1]} can never overlap${parenthetical}, but this rule requires that to happen, so it's being culled.`, rule.lineNumber);
+                logError(`${example[0]} and ${example[1]} can never overlap${parenthetical}. This rule requires that to happen, so it impossible it will ever trigger.`, rule.lineNumber);
             }
             i--;
         }

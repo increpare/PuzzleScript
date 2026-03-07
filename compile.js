@@ -36,6 +36,9 @@ console.log('build number ' + buildnum)
 
 let start = new Date()
 
+console.log("building CodeMirror 6 bundle")
+execFileSync(process.execPath, ["./build-codemirror6.js"], { stdio: "inherit" });
+
 console.log("removing bin")
 
 rimraf.sync("./bin");
@@ -168,15 +171,8 @@ ncp("./src", "./bin/", function (err) {
                 "./src/js/rng.js",
                 "./src/js/riffwave.js",
                 "./src/js/sfxr.js",
-                "./src/js/codemirror/codemirror.js",
-                "./src/js/codemirror/active-line.js",
-                "./src/js/codemirror/dialog.js",
-                "./src/js/codemirror/searchcursor.js",
-                "./src/js/codemirror/search.js",
-                "./src/js/codemirror/match-highlighter.js",
-                "./src/js/codemirror/show-hint.js",
+                "./src/js/codemirror/cm6.bundle.js",
                 "./src/js/codemirror/anyword-hint.js",
-                "./src/js/codemirror/comment.js",
                 "./src/js/colors.js",
                 "./src/js/graphics.js",
                 "./src/js/inputoutput.js",

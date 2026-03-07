@@ -18,6 +18,24 @@ body {
 }
 
 /*<!--activeline-->*/
+/* CM6 editor chrome is now defined via EditorView.theme() in cm6-puzzlescript.js */
+
+.dark-theme .cm-s-midnight span.cm-COLOR-BLACK {
+    color: #555555;
+}
+
+.light-theme .cm-s-midnight span.cm-COLOR-BLACK {
+    color: black;
+}
+
+.dark-theme .cm-s-midnight span.cm-COLOR-WHITE {
+    color: #FFFFFF;
+}
+
+.light-theme .cm-s-midnight span.cm-COLOR-WHITE {
+    color: #dedede;
+}
+
 .cm-s-midnight .CodeMirror-activeline-background {
     background-color: light-dark(#e8f2ff, #203040) !important;
 }
@@ -31,8 +49,6 @@ body {
 .nocolorlink, .nocolorlink:visited, .nocolorlink .quasilink{
     color: inherit;
 }
-
-.cm-s-midnight span.cm-COLOR {}
 
 .light-theme .cm-s-midnight span.cm-BOLDCOLOR {
     font-weight: normal;
