@@ -400,7 +400,7 @@ function deepClone(item) {
 		} else if (typeof item == "object") {
 			// testing that this is DOM
 			if (item.nodeType && typeof item.cloneNode == "function") {
-				let result = item.cloneNode(true);
+				result = item.cloneNode(true);
 			} else if (!item.prototype) { // check that this is a literal
 				if (item instanceof Date) {
 					result = new Date(item);
@@ -1408,7 +1408,7 @@ function generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE) {
 	`)}
 		
 	//corresponding object stuff in repositionEntitiesOnLayer
-	const colIndex=(positionIndex/this.height)|0;
+	const colIndex=(positionIndex/level.height)|0;
 	const rowIndex=(positionIndex%level.height);
 	${UNROLL("level.colCellContents_Movements[colIndex] |= movementMask",MOVEMENT_SIZE)}
 	${UNROLL("level.rowCellContents_Movements[rowIndex] |= movementMask",MOVEMENT_SIZE)}

@@ -154,7 +154,7 @@ function EQUALS(tok, other, array_size) {
 function EQUALS_TOK_REAL(tok, other) {
 	let result = "(true";
 	for (let i = 0; i < other.data.length; i++) {
-		result += `&&(${tok}.data[o] === ${other.data[i]})`;
+		result += `&&(${tok}.data[${i}] === ${other.data[i]})`;
 	}
 	return result + ")";
 }

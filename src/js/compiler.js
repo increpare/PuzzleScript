@@ -741,9 +741,9 @@ function processRuleString(rule, state, curRules) {
                             //check that the object is not already present in the cell
                             for (let j = 0; j < curcell.length; j += 2) {
                                 if (curcell[j + 1] === token) {
-                                    logError(`You cannot specify the same object more than once in a single cell (in this case ${token} occurs mutliple times).`, lineNumber);
+                                    logError(`You cannot specify the same object more than once in a single cell (in this case ${token} occurs multiple times).`, lineNumber);
                                     if (token in state.propertiesDict){
-                                        logWarningNoLine(`( However, noticing that you're committing this crime with <i>properties</i>, and not being able to help but acknowledge that you <i>may</i> be trying to do something esoteric and <i>clever</i> with the property inference system,  I might be brought to suggest that you consider this: you can have multiple equivalent properties with different names. )`);
+                                        logWarning(`( However, noticing that you're committing this crime with <i>properties</i>, and not being able to help but acknowledge that you <i>may</i> be trying to do something esoteric and <i>clever</i> with the property inference system,  I might be brought to suggest that you consider this: you can have multiple equivalent properties with different names. )`, lineNumber);
                                     } 
                                 }
                             }
@@ -2474,7 +2474,7 @@ function twiddleMetaData(state) {
             logWarning(`Wasn't able to make sense of "${s}" as a dimension.`, lineNumber);
         }
         if (result <= 0) {
-            logWarning(`The dimension given to me (you gave "${s}") is baad - it should be greater than 0.`, lineNumber);
+            logWarning(`The dimension given to me (you gave "${s}") is bad - it should be greater than 0.`, lineNumber);
         }
         return result;
     }
@@ -2491,7 +2491,7 @@ function twiddleMetaData(state) {
                 return null;
             } else {
                 if (intcoords[0] <= 0 || intcoords[1] <= 0) {
-                    logWarning(`The dimensions given to me (you gave "${val}") are baad - they should be > 0.`, lineNumber);
+                    logWarning(`The dimensions given to me (you gave "${val}") are bad - they should be > 0.`, lineNumber);
                 }
                 return intcoords;
             }
@@ -2567,7 +2567,7 @@ function processWinConditions(state) {
             aggr2 = true;
             mask2 = state.aggregateMasks[n2];
         } else {
-            logError('Unwelcome term "' + n1 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
+            logError('Unwelcome term "' + n2 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
         }
         let newcondition = [num, mask1, mask2, lineNumber, aggr1, aggr2];
         newconditions.push(newcondition);
@@ -2885,7 +2885,7 @@ function generateSoundData(state) {
                     directions.push(sound[j][0]);
                 } else {
                     //Don't think I can get here, but just in case
-                    logError(`Expected a direction here, but found instead "$(sound[j][0])".`, lineNumber);
+                    logError(`Expected a direction here, but found instead "${sound[j][0]}".`, lineNumber);
                 }
             }
             if (directions.length > 0 && (verb !== 'move' && verb !== 'cantmove')) {
