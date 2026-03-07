@@ -87,7 +87,7 @@ BitVec.prototype.getshiftor = function(mask, shift) {
 	const inner_idx = shift & 0b11111;
 	const outer_idx = shift>>5;
 	// low part: from word at shift>>5, shift right by toshift (brings high bits down)
-	let ret = this.data[outer_idx] >>> inner_idx;
+	const ret = this.data[outer_idx] >>> inner_idx;
 	if (toshift > 27) {//32 - toshift > 5
 		// high part: from next word, shift left so its low bits align; OR into ret (span two words)
 		ret |= this.data[outer_idx+1] << (32 - inner_idx);
@@ -114,12 +114,12 @@ BitVec.prototype.ishiftor = function(mask, shift) {
 	// outer_idx: which 32-bit integer (word index in data[]); shift>>5 = number of full words
 	const outer_idx = shift>>5;
 	// low: mask shifted left so it lands at bit position (shift mod 32) in word shift_5
-	let low = mask << inner_idx;
+	const low = mask << inner_idx;
 	this.data[outer_idx] |= low;
 	// if we have overflow into the next word
 	if (inner_idx > 27) {//32 - inner_idx > 5
 		// high: part of mask that overflows into next word (mask >>> (32-toshift))
-		let high = mask >> (32 - inner_idx);
+		const high = mask >> (32 - inner_idx);
 		this.data[outer_idx+1] |= high;
 	}
 }
@@ -132,7 +132,7 @@ function ISHIFTOR(tok, mask, shift) {
 		const low = ${mask} << inner_idx;
 		${tok}.data[outer_idx] |= low;
 		if (inner_idx > 27) {//32 - inner_idx > 5
-			let high = ${mask} >> (32 - inner_idx);
+			const high = ${mask} >> (32 - inner_idx);
 			${tok}.data[outer_idx+1] |= high;
 		}
 	}`;
@@ -146,7 +146,7 @@ BitVec.prototype.ishiftclear = function(mask, shift) {
 	const low = mask << inner_idx;
 	this.data[outer_idx] &= ~low;
 	if (inner_idx > 27) {//32 - inner_idx > 5
-		let high = mask >> (32 - inner_idx);
+		const high = mask >> (32 - inner_idx);
 		this.data[outer_idx+1] &= ~high;
 	}
 }
