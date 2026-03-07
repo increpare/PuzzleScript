@@ -1,0 +1,30 @@
+#! /bin/bash
+
+# Run tests for a given changelist
+
+changelists=(
+    "f1624b3ca07c6de6ab03005bd19ec46a2df0b238"
+    "1d5c20a0b3ae0d182c4baf092829283916415ddd"
+    "e0f917d0dd142d5bf6630ba2ffd0d1d1af198842"
+    "c3ea5c60d4ead173755baad61d86a7db57ec6e0e"
+    "1da9480cf4621c259113890502afd968e159a483"
+)
+
+
+#for each changelist
+for changelist in ${changelists[@]}; do
+    # echo "Running tests for $changelist"
+    #print the changelist name desrciption from github
+    # changelist_description=$(gh pr view $changelist --json title -q .title)
+    # echo "Changelog: $changelist_description"
+    #print the changelist name
+    # echo "Changelist: $changelist"
+    #print the changelist name
+    #sync to this changelist
+    git checkout $changelist
+    #run the tests
+    node run_tests_node.js --profile --breakdown
+done
+
+#checkout master at end
+git checkout ai-pass

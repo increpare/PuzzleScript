@@ -164,7 +164,7 @@ function wordAlreadyDeclared(state, n) {
 
 
 //for IE support
-if (typeof Object.assign != 'function') {
+if (typeof Object.assign !== 'function') {
     (function () {
         Object.assign = function (target) {
             'use strict';
@@ -199,19 +199,19 @@ let codeMirrorFn = function () {
         }
         for (let i = 0; i < state.legend_synonyms.length; i++) {
             let entry = state.legend_synonyms[i];
-            if (entry[0] == candname) {
+            if (entry[0] === candname) {
                 return;
             }
         }
         for (let i = 0; i < state.legend_aggregates.length; i++) {
             let entry = state.legend_aggregates[i];
-            if (entry[0] == candname) {
+            if (entry[0] === candname) {
                 return;
             }
         }
         for (let i = 0; i < state.legend_properties.length; i++) {
             let entry = state.legend_properties[i];
-            if (entry[0] == candname) {
+            if (entry[0] === candname) {
                 return;
             }
         }
@@ -519,12 +519,15 @@ let codeMirrorFn = function () {
                 line_should_end_because: state.line_should_end_because,
                 sol_after_comment: state.sol_after_comment,
 
+                inside_cell: state.inside_cell,
+                bracket_balance: state.bracket_balance,
+                arrow_passed: state.arrow_passed,
+
                 objects_candname: state.objects_candname,
                 objects_section: state.objects_section,
                 objects_spritematrix: state.objects_spritematrix.concat([]),
 
                 tokenIndex: state.tokenIndex,
-
                 current_line_wip_array: state.current_line_wip_array.concat([]),
 
                 legend_synonyms: legend_synonymsCopy,
@@ -678,12 +681,12 @@ let codeMirrorFn = function () {
                     state.line_should_end_because = `a section name ("${state.section.toUpperCase()}")`;
                     state.visitedSections.push(state.section);
                     let sectionIndex = sectionNames.indexOf(state.section);
-                    if (sectionIndex == 0) {
+                    if (sectionIndex === 0) {
                         state.objects_section = 0;
                         if (state.visitedSections.length > 1) {
                             logError('section "' + state.section.toUpperCase() + '" must be the first section', state.lineNumber);
                         }
-                    } else if (state.visitedSections.indexOf(sectionNames[sectionIndex - 1]) == -1) {
+                    } else if (state.visitedSections.indexOf(sectionNames[sectionIndex - 1]) === -1) {
                         if (sectionIndex === -1) {
                             //honestly not sure how I could get here.
                             logError('no such section as "' + state.section.toUpperCase() + '".', state.lineNumber);
@@ -788,7 +791,7 @@ let codeMirrorFn = function () {
                                 }
                                 for (let i = 0; i < state.legend_synonyms.length; i++) {
                                     let entry = state.legend_synonyms[i];
-                                    if (entry[0] == candname) {
+                                    if (entry[0] === candname) {
                                         logError('Name "' + candname.toUpperCase() + '" already in use.', state.lineNumber);
                                     }
                                 }
@@ -817,11 +820,11 @@ let codeMirrorFn = function () {
                             }
                         };
 
-                        if (sol && state.objects_section == 2) {
+                        if (sol && state.objects_section === 2) {
                             state.objects_section = 3;
                         }
 
-                        if (sol && state.objects_section == 1) {
+                        if (sol && state.objects_section === 1) {
                             state.objects_section = 2;
                         }
 
@@ -901,7 +904,7 @@ let codeMirrorFn = function () {
                                 }
                             default:
                                 {
-                                    window.console.logError("EEK shouldn't get here.");
+                                    console.error("EEK shouldn't get here.");
                                 }
                         }
                         break;
@@ -1192,7 +1195,7 @@ let codeMirrorFn = function () {
                             //then strip spaces and commas
                             let prepos = stream.pos;
                             stream.match(reg_csv_separators, true);
-                            if (stream.pos == prepos) {
+                            if (stream.pos === prepos) {
                                 logError("error detected - unexpected character " + stream.peek(), state.lineNumber);
                                 stream.next();
                             }
@@ -1302,6 +1305,9 @@ let codeMirrorFn = function () {
                             let rule = reg_notcommentstart.exec(stream.string)[0];
                             state.rules.push([rule, state.lineNumber, mixedCase]);
                             state.tokenIndex = 0;//in rules, records whether bracket has been found or not
+                            state.inside_cell = false;
+                            state.arrow_passed = false;
+                            state.bracket_balance = 0;
                         }
 
                         if (state.tokenIndex === -4) {
@@ -1309,9 +1315,22 @@ let codeMirrorFn = function () {
                             return 'MESSAGE';
                         }
                         if (stream.match(/[\p{Z}\s]*->[\p{Z}\s]*/u, true)) {
+                            state.arrow_passed = true;
                             return 'ARROW';
                         }
                         if (ch === '[' || ch === '|' || ch === ']' || ch === '+') {
+                            if (ch === '[') {
+                                state.inside_cell = true;
+                            } else if (ch === ']') {
+                                state.inside_cell = false;
+                                //used to detect if we've reached the final ']'
+                                if (state.arrow_passed) {
+                                    state.bracket_balance--;
+                                } else {
+                                    state.bracket_balance++;
+                                }
+                            }
+
                             if (ch !== '+') {
                                 state.tokenIndex = 1;
                             }
@@ -1389,7 +1408,7 @@ let codeMirrorFn = function () {
                                 }
                             }
                             else if (state.tokenIndex === 2) {
-                                if (candword != 'on') {
+                                if (candword !== 'on') {
                                     logError('Expecting the word "ON" but got "' + candword.toUpperCase() + "\".", state.lineNumber);
                                     return 'ERROR';
                                 } else {
@@ -1445,16 +1464,16 @@ let codeMirrorFn = function () {
                                     let line = matches[0].trim();
                                     state.tokenIndex = 2;
                                     let lastlevel = state.levels[state.levels.length - 1];
-                                    if (lastlevel[0] == '\n') {
+                                    if (lastlevel[0] === '\n') {
                                         state.levels.push([state.lineNumber, line]);
                                     } else {
-                                        if (lastlevel.length == 0) {
+                                        if (lastlevel.length === 0) {
                                             lastlevel.push(state.lineNumber);
                                         }
                                         lastlevel.push(line);
 
                                         if (lastlevel.length > 1) {
-                                            if (line.length != lastlevel[1].length) {
+                                            if (line.length !== lastlevel[1].length) {
                                                 logWarning("Maps must be rectangular, yo (In a level, the length of each row must be the same).", state.lineNumber);
                                             }
                                         }
@@ -1462,7 +1481,7 @@ let codeMirrorFn = function () {
                                 }
                             }
                         } else {
-                            if (state.tokenIndex == -4) {
+                            if (state.tokenIndex === -4) {
                                 stream.skipToEnd();
                                 return 'MESSAGE';
                             }
@@ -1486,7 +1505,7 @@ let codeMirrorFn = function () {
                         if (sol || state.sol_after_comment) {
                             state.tokenIndex = 0;
                         }
-                        if (state.tokenIndex == 0) {
+                        if (state.tokenIndex === 0) {
                             let match = stream.match(/[\p{Z}\s]*[\p{L}\p{N}_]+[\p{Z}\s]*/u);
                             if (match !== null) {
                                 let token = match[0].trim();
@@ -1508,7 +1527,7 @@ let codeMirrorFn = function () {
                                             state.metadata.push(m2[0].trim());
                                             if (token in state.metadata_lines) {
                                                 let otherline = state.metadata_lines[token];
-                                                logWarning(`You've already defined a ${token.toUpperCase()} in the prelude on line <a onclick="jumpToLine(${otherline})>${otherline}</a>.`, state.lineNumber);
+                                                logWarning(`You've already defined a ${token.toUpperCase()} in the prelude on line <a onclick="jumpToLine(${otherline});" href="javascript:void(0);">${otherline}</a>.`, state.lineNumber);
                                             }
                                             state.metadata_lines[token] = state.lineNumber;
                                         } else {
@@ -1534,7 +1553,7 @@ let codeMirrorFn = function () {
                                         logError('Unrecognised stuff in the prelude.', state.lineNumber);
                                         return 'ERROR';
                                     }
-                                } else if (state.tokenIndex == -1) {
+                                } else if (state.tokenIndex === -1) {
                                     //no idea how to get here. covered with a similar error message above.
                                     logError('MetaData "' + token + '" has no parameters.', state.lineNumber);
                                     return 'ERROR';
@@ -1606,6 +1625,10 @@ let codeMirrorFn = function () {
                 line_should_end: false,
                 line_should_end_because: '',
                 sol_after_comment: false,
+
+                inside_cell: false,
+                bracket_balance: 0,
+                arrow_passed: false,
 
                 objects_candname: '',
                 objects_section: 0, //whether reading name/color/spritematrix

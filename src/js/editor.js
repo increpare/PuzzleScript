@@ -24,7 +24,7 @@ if (fileToOpen!==null&&fileToOpen.length>0) {
 					loadDropdown.selectedIndex=0;
 			}
 		} catch(ex) {
-			
+			console.warn("Failed to load saved game:", ex);
 		}
 	}
 }

@@ -1,5 +1,6 @@
-//This script has just the CodeMirror bits to make shared & exported games work, without loading the entire thing
-//from https://github.com/Auroriax/PuzzleScript/commit/463e8069218dbde0901627e8dac124d2856eb394
+// Minimal CodeMirror stub + StringStream for player (play.html), standalone export (standalone.html), and tests.
+// Loaded instead of full codemirror.js so the compiler can tokenize without the editor. Do not remove.
+// from https://github.com/Auroriax/PuzzleScript/commit/463e8069218dbde0901627e8dac124d2856eb394
 function CodeMirror(place, options) {};
 
 CodeMirror.defineMode = function(name, mode) {};

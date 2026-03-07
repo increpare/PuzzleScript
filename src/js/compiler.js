@@ -741,7 +741,7 @@ function processRuleString(rule, state, curRules) {
                             //check that the object is not already present in the cell
                             for (let j = 0; j < curcell.length; j += 2) {
                                 if (curcell[j + 1] === token) {
-                                    logError(`You cannot specify the same object more than once in a single cell (in this case ${token} occurs mutliple times).`, lineNumber);
+                                    logError(`You cannot specify the same object more than once in a single cell (in this case ${token} occurs multiple times).`, lineNumber);
                                     if (token in state.propertiesDict){
                                         logWarningNoLine(`( However, noticing that you're committing this crime with <i>properties</i>, and not being able to help but acknowledge that you <i>may</i> be trying to do something esoteric and <i>clever</i> with the property inference system,  I might be brought to suggest that you consider this: you can have multiple equivalent properties with different names. )`);
                                     } 
@@ -804,7 +804,7 @@ function processRuleString(rule, state, curRules) {
         logError("Late rules cannot be marked as rigid (rigid rules are all about dealing with the consequences of unresolvable movements, and late rules can't even have movements).", lineNumber);
     }
 
-    if (lhs_cells.length != rhs_cells.length) {
+    if (lhs_cells.length !== rhs_cells.length) {
         if (commands.length > 0 && rhs_cells.length === 0) {
             //ok
         } else {
@@ -812,7 +812,7 @@ function processRuleString(rule, state, curRules) {
         }
     } else {
         for (let i = 0; i < lhs_cells.length; i++) {
-            if (lhs_cells[i].length != rhs_cells[i].length) {
+            if (lhs_cells[i].length !== rhs_cells[i].length) {
                 logError('In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).', lineNumber);
                 state.invalid = true;
             }
@@ -2189,7 +2189,7 @@ function ruleGroupDiscardOverlappingTest(ruleGroup) {
                     parenthetical += ")";
                 }
 
-                logError(`${example[0]} and ${example[1]} can never overlap${parenthetical}, but this rule requires that to happen, so it's being culled.`, rule.lineNumber);
+                logError(`${example[0]} and ${example[1]} can never overlap${parenthetical}. This rule requires that to happen, so it impossible it will ever trigger.`, rule.lineNumber);
             }
             i--;
         }
@@ -2567,7 +2567,7 @@ function processWinConditions(state) {
             aggr2 = true;
             mask2 = state.aggregateMasks[n2];
         } else {
-            logError('Unwelcome term "' + n1 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
+            logError('Unwelcome term "' + n2 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
         }
         let newcondition = [num, mask1, mask2, lineNumber, aggr1, aggr2];
         newconditions.push(newcondition);
@@ -2885,7 +2885,7 @@ function generateSoundData(state) {
                     directions.push(sound[j][0]);
                 } else {
                     //Don't think I can get here, but just in case
-                    logError(`Expected a direction here, but found instead "$(sound[j][0])".`, lineNumber);
+                    logError(`Expected a direction here, but found instead "${sound[j][0]}".`, lineNumber);
                 }
             }
             if (directions.length > 0 && (verb !== 'move' && verb !== 'cantmove')) {
@@ -3153,12 +3153,6 @@ function loadFile(str) {
     delete state.current_line_wip_array;
     delete state.visitedSections;
     delete state.loops;
-    /*
-    let lines = stripComments(str);
-    window.console.log(lines);
-    let sections = generateSections(lines);
-    window.console.log(sections);
-    let sss = generateSemiStructuredSections(sections);*/
     return state;
 }
 
@@ -3173,109 +3167,6 @@ function addSpecializedFunctions(state) {
     state.matchCellRowWildCard = generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE);
     state.repositionEntitiesAtCell = generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE);
 }
-
-
-// function diffLevelStates(basis, current){
-//     const diff = []
-//     for (let i = 0; i < basis.length; i++) {
-//         if (basis[i] !== current[i]) {
-//             diff.push(i);
-//             diff.push(current[i]);
-//         }
-//     }
-//     return diff.toString();
-// }
-
-// function simulation_tickInput(val){
-//     processInput(val);
-//     while (againing) {
-//         againing=false;
-//         processInput(-1,false);			
-//     }
-// }
-
-// function solveLevel(state){
-//     //disable sfx
-//     let oldmuted=muted;
-//     muted = true;
-//     /* this is a pathfinding algorithm that will try to solve the level - it does a depth first search of the level */
-//     const visited_states = new Set();
-//     const states_to_leave = [];
-//     const MOVE_COUNT=5;//up down left right action  
-
-//     const desired_level = curlevel;
-//     loadLevelFromState(state,curlevel,null);
-// 	while (againing) {//in case some stuff to do at the start
-// 		againing=false;
-// 		processInput(-1);			
-// 	}
-
-//     const initial_level_state = new Int32Array(level.objects);
-//     const initial_state_key = diffLevelStates(initial_level_state, initial_level_state);
-//     visited_states.add(initial_state_key);
-//     states_to_leave.push({
-//             state:initial_level_state,
-//             input_sequence:""
-//         });
-
-
-//     let won = false;
-//     let solution = "";
-
-//     while (states_to_leave.length > 0){
-//         let o = states_to_leave.shift();
-//         let level_state = o.state;
-//         let input_sequence = o.input_sequence;
-//         for (let input=0; input<MOVE_COUNT; input++){
-//             level.objects.set(level_state);            
-//             simulation_tickInput(input);
-//             const new_state = level.objects;
-//             const new_state_key = diffLevelStates(initial_level_state,new_state);
-//             if (visited_states.has(new_state_key)){
-//                 continue;
-//             }
-//             let new_input_sequence = input_sequence + input;
-//             visited_states.add(new_state_key);
-//             states_to_leave.push({
-//                 state:new Int32Array(new_state),
-//                 input_sequence:new_input_sequence
-//             });
-//             if (winning){
-//                 won = true;
-//                 solution = new_input_sequence;
-//                 break;
-//             }
-//         }
-//     }
-//     if (won){
-//         consolePrint("Solution found");
-//         consolePrint("States Visited: " + visited_states.size);
-//         consolePrint(pretty_print_solution(solution));
-//     } else {
-//         consolePrint("No solution found");
-//         consolePrint("States Visited: " + visited_states.size);
-//     }
-
-//     curlevel=desired_level;
-//     winning=false;
-//     loadLevelFromState(state,curlevel,null);
-//     consolePrint("loaded level"+curlevel);
-//     muted = oldmuted;
-// }
-
-// function pretty_print_solution(solution){
-//     const move_names = ["U","L","D","R","A"];
-//     let result=""
-//     //group in fives
-//     for (let i = 0; i < solution.length; i ++) {
-//         const move_name = move_names[solution[i]];
-//         result += move_name;
-//         if ((i + 1) % 5 === 0) {
-//             result += " ";
-//         }
-//     }
-//     return result;
-// }
 
 function compile(command, text, randomseed) {
 

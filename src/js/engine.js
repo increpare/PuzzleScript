@@ -391,16 +391,16 @@ function deepClone(item) {
 		}
 	});
 
-	if (typeof result == "undefined") {
+	if (typeof result === "undefined") {
 		if (Object.prototype.toString.call(item) === "[object Array]") {
 			result = [];
 			item.forEach(function (child, index, array) {
 				result[index] = deepClone(child);
 			});
-		} else if (typeof item == "object") {
+		} else if (typeof item === "object") {
 			// testing that this is DOM
-			if (item.nodeType && typeof item.cloneNode == "function") {
-				let result = item.cloneNode(true);
+			if (item.nodeType && typeof item.cloneNode === "function") {
+				result = item.cloneNode(true);
 			} else if (!item.prototype) { // check that this is a literal
 				if (item instanceof Date) {
 					result = new Date(item);
@@ -412,14 +412,7 @@ function deepClone(item) {
 					}
 				}
 			} else {
-                // depending what you would like here,
-                // just keep the reference, or create new object
-/*                if (false && item.constructor) {
-                    // would not advice to do that, reason? Read below
-                    result = new item.constructor();
-                } else */{
-					result = item;
-				}
+				result = item;
 			}
 		} else {
 			result = item;
@@ -1350,7 +1343,7 @@ function repositionEntitiesOnLayer(positionIndex, layer, dirMask) {
 	let targetMask = level.getCellInto(targetIndex, _o7);
 	let sourceMask = level.getCellInto(positionIndex, _o8);
 
-	if (layerMask.anyBitsInCommon(targetMask) && (dirMask != 16)) {
+	if (layerMask.anyBitsInCommon(targetMask) && (dirMask !== 16)) {
 		return false;
 	}
 
@@ -1408,7 +1401,7 @@ function generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE) {
 	`)}
 		
 	//corresponding object stuff in repositionEntitiesOnLayer
-	const colIndex=(positionIndex/this.height)|0;
+	const colIndex=(positionIndex/level.height)|0;
 	const rowIndex=(positionIndex%level.height);
 	${UNROLL("level.colCellContents_Movements[colIndex] |= movementMask",MOVEMENT_SIZE)}
 	${UNROLL("level.rowCellContents_Movements[rowIndex] |= movementMask",MOVEMENT_SIZE)}
@@ -1749,8 +1742,6 @@ let _o1, _o2, _o2_5, _o3, _o4, _o5, _o6, _o7, _o8, _o9, _o10, _o11, _o12;
 let _m1, _m2, _m3;
 
 let CACHE_CELLPATTERN_REPLACEFUNCTION = {}
-let CACHE_CHECK_COUNT=0;
-let CACHE_HIT_COUNT=0;
 let _replace_function_key_array = new Int32Array(0);
 
 
@@ -1961,7 +1952,7 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 		}
     	default:
     	{
-    		window.console.log("EEEP "+direction);
+    		console.error("Unexpected direction: "+direction);
     	}
     }
 
@@ -2043,7 +2034,7 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 		}
     	default:
     	{
-    		window.console.log("EEEP2 "+direction);
+    		console.error("Unexpected direction: "+direction);
     	}
     }
 
@@ -2064,7 +2055,7 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 				} else if (direction === 8) { //right
 					kmax=level.width-(x+len)+1;	
 				} else {
-					window.console.log("EEEP2 "+direction);					
+					console.error("Unexpected direction: "+direction);
 				}
 
 				if (wildcardCount===1) {
@@ -2090,7 +2081,7 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 				} else if (direction === 1) { // up
 					kmax=y-len+2;					
 				} else {
-					window.console.log("EEEP2 "+direction);
+					console.error("Unexpected direction: "+direction);
 				}
 				if (wildcardCount===1) {
 					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
@@ -3119,7 +3110,7 @@ function nextLevel() {
 				storage_remove(document.URL);
 				storage_remove(document.URL + '_checkpoint');
 			} catch (ex) {
-
+				console.warn("Failed to clear save data:", ex);
 			}
 
 			curlevel = 0;
@@ -3139,7 +3130,7 @@ function nextLevel() {
 			storage_remove(document.URL + "_checkpoint");
 		}
 	} catch (ex) {
-
+		console.warn("Failed to save progress:", ex);
 	}
 
 	if (state !== undefined && state.metadata.flickscreen !== undefined) {

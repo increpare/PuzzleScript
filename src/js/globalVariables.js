@@ -28,6 +28,7 @@ function doSetupTitleScreenLevelContinue() {
             curlevel = storage_get_int(document.URL, 0);
         }
     } catch (ex) {
+        console.warn("Failed to restore checkpoint:", ex);
     }
 }
 

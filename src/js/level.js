@@ -72,9 +72,9 @@ Level.prototype.setMovements = function (index, vec) {
 	//corresponding object stuff in repositionEntitiesOnLayer
 	let colIndex = (index / this.height) | 0;
 	let rowIndex = (index % this.height);
-	level.colCellContents_Movements[colIndex].ior(vec);
-	level.rowCellContents_Movements[rowIndex].ior(vec);
-	level.mapCellContents_Movements.ior(vec);
+	this.colCellContents_Movements[colIndex].ior(vec);
+	this.rowCellContents_Movements[rowIndex].ior(vec);
+	this.mapCellContents_Movements.ior(vec);
 }
 
 

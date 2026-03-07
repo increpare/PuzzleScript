@@ -79,11 +79,6 @@ RC4.prototype.next = function() {
     return this.s[(this.s[this.i] + this.s[this.j]) % 256];
 };
 
-function print_call_stack() {
-  let e = new Error();
-  let stack = e.stack;
-  console.log( stack );
-}
 /**
  * Create a new random number generator with optional seed. If the
  * provided seed is a function (i.e. Math.random) it will be used as

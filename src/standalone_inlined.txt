@@ -426,7 +426,7 @@ function EQUALS(tok, other, array_size) {
 function EQUALS_TOK_REAL(tok, other) {
 	let result = "(true";
 	for (let i = 0; i < other.data.length; i++) {
-		result += `&&(${tok}.data[o] === ${other.data[i]})`;
+		result += `&&(${tok}.data[${i}] === ${other.data[i]})`;
 	}
 	return result + ")";
 }
@@ -694,9 +694,9 @@ Level.prototype.setMovements = function (index, vec) {
 	//corresponding object stuff in repositionEntitiesOnLayer
 	let colIndex = (index / this.height) | 0;
 	let rowIndex = (index % this.height);
-	level.colCellContents_Movements[colIndex].ior(vec);
-	level.rowCellContents_Movements[rowIndex].ior(vec);
-	level.mapCellContents_Movements.ior(vec);
+	this.colCellContents_Movements[colIndex].ior(vec);
+	this.rowCellContents_Movements[rowIndex].ior(vec);
+	this.mapCellContents_Movements.ior(vec);
 }
 
 
@@ -757,7 +757,7 @@ const reg_loopmarker = /^(startloop|endloop)$/;
 const reg_ruledirectionindicators = /^(up|down|left|right|horizontal|vertical|orthogonal|late|rigid)$/;
 const reg_sounddirectionindicators = /[\p{Z}\s]*(up|down|left|right|horizontal|vertical|orthogonal)(?![\p{L}\p{N}_])[\p{Z}\s]*/u;
 const reg_winconditionquantifiers = /^(all|any|no|some)$/;
-const keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message', "move", "action", "create", "destroy", "cantmove", "sfx0", "sfx1", "sfx2", "sfx3", "Sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again", "undo", "restart", "titlescreen", "startgame", "cancel", "endgame", "startlevel", "endlevel", "showmessage", "closemessage"];
+const keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message', "move", "action", "create", "destroy", "cantmove", "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again", "undo", "restart", "titlescreen", "startgame", "cancel", "endgame", "startlevel", "endlevel", "showmessage", "closemessage"];
 
 const  directionaggregates = {
     'horizontal': ['left', 'right'],
@@ -816,6 +816,7 @@ function doSetupTitleScreenLevelContinue() {
             curlevel = storage_get_int(document.URL, 0);
         }
     } catch (ex) {
+        console.warn("Failed to restore checkpoint:", ex);
     }
 }
 
@@ -6141,11 +6142,6 @@ RC4.prototype.next = function() {
     return this.s[(this.s[this.i] + this.s[this.j]) % 256];
 };
 
-function print_call_stack() {
-  let e = new Error();
-  let stack = e.stack;
-  console.log( stack );
-}
 /**
  * Create a new random number generator with optional seed. If the
  * provided seed is a function (i.e. Math.random) it will be used as
@@ -7508,8 +7504,9 @@ function unMuteAudio() {
 }
 </script>
 <script>
-//This script has just the CodeMirror bits to make shared & exported games work, without loading the entire thing
-//from https://github.com/Auroriax/PuzzleScript/commit/463e8069218dbde0901627e8dac124d2856eb394
+// Minimal CodeMirror stub + StringStream for player (play.html), standalone export (standalone.html), and tests.
+// Loaded instead of full codemirror.js so the compiler can tokenize without the editor. Do not remove.
+// from https://github.com/Auroriax/PuzzleScript/commit/463e8069218dbde0901627e8dac124d2856eb394
 function CodeMirror(place, options) {};
 
 CodeMirror.defineMode = function(name, mode) {};
@@ -9040,16 +9037,16 @@ function deepClone(item) {
 		}
 	});
 
-	if (typeof result == "undefined") {
+	if (typeof result === "undefined") {
 		if (Object.prototype.toString.call(item) === "[object Array]") {
 			result = [];
 			item.forEach(function (child, index, array) {
 				result[index] = deepClone(child);
 			});
-		} else if (typeof item == "object") {
+		} else if (typeof item === "object") {
 			// testing that this is DOM
-			if (item.nodeType && typeof item.cloneNode == "function") {
-				let result = item.cloneNode(true);
+			if (item.nodeType && typeof item.cloneNode === "function") {
+				result = item.cloneNode(true);
 			} else if (!item.prototype) { // check that this is a literal
 				if (item instanceof Date) {
 					result = new Date(item);
@@ -9061,14 +9058,7 @@ function deepClone(item) {
 					}
 				}
 			} else {
-                // depending what you would like here,
-                // just keep the reference, or create new object
-/*                if (false && item.constructor) {
-                    // would not advice to do that, reason? Read below
-                    result = new item.constructor();
-                } else */{
-					result = item;
-				}
+				result = item;
 			}
 		} else {
 			result = item;
@@ -9999,7 +9989,7 @@ function repositionEntitiesOnLayer(positionIndex, layer, dirMask) {
 	let targetMask = level.getCellInto(targetIndex, _o7);
 	let sourceMask = level.getCellInto(positionIndex, _o8);
 
-	if (layerMask.anyBitsInCommon(targetMask) && (dirMask != 16)) {
+	if (layerMask.anyBitsInCommon(targetMask) && (dirMask !== 16)) {
 		return false;
 	}
 
@@ -10057,7 +10047,7 @@ function generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE) {
 	`)}
 		
 	//corresponding object stuff in repositionEntitiesOnLayer
-	const colIndex=(positionIndex/this.height)|0;
+	const colIndex=(positionIndex/level.height)|0;
 	const rowIndex=(positionIndex%level.height);
 	${UNROLL("level.colCellContents_Movements[colIndex] |= movementMask",MOVEMENT_SIZE)}
 	${UNROLL("level.rowCellContents_Movements[rowIndex] |= movementMask",MOVEMENT_SIZE)}
@@ -10398,8 +10388,6 @@ let _o1, _o2, _o2_5, _o3, _o4, _o5, _o6, _o7, _o8, _o9, _o10, _o11, _o12;
 let _m1, _m2, _m3;
 
 let CACHE_CELLPATTERN_REPLACEFUNCTION = {}
-let CACHE_CHECK_COUNT=0;
-let CACHE_HIT_COUNT=0;
 let _replace_function_key_array = new Int32Array(0);
 
 
@@ -10610,7 +10598,7 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 		}
     	default:
     	{
-    		window.console.log("EEEP "+direction);
+    		console.error("Unexpected direction: "+direction);
     	}
     }
 
@@ -10692,7 +10680,7 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 		}
     	default:
     	{
-    		window.console.log("EEEP2 "+direction);
+    		console.error("Unexpected direction: "+direction);
     	}
     }
 
@@ -10713,7 +10701,7 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 				} else if (direction === 8) { //right
 					kmax=level.width-(x+len)+1;	
 				} else {
-					window.console.log("EEEP2 "+direction);					
+					console.error("Unexpected direction: "+direction);
 				}
 
 				if (wildcardCount===1) {
@@ -10739,7 +10727,7 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 				} else if (direction === 1) { // up
 					kmax=y-len+2;					
 				} else {
-					window.console.log("EEEP2 "+direction);
+					console.error("Unexpected direction: "+direction);
 				}
 				if (wildcardCount===1) {
 					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));
@@ -11763,7 +11751,7 @@ function nextLevel() {
 				storage_remove(document.URL);
 				storage_remove(document.URL + '_checkpoint');
 			} catch (ex) {
-
+				console.warn("Failed to clear save data:", ex);
 			}
 
 			curlevel = 0;
@@ -11783,7 +11771,7 @@ function nextLevel() {
 			storage_remove(document.URL + "_checkpoint");
 		}
 	} catch (ex) {
-
+		console.warn("Failed to save progress:", ex);
 	}
 
 	if (state !== undefined && state.metadata.flickscreen !== undefined) {
@@ -12013,7 +12001,7 @@ function wordAlreadyDeclared(state, n) {
 
 
 //for IE support
-if (typeof Object.assign != 'function') {
+if (typeof Object.assign !== 'function') {
     (function () {
         Object.assign = function (target) {
             'use strict';
@@ -12048,19 +12036,19 @@ let codeMirrorFn = function () {
         }
         for (let i = 0; i < state.legend_synonyms.length; i++) {
             let entry = state.legend_synonyms[i];
-            if (entry[0] == candname) {
+            if (entry[0] === candname) {
                 return;
             }
         }
         for (let i = 0; i < state.legend_aggregates.length; i++) {
             let entry = state.legend_aggregates[i];
-            if (entry[0] == candname) {
+            if (entry[0] === candname) {
                 return;
             }
         }
         for (let i = 0; i < state.legend_properties.length; i++) {
             let entry = state.legend_properties[i];
-            if (entry[0] == candname) {
+            if (entry[0] === candname) {
                 return;
             }
         }
@@ -12527,12 +12515,12 @@ let codeMirrorFn = function () {
                     state.line_should_end_because = `a section name ("${state.section.toUpperCase()}")`;
                     state.visitedSections.push(state.section);
                     let sectionIndex = sectionNames.indexOf(state.section);
-                    if (sectionIndex == 0) {
+                    if (sectionIndex === 0) {
                         state.objects_section = 0;
                         if (state.visitedSections.length > 1) {
                             logError('section "' + state.section.toUpperCase() + '" must be the first section', state.lineNumber);
                         }
-                    } else if (state.visitedSections.indexOf(sectionNames[sectionIndex - 1]) == -1) {
+                    } else if (state.visitedSections.indexOf(sectionNames[sectionIndex - 1]) === -1) {
                         if (sectionIndex === -1) {
                             //honestly not sure how I could get here.
                             logError('no such section as "' + state.section.toUpperCase() + '".', state.lineNumber);
@@ -12637,7 +12625,7 @@ let codeMirrorFn = function () {
                                 }
                                 for (let i = 0; i < state.legend_synonyms.length; i++) {
                                     let entry = state.legend_synonyms[i];
-                                    if (entry[0] == candname) {
+                                    if (entry[0] === candname) {
                                         logError('Name "' + candname.toUpperCase() + '" already in use.', state.lineNumber);
                                     }
                                 }
@@ -12666,11 +12654,11 @@ let codeMirrorFn = function () {
                             }
                         };
 
-                        if (sol && state.objects_section == 2) {
+                        if (sol && state.objects_section === 2) {
                             state.objects_section = 3;
                         }
 
-                        if (sol && state.objects_section == 1) {
+                        if (sol && state.objects_section === 1) {
                             state.objects_section = 2;
                         }
 
@@ -12750,7 +12738,7 @@ let codeMirrorFn = function () {
                                 }
                             default:
                                 {
-                                    window.console.logError("EEK shouldn't get here.");
+                                    console.error("EEK shouldn't get here.");
                                 }
                         }
                         break;
@@ -13041,7 +13029,7 @@ let codeMirrorFn = function () {
                             //then strip spaces and commas
                             let prepos = stream.pos;
                             stream.match(reg_csv_separators, true);
-                            if (stream.pos == prepos) {
+                            if (stream.pos === prepos) {
                                 logError("error detected - unexpected character " + stream.peek(), state.lineNumber);
                                 stream.next();
                             }
@@ -13238,7 +13226,7 @@ let codeMirrorFn = function () {
                                 }
                             }
                             else if (state.tokenIndex === 2) {
-                                if (candword != 'on') {
+                                if (candword !== 'on') {
                                     logError('Expecting the word "ON" but got "' + candword.toUpperCase() + "\".", state.lineNumber);
                                     return 'ERROR';
                                 } else {
@@ -13294,16 +13282,16 @@ let codeMirrorFn = function () {
                                     let line = matches[0].trim();
                                     state.tokenIndex = 2;
                                     let lastlevel = state.levels[state.levels.length - 1];
-                                    if (lastlevel[0] == '\n') {
+                                    if (lastlevel[0] === '\n') {
                                         state.levels.push([state.lineNumber, line]);
                                     } else {
-                                        if (lastlevel.length == 0) {
+                                        if (lastlevel.length === 0) {
                                             lastlevel.push(state.lineNumber);
                                         }
                                         lastlevel.push(line);
 
                                         if (lastlevel.length > 1) {
-                                            if (line.length != lastlevel[1].length) {
+                                            if (line.length !== lastlevel[1].length) {
                                                 logWarning("Maps must be rectangular, yo (In a level, the length of each row must be the same).", state.lineNumber);
                                             }
                                         }
@@ -13311,7 +13299,7 @@ let codeMirrorFn = function () {
                                 }
                             }
                         } else {
-                            if (state.tokenIndex == -4) {
+                            if (state.tokenIndex === -4) {
                                 stream.skipToEnd();
                                 return 'MESSAGE';
                             }
@@ -13335,7 +13323,7 @@ let codeMirrorFn = function () {
                         if (sol || state.sol_after_comment) {
                             state.tokenIndex = 0;
                         }
-                        if (state.tokenIndex == 0) {
+                        if (state.tokenIndex === 0) {
                             let match = stream.match(/[\p{Z}\s]*[\p{L}\p{N}_]+[\p{Z}\s]*/u);
                             if (match !== null) {
                                 let token = match[0].trim();
@@ -13357,7 +13345,7 @@ let codeMirrorFn = function () {
                                             state.metadata.push(m2[0].trim());
                                             if (token in state.metadata_lines) {
                                                 let otherline = state.metadata_lines[token];
-                                                logWarning(`You've already defined a ${token.toUpperCase()} in the prelude on line <a onclick="jumpToLine(${otherline})>${otherline}</a>.`, state.lineNumber);
+                                                logWarning(`You've already defined a ${token.toUpperCase()} in the prelude on line <a onclick="jumpToLine(${otherline});" href="javascript:void(0);">${otherline}</a>.`, state.lineNumber);
                                             }
                                             state.metadata_lines[token] = state.lineNumber;
                                         } else {
@@ -13383,7 +13371,7 @@ let codeMirrorFn = function () {
                                         logError('Unrecognised stuff in the prelude.', state.lineNumber);
                                         return 'ERROR';
                                     }
-                                } else if (state.tokenIndex == -1) {
+                                } else if (state.tokenIndex === -1) {
                                     //no idea how to get here. covered with a similar error message above.
                                     logError('MetaData "' + token + '" has no parameters.', state.lineNumber);
                                     return 'ERROR';
@@ -14239,7 +14227,7 @@ function processRuleString(rule, state, curRules) {
                             //check that the object is not already present in the cell
                             for (let j = 0; j < curcell.length; j += 2) {
                                 if (curcell[j + 1] === token) {
-                                    logError(`You cannot specify the same object more than once in a single cell (in this case ${token} occurs mutliple times).`, lineNumber);
+                                    logError(`You cannot specify the same object more than once in a single cell (in this case ${token} occurs multiple times).`, lineNumber);
                                     if (token in state.propertiesDict){
                                         logWarningNoLine(`( However, noticing that you're committing this crime with <i>properties</i>, and not being able to help but acknowledge that you <i>may</i> be trying to do something esoteric and <i>clever</i> with the property inference system,  I might be brought to suggest that you consider this: you can have multiple equivalent properties with different names. )`);
                                     } 
@@ -14302,7 +14290,7 @@ function processRuleString(rule, state, curRules) {
         logError("Late rules cannot be marked as rigid (rigid rules are all about dealing with the consequences of unresolvable movements, and late rules can't even have movements).", lineNumber);
     }
 
-    if (lhs_cells.length != rhs_cells.length) {
+    if (lhs_cells.length !== rhs_cells.length) {
         if (commands.length > 0 && rhs_cells.length === 0) {
             //ok
         } else {
@@ -14310,7 +14298,7 @@ function processRuleString(rule, state, curRules) {
         }
     } else {
         for (let i = 0; i < lhs_cells.length; i++) {
-            if (lhs_cells[i].length != rhs_cells[i].length) {
+            if (lhs_cells[i].length !== rhs_cells[i].length) {
                 logError('In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).', lineNumber);
                 state.invalid = true;
             }
@@ -16065,7 +16053,7 @@ function processWinConditions(state) {
             aggr2 = true;
             mask2 = state.aggregateMasks[n2];
         } else {
-            logError('Unwelcome term "' + n1 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
+            logError('Unwelcome term "' + n2 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
         }
         let newcondition = [num, mask1, mask2, lineNumber, aggr1, aggr2];
         newconditions.push(newcondition);
@@ -16383,7 +16371,7 @@ function generateSoundData(state) {
                     directions.push(sound[j][0]);
                 } else {
                     //Don't think I can get here, but just in case
-                    logError(`Expected a direction here, but found instead "$(sound[j][0])".`, lineNumber);
+                    logError(`Expected a direction here, but found instead "${sound[j][0]}".`, lineNumber);
                 }
             }
             if (directions.length > 0 && (verb !== 'move' && verb !== 'cantmove')) {
@@ -16651,12 +16639,6 @@ function loadFile(str) {
     delete state.current_line_wip_array;
     delete state.visitedSections;
     delete state.loops;
-    /*
-    let lines = stripComments(str);
-    window.console.log(lines);
-    let sections = generateSections(lines);
-    window.console.log(sections);
-    let sss = generateSemiStructuredSections(sections);*/
     return state;
 }
 
@@ -16671,109 +16653,6 @@ function addSpecializedFunctions(state) {
     state.matchCellRowWildCard = generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE);
     state.repositionEntitiesAtCell = generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE);
 }
-
-
-// function diffLevelStates(basis, current){
-//     const diff = []
-//     for (let i = 0; i < basis.length; i++) {
-//         if (basis[i] !== current[i]) {
-//             diff.push(i);
-//             diff.push(current[i]);
-//         }
-//     }
-//     return diff.toString();
-// }
-
-// function simulation_tickInput(val){
-//     processInput(val);
-//     while (againing) {
-//         againing=false;
-//         processInput(-1,false);			
-//     }
-// }
-
-// function solveLevel(state){
-//     //disable sfx
-//     let oldmuted=muted;
-//     muted = true;
-//     /* this is a pathfinding algorithm that will try to solve the level - it does a depth first search of the level */
-//     const visited_states = new Set();
-//     const states_to_leave = [];
-//     const MOVE_COUNT=5;//up down left right action  
-
-//     const desired_level = curlevel;
-//     loadLevelFromState(state,curlevel,null);
-// 	while (againing) {//in case some stuff to do at the start
-// 		againing=false;
-// 		processInput(-1);			
-// 	}
-
-//     const initial_level_state = new Int32Array(level.objects);
-//     const initial_state_key = diffLevelStates(initial_level_state, initial_level_state);
-//     visited_states.add(initial_state_key);
-//     states_to_leave.push({
-//             state:initial_level_state,
-//             input_sequence:""
-//         });
-
-
-//     let won = false;
-//     let solution = "";
-
-//     while (states_to_leave.length > 0){
-//         let o = states_to_leave.shift();
-//         let level_state = o.state;
-//         let input_sequence = o.input_sequence;
-//         for (let input=0; input<MOVE_COUNT; input++){
-//             level.objects.set(level_state);            
-//             simulation_tickInput(input);
-//             const new_state = level.objects;
-//             const new_state_key = diffLevelStates(initial_level_state,new_state);
-//             if (visited_states.has(new_state_key)){
-//                 continue;
-//             }
-//             let new_input_sequence = input_sequence + input;
-//             visited_states.add(new_state_key);
-//             states_to_leave.push({
-//                 state:new Int32Array(new_state),
-//                 input_sequence:new_input_sequence
-//             });
-//             if (winning){
-//                 won = true;
-//                 solution = new_input_sequence;
-//                 break;
-//             }
-//         }
-//     }
-//     if (won){
-//         consolePrint("Solution found");
-//         consolePrint("States Visited: " + visited_states.size);
-//         consolePrint(pretty_print_solution(solution));
-//     } else {
-//         consolePrint("No solution found");
-//         consolePrint("States Visited: " + visited_states.size);
-//     }
-
-//     curlevel=desired_level;
-//     winning=false;
-//     loadLevelFromState(state,curlevel,null);
-//     consolePrint("loaded level"+curlevel);
-//     muted = oldmuted;
-// }
-
-// function pretty_print_solution(solution){
-//     const move_names = ["U","L","D","R","A"];
-//     let result=""
-//     //group in fives
-//     for (let i = 0; i < solution.length; i ++) {
-//         const move_name = move_names[solution[i]];
-//         result += move_name;
-//         if ((i + 1) % 5 === 0) {
-//             result += " ";
-//         }
-//     }
-//     return result;
-// }
 
 function compile(command, text, randomseed) {
 
