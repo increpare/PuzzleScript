@@ -391,15 +391,15 @@ function deepClone(item) {
 		}
 	});
 
-	if (typeof result == "undefined") {
+	if (typeof result === "undefined") {
 		if (Object.prototype.toString.call(item) === "[object Array]") {
 			result = [];
 			item.forEach(function (child, index, array) {
 				result[index] = deepClone(child);
 			});
-		} else if (typeof item == "object") {
+		} else if (typeof item === "object") {
 			// testing that this is DOM
-			if (item.nodeType && typeof item.cloneNode == "function") {
+			if (item.nodeType && typeof item.cloneNode === "function") {
 				result = item.cloneNode(true);
 			} else if (!item.prototype) { // check that this is a literal
 				if (item instanceof Date) {
@@ -1343,7 +1343,7 @@ function repositionEntitiesOnLayer(positionIndex, layer, dirMask) {
 	let targetMask = level.getCellInto(targetIndex, _o7);
 	let sourceMask = level.getCellInto(positionIndex, _o8);
 
-	if (layerMask.anyBitsInCommon(targetMask) && (dirMask != 16)) {
+	if (layerMask.anyBitsInCommon(targetMask) && (dirMask !== 16)) {
 		return false;
 	}
 
@@ -3105,7 +3105,7 @@ function nextLevel() {
 				storage_remove(document.URL);
 				storage_remove(document.URL + '_checkpoint');
 			} catch (ex) {
-
+				console.warn("Failed to clear save data:", ex);
 			}
 
 			curlevel = 0;
@@ -3125,7 +3125,7 @@ function nextLevel() {
 			storage_remove(document.URL + "_checkpoint");
 		}
 	} catch (ex) {
-
+		console.warn("Failed to save progress:", ex);
 	}
 
 	if (state !== undefined && state.metadata.flickscreen !== undefined) {

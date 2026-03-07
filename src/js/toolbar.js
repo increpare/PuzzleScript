@@ -69,7 +69,7 @@ function saveToGroup(savegroup,rebuild){
 			compile(["rebuild"]);//to regenerate/extract title
 		}
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 	}
 	let title = "Untitled";
 	if (state.metadata.title!==undefined) {
@@ -205,6 +205,7 @@ function repopulateSaveDropdown() {
 				saves = JSON.parse(storage_get(savegroup_name));
 			}
 		} catch (ex) {
+			console.warn("Failed to load saves:", ex);
 			return;
 		}
 		

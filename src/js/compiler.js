@@ -804,7 +804,7 @@ function processRuleString(rule, state, curRules) {
         logError("Late rules cannot be marked as rigid (rigid rules are all about dealing with the consequences of unresolvable movements, and late rules can't even have movements).", lineNumber);
     }
 
-    if (lhs_cells.length != rhs_cells.length) {
+    if (lhs_cells.length !== rhs_cells.length) {
         if (commands.length > 0 && rhs_cells.length === 0) {
             //ok
         } else {
@@ -812,7 +812,7 @@ function processRuleString(rule, state, curRules) {
         }
     } else {
         for (let i = 0; i < lhs_cells.length; i++) {
-            if (lhs_cells[i].length != rhs_cells[i].length) {
+            if (lhs_cells[i].length !== rhs_cells[i].length) {
                 logError('In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).', lineNumber);
                 state.invalid = true;
             }
