@@ -2189,7 +2189,7 @@ function ruleGroupDiscardOverlappingTest(ruleGroup) {
                     parenthetical += ")";
                 }
 
-                logError(`${example[0]} and ${example[1]} can never overlap${parenthetical}, but this rule requires that to happen, so it's being culled.`, rule.lineNumber);
+                logError(`${example[0]} and ${example[1]} can never overlap${parenthetical}. This rule requires that to happen, so it impossible it will ever trigger.`, rule.lineNumber);
             }
             i--;
         }
