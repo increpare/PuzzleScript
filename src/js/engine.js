@@ -2741,6 +2741,11 @@ function processInput(dir, dontDoWin, dontModify) {
 			level.commandQueueSourceRules = startState.commandQueueSourceRules.concat([]);
 			sfxCreateMask.setZero();
 			sfxDestroyMask.setZero();
+			seedsToPlay_CanMove = [];
+			//seedsToPlay_CantMove = []; 
+			// CAN'T MOVE SHOULD BE KEPT - it's not perfect, but more often than not, 
+			// the thing that can't move is the rigid body, and we want to keep that information, 
+			// not clear it.
 
 			if (verbose_logging && rigidloop && i > 0) {
 				consolePrint('Relooping through rules because of rigid.');
