@@ -4,51 +4,51 @@
 // Split bit index "shift" into: position within the word vs which word.
 // inner_idx: internal index - which bit within that int (0..0b11111)
 // outer_idx: external index - which int our index is in ( not a "layer" index)
-	
+
 // for movements: 5 bits per layer: layer 6, 12, … start at bit 5*6 = 30 and straddle into next word
 
 function BitVec(init) {
 	this.data = new Int32Array(init);
 }
 
-BitVec.prototype.cloneInto = function(target) {
-	for (let i=0;i<this.data.length;++i) {
-		target.data[i]=this.data[i];
+BitVec.prototype.cloneInto = function (target) {
+	for (let i = 0; i < this.data.length; ++i) {
+		target.data[i] = this.data[i];
 	}
 	return target;
 }
-BitVec.prototype.clone = function() {
+BitVec.prototype.clone = function () {
 	return new BitVec(this.data);
 }
 
-BitVec.prototype.iand = function(other) {
+BitVec.prototype.iand = function (other) {
 	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i] &= other.data[i];
 	}
 }
 
 
-BitVec.prototype.inot = function() {
+BitVec.prototype.inot = function () {
 	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i] = ~this.data[i];
 	}
 }
 
-BitVec.prototype.ior = function(other) {
+BitVec.prototype.ior = function (other) {
 	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i] |= other.data[i];
 	}
 }
 
-BitVec.prototype.iclear = function(other) {
+BitVec.prototype.iclear = function (other) {
 	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i] &= ~other.data[i];
 	}
 }
 
 
-BitVec.prototype.ibitset = function(ind) {
-	const outer_idx = ind>>5;
+BitVec.prototype.ibitset = function (ind) {
+	const outer_idx = ind >> 5;
 	const inner_idx = ind & 0b11111;
 	this.data[outer_idx] |= 1 << inner_idx;
 }
@@ -60,49 +60,49 @@ function IBITSET(tok, index) {
 }
 
 
-BitVec.prototype.ibitclear = function(ind) {	
-	const outer_idx = ind>>5;
+BitVec.prototype.ibitclear = function (ind) {
+	const outer_idx = ind >> 5;
 	const inner_idx = ind & 0b11111;
 	// clears that one bit, leaves others unchanged
-	this.data[outer_idx] &= ~(1 << inner_idx); 
+	this.data[outer_idx] &= ~(1 << inner_idx);
 }
 
-BitVec.prototype.get = function(ind) {
-	const outer_idx = ind>>5;
+BitVec.prototype.get = function (ind) {
+	const outer_idx = ind >> 5;
 	const inner_idx = ind & 0b11111;
 	return (this.data[outer_idx] & 1 << inner_idx) !== 0;
 }
 
 function GET(tok, index) {
-    const outer_idx = index >> 5;
-    const inner_idx = index & 0b11111;
-    return `((${tok}.data[${outer_idx}] & 1 << ${inner_idx}) !== 0)`;
+	const outer_idx = index >> 5;
+	const inner_idx = index & 0b11111;
+	return `((${tok}.data[${outer_idx}] & 1 << ${inner_idx}) !== 0)`;
 }
 
 
-BitVec.prototype.getshiftor = function(mask, shift) {
+BitVec.prototype.getshiftor = function (mask, shift) {
 	const inner_idx = shift & 0b11111;
-	const outer_idx = shift>>5;
+	const outer_idx = shift >> 5;
 	let ret = this.data[outer_idx] >>> inner_idx;
 	if (inner_idx > 27) {//32 - inner_idx > 5
-		ret |= this.data[outer_idx+1] << (32 - inner_idx);
+		ret |= this.data[outer_idx + 1] << (32 - inner_idx);
 	}
 	return ret & mask;
 }
 
 function GETSHIFTOR(tok, mask, shift) {
-    const inner_idx = shift&0b11111;
-    const outer_idx = shift>>5;
-    if (inner_idx > 27) {//32 - inner_idx > 5
-        return `${mask}&((${tok}.data[${outer_idx}] >>> ${inner_idx}) | (${tok}.data[${outer_idx}+1] << (32-${inner_idx})))`;
-    } else {
-        return `${mask}&(${tok}.data[${outer_idx}] >>> ${inner_idx})`;
-    }
+	const inner_idx = shift & 0b11111;
+	const outer_idx = shift >> 5;
+	if (inner_idx > 27) {//32 - inner_idx > 5
+		return `${mask}&((${tok}.data[${outer_idx}] >>> ${inner_idx}) | (${tok}.data[${outer_idx}+1] << (32-${inner_idx})))`;
+	} else {
+		return `${mask}&(${tok}.data[${outer_idx}] >>> ${inner_idx})`;
+	}
 }
 
-BitVec.prototype.ishiftor = function(mask, shift) {
-	const inner_idx = shift&0b11111;
-	const outer_idx = shift>>5;
+BitVec.prototype.ishiftor = function (mask, shift) {
+	const inner_idx = shift & 0b11111;
+	const outer_idx = shift >> 5;
 	// low: mask shifted left so it lands at bit position (inner_idx) in word outer_idx
 	const low = mask << inner_idx;
 	this.data[outer_idx] |= low;
@@ -110,7 +110,7 @@ BitVec.prototype.ishiftor = function(mask, shift) {
 	if (inner_idx > 27) {//32 - inner_idx > 5
 		// high: part of mask that overflows into next word (mask >>> (32-inner_idx))
 		const high = mask >> (32 - inner_idx);
-		this.data[outer_idx+1] |= high;
+		this.data[outer_idx + 1] |= high;
 	}
 }
 
@@ -128,36 +128,36 @@ function ISHIFTOR(tok, mask, shift) {
 }
 
 
-BitVec.prototype.ishiftclear = function(mask, shift) {
+BitVec.prototype.ishiftclear = function (mask, shift) {
 	const inner_idx = shift & 0b11111;
-	const outer_idx = shift>>5;
+	const outer_idx = shift >> 5;
 	const low = mask << inner_idx;
 	this.data[outer_idx] &= ~low;
 	if (inner_idx > 27) {//32 - inner_idx > 5
 		const high = mask >> (32 - inner_idx);
-		this.data[outer_idx+1] &= ~high;
+		this.data[outer_idx + 1] &= ~high;
 	}
 }
 
-function WEIRDNESS_FOUND(msg){
-	throw new Error( `found ${msg}`);
+function WEIRDNESS_FOUND(msg) {
+	throw new Error(`found ${msg}`);
 }
 
 
 function ISHIFTCLEAR(tok, mask, shift) {
-	const inner_idx = shift&0b11111;
-	const outer_idx = shift>>5;
-	const low = mask +"<<"+inner_idx;
+	const inner_idx = shift & 0b11111;
+	const outer_idx = shift >> 5;
+	const low = mask + "<<" + inner_idx;
 	let result = `${tok}.data[${outer_idx}] &= ~(${low});\n`
 	if (inner_idx > 27) {//32 - inner_idx > 5
-		const high = mask +">>>"+(32-inner_idx);
-		const idx = outer_idx+1;
+		const high = mask + ">>>" + (32 - inner_idx);
+		const idx = outer_idx + 1;
 		result += `${tok}.data[${idx}] &= ~(${high});\n`;
 	}
 	return result;
 }
 
-BitVec.prototype.equals = function(other) {
+BitVec.prototype.equals = function (other) {
 	if (this.data.length !== other.data.length)
 		return false;
 	for (let i = 0; i < this.data.length; ++i) {
@@ -193,21 +193,21 @@ function NOT_EQUALS(tok, other, array_size) {
 }
 
 
-BitVec.prototype.setZero = function() {
+BitVec.prototype.setZero = function () {
 	this.data.fill(0);
 }
 
 function ARRAY_SET_ZERO(tok) {
-	return tok+".fill(0);\n";
+	return tok + ".fill(0);\n";
 }
 
 function SET_ZERO(tok) {
-	return tok+".data.fill(0);\n";
+	return tok + ".data.fill(0);\n";
 }
 
-BitVec.prototype.iszero = function() {
+BitVec.prototype.iszero = function () {
 	for (let i = 0; i < this.data.length; ++i) {
-		if (this.data[i]!==0)
+		if (this.data[i] !== 0)
 			return false;
 	}
 	return true;
@@ -229,7 +229,7 @@ function IS_NONZERO(tok, array_size) {
 	return result + ")";
 }
 
-BitVec.prototype.bitsSetInArray = function(arr) {
+BitVec.prototype.bitsSetInArray = function (arr) {
 	for (let i = 0; i < this.data.length; ++i) {
 		if ((this.data[i] & arr[i]) !== this.data[i]) {
 			return false;
@@ -255,7 +255,7 @@ function NOT_BITS_SET_IN_ARRAY(tok, arr, array_size) {
 	return result + ")";
 }
 
-BitVec.prototype.bitsClearInArray = function(arr) {
+BitVec.prototype.bitsClearInArray = function (arr) {
 	for (let i = 0; i < this.data.length; ++i) {
 		if (this.data[i] & arr[i]) {
 			return false;
@@ -274,7 +274,7 @@ function BITS_CLEAR_IN_ARRAY(tok, arr, array_size) {
 	return result + ")";
 }
 
-BitVec.prototype.anyBitsInCommon = function(other) {
+BitVec.prototype.anyBitsInCommon = function (other) {
 	for (let i = 0; i < this.data.length; ++i) {
 		if (this.data[i] & other.data[i]) {
 			return true;
@@ -283,8 +283,8 @@ BitVec.prototype.anyBitsInCommon = function(other) {
 	return false;
 }
 
-BitVec.prototype.prettyPrint = function() {
-	var result="";
+BitVec.prototype.prettyPrint = function () {
+	var result = "";
 	//print string as bit array, grouped into fives
 	for (let i = 0; i < this.data.length; i++) {
 		for (let j = 0; j < 32; j++) {
@@ -332,7 +332,7 @@ function UNROLL(command, array_size) {
 function UNROLL_TOK_REAL(tok, op, val, array_size) {
 	let result = "";
 	for (let i = 0; i < array_size; i++) {
-		result += tok + ".data[" + i + "]" + op + val.data[i]+";\n";
+		result += tok + ".data[" + i + "]" + op + val.data[i] + ";\n";
 	}
 	return result;
 }
@@ -340,15 +340,15 @@ function UNROLL_TOK_REAL(tok, op, val, array_size) {
 function LEVEL_GET_CELL_INTO(level, index, targetarray, OBJECT_SIZE) {
 	let result = "";
 	for (let i = 0; i < OBJECT_SIZE; i++) {
-		result += targetarray+`.data[${i}]=level.objects[${index}*${OBJECT_SIZE}+${i}];\n`;
+		result += targetarray + `.data[${i}]=level.objects[${index}*${OBJECT_SIZE}+${i}];\n`;
 	}
 	return result;
 }
 
-function LEVEL_GET_MOVEMENTS_INTO( index, targetarray, MOVEMENT_SIZE) {
+function LEVEL_GET_MOVEMENTS_INTO(index, targetarray, MOVEMENT_SIZE) {
 	let result = "";
 	for (let i = 0; i < MOVEMENT_SIZE; i++) {
-		result += targetarray+`.data[${i}]=level.movements[${index}*${MOVEMENT_SIZE}+${i}];\n`;
+		result += targetarray + `.data[${i}]=level.movements[${index}*${MOVEMENT_SIZE}+${i}];\n`;
 	}
 	return result;
 }
@@ -363,10 +363,10 @@ function LEVEL_SET_CELL(level, index, vec, array_size) {
 }
 
 
-function IMPORT_COMPILE_TIME_ARRAY(runtime,compiletime,array_size){
+function IMPORT_COMPILE_TIME_ARRAY(runtime, compiletime, array_size) {
 	let result = "";
 	for (let i = 0; i < array_size; i++) {
-		result+=`${runtime}.data[${i}]=${compiletime.data[i]};\n`;
+		result += `${runtime}.data[${i}]=${compiletime.data[i]};\n`;
 	}
 	return result;
 }
