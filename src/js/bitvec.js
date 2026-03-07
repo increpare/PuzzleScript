@@ -83,7 +83,7 @@ function GET(tok, index) {
 BitVec.prototype.getshiftor = function(mask, shift) {
 	const inner_idx = shift & 0b11111;
 	const outer_idx = shift>>5;
-	const ret = this.data[outer_idx] >>> inner_idx;
+	let ret = this.data[outer_idx] >>> inner_idx;
 	if (inner_idx > 27) {//32 - inner_idx > 5
 		ret |= this.data[outer_idx+1] << (32 - inner_idx);
 	}
