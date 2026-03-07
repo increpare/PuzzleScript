@@ -32,7 +32,7 @@ function generateSpriteMatrix(dat) {
             if (ch === '.') {
                 row.push(-1);
             } else {
-                row.push(ch);
+                row.push(parseInt(ch));
             }
         }
         result.push(row);
