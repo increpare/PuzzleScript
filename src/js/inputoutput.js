@@ -195,8 +195,7 @@ let selectableint = 0;
 
 function printLevel() {
 	try {
-		errorCount = 0;
-		errorStrings = [];
+		resetParserErrorState();
 		const glyphMasks = [];
 
 		for (const glyphName in state.glyphDict) {

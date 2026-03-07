@@ -29,10 +29,24 @@ let compiling = false;
 let errorStrings = [];//also stores warning strings
 let errorCount = 0;//only counts errors
 
+function resetParserErrorState() {
+    errorStrings = [];
+    errorCount = 0;
+}
+
 function TooManyErrors() {
     const message = compiling ? "Too many errors/warnings; aborting compilation." : "Too many errors/warnings; noping out.";
     consolePrint(message, true);
     throw new Error(message);
+}
+
+function buildErrorHtml(lineNumber, str, className) {
+    const c = className || 'errorText';
+    if (lineNumber === undefined) {
+        return '<span class="' + c + '">' + str + '</span>';
+    }
+    const ln = lineNumber.toString();
+    return '<a onclick="jumpToLine(' + ln + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + ln + '</span></a> : ' + '<span class="' + c + '">' + str + '</span>';
 }
 
 function logErrorCacheable(str, lineNumber, urgent) {
@@ -40,7 +54,7 @@ function logErrorCacheable(str, lineNumber, urgent) {
         if (lineNumber === undefined) {
             return logErrorNoLine(str, urgent);
         }
-        let errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="errorText">' + str + '</span>';
+        const errorString = buildErrorHtml(lineNumber, str, 'errorText');
         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
         } else {
@@ -59,7 +73,7 @@ function logError(str, lineNumber, urgent) {
         if (lineNumber === undefined) {
             return logErrorNoLine(str, urgent);
         }
-        let errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="errorText">' + str + '</span>';
+        const errorString = buildErrorHtml(lineNumber, str, 'errorText')
         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
         } else {
@@ -78,7 +92,7 @@ function logWarning(str, lineNumber, urgent) {
         if (lineNumber === undefined) {
             return logWarningNoLine(str, urgent);
         }
-        let errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="warningText">' + str + '</span>';
+        const errorString = buildErrorHtml(lineNumber, str, 'warningText');
         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
         } else {
@@ -93,7 +107,7 @@ function logWarning(str, lineNumber, urgent) {
 
 function logWarningNoLine(str, urgent) {
     if (compiling || urgent) {
-        let errorString = '<span class="warningText">' + str + '</span>';
+        const errorString = '<span class="warningText">' + str + '</span>';
         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
         } else {
@@ -110,7 +124,7 @@ function logWarningNoLine(str, urgent) {
 
 function logErrorNoLine(str, urgent) {
     if (compiling || urgent) {
-        let errorString = '<span class="errorText">' + str + '</span>';
+        const errorString = '<span class="errorText">' + str + '</span>';
         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
         } else {
@@ -194,7 +208,8 @@ let codeMirrorFn = function () {
     'use strict';
 
     function checkNameDefined(state, candname) {
-        if (state.objects[candname] !== undefined) {
+        const key = candname.toLowerCase();
+        if (state.objects[key] !== undefined) {
             return;
         }
         for (let i = 0; i < state.legend_synonyms.length; i++) {
@@ -729,7 +744,7 @@ let codeMirrorFn = function () {
                             /*
                             if (state.names.indexOf(n)!==-1) {
                                 logError('Object "'+n+'" has been declared to be multiple different things',state.legend_properties[i].lineNumber);
-                            }                           
+                            }
                             */
                             state.names.push(n);
                         }

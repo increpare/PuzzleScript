@@ -3200,9 +3200,8 @@ function compile(command, text, randomseed) {
         compiledText = text;
     }
 
-    errorCount = 0;
+    resetParserErrorState();
     compiling = true;
-    errorStrings = [];
     consolePrint('=================================');
     let state;
     try {
