@@ -1,5 +1,11 @@
 'use strict';
 
+//GENERAL PRINCIPLE
+// Split bit index "shift" into: position within the word vs which word.
+// inner_idx: internal index - which bit within that int (0..0b11111)
+// outer_idx: external index - which int our index is in ( not a "layer" index)
+	
+
 function BitVec(init) {
 	this.data = new Int32Array(init);
 }
@@ -39,95 +45,127 @@ BitVec.prototype.iclear = function(other) {
 	}
 }
 
+
 BitVec.prototype.ibitset = function(ind) {
-	this.data[ind>>5] |= 1 << (ind & 31);
+	const outer_idx = ind>>5;
+	const inner_idx = ind & 0b11111;
+	this.data[outer_idx] |= 1 << inner_idx;
 }
 
 
 
 function IBITSET(tok, index) {
-	return `${tok}.data[${index}>>5] |= 1 << (${index} & 31);`;
+	// index>>5 → external index - which int our index is in
+	// index&0b11111 → internal index - which bit within that int
+	return `${tok}.data[${index}>>5] |= 1 << (${index} & 0b11111);`;
 }
 
 
 BitVec.prototype.ibitclear = function(ind) {
-	this.data[ind>>5] &= ~(1 << (ind & 31));
+	// same word/bit split; ~(1<<(ind&0b11111)) clears that one bit, leaves others unchanged
+	const outer_idx = ind>>5;
+	const inner_idx = ind & 0b11111;
+	this.data[outer_idx] &= ~(1 << inner_idx);
 }
 
 BitVec.prototype.get = function(ind) {
-	return (this.data[ind>>5] & 1 << (ind & 31)) !== 0;
+	// Split bit index "shift" into: position within the word vs which word.
+	const outer_idx = ind>>5;
+	const inner_idx = ind & 0b11111;
+	return (this.data[outer_idx] & 1 << inner_idx) !== 0;
 }
 
 function GET(tok, index) {
-    const shift_5 = index >> 5;
-    const bit_position = 1 << (index & 31);
-    return `((${tok}.data[${shift_5}] & ${bit_position}) !== 0)`;
+	// Split bit index "shift" into: position within the word vs which word.
+    const outer_idx = index >> 5;
+    const inner_idx = index & 0b11111;
+    return `((${tok}.data[${outer_idx}] & 1 << ${inner_idx}) !== 0)`;
 }
 
 
 BitVec.prototype.getshiftor = function(mask, shift) {
-	const toshift = shift & 31;
-	let ret = this.data[shift>>5] >>> (toshift);
-	if (toshift) {
-		ret |= this.data[(shift>>5)+1] << (32 - toshift);
+	const inner_idx = shift & 0b11111;
+	const outer_idx = shift>>5;
+	// low part: from word at shift>>5, shift right by toshift (brings high bits down)
+	let ret = this.data[outer_idx] >>> inner_idx;
+	if (toshift > 27) {//32 - toshift > 5
+		// high part: from next word, shift left so its low bits align; OR into ret (span two words)
+		ret |= this.data[outer_idx+1] << (32 - inner_idx);
 	}
 	return ret & mask;
 }
 
 function GETSHIFTOR(tok, mask, shift) {
-    const toshift = shift&31;
-    const shift_5 = shift>>5;
-    if (toshift) {
-        return `${mask}&((${tok}.data[${shift_5}] >>> ${toshift}) | (${tok}.data[${shift_5}+1] << (32-${toshift})))`;
+	// Split bit index "shift" into: position within the word vs which word.
+    const inner_idx = shift&0b11111;
+    const outer_idx = shift>>5;
+    if (inner_idx > 27) {//32 - inner_idx > 5
+        // two-word read: low word >>> toshift, high word << (32-toshift), OR, then mask
+        return `${mask}&((${tok}.data[${outer_idx}] >>> ${inner_idx}) | (${tok}.data[${outer_idx}+1] << (32-${inner_idx})))`;
     } else {
-        return `${mask}&(${tok}.data[${shift_5}] >>> ${toshift})`;
+        return `${mask}&(${tok}.data[${outer_idx}] >>> ${inner_idx})`;
     }
 }
 
 BitVec.prototype.ishiftor = function(mask, shift) {
-	const toshift = shift&31;
-	const shift_5 = shift>>5;
-	let low = mask << toshift;
-	this.data[shift_5] |= low;
-	if (toshift) {
-		let high = mask >> (32 - toshift);
-		this.data[shift_5+1] |= high;
+	// Split bit index "shift" into: position within the word vs which word.
+	// inner_idx: bit offset inside the current 32-bit integer (0..31); shift&0b11111 = shift % 32
+	const inner_idx = shift&0b11111;
+	// outer_idx: which 32-bit integer (word index in data[]); shift>>5 = number of full words
+	const outer_idx = shift>>5;
+	// low: mask shifted left so it lands at bit position (shift mod 32) in word shift_5
+	let low = mask << inner_idx;
+	this.data[outer_idx] |= low;
+	// if we have overflow into the next word
+	if (inner_idx > 27) {//32 - inner_idx > 5
+		// high: part of mask that overflows into next word (mask >>> (32-toshift))
+		let high = mask >> (32 - inner_idx);
+		this.data[outer_idx+1] |= high;
 	}
 }
 
 function ISHIFTOR(tok, mask, shift) {
+	// toshift = shift%32; low in word at shift>>5, high in word at (shift>>5)+1
 	return `{
-		let toshift = ${shift}&31;
-		let low = ${mask} << toshift;
-		${tok}.data[${shift}>>5] |= low;
-		if (toshift) {
-			let high = ${mask} >> (32 - toshift);
-			${tok}.data[(${shift}>>5)+1] |= high;
+		const inner_idx = ${shift}&0b11111;
+		const outer_idx = ${shift}>>5;
+		const low = ${mask} << inner_idx;
+		${tok}.data[outer_idx] |= low;
+		if (inner_idx > 27) {//32 - inner_idx > 5
+			let high = ${mask} >> (32 - inner_idx);
+			${tok}.data[outer_idx+1] |= high;
 		}
 	}`;
 }
 
 
 BitVec.prototype.ishiftclear = function(mask, shift) {
-	const toshift = shift & 31;
-	const shift_5 = shift>>5;
-	const low = mask << toshift;
-	this.data[shift_5] &= ~low;
-	if (toshift){
-		let high = mask >> (32 - (shift & 31));
-		this.data[shift_5+1] &= ~high;
+	// same word split as ishiftor: clear bits at [shift..] with mask (may span two words)
+	const inner_idx = shift & 0b11111;
+	const outer_idx = shift>>5;
+	const low = mask << inner_idx;
+	this.data[outer_idx] &= ~low;
+	if (inner_idx > 27) {//32 - inner_idx > 5
+		let high = mask >> (32 - inner_idx);
+		this.data[outer_idx+1] &= ~high;
 	}
+}
+
+function WEIRDNESS_FOUND(msg){
+	throw new Error( `found ${msg}`);
 }
 
 
 function ISHIFTCLEAR(tok, mask, shift) {
-	const toshift = shift&31;
-	const shift_5 = shift>>5;
-	const low = mask +"<<"+toshift;
-	let result = `${tok}.data[${shift_5}] &= ~(${low});\n`
-	if (toshift) {
-		const high = mask +">>>"+(32-toshift);
-		result += `${tok}.data[${shift_5+1}] &= ~(${high});\n`;
+	// shift_5 = word index; clear shifted mask in that word and optionally next
+	const inner_idx = shift&0b11111;
+	const outer_idx = shift>>5;
+	const low = mask +"<<"+inner_idx;
+	let result = `${tok}.data[${outer_idx}] &= ~(${low});\n`
+	if (inner_idx > 27) {//32 - inner_idx > 5
+		const high = mask +">>>"+(32-inner_idx);
+		const idx = outer_idx+1;
+		result += `${tok}.data[${idx}] &= ~(${high});\n`;
 	}
 	return result;
 }
@@ -263,6 +301,7 @@ BitVec.prototype.prettyPrint = function() {
 	//print string as bit array, grouped into fives
 	for (let i = 0; i < this.data.length; i++) {
 		for (let j = 0; j < 32; j++) {
+			// 1<<j = bit mask for bit j in the word
 			result += (this.data[i] & (1 << j)) ? "1" : "0";
 		}
 		result += " ";
