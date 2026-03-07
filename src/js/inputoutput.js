@@ -628,53 +628,55 @@ function pollGamepads() {
 
 	for(var i = 0; i < gamepads.length; i++) {
 		var gamepad = gamepads[i];
-		
+		//reference https://w3c.github.io/gamepad/#remapping
 		if(!gamepad || !gamepad.connected) {
 			continue;
 		}
-		if(buttonCheck(gamepad.buttons, 3) // Y
-			|| buttonCheck(gamepad.buttons, 4)) { // LB
-			
-			keyPressed(82); // restart
-		}
-		if(buttonCheck(gamepad.buttons, 1) // B
-			|| buttonCheck(gamepad.buttons, 6)) { // LT
-			
-			keyPressed(90); // undo
-		}
-		if(buttonCheck(gamepad.buttons, 2) // X
-			|| buttonCheck(gamepad.buttons, 0) // A
-			|| buttonCheck(gamepad.buttons, 5) // RB
-			|| buttonCheck(gamepad.buttons, 7)) { // RT
-			
-			keyPressed(88); // action
-		}
-		if(buttonCheck(gamepad.buttons, 7)||buttonCheck(gamepad.buttons, 8)) { // menu button
-			keyPressed(27); // exit
-		}
-		if(buttonCheck(gamepad.buttons, 6)) { // change view button
-			keyPressed(69); // edit
-		}
-		if(axisCheck(gamepad.axes, 1, -1) // up
-			|| axisCheck(gamepad.axes, 7, -1) || buttonCheck(gamepad.buttons, 12)) { // D-pad up
-			
+		if(axisCheck(gamepad.axes, 1, -1) // lstick up
+			|| axisCheck(gamepad.axes, 3, -1)  //rstick up
+			|| buttonCheck(gamepad.buttons, 12)) { // D-pad up		
+
 			keyPressed(38); // up
 		}
-		if(axisCheck(gamepad.axes, 1, 1) // down
-			|| axisCheck(gamepad.axes, 7, 1) || buttonCheck(gamepad.buttons, 13)) { // D-pad down
-			
+		if(axisCheck(gamepad.axes, 1, 1) // lstick down
+			|| axisCheck(gamepad.axes, 3, 1)   //rstick down
+			|| buttonCheck(gamepad.buttons, 13)) { // D-pad down
+						
 			keyPressed(40); // down
 		}
-		if(axisCheck(gamepad.axes, 0, -1) // left
-			|| axisCheck(gamepad.axes, 6, -1) || buttonCheck(gamepad.buttons, 14)) { // D-pad left
+		if(axisCheck(gamepad.axes, 0, -1) // lstick left
+			|| axisCheck(gamepad.axes, 2, -1)  //rstick left
+			|| buttonCheck(gamepad.buttons, 14)) { // D-pad left
 			
 			keyPressed(37); // left
 		}
-		if(axisCheck(gamepad.axes, 0, 1) // right
-			|| axisCheck(gamepad.axes, 6, 1) || buttonCheck(gamepad.buttons, 15)) { // D-pad right
-			
+		if(axisCheck(gamepad.axes, 0, 1) // lstick right
+			|| axisCheck(gamepad.axes, 2, 1)   //rstick right
+			|| buttonCheck(gamepad.buttons, 15)) { // D-pad right			
 			keyPressed(39); // right
 		}
+		
+		if(buttonCheck(gamepad.buttons, 2) // X 
+			|| buttonCheck(gamepad.buttons, 0) // A 
+			|| buttonCheck(gamepad.buttons, 5) // RB  
+			|| buttonCheck(gamepad.buttons, 7)) { // RT			
+			keyPressed(88); // action
+		}
+
+		if(buttonCheck(gamepad.buttons, 3) // Y  
+			|| buttonCheck(gamepad.buttons, 6)) { // LT  
+			
+			keyPressed(82); // restart
+		}
+		if(buttonCheck(gamepad.buttons, 1) // B  
+			|| buttonCheck(gamepad.buttons, 4)) { // LB 
+			
+			keyPressed(90); // undo
+		}
+		if(buttonCheck(gamepad.buttons, 9)) { // menu button 
+			keyPressed(27); // exit
+		}
+
 	}
 
 	clear();
