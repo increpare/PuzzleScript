@@ -454,7 +454,7 @@ function redraw() {
                 }
             }
 
-            //draw rigid applciations!
+            //draw rigid applications!
             if (state.rigid){
                 for (var i = mini; i < maxi; i++) {
                     for (var j = minj; j < maxj; j++) {
