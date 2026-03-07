@@ -3,8 +3,12 @@ function runTest(dataarray,testname) {
 	unitTesting=true;
 	lazyFunctionGeneration=false;
 	levelString=dataarray[0];
-	errorStrings = [];
-	errorCount=0;
+	if (typeof resetParserErrorState === 'function') {
+		resetParserErrorState();
+	} else {
+		errorStrings = [];
+		errorCount=0;
+	}
 
 	for (var i=0;i<errorStrings.length;i++) {
 		var s = errorStrings[i];
@@ -87,8 +91,12 @@ function runCompilationTest(dataarray,testname) {
 	levelString=dataarray[0];
 	var recordedErrorStrings=dataarray[1];
 	var recordedErrorCount=dataarray[2];
-	errorStrings = [];
-	errorCount=0;
+	if (typeof resetParserErrorState === 'function') {
+		resetParserErrorState();
+	} else {
+		errorStrings = [];
+		errorCount=0;
+	}
 
 	try{
 		compile(["restart"],levelString);
