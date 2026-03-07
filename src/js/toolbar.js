@@ -132,7 +132,6 @@ window.addEventListener( "pageshow", function ( event ) {
   });
 
 window.addEventListener("popstate", function(event){
-	console.log("hey");
 	location.reload();
 });
 

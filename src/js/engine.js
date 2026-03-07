@@ -412,14 +412,7 @@ function deepClone(item) {
 					}
 				}
 			} else {
-                // depending what you would like here,
-                // just keep the reference, or create new object
-/*                if (false && item.constructor) {
-                    // would not advice to do that, reason? Read below
-                    result = new item.constructor();
-                } else */{
-					result = item;
-				}
+				result = item;
 			}
 		} else {
 			result = item;
@@ -1749,8 +1742,6 @@ let _o1, _o2, _o2_5, _o3, _o4, _o5, _o6, _o7, _o8, _o9, _o10, _o11, _o12;
 let _m1, _m2, _m3;
 
 let CACHE_CELLPATTERN_REPLACEFUNCTION = {}
-let CACHE_CHECK_COUNT=0;
-let CACHE_HIT_COUNT=0;
 let _replace_function_key_array = new Int32Array(0);
 
 
@@ -1961,7 +1952,7 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 		}
     	default:
     	{
-    		window.console.log("EEEP "+direction);
+    		console.error("Unexpected direction: "+direction);
     	}
     }
 
@@ -2043,7 +2034,7 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 		}
     	default:
     	{
-    		window.console.log("EEEP2 "+direction);
+    		console.error("Unexpected direction: "+direction);
     	}
     }
 
@@ -2064,7 +2055,7 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 				} else if (direction === 8) { //right
 					kmax=level.width-(x+len)+1;	
 				} else {
-					window.console.log("EEEP2 "+direction);					
+					console.error("Unexpected direction: "+direction);
 				}
 
 				if (wildcardCount===1) {
@@ -2090,7 +2081,7 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 				} else if (direction === 1) { // up
 					kmax=y-len+2;					
 				} else {
-					window.console.log("EEEP2 "+direction);
+					console.error("Unexpected direction: "+direction);
 				}
 				if (wildcardCount===1) {
 					result.push.apply(result, cellRowMatch(cellRow,i,kmax,0, d, level.objects, level.movements));

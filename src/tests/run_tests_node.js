@@ -172,6 +172,13 @@ for (let i = 0; i < errTotal; i++) {
             passed++;
         } else {
             failed++;
+            if (verbose) {
+                const td = global.errormessage_testdata[i][1];
+                _origLog(`  actual errorCount: ${global.errorCount}, expected: ${td[2]}`);
+                const stripped = global.errorStrings.map(global.stripHTMLTags);
+                _origLog(`  actual errors: ${JSON.stringify(stripped)}`);
+                _origLog(`  expected errors: ${JSON.stringify(td[1])}`);
+            }
             failures.push(`FAIL: [err] ${name}`);
         }
     } catch (e) {
