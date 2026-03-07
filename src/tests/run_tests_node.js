@@ -4,8 +4,34 @@
 const fs = require('fs');
 const vm = require('vm');
 const path = require('path');
+const { spawnSync } = require('child_process');
 
 const srcDir = path.join(__dirname, '..');
+
+// ---- Profile: run this script 6 times in separate processes (cold) and average ----
+if (process.argv.includes('--profile')) {
+    const childArgs = process.argv.slice(2).filter(a => a !== '--profile');
+    const scriptPath = path.join(__dirname, 'run_tests_node.js');
+    const runs = 6;
+    const times = [];
+    let anyFailed = false;
+    for (let i = 0; i < runs; i++) {
+        const result = spawnSync(process.execPath, [scriptPath, ...childArgs], {
+            encoding: 'utf8',
+            cwd: path.join(__dirname, '..')
+        });
+        const match = result.stdout && result.stdout.match(/Total:\s*\d+ tests in ([\d.]+)s/);
+        if (match) times.push(parseFloat(match[1]) * 1000);
+        else anyFailed = true;
+        if (result.status !== 0) anyFailed = true;
+    }
+    if (times.length > 0) {
+        const avgMs = times.reduce((a, b) => a + b, 0) / times.length;
+        console.log(`\n--- Profile (cold, ${runs} separate processes) ---`);
+        console.log(`Average: ${(avgMs / 1000).toFixed(2)}s over ${runs} runs`);
+    }
+    process.exit(anyFailed ? 1 : 0);
+}
 
 // ---- Browser shims ----
 
@@ -124,10 +150,12 @@ global.stripHTMLTags = function(html_str) {
 let passed = 0;
 let failed = 0;
 let errored = 0;
-const failures = [];
+let failures = [];
 
 const args = process.argv.slice(2);
 const verbose = args.includes('--verbose') || args.includes('-v');
+const simOnly = args.includes('--sim-only');
+const breakdown = args.includes('--breakdown');
 const filterArg = args.find(a => !a.startsWith('-'));
 
 const _origLog = console.log;
@@ -135,70 +163,153 @@ if (!verbose) {
     console.log = function() {};
 }
 
-// Game simulation tests
-const simStart = performance.now();
+const timing = {
+    compileMs: 0,
+    processInputMs: 0,
+    undoMs: 0,
+    restartMs: 0,
+    compileCount: 0,
+    processInputCount: 0,
+    undoCount: 0,
+    restartCount: 0,
+};
+
+if (breakdown) {
+    const compileOrig = global.compile;
+    global.compile = function(...args) {
+        const start = performance.now();
+        try {
+            return compileOrig.apply(this, args);
+        } finally {
+            timing.compileMs += performance.now() - start;
+            timing.compileCount++;
+        }
+    };
+
+    const processInputOrig = global.processInput;
+    global.processInput = function(...args) {
+        const start = performance.now();
+        try {
+            return processInputOrig.apply(this, args);
+        } finally {
+            timing.processInputMs += performance.now() - start;
+            timing.processInputCount++;
+        }
+    };
+
+    const doUndoOrig = global.DoUndo;
+    global.DoUndo = function(...args) {
+        const start = performance.now();
+        try {
+            return doUndoOrig.apply(this, args);
+        } finally {
+            timing.undoMs += performance.now() - start;
+            timing.undoCount++;
+        }
+    };
+
+    const doRestartOrig = global.DoRestart;
+    global.DoRestart = function(...args) {
+        const start = performance.now();
+        try {
+            return doRestartOrig.apply(this, args);
+        } finally {
+            timing.restartMs += performance.now() - start;
+            timing.restartCount++;
+        }
+    };
+}
+
+// Run one full test pass; returns { passed, failed, errored, failures, simMs, errMs, totalMs, timing }
+function runOnePass() {
+    let p = 0, f = 0, e = 0;
+    const fails = [];
+    timing.compileMs = 0;
+    timing.processInputMs = 0;
+    timing.undoMs = 0;
+    timing.restartMs = 0;
+    timing.compileCount = 0;
+    timing.processInputCount = 0;
+    timing.undoCount = 0;
+    timing.restartCount = 0;
+
+    const simTotal = global.testdata.length;
+    const passStart = performance.now();
+    const simStart = performance.now();
+
+    for (let i = 0; i < simTotal; i++) {
+        const name = global.testdata[i][0];
+        if (filterArg && !name.toLowerCase().includes(filterArg.toLowerCase())) continue;
+        try {
+            if (global.runTest(global.testdata[i][1], name)) {
+                p++;
+            } else {
+                f++;
+                fails.push(`FAIL: ${name}`);
+            }
+        } catch (err) {
+            e++;
+            fails.push(`ERROR: ${name}: ${err.message}`);
+        }
+    }
+    const simMs = performance.now() - simStart;
+
+    let errMs = 0;
+    if (!simOnly) {
+        const errStart = performance.now();
+        const errTotal = global.errormessage_testdata.length;
+        for (let i = 0; i < errTotal; i++) {
+            const name = global.errormessage_testdata[i][0];
+            if (filterArg && !name.toLowerCase().includes(filterArg.toLowerCase())) continue;
+            try {
+                if (global.runCompilationTest(global.errormessage_testdata[i][1], name)) {
+                    p++;
+                } else {
+                    f++;
+                    if (verbose) {
+                        const td = global.errormessage_testdata[i][1];
+                        _origLog(`  actual errorCount: ${global.errorCount}, expected: ${td[2]}`);
+                        const stripped = global.errorStrings.map(global.stripHTMLTags);
+                        _origLog(`  actual errors: ${JSON.stringify(stripped)}`);
+                        _origLog(`  expected errors: ${JSON.stringify(td[1])}`);
+                    }
+                    fails.push(`FAIL: [err] ${name}`);
+                }
+            } catch (err) {
+                e++;
+                fails.push(`ERROR: [err] ${name}: ${err.message}`);
+            }
+        }
+        errMs = performance.now() - errStart;
+    }
+    const totalMs = performance.now() - passStart;
+    return { passed: p, failed: f, errored: e, failures: fails, simMs, errMs, totalMs, timing: { ...timing } };
+}
+
 const simTotal = global.testdata.length;
 _origLog(`Running ${simTotal} game simulation tests...`);
 
-for (let i = 0; i < simTotal; i++) {
-    const name = global.testdata[i][0];
-    if (filterArg && !name.toLowerCase().includes(filterArg.toLowerCase())) continue;
-    try {
-        if (global.runTest(global.testdata[i][1], name)) {
-            passed++;
-        } else {
-            failed++;
-            failures.push(`FAIL: ${name}`);
-        }
-    } catch (e) {
-        errored++;
-        failures.push(`ERROR: ${name}: ${e.message}`);
-    }
-}
-
-const simElapsed = ((performance.now() - simStart) / 1000).toFixed(2);
-_origLog(`  Done in ${simElapsed}s`);
-
-// Error message tests
-const errStart = performance.now();
-const errTotal = global.errormessage_testdata.length;
-_origLog(`Running ${errTotal} error message tests...`);
-
-for (let i = 0; i < errTotal; i++) {
-    const name = global.errormessage_testdata[i][0];
-    if (filterArg && !name.toLowerCase().includes(filterArg.toLowerCase())) continue;
-    try {
-        if (global.runCompilationTest(global.errormessage_testdata[i][1], name)) {
-            passed++;
-        } else {
-            failed++;
-            if (verbose) {
-                const td = global.errormessage_testdata[i][1];
-                _origLog(`  actual errorCount: ${global.errorCount}, expected: ${td[2]}`);
-                const stripped = global.errorStrings.map(global.stripHTMLTags);
-                _origLog(`  actual errors: ${JSON.stringify(stripped)}`);
-                _origLog(`  expected errors: ${JSON.stringify(td[1])}`);
-            }
-            failures.push(`FAIL: [err] ${name}`);
-        }
-    } catch (e) {
-        errored++;
-        failures.push(`ERROR: [err] ${name}: ${e.message}`);
-    }
-}
-
-const errElapsed = ((performance.now() - errStart) / 1000).toFixed(2);
-_origLog(`  Done in ${errElapsed}s`);
+const result = runOnePass();
+passed = result.passed;
+failed = result.failed;
+errored = result.errored;
+failures = result.failures;
+const simElapsed = (result.simMs / 1000).toFixed(2);
+const errElapsed = (result.errMs / 1000).toFixed(2);
+const totalElapsed = (result.totalMs / 1000).toFixed(2);
+_origLog(`  Done in ${totalElapsed}s`);
 
 // Report
 console.log = _origLog;
-const totalElapsed = ((performance.now() - simStart) / 1000).toFixed(2);
 console.log(`\n--- Results ---`);
 console.log(`Passed:  ${passed}`);
 console.log(`Failed:  ${failed}`);
 console.log(`Errors:  ${errored}`);
 console.log(`Total:   ${passed + failed + errored} tests in ${totalElapsed}s`);
 console.log(`  Simulation: ${simElapsed}s | Error messages: ${errElapsed}s`);
+if (breakdown) {
+    console.log(`  Breakdown: compile ${timing.compileMs.toFixed(0)}ms (${timing.compileCount} calls), processInput ${timing.processInputMs.toFixed(0)}ms (${timing.processInputCount} calls), undo ${timing.undoMs.toFixed(0)}ms (${timing.undoCount} calls), restart ${timing.restartMs.toFixed(0)}ms (${timing.restartCount} calls)`);
+}
 
 if (failures.length > 0) {
     console.log(`\nFailures:`);
