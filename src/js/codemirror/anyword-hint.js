@@ -141,6 +141,300 @@
             }
         }
 
+        // Rule mirror/rotate: first rule direction (skip late, rigid, +)
+        var RULE_DIRECTION_TOKENS = ['up', 'down', 'left', 'right', 'horizontal', 'vertical'];
+        function getFirstRuleDirection(line) {
+            var s = line.trim();
+            var commentIdx = s.indexOf('#');
+            if (commentIdx >= 0) s = s.substring(0, commentIdx).trim();
+            var tokens = s.split(/\s+/);
+            for (var i = 0; i < tokens.length; i++) {
+                var t = tokens[i].toLowerCase();
+                if (RULE_DIRECTION_TOKENS.indexOf(t) >= 0) return t;
+                if (t !== 'late' && t !== 'rigid' && t !== '+' && t !== '') return null;
+            }
+            return null;
+        }
+        function replaceLeadingDirection(line, newDir) {
+            var s = line.trim();
+            var commentIdx = s.indexOf('#');
+            var comment = '';
+            if (commentIdx >= 0) {
+                comment = s.substring(commentIdx);
+                s = s.substring(0, commentIdx).trim();
+            }
+            var tokens = s.split(/\s+/);
+            var replaced = false;
+            for (var i = 0; i < tokens.length; i++) {
+                var t = tokens[i].toLowerCase();
+                if (RULE_DIRECTION_TOKENS.indexOf(t) >= 0) {
+                    tokens[i] = newDir;
+                    replaced = true;
+                    break;
+                }
+                if (t !== 'late' && t !== 'rigid' && t !== '+') break;
+            }
+            if (!replaced) return null;
+            return tokens.join(' ') + (comment ? ' ' + comment : '');
+        }
+
+        var CELL_DIRS = ['up', 'down', 'left', 'right', 'no', 'moving', 'stationary', 'randomdir', 'random', 'horizontal', 'vertical', 'orthogonal', 'perpendicular', 'parallel', 'action', '...'];
+        function mirrorBracketContentUpDown(content) {
+            var rows = content.split('|').map(function(r) { return r.trim(); }).filter(Boolean);
+            if (rows.length === 0) return content;
+            rows.reverse();
+            var joined = rows.join(' | ');
+            return joined.replace(/\bup\b/gi, '\u0001').replace(/\bdown\b/gi, 'up').replace(/\u0001/g, 'down');
+        }
+        function mirrorBracketContentLeftRight(content) {
+            var tokens = content.trim().split(/\s+/);
+            var cells = [];
+            var i = 0;
+            while (i < tokens.length) {
+                var t = tokens[i].toLowerCase();
+                if (t === '...') {
+                    cells.push(['...']);
+                    i++;
+                } else if (CELL_DIRS.indexOf(t) >= 0 && i + 1 < tokens.length) {
+                    cells.push([tokens[i], tokens[i + 1]]);
+                    i += 2;
+                } else if (tokens[i]) {
+                    cells.push([tokens[i]]);
+                    i++;
+                } else {
+                    i++;
+                }
+            }
+            if (cells.length === 0) return content;
+            cells.reverse();
+            var out = [];
+            for (var c = 0; c < cells.length; c++) {
+                out.push(cells[c].join(' '));
+            }
+            var joined = out.join(' ');
+            return joined.replace(/\bleft\b/gi, '\u0001').replace(/\bright\b/gi, 'left').replace(/\u0001/g, 'right');
+        }
+        function transposeBracketContentHorizontalVertical(content, toVertical) {
+            var rows = content.split('|').map(function(r) { return r.trim(); }).filter(Boolean);
+            if (rows.length === 0) return content;
+            var grid = [];
+            for (var r = 0; r < rows.length; r++) {
+                var tokens = rows[r].trim().split(/\s+/);
+                var cells = [];
+                var i = 0;
+                while (i < tokens.length) {
+                    var t = tokens[i].toLowerCase();
+                    if (t === '...') {
+                        cells.push({ dir: '...', name: '' });
+                        i++;
+                    } else if (CELL_DIRS.indexOf(t) >= 0 && i + 1 < tokens.length) {
+                        cells.push({ dir: tokens[i], name: tokens[i + 1] });
+                        i += 2;
+                    } else if (tokens[i]) {
+                        cells.push({ dir: '', name: tokens[i] });
+                        i++;
+                    } else {
+                        i++;
+                    }
+                }
+                grid.push(cells);
+            }
+            var maxCol = 0;
+            for (var r = 0; r < grid.length; r++) {
+                if (grid[r].length > maxCol) maxCol = grid[r].length;
+            }
+            var transposed = [];
+            for (var c = 0; c < maxCol; c++) {
+                var newRow = [];
+                for (var r = 0; r < grid.length; r++) {
+                    if (c < grid[r].length) {
+                        var cell = grid[r][c];
+                        var dir = cell.dir;
+                        var d = (dir || '').toLowerCase();
+                        var name = cell.name;
+                        if (toVertical) {
+                            if (d === 'left') dir = 'up'; else if (d === 'right') dir = 'down';
+                            else if (d === 'up') dir = 'left'; else if (d === 'down') dir = 'right';
+                        } else {
+                            if (d === 'up') dir = 'left'; else if (d === 'down') dir = 'right';
+                            else if (d === 'left') dir = 'up'; else if (d === 'right') dir = 'down';
+                        }
+                        if (d === '...') newRow.push('...');
+                        else newRow.push(dir ? dir + ' ' + name : name);
+                    }
+                }
+                transposed.push(newRow.join(' '));
+            }
+            return transposed.join(' | ');
+        }
+        function transformRuleLineBrackets(line, newDir) {
+            var out = '';
+            var idx = 0;
+            var re = /\[\s*([^\]]*)\]/g;
+            var match;
+            while ((match = re.exec(line)) !== null) {
+                out += line.substring(idx, match.index);
+                var inner = match[1];
+                if (newDir === 'up' || newDir === 'down') {
+                    inner = mirrorBracketContentUpDown(inner);
+                } else if (newDir === 'left' || newDir === 'right') {
+                    inner = mirrorBracketContentLeftRight(inner);
+                } else if (newDir === 'horizontal' || newDir === 'vertical') {
+                    inner = transposeBracketContentHorizontalVertical(inner, newDir === 'vertical');
+                }
+                out += '[ ' + inner.trim() + ' ]';
+                idx = re.lastIndex;
+            }
+            out += line.substring(idx);
+            return out;
+        }
+
+        var CARDINAL_ORDER = ['up', 'right', 'down', 'left'];
+        var PAIRING_ORDER = ['up', 'down', 'left', 'right'];
+        function cardIdx(d) {
+            var i = CARDINAL_ORDER.indexOf((d || '').toLowerCase());
+            return i >= 0 ? i : 0;
+        }
+        function pairingIdx(d) {
+            var i = PAIRING_ORDER.indexOf((d || '').toLowerCase());
+            return i >= 0 ? i : 0;
+        }
+        function transform_movement(fromDir, toDir, movement) {
+            var m = (movement || '').toLowerCase();
+            if (m !== 'up' && m !== 'down' && m !== 'left' && m !== 'right') return movement;
+            var steps = (cardIdx(toDir) - cardIdx(fromDir) + 4) % 4;
+            var idx = cardIdx(m);
+            var newIdx = (idx + steps) % 4;
+            var result = CARDINAL_ORDER[newIdx];
+            return movement === movement.toUpperCase() ? result.toUpperCase() : (movement[0] === movement[0].toUpperCase() ? result.charAt(0).toUpperCase() + result.slice(1) : result);
+        }
+        function transform_object(fromDir, toDir, token) {
+            if (!token) return token;
+            var steps = (pairingIdx(toDir) - pairingIdx(fromDir) + 4) % 4;
+            if (steps === 0) return token;
+            for (var p = 0; p < DIRECTIONAL_PAIRINGS.length; p++) {
+                var pairing = DIRECTIONAL_PAIRINGS[p];
+                var suffixes = [pairing[0]].concat(pairing[1]);
+                for (var i = 0; i < suffixes.length; i++) {
+                    var suf = suffixes[i];
+                    if (suf.length > 0 && token.length >= suf.length && token.slice(-suf.length) === suf) {
+                        var newIdx = (i + steps) % 4;
+                        var newSuf = suffixes[newIdx];
+                        return token.slice(0, -suf.length) + newSuf;
+                    }
+                }
+            }
+            return token;
+        }
+        function transformBracketContentNoReorder(content, fromDir, toDir) {
+            var rows = content.split('|').map(function(r) { return r.trim(); }).filter(Boolean);
+            if (rows.length === 0) return content;
+            var outRows = [];
+            for (var r = 0; r < rows.length; r++) {
+                var tokens = rows[r].trim().split(/\s+/);
+                var outCells = [];
+                var i = 0;
+                while (i < tokens.length) {
+                    var t = (tokens[i] || '').toLowerCase();
+                    if (t === '...') {
+                        outCells.push('...');
+                        i++;
+                    } else if (CELL_DIRS.indexOf(t) >= 0 && i + 1 < tokens.length) {
+                        var mov = transform_movement(fromDir, toDir, tokens[i]);
+                        var obj = transform_object(fromDir, toDir, tokens[i + 1]);
+                        outCells.push(mov + ' ' + obj);
+                        i += 2;
+                    } else if (tokens[i]) {
+                        outCells.push(transform_object(fromDir, toDir, tokens[i]));
+                        i++;
+                    } else {
+                        i++;
+                    }
+                }
+                outRows.push(outCells.join(' '));
+            }
+            return outRows.join(' | ');
+        }
+        function rotateBracketContent90(content, steps) {
+            steps = (steps % 4 + 4) % 4;
+            if (steps === 0) return content;
+            var rows = content.split('|').map(function(r) { return r.trim(); }).filter(Boolean);
+            if (rows.length === 0) return content;
+            var grid = [];
+            for (var r = 0; r < rows.length; r++) {
+                var tokens = rows[r].trim().split(/\s+/);
+                var cells = [];
+                var i = 0;
+                while (i < tokens.length) {
+                    var t = tokens[i].toLowerCase();
+                    if (t === '...') {
+                        cells.push({ dir: '...', name: '' });
+                        i++;
+                    } else if (CELL_DIRS.indexOf(t) >= 0 && i + 1 < tokens.length) {
+                        cells.push({ dir: tokens[i], name: tokens[i + 1] });
+                        i += 2;
+                    } else if (tokens[i]) {
+                        cells.push({ dir: '', name: tokens[i] });
+                        i++;
+                    } else {
+                        i++;
+                    }
+                }
+                grid.push(cells);
+            }
+            for (var step = 0; step < steps; step++) {
+                var maxCol = 0;
+                for (var r = 0; r < grid.length; r++) {
+                    if (grid[r].length > maxCol) maxCol = grid[r].length;
+                }
+                var next = [];
+                for (var c = 0; c < maxCol; c++) {
+                    var newRow = [];
+                    for (var ri = grid.length - 1; ri >= 0; ri--) {
+                        if (c < grid[ri].length) {
+                            var cell = grid[ri][c];
+                            var d = (cell.dir || '').toLowerCase();
+                            var dir = cell.dir;
+                            if (d === 'up') dir = 'right'; else if (d === 'right') dir = 'down';
+                            else if (d === 'down') dir = 'left'; else if (d === 'left') dir = 'up';
+                            if (d === '...') newRow.push({ dir: '...', name: '' });
+                            else newRow.push({ dir: dir, name: cell.name });
+                        }
+                    }
+                    next.push(newRow);
+                }
+                grid = next;
+            }
+            var out = grid.map(function(row) {
+                return row.map(function(cell) {
+                    if (cell.dir === '...') return '...';
+                    return cell.dir ? cell.dir + ' ' + cell.name : cell.name;
+                }).join(' ');
+            }).join(' | ');
+            return out;
+        }
+        function rotateRuleLineToDirection(line, toDir) {
+            var fromDir = getFirstRuleDirection(line);
+            if (!fromDir || RULE_DIRECTION_TOKENS.indexOf(fromDir) < 0) return null;
+            if (CARDINAL_ORDER.indexOf(fromDir) < 0) return null;
+            var replaced = replaceLeadingDirection(line, toDir);
+            if (!replaced) return null;
+            var out = '';
+            var idx = 0;
+            var re = /\[\s*([^\]]*)\]/g;
+            var match;
+            while ((match = re.exec(replaced)) !== null) {
+                out += replaced.substring(idx, match.index);
+                out += '[ ' + transformBracketContentNoReorder(match[1], fromDir, toDir).trim() + ' ]';
+                idx = re.lastIndex;
+            }
+            out += replaced.substring(idx);
+            return out;
+        }
+        function stripRuleComment(line) {
+            return line.replace(/\s*\([^)]*\)/g, '').replace(/\s+/g, ' ').trim();
+        }
+
         //rotates clockwise 90 degrees n times
         function rotate_2d_array(array,amount){
             amount = amount %4;
@@ -219,6 +513,8 @@
             var list = options && options.list || [],
                 seen = {};
             var legendDirectionalFirst = []; // directional "or" completions for LEGEND, shown first
+            var collisionlayersDirectionalFirst = []; // same for COLLISIONLAYERS
+            var ruleMirrorFirst = []; // mirrored/rotated rule from previous line (rules section only)
 
             var addObjects = false;
             var excludeProperties = false;
@@ -492,6 +788,45 @@
                     }
             }
 
+            // Rule mirror/rotate: single suggestion for the direction being typed (or prefix, e.g. "d" -> down), alongside normal hints
+            if (state.section === 'rules' && cur.line > 0 && curWord) {
+                var ruleMirrorDirections = ['up', 'down', 'left', 'right', 'horizontal', 'vertical'];
+                var ruleMirrorTrigger = { up: 'down', down: 'up', left: 'right', right: 'left', horizontal: 'vertical', vertical: 'horizontal' };
+                var matchDir = null;
+                if (ruleMirrorDirections.indexOf(curWord) >= 0) matchDir = curWord;
+                else {
+                    for (var mi = 0; mi < ruleMirrorDirections.length; mi++) {
+                        if (ruleMirrorDirections[mi].lastIndexOf(curWord, 0) === 0) { matchDir = ruleMirrorDirections[mi]; break; }
+                    }
+                }
+                if (matchDir) {
+                    var prevLine = editor.getLine(cur.line - 1);
+                    if (prevLine.indexOf('->') >= 0) {
+                        var prevDir = getFirstRuleDirection(prevLine);
+                        if (prevDir) {
+                            if (matchDir === 'horizontal' || matchDir === 'vertical') {
+                                if (prevDir === ruleMirrorTrigger[matchDir]) {
+                                    var mirroredLine = replaceLeadingDirection(prevLine, matchDir);
+                                    if (mirroredLine) {
+                                        mirroredLine = stripRuleComment(transformRuleLineBrackets(mirroredLine, matchDir));
+                                        ruleMirrorFirst.push({ text: mirroredLine, extra: '', tag: 'NAME', render: renderHint });
+                                    }
+                                }
+                            } else if (CARDINAL_ORDER.indexOf(prevDir) >= 0) {
+                                var rotated = rotateRuleLineToDirection(prevLine, matchDir);
+                                if (rotated) ruleMirrorFirst.push({ text: stripRuleComment(rotated), extra: '', tag: 'NAME', render: renderHint });
+                            } else if (prevDir === ruleMirrorTrigger[matchDir]) {
+                                var mirroredLine = replaceLeadingDirection(prevLine, matchDir);
+                                if (mirroredLine) {
+                                    mirroredLine = stripRuleComment(transformRuleLineBrackets(mirroredLine, matchDir));
+                                    ruleMirrorFirst.push({ text: mirroredLine, extra: '', tag: 'NAME', render: renderHint });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             // In LEGEND, when typing at start of line (no = yet), suggest full line "stem = stem_north or ..."
             if (state.section === 'legend' && lineToCursor.indexOf('=') < 0) {
                 for (var p = 0; p < DIRECTIONAL_PAIRINGS.length; p++) {
@@ -656,11 +991,69 @@
                     }
                 }
 
+                // In collisionlayers section, offer "Base_u, Base_d, ..." comma-separated groups, skip if any term already on line
+                if (state.section === 'collisionlayers') {
+                    var clLineTokens = {};
+                    if (state.current_line_wip_array && state.current_line_wip_array.length) {
+                        for (var i = 0; i < state.current_line_wip_array.length; i++) {
+                            var t = state.current_line_wip_array[i];
+                            var name = typeof t === 'string' ? t : (t && t[0] ? t[0].toLowerCase() : null);
+                            if (name) clLineTokens[name] = true;
+                        }
+                    }
+                    for (var p = 0; p < DIRECTIONAL_PAIRINGS.length; p++) {
+                        var pairing = DIRECTIONAL_PAIRINGS[p];
+                        var suffixes = [pairing[0]].concat(pairing[1]);
+                        var suffixesLower = suffixes.map(function (s) { return s.toLowerCase(); });
+                        var byStem = {};
+                        for (var key in state.objects) {
+                            if (!state.objects.hasOwnProperty(key)) continue;
+                            for (var s = 0; s < suffixesLower.length; s++) {
+                                var suf = suffixesLower[s];
+                                if (key.length > suf.length && key.slice(-suf.length) === suf) {
+                                    var stem = key.slice(0, -suf.length);
+                                    if (!byStem[stem]) byStem[stem] = [];
+                                    if (byStem[stem].indexOf(suf) === -1) byStem[stem].push({ suf: suf, key: key, order: s });
+                                    break;
+                                }
+                            }
+                        }
+                        for (var stem in byStem) {
+                            if (!curWord || stem.lastIndexOf(curWord, 0) !== 0) continue;
+                            var variants = byStem[stem];
+                            if (variants.length < 2) continue;
+                            variants.sort(function (a, b) { return a.order - b.order; });
+                            var parts = [];
+                            for (var v = 0; v < variants.length; v++) {
+                                var casename = state.original_case_names[variants[v].key];
+                                if (casename) parts.push(casename);
+                            }
+                            if (parts.length < 2) continue;
+                            var termAlreadyOnLine = false;
+                            for (var v = 0; v < variants.length; v++) {
+                                if (clLineTokens[variants[v].key]) {
+                                    termAlreadyOnLine = true;
+                                    break;
+                                }
+                            }
+                            if (termAlreadyOnLine) continue;
+                            var combined = parts.join(', ');
+                            var combinedKey = combined.toLowerCase();
+                            if (Object.prototype.hasOwnProperty.call(seen, combinedKey)) continue;
+                            seen[combinedKey] = true;
+                            collisionlayersDirectionalFirst.push({ text: combined, extra: '', tag: 'NAME', render: renderHint });
+                        }
+                    }
+                }
+
             }
 
             // Show directional legend completions first (both full-line LHS and RHS "or" chain)
             if (legendDirectionalFirst.length) {
                 list = legendDirectionalFirst.concat(list);
+            }
+            if (collisionlayersDirectionalFirst.length) {
+                list = collisionlayersDirectionalFirst.concat(list);
             }
 
             // go through random names
@@ -692,7 +1085,9 @@
                     }
                 }
             }
-            
+            if (ruleMirrorFirst.length) {
+                list = list.concat(ruleMirrorFirst);
+            }
 
             //state.legend_aggregates
             //state.legend_synonyms
@@ -731,10 +1126,16 @@
             if (tok.string.trim().length>curWord.length){
                 list=[];
             }
+            var fromPos = CodeMirror.Pos(cur.line, start);
+            var toPos = CodeMirror.Pos(cur.line, end);
+            if (ruleMirrorFirst.length > 0) {
+                fromPos = CodeMirror.Pos(cur.line, start);
+                toPos = CodeMirror.Pos(cur.line, end);
+            }
             return {
                 list: list,
-                from: CodeMirror.Pos(cur.line, start),
-                to: CodeMirror.Pos(cur.line, end)
+                from: fromPos,
+                to: toPos
             };
         });
 
