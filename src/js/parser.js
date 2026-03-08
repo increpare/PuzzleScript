@@ -1299,13 +1299,13 @@ let codeMirrorFn = function () {
                                 logWarning(warningStr + ' ). You should fix this!', state.lineNumber);
                             }
 
-                            // Allow same layer to mention a name/synonym multiple times; only add objects not already on layer (#1110)
-                            let currentLayer = state.collisionLayers[state.collisionLayers.length - 1];
-                            let newAr = ar.filter(function (name) { return currentLayer.indexOf(name) < 0; });
-                            if (state.current_line_wip_array.indexOf(candname) < 0) {
-                                state.current_line_wip_array.push(candname);
+                            if (state.current_line_wip_array.indexOf(candname) >= 0) {
+                                let warningStr = 'Object "' + candname.toUpperCase() + '" included explicitly multiple times in the same layer. Don\'t do that innit.';
+                                logWarning(warningStr, state.lineNumber);
                             }
-                            state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(newAr);
+                            state.current_line_wip_array.push(candname);
+
+                            state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
                             if (ar.length > 0) {
                                 return 'NAME';
                             } else {
