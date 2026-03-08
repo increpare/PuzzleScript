@@ -517,6 +517,41 @@
                     }
                 }
 
+                // In legend section, offer "Base_u or Base_d or Base_l or Base_r" when base has directional variants (#1104)
+                if (state.section === 'legend') {
+                    var dirSuffixes = ['_u', '_d', '_l', '_r'];
+                    var byStem = {};
+                    for (var key in state.objects) {
+                        if (!state.objects.hasOwnProperty(key)) continue;
+                        for (var s = 0; s < dirSuffixes.length; s++) {
+                            var suf = dirSuffixes[s];
+                            if (key.length > suf.length && key.slice(-suf.length) === suf) {
+                                var stem = key.slice(0, -suf.length);
+                                if (!byStem[stem]) byStem[stem] = [];
+                                if (byStem[stem].indexOf(suf) === -1) byStem[stem].push(suf);
+                                break;
+                            }
+                        }
+                    }
+                    for (var stem in byStem) {
+                        if (!curWord || stem.lastIndexOf(curWord, 0) !== 0) continue;
+                        var variants = byStem[stem].sort();
+                        if (variants.length < 2) continue;
+                        var orParts = [];
+                        for (var v = 0; v < variants.length; v++) {
+                            var objKey = stem + variants[v];
+                            var casename = state.original_case_names[objKey];
+                            if (casename) orParts.push(casename);
+                        }
+                        if (orParts.length < 2) continue;
+                        var combined = orParts.join(' or ');
+                        var combinedKey = combined.toLowerCase();
+                        if (Object.prototype.hasOwnProperty.call(seen, combinedKey)) continue;
+                        seen[combinedKey] = true;
+                        list.push({text: combined, extra: '', tag: 'NAME', render: renderHint});
+                    }
+                }
+
             }
 
             // go through random names
