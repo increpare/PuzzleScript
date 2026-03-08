@@ -513,21 +513,25 @@
                     }
                     for (var stem in byStem) {
                         if (!curWord || stem.lastIndexOf(curWord, 0) !== 0) continue;
-                        if (state.objects[stem]) continue;
+                        var stemTrimmed = stem;
+                        while (stemTrimmed && stemTrimmed.charAt(stemTrimmed.length - 1) === "_") {
+                            stemTrimmed = stemTrimmed.slice(0, -1);
+                        }
+                        if (state.objects[stemTrimmed]) continue;
                         var stemDefined = false;
                         if (state.legend_synonyms) {
                             for (var si = 0; si < state.legend_synonyms.length; si++) {
-                                if (state.legend_synonyms[si][0].toLowerCase() === stem) { stemDefined = true; break; }
+                                if (state.legend_synonyms[si][0].toLowerCase() === stemTrimmed) { stemDefined = true; break; }
                             }
                         }
                         if (!stemDefined && state.legend_properties) {
                             for (var pi = 0; pi < state.legend_properties.length; pi++) {
-                                if (state.legend_properties[pi][0].toLowerCase() === stem) { stemDefined = true; break; }
+                                if (state.legend_properties[pi][0].toLowerCase() === stemTrimmed) { stemDefined = true; break; }
                             }
                         }
                         if (!stemDefined && state.legend_aggregates) {
                             for (var ai = 0; ai < state.legend_aggregates.length; ai++) {
-                                if (state.legend_aggregates[ai][0].toLowerCase() === stem) { stemDefined = true; break; }
+                                if (state.legend_aggregates[ai][0].toLowerCase() === stemTrimmed) { stemDefined = true; break; }
                             }
                         }
                         if (stemDefined) continue;
@@ -545,6 +549,9 @@
                         var stemDisplay = (firstCasename && firstCasename.length > sufLow.length)
                             ? firstCasename.replace(new RegExp(sufLow.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$", "i"), "")
                             : stem;
+                        while (stemDisplay && stemDisplay.charAt(stemDisplay.length - 1) === "_") {
+                            stemDisplay = stemDisplay.slice(0, -1);
+                        }
                         var fullLine = stemDisplay + " = " + orParts.join(" or ");
                         var fullLineKey = fullLine.toLowerCase();
                         if (Object.prototype.hasOwnProperty.call(seen, fullLineKey)) continue;
