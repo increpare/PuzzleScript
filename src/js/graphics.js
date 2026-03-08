@@ -409,6 +409,36 @@ function redraw() {
             }
         }
 
+        // In level editor with flickscreen, draw grid lines at screen boundaries (#1106)
+        if (levelEditorOpened && state.metadata.flickscreen !== undefined) {
+            var fw = state.metadata.flickscreen[0];
+            var fh = state.metadata.flickscreen[1];
+            var viewW = maxi - mini;
+            var viewH = maxj - minj;
+            ctx.strokeStyle = state.fgcolor;
+            ctx.globalAlpha = 0.4;
+            ctx.lineWidth = 1;
+            for (var col = fw; col < maxi; col += fw) {
+                if (col > mini) {
+                    var x = xoffset + (col - mini) * cellwidth;
+                    ctx.beginPath();
+                    ctx.moveTo(x, yoffset);
+                    ctx.lineTo(x, yoffset + viewH * cellheight);
+                    ctx.stroke();
+                }
+            }
+            for (var row = fh; row < maxj; row += fh) {
+                if (row > minj) {
+                    var y = yoffset + (row - minj) * cellheight;
+                    ctx.beginPath();
+                    ctx.moveTo(xoffset, y);
+                    ctx.lineTo(xoffset + viewW * cellwidth, y);
+                    ctx.stroke();
+                }
+            }
+            ctx.globalAlpha = 1;
+        }
+
         if (diffToVisualize !== null) {
             //find previous state (this is never called on the very first state, the one before player inputs are applied, so there is always a previous state)
             var prevstate_lineNumberIndex = diffToVisualize.lineNumber - 1;
