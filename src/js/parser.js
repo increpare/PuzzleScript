@@ -537,6 +537,7 @@ let codeMirrorFn = function () {
                 inside_cell: state.inside_cell,
                 bracket_balance: state.bracket_balance,
                 arrow_passed: state.arrow_passed,
+                rule_prelude: state.rule_prelude,
 
                 objects_candname: state.objects_candname,
                 objects_section: state.objects_section,
@@ -1323,6 +1324,7 @@ let codeMirrorFn = function () {
                             state.inside_cell = false;
                             state.arrow_passed = false;
                             state.bracket_balance = 0;
+                            state.rule_prelude = true;
                         }
 
                         if (state.tokenIndex === -4) {
@@ -1336,6 +1338,7 @@ let codeMirrorFn = function () {
                         if (ch === '[' || ch === '|' || ch === ']' || ch === '+') {
                             if (ch === '[') {
                                 state.inside_cell = true;
+                                state.rule_prelude = false;
                             } else if (ch === ']') {
                                 state.inside_cell = false;
                                 //used to detect if we've reached the final ']'
@@ -1644,6 +1647,7 @@ let codeMirrorFn = function () {
                 inside_cell: false,
                 bracket_balance: 0,
                 arrow_passed: false,
+                rule_prelude: true,
 
                 objects_candname: '',
                 objects_section: 0, //whether reading name/color/spritematrix
