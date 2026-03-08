@@ -809,17 +809,17 @@
                                     var mirroredLine = replaceLeadingDirection(prevLine, matchDir);
                                     if (mirroredLine) {
                                         mirroredLine = stripRuleComment(transformRuleLineBrackets(mirroredLine, matchDir));
-                                        ruleMirrorFirst.push({ text: mirroredLine, extra: '', tag: 'NAME', render: renderHint });
+                                        ruleMirrorFirst.push({ text: mirroredLine, extra: '', tag: 'EXTENDED_AUTOCOMPLETE', render: renderHint });
                                     }
                                 }
                             } else if (CARDINAL_ORDER.indexOf(prevDir) >= 0) {
                                 var rotated = rotateRuleLineToDirection(prevLine, matchDir);
-                                if (rotated) ruleMirrorFirst.push({ text: stripRuleComment(rotated), extra: '', tag: 'NAME', render: renderHint });
+                                if (rotated) ruleMirrorFirst.push({ text: stripRuleComment(rotated), extra: '', tag: 'EXTENDED_AUTOCOMPLETE', render: renderHint });
                             } else if (prevDir === ruleMirrorTrigger[matchDir]) {
                                 var mirroredLine = replaceLeadingDirection(prevLine, matchDir);
                                 if (mirroredLine) {
                                     mirroredLine = stripRuleComment(transformRuleLineBrackets(mirroredLine, matchDir));
-                                    ruleMirrorFirst.push({ text: mirroredLine, extra: '', tag: 'NAME', render: renderHint });
+                                    ruleMirrorFirst.push({ text: mirroredLine, extra: '', tag: 'EXTENDED_AUTOCOMPLETE', render: renderHint });
                                 }
                             }
                         }
