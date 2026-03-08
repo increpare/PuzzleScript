@@ -206,7 +206,9 @@
                 //     curWord="";
                 // } else {
                     return {
-                        list: []
+                        list: [],
+                        from: CodeMirror.Pos(cur.line, start),
+                        to: CodeMirror.Pos(cur.line, end)
                     };
                 // }            
             }
@@ -621,14 +623,6 @@
                                 if (casename) orParts.push(casename);
                             }
                             if (orParts.length < 2) continue;
-                            var lineBeforeWord = curLine.substring(0, start);
-                            var tokensBefore = lineBeforeWord.split(/\s+or\s+|\s+/i).filter(Boolean).map(function (t) { return t.toLowerCase(); });
-                            var orPartsLower = orParts.map(function (p) { return p.toLowerCase(); });
-                            var anyEarlier = false;
-                            for (var ti = 0; ti < tokensBefore.length; ti++) {
-                                if (orPartsLower.indexOf(tokensBefore[ti]) >= 0) { anyEarlier = true; break; }
-                            }
-                            if (anyEarlier) continue;
                             var combined = orParts.join(' or ');
                             var combinedKey = combined.toLowerCase();
                             if (Object.prototype.hasOwnProperty.call(seen, combinedKey)) continue;
