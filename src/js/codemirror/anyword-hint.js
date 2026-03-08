@@ -602,6 +602,14 @@
 
                 // In legend section (RHS), offer "Base_u or Base_d or ..." and show these first (#1104)
                 if (state.section === 'legend') {
+                    // Tokens already on line (even indices = name tokens; lowercase)
+                    var already_on_line = [];
+                    if (state.current_line_wip_array && state.current_line_wip_array.length) {
+                        for (var i = 2; i < state.current_line_wip_array.length; i += 2) {
+                            var t = state.current_line_wip_array[i];
+                            already_on_line.push(t);
+                        }
+                    }
                     for (var p = 0; p < DIRECTIONAL_PAIRINGS.length; p++) {
                         var pairing = DIRECTIONAL_PAIRINGS[p];
                         var suffixes = [pairing[0]].concat(pairing[1]);
@@ -630,6 +638,15 @@
                                 if (casename) orParts.push(casename);
                             }
                             if (orParts.length < 2) continue;
+                            // Don't suggest if any term in this "X or Y or Z" already appears on the line
+                            var termAlreadyOnLine = false;
+                            for (var v = 0; v < variants.length; v++) {
+                                if (already_on_line.indexOf(variants[v].key) !== -1) {
+                                    termAlreadyOnLine = true;
+                                    break;
+                                }
+                            }
+                            if (termAlreadyOnLine) continue;
                             var combined = orParts.join(' or ');
                             var combinedKey = combined.toLowerCase();
                             if (Object.prototype.hasOwnProperty.call(seen, combinedKey)) continue;
