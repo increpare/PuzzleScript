@@ -88,6 +88,7 @@ class RuleTransform {
         ['_H', ['_V']],
     ];
 
+    //could also write as DIRECTIONAL_PAIRINGS.map(a=>a.flat())
     static FLATTENED_DIRECTIONAL_PAIRINGS = [
         ['Up', 'Down', 'Left', 'Right'],
         ['UP', 'DOWN', 'LEFT', 'RIGHT'],
@@ -242,6 +243,7 @@ class RuleTransform {
                 if (suffix===suf) return i;
             }
         }
+        return -1;
     }
 
     static apply_transformation_to_direction(dir, transformation) {
