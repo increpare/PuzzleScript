@@ -8,7 +8,7 @@ div.container > pre {
   width: fit-content;
 }
 
-div.container > ul {
+div.container > ul:not(.nav) {
   width: 600px;
 }
 .doc-code {
