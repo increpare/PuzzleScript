@@ -45,13 +45,13 @@ class RuleTransform {
         },
         'left': {
             'right': "MIRROR_H",
-            'up': "ROTATE_CCW",
-            'down': "ROTATE_CW",
+            'up': "ROTATE_CW",
+            'down': "ROTATE_CCW",
         },
         'right': {
             'left': "MIRROR_H",
-            'up': "ROTATE_CW",
-            'down': "ROTATE_CCW",
+            'up': "ROTATE_CCW",
+            'down': "ROTATE_CW",
         },
         'horizontal': {
             'vertical': "ROTATE_CW",
@@ -261,13 +261,35 @@ class RuleTransform {
         //now to look for objects with suffixes
         return token;
     }
+
+    static strip_prelude(line) {
+        //remove everything before the first '['
+        var idx = line.indexOf('[');
+        if (idx < 0) return line;
+        return line.substring(idx);
+    }
     static applyTransformation(line, transformation) {
         line = RuleTransform.stripRuleComment(line);
+        var fromDir = RuleTransform.getFirstRuleDirection(line);
+
+        /*
+        this is a bit inefficient - it's basically to stop, when you autocomplete something like this
+            rigid up [ up Player | Crate_up ] -> [ up Player | up Crate_up ] 
+            + rigid
+
+        from getting
+            rigid up [ up Player | Crate_up ] -> [ up Player | up Crate_up ] 
+            + rigid rigid up [ up Player | Crate_up ] -> [ up Player | up Crate_up ] 
+        */
+        
+        line = RuleTransform.strip_prelude(line);
+        line = fromDir + ' ' + line;
+
         var tokens = tokenizeRuleLine(line);
-        if (!tokens) return null;
+        if (!tokens) return null;        
         for (var i = 0; i < tokens.length; i++) {
             tokens[i] = RuleTransform.applyTransformationToToken(tokens[i], transformation);            
-        }
+        }        
         return tokens.join(' ');
     }
 
