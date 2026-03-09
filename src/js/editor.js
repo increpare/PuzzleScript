@@ -164,6 +164,8 @@ editor.on("beforeChange", function(instance, change) {
 code.editorreference = editor;
 editor.setOption('theme', 'midnight');
 
+installImagePasteHandler(editor);
+
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     let regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
