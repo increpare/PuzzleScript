@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="shortcut icon" type="image/x-icon" href="ico/favicon.ico" />
+
+  <title>Advanced Autocomplete - PuzzleScript Documentation</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/bootstrap-theme.css" rel="stylesheet">
+  <link href="css/doc-code.css" rel="stylesheet">
+
+  <style>
+    .table-bordered-pop {
+      border: 1px solid black !important;
+    }
+
+    .table-bordered-pop th,
+    .table-bordered-pop td,
+    .table-bordered-pop thead th {
+      border: 1px solid black !important;
+    }
+  </style>
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><img src="../images/mascot_colorful.png"> PuzzleScript</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="../editor.html">Make A Game</a></li>
+
+          <li class="active"><a href="documentation.html">Documentation</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="https://groups.google.com/g/puzzlescript">Forum</a></li>
+          <li><a href="https://github.com/increpare/puzzlescript">GitHub</a></li>
+          <li><a href="https://github.com/sponsors/increpare">Sponsor</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+
+  <div class="container">
+
+    <p>
+    <ol class="breadcrumb">
+      <li><a href="documentation.html">Documentation</a></li>
+      <li class="active">Advanced Autocomplete</li>
+    </ol>
+    <p>
+    <h1>Advanced Autocomplete</h1>
+    <p>
+      PuzzleScript has fancy autocomplete for objects and rules.
+    <p>
+      For instance, if you create an objected called <b>Enemy_up</b>, if as your next object you start typing <b>C</b>
+      you will see in your autocomplete a suggestion to generate the rest (<b>_down</b>, <b>_left</b>, <b>_right</b>),
+      which will also rotate the sprites with them.
+    <p>
+      <img width="200px" src="images/autocomplete_object_udlr_alt.gif">
+    <p>
+      There's been autocomplete added for many suffix variants:
+    <div class="row">
+      <div class="col-md-8">
+        <div style="display: table;">
+          <table class="table table-bordered table-bordered-pop" style="width: auto;">
+            <thead>
+              <tr>
+                <td>Suffix</td>
+                <td>Other parts complete to</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>_up</b></td>
+                <td><b>_down</b>, <b>_left</b>, <b>_right</b></td>
+              </tr>
+              <tr>
+                <td><b>_u</b></td>
+                <td><b>_d</b>, <b>_l</b>, <b>_r</b></td>
+              </tr>
+              <tr>
+                <td><b>_U</b></td>
+                <td><b>_D</b>, <b>_L</b>, <b>_R</b></td>
+              </tr>
+              <tr>
+                <td><b>Up</b></td>
+                <td><b>Down</b>, <b>Left</b>, <b>Right</b></td>
+              </tr>
+              <tr>
+                <td><b>UP</b></td>
+                <td><b>DOWN</b>, <b>LEFT</b>, <b>RIGHT</b></td>
+              </tr>
+              <tr>
+                <td><b>North</b></td>
+                <td><b>South</b>, <b>West</b>, <b>East</b></td>
+              </tr>
+              <tr>
+                <td><b>NORTH</b></td>
+                <td><b>SOUTH</b>, <b>WEST</b>, <b>EAST</b></td>
+              </tr>
+              <tr>
+                <td><b>_n</b></td>
+                <td><b>_s</b>, <b>_w</b>, <b>_e</b></td>
+              </tr>
+              <tr>
+                <td><b>_N</b></td>
+                <td><b>_S</b>, <b>_W</b>, <b>_E</b></td>
+              </tr>
+              <tr>
+                <td><b>Horizontal</b></td>
+                <td><b>Vertical</b></td>
+              </tr>
+              <tr>
+                <td><b>HORIZONTAL</b></td>
+                <td><b>VERTICAL</b></td>
+              </tr>
+              <tr>
+                <td><b>_horizontal</b></td>
+                <td><b>_vertical</b></td>
+              </tr>
+              <tr>
+                <td><b>_h</b></td>
+                <td><b>_v</b></td>
+              </tr>
+              <tr>
+                <td><b>_H</b></td>
+                <td><b>_V</b></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <p>
+    This isn't the end of it, though! Having defined an object with a suffix, you will also be able
+    to autocomplete it in other parts of the code, such as auto-generating property-types in the legend:
+<p>
+    <img width="600px" src="images/autocomplete_2.gif">
+<p>
+    Or appending to existing types:
+  <p>
+    <img width="600px" src="images/autocomplete_3.gif">
+<p>
+
+  This is not the end, though! If you type one rule that starts with a direction, 
+  if you add a new rule to the next line that starts with a direction, you will be 
+  prompted with a transformed version of that rule.
+
+  <p>
+    <img width="600px" src="images/autocomplete_4.gif">
+  <p>
+
+    How do we decide how to transform the rule? It depends on the two directions. 
+    If they are 90 degrees apart, it's a rotation, otherwise we mirror the rule.  
+    If we have an <b>up</b> rule, a following <b>down</b> rule will be autocompleted as a vertical mirror:
+    <p>
+    <pre><code>up [ > Player | up Crate_up ] -> [ > Player | right Crate_right ] 
+down [ > Player | down Crate_down ] -> [ > Player | right Crate_right ]</code></pre>
+<p>
+But if we autocomplete in series <b>up</b>, <b>right</b>, <b>down</b>, the <b>down</b> rule will be effectively a 180 degree rotation of the original <b>up</b> rule:
+<p>
+<pre><code>up [ > Player | up Crate_up ] -> [ > Player | right Crate_right ] 
+right [ > Player | right Crate_right ] -> [ > Player | down Crate_down ]
+down [ > Player | down Crate_down ] -> [ > Player | left Crate_left ]</code></pre>
+<p>
+  This will do its best to transform any objects with suffixes mentioned in the above table, along with any movement directions mentioned.
+
+  </div><!-- /.container -->
+
+
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="js/jquery.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/doc-highlight.js"></script>
+</body>
+
+</html>

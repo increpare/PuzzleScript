@@ -190,7 +190,9 @@
                 //     curWord="";
                 // } else {
                     return {
-                        list: []
+                        list: [],
+                        from: CodeMirror.Pos(cur.line, start),
+                        to: CodeMirror.Pos(cur.line, end)
                     };
                 // }            
             }
@@ -200,6 +202,9 @@
 
             var list = options && options.list || [],
                 seen = {};
+            var legendDirectionalFirst = []; // directional "or" completions for LEGEND, shown first
+            var collisionlayersDirectionalFirst = []; // same for COLLISIONLAYERS
+            var ruleMirrorFirst = []; // mirrored/rotated rule from previous line (rules section only)
 
             var addObjects = false;
             var excludeProperties = false;
@@ -244,29 +249,26 @@
                                 break;
                             }
 
-                            const pairings = [ ["Up",["Down","Left","Right"]],
-                                                ["UP",["DOWN","LEFT","RIGHT"]],
-                                                ["up",["down","left","right"]],
-                                                ["_u",["_d","_l","_r"]],
-                                                ["_U",["_D","_L","_R"]] ];
-                            for (var i=0;i<pairings.length;i++){
-                                const suffix = pairings[i][0];
+                            for (var i=0;i<RuleTransform.DIRECTIONAL_PAIRINGS.length;i++){
+                                const suffix = RuleTransform.DIRECTIONAL_PAIRINGS[i][0];
                                 // STEP 2, if casename ends with suffix, suggest the corresonding pairings
                                 if (previous_object_casename.endsWith(suffix)){
                                     //FOUND a match.
                                     let to_suggest = "";
                                     const stem = previous_object_casename.slice(0,-suffix.length);
-                                    const further_endings = pairings[i][1];
+                                    const further_endings = RuleTransform.DIRECTIONAL_PAIRINGS[i][1];
                                     const previous_object = state.objects[max_line_number_name_lowercase];
 
                                     //generate rotations of previous_object
-                                    const rotations = [ 
+                                    const rotations = further_endings.length === 3 ?[ 
                                         //DOWN
                                         rotate_2d_array(previous_object.spritematrix,2),
                                         //LEFT
                                         rotate_2d_array(previous_object.spritematrix,3),
                                         //RIGHT
                                         rotate_2d_array(previous_object.spritematrix,1),
+                                    ] : [ //for horizontal and vertical objects
+                                        rotate_2d_array(previous_object.spritematrix,1)
                                     ];
 
                                     for (let j=0;j<further_endings.length;j++){
@@ -478,6 +480,87 @@
                     }
             }
 
+            // Rule mirror/rotate: single suggestion for the direction being typed (or prefix, e.g. "d" -> down), alongside normal hints
+            if (state.section === 'rules' && state.rule_prelude === true && curWord) {
+                var curDir = RuleTransform.matchRuleDirection(curWord); 
+                var prevLine = editor.getLine(cur.line - 1);
+                var prevDir = RuleTransform.matchRuleDirection(prevLine);
+                var transformed = RuleTransform.tryTransformRuleLine(prevLine, curDir);
+                if (transformed) {
+                    ruleMirrorFirst.push({ text: transformed, extra: '', tag: 'EXTENDED_AUTOCOMPLETE', render: renderHint });
+                }   
+                    
+            }
+
+            // In LEGEND, when typing at start of line (no = yet), suggest full line "stem = stem_north or ..."
+            if (state.section === 'legend' && lineToCursor.indexOf('=') < 0) {
+                for (var p = 0; p < RuleTransform.DIRECTIONAL_PAIRINGS.length; p++) {
+                    var pairing = RuleTransform.DIRECTIONAL_PAIRINGS[p];
+                    var suffixes = [pairing[0]].concat(pairing[1]);
+                    var suffixesLower = suffixes.map(function (s) { return s.toLowerCase(); });
+                    var byStem = {};
+                    for (var key in state.objects) {
+                        if (!state.objects.hasOwnProperty(key)) continue;
+                        for (var s = 0; s < suffixesLower.length; s++) {
+                            var suf = suffixesLower[s];
+                            if (key.length > suf.length && key.slice(-suf.length) === suf) {
+                                var stem = key.slice(0, -suf.length);
+                                if (!byStem[stem]) byStem[stem] = [];
+                                if (byStem[stem].indexOf(suf) === -1) byStem[stem].push({ suf: suf, key: key, order: s });
+                                break;
+                            }
+                        }
+                    }
+                    for (var stem in byStem) {
+                        if (!curWord || stem.lastIndexOf(curWord, 0) !== 0) continue;
+                        var stemTrimmed = stem;
+                        while (stemTrimmed && stemTrimmed.charAt(stemTrimmed.length - 1) === "_") {
+                            stemTrimmed = stemTrimmed.slice(0, -1);
+                        }
+                        if (state.objects[stemTrimmed]) continue;
+                        var stemDefined = false;
+                        if (state.legend_synonyms) {
+                            for (var si = 0; si < state.legend_synonyms.length; si++) {
+                                if (state.legend_synonyms[si][0].toLowerCase() === stemTrimmed) { stemDefined = true; break; }
+                            }
+                        }
+                        if (!stemDefined && state.legend_properties) {
+                            for (var pi = 0; pi < state.legend_properties.length; pi++) {
+                                if (state.legend_properties[pi][0].toLowerCase() === stemTrimmed) { stemDefined = true; break; }
+                            }
+                        }
+                        if (!stemDefined && state.legend_aggregates) {
+                            for (var ai = 0; ai < state.legend_aggregates.length; ai++) {
+                                if (state.legend_aggregates[ai][0].toLowerCase() === stemTrimmed) { stemDefined = true; break; }
+                            }
+                        }
+                        if (stemDefined) continue;
+                        var variants = byStem[stem];
+                        if (variants.length < 2) continue;
+                        variants.sort(function (a, b) { return a.order - b.order; });
+                        var orParts = [];
+                        for (var v = 0; v < variants.length; v++) {
+                            var casename = state.original_case_names[variants[v].key];
+                            if (casename) orParts.push(casename);
+                        }
+                        if (orParts.length < 2) continue;
+                        var firstCasename = state.original_case_names[variants[0].key];
+                        var sufLow = suffixesLower[variants[0].order];
+                        var stemDisplay = (firstCasename && firstCasename.length > sufLow.length)
+                            ? firstCasename.replace(new RegExp(sufLow.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$", "i"), "")
+                            : stem;
+                        while (stemDisplay && stemDisplay.charAt(stemDisplay.length - 1) === "_") {
+                            stemDisplay = stemDisplay.slice(0, -1);
+                        }
+                        var fullLine = stemDisplay + " = " + orParts.join(" or ");
+                        var fullLineKey = fullLine.toLowerCase();
+                        if (Object.prototype.hasOwnProperty.call(seen, fullLineKey)) continue;
+                        seen[fullLineKey] = true;
+                        legendDirectionalFirst.push({ text: fullLine, extra: '', tag: 'NAME', render: renderHint });
+                    }
+                }
+            }
+
             //first, add objects if needed
             if (addObjects){
                 var obs = state.objects;
@@ -517,6 +600,125 @@
                     }
                 }
 
+                // In legend section (RHS), offer "Base_u or Base_d or ..." and show these first (#1104)
+                if (state.section === 'legend') {
+                    // Tokens already on line (even indices = name tokens; lowercase)
+                    var already_on_line = [];
+                    if (state.current_line_wip_array && state.current_line_wip_array.length) {
+                        for (var i = 2; i < state.current_line_wip_array.length; i += 2) {
+                            var t = state.current_line_wip_array[i];
+                            already_on_line.push(t);
+                        }
+                    }
+                    for (var p = 0; p < RuleTransform.DIRECTIONAL_PAIRINGS.length; p++) {
+                        var pairing = RuleTransform.DIRECTIONAL_PAIRINGS[p];
+                        var suffixes = [pairing[0]].concat(pairing[1]);
+                        var suffixesLower = suffixes.map(function (s) { return s.toLowerCase(); });
+                        var byStem = {};
+                        for (var key in state.objects) {
+                            if (!state.objects.hasOwnProperty(key)) continue;
+                            for (var s = 0; s < suffixesLower.length; s++) {
+                                var suf = suffixesLower[s];
+                                if (key.length > suf.length && key.slice(-suf.length) === suf) {
+                                    var stem = key.slice(0, -suf.length);
+                                    if (!byStem[stem]) byStem[stem] = [];
+                                    if (byStem[stem].indexOf(suf) === -1) byStem[stem].push({ suf: suf, key: key, order: s });
+                                    break;
+                                }
+                            }
+                        }
+                        for (var stem in byStem) {
+                            if (!curWord || stem.lastIndexOf(curWord, 0) !== 0) continue;
+                            var variants = byStem[stem];
+                            if (variants.length < 2) continue;
+                            variants.sort(function (a, b) { return a.order - b.order; });
+                            var orParts = [];
+                            for (var v = 0; v < variants.length; v++) {
+                                var casename = state.original_case_names[variants[v].key];
+                                if (casename) orParts.push(casename);
+                            }
+                            if (orParts.length < 2) continue;
+                            // Don't suggest if any term in this "X or Y or Z" already appears on the line
+                            var termAlreadyOnLine = false;
+                            for (var v = 0; v < variants.length; v++) {
+                                if (already_on_line.indexOf(variants[v].key) !== -1) {
+                                    termAlreadyOnLine = true;
+                                    break;
+                                }
+                            }
+                            if (termAlreadyOnLine) continue;
+                            var combined = orParts.join(' or ');
+                            var combinedKey = combined.toLowerCase();
+                            if (Object.prototype.hasOwnProperty.call(seen, combinedKey)) continue;
+                            seen[combinedKey] = true;
+                            legendDirectionalFirst.push({ text: combined, extra: '', tag: 'NAME', render: renderHint });
+                        }
+                    }
+                }
+
+                // In collisionlayers section, offer "Base_u, Base_d, ..." comma-separated groups, skip if any term already on line
+                if (state.section === 'collisionlayers') {
+                    var clLineTokens = {};
+                    if (state.current_line_wip_array && state.current_line_wip_array.length) {
+                        for (var i = 0; i < state.current_line_wip_array.length; i++) {
+                            var t = state.current_line_wip_array[i];
+                            var name = typeof t === 'string' ? t : (t && t[0] ? t[0].toLowerCase() : null);
+                            if (name) clLineTokens[name] = true;
+                        }
+                    }
+                    for (var p = 0; p < RuleTransform.DIRECTIONAL_PAIRINGS.length; p++) {
+                        var pairing = RuleTransform.DIRECTIONAL_PAIRINGS[p];
+                        var suffixes = [pairing[0]].concat(pairing[1]);
+                        var suffixesLower = suffixes.map(function (s) { return s.toLowerCase(); });
+                        var byStem = {};
+                        for (var key in state.objects) {
+                            if (!state.objects.hasOwnProperty(key)) continue;
+                            for (var s = 0; s < suffixesLower.length; s++) {
+                                var suf = suffixesLower[s];
+                                if (key.length > suf.length && key.slice(-suf.length) === suf) {
+                                    var stem = key.slice(0, -suf.length);
+                                    if (!byStem[stem]) byStem[stem] = [];
+                                    if (byStem[stem].indexOf(suf) === -1) byStem[stem].push({ suf: suf, key: key, order: s });
+                                    break;
+                                }
+                            }
+                        }
+                        for (var stem in byStem) {
+                            if (!curWord || stem.lastIndexOf(curWord, 0) !== 0) continue;
+                            var variants = byStem[stem];
+                            if (variants.length < 2) continue;
+                            variants.sort(function (a, b) { return a.order - b.order; });
+                            var parts = [];
+                            for (var v = 0; v < variants.length; v++) {
+                                var casename = state.original_case_names[variants[v].key];
+                                if (casename) parts.push(casename);
+                            }
+                            if (parts.length < 2) continue;
+                            var termAlreadyOnLine = false;
+                            for (var v = 0; v < variants.length; v++) {
+                                if (clLineTokens[variants[v].key]) {
+                                    termAlreadyOnLine = true;
+                                    break;
+                                }
+                            }
+                            if (termAlreadyOnLine) continue;
+                            var combined = parts.join(', ');
+                            var combinedKey = combined.toLowerCase();
+                            if (Object.prototype.hasOwnProperty.call(seen, combinedKey)) continue;
+                            seen[combinedKey] = true;
+                            collisionlayersDirectionalFirst.push({ text: combined, extra: '', tag: 'NAME', render: renderHint });
+                        }
+                    }
+                }
+
+            }
+
+            // Show directional legend completions first (both full-line LHS and RHS "or" chain)
+            if (legendDirectionalFirst.length) {
+                list = legendDirectionalFirst.concat(list);
+            }
+            if (collisionlayersDirectionalFirst.length) {
+                list = collisionlayersDirectionalFirst.concat(list);
             }
 
             // go through random names
@@ -548,7 +750,9 @@
                     }
                 }
             }
-            
+            if (ruleMirrorFirst.length) {
+                list = list.concat(ruleMirrorFirst);
+            }
 
             //state.legend_aggregates
             //state.legend_synonyms
@@ -587,10 +791,16 @@
             if (tok.string.trim().length>curWord.length){
                 list=[];
             }
+            var fromPos = CodeMirror.Pos(cur.line, start);
+            var toPos = CodeMirror.Pos(cur.line, end);
+            if (ruleMirrorFirst.length > 0) {
+                fromPos = CodeMirror.Pos(cur.line, start);
+                toPos = CodeMirror.Pos(cur.line, end);
+            }
             return {
                 list: list,
-                from: CodeMirror.Pos(cur.line, start),
-                to: CodeMirror.Pos(cur.line, end)
+                from: fromPos,
+                to: toPos
             };
         });
 

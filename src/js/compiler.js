@@ -533,6 +533,15 @@ function rightBracketToRightOf(tokens, i) {
     return false;
 }
 
+function tokenizeRuleLine(line) {
+    line = line.replace(/\[/g, ' [ ').replace(/\]/g, ' ] ').replace(/\|/g, ' | ').replace(/\-\>/g, ' -> ');
+    line = line.trim();
+    if (line[0] === '+') {
+        line = line.substring(0, 1) + " " + line.substring(1, line.length);
+    }
+    return line.split(/\s/).filter(function (v) { return v !== '' });
+}
+
 function processRuleString(rule, state, curRules) {
     /*
 
@@ -552,12 +561,7 @@ function processRuleString(rule, state, curRules) {
     let origLine = rule[2];
 
     // STEP ONE, TOKENIZE
-    line = line.replace(/\[/g, ' [ ').replace(/\]/g, ' ] ').replace(/\|/g, ' | ').replace(/\-\>/g, ' -> ');
-    line = line.trim();
-    if (line[0] === '+') {
-        line = line.substring(0, 1) + " " + line.substring(1, line.length);
-    }
-    let tokens = line.split(/\s/).filter(function (v) { return v !== '' });
+    let tokens = tokenizeRuleLine(line);
 
     if (tokens.length === 0) {
         logError('Spooky error!  Empty line passed to rule function.', lineNumber);

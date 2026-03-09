@@ -14,6 +14,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/bootstrap-theme.css" rel="stylesheet">
+    <link href="css/doc-code.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -75,7 +76,7 @@ Sokoban has one rule:
 <p>
 PuzzleScript allows you to express this succinctly:
 <p>
-<pre><code><a href="../editor.html?demo=sokoban_basic" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ]</code></pre>
+<pre><code><a href="../editor.html?demo=sokoban_basic" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ]</code></pre>
 <p>
 The engine looks for the pattern on the left, and replaces it with the one on the right.  
 <p>
@@ -83,7 +84,7 @@ The engine looks for the pattern on the left, and replaces it with the one on th
 <p>
 Let's play with the above line of code - what would happen if we changed the direction of the arrows?
 <p>
-<pre><code><a href="../editor.html?demo=sokoban_sticky" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ &lt; Player | Crate ] -> [ &lt; Player | &lt; Crate ]</code></pre>
+<pre><code><a href="../editor.html?demo=sokoban_sticky" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ &lt; Player | Crate ] -> [ &lt; Player | &lt; Crate ]</code></pre>
 <p>
 Now, the crates stick to you you when you move away from them!
 <p>
@@ -100,7 +101,7 @@ The engine works like this:
 <p>
 What might you want to do after movements have been applied?  Say you want three crates in a row to vanish (a la <a href="../editor.html?demo=blockfaker">block faker</a>), you do this by adding the following rule:
 <p>
-<pre><code><a href="../editor.html?demo=sokoban_match3" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>late [ Crate | Crate | Crate ] -> [ | | ]</code></pre>
+<pre><code><a href="../editor.html?demo=sokoban_match3" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>late [ Crate | Crate | Crate ] -> [ | | ]</code></pre>
 <p>
 <img src="images/sokoban_match3.gif">
 <p>
@@ -108,7 +109,7 @@ If the late keyword wasn't there, the crates wouldn't disappear until the start 
 <p>
 Let's have spooky eyeballs that follow you around.
 <p>
-<pre><code><a href="../editor.html?demo=sokoban_eyeball" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ]</code></pre>
+<pre><code><a href="../editor.html?demo=sokoban_eyeball" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ Eyeball | ... | Player ] -> [ > Eyeball | ... | Player ]</code></pre>
 <p>
 <img src="images/eyefollow.gif">
 <p>
@@ -118,14 +119,14 @@ Here's a naughty teleport sprite - whenever she sees you she swaps places with y
 <p>
 <em>No, wait!  Don't type that in.</em> It causes an infinite loop, it keeps swapping them back and forth forever.  This fixes it:
 <p>
-<pre><code><a href="../editor.html?demo=naughtysprite" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>late [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ]
+<pre><code><a href="../editor.html?demo=naughtysprite" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>late [ Sprite | ... | Player ] -> [ Temp | ... | Sprite ]
 late [ Temp ] -> [ Player ]</code></pre>
 <p>
 <img src="images/sokoban_fairy.gif">
 <p>
 What if you're <a href="http://www.lexaloffle.com/neko.htm">a kitty that likes fruit?</a>
 <p>
-<pre><code><a href="../editor.html?demo=nekopuzzle" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Kitty | ... | Fruit ] -> [ | ... | Kitty ]
+<pre><code><a href="../editor.html?demo=nekopuzzle" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ > Kitty | ... | Fruit ] -> [ | ... | Kitty ]
 [ > Kitty ] -> [ Kitty ]</code></pre>
 <p>
 The second line is because we are moving the kitty ourselves, and don't want the game engine letting kitty wander about.
@@ -134,7 +135,7 @@ The second line is because we are moving the kitty ourselves, and don't want the
 <p>
 What if you want crates that can only be pushed horizontally? 
 <p>
-<pre><code><a href="../editor.html?demo=sokoban_horizontal" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>Horizontal [ > Player | Block ] -> [ > Player | > Block ]</code></pre>
+<pre><code><a href="../editor.html?demo=sokoban_horizontal" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>Horizontal [ > Player | Block ] -> [ > Player | > Block ]</code></pre>
 <p>
 This only looks for occurrences of the pattern that are horizontal. You could also say vertical instead.
 <p>
@@ -142,7 +143,7 @@ This only looks for occurrences of the pattern that are horizontal. You could al
 <p>
 You can have several patterns rather than just a single row - here's a sumo wrestler that imitates whatever you do, wherever you are:
 <p>
-<pre><code><a href="../editor.html?demo=sumo" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player ] [ Sumo ] -> [ > Player ] [ > Sumo ]</code></pre>
+<pre><code><a href="../editor.html?demo=sumo" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ > Player ] [ Sumo ] -> [ > Player ] [ > Sumo ]</code></pre>
 <p>
 <img src="images/sumo.gif">
 <p>
@@ -159,5 +160,6 @@ That about covers all the basics.  You should be able to tinker with the example
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/doc-highlight.js"></script>
   </body>
 </html>

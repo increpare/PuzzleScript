@@ -14,6 +14,7 @@
 
  <!-- Custom styles for this template -->
  <link href="css/bootstrap-theme.css" rel="stylesheet">
+ <link href="css/doc-code.css" rel="stylesheet">
 
  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
  <!--[if lt IE 9]>
@@ -75,7 +76,7 @@
 </p><p>
 So, it's nice to be able to push blocks around that are larger than 1x1. An initial effort to achieve this will look like this:
 </p><p>
-<pre><code><a href="../editor.html?demo=rigidfail1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
+<pre><code><a href="../editor.html?demo=rigidfail1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
 [ Moving BigBlock | BigBlock ] -> [ Moving BigBlock | Moving BigBlock ]</code></pre>
 </p><p>
 To the naked eye it will look splendid:
@@ -98,7 +99,7 @@ SO, let's start are catalogue of cases:
 </p><p>
  This is the easiest. You just push everything, and if one crate can't be pushed, you cancel everything:
 </p><p>
- <pre><code><a href="../editor.html?demo=rigid_11" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ]
+ <pre><code><a href="../editor.html?demo=rigid_11" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ]
 [ > Crate ] [ stationary Crate ] -> [ > Crate ] [ > Crate ]
 [ > Crate | Wall ] -> cancel</code></pre>
 </p><p>
@@ -108,7 +109,7 @@ SO, let's start are catalogue of cases:
 </p><p>
 If you want to have several objects at once, you can do something like the following:
 </p><p>
-<pre><code><a href="../editor.html?demo=rigid_scott1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Box ] -> [ > Player | > Box ]
+<pre><code><a href="../editor.html?demo=rigid_scott1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ > Player | Box ] -> [ > Player | > Box ]
 
 startloop
 
@@ -140,7 +141,7 @@ If we have many characters that want simultaneously to push several objects, but
   </ul>
   </p><p> (Checking this example in the <a href="visual_debugger.html">visual debugger</a> is strongly recommended).
   </p><p>
-<pre><code><a href="../editor.html?demo=rigid_parallel_many" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>( 1. Propagate movements forward )
+<pre><code><a href="../editor.html?demo=rigid_parallel_many" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>( 1. Propagate movements forward )
 [ > Mover | Movable ] -> [ > Mover | > Movable ]
 + [ > Box ] [ Box ] -> [ > Box ] [ > Box ]
 + [ > Crate ] [ Crate ] -> [ > Crate ] [ > Crate ]
@@ -175,7 +176,7 @@ If we have many characters that want simultaneously to push several objects, but
 You don't have to define individual objects for each crate in regular sokoban, so why do you have to do it for extended bodies? Well, you don't; you can instead have a single CRATE block type and encode information about directional connections as 'metadata' on top of it (CRATE_U, CRATE_D, CRATE_L, CRATE_R) that rules use to propagate movements within single extended bodies like so:
 </p><p>
 
-<pre><code><a href="../editor.html?demo=rigid_one_unlimited" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>(Propagate movements within and between extended bodies)
+<pre><code><a href="../editor.html?demo=rigid_one_unlimited" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>(Propagate movements within and between extended bodies)
 [ > Pusher | Pushable ] -> [ > Pusher | > Pushable ]
 + up [ moving Crate Crate_U | Crate ] -> [ moving Crate Crate_U | moving Crate ]
 + down [ moving Crate Crate_D | Crate ] -> [ moving Crate Crate_D | moving Crate ]
@@ -198,7 +199,7 @@ Et voilà:
 </p><p>
 So I'm going to take the above example and push it beyond its limits. Let's say we take the above example but have two characters: a regular player, and a shadow player that moves in the opposite direction.
 </p><p>
-<pre><code><a href="../editor.html?demo=rigid_many_broken" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]</code></pre><p>
+<pre><code><a href="../editor.html?demo=rigid_many_broken" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ > player ] [ stationary shadow ] -> [ > player ] [ < shadow ]</code></pre><p>
 </p><p>
 The problem here is, what happens if you push the same extended body from two directions at once? Well, as you can see, the directions end up fighting with eachother and can't resolve:
 </p><p>
@@ -206,7 +207,7 @@ The problem here is, what happens if you push the same extended body from two di
 </p><p>
 A question you might ask yourself here would be: how would you expect this to resolve anyway? Well, in this case you could detect conflicting movements as obstructions like so in this step 2:
 </p><p>
-<pre><code><a href="../editor.html?demo=rigid_many_many" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>( 2. Propagate obstructions backwards )
+<pre><code><a href="../editor.html?demo=rigid_many_many" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>( 2. Propagate obstructions backwards )
 [ > Mover | stationary Obstacle ] -> [ stationary Mover | Obstacle ]
 
  (The next lines deal with directional conflicts:)
@@ -240,7 +241,7 @@ And I might be feeling good about myself, but there's still a lot of ways that m
 </p><p>
  So you throw in this as well to detect when two objects are trying to move together and stick one of them in place:
 </p><p>
- <pre><code><a href="../editor.html?demo=rigid_many_many2" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>+ [ > Mover | | < Mover ] -> [ stationary Mover | | < Mover ]</code></pre><p></p>
+ <pre><code><a href="../editor.html?demo=rigid_many_many2" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>+ [ > Mover | | < Mover ] -> [ stationary Mover | | < Mover ]</code></pre><p></p>
 </p><p>
  This patches up that behaviour quite nicely!
 </p><p>
@@ -301,12 +302,12 @@ Let's go back to the broken example right at the start:
 </p><p>
 <img src="images/rigidfail2.gif">
 </p><p>
-<pre><code><a href="../editor.html?demo=rigidfail1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
+<pre><code><a href="../editor.html?demo=rigidfail1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
 [ Moving BigBlock | BigBlock ] -> [ Moving BigBlock | Moving BigBlock ]</code></pre>
 </p><p>
 We want that, if any of the BigBlock pieces don't get to move, that whole rule just doesn't apply. Actually, we also don't want the first rule to apply. So what we do is that we group the rules together using the + symbol, and we mark them as rigid
 </p><p>
-<pre><code><a href="../editor.html?demo=rigid_one_object" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>rigid [ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
+<pre><code><a href="../editor.html?demo=rigid_one_object" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>rigid [ > Player | BigBlock ] -> [ > Player | > BigBlock ] 
 + rigid [ Moving BigBlock | BigBlock ] -> [ Moving BigBlock | Moving BigBlock ]</code></pre>
 </p><p>
 and magically it works
@@ -315,7 +316,7 @@ and magically it works
 </p><p>
 So all's good if you have a single rigid block, but if you try to have blocks pushing other blocks it gets complicated. Let's say you want a big block to collide with little blocks. You end up with stuff like this:
 </p><p>
-<pre><code><a href="../editor.html?demo=rigid_and_little" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | LittleBlock ] -> [ > Player | > LittleBlock ]
+<pre><code><a href="../editor.html?demo=rigid_and_little" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ > Player | LittleBlock ] -> [ > Player | > LittleBlock ]
 [ > LittleBlock | LittleBlock ] -> [ > LittleBlock | > LittleBlock ]
 
 rigid [ > LittleBlock | BigBlock ] -> [ > LittleBlock | > BigBlock ]
@@ -330,7 +331,7 @@ Let's try to model two crate types, where crates can push crates.
 <img src="images/rigid_twolittlecrates1.gif">
 </p><p>
 
-<pre><code><a href="../editor.html?demo=twolittlecrates1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>=======
+<pre><code><a href="../editor.html?demo=twolittlecrates1" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>=======
 LEGEND
 =======
 
@@ -346,7 +347,7 @@ RULES
 </p><p>
 Thich works splendidly. But what if we weren't allowed to refer to the Crate but instead had to refer to them individually, or weren't allowed to combine them together into a rulegroup in the second rule? We could try something like:
 </p><p>
-<pre><code><a href="../editor.html?demo=twolittlecrates2" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ] 
+<pre><code><a href="../editor.html?demo=twolittlecrates2" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ] 
 
 [ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
 [ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
@@ -361,7 +362,7 @@ If only there were some way of looping through these four rules. Well, adding th
 </p><p>
 
 
-<pre><code><a href="../editor.html?demo=twolittlecrates3" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ] 
+<pre><code><a href="../editor.html?demo=twolittlecrates3" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ] 
 
 startLoop
 
@@ -378,7 +379,7 @@ That fixes our weird theoretical problem (in a way that will be useful for solvi
 </p><p>
 For the above example, this is more or less identical to saying
 </p><p>
-<pre><code><a href="../editor.html?demo=twolittlecrates4" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ] 
+<pre><code><a href="../editor.html?demo=twolittlecrates4" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>[ > Player | Crate ] -> [ > Player | > Crate ] 
 
 [ > OrangeCrate | OrangeCrate ] -> [ > OrangeCrate | > OrangeCrate ]
 + [ > OrangeCrate | BlueCrate ] -> [ > OrangeCrate | > BlueCrate ]
@@ -387,7 +388,7 @@ For the above example, this is more or less identical to saying
 </p><p>
 However, we don't have this luxury for rigidbodies (Can you tell why not? It's because rigidbodies deactivate entire rule-groups - if our whole game logic is in one giant rule-group we can't selectively delete parts of it). So, with all that said, here's what code for a system with several rigid bodies and some small blocks looks like, thanks to the STARTLOOP and ENDLOOP keywords:
 </p><p>
-<pre><code><a href="../editor.html?demo=several_rigid_bodies" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-cog"> Edit</span></a>startloop
+<pre><code><a href="../editor.html?demo=several_rigid_bodies" target="puzzleScript_EditorWindow" class="btn btn-default pull-right" ><span class="glyphicon"> Edit</span></a>startloop
 
 [ > Player | Smallcrate ] -> [ > Player | > SmallCrate ]
 
@@ -421,5 +422,6 @@ Anyway, that's it.  Thanks for bearing with me through this rather labourious de
  <!-- Placed at the end of the document so the pages load faster -->
  <script src="js/jquery.js"></script>
  <script src="js/bootstrap.min.js"></script>
+ <script src="js/doc-highlight.js"></script>
  </body>
 </html>

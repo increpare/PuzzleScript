@@ -1,0 +1,109 @@
+/**
+ * Documentation code block styles for PuzzleScript syntax highlighting.
+ * Self-contained (nighttime theme). doc-highlight.js adds .doc-code to the <pre>.
+ */
+
+div.container > pre {
+  min-width: 600px;
+  width: fit-content;
+}
+
+div.container > ul {
+  width: 600px;
+}
+.doc-code {
+  background-color: #0F192A;
+  color: #D1EDFF;
+  font-family: 'Consolas', 'Lucida Console', monospace;
+  padding: 0.75em 1em;
+  overflow-x: auto;
+  border-radius: 4px;
+  margin: 0.5em 0;
+  margin-right: 5em; /* space for Edit button (btn pull-right) so it doesn't cause line-breaks */
+  border: 2px solid green;
+  min-width: 600px;
+  /*size to fit the content*/
+  width: fit-content;
+  white-space: pre;
+}
+
+p{
+  width:600px;
+}
+code {
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  font-weight: bold !important;
+}
+
+/* Edit button: visible on dark background */
+.doc-code .btn,
+.doc-code .btn:visited,
+.doc-code .btn:hover {
+  color: #e06f8b !important;
+  border-color: #e06f8b !important;
+  border-width: 2px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+
+  
+}
+.doc-code .btn:hover {
+  background: #134162 !important;
+}
+
+.doc-code .glyphicon {
+  font-family: 'Consolas', 'Lucida Console', monospace;
+  font-weight: bold !important;
+}
+/* Icon is drawn via ::before; keep glyphicon font so the icon displays */
+.doc-code .glyphicon::before {
+  font-family: 'Glyphicons Halflings' !important;
+}
+
+/* Token colors (nighttime theme) */
+.cm-NAME { color: #1DC116; }
+.cm-HEADER { color: #AE81FF; font-weight: bold; }
+.cm-METADATA { color: #AE81FF; }
+.cm-METADATATEXT { color: orange; font-style: italic; }
+.cm-COMMAND { color: #AE81FF; }
+.cm-MESSAGE_VERB { color: #AE81FF; }
+.cm-DIRECTION { color: #C11DC1; }
+.cm-LOGICWORD { color: #AE81FF; }
+.cm-ARROW { color: #C11D16; }
+.cm-ASSIGNMENT { color: #AE81FF; }
+.cm-BRACKET { color: #D1EDFF; }
+.cm-EQUALSBIT { color: #808080; }
+.cm-LEVEL { color: #AAAAAA; }
+.cm-comment { color: #428BDD; font-style: italic; }
+.cm-SOUND { 
+  color: orange;
+  cursor: pointer;
+  cursor: hand;
+  text-decoration: underline; }
+
+/* Sprite matrix: dot = transparent, digits = palette index */
+.cm-FADECOLOR { color: #777777; }
+.cm-MATRIX { color: #D1EDFF; }
+.cm-COLOR-HEX { color: #D1EDFF; }
+.cm-COLOR-BLACK { color: #555555; }
+.cm-COLOR-WHITE { color: #FFFFFF; }
+.cm-COLOR-GREY, .cm-COLOR-GRAY { color: #9D9D9D; }
+.cm-COLOR-DARKGREY, .cm-COLOR-DARKGRAY { color: #6D6D6D; }
+.cm-COLOR-LIGHTGREY, .cm-COLOR-LIGHTGRAY { color: #c1c1c1; }
+.cm-COLOR-RED { color: #BE2633; }
+.cm-COLOR-DARKRED { color: #732930; }
+.cm-COLOR-LIGHTRED { color: #e06f8b; }
+.cm-COLOR-BROWN { color: #A46422; }
+.cm-COLOR-DARKBROWN { color: #493C2B; }
+.cm-COLOR-LIGHTBROWN { color: #EEB62F; }
+.cm-COLOR-ORANGE { color: #EB8931; }
+.cm-COLOR-YELLOW { color: #F7E26B; }
+.cm-COLOR-GREEN { color: #44891A; }
+.cm-COLOR-DARKGREEN { color: #2F484E; }
+.cm-COLOR-LIGHTGREEN { color: #A3CE27; }
+.cm-COLOR-BLUE { color: #31A2F2; }
+.cm-COLOR-DARKBLUE { color: #005784; }
+.cm-COLOR-LIGHTBLUE { color: #B2DCEF; }
+.cm-COLOR-PURPLE { color: #580780; }
+.cm-COLOR-PINK { color: #E06F8B; }

@@ -175,6 +175,7 @@ ncp("./src", "./bin/", function (err) {
                 "./src/js/codemirror/search.js",
                 "./src/js/codemirror/match-highlighter.js",
                 "./src/js/codemirror/show-hint.js",
+                "./src/js/codemirror/rule-transform.js",
                 "./src/js/codemirror/anyword-hint.js",
                 "./src/js/codemirror/comment.js",
                 "./src/js/colors.js",
