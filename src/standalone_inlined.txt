@@ -272,139 +272,164 @@ function storage_remove(key) {
 <script>
 'use strict';
 
+//GENERAL PRINCIPLE
+// Split bit index "shift" into: position within the word vs which word.
+// inner_idx: internal index - which bit within that int (0..0b11111)
+// outer_idx: external index - which int our index is in ( not a "layer" index)
+
+// for movements: 5 bits per layer: layer 6, 12, … start at bit 5*6 = 30 and straddle into next word
+
 function BitVec(init) {
 	this.data = new Int32Array(init);
 }
 
-BitVec.prototype.cloneInto = function(target) {
-	for (let i=0;i<this.data.length;++i) {
-		target.data[i]=this.data[i];
+BitVec.prototype.cloneInto = function (target) {
+	for (let i = 0; i < this.data.length; ++i) {
+		target.data[i] = this.data[i];
 	}
 	return target;
 }
-BitVec.prototype.clone = function() {
+BitVec.prototype.clone = function () {
 	return new BitVec(this.data);
 }
 
-BitVec.prototype.iand = function(other) {
+BitVec.prototype.iand = function (other) {
 	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i] &= other.data[i];
 	}
 }
 
 
-BitVec.prototype.inot = function() {
+BitVec.prototype.inot = function () {
 	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i] = ~this.data[i];
 	}
 }
 
-BitVec.prototype.ior = function(other) {
+BitVec.prototype.ior = function (other) {
 	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i] |= other.data[i];
 	}
 }
 
-BitVec.prototype.iclear = function(other) {
+BitVec.prototype.iclear = function (other) {
 	for (let i = 0; i < this.data.length; ++i) {
 		this.data[i] &= ~other.data[i];
 	}
 }
 
-BitVec.prototype.ibitset = function(ind) {
-	this.data[ind>>5] |= 1 << (ind & 31);
+
+BitVec.prototype.ibitset = function (ind) {
+	const outer_idx = ind >> 5;
+	const inner_idx = ind & 0b11111;
+	this.data[outer_idx] |= 1 << inner_idx;
 }
 
 
 
 function IBITSET(tok, index) {
-	return `${tok}.data[${index}>>5] |= 1 << (${index} & 31);`;
+	return `${tok}.data[${index}>>5] |= 1 << (${index} & 0b11111);`;
 }
 
 
-BitVec.prototype.ibitclear = function(ind) {
-	this.data[ind>>5] &= ~(1 << (ind & 31));
+BitVec.prototype.ibitclear = function (ind) {
+	const outer_idx = ind >> 5;
+	const inner_idx = ind & 0b11111;
+	// clears that one bit, leaves others unchanged
+	this.data[outer_idx] &= ~(1 << inner_idx);
 }
 
-BitVec.prototype.get = function(ind) {
-	return (this.data[ind>>5] & 1 << (ind & 31)) !== 0;
+BitVec.prototype.get = function (ind) {
+	const outer_idx = ind >> 5;
+	const inner_idx = ind & 0b11111;
+	return (this.data[outer_idx] & 1 << inner_idx) !== 0;
 }
 
 function GET(tok, index) {
-    const shift_5 = index >> 5;
-    const bit_position = 1 << (index & 31);
-    return `((${tok}.data[${shift_5}] & ${bit_position}) !== 0)`;
+	const outer_idx = index >> 5;
+	const inner_idx = index & 0b11111;
+	return `((${tok}.data[${outer_idx}] & 1 << ${inner_idx}) !== 0)`;
 }
 
 
-BitVec.prototype.getshiftor = function(mask, shift) {
-	const toshift = shift & 31;
-	let ret = this.data[shift>>5] >>> (toshift);
-	if (toshift) {
-		ret |= this.data[(shift>>5)+1] << (32 - toshift);
+BitVec.prototype.getshiftor = function (mask, shift) {
+	const inner_idx = shift & 0b11111;
+	const outer_idx = shift >> 5;
+	let ret = this.data[outer_idx] >>> inner_idx;
+	if (inner_idx > 27) {//32 - inner_idx > 5
+		ret |= this.data[outer_idx + 1] << (32 - inner_idx);
 	}
 	return ret & mask;
 }
 
 function GETSHIFTOR(tok, mask, shift) {
-    const toshift = shift&31;
-    const shift_5 = shift>>5;
-    if (toshift) {
-        return `${mask}&((${tok}.data[${shift_5}] >>> ${toshift}) | (${tok}.data[${shift_5}+1] << (32-${toshift})))`;
-    } else {
-        return `${mask}&(${tok}.data[${shift_5}] >>> ${toshift})`;
-    }
+	const inner_idx = shift & 0b11111;
+	const outer_idx = shift >> 5;
+	if (inner_idx > 27) {//32 - inner_idx > 5
+		return `${mask}&((${tok}.data[${outer_idx}] >>> ${inner_idx}) | (${tok}.data[${outer_idx}+1] << (32-${inner_idx})))`;
+	} else {
+		return `${mask}&(${tok}.data[${outer_idx}] >>> ${inner_idx})`;
+	}
 }
 
-BitVec.prototype.ishiftor = function(mask, shift) {
-	const toshift = shift&31;
-	const shift_5 = shift>>5;
-	let low = mask << toshift;
-	this.data[shift_5] |= low;
-	if (toshift) {
-		let high = mask >> (32 - toshift);
-		this.data[shift_5+1] |= high;
+BitVec.prototype.ishiftor = function (mask, shift) {
+	const inner_idx = shift & 0b11111;
+	const outer_idx = shift >> 5;
+	// low: mask shifted left so it lands at bit position (inner_idx) in word outer_idx
+	const low = mask << inner_idx;
+	this.data[outer_idx] |= low;
+	// if we have overflow into the next word
+	if (inner_idx > 27) {//32 - inner_idx > 5
+		// high: part of mask that overflows into next word (mask >>> (32-inner_idx))
+		const high = mask >> (32 - inner_idx);
+		this.data[outer_idx + 1] |= high;
 	}
 }
 
 function ISHIFTOR(tok, mask, shift) {
 	return `{
-		let toshift = ${shift}&31;
-		let low = ${mask} << toshift;
-		${tok}.data[${shift}>>5] |= low;
-		if (toshift) {
-			let high = ${mask} >> (32 - toshift);
-			${tok}.data[(${shift}>>5)+1] |= high;
+		const inner_idx = ${shift}&0b11111;
+		const outer_idx = ${shift}>>5;
+		const low = ${mask} << inner_idx;
+		${tok}.data[outer_idx] |= low;
+		if (inner_idx > 27) {//32 - inner_idx > 5
+			const high = ${mask} >> (32 - inner_idx);
+			${tok}.data[outer_idx+1] |= high;
 		}
 	}`;
 }
 
 
-BitVec.prototype.ishiftclear = function(mask, shift) {
-	const toshift = shift & 31;
-	const shift_5 = shift>>5;
-	const low = mask << toshift;
-	this.data[shift_5] &= ~low;
-	if (toshift){
-		let high = mask >> (32 - (shift & 31));
-		this.data[shift_5+1] &= ~high;
+BitVec.prototype.ishiftclear = function (mask, shift) {
+	const inner_idx = shift & 0b11111;
+	const outer_idx = shift >> 5;
+	const low = mask << inner_idx;
+	this.data[outer_idx] &= ~low;
+	if (inner_idx > 27) {//32 - inner_idx > 5
+		const high = mask >> (32 - inner_idx);
+		this.data[outer_idx + 1] &= ~high;
 	}
+}
+
+function WEIRDNESS_FOUND(msg) {
+	throw new Error(`found ${msg}`);
 }
 
 
 function ISHIFTCLEAR(tok, mask, shift) {
-	const toshift = shift&31;
-	const shift_5 = shift>>5;
-	const low = mask +"<<"+toshift;
-	let result = `${tok}.data[${shift_5}] &= ~(${low});\n`
-	if (toshift) {
-		const high = mask +">>>"+(32-toshift);
-		result += `${tok}.data[${shift_5+1}] &= ~(${high});\n`;
+	const inner_idx = shift & 0b11111;
+	const outer_idx = shift >> 5;
+	const low = mask + "<<" + inner_idx;
+	let result = `${tok}.data[${outer_idx}] &= ~(${low});\n`
+	if (inner_idx > 27) {//32 - inner_idx > 5
+		const high = mask + ">>>" + (32 - inner_idx);
+		const idx = outer_idx + 1;
+		result += `${tok}.data[${idx}] &= ~(${high});\n`;
 	}
 	return result;
 }
 
-BitVec.prototype.equals = function(other) {
+BitVec.prototype.equals = function (other) {
 	if (this.data.length !== other.data.length)
 		return false;
 	for (let i = 0; i < this.data.length; ++i) {
@@ -440,21 +465,21 @@ function NOT_EQUALS(tok, other, array_size) {
 }
 
 
-BitVec.prototype.setZero = function() {
+BitVec.prototype.setZero = function () {
 	this.data.fill(0);
 }
 
 function ARRAY_SET_ZERO(tok) {
-	return tok+".fill(0);\n";
+	return tok + ".fill(0);\n";
 }
 
 function SET_ZERO(tok) {
-	return tok+".data.fill(0);\n";
+	return tok + ".data.fill(0);\n";
 }
 
-BitVec.prototype.iszero = function() {
+BitVec.prototype.iszero = function () {
 	for (let i = 0; i < this.data.length; ++i) {
-		if (this.data[i]!==0)
+		if (this.data[i] !== 0)
 			return false;
 	}
 	return true;
@@ -476,7 +501,7 @@ function IS_NONZERO(tok, array_size) {
 	return result + ")";
 }
 
-BitVec.prototype.bitsSetInArray = function(arr) {
+BitVec.prototype.bitsSetInArray = function (arr) {
 	for (let i = 0; i < this.data.length; ++i) {
 		if ((this.data[i] & arr[i]) !== this.data[i]) {
 			return false;
@@ -502,7 +527,7 @@ function NOT_BITS_SET_IN_ARRAY(tok, arr, array_size) {
 	return result + ")";
 }
 
-BitVec.prototype.bitsClearInArray = function(arr) {
+BitVec.prototype.bitsClearInArray = function (arr) {
 	for (let i = 0; i < this.data.length; ++i) {
 		if (this.data[i] & arr[i]) {
 			return false;
@@ -521,7 +546,7 @@ function BITS_CLEAR_IN_ARRAY(tok, arr, array_size) {
 	return result + ")";
 }
 
-BitVec.prototype.anyBitsInCommon = function(other) {
+BitVec.prototype.anyBitsInCommon = function (other) {
 	for (let i = 0; i < this.data.length; ++i) {
 		if (this.data[i] & other.data[i]) {
 			return true;
@@ -530,11 +555,12 @@ BitVec.prototype.anyBitsInCommon = function(other) {
 	return false;
 }
 
-BitVec.prototype.prettyPrint = function() {
-	var result="";
+BitVec.prototype.prettyPrint = function () {
+	var result = "";
 	//print string as bit array, grouped into fives
 	for (let i = 0; i < this.data.length; i++) {
 		for (let j = 0; j < 32; j++) {
+			// 1<<j = bit mask for bit j in the word
 			result += (this.data[i] & (1 << j)) ? "1" : "0";
 		}
 		result += " ";
@@ -578,7 +604,7 @@ function UNROLL(command, array_size) {
 function UNROLL_TOK_REAL(tok, op, val, array_size) {
 	let result = "";
 	for (let i = 0; i < array_size; i++) {
-		result += tok + ".data[" + i + "]" + op + val.data[i]+";\n";
+		result += tok + ".data[" + i + "]" + op + val.data[i] + ";\n";
 	}
 	return result;
 }
@@ -586,15 +612,15 @@ function UNROLL_TOK_REAL(tok, op, val, array_size) {
 function LEVEL_GET_CELL_INTO(level, index, targetarray, OBJECT_SIZE) {
 	let result = "";
 	for (let i = 0; i < OBJECT_SIZE; i++) {
-		result += targetarray+`.data[${i}]=level.objects[${index}*${OBJECT_SIZE}+${i}];\n`;
+		result += targetarray + `.data[${i}]=level.objects[${index}*${OBJECT_SIZE}+${i}];\n`;
 	}
 	return result;
 }
 
-function LEVEL_GET_MOVEMENTS_INTO( index, targetarray, MOVEMENT_SIZE) {
+function LEVEL_GET_MOVEMENTS_INTO(index, targetarray, MOVEMENT_SIZE) {
 	let result = "";
 	for (let i = 0; i < MOVEMENT_SIZE; i++) {
-		result += targetarray+`.data[${i}]=level.movements[${index}*${MOVEMENT_SIZE}+${i}];\n`;
+		result += targetarray + `.data[${i}]=level.movements[${index}*${MOVEMENT_SIZE}+${i}];\n`;
 	}
 	return result;
 }
@@ -609,10 +635,10 @@ function LEVEL_SET_CELL(level, index, vec, array_size) {
 }
 
 
-function IMPORT_COMPILE_TIME_ARRAY(runtime,compiletime,array_size){
+function IMPORT_COMPILE_TIME_ARRAY(runtime, compiletime, array_size) {
 	let result = "";
 	for (let i = 0; i < array_size; i++) {
-		result+=`${runtime}.data[${i}]=${compiletime.data[i]};\n`;
+		result += `${runtime}.data[${i}]=${compiletime.data[i]};\n`;
 	}
 	return result;
 }
@@ -757,7 +783,8 @@ const reg_loopmarker = /^(startloop|endloop)$/;
 const reg_ruledirectionindicators = /^(up|down|left|right|horizontal|vertical|orthogonal|late|rigid)$/;
 const reg_sounddirectionindicators = /[\p{Z}\s]*(up|down|left|right|horizontal|vertical|orthogonal)(?![\p{L}\p{N}_])[\p{Z}\s]*/u;
 const reg_winconditionquantifiers = /^(all|any|no|some)$/;
-const keyword_array = ['checkpoint','objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message', "move", "action", "create", "destroy", "cantmove", "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "checkpoint", "restart", "win", "message", "again", "undo", "restart", "titlescreen", "startgame", "cancel", "endgame", "startlevel", "endlevel", "showmessage", "closemessage"];
+// checkpoint omitted: allowed as object name (see issue #1109)
+const keyword_array = ['objects', 'collisionlayers', 'legend', 'sounds', 'rules', '...','winconditions', 'levels','|','[',']','up', 'down', 'left', 'right', 'late','rigid', '^','v','\>','\<','no','randomdir','random', 'horizontal', 'vertical','any', 'all', 'no', 'some', 'moving','stationary','parallel','perpendicular','action','message', "move", "action", "create", "destroy", "cantmove", "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10", "cancel", "restart", "win", "message", "again", "undo", "restart", "titlescreen", "startgame", "cancel", "endgame", "startlevel", "endlevel", "showmessage", "closemessage"];
 
 const  directionaggregates = {
     'horizontal': ['left', 'right'],
@@ -8403,6 +8430,36 @@ function redraw() {
             }
         }
 
+        // In level editor with flickscreen, draw grid lines at screen boundaries (#1106)
+        if (levelEditorOpened && state.metadata.flickscreen !== undefined) {
+            var fw = state.metadata.flickscreen[0];
+            var fh = state.metadata.flickscreen[1];
+            var viewW = maxi - mini;
+            var viewH = maxj - minj;
+            ctx.strokeStyle = state.fgcolor;
+            ctx.globalAlpha = 0.4;
+            ctx.lineWidth = 1;
+            for (var col = fw; col < maxi; col += fw) {
+                if (col > mini) {
+                    var x = xoffset + (col - mini) * cellwidth;
+                    ctx.beginPath();
+                    ctx.moveTo(x, yoffset);
+                    ctx.lineTo(x, yoffset + viewH * cellheight);
+                    ctx.stroke();
+                }
+            }
+            for (var row = fh; row < maxj; row += fh) {
+                if (row > minj) {
+                    var y = yoffset + (row - minj) * cellheight;
+                    ctx.beginPath();
+                    ctx.moveTo(xoffset, y);
+                    ctx.lineTo(xoffset + viewW * cellwidth, y);
+                    ctx.stroke();
+                }
+            }
+            ctx.globalAlpha = 1;
+        }
+
         if (diffToVisualize !== null) {
             //find previous state (this is never called on the very first state, the one before player inputs are applied, so there is always a previous state)
             var prevstate_lineNumberIndex = diffToVisualize.lineNumber - 1;
@@ -8448,7 +8505,7 @@ function redraw() {
                 }
             }
 
-            //draw rigid applciations!
+            //draw rigid applications!
             if (state.rigid){
                 for (var i = mini; i < maxi; i++) {
                     for (var j = minj; j < maxj; j++) {
@@ -11378,6 +11435,11 @@ function processInput(dir, dontDoWin, dontModify) {
 			level.commandQueueSourceRules = startState.commandQueueSourceRules.concat([]);
 			sfxCreateMask.setZero();
 			sfxDestroyMask.setZero();
+			seedsToPlay_CanMove = [];
+			//seedsToPlay_CantMove = []; 
+			// CAN'T MOVE SHOULD BE KEPT - it's not perfect, but more often than not, 
+			// the thing that can't move is the rigid body, and we want to keep that information, 
+			// not clear it.
 
 			if (verbose_logging && rigidloop && i > 0) {
 				consolePrint('Relooping through rules because of rigid.');
@@ -11866,10 +11928,24 @@ let compiling = false;
 let errorStrings = [];//also stores warning strings
 let errorCount = 0;//only counts errors
 
+function resetParserErrorState() {
+    errorStrings = [];
+    errorCount = 0;
+}
+
 function TooManyErrors() {
     const message = compiling ? "Too many errors/warnings; aborting compilation." : "Too many errors/warnings; noping out.";
     consolePrint(message, true);
     throw new Error(message);
+}
+
+function buildErrorHtml(lineNumber, str, className) {
+    const c = className || 'errorText';
+    if (lineNumber === undefined) {
+        return '<span class="' + c + '">' + str + '</span>';
+    }
+    const ln = lineNumber.toString();
+    return '<a onclick="jumpToLine(' + ln + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + ln + '</span></a> : ' + '<span class="' + c + '">' + str + '</span>';
 }
 
 function logErrorCacheable(str, lineNumber, urgent) {
@@ -11877,7 +11953,7 @@ function logErrorCacheable(str, lineNumber, urgent) {
         if (lineNumber === undefined) {
             return logErrorNoLine(str, urgent);
         }
-        let errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="errorText">' + str + '</span>';
+        const errorString = buildErrorHtml(lineNumber, str, 'errorText');
         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
         } else {
@@ -11896,7 +11972,7 @@ function logError(str, lineNumber, urgent) {
         if (lineNumber === undefined) {
             return logErrorNoLine(str, urgent);
         }
-        let errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="errorText">' + str + '</span>';
+        const errorString = buildErrorHtml(lineNumber, str, 'errorText')
         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
         } else {
@@ -11915,7 +11991,7 @@ function logWarning(str, lineNumber, urgent) {
         if (lineNumber === undefined) {
             return logWarningNoLine(str, urgent);
         }
-        let errorString = '<a onclick="jumpToLine(' + lineNumber.toString() + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + lineNumber.toString() + '</span></a> : ' + '<span class="warningText">' + str + '</span>';
+        const errorString = buildErrorHtml(lineNumber, str, 'warningText');
         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
         } else {
@@ -11930,7 +12006,7 @@ function logWarning(str, lineNumber, urgent) {
 
 function logWarningNoLine(str, urgent) {
     if (compiling || urgent) {
-        let errorString = '<span class="warningText">' + str + '</span>';
+        const errorString = '<span class="warningText">' + str + '</span>';
         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
         } else {
@@ -11947,7 +12023,7 @@ function logWarningNoLine(str, urgent) {
 
 function logErrorNoLine(str, urgent) {
     if (compiling || urgent) {
-        let errorString = '<span class="errorText">' + str + '</span>';
+        const errorString = '<span class="errorText">' + str + '</span>';
         if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
             //do nothing, duplicate error
         } else {
@@ -12031,7 +12107,8 @@ let codeMirrorFn = function () {
     'use strict';
 
     function checkNameDefined(state, candname) {
-        if (state.objects[candname] !== undefined) {
+        const key = candname.toLowerCase();
+        if (state.objects[key] !== undefined) {
             return;
         }
         for (let i = 0; i < state.legend_synonyms.length; i++) {
@@ -12356,12 +12433,16 @@ let codeMirrorFn = function () {
                 line_should_end_because: state.line_should_end_because,
                 sol_after_comment: state.sol_after_comment,
 
+                inside_cell: state.inside_cell,
+                bracket_balance: state.bracket_balance,
+                arrow_passed: state.arrow_passed,
+                rule_prelude: state.rule_prelude,
+
                 objects_candname: state.objects_candname,
                 objects_section: state.objects_section,
                 objects_spritematrix: state.objects_spritematrix.concat([]),
 
                 tokenIndex: state.tokenIndex,
-
                 current_line_wip_array: state.current_line_wip_array.concat([]),
 
                 legend_synonyms: legend_synonymsCopy,
@@ -12563,7 +12644,7 @@ let codeMirrorFn = function () {
                             /*
                             if (state.names.indexOf(n)!==-1) {
                                 logError('Object "'+n+'" has been declared to be multiple different things',state.legend_properties[i].lineNumber);
-                            }                           
+                            }
                             */
                             state.names.push(n);
                         }
@@ -13139,6 +13220,10 @@ let codeMirrorFn = function () {
                             let rule = reg_notcommentstart.exec(stream.string)[0];
                             state.rules.push([rule, state.lineNumber, mixedCase]);
                             state.tokenIndex = 0;//in rules, records whether bracket has been found or not
+                            state.inside_cell = false;
+                            state.arrow_passed = false;
+                            state.bracket_balance = 0;
+                            state.rule_prelude = true;
                         }
 
                         if (state.tokenIndex === -4) {
@@ -13146,9 +13231,23 @@ let codeMirrorFn = function () {
                             return 'MESSAGE';
                         }
                         if (stream.match(/[\p{Z}\s]*->[\p{Z}\s]*/u, true)) {
+                            state.arrow_passed = true;
                             return 'ARROW';
                         }
                         if (ch === '[' || ch === '|' || ch === ']' || ch === '+') {
+                            if (ch === '[') {
+                                state.inside_cell = true;
+                                state.rule_prelude = false;
+                            } else if (ch === ']') {
+                                state.inside_cell = false;
+                                //used to detect if we've reached the final ']'
+                                if (state.arrow_passed) {
+                                    state.bracket_balance--;
+                                } else {
+                                    state.bracket_balance++;
+                                }
+                            }
+
                             if (ch !== '+') {
                                 state.tokenIndex = 1;
                             }
@@ -13444,6 +13543,11 @@ let codeMirrorFn = function () {
                 line_should_end_because: '',
                 sol_after_comment: false,
 
+                inside_cell: false,
+                bracket_balance: 0,
+                arrow_passed: false,
+                rule_prelude: true,
+
                 objects_candname: '',
                 objects_section: 0, //whether reading name/color/spritematrix
                 objects_spritematrix: [],
@@ -13518,7 +13622,7 @@ function generateSpriteMatrix(dat) {
             if (ch === '.') {
                 row.push(-1);
             } else {
-                row.push(ch);
+                row.push(parseInt(ch));
             }
         }
         result.push(row);
@@ -14019,6 +14123,15 @@ function rightBracketToRightOf(tokens, i) {
     return false;
 }
 
+function tokenizeRuleLine(line) {
+    line = line.replace(/\[/g, ' [ ').replace(/\]/g, ' ] ').replace(/\|/g, ' | ').replace(/\-\>/g, ' -> ');
+    line = line.trim();
+    if (line[0] === '+') {
+        line = line.substring(0, 1) + " " + line.substring(1, line.length);
+    }
+    return line.split(/\s/).filter(function (v) { return v !== '' });
+}
+
 function processRuleString(rule, state, curRules) {
     /*
 
@@ -14038,12 +14151,7 @@ function processRuleString(rule, state, curRules) {
     let origLine = rule[2];
 
     // STEP ONE, TOKENIZE
-    line = line.replace(/\[/g, ' [ ').replace(/\]/g, ' ] ').replace(/\|/g, ' | ').replace(/\-\>/g, ' -> ');
-    line = line.trim();
-    if (line[0] === '+') {
-        line = line.substring(0, 1) + " " + line.substring(1, line.length);
-    }
-    let tokens = line.split(/\s/).filter(function (v) { return v !== '' });
+    let tokens = tokenizeRuleLine(line);
 
     if (tokens.length === 0) {
         logError('Spooky error!  Empty line passed to rule function.', lineNumber);
@@ -15675,7 +15783,7 @@ function ruleGroupDiscardOverlappingTest(ruleGroup) {
                     parenthetical += ")";
                 }
 
-                logError(`${example[0]} and ${example[1]} can never overlap${parenthetical}, but this rule requires that to happen, so it's being culled.`, rule.lineNumber);
+                logError(`${example[0]} and ${example[1]} can never overlap${parenthetical}. This rule requires that to happen, so it impossible it will ever trigger.`, rule.lineNumber);
             }
             i--;
         }
@@ -16686,9 +16794,8 @@ function compile(command, text, randomseed) {
         compiledText = text;
     }
 
-    errorCount = 0;
+    resetParserErrorState();
     compiling = true;
-    errorStrings = [];
     consolePrint('=================================');
     let state;
     try {
@@ -17021,8 +17128,7 @@ let selectableint = 0;
 
 function printLevel() {
 	try {
-		errorCount = 0;
-		errorStrings = [];
+		resetParserErrorState();
 		const glyphMasks = [];
 
 		for (const glyphName in state.glyphDict) {
@@ -17454,53 +17560,55 @@ function pollGamepads() {
 
 	for(var i = 0; i < gamepads.length; i++) {
 		var gamepad = gamepads[i];
-		
+		//reference https://w3c.github.io/gamepad/#remapping
 		if(!gamepad || !gamepad.connected) {
 			continue;
 		}
-		if(buttonCheck(gamepad.buttons, 3) // Y
-			|| buttonCheck(gamepad.buttons, 4)) { // LB
-			
-			keyPressed(82); // restart
-		}
-		if(buttonCheck(gamepad.buttons, 1) // B
-			|| buttonCheck(gamepad.buttons, 6)) { // LT
-			
-			keyPressed(90); // undo
-		}
-		if(buttonCheck(gamepad.buttons, 2) // X
-			|| buttonCheck(gamepad.buttons, 0) // A
-			|| buttonCheck(gamepad.buttons, 5) // RB
-			|| buttonCheck(gamepad.buttons, 7)) { // RT
-			
-			keyPressed(88); // action
-		}
-		if(buttonCheck(gamepad.buttons, 7)||buttonCheck(gamepad.buttons, 8)) { // menu button
-			keyPressed(27); // exit
-		}
-		if(buttonCheck(gamepad.buttons, 6)) { // change view button
-			keyPressed(69); // edit
-		}
-		if(axisCheck(gamepad.axes, 1, -1) // up
-			|| axisCheck(gamepad.axes, 7, -1) || buttonCheck(gamepad.buttons, 12)) { // D-pad up
-			
+		if(axisCheck(gamepad.axes, 1, -1) // lstick up
+			|| axisCheck(gamepad.axes, 3, -1)  //rstick up
+			|| buttonCheck(gamepad.buttons, 12)) { // D-pad up		
+
 			keyPressed(38); // up
 		}
-		if(axisCheck(gamepad.axes, 1, 1) // down
-			|| axisCheck(gamepad.axes, 7, 1) || buttonCheck(gamepad.buttons, 13)) { // D-pad down
-			
+		if(axisCheck(gamepad.axes, 1, 1) // lstick down
+			|| axisCheck(gamepad.axes, 3, 1)   //rstick down
+			|| buttonCheck(gamepad.buttons, 13)) { // D-pad down
+						
 			keyPressed(40); // down
 		}
-		if(axisCheck(gamepad.axes, 0, -1) // left
-			|| axisCheck(gamepad.axes, 6, -1) || buttonCheck(gamepad.buttons, 14)) { // D-pad left
+		if(axisCheck(gamepad.axes, 0, -1) // lstick left
+			|| axisCheck(gamepad.axes, 2, -1)  //rstick left
+			|| buttonCheck(gamepad.buttons, 14)) { // D-pad left
 			
 			keyPressed(37); // left
 		}
-		if(axisCheck(gamepad.axes, 0, 1) // right
-			|| axisCheck(gamepad.axes, 6, 1) || buttonCheck(gamepad.buttons, 15)) { // D-pad right
-			
+		if(axisCheck(gamepad.axes, 0, 1) // lstick right
+			|| axisCheck(gamepad.axes, 2, 1)   //rstick right
+			|| buttonCheck(gamepad.buttons, 15)) { // D-pad right			
 			keyPressed(39); // right
 		}
+		
+		if(buttonCheck(gamepad.buttons, 2) // X 
+			|| buttonCheck(gamepad.buttons, 0) // A 
+			|| buttonCheck(gamepad.buttons, 5) // RB  
+			|| buttonCheck(gamepad.buttons, 7)) { // RT			
+			keyPressed(88); // action
+		}
+
+		if(buttonCheck(gamepad.buttons, 3) // Y  
+			|| buttonCheck(gamepad.buttons, 6)) { // LT  
+			
+			keyPressed(82); // restart
+		}
+		if(buttonCheck(gamepad.buttons, 1) // B  
+			|| buttonCheck(gamepad.buttons, 4)) { // LB 
+			
+			keyPressed(90); // undo
+		}
+		if(buttonCheck(gamepad.buttons, 9)) { // menu button 
+			keyPressed(27); // exit
+		}
+
 	}
 
 	clear();
