@@ -260,13 +260,15 @@
                                     const previous_object = state.objects[max_line_number_name_lowercase];
 
                                     //generate rotations of previous_object
-                                    const rotations = [ 
+                                    const rotations = further_endings.length === 3 ?[ 
                                         //DOWN
                                         rotate_2d_array(previous_object.spritematrix,2),
                                         //LEFT
                                         rotate_2d_array(previous_object.spritematrix,3),
                                         //RIGHT
                                         rotate_2d_array(previous_object.spritematrix,1),
+                                    ] : [ //for horizontal and vertical objects
+                                        rotate_2d_array(previous_object.spritematrix,1)
                                     ];
 
                                     for (let j=0;j<further_endings.length;j++){

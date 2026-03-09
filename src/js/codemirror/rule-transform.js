@@ -81,6 +81,11 @@ class RuleTransform {
         ['north', ['south', 'west', 'east']],
         ['_n', ['_s', '_w', '_e']],
         ['_N', ['_S', '_W', '_E']],
+        ['Horizontal', ['Vertical']],
+        ['HORIZONTAL', ['VERTICAL']],
+        ['horizontal', ['vertical']],
+        ['_h', ['_v']],
+        ['_H', ['_V']],
     ];
 
     static FLATTENED_DIRECTIONAL_PAIRINGS = [
@@ -94,6 +99,11 @@ class RuleTransform {
         ['north', 'south', 'west', 'east'],
         ['_n', '_s', '_w', '_e'],
         ['_N', '_S', '_W', '_E'],
+        ['Horizontal', 'Vertical'],
+        ['HORIZONTAL', 'VERTICAL'],
+        ['horizontal', 'vertical'],
+        ['_h', '_v'],
+        ['_H', '_V'],
     ];
 
 
@@ -201,11 +211,24 @@ class RuleTransform {
 
     static get_direction_from_suffix(suffix) {
         //use FLATTENED_DIRECTIONAL_PAIRINGS for this
+        // here are our indexes 
+        // 0 = Up
+        // 1 = Down
+        // 2 = Left
+        // 3 = Right
+        // 4 = Horizontal
+        // 5 = Vertical
         for (var i = 0; i < RuleTransform.FLATTENED_DIRECTIONAL_PAIRINGS.length; i++) {
             var pairings = RuleTransform.FLATTENED_DIRECTIONAL_PAIRINGS[i];
             for (var j = 0; j < pairings.length; j++) {
                 var suf = pairings[j];
-                if (suffix===suf) return j;
+                if (suffix===suf) {
+                    if (pairings.length ===4) {
+                        return j; //up, down, left, right are at index 0, 1, 2, 3
+                    } else {
+                        return 4+j; //horizontal and vertical are at index 4 and 5
+                    }
+                }
             }
         }
         return null;
@@ -222,16 +245,16 @@ class RuleTransform {
     }
 
     static apply_transformation_to_direction(dir, transformation) {
-        //dir 0123 = up, down, left, right
+        //dir 0123 = up, down, left, right, horizontal, vertical
         switch (transformation) {
             case "ROTATE_CW":
-                return [3,2,0,1][dir];
+                return [3,2,0,1,5,4][dir];
             case "ROTATE_CCW":
-                return [2,3,1,0][dir];
+                return [2,3,1,0,5,4][dir];
             case "MIRROR_H":
-                return [0,1,3,2][dir];
+                return [0,1,3,2,4,5][dir];
             case "MIRROR_V":
-                return [1,0,2,3][dir];
+                return [1,0,2,3,4,5][dir];
         }
         //should never happen, print error
         console.error("Invalid transformation: " + transformation);
@@ -242,7 +265,8 @@ class RuleTransform {
         var suffix = RuleTransform.get_object_directional_suffix(object_name);
         var stem = RuleTransform.get_object_name_stem(object_name,suffix,false);
         var dir = RuleTransform.get_direction_from_suffix(suffix);
-        var new_dir = RuleTransform.apply_transformation_to_direction(dir, transformation);
+        //udlr are 0123, hv are 45, so if we %4 we get the correct indexes for both groups yolo
+        var new_dir = RuleTransform.apply_transformation_to_direction(dir, transformation)%4;
         var suffix_type_idx = RuleTransform.get_suffix_type_idx_from_suffix(suffix);
         var new_suffix = RuleTransform.FLATTENED_DIRECTIONAL_PAIRINGS[suffix_type_idx][new_dir];
         return stem + new_suffix;
