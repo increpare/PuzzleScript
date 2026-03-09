@@ -148,7 +148,7 @@ function imageBlobToObjectText(blob, editor) {
 				for (let row = 0; row < PASTE_SIZE; row++) {
 					gridLines.push(grid.slice(row * PASTE_SIZE, (row + 1) * PASTE_SIZE).join(''));
 				}
-				const text = name + '\n' + colorLine + '\n' + gridLines.join('\n') + '\n';
+				const text = '\n' + name + '\n' + colorLine + '\n' + gridLines.join('\n') + '\n';
 				resolve(text);
 			} catch (e) {
 				reject(e);
