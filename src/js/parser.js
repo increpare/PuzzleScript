@@ -469,6 +469,7 @@ let codeMirrorFn = function () {
     ];
 
     return {
+        wordChars: "puzzle",
         copyState: function (state) {
             let objectsCopy = {};
             for (let i in state.objects) {
@@ -1686,3 +1687,5 @@ let codeMirrorFn = function () {
 };
 
 window.CodeMirror.defineMode('puzzle', codeMirrorFn);
+// Include # in word chars so hex colours like #15111D are selected as one word on double-click
+window.CodeMirror.registerHelper("wordChars", "puzzle", /[\w#]/);
