@@ -93,11 +93,13 @@ class RuleTransform {
         ['Up', 'Down', 'Left', 'Right'],
         ['UP', 'DOWN', 'LEFT', 'RIGHT'],
         ['up', 'down', 'left', 'right'],
+        ['_up', '_down', '_left', '_right'],
         ['_u', '_d', '_l', '_r'],
         ['_U', '_D', '_L', '_R'],
         ['North', 'South', 'West', 'East'],
         ['NORTH', 'SOUTH', 'WEST', 'EAST'],
         ['north', 'south', 'west', 'east'],
+        ['_north', '_south', '_west', '_east'],
         ['_n', '_s', '_w', '_e'],
         ['_N', '_S', '_W', '_E'],
         ['Horizontal', 'Vertical'],
@@ -270,7 +272,21 @@ class RuleTransform {
         //udlr are 0123, hv are 45, so if we %4 we get the correct indexes for both groups yolo
         var new_dir = RuleTransform.apply_transformation_to_direction(dir, transformation)%4;
         var suffix_type_idx = RuleTransform.get_suffix_type_idx_from_suffix(suffix);
-        var new_suffix = RuleTransform.FLATTENED_DIRECTIONAL_PAIRINGS[suffix_type_idx][new_dir];
+        var pairings = RuleTransform.FLATTENED_DIRECTIONAL_PAIRINGS[suffix_type_idx];
+        if (pairings == null || pairings[new_dir] == null) {
+            console.warn('[RuleTransform.transformObject] lookup failed', {
+                object_name,
+                transformation,
+                suffix,
+                dir,
+                new_dir,
+                suffix_type_idx,
+                pairings: pairings ? pairings.length : pairings,
+                valid_new_dir_range: pairings ? '0..' + (pairings.length - 1) : 'n/a'
+            });
+            return stem + suffix;
+        }
+        var new_suffix = pairings[new_dir];
         return stem + new_suffix;
     }
 
@@ -323,6 +339,10 @@ class RuleTransform {
         var fromDir = RuleTransform.getFirstRuleDirection(line);
         if (!fromDir) return null;
         var transformation = RuleTransform.DIR_TRANSFORMATION_RULES[fromDir][newDir];
+        if (!transformation) {
+            console.warn('[RuleTransform.rotateRuleLineToDirection] no transformation', { line: line.slice(0, 80), fromDir, newDir });
+            return null;
+        }
         var transformed_rule = RuleTransform.applyTransformation(line, transformation);
         return transformed_rule;
     }
