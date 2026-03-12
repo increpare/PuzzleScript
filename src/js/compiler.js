@@ -156,7 +156,7 @@ function generateExtraMembers(state) {
             o.spritematrix = generateSpriteMatrix(o.spritematrix);
         }    
 
-        let mask = blankMask.concat([]);
+        let mask = blankMask.slice();
         mask[o.layer] = o.id;
         glyphDict[n] = mask;
         glyphOrder.push([o.lineNumber, n]);    
@@ -192,7 +192,7 @@ function generateExtraMembers(state) {
                 }
             }
             if ((!(key in glyphDict) || (glyphDict[key] === undefined)) && allVallsFound) {
-                let mask = blankMask.concat([]);
+                let mask = blankMask.slice();
 
                 for (let j = 1; j < dat.length; j++) {
                     let n = dat[j];
@@ -276,7 +276,7 @@ function generateExtraMembers(state) {
                 propertiesDict[n] = propertiesDict[value];
                 modified = true;
             } else if (value in aggregatesDict) {
-                delete aggregatesDict[n];
+                delete synonymsDict[n];
                 aggregatesDict[n] = aggregatesDict[value];
                 modified = true;
             } else if (value in synonymsDict) {
@@ -433,7 +433,7 @@ function levelFromString(state, level) {
             }
 
             let maskint = new BitVec(STRIDE_OBJ);
-            mask = mask.concat([]);
+            mask = mask.slice();
             for (let z = 0; z < o.layerCount; z++) {
                 if (mask[z] >= 0) {
                     maskint.ibitset(mask[z]);
@@ -897,8 +897,8 @@ First, let's check for 'X no X' on the RHS.
             const rhs_group_len = rhs_group.length;
             for (let k=0;k<rhs_group_len;k++){
                 let cell = rhs_group[k];
-                var objects_present = [];
-                var objects_present_mask = new BitVec(STRIDE_OBJ);
+                let objects_present = [];
+                let objects_present_mask = new BitVec(STRIDE_OBJ);
                 for (let l=0;l<cell.length;l+=2){
                     let item = cell[l];
                     if (!item.startsWith("no")){
@@ -928,7 +928,7 @@ First, let's check for 'X no X' on the RHS.
                     let item = cell[l];
                     if (item.startsWith("no")){
                         let no_name = cell[l+1];
-                        var no_name_mask = state.objectMasks[no_name];
+                        let no_name_mask = state.objectMasks[no_name];
 
                         //if no_name overlaps with any objects_present, then we have a problem.
                         if (no_name_mask.anyBitsInCommon(objects_present_mask)){
@@ -1555,7 +1555,6 @@ function concretizeMovingRule(state, rule, lineNumber) {
         if (cur_rule.movingReplacement === undefined) {
             continue;
         }
-        let ambiguous_movement_dict = {};
         //strict first - matches movement direction to objects
         //for each property replacement in that rule
 
@@ -1600,26 +1599,6 @@ function concretizeMovingRule(state, rule, lineNumber) {
             } else {
                 ambiguous_movement_names_dict[ambiguousMovement] = concreteMovement
             }        
-        }
-
-        const ambiguous_movement_dict_keys = Object.keys(ambiguous_movement_dict);
-        const ambiguous_movement_dict_keys_l = ambiguous_movement_dict_keys.length;
-        for (let k_i = 0; k_i < ambiguous_movement_dict_keys_l; k_i++) {
-            const ambiguousMovement = ambiguous_movement_dict_keys[k_i];
-        //for each ambiguous word, if there's a single ambiguous movement specified in the whole lhs, then replace that wholesale
-            if (ambiguousMovement !== "INVALID") {
-                concreteMovement = ambiguous_movement_dict[ambiguousMovement];
-                if (concreteMovement === "INVALID") {
-                    continue;
-                }
-                for (let j = 0; j < cur_rule.rhs.length; j++) {
-                    let cellRow_rhs = cur_rule.rhs[j];
-                    for (let k = 0; k < cellRow_rhs.length; k++) {
-                        let cell = cellRow_rhs[k];
-                        concretizeMovingInCellByAmbiguousMovementName(cell, ambiguousMovement, concreteMovement);
-                    }
-                }
-            }
         }
 
         const ambiguous_movement_names_dict_keys = Object.keys(ambiguous_movement_names_dict);
@@ -2457,7 +2436,7 @@ function checkObjectsAreLayered(state) {
 }
 
 function isInt(value) {
-    return !isNaN(value) && (function (x) { return (x | 0) === x; })(parseFloat(value))
+    return !isNaN(value) && Number.isInteger(parseFloat(value));
 }
 
 function twiddleMetaData(state) {
@@ -2922,7 +2901,7 @@ function generateSoundData(state) {
             for (let j = 0; j < directions.length; j++) {
                 directions[j] = directions[j].trim();
                 let direction = directions[j];
-                if (soundDirectionIndicators.indexOf(direction) === -1) {
+                if (!(direction in soundDirectionIndicatorMasks)) {
                     //pre-emted by parser
                     logError('Was expecting a direction, instead found "' + direction + '".', lineNumber);
                 } else {
