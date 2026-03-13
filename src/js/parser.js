@@ -113,7 +113,6 @@ function logWarningNoLine(str, urgent) {
         } else {
             consolePrint(errorString, true);
             errorStrings.push(errorString);
-            errorCount++;
             if (errorStrings.length > MAX_ERRORS_FOR_REAL) {
                 TooManyErrors();
             }
@@ -434,10 +433,7 @@ let codeMirrorFn = function () {
         if (state.current_line_wip_array.length === 0) {
             return;
         }
-        //if last entry in array is 'ERROR', do nothing
-        if (state.current_line_wip_array[state.current_line_wip_array.length - 1] === 'ERROR') {
-
-        } else {
+        if (state.current_line_wip_array[state.current_line_wip_array.length - 1] !== 'ERROR') {
             //take the first component from each pair in the array
             let soundrow = state.current_line_wip_array;//.map(function(a){return a[0];});
             soundrow.push(state.lineNumber);
@@ -460,14 +456,6 @@ let codeMirrorFn = function () {
 
     //  let keywordRegex = new RegExp("\\b(("+cons.join(")|(")+"))$", 'i');
 
-    let fullSpriteMatrix = [
-        '00000',
-        '00000',
-        '00000',
-        '00000',
-        '00000'
-    ];
-
     return {
         wordChars: "puzzle",
         copyState: function (state) {
@@ -476,16 +464,16 @@ let codeMirrorFn = function () {
                 if (state.objects.hasOwnProperty(i)) {
                     let o = state.objects[i];
                     objectsCopy[i] = {
-                        colors: o.colors.concat([]),
+                        colors: o.colors.slice(),
                         lineNumber: o.lineNumber,
-                        spritematrix: o.spritematrix.concat([])
+                        spritematrix: o.spritematrix.slice()
                     }
                 }
             }
 
             let collisionLayersCopy = [];
             for (let i = 0; i < state.collisionLayers.length; i++) {
-                collisionLayersCopy.push(state.collisionLayers[i].concat([]));
+                collisionLayersCopy.push(state.collisionLayers[i].slice());
             }
 
             let legend_synonymsCopy = [];
@@ -497,25 +485,25 @@ let codeMirrorFn = function () {
             let rulesCopy = [];
 
             for (let i = 0; i < state.legend_synonyms.length; i++) {
-                legend_synonymsCopy.push(state.legend_synonyms[i].concat([]));
+                legend_synonymsCopy.push(state.legend_synonyms[i].slice());
             }
             for (let i = 0; i < state.legend_aggregates.length; i++) {
-                legend_aggregatesCopy.push(state.legend_aggregates[i].concat([]));
+                legend_aggregatesCopy.push(state.legend_aggregates[i].slice());
             }
             for (let i = 0; i < state.legend_properties.length; i++) {
-                legend_propertiesCopy.push(state.legend_properties[i].concat([]));
+                legend_propertiesCopy.push(state.legend_properties[i].slice());
             }
             for (let i = 0; i < state.sounds.length; i++) {
-                soundsCopy.push(state.sounds[i].concat([]));
+                soundsCopy.push(state.sounds[i].slice());
             }
             for (let i = 0; i < state.levels.length; i++) {
-                levelsCopy.push(state.levels[i].concat([]));
+                levelsCopy.push(state.levels[i].slice());
             }
             for (let i = 0; i < state.winconditions.length; i++) {
-                winConditionsCopy.push(state.winconditions[i].concat([]));
+                winConditionsCopy.push(state.winconditions[i].slice());
             }
             for (let i = 0; i < state.rules.length; i++) {
-                rulesCopy.push(state.rules[i].concat([]));
+                rulesCopy.push(state.rules[i].slice());
             }
 
             let original_case_namesCopy = Object.assign({}, state.original_case_names);
@@ -529,7 +517,7 @@ let codeMirrorFn = function () {
 
                 commentLevel: state.commentLevel,
                 section: state.section,
-                visitedSections: state.visitedSections.concat([]),
+                visitedSections: state.visitedSections.slice(),
 
                 line_should_end: state.line_should_end,
                 line_should_end_because: state.line_should_end_because,
@@ -542,10 +530,10 @@ let codeMirrorFn = function () {
 
                 objects_candname: state.objects_candname,
                 objects_section: state.objects_section,
-                objects_spritematrix: state.objects_spritematrix.concat([]),
+                objects_spritematrix: state.objects_spritematrix.slice(),
 
                 tokenIndex: state.tokenIndex,
-                current_line_wip_array: state.current_line_wip_array.concat([]),
+                current_line_wip_array: state.current_line_wip_array.slice(),
 
                 legend_synonyms: legend_synonymsCopy,
                 legend_aggregates: legend_aggregatesCopy,
@@ -555,16 +543,16 @@ let codeMirrorFn = function () {
 
                 rules: rulesCopy,
 
-                names: state.names.concat([]),
+                names: new Set(state.names),
 
                 winconditions: winConditionsCopy,
 
                 original_case_names: original_case_namesCopy,
                 original_line_numbers: original_line_numbersCopy,
 
-                abbrevNames: state.abbrevNames.concat([]),
+                abbrevNames: new Set(state.abbrevNames),
 
-                metadata: state.metadata.concat([]),
+                metadata: state.metadata.slice(),
                 metadata_lines: Object.assign({}, state.metadata_lines),
 
                 levels: levelsCopy,
@@ -719,7 +707,7 @@ let codeMirrorFn = function () {
                                 /*                                if (state.names.indexOf(n)!==-1) {
                                                                 logError('Object "'+n+'" has been declared to be multiple different things',state.objects[n].lineNumber);
                                                             }*/
-                                state.names.push(n);
+                                state.names.add(n);
                             }
                         }
                         //populate names from legends
@@ -730,7 +718,7 @@ let codeMirrorFn = function () {
                                 logError('Object "'+n+'" has been declared to be multiple different things',state.legend_synonyms[i].lineNumber);
                             }
                             */
-                            state.names.push(n);
+                            state.names.add(n);
                         }
                         for (let i = 0; i < state.legend_aggregates.length; i++) {
                             let n = state.legend_aggregates[i][0];
@@ -739,7 +727,7 @@ let codeMirrorFn = function () {
                                 logError('Object "'+n+'" has been declared to be multiple different things',state.legend_aggregates[i].lineNumber);
                             }
                             */
-                            state.names.push(n);
+                            state.names.add(n);
                         }
                         for (let i = 0; i < state.legend_properties.length; i++) {
                             let n = state.legend_properties[i][0];
@@ -748,25 +736,25 @@ let codeMirrorFn = function () {
                                 logError('Object "'+n+'" has been declared to be multiple different things',state.legend_properties[i].lineNumber);
                             }
                             */
-                            state.names.push(n);
+                            state.names.add(n);
                         }
                     }
                     else if (state.section === 'levels') {
                         //populate character abbreviations
                         for (let n in state.objects) {
                             if (state.objects.hasOwnProperty(n) && n.length === 1) {
-                                state.abbrevNames.push(n);
+                                state.abbrevNames.add(n);
                             }
                         }
 
                         for (let i = 0; i < state.legend_synonyms.length; i++) {
                             if (state.legend_synonyms[i][0].length === 1) {
-                                state.abbrevNames.push(state.legend_synonyms[i][0]);
+                                state.abbrevNames.add(state.legend_synonyms[i][0]);
                             }
                         }
                         for (let i = 0; i < state.legend_aggregates.length; i++) {
                             if (state.legend_aggregates[i][0].length === 1) {
-                                state.abbrevNames.push(state.legend_aggregates[i][0]);
+                                state.abbrevNames.add(state.legend_aggregates[i][0]);
                             }
                         }
                     }
@@ -1005,7 +993,6 @@ let codeMirrorFn = function () {
                         }
 
                         return resultToken;
-                        break;
                     }
                 case 'sounds':
                     {
@@ -1307,7 +1294,7 @@ let codeMirrorFn = function () {
                             }
                             state.current_line_wip_array.push(candname);
 
-                            state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
+                            state.collisionLayers[state.collisionLayers.length - 1].push(...ar);
                             if (ar.length > 0) {
                                 return 'NAME';
                             } else {
@@ -1368,7 +1355,7 @@ let codeMirrorFn = function () {
                                 stream.match(/[\p{Z}\s]*/u, true);
                                 return 'DIRECTION';
                             } else {
-                                if (state.names.indexOf(m) >= 0) {
+                                if (state.names.has(m)) {
                                     if (sol) {
                                         logError('Objects cannot appear outside of square brackets in rules, only directions can.', state.lineNumber);
                                         return 'ERROR';
@@ -1435,7 +1422,7 @@ let codeMirrorFn = function () {
                                 }
                             }
                             else if (state.tokenIndex === 1 || state.tokenIndex === 3) {
-                                if (state.names.indexOf(candword) === -1) {
+                                if (!state.names.has(candword)) {
                                     logError('Error in win condition: "' + candword.toUpperCase() + '" is not a valid object name.', state.lineNumber);
                                     return 'ERROR';
                                 } else {
@@ -1509,7 +1496,7 @@ let codeMirrorFn = function () {
                         if (state.tokenIndex === 2 && !stream.eol()) {
                             let ch = stream.peek();
                             stream.next();
-                            if (state.abbrevNames.indexOf(ch) >= 0) {
+                            if (state.abbrevNames.has(ch)) {
                                 return 'LEVEL';
                             } else {
                                 logError('Key "' + ch.toUpperCase() + '" not found. Do you need to add it to the legend, or define a new object?', state.lineNumber);
@@ -1614,15 +1601,8 @@ let codeMirrorFn = function () {
             }
 
 
-            if (stream.eol()) {
-                //don't know how to reach this.
-                return null;
-            }
-
-            if (!stream.eol()) {
-                stream.next();
-                return null;
-            }
+            stream.next();
+            return null;
         },
         startState: function () {
             return {
@@ -1667,7 +1647,7 @@ let codeMirrorFn = function () {
                 sounds: [],
                 rules: [],
 
-                names: [],
+                names: new Set(),
 
                 winconditions: [],
                 metadata: [],
@@ -1676,7 +1656,7 @@ let codeMirrorFn = function () {
                 original_case_names: {},
                 original_line_numbers: {},
 
-                abbrevNames: [],
+                abbrevNames: new Set(),
 
                 levels: [[]],
 

@@ -738,7 +738,7 @@ function processRuleString(rule, state, curRules) {
                         } else {
                             rhs = true;
                         }
-                    } else if (state.names.indexOf(token) >= 0) {
+                    } else if (state.names.has(token)) {
                         if (!incellrow) {
                             logWarning("Invalid token " + token.toUpperCase() + ". Object names should only be used within cells (square brackets).", lineNumber);
                         } else {

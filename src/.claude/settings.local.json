@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"C:/Users/Anwender/Documents/GitHub/PuzzleScript\" diff HEAD -- src/js/parser.js)",
+      "Bash(git -C \"C:/Users/Anwender/Documents/GitHub/PuzzleScript\" log --oneline -5 -- src/js/parser.js)",
+      "Bash(grep -r keyword_arrays*= C:UsersAnwenderDocumentsGitHubPuzzleScriptsrcjs)"
+    ]
+  }
+}
