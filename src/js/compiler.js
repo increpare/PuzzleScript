@@ -1130,18 +1130,14 @@ function rulesToArray(state) {
     for (let i = 0; i < rules2.length; i++) {
         let rule = rules2[i];
         let expanded = concretizeMovingRule(state, rule, rule.lineNumber);
-        for (let j = 0; j < expanded.length; j++) {
-            rules3.push(expanded[j]);
-        }
+        rules3.push(...expanded)
     }
 
     let rules4 = [];
     for (let i = 0; i < rules3.length; i++) {
         let rule = rules3[i];
         let expanded = concretizePropertyRule(state, rule, rule.lineNumber);
-        for (let j = 0; j < expanded.length; j++) {
-            rules4.push(expanded[j]);
-        }
+        rules4.push(...expanded);
     }
 
     for (let i = 0; i < rules4.length; i++) {
