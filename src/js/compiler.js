@@ -897,8 +897,8 @@ First, let's check for 'X no X' on the RHS.
             const rhs_group_len = rhs_group.length;
             for (let k=0;k<rhs_group_len;k++){
                 let cell = rhs_group[k];
-                var objects_present = [];
-                var objects_present_mask = new BitVec(STRIDE_OBJ);
+                let objects_present = [];
+                let objects_present_mask = new BitVec(STRIDE_OBJ);
                 for (let l=0;l<cell.length;l+=2){
                     let item = cell[l];
                     if (!item.startsWith("no")){
@@ -928,7 +928,7 @@ First, let's check for 'X no X' on the RHS.
                     let item = cell[l];
                     if (item.startsWith("no")){
                         let no_name = cell[l+1];
-                        var no_name_mask = state.objectMasks[no_name];
+                        let no_name_mask = state.objectMasks[no_name];
 
                         //if no_name overlaps with any objects_present, then we have a problem.
                         if (no_name_mask.anyBitsInCommon(objects_present_mask)){
@@ -988,7 +988,6 @@ First, let's check for 'X no X' on the RHS.
                         continue;
                     }
                     let entity_name = cell[l+1]
-                    let layer=[];
                     //if it's a single-layer property
                     if (state.propertiesSingleLayer.hasOwnProperty(entity_name)){
                         let layer = state.propertiesSingleLayer[entity_name];
@@ -1130,14 +1129,19 @@ function rulesToArray(state) {
     //expand property rules
     for (let i = 0; i < rules2.length; i++) {
         let rule = rules2[i];
-        rules3 = rules3.concat(concretizeMovingRule(state, rule, rule.lineNumber));
+        let expanded = concretizeMovingRule(state, rule, rule.lineNumber);
+        for (let j = 0; j < expanded.length; j++) {
+            rules3.push(expanded[j]);
+        }
     }
 
     let rules4 = [];
     for (let i = 0; i < rules3.length; i++) {
         let rule = rules3[i];
-        rules4 = rules4.concat(concretizePropertyRule(state, rule, rule.lineNumber));
-
+        let expanded = concretizePropertyRule(state, rule, rule.lineNumber);
+        for (let j = 0; j < expanded.length; j++) {
+            rules4.push(expanded[j]);
+        }
     }
 
     for (let i = 0; i < rules4.length; i++) {
@@ -1555,7 +1559,6 @@ function concretizeMovingRule(state, rule, lineNumber) {
         if (cur_rule.movingReplacement === undefined) {
             continue;
         }
-        let ambiguous_movement_dict = {};
         //strict first - matches movement direction to objects
         //for each property replacement in that rule
 
@@ -1600,26 +1603,6 @@ function concretizeMovingRule(state, rule, lineNumber) {
             } else {
                 ambiguous_movement_names_dict[ambiguousMovement] = concreteMovement
             }        
-        }
-
-        const ambiguous_movement_dict_keys = Object.keys(ambiguous_movement_dict);
-        const ambiguous_movement_dict_keys_l = ambiguous_movement_dict_keys.length;
-        for (let k_i = 0; k_i < ambiguous_movement_dict_keys_l; k_i++) {
-            const ambiguousMovement = ambiguous_movement_dict_keys[k_i];
-        //for each ambiguous word, if there's a single ambiguous movement specified in the whole lhs, then replace that wholesale
-            if (ambiguousMovement !== "INVALID") {
-                concreteMovement = ambiguous_movement_dict[ambiguousMovement];
-                if (concreteMovement === "INVALID") {
-                    continue;
-                }
-                for (let j = 0; j < cur_rule.rhs.length; j++) {
-                    let cellRow_rhs = cur_rule.rhs[j];
-                    for (let k = 0; k < cellRow_rhs.length; k++) {
-                        let cell = cellRow_rhs[k];
-                        concretizeMovingInCellByAmbiguousMovementName(cell, ambiguousMovement, concreteMovement);
-                    }
-                }
-            }
         }
 
         const ambiguous_movement_names_dict_keys = Object.keys(ambiguous_movement_names_dict);
@@ -1905,7 +1888,7 @@ function rulesToMask(state) {
                         const ln = rule.lineNumber;
 
                         const overlap = getOverlapObjectNames(state, bitVectors.objectsPresent, bitVectors.objectsMissing);
-                        var x_no_x_list = overlap.map(x => x+" NO "+x).join(', ').toUpperCase();
+                        let x_no_x_list = overlap.map(x => x+" NO "+x).join(', ').toUpperCase();
                         logWarning(`This rule has something amounting to "${x_no_x_list}" on the left-hand-side,which can never match, so the rule is getting removed during compilation.`, rule.lineNumber);
 
                         state.rules.splice(ruleIndex, 1);
@@ -2061,36 +2044,20 @@ function rulesToMask(state) {
     }
 }
 
-function cellRowMasks(rule) {
+function cellRowMasksGeneric(rule, stride, propertyName) {
     const ruleMasks = [];
     const lhs = rule[1];
     for (let i = 0; i < lhs.length; i++) {
         const cellRow = lhs[i];
-        const rowMask = new BitVec(STRIDE_OBJ);
+        const rowMask = new BitVec(stride);
         for (let j = 0; j < cellRow.length; j++) {
             if (cellRow[j] === ellipsisPattern)
                 continue;
-            rowMask.ior(cellRow[j].objectsPresent);
+            rowMask.ior(cellRow[j][propertyName]);
         }
         ruleMasks.push(rowMask);
     }
     return ruleMasks;
-}
-
-function cellRowMasks_Movements(rule) {
-    const ruleMasks_mov = [];
-    const lhs = rule[1];
-    for (let i = 0; i < lhs.length; i++) {
-        const cellRow = lhs[i];
-        const rowMask = new BitVec(STRIDE_MOV);
-        for (let j = 0; j < cellRow.length; j++) {
-            if (cellRow[j] === ellipsisPattern)
-                continue;
-            rowMask.ior(cellRow[j].movementsPresent);
-        }
-        ruleMasks_mov.push(rowMask);
-    }
-    return ruleMasks_mov;
 }
 
 function collapseRules(groups) {
@@ -2126,8 +2093,8 @@ function collapseRules(groups) {
             newrule.push(oldrule.rigid);
             newrule.push(oldrule.commands);
             newrule.push(oldrule.randomRule);
-            newrule.push(cellRowMasks(newrule));
-            newrule.push(cellRowMasks_Movements(newrule));
+            newrule.push(cellRowMasksGeneric(newrule, STRIDE_OBJ, 'objectsPresent'));
+            newrule.push(cellRowMasksGeneric(newrule, STRIDE_MOV, 'movementsPresent'));
             rules[i] = new Rule(newrule);
         }
     }
@@ -2200,15 +2167,24 @@ function ruleGroupDiscardOverlappingTest(ruleGroup) {
     }
 }
 
+function collectRuleGroups(aggregates) {
+    let result = [];
+    for (const groupNumber of Object.keys(aggregates)) {
+        let ruleGroup = aggregates[groupNumber];
+        ruleGroupDiscardOverlappingTest(ruleGroup);
+        if (ruleGroup.length > 0) {
+            result.push(ruleGroup);
+        }
+    }
+    return result;
+}
+
 function arrangeRulesByGroupNumber(state) {
     let aggregates = {};
     let aggregates_late = {};
     for (let i = 0; i < state.rules.length; i++) {
         let rule = state.rules[i];
-        let targetArray = aggregates;
-        if (rule.late) {
-            targetArray = aggregates_late;
-        }
+        let targetArray = rule.late ? aggregates_late : aggregates;
 
         if (targetArray[rule.groupNumber] === undefined) {
             targetArray[rule.groupNumber] = [];
@@ -2216,35 +2192,8 @@ function arrangeRulesByGroupNumber(state) {
         targetArray[rule.groupNumber].push(rule);
     }
 
-    let result = [];
-
-    const aggregate_keys = Object.keys(aggregates);
-    const aggregate_keys_l = aggregate_keys.length;
-    for (let k_i = 0; k_i < aggregate_keys_l; k_i++) {
-        const groupNumber = aggregate_keys[k_i];
-        let ruleGroup = aggregates[groupNumber];
-        ruleGroupDiscardOverlappingTest(ruleGroup);
-        if (ruleGroup.length > 0) {
-            result.push(ruleGroup);
-        }        
-    }
-
-    let result_late = [];
-
-    const aggregate_keys_late = Object.keys(aggregates_late);
-    const aggregate_keys_late_l = aggregate_keys_late.length;
-    for (let k_i = 0; k_i < aggregate_keys_late_l; k_i++) {
-        const groupNumber = aggregate_keys_late[k_i];
-        let ruleGroup = aggregates_late[groupNumber];
-        ruleGroupDiscardOverlappingTest(ruleGroup);
-        if (ruleGroup.length > 0) {
-            result_late.push(ruleGroup);
-        }        
-    }
-    state.rules = result;
-
-    //check that there're no late movements with direction requirements on the lhs
-    state.lateRules = result_late;
+    state.rules = collectRuleGroups(aggregates);
+    state.lateRules = collectRuleGroups(aggregates_late);
 }
 
 function generateRigidGroupList(state) {
@@ -2283,38 +2232,22 @@ function generateRigidGroupList(state) {
     state.groupIndex_to_RigidGroupIndex = groupIndex_to_RigidGroupIndex;
 }
 
-function isObjectDefined(state, name) {
+function legendContainsName(legendArray, name) {
+    if (legendArray === undefined) return false;
+    for (let i = 0; i < legendArray.length; i++) {
+        if (legendArray[i][0] === name) return true;
+    }
+    return false;
+}
 
-    let result = name in state.objects ||
+function isObjectDefined(state, name) {
+    return name in state.objects ||
         (state.aggregatesDict !== undefined && (name in state.aggregatesDict)) ||
         (state.propertiesDict !== undefined && (name in state.propertiesDict)) ||
-        (state.synonymsDict !== undefined && (name in state.synonymsDict));
-
-    if (state.legend_aggregates !== undefined) {
-        for (let i = 0; i < state.legend_aggregates.length; i++) {
-            if (state.legend_aggregates[i][0] === name) {
-                result = true;
-                break;
-            }
-        }
-    }
-    if (state.legend_properties !== undefined) {
-        for (let i = 0; i < state.legend_properties.length; i++) {
-            if (state.legend_properties[i][0] === name) {
-                result = true;
-                break;
-            }
-        }
-    }
-    if (state.legend_synonyms !== undefined) {
-        for (let i = 0; i < state.legend_synonyms.length; i++) {
-            if (state.legend_synonyms[i][0] === name) {
-                result = true;
-                break;
-            }
-        }
-    }
-    return result;
+        (state.synonymsDict !== undefined && (name in state.synonymsDict)) ||
+        legendContainsName(state.legend_aggregates, name) ||
+        legendContainsName(state.legend_properties, name) ||
+        legendContainsName(state.legend_synonyms, name);
 }
 
 function getMaskFromName(state, name) {
@@ -2434,26 +2367,19 @@ function generateMasks(state) {
 }
 
 function checkObjectsAreLayered(state) {
-    const object_keys = Object.keys(state.objects);
-    const object_keys_l = object_keys.length;
-    outer: for (let k_i = 0; k_i < object_keys_l; k_i++) {
-        const n = object_keys[k_i];
-        let found = false;
-        for (let i = 0; i < state.collisionLayers.length; i++) {
-            const layer = state.collisionLayers[i];
-            for (let j = 0; j < layer.length; j++) {
-                if (layer[j] === n) {
-                    found = true;
-                    continue outer;
-                }
-            }
+    const layered = new Set();
+    for (let i = 0; i < state.collisionLayers.length; i++) {
+        const layer = state.collisionLayers[i];
+        for (let j = 0; j < layer.length; j++) {
+            layered.add(layer[j]);
         }
-        if (found === false) {
+    }
+    for (const n of Object.keys(state.objects)) {
+        if (!layered.has(n)) {
             const o = state.objects[n];
             logError('Object "' + n.toUpperCase() + '" has been defined, but not assigned to a layer.', o.lineNumber);
         }
     }
-    
 }
 
 function isInt(value) {
@@ -2520,6 +2446,17 @@ function twiddleMetaData(state) {
     state.metadata = newmetadata;
 }
 
+function lookupWinConditionMask(state, name, lineNumber) {
+    if (name in state.objectMasks) {
+        return { aggregate: false, mask: state.objectMasks[name] };
+    } else if (name in state.aggregateMasks) {
+        return { aggregate: true, mask: state.aggregateMasks[name] };
+    } else {
+        logError('Unwelcome term "' + name + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
+        return { aggregate: false, mask: 0 };
+    }
+}
+
 function processWinConditions(state) {
     //	[-1/0/1 (no,some,all),ob1,ob2] (ob2 is background by default)
     let newconditions = [];
@@ -2547,33 +2484,13 @@ function processWinConditions(state) {
             n2 = '\nall\n';
         }
 
-        let mask1 = 0;
-        let mask2 = 0;
-        let aggr1 = false;
-        let aggr2 = false;
-
         if (wincondition.length <= 2) {
             logError('Win conditions is badly formatted - needs to look something like "No Fruit", "All Target On Crate", "Some Fruit", "Some Gold on Chest", "No Gold on Chest", or the like.', lineNumber);
+            continue;
         }
-        else if (n1 in state.objectMasks) {
-            aggr1 = false;
-            mask1 = state.objectMasks[n1];
-        } else if (n1 in state.aggregateMasks) {
-            aggr1 = true;
-            mask1 = state.aggregateMasks[n1];
-        } else {
-            logError('Unwelcome term "' + n1 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
-        }
-        if (n2 in state.objectMasks) {
-            aggr2 = false;
-            mask2 = state.objectMasks[n2];
-        } else if (n2 in state.aggregateMasks) {
-            aggr2 = true;
-            mask2 = state.aggregateMasks[n2];
-        } else {
-            logError('Unwelcome term "' + n2 + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
-        }
-        let newcondition = [num, mask1, mask2, lineNumber, aggr1, aggr2];
+        let r1 = lookupWinConditionMask(state, n1, lineNumber);
+        let r2 = lookupWinConditionMask(state, n2, lineNumber);
+        let newcondition = [num, r1.mask, r2.mask, lineNumber, r1.aggregate, r2.aggregate];
         newconditions.push(newcondition);
     }
     state.winconditions = newconditions;
@@ -2724,9 +2641,10 @@ function printRules(state) {
 }
 
 function removeDuplicateRules(state) {
+    // Mark which indices to keep by scanning in reverse (keeps last occurrence per group)
     let record = {};
-    let newrules = [];
     let lastgroupnumber = -1;
+    let keep = new Uint8Array(state.rules.length);
     for (let i = state.rules.length - 1; i >= 0; i--) {
         let r = state.rules[i];
         let groupnumber = r.groupNumber;
@@ -2734,13 +2652,20 @@ function removeDuplicateRules(state) {
             record = {};
         }
         let r_string = r.stringRep;
-        if (record.hasOwnProperty(r_string)) {
-            state.rules.splice(i, 1);
-        } else {
+        if (!record.hasOwnProperty(r_string)) {
             record[r_string] = true;
+            keep[i] = 1;
         }
         lastgroupnumber = groupnumber;
     }
+    // Rebuild array with only kept rules
+    let result = [];
+    for (let i = 0; i < state.rules.length; i++) {
+        if (keep[i]) {
+            result.push(state.rules[i]);
+        }
+    }
+    state.rules = result;
 }
 
 function calculateLoopPoints(state, rulegroup_collection) {
@@ -2825,9 +2750,6 @@ let soundDirectionIndicatorMasks = {
     'orthogonal': parseInt('01111', 2),
     '___action____': parseInt('10000', 2)
 };
-
-let soundDirectionIndicators = ["up", "down", "left", "right", "horizontal", "vertical", "orthogonal", "___action____"];
-
 
 function generateSoundData(state) {
     let sfx_Events = {};
@@ -2922,7 +2844,7 @@ function generateSoundData(state) {
             for (let j = 0; j < directions.length; j++) {
                 directions[j] = directions[j].trim();
                 let direction = directions[j];
-                if (soundDirectionIndicators.indexOf(direction) === -1) {
+                if (!(direction in soundDirectionIndicatorMasks)) {
                     //pre-emted by parser
                     logError('Was expecting a direction, instead found "' + direction + '".', lineNumber);
                 } else {
@@ -2986,7 +2908,6 @@ function generateSoundData(state) {
 
 
 
-            let targetArray;
             switch (verb) {
                 case "create":
                     {
@@ -3278,55 +3199,37 @@ function compile(command, text, randomseed) {
 
 const cache_CHECK_RATE=20;
 let cache_checkCount=0;
-function manage_compilation_caches() {    
+function evictObjCacheIfOversized(cache, limit) {
+    if (Object.keys(cache).length > limit) {
+        // Clear all own properties in-place
+        for (let key in cache) {
+            if (cache.hasOwnProperty(key)) {
+                delete cache[key];
+            }
+        }
+    }
+}
+
+function manage_compilation_caches() {
     cache_checkCount = (cache_checkCount + 1) % cache_CHECK_RATE;
     if (cache_checkCount !== 0) {
         return;
     }
-    // console.log("CACHE_CELLPATTERN_MATCHFUNCTION size: " + Object.keys(CACHE_CELLPATTERN_MATCHFUNCTION).length);
-    // console.log("CACHE_MOVEENTITIESATINDEX size: " + Object.keys(CACHE_MOVEENTITIESATINDEX).length);
-    // console.log("CACHE_CALCULATEROWCOLMASKS size: " + Object.keys(CACHE_CALCULATEROWCOLMASKS).length);
-    // console.log("CACHE_RULE_CELLROWMATCHESFUNCTION size: " + Object.keys(CACHE_RULE_CELLROWMATCHESFUNCTION).length);
-    // console.log("CACHE_CELLPATTERN_REPLACEFUNCTION size: " + Object.keys(CACHE_CELLPATTERN_REPLACEFUNCTION).length);
-    // console.log("CACHE_MATCHCELLROW size: " + Object.keys(CACHE_MATCHCELLROW).length);
-    // console.log("CACHE_MATCHCELLROWWILDCARD size: " + Object.keys(CACHE_MATCHCELLROWWILDCARD).length);
-    // console.log("CACHE_RULE_APPLYAT size: " + Object.keys(CACHE_RULE_APPLYAT).length);
-    // console.log("CACHE_RESOLVEMOVEMENTS size: " + Object.keys(CACHE_RESOLVEMOVEMENTS).length);
-    // console.log("CACHE_RULE_FINDMATCHES size: " + Object.keys(CACHE_RULE_FINDMATCHES).length);
 
+    // CACHE_CELLPATTERN_MATCHFUNCTION is a Map, so use .size and .clear()
+    if (CACHE_CELLPATTERN_MATCHFUNCTION.size > 10000) {
+        CACHE_CELLPATTERN_MATCHFUNCTION.clear();
+    }
 
-
-    //CACHE_CELLPATTERN_MATCHFUNCTION>10000, reset, for the others the limit is say 200
-    if (Object.keys(CACHE_CELLPATTERN_MATCHFUNCTION).length > 10000) {
-        CACHE_CELLPATTERN_MATCHFUNCTION = {};
-    }
-    if (Object.keys(CACHE_MOVEENTITIESATINDEX).length > 200) {
-        CACHE_MOVEENTITIESATINDEX = {};
-    }
-    if (Object.keys(CACHE_CALCULATEROWCOLMASKS).length > 200) {
-        CACHE_CALCULATEROWCOLMASKS = {};
-    }
-    if (Object.keys(CACHE_RULE_CELLROWMATCHESFUNCTION).length > 1000) {
-        CACHE_RULE_CELLROWMATCHESFUNCTION = {};
-    }
-    if (Object.keys(CACHE_CELLPATTERN_REPLACEFUNCTION).length > 200) {
-        CACHE_CELLPATTERN_REPLACEFUNCTION = {};
-    }
-    if (Object.keys(CACHE_MATCHCELLROW).length > 200) {
-        CACHE_MATCHCELLROW = {};
-    }
-    if (Object.keys(CACHE_MATCHCELLROWWILDCARD).length > 200) {
-        CACHE_MATCHCELLROWWILDCARD = {};
-    }
-    if (Object.keys(CACHE_RULE_APPLYAT).length > 200) {
-        CACHE_RULE_APPLYAT = {};
-    }
-    if (Object.keys(CACHE_RESOLVEMOVEMENTS).length > 200) {
-        CACHE_RESOLVEMOVEMENTS = {};
-    }
-    if (Object.keys(CACHE_RULE_FINDMATCHES).length > 200) {
-        CACHE_RULE_FINDMATCHES = {};
-    }
+    evictObjCacheIfOversized(CACHE_MOVEENTITIESATINDEX, 200);
+    evictObjCacheIfOversized(CACHE_CALCULATEROWCOLMASKS, 200);
+    evictObjCacheIfOversized(CACHE_RULE_CELLROWMATCHESFUNCTION, 1000);
+    evictObjCacheIfOversized(CACHE_CELLPATTERN_REPLACEFUNCTION, 200);
+    evictObjCacheIfOversized(CACHE_MATCHCELLROW, 200);
+    evictObjCacheIfOversized(CACHE_MATCHCELLROWWILDCARD, 200);
+    evictObjCacheIfOversized(CACHE_RULE_APPLYAT, 200);
+    evictObjCacheIfOversized(CACHE_RESOLVEMOVEMENTS, 200);
+    evictObjCacheIfOversized(CACHE_RULE_FINDMATCHES, 200);
 }
 
 
