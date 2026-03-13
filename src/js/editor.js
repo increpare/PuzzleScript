@@ -1,5 +1,9 @@
 'use strict';
 
+window.CodeMirror.defineMode('puzzle', codeMirrorFn);
+// Include # in word chars so hex colours like #15111D are selected as one word on double-click
+window.CodeMirror.registerHelper("wordChars", "puzzle", /[\w#]/);
+
 let code = document.getElementById('code');
 let _editorDirty = false;
 let _editorCleanState = "";
