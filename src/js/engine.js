@@ -2648,19 +2648,19 @@ function processInput(dir, dontDoWin, dontModify) {
 	if (dir >= 0) {
 		switch (dir) {
 			case 0: // up
-				dir = parseInt('00001', 2);
+				dir = 0b00001;
 				break;
 			case 1: // left
-				dir = parseInt('00100', 2);
+				dir = 0b00100;
 				break;
 			case 2: // down
-				dir = parseInt('00010', 2);
+				dir = 0b00010;
 				break;
 			case 3: // right
-				dir = parseInt('01000', 2);
+				dir = 0b01000;
 				break;
 			case 4: // action
-				dir = parseInt('10000', 2);
+				dir = 0b10000;
 				break;
 		}
 		playerPositions = startMovement(dir);
