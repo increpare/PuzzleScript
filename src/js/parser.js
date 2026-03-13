@@ -55,7 +55,7 @@ function logErrorCacheable(str, lineNumber, urgent) {
             return logErrorNoLine(str, urgent);
         }
         const errorString = buildErrorHtml(lineNumber, str, 'errorText');
-        if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+        if (errorStrings.includes(errorString) && !urgent) {
             //do nothing, duplicate error
         } else {
             consolePrint(errorString);
@@ -74,7 +74,7 @@ function logError(str, lineNumber, urgent) {
             return logErrorNoLine(str, urgent);
         }
         const errorString = buildErrorHtml(lineNumber, str, 'errorText')
-        if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+        if (errorStrings.includes(errorString) && !urgent) {
             //do nothing, duplicate error
         } else {
             consolePrint(errorString, true);
@@ -93,7 +93,7 @@ function logWarning(str, lineNumber, urgent) {
             return logWarningNoLine(str, urgent);
         }
         const errorString = buildErrorHtml(lineNumber, str, 'warningText');
-        if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+        if (errorStrings.includes(errorString) && !urgent) {
             //do nothing, duplicate error
         } else {
             consolePrint(errorString, true);
@@ -108,12 +108,12 @@ function logWarning(str, lineNumber, urgent) {
 function logWarningNoLine(str, urgent) {
     if (compiling || urgent) {
         const errorString = '<span class="warningText">' + str + '</span>';
-        if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+        if (errorStrings.includes(errorString) && !urgent) {
             //do nothing, duplicate error
         } else {
             consolePrint(errorString, true);
             errorStrings.push(errorString);
-            errorCount++;
+            errorCount++; // Note: arguably a bug (warnings incrementing errorCount), but test expectations depend on it
             if (errorStrings.length > MAX_ERRORS_FOR_REAL) {
                 TooManyErrors();
             }
@@ -125,7 +125,7 @@ function logWarningNoLine(str, urgent) {
 function logErrorNoLine(str, urgent) {
     if (compiling || urgent) {
         const errorString = '<span class="errorText">' + str + '</span>';
-        if (errorStrings.indexOf(errorString) >= 0 && !urgent) {
+        if (errorStrings.includes(errorString) && !urgent) {
             //do nothing, duplicate error
         } else {
             consolePrint(errorString, true);
@@ -177,35 +177,8 @@ function wordAlreadyDeclared(state, n) {
 }
 
 
-//for IE support
-if (typeof Object.assign !== 'function') {
-    (function () {
-        Object.assign = function (target) {
-            'use strict';
-            // We must check against these specific cases.
-            if (target === undefined || target === null) {
-                throw new TypeError('Cannot convert undefined or null to object');
-            }
-
-            let output = Object(target);
-            for (let index = 1; index < arguments.length; index++) {
-                let source = arguments[index];
-                if (source !== undefined && source !== null) {
-                    for (let nextKey in source) {
-                        if (source.hasOwnProperty(nextKey)) {
-                            output[nextKey] = source[nextKey];
-                        }
-                    }
-                }
-            }
-            return output;
-        };
-    })();
-}
-
 
 let codeMirrorFn = function () {
-    'use strict';
 
     function checkNameDefined(state, candname) {
         const key = candname.toLowerCase();
@@ -280,7 +253,7 @@ let codeMirrorFn = function () {
                 ok = false;
             }
 
-            if (keyword_array.indexOf(candname) >= 0) {
+            if (keyword_array.includes(candname)) {
                 logWarning('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
             }
 
@@ -338,7 +311,7 @@ let codeMirrorFn = function () {
                     for (let i = 0; i < state.legend_aggregates.length; i++) {
                         let a = state.legend_aggregates[i];
                         if (a[0] === n) {
-                            return [].concat.apply([], a.slice(1).map(substitutor));
+                            return a.slice(1).map(substitutor).flat();
                         }
                     }
                     for (let i = 0; i < state.legend_properties.length; i++) {
@@ -353,9 +326,9 @@ let codeMirrorFn = function () {
                     return [n];
                 };
 
-                let newlegend = [splits[0]].concat(substitutor(splits[2])).concat(substitutor(splits[4]));
+                let newlegend = [splits[0], ...substitutor(splits[2]), ...substitutor(splits[4])];
                 for (let i = 6; i < splits.length; i += 2) {
-                    newlegend = newlegend.concat(substitutor(splits[i]));
+                    newlegend.push(...substitutor(splits[i]));
                 }
                 newlegend.lineNumber = state.lineNumber;
 
@@ -391,11 +364,12 @@ let codeMirrorFn = function () {
                         if (a[0] === n) {
                             let result = [];
                             for (let j = 1; j < a.length; j++) {
-                                if (a[j] === n) {
-                                    //error here superfluous, also detected elsewhere (cf 'You can't define object' / #789)
-                                    //logError('Error, recursive definition found for '+n+'.', state.lineNumber);                                
-                                } else {
-                                    result = result.concat(substitutor(a[j]));
+                                /*
+                                    //error here superfluous when a[j] === n, because it's detected elsewhere (cf 'You can't define object' / #789)
+                                    //logError('Error, recursive definition found for '+n+'.', state.lineNumber);     
+                                */
+                                if (a[j] !== n) {
+                                    result.push(...substitutor(a[j]));
                                 }
                             }
                             return result;
@@ -411,7 +385,7 @@ let codeMirrorFn = function () {
                     }
                 }
                 if (!malformed) {
-                    let newlegend = [splits[0]].concat(substitutor(splits[2])).concat(substitutor(splits[4]));
+                    let newlegend = [splits[0], ...substitutor(splits[2]), ...substitutor(splits[4])];
                     for (let i = 6; i < splits.length; i += 2) {
                         newlegend.push(splits[i].toLowerCase());
                     }
@@ -435,11 +409,8 @@ let codeMirrorFn = function () {
             return;
         }
         //if last entry in array is 'ERROR', do nothing
-        if (state.current_line_wip_array[state.current_line_wip_array.length - 1] === 'ERROR') {
-
-        } else {
-            //take the first component from each pair in the array
-            let soundrow = state.current_line_wip_array;//.map(function(a){return a[0];});
+        if (state.current_line_wip_array[state.current_line_wip_array.length - 1] !== 'ERROR') {
+            let soundrow = state.current_line_wip_array;
             soundrow.push(state.lineNumber);
             state.sounds.push(soundrow);
         }
@@ -460,14 +431,6 @@ let codeMirrorFn = function () {
 
     //  let keywordRegex = new RegExp("\\b(("+cons.join(")|(")+"))$", 'i');
 
-    let fullSpriteMatrix = [
-        '00000',
-        '00000',
-        '00000',
-        '00000',
-        '00000'
-    ];
-
     return {
         wordChars: "puzzle",
         copyState: function (state) {
@@ -476,16 +439,16 @@ let codeMirrorFn = function () {
                 if (state.objects.hasOwnProperty(i)) {
                     let o = state.objects[i];
                     objectsCopy[i] = {
-                        colors: o.colors.concat([]),
+                        colors: o.colors.slice(),
                         lineNumber: o.lineNumber,
-                        spritematrix: o.spritematrix.concat([])
+                        spritematrix: o.spritematrix.slice()
                     }
                 }
             }
 
             let collisionLayersCopy = [];
             for (let i = 0; i < state.collisionLayers.length; i++) {
-                collisionLayersCopy.push(state.collisionLayers[i].concat([]));
+                collisionLayersCopy.push(state.collisionLayers[i].slice());
             }
 
             let legend_synonymsCopy = [];
@@ -497,25 +460,25 @@ let codeMirrorFn = function () {
             let rulesCopy = [];
 
             for (let i = 0; i < state.legend_synonyms.length; i++) {
-                legend_synonymsCopy.push(state.legend_synonyms[i].concat([]));
+                legend_synonymsCopy.push(state.legend_synonyms[i].slice());
             }
             for (let i = 0; i < state.legend_aggregates.length; i++) {
-                legend_aggregatesCopy.push(state.legend_aggregates[i].concat([]));
+                legend_aggregatesCopy.push(state.legend_aggregates[i].slice());
             }
             for (let i = 0; i < state.legend_properties.length; i++) {
-                legend_propertiesCopy.push(state.legend_properties[i].concat([]));
+                legend_propertiesCopy.push(state.legend_properties[i].slice());
             }
             for (let i = 0; i < state.sounds.length; i++) {
-                soundsCopy.push(state.sounds[i].concat([]));
+                soundsCopy.push(state.sounds[i].slice());
             }
             for (let i = 0; i < state.levels.length; i++) {
-                levelsCopy.push(state.levels[i].concat([]));
+                levelsCopy.push(state.levels[i].slice());
             }
             for (let i = 0; i < state.winconditions.length; i++) {
-                winConditionsCopy.push(state.winconditions[i].concat([]));
+                winConditionsCopy.push(state.winconditions[i].slice());
             }
             for (let i = 0; i < state.rules.length; i++) {
-                rulesCopy.push(state.rules[i].concat([]));
+                rulesCopy.push(state.rules[i].slice());
             }
 
             let original_case_namesCopy = Object.assign({}, state.original_case_names);
@@ -529,7 +492,7 @@ let codeMirrorFn = function () {
 
                 commentLevel: state.commentLevel,
                 section: state.section,
-                visitedSections: state.visitedSections.concat([]),
+                visitedSections: state.visitedSections.slice(),
 
                 line_should_end: state.line_should_end,
                 line_should_end_because: state.line_should_end_because,
@@ -542,10 +505,10 @@ let codeMirrorFn = function () {
 
                 objects_candname: state.objects_candname,
                 objects_section: state.objects_section,
-                objects_spritematrix: state.objects_spritematrix.concat([]),
+                objects_spritematrix: state.objects_spritematrix.slice(),
 
                 tokenIndex: state.tokenIndex,
-                current_line_wip_array: state.current_line_wip_array.concat([]),
+                current_line_wip_array: state.current_line_wip_array.slice(),
 
                 legend_synonyms: legend_synonymsCopy,
                 legend_aggregates: legend_aggregatesCopy,
@@ -555,16 +518,16 @@ let codeMirrorFn = function () {
 
                 rules: rulesCopy,
 
-                names: state.names.concat([]),
+                names: new Set(state.names),
 
                 winconditions: winConditionsCopy,
 
                 original_case_names: original_case_namesCopy,
                 original_line_numbers: original_line_numbersCopy,
 
-                abbrevNames: state.abbrevNames.concat([]),
+                abbrevNames: new Set(state.abbrevNames),
 
-                metadata: state.metadata.concat([]),
+                metadata: state.metadata.slice(),
                 metadata_lines: Object.assign({}, state.metadata_lines),
 
                 levels: levelsCopy,
@@ -691,7 +654,7 @@ let codeMirrorFn = function () {
                 if (sol && sectionNameMatches) {
 
                     state.section = sectionNameMatches[0].trim();
-                    if (state.visitedSections.indexOf(state.section) >= 0) {
+                    if (state.visitedSections.includes(state.section)) {
                         logError('cannot duplicate sections (you tried to duplicate \"' + state.section.toUpperCase() + '").', state.lineNumber);
                     }
                     state.line_should_end = true;
@@ -703,7 +666,7 @@ let codeMirrorFn = function () {
                         if (state.visitedSections.length > 1) {
                             logError('section "' + state.section.toUpperCase() + '" must be the first section', state.lineNumber);
                         }
-                    } else if (state.visitedSections.indexOf(sectionNames[sectionIndex - 1]) === -1) {
+                    } else if (!state.visitedSections.includes(sectionNames[sectionIndex - 1])) {
                         if (sectionIndex === -1) {
                             //honestly not sure how I could get here.
                             logError('no such section as "' + state.section.toUpperCase() + '".', state.lineNumber);
@@ -719,7 +682,7 @@ let codeMirrorFn = function () {
                                 /*                                if (state.names.indexOf(n)!==-1) {
                                                                 logError('Object "'+n+'" has been declared to be multiple different things',state.objects[n].lineNumber);
                                                             }*/
-                                state.names.push(n);
+                                state.names.add(n);
                             }
                         }
                         //populate names from legends
@@ -730,7 +693,7 @@ let codeMirrorFn = function () {
                                 logError('Object "'+n+'" has been declared to be multiple different things',state.legend_synonyms[i].lineNumber);
                             }
                             */
-                            state.names.push(n);
+                            state.names.add(n);
                         }
                         for (let i = 0; i < state.legend_aggregates.length; i++) {
                             let n = state.legend_aggregates[i][0];
@@ -739,7 +702,7 @@ let codeMirrorFn = function () {
                                 logError('Object "'+n+'" has been declared to be multiple different things',state.legend_aggregates[i].lineNumber);
                             }
                             */
-                            state.names.push(n);
+                            state.names.add(n);
                         }
                         for (let i = 0; i < state.legend_properties.length; i++) {
                             let n = state.legend_properties[i][0];
@@ -748,25 +711,25 @@ let codeMirrorFn = function () {
                                 logError('Object "'+n+'" has been declared to be multiple different things',state.legend_properties[i].lineNumber);
                             }
                             */
-                            state.names.push(n);
+                            state.names.add(n);
                         }
                     }
                     else if (state.section === 'levels') {
                         //populate character abbreviations
                         for (let n in state.objects) {
                             if (state.objects.hasOwnProperty(n) && n.length === 1) {
-                                state.abbrevNames.push(n);
+                                state.abbrevNames.add(n);
                             }
                         }
 
                         for (let i = 0; i < state.legend_synonyms.length; i++) {
                             if (state.legend_synonyms[i][0].length === 1) {
-                                state.abbrevNames.push(state.legend_synonyms[i][0]);
+                                state.abbrevNames.add(state.legend_synonyms[i][0]);
                             }
                         }
                         for (let i = 0; i < state.legend_aggregates.length; i++) {
                             if (state.legend_aggregates[i][0].length === 1) {
-                                state.abbrevNames.push(state.legend_aggregates[i][0]);
+                                state.abbrevNames.add(state.legend_aggregates[i][0]);
                             }
                         }
                     }
@@ -812,7 +775,7 @@ let codeMirrorFn = function () {
                                         logError('Name "' + candname.toUpperCase() + '" already in use.', state.lineNumber);
                                     }
                                 }
-                                if (keyword_array.indexOf(candname) >= 0) {
+                                if (keyword_array.includes(candname)) {
                                     logWarning('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
                                 }
 
@@ -1005,7 +968,6 @@ let codeMirrorFn = function () {
                         }
 
                         return resultToken;
-                        break;
                     }
                 case 'sounds':
                     {
@@ -1150,7 +1112,7 @@ let codeMirrorFn = function () {
                                     tokentype = 'ERROR';
                                     state.current_line_wip_array.push("ERROR");
                                 } else {
-                                    let directional_verb = soundverbs_directional.indexOf(state.current_line_wip_array[1][0]) >= 0;
+                                    let directional_verb = soundverbs_directional.includes(state.current_line_wip_array[1][0]);
                                     if (directional_verb) {
                                         //match seed or direction                          
                                         let is_direction = stream.match(reg_sounddirectionindicators, true);
@@ -1247,11 +1209,8 @@ let codeMirrorFn = function () {
                                     if (a[0] === n) {
                                         let result = [];
                                         for (let j = 1; j < a.length; j++) {
-                                            if (a[j] === n) {
-                                                //error here superfluous, also detected elsewhere (cf 'You can't define object' / #789)
-                                                //logError('Error, recursive definition found for '+n+'.', state.lineNumber);                                
-                                            } else {
-                                                result = result.concat(substitutor(a[j]));
+                                            if (a[j] !== n) {
+                                                result.push(...substitutor(a[j]));
                                             }
                                         }
                                         return result;
@@ -1283,7 +1242,7 @@ let codeMirrorFn = function () {
                                 let tcandname = ar[i];
                                 for (let j = 0; j <= state.collisionLayers.length - 1; j++) {
                                     let clj = state.collisionLayers[j];
-                                    if (clj.indexOf(tcandname) >= 0) {
+                                    if (clj.includes(tcandname)) {
                                         if (j !== state.collisionLayers.length - 1) {
                                             foundOthers.push(j);
                                         } else {
@@ -1301,13 +1260,13 @@ let codeMirrorFn = function () {
                                 logWarning(warningStr + ' ). You should fix this!', state.lineNumber);
                             }
 
-                            if (state.current_line_wip_array.indexOf(candname) >= 0) {
+                            if (state.current_line_wip_array.includes(candname)) {
                                 let warningStr = 'Object "' + candname.toUpperCase() + '" included explicitly multiple times in the same layer. Don\'t do that innit.';
                                 logWarning(warningStr, state.lineNumber);
                             }
                             state.current_line_wip_array.push(candname);
 
-                            state.collisionLayers[state.collisionLayers.length - 1] = state.collisionLayers[state.collisionLayers.length - 1].concat(ar);
+                            state.collisionLayers[state.collisionLayers.length - 1].push(...ar);
                             if (ar.length > 0) {
                                 return 'NAME';
                             } else {
@@ -1368,7 +1327,7 @@ let codeMirrorFn = function () {
                                 stream.match(/[\p{Z}\s]*/u, true);
                                 return 'DIRECTION';
                             } else {
-                                if (state.names.indexOf(m) >= 0) {
+                                if (state.names.has(m)) {
                                     if (sol) {
                                         logError('Objects cannot appear outside of square brackets in rules, only directions can.', state.lineNumber);
                                         return 'ERROR';
@@ -1382,7 +1341,7 @@ let codeMirrorFn = function () {
                                     return 'DIRECTION';
                                 } else if (m === 'random') {
                                     return 'DIRECTION';
-                                } else if (commandwords.indexOf(m) >= 0) {
+                                } else if (commandwords.includes(m)) {
                                     if (m === 'message') {
                                         state.tokenIndex = -4;
                                     }
@@ -1435,7 +1394,7 @@ let codeMirrorFn = function () {
                                 }
                             }
                             else if (state.tokenIndex === 1 || state.tokenIndex === 3) {
-                                if (state.names.indexOf(candword) === -1) {
+                                if (!state.names.has(candword)) {
                                     logError('Error in win condition: "' + candword.toUpperCase() + '" is not a valid object name.', state.lineNumber);
                                     return 'ERROR';
                                 } else {
@@ -1509,7 +1468,7 @@ let codeMirrorFn = function () {
                         if (state.tokenIndex === 2 && !stream.eol()) {
                             let ch = stream.peek();
                             stream.next();
-                            if (state.abbrevNames.indexOf(ch) >= 0) {
+                            if (state.abbrevNames.has(ch)) {
                                 return 'LEVEL';
                             } else {
                                 logError('Key "' + ch.toUpperCase() + '" not found. Do you need to add it to the legend, or define a new object?', state.lineNumber);
@@ -1529,7 +1488,7 @@ let codeMirrorFn = function () {
                             if (match !== null) {
                                 let token = match[0].trim();
                                 if (sol) {
-                                    if (['title', 'author', 'homepage', 'background_color', 'text_color', 'key_repeat_interval', 'realtime_interval', 'again_interval', 'flickscreen', 'zoomscreen', 'color_palette', 'youtube'].indexOf(token) >= 0) {
+                                    if (['title', 'author', 'homepage', 'background_color', 'text_color', 'key_repeat_interval', 'realtime_interval', 'again_interval', 'flickscreen', 'zoomscreen', 'color_palette', 'youtube'].includes(token)) {
 
                                         if (token === 'author' || token === 'homepage' || token === 'title') {
                                             stream.string = mixedCase;
@@ -1554,7 +1513,7 @@ let codeMirrorFn = function () {
                                         }
                                         state.tokenIndex = 1;
                                         return 'METADATA';
-                                    } else if (['run_rules_on_level_start', 'norepeat_action', 'require_player_movement', 'debug', 'verbose_logging', 'throttle_movement', 'noundo', 'noaction', 'norestart', 'scanline'].indexOf(token) >= 0) {
+                                    } else if (['run_rules_on_level_start', 'norepeat_action', 'require_player_movement', 'debug', 'verbose_logging', 'throttle_movement', 'noundo', 'noaction', 'norestart', 'scanline'].includes(token)) {
                                         state.metadata.push(token);
                                         state.metadata.push("true");
                                         state.tokenIndex = -1;
@@ -1614,15 +1573,8 @@ let codeMirrorFn = function () {
             }
 
 
-            if (stream.eol()) {
-                //don't know how to reach this.
-                return null;
-            }
-
-            if (!stream.eol()) {
-                stream.next();
-                return null;
-            }
+            stream.next();
+            return null;
         },
         startState: function () {
             return {
@@ -1667,7 +1619,7 @@ let codeMirrorFn = function () {
                 sounds: [],
                 rules: [],
 
-                names: [],
+                names: new Set(),
 
                 winconditions: [],
                 metadata: [],
@@ -1676,7 +1628,7 @@ let codeMirrorFn = function () {
                 original_case_names: {},
                 original_line_numbers: {},
 
-                abbrevNames: [],
+                abbrevNames: new Set(),
 
                 levels: [[]],
 
