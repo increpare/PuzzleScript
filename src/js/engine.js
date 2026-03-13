@@ -2724,12 +2724,12 @@ function processInput(dir, dontDoWin, dontModify) {
 				ts += bannedLineNumbers.map(ln => `<a onclick="jumpToLine(${ln});" href="javascript:void(0);">${ln}</a>`).join(", ");
 				consolePrint(`Rigid movement application failed in rule-Group starting from ${ts}, and will be disabled in resimulation. Rolling back...`);
 			}
-			level.objects = new Int32Array(startState.objects);
-			level.movements = new Int32Array(startState.movements);
-			level.rigidGroupIndexMask = startState.rigidGroupIndexMask.concat([]);
-			level.rigidMovementAppliedMask = startState.rigidMovementAppliedMask.concat([]);
-			level.commandQueue = startState.commandQueue.concat([]);
-			level.commandQueueSourceRules = startState.commandQueueSourceRules.concat([]);
+			level.objects.set(startState.objects);
+			level.movements.set(startState.movements);
+			level.rigidGroupIndexMask = startState.rigidGroupIndexMask.slice();
+			level.rigidMovementAppliedMask = startState.rigidMovementAppliedMask.slice();
+			level.commandQueue = startState.commandQueue.slice();
+			level.commandQueueSourceRules = startState.commandQueueSourceRules.slice();
 			sfxCreateMask.setZero();
 			sfxDestroyMask.setZero();
 			seedsToPlay_CanMove = [];
