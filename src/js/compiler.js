@@ -3213,19 +3213,19 @@ function manage_compilation_caches() {
     }
 
     // CACHE_CELLPATTERN_MATCHFUNCTION is a Map, so use .size and .clear()
-    if (CACHE_CELLPATTERN_MATCHFUNCTION.size > 10000) {
+    if (CACHE_CELLPATTERN_MATCHFUNCTION.size > 100000) {
         CACHE_CELLPATTERN_MATCHFUNCTION.clear();
     }
 
-    evictObjCacheIfOversized(CACHE_MOVEENTITIESATINDEX, 200);
-    evictObjCacheIfOversized(CACHE_CALCULATEROWCOLMASKS, 200);
-    evictObjCacheIfOversized(CACHE_RULE_CELLROWMATCHESFUNCTION, 1000);
-    evictObjCacheIfOversized(CACHE_CELLPATTERN_REPLACEFUNCTION, 200);
-    evictObjCacheIfOversized(CACHE_MATCHCELLROW, 200);
-    evictObjCacheIfOversized(CACHE_MATCHCELLROWWILDCARD, 200);
-    evictObjCacheIfOversized(CACHE_RULE_APPLYAT, 200);
-    evictObjCacheIfOversized(CACHE_RESOLVEMOVEMENTS, 200);
-    evictObjCacheIfOversized(CACHE_RULE_FINDMATCHES, 200);
+    evictObjCacheIfOversized(CACHE_MOVEENTITIESATINDEX, 5000);
+    evictObjCacheIfOversized(CACHE_CALCULATEROWCOLMASKS, 5000);
+    evictObjCacheIfOversized(CACHE_RULE_CELLROWMATCHESFUNCTION, 100000);
+    evictObjCacheIfOversized(CACHE_CELLPATTERN_REPLACEFUNCTION, 50000);
+    evictObjCacheIfOversized(CACHE_MATCHCELLROW, 5000);
+    evictObjCacheIfOversized(CACHE_MATCHCELLROWWILDCARD, 5000);
+    evictObjCacheIfOversized(CACHE_RULE_APPLYAT, 5000);
+    evictObjCacheIfOversized(CACHE_RESOLVEMOVEMENTS, 5000);
+    evictObjCacheIfOversized(CACHE_RULE_FINDMATCHES, 5000);
 }
 
 

@@ -1750,7 +1750,8 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		return FALSE_FUNCTION;
 	}
 
-	const array_len = 3*OBJECT_SIZE + 4*MOVEMENT_SIZE + 3;
+	const rigidGroupIndex = rule.rigid ? (state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1) : 0;
+	const array_len = 3*OBJECT_SIZE + 4*MOVEMENT_SIZE + 5;
 	if (array_len!==_replace_function_key_array.length) {
 		_replace_function_key_array = new Int32Array(array_len);
 	}
@@ -1770,6 +1771,8 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE] = OBJECT_SIZE;
 	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE+1] = MOVEMENT_SIZE;
 	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE+2] = rule.rigid;
+	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE+3] = rigidGroupIndex;
+	key_array[3*OBJECT_SIZE + 4*MOVEMENT_SIZE+4] = level.layerCount;
 
 	const key = key_array.toString();
 	if (key in CACHE_CELLPATTERN_REPLACEFUNCTION) {
@@ -1855,7 +1858,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		let curRigidMovementAppliedMask;
 		let rigidchange=false;		
 		${IF_LAZY(rule.rigid,()=>`
-			const rigidGroupIndex = ${state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1};
+			const rigidGroupIndex = ${rigidGroupIndex};
 			const rigidMask = new BitVec(${STRIDE_MOV});
 			${FOR(0,level.layerCount,layer=>`
 				${ISHIFTOR("rigidMask", "rigidGroupIndex", layer * 5)}
