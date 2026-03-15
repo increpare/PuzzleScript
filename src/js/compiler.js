@@ -208,13 +208,11 @@ function generateExtraMembers(state) {
                         } else {
                             let n1 = n.toUpperCase();
                             let n2 = state.idDict[mask[o.layer]].toUpperCase();
-                            // if (n1 !== n2) {
                             logError(
                                 'Trying to create an aggregate object (something defined in the LEGEND section using AND) with both "' +
                                 n1 + '" and "' + n2 + '", which are on the same layer and therefore can\'t coexist.',
                                 dat.lineNumber
                             );
-                            // }
                         }
                     }
                 }
@@ -262,12 +260,41 @@ function generateExtraMembers(state) {
     }
     state.synonymsDict = synonymsDict;
 
+    resolveDictionaryCrossReferences(synonymsDict, propertiesDict, aggregatesDict);
+
+    /* determine which properties specify objects all on one layer */
+    state.propertiesSingleLayer = {};
+    const propertiesDict_keys = Object.keys(propertiesDict);
+    const propertiesDict_keys_l = propertiesDict_keys.length;
+    for (let k_i = 0; k_i < propertiesDict_keys_l; k_i++) {
+        const key = propertiesDict_keys[k_i];
+        let values = propertiesDict[key];
+        let sameLayer = true;
+        for (let i = 1; i < values.length; i++) {
+            if ((state.objects[values[i - 1]].layer !== state.objects[values[i]].layer)) {
+                sameLayer = false;
+                break;
+            }
+        }
+        if (sameLayer) {
+            state.propertiesSingleLayer[key] = state.objects[values[0]].layer;
+        }
+    }
+
+    if (state.idDict[0] === undefined && state.collisionLayers.length > 0) {
+        logError('You need to have some objects defined');
+    }
+
+    resolveBackgroundObject(state);
+}
+
+function resolveDictionaryCrossReferences(synonymsDict, propertiesDict, aggregatesDict) {
     let modified = true;
     while (modified) {
         modified = false;
 
         const synonymsDict_keys = Object.keys(synonymsDict);
-        const synonymsDict_keys_l = synonymsDict_keys.length;   
+        const synonymsDict_keys_l = synonymsDict_keys.length;
         for (let k_i = 0; k_i < synonymsDict_keys_l; k_i++) {
             const n = synonymsDict_keys[k_i];
             let value = synonymsDict[n];
@@ -281,7 +308,7 @@ function generateExtraMembers(state) {
                 modified = true;
             } else if (value in synonymsDict) {
                 synonymsDict[n] = synonymsDict[value];
-            }            
+            }
         }
 
         const propertiesDict_keys = Object.keys(propertiesDict);
@@ -308,7 +335,7 @@ function generateExtraMembers(state) {
                 if (value in aggregatesDict) {
                     logError('Trying to define property "' + n.toUpperCase() + '" in terms of aggregate "' + value.toUpperCase() + '".');
                 }
-            }        
+            }
         }
 
         const aggregatesDict_keys = Object.keys(aggregatesDict);
@@ -335,34 +362,12 @@ function generateExtraMembers(state) {
                 if (value in propertiesDict) {
                     logError('Trying to define aggregate "' + n.toUpperCase() + '" in terms of property "' + value.toUpperCase() + '".');
                 }
-            }        
-        }
-    }
-
-    /* determine which properties specify objects all on one layer */
-    state.propertiesSingleLayer = {};
-    const propertiesDict_keys = Object.keys(propertiesDict);
-    const propertiesDict_keys_l = propertiesDict_keys.length;
-    for (let k_i = 0; k_i < propertiesDict_keys_l; k_i++) {
-        const key = propertiesDict_keys[k_i];
-        let values = propertiesDict[key];
-        let sameLayer = true;
-        for (let i = 1; i < values.length; i++) {
-            if ((state.objects[values[i - 1]].layer !== state.objects[values[i]].layer)) {
-                sameLayer = false;
-                break;
             }
         }
-        if (sameLayer) {
-            state.propertiesSingleLayer[key] = state.objects[values[0]].layer;        
-        }
     }
+}
 
-    if (state.idDict[0] === undefined && state.collisionLayers.length > 0) {
-        logError('You need to have some objects defined');
-    }
-
-    //set default background object
+function resolveBackgroundObject(state) {
     let backgroundid;
     let backgroundlayer;
     if (state.objects.background === undefined) {
@@ -871,196 +876,177 @@ function deepCloneRule(rule) {
     return clonedRule;
 }
 
+function checkRHSConflicts(state, rule){
+	// First do a RHS check - you shouldn't have something amounting to
+	// X no X on the RHS. (even if the engine does it internally a lot later)
+	const rhs_len = rule.rhs.length;
+	for (let j=0;j<rhs_len;j++){
+		let rhs_group = rule.rhs[j];
+		const rhs_group_len = rhs_group.length;
+		for (let k=0;k<rhs_group_len;k++){
+			let cell = rhs_group[k];
+			let objects_present = [];
+			let objects_present_mask = new BitVec(STRIDE_OBJ);
+			for (let l=0;l<cell.length;l+=2){
+				let item = cell[l];
+				if (!item.startsWith("no")){
+					let no_name = cell[l+1];
+					if (state.objects.hasOwnProperty(no_name)){
+						objects_present.push(no_name);
+						objects_present_mask.ibitset(state.objects[no_name].id);
+					}
+				}
+			}
+			//for each 'no' object
+			for (let l=0;l<cell.length;l+=2){
+				let item = cell[l];
+				if (item.startsWith("no")){
+					let no_name = cell[l+1];
+					let no_name_mask = state.objectMasks[no_name];
+
+					//if no_name overlaps with any objects_present, then we have a problem.
+					if (no_name_mask.anyBitsInCommon(objects_present_mask)){
+						logError(`You have specified that there should be NO ${no_name.toUpperCase()} but there is also a requirement that ${objects_present.join(", ").toUpperCase()} be here.  This is a mistake right?`, rule.lineNumber);
+					}
+				}
+			}
+
+		}
+	}
+}
+
+function removeRedundantRHSNegations(rule){
+	//secondly, for all 'no X' on the LHS, can remove any corresponding verbatim 'no X' on the RHS.
+	const rhs_len = rule.rhs.length;
+	for (let j=0;j<rhs_len;j++){
+		let rhs_group = rule.rhs[j];
+		const rhs_group_len = rhs_group.length;
+		for (let k=0;k<rhs_group_len;k++){
+			let cell = rhs_group[k];
+			for (let l=0;l<cell.length;l+=2){
+				let item = cell[l];
+				if (item.startsWith("no")){
+					let no_name = cell[l+1];
+					//look for a 'no X' on the LHS in the same position
+					const lhs_cell = rule.lhs[j][k];
+					for (let m=0;m<lhs_cell.length;m+=2){
+						if (lhs_cell[m].startsWith("no") && lhs_cell[m+1] === no_name){
+							//we have a match - remove the 'no X' from the LHS
+							cell.splice(l,2);
+							break;
+						}
+					}
+
+				}
+			}
+		}
+	}
+}
+
+function trimSuperfluousLHSNegations(state, rule){
+	// thirdly, trim unnecessary 'no X's on the LHS - e.g. [ player no wall ]
+
+	let required_layers = new BitVec(Math.ceil(LAYER_COUNT/32)|0);
+	let required_objects = new BitVec(STRIDE_OBJ);
+
+	const lhs_len = rule.lhs.length;
+	for (let j=0;j<lhs_len;j++){
+		let lhs_group = rule.lhs[j];
+		const lhs_group_len = lhs_group.length;
+		for (let k=0;k<lhs_group_len;k++){
+			let cell = lhs_group[k];
+			// cell is an array of pairs - it looks like:
+			// ["", "player", "no", "wall", "", "target"]
+
+			required_layers.setZero();
+			required_objects.setZero();
+
+			let occupier={};
+			for (let l=0;l<cell.length;l+=2){
+				let entity_modifier = cell[l];
+				if (entity_modifier==="no"){
+					continue;
+				}
+				let entity_name = cell[l+1]
+				//if it's a single-layer property
+				if (state.propertiesSingleLayer.hasOwnProperty(entity_name)){
+					let layer = state.propertiesSingleLayer[entity_name];
+					required_layers.ibitset(layer);
+					let property_obs = state.propertiesDict[entity_name];
+					const property_obs_len = property_obs.length;
+					for (let m=0;m<property_obs_len;m++){
+						const object_name = property_obs[m];
+						const object_data = state.objects[object_name];
+						required_objects.ibitset(object_data.id);
+					}
+					occupier[layer]=entity_name;
+				} else if (state.objects.hasOwnProperty(entity_name)){
+					let layer = state.objects[entity_name].layer;
+					let ob_id = state.objects[entity_name].id;
+					required_layers.ibitset(layer);
+					required_objects.ibitset(ob_id);
+					occupier[layer]=entity_name;
+				} else if (state.aggregatesDict.hasOwnProperty(entity_name)){
+					let aggregate_obs = state.aggregatesDict[entity_name];
+					for (let m=0;m<aggregate_obs.length;m++){
+						let object_info = state.objects[aggregate_obs[m]];
+						let layer = object_info.layer;
+						let ob_id = object_info.id;
+						required_layers.ibitset(layer);
+						required_objects.ibitset(ob_id);
+						occupier[layer]=entity_name;
+					}
+				}
+			}
+
+
+			//find all objects qualified by 'no'
+			for (let l=0;l<cell.length;l+=2){
+				let item = cell[l];
+				if (item.startsWith("no")){
+					let no_name = cell[l+1]
+					if (!state.objectMasks.hasOwnProperty(no_name)){
+						continue;//error, should have been caught earlier - e.g. You cannot use 'no' to exclude the aggregate objec
+					}
+					let no_object_mask = state.objectMasks[no_name];
+					let no_object_layer_mask = new BitVec(Math.ceil(LAYER_COUNT/32)|0);
+					for (let m=0;m<state.layerMasks.length;m++){
+						if (state.layerMasks[m].anyBitsInCommon(no_object_mask)){
+							no_object_layer_mask.ibitset(m);
+						}
+					}
+
+					const object_layers_disjoint = !no_object_mask.anyBitsInCommon(required_objects);
+					const no_object_covered_by_required_layers = no_object_layer_mask.bitsSetInArray(required_layers.data);
+
+					if (no_object_covered_by_required_layers && object_layers_disjoint){
+
+						const obs_present = [];
+						const layers_present = [];
+						for (let m=0;m<state.layerMasks.length;m++){
+							if (occupier[m]){
+								obs_present.push(occupier[m]);
+								layers_present.push(m);
+							}
+						}
+						logWarning(`You have specified that there should be NO ${no_name.toUpperCase()} but there is also a requirement that ${obs_present.join(", ").toUpperCase()} be there, which collectively occupies the same layers (Layers ${layers_present.map(l=>l+1).join(", ")}), so you can leave this out.`, rule.lineNumber);
+						cell.splice(l,2);
+						l-=2;
+					}
+				}
+			}
+		}
+	}
+}
+
 function checkSuperfluousCoincidences(state,rules){
-
-    /*
-First, let's check for 'X no X' on the RHS.
-    */
-// check that that we don't have an object on one layer required, and at the same time
-// 'no X' where x is also on that layer - it's   "no wall" and player in the same cell - for then "no wall" is
-// superfluous.
-// for each rule
-
-    //first, find a list of layers where we *know* something has to be
-    let required_layers = new BitVec(Math.ceil(LAYER_COUNT/32)|0);
-    let required_objects = new BitVec(STRIDE_OBJ);
-    
-    const rules_l = rules.length;
-    for (let i=0;i<rules_l;i++){
-        let rule = rules[i];
-
-        // First do a RHS check - you shouldn't have something amounting to
-        // X no X on the RHS. (even if the engine does it internally a lot later)
-        const rhs_len = rule.rhs.length;
-        for (let j=0;j<rhs_len;j++){
-            let rhs_group = rule.rhs[j];
-            const rhs_group_len = rhs_group.length;
-            for (let k=0;k<rhs_group_len;k++){
-                let cell = rhs_group[k];
-                let objects_present = [];
-                let objects_present_mask = new BitVec(STRIDE_OBJ);
-                for (let l=0;l<cell.length;l+=2){
-                    let item = cell[l];
-                    if (!item.startsWith("no")){
-                        let no_name = cell[l+1];
-                        if (state.objects.hasOwnProperty(no_name)){
-                            objects_present.push(no_name);
-                            objects_present_mask.ibitset(state.objects[no_name].id);
-                        } else if (state.propertiesSingleLayer.hasOwnProperty(no_name)){
-                            // objects_present.push(no_name);
-                            // let property_obs = state.propertiesDict[no_name];
-                            // for (let m=0;m<property_obs.length;m++){
-                            //     let ob_data = state.objects[property_obs[m]];
-                            //     objects_present_mask.ibitset(ob_data.id);
-                            // }
-                        } else if (state.propertiesDict.hasOwnProperty(no_name)){
-                            // this is more complicated a case, right?
-                            // let property_obs = state.propertiesDict[no_name];
-                            // for (let m=0;m<property_obs.length;m++){
-                            //     let ob_data = state.objects[property_obs[m]];
-                            //     objects_present_mask.ibitset(ob_data.id);
-                            // }
-                        }
-                    }
-                }
-                //for each 'no' object
-                for (let l=0;l<cell.length;l+=2){
-                    let item = cell[l];
-                    if (item.startsWith("no")){
-                        let no_name = cell[l+1];
-                        let no_name_mask = state.objectMasks[no_name];
-
-                        //if no_name overlaps with any objects_present, then we have a problem.
-                        if (no_name_mask.anyBitsInCommon(objects_present_mask)){
-                            logError(`You have specified that there should be NO ${no_name.toUpperCase()} but there is also a requirement that ${objects_present.join(", ").toUpperCase()} be here.  This is a mistake right?`, rule.lineNumber);
-                        }
-                    }
-                }
-
-            }
-        }
-
-        //secondly, for all 'no X' on the LHS, can remove any corresponding verbatim 'no X' on the RHS.
-        for (let j=0;j<rhs_len;j++){
-            let rhs_group = rule.rhs[j];
-            const rhs_group_len = rhs_group.length;
-            for (let k=0;k<rhs_group_len;k++){
-                let cell = rhs_group[k];
-                for (let l=0;l<cell.length;l+=2){
-                    let item = cell[l];
-                    if (item.startsWith("no")){
-                        let no_name = cell[l+1];
-                        //look for a 'no X' on the LHS in the same position
-                        const lhs_cell = rule.lhs[j][k];
-                        for (let m=0;m<lhs_cell.length;m+=2){
-                            if (lhs_cell[m].startsWith("no") && lhs_cell[m+1] === no_name){
-                                //we have a match - remove the 'no X' from the LHS
-                                cell.splice(l,2);
-                                break;
-                            }
-                        }
-
-                    }
-                }
-            }
-        }
-    
-
-
-        // thirdly, trim unnecessary 'no X's on the LHS - e.g. [ player no wall ]
-
-        const lhs_len = rule.lhs.length;
-        for (let j=0;j<lhs_len;j++){
-            let lhs_group = rule.lhs[j];
-            const lhs_group_len = lhs_group.length; 
-            for (let k=0;k<lhs_group_len;k++){
-                let cell = lhs_group[k];
-                // cell is an array of pairs - it looks like:
-                // ["", "player", "no", "wall", "", "target"]
-
-                required_layers.setZero();
-                required_objects.setZero();
-
-                let occupier={};
-                for (let l=0;l<cell.length;l+=2){
-                    let entity_modifier = cell[l];
-                    if (entity_modifier==="no"){
-                        continue;
-                    }
-                    let entity_name = cell[l+1]
-                    //if it's a single-layer property
-                    if (state.propertiesSingleLayer.hasOwnProperty(entity_name)){
-                        let layer = state.propertiesSingleLayer[entity_name];
-                        required_layers.ibitset(layer);
-                        let property_obs = state.propertiesDict[entity_name];
-                        const property_obs_len = property_obs.length;
-                        for (let m=0;m<property_obs_len;m++){
-                            const object_name = property_obs[m];
-                            const object_data = state.objects[object_name];
-                            required_objects.ibitset(object_data.id);
-                        }
-                        occupier[layer]=entity_name;
-                    } else if (state.objects.hasOwnProperty(entity_name)){
-                        let layer = state.objects[entity_name].layer;
-                        let ob_id = state.objects[entity_name].id;
-                        required_layers.ibitset(layer);
-                        required_objects.ibitset(ob_id);
-                        occupier[layer]=entity_name;
-                    } else if (state.aggregatesDict.hasOwnProperty(entity_name)){
-                        let aggregate_obs = state.aggregatesDict[entity_name];
-                        for (let m=0;m<aggregate_obs.length;m++){
-                            let object_info = state.objects[aggregate_obs[m]];
-                            let layer = object_info.layer;
-                            let ob_id = object_info.id;
-                            required_layers.ibitset(layer);
-                            required_objects.ibitset(ob_id);
-                            occupier[layer]=entity_name;
-                        }
-                    }
-                }
-
-                
-                //find all objects qualified by 'no'
-                for (let l=0;l<cell.length;l+=2){
-                    let item = cell[l];
-                    if (item.startsWith("no")){
-                        let no_name = cell[l+1]
-                        let remove = false;
-                        if (!state.objectMasks.hasOwnProperty(no_name)){
-                            continue;//error, should have been caught earlier - e.g. You cannot use 'no' to exclude the aggregate objec
-                        }
-                        let no_object_mask = state.objectMasks[no_name];
-                        let no_object_layer_mask = new BitVec(Math.ceil(LAYER_COUNT/32)|0);                        
-                        for (let m=0;m<state.layerMasks.length;m++){
-                            if (state.layerMasks[m].anyBitsInCommon(no_object_mask)){
-                                no_object_layer_mask.ibitset(m);
-                            }
-                        }                        
-
-                        const object_layers_disjoint = !no_object_mask.anyBitsInCommon(required_objects);
-                        const no_object_covered_by_required_layers = no_object_layer_mask.bitsSetInArray(required_layers.data);      
-
-                        if (no_object_covered_by_required_layers && object_layers_disjoint){
-
-                            const obs_present = [];
-                            const layers_present = [];
-                            for (let m=0;m<state.layerMasks.length;m++){
-                                if (occupier[m]){
-                                    obs_present.push(occupier[m]);
-                                    layers_present.push(m);
-                                }
-                            }
-                            logWarning(`You have specified that there should be NO ${no_name.toUpperCase()} but there is also a requirement that ${obs_present.join(", ").toUpperCase()} be there, which collectively occupies the same layers (Layers ${layers_present.map(l=>l+1).join(", ")}), so you can leave this out.`, rule.lineNumber);
-                            cell.splice(l,2);
-                            l-=2;
-                        }
-                    }
-                }                
-            }
-        }
-    }
-
-
+	const rules_l = rules.length;
+	for (let i=0;i<rules_l;i++){
+		let rule = rules[i];
+		checkRHSConflicts(state, rule);
+		removeRedundantRHSNegations(rule);
+		trimSuperfluousLHSNegations(state, rule);
+	}
 }
 
 function rulesToArray(state) {
@@ -1090,21 +1076,9 @@ function rulesToArray(state) {
         let ruledirs = rule.directions;
         for (let j = 0; j < ruledirs.length; j++) {
             let dir = ruledirs[j];
-            // The following block is never getting hit by any tests. 
-            // Presumably in the past it was used to expand out rules with
-            // multiple directions, but now that's done somewhere else.
-            if (dir in directionaggregates && directionalRule(rule)) {
-                let dirs = directionaggregates[dir];
-                for (let k = 0; k < dirs.length; k++) {
-                    let modifiedrule = deepCloneRule(rule);
-                    modifiedrule.direction = dirs[k];
-                    rules2.push(modifiedrule);
-                }
-            } else {
-                let modifiedrule = deepCloneRule(rule);
-                modifiedrule.direction = dir;
-                rules2.push(modifiedrule);
-            }
+            let modifiedrule = deepCloneRule(rule);
+            modifiedrule.direction = dir;
+            rules2.push(modifiedrule);
         }
     }
 
