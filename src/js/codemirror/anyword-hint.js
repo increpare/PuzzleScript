@@ -125,42 +125,92 @@
             }
         }
 
-        //rotates clockwise 90 degrees n times
+        // Rotates clockwise 90 degrees `amount` times.
+        // Input: array of strings (rows). Supports rectangular matrices.
         function rotate_2d_array(array,amount){
-            amount = amount %4;
-            switch(amount){                    
-                case 0:{
-                    return array;
-                }
-                case 1:{
-                    let result = [];
-                    for (let i=0;i<array.length;i++) {
-                        let new_row = "";
-                        for (let j=0;j<array[i].length;j++) {
-                            new_row+=array[j][i];
-                        }
-                        result.push(new_row);
+            array = Array.isArray(array) ? array.slice() : [];
+            amount = ((amount % 4) + 4) % 4;
+            if (amount === 0) return array.slice();
+
+            function rotateCW(a){
+                var h = a.length;
+                if (h === 0) return [];
+                var w = a[0].length;
+                var out = [];
+                // CW: out has height=w, width=h
+                for (var r = 0; r < w; r++){
+                    var row = "";
+                    for (var c = 0; c < h; c++){
+                        row += a[h - 1 - c].charAt(r);
                     }
-                    return result;
+                    out.push(row);
                 }
-                case 2:{
-                    //reverse both array and all the strings it contains
-                    let result = array.reverse().map(row => row.split('').reverse().join(''));
-                    return result;
-                }
-                case 3:{
-                    //rotate 3 times
-                    let result = [];
-                    for (let i=0;i<array.length;i++) {
-                        let new_row = "";
-                        for (let j=0;j<array[i].length;j++) {
-                            new_row+=array[array.length-1-j][array.length-1-i];
-                        }
-                        result.push(new_row);
+                return out;
+            }
+
+            var out = array;
+            for (var t = 0; t < amount; t++){
+                out = rotateCW(out);
+            }
+            return out;
+        }
+
+        function mirror_h_2d_array(array){
+            // Flip left/right within each row.
+            return (array || []).map(row => row.split('').reverse().join(''));
+        }
+
+        function mirror_v_2d_array(array){
+            // Flip up/down: reverse row order.
+            return (array || []).slice().reverse();
+        }
+
+        // Canonical abstract direction sequences for ordering.
+        // 0=up, 1=down, 2=left, 3=right
+        var CANONICAL_DIR_SEQUENCES = [
+            [0,1,2,3], // up->down->left->right
+            [0,3,1,2], // up->right->down->left
+            [0,2,1,3], // up->left->down->right
+            [2,3],     // left->right
+            [3,2],     // right->left
+        ];
+
+        function findDirectionalFamilyAndIndex(objectCaseName){
+            for (var i=0;i<RuleTransform.DIRECTIONAL_PAIRINGS.length;i++){
+                var pairing = RuleTransform.DIRECTIONAL_PAIRINGS[i];
+                var suffixes = [pairing[0]].concat(pairing[1]);
+                for (var j=0;j<suffixes.length;j++){
+                    var suf = suffixes[j];
+                    if (objectCaseName.endsWith(suf)) {
+                        return { familyIndex:i, suffixes:suffixes, suffixIndex:j, suffix:suf };
                     }
-                    return result;
                 }
             }
+            return null;
+        }
+
+        function transformSpriteByAbstractDirs(spriteMatrix, baseDir, targetDir){
+            if (!spriteMatrix || spriteMatrix.length===0) return spriteMatrix || [];
+            if (baseDir===targetDir) return spriteMatrix.slice();
+
+            // Prefer mirrors for opposites (matches spec).
+            if ((baseDir===0 && targetDir===1) || (baseDir===1 && targetDir===0)){
+                return mirror_v_2d_array(spriteMatrix);
+            }
+            if ((baseDir===2 && targetDir===3) || (baseDir===3 && targetDir===2)){
+                return mirror_h_2d_array(spriteMatrix);
+            }
+
+            // Otherwise rotate (CW steps).
+            var rotCW = [3,2,0,1];
+            var d = baseDir;
+            var steps = 0;
+            while (steps<4 && d!==targetDir){
+                d = rotCW[d];
+                steps++;
+            }
+            if (steps>=4) return spriteMatrix.slice();
+            return rotate_2d_array(spriteMatrix, steps);
         }
 
         CodeMirror.registerHelper("hint", "anyword", function(editor, options) {
@@ -249,43 +299,141 @@
                                 break;
                             }
 
-                            for (var i=0;i<RuleTransform.DIRECTIONAL_PAIRINGS.length;i++){
-                                const suffix = RuleTransform.DIRECTIONAL_PAIRINGS[i][0];
-                                // STEP 2, if casename ends with suffix, suggest the corresonding pairings
-                                if (previous_object_casename.endsWith(suffix)){
-                                    //FOUND a match.
-                                    let to_suggest = "";
-                                    const stem = previous_object_casename.slice(0,-suffix.length);
-                                    const further_endings = RuleTransform.DIRECTIONAL_PAIRINGS[i][1];
-                                    const previous_object = state.objects[max_line_number_name_lowercase];
+                            // Directional variant suggestions: one object block at a time.
+                            var fam = findDirectionalFamilyAndIndex(previous_object_casename);
+                            if (fam && fam.suffixes.length>=2){
+                                var suffixes = fam.suffixes;
+                                var baseSuffixIdx = fam.suffixIndex;
+                                var baseSuffix = fam.suffix;
+                                var stem = previous_object_casename.slice(0, -baseSuffix.length);
+                                var previous_object = state.objects[max_line_number_name_lowercase];
 
-                                    //generate rotations of previous_object
-                                    const rotations = further_endings.length === 3 ?[ 
-                                        //DOWN
-                                        rotate_2d_array(previous_object.spritematrix,2),
-                                        //LEFT
-                                        rotate_2d_array(previous_object.spritematrix,3),
-                                        //RIGHT
-                                        rotate_2d_array(previous_object.spritematrix,1),
-                                    ] : [ //for horizontal and vertical objects
-                                        rotate_2d_array(previous_object.spritematrix,1)
-                                    ];
+                                // Map concrete suffix index to abstract direction index.
+                                // For 4-way families: [up,down,left,right] => [0,1,2,3]
+                                // For 2-way (horizontal/vertical): no history-based ordering.
+                                var isFourWay = (suffixes.length===4);
 
-                                    for (let j=0;j<further_endings.length;j++){
-                                        const pairing = further_endings[j];
-                                        to_suggest += stem+pairing+"\n";
-                                        //print colros
-                                        to_suggest += previous_object.colors.join(" ")+"\n";
-
-                                        if (previous_object.spritematrix.length>0){
-                                            to_suggest += rotations[j].join("\n");
-                                            to_suggest += "\n";
-                                        } 
-                                        to_suggest += "\n";
+                                // Build per-stem abstract direction history (last 3 directional decls for this stem).
+                                var history = [];
+                                if (isFourWay){
+                                    var stemLower = stem.toLowerCase();
+                                    var entries = [];
+                                    var names = Object.keys(state.original_line_numbers);
+                                    for (var hn=0; hn<names.length; hn++){
+                                        var nameLower = names[hn];
+                                        var caseName = state.original_case_names[nameLower];
+                                        if (!caseName) continue;
+                                        if (caseName.length <= stem.length) continue;
+                                        if (caseName.slice(0, stem.length).toLowerCase() !== stemLower) continue;
+                                        // Must end with one of the suffixes in this family.
+                                        for (var si=0; si<suffixes.length; si++){
+                                            var suf = suffixes[si];
+                                            if (caseName.endsWith(suf)){
+                                                entries.push({ line: state.original_line_numbers[nameLower], dir: si });
+                                                break;
+                                            }
+                                        }
                                     }
-                                    candlists.push(["comment",to_suggest]);
-                                }                                    
-                            }                                                                                                                    
+                                    entries.sort(function(a,b){ return a.line - b.line; });
+                                    for (var ei=Math.max(0, entries.length-3); ei<entries.length; ei++){
+                                        history.push(entries[ei].dir);
+                                    }
+                                }
+
+                                // Determine preferred next direction from canonical sequences (strict prefix match).
+                                var preferredNextDir = null;
+                                if (isFourWay && history.length>0){
+                                    for (var pi=0; pi<CANONICAL_DIR_SEQUENCES.length; pi++){
+                                        var seq = CANONICAL_DIR_SEQUENCES[pi];
+                                        if (history.length >= seq.length) continue;
+                                        var ok = true;
+                                        for (var k=0; k<history.length; k++){
+                                            if (seq[k] !== history[k]) { ok = false; break; }
+                                        }
+                                        if (ok){
+                                            preferredNextDir = seq[history.length];
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                function isDeclared(caseName){
+                                    return !!state.objects[caseName.toLowerCase()];
+                                }
+
+                                // Build list of missing target suffix indexes.
+                                var missing = [];
+                                for (var ti=0; ti<suffixes.length; ti++){
+                                    if (ti===baseSuffixIdx) continue;
+                                    var targetName = stem + suffixes[ti];
+                                    if (!isDeclared(targetName)) missing.push(ti);
+                                }
+
+                                // Ordering: preferred-next first (if missing), then fallback deterministic ordering.
+                                if (missing.length>0){
+                                    var ordered = [];
+                                    var used = {};
+                                    function pushIfPresent(dirIdx){
+                                        if (dirIdx==null) return;
+                                        for (var mi=0; mi<missing.length; mi++){
+                                            if (missing[mi]===dirIdx && !used[dirIdx]){
+                                                ordered.push(dirIdx);
+                                                used[dirIdx]=true;
+                                            }
+                                        }
+                                    }
+
+                                    if (isFourWay) pushIfPresent(preferredNextDir);
+
+                                    if (isFourWay){
+                                        // Mirror counterpart first, then CCW then CW (relative to base).
+                                        var mirrorMap = [1,0,3,2];
+                                        var rotCCW = [2,3,1,0];
+                                        var rotCW = [3,2,0,1];
+                                        pushIfPresent(mirrorMap[baseSuffixIdx]);
+                                        pushIfPresent(rotCCW[baseSuffixIdx]);
+                                        pushIfPresent(rotCW[baseSuffixIdx]);
+                                    } else {
+                                        // 2-way family: just the other one.
+                                        for (var mi2=0; mi2<missing.length; mi2++){
+                                            pushIfPresent(missing[mi2]);
+                                        }
+                                    }
+
+                                    // Any remaining (should be none, but ensure all show up).
+                                    for (var mi3=0; mi3<missing.length; mi3++){
+                                        var dleft = missing[mi3];
+                                        if (!used[dleft]){
+                                            ordered.push(dleft);
+                                            used[dleft]=true;
+                                        }
+                                    }
+
+                                    // Emit one completion per missing direction.
+                                    for (var oi=0; oi<ordered.length; oi++){
+                                        var targetIdx = ordered[oi];
+                                        var targetSuffix = suffixes[targetIdx];
+                                        var targetName = stem + targetSuffix;
+
+                                        var block = "";
+                                        block += targetName + "\n";
+                                        block += previous_object.colors.join(" ") + "\n";
+
+                                        if (previous_object.spritematrix && previous_object.spritematrix.length>0){
+                                            var transformedSprite = previous_object.spritematrix;
+                                            if (isFourWay){
+                                                transformedSprite = transformSpriteByAbstractDirs(previous_object.spritematrix, baseSuffixIdx, targetIdx);
+                                            } else {
+                                                // horizontal<->vertical: rotate 90 degrees (existing behavior)
+                                                transformedSprite = rotate_2d_array(previous_object.spritematrix,1);
+                                            }
+                                            block += transformedSprite.join("\n") + "\n";
+                                        }
+                                        block += "\n";
+                                        candlists.push(["comment", block]);
+                                    }
+                                }
+                            }
                         } else if (state.objects_section==2){
                             candlists.push(COLOR_WORDS);
                         }
