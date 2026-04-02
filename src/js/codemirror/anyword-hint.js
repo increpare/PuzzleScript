@@ -102,9 +102,9 @@
             var wrapper = document.createElement("span")
             wrapper.className += " cm-s-midnight ";
 
-            var h = document.createElement("span")                // Create a <h1> element
+            var h = document.createElement("span")
             // h.style.color="white";
-            var t = document.createTextNode(t1);     // Create a text node
+            var t = document.createTextNode(t1);
 
             h.appendChild(t);   
             wrapper.appendChild(h); 
@@ -116,11 +116,10 @@
             elt.appendChild(wrapper);//document.createTextNode(cur.displayText || getText(cur)));
 
             if (t2.length>0){
-                var h2 = document.createElement("span")                // Create a <h1> element
+                var h2 = document.createElement("span")
                 h2.style.color="orange";
-                var t2 = document.createTextNode(" "+t2);     // Create a text node
-                h2.appendChild(t2);  
-                h2.style.color="orange";
+                var t2 = document.createTextNode(" "+t2);
+                h2.appendChild(t2);
                 elt.appendChild(t2);
             }
         }
@@ -298,9 +297,9 @@
                             var famForPrefix = findDirectionalFamilyAndIndex(previous_object_casename);
                             var curWordPrefixesDirectionalHint = max_line_number_name_lowercase.startsWith(curWord);
                             if (!curWordPrefixesDirectionalHint && famForPrefix && famForPrefix.suffixes.length >= 2){
-                                var stemForPrefix = previous_object_casename.slice(0, -famForPrefix.suffix.length);
+                                var stemForPrefix = previous_object_casename.slice(0, -famForPrefix.suffix.length).toLowerCase();
                                 for (var spi = 0; spi < famForPrefix.suffixes.length; spi++){
-                                    if ((stemForPrefix + famForPrefix.suffixes[spi]).toLowerCase().startsWith(curWord)){
+                                    if ((stemForPrefix + famForPrefix.suffixes[spi].toLowerCase()).startsWith(curWord)){
                                         curWordPrefixesDirectionalHint = true;
                                         break;
                                     }
@@ -311,7 +310,7 @@
                             }
 
                             // Directional variant suggestions: one object block at a time.
-                            var fam = findDirectionalFamilyAndIndex(previous_object_casename);
+                            var fam = famForPrefix;
                             if (fam && fam.suffixes.length>=2){
                                 var suffixes = fam.suffixes;
                                 var baseSuffixIdx = fam.suffixIndex;
@@ -329,7 +328,7 @@
                                 if (isFourWay){
                                     var stemLower = stem.toLowerCase();
                                     var entries = [];
-                                    var names = Object.keys(state.original_line_numbers);
+                                    var names = object_names_lowercase;
                                     for (var hn=0; hn<names.length; hn++){
                                         var nameLower = names[hn];
                                         var caseName = state.original_case_names[nameLower];
