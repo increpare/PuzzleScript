@@ -173,6 +173,8 @@
             [0,2,1,3], // up->left->down->right
             [2,3],     // left->right
             [3,2],     // right->left
+            [1,0],     // down->up
+            [3,2],     // right->left
         ];
 
         function findDirectionalFamilyAndIndex(objectCaseName){
