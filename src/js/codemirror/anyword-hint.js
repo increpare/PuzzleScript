@@ -293,9 +293,20 @@
                             var previous_object_data = state.objects[max_line_number_name_lowercase];
                             var previous_object_casename = state.original_case_names[max_line_number_name_lowercase];
 
-                            // only bother with all this if the curword is a prefix 
-                            // of max_line_number_name_lowercase
-                            if (!max_line_number_name_lowercase.startsWith(curWord)){
+                            // Show hints while curWord prefixes the last object OR any same-stem
+                            // directional variant (e.g. player_d → player_down after player_up).
+                            var famForPrefix = findDirectionalFamilyAndIndex(previous_object_casename);
+                            var curWordPrefixesDirectionalHint = max_line_number_name_lowercase.startsWith(curWord);
+                            if (!curWordPrefixesDirectionalHint && famForPrefix && famForPrefix.suffixes.length >= 2){
+                                var stemForPrefix = previous_object_casename.slice(0, -famForPrefix.suffix.length);
+                                for (var spi = 0; spi < famForPrefix.suffixes.length; spi++){
+                                    if ((stemForPrefix + famForPrefix.suffixes[spi]).toLowerCase().startsWith(curWord)){
+                                        curWordPrefixesDirectionalHint = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!curWordPrefixesDirectionalHint){
                                 break;
                             }
 
