@@ -74,6 +74,15 @@ global.jumpToLine = function() {};
 global.printLevel = function() {};
 global.playSound = function() {};
 
+// sfxr.js falls back to HTMLAudioElement when Web Audio isn't available; Node has neither.
+global.Audio = function Audio() {
+    return {
+        src: '',
+        play() { return Promise.resolve(); },
+        cloneNode() { return new global.Audio(); }
+    };
+};
+
 global.levelString = '';
 global.inputString = '';
 global.outputString = '';
