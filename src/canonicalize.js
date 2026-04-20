@@ -239,6 +239,7 @@ function modeOptions(mode) {
                 includeFlavorMetadata: false,
                 includeMessageText: false,
                 includeSynonyms: false,
+                collapseEquivalentObjects: true,
             };
         case 'semantic':
             return {
@@ -250,6 +251,21 @@ function modeOptions(mode) {
                 includeFlavorMetadata: false,
                 includeMessageText: false,
                 includeSynonyms: false,
+                collapseEquivalentObjects: true,
+            };
+        case 'family':
+            return {
+                includeMetadata: false,
+                includeVisuals: false,
+                includeSounds: false,
+                includeLevels: false,
+                includeWinConditions: false,
+                includeFlavorMetadata: false,
+                includeMessageText: false,
+                includeSynonyms: false,
+                collapseEquivalentObjects: true,
+                canonicalFormat: 'puzzlescript-family-canonical-v1',
+                objectNamePrefix: 'fam_',
             };
         case 'mechanics':
             return {
@@ -261,6 +277,7 @@ function modeOptions(mode) {
                 includeFlavorMetadata: false,
                 includeMessageText: false,
                 includeSynonyms: false,
+                collapseEquivalentObjects: true,
             };
         case 'no-levels':
             return {
@@ -655,6 +672,169 @@ function serializeCompiledCell(cell, nameMap, state) {
     return entries;
 }
 
+function extractEntryObjects(entry) {
+    if (entry.obj) {
+        return [entry.obj];
+    }
+    if (entry.objs) {
+        return entry.objs.slice();
+    }
+    return [];
+}
+
+function relabelEntry(entry, mapper) {
+    if (entry.obj) {
+        return { dir: entry.dir, obj: mapper(entry.obj) };
+    }
+    if (entry.objs) {
+        const mapped = Array.from(new Set(entry.objs.map(mapper))).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+        if (mapped.length === 1) {
+            return { dir: entry.dir, obj: mapped[0] };
+        }
+        return { dir: entry.dir, objs: mapped };
+    }
+    return entry;
+}
+
+function normalizeRelabeledCell(cell, mapper) {
+    if (cell.ellipsis) {
+        return cell;
+    }
+    const relabeled = cell.map(entry => relabelEntry(entry, mapper));
+    relabeled.sort((a, b) => {
+        const left = a.obj || (a.objs || []).join('|');
+        const right = b.obj || (b.objs || []).join('|');
+        return left.localeCompare(right, undefined, { numeric: true }) || a.dir.localeCompare(b.dir);
+    });
+    const deduped = [];
+    const seen = new Set();
+    for (const entry of relabeled) {
+        const key = JSON.stringify(entry);
+        if (!seen.has(key)) {
+            seen.add(key);
+            deduped.push(entry);
+        }
+    }
+    return deduped;
+}
+
+function collectRuleMentionedObjects(rules) {
+    const mentioned = new Set();
+    for (const rule of rules || []) {
+        for (const side of [rule.lhs || [], rule.rhs || []]) {
+            for (const row of side) {
+                for (const cell of row) {
+                    if (cell.ellipsis) {
+                        continue;
+                    }
+                    for (const entry of cell) {
+                        for (const objectName of extractEntryObjects(entry)) {
+                            mentioned.add(objectName);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return mentioned;
+}
+
+function collapseEquivalentObjectsInCanonical(canonical, options = {}) {
+    const format = options.format || canonical.format;
+    const namePrefix = options.namePrefix || 'obj_';
+    const includeMetadata = options.includeMetadata !== false;
+    const includeWinConditions = options.includeWinConditions !== false;
+    const includeLevels = options.includeLevels !== false;
+    const playerSet = new Set(canonical.playerObjects || []);
+    const ruleMentioned = collectRuleMentionedObjects(canonical.rules || []);
+    const retainedLayers = [];
+    const retainedObjects = new Set();
+    const inertBucketLabels = new Map();
+
+    (canonical.collisionLayers || []).forEach((layer, layerIndex) => {
+        const hasRetainedObject = layer.some(name => playerSet.has(name) || ruleMentioned.has(name));
+        if (!hasRetainedObject) {
+            return;
+        }
+        retainedLayers.push(layer.slice());
+        layer.forEach(name => retainedObjects.add(name));
+        const inertNonPlayers = layer.filter(name => !playerSet.has(name) && !ruleMentioned.has(name));
+        if (inertNonPlayers.length > 0) {
+            const bucketName = `__inert_layer_${layerIndex}`;
+            inertNonPlayers.forEach(name => inertBucketLabels.set(name, bucketName));
+        }
+    });
+
+    const objectToFamily = new Map();
+    let nextFamilyIndex = 0;
+    retainedLayers.forEach((layer, layerIndex) => {
+        let inertFamilyName = null;
+        layer.forEach(objectName => {
+            if (inertBucketLabels.has(objectName)) {
+                if (inertFamilyName === null) {
+                    inertFamilyName = `${namePrefix}${nextFamilyIndex++}`;
+                }
+                objectToFamily.set(objectName, inertFamilyName);
+                return;
+            }
+            objectToFamily.set(objectName, `${namePrefix}${nextFamilyIndex++}`);
+        });
+    });
+
+    const mapper = name => objectToFamily.get(name) || name;
+    const dedupeList = list => Array.from(new Set((list || []).map(mapper))).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+    const rules = (canonical.rules || []).map(rule => ({
+        direction: rule.direction,
+        late: !!rule.late,
+        rigid: !!rule.rigid,
+        randomRule: !!rule.randomRule,
+        groupNumber: rule.groupNumber,
+        lhs: (rule.lhs || []).map(row => row.map(cell => normalizeRelabeledCell(cell, mapper))),
+        rhs: (rule.rhs || []).map(row => row.map(cell => normalizeRelabeledCell(cell, mapper))),
+        commands: rule.commands || [],
+    }));
+
+    const dedupedRules = [];
+    const seenRules = new Set();
+    for (const rule of rules) {
+        const key = JSON.stringify(rule);
+        if (!seenRules.has(key)) {
+            seenRules.add(key);
+            dedupedRules.push(rule);
+        }
+    }
+
+    return {
+        format,
+        metadata: includeMetadata ? (canonical.metadata || []) : [],
+        playerObjects: dedupeList((canonical.playerObjects || []).filter(name => retainedObjects.has(name))),
+        backgroundObjects: dedupeList((canonical.backgroundObjects || []).filter(name => retainedObjects.has(name))),
+        collisionLayers: retainedLayers.map(layer => dedupeList(layer)),
+        rules: dedupedRules,
+        winConditions: includeWinConditions
+            ? (canonical.winConditions || []).map(condition => ({
+                quantifier: condition.quantifier,
+                a: dedupeList(condition.a || []),
+                b: dedupeList(condition.b || []),
+            }))
+            : [],
+        levels: includeLevels
+            ? (canonical.levels || []).map(level => {
+                if (level.type !== 'map') {
+                    return level;
+                }
+                return {
+                    type: 'map',
+                    rows: level.rows.map(row =>
+                        row.map(cell => dedupeList(cell.filter(name => retainedObjects.has(name))))
+                    ),
+                };
+            })
+            : [],
+    };
+}
+
 function serializeCompiledRule(rule, nameMap, state, options) {
     const commands = rule.commands
         .filter(command => !/^sfx(?:10|[0-9])$/.test(command[0]))
@@ -820,11 +1000,21 @@ function canonicalizeCompiledState(state, options) {
         result.levels = [];
     }
 
+    if (options.collapseEquivalentObjects) {
+        return collapseEquivalentObjectsInCanonical(result, {
+            format: options.canonicalFormat || result.format,
+            namePrefix: options.objectNamePrefix || 'obj_',
+            includeMetadata: options.includeMetadata,
+            includeWinConditions: options.includeWinConditions,
+            includeLevels: options.includeLevels,
+        });
+    }
+
     return result;
 }
 
 function canonicalizeSource(source, mode = 'structural') {
-    if (mode === 'ruleset' || mode === 'mechanics' || mode === 'semantic') {
+    if (mode === 'ruleset' || mode === 'mechanics' || mode === 'semantic' || mode === 'family') {
         const options = modeOptions(mode);
         const compiled = getRuntime().compileSemantic(source, options.includeWinConditions);
         if (compiled.errorCount > 0 || compiled.state === null || compiled.state.invalid) {
@@ -858,7 +1048,7 @@ function canonicalizeFile(inputPath, mode = 'structural') {
 }
 
 function buildComparisonHashes(source) {
-    const modes = ['full', 'structural', 'no-levels', 'mechanics', 'ruleset', 'semantic'];
+    const modes = ['full', 'structural', 'no-levels', 'mechanics', 'ruleset', 'semantic', 'family'];
     const result = {};
     for (const mode of modes) {
         result[mode] = hashCanonical(canonicalizeSource(source, mode));

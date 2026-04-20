@@ -11,7 +11,7 @@ const {
 } = require('./canonicalize');
 
 function printUsage(exitCode) {
-    console.error('Usage: node src/canonicalize_cli.js <input.ps> [output.json] [--mode structural|full|no-levels|mechanics|ruleset|semantic] [--hashes]');
+    console.error('Usage: node src/canonicalize_cli.js <input.ps> [output.json] [--mode structural|full|no-levels|mechanics|ruleset|semantic|family] [--hashes]');
     console.error('');
     console.error('Writes a canonical JSON representation of a PuzzleScript game.');
     console.error('Default mode is "semantic": gameplay metadata + player/background roles + collision layers + compiled rules + compiled maps.');
