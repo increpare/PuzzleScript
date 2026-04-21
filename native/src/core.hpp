@@ -175,6 +175,8 @@ struct Session {
         PreparedSession preparedSession;
         LevelTemplate liveLevel;
         std::vector<int32_t> liveMovements;
+        std::vector<int32_t> rigidGroupIndexMasks;
+        std::vector<int32_t> rigidMovementAppliedMasks;
         RandomState randomState;
     };
 
@@ -188,6 +190,8 @@ struct Session {
     std::vector<int32_t> rowMovementMasks;
     std::vector<int32_t> columnMovementMasks;
     std::vector<int32_t> boardMovementMask;
+    std::vector<int32_t> rigidGroupIndexMasks;
+    std::vector<int32_t> rigidMovementAppliedMasks;
     std::vector<UndoSnapshot> undoStack;
     std::vector<ps_audio_event> lastAudioEvents;
     bool canUndo = false;

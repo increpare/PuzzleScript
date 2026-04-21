@@ -26,6 +26,11 @@ struct RuleApplyOutcome {
     bool changed = false;
 };
 
+struct MovementResolveOutcome {
+    bool moved = false;
+    bool shouldUndo = false;
+};
+
 const json::Value& requireField(const json::Value::Object& object, std::string_view key) {
     const auto it = object.find(std::string(key));
     if (it == object.end()) {
@@ -479,6 +484,24 @@ const int32_t* getCellMovementsPtr(const Session& session, int32_t tileIndex) {
     return session.liveMovements.data() + base;
 }
 
+BitVector getCellRigidGroupIndexMask(const Session& session, int32_t tileIndex) {
+    BitVector result(static_cast<size_t>(session.game->strideMovement), 0);
+    const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
+    for (int32_t word = 0; word < session.game->strideMovement; ++word) {
+        result[static_cast<size_t>(word)] = session.rigidGroupIndexMasks[base + static_cast<size_t>(word)];
+    }
+    return result;
+}
+
+BitVector getCellRigidMovementAppliedMask(const Session& session, int32_t tileIndex) {
+    BitVector result(static_cast<size_t>(session.game->strideMovement), 0);
+    const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
+    for (int32_t word = 0; word < session.game->strideMovement; ++word) {
+        result[static_cast<size_t>(word)] = session.rigidMovementAppliedMasks[base + static_cast<size_t>(word)];
+    }
+    return result;
+}
+
 int32_t getShiftedMask5(const BitVector& value, int32_t shift) {
     const int32_t word = shift >> 5;
     const int32_t bit = shift & 31;
@@ -510,6 +533,38 @@ void setCellMovements(Session& session, int32_t tileIndex, const BitVector& move
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     for (int32_t word = 0; word < session.game->strideMovement; ++word) {
         session.liveMovements[base + static_cast<size_t>(word)] = movements[static_cast<size_t>(word)];
+    }
+}
+
+void setCellRigidGroupIndexMask(Session& session, int32_t tileIndex, const BitVector& masks) {
+    const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
+    for (int32_t word = 0; word < session.game->strideMovement; ++word) {
+        session.rigidGroupIndexMasks[base + static_cast<size_t>(word)] = masks[static_cast<size_t>(word)];
+    }
+}
+
+void setCellRigidMovementAppliedMask(Session& session, int32_t tileIndex, const BitVector& masks) {
+    const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
+    for (int32_t word = 0; word < session.game->strideMovement; ++word) {
+        session.rigidMovementAppliedMasks[base + static_cast<size_t>(word)] = masks[static_cast<size_t>(word)];
+    }
+}
+
+void clearRigidState(Session& session) {
+    std::fill(session.rigidGroupIndexMasks.begin(), session.rigidGroupIndexMasks.end(), 0);
+    std::fill(session.rigidMovementAppliedMasks.begin(), session.rigidMovementAppliedMasks.end(), 0);
+}
+
+void setShiftedMask5(BitVector& value, int32_t shift, int32_t bits) {
+    const int32_t word = shift >> 5;
+    const int32_t bit = shift & 31;
+    if (word >= static_cast<int32_t>(value.size())) {
+        return;
+    }
+    const uint32_t packedBits = static_cast<uint32_t>(bits & 0x1F);
+    value[static_cast<size_t>(word)] |= static_cast<int32_t>(packedBits << bit);
+    if (bit > 27 && word + 1 < static_cast<int32_t>(value.size())) {
+        value[static_cast<size_t>(word + 1)] |= static_cast<int32_t>(packedBits >> (32 - bit));
     }
 }
 
@@ -702,8 +757,8 @@ bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer,
     return true;
 }
 
-bool resolveMovements(Session& session) {
-    bool movedAny = false;
+MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* bannedGroups) {
+    MovementResolveOutcome outcome;
     bool moved = true;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
     while (moved) {
@@ -722,7 +777,7 @@ bool resolveMovements(Session& session) {
                 if (resolveOneLayerMovement(session, tileIndex, layer, layerMovement)) {
                     clearShiftedMask5(movementMask, 5 * layer);
                     moved = true;
-                    movedAny = true;
+                    outcome.moved = true;
                     changedTile = true;
                 }
             }
@@ -732,8 +787,48 @@ bool resolveMovements(Session& session) {
         }
     }
 
+    for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
+        BitVector movementMask = getCellMovements(session, tileIndex);
+        if (!anyBitsSet(movementMask)) {
+            continue;
+        }
+
+        if (session.game->rigid) {
+            BitVector rigidMovementAppliedMask = getCellRigidMovementAppliedMask(session, tileIndex);
+            if (anyBitsSet(rigidMovementAppliedMask)) {
+                for (size_t word = 0; word < movementMask.size() && word < rigidMovementAppliedMask.size(); ++word) {
+                    movementMask[word] &= rigidMovementAppliedMask[word];
+                }
+                if (anyBitsSet(movementMask)) {
+                    for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
+                        if (getShiftedMask5(movementMask, 5 * layer) == 0) {
+                            continue;
+                        }
+                        const BitVector rigidGroupIndexMask = getCellRigidGroupIndexMask(session, tileIndex);
+                        const int32_t rigidGroupIndex = getShiftedMask5(rigidGroupIndexMask, 5 * layer) - 1;
+                        if (rigidGroupIndex >= 0
+                            && static_cast<size_t>(rigidGroupIndex) < session.game->rigidGroupIndexToGroupIndex.size()) {
+                            const int32_t groupIndex = session.game->rigidGroupIndexToGroupIndex[static_cast<size_t>(rigidGroupIndex)];
+                            if (bannedGroups != nullptr && groupIndex >= 0) {
+                                if (static_cast<size_t>(groupIndex) >= bannedGroups->size()) {
+                                    bannedGroups->resize(static_cast<size_t>(groupIndex + 1), false);
+                                }
+                                if (!(*bannedGroups)[static_cast<size_t>(groupIndex)]) {
+                                    (*bannedGroups)[static_cast<size_t>(groupIndex)] = true;
+                                    outcome.shouldUndo = true;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
-    return movedAny;
+    clearRigidState(session);
+    return outcome;
 }
 
 bool matchesPatternAt(const Session& session, const Pattern& pattern, int32_t tileIndex) {
@@ -778,7 +873,7 @@ bool matchesPatternAt(const Session& session, const Pattern& pattern, int32_t ti
     return true;
 }
 
-bool applyReplacementAt(Session& session, const Pattern& pattern, int32_t tileIndex) {
+bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& pattern, int32_t tileIndex) {
     if (!pattern.replacement.has_value()) {
         return false;
     }
@@ -787,6 +882,9 @@ bool applyReplacementAt(Session& session, const Pattern& pattern, int32_t tileIn
     BitVector movements = getCellMovements(session, tileIndex);
     const BitVector oldObjects = objects;
     const BitVector oldMovements = movements;
+    BitVector rigidGroupIndexMask;
+    BitVector rigidMovementAppliedMask;
+    bool rigidChange = false;
     BitVector objectsClear = replacement.objectsClear;
     BitVector objectsSet = replacement.objectsSet;
     BitVector movementsSet = replacement.movementsSet;
@@ -855,11 +953,44 @@ bool applyReplacementAt(Session& session, const Pattern& pattern, int32_t tileIn
         movements[word] = (movements[word] & ~movementsClear[word]) | movementsSet[word];
     }
 
-    if (objects == oldObjects && movements == oldMovements) {
+    if (rule.rigid && !replacement.movementsLayerMask.empty()) {
+        const int32_t rigidGroupIndex = (rule.groupNumber >= 0
+            && static_cast<size_t>(rule.groupNumber) < session.game->groupNumberToRigidGroupIndex.size())
+            ? session.game->groupNumberToRigidGroupIndex[static_cast<size_t>(rule.groupNumber)] + 1
+            : 0;
+        if (rigidGroupIndex > 0) {
+            BitVector rigidMask(static_cast<size_t>(session.game->strideMovement), 0);
+            for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
+                const int32_t shift = 5 * layer;
+                if (getShiftedMask5(replacement.movementsLayerMask, shift) != 0) {
+                    setShiftedMask5(rigidMask, shift, rigidGroupIndex);
+                }
+            }
+
+            rigidGroupIndexMask = getCellRigidGroupIndexMask(session, tileIndex);
+            rigidMovementAppliedMask = getCellRigidMovementAppliedMask(session, tileIndex);
+            if (!bitsSetInArray(rigidMask, rigidGroupIndexMask)
+                && !bitsSetInArray(replacement.movementsLayerMask, rigidMovementAppliedMask)) {
+                for (size_t word = 0; word < rigidGroupIndexMask.size() && word < rigidMask.size(); ++word) {
+                    rigidGroupIndexMask[word] |= rigidMask[word];
+                }
+                for (size_t word = 0; word < rigidMovementAppliedMask.size() && word < replacement.movementsLayerMask.size(); ++word) {
+                    rigidMovementAppliedMask[word] |= replacement.movementsLayerMask[word];
+                }
+                rigidChange = true;
+            }
+        }
+    }
+
+    if (objects == oldObjects && movements == oldMovements && !rigidChange) {
         return false;
     }
     setCellObjects(session, tileIndex, objects);
     setCellMovements(session, tileIndex, movements);
+    if (rigidChange) {
+        setCellRigidGroupIndexMask(session, tileIndex, rigidGroupIndexMask);
+        setCellRigidMovementAppliedMask(session, tileIndex, rigidMovementAppliedMask);
+    }
     return true;
 }
 
@@ -966,10 +1097,10 @@ bool rowStillMatchesAt(const Session& session, const std::vector<Pattern>& row, 
     return true;
 }
 
-bool applyRowAt(Session& session, const std::vector<Pattern>& row, int32_t startIndex, int32_t delta) {
+bool applyRowAt(Session& session, const Rule& rule, const std::vector<Pattern>& row, int32_t startIndex, int32_t delta) {
     bool changed = false;
     for (int32_t cellIndex = 0; cellIndex < static_cast<int32_t>(row.size()); ++cellIndex) {
-        changed = applyReplacementAt(session, row[static_cast<size_t>(cellIndex)], startIndex + cellIndex * delta) || changed;
+        changed = applyReplacementAt(session, rule, row[static_cast<size_t>(cellIndex)], startIndex + cellIndex * delta) || changed;
     }
     return changed;
 }
@@ -1083,7 +1214,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                 if (cellIndex == ellipsisIndex) {
                     continue;
                 }
-                changed = applyReplacementAt(session, row[static_cast<size_t>(cellIndex)], positions[static_cast<size_t>(positionIndex++)]) || changed;
+                changed = applyReplacementAt(session, rule, row[static_cast<size_t>(cellIndex)], positions[static_cast<size_t>(positionIndex++)]) || changed;
             }
         }
 
@@ -1153,31 +1284,63 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
             }
         }
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-            changed = applyRowAt(session, rule.patterns[rowIndex], tuple[rowIndex], delta) || changed;
+            changed = applyRowAt(session, rule, rule.patterns[rowIndex], tuple[rowIndex], delta) || changed;
         }
     }
     return RuleApplyOutcome{true, changed};
 }
 
-bool collectSingleCellMatches(const Session& session, const Rule& rule, std::vector<int32_t>& outMatches) {
-    if (!rule.isRandom || rule.patterns.size() != 1 || rule.ellipsisCount.size() != 1 || rule.ellipsisCount[0] != 0) {
+bool collectRandomRuleMatches(const Session& session, const Rule& rule, std::vector<std::vector<int32_t>>& outMatches) {
+    if (!rule.isRandom || rule.patterns.empty()) {
         return false;
     }
     if (!ruleCanPossiblyMatch(session, rule)) {
         outMatches.clear();
         return true;
     }
-    const auto& row = rule.patterns[0];
-    if (row.size() != 1 || row[0].kind != Pattern::Kind::CellPattern) {
+
+    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+        if (rowIndex >= rule.ellipsisCount.size() || rule.ellipsisCount[rowIndex] != 0 || rule.patterns[rowIndex].empty()) {
+            return false;
+        }
+    }
+
+    const auto [dx, dy] = directionMaskToDelta(rule.direction);
+    const int32_t delta = dx * session.liveLevel.height + dy;
+    if (delta == 0) {
         return false;
     }
 
-    outMatches.clear();
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
-    for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-        if (matchesPatternAt(session, row[0], tileIndex)) {
-            outMatches.push_back(tileIndex);
+    std::vector<std::vector<int32_t>> rowMatches;
+    rowMatches.reserve(rule.patterns.size());
+    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+        const auto& row = rule.patterns[rowIndex];
+        const BitVector& rowObjectMask = rowIndex < rule.cellRowMasks.size()
+            ? rule.cellRowMasks[rowIndex]
+            : rule.ruleMask;
+        const BitVector& rowMovementMask = rowIndex < rule.cellRowMasksMovements.size()
+            ? rule.cellRowMasksMovements[rowIndex]
+            : BitVector{};
+        auto matches = collectRowMatches(session, row, rule.direction, rowObjectMask, rowMovementMask);
+        if (matches.empty()) {
+            outMatches.clear();
+            return true;
         }
+        rowMatches.push_back(std::move(matches));
+    }
+
+    outMatches.assign(1, {});
+    for (const auto& matches : rowMatches) {
+        std::vector<std::vector<int32_t>> newTuples;
+        newTuples.reserve(outMatches.size() * matches.size());
+        for (const int32_t match : matches) {
+            for (const auto& tuple : outMatches) {
+                std::vector<int32_t> newTuple = tuple;
+                newTuple.push_back(match);
+                newTuples.push_back(std::move(newTuple));
+            }
+        }
+        outMatches = std::move(newTuples);
     }
     return true;
 }
@@ -1185,17 +1348,17 @@ bool collectSingleCellMatches(const Session& session, const Rule& rule, std::vec
 bool applyRandomRuleGroup(Session& session, const std::vector<Rule>& group, CommandState& commands) {
     struct Candidate {
         const Rule* rule = nullptr;
-        int32_t tileIndex = 0;
+        std::vector<int32_t> tuple;
     };
 
     std::vector<Candidate> candidates;
-    std::vector<int32_t> matches;
+    std::vector<std::vector<int32_t>> matches;
     for (const auto& rule : group) {
-        if (!collectSingleCellMatches(session, rule, matches)) {
+        if (!collectRandomRuleMatches(session, rule, matches)) {
             continue;
         }
-        for (const int32_t tileIndex : matches) {
-            candidates.push_back(Candidate{&rule, tileIndex});
+        for (const auto& tuple : matches) {
+            candidates.push_back(Candidate{&rule, tuple});
         }
     }
 
@@ -1209,8 +1372,17 @@ bool applyRandomRuleGroup(Session& session, const std::vector<Rule>& group, Comm
     );
     const Candidate& chosen = candidates[chosenIndex];
     queueRuleCommands(*chosen.rule, commands);
-    const auto& pattern = chosen.rule->patterns[0][0];
-    return pattern.replacement.has_value() ? applyReplacementAt(session, pattern, chosen.tileIndex) : false;
+    const auto [dx, dy] = directionMaskToDelta(chosen.rule->direction);
+    const int32_t delta = dx * session.liveLevel.height + dy;
+    if (delta == 0) {
+        return false;
+    }
+
+    bool changed = false;
+    for (size_t rowIndex = 0; rowIndex < chosen.tuple.size() && rowIndex < chosen.rule->patterns.size(); ++rowIndex) {
+        changed = applyRowAt(session, *chosen.rule, chosen.rule->patterns[rowIndex], chosen.tuple[rowIndex], delta) || changed;
+    }
+    return changed;
 }
 
 bool applyRuleGroup(Session& session, const std::vector<Rule>& group, CommandState& commands) {
@@ -1218,7 +1390,11 @@ bool applyRuleGroup(Session& session, const std::vector<Rule>& group, CommandSta
         return false;
     }
     if (group[0].isRandom) {
-        return applyRandomRuleGroup(session, group, commands);
+        const bool changed = applyRandomRuleGroup(session, group, commands);
+        if (changed) {
+            rebuildMasks(session);
+        }
+        return changed;
     }
     bool hasChanges = false;
     bool madeChange = true;
@@ -1254,14 +1430,25 @@ std::optional<int32_t> lookupLoopPoint(const json::Value& loopPoint, int32_t ind
     return std::nullopt;
 }
 
-bool applyRuleGroups(Session& session, const std::vector<std::vector<Rule>>& groups, const json::Value& loopPoint, CommandState& commands) {
+bool applyRuleGroups(
+    Session& session,
+    const std::vector<std::vector<Rule>>& groups,
+    const json::Value& loopPoint,
+    CommandState& commands,
+    const std::vector<bool>* bannedGroups
+) {
     bool loopPropagated = false;
     bool hasChanges = false;
     int32_t loopCount = 0;
     int32_t groupIndex = 0;
     const int32_t groupCount = static_cast<int32_t>(groups.size());
     while (groupIndex < groupCount) {
-        const bool groupChanged = applyRuleGroup(session, groups[static_cast<size_t>(groupIndex)], commands);
+        bool groupChanged = false;
+        if (bannedGroups == nullptr
+            || static_cast<size_t>(groupIndex) >= bannedGroups->size()
+            || !(*bannedGroups)[static_cast<size_t>(groupIndex)]) {
+            groupChanged = applyRuleGroup(session, groups[static_cast<size_t>(groupIndex)], commands);
+        }
         loopPropagated = groupChanged || loopPropagated;
         hasChanges = groupChanged || hasChanges;
 
@@ -1380,6 +1567,8 @@ void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot) {
     session.preparedSession = snapshot.preparedSession;
     session.liveLevel = snapshot.liveLevel;
     session.liveMovements = snapshot.liveMovements;
+    session.rigidGroupIndexMasks = snapshot.rigidGroupIndexMasks;
+    session.rigidMovementAppliedMasks = snapshot.rigidMovementAppliedMasks;
     session.randomState = snapshot.randomState;
     session.pendingAgain = false;
     rebuildMasks(session);
@@ -1390,6 +1579,8 @@ void pushUndoSnapshot(Session& session) {
         session.preparedSession,
         session.liveLevel,
         session.liveMovements,
+        session.rigidGroupIndexMasks,
+        session.rigidMovementAppliedMasks,
         session.randomState,
     });
     session.canUndo = true;
@@ -1404,6 +1595,8 @@ void restoreRestartTarget(Session& session) {
         session.preparedSession.oldFlickscreenDat = session.preparedSession.restart.oldFlickscreenDat;
     }
     session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
+    session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
+    session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
     session.pendingAgain = false;
     rebuildMasks(session);
 }
@@ -1488,6 +1681,8 @@ bool advanceToNextLevel(Session& session) {
         session.preparedSession.winning = false;
         if (session.preparedSession.textMode) {
             session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
+            session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
+            session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
             session.pendingAgain = false;
             rebuildMasks(session);
             session.undoStack.clear();
@@ -1514,6 +1709,8 @@ bool advanceToNextLevel(Session& session) {
     session.preparedSession.messageSelected = false;
     session.preparedSession.winning = false;
     session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
+    session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
+    session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
     session.pendingAgain = false;
     rebuildMasks(session);
     session.undoStack.clear();
@@ -1524,6 +1721,8 @@ bool advanceToNextLevel(Session& session) {
 void resetToPrepared(Session& session) {
     session.liveLevel = session.preparedSession.level;
     session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
+    session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
+    session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
     session.canUndo = false;
     session.undoStack.clear();
     session.pendingAgain = false;
@@ -1857,6 +2056,8 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, bool pushUnd
         session.preparedSession,
         session.liveLevel,
         session.liveMovements,
+        session.rigidGroupIndexMasks,
+        session.rigidMovementAppliedMasks,
         session.randomState,
     };
     const std::vector<int32_t> startPlayerPositions = collectPlayerPositions(session);
@@ -1865,15 +2066,37 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, bool pushUnd
         pushUndoSnapshot(session);
     }
 
-    CommandState commands;
     session.pendingAgain = false;
     std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
+    clearRigidState(session);
     const bool seeded = directionMask != 0 && seedPlayerMovements(session, directionMask);
-    rebuildMasks(session);
-    const bool ruleChanged = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands);
-    const bool moved = resolveMovements(session);
-    rebuildMasks(session);
-    const bool lateRuleChanged = applyRuleGroups(session, session.game->lateRules, session.game->lateLoopPoint, commands);
+    bool ruleChanged = false;
+    bool moved = false;
+    bool lateRuleChanged = false;
+    CommandState commands;
+    std::vector<bool> bannedGroups;
+    int rigidLoopCount = 0;
+    while (true) {
+        commands = CommandState{};
+        restoreSnapshot(session, turnStart);
+        std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
+        clearRigidState(session);
+        if (directionMask != 0) {
+            (void)seedPlayerMovements(session, directionMask);
+        }
+        rebuildMasks(session);
+        const bool ruleChangedThisPass = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands, &bannedGroups);
+        const MovementResolveOutcome movementOutcome = resolveMovements(session, &bannedGroups);
+        rebuildMasks(session);
+        if (movementOutcome.shouldUndo && rigidLoopCount < 49) {
+            ++rigidLoopCount;
+            continue;
+        }
+        ruleChanged = ruleChangedThisPass;
+        moved = movementOutcome.moved;
+        lateRuleChanged = applyRuleGroups(session, session.game->lateRules, session.game->lateLoopPoint, commands, nullptr);
+        break;
+    }
     const bool modified = session.liveLevel.objects != turnStart.liveLevel.objects;
 
     if (!startPlayerPositions.empty() && session.game->metadataMap.find("require_player_movement") != session.game->metadataMap.end()) {
