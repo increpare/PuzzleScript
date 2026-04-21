@@ -3,8 +3,10 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <cstdlib>
 #include <cstring>
 #include <future>
+#include <iostream>
 #include <map>
 #include <numeric>
 #include <sstream>
@@ -76,6 +78,34 @@ bool anyBitsSet(const BitVector& value) {
 
 bool commandQueueContains(const CommandState& state, std::string_view command) {
     return std::find(state.queue.begin(), state.queue.end(), std::string(command)) != state.queue.end();
+}
+
+bool rigidDebugEnabled() {
+    static const bool enabled = []() {
+        const char* value = std::getenv("PS_DEBUG_RIGID");
+        return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+    }();
+    return enabled;
+}
+
+void rigidDebugLog(const std::string& message) {
+    if (rigidDebugEnabled()) {
+        std::cerr << "[rigid] " << message << '\n';
+    }
+}
+
+bool againDebugEnabled() {
+    static const bool enabled = []() {
+        const char* value = std::getenv("PS_DEBUG_AGAIN");
+        return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+    }();
+    return enabled;
+}
+
+void againDebugLog(const std::string& message) {
+    if (againDebugEnabled()) {
+        std::cerr << "[again] " << message << '\n';
+    }
 }
 
 void appendAudioEvent(Session& session, int32_t seed, const char* kind) {
@@ -850,6 +880,12 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                                 if (!(*bannedGroups)[static_cast<size_t>(groupIndex)]) {
                                     (*bannedGroups)[static_cast<size_t>(groupIndex)] = true;
                                     outcome.shouldUndo = true;
+                                    std::ostringstream stream;
+                                    stream << "unresolved movement at tile=" << tileIndex
+                                           << " layer=" << layer
+                                           << " rigid_group_index=" << rigidGroupIndex
+                                           << " bans_group=" << groupIndex;
+                                    rigidDebugLog(stream.str());
                                 }
                             }
                         }
@@ -1800,6 +1836,7 @@ void resetToPrepared(Session& session) {
 } // namespace
 
 void runRulesOnLevelStart(Session& session);
+bool wouldAgainChange(const Session& session);
 
 std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_ptr<const Game>& outGame) {
     try {
@@ -2139,6 +2176,37 @@ void runRulesOnLevelStart(Session& session) {
     session.pendingAgain = false;
 }
 
+bool wouldAgainChange(const Session& session) {
+    Session probe = session;
+    const PreparedSession beforePrepared = probe.preparedSession;
+    const LevelTemplate beforeLevel = probe.liveLevel;
+    const ps_step_result result = executeTurn(probe, 0, ExecuteTurnOptions{
+        .pushUndo = false,
+        .ignoreWin = true,
+    });
+
+    const bool changed = result.transitioned
+        || probe.liveLevel.objects != beforeLevel.objects
+        || probe.preparedSession.currentLevelIndex != beforePrepared.currentLevelIndex
+        || probe.preparedSession.currentLevelTarget != beforePrepared.currentLevelTarget
+        || probe.preparedSession.titleScreen != beforePrepared.titleScreen
+        || probe.preparedSession.textMode != beforePrepared.textMode
+        || probe.preparedSession.titleMode != beforePrepared.titleMode
+        || probe.preparedSession.titleSelection != beforePrepared.titleSelection
+        || probe.preparedSession.titleSelected != beforePrepared.titleSelected
+        || probe.preparedSession.messageSelected != beforePrepared.messageSelected;
+    if (againDebugEnabled()) {
+        std::ostringstream stream;
+        stream << "probe changed=" << (changed ? 1 : 0)
+               << " transitioned=" << (result.transitioned ? 1 : 0)
+               << " won=" << (result.won ? 1 : 0)
+               << " before_hash=" << hashSession64(session)
+               << " after_hash=" << hashSession64(probe);
+        againDebugLog(stream.str());
+    }
+    return changed;
+}
+
 ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnOptions options) {
     ps_step_result result{};
     session.lastAudioEvents.clear();
@@ -2153,7 +2221,9 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         session.rigidMovementAppliedMasks,
         session.randomState,
     };
-    const std::vector<int32_t> startPlayerPositions = collectPlayerPositions(session);
+    const std::vector<int32_t> startPlayerPositions = directionMask != 0
+        ? collectPlayerPositions(session)
+        : std::vector<int32_t>{};
 
     if (options.pushUndo) {
         pushUndoSnapshot(session);
@@ -2181,6 +2251,30 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         const bool ruleChangedThisPass = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands, &bannedGroups);
         const MovementResolveOutcome movementOutcome = resolveMovements(session, &bannedGroups);
         rebuildMasks(session);
+        if (rigidDebugEnabled()) {
+            std::ostringstream stream;
+            stream << "turn_pass=" << (rigidLoopCount + 1)
+                   << " direction=" << directionMask
+                   << " rules_changed=" << (ruleChangedThisPass ? 1 : 0)
+                   << " moved=" << (movementOutcome.moved ? 1 : 0)
+                   << " should_undo=" << (movementOutcome.shouldUndo ? 1 : 0)
+                   << " banned_groups=";
+            bool emitted = false;
+            for (size_t index = 0; index < bannedGroups.size(); ++index) {
+                if (!bannedGroups[index]) {
+                    continue;
+                }
+                if (emitted) {
+                    stream << ",";
+                }
+                stream << index;
+                emitted = true;
+            }
+            if (!emitted) {
+                stream << "-";
+            }
+            rigidDebugLog(stream.str());
+        }
         if (movementOutcome.shouldUndo && rigidLoopCount < 49) {
             ++rigidLoopCount;
             continue;
@@ -2239,7 +2333,24 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         (void)transitioned;
     }
 
-    if (!won && commandQueueContains(commands, "again") && modified) {
+    const bool hasAgain = commandQueueContains(commands, "again");
+    const bool againWouldChange = !won && hasAgain && modified && wouldAgainChange(session);
+    if (againDebugEnabled() && (hasAgain || session.pendingAgain || modified)) {
+        std::ostringstream stream;
+        stream << "post-turn modified=" << (modified ? 1 : 0)
+               << " won=" << (won ? 1 : 0)
+               << " has_again=" << (hasAgain ? 1 : 0)
+               << " schedule_again=" << (againWouldChange ? 1 : 0)
+               << " commands=";
+        for (size_t index = 0; index < commands.queue.size(); ++index) {
+            if (index > 0) {
+                stream << ",";
+            }
+            stream << commands.queue[index];
+        }
+        againDebugLog(stream.str());
+    }
+    if (againWouldChange) {
         session.pendingAgain = true;
     }
 
