@@ -1513,12 +1513,9 @@ bool advanceToNextLevel(Session& session) {
     session.preparedSession.titleSelected = false;
     session.preparedSession.messageSelected = false;
     session.preparedSession.winning = false;
-    session.preparedSession.level = session.game->levels.front();
-    session.preparedSession.restart.width = session.preparedSession.level.width;
-    session.preparedSession.restart.height = session.preparedSession.level.height;
-    session.preparedSession.restart.objects = session.preparedSession.level.objects;
-    session.preparedSession.restart.oldFlickscreenDat = session.preparedSession.oldFlickscreenDat;
-    restoreRestartTarget(session);
+    session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
+    session.pendingAgain = false;
+    rebuildMasks(session);
     session.undoStack.clear();
     session.canUndo = false;
     return true;
