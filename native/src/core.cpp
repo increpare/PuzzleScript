@@ -15,6 +15,8 @@ namespace {
 
 void rebuildMasks(Session& session);
 std::string toString(const json::Value& value);
+std::vector<int32_t> parseIntVector(const json::Value& value);
+bool anyBitsInCommon(const BitVector& lhs, const BitVector& rhs);
 
 struct CommandState {
     std::vector<std::string> queue;
@@ -29,6 +31,12 @@ struct RuleApplyOutcome {
 struct MovementResolveOutcome {
     bool moved = false;
     bool shouldUndo = false;
+};
+
+struct ExecuteTurnOptions {
+    bool pushUndo = true;
+    bool ignoreRestartCommand = false;
+    bool ignoreWin = false;
 };
 
 const json::Value& requireField(const json::Value::Object& object, std::string_view key) {
@@ -96,6 +104,15 @@ void processOutputCommands(Session& session, const CommandState& commands) {
     (void)commands;
 }
 
+void accumulateMask(BitVector& target, const BitVector& source) {
+    if (target.size() < source.size()) {
+        target.resize(source.size(), 0);
+    }
+    for (size_t index = 0; index < source.size(); ++index) {
+        target[index] |= source[index];
+    }
+}
+
 void queueRuleCommands(const Rule& rule, CommandState& state) {
     if (!rule.commands.isArray() || rule.commands.asArray().empty()) {
         return;
@@ -140,6 +157,26 @@ void queueRuleCommands(const Rule& rule, CommandState& state) {
         }
         if (commandName == "message" && commandArray.size() > 1) {
             state.messageText = toString(commandArray[1]);
+        }
+    }
+}
+
+void tryPlayMaskSounds(Session& session, const json::Value& entries, const BitVector& changedMask) {
+    if (!entries.isArray() || !anyBitsSet(changedMask)) {
+        return;
+    }
+    for (const auto& entryValue : entries.asArray()) {
+        if (!entryValue.isObject()) {
+            continue;
+        }
+        const auto* objectMaskValue = entryValue.find("objectMask");
+        const auto* seedValue = entryValue.find("seed");
+        if (!objectMaskValue || !seedValue) {
+            continue;
+        }
+        const BitVector objectMask = parseIntVector(*objectMaskValue);
+        if (anyBitsInCommon(changedMask, objectMask)) {
+            appendAudioEvent(session, toInt(*seedValue), "");
         }
     }
 }
@@ -647,12 +684,9 @@ bool seedPlayerMovements(Session& session, int32_t directionMask) {
         bool tileChanged = false;
         for (const int32_t layer : layers) {
             const int32_t shift = 5 * layer;
-            const int32_t word = shift >> 5;
-            const int32_t bit = shift & 31;
-            const int32_t dirBits = directionMask << bit;
-            const int32_t oldValue = movementMask[static_cast<size_t>(word)];
-            movementMask[static_cast<size_t>(word)] |= dirBits;
-            tileChanged = tileChanged || movementMask[static_cast<size_t>(word)] != oldValue;
+            const BitVector before = movementMask;
+            setShiftedMask5(movementMask, shift, directionMask);
+            tileChanged = tileChanged || movementMask != before;
         }
         if (tileChanged) {
             setCellMovements(session, tileIndex, movementMask);
@@ -824,6 +858,30 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                 }
             }
         }
+
+        if (session.game->sfxMovementFailureMasks.isArray()) {
+            const BitVector cellMask = getCellObjects(session, tileIndex);
+            for (const auto& entryValue : session.game->sfxMovementFailureMasks.asArray()) {
+                if (!entryValue.isObject()) {
+                    continue;
+                }
+                const auto* objectMaskValue = entryValue.find("objectMask");
+                const auto* directionMaskValue = entryValue.find("directionMask");
+                const auto* seedValue = entryValue.find("seed");
+                if (!objectMaskValue || !directionMaskValue || !seedValue) {
+                    continue;
+                }
+                const BitVector objectMask = parseIntVector(*objectMaskValue);
+                const BitVector directionMaskBits = parseIntVector(*directionMaskValue);
+                if (!anyBitsInCommon(cellMask, objectMask)) {
+                    continue;
+                }
+                if (!anyBitsInCommon(directionMaskBits, movementMask)) {
+                    continue;
+                }
+                appendAudioEvent(session, toInt(*seedValue), "");
+            }
+        }
     }
 
     std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
@@ -953,6 +1011,13 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         movements[word] = (movements[word] & ~movementsClear[word]) | movementsSet[word];
     }
 
+    BitVector created(objects.size(), 0);
+    BitVector destroyed(objects.size(), 0);
+    for (size_t word = 0; word < objects.size(); ++word) {
+        created[word] = objects[word] & ~oldObjects[word];
+        destroyed[word] = oldObjects[word] & ~objects[word];
+    }
+
     if (rule.rigid && !replacement.movementsLayerMask.empty()) {
         const int32_t rigidGroupIndex = (rule.groupNumber >= 0
             && static_cast<size_t>(rule.groupNumber) < session.game->groupNumberToRigidGroupIndex.size())
@@ -987,6 +1052,8 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     }
     setCellObjects(session, tileIndex, objects);
     setCellMovements(session, tileIndex, movements);
+    accumulateMask(session.pendingCreateMask, created);
+    accumulateMask(session.pendingDestroyMask, destroyed);
     if (rigidChange) {
         setCellRigidGroupIndexMask(session, tileIndex, rigidGroupIndexMask);
         setCellRigidMovementAppliedMask(session, tileIndex, rigidMovementAppliedMask);
@@ -1732,6 +1799,8 @@ void resetToPrepared(Session& session) {
 
 } // namespace
 
+void runRulesOnLevelStart(Session& session);
+
 std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_ptr<const Game>& outGame) {
     try {
         json::Value root = json::parse(jsonText);
@@ -1932,12 +2001,14 @@ std::unique_ptr<Error> loadLevel(Session& session, int32_t levelIndex) {
     session.preparedSession.restart.objects = session.preparedSession.level.objects;
     session.preparedSession.restart.oldFlickscreenDat = session.preparedSession.oldFlickscreenDat;
     resetToPrepared(session);
+    runRulesOnLevelStart(session);
     return nullptr;
 }
 
 bool restart(Session& session) {
     pushUndoSnapshot(session);
     restoreRestartTarget(session);
+    runRulesOnLevelStart(session);
     return true;
 }
 
@@ -2048,9 +2119,31 @@ void discardTopUndoSnapshot(Session& session) {
     session.canUndo = !session.undoStack.empty();
 }
 
-ps_step_result executeTurn(Session& session, int32_t directionMask, bool pushUndo) {
+ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnOptions options);
+
+void runRulesOnLevelStart(Session& session) {
+    if (session.game->metadataMap.find("run_rules_on_level_start") == session.game->metadataMap.end()) {
+        return;
+    }
+
+    int iterations = 0;
+    do {
+        session.pendingAgain = false;
+        (void)executeTurn(session, 0, ExecuteTurnOptions{
+            .pushUndo = false,
+            .ignoreRestartCommand = true,
+            .ignoreWin = true,
+        });
+        ++iterations;
+    } while (session.pendingAgain && iterations < 50);
+    session.pendingAgain = false;
+}
+
+ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnOptions options) {
     ps_step_result result{};
     session.lastAudioEvents.clear();
+    session.pendingCreateMask.assign(static_cast<size_t>(session.game->strideObject), 0);
+    session.pendingDestroyMask.assign(static_cast<size_t>(session.game->strideObject), 0);
 
     const Session::UndoSnapshot turnStart{
         session.preparedSession,
@@ -2062,7 +2155,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, bool pushUnd
     };
     const std::vector<int32_t> startPlayerPositions = collectPlayerPositions(session);
 
-    if (pushUndo) {
+    if (options.pushUndo) {
         pushUndoSnapshot(session);
     }
 
@@ -2109,7 +2202,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, bool pushUnd
         }
         if (!someMoved) {
             restoreSnapshot(session, turnStart);
-            if (pushUndo) {
+            if (options.pushUndo) {
                 discardTopUndoSnapshot(session);
             }
             rebuildMasks(session);
@@ -2117,11 +2210,13 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, bool pushUnd
         }
     }
 
+    tryPlayMaskSounds(session, session.game->sfxCreationMasks, session.pendingCreateMask);
+    tryPlayMaskSounds(session, session.game->sfxDestructionMasks, session.pendingDestroyMask);
     processOutputCommands(session, commands);
 
     if (commandQueueContains(commands, "cancel")) {
         restoreSnapshot(session, turnStart);
-        if (pushUndo) {
+        if (options.pushUndo) {
             discardTopUndoSnapshot(session);
         }
         tryPlaySimpleSound(session, "cancel");
@@ -2132,12 +2227,13 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, bool pushUnd
         return result;
     }
 
-    if (commandQueueContains(commands, "restart")) {
+    if (commandQueueContains(commands, "restart") && !options.ignoreRestartCommand) {
         restoreRestartTarget(session);
+        runRulesOnLevelStart(session);
         tryPlaySimpleSound(session, "restart");
     }
 
-    const bool won = commandQueueContains(commands, "win") || evaluateWinConditions(session);
+    const bool won = !options.ignoreWin && (commandQueueContains(commands, "win") || evaluateWinConditions(session));
     const bool transitioned = won && advanceToNextLevel(session);
     if (won) {
         (void)transitioned;
@@ -2190,12 +2286,12 @@ ps_step_result step(Session& session, ps_input input) {
         return tick(session);
     }
 
-    return executeTurn(session, inputToDirectionMask(input), true);
+    return executeTurn(session, inputToDirectionMask(input), ExecuteTurnOptions{});
 }
 
 ps_step_result tick(Session& session) {
     if (session.pendingAgain) {
-        return executeTurn(session, 0, false);
+        return executeTurn(session, 0, ExecuteTurnOptions{.pushUndo = false});
     }
     session.lastAudioEvents.clear();
     std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);

@@ -192,6 +192,8 @@ struct Session {
     std::vector<int32_t> boardMovementMask;
     std::vector<int32_t> rigidGroupIndexMasks;
     std::vector<int32_t> rigidMovementAppliedMasks;
+    std::vector<int32_t> pendingCreateMask;
+    std::vector<int32_t> pendingDestroyMask;
     std::vector<UndoSnapshot> undoStack;
     std::vector<ps_audio_event> lastAudioEvents;
     bool canUndo = false;
