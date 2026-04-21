@@ -194,6 +194,21 @@ bool anyBitsInCommon(const BitVector& lhs, const BitVector& rhs) {
     return false;
 }
 
+bool bitsSetInArray(const BitVector& required, const int32_t* actual, size_t actualCount) {
+    const size_t count = std::min(required.size(), actualCount);
+    for (size_t index = 0; index < count; ++index) {
+        if ((actual[index] & required[index]) != required[index]) {
+            return false;
+        }
+    }
+    for (size_t index = count; index < required.size(); ++index) {
+        if (required[index] != 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool bitsSetInArray(const BitVector& required, const BitVector& actual) {
     const size_t count = std::min(required.size(), actual.size());
     for (size_t index = 0; index < count; ++index) {
@@ -438,6 +453,11 @@ BitVector getCellObjects(const Session& session, int32_t tileIndex) {
     return result;
 }
 
+const int32_t* getCellObjectsPtr(const Session& session, int32_t tileIndex) {
+    const size_t base = static_cast<size_t>(tileIndex * session.game->strideObject);
+    return session.liveLevel.objects.data() + base;
+}
+
 void setCellObjects(Session& session, int32_t tileIndex, const BitVector& objects) {
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideObject);
     for (int32_t word = 0; word < session.game->strideObject; ++word) {
@@ -452,6 +472,11 @@ BitVector getCellMovements(const Session& session, int32_t tileIndex) {
         result[static_cast<size_t>(word)] = session.liveMovements[base + static_cast<size_t>(word)];
     }
     return result;
+}
+
+const int32_t* getCellMovementsPtr(const Session& session, int32_t tileIndex) {
+    const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
+    return session.liveMovements.data() + base;
 }
 
 int32_t getShiftedMask5(const BitVector& value, int32_t shift) {
@@ -715,24 +740,40 @@ bool matchesPatternAt(const Session& session, const Pattern& pattern, int32_t ti
     if (pattern.kind != Pattern::Kind::CellPattern) {
         return false;
     }
-    const BitVector objects = getCellObjects(session, tileIndex);
-    const BitVector movements = getCellMovements(session, tileIndex);
-    if (!bitsSetInArray(pattern.objectsPresent, objects)) {
-        return false;
-    }
-    if (anyBitsInCommon(pattern.objectsMissing, objects)) {
-        return false;
-    }
-    for (const auto& anyMask : pattern.anyObjectsPresent) {
-        if (!anyBitsInCommon(anyMask, objects)) {
+    const int32_t* objects = getCellObjectsPtr(session, tileIndex);
+    const int32_t* movements = getCellMovementsPtr(session, tileIndex);
+
+    for (size_t index = 0; index < pattern.objectsPresent.size(); ++index) {
+        if ((objects[index] & pattern.objectsPresent[index]) != pattern.objectsPresent[index]) {
             return false;
         }
     }
-    if (!bitsSetInArray(pattern.movementsPresent, movements)) {
-        return false;
+    for (size_t index = 0; index < pattern.objectsMissing.size(); ++index) {
+        if ((objects[index] & pattern.objectsMissing[index]) != 0) {
+            return false;
+        }
     }
-    if (anyBitsInCommon(pattern.movementsMissing, movements)) {
-        return false;
+    for (const auto& anyMask : pattern.anyObjectsPresent) {
+        bool found = false;
+        for (size_t index = 0; index < anyMask.size(); ++index) {
+            if ((objects[index] & anyMask[index]) != 0) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            return false;
+        }
+    }
+    for (size_t index = 0; index < pattern.movementsPresent.size(); ++index) {
+        if ((movements[index] & pattern.movementsPresent[index]) != pattern.movementsPresent[index]) {
+            return false;
+        }
+    }
+    for (size_t index = 0; index < pattern.movementsMissing.size(); ++index) {
+        if ((movements[index] & pattern.movementsMissing[index]) != 0) {
+            return false;
+        }
     }
     return true;
 }
@@ -822,7 +863,13 @@ bool applyReplacementAt(Session& session, const Pattern& pattern, int32_t tileIn
     return true;
 }
 
-std::vector<int32_t> collectRowMatches(const Session& session, const std::vector<Pattern>& row, int32_t direction) {
+std::vector<int32_t> collectRowMatches(
+    const Session& session,
+    const std::vector<Pattern>& row,
+    int32_t direction,
+    const BitVector& rowObjectMask,
+    const BitVector& rowMovementMask
+) {
     std::vector<int32_t> matches;
     if (row.empty()) {
         return matches;
@@ -857,8 +904,18 @@ std::vector<int32_t> collectRowMatches(const Session& session, const std::vector
         return matches;
     }
 
+    if (!bitsSetInArray(rowObjectMask, session.boardMask) || !bitsSetInArray(rowMovementMask, session.boardMovementMask)) {
+        return matches;
+    }
+
     if (horizontal) {
         for (int32_t y = ymin; y < ymax; ++y) {
+            const int32_t* rowObjects = session.rowMasks.data() + static_cast<size_t>(y * session.game->strideObject);
+            const int32_t* rowMovements = session.rowMovementMasks.data() + static_cast<size_t>(y * session.game->strideMovement);
+            if (!bitsSetInArray(rowObjectMask, rowObjects, static_cast<size_t>(session.game->strideObject))
+                || !bitsSetInArray(rowMovementMask, rowMovements, static_cast<size_t>(session.game->strideMovement))) {
+                continue;
+            }
             for (int32_t x = xmin; x < xmax; ++x) {
                 const int32_t startIndex = x * session.liveLevel.height + y;
                 bool matched = true;
@@ -875,6 +932,12 @@ std::vector<int32_t> collectRowMatches(const Session& session, const std::vector
         }
     } else {
         for (int32_t x = xmin; x < xmax; ++x) {
+            const int32_t* columnObjects = session.columnMasks.data() + static_cast<size_t>(x * session.game->strideObject);
+            const int32_t* columnMovements = session.columnMovementMasks.data() + static_cast<size_t>(x * session.game->strideMovement);
+            if (!bitsSetInArray(rowObjectMask, columnObjects, static_cast<size_t>(session.game->strideObject))
+                || !bitsSetInArray(rowMovementMask, columnMovements, static_cast<size_t>(session.game->strideMovement))) {
+                continue;
+            }
             for (int32_t y = ymin; y < ymax; ++y) {
                 const int32_t startIndex = x * session.liveLevel.height + y;
                 bool matched = true;
@@ -911,8 +974,15 @@ bool applyRowAt(Session& session, const std::vector<Pattern>& row, int32_t start
     return changed;
 }
 
+bool ruleCanPossiblyMatch(const Session& session, const Rule& rule) {
+    return bitsSetInArray(rule.ruleMask, session.boardMask);
+}
+
 RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandState& commands) {
     if (rule.isRandom || rule.patterns.empty()) {
+        return {};
+    }
+    if (!ruleCanPossiblyMatch(session, rule)) {
         return {};
     }
     if (rule.patterns.size() == 1 && rule.ellipsisCount.size() == 1 && rule.ellipsisCount[0] == 1) {
@@ -1032,8 +1102,15 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
 
     std::vector<std::vector<int32_t>> rowMatches;
     rowMatches.reserve(rule.patterns.size());
-    for (const auto& row : rule.patterns) {
-        auto matches = collectRowMatches(session, row, rule.direction);
+    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+        const auto& row = rule.patterns[rowIndex];
+        const BitVector& rowObjectMask = rowIndex < rule.cellRowMasks.size()
+            ? rule.cellRowMasks[rowIndex]
+            : rule.ruleMask;
+        const BitVector& rowMovementMask = rowIndex < rule.cellRowMasksMovements.size()
+            ? rule.cellRowMasksMovements[rowIndex]
+            : BitVector{};
+        auto matches = collectRowMatches(session, row, rule.direction, rowObjectMask, rowMovementMask);
         if (matches.empty()) {
             return {};
         }
@@ -1085,6 +1162,10 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
 bool collectSingleCellMatches(const Session& session, const Rule& rule, std::vector<int32_t>& outMatches) {
     if (!rule.isRandom || rule.patterns.size() != 1 || rule.ellipsisCount.size() != 1 || rule.ellipsisCount[0] != 0) {
         return false;
+    }
+    if (!ruleCanPossiblyMatch(session, rule)) {
+        outMatches.clear();
+        return true;
     }
     const auto& row = rule.patterns[0];
     if (row.size() != 1 || row[0].kind != Pattern::Kind::CellPattern) {
@@ -1142,11 +1223,15 @@ bool applyRuleGroup(Session& session, const std::vector<Rule>& group, CommandSta
     bool hasChanges = false;
     bool madeChange = true;
     int loopCount = 0;
+    rebuildMasks(session);
     while (madeChange && loopCount++ < 200) {
         madeChange = false;
         for (const auto& rule : group) {
             const RuleApplyOutcome outcome = tryApplySimpleRule(session, rule, commands);
             madeChange = outcome.changed || madeChange;
+            if (outcome.changed) {
+                rebuildMasks(session);
+            }
         }
         hasChanges = hasChanges || madeChange;
     }
@@ -1779,8 +1864,10 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, bool pushUnd
     session.pendingAgain = false;
     std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
     const bool seeded = directionMask != 0 && seedPlayerMovements(session, directionMask);
+    rebuildMasks(session);
     const bool ruleChanged = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands);
     const bool moved = resolveMovements(session);
+    rebuildMasks(session);
     const bool lateRuleChanged = applyRuleGroups(session, session.game->lateRules, session.game->lateLoopPoint, commands);
     const bool modified = session.liveLevel.objects != turnStart.liveLevel.objects;
 

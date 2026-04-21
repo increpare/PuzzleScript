@@ -627,8 +627,10 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
     size_t tracePassed = 0;
     size_t traceFailed = 0;
     size_t traceLimit = 0;
+    size_t traceProgress = 0;
     bool traceAll = false;
     bool traceAllowFailures = false;
+    bool traceQuiet = false;
 
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
@@ -636,8 +638,12 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
             traceAll = true;
         } else if (arg == "--trace-limit" && index + 1 < argc) {
             traceLimit = static_cast<size_t>(std::stoull(argv[++index]));
+        } else if (arg == "--trace-progress" && index + 1 < argc) {
+            traceProgress = static_cast<size_t>(std::stoull(argv[++index]));
         } else if (arg == "--trace-allow-failures") {
             traceAllowFailures = true;
+        } else if (arg == "--trace-quiet") {
+            traceQuiet = true;
         } else {
             throw std::runtime_error("Unsupported test-fixtures argument: " + arg);
         }
@@ -679,7 +685,9 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                     ++preparedPassed;
                 } else {
                     ++preparedFailed;
-                    std::cerr << name << ": prepared session mismatch\n";
+                    if (!traceQuiet) {
+                        std::cerr << name << ": prepared session mismatch\n";
+                    }
                 }
 
                 ps_string_free(serialized);
@@ -689,12 +697,21 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                     && (traceAll || (traceLimit > 0 && traceChecked < traceLimit));
                 if (shouldCheckTrace) {
                     ++traceChecked;
+                    if (traceProgress > 0 && (traceChecked % traceProgress) == 0) {
+                        std::cerr << "trace_progress checked=" << traceChecked
+                                  << " passed=" << tracePassed
+                                  << " failed=" << traceFailed
+                                  << " current_fixture=" << name
+                                  << "\n";
+                    }
                     std::ostringstream traceErrors;
                     const auto tracePath = manifestDir / fixture.at("trace_file").asString();
                     ps_game* traceGame = nullptr;
                     if (!loadGameFromFile(irPath, &traceGame)) {
                         ++traceFailed;
-                        std::cerr << name << ": failed to reload game for trace replay\n";
+                        if (!traceQuiet) {
+                            std::cerr << name << ": failed to reload game for trace replay\n";
+                        }
                     } else {
                         const int traceResult = diffTraceAgainstSnapshots(traceGame, loadTraceSnapshots(tracePath), traceErrors, false);
                         ps_free_game(traceGame);
@@ -702,7 +719,9 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                             ++tracePassed;
                         } else {
                             ++traceFailed;
-                            std::cerr << name << ": trace replay mismatch\n" << traceErrors.str();
+                            if (!traceQuiet) {
+                                std::cerr << name << ": trace replay mismatch\n" << traceErrors.str();
+                            }
                         }
                     }
                 }
@@ -710,7 +729,9 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                 ps_free_game(game);
             } catch (const std::exception& error) {
                 ++preparedFailed;
-                std::cerr << "fixture #" << index << ": " << error.what() << "\n";
+                if (!traceQuiet) {
+                    std::cerr << "fixture #" << index << ": " << error.what() << "\n";
+                }
             }
         }
     } catch (const std::exception& error) {
@@ -740,7 +761,7 @@ void printUsage() {
               << "  ps_cli bench-source <game.ps> [--level N] [--seed seed] [--settle-again] [--iterations N] [--threads N]\n"
               << "  ps_cli diff-trace <ir.json> <trace.json>\n"
               << "  ps_cli diff-trace-source <game.ps> [--level N] [--seed seed] [--inputs-json json] [--inputs-file path]\n"
-              << "  ps_cli test-fixtures <fixtures.json> [--trace-limit N] [--trace-all] [--trace-allow-failures]\n"
+              << "  ps_cli test-fixtures <fixtures.json> [--trace-limit N] [--trace-all] [--trace-allow-failures] [--trace-quiet] [--trace-progress N]\n"
               << "  ps_cli play <ir.json>\n";
 }
 

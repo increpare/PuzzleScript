@@ -29,6 +29,7 @@ What is intentionally not implemented yet:
 Typical workflow:
 
 ```bash
+make tests
 node src/tests/export_ir_json.js src/demo/sokoban_basic.txt /tmp/sokoban.json --level 0 --settle-again
 cmake -S . -B build/native
 cmake --build build/native
@@ -37,3 +38,5 @@ cmake --build build/native
 ./build/native/native/ps_cli diff-trace-source src/demo/sokoban_basic.txt --level 0 --seed smoke --inputs-file native/tests/push_trace_inputs.json
 ./build/native/native/ps_cli bench /tmp/sokoban.json --iterations 10000 --threads 4
 ```
+
+`make tests` builds the native port, regenerates the trace-backed coverage fixtures in `build/native/coverage-fixtures`, and runs the real native parity sweep against them.
