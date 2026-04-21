@@ -1,4 +1,13 @@
 {
+  "scripts": {
+    "test:node": "node src/tests/run_tests_node.js",
+    "native:export-fixtures": "node src/tests/export_native_fixtures.js",
+    "native:export-ir": "node src/tests/export_ir_json.js",
+    "native:export-trace": "node src/tests/export_execution_trace.js",
+    "native:configure": "cmake -S . -B build/native",
+    "native:build": "cmake --build build/native",
+    "native:test": "ctest --test-dir build/native --output-on-failure"
+  },
   "dependencies": {
     "compress-images": "^2.0.5",
     "concat": "^1.0.3",
