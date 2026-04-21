@@ -79,6 +79,29 @@ function metadataPairsToMap(metadataPairs) {
     return map;
 }
 
+function metadataToPairs(metadata) {
+    if (Array.isArray(metadata)) {
+        return Array.from(metadata);
+    }
+    if (!metadata || typeof metadata !== 'object') {
+        return [];
+    }
+    const normalizeValue = value => {
+        if (Array.isArray(value)) {
+            return value.join('x');
+        }
+        if (value === null || value === undefined) {
+            return '';
+        }
+        return String(value);
+    };
+    const pairs = [];
+    for (const [key, value] of Object.entries(metadata)) {
+        pairs.push(String(key), normalizeValue(value));
+    }
+    return pairs;
+}
+
 function serializeObjectEntry(name, objectEntry) {
     return {
         name,
@@ -119,7 +142,7 @@ function serializeNumericLookup(value) {
 
 function serializeGameState(state) {
     const objectNames = Object.keys(state.objects).sort();
-    const metadataPairs = Array.from(state.metadata || []);
+    const metadataPairs = metadataToPairs(state.metadata);
 
     return {
         schema_version: 1,

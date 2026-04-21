@@ -1307,9 +1307,9 @@ void rebuildMasks(Session& session) {
     session.columnMovementMasks.assign(static_cast<size_t>(width * movementStride), 0);
     session.boardMovementMask.assign(static_cast<size_t>(movementStride), 0);
 
-    for (int32_t y = 0; y < height; ++y) {
-        for (int32_t x = 0; x < width; ++x) {
-            const int32_t tileIndex = y * width + x;
+    for (int32_t x = 0; x < width; ++x) {
+        for (int32_t y = 0; y < height; ++y) {
+            const int32_t tileIndex = x * height + y;
             const size_t objectBase = static_cast<size_t>(tileIndex * objectStride);
             for (int32_t word = 0; word < objectStride; ++word) {
                 const int32_t value = session.liveLevel.objects[objectBase + static_cast<size_t>(word)];
@@ -1479,13 +1479,21 @@ bool advanceToNextLevel(Session& session) {
         session.preparedSession.titleScreen = false;
         session.preparedSession.level = session.game->levels[static_cast<size_t>(session.preparedSession.currentLevelIndex)];
         session.preparedSession.textMode = session.preparedSession.level.isMessage;
-        session.preparedSession.titleMode = session.preparedSession.textMode
-            ? (showContinueOptionOnTitleScreen(session.preparedSession) ? 1 : 0)
-            : 0;
-        session.preparedSession.titleSelection = showContinueOptionOnTitleScreen(session.preparedSession) ? 1 : 0;
+        if (!session.preparedSession.textMode) {
+            session.preparedSession.titleMode = 0;
+            session.preparedSession.titleSelection = showContinueOptionOnTitleScreen(session.preparedSession) ? 1 : 0;
+        }
         session.preparedSession.titleSelected = false;
         session.preparedSession.messageSelected = false;
         session.preparedSession.winning = false;
+        if (session.preparedSession.textMode) {
+            session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
+            session.pendingAgain = false;
+            rebuildMasks(session);
+            session.undoStack.clear();
+            session.canUndo = false;
+            return true;
+        }
         session.preparedSession.restart.width = session.preparedSession.level.width;
         session.preparedSession.restart.height = session.preparedSession.level.height;
         session.preparedSession.restart.objects = session.preparedSession.level.objects;

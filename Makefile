@@ -1,4 +1,4 @@
-.PHONY: configure-native build-native ctest-native tests
+.PHONY: configure-native build-native ctest-native coverage-fixtures tests
 
 NODE ?= node
 CMAKE ?= cmake
@@ -16,8 +16,8 @@ build-native: configure-native
 ctest-native: build-native
 	ctest --test-dir $(BUILD_DIR) --output-on-failure
 
-$(COVERAGE_FIXTURES_MANIFEST):
+coverage-fixtures:
 	$(NODE) src/tests/export_native_fixtures.js $(COVERAGE_FIXTURES_DIR)
 
-tests: build-native $(COVERAGE_FIXTURES_MANIFEST)
+tests: build-native coverage-fixtures
 	$(PS_CLI) test-fixtures $(COVERAGE_FIXTURES_MANIFEST) --trace-all --trace-quiet --trace-progress 50
