@@ -15,6 +15,7 @@
 
 #ifdef PS_HAVE_SDL2
 int ps_cli_run_player(const std::string& irPath);
+int ps_cli_run_player_for_game(ps_game* game);
 #endif
 
 namespace {
@@ -942,6 +943,27 @@ int benchSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     return result;
 }
 
+int playSourceCommand(const std::string& sourcePath, int argc, char** argv) {
+    std::vector<std::string> exporterArgs;
+    for (int index = 0; index < argc; ++index) {
+        exporterArgs.emplace_back(argv[index]);
+    }
+
+    ps_game* game = nullptr;
+    if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
+        return 1;
+    }
+#ifdef PS_HAVE_SDL2
+    const int result = ps_cli_run_player_for_game(game);
+    ps_free_game(game);
+    return result;
+#else
+    ps_free_game(game);
+    std::cerr << "SDL2 support is not enabled in this build.\n";
+    return 1;
+#endif
+}
+
 int stepSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     std::vector<std::string> exporterArgs;
     std::vector<std::string> inputTokens;
@@ -1137,6 +1159,7 @@ void printUsage() {
               << "  ps_cli run-source <game.ps> [--level N] [--seed seed] [--settle-again]\n"
               << "  ps_cli step-source <game.ps> [input ...] [--level N] [--seed seed] [--settle-again]\n"
               << "  ps_cli bench-source <game.ps> [--level N] [--seed seed] [--settle-again] [--iterations N] [--threads N]\n"
+              << "  ps_cli play-source <game.ps> [--level N] [--seed seed] [--settle-again]\n"
               << "  ps_cli diff-trace <ir.json> <trace.json>\n"
               << "  ps_cli trace-at <ir.json> <trace.json> <snapshot-index>\n"
               << "  ps_cli trace-step-at <ir.json> <trace.json> <snapshot-index>\n"
@@ -1174,6 +1197,9 @@ int main(int argc, char** argv) {
         }
         if (command == "bench-source") {
             return benchSourceCommand(path, argc - 3, argv + 3);
+        }
+        if (command == "play-source") {
+            return playSourceCommand(path, argc - 3, argv + 3);
         }
         if (command == "diff-trace") {
             if (argc < 4) {

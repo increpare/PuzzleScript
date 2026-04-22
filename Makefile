@@ -1,4 +1,4 @@
-.PHONY: configure-native build-native ctest-native coverage-fixtures tests
+.PHONY: configure-native build-native ctest-native coverage-fixtures tests run
 
 NODE ?= node
 CMAKE ?= cmake
@@ -21,3 +21,18 @@ coverage-fixtures:
 
 tests: build-native coverage-fixtures
 	$(NODE) src/tests/run_native_trace_suite.js $(COVERAGE_FIXTURES_MANIFEST) --cli $(PS_CLI) --progress-every 1 --timeout-ms 30000
+
+ifneq ($(filter run,$(MAKECMDGOALS)),)
+RUN_SOURCE_FILE := $(word 2,$(MAKECMDGOALS))
+ifneq ($(strip $(RUN_SOURCE_FILE)),)
+$(eval .PHONY: $(RUN_SOURCE_FILE))
+$(eval $(RUN_SOURCE_FILE):;@:)
+endif
+endif
+
+run: build-native
+ifndef RUN_SOURCE_FILE
+	@echo "Usage: make run path/to/game.txt"
+	@exit 1
+endif
+	$(PS_CLI) play-source $(RUN_SOURCE_FILE)

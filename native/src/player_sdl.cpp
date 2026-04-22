@@ -31,21 +31,12 @@ void drawChecker(SDL_Renderer* renderer, int tileX, int tileY, int tileSize) {
 
 } // namespace
 
-int ps_cli_run_player(const std::string& irPath) {
-    const std::string json = readFile(irPath);
-    ps_game* game = nullptr;
+int ps_cli_run_player_for_game(ps_game* game) {
     ps_error* error = nullptr;
-    if (!ps_load_ir_json(json.data(), json.size(), &game, &error)) {
-        SDL_Log("%s", ps_error_message(error));
-        ps_free_error(error);
-        return 1;
-    }
-
     ps_session* session = nullptr;
     if (!ps_session_create(game, &session, &error)) {
         SDL_Log("%s", ps_error_message(error));
         ps_free_error(error);
-        ps_free_game(game);
         return 1;
     }
 
@@ -55,7 +46,6 @@ int ps_cli_run_player(const std::string& irPath) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         SDL_Log("SDL_Init failed: %s", SDL_GetError());
         ps_session_destroy(session);
-        ps_free_game(game);
         return 1;
     }
 
@@ -107,6 +97,20 @@ int ps_cli_run_player(const std::string& irPath) {
     SDL_DestroyWindow(window);
     SDL_Quit();
     ps_session_destroy(session);
-    ps_free_game(game);
     return 0;
+}
+
+int ps_cli_run_player(const std::string& irPath) {
+    const std::string json = readFile(irPath);
+    ps_game* game = nullptr;
+    ps_error* error = nullptr;
+    if (!ps_load_ir_json(json.data(), json.size(), &game, &error)) {
+        SDL_Log("%s", ps_error_message(error));
+        ps_free_error(error);
+        return 1;
+    }
+
+    const int result = ps_cli_run_player_for_game(game);
+    ps_free_game(game);
+    return result;
 }
