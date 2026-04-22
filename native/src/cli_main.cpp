@@ -1486,15 +1486,66 @@ int playSourceCommand(const std::string& sourcePath, int argc, char** argv) {
 #endif
 }
 
+std::string jsonStringLiteral(std::string_view utf8) {
+    std::string out;
+    out.reserve(utf8.size() + 2);
+    out.push_back('"');
+    for (unsigned char ch : utf8) {
+        switch (ch) {
+            case '"':
+                out += "\\\"";
+                break;
+            case '\\':
+                out += "\\\\";
+                break;
+            case '\b':
+                out += "\\b";
+                break;
+            case '\f':
+                out += "\\f";
+                break;
+            case '\n':
+                out += "\\n";
+                break;
+            case '\r':
+                out += "\\r";
+                break;
+            case '\t':
+                out += "\\t";
+                break;
+            default:
+                if (ch < 0x20U) {
+                    static const char hex[] = "0123456789abcdef";
+                    out += "\\u00";
+                    out.push_back(hex[(ch >> 4U) & 0x0FU]);
+                    out.push_back(hex[ch & 0x0FU]);
+                } else {
+                    out.push_back(static_cast<char>(ch));
+                }
+                break;
+        }
+    }
+    out.push_back('"');
+    return out;
+}
+
 int compileSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     bool emitParserState = false;
+    bool emitDiagnostics = false;
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--emit-parser-state") {
             emitParserState = true;
+        } else if (arg == "--emit-diagnostics") {
+            emitDiagnostics = true;
         } else {
             throw std::runtime_error("Unsupported compile-source argument: " + arg);
         }
+    }
+
+    if (!emitParserState && !emitDiagnostics) {
+        std::cerr << "compile-source requires --emit-parser-state and/or --emit-diagnostics.\n";
+        return 1;
     }
 
     const std::string source = readFile(sourcePath) + "\n";
@@ -1507,29 +1558,25 @@ int compileSourceCommand(const std::string& sourcePath, int argc, char** argv) {
         return 1;
     }
 
-    for (size_t index = 0; index < ps_frontend_result_diagnostic_count(result.get()); ++index) {
-        const ps_diagnostic* diagnostic = ps_frontend_result_diagnostic(result.get(), index);
-        if (!diagnostic) {
-            continue;
+    if (emitDiagnostics) {
+        for (size_t index = 0; index < ps_frontend_result_diagnostic_count(result.get()); ++index) {
+            const ps_diagnostic* diagnostic = ps_frontend_result_diagnostic(result.get(), index);
+            if (diagnostic == nullptr || diagnostic->message == nullptr) {
+                continue;
+            }
+            std::cout << jsonStringLiteral(diagnostic->message) << "\n";
         }
-        std::cerr << "diag[" << index << "] severity=" << diagnostic->severity
-                  << " code=" << diagnostic->code
-                  << " line=" << diagnostic->line
-                  << " message=" << diagnostic->message
-                  << "\n";
     }
 
-    if (!emitParserState) {
-        std::cerr << "compile-source currently supports only --emit-parser-state.\n";
-        return 1;
+    if (emitParserState) {
+        const size_t required = ps_frontend_result_parser_state_json(result.get(), nullptr, 0);
+        std::string payload(required == 0 ? 0 : (required - 1), '\0');
+        if (required > 0) {
+            (void)ps_frontend_result_parser_state_json(result.get(), payload.data(), required);
+        }
+        std::cout << payload << "\n";
     }
 
-    const size_t required = ps_frontend_result_parser_state_json(result.get(), nullptr, 0);
-    std::string payload(required == 0 ? 0 : (required - 1), '\0');
-    if (required > 0) {
-        (void)ps_frontend_result_parser_state_json(result.get(), payload.data(), required);
-    }
-    std::cout << payload << "\n";
     return 0;
 }
 
@@ -1773,6 +1820,7 @@ void printUsage() {
               << "  ps_cli step <ir.json> [input ...]\n"
               << "  ps_cli bench <ir.json> [--iterations N] [--threads N]\n"
               << "  ps_cli compile-source <game.ps> --emit-parser-state\n"
+              << "  ps_cli compile-source <game.ps> --emit-diagnostics\n"
               << "  ps_cli run-source <game.ps> [--level N] [--seed seed] [--settle-again]\n"
               << "  ps_cli step-source <game.ps> [input ...] [--level N] [--seed seed] [--settle-again]\n"
               << "  ps_cli bench-source <game.ps> [--level N] [--seed seed] [--settle-again] [--iterations N] [--threads N]\n"

@@ -14,6 +14,29 @@ function parseOnly(source) {
     return parserState;
 }
 
+/**
+ * Tokenize-only pass with `compiling` enabled so parser `logError` / `logWarning`
+ * calls populate `errorStrings` (matches in-editor behavior during compile's loadFile).
+ */
+function collectParserPhaseDiagnostics(source) {
+    resetParserErrorState();
+    compiling = true;
+    try {
+        const processor = new codeMirrorFn();
+        const parserState = processor.startState();
+        const lines = source.split('\n');
+        for (const line of lines) {
+            const stream = new CodeMirror.StringStream(line, 4);
+            do {
+                processor.token(stream, parserState);
+            } while (stream.eol() === false);
+        }
+        return errorStrings.slice();
+    } finally {
+        compiling = false;
+    }
+}
+
 function serializeObjects(objects) {
     return Object.keys(objects || {}).sort().map(name => ({
         name,
@@ -124,4 +147,5 @@ function buildParserStateSnapshot(source) {
 
 module.exports = {
     buildParserStateSnapshot,
+    collectParserPhaseDiagnostics,
 };

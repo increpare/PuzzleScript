@@ -24,6 +24,11 @@ void DiagnosticSink::info(DiagnosticCode code, std::optional<int32_t> line, std:
 }
 
 std::string formatForJsCompat(const Diagnostic& diagnostic) {
+    // Mirror `buildErrorHtml` / `buildWarningHtml` after `stripHTMLTags` in the node harness:
+    // anchored diagnostics become `line N : <message>`.
+    if (diagnostic.line.has_value()) {
+        return "line " + std::to_string(*diagnostic.line) + " : " + diagnostic.message;
+    }
     return diagnostic.message;
 }
 

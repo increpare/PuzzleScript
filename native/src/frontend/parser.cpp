@@ -109,6 +109,31 @@ std::string toLowerCopy(std::string_view value) {
     return out;
 }
 
+std::string toUpperCopy(std::string_view value) {
+    std::string out;
+    out.reserve(value.size());
+    const auto* bytes = reinterpret_cast<const utf8proc_uint8_t*>(value.data());
+    const utf8proc_ssize_t total = static_cast<utf8proc_ssize_t>(value.size());
+    utf8proc_ssize_t cursor = 0;
+    while (cursor < total) {
+        utf8proc_int32_t codepoint = 0;
+        const utf8proc_ssize_t advance = utf8proc_iterate(bytes + cursor, total - cursor, &codepoint);
+        if (advance <= 0) {
+            out.push_back(static_cast<char>(value[static_cast<size_t>(cursor)]));
+            ++cursor;
+            continue;
+        }
+        const utf8proc_int32_t uppered = utf8proc_toupper(codepoint);
+        utf8proc_uint8_t buffer[4]{};
+        const utf8proc_ssize_t encoded = utf8proc_encode_char(uppered, buffer);
+        if (encoded > 0) {
+            out.append(reinterpret_cast<const char*>(buffer), static_cast<size_t>(encoded));
+        }
+        cursor += advance;
+    }
+    return out;
+}
+
 bool isIdentifierLike(std::string_view value) {
     if (value.empty()) {
         return false;
@@ -257,6 +282,25 @@ std::vector<std::string> splitCsvWords(std::string_view value) {
     }
     if (!current.empty()) {
         result.push_back(toLowerCopy(current));
+    }
+    return result;
+}
+
+std::vector<std::string> splitCollisionLayerTokensPreservingCase(std::string_view value) {
+    std::vector<std::string> result;
+    std::string current;
+    for (const char ch : value) {
+        if (ch == ',' || std::isspace(static_cast<unsigned char>(ch)) != 0) {
+            if (!current.empty()) {
+                result.push_back(trim(current));
+                current.clear();
+            }
+            continue;
+        }
+        current.push_back(ch);
+    }
+    if (!current.empty()) {
+        result.push_back(trim(current));
     }
     return result;
 }
@@ -758,10 +802,13 @@ void parseSoundsLine(ParserState& state, std::string_view trimmedLine) {
 }
 
 void parseCollisionLayersLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine) {
-    auto items = splitCsvWords(trimmedLine);
-    if (items.empty()) {
+    const auto tokens = splitCollisionLayerTokensPreservingCase(trimmedLine);
+    if (tokens.empty()) {
         return;
     }
+
+    // parser.js parseCollisionLayersToken: each physical line starts a new layer (sol).
+    state.collisionLayers.push_back({});
 
     std::function<std::vector<std::string>(const std::string&)> expand;
     expand = [&](const std::string& name) -> std::vector<std::string> {
@@ -793,16 +840,58 @@ void parseCollisionLayersLine(ParserState& state, DiagnosticSink& diagnostics, s
                 return result;
             }
         }
-        diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "Cannot add \"" + lowered + "\" to a collision layer; it has not been declared.");
+        diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "Cannot add \"" + toUpperCopy(name) + "\" to a collision layer; it has not been declared.");
         return {};
     };
 
-    std::vector<std::string> expandedLayer;
-    for (const auto& item : items) {
-        const auto expanded = expand(item);
-        expandedLayer.insert(expandedLayer.end(), expanded.begin(), expanded.end());
+    for (const std::string& candname : tokens) {
+        const std::string loweredCand = toLowerCopy(candname);
+        if (loweredCand == "background") {
+            if (!state.collisionLayers.empty() && !state.collisionLayers.back().empty()) {
+                diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "Background must be in a layer by itself.");
+            }
+            state.tokenIndex = 1;
+        } else if (state.tokenIndex != 0) {
+            diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "Background must be in a layer by itself.");
+        }
+
+        const std::vector<std::string> ar = expand(candname);
+        if (state.collisionLayers.empty()) {
+            diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "no layers found.");
+            continue;
+        }
+
+        std::vector<size_t> foundOthers;
+        for (const std::string& tcandname : ar) {
+            for (size_t j = 0; j < state.collisionLayers.size(); ++j) {
+                const auto& clj = state.collisionLayers[j];
+                if (std::find(clj.begin(), clj.end(), tcandname) != clj.end()) {
+                    if (j + 1 != state.collisionLayers.size()) {
+                        foundOthers.push_back(j);
+                    }
+                }
+            }
+        }
+        if (!foundOthers.empty()) {
+            std::string warningStr = "Object \"" + toUpperCopy(candname) + "\" included in multiple collision layers ( layers ";
+            for (size_t i = 0; i < foundOthers.size(); ++i) {
+                warningStr += "#" + std::to_string(foundOthers[i] + 1) + ", ";
+            }
+            warningStr += "#" + std::to_string(state.collisionLayers.size());
+            diagnostics.warning(DiagnosticCode::GenericWarning, state.lineNumber, warningStr + " ). You should fix this!");
+        }
+
+        if (std::find(state.currentLineWipArray.begin(), state.currentLineWipArray.end(), candname)
+            != state.currentLineWipArray.end()) {
+            diagnostics.warning(
+                DiagnosticCode::GenericWarning,
+                state.lineNumber,
+                "Object \"" + toUpperCopy(candname) + "\" included explicitly multiple times in the same layer. Don't do that innit.");
+        }
+        state.currentLineWipArray.push_back(candname);
+
+        state.collisionLayers.back().insert(state.collisionLayers.back().end(), ar.begin(), ar.end());
     }
-    state.collisionLayers.push_back(std::move(expandedLayer));
 }
 
 void parseRulesLine(ParserState& state, std::string_view trimmedLine, std::string_view mixedCaseRaw) {
@@ -1009,6 +1098,9 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
         blankCommentFooter.rawLine = rawLine;
 
         ++state.lineNumber;
+        // parser.js token(): on sol, clears current_line_wip_array and tokenIndex before section logic.
+        state.currentLineWipArray.clear();
+        state.tokenIndex = 0;
         // parser.js clears line_should_end at the start of each physical line (sol block).
         state.lineShouldEnd = false;
         if (state.solAfterComment) {

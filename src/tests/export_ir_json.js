@@ -6,7 +6,7 @@ const path = require('path');
 
 const { loadPuzzleScript } = require('./lib/puzzlescript_node_env');
 const { buildCompiledIr } = require('./lib/puzzlescript_ir');
-const { buildParserStateSnapshot } = require('./lib/puzzlescript_parser_snapshot');
+const { buildParserStateSnapshot, collectParserPhaseDiagnostics } = require('./lib/puzzlescript_parser_snapshot');
 
 function parseArgs(argv) {
     const result = {
@@ -48,7 +48,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-    console.error('Usage: node src/tests/export_ir_json.js <input.ps> [output.json] [--level N] [--seed seed] [--settle-again] [--snapshot-phase parser]');
+    console.error('Usage: node src/tests/export_ir_json.js <input.ps> [output.json] [--level N] [--seed seed] [--settle-again] [--snapshot-phase parser|parser-diagnostics]');
 }
 
 function main() {
@@ -72,6 +72,18 @@ function main() {
             fs.writeFileSync(outputFile, `${payload}\n`, 'utf8');
         } else {
             process.stdout.write(`${payload}\n`);
+        }
+        return;
+    }
+
+    if (options.snapshotPhase === 'parser-diagnostics') {
+        const diagnostics = collectParserPhaseDiagnostics(`${source}\n`);
+        const lines = diagnostics.map((html) => `${JSON.stringify(html)}\n`).join('');
+        if (outputFile) {
+            fs.mkdirSync(path.dirname(outputFile), { recursive: true });
+            fs.writeFileSync(outputFile, lines, 'utf8');
+        } else {
+            process.stdout.write(lines);
         }
         return;
     }

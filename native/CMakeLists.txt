@@ -212,6 +212,11 @@ add_test(
 )
 
 add_test(
+  NAME ps_cli_parser_diagnostics_diff_smoke
+  COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/diff_diagnostics_against_js.sh ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt
+)
+
+add_test(
   NAME ps_cli_diff_trace_smoke
   COMMAND ps_cli diff-trace ${SMOKE_IR} ${SMOKE_TRACE}
 )
