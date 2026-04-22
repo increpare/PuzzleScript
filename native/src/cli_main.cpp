@@ -41,6 +41,40 @@ std::string readFile(const std::filesystem::path& path) {
     return buffer.str();
 }
 
+int32_t looseAsInt(const puzzlescript::json::Value& value) {
+    if (value.isInteger()) {
+        return static_cast<int32_t>(value.asInteger());
+    }
+    if (value.isDouble()) {
+        return static_cast<int32_t>(value.asDouble());
+    }
+    return 0;
+}
+
+std::vector<int32_t> looseAsIntArray(const puzzlescript::json::Value& value) {
+    std::vector<int32_t> result;
+    if (!value.isArray()) {
+        return result;
+    }
+    const auto& array = value.asArray();
+    result.reserve(array.size());
+    for (const auto& item : array) {
+        if (item.isInteger() || item.isDouble()) {
+            result.push_back(looseAsInt(item));
+        }
+    }
+    return result;
+}
+
+void appendIntList(std::ostream& stream, const std::vector<int32_t>& values) {
+    for (size_t index = 0; index < values.size(); ++index) {
+        if (index > 0) {
+            stream << ",";
+        }
+        stream << values[index];
+    }
+}
+
 struct ScopedEnvSilence {
     explicit ScopedEnvSilence(std::vector<std::string> names)
         : names(std::move(names)) {
@@ -111,21 +145,15 @@ std::vector<TraceSnapshot> loadTraceSnapshotsFromJsonText(const std::string& jso
         TraceSnapshot snapshot;
         snapshot.phase = object.at("phase").asString();
         if (const auto inputIt = object.find("input"); inputIt != object.end() && !inputIt->second.isNull()) {
-            if (inputIt->second.isInteger()) {
-                snapshot.numericInput = static_cast<int32_t>(inputIt->second.asInteger());
-            } else if (inputIt->second.isDouble()) {
-                snapshot.numericInput = static_cast<int32_t>(inputIt->second.asDouble());
+            if (inputIt->second.isInteger() || inputIt->second.isDouble()) {
+                snapshot.numericInput = looseAsInt(inputIt->second);
             } else if (inputIt->second.isString()) {
                 snapshot.stringInput = inputIt->second.asString();
             }
         }
-        snapshot.currentLevelIndex = object.at("current_level_index").isInteger()
-            ? static_cast<int32_t>(object.at("current_level_index").asInteger())
-            : static_cast<int32_t>(object.at("current_level_index").asDouble());
+        snapshot.currentLevelIndex = looseAsInt(object.at("current_level_index"));
         if (const auto targetIt = object.find("current_level_target"); targetIt != object.end() && !targetIt->second.isNull()) {
-            snapshot.currentLevelTarget = targetIt->second.isInteger()
-                ? static_cast<int32_t>(targetIt->second.asInteger())
-                : static_cast<int32_t>(targetIt->second.asDouble());
+            snapshot.currentLevelTarget = looseAsInt(targetIt->second);
         }
         if (const auto loadedLevelSeedIt = object.find("loaded_level_seed"); loadedLevelSeedIt != object.end() && !loadedLevelSeedIt->second.isNull()) {
             snapshot.loadedLevelSeed = loadedLevelSeedIt->second.asString();
@@ -133,14 +161,10 @@ std::vector<TraceSnapshot> loadTraceSnapshotsFromJsonText(const std::string& jso
         snapshot.titleScreen = object.at("title_screen").asBool();
         snapshot.textMode = object.at("text_mode").asBool();
         if (const auto titleModeIt = object.find("title_mode"); titleModeIt != object.end()) {
-            snapshot.titleMode = titleModeIt->second.isInteger()
-                ? static_cast<int32_t>(titleModeIt->second.asInteger())
-                : static_cast<int32_t>(titleModeIt->second.asDouble());
+            snapshot.titleMode = looseAsInt(titleModeIt->second);
         }
         if (const auto titleSelectionIt = object.find("title_selection"); titleSelectionIt != object.end()) {
-            snapshot.titleSelection = titleSelectionIt->second.isInteger()
-                ? static_cast<int32_t>(titleSelectionIt->second.asInteger())
-                : static_cast<int32_t>(titleSelectionIt->second.asDouble());
+            snapshot.titleSelection = looseAsInt(titleSelectionIt->second);
         }
         if (const auto titleSelectedIt = object.find("title_selected"); titleSelectedIt != object.end()) {
             snapshot.titleSelected = titleSelectedIt->second.asBool();
@@ -153,23 +177,13 @@ std::vector<TraceSnapshot> loadTraceSnapshotsFromJsonText(const std::string& jso
             snapshot.randomStateValid = randomStateValidIt->second.asBool();
         }
         if (const auto randomStateIIt = object.find("random_state_i"); randomStateIIt != object.end()) {
-            snapshot.randomStateI = randomStateIIt->second.isInteger()
-                ? static_cast<int32_t>(randomStateIIt->second.asInteger())
-                : static_cast<int32_t>(randomStateIIt->second.asDouble());
+            snapshot.randomStateI = looseAsInt(randomStateIIt->second);
         }
         if (const auto randomStateJIt = object.find("random_state_j"); randomStateJIt != object.end()) {
-            snapshot.randomStateJ = randomStateJIt->second.isInteger()
-                ? static_cast<int32_t>(randomStateJIt->second.asInteger())
-                : static_cast<int32_t>(randomStateJIt->second.asDouble());
+            snapshot.randomStateJ = looseAsInt(randomStateJIt->second);
         }
-        if (const auto previewBytesIt = object.find("random_state_preview_bytes"); previewBytesIt != object.end() && previewBytesIt->second.isArray()) {
-            for (const auto& byteValue : previewBytesIt->second.asArray()) {
-                if (byteValue.isInteger()) {
-                    snapshot.randomStatePreviewBytes.push_back(static_cast<int32_t>(byteValue.asInteger()));
-                } else if (byteValue.isDouble()) {
-                    snapshot.randomStatePreviewBytes.push_back(static_cast<int32_t>(byteValue.asDouble()));
-                }
-            }
+        if (const auto previewBytesIt = object.find("random_state_preview_bytes"); previewBytesIt != object.end()) {
+            snapshot.randomStatePreviewBytes = looseAsIntArray(previewBytesIt->second);
         }
         snapshot.serializedLevel = object.at("serialized_level").asString();
         if (const auto soundsIt = object.find("new_sounds"); soundsIt != object.end() && soundsIt->second.isArray()) {
@@ -476,47 +490,27 @@ bool compareSnapshot(const TraceSnapshot& expected, ps_session* session, const p
                    << (actualRandomStateValid ? 1 : 0) << " expected=" << (expected.randomStateValid ? 1 : 0) << "\n";
             ok = false;
         }
-        const int32_t actualRandomStateI = actualSnapshotObject.at("random_state_i").isInteger()
-            ? static_cast<int32_t>(actualSnapshotObject.at("random_state_i").asInteger())
-            : static_cast<int32_t>(actualSnapshotObject.at("random_state_i").asDouble());
+        const int32_t actualRandomStateI = looseAsInt(actualSnapshotObject.at("random_state_i"));
         if (actualRandomStateI != expected.randomStateI) {
             stream << "snapshot[" << snapshotIndex << "] random_state_i mismatch: actual="
                    << actualRandomStateI << " expected=" << expected.randomStateI << "\n";
             ok = false;
         }
-        const int32_t actualRandomStateJ = actualSnapshotObject.at("random_state_j").isInteger()
-            ? static_cast<int32_t>(actualSnapshotObject.at("random_state_j").asInteger())
-            : static_cast<int32_t>(actualSnapshotObject.at("random_state_j").asDouble());
+        const int32_t actualRandomStateJ = looseAsInt(actualSnapshotObject.at("random_state_j"));
         if (actualRandomStateJ != expected.randomStateJ) {
             stream << "snapshot[" << snapshotIndex << "] random_state_j mismatch: actual="
                    << actualRandomStateJ << " expected=" << expected.randomStateJ << "\n";
             ok = false;
         }
         std::vector<int32_t> actualPreviewBytes;
-        if (const auto previewIt = actualSnapshotObject.find("random_state_preview_bytes"); previewIt != actualSnapshotObject.end() && previewIt->second.isArray()) {
-            for (const auto& byteValue : previewIt->second.asArray()) {
-                if (byteValue.isInteger()) {
-                    actualPreviewBytes.push_back(static_cast<int32_t>(byteValue.asInteger()));
-                } else if (byteValue.isDouble()) {
-                    actualPreviewBytes.push_back(static_cast<int32_t>(byteValue.asDouble()));
-                }
-            }
+        if (const auto previewIt = actualSnapshotObject.find("random_state_preview_bytes"); previewIt != actualSnapshotObject.end()) {
+            actualPreviewBytes = looseAsIntArray(previewIt->second);
         }
         if (actualPreviewBytes != expected.randomStatePreviewBytes) {
             stream << "snapshot[" << snapshotIndex << "] random_state_preview_bytes mismatch: actual=[";
-            for (size_t index = 0; index < actualPreviewBytes.size(); ++index) {
-                if (index > 0) {
-                    stream << ",";
-                }
-                stream << actualPreviewBytes[index];
-            }
+            appendIntList(stream, actualPreviewBytes);
             stream << "] expected=[";
-            for (size_t index = 0; index < expected.randomStatePreviewBytes.size(); ++index) {
-                if (index > 0) {
-                    stream << ",";
-                }
-                stream << expected.randomStatePreviewBytes[index];
-            }
+            appendIntList(stream, expected.randomStatePreviewBytes);
             stream << "]\n";
             ok = false;
         }

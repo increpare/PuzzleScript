@@ -126,26 +126,35 @@ bool ruleDebugLineFilterMatches(int32_t lineNumber) {
     if (!ruleDebugEnabled()) {
         return false;
     }
-    const char* value = std::getenv("PS_DEBUG_RULE_LINES");
-    if (value == nullptr || value[0] == '\0') {
+    struct Filter {
+        bool unrestricted = true;
+        std::vector<int32_t> lines;
+    };
+    static const Filter filter = [] {
+        Filter result;
+        const char* value = std::getenv("PS_DEBUG_RULE_LINES");
+        if (value == nullptr || value[0] == '\0') {
+            return result;
+        }
+        result.unrestricted = false;
+        std::stringstream stream(value);
+        std::string token;
+        while (std::getline(stream, token, ',')) {
+            if (token.empty()) {
+                continue;
+            }
+            try {
+                result.lines.push_back(std::stoi(token));
+            } catch (const std::exception&) {
+                continue;
+            }
+        }
+        return result;
+    }();
+    if (filter.unrestricted) {
         return true;
     }
-
-    std::stringstream stream(value);
-    std::string token;
-    while (std::getline(stream, token, ',')) {
-        if (token.empty()) {
-            continue;
-        }
-        try {
-            if (std::stoi(token) == lineNumber) {
-                return true;
-            }
-        } catch (const std::exception&) {
-            continue;
-        }
-    }
-    return false;
+    return std::find(filter.lines.begin(), filter.lines.end(), lineNumber) != filter.lines.end();
 }
 
 void ruleDebugLog(const std::string& message) {
@@ -806,16 +815,18 @@ const int32_t* getCellObjectsPtr(const Session& session, int32_t tileIndex) {
 }
 
 void setCellObjects(Session& session, int32_t tileIndex, const BitVector& objects) {
-    const size_t base = static_cast<size_t>(tileIndex * session.game->strideObject);
-    for (int32_t word = 0; word < session.game->strideObject; ++word) {
-        session.liveLevel.objects[base + static_cast<size_t>(word)] = objects[static_cast<size_t>(word)];
-    }
+    const int32_t stride = session.game->strideObject;
+    const size_t base = static_cast<size_t>(tileIndex * stride);
     const int32_t columnIndex = tileIndex / session.liveLevel.height;
     const int32_t rowIndex = tileIndex % session.liveLevel.height;
-    for (int32_t word = 0; word < session.game->strideObject; ++word) {
-        session.columnMasks[static_cast<size_t>(columnIndex * session.game->strideObject + word)] |= objects[static_cast<size_t>(word)];
-        session.rowMasks[static_cast<size_t>(rowIndex * session.game->strideObject + word)] |= objects[static_cast<size_t>(word)];
-        session.boardMask[static_cast<size_t>(word)] |= objects[static_cast<size_t>(word)];
+    const size_t columnBase = static_cast<size_t>(columnIndex * stride);
+    const size_t rowBase = static_cast<size_t>(rowIndex * stride);
+    for (int32_t word = 0; word < stride; ++word) {
+        const int32_t value = objects[static_cast<size_t>(word)];
+        session.liveLevel.objects[base + static_cast<size_t>(word)] = value;
+        session.columnMasks[columnBase + static_cast<size_t>(word)] |= value;
+        session.rowMasks[rowBase + static_cast<size_t>(word)] |= value;
+        session.boardMask[static_cast<size_t>(word)] |= value;
     }
 }
 
@@ -879,16 +890,18 @@ void clearShiftedMask5(BitVector& value, int32_t shift) {
 }
 
 void setCellMovements(Session& session, int32_t tileIndex, const BitVector& movements) {
-    const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
-    for (int32_t word = 0; word < session.game->strideMovement; ++word) {
-        session.liveMovements[base + static_cast<size_t>(word)] = movements[static_cast<size_t>(word)];
-    }
+    const int32_t stride = session.game->strideMovement;
+    const size_t base = static_cast<size_t>(tileIndex * stride);
     const int32_t columnIndex = tileIndex / session.liveLevel.height;
     const int32_t rowIndex = tileIndex % session.liveLevel.height;
-    for (int32_t word = 0; word < session.game->strideMovement; ++word) {
-        session.columnMovementMasks[static_cast<size_t>(columnIndex * session.game->strideMovement + word)] |= movements[static_cast<size_t>(word)];
-        session.rowMovementMasks[static_cast<size_t>(rowIndex * session.game->strideMovement + word)] |= movements[static_cast<size_t>(word)];
-        session.boardMovementMask[static_cast<size_t>(word)] |= movements[static_cast<size_t>(word)];
+    const size_t columnBase = static_cast<size_t>(columnIndex * stride);
+    const size_t rowBase = static_cast<size_t>(rowIndex * stride);
+    for (int32_t word = 0; word < stride; ++word) {
+        const int32_t value = movements[static_cast<size_t>(word)];
+        session.liveMovements[base + static_cast<size_t>(word)] = value;
+        session.columnMovementMasks[columnBase + static_cast<size_t>(word)] |= value;
+        session.rowMovementMasks[rowBase + static_cast<size_t>(word)] |= value;
+        session.boardMovementMask[static_cast<size_t>(word)] |= value;
     }
 }
 
@@ -1672,21 +1685,18 @@ bool rowMatchStillMatches(
     if (ellipsisCount == 0) {
         return !match.empty() && rowStillMatchesAt(session, row, match.front(), delta);
     }
-    if (ellipsisCount >= 1) {
-        int32_t positionIndex = 0;
-        for (int32_t cellIndex = 0; cellIndex < static_cast<int32_t>(row.size()); ++cellIndex) {
-            if (row[static_cast<size_t>(cellIndex)].kind == Pattern::Kind::Ellipsis) {
-                continue;
-            }
-            if (positionIndex >= static_cast<int32_t>(match.size())
-                || !matchesPatternAt(session, row[static_cast<size_t>(cellIndex)], match[static_cast<size_t>(positionIndex)])) {
-                return false;
-            }
-            ++positionIndex;
+    int32_t positionIndex = 0;
+    for (int32_t cellIndex = 0; cellIndex < static_cast<int32_t>(row.size()); ++cellIndex) {
+        if (row[static_cast<size_t>(cellIndex)].kind == Pattern::Kind::Ellipsis) {
+            continue;
         }
-        return positionIndex == static_cast<int32_t>(match.size());
+        if (positionIndex >= static_cast<int32_t>(match.size())
+            || !matchesPatternAt(session, row[static_cast<size_t>(cellIndex)], match[static_cast<size_t>(positionIndex)])) {
+            return false;
+        }
+        ++positionIndex;
     }
-    return false;
+    return positionIndex == static_cast<int32_t>(match.size());
 }
 
 bool ruleCanPossiblyMatch(const Session& session, const Rule& rule) {
@@ -2217,7 +2227,7 @@ bool showContinueOptionOnTitleScreen(const PreparedSession& prepared) {
     return prepared.currentLevelIndex > 0 || prepared.currentLevelTarget.has_value();
 }
 
-void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot, bool restoreRandomState = true) {
+void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot, bool restoreRandomState) {
     session.preparedSession = snapshot.preparedSession;
     session.liveLevel = snapshot.liveLevel;
     session.liveMovements = snapshot.liveMovements;
