@@ -1635,24 +1635,53 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     BitVector rigidGroupIndexMask;
     BitVector rigidMovementAppliedMask;
     bool rigidChange = false;
-    BitVector objectsClear       = arenaCopy(game, replacement.objectsClear,       objectWordCount);
-    BitVector objectsSet         = arenaCopy(game, replacement.objectsSet,         objectWordCount);
-    BitVector movementsSet       = arenaCopy(game, replacement.movementsSet,       movementWordCount);
-    BitVector movementsClear     = arenaCopy(game, replacement.movementsClear,     movementWordCount);
-    BitVector movementsLayerMask = arenaCopy(game, replacement.movementsLayerMask, movementWordCount);
-    BitVector randomEntityMask   = arenaCopy(game, replacement.randomEntityMask,   replacement.randomEntityMaskWidth);
-    BitVector randomDirMask      = arenaCopy(game, replacement.randomDirMask,      replacement.randomDirMaskWidth);
+    // Reuse per-session scratch buffers instead of allocating a fresh
+    // BitVector per invocation. Width is stable across the session.
+    auto initScratch = [](std::vector<int32_t>& scratch,
+                          const int32_t* source,
+                          uint32_t wordCount) {
+        scratch.resize(wordCount);
+        if (source != nullptr && wordCount > 0) {
+            std::memcpy(scratch.data(), source, wordCount * sizeof(int32_t));
+        } else if (wordCount > 0) {
+            std::fill(scratch.begin(), scratch.end(), 0);
+        }
+    };
+    initScratch(session.replacementObjectsClearScratch,  maskPtr(game, replacement.objectsClear),   objectWordCount);
+    initScratch(session.replacementObjectsSetScratch,    maskPtr(game, replacement.objectsSet),     objectWordCount);
+    initScratch(session.replacementMovementsClearScratch,maskPtr(game, replacement.movementsClear), movementWordCount);
+    initScratch(session.replacementMovementsSetScratch,  maskPtr(game, replacement.movementsSet),   movementWordCount);
+    BitVector& objectsClear   = session.replacementObjectsClearScratch;
+    BitVector& objectsSet     = session.replacementObjectsSetScratch;
+    BitVector& movementsClear = session.replacementMovementsClearScratch;
+    BitVector& movementsSet   = session.replacementMovementsSetScratch;
 
-    for (size_t word = 0; word < movementsClear.size(); ++word) {
-        movementsClear[word] |= movementsLayerMask[word];
+    const int32_t* movementsLayerMask = maskPtr(game, replacement.movementsLayerMask);
+    const int32_t* randomEntityMask   = maskPtr(game, replacement.randomEntityMask);
+    const uint32_t randomEntityMaskWidth = replacement.randomEntityMaskWidth;
+    const int32_t* randomDirMask      = maskPtr(game, replacement.randomDirMask);
+    const uint32_t randomDirMaskWidth    = replacement.randomDirMaskWidth;
+
+    if (movementsLayerMask != nullptr) {
+        for (size_t word = 0; word < movementsClear.size() && word < movementWordCount; ++word) {
+            movementsClear[word] |= movementsLayerMask[word];
+        }
     }
 
-    if (anyBitsSet(randomEntityMask)) {
+    auto maskHasAnyBitSet = [](const int32_t* mask, uint32_t count) {
+        if (mask == nullptr) return false;
+        for (uint32_t i = 0; i < count; ++i) {
+            if (mask[i] != 0) return true;
+        }
+        return false;
+    };
+
+    if (maskHasAnyBitSet(randomEntityMask, randomEntityMaskWidth)) {
         std::vector<int32_t> choices;
         for (int32_t objectId = 0; objectId < session.game->objectCount; ++objectId) {
             const int32_t word = objectId >> 5;
             const int32_t bit = objectId & 31;
-            if (word < static_cast<int32_t>(randomEntityMask.size())
+            if (word < static_cast<int32_t>(randomEntityMaskWidth)
                 && (randomEntityMask[static_cast<size_t>(word)] & (1 << bit)) != 0) {
                 choices.push_back(objectId);
             }
@@ -1710,10 +1739,14 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         }
     }
 
-    if (anyBitsSet(randomDirMask)) {
+    if (maskHasAnyBitSet(randomDirMask, randomDirMaskWidth)) {
         for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
             const int32_t shift = 5 * layer;
-            if (getShiftedMask5(randomDirMask, shift) != 0) {
+            const int32_t wordIdx = shift >> 5;
+            const int32_t bitIdx = shift & 31;
+            const int32_t dirBits = (static_cast<size_t>(wordIdx) < randomDirMaskWidth)
+                ? ((randomDirMask[static_cast<size_t>(wordIdx)] >> bitIdx) & 0x1F) : 0;
+            if (dirBits != 0) {
                 const double randomValue = randomUniform(session.randomState);
                 const int32_t randomDir = static_cast<int32_t>(std::floor(randomValue * 4.0));
                 if (randomDebugEnabled()) {
@@ -1749,7 +1782,7 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         destroyed[word] = oldObjects[word] & ~objects[word];
     }
 
-    if (rule.rigid && !movementsLayerMask.empty()) {
+    if (rule.rigid && movementsLayerMask != nullptr && movementWordCount > 0) {
         const int32_t rigidGroupIndex = (rule.groupNumber >= 0
             && static_cast<size_t>(rule.groupNumber) < session.game->groupNumberToRigidGroupIndex.size())
             ? session.game->groupNumberToRigidGroupIndex[static_cast<size_t>(rule.groupNumber)] + 1
@@ -1758,19 +1791,23 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
             BitVector rigidMask(static_cast<size_t>(session.game->strideMovement), 0);
             for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
                 const int32_t shift = 5 * layer;
-                if (getShiftedMask5(movementsLayerMask, shift) != 0) {
+                const int32_t wIdx = shift >> 5;
+                const int32_t bIdx = shift & 31;
+                const int32_t layerBits = (static_cast<size_t>(wIdx) < movementWordCount)
+                    ? ((movementsLayerMask[static_cast<size_t>(wIdx)] >> bIdx) & 0x1F) : 0;
+                if (layerBits != 0) {
                     setShiftedMask5(rigidMask, shift, rigidGroupIndex);
                 }
             }
 
             rigidGroupIndexMask = getCellRigidGroupIndexMask(session, tileIndex);
             rigidMovementAppliedMask = getCellRigidMovementAppliedMask(session, tileIndex);
-            if (!bitsSetInArray(rigidMask, rigidGroupIndexMask)
-                && !bitsSetInArray(movementsLayerMask, rigidMovementAppliedMask)) {
+            if (!bitsSetInArray(rigidMask.data(), rigidMask.size(), rigidGroupIndexMask.data(), rigidGroupIndexMask.size())
+                && !bitsSetInArray(movementsLayerMask, movementWordCount, rigidMovementAppliedMask.data(), rigidMovementAppliedMask.size())) {
                 for (size_t word = 0; word < rigidGroupIndexMask.size() && word < rigidMask.size(); ++word) {
                     rigidGroupIndexMask[word] |= rigidMask[word];
                 }
-                for (size_t word = 0; word < rigidMovementAppliedMask.size() && word < movementsLayerMask.size(); ++word) {
+                for (size_t word = 0; word < rigidMovementAppliedMask.size() && word < movementWordCount; ++word) {
                     rigidMovementAppliedMask[word] |= movementsLayerMask[word];
                 }
                 rigidChange = true;

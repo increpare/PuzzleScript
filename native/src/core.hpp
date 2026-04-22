@@ -280,6 +280,12 @@ struct Session {
     std::vector<int32_t> rigidMovementAppliedMasks;
     std::vector<int32_t> pendingCreateMask;
     std::vector<int32_t> pendingDestroyMask;
+    // Scratch buffers reused across applyReplacementAt invocations to avoid
+    // per-call heap allocation. Contents are overwritten on every call.
+    std::vector<int32_t> replacementObjectsClearScratch;
+    std::vector<int32_t> replacementObjectsSetScratch;
+    std::vector<int32_t> replacementMovementsClearScratch;
+    std::vector<int32_t> replacementMovementsSetScratch;
     std::vector<UndoSnapshot> undoStack;
     std::vector<ps_audio_event> lastAudioEvents;
     bool canUndo = false;
