@@ -19,7 +19,7 @@ function parseArgs(argv) {
     const result = {
         limit: 0,
         start: 0,
-        cliPath: path.resolve('build/native/native/ps_cli'),
+        cliPath: path.resolve('build/native/ps_cli'),
         keepTemps: false,
     };
     const args = argv.slice(2);

@@ -42,7 +42,7 @@ function parseArgs(argv) {
         throw new Error('Missing fixtures manifest path');
     }
     if (result.cliPath === null) {
-        result.cliPath = path.resolve('build/native/native/ps_cli');
+        result.cliPath = path.resolve('build/native/ps_cli');
     }
     return result;
 }

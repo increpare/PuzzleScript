@@ -53,6 +53,7 @@ set(PUZZLESCRIPT_FRONTEND_SOURCES
   src/c_api_frontend.cpp
   src/frontend/diagnostic.cpp
   src/frontend/parser.cpp
+  third_party/utf8proc/utf8proc.c
 )
 
 set(PUZZLESCRIPT_NATIVE_SOURCES
@@ -81,12 +82,18 @@ target_include_directories(puzzlescript_frontend
     ${CMAKE_CURRENT_SOURCE_DIR}/include
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/utf8proc
 )
 
 target_compile_definitions(puzzlescript_frontend
   PRIVATE
+    UTF8PROC_STATIC
     $<$<BOOL:${PS_ENABLE_DEV_SERIALIZERS}>:PS_ENABLE_DEV_SERIALIZERS=1>
 )
+
+set_source_files_properties(
+  third_party/utf8proc/utf8proc.c
+  PROPERTIES COMPILE_FLAGS "-Wno-everything")
 
 target_include_directories(puzzlescript_native
   PUBLIC

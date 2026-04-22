@@ -8,7 +8,7 @@ set -eu
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-PS_CLI="${PS_CLI:-$ROOT/build/native/native/ps_cli}"
+PS_CLI="${PS_CLI:-$ROOT/build/native/ps_cli}"
 MANIFEST="${PROFILE_MANIFEST:-$ROOT/build/native/coverage-fixtures/fixtures.json}"
 BASELINE="$ROOT/perf_baseline.json"
 RUNS="${PERF_RUNS:-5}"

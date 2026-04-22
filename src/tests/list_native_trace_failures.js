@@ -14,7 +14,7 @@ function firstNonEmptyLine(text) {
 
 function main() {
     const manifestPath = process.argv[2] || 'build/native/coverage-fixtures/fixtures.json';
-    const cliPath = process.argv[3] || 'build/native/native/ps_cli';
+    const cliPath = process.argv[3] || 'build/native/ps_cli';
     const manifestDir = path.dirname(manifestPath);
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     const fixtures = manifest.simulation_fixtures || [];

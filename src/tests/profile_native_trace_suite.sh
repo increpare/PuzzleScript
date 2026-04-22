@@ -8,7 +8,7 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
 
 OUT="${PROFILE_STATS_OUT:-$ROOT/profile_stats.txt}"
-PS_CLI="${PS_CLI:-$ROOT/build/native/native/ps_cli}"
+PS_CLI="${PS_CLI:-$ROOT/build/native/ps_cli}"
 MANIFEST="${PROFILE_MANIFEST:-$ROOT/build/native/coverage-fixtures/fixtures.json}"
 ART="$ROOT/build/native/profile_last"
 EXTRA_CLI_ARGS="${EXTRA_CLI_ARGS:-}"

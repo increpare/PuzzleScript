@@ -1,10 +1,12 @@
 #include "frontend/parser.hpp"
 
+#include <utf8proc.h>
+
 #include <algorithm>
 #include <cctype>
 #include <functional>
+#include <regex>
 #include <set>
-#include <sstream>
 
 namespace puzzlescript::frontend {
 namespace {
@@ -85,8 +87,24 @@ std::string trim(std::string_view value) {
 std::string toLowerCopy(std::string_view value) {
     std::string out;
     out.reserve(value.size());
-    for (const char ch : value) {
-        out.push_back(static_cast<char>(std::tolower(static_cast<unsigned char>(ch))));
+    const auto* bytes = reinterpret_cast<const utf8proc_uint8_t*>(value.data());
+    const utf8proc_ssize_t total = static_cast<utf8proc_ssize_t>(value.size());
+    utf8proc_ssize_t cursor = 0;
+    while (cursor < total) {
+        utf8proc_int32_t codepoint = 0;
+        const utf8proc_ssize_t advance = utf8proc_iterate(bytes + cursor, total - cursor, &codepoint);
+        if (advance <= 0) {
+            out.push_back(static_cast<char>(value[static_cast<size_t>(cursor)]));
+            ++cursor;
+            continue;
+        }
+        const utf8proc_int32_t lowered = utf8proc_tolower(codepoint);
+        utf8proc_uint8_t buffer[4]{};
+        const utf8proc_ssize_t encoded = utf8proc_encode_char(lowered, buffer);
+        if (encoded > 0) {
+            out.append(reinterpret_cast<const char*>(buffer), static_cast<size_t>(encoded));
+        }
+        cursor += advance;
     }
     return out;
 }
@@ -113,14 +131,25 @@ bool isAsciiIdentifierLike(std::string_view value) {
     });
 }
 
+bool containsAsciiLetter(std::string_view value) {
+    for (const unsigned char byte : value) {
+        if (std::isalpha(byte) != 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool isExactToken(std::string_view value, const std::string_view* tokens, size_t count) {
     return std::find(tokens, tokens + count, value) != (tokens + count);
 }
 
 bool isSpriteRow(std::string_view value) {
-    if (value.empty() || value.size() > 5) {
+    if (value.empty()) {
         return false;
     }
+    // Match parser.js section 3: stream eats /[.\\d]/ until non-sprite chars; rows may exceed
+    // 5 columns (warnings are logged in JS) so do not cap line length here.
     return std::all_of(value.begin(), value.end(), [](char ch) {
         return ch == '.' || std::isdigit(static_cast<unsigned char>(ch)) != 0;
     });
@@ -193,10 +222,22 @@ std::vector<std::string> iterateObjectKeysLikeJs(const std::map<std::string, Par
 
 std::vector<std::string> splitWhitespace(std::string_view value) {
     std::vector<std::string> result;
-    std::stringstream stream{std::string(value)};
-    std::string token;
-    while (stream >> token) {
-        result.push_back(token);
+    const auto isAsciiSpace = [](char ch) {
+        return std::isspace(static_cast<unsigned char>(ch)) != 0;
+    };
+    size_t index = 0;
+    while (index < value.size()) {
+        while (index < value.size() && isAsciiSpace(value[index]) != 0) {
+            ++index;
+        }
+        if (index >= value.size()) {
+            break;
+        }
+        const size_t start = index;
+        while (index < value.size() && isAsciiSpace(value[index]) == 0) {
+            ++index;
+        }
+        result.emplace_back(value.substr(start, index - start));
     }
     return result;
 }
@@ -216,6 +257,25 @@ std::vector<std::string> splitCsvWords(std::string_view value) {
     }
     if (!current.empty()) {
         result.push_back(toLowerCopy(current));
+    }
+    return result;
+}
+
+std::vector<std::string> splitObjectColorsLine(std::string_view value) {
+    static const std::regex colorToken(
+        "^\\s*(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|"
+        "red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|"
+        "blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-fA-F]{3}){1,2})",
+        std::regex_constants::icase);
+    std::string remaining(trim(std::string(value)));
+    std::vector<std::string> result;
+    while (!remaining.empty()) {
+        std::smatch match;
+        if (!std::regex_search(remaining, match, colorToken)) {
+            break;
+        }
+        result.push_back(toLowerCopy(trim(std::string(match[1].str()))));
+        remaining = std::string(match.suffix());
     }
     return result;
 }
@@ -261,26 +321,43 @@ size_t utf8CodePointCount(std::string_view value) {
     return count;
 }
 
+bool asciiSubstringEqualsInsensitive(std::string_view haystack, std::string_view needle) {
+    if (haystack.size() != needle.size()) {
+        return false;
+    }
+    for (size_t index = 0; index < haystack.size(); ++index) {
+        if (std::tolower(static_cast<unsigned char>(haystack[index])) != std::tolower(static_cast<unsigned char>(needle[index]))) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool isAsciiWordCharByte(unsigned char byte) {
+    return (byte >= '0' && byte <= '9')
+        || (byte >= 'A' && byte <= 'Z')
+        || (byte >= 'a' && byte <= 'z')
+        || byte == '_';
+}
+
 void registerOriginalCaseName(ParserState& state, std::string_view lowered, std::string_view original, int32_t lineNumber) {
     if (!isAsciiIdentifierLike(lowered)) {
         return;
     }
-    const std::string loweredNeedle = toLowerCopy(lowered);
-    const std::string loweredHaystack = toLowerCopy(original);
-    std::string matched = std::string(lowered);
-    size_t position = loweredHaystack.find(loweredNeedle);
-    while (position != std::string::npos) {
-        const bool leftBoundary = position == 0 || !isWordChar(loweredHaystack[position - 1]);
-        const size_t end = position + loweredNeedle.size();
-        const bool rightBoundary = end >= loweredHaystack.size() || !isWordChar(loweredHaystack[end]);
-        if (leftBoundary && rightBoundary) {
-            matched = std::string(original.substr(position, loweredNeedle.size()));
-            break;
+    const std::string needle(lowered);
+    for (size_t position = 0; position + needle.size() <= original.size(); ++position) {
+        if (!asciiSubstringEqualsInsensitive(original.substr(position, needle.size()), needle)) {
+            continue;
         }
-        position = loweredHaystack.find(loweredNeedle, position + 1);
+        const bool leftBoundary = position == 0 || !isAsciiWordCharByte(static_cast<unsigned char>(original[position - 1]));
+        const size_t end = position + needle.size();
+        const bool rightBoundary = end >= original.size() || !isAsciiWordCharByte(static_cast<unsigned char>(original[end]));
+        if (leftBoundary && rightBoundary) {
+            state.originalCaseNames[needle] = std::string(original.substr(position, needle.size()));
+            state.originalLineNumbers[needle] = lineNumber;
+            return;
+        }
     }
-    state.originalCaseNames[std::string(lowered)] = matched;
-    state.originalLineNumbers[std::string(lowered)] = lineNumber;
 }
 
 void registerLegendOriginalCaseName(ParserState& state, std::string_view lowered, int32_t lineNumber) {
@@ -306,12 +383,21 @@ std::string stripComments(std::string_view line, ParserState& state) {
     for (size_t index = 0; index < line.size(); ++index) {
         const char ch = line[index];
         if (ch == '(') {
+            // In parser.js, '(' after "message" in a rules line does not open a comment (TOKEN_MESSAGE).
+            // Line-based strip cannot track that; in rules only, treat ":( ..." as literal '(' (message tails).
+            // Other sections still treat '(' after ':' as comment (OBJECTS colors, etc.).
+            if (state.commentLevel == 0 && index > 0 && line[index - 1] == ':' && state.section == "rules") {
+                visible.push_back(ch);
+                continue;
+            }
             ++state.commentLevel;
             continue;
         }
         if (ch == ')' && state.commentLevel > 0) {
             --state.commentLevel;
-            state.solAfterComment = state.commentLevel > 0;
+            if (state.commentLevel == 0) {
+                state.solAfterComment = true;
+            }
             continue;
         }
         if (state.commentLevel == 0) {
@@ -378,7 +464,7 @@ void handleBlankLine(ParserState& state) {
     }
 }
 
-void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine, std::string_view mixedCase) {
+void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine, std::string_view mixedCase, std::string_view rawLine) {
     const auto tokens = splitWhitespace(trimmedLine);
     if (tokens.empty()) {
         return;
@@ -398,8 +484,23 @@ void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::str
             diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "MetaData \"" + key + "\" needs a value.");
             return;
         }
+        std::string storedValue = remainder;
+        // parser.js uses reg_notcommentstart for metadata values — text after '(' is not included even if the
+        // closing ')' appears later on the line (see title with parenthetical notes).
+        if (preserveOriginalValueCase) {
+            const std::string rawTrimmed = trim(rawLine);
+            if (originalKey.size() <= rawTrimmed.size()
+                && toLowerCopy(rawTrimmed.substr(0, originalKey.size())) == key) {
+                size_t valueStart = originalKey.size();
+                while (valueStart < rawTrimmed.size()
+                    && std::isspace(static_cast<unsigned char>(rawTrimmed[valueStart])) != 0) {
+                    ++valueStart;
+                }
+                storedValue = trim(takePrefixBeforeComment(std::string_view(rawTrimmed).substr(valueStart)));
+            }
+        }
         state.metadata.push_back(key);
-        state.metadata.push_back(remainder);
+        state.metadata.push_back(std::move(storedValue));
         state.metadataLines[key] = state.lineNumber;
         return;
     }
@@ -422,17 +523,27 @@ void parseObjectsLine(ParserState& state, std::string_view trimmedLine, std::str
         if (!isIdentifierLike(primaryName)) {
             return;
         }
+        const std::string loweredObjectNamesLine = toLowerCopy(trim(mixedCase));
         state.objectsCandname = primaryName;
         state.objectsSection = 1;
         state.objectsSpritematrix.clear();
         auto& object = state.objects[primaryName];
         object.name = primaryName;
         object.lineNumber = state.lineNumber;
-        registerOriginalCaseName(state, primaryName, mixedCase, state.lineNumber);
+        if (isAsciiIdentifierLike(primaryName)) {
+            registerOriginalCaseName(state, primaryName, trim(mixedCase), state.lineNumber);
+        } else if (isIdentifierLike(primaryName) && containsAsciiLetter(primaryName)) {
+            // registerOriginalCaseName only scans ASCII word boundaries; mixed ASCII/Unicode names
+            // (e.g. ziehend_nördlich) need the mixed-case token. Pure-non-ASCII names (e.g. 大) omit.
+            state.originalCaseNames[primaryName] = std::string(mixedTokens.front());
+            state.originalLineNumbers[primaryName] = state.lineNumber;
+        }
         for (size_t index = 1; index < mixedTokens.size(); ++index) {
             const std::string aliasName = toLowerCopy(mixedTokens[index]);
-            if (isIdentifierLike(aliasName)) {
-                state.originalCaseNames[aliasName] = aliasName;
+            if (isAsciiIdentifierLike(aliasName)) {
+                registerOriginalCaseName(state, aliasName, loweredObjectNamesLine, state.lineNumber);
+            } else if (isIdentifierLike(aliasName) && containsAsciiLetter(aliasName)) {
+                state.originalCaseNames[aliasName] = std::string(mixedTokens[index]);
                 state.originalLineNumbers[aliasName] = state.lineNumber;
             }
             state.legendSynonyms.push_back(ParserLegendEntry{
@@ -445,7 +556,7 @@ void parseObjectsLine(ParserState& state, std::string_view trimmedLine, std::str
     }
     if (state.objectsSection == 1) {
         auto& object = state.objects[state.objectsCandname];
-        object.colors = splitCsvWords(trimmedLine);
+        object.colors = splitObjectColorsLine(trimmedLine);
         state.objectsSection = 2;
         return;
     }
@@ -575,6 +686,35 @@ void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
     }
 }
 
+bool soundLeadingTokenAcceptable(const ParserState& state, std::string_view lowered) {
+    if (isExactToken(lowered, kSoundEvents, std::size(kSoundEvents))) {
+        return true;
+    }
+    if (lowered.size() > 3 && lowered.rfind("sfx", 0) == 0 && isNumeric(lowered.substr(3))) {
+        return true;
+    }
+    const std::string key(lowered);
+    if (state.objects.find(key) != state.objects.end()) {
+        return true;
+    }
+    for (const auto& entry : state.legendSynonyms) {
+        if (entry.name == key) {
+            return true;
+        }
+    }
+    for (const auto& entry : state.legendAggregates) {
+        if (entry.name == key) {
+            return true;
+        }
+    }
+    for (const auto& entry : state.legendProperties) {
+        if (entry.name == key) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::string classifySoundKind(std::string_view lowered, size_t index) {
     if (isNumeric(lowered)) {
         return "SOUND";
@@ -598,6 +738,13 @@ void parseSoundsLine(ParserState& state, std::string_view trimmedLine) {
     ParserSoundEntry entry;
     entry.lineNumber = state.lineNumber;
     const auto tokens = splitWhitespace(trimmedLine);
+    if (tokens.empty()) {
+        return;
+    }
+    if (!soundLeadingTokenAcceptable(state, toLowerCopy(tokens.front()))) {
+        // parser.js rejects unknown first tokens and does not push a sound row (processSoundsLine no-op).
+        return;
+    }
     for (size_t index = 0; index < tokens.size(); ++index) {
         const std::string lowered = toLowerCopy(tokens[index]);
         entry.tokens.push_back(ParserSoundToken{
@@ -704,7 +851,11 @@ void parseWinConditionsLine(ParserState& state, std::string_view trimmedLine) {
 void parseLevelsLine(ParserState& state, std::string_view trimmedLine, std::string_view rawLine) {
     const std::string trimmedMixed = trim(rawLine);
     const std::string trimmedLower = toLowerCopy(trimmedLine);
-    if (trimmedLower.rfind("message", 0) == 0 && (trimmedLower.size() == 7 || std::isspace(static_cast<unsigned char>(trimmedLine[7])) != 0)) {
+    // parser.js uses /\bmessage\b/ — "message: foo" matches (':' is a non-word boundary after "message").
+    if (trimmedLower.rfind("message", 0) == 0
+        && (trimmedLower.size() == 7
+            || std::isspace(static_cast<unsigned char>(trimmedLine[7])) != 0
+            || trimmedLine[7] == ':')) {
         ParserLevelEntry entry;
         entry.isMessage = true;
         entry.lineNumber = state.lineNumber;
@@ -819,6 +970,23 @@ void appendJsonIntMap(std::string& out, const std::map<std::string, int32_t>& va
 
 } // namespace
 
+struct PhysicalBlankInOpenCommentFooter {
+    ParserState* state = nullptr;
+    std::string_view rawLine{};
+
+    ~PhysicalBlankInOpenCommentFooter() {
+        if (state == nullptr) {
+            return;
+        }
+        if (!trim(rawLine).empty()) {
+            return;
+        }
+        if (state->commentLevel > 0) {
+            state->solAfterComment = true;
+        }
+    }
+};
+
 ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
     ParserState state;
     state.levels.push_back(ParserLevelEntry{});
@@ -836,27 +1004,19 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
 
     for (size_t lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
         const std::string& rawLine = lines[lineIndex];
+        PhysicalBlankInOpenCommentFooter blankCommentFooter;
+        blankCommentFooter.state = &state;
+        blankCommentFooter.rawLine = rawLine;
+
         ++state.lineNumber;
+        // parser.js clears line_should_end at the start of each physical line (sol block).
+        state.lineShouldEnd = false;
         if (state.solAfterComment) {
-            bool onlyTrailingEmptyLinesRemain = rawLine.empty();
-            if (onlyTrailingEmptyLinesRemain) {
-                for (size_t remaining = lineIndex; remaining < lines.size(); ++remaining) {
-                    if (!lines[remaining].empty()) {
-                        onlyTrailingEmptyLinesRemain = false;
-                        break;
-                    }
-                }
-            }
-            if (!onlyTrailingEmptyLinesRemain) {
-                state.solAfterComment = false;
-            }
+            state.solAfterComment = false;
         }
-        const std::string rawTrimmedLower = toLowerCopy(trim(rawLine));
-        const bool isLevelsMessageLine = state.commentLevel == 0
-            && state.section == "levels"
-            && rawTrimmedLower.rfind("message", 0) == 0
-            && (rawTrimmedLower.size() == 7 || std::isspace(static_cast<unsigned char>(rawTrimmedLower[7])) != 0);
-        const std::string mixedVisible = isLevelsMessageLine ? rawLine : stripComments(rawLine, state);
+        // Always strip comments (parser.js processes '(' / ')' before section logic).
+        // A levels "message ..." line can contain '(' — skipping strip would desync commentLevel.
+        const std::string mixedVisible = stripComments(rawLine, state);
         const std::string trimmedVisible = trim(mixedVisible);
         const std::string loweredVisible = toLowerCopy(trimmedVisible);
 
@@ -866,15 +1026,24 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
 
         if (trimmedVisible.empty() || isAllEquals(trimmedVisible)) {
             if (isAllEquals(trimmedVisible)) {
-                state.lineShouldEnd = false;
+                state.lineShouldEnd = true;
                 state.lineShouldEndBecause = "a bunch of equals signs ('===')";
             } else {
-                handleBlankLine(state);
+                const bool rawHasContent = !trim(rawLine).empty();
+                if (rawHasContent && state.section == "objects"
+                    && (state.objectsSection == 2 || state.objectsSection == 3)) {
+                    // Comment-only physical line while reading sprite matrix: JS still has
+                    // non-empty stream.string so blankLineHandle does not run; do not reset.
+                } else {
+                    handleBlankLine(state);
+                }
             }
             continue;
         }
 
-        if (std::find(std::begin(kSections), std::end(kSections), loweredVisible) != std::end(kSections)) {
+        // parser.js #976: lines that look like section headers are still level map rows inside LEVELS.
+        if (state.section != "levels"
+            && std::find(std::begin(kSections), std::end(kSections), loweredVisible) != std::end(kSections)) {
             state.section = loweredVisible;
             state.lineShouldEnd = true;
             state.lineShouldEndBecause = "a section name (\"" + std::string(loweredVisible) + "\")";
@@ -889,9 +1058,8 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
             continue;
         }
 
-        state.lineShouldEnd = false;
         if (state.section.empty()) {
-            parsePreambleLine(state, diagnostics, trimmedVisible, trim(mixedVisible));
+            parsePreambleLine(state, diagnostics, trimmedVisible, trim(mixedVisible), rawLine);
             continue;
         }
 
