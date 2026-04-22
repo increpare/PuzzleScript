@@ -1,4 +1,6 @@
 #include <array>
+#include <chrono>
+#include <cstdint>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -8,6 +10,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "json.hpp"
@@ -366,6 +369,42 @@ bool loadGameFromJsonText(const std::string& json, ps_game** outGame) {
 bool loadGameFromFile(const std::filesystem::path& path, ps_game** outGame) {
     return loadGameFromJsonText(readFile(path), outGame);
 }
+
+struct PsGameCache {
+    std::unordered_map<std::string, ps_game*> games;
+
+    PsGameCache() = default;
+
+    ~PsGameCache() {
+        for (auto& entry : games) {
+            if (entry.second != nullptr) {
+                ps_free_game(entry.second);
+            }
+        }
+    }
+
+    PsGameCache(const PsGameCache&) = delete;
+    PsGameCache& operator=(const PsGameCache&) = delete;
+
+    bool has(const std::filesystem::path& irPath) const {
+        const std::string key = irPath.lexically_normal().string();
+        return games.find(key) != games.end();
+    }
+
+    ps_game* acquire(const std::filesystem::path& irPath) {
+        const std::string key = irPath.lexically_normal().string();
+        const auto existing = games.find(key);
+        if (existing != games.end()) {
+            return existing->second;
+        }
+        ps_game* game = nullptr;
+        if (!loadGameFromFile(irPath, &game)) {
+            return nullptr;
+        }
+        games.emplace(key, game);
+        return game;
+    }
+};
 
 std::string shellEscape(const std::string& value) {
     std::string escaped = "'";
@@ -837,6 +876,280 @@ int checkTraceCommand(const std::string& irPath, const std::string& tracePath) {
     return result;
 }
 
+bool runPreparedSerializedLevelCheck(
+    ps_game* game,
+    const std::string& expectedSerialized,
+    const std::string& name,
+    bool quiet,
+    bool profileTimers,
+    int64_t& profileSessionCreateUs,
+    int64_t& profileSerializePreparedUs
+) {
+    ps_session* session = nullptr;
+    ps_error* error = nullptr;
+    const auto sessionStart = std::chrono::steady_clock::now();
+    if (!ps_session_create(game, &session, &error)) {
+        if (!quiet) {
+            std::cerr << name << ": " << ps_error_message(error) << "\n";
+        }
+        ps_free_error(error);
+        if (profileTimers) {
+            profileSessionCreateUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                           std::chrono::steady_clock::now() - sessionStart)
+                                           .count();
+        }
+        return false;
+    }
+    if (profileTimers) {
+        profileSessionCreateUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                       std::chrono::steady_clock::now() - sessionStart)
+                                       .count();
+    }
+
+    const auto serializeStart = std::chrono::steady_clock::now();
+    char* serialized = ps_session_serialize_test_string(session);
+    const std::string actual = serialized ? serialized : "";
+    if (profileTimers) {
+        profileSerializePreparedUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                           std::chrono::steady_clock::now() - serializeStart)
+                                           .count();
+    }
+    ps_string_free(serialized);
+    ps_session_destroy(session);
+
+    if (actual == expectedSerialized) {
+        return true;
+    }
+    if (!quiet) {
+        std::cerr << name << ": prepared session mismatch\n";
+    }
+    return false;
+}
+
+int checkTraceSweepCommand(const std::string& manifestPath, int argc, char** argv) {
+    bool quiet = false;
+    bool allowFailures = false;
+    bool profileTimers = false;
+    size_t progressEvery = 0;
+
+    for (int argIndex = 0; argIndex < argc; ++argIndex) {
+        const std::string arg = argv[argIndex];
+        if (arg == "--quiet") {
+            quiet = true;
+        } else if (arg == "--allow-failures") {
+            allowFailures = true;
+        } else if (arg == "--profile-timers") {
+            profileTimers = true;
+        } else if (arg == "--progress-every" && argIndex + 1 < argc) {
+            progressEvery = static_cast<size_t>(std::stoull(argv[++argIndex]));
+        } else {
+            throw std::runtime_error("Unsupported check-trace-sweep argument: " + arg);
+        }
+    }
+
+    const auto manifestDir = std::filesystem::path(manifestPath).parent_path();
+    size_t preparedPassed = 0;
+    size_t preparedFailed = 0;
+    size_t traceChecked = 0;
+    size_t tracePassed = 0;
+    size_t traceFailed = 0;
+    size_t traceTimedOut = 0;
+    size_t traceFastPassed = 0;
+    size_t traceDetailedRuns = 0;
+
+    int64_t profileIrHitUs = 0;
+    int64_t profileIrMissUs = 0;
+    size_t profileIrHitCount = 0;
+    size_t profileIrMissCount = 0;
+    int64_t profilePreparedSessionUs = 0;
+    int64_t profilePreparedSerializeUs = 0;
+    int64_t profileTraceParseUs = 0;
+    int64_t profileFastCheckUs = 0;
+    int64_t profileDiffUs = 0;
+    const auto sweepWallStart = std::chrono::steady_clock::now();
+
+    try {
+        PsGameCache cache;
+        const auto fixtures = parseSimulationFixtureManifest(manifestPath, manifestDir);
+        for (const auto& fixture : fixtures) {
+            const std::string& name = fixture.name;
+            const auto& irPath = fixture.irFile;
+            const bool hasTrace = fixture.traceFile.has_value();
+
+            const bool irCached = cache.has(irPath);
+            const auto irAcquireStart = std::chrono::steady_clock::now();
+            ps_game* game = cache.acquire(irPath);
+            const auto irAcquireUs = std::chrono::duration_cast<std::chrono::microseconds>(
+                                         std::chrono::steady_clock::now() - irAcquireStart)
+                                         .count();
+            if (profileTimers) {
+                if (irCached) {
+                    ++profileIrHitCount;
+                    profileIrHitUs += irAcquireUs;
+                } else {
+                    ++profileIrMissCount;
+                    profileIrMissUs += irAcquireUs;
+                }
+            }
+
+            if (game == nullptr) {
+                ++preparedFailed;
+                if (hasTrace) {
+                    ++traceFailed;
+                }
+                if (!quiet) {
+                    std::cerr << name << ": failed to load IR\n";
+                }
+                if (hasTrace) {
+                    ++traceChecked;
+                    const auto fastMs = static_cast<int64_t>(0);
+                    std::cerr << "trace_case index=" << traceChecked << " name=" << name << " mode=fast outcome=failed elapsed_ms=" << fastMs
+                              << "\n";
+                    if (progressEvery > 0 && (traceChecked % progressEvery) == 0) {
+                        std::cerr << "trace_progress checked=" << traceChecked << " passed=" << tracePassed << " failed=" << traceFailed
+                                  << " timed_out=" << traceTimedOut << " current_fixture=" << name << " outcome=failed elapsed_ms=" << fastMs
+                                  << "\n";
+                    }
+                }
+                continue;
+            }
+
+            if (runPreparedSerializedLevelCheck(
+                    game,
+                    fixture.initialSerializedLevel,
+                    name,
+                    quiet,
+                    profileTimers,
+                    profilePreparedSessionUs,
+                    profilePreparedSerializeUs
+                )) {
+                ++preparedPassed;
+            } else {
+                ++preparedFailed;
+            }
+
+            if (!hasTrace) {
+                continue;
+            }
+
+            ++traceChecked;
+            const auto& tracePath = *fixture.traceFile;
+            const auto fastStarted = std::chrono::steady_clock::now();
+
+            TraceFile traceFile;
+            try {
+                const auto traceParseStart = std::chrono::steady_clock::now();
+                traceFile = loadTraceFile(tracePath);
+                if (profileTimers) {
+                    profileTraceParseUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                               std::chrono::steady_clock::now() - traceParseStart)
+                                               .count();
+                }
+            } catch (const std::exception& error) {
+                ++traceFailed;
+                const auto fastMs = std::chrono::duration_cast<std::chrono::milliseconds>(
+                                        std::chrono::steady_clock::now() - fastStarted)
+                                        .count();
+                if (!quiet) {
+                    std::cerr << name << ": " << error.what() << "\n";
+                }
+                std::cerr << "trace_case index=" << traceChecked << " name=" << name << " mode=fast outcome=failed elapsed_ms=" << fastMs
+                          << "\n";
+                if (progressEvery > 0 && (traceChecked % progressEvery) == 0) {
+                    std::cerr << "trace_progress checked=" << traceChecked << " passed=" << tracePassed << " failed=" << traceFailed
+                              << " timed_out=" << traceTimedOut << " current_fixture=" << name << " outcome=failed elapsed_ms=" << fastMs
+                              << "\n";
+                }
+                continue;
+            }
+
+            std::ostringstream fastErrors;
+            const auto fastCheckStart = std::chrono::steady_clock::now();
+            const int fastResult = checkTraceAgainstSnapshots(game, traceFile, fastErrors, false);
+            if (profileTimers) {
+                profileFastCheckUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                          std::chrono::steady_clock::now() - fastCheckStart)
+                                          .count();
+            }
+            const auto fastMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - fastStarted)
+                                    .count();
+
+            std::string mode = "fast";
+            std::string outcome = "passed";
+            int64_t elapsedMs = fastMs;
+
+            if (fastResult == 0) {
+                ++tracePassed;
+                ++traceFastPassed;
+            } else {
+                mode = "detailed";
+                ++traceDetailedRuns;
+                const auto detailedStarted = std::chrono::steady_clock::now();
+                std::ostringstream diffErrors;
+                const int detailedResult = diffTraceAgainstSnapshots(game, traceFile.snapshots, diffErrors, false);
+                if (profileTimers) {
+                    profileDiffUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                         std::chrono::steady_clock::now() - detailedStarted)
+                                         .count();
+                }
+                elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - detailedStarted)
+                                .count();
+                if (detailedResult == 0) {
+                    ++tracePassed;
+                } else {
+                    ++traceFailed;
+                    outcome = "failed";
+                }
+                if (!quiet) {
+                    std::cerr << fastErrors.str();
+                    std::cerr << diffErrors.str();
+                }
+            }
+
+            std::cerr << "trace_case index=" << traceChecked << " name=" << name << " mode=" << mode << " outcome=" << outcome << " elapsed_ms="
+                      << elapsedMs;
+            if (mode == "detailed") {
+                std::cerr << " fast_elapsed_ms=" << fastMs;
+            }
+            std::cerr << "\n";
+
+            if (progressEvery > 0 && (traceChecked % progressEvery) == 0) {
+                std::cerr << "trace_progress checked=" << traceChecked << " passed=" << tracePassed << " failed=" << traceFailed
+                          << " timed_out=" << traceTimedOut << " current_fixture=" << name << " outcome=" << outcome << " elapsed_ms=" << elapsedMs
+                          << "\n";
+            }
+        }
+    } catch (const std::exception& error) {
+        std::cerr << error.what() << "\n";
+        return 1;
+    }
+
+    const size_t simulationFixtureCount = preparedPassed + preparedFailed;
+    std::cout << "simulation_fixture_count=" << simulationFixtureCount << " prepared_session_checks_passed=" << preparedPassed
+              << " prepared_session_checks_failed=" << preparedFailed << " trace_replay_checked=" << traceChecked << " trace_replay_passed="
+              << tracePassed << " trace_replay_failed=" << traceFailed << " trace_replay_timed_out=" << traceTimedOut
+              << " trace_fast_passed=" << traceFastPassed << " trace_detailed_runs=" << traceDetailedRuns << "\n";
+
+    if (profileTimers) {
+        const auto sweepWallUs = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - sweepWallStart)
+                                     .count();
+        const auto usToMs = [](int64_t microseconds) -> int64_t {
+            return (microseconds + 500) / 1000;
+        };
+        std::cerr << "native_trace_suite_profile simulation_fixtures=" << simulationFixtureCount << " trace_fixtures=" << traceChecked
+                  << " wall_ms=" << usToMs(sweepWallUs) << " ir_hit_count=" << profileIrHitCount << " ir_miss_count=" << profileIrMissCount
+                  << " ir_hit_ms=" << usToMs(profileIrHitUs) << " ir_miss_ms=" << usToMs(profileIrMissUs)
+                  << " prepared_session_create_ms=" << usToMs(profilePreparedSessionUs)
+                  << " prepared_serialize_ms=" << usToMs(profilePreparedSerializeUs) << " trace_json_parse_ms=" << usToMs(profileTraceParseUs)
+                  << " fast_replay_ms=" << usToMs(profileFastCheckUs) << " detailed_diff_ms=" << usToMs(profileDiffUs) << "\n";
+    }
+
+    const bool preparedOk = preparedFailed == 0;
+    const bool traceOk = allowFailures || traceFailed == 0;
+    (void)traceTimedOut;
+    return (preparedOk && traceOk) ? 0 : 1;
+}
+
 int traceAtCommand(const std::string& irPath, const std::string& tracePath, size_t snapshotIndex) {
     ps_game* game = nullptr;
     if (!loadGameFromFile(irPath, &game)) {
@@ -1239,6 +1552,7 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
     bool traceAll = false;
     bool traceAllowFailures = false;
     bool traceQuiet = false;
+    bool profileTimers = false;
 
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
@@ -1252,12 +1566,24 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
             traceAllowFailures = true;
         } else if (arg == "--trace-quiet") {
             traceQuiet = true;
+        } else if (arg == "--profile-timers") {
+            profileTimers = true;
         } else {
             throw std::runtime_error("Unsupported test-fixtures argument: " + arg);
         }
     }
 
+    int64_t profileIrHitUs = 0;
+    int64_t profileIrMissUs = 0;
+    size_t profileIrHitCount = 0;
+    size_t profileIrMissCount = 0;
+    int64_t profileSessionCreateUs = 0;
+    int64_t profileSerializeUs = 0;
+    int64_t profileTraceDiffUs = 0;
+    const auto preparedWallStart = std::chrono::steady_clock::now();
+
     try {
+        PsGameCache cache;
         const auto fixtures = parseSimulationFixtureManifest(manifestPath, manifestDir);
         for (size_t index = 0; index < fixtures.size(); ++index) {
             try {
@@ -1266,23 +1592,54 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                 const auto& name = fixture.name;
                 const auto& expectedSerialized = fixture.initialSerializedLevel;
 
-                ps_game* game = nullptr;
-                if (!loadGameFromFile(irPath, &game)) {
+                const bool irCached = cache.has(irPath);
+                const auto irAcquireStart = std::chrono::steady_clock::now();
+                ps_game* game = cache.acquire(irPath);
+                const auto irAcquireUs = std::chrono::duration_cast<std::chrono::microseconds>(
+                                             std::chrono::steady_clock::now() - irAcquireStart)
+                                             .count();
+                if (profileTimers) {
+                    if (irCached) {
+                        ++profileIrHitCount;
+                        profileIrHitUs += irAcquireUs;
+                    } else {
+                        ++profileIrMissCount;
+                        profileIrMissUs += irAcquireUs;
+                    }
+                }
+
+                if (game == nullptr) {
                     ++preparedFailed;
                     continue;
                 }
                 ps_session* session = nullptr;
                 ps_error* error = nullptr;
+                const auto sessionStart = std::chrono::steady_clock::now();
                 if (!ps_session_create(game, &session, &error)) {
                     std::cerr << name << ": " << ps_error_message(error) << "\n";
                     ps_free_error(error);
-                    ps_free_game(game);
                     ++preparedFailed;
+                    if (profileTimers) {
+                        profileSessionCreateUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                                       std::chrono::steady_clock::now() - sessionStart)
+                                                       .count();
+                    }
                     continue;
                 }
+                if (profileTimers) {
+                    profileSessionCreateUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                                   std::chrono::steady_clock::now() - sessionStart)
+                                                   .count();
+                }
 
+                const auto serializeStart = std::chrono::steady_clock::now();
                 char* serialized = ps_session_serialize_test_string(session);
                 const std::string actual = serialized ? serialized : "";
+                if (profileTimers) {
+                    profileSerializeUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                               std::chrono::steady_clock::now() - serializeStart)
+                                               .count();
+                }
                 if (actual == expectedSerialized) {
                     ++preparedPassed;
                 } else {
@@ -1307,27 +1664,23 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                                   << "\n";
                     }
                     std::ostringstream traceErrors;
-                    ps_game* traceGame = nullptr;
-                    if (!loadGameFromFile(irPath, &traceGame)) {
+                    const auto traceDiffStart = std::chrono::steady_clock::now();
+                    const int traceResult = diffTraceAgainstSnapshots(game, loadTraceSnapshots(*fixture.traceFile), traceErrors, false);
+                    if (profileTimers) {
+                        profileTraceDiffUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                                  std::chrono::steady_clock::now() - traceDiffStart)
+                                                  .count();
+                    }
+                    if (traceResult == 0) {
+                        ++tracePassed;
+                    } else {
                         ++traceFailed;
                         if (!traceQuiet) {
-                            std::cerr << name << ": failed to reload game for trace replay\n";
-                        }
-                    } else {
-                        const int traceResult = diffTraceAgainstSnapshots(traceGame, loadTraceSnapshots(*fixture.traceFile), traceErrors, false);
-                        ps_free_game(traceGame);
-                        if (traceResult == 0) {
-                            ++tracePassed;
-                        } else {
-                            ++traceFailed;
-                            if (!traceQuiet) {
-                                std::cerr << name << ": trace replay mismatch\n" << traceErrors.str();
-                            }
+                            std::cerr << name << ": trace replay mismatch\n" << traceErrors.str();
                         }
                     }
                 }
 
-                ps_free_game(game);
             } catch (const std::exception& error) {
                 ++preparedFailed;
                 if (!traceQuiet) {
@@ -1347,6 +1700,20 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
               << " trace_replay_passed=" << tracePassed
               << " trace_replay_failed=" << traceFailed
               << "\n";
+
+    if (profileTimers) {
+        const auto preparedWallUs = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - preparedWallStart)
+                                        .count();
+        const auto usToMs = [](int64_t microseconds) -> int64_t {
+            return (microseconds + 500) / 1000;
+        };
+        const size_t fixtureCount = preparedPassed + preparedFailed;
+        std::cerr << "prepared_profile fixtures=" << fixtureCount << " wall_ms=" << usToMs(preparedWallUs) << " ir_hit_count=" << profileIrHitCount
+                  << " ir_miss_count=" << profileIrMissCount << " ir_hit_ms=" << usToMs(profileIrHitUs) << " ir_miss_ms=" << usToMs(profileIrMissUs)
+                  << " session_create_ms=" << usToMs(profileSessionCreateUs) << " serialize_test_string_ms=" << usToMs(profileSerializeUs)
+                  << " optional_trace_diff_ms=" << usToMs(profileTraceDiffUs) << "\n";
+    }
+
     const bool preparedOk = preparedFailed == 0;
     const bool traceOk = traceAllowFailures || traceFailed == 0;
     return (preparedOk && traceOk) ? 0 : 1;
@@ -1363,10 +1730,12 @@ void printUsage() {
               << "  ps_cli play-source <game.ps> [--level N] [--seed seed] [--settle-again]\n"
               << "  ps_cli diff-trace <ir.json> <trace.json>\n"
               << "  ps_cli check-trace <ir.json> <trace.json>\n"
+              << "  ps_cli check-trace-sweep <fixtures.json> [--progress-every N] [--allow-failures] [--quiet] [--profile-timers]\n"
+              << "    (runs prepared session serialization checks for every simulation fixture, then trace replay for fixtures with traces)\n"
               << "  ps_cli trace-at <ir.json> <trace.json> <snapshot-index>\n"
               << "  ps_cli trace-step-at <ir.json> <trace.json> <snapshot-index>\n"
               << "  ps_cli diff-trace-source <game.ps> [--level N] [--seed seed] [--inputs-json json] [--inputs-file path]\n"
-              << "  ps_cli test-fixtures <fixtures.json> [--trace-limit N] [--trace-all] [--trace-allow-failures] [--trace-quiet] [--trace-progress N]\n"
+              << "  ps_cli test-fixtures <fixtures.json> [--trace-limit N] [--trace-all] [--trace-allow-failures] [--trace-quiet] [--trace-progress N] [--profile-timers]\n"
               << "  ps_cli play <ir.json>\n";
 }
 
@@ -1416,6 +1785,9 @@ int main(int argc, char** argv) {
                 return 1;
             }
             return checkTraceCommand(path, argv[3]);
+        }
+        if (command == "check-trace-sweep") {
+            return checkTraceSweepCommand(path, argc - 3, argv + 3);
         }
         if (command == "trace-at") {
             if (argc < 5) {
