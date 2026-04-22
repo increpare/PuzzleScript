@@ -44,6 +44,7 @@ struct ExecuteTurnOptions {
     bool ignoreRestartCommand = false;
     bool ignoreWin = false;
     bool dontModify = false;
+    bool* observedModification = nullptr;
 };
 
 const json::Value& requireField(const json::Value::Object& object, std::string_view key) {
@@ -1146,10 +1147,12 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                 continue;
             }
             bool changedTile = false;
+            bool preventAggregateSplit = false;
 
             // Aggregate player movement must be atomic across all player layers present in the cell.
             // If one layer is blocked, none of the player layers should move.
             if (session.game->playerMaskAggregate && cellContainsPlayer(session, tileIndex)) {
+                const size_t aggregatePlayerCount = collectPlayerPositions(session).size();
                 const BitVector cellMask = getCellObjects(session, tileIndex);
                 BitVector playerCellMask = cellMask;
                 for (size_t word = 0; word < playerCellMask.size() && word < session.game->playerMask.size(); ++word) {
@@ -1183,9 +1186,11 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                         bool canMoveAll = true;
                         if (targetX < 0 || targetX >= session.liveLevel.width || targetY < 0 || targetY >= session.liveLevel.height) {
                             canMoveAll = false;
+                            preventAggregateSplit = true;
                         } else {
                             const int32_t targetIndex = tileIndex + pdy + pdx * session.liveLevel.height;
                             const BitVector targetMaskAll = getCellObjects(session, targetIndex);
+                            bool blockedByPlayerConstituent = false;
                             for (const int32_t layer : playerLayers) {
                                 const int32_t layerMovement = getShiftedMask5(movementMask, 5 * layer);
                                 if (layerMovement == 0) {
@@ -1194,9 +1199,12 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                                 const BitVector& layerMask = session.game->layerMasks[static_cast<size_t>(layer)];
                                 if (playerDirection != 16 && anyBitsInCommon(targetMaskAll, layerMask)) {
                                     canMoveAll = false;
+                                    blockedByPlayerConstituent = blockedByPlayerConstituent
+                                        || anyBitsInCommon(targetMaskAll, session.game->playerMask);
                                     break;
                                 }
                             }
+                            preventAggregateSplit = blockedByPlayerConstituent || aggregatePlayerCount <= 1;
 
                             if (canMoveAll) {
                                 BitVector sourceMask = getCellObjects(session, tileIndex);
@@ -1231,7 +1239,7 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                     continue;
                 }
                 // Prevent per-layer movement from splitting aggregate player pieces.
-                if (session.game->playerMaskAggregate && cellContainsPlayer(session, tileIndex)) {
+                if (preventAggregateSplit && session.game->playerMaskAggregate && cellContainsPlayer(session, tileIndex)) {
                     const BitVector cellMask = getCellObjects(session, tileIndex);
                     BitVector playerCellMask = cellMask;
                     for (size_t word = 0; word < playerCellMask.size() && word < session.game->playerMask.size(); ++word) {
@@ -2517,7 +2525,7 @@ void resetToPrepared(Session& session) {
 } // namespace
 
 void runRulesOnLevelStart(Session& session);
-bool wouldAgainChange(Session& session);
+bool wouldAgainChange(Session& session, bool* outWouldModify = nullptr);
 
 std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_ptr<const Game>& outGame) {
     try {
@@ -2734,6 +2742,9 @@ bool restart(Session& session) {
 }
 
 bool undo(Session& session) {
+    if (session.game->metadataMap.find("noundo") != session.game->metadataMap.end()) {
+        return true;
+    }
     while (!session.undoStack.empty()) {
         const auto& top = session.undoStack.back();
         if (top.liveLevel.width != session.liveLevel.width
@@ -2877,20 +2888,26 @@ void runRulesOnLevelStart(Session& session) {
     });
 }
 
-bool wouldAgainChange(Session& session) {
+bool wouldAgainChange(Session& session, bool* outWouldModify) {
     const uint64_t beforeHash = hashSession64(session);
     session.pendingAgain = false;
+    bool wouldModify = false;
     const ps_step_result result = executeTurn(session, 0, ExecuteTurnOptions{
         .pushUndo = false,
         .ignoreWin = true,
         .dontModify = true,
+        .observedModification = &wouldModify,
     });
     const bool changed = result.changed || result.transitioned || result.won;
     const int iterations = 1;
+    if (outWouldModify != nullptr) {
+        *outWouldModify = wouldModify;
+    }
 
     if (againDebugEnabled()) {
         std::ostringstream stream;
         stream << "probe changed=" << (changed ? 1 : 0)
+               << " modified=" << (wouldModify ? 1 : 0)
                << " iterations=" << iterations
                << " before_hash=" << beforeHash
                << " after_hash=" << hashSession64(session);
@@ -2979,6 +2996,9 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         break;
     }
     const bool modified = session.liveLevel.objects != turnStart.liveLevel.objects;
+    if (options.observedModification != nullptr) {
+        *options.observedModification = modified;
+    }
 
     if (!startPlayerPositions.empty() && session.game->metadataMap.find("require_player_movement") != session.game->metadataMap.end()) {
         bool someMoved = false;
@@ -3034,6 +3054,9 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     processOutputCommands(session, commands);
 
     if (commandQueueContains(commands, "restart") && !options.ignoreRestartCommand) {
+        if (!options.pushUndo) {
+            pushUndoSnapshot(session);
+        }
         restoreRestartTarget(session);
         runRulesOnLevelStart(session);
         tryPlaySimpleSound(session, "restart");
@@ -3053,9 +3076,10 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
 
     const bool hasAgain = commandQueueContains(commands, "again");
     bool againWouldChange = false;
+    bool againWouldModify = false;
     if (!won && hasAgain && modified) {
         const auto audioBeforeAgainProbe = session.lastAudioEvents;
-        againWouldChange = wouldAgainChange(session);
+        againWouldChange = wouldAgainChange(session, &againWouldModify);
         session.lastAudioEvents = audioBeforeAgainProbe;
     }
     if (ruleDebugEnabled()) {
@@ -3069,6 +3093,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
                << " won=" << (won ? 1 : 0)
                << " transitioned=" << (transitioned ? 1 : 0)
                << " has_again=" << (hasAgain ? 1 : 0)
+               << " again_probe_modified=" << (againWouldModify ? 1 : 0)
                << " schedule_again=" << (againWouldChange ? 1 : 0);
         ruleDebugLog(stream.str());
     }
@@ -3077,6 +3102,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         stream << "post-turn modified=" << (modified ? 1 : 0)
                << " won=" << (won ? 1 : 0)
                << " has_again=" << (hasAgain ? 1 : 0)
+               << " probe_modified=" << (againWouldModify ? 1 : 0)
                << " schedule_again=" << (againWouldChange ? 1 : 0)
                << " commands=";
         for (size_t index = 0; index < commands.queue.size(); ++index) {
