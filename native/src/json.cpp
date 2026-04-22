@@ -1,283 +1,70 @@
 #include "json.hpp"
 
-#include <cctype>
-#include <cstdlib>
-#include <sstream>
+#include <cstdint>
+#include <string>
+#include <string_view>
+#include <utility>
+
+#include "simdjson.h"
 
 namespace puzzlescript::json {
 namespace {
 
-void appendUtf8(std::string& output, uint32_t codePoint) {
-    if (codePoint <= 0x7F) {
-        output.push_back(static_cast<char>(codePoint));
-    } else if (codePoint <= 0x7FF) {
-        output.push_back(static_cast<char>(0xC0 | (codePoint >> 6)));
-        output.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
-    } else if (codePoint <= 0xFFFF) {
-        output.push_back(static_cast<char>(0xE0 | (codePoint >> 12)));
-        output.push_back(static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F)));
-        output.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
-    } else {
-        output.push_back(static_cast<char>(0xF0 | (codePoint >> 18)));
-        output.push_back(static_cast<char>(0x80 | ((codePoint >> 12) & 0x3F)));
-        output.push_back(static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F)));
-        output.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
+Value convert(simdjson::dom::element el) {
+    using simdjson::dom::element_type;
+    switch (el.type()) {
+        case element_type::NULL_VALUE:
+            return Value();
+        case element_type::BOOL:
+            return Value(static_cast<bool>(el.get_bool()));
+        case element_type::INT64:
+            return Value(static_cast<int64_t>(el.get_int64()));
+        case element_type::UINT64:
+            return Value(static_cast<int64_t>(el.get_uint64()));
+        case element_type::DOUBLE:
+            return Value(static_cast<double>(el.get_double()));
+        case element_type::STRING: {
+            std::string_view sv = el.get_string();
+            return Value(std::string(sv));
+        }
+        case element_type::ARRAY: {
+            Value::Array out;
+            simdjson::dom::array arr = el.get_array();
+            out.reserve(arr.size());
+            for (auto child : arr) {
+                out.push_back(convert(child));
+            }
+            return Value(std::move(out));
+        }
+        case element_type::OBJECT: {
+            Value::Object out;
+            simdjson::dom::object obj = el.get_object();
+            for (auto field : obj) {
+                std::string_view key = field.key;
+                out.emplace(std::string(key), convert(field.value));
+            }
+            return Value(std::move(out));
+        }
+        case element_type::BIGINT:
+            throw ParseError("simdjson BIGINT not supported by puzzlescript::json");
     }
+    throw ParseError("unhandled simdjson element_type");
 }
 
-class Parser {
-public:
-    explicit Parser(std::string_view input)
-        : input_(input) {}
-
-    Value parseValue() {
-        skipWhitespace();
-        if (position_ >= input_.size()) {
-            throw ParseError("Unexpected end of JSON input");
-        }
-
-        switch (input_[position_]) {
-            case 'n': return parseNull();
-            case 't': return parseTrue();
-            case 'f': return parseFalse();
-            case '"': return Value(parseString());
-            case '[': return Value(parseArray());
-            case '{': return Value(parseObject());
-            default: return parseNumber();
-        }
-    }
-
-private:
-    void skipWhitespace() {
-        while (position_ < input_.size() && std::isspace(static_cast<unsigned char>(input_[position_]))) {
-            ++position_;
-        }
-    }
-
-    bool consumeLiteral(std::string_view literal) {
-        if (input_.substr(position_, literal.size()) == literal) {
-            position_ += literal.size();
-            return true;
-        }
-        return false;
-    }
-
-    Value parseNull() {
-        if (!consumeLiteral("null")) {
-            throw ParseError("Invalid JSON literal");
-        }
-        return Value();
-    }
-
-    Value parseTrue() {
-        if (!consumeLiteral("true")) {
-            throw ParseError("Invalid JSON literal");
-        }
-        return Value(true);
-    }
-
-    Value parseFalse() {
-        if (!consumeLiteral("false")) {
-            throw ParseError("Invalid JSON literal");
-        }
-        return Value(false);
-    }
-
-    std::string parseString() {
-        if (input_[position_] != '"') {
-            throw ParseError("Expected string");
-        }
-        ++position_;
-
-        std::string output;
-        while (position_ < input_.size()) {
-            char ch = input_[position_++];
-            if (ch == '"') {
-                return output;
-            }
-            if (ch != '\\') {
-                output.push_back(ch);
-                continue;
-            }
-
-            if (position_ >= input_.size()) {
-                throw ParseError("Invalid escape sequence");
-            }
-
-            char escape = input_[position_++];
-            switch (escape) {
-                case '"': output.push_back('"'); break;
-                case '\\': output.push_back('\\'); break;
-                case '/': output.push_back('/'); break;
-                case 'b': output.push_back('\b'); break;
-                case 'f': output.push_back('\f'); break;
-                case 'n': output.push_back('\n'); break;
-                case 'r': output.push_back('\r'); break;
-                case 't': output.push_back('\t'); break;
-                case 'u': {
-                    if (position_ + 4 > input_.size()) {
-                        throw ParseError("Invalid unicode escape");
-                    }
-                    uint32_t codePoint = 0;
-                    for (int index = 0; index < 4; ++index) {
-                        const char hex = input_[position_++];
-                        codePoint <<= 4;
-                        if (hex >= '0' && hex <= '9') {
-                            codePoint |= static_cast<uint32_t>(hex - '0');
-                        } else if (hex >= 'a' && hex <= 'f') {
-                            codePoint |= static_cast<uint32_t>(10 + hex - 'a');
-                        } else if (hex >= 'A' && hex <= 'F') {
-                            codePoint |= static_cast<uint32_t>(10 + hex - 'A');
-                        } else {
-                            throw ParseError("Invalid unicode escape");
-                        }
-                    }
-
-                    if (codePoint >= 0xD800 && codePoint <= 0xDBFF) {
-                        if (position_ + 6 <= input_.size() && input_[position_] == '\\' && input_[position_ + 1] == 'u') {
-                            position_ += 2;
-                            uint32_t low = 0;
-                            for (int index = 0; index < 4; ++index) {
-                                const char hex = input_[position_++];
-                                low <<= 4;
-                                if (hex >= '0' && hex <= '9') {
-                                    low |= static_cast<uint32_t>(hex - '0');
-                                } else if (hex >= 'a' && hex <= 'f') {
-                                    low |= static_cast<uint32_t>(10 + hex - 'a');
-                                } else if (hex >= 'A' && hex <= 'F') {
-                                    low |= static_cast<uint32_t>(10 + hex - 'A');
-                                } else {
-                                    throw ParseError("Invalid unicode escape");
-                                }
-                            }
-                            if (low < 0xDC00 || low > 0xDFFF) {
-                                throw ParseError("Invalid surrogate pair");
-                            }
-                            codePoint = 0x10000 + (((codePoint - 0xD800) << 10) | (low - 0xDC00));
-                        } else {
-                            throw ParseError("Missing low surrogate");
-                        }
-                    }
-
-                    appendUtf8(output, codePoint);
-                    break;
-                }
-                default:
-                    throw ParseError("Invalid escape sequence");
-            }
-        }
-
-        throw ParseError("Unterminated string");
-    }
-
-    Value parseNumber() {
-        const size_t start = position_;
-        if (input_[position_] == '-') {
-            ++position_;
-        }
-        while (position_ < input_.size() && std::isdigit(static_cast<unsigned char>(input_[position_]))) {
-            ++position_;
-        }
-        bool isDouble = false;
-        if (position_ < input_.size() && input_[position_] == '.') {
-            isDouble = true;
-            ++position_;
-            while (position_ < input_.size() && std::isdigit(static_cast<unsigned char>(input_[position_]))) {
-                ++position_;
-            }
-        }
-        if (position_ < input_.size() && (input_[position_] == 'e' || input_[position_] == 'E')) {
-            isDouble = true;
-            ++position_;
-            if (position_ < input_.size() && (input_[position_] == '+' || input_[position_] == '-')) {
-                ++position_;
-            }
-            while (position_ < input_.size() && std::isdigit(static_cast<unsigned char>(input_[position_]))) {
-                ++position_;
-            }
-        }
-        const std::string token(input_.substr(start, position_ - start));
-        if (token.empty()) {
-            throw ParseError("Expected JSON value");
-        }
-        if (isDouble) {
-            return Value(std::strtod(token.c_str(), nullptr));
-        }
-        return Value(std::strtoll(token.c_str(), nullptr, 10));
-    }
-
-    Value::Array parseArray() {
-        if (input_[position_] != '[') {
-            throw ParseError("Expected array");
-        }
-        ++position_;
-
-        Value::Array result;
-        skipWhitespace();
-        if (position_ < input_.size() && input_[position_] == ']') {
-            ++position_;
-            return result;
-        }
-
-        while (true) {
-            result.push_back(parseValue());
-            skipWhitespace();
-            if (position_ >= input_.size()) {
-                throw ParseError("Unterminated array");
-            }
-            const char ch = input_[position_++];
-            if (ch == ']') {
-                break;
-            }
-            if (ch != ',') {
-                throw ParseError("Expected ',' or ']'");
-            }
-        }
-        return result;
-    }
-
-    Value::Object parseObject() {
-        if (input_[position_] != '{') {
-            throw ParseError("Expected object");
-        }
-        ++position_;
-
-        Value::Object result;
-        skipWhitespace();
-        if (position_ < input_.size() && input_[position_] == '}') {
-            ++position_;
-            return result;
-        }
-
-        while (true) {
-            skipWhitespace();
-            const std::string key = parseString();
-            skipWhitespace();
-            if (position_ >= input_.size() || input_[position_] != ':') {
-                throw ParseError("Expected ':' after object key");
-            }
-            ++position_;
-            result.emplace(key, parseValue());
-            skipWhitespace();
-            if (position_ >= input_.size()) {
-                throw ParseError("Unterminated object");
-            }
-            const char ch = input_[position_++];
-            if (ch == '}') {
-                break;
-            }
-            if (ch != ',') {
-                throw ParseError("Expected ',' or '}'");
-            }
-        }
-        return result;
-    }
-
-    std::string_view input_;
-    size_t position_ = 0;
-};
-
 } // namespace
+
+Value parse(std::string_view input) {
+    simdjson::dom::parser parser;
+    simdjson::padded_string padded(input.data(), input.size());
+    simdjson::dom::element root;
+    auto err = parser.parse(padded).get(root);
+    if (err) {
+        throw ParseError(std::string("simdjson: ") + simdjson::error_message(err));
+    }
+    return convert(root);
+}
+
+// ----- Value implementation (unchanged semantics) -------------------------
 
 Value::Value()
     : data_(nullptr) {}
@@ -338,12 +125,6 @@ const Value* Value::find(std::string_view key) const {
         return nullptr;
     }
     return &it->second;
-}
-
-Value parse(std::string_view input) {
-    Parser parser(input);
-    Value value = parser.parseValue();
-    return value;
 }
 
 } // namespace puzzlescript::json
