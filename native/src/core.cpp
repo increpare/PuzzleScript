@@ -2865,7 +2865,12 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     if (!startPlayerPositions.empty() && session.game->metadataMap.find("require_player_movement") != session.game->metadataMap.end()) {
         bool someMoved = false;
         for (const int32_t tileIndex : startPlayerPositions) {
-            if (!cellContainsPlayer(session, tileIndex)) {
+            // Matches JS playerMask[1].bitsClearInArray(cell): a starting cell
+            // counts as vacated only if none of the player bits remain. Using
+            // the aggregate check here would flag partial vacancies (e.g. the
+            // hat moved but the body stayed) as movement.
+            const BitVector cellMask = getCellObjects(session, tileIndex);
+            if (!anyBitsInCommon(cellMask, session.game->playerMask)) {
                 someMoved = true;
                 break;
             }
