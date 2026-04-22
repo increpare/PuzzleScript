@@ -19,6 +19,12 @@ namespace {
 void rebuildMasks(Session& session);
 std::string toString(const json::Value& value);
 std::vector<int32_t> parseIntVector(const json::Value& value);
+std::vector<RuleCommand> parseRuleCommands(const json::Value& value);
+LoopPointTable parseLoopPointTable(const json::Value& value);
+std::map<std::string, int32_t> parseSoundEventMap(const json::Value& value);
+SoundMaskEntry parseSoundMaskEntry(const json::Value& value);
+std::vector<SoundMaskEntry> parseSoundMaskEntries(const json::Value& value);
+std::vector<std::vector<SoundMaskEntry>> parseLayeredSoundMaskEntries(const json::Value& value);
 bool anyBitsInCommon(const BitVector& lhs, const BitVector& rhs);
 BitVector getCellObjects(const Session& session, int32_t tileIndex);
 BitVector getCellMovements(const Session& session, int32_t tileIndex);
@@ -270,12 +276,8 @@ void clearAudioEventsByKind(Session& session, std::string_view kind) {
 }
 
 void tryPlaySimpleSound(Session& session, std::string_view soundName) {
-    if (!session.game->sfxEvents.isObject()) {
-        return;
-    }
-    const auto& events = session.game->sfxEvents.asObject();
-    const auto it = events.find(std::string(soundName));
-    if (it == events.end()) {
+    const auto it = session.game->sfxEvents.find(std::string(soundName));
+    if (it == session.game->sfxEvents.end()) {
         return;
     }
     // In the JS engine, these UI-ish "simple sounds" call playSound(seed, true),
@@ -400,7 +402,7 @@ void dumpActiveMovements(const Session& session, std::string_view label) {
 }
 
 void queueRuleCommands(const Rule& rule, CommandState& state) {
-    if (!rule.commands.isArray() || rule.commands.asArray().empty()) {
+    if (rule.commands.empty()) {
         return;
     }
 
@@ -409,11 +411,8 @@ void queueRuleCommands(const Rule& rule, CommandState& state) {
     bool currentRuleCancel = false;
     bool currentRuleRestart = false;
 
-    for (const auto& commandValue : rule.commands.asArray()) {
-        if (!commandValue.isArray() || commandValue.asArray().empty()) {
-            continue;
-        }
-        const std::string commandName = toString(commandValue.asArray()[0]);
+    for (const auto& command : rule.commands) {
+        const std::string& commandName = command.name;
         if (commandName == "cancel") {
             currentRuleCancel = true;
         } else if (commandName == "restart") {
@@ -432,23 +431,19 @@ void queueRuleCommands(const Rule& rule, CommandState& state) {
         state.messageText.clear();
     }
 
-    for (const auto& commandValue : rule.commands.asArray()) {
-        if (!commandValue.isArray() || commandValue.asArray().empty()) {
-            continue;
-        }
-        const auto& commandArray = commandValue.asArray();
-        const std::string commandName = toString(commandArray[0]);
+    for (const auto& command : rule.commands) {
+        const std::string& commandName = command.name;
         if (!commandQueueContains(state, commandName)) {
             state.queue.push_back(commandName);
         }
-        if (commandName == "message" && commandArray.size() > 1) {
-            state.messageText = toString(commandArray[1]);
+        if (commandName == "message" && command.argument.has_value()) {
+            state.messageText = *command.argument;
         }
     }
 }
 
-void tryPlayMaskSounds(Session& session, const json::Value& entries, const BitVector& changedMask, const char* kind) {
-    if (!entries.isArray() || !anyBitsSet(changedMask)) {
+void tryPlayMaskSounds(Session& session, const std::vector<SoundMaskEntry>& entries, const BitVector& changedMask, const char* kind) {
+    if (entries.empty() || !anyBitsSet(changedMask)) {
         return;
     }
     if (audioDebugEnabled()) {
@@ -456,25 +451,16 @@ void tryPlayMaskSounds(Session& session, const json::Value& entries, const BitVe
         stream << "kind=" << kind << " changed=" << describeObjects(session, changedMask);
         audioDebugLog(stream.str());
     }
-    for (const auto& entryValue : entries.asArray()) {
-        if (!entryValue.isObject()) {
-            continue;
-        }
-        const auto* objectMaskValue = entryValue.find("objectMask");
-        const auto* seedValue = entryValue.find("seed");
-        if (!objectMaskValue || !seedValue) {
-            continue;
-        }
-        const BitVector objectMask = parseIntVector(*objectMaskValue);
-        if (anyBitsInCommon(changedMask, objectMask)) {
+    for (const auto& entry : entries) {
+        if (anyBitsInCommon(changedMask, entry.objectMask)) {
             if (audioDebugEnabled()) {
                 std::ostringstream stream;
                 stream << "matched kind=" << kind
-                       << " seed=" << toInt(*seedValue)
-                       << " mask=" << describeObjects(session, objectMask);
+                       << " seed=" << entry.seed
+                       << " mask=" << describeObjects(session, entry.objectMask);
                 audioDebugLog(stream.str());
             }
-            appendAudioEvent(session, toInt(*seedValue), kind);
+            appendAudioEvent(session, entry.seed, kind);
         }
     }
 }
@@ -601,6 +587,27 @@ std::vector<int32_t> parseIntVector(const json::Value& value) {
     return result;
 }
 
+std::vector<RuleCommand> parseRuleCommands(const json::Value& value) {
+    std::vector<RuleCommand> result;
+    if (!value.isArray()) {
+        return result;
+    }
+    result.reserve(value.asArray().size());
+    for (const auto& commandValue : value.asArray()) {
+        if (!commandValue.isArray() || commandValue.asArray().empty()) {
+            continue;
+        }
+        RuleCommand command;
+        const auto& commandArray = commandValue.asArray();
+        command.name = toString(commandArray[0]);
+        if (commandArray.size() > 1 && !commandArray[1].isNull()) {
+            command.argument = toString(commandArray[1]);
+        }
+        result.push_back(std::move(command));
+    }
+    return result;
+}
+
 std::vector<std::string> parseStringVector(const json::Value& value) {
     std::vector<std::string> result;
     for (const auto& entry : value.asArray()) {
@@ -615,6 +622,42 @@ std::vector<bool> parseBoolVector(const json::Value& value) {
         result.push_back(toBool(entry));
     }
     return result;
+}
+
+LoopPointTable parseLoopPointTable(const json::Value& value) {
+    LoopPointTable table;
+    if (value.isArray()) {
+        table.entries.resize(value.asArray().size());
+        for (size_t index = 0; index < value.asArray().size(); ++index) {
+            const auto& entry = value.asArray()[index];
+            if (!entry.isNull()) {
+                table.entries[index] = toInt(entry);
+            }
+        }
+        return table;
+    }
+    if (value.isObject()) {
+        size_t maxIndex = 0;
+        bool sawAny = false;
+        for (const auto& [key, entry] : value.asObject()) {
+            if (entry.isNull()) {
+                continue;
+            }
+            maxIndex = std::max(maxIndex, static_cast<size_t>(std::stoll(key)));
+            sawAny = true;
+        }
+        if (!sawAny) {
+            return table;
+        }
+        table.entries.resize(maxIndex + 1);
+        for (const auto& [key, entry] : value.asObject()) {
+            if (entry.isNull()) {
+                continue;
+            }
+            table.entries[static_cast<size_t>(std::stoll(key))] = toInt(entry);
+        }
+    }
+    return table;
 }
 
 std::map<std::string, std::string> parseStringMap(const json::Value& value) {
@@ -633,10 +676,54 @@ std::map<std::string, int32_t> parseIntMap(const json::Value& value) {
     return result;
 }
 
+std::map<std::string, int32_t> parseSoundEventMap(const json::Value& value) {
+    return parseIntMap(value);
+}
+
 std::map<std::string, BitVector> parseBitVectorMap(const json::Value& value) {
     std::map<std::string, BitVector> result;
     for (const auto& [key, entry] : value.asObject()) {
         result.emplace(key, parseIntVector(entry));
+    }
+    return result;
+}
+
+SoundMaskEntry parseSoundMaskEntry(const json::Value& value) {
+    const auto& object = value.asObject();
+    SoundMaskEntry entry;
+    if (const auto* objectMask = value.find("objectMask"); objectMask != nullptr) {
+        entry.objectMask = parseIntVector(*objectMask);
+    }
+    if (const auto* directionMask = value.find("directionMask"); directionMask != nullptr) {
+        entry.directionMask = parseIntVector(*directionMask);
+    }
+    entry.seed = toInt(requireField(object, "seed"));
+    return entry;
+}
+
+std::vector<SoundMaskEntry> parseSoundMaskEntries(const json::Value& value) {
+    std::vector<SoundMaskEntry> result;
+    if (!value.isArray()) {
+        return result;
+    }
+    result.reserve(value.asArray().size());
+    for (const auto& entry : value.asArray()) {
+        if (!entry.isObject()) {
+            continue;
+        }
+        result.push_back(parseSoundMaskEntry(entry));
+    }
+    return result;
+}
+
+std::vector<std::vector<SoundMaskEntry>> parseLayeredSoundMaskEntries(const json::Value& value) {
+    std::vector<std::vector<SoundMaskEntry>> result;
+    if (!value.isArray()) {
+        return result;
+    }
+    result.reserve(value.asArray().size());
+    for (const auto& layer : value.asArray()) {
+        result.push_back(parseSoundMaskEntries(layer));
     }
     return result;
 }
@@ -693,7 +780,7 @@ Rule parseRule(const json::Value& value) {
     rule.ellipsisCount = parseIntVector(requireField(object, "ellipsis_count"));
     rule.groupNumber = toInt(requireField(object, "group_number"));
     rule.rigid = toBool(requireField(object, "rigid"));
-    rule.commands = requireField(object, "commands");
+    rule.commands = parseRuleCommands(requireField(object, "commands"));
     rule.isRandom = toBool(requireField(object, "is_random"));
     for (const auto& rowMask : requireField(object, "cell_row_masks").asArray()) {
         rule.cellRowMasks.push_back(parseIntVector(rowMask));
@@ -750,7 +837,9 @@ LevelTemplate parseLevelTemplate(const json::Value& value) {
         level.message = requireField(object, "message").asString();
         return level;
     }
-    level.lineNumber = toInt(requireField(object, "line_number"));
+    if (const auto* lineNumber = value.find("line_number"); lineNumber != nullptr && !lineNumber->isNull()) {
+        level.lineNumber = toInt(*lineNumber);
+    }
     level.width = toInt(requireField(object, "width"));
     level.height = toInt(requireField(object, "height"));
     level.layerCount = toInt(requireField(object, "layer_count"));
@@ -1093,30 +1182,15 @@ bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer,
         targetMask[word] |= movingEntities[word];
     }
 
-    if (session.game->sfxMovementMasks.isArray()) {
-        const auto& movementLayers = session.game->sfxMovementMasks.asArray();
-        if (static_cast<size_t>(layer) < movementLayers.size() && movementLayers[static_cast<size_t>(layer)].isArray()) {
-            for (const auto& entryValue : movementLayers[static_cast<size_t>(layer)].asArray()) {
-                if (!entryValue.isObject()) {
-                    continue;
-                }
-                const auto& entry = entryValue.asObject();
-                const auto* objectMaskValue = entryValue.find("objectMask");
-                const auto* directionMaskValue = entryValue.find("directionMask");
-                const auto* seedValue = entryValue.find("seed");
-                if (!objectMaskValue || !directionMaskValue || !seedValue) {
-                    continue;
-                }
-                const BitVector objectMask = parseIntVector(*objectMaskValue);
-                const BitVector directionMaskBits = parseIntVector(*directionMaskValue);
-                if (!anyBitsInCommon(sourceMaskBeforeMove, objectMask)) {
-                    continue;
-                }
-                if ((getShiftedMask5(directionMaskBits, 5 * layer) & directionMask) == 0) {
-                    continue;
-                }
-                appendAudioEvent(session, toInt(*seedValue), "canmove");
+    if (static_cast<size_t>(layer) < session.game->sfxMovementMasks.size()) {
+        for (const auto& entry : session.game->sfxMovementMasks[static_cast<size_t>(layer)]) {
+            if (!anyBitsInCommon(sourceMaskBeforeMove, entry.objectMask)) {
+                continue;
             }
+            if ((getShiftedMask5(entry.directionMask, 5 * layer) & directionMask) == 0) {
+                continue;
+            }
+            appendAudioEvent(session, entry.seed, "canmove");
         }
     }
 
@@ -1307,27 +1381,16 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
             }
         }
 
-        if (session.game->sfxMovementFailureMasks.isArray()) {
+        if (!session.game->sfxMovementFailureMasks.empty()) {
             const BitVector cellMask = getCellObjects(session, tileIndex);
-            for (const auto& entryValue : session.game->sfxMovementFailureMasks.asArray()) {
-                if (!entryValue.isObject()) {
+            for (const auto& entry : session.game->sfxMovementFailureMasks) {
+                if (!anyBitsInCommon(cellMask, entry.objectMask)) {
                     continue;
                 }
-                const auto* objectMaskValue = entryValue.find("objectMask");
-                const auto* directionMaskValue = entryValue.find("directionMask");
-                const auto* seedValue = entryValue.find("seed");
-                if (!objectMaskValue || !directionMaskValue || !seedValue) {
+                if (!anyBitsInCommon(entry.directionMask, movementMask)) {
                     continue;
                 }
-                const BitVector objectMask = parseIntVector(*objectMaskValue);
-                const BitVector directionMaskBits = parseIntVector(*directionMaskValue);
-                if (!anyBitsInCommon(cellMask, objectMask)) {
-                    continue;
-                }
-                if (!anyBitsInCommon(directionMaskBits, movementMask)) {
-                    continue;
-                }
-                appendAudioEvent(session, toInt(*seedValue), "cantmove");
+                appendAudioEvent(session, entry.seed, "cantmove");
             }
         }
     }
@@ -2191,26 +2254,17 @@ bool applyRuleGroup(Session& session, const std::vector<Rule>& group, CommandSta
     return hasChanges;
 }
 
-std::optional<int32_t> lookupLoopPoint(const json::Value& loopPoint, int32_t index) {
-    if (loopPoint.isObject()) {
-        const auto& object = loopPoint.asObject();
-        const auto it = object.find(std::to_string(index));
-        if (it != object.end() && !it->second.isNull()) {
-            return toInt(it->second);
-        }
-    } else if (loopPoint.isArray()) {
-        const auto& array = loopPoint.asArray();
-        if (index >= 0 && static_cast<size_t>(index) < array.size() && !array[static_cast<size_t>(index)].isNull()) {
-            return toInt(array[static_cast<size_t>(index)]);
-        }
+std::optional<int32_t> lookupLoopPoint(const LoopPointTable& loopPoint, int32_t index) {
+    if (index < 0 || static_cast<size_t>(index) >= loopPoint.entries.size()) {
+        return std::nullopt;
     }
-    return std::nullopt;
+    return loopPoint.entries[static_cast<size_t>(index)];
 }
 
 bool applyRuleGroups(
     Session& session,
     const std::vector<std::vector<Rule>>& groups,
-    const json::Value& loopPoint,
+    const LoopPointTable& loopPoint,
     CommandState& commands,
     const std::vector<bool>* bannedGroups
 ) {
@@ -2616,9 +2670,6 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
                 game->playerMask = parseIntVector(playerMask->second);
             }
         }
-        if (const auto propertiesSingleLayer = gameObject.find("properties_single_layer"); propertiesSingleLayer != gameObject.end()) {
-            game->propertiesSingleLayer = propertiesSingleLayer->second;
-        }
         if (const auto rigid = gameObject.find("rigid"); rigid != gameObject.end()) {
             game->rigid = toBool(rigid->second);
         }
@@ -2641,10 +2692,10 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
             game->lateRules = parseRuleGroups(lateRules->second);
         }
         if (const auto loopPoint = gameObject.find("loop_point"); loopPoint != gameObject.end()) {
-            game->loopPoint = loopPoint->second;
+            game->loopPoint = parseLoopPointTable(loopPoint->second);
         }
         if (const auto lateLoopPoint = gameObject.find("late_loop_point"); lateLoopPoint != gameObject.end()) {
-            game->lateLoopPoint = lateLoopPoint->second;
+            game->lateLoopPoint = parseLoopPointTable(lateLoopPoint->second);
         }
         if (const auto winconditions = gameObject.find("winconditions"); winconditions != gameObject.end()) {
             for (const auto& conditionValue : winconditions->second.asArray()) {
@@ -2662,22 +2713,19 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
         }
 
         if (const auto sfxEvents = gameObject.find("sfx_events"); sfxEvents != gameObject.end()) {
-            game->sfxEvents = sfxEvents->second;
+            game->sfxEvents = parseSoundEventMap(sfxEvents->second);
         }
         if (const auto sfxCreationMasks = gameObject.find("sfx_creation_masks"); sfxCreationMasks != gameObject.end()) {
-            game->sfxCreationMasks = sfxCreationMasks->second;
+            game->sfxCreationMasks = parseSoundMaskEntries(sfxCreationMasks->second);
         }
         if (const auto sfxDestructionMasks = gameObject.find("sfx_destruction_masks"); sfxDestructionMasks != gameObject.end()) {
-            game->sfxDestructionMasks = sfxDestructionMasks->second;
+            game->sfxDestructionMasks = parseSoundMaskEntries(sfxDestructionMasks->second);
         }
         if (const auto sfxMovementMasks = gameObject.find("sfx_movement_masks"); sfxMovementMasks != gameObject.end()) {
-            game->sfxMovementMasks = sfxMovementMasks->second;
+            game->sfxMovementMasks = parseLayeredSoundMaskEntries(sfxMovementMasks->second);
         }
         if (const auto sfxMovementFailureMasks = gameObject.find("sfx_movement_failure_masks"); sfxMovementFailureMasks != gameObject.end()) {
-            game->sfxMovementFailureMasks = sfxMovementFailureMasks->second;
-        }
-        if (const auto sounds = gameObject.find("sounds"); sounds != gameObject.end()) {
-            game->sounds = sounds->second;
+            game->sfxMovementFailureMasks = parseSoundMaskEntries(sfxMovementFailureMasks->second);
         }
 
         if (const auto prepared = rootObject.find("prepared_session"); prepared != rootObject.end()) {
@@ -2687,8 +2735,6 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
                 throw json::ParseError("Failed parsing prepared_session: " + std::string(error.what()));
             }
         }
-
-        game->root = std::move(root);
         outGame = std::move(game);
         return nullptr;
     } catch (const std::exception& error) {

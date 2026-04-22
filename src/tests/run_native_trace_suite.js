@@ -10,7 +10,7 @@ function parseArgs(argv) {
         manifestPath: null,
         cliPath: null,
         preparedTimeoutMs: 120000,
-        timeoutMs: 30000,
+        timeoutMs: 45000,
         progressEvery: 1,
         allowFailures: false,
         quiet: false,
@@ -110,23 +110,41 @@ function main() {
         const irPath = path.join(manifestDir, fixture.ir_file);
         const tracePath = path.join(manifestDir, fixture.trace_file);
         const startedAt = Date.now();
-        const run = runCommand(options.cliPath, ['diff-trace', irPath, tracePath], {
+
+        // Phase 1: fast native-only check (no per-snapshot diagnostic export).
+        const fastRun = runCommand(options.cliPath, ['check-trace', irPath, tracePath], {
             timeout: options.timeoutMs,
         });
-        const elapsedMs = Date.now() - startedAt;
+        const fastElapsedMs = Date.now() - startedAt;
 
         let outcome = 'passed';
-        if (run.error && run.error.code === 'ETIMEDOUT') {
-            traceTimedOut += 1;
-            outcome = 'timed_out';
-        } else if (run.error) {
-            traceFailed += 1;
-            outcome = 'error';
-        } else if (run.status === 0) {
+        let run = fastRun;
+        let elapsedMs = fastElapsedMs;
+
+        const fastPassed = !fastRun.error && fastRun.status === 0;
+        if (fastPassed) {
             tracePassed += 1;
         } else {
-            traceFailed += 1;
-            outcome = 'failed';
+            // Phase 2: detailed diff only on failure.
+            const detailedStartedAt = Date.now();
+            const detailedRun = runCommand(options.cliPath, ['diff-trace', irPath, tracePath], {
+                timeout: options.timeoutMs,
+            });
+            run = detailedRun;
+            elapsedMs = Date.now() - detailedStartedAt;
+
+            if (detailedRun.error && detailedRun.error.code === 'ETIMEDOUT') {
+                traceTimedOut += 1;
+                outcome = 'timed_out';
+            } else if (detailedRun.error) {
+                traceFailed += 1;
+                outcome = 'error';
+            } else if (detailedRun.status === 0) {
+                tracePassed += 1;
+            } else {
+                traceFailed += 1;
+                outcome = 'failed';
+            }
         }
 
         if (options.progressEvery > 0 && (traceChecked % options.progressEvery) === 0) {

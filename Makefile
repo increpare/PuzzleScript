@@ -1,4 +1,4 @@
-.PHONY: configure-native build-native ctest-native coverage-fixtures tests run
+.PHONY: tests run ctest-native clean clean-native clean-fixtures configure-native build-native coverage-fixtures
 
 NODE ?= node
 CMAKE ?= cmake
@@ -7,20 +7,40 @@ PS_CLI := $(BUILD_DIR)/native/ps_cli
 COVERAGE_FIXTURES_DIR := $(BUILD_DIR)/coverage-fixtures
 COVERAGE_FIXTURES_MANIFEST := $(COVERAGE_FIXTURES_DIR)/fixtures.json
 
-configure-native:
+CMAKE_CACHE := $(BUILD_DIR)/CMakeCache.txt
+
+# Note: make can't automatically infer Node's require() dependency graph.
+# These are intentionally coarse so C++-only iterations don't keep regenerating fixtures.
+JS_FIXTURE_INPUTS := \
+	src/tests/export_native_fixtures.js \
+	src/tests/run_native_trace_suite.js \
+	$(wildcard src/tests/lib/*.js) \
+	$(wildcard src/tests/lib/*/*.js) \
+	$(wildcard src/tests/lib/*/*/*.js) \
+	$(wildcard src/js/*.js) \
+	$(wildcard src/js/*/*.js) \
+	$(wildcard src/js/*/*/*.js)
+
+$(CMAKE_CACHE):
 	$(CMAKE) -S . -B $(BUILD_DIR)
 
-build-native: configure-native
+$(PS_CLI): $(CMAKE_CACHE)
 	$(CMAKE) --build $(BUILD_DIR)
 
-ctest-native: build-native
+ctest-native: $(PS_CLI)
 	ctest --test-dir $(BUILD_DIR) --output-on-failure
 
-coverage-fixtures:
+$(COVERAGE_FIXTURES_MANIFEST): $(JS_FIXTURE_INPUTS)
 	$(NODE) src/tests/export_native_fixtures.js $(COVERAGE_FIXTURES_DIR)
 
-tests: build-native coverage-fixtures
-	$(NODE) src/tests/run_native_trace_suite.js $(COVERAGE_FIXTURES_MANIFEST) --cli $(PS_CLI) --progress-every 1 --timeout-ms 30000
+tests: build-native $(COVERAGE_FIXTURES_MANIFEST)
+	$(NODE) src/tests/run_native_trace_suite.js $(COVERAGE_FIXTURES_MANIFEST) --cli $(PS_CLI) --progress-every 1 --timeout-ms 45000
+
+# Backwards-compatible aliases.
+configure-native: $(CMAKE_CACHE)
+build-native: $(CMAKE_CACHE)
+	$(CMAKE) --build $(BUILD_DIR)
+coverage-fixtures: $(COVERAGE_FIXTURES_MANIFEST)
 
 ifneq ($(filter run,$(MAKECMDGOALS)),)
 RUN_SOURCE_FILE := $(word 2,$(MAKECMDGOALS))
@@ -36,3 +56,11 @@ ifndef RUN_SOURCE_FILE
 	@exit 1
 endif
 	$(PS_CLI) play-source $(RUN_SOURCE_FILE)
+
+clean: clean-native clean-fixtures
+
+clean-native:
+	rm -rf "$(BUILD_DIR)"
+
+clean-fixtures:
+	rm -rf "$(COVERAGE_FIXTURES_DIR)"

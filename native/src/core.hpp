@@ -99,6 +99,11 @@ struct Pattern {
     std::optional<Replacement> replacement;
 };
 
+struct RuleCommand {
+    std::string name;
+    std::optional<std::string> argument;
+};
+
 struct Rule {
     int32_t direction = 0;
     bool hasReplacements = false;
@@ -106,7 +111,7 @@ struct Rule {
     std::vector<int32_t> ellipsisCount;
     int32_t groupNumber = 0;
     bool rigid = false;
-    json::Value commands;
+    std::vector<RuleCommand> commands;
     bool isRandom = false;
     std::vector<BitVector> cellRowMasks;
     std::vector<BitVector> cellRowMasksMovements;
@@ -121,6 +126,16 @@ struct WinCondition {
     int32_t lineNumber = 0;
     bool aggr1 = false;
     bool aggr2 = false;
+};
+
+struct LoopPointTable {
+    std::vector<std::optional<int32_t>> entries;
+};
+
+struct SoundMaskEntry {
+    BitVector objectMask;
+    BitVector directionMask;
+    int32_t seed = 0;
 };
 
 struct Game {
@@ -146,7 +161,6 @@ struct Game {
     std::map<std::string, BitVector> aggregateMasks;
     bool playerMaskAggregate = false;
     BitVector playerMask;
-    json::Value propertiesSingleLayer;
     bool rigid = false;
     std::vector<bool> rigidGroups;
     std::vector<int32_t> rigidGroupIndexToGroupIndex;
@@ -154,18 +168,16 @@ struct Game {
     std::vector<int32_t> groupNumberToRigidGroupIndex;
     std::vector<std::vector<Rule>> rules;
     std::vector<std::vector<Rule>> lateRules;
-    json::Value loopPoint;
-    json::Value lateLoopPoint;
+    LoopPointTable loopPoint;
+    LoopPointTable lateLoopPoint;
     std::vector<WinCondition> winConditions;
     std::vector<LevelTemplate> levels;
-    json::Value sfxEvents;
-    json::Value sfxCreationMasks;
-    json::Value sfxDestructionMasks;
-    json::Value sfxMovementMasks;
-    json::Value sfxMovementFailureMasks;
-    json::Value sounds;
+    std::map<std::string, int32_t> sfxEvents;
+    std::vector<SoundMaskEntry> sfxCreationMasks;
+    std::vector<SoundMaskEntry> sfxDestructionMasks;
+    std::vector<std::vector<SoundMaskEntry>> sfxMovementMasks;
+    std::vector<SoundMaskEntry> sfxMovementFailureMasks;
     PreparedSession preparedSession;
-    json::Value root;
 };
 
 struct Session {

@@ -42,12 +42,23 @@ std::string readFile(const std::filesystem::path& path) {
     return buffer.str();
 }
 
+const puzzlescript::json::Value& requireField(const puzzlescript::json::Value::Object& object, std::string_view key) {
+    const auto it = object.find(std::string(key));
+    if (it == object.end()) {
+        throw std::runtime_error("Missing required field: " + std::string(key));
+    }
+    return it->second;
+}
+
 int32_t looseAsInt(const puzzlescript::json::Value& value) {
     if (value.isInteger()) {
         return static_cast<int32_t>(value.asInteger());
     }
     if (value.isDouble()) {
         return static_cast<int32_t>(value.asDouble());
+    }
+    if (value.isString()) {
+        return static_cast<int32_t>(std::stoi(value.asString()));
     }
     return 0;
 }
@@ -60,7 +71,7 @@ std::vector<int32_t> looseAsIntArray(const puzzlescript::json::Value& value) {
     const auto& array = value.asArray();
     result.reserve(array.size());
     for (const auto& item : array) {
-        if (item.isInteger() || item.isDouble()) {
+        if (item.isInteger() || item.isDouble() || item.isString()) {
             result.push_back(looseAsInt(item));
         }
     }
@@ -74,6 +85,22 @@ void appendIntList(std::ostream& stream, const std::vector<int32_t>& values) {
         }
         stream << values[index];
     }
+}
+
+std::optional<int32_t> optionalIntField(const puzzlescript::json::Value::Object& object, std::string_view key) {
+    const auto it = object.find(std::string(key));
+    if (it == object.end() || it->second.isNull()) {
+        return std::nullopt;
+    }
+    return looseAsInt(it->second);
+}
+
+std::optional<std::string> optionalStringField(const puzzlescript::json::Value::Object& object, std::string_view key) {
+    const auto it = object.find(std::string(key));
+    if (it == object.end() || it->second.isNull()) {
+        return std::nullopt;
+    }
+    return it->second.asString();
 }
 
 struct ScopedEnvSilence {
@@ -129,6 +156,149 @@ struct TraceSnapshot {
     std::vector<int32_t> newSounds;
 };
 
+struct TraceFile {
+    std::optional<std::string> expectedSerializedLevel;
+    std::vector<int32_t> expectedSounds;
+    std::vector<TraceSnapshot> snapshots;
+};
+
+struct SessionSnapshot {
+    int32_t currentLevelIndex = 0;
+    std::optional<int32_t> currentLevelTarget;
+    std::optional<std::string> loadedLevelSeed;
+    bool titleScreen = false;
+    bool textMode = false;
+    int32_t titleMode = 0;
+    int32_t titleSelection = 0;
+    bool titleSelected = false;
+    bool messageSelected = false;
+    bool winning = false;
+    bool randomStateValid = false;
+    int32_t randomStateI = 0;
+    int32_t randomStateJ = 0;
+    std::vector<int32_t> randomStatePreviewBytes;
+    std::string serializedLevel;
+};
+
+struct SimulationFixtureEntry {
+    std::string name;
+    std::filesystem::path irFile;
+    std::optional<std::filesystem::path> traceFile;
+    std::string initialSerializedLevel;
+};
+
+TraceSnapshot parseTraceSnapshot(const puzzlescript::json::Value& snapshotValue) {
+    const auto& object = snapshotValue.asObject();
+    TraceSnapshot snapshot;
+    snapshot.phase = requireField(object, "phase").asString();
+    if (const auto inputIt = object.find("input"); inputIt != object.end() && !inputIt->second.isNull()) {
+        if (inputIt->second.isString()) {
+            snapshot.stringInput = inputIt->second.asString();
+        } else {
+            snapshot.numericInput = looseAsInt(inputIt->second);
+        }
+    }
+    snapshot.currentLevelIndex = looseAsInt(requireField(object, "current_level_index"));
+    snapshot.currentLevelTarget = optionalIntField(object, "current_level_target");
+    snapshot.loadedLevelSeed = optionalStringField(object, "loaded_level_seed");
+    snapshot.titleScreen = requireField(object, "title_screen").asBool();
+    snapshot.textMode = requireField(object, "text_mode").asBool();
+    if (const auto titleMode = optionalIntField(object, "title_mode"); titleMode.has_value()) {
+        snapshot.titleMode = *titleMode;
+    }
+    if (const auto titleSelection = optionalIntField(object, "title_selection"); titleSelection.has_value()) {
+        snapshot.titleSelection = *titleSelection;
+    }
+    if (const auto it = object.find("title_selected"); it != object.end()) {
+        snapshot.titleSelected = it->second.asBool();
+    }
+    if (const auto it = object.find("message_selected"); it != object.end()) {
+        snapshot.messageSelected = it->second.asBool();
+    }
+    snapshot.winning = requireField(object, "winning").asBool();
+    if (const auto it = object.find("random_state_valid"); it != object.end()) {
+        snapshot.randomStateValid = it->second.asBool();
+    }
+    if (const auto randomStateI = optionalIntField(object, "random_state_i"); randomStateI.has_value()) {
+        snapshot.randomStateI = *randomStateI;
+    }
+    if (const auto randomStateJ = optionalIntField(object, "random_state_j"); randomStateJ.has_value()) {
+        snapshot.randomStateJ = *randomStateJ;
+    }
+    if (const auto it = object.find("random_state_preview_bytes"); it != object.end()) {
+        snapshot.randomStatePreviewBytes = looseAsIntArray(it->second);
+    }
+    snapshot.serializedLevel = requireField(object, "serialized_level").asString();
+    if (const auto it = object.find("new_sounds"); it != object.end()) {
+        snapshot.newSounds = looseAsIntArray(it->second);
+    }
+    return snapshot;
+}
+
+SessionSnapshot parseSessionSnapshot(const std::string& snapshotJson, const std::string& serializedLevel) {
+    const auto value = puzzlescript::json::parse(snapshotJson);
+    const auto& object = value.asObject();
+    SessionSnapshot snapshot;
+    snapshot.currentLevelIndex = looseAsInt(requireField(object, "current_level_index"));
+    snapshot.currentLevelTarget = optionalIntField(object, "current_level_target");
+    snapshot.loadedLevelSeed = optionalStringField(object, "loaded_level_seed");
+    snapshot.titleScreen = requireField(object, "title_screen").asBool();
+    snapshot.textMode = requireField(object, "text_mode").asBool();
+    if (const auto titleMode = optionalIntField(object, "title_mode"); titleMode.has_value()) {
+        snapshot.titleMode = *titleMode;
+    }
+    if (const auto titleSelection = optionalIntField(object, "title_selection"); titleSelection.has_value()) {
+        snapshot.titleSelection = *titleSelection;
+    }
+    if (const auto it = object.find("title_selected"); it != object.end()) {
+        snapshot.titleSelected = it->second.asBool();
+    }
+    if (const auto it = object.find("message_selected"); it != object.end()) {
+        snapshot.messageSelected = it->second.asBool();
+    }
+    snapshot.winning = requireField(object, "winning").asBool();
+    if (const auto it = object.find("random_state_valid"); it != object.end()) {
+        snapshot.randomStateValid = it->second.asBool();
+    }
+    if (const auto randomStateI = optionalIntField(object, "random_state_i"); randomStateI.has_value()) {
+        snapshot.randomStateI = *randomStateI;
+    }
+    if (const auto randomStateJ = optionalIntField(object, "random_state_j"); randomStateJ.has_value()) {
+        snapshot.randomStateJ = *randomStateJ;
+    }
+    if (const auto it = object.find("random_state_preview_bytes"); it != object.end()) {
+        snapshot.randomStatePreviewBytes = looseAsIntArray(it->second);
+    }
+    snapshot.serializedLevel = serializedLevel;
+    return snapshot;
+}
+
+std::vector<SimulationFixtureEntry> parseSimulationFixtureManifest(
+    const std::filesystem::path& manifestPath,
+    const std::filesystem::path& manifestDir
+) {
+    const auto manifestValue = puzzlescript::json::parse(readFile(manifestPath));
+    const auto* fixturesValue = manifestValue.find("simulation_fixtures");
+    if (!fixturesValue || !fixturesValue->isArray()) {
+        throw std::runtime_error("fixtures.json is missing simulation_fixtures");
+    }
+
+    std::vector<SimulationFixtureEntry> fixtures;
+    fixtures.reserve(fixturesValue->asArray().size());
+    for (const auto& fixtureValue : fixturesValue->asArray()) {
+        const auto& object = fixtureValue.asObject();
+        SimulationFixtureEntry fixture;
+        fixture.name = requireField(object, "name").asString();
+        fixture.irFile = manifestDir / requireField(object, "ir_file").asString();
+        fixture.initialSerializedLevel = requireField(object, "initial_serialized_level").asString();
+        if (const auto traceFile = optionalStringField(object, "trace_file"); traceFile.has_value()) {
+            fixture.traceFile = manifestDir / *traceFile;
+        }
+        fixtures.push_back(std::move(fixture));
+    }
+    return fixtures;
+}
+
 std::vector<TraceSnapshot> loadTraceSnapshotsFromJsonText(const std::string& jsonText) {
     const auto root = puzzlescript::json::parse(jsonText);
     const auto* traceValue = root.find("trace");
@@ -141,64 +311,9 @@ std::vector<TraceSnapshot> loadTraceSnapshotsFromJsonText(const std::string& jso
     }
 
     std::vector<TraceSnapshot> snapshots;
+    snapshots.reserve(snapshotsValue->asArray().size());
     for (const auto& snapshotValue : snapshotsValue->asArray()) {
-        const auto& object = snapshotValue.asObject();
-        TraceSnapshot snapshot;
-        snapshot.phase = object.at("phase").asString();
-        if (const auto inputIt = object.find("input"); inputIt != object.end() && !inputIt->second.isNull()) {
-            if (inputIt->second.isInteger() || inputIt->second.isDouble()) {
-                snapshot.numericInput = looseAsInt(inputIt->second);
-            } else if (inputIt->second.isString()) {
-                snapshot.stringInput = inputIt->second.asString();
-            }
-        }
-        snapshot.currentLevelIndex = looseAsInt(object.at("current_level_index"));
-        if (const auto targetIt = object.find("current_level_target"); targetIt != object.end() && !targetIt->second.isNull()) {
-            snapshot.currentLevelTarget = looseAsInt(targetIt->second);
-        }
-        if (const auto loadedLevelSeedIt = object.find("loaded_level_seed"); loadedLevelSeedIt != object.end() && !loadedLevelSeedIt->second.isNull()) {
-            snapshot.loadedLevelSeed = loadedLevelSeedIt->second.asString();
-        }
-        snapshot.titleScreen = object.at("title_screen").asBool();
-        snapshot.textMode = object.at("text_mode").asBool();
-        if (const auto titleModeIt = object.find("title_mode"); titleModeIt != object.end()) {
-            snapshot.titleMode = looseAsInt(titleModeIt->second);
-        }
-        if (const auto titleSelectionIt = object.find("title_selection"); titleSelectionIt != object.end()) {
-            snapshot.titleSelection = looseAsInt(titleSelectionIt->second);
-        }
-        if (const auto titleSelectedIt = object.find("title_selected"); titleSelectedIt != object.end()) {
-            snapshot.titleSelected = titleSelectedIt->second.asBool();
-        }
-        if (const auto messageSelectedIt = object.find("message_selected"); messageSelectedIt != object.end()) {
-            snapshot.messageSelected = messageSelectedIt->second.asBool();
-        }
-        snapshot.winning = object.at("winning").asBool();
-        if (const auto randomStateValidIt = object.find("random_state_valid"); randomStateValidIt != object.end()) {
-            snapshot.randomStateValid = randomStateValidIt->second.asBool();
-        }
-        if (const auto randomStateIIt = object.find("random_state_i"); randomStateIIt != object.end()) {
-            snapshot.randomStateI = looseAsInt(randomStateIIt->second);
-        }
-        if (const auto randomStateJIt = object.find("random_state_j"); randomStateJIt != object.end()) {
-            snapshot.randomStateJ = looseAsInt(randomStateJIt->second);
-        }
-        if (const auto previewBytesIt = object.find("random_state_preview_bytes"); previewBytesIt != object.end()) {
-            snapshot.randomStatePreviewBytes = looseAsIntArray(previewBytesIt->second);
-        }
-        snapshot.serializedLevel = object.at("serialized_level").asString();
-        if (const auto soundsIt = object.find("new_sounds"); soundsIt != object.end() && soundsIt->second.isArray()) {
-            for (const auto& soundValue : soundsIt->second.asArray()) {
-                if (soundValue.isInteger()) {
-                    snapshot.newSounds.push_back(static_cast<int32_t>(soundValue.asInteger()));
-                } else if (soundValue.isDouble()) {
-                    snapshot.newSounds.push_back(static_cast<int32_t>(soundValue.asDouble()));
-                } else if (soundValue.isString()) {
-                    snapshot.newSounds.push_back(std::stoi(soundValue.asString()));
-                }
-            }
-        }
-        snapshots.push_back(std::move(snapshot));
+        snapshots.push_back(parseTraceSnapshot(snapshotValue));
     }
 
     return snapshots;
@@ -206,6 +321,23 @@ std::vector<TraceSnapshot> loadTraceSnapshotsFromJsonText(const std::string& jso
 
 std::vector<TraceSnapshot> loadTraceSnapshots(const std::filesystem::path& path) {
     return loadTraceSnapshotsFromJsonText(readFile(path));
+}
+
+TraceFile loadTraceFileFromJsonText(const std::string& jsonText) {
+    const auto root = puzzlescript::json::parse(jsonText);
+    TraceFile result;
+    if (const auto* expectedSerialized = root.find("expected_serialized_level"); expectedSerialized && expectedSerialized->isString()) {
+        result.expectedSerializedLevel = expectedSerialized->asString();
+    }
+    if (const auto* expectedSounds = root.find("expected_sounds"); expectedSounds && expectedSounds->isArray()) {
+        result.expectedSounds = looseAsIntArray(*expectedSounds);
+    }
+    result.snapshots = loadTraceSnapshotsFromJsonText(jsonText);
+    return result;
+}
+
+TraceFile loadTraceFile(const std::filesystem::path& path) {
+    return loadTraceFileFromJsonText(readFile(path));
 }
 
 size_t traceSnapshotProgressInterval() {
@@ -420,22 +552,17 @@ bool compareSnapshot(const TraceSnapshot& expected, ps_session* session, const p
     char* snapshotJson = ps_session_export_snapshot(session);
     const std::string actualSnapshotJson = snapshotJson ? snapshotJson : "";
     ps_string_free(snapshotJson);
-    const auto actualSnapshotValue = puzzlescript::json::parse(actualSnapshotJson);
-    const auto& actualSnapshotObject = actualSnapshotValue.asObject();
-    std::optional<std::string> actualLoadedLevelSeed;
-    if (const auto loadedLevelSeedIt = actualSnapshotObject.find("loaded_level_seed"); loadedLevelSeedIt != actualSnapshotObject.end() && !loadedLevelSeedIt->second.isNull()) {
-        actualLoadedLevelSeed = loadedLevelSeedIt->second.asString();
-    }
+    const SessionSnapshot actualSnapshot = parseSessionSnapshot(actualSnapshotJson, actualSerialized);
 
     bool ok = true;
-    if (actualSerialized != expected.serializedLevel) {
+    if (actualSnapshot.serializedLevel != expected.serializedLevel) {
         stream << "snapshot[" << snapshotIndex << "] serialized level mismatch\n";
         stream << "expected_serialized_level:\n" << expected.serializedLevel;
         if (!expected.serializedLevel.empty() && expected.serializedLevel.back() != '\n') {
             stream << "\n";
         }
-        stream << "actual_serialized_level:\n" << actualSerialized;
-        if (!actualSerialized.empty() && actualSerialized.back() != '\n') {
+        stream << "actual_serialized_level:\n" << actualSnapshot.serializedLevel;
+        if (!actualSnapshot.serializedLevel.empty() && actualSnapshot.serializedLevel.back() != '\n') {
             stream << "\n";
         }
         stream << "actual_session_snapshot:\n" << actualSnapshotJson << "\n";
@@ -482,34 +609,27 @@ bool compareSnapshot(const TraceSnapshot& expected, ps_session* session, const p
         ok = false;
     }
     const bool skipRandomStateComparison = expected.loadedLevelSeed.has_value()
-        && actualLoadedLevelSeed.has_value()
-        && *expected.loadedLevelSeed != *actualLoadedLevelSeed;
+        && actualSnapshot.loadedLevelSeed.has_value()
+        && *expected.loadedLevelSeed != *actualSnapshot.loadedLevelSeed;
     if (!skipRandomStateComparison) {
-        const bool actualRandomStateValid = actualSnapshotObject.at("random_state_valid").asBool();
-        if (actualRandomStateValid != expected.randomStateValid) {
+        if (actualSnapshot.randomStateValid != expected.randomStateValid) {
             stream << "snapshot[" << snapshotIndex << "] random_state_valid mismatch: actual="
-                   << (actualRandomStateValid ? 1 : 0) << " expected=" << (expected.randomStateValid ? 1 : 0) << "\n";
+                   << (actualSnapshot.randomStateValid ? 1 : 0) << " expected=" << (expected.randomStateValid ? 1 : 0) << "\n";
             ok = false;
         }
-        const int32_t actualRandomStateI = looseAsInt(actualSnapshotObject.at("random_state_i"));
-        if (actualRandomStateI != expected.randomStateI) {
+        if (actualSnapshot.randomStateI != expected.randomStateI) {
             stream << "snapshot[" << snapshotIndex << "] random_state_i mismatch: actual="
-                   << actualRandomStateI << " expected=" << expected.randomStateI << "\n";
+                   << actualSnapshot.randomStateI << " expected=" << expected.randomStateI << "\n";
             ok = false;
         }
-        const int32_t actualRandomStateJ = looseAsInt(actualSnapshotObject.at("random_state_j"));
-        if (actualRandomStateJ != expected.randomStateJ) {
+        if (actualSnapshot.randomStateJ != expected.randomStateJ) {
             stream << "snapshot[" << snapshotIndex << "] random_state_j mismatch: actual="
-                   << actualRandomStateJ << " expected=" << expected.randomStateJ << "\n";
+                   << actualSnapshot.randomStateJ << " expected=" << expected.randomStateJ << "\n";
             ok = false;
         }
-        std::vector<int32_t> actualPreviewBytes;
-        if (const auto previewIt = actualSnapshotObject.find("random_state_preview_bytes"); previewIt != actualSnapshotObject.end()) {
-            actualPreviewBytes = looseAsIntArray(previewIt->second);
-        }
-        if (actualPreviewBytes != expected.randomStatePreviewBytes) {
+        if (actualSnapshot.randomStatePreviewBytes != expected.randomStatePreviewBytes) {
             stream << "snapshot[" << snapshotIndex << "] random_state_preview_bytes mismatch: actual=[";
-            appendIntList(stream, actualPreviewBytes);
+            appendIntList(stream, actualSnapshot.randomStatePreviewBytes);
             stream << "] expected=[";
             appendIntList(stream, expected.randomStatePreviewBytes);
             stream << "]\n";
@@ -625,6 +745,94 @@ int diffTraceCommand(const std::string& irPath, const std::string& tracePath) {
         return 1;
     }
     const int result = diffTraceAgainstSnapshots(game, loadTraceSnapshots(tracePath), std::cerr, true);
+    ps_free_game(game);
+    return result;
+}
+
+int checkTraceAgainstSnapshots(ps_game* game, const TraceFile& traceFile, std::ostream& errorStream, bool printSuccessSummary) {
+    ps_session* session = nullptr;
+    ps_error* error = nullptr;
+    if (!ps_session_create(game, &session, &error)) {
+        errorStream << ps_error_message(error) << "\n";
+        ps_free_error(error);
+        return 1;
+    }
+    std::unique_ptr<ps_session, decltype(&ps_session_destroy)> sessionHolder(session, ps_session_destroy);
+
+    const auto& snapshots = traceFile.snapshots;
+    if (snapshots.empty()) {
+        errorStream << "Trace has no snapshots\n";
+        return 1;
+    }
+
+    // Fast path: just replay inputs to reach the final state without exporting/parsing per-snapshot JSON.
+    std::vector<int32_t> observedSounds;
+    if (!traceFile.expectedSounds.empty()) {
+        observedSounds.reserve(traceFile.expectedSounds.size());
+    }
+
+    for (size_t index = 1; index < snapshots.size(); ++index) {
+        const auto& snapshot = snapshots[index];
+        ps_step_result stepResult{};
+        if (snapshot.phase == "again") {
+            stepResult = ps_session_tick(session);
+        } else if (snapshot.numericInput.has_value()) {
+            stepResult = ps_session_step(session, static_cast<ps_input>(*snapshot.numericInput));
+        } else if (snapshot.stringInput.has_value()) {
+            if (*snapshot.stringInput == "tick") {
+                stepResult = ps_session_tick(session);
+            } else if (*snapshot.stringInput == "restart") {
+                if (!ps_session_restart(session)) {
+                    errorStream << "Restart failed at snapshot[" << index << "]\n";
+                    return 1;
+                }
+            } else if (*snapshot.stringInput == "undo") {
+                if (!ps_session_undo(session)) {
+                    errorStream << "Undo failed at snapshot[" << index << "]\n";
+                    return 1;
+                }
+            } else {
+                errorStream << "Unsupported trace input token: " << *snapshot.stringInput << "\n";
+                return 1;
+            }
+        } else {
+            errorStream << "Snapshot[" << index << "] has no replayable input token\n";
+            return 1;
+        }
+
+        if (!traceFile.expectedSounds.empty() && stepResult.audio_event_count > 0 && stepResult.audio_events != nullptr) {
+            for (size_t soundIndex = 0; soundIndex < stepResult.audio_event_count; ++soundIndex) {
+                observedSounds.push_back(stepResult.audio_events[soundIndex].seed);
+            }
+        }
+    }
+
+    const auto& expectedFinal = snapshots.back().serializedLevel;
+    char* serialized = ps_session_serialize_test_string(session);
+    const std::string actualFinal = serialized ? serialized : "";
+    ps_string_free(serialized);
+    if (actualFinal != expectedFinal) {
+        errorStream << "final serialized level mismatch\n";
+        return 1;
+    }
+
+    if (!traceFile.expectedSounds.empty() && observedSounds != traceFile.expectedSounds) {
+        errorStream << "final expected_sounds mismatch\n";
+        return 1;
+    }
+
+    if (printSuccessSummary) {
+        std::cout << "trace_check_passed snapshots=" << snapshots.size() << "\n";
+    }
+    return 0;
+}
+
+int checkTraceCommand(const std::string& irPath, const std::string& tracePath) {
+    ps_game* game = nullptr;
+    if (!loadGameFromFile(irPath, &game)) {
+        return 1;
+    }
+    const int result = checkTraceAgainstSnapshots(game, loadTraceFile(tracePath), std::cerr, true);
     ps_free_game(game);
     return result;
 }
@@ -1050,19 +1258,13 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
     }
 
     try {
-        const auto manifestValue = puzzlescript::json::parse(readFile(manifestPath));
-        const auto* fixturesValue = manifestValue.find("simulation_fixtures");
-        if (!fixturesValue || !fixturesValue->isArray()) {
-            throw std::runtime_error("fixtures.json is missing simulation_fixtures");
-        }
-
-        const auto& fixtures = fixturesValue->asArray();
+        const auto fixtures = parseSimulationFixtureManifest(manifestPath, manifestDir);
         for (size_t index = 0; index < fixtures.size(); ++index) {
             try {
-                const auto& fixture = fixtures[index].asObject();
-                const auto irPath = manifestDir / fixture.at("ir_file").asString();
-                const auto name = fixture.at("name").asString();
-                const auto expectedSerialized = fixture.at("initial_serialized_level").asString();
+                const auto& fixture = fixtures[index];
+                const auto& irPath = fixture.irFile;
+                const auto& name = fixture.name;
+                const auto& expectedSerialized = fixture.initialSerializedLevel;
 
                 ps_game* game = nullptr;
                 if (!loadGameFromFile(irPath, &game)) {
@@ -1093,7 +1295,7 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                 ps_string_free(serialized);
                 ps_session_destroy(session);
 
-                const bool shouldCheckTrace = fixture.find("trace_file") != fixture.end()
+                const bool shouldCheckTrace = fixture.traceFile.has_value()
                     && (traceAll || (traceLimit > 0 && traceChecked < traceLimit));
                 if (shouldCheckTrace) {
                     ++traceChecked;
@@ -1105,7 +1307,6 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                                   << "\n";
                     }
                     std::ostringstream traceErrors;
-                    const auto tracePath = manifestDir / fixture.at("trace_file").asString();
                     ps_game* traceGame = nullptr;
                     if (!loadGameFromFile(irPath, &traceGame)) {
                         ++traceFailed;
@@ -1113,7 +1314,7 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                             std::cerr << name << ": failed to reload game for trace replay\n";
                         }
                     } else {
-                        const int traceResult = diffTraceAgainstSnapshots(traceGame, loadTraceSnapshots(tracePath), traceErrors, false);
+                        const int traceResult = diffTraceAgainstSnapshots(traceGame, loadTraceSnapshots(*fixture.traceFile), traceErrors, false);
                         ps_free_game(traceGame);
                         if (traceResult == 0) {
                             ++tracePassed;
@@ -1161,6 +1362,7 @@ void printUsage() {
               << "  ps_cli bench-source <game.ps> [--level N] [--seed seed] [--settle-again] [--iterations N] [--threads N]\n"
               << "  ps_cli play-source <game.ps> [--level N] [--seed seed] [--settle-again]\n"
               << "  ps_cli diff-trace <ir.json> <trace.json>\n"
+              << "  ps_cli check-trace <ir.json> <trace.json>\n"
               << "  ps_cli trace-at <ir.json> <trace.json> <snapshot-index>\n"
               << "  ps_cli trace-step-at <ir.json> <trace.json> <snapshot-index>\n"
               << "  ps_cli diff-trace-source <game.ps> [--level N] [--seed seed] [--inputs-json json] [--inputs-file path]\n"
@@ -1207,6 +1409,13 @@ int main(int argc, char** argv) {
                 return 1;
             }
             return diffTraceCommand(path, argv[3]);
+        }
+        if (command == "check-trace") {
+            if (argc < 4) {
+                printUsage();
+                return 1;
+            }
+            return checkTraceCommand(path, argv[3]);
         }
         if (command == "trace-at") {
             if (argc < 5) {
