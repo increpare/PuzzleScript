@@ -1,4 +1,5 @@
 #include <array>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -39,6 +40,37 @@ std::string readFile(const std::filesystem::path& path) {
     buffer << stream.rdbuf();
     return buffer.str();
 }
+
+struct ScopedEnvSilence {
+    explicit ScopedEnvSilence(std::vector<std::string> names)
+        : names(std::move(names)) {
+        values.reserve(this->names.size());
+        for (const auto& name : this->names) {
+            const char* value = std::getenv(name.c_str());
+            if (value) {
+                values.emplace_back(value);
+                unsetenv(name.c_str());
+            } else {
+                values.emplace_back(std::nullopt);
+            }
+        }
+    }
+
+    ~ScopedEnvSilence() {
+        for (size_t index = 0; index < names.size(); ++index) {
+            const auto& name = names[index];
+            const auto& value = values[index];
+            if (value.has_value()) {
+                setenv(name.c_str(), value->c_str(), 1);
+            } else {
+                unsetenv(name.c_str());
+            }
+        }
+    }
+
+    std::vector<std::string> names;
+    std::vector<std::optional<std::string>> values;
+};
 
 struct TraceSnapshot {
     std::string phase;
@@ -129,6 +161,19 @@ std::vector<TraceSnapshot> loadTraceSnapshotsFromJsonText(const std::string& jso
 
 std::vector<TraceSnapshot> loadTraceSnapshots(const std::filesystem::path& path) {
     return loadTraceSnapshotsFromJsonText(readFile(path));
+}
+
+size_t traceSnapshotProgressInterval() {
+    const char* value = std::getenv("PS_TRACE_PROGRESS");
+    if (value == nullptr || value[0] == '\0') {
+        return 0;
+    }
+    char* end = nullptr;
+    const unsigned long long parsed = std::strtoull(value, &end, 10);
+    if (end == value || parsed == 0) {
+        return 0;
+    }
+    return static_cast<size_t>(parsed);
 }
 
 bool loadGameFromJsonText(const std::string& json, ps_game** outGame) {
@@ -426,6 +471,14 @@ int diffTraceAgainstSnapshots(ps_game* game, const std::vector<TraceSnapshot>& s
     }
 
     for (size_t index = 1; index < snapshots.size(); ++index) {
+        const size_t progressInterval = traceSnapshotProgressInterval();
+        if (progressInterval > 0 && (index % progressInterval) == 0) {
+            errorStream << "trace_snapshot_progress index=" << index
+                        << " total=" << snapshots.size()
+                        << " phase=" << snapshots[index].phase
+                        << "\n"
+                        << std::flush;
+        }
         const auto& snapshot = snapshots[index];
         ps_step_result stepResult{};
         if (snapshot.phase == "again") {
@@ -473,6 +526,231 @@ int diffTraceCommand(const std::string& irPath, const std::string& tracePath) {
     const int result = diffTraceAgainstSnapshots(game, loadTraceSnapshots(tracePath), std::cerr, true);
     ps_free_game(game);
     return result;
+}
+
+int traceAtCommand(const std::string& irPath, const std::string& tracePath, size_t snapshotIndex) {
+    ps_game* game = nullptr;
+    if (!loadGameFromFile(irPath, &game)) {
+        return 1;
+    }
+
+    const auto snapshots = loadTraceSnapshots(tracePath);
+    if (snapshots.empty()) {
+        std::cerr << "Trace has no snapshots\n";
+        ps_free_game(game);
+        return 1;
+    }
+    if (snapshotIndex >= snapshots.size()) {
+        std::cerr << "Snapshot index out of range: " << snapshotIndex
+                  << " >= " << snapshots.size() << "\n";
+        ps_free_game(game);
+        return 1;
+    }
+
+    ps_session* session = nullptr;
+    ps_error* error = nullptr;
+    if (!ps_session_create(game, &session, &error)) {
+        std::cerr << ps_error_message(error) << "\n";
+        ps_free_error(error);
+        ps_free_game(game);
+        return 1;
+    }
+
+    for (size_t index = 1; index <= snapshotIndex; ++index) {
+        const auto& snapshot = snapshots[index];
+        if (snapshot.phase == "again") {
+            (void)ps_session_tick(session);
+        } else if (snapshot.numericInput.has_value()) {
+            (void)ps_session_step(session, static_cast<ps_input>(*snapshot.numericInput));
+        } else if (snapshot.stringInput.has_value()) {
+            if (*snapshot.stringInput == "tick") {
+                (void)ps_session_tick(session);
+            } else if (*snapshot.stringInput == "restart") {
+                if (!ps_session_restart(session)) {
+                    std::cerr << "Restart failed at snapshot[" << index << "]\n";
+                    ps_session_destroy(session);
+                    ps_free_game(game);
+                    return 1;
+                }
+            } else if (*snapshot.stringInput == "undo") {
+                if (!ps_session_undo(session)) {
+                    std::cerr << "Undo failed at snapshot[" << index << "]\n";
+                    ps_session_destroy(session);
+                    ps_free_game(game);
+                    return 1;
+                }
+            } else {
+                std::cerr << "Unsupported trace input token: " << *snapshot.stringInput << "\n";
+                ps_session_destroy(session);
+                ps_free_game(game);
+                return 1;
+            }
+        } else {
+            std::cerr << "Snapshot[" << index << "] has no replayable input token\n";
+            ps_session_destroy(session);
+            ps_free_game(game);
+            return 1;
+        }
+    }
+
+    const int result = printSession(session);
+    ps_session_destroy(session);
+    ps_free_game(game);
+    return result;
+}
+
+int traceStepAtCommand(const std::string& irPath, const std::string& tracePath, size_t snapshotIndex) {
+    ps_game* game = nullptr;
+    if (!loadGameFromFile(irPath, &game)) {
+        return 1;
+    }
+
+    const auto snapshots = loadTraceSnapshots(tracePath);
+    if (snapshots.empty()) {
+        std::cerr << "Trace has no snapshots\n";
+        ps_free_game(game);
+        return 1;
+    }
+    if (snapshotIndex >= snapshots.size()) {
+        std::cerr << "Snapshot index out of range: " << snapshotIndex
+                  << " >= " << snapshots.size() << "\n";
+        ps_free_game(game);
+        return 1;
+    }
+    if (snapshotIndex + 1 >= snapshots.size()) {
+        std::cerr << "Snapshot index " << snapshotIndex << " has no next snapshot to execute\n";
+        ps_free_game(game);
+        return 1;
+    }
+
+    ps_session* session = nullptr;
+    ps_error* error = nullptr;
+    if (!ps_session_create(game, &session, &error)) {
+        std::cerr << ps_error_message(error) << "\n";
+        ps_free_error(error);
+        ps_free_game(game);
+        return 1;
+    }
+
+    {
+        ScopedEnvSilence silence({
+            "PS_DEBUG_RANDOM",
+            "PS_DEBUG_RANDOM_BOARD_HASH",
+            "PS_DEBUG_RANDOM_SESSION_HASH",
+            "PS_DEBUG_RANDOM_SUBSTRING",
+            "PS_DEBUG_MOVES",
+            "PS_DEBUG_RULES",
+            "PS_DEBUG_RIGID",
+            "PS_DEBUG_AGAIN"
+        });
+        for (size_t index = 1; index <= snapshotIndex; ++index) {
+            const auto& snapshot = snapshots[index];
+            if (snapshot.phase == "again") {
+                (void)ps_session_tick(session);
+            } else if (snapshot.numericInput.has_value()) {
+                (void)ps_session_step(session, static_cast<ps_input>(*snapshot.numericInput));
+            } else if (snapshot.stringInput.has_value()) {
+                if (*snapshot.stringInput == "tick") {
+                    (void)ps_session_tick(session);
+                } else if (*snapshot.stringInput == "restart") {
+                    if (!ps_session_restart(session)) {
+                        std::cerr << "Restart failed at snapshot[" << index << "]\n";
+                        ps_session_destroy(session);
+                        ps_free_game(game);
+                        return 1;
+                    }
+                } else if (*snapshot.stringInput == "undo") {
+                    if (!ps_session_undo(session)) {
+                        std::cerr << "Undo failed at snapshot[" << index << "]\n";
+                        ps_session_destroy(session);
+                        ps_free_game(game);
+                        return 1;
+                    }
+                } else {
+                    std::cerr << "Unsupported trace input token: " << *snapshot.stringInput << "\n";
+                    ps_session_destroy(session);
+                    ps_free_game(game);
+                    return 1;
+                }
+            } else {
+                std::cerr << "Snapshot[" << index << "] has no replayable input token\n";
+                ps_session_destroy(session);
+                ps_free_game(game);
+                return 1;
+            }
+        }
+    }
+
+    const auto& nextSnapshot = snapshots[snapshotIndex + 1];
+    ps_step_result stepResult{};
+    if (nextSnapshot.phase == "again") {
+        stepResult = ps_session_tick(session);
+    } else if (nextSnapshot.numericInput.has_value()) {
+        stepResult = ps_session_step(session, static_cast<ps_input>(*nextSnapshot.numericInput));
+    } else if (nextSnapshot.stringInput.has_value()) {
+        if (*nextSnapshot.stringInput == "tick") {
+            stepResult = ps_session_tick(session);
+        } else if (*nextSnapshot.stringInput == "restart") {
+            if (!ps_session_restart(session)) {
+                std::cerr << "Restart failed at snapshot[" << (snapshotIndex + 1) << "]\n";
+                ps_session_destroy(session);
+                ps_free_game(game);
+                return 1;
+            }
+        } else if (*nextSnapshot.stringInput == "undo") {
+            if (!ps_session_undo(session)) {
+                std::cerr << "Undo failed at snapshot[" << (snapshotIndex + 1) << "]\n";
+                ps_session_destroy(session);
+                ps_free_game(game);
+                return 1;
+            }
+        } else {
+            std::cerr << "Unsupported trace input token: " << *nextSnapshot.stringInput << "\n";
+            ps_session_destroy(session);
+            ps_free_game(game);
+            return 1;
+        }
+    } else {
+        std::cerr << "Snapshot[" << (snapshotIndex + 1) << "] has no replayable input token\n";
+        ps_session_destroy(session);
+        ps_free_game(game);
+        return 1;
+    }
+
+    std::cerr << "executed_snapshot=" << (snapshotIndex + 1)
+              << " phase=" << nextSnapshot.phase
+              << " input=";
+    if (nextSnapshot.numericInput.has_value()) {
+        std::cerr << *nextSnapshot.numericInput;
+    } else if (nextSnapshot.stringInput.has_value()) {
+        std::cerr << *nextSnapshot.stringInput;
+    } else {
+        std::cerr << "null";
+    }
+    std::cerr << " changed=" << (stepResult.changed ? 1 : 0)
+              << " transitioned=" << (stepResult.transitioned ? 1 : 0)
+              << " won=" << (stepResult.won ? 1 : 0)
+              << " audio_events=" << stepResult.audio_event_count
+              << "\n";
+    if (stepResult.audio_event_count > 0 && stepResult.audio_events != nullptr) {
+        std::cerr << "audio_seeds=";
+        for (size_t index = 0; index < stepResult.audio_event_count; ++index) {
+            if (index > 0) {
+                std::cerr << ",";
+            }
+            std::cerr << stepResult.audio_events[index].seed;
+            if (stepResult.audio_events[index].kind != nullptr && stepResult.audio_events[index].kind[0] != '\0') {
+                std::cerr << ":" << stepResult.audio_events[index].kind;
+            }
+        }
+        std::cerr << "\n";
+    }
+
+    bool ok = compareSnapshot(nextSnapshot, session, &stepResult, snapshotIndex + 1, std::cerr);
+    const int result = printSession(session);
+    ps_session_destroy(session);
+    ps_free_game(game);
+    return ok ? result : 1;
 }
 
 int runCommand(const std::string& irPath, int argc, char** argv) {
@@ -760,6 +1038,8 @@ void printUsage() {
               << "  ps_cli step-source <game.ps> [input ...] [--level N] [--seed seed] [--settle-again]\n"
               << "  ps_cli bench-source <game.ps> [--level N] [--seed seed] [--settle-again] [--iterations N] [--threads N]\n"
               << "  ps_cli diff-trace <ir.json> <trace.json>\n"
+              << "  ps_cli trace-at <ir.json> <trace.json> <snapshot-index>\n"
+              << "  ps_cli trace-step-at <ir.json> <trace.json> <snapshot-index>\n"
               << "  ps_cli diff-trace-source <game.ps> [--level N] [--seed seed] [--inputs-json json] [--inputs-file path]\n"
               << "  ps_cli test-fixtures <fixtures.json> [--trace-limit N] [--trace-all] [--trace-allow-failures] [--trace-quiet] [--trace-progress N]\n"
               << "  ps_cli play <ir.json>\n";
@@ -801,6 +1081,20 @@ int main(int argc, char** argv) {
                 return 1;
             }
             return diffTraceCommand(path, argv[3]);
+        }
+        if (command == "trace-at") {
+            if (argc < 5) {
+                printUsage();
+                return 1;
+            }
+            return traceAtCommand(path, argv[3], static_cast<size_t>(std::stoull(argv[4])));
+        }
+        if (command == "trace-step-at") {
+            if (argc < 5) {
+                printUsage();
+                return 1;
+            }
+            return traceStepAtCommand(path, argv[3], static_cast<size_t>(std::stoull(argv[4])));
         }
         if (command == "diff-trace-source") {
             return diffTraceSourceCommand(path, argc - 3, argv + 3);

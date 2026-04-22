@@ -20,4 +20,4 @@ coverage-fixtures:
 	$(NODE) src/tests/export_native_fixtures.js $(COVERAGE_FIXTURES_DIR)
 
 tests: build-native coverage-fixtures
-	$(PS_CLI) test-fixtures $(COVERAGE_FIXTURES_MANIFEST) --trace-all --trace-quiet --trace-progress 50
+	$(NODE) src/tests/run_native_trace_suite.js $(COVERAGE_FIXTURES_MANIFEST) --cli $(PS_CLI) --progress-every 1 --timeout-ms 30000

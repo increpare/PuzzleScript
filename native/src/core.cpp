@@ -19,6 +19,9 @@ void rebuildMasks(Session& session);
 std::string toString(const json::Value& value);
 std::vector<int32_t> parseIntVector(const json::Value& value);
 bool anyBitsInCommon(const BitVector& lhs, const BitVector& rhs);
+BitVector getCellObjects(const Session& session, int32_t tileIndex);
+BitVector getCellMovements(const Session& session, int32_t tileIndex);
+int32_t getShiftedMask5(const BitVector& value, int32_t shift);
 
 struct CommandState {
     std::vector<std::string> queue;
@@ -39,6 +42,7 @@ struct ExecuteTurnOptions {
     bool pushUndo = true;
     bool ignoreRestartCommand = false;
     bool ignoreWin = false;
+    bool dontModify = false;
 };
 
 const json::Value& requireField(const json::Value::Object& object, std::string_view key) {
@@ -81,11 +85,8 @@ bool commandQueueContains(const CommandState& state, std::string_view command) {
 }
 
 bool rigidDebugEnabled() {
-    static const bool enabled = []() {
-        const char* value = std::getenv("PS_DEBUG_RIGID");
-        return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
-    }();
-    return enabled;
+    const char* value = std::getenv("PS_DEBUG_RIGID");
+    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
 }
 
 void rigidDebugLog(const std::string& message) {
@@ -95,17 +96,91 @@ void rigidDebugLog(const std::string& message) {
 }
 
 bool againDebugEnabled() {
-    static const bool enabled = []() {
-        const char* value = std::getenv("PS_DEBUG_AGAIN");
-        return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
-    }();
-    return enabled;
+    const char* value = std::getenv("PS_DEBUG_AGAIN");
+    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
 }
 
 void againDebugLog(const std::string& message) {
     if (againDebugEnabled()) {
         std::cerr << "[again] " << message << '\n';
     }
+}
+
+bool randomDebugEnabled() {
+    const char* value = std::getenv("PS_DEBUG_RANDOM");
+    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+}
+
+void randomDebugLog(const std::string& message) {
+    if (randomDebugEnabled()) {
+        std::cerr << "[random] " << message << '\n';
+    }
+}
+
+bool ruleDebugEnabled() {
+    const char* value = std::getenv("PS_DEBUG_RULES");
+    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+}
+
+void ruleDebugLog(const std::string& message) {
+    if (ruleDebugEnabled()) {
+        std::cerr << "[rules] " << message << '\n';
+    }
+}
+
+bool movementDebugEnabled() {
+    const char* value = std::getenv("PS_DEBUG_MOVES");
+    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+}
+
+void movementDebugLog(const std::string& message) {
+    if (movementDebugEnabled()) {
+        std::cerr << "[moves] " << message << '\n';
+    }
+}
+
+bool audioDebugEnabled() {
+    const char* value = std::getenv("PS_DEBUG_AUDIO");
+    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+}
+
+void audioDebugLog(const std::string& message) {
+    if (audioDebugEnabled()) {
+        std::cerr << "[audio] " << message << '\n';
+    }
+}
+
+std::optional<uint64_t> randomDebugBoardHashFilter() {
+    const char* value = std::getenv("PS_DEBUG_RANDOM_BOARD_HASH");
+    if (value == nullptr || value[0] == '\0') {
+        return std::nullopt;
+    }
+    char* end = nullptr;
+    const unsigned long long parsed = std::strtoull(value, &end, 10);
+    if (end == value) {
+        return std::nullopt;
+    }
+    return static_cast<uint64_t>(parsed);
+}
+
+std::optional<uint64_t> randomDebugSessionHashFilter() {
+    const char* value = std::getenv("PS_DEBUG_RANDOM_SESSION_HASH");
+    if (value == nullptr || value[0] == '\0') {
+        return std::nullopt;
+    }
+    char* end = nullptr;
+    const unsigned long long parsed = std::strtoull(value, &end, 10);
+    if (end == value) {
+        return std::nullopt;
+    }
+    return static_cast<uint64_t>(parsed);
+}
+
+std::string_view randomDebugSubstringFilter() {
+    static std::string filter;
+    const char* value = std::getenv("PS_DEBUG_RANDOM_SUBSTRING");
+    filter = value == nullptr ? std::string{} : std::string(value);
+    return filter;
 }
 
 void appendAudioEvent(Session& session, int32_t seed, const char* kind) {
@@ -115,6 +190,37 @@ void appendAudioEvent(Session& session, int32_t seed, const char* kind) {
     if (duplicate == session.lastAudioEvents.end()) {
         session.lastAudioEvents.push_back(ps_audio_event{seed, kind});
     }
+}
+
+int audioEventPriority(const ps_audio_event& event) {
+    const std::string_view kind = event.kind == nullptr ? std::string_view{} : std::string_view(event.kind);
+    if (kind == "cantmove") {
+        return 0;
+    }
+    if (kind == "canmove") {
+        return 1;
+    }
+    if (kind == "create") {
+        return 2;
+    }
+    if (kind == "destroy") {
+        return 3;
+    }
+    return 4;
+}
+
+void sortAudioEvents(Session& session) {
+    std::stable_sort(session.lastAudioEvents.begin(), session.lastAudioEvents.end(), [](const ps_audio_event& lhs, const ps_audio_event& rhs) {
+        return audioEventPriority(lhs) < audioEventPriority(rhs);
+    });
+}
+
+void clearAudioEventsByKind(Session& session, std::string_view kind) {
+    session.lastAudioEvents.erase(
+        std::remove_if(session.lastAudioEvents.begin(), session.lastAudioEvents.end(), [kind](const ps_audio_event& event) {
+            return kind == event.kind;
+        }),
+        session.lastAudioEvents.end());
 }
 
 void tryPlaySimpleSound(Session& session, std::string_view soundName) {
@@ -140,6 +246,91 @@ void accumulateMask(BitVector& target, const BitVector& source) {
     }
     for (size_t index = 0; index < source.size(); ++index) {
         target[index] |= source[index];
+    }
+}
+
+std::string describeObjects(const Session& session, const BitVector& mask) {
+    std::ostringstream stream;
+    bool emitted = false;
+    for (int32_t objectId = 0; objectId < session.game->objectCount; ++objectId) {
+        const int32_t word = objectId >> 5;
+        const int32_t bit = objectId & 31;
+        if (word >= static_cast<int32_t>(mask.size()) || (mask[static_cast<size_t>(word)] & (1 << bit)) == 0) {
+            continue;
+        }
+        if (!emitted) {
+            stream << "[";
+        } else {
+            stream << ",";
+        }
+        emitted = true;
+        if (static_cast<size_t>(objectId) < session.game->objectsById.size()
+            && !session.game->objectsById[static_cast<size_t>(objectId)].name.empty()) {
+            stream << session.game->objectsById[static_cast<size_t>(objectId)].name;
+        } else {
+            stream << "#" << objectId;
+        }
+    }
+    if (!emitted) {
+        return "[]";
+    }
+    stream << "]";
+    return stream.str();
+}
+
+std::string describeMovements(const Session& session, const BitVector& mask) {
+    std::ostringstream stream;
+    bool emitted = false;
+    auto dirName = [](int32_t directionMask) -> const char* {
+        switch (directionMask) {
+            case 1: return "up";
+            case 2: return "down";
+            case 4: return "left";
+            case 8: return "right";
+            case 16: return "action";
+            default: return "?";
+        }
+    };
+    for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
+        const int32_t directionMask = getShiftedMask5(mask, 5 * layer);
+        if (directionMask == 0) {
+            continue;
+        }
+        if (!emitted) {
+            stream << "[";
+        } else {
+            stream << ",";
+        }
+        emitted = true;
+        stream << "layer=" << layer << ":" << dirName(directionMask);
+    }
+    if (!emitted) {
+        return "[]";
+    }
+    stream << "]";
+    return stream.str();
+}
+
+void dumpActiveMovements(const Session& session, std::string_view label) {
+    if (!movementDebugEnabled()) {
+        return;
+    }
+    std::ostringstream header;
+    header << std::string(label) << " hash=" << hashSession64(session);
+    movementDebugLog(header.str());
+    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
+        const BitVector movementMask = getCellMovements(session, tileIndex);
+        if (!anyBitsSet(movementMask)) {
+            continue;
+        }
+        const int32_t x = tileIndex / session.liveLevel.height;
+        const int32_t y = tileIndex % session.liveLevel.height;
+        std::ostringstream line;
+        line << "tile=(" << x << "," << y << ")"
+             << " objects=" << describeObjects(session, getCellObjects(session, tileIndex))
+             << " movements=" << describeMovements(session, movementMask);
+        movementDebugLog(line.str());
     }
 }
 
@@ -191,9 +382,14 @@ void queueRuleCommands(const Rule& rule, CommandState& state) {
     }
 }
 
-void tryPlayMaskSounds(Session& session, const json::Value& entries, const BitVector& changedMask) {
+void tryPlayMaskSounds(Session& session, const json::Value& entries, const BitVector& changedMask, const char* kind) {
     if (!entries.isArray() || !anyBitsSet(changedMask)) {
         return;
+    }
+    if (audioDebugEnabled()) {
+        std::ostringstream stream;
+        stream << "kind=" << kind << " changed=" << describeObjects(session, changedMask);
+        audioDebugLog(stream.str());
     }
     for (const auto& entryValue : entries.asArray()) {
         if (!entryValue.isObject()) {
@@ -206,7 +402,14 @@ void tryPlayMaskSounds(Session& session, const json::Value& entries, const BitVe
         }
         const BitVector objectMask = parseIntVector(*objectMaskValue);
         if (anyBitsInCommon(changedMask, objectMask)) {
-            appendAudioEvent(session, toInt(*seedValue), "");
+            if (audioDebugEnabled()) {
+                std::ostringstream stream;
+                stream << "matched kind=" << kind
+                       << " seed=" << toInt(*seedValue)
+                       << " mask=" << describeObjects(session, objectMask);
+                audioDebugLog(stream.str());
+            }
+            appendAudioEvent(session, toInt(*seedValue), kind);
         }
     }
 }
@@ -254,6 +457,16 @@ double randomUniform(Session::RandomState& state) {
         output += nextRandomByte(state);
     }
     return output / (std::pow(2.0, 56.0) - 1.0);
+}
+
+std::vector<int32_t> previewRandomBytes(const Session::RandomState& state, int count) {
+    Session::RandomState probe = state;
+    std::vector<int32_t> bytes;
+    bytes.reserve(static_cast<size_t>(std::max(count, 0)));
+    for (int idx = 0; idx < count; ++idx) {
+        bytes.push_back(static_cast<int32_t>(nextRandomByte(probe)));
+    }
+    return bytes;
 }
 
 bool anyBitsInCommon(const BitVector& lhs, const BitVector& rhs) {
@@ -500,6 +713,25 @@ PreparedSession parsePreparedSession(const json::Value& value) {
     prepared.winning = toBool(requireField(object, "winning"));
     if (const auto* seed = value.find("loaded_level_seed"); seed && !seed->isNull()) {
         prepared.loadedLevelSeed = toString(*seed);
+    }
+    if (const auto* randomState = value.find("random_state"); randomState && randomState->isObject()) {
+        const auto& randomStateObject = randomState->asObject();
+        prepared.hasRandomState = true;
+        if (const auto* valid = randomState->find("valid"); valid && !valid->isNull()) {
+            prepared.randomStateValid = toBool(*valid);
+        }
+        if (const auto* i = randomState->find("i"); i && !i->isNull()) {
+            prepared.randomStateI = static_cast<uint8_t>(toInt(*i));
+        }
+        if (const auto* j = randomState->find("j"); j && !j->isNull()) {
+            prepared.randomStateJ = static_cast<uint8_t>(toInt(*j));
+        }
+        if (const auto* s = randomState->find("s"); s && s->isArray()) {
+            prepared.randomStateS.reserve(s->asArray().size());
+            for (const auto& entry : s->asArray()) {
+                prepared.randomStateS.push_back(static_cast<uint8_t>(toInt(entry)));
+            }
+        }
     }
     prepared.oldFlickscreenDat = parseIntVector(requireField(object, "old_flickscreen_dat"));
     prepared.level = parseLevelTemplate(requireField(object, "level"));
@@ -797,23 +1029,22 @@ bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer,
                 if (!anyBitsInCommon(sourceMaskBeforeMove, objectMask)) {
                     continue;
                 }
-                BitVector layerDirectionMask(static_cast<size_t>(session.game->strideMovement), 0);
-                const int32_t shift = layer * 5;
-                const int32_t word = shift >> 5;
-                const int32_t bit = shift & 31;
-                layerDirectionMask[static_cast<size_t>(word)] = directionMask << bit;
-                if (!anyBitsInCommon(directionMaskBits, layerDirectionMask)) {
+                if ((getShiftedMask5(directionMaskBits, 5 * layer) & directionMask) == 0) {
                     continue;
                 }
-                const int32_t seed = toInt(*seedValue);
-                const auto duplicate = std::find_if(session.lastAudioEvents.begin(), session.lastAudioEvents.end(), [seed](const ps_audio_event& event) {
-                    return event.seed == seed;
-                });
-                if (duplicate == session.lastAudioEvents.end()) {
-                    session.lastAudioEvents.push_back(ps_audio_event{seed, ""});
-                }
+                appendAudioEvent(session, toInt(*seedValue), "canmove");
             }
         }
+    }
+
+    if (movementDebugEnabled()) {
+        std::ostringstream stream;
+        stream << "resolve tile=(" << x << "," << y << ")"
+               << " target=(" << targetX << "," << targetY << ")"
+               << " layer=" << layer
+               << " objects=" << describeObjects(session, movingEntities)
+               << " direction=" << describeMovements(session, getCellMovements(session, tileIndex));
+        movementDebugLog(stream.str());
     }
 
     setCellObjects(session, tileIndex, sourceMask);
@@ -915,7 +1146,7 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                 if (!anyBitsInCommon(directionMaskBits, movementMask)) {
                     continue;
                 }
-                appendAudioEvent(session, toInt(*seedValue), "");
+                appendAudioEvent(session, toInt(*seedValue), "cantmove");
             }
         }
     }
@@ -1321,6 +1552,15 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
             }
         }
 
+        if (changed) {
+            std::ostringstream stream;
+            stream << "line=" << rule.lineNumber << " matched=1 changed=1 ellipsis=1";
+            ruleDebugLog(stream.str());
+        } else if (ruleDebugEnabled() && !matches.empty()) {
+            std::ostringstream stream;
+            stream << "line=" << rule.lineNumber << " matched=1 changed=0 ellipsis=1";
+            ruleDebugLog(stream.str());
+        }
         return RuleApplyOutcome{true, changed};
     }
     for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
@@ -1389,6 +1629,17 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
             changed = applyRowAt(session, rule, rule.patterns[rowIndex], tuple[rowIndex], delta) || changed;
         }
+    }
+    if (changed) {
+        std::ostringstream stream;
+        stream << "line=" << rule.lineNumber
+               << " matched=1 changed=1 row_count=" << rule.patterns.size();
+        ruleDebugLog(stream.str());
+    } else if (ruleDebugEnabled()) {
+        std::ostringstream stream;
+        stream << "line=" << rule.lineNumber
+               << " matched=1 changed=0 row_count=" << rule.patterns.size();
+        ruleDebugLog(stream.str());
     }
     return RuleApplyOutcome{true, changed};
 }
@@ -1469,11 +1720,63 @@ bool applyRandomRuleGroup(Session& session, const std::vector<Rule>& group, Comm
         return false;
     }
 
+    const auto sessionHashFilter = randomDebugSessionHashFilter();
+    const auto boardHashFilter = randomDebugBoardHashFilter();
+    const uint64_t sessionHashBeforeRandom = (randomDebugEnabled() && sessionHashFilter.has_value())
+        ? hashSession64(session)
+        : 0;
+    std::optional<std::string> serializedBeforeRandom;
+    if (randomDebugEnabled() && (boardHashFilter.has_value() || !randomDebugSubstringFilter().empty())) {
+        serializedBeforeRandom = serializeTestString(session);
+    }
+
+    bool shouldLogRandom = randomDebugEnabled();
+    if (shouldLogRandom && sessionHashFilter.has_value()) {
+        shouldLogRandom = sessionHashBeforeRandom == *sessionHashFilter;
+    }
+    if (shouldLogRandom && boardHashFilter.has_value()) {
+        const uint64_t serializedHash = fnv1a64(
+            reinterpret_cast<const uint8_t*>(serializedBeforeRandom->data()),
+            serializedBeforeRandom->size()
+        );
+        shouldLogRandom = serializedHash == *boardHashFilter;
+        if (shouldLogRandom) {
+            const std::string_view substring = randomDebugSubstringFilter();
+            if (!substring.empty()) {
+                shouldLogRandom = serializedBeforeRandom->find(substring) != std::string::npos;
+            }
+        }
+    } else if (shouldLogRandom) {
+        const std::string_view substring = randomDebugSubstringFilter();
+        if (!substring.empty()) {
+            shouldLogRandom = serializedBeforeRandom->find(substring) != std::string::npos;
+        }
+    }
+
+    const double randomValue = randomUniform(session.randomState);
     const size_t chosenIndex = std::min(
         candidates.size() - 1,
-        static_cast<size_t>(std::floor(randomUniform(session.randomState) * static_cast<double>(candidates.size())))
+        static_cast<size_t>(std::floor(randomValue * static_cast<double>(candidates.size())))
     );
     const Candidate& chosen = candidates[chosenIndex];
+    if (shouldLogRandom) {
+        std::ostringstream stream;
+        stream << "group_line=" << group[0].lineNumber
+               << " candidate_count=" << candidates.size()
+               << " random=" << randomValue
+               << " chosen_index=" << chosenIndex;
+        for (size_t index = 0; index < candidates.size(); ++index) {
+            stream << " candidate[" << index << "]={line=" << candidates[index].rule->lineNumber << ",tuple=";
+            for (size_t tupleIndex = 0; tupleIndex < candidates[index].tuple.size(); ++tupleIndex) {
+                if (tupleIndex > 0) {
+                    stream << ",";
+                }
+                stream << candidates[index].tuple[tupleIndex];
+            }
+            stream << "}";
+        }
+        randomDebugLog(stream.str());
+    }
     queueRuleCommands(*chosen.rule, commands);
     const auto [dx, dy] = directionMaskToDelta(chosen.rule->direction);
     const int32_t delta = dx * session.liveLevel.height + dy;
@@ -1484,6 +1787,12 @@ bool applyRandomRuleGroup(Session& session, const std::vector<Rule>& group, Comm
     bool changed = false;
     for (size_t rowIndex = 0; rowIndex < chosen.tuple.size() && rowIndex < chosen.rule->patterns.size(); ++rowIndex) {
         changed = applyRowAt(session, *chosen.rule, chosen.rule->patterns[rowIndex], chosen.tuple[rowIndex], delta) || changed;
+    }
+    if (changed) {
+        std::ostringstream stream;
+        stream << "line=" << chosen.rule->lineNumber
+               << " matched=1 changed=1 random=1 candidate_count=" << candidates.size();
+        ruleDebugLog(stream.str());
     }
     return changed;
 }
@@ -1672,7 +1981,6 @@ void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot) {
     session.liveMovements = snapshot.liveMovements;
     session.rigidGroupIndexMasks = snapshot.rigidGroupIndexMasks;
     session.rigidMovementAppliedMasks = snapshot.rigidMovementAppliedMasks;
-    session.randomState = snapshot.randomState;
     session.pendingAgain = false;
     rebuildMasks(session);
 }
@@ -1829,14 +2137,26 @@ void resetToPrepared(Session& session) {
     session.canUndo = false;
     session.undoStack.clear();
     session.pendingAgain = false;
-    seedRandomState(session.randomState, session.preparedSession.loadedLevelSeed);
+    if (session.preparedSession.hasRandomState
+        && session.preparedSession.randomStateS.size() == session.randomState.s.size()) {
+        session.randomState.valid = session.preparedSession.randomStateValid;
+        session.randomState.i = session.preparedSession.randomStateI;
+        session.randomState.j = session.preparedSession.randomStateJ;
+        std::copy(
+            session.preparedSession.randomStateS.begin(),
+            session.preparedSession.randomStateS.end(),
+            session.randomState.s.begin()
+        );
+    } else {
+        seedRandomState(session.randomState, session.preparedSession.loadedLevelSeed);
+    }
     rebuildMasks(session);
 }
 
 } // namespace
 
 void runRulesOnLevelStart(Session& session);
-bool wouldAgainChange(const Session& session);
+bool wouldAgainChange(Session& session);
 
 std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_ptr<const Game>& outGame) {
     try {
@@ -2133,6 +2453,9 @@ std::string exportSnapshot(const Session& session) {
            << "\"message_selected\":" << (session.preparedSession.messageSelected ? "true" : "false") << ","
            << "\"winning\":" << (session.preparedSession.winning ? "true" : "false") << ","
            << "\"movement_word_count_nonzero\":" << countNonZeroWords(session.liveMovements) << ","
+           << "\"random_state_valid\":" << (session.randomState.valid ? "true" : "false") << ","
+           << "\"random_state_i\":" << static_cast<int32_t>(session.randomState.i) << ","
+           << "\"random_state_j\":" << static_cast<int32_t>(session.randomState.j) << ","
            << "\"loaded_level_seed\":\"" << escapeJson(session.preparedSession.loadedLevelSeed) << "\","
            << "\"hash64\":" << hash64 << ","
            << "\"hash128\":{\"lo\":" << hash128.lo << ",\"hi\":" << hash128.hi << "},"
@@ -2142,6 +2465,15 @@ std::string exportSnapshot(const Session& session) {
             stream << ",";
         }
         stream << session.boardMovementMask[index];
+    }
+    stream << "],"
+           << "\"random_state_preview_bytes\":[";
+    const std::vector<int32_t> previewBytes = previewRandomBytes(session.randomState, 8);
+    for (size_t index = 0; index < previewBytes.size(); ++index) {
+        if (index > 0) {
+            stream << ",";
+        }
+        stream << previewBytes[index];
     }
     stream << "],"
            << "\"serialized_level\":\"" << escapeJson(serializeTestString(session)) << "\""
@@ -2176,32 +2508,23 @@ void runRulesOnLevelStart(Session& session) {
     session.pendingAgain = false;
 }
 
-bool wouldAgainChange(const Session& session) {
-    Session probe = session;
-    const PreparedSession beforePrepared = probe.preparedSession;
-    const LevelTemplate beforeLevel = probe.liveLevel;
-    const ps_step_result result = executeTurn(probe, 0, ExecuteTurnOptions{
+bool wouldAgainChange(Session& session) {
+    const uint64_t beforeHash = hashSession64(session);
+    session.pendingAgain = false;
+    const ps_step_result result = executeTurn(session, 0, ExecuteTurnOptions{
         .pushUndo = false,
         .ignoreWin = true,
+        .dontModify = true,
     });
+    const bool changed = result.changed || result.transitioned || result.won;
+    const int iterations = 1;
 
-    const bool changed = result.transitioned
-        || probe.liveLevel.objects != beforeLevel.objects
-        || probe.preparedSession.currentLevelIndex != beforePrepared.currentLevelIndex
-        || probe.preparedSession.currentLevelTarget != beforePrepared.currentLevelTarget
-        || probe.preparedSession.titleScreen != beforePrepared.titleScreen
-        || probe.preparedSession.textMode != beforePrepared.textMode
-        || probe.preparedSession.titleMode != beforePrepared.titleMode
-        || probe.preparedSession.titleSelection != beforePrepared.titleSelection
-        || probe.preparedSession.titleSelected != beforePrepared.titleSelected
-        || probe.preparedSession.messageSelected != beforePrepared.messageSelected;
     if (againDebugEnabled()) {
         std::ostringstream stream;
         stream << "probe changed=" << (changed ? 1 : 0)
-               << " transitioned=" << (result.transitioned ? 1 : 0)
-               << " won=" << (result.won ? 1 : 0)
-               << " before_hash=" << hashSession64(session)
-               << " after_hash=" << hashSession64(probe);
+               << " iterations=" << iterations
+               << " before_hash=" << beforeHash
+               << " after_hash=" << hashSession64(session);
         againDebugLog(stream.str());
     }
     return changed;
@@ -2249,6 +2572,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         }
         rebuildMasks(session);
         const bool ruleChangedThisPass = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands, &bannedGroups);
+        dumpActiveMovements(session, "pre-resolve");
         const MovementResolveOutcome movementOutcome = resolveMovements(session, &bannedGroups);
         rebuildMasks(session);
         if (rigidDebugEnabled()) {
@@ -2276,6 +2600,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
             rigidDebugLog(stream.str());
         }
         if (movementOutcome.shouldUndo && rigidLoopCount < 49) {
+            clearAudioEventsByKind(session, "canmove");
             ++rigidLoopCount;
             continue;
         }
@@ -2304,22 +2629,40 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         }
     }
 
-    tryPlayMaskSounds(session, session.game->sfxCreationMasks, session.pendingCreateMask);
-    tryPlayMaskSounds(session, session.game->sfxDestructionMasks, session.pendingDestroyMask);
-    processOutputCommands(session, commands);
-
     if (commandQueueContains(commands, "cancel")) {
         restoreSnapshot(session, turnStart);
         if (options.pushUndo) {
             discardTopUndoSnapshot(session);
         }
-        tryPlaySimpleSound(session, "cancel");
-        result.changed = modified || !commands.queue.empty();
+        session.lastAudioEvents.clear();
+        if (!options.dontModify) {
+            tryPlaySimpleSound(session, "cancel");
+        }
+        result.changed = options.dontModify
+            ? commands.queue.size() > 1
+            : (modified || !commands.queue.empty());
+        sortAudioEvents(session);
         result.audio_event_count = session.lastAudioEvents.size();
         result.audio_events = session.lastAudioEvents.empty() ? nullptr : session.lastAudioEvents.data();
         rebuildMasks(session);
         return result;
     }
+
+    if (options.dontModify) {
+        if (modified || commandQueueContains(commands, "win") || commandQueueContains(commands, "restart")) {
+            restoreSnapshot(session, turnStart);
+            rebuildMasks(session);
+            result.changed = true;
+            return result;
+        }
+        restoreSnapshot(session, turnStart);
+        rebuildMasks(session);
+        return result;
+    }
+
+    tryPlayMaskSounds(session, session.game->sfxCreationMasks, session.pendingCreateMask, "create");
+    tryPlayMaskSounds(session, session.game->sfxDestructionMasks, session.pendingDestroyMask, "destroy");
+    processOutputCommands(session, commands);
 
     if (commandQueueContains(commands, "restart") && !options.ignoreRestartCommand) {
         restoreRestartTarget(session);
@@ -2334,7 +2677,26 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     }
 
     const bool hasAgain = commandQueueContains(commands, "again");
-    const bool againWouldChange = !won && hasAgain && modified && wouldAgainChange(session);
+    bool againWouldChange = false;
+    if (!won && hasAgain && modified) {
+        const auto audioBeforeAgainProbe = session.lastAudioEvents;
+        againWouldChange = wouldAgainChange(session);
+        session.lastAudioEvents = audioBeforeAgainProbe;
+    }
+    if (ruleDebugEnabled()) {
+        std::ostringstream stream;
+        stream << "turn_summary direction=" << directionMask
+               << " seeded=" << (seeded ? 1 : 0)
+               << " rule_changed=" << (ruleChanged ? 1 : 0)
+               << " moved=" << (moved ? 1 : 0)
+               << " late_rule_changed=" << (lateRuleChanged ? 1 : 0)
+               << " modified=" << (modified ? 1 : 0)
+               << " won=" << (won ? 1 : 0)
+               << " transitioned=" << (transitioned ? 1 : 0)
+               << " has_again=" << (hasAgain ? 1 : 0)
+               << " schedule_again=" << (againWouldChange ? 1 : 0);
+        ruleDebugLog(stream.str());
+    }
     if (againDebugEnabled() && (hasAgain || session.pendingAgain || modified)) {
         std::ostringstream stream;
         stream << "post-turn modified=" << (modified ? 1 : 0)
@@ -2357,6 +2719,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     result.changed = seeded || ruleChanged || moved || lateRuleChanged || modified || transitioned || !commands.queue.empty();
     result.transitioned = transitioned;
     result.won = won;
+    sortAudioEvents(session);
     result.audio_event_count = session.lastAudioEvents.size();
     result.audio_events = session.lastAudioEvents.empty() ? nullptr : session.lastAudioEvents.data();
     rebuildMasks(session);

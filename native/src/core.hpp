@@ -63,6 +63,11 @@ struct PreparedSession {
     bool messageSelected = false;
     bool winning = false;
     std::string loadedLevelSeed;
+    bool hasRandomState = false;
+    bool randomStateValid = false;
+    uint8_t randomStateI = 0;
+    uint8_t randomStateJ = 0;
+    std::vector<uint8_t> randomStateS;
     std::vector<int32_t> oldFlickscreenDat;
     LevelTemplate level;
     RestartSnapshot restart;

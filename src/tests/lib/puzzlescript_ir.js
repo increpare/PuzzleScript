@@ -210,6 +210,7 @@ function serializeGameState(state) {
 
 function serializePreparedSession() {
     const currentLevel = level;
+    const randomState = RandomGen && RandomGen._state ? RandomGen._state : null;
     return {
         current_level_index: typeof curlevel === 'number' ? curlevel : 0,
         current_level_target: typeof curlevelTarget === 'number' ? curlevelTarget : null,
@@ -221,6 +222,12 @@ function serializePreparedSession() {
         message_selected: Boolean(messageselected),
         winning: Boolean(winning),
         loaded_level_seed: typeof loadedLevelSeed === 'string' ? loadedLevelSeed : null,
+        random_state: randomState ? {
+            valid: true,
+            i: typeof randomState.i === 'number' ? randomState.i : 0,
+            j: typeof randomState.j === 'number' ? randomState.j : 0,
+            s: Array.isArray(randomState.s) ? Array.from(randomState.s) : [],
+        } : null,
         old_flickscreen_dat: Array.isArray(oldflickscreendat) ? oldflickscreendat.slice() : [],
         level: {
             line_number: currentLevel.lineNumber,
