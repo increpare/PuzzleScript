@@ -532,7 +532,21 @@ void diagnoseLegendLineTokens(
     }
 }
 
-std::string stripComments(std::string_view line, ParserState& state, DiagnosticSink& diagnostics) {
+bool isLevelsMessagePhysicalLine(std::string_view trimmedLower, std::string_view trimmedMixed) {
+    if (trimmedLower.rfind("message", 0) != 0) {
+        return false;
+    }
+    if (trimmedLower.size() == 7) {
+        return true;
+    }
+    if (trimmedMixed.size() <= 7) {
+        return false;
+    }
+    const char boundary = trimmedMixed[7];
+    return std::isspace(static_cast<unsigned char>(boundary)) != 0 || boundary == ':';
+}
+
+std::string stripCommentsCore(std::string_view line, ParserState& state, DiagnosticSink& diagnostics) {
     std::string visible;
     visible.reserve(line.size());
     for (size_t index = 0; index < line.size(); ++index) {
@@ -567,6 +581,21 @@ std::string stripComments(std::string_view line, ParserState& state, DiagnosticS
         }
     }
     return visible;
+}
+
+std::string stripComments(std::string_view line, ParserState& state, DiagnosticSink& diagnostics) {
+    const std::string trimmedLine = trim(std::string(line));
+    const std::string trimmedLower = toLowerCopy(trimmedLine);
+    // Inside an open multi-line `(...)`, do not apply line-local shortcuts — comment depth carries across lines.
+    if (state.commentLevel == 0) {
+        // parser.js parseLevelsToken: after matching "message", the rest of the line is skipped without
+        // comment '(' / ')' processing — so ":)" in level messages is literal.
+        if (state.section == "levels" && isLevelsMessagePhysicalLine(trimmedLower, trimmedLine)) {
+            return trimmedLine;
+        }
+    }
+
+    return stripCommentsCore(trimmedLine, state, diagnostics);
 }
 
 std::string takePrefixBeforeComment(std::string_view line) {
@@ -671,7 +700,16 @@ void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::str
                     && std::isspace(static_cast<unsigned char>(rawTrimmed[valueStart])) != 0) {
                     ++valueStart;
                 }
-                storedValue = trim(takePrefixBeforeComment(std::string_view(rawTrimmed).substr(valueStart)));
+                const std::string rawValueTail = rawTrimmed.substr(valueStart);
+                storedValue = trim(takePrefixBeforeComment(std::string_view(rawValueTail)));
+                // parser.js only surfaces this reliably for long title lines where `(` starts a comment mid-value;
+                // homepage URLs may contain parentheses without this warning in the tokenizer snapshot.
+                if (key == "title" && rawValueTail.find('(') != std::string::npos) {
+                    diagnostics.warning(
+                        DiagnosticCode::GenericWarning,
+                        state.lineNumber,
+                        "Error: you can't embed comments in metadata values. Anything after the comment will be ignored.");
+                }
             }
         }
         state.metadata.push_back(key);
