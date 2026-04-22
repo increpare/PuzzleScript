@@ -122,6 +122,32 @@ bool ruleDebugEnabled() {
     return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
 }
 
+bool ruleDebugLineFilterMatches(int32_t lineNumber) {
+    if (!ruleDebugEnabled()) {
+        return false;
+    }
+    const char* value = std::getenv("PS_DEBUG_RULE_LINES");
+    if (value == nullptr || value[0] == '\0') {
+        return true;
+    }
+
+    std::stringstream stream(value);
+    std::string token;
+    while (std::getline(stream, token, ',')) {
+        if (token.empty()) {
+            continue;
+        }
+        try {
+            if (std::stoi(token) == lineNumber) {
+                return true;
+            }
+        } catch (const std::exception&) {
+            continue;
+        }
+    }
+    return false;
+}
+
 void ruleDebugLog(const std::string& message) {
     if (ruleDebugEnabled()) {
         std::cerr << "[rules] " << message << '\n';
@@ -306,6 +332,23 @@ std::string describeMovements(const Session& session, const BitVector& mask) {
     }
     if (!emitted) {
         return "[]";
+    }
+    stream << "]";
+    return stream.str();
+}
+
+std::string formatMatchList(const std::vector<int32_t>& matches, int32_t height, size_t limit = 8) {
+    std::ostringstream stream;
+    stream << "[";
+    for (size_t index = 0; index < matches.size() && index < limit; ++index) {
+        if (index > 0) {
+            stream << ",";
+        }
+        const int32_t tileIndex = matches[index];
+        stream << tileIndex << "@(" << (tileIndex / height) << "," << (tileIndex % height) << ")";
+    }
+    if (matches.size() > limit) {
+        stream << ",...";
     }
     stream << "]";
     return stream.str();
@@ -767,6 +810,13 @@ void setCellObjects(Session& session, int32_t tileIndex, const BitVector& object
     for (int32_t word = 0; word < session.game->strideObject; ++word) {
         session.liveLevel.objects[base + static_cast<size_t>(word)] = objects[static_cast<size_t>(word)];
     }
+    const int32_t columnIndex = tileIndex / session.liveLevel.height;
+    const int32_t rowIndex = tileIndex % session.liveLevel.height;
+    for (int32_t word = 0; word < session.game->strideObject; ++word) {
+        session.columnMasks[static_cast<size_t>(columnIndex * session.game->strideObject + word)] |= objects[static_cast<size_t>(word)];
+        session.rowMasks[static_cast<size_t>(rowIndex * session.game->strideObject + word)] |= objects[static_cast<size_t>(word)];
+        session.boardMask[static_cast<size_t>(word)] |= objects[static_cast<size_t>(word)];
+    }
 }
 
 BitVector getCellMovements(const Session& session, int32_t tileIndex) {
@@ -832,6 +882,13 @@ void setCellMovements(Session& session, int32_t tileIndex, const BitVector& move
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     for (int32_t word = 0; word < session.game->strideMovement; ++word) {
         session.liveMovements[base + static_cast<size_t>(word)] = movements[static_cast<size_t>(word)];
+    }
+    const int32_t columnIndex = tileIndex / session.liveLevel.height;
+    const int32_t rowIndex = tileIndex % session.liveLevel.height;
+    for (int32_t word = 0; word < session.game->strideMovement; ++word) {
+        session.columnMovementMasks[static_cast<size_t>(columnIndex * session.game->strideMovement + word)] |= movements[static_cast<size_t>(word)];
+        session.rowMovementMasks[static_cast<size_t>(rowIndex * session.game->strideMovement + word)] |= movements[static_cast<size_t>(word)];
+        session.boardMovementMask[static_cast<size_t>(word)] |= movements[static_cast<size_t>(word)];
     }
 }
 
@@ -1317,6 +1374,17 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     if (objects == oldObjects && movements == oldMovements && !rigidChange) {
         return false;
     }
+    if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+        std::ostringstream stream;
+        stream << "line=" << rule.lineNumber
+               << " apply tile=" << tileIndex
+               << "@(" << (tileIndex / session.liveLevel.height) << "," << (tileIndex % session.liveLevel.height) << ")"
+               << " objects_before=" << describeObjects(session, oldObjects)
+               << " objects_after=" << describeObjects(session, objects)
+               << " movements_before=" << describeMovements(session, oldMovements)
+               << " movements_after=" << describeMovements(session, movements);
+        ruleDebugLog(stream.str());
+    }
     setCellObjects(session, tileIndex, objects);
     setCellMovements(session, tileIndex, movements);
     accumulateMask(session.pendingCreateMask, created);
@@ -1563,10 +1631,32 @@ bool ruleCanPossiblyMatch(const Session& session, const Rule& rule) {
 }
 
 RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandState& commands) {
+    if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+        std::ostringstream stream;
+        stream << "line=" << rule.lineNumber
+               << " begin direction=" << rule.direction
+               << " pattern_rows=" << rule.patterns.size()
+               << " is_random=" << (rule.isRandom ? 1 : 0);
+        ruleDebugLog(stream.str());
+    }
     if (rule.isRandom || rule.patterns.empty()) {
+        if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+            std::ostringstream stream;
+            stream << "line=" << rule.lineNumber << " skip reason="
+                   << (rule.isRandom ? "random" : "empty-patterns");
+            ruleDebugLog(stream.str());
+        }
         return {};
     }
     if (!ruleCanPossiblyMatch(session, rule)) {
+        if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+            std::ostringstream stream;
+            stream << "line=" << rule.lineNumber
+                   << " skip reason=rule-mask"
+                   << " rule_mask=" << describeObjects(session, rule.ruleMask)
+                   << " board_mask=" << describeObjects(session, session.boardMask);
+            ruleDebugLog(stream.str());
+        }
         return {};
     }
     if (rule.patterns.size() == 1 && rule.ellipsisCount.size() == 1 && rule.ellipsisCount[0] == 1) {
@@ -1587,6 +1677,11 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
         const auto [dx, dy] = directionMaskToDelta(rule.direction);
         const int32_t parallelDelta = dx * session.liveLevel.height + dy;
         if (parallelDelta == 0) {
+            if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                std::ostringstream stream;
+                stream << "line=" << rule.lineNumber << " skip reason=parallel-delta-zero";
+                ruleDebugLog(stream.str());
+            }
             return {};
         }
 
@@ -1690,6 +1785,11 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
     const auto [dx, dy] = directionMaskToDelta(rule.direction);
     const int32_t delta = dx * session.liveLevel.height + dy;
     if (delta == 0) {
+        if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+            std::ostringstream stream;
+            stream << "line=" << rule.lineNumber << " skip reason=delta-zero";
+            ruleDebugLog(stream.str());
+        }
         return {};
     }
 
@@ -1705,7 +1805,24 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
             : BitVector{};
         auto matches = collectRowMatches(session, row, rule.direction, rowObjectMask, rowMovementMask);
         if (matches.empty()) {
+            if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                std::ostringstream stream;
+                stream << "line=" << rule.lineNumber
+                       << " row=" << rowIndex
+                       << " matches=0"
+                       << " object_mask=" << describeObjects(session, rowObjectMask)
+                       << " movement_mask=" << describeMovements(session, rowMovementMask);
+                ruleDebugLog(stream.str());
+            }
             return {};
+        }
+        if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+            std::ostringstream stream;
+            stream << "line=" << rule.lineNumber
+                   << " row=" << rowIndex
+                   << " matches=" << matches.size()
+                   << " starts=" << formatMatchList(matches, session.liveLevel.height);
+            ruleDebugLog(stream.str());
         }
         rowMatches.push_back(std::move(matches));
     }
@@ -2921,13 +3038,7 @@ ps_step_result step(Session& session, ps_input input) {
 }
 
 ps_step_result tick(Session& session) {
-    if (session.pendingAgain) {
-        return executeTurn(session, 0, ExecuteTurnOptions{.pushUndo = false});
-    }
-    session.lastAudioEvents.clear();
-    std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
-    rebuildMasks(session);
-    return ps_step_result{};
+    return executeTurn(session, 0, ExecuteTurnOptions{.pushUndo = false});
 }
 
 std::unique_ptr<Error> benchmarkCloneHash(const Session& session, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult) {
