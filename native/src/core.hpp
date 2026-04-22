@@ -116,11 +116,21 @@ struct Pattern {
     };
 
     Kind kind = Kind::CellPattern;
-    BitVector objectsPresent;
-    BitVector objectsMissing;
-    std::vector<BitVector> anyObjectsPresent;
-    BitVector movementsPresent;
-    BitVector movementsMissing;
+
+    // Fixed-width masks live in Game::maskArena. `objects*` masks have width
+    // Game::wordCount; `movements*` masks have width Game::movementWordCount.
+    MaskOffset objectsPresent   = kNullMaskOffset;
+    MaskOffset objectsMissing   = kNullMaskOffset;
+    MaskOffset movementsPresent = kNullMaskOffset;
+    MaskOffset movementsMissing = kNullMaskOffset;
+
+    // anyObjectsPresent is a variable-length list of masks of width
+    // Game::wordCount. Each mask's offset is stored in
+    // Game::anyObjectOffsets; this struct locates that run with
+    // [anyObjectsFirst, anyObjectsFirst + anyObjectsCount).
+    uint32_t anyObjectsFirst = 0;
+    uint32_t anyObjectsCount = 0;
+
     std::optional<Replacement> replacement;
 };
 
@@ -170,6 +180,10 @@ struct Game {
     uint32_t wordCount = 0;          // = strideObject; object-mask words per cell
     uint32_t movementWordCount = 0;  // = strideMovement; movement-mask words per cell
     std::vector<MaskWord> maskArena; // all per-game bitmasks concatenated
+    // Offsets into maskArena for each entry of Pattern::anyObjectsPresent
+    // runs. Pattern locates its entries as
+    // anyObjectOffsets[anyObjectsFirst .. anyObjectsFirst+anyObjectsCount).
+    std::vector<MaskOffset> anyObjectOffsets;
     int32_t layerCount = 1;
     int32_t objectCount = 0;
     int32_t backgroundId = -1;
