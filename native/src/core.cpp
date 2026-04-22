@@ -24,13 +24,17 @@ std::vector<int32_t> parseIntVector(const json::Value& value);
 std::vector<RuleCommand> parseRuleCommands(const json::Value& value);
 LoopPointTable parseLoopPointTable(const json::Value& value);
 std::map<std::string, int32_t> parseSoundEventMap(const json::Value& value);
-SoundMaskEntry parseSoundMaskEntry(const json::Value& value);
-std::vector<SoundMaskEntry> parseSoundMaskEntries(const json::Value& value);
-std::vector<std::vector<SoundMaskEntry>> parseLayeredSoundMaskEntries(const json::Value& value);
+SoundMaskEntry parseSoundMaskEntry(Game& game, const json::Value& value);
+std::vector<SoundMaskEntry> parseSoundMaskEntries(Game& game, const json::Value& value);
+std::vector<std::vector<SoundMaskEntry>> parseLayeredSoundMaskEntries(Game& game, const json::Value& value);
 bool anyBitsInCommon(const BitVector& lhs, const BitVector& rhs);
+bool anyBitsInCommon(const int32_t* lhs, size_t lhsCount, const int32_t* rhs, size_t rhsCount);
 BitVector getCellObjects(const Session& session, int32_t tileIndex);
 BitVector getCellMovements(const Session& session, int32_t tileIndex);
 int32_t getShiftedMask5(const BitVector& value, int32_t shift);
+
+inline const int32_t* maskPtr(const Game& game, MaskOffset offset);
+inline std::vector<int32_t> arenaCopy(const Game& game, MaskOffset offset, uint32_t wordCount);
 
 struct CommandState {
     std::vector<std::string> queue;
@@ -453,13 +457,18 @@ void tryPlayMaskSounds(Session& session, const std::vector<SoundMaskEntry>& entr
         stream << "kind=" << kind << " changed=" << describeObjects(session, changedMask);
         audioDebugLog(stream.str());
     }
+    const Game& game = *session.game;
+    const uint32_t wordCount = game.wordCount;
     for (const auto& entry : entries) {
-        if (anyBitsInCommon(changedMask, entry.objectMask)) {
+        const int32_t* entryMask = maskPtr(game, entry.objectMask);
+        if (entryMask == nullptr) continue;
+        if (anyBitsInCommon(changedMask.data(), changedMask.size(), entryMask, wordCount)) {
             if (audioDebugEnabled()) {
+                const BitVector entryMaskCopy = arenaCopy(game, entry.objectMask, wordCount);
                 std::ostringstream stream;
                 stream << "matched kind=" << kind
                        << " seed=" << entry.seed
-                       << " mask=" << describeObjects(session, entry.objectMask);
+                       << " mask=" << describeObjects(session, entryMaskCopy);
                 audioDebugLog(stream.str());
             }
             appendAudioEvent(session, entry.seed, kind);
@@ -524,6 +533,18 @@ std::vector<int32_t> previewRandomBytes(const Session::RandomState& state, int c
 
 bool anyBitsInCommon(const BitVector& lhs, const BitVector& rhs) {
     const size_t count = std::min(lhs.size(), rhs.size());
+    for (size_t index = 0; index < count; ++index) {
+        if ((lhs[index] & rhs[index]) != 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Raw-pointer overload so arena-stored masks can be checked without
+// materializing a BitVector.
+bool anyBitsInCommon(const int32_t* lhs, size_t lhsCount, const int32_t* rhs, size_t rhsCount) {
+    const size_t count = std::min(lhsCount, rhsCount);
     for (size_t index = 0; index < count; ++index) {
         if ((lhs[index] & rhs[index]) != 0) {
             return true;
@@ -669,6 +690,22 @@ inline bool arenaAnyBitsSet(const Game& game, MaskOffset offset, uint32_t wordCo
     return false;
 }
 
+// Return a raw pointer to the first word of an arena-stored mask, or nullptr
+// if the offset is null.
+inline const int32_t* maskPtr(const Game& game, MaskOffset offset) {
+    return offset == kNullMaskOffset ? nullptr : game.maskArena.data() + offset;
+}
+
+// Binary-search a sorted NamedMaskEntry table by name. Returns
+// kNullMaskOffset if not found.
+inline MaskOffset lookupNamedMask(const std::vector<Game::NamedMaskEntry>& table,
+                                  const std::string& name) {
+    auto it = std::lower_bound(table.begin(), table.end(), name,
+        [](const Game::NamedMaskEntry& entry, const std::string& n) { return entry.name < n; });
+    if (it == table.end() || it->name != name) return kNullMaskOffset;
+    return it->offset;
+}
+
 std::vector<RuleCommand> parseRuleCommands(const json::Value& value) {
     std::vector<RuleCommand> result;
     if (!value.isArray()) {
@@ -762,28 +799,39 @@ std::map<std::string, int32_t> parseSoundEventMap(const json::Value& value) {
     return parseIntMap(value);
 }
 
-std::map<std::string, BitVector> parseBitVectorMap(const json::Value& value) {
-    std::map<std::string, BitVector> result;
-    for (const auto& [key, entry] : value.asObject()) {
-        result.emplace(key, parseIntVector(entry));
+// Parse a JSON map of { name -> int[] bitmask } into a sorted vector of
+// NamedMaskEntry, with mask words stored into Game::maskArena.
+std::vector<Game::NamedMaskEntry> parseNamedMaskTable(Game& game, const json::Value& value) {
+    std::vector<Game::NamedMaskEntry> result;
+    const auto& object = value.asObject();
+    result.reserve(object.size());
+    for (const auto& [key, entry] : object) {
+        Game::NamedMaskEntry named;
+        named.name = key;
+        named.offset = storeMaskWords(game, parseIntVector(entry));
+        result.push_back(std::move(named));
     }
+    std::sort(result.begin(), result.end(),
+              [](const Game::NamedMaskEntry& a, const Game::NamedMaskEntry& b) { return a.name < b.name; });
     return result;
 }
 
-SoundMaskEntry parseSoundMaskEntry(const json::Value& value) {
+SoundMaskEntry parseSoundMaskEntry(Game& game, const json::Value& value) {
     const auto& object = value.asObject();
     SoundMaskEntry entry;
     if (const auto* objectMask = value.find("objectMask"); objectMask != nullptr) {
-        entry.objectMask = parseIntVector(*objectMask);
+        entry.objectMask = storeMaskWords(game, parseIntVector(*objectMask));
     }
     if (const auto* directionMask = value.find("directionMask"); directionMask != nullptr) {
-        entry.directionMask = parseIntVector(*directionMask);
+        auto words = parseIntVector(*directionMask);
+        entry.directionMaskWidth = static_cast<uint32_t>(words.size());
+        entry.directionMask = storeMaskWords(game, words);
     }
     entry.seed = toInt(requireField(object, "seed"));
     return entry;
 }
 
-std::vector<SoundMaskEntry> parseSoundMaskEntries(const json::Value& value) {
+std::vector<SoundMaskEntry> parseSoundMaskEntries(Game& game, const json::Value& value) {
     std::vector<SoundMaskEntry> result;
     if (!value.isArray()) {
         return result;
@@ -793,19 +841,19 @@ std::vector<SoundMaskEntry> parseSoundMaskEntries(const json::Value& value) {
         if (!entry.isObject()) {
             continue;
         }
-        result.push_back(parseSoundMaskEntry(entry));
+        result.push_back(parseSoundMaskEntry(game, entry));
     }
     return result;
 }
 
-std::vector<std::vector<SoundMaskEntry>> parseLayeredSoundMaskEntries(const json::Value& value) {
+std::vector<std::vector<SoundMaskEntry>> parseLayeredSoundMaskEntries(Game& game, const json::Value& value) {
     std::vector<std::vector<SoundMaskEntry>> result;
     if (!value.isArray()) {
         return result;
     }
     result.reserve(value.asArray().size());
     for (const auto& layer : value.asArray()) {
-        result.push_back(parseSoundMaskEntries(layer));
+        result.push_back(parseSoundMaskEntries(game, layer));
     }
     return result;
 }
@@ -912,12 +960,12 @@ std::vector<std::vector<Rule>> parseRuleGroups(Game& game, const json::Value& va
     return groups;
 }
 
-WinCondition parseWinCondition(const json::Value& value) {
+WinCondition parseWinCondition(Game& game, const json::Value& value) {
     const auto& object = value.asObject();
     WinCondition condition;
     condition.quantifier = toInt(requireField(object, "quantifier"));
-    condition.filter1 = parseIntVector(requireField(object, "filter1"));
-    condition.filter2 = parseIntVector(requireField(object, "filter2"));
+    condition.filter1 = storeMaskWords(game, parseIntVector(requireField(object, "filter1")));
+    condition.filter2 = storeMaskWords(game, parseIntVector(requireField(object, "filter2")));
     condition.lineNumber = toInt(requireField(object, "line_number"));
     condition.aggr1 = toBool(requireField(object, "aggr1"));
     condition.aggr2 = toBool(requireField(object, "aggr2"));
@@ -1182,22 +1230,25 @@ std::pair<int32_t, int32_t> directionMaskToDelta(int32_t directionMask) {
 }
 
 bool seedPlayerMovements(Session& session, int32_t directionMask) {
-    if (directionMask == 0 || session.game->playerMask.empty()) {
+    const Game& game = *session.game;
+    if (directionMask == 0 || game.playerMask == kNullMaskOffset) {
         return false;
     }
+    const int32_t* playerMask = maskPtr(game, game.playerMask);
+    const uint32_t wordCount = game.wordCount;
 
     bool changed = false;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
     for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
         BitVector cellMask = getCellObjects(session, tileIndex);
-        if (!session.game->playerMaskAggregate) {
-            if (!anyBitsInCommon(cellMask, session.game->playerMask)) {
+        if (!game.playerMaskAggregate) {
+            if (!anyBitsInCommon(cellMask.data(), cellMask.size(), playerMask, wordCount)) {
                 continue;
             }
         } else {
             bool containsAll = true;
-            for (size_t word = 0; word < session.game->playerMask.size(); ++word) {
-                if ((cellMask[word] & session.game->playerMask[word]) != session.game->playerMask[word]) {
+            for (uint32_t word = 0; word < wordCount; ++word) {
+                if ((cellMask[word] & playerMask[word]) != playerMask[word]) {
                     containsAll = false;
                     break;
                 }
@@ -1207,8 +1258,8 @@ bool seedPlayerMovements(Session& session, int32_t directionMask) {
             }
         }
 
-        for (size_t word = 0; word < cellMask.size(); ++word) {
-            cellMask[word] &= session.game->playerMask[word];
+        for (size_t word = 0; word < cellMask.size() && word < wordCount; ++word) {
+            cellMask[word] &= playerMask[word];
         }
         const auto layers = findLayersInMask(session, cellMask);
         if (layers.empty()) {
@@ -1233,19 +1284,22 @@ bool seedPlayerMovements(Session& session, int32_t directionMask) {
 }
 
 bool cellContainsPlayer(const Session& session, int32_t tileIndex) {
-    if (session.game->playerMask.empty()) {
+    const Game& game = *session.game;
+    if (game.playerMask == kNullMaskOffset) {
         return false;
     }
+    const int32_t* playerMask = maskPtr(game, game.playerMask);
+    const uint32_t wordCount = game.wordCount;
     const BitVector cellMask = getCellObjects(session, tileIndex);
-    if (!session.game->playerMaskAggregate) {
-        return anyBitsInCommon(cellMask, session.game->playerMask);
+    if (!game.playerMaskAggregate) {
+        return anyBitsInCommon(cellMask.data(), cellMask.size(), playerMask, wordCount);
     }
-    return bitsSetInArray(session.game->playerMask, cellMask);
+    return bitsSetInArray(playerMask, wordCount, cellMask.data(), cellMask.size());
 }
 
 std::vector<int32_t> collectPlayerPositions(const Session& session) {
     std::vector<int32_t> positions;
-    if (session.game->playerMask.empty()) {
+    if (session.game->playerMask == kNullMaskOffset) {
         return positions;
     }
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
@@ -1268,7 +1322,8 @@ bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer,
     }
 
     const int32_t targetIndex = tileIndex + dy + dx * session.liveLevel.height;
-    const BitVector& layerMask = session.game->layerMasks[static_cast<size_t>(layer)];
+    const Game& game = *session.game;
+    const BitVector layerMask = arenaCopy(game, game.layerMaskOffsets[static_cast<size_t>(layer)], game.wordCount);
     BitVector sourceMask = getCellObjects(session, tileIndex);
     const BitVector sourceMaskBeforeMove = sourceMask;
     BitVector targetMask = getCellObjects(session, targetIndex);
@@ -1283,12 +1338,14 @@ bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer,
         targetMask[word] |= movingEntities[word];
     }
 
-    if (static_cast<size_t>(layer) < session.game->sfxMovementMasks.size()) {
-        for (const auto& entry : session.game->sfxMovementMasks[static_cast<size_t>(layer)]) {
-            if (!anyBitsInCommon(sourceMaskBeforeMove, entry.objectMask)) {
+    if (static_cast<size_t>(layer) < game.sfxMovementMasks.size()) {
+        for (const auto& entry : game.sfxMovementMasks[static_cast<size_t>(layer)]) {
+            const BitVector entryObjectMask = arenaCopy(game, entry.objectMask, game.wordCount);
+            if (!anyBitsInCommon(sourceMaskBeforeMove, entryObjectMask)) {
                 continue;
             }
-            if ((getShiftedMask5(entry.directionMask, 5 * layer) & directionMask) == 0) {
+            const BitVector entryDirectionMask = arenaCopy(game, entry.directionMask, entry.directionMaskWidth);
+            if ((getShiftedMask5(entryDirectionMask, 5 * layer) & directionMask) == 0) {
                 continue;
             }
             appendAudioEvent(session, entry.seed, "canmove");
@@ -1327,11 +1384,13 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
             // Aggregate player movement must be atomic across all player layers present in the cell.
             // If one layer is blocked, none of the player layers should move.
             if (session.game->playerMaskAggregate && cellContainsPlayer(session, tileIndex)) {
+                const Game& game = *session.game;
                 const size_t aggregatePlayerCount = collectPlayerPositions(session).size();
                 const BitVector cellMask = getCellObjects(session, tileIndex);
                 BitVector playerCellMask = cellMask;
-                for (size_t word = 0; word < playerCellMask.size() && word < session.game->playerMask.size(); ++word) {
-                    playerCellMask[word] &= session.game->playerMask[word];
+                const int32_t* playerMaskWords = maskPtr(game, game.playerMask);
+                for (uint32_t word = 0; word < game.wordCount && word < playerCellMask.size(); ++word) {
+                    playerCellMask[word] &= playerMaskWords[word];
                 }
                 const auto playerLayers = findLayersInMask(session, playerCellMask);
                 if (!playerLayers.empty()) {
@@ -1371,11 +1430,11 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                                 if (layerMovement == 0) {
                                     continue;
                                 }
-                                const BitVector& layerMask = session.game->layerMasks[static_cast<size_t>(layer)];
+                                const BitVector layerMask = arenaCopy(game, game.layerMaskOffsets[static_cast<size_t>(layer)], game.wordCount);
                                 if (playerDirection != 16 && anyBitsInCommon(targetMaskAll, layerMask)) {
                                     canMoveAll = false;
                                     blockedByPlayerConstituent = blockedByPlayerConstituent
-                                        || anyBitsInCommon(targetMaskAll, session.game->playerMask);
+                                        || anyBitsInCommon(targetMaskAll.data(), targetMaskAll.size(), playerMaskWords, game.wordCount);
                                     break;
                                 }
                             }
@@ -1389,7 +1448,7 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                                     if (layerMovement == 0) {
                                         continue;
                                     }
-                                    const BitVector& layerMask = session.game->layerMasks[static_cast<size_t>(layer)];
+                                    const BitVector layerMask = arenaCopy(game, game.layerMaskOffsets[static_cast<size_t>(layer)], game.wordCount);
                                     for (size_t word = 0; word < sourceMask.size() && word < layerMask.size(); ++word) {
                                         const int32_t moving = sourceMask[word] & layerMask[word];
                                         sourceMask[word] &= ~layerMask[word];
@@ -1415,12 +1474,14 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                 }
                 // Prevent per-layer movement from splitting aggregate player pieces.
                 if (preventAggregateSplit && session.game->playerMaskAggregate && cellContainsPlayer(session, tileIndex)) {
+                    const Game& game = *session.game;
                     const BitVector cellMask = getCellObjects(session, tileIndex);
                     BitVector playerCellMask = cellMask;
-                    for (size_t word = 0; word < playerCellMask.size() && word < session.game->playerMask.size(); ++word) {
-                        playerCellMask[word] &= session.game->playerMask[word];
+                    const int32_t* playerMaskWords = maskPtr(game, game.playerMask);
+                    for (uint32_t word = 0; word < game.wordCount && word < playerCellMask.size(); ++word) {
+                        playerCellMask[word] &= playerMaskWords[word];
                     }
-                    const BitVector& layerMask = session.game->layerMasks[static_cast<size_t>(layer)];
+                    const BitVector layerMask = arenaCopy(game, game.layerMaskOffsets[static_cast<size_t>(layer)], game.wordCount);
                     if (anyBitsInCommon(playerCellMask, layerMask)) {
                         continue;
                     }
@@ -1483,12 +1544,18 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
         }
 
         if (!session.game->sfxMovementFailureMasks.empty()) {
+            const Game& game = *session.game;
             const BitVector cellMask = getCellObjects(session, tileIndex);
-            for (const auto& entry : session.game->sfxMovementFailureMasks) {
-                if (!anyBitsInCommon(cellMask, entry.objectMask)) {
+            for (const auto& entry : game.sfxMovementFailureMasks) {
+                const int32_t* entryObjectMask = maskPtr(game, entry.objectMask);
+                if (entryObjectMask == nullptr) continue;
+                if (!anyBitsInCommon(cellMask.data(), cellMask.size(), entryObjectMask, game.wordCount)) {
                     continue;
                 }
-                if (!anyBitsInCommon(entry.directionMask, movementMask)) {
+                const int32_t* entryDirectionMask = maskPtr(game, entry.directionMask);
+                if (entryDirectionMask == nullptr) continue;
+                if (!anyBitsInCommon(entryDirectionMask, entry.directionMaskWidth,
+                                     movementMask.data(), movementMask.size())) {
                     continue;
                 }
                 appendAudioEvent(session, entry.seed, "cantmove");
@@ -1626,9 +1693,9 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
             objectsSet[static_cast<size_t>(word)] |= (1 << bit);
             if (static_cast<size_t>(objectId) < session.game->objectsById.size()) {
                 const int32_t layer = session.game->objectsById[static_cast<size_t>(objectId)].layer;
-                if (layer >= 0 && static_cast<size_t>(layer) < session.game->layerMasks.size()) {
-                    const BitVector& layerMask = session.game->layerMasks[static_cast<size_t>(layer)];
-                    for (size_t idx = 0; idx < objectsClear.size() && idx < layerMask.size(); ++idx) {
+                if (layer >= 0 && static_cast<size_t>(layer) < game.layerMaskOffsets.size()) {
+                    const int32_t* layerMask = maskPtr(game, game.layerMaskOffsets[static_cast<size_t>(layer)]);
+                    for (size_t idx = 0; idx < objectsClear.size() && idx < game.wordCount; ++idx) {
                         objectsClear[idx] |= layerMask[idx];
                     }
                     clearShiftedMask5(movementsClear, 5 * layer);
@@ -2569,8 +2636,12 @@ void restoreRestartTarget(Session& session) {
     rebuildMasks(session);
 }
 
-bool matchesFilter(const BitVector& filter, bool aggregate, const BitVector& cell) {
-    return aggregate ? bitsSetInArray(filter, cell) : anyBitsInCommon(filter, cell);
+// Raw-pointer variant used after WinCondition mask migration: filter lives
+// in Game::maskArena with width wordCount.
+bool matchesFilter(const int32_t* filter, uint32_t filterCount, bool aggregate, const BitVector& cell) {
+    return aggregate
+        ? bitsSetInArray(filter, filterCount, cell.data(), cell.size())
+        : anyBitsInCommon(filter, filterCount, cell.data(), cell.size());
 }
 
 bool evaluateWinConditions(const Session& session) {
@@ -2578,15 +2649,19 @@ bool evaluateWinConditions(const Session& session) {
         return false;
     }
 
+    const Game& game = *session.game;
+    const uint32_t wordCount = game.wordCount;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
-    for (const auto& condition : session.game->winConditions) {
+    for (const auto& condition : game.winConditions) {
+        const int32_t* filter1 = maskPtr(game, condition.filter1);
+        const int32_t* filter2 = maskPtr(game, condition.filter2);
         bool rulePassed = true;
         switch (condition.quantifier) {
             case -1: {
                 for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
                     const BitVector cell = getCellObjects(session, tileIndex);
-                    if (matchesFilter(condition.filter1, condition.aggr1, cell)
-                        && matchesFilter(condition.filter2, condition.aggr2, cell)) {
+                    if (matchesFilter(filter1, wordCount, condition.aggr1, cell)
+                        && matchesFilter(filter2, wordCount, condition.aggr2, cell)) {
                         rulePassed = false;
                         break;
                     }
@@ -2597,8 +2672,8 @@ bool evaluateWinConditions(const Session& session) {
                 bool passedTest = false;
                 for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
                     const BitVector cell = getCellObjects(session, tileIndex);
-                    if (matchesFilter(condition.filter1, condition.aggr1, cell)
-                        && matchesFilter(condition.filter2, condition.aggr2, cell)) {
+                    if (matchesFilter(filter1, wordCount, condition.aggr1, cell)
+                        && matchesFilter(filter2, wordCount, condition.aggr2, cell)) {
                         passedTest = true;
                         break;
                     }
@@ -2609,8 +2684,8 @@ bool evaluateWinConditions(const Session& session) {
             case 1: {
                 for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
                     const BitVector cell = getCellObjects(session, tileIndex);
-                    if (matchesFilter(condition.filter1, condition.aggr1, cell)
-                        && !matchesFilter(condition.filter2, condition.aggr2, cell)) {
+                    if (matchesFilter(filter1, wordCount, condition.aggr1, cell)
+                        && !matchesFilter(filter2, wordCount, condition.aggr2, cell)) {
                         rulePassed = false;
                         break;
                     }
@@ -2758,7 +2833,7 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
             game->glyphOrder = parseStringVector(glyphOrder->second);
         }
         if (const auto glyphDict = gameObject.find("glyph_dict"); glyphDict != gameObject.end()) {
-            game->glyphDict = parseBitVectorMap(glyphDict->second);
+            game->glyphMaskTable = parseNamedMaskTable(*game, glyphDict->second);
         }
         game->objectsById.resize(static_cast<size_t>(game->objectCount));
         const auto& objectsArray = requireField(gameObject, "objects").asArray();
@@ -2786,14 +2861,14 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
         }
         if (const auto layerMasks = gameObject.find("layer_masks"); layerMasks != gameObject.end()) {
             for (const auto& maskValue : layerMasks->second.asArray()) {
-                game->layerMasks.push_back(parseIntVector(maskValue));
+                game->layerMaskOffsets.push_back(storeMaskWords(*game, parseIntVector(maskValue)));
             }
         }
         if (const auto objectMasks = gameObject.find("object_masks"); objectMasks != gameObject.end()) {
-            game->objectMasks = parseBitVectorMap(objectMasks->second);
+            game->objectMaskTable = parseNamedMaskTable(*game, objectMasks->second);
         }
         if (const auto aggregateMasks = gameObject.find("aggregate_masks"); aggregateMasks != gameObject.end()) {
-            game->aggregateMasks = parseBitVectorMap(aggregateMasks->second);
+            game->aggregateMaskTable = parseNamedMaskTable(*game, aggregateMasks->second);
         }
         if (const auto playerMask = gameObject.find("player_mask"); playerMask != gameObject.end()) {
             if (playerMask->second.isObject()) {
@@ -2802,10 +2877,10 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
                     game->playerMaskAggregate = toBool(aggregate->second);
                 }
                 if (const auto mask = playerMaskObject.find("mask"); mask != playerMaskObject.end()) {
-                    game->playerMask = parseIntVector(mask->second);
+                    game->playerMask = storeMaskWords(*game, parseIntVector(mask->second));
                 }
             } else {
-                game->playerMask = parseIntVector(playerMask->second);
+                game->playerMask = storeMaskWords(*game, parseIntVector(playerMask->second));
             }
         }
         if (const auto rigid = gameObject.find("rigid"); rigid != gameObject.end()) {
@@ -2837,7 +2912,7 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
         }
         if (const auto winconditions = gameObject.find("winconditions"); winconditions != gameObject.end()) {
             for (const auto& conditionValue : winconditions->second.asArray()) {
-                game->winConditions.push_back(parseWinCondition(conditionValue));
+                game->winConditions.push_back(parseWinCondition(*game, conditionValue));
             }
         }
 
@@ -2854,16 +2929,16 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
             game->sfxEvents = parseSoundEventMap(sfxEvents->second);
         }
         if (const auto sfxCreationMasks = gameObject.find("sfx_creation_masks"); sfxCreationMasks != gameObject.end()) {
-            game->sfxCreationMasks = parseSoundMaskEntries(sfxCreationMasks->second);
+            game->sfxCreationMasks = parseSoundMaskEntries(*game, sfxCreationMasks->second);
         }
         if (const auto sfxDestructionMasks = gameObject.find("sfx_destruction_masks"); sfxDestructionMasks != gameObject.end()) {
-            game->sfxDestructionMasks = parseSoundMaskEntries(sfxDestructionMasks->second);
+            game->sfxDestructionMasks = parseSoundMaskEntries(*game, sfxDestructionMasks->second);
         }
         if (const auto sfxMovementMasks = gameObject.find("sfx_movement_masks"); sfxMovementMasks != gameObject.end()) {
-            game->sfxMovementMasks = parseLayeredSoundMaskEntries(sfxMovementMasks->second);
+            game->sfxMovementMasks = parseLayeredSoundMaskEntries(*game, sfxMovementMasks->second);
         }
         if (const auto sfxMovementFailureMasks = gameObject.find("sfx_movement_failure_masks"); sfxMovementFailureMasks != gameObject.end()) {
-            game->sfxMovementFailureMasks = parseSoundMaskEntries(sfxMovementFailureMasks->second);
+            game->sfxMovementFailureMasks = parseSoundMaskEntries(*game, sfxMovementFailureMasks->second);
         }
 
         if (const auto prepared = rootObject.find("prepared_session"); prepared != rootObject.end()) {

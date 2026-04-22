@@ -163,8 +163,9 @@ struct Rule {
 
 struct WinCondition {
     int32_t quantifier = 0;
-    BitVector filter1;
-    BitVector filter2;
+    // object-width masks in Game::maskArena
+    MaskOffset filter1 = kNullMaskOffset;
+    MaskOffset filter2 = kNullMaskOffset;
     int32_t lineNumber = 0;
     bool aggr1 = false;
     bool aggr2 = false;
@@ -175,8 +176,12 @@ struct LoopPointTable {
 };
 
 struct SoundMaskEntry {
-    BitVector objectMask;
-    BitVector directionMask;
+    // object-width mask of width Game::wordCount
+    MaskOffset objectMask = kNullMaskOffset;
+    // movement-mask whose legacy JSON form may be narrower than
+    // Game::movementWordCount; store the actual parsed width.
+    MaskOffset directionMask = kNullMaskOffset;
+    uint32_t directionMaskWidth = 0;
     int32_t seed = 0;
 };
 
@@ -207,14 +212,24 @@ struct Game {
     std::map<std::string, int32_t> metadataLines;
     std::vector<std::string> idDict;
     std::vector<std::string> glyphOrder;
-    std::map<std::string, BitVector> glyphDict;
+
+    // Name-keyed mask tables. Sorted by name at load time so lookups are
+    // binary-search. Each entry's mask lives in maskArena at `offset`,
+    // width = wordCount unless noted.
+    struct NamedMaskEntry { std::string name; MaskOffset offset; };
+    std::vector<NamedMaskEntry> glyphMaskTable;
+    std::vector<NamedMaskEntry> objectMaskTable;
+    std::vector<NamedMaskEntry> aggregateMaskTable;
+
     std::vector<ObjectDef> objectsById;
     std::vector<std::vector<std::string>> collisionLayers;
-    std::vector<BitVector> layerMasks;
-    std::map<std::string, BitVector> objectMasks;
-    std::map<std::string, BitVector> aggregateMasks;
+
+    // layerMaskOffsets[layer] is the arena offset of the object-width mask
+    // for that collision layer.
+    std::vector<MaskOffset> layerMaskOffsets;
+
     bool playerMaskAggregate = false;
-    BitVector playerMask;
+    MaskOffset playerMask = kNullMaskOffset;  // object-width mask; null means no player
     bool rigid = false;
     std::vector<bool> rigidGroups;
     std::vector<int32_t> rigidGroupIndexToGroupIndex;
