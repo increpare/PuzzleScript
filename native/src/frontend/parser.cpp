@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <functional>
 #include <set>
 #include <sstream>
 
@@ -95,7 +96,20 @@ bool isIdentifierLike(std::string_view value) {
         return false;
     }
     return std::all_of(value.begin(), value.end(), [](char ch) {
-        return std::isalnum(static_cast<unsigned char>(ch)) != 0 || ch == '_';
+        const unsigned char byte = static_cast<unsigned char>(ch);
+        return byte >= 0x80u || std::isalnum(byte) != 0 || ch == '_';
+    });
+}
+
+bool isAsciiIdentifierLike(std::string_view value) {
+    if (value.empty()) {
+        return false;
+    }
+    return std::all_of(value.begin(), value.end(), [](char ch) {
+        return (ch >= '0' && ch <= '9')
+            || (ch >= 'A' && ch <= 'Z')
+            || (ch >= 'a' && ch <= 'z')
+            || ch == '_';
     });
 }
 
@@ -123,6 +137,58 @@ bool isNumeric(std::string_view value) {
     return !value.empty() && std::all_of(value.begin(), value.end(), [](char ch) {
         return std::isdigit(static_cast<unsigned char>(ch)) != 0;
     });
+}
+
+template <typename MapType>
+std::vector<std::string> sortLikeJsObjectKeys(const MapType& values) {
+    std::vector<std::string> integerKeys;
+    std::vector<std::string> stringKeys;
+    integerKeys.reserve(values.size());
+    stringKeys.reserve(values.size());
+    for (const auto& [key, _value] : values) {
+        if (isNumeric(key)) {
+            integerKeys.push_back(key);
+        } else {
+            stringKeys.push_back(key);
+        }
+    }
+    std::sort(integerKeys.begin(), integerKeys.end(), [](const std::string& lhs, const std::string& rhs) {
+        return std::stoll(lhs) < std::stoll(rhs);
+    });
+    std::sort(stringKeys.begin(), stringKeys.end());
+    integerKeys.insert(integerKeys.end(), stringKeys.begin(), stringKeys.end());
+    return integerKeys;
+}
+
+std::vector<std::string> iterateObjectKeysLikeJs(const std::map<std::string, ParserObjectEntry>& objects) {
+    std::vector<std::string> integerKeys;
+    std::vector<const ParserObjectEntry*> stringObjects;
+    integerKeys.reserve(objects.size());
+    stringObjects.reserve(objects.size());
+    for (const auto& [key, object] : objects) {
+        if (isNumeric(key)) {
+            integerKeys.push_back(key);
+        } else {
+            stringObjects.push_back(&object);
+        }
+    }
+    std::sort(integerKeys.begin(), integerKeys.end(), [](const std::string& lhs, const std::string& rhs) {
+        return std::stoll(lhs) < std::stoll(rhs);
+    });
+    std::sort(stringObjects.begin(), stringObjects.end(), [](const ParserObjectEntry* lhs, const ParserObjectEntry* rhs) {
+        if (lhs->lineNumber != rhs->lineNumber) {
+            return lhs->lineNumber < rhs->lineNumber;
+        }
+        return lhs->name < rhs->name;
+    });
+
+    std::vector<std::string> ordered;
+    ordered.reserve(objects.size());
+    ordered.insert(ordered.end(), integerKeys.begin(), integerKeys.end());
+    for (const ParserObjectEntry* object : stringObjects) {
+        ordered.push_back(object->name);
+    }
+    return ordered;
 }
 
 std::vector<std::string> splitWhitespace(std::string_view value) {
@@ -154,11 +220,77 @@ std::vector<std::string> splitCsvWords(std::string_view value) {
     return result;
 }
 
+std::vector<std::string> tokenizeLegendLine(std::string_view value) {
+    std::vector<std::string> result;
+    std::string current;
+    for (const char ch : value) {
+        if (std::isspace(static_cast<unsigned char>(ch)) != 0) {
+            if (!current.empty()) {
+                result.push_back(current);
+                current.clear();
+            }
+            continue;
+        }
+        if (ch == '=') {
+            if (!current.empty()) {
+                result.push_back(current);
+                current.clear();
+            }
+            result.emplace_back("=");
+            continue;
+        }
+        current.push_back(ch);
+    }
+    if (!current.empty()) {
+        result.push_back(current);
+    }
+    return result;
+}
+
+bool isWordChar(char ch) {
+    return std::isalnum(static_cast<unsigned char>(ch)) != 0 || ch == '_';
+}
+
+size_t utf8CodePointCount(std::string_view value) {
+    size_t count = 0;
+    for (unsigned char ch : value) {
+        if ((ch & 0xC0u) != 0x80u) {
+            ++count;
+        }
+    }
+    return count;
+}
+
 void registerOriginalCaseName(ParserState& state, std::string_view lowered, std::string_view original, int32_t lineNumber) {
+    if (!isAsciiIdentifierLike(lowered)) {
+        return;
+    }
+    const std::string loweredNeedle = toLowerCopy(lowered);
+    const std::string loweredHaystack = toLowerCopy(original);
+    std::string matched = std::string(lowered);
+    size_t position = loweredHaystack.find(loweredNeedle);
+    while (position != std::string::npos) {
+        const bool leftBoundary = position == 0 || !isWordChar(loweredHaystack[position - 1]);
+        const size_t end = position + loweredNeedle.size();
+        const bool rightBoundary = end >= loweredHaystack.size() || !isWordChar(loweredHaystack[end]);
+        if (leftBoundary && rightBoundary) {
+            matched = std::string(original.substr(position, loweredNeedle.size()));
+            break;
+        }
+        position = loweredHaystack.find(loweredNeedle, position + 1);
+    }
+    state.originalCaseNames[std::string(lowered)] = matched;
+    state.originalLineNumbers[std::string(lowered)] = lineNumber;
+}
+
+void registerLegendOriginalCaseName(ParserState& state, std::string_view lowered, int32_t lineNumber) {
     if (!isIdentifierLike(lowered)) {
         return;
     }
-    state.originalCaseNames[std::string(lowered)] = std::string(original);
+    if (!isWordChar(lowered.front()) || !isWordChar(lowered.back())) {
+        return;
+    }
+    state.originalCaseNames[std::string(lowered)] = std::string(lowered);
     state.originalLineNumbers[std::string(lowered)] = lineNumber;
 }
 
@@ -179,6 +311,7 @@ std::string stripComments(std::string_view line, ParserState& state) {
         }
         if (ch == ')' && state.commentLevel > 0) {
             --state.commentLevel;
+            state.solAfterComment = state.commentLevel > 0;
             continue;
         }
         if (state.commentLevel == 0) {
@@ -188,22 +321,22 @@ std::string stripComments(std::string_view line, ParserState& state) {
     return visible;
 }
 
+std::string takePrefixBeforeComment(std::string_view line) {
+    std::string prefix;
+    prefix.reserve(line.size());
+    for (const char ch : line) {
+        if (ch == '(') {
+            break;
+        }
+        prefix.push_back(ch);
+    }
+    return prefix;
+}
+
 void populateNamesForSounds(ParserState& state) {
     state.names.clear();
-    std::vector<const ParserObjectEntry*> orderedObjects;
-    orderedObjects.reserve(state.objects.size());
-    for (const auto& [name, object] : state.objects) {
-        (void)name;
-        orderedObjects.push_back(&object);
-    }
-    std::sort(orderedObjects.begin(), orderedObjects.end(), [](const ParserObjectEntry* lhs, const ParserObjectEntry* rhs) {
-        if (lhs->lineNumber != rhs->lineNumber) {
-            return lhs->lineNumber < rhs->lineNumber;
-        }
-        return lhs->name < rhs->name;
-    });
-    for (const ParserObjectEntry* object : orderedObjects) {
-        state.names.push_back(object->name);
+    for (const auto& name : iterateObjectKeysLikeJs(state.objects)) {
+        state.names.push_back(name);
     }
     for (const auto& entry : state.legendSynonyms) {
         state.names.push_back(entry.name);
@@ -218,18 +351,18 @@ void populateNamesForSounds(ParserState& state) {
 
 void populateAbbrevNamesForLevels(ParserState& state) {
     state.abbrevNames.clear();
-    for (const auto& [name, _object] : state.objects) {
-        if (name.size() == 1) {
+    for (const auto& name : iterateObjectKeysLikeJs(state.objects)) {
+        if (utf8CodePointCount(name) == 1) {
             state.abbrevNames.push_back(name);
         }
     }
     for (const auto& entry : state.legendSynonyms) {
-        if (entry.name.size() == 1) {
+        if (utf8CodePointCount(entry.name) == 1) {
             state.abbrevNames.push_back(entry.name);
         }
     }
     for (const auto& entry : state.legendAggregates) {
-        if (entry.name.size() == 1) {
+        if (utf8CodePointCount(entry.name) == 1) {
             state.abbrevNames.push_back(entry.name);
         }
     }
@@ -253,7 +386,12 @@ void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::str
     const std::string key = toLowerCopy(tokens.front());
     const std::string originalKey = tokens.front();
     const size_t keyOffset = mixedCase.find(originalKey);
-    const std::string remainder = keyOffset == std::string_view::npos ? std::string{} : trim(mixedCase.substr(keyOffset + originalKey.size()));
+    const std::string loweredLine = toLowerCopy(trimmedLine);
+    const size_t loweredKeyOffset = loweredLine.find(key);
+    const std::string originalRemainder = keyOffset == std::string_view::npos ? std::string{} : trim(mixedCase.substr(keyOffset + originalKey.size()));
+    const std::string loweredRemainder = loweredKeyOffset == std::string::npos ? std::string{} : trim(loweredLine.substr(loweredKeyOffset + key.size()));
+    const bool preserveOriginalValueCase = key == "title" || key == "author" || key == "homepage";
+    const std::string remainder = preserveOriginalValueCase ? originalRemainder : loweredRemainder;
 
     if (isExactToken(key, kPreambleValues, std::size(kPreambleValues))) {
         if (remainder.empty()) {
@@ -268,7 +406,6 @@ void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::str
     if (isExactToken(key, kPreambleFlags, std::size(kPreambleFlags))) {
         state.metadata.push_back(key);
         state.metadata.push_back("true");
-        state.metadataLines[key] = state.lineNumber;
         return;
     }
     diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "Unrecognised stuff in the prelude.");
@@ -277,20 +414,48 @@ void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::str
 void parseObjectsLine(ParserState& state, std::string_view trimmedLine, std::string_view mixedCase) {
     const std::string loweredLine = toLowerCopy(trimmedLine);
     if (state.objectsSection == 0) {
-        state.objectsCandname = loweredLine;
-        state.objectsSection = 2;
+        const auto mixedTokens = splitWhitespace(mixedCase);
+        if (mixedTokens.empty()) {
+            return;
+        }
+        const std::string primaryName = toLowerCopy(mixedTokens.front());
+        if (!isIdentifierLike(primaryName)) {
+            return;
+        }
+        state.objectsCandname = primaryName;
+        state.objectsSection = 1;
         state.objectsSpritematrix.clear();
-        auto& object = state.objects[loweredLine];
-        object.name = loweredLine;
+        auto& object = state.objects[primaryName];
+        object.name = primaryName;
         object.lineNumber = state.lineNumber;
-        registerOriginalCaseName(state, loweredLine, trim(mixedCase), state.lineNumber);
+        registerOriginalCaseName(state, primaryName, mixedCase, state.lineNumber);
+        for (size_t index = 1; index < mixedTokens.size(); ++index) {
+            const std::string aliasName = toLowerCopy(mixedTokens[index]);
+            if (isIdentifierLike(aliasName)) {
+                state.originalCaseNames[aliasName] = aliasName;
+                state.originalLineNumbers[aliasName] = state.lineNumber;
+            }
+            state.legendSynonyms.push_back(ParserLegendEntry{
+                aliasName,
+                {primaryName},
+                state.lineNumber,
+            });
+        }
+        return;
+    }
+    if (state.objectsSection == 1) {
+        auto& object = state.objects[state.objectsCandname];
+        object.colors = splitCsvWords(trimmedLine);
+        state.objectsSection = 2;
         return;
     }
     if (state.objectsSection == 2) {
-        auto& object = state.objects[state.objectsCandname];
-        object.colors = splitCsvWords(trimmedLine);
+        if (!isSpriteRow(trimmedLine)) {
+            state.objectsSection = 0;
+            parseObjectsLine(state, trimmedLine, mixedCase);
+            return;
+        }
         state.objectsSection = 3;
-        return;
     }
     if (state.objectsSection == 3 && isSpriteRow(trimmedLine)) {
         auto& object = state.objects[state.objectsCandname];
@@ -306,8 +471,8 @@ void parseObjectsLine(ParserState& state, std::string_view trimmedLine, std::str
     parseObjectsLine(state, trimmedLine, mixedCase);
 }
 
-void parseLegendLine(ParserState& state, std::string_view trimmedLine, std::string_view mixedCase) {
-    const auto tokens = splitWhitespace(trimmedLine);
+void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine) {
+    const auto tokens = tokenizeLegendLine(trimmedLine);
     if (tokens.size() < 3 || tokens[1] != "=") {
         return;
     }
@@ -315,11 +480,7 @@ void parseLegendLine(ParserState& state, std::string_view trimmedLine, std::stri
     ParserLegendEntry entry;
     entry.name = toLowerCopy(tokens[0]);
     entry.lineNumber = state.lineNumber;
-    if (entry.name.size() == 1 && std::isalpha(static_cast<unsigned char>(entry.name[0])) != 0) {
-        registerOriginalCaseName(state, entry.name, entry.name, state.lineNumber);
-    } else {
-        registerOriginalCaseName(state, entry.name, tokens[0], state.lineNumber);
-    }
+    registerLegendOriginalCaseName(state, entry.name, state.lineNumber);
 
     if (tokens.size() == 3) {
         entry.items.push_back(toLowerCopy(tokens[2]));
@@ -327,18 +488,89 @@ void parseLegendLine(ParserState& state, std::string_view trimmedLine, std::stri
         return;
     }
 
-    std::string joiner;
-    if (tokens.size() >= 4) {
-        joiner = toLowerCopy(tokens[3]);
-    }
-    for (size_t index = 2; index < tokens.size(); ++index) {
-        if ((index % 2) == 0) {
+    const std::string joiner = tokens.size() >= 4 ? toLowerCopy(tokens[3]) : std::string{};
+    std::function<std::vector<std::string>(const std::string&)> expandAggregate;
+    std::function<std::vector<std::string>(const std::string&)> expandProperty;
+
+    expandAggregate = [&](const std::string& name) -> std::vector<std::string> {
+        const std::string lowered = toLowerCopy(name);
+        if (state.objects.find(lowered) != state.objects.end()) {
+            return {lowered};
+        }
+        for (const auto& synonym : state.legendSynonyms) {
+            if (synonym.name == lowered && !synonym.items.empty()) {
+                return expandAggregate(synonym.items.front());
+            }
+        }
+        for (const auto& aggregate : state.legendAggregates) {
+            if (aggregate.name == lowered) {
+                std::vector<std::string> result;
+                for (const auto& item : aggregate.items) {
+                    const auto expanded = expandAggregate(item);
+                    result.insert(result.end(), expanded.begin(), expanded.end());
+                }
+                return result;
+            }
+        }
+        for (const auto& property : state.legendProperties) {
+            if (property.name == lowered) {
+                diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "Cannot define an aggregate (using 'and') in terms of properties (something that uses 'or').");
+                return {lowered};
+            }
+        }
+        return {lowered};
+    };
+
+    expandProperty = [&](const std::string& name) -> std::vector<std::string> {
+        const std::string lowered = toLowerCopy(name);
+        if (state.objects.find(lowered) != state.objects.end()) {
+            return {lowered};
+        }
+        for (const auto& synonym : state.legendSynonyms) {
+            if (synonym.name == lowered && !synonym.items.empty()) {
+                return expandProperty(synonym.items.front());
+            }
+        }
+        for (const auto& aggregate : state.legendAggregates) {
+            if (aggregate.name == lowered) {
+                diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "Cannot define a property (something defined in terms of 'or') in terms of an aggregate (something that uses 'and').  In this case, you can't define \"" + entry.name + "\" in terms of \"" + lowered + "\".");
+                return {};
+            }
+        }
+        for (const auto& property : state.legendProperties) {
+            if (property.name == lowered) {
+                std::vector<std::string> result;
+                for (const auto& item : property.items) {
+                    if (item == lowered) {
+                        continue;
+                    }
+                    const auto expanded = expandProperty(item);
+                    result.insert(result.end(), expanded.begin(), expanded.end());
+                }
+                return result;
+            }
+        }
+        return {lowered};
+    };
+
+    if (joiner == "and") {
+        for (size_t index = 2; index < tokens.size(); index += 2) {
+            const auto expanded = expandAggregate(tokens[index]);
+            entry.items.insert(entry.items.end(), expanded.begin(), expanded.end());
+        }
+        state.legendAggregates.push_back(std::move(entry));
+    } else if (joiner == "or") {
+        if (tokens.size() >= 3) {
+            const auto expanded = expandProperty(tokens[2]);
+            entry.items.insert(entry.items.end(), expanded.begin(), expanded.end());
+        }
+        if (tokens.size() >= 5) {
+            const auto expanded = expandProperty(tokens[4]);
+            entry.items.insert(entry.items.end(), expanded.begin(), expanded.end());
+        }
+        for (size_t index = 6; index < tokens.size(); index += 2) {
             entry.items.push_back(toLowerCopy(tokens[index]));
         }
-    }
-    if (joiner == "and") {
-        state.legendAggregates.push_back(std::move(entry));
-    } else {
         state.legendProperties.push_back(std::move(entry));
     }
 }
@@ -346,6 +578,9 @@ void parseLegendLine(ParserState& state, std::string_view trimmedLine, std::stri
 std::string classifySoundKind(std::string_view lowered, size_t index) {
     if (isNumeric(lowered)) {
         return "SOUND";
+    }
+    if (lowered.size() > 3 && lowered.substr(0, 3) == "sfx" && isNumeric(lowered.substr(3))) {
+        return "SOUNDEVENT";
     }
     if (isExactToken(lowered, kSoundEvents, std::size(kSoundEvents))) {
         return "SOUNDEVENT";
@@ -375,20 +610,83 @@ void parseSoundsLine(ParserState& state, std::string_view trimmedLine) {
     }
 }
 
-void parseCollisionLayersLine(ParserState& state, std::string_view trimmedLine) {
+void parseCollisionLayersLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine) {
     auto items = splitCsvWords(trimmedLine);
-    if (!items.empty()) {
-        state.collisionLayers.push_back(std::move(items));
+    if (items.empty()) {
+        return;
     }
+
+    std::function<std::vector<std::string>(const std::string&)> expand;
+    expand = [&](const std::string& name) -> std::vector<std::string> {
+        const std::string lowered = toLowerCopy(name);
+        if (state.objects.find(lowered) != state.objects.end()) {
+            return {lowered};
+        }
+        for (const auto& synonym : state.legendSynonyms) {
+            if (synonym.name == lowered && !synonym.items.empty()) {
+                return expand(synonym.items.front());
+            }
+        }
+        for (const auto& aggregate : state.legendAggregates) {
+            if (aggregate.name == lowered) {
+                diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "\"" + lowered + "\" is an aggregate (defined using \"and\"), and cannot be added to a single layer because its constituent objects must be able to coexist.");
+                return {};
+            }
+        }
+        for (const auto& property : state.legendProperties) {
+            if (property.name == lowered) {
+                std::vector<std::string> result;
+                for (const auto& item : property.items) {
+                    if (item == lowered) {
+                        continue;
+                    }
+                    const auto expanded = expand(item);
+                    result.insert(result.end(), expanded.begin(), expanded.end());
+                }
+                return result;
+            }
+        }
+        diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "Cannot add \"" + lowered + "\" to a collision layer; it has not been declared.");
+        return {};
+    };
+
+    std::vector<std::string> expandedLayer;
+    for (const auto& item : items) {
+        const auto expanded = expand(item);
+        expandedLayer.insert(expandedLayer.end(), expanded.begin(), expanded.end());
+    }
+    state.collisionLayers.push_back(std::move(expandedLayer));
 }
 
-void parseRulesLine(ParserState& state, std::string_view trimmedLine, std::string_view mixedCase) {
-    state.rulePrelude = false;
-    state.arrowPassed = trimmedLine.find("->") != std::string_view::npos;
+void parseRulesLine(ParserState& state, std::string_view trimmedLine, std::string_view mixedCaseRaw) {
+    bool arrowPassed = false;
+    bool insideCell = false;
+    bool rulePrelude = true;
+    int32_t bracketBalance = 0;
+    for (size_t index = 0; index < trimmedLine.size(); ++index) {
+        if ((index + 1) < trimmedLine.size() && trimmedLine[index] == '-' && trimmedLine[index + 1] == '>') {
+            arrowPassed = true;
+            ++index;
+            continue;
+        }
+        if (trimmedLine[index] == '[') {
+            insideCell = true;
+            rulePrelude = false;
+            continue;
+        }
+        if (trimmedLine[index] == ']') {
+            insideCell = false;
+            bracketBalance += arrowPassed ? -1 : 1;
+        }
+    }
+    state.rulePrelude = rulePrelude;
+    state.arrowPassed = arrowPassed;
+    state.insideCell = insideCell;
+    state.bracketBalance = bracketBalance;
     state.rules.push_back(ParserRuleEntry{
-        toLowerCopy(mixedCase),
+        toLowerCopy(takePrefixBeforeComment(mixedCaseRaw)),
         state.lineNumber,
-        std::string(mixedCase),
+        std::string(mixedCaseRaw),
     });
 }
 
@@ -403,8 +701,8 @@ void parseWinConditionsLine(ParserState& state, std::string_view trimmedLine) {
     }
 }
 
-void parseLevelsLine(ParserState& state, std::string_view trimmedLine, std::string_view mixedCase) {
-    const std::string trimmedMixed = trim(mixedCase);
+void parseLevelsLine(ParserState& state, std::string_view trimmedLine, std::string_view rawLine) {
+    const std::string trimmedMixed = trim(rawLine);
     const std::string trimmedLower = toLowerCopy(trimmedLine);
     if (trimmedLower.rfind("message", 0) == 0 && (trimmedLower.size() == 7 || std::isspace(static_cast<unsigned char>(trimmedLine[7])) != 0)) {
         ParserLevelEntry entry;
@@ -481,13 +779,14 @@ void appendJsonStringMap(std::string& out, const std::map<std::string, std::stri
     out += "{";
     if (!values.empty()) {
         out += "\n";
-        size_t index = 0;
-        for (const auto& [key, value] : values) {
+        const auto orderedKeys = sortLikeJsObjectKeys(values);
+        for (size_t index = 0; index < orderedKeys.size(); ++index) {
+            const auto& key = orderedKeys[index];
             appendIndent(out, indent + 1);
             appendJsonString(out, key);
             out += ": ";
-            appendJsonString(out, value);
-            if (++index != values.size()) {
+            appendJsonString(out, values.at(key));
+            if (index + 1 != orderedKeys.size()) {
                 out += ",";
             }
             out += "\n";
@@ -501,13 +800,14 @@ void appendJsonIntMap(std::string& out, const std::map<std::string, int32_t>& va
     out += "{";
     if (!values.empty()) {
         out += "\n";
-        size_t index = 0;
-        for (const auto& [key, value] : values) {
+        const auto orderedKeys = sortLikeJsObjectKeys(values);
+        for (size_t index = 0; index < orderedKeys.size(); ++index) {
+            const auto& key = orderedKeys[index];
             appendIndent(out, indent + 1);
             appendJsonString(out, key);
             out += ": ";
-            out += std::to_string(value);
-            if (++index != values.size()) {
+            out += std::to_string(values.at(key));
+            if (index + 1 != orderedKeys.size()) {
                 out += ",";
             }
             out += "\n";
@@ -534,11 +834,35 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
         }
     }
 
-    for (const std::string& rawLine : lines) {
+    for (size_t lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
+        const std::string& rawLine = lines[lineIndex];
         ++state.lineNumber;
-        const std::string mixedVisible = stripComments(rawLine, state);
+        if (state.solAfterComment) {
+            bool onlyTrailingEmptyLinesRemain = rawLine.empty();
+            if (onlyTrailingEmptyLinesRemain) {
+                for (size_t remaining = lineIndex; remaining < lines.size(); ++remaining) {
+                    if (!lines[remaining].empty()) {
+                        onlyTrailingEmptyLinesRemain = false;
+                        break;
+                    }
+                }
+            }
+            if (!onlyTrailingEmptyLinesRemain) {
+                state.solAfterComment = false;
+            }
+        }
+        const std::string rawTrimmedLower = toLowerCopy(trim(rawLine));
+        const bool isLevelsMessageLine = state.commentLevel == 0
+            && state.section == "levels"
+            && rawTrimmedLower.rfind("message", 0) == 0
+            && (rawTrimmedLower.size() == 7 || std::isspace(static_cast<unsigned char>(rawTrimmedLower[7])) != 0);
+        const std::string mixedVisible = isLevelsMessageLine ? rawLine : stripComments(rawLine, state);
         const std::string trimmedVisible = trim(mixedVisible);
         const std::string loweredVisible = toLowerCopy(trimmedVisible);
+
+        if (trimmedVisible == ")") {
+            continue;
+        }
 
         if (trimmedVisible.empty() || isAllEquals(trimmedVisible)) {
             if (isAllEquals(trimmedVisible)) {
@@ -577,19 +901,19 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
                 break;
             case 'l':
                 if (state.section == "legend") {
-                    parseLegendLine(state, trimmedVisible, trim(mixedVisible));
+                    parseLegendLine(state, diagnostics, trimmedVisible);
                 } else {
-                    parseLevelsLine(state, trimmedVisible, trim(mixedVisible));
+                    parseLevelsLine(state, trimmedVisible, rawLine);
                 }
                 break;
             case 's':
                 parseSoundsLine(state, trimmedVisible);
                 break;
             case 'c':
-                parseCollisionLayersLine(state, trimmedVisible);
+                parseCollisionLayersLine(state, diagnostics, trimmedVisible);
                 break;
             case 'r':
-                parseRulesLine(state, trimmedVisible, mixedVisible);
+                parseRulesLine(state, trimmedVisible, rawLine);
                 break;
             case 'w':
                 parseWinConditionsLine(state, trimmedVisible);
