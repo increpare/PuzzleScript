@@ -2657,17 +2657,12 @@ void runRulesOnLevelStart(Session& session) {
         return;
     }
 
-    int iterations = 0;
-    do {
-        session.pendingAgain = false;
-        (void)executeTurn(session, 0, ExecuteTurnOptions{
-            .pushUndo = false,
-            .ignoreRestartCommand = true,
-            .ignoreWin = true,
-        });
-        ++iterations;
-    } while (session.pendingAgain && iterations < 50);
     session.pendingAgain = false;
+    (void)executeTurn(session, 0, ExecuteTurnOptions{
+        .pushUndo = false,
+        .ignoreRestartCommand = true,
+        .ignoreWin = true,
+    });
 }
 
 bool wouldAgainChange(Session& session) {
