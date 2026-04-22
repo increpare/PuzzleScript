@@ -219,12 +219,21 @@ std::string_view randomDebugSubstringFilter() {
 }
 
 void appendAudioEvent(Session& session, int32_t seed, const char* kind) {
-    const auto duplicate = std::find_if(session.lastAudioEvents.begin(), session.lastAudioEvents.end(), [seed](const ps_audio_event& event) {
-        return event.seed == seed;
-    });
-    if (duplicate == session.lastAudioEvents.end()) {
-        session.lastAudioEvents.push_back(ps_audio_event{seed, kind});
+    const std::string_view kindView = kind == nullptr ? std::string_view{} : std::string_view(kind);
+    // JS dedupes movement audio seeds within each canmove/cantmove list.
+    if (kindView == "canmove" || kindView == "cantmove") {
+        const auto duplicate = std::find_if(session.lastAudioEvents.begin(), session.lastAudioEvents.end(), [seed, kindView](const ps_audio_event& event) {
+            const std::string_view eventKind = event.kind == nullptr ? std::string_view{} : std::string_view(event.kind);
+            return event.seed == seed && eventKind == kindView;
+        });
+        if (duplicate != session.lastAudioEvents.end()) {
+            return;
+        }
     }
+    if (audioDebugEnabled()) {
+        std::cerr << "[audio] emit seed=" << seed << " kind=" << kindView << '\n';
+    }
+    session.lastAudioEvents.push_back(ps_audio_event{seed, kind});
 }
 
 int audioEventPriority(const ps_audio_event& event) {
@@ -256,6 +265,20 @@ void clearAudioEventsByKind(Session& session, std::string_view kind) {
             return kind == event.kind;
         }),
         session.lastAudioEvents.end());
+}
+
+void tryPlaySimpleSound(Session& session, std::string_view soundName) {
+    if (!session.game->sfxEvents.isObject()) {
+        return;
+    }
+    const auto& events = session.game->sfxEvents.asObject();
+    const auto it = events.find(std::string(soundName));
+    if (it == events.end()) {
+        return;
+    }
+    // In the JS engine, these UI-ish "simple sounds" call playSound(seed, true),
+    // which explicitly does NOT record the seed in the sound history (used by tests).
+    // The native trace suite expects the same behavior: do not emit these as test audio events.
 }
 
 void processOutputCommands(Session& session, const CommandState& commands) {
@@ -1122,10 +1145,101 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                 continue;
             }
             bool changedTile = false;
+
+            // Aggregate player movement must be atomic across all player layers present in the cell.
+            // If one layer is blocked, none of the player layers should move.
+            if (session.game->playerMaskAggregate && cellContainsPlayer(session, tileIndex)) {
+                const BitVector cellMask = getCellObjects(session, tileIndex);
+                BitVector playerCellMask = cellMask;
+                for (size_t word = 0; word < playerCellMask.size() && word < session.game->playerMask.size(); ++word) {
+                    playerCellMask[word] &= session.game->playerMask[word];
+                }
+                const auto playerLayers = findLayersInMask(session, playerCellMask);
+                if (!playerLayers.empty()) {
+                    int32_t playerDirection = 0;
+                    bool playerHasMovement = false;
+                    for (const int32_t layer : playerLayers) {
+                        const int32_t layerMovement = getShiftedMask5(movementMask, 5 * layer);
+                        if (layerMovement == 0) {
+                            continue;
+                        }
+                        playerHasMovement = true;
+                        if (playerDirection == 0) {
+                            playerDirection = layerMovement;
+                        } else if (playerDirection != layerMovement) {
+                            // Mixed directions across the aggregate player: fall back to per-layer behavior.
+                            playerHasMovement = false;
+                            break;
+                        }
+                    }
+
+                    if (playerHasMovement && playerDirection != 0) {
+                        const auto [pdx, pdy] = directionMaskToDelta(playerDirection);
+                        const int32_t x = tileIndex / session.liveLevel.height;
+                        const int32_t y = tileIndex % session.liveLevel.height;
+                        const int32_t targetX = x + pdx;
+                        const int32_t targetY = y + pdy;
+                        bool canMoveAll = true;
+                        if (targetX < 0 || targetX >= session.liveLevel.width || targetY < 0 || targetY >= session.liveLevel.height) {
+                            canMoveAll = false;
+                        } else {
+                            const int32_t targetIndex = tileIndex + pdy + pdx * session.liveLevel.height;
+                            const BitVector targetMaskAll = getCellObjects(session, targetIndex);
+                            for (const int32_t layer : playerLayers) {
+                                const int32_t layerMovement = getShiftedMask5(movementMask, 5 * layer);
+                                if (layerMovement == 0) {
+                                    continue;
+                                }
+                                const BitVector& layerMask = session.game->layerMasks[static_cast<size_t>(layer)];
+                                if (playerDirection != 16 && anyBitsInCommon(targetMaskAll, layerMask)) {
+                                    canMoveAll = false;
+                                    break;
+                                }
+                            }
+
+                            if (canMoveAll) {
+                                BitVector sourceMask = getCellObjects(session, tileIndex);
+                                BitVector targetMask = getCellObjects(session, targetIndex);
+                                for (const int32_t layer : playerLayers) {
+                                    const int32_t layerMovement = getShiftedMask5(movementMask, 5 * layer);
+                                    if (layerMovement == 0) {
+                                        continue;
+                                    }
+                                    const BitVector& layerMask = session.game->layerMasks[static_cast<size_t>(layer)];
+                                    for (size_t word = 0; word < sourceMask.size() && word < layerMask.size(); ++word) {
+                                        const int32_t moving = sourceMask[word] & layerMask[word];
+                                        sourceMask[word] &= ~layerMask[word];
+                                        targetMask[word] |= moving;
+                                    }
+                                    clearShiftedMask5(movementMask, 5 * layer);
+                                }
+                                setCellObjects(session, tileIndex, sourceMask);
+                                setCellObjects(session, targetIndex, targetMask);
+                                moved = true;
+                                outcome.moved = true;
+                                changedTile = true;
+                            }
+                        }
+                    }
+                }
+            }
+
             for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
                 const int32_t layerMovement = getShiftedMask5(movementMask, 5 * layer);
                 if (layerMovement == 0) {
                     continue;
+                }
+                // Prevent per-layer movement from splitting aggregate player pieces.
+                if (session.game->playerMaskAggregate && cellContainsPlayer(session, tileIndex)) {
+                    const BitVector cellMask = getCellObjects(session, tileIndex);
+                    BitVector playerCellMask = cellMask;
+                    for (size_t word = 0; word < playerCellMask.size() && word < session.game->playerMask.size(); ++word) {
+                        playerCellMask[word] &= session.game->playerMask[word];
+                    }
+                    const BitVector& layerMask = session.game->layerMasks[static_cast<size_t>(layer)];
+                    if (anyBitsInCommon(playerCellMask, layerMask)) {
+                        continue;
+                    }
                 }
                 if (resolveOneLayerMovement(session, tileIndex, layer, layerMovement)) {
                     clearShiftedMask5(movementMask, 5 * layer);
@@ -1857,7 +1971,9 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
 }
 
 bool collectRandomRuleMatches(const Session& session, const Rule& rule, std::vector<RuleMatch>& outMatches) {
-    if (!rule.isRandom || rule.patterns.empty()) {
+    // In JS, a "random rule group" runs random selection across *all* rules in the group,
+    // regardless of whether individual rules are marked random.
+    if (rule.patterns.empty()) {
         return false;
     }
     if (!ruleCanPossiblyMatch(session, rule)) {
@@ -2865,12 +2981,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     if (!startPlayerPositions.empty() && session.game->metadataMap.find("require_player_movement") != session.game->metadataMap.end()) {
         bool someMoved = false;
         for (const int32_t tileIndex : startPlayerPositions) {
-            // Matches JS playerMask[1].bitsClearInArray(cell): a starting cell
-            // counts as vacated only if none of the player bits remain. Using
-            // the aggregate check here would flag partial vacancies (e.g. the
-            // hat moved but the body stayed) as movement.
-            const BitVector cellMask = getCellObjects(session, tileIndex);
-            if (!anyBitsInCommon(cellMask, session.game->playerMask)) {
+            if (!cellContainsPlayer(session, tileIndex)) {
                 someMoved = true;
                 break;
             }
@@ -2891,9 +3002,9 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
             discardTopUndoSnapshot(session);
         }
         session.lastAudioEvents.clear();
-        // JS plays the cancel/restart sfx via playSound(seed, ignore=true), which
-        // deliberately skips the soundHistory that trace comparisons read from.
-        // We match that by not emitting the event here.
+        if (!options.dontModify) {
+            tryPlaySimpleSound(session, "cancel");
+        }
         result.changed = options.dontModify
             ? commands.queue.size() > 1
             : (modified || !commands.queue.empty());
@@ -2923,8 +3034,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     if (commandQueueContains(commands, "restart") && !options.ignoreRestartCommand) {
         restoreRestartTarget(session);
         runRulesOnLevelStart(session);
-        // JS plays the restart sfx via playSound(seed, ignore=true), which
-        // deliberately skips soundHistory; we don't emit the event for parity.
+        tryPlaySimpleSound(session, "restart");
     }
 
     const bool won = !options.ignoreWin && (commandQueueContains(commands, "win") || evaluateWinConditions(session));

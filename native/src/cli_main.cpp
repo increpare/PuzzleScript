@@ -519,6 +519,21 @@ bool compareSnapshot(const TraceSnapshot& expected, ps_session* session, const p
         if (stepResult->audio_event_count != expected.newSounds.size()) {
             stream << "snapshot[" << snapshotIndex << "] audio event count mismatch: actual="
                    << stepResult->audio_event_count << " expected=" << expected.newSounds.size() << "\n";
+            stream << "actual_audio_seeds=[";
+            for (size_t soundIndex = 0; soundIndex < stepResult->audio_event_count; ++soundIndex) {
+                if (soundIndex > 0) {
+                    stream << ",";
+                }
+                stream << stepResult->audio_events[soundIndex].seed;
+            }
+            stream << "] expected_audio_seeds=[";
+            for (size_t soundIndex = 0; soundIndex < expected.newSounds.size(); ++soundIndex) {
+                if (soundIndex > 0) {
+                    stream << ",";
+                }
+                stream << expected.newSounds[soundIndex];
+            }
+            stream << "]\n";
             ok = false;
         } else {
             for (size_t soundIndex = 0; soundIndex < expected.newSounds.size(); ++soundIndex) {
