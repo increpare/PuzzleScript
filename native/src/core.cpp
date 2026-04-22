@@ -589,6 +589,47 @@ std::vector<int32_t> parseIntVector(const json::Value& value) {
     return result;
 }
 
+// ---- Game mask-arena helpers ----------------------------------------------
+// These append mask words into `game.maskArena` and return the offset (in
+// words) of the first element. Used during IR parsing to replace the old
+// BitVector-per-field layout with a single contiguous arena.
+
+MaskOffset storeMaskWords(Game& game, const std::vector<int32_t>& words) {
+    MaskOffset offset = static_cast<MaskOffset>(game.maskArena.size());
+    game.maskArena.insert(game.maskArena.end(), words.begin(), words.end());
+    return offset;
+}
+
+// Append `game.wordCount` zero words and return the offset. Used for fields
+// that are absent in the IR and need an all-zero mask at the arena's width.
+[[maybe_unused]] MaskOffset storeZeroMask(Game& game) {
+    MaskOffset offset = static_cast<MaskOffset>(game.maskArena.size());
+    game.maskArena.insert(game.maskArena.end(), game.wordCount, 0);
+    return offset;
+}
+
+[[maybe_unused]] inline MaskRef maskAt(const Game& game, MaskOffset offset) {
+    return MaskRef{ game.maskArena.data() + offset };
+}
+
+[[maybe_unused]] inline MaskMut maskAt(Game& game, MaskOffset offset) {
+    return MaskMut{ game.maskArena.data() + offset };
+}
+
+[[maybe_unused]] inline bool anyBitsSet(MaskRef m, uint32_t wordCount) {
+    for (uint32_t w = 0; w < wordCount; ++w) {
+        if (m.data[w] != 0) return true;
+    }
+    return false;
+}
+
+[[maybe_unused]] inline bool anyBitsInCommon(MaskRef a, MaskRef b, uint32_t wordCount) {
+    for (uint32_t w = 0; w < wordCount; ++w) {
+        if ((a.data[w] & b.data[w]) != 0) return true;
+    }
+    return false;
+}
+
 std::vector<RuleCommand> parseRuleCommands(const json::Value& value) {
     std::vector<RuleCommand> result;
     if (!value.isArray()) {
@@ -2607,6 +2648,9 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
         const auto& strides = requireField(gameObject, "strides").asObject();
         game->strideObject = toInt(requireField(strides, "object"));
         game->strideMovement = toInt(requireField(strides, "movement"));
+        game->wordCount = static_cast<uint32_t>(game->strideObject);
+        game->movementWordCount = static_cast<uint32_t>(game->strideMovement);
+        game->maskArena.reserve(1024);
         game->layerCount = toInt(requireField(strides, "layers"));
         game->objectCount = toInt(requireField(gameObject, "object_count"));
 

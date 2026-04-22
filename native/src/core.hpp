@@ -27,6 +27,24 @@ struct CompileResult;
 
 using BitVector = std::vector<int32_t>;
 
+// ---- Mask representation (Phase 1) -----------------------------------------
+// Every per-game bitmask (pattern masks, replacement masks, rule masks, layer
+// masks, glyph masks, aggregate masks, etc.) is stored as a run of `wordCount`
+// consecutive MaskWords inside Game::maskArena. Structs that owned a BitVector
+// now store a uint32_t offset into the arena.
+//
+// MaskWord is kept as int32_t in Phase 1 to match the existing IR layout; the
+// Phase 2 plan switches it to uint64_t after the arena is in place.
+using MaskWord = int32_t;
+
+struct MaskRef { const MaskWord* data; };
+struct MaskMut { MaskWord* data; };
+
+// Offset into Game::maskArena (in words, not bytes). `kNullMaskOffset` means
+// "no mask assigned" (used for fields that are optional or vary per pattern).
+using MaskOffset = uint32_t;
+inline constexpr MaskOffset kNullMaskOffset = static_cast<uint32_t>(-1);
+
 struct ObjectDef {
     std::string name;
     int32_t id = -1;
@@ -142,6 +160,9 @@ struct Game {
     int32_t schemaVersion = 1;
     int32_t strideObject = 1;
     int32_t strideMovement = 1;
+    uint32_t wordCount = 0;          // = strideObject; object-mask words per cell
+    uint32_t movementWordCount = 0;  // = strideMovement; movement-mask words per cell
+    std::vector<MaskWord> maskArena; // all per-game bitmasks concatenated
     int32_t layerCount = 1;
     int32_t objectCount = 0;
     int32_t backgroundId = -1;
