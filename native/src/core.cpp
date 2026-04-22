@@ -13,6 +13,7 @@
 #include <thread>
 
 namespace puzzlescript {
+void runRulesOnLevelStart(Session& session);
 namespace {
 
 void rebuildMasks(Session& session);
@@ -2464,6 +2465,7 @@ bool advanceToNextLevel(Session& session) {
         session.preparedSession.restart.objects = session.preparedSession.level.objects;
         session.preparedSession.restart.oldFlickscreenDat = session.preparedSession.oldFlickscreenDat;
         restoreRestartTarget(session);
+        ::puzzlescript::runRulesOnLevelStart(session);
         session.undoStack.clear();
         session.canUndo = false;
         return true;
