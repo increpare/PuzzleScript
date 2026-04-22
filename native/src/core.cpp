@@ -547,6 +547,24 @@ bool bitsSetInArray(const BitVector& required, const int32_t* actual, size_t act
     return true;
 }
 
+// Arena-pointer variant: required and actual both provided as raw pointers
+// with their own word counts. Used after Rule/Pattern mask migration so we
+// do not have to materialize per-row BitVectors just to compare bits.
+bool bitsSetInArray(const int32_t* required, size_t requiredCount, const int32_t* actual, size_t actualCount) {
+    const size_t count = std::min(requiredCount, actualCount);
+    for (size_t index = 0; index < count; ++index) {
+        if ((actual[index] & required[index]) != required[index]) {
+            return false;
+        }
+    }
+    for (size_t index = count; index < requiredCount; ++index) {
+        if (required[index] != 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool bitsSetInArray(const BitVector& required, const BitVector& actual) {
     const size_t count = std::min(required.size(), actual.size());
     for (size_t index = 0; index < count; ++index) {
@@ -859,13 +877,19 @@ Rule parseRule(Game& game, const json::Value& value) {
     rule.rigid = toBool(requireField(object, "rigid"));
     rule.commands = parseRuleCommands(requireField(object, "commands"));
     rule.isRandom = toBool(requireField(object, "is_random"));
+    rule.cellRowMasksFirst = static_cast<uint32_t>(game.cellRowMaskOffsets.size());
     for (const auto& rowMask : requireField(object, "cell_row_masks").asArray()) {
-        rule.cellRowMasks.push_back(parseIntVector(rowMask));
+        game.cellRowMaskOffsets.push_back(storeMaskWords(game, parseIntVector(rowMask)));
     }
+    rule.cellRowMasksCount = static_cast<uint32_t>(game.cellRowMaskOffsets.size()) - rule.cellRowMasksFirst;
+
+    rule.cellRowMasksMovementsFirst = static_cast<uint32_t>(game.cellRowMaskMovementsOffsets.size());
     for (const auto& rowMask : requireField(object, "cell_row_masks_movements").asArray()) {
-        rule.cellRowMasksMovements.push_back(parseIntVector(rowMask));
+        game.cellRowMaskMovementsOffsets.push_back(storeMaskWords(game, parseIntVector(rowMask)));
     }
-    rule.ruleMask = parseIntVector(requireField(object, "rule_mask"));
+    rule.cellRowMasksMovementsCount = static_cast<uint32_t>(game.cellRowMaskMovementsOffsets.size()) - rule.cellRowMasksMovementsFirst;
+
+    rule.ruleMask = storeMaskWords(game, parseIntVector(requireField(object, "rule_mask")));
     for (const auto& patternRowValue : requireField(object, "patterns").asArray()) {
         std::vector<Pattern> patternRow;
         for (const auto& patternValue : patternRowValue.asArray()) {
@@ -1967,7 +1991,10 @@ bool rowMatchStillMatches(
 }
 
 bool ruleCanPossiblyMatch(const Session& session, const Rule& rule) {
-    return bitsSetInArray(rule.ruleMask, session.boardMask);
+    const Game& game = *session.game;
+    const int32_t* required = game.maskArena.data() + rule.ruleMask;
+    return bitsSetInArray(required, game.wordCount,
+                          session.boardMask.data(), session.boardMask.size());
 }
 
 RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandState& commands) {
@@ -1993,7 +2020,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
             std::ostringstream stream;
             stream << "line=" << rule.lineNumber
                    << " skip reason=rule-mask"
-                   << " rule_mask=" << describeObjects(session, rule.ruleMask)
+                   << " rule_mask=" << describeObjects(session, arenaCopy(*session.game, rule.ruleMask, session.game->wordCount))
                    << " board_mask=" << describeObjects(session, session.boardMask);
             ruleDebugLog(stream.str());
         }
@@ -2019,11 +2046,13 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
         const auto& row = rule.patterns[rowIndex];
         const int32_t ellipsisCount = rule.ellipsisCount[rowIndex];
         if (ellipsisCount == 0) {
-            const BitVector& rowObjectMask = rowIndex < rule.cellRowMasks.size()
-                ? rule.cellRowMasks[rowIndex]
+            const Game& game = *session.game;
+            const MaskOffset rowObjectOffset = rowIndex < rule.cellRowMasksCount
+                ? game.cellRowMaskOffsets[rule.cellRowMasksFirst + rowIndex]
                 : rule.ruleMask;
-            const BitVector& rowMovementMask = rowIndex < rule.cellRowMasksMovements.size()
-                ? rule.cellRowMasksMovements[rowIndex]
+            const BitVector rowObjectMask = arenaCopy(game, rowObjectOffset, game.wordCount);
+            const BitVector rowMovementMask = rowIndex < rule.cellRowMasksMovementsCount
+                ? arenaCopy(game, game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst + rowIndex], game.movementWordCount)
                 : BitVector{};
             auto matches = collectRowMatches(session, row, rule.direction, rowObjectMask, rowMovementMask);
             if (matches.empty()) {
@@ -2160,11 +2189,13 @@ bool collectRandomRuleMatches(const Session& session, const Rule& rule, std::vec
         }
         const auto& row = rule.patterns[rowIndex];
         if (rule.ellipsisCount[rowIndex] == 0) {
-            const BitVector& rowObjectMask = rowIndex < rule.cellRowMasks.size()
-                ? rule.cellRowMasks[rowIndex]
+            const Game& game = *session.game;
+            const MaskOffset rowObjectOffset = rowIndex < rule.cellRowMasksCount
+                ? game.cellRowMaskOffsets[rule.cellRowMasksFirst + rowIndex]
                 : rule.ruleMask;
-            const BitVector& rowMovementMask = rowIndex < rule.cellRowMasksMovements.size()
-                ? rule.cellRowMasksMovements[rowIndex]
+            const BitVector rowObjectMask = arenaCopy(game, rowObjectOffset, game.wordCount);
+            const BitVector rowMovementMask = rowIndex < rule.cellRowMasksMovementsCount
+                ? arenaCopy(game, game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst + rowIndex], game.movementWordCount)
                 : BitVector{};
             auto matches = collectRowMatches(session, row, rule.direction, rowObjectMask, rowMovementMask);
             if (matches.empty()) {

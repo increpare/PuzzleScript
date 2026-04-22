@@ -148,9 +148,16 @@ struct Rule {
     bool rigid = false;
     std::vector<RuleCommand> commands;
     bool isRandom = false;
-    std::vector<BitVector> cellRowMasks;
-    std::vector<BitVector> cellRowMasksMovements;
-    BitVector ruleMask;
+
+    // cellRowMasks is a per-row list of object-width masks stored as a run
+    // of offsets inside Game::cellRowMaskOffsets[first .. first+count).
+    uint32_t cellRowMasksFirst = 0;
+    uint32_t cellRowMasksCount = 0;
+    uint32_t cellRowMasksMovementsFirst = 0;
+    uint32_t cellRowMasksMovementsCount = 0;
+
+    MaskOffset ruleMask = kNullMaskOffset;
+
     std::vector<std::vector<Pattern>> patterns;
 };
 
@@ -184,6 +191,11 @@ struct Game {
     // runs. Pattern locates its entries as
     // anyObjectOffsets[anyObjectsFirst .. anyObjectsFirst+anyObjectsCount).
     std::vector<MaskOffset> anyObjectOffsets;
+
+    // Offsets into maskArena for the per-row object / movement masks of
+    // Rule. Each referenced mask has width wordCount or movementWordCount.
+    std::vector<MaskOffset> cellRowMaskOffsets;
+    std::vector<MaskOffset> cellRowMaskMovementsOffsets;
     int32_t layerCount = 1;
     int32_t objectCount = 0;
     int32_t backgroundId = -1;
