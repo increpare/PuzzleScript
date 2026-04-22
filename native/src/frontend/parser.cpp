@@ -693,7 +693,7 @@ void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::str
     diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "Unrecognised stuff in the prelude.");
 }
 
-void parseObjectsLine(ParserState& state, std::string_view trimmedLine, std::string_view mixedCase) {
+void parseObjectsLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine, std::string_view mixedCase) {
     const std::string loweredLine = toLowerCopy(trimmedLine);
     if (state.objectsSection == 0) {
         const auto mixedTokens = splitWhitespace(mixedCase);
@@ -702,7 +702,33 @@ void parseObjectsLine(ParserState& state, std::string_view trimmedLine, std::str
         }
         const std::string primaryName = toLowerCopy(mixedTokens.front());
         if (!isIdentifierLike(primaryName)) {
+            if (!trim(std::string(trimmedLine)).empty()) {
+                diagnostics.warning(
+                    DiagnosticCode::GenericWarning,
+                    state.lineNumber,
+                    "Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like \",\", do it in the legend section).");
+            }
             return;
+        }
+        if (state.objects.find(primaryName) != state.objects.end()) {
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "Object \"" + toUpperCopy(primaryName) + "\" defined multiple times.");
+        }
+        for (const auto& synonym : state.legendSynonyms) {
+            if (synonym.name == primaryName) {
+                diagnostics.error(
+                    DiagnosticCode::GenericError,
+                    state.lineNumber,
+                    "Name \"" + toUpperCopy(primaryName) + "\" already in use.");
+            }
+        }
+        if (isLegendKeywordName(primaryName)) {
+            diagnostics.warning(
+                DiagnosticCode::GenericWarning,
+                state.lineNumber,
+                "You named an object \"" + toUpperCopy(primaryName) + "\", but this is a keyword. Don't do that!");
         }
         const std::string loweredObjectNamesLine = toLowerCopy(trim(mixedCase));
         state.objectsCandname = primaryName;
@@ -744,7 +770,7 @@ void parseObjectsLine(ParserState& state, std::string_view trimmedLine, std::str
     if (state.objectsSection == 2) {
         if (!isSpriteRow(trimmedLine)) {
             state.objectsSection = 0;
-            parseObjectsLine(state, trimmedLine, mixedCase);
+            parseObjectsLine(state, diagnostics, trimmedLine, mixedCase);
             return;
         }
         state.objectsSection = 3;
@@ -760,7 +786,7 @@ void parseObjectsLine(ParserState& state, std::string_view trimmedLine, std::str
     }
 
     state.objectsSection = 0;
-    parseObjectsLine(state, trimmedLine, mixedCase);
+    parseObjectsLine(state, diagnostics, trimmedLine, mixedCase);
 }
 
 void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine) {
@@ -917,14 +943,21 @@ std::string classifySoundKind(std::string_view lowered, size_t index) {
     return index == 0 ? "NAME" : "NAME";
 }
 
-void parseSoundsLine(ParserState& state, std::string_view trimmedLine) {
+void parseSoundsLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine) {
     ParserSoundEntry entry;
     entry.lineNumber = state.lineNumber;
     const auto tokens = splitWhitespace(trimmedLine);
     if (tokens.empty()) {
         return;
     }
-    if (!soundLeadingTokenAcceptable(state, toLowerCopy(tokens.front()))) {
+    const std::string firstLowered = toLowerCopy(tokens.front());
+    if (!soundLeadingTokenAcceptable(state, firstLowered)) {
+        if (isIdentifierLike(firstLowered)) {
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "unexpected sound token \"" + std::string(trim(tokens.front())) + "\".");
+        }
         // parser.js rejects unknown first tokens and does not push a sound row (processSoundsLine no-op).
         return;
     }
@@ -1307,7 +1340,7 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
 
         switch (state.section[0]) {
             case 'o':
-                parseObjectsLine(state, trimmedVisible, trim(mixedVisible));
+                parseObjectsLine(state, diagnostics, trimmedVisible, trim(mixedVisible));
                 break;
             case 'l':
                 if (state.section == "legend") {
@@ -1317,7 +1350,7 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
                 }
                 break;
             case 's':
-                parseSoundsLine(state, trimmedVisible);
+                parseSoundsLine(state, diagnostics, trimmedVisible);
                 break;
             case 'c':
                 parseCollisionLayersLine(state, diagnostics, trimmedVisible);
