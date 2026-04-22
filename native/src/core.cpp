@@ -19,6 +19,8 @@ void runRulesOnLevelStart(Session& session);
 namespace {
 
 void rebuildMasks(Session& session);
+void markAllMasksDirty(Session& session);
+void markAllMovementMasksDirty(Session& session);
 std::string toString(const json::Value& value);
 std::vector<int32_t> parseIntVector(const json::Value& value);
 std::vector<RuleCommand> parseRuleCommands(const json::Value& value);
@@ -1079,12 +1081,23 @@ void setCellObjects(Session& session, int32_t tileIndex, const std::vector<int32
     const int32_t rowIndex = tileIndex % session.liveLevel.height;
     const size_t columnBase = static_cast<size_t>(columnIndex * stride);
     const size_t rowBase = static_cast<size_t>(rowIndex * stride);
+    int32_t clearedAny = 0;
     for (int32_t word = 0; word < stride; ++word) {
+        const int32_t oldValue = session.liveLevel.objects[base + static_cast<size_t>(word)];
         const int32_t value = objects[static_cast<size_t>(word)];
+        clearedAny |= (oldValue & ~value);
         session.liveLevel.objects[base + static_cast<size_t>(word)] = value;
         session.columnMasks[columnBase + static_cast<size_t>(word)] |= value;
         session.rowMasks[rowBase + static_cast<size_t>(word)] |= value;
         session.boardMask[static_cast<size_t>(word)] |= value;
+    }
+    if (clearedAny != 0) {
+        if (static_cast<size_t>(rowIndex) < session.dirtyObjectRows.size())
+            session.dirtyObjectRows[static_cast<size_t>(rowIndex)] = 1;
+        if (static_cast<size_t>(columnIndex) < session.dirtyObjectColumns.size())
+            session.dirtyObjectColumns[static_cast<size_t>(columnIndex)] = 1;
+        session.dirtyObjectBoard = true;
+        session.anyMasksDirty = true;
     }
 }
 
@@ -1154,12 +1167,23 @@ void setCellMovements(Session& session, int32_t tileIndex, const std::vector<int
     const int32_t rowIndex = tileIndex % session.liveLevel.height;
     const size_t columnBase = static_cast<size_t>(columnIndex * stride);
     const size_t rowBase = static_cast<size_t>(rowIndex * stride);
+    int32_t clearedAny = 0;
     for (int32_t word = 0; word < stride; ++word) {
+        const int32_t oldValue = session.liveMovements[base + static_cast<size_t>(word)];
         const int32_t value = movements[static_cast<size_t>(word)];
+        clearedAny |= (oldValue & ~value);
         session.liveMovements[base + static_cast<size_t>(word)] = value;
         session.columnMovementMasks[columnBase + static_cast<size_t>(word)] |= value;
         session.rowMovementMasks[rowBase + static_cast<size_t>(word)] |= value;
         session.boardMovementMask[static_cast<size_t>(word)] |= value;
+    }
+    if (clearedAny != 0) {
+        if (static_cast<size_t>(rowIndex) < session.dirtyMovementRows.size())
+            session.dirtyMovementRows[static_cast<size_t>(rowIndex)] = 1;
+        if (static_cast<size_t>(columnIndex) < session.dirtyMovementColumns.size())
+            session.dirtyMovementColumns[static_cast<size_t>(columnIndex)] = 1;
+        session.dirtyMovementBoard = true;
+        session.anyMasksDirty = true;
     }
 }
 
@@ -1595,6 +1619,7 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
     }
 
     std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
+    markAllMovementMasksDirty(session);
     clearRigidState(session);
     return outcome;
 }
@@ -2603,49 +2628,145 @@ size_t countNonZeroWords(const std::vector<int32_t>& values) {
     return std::count_if(values.begin(), values.end(), [](int32_t value) { return value != 0; });
 }
 
+// Incremental rebuildMasks: setCellObjects/setCellMovements already OR new
+// bits into the row/col/board masks on the write path, so the only case a
+// rebuild is needed is when bits were *cleared*. The set-paths mark those
+// rows/columns dirty. This function rebuilds exactly the dirty slices from
+// scratch and leaves the rest untouched. On a clean session (anyMasksDirty
+// == false) this is a branch and return.
 void rebuildMasks(Session& session) {
     const int32_t objectStride = session.game->strideObject;
     const int32_t movementStride = session.game->strideMovement;
     const int32_t width = session.liveLevel.width;
     const int32_t height = session.liveLevel.height;
 
-    // Reuse capacity across calls: if the level geometry is stable (the common
-    // case within a session), this zeros in place without hitting the
-    // allocator. Only on the first call or when the live-level dimensions
-    // change do we reshape storage.
-    auto fillOrResize = [](std::vector<int32_t>& v, size_t n) {
-        if (v.size() != n) {
-            v.assign(n, 0);
-        } else {
-            std::fill(v.begin(), v.end(), 0);
-        }
+    // Reshape storage on first call / level-dimension change. We compare
+    // against the expected sizes and (re)allocate uniformly if anything is
+    // off — this also drives "mark everything dirty on first use" via the
+    // fact that we populate a fresh row/col mask set below.
+    const size_t rowObjectSize = static_cast<size_t>(height * objectStride);
+    const size_t columnObjectSize = static_cast<size_t>(width * objectStride);
+    const size_t rowMovementSize = static_cast<size_t>(height * movementStride);
+    const size_t columnMovementSize = static_cast<size_t>(width * movementStride);
+    bool sizeChanged = false;
+    auto ensureSize = [&sizeChanged](std::vector<int32_t>& v, size_t n) {
+        if (v.size() != n) { v.assign(n, 0); sizeChanged = true; }
     };
-    fillOrResize(session.rowMasks,            static_cast<size_t>(height * objectStride));
-    fillOrResize(session.columnMasks,         static_cast<size_t>(width  * objectStride));
-    fillOrResize(session.boardMask,           static_cast<size_t>(objectStride));
-    fillOrResize(session.rowMovementMasks,    static_cast<size_t>(height * movementStride));
-    fillOrResize(session.columnMovementMasks, static_cast<size_t>(width  * movementStride));
-    fillOrResize(session.boardMovementMask,   static_cast<size_t>(movementStride));
+    ensureSize(session.rowMasks, rowObjectSize);
+    ensureSize(session.columnMasks, columnObjectSize);
+    ensureSize(session.boardMask, static_cast<size_t>(objectStride));
+    ensureSize(session.rowMovementMasks, rowMovementSize);
+    ensureSize(session.columnMovementMasks, columnMovementSize);
+    ensureSize(session.boardMovementMask, static_cast<size_t>(movementStride));
+    if (session.dirtyObjectRows.size() != static_cast<size_t>(height)) {
+        session.dirtyObjectRows.assign(static_cast<size_t>(height), 1);
+        sizeChanged = true;
+    }
+    if (session.dirtyObjectColumns.size() != static_cast<size_t>(width)) {
+        session.dirtyObjectColumns.assign(static_cast<size_t>(width), 1);
+        sizeChanged = true;
+    }
+    if (session.dirtyMovementRows.size() != static_cast<size_t>(height)) {
+        session.dirtyMovementRows.assign(static_cast<size_t>(height), 1);
+        sizeChanged = true;
+    }
+    if (session.dirtyMovementColumns.size() != static_cast<size_t>(width)) {
+        session.dirtyMovementColumns.assign(static_cast<size_t>(width), 1);
+        sizeChanged = true;
+    }
+    if (sizeChanged) {
+        std::fill(session.dirtyObjectRows.begin(), session.dirtyObjectRows.end(), 1);
+        std::fill(session.dirtyObjectColumns.begin(), session.dirtyObjectColumns.end(), 1);
+        std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 1);
+        std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 1);
+        session.dirtyObjectBoard = true;
+        session.dirtyMovementBoard = true;
+        session.anyMasksDirty = true;
+    }
 
-    for (int32_t x = 0; x < width; ++x) {
-        for (int32_t y = 0; y < height; ++y) {
-            const int32_t tileIndex = x * height + y;
-            const size_t objectBase = static_cast<size_t>(tileIndex * objectStride);
+    if (!session.anyMasksDirty) {
+        return;
+    }
+
+    // ---- Object masks ---------------------------------------------------
+    // Rebuild each dirty row: zero its slice, then OR every tile in that row.
+    for (int32_t y = 0; y < height; ++y) {
+        if (!session.dirtyObjectRows[static_cast<size_t>(y)]) continue;
+        int32_t* rowStart = session.rowMasks.data() + static_cast<size_t>(y * objectStride);
+        std::fill(rowStart, rowStart + objectStride, 0);
+        for (int32_t x = 0; x < width; ++x) {
+            const size_t objectBase = static_cast<size_t>((x * height + y) * objectStride);
+            const int32_t* cell = session.liveLevel.objects.data() + objectBase;
             for (int32_t word = 0; word < objectStride; ++word) {
-                const int32_t value = session.liveLevel.objects[objectBase + static_cast<size_t>(word)];
-                session.rowMasks[static_cast<size_t>(y * objectStride + word)] |= value;
-                session.columnMasks[static_cast<size_t>(x * objectStride + word)] |= value;
-                session.boardMask[static_cast<size_t>(word)] |= value;
-            }
-            const size_t movementBase = static_cast<size_t>(tileIndex * movementStride);
-            for (int32_t word = 0; word < movementStride; ++word) {
-                const int32_t value = session.liveMovements[movementBase + static_cast<size_t>(word)];
-                session.rowMovementMasks[static_cast<size_t>(y * movementStride + word)] |= value;
-                session.columnMovementMasks[static_cast<size_t>(x * movementStride + word)] |= value;
-                session.boardMovementMask[static_cast<size_t>(word)] |= value;
+                rowStart[word] |= cell[word];
             }
         }
+        session.dirtyObjectRows[static_cast<size_t>(y)] = 0;
     }
+    for (int32_t x = 0; x < width; ++x) {
+        if (!session.dirtyObjectColumns[static_cast<size_t>(x)]) continue;
+        int32_t* colStart = session.columnMasks.data() + static_cast<size_t>(x * objectStride);
+        std::fill(colStart, colStart + objectStride, 0);
+        for (int32_t y = 0; y < height; ++y) {
+            const size_t objectBase = static_cast<size_t>((x * height + y) * objectStride);
+            const int32_t* cell = session.liveLevel.objects.data() + objectBase;
+            for (int32_t word = 0; word < objectStride; ++word) {
+                colStart[word] |= cell[word];
+            }
+        }
+        session.dirtyObjectColumns[static_cast<size_t>(x)] = 0;
+    }
+    if (session.dirtyObjectBoard) {
+        // boardMask = OR over all rowMasks slices.
+        std::fill(session.boardMask.begin(), session.boardMask.end(), 0);
+        for (int32_t y = 0; y < height; ++y) {
+            const int32_t* rowStart = session.rowMasks.data() + static_cast<size_t>(y * objectStride);
+            for (int32_t word = 0; word < objectStride; ++word) {
+                session.boardMask[static_cast<size_t>(word)] |= rowStart[word];
+            }
+        }
+        session.dirtyObjectBoard = false;
+    }
+
+    // ---- Movement masks -------------------------------------------------
+    for (int32_t y = 0; y < height; ++y) {
+        if (!session.dirtyMovementRows[static_cast<size_t>(y)]) continue;
+        int32_t* rowStart = session.rowMovementMasks.data() + static_cast<size_t>(y * movementStride);
+        std::fill(rowStart, rowStart + movementStride, 0);
+        for (int32_t x = 0; x < width; ++x) {
+            const size_t movementBase = static_cast<size_t>((x * height + y) * movementStride);
+            const int32_t* cell = session.liveMovements.data() + movementBase;
+            for (int32_t word = 0; word < movementStride; ++word) {
+                rowStart[word] |= cell[word];
+            }
+        }
+        session.dirtyMovementRows[static_cast<size_t>(y)] = 0;
+    }
+    for (int32_t x = 0; x < width; ++x) {
+        if (!session.dirtyMovementColumns[static_cast<size_t>(x)]) continue;
+        int32_t* colStart = session.columnMovementMasks.data() + static_cast<size_t>(x * movementStride);
+        std::fill(colStart, colStart + movementStride, 0);
+        for (int32_t y = 0; y < height; ++y) {
+            const size_t movementBase = static_cast<size_t>((x * height + y) * movementStride);
+            const int32_t* cell = session.liveMovements.data() + movementBase;
+            for (int32_t word = 0; word < movementStride; ++word) {
+                colStart[word] |= cell[word];
+            }
+        }
+        session.dirtyMovementColumns[static_cast<size_t>(x)] = 0;
+    }
+    if (session.dirtyMovementBoard) {
+        std::fill(session.boardMovementMask.begin(), session.boardMovementMask.end(), 0);
+        for (int32_t y = 0; y < height; ++y) {
+            const int32_t* rowStart = session.rowMovementMasks.data() + static_cast<size_t>(y * movementStride);
+            for (int32_t word = 0; word < movementStride; ++word) {
+                session.boardMovementMask[static_cast<size_t>(word)] |= rowStart[word];
+            }
+        }
+        session.dirtyMovementBoard = false;
+    }
+
+    session.anyMasksDirty = false;
 }
 
 std::vector<uint8_t> buildSessionHashBytes(const Session& session) {
@@ -2696,6 +2817,27 @@ bool showContinueOptionOnTitleScreen(const PreparedSession& prepared) {
     return prepared.currentLevelIndex > 0 || prepared.currentLevelTarget.has_value();
 }
 
+void markAllMasksDirty(Session& session) {
+    std::fill(session.dirtyObjectRows.begin(), session.dirtyObjectRows.end(), 1);
+    std::fill(session.dirtyObjectColumns.begin(), session.dirtyObjectColumns.end(), 1);
+    std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 1);
+    std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 1);
+    session.dirtyObjectBoard = true;
+    session.dirtyMovementBoard = true;
+    session.anyMasksDirty = true;
+}
+
+// Variant for callers that bulk-zero liveMovements without going through
+// setCellMovements. Row/col/board movement masks retain stale OR'd bits
+// until the next rebuild; mark them all dirty so the next rebuildMasks()
+// recomputes from the current (zeroed or just-seeded) movement state.
+void markAllMovementMasksDirty(Session& session) {
+    std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 1);
+    std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 1);
+    session.dirtyMovementBoard = true;
+    session.anyMasksDirty = true;
+}
+
 void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot, bool restoreRandomState) {
     session.preparedSession = snapshot.preparedSession;
     session.liveLevel = snapshot.liveLevel;
@@ -2706,6 +2848,7 @@ void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot, bo
         session.randomState = snapshot.randomState;
     }
     session.pendingAgain = false;
+    markAllMasksDirty(session);
     rebuildMasks(session);
 }
 
@@ -2733,6 +2876,7 @@ void restoreRestartTarget(Session& session) {
     session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
     session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
     session.pendingAgain = false;
+    markAllMasksDirty(session);
     rebuildMasks(session);
 }
 
@@ -2829,6 +2973,7 @@ bool advanceToNextLevel(Session& session) {
             session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
             session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
             session.pendingAgain = false;
+            markAllMovementMasksDirty(session);
             rebuildMasks(session);
             session.undoStack.clear();
             session.canUndo = false;
@@ -2858,6 +3003,7 @@ bool advanceToNextLevel(Session& session) {
     session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
     session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
     session.pendingAgain = false;
+    markAllMovementMasksDirty(session);
     rebuildMasks(session);
     session.undoStack.clear();
     session.canUndo = false;
@@ -2872,6 +3018,7 @@ void resetToPrepared(Session& session) {
     session.canUndo = false;
     session.undoStack.clear();
     session.pendingAgain = false;
+    markAllMasksDirty(session);
     if (session.preparedSession.hasRandomState
         && session.preparedSession.randomStateS.size() == session.randomState.s.size()) {
         session.randomState.valid = session.preparedSession.randomStateValid;
@@ -3301,6 +3448,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
 
     session.pendingAgain = false;
     std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
+    markAllMovementMasksDirty(session);
     clearRigidState(session);
     const bool seeded = directionMask != 0 && seedPlayerMovements(session, directionMask);
     bool ruleChanged = false;
@@ -3313,6 +3461,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         commands = CommandState{};
         restoreSnapshot(session, turnStart, false);
         std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
+        markAllMovementMasksDirty(session);
         clearRigidState(session);
         if (directionMask != 0) {
             (void)seedPlayerMovements(session, directionMask);

@@ -280,6 +280,23 @@ struct Session {
     std::vector<int32_t> rowMovementMasks;
     std::vector<int32_t> columnMovementMasks;
     std::vector<int32_t> boardMovementMask;
+    // Incremental rebuildMasks tracking: `setCellObjects`/`setCellMovements`
+    // OR new bits into the row/column/board masks directly. When bits are
+    // *cleared* (old & ~new != 0) we cannot undo the OR without re-scanning
+    // the row/column, so we mark that row/column dirty and `rebuildMasks`
+    // rebuilds only the dirty ones. Sized to [height] / [width] in loadLevel.
+    // A non-empty `dirtyObjectRows` etc. implies the corresponding board mask
+    // is also stale (tracked via dirtyObjectBoard / dirtyMovementBoard).
+    std::vector<uint8_t> dirtyObjectRows;
+    std::vector<uint8_t> dirtyObjectColumns;
+    std::vector<uint8_t> dirtyMovementRows;
+    std::vector<uint8_t> dirtyMovementColumns;
+    bool dirtyObjectBoard = true;
+    bool dirtyMovementBoard = true;
+    // Fast-path flag: if true, at least one row/col/board entry is dirty and
+    // `rebuildMasks` must do work. Set whenever we mark something dirty,
+    // cleared by `rebuildMasks` at the end of a clean rebuild.
+    bool anyMasksDirty = true;
     std::vector<int32_t> rigidGroupIndexMasks;
     std::vector<int32_t> rigidMovementAppliedMasks;
     std::vector<int32_t> pendingCreateMask;
