@@ -1290,11 +1290,11 @@ bool cellContainsPlayer(const Session& session, int32_t tileIndex) {
     }
     const int32_t* playerMask = maskPtr(game, game.playerMask);
     const uint32_t wordCount = game.wordCount;
-    const std::vector<int32_t> cellMask = getCellObjects(session, tileIndex);
+    const int32_t* cellMask = getCellObjectsPtr(session, tileIndex);
     if (!game.playerMaskAggregate) {
-        return anyBitsInCommon(cellMask.data(), cellMask.size(), playerMask, wordCount);
+        return anyBitsInCommon(cellMask, wordCount, playerMask, wordCount);
     }
-    return bitsSetInArray(playerMask, wordCount, cellMask.data(), cellMask.size());
+    return bitsSetInArray(playerMask, wordCount, cellMask, wordCount);
 }
 
 std::vector<int32_t> collectPlayerPositions(const Session& session) {
@@ -1323,16 +1323,17 @@ bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer,
 
     const int32_t targetIndex = tileIndex + dy + dx * session.liveLevel.height;
     const Game& game = *session.game;
-    const std::vector<int32_t> layerMask = arenaCopy(game, game.layerMaskOffsets[static_cast<size_t>(layer)], game.wordCount);
+    const int32_t* layerMask = maskPtr(game, game.layerMaskOffsets[static_cast<size_t>(layer)]);
+    const uint32_t wordCount = game.wordCount;
     std::vector<int32_t> sourceMask = getCellObjects(session, tileIndex);
     const std::vector<int32_t> sourceMaskBeforeMove = sourceMask;
     std::vector<int32_t> targetMask = getCellObjects(session, targetIndex);
-    if (directionMask != 16 && anyBitsInCommon(targetMask, layerMask)) {
+    if (directionMask != 16 && anyBitsInCommon(targetMask.data(), targetMask.size(), layerMask, wordCount)) {
         return false;
     }
 
     std::vector<int32_t> movingEntities = sourceMask;
-    for (size_t word = 0; word < movingEntities.size(); ++word) {
+    for (size_t word = 0; word < movingEntities.size() && word < wordCount; ++word) {
         movingEntities[word] &= layerMask[word];
         sourceMask[word] &= ~layerMask[word];
         targetMask[word] |= movingEntities[word];
@@ -1340,12 +1341,20 @@ bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer,
 
     if (static_cast<size_t>(layer) < game.sfxMovementMasks.size()) {
         for (const auto& entry : game.sfxMovementMasks[static_cast<size_t>(layer)]) {
-            const std::vector<int32_t> entryObjectMask = arenaCopy(game, entry.objectMask, game.wordCount);
-            if (!anyBitsInCommon(sourceMaskBeforeMove, entryObjectMask)) {
+            const int32_t* entryObjectMask = maskPtr(game, entry.objectMask);
+            if (entryObjectMask == nullptr) continue;
+            if (!anyBitsInCommon(sourceMaskBeforeMove.data(), sourceMaskBeforeMove.size(),
+                                 entryObjectMask, wordCount)) {
                 continue;
             }
-            const std::vector<int32_t> entryDirectionMask = arenaCopy(game, entry.directionMask, entry.directionMaskWidth);
-            if ((getShiftedMask5(entryDirectionMask, 5 * layer) & directionMask) == 0) {
+            const int32_t* entryDirectionMask = maskPtr(game, entry.directionMask);
+            if (entryDirectionMask == nullptr) continue;
+            const int32_t shift = 5 * layer;
+            const int32_t wIdx = shift >> 5;
+            const int32_t bIdx = shift & 31;
+            const int32_t dirBits = (static_cast<size_t>(wIdx) < entry.directionMaskWidth)
+                ? ((entryDirectionMask[static_cast<size_t>(wIdx)] >> bIdx) & 0x1F) : 0;
+            if ((dirBits & directionMask) == 0) {
                 continue;
             }
             appendAudioEvent(session, entry.seed, "canmove");
@@ -1430,8 +1439,8 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                                 if (layerMovement == 0) {
                                     continue;
                                 }
-                                const std::vector<int32_t> layerMask = arenaCopy(game, game.layerMaskOffsets[static_cast<size_t>(layer)], game.wordCount);
-                                if (playerDirection != 16 && anyBitsInCommon(targetMaskAll, layerMask)) {
+                                const int32_t* layerMask = maskPtr(game, game.layerMaskOffsets[static_cast<size_t>(layer)]);
+                                if (playerDirection != 16 && anyBitsInCommon(targetMaskAll.data(), targetMaskAll.size(), layerMask, game.wordCount)) {
                                     canMoveAll = false;
                                     blockedByPlayerConstituent = blockedByPlayerConstituent
                                         || anyBitsInCommon(targetMaskAll.data(), targetMaskAll.size(), playerMaskWords, game.wordCount);
@@ -1448,8 +1457,8 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                                     if (layerMovement == 0) {
                                         continue;
                                     }
-                                    const std::vector<int32_t> layerMask = arenaCopy(game, game.layerMaskOffsets[static_cast<size_t>(layer)], game.wordCount);
-                                    for (size_t word = 0; word < sourceMask.size() && word < layerMask.size(); ++word) {
+                                    const int32_t* layerMask = maskPtr(game, game.layerMaskOffsets[static_cast<size_t>(layer)]);
+                                    for (size_t word = 0; word < sourceMask.size() && word < game.wordCount; ++word) {
                                         const int32_t moving = sourceMask[word] & layerMask[word];
                                         sourceMask[word] &= ~layerMask[word];
                                         targetMask[word] |= moving;
@@ -1475,14 +1484,17 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                 // Prevent per-layer movement from splitting aggregate player pieces.
                 if (preventAggregateSplit && session.game->playerMaskAggregate && cellContainsPlayer(session, tileIndex)) {
                     const Game& game = *session.game;
-                    const std::vector<int32_t> cellMask = getCellObjects(session, tileIndex);
-                    std::vector<int32_t> playerCellMask = cellMask;
+                    const int32_t* cellMask = getCellObjectsPtr(session, tileIndex);
                     const int32_t* playerMaskWords = maskPtr(game, game.playerMask);
-                    for (uint32_t word = 0; word < game.wordCount && word < playerCellMask.size(); ++word) {
-                        playerCellMask[word] &= playerMaskWords[word];
+                    const int32_t* layerMask = maskPtr(game, game.layerMaskOffsets[static_cast<size_t>(layer)]);
+                    bool blocked = false;
+                    for (uint32_t word = 0; word < game.wordCount; ++word) {
+                        if (((cellMask[word] & playerMaskWords[word]) & layerMask[word]) != 0) {
+                            blocked = true;
+                            break;
+                        }
                     }
-                    const std::vector<int32_t> layerMask = arenaCopy(game, game.layerMaskOffsets[static_cast<size_t>(layer)], game.wordCount);
-                    if (anyBitsInCommon(playerCellMask, layerMask)) {
+                    if (blocked) {
                         continue;
                     }
                 }
@@ -1844,8 +1856,10 @@ std::vector<int32_t> collectRowMatches(
     const Session& session,
     const std::vector<Pattern>& row,
     int32_t direction,
-    const std::vector<int32_t>& rowObjectMask,
-    const std::vector<int32_t>& rowMovementMask
+    const int32_t* rowObjectMask,
+    uint32_t rowObjectMaskWords,
+    const int32_t* rowMovementMask,
+    uint32_t rowMovementMaskWords
 ) {
     std::vector<int32_t> matches;
     if (row.empty()) {
@@ -1881,7 +1895,8 @@ std::vector<int32_t> collectRowMatches(
         return matches;
     }
 
-    if (!bitsSetInArray(rowObjectMask, session.boardMask) || !bitsSetInArray(rowMovementMask, session.boardMovementMask)) {
+    if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, session.boardMask.data(), session.boardMask.size())
+        || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, session.boardMovementMask.data(), session.boardMovementMask.size())) {
         return matches;
     }
 
@@ -1889,8 +1904,8 @@ std::vector<int32_t> collectRowMatches(
         for (int32_t y = ymin; y < ymax; ++y) {
             const int32_t* rowObjects = session.rowMasks.data() + static_cast<size_t>(y * session.game->strideObject);
             const int32_t* rowMovements = session.rowMovementMasks.data() + static_cast<size_t>(y * session.game->strideMovement);
-            if (!bitsSetInArray(rowObjectMask, rowObjects, static_cast<size_t>(session.game->strideObject))
-                || !bitsSetInArray(rowMovementMask, rowMovements, static_cast<size_t>(session.game->strideMovement))) {
+            if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, rowObjects, static_cast<size_t>(session.game->strideObject))
+                || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, rowMovements, static_cast<size_t>(session.game->strideMovement))) {
                 continue;
             }
             for (int32_t x = xmin; x < xmax; ++x) {
@@ -1911,8 +1926,8 @@ std::vector<int32_t> collectRowMatches(
         for (int32_t x = xmin; x < xmax; ++x) {
             const int32_t* columnObjects = session.columnMasks.data() + static_cast<size_t>(x * session.game->strideObject);
             const int32_t* columnMovements = session.columnMovementMasks.data() + static_cast<size_t>(x * session.game->strideMovement);
-            if (!bitsSetInArray(rowObjectMask, columnObjects, static_cast<size_t>(session.game->strideObject))
-                || !bitsSetInArray(rowMovementMask, columnMovements, static_cast<size_t>(session.game->strideMovement))) {
+            if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, columnObjects, static_cast<size_t>(session.game->strideObject))
+                || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, columnMovements, static_cast<size_t>(session.game->strideMovement))) {
                 continue;
             }
             for (int32_t y = ymin; y < ymax; ++y) {
@@ -2154,19 +2169,28 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
             const MaskOffset rowObjectOffset = rowIndex < rule.cellRowMasksCount
                 ? game.cellRowMaskOffsets[rule.cellRowMasksFirst + rowIndex]
                 : rule.ruleMask;
-            const std::vector<int32_t> rowObjectMask = arenaCopy(game, rowObjectOffset, game.wordCount);
-            const std::vector<int32_t> rowMovementMask = rowIndex < rule.cellRowMasksMovementsCount
-                ? arenaCopy(game, game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst + rowIndex], game.movementWordCount)
-                : std::vector<int32_t>{};
-            auto matches = collectRowMatches(session, row, rule.direction, rowObjectMask, rowMovementMask);
+            const int32_t* rowObjectMask = maskPtr(game, rowObjectOffset);
+            const uint32_t rowObjectMaskWords = game.wordCount;
+            const MaskOffset rowMovementOffset = rowIndex < rule.cellRowMasksMovementsCount
+                ? game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst + rowIndex]
+                : kNullMaskOffset;
+            const int32_t* rowMovementMask = maskPtr(game, rowMovementOffset);
+            const uint32_t rowMovementMaskWords = rowMovementMask != nullptr ? game.movementWordCount : 0;
+            auto matches = collectRowMatches(session, row, rule.direction,
+                                             rowObjectMask, rowObjectMaskWords,
+                                             rowMovementMask, rowMovementMaskWords);
             if (matches.empty()) {
                 if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                    const std::vector<int32_t> rowObjectMaskCopy = arenaCopy(game, rowObjectOffset, game.wordCount);
+                    const std::vector<int32_t> rowMovementMaskCopy = rowMovementMask != nullptr
+                        ? arenaCopy(game, rowMovementOffset, game.movementWordCount)
+                        : std::vector<int32_t>{};
                     std::ostringstream stream;
                     stream << "line=" << rule.lineNumber
                            << " row=" << rowIndex
                            << " matches=0"
-                           << " object_mask=" << describeObjects(session, rowObjectMask)
-                           << " movement_mask=" << describeMovements(session, rowMovementMask);
+                           << " object_mask=" << describeObjects(session, rowObjectMaskCopy)
+                           << " movement_mask=" << describeMovements(session, rowMovementMaskCopy);
                     ruleDebugLog(stream.str());
                 }
                 return {};
@@ -2297,11 +2321,15 @@ bool collectRandomRuleMatches(const Session& session, const Rule& rule, std::vec
             const MaskOffset rowObjectOffset = rowIndex < rule.cellRowMasksCount
                 ? game.cellRowMaskOffsets[rule.cellRowMasksFirst + rowIndex]
                 : rule.ruleMask;
-            const std::vector<int32_t> rowObjectMask = arenaCopy(game, rowObjectOffset, game.wordCount);
-            const std::vector<int32_t> rowMovementMask = rowIndex < rule.cellRowMasksMovementsCount
-                ? arenaCopy(game, game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst + rowIndex], game.movementWordCount)
-                : std::vector<int32_t>{};
-            auto matches = collectRowMatches(session, row, rule.direction, rowObjectMask, rowMovementMask);
+            const int32_t* rowObjectMask = maskPtr(game, rowObjectOffset);
+            const MaskOffset rowMovementOffset = rowIndex < rule.cellRowMasksMovementsCount
+                ? game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst + rowIndex]
+                : kNullMaskOffset;
+            const int32_t* rowMovementMask = maskPtr(game, rowMovementOffset);
+            const uint32_t rowMovementMaskWords = rowMovementMask != nullptr ? game.movementWordCount : 0;
+            auto matches = collectRowMatches(session, row, rule.direction,
+                                             rowObjectMask, game.wordCount,
+                                             rowMovementMask, rowMovementMaskWords);
             if (matches.empty()) {
                 outMatches.clear();
                 return true;
@@ -2675,10 +2703,12 @@ void restoreRestartTarget(Session& session) {
 
 // Raw-pointer variant used after WinCondition mask migration: filter lives
 // in Game::maskArena with width wordCount.
-bool matchesFilter(const int32_t* filter, uint32_t filterCount, bool aggregate, const std::vector<int32_t>& cell) {
+bool matchesFilter(const int32_t* filter, uint32_t filterCount,
+                   bool aggregate,
+                   const int32_t* cell, uint32_t cellCount) {
     return aggregate
-        ? bitsSetInArray(filter, filterCount, cell.data(), cell.size())
-        : anyBitsInCommon(filter, filterCount, cell.data(), cell.size());
+        ? bitsSetInArray(filter, filterCount, cell, cellCount)
+        : anyBitsInCommon(filter, filterCount, cell, cellCount);
 }
 
 bool evaluateWinConditions(const Session& session) {
@@ -2696,9 +2726,9 @@ bool evaluateWinConditions(const Session& session) {
         switch (condition.quantifier) {
             case -1: {
                 for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-                    const std::vector<int32_t> cell = getCellObjects(session, tileIndex);
-                    if (matchesFilter(filter1, wordCount, condition.aggr1, cell)
-                        && matchesFilter(filter2, wordCount, condition.aggr2, cell)) {
+                    const int32_t* cell = getCellObjectsPtr(session, tileIndex);
+                    if (matchesFilter(filter1, wordCount, condition.aggr1, cell, wordCount)
+                        && matchesFilter(filter2, wordCount, condition.aggr2, cell, wordCount)) {
                         rulePassed = false;
                         break;
                     }
@@ -2708,9 +2738,9 @@ bool evaluateWinConditions(const Session& session) {
             case 0: {
                 bool passedTest = false;
                 for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-                    const std::vector<int32_t> cell = getCellObjects(session, tileIndex);
-                    if (matchesFilter(filter1, wordCount, condition.aggr1, cell)
-                        && matchesFilter(filter2, wordCount, condition.aggr2, cell)) {
+                    const int32_t* cell = getCellObjectsPtr(session, tileIndex);
+                    if (matchesFilter(filter1, wordCount, condition.aggr1, cell, wordCount)
+                        && matchesFilter(filter2, wordCount, condition.aggr2, cell, wordCount)) {
                         passedTest = true;
                         break;
                     }
@@ -2720,9 +2750,9 @@ bool evaluateWinConditions(const Session& session) {
             }
             case 1: {
                 for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-                    const std::vector<int32_t> cell = getCellObjects(session, tileIndex);
-                    if (matchesFilter(filter1, wordCount, condition.aggr1, cell)
-                        && !matchesFilter(filter2, wordCount, condition.aggr2, cell)) {
+                    const int32_t* cell = getCellObjectsPtr(session, tileIndex);
+                    if (matchesFilter(filter1, wordCount, condition.aggr1, cell, wordCount)
+                        && !matchesFilter(filter2, wordCount, condition.aggr2, cell, wordCount)) {
                         rulePassed = false;
                         break;
                     }
