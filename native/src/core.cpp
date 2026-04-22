@@ -1510,25 +1510,22 @@ bool applyRowAt(Session& session, const Rule& rule, const std::vector<Pattern>& 
 using RowMatch = std::vector<int32_t>;
 using RuleMatch = std::vector<RowMatch>;
 
-std::vector<RowMatch> collectSingleEllipsisRowMatches(
+std::vector<RowMatch> collectEllipsisRowMatches(
     const Session& session,
     const std::vector<Pattern>& row,
     int32_t direction
 ) {
     std::vector<RowMatch> matches;
-    int32_t ellipsisIndex = -1;
-    for (int32_t index = 0; index < static_cast<int32_t>(row.size()); ++index) {
-        if (row[static_cast<size_t>(index)].kind == Pattern::Kind::Ellipsis) {
-            ellipsisIndex = index;
-            break;
+    int32_t concreteCount = 0;
+    for (const auto& pattern : row) {
+        if (pattern.kind != Pattern::Kind::Ellipsis) {
+            ++concreteCount;
         }
     }
-    if (ellipsisIndex < 0) {
+    if (concreteCount == static_cast<int32_t>(row.size())) {
         return matches;
     }
 
-    const int32_t prefixLength = ellipsisIndex;
-    const int32_t suffixLength = static_cast<int32_t>(row.size()) - ellipsisIndex - 1;
     const auto [dx, dy] = directionMaskToDelta(direction);
     const int32_t parallelDelta = dx * session.liveLevel.height + dy;
     if (parallelDelta == 0) {
@@ -1547,58 +1544,61 @@ std::vector<RowMatch> collectSingleEllipsisRowMatches(
         }
     };
 
+    std::vector<int32_t> minConcreteSuffix(row.size() + 1, 0);
+    for (int32_t rowIndex = static_cast<int32_t>(row.size()) - 1; rowIndex >= 0; --rowIndex) {
+        minConcreteSuffix[static_cast<size_t>(rowIndex)] = minConcreteSuffix[static_cast<size_t>(rowIndex + 1)]
+            + (row[static_cast<size_t>(rowIndex)].kind == Pattern::Kind::Ellipsis ? 0 : 1);
+    }
+
     for (int32_t tileIndex = 0; tileIndex < session.liveLevel.width * session.liveLevel.height; ++tileIndex) {
         const int32_t available = availableAlongDirection(tileIndex);
-        const int32_t maxGap = available - (prefixLength + suffixLength);
-        if (maxGap < 0) {
+        if (available < concreteCount) {
             continue;
         }
-        for (int32_t gap = 0; gap <= maxGap; ++gap) {
-            RowMatch positions;
-            positions.reserve(static_cast<size_t>(prefixLength + suffixLength));
-            bool matched = true;
-            for (int32_t cellIndex = 0; cellIndex < prefixLength; ++cellIndex) {
-                const int32_t matchIndex = tileIndex + cellIndex * parallelDelta;
-                if (!matchesPatternAt(session, row[static_cast<size_t>(cellIndex)], matchIndex)) {
-                    matched = false;
-                    break;
+
+        RowMatch positions;
+        positions.reserve(static_cast<size_t>(concreteCount));
+        auto search = [&](auto&& self, int32_t rowIndex, int32_t offset) -> void {
+            if (rowIndex >= static_cast<int32_t>(row.size())) {
+                matches.push_back(positions);
+                return;
+            }
+
+            const Pattern& pattern = row[static_cast<size_t>(rowIndex)];
+            if (pattern.kind == Pattern::Kind::Ellipsis) {
+                const int32_t maxSkip = available - offset - minConcreteSuffix[static_cast<size_t>(rowIndex + 1)];
+                for (int32_t skip = 0; skip <= maxSkip; ++skip) {
+                    self(self, rowIndex + 1, offset + skip);
                 }
-                positions.push_back(matchIndex);
+                return;
             }
-            for (int32_t cellIndex = 0; matched && cellIndex < suffixLength; ++cellIndex) {
-                const int32_t rowIndex = ellipsisIndex + 1 + cellIndex;
-                const int32_t matchIndex = tileIndex + (ellipsisIndex + gap + cellIndex) * parallelDelta;
-                if (!matchesPatternAt(session, row[static_cast<size_t>(rowIndex)], matchIndex)) {
-                    matched = false;
-                    break;
-                }
-                positions.push_back(matchIndex);
+
+            if (offset >= available) {
+                return;
             }
-            if (matched) {
-                matches.push_back(std::move(positions));
+            const int32_t matchIndex = tileIndex + offset * parallelDelta;
+            if (!matchesPatternAt(session, pattern, matchIndex)) {
+                return;
             }
-        }
+            positions.push_back(matchIndex);
+            self(self, rowIndex + 1, offset + 1);
+            positions.pop_back();
+        };
+        search(search, 0, 0);
     }
 
     return matches;
 }
 
-bool applySingleEllipsisRowAt(Session& session, const Rule& rule, const std::vector<Pattern>& row, const RowMatch& positions) {
-    int32_t ellipsisIndex = -1;
-    for (int32_t index = 0; index < static_cast<int32_t>(row.size()); ++index) {
-        if (row[static_cast<size_t>(index)].kind == Pattern::Kind::Ellipsis) {
-            ellipsisIndex = index;
-            break;
-        }
-    }
-    if (ellipsisIndex < 0) {
+bool applyEllipsisRowAt(Session& session, const Rule& rule, const std::vector<Pattern>& row, const RowMatch& positions) {
+    if (positions.empty()) {
         return false;
     }
 
     bool changed = false;
     int32_t positionIndex = 0;
     for (int32_t cellIndex = 0; cellIndex < static_cast<int32_t>(row.size()); ++cellIndex) {
-        if (cellIndex == ellipsisIndex) {
+        if (row[static_cast<size_t>(cellIndex)].kind == Pattern::Kind::Ellipsis) {
             continue;
         }
         changed = applyReplacementAt(session, rule, row[static_cast<size_t>(cellIndex)], positions[static_cast<size_t>(positionIndex++)]) || changed;
@@ -1620,8 +1620,8 @@ bool applyRowMatchAt(
         }
         return applyRowAt(session, rule, row, match.front(), delta);
     }
-    if (ellipsisCount == 1) {
-        return applySingleEllipsisRowAt(session, rule, row, match);
+    if (ellipsisCount >= 1) {
+        return applyEllipsisRowAt(session, rule, row, match);
     }
     return false;
 }
@@ -1636,7 +1636,7 @@ bool rowMatchStillMatches(
     if (ellipsisCount == 0) {
         return !match.empty() && rowStillMatchesAt(session, row, match.front(), delta);
     }
-    if (ellipsisCount == 1) {
+    if (ellipsisCount >= 1) {
         int32_t positionIndex = 0;
         for (int32_t cellIndex = 0; cellIndex < static_cast<int32_t>(row.size()); ++cellIndex) {
             if (row[static_cast<size_t>(cellIndex)].kind == Pattern::Kind::Ellipsis) {
@@ -1739,14 +1739,14 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                 wrappedMatches.push_back(RowMatch{startIndex});
             }
             rowMatches.push_back(std::move(wrappedMatches));
-        } else if (ellipsisCount == 1) {
-            auto matches = collectSingleEllipsisRowMatches(session, row, rule.direction);
+        } else {
+            auto matches = collectEllipsisRowMatches(session, row, rule.direction);
             if (matches.empty()) {
                 if (ruleDebugLineFilterMatches(rule.lineNumber)) {
                     std::ostringstream stream;
                     stream << "line=" << rule.lineNumber
                            << " row=" << rowIndex
-                           << " matches=0 ellipsis=1";
+                           << " matches=0 ellipsis=" << ellipsisCount;
                     ruleDebugLog(stream.str());
                 }
                 return {};
@@ -1756,19 +1756,10 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                 stream << "line=" << rule.lineNumber
                        << " row=" << rowIndex
                        << " matches=" << matches.size()
-                       << " ellipsis=1";
-                ruleDebugLog(stream.str());
-            }
-            rowMatches.push_back(std::move(matches));
-        } else {
-            if (ruleDebugLineFilterMatches(rule.lineNumber)) {
-                std::ostringstream stream;
-                stream << "line=" << rule.lineNumber
-                       << " skip reason=ellipsis-count"
                        << " ellipsis=" << ellipsisCount;
                 ruleDebugLog(stream.str());
             }
-            return {};
+            rowMatches.push_back(std::move(matches));
         }
     }
 
@@ -1871,15 +1862,13 @@ bool collectRandomRuleMatches(const Session& session, const Rule& rule, std::vec
                 wrappedMatches.push_back(RowMatch{startIndex});
             }
             rowMatches.push_back(std::move(wrappedMatches));
-        } else if (rule.ellipsisCount[rowIndex] == 1) {
-            auto matches = collectSingleEllipsisRowMatches(session, row, rule.direction);
+        } else {
+            auto matches = collectEllipsisRowMatches(session, row, rule.direction);
             if (matches.empty()) {
                 outMatches.clear();
                 return true;
             }
             rowMatches.push_back(std::move(matches));
-        } else {
-            return false;
         }
     }
 
