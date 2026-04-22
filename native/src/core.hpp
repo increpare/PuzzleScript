@@ -25,7 +25,11 @@ struct Error {
 
 struct CompileResult;
 
-using BitVector = std::vector<int32_t>;
+// (The historical `BitVector` typedef was removed after Tasks 7-10 — every
+// engine struct now stores masks as MaskOffsets into Game::maskArena. A few
+// hot-path functions still pass std::vector<int32_t> by value/reference as
+// local scratch; those are intentionally written out as the canonical type
+// rather than a typedef so that ownership vs view distinctions stay visible.)
 
 // ---- Mask representation (Phase 1) -----------------------------------------
 // Every per-game bitmask (pattern masks, replacement masks, rule masks, layer
