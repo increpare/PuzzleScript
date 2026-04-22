@@ -1640,10 +1640,23 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     const Game& game = *session.game;
     const uint32_t objectWordCount = game.wordCount;
     const uint32_t movementWordCount = game.movementWordCount;
-    std::vector<int32_t> objects = getCellObjects(session, tileIndex);
-    std::vector<int32_t> movements = getCellMovements(session, tileIndex);
-    const std::vector<int32_t> oldObjects = objects;
-    const std::vector<int32_t> oldMovements = movements;
+    auto copyIntoScratch = [](std::vector<int32_t>& scratch, const int32_t* src, size_t n) {
+        scratch.resize(n);
+        if (n > 0) std::memcpy(scratch.data(), src, n * sizeof(int32_t));
+    };
+    copyIntoScratch(session.replacementObjectsScratch,
+                    getCellObjectsPtr(session, tileIndex),
+                    static_cast<size_t>(game.strideObject));
+    copyIntoScratch(session.replacementMovementsScratch,
+                    getCellMovementsPtr(session, tileIndex),
+                    static_cast<size_t>(game.strideMovement));
+    // Capture the pre-replacement state for diffing.
+    session.replacementOldObjectsScratch   = session.replacementObjectsScratch;
+    session.replacementOldMovementsScratch = session.replacementMovementsScratch;
+    std::vector<int32_t>& objects      = session.replacementObjectsScratch;
+    std::vector<int32_t>& movements    = session.replacementMovementsScratch;
+    const std::vector<int32_t>& oldObjects   = session.replacementOldObjectsScratch;
+    const std::vector<int32_t>& oldMovements = session.replacementOldMovementsScratch;
     std::vector<int32_t> rigidGroupIndexMask;
     std::vector<int32_t> rigidMovementAppliedMask;
     bool rigidChange = false;
@@ -1787,8 +1800,10 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         movements[word] = (movements[word] & ~movementsClear[word]) | movementsSet[word];
     }
 
-    std::vector<int32_t> created(objects.size(), 0);
-    std::vector<int32_t> destroyed(objects.size(), 0);
+    session.replacementCreatedScratch.assign(objects.size(), 0);
+    session.replacementDestroyedScratch.assign(objects.size(), 0);
+    std::vector<int32_t>& created   = session.replacementCreatedScratch;
+    std::vector<int32_t>& destroyed = session.replacementDestroyedScratch;
     for (size_t word = 0; word < objects.size(); ++word) {
         created[word] = objects[word] & ~oldObjects[word];
         destroyed[word] = oldObjects[word] & ~objects[word];
@@ -1800,7 +1815,8 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
             ? session.game->groupNumberToRigidGroupIndex[static_cast<size_t>(rule.groupNumber)] + 1
             : 0;
         if (rigidGroupIndex > 0) {
-            std::vector<int32_t> rigidMask(static_cast<size_t>(session.game->strideMovement), 0);
+            session.replacementRigidMaskScratch.assign(static_cast<size_t>(session.game->strideMovement), 0);
+            std::vector<int32_t>& rigidMask = session.replacementRigidMaskScratch;
             for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
                 const int32_t shift = 5 * layer;
                 const int32_t wIdx = shift >> 5;

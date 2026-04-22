@@ -290,6 +290,13 @@ struct Session {
     std::vector<int32_t> replacementObjectsSetScratch;
     std::vector<int32_t> replacementMovementsClearScratch;
     std::vector<int32_t> replacementMovementsSetScratch;
+    std::vector<int32_t> replacementObjectsScratch;
+    std::vector<int32_t> replacementMovementsScratch;
+    std::vector<int32_t> replacementOldObjectsScratch;
+    std::vector<int32_t> replacementOldMovementsScratch;
+    std::vector<int32_t> replacementCreatedScratch;
+    std::vector<int32_t> replacementDestroyedScratch;
+    std::vector<int32_t> replacementRigidMaskScratch;
     std::vector<UndoSnapshot> undoStack;
     std::vector<ps_audio_event> lastAudioEvents;
     bool canUndo = false;
