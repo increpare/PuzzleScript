@@ -1287,13 +1287,38 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
             }
         }
         if (!choices.empty()) {
+            const double randomValue = randomUniform(session.randomState);
             const size_t chosen = std::min(
                 choices.size() - 1,
-                static_cast<size_t>(std::floor(randomUniform(session.randomState) * static_cast<double>(choices.size())))
+                static_cast<size_t>(std::floor(randomValue * static_cast<double>(choices.size())))
             );
             const int32_t objectId = choices[chosen];
             const int32_t word = objectId >> 5;
             const int32_t bit = objectId & 31;
+            if (randomDebugEnabled()) {
+                std::ostringstream stream;
+                stream << "replacement_random_entity"
+                       << " line=" << rule.lineNumber
+                       << " tile=" << tileIndex
+                       << " choice_count=" << choices.size()
+                       << " random=" << randomValue
+                       << " chosen_index=" << chosen
+                       << " chosen_id=" << objectId;
+                if (static_cast<size_t>(objectId) < session.game->idDict.size()) {
+                    stream << " chosen_name=" << session.game->idDict[static_cast<size_t>(objectId)];
+                }
+                stream << " choices=";
+                for (size_t choiceIndex = 0; choiceIndex < choices.size(); ++choiceIndex) {
+                    if (choiceIndex > 0) {
+                        stream << ",";
+                    }
+                    stream << choices[choiceIndex];
+                    if (static_cast<size_t>(choices[choiceIndex]) < session.game->idDict.size()) {
+                        stream << ":" << session.game->idDict[static_cast<size_t>(choices[choiceIndex])];
+                    }
+                }
+                randomDebugLog(stream.str());
+            }
             objectsSet[static_cast<size_t>(word)] |= (1 << bit);
             if (static_cast<size_t>(objectId) < session.game->objectsById.size()) {
                 const int32_t layer = session.game->objectsById[static_cast<size_t>(objectId)].layer;
@@ -1318,7 +1343,18 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
             const int32_t shift = 5 * layer;
             if (getShiftedMask5(replacement.randomDirMask, shift) != 0) {
-                const int32_t randomDir = static_cast<int32_t>(std::floor(randomUniform(session.randomState) * 4.0));
+                const double randomValue = randomUniform(session.randomState);
+                const int32_t randomDir = static_cast<int32_t>(std::floor(randomValue * 4.0));
+                if (randomDebugEnabled()) {
+                    std::ostringstream stream;
+                    stream << "replacement_random_dir"
+                           << " line=" << rule.lineNumber
+                           << " tile=" << tileIndex
+                           << " layer=" << layer
+                           << " random=" << randomValue
+                           << " dir=" << randomDir;
+                    randomDebugLog(stream.str());
+                }
                 const int32_t word = (shift + randomDir) >> 5;
                 const int32_t bit = (shift + randomDir) & 31;
                 if (static_cast<size_t>(word) < movementsSet.size()) {
@@ -2181,13 +2217,15 @@ bool showContinueOptionOnTitleScreen(const PreparedSession& prepared) {
     return prepared.currentLevelIndex > 0 || prepared.currentLevelTarget.has_value();
 }
 
-void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot) {
+void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot, bool restoreRandomState = true) {
     session.preparedSession = snapshot.preparedSession;
     session.liveLevel = snapshot.liveLevel;
     session.liveMovements = snapshot.liveMovements;
     session.rigidGroupIndexMasks = snapshot.rigidGroupIndexMasks;
     session.rigidMovementAppliedMasks = snapshot.rigidMovementAppliedMasks;
-    session.randomState = snapshot.randomState;
+    if (restoreRandomState) {
+        session.randomState = snapshot.randomState;
+    }
     session.pendingAgain = false;
     rebuildMasks(session);
 }
@@ -2595,7 +2633,7 @@ bool undo(Session& session) {
     }
     const auto snapshot = std::move(session.undoStack.back());
     session.undoStack.pop_back();
-    restoreSnapshot(session, snapshot);
+    restoreSnapshot(session, snapshot, false);
     session.canUndo = !session.undoStack.empty();
     return true;
 }
@@ -2779,7 +2817,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     int rigidLoopCount = 0;
     while (true) {
         commands = CommandState{};
-        restoreSnapshot(session, turnStart);
+        restoreSnapshot(session, turnStart, false);
         std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
         clearRigidState(session);
         if (directionMask != 0) {
@@ -2835,7 +2873,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
             }
         }
         if (!someMoved) {
-            restoreSnapshot(session, turnStart);
+            restoreSnapshot(session, turnStart, false);
             if (options.pushUndo) {
                 discardTopUndoSnapshot(session);
             }
@@ -2845,7 +2883,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     }
 
     if (commandQueueContains(commands, "cancel")) {
-        restoreSnapshot(session, turnStart);
+        restoreSnapshot(session, turnStart, false);
         if (options.pushUndo) {
             discardTopUndoSnapshot(session);
         }
@@ -2865,12 +2903,12 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
 
     if (options.dontModify) {
         if (modified || commandQueueContains(commands, "win") || commandQueueContains(commands, "restart")) {
-            restoreSnapshot(session, turnStart);
+            restoreSnapshot(session, turnStart, false);
             rebuildMasks(session);
             result.changed = true;
             return result;
         }
-        restoreSnapshot(session, turnStart);
+        restoreSnapshot(session, turnStart, false);
         rebuildMasks(session);
         return result;
     }
@@ -2890,7 +2928,6 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     if (won) {
         (void)transitioned;
     }
-
     if (!won && commandQueueContains(commands, "checkpoint")) {
         session.preparedSession.restart.width = session.liveLevel.width;
         session.preparedSession.restart.height = session.liveLevel.height;
