@@ -94,6 +94,13 @@ bool anyBitsSet(const std::vector<int32_t>& value) {
     return std::any_of(value.begin(), value.end(), [](int32_t word) { return word != 0; });
 }
 
+inline bool anyBitsSet(const int32_t* value, size_t count) {
+    for (size_t i = 0; i < count; ++i) {
+        if (value[i] != 0) return true;
+    }
+    return false;
+}
+
 bool commandQueueContains(const CommandState& state, std::string_view command) {
     return std::find(state.queue.begin(), state.queue.end(), std::string(command)) != state.queue.end();
 }
@@ -1382,11 +1389,13 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
     while (moved) {
         moved = false;
+        const uint32_t movementStride = static_cast<uint32_t>(session.game->strideMovement);
         for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-            std::vector<int32_t> movementMask = getCellMovements(session, tileIndex);
-            if (!anyBitsSet(movementMask)) {
+            const int32_t* movementMaskPtr = getCellMovementsPtr(session, tileIndex);
+            if (!anyBitsSet(movementMaskPtr, movementStride)) {
                 continue;
             }
+            std::vector<int32_t> movementMask(movementMaskPtr, movementMaskPtr + movementStride);
             bool changedTile = false;
             bool preventAggregateSplit = false;
 
@@ -1511,11 +1520,13 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
         }
     }
 
+    const uint32_t failureMovementStride = static_cast<uint32_t>(session.game->strideMovement);
     for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-        std::vector<int32_t> movementMask = getCellMovements(session, tileIndex);
-        if (!anyBitsSet(movementMask)) {
+        const int32_t* movementMaskPtr2 = getCellMovementsPtr(session, tileIndex);
+        if (!anyBitsSet(movementMaskPtr2, failureMovementStride)) {
             continue;
         }
+        std::vector<int32_t> movementMask(movementMaskPtr2, movementMaskPtr2 + failureMovementStride);
 
         if (session.game->rigid) {
             std::vector<int32_t> rigidMovementAppliedMask = getCellRigidMovementAppliedMask(session, tileIndex);
