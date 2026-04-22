@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cctype>
 #include <functional>
+#include <optional>
 #include <regex>
 #include <set>
 
@@ -47,6 +48,18 @@ constexpr std::string_view kPreambleFlags[] = {
     "noaction",
     "norestart",
     "scanline",
+};
+
+// parser.js keyword_array (languageConstants.js) — names that cannot be used as legend keys.
+constexpr std::string_view kLegendKeywordNames[] = {
+    "objects", "collisionlayers", "legend", "sounds", "rules", "...", "winconditions", "levels",
+    "|", "[", "]", "up", "down", "left", "right", "late", "rigid", "^", "v", ">", "<",
+    "no", "randomdir", "random", "horizontal", "vertical", "any", "all", "some",
+    "moving", "stationary", "parallel", "perpendicular", "action", "message", "move",
+    "create", "destroy", "cantmove",
+    "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10",
+    "cancel", "restart", "win", "again", "undo", "titlescreen", "startgame", "endgame",
+    "startlevel", "endlevel", "showmessage", "closemessage",
 };
 
 constexpr std::string_view kSoundEvents[] = {
@@ -421,6 +434,104 @@ void appendUnique(std::vector<std::string>& values, const std::string& value) {
     }
 }
 
+std::optional<int32_t> wordAlreadyDeclaredLine(const ParserState& state, const std::string& lowered) {
+    const auto objectIt = state.objects.find(lowered);
+    if (objectIt != state.objects.end()) {
+        return objectIt->second.lineNumber;
+    }
+    for (const auto& aggregate : state.legendAggregates) {
+        if (aggregate.name == lowered) {
+            return aggregate.lineNumber;
+        }
+    }
+    for (const auto& property : state.legendProperties) {
+        if (property.name == lowered) {
+            return property.lineNumber;
+        }
+    }
+    for (const auto& synonym : state.legendSynonyms) {
+        if (synonym.name == lowered) {
+            return synonym.lineNumber;
+        }
+    }
+    return std::nullopt;
+}
+
+bool isLegendKeywordName(std::string_view lowered) {
+    return isExactToken(lowered, kLegendKeywordNames, std::size(kLegendKeywordNames));
+}
+
+void checkNameDefinedForLegend(
+    const ParserState& state,
+    DiagnosticSink& diagnostics,
+    int32_t lineNumber,
+    const std::string& loweredName
+) {
+    if (state.objects.find(loweredName) != state.objects.end()) {
+        return;
+    }
+    for (const auto& synonym : state.legendSynonyms) {
+        if (synonym.name == loweredName) {
+            return;
+        }
+    }
+    for (const auto& aggregate : state.legendAggregates) {
+        if (aggregate.name == loweredName) {
+            return;
+        }
+    }
+    for (const auto& property : state.legendProperties) {
+        if (property.name == loweredName) {
+            return;
+        }
+    }
+    diagnostics.error(
+        DiagnosticCode::GenericError,
+        lineNumber,
+        "You're talking about " + toUpperCopy(loweredName) + " but it's not defined anywhere.");
+}
+
+void diagnoseLegendLineTokens(
+    ParserState& state,
+    DiagnosticSink& diagnostics,
+    const std::vector<std::string>& tokens,
+    const std::string& candname
+) {
+    if (const auto prevLine = wordAlreadyDeclaredLine(state, candname)) {
+        diagnostics.error(
+            DiagnosticCode::GenericError,
+            state.lineNumber,
+            "Name \"" + toUpperCopy(candname) + "\" already in use (on line line " + std::to_string(*prevLine) + ").");
+    }
+    if (isLegendKeywordName(candname)) {
+        diagnostics.warning(
+            DiagnosticCode::GenericWarning,
+            state.lineNumber,
+            "You named an object \"" + toUpperCopy(candname) + "\", but this is a keyword. Don't do that!");
+    }
+    for (size_t i = 2; i < tokens.size(); i += 2) {
+        const std::string rhs = toLowerCopy(trim(std::string(tokens[i])));
+        if (rhs == candname) {
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "You can't define object " + toUpperCopy(candname) + " in terms of itself!");
+        }
+        for (size_t j = 2; j < i; j += 2) {
+            const std::string other = toLowerCopy(trim(std::string(tokens[j])));
+            if (other == rhs) {
+                diagnostics.warning(
+                    DiagnosticCode::GenericWarning,
+                    state.lineNumber,
+                    "You're repeating the object " + toUpperCopy(rhs) + " here multiple times on the RHS.  This makes no sense.  Don't do that.");
+            }
+        }
+        if (rhs != candname) {
+            checkNameDefinedForLegend(state, diagnostics, state.lineNumber, rhs);
+        }
+    }
+}
+
 std::string stripComments(std::string_view line, ParserState& state) {
     std::string visible;
     visible.reserve(line.size());
@@ -528,6 +639,19 @@ void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::str
             diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "MetaData \"" + key + "\" needs a value.");
             return;
         }
+        if (key == "youtube") {
+            diagnostics.warning(
+                DiagnosticCode::GenericWarning,
+                state.lineNumber,
+                "Unfortunately, YouTube support hasn't been working properly for a long time - it was always a hack and it hasn't gotten less hacky over time, so I can no longer pretend to support it.");
+        }
+        const auto duplicateMeta = state.metadataLines.find(key);
+        if (duplicateMeta != state.metadataLines.end()) {
+            diagnostics.warning(
+                DiagnosticCode::GenericWarning,
+                state.lineNumber,
+                "You've already defined a " + toUpperCopy(key) + " in the prelude on line " + std::to_string(duplicateMeta->second) + ".");
+        }
         std::string storedValue = remainder;
         // parser.js uses reg_notcommentstart for metadata values — text after '(' is not included even if the
         // closing ')' appears later on the line (see title with parenthetical notes).
@@ -549,6 +673,19 @@ void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::str
         return;
     }
     if (isExactToken(key, kPreambleFlags, std::size(kPreambleFlags))) {
+        std::string extra;
+        for (size_t index = 1; index < tokens.size(); ++index) {
+            if (!extra.empty()) {
+                extra.push_back(' ');
+            }
+            extra += tokens[index];
+        }
+        if (!extra.empty()) {
+            diagnostics.warning(
+                DiagnosticCode::GenericWarning,
+                state.lineNumber,
+                "MetaData " + toUpperCopy(key) + " doesn't take any parameters, but you went and gave it \"" + extra + "\".");
+        }
         state.metadata.push_back(key);
         state.metadata.push_back("true");
         return;
@@ -633,17 +770,19 @@ void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
     }
 
     ParserLegendEntry entry;
-    entry.name = toLowerCopy(tokens[0]);
+    const std::string candname = toLowerCopy(trim(std::string(tokens[0])));
+    entry.name = candname;
     entry.lineNumber = state.lineNumber;
     registerLegendOriginalCaseName(state, entry.name, state.lineNumber);
+    diagnoseLegendLineTokens(state, diagnostics, tokens, candname);
 
     if (tokens.size() == 3) {
-        entry.items.push_back(toLowerCopy(tokens[2]));
+        entry.items.push_back(toLowerCopy(trim(std::string(tokens[2]))));
         state.legendSynonyms.push_back(std::move(entry));
         return;
     }
 
-    const std::string joiner = tokens.size() >= 4 ? toLowerCopy(tokens[3]) : std::string{};
+    const std::string joiner = tokens.size() >= 4 ? toLowerCopy(trim(std::string(tokens[3]))) : std::string{};
     std::function<std::vector<std::string>(const std::string&)> expandAggregate;
     std::function<std::vector<std::string>(const std::string&)> expandProperty;
 
@@ -710,21 +849,21 @@ void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
 
     if (joiner == "and") {
         for (size_t index = 2; index < tokens.size(); index += 2) {
-            const auto expanded = expandAggregate(tokens[index]);
+            const auto expanded = expandAggregate(trim(std::string(tokens[index])));
             entry.items.insert(entry.items.end(), expanded.begin(), expanded.end());
         }
         state.legendAggregates.push_back(std::move(entry));
     } else if (joiner == "or") {
         if (tokens.size() >= 3) {
-            const auto expanded = expandProperty(tokens[2]);
+            const auto expanded = expandProperty(trim(std::string(tokens[2])));
             entry.items.insert(entry.items.end(), expanded.begin(), expanded.end());
         }
         if (tokens.size() >= 5) {
-            const auto expanded = expandProperty(tokens[4]);
+            const auto expanded = expandProperty(trim(std::string(tokens[4])));
             entry.items.insert(entry.items.end(), expanded.begin(), expanded.end());
         }
         for (size_t index = 6; index < tokens.size(); index += 2) {
-            entry.items.push_back(toLowerCopy(tokens[index]));
+            entry.items.push_back(toLowerCopy(trim(std::string(tokens[index]))));
         }
         state.legendProperties.push_back(std::move(entry));
     }
@@ -881,14 +1020,16 @@ void parseCollisionLayersLine(ParserState& state, DiagnosticSink& diagnostics, s
             diagnostics.warning(DiagnosticCode::GenericWarning, state.lineNumber, warningStr + " ). You should fix this!");
         }
 
-        if (std::find(state.currentLineWipArray.begin(), state.currentLineWipArray.end(), candname)
+        // parser.js collision lines are lowercased before tokenizing; duplicate detection is case-insensitive.
+        const std::string loweredToken = toLowerCopy(candname);
+        if (std::find(state.currentLineWipArray.begin(), state.currentLineWipArray.end(), loweredToken)
             != state.currentLineWipArray.end()) {
             diagnostics.warning(
                 DiagnosticCode::GenericWarning,
                 state.lineNumber,
                 "Object \"" + toUpperCopy(candname) + "\" included explicitly multiple times in the same layer. Don't do that innit.");
         }
-        state.currentLineWipArray.push_back(candname);
+        state.currentLineWipArray.push_back(loweredToken);
 
         state.collisionLayers.back().insert(state.collisionLayers.back().end(), ar.begin(), ar.end());
     }
@@ -937,7 +1078,7 @@ void parseWinConditionsLine(ParserState& state, std::string_view trimmedLine) {
     }
 }
 
-void parseLevelsLine(ParserState& state, std::string_view trimmedLine, std::string_view rawLine) {
+void parseLevelsLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine, std::string_view rawLine) {
     const std::string trimmedMixed = trim(rawLine);
     const std::string trimmedLower = toLowerCopy(trimmedLine);
     // parser.js uses /\bmessage\b/ — "message: foo" matches (':' is a non-word boundary after "message").
@@ -968,6 +1109,15 @@ void parseLevelsLine(ParserState& state, std::string_view trimmedLine, std::stri
         level.lineNumber = state.lineNumber;
     }
     level.rows.push_back(trimmedLower);
+    if (level.rows.size() > 1) {
+        // parser.js compares String.length (UTF-16 code units); for BMP PuzzleScript maps this matches Unicode scalar count.
+        if (utf8CodePointCount(level.rows.back()) != utf8CodePointCount(level.rows.front())) {
+            diagnostics.warning(
+                DiagnosticCode::GenericWarning,
+                state.lineNumber,
+                "Maps must be rectangular, yo (In a level, the length of each row must be the same).");
+        }
+    }
 }
 
 std::string escapeJson(std::string_view value) {
@@ -1163,7 +1313,7 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
                 if (state.section == "legend") {
                     parseLegendLine(state, diagnostics, trimmedVisible);
                 } else {
-                    parseLevelsLine(state, trimmedVisible, rawLine);
+                    parseLevelsLine(state, diagnostics, trimmedVisible, rawLine);
                 }
                 break;
             case 's':
