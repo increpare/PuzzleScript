@@ -258,18 +258,6 @@ void clearAudioEventsByKind(Session& session, std::string_view kind) {
         session.lastAudioEvents.end());
 }
 
-void tryPlaySimpleSound(Session& session, std::string_view soundName) {
-    if (!session.game->sfxEvents.isObject()) {
-        return;
-    }
-    const auto& events = session.game->sfxEvents.asObject();
-    const auto it = events.find(std::string(soundName));
-    if (it == events.end()) {
-        return;
-    }
-    appendAudioEvent(session, toInt(it->second), "");
-}
-
 void processOutputCommands(Session& session, const CommandState& commands) {
     (void)session;
     (void)commands;
@@ -2898,9 +2886,9 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
             discardTopUndoSnapshot(session);
         }
         session.lastAudioEvents.clear();
-        if (!options.dontModify) {
-            tryPlaySimpleSound(session, "cancel");
-        }
+        // JS plays the cancel/restart sfx via playSound(seed, ignore=true), which
+        // deliberately skips the soundHistory that trace comparisons read from.
+        // We match that by not emitting the event here.
         result.changed = options.dontModify
             ? commands.queue.size() > 1
             : (modified || !commands.queue.empty());
@@ -2930,7 +2918,8 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     if (commandQueueContains(commands, "restart") && !options.ignoreRestartCommand) {
         restoreRestartTarget(session);
         runRulesOnLevelStart(session);
-        tryPlaySimpleSound(session, "restart");
+        // JS plays the restart sfx via playSound(seed, ignore=true), which
+        // deliberately skips soundHistory; we don't emit the event for parity.
     }
 
     const bool won = !options.ignoreWin && (commandQueueContains(commands, "win") || evaluateWinConditions(session));
