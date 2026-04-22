@@ -4,6 +4,35 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# --- Performance defaults ----------------------------------------------------
+# Default to Release when the user hasn't set anything. Honor explicit Debug.
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING
+      "Build type (Release, Debug, RelWithDebInfo, MinSizeRel)" FORCE)
+  message(STATUS "Defaulting CMAKE_BUILD_TYPE to Release (native perf build).")
+endif()
+
+# Release-build flags: -O3, LTO, native codegen, NDEBUG. Tuned for the
+# performance target in docs/superpowers/specs/2026-04-22-native-perf-crush-design.md.
+# Note: -fno-exceptions / -fno-rtti omitted because core.cpp and cli_main.cpp
+# use throw / try / catch (e.g. json::ParseError) pervasively for parse-error
+# reporting; enabling those flags would require a large rewrite outside the
+# scope of this perf phase.
+add_compile_options(
+    $<$<CONFIG:Release>:-O3>
+    $<$<CONFIG:Release>:-DNDEBUG>
+    $<$<CONFIG:Release>:-march=native>
+    $<$<CONFIG:Release>:-flto>
+)
+
+# libc++ safe-mode instrumentation (seen as __annotate_contiguous_container in
+# baseline profiles) is a large tax; turn it off on Release only.
+add_compile_definitions(
+    $<$<CONFIG:Release>:_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_NONE>
+)
+
+add_link_options($<$<CONFIG:Release>:-flto>)
+
 find_package(Threads REQUIRED)
 find_package(PkgConfig QUIET)
 find_program(NODE_EXECUTABLE node REQUIRED)
