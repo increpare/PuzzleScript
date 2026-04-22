@@ -532,7 +532,7 @@ void diagnoseLegendLineTokens(
     }
 }
 
-std::string stripComments(std::string_view line, ParserState& state) {
+std::string stripComments(std::string_view line, ParserState& state, DiagnosticSink& diagnostics) {
     std::string visible;
     visible.reserve(line.size());
     for (size_t index = 0; index < line.size(); ++index) {
@@ -548,11 +548,18 @@ std::string stripComments(std::string_view line, ParserState& state) {
             ++state.commentLevel;
             continue;
         }
-        if (ch == ')' && state.commentLevel > 0) {
-            --state.commentLevel;
-            if (state.commentLevel == 0) {
-                state.solAfterComment = true;
+        if (ch == ')') {
+            if (state.commentLevel > 0) {
+                --state.commentLevel;
+                if (state.commentLevel == 0) {
+                    state.solAfterComment = true;
+                }
+                continue;
             }
+            diagnostics.warning(
+                DiagnosticCode::GenericWarning,
+                state.lineNumber,
+                "You're trying to close a comment here, but I can't find any opening bracket to match it? [This is highly suspicious; you probably want to fix it.]");
             continue;
         }
         if (state.commentLevel == 0) {
@@ -747,6 +754,12 @@ void parseObjectsLine(ParserState& state, DiagnosticSink& diagnostics, std::stri
         }
         for (size_t index = 1; index < mixedTokens.size(); ++index) {
             const std::string aliasName = toLowerCopy(mixedTokens[index]);
+            if (isLegendKeywordName(aliasName)) {
+                diagnostics.warning(
+                    DiagnosticCode::GenericWarning,
+                    state.lineNumber,
+                    "You named an object \"" + toUpperCopy(aliasName) + "\", but this is a keyword. Don't do that!");
+            }
             if (isAsciiIdentifierLike(aliasName)) {
                 registerOriginalCaseName(state, aliasName, loweredObjectNamesLine, state.lineNumber);
             } else if (isIdentifierLike(aliasName) && containsAsciiLetter(aliasName)) {
@@ -1291,7 +1304,7 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
         }
         // Always strip comments (parser.js processes '(' / ')' before section logic).
         // A levels "message ..." line can contain '(' — skipping strip would desync commentLevel.
-        const std::string mixedVisible = stripComments(rawLine, state);
+        const std::string mixedVisible = stripComments(rawLine, state, diagnostics);
         const std::string trimmedVisible = trim(mixedVisible);
         const std::string loweredVisible = toLowerCopy(trimmedVisible);
 
