@@ -1626,6 +1626,33 @@ bool applyRowMatchAt(
     return false;
 }
 
+bool rowMatchStillMatches(
+    const Session& session,
+    const std::vector<Pattern>& row,
+    int32_t ellipsisCount,
+    const RowMatch& match,
+    int32_t delta
+) {
+    if (ellipsisCount == 0) {
+        return !match.empty() && rowStillMatchesAt(session, row, match.front(), delta);
+    }
+    if (ellipsisCount == 1) {
+        int32_t positionIndex = 0;
+        for (int32_t cellIndex = 0; cellIndex < static_cast<int32_t>(row.size()); ++cellIndex) {
+            if (row[static_cast<size_t>(cellIndex)].kind == Pattern::Kind::Ellipsis) {
+                continue;
+            }
+            if (positionIndex >= static_cast<int32_t>(match.size())
+                || !matchesPatternAt(session, row[static_cast<size_t>(cellIndex)], match[static_cast<size_t>(positionIndex)])) {
+                return false;
+            }
+            ++positionIndex;
+        }
+        return positionIndex == static_cast<int32_t>(match.size());
+    }
+    return false;
+}
+
 bool ruleCanPossiblyMatch(const Session& session, const Rule& rule) {
     return bitsSetInArray(rule.ruleMask, session.boardMask);
 }
@@ -1659,129 +1686,6 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
         }
         return {};
     }
-    if (rule.patterns.size() == 1 && rule.ellipsisCount.size() == 1 && rule.ellipsisCount[0] == 1) {
-        const auto& row = rule.patterns[0];
-        int32_t ellipsisIndex = -1;
-        for (int32_t i = 0; i < static_cast<int32_t>(row.size()); ++i) {
-            if (row[static_cast<size_t>(i)].kind == Pattern::Kind::Ellipsis) {
-                ellipsisIndex = i;
-                break;
-            }
-        }
-        if (ellipsisIndex < 0) {
-            return {};
-        }
-
-        const int32_t prefixLength = ellipsisIndex;
-        const int32_t suffixLength = static_cast<int32_t>(row.size()) - ellipsisIndex - 1;
-        const auto [dx, dy] = directionMaskToDelta(rule.direction);
-        const int32_t parallelDelta = dx * session.liveLevel.height + dy;
-        if (parallelDelta == 0) {
-            if (ruleDebugLineFilterMatches(rule.lineNumber)) {
-                std::ostringstream stream;
-                stream << "line=" << rule.lineNumber << " skip reason=parallel-delta-zero";
-                ruleDebugLog(stream.str());
-            }
-            return {};
-        }
-
-        auto availableAlongDirection = [&](int32_t startIndex) {
-            const int32_t x = startIndex / session.liveLevel.height;
-            const int32_t y = startIndex % session.liveLevel.height;
-            switch (rule.direction) {
-                case 1: return y + 1;
-                case 2: return session.liveLevel.height - y;
-                case 4: return x + 1;
-                case 8: return session.liveLevel.width - x;
-                default: return 0;
-            }
-        };
-
-        std::vector<std::vector<int32_t>> matches;
-        for (int32_t tileIndex = 0; tileIndex < session.liveLevel.width * session.liveLevel.height; ++tileIndex) {
-            const int32_t available = availableAlongDirection(tileIndex);
-            const int32_t maxGap = available - (prefixLength + suffixLength);
-            if (maxGap < 0) {
-                continue;
-            }
-            for (int32_t gap = 0; gap <= maxGap; ++gap) {
-                std::vector<int32_t> positions;
-                positions.reserve(static_cast<size_t>(prefixLength + suffixLength));
-                bool matched = true;
-                for (int32_t cellIndex = 0; cellIndex < prefixLength; ++cellIndex) {
-                    const int32_t matchIndex = tileIndex + cellIndex * parallelDelta;
-                    if (!matchesPatternAt(session, row[static_cast<size_t>(cellIndex)], matchIndex)) {
-                        matched = false;
-                        break;
-                    }
-                    positions.push_back(matchIndex);
-                }
-                for (int32_t cellIndex = 0; matched && cellIndex < suffixLength; ++cellIndex) {
-                    const int32_t rowIndex = ellipsisIndex + 1 + cellIndex;
-                    const int32_t matchIndex = tileIndex + (ellipsisIndex + gap + cellIndex) * parallelDelta;
-                    if (!matchesPatternAt(session, row[static_cast<size_t>(rowIndex)], matchIndex)) {
-                        matched = false;
-                        break;
-                    }
-                    positions.push_back(matchIndex);
-                }
-                if (matched) {
-                    matches.push_back(std::move(positions));
-                }
-            }
-        }
-
-        if (matches.empty()) {
-            return {};
-        }
-
-        queueRuleCommands(rule, commands);
-
-        bool changed = false;
-        for (size_t matchIndex = 0; matchIndex < matches.size(); ++matchIndex) {
-            const auto& positions = matches[matchIndex];
-            if (matchIndex > 0) {
-                bool stillMatches = true;
-                int32_t positionIndex = 0;
-                for (int32_t cellIndex = 0; cellIndex < static_cast<int32_t>(row.size()); ++cellIndex) {
-                    if (cellIndex == ellipsisIndex) {
-                        continue;
-                    }
-                    if (!matchesPatternAt(session, row[static_cast<size_t>(cellIndex)], positions[static_cast<size_t>(positionIndex++)])) {
-                        stillMatches = false;
-                        break;
-                    }
-                }
-                if (!stillMatches) {
-                    continue;
-                }
-            }
-
-            int32_t positionIndex = 0;
-            for (int32_t cellIndex = 0; cellIndex < static_cast<int32_t>(row.size()); ++cellIndex) {
-                if (cellIndex == ellipsisIndex) {
-                    continue;
-                }
-                changed = applyReplacementAt(session, rule, row[static_cast<size_t>(cellIndex)], positions[static_cast<size_t>(positionIndex++)]) || changed;
-            }
-        }
-
-        if (changed) {
-            std::ostringstream stream;
-            stream << "line=" << rule.lineNumber << " matched=1 changed=1 ellipsis=1";
-            ruleDebugLog(stream.str());
-        } else if (ruleDebugEnabled() && !matches.empty()) {
-            std::ostringstream stream;
-            stream << "line=" << rule.lineNumber << " matched=1 changed=0 ellipsis=1";
-            ruleDebugLog(stream.str());
-        }
-        return RuleApplyOutcome{true, changed};
-    }
-    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-        if (rowIndex >= rule.ellipsisCount.size() || rule.ellipsisCount[rowIndex] != 0 || rule.patterns[rowIndex].empty()) {
-            return {};
-        }
-    }
     const auto [dx, dy] = directionMaskToDelta(rule.direction);
     const int32_t delta = dx * session.liveLevel.height + dy;
     if (delta == 0) {
@@ -1793,47 +1697,88 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
         return {};
     }
 
-    std::vector<std::vector<int32_t>> rowMatches;
+    std::vector<std::vector<RowMatch>> rowMatches;
     rowMatches.reserve(rule.patterns.size());
     for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+        if (rowIndex >= rule.ellipsisCount.size() || rule.patterns[rowIndex].empty()) {
+            return {};
+        }
         const auto& row = rule.patterns[rowIndex];
-        const BitVector& rowObjectMask = rowIndex < rule.cellRowMasks.size()
-            ? rule.cellRowMasks[rowIndex]
-            : rule.ruleMask;
-        const BitVector& rowMovementMask = rowIndex < rule.cellRowMasksMovements.size()
-            ? rule.cellRowMasksMovements[rowIndex]
-            : BitVector{};
-        auto matches = collectRowMatches(session, row, rule.direction, rowObjectMask, rowMovementMask);
-        if (matches.empty()) {
+        const int32_t ellipsisCount = rule.ellipsisCount[rowIndex];
+        if (ellipsisCount == 0) {
+            const BitVector& rowObjectMask = rowIndex < rule.cellRowMasks.size()
+                ? rule.cellRowMasks[rowIndex]
+                : rule.ruleMask;
+            const BitVector& rowMovementMask = rowIndex < rule.cellRowMasksMovements.size()
+                ? rule.cellRowMasksMovements[rowIndex]
+                : BitVector{};
+            auto matches = collectRowMatches(session, row, rule.direction, rowObjectMask, rowMovementMask);
+            if (matches.empty()) {
+                if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                    std::ostringstream stream;
+                    stream << "line=" << rule.lineNumber
+                           << " row=" << rowIndex
+                           << " matches=0"
+                           << " object_mask=" << describeObjects(session, rowObjectMask)
+                           << " movement_mask=" << describeMovements(session, rowMovementMask);
+                    ruleDebugLog(stream.str());
+                }
+                return {};
+            }
             if (ruleDebugLineFilterMatches(rule.lineNumber)) {
                 std::ostringstream stream;
                 stream << "line=" << rule.lineNumber
                        << " row=" << rowIndex
-                       << " matches=0"
-                       << " object_mask=" << describeObjects(session, rowObjectMask)
-                       << " movement_mask=" << describeMovements(session, rowMovementMask);
+                       << " matches=" << matches.size()
+                       << " starts=" << formatMatchList(matches, session.liveLevel.height);
+                ruleDebugLog(stream.str());
+            }
+            std::vector<RowMatch> wrappedMatches;
+            wrappedMatches.reserve(matches.size());
+            for (const int32_t startIndex : matches) {
+                wrappedMatches.push_back(RowMatch{startIndex});
+            }
+            rowMatches.push_back(std::move(wrappedMatches));
+        } else if (ellipsisCount == 1) {
+            auto matches = collectSingleEllipsisRowMatches(session, row, rule.direction);
+            if (matches.empty()) {
+                if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                    std::ostringstream stream;
+                    stream << "line=" << rule.lineNumber
+                           << " row=" << rowIndex
+                           << " matches=0 ellipsis=1";
+                    ruleDebugLog(stream.str());
+                }
+                return {};
+            }
+            if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                std::ostringstream stream;
+                stream << "line=" << rule.lineNumber
+                       << " row=" << rowIndex
+                       << " matches=" << matches.size()
+                       << " ellipsis=1";
+                ruleDebugLog(stream.str());
+            }
+            rowMatches.push_back(std::move(matches));
+        } else {
+            if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                std::ostringstream stream;
+                stream << "line=" << rule.lineNumber
+                       << " skip reason=ellipsis-count"
+                       << " ellipsis=" << ellipsisCount;
                 ruleDebugLog(stream.str());
             }
             return {};
         }
-        if (ruleDebugLineFilterMatches(rule.lineNumber)) {
-            std::ostringstream stream;
-            stream << "line=" << rule.lineNumber
-                   << " row=" << rowIndex
-                   << " matches=" << matches.size()
-                   << " starts=" << formatMatchList(matches, session.liveLevel.height);
-            ruleDebugLog(stream.str());
-        }
-        rowMatches.push_back(std::move(matches));
     }
 
-    std::vector<std::vector<int32_t>> tuples(1);
+    std::vector<RuleMatch> tuples(1);
     for (const auto& matches : rowMatches) {
-        std::vector<std::vector<int32_t>> newTuples;
+        std::vector<RuleMatch> newTuples;
         newTuples.reserve(tuples.size() * matches.size());
-        for (const int32_t match : matches) {
+        for (const auto& match : matches) {
             for (const auto& tuple : tuples) {
-                std::vector<int32_t> newTuple = tuple;
+                RuleMatch newTuple = tuple;
                 newTuple.push_back(match);
                 newTuples.push_back(std::move(newTuple));
             }
@@ -1853,7 +1798,10 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
         if (tupleIndex > 0) {
             bool stillMatches = true;
             for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-                if (!rowStillMatchesAt(session, rule.patterns[rowIndex], tuple[rowIndex], delta)) {
+                const int32_t ellipsisCount = rowIndex < rule.ellipsisCount.size()
+                    ? rule.ellipsisCount[rowIndex]
+                    : 0;
+                if (!rowMatchStillMatches(session, rule.patterns[rowIndex], ellipsisCount, tuple[rowIndex], delta)) {
                     stillMatches = false;
                     break;
                 }
@@ -1863,7 +1811,10 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
             }
         }
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-            changed = applyRowAt(session, rule, rule.patterns[rowIndex], tuple[rowIndex], delta) || changed;
+            const int32_t ellipsisCount = rowIndex < rule.ellipsisCount.size()
+                ? rule.ellipsisCount[rowIndex]
+                : 0;
+            changed = applyRowMatchAt(session, rule, rule.patterns[rowIndex], ellipsisCount, tuple[rowIndex], delta) || changed;
         }
     }
     if (changed) {
@@ -2247,6 +2198,7 @@ void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot) {
     session.liveMovements = snapshot.liveMovements;
     session.rigidGroupIndexMasks = snapshot.rigidGroupIndexMasks;
     session.rigidMovementAppliedMasks = snapshot.rigidMovementAppliedMasks;
+    session.randomState = snapshot.randomState;
     session.pendingAgain = false;
     rebuildMasks(session);
 }
@@ -2948,6 +2900,13 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     const bool transitioned = won && advanceToNextLevel(session);
     if (won) {
         (void)transitioned;
+    }
+
+    if (!won && commandQueueContains(commands, "checkpoint")) {
+        session.preparedSession.restart.width = session.liveLevel.width;
+        session.preparedSession.restart.height = session.liveLevel.height;
+        session.preparedSession.restart.objects = session.liveLevel.objects;
+        session.preparedSession.restart.oldFlickscreenDat = session.preparedSession.oldFlickscreenDat;
     }
 
     const bool hasAgain = commandQueueContains(commands, "again");
