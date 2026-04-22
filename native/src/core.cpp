@@ -2320,12 +2320,23 @@ void rebuildMasks(Session& session) {
     const int32_t width = session.liveLevel.width;
     const int32_t height = session.liveLevel.height;
 
-    session.rowMasks.assign(static_cast<size_t>(height * objectStride), 0);
-    session.columnMasks.assign(static_cast<size_t>(width * objectStride), 0);
-    session.boardMask.assign(static_cast<size_t>(objectStride), 0);
-    session.rowMovementMasks.assign(static_cast<size_t>(height * movementStride), 0);
-    session.columnMovementMasks.assign(static_cast<size_t>(width * movementStride), 0);
-    session.boardMovementMask.assign(static_cast<size_t>(movementStride), 0);
+    // Reuse capacity across calls: if the level geometry is stable (the common
+    // case within a session), this zeros in place without hitting the
+    // allocator. Only on the first call or when the live-level dimensions
+    // change do we reshape storage.
+    auto fillOrResize = [](std::vector<int32_t>& v, size_t n) {
+        if (v.size() != n) {
+            v.assign(n, 0);
+        } else {
+            std::fill(v.begin(), v.end(), 0);
+        }
+    };
+    fillOrResize(session.rowMasks,            static_cast<size_t>(height * objectStride));
+    fillOrResize(session.columnMasks,         static_cast<size_t>(width  * objectStride));
+    fillOrResize(session.boardMask,           static_cast<size_t>(objectStride));
+    fillOrResize(session.rowMovementMasks,    static_cast<size_t>(height * movementStride));
+    fillOrResize(session.columnMovementMasks, static_cast<size_t>(width  * movementStride));
+    fillOrResize(session.boardMovementMask,   static_cast<size_t>(movementStride));
 
     for (int32_t x = 0; x < width; ++x) {
         for (int32_t y = 0; y < height; ++y) {
