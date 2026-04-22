@@ -1,4 +1,3 @@
-
 var errormessage_testdata = [
     [
         "Background missing",

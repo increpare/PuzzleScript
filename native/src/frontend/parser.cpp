@@ -570,6 +570,12 @@ std::string stripCommentsCore(std::string_view line, ParserState& state, Diagnos
                 }
                 continue;
             }
+            // parser.js: `:` before `(` in rules keeps `(` literal; `:` before `)` (e.g. `:)`) is also
+            // literal text in message tails, not a stray comment closer.
+            if (state.section == "rules" && index > 0 && line[index - 1] == ':') {
+                visible.push_back(ch);
+                continue;
+            }
             diagnostics.warning(
                 DiagnosticCode::GenericWarning,
                 state.lineNumber,
@@ -608,6 +614,40 @@ std::string takePrefixBeforeComment(std::string_view line) {
         prefix.push_back(ch);
     }
     return prefix;
+}
+
+// parser.js: metadata embed warning fires when a `(...)` comment closes on the same prelude line and
+// non-comment text follows whose first non-whitespace character is not `(` (so `title A (b) (c)` is ok,
+// `title A (b) Z` and `title A (b)`-only are ok, but `title A (b) Z` with trailing word warns).
+bool shouldWarnMetadataEmbedCommentLikeJs(std::string_view rawValueTail) {
+    const size_t firstOpen = rawValueTail.find('(');
+    if (firstOpen == std::string_view::npos) {
+        return false;
+    }
+    int depth = 0;
+    size_t scan = firstOpen;
+    bool closed = false;
+    for (; scan < rawValueTail.size(); ++scan) {
+        const char ch = rawValueTail[scan];
+        if (ch == '(') {
+            ++depth;
+        } else if (ch == ')') {
+            --depth;
+            if (depth == 0) {
+                ++scan;
+                closed = true;
+                break;
+            }
+        }
+    }
+    if (!closed) {
+        return false;
+    }
+    const std::string remainderTrimmed = trim(rawValueTail.substr(scan));
+    if (remainderTrimmed.empty()) {
+        return false;
+    }
+    return remainderTrimmed.front() != '(';
 }
 
 void populateNamesForSounds(ParserState& state) {
@@ -702,9 +742,7 @@ void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::str
                 }
                 const std::string rawValueTail = rawTrimmed.substr(valueStart);
                 storedValue = trim(takePrefixBeforeComment(std::string_view(rawValueTail)));
-                // parser.js only surfaces this reliably for long title lines where `(` starts a comment mid-value;
-                // homepage URLs may contain parentheses without this warning in the tokenizer snapshot.
-                if (key == "title" && rawValueTail.find('(') != std::string::npos) {
+                if (preserveOriginalValueCase && shouldWarnMetadataEmbedCommentLikeJs(rawValueTail)) {
                     diagnostics.warning(
                         DiagnosticCode::GenericWarning,
                         state.lineNumber,
@@ -828,6 +866,12 @@ void parseObjectsLine(ParserState& state, DiagnosticSink& diagnostics, std::stri
     }
     if (state.objectsSection == 3 && isSpriteRow(trimmedLine)) {
         auto& object = state.objects[state.objectsCandname];
+        if (trimmedLine.size() > 5) {
+            diagnostics.warning(
+                DiagnosticCode::GenericWarning,
+                state.lineNumber,
+                "Sprites must be 5 wide and 5 high.");
+        }
         object.spritematrix.push_back(std::string(trimmedLine));
         state.objectsSpritematrix = object.spritematrix;
         if (object.spritematrix.size() >= 5) {
