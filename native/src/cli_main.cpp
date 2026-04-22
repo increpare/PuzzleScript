@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "json.hpp"
+#include "puzzlescript/frontend.h"
 #include "puzzlescript/puzzlescript.h"
 
 #ifdef PS_HAVE_SDL2
@@ -1485,6 +1486,53 @@ int playSourceCommand(const std::string& sourcePath, int argc, char** argv) {
 #endif
 }
 
+int compileSourceCommand(const std::string& sourcePath, int argc, char** argv) {
+    bool emitParserState = false;
+    for (int index = 0; index < argc; ++index) {
+        const std::string arg = argv[index];
+        if (arg == "--emit-parser-state") {
+            emitParserState = true;
+        } else {
+            throw std::runtime_error("Unsupported compile-source argument: " + arg);
+        }
+    }
+
+    const std::string source = readFile(sourcePath) + "\n";
+    std::unique_ptr<ps_frontend_result, decltype(&ps_frontend_result_free)> result(
+        ps_frontend_parse(source.data(), source.size()),
+        ps_frontend_result_free
+    );
+    if (!result) {
+        std::cerr << "Failed to parse source.\n";
+        return 1;
+    }
+
+    for (size_t index = 0; index < ps_frontend_result_diagnostic_count(result.get()); ++index) {
+        const ps_diagnostic* diagnostic = ps_frontend_result_diagnostic(result.get(), index);
+        if (!diagnostic) {
+            continue;
+        }
+        std::cerr << "diag[" << index << "] severity=" << diagnostic->severity
+                  << " code=" << diagnostic->code
+                  << " line=" << diagnostic->line
+                  << " message=" << diagnostic->message
+                  << "\n";
+    }
+
+    if (!emitParserState) {
+        std::cerr << "compile-source currently supports only --emit-parser-state.\n";
+        return 1;
+    }
+
+    const size_t required = ps_frontend_result_parser_state_json(result.get(), nullptr, 0);
+    std::string payload(required == 0 ? 0 : (required - 1), '\0');
+    if (required > 0) {
+        (void)ps_frontend_result_parser_state_json(result.get(), payload.data(), required);
+    }
+    std::cout << payload << "\n";
+    return 0;
+}
+
 int stepSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     std::vector<std::string> exporterArgs;
     std::vector<std::string> inputTokens;
@@ -1724,6 +1772,7 @@ void printUsage() {
               << "  ps_cli run <ir.json>\n"
               << "  ps_cli step <ir.json> [input ...]\n"
               << "  ps_cli bench <ir.json> [--iterations N] [--threads N]\n"
+              << "  ps_cli compile-source <game.ps> --emit-parser-state\n"
               << "  ps_cli run-source <game.ps> [--level N] [--seed seed] [--settle-again]\n"
               << "  ps_cli step-source <game.ps> [input ...] [--level N] [--seed seed] [--settle-again]\n"
               << "  ps_cli bench-source <game.ps> [--level N] [--seed seed] [--settle-again] [--iterations N] [--threads N]\n"
@@ -1759,6 +1808,9 @@ int main(int argc, char** argv) {
         }
         if (command == "bench") {
             return benchCommand(path, argc - 3, argv + 3);
+        }
+        if (command == "compile-source") {
+            return compileSourceCommand(path, argc - 3, argv + 3);
         }
         if (command == "run-source") {
             return runSourceCommand(path, argc - 3, argv + 3);

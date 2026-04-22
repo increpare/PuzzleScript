@@ -45,6 +45,16 @@ set(PUZZLESCRIPT_NATIVE_PUBLIC_HEADERS
   include/puzzlescript/puzzlescript.h
 )
 
+set(PUZZLESCRIPT_FRONTEND_PUBLIC_HEADERS
+  include/puzzlescript/frontend.h
+)
+
+set(PUZZLESCRIPT_FRONTEND_SOURCES
+  src/c_api_frontend.cpp
+  src/frontend/diagnostic.cpp
+  src/frontend/parser.cpp
+)
+
 set(PUZZLESCRIPT_NATIVE_SOURCES
   src/c_api.cpp
   src/core.cpp
@@ -57,6 +67,25 @@ set(PUZZLESCRIPT_NATIVE_SOURCES
 add_library(puzzlescript_native STATIC
   ${PUZZLESCRIPT_NATIVE_PUBLIC_HEADERS}
   ${PUZZLESCRIPT_NATIVE_SOURCES}
+)
+
+option(PS_ENABLE_DEV_SERIALIZERS "Enable dev-only frontend serializers and commands" ON)
+
+add_library(puzzlescript_frontend STATIC
+  ${PUZZLESCRIPT_FRONTEND_PUBLIC_HEADERS}
+  ${PUZZLESCRIPT_FRONTEND_SOURCES}
+)
+
+target_include_directories(puzzlescript_frontend
+  PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+target_compile_definitions(puzzlescript_frontend
+  PRIVATE
+    $<$<BOOL:${PS_ENABLE_DEV_SERIALIZERS}>:PS_ENABLE_DEV_SERIALIZERS=1>
 )
 
 target_include_directories(puzzlescript_native
@@ -86,6 +115,7 @@ add_executable(ps_cli
 target_link_libraries(ps_cli
   PRIVATE
     puzzlescript_native
+    puzzlescript_frontend
 )
 
 target_compile_definitions(ps_cli
@@ -162,6 +192,17 @@ add_test(
   COMMAND ps_cli step-source ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt right --level 0 --seed native-step-smoke --settle-again
 )
 set_tests_properties(ps_cli_step_source_smoke PROPERTIES PASS_REGULAR_EXPRESSION "step\\[0\\] token=right changed=1")
+
+add_test(
+  NAME ps_cli_parser_state_smoke
+  COMMAND ps_cli compile-source ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt --emit-parser-state
+)
+set_tests_properties(ps_cli_parser_state_smoke PROPERTIES PASS_REGULAR_EXPRESSION "\"parser_state\"")
+
+add_test(
+  NAME ps_cli_parser_state_diff_smoke
+  COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/diff_parser_state_against_js.sh ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt
+)
 
 add_test(
   NAME ps_cli_diff_trace_smoke
