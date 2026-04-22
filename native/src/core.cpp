@@ -1246,16 +1246,20 @@ bool seedPlayerMovements(Session& session, int32_t directionMask) {
 
     bool changed = false;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const uint32_t objectStride = static_cast<uint32_t>(game.strideObject);
+    const uint32_t movementStride = static_cast<uint32_t>(game.strideMovement);
+    std::vector<int32_t> playerCellMask;
+    std::vector<int32_t> movementMask;
     for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-        std::vector<int32_t> cellMask = getCellObjects(session, tileIndex);
+        const int32_t* cellMaskPtr = getCellObjectsPtr(session, tileIndex);
         if (!game.playerMaskAggregate) {
-            if (!anyBitsInCommon(cellMask.data(), cellMask.size(), playerMask, wordCount)) {
+            if (!anyBitsInCommon(cellMaskPtr, objectStride, playerMask, wordCount)) {
                 continue;
             }
         } else {
             bool containsAll = true;
             for (uint32_t word = 0; word < wordCount; ++word) {
-                if ((cellMask[word] & playerMask[word]) != playerMask[word]) {
+                if ((cellMaskPtr[word] & playerMask[word]) != playerMask[word]) {
                     containsAll = false;
                     break;
                 }
@@ -1265,21 +1269,25 @@ bool seedPlayerMovements(Session& session, int32_t directionMask) {
             }
         }
 
-        for (size_t word = 0; word < cellMask.size() && word < wordCount; ++word) {
-            cellMask[word] &= playerMask[word];
+        playerCellMask.resize(objectStride);
+        for (uint32_t word = 0; word < objectStride; ++word) {
+            const int32_t pm = word < wordCount ? playerMask[word] : 0;
+            playerCellMask[word] = cellMaskPtr[word] & pm;
         }
-        const auto layers = findLayersInMask(session, cellMask);
+        const auto layers = findLayersInMask(session, playerCellMask);
         if (layers.empty()) {
             continue;
         }
 
-        std::vector<int32_t> movementMask = getCellMovements(session, tileIndex);
+        const int32_t* movementSrc = getCellMovementsPtr(session, tileIndex);
+        movementMask.assign(movementSrc, movementSrc + movementStride);
         bool tileChanged = false;
         for (const int32_t layer : layers) {
             const int32_t shift = 5 * layer;
-            const std::vector<int32_t> before = movementMask;
+            const int32_t before = getShiftedMask5(movementMask, shift);
             setShiftedMask5(movementMask, shift, directionMask);
-            tileChanged = tileChanged || movementMask != before;
+            const int32_t after = getShiftedMask5(movementMask, shift);
+            tileChanged = tileChanged || before != after;
         }
         if (tileChanged) {
             setCellMovements(session, tileIndex, movementMask);
