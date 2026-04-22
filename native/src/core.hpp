@@ -93,13 +93,20 @@ struct PreparedSession {
 };
 
 struct Replacement {
-    BitVector objectsClear;
-    BitVector objectsSet;
-    BitVector movementsClear;
-    BitVector movementsSet;
-    BitVector movementsLayerMask;
-    BitVector randomEntityMask;
-    BitVector randomDirMask;
+    // All masks live in Game::maskArena; these are offsets (in words).
+    // The "objects" / "movements" / "movementsLayerMask" fields have width
+    // Game::wordCount / Game::movementWordCount respectively. The two
+    // "random" masks may have a different width (legacy IR format), stored
+    // explicitly below.
+    MaskOffset objectsClear       = kNullMaskOffset;
+    MaskOffset objectsSet         = kNullMaskOffset;
+    MaskOffset movementsClear     = kNullMaskOffset;
+    MaskOffset movementsSet       = kNullMaskOffset;
+    MaskOffset movementsLayerMask = kNullMaskOffset;
+    MaskOffset randomEntityMask   = kNullMaskOffset;
+    MaskOffset randomDirMask      = kNullMaskOffset;
+    uint32_t randomEntityMaskWidth = 0;
+    uint32_t randomDirMaskWidth    = 0;
 };
 
 struct Pattern {

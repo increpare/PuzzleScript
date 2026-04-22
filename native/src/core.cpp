@@ -630,6 +630,27 @@ MaskOffset storeMaskWords(Game& game, const std::vector<int32_t>& words) {
     return false;
 }
 
+// Copy `wordCount` arena words starting at `offset` into a newly-allocated
+// std::vector<int32_t>. Used at call sites that need a mutable copy of a mask
+// (e.g. `BitVector objectsClear = replacement.objectsClear;` patterns where
+// the callee modifies the copy). `kNullMaskOffset` yields an empty vector.
+inline std::vector<int32_t> arenaCopy(const Game& game, MaskOffset offset, uint32_t wordCount) {
+    if (offset == kNullMaskOffset || wordCount == 0) return {};
+    const int32_t* begin = game.maskArena.data() + offset;
+    return std::vector<int32_t>(begin, begin + wordCount);
+}
+
+// Check whether any bit is set in the masked `wordCount` arena words starting
+// at `offset`. `kNullMaskOffset` returns false.
+inline bool arenaAnyBitsSet(const Game& game, MaskOffset offset, uint32_t wordCount) {
+    if (offset == kNullMaskOffset) return false;
+    const int32_t* data = game.maskArena.data() + offset;
+    for (uint32_t w = 0; w < wordCount; ++w) {
+        if (data[w] != 0) return true;
+    }
+    return false;
+}
+
 std::vector<RuleCommand> parseRuleCommands(const json::Value& value) {
     std::vector<RuleCommand> result;
     if (!value.isArray()) {
@@ -779,20 +800,28 @@ std::vector<std::vector<int32_t>> parseSprite(const json::Value& value) {
     return sprite;
 }
 
-Replacement parseReplacement(const json::Value& value) {
+Replacement parseReplacement(Game& game, const json::Value& value) {
     const auto& object = value.asObject();
     Replacement replacement;
-    replacement.objectsClear = parseIntVector(requireField(object, "objects_clear"));
-    replacement.objectsSet = parseIntVector(requireField(object, "objects_set"));
-    replacement.movementsClear = parseIntVector(requireField(object, "movements_clear"));
-    replacement.movementsSet = parseIntVector(requireField(object, "movements_set"));
-    replacement.movementsLayerMask = parseIntVector(requireField(object, "movements_layer_mask"));
-    replacement.randomEntityMask = parseIntVector(requireField(object, "random_entity_mask"));
-    replacement.randomDirMask = parseIntVector(requireField(object, "random_dir_mask"));
+    replacement.objectsClear       = storeMaskWords(game, parseIntVector(requireField(object, "objects_clear")));
+    replacement.objectsSet         = storeMaskWords(game, parseIntVector(requireField(object, "objects_set")));
+    replacement.movementsClear     = storeMaskWords(game, parseIntVector(requireField(object, "movements_clear")));
+    replacement.movementsSet       = storeMaskWords(game, parseIntVector(requireField(object, "movements_set")));
+    replacement.movementsLayerMask = storeMaskWords(game, parseIntVector(requireField(object, "movements_layer_mask")));
+    {
+        auto words = parseIntVector(requireField(object, "random_entity_mask"));
+        replacement.randomEntityMaskWidth = static_cast<uint32_t>(words.size());
+        replacement.randomEntityMask = storeMaskWords(game, words);
+    }
+    {
+        auto words = parseIntVector(requireField(object, "random_dir_mask"));
+        replacement.randomDirMaskWidth = static_cast<uint32_t>(words.size());
+        replacement.randomDirMask = storeMaskWords(game, words);
+    }
     return replacement;
 }
 
-Pattern parsePattern(const json::Value& value) {
+Pattern parsePattern(Game& game, const json::Value& value) {
     const auto& object = value.asObject();
     Pattern pattern;
     const std::string kind = toString(requireField(object, "kind"));
@@ -809,12 +838,12 @@ Pattern parsePattern(const json::Value& value) {
     pattern.movementsPresent = parseIntVector(requireField(object, "movements_present"));
     pattern.movementsMissing = parseIntVector(requireField(object, "movements_missing"));
     if (const auto* replacement = value.find("replacement"); replacement && !replacement->isNull()) {
-        pattern.replacement = parseReplacement(*replacement);
+        pattern.replacement = parseReplacement(game, *replacement);
     }
     return pattern;
 }
 
-Rule parseRule(const json::Value& value) {
+Rule parseRule(Game& game, const json::Value& value) {
     const auto& object = value.asObject();
     Rule rule;
     rule.direction = toInt(requireField(object, "direction"));
@@ -835,19 +864,19 @@ Rule parseRule(const json::Value& value) {
     for (const auto& patternRowValue : requireField(object, "patterns").asArray()) {
         std::vector<Pattern> patternRow;
         for (const auto& patternValue : patternRowValue.asArray()) {
-            patternRow.push_back(parsePattern(patternValue));
+            patternRow.push_back(parsePattern(game, patternValue));
         }
         rule.patterns.push_back(std::move(patternRow));
     }
     return rule;
 }
 
-std::vector<std::vector<Rule>> parseRuleGroups(const json::Value& value) {
+std::vector<std::vector<Rule>> parseRuleGroups(Game& game, const json::Value& value) {
     std::vector<std::vector<Rule>> groups;
     for (const auto& groupValue : value.asArray()) {
         std::vector<Rule> group;
         for (const auto& ruleValue : groupValue.asArray()) {
-            group.push_back(parseRule(ruleValue));
+            group.push_back(parseRule(game, ruleValue));
         }
         groups.push_back(std::move(group));
     }
@@ -1490,6 +1519,9 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         return false;
     }
     const auto& replacement = *pattern.replacement;
+    const Game& game = *session.game;
+    const uint32_t objectWordCount = game.wordCount;
+    const uint32_t movementWordCount = game.movementWordCount;
     BitVector objects = getCellObjects(session, tileIndex);
     BitVector movements = getCellMovements(session, tileIndex);
     const BitVector oldObjects = objects;
@@ -1497,22 +1529,25 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     BitVector rigidGroupIndexMask;
     BitVector rigidMovementAppliedMask;
     bool rigidChange = false;
-    BitVector objectsClear = replacement.objectsClear;
-    BitVector objectsSet = replacement.objectsSet;
-    BitVector movementsSet = replacement.movementsSet;
-    BitVector movementsClear = replacement.movementsClear;
+    BitVector objectsClear       = arenaCopy(game, replacement.objectsClear,       objectWordCount);
+    BitVector objectsSet         = arenaCopy(game, replacement.objectsSet,         objectWordCount);
+    BitVector movementsSet       = arenaCopy(game, replacement.movementsSet,       movementWordCount);
+    BitVector movementsClear     = arenaCopy(game, replacement.movementsClear,     movementWordCount);
+    BitVector movementsLayerMask = arenaCopy(game, replacement.movementsLayerMask, movementWordCount);
+    BitVector randomEntityMask   = arenaCopy(game, replacement.randomEntityMask,   replacement.randomEntityMaskWidth);
+    BitVector randomDirMask      = arenaCopy(game, replacement.randomDirMask,      replacement.randomDirMaskWidth);
 
     for (size_t word = 0; word < movementsClear.size(); ++word) {
-        movementsClear[word] |= replacement.movementsLayerMask[word];
+        movementsClear[word] |= movementsLayerMask[word];
     }
 
-    if (anyBitsSet(replacement.randomEntityMask)) {
+    if (anyBitsSet(randomEntityMask)) {
         std::vector<int32_t> choices;
         for (int32_t objectId = 0; objectId < session.game->objectCount; ++objectId) {
             const int32_t word = objectId >> 5;
             const int32_t bit = objectId & 31;
-            if (word < static_cast<int32_t>(replacement.randomEntityMask.size())
-                && (replacement.randomEntityMask[static_cast<size_t>(word)] & (1 << bit)) != 0) {
+            if (word < static_cast<int32_t>(randomEntityMask.size())
+                && (randomEntityMask[static_cast<size_t>(word)] & (1 << bit)) != 0) {
                 choices.push_back(objectId);
             }
         }
@@ -1569,10 +1604,10 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         }
     }
 
-    if (anyBitsSet(replacement.randomDirMask)) {
+    if (anyBitsSet(randomDirMask)) {
         for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
             const int32_t shift = 5 * layer;
-            if (getShiftedMask5(replacement.randomDirMask, shift) != 0) {
+            if (getShiftedMask5(randomDirMask, shift) != 0) {
                 const double randomValue = randomUniform(session.randomState);
                 const int32_t randomDir = static_cast<int32_t>(std::floor(randomValue * 4.0));
                 if (randomDebugEnabled()) {
@@ -1608,7 +1643,7 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         destroyed[word] = oldObjects[word] & ~objects[word];
     }
 
-    if (rule.rigid && !replacement.movementsLayerMask.empty()) {
+    if (rule.rigid && !movementsLayerMask.empty()) {
         const int32_t rigidGroupIndex = (rule.groupNumber >= 0
             && static_cast<size_t>(rule.groupNumber) < session.game->groupNumberToRigidGroupIndex.size())
             ? session.game->groupNumberToRigidGroupIndex[static_cast<size_t>(rule.groupNumber)] + 1
@@ -1617,7 +1652,7 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
             BitVector rigidMask(static_cast<size_t>(session.game->strideMovement), 0);
             for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
                 const int32_t shift = 5 * layer;
-                if (getShiftedMask5(replacement.movementsLayerMask, shift) != 0) {
+                if (getShiftedMask5(movementsLayerMask, shift) != 0) {
                     setShiftedMask5(rigidMask, shift, rigidGroupIndex);
                 }
             }
@@ -1625,12 +1660,12 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
             rigidGroupIndexMask = getCellRigidGroupIndexMask(session, tileIndex);
             rigidMovementAppliedMask = getCellRigidMovementAppliedMask(session, tileIndex);
             if (!bitsSetInArray(rigidMask, rigidGroupIndexMask)
-                && !bitsSetInArray(replacement.movementsLayerMask, rigidMovementAppliedMask)) {
+                && !bitsSetInArray(movementsLayerMask, rigidMovementAppliedMask)) {
                 for (size_t word = 0; word < rigidGroupIndexMask.size() && word < rigidMask.size(); ++word) {
                     rigidGroupIndexMask[word] |= rigidMask[word];
                 }
-                for (size_t word = 0; word < rigidMovementAppliedMask.size() && word < replacement.movementsLayerMask.size(); ++word) {
-                    rigidMovementAppliedMask[word] |= replacement.movementsLayerMask[word];
+                for (size_t word = 0; word < rigidMovementAppliedMask.size() && word < movementsLayerMask.size(); ++word) {
+                    rigidMovementAppliedMask[word] |= movementsLayerMask[word];
                 }
                 rigidChange = true;
             }
@@ -2743,10 +2778,10 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
             game->groupNumberToRigidGroupIndex = parseIntVector(indexMap->second);
         }
         if (const auto rules = gameObject.find("rules"); rules != gameObject.end()) {
-            game->rules = parseRuleGroups(rules->second);
+            game->rules = parseRuleGroups(*game, rules->second);
         }
         if (const auto lateRules = gameObject.find("late_rules"); lateRules != gameObject.end()) {
-            game->lateRules = parseRuleGroups(lateRules->second);
+            game->lateRules = parseRuleGroups(*game, lateRules->second);
         }
         if (const auto loopPoint = gameObject.find("loop_point"); loopPoint != gameObject.end()) {
             game->loopPoint = parseLoopPointTable(loopPoint->second);
