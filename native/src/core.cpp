@@ -12,6 +12,8 @@
 #include <sstream>
 #include <thread>
 
+#include "simdjson.h" // vendored; will replace puzzlescript::json in Task 4
+
 namespace puzzlescript {
 void runRulesOnLevelStart(Session& session);
 namespace {

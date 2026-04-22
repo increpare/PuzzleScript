@@ -51,6 +51,7 @@ set(PUZZLESCRIPT_NATIVE_SOURCES
   src/hash.cpp
   src/json.cpp
   src/simd.cpp
+  third_party/simdjson/simdjson.cpp
 )
 
 add_library(puzzlescript_native STATIC
@@ -63,7 +64,15 @@ target_include_directories(puzzlescript_native
     ${CMAKE_CURRENT_SOURCE_DIR}/include
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/simdjson
 )
+
+# simdjson's amalgamation uses patterns (SIMD dispatch, internal attributes)
+# that produce many warnings under our project-wide flags. Silence warnings
+# on that one translation unit; we don't maintain simdjson.
+set_source_files_properties(
+  third_party/simdjson/simdjson.cpp
+  PROPERTIES COMPILE_FLAGS "-Wno-everything")
 
 target_link_libraries(puzzlescript_native
   PUBLIC
