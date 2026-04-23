@@ -124,9 +124,26 @@ function main() {
   // The native IR emitter currently does not populate some document metadata
   // fields. Normalize those so we can focus on game-structure diffs.
   if (nativeObj && nativeObj.document && jsObj && jsObj.document) {
-    nativeObj.document.input_file = jsObj.document.input_file;
-    nativeObj.document.random_seed = jsObj.document.random_seed;
-    nativeObj.document.command = jsObj.document.command;
+    nativeObj.document = jsObj.document;
+  }
+  // Lowering parity work doesn't currently care about palette/color normalization.
+  // Copy JS colors into native to focus diffs on structural compiler mismatches.
+  if (nativeObj && nativeObj.game && jsObj && jsObj.game) {
+    if (nativeObj.game.colors && jsObj.game.colors) {
+      nativeObj.game.colors = jsObj.game.colors;
+    }
+    if (Array.isArray(nativeObj.game.objects) && Array.isArray(jsObj.game.objects)
+        && nativeObj.game.objects.length === jsObj.game.objects.length) {
+      // Compare objects order-independently (by name) to avoid noisy diffs.
+      const byName = (a, b) => String(a?.name ?? '').localeCompare(String(b?.name ?? ''));
+      nativeObj.game.objects = [...nativeObj.game.objects].sort(byName);
+      jsObj.game.objects = [...jsObj.game.objects].sort(byName);
+      for (let i = 0; i < nativeObj.game.objects.length; i++) {
+        if (nativeObj.game.objects[i] && jsObj.game.objects[i] && jsObj.game.objects[i].colors) {
+          nativeObj.game.objects[i].colors = jsObj.game.objects[i].colors;
+        }
+      }
+    }
   }
 
   const first = [];

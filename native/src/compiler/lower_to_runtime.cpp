@@ -1,6 +1,7 @@
 #include "compiler/lower_to_runtime.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <cstdint>
 #include <map>
 #include <memory>
@@ -14,6 +15,15 @@
 namespace puzzlescript::compiler {
 
 namespace {
+
+std::string toLowerAsciiCopy(std::string_view input) {
+    std::string out;
+    out.reserve(input.size());
+    for (unsigned char ch : input) {
+        out.push_back(static_cast<char>(std::tolower(ch)));
+    }
+    return out;
+}
 
 uint32_t ceilDivU32(uint32_t a, uint32_t b) {
     return (a + b - 1) / b;
@@ -316,14 +326,20 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
     for (const auto& entry : state.legendSynonyms) {
         if (!entry.items.empty()) {
-            synonymOf[entry.name] = entry.items.front();
+            synonymOf[toLowerAsciiCopy(entry.name)] = toLowerAsciiCopy(entry.items.front());
         }
     }
     for (const auto& entry : state.legendAggregates) {
-        aggregateOf[entry.name] = entry.items;
+        std::vector<std::string> items;
+        items.reserve(entry.items.size());
+        for (const auto& item : entry.items) items.push_back(toLowerAsciiCopy(item));
+        aggregateOf[toLowerAsciiCopy(entry.name)] = std::move(items);
     }
     for (const auto& entry : state.legendProperties) {
-        propertyOf[entry.name] = entry.items;
+        std::vector<std::string> items;
+        items.reserve(entry.items.size());
+        for (const auto& item : entry.items) items.push_back(toLowerAsciiCopy(item));
+        propertyOf[toLowerAsciiCopy(entry.name)] = std::move(items);
     }
 
     // JS-style glyphDict: maps a glyph name to a per-layer concrete object id,
@@ -352,8 +368,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             if (entry.items.empty()) {
                 continue;
             }
-            const auto& key = entry.name;
-            const auto& val = entry.items.front();
+            const auto key = toLowerAsciiCopy(entry.name);
+            const auto val = toLowerAsciiCopy(entry.items.front());
             if (glyphDict.find(key) == glyphDict.end()) {
                 const auto it = glyphDict.find(val);
                 if (it != glyphDict.end()) {
@@ -364,13 +380,13 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         }
         // aggregates (AND)
         for (const auto& entry : state.legendAggregates) {
-            const auto& key = entry.name;
+            const auto key = toLowerAsciiCopy(entry.name);
             if (glyphDict.find(key) != glyphDict.end()) {
                 continue;
             }
             bool allFound = true;
             for (const auto& item : entry.items) {
-                if (glyphDict.find(item) == glyphDict.end()) {
+                if (glyphDict.find(toLowerAsciiCopy(item)) == glyphDict.end()) {
                     allFound = false;
                     break;
                 }
@@ -380,7 +396,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             }
             auto glyph = blankGlyph;
             for (const auto& item : entry.items) {
-                const auto& sub = glyphDict[item];
+                const auto& sub = glyphDict[toLowerAsciiCopy(item)];
                 for (size_t layer = 0; layer < glyph.size(); ++layer) {
                     if (sub[layer] >= 0) {
                         glyph[layer] = sub[layer];
@@ -466,6 +482,11 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     game->levels.clear();
     game->levels.reserve(state.levels.size());
     for (const auto& srcLevel : state.levels) {
+        // Parser may retain empty placeholder level entries (notably a trailing
+        // one); JS compiler drops them.
+        if (!srcLevel.isMessage && srcLevel.rows.empty() && !srcLevel.lineNumber.has_value()) {
+            continue;
+        }
         puzzlescript::LevelTemplate level;
         level.isMessage = srcLevel.isMessage;
         if (level.isMessage) {
@@ -645,6 +666,14 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             addDirectionAggregate("orthogonal");
         }
 
+        // JS groups late rules separately (each "late ..." line becomes its own
+        // group). Keep that structure to make IR diffs easier.
+        std::vector<puzzlescript::Rule>* outputGroup = &ruleGroup;
+        if (lateRule) {
+            game->lateRules.emplace_back();
+            outputGroup = &game->lateRules.back();
+        }
+
         struct ParsedItem {
             std::string dir;
             std::string name;
@@ -751,6 +780,60 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             return false;
         };
 
+        // JS compiler may emit fewer variants than the naive 4-direction expansion
+        // when different scan directions collapse to identical rule patterns after
+        // canonicalization (e.g. symmetric patterns, or UP/LLEFT normalized).
+        std::set<std::string> seenRuleVariants;
+        auto ruleVariantSignature = [&](const std::string& forward, const std::vector<ParsedRow>& lhs, const std::vector<ParsedRow>& rhs) {
+            std::string sig;
+            sig.reserve(256);
+            bool axisRelevant = false;
+            for (const auto& row : lhs) {
+                if (row.size() > 1) {
+                    axisRelevant = true;
+                    break;
+                }
+            }
+            if (!axisRelevant) {
+                for (const auto& row : rhs) {
+                    if (row.size() > 1) {
+                        axisRelevant = true;
+                        break;
+                    }
+                }
+            }
+            if (axisRelevant) {
+                sig.append(forward);
+                sig.push_back('|');
+            }
+            auto appendRows = [&](const std::vector<ParsedRow>& rows) {
+                for (const auto& row : rows) {
+                    sig.push_back('[');
+                    for (const auto& cell : row) {
+                        sig.push_back('{');
+                        if (cell.isEllipsis) {
+                            sig.append("...");
+                        } else {
+                            for (const auto& item : cell.items) {
+                                if (!item.dir.empty()) {
+                                    sig.append(item.dir);
+                                    sig.push_back(' ');
+                                }
+                                sig.append(item.name);
+                                sig.push_back(',');
+                            }
+                        }
+                        sig.push_back('}');
+                    }
+                    sig.push_back(']');
+                }
+            };
+            appendRows(lhs);
+            sig.push_back('|');
+            appendRows(rhs);
+            return sig;
+        };
+
         for (const auto& rawRuleDirection : ruleDirections) {
         auto variantLhsRows = lhsRows;
         auto variantRhsRows = rhsRows;
@@ -767,6 +850,14 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 for (auto& row : variantLhsRows) std::reverse(row.begin(), row.end());
                 for (auto& row : variantRhsRows) std::reverse(row.begin(), row.end());
             }
+        }
+
+        {
+            const std::string sig = ruleVariantSignature(concreteRuleDirection, variantLhsRows, variantRhsRows);
+            if (seenRuleVariants.find(sig) != seenRuleVariants.end()) {
+                continue;
+            }
+            seenRuleVariants.insert(sig);
         }
 
         puzzlescript::Rule rule;
@@ -803,6 +894,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                     std::set<std::string> visiting;
                     const auto mask = resolveMask(resolveMask, item.name, visiting);
                     const auto singleLayer = maskSingleLayer(mask);
+                    const bool isProperty = propertyOf.find(item.name) != propertyOf.end();
 
                     if (item.dir == "no") {
                         for (size_t w = 0; w < objectsMissing.size(); ++w) {
@@ -811,13 +903,21 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         continue;
                     }
 
-                    if (singleLayer.has_value()) {
+                    if (isProperty) {
+                        // JS semantics: OR properties become anyObjectsPresent even
+                        // when they live on a single collision layer.
+                        const auto off = storeMaskWords(*game, mask);
+                        game->anyObjectOffsets.push_back(off);
+                        anyOffsets.push_back(off);
+                        if (singleLayer.has_value()) {
+                            layersUsed[static_cast<size_t>(*singleLayer)] = 1;
+                        }
+                    } else if (singleLayer.has_value()) {
                         for (size_t w = 0; w < objectsPresent.size(); ++w) {
                             objectsPresent[w] |= mask[w];
                         }
                         layersUsed[static_cast<size_t>(*singleLayer)] = 1;
                     } else {
-                        // "or" properties end up as "anyObjectsPresent" in JS.
                         const auto off = storeMaskWords(*game, mask);
                         game->anyObjectOffsets.push_back(off);
                         anyOffsets.push_back(off);
@@ -867,10 +967,31 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                             orShiftedMask5(movementsLayerMask, 5 * layer, 0x1f);
                         };
 
-                        // LHS layersUsed already collected.
-                        for (int32_t layer = 0; layer < game->layerCount; ++layer) {
-                            if (layersUsed[static_cast<size_t>(layer)] != 0) {
-                                markLayerClear(layer);
+                        // Only clear object layers if the RHS actually writes objects
+                        // (i.e. concrete objects or explicit deletes). For property
+                        // rules like Moveable -> Moveable, JS leaves objects_clear/set empty.
+                        bool rhsWritesObjects = rhsCell.items.empty(); // empty cell => clear
+                        if (!rhsWritesObjects) {
+                            for (const auto& rhsItem : rhsCell.items) {
+                                if (rhsItem.dir == "random") {
+                                    continue;
+                                }
+                                if (rhsItem.dir == "no") {
+                                    rhsWritesObjects = true;
+                                    break;
+                                }
+                                if (propertyOf.find(rhsItem.name) == propertyOf.end()) {
+                                    rhsWritesObjects = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (rhsWritesObjects) {
+                            // LHS layersUsed already collected.
+                            for (int32_t layer = 0; layer < game->layerCount; ++layer) {
+                                if (layersUsed[static_cast<size_t>(layer)] != 0) {
+                                    markLayerClear(layer);
+                                }
                             }
                         }
 
@@ -881,6 +1002,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                             std::set<std::string> visiting;
                             const auto mask = resolveMask(resolveMask, item.name, visiting);
                             const auto singleLayer = maskSingleLayer(mask);
+                            const bool isProperty = propertyOf.find(item.name) != propertyOf.end();
 
                             if (item.dir == "no") {
                                 // Explicit delete.
@@ -893,22 +1015,43 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                                 continue;
                             }
 
-                            for (size_t w = 0; w < objectsSet.size(); ++w) {
-                                objectsSet[w] |= mask[w];
+                            if (!isProperty) {
+                                for (size_t w = 0; w < objectsSet.size(); ++w) {
+                                    objectsSet[w] |= mask[w];
+                                }
+                                if (rhsWritesObjects && singleLayer.has_value()) {
+                                    markLayerClear(*singleLayer);
+                                }
                             }
                             if (singleLayer.has_value()) {
-                                markLayerClear(*singleLayer);
                                 const int32_t layer = *singleLayer;
                                 if (item.dir == "stationary") {
-                                    orShiftedMask5(movementsClear, 5 * layer, 0x1f);
                                     orShiftedMask5(movementsLayerMask, 5 * layer, 0x1f);
                                 } else if (!item.dir.empty()) {
                                     const int32_t dm = dirMaskFromToken(item.dir);
                                     if (dm != 0) {
-                                        orShiftedMask5(movementsClear, 5 * layer, 0x1f);
                                         orShiftedMask5(movementsSet, 5 * layer, dm);
                                         orShiftedMask5(movementsLayerMask, 5 * layer, 0x1f);
                                     }
+                                }
+                            }
+                        }
+
+                        // If we set a concrete object on a layer, JS does not
+                        // clear that layer's movement bits implicitly.
+                        if (rhsWritesObjects) {
+                            for (int32_t layer = 0; layer < game->layerCount; ++layer) {
+                                const auto off = game->layerMaskOffsets[static_cast<size_t>(layer)];
+                                bool overlaps = false;
+                                for (uint32_t w = 0; w < game->wordCount; ++w) {
+                                    const int32_t layerWord = static_cast<int32_t>(game->maskArena[static_cast<size_t>(off + w)]);
+                                    if ((objectsSet[static_cast<size_t>(w)] & layerWord) != 0) {
+                                        overlaps = true;
+                                        break;
+                                    }
+                                }
+                                if (overlaps) {
+                                    setShiftedMask5(movementsLayerMask, 5 * layer, 0);
                                 }
                             }
                         }
@@ -919,7 +1062,16 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         repl.movementsClear = storeMaskWords(*game, movementsClear);
                         repl.movementsSet = storeMaskWords(*game, movementsSet);
                         repl.movementsLayerMask = storeMaskWords(*game, movementsLayerMask);
-                        pat.replacement = std::move(repl);
+                        auto anyNonZero = [](const std::vector<int32_t>& words) {
+                            for (const int32_t w : words) {
+                                if (w != 0) return true;
+                            }
+                            return false;
+                        };
+                        if (anyNonZero(objectsClear) || anyNonZero(objectsSet) || anyNonZero(movementsClear)
+                            || anyNonZero(movementsSet) || anyNonZero(movementsLayerMask)) {
+                            pat.replacement = std::move(repl);
+                        }
                     }
                 }
 
@@ -985,14 +1137,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         rule.cellRowMasksMovementsCount =
             static_cast<uint32_t>(game->cellRowMaskMovementsOffsets.size()) - rowMoveMasksFirst;
 
-        if (lateRule) {
-            if (game->lateRules.empty()) {
-                game->lateRules.emplace_back();
-            }
-            game->lateRules.back().push_back(std::move(rule));
-        } else {
-            ruleGroup.push_back(std::move(rule));
-        }
+        outputGroup->push_back(std::move(rule));
         }
     }
 
