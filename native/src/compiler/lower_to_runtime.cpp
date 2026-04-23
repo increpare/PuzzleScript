@@ -672,6 +672,10 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     // --- Rules / winconditions / sounds / loop points ---
     game->rules.clear();
     game->lateRules.clear();
+    std::vector<int32_t> earlyLoopStartStack;
+    std::vector<int32_t> lateLoopStartStack;
+    std::map<int32_t, int32_t> earlyLoopPointMap;
+    std::map<int32_t, int32_t> lateLoopPointMap;
 
     // Precompute (best-effort) single-layer info for legend names: if a mask's
     // set bits all live on the same collision layer, we can treat it as
@@ -703,8 +707,25 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         if (tokens.empty()) {
             continue;
         }
-        // Skip loop markers for now.
-        if (tokens.size() == 1 && (tokens.front() == "startloop" || tokens.front() == "endloop")) {
+        // Handle loop markers.
+        const bool markerLate = (!tokens.empty() && tokens.front() == "late");
+        const std::string marker = markerLate && tokens.size() >= 2 ? tokens[1] : tokens.front();
+        if (marker == "startloop" || marker == "endloop") {
+            auto& groups = markerLate ? game->lateRules : game->rules;
+            auto& loopStack = markerLate ? lateLoopStartStack : earlyLoopStartStack;
+            auto& loopMap = markerLate ? lateLoopPointMap : earlyLoopPointMap;
+            if (marker == "startloop") {
+                loopStack.push_back(static_cast<int32_t>(groups.size()));
+            } else {
+                if (!loopStack.empty()) {
+                    const int32_t startIndex = loopStack.back();
+                    loopStack.pop_back();
+                    const int32_t endIndex = static_cast<int32_t>(groups.size()) - 1;
+                    if (endIndex >= 0) {
+                        loopMap[endIndex] = startIndex;
+                    }
+                }
+            }
             continue;
         }
         auto arrowIt = std::find(tokens.begin(), tokens.end(), "->");
@@ -823,8 +844,48 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         };
 
         const size_t arrowPos = static_cast<size_t>(std::distance(tokens.begin(), arrowIt));
+        size_t rhsEnd = tokens.size();
+        {
+            int32_t bracketDepth = 0;
+            for (size_t i = arrowPos + 1; i < tokens.size(); ++i) {
+                if (tokens[i] == "[") {
+                    ++bracketDepth;
+                    continue;
+                }
+                if (tokens[i] == "]") {
+                    if (bracketDepth > 0) {
+                        --bracketDepth;
+                    }
+                    continue;
+                }
+                if (bracketDepth == 0) {
+                    rhsEnd = i;
+                    break;
+                }
+            }
+        }
         const auto lhsRows = parseSide(cursor, arrowPos);
-        const auto rhsRows = parseSide(arrowPos + 1, tokens.size());
+        const auto rhsRows = parseSide(arrowPos + 1, rhsEnd);
+        std::vector<puzzlescript::RuleCommand> parsedCommands;
+        if (rhsEnd < tokens.size()) {
+            for (size_t i = rhsEnd; i < tokens.size(); ++i) {
+                puzzlescript::RuleCommand command;
+                command.name = tokens[i];
+                if (command.name == "message") {
+                    std::string message;
+                    for (size_t j = i + 1; j < tokens.size(); ++j) {
+                        if (!message.empty()) {
+                            message.push_back(' ');
+                        }
+                        message.append(tokens[j]);
+                    }
+                    command.argument = message;
+                    parsedCommands.push_back(std::move(command));
+                    break;
+                }
+                parsedCommands.push_back(std::move(command));
+            }
+        }
 
         auto absolutizeDir = [](const std::string& forward, const std::string& dir) -> std::string {
             if (dir == "horizontal") {
@@ -1016,6 +1077,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         rule.rigid = rigidRule;
         rule.isRandom = randomRule;
         rule.hasReplacements = !variantRhsRowsExpanded.empty();
+        rule.commands = parsedCommands;
 
         auto buildPatternRow = [&](const ParsedRow& row, const ParsedRow* rhsRow) -> std::vector<puzzlescript::Pattern> {
             std::vector<puzzlescript::Pattern> out;
@@ -1311,6 +1373,70 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         }
         }
     }
+
+    // Rigid bookkeeping tables used by runtime conflict resolution.
+    game->rigid = false;
+    game->rigidGroups.clear();
+    game->rigidGroupIndexToGroupIndex.clear();
+    game->groupIndexToRigidGroupIndex.clear();
+    game->groupNumberToRigidGroupIndex.clear();
+    game->groupIndexToRigidGroupIndex.reserve(game->rules.size());
+
+    int32_t maxGroupNumber = -1;
+    for (const auto& group : game->rules) {
+        for (const auto& rule : group) {
+            if (rule.groupNumber > maxGroupNumber) {
+                maxGroupNumber = rule.groupNumber;
+            }
+        }
+    }
+    if (maxGroupNumber >= 0) {
+        game->groupNumberToRigidGroupIndex.assign(static_cast<size_t>(maxGroupNumber + 1), -1);
+    }
+
+    for (int32_t groupIndex = 0; groupIndex < static_cast<int32_t>(game->rules.size()); ++groupIndex) {
+        const auto& group = game->rules[static_cast<size_t>(groupIndex)];
+        bool anyRigid = false;
+        for (const auto& rule : group) {
+            if (rule.rigid) {
+                anyRigid = true;
+                break;
+            }
+        }
+        if (!anyRigid) {
+            game->groupIndexToRigidGroupIndex.push_back(-1);
+            continue;
+        }
+
+        game->rigid = true;
+        const int32_t rigidGroupIndex = static_cast<int32_t>(game->rigidGroups.size());
+        game->rigidGroups.push_back(true);
+        game->rigidGroupIndexToGroupIndex.push_back(groupIndex);
+        game->groupIndexToRigidGroupIndex.push_back(rigidGroupIndex);
+        for (const auto& rule : group) {
+            if (rule.groupNumber >= 0
+                && static_cast<size_t>(rule.groupNumber) < game->groupNumberToRigidGroupIndex.size()) {
+                game->groupNumberToRigidGroupIndex[static_cast<size_t>(rule.groupNumber)] = rigidGroupIndex;
+            }
+        }
+    }
+
+    auto buildLoopPointTable = [](const std::map<int32_t, int32_t>& points) {
+        puzzlescript::LoopPointTable table;
+        if (points.empty()) {
+            return table;
+        }
+        const int32_t maxKey = points.rbegin()->first;
+        table.entries.assign(static_cast<size_t>(maxKey + 1), std::nullopt);
+        for (const auto& [k, v] : points) {
+            if (k >= 0 && static_cast<size_t>(k) < table.entries.size()) {
+                table.entries[static_cast<size_t>(k)] = v;
+            }
+        }
+        return table;
+    };
+    game->loopPoint = buildLoopPointTable(earlyLoopPointMap);
+    game->lateLoopPoint = buildLoopPointTable(lateLoopPointMap);
 
     game->winConditions.clear();
     for (const auto& entry : state.winconditions) {
