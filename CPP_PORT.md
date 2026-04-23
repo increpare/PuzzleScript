@@ -21,6 +21,7 @@ make ctest
 make js_parity_tests
 make simulation_tests
 make compilation_tests
+make profile_simulation_tests
 make tests
 ```
 
@@ -42,6 +43,7 @@ build/native/puzzlescript_cpp bench path/to/game.txt --iterations 10000 --thread
 - `make compilation_tests`: original JS compiler tests, then mirrored C++ compiler diagnostics parity. Use this for JS vs C++ compiler performance comparisons.
 - `make simulation_tests_js` / `make simulation_tests_cpp`: run one side only when you want cleaner timing.
 - `make compilation_tests_js` / `make compilation_tests_cpp`: run one side only when you want cleaner timing.
+- `make profile_simulation_tests`: run the C++-only simulation replay workload with native timing and hotspot profiler output.
 - `make tests`: full native correctness suite, currently `ctest` plus JS parity.
 
 “JS parity data” means saved replay and diagnostic cases generated from the original JavaScript test suite files, especially `testdata.js` and `errormessage_testdata.js`.

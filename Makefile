@@ -5,13 +5,15 @@
 #   make js_parity_tests   Run C++ against the original JS test corpus.
 #   make simulation_tests  Run JS simulation tests and C++ mirrored simulation tests.
 #   make compilation_tests Run JS compiler tests and C++ mirrored compiler tests.
+#   make profile_simulation_tests
+#                           Profile the C++ simulation replay workload.
 #   make tests             Run the full native correctness suite.
 
 .DEFAULT_GOAL := help
 
 .PHONY: help build run ctest tests js_parity_tests tests_js simulation_tests_js compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
-	basic_test_suite_cpp basic_test_suite_js \
+	profile_simulation_tests basic_test_suite_cpp basic_test_suite_js \
 	parser_corpus_errormessage_bundle parser_corpus_testdata_bundle clean clean-native \
 	clean-js-parity-data configure-native build-native js-parity-data
 
@@ -53,6 +55,7 @@ help:
 	@echo "  make js_parity_tests               Run C++ against the original JS test corpus"
 	@echo "  make simulation_tests              Run JS sim tests, then mirrored C++ sim parity"
 	@echo "  make compilation_tests             Run JS compiler tests, then mirrored C++ diagnostics"
+	@echo "  make profile_simulation_tests      Profile C++ simulation replay hot functions"
 	@echo "  make tests                         Run the full native correctness suite"
 	@echo "  make clean                         Remove native build outputs and JS parity data"
 	@echo ""
@@ -121,6 +124,9 @@ js_parity_tests: simulation_tests_cpp compilation_tests_cpp
 simulation_tests: simulation_tests_js simulation_tests_cpp
 
 compilation_tests: compilation_tests_js compilation_tests_cpp
+
+profile_simulation_tests: build $(JS_PARITY_MANIFEST)
+	src/tests/profile_native_trace_suite.sh
 
 tests: ctest js_parity_tests
 

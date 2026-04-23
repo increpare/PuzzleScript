@@ -868,6 +868,49 @@ int checkTraceAgainstSnapshots(ps_game* game, const TraceFile& traceFile, std::o
     return 0;
 }
 
+bool replayTraceInputsOnly(ps_session* session, const TraceFile& traceFile, std::ostream& errorStream, size_t& replayedSteps) {
+    const auto& snapshots = traceFile.snapshots;
+    if (snapshots.empty()) {
+        errorStream << "Trace has no snapshots\n";
+        return false;
+    }
+
+    for (size_t index = 1; index < snapshots.size(); ++index) {
+        const auto& snapshot = snapshots[index];
+        if (snapshot.phase == "again") {
+            (void)ps_session_tick(session);
+            ++replayedSteps;
+        } else if (snapshot.numericInput.has_value()) {
+            (void)ps_session_step(session, static_cast<ps_input>(*snapshot.numericInput));
+            ++replayedSteps;
+        } else if (snapshot.stringInput.has_value()) {
+            if (*snapshot.stringInput == "tick") {
+                (void)ps_session_tick(session);
+                ++replayedSteps;
+            } else if (*snapshot.stringInput == "restart") {
+                if (!ps_session_restart(session)) {
+                    errorStream << "Restart failed at snapshot[" << index << "]\n";
+                    return false;
+                }
+                ++replayedSteps;
+            } else if (*snapshot.stringInput == "undo") {
+                if (!ps_session_undo(session)) {
+                    errorStream << "Undo failed at snapshot[" << index << "]\n";
+                    return false;
+                }
+                ++replayedSteps;
+            } else {
+                errorStream << "Unsupported trace input token: " << *snapshot.stringInput << "\n";
+                return false;
+            }
+        } else {
+            errorStream << "Snapshot[" << index << "] has no replayable input token\n";
+            return false;
+        }
+    }
+    return true;
+}
+
 int checkTraceCommand(const std::string& irPath, const std::string& tracePath) {
     ps_game* game = nullptr;
     if (!loadGameFromFile(irPath, &game)) {
@@ -1150,6 +1193,152 @@ int checkTraceSweepCommand(const std::string& manifestPath, int argc, char** arg
     const bool traceOk = allowFailures || traceFailed == 0;
     (void)traceTimedOut;
     return (preparedOk && traceOk) ? 0 : 1;
+}
+
+int profileSimulationsCommand(const std::string& manifestPath, int argc, char** argv) {
+    bool quiet = false;
+    bool profileTimers = false;
+    size_t repeat = 1;
+
+    for (int argIndex = 0; argIndex < argc; ++argIndex) {
+        const std::string arg = argv[argIndex];
+        if (arg == "--quiet") {
+            quiet = true;
+        } else if (arg == "--profile-timers") {
+            profileTimers = true;
+        } else if (arg == "--repeat" && argIndex + 1 < argc) {
+            repeat = std::max<size_t>(1, static_cast<size_t>(std::stoull(argv[++argIndex])));
+        } else {
+            throw std::runtime_error("Unsupported simulation profile argument: " + arg);
+        }
+    }
+
+    const auto manifestDir = std::filesystem::path(manifestPath).parent_path();
+    size_t casesChecked = 0;
+    size_t casesFailed = 0;
+    size_t replayRuns = 0;
+    size_t replayedSteps = 0;
+
+    int64_t profileGameReuseUs = 0;
+    int64_t profileGameLoadUs = 0;
+    size_t profileGamesReused = 0;
+    size_t profileGamesLoaded = 0;
+    int64_t profileTraceParseUs = 0;
+    int64_t profileSessionCreateUs = 0;
+    int64_t profileReplayUs = 0;
+    const auto wallStart = std::chrono::steady_clock::now();
+
+    try {
+        PsGameCache cache;
+        const auto fixtures = parseSimulationFixtureManifest(manifestPath, manifestDir);
+        for (const auto& fixture : fixtures) {
+            if (!fixture.traceFile.has_value()) {
+                continue;
+            }
+            ++casesChecked;
+
+            const bool gameCached = cache.has(fixture.irFile);
+            const auto gameAcquireStart = std::chrono::steady_clock::now();
+            ps_game* game = cache.acquire(fixture.irFile);
+            const auto gameAcquireUs = std::chrono::duration_cast<std::chrono::microseconds>(
+                                           std::chrono::steady_clock::now() - gameAcquireStart)
+                                           .count();
+            if (profileTimers) {
+                if (gameCached) {
+                    ++profileGamesReused;
+                    profileGameReuseUs += gameAcquireUs;
+                } else {
+                    ++profileGamesLoaded;
+                    profileGameLoadUs += gameAcquireUs;
+                }
+            }
+
+            if (game == nullptr) {
+                ++casesFailed;
+                if (!quiet) {
+                    std::cerr << fixture.name << ": failed to load game\n";
+                }
+                continue;
+            }
+
+            TraceFile traceFile;
+            try {
+                const auto traceParseStart = std::chrono::steady_clock::now();
+                traceFile = loadTraceFile(*fixture.traceFile);
+                if (profileTimers) {
+                    profileTraceParseUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                               std::chrono::steady_clock::now() - traceParseStart)
+                                               .count();
+                }
+            } catch (const std::exception& error) {
+                ++casesFailed;
+                if (!quiet) {
+                    std::cerr << fixture.name << ": " << error.what() << "\n";
+                }
+                continue;
+            }
+
+            for (size_t run = 0; run < repeat; ++run) {
+                ps_session* session = nullptr;
+                ps_error* error = nullptr;
+                const auto sessionStart = std::chrono::steady_clock::now();
+                if (!ps_session_create(game, &session, &error)) {
+                    ++casesFailed;
+                    if (!quiet) {
+                        std::cerr << fixture.name << ": " << ps_error_message(error) << "\n";
+                    }
+                    ps_free_error(error);
+                    if (profileTimers) {
+                        profileSessionCreateUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                                      std::chrono::steady_clock::now() - sessionStart)
+                                                      .count();
+                    }
+                    break;
+                }
+                std::unique_ptr<ps_session, decltype(&ps_session_destroy)> sessionHolder(session, ps_session_destroy);
+                if (profileTimers) {
+                    profileSessionCreateUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                                  std::chrono::steady_clock::now() - sessionStart)
+                                                  .count();
+                }
+
+                const auto replayStart = std::chrono::steady_clock::now();
+                size_t runSteps = 0;
+                const bool ok = replayTraceInputsOnly(session, traceFile, std::cerr, runSteps);
+                if (profileTimers) {
+                    profileReplayUs += std::chrono::duration_cast<std::chrono::microseconds>(
+                                           std::chrono::steady_clock::now() - replayStart)
+                                           .count();
+                }
+                if (!ok) {
+                    ++casesFailed;
+                    break;
+                }
+                ++replayRuns;
+                replayedSteps += runSteps;
+            }
+        }
+    } catch (const std::exception& error) {
+        std::cerr << error.what() << "\n";
+        return 1;
+    }
+
+    std::cout << "simulation_profile_checked=" << casesChecked << " simulation_profile_failed=" << casesFailed
+              << " replay_runs=" << replayRuns << " replay_steps=" << replayedSteps << "\n";
+
+    if (profileTimers) {
+        const auto wallUs = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - wallStart).count();
+        const auto usToMs = [](int64_t microseconds) -> int64_t {
+            return (microseconds + 500) / 1000;
+        };
+        std::cerr << "native_simulation_profile test_cases=" << casesChecked << " replay_runs=" << replayRuns
+                  << " replay_steps=" << replayedSteps << " wall_ms=" << usToMs(wallUs) << " games_reused=" << profileGamesReused
+                  << " games_loaded=" << profileGamesLoaded << " game_reuse_ms=" << usToMs(profileGameReuseUs)
+                  << " game_load_ms=" << usToMs(profileGameLoadUs) << " trace_json_parse_ms=" << usToMs(profileTraceParseUs)
+                  << " session_create_ms=" << usToMs(profileSessionCreateUs) << " replay_ms=" << usToMs(profileReplayUs) << "\n";
+    }
+
+    return casesFailed == 0 ? 0 : 1;
 }
 
 int traceAtCommand(const std::string& irPath, const std::string& tracePath, size_t snapshotIndex) {
@@ -1888,6 +2077,8 @@ void printMainHelp() {
         << "      Check saved replay cases generated from the original JavaScript test suite.\n"
         << "  puzzlescript_cpp bench game.txt --iterations 10000 --threads 4\n"
         << "      Benchmark clone/hash/session operations for a source game.\n\n"
+        << "  puzzlescript_cpp profile-simulations generated-js-parity-data.json --repeat 3\n"
+        << "      Run a C++-only replay workload for profiler/hot-function analysis.\n\n"
         << "Project map:\n"
         << "  compiler: native/src/compiler\n"
         << "  runtime:  native/src/runtime\n"
@@ -1909,6 +2100,7 @@ void printMainHelp() {
         << "  puzzlescript_cpp help run\n"
         << "  puzzlescript_cpp help compile\n"
         << "  puzzlescript_cpp help test\n"
+        << "  puzzlescript_cpp help profile\n"
         << "  puzzlescript_cpp help bench\n";
 }
 
@@ -1958,6 +2150,18 @@ void printTestHelp() {
         << "  make tests\n";
 }
 
+void printProfileHelp() {
+    std::cout
+        << "Usage: puzzlescript_cpp profile-simulations generated-js-parity-data.json [--repeat N] [--profile-timers] [--quiet]\n\n"
+        << "Runs the C++ runtime over the saved simulation replay corpus without invoking\n"
+        << "the JavaScript engine or doing JS-vs-C++ parity comparison. This measures the\n"
+        << "compiled runtime representation loaded from corpus IR, not native source\n"
+        << "parse/compile time. Use --repeat to amplify engine stepping time for sampling\n"
+        << "profilers.\n\n"
+        << "Usually use:\n"
+        << "  make profile_simulation_tests\n";
+}
+
 void printBenchHelp() {
     std::cout
         << "Usage: puzzlescript_cpp bench game.txt [--level N] [--seed seed] [--settle-again] [--iterations N] [--threads N]\n\n"
@@ -1976,6 +2180,8 @@ void printHelpTopic(const std::string& topic) {
         printCompileHelp();
     } else if (topic == "test") {
         printTestHelp();
+    } else if (topic == "profile" || topic == "profile-simulations") {
+        printProfileHelp();
     } else if (topic == "bench") {
         printBenchHelp();
     } else {
@@ -2061,6 +2267,9 @@ int main(int argc, char** argv) {
         }
         if (command == "check-js-parity-data") {
             return checkTraceSweepCommand(path, argc - 3, argv + 3);
+        }
+        if (command == "profile-simulations") {
+            return profileSimulationsCommand(path, argc - 3, argv + 3);
         }
         if (command == "trace-at") {
             if (argc < 5) {

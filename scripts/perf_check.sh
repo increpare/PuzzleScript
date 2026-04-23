@@ -20,14 +20,14 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
 for i in $(seq 1 "$RUNS"); do
-  "$PUZZLESCRIPT_CPP" check-js-parity-data "$MANIFEST" --profile-timers >"$TMP/run$i.stdout" 2>"$TMP/run$i.stderr"
+  "$PUZZLESCRIPT_CPP" profile-simulations "$MANIFEST" --profile-timers >"$TMP/run$i.stdout" 2>"$TMP/run$i.stderr"
   awk -f "$ROOT/scripts/perf_extract.awk" "$TMP/run$i.stderr" > "$TMP/run$i.json"
 done
 
 python3 - "$TMP" "$RUNS" "$BASELINE" <<'PY'
 import json, sys, os, statistics
 tmp, runs, baseline_path = sys.argv[1], int(sys.argv[2]), sys.argv[3]
-metrics = ["wall_ms","fast_replay_ms","game_load_ms","trace_json_parse_ms"]
+metrics = ["wall_ms","replay_ms","game_load_ms","trace_json_parse_ms"]
 samples = {m: [] for m in metrics}
 for i in range(1, runs+1):
     with open(os.path.join(tmp, f"run{i}.json")) as f:
