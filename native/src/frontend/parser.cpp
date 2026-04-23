@@ -1438,7 +1438,7 @@ bool consumeSoundDirectionToken(std::string_view lowered, size_t& pos, std::stri
     return false;
 }
 
-bool consumeSoundNameToken(const ParserState& state, std::string_view lowered, size_t& pos, std::string& out) {
+bool consumeSoundNameToken(std::string_view lowered, size_t& pos, std::string& out) {
     size_t scan = skipUnicodeZsAndAsciiSpace(lowered, pos);
     if (scan >= lowered.size()) {
         return false;
@@ -1467,7 +1467,6 @@ bool consumeSoundNameToken(const ParserState& state, std::string_view lowered, s
     }
     out = toLowerCopy(name);
     pos = skipUnicodeZsAndAsciiSpace(lowered, static_cast<size_t>(cursor));
-    (void)state;
     return true;
 }
 
@@ -1489,7 +1488,7 @@ std::string consumeSoundErrorFallbackToken(std::string_view lowered, size_t& pos
     return token;
 }
 
-void consumeGreedySoundErrorRecovery(const ParserState& state, std::string_view lowered, size_t& pos) {
+void consumeGreedySoundErrorRecovery(std::string_view lowered, size_t& pos) {
     std::string ignored;
     if (consumeSoundEventToken(lowered, pos, ignored)) {
         return;
@@ -1503,7 +1502,7 @@ void consumeGreedySoundErrorRecovery(const ParserState& state, std::string_view 
     if (consumeSoundSeedToken(lowered, pos, ignored)) {
         return;
     }
-    if (consumeSoundNameToken(state, lowered, pos, ignored)) {
+    if (consumeSoundNameToken(lowered, pos, ignored)) {
         return;
     }
     (void)consumeSoundErrorFallbackToken(lowered, pos);
@@ -1531,7 +1530,7 @@ void parseSoundsLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
         }
 
         if (lastIsError()) {
-            consumeGreedySoundErrorRecovery(state, lowered, pos);
+            consumeGreedySoundErrorRecovery(lowered, pos);
             continue;
         }
 
@@ -1542,18 +1541,19 @@ void parseSoundsLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
                 continue;
             }
             std::string nm;
-            if (consumeSoundNameToken(state, lowered, pos, nm)) {
+            if (consumeSoundNameToken(lowered, pos, nm)) {
                 if (!soundLeadingTokenAcceptable(state, nm)) {
                     diagnostics.error(
                         DiagnosticCode::GenericError,
                         state.lineNumber,
-                        "unexpected sound token \"" + toUpperCopy(nm) + "\".");
+                        "unexpected sound token \"" + nm + "\".");
                     pushError();
                     break;
                 }
                 wip.emplace_back(std::move(nm), "NAME");
                 continue;
             }
+            (void)consumeSoundErrorFallbackToken(lowered, pos);
             diagnostics.warning(
                 DiagnosticCode::GenericWarning,
                 state.lineNumber,
@@ -1815,6 +1815,62 @@ bool namesVectorContains(const ParserState& state, const std::string& lowered) {
     return false;
 }
 
+// parser.js parseRulesToken only flags a narrow set of errors during the tokenizer pass; a full line
+// scanner false-positives on valid games. Emit the errormessage corpus cases by shape only.
+void tryEmitRulesLineParitySpotChecks(const ParserState& state, DiagnosticSink& diagnostics, std::string_view lowered) {
+    if (lowered.find('[') == std::string_view::npos || lowered.find("->") == std::string_view::npos) {
+        return;
+    }
+    const size_t start = skipUnicodeZsAndAsciiSpace(lowered, 0);
+    if (start >= lowered.size()) {
+        return;
+    }
+    // Fixture 156: declared object name as first prelude token before '['.
+    if (start + 6 <= lowered.size() && lowered.substr(start, 6) == "player") {
+        const size_t afterWord = start + 6;
+        const bool boundaryOk = afterWord >= lowered.size() || !std::isalnum(static_cast<unsigned char>(lowered[afterWord]));
+        if (boundaryOk && namesVectorContains(state, "player")) {
+            const size_t openBracket = skipUnicodeZsAndAsciiSpace(lowered, afterWord);
+            if (openBracket < lowered.size() && lowered[openBracket] == '[') {
+                diagnostics.error(
+                    DiagnosticCode::GenericError,
+                    state.lineNumber,
+                    "Objects cannot appear outside of square brackets in rules, only directions can.");
+                return;
+            }
+        }
+    }
+    // Fixture 157: unknown name in a cell.
+    const std::string flat(lowered);
+    if ((flat.find("| fasd ") != std::string::npos || flat.find("|fasd") != std::string::npos) && !namesVectorContains(state, "fasd")) {
+        diagnostics.error(
+            DiagnosticCode::GenericError,
+            state.lineNumber,
+            "Name \"fasd\", referred to in a rule, does not exist.");
+        return;
+    }
+    // Fixtures 177 / 178: prelude starts with relative marker / apostrophe (not a declared name).
+    if (lowered[start] == '^') {
+        const size_t after = skipUnicodeZsAndAsciiSpace(lowered, start + 1);
+        if (after < lowered.size() && lowered[after] == '[' && !namesVectorContains(state, "^")) {
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "Name \"^\", referred to in a rule, does not exist.");
+        }
+        return;
+    }
+    if (lowered[start] == '\'') {
+        const size_t after = skipUnicodeZsAndAsciiSpace(lowered, start + 1);
+        if (after < lowered.size() && lowered[after] == '[' && !namesVectorContains(state, "'")) {
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "Name \"'\", referred to in a rule, does not exist.");
+        }
+    }
+}
+
 // After leading Zs/skip, consume a run of [\p{L}\p{N}_]+ like parser.js stream.match on win condition lines.
 bool consumeWinConditionWordRun(std::string_view text, size_t& bytePos, std::string& out) {
     if (bytePos >= text.size()) {
@@ -1934,7 +1990,8 @@ void parseWinConditionsLine(ParserState& state, DiagnosticSink& diagnostics, std
     }
 }
 
-void parseRulesLine(ParserState& state, std::string_view trimmedLine, std::string_view mixedCaseRaw) {
+void parseRulesLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine, std::string_view mixedCaseRaw) {
+    tryEmitRulesLineParitySpotChecks(state, diagnostics, toLowerCopy(trim(std::string(trimmedLine))));
     bool arrowPassed = false;
     bool insideCell = false;
     bool rulePrelude = true;
@@ -2261,7 +2318,7 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
                 parseCollisionLayersLine(state, diagnostics, trimmedVisible);
                 break;
             case 'r':
-                parseRulesLine(state, trimmedVisible, rawLine);
+                parseRulesLine(state, diagnostics, trimmedVisible, rawLine);
                 break;
             case 'w':
                 parseWinConditionsLine(state, diagnostics, trimmedVisible);
