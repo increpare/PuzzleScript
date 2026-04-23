@@ -545,6 +545,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     game->rules.clear();
     game->lateRules.clear();
     game->rules.emplace_back();
+    game->lateRules.emplace_back();
     auto& ruleGroup = game->rules.back();
 
     // Precompute (best-effort) single-layer info for legend names: if a mask's
@@ -591,6 +592,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         size_t cursor = 0;
         bool rigidRule = false;
         bool randomRule = false;
+        bool lateRule = false;
         std::vector<std::string> ruleDirections;
         auto addDirectionAggregate = [&](const std::string& token) {
             if (token == "horizontal") {
@@ -616,6 +618,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 rigidRule = true;
             } else if (token == "random") {
                 randomRule = true;
+            } else if (token == "late") {
+                lateRule = true;
             }
             ++cursor;
         }
@@ -937,7 +941,11 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         rule.cellRowMasksCount = static_cast<uint32_t>(game->cellRowMaskOffsets.size()) - rowMasksFirst;
         rule.ruleMask = storeMaskWords(*game, ruleMaskWords);
 
-        ruleGroup.push_back(std::move(rule));
+        if (lateRule) {
+            game->lateRules.back().push_back(std::move(rule));
+        } else {
+            ruleGroup.push_back(std::move(rule));
+        }
         }
     }
 
