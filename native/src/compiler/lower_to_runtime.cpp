@@ -472,6 +472,13 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         break;
                     }
                 }
+                // JS semantics: background must be a *single concrete object* for
+                // map default fills. If background is a property/aggregate, pick
+                // the first concrete object id and use only that bit.
+                if (game->backgroundId >= 0) {
+                    backgroundMaskWords = makeEmptyMask(game->wordCount);
+                    setMaskBit(backgroundMaskWords, game->backgroundId);
+                }
             } catch (...) {
                 // Leave unset; suite-green will enforce correctness.
             }
