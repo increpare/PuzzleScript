@@ -981,6 +981,105 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             }
             return out;
         };
+        auto enumerateDirectionalPropertyVariants = [&](const std::vector<ParsedRow>& lhsBase, const std::vector<ParsedRow>& rhsBase) {
+            std::map<std::string, bool> directionalPropertySeen;
+            auto collectDirectional = [&](const std::vector<ParsedRow>& rows) {
+                for (const auto& row : rows) {
+                    for (const auto& cell : row) {
+                        for (const auto& item : cell.items) {
+                            if (propertyOf.find(item.name) == propertyOf.end()) {
+                                continue;
+                            }
+                            if (item.name != "player") {
+                                continue;
+                            }
+                            if (!item.dir.empty() && item.dir != "no") {
+                                directionalPropertySeen[item.name] = true;
+                            } else if (directionalPropertySeen.find(item.name) == directionalPropertySeen.end()) {
+                                directionalPropertySeen[item.name] = false;
+                            }
+                        }
+                    }
+                }
+            };
+            collectDirectional(lhsBase);
+            collectDirectional(rhsBase);
+
+            struct PropertySlot {
+                std::string name;
+                std::vector<std::string> choices;
+            };
+            std::vector<PropertySlot> slots;
+            for (const auto& [name, hasDirectionalUse] : directionalPropertySeen) {
+                if (!hasDirectionalUse) {
+                    continue;
+                }
+                std::set<std::string> visiting;
+                const auto mask = resolveMask(resolveMask, name, visiting);
+                if (!maskSingleLayer(mask).has_value()) {
+                    continue;
+                }
+                std::vector<std::string> choices;
+                for (int32_t id = 0; id < game->objectCount; ++id) {
+                    const uint32_t word = static_cast<uint32_t>(id) / 32U;
+                    const uint32_t bit = static_cast<uint32_t>(id) % 32U;
+                    if (word < mask.size() && (mask[word] & (1U << bit)) != 0) {
+                        if (static_cast<size_t>(id) < game->idDict.size()) {
+                            choices.push_back(game->idDict[static_cast<size_t>(id)]);
+                        }
+                    }
+                }
+                if (choices.size() <= 1) {
+                    continue;
+                }
+                slots.push_back(PropertySlot{name, std::move(choices)});
+            }
+
+            std::vector<std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>>> out;
+            if (slots.empty()) {
+                out.push_back({lhsBase, rhsBase});
+                return out;
+            }
+
+            std::vector<size_t> choiceIndex(slots.size(), 0);
+            while (true) {
+                std::map<std::string, std::string> picked;
+                for (size_t i = 0; i < slots.size(); ++i) {
+                    picked[slots[i].name] = slots[i].choices[choiceIndex[i]];
+                }
+
+                auto lhs = lhsBase;
+                auto rhs = rhsBase;
+                auto applyPicked = [&](std::vector<ParsedRow>& rows) {
+                    for (auto& row : rows) {
+                        for (auto& cell : row) {
+                            for (auto& item : cell.items) {
+                                if (const auto it = picked.find(item.name); it != picked.end()) {
+                                    item.name = it->second;
+                                }
+                            }
+                        }
+                    }
+                };
+                applyPicked(lhs);
+                applyPicked(rhs);
+                out.push_back({std::move(lhs), std::move(rhs)});
+
+                size_t carry = 0;
+                while (carry < slots.size()) {
+                    ++choiceIndex[carry];
+                    if (choiceIndex[carry] < slots[carry].choices.size()) {
+                        break;
+                    }
+                    choiceIndex[carry] = 0;
+                    ++carry;
+                }
+                if (carry == slots.size()) {
+                    break;
+                }
+            }
+            return out;
+        };
 
         // JS compiler may emit fewer variants than the naive 4-direction expansion
         // when different scan directions collapse to identical rule patterns after
@@ -1056,8 +1155,10 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
         const auto movingVariants = enumerateMovingVariants(variantLhsRows, variantRhsRows);
         for (const auto& movingVariant : movingVariants) {
-        const auto& variantLhsRowsExpanded = movingVariant.first;
-        const auto& variantRhsRowsExpanded = movingVariant.second;
+        const auto propertyVariants = enumerateDirectionalPropertyVariants(movingVariant.first, movingVariant.second);
+        for (const auto& propertyVariant : propertyVariants) {
+        const auto& variantLhsRowsExpanded = propertyVariant.first;
+        const auto& variantRhsRowsExpanded = propertyVariant.second;
         {
             const std::string sig = ruleVariantSignature(concreteRuleDirection, variantLhsRowsExpanded, variantRhsRowsExpanded);
             if (seenRuleVariants.find(sig) != seenRuleVariants.end()) {
@@ -1377,6 +1478,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             static_cast<uint32_t>(game->cellRowMaskMovementsOffsets.size()) - rowMoveMasksFirst;
 
         outputGroup->push_back(std::move(rule));
+        }
         }
         }
     }
