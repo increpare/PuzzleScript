@@ -43,27 +43,32 @@ function loadStream(path) {
 }
 
 function main() {
-    const jsPath = process.argv[2];
-    const cppPath = process.argv[3];
-    if (!jsPath || !cppPath) {
-        console.error('Usage: node scripts/compare_parser_phase_diagnostics.js <js.ndjson> <cpp.ndjson>');
+    const referencePath = process.argv[2];
+    const nativePath = process.argv[3];
+    if (!referencePath || !nativePath) {
+        console.error(
+            'Usage: node scripts/compare_parser_phase_diagnostics.js <reference.ndjson> <native.ndjson>',
+        );
+        console.error(
+            '(reference = parser-diagnostics from export_ir_json.js; native = ps_cli compile-source --emit-diagnostics)',
+        );
         process.exit(2);
     }
-    const jsRows = loadStream(jsPath);
-    const cppRows = loadStream(cppPath);
-    if (jsRows.length !== cppRows.length) {
+    const referenceRows = loadStream(referencePath);
+    const nativeRows = loadStream(nativePath);
+    if (referenceRows.length !== nativeRows.length) {
         console.error(
-            `diagnostic_count_mismatch js=${jsRows.length} cpp=${cppRows.length}`,
+            `diagnostic_count_mismatch reference=${referenceRows.length} native=${nativeRows.length}`,
         );
         process.exit(1);
     }
-    for (let i = 0; i < jsRows.length; ++i) {
-        if (jsRows[i] !== cppRows[i]) {
+    for (let i = 0; i < referenceRows.length; ++i) {
+        if (referenceRows[i] !== nativeRows[i]) {
             console.error(`diagnostic_mismatch index=${i}`);
-            console.error('--- js');
-            console.error(jsRows[i]);
-            console.error('--- cpp');
-            console.error(cppRows[i]);
+            console.error('--- reference (JS parser export)');
+            console.error(referenceRows[i]);
+            console.error('--- native (C++ frontend)');
+            console.error(nativeRows[i]);
             process.exit(1);
         }
     }

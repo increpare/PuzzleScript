@@ -73,6 +73,12 @@ function main() {
     const start = Math.max(0, options.start);
     const end = options.limit > 0 ? Math.min(corpus.length, start + options.limit) : corpus.length;
 
+    const wallStart = Date.now();
+    process.stderr.write(
+        'diag_corpus: for each fixture, export parser-diagnostics via Node (reference), ' +
+            'then ps_cli --emit-diagnostics (native), then compare. Slow: many subprocesses per row.\n',
+    );
+
     let checked = 0;
     let passed = 0;
     let failed = 0;
@@ -84,39 +90,43 @@ function main() {
             const source = fixture[1][0];
             const fixtureBase = `fixture-${index}`;
             const sourcePath = path.join(tempRoot, `${fixtureBase}.txt`);
-            const jsPath = path.join(tempRoot, `${fixtureBase}.js.ndjson`);
-            const cppPath = path.join(tempRoot, `${fixtureBase}.cpp.ndjson`);
+            const referenceNdjsonPath = path.join(tempRoot, `${fixtureBase}.reference.ndjson`);
+            const nativeNdjsonPath = path.join(tempRoot, `${fixtureBase}.native.ndjson`);
 
             fs.writeFileSync(sourcePath, source, 'utf8');
 
-            const jsRun = run('node', [
+            const referenceRun = run('node', [
                 'src/tests/export_ir_json.js',
                 sourcePath,
-                jsPath,
+                referenceNdjsonPath,
                 '--snapshot-phase',
                 'parser-diagnostics',
             ]);
-            if (jsRun.status !== 0) {
+            if (referenceRun.status !== 0) {
                 ++failed;
                 ++checked;
-                console.log(`diag_corpus index=${index} outcome=js_error name=${name}`);
-                console.log(jsRun.stderr || jsRun.stdout);
+                console.log(`diag_corpus index=${index} outcome=reference_export_error name=${name}`);
+                console.log(referenceRun.stderr || referenceRun.stdout);
                 continue;
             }
 
-            const cppRun = run(options.cliPath, ['compile-source', sourcePath, '--emit-diagnostics'], {
+            const nativeRun = run(options.cliPath, ['compile-source', sourcePath, '--emit-diagnostics'], {
                 input: '',
             });
-            if (cppRun.status !== 0) {
+            if (nativeRun.status !== 0) {
                 ++failed;
                 ++checked;
-                console.log(`diag_corpus index=${index} outcome=cpp_error name=${name}`);
-                console.log(cppRun.stderr || cppRun.stdout);
+                console.log(`diag_corpus index=${index} outcome=native_cli_error name=${name}`);
+                console.log(nativeRun.stderr || nativeRun.stdout);
                 continue;
             }
-            fs.writeFileSync(cppPath, cppRun.stdout, 'utf8');
+            fs.writeFileSync(nativeNdjsonPath, nativeRun.stdout, 'utf8');
 
-            const cmp = run('node', ['scripts/compare_parser_phase_diagnostics.js', jsPath, cppPath]);
+            const cmp = run('node', [
+                'scripts/compare_parser_phase_diagnostics.js',
+                referenceNdjsonPath,
+                nativeNdjsonPath,
+            ]);
             if (cmp.status !== 0) {
                 ++failed;
                 ++checked;
@@ -134,7 +144,8 @@ function main() {
         }
     }
 
-    console.log(`diag_corpus checked=${checked} passed=${passed} failed=${failed}`);
+    const wallS = ((Date.now() - wallStart) / 1000).toFixed(1);
+    console.log(`diag_corpus checked=${checked} passed=${passed} failed=${failed} wall_s=${wallS}`);
     if (failed > 0) {
         process.exit(1);
     }
