@@ -692,9 +692,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                     }
                     cell.items.push_back({std::move(dir), std::move(name)});
                 }
-                if (cell.isEllipsis || !cell.items.empty()) {
-                    current.push_back(std::move(cell));
-                }
+                // Always push the last cell, even if empty. This is required for
+                // rules like `[ | | ]` where empty RHS cells represent clearing.
+                current.push_back(std::move(cell));
                 if (i < end && tokens[i] == "]") {
                     ++i;
                 }
@@ -863,6 +863,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                             for (uint32_t w = 0; w < game->wordCount; ++w) {
                                 objectsClear[static_cast<size_t>(w)] |= static_cast<int32_t>(game->maskArena[static_cast<size_t>(off + w)]);
                             }
+                            // JS semantics: mark movement layers that should be reset.
+                            orShiftedMask5(movementsLayerMask, 5 * layer, 0x1f);
                         };
 
                         // LHS layersUsed already collected.
@@ -959,14 +961,37 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         rule.cellRowMasksCount = static_cast<uint32_t>(game->cellRowMaskOffsets.size()) - rowMasksFirst;
         rule.ruleMask = storeMaskWords(*game, ruleMaskWords);
 
+        // Movement row masks: JS IR includes these; build them similarly to
+        // cell_row_masks but over movement masks.
+        const uint32_t rowMoveMasksFirst = static_cast<uint32_t>(game->cellRowMaskMovementsOffsets.size());
+        for (const auto& row : rule.patterns) {
+            auto rowMoveMaskWords = makeEmptyMask(game->movementWordCount);
+            for (const auto& pat : row) {
+                if (pat.kind != puzzlescript::Pattern::Kind::CellPattern) {
+                    continue;
+                }
+                const auto off = pat.movementsPresent;
+                if (off == puzzlescript::kNullMaskOffset) {
+                    continue;
+                }
+                for (uint32_t w = 0; w < game->movementWordCount; ++w) {
+                    const int32_t word = game->maskArena[static_cast<size_t>(off + w)];
+                    rowMoveMaskWords[static_cast<size_t>(w)] |= word;
+                }
+            }
+            game->cellRowMaskMovementsOffsets.push_back(storeMaskWords(*game, rowMoveMaskWords));
+        }
+        rule.cellRowMasksMovementsFirst = rowMoveMasksFirst;
+        rule.cellRowMasksMovementsCount =
+            static_cast<uint32_t>(game->cellRowMaskMovementsOffsets.size()) - rowMoveMasksFirst;
+
         if (lateRule) {
-            // TODO: lower late rules once we parse the "late" keyword.
-            // For now, treat these as early rules to avoid emitting a non-empty
-            // late_rules group in IR diff mode.
-            ruleGroup.push_back(std::move(rule));
+            if (game->lateRules.empty()) {
+                game->lateRules.emplace_back();
+            }
+            game->lateRules.back().push_back(std::move(rule));
         } else {
-        // TODO: detect "late" rules properly; for now everything is early.
-        ruleGroup.push_back(std::move(rule));
+            ruleGroup.push_back(std::move(rule));
         }
         }
     }

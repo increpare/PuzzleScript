@@ -2162,8 +2162,8 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
                                 out << ",\"movements_set\":"; appendJsonMask(out, game, repl.movementsSet, game.movementWordCount);
                                 out << ",\"movements_layer_mask\":"; appendJsonMask(out, game, repl.movementsLayerMask, game.movementWordCount);
                                 // Required by parseReplacement even if unused.
-                                out << ",\"random_entity_mask\":[]";
-                                out << ",\"random_dir_mask\":[]";
+                                out << ",\"random_entity_mask\":[0]";
+                                out << ",\"random_dir_mask\":[0]";
                                 out << "}";
                             } else {
                                 out << ",\"replacement\":null";
