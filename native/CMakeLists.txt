@@ -117,6 +117,7 @@ target_link_libraries(puzzlescript_native
 
 add_executable(ps_cli
   src/cli_main.cpp
+  src/diagnostics_parity.cpp
 )
 
 target_link_libraries(ps_cli

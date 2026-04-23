@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "diagnostics_parity.hpp"
 #include "json.hpp"
 #include "puzzlescript/frontend.h"
 #include "puzzlescript/puzzlescript.h"
@@ -1833,6 +1834,8 @@ void printUsage() {
               << "  ps_cli trace-step-at <ir.json> <trace.json> <snapshot-index>\n"
               << "  ps_cli diff-trace-source <game.ps> [--level N] [--seed seed] [--inputs-json json] [--inputs-file path]\n"
               << "  ps_cli test-fixtures <fixtures.json> [--trace-limit N] [--trace-all] [--trace-allow-failures] [--trace-quiet] [--trace-progress N] [--profile-timers]\n"
+              << "  ps_cli diagnostics-parity <corpus.bundle.ndjson>\n"
+              << "    (NDJSON from scripts/build_parser_corpus_bundle.js; compares native diagnostics in-process)\n"
               << "  ps_cli play <ir.json>\n";
 }
 
@@ -1908,6 +1911,9 @@ int main(int argc, char** argv) {
         }
         if (command == "test-fixtures") {
             return testFixturesCommand(path, argc - 3, argv + 3);
+        }
+        if (command == "diagnostics-parity") {
+            return diagnosticsParityMain(std::filesystem::path(path));
         }
         if (command == "play") {
 #ifdef PS_HAVE_SDL2

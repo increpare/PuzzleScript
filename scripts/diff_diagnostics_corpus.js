@@ -75,8 +75,9 @@ function main() {
 
     const wallStart = Date.now();
     process.stderr.write(
-        'diag_corpus: for each fixture, export parser-diagnostics via Node (reference), ' +
-            'then ps_cli --emit-diagnostics (native), then compare. Slow: many subprocesses per row.\n',
+        'diag_corpus (legacy): per fixture spawns Node export_ir_json + ps_cli compile-source + Node compare. ' +
+            'Prefer: node scripts/build_parser_corpus_bundle.js errormessage > build/…bundle.ndjson && ' +
+            'ps_cli diagnostics-parity build/…bundle.ndjson (one Node pass to bake references, then pure C++).\n',
     );
 
     let checked = 0;

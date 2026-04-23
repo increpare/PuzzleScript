@@ -59,10 +59,13 @@ else
 fi
 
 if [[ "${SKIP_DIAGNOSTICS_CORPUS:-0}" != "1" ]]; then
-	echo "== parser diagnostics corpus (testdata.js) =="
-	node scripts/diff_diagnostics_corpus.js --cli "$PS_CLI" --corpus testdata
-	echo "== parser diagnostics corpus (errormessage_testdata.js) =="
-	node scripts/diff_diagnostics_corpus.js --cli "$PS_CLI" --corpus errormessage
+	echo "== parser diagnostics corpus (testdata.js, ps_cli diagnostics-parity) =="
+	mkdir -p "$ROOT/$BUILD_DIR"
+	node "$ROOT/scripts/build_parser_corpus_bundle.js" testdata >"$ROOT/$BUILD_DIR/parser_corpus_testdata.bundle.ndjson"
+	"$PS_CLI" diagnostics-parity "$ROOT/$BUILD_DIR/parser_corpus_testdata.bundle.ndjson"
+	echo "== parser diagnostics corpus (errormessage_testdata.js, ps_cli diagnostics-parity) =="
+	node "$ROOT/scripts/build_parser_corpus_bundle.js" errormessage >"$ROOT/$BUILD_DIR/parser_corpus_errormessage.bundle.ndjson"
+	"$PS_CLI" diagnostics-parity "$ROOT/$BUILD_DIR/parser_corpus_errormessage.bundle.ndjson"
 else
 	echo "== parser diagnostics corpus (skipped) =="
 fi

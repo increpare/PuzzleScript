@@ -8,9 +8,32 @@
 #include <optional>
 #include <regex>
 #include <set>
+#include <unordered_set>
 
 namespace puzzlescript::frontend {
 namespace {
+
+// parser.js removes self-referential RHS tokens from legend splits before committing synonyms
+// (see processLegendLine splice loop). Without the same guard, a synonym like "player = player"
+// stays in state and later parseCollisionLayersLine::expand recurses until stack overflow.
+struct ExpandStackGuard {
+    std::unordered_set<std::string>& active;
+    const std::string key;
+    const bool committed;
+
+    ExpandStackGuard(std::unordered_set<std::string>& inOut, std::string inKey)
+        : active(inOut)
+        , key(std::move(inKey))
+        , committed(active.insert(key).second) {}
+
+    ~ExpandStackGuard() {
+        if (committed) {
+            active.erase(key);
+        }
+    }
+
+    [[nodiscard]] bool cycle() const { return !committed; }
+};
 
 constexpr std::string_view kSections[] = {
     "objects",
@@ -21,6 +44,20 @@ constexpr std::string_view kSections[] = {
     "winconditions",
     "levels",
 };
+
+int sectionOrderIndex(std::string_view name) {
+    for (size_t index = 0; index < std::size(kSections); ++index) {
+        if (kSections[index] == name) {
+            return static_cast<int>(index);
+        }
+    }
+    return -1;
+}
+
+bool visitedContainsSection(const ParserState& state, std::string_view name) {
+    return std::find(state.visitedSections.begin(), state.visitedSections.end(), std::string(name))
+        != state.visitedSections.end();
+}
 
 constexpr std::string_view kPreambleValues[] = {
     "title",
@@ -909,17 +946,28 @@ void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
     diagnoseLegendLineTokens(state, diagnostics, tokens, candname);
 
     if (tokens.size() == 3) {
-        entry.items.push_back(toLowerCopy(trim(std::string(tokens[2]))));
+        const std::string rhs = toLowerCopy(trim(std::string(tokens[2])));
+        if (rhs == candname) {
+            // parser.js splices out the self RHS so splits.length !== 3 and the synonym is not stored.
+            return;
+        }
+        entry.items.push_back(rhs);
         state.legendSynonyms.push_back(std::move(entry));
         return;
     }
 
     const std::string joiner = tokens.size() >= 4 ? toLowerCopy(trim(std::string(tokens[3]))) : std::string{};
+    std::unordered_set<std::string> expandingAggregate;
+    std::unordered_set<std::string> expandingProperty;
     std::function<std::vector<std::string>(const std::string&)> expandAggregate;
     std::function<std::vector<std::string>(const std::string&)> expandProperty;
 
     expandAggregate = [&](const std::string& name) -> std::vector<std::string> {
         const std::string lowered = toLowerCopy(name);
+        ExpandStackGuard guard(expandingAggregate, lowered);
+        if (guard.cycle()) {
+            return {};
+        }
         if (state.objects.find(lowered) != state.objects.end()) {
             return {lowered};
         }
@@ -949,6 +997,10 @@ void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
 
     expandProperty = [&](const std::string& name) -> std::vector<std::string> {
         const std::string lowered = toLowerCopy(name);
+        ExpandStackGuard guard(expandingProperty, lowered);
+        if (guard.cycle()) {
+            return {};
+        }
         if (state.objects.find(lowered) != state.objects.end()) {
             return {lowered};
         }
@@ -1088,9 +1140,14 @@ void parseCollisionLayersLine(ParserState& state, DiagnosticSink& diagnostics, s
     // parser.js parseCollisionLayersToken: each physical line starts a new layer (sol).
     state.collisionLayers.push_back({});
 
+    std::unordered_set<std::string> expandingCollision;
     std::function<std::vector<std::string>(const std::string&)> expand;
     expand = [&](const std::string& name) -> std::vector<std::string> {
         const std::string lowered = toLowerCopy(name);
+        ExpandStackGuard guard(expandingCollision, lowered);
+        if (guard.cycle()) {
+            return {};
+        }
         if (state.objects.find(lowered) != state.objects.end()) {
             return {lowered};
         }

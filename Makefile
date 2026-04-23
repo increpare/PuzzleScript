@@ -5,15 +5,15 @@
 #   make tests_cpp — Native CTest suite (builds ps_cli first if needed).
 #   make simulation_tests_cpp   — Native trace replay (same as make tests): export fixtures, then
 #                                  run_native_trace_suite.js + ps_cli check-trace-sweep.
-#   make compilation_tests_cpp  — Parser-diagnostics parity: for each errormessage_testdata row, runs
-#                                  export_ir_json.js (reference = existing JS parser) and ps_cli
-#                                  --emit-diagnostics (native), then compares. Expect failures until the
-#                                  C++ frontend matches JS; slow (several subprocesses per fixture).
-#                                  For a quick slice: node scripts/diff_diagnostics_corpus.js --cli … --limit 5
+#   make compilation_tests_cpp  — Parser-diagnostics parity: rebuild a corpus bundle with Node once
+#                                  (scripts/build_parser_corpus_bundle.js), then ps_cli diagnostics-parity
+#                                  (pure C++ per fixture, no subprocess farm). Legacy per-row harness:
+#                                  node scripts/diff_diagnostics_corpus.js --cli … --limit 5
 #   make tests     — Alias for simulation_tests_cpp.
 #   make cpp-test-pipeline — make tests_cpp, then parser-state + diagnostics corpus diffs vs JS.
 .PHONY: tests tests_js tests_cpp simulation_tests_js simulation_tests_cpp \
-	compilation_tests_js compilation_tests_cpp run cpp-test-pipeline \
+	compilation_tests_js compilation_tests_cpp parser_corpus_errormessage_bundle \
+	parser_corpus_testdata_bundle run cpp-test-pipeline \
 	clean clean-native clean-fixtures configure-native build-native coverage-fixtures
 
 NODE ?= node
@@ -24,6 +24,15 @@ BUILD_DIR ?= build
 PS_CLI := $(BUILD_DIR)/native/ps_cli
 COVERAGE_FIXTURES_DIR := $(BUILD_DIR)/coverage-fixtures
 COVERAGE_FIXTURES_MANIFEST := $(COVERAGE_FIXTURES_DIR)/fixtures.json
+ERRORMESSAGE_PARSER_BUNDLE := $(BUILD_DIR)/parser_corpus_errormessage.bundle.ndjson
+TESTDATA_PARSER_BUNDLE := $(BUILD_DIR)/parser_corpus_testdata.bundle.ndjson
+
+PARSER_CORPUS_BUNDLE_INPUTS := \
+	scripts/build_parser_corpus_bundle.js \
+	src/tests/resources/errormessage_testdata.js \
+	src/tests/resources/testdata.js \
+	src/tests/lib/puzzlescript_parser_snapshot.js \
+	src/tests/lib/puzzlescript_node_env.js
 
 CMAKE_CACHE := $(BUILD_DIR)/CMakeCache.txt
 
@@ -69,8 +78,20 @@ $(COVERAGE_FIXTURES_MANIFEST): $(JS_FIXTURE_INPUTS)
 simulation_tests_cpp: build-native $(COVERAGE_FIXTURES_MANIFEST)
 	$(NODE) src/tests/run_native_trace_suite.js $(COVERAGE_FIXTURES_MANIFEST) --cli $(PS_CLI) --progress-every 1 --timeout-ms 45000
 
-compilation_tests_cpp: build-native
-	$(NODE) scripts/diff_diagnostics_corpus.js --cli $(PS_CLI) --corpus errormessage
+$(ERRORMESSAGE_PARSER_BUNDLE): $(PARSER_CORPUS_BUNDLE_INPUTS) $(JS_FIXTURE_INPUTS)
+	mkdir -p "$(BUILD_DIR)"
+	$(NODE) scripts/build_parser_corpus_bundle.js errormessage > "$(ERRORMESSAGE_PARSER_BUNDLE)"
+
+$(TESTDATA_PARSER_BUNDLE): $(PARSER_CORPUS_BUNDLE_INPUTS) $(JS_FIXTURE_INPUTS)
+	mkdir -p "$(BUILD_DIR)"
+	$(NODE) scripts/build_parser_corpus_bundle.js testdata > "$(TESTDATA_PARSER_BUNDLE)"
+
+parser_corpus_errormessage_bundle: $(ERRORMESSAGE_PARSER_BUNDLE)
+
+parser_corpus_testdata_bundle: $(TESTDATA_PARSER_BUNDLE)
+
+compilation_tests_cpp: build-native $(ERRORMESSAGE_PARSER_BUNDLE)
+	$(PS_CLI) diagnostics-parity "$(ERRORMESSAGE_PARSER_BUNDLE)"
 
 tests: simulation_tests_cpp
 
