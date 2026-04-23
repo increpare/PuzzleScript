@@ -1198,7 +1198,11 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 auto movementsMissing = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
                 std::vector<puzzlescript::MaskOffset> anyOffsets;
 
-                std::vector<int32_t> layersUsed(game->layerCount, 0);
+                // Per-layer occupancy names (JS `layersUsed_l`): any LHS token with a
+                // resolved single layer, including properties.
+                std::vector<int32_t> layersUsedL(game->layerCount, 0);
+                // Movement-bitvec lanes where LHS had a *concrete* object (JS `objectlayers_l`).
+                std::vector<int32_t> lhsObjectLayersMovement(static_cast<size_t>(game->movementWordCount), 0);
                 for (const auto& item : cell.items) {
                     if (item.dir == "random") {
                         continue; // handled on RHS replacement
@@ -1222,13 +1226,14 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         game->anyObjectOffsets.push_back(off);
                         anyOffsets.push_back(off);
                         if (singleLayer.has_value()) {
-                            layersUsed[static_cast<size_t>(*singleLayer)] = 1;
+                            layersUsedL[static_cast<size_t>(*singleLayer)] = 1;
                         }
                     } else if (singleLayer.has_value()) {
                         for (size_t w = 0; w < objectsPresent.size(); ++w) {
                             objectsPresent[w] |= mask[w];
                         }
-                        layersUsed[static_cast<size_t>(*singleLayer)] = 1;
+                        layersUsedL[static_cast<size_t>(*singleLayer)] = 1;
+                        orShiftedMask5(lhsObjectLayersMovement, 5 * (*singleLayer), 0x1f);
                     } else {
                         const auto off = storeMaskWords(*game, mask);
                         game->anyObjectOffsets.push_back(off);
@@ -1268,6 +1273,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         auto movementsClear = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
                         auto movementsSet = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
                         auto movementsLayerMask = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
+                        std::vector<int32_t> layersUsedR(game->layerCount, 0);
+                        std::vector<int32_t> rhsObjectLayersMovement(static_cast<size_t>(game->movementWordCount), 0);
 
                         auto markLayerClear = [&](int32_t layer) {
                             if (layer < 0 || layer >= game->layerCount) return;
@@ -1277,6 +1284,14 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                             }
                             // JS semantics: mark movement layers that should be reset.
                             orShiftedMask5(movementsLayerMask, 5 * layer, 0x1f);
+                        };
+
+                        auto orLayerMaskToObjectsClear = [&](int32_t layer) {
+                            if (layer < 0 || layer >= game->layerCount) return;
+                            const auto off = game->layerMaskOffsets[static_cast<size_t>(layer)];
+                            for (uint32_t w = 0; w < game->wordCount; ++w) {
+                                objectsClear[static_cast<size_t>(w)] |= static_cast<int32_t>(game->maskArena[static_cast<size_t>(off + w)]);
+                            }
                         };
 
                         // Only clear object layers if the RHS actually writes objects
@@ -1298,15 +1313,6 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                                 }
                             }
                         }
-                        // Note: property-only RHS should not trigger object clear/set.
-                        if (rhsWritesObjects) {
-                            // LHS layersUsed already collected.
-                            for (int32_t layer = 0; layer < game->layerCount; ++layer) {
-                                if (layersUsed[static_cast<size_t>(layer)] != 0) {
-                                    markLayerClear(layer);
-                                }
-                            }
-                        }
 
                         for (const auto& item : rhsCell.items) {
                             if (item.dir == "random") {
@@ -1322,10 +1328,11 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                                 for (size_t w = 0; w < objectsClear.size(); ++w) {
                                     objectsClear[w] |= mask[w];
                                 }
-                                if (singleLayer.has_value()) {
-                                    markLayerClear(*singleLayer);
-                                }
                                 continue;
+                            }
+
+                            if (singleLayer.has_value()) {
+                                layersUsedR[static_cast<size_t>(*singleLayer)] = 1;
                             }
 
                             if (!isProperty) {
@@ -1346,20 +1353,82 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                                     objectsSet[w] |= oneMask[w];
                                 }
                                 if (rhsWritesObjects && singleLayer.has_value()) {
-                                    markLayerClear(*singleLayer);
+                                    const int32_t layer = *singleLayer;
+                                    orLayerMaskToObjectsClear(layer);
+                                    orShiftedMask5(rhsObjectLayersMovement, 5 * layer, 0x1f);
                                 }
                             }
                             if (singleLayer.has_value()) {
                                 const int32_t layer = *singleLayer;
-                                if (item.dir == "stationary") {
+                                // JS: any non-empty direction on RHS sets postMovementsLayerMask first.
+                                if (!item.dir.empty() && item.dir != "no") {
                                     orShiftedMask5(movementsLayerMask, 5 * layer, 0x1f);
-                                } else if (!item.dir.empty()) {
+                                }
+                                if (item.dir == "stationary") {
+                                    orShiftedMask5(movementsClear, 5 * layer, 0x1f);
+                                } else if (!item.dir.empty() && item.dir != "no") {
                                     const int32_t dm = dirMaskFromToken(item.dir);
                                     if (dm != 0) {
                                         orShiftedMask5(movementsSet, 5 * layer, dm);
-                                        orShiftedMask5(movementsLayerMask, 5 * layer, 0x1f);
                                     }
                                 }
+                            }
+                        }
+
+                        // JS rulesToMask: if RHS objectsSet doesn't cover LHS objectsPresent,
+                        // OR LHS objectsPresent into objectsClear.
+                        {
+                            bool lhsCovered = true;
+                            for (uint32_t w = 0; w < game->wordCount; ++w) {
+                                const int32_t pres = objectsPresent[static_cast<size_t>(w)];
+                                const int32_t setv = objectsSet[static_cast<size_t>(w)];
+                                if ((pres & setv) != pres) {
+                                    lhsCovered = false;
+                                    break;
+                                }
+                            }
+                            if (!lhsCovered) {
+                                for (uint32_t w = 0; w < game->wordCount; ++w) {
+                                    objectsClear[static_cast<size_t>(w)] |= objectsPresent[static_cast<size_t>(w)];
+                                }
+                            }
+                        }
+                        // Same for movementsPresent vs movementsSet.
+                        {
+                            bool movCovered = true;
+                            for (uint32_t w = 0; w < game->movementWordCount; ++w) {
+                                const int32_t pres = movementsPresent[static_cast<size_t>(w)];
+                                const int32_t setv = movementsSet[static_cast<size_t>(w)];
+                                if ((pres & setv) != pres) {
+                                    movCovered = false;
+                                    break;
+                                }
+                            }
+                            if (!movCovered) {
+                                for (uint32_t w = 0; w < game->movementWordCount; ++w) {
+                                    movementsClear[static_cast<size_t>(w)] |= movementsPresent[static_cast<size_t>(w)];
+                                }
+                            }
+                        }
+
+                        // Layers where LHS named something on a layer but RHS did not.
+                        if (rhsWritesObjects) {
+                            for (int32_t layer = 0; layer < game->layerCount; ++layer) {
+                                if (layersUsedL[static_cast<size_t>(layer)] != 0
+                                    && layersUsedR[static_cast<size_t>(layer)] == 0) {
+                                    markLayerClear(layer);
+                                }
+                            }
+                        }
+
+                        // JS: postMovementsLayerMask |= (objectlayers_l & ~objectlayers_r)
+                        {
+                            std::vector<int32_t> residual = lhsObjectLayersMovement;
+                            for (size_t w = 0; w < residual.size(); ++w) {
+                                residual[static_cast<size_t>(w)] &= ~rhsObjectLayersMovement[static_cast<size_t>(w)];
+                            }
+                            for (size_t w = 0; w < movementsLayerMask.size(); ++w) {
+                                movementsLayerMask[static_cast<size_t>(w)] |= residual[static_cast<size_t>(w)];
                             }
                         }
 
