@@ -237,6 +237,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     game->collisionLayers = state.collisionLayers;
     game->layerCount = static_cast<int32_t>(game->collisionLayers.size());
 
+    std::vector<int32_t> idLayerById;
     int32_t idCount = 0;
     for (int32_t layerIndex = 0; layerIndex < static_cast<int32_t>(state.collisionLayers.size()); ++layerIndex) {
         for (const auto& name : state.collisionLayers[static_cast<size_t>(layerIndex)]) {
@@ -244,6 +245,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 continue;
             }
             game->idDict.push_back(name);
+            idLayerById.push_back(layerIndex);
             ++idCount;
         }
     }
@@ -260,40 +262,51 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     game->objectMaskTable.clear();
     game->objectMaskTable.reserve(static_cast<size_t>(game->objectCount));
 
-    // Name -> id lookup by idDict index.
+    // Name -> id lookup by *last* idDict index. Some games accidentally
+    // duplicate object names in collision layers; JS ends up using the later id
+    // as the canonical one (and leaves earlier slots without an object def in
+    // the IR objects list), but ids still exist in id_dict/collision_layers.
     std::map<std::string, int32_t> objectIdByName;
     for (int32_t id = 0; id < static_cast<int32_t>(game->idDict.size()); ++id) {
-        objectIdByName[game->idDict[static_cast<size_t>(id)]] = id;
+        const auto& nm = game->idDict[static_cast<size_t>(id)];
+        objectIdByName[nm] = id;
     }
 
-    for (int32_t layerIndex = 0; layerIndex < static_cast<int32_t>(state.collisionLayers.size()); ++layerIndex) {
-        for (const auto& name : state.collisionLayers[static_cast<size_t>(layerIndex)]) {
+    // Fill objectsById for every id entry. (Even if JS omits duplicates from
+    // the serialized `objects` list, runtime logic still expects stable ids,
+    // layers, and names.)
+    for (int32_t id = 0; id < static_cast<int32_t>(game->idDict.size()); ++id) {
+            const auto& name = game->idDict[static_cast<size_t>(id)];
             const auto it = state.objects.find(name);
             if (it == state.objects.end()) {
                 continue;
             }
-            const auto idIt = objectIdByName.find(name);
-            if (idIt == objectIdByName.end()) {
-                continue;
-            }
-            const int32_t id = idIt->second;
+            const int32_t layerIndex = (static_cast<size_t>(id) < idLayerById.size()) ? idLayerById[static_cast<size_t>(id)] : 0;
+            const auto canonIt = objectIdByName.find(name);
+            const bool isCanonical = (canonIt != objectIdByName.end() && canonIt->second == id);
             puzzlescript::ObjectDef def;
             def.name = name;
             def.id = id;
-            def.layer = layerIndex;
-            def.colors = it->second.colors;
-            if (!it->second.spritematrix.empty()) {
-                def.sprite = parseSpriteMatrix(it->second.spritematrix);
-            } else {
-                def.sprite = std::vector<std::vector<int32_t>>(5, std::vector<int32_t>(5, 0));
+            // Non-canonical duplicate ids exist in id_dict, but JS does not
+            // treat them as real objects for layer masks / clearing.
+            def.layer = isCanonical ? layerIndex : -1;
+            if (isCanonical) {
+                def.colors = it->second.colors;
+                if (!it->second.spritematrix.empty()) {
+                    def.sprite = parseSpriteMatrix(it->second.spritematrix);
+                } else {
+                    def.sprite = std::vector<std::vector<int32_t>>(5, std::vector<int32_t>(5, 0));
+                }
             }
             game->objectsById[static_cast<size_t>(id)] = std::move(def);
 
-            auto mask = makeEmptyMask(game->wordCount);
-            setMaskBit(mask, id);
-            const auto offset = storeMaskWords(*game, mask);
-            game->objectMaskTable.push_back({name, offset});
-        }
+            // objectMaskTable is name-keyed; keep one entry per name (canonical id).
+            if (canonIt != objectIdByName.end() && canonIt->second == id) {
+                auto mask = makeEmptyMask(game->wordCount);
+                setMaskBit(mask, id);
+                const auto offset = storeMaskWords(*game, mask);
+                game->objectMaskTable.push_back({name, offset});
+            }
     }
 
     // layer masks
@@ -310,13 +323,6 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     }
 
     // --- Background / player masks ---
-    const auto playerIt = objectIdByName.find("player");
-    if (playerIt != objectIdByName.end()) {
-        auto playerMask = makeEmptyMask(game->wordCount);
-        setMaskBit(playerMask, playerIt->second);
-        game->playerMaskAggregate = false;
-        game->playerMask = storeMaskWords(*game, playerMask);
-    }
 
     // --- Legend resolution (name -> object mask) ---
     std::map<std::string, std::vector<int32_t>> resolvedMasks;
@@ -446,6 +452,26 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         return mask;
     };
 
+    // Player mask: prefer a concrete object named "player"; otherwise resolve
+    // the legend key "player" (common: Player = Foo or Bar).
+    {
+        auto playerMaskWords = makeEmptyMask(game->wordCount);
+        const auto playerIt = objectIdByName.find("player");
+        if (playerIt != objectIdByName.end()) {
+            setMaskBit(playerMaskWords, playerIt->second);
+            game->playerMaskAggregate = false;
+        } else {
+            try {
+                std::set<std::string> visiting;
+                playerMaskWords = resolveMask(resolveMask, "player", visiting);
+                game->playerMaskAggregate = (aggregateOf.find("player") != aggregateOf.end());
+            } catch (...) {
+                // leave empty
+            }
+        }
+        game->playerMask = storeMaskWords(*game, playerMaskWords);
+    }
+
     // Resolve background object/property.
     std::vector<int32_t> backgroundMaskWords = makeEmptyMask(game->wordCount);
     int32_t backgroundLayer = -1;
@@ -514,6 +540,38 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         const int32_t tileCount = level.width * level.height;
         level.objects.assign(static_cast<size_t>(tileCount * game->strideObject), 0);
 
+        // Per-level default background: if the level explicitly uses a concrete
+        // background-layer glyph (e.g. WoodenFloor), JS effectively treats that
+        // as the fill under obstacles/walls in cells without background glyphs.
+        int32_t levelBackgroundId = game->backgroundId;
+        if (backgroundLayer >= 0) {
+            for (int32_t y = 0; y < level.height && levelBackgroundId == game->backgroundId; ++y) {
+                const auto glyphs = splitUtf8Codepoints(srcLevel.rows[static_cast<size_t>(y)]);
+                for (int32_t x = 0; x < level.width; ++x) {
+                    const std::string glyph = x < static_cast<int32_t>(glyphs.size()) ? glyphs[static_cast<size_t>(x)] : std::string{};
+                    if (glyph.empty()) {
+                        continue;
+                    }
+                    const auto it = glyphDict.find(glyph);
+                    if (it == glyphDict.end()) {
+                        continue;
+                    }
+                    const auto& perLayer = it->second;
+                    if (static_cast<size_t>(backgroundLayer) < perLayer.size()) {
+                        const int32_t id = perLayer[static_cast<size_t>(backgroundLayer)];
+                        if (id >= 0) {
+                            levelBackgroundId = id;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        auto levelBackgroundMaskWords = makeEmptyMask(game->wordCount);
+        if (levelBackgroundId >= 0) {
+            setMaskBit(levelBackgroundMaskWords, levelBackgroundId);
+        }
+
         for (int32_t y = 0; y < level.height; ++y) {
             const auto glyphs = splitUtf8Codepoints(srcLevel.rows[static_cast<size_t>(y)]);
             for (int32_t x = 0; x < level.width; ++x) {
@@ -549,7 +607,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                     }
                     if (!anyBackgroundLayer) {
                         for (size_t w = 0; w < cellMask.size(); ++w) {
-                            cellMask[w] |= backgroundMaskWords[w];
+                            cellMask[w] |= levelBackgroundMaskWords[w];
                         }
                     }
                 }
@@ -993,6 +1051,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                                 }
                             }
                         }
+                        // Note: property-only RHS should not trigger object clear/set.
                         if (rhsWritesObjects) {
                             // LHS layersUsed already collected.
                             for (int32_t layer = 0; layer < game->layerCount; ++layer) {
@@ -1023,8 +1082,14 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                             }
 
                             if (!isProperty) {
+                                // Concrete objects: set only the first id for this name.
+                                auto oneMask = makeEmptyMask(game->wordCount);
+                                const auto idIt = objectIdByName.find(item.name);
+                                if (idIt != objectIdByName.end()) {
+                                    setMaskBit(oneMask, idIt->second);
+                                }
                                 for (size_t w = 0; w < objectsSet.size(); ++w) {
-                                    objectsSet[w] |= mask[w];
+                                    objectsSet[w] |= oneMask[w];
                                 }
                                 if (rhsWritesObjects && singleLayer.has_value()) {
                                     markLayerClear(*singleLayer);
