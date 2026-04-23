@@ -126,6 +126,9 @@ function main() {
   if (nativeObj && nativeObj.document && jsObj && jsObj.document) {
     nativeObj.document = jsObj.document;
   }
+  if (nativeObj && jsObj && nativeObj.prepared_session && jsObj.prepared_session) {
+    nativeObj.prepared_session = jsObj.prepared_session;
+  }
   // Lowering parity work doesn't currently care about palette/color normalization.
   // Copy JS colors into native to focus diffs on structural compiler mismatches.
   if (nativeObj && nativeObj.game && jsObj && jsObj.game) {

@@ -1,6 +1,7 @@
 #include "compiler/lower_to_runtime.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cctype>
 #include <cstdint>
 #include <map>
@@ -142,7 +143,7 @@ int32_t dirMaskFromToken(std::string_view token) {
     if (token == ">") return 8;
     if (token == "right") return 8;
     if (token == "action") return 16;
-    if (token == "moving") return 15;
+    if (token == "moving") return 1; // canonicalized to UP in JS rule masks
     if (token == "horizontal") return 4;  // canonicalized to left
     if (token == "vertical") return 1;    // canonicalized to up
     if (token == "orthogonal") return 15; // up|down|left|right
@@ -877,6 +878,49 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             return false;
         };
 
+        auto enumerateMovingVariants = [&](const std::vector<ParsedRow>& lhsBase, const std::vector<ParsedRow>& rhsBase) {
+            struct Slot {
+                bool rhs = false;
+                size_t row = 0;
+                size_t cell = 0;
+                size_t item = 0;
+            };
+            std::vector<Slot> slots;
+            auto collect = [&](const std::vector<ParsedRow>& rows, bool rhs) {
+                for (size_t r = 0; r < rows.size(); ++r) {
+                    for (size_t c = 0; c < rows[r].size(); ++c) {
+                        for (size_t i = 0; i < rows[r][c].items.size(); ++i) {
+                            if (rows[r][c].items[i].dir == "moving") {
+                                slots.push_back(Slot{rhs, r, c, i});
+                            }
+                        }
+                    }
+                }
+            };
+            collect(lhsBase, false);
+            collect(rhsBase, true);
+            std::vector<std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>>> out;
+            if (slots.empty()) {
+                out.push_back({lhsBase, rhsBase});
+                return out;
+            }
+            static const std::array<const char*, 5> kMovingDirs = {"up", "down", "left", "right", "action"};
+            for (const char* movingDir : kMovingDirs) {
+                auto lhs = lhsBase;
+                auto rhs = rhsBase;
+                for (const auto& slot : slots) {
+                    const std::string dir = movingDir;
+                    if (!slot.rhs) {
+                        lhs[slot.row][slot.cell].items[slot.item].dir = dir;
+                    } else {
+                        rhs[slot.row][slot.cell].items[slot.item].dir = dir;
+                    }
+                }
+                out.push_back({std::move(lhs), std::move(rhs)});
+            }
+            return out;
+        };
+
         // JS compiler may emit fewer variants than the naive 4-direction expansion
         // when different scan directions collapse to identical rule patterns after
         // canonicalization (e.g. symmetric patterns, or UP/LLEFT normalized).
@@ -949,8 +993,12 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             }
         }
 
+        const auto movingVariants = enumerateMovingVariants(variantLhsRows, variantRhsRows);
+        for (const auto& movingVariant : movingVariants) {
+        const auto& variantLhsRowsExpanded = movingVariant.first;
+        const auto& variantRhsRowsExpanded = movingVariant.second;
         {
-            const std::string sig = ruleVariantSignature(concreteRuleDirection, variantLhsRows, variantRhsRows);
+            const std::string sig = ruleVariantSignature(concreteRuleDirection, variantLhsRowsExpanded, variantRhsRowsExpanded);
             if (seenRuleVariants.find(sig) != seenRuleVariants.end()) {
                 continue;
             }
@@ -960,10 +1008,14 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         puzzlescript::Rule rule;
         rule.direction = dirMaskFromToken(concreteRuleDirection);
         rule.lineNumber = entry.lineNumber;
-        rule.groupNumber = entry.lineNumber;
+        if (sameGroup && outputGroup != nullptr && !outputGroup->empty()) {
+            rule.groupNumber = outputGroup->front().groupNumber;
+        } else {
+            rule.groupNumber = entry.lineNumber;
+        }
         rule.rigid = rigidRule;
         rule.isRandom = randomRule;
-        rule.hasReplacements = !variantRhsRows.empty();
+        rule.hasReplacements = !variantRhsRowsExpanded.empty();
 
         auto buildPatternRow = [&](const ParsedRow& row, const ParsedRow* rhsRow) -> std::vector<puzzlescript::Pattern> {
             std::vector<puzzlescript::Pattern> out;
@@ -1192,9 +1244,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
         rule.patterns.clear();
         rule.ellipsisCount.clear();
-        for (size_t rowIndex = 0; rowIndex < variantLhsRows.size(); ++rowIndex) {
-            const ParsedRow& lhsRow = variantLhsRows[rowIndex];
-            const ParsedRow* rhsRow = (rowIndex < variantRhsRows.size()) ? &variantRhsRows[rowIndex] : nullptr;
+        for (size_t rowIndex = 0; rowIndex < variantLhsRowsExpanded.size(); ++rowIndex) {
+            const ParsedRow& lhsRow = variantLhsRowsExpanded[rowIndex];
+            const ParsedRow* rhsRow = (rowIndex < variantRhsRowsExpanded.size()) ? &variantRhsRowsExpanded[rowIndex] : nullptr;
             auto loweredRow = buildPatternRow(lhsRow, rhsRow);
             int32_t ellipsisInRow = 0;
             for (const auto& pat : loweredRow) {
@@ -1256,6 +1308,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             static_cast<uint32_t>(game->cellRowMaskMovementsOffsets.size()) - rowMoveMasksFirst;
 
         outputGroup->push_back(std::move(rule));
+        }
         }
     }
 
