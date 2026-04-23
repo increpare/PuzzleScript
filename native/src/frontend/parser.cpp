@@ -294,17 +294,6 @@ bool isExactToken(std::string_view value, const std::string_view* tokens, size_t
     return std::find(tokens, tokens + count, value) != (tokens + count);
 }
 
-bool isSpriteRow(std::string_view value) {
-    if (value.empty()) {
-        return false;
-    }
-    // Match parser.js section 3: stream eats /[.\\d]/ until non-sprite chars; rows may exceed
-    // 5 columns (warnings are logged in JS) so do not cap line length here.
-    return std::all_of(value.begin(), value.end(), [](char ch) {
-        return ch == '.' || std::isdigit(static_cast<unsigned char>(ch)) != 0;
-    });
-}
-
 bool isAllEquals(std::string_view value) {
     if (value.empty()) {
         return false;
@@ -481,23 +470,140 @@ std::string utf8FirstScalarString(std::string_view token) {
     return std::string(reinterpret_cast<const char*>(bytes), static_cast<size_t>(advance));
 }
 
-std::vector<std::string> splitObjectColorsLine(std::string_view value) {
-    static const std::regex colorToken(
-        "^\\s*(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|"
+static const std::regex& objectColorTokenAtLineStart() {
+    static const std::regex instance(
+        "(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|"
         "red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|"
-        "blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-fA-F]{3}){1,2})",
+        "blue|lightblue|darkblue|purple|pink|transparent|#(?:[0-9a-fA-F]{3}){1,2})\\s*",
         std::regex_constants::icase);
-    std::string remaining(trim(std::string(value)));
-    std::vector<std::string> result;
-    while (!remaining.empty()) {
-        std::smatch match;
-        if (!std::regex_search(remaining, match, colorToken)) {
+    return instance;
+}
+
+void skipAsciiSpaceTab(std::string_view s, size_t& pos) {
+    while (pos < s.size() && (s[pos] == ' ' || s[pos] == '\t')) {
+        ++pos;
+    }
+}
+
+bool utf8CodepointIsRegNameBody(utf8proc_int32_t codepoint) {
+    if (codepoint == '_') {
+        return true;
+    }
+    if (codepoint <= 0x7F) {
+        return std::isalnum(static_cast<unsigned char>(static_cast<char>(codepoint))) != 0;
+    }
+    const auto category = utf8proc_category(codepoint);
+    return category == UTF8PROC_CATEGORY_LU || category == UTF8PROC_CATEGORY_LL || category == UTF8PROC_CATEGORY_LT
+        || category == UTF8PROC_CATEGORY_LM || category == UTF8PROC_CATEGORY_LO || category == UTF8PROC_CATEGORY_ND
+        || category == UTF8PROC_CATEGORY_NL || category == UTF8PROC_CATEGORY_NO;
+}
+
+bool utf8CodepointIsZsOrAsciiSpace(utf8proc_int32_t codepoint) {
+    if (codepoint <= 0x7F) {
+        return std::isspace(static_cast<unsigned char>(static_cast<char>(codepoint))) != 0;
+    }
+    const auto category = utf8proc_category(codepoint);
+    return category == UTF8PROC_CATEGORY_ZS || category == UTF8PROC_CATEGORY_ZL || category == UTF8PROC_CATEGORY_ZP;
+}
+
+bool utf8CodepointIsExcludedFromSynonymInterior(utf8proc_int32_t codepoint) {
+    if (codepoint == '(' || codepoint == ')') {
+        return true;
+    }
+    return utf8CodepointIsZsOrAsciiSpace(codepoint);
+}
+
+void consumeRegNameTrailingZsAndSpace(const utf8proc_uint8_t* bytes, const utf8proc_ssize_t total, utf8proc_ssize_t& cursor) {
+    while (cursor < total) {
+        utf8proc_int32_t codepoint = 0;
+        const utf8proc_ssize_t advance = utf8proc_iterate(bytes + cursor, total - cursor, &codepoint);
+        if (advance <= 0) {
             break;
         }
-        result.push_back(toLowerCopy(trim(std::string(match[1].str()))));
-        remaining = std::string(match.suffix());
+        if (!utf8CodepointIsZsOrAsciiSpace(codepoint)) {
+            break;
+        }
+        cursor += advance;
     }
-    return result;
+}
+
+// parser.js tryParseName with sol: reg_name = /[\p{L}\p{N}_]+[\p{Z}\s]*/u
+bool matchObjectsRegNameSol(std::string_view lowered, size_t& bytePos, std::string& candLower, size_t& outTokenStart, size_t& outTokenEnd) {
+    skipAsciiSpaceTab(lowered, bytePos);
+    const utf8proc_ssize_t total = static_cast<utf8proc_ssize_t>(lowered.size());
+    utf8proc_ssize_t cursor = static_cast<utf8proc_ssize_t>(bytePos);
+    const auto* bytes = reinterpret_cast<const utf8proc_uint8_t*>(lowered.data());
+    const utf8proc_ssize_t nameStart = cursor;
+    while (cursor < total) {
+        utf8proc_int32_t codepoint = 0;
+        const utf8proc_ssize_t advance = utf8proc_iterate(bytes + cursor, total - cursor, &codepoint);
+        if (advance <= 0) {
+            break;
+        }
+        if (!utf8CodepointIsRegNameBody(codepoint)) {
+            break;
+        }
+        cursor += advance;
+    }
+    if (cursor == nameStart) {
+        return false;
+    }
+    consumeRegNameTrailingZsAndSpace(bytes, total, cursor);
+    outTokenStart = static_cast<size_t>(nameStart);
+    outTokenEnd = static_cast<size_t>(cursor);
+    candLower = trim(std::string(lowered.substr(outTokenStart, outTokenEnd - outTokenStart)));
+    bytePos = outTokenEnd;
+    return !candLower.empty();
+}
+
+// parser.js tryParseName without sol: /[^\p{Z}\s\()]+[\p{Z}\s]*/u
+bool matchObjectsSynonymToken(std::string_view lowered, size_t& bytePos, std::string& candLower, size_t& outTokenStart, size_t& outTokenEnd) {
+    skipAsciiSpaceTab(lowered, bytePos);
+    const utf8proc_ssize_t total = static_cast<utf8proc_ssize_t>(lowered.size());
+    utf8proc_ssize_t cursor = static_cast<utf8proc_ssize_t>(bytePos);
+    const auto* bytes = reinterpret_cast<const utf8proc_uint8_t*>(lowered.data());
+    const utf8proc_ssize_t nameStart = cursor;
+    while (cursor < total) {
+        utf8proc_int32_t codepoint = 0;
+        const utf8proc_ssize_t advance = utf8proc_iterate(bytes + cursor, total - cursor, &codepoint);
+        if (advance <= 0) {
+            break;
+        }
+        if (utf8CodepointIsExcludedFromSynonymInterior(codepoint)) {
+            break;
+        }
+        cursor += advance;
+    }
+    if (cursor == nameStart) {
+        return false;
+    }
+    consumeRegNameTrailingZsAndSpace(bytes, total, cursor);
+    outTokenStart = static_cast<size_t>(nameStart);
+    outTokenEnd = static_cast<size_t>(cursor);
+    candLower = trim(std::string(lowered.substr(outTokenStart, outTokenEnd - outTokenStart)));
+    bytePos = outTokenEnd;
+    return !candLower.empty();
+}
+
+void consumeObjectsRegNotCommentStart(std::string_view lowered, size_t& bytePos) {
+    while (bytePos < lowered.size() && lowered[bytePos] != '(') {
+        ++bytePos;
+    }
+}
+
+bool tryMatchObjectColorToken(std::string_view lowered, size_t& bytePos, std::string& colorLower) {
+    skipAsciiSpaceTab(lowered, bytePos);
+    if (bytePos >= lowered.size()) {
+        return false;
+    }
+    const std::string suffix(lowered.substr(bytePos));
+    std::smatch match;
+    if (!std::regex_search(suffix, match, objectColorTokenAtLineStart(), std::regex_constants::match_continuous)) {
+        return false;
+    }
+    colorLower = toLowerCopy(trim(std::string(match[1].str())));
+    bytePos += static_cast<size_t>(match[0].length());
+    return true;
 }
 
 std::vector<std::string> tokenizeLegendLine(std::string_view value) {
@@ -962,125 +1068,211 @@ void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::str
 }
 
 void parseObjectsLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine, std::string_view mixedCase) {
+    const std::string mixedLine = trim(std::string(mixedCase));
     const std::string loweredLine = toLowerCopy(trimmedLine);
-    if (state.objectsSection == 0) {
-        const auto mixedTokens = splitWhitespace(mixedCase);
-        if (mixedTokens.empty()) {
+    if (mixedLine.size() != loweredLine.size()) {
+        // Extremely rare: lowering changes UTF-8 length; fall back to whitespace-only object lines.
+        if (trim(std::string(trimmedLine)).empty()) {
             return;
         }
-        const std::string primaryName = toLowerCopy(mixedTokens.front());
-        if (!isIdentifierLike(primaryName)) {
-            if (!trim(std::string(trimmedLine)).empty()) {
+    }
+
+    size_t pos = 0;
+    bool firstContentfulTokenOnLine = true;
+
+    auto sliceMixedFor = [&](size_t start, size_t end) -> std::string {
+        if (end <= mixedLine.size() && start < mixedLine.size()) {
+            return std::string(mixedLine.substr(start, end - start));
+        }
+        return std::string(loweredLine.substr(start, end - start));
+    };
+
+    auto tryParseNameToken = [&](const bool sol) -> bool {
+        state.objectsSpritematrix.clear();
+        const size_t posBefore = pos;
+        std::string candLower;
+        size_t tokenStart = 0;
+        size_t tokenEnd = 0;
+        const bool matched = sol ? matchObjectsRegNameSol(loweredLine, pos, candLower, tokenStart, tokenEnd)
+                                   : matchObjectsSynonymToken(loweredLine, pos, candLower, tokenStart, tokenEnd);
+        if (!matched) {
+            consumeObjectsRegNotCommentStart(loweredLine, pos);
+            if (pos > posBefore) {
                 diagnostics.warning(
                     DiagnosticCode::GenericWarning,
                     state.lineNumber,
                     "Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like \",\", do it in the legend section).");
             }
-            return;
+            return false;
         }
-        if (state.objects.find(primaryName) != state.objects.end()) {
+
+        if (state.objects.find(candLower) != state.objects.end()) {
             diagnostics.error(
                 DiagnosticCode::GenericError,
                 state.lineNumber,
-                "Object \"" + toUpperCopy(primaryName) + "\" defined multiple times.");
+                "Object \"" + toUpperCopy(candLower) + "\" defined multiple times.");
+            state.objectsSection = 0;
+            return false;
         }
         for (const auto& synonym : state.legendSynonyms) {
-            if (synonym.name == primaryName) {
+            if (synonym.name == candLower) {
                 diagnostics.error(
                     DiagnosticCode::GenericError,
                     state.lineNumber,
-                    "Name \"" + toUpperCopy(primaryName) + "\" already in use.");
+                    "Name \"" + toUpperCopy(candLower) + "\" already in use.");
             }
         }
-        if (isLegendKeywordName(primaryName)) {
+        if (isLegendKeywordName(candLower)) {
             diagnostics.warning(
                 DiagnosticCode::GenericWarning,
                 state.lineNumber,
-                "You named an object \"" + toUpperCopy(primaryName) + "\", but this is a keyword. Don't do that!");
+                "You named an object \"" + toUpperCopy(candLower) + "\", but this is a keyword. Don't do that!");
         }
-        const std::string loweredObjectNamesLine = toLowerCopy(trim(mixedCase));
-        state.objectsCandname = primaryName;
-        state.objectsSection = 1;
-        state.objectsSpritematrix.clear();
-        auto& object = state.objects[primaryName];
-        object.name = primaryName;
-        object.lineNumber = state.lineNumber;
-        if (isAsciiIdentifierLike(primaryName)) {
-            registerOriginalCaseName(state, primaryName, trim(mixedCase), state.lineNumber);
-        } else if (isIdentifierLike(primaryName) && containsAsciiLetter(primaryName)) {
-            // registerOriginalCaseName only scans ASCII word boundaries; mixed ASCII/Unicode names
-            // (e.g. ziehend_nördlich) need the mixed-case token. Pure-non-ASCII names (e.g. 大) omit.
-            state.originalCaseNames[primaryName] = std::string(mixedTokens.front());
-            state.originalLineNumbers[primaryName] = state.lineNumber;
-        }
-        for (size_t index = 1; index < mixedTokens.size(); ++index) {
-            const std::string aliasName = toLowerCopy(mixedTokens[index]);
-            if (isLegendKeywordName(aliasName)) {
-                diagnostics.warning(
-                    DiagnosticCode::GenericWarning,
-                    state.lineNumber,
-                    "You named an object \"" + toUpperCopy(aliasName) + "\", but this is a keyword. Don't do that!");
+
+        if (sol) {
+            state.objectsCandname = candLower;
+            auto& object = state.objects[candLower];
+            object.name = candLower;
+            object.lineNumber = state.lineNumber;
+            object.colors.clear();
+            object.spritematrix.clear();
+            if (isAsciiIdentifierLike(candLower)) {
+                registerOriginalCaseName(state, candLower, mixedLine, state.lineNumber);
+            } else if (isIdentifierLike(candLower) && containsAsciiLetter(candLower)) {
+                state.originalCaseNames[candLower] = sliceMixedFor(tokenStart, tokenEnd);
+                state.originalLineNumbers[candLower] = state.lineNumber;
             }
-            if (isAsciiIdentifierLike(aliasName)) {
-                registerOriginalCaseName(state, aliasName, loweredObjectNamesLine, state.lineNumber);
-            } else if (isIdentifierLike(aliasName) && containsAsciiLetter(aliasName)) {
-                state.originalCaseNames[aliasName] = std::string(mixedTokens[index]);
-                state.originalLineNumbers[aliasName] = state.lineNumber;
+        } else {
+            if (isAsciiIdentifierLike(candLower)) {
+                registerOriginalCaseName(state, candLower, mixedLine, state.lineNumber);
+            } else if (isIdentifierLike(candLower) && containsAsciiLetter(candLower)) {
+                state.originalCaseNames[candLower] = sliceMixedFor(tokenStart, tokenEnd);
+                state.originalLineNumbers[candLower] = state.lineNumber;
             }
             state.legendSynonyms.push_back(ParserLegendEntry{
-                aliasName,
-                {primaryName},
+                candLower,
+                {state.objectsCandname},
                 state.lineNumber,
             });
         }
-        return;
-    }
-    if (state.objectsSection == 1) {
-        auto& object = state.objects[state.objectsCandname];
-        object.colors = splitObjectColorsLine(trimmedLine);
-        state.objectsSection = 2;
-        return;
-    }
-    if (state.objectsSection == 2) {
-        if (!isSpriteRow(trimmedLine)) {
-            state.objectsSection = 0;
-            parseObjectsLine(state, diagnostics, trimmedLine, mixedCase);
-            return;
-        }
-        state.objectsSection = 3;
-    }
-    if (state.objectsSection == 3 && isSpriteRow(trimmedLine)) {
-        auto& object = state.objects[state.objectsCandname];
-        if (trimmedLine.size() > 5) {
-            diagnostics.warning(
-                DiagnosticCode::GenericWarning,
-                state.lineNumber,
-                "Sprites must be 5 wide and 5 high.");
-        }
-        object.spritematrix.push_back(std::string(trimmedLine));
-        state.objectsSpritematrix = object.spritematrix;
-        if (object.spritematrix.size() >= 5) {
-            state.objectsSection = 0;
-        }
-        return;
-    }
-    if (state.objectsSection == 3 && !isSpriteRow(trimmedLine)) {
-        auto& object = state.objects[state.objectsCandname];
-        if (object.spritematrix.empty()) {
-            state.objectsSection = 0;
-            parseObjectsLine(state, diagnostics, trimmedLine, mixedCase);
-            return;
-        }
-        diagnostics.error(
-            DiagnosticCode::GenericError,
-            state.lineNumber,
-            "Unknown junk in spritematrix for object " + toUpperCopy(state.objectsCandname) + ".");
-        state.objectsSection = 0;
-        return;
-    }
+        state.objectsSection = 1;
+        return true;
+    };
 
-    state.objectsSection = 0;
-    parseObjectsLine(state, diagnostics, trimmedLine, mixedCase);
+    while (pos < loweredLine.size()) {
+        skipAsciiSpaceTab(loweredLine, pos);
+        if (pos >= loweredLine.size()) {
+            break;
+        }
+
+        const bool sol = firstContentfulTokenOnLine;
+        if (sol && state.objectsSection == 2) {
+            state.objectsSection = 3;
+        }
+        if (sol && state.objectsSection == 1) {
+            state.objectsSection = 2;
+        }
+
+        if (state.objectsSection == 0 || state.objectsSection == 1) {
+            if (!tryParseNameToken(sol)) {
+                firstContentfulTokenOnLine = false;
+                continue;
+            }
+            firstContentfulTokenOnLine = false;
+            continue;
+        }
+
+        if (state.objectsSection == 2) {
+            auto& object = state.objects[state.objectsCandname];
+            std::string colorTok;
+            if (tryMatchObjectColorToken(loweredLine, pos, colorTok)) {
+                object.colors.push_back(colorTok);
+                firstContentfulTokenOnLine = false;
+                continue;
+            }
+            std::string badTok;
+            size_t unusedStart = 0;
+            size_t unusedEnd = 0;
+            if (matchObjectsRegNameSol(loweredLine, pos, badTok, unusedStart, unusedEnd)) {
+                // parser.js: prefer reg_name text for the diagnostic fragment when it matches.
+            } else {
+                const size_t badStart = pos;
+                consumeObjectsRegNotCommentStart(loweredLine, pos);
+                badTok = std::string(loweredLine.substr(badStart, pos - badStart));
+            }
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "Was looking for color for object " + toUpperCopy(state.objectsCandname) + ", got \"" + badTok + "\" instead.");
+            firstContentfulTokenOnLine = false;
+            continue;
+        }
+
+        if (state.objectsSection == 3) {
+            auto& object = state.objects[state.objectsCandname];
+            const unsigned char byte = static_cast<unsigned char>(loweredLine[pos]);
+            const bool isSpriteChar = byte == '.' || std::isdigit(byte) != 0;
+            if (!isSpriteChar) {
+                if (state.objectsSpritematrix.empty()) {
+                    state.objectsSection = 0;
+                    if (!tryParseNameToken(sol)) {
+                        firstContentfulTokenOnLine = false;
+                    } else {
+                        firstContentfulTokenOnLine = false;
+                    }
+                    continue;
+                }
+                diagnostics.error(
+                    DiagnosticCode::GenericError,
+                    state.lineNumber,
+                    "Unknown junk in spritematrix for object " + toUpperCopy(state.objectsCandname) + ".");
+                consumeObjectsRegNotCommentStart(loweredLine, pos);
+                state.objectsSection = 0;
+                firstContentfulTokenOnLine = false;
+                continue;
+            }
+
+            if (sol) {
+                state.objectsSpritematrix.push_back(std::string{});
+            }
+            if (state.objectsSpritematrix.empty()) {
+                state.objectsSpritematrix.push_back(std::string{});
+            }
+            std::string& activeRow = state.objectsSpritematrix.back();
+            const char ch = static_cast<char>(loweredLine[pos]);
+            ++pos;
+            activeRow.push_back(ch);
+            if (activeRow.size() > 5) {
+                diagnostics.warning(
+                    DiagnosticCode::GenericWarning,
+                    state.lineNumber,
+                    "Sprites must be 5 wide and 5 high.");
+                consumeObjectsRegNotCommentStart(loweredLine, pos);
+                firstContentfulTokenOnLine = false;
+                continue;
+            }
+            object.spritematrix = state.objectsSpritematrix;
+            if (state.objectsSpritematrix.size() == 5 && state.objectsSpritematrix.back().size() == 5) {
+                state.objectsSection = 0;
+            }
+            if (ch != '.') {
+                const int digit = ch - '0';
+                if (digit >= 0 && digit <= 9 && static_cast<size_t>(digit) >= object.colors.size()) {
+                    diagnostics.error(
+                        DiagnosticCode::GenericError,
+                        state.lineNumber,
+                        "Trying to access color number " + std::to_string(digit) + " from the color palette of sprite "
+                            + toUpperCopy(state.objectsCandname) + ", but there are only " + std::to_string(object.colors.size())
+                            + " defined in it.");
+                }
+            }
+            firstContentfulTokenOnLine = false;
+            continue;
+        }
+
+        state.objectsSection = 0;
+        firstContentfulTokenOnLine = false;
+    }
 }
 
 bool abbrevNamesContainGlyph(const ParserState& state, std::string_view utf8Glyph) {
