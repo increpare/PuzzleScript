@@ -1754,6 +1754,7 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     bool nativeCompile = false;
     std::optional<std::string> inputsJson;
     std::optional<std::string> inputsFile;
+    std::optional<int32_t> requestedLevel;
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--headless") {
@@ -1777,6 +1778,9 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
             exporterArgs.push_back(value);
             traceArgs.push_back(arg);
             traceArgs.push_back(value);
+            if (arg == "--level") {
+                requestedLevel = static_cast<int32_t>(std::stoi(value));
+            }
             continue;
         }
         if (arg == "--settle-again") {
@@ -1799,6 +1803,14 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     }
     ensureDefaultSourceLoad(exporterArgs);
     ensureDefaultSourceLoad(traceArgs, false);
+    if (!requestedLevel.has_value()) {
+        for (size_t i = 0; i + 1 < exporterArgs.size(); ++i) {
+            if (exporterArgs[i] == "--level") {
+                requestedLevel = static_cast<int32_t>(std::stoi(exporterArgs[i + 1]));
+                break;
+            }
+        }
+    }
 
     ps_game* game = nullptr;
     if (!nativeCompile) {
@@ -1828,6 +1840,15 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
             ps_free_error(error);
             ps_free_game(game);
             return 1;
+        }
+        if (nativeCompile && requestedLevel.has_value()) {
+            if (!ps_session_load_level(session, *requestedLevel, &error)) {
+                std::cerr << ps_error_message(error) << "\n";
+                ps_free_error(error);
+                ps_session_destroy(session);
+                ps_free_game(game);
+                return 1;
+            }
         }
 
         std::vector<std::string> tokens;
