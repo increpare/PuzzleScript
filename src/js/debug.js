@@ -52,38 +52,32 @@ function dumpTestCase() {
 	let levelDat = compiledText;
 	let errorStrings_stripped = errorStrings.map(stripHTMLTags);
 	let resultarray = [levelDat,errorStrings_stripped,errorCount];
-	let resultstring = JSON.stringify(resultarray);
-	let escapedtitle = (state.metadata.title||"untitled test").replace(/"/g, '\\"');
-	resultstring = `<br>
-	[<br>
-		"${escapedtitle}",<br>
-		${resultstring}<br>
-	],`;
+	let innerJson = JSON.stringify(resultarray);
+	let titleJson = JSON.stringify(state.metadata.title || 'untitled test');
+	let resultstring =
+		'<br>\n\t[<br>\n\t\t' + titleJson + ',<br>\n\t\t' + innerJson + '<br>\n\t],';
 	selectableint++;
 	let tag = 'selectable'+selectableint;
 	consolePrint("<br>Compilation error/warning data (for error message tests - errormessage_testdata.js):<br><br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">"+resultstring+"</span><br><br><br>",true);
 
-	
 	//if the game is currently running and not on the title screen, dump the recording data
 	if (!titleScreen) {
 		//normal session recording data
-		let levelDat = compiledText;
+		let levelDatRec = compiledText;
 		let input = inputHistory.concat([]);
 		let sounds = soundHistory.concat([]);
 		let outputDat = convertLevelToString();
 
-		let resultarray = [levelDat,input,outputDat,recordingStartsFromLevel,loadedLevelSeed,sounds];
-		let resultstring = JSON.stringify(resultarray);
-		resultstring = `<br>
-		[<br>
-			"${state.metadata.title||"untitled test"}",<br>
-			${resultstring}<br>
-		],`;
-		
+		let resultarrayRec = [levelDatRec,input,outputDat,recordingStartsFromLevel,loadedLevelSeed,sounds];
+		let innerJsonRec = JSON.stringify(resultarrayRec);
+		let titleJsonRec = JSON.stringify(state.metadata.title || 'untitled test');
+		let resultstringRec =
+			'<br>\n\t\t[<br>\n\t\t\t' + titleJsonRec + ',<br>\n\t\t\t' + innerJsonRec + '<br>\n\t\t],';
+
 		selectableint++;
-		let tag = 'selectable'+selectableint;
-		
-		consolePrint("<br>Recorded play session data (for play session tests - testdata.js):<br><br><br><span id=\""+tag+"\" onclick=\"selectText('"+tag+"',event)\">"+resultstring+"</span><br><br><br>",true);
+		let tagRec = 'selectable'+selectableint;
+
+		consolePrint("<br>Recorded play session data (for play session tests - testdata.js):<br><br><br><span id=\""+tagRec+"\" onclick=\"selectText('"+tagRec+"',event)\">"+resultstringRec+"</span><br><br><br>",true);
 	}
 
 }
