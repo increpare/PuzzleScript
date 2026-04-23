@@ -793,7 +793,30 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         };
         using ParsedRow = std::vector<ParsedCell>;
 
-        auto parseSide = [&](size_t start, size_t end) -> std::vector<ParsedRow> {
+        // Mirrors src/js/languageConstants.js `commandwords` for tokens that may
+        // appear inside RHS brackets (legacy): sfxN / cancel / checkpoint / …
+        // Sound-only names like `Sfx1` lower-case to `sfx1` and are not in
+        // `state.names` in JS, so they become commands rather than cell objects.
+        auto cellNameRefersToLegendOrObject = [&](const std::string& name) -> bool {
+            return objectIdByName.find(name) != objectIdByName.end()
+                || synonymOf.find(name) != synonymOf.end()
+                || aggregateOf.find(name) != aggregateOf.end()
+                || propertyOf.find(name) != propertyOf.end();
+        };
+        auto isJsBracketPostfixCommand = [](const std::string& name) -> bool {
+            static constexpr std::array<const char*, 16> kWords = {
+                "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10",
+                "cancel", "checkpoint", "restart", "win", "again",
+            };
+            for (const char* w : kWords) {
+                if (name == w) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        auto parseSide = [&](size_t start, size_t end, std::vector<puzzlescript::RuleCommand>* inlineCommandSink) -> std::vector<ParsedRow> {
             std::vector<ParsedRow> rows;
             size_t i = start;
             while (i < end) {
@@ -826,6 +849,13 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         i += 1;
                     }
                     if (name == "|") {
+                        continue;
+                    }
+                    if (inlineCommandSink != nullptr && dir.empty() && isJsBracketPostfixCommand(name)
+                        && !cellNameRefersToLegendOrObject(name)) {
+                        puzzlescript::RuleCommand cmd;
+                        cmd.name = name;
+                        inlineCommandSink->push_back(std::move(cmd));
                         continue;
                     }
                     cell.items.push_back({std::move(dir), std::move(name)});
@@ -864,9 +894,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 }
             }
         }
-        const auto lhsRows = parseSide(cursor, arrowPos);
-        const auto rhsRows = parseSide(arrowPos + 1, rhsEnd);
         std::vector<puzzlescript::RuleCommand> parsedCommands;
+        const auto lhsRows = parseSide(cursor, arrowPos, nullptr);
+        const auto rhsRows = parseSide(arrowPos + 1, rhsEnd, &parsedCommands);
         if (rhsEnd < tokens.size()) {
             for (size_t i = rhsEnd; i < tokens.size(); ++i) {
                 puzzlescript::RuleCommand command;
