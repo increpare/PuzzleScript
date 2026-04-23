@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace puzzlescript::frontend {
+namespace puzzlescript::compiler {
 
 enum class Severity : int32_t {
     Error = 0,
@@ -42,4 +42,4 @@ private:
 
 std::string formatForJsCompat(const Diagnostic& diagnostic);
 
-} // namespace puzzlescript::frontend
+} // namespace puzzlescript::compiler

@@ -1,19 +1,19 @@
 I am an AI who implemented this really terribly/slowly, and who was inexplicably recalcitrant at the suggestion that C++ might be reasonably expected to be more performant than JS.  Here is a description of my crimes:
 
 ===== PuzzleScript native trace profiling =====
-Wed, 22 Apr 2026 21:59:31 +0200
+Thu, 23 Apr 2026 09:21:44 +0200
 Darwin Stephens-MacBook-Pro.fritz.box 25.3.0 Darwin Kernel Version 25.3.0: Wed Jan 28 20:53:15 PST 2026; root:xnu-12377.81.4~5/RELEASE_ARM64_T6000 arm64
 ProductName:		macOS
 ProductVersion:		26.3
 BuildVersion:		25D125
-07dcc0db94b32b733584480b4d602d5ac804335c
+3330e918d471d895a560a38680333a2499ea4ab7
 
 ===== Binaries =====
-/Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/native/ps_cli: Mach-O 64-bit executable arm64
--rwxr-xr-x@ 1 stephenlavelle  staff  407800 Apr 22 21:57 /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/native/ps_cli
+build/native/ps_cli: Mach-O 64-bit executable arm64
+-rwxr-xr-x@ 1 stephenlavelle  staff  1011928 Apr 23 04:31 build/native/ps_cli
 
 ===== sweep command =====
-/Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/native/ps_cli check-trace-sweep "/Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/coverage-fixtures/fixtures.json" --profile-timers 
+build/native/ps_cli check-trace-sweep "build/coverage-fixtures/fixtures.json" --profile-timers 
 
 ----- Pass 1: wall clock + getrusage (no sample overhead) -----
 
@@ -23,11 +23,11 @@ simulation_fixture_count=469 prepared_session_checks_passed=469 prepared_session
 
 ===== Pass 1 stderr (native_trace_suite_profile + tail of trace_case) =====
 
-native_trace_suite_profile simulation_fixtures=469 trace_fixtures=469 wall_ms=9491 ir_hit_count=0 ir_miss_count=469 ir_hit_ms=0 ir_miss_ms=3830 prepared_session_create_ms=2 prepared_serialize_ms=22 trace_json_parse_ms=356 fast_replay_ms=5230 detailed_diff_ms=0
+native_trace_suite_profile simulation_fixtures=469 trace_fixtures=469 wall_ms=9532 ir_hit_count=0 ir_miss_count=469 ir_hit_ms=0 ir_miss_ms=3933 prepared_session_create_ms=2 prepared_serialize_ms=22 trace_json_parse_ms=484 fast_replay_ms=5015 detailed_diff_ms=0
 --- last 15 stderr lines ---
                    0  average unshared data size
                    0  average unshared stack size
-              129939  page reclaims
+              130930  page reclaims
                    9  page faults
                    0  swaps
                    0  block input operations
@@ -35,11 +35,11 @@ native_trace_suite_profile simulation_fixtures=469 trace_fixtures=469 wall_ms=94
                    0  messages sent
                    0  messages received
                    0  signals received
-                   0  voluntary context switches
-               16613  involuntary context switches
-        137393788119  instructions retired
-         27705023744  cycles elapsed
-          1098813440  peak memory footprint
+                1765  voluntary context switches
+               15105  involuntary context switches
+        139234579684  instructions retired
+         28312553286  cycles elapsed
+          1106726912  peak memory footprint
 pass1_exit_status=0
 ----- Pass 2: macOS sample(1) Time Profiler-style stacks (same workload) -----
 
@@ -49,7 +49,7 @@ simulation_fixture_count=469 prepared_session_checks_passed=469 prepared_session
 
 ===== Pass 2 stderr (profile line + tail) =====
 
-native_trace_suite_profile simulation_fixtures=469 trace_fixtures=469 wall_ms=9863 ir_hit_count=0 ir_miss_count=469 ir_hit_ms=0 ir_miss_ms=3990 prepared_session_create_ms=2 prepared_serialize_ms=24 trace_json_parse_ms=360 fast_replay_ms=5398 detailed_diff_ms=0
+native_trace_suite_profile simulation_fixtures=469 trace_fixtures=469 wall_ms=10032 ir_hit_count=0 ir_miss_count=469 ir_hit_ms=0 ir_miss_ms=4132 prepared_session_create_ms=2 prepared_serialize_ms=23 trace_json_parse_ms=457 fast_replay_ms=5368 detailed_diff_ms=0
 --- last 10 stderr lines ---
 trace_case index=461 name=#1067 [ player no wall ] test suite, No. 36 mode=fast outcome=passed elapsed_ms=0
 trace_case index=462 name=#1067 [ player no wall ] test suite, No. 37 mode=fast outcome=passed elapsed_ms=0
@@ -60,83 +60,81 @@ trace_case index=466 name=#1067 [ player no wall ] test suite, No. 41 mode=fast 
 trace_case index=467 name=#1067 [ player no wall ] test suite, No. 42 mode=fast outcome=passed elapsed_ms=0
 trace_case index=468 name=#1067 [ player no wall ] test suite, No. 43 mode=fast outcome=passed elapsed_ms=0
 trace_case index=469 name=#1094 winning broken in Cratopia mode=fast outcome=passed elapsed_ms=0
-native_trace_suite_profile simulation_fixtures=469 trace_fixtures=469 wall_ms=9863 ir_hit_count=0 ir_miss_count=469 ir_hit_ms=0 ir_miss_ms=3990 prepared_session_create_ms=2 prepared_serialize_ms=24 trace_json_parse_ms=360 fast_replay_ms=5398 detailed_diff_ms=0
+native_trace_suite_profile simulation_fixtures=469 trace_fixtures=469 wall_ms=10032 ir_hit_count=0 ir_miss_count=469 ir_hit_ms=0 ir_miss_ms=4132 prepared_session_create_ms=2 prepared_serialize_ms=23 trace_json_parse_ms=457 fast_replay_ms=5368 detailed_diff_ms=0
 pass2_exit_status=0
 
 ===== Hot stacks: sample(1) 'Sort by top of stack' (>=5 hits) =====
 
 Sort by top of stack, same collapsed (when >= 5):
-        std::basic_ostream<char>::operator<<(std::basic_streambuf<char>*)  (in libc++.1.dylib)        958
-        __findenv_locked  (in libsystem_c.dylib)        915
-        puzzlescript::(anonymous namespace)::collectRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, int const*, unsigned int, int const*, unsigned int)  (in ps_cli)        717
-        std::ostreambuf_iterator<char>::operator=[abi:ne200100](char)  (in libc++.1.dylib)        622
-        _platform_memmove  (in libsystem_platform.dylib)        399
-        _xzm_free  (in libsystem_malloc.dylib)        363
-        std::istreambuf_iterator<char>::__test_for_eof[abi:ne200100]() const  (in libc++.1.dylib)        361
-        _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib)        330
-        puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli)        278
-        puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in ps_cli)        175
-        simdjson::arm64::dom_parser_implementation::stage2(simdjson::dom::document&)  (in ps_cli)        156
-        puzzlescript::json::(anonymous namespace)::convert(simdjson::dom::element)  (in ps_cli)        146
+        __findenv_locked  (in libsystem_c.dylib)        978
+        std::basic_ostream<char>::operator<<(std::basic_streambuf<char>*)  (in libc++.1.dylib)        973
+        puzzlescript::(anonymous namespace)::collectRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, int const*, unsigned int, int const*, unsigned int)  (in ps_cli)        723
+        std::ostreambuf_iterator<char>::operator=[abi:ne200100](char)  (in libc++.1.dylib)        590
+        _platform_memmove  (in libsystem_platform.dylib)        379
+        __read_nocancel  (in libsystem_kernel.dylib)        364
+        _xzm_free  (in libsystem_malloc.dylib)        337
+        std::istreambuf_iterator<char>::__test_for_eof[abi:ne200100]() const  (in libc++.1.dylib)        326
+        _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib)        322
+        puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli)        247
+        puzzlescript::(anonymous namespace)::rebuildMasks(puzzlescript::Session&)  (in ps_cli)        159
+        puzzlescript::json::(anonymous namespace)::convert(simdjson::dom::element)  (in ps_cli)        158
+        simdjson::arm64::dom_parser_implementation::stage2(simdjson::dom::document&)  (in ps_cli)        150
         puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&)  (in ps_cli)        144
-        _free  (in libsystem_malloc.dylib)        142
-        puzzlescript::(anonymous namespace)::rebuildMasks(puzzlescript::Session&)  (in ps_cli)        130
-        simdjson::arm64::dom_parser_implementation::stage1(unsigned char const*, unsigned long, simdjson::stage1_mode)  (in ps_cli)        129
-        <deduplicated_symbol>  (in libsystem_malloc.dylib)        127
-        __read_nocancel  (in libsystem_kernel.dylib)        124
+        puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in ps_cli)        143
+        _free  (in libsystem_malloc.dylib)        130
+        simdjson::arm64::dom_parser_implementation::stage1(unsigned char const*, unsigned long, simdjson::stage1_mode)  (in ps_cli)        128
         puzzlescript::executeTurn(puzzlescript::Session&, int, puzzlescript::(anonymous namespace)::ExecuteTurnOptions)  (in ps_cli)        114
-        _platform_memcmp  (in libsystem_platform.dylib)        96
-        malloc_type_malloc  (in libsystem_malloc.dylib)        96
-        _xzm_xzone_malloc  (in libsystem_malloc.dylib)        93
-        _platform_memset  (in libsystem_platform.dylib)        73
-        __bzero  (in libsystem_platform.dylib)        58
-        decltype(auto) std::__variant_detail::__visitation::__base::__dispatcher<5ul>::__dispatch[abi:nqe210106]<std::__variant_detail::__dtor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>::__destroy[abi:nqe210106]()::'lambda'(auto&)&&, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&>(auto, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&)  (in ps_cli)        52
-        _xzm_xzone_malloc_freelist_outlined  (in libsystem_malloc.dylib)        51
-        os_unfair_lock_lock_with_options  (in libsystem_platform.dylib)        50
+        mach_absolute_time  (in libsystem_kernel.dylib)        106
+        <deduplicated_symbol>  (in libsystem_malloc.dylib)        100
+        _xzm_xzone_malloc  (in libsystem_malloc.dylib)        92
+        _platform_memcmp  (in libsystem_platform.dylib)        77
+        _platform_memset  (in libsystem_platform.dylib)        76
+        malloc_type_malloc  (in libsystem_malloc.dylib)        70
+        __bzero  (in libsystem_platform.dylib)        69
         operator new(unsigned long)  (in libc++abi.dylib)        49
-        puzzlescript::(anonymous namespace)::requireField(std::map<std::basic_string<char>, puzzlescript::json::Value> const&, std::basic_string_view<char>)  (in ps_cli)        48
-        __open_nocancel  (in libsystem_kernel.dylib)        44
-        puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int)  (in ps_cli)        42
-        os_unfair_lock_unlock  (in libsystem_platform.dylib)        41
-        DYLD-STUB$$free  (in libc++abi.dylib)        37
-        DYLD-STUB$$operator delete(void*)  (in ps_cli)        36
-        std::vector<int>::__assign_with_size[abi:nqe210106]<int*, int*>(int*, int*, long)  (in ps_cli)        35
-        DYLD-STUB$$memcpy  (in ps_cli)        33
-        _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERKNS_7SessionERKNSt3__16vectorINS_7PatternENS4_9allocatorIS6_EEEEiENK3$_0clIRSC_EEvOT_ii  (in ps_cli)        33
-        std::vector<int>::assign(unsigned long, int const&)  (in ps_cli)        29
-        puzzlescript::(anonymous namespace)::parseRule(puzzlescript::Game&, puzzlescript::json::Value const&)  (in ps_cli)        28
-        DYLD-STUB$$malloc_type_malloc  (in libc++abi.dylib)        27
-        mach_msg2_trap  (in libsystem_kernel.dylib)        27
-        puzzlescript::(anonymous namespace)::toInt(puzzlescript::json::Value const&)  (in ps_cli)        27
-        std::__tree<std::__value_type<std::basic_string<char>, puzzlescript::json::Value>, std::__map_value_compare<std::basic_string<char>, std::pair<std::basic_string<char> const, puzzlescript::json::Value>, true>>::destroy(std::__tree_node<std::__value_type<std::basic_string<char>, puzzlescript::json::Value>, void*>*)  (in ps_cli)        24
-        DYLD-STUB$$operator new(unsigned long)  (in ps_cli)        23
-        DYLD-STUB$$memcmp  (in ps_cli)        20
-        getenv  (in libsystem_c.dylib)        20
-        mach_vm_reclaim_update_kernel_accounting_trap  (in libsystem_kernel.dylib)        20
-        puzzlescript::(anonymous namespace)::seedPlayerMovements(puzzlescript::Session&, int)  (in ps_cli)        18
-        puzzlescript::(anonymous namespace)::applyRuleGroups(puzzlescript::Session&, std::vector<std::vector<puzzlescript::Rule>> const&, puzzlescript::LoopPointTable const&, puzzlescript::(anonymous namespace)::CommandState&, std::vector<bool> const*)  (in ps_cli)        16
-        DYLD-STUB$$os_unfair_lock_unlock  (in libsystem_c.dylib)        14
+        os_unfair_lock_unlock  (in libsystem_platform.dylib)        47
+        puzzlescript::(anonymous namespace)::requireField(std::map<std::basic_string<char>, puzzlescript::json::Value> const&, std::basic_string_view<char>)  (in ps_cli)        42
+        _xzm_xzone_malloc_freelist_outlined  (in libsystem_malloc.dylib)        40
+        DYLD-STUB$$memcpy  (in ps_cli)        34
+        DYLD-STUB$$malloc_type_malloc  (in libc++abi.dylib)        33
+        decltype(auto) std::__variant_detail::__visitation::__base::__dispatcher<5ul>::__dispatch[abi:nqe210106]<std::__variant_detail::__dtor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>::__destroy[abi:nqe210106]()::'lambda'(auto&)&&, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&>(auto, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&)  (in ps_cli)        33
+        os_unfair_lock_lock_with_options  (in libsystem_platform.dylib)        33
+        puzzlescript::(anonymous namespace)::parseRule(puzzlescript::Game&, puzzlescript::json::Value const&)  (in ps_cli)        33
+        std::vector<int>::assign(unsigned long, int const&)  (in ps_cli)        31
+        DYLD-STUB$$free  (in libc++abi.dylib)        30
+        DYLD-STUB$$memcmp  (in ps_cli)        30
+        _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERKNS_7SessionERKNSt3__16vectorINS_7PatternENS4_9allocatorIS6_EEEEiENK3$_0clIRSC_EEvOT_ii  (in ps_cli)        29
+        __open_nocancel  (in libsystem_kernel.dylib)        29
+        puzzlescript::(anonymous namespace)::toInt(puzzlescript::json::Value const&)  (in ps_cli)        28
+        puzzlescript::(anonymous namespace)::applyRuleGroups(puzzlescript::Session&, std::vector<std::vector<puzzlescript::Rule>> const&, puzzlescript::LoopPointTable const&, puzzlescript::(anonymous namespace)::CommandState&, std::vector<bool> const*)  (in ps_cli)        26
+        puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int)  (in ps_cli)        23
+        std::vector<int>::__assign_with_size[abi:nqe210106]<int*, int*>(int*, int*, long)  (in ps_cli)        23
+        decltype(auto) std::__variant_detail::__visitation::__base::__dispatcher<2ul>::__dispatch[abi:nqe210106]<std::__variant_detail::__dtor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>::__destroy[abi:nqe210106]()::'lambda'(auto&)&&, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&>(auto, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&)  (in ps_cli)        21
+        DYLD-STUB$$operator delete(void*)  (in ps_cli)        20
+        DYLD-STUB$$operator new(unsigned long)  (in ps_cli)        19
+        puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in ps_cli)        19
+        __write_nocancel  (in libsystem_kernel.dylib)        18
+        puzzlescript::(anonymous namespace)::seedPlayerMovements(puzzlescript::Session&, int)  (in ps_cli)        17
+        puzzlescript::serializeTestString(puzzlescript::Session const&)  (in ps_cli)        17
+        std::__tree<std::__value_type<std::basic_string<char>, puzzlescript::json::Value>, std::__map_value_compare<std::basic_string<char>, std::pair<std::basic_string<char> const, puzzlescript::json::Value>, true>>::destroy(std::__tree_node<std::__value_type<std::basic_string<char>, puzzlescript::json::Value>, void*>*)  (in ps_cli)        16
+        getenv  (in libsystem_c.dylib)        15
         puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::Session&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in ps_cli)        14
-        DYLD-STUB$$memmove  (in ps_cli)        13
-        __vfprintf  (in libsystem_c.dylib)        13
-        decltype(auto) std::__variant_detail::__visitation::__base::__dispatcher<2ul>::__dispatch[abi:nqe210106]<std::__variant_detail::__dtor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>::__destroy[abi:nqe210106]()::'lambda'(auto&)&&, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&>(auto, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&)  (in ps_cli)        13
-        DYLD-STUB$$_platform_bzero  (in libsystem_malloc.dylib)        11
-        __write_nocancel  (in libsystem_kernel.dylib)        11
-        puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in ps_cli)        10
-        puzzlescript::serializeTestString(puzzlescript::Session const&)  (in ps_cli)        10
-        std::__tree_balance_after_insert[abi:nqe210106]<std::__tree_node_base<void*>*>(std::__tree_node_base<void*>*, std::__tree_node_base<void*>*)  (in ps_cli)        9
-        decltype(auto) std::__variant_detail::__visitation::__base::__dispatcher<2ul>::__dispatch[abi:nqe210106]<void std::__variant_detail::__ctor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>>::__generic_construct[abi:nqe210106]<std::__variant_detail::__move_constructor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>>(std::__variant_detail::__ctor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>>&, std::__variant_detail::__move_constructor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>&&)::'lambda'(std::__variant_detail::__move_constructor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>&&)&&, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&&>(std::__variant_detail::__move_constructor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&&)  (in ps_cli)        8
-        puzzlescript::(anonymous namespace)::parseIntVector(puzzlescript::json::Value const&)  (in ps_cli)        8
-        DYLD-STUB$$os_unfair_lock_lock_with_options  (in libsystem_c.dylib)        7
-        decltype(auto) std::__variant_detail::__visitation::__base::__dispatcher<4ul>::__dispatch[abi:nqe210106]<std::__variant_detail::__dtor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>::__destroy[abi:nqe210106]()::'lambda'(auto&)&&, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&>(auto, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&)  (in ps_cli)        6
-        mach_absolute_time  (in libsystem_kernel.dylib)        6
-        DYLD-STUB$$getenv  (in ps_cli)        5
-        _xzm_xzone_malloc_small_freelist  (in libsystem_malloc.dylib)        5
-        std::basic_streambuf<char>::xsputn(char const*, long)  (in libc++.1.dylib)        5
+        DYLD-STUB$$os_unfair_lock_unlock  (in libsystem_c.dylib)        12
+        _NSGetEnviron  (in libsystem_c.dylib)        12
+        mach_msg2_trap  (in libsystem_kernel.dylib)        12
+        mach_vm_reclaim_update_kernel_accounting_trap  (in libsystem_kernel.dylib)        12
+        std::__tree_balance_after_insert[abi:nqe210106]<std::__tree_node_base<void*>*>(std::__tree_node_base<void*>*, std::__tree_node_base<void*>*)  (in ps_cli)        12
+        decltype(auto) std::__variant_detail::__visitation::__base::__dispatcher<2ul>::__dispatch[abi:nqe210106]<void std::__variant_detail::__ctor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>>::__generic_construct[abi:nqe210106]<std::__variant_detail::__move_constructor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>>(std::__variant_detail::__ctor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>>&, std::__variant_detail::__move_constructor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>&&)::'lambda'(std::__variant_detail::__move_constructor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>&&)&&, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&&>(std::__variant_detail::__move_constructor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&&)  (in ps_cli)        9
+        std::basic_streambuf<char>::xsputn(char const*, long)  (in libc++.1.dylib)        9
+        DYLD-STUB$$getenv  (in ps_cli)        8
+        __vfprintf  (in libsystem_c.dylib)        8
+        DYLD-STUB$$memmove  (in ps_cli)        7
+        DYLD-STUB$$_platform_bzero  (in libsystem_malloc.dylib)        5
+        decltype(auto) std::__variant_detail::__visitation::__base::__dispatcher<5ul>::__dispatch[abi:nqe210106]<void std::__variant_detail::__ctor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>>::__generic_construct[abi:nqe210106]<std::__variant_detail::__move_constructor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>>(std::__variant_detail::__ctor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>>&, std::__variant_detail::__move_constructor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>&&)::'lambda'(std::__variant_detail::__move_constructor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>&&)&&, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&&>(std::__variant_detail::__move_constructor<std::__variant_detail::__traits<std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>, (std::__variant_detail::_Trait)1>, std::__variant_detail::__base<(std::__variant_detail::_Trait)1, std::nullptr_t, bool, long long, double, std::basic_string<char>, std::vector<puzzlescript::json::Value>, std::map<std::basic_string<char>, puzzlescript::json::Value>>&&)  (in ps_cli)        5
 
 Binary Images:
-       0x102f60000 -        0x102faf03f +ps_cli (0) <61859731-4C87-343F-A8DD-EA4FF49B0004> /Users/*/Documents/*/ps_cli
-       0x103140000 -        0x10324ffe7 +libSDL2-2.0.0.dylib (0) <028E981B-F9E9-394B-BAA1-136A3669A7AF> /opt/homebrew/*/libSDL2-2.0.0.dylib
+       0x1043e8000 -        0x1044bacd7 +ps_cli (0) <AFD2DD6D-7453-3C72-AB4C-B423F484CCCF> /Users/*/Documents/*/ps_cli
+       0x104830000 -        0x10493ffe7 +libSDL2-2.0.0.dylib (0) <028E981B-F9E9-394B-BAA1-136A3669A7AF> /opt/homebrew/*/libSDL2-2.0.0.dylib
        0x1936bc000 -        0x19370f4bb  libobjc.A.dylib (951.1) <9E66CFF2-3EBD-3242-8166-D5D0C204755B> /usr/lib/libobjc.A.dylib
        0x193710000 -        0x193740bcb  libdyld.dylib (1340) <D0CBB392-9301-3174-8904-D869F1D973CF> /usr/lib/system/libdyld.dylib
        0x193741000 -        0x1937e0713  dyld (1.0.0 - 1340) <BC4DB5F4-1C64-3706-8006-73B78C3E1F1A> /usr/lib/dyld
@@ -155,138 +153,140 @@ Binary Images:
        0x193b1a000 -        0x193b224af  libsystem_platform.dylib (359.80.2) <62C9CD37-272D-3D2D-9A1C-6F4EF24F7EC7> /usr/lib/system/libsystem_platform.dylib
        0x193b23000 -        0x193b52e23  libsystem_info.dylib (600) <05CCB208-0B54-38D8-B736-6C7043F446AA> /usr/lib/system/libsystem_info.dylib
        0x193b53000 -        0x19409c2bf  com.apple.CoreFoundation (6.9 - 4302) <02762698-9950-3C66-8116-A3A565972A49> /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation
+       0x19409d000 -        0x1943b87bf  com.apple.LaunchServices (1141.1 - 1141.1) <9AFF1770-4AA1-3B52-9E33-6F91E1849A9E> /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/LaunchServices
+       0x1943b9000 -        0x19459cd3f  com.apple.gpusw.MetalTools (1.0 - 1) <15A3C78C-DDC1-3B6B-82C6-A2066EEEBEDD> /System/Library/PrivateFrameworks/MetalTools.framework/Versions/A/MetalTools
 
 ===== sample(1) call graph (first 120 lines) =====
 
-Analysis of sampling ps_cli (pid 48945) every 1 millisecond
-Process:         ps_cli [48945]
+Analysis of sampling ps_cli (pid 22799) every 1 millisecond
+Process:         ps_cli [22799]
 Path:            /Users/USER/Documents/*/ps_cli
-Load Address:    0x102f60000
+Load Address:    0x1043e8000
 Identifier:      ps_cli
 Version:         0
 Code Type:       ARM64
 Platform:        macOS
-Parent Process:  bash [48714]
+Parent Process:  bash [22568]
 Target Type:     live task
 
-Date/Time:       2026-04-22 21:59:41.261 +0200
-Launch Time:     2026-04-22 21:59:41.194 +0200
+Date/Time:       2026-04-23 09:21:54.560 +0200
+Launch Time:     2026-04-23 09:21:54.487 +0200
 OS Version:      macOS 26.3 (25D125)
 Report Version:  7
 Analysis Tool:   /usr/bin/sample
 ----
 
 Call graph:
-    7881 Thread_20985198   DispatchQueue_1: com.apple.main-thread  (serial)
-      7881 start  (in dyld) + 7184  [0x193749d54]
-        7881 main  (in ps_cli) + 3600  [0x102f62060]
-          4238 (anonymous namespace)::checkTraceSweepCommand(std::basic_string<char> const&, int, char**)  (in ps_cli) + 3116  [0x102f66490]
-          + 3116 (anonymous namespace)::checkTraceAgainstSnapshots(ps_game*, (anonymous namespace)::TraceFile const&, std::basic_ostream<char>&, bool)  (in ps_cli) + 460  [0x102f71078]
-          + ! 1625 puzzlescript::executeTurn(puzzlescript::Session&, int, puzzlescript::(anonymous namespace)::ExecuteTurnOptions)  (in ps_cli) + 1592  [0x102f83c34]
-          + ! : 1542 puzzlescript::(anonymous namespace)::applyRuleGroups(puzzlescript::Session&, std::vector<std::vector<puzzlescript::Rule>> const&, puzzlescript::LoopPointTable const&, puzzlescript::(anonymous namespace)::CommandState&, std::vector<bool> const*)  (in ps_cli) + 5152  [0x102f8c794]
-          + ! : | 305 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&)  (in ps_cli) + 2260  [0x102f92a70]
-          + ! : | + 297 puzzlescript::(anonymous namespace)::collectRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, int const*, unsigned int, int const*, unsigned int)  (in ps_cli) + 1768,1808,...  [0x102f9081c,0x102f90844,...]
-          + ! : | + 5 puzzlescript::(anonymous namespace)::collectRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, int const*, unsigned int, int const*, unsigned int)  (in ps_cli) + 2140  [0x102f90990]
+    7966 Thread_22931101   DispatchQueue_1: com.apple.main-thread  (serial)
+      7966 start  (in dyld) + 7184  [0x193749d54]
+        7966 main  (in ps_cli) + 5008  [0x1043ea5e0]
+          4176 (anonymous namespace)::checkTraceSweepCommand(std::basic_string<char> const&, int, char**)  (in ps_cli) + 3116  [0x1043ee70c]
+          + 3015 (anonymous namespace)::checkTraceAgainstSnapshots(ps_game*, (anonymous namespace)::TraceFile const&, std::basic_ostream<char>&, bool)  (in ps_cli) + 460  [0x1043f97c8]
+          + ! 1604 puzzlescript::executeTurn(puzzlescript::Session&, int, puzzlescript::(anonymous namespace)::ExecuteTurnOptions)  (in ps_cli) + 1592  [0x104418d20]
+          + ! : 1521 puzzlescript::(anonymous namespace)::applyRuleGroups(puzzlescript::Session&, std::vector<std::vector<puzzlescript::Rule>> const&, puzzlescript::LoopPointTable const&, puzzlescript::(anonymous namespace)::CommandState&, std::vector<bool> const*)  (in ps_cli) + 5152  [0x104421880]
+          + ! : | 298 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&)  (in ps_cli) + 2260  [0x104427b5c]
+          + ! : | + 290 puzzlescript::(anonymous namespace)::collectRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, int const*, unsigned int, int const*, unsigned int)  (in ps_cli) + 1768,1808,...  [0x104425908,0x104425930,...]
+          + ! : | + 4 puzzlescript::(anonymous namespace)::collectRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, int const*, unsigned int, int const*, unsigned int)  (in ps_cli) + 2140  [0x104425a7c]
           + ! : | + ! 3 operator new(unsigned long)  (in libc++abi.dylib) + 52  [0x193acba78]
-          + ! : | + ! : 3 _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib) + 24,408,...  [0x193937198,0x193937318,...]
-          + ! : | + ! 1 DYLD-STUB$$operator new(unsigned long)  (in ps_cli) + 4  [0x102fa4764]
-          + ! : | + ! 1 operator new(unsigned long)  (in libc++abi.dylib) + 36  [0x193acba68]
-          + ! : | + 1 puzzlescript::(anonymous namespace)::collectRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, int const*, unsigned int, int const*, unsigned int)  (in ps_cli) + 1240  [0x102f9060c]
+          + ! : | + ! : 2 _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib) + 24,308  [0x193937198,0x1939372b4]
+          + ! : | + ! : 1 <deduplicated_symbol>  (in libsystem_malloc.dylib) + 108  [0x193932c8c]
           + ! : | + ! 1 operator new(unsigned long)  (in libc++abi.dylib) + 52  [0x193acba78]
-          + ! : | + !   1 _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib) + 476  [0x19393735c]
-          + ! : | + 1 puzzlescript::(anonymous namespace)::collectRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, int const*, unsigned int, int const*, unsigned int)  (in ps_cli) + 1308  [0x102f90650]
-          + ! : | + ! 1 _free  (in libsystem_malloc.dylib) + 64  [0x193940a6c]
-          + ! : | + 1 puzzlescript::(anonymous namespace)::collectRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, int const*, unsigned int, int const*, unsigned int)  (in ps_cli) + 2204  [0x102f909d0]
-          + ! : | +   1 _free  (in libsystem_malloc.dylib) + 12  [0x193940a38]
-          + ! : | 295 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&)  (in ps_cli) + 7240  [0x102f93de4]
-          + ! : | + 288 puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::Session&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in ps_cli) + 284  [0x102f9214c]
-          + ! : | + ! 91 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 2416,3324,...  [0x102f95aa4,0x102f95e30,...]
-          + ! : | + ! 58 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 4024  [0x102f960ec]
-          + ! : | + ! : 57 puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in ps_cli) + 32  [0x102f94514]
-          + ! : | + ! : | 49 getenv  (in libsystem_c.dylib) + 64  [0x19399fef8]
-          + ! : | + ! : | + 49 __findenv_locked  (in libsystem_c.dylib) + 68,100,...  [0x19399ff68,0x19399ff88,...]
-          + ! : | + ! : | 7 getenv  (in libsystem_c.dylib) + 76  [0x19399ff04]
-          + ! : | + ! : | + 4 os_unfair_lock_unlock  (in libsystem_platform.dylib) + 0  [0x193b1a8a4]
-          + ! : | + ! : | + 3 DYLD-STUB$$os_unfair_lock_unlock  (in libsystem_c.dylib) + 8  [0x193a19d00]
-          + ! : | + ! : | 1 getenv  (in libsystem_c.dylib) + 32  [0x19399fed8]
-          + ! : | + ! : 1 puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in ps_cli) + 8  [0x102f944fc]
-          + ! : | + ! 24 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 1468  [0x102f956f0]
-          + ! : | + ! : 20 getenv  (in libsystem_c.dylib) + 64  [0x19399fef8]
-          + ! : | + ! : | 20 __findenv_locked  (in libsystem_c.dylib) + 92,144,...  [0x19399ff80,0x19399ffb4,...]
-          + ! : | + ! : 2 getenv  (in libsystem_c.dylib) + 44  [0x19399fee4]
-          + ! : | + ! : | 2 os_unfair_lock_lock_with_options  (in libsystem_platform.dylib) + 4  [0x193b1a884]
-          + ! : | + ! : 2 getenv  (in libsystem_c.dylib) + 40,64  [0x19399fee0,0x19399fef8]
-          + ! : | + ! 15 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 1304  [0x102f9564c]
-          + ! : | + ! : 15 operator new(unsigned long)  (in libc++abi.dylib) + 52  [0x193acba78]
-          + ! : | + ! :   7 _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib) + 40,532,...  [0x1939371a8,0x193937394,...]
-          + ! : | + ! :   4 <deduplicated_symbol>  (in libsystem_malloc.dylib) + 108,208  [0x193932c8c,0x193932cf0]
-          + ! : | + ! :   2 _xzm_xzone_malloc  (in libsystem_malloc.dylib) + 192  [0x19393314c]
-          + ! : | + ! :   1 DYLD-STUB$$malloc_type_malloc  (in libc++abi.dylib) + 8  [0x193acbe88]
-          + ! : | + ! :   1 malloc_type_malloc  (in libsystem_malloc.dylib) + 28  [0x193927150]
-          + ! : | + ! 11 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 296  [0x102f9525c]
-          + ! : | + ! : 6 std::vector<int>::__assign_with_size[abi:nqe210106]<int*, int*>(int*, int*, long)  (in ps_cli) + 272  [0x102f81a8c]
-          + ! : | + ! : | 5 _platform_memmove  (in libsystem_platform.dylib) + 452,428,...  [0x193b1d544,0x193b1d52c,...]
-          + ! : | + ! : | 1 DYLD-STUB$$memmove  (in ps_cli) + 4  [0x102fa4884]
-          + ! : | + ! : 5 std::vector<int>::__assign_with_size[abi:nqe210106]<int*, int*>(int*, int*, long)  (in ps_cli) + 280,32,...  [0x102f81a94,0x102f8199c,...]
-          + ! : | + ! 11 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 320  [0x102f95274]
-          + ! : | + ! : 8 std::vector<int>::__assign_with_size[abi:nqe210106]<int*, int*>(int*, int*, long)  (in ps_cli) + 272  [0x102f81a8c]
-          + ! : | + ! : | 7 _platform_memmove  (in libsystem_platform.dylib) + 452  [0x193b1d544]
-          + ! : | + ! : | 1 DYLD-STUB$$memmove  (in ps_cli) + 4  [0x102fa4884]
-          + ! : | + ! : 3 std::vector<int>::__assign_with_size[abi:nqe210106]<int*, int*>(int*, int*, long)  (in ps_cli) + 12,32,...  [0x102f81988,0x102f8199c,...]
-          + ! : | + ! 10 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 268  [0x102f95240]
-          + ! : | + ! : 9 _platform_memmove  (in libsystem_platform.dylib) + 204,428,...  [0x193b1d44c,0x193b1d52c,...]
-          + ! : | + ! : 1 DYLD-STUB$$memcpy  (in ps_cli) + 4  [0x102fa4878]
-          + ! : | + ! 10 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 692  [0x102f953e8]
-          + ! : | + ! : 10 _platform_memmove  (in libsystem_platform.dylib) + 420,428,...  [0x193b1d524,0x193b1d52c,...]
-          + ! : | + ! 8 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 420  [0x102f952d8]
-          + ! : | + ! : 7 _platform_memmove  (in libsystem_platform.dylib) + 452,428,...  [0x193b1d544,0x193b1d52c,...]
-          + ! : | + ! : 1 DYLD-STUB$$memcpy  (in ps_cli) + 4  [0x102fa4878]
-          + ! : | + ! 7 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 168  [0x102f951dc]
-          + ! : | + ! : 7 _platform_memmove  (in libsystem_platform.dylib) + 452,12,...  [0x193b1d544,0x193b1d38c,...]
-          + ! : | + ! 7 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 3964  [0x102f960b0]
-          + ! : | + ! : 7 _platform_memcmp  (in libsystem_platform.dylib) + 104,272,...  [0x193b1af58,0x193b1b000,...]
-          + ! : | + ! 6 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 828  [0x102f95470]
-          + ! : | + ! : 6 _platform_memmove  (in libsystem_platform.dylib) + 428,136,...  [0x193b1d52c,0x193b1d408,...]
-          + ! : | + ! 5 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 548  [0x102f95358]
-          + ! : | + ! : 3 _platform_memmove  (in libsystem_platform.dylib) + 452,12  [0x193b1d544,0x193b1d38c]
-          + ! : | + ! : 2 DYLD-STUB$$memcpy  (in ps_cli) + 4  [0x102fa4878]
-          + ! : | + ! 4 std::vector<int>::assign(unsigned long, int const&)  (in ps_cli) + 640  [0x102f81d30]
-          + ! : | + ! 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 1408  [0x102f956b4]
-          + ! : | + ! : 3 puzzlescript::(anonymous namespace)::randomUniform(puzzlescript::Session::RandomState&)  (in ps_cli) + 220,328,...  [0x102f919f4,0x102f91a60,...]
-          + ! : | + ! 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 2368  [0x102f95a74]
-          + ! : | + ! : 2 _xzm_free  (in libsystem_malloc.dylib) + 516,952  [0x193933948,0x193933afc]
+          + ! : | + 2 puzzlescript::(anonymous namespace)::collectRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, int const*, unsigned int, int const*, unsigned int)  (in ps_cli) + 2204  [0x104425abc]
+          + ! : | + ! 1 _free  (in libsystem_malloc.dylib) + 104  [0x193940a94]
+          + ! : | + ! 1 _xzm_free  (in libsystem_malloc.dylib) + 348  [0x1939338a0]
+          + ! : | + !   1 DYLD-STUB$$_platform_bzero  (in libsystem_malloc.dylib) + 8  [0x19394845c]
+          + ! : | + 1 puzzlescript::(anonymous namespace)::collectRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, int const*, unsigned int, int const*, unsigned int)  (in ps_cli) + 1276  [0x10442571c]
+          + ! : | + ! 1 _platform_memmove  (in libsystem_platform.dylib) + 12  [0x193b1d38c]
+          + ! : | + 1 puzzlescript::(anonymous namespace)::collectRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, int const*, unsigned int, int const*, unsigned int)  (in ps_cli) + 2176  [0x104425aa0]
+          + ! : | +   1 _platform_memmove  (in libsystem_platform.dylib) + 204  [0x193b1d44c]
+          + ! : | 264 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&)  (in ps_cli) + 7240  [0x104428ed0]
+          + ! : | + 257 puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::Session&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in ps_cli) + 284  [0x104427238]
+          + ! : | + ! 97 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 92,2416,...  [0x104429e38,0x10442a74c,...]
+          + ! : | + ! 58 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 4024  [0x10442ad94]
+          + ! : | + ! : 58 puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in ps_cli) + 32  [0x104429600]
+          + ! : | + ! :   52 getenv  (in libsystem_c.dylib) + 64  [0x19399fef8]
+          + ! : | + ! :   | 52 __findenv_locked  (in libsystem_c.dylib) + 68,100,...  [0x19399ff68,0x19399ff88,...]
+          + ! : | + ! :   3 getenv  (in libsystem_c.dylib) + 76  [0x19399ff04]
+          + ! : | + ! :   | 2 DYLD-STUB$$os_unfair_lock_unlock  (in libsystem_c.dylib) + 8  [0x193a19d00]
+          + ! : | + ! :   | 1 os_unfair_lock_unlock  (in libsystem_platform.dylib) + 0  [0x193b1a8a4]
+          + ! : | + ! :   1 DYLD-STUB$$getenv  (in ps_cli) + 4  [0x10445cbd8]
+          + ! : | + ! :   1 getenv  (in libsystem_c.dylib) + 44  [0x19399fee4]
+          + ! : | + ! :   | 1 os_unfair_lock_lock_with_options  (in libsystem_platform.dylib) + 4  [0x193b1a884]
+          + ! : | + ! :   1 getenv  (in libsystem_c.dylib) + 64  [0x19399fef8]
+          + ! : | + ! 13 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 1468  [0x10442a398]
+          + ! : | + ! : 10 getenv  (in libsystem_c.dylib) + 64  [0x19399fef8]
+          + ! : | + ! : | 10 __findenv_locked  (in libsystem_c.dylib) + 68,92,...  [0x19399ff68,0x19399ff80,...]
+          + ! : | + ! : 2 getenv  (in libsystem_c.dylib) + 76  [0x19399ff04]
+          + ! : | + ! : | 2 os_unfair_lock_unlock  (in libsystem_platform.dylib) + 0  [0x193b1a8a4]
+          + ! : | + ! : 1 getenv  (in libsystem_c.dylib) + 48  [0x19399fee8]
+          + ! : | + ! :   1 _NSGetEnviron  (in libsystem_c.dylib) + 0  [0x19399ff18]
+          + ! : | + ! 11 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 828  [0x10442a118]
+          + ! : | + ! : 11 _platform_memmove  (in libsystem_platform.dylib) + 452,24,...  [0x193b1d544,0x193b1d398,...]
+          + ! : | + ! 10 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 296  [0x104429f04]
+          + ! : | + ! : 7 std::vector<int>::__assign_with_size[abi:nqe210106]<int*, int*>(int*, int*, long)  (in ps_cli) + 272  [0x104416b78]
+          + ! : | + ! : | 7 _platform_memmove  (in libsystem_platform.dylib) + 452,12,...  [0x193b1d544,0x193b1d38c,...]
+          + ! : | + ! : 3 std::vector<int>::__assign_with_size[abi:nqe210106]<int*, int*>(int*, int*, long)  (in ps_cli) + 32,260  [0x104416a88,0x104416b6c]
+          + ! : | + ! 10 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 320  [0x104429f1c]
+          + ! : | + ! : 5 std::vector<int>::__assign_with_size[abi:nqe210106]<int*, int*>(int*, int*, long)  (in ps_cli) + 272  [0x104416b78]
+          + ! : | + ! : | 4 _platform_memmove  (in libsystem_platform.dylib) + 452,36  [0x193b1d544,0x193b1d3a4]
+          + ! : | + ! : | 1 DYLD-STUB$$memmove  (in ps_cli) + 4  [0x10445cc08]
+          + ! : | + ! : 5 std::vector<int>::__assign_with_size[abi:nqe210106]<int*, int*>(int*, int*, long)  (in ps_cli) + 32,184,...  [0x104416a88,0x104416b20,...]
+          + ! : | + ! 9 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 548  [0x10442a000]
+          + ! : | + ! : 7 _platform_memmove  (in libsystem_platform.dylib) + 452,436,...  [0x193b1d544,0x193b1d534,...]
+          + ! : | + ! : 2 DYLD-STUB$$memcpy  (in ps_cli) + 4  [0x10445cbfc]
+          + ! : | + ! 9 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 692  [0x10442a090]
+          + ! : | + ! : 6 _platform_memmove  (in libsystem_platform.dylib) + 452,36,...  [0x193b1d544,0x193b1d3a4,...]
+          + ! : | + ! : 3 DYLD-STUB$$memcpy  (in ps_cli) + 4  [0x10445cbfc]
+          + ! : | + ! 7 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 1304  [0x10442a2f4]
+          + ! : | + ! : 7 operator new(unsigned long)  (in libc++abi.dylib) + 52  [0x193acba78]
+          + ! : | + ! :   4 _xzm_xzone_malloc  (in libsystem_malloc.dylib) + 192,180,...  [0x19393314c,0x193933140,...]
+          + ! : | + ! :   2 _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib) + 88,532  [0x1939371d8,0x193937394]
+          + ! : | + ! :   1 malloc_type_malloc  (in libsystem_malloc.dylib) + 84  [0x193927188]
+          + ! : | + ! 6 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 3196  [0x10442aa58]
+          + ! : | + ! : 6 std::vector<int>::assign(unsigned long, int const&)  (in ps_cli) + 220,28,...  [0x104416c78,0x104416bb8,...]
+          + ! : | + ! 5 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 268  [0x104429ee8]
+          + ! : | + ! : 3 _platform_memmove  (in libsystem_platform.dylib) + 204,428,...  [0x193b1d44c,0x193b1d52c,...]
+          + ! : | + ! : 2 DYLD-STUB$$memcpy  (in ps_cli) + 4  [0x10445cbfc]
+          + ! : | + ! 5 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 4004  [0x10442ad80]
+          + ! : | + ! : 3 _platform_memcmp  (in libsystem_platform.dylib) + 0,8,...  [0x193b1aef0,0x193b1aef8,...]
+          + ! : | + ! : 2 DYLD-STUB$$memcmp  (in ps_cli) + 4  [0x10445cbf0]
+          + ! : | + ! 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 420  [0x104429f80]
+          + ! : | + ! : 3 _platform_memmove  (in libsystem_platform.dylib) + 452,428  [0x193b1d544,0x193b1d52c]
+          + ! : | + ! 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 1352  [0x10442a324]
+          + ! : | + ! : 2 _xzm_free  (in libsystem_malloc.dylib) + 508,952  [0x193933940,0x193933afc]
           + ! : | + ! : 1 _free  (in libsystem_malloc.dylib) + 44  [0x193940a58]
-          + ! : | + ! 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 3196  [0x102f95db0]
-          + ! : | + ! : 3 std::vector<int>::assign(unsigned long, int const&)  (in ps_cli) + 28,512  [0x102f81acc,0x102f81cb0]
-          + ! : | + ! 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 4004  [0x102f960d8]
-          + ! : | + ! : 2 DYLD-STUB$$memcmp  (in ps_cli) + 4  [0x102fa486c]
-          + ! : | + ! : 1 _platform_memcmp  (in libsystem_platform.dylib) + 56  [0x193b1af28]
-          + ! : | + ! 3 std::vector<int>::__assign_with_size[abi:nqe210106]<int*, int*>(int*, int*, long)  (in ps_cli) + 296  [0x102f81aa4]
-          + ! : | + ! 2 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 1340  [0x102f95670]
-          + ! : | + ! : 2 _platform_memmove  (in libsystem_platform.dylib) + 452,460  [0x193b1d544,0x193b1d54c]
-          + ! : | + ! 2 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 1352  [0x102f9567c]
-          + ! : | + ! : 1 _free  (in libsystem_malloc.dylib) + 24  [0x193940a44]
-          + ! : | + ! : 1 _xzm_free  (in libsystem_malloc.dylib) + 1024  [0x193933b44]
-          + ! : | + ! 2 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 3224  [0x102f95dcc]
-          + ! : | + !   2 std::vector<int>::assign(unsigned long, int const&)  (in ps_cli) + 448,632  [0x102f81c70,0x102f81d28]
-          + ! : | + 5 puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::Session&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in ps_cli) + 260,20,...  [0x102f92134,0x102f92044,...]
-          + ! : | + 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 5736  [0x102f9679c]
-          + ! : | + 1 puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::Session&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in ps_cli) + 184  [0x102f920e8]
-          + ! : | +   1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 4024  [0x102f960ec]
-          + ! : | +     1 puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in ps_cli) + 32  [0x102f94514]
-          + ! : | +       1 getenv  (in libsystem_c.dylib) + 64  [0x19399fef8]
-          + ! : | +         1 __findenv_locked  (in libsystem_c.dylib) + 100  [0x19399ff88]
-          + ! : | 221 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&)  (in ps_cli) + 1260  [0x102f92688]
-          + ! : | + 83 puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int)  (in ps_cli) + 628  [0x102f90ce8]
+          + ! : | + ! 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 3964  [0x10442ad58]
+          + ! : | + ! : 3 _platform_memcmp  (in libsystem_platform.dylib) + 104  [0x193b1af58]
+          + ! : | + ! 2 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 3224  [0x10442aa74]
+          + ! : | + ! : 2 std::vector<int>::assign(unsigned long, int const&)  (in ps_cli) + 40,204  [0x104416bc4,0x104416c68]
+          + ! : | + ! 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 168  [0x104429e84]
+          + ! : | + ! : 1 _platform_memmove  (in libsystem_platform.dylib) + 428  [0x193b1d52c]
+          + ! : | + ! 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 1340  [0x10442a318]
+          + ! : | + ! : 1 _platform_memmove  (in libsystem_platform.dylib) + 460  [0x193b1d54c]
+          + ! : | + ! 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 1408  [0x10442a35c]
+          + ! : | + ! : 1 puzzlescript::(anonymous namespace)::randomUniform(puzzlescript::Session::RandomState&)  (in ps_cli) + 316  [0x104426b40]
+          + ! : | + ! 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 2308  [0x10442a6e0]
+          + ! : | + ! : 1 puzzlescript::(anonymous namespace)::clearShiftedMask5(std::vector<int>&, int)  (in ps_cli) + 40  [0x10442c740]
+          + ! : | + ! 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in ps_cli) + 2368  [0x10442a71c]
+          + ! : | + ! : 1 _xzm_free  (in libsystem_malloc.dylib) + 204  [0x193933810]
+          + ! : | + ! 1 std::vector<int>::__assign_with_size[abi:nqe210106]<int*, int*>(int*, int*, long)  (in ps_cli) + 296  [0x104416b90]
+          + ! : | + 7 puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::Session&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in ps_cli) + 20,324,...  [0x104427130,0x104427260,...]
+          + ! : | 220 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&)  (in ps_cli) + 1260  [0x104427774]
+          + ! : | + 75 puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int)  (in ps_cli) + 628  [0x104425dd4]
+          + ! : | + ! 71 operator new(unsigned long)  (in libc++abi.dylib) + 52  [0x193acba78]
+          + ! : | + ! : 39 _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib) + 40,408,...  [0x1939371a8,0x193937318,...]
+          + ! : | + ! : 11 _xzm_xzone_malloc  (in libsystem_malloc.dylib) + 24,8,...  [0x1939330a4,0x193933094,...]
+          + ! : | + ! : 10 malloc_type_malloc  (in libsystem_malloc.dylib) + 84,28,...  [0x193927188,0x193927150,...]
+          + ! : | + ! : 8 <deduplicated_symbol>  (in libsystem_malloc.dylib) + 208,108,...  [0x193932cf0,0x193932c8c,...]
 
 ===== Artifacts (full logs; sample file is large) =====
   /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/pass1.stdout
   /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/pass1.stderr
   /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/pass2.stdout
   /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/pass2.stderr
-  /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/sample_ps_cli.txt (772597 bytes, 4396 lines)
+  /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/sample_ps_cli.txt (752235 bytes, 4269 lines)
 
 Open the sample file for full collapsed trees. For Instruments UI, run:
   xcrun xctrace record --template 'Time Profiler' --quiet --launch --output /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/time_profiler.trace -- \
-    "/Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/native/ps_cli" check-trace-sweep "/Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/coverage-fixtures/fixtures.json" --profile-timers 
+    "build/native/ps_cli" check-trace-sweep "build/coverage-fixtures/fixtures.json" --profile-timers 
 Wrote /Users/stephenlavelle/Documents/GitHub/PuzzleScript/profile_stats.txt (see also /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/ for full stderr/stdout and sample_ps_cli.txt)

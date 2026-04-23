@@ -51,14 +51,14 @@ set(PUZZLESCRIPT_NATIVE_PUBLIC_HEADERS
   include/puzzlescript/puzzlescript.h
 )
 
-set(PUZZLESCRIPT_FRONTEND_PUBLIC_HEADERS
+set(PUZZLESCRIPT_COMPILER_PUBLIC_HEADERS
   include/puzzlescript/frontend.h
 )
 
-set(PUZZLESCRIPT_FRONTEND_SOURCES
-  src/c_api_frontend.cpp
-  src/frontend/diagnostic.cpp
-  src/frontend/parser.cpp
+set(PUZZLESCRIPT_COMPILER_SOURCES
+  src/c_api_compiler.cpp
+  src/compiler/diagnostic.cpp
+  src/compiler/parser.cpp
   third_party/utf8proc/utf8proc.c
 )
 
@@ -76,14 +76,14 @@ add_library(puzzlescript_native STATIC
   ${PUZZLESCRIPT_NATIVE_SOURCES}
 )
 
-option(PS_ENABLE_DEV_SERIALIZERS "Enable dev-only frontend serializers and commands" ON)
+option(PS_ENABLE_DEV_SERIALIZERS "Enable dev-only compiler serializers and commands" ON)
 
-add_library(puzzlescript_frontend STATIC
-  ${PUZZLESCRIPT_FRONTEND_PUBLIC_HEADERS}
-  ${PUZZLESCRIPT_FRONTEND_SOURCES}
+add_library(puzzlescript_compiler STATIC
+  ${PUZZLESCRIPT_COMPILER_PUBLIC_HEADERS}
+  ${PUZZLESCRIPT_COMPILER_SOURCES}
 )
 
-target_include_directories(puzzlescript_frontend
+target_include_directories(puzzlescript_compiler
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
   PRIVATE
@@ -91,7 +91,7 @@ target_include_directories(puzzlescript_frontend
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/utf8proc
 )
 
-target_compile_definitions(puzzlescript_frontend
+target_compile_definitions(puzzlescript_compiler
   PRIVATE
     UTF8PROC_STATIC
     $<$<BOOL:${PS_ENABLE_DEV_SERIALIZERS}>:PS_ENABLE_DEV_SERIALIZERS=1>
@@ -129,7 +129,7 @@ add_executable(ps_cli
 target_link_libraries(ps_cli
   PRIVATE
     puzzlescript_native
-    puzzlescript_frontend
+    puzzlescript_compiler
 )
 
 target_compile_definitions(ps_cli

@@ -75,6 +75,9 @@ cpp-test-pipeline: build-native
 $(COVERAGE_FIXTURES_MANIFEST): $(JS_FIXTURE_INPUTS)
 	$(NODE) src/tests/export_native_fixtures.js $(COVERAGE_FIXTURES_DIR)
 
+basic_test_suite_cpp: simulation_tests_cpp compilation_tests_cpp
+basic_test_suite_js: tests_js
+
 simulation_tests_cpp: build-native $(COVERAGE_FIXTURES_MANIFEST)
 	$(NODE) src/tests/run_native_trace_suite.js $(COVERAGE_FIXTURES_MANIFEST) --cli $(PS_CLI) --progress-every 1 --timeout-ms 45000
 

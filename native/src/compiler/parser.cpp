@@ -1,4 +1,4 @@
-#include "frontend/parser.hpp"
+#include "compiler/parser.hpp"
 
 #include <utf8proc.h>
 
@@ -10,7 +10,7 @@
 #include <set>
 #include <unordered_set>
 
-namespace puzzlescript::frontend {
+namespace puzzlescript::compiler {
 namespace {
 
 // parser.js removes self-referential RHS tokens from legend splits before committing synonyms
@@ -2899,4 +2899,4 @@ std::string serializeParserStateJson(const ParserState& state) {
     return out;
 }
 
-} // namespace puzzlescript::frontend
+} // namespace puzzlescript::compiler

@@ -1,6 +1,6 @@
-#include "frontend/diagnostic.hpp"
+#include "compiler/diagnostic.hpp"
 
-namespace puzzlescript::frontend {
+namespace puzzlescript::compiler {
 
 void DiagnosticSink::add(Severity severity, DiagnosticCode code, std::optional<int32_t> line, std::string message) {
     // parser.js logError/logWarning: identical HTML diagnostics are suppressed (see duplicate checks).
@@ -38,4 +38,4 @@ std::string formatForJsCompat(const Diagnostic& diagnostic) {
     return diagnostic.message;
 }
 
-} // namespace puzzlescript::frontend
+} // namespace puzzlescript::compiler

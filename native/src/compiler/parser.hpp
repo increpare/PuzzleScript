@@ -3,12 +3,12 @@
 #include <string>
 #include <string_view>
 
-#include "frontend/diagnostic.hpp"
-#include "frontend/types/parser_state.hpp"
+#include "compiler/diagnostic.hpp"
+#include "compiler/types/parser_state.hpp"
 
-namespace puzzlescript::frontend {
+namespace puzzlescript::compiler {
 
 ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics);
 std::string serializeParserStateJson(const ParserState& state);
 
-} // namespace puzzlescript::frontend
+} // namespace puzzlescript::compiler

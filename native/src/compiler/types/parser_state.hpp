@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-namespace puzzlescript::frontend {
+namespace puzzlescript::compiler {
 
 struct ParserObjectEntry {
     std::string name;
@@ -87,4 +87,4 @@ struct ParserState {
     std::string subsection;
 };
 
-} // namespace puzzlescript::frontend
+} // namespace puzzlescript::compiler
