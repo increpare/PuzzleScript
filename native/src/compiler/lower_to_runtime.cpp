@@ -1,5 +1,6 @@
 #include "compiler/lower_to_runtime.hpp"
 
+#include <algorithm>
 #include <cstdint>
 #include <map>
 #include <memory>
@@ -122,9 +123,13 @@ std::vector<std::string> tokenizeRuleLine(std::string line) {
 }
 
 int32_t dirMaskFromToken(std::string_view token) {
+    if (token == "^") return 1;
     if (token == "up") return 1;
+    if (token == "v") return 2;
     if (token == "down") return 2;
+    if (token == "<") return 4;
     if (token == "left") return 4;
+    if (token == ">") return 8;
     if (token == "right") return 8;
     if (token == "action") return 16;
     if (token == "moving") return 15;
@@ -581,16 +586,41 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             continue;
         }
 
-        // Directions at start (optional).
+        // Directions/modifiers at start (optional). JS defaults rules with no
+        // explicit direction to orthogonal, then expands one rule per direction.
         size_t cursor = 0;
-        int32_t direction = 0;
-        if (cursor < tokens.size()) {
-            const int32_t mask = dirMaskFromToken(tokens[cursor]);
-            if (mask != 0 || tokens[cursor] == "stationary") {
-                // JS expands multiple directions; for now keep a single direction.
-                direction = mask;
-                cursor++;
+        bool rigidRule = false;
+        bool randomRule = false;
+        std::vector<std::string> ruleDirections;
+        auto addDirectionAggregate = [&](const std::string& token) {
+            if (token == "horizontal") {
+                ruleDirections.push_back("left");
+                ruleDirections.push_back("right");
+            } else if (token == "vertical") {
+                ruleDirections.push_back("up");
+                ruleDirections.push_back("down");
+            } else if (token == "orthogonal") {
+                ruleDirections.push_back("up");
+                ruleDirections.push_back("down");
+                ruleDirections.push_back("left");
+                ruleDirections.push_back("right");
             }
+        };
+        while (cursor < tokens.size() && tokens[cursor] != "[") {
+            const std::string token = tokens[cursor];
+            if (token == "up" || token == "down" || token == "left" || token == "right") {
+                ruleDirections.push_back(token);
+            } else if (token == "horizontal" || token == "vertical" || token == "orthogonal") {
+                addDirectionAggregate(token);
+            } else if (token == "rigid") {
+                rigidRule = true;
+            } else if (token == "random") {
+                randomRule = true;
+            }
+            ++cursor;
+        }
+        if (ruleDirections.empty()) {
+            addDirectionAggregate("orthogonal");
         }
 
         struct ParsedItem {
@@ -605,22 +635,22 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
         auto parseSide = [&](size_t start, size_t end) -> std::vector<ParsedRow> {
             std::vector<ParsedRow> rows;
-            ParsedRow current;
             size_t i = start;
             while (i < end) {
-                if (tokens[i] == "|") {
-                    rows.push_back(std::move(current));
-                    current = ParsedRow{};
-                    ++i;
-                    continue;
-                }
                 if (tokens[i] != "[") {
                     ++i;
                     continue;
                 }
-                ++i;
+                ++i; // consume '['
+                ParsedRow current;
                 ParsedCell cell;
                 while (i < end && tokens[i] != "]") {
+                    if (tokens[i] == "|") {
+                        current.push_back(std::move(cell));
+                        cell = ParsedCell{};
+                        ++i;
+                        continue;
+                    }
                     if (tokens[i] == "...") {
                         cell.isEllipsis = true;
                         ++i;
@@ -640,13 +670,15 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                     }
                     cell.items.push_back({std::move(dir), std::move(name)});
                 }
+                if (cell.isEllipsis || !cell.items.empty()) {
+                    current.push_back(std::move(cell));
+                }
                 if (i < end && tokens[i] == "]") {
                     ++i;
                 }
-                current.push_back(std::move(cell));
-            }
-            if (!current.empty()) {
-                rows.push_back(std::move(current));
+                if (!current.empty()) {
+                    rows.push_back(std::move(current));
+                }
             }
             return rows;
         };
@@ -655,13 +687,73 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         const auto lhsRows = parseSide(cursor, arrowPos);
         const auto rhsRows = parseSide(arrowPos + 1, tokens.size());
 
+        auto absolutizeDir = [](const std::string& forward, const std::string& dir) -> std::string {
+            if (dir == ">") return forward;
+            if (dir == "<") {
+                if (forward == "up") return "down";
+                if (forward == "down") return "up";
+                if (forward == "left") return "right";
+                if (forward == "right") return "left";
+            }
+            if (dir == "^") {
+                if (forward == "up") return "left";
+                if (forward == "down") return "right";
+                if (forward == "left") return "down";
+                if (forward == "right") return "up";
+            }
+            if (dir == "v") {
+                if (forward == "up") return "right";
+                if (forward == "down") return "left";
+                if (forward == "left") return "up";
+                if (forward == "right") return "down";
+            }
+            return dir;
+        };
+        auto absolutizeRows = [&](std::vector<ParsedRow>& rows, const std::string& forward) {
+            for (auto& row : rows) {
+                for (auto& cell : row) {
+                    for (auto& item : cell.items) {
+                        item.dir = absolutizeDir(forward, item.dir);
+                    }
+                }
+            }
+        };
+        auto containsEllipsis = [](const std::vector<ParsedRow>& rows) {
+            for (const auto& row : rows) {
+                for (const auto& cell : row) {
+                    if (cell.isEllipsis) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+
+        for (const auto& rawRuleDirection : ruleDirections) {
+        auto variantLhsRows = lhsRows;
+        auto variantRhsRows = rhsRows;
+        std::string concreteRuleDirection = rawRuleDirection;
+        absolutizeRows(variantLhsRows, concreteRuleDirection);
+        absolutizeRows(variantRhsRows, concreteRuleDirection);
+        if (!containsEllipsis(variantLhsRows)) {
+            if (concreteRuleDirection == "up") {
+                concreteRuleDirection = "down";
+                for (auto& row : variantLhsRows) std::reverse(row.begin(), row.end());
+                for (auto& row : variantRhsRows) std::reverse(row.begin(), row.end());
+            } else if (concreteRuleDirection == "left") {
+                concreteRuleDirection = "right";
+                for (auto& row : variantLhsRows) std::reverse(row.begin(), row.end());
+                for (auto& row : variantRhsRows) std::reverse(row.begin(), row.end());
+            }
+        }
+
         puzzlescript::Rule rule;
-        rule.direction = direction;
+        rule.direction = dirMaskFromToken(concreteRuleDirection);
         rule.lineNumber = entry.lineNumber;
         rule.groupNumber = entry.lineNumber;
-        rule.rigid = false;
-        rule.isRandom = false;
-        rule.hasReplacements = !rhsRows.empty();
+        rule.rigid = rigidRule;
+        rule.isRandom = randomRule;
+        rule.hasReplacements = !variantRhsRows.empty();
 
         auto buildPatternRow = [&](const ParsedRow& row, const ParsedRow* rhsRow) -> std::vector<puzzlescript::Pattern> {
             std::vector<puzzlescript::Pattern> out;
@@ -813,9 +905,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         };
 
         rule.patterns.clear();
-        for (size_t rowIndex = 0; rowIndex < lhsRows.size(); ++rowIndex) {
-            const ParsedRow& lhsRow = lhsRows[rowIndex];
-            const ParsedRow* rhsRow = (rowIndex < rhsRows.size()) ? &rhsRows[rowIndex] : nullptr;
+        for (size_t rowIndex = 0; rowIndex < variantLhsRows.size(); ++rowIndex) {
+            const ParsedRow& lhsRow = variantLhsRows[rowIndex];
+            const ParsedRow* rhsRow = (rowIndex < variantRhsRows.size()) ? &variantRhsRows[rowIndex] : nullptr;
             rule.patterns.push_back(buildPatternRow(lhsRow, rhsRow));
         }
         rule.ellipsisCount.assign(rule.patterns.size(), 0);
@@ -846,9 +938,64 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         rule.ruleMask = storeMaskWords(*game, ruleMaskWords);
 
         ruleGroup.push_back(std::move(rule));
+        }
     }
 
     game->winConditions.clear();
+    for (const auto& entry : state.winconditions) {
+        if (entry.tokens.size() < 2) {
+            continue;
+        }
+
+        puzzlescript::WinCondition condition;
+        if (entry.tokens[0] == "no") {
+            condition.quantifier = -1;
+        } else if (entry.tokens[0] == "all") {
+            condition.quantifier = 1;
+        } else {
+            condition.quantifier = 0; // "some"
+        }
+        condition.lineNumber = entry.lineNumber;
+
+        auto allObjectsMask = [&]() {
+            auto mask = makeEmptyMask(game->wordCount);
+            for (int32_t id = 0; id < game->objectCount; ++id) {
+                setMaskBit(mask, id);
+            }
+            return mask;
+        };
+
+        auto resolveWinMask = [&](const std::string& name, bool& aggregate) {
+            aggregate = false;
+            if (name == "\nall\n") {
+                return allObjectsMask();
+            }
+            if (objectIdByName.find(name) != objectIdByName.end()
+                || synonymOf.find(name) != synonymOf.end()
+                || propertyOf.find(name) != propertyOf.end()) {
+                std::set<std::string> visiting;
+                return resolveMask(resolveMask, name, visiting);
+            }
+            if (aggregateOf.find(name) != aggregateOf.end()) {
+                aggregate = true;
+                std::set<std::string> visiting;
+                return resolveMask(resolveMask, name, visiting);
+            }
+            return makeEmptyMask(game->wordCount);
+        };
+
+        bool aggr1 = false;
+        bool aggr2 = false;
+        const auto filter1 = resolveWinMask(entry.tokens[1], aggr1);
+        const std::string filter2Name = entry.tokens.size() == 4 ? entry.tokens[3] : std::string("\nall\n");
+        const auto filter2 = resolveWinMask(filter2Name, aggr2);
+
+        condition.filter1 = storeMaskWords(*game, filter1);
+        condition.filter2 = storeMaskWords(*game, filter2);
+        condition.aggr1 = aggr1;
+        condition.aggr2 = aggr2;
+        game->winConditions.push_back(std::move(condition));
+    }
     game->sfxEvents.clear();
 
     outGame = std::move(game);
@@ -856,4 +1003,3 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 }
 
 } // namespace puzzlescript::compiler
-
