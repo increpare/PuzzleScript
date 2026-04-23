@@ -143,6 +143,9 @@ int32_t dirMaskFromToken(std::string_view token) {
     if (token == "right") return 8;
     if (token == "action") return 16;
     if (token == "moving") return 15;
+    if (token == "horizontal") return 4;  // canonicalized to left
+    if (token == "vertical") return 1;    // canonicalized to up
+    if (token == "orthogonal") return 15; // up|down|left|right
     if (token == "stationary") return 0; // special-cased: goes to movementsMissing=0x1f
     return 0;
 }
@@ -195,6 +198,25 @@ void orShiftedMask5(std::vector<int32_t>& words, int32_t shift, int32_t value5) 
         w1 |= (v >> (5 - spill));
         words[static_cast<size_t>(next)] = static_cast<int32_t>(w1);
     }
+}
+
+int32_t getShiftedMask5(const std::vector<int32_t>& words, int32_t shift) {
+    const int32_t wordIndex = shift / 32;
+    const int32_t bitIndex = shift % 32;
+    if (wordIndex < 0 || static_cast<size_t>(wordIndex) >= words.size()) {
+        return 0;
+    }
+    const uint32_t mask = 0x1fU;
+    uint32_t value = (static_cast<uint32_t>(words[static_cast<size_t>(wordIndex)]) >> bitIndex) & mask;
+    if (bitIndex > 27) {
+        const int32_t next = wordIndex + 1;
+        if (static_cast<size_t>(next) < words.size()) {
+            const int32_t spill = bitIndex + 5 - 32;
+            const uint32_t nextBits = static_cast<uint32_t>(words[static_cast<size_t>(next)]) & ((1U << spill) - 1U);
+            value |= (nextBits << (5 - spill));
+        }
+    }
+    return static_cast<int32_t>(value);
 }
 
 } // namespace
@@ -649,8 +671,6 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     // --- Rules / winconditions / sounds / loop points ---
     game->rules.clear();
     game->lateRules.clear();
-    game->rules.emplace_back();
-    auto& ruleGroup = game->rules.back();
 
     // Precompute (best-effort) single-layer info for legend names: if a mask's
     // set bits all live on the same collision layer, we can treat it as
@@ -697,6 +717,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         bool rigidRule = false;
         bool randomRule = false;
         bool lateRule = false;
+        bool sameGroup = false;
         std::vector<std::string> ruleDirections;
         auto addDirectionAggregate = [&](const std::string& token) {
             if (token == "horizontal") {
@@ -724,6 +745,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 randomRule = true;
             } else if (token == "late") {
                 lateRule = true;
+            } else if (token == "+") {
+                sameGroup = true;
             }
             ++cursor;
         }
@@ -731,13 +754,12 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             addDirectionAggregate("orthogonal");
         }
 
-        // JS groups late rules separately (each "late ..." line becomes its own
-        // group). Keep that structure to make IR diffs easier.
-        std::vector<puzzlescript::Rule>* outputGroup = &ruleGroup;
-        if (lateRule) {
-            game->lateRules.emplace_back();
-            outputGroup = &game->lateRules.back();
+        // JS grouping: each rule line starts a new group unless prefixed by "+".
+        std::vector<std::vector<puzzlescript::Rule>>& groups = lateRule ? game->lateRules : game->rules;
+        if (groups.empty() || !sameGroup) {
+            groups.emplace_back();
         }
+        std::vector<puzzlescript::Rule>* outputGroup = &groups.back();
 
         struct ParsedItem {
             std::string dir;
@@ -804,6 +826,16 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         const auto rhsRows = parseSide(arrowPos + 1, tokens.size());
 
         auto absolutizeDir = [](const std::string& forward, const std::string& dir) -> std::string {
+            if (dir == "horizontal") {
+                if (forward == "up") return "left";
+                if (forward == "down") return "left";
+                if (forward == "right") return "right";
+                if (forward == "left") return "right";
+            }
+            if (dir == "vertical") {
+                if (forward == "up" || forward == "left") return "up";
+                if (forward == "down" || forward == "right") return "down";
+            }
             if (dir == ">") return forward;
             if (dir == "<") {
                 if (forward == "up") return "down";
@@ -1123,7 +1155,13 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                                     }
                                 }
                                 if (overlaps) {
-                                    setShiftedMask5(movementsLayerMask, 5 * layer, 0);
+                                    const int32_t moveSetBits = getShiftedMask5(movementsSet, 5 * layer);
+                                    const int32_t moveClearBits = getShiftedMask5(movementsClear, 5 * layer);
+                                    // Only suppress implicit layer-mask clearing when
+                                    // there is no explicit movement directive on layer.
+                                    if (moveSetBits == 0 && moveClearBits == 0) {
+                                        setShiftedMask5(movementsLayerMask, 5 * layer, 0);
+                                    }
                                 }
                             }
                         }
@@ -1153,12 +1191,20 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         };
 
         rule.patterns.clear();
+        rule.ellipsisCount.clear();
         for (size_t rowIndex = 0; rowIndex < variantLhsRows.size(); ++rowIndex) {
             const ParsedRow& lhsRow = variantLhsRows[rowIndex];
             const ParsedRow* rhsRow = (rowIndex < variantRhsRows.size()) ? &variantRhsRows[rowIndex] : nullptr;
-            rule.patterns.push_back(buildPatternRow(lhsRow, rhsRow));
+            auto loweredRow = buildPatternRow(lhsRow, rhsRow);
+            int32_t ellipsisInRow = 0;
+            for (const auto& pat : loweredRow) {
+                if (pat.kind == puzzlescript::Pattern::Kind::Ellipsis) {
+                    ++ellipsisInRow;
+                }
+            }
+            rule.patterns.push_back(std::move(loweredRow));
+            rule.ellipsisCount.push_back(ellipsisInRow);
         }
-        rule.ellipsisCount.assign(rule.patterns.size(), 0);
 
         // Build row/rule masks so runtime fast-paths don't deref null.
         auto ruleMaskWords = makeEmptyMask(game->wordCount);
