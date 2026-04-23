@@ -13,6 +13,7 @@
 
 .PHONY: help build run ctest tests js_parity_tests tests_js simulation_tests_js compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
+	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	profile_simulation_tests basic_test_suite_cpp basic_test_suite_js \
 	parser_corpus_errormessage_bundle parser_corpus_testdata_bundle clean clean-native \
 	clean-js-parity-data configure-native build-native js-parity-data
@@ -101,7 +102,10 @@ $(JS_PARITY_MANIFEST): $(JS_PARITY_INPUTS)
 
 js-parity-data: $(JS_PARITY_MANIFEST)
 
-simulation_tests_cpp: build $(JS_PARITY_MANIFEST)
+simulation_tests_cpp: build
+	$(NODE) src/tests/run_simulation_tests_cpp_direct.js src/tests/resources/testdata.js --cli $(PUZZLESCRIPT_CPP) --progress-every 25
+
+simulation_tests_cpp_js_parity: build $(JS_PARITY_MANIFEST)
 	$(NODE) src/tests/run_native_trace_suite.js $(JS_PARITY_MANIFEST) --cli $(PUZZLESCRIPT_CPP) --progress-every 1 --timeout-ms 45000
 
 $(ERRORMESSAGE_PARSER_BUNDLE): $(PARSER_CORPUS_BUNDLE_INPUTS) $(JS_PARITY_INPUTS)
@@ -119,7 +123,10 @@ parser_corpus_testdata_bundle: $(TESTDATA_PARSER_BUNDLE)
 compilation_tests_cpp: build $(ERRORMESSAGE_PARSER_BUNDLE)
 	$(PUZZLESCRIPT_CPP) diagnostics-parity "$(ERRORMESSAGE_PARSER_BUNDLE)"
 
-js_parity_tests: simulation_tests_cpp compilation_tests_cpp
+compilation_tests_cpp_direct: build
+	$(NODE) src/tests/run_compilation_tests_cpp_direct.js src/tests/resources/errormessage_testdata.js --cli $(PUZZLESCRIPT_CPP) --progress-every 50
+
+js_parity_tests: simulation_tests_cpp_js_parity compilation_tests_cpp
 
 simulation_tests: simulation_tests_js simulation_tests_cpp
 

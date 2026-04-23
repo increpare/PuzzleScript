@@ -14,6 +14,8 @@
 #include <vector>
 
 #include "cli/diagnostics_parity.hpp"
+#include "compiler/parser.hpp"
+#include "compiler/lower_to_runtime.hpp"
 #include "runtime/json.hpp"
 #include "puzzlescript/compiler.h"
 #include "puzzlescript/puzzlescript.h"
@@ -138,6 +140,74 @@ struct ScopedEnvSilence {
     std::vector<std::string> names;
     std::vector<std::optional<std::string>> values;
 };
+
+std::vector<std::string> loadInputTokensFromJsonText(const std::string& jsonText) {
+    std::vector<std::string> tokens;
+    const auto root = puzzlescript::json::parse(jsonText);
+    if (!root.isArray()) {
+        throw std::runtime_error("inputs-json must be a JSON array");
+    }
+    const auto& array = root.asArray();
+    tokens.reserve(array.size());
+    for (const auto& value : array) {
+        if (value.isString()) {
+            tokens.push_back(value.asString());
+        } else if (value.isInteger() || value.isDouble()) {
+            tokens.push_back(std::to_string(looseAsInt(value)));
+        } else {
+            tokens.push_back("0");
+        }
+    }
+    return tokens;
+}
+
+std::vector<std::string> loadInputTokensFromJsonFile(const std::filesystem::path& path) {
+    return loadInputTokensFromJsonText(readFile(path));
+}
+
+bool replayInputTokens(ps_session* session, const std::vector<std::string>& tokens, std::vector<std::string>* outSounds) {
+    if (!session) {
+        return false;
+    }
+    if (outSounds) {
+        outSounds->clear();
+    }
+    for (const auto& token : tokens) {
+        if (token == "undo") {
+            (void)ps_session_undo(session);
+            continue;
+        }
+        if (token == "restart") {
+            (void)ps_session_restart(session);
+            continue;
+        }
+        int32_t inputValue = 0;
+        try {
+            inputValue = std::stoi(token);
+        } catch (...) {
+            inputValue = 0;
+        }
+
+        ps_step_result stepResult{};
+        if (inputValue == static_cast<int32_t>(PS_INPUT_TICK)) {
+            stepResult = ps_session_tick(session);
+        } else {
+            if (inputValue < 0) inputValue = 0;
+            if (inputValue > static_cast<int32_t>(PS_INPUT_TICK)) inputValue = static_cast<int32_t>(PS_INPUT_TICK);
+            stepResult = ps_session_step(session, static_cast<ps_input>(inputValue));
+        }
+
+        if (outSounds && stepResult.audio_event_count > 0 && stepResult.audio_events) {
+            for (size_t i = 0; i < stepResult.audio_event_count; ++i) {
+                const ps_audio_event& event = stepResult.audio_events[i];
+                if (event.kind && event.kind[0] != '\0') {
+                    outSounds->push_back(event.kind);
+                }
+            }
+        }
+    }
+    return true;
+}
 
 struct TraceSnapshot {
     std::string phase;
@@ -366,6 +436,42 @@ bool loadGameFromJsonText(const std::string& json, ps_game** outGame) {
         return false;
     }
     return true;
+}
+
+bool loadGameFromSourceText(const std::string& sourceText, ps_game** outGame) {
+    if (!outGame) {
+        return false;
+    }
+    ps_compile_result* result = nullptr;
+    if (!ps_compile_source(sourceText.data(), sourceText.size(), &result) || result == nullptr) {
+        if (result) {
+            const ps_error* error = ps_compile_result_error(result);
+            if (error) {
+                std::cerr << ps_error_message(error) << "\n";
+                ps_free_error(const_cast<ps_error*>(error));
+            }
+            ps_free_compile_result(result);
+        }
+        return false;
+    }
+    const ps_game* game = ps_compile_result_game(result);
+    if (!game) {
+        const ps_error* error = ps_compile_result_error(result);
+        if (error) {
+            std::cerr << ps_error_message(error) << "\n";
+            ps_free_error(const_cast<ps_error*>(error));
+        }
+        ps_free_compile_result(result);
+        return false;
+    }
+    // ps_compile_result_game() returns a newly-allocated ps_game wrapper.
+    *outGame = const_cast<ps_game*>(game);
+    ps_free_compile_result(result);
+    return true;
+}
+
+bool loadGameFromSourceFile(const std::filesystem::path& path, ps_game** outGame) {
+    return loadGameFromSourceText(readFile(path) + "\n", outGame);
 }
 
 bool loadGameFromFile(const std::filesystem::path& path, ps_game** outGame) {
@@ -1637,13 +1743,32 @@ void ensureDefaultSourceLoad(std::vector<std::string>& args, bool addSettleAgain
     }
 }
 
+std::string jsonStringLiteral(std::string_view utf8);
+
 int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     std::vector<std::string> exporterArgs;
     std::vector<std::string> traceArgs;
     bool hasInputTrace = false;
+    bool finalOnly = false;
+    bool emitJson = false;
+    bool nativeCompile = false;
+    std::optional<std::string> inputsJson;
+    std::optional<std::string> inputsFile;
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--headless") {
+            continue;
+        }
+        if (arg == "--native-compile") {
+            nativeCompile = true;
+            continue;
+        }
+        if (arg == "--final-only") {
+            finalOnly = true;
+            continue;
+        }
+        if (arg == "--json") {
+            emitJson = true;
             continue;
         }
         if ((arg == "--level" || arg == "--seed") && index + 1 < argc) {
@@ -1660,8 +1785,14 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
         }
         if ((arg == "--inputs-json" || arg == "--inputs-file") && index + 1 < argc) {
             hasInputTrace = true;
+            const std::string value = argv[++index];
+            if (arg == "--inputs-json") {
+                inputsJson = value;
+            } else {
+                inputsFile = value;
+            }
             traceArgs.push_back(arg);
-            traceArgs.push_back(argv[++index]);
+            traceArgs.push_back(value);
             continue;
         }
         exporterArgs.emplace_back(arg);
@@ -1670,12 +1801,78 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     ensureDefaultSourceLoad(traceArgs, false);
 
     ps_game* game = nullptr;
-    if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
-        return 1;
+    if (!nativeCompile) {
+        if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
+            return 1;
+        }
+    } else {
+        if (!loadGameFromSourceFile(sourcePath, &game)) {
+            return 1;
+        }
     }
-    const int result = hasInputTrace
-        ? diffTraceAgainstSnapshots(game, loadTraceSnapshotsFromJsonText(runTraceExporterAndCaptureJson(sourcePath, traceArgs)), std::cerr, true)
-        : runCommandForGame(game);
+    int result = 0;
+    if (!hasInputTrace) {
+        result = runCommandForGame(game);
+    } else if (!finalOnly) {
+        result = diffTraceAgainstSnapshots(
+            game,
+            loadTraceSnapshotsFromJsonText(runTraceExporterAndCaptureJson(sourcePath, traceArgs)),
+            std::cerr,
+            true
+        );
+    } else {
+        ps_session* session = nullptr;
+        ps_error* error = nullptr;
+        if (!ps_session_create(game, &session, &error)) {
+            std::cerr << ps_error_message(error) << "\n";
+            ps_free_error(error);
+            ps_free_game(game);
+            return 1;
+        }
+
+        std::vector<std::string> tokens;
+        if (inputsJson.has_value()) {
+            tokens = loadInputTokensFromJsonText(*inputsJson);
+        } else if (inputsFile.has_value()) {
+            tokens = loadInputTokensFromJsonFile(*inputsFile);
+        } else {
+            tokens.clear();
+        }
+
+        std::vector<std::string> sounds;
+        sounds.reserve(16);
+        if (!replayInputTokens(session, tokens, emitJson ? &sounds : nullptr)) {
+            ps_session_destroy(session);
+            ps_free_game(game);
+            return 1;
+        }
+
+        char* serialized = ps_session_serialize_test_string(session);
+        const std::string actualFinal = serialized ? serialized : "";
+        ps_string_free(serialized);
+
+        if (!emitJson) {
+            std::cout << actualFinal;
+            if (!actualFinal.empty() && actualFinal.back() != '\n') {
+                std::cout << "\n";
+            }
+        } else {
+            std::cout << "{"
+                      << "\"serialized_level\":" << jsonStringLiteral(actualFinal)
+                      << ",\"sounds\":[";
+            for (size_t i = 0; i < sounds.size(); ++i) {
+                if (i > 0) {
+                    std::cout << ",";
+                }
+                std::cout << jsonStringLiteral(sounds[i]);
+            }
+            std::cout << "]"
+                      << "}\n";
+        }
+
+        ps_session_destroy(session);
+        result = 0;
+    }
     ps_free_game(game);
     return result;
 }
@@ -1684,6 +1881,7 @@ int benchSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     uint32_t iterations = 10000;
     uint32_t threads = 1;
     std::vector<std::string> exporterArgs;
+    bool nativeCompile = false;
 
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
@@ -1691,6 +1889,8 @@ int benchSourceCommand(const std::string& sourcePath, int argc, char** argv) {
             iterations = static_cast<uint32_t>(std::stoul(argv[++index]));
         } else if (arg == "--threads" && index + 1 < argc) {
             threads = static_cast<uint32_t>(std::stoul(argv[++index]));
+        } else if (arg == "--native-compile") {
+            nativeCompile = true;
         } else {
             exporterArgs.emplace_back(arg);
         }
@@ -1698,8 +1898,14 @@ int benchSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     ensureDefaultSourceLoad(exporterArgs);
 
     ps_game* game = nullptr;
-    if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
-        return 1;
+    if (!nativeCompile) {
+        if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
+            return 1;
+        }
+    } else {
+        if (!loadGameFromSourceFile(sourcePath, &game)) {
+            return 1;
+        }
     }
     const int result = benchCommandForGame(game, iterations, threads);
     ps_free_game(game);
@@ -1708,14 +1914,26 @@ int benchSourceCommand(const std::string& sourcePath, int argc, char** argv) {
 
 int playSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     std::vector<std::string> exporterArgs;
+    bool nativeCompile = false;
     for (int index = 0; index < argc; ++index) {
-        exporterArgs.emplace_back(argv[index]);
+        const std::string arg = argv[index];
+        if (arg == "--native-compile") {
+            nativeCompile = true;
+            continue;
+        }
+        exporterArgs.emplace_back(arg);
     }
     ensureDefaultSourceLoad(exporterArgs);
 
     ps_game* game = nullptr;
-    if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
-        return 1;
+    if (!nativeCompile) {
+        if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
+            return 1;
+        }
+    } else {
+        if (!loadGameFromSourceFile(sourcePath, &game)) {
+            return 1;
+        }
     }
 #ifdef PS_HAVE_SDL2
     const int result = puzzlescript_cpp_run_player_for_game(game);
@@ -1826,9 +2044,14 @@ int compileSourceCommand(const std::string& sourcePath, int argc, char** argv) {
 int stepSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     std::vector<std::string> exporterArgs;
     std::vector<std::string> inputTokens;
+    bool nativeCompile = false;
 
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
+        if (arg == "--native-compile") {
+            nativeCompile = true;
+            continue;
+        }
         if ((arg == "--level" || arg == "--seed") && index + 1 < argc) {
             exporterArgs.push_back(arg);
             exporterArgs.push_back(argv[++index]);
@@ -1841,8 +2064,14 @@ int stepSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     ensureDefaultSourceLoad(exporterArgs);
 
     ps_game* game = nullptr;
-    if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
-        return 1;
+    if (!nativeCompile) {
+        if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
+            return 1;
+        }
+    } else {
+        if (!loadGameFromSourceFile(sourcePath, &game)) {
+            return 1;
+        }
     }
     const int result = stepCommandForGame(game, inputTokens);
     ps_free_game(game);
@@ -1852,9 +2081,14 @@ int stepSourceCommand(const std::string& sourcePath, int argc, char** argv) {
 int diffTraceSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     std::vector<std::string> irArgs;
     std::vector<std::string> traceArgs;
+    bool nativeCompile = false;
 
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
+        if (arg == "--native-compile") {
+            nativeCompile = true;
+            continue;
+        }
         if ((arg == "--level" || arg == "--seed" || arg == "--inputs-json" || arg == "--inputs-file") && index + 1 < argc) {
             const std::string value = argv[++index];
             if (arg == "--level" || arg == "--seed") {
@@ -1871,8 +2105,14 @@ int diffTraceSourceCommand(const std::string& sourcePath, int argc, char** argv)
     }
 
     ps_game* game = nullptr;
-    if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, irArgs), &game)) {
-        return 1;
+    if (!nativeCompile) {
+        if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, irArgs), &game)) {
+            return 1;
+        }
+    } else {
+        if (!loadGameFromSourceFile(sourcePath, &game)) {
+            return 1;
+        }
     }
     const int result = diffTraceAgainstSnapshots(game, loadTraceSnapshotsFromJsonText(runTraceExporterAndCaptureJson(sourcePath, traceArgs)), std::cerr, true);
     ps_free_game(game);
@@ -2106,7 +2346,7 @@ void printMainHelp() {
 
 void printPlayHelp() {
     std::cout
-        << "Usage: puzzlescript_cpp play game.txt [--level N] [--seed seed] [--settle-again]\n\n"
+        << "Usage: puzzlescript_cpp play game.txt [--level N] [--seed seed] [--settle-again] [--native-compile]\n\n"
         << "Opens the SDL player for a PuzzleScript source file. The runtime currently loads\n"
         << "through generated JS parity data while the native compiler is being connected to\n"
         << "full Game lowering.\n\n"
@@ -2116,7 +2356,7 @@ void printPlayHelp() {
 
 void printRunHelp() {
     std::cout
-        << "Usage: puzzlescript_cpp run game.txt [--headless] [--level N] [--seed seed] [--settle-again]\n"
+        << "Usage: puzzlescript_cpp run game.txt [--headless] [--level N] [--seed seed] [--settle-again] [--native-compile]\n"
         << "       puzzlescript_cpp run game.txt --headless --inputs-file inputs.json\n\n"
         << "Runs a source game without opening a window. With no inputs it prints the current\n"
         << "board serialization; with --inputs-file/--inputs-json it replays inputs and\n"
@@ -2164,7 +2404,7 @@ void printProfileHelp() {
 
 void printBenchHelp() {
     std::cout
-        << "Usage: puzzlescript_cpp bench game.txt [--level N] [--seed seed] [--settle-again] [--iterations N] [--threads N]\n\n"
+        << "Usage: puzzlescript_cpp bench game.txt [--level N] [--seed seed] [--settle-again] [--native-compile] [--iterations N] [--threads N]\n\n"
         << "Benchmarks native runtime operations for a source game. Use --threads to measure\n"
         << "multi-session throughput for future solver workloads.\n\n"
         << "Example:\n"

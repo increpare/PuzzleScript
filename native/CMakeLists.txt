@@ -58,6 +58,7 @@ set(PUZZLESCRIPT_COMPILER_PUBLIC_HEADERS
 set(PUZZLESCRIPT_COMPILER_SOURCES
   src/compiler/c_api.cpp
   src/compiler/diagnostic.cpp
+  src/compiler/lower_to_runtime.cpp
   src/compiler/parser.cpp
   third_party/utf8proc/utf8proc.c
 )

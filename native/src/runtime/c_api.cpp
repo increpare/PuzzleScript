@@ -2,6 +2,9 @@
 
 #include <cstring>
 
+ #include "compiler/lower_to_runtime.hpp"
+ #include "compiler/parser.hpp"
+
 using puzzlescript::CompileResult;
 using puzzlescript::Error;
 using puzzlescript::Game;
@@ -67,17 +70,34 @@ bool ps_load_ir_json(const char* json_utf8, size_t json_size, ps_game** out_game
     return true;
 }
 
-bool ps_compile_source(const char*, size_t, ps_compile_result** out_result) {
+bool ps_compile_source(const char* source_utf8, size_t source_size, ps_compile_result** out_result) {
     if (!out_result) {
         return false;
     }
     auto* wrapper = new ps_compile_result();
     wrapper->impl = std::make_unique<CompileResult>();
-    wrapper->impl->error = std::make_unique<Error>(
-        "Native source compilation is not implemented yet. Export JSON IR with node src/tests/js_oracle/export_ir_json.js and load it via ps_load_ir_json."
-    );
-    *out_result = wrapper;
-    return false;
+    try {
+        puzzlescript::compiler::DiagnosticSink diagnostics;
+        const auto state = puzzlescript::compiler::parseSource(
+            source_utf8 == nullptr ? std::string_view{} : std::string_view(source_utf8, source_size),
+            diagnostics
+        );
+        // For now, treat any lowering failure as a compile error. (Once lowering
+        // is implemented, we can choose to gate on diagnostic severity.)
+        std::shared_ptr<const Game> game;
+        if (auto error = puzzlescript::compiler::lowerToRuntimeGame(state, game)) {
+            wrapper->impl->error = std::move(error);
+            *out_result = wrapper;
+            return false;
+        }
+        wrapper->impl->game = std::move(game);
+        *out_result = wrapper;
+        return true;
+    } catch (const std::exception& e) {
+        wrapper->impl->error = std::make_unique<Error>(e.what());
+        *out_result = wrapper;
+        return false;
+    }
 }
 
 const ps_game* ps_compile_result_game(const ps_compile_result* result) {
