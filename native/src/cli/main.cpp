@@ -2022,26 +2022,76 @@ void appendJsonMask(std::ostream& out, const puzzlescript::Game& game, puzzlescr
 
 std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
     std::ostringstream out;
+    // Emit JSON that is loadable by puzzlescript::loadGameFromJson.
     out << "{\n";
     out << "  \"schema_version\": " << game.schemaVersion << ",\n";
-    out << "  \"strides\": {\"object\": " << game.strideObject << ", \"movement\": " << game.strideMovement
+    out << "  \"document\": {\"command\":[\"loadLevel\",0],\"error_count\":0,\"errors\":[],\"input_file\":\"\",\"random_seed\":\"\"},\n";
+    out << "  \"game\": {\n";
+    out << "    \"strides\": {\"object\": " << game.strideObject << ", \"movement\": " << game.strideMovement
         << ", \"layers\": " << game.layerCount << "},\n";
-    out << "  \"object_count\": " << game.objectCount << ",\n";
-    out << "  \"background\": {\"id\": " << game.backgroundId << ", \"layer\": " << game.backgroundLayer << "},\n";
-    out << "  \"id_dict\": "; appendJsonStringArray(out, game.idDict); out << ",\n";
-    out << "  \"collision_layers\": [";
+    out << "    \"object_count\": " << game.objectCount << ",\n";
+    out << "    \"colors\": {\"foreground\": " << jsonStringLiteral(game.foregroundColor)
+        << ", \"background\": " << jsonStringLiteral(game.backgroundColor) << "},\n";
+    out << "    \"background\": {\"id\": " << game.backgroundId << ", \"layer\": " << game.backgroundLayer << "},\n";
+    out << "    \"metadata_pairs\": "; appendJsonStringArray(out, game.metadataPairs); out << ",\n";
+    // metadata_map / lines are optional; include to ease diffs.
+    out << "    \"metadata_map\": {";
+    {
+        bool first = true;
+        for (const auto& [k, v] : game.metadataMap) {
+            if (!first) out << ",";
+            first = false;
+            out << jsonStringLiteral(k) << ":" << jsonStringLiteral(v);
+        }
+    }
+    out << "},\n";
+    out << "    \"metadata_lines\": {";
+    {
+        bool first = true;
+        for (const auto& [k, v] : game.metadataLines) {
+            if (!first) out << ",";
+            first = false;
+            out << jsonStringLiteral(k) << ":" << v;
+        }
+    }
+    out << "},\n";
+    out << "    \"id_dict\": "; appendJsonStringArray(out, game.idDict); out << ",\n";
+    out << "    \"collision_layers\": [";
     for (size_t layer = 0; layer < game.collisionLayers.size(); ++layer) {
         if (layer != 0) out << ",";
         appendJsonStringArray(out, game.collisionLayers[layer]);
     }
     out << "],\n";
-    out << "  \"layer_masks\": [";
+    out << "    \"layer_masks\": [";
     for (size_t layer = 0; layer < game.layerMaskOffsets.size(); ++layer) {
         if (layer != 0) out << ",";
         appendJsonMask(out, game, game.layerMaskOffsets[layer], game.wordCount);
     }
     out << "],\n";
-    out << "  \"levels\": [";
+    out << "    \"player_mask\": {\"aggregate\": " << (game.playerMaskAggregate ? "true" : "false") << ", \"mask\":";
+    appendJsonMask(out, game, game.playerMask, game.wordCount);
+    out << "},\n";
+
+    out << "    \"objects\": [";
+    for (size_t idx = 0; idx < game.objectsById.size(); ++idx) {
+        if (idx != 0) out << ",";
+        const auto& obj = game.objectsById[idx];
+        out << "{"
+            << "\"name\":" << jsonStringLiteral(obj.name)
+            << ",\"id\":" << obj.id
+            << ",\"layer\":" << obj.layer
+            << ",\"colors\":"; appendJsonStringArray(out, obj.colors);
+        out << ",\"spritematrix\":[";
+        for (size_t r = 0; r < obj.sprite.size(); ++r) {
+            if (r != 0) out << ",";
+            appendJsonIntArray(out, obj.sprite[r]);
+        }
+        out << "]"
+            << "}";
+    }
+    out << "],\n";
+
+    out << "    \"levels\": [";
     for (size_t levelIndex = 0; levelIndex < game.levels.size(); ++levelIndex) {
         if (levelIndex != 0) out << ",";
         const auto& level = game.levels[levelIndex];
@@ -2068,6 +2118,7 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
                     << ",\"rigid\":" << (rule.rigid ? "true" : "false") << ",\"is_random\":" << (rule.isRandom ? "true" : "false")
                     << ",\"ellipsis_count\":";
                 appendJsonIntArray(out, rule.ellipsisCount);
+                out << ",\"commands\":[]";
                 out << ",\"cell_row_masks\":[";
                 for (uint32_t row = 0; row < rule.cellRowMasksCount; ++row) {
                     if (row != 0) out << ",";
@@ -2110,6 +2161,9 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
                                 out << ",\"movements_clear\":"; appendJsonMask(out, game, repl.movementsClear, game.movementWordCount);
                                 out << ",\"movements_set\":"; appendJsonMask(out, game, repl.movementsSet, game.movementWordCount);
                                 out << ",\"movements_layer_mask\":"; appendJsonMask(out, game, repl.movementsLayerMask, game.movementWordCount);
+                                // Required by parseReplacement even if unused.
+                                out << ",\"random_entity_mask\":[]";
+                                out << ",\"random_dir_mask\":[]";
                                 out << "}";
                             } else {
                                 out << ",\"replacement\":null";
@@ -2125,8 +2179,39 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
         }
         out << "]";
     };
-    out << "  \"rules\": "; appendRules(game.rules); out << ",\n";
-    out << "  \"late_rules\": "; appendRules(game.lateRules); out << "\n";
+    out << "    \"rules\": "; appendRules(game.rules); out << ",\n";
+    out << "    \"late_rules\": "; appendRules(game.lateRules); out << "\n";
+    out << "  }";
+
+    // prepared_session is optional, but emitting it makes native-vs-js diffs much easier.
+    out << ",\n  \"prepared_session\": {";
+    out << "\"current_level_index\":" << game.preparedSession.currentLevelIndex << ",";
+    out << "\"current_level_target\":null,";
+    out << "\"title_screen\":" << (game.preparedSession.titleScreen ? "true" : "false") << ",";
+    out << "\"text_mode\":" << (game.preparedSession.textMode ? "true" : "false") << ",";
+    out << "\"title_mode\":" << game.preparedSession.titleMode << ",";
+    out << "\"title_selection\":" << game.preparedSession.titleSelection << ",";
+    out << "\"title_selected\":" << (game.preparedSession.titleSelected ? "true" : "false") << ",";
+    out << "\"message_selected\":" << (game.preparedSession.messageSelected ? "true" : "false") << ",";
+    out << "\"winning\":" << (game.preparedSession.winning ? "true" : "false") << ",";
+    out << "\"loaded_level_seed\":" << jsonStringLiteral(game.preparedSession.loadedLevelSeed) << ",";
+    out << "\"random_state\":null,";
+    out << "\"old_flickscreen_dat\":[],";
+    out << "\"level\":";
+    if (game.preparedSession.level.isMessage) {
+        out << "{\"kind\":\"message\",\"message\":" << jsonStringLiteral(game.preparedSession.level.message) << "}";
+    } else {
+        out << "{\"kind\":\"level\",\"line_number\":" << game.preparedSession.level.lineNumber
+            << ",\"width\":" << game.preparedSession.level.width
+            << ",\"height\":" << game.preparedSession.level.height
+            << ",\"layer_count\":" << game.preparedSession.level.layerCount
+            << ",\"objects\":";
+        appendJsonIntArray(out, game.preparedSession.level.objects);
+        out << "}";
+    }
+    out << ",\"serialized_level\":" << jsonStringLiteral(game.preparedSession.serializedLevel);
+    out << ",\"restart_target\":null";
+    out << "}\n";
     out << "}\n";
     return out.str();
 }
@@ -2139,7 +2224,7 @@ int compileSourceCommand(const std::string& sourcePath, int argc, char** argv) {
         const std::string arg = argv[index];
         if (arg == "--emit-parser-state") {
             emitParserState = true;
-        } else if (arg == "--emit-runtime-ir") {
+        } else if (arg == "--emit-runtime-ir" || arg == "--emit-ir-json") {
             emitRuntimeIr = true;
         } else if (arg == "--diagnostics" || arg == "--emit-diagnostics") {
             emitDiagnostics = true;
@@ -2149,7 +2234,7 @@ int compileSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     }
 
     if (!emitParserState && !emitDiagnostics && !emitRuntimeIr) {
-        std::cerr << "compile requires --diagnostics, --emit-parser-state, or --emit-runtime-ir.\n"
+        std::cerr << "compile requires --diagnostics, --emit-parser-state, or --emit-ir-json.\n"
                   << "Try: puzzlescript_cpp compile " << sourcePath << " --diagnostics\n";
         return 1;
     }
@@ -2473,7 +2558,7 @@ void printMainHelp() {
         << "      Run the C++ compiler parser diagnostics.\n"
         << "  puzzlescript_cpp compile game.txt --emit-parser-state\n"
         << "      Emit the canonical parser-state JSON used by parity tests.\n"
-        << "  puzzlescript_cpp compile game.txt --emit-runtime-ir\n"
+        << "  puzzlescript_cpp compile game.txt --emit-ir-json\n"
         << "      Emit the native lowered runtime game JSON used for JS-vs-C++ compiler diffs.\n"
         << "  puzzlescript_cpp test js-parity <generated-js-parity-data.json>\n"
         << "      Check saved replay cases generated from the original JavaScript test suite.\n"
@@ -2527,15 +2612,15 @@ void printRunHelp() {
 
 void printCompileHelp() {
     std::cout
-        << "Usage: puzzlescript_cpp compile game.txt [--diagnostics] [--emit-parser-state] [--emit-runtime-ir]\n\n"
+        << "Usage: puzzlescript_cpp compile game.txt [--diagnostics] [--emit-parser-state] [--emit-ir-json]\n\n"
         << "Runs the C++ PuzzleScript compiler parser. Use --diagnostics for JS-compatible\n"
-        << "diagnostic text, --emit-parser-state for parser JSON, and --emit-runtime-ir for\n"
+        << "diagnostic text, --emit-parser-state for parser JSON, and --emit-ir-json for\n"
         << "the lowered native runtime game JSON used to debug compiler parity before board\n"
         << "simulation.\n\n"
         << "Examples:\n"
         << "  puzzlescript_cpp compile game.txt --diagnostics\n"
         << "  puzzlescript_cpp compile game.txt --emit-parser-state\n"
-        << "  puzzlescript_cpp compile game.txt --emit-runtime-ir\n";
+        << "  puzzlescript_cpp compile game.txt --emit-ir-json\n";
 }
 
 void printTestHelp() {

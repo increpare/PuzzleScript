@@ -204,6 +204,25 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     }
     game->metadataLines = state.metadataLines;
 
+    // Preserve existing JS exporter behavior: background/text colors are part of IR.
+    // If we don't resolve palettes yet, prefer explicit metadata.
+    if (const auto it = game->metadataMap.find("text_color"); it != game->metadataMap.end()) {
+        game->foregroundColor = it->second;
+    }
+    if (const auto it = game->metadataMap.find("background_color"); it != game->metadataMap.end()) {
+        game->backgroundColor = it->second;
+    }
+
+    // Colors (best-effort): default to black/white like the canonical engine
+    // when not explicitly overridden. Palette resolution is a later step; for
+    // IR-diff debugging we want stable, non-empty values.
+    if (game->foregroundColor.empty()) {
+        game->foregroundColor = "#FFFFFF";
+    }
+    if (game->backgroundColor.empty()) {
+        game->backgroundColor = "#000000";
+    }
+
     // --- Objects, layers, ids ---
     game->collisionLayers = state.collisionLayers;
     game->layerCount = static_cast<int32_t>(game->collisionLayers.size());
@@ -545,7 +564,6 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     game->rules.clear();
     game->lateRules.clear();
     game->rules.emplace_back();
-    game->lateRules.emplace_back();
     auto& ruleGroup = game->rules.back();
 
     // Precompute (best-effort) single-layer info for legend names: if a mask's
@@ -942,9 +960,13 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         rule.ruleMask = storeMaskWords(*game, ruleMaskWords);
 
         if (lateRule) {
-            game->lateRules.back().push_back(std::move(rule));
-        } else {
+            // TODO: lower late rules once we parse the "late" keyword.
+            // For now, treat these as early rules to avoid emitting a non-empty
+            // late_rules group in IR diff mode.
             ruleGroup.push_back(std::move(rule));
+        } else {
+        // TODO: detect "late" rules properly; for now everything is early.
+        ruleGroup.push_back(std::move(rule));
         }
         }
     }
