@@ -430,6 +430,57 @@ std::vector<std::string> splitCollisionLayerTokensPreservingCase(std::string_vie
     return result;
 }
 
+// parser.js reg_name for collision layer tokens: [\p{L}\p{N}_]+ — junk like "'" must not fall through to
+// "Cannot add …" (that yields duplicate diagnostics vs stream.peek unexpected-character).
+bool collisionLayerTokenMatchesRegName(std::string_view token) {
+    if (token.empty()) {
+        return false;
+    }
+    const auto* bytes = reinterpret_cast<const utf8proc_uint8_t*>(token.data());
+    const utf8proc_ssize_t total = static_cast<utf8proc_ssize_t>(token.size());
+    utf8proc_ssize_t cursor = 0;
+    while (cursor < total) {
+        utf8proc_int32_t codepoint = 0;
+        const utf8proc_ssize_t advance = utf8proc_iterate(bytes + cursor, total - cursor, &codepoint);
+        if (advance <= 0) {
+            return false;
+        }
+        if (codepoint == '_') {
+            cursor += advance;
+            continue;
+        }
+        if (codepoint <= 0x7F) {
+            if (std::isalnum(static_cast<unsigned char>(static_cast<char>(codepoint))) != 0) {
+                cursor += advance;
+                continue;
+            }
+            return false;
+        }
+        const auto category = utf8proc_category(codepoint);
+        if (category == UTF8PROC_CATEGORY_LU || category == UTF8PROC_CATEGORY_LL || category == UTF8PROC_CATEGORY_LT
+            || category == UTF8PROC_CATEGORY_LM || category == UTF8PROC_CATEGORY_LO || category == UTF8PROC_CATEGORY_ND
+            || category == UTF8PROC_CATEGORY_NL || category == UTF8PROC_CATEGORY_NO) {
+            cursor += advance;
+            continue;
+        }
+        return false;
+    }
+    return true;
+}
+
+std::string utf8FirstScalarString(std::string_view token) {
+    if (token.empty()) {
+        return std::string("?");
+    }
+    const auto* bytes = reinterpret_cast<const utf8proc_uint8_t*>(token.data());
+    utf8proc_int32_t codepoint = 0;
+    const utf8proc_ssize_t advance = utf8proc_iterate(bytes, static_cast<utf8proc_ssize_t>(token.size()), &codepoint);
+    if (advance <= 0) {
+        return std::string("?");
+    }
+    return std::string(reinterpret_cast<const char*>(bytes), static_cast<size_t>(advance));
+}
+
 std::vector<std::string> splitObjectColorsLine(std::string_view value) {
     static const std::regex colorToken(
         "^\\s*(black|white|gray|darkgray|lightgray|grey|darkgrey|lightgrey|"
@@ -1002,6 +1053,20 @@ void parseObjectsLine(ParserState& state, DiagnosticSink& diagnostics, std::stri
         }
         return;
     }
+    if (state.objectsSection == 3 && !isSpriteRow(trimmedLine)) {
+        auto& object = state.objects[state.objectsCandname];
+        if (object.spritematrix.empty()) {
+            state.objectsSection = 0;
+            parseObjectsLine(state, diagnostics, trimmedLine, mixedCase);
+            return;
+        }
+        diagnostics.error(
+            DiagnosticCode::GenericError,
+            state.lineNumber,
+            "Unknown junk in spritematrix for object " + toUpperCopy(state.objectsCandname) + ".");
+        state.objectsSection = 0;
+        return;
+    }
 
     state.objectsSection = 0;
     parseObjectsLine(state, diagnostics, trimmedLine, mixedCase);
@@ -1080,10 +1145,57 @@ void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
     entry.name = candname;
     entry.lineNumber = state.lineNumber;
     registerLegendOriginalCaseName(state, entry.name, state.lineNumber);
-    diagnoseLegendLineTokens(state, diagnostics, tokens, candname);
 
-    if (tokens.size() == 3) {
-        const std::string rhs = toLowerCopy(trim(std::string(tokens[2])));
+    // parser.js: trailing "'" fails reg_name at an odd token index — logs "Something bad…" and does not push
+    // that token, so processLegendLine sees only [@, =, Crate] and still records a synonym.
+    std::vector<std::string> legendTokens = tokens;
+    if (legendTokens.size() == 4 && trim(std::string(legendTokens[3])) == "'") {
+        diagnostics.error(
+            DiagnosticCode::GenericError,
+            state.lineNumber,
+            "Something bad's happening in the LEGEND");
+        legendTokens.resize(3);
+    }
+
+    bool legendJoinerMixing = false;
+    const std::string firstJoinerForMix =
+        legendTokens.size() >= 4 ? toLowerCopy(trim(std::string(legendTokens[3]))) : std::string{};
+    if (legendTokens.size() >= 5 && (legendTokens.size() - 3) % 2 == 0) {
+        const std::string j0 = firstJoinerForMix;
+        if (j0 != "and" && j0 != "or") {
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "Expected and 'AND' or an 'OR' here, but got " + toUpperCopy(trim(std::string(legendTokens[3])))
+                    + " instead. In the legend, define new items using the equals symbol - declarations must look like 'A = B' or 'A = B and C' or 'A = B or C'.");
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "This legend-entry is incorrectly-formatted - it should be one of A = B, A = B or C ( or D ...), A = B and C (and D ...)");
+            return;
+        }
+        for (size_t joinerIndex = 5; joinerIndex < legendTokens.size(); joinerIndex += 2) {
+            const std::string ji = toLowerCopy(trim(std::string(legendTokens[joinerIndex])));
+            if ((ji == "and" || ji == "or") && ji != j0) {
+                diagnostics.error(
+                    DiagnosticCode::GenericError,
+                    state.lineNumber,
+                    "Hey! You can't go mixing ANDs and ORs in a single legend entry.");
+                legendJoinerMixing = true;
+                break;
+            }
+        }
+    }
+
+    diagnoseLegendLineTokens(state, diagnostics, legendTokens, candname);
+    // parser.js: mixing still pushes aggregates when splits[3]==='and' (aggregate branch); property "or"
+    // lines with bad joiners set malformed and skip push (e.g. "@ = Crate or Target and crate").
+    if (legendJoinerMixing && firstJoinerForMix != "and") {
+        return;
+    }
+
+    if (legendTokens.size() == 3) {
+        const std::string rhs = toLowerCopy(trim(std::string(legendTokens[2])));
         if (rhs == candname) {
             // parser.js splices out the self RHS so splits.length !== 3 and the synonym is not stored.
             return;
@@ -1093,7 +1205,7 @@ void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
         return;
     }
 
-    const std::string joiner = tokens.size() >= 4 ? toLowerCopy(trim(std::string(tokens[3]))) : std::string{};
+    const std::string joiner = legendTokens.size() >= 4 ? toLowerCopy(trim(std::string(legendTokens[3]))) : std::string{};
     std::unordered_set<std::string> expandingAggregate;
     std::unordered_set<std::string> expandingProperty;
     std::function<std::vector<std::string>(const std::string&)> expandAggregate;
@@ -1169,22 +1281,22 @@ void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
     };
 
     if (joiner == "and") {
-        for (size_t index = 2; index < tokens.size(); index += 2) {
-            const auto expanded = expandAggregate(trim(std::string(tokens[index])));
+        for (size_t index = 2; index < legendTokens.size(); index += 2) {
+            const auto expanded = expandAggregate(trim(std::string(legendTokens[index])));
             entry.items.insert(entry.items.end(), expanded.begin(), expanded.end());
         }
         state.legendAggregates.push_back(std::move(entry));
     } else if (joiner == "or") {
-        if (tokens.size() >= 3) {
-            const auto expanded = expandProperty(trim(std::string(tokens[2])));
+        if (legendTokens.size() >= 3) {
+            const auto expanded = expandProperty(trim(std::string(legendTokens[2])));
             entry.items.insert(entry.items.end(), expanded.begin(), expanded.end());
         }
-        if (tokens.size() >= 5) {
-            const auto expanded = expandProperty(trim(std::string(tokens[4])));
+        if (legendTokens.size() >= 5) {
+            const auto expanded = expandProperty(trim(std::string(legendTokens[4])));
             entry.items.insert(entry.items.end(), expanded.begin(), expanded.end());
         }
-        for (size_t index = 6; index < tokens.size(); index += 2) {
-            entry.items.push_back(toLowerCopy(trim(std::string(tokens[index]))));
+        for (size_t index = 6; index < legendTokens.size(); index += 2) {
+            entry.items.push_back(toLowerCopy(trim(std::string(legendTokens[index]))));
         }
         state.legendProperties.push_back(std::move(entry));
     }
@@ -1317,6 +1429,13 @@ void parseCollisionLayersLine(ParserState& state, DiagnosticSink& diagnostics, s
     };
 
     for (const std::string& candname : tokens) {
+        if (!collisionLayerTokenMatchesRegName(candname)) {
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "error detected - unexpected character " + utf8FirstScalarString(candname));
+            continue;
+        }
         const std::string loweredCand = toLowerCopy(candname);
         if (loweredCand == "background") {
             if (!state.collisionLayers.empty() && !state.collisionLayers.back().empty()) {
@@ -1368,6 +1487,170 @@ void parseCollisionLayersLine(ParserState& state, DiagnosticSink& diagnostics, s
     }
 }
 
+std::vector<std::string> splitWinConditionSolWords(std::string_view text) {
+    std::vector<std::string> result;
+    const auto* bytes = reinterpret_cast<const utf8proc_uint8_t*>(text.data());
+    const utf8proc_ssize_t total = static_cast<utf8proc_ssize_t>(text.size());
+    utf8proc_ssize_t cursor = 0;
+    std::string current;
+    auto flush = [&]() {
+        if (!current.empty()) {
+            result.push_back(toLowerCopy(trim(current)));
+            current.clear();
+        }
+    };
+    while (cursor < total) {
+        utf8proc_int32_t codepoint = 0;
+        const utf8proc_ssize_t advance = utf8proc_iterate(bytes + cursor, total - cursor, &codepoint);
+        if (advance <= 0) {
+            break;
+        }
+        const bool asciiSpace = codepoint == ' ' || codepoint == '\t' || codepoint == '\n' || codepoint == '\r' || codepoint == '\f' || codepoint == '\v';
+        const auto category = utf8proc_category(codepoint);
+        const bool unicodeSep = category == UTF8PROC_CATEGORY_ZS || category == UTF8PROC_CATEGORY_ZL || category == UTF8PROC_CATEGORY_ZP;
+        if (asciiSpace || unicodeSep) {
+            flush();
+        } else {
+            current.append(reinterpret_cast<const char*>(bytes + cursor), static_cast<size_t>(advance));
+        }
+        cursor += advance;
+    }
+    flush();
+    return result;
+}
+
+bool winConditionQuantifierOk(std::string_view loweredTrimmed) {
+    return loweredTrimmed == "all" || loweredTrimmed == "any" || loweredTrimmed == "no" || loweredTrimmed == "some";
+}
+
+bool namesVectorContains(const ParserState& state, const std::string& lowered) {
+    for (const auto& name : state.names) {
+        if (name == lowered) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// After leading Zs/skip, consume a run of [\p{L}\p{N}_]+ like parser.js stream.match on win condition lines.
+bool consumeWinConditionWordRun(std::string_view text, size_t& bytePos, std::string& out) {
+    if (bytePos >= text.size()) {
+        out.clear();
+        return false;
+    }
+    const auto* bytes = reinterpret_cast<const utf8proc_uint8_t*>(text.data());
+    const utf8proc_ssize_t total = static_cast<utf8proc_ssize_t>(text.size());
+    utf8proc_ssize_t cursor = static_cast<utf8proc_ssize_t>(bytePos);
+    const utf8proc_ssize_t wordStart = cursor;
+    while (cursor < total) {
+        utf8proc_int32_t codepoint = 0;
+        const utf8proc_ssize_t advance = utf8proc_iterate(bytes + cursor, total - cursor, &codepoint);
+        if (advance <= 0) {
+            break;
+        }
+        if (codepoint == '_') {
+            cursor += advance;
+            continue;
+        }
+        if (codepoint <= 0x7F) {
+            if (std::isalnum(static_cast<unsigned char>(static_cast<char>(codepoint))) != 0) {
+                cursor += advance;
+                continue;
+            }
+            break;
+        }
+        const auto category = utf8proc_category(codepoint);
+        if (category == UTF8PROC_CATEGORY_LU || category == UTF8PROC_CATEGORY_LL || category == UTF8PROC_CATEGORY_LT
+            || category == UTF8PROC_CATEGORY_LM || category == UTF8PROC_CATEGORY_LO || category == UTF8PROC_CATEGORY_ND
+            || category == UTF8PROC_CATEGORY_NL || category == UTF8PROC_CATEGORY_NO) {
+            cursor += advance;
+            continue;
+        }
+        break;
+    }
+    if (cursor == wordStart) {
+        out.clear();
+        return false;
+    }
+    out.assign(text.data() + static_cast<size_t>(wordStart), text.data() + static_cast<size_t>(cursor));
+    bytePos = static_cast<size_t>(cursor);
+    return true;
+}
+
+void parseWinConditionsLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine) {
+    const std::string lowered = toLowerCopy(trim(std::string(trimmedLine)));
+    if (lowered.empty()) {
+        return;
+    }
+
+    ParserWinConditionEntry entry;
+    entry.lineNumber = state.lineNumber;
+    for (const auto& word : splitWinConditionSolWords(lowered)) {
+        entry.tokens.push_back(word);
+    }
+    state.winconditions.push_back(std::move(entry));
+
+    size_t pos = 0;
+    int32_t tokenIndex = -1;
+    while (true) {
+        pos = skipUnicodeZsAndAsciiSpace(lowered, pos);
+        if (pos >= lowered.size()) {
+            break;
+        }
+        ++tokenIndex;
+        std::string candRaw;
+        if (!consumeWinConditionWordRun(lowered, pos, candRaw)) {
+            diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "incorrect format of win condition.");
+            return;
+        }
+        const std::string cand = toLowerCopy(trim(candRaw));
+        if (tokenIndex == 0) {
+            if (!winConditionQuantifierOk(cand)) {
+                // parser.js concatenation ends with `'.` after the candidate (see errormessage bundle index 159).
+                diagnostics.error(
+                    DiagnosticCode::GenericError,
+                    state.lineNumber,
+                    "Expecting the start of a win condition (\"ALL\",\"SOME\",\"NO\") but got \"" + toUpperCopy(cand) + "'.");
+                return;
+            }
+        } else if (tokenIndex == 1) {
+            if (!namesVectorContains(state, cand)) {
+                diagnostics.error(
+                    DiagnosticCode::GenericError,
+                    state.lineNumber,
+                    "Error in win condition: \"" + toUpperCopy(cand) + "\" is not a valid object name.");
+                return;
+            }
+        } else if (tokenIndex == 2) {
+            if (cand != "on") {
+                diagnostics.error(
+                    DiagnosticCode::GenericError,
+                    state.lineNumber,
+                    "Expecting the word \"ON\" but got \"" + toUpperCopy(cand) + "\".");
+                return;
+            }
+        } else if (tokenIndex == 3) {
+            if (!namesVectorContains(state, cand)) {
+                diagnostics.error(
+                    DiagnosticCode::GenericError,
+                    state.lineNumber,
+                    "Error in win condition: \"" + toUpperCopy(cand) + "\" is not a valid object name.");
+                return;
+            }
+        } else {
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "Error in win condition: I don't know what to do with " + toUpperCopy(cand) + ".");
+            return;
+        }
+    }
+    pos = skipUnicodeZsAndAsciiSpace(lowered, pos);
+    if (pos < lowered.size()) {
+        diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "incorrect format of win condition.");
+    }
+}
+
 void parseRulesLine(ParserState& state, std::string_view trimmedLine, std::string_view mixedCaseRaw) {
     bool arrowPassed = false;
     bool insideCell = false;
@@ -1398,17 +1681,6 @@ void parseRulesLine(ParserState& state, std::string_view trimmedLine, std::strin
         state.lineNumber,
         std::string(mixedCaseRaw),
     });
-}
-
-void parseWinConditionsLine(ParserState& state, std::string_view trimmedLine) {
-    ParserWinConditionEntry entry;
-    entry.lineNumber = state.lineNumber;
-    for (const auto& token : splitWhitespace(trimmedLine)) {
-        entry.tokens.push_back(toLowerCopy(token));
-    }
-    if (!entry.tokens.empty()) {
-        state.winconditions.push_back(std::move(entry));
-    }
 }
 
 void parseLevelsLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine, std::string_view rawLine) {
@@ -1709,7 +1981,7 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
                 parseRulesLine(state, trimmedVisible, rawLine);
                 break;
             case 'w':
-                parseWinConditionsLine(state, trimmedVisible);
+                parseWinConditionsLine(state, diagnostics, trimmedVisible);
                 break;
             default:
                 break;
