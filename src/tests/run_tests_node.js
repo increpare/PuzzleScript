@@ -155,8 +155,14 @@ let failures = [];
 const args = process.argv.slice(2);
 const verbose = args.includes('--verbose') || args.includes('-v');
 const simOnly = args.includes('--sim-only');
+const compilationOnly = args.includes('--compilation-only');
 const breakdown = args.includes('--breakdown');
 const filterArg = args.find(a => !a.startsWith('-'));
+
+if (simOnly && compilationOnly) {
+    console.error('Use only one of --sim-only or --compilation-only');
+    process.exit(1);
+}
 
 const _origLog = console.log;
 if (!verbose) {
@@ -237,22 +243,24 @@ function runOnePass() {
     const passStart = performance.now();
     const simStart = performance.now();
 
-    for (let i = 0; i < simTotal; i++) {
-        const name = global.testdata[i][0];
-        if (filterArg && !name.toLowerCase().includes(filterArg.toLowerCase())) continue;
-        try {
-            if (global.runTest(global.testdata[i][1], name)) {
-                p++;
-            } else {
-                f++;
-                fails.push(`FAIL: ${name}`);
+    if (!compilationOnly) {
+        for (let i = 0; i < simTotal; i++) {
+            const name = global.testdata[i][0];
+            if (filterArg && !name.toLowerCase().includes(filterArg.toLowerCase())) continue;
+            try {
+                if (global.runTest(global.testdata[i][1], name)) {
+                    p++;
+                } else {
+                    f++;
+                    fails.push(`FAIL: ${name}`);
+                }
+            } catch (err) {
+                e++;
+                fails.push(`ERROR: ${name}: ${err.message}`);
             }
-        } catch (err) {
-            e++;
-            fails.push(`ERROR: ${name}: ${err.message}`);
         }
     }
-    const simMs = performance.now() - simStart;
+    const simMs = compilationOnly ? 0 : performance.now() - simStart;
 
     let errMs = 0;
     if (!simOnly) {
@@ -287,7 +295,14 @@ function runOnePass() {
 }
 
 const simTotal = global.testdata.length;
-_origLog(`Running ${simTotal} game simulation tests...`);
+const errTotal = global.errormessage_testdata.length;
+if (compilationOnly) {
+    _origLog(`Running ${errTotal} compilation error tests...`);
+} else if (simOnly) {
+    _origLog(`Running ${simTotal} game simulation tests...`);
+} else {
+    _origLog(`Running ${simTotal} game simulation tests and ${errTotal} compilation error tests...`);
+}
 
 const result = runOnePass();
 passed = result.passed;

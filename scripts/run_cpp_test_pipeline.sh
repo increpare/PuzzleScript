@@ -3,7 +3,7 @@
 # parser-diagnostics corpus diffs (testdata.js and errormessage_testdata.js).
 #
 # Prerequisites: repo-root CMake build with `ps_cli` (e.g. `make build-native`
-# or `cmake --build build/native --target ps_cli`).
+# or `cmake --build build --target ps_cli`; default BUILD_DIR matches the Makefile).
 #
 # Usage:
 #   scripts/run_cpp_test_pipeline.sh
@@ -18,7 +18,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-BUILD_DIR="${BUILD_DIR:-build/native}"
+BUILD_DIR="${BUILD_DIR:-build}"
 export BUILD_DIR
 
 resolve_ps_cli() {
@@ -27,13 +27,16 @@ resolve_ps_cli() {
 		return
 	fi
 	local cand
-	for cand in "$ROOT/$BUILD_DIR/ps_cli" "$ROOT/$BUILD_DIR/native/ps_cli"; do
+	for cand in \
+		"$ROOT/$BUILD_DIR/ps_cli" \
+		"$ROOT/$BUILD_DIR/native/ps_cli" \
+		"$ROOT/$BUILD_DIR/native/native/ps_cli"; do
 		if [[ -x "$cand" ]]; then
 			echo "$cand"
 			return
 		fi
 	done
-	echo "error: no executable ps_cli found (tried \$PS_CLI, $ROOT/$BUILD_DIR/ps_cli, $ROOT/$BUILD_DIR/native/ps_cli)" >&2
+	echo "error: no executable ps_cli found (tried \$PS_CLI, $ROOT/$BUILD_DIR/ps_cli, $ROOT/$BUILD_DIR/native/ps_cli, $ROOT/$BUILD_DIR/native/native/ps_cli)" >&2
 	echo "Build first, e.g.: cmake -S . -B $BUILD_DIR && cmake --build $BUILD_DIR --target ps_cli" >&2
 	exit 1
 }
