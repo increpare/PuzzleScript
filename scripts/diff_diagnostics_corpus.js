@@ -19,7 +19,7 @@ function parseArgs(argv) {
     const result = {
         limit: 0,
         start: 0,
-        cliPath: path.resolve('build/native/ps_cli'),
+        cliPath: path.resolve('build/native/puzzlescript_cpp'),
         keepTemps: false,
         corpus: 'testdata',
     };
@@ -75,9 +75,9 @@ function main() {
 
     const wallStart = Date.now();
     process.stderr.write(
-        'diag_corpus (legacy): per fixture spawns Node export_ir_json + ps_cli compile-source + Node compare. ' +
+        'diag_corpus (legacy): per row spawns Node export_ir_json + puzzlescript_cpp compile + Node compare. ' +
             'Prefer: node scripts/build_parser_corpus_bundle.js errormessage > build/…bundle.ndjson && ' +
-            'ps_cli diagnostics-parity build/…bundle.ndjson (one Node pass to bake references, then pure C++).\n',
+            'puzzlescript_cpp diagnostics-parity build/…bundle.ndjson (one Node pass to bake references, then pure C++).\n',
     );
 
     let checked = 0;
@@ -97,7 +97,7 @@ function main() {
             fs.writeFileSync(sourcePath, source, 'utf8');
 
             const referenceRun = run('node', [
-                'src/tests/export_ir_json.js',
+                'src/tests/js_oracle/export_ir_json.js',
                 sourcePath,
                 referenceNdjsonPath,
                 '--snapshot-phase',
@@ -111,7 +111,7 @@ function main() {
                 continue;
             }
 
-            const nativeRun = run(options.cliPath, ['compile-source', sourcePath, '--emit-diagnostics'], {
+            const nativeRun = run(options.cliPath, ['compile', sourcePath, '--diagnostics'], {
                 input: '',
             });
             if (nativeRun.status !== 0) {

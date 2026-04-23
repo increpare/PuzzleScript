@@ -16,19 +16,19 @@ function runChecked(command, args, label) {
 }
 
 function main(argv) {
-    const [exporterScript, psCliPath, outputDir, ...psCliArgs] = argv.slice(2);
-    if (!exporterScript || !psCliPath || !outputDir) {
-        throw new Error('Usage: run_fixture_check.js <exporter-script> <ps-cli> <output-dir> [ps-cli args...]');
+    const [exporterScript, cliPath, outputDir, ...cliArgs] = argv.slice(2);
+    if (!exporterScript || !cliPath || !outputDir) {
+        throw new Error('Usage: run_fixture_check.js <exporter-script> <puzzlescript_cpp> <output-dir> [puzzlescript_cpp args...]');
     }
 
     fs.rmSync(outputDir, { recursive: true, force: true });
     fs.mkdirSync(outputDir, { recursive: true });
 
-    runChecked(process.execPath, [path.resolve(exporterScript), path.resolve(outputDir)], 'fixture export');
+    runChecked(process.execPath, [path.resolve(exporterScript), path.resolve(outputDir)], 'JS parity data export');
     runChecked(
-        path.resolve(psCliPath),
-        ['test-fixtures', path.join(path.resolve(outputDir), 'fixtures.json'), ...psCliArgs],
-        'fixture validation'
+        path.resolve(cliPath),
+        ['test-js-parity-data', path.join(path.resolve(outputDir), 'fixtures.json'), ...cliArgs],
+        'JS parity data validation'
     );
 }
 

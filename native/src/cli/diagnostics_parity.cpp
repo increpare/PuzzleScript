@@ -1,4 +1,4 @@
-#include "diagnostics_parity.hpp"
+#include "cli/diagnostics_parity.hpp"
 
 #include <cctype>
 #include <filesystem>
@@ -11,8 +11,8 @@
 #include <string>
 #include <vector>
 
-#include "json.hpp"
-#include "puzzlescript/frontend.h"
+#include "runtime/json.hpp"
+#include "puzzlescript/compiler.h"
 
 namespace {
 
@@ -142,9 +142,9 @@ int diagnosticsParityMain(const std::filesystem::path& bundleNdjsonPath) {
             expected.push_back(item.asString());
         }
 
-        std::unique_ptr<ps_frontend_result, decltype(&ps_frontend_result_free)> result(
-            ps_frontend_parse(source.data(), source.size()),
-            ps_frontend_result_free
+        std::unique_ptr<ps_compiler_result, decltype(&ps_compiler_result_free)> result(
+            ps_compiler_parse_source(source.data(), source.size()),
+            ps_compiler_result_free
         );
         if (!result) {
             std::cerr << "diag_corpus index=" << fixtureIndex << " outcome=native_parse_null name=" << name << "\n";
@@ -154,9 +154,9 @@ int diagnosticsParityMain(const std::filesystem::path& bundleNdjsonPath) {
         }
 
         std::vector<std::string> actual;
-        const size_t diagnosticCount = ps_frontend_result_diagnostic_count(result.get());
+        const size_t diagnosticCount = ps_compiler_result_diagnostic_count(result.get());
         for (size_t diagnosticIndex = 0; diagnosticIndex < diagnosticCount; ++diagnosticIndex) {
-            const ps_diagnostic* diagnostic = ps_frontend_result_diagnostic(result.get(), diagnosticIndex);
+            const ps_diagnostic* diagnostic = ps_compiler_result_diagnostic(result.get(), diagnosticIndex);
             if (diagnostic == nullptr || diagnostic->message == nullptr) {
                 continue;
             }
@@ -177,7 +177,7 @@ int diagnosticsParityMain(const std::filesystem::path& bundleNdjsonPath) {
                 std::cerr << "diagnostic_mismatch index=" << index << "\n";
                 std::cerr << "--- reference (JS parser export)\n";
                 std::cerr << expected[index] << "\n";
-                std::cerr << "--- native (C++ frontend)\n";
+                std::cerr << "--- native (C++ compiler)\n";
                 std::cerr << actual[index] << "\n";
                 mismatch = true;
                 break;

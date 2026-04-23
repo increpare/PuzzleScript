@@ -31,7 +31,7 @@ void drawChecker(SDL_Renderer* renderer, int tileX, int tileY, int tileSize) {
 
 } // namespace
 
-int ps_cli_run_player_for_game(ps_game* game) {
+int puzzlescript_cpp_run_player_for_game(ps_game* game) {
     ps_error* error = nullptr;
     ps_session* session = nullptr;
     if (!ps_session_create(game, &session, &error)) {
@@ -100,7 +100,7 @@ int ps_cli_run_player_for_game(ps_game* game) {
     return 0;
 }
 
-int ps_cli_run_player(const std::string& irPath) {
+int puzzlescript_cpp_run_player_for_ir(const std::string& irPath) {
     const std::string json = readFile(irPath);
     ps_game* game = nullptr;
     ps_error* error = nullptr;
@@ -110,7 +110,7 @@ int ps_cli_run_player(const std::string& irPath) {
         return 1;
     }
 
-    const int result = ps_cli_run_player_for_game(game);
+    const int result = puzzlescript_cpp_run_player_for_game(game);
     ps_free_game(game);
     return result;
 }

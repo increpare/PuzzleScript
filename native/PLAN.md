@@ -26,7 +26,7 @@ Phase 1 is hybrid-first:
 - Export normalized simulation and compilation fixtures from the existing JS test corpus.
 - Export per-input execution traces from JS, including `again` substeps.
 - Load the exported IR in native code and reproduce prepared-session state exactly.
-- Add CLI commands for `run`, `bench`, `test-fixtures`, `diff-trace`, and `diff-trace-source`.
+- Add CLI commands for `run`, `bench`, JS parity data checks, and trace diffing.
 
 ### M2. Scalar Native Runtime
 

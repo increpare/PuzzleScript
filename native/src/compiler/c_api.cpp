@@ -1,12 +1,12 @@
 #include "compiler/parser.hpp"
-#include "puzzlescript/frontend.h"
+#include "puzzlescript/compiler.h"
 
 #include <cstring>
 #include <memory>
 #include <string>
 #include <vector>
 
-struct ps_frontend_result {
+struct ps_compiler_result {
     puzzlescript::compiler::ParserState parserState;
     std::vector<puzzlescript::compiler::Diagnostic> diagnostics;
     std::vector<ps_diagnostic> exportedDiagnostics;
@@ -28,8 +28,8 @@ ps_diagnostic_severity toCSeverity(puzzlescript::compiler::Severity severity) {
 
 } // namespace
 
-ps_frontend_result* ps_frontend_parse(const char* source_utf8, size_t source_size) {
-    auto* result = new ps_frontend_result();
+ps_compiler_result* ps_compiler_parse_source(const char* source_utf8, size_t source_size) {
+    auto* result = new ps_compiler_result();
     puzzlescript::compiler::DiagnosticSink sink;
     result->parserState = puzzlescript::compiler::parseSource(
         source_utf8 == nullptr ? std::string_view{} : std::string_view(source_utf8, source_size),
@@ -51,19 +51,19 @@ ps_frontend_result* ps_frontend_parse(const char* source_utf8, size_t source_siz
     return result;
 }
 
-size_t ps_frontend_result_diagnostic_count(const ps_frontend_result* result) {
+size_t ps_compiler_result_diagnostic_count(const ps_compiler_result* result) {
     return result == nullptr ? 0 : result->exportedDiagnostics.size();
 }
 
-const ps_diagnostic* ps_frontend_result_diagnostic(const ps_frontend_result* result, size_t index) {
+const ps_diagnostic* ps_compiler_result_diagnostic(const ps_compiler_result* result, size_t index) {
     if (result == nullptr || index >= result->exportedDiagnostics.size()) {
         return nullptr;
     }
     return &result->exportedDiagnostics[index];
 }
 
-size_t ps_frontend_result_parser_state_json(
-    const ps_frontend_result* result,
+size_t ps_compiler_result_parser_state_json(
+    const ps_compiler_result* result,
     char* out_buffer,
     size_t out_buffer_capacity
 ) {
@@ -79,6 +79,6 @@ size_t ps_frontend_result_parser_state_json(
     return required;
 }
 
-void ps_frontend_result_free(ps_frontend_result* result) {
+void ps_compiler_result_free(ps_compiler_result* result) {
     delete result;
 }

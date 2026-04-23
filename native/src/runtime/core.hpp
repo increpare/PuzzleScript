@@ -9,10 +9,10 @@
 #include <string_view>
 #include <vector>
 
-#include "hash.hpp"
-#include "json.hpp"
+#include "runtime/hash.hpp"
+#include "runtime/json.hpp"
 #include "puzzlescript/puzzlescript.h"
-#include "simd.hpp"
+#include "runtime/simd.hpp"
 
 namespace puzzlescript {
 

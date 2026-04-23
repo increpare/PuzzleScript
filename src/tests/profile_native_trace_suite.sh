@@ -8,20 +8,20 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
 
 OUT="${PROFILE_STATS_OUT:-$ROOT/profile_stats.txt}"
-PS_CLI="${PS_CLI:-$ROOT/build/native/ps_cli}"
-MANIFEST="${PROFILE_MANIFEST:-$ROOT/build/native/coverage-fixtures/fixtures.json}"
+PUZZLESCRIPT_CPP="${PUZZLESCRIPT_CPP:-$ROOT/build/native/puzzlescript_cpp}"
+MANIFEST="${PROFILE_MANIFEST:-$ROOT/build/js-parity-data/fixtures.json}"
 ART="$ROOT/build/native/profile_last"
 EXTRA_CLI_ARGS="${EXTRA_CLI_ARGS:-}"
 
 mkdir -p "$ART"
 
-if [[ ! -x "$PS_CLI" ]]; then
-  echo "Missing executable: $PS_CLI (build native first)" >&2
+if [[ ! -x "$PUZZLESCRIPT_CPP" ]]; then
+  echo "Missing executable: $PUZZLESCRIPT_CPP (build native first)" >&2
   exit 1
 fi
 
 if [[ ! -f "$MANIFEST" ]]; then
-  echo "Missing manifest: $MANIFEST (run: make coverage-fixtures)" >&2
+  echo "Missing manifest: $MANIFEST (run: make js-parity-data)" >&2
   exit 1
 fi
 
@@ -37,11 +37,11 @@ DISCLAIMER
   git rev-parse HEAD 2>/dev/null || true
   echo
   echo "===== Binaries ====="
-  file "$PS_CLI"
-  ls -la "$PS_CLI"
+  file "$PUZZLESCRIPT_CPP"
+  ls -la "$PUZZLESCRIPT_CPP"
   echo
   echo "===== sweep command ====="
-  echo "$PS_CLI check-trace-sweep \"$MANIFEST\" --profile-timers $EXTRA_CLI_ARGS"
+  echo "$PUZZLESCRIPT_CPP check-js-parity-data \"$MANIFEST\" --profile-timers $EXTRA_CLI_ARGS"
   echo
 } | tee "$OUT"
 
@@ -58,13 +58,13 @@ echo "----- Pass 1: wall clock + getrusage (no sample overhead) -----" | tee -a 
 PASS1_STDOUT="$ART/pass1.stdout"
 PASS1_STDERR="$ART/pass1.stderr"
 set +e
-/usr/bin/time -lp "$PS_CLI" check-trace-sweep "$MANIFEST" --profile-timers $EXTRA_CLI_ARGS \
+/usr/bin/time -lp "$PUZZLESCRIPT_CPP" check-js-parity-data "$MANIFEST" --profile-timers $EXTRA_CLI_ARGS \
   >"$PASS1_STDOUT" 2>"$PASS1_STDERR"
 PASS1_STATUS=$?
 set -e
 append_section "Pass 1 stdout (tail: summary line)" <(tail -5 "$PASS1_STDOUT")
 append_section "Pass 1 stderr (native_trace_suite_profile + tail of trace_case)" \
-  <({ grep -E '^(native_trace_suite_profile|simulation_fixture_count=)' "$PASS1_STDERR" || true; echo '--- last 15 stderr lines ---'; tail -15 "$PASS1_STDERR"; })
+  <({ grep -E '^(native_trace_suite_profile|test_cases_checked=)' "$PASS1_STDERR" || true; echo '--- last 15 stderr lines ---'; tail -15 "$PASS1_STDERR"; })
 {
   echo "pass1_exit_status=$PASS1_STATUS"
 } | tee -a "$OUT"
@@ -72,12 +72,12 @@ append_section "Pass 1 stderr (native_trace_suite_profile + tail of trace_case)"
 echo "----- Pass 2: macOS sample(1) Time Profiler-style stacks (same workload) -----" | tee -a "$OUT"
 PASS2_STDOUT="$ART/pass2.stdout"
 PASS2_STDERR="$ART/pass2.stderr"
-SAMPLE_FILE="$ART/sample_ps_cli.txt"
+SAMPLE_FILE="$ART/sample_puzzlescript_cpp.txt"
 
 rm -f "$PASS2_STDOUT" "$PASS2_STDERR" "$SAMPLE_FILE"
 
 set +m
-"$PS_CLI" check-trace-sweep "$MANIFEST" --profile-timers $EXTRA_CLI_ARGS \
+"$PUZZLESCRIPT_CPP" check-js-parity-data "$MANIFEST" --profile-timers $EXTRA_CLI_ARGS \
   >"$PASS2_STDOUT" 2>"$PASS2_STDERR" &
 CPID=$!
 
@@ -95,7 +95,7 @@ set -e
 
 append_section "Pass 2 stdout (tail)" <(tail -5 "$PASS2_STDOUT")
 append_section "Pass 2 stderr (profile line + tail)" \
-  <({ grep -E '^(native_trace_suite_profile|simulation_fixture_count=)' "$PASS2_STDERR" || true; echo '--- last 10 stderr lines ---'; tail -10 "$PASS2_STDERR"; })
+  <({ grep -E '^(native_trace_suite_profile|test_cases_checked=)' "$PASS2_STDERR" || true; echo '--- last 10 stderr lines ---'; tail -10 "$PASS2_STDERR"; })
 
 {
   echo "pass2_exit_status=$PASS2_STATUS"
@@ -117,7 +117,7 @@ append_section "Pass 2 stderr (profile line + tail)" \
   echo
   echo "Open the sample file for full collapsed trees. For Instruments UI, run:"
   echo "  xcrun xctrace record --template 'Time Profiler' --quiet --launch --output $ART/time_profiler.trace -- \\"
-  echo "    \"$PS_CLI\" check-trace-sweep \"$MANIFEST\" --profile-timers $EXTRA_CLI_ARGS"
+  echo "    \"$PUZZLESCRIPT_CPP\" check-js-parity-data \"$MANIFEST\" --profile-timers $EXTRA_CLI_ARGS"
 } >>"$OUT"
 
-echo "Wrote $OUT (see also $ART/ for full stderr/stdout and sample_ps_cli.txt)" | tee -a "$OUT"
+echo "Wrote $OUT (see also $ART/ for full stderr/stdout and sample_puzzlescript_cpp.txt)" | tee -a "$OUT"

@@ -1,4 +1,4 @@
-#include "hash.hpp"
+#include "runtime/hash.hpp"
 
 namespace puzzlescript {
 

@@ -23,7 +23,7 @@ function parseArgs(argv) {
         corpus: 'all',
         limit: 0,
         start: 0,
-        cliPath: path.resolve('build/native/ps_cli'),
+        cliPath: path.resolve('build/native/puzzlescript_cpp'),
         keepTemps: false,
     };
     const args = argv.slice(2);
@@ -96,7 +96,7 @@ function diffParserStateCorpusOnce(options, corpusName) {
 
             fs.writeFileSync(sourcePath, source, 'utf8');
 
-            const jsRun = run('node', ['src/tests/export_ir_json.js', sourcePath, jsPath, '--snapshot-phase', 'parser']);
+            const jsRun = run('node', ['src/tests/js_oracle/export_ir_json.js', sourcePath, jsPath, '--snapshot-phase', 'parser']);
             if (jsRun.status !== 0) {
                 ++failed;
                 ++checked;
@@ -105,7 +105,7 @@ function diffParserStateCorpusOnce(options, corpusName) {
                 continue;
             }
 
-            const cppRun = run(options.cliPath, ['compile-source', sourcePath, '--emit-parser-state']);
+            const cppRun = run(options.cliPath, ['compile', sourcePath, '--emit-parser-state']);
             if (cppRun.status !== 0) {
                 ++failed;
                 ++checked;

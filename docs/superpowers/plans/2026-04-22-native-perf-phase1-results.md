@@ -5,7 +5,7 @@
 
 ## Summary
 
-Phase 1 reduced the native trace-replay sweep (`ps_cli check-trace-sweep` over 469 fixtures) by an order of magnitude and cleared every phase-1 gate by a wide margin. All 469 fixtures pass; no engine semantics changed.
+Phase 1 reduced the native trace-replay sweep (`puzzlescript_cpp check-js-parity-data` over 469 fixtures) by an order of magnitude and cleared every phase-1 gate by a wide margin. All 469 fixtures pass; no engine semantics changed.
 
 | Metric                    | Phase-1 gate | Original  | Final (median of 5) | Delta     |
 |---------------------------|--------------|-----------|---------------------|-----------|

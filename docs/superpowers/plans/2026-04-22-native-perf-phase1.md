@@ -76,19 +76,19 @@ set -eu
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-PS_CLI="${PS_CLI:-$ROOT/build/native/native/ps_cli}"
+PUZZLESCRIPT_CPP="${PUZZLESCRIPT_CPP:-$ROOT/build/native/native/puzzlescript_cpp}"
 MANIFEST="${PROFILE_MANIFEST:-$ROOT/build/native/coverage-fixtures/fixtures.json}"
 BASELINE="$ROOT/perf_baseline.json"
 RUNS="${PERF_RUNS:-5}"
 
-if [[ ! -x "$PS_CLI" ]]; then echo "missing $PS_CLI — build native first" >&2; exit 2; fi
+if [[ ! -x "$PUZZLESCRIPT_CPP" ]]; then echo "missing $PUZZLESCRIPT_CPP — build native first" >&2; exit 2; fi
 if [[ ! -f "$MANIFEST" ]]; then echo "missing $MANIFEST — run: make coverage-fixtures" >&2; exit 2; fi
 
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
 for i in $(seq 1 "$RUNS"); do
-  "$PS_CLI" check-trace-sweep "$MANIFEST" --profile-timers >"$TMP/run$i.stdout" 2>"$TMP/run$i.stderr"
+  "$PUZZLESCRIPT_CPP" check-js-parity-data "$MANIFEST" --profile-timers >"$TMP/run$i.stdout" 2>"$TMP/run$i.stderr"
   awk -f "$ROOT/scripts/perf_extract.awk" "$TMP/run$i.stderr" > "$TMP/run$i.json"
 done
 

@@ -3,7 +3,7 @@
 
 /**
  * Compare two diagnostic stream files (one JSON-string per line, UTF-8)
- * after canonicalization per docs/superpowers/specs/2026-04-22-cpp-frontend-design.md §5.3.
+ * after canonicalization per docs/superpowers/specs/2026-04-22-cpp-compiler-design.md §5.3.
  */
 
 const fs = require('fs');
@@ -50,7 +50,7 @@ function main() {
             'Usage: node scripts/compare_parser_phase_diagnostics.js <reference.ndjson> <native.ndjson>',
         );
         console.error(
-            '(reference = parser-diagnostics from export_ir_json.js; native = ps_cli compile-source --emit-diagnostics)',
+            '(reference = parser-diagnostics from JS oracle export_ir_json.js; native = puzzlescript_cpp compile --diagnostics)',
         );
         process.exit(2);
     }
@@ -67,7 +67,7 @@ function main() {
             console.error(`diagnostic_mismatch index=${i}`);
             console.error('--- reference (JS parser export)');
             console.error(referenceRows[i]);
-            console.error('--- native (C++ frontend)');
+            console.error('--- native (C++ compiler)');
             console.error(nativeRows[i]);
             process.exit(1);
         }

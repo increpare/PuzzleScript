@@ -1,4 +1,4 @@
-# C++ PuzzleScript frontend (parser + compiler)
+# C++ PuzzleScript compiler (parser + compiler)
 
 Status: design approved, pending per-phase implementation plans.
 Date: 2026-04-22.
@@ -8,11 +8,11 @@ Supersedes: the "port compilation to C++" follow-on tracked in `2026-04-22-nativ
 
 ### Primary goal
 
-Eliminate the node.js dependency from the native runtime's compilation path. `ps_cli` must be able to accept a puzzlescript source file (current extension: `.txt`) and produce an in-memory `puzzlescript::Game` ready for the existing runtime — with **no subprocess, no intermediate `ir.json` on disk, no node involvement of any kind.**
+Eliminate the node.js dependency from the native runtime's compilation path. `puzzlescript_cpp` must be able to accept a puzzlescript source file (current extension: `.txt`) and produce an in-memory `puzzlescript::Game` ready for the existing runtime — with **no subprocess, no intermediate `ir.json` on disk, no node involvement of any kind.**
 
 ### Secondary goal
 
-Ship the parser + compiler as a reusable C++ frontend library (`libpuzzlescript-frontend`) behind a clean C API, so that future tooling (LSP server, VSCode extension shipping a native binary, TextMate grammar reference, GitHub Linguist submission) is a feasible follow-on without another rewrite.
+Ship the parser + compiler as a reusable C++ compiler library (`libpuzzlescript-compiler`) behind a clean C API, so that future tooling (LSP server, VSCode extension shipping a native binary, TextMate grammar reference, GitHub Linguist submission) is a feasible follow-on without another rewrite.
 
 ### Fidelity bar
 
@@ -24,16 +24,16 @@ Ship the parser + compiler as a reusable C++ frontend library (`libpuzzlescript-
 ### Non-goals
 
 - **Porting the browser editor's parser.** The JS parser in `src/js/parser.js` doubles as a CodeMirror mode and stays that way forever. The browser editor keeps its JS parser.
-- **WASM.** Not a target, not a concern. The C++ frontend is a native library only. If someone later wants to run it in a browser they can port it themselves, but we don't shape the design around that possibility.
+- **WASM.** Not a target, not a concern. The C++ compiler is a native library only. If someone later wants to run it in a browser they can port it themselves, but we don't shape the design around that possibility.
 - **Making compilation dramatically faster.** Nice if it happens, not a goal. See §7.
-- **Changing the runtime, the `Game` struct layout, or any observable engine semantics.** The C++ frontend is a new producer of the existing `Game` type; consumers (the engine core, `cli_main.cpp`) are untouched.
-- **Adopting the C++ frontend in the browser.** See "non-goals: browser editor" above. We intentionally do not support this use case.
+- **Changing the runtime, the `Game` struct layout, or any observable engine semantics.** The C++ compiler is a new producer of the existing `Game` type; consumers (the engine core, `cli_main.cpp`) are untouched.
+- **Adopting the C++ compiler in the browser.** See "non-goals: browser editor" above. We intentionally do not support this use case.
 
 ### In scope
 
-- New library in `native/src/frontend/` producing `puzzlescript::Game`.
-- New public header `native/include/puzzlescript/frontend.h` exposing a C API.
-- New `ps_cli` subcommand(s) to drive compilation from source.
+- New library in `native/src/compiler/` producing `puzzlescript::Game`.
+- New public header `native/include/puzzlescript/compiler.h` exposing a C API.
+- New `puzzlescript_cpp` subcommand(s) to drive compilation from source.
 - Validation harness (differential testing against the JS reference).
 - One-time instrumentation of the JS compiler to emit phase snapshots for debugging.
 
@@ -78,49 +78,49 @@ This structure is what makes an LSP server feasible later: LSP consumers want st
 
 ### 2.3 Public C API
 
-`native/include/puzzlescript/frontend.h` exposes:
+`native/include/puzzlescript/compiler.h` exposes:
 
 ```c
-typedef struct ps_frontend_result ps_frontend_result;
+typedef struct ps_compiler_result ps_compiler_result;
 
-ps_frontend_result* ps_frontend_compile_source(const char* source, size_t source_len);
-ps_game*            ps_frontend_result_game(const ps_frontend_result*);  // null on fatal error
-size_t              ps_frontend_result_diagnostic_count(const ps_frontend_result*);
-const ps_diagnostic* ps_frontend_result_diagnostic(const ps_frontend_result*, size_t index);
-void                ps_frontend_result_free(ps_frontend_result*);
+ps_compiler_result* ps_compiler_compile_source(const char* source, size_t source_len);
+ps_game*            ps_compiler_result_game(const ps_compiler_result*);  // null on fatal error
+size_t              ps_compiler_result_diagnostic_count(const ps_compiler_result*);
+const ps_diagnostic* ps_compiler_result_diagnostic(const ps_compiler_result*, size_t index);
+void                ps_compiler_result_free(ps_compiler_result*);
 ```
 
 The C API hides C++ types entirely. The result owns its `ps_game` and diagnostics until freed. This shape keeps future LSP/CLI consumers unblocked.
 
 ### 2.4 Library and target layout
 
-- New CMake target `puzzlescript-frontend` (static library). Depends on nothing outside `native/` — in particular, no simdjson dependency (simdjson stays scoped to `ir.json` loading in `cli_main.cpp`).
-- `ps_cli` links `puzzlescript-frontend` and exposes new subcommands.
-- The existing `puzzlescript-core` runtime library is unchanged and unaware of the frontend.
+- New CMake target `puzzlescript-compiler` (static library). Depends on nothing outside `native/` — in particular, no simdjson dependency (simdjson stays scoped to `ir.json` loading in `cli_main.cpp`).
+- `puzzlescript_cpp` links `puzzlescript-compiler` and exposes new subcommands.
+- The existing `puzzlescript-core` runtime library is unchanged and unaware of the compiler.
 
 ## 3. Data types
 
-### 3.1 `ParserState` (frontend/types/parser_state.hpp)
+### 3.1 `ParserState` (compiler/types/parser_state.hpp)
 
 Captures what a CodeMirror-style tokenizing pass produces: section headers, raw token streams per rule/legend line, grid literals per level, sound-line tuples. No name resolution — every identifier is still a raw string. Line numbers are preserved on every element.
 
 Design guideline: `ParserState` should be convertible to a stable JSON form (`parser_state.json`) for the validation harness. This serializer lives in a dev-only translation unit (see §4.2).
 
-### 3.2 `LoweredProgram` (frontend/types/lowered_program.hpp)
+### 3.2 `LoweredProgram` (compiler/types/lowered_program.hpp)
 
 Semantic canonical form: every object identifier is resolved against the legend; direction-qualified patterns are expanded to concrete directions; `no` markers, random selectors, and property/aggregate references are resolved per JS semantics; rules are in a flat canonical list; levels are concrete grids of object-mask placeholders (or the final masks if convenient — implementation detail).
 
 Design guideline: boundary between "syntax-ish" and "semantics-ish". After lowering, there are no more string-to-object lookups; everything is a typed handle.
 
-### 3.3 `Game` (existing — frontend/types/game.hpp re-exports `puzzlescript::Game`)
+### 3.3 `Game` (existing — compiler/types/game.hpp re-exports `puzzlescript::Game`)
 
-The existing runtime type in `native/src/core.hpp`. The compile phase is the only producer of this type in the new pipeline. **No new fields are added for the frontend's benefit.** If the compile phase needs scratch state it lives in compile-phase locals, not on `Game`.
+The existing runtime type in `native/src/core.hpp`. The compile phase is the only producer of this type in the new pipeline. **No new fields are added for the compiler's benefit.** If the compile phase needs scratch state it lives in compile-phase locals, not on `Game`.
 
 ## 4. The pipeline — in-memory vs. serialized
 
 ### 4.1 The actual pipeline is 100% in-memory
 
-`ps_frontend_compile_source` reads a source string and returns a `ps_game*`. There is no filesystem involvement, no JSON, no intermediate textual form. This is the whole point.
+`ps_compiler_compile_source` reads a source string and returns a `ps_game*`. There is no filesystem involvement, no JSON, no intermediate textual form. This is the whole point.
 
 ### 4.2 JSON serializers are dev-only artifacts
 
@@ -128,7 +128,7 @@ Three serializers exist **only for the validation harness and for debugging**:
 
 - `parser_state_serialize.cpp` — `ParserState → parser_state.json`
 - `lowered_program_serialize.cpp` — `LoweredProgram → lowered_program.json`
-- `ir_serialize.cpp` — `Game → ir.json` (matching the existing `src/tests/lib/puzzlescript_ir.js` format byte-for-byte)
+- `ir_serialize.cpp` — `Game → ir.json` (matching the existing `src/tests/js_oracle/lib/puzzlescript_ir.js` format byte-for-byte)
 
 These live behind a CMake option (`-DPS_ENABLE_DEV_SERIALIZERS=ON`) and are not linked into shipping builds. They are not on any runtime path and have no performance budget.
 
@@ -175,24 +175,24 @@ Canonicalization happens on both sides before diffing, not only on C++ output. T
 - `scripts/diff_diagnostics_against_js.sh <source.txt>` — same shape for diagnostics.
 - `scripts/diff_phase_snapshots.sh <source.txt>` — dev-only phase-level diff.
 
-All three are shell scripts driving `ps_cli` and `node src/tests/export_ir_json.js`. CI wires the first two on the full corpus; the third is manual.
+All three are shell scripts driving `puzzlescript_cpp` and `node src/tests/js_oracle/export_ir_json.js`. CI wires the first two on the full corpus; the third is manual.
 
 ## 6. Delivery phases
 
-Four phases, each a standalone spec → plan → implementation → PR. Phases 1–3 merge as dev-only tooling (behind `-DPS_ENABLE_DEV_SERIALIZERS=ON` and new dev-only `ps_cli` subcommands). P4 is the user-visible cutover.
+Four phases, each a standalone spec → plan → implementation → PR. Phases 1–3 merge as dev-only tooling (behind `-DPS_ENABLE_DEV_SERIALIZERS=ON` and new dev-only `puzzlescript_cpp` subcommands). P4 is the user-visible cutover.
 
 ### P1 — C++ parser + validation harness
 
 **Builds:** `source → ParserState`, plus all shared infrastructure.
 
 Deliverables:
-- `native/src/frontend/parser.{hpp,cpp}`, `native/src/frontend/types/parser_state.hpp`, `native/src/frontend/language_constants.hpp`.
-- `native/src/frontend/diagnostic.{hpp,cpp}` — `Diagnostic`, `DiagnosticCode`, `DiagnosticSink`, `format_for_js_compat`.
+- `native/src/compiler/parser.{hpp,cpp}`, `native/src/compiler/types/parser_state.hpp`, `native/src/compiler/language_constants.hpp`.
+- `native/src/compiler/diagnostic.{hpp,cpp}` — `Diagnostic`, `DiagnosticCode`, `DiagnosticSink`, `format_for_js_compat`.
 - Dev-only `parser_state_serialize.cpp`.
-- `src/tests/export_ir_json.js` extended with `--snapshot-phase parser` to emit JS `parser_state.json`.
+- `src/tests/js_oracle/export_ir_json.js` extended with `--snapshot-phase parser` to emit JS `parser_state.json`.
 - `scripts/diff_parser_state_against_js.sh` (whole-corpus runner).
-- `ps_cli compile-source --emit-parser-state` (dev build only).
-- CMake target `puzzlescript-frontend` (static library, initially parser-only).
+- `puzzlescript_cpp compile --emit-parser-state` (dev build only).
+- CMake target `puzzlescript-compiler` (static library, initially parser-only).
 
 Gate to merge: 100% fixture parity on `ParserState`; 100% parity on parser-phase diagnostics.
 
@@ -203,12 +203,12 @@ Estimated size: ~1,700 LOC of JS parser logic + ~800 LOC of shared infrastructur
 **Builds:** `ParserState → LoweredProgram`. Mirrors JS `rulesToArray`, `levelsToArray`, `resolveDictionaryCrossReferences`, legend-resolution passes, direction expansion, property concretization, movement concretization, synonym rewrites, aggregate atomization, RHS-conflict / LHS-negation-trimming / coincidence checks.
 
 Deliverables:
-- `native/src/frontend/lower.{hpp,cpp}`, `native/src/frontend/types/lowered_program.hpp`.
+- `native/src/compiler/lower.{hpp,cpp}`, `native/src/compiler/types/lowered_program.hpp`.
 - Each JS pass becomes a C++ free function over `LoweredProgram`.
 - Dev-only `lowered_program_serialize.cpp`.
 - JS `--snapshot-phase lowered` flag.
 - `scripts/diff_lowered_program_against_js.sh`.
-- `ps_cli compile-source --emit-lowered-program` (dev build).
+- `puzzlescript_cpp compile --emit-lowered-program` (dev build).
 
 Gate to merge: 100% fixture parity on `LoweredProgram`; 100% diagnostic parity cumulative across parser + lowerer.
 
@@ -219,14 +219,14 @@ Estimated size: largest phase. ~2,500–3,000 LOC across `rulesToArray` and depe
 **Builds:** `LoweredProgram → Game`. Mirrors JS `generateMasks`, `rulesToMask`, `arrangeRulesByGroupNumber`, `collapseRules`, `generateRigidGroupList`, `processWinConditions`, `checkObjectsAreLayered`, `twiddleMetaData`, `generateLoopPoints`, `generateSoundData`, `formatHomePage`.
 
 Deliverables:
-- `native/src/frontend/compile.{hpp,cpp}`.
+- `native/src/compiler/compile.{hpp,cpp}`.
 - Dev-only `ir_serialize.cpp`.
 - `scripts/diff_ir_against_js.sh` (the §5.1 headline gate).
-- `ps_cli compile-source --emit-ir` (dev build).
+- `puzzlescript_cpp compile --emit-ir` (dev build).
 
 Gate to merge: 100% fixture parity on final `Game` (serialized to `ir.json`, byte-identical after canonicalization); 100% cumulative diagnostic parity.
 
-**After P3 the C++ frontend is feature-complete.** The runtime still consumes `ir.json` from disk — no user-visible change yet.
+**After P3 the C++ compiler is feature-complete.** The runtime still consumes `ir.json` from disk — no user-visible change yet.
 
 Estimated size: ~1,500 LOC, largely mechanical bit-twiddling over `state.rules` and `state.objectMasks`.
 
@@ -235,9 +235,9 @@ Estimated size: ~1,500 LOC, largely mechanical bit-twiddling over `state.rules` 
 **Delivers the kill-node promise.**
 
 Deliverables:
-- `ps_cli` subcommands promoted from dev-only to production: `ps_cli run <source.txt>`, `ps_cli check-trace <source.txt> <trace.json>`, `ps_cli check-trace-sweep <manifest>` (where manifest lists `(source.txt, trace.json)` pairs, no `ir.json`).
+- `puzzlescript_cpp` subcommands promoted from dev-only to production: `puzzlescript_cpp run <source.txt>`, `puzzlescript_cpp check-trace <source.txt> <trace.json>`, `puzzlescript_cpp check-js-parity-data <manifest>` (where manifest lists `(source.txt, trace.json)` pairs, no `ir.json`).
 - Backward compat: existing `ir.json`-consuming surface continues to work on the same binary.
-- `src/tests/run_native_trace_suite.js` and `src/tests/export_native_fixtures.js` updated to pass puzzlescript source directly to `ps_cli`, no round-trip through `export_ir_json.js`.
+- `src/tests/run_native_trace_suite.js` and `src/tests/js_oracle/export_native_fixtures.js` updated to pass puzzlescript source directly to `puzzlescript_cpp`, no round-trip through `export_ir_json.js`.
 - Performance baseline regenerated; new metrics `compile_source_ms` and `build_ir_cache_ms` added to `perf_baseline.json` (see §7).
 - README / CLAUDE.md / AGENTS.md updated to note native test runs no longer need node.
 
@@ -276,7 +276,7 @@ Existing metrics (`fast_replay_ms`, `trace_json_parse_ms`) keep current baseline
 ### Explicitly not gated
 
 - Memory usage (as long as peak RSS <100 MB on the largest fixture).
-- Binary size of `puzzlescript-frontend.a`.
+- Binary size of `puzzlescript-compiler.a`.
 - Internal phase timings — only aggregate `compile_source_ms` matters.
 
 ## 8. Risks and open questions
@@ -319,9 +319,9 @@ Before writing the P2 plan:
 - Decide on the `LoweredProgram` shape — specifically how direction expansion and property concretization are represented.
 
 Before writing the P3 plan:
-- Confirm the exact `ir.json` serialization format by reading `src/tests/lib/puzzlescript_ir.js` in full.
+- Confirm the exact `ir.json` serialization format by reading `src/tests/js_oracle/lib/puzzlescript_ir.js` in full.
 - Enumerate every `Game` field populated by JS compilation and confirm a C++ compile-phase source for each.
 
 Before writing the P4 plan:
-- Enumerate every current `ps_cli` subcommand that consumes `ir.json` and define the source-direct equivalent.
-- Identify every shell script, npm script, and CI job that invokes `node src/tests/export_ir_json.js` and plan the migration.
+- Enumerate every current `puzzlescript_cpp` subcommand that consumes `ir.json` and define the source-direct equivalent.
+- Identify every shell script, npm script, and CI job that invokes `node src/tests/js_oracle/export_ir_json.js` and plan the migration.

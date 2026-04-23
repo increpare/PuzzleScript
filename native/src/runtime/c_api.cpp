@@ -1,4 +1,4 @@
-#include "core.hpp"
+#include "runtime/core.hpp"
 
 #include <cstring>
 
@@ -74,7 +74,7 @@ bool ps_compile_source(const char*, size_t, ps_compile_result** out_result) {
     auto* wrapper = new ps_compile_result();
     wrapper->impl = std::make_unique<CompileResult>();
     wrapper->impl->error = std::make_unique<Error>(
-        "Native source compilation is not implemented yet. Export JSON IR with node src/tests/export_ir_json.js and load it via ps_load_ir_json."
+        "Native source compilation is not implemented yet. Export JSON IR with node src/tests/js_oracle/export_ir_json.js and load it via ps_load_ir_json."
     );
     *out_result = wrapper;
     return false;

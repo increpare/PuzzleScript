@@ -29,7 +29,7 @@ Out of scope:
 
 ### Success metrics
 
-Measured via `check-trace-sweep --profile-timers` (same command that produced the baseline `profile_stats.txt`).
+Measured via `check-js-parity-data --profile-timers` (same command that produced the baseline `profile_stats.txt`).
 
 | Gate              | `fast_replay_ms` | `wall_ms` | `trace_json_parse_ms + ir_miss_ms` |
 | ----------------- | ---------------- | --------- | ---------------------------------- |
@@ -220,7 +220,7 @@ Do not start Phase 3 unless Phase 1+2 `wall_ms > 3000`. First item is always 5.3
 ## 6. Testing, measurement, risks
 
 ### 6.1 Correctness gate (every merge)
-- All 469 trace fixtures pass bit-identical to today. `check-trace-sweep` must report `trace_replay_passed=469 trace_replay_failed=0 prepared_session_checks_passed=469 prepared_session_checks_failed=0`.
+- All 469 trace fixtures pass bit-identical to today. `check-js-parity-data` must report `trace_replay_passed=469 trace_replay_failed=0 prepared_session_checks_passed=469 prepared_session_checks_failed=0`.
 - No new compiler warnings at `-Wall -Wextra -Wpedantic`.
 - CI runs the full fixture suite, not a sample.
 - Undo/restart parity: these tests were fragile in recent history and Phase 2's incremental-mask work touches this area directly.

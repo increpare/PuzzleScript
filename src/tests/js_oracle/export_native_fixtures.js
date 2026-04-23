@@ -12,7 +12,7 @@ const { runInputTrace } = require('./lib/puzzlescript_trace');
 function parseArgs(argv) {
     const args = argv.slice(2);
     return {
-        outputDir: args[0] ? path.resolve(args[0]) : path.resolve('build/native-fixtures'),
+        outputDir: args[0] ? path.resolve(args[0]) : path.resolve('build/js-parity-data'),
     };
 }
 

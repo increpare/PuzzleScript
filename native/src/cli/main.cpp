@@ -13,14 +13,14 @@
 #include <unordered_map>
 #include <vector>
 
-#include "diagnostics_parity.hpp"
-#include "json.hpp"
-#include "puzzlescript/frontend.h"
+#include "cli/diagnostics_parity.hpp"
+#include "runtime/json.hpp"
+#include "puzzlescript/compiler.h"
 #include "puzzlescript/puzzlescript.h"
 
 #ifdef PS_HAVE_SDL2
-int ps_cli_run_player(const std::string& irPath);
-int ps_cli_run_player_for_game(ps_game* game);
+int puzzlescript_cpp_run_player_for_ir(const std::string& irPath);
+int puzzlescript_cpp_run_player_for_game(ps_game* game);
 #endif
 
 namespace {
@@ -30,11 +30,11 @@ namespace {
 #endif
 
 #ifndef PS_EXPORT_IR_SCRIPT
-#define PS_EXPORT_IR_SCRIPT "src/tests/export_ir_json.js"
+#define PS_EXPORT_IR_SCRIPT "src/tests/js_oracle/export_ir_json.js"
 #endif
 
 #ifndef PS_EXPORT_TRACE_SCRIPT
-#define PS_EXPORT_TRACE_SCRIPT "src/tests/export_execution_trace.js"
+#define PS_EXPORT_TRACE_SCRIPT "src/tests/js_oracle/export_execution_trace.js"
 #endif
 
 std::string readFile(const std::filesystem::path& path) {
@@ -945,7 +945,7 @@ int checkTraceSweepCommand(const std::string& manifestPath, int argc, char** arg
         } else if (arg == "--progress-every" && argIndex + 1 < argc) {
             progressEvery = static_cast<size_t>(std::stoull(argv[++argIndex]));
         } else {
-            throw std::runtime_error("Unsupported check-trace-sweep argument: " + arg);
+            throw std::runtime_error("Unsupported JS parity data check argument: " + arg);
         }
     }
 
@@ -1009,7 +1009,7 @@ int checkTraceSweepCommand(const std::string& manifestPath, int argc, char** arg
                               << "\n";
                     if (progressEvery > 0 && (traceChecked % progressEvery) == 0) {
                         std::cerr << "trace_progress checked=" << traceChecked << " passed=" << tracePassed << " failed=" << traceFailed
-                                  << " timed_out=" << traceTimedOut << " current_fixture=" << name << " outcome=failed elapsed_ms=" << fastMs
+                                  << " timed_out=" << traceTimedOut << " current_case=" << name << " outcome=failed elapsed_ms=" << fastMs
                                   << "\n";
                     }
                 }
@@ -1059,7 +1059,7 @@ int checkTraceSweepCommand(const std::string& manifestPath, int argc, char** arg
                           << "\n";
                 if (progressEvery > 0 && (traceChecked % progressEvery) == 0) {
                     std::cerr << "trace_progress checked=" << traceChecked << " passed=" << tracePassed << " failed=" << traceFailed
-                              << " timed_out=" << traceTimedOut << " current_fixture=" << name << " outcome=failed elapsed_ms=" << fastMs
+                              << " timed_out=" << traceTimedOut << " current_case=" << name << " outcome=failed elapsed_ms=" << fastMs
                               << "\n";
                 }
                 continue;
@@ -1117,7 +1117,7 @@ int checkTraceSweepCommand(const std::string& manifestPath, int argc, char** arg
 
             if (progressEvery > 0 && (traceChecked % progressEvery) == 0) {
                 std::cerr << "trace_progress checked=" << traceChecked << " passed=" << tracePassed << " failed=" << traceFailed
-                          << " timed_out=" << traceTimedOut << " current_fixture=" << name << " outcome=" << outcome << " elapsed_ms=" << elapsedMs
+                          << " timed_out=" << traceTimedOut << " current_case=" << name << " outcome=" << outcome << " elapsed_ms=" << elapsedMs
                           << "\n";
             }
         }
@@ -1127,7 +1127,7 @@ int checkTraceSweepCommand(const std::string& manifestPath, int argc, char** arg
     }
 
     const size_t simulationFixtureCount = preparedPassed + preparedFailed;
-    std::cout << "simulation_fixture_count=" << simulationFixtureCount << " prepared_session_checks_passed=" << preparedPassed
+    std::cout << "test_cases_checked=" << simulationFixtureCount << " prepared_session_checks_passed=" << preparedPassed
               << " prepared_session_checks_failed=" << preparedFailed << " trace_replay_checked=" << traceChecked << " trace_replay_passed="
               << tracePassed << " trace_replay_failed=" << traceFailed << " trace_replay_timed_out=" << traceTimedOut
               << " trace_fast_passed=" << traceFastPassed << " trace_detailed_runs=" << traceDetailedRuns << "\n";
@@ -1138,7 +1138,7 @@ int checkTraceSweepCommand(const std::string& manifestPath, int argc, char** arg
         const auto usToMs = [](int64_t microseconds) -> int64_t {
             return (microseconds + 500) / 1000;
         };
-        std::cerr << "native_trace_suite_profile simulation_fixtures=" << simulationFixtureCount << " trace_fixtures=" << traceChecked
+        std::cerr << "native_trace_suite_profile test_cases=" << simulationFixtureCount << " saved_replays=" << traceChecked
                   << " wall_ms=" << usToMs(sweepWallUs) << " games_reused=" << profileGamesReused << " games_loaded=" << profileGamesLoaded
                   << " game_reuse_ms=" << usToMs(profileGameReuseUs) << " game_load_ms=" << usToMs(profileGameLoadUs)
                   << " prepared_session_create_ms=" << usToMs(profilePreparedSessionUs)
@@ -1426,17 +1426,67 @@ int stepCommand(const std::string& irPath, int argc, char** argv) {
     return result;
 }
 
+void ensureDefaultSourceLoad(std::vector<std::string>& args, bool addSettleAgain = true) {
+    bool hasLevel = false;
+    bool hasRestart = false;
+    bool hasSettleAgain = false;
+    for (size_t index = 0; index < args.size(); ++index) {
+        if (args[index] == "--level") {
+            hasLevel = true;
+        } else if (args[index] == "--restart") {
+            hasRestart = true;
+        } else if (args[index] == "--settle-again") {
+            hasSettleAgain = true;
+        }
+    }
+    if (!hasLevel && !hasRestart) {
+        args.push_back("--level");
+        args.push_back("0");
+    }
+    if (addSettleAgain && !hasSettleAgain) {
+        args.push_back("--settle-again");
+    }
+}
+
 int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     std::vector<std::string> exporterArgs;
+    std::vector<std::string> traceArgs;
+    bool hasInputTrace = false;
     for (int index = 0; index < argc; ++index) {
-        exporterArgs.emplace_back(argv[index]);
+        const std::string arg = argv[index];
+        if (arg == "--headless") {
+            continue;
+        }
+        if ((arg == "--level" || arg == "--seed") && index + 1 < argc) {
+            const std::string value = argv[++index];
+            exporterArgs.push_back(arg);
+            exporterArgs.push_back(value);
+            traceArgs.push_back(arg);
+            traceArgs.push_back(value);
+            continue;
+        }
+        if (arg == "--settle-again") {
+            exporterArgs.push_back(arg);
+            continue;
+        }
+        if ((arg == "--inputs-json" || arg == "--inputs-file") && index + 1 < argc) {
+            hasInputTrace = true;
+            traceArgs.push_back(arg);
+            traceArgs.push_back(argv[++index]);
+            continue;
+        }
+        exporterArgs.emplace_back(arg);
     }
+    ensureDefaultSourceLoad(exporterArgs);
+    ensureDefaultSourceLoad(traceArgs, false);
 
     ps_game* game = nullptr;
     if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
         return 1;
     }
-    const int result = runCommandForGame(game);
+    const int result = hasInputTrace
+        ? diffTraceAgainstSnapshots(game, loadTraceSnapshotsFromJsonText(runTraceExporterAndCaptureJson(sourcePath, traceArgs)), std::cerr, true)
+        : runCommandForGame(game);
     ps_free_game(game);
     return result;
 }
@@ -1456,6 +1506,7 @@ int benchSourceCommand(const std::string& sourcePath, int argc, char** argv) {
             exporterArgs.emplace_back(arg);
         }
     }
+    ensureDefaultSourceLoad(exporterArgs);
 
     ps_game* game = nullptr;
     if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
@@ -1471,13 +1522,14 @@ int playSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     for (int index = 0; index < argc; ++index) {
         exporterArgs.emplace_back(argv[index]);
     }
+    ensureDefaultSourceLoad(exporterArgs);
 
     ps_game* game = nullptr;
     if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
         return 1;
     }
 #ifdef PS_HAVE_SDL2
-    const int result = ps_cli_run_player_for_game(game);
+    const int result = puzzlescript_cpp_run_player_for_game(game);
     ps_free_game(game);
     return result;
 #else
@@ -1537,22 +1589,23 @@ int compileSourceCommand(const std::string& sourcePath, int argc, char** argv) {
         const std::string arg = argv[index];
         if (arg == "--emit-parser-state") {
             emitParserState = true;
-        } else if (arg == "--emit-diagnostics") {
+        } else if (arg == "--diagnostics" || arg == "--emit-diagnostics") {
             emitDiagnostics = true;
         } else {
-            throw std::runtime_error("Unsupported compile-source argument: " + arg);
+            throw std::runtime_error("Unsupported compile argument: " + arg + "\nTry: puzzlescript_cpp help compile");
         }
     }
 
     if (!emitParserState && !emitDiagnostics) {
-        std::cerr << "compile-source requires --emit-parser-state and/or --emit-diagnostics.\n";
+        std::cerr << "compile requires --diagnostics and/or --emit-parser-state.\n"
+                  << "Try: puzzlescript_cpp compile " << sourcePath << " --diagnostics\n";
         return 1;
     }
 
     const std::string source = readFile(sourcePath) + "\n";
-    std::unique_ptr<ps_frontend_result, decltype(&ps_frontend_result_free)> result(
-        ps_frontend_parse(source.data(), source.size()),
-        ps_frontend_result_free
+    std::unique_ptr<ps_compiler_result, decltype(&ps_compiler_result_free)> result(
+        ps_compiler_parse_source(source.data(), source.size()),
+        ps_compiler_result_free
     );
     if (!result) {
         std::cerr << "Failed to parse source.\n";
@@ -1560,8 +1613,8 @@ int compileSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     }
 
     if (emitDiagnostics) {
-        for (size_t index = 0; index < ps_frontend_result_diagnostic_count(result.get()); ++index) {
-            const ps_diagnostic* diagnostic = ps_frontend_result_diagnostic(result.get(), index);
+        for (size_t index = 0; index < ps_compiler_result_diagnostic_count(result.get()); ++index) {
+            const ps_diagnostic* diagnostic = ps_compiler_result_diagnostic(result.get(), index);
             if (diagnostic == nullptr || diagnostic->message == nullptr) {
                 continue;
             }
@@ -1570,10 +1623,10 @@ int compileSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     }
 
     if (emitParserState) {
-        const size_t required = ps_frontend_result_parser_state_json(result.get(), nullptr, 0);
+        const size_t required = ps_compiler_result_parser_state_json(result.get(), nullptr, 0);
         std::string payload(required == 0 ? 0 : (required - 1), '\0');
         if (required > 0) {
-            (void)ps_frontend_result_parser_state_json(result.get(), payload.data(), required);
+            (void)ps_compiler_result_parser_state_json(result.get(), payload.data(), required);
         }
         std::cout << payload << "\n";
     }
@@ -1596,6 +1649,7 @@ int stepSourceCommand(const std::string& sourcePath, int argc, char** argv) {
             inputTokens.push_back(arg);
         }
     }
+    ensureDefaultSourceLoad(exporterArgs);
 
     ps_game* game = nullptr;
     if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
@@ -1665,7 +1719,7 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
         } else if (arg == "--profile-timers") {
             profileTimers = true;
         } else {
-            throw std::runtime_error("Unsupported test-fixtures argument: " + arg);
+            throw std::runtime_error("Unsupported JS parity data validation argument: " + arg);
         }
     }
 
@@ -1756,7 +1810,7 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                         std::cerr << "trace_progress checked=" << traceChecked
                                   << " passed=" << tracePassed
                                   << " failed=" << traceFailed
-                                  << " current_fixture=" << name
+                                  << " current_case=" << name
                                   << "\n";
                     }
                     std::ostringstream traceErrors;
@@ -1780,7 +1834,7 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
             } catch (const std::exception& error) {
                 ++preparedFailed;
                 if (!traceQuiet) {
-                    std::cerr << "fixture #" << index << ": " << error.what() << "\n";
+                    std::cerr << "case #" << index << ": " << error.what() << "\n";
                 }
             }
         }
@@ -1789,7 +1843,7 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
         return 1;
     }
 
-    std::cout << "simulation_fixture_count=" << (preparedPassed + preparedFailed)
+    std::cout << "test_cases_checked=" << (preparedPassed + preparedFailed)
               << " prepared_session_checks_passed=" << preparedPassed
               << " prepared_session_checks_failed=" << preparedFailed
               << " trace_replay_checked=" << traceChecked
@@ -1804,7 +1858,7 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
             return (microseconds + 500) / 1000;
         };
         const size_t fixtureCount = preparedPassed + preparedFailed;
-        std::cerr << "prepared_profile fixtures=" << fixtureCount << " wall_ms=" << usToMs(preparedWallUs) << " games_reused=" << profileGamesReused
+        std::cerr << "prepared_profile test_cases=" << fixtureCount << " wall_ms=" << usToMs(preparedWallUs) << " games_reused=" << profileGamesReused
                   << " games_loaded=" << profileGamesLoaded << " game_reuse_ms=" << usToMs(profileGameReuseUs)
                   << " game_load_ms=" << usToMs(profileGameLoadUs)
                   << " session_create_ms=" << usToMs(profileSessionCreateUs) << " serialize_test_string_ms=" << usToMs(profileSerializeUs)
@@ -1816,119 +1870,225 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
     return (preparedOk && traceOk) ? 0 : 1;
 }
 
-void printUsage() {
-    std::cerr << "Usage:\n"
-              << "  ps_cli run <ir.json>\n"
-              << "  ps_cli step <ir.json> [input ...]\n"
-              << "  ps_cli bench <ir.json> [--iterations N] [--threads N]\n"
-              << "  ps_cli compile-source <game.ps> --emit-parser-state\n"
-              << "  ps_cli compile-source <game.ps> --emit-diagnostics\n"
-              << "  ps_cli run-source <game.ps> [--level N] [--seed seed] [--settle-again]\n"
-              << "  ps_cli step-source <game.ps> [input ...] [--level N] [--seed seed] [--settle-again]\n"
-              << "  ps_cli bench-source <game.ps> [--level N] [--seed seed] [--settle-again] [--iterations N] [--threads N]\n"
-              << "  ps_cli play-source <game.ps> [--level N] [--seed seed] [--settle-again]\n"
-              << "  ps_cli diff-trace <ir.json> <trace.json>\n"
-              << "  ps_cli check-trace <ir.json> <trace.json>\n"
-              << "  ps_cli check-trace-sweep <fixtures.json> [--progress-every N] [--allow-failures] [--quiet] [--profile-timers]\n"
-              << "    (runs prepared session serialization checks for every simulation fixture, then trace replay for fixtures with traces)\n"
-              << "  ps_cli trace-at <ir.json> <trace.json> <snapshot-index>\n"
-              << "  ps_cli trace-step-at <ir.json> <trace.json> <snapshot-index>\n"
-              << "  ps_cli diff-trace-source <game.ps> [--level N] [--seed seed] [--inputs-json json] [--inputs-file path]\n"
-              << "  ps_cli test-fixtures <fixtures.json> [--trace-limit N] [--trace-all] [--trace-allow-failures] [--trace-quiet] [--trace-progress N] [--profile-timers]\n"
-              << "  ps_cli diagnostics-parity <corpus.bundle.ndjson>\n"
-              << "    (NDJSON from scripts/build_parser_corpus_bundle.js; compares native diagnostics in-process)\n"
-              << "  ps_cli play <ir.json>\n";
+void printMainHelp() {
+    std::cout
+        << "puzzlescript_cpp: C++ PuzzleScript compiler, runtime, test runner, and SDL player\n\n"
+        << "Common commands:\n"
+        << "  puzzlescript_cpp play game.txt\n"
+        << "      Build/load a PuzzleScript source file and launch the SDL player.\n"
+        << "  puzzlescript_cpp run game.txt --headless\n"
+        << "      Load a PuzzleScript source file and print the current board serialization.\n"
+        << "  puzzlescript_cpp run game.txt --headless --inputs-file inputs.json\n"
+        << "      Replay inputs through the headless runtime and compare against the JS oracle trace.\n"
+        << "  puzzlescript_cpp compile game.txt --diagnostics\n"
+        << "      Run the C++ compiler parser diagnostics.\n"
+        << "  puzzlescript_cpp compile game.txt --emit-parser-state\n"
+        << "      Emit the canonical parser-state JSON used by parity tests.\n"
+        << "  puzzlescript_cpp test js-parity <generated-js-parity-data.json>\n"
+        << "      Check saved replay cases generated from the original JavaScript test suite.\n"
+        << "  puzzlescript_cpp bench game.txt --iterations 10000 --threads 4\n"
+        << "      Benchmark clone/hash/session operations for a source game.\n\n"
+        << "Project map:\n"
+        << "  compiler: native/src/compiler\n"
+        << "  runtime:  native/src/runtime\n"
+        << "  player:   native/src/player\n"
+        << "  CLI:      native/src/cli\n"
+        << "  JS oracle/reference harness: src/tests/js_oracle\n\n"
+        << "Makefile shortcuts:\n"
+        << "  make build           Build build/native/puzzlescript_cpp\n"
+        << "  make run game.txt    Build and play a game\n"
+        << "  make ctest           Run fast C++ smoke/unit tests\n"
+        << "  make js_parity_tests Run C++ vs original-JS parity tests\n"
+        << "  make tests           Run the full native correctness suite\n\n"
+        << "Detailed help:\n"
+        << "  puzzlescript_cpp help play\n"
+        << "  puzzlescript_cpp help run\n"
+        << "  puzzlescript_cpp help compile\n"
+        << "  puzzlescript_cpp help test\n"
+        << "  puzzlescript_cpp help bench\n";
+}
+
+void printPlayHelp() {
+    std::cout
+        << "Usage: puzzlescript_cpp play game.txt [--level N] [--seed seed] [--settle-again]\n\n"
+        << "Opens the SDL player for a PuzzleScript source file. The runtime currently loads\n"
+        << "through generated JS parity data while the native compiler is being connected to\n"
+        << "full Game lowering.\n\n"
+        << "Example:\n"
+        << "  puzzlescript_cpp play src/demo/sokoban_basic.txt\n";
+}
+
+void printRunHelp() {
+    std::cout
+        << "Usage: puzzlescript_cpp run game.txt [--headless] [--level N] [--seed seed] [--settle-again]\n"
+        << "       puzzlescript_cpp run game.txt --headless --inputs-file inputs.json\n\n"
+        << "Runs a source game without opening a window. With no inputs it prints the current\n"
+        << "board serialization; with --inputs-file/--inputs-json it replays inputs and\n"
+        << "compares against the original JavaScript oracle trace.\n";
+}
+
+void printCompileHelp() {
+    std::cout
+        << "Usage: puzzlescript_cpp compile game.txt [--diagnostics] [--emit-parser-state]\n\n"
+        << "Runs the C++ PuzzleScript compiler parser. Use --diagnostics for JS-compatible\n"
+        << "diagnostic text and --emit-parser-state for the canonical parser-state JSON used\n"
+        << "by parity tests.\n\n"
+        << "Examples:\n"
+        << "  puzzlescript_cpp compile game.txt --diagnostics\n"
+        << "  puzzlescript_cpp compile game.txt --emit-parser-state\n";
+}
+
+void printTestHelp() {
+    std::cout
+        << "Usage: puzzlescript_cpp test js-parity generated-js-parity-data.json [options]\n"
+        << "       puzzlescript_cpp test diagnostics parser-corpus.bundle.ndjson\n\n"
+        << "JS parity corpus means saved replay and diagnostic cases generated from the\n"
+        << "original JavaScript test suite: testdata.js and errormessage_testdata.js.\n"
+        << "Simulation tests compare gameplay traces. Compiler tests compare diagnostics.\n\n"
+        << "Usually use the Makefile wrappers:\n"
+        << "  make js_parity_tests\n"
+        << "  make tests\n";
+}
+
+void printBenchHelp() {
+    std::cout
+        << "Usage: puzzlescript_cpp bench game.txt [--level N] [--seed seed] [--settle-again] [--iterations N] [--threads N]\n\n"
+        << "Benchmarks native runtime operations for a source game. Use --threads to measure\n"
+        << "multi-session throughput for future solver workloads.\n\n"
+        << "Example:\n"
+        << "  puzzlescript_cpp bench src/demo/sokoban_basic.txt --iterations 10000 --threads 4\n";
+}
+
+void printHelpTopic(const std::string& topic) {
+    if (topic == "play") {
+        printPlayHelp();
+    } else if (topic == "run") {
+        printRunHelp();
+    } else if (topic == "compile") {
+        printCompileHelp();
+    } else if (topic == "test") {
+        printTestHelp();
+    } else if (topic == "bench") {
+        printBenchHelp();
+    } else {
+        printMainHelp();
+    }
 }
 
 } // namespace
 
 int main(int argc, char** argv) {
-    if (argc < 3) {
-        printUsage();
-        return 1;
+    if (argc < 2 || std::string(argv[1]) == "--help" || std::string(argv[1]) == "-h") {
+        printMainHelp();
+        return 0;
     }
 
     const std::string command = argv[1];
+    if (command == "help") {
+        printHelpTopic(argc >= 3 ? argv[2] : "");
+        return 0;
+    }
+    if (command == "test" && argc >= 3 && (std::string(argv[2]) == "--help" || std::string(argv[2]) == "-h")) {
+        printTestHelp();
+        return 0;
+    }
+
+    if (argc < 3) {
+        std::cerr << "Missing path or subcommand.\nTry: puzzlescript_cpp --help\n";
+        return 1;
+    }
+
     const std::string path = argv[2];
 
     try {
         if (command == "run") {
-            return runCommand(path, argc - 3, argv + 3);
-        }
-        if (command == "step") {
-            return stepCommand(path, argc - 3, argv + 3);
-        }
-        if (command == "bench") {
-            return benchCommand(path, argc - 3, argv + 3);
-        }
-        if (command == "compile-source") {
-            return compileSourceCommand(path, argc - 3, argv + 3);
-        }
-        if (command == "run-source") {
             return runSourceCommand(path, argc - 3, argv + 3);
         }
-        if (command == "step-source") {
+        if (command == "step") {
             return stepSourceCommand(path, argc - 3, argv + 3);
         }
-        if (command == "bench-source") {
+        if (command == "bench") {
             return benchSourceCommand(path, argc - 3, argv + 3);
         }
-        if (command == "play-source") {
+        if (command == "compile") {
+            return compileSourceCommand(path, argc - 3, argv + 3);
+        }
+        if (command == "play") {
+#ifdef PS_HAVE_SDL2
             return playSourceCommand(path, argc - 3, argv + 3);
+#else
+            std::cerr << "SDL2 support is not enabled in this build.\n";
+            return 1;
+#endif
+        }
+        if (command == "run-ir") {
+            return runCommand(path, argc - 3, argv + 3);
+        }
+        if (command == "step-ir") {
+            return stepCommand(path, argc - 3, argv + 3);
+        }
+        if (command == "bench-ir") {
+            return benchCommand(path, argc - 3, argv + 3);
+        }
+        if (command == "play-ir") {
+#ifdef PS_HAVE_SDL2
+            return puzzlescript_cpp_run_player_for_ir(path);
+#else
+            std::cerr << "SDL2 support is not enabled in this build.\n";
+            return 1;
+#endif
         }
         if (command == "diff-trace") {
-            if (argc < 4) {
-                printUsage();
-                return 1;
+            if (argc >= 4 && std::filesystem::path(path).extension() == ".json") {
+                return diffTraceCommand(path, argv[3]);
             }
-            return diffTraceCommand(path, argv[3]);
+            return diffTraceSourceCommand(path, argc - 3, argv + 3);
         }
         if (command == "check-trace") {
             if (argc < 4) {
-                printUsage();
+                std::cerr << "Usage: puzzlescript_cpp check-trace <ir.json> <trace.json>\n";
                 return 1;
             }
             return checkTraceCommand(path, argv[3]);
         }
-        if (command == "check-trace-sweep") {
+        if (command == "check-js-parity-data") {
             return checkTraceSweepCommand(path, argc - 3, argv + 3);
         }
         if (command == "trace-at") {
             if (argc < 5) {
-                printUsage();
+                std::cerr << "Usage: puzzlescript_cpp trace-at <ir.json> <trace.json> <snapshot-index>\n";
                 return 1;
             }
             return traceAtCommand(path, argv[3], static_cast<size_t>(std::stoull(argv[4])));
         }
         if (command == "trace-step-at") {
             if (argc < 5) {
-                printUsage();
+                std::cerr << "Usage: puzzlescript_cpp trace-step-at <ir.json> <trace.json> <snapshot-index>\n";
                 return 1;
             }
             return traceStepAtCommand(path, argv[3], static_cast<size_t>(std::stoull(argv[4])));
         }
-        if (command == "diff-trace-source") {
-            return diffTraceSourceCommand(path, argc - 3, argv + 3);
-        }
-        if (command == "test-fixtures") {
+        if (command == "test-js-parity-data") {
             return testFixturesCommand(path, argc - 3, argv + 3);
         }
         if (command == "diagnostics-parity") {
             return diagnosticsParityMain(std::filesystem::path(path));
         }
-        if (command == "play") {
-#ifdef PS_HAVE_SDL2
-            return ps_cli_run_player(path);
-#else
-            std::cerr << "SDL2 support is not enabled in this build.\n";
+        if (command == "test") {
+            if (path == "js-parity" && argc >= 4) {
+                return checkTraceSweepCommand(argv[3], argc - 4, argv + 4);
+            }
+            if (path == "diagnostics" && argc >= 4) {
+                return diagnosticsParityMain(std::filesystem::path(argv[3]));
+            }
+            printTestHelp();
             return 1;
-#endif
         }
     } catch (const std::exception& error) {
         std::cerr << error.what() << "\n";
         return 1;
     }
 
-    printUsage();
+    std::cerr << "Unknown command: " << command << "\nTry: puzzlescript_cpp --help\n";
     return 1;
 }

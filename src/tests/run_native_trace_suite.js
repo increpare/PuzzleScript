@@ -39,10 +39,10 @@ function parseArgs(argv) {
     }
 
     if (result.manifestPath === null) {
-        throw new Error('Missing fixtures manifest path');
+        throw new Error('Missing JS parity data manifest path');
     }
     if (result.cliPath === null) {
-        result.cliPath = path.resolve('build/native/ps_cli');
+        result.cliPath = path.resolve('build/native/puzzlescript_cpp');
     }
     return result;
 }
@@ -74,13 +74,13 @@ function main() {
     const cliTimeoutMs = Math.max(options.preparedTimeoutMs, sweepBudgetMs);
 
     process.stderr.write(
-        `native_trace_suite starting (single ps_cli) timeout_ms=${cliTimeoutMs} ` +
+        `native_trace_suite starting (single puzzlescript_cpp) timeout_ms=${cliTimeoutMs} ` +
             `(prepared_budget_ms=${options.preparedTimeoutMs} per_fixture_budget_ms=${options.timeoutMs} ` +
-            `trace_fixtures=${traceFixtureCount})\n`,
+            `saved_replay_cases=${traceFixtureCount})\n`,
     );
 
     const cliStartedAt = Date.now();
-    const sweepArgs = ['check-trace-sweep', options.manifestPath];
+    const sweepArgs = ['check-js-parity-data', options.manifestPath];
     if (options.progressEvery > 0) {
         sweepArgs.push('--progress-every', String(options.progressEvery));
     }

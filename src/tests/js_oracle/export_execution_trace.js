@@ -44,7 +44,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-    console.error('Usage: node src/tests/export_execution_trace.js <input.ps> [output.json] [--level N] [--seed seed] [--inputs-json json] [--inputs-file path]');
+    console.error('Usage: node src/tests/js_oracle/export_execution_trace.js <input.ps> [output.json] [--level N] [--seed seed] [--inputs-json json] [--inputs-file path]');
 }
 
 function main() {

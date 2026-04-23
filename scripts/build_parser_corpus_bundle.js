@@ -2,7 +2,7 @@
 'use strict';
 
 /**
- * Emit an NDJSON corpus for ps_cli diagnostics-parity: one JSON object per line with
+ * Emit an NDJSON corpus for puzzlescript_cpp diagnostics-parity: one JSON object per line with
  * { "index", "name", "source", "reference": [ canonical diagnostic strings ] }.
  *
  * Reference strings match scripts/compare_parser_phase_diagnostics.js after
@@ -18,8 +18,8 @@ const path = require('path');
 const vm = require('vm');
 
 const repoRoot = path.join(__dirname, '..');
-const { loadPuzzleScript } = require(path.join(repoRoot, 'src', 'tests', 'lib', 'puzzlescript_node_env'));
-const { collectParserPhaseDiagnostics } = require(path.join(repoRoot, 'src', 'tests', 'lib', 'puzzlescript_parser_snapshot'));
+const { loadPuzzleScript } = require(path.join(repoRoot, 'src', 'tests', 'js_oracle', 'lib', 'puzzlescript_node_env'));
+const { collectParserPhaseDiagnostics } = require(path.join(repoRoot, 'src', 'tests', 'js_oracle', 'lib', 'puzzlescript_parser_snapshot'));
 
 function canonicalizeDiagnosticText(raw) {
     let t = String(raw);

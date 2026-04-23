@@ -14,7 +14,7 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 JS_OUT="$TMP_DIR/js-parser-state.json"
 CPP_OUT="$TMP_DIR/cpp-parser-state.json"
 
-node "$ROOT_DIR/src/tests/export_ir_json.js" "$SOURCE_FILE" "$JS_OUT" --snapshot-phase parser
-"$ROOT_DIR/build/native/ps_cli" compile-source "$SOURCE_FILE" --emit-parser-state > "$CPP_OUT"
+node "$ROOT_DIR/src/tests/js_oracle/export_ir_json.js" "$SOURCE_FILE" "$JS_OUT" --snapshot-phase parser
+"$ROOT_DIR/build/native/puzzlescript_cpp" compile "$SOURCE_FILE" --emit-parser-state > "$CPP_OUT"
 
 diff -u "$JS_OUT" "$CPP_OUT"

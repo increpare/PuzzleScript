@@ -107,7 +107,7 @@ function installBrowserShims(messageSink) {
 }
 
 function loadPuzzleScript(options = {}) {
-    const srcDir = path.join(__dirname, '..', '..');
+    const srcDir = path.join(__dirname, '..', '..', '..');
     const includeTests = Boolean(options.includeTests);
     const messageSink = installBrowserShims(options.messageSink);
 

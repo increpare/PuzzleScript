@@ -48,7 +48,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-    console.error('Usage: node src/tests/export_ir_json.js <input.ps> [output.json] [--level N] [--seed seed] [--settle-again] [--snapshot-phase parser|parser-diagnostics]');
+    console.error('Usage: node src/tests/js_oracle/export_ir_json.js <input.ps> [output.json] [--level N] [--seed seed] [--settle-again] [--snapshot-phase parser|parser-diagnostics]');
 }
 
 function main() {
