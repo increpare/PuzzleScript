@@ -37,6 +37,12 @@ find_package(Threads REQUIRED)
 find_package(PkgConfig QUIET)
 find_program(NODE_EXECUTABLE node REQUIRED)
 
+# Repo root (parent of this `native/` tree). `CMAKE_SOURCE_DIR` is the checkout
+# only when this file is not the top-level project; when users configure from
+# `native/` directly, `CMAKE_SOURCE_DIR` points at `native/` and repo paths must
+# not be derived from it.
+get_filename_component(PUZZLESCRIPT_REPO_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
+
 if(PKG_CONFIG_FOUND)
   pkg_check_modules(SDL2 IMPORTED_TARGET sdl2)
 endif()
@@ -129,8 +135,8 @@ target_link_libraries(ps_cli
 target_compile_definitions(ps_cli
   PRIVATE
     PS_NODE_EXECUTABLE="${NODE_EXECUTABLE}"
-    PS_EXPORT_IR_SCRIPT="${CMAKE_SOURCE_DIR}/src/tests/export_ir_json.js"
-    PS_EXPORT_TRACE_SCRIPT="${CMAKE_SOURCE_DIR}/src/tests/export_execution_trace.js"
+    PS_EXPORT_IR_SCRIPT="${PUZZLESCRIPT_REPO_ROOT}/src/tests/export_ir_json.js"
+    PS_EXPORT_TRACE_SCRIPT="${PUZZLESCRIPT_REPO_ROOT}/src/tests/export_execution_trace.js"
 )
 
 if(TARGET PkgConfig::SDL2)
@@ -147,33 +153,33 @@ set(SMOKE_TRACE_INPUTS ${CMAKE_CURRENT_SOURCE_DIR}/tests/smoke_trace_inputs.json
 add_custom_command(
   OUTPUT ${SMOKE_IR}
   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/generated
-  COMMAND node ${CMAKE_SOURCE_DIR}/src/tests/export_ir_json.js
-          ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt
+  COMMAND node ${PUZZLESCRIPT_REPO_ROOT}/src/tests/export_ir_json.js
+          ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt
           ${SMOKE_IR}
           --level 0
           --seed native-smoke
           --settle-again
   DEPENDS
-    ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt
-    ${CMAKE_SOURCE_DIR}/src/tests/export_ir_json.js
-    ${CMAKE_SOURCE_DIR}/src/tests/lib/puzzlescript_ir.js
-    ${CMAKE_SOURCE_DIR}/src/tests/lib/puzzlescript_node_env.js
+    ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt
+    ${PUZZLESCRIPT_REPO_ROOT}/src/tests/export_ir_json.js
+    ${PUZZLESCRIPT_REPO_ROOT}/src/tests/lib/puzzlescript_ir.js
+    ${PUZZLESCRIPT_REPO_ROOT}/src/tests/lib/puzzlescript_node_env.js
 )
 
 add_custom_command(
   OUTPUT ${SMOKE_TRACE}
   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/generated
-  COMMAND node ${CMAKE_SOURCE_DIR}/src/tests/export_execution_trace.js
-          ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt
+  COMMAND node ${PUZZLESCRIPT_REPO_ROOT}/src/tests/export_execution_trace.js
+          ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt
           ${SMOKE_TRACE}
           --level 0
           --seed native-trace-smoke
           --inputs-file ${SMOKE_TRACE_INPUTS}
   DEPENDS
-    ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt
-    ${CMAKE_SOURCE_DIR}/src/tests/export_execution_trace.js
-    ${CMAKE_SOURCE_DIR}/src/tests/lib/puzzlescript_trace.js
-    ${CMAKE_SOURCE_DIR}/src/tests/lib/puzzlescript_node_env.js
+    ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt
+    ${PUZZLESCRIPT_REPO_ROOT}/src/tests/export_execution_trace.js
+    ${PUZZLESCRIPT_REPO_ROOT}/src/tests/lib/puzzlescript_trace.js
+    ${PUZZLESCRIPT_REPO_ROOT}/src/tests/lib/puzzlescript_node_env.js
     ${SMOKE_TRACE_INPUTS}
 )
 
@@ -192,29 +198,29 @@ add_test(
 
 add_test(
   NAME ps_cli_run_source_smoke
-  COMMAND ps_cli run-source ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt --level 0 --seed native-source-smoke --settle-again
+  COMMAND ps_cli run-source ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt --level 0 --seed native-source-smoke --settle-again
 )
 
 add_test(
   NAME ps_cli_step_source_smoke
-  COMMAND ps_cli step-source ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt right --level 0 --seed native-step-smoke --settle-again
+  COMMAND ps_cli step-source ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt right --level 0 --seed native-step-smoke --settle-again
 )
 set_tests_properties(ps_cli_step_source_smoke PROPERTIES PASS_REGULAR_EXPRESSION "step\\[0\\] token=right changed=1")
 
 add_test(
   NAME ps_cli_parser_state_smoke
-  COMMAND ps_cli compile-source ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt --emit-parser-state
+  COMMAND ps_cli compile-source ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt --emit-parser-state
 )
 set_tests_properties(ps_cli_parser_state_smoke PROPERTIES PASS_REGULAR_EXPRESSION "\"parser_state\"")
 
 add_test(
   NAME ps_cli_parser_state_diff_smoke
-  COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/diff_parser_state_against_js.sh ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt
+  COMMAND bash ${PUZZLESCRIPT_REPO_ROOT}/scripts/diff_parser_state_against_js.sh ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt
 )
 
 add_test(
   NAME ps_cli_parser_diagnostics_diff_smoke
-  COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/diff_diagnostics_against_js.sh ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt
+  COMMAND bash ${PUZZLESCRIPT_REPO_ROOT}/scripts/diff_diagnostics_against_js.sh ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt
 )
 
 add_test(
@@ -224,24 +230,24 @@ add_test(
 
 add_test(
   NAME ps_cli_diff_trace_source_smoke
-  COMMAND ps_cli diff-trace-source ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt --level 0 --seed native-trace-smoke --inputs-file ${SMOKE_TRACE_INPUTS}
+  COMMAND ps_cli diff-trace-source ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt --level 0 --seed native-trace-smoke --inputs-file ${SMOKE_TRACE_INPUTS}
 )
 
 add_test(
   NAME ps_cli_diff_trace_source_right_smoke
-  COMMAND ps_cli diff-trace-source ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt --level 0 --seed native-trace-right --inputs-file ${CMAKE_CURRENT_SOURCE_DIR}/tests/right_trace_inputs.json
+  COMMAND ps_cli diff-trace-source ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt --level 0 --seed native-trace-right --inputs-file ${CMAKE_CURRENT_SOURCE_DIR}/tests/right_trace_inputs.json
 )
 
 add_test(
   NAME ps_cli_diff_trace_source_push_smoke
-  COMMAND ps_cli diff-trace-source ${CMAKE_SOURCE_DIR}/src/demo/sokoban_basic.txt --level 0 --seed native-trace-push --inputs-file ${CMAKE_CURRENT_SOURCE_DIR}/tests/push_trace_inputs.json
+  COMMAND ps_cli diff-trace-source ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt --level 0 --seed native-trace-push --inputs-file ${CMAKE_CURRENT_SOURCE_DIR}/tests/push_trace_inputs.json
 )
 
 add_test(
   NAME ps_cli_fixture_manifest
   COMMAND ${NODE_EXECUTABLE}
           ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_fixture_check.js
-          ${CMAKE_SOURCE_DIR}/src/tests/export_native_fixtures.js
+          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/export_native_fixtures.js
           $<TARGET_FILE:ps_cli>
           ${CMAKE_CURRENT_BINARY_DIR}/generated-fixtures
 )
@@ -252,7 +258,7 @@ add_test(
   NAME ps_cli_fixture_trace_sample
   COMMAND ${NODE_EXECUTABLE}
           ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_fixture_check.js
-          ${CMAKE_SOURCE_DIR}/src/tests/export_native_fixtures.js
+          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/export_native_fixtures.js
           $<TARGET_FILE:ps_cli>
           ${CMAKE_CURRENT_BINARY_DIR}/generated-fixtures-trace-sample
           --trace-limit 10

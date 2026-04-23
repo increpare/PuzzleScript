@@ -51,13 +51,15 @@ struct ParserLevelEntry {
 
 struct ParserState {
     std::map<std::string, ParserObjectEntry> objects;
+    // parser.js: for-in over state.objects uses insertion order; sounds/levels name lists follow that.
+    std::vector<std::string> objectDefinitionOrder;
 
     int32_t lineNumber = 0;
     int32_t commentLevel = 0;
     std::string section;
     std::vector<std::string> visitedSections;
     bool lineShouldEnd = false;
-    std::string lineShouldEndBecause = "a bunch of equals signs ('===')";
+    std::string lineShouldEndBecause;
     bool solAfterComment = false;
     bool insideCell = false;
     int32_t bracketBalance = 0;

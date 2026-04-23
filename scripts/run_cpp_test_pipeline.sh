@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Run the native/C++ checks used for JS parity: ctest + full parser-state and
-# parser-diagnostics corpus diffs (testdata.js and errormessage_testdata.js).
+# parser-diagnostics corpus diffs. Parser-state: `diff_parser_state_corpus.js`
+# defaults to both testdata.js and errormessage_testdata.js (`--corpus all`).
 #
 # Prerequisites: repo-root CMake build with `ps_cli` (e.g. `make build-native`
 # or `cmake --build build --target ps_cli`; default BUILD_DIR matches the Makefile).
@@ -52,7 +53,7 @@ else
 fi
 
 if [[ "${SKIP_PARSER_STATE_CORPUS:-0}" != "1" ]]; then
-	echo "== parser state corpus (testdata.js vs export_ir_json parser snapshot) =="
+	echo "== parser state corpus (testdata + errormessage vs export_ir_json parser snapshot) =="
 	node scripts/diff_parser_state_corpus.js --cli "$PS_CLI"
 else
 	echo "== parser state corpus (skipped) =="

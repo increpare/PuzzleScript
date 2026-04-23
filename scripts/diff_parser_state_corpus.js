@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
+// Compare JS parser_state snapshots (export_ir_json --snapshot-phase parser) to C++ (--emit-parser-state).
+// Default --corpus all runs testdata.js then errormessage_testdata.js. Use --corpus testdata|errormessage for one.
+
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -17,6 +20,7 @@ function loadJsArray(filePath, symbol) {
 
 function parseArgs(argv) {
     const result = {
+        corpus: 'all',
         limit: 0,
         start: 0,
         cliPath: path.resolve('build/native/ps_cli'),
@@ -25,7 +29,9 @@ function parseArgs(argv) {
     const args = argv.slice(2);
     for (let index = 0; index < args.length; ++index) {
         const arg = args[index];
-        if (arg === '--limit' && index + 1 < args.length) {
+        if (arg === '--corpus' && index + 1 < args.length) {
+            result.corpus = args[++index];
+        } else if (arg === '--limit' && index + 1 < args.length) {
             result.limit = Number.parseInt(args[++index], 10);
         } else if (arg === '--start' && index + 1 < args.length) {
             result.start = Number.parseInt(args[++index], 10);
@@ -36,6 +42,9 @@ function parseArgs(argv) {
         } else {
             throw new Error(`Unexpected argument: ${arg}`);
         }
+    }
+    if (result.corpus !== 'testdata' && result.corpus !== 'errormessage' && result.corpus !== 'all') {
+        throw new Error(`Unknown corpus "${result.corpus}" (expected testdata, errormessage, or all)`);
     }
     return result;
 }
@@ -48,9 +57,25 @@ function run(command, args, options = {}) {
     });
 }
 
-function main() {
-    const options = parseArgs(process.argv);
-    const corpus = loadJsArray(path.join('src', 'tests', 'resources', 'testdata.js'), 'testdata');
+function corpusFileAndSymbol(corpusName) {
+    if (corpusName === 'errormessage') {
+        return {
+            corpusFile: path.join('src', 'tests', 'resources', 'errormessage_testdata.js'),
+            corpusSymbol: 'errormessage_testdata',
+        };
+    }
+    return {
+        corpusFile: path.join('src', 'tests', 'resources', 'testdata.js'),
+        corpusSymbol: 'testdata',
+    };
+}
+
+/**
+ * @returns {{ checked: number, passed: number, failed: number }}
+ */
+function diffParserStateCorpusOnce(options, corpusName) {
+    const { corpusFile, corpusSymbol } = corpusFileAndSymbol(corpusName);
+    const corpus = loadJsArray(corpusFile, corpusSymbol);
     const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ps-parser-corpus-'));
     const start = Math.max(0, options.start);
     const end = options.limit > 0 ? Math.min(corpus.length, start + options.limit) : corpus.length;
@@ -75,7 +100,7 @@ function main() {
             if (jsRun.status !== 0) {
                 ++failed;
                 ++checked;
-                console.log(`parser_corpus index=${index} outcome=js_error name=${name}`);
+                console.log(`parser_corpus corpus=${corpusName} index=${index} outcome=js_error name=${name}`);
                 console.log(jsRun.stderr || jsRun.stdout);
                 continue;
             }
@@ -84,7 +109,7 @@ function main() {
             if (cppRun.status !== 0) {
                 ++failed;
                 ++checked;
-                console.log(`parser_corpus index=${index} outcome=cpp_error name=${name}`);
+                console.log(`parser_corpus corpus=${corpusName} index=${index} outcome=cpp_error name=${name}`);
                 console.log(cppRun.stderr || cppRun.stdout);
                 continue;
             }
@@ -96,7 +121,7 @@ function main() {
                 ++passed;
             } else {
                 ++failed;
-                console.log(`parser_corpus index=${index} outcome=diff_failed name=${name}`);
+                console.log(`parser_corpus corpus=${corpusName} index=${index} outcome=diff_failed name=${name}`);
                 console.log(diffRun.stdout);
                 break;
             }
@@ -109,8 +134,23 @@ function main() {
         }
     }
 
-    console.log(`parser_corpus_checked=${checked} parser_corpus_passed=${passed} parser_corpus_failed=${failed}`);
-    process.exit(failed === 0 ? 0 : 1);
+    console.log(
+        `parser_corpus=${corpusName} parser_corpus_checked=${checked} parser_corpus_passed=${passed} parser_corpus_failed=${failed}`,
+    );
+    return { checked, passed, failed };
+}
+
+function main() {
+    const options = parseArgs(process.argv);
+    const corpora = options.corpus === 'all' ? ['testdata', 'errormessage'] : [options.corpus];
+    let anyFailed = false;
+    for (const corpusName of corpora) {
+        const { failed } = diffParserStateCorpusOnce(options, corpusName);
+        if (failed > 0) {
+            anyFailed = true;
+        }
+    }
+    process.exit(anyFailed ? 1 : 0);
 }
 
 main();

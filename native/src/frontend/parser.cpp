@@ -307,6 +307,27 @@ bool isNumeric(std::string_view value) {
     });
 }
 
+// ECMA-262 "array index" string: ToString(ToUint32(P)) == P and ToUint32(P) != 2^32-1 (so "00000" is false).
+bool isJsArrayIndexPropertyName(std::string_view key) {
+    if (key.empty()) {
+        return false;
+    }
+    for (unsigned char ch : key) {
+        if (std::isdigit(ch) == 0) {
+            return false;
+        }
+    }
+    try {
+        const unsigned long long n = std::stoull(std::string(key));
+        if (n >= 4294967295ULL) {
+            return false;
+        }
+        return std::to_string(n) == std::string(key);
+    } catch (...) {
+        return false;
+    }
+}
+
 template <typename MapType>
 std::vector<std::string> sortLikeJsObjectKeys(const MapType& values) {
     std::vector<std::string> integerKeys;
@@ -314,7 +335,7 @@ std::vector<std::string> sortLikeJsObjectKeys(const MapType& values) {
     integerKeys.reserve(values.size());
     stringKeys.reserve(values.size());
     for (const auto& [key, _value] : values) {
-        if (isNumeric(key)) {
+        if (isJsArrayIndexPropertyName(key)) {
             integerKeys.push_back(key);
         } else {
             stringKeys.push_back(key);
@@ -334,7 +355,7 @@ std::vector<std::string> iterateObjectKeysLikeJs(const std::map<std::string, Par
     integerKeys.reserve(objects.size());
     stringObjects.reserve(objects.size());
     for (const auto& [key, object] : objects) {
-        if (isNumeric(key)) {
+        if (isJsArrayIndexPropertyName(key)) {
             integerKeys.push_back(key);
         } else {
             stringObjects.push_back(&object);
@@ -667,7 +688,7 @@ bool isAsciiWordCharByte(unsigned char byte) {
 }
 
 void registerOriginalCaseName(ParserState& state, std::string_view lowered, std::string_view original, int32_t lineNumber) {
-    if (!isAsciiIdentifierLike(lowered)) {
+    if (lowered.empty()) {
         return;
     }
     const std::string needle(lowered);
@@ -675,26 +696,21 @@ void registerOriginalCaseName(ParserState& state, std::string_view lowered, std:
         if (!asciiSubstringEqualsInsensitive(original.substr(position, needle.size()), needle)) {
             continue;
         }
-        const bool leftBoundary = position == 0 || !isAsciiWordCharByte(static_cast<unsigned char>(original[position - 1]));
+        const unsigned char first = static_cast<unsigned char>(original[position]);
+        // parser.js RegExp("\\b"+candname+"\\b","i") without /u: \\b is ASCII [A-Za-z0-9_] vs non-word.
+        const bool leftOk = (position == 0 && isAsciiWordCharByte(first))
+            || (position > 0
+                && isAsciiWordCharByte(static_cast<unsigned char>(original[position - 1])) != isAsciiWordCharByte(first));
         const size_t end = position + needle.size();
-        const bool rightBoundary = end >= original.size() || !isAsciiWordCharByte(static_cast<unsigned char>(original[end]));
-        if (leftBoundary && rightBoundary) {
+        const unsigned char last = static_cast<unsigned char>(original[end - 1]);
+        const bool rightOk = (end >= original.size())
+            || (isAsciiWordCharByte(last) != isAsciiWordCharByte(static_cast<unsigned char>(original[end])));
+        if (leftOk && rightOk) {
             state.originalCaseNames[needle] = std::string(original.substr(position, needle.size()));
             state.originalLineNumbers[needle] = lineNumber;
             return;
         }
     }
-}
-
-void registerLegendOriginalCaseName(ParserState& state, std::string_view lowered, int32_t lineNumber) {
-    if (!isIdentifierLike(lowered)) {
-        return;
-    }
-    if (!isWordChar(lowered.front()) || !isWordChar(lowered.back())) {
-        return;
-    }
-    state.originalCaseNames[std::string(lowered)] = std::string(lowered);
-    state.originalLineNumbers[std::string(lowered)] = lineNumber;
 }
 
 void appendUnique(std::vector<std::string>& values, const std::string& value) {
@@ -763,7 +779,7 @@ void checkNameDefinedForLegend(
 void diagnoseLegendLineTokens(
     ParserState& state,
     DiagnosticSink& diagnostics,
-    const std::vector<std::string>& tokens,
+    std::vector<std::string>& tokens,
     const std::string& candname
 ) {
     if (const auto prevLine = wordAlreadyDeclaredLine(state, candname)) {
@@ -778,25 +794,52 @@ void diagnoseLegendLineTokens(
             state.lineNumber,
             "You named an object \"" + toUpperCopy(candname) + "\", but this is a keyword. Don't do that!");
     }
+    // parser.js processLegendLine: on each RHS visit where splits[i] === candname, log once then splice
+    // out every occurrence of candname from index >= 2 (first pair removes [rhs, joiner]; later [joiner, rhs]).
+    // Synonym / aggregate / property branches use the mutated splits array.
     for (size_t i = 2; i < tokens.size(); i += 2) {
-        const std::string rhs = toLowerCopy(trim(std::string(tokens[i])));
-        if (rhs == candname) {
+        const std::string nname = toLowerCopy(trim(std::string(tokens[i])));
+        if (nname == candname) {
             diagnostics.error(
                 DiagnosticCode::GenericError,
                 state.lineNumber,
                 "You can't define object " + toUpperCopy(candname) + " in terms of itself!");
+            while (true) {
+                size_t idx = std::string::npos;
+                for (size_t k = 2; k < tokens.size(); ++k) {
+                    if (toLowerCopy(trim(std::string(tokens[k]))) == candname) {
+                        idx = k;
+                        break;
+                    }
+                }
+                if (idx < 2 || idx == std::string::npos) {
+                    break;
+                }
+                if (idx >= 4) {
+                    tokens.erase(tokens.begin() + static_cast<std::ptrdiff_t>(idx - 1), tokens.begin() + static_cast<std::ptrdiff_t>(idx + 1));
+                } else {
+                    // JS Array#splice(idx, 2): only deletes elements that exist (e.g. synonym `a = a` has no joiner
+                    // after the RHS — only one tail element is removed).
+                    const size_t endIdx = std::min(idx + 2, tokens.size());
+                    tokens.erase(tokens.begin() + static_cast<std::ptrdiff_t>(idx), tokens.begin() + static_cast<std::ptrdiff_t>(endIdx));
+                }
+            }
         }
         for (size_t j = 2; j < i; j += 2) {
-            const std::string other = toLowerCopy(trim(std::string(tokens[j])));
-            if (other == rhs) {
+            const std::string oname = toLowerCopy(trim(std::string(tokens[j])));
+            const std::string nnameDup = toLowerCopy(trim(std::string(tokens[i])));
+            if (oname == nnameDup) {
                 diagnostics.warning(
                     DiagnosticCode::GenericWarning,
                     state.lineNumber,
-                    "You're repeating the object " + toUpperCopy(rhs) + " here multiple times on the RHS.  This makes no sense.  Don't do that.");
+                    "You're repeating the object " + toUpperCopy(nnameDup) + " here multiple times on the RHS.  This makes no sense.  Don't do that.");
             }
         }
-        if (rhs != candname) {
-            checkNameDefinedForLegend(state, diagnostics, state.lineNumber, rhs);
+    }
+    for (size_t i = 2; i < tokens.size(); i += 2) {
+        const std::string defname = toLowerCopy(trim(std::string(tokens[i])));
+        if (defname != candname) {
+            checkNameDefinedForLegend(state, diagnostics, state.lineNumber, defname);
         }
     }
 }
@@ -927,9 +970,49 @@ bool shouldWarnMetadataEmbedCommentLikeJs(std::string_view rawValueTail) {
     return remainderTrimmed.front() != '(';
 }
 
+std::vector<std::string> objectKeysForInEnumerationOrder(const ParserState& state) {
+    std::vector<std::string> integerKeys;
+    std::vector<std::string> stringKeysInOrder;
+    integerKeys.reserve(state.objects.size());
+    stringKeysInOrder.reserve(state.objects.size());
+    for (const auto& [key, _] : state.objects) {
+        if (isJsArrayIndexPropertyName(key)) {
+            integerKeys.push_back(key);
+        }
+    }
+    std::sort(integerKeys.begin(), integerKeys.end(), [](const std::string& lhs, const std::string& rhs) {
+        return std::stoll(lhs) < std::stoll(rhs);
+    });
+    if (!state.objectDefinitionOrder.empty()) {
+        for (const auto& key : state.objectDefinitionOrder) {
+            if (!isJsArrayIndexPropertyName(key) && state.objects.find(key) != state.objects.end()) {
+                if (std::find(stringKeysInOrder.begin(), stringKeysInOrder.end(), key) == stringKeysInOrder.end()) {
+                    stringKeysInOrder.push_back(key);
+                }
+            }
+        }
+        for (const auto& [key, _] : state.objects) {
+            if (isJsArrayIndexPropertyName(key)) {
+                continue;
+            }
+            if (std::find(stringKeysInOrder.begin(), stringKeysInOrder.end(), key) == stringKeysInOrder.end()) {
+                stringKeysInOrder.push_back(key);
+            }
+        }
+    } else {
+        for (const auto& [key, _] : state.objects) {
+            if (!isJsArrayIndexPropertyName(key)) {
+                stringKeysInOrder.push_back(key);
+            }
+        }
+    }
+    integerKeys.insert(integerKeys.end(), stringKeysInOrder.begin(), stringKeysInOrder.end());
+    return integerKeys;
+}
+
 void populateNamesForSounds(ParserState& state) {
     state.names.clear();
-    for (const auto& name : iterateObjectKeysLikeJs(state.objects)) {
+    for (const auto& name : objectKeysForInEnumerationOrder(state)) {
         state.names.push_back(name);
     }
     for (const auto& entry : state.legendSynonyms) {
@@ -945,7 +1028,7 @@ void populateNamesForSounds(ParserState& state) {
 
 void populateAbbrevNamesForLevels(ParserState& state) {
     state.abbrevNames.clear();
-    for (const auto& name : iterateObjectKeysLikeJs(state.objects)) {
+    for (const auto& name : objectKeysForInEnumerationOrder(state)) {
         if (utf8CodePointCount(name) == 1) {
             state.abbrevNames.push_back(name);
         }
@@ -1136,6 +1219,9 @@ void parseObjectsLine(ParserState& state, DiagnosticSink& diagnostics, std::stri
             object.lineNumber = state.lineNumber;
             object.colors.clear();
             object.spritematrix.clear();
+            state.objectDefinitionOrder.push_back(candLower);
+            // parser.js: mixedCase is captured before stream.string is lowercased on sol, so the
+            // first object name on a line uses the original-casing buffer for registerOriginalCaseName.
             if (isAsciiIdentifierLike(candLower)) {
                 registerOriginalCaseName(state, candLower, mixedLine, state.lineNumber);
             } else if (isIdentifierLike(candLower) && containsAsciiLetter(candLower)) {
@@ -1143,10 +1229,11 @@ void parseObjectsLine(ParserState& state, DiagnosticSink& diagnostics, std::stri
                 state.originalLineNumbers[candLower] = state.lineNumber;
             }
         } else {
-            if (isAsciiIdentifierLike(candLower)) {
-                registerOriginalCaseName(state, candLower, mixedLine, state.lineNumber);
-            } else if (isIdentifierLike(candLower) && containsAsciiLetter(candLower)) {
-                state.originalCaseNames[candLower] = sliceMixedFor(tokenStart, tokenEnd);
+            // Subsequent tokens on the same physical line see stream.string already lowercased in JS,
+            // so registerOriginalCaseName runs against the lowered line (match[0] is lowercase there).
+            registerOriginalCaseName(state, candLower, loweredLine, state.lineNumber);
+            if (isIdentifierLike(candLower) && containsAsciiLetter(candLower) && state.originalCaseNames.count(candLower) == 0) {
+                state.originalCaseNames[candLower] = std::string(loweredLine.substr(tokenStart, tokenEnd - tokenStart));
                 state.originalLineNumbers[candLower] = state.lineNumber;
             }
             state.legendSynonyms.push_back(ParserLegendEntry{
@@ -1227,7 +1314,8 @@ void parseObjectsLine(ParserState& state, DiagnosticSink& diagnostics, std::stri
                     state.lineNumber,
                     "Unknown junk in spritematrix for object " + toUpperCopy(state.objectsCandname) + ".");
                 consumeObjectsRegNotCommentStart(loweredLine, pos);
-                state.objectsSection = 0;
+                // Stay in sprite matrix mode for this object; otherwise the next all-digit line (e.g. `00010`)
+                // is mis-tokenized as a new object name (matches JS / errormessage "Unknown junk in spritematrix").
                 firstContentfulTokenOnLine = false;
                 continue;
             }
@@ -1361,7 +1449,20 @@ void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
     const std::string candname = toLowerCopy(trim(std::string(tokens[0])));
     entry.name = candname;
     entry.lineNumber = state.lineNumber;
-    registerLegendOriginalCaseName(state, entry.name, state.lineNumber);
+    // parser.js processLegendLine: mixedCase is stream.string at EOL, which is already lowercased
+    // after the first token on the line — same buffer registerOriginalCaseName searches in JS.
+    if (isAsciiIdentifierLike(candname)) {
+        registerOriginalCaseName(state, candname, trimmedLine, state.lineNumber);
+    } else if (isIdentifierLike(candname)) {
+        // registerOriginalCaseName uses ASCII \\b boundaries only (matches JS RegExp without /u).
+        // Unicode legend keys (e.g. "stück") still get a stable original_case_names entry in JS.
+        // Reuse the legacy gate: only ASCII-ish edge bytes count as "word" endpoints (same as the
+        // old registerLegendOriginalCaseName), so single-token punctuation like "˅" is skipped.
+        if (isWordChar(static_cast<unsigned char>(candname.front())) && isWordChar(static_cast<unsigned char>(candname.back()))) {
+            state.originalCaseNames[candname] = candname;
+            state.originalLineNumbers[candname] = state.lineNumber;
+        }
+    }
 
     // parser.js: trailing "'" fails reg_name at an odd token index — logs "Something bad…" and does not push
     // that token, so processLegendLine sees only [@, =, Crate] and still records a synonym.
@@ -2332,6 +2433,8 @@ void appendJsonStringMap(std::string& out, const std::map<std::string, std::stri
     out += "{";
     if (!values.empty()) {
         out += "\n";
+        // Matches JSON.stringify / Object.keys enumeration on objects built by puzzlescript_parser_snapshot.js
+        // toStringMap(): integer-like keys first in numeric order, then remaining keys sorted lexicographically.
         const auto orderedKeys = sortLikeJsObjectKeys(values);
         for (size_t index = 0; index < orderedKeys.size(); ++index) {
             const auto& key = orderedKeys[index];
@@ -2512,7 +2615,7 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
                 break;
             case 'l':
                 if (state.section == "legend") {
-                    parseLegendLine(state, diagnostics, trimmedVisible);
+                    parseLegendLine(state, diagnostics, loweredVisible);
                 } else {
                     parseLevelsLine(state, diagnostics, trimmedVisible, rawLine);
                 }
