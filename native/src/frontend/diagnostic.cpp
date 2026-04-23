@@ -3,6 +3,12 @@
 namespace puzzlescript::frontend {
 
 void DiagnosticSink::add(Severity severity, DiagnosticCode code, std::optional<int32_t> line, std::string message) {
+    // parser.js logError/logWarning: identical HTML diagnostics are suppressed (see duplicate checks).
+    for (const auto& existing : diagnostics_) {
+        if (existing.severity == severity && existing.line == line && existing.message == message) {
+            return;
+        }
+    }
     diagnostics_.push_back(Diagnostic{
         severity,
         code,

@@ -54,6 +54,81 @@ int sectionOrderIndex(std::string_view name) {
     return -1;
 }
 
+// Longest-first so "collisionlayers" wins over any hypothetical shorter prefix.
+constexpr std::string_view kSectionKeywordLongestFirst[] = {
+    "collisionlayers",
+    "winconditions",
+    "objects",
+    "legend",
+    "sounds",
+    "rules",
+    "levels",
+};
+
+bool utf8IdentifierContinuationAt(std::string_view text, size_t byteOffset) {
+    if (byteOffset >= text.size()) {
+        return false;
+    }
+    const auto* bytes = reinterpret_cast<const utf8proc_uint8_t*>(text.data());
+    const utf8proc_ssize_t total = static_cast<utf8proc_ssize_t>(text.size());
+    utf8proc_int32_t codepoint = 0;
+    const utf8proc_ssize_t advance = utf8proc_iterate(bytes + static_cast<utf8proc_ssize_t>(byteOffset), total - static_cast<utf8proc_ssize_t>(byteOffset), &codepoint);
+    if (advance <= 0) {
+        return false;
+    }
+    if (codepoint == '_') {
+        return true;
+    }
+    if (codepoint <= 0x7F) {
+        return std::isalnum(static_cast<unsigned char>(static_cast<char>(codepoint))) != 0;
+    }
+    const auto category = utf8proc_category(codepoint);
+    return category == UTF8PROC_CATEGORY_LU || category == UTF8PROC_CATEGORY_LL || category == UTF8PROC_CATEGORY_LT
+        || category == UTF8PROC_CATEGORY_LM || category == UTF8PROC_CATEGORY_LO || category == UTF8PROC_CATEGORY_ND
+        || category == UTF8PROC_CATEGORY_NL || category == UTF8PROC_CATEGORY_NO;
+}
+
+size_t skipUnicodeZsAndAsciiSpace(std::string_view text, size_t byteOffset) {
+    const auto* bytes = reinterpret_cast<const utf8proc_uint8_t*>(text.data());
+    const utf8proc_ssize_t total = static_cast<utf8proc_ssize_t>(text.size());
+    utf8proc_ssize_t cursor = static_cast<utf8proc_ssize_t>(byteOffset);
+    while (cursor < total) {
+        utf8proc_int32_t codepoint = 0;
+        const utf8proc_ssize_t advance = utf8proc_iterate(bytes + cursor, total - cursor, &codepoint);
+        if (advance <= 0) {
+            break;
+        }
+        if (codepoint == ' ' || codepoint == '\t' || codepoint == '\n' || codepoint == '\r' || codepoint == '\f' || codepoint == '\v') {
+            cursor += advance;
+            continue;
+        }
+        const auto category = utf8proc_category(codepoint);
+        if (category == UTF8PROC_CATEGORY_ZS || category == UTF8PROC_CATEGORY_ZL || category == UTF8PROC_CATEGORY_ZP) {
+            cursor += advance;
+            continue;
+        }
+        break;
+    }
+    return static_cast<size_t>(cursor);
+}
+
+// parser.js reg_sectionNames + trailing [\p{Z}\s]*; returns section name or nullopt.
+std::optional<std::string> matchLeadingSectionKeyword(std::string_view loweredTrimmedLine) {
+    for (const std::string_view keyword : kSectionKeywordLongestFirst) {
+        if (loweredTrimmedLine.size() < keyword.size()) {
+            continue;
+        }
+        if (loweredTrimmedLine.substr(0, keyword.size()) != keyword) {
+            continue;
+        }
+        if (utf8IdentifierContinuationAt(loweredTrimmedLine, keyword.size())) {
+            continue;
+        }
+        return std::string(keyword);
+    }
+    return std::nullopt;
+}
+
 bool visitedContainsSection(const ParserState& state, std::string_view name) {
     return std::find(state.visitedSections.begin(), state.visitedSections.end(), std::string(name))
         != state.visitedSections.end();
@@ -932,8 +1007,70 @@ void parseObjectsLine(ParserState& state, DiagnosticSink& diagnostics, std::stri
     parseObjectsLine(state, diagnostics, trimmedLine, mixedCase);
 }
 
+bool abbrevNamesContainGlyph(const ParserState& state, std::string_view utf8Glyph) {
+    for (const auto& entry : state.abbrevNames) {
+        if (entry.size() == utf8Glyph.size() && entry == utf8Glyph) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// parser.js parseLevelsToken: first unknown glyph on a row yields one Key diagnostic (then parsing continues).
+void validateLevelMapRowAbbrevKeys(const ParserState& state, DiagnosticSink& diagnostics, std::string_view rowLowered) {
+    if (rowLowered.empty()) {
+        return;
+    }
+    const auto* bytes = reinterpret_cast<const utf8proc_uint8_t*>(rowLowered.data());
+    const utf8proc_ssize_t total = static_cast<utf8proc_ssize_t>(rowLowered.size());
+    utf8proc_ssize_t cursor = 0;
+    while (cursor < total) {
+        utf8proc_int32_t codepoint = 0;
+        const utf8proc_ssize_t advance = utf8proc_iterate(bytes + cursor, total - cursor, &codepoint);
+        if (advance <= 0) {
+            break;
+        }
+        const std::string_view glyph(reinterpret_cast<const char*>(bytes + cursor), static_cast<size_t>(advance));
+        if (!abbrevNamesContainGlyph(state, glyph)) {
+            std::string glyphStr(glyph);
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "Key \"" + toUpperCopy(glyphStr) + "\" not found. Do you need to add it to the legend, or define a new object?");
+            return;
+        }
+        cursor += advance;
+    }
+}
+
 void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine) {
-    const auto tokens = tokenizeLegendLine(trimmedLine);
+    const std::string trimmed = trim(std::string(trimmedLine));
+    if (trimmed.empty()) {
+        return;
+    }
+    const auto tokens = tokenizeLegendLine(trimmed);
+    const bool hasEqualsToken = std::find(tokens.begin(), tokens.end(), std::string("=")) != tokens.end();
+    if (!hasEqualsToken) {
+        // parser.js: processLegendLine with splits.length===1 logs a single error; missing '=' mid-line
+        // (e.g. ". Background") first logs the "define new items" assignment error then a dangling "ERROR".
+        if (tokens.size() <= 1) {
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "Incorrect format of legend - should be one of \"A = B\", \"A = B or C [ or D ...]\", \"A = B and C [ and D ...]\".");
+        } else {
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "In the legend, define new items using the equals symbol - declarations must look like \"A = B\", \"A = B or C [ or D ...]\", \"A = B and C [ and D ...]\".");
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "Incorrect format of legend - should be one of \"A = B\", \"A = B or C [ or D ...]\", \"A = B and C [ and D ...]\", but it looks like you have a dangling \"ERROR\"?");
+        }
+        return;
+    }
+
     if (tokens.size() < 3 || tokens[1] != "=") {
         return;
     }
@@ -1314,6 +1451,9 @@ void parseLevelsLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
         level.lineNumber = state.lineNumber;
     }
     level.rows.push_back(trimmedLower);
+    if (!trimmedLower.empty()) {
+        validateLevelMapRowAbbrevKeys(state, diagnostics, trimmedLower);
+    }
     if (level.rows.size() > 1) {
         // parser.js compares String.length (UTF-16 code units); for BMP PuzzleScript maps this matches Unicode scalar count.
         if (utf8CodePointCount(level.rows.back()) != utf8CodePointCount(level.rows.front())) {
@@ -1489,20 +1629,58 @@ ParserState parseSource(std::string_view source, DiagnosticSink& diagnostics) {
         }
 
         // parser.js #976: lines that look like section headers are still level map rows inside LEVELS.
-        if (state.section != "levels"
-            && std::find(std::begin(kSections), std::end(kSections), loweredVisible) != std::end(kSections)) {
-            state.section = loweredVisible;
-            state.lineShouldEnd = true;
-            state.lineShouldEndBecause = "a section name (\"" + std::string(loweredVisible) + "\")";
-            appendUnique(state.visitedSections, loweredVisible);
-            if (state.section == "sounds") {
-                populateNamesForSounds(state);
-            } else if (state.section == "levels") {
-                populateAbbrevNamesForLevels(state);
-            } else if (state.section == "objects") {
-                state.objectsSection = 0;
+        if (state.section != "levels") {
+            if (const std::optional<std::string> sectionHeader = matchLeadingSectionKeyword(loweredVisible)) {
+                const std::string& newSection = *sectionHeader;
+                if (std::find(state.visitedSections.begin(), state.visitedSections.end(), newSection) != state.visitedSections.end()) {
+                    diagnostics.error(
+                        DiagnosticCode::GenericError,
+                        state.lineNumber,
+                        "cannot duplicate sections (you tried to duplicate \"" + toUpperCopy(newSection) + "\").");
+                }
+                state.section = newSection;
+                state.lineShouldEnd = true;
+                state.lineShouldEndBecause = "a section name (\"" + toUpperCopy(newSection) + "\")";
+                state.visitedSections.push_back(newSection);
+
+                const int sectionIndex = sectionOrderIndex(newSection);
+                if (sectionIndex == 0) {
+                    if (state.visitedSections.size() > 1) {
+                        diagnostics.error(
+                            DiagnosticCode::GenericError,
+                            state.lineNumber,
+                            "section \"" + toUpperCopy(newSection) + "\" must be the first section");
+                    }
+                } else if (sectionIndex > 0) {
+                    const std::string prevRequired = std::string(kSections[static_cast<size_t>(sectionIndex - 1)]);
+                    if (std::find(state.visitedSections.begin(), state.visitedSections.end(), prevRequired) == state.visitedSections.end()) {
+                        diagnostics.error(
+                            DiagnosticCode::GenericError,
+                            state.lineNumber,
+                            "section \"" + toUpperCopy(newSection) + "\" is out of order, must follow  \"" + toUpperCopy(prevRequired)
+                                + "\" (or it could be that the section \"" + toUpperCopy(prevRequired)
+                                + "\"is just missing totally.  You have to include all section headings, even if the section itself is empty).");
+                    }
+                }
+
+                const size_t keywordBytes = newSection.size();
+                const size_t afterWhitespace = skipUnicodeZsAndAsciiSpace(loweredVisible, keywordBytes);
+                if (afterWhitespace < loweredVisible.size()) {
+                    diagnostics.error(
+                        DiagnosticCode::GenericError,
+                        state.lineNumber,
+                        "Only comments should go after a section name (\"" + toUpperCopy(newSection) + "\") on a line.");
+                }
+
+                if (state.section == "sounds") {
+                    populateNamesForSounds(state);
+                } else if (state.section == "levels") {
+                    populateAbbrevNamesForLevels(state);
+                } else if (state.section == "objects") {
+                    state.objectsSection = 0;
+                }
+                continue;
             }
-            continue;
         }
 
         if (state.section.empty()) {
