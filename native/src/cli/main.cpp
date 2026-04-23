@@ -2139,7 +2139,19 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
                     << ",\"rigid\":" << (rule.rigid ? "true" : "false") << ",\"is_random\":" << (rule.isRandom ? "true" : "false")
                     << ",\"ellipsis_count\":";
                 appendJsonIntArray(out, rule.ellipsisCount);
-                out << ",\"commands\":[]";
+                out << ",\"commands\":[";
+                for (size_t commandIndex = 0; commandIndex < rule.commands.size(); ++commandIndex) {
+                    if (commandIndex != 0) {
+                        out << ",";
+                    }
+                    const auto& command = rule.commands[commandIndex];
+                    out << "[" << jsonStringLiteral(command.name);
+                    if (command.argument.has_value()) {
+                        out << "," << jsonStringLiteral(*command.argument);
+                    }
+                    out << "]";
+                }
+                out << "]";
                 out << ",\"cell_row_masks\":[";
                 for (uint32_t row = 0; row < rule.cellRowMasksCount; ++row) {
                     if (row != 0) out << ",";

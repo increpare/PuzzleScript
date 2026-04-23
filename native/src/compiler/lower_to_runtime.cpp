@@ -1228,11 +1228,18 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                             }
 
                             if (!isProperty) {
-                                // Concrete objects: set only the first id for this name.
+                                // Concrete objects: set only the first id represented
+                                // by this token (handles legend aliases like 1/2/3/4).
                                 auto oneMask = makeEmptyMask(game->wordCount);
-                                const auto idIt = objectIdByName.find(item.name);
-                                if (idIt != objectIdByName.end()) {
-                                    setMaskBit(oneMask, idIt->second);
+                                std::set<std::string> rhsVisiting;
+                                const auto resolved = resolveMask(resolveMask, item.name, rhsVisiting);
+                                for (int32_t id = 0; id < game->objectCount; ++id) {
+                                    const uint32_t word = static_cast<uint32_t>(id) / 32U;
+                                    const uint32_t bit = static_cast<uint32_t>(id) % 32U;
+                                    if (word < resolved.size() && (resolved[word] & (1U << bit)) != 0) {
+                                        setMaskBit(oneMask, id);
+                                        break;
+                                    }
                                 }
                                 for (size_t w = 0; w < objectsSet.size(); ++w) {
                                     objectsSet[w] |= oneMask[w];
