@@ -329,6 +329,7 @@ struct CompileResult {
 
 std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_ptr<const Game>& outGame);
 std::unique_ptr<Session> createSession(std::shared_ptr<const Game> game);
+std::unique_ptr<Session> createSessionWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed);
 std::unique_ptr<Error> loadLevel(Session& session, int32_t levelIndex);
 bool restart(Session& session);
 bool undo(Session& session);

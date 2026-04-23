@@ -80,6 +80,11 @@ const ps_error* ps_compile_result_error(const ps_compile_result* result);
 void ps_free_compile_result(ps_compile_result* result);
 
 bool ps_session_create(const ps_game* game, ps_session** out_session, ps_error** out_error);
+bool ps_session_create_with_loaded_level_seed(
+    const ps_game* game,
+    const char* loaded_level_seed_utf8,
+    ps_session** out_session,
+    ps_error** out_error);
 bool ps_session_clone(const ps_session* session, ps_session** out_session, ps_error** out_error);
 void ps_session_destroy(ps_session* session);
 bool ps_session_load_level(ps_session* session, int32_t level_index, ps_error** out_error);

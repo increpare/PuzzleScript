@@ -144,9 +144,12 @@ int32_t dirMaskFromToken(std::string_view token) {
     if (token == "right") return 8;
     if (token == "action") return 16;
     if (token == "moving") return 1; // canonicalized to UP in JS rule masks
-    if (token == "horizontal") return 4;  // canonicalized to left
-    if (token == "vertical") return 1;    // canonicalized to up
+    if (token == "horizontal" || token == "horizontal_par" || token == "horizontal_perp") return 4;
+    if (token == "vertical" || token == "vertical_par" || token == "vertical_perp") return 1;
     if (token == "orthogonal") return 15; // up|down|left|right
+    // Aggregates: non-zero so `parseSide` pairs them with the following object name
+    // (reg_directions in languageConstants.js).
+    if (token == "perpendicular" || token == "parallel") return 1;
     if (token == "stationary") return 0; // special-cased: goes to movementsMissing=0x1f
     return 0;
 }
@@ -869,8 +872,10 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                     }
                     std::string dir;
                     std::string name = tokens[i];
-                    if ((dirMaskFromToken(tokens[i]) != 0 || tokens[i] == "stationary" || tokens[i] == "no" || tokens[i] == "random") && (i + 1) < end) {
-                        dir = tokens[i];
+                    const std::string tokLower = toLowerAsciiCopy(tokens[i]);
+                    if ((dirMaskFromToken(tokLower) != 0 || tokLower == "stationary" || tokLower == "no" || tokLower == "random")
+                        && (i + 1) < end) {
+                        dir = tokLower;
                         name = tokens[i + 1];
                         i += 2;
                     } else {
@@ -879,14 +884,22 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                     if (name == "|") {
                         continue;
                     }
-                    if (inlineCommandSink != nullptr && dir.empty() && isJsBracketPostfixCommand(name)
-                        && !cellNameRefersToLegendOrObject(name)) {
+                    // Legend/property maps are lower-case (see legend parsing). JS rule
+                    // matching is case-insensitive for object/property names and movement
+                    // keywords like MOVING / STATIONARY.
+                    const std::string nameNorm = toLowerAsciiCopy(name);
+                    std::string dirNorm = dir;
+                    if (!dirNorm.empty()) {
+                        dirNorm = toLowerAsciiCopy(dirNorm);
+                    }
+                    if (inlineCommandSink != nullptr && dirNorm.empty() && isJsBracketPostfixCommand(nameNorm)
+                        && !cellNameRefersToLegendOrObject(nameNorm)) {
                         puzzlescript::RuleCommand cmd;
-                        cmd.name = name;
+                        cmd.name = nameNorm;
                         inlineCommandSink->push_back(std::move(cmd));
                         continue;
                     }
-                    cell.items.push_back({std::move(dir), std::move(name)});
+                    cell.items.push_back({std::move(dirNorm), std::move(nameNorm)});
                 }
                 // Always push the last cell, even if empty. This is required for
                 // rules like `[ | | ]` where empty RHS cells represent clearing.
@@ -946,16 +959,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         }
 
         auto absolutizeDir = [](const std::string& forward, const std::string& dir) -> std::string {
-            if (dir == "horizontal") {
-                if (forward == "up") return "left";
-                if (forward == "down") return "right";
-                if (forward == "right") return "right";
-                if (forward == "left") return "right";
-            }
-            if (dir == "vertical") {
-                if (forward == "up" || forward == "left") return "up";
-                if (forward == "down" || forward == "right") return "down";
-            }
+            // Match JS `absolutifyRuleCell` + `relativeDict` / `relativeDirs` in compiler.js.
+            // `horizontal`, `vertical`, `orthogonal`, `moving`, etc. stay as aggregates
+            // for aggregate expansion; ^ v < > parallel perpendicular become concrete/_par/_perp.
             if (dir == ">") return forward;
             if (dir == "<") {
                 if (forward == "up") return "down";
@@ -974,6 +980,14 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 if (forward == "down") return "left";
                 if (forward == "left") return "up";
                 if (forward == "right") return "down";
+            }
+            if (dir == "parallel") {
+                if (forward == "right" || forward == "left") return "horizontal_par";
+                if (forward == "up" || forward == "down") return "vertical_par";
+            }
+            if (dir == "perpendicular") {
+                if (forward == "right" || forward == "left") return "vertical_perp";
+                if (forward == "up" || forward == "down") return "horizontal_perp";
             }
             return dir;
         };
@@ -995,6 +1009,138 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 }
             }
             return false;
+        };
+
+        // JS `concretizeMovingRule` expands `directionaggregates` on the LHS (languageConstants.js).
+        // Native splits `moving` separately (`enumerateMovingVariants`). We also split
+        // direction aggregates from `languageConstants.js` / post-`absolutifyRuleCell` names
+        // (`horizontal_par`, `vertical_perp`, etc.); `moving` stays in enumerateMovingVariants.
+        auto expandOrthogonalHorizontalVerticalRows = [&](std::vector<ParsedRow> lhs0, std::vector<ParsedRow> rhs0)
+            -> std::vector<std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>>> {
+            static const std::vector<std::string> kOrthDirs = {"up", "down", "left", "right"};
+            static const std::vector<std::string> kHorizDirs = {"left", "right"};
+            static const std::vector<std::string> kVertDirs = {"up", "down"};
+            static const std::vector<std::string> kPerpDirs = {"^", "v"};
+            static const std::vector<std::string> kParDirs = {"<", ">"};
+            std::vector<std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>>> work;
+            work.push_back({std::move(lhs0), std::move(rhs0)});
+            for (;;) {
+                bool split = false;
+                for (size_t wi = 0; wi < work.size(); ++wi) {
+                    size_t fj = 0;
+                    size_t fk = 0;
+                    std::string nameAt;
+                    std::string aggAt;
+                    const std::vector<std::string>* concDirs = nullptr;
+                    bool found = false;
+                    const auto& lhs = work[wi].first;
+                    for (size_t j = 0; j < lhs.size() && !found; ++j) {
+                        for (size_t k = 0; k < lhs[j].size() && !found; ++k) {
+                            if (lhs[j][k].isEllipsis) {
+                                continue;
+                            }
+                            for (size_t ii = 0; ii < lhs[j][k].items.size() && !found; ++ii) {
+                                const std::string& d = lhs[j][k].items[ii].dir;
+                                if (d == "orthogonal") {
+                                    fj = j;
+                                    fk = k;
+                                    nameAt = lhs[j][k].items[ii].name;
+                                    aggAt = d;
+                                    concDirs = &kOrthDirs;
+                                    found = true;
+                                } else if (d == "horizontal" || d == "horizontal_par" || d == "horizontal_perp") {
+                                    fj = j;
+                                    fk = k;
+                                    nameAt = lhs[j][k].items[ii].name;
+                                    aggAt = d;
+                                    concDirs = &kHorizDirs;
+                                    found = true;
+                                } else if (d == "vertical" || d == "vertical_par" || d == "vertical_perp") {
+                                    fj = j;
+                                    fk = k;
+                                    nameAt = lhs[j][k].items[ii].name;
+                                    aggAt = d;
+                                    concDirs = &kVertDirs;
+                                    found = true;
+                                } else if (d == "perpendicular") {
+                                    fj = j;
+                                    fk = k;
+                                    nameAt = lhs[j][k].items[ii].name;
+                                    aggAt = d;
+                                    concDirs = &kPerpDirs;
+                                    found = true;
+                                } else if (d == "parallel") {
+                                    fj = j;
+                                    fk = k;
+                                    nameAt = lhs[j][k].items[ii].name;
+                                    aggAt = d;
+                                    concDirs = &kParDirs;
+                                    found = true;
+                                }
+                            }
+                        }
+                    }
+                    if (!found || concDirs == nullptr) {
+                        continue;
+                    }
+                    std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>> base = std::move(work[wi]);
+                    work.erase(work.begin() + static_cast<std::ptrdiff_t>(wi));
+                    // JS `concretizeMovingRule`: only the scanned LHS cell (fj,fk) is concretized per
+                    // split iteration; if that aggregate+object appears once on the LHS overall, the
+                    // post-pass applies the same concrete dir to *every* RHS cell (not aligned index).
+                    int lhsAggCells = 0;
+                    for (const auto& row : base.first) {
+                        for (const auto& cell : row) {
+                            if (cell.isEllipsis) {
+                                continue;
+                            }
+                            for (const auto& it : cell.items) {
+                                if (it.dir == aggAt && it.name == nameAt) {
+                                    ++lhsAggCells;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    const bool rhsAggGlobal = (lhsAggCells == 1);
+                    for (const std::string& conc : *concDirs) {
+                        std::vector<ParsedRow> nl = base.first;
+                        std::vector<ParsedRow> nr = base.second;
+                        for (auto& it : nl[fj][fk].items) {
+                            if (it.dir == aggAt && it.name == nameAt) {
+                                it.dir = conc;
+                            }
+                        }
+                        if (rhsAggGlobal) {
+                            for (auto& row : nr) {
+                                for (auto& cell : row) {
+                                    if (cell.isEllipsis) {
+                                        continue;
+                                    }
+                                    for (auto& it : cell.items) {
+                                        if (it.dir == aggAt && it.name == nameAt) {
+                                            it.dir = conc;
+                                        }
+                                    }
+                                }
+                            }
+                        } else if (fj < nr.size() && fk < nr[fj].size() && !nr[fj][fk].isEllipsis) {
+                            for (auto& it : nr[fj][fk].items) {
+                                if (it.dir == aggAt && it.name == nameAt) {
+                                    it.dir = conc;
+                                }
+                            }
+                        }
+                        work.push_back({std::move(nl), std::move(nr)});
+                    }
+                    split = true;
+                    break;
+                }
+                if (!split) {
+                    break;
+                }
+            }
+            return work;
         };
 
         auto enumerateMovingVariants = [&](const std::vector<ParsedRow>& lhsBase, const std::vector<ParsedRow>& rhsBase) {
@@ -1036,105 +1182,6 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                     }
                 }
                 out.push_back({std::move(lhs), std::move(rhs)});
-            }
-            return out;
-        };
-        auto enumerateDirectionalPropertyVariants = [&](const std::vector<ParsedRow>& lhsBase, const std::vector<ParsedRow>& rhsBase) {
-            std::map<std::string, bool> directionalPropertySeen;
-            auto collectDirectional = [&](const std::vector<ParsedRow>& rows) {
-                for (const auto& row : rows) {
-                    for (const auto& cell : row) {
-                        for (const auto& item : cell.items) {
-                            if (propertyOf.find(item.name) == propertyOf.end()) {
-                                continue;
-                            }
-                            if (item.name != "player") {
-                                continue;
-                            }
-                            if (!item.dir.empty() && item.dir != "no") {
-                                directionalPropertySeen[item.name] = true;
-                            } else if (directionalPropertySeen.find(item.name) == directionalPropertySeen.end()) {
-                                directionalPropertySeen[item.name] = false;
-                            }
-                        }
-                    }
-                }
-            };
-            collectDirectional(lhsBase);
-            collectDirectional(rhsBase);
-
-            struct PropertySlot {
-                std::string name;
-                std::vector<std::string> choices;
-            };
-            std::vector<PropertySlot> slots;
-            for (const auto& [name, hasDirectionalUse] : directionalPropertySeen) {
-                if (!hasDirectionalUse) {
-                    continue;
-                }
-                std::set<std::string> visiting;
-                const auto mask = resolveMask(resolveMask, name, visiting);
-                if (!maskSingleLayer(mask).has_value()) {
-                    continue;
-                }
-                std::vector<std::string> choices;
-                for (int32_t id = 0; id < game->objectCount; ++id) {
-                    const uint32_t word = static_cast<uint32_t>(id) / 32U;
-                    const uint32_t bit = static_cast<uint32_t>(id) % 32U;
-                    if (word < mask.size() && (mask[word] & (1U << bit)) != 0) {
-                        if (static_cast<size_t>(id) < game->idDict.size()) {
-                            choices.push_back(game->idDict[static_cast<size_t>(id)]);
-                        }
-                    }
-                }
-                if (choices.size() <= 1) {
-                    continue;
-                }
-                slots.push_back(PropertySlot{name, std::move(choices)});
-            }
-
-            std::vector<std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>>> out;
-            if (slots.empty()) {
-                out.push_back({lhsBase, rhsBase});
-                return out;
-            }
-
-            std::vector<size_t> choiceIndex(slots.size(), 0);
-            while (true) {
-                std::map<std::string, std::string> picked;
-                for (size_t i = 0; i < slots.size(); ++i) {
-                    picked[slots[i].name] = slots[i].choices[choiceIndex[i]];
-                }
-
-                auto lhs = lhsBase;
-                auto rhs = rhsBase;
-                auto applyPicked = [&](std::vector<ParsedRow>& rows) {
-                    for (auto& row : rows) {
-                        for (auto& cell : row) {
-                            for (auto& item : cell.items) {
-                                if (const auto it = picked.find(item.name); it != picked.end()) {
-                                    item.name = it->second;
-                                }
-                            }
-                        }
-                    }
-                };
-                applyPicked(lhs);
-                applyPicked(rhs);
-                out.push_back({std::move(lhs), std::move(rhs)});
-
-                size_t carry = 0;
-                while (carry < slots.size()) {
-                    ++choiceIndex[carry];
-                    if (choiceIndex[carry] < slots[carry].choices.size()) {
-                        break;
-                    }
-                    choiceIndex[carry] = 0;
-                    ++carry;
-                }
-                if (carry == slots.size()) {
-                    break;
-                }
             }
             return out;
         };
@@ -1225,6 +1272,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             std::vector<Work> work;
             work.push_back({std::move(lhs0), std::move(rhs0), {}});
             expandNoPrefixedRows(work.front().lhs, work.front().rhs);
+            // JS freezes `ambiguousProperties` after no-prefix expand; it is not
+            // recomputed as concrete names appear on the LHS during splitting.
             const std::set<std::string> ambiguousInitial =
                 buildAmbiguousPropertiesSet(work.front().lhs, work.front().rhs);
 
@@ -1232,7 +1281,6 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             while (modified) {
                 modified = false;
                 for (size_t i = 0; i < work.size(); ++i) {
-                    const std::set<std::string> ambiguous = buildAmbiguousPropertiesSet(work[i].lhs, work[i].rhs);
                     size_t splitJ = 0;
                     size_t splitK = 0;
                     std::string splitProperty;
@@ -1241,7 +1289,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         for (size_t k = 0; k < work[i].lhs[j].size() && !found; ++k) {
                             for (const std::string& property : getPropertiesFromCellParsed(work[i].lhs[j][k])) {
                                 if (propertiesSingleLayer.find(property) != propertiesSingleLayer.end()
-                                    && ambiguous.find(property) == ambiguous.end()) {
+                                    && ambiguousInitial.find(property) == ambiguousInitial.end()) {
                                     continue;
                                 }
                                 if (propertyOf.find(property) == propertyOf.end()) {
@@ -1323,10 +1371,91 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             return out;
         };
 
+        // JS `makeSpawnedObjectsStationary` (compiler.js): after moving/property
+        // concretization, any RHS object token with an empty direction prefix whose
+        // collision layer is not represented among possible LHS objects in the
+        // aligned cell gets `stationary`, so old movement bits clear (#492).
+        auto getPossibleObjectNamesFromParsedCell = [&](const ParsedCell& cell) -> std::vector<std::string> {
+            std::vector<std::string> out;
+            if (cell.isEllipsis) {
+                return out;
+            }
+            for (const auto& it : cell.items) {
+                if (it.dir == "random") {
+                    continue;
+                }
+                const std::string nameLower = toLowerAsciiCopy(it.name);
+                const auto propIt = propertyOf.find(nameLower);
+                if (propIt != propertyOf.end()) {
+                    for (const auto& al : propIt->second) {
+                        out.push_back(al);
+                    }
+                } else if (objectIdByName.find(nameLower) != objectIdByName.end()) {
+                    out.push_back(nameLower);
+                }
+            }
+            return out;
+        };
+        auto objectLayerByLowerName = [&](const std::string& nameLower) -> std::optional<int32_t> {
+            const auto it = objectIdByName.find(nameLower);
+            if (it == objectIdByName.end()) {
+                return std::nullopt;
+            }
+            const int32_t layer = game->objectsById[static_cast<size_t>(it->second)].layer;
+            if (layer < 0) {
+                return std::nullopt;
+            }
+            return layer;
+        };
+        auto makeSpawnedObjectsStationaryRows = [&](std::vector<ParsedRow>& lhs, std::vector<ParsedRow>& rhs) {
+            const size_t nRows = std::min(lhs.size(), rhs.size());
+            for (size_t j = 0; j < nRows; ++j) {
+                const ParsedRow& rowL = lhs[j];
+                ParsedRow& rowR = rhs[j];
+                const size_t nCols = std::min(rowL.size(), rowR.size());
+                for (size_t k = 0; k < nCols; ++k) {
+                    const ParsedCell& cellL = rowL[k];
+                    ParsedCell& cellR = rowR[k];
+                    if (cellR.isEllipsis) {
+                        continue;
+                    }
+                    const std::vector<std::string> possible = getPossibleObjectNamesFromParsedCell(cellL);
+                    std::vector<int32_t> lhsLayers;
+                    lhsLayers.reserve(possible.size());
+                    for (const auto& name : possible) {
+                        if (const auto layer = objectLayerByLowerName(name)) {
+                            lhsLayers.push_back(*layer);
+                        }
+                    }
+                    for (auto& it : cellR.items) {
+                        if (it.dir == "random" || !it.dir.empty()) {
+                            continue;
+                        }
+                        const std::string nameLower = toLowerAsciiCopy(it.name);
+                        if (propertyOf.find(nameLower) != propertyOf.end()) {
+                            continue;
+                        }
+                        if (std::find(possible.begin(), possible.end(), nameLower) != possible.end()) {
+                            continue;
+                        }
+                        const auto rLayer = objectLayerByLowerName(nameLower);
+                        if (!rLayer.has_value()) {
+                            continue;
+                        }
+                        if (std::find(lhsLayers.begin(), lhsLayers.end(), *rLayer) != lhsLayers.end()) {
+                            continue;
+                        }
+                        it.dir = "stationary";
+                    }
+                }
+            }
+        };
+
         // JS compiler may emit fewer variants than the naive 4-direction expansion
         // when different scan directions collapse to identical rule patterns after
         // canonicalization (e.g. symmetric patterns, or UP/LLEFT normalized).
-        std::set<std::string> seenRuleVariants;
+        // Dedupe is per scan-direction iteration only: `concreteRuleDirection` is often
+        // normalized to down/right, so signatures must not cross-merge raw directions.
         auto ruleVariantSignature = [&](const std::string& forward, const std::vector<ParsedRow>& lhs, const std::vector<ParsedRow>& rhs) {
             std::string sig;
             sig.reserve(256);
@@ -1378,6 +1507,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         };
 
         for (const auto& rawRuleDirection : ruleDirections) {
+        std::set<std::string> seenRuleVariants;
         auto variantLhsRows = lhsRows;
         auto variantRhsRows = rhsRows;
         std::string concreteRuleDirection = rawRuleDirection;
@@ -1395,15 +1525,20 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             }
         }
 
-        const auto movingVariants = enumerateMovingVariants(variantLhsRows, variantRhsRows);
-        for (const auto& movingVariant : movingVariants) {
+        auto axisAggExpanded = expandOrthogonalHorizontalVerticalRows(std::move(variantLhsRows), std::move(variantRhsRows));
+        for (auto& orthoPair : axisAggExpanded) {
+            absolutizeRows(orthoPair.first, concreteRuleDirection);
+            absolutizeRows(orthoPair.second, concreteRuleDirection);
+            const auto movingVariants = enumerateMovingVariants(orthoPair.first, orthoPair.second);
+            for (const auto& movingVariant : movingVariants) {
             const auto propertyConcreteChunks =
                 expandConcretizePropertyRows(movingVariant.first, movingVariant.second);
             for (const auto& propChunk : propertyConcreteChunks) {
-        const auto propertyVariants = enumerateDirectionalPropertyVariants(propChunk.first, propChunk.second);
-        for (const auto& propertyVariant : propertyVariants) {
-        const auto& variantLhsRowsExpanded = propertyVariant.first;
-        const auto& variantRhsRowsExpanded = propertyVariant.second;
+                std::vector<ParsedRow> variantLhsRowsExpanded = propChunk.first;
+                std::vector<ParsedRow> variantRhsRowsExpanded = propChunk.second;
+                if (!lateRule) {
+                    makeSpawnedObjectsStationaryRows(variantLhsRowsExpanded, variantRhsRowsExpanded);
+                }
         {
             const std::string sig = ruleVariantSignature(concreteRuleDirection, variantLhsRowsExpanded, variantRhsRowsExpanded);
             if (seenRuleVariants.find(sig) != seenRuleVariants.end()) {

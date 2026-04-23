@@ -138,6 +138,30 @@ bool ps_session_create(const ps_game* game, ps_session** out_session, ps_error**
     return true;
 }
 
+bool ps_session_create_with_loaded_level_seed(
+    const ps_game* game,
+    const char* loaded_level_seed_utf8,
+    ps_session** out_session,
+    ps_error** out_error
+) {
+    if (out_error) {
+        *out_error = nullptr;
+    }
+    if (!game || !out_session) {
+        if (out_error) {
+            *out_error = makeError(std::make_unique<Error>("ps_session_create_with_loaded_level_seed received null input"));
+        }
+        return false;
+    }
+    if (!loaded_level_seed_utf8) {
+        return ps_session_create(game, out_session, out_error);
+    }
+    auto* wrapper = new ps_session();
+    wrapper->impl = puzzlescript::createSessionWithLoadedLevelSeed(game->impl, loaded_level_seed_utf8);
+    *out_session = wrapper;
+    return true;
+}
+
 bool ps_session_clone(const ps_session* session, ps_session** out_session, ps_error** out_error) {
     if (out_error) {
         *out_error = nullptr;

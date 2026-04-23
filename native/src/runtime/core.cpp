@@ -2311,8 +2311,6 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
         return {};
     }
 
-    queueRuleCommands(rule, commands);
-
     bool changed = false;
     for (size_t tupleIndex = 0; tupleIndex < tuples.size(); ++tupleIndex) {
         const auto& tuple = tuples[tupleIndex];
@@ -2338,6 +2336,10 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
             changed = applyRowMatchAt(session, rule, rule.patterns[rowIndex], ellipsisCount, tuple[rowIndex], delta) || changed;
         }
     }
+    // Mirror JS `Rule.prototype.tryApply`: queue commands after replacement attempts,
+    // but still when the row matched (matches.length > 0 there).
+    queueRuleCommands(rule, commands);
+
     if (changed) {
         std::ostringstream stream;
         stream << "line=" << rule.lineNumber
@@ -2349,7 +2351,8 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                << " matched=1 changed=0 row_count=" << rule.patterns.size();
         ruleDebugLog(stream.str());
     }
-    return RuleApplyOutcome{true, changed};
+    // JS returns whether any replacement ran; `matched` is used only for logging here.
+    return RuleApplyOutcome{changed, changed};
 }
 
 bool collectRandomRuleMatches(const Session& session, const Rule& rule, std::vector<RuleMatch>& outMatches) {
@@ -3209,6 +3212,21 @@ std::unique_ptr<Session> createSession(std::shared_ptr<const Game> game) {
     auto session = std::make_unique<Session>();
     session->game = std::move(game);
     session->preparedSession = session->game->preparedSession;
+    session->backend = detectBestBackend();
+    resetToPrepared(*session);
+    return session;
+}
+
+std::unique_ptr<Session> createSessionWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed) {
+    auto session = std::make_unique<Session>();
+    session->game = std::move(game);
+    session->preparedSession = session->game->preparedSession;
+    session->preparedSession.loadedLevelSeed = std::move(loadedLevelSeed);
+    session->preparedSession.hasRandomState = false;
+    session->preparedSession.randomStateValid = false;
+    session->preparedSession.randomStateI = 0;
+    session->preparedSession.randomStateJ = 0;
+    session->preparedSession.randomStateS.clear();
     session->backend = detectBestBackend();
     resetToPrepared(*session);
     return session;

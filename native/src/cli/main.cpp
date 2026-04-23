@@ -27,6 +27,22 @@ int puzzlescript_cpp_run_player_for_game(ps_game* game);
 
 namespace {
 
+bool sessionCreateForGame(ps_game* game, const std::optional<std::string>& loadedLevelSeed, ps_session** outSession, ps_error** outError) {
+    if (loadedLevelSeed.has_value()) {
+        return ps_session_create_with_loaded_level_seed(game, loadedLevelSeed->c_str(), outSession, outError);
+    }
+    return ps_session_create(game, outSession, outError);
+}
+
+std::optional<std::string> findArgValue(const std::vector<std::string>& args, const char* flag) {
+    for (size_t index = 0; index + 1 < args.size(); ++index) {
+        if (args[index] == flag) {
+            return args[index + 1];
+        }
+    }
+    return std::nullopt;
+}
+
 #ifndef PS_NODE_EXECUTABLE
 #define PS_NODE_EXECUTABLE "node"
 #endif
@@ -606,10 +622,15 @@ int runCommandForGame(ps_game* game) {
     return result;
 }
 
-int benchCommandForGame(ps_game* game, uint32_t iterations, uint32_t threads) {
+int benchCommandForGame(
+    ps_game* game,
+    uint32_t iterations,
+    uint32_t threads,
+    const std::optional<std::string>& loadedLevelSeed = std::nullopt
+) {
     ps_session* session = nullptr;
     ps_error* error = nullptr;
-    if (!ps_session_create(game, &session, &error)) {
+    if (!sessionCreateForGame(game, loadedLevelSeed, &session, &error)) {
         std::cerr << ps_error_message(error) << "\n";
         ps_free_error(error);
         return 1;
@@ -656,10 +677,14 @@ std::optional<ps_input> parseInputToken(const std::string& token) {
     return std::nullopt;
 }
 
-int stepCommandForGame(ps_game* game, const std::vector<std::string>& inputTokens) {
+int stepCommandForGame(
+    ps_game* game,
+    const std::vector<std::string>& inputTokens,
+    const std::optional<std::string>& loadedLevelSeed = std::nullopt
+) {
     ps_session* session = nullptr;
     ps_error* error = nullptr;
-    if (!ps_session_create(game, &session, &error)) {
+    if (!sessionCreateForGame(game, loadedLevelSeed, &session, &error)) {
         std::cerr << ps_error_message(error) << "\n";
         ps_free_error(error);
         return 1;
@@ -832,10 +857,16 @@ bool compareSnapshot(const TraceSnapshot& expected, ps_session* session, const p
     return ok;
 }
 
-int diffTraceAgainstSnapshots(ps_game* game, const std::vector<TraceSnapshot>& snapshots, std::ostream& errorStream, bool printSuccessSummary) {
+int diffTraceAgainstSnapshots(
+    ps_game* game,
+    const std::vector<TraceSnapshot>& snapshots,
+    std::ostream& errorStream,
+    bool printSuccessSummary,
+    const std::optional<std::string>& loadedLevelSeed = std::nullopt
+) {
     ps_session* session = nullptr;
     ps_error* error = nullptr;
-    if (!ps_session_create(game, &session, &error)) {
+    if (!sessionCreateForGame(game, loadedLevelSeed, &session, &error)) {
         errorStream << ps_error_message(error) << "\n";
         ps_free_error(error);
         return 1;
@@ -1767,6 +1798,7 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     std::optional<std::string> inputsJson;
     std::optional<std::string> inputsFile;
     std::optional<int32_t> requestedLevel;
+    std::optional<std::string> cliLoadedLevelSeed;
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--headless") {
@@ -1792,6 +1824,8 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
             traceArgs.push_back(value);
             if (arg == "--level") {
                 requestedLevel = static_cast<int32_t>(std::stoi(value));
+            } else {
+                cliLoadedLevelSeed = value;
             }
             continue;
         }
@@ -1838,16 +1872,19 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     if (!hasInputTrace) {
         result = runCommandForGame(game);
     } else if (!finalOnly) {
+        const std::optional<std::string> sessionSeed = nativeCompile ? cliLoadedLevelSeed : std::nullopt;
         result = diffTraceAgainstSnapshots(
             game,
             loadTraceSnapshotsFromJsonText(runTraceExporterAndCaptureJson(sourcePath, traceArgs)),
             std::cerr,
-            true
+            true,
+            sessionSeed
         );
     } else {
         ps_session* session = nullptr;
         ps_error* error = nullptr;
-        if (!ps_session_create(game, &session, &error)) {
+        const std::optional<std::string> sessionSeed = nativeCompile ? cliLoadedLevelSeed : std::nullopt;
+        if (!sessionCreateForGame(game, sessionSeed, &session, &error)) {
             std::cerr << ps_error_message(error) << "\n";
             ps_free_error(error);
             ps_free_game(game);
@@ -1940,7 +1977,8 @@ int benchSourceCommand(const std::string& sourcePath, int argc, char** argv) {
             return 1;
         }
     }
-    const int result = benchCommandForGame(game, iterations, threads);
+    const std::optional<std::string> sessionSeed = nativeCompile ? findArgValue(exporterArgs, "--seed") : std::nullopt;
+    const int result = benchCommandForGame(game, iterations, threads, sessionSeed);
     ps_free_game(game);
     return result;
 }
@@ -2362,7 +2400,8 @@ int stepSourceCommand(const std::string& sourcePath, int argc, char** argv) {
             return 1;
         }
     }
-    const int result = stepCommandForGame(game, inputTokens);
+    const std::optional<std::string> sessionSeed = nativeCompile ? findArgValue(exporterArgs, "--seed") : std::nullopt;
+    const int result = stepCommandForGame(game, inputTokens, sessionSeed);
     ps_free_game(game);
     return result;
 }
@@ -2403,7 +2442,14 @@ int diffTraceSourceCommand(const std::string& sourcePath, int argc, char** argv)
             return 1;
         }
     }
-    const int result = diffTraceAgainstSnapshots(game, loadTraceSnapshotsFromJsonText(runTraceExporterAndCaptureJson(sourcePath, traceArgs)), std::cerr, true);
+    const std::optional<std::string> sessionSeed = nativeCompile ? findArgValue(traceArgs, "--seed") : std::nullopt;
+    const int result = diffTraceAgainstSnapshots(
+        game,
+        loadTraceSnapshotsFromJsonText(runTraceExporterAndCaptureJson(sourcePath, traceArgs)),
+        std::cerr,
+        true,
+        sessionSeed
+    );
     ps_free_game(game);
     return result;
 }
