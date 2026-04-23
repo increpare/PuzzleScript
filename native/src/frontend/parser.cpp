@@ -1151,6 +1151,20 @@ void parseLegendLine(ParserState& state, DiagnosticSink& diagnostics, std::strin
         return;
     }
 
+    // parser.js: `a = = b` yields "Something bad…" from parseLegendToken, then processLegendLine even-split
+    // dangling "=" (not "ERROR") before checkNameDefined runs on bogus RHS tokens.
+    if (tokens.size() == 4 && tokens[2] == "=") {
+        diagnostics.error(
+            DiagnosticCode::GenericError,
+            state.lineNumber,
+            "Something bad's happening in the LEGEND");
+        diagnostics.error(
+            DiagnosticCode::GenericError,
+            state.lineNumber,
+            "Incorrect format of legend - should be one of \"A = B\", \"A = B or C [ or D ...]\", \"A = B and C [ and D ...]\", but it looks like you have a dangling \"=\"?");
+        return;
+    }
+
     ParserLegendEntry entry;
     const std::string candname = toLowerCopy(trim(std::string(tokens[0])));
     entry.name = candname;
