@@ -533,17 +533,14 @@ void diagnoseLegendLineTokens(
 }
 
 bool isLevelsMessagePhysicalLine(std::string_view trimmedLower, std::string_view trimmedMixed) {
-    if (trimmedLower.rfind("message", 0) != 0) {
-        return false;
-    }
-    if (trimmedLower.size() == 7) {
-        return true;
-    }
-    if (trimmedMixed.size() <= 7) {
-        return false;
-    }
-    const char boundary = trimmedMixed[7];
-    return std::isspace(static_cast<unsigned char>(boundary)) != 0 || boundary == ':';
+    (void)trimmedMixed;
+    // Any physical line whose leading token is "message" is a MESSAGE_VERB line in parser.js (including
+    // "messagecat" / "message(" tails); treat the whole trimmed line as outside '(' ')' comment stripping.
+    return trimmedLower.size() >= 7 && trimmedLower.rfind("message", 0) == 0;
+}
+
+bool isJsWordCharAfterMessage(char ch) {
+    return std::isalnum(static_cast<unsigned char>(ch)) != 0 || ch == '_';
 }
 
 std::string stripCommentsCore(std::string_view line, ParserState& state, DiagnosticSink& diagnostics) {
@@ -772,6 +769,20 @@ void parsePreambleLine(ParserState& state, DiagnosticSink& diagnostics, std::str
         state.metadata.push_back(key);
         state.metadata.push_back("true");
         return;
+    }
+    // parser.js parsePreambleToken: if the leading /[\p{Z}\s]*[\p{L}\p{N}_]+/ token cannot start (e.g. ".title"),
+    // log the full line in quotes (lower-cased like stripHTMLTags output); otherwise unknown keyword uses the short form.
+    const std::string displayLine = toLowerCopy(trim(std::string(rawLine)));
+    if (!displayLine.empty()) {
+        const unsigned char first = static_cast<unsigned char>(displayLine[0]);
+        const bool startsLikeIdentifier = std::isalpha(first) != 0 || first == '_' || std::isdigit(first) != 0;
+        if (!startsLikeIdentifier) {
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "Unrecognised stuff \"" + displayLine + "\" in the prelude.");
+            return;
+        }
     }
     diagnostics.error(DiagnosticCode::GenericError, state.lineNumber, "Unrecognised stuff in the prelude.");
 }
@@ -1209,11 +1220,20 @@ void parseWinConditionsLine(ParserState& state, std::string_view trimmedLine) {
 void parseLevelsLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine, std::string_view rawLine) {
     const std::string trimmedMixed = trim(rawLine);
     const std::string trimmedLower = toLowerCopy(trimmedLine);
-    // parser.js uses /\bmessage\b/ — "message: foo" matches (':' is a non-word boundary after "message").
-    if (trimmedLower.rfind("message", 0) == 0
-        && (trimmedLower.size() == 7
-            || std::isspace(static_cast<unsigned char>(trimmedLine[7])) != 0
-            || trimmedLine[7] == ':')) {
+    // parser.js parseLevelsToken: first try /\bmessage\b[\p{Z}\s]*/ (no warning); else /message[\p{Z}\s]*/
+    // (e.g. "messagecat") logs innit warning; "message:" / "message (" use \b before ':' / '('.
+    if (trimmedLower.rfind("message", 0) == 0 && trimmedLower.size() >= 7) {
+        const bool strictNoWarning = trimmedLower.size() == 7
+            || trimmedMixed.size() <= 7
+            || std::isspace(static_cast<unsigned char>(trimmedMixed[7])) != 0 || trimmedMixed[7] == ':'
+            || !isJsWordCharAfterMessage(trimmedMixed[7]);
+        if (!strictNoWarning) {
+            diagnostics.warning(
+                DiagnosticCode::GenericWarning,
+                state.lineNumber,
+                "You probably meant to put a space after 'message' innit.  That's ok, I'll still interpret it as a "
+                "message, but you probably want to put a space there.");
+        }
         ParserLevelEntry entry;
         entry.isMessage = true;
         entry.lineNumber = state.lineNumber;
