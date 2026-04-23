@@ -828,7 +828,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         auto absolutizeDir = [](const std::string& forward, const std::string& dir) -> std::string {
             if (dir == "horizontal") {
                 if (forward == "up") return "left";
-                if (forward == "down") return "left";
+                if (forward == "down") return "right";
                 if (forward == "right") return "right";
                 if (forward == "left") return "right";
             }
