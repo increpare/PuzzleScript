@@ -959,10 +959,10 @@ int checkTraceSweepCommand(const std::string& manifestPath, int argc, char** arg
     size_t traceFastPassed = 0;
     size_t traceDetailedRuns = 0;
 
-    int64_t profileIrHitUs = 0;
-    int64_t profileIrMissUs = 0;
-    size_t profileIrHitCount = 0;
-    size_t profileIrMissCount = 0;
+    int64_t profileGameReuseUs = 0;
+    int64_t profileGameLoadUs = 0;
+    size_t profileGamesReused = 0;
+    size_t profileGamesLoaded = 0;
     int64_t profilePreparedSessionUs = 0;
     int64_t profilePreparedSerializeUs = 0;
     int64_t profileTraceParseUs = 0;
@@ -978,19 +978,19 @@ int checkTraceSweepCommand(const std::string& manifestPath, int argc, char** arg
             const auto& irPath = fixture.irFile;
             const bool hasTrace = fixture.traceFile.has_value();
 
-            const bool irCached = cache.has(irPath);
-            const auto irAcquireStart = std::chrono::steady_clock::now();
+            const bool gameCached = cache.has(irPath);
+            const auto gameAcquireStart = std::chrono::steady_clock::now();
             ps_game* game = cache.acquire(irPath);
-            const auto irAcquireUs = std::chrono::duration_cast<std::chrono::microseconds>(
-                                         std::chrono::steady_clock::now() - irAcquireStart)
-                                         .count();
+            const auto gameAcquireUs = std::chrono::duration_cast<std::chrono::microseconds>(
+                                           std::chrono::steady_clock::now() - gameAcquireStart)
+                                           .count();
             if (profileTimers) {
-                if (irCached) {
-                    ++profileIrHitCount;
-                    profileIrHitUs += irAcquireUs;
+                if (gameCached) {
+                    ++profileGamesReused;
+                    profileGameReuseUs += gameAcquireUs;
                 } else {
-                    ++profileIrMissCount;
-                    profileIrMissUs += irAcquireUs;
+                    ++profileGamesLoaded;
+                    profileGameLoadUs += gameAcquireUs;
                 }
             }
 
@@ -1139,8 +1139,8 @@ int checkTraceSweepCommand(const std::string& manifestPath, int argc, char** arg
             return (microseconds + 500) / 1000;
         };
         std::cerr << "native_trace_suite_profile simulation_fixtures=" << simulationFixtureCount << " trace_fixtures=" << traceChecked
-                  << " wall_ms=" << usToMs(sweepWallUs) << " ir_hit_count=" << profileIrHitCount << " ir_miss_count=" << profileIrMissCount
-                  << " ir_hit_ms=" << usToMs(profileIrHitUs) << " ir_miss_ms=" << usToMs(profileIrMissUs)
+                  << " wall_ms=" << usToMs(sweepWallUs) << " games_reused=" << profileGamesReused << " games_loaded=" << profileGamesLoaded
+                  << " game_reuse_ms=" << usToMs(profileGameReuseUs) << " game_load_ms=" << usToMs(profileGameLoadUs)
                   << " prepared_session_create_ms=" << usToMs(profilePreparedSessionUs)
                   << " prepared_serialize_ms=" << usToMs(profilePreparedSerializeUs) << " trace_json_parse_ms=" << usToMs(profileTraceParseUs)
                   << " fast_replay_ms=" << usToMs(profileFastCheckUs) << " detailed_diff_ms=" << usToMs(profileDiffUs) << "\n";
@@ -1669,10 +1669,10 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
         }
     }
 
-    int64_t profileIrHitUs = 0;
-    int64_t profileIrMissUs = 0;
-    size_t profileIrHitCount = 0;
-    size_t profileIrMissCount = 0;
+    int64_t profileGameReuseUs = 0;
+    int64_t profileGameLoadUs = 0;
+    size_t profileGamesReused = 0;
+    size_t profileGamesLoaded = 0;
     int64_t profileSessionCreateUs = 0;
     int64_t profileSerializeUs = 0;
     int64_t profileTraceDiffUs = 0;
@@ -1688,19 +1688,19 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                 const auto& name = fixture.name;
                 const auto& expectedSerialized = fixture.initialSerializedLevel;
 
-                const bool irCached = cache.has(irPath);
-                const auto irAcquireStart = std::chrono::steady_clock::now();
+                const bool gameCached = cache.has(irPath);
+                const auto gameAcquireStart = std::chrono::steady_clock::now();
                 ps_game* game = cache.acquire(irPath);
-                const auto irAcquireUs = std::chrono::duration_cast<std::chrono::microseconds>(
-                                             std::chrono::steady_clock::now() - irAcquireStart)
-                                             .count();
+                const auto gameAcquireUs = std::chrono::duration_cast<std::chrono::microseconds>(
+                                               std::chrono::steady_clock::now() - gameAcquireStart)
+                                               .count();
                 if (profileTimers) {
-                    if (irCached) {
-                        ++profileIrHitCount;
-                        profileIrHitUs += irAcquireUs;
+                    if (gameCached) {
+                        ++profileGamesReused;
+                        profileGameReuseUs += gameAcquireUs;
                     } else {
-                        ++profileIrMissCount;
-                        profileIrMissUs += irAcquireUs;
+                        ++profileGamesLoaded;
+                        profileGameLoadUs += gameAcquireUs;
                     }
                 }
 
@@ -1804,8 +1804,9 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
             return (microseconds + 500) / 1000;
         };
         const size_t fixtureCount = preparedPassed + preparedFailed;
-        std::cerr << "prepared_profile fixtures=" << fixtureCount << " wall_ms=" << usToMs(preparedWallUs) << " ir_hit_count=" << profileIrHitCount
-                  << " ir_miss_count=" << profileIrMissCount << " ir_hit_ms=" << usToMs(profileIrHitUs) << " ir_miss_ms=" << usToMs(profileIrMissUs)
+        std::cerr << "prepared_profile fixtures=" << fixtureCount << " wall_ms=" << usToMs(preparedWallUs) << " games_reused=" << profileGamesReused
+                  << " games_loaded=" << profileGamesLoaded << " game_reuse_ms=" << usToMs(profileGameReuseUs)
+                  << " game_load_ms=" << usToMs(profileGameLoadUs)
                   << " session_create_ms=" << usToMs(profileSessionCreateUs) << " serialize_test_string_ms=" << usToMs(profileSerializeUs)
                   << " optional_trace_diff_ms=" << usToMs(profileTraceDiffUs) << "\n";
     }

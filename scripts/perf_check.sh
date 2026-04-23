@@ -27,7 +27,7 @@ done
 python3 - "$TMP" "$RUNS" "$BASELINE" <<'PY'
 import json, sys, os, statistics
 tmp, runs, baseline_path = sys.argv[1], int(sys.argv[2]), sys.argv[3]
-metrics = ["wall_ms","fast_replay_ms","ir_miss_ms","trace_json_parse_ms"]
+metrics = ["wall_ms","fast_replay_ms","game_load_ms","trace_json_parse_ms"]
 samples = {m: [] for m in metrics}
 for i in range(1, runs+1):
     with open(os.path.join(tmp, f"run{i}.json")) as f:

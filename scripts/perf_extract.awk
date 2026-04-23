@@ -5,10 +5,12 @@
     split($i, kv, "=")
     if (kv[1] == "wall_ms"             ) wall = kv[2]
     if (kv[1] == "fast_replay_ms"      ) fast = kv[2]
-    if (kv[1] == "ir_miss_ms"          ) irmiss = kv[2]
+    if (kv[1] == "game_load_ms"        ) load = kv[2]
+    # Backward compatibility for profile logs produced before the field rename.
+    if (kv[1] == "ir_miss_ms"          ) load = kv[2]
     if (kv[1] == "trace_json_parse_ms" ) jsonp = kv[2]
   }
 }
 END {
-  printf "{\"wall_ms\":%s,\"fast_replay_ms\":%s,\"ir_miss_ms\":%s,\"trace_json_parse_ms\":%s}\n", wall, fast, irmiss, jsonp
+  printf "{\"wall_ms\":%s,\"fast_replay_ms\":%s,\"game_load_ms\":%s,\"trace_json_parse_ms\":%s}\n", wall, fast, load, jsonp
 }
