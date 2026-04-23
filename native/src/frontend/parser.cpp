@@ -176,7 +176,7 @@ constexpr std::string_view kLegendKeywordNames[] = {
 
 constexpr std::string_view kSoundEvents[] = {
     "titlescreen", "startgame", "cancel", "endgame", "startlevel", "undo", "restart", "endlevel", "showmessage", "closemessage", "sfx0", "sfx1",
-    "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9",
+    "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10",
 };
 
 constexpr std::string_view kSoundVerbs[] = {
@@ -727,6 +727,17 @@ std::string stripCommentsCore(std::string_view line, ParserState& state, Diagnos
                 --state.commentLevel;
                 if (state.commentLevel == 0) {
                     state.solAfterComment = true;
+                    // parser.js sound tokenization uses \\b after comments; stripping `(...)` can glue
+                    // "move" + "36772507" into "move36772507". Restore a word boundary in SOUNDS only.
+                    if (state.section == "sounds" && !visible.empty() && index + 1 < line.size()) {
+                        const unsigned char last = static_cast<unsigned char>(visible.back());
+                        const unsigned char next = static_cast<unsigned char>(line[index + 1]);
+                        const bool lastWord = std::isalnum(last) != 0 || last == '_';
+                        const bool nextWord = std::isalnum(next) != 0 || next == '_';
+                        if (lastWord && nextWord) {
+                            visible.push_back(' ');
+                        }
+                    }
                 }
                 continue;
             }
@@ -1331,53 +1342,325 @@ bool soundLeadingTokenAcceptable(const ParserState& state, std::string_view lowe
     return false;
 }
 
-std::string classifySoundKind(std::string_view lowered, size_t index) {
-    if (isNumeric(lowered)) {
-        return "SOUND";
+bool soundTokenWordEndOk(std::string_view text, size_t endByte) {
+    if (endByte >= text.size()) {
+        return true;
     }
-    if (lowered.size() > 3 && lowered.substr(0, 3) == "sfx" && isNumeric(lowered.substr(3))) {
-        return "SOUNDEVENT";
+    const unsigned char ch = static_cast<unsigned char>(text[endByte]);
+    return std::isalnum(ch) == 0 && ch != '_';
+}
+
+bool consumeSoundSeedToken(std::string_view lowered, size_t& pos, std::string& out) {
+    const size_t start = skipUnicodeZsAndAsciiSpace(lowered, pos);
+    if (start >= lowered.size() || std::isdigit(static_cast<unsigned char>(lowered[start])) == 0) {
+        return false;
     }
-    if (isExactToken(lowered, kSoundEvents, std::size(kSoundEvents))) {
-        return "SOUNDEVENT";
+    size_t end = start;
+    while (end < lowered.size() && std::isdigit(static_cast<unsigned char>(lowered[end])) != 0) {
+        ++end;
     }
-    if (isExactToken(lowered, kSoundVerbs, std::size(kSoundVerbs))) {
-        return "SOUNDVERB";
+    if (!soundTokenWordEndOk(lowered, end)) {
+        return false;
     }
-    if (isExactToken(lowered, kSoundDirections, std::size(kSoundDirections))) {
-        return "DIRECTION";
+    out.assign(lowered.begin() + static_cast<std::ptrdiff_t>(start), lowered.begin() + static_cast<std::ptrdiff_t>(end));
+    pos = skipUnicodeZsAndAsciiSpace(lowered, end);
+    return true;
+}
+
+bool consumeSoundVerbToken(std::string_view lowered, size_t& pos, std::string& out) {
+    const size_t start = skipUnicodeZsAndAsciiSpace(lowered, pos);
+    if (start >= lowered.size()) {
+        return false;
     }
-    return index == 0 ? "NAME" : "NAME";
+    for (const auto& verb : kSoundVerbs) {
+        if (lowered.size() - start < verb.size()) {
+            continue;
+        }
+        if (lowered.substr(start, verb.size()) != verb) {
+            continue;
+        }
+        const size_t after = start + verb.size();
+        if (!soundTokenWordEndOk(lowered, after)) {
+            continue;
+        }
+        out.assign(verb.begin(), verb.end());
+        pos = skipUnicodeZsAndAsciiSpace(lowered, after);
+        return true;
+    }
+    return false;
+}
+
+bool consumeSoundEventToken(std::string_view lowered, size_t& pos, std::string& out) {
+    const size_t start = skipUnicodeZsAndAsciiSpace(lowered, pos);
+    if (start >= lowered.size()) {
+        return false;
+    }
+    std::vector<std::string_view> events(kSoundEvents, kSoundEvents + std::size(kSoundEvents));
+    std::sort(events.begin(), events.end(), [](const std::string_view a, const std::string_view b) { return a.size() > b.size(); });
+    for (const auto& ev : events) {
+        if (lowered.size() - start < ev.size()) {
+            continue;
+        }
+        if (lowered.substr(start, ev.size()) != ev) {
+            continue;
+        }
+        const size_t after = start + ev.size();
+        if (!soundTokenWordEndOk(lowered, after)) {
+            continue;
+        }
+        out.assign(ev.begin(), ev.end());
+        pos = skipUnicodeZsAndAsciiSpace(lowered, after);
+        return true;
+    }
+    return false;
+}
+
+bool consumeSoundDirectionToken(std::string_view lowered, size_t& pos, std::string& out) {
+    size_t scan = skipUnicodeZsAndAsciiSpace(lowered, pos);
+    if (scan >= lowered.size()) {
+        return false;
+    }
+    for (const auto& dir : kSoundDirections) {
+        if (lowered.size() - scan < dir.size()) {
+            continue;
+        }
+        if (lowered.substr(scan, dir.size()) != dir) {
+            continue;
+        }
+        const size_t after = scan + dir.size();
+        if (!soundTokenWordEndOk(lowered, after)) {
+            continue;
+        }
+        out.assign(dir.begin(), dir.end());
+        pos = skipUnicodeZsAndAsciiSpace(lowered, after);
+        return true;
+    }
+    return false;
+}
+
+bool consumeSoundNameToken(const ParserState& state, std::string_view lowered, size_t& pos, std::string& out) {
+    size_t scan = skipUnicodeZsAndAsciiSpace(lowered, pos);
+    if (scan >= lowered.size()) {
+        return false;
+    }
+    const auto* bytes = reinterpret_cast<const utf8proc_uint8_t*>(lowered.data());
+    const utf8proc_ssize_t total = static_cast<utf8proc_ssize_t>(lowered.size());
+    utf8proc_ssize_t cursor = static_cast<utf8proc_ssize_t>(scan);
+    std::string name;
+    while (cursor < total) {
+        utf8proc_int32_t codepoint = 0;
+        const utf8proc_ssize_t advance = utf8proc_iterate(bytes + cursor, total - cursor, &codepoint);
+        if (advance <= 0) {
+            break;
+        }
+        const auto category = utf8proc_category(codepoint);
+        const bool ok = category == UTF8PROC_CATEGORY_LL || category == UTF8PROC_CATEGORY_LU || category == UTF8PROC_CATEGORY_LT
+            || category == UTF8PROC_CATEGORY_LO || category == UTF8PROC_CATEGORY_ND || codepoint == '_';
+        if (!ok) {
+            break;
+        }
+        name.append(reinterpret_cast<const char*>(bytes + cursor), static_cast<size_t>(advance));
+        cursor += advance;
+    }
+    if (name.empty()) {
+        return false;
+    }
+    out = toLowerCopy(name);
+    pos = skipUnicodeZsAndAsciiSpace(lowered, static_cast<size_t>(cursor));
+    (void)state;
+    return true;
+}
+
+std::string consumeSoundErrorFallbackToken(std::string_view lowered, size_t& pos) {
+    size_t scan = skipUnicodeZsAndAsciiSpace(lowered, pos);
+    size_t start = scan;
+    while (scan < lowered.size()) {
+        const char ch = lowered[scan];
+        if (ch == '(' || ch == ')' || std::isspace(static_cast<unsigned char>(ch)) != 0) {
+            break;
+        }
+        ++scan;
+    }
+    std::string token = trim(std::string(lowered.substr(start, scan - start)));
+    while (scan < lowered.size() && std::isspace(static_cast<unsigned char>(lowered[scan])) != 0) {
+        ++scan;
+    }
+    pos = scan;
+    return token;
+}
+
+void consumeGreedySoundErrorRecovery(const ParserState& state, std::string_view lowered, size_t& pos) {
+    std::string ignored;
+    if (consumeSoundEventToken(lowered, pos, ignored)) {
+        return;
+    }
+    if (consumeSoundVerbToken(lowered, pos, ignored)) {
+        return;
+    }
+    if (consumeSoundDirectionToken(lowered, pos, ignored)) {
+        return;
+    }
+    if (consumeSoundSeedToken(lowered, pos, ignored)) {
+        return;
+    }
+    if (consumeSoundNameToken(state, lowered, pos, ignored)) {
+        return;
+    }
+    (void)consumeSoundErrorFallbackToken(lowered, pos);
+}
+
+bool soundDirectionalVerb(std::string_view loweredVerb) {
+    return loweredVerb == "move" || loweredVerb == "cantmove";
 }
 
 void parseSoundsLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine) {
-    ParserSoundEntry entry;
-    entry.lineNumber = state.lineNumber;
-    const auto tokens = splitWhitespace(trimmedLine);
-    if (tokens.empty()) {
+    const std::string lowered = toLowerCopy(trim(std::string(trimmedLine)));
+    size_t pos = skipUnicodeZsAndAsciiSpace(lowered, 0);
+    if (pos >= lowered.size()) {
         return;
     }
-    const std::string firstLowered = toLowerCopy(tokens.front());
-    if (!soundLeadingTokenAcceptable(state, firstLowered)) {
-        if (isIdentifierLike(firstLowered)) {
+
+    std::vector<std::pair<std::string, std::string>> wip;
+    const auto lastIsError = [&]() -> bool { return !wip.empty() && wip.back().first == "ERROR"; };
+    const auto pushError = [&]() { wip.emplace_back("ERROR", std::string{}); };
+
+    while (pos < lowered.size()) {
+        pos = skipUnicodeZsAndAsciiSpace(lowered, pos);
+        if (pos >= lowered.size()) {
+            break;
+        }
+
+        if (lastIsError()) {
+            consumeGreedySoundErrorRecovery(state, lowered, pos);
+            continue;
+        }
+
+        if (wip.empty()) {
+            std::string ev;
+            if (consumeSoundEventToken(lowered, pos, ev)) {
+                wip.emplace_back(std::move(ev), "SOUNDEVENT");
+                continue;
+            }
+            std::string nm;
+            if (consumeSoundNameToken(state, lowered, pos, nm)) {
+                if (!soundLeadingTokenAcceptable(state, nm)) {
+                    diagnostics.error(
+                        DiagnosticCode::GenericError,
+                        state.lineNumber,
+                        "unexpected sound token \"" + toUpperCopy(nm) + "\".");
+                    pushError();
+                    break;
+                }
+                wip.emplace_back(std::move(nm), "NAME");
+                continue;
+            }
+            diagnostics.warning(
+                DiagnosticCode::GenericWarning,
+                state.lineNumber,
+                "Was expecting a sound event (like SFX3, or ENDLEVEL) or an object name, but didn't find either.");
+            pushError();
+            break;
+        }
+
+        if (wip.size() == 1) {
+            if (wip[0].second == "SOUNDEVENT") {
+                std::string seed;
+                if (consumeSoundSeedToken(lowered, pos, seed)) {
+                    wip.emplace_back(std::move(seed), "SOUND");
+                    continue;
+                }
+                const std::string bad = consumeSoundErrorFallbackToken(lowered, pos);
+                diagnostics.error(
+                    DiagnosticCode::GenericError,
+                    state.lineNumber,
+                    "Was expecting a sound seed here (a number like 123123, like you generate by pressing the buttons above the console panel), but found something else.");
+                (void)bad;
+                pushError();
+                break;
+            }
+            std::string verb;
+            if (consumeSoundVerbToken(lowered, pos, verb)) {
+                wip.emplace_back(std::move(verb), "SOUNDVERB");
+                continue;
+            }
+            const std::string bad = consumeSoundErrorFallbackToken(lowered, pos);
             diagnostics.error(
                 DiagnosticCode::GenericError,
                 state.lineNumber,
-                "unexpected sound token \"" + std::string(trim(tokens.front())) + "\".");
+                "Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.");
+            (void)bad;
+            pushError();
+            break;
         }
-        // parser.js rejects unknown first tokens and does not push a sound row (processSoundsLine no-op).
+
+        if (wip[0].second == "SOUNDEVENT") {
+            const std::string bad = consumeSoundErrorFallbackToken(lowered, pos);
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "I wasn't expecting anything after the sound declaration " + toUpperCopy(wip.back().first)
+                    + " on this line, so I don't know what to do with \"" + toUpperCopy(bad) + "\" here.");
+            pushError();
+            break;
+        }
+
+        const bool seedOnRight = wip.back().second == "SOUND";
+        if (seedOnRight) {
+            const std::string bad = consumeSoundErrorFallbackToken(lowered, pos);
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "I wasn't expecting anything after the sound declaration " + toUpperCopy(wip.back().first)
+                    + " on this line, so I don't know what to do with \"" + toUpperCopy(bad) + "\" here.");
+            pushError();
+            break;
+        }
+
+        const std::string& verbText = wip[1].first;
+        if (soundDirectionalVerb(verbText)) {
+            std::string dirOrSeed;
+            if (consumeSoundDirectionToken(lowered, pos, dirOrSeed)) {
+                wip.emplace_back(std::move(dirOrSeed), "DIRECTION");
+                continue;
+            }
+            if (consumeSoundSeedToken(lowered, pos, dirOrSeed)) {
+                wip.emplace_back(std::move(dirOrSeed), "SOUND");
+                continue;
+            }
+            const std::string bad = consumeSoundErrorFallbackToken(lowered, pos);
+            const std::string after = toUpperCopy(wip.back().first);
+            diagnostics.error(
+                DiagnosticCode::GenericError,
+                state.lineNumber,
+                "Ah I was expecting direction or a sound seed here after " + after + ", but I don't know what to make of \"" + toUpperCopy(bad) + "\".");
+            pushError();
+            break;
+        }
+
+        std::string seedOnly;
+        if (consumeSoundSeedToken(lowered, pos, seedOnly)) {
+            wip.emplace_back(std::move(seedOnly), "SOUND");
+            continue;
+        }
+        const std::string bad = consumeSoundErrorFallbackToken(lowered, pos);
+        diagnostics.error(
+            DiagnosticCode::GenericError,
+            state.lineNumber,
+            "Ah I was expecting a sound seed here after " + toUpperCopy(wip.back().first) + ", but I don't know what to make of \"" + toUpperCopy(bad) + "\".");
+        pushError();
+        break;
+    }
+
+    if (lastIsError() || wip.empty()) {
         return;
     }
-    for (size_t index = 0; index < tokens.size(); ++index) {
-        const std::string lowered = toLowerCopy(tokens[index]);
-        entry.tokens.push_back(ParserSoundToken{
-            lowered,
-            classifySoundKind(lowered, index),
-        });
+
+    ParserSoundEntry entry;
+    entry.lineNumber = state.lineNumber;
+    for (const auto& pair : wip) {
+        entry.tokens.push_back(ParserSoundToken{pair.first, pair.second});
     }
-    if (!entry.tokens.empty()) {
-        state.sounds.push_back(std::move(entry));
-    }
+    state.sounds.push_back(std::move(entry));
 }
 
 void parseCollisionLayersLine(ParserState& state, DiagnosticSink& diagnostics, std::string_view trimmedLine) {
