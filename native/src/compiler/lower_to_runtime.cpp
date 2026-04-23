@@ -765,7 +765,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         }
 
         // Directions/modifiers at start (optional). JS defaults rules with no
-        // explicit direction to orthogonal, then expands one rule per direction.
+        // explicit direction to orthogonal, then (for non-directional rules only)
+        // keeps the first scan direction only — see `directionalRule` + `splice(1)`
+        // in compiler.js `processRuleString`.
         size_t cursor = 0;
         bool rigidRule = false;
         bool randomRule = false;
@@ -873,7 +875,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                     std::string dir;
                     std::string name = tokens[i];
                     const std::string tokLower = toLowerAsciiCopy(tokens[i]);
-                    if ((dirMaskFromToken(tokLower) != 0 || tokLower == "stationary" || tokLower == "no" || tokLower == "random")
+                    if ((dirMaskFromToken(tokLower) != 0 || tokLower == "stationary" || tokLower == "no" || tokLower == "random"
+                         || tokLower == "randomdir")
                         && (i + 1) < end) {
                         dir = tokLower;
                         name = tokens[i + 1];
@@ -938,6 +941,35 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         std::vector<puzzlescript::RuleCommand> parsedCommands;
         const auto lhsRows = parseSide(cursor, arrowPos, nullptr);
         const auto rhsRows = parseSide(arrowPos + 1, rhsEnd, &parsedCommands);
+
+        // JS `processRuleString`: if `directionalRule(rule_line) === false` and
+        // `rule_line.directions.length > 1`, only the first direction is kept.
+        const auto isDirectionalRule = [](const std::vector<ParsedRow>& lhs, const std::vector<ParsedRow>& rhs) -> bool {
+            static const std::set<std::string> kRelativeDirs = {"^", "v", "<", ">", "perpendicular", "parallel"};
+            const auto rowsDirectional = [](const std::vector<ParsedRow>& rows, const std::set<std::string>& rel) -> bool {
+                for (const auto& row : rows) {
+                    if (row.size() > 1) {
+                        return true;
+                    }
+                    for (const auto& cell : row) {
+                        if (cell.isEllipsis) {
+                            continue;
+                        }
+                        for (const auto& item : cell.items) {
+                            if (rel.find(item.dir) != rel.end()) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            };
+            return rowsDirectional(lhs, kRelativeDirs) || rowsDirectional(rhs, kRelativeDirs);
+        };
+        if (!isDirectionalRule(lhsRows, rhsRows) && ruleDirections.size() > 1) {
+            ruleDirections.erase(ruleDirections.begin() + 1, ruleDirections.end());
+        }
+
         if (rhsEnd < tokens.size()) {
             for (size_t i = rhsEnd; i < tokens.size(); ++i) {
                 puzzlescript::RuleCommand command;
@@ -1653,6 +1685,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         auto movementsClear = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
                         auto movementsSet = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
                         auto movementsLayerMask = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
+                        auto randomEntityMask = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
+                        auto randomDirMask = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
                         std::vector<int32_t> layersUsedR(game->layerCount, 0);
                         std::vector<int32_t> rhsObjectLayersMovement(static_cast<size_t>(game->movementWordCount), 0);
 
@@ -1696,6 +1730,44 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
                         for (const auto& item : rhsCell.items) {
                             if (item.dir == "random") {
+                                continue;
+                            }
+                            // JS `dirMasks.randomdir` === parseInt('00101', 2) === 5; OR'd into randomDirMask_r
+                            // at STRIDE_5 * layerIndex (compiler.js rulesToMask).
+                            if (item.dir == "randomdir") {
+                                std::set<std::string> visiting;
+                                const auto mask = resolveMask(resolveMask, item.name, visiting);
+                                const auto singleLayer = maskSingleLayer(mask);
+                                const bool isProperty = propertyOf.find(item.name) != propertyOf.end();
+                                if (singleLayer.has_value()) {
+                                    layersUsedR[static_cast<size_t>(*singleLayer)] = 1;
+                                }
+                                if (!isProperty) {
+                                    auto oneMask = makeEmptyMask(game->wordCount);
+                                    std::set<std::string> rhsVisiting;
+                                    const auto resolved = resolveMask(resolveMask, item.name, rhsVisiting);
+                                    for (int32_t id = 0; id < game->objectCount; ++id) {
+                                        const uint32_t word = static_cast<uint32_t>(id) / 32U;
+                                        const uint32_t bit = static_cast<uint32_t>(id) % 32U;
+                                        if (word < resolved.size() && (resolved[word] & (1U << bit)) != 0) {
+                                            setMaskBit(oneMask, id);
+                                            break;
+                                        }
+                                    }
+                                    for (size_t w = 0; w < objectsSet.size(); ++w) {
+                                        objectsSet[static_cast<size_t>(w)] |= oneMask[static_cast<size_t>(w)];
+                                    }
+                                    if (rhsWritesObjects && singleLayer.has_value()) {
+                                        const int32_t layer = *singleLayer;
+                                        orLayerMaskToObjectsClear(layer);
+                                        orShiftedMask5(rhsObjectLayersMovement, 5 * layer, 0x1f);
+                                    }
+                                }
+                                if (singleLayer.has_value()) {
+                                    const int32_t layer = *singleLayer;
+                                    orShiftedMask5(movementsLayerMask, 5 * layer, 0x1f);
+                                    orShiftedMask5(randomDirMask, 5 * layer, 5);
+                                }
                                 continue;
                             }
                             std::set<std::string> visiting;
@@ -1828,14 +1900,23 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                                 if (overlaps) {
                                     const int32_t moveSetBits = getShiftedMask5(movementsSet, 5 * layer);
                                     const int32_t moveClearBits = getShiftedMask5(movementsClear, 5 * layer);
-                                    // Only suppress implicit layer-mask clearing when
-                                    // there is no explicit movement directive on layer.
-                                    if (moveSetBits == 0 && moveClearBits == 0) {
+                                    const int32_t randomDirBits = getShiftedMask5(randomDirMask, 5 * layer);
+                                    const int32_t randomEntBits = getShiftedMask5(randomEntityMask, 5 * layer);
+                                    // Only suppress implicit layer-mask clearing when there is no explicit
+                                    // movement directive on the layer (including randomDir / random entity).
+                                    if (moveSetBits == 0 && moveClearBits == 0 && randomDirBits == 0 && randomEntBits == 0) {
                                         setShiftedMask5(movementsLayerMask, 5 * layer, 0);
                                     }
                                 }
                             }
                         }
+
+                        auto anyNonZero = [](const std::vector<int32_t>& words) {
+                            for (const int32_t w : words) {
+                                if (w != 0) return true;
+                            }
+                            return false;
+                        };
 
                         puzzlescript::Replacement repl;
                         repl.objectsClear = storeMaskWords(*game, objectsClear);
@@ -1843,14 +1924,17 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         repl.movementsClear = storeMaskWords(*game, movementsClear);
                         repl.movementsSet = storeMaskWords(*game, movementsSet);
                         repl.movementsLayerMask = storeMaskWords(*game, movementsLayerMask);
-                        auto anyNonZero = [](const std::vector<int32_t>& words) {
-                            for (const int32_t w : words) {
-                                if (w != 0) return true;
-                            }
-                            return false;
-                        };
+                        if (anyNonZero(randomEntityMask)) {
+                            repl.randomEntityMask = storeMaskWords(*game, randomEntityMask);
+                            repl.randomEntityMaskWidth = game->movementWordCount;
+                        }
+                        if (anyNonZero(randomDirMask)) {
+                            repl.randomDirMask = storeMaskWords(*game, randomDirMask);
+                            repl.randomDirMaskWidth = game->movementWordCount;
+                        }
                         if (anyNonZero(objectsClear) || anyNonZero(objectsSet) || anyNonZero(movementsClear)
-                            || anyNonZero(movementsSet) || anyNonZero(movementsLayerMask)) {
+                            || anyNonZero(movementsSet) || anyNonZero(movementsLayerMask)
+                            || anyNonZero(randomEntityMask) || anyNonZero(randomDirMask)) {
                             pat.replacement = std::move(repl);
                         }
                     }
