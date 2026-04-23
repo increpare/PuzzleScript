@@ -191,6 +191,10 @@ ps_step_result ps_session_tick(ps_session* session) {
     return puzzlescript::tick(*session->impl);
 }
 
+bool ps_session_pending_again(const ps_session* session) {
+    return session && session->impl->pendingAgain;
+}
+
 bool ps_session_undo(ps_session* session) {
     return session ? puzzlescript::undo(*session->impl) : false;
 }

@@ -339,6 +339,7 @@ std::string exportSnapshot(const Session& session);
 size_t listInputs(ps_input* output, size_t capacity);
 ps_step_result step(Session& session, ps_input input);
 ps_step_result tick(Session& session);
+void settlePendingAgain(Session& session);
 std::unique_ptr<Error> benchmarkCloneHash(const Session& session, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult);
 
 } // namespace puzzlescript

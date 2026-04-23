@@ -85,6 +85,7 @@ void ps_session_destroy(ps_session* session);
 bool ps_session_load_level(ps_session* session, int32_t level_index, ps_error** out_error);
 ps_step_result ps_session_step(ps_session* session, ps_input input);
 ps_step_result ps_session_tick(ps_session* session);
+bool ps_session_pending_again(const ps_session* session);
 bool ps_session_undo(ps_session* session);
 bool ps_session_restart(ps_session* session);
 void ps_session_status(const ps_session* session, ps_session_status_info* out_status);

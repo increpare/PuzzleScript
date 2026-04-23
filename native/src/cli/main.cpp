@@ -205,6 +205,18 @@ bool replayInputTokens(ps_session* session, const std::vector<std::string>& toke
                 }
             }
         }
+
+        for (int againPass = 0; againPass < 500 && ps_session_pending_again(session); ++againPass) {
+            stepResult = ps_session_tick(session);
+            if (outSounds && stepResult.audio_event_count > 0 && stepResult.audio_events) {
+                for (size_t i = 0; i < stepResult.audio_event_count; ++i) {
+                    const ps_audio_event& event = stepResult.audio_events[i];
+                    if (event.kind && event.kind[0] != '\0') {
+                        outSounds->push_back(event.kind);
+                    }
+                }
+            }
+        }
     }
     return true;
 }

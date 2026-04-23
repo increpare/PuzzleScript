@@ -3039,6 +3039,7 @@ void resetToPrepared(Session& session) {
 
 void runRulesOnLevelStart(Session& session);
 bool wouldAgainChange(Session& session, bool* outWouldModify = nullptr);
+void settlePendingAgain(Session& session);
 
 std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_ptr<const Game>& outGame) {
     try {
@@ -3236,6 +3237,7 @@ std::unique_ptr<Error> loadLevel(Session& session, int32_t levelIndex) {
     session.preparedSession.restart.oldFlickscreenDat = session.preparedSession.oldFlickscreenDat;
     resetToPrepared(session);
     runRulesOnLevelStart(session);
+    settlePendingAgain(session);
     return nullptr;
 }
 
@@ -3246,6 +3248,7 @@ bool restart(Session& session) {
     pushUndoSnapshot(session);
     restoreRestartTarget(session);
     runRulesOnLevelStart(session);
+    settlePendingAgain(session);
     return true;
 }
 
@@ -3569,6 +3572,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         }
         restoreRestartTarget(session);
         runRulesOnLevelStart(session);
+        settlePendingAgain(session);
         tryPlaySimpleSound(session, "restart");
     }
 
@@ -3676,6 +3680,13 @@ ps_step_result step(Session& session, ps_input input) {
 
 ps_step_result tick(Session& session) {
     return executeTurn(session, 0, ExecuteTurnOptions{.pushUndo = false});
+}
+
+void settlePendingAgain(Session& session) {
+    constexpr int kMaxAgainIterations = 500;
+    for (int iteration = 0; iteration < kMaxAgainIterations && session.pendingAgain; ++iteration) {
+        (void)tick(session);
+    }
 }
 
 std::unique_ptr<Error> benchmarkCloneHash(const Session& session, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult) {
