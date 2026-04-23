@@ -371,6 +371,34 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         propertyOf[toLowerAsciiCopy(entry.name)] = std::move(items);
     }
 
+    // Mirrors compiler.js `propertiesSingleLayer`: OR-properties whose members all
+    // share one collision layer (used to skip `concretizePropertyRule` explosion).
+    std::map<std::string, int32_t> propertiesSingleLayer;
+    for (const auto& [propName, aliases] : propertyOf) {
+        if (aliases.empty()) {
+            continue;
+        }
+        std::optional<int32_t> commonLayer;
+        bool ok = true;
+        for (const auto& al : aliases) {
+            const auto it = objectIdByName.find(al);
+            if (it == objectIdByName.end()) {
+                ok = false;
+                break;
+            }
+            const int32_t L = game->objectsById[static_cast<size_t>(it->second)].layer;
+            if (!commonLayer.has_value()) {
+                commonLayer = L;
+            } else if (*commonLayer != L) {
+                ok = false;
+                break;
+            }
+        }
+        if (ok && commonLayer.has_value()) {
+            propertiesSingleLayer[propName] = *commonLayer;
+        }
+    }
+
     // JS-style glyphDict: maps a glyph name to a per-layer concrete object id,
     // where -1 means "no object for this layer". This includes:
     // - concrete objects
@@ -1111,6 +1139,190 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             return out;
         };
 
+        // Mirrors src/js/compiler.js `concretizePropertyRule` for ParsedRow/cell form:
+        // expandNoPrefixedProperties, ambiguousProperties (RHS vs LHS), per-cell
+        // property explosion with propertyReplacement bookkeeping, then RHS cleanup
+        // when a property was concretized exactly once on the LHS.
+        auto concretizePropertyInCell = [](ParsedCell& cell, const std::string& property, const std::string& concreteType) {
+            if (cell.isEllipsis) {
+                return;
+            }
+            for (auto& it : cell.items) {
+                if (it.dir != "random" && it.name == property) {
+                    it.name = concreteType;
+                }
+            }
+        };
+        auto getPropertiesFromCellParsed = [&](const ParsedCell& cell) -> std::vector<std::string> {
+            std::vector<std::string> out;
+            if (cell.isEllipsis) {
+                return out;
+            }
+            for (const auto& it : cell.items) {
+                if (it.dir == "random") {
+                    continue;
+                }
+                if (propertyOf.find(it.name) != propertyOf.end()) {
+                    out.push_back(it.name);
+                }
+            }
+            return out;
+        };
+        auto expandNoPrefixedCell = [&](ParsedCell& cell) {
+            if (cell.isEllipsis) {
+                return;
+            }
+            std::vector<ParsedItem> expanded;
+            expanded.reserve(cell.items.size() * 2);
+            for (const auto& it : cell.items) {
+                if (it.dir == "no" && propertyOf.find(it.name) != propertyOf.end()) {
+                    for (const auto& alias : propertyOf.at(it.name)) {
+                        expanded.push_back({"no", alias});
+                    }
+                } else {
+                    expanded.push_back(it);
+                }
+            }
+            cell.items = std::move(expanded);
+        };
+        auto expandNoPrefixedRows = [&](std::vector<ParsedRow>& lhs, std::vector<ParsedRow>& rhs) {
+            for (size_t ri = 0; ri < lhs.size(); ++ri) {
+                auto& lhsRow = lhs[ri];
+                for (size_t ci = 0; ci < lhsRow.size(); ++ci) {
+                    expandNoPrefixedCell(lhsRow[ci]);
+                    if (ri < rhs.size() && ci < rhs[ri].size()) {
+                        expandNoPrefixedCell(rhs[ri][ci]);
+                    }
+                }
+            }
+        };
+        auto buildAmbiguousPropertiesSet = [&](const std::vector<ParsedRow>& lhs, const std::vector<ParsedRow>& rhs) {
+            std::set<std::string> ambiguous;
+            const size_t nRows = std::min(lhs.size(), rhs.size());
+            for (size_t j = 0; j < nRows; ++j) {
+                const auto& rowL = lhs[j];
+                const auto& rowR = rhs[j];
+                const size_t nCols = std::min(rowL.size(), rowR.size());
+                for (size_t k = 0; k < nCols; ++k) {
+                    const auto propsL = getPropertiesFromCellParsed(rowL[k]);
+                    const std::set<std::string> setL(propsL.begin(), propsL.end());
+                    for (const std::string& p : getPropertiesFromCellParsed(rowR[k])) {
+                        if (setL.find(p) == setL.end()) {
+                            ambiguous.insert(p);
+                        }
+                    }
+                }
+            }
+            return ambiguous;
+        };
+        auto expandConcretizePropertyRows = [&](std::vector<ParsedRow> lhs0, std::vector<ParsedRow> rhs0)
+            -> std::vector<std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>>> {
+            struct Work {
+                std::vector<ParsedRow> lhs;
+                std::vector<ParsedRow> rhs;
+                std::map<std::string, std::pair<std::string, int>> propRepl;
+            };
+            std::vector<Work> work;
+            work.push_back({std::move(lhs0), std::move(rhs0), {}});
+            expandNoPrefixedRows(work.front().lhs, work.front().rhs);
+            const std::set<std::string> ambiguousInitial =
+                buildAmbiguousPropertiesSet(work.front().lhs, work.front().rhs);
+
+            bool modified = true;
+            while (modified) {
+                modified = false;
+                for (size_t i = 0; i < work.size(); ++i) {
+                    const std::set<std::string> ambiguous = buildAmbiguousPropertiesSet(work[i].lhs, work[i].rhs);
+                    size_t splitJ = 0;
+                    size_t splitK = 0;
+                    std::string splitProperty;
+                    bool found = false;
+                    for (size_t j = 0; j < work[i].lhs.size() && !found; ++j) {
+                        for (size_t k = 0; k < work[i].lhs[j].size() && !found; ++k) {
+                            for (const std::string& property : getPropertiesFromCellParsed(work[i].lhs[j][k])) {
+                                if (propertiesSingleLayer.find(property) != propertiesSingleLayer.end()
+                                    && ambiguous.find(property) == ambiguous.end()) {
+                                    continue;
+                                }
+                                if (propertyOf.find(property) == propertyOf.end()) {
+                                    continue;
+                                }
+                                splitJ = j;
+                                splitK = k;
+                                splitProperty = property;
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!found) {
+                        continue;
+                    }
+
+                    const Work base = work[i];
+                    work.erase(work.begin() + static_cast<std::ptrdiff_t>(i));
+                    const std::vector<std::string>& aliases = propertyOf.at(splitProperty);
+                    std::vector<Work> newOnes;
+                    newOnes.reserve(aliases.size());
+                    for (const std::string& concreteType : aliases) {
+                        Work nw = base;
+                        concretizePropertyInCell(nw.lhs[splitJ][splitK], splitProperty, concreteType);
+                        if (!nw.rhs.empty() && splitJ < nw.rhs.size() && splitK < nw.rhs[splitJ].size()) {
+                            concretizePropertyInCell(nw.rhs[splitJ][splitK], splitProperty, concreteType);
+                        }
+                        const auto repIt = nw.propRepl.find(splitProperty);
+                        if (repIt == nw.propRepl.end()) {
+                            nw.propRepl[splitProperty] = {concreteType, 1};
+                        } else {
+                            repIt->second.second += 1;
+                        }
+                        newOnes.push_back(std::move(nw));
+                    }
+                    work.insert(
+                        work.begin() + static_cast<std::ptrdiff_t>(i),
+                        std::make_move_iterator(newOnes.begin()),
+                        std::make_move_iterator(newOnes.end()));
+                    modified = true;
+                    break;
+                }
+            }
+
+            std::vector<std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>>> out;
+            out.reserve(work.size());
+            for (Work& w : work) {
+                for (const auto& [prop, info] : w.propRepl) {
+                    if (info.second != 1) {
+                        continue;
+                    }
+                    const std::string& concreteType = info.first;
+                    for (auto& row : w.rhs) {
+                        for (auto& cell : row) {
+                            concretizePropertyInCell(cell, prop, concreteType);
+                        }
+                    }
+                }
+
+                std::string rhsPropertyRemains;
+                for (const auto& row : w.rhs) {
+                    for (const auto& cell : row) {
+                        for (const std::string& p : getPropertiesFromCellParsed(cell)) {
+                            if (ambiguousInitial.find(p) != ambiguousInitial.end()) {
+                                rhsPropertyRemains = p;
+                            }
+                        }
+                    }
+                }
+                if (!rhsPropertyRemains.empty()) {
+                    throw std::runtime_error(
+                        "Rule at line " + std::to_string(entry.lineNumber)
+                        + " has a property on the right-hand side, \"" + rhsPropertyRemains
+                        + "\", that can't be inferred from the left-hand side.");
+                }
+                out.push_back({std::move(w.lhs), std::move(w.rhs)});
+            }
+            return out;
+        };
+
         // JS compiler may emit fewer variants than the naive 4-direction expansion
         // when different scan directions collapse to identical rule patterns after
         // canonicalization (e.g. symmetric patterns, or UP/LLEFT normalized).
@@ -1185,7 +1397,10 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
         const auto movingVariants = enumerateMovingVariants(variantLhsRows, variantRhsRows);
         for (const auto& movingVariant : movingVariants) {
-        const auto propertyVariants = enumerateDirectionalPropertyVariants(movingVariant.first, movingVariant.second);
+            const auto propertyConcreteChunks =
+                expandConcretizePropertyRows(movingVariant.first, movingVariant.second);
+            for (const auto& propChunk : propertyConcreteChunks) {
+        const auto propertyVariants = enumerateDirectionalPropertyVariants(propChunk.first, propChunk.second);
         for (const auto& propertyVariant : propertyVariants) {
         const auto& variantLhsRowsExpanded = propertyVariant.first;
         const auto& variantRhsRowsExpanded = propertyVariant.second;
@@ -1577,6 +1792,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             static_cast<uint32_t>(game->cellRowMaskMovementsOffsets.size()) - rowMoveMasksFirst;
 
         outputGroup->push_back(std::move(rule));
+        }
         }
         }
         }
