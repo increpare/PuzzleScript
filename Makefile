@@ -3,12 +3,15 @@
 #   make run game.txt      Build and play a PuzzleScript source file.
 #   make ctest             Run fast C++ smoke/unit tests registered with CMake.
 #   make js_parity_tests   Run C++ against the original JS test corpus.
+#   make simulation_tests  Run JS simulation tests and C++ mirrored simulation tests.
+#   make compilation_tests Run JS compiler tests and C++ mirrored compiler tests.
 #   make tests             Run the full native correctness suite.
 
 .DEFAULT_GOAL := help
 
 .PHONY: help build run ctest tests js_parity_tests tests_js simulation_tests_js compilation_tests_js \
-	simulation_tests_cpp compilation_tests_cpp basic_test_suite_cpp basic_test_suite_js \
+	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
+	basic_test_suite_cpp basic_test_suite_js \
 	parser_corpus_errormessage_bundle parser_corpus_testdata_bundle clean clean-native \
 	clean-js-parity-data configure-native build-native js-parity-data
 
@@ -48,15 +51,17 @@ help:
 	@echo "  make run path/to/game.txt          Build and play a PuzzleScript game"
 	@echo "  make ctest                         Run fast C++ smoke/unit tests"
 	@echo "  make js_parity_tests               Run C++ against the original JS test corpus"
+	@echo "  make simulation_tests              Run JS sim tests, then mirrored C++ sim parity"
+	@echo "  make compilation_tests             Run JS compiler tests, then mirrored C++ diagnostics"
 	@echo "  make tests                         Run the full native correctness suite"
 	@echo "  make clean                         Remove native build outputs and JS parity data"
 	@echo ""
-	@echo "More specific test commands:"
+	@echo "Single-side test commands for timing:"
+	@echo "  make simulation_tests_js           Run JS simulation tests only"
 	@echo "  make simulation_tests_cpp          Run saved gameplay replay parity cases"
+	@echo "  make compilation_tests_js          Run JS compiler tests only"
 	@echo "  make compilation_tests_cpp         Run compiler diagnostics parity cases"
 	@echo "  make tests_js                      Run the original JavaScript test suite"
-	@echo "  make simulation_tests_js           Run JS simulation tests only"
-	@echo "  make compilation_tests_js          Run JS compiler tests only"
 	@echo ""
 	@echo "Direct executable after build:"
 	@echo "  build/native/puzzlescript_cpp --help"
@@ -112,6 +117,10 @@ compilation_tests_cpp: build $(ERRORMESSAGE_PARSER_BUNDLE)
 	$(PUZZLESCRIPT_CPP) diagnostics-parity "$(ERRORMESSAGE_PARSER_BUNDLE)"
 
 js_parity_tests: simulation_tests_cpp compilation_tests_cpp
+
+simulation_tests: simulation_tests_js simulation_tests_cpp
+
+compilation_tests: compilation_tests_js compilation_tests_cpp
 
 tests: ctest js_parity_tests
 

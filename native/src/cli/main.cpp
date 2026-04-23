@@ -1899,6 +1899,10 @@ void printMainHelp() {
         << "  make run game.txt    Build and play a game\n"
         << "  make ctest           Run fast C++ smoke/unit tests\n"
         << "  make js_parity_tests Run C++ vs original-JS parity tests\n"
+        << "  make simulation_tests\n"
+        << "      Run JS simulation tests, then mirrored C++ simulation parity\n"
+        << "  make compilation_tests\n"
+        << "      Run JS compiler tests, then mirrored C++ diagnostics parity\n"
         << "  make tests           Run the full native correctness suite\n\n"
         << "Detailed help:\n"
         << "  puzzlescript_cpp help play\n"
@@ -1947,6 +1951,10 @@ void printTestHelp() {
         << "Simulation tests compare gameplay traces. Compiler tests compare diagnostics.\n\n"
         << "Usually use the Makefile wrappers:\n"
         << "  make js_parity_tests\n"
+        << "  make simulation_tests\n"
+        << "  make compilation_tests\n"
+        << "  make simulation_tests_js / make simulation_tests_cpp\n"
+        << "  make compilation_tests_js / make compilation_tests_cpp\n"
         << "  make tests\n";
 }
 
