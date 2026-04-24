@@ -46,6 +46,7 @@ if (process.argv.includes('--profile')) {
     const childArgs = withoutOption(rawArgs.filter(a => a !== '--profile'), '--profile-runs');
     const scriptPath = path.join(__dirname, 'run_tests_node.js');
     const times = [];
+    const breakdowns = [];
     let anyFailed = false;
     for (let i = 0; i < runs; i++) {
         const result = spawnSync(process.execPath, [scriptPath, ...childArgs], {
@@ -55,6 +56,19 @@ if (process.argv.includes('--profile')) {
         const match = result.stdout && result.stdout.match(/Total:\s*\d+ tests in ([\d.]+)s/);
         if (match) times.push(parseFloat(match[1]) * 1000);
         else anyFailed = true;
+        const breakdownMatch = result.stdout && result.stdout.match(/Breakdown: compile ([\d.]+)ms \((\d+) calls\), processInput ([\d.]+)ms \((\d+) calls\), undo ([\d.]+)ms \((\d+) calls\), restart ([\d.]+)ms \((\d+) calls\)/);
+        if (breakdownMatch) {
+            breakdowns.push({
+                compileMs: parseFloat(breakdownMatch[1]),
+                compileCount: Number(breakdownMatch[2]),
+                processInputMs: parseFloat(breakdownMatch[3]),
+                processInputCount: Number(breakdownMatch[4]),
+                undoMs: parseFloat(breakdownMatch[5]),
+                undoCount: Number(breakdownMatch[6]),
+                restartMs: parseFloat(breakdownMatch[7]),
+                restartCount: Number(breakdownMatch[8]),
+            });
+        }
         if (result.status !== 0) anyFailed = true;
     }
     if (times.length > 0) {
@@ -66,6 +80,10 @@ if (process.argv.includes('--profile')) {
         console.log(`Average: ${(avgMs / 1000).toFixed(2)}s`);
         console.log(`Median:  ${(medianMs / 1000).toFixed(2)}s`);
         console.log(`Min/Max: ${(sorted[0] / 1000).toFixed(2)}s / ${(sorted[sorted.length - 1] / 1000).toFixed(2)}s`);
+        if (breakdowns.length > 0) {
+            const avg = key => breakdowns.reduce((sum, b) => sum + b[key], 0) / breakdowns.length;
+            console.log(`Breakdown avg: compile ${avg('compileMs').toFixed(0)}ms (${breakdowns[0].compileCount} calls), processInput ${avg('processInputMs').toFixed(0)}ms (${breakdowns[0].processInputCount} calls), undo ${avg('undoMs').toFixed(0)}ms (${breakdowns[0].undoCount} calls), restart ${avg('restartMs').toFixed(0)}ms (${breakdowns[0].restartCount} calls)`);
+        }
     }
     process.exit(anyFailed ? 1 : 0);
 }
