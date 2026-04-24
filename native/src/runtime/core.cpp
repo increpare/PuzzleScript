@@ -3660,15 +3660,19 @@ void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot, bo
     rebuildMasks(session);
 }
 
-void pushUndoSnapshot(Session& session) {
-    session.undoStack.push_back(Session::UndoSnapshot{
+Session::UndoSnapshot makeUndoSnapshot(const Session& session) {
+    return Session::UndoSnapshot{
         session.preparedSession,
         session.liveLevel,
         session.liveMovements,
         session.rigidGroupIndexMasks,
         session.rigidMovementAppliedMasks,
         session.randomState,
-    });
+    };
+}
+
+void pushUndoSnapshot(Session& session) {
+    session.undoStack.push_back(makeUndoSnapshot(session));
     session.canUndo = true;
 }
 
@@ -4273,21 +4277,19 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     session.pendingCreateMask.assign(static_cast<size_t>(session.game->strideObject), 0);
     session.pendingDestroyMask.assign(static_cast<size_t>(session.game->strideObject), 0);
 
-    const Session::UndoSnapshot turnStart{
-        session.preparedSession,
-        session.liveLevel,
-        session.liveMovements,
-        session.rigidGroupIndexMasks,
-        session.rigidMovementAppliedMasks,
-        session.randomState,
-    };
+    std::optional<Session::UndoSnapshot> localTurnStart;
+    const Session::UndoSnapshot* turnStartPtr = nullptr;
+    if (options.pushUndo) {
+        pushUndoSnapshot(session);
+        turnStartPtr = &session.undoStack.back();
+    } else {
+        localTurnStart = makeUndoSnapshot(session);
+        turnStartPtr = &*localTurnStart;
+    }
+    const Session::UndoSnapshot& turnStart = *turnStartPtr;
     const std::vector<int32_t> startPlayerPositions = directionMask != 0
         ? collectPlayerPositions(session)
         : std::vector<int32_t>{};
-
-    if (options.pushUndo) {
-        pushUndoSnapshot(session);
-    }
 
     session.pendingAgain = false;
     clearMovementState(session);
