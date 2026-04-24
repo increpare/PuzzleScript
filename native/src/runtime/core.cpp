@@ -419,6 +419,15 @@ void accumulateMask(MaskVector& target, const MaskVector& source) {
 }
 #endif
 
+void accumulateMaskWords(MaskVector& target, const MaskWord* source, size_t sourceSize) {
+    if (target.size() < sourceSize) {
+        target.resize(sourceSize, 0);
+    }
+    for (size_t index = 0; index < sourceSize; ++index) {
+        target[index] |= source[index];
+    }
+}
+
 std::string describeObjects(const Session& session, const MaskVector& mask) {
     std::ostringstream stream;
     bool emitted = false;
@@ -1365,7 +1374,7 @@ void setObjectCellIndexBit(Session& session, int32_t objectId, int32_t tileIndex
     }
 }
 
-void setCellObjects(Session& session, int32_t tileIndex, const MaskVector& objects) {
+void setCellObjectsFromWords(Session& session, int32_t tileIndex, const MaskWord* objects) {
     const int32_t stride = session.game->strideObject;
     const size_t base = static_cast<size_t>(tileIndex * stride);
     const int32_t columnIndex = tileIndex / session.liveLevel.height;
@@ -1397,6 +1406,10 @@ void setCellObjects(Session& session, int32_t tileIndex, const MaskVector& objec
         session.dirtyObjectBoard = true;
         session.anyMasksDirty = true;
     }
+}
+
+void setCellObjects(Session& session, int32_t tileIndex, const MaskVector& objects) {
+    setCellObjectsFromWords(session, tileIndex, objects.data());
 }
 
 MaskVector getCellMovements(const Session& session, int32_t tileIndex) {
@@ -1458,7 +1471,7 @@ void clearShiftedMask5(MaskVector& value, int32_t shift) {
     }
 }
 
-void setCellMovements(Session& session, int32_t tileIndex, const MaskVector& movements) {
+void setCellMovementsFromWords(Session& session, int32_t tileIndex, const MaskWord* movements) {
     const int32_t stride = session.game->strideMovement;
     const size_t base = static_cast<size_t>(tileIndex * stride);
     const int32_t columnIndex = tileIndex / session.liveLevel.height;
@@ -1483,6 +1496,10 @@ void setCellMovements(Session& session, int32_t tileIndex, const MaskVector& mov
         session.dirtyMovementBoard = true;
         session.anyMasksDirty = true;
     }
+}
+
+void setCellMovements(Session& session, int32_t tileIndex, const MaskVector& movements) {
+    setCellMovementsFromWords(session, tileIndex, movements.data());
 }
 
 void setCellRigidGroupIndexMask(Session& session, int32_t tileIndex, const MaskVector& masks) {
@@ -2007,6 +2024,69 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     const Game& game = *session.game;
     const uint32_t objectWordCount = game.wordCount;
     const uint32_t movementWordCount = game.movementWordCount;
+
+    if (!rule.rigid
+        && !replacement.hasRandomEntityMask
+        && !replacement.hasRandomDirMask
+        && !ruleDebugEnabled()) {
+        const MaskWord* oldObjects = getCellObjectsPtr(session, tileIndex);
+        const MaskWord* oldMovements = getCellMovementsPtr(session, tileIndex);
+        const MaskWord* objectsClear = maskPtr(game, replacement.objectsClear);
+        const MaskWord* objectsSet = maskPtr(game, replacement.objectsSet);
+        const MaskWord* movementsClear = maskPtr(game, replacement.movementsClear);
+        const MaskWord* movementsSet = maskPtr(game, replacement.movementsSet);
+        const MaskWord* movementsLayerMask = replacement.hasMovementsLayerMask
+            ? maskPtr(game, replacement.movementsLayerMask)
+            : nullptr;
+
+        MaskVector& newObjects = session.replacementObjectsScratch;
+        MaskVector& newMovements = session.replacementMovementsScratch;
+        MaskVector& created = session.replacementCreatedScratch;
+        MaskVector& destroyed = session.replacementDestroyedScratch;
+        newObjects.resize(objectWordCount);
+        created.resize(objectWordCount);
+        destroyed.resize(objectWordCount);
+        newMovements.resize(movementWordCount);
+
+        bool objectsChanged = false;
+        bool movementsChanged = false;
+        for (uint32_t word = 0; word < objectWordCount; ++word) {
+            const MaskWord clearWord = objectsClear != nullptr ? objectsClear[word] : 0;
+            const MaskWord setWord = objectsSet != nullptr ? objectsSet[word] : 0;
+            const MaskWord before = oldObjects[word];
+            const MaskWord after = (before & ~clearWord) | setWord;
+            newObjects[word] = after;
+            created[word] = after & ~before;
+            destroyed[word] = before & ~after;
+            objectsChanged = objectsChanged || after != before;
+        }
+        for (uint32_t word = 0; word < movementWordCount; ++word) {
+            MaskWord clearWord = movementsClear != nullptr ? movementsClear[word] : 0;
+            if (movementsLayerMask != nullptr) {
+                clearWord |= movementsLayerMask[word];
+            }
+            const MaskWord setWord = movementsSet != nullptr ? movementsSet[word] : 0;
+            const MaskWord before = oldMovements[word];
+            const MaskWord after = (before & ~clearWord) | setWord;
+            newMovements[word] = after;
+            movementsChanged = movementsChanged || after != before;
+        }
+
+        if (!objectsChanged && !movementsChanged) {
+            return false;
+        }
+        if (objectsChanged) {
+            setCellObjectsFromWords(session, tileIndex, newObjects.data());
+            accumulateMaskWords(session.pendingCreateMask, created.data(), created.size());
+            accumulateMaskWords(session.pendingDestroyMask, destroyed.data(), destroyed.size());
+        }
+        if (movementsChanged) {
+            setCellMovementsFromWords(session, tileIndex, newMovements.data());
+        }
+        addCounter(gRuntimeCounters.replacementsApplied);
+        return true;
+    }
+
     auto copyIntoScratchPair = [](MaskVector& current,
                                   MaskVector& old,
                                   const MaskWord* src,
