@@ -2560,8 +2560,7 @@ bool ruleCanPossiblyMatch(const Session& session, const Rule& rule) {
     return true;
 }
 
-RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandState& commands) {
-    addCounter(gRuntimeCounters.rulesVisited);
+RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandState& commands, bool maskPrechecked) {
     const bool logRule = ruleDebugLineFilterMatches(rule.lineNumber);
     if (logRule) {
         std::ostringstream stream;
@@ -2580,7 +2579,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
         }
         return {};
     }
-    if (!ruleCanPossiblyMatch(session, rule)) {
+    if (!maskPrechecked && !ruleCanPossiblyMatch(session, rule)) {
         addCounter(gRuntimeCounters.rulesSkippedByMask);
         if (logRule) {
             std::ostringstream stream;
@@ -3078,7 +3077,20 @@ bool applyRuleGroup(Session& session, const std::vector<Rule>& group, CommandSta
     while (madeChange && loopCount++ < 200) {
         madeChange = false;
         for (const auto& rule : group) {
-            const RuleApplyOutcome outcome = tryApplySimpleRule(session, rule, commands);
+            addCounter(gRuntimeCounters.rulesVisited);
+            if (!ruleCanPossiblyMatch(session, rule)) {
+                addCounter(gRuntimeCounters.rulesSkippedByMask);
+                if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                    std::ostringstream stream;
+                    stream << "line=" << rule.lineNumber
+                           << " skip reason=rule-mask"
+                           << " rule_mask=" << describeObjects(session, arenaCopy(*session.game, rule.ruleMask, session.game->wordCount))
+                           << " board_mask=" << describeObjects(session, session.boardMask);
+                    ruleDebugLog(stream.str());
+                }
+                continue;
+            }
+            const RuleApplyOutcome outcome = tryApplySimpleRule(session, rule, commands, true);
             madeChange = outcome.changed || madeChange;
             if (outcome.changed) {
                 rebuildMasks(session);
