@@ -298,11 +298,16 @@ function serializeRulePlan(rule, groupIndex, ruleIndex, late, state) {
 
 function serializeRulePlanGroups(ruleGroups, late, state) {
     const objectLayers = objectLayerById(state);
-    return ruleGroups.map((ruleGroup, groupIndex) =>
-        ruleGroup
+    const groups = [];
+    for (const ruleGroup of ruleGroups) {
+        const group = ruleGroup
             .filter(rule => !ruleImpossible(rule, state, objectLayers))
-            .map((rule, ruleIndex) => serializeRulePlan(rule, groupIndex, ruleIndex, late, state))
-    );
+            .map((rule, ruleIndex) => serializeRulePlan(rule, groups.length, ruleIndex, late, state));
+        if (group.length > 0) {
+            groups.push(group);
+        }
+    }
+    return groups;
 }
 
 function serializePattern(pattern) {

@@ -3124,8 +3124,19 @@ void appendRulePlanJson(std::ostream& out, const puzzlescript::Game& game) {
 
     auto appendGroups = [&](const std::vector<std::vector<puzzlescript::Rule>>& groups, bool late) {
         out << "[";
+        size_t emittedGroupIndex = 0;
         for (size_t groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
-            if (groupIndex != 0) {
+            bool hasEmittedRules = false;
+            for (const auto& rule : groups[groupIndex]) {
+                if (!ruleImpossible(game, rule)) {
+                    hasEmittedRules = true;
+                    break;
+                }
+            }
+            if (!hasEmittedRules) {
+                continue;
+            }
+            if (emittedGroupIndex != 0) {
                 out << ",";
             }
             out << "[";
@@ -3138,10 +3149,11 @@ void appendRulePlanJson(std::ostream& out, const puzzlescript::Game& game) {
                 if (emittedRuleIndex != 0) {
                     out << ",";
                 }
-                appendRuleEntry(rule, groupIndex, emittedRuleIndex, late);
+                appendRuleEntry(rule, emittedGroupIndex, emittedRuleIndex, late);
                 ++emittedRuleIndex;
             }
             out << "]";
+            ++emittedGroupIndex;
         }
         out << "]";
     };

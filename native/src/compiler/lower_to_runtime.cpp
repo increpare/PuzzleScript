@@ -1180,23 +1180,19 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                     if (lhsCell.isEllipsis || rhsCell.isEllipsis) {
                         continue;
                     }
-                    std::vector<ParsedItem> trimmed;
-                    trimmed.reserve(rhsCell.items.size());
-                    for (const auto& rhsItem : rhsCell.items) {
-                        bool redundant = false;
+                    for (size_t rhsIndex = 0; rhsIndex < rhsCell.items.size(); ++rhsIndex) {
+                        const auto& rhsItem = rhsCell.items[rhsIndex];
                         if (rhsItem.dir == "no") {
                             for (const auto& lhsItem : lhsCell.items) {
                                 if (lhsItem.dir == "no" && lhsItem.name == rhsItem.name) {
-                                    redundant = true;
+                                    // JS splices while iterating token pairs, so adjacent
+                                    // redundant RHS negations leave every second one behind.
+                                    rhsCell.items.erase(rhsCell.items.begin() + static_cast<std::ptrdiff_t>(rhsIndex));
                                     break;
                                 }
                             }
                         }
-                        if (!redundant) {
-                            trimmed.push_back(rhsItem);
-                        }
                     }
-                    rhsCell.items = std::move(trimmed);
                 }
             }
         };
@@ -1903,6 +1899,33 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             }
             return sig;
         };
+        auto lhsHasLayerOverlap = [&](const std::vector<ParsedRow>& rows) {
+            for (const auto& row : rows) {
+                for (const auto& cell : row) {
+                    if (cell.isEllipsis) {
+                        continue;
+                    }
+                    std::vector<uint8_t> usedLayers(static_cast<size_t>(game->layerCount), 0);
+                    for (const auto& item : cell.items) {
+                        if (item.dir == "no" || item.dir == "random") {
+                            continue;
+                        }
+                        std::set<std::string> visiting;
+                        const auto mask = resolveMask(resolveMask, item.name, visiting);
+                        const auto layer = maskSingleLayer(mask);
+                        if (!layer.has_value() || *layer < 0 || *layer >= game->layerCount) {
+                            continue;
+                        }
+                        auto& used = usedLayers[static_cast<size_t>(*layer)];
+                        if (used != 0) {
+                            return true;
+                        }
+                        used = 1;
+                    }
+                }
+            }
+            return false;
+        };
 
         for (const auto& rawRuleDirection : ruleDirections) {
         auto variantLhsRows = lhsRows;
@@ -1931,6 +1954,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             for (const auto& propChunk : propertyConcreteChunks) {
                 std::vector<ParsedRow> variantLhsRowsExpanded = propChunk.first;
             std::vector<ParsedRow> variantRhsRowsExpanded = propChunk.second;
+            if (lhsHasLayerOverlap(variantLhsRowsExpanded)) {
+                continue;
+            }
             if (!lateRule) {
                 makeSpawnedObjectsStationaryRows(variantLhsRowsExpanded, variantRhsRowsExpanded);
             }
