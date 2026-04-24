@@ -103,6 +103,7 @@ struct StateKeyHash {
 
 struct Node {
     std::unique_ptr<Session> session;
+    StateKey key;
     int32_t parent = -1;
     ps_input input = PS_INPUT_UP;
     uint32_t depth = 0;
@@ -792,11 +793,12 @@ Result runSearch(
     const bool includeRandomStateInKey = gameUsesRandomness(*game);
     std::unordered_map<StateKey, uint32_t, StateKeyHash> bestDepth;
     bestDepth.reserve(16384);
-    bestDepth.emplace(solverStateKey(*initial, includeRandomStateInKey, result.timing), 0);
+    const StateKey initialKey = solverStateKey(*initial, includeRandomStateInKey, result.timing);
+    bestDepth.emplace(initialKey, 0);
     result.uniqueStates = 1;
 
     const int32_t initialHeuristic = mode == SearchMode::Bfs ? 0 : heuristicScore(*initial);
-    nodes.push_back(Node{std::move(initial), -1, PS_INPUT_UP, 0, initialHeuristic});
+    nodes.push_back(Node{std::move(initial), initialKey, -1, PS_INPUT_UP, 0, initialHeuristic});
     std::priority_queue<QueueEntry, std::vector<QueueEntry>, QueueEntryGreater> frontier;
     frontier.push(QueueEntry{priorityFor(mode, 0, initialHeuristic), 0, 0});
     result.maxFrontier = 1;
@@ -813,8 +815,15 @@ Result runSearch(
         const QueueEntry entry = frontier.top();
         frontier.pop();
 
-        const Session& parentSession = *nodes[entry.nodeIndex].session;
-        const uint32_t parentDepth = nodes[entry.nodeIndex].depth;
+        const Node& parentNode = nodes[entry.nodeIndex];
+        const auto best = bestDepth.find(parentNode.key);
+        if (best != bestDepth.end() && best->second < parentNode.depth) {
+            ++result.duplicates;
+            continue;
+        }
+
+        const Session& parentSession = *parentNode.session;
+        const uint32_t parentDepth = parentNode.depth;
         ++result.expanded;
 
         for (const ps_input input : inputs) {
@@ -862,7 +871,7 @@ Result runSearch(
 
             const int32_t childHeuristic = mode == SearchMode::Bfs ? 0 : heuristicScore(*child);
             const uint32_t childIndex = static_cast<uint32_t>(nodes.size());
-            nodes.push_back(Node{std::move(child), static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+            nodes.push_back(Node{std::move(child), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
             frontier.push(QueueEntry{priorityFor(mode, childDepth, childHeuristic), nextTie++, childIndex});
             result.maxFrontier = std::max<uint64_t>(result.maxFrontier, frontier.size());
         }
