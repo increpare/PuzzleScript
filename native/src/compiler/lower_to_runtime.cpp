@@ -705,8 +705,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     game->lateRules.clear();
     std::vector<int32_t> earlyLoopStartStack;
     std::vector<int32_t> lateLoopStartStack;
-    std::map<int32_t, int32_t> earlyLoopPointMap;
-    std::map<int32_t, int32_t> lateLoopPointMap;
+    std::vector<std::pair<int32_t, int32_t>> earlyLoopRanges;
+    std::vector<std::pair<int32_t, int32_t>> lateLoopRanges;
 
     // Precompute (best-effort) single-layer info for legend names: if a mask's
     // set bits all live on the same collision layer, we can treat it as
@@ -744,17 +744,14 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         if (marker == "startloop" || marker == "endloop") {
             auto& groups = markerLate ? game->lateRules : game->rules;
             auto& loopStack = markerLate ? lateLoopStartStack : earlyLoopStartStack;
-            auto& loopMap = markerLate ? lateLoopPointMap : earlyLoopPointMap;
             if (marker == "startloop") {
-                loopStack.push_back(static_cast<int32_t>(groups.size()));
+                loopStack.push_back(entry.lineNumber);
             } else {
                 if (!loopStack.empty()) {
-                    const int32_t startIndex = loopStack.back();
+                    const int32_t startLine = loopStack.back();
                     loopStack.pop_back();
-                    const int32_t endIndex = static_cast<int32_t>(groups.size()) - 1;
-                    if (endIndex >= 0) {
-                        loopMap[endIndex] = startIndex;
-                    }
+                    auto& loopRanges = markerLate ? lateLoopRanges : earlyLoopRanges;
+                    loopRanges.emplace_back(startLine, entry.lineNumber);
                 }
             }
             continue;
@@ -1043,177 +1040,206 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             return false;
         };
 
-        // JS `concretizeMovingRule` expands `directionaggregates` on the LHS (languageConstants.js).
-        // Native splits `moving` separately (`enumerateMovingVariants`). We also split
-        // direction aggregates from `languageConstants.js` / post-`absolutifyRuleCell` names
-        // (`horizontal_par`, `vertical_perp`, etc.); `moving` stays in enumerateMovingVariants.
-        auto expandOrthogonalHorizontalVerticalRows = [&](std::vector<ParsedRow> lhs0, std::vector<ParsedRow> rhs0)
+        // Mirrors JS `concretizeMovingRule` closely, including split order and the
+        // two RHS disambiguation passes (`movingReplacement` and
+        // `aggregateDirReplacement`). Rule-group order is observable, so the push /
+        // erase behavior intentionally follows the JS implementation.
+        auto expandConcretizeMovingRows = [&](std::vector<ParsedRow> lhs0, std::vector<ParsedRow> rhs0)
             -> std::vector<std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>>> {
-            static const std::vector<std::string> kOrthDirs = {"up", "down", "left", "right"};
-            static const std::vector<std::string> kHorizDirs = {"left", "right"};
-            static const std::vector<std::string> kVertDirs = {"up", "down"};
-            static const std::vector<std::string> kPerpDirs = {"^", "v"};
-            static const std::vector<std::string> kParDirs = {"<", ">"};
-            std::vector<std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>>> work;
-            work.push_back({std::move(lhs0), std::move(rhs0)});
-            for (;;) {
-                bool split = false;
-                for (size_t wi = 0; wi < work.size(); ++wi) {
-                    size_t fj = 0;
-                    size_t fk = 0;
-                    std::string nameAt;
-                    std::string aggAt;
-                    const std::vector<std::string>* concDirs = nullptr;
-                    bool found = false;
-                    const auto& lhs = work[wi].first;
-                    for (size_t j = 0; j < lhs.size() && !found; ++j) {
-                        for (size_t k = 0; k < lhs[j].size() && !found; ++k) {
-                            if (lhs[j][k].isEllipsis) {
-                                continue;
-                            }
-                            for (size_t ii = 0; ii < lhs[j][k].items.size() && !found; ++ii) {
-                                const std::string& d = lhs[j][k].items[ii].dir;
-                                if (d == "orthogonal") {
-                                    fj = j;
-                                    fk = k;
-                                    nameAt = lhs[j][k].items[ii].name;
-                                    aggAt = d;
-                                    concDirs = &kOrthDirs;
-                                    found = true;
-                                } else if (d == "horizontal" || d == "horizontal_par" || d == "horizontal_perp") {
-                                    fj = j;
-                                    fk = k;
-                                    nameAt = lhs[j][k].items[ii].name;
-                                    aggAt = d;
-                                    concDirs = &kHorizDirs;
-                                    found = true;
-                                } else if (d == "vertical" || d == "vertical_par" || d == "vertical_perp") {
-                                    fj = j;
-                                    fk = k;
-                                    nameAt = lhs[j][k].items[ii].name;
-                                    aggAt = d;
-                                    concDirs = &kVertDirs;
-                                    found = true;
-                                } else if (d == "perpendicular") {
-                                    fj = j;
-                                    fk = k;
-                                    nameAt = lhs[j][k].items[ii].name;
-                                    aggAt = d;
-                                    concDirs = &kPerpDirs;
-                                    found = true;
-                                } else if (d == "parallel") {
-                                    fj = j;
-                                    fk = k;
-                                    nameAt = lhs[j][k].items[ii].name;
-                                    aggAt = d;
-                                    concDirs = &kParDirs;
-                                    found = true;
-                                }
-                            }
-                        }
-                    }
-                    if (!found || concDirs == nullptr) {
-                        continue;
-                    }
-                    std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>> base = std::move(work[wi]);
-                    work.erase(work.begin() + static_cast<std::ptrdiff_t>(wi));
-                    // JS `concretizeMovingRule`: only the scanned LHS cell (fj,fk) is concretized per
-                    // split iteration; if that aggregate+object appears once on the LHS overall, the
-                    // post-pass applies the same concrete dir to *every* RHS cell (not aligned index).
-                    int lhsAggCells = 0;
-                    for (const auto& row : base.first) {
-                        for (const auto& cell : row) {
-                            if (cell.isEllipsis) {
-                                continue;
-                            }
-                            for (const auto& it : cell.items) {
-                                if (it.dir == aggAt && it.name == nameAt) {
-                                    ++lhsAggCells;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    const bool rhsAggGlobal = (lhsAggCells == 1);
-                    for (const std::string& conc : *concDirs) {
-                        std::vector<ParsedRow> nl = base.first;
-                        std::vector<ParsedRow> nr = base.second;
-                        for (auto& it : nl[fj][fk].items) {
-                            if (it.dir == aggAt && it.name == nameAt) {
-                                it.dir = conc;
-                            }
-                        }
-                        if (rhsAggGlobal) {
-                            for (auto& row : nr) {
-                                for (auto& cell : row) {
-                                    if (cell.isEllipsis) {
-                                        continue;
-                                    }
-                                    for (auto& it : cell.items) {
-                                        if (it.dir == aggAt && it.name == nameAt) {
-                                            it.dir = conc;
-                                        }
-                                    }
-                                }
-                            }
-                        } else if (fj < nr.size() && fk < nr[fj].size() && !nr[fj][fk].isEllipsis) {
-                            for (auto& it : nr[fj][fk].items) {
-                                if (it.dir == aggAt && it.name == nameAt) {
-                                    it.dir = conc;
-                                }
-                            }
-                        }
-                        work.push_back({std::move(nl), std::move(nr)});
-                    }
-                    split = true;
-                    break;
-                }
-                if (!split) {
-                    break;
-                }
-            }
-            return work;
-        };
-
-        auto enumerateMovingVariants = [&](const std::vector<ParsedRow>& lhsBase, const std::vector<ParsedRow>& rhsBase) {
-            struct Slot {
-                bool rhs = false;
+            struct MovingReplacement {
+                std::string concreteDirection;
+                int occurrenceCount = 1;
+                std::string ambiguousMovement;
+                std::string attachedObject;
                 size_t row = 0;
                 size_t cell = 0;
-                size_t item = 0;
             };
-            std::vector<Slot> slots;
-            auto collect = [&](const std::vector<ParsedRow>& rows, bool rhs) {
-                for (size_t r = 0; r < rows.size(); ++r) {
-                    for (size_t c = 0; c < rows[r].size(); ++c) {
-                        for (size_t i = 0; i < rows[r][c].items.size(); ++i) {
-                            if (rows[r][c].items[i].dir == "moving") {
-                                slots.push_back(Slot{rhs, r, c, i});
+            struct AggregateDirReplacement {
+                std::string concreteDirection;
+                int occurrenceCount = 1;
+                std::string ambiguousMovement;
+            };
+            struct WorkRule {
+                std::vector<ParsedRow> lhs;
+                std::vector<ParsedRow> rhs;
+                std::map<std::string, MovingReplacement> movingReplacement;
+                std::map<std::string, AggregateDirReplacement> aggregateDirReplacement;
+            };
+
+            const auto concreteDirsForAggregate = [](const std::string& dir) -> const std::vector<std::string>* {
+                static const std::vector<std::string> kHorizDirs = {"left", "right"};
+                static const std::vector<std::string> kVertDirs = {"up", "down"};
+                static const std::vector<std::string> kMovingDirs = {"up", "down", "left", "right", "action"};
+                static const std::vector<std::string> kOrthDirs = {"up", "down", "left", "right"};
+                static const std::vector<std::string> kPerpDirs = {"^", "v"};
+                static const std::vector<std::string> kParDirs = {"<", ">"};
+                if (dir == "horizontal" || dir == "horizontal_par" || dir == "horizontal_perp") return &kHorizDirs;
+                if (dir == "vertical" || dir == "vertical_par" || dir == "vertical_perp") return &kVertDirs;
+                if (dir == "moving") return &kMovingDirs;
+                if (dir == "orthogonal") return &kOrthDirs;
+                if (dir == "perpendicular") return &kPerpDirs;
+                if (dir == "parallel") return &kParDirs;
+                return nullptr;
+            };
+            auto getMovingsParsed = [&](const ParsedCell& cell) {
+                std::vector<std::pair<std::string, std::string>> result;
+                if (cell.isEllipsis) {
+                    return result;
+                }
+                for (const auto& item : cell.items) {
+                    if (concreteDirsForAggregate(item.dir) != nullptr) {
+                        result.push_back({item.name, item.dir});
+                    }
+                }
+                return result;
+            };
+            auto concretizeMovingInCell = [](ParsedCell& cell,
+                                             const std::string& ambiguousMovement,
+                                             const std::string& nameToMove,
+                                             const std::string& concreteDirection) {
+                if (cell.isEllipsis) {
+                    return;
+                }
+                for (auto& item : cell.items) {
+                    if (item.dir == ambiguousMovement && item.name == nameToMove) {
+                        item.dir = concreteDirection;
+                    }
+                }
+            };
+            auto concretizeMovingInCellByAmbiguousMovementName = [](ParsedCell& cell,
+                                                                    const std::string& ambiguousMovement,
+                                                                    const std::string& concreteDirection) {
+                if (cell.isEllipsis) {
+                    return;
+                }
+                for (auto& item : cell.items) {
+                    if (item.dir == ambiguousMovement) {
+                        item.dir = concreteDirection;
+                    }
+                }
+            };
+
+            std::vector<WorkRule> result;
+            result.push_back({std::move(lhs0), std::move(rhs0), {}, {}});
+
+            bool modified = true;
+            while (modified) {
+                modified = false;
+                for (size_t i = 0; i < result.size(); ++i) {
+                    bool shouldRemove = false;
+                    for (size_t j = 0; j < result[i].lhs.size() && !shouldRemove; ++j) {
+                        auto& currentRuleRow = result[i].lhs[j];
+                        for (size_t k = 0; k < currentRuleRow.size() && !shouldRemove; ++k) {
+                            const auto movings = getMovingsParsed(currentRuleRow[k]);
+                            if (movings.empty()) {
+                                continue;
+                            }
+
+                            shouldRemove = true;
+                            modified = true;
+                            const std::string& candName = movings[0].first;
+                            const std::string& ambiguousDir = movings[0].second;
+                            const auto* concreteDirs = concreteDirsForAggregate(ambiguousDir);
+                            if (concreteDirs == nullptr) {
+                                continue;
+                            }
+
+                            const WorkRule baseRule = result[i];
+                            for (const auto& concreteDirection : *concreteDirs) {
+                                WorkRule newRule = baseRule;
+                                concretizeMovingInCell(newRule.lhs[j][k], ambiguousDir, candName, concreteDirection);
+                                if (!newRule.rhs.empty() && j < newRule.rhs.size() && k < newRule.rhs[j].size()) {
+                                    concretizeMovingInCell(newRule.rhs[j][k], ambiguousDir, candName, concreteDirection);
+                                }
+
+                                const std::string movingKey = candName + ambiguousDir;
+                                auto movingIt = newRule.movingReplacement.find(movingKey);
+                                if (movingIt == newRule.movingReplacement.end()) {
+                                    newRule.movingReplacement[movingKey] =
+                                        MovingReplacement{concreteDirection, 1, ambiguousDir, candName, j, k};
+                                } else if (j != movingIt->second.row || k != movingIt->second.cell) {
+                                    movingIt->second.occurrenceCount += 1;
+                                }
+
+                                auto aggregateIt = newRule.aggregateDirReplacement.find(ambiguousDir);
+                                if (aggregateIt == newRule.aggregateDirReplacement.end()) {
+                                    newRule.aggregateDirReplacement[ambiguousDir] =
+                                        AggregateDirReplacement{concreteDirection, 1, ambiguousDir};
+                                } else {
+                                    aggregateIt->second.occurrenceCount += 1;
+                                }
+
+                                result.push_back(std::move(newRule));
                             }
                         }
                     }
-                }
-            };
-            collect(lhsBase, false);
-            collect(rhsBase, true);
-            std::vector<std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>>> out;
-            if (slots.empty()) {
-                out.push_back({lhsBase, rhsBase});
-                return out;
-            }
-            static const std::array<const char*, 5> kMovingDirs = {"up", "down", "left", "right", "action"};
-            for (const char* movingDir : kMovingDirs) {
-                auto lhs = lhsBase;
-                auto rhs = rhsBase;
-                for (const auto& slot : slots) {
-                    const std::string dir = movingDir;
-                    if (!slot.rhs) {
-                        lhs[slot.row][slot.cell].items[slot.item].dir = dir;
-                    } else {
-                        rhs[slot.row][slot.cell].items[slot.item].dir = dir;
+                    if (shouldRemove) {
+                        result.erase(result.begin() + static_cast<std::ptrdiff_t>(i));
+                        --i;
                     }
                 }
-                out.push_back({std::move(lhs), std::move(rhs)});
+            }
+
+            std::vector<std::pair<std::vector<ParsedRow>, std::vector<ParsedRow>>> out;
+            out.reserve(result.size());
+            for (auto& currentRule : result) {
+                for (const auto& [_, replacementInfo] : currentRule.movingReplacement) {
+                    if (replacementInfo.occurrenceCount != 1) {
+                        continue;
+                    }
+                    for (auto& rhsRow : currentRule.rhs) {
+                        for (auto& cell : rhsRow) {
+                            concretizeMovingInCell(
+                                cell,
+                                replacementInfo.ambiguousMovement,
+                                replacementInfo.attachedObject,
+                                replacementInfo.concreteDirection
+                            );
+                        }
+                    }
+                }
+
+                std::map<std::string, std::string> ambiguousMovementNames;
+                for (const auto& [_, replacementInfo] : currentRule.aggregateDirReplacement) {
+                    const auto existing = ambiguousMovementNames.find(replacementInfo.ambiguousMovement);
+                    if (existing != ambiguousMovementNames.end() || replacementInfo.occurrenceCount != 1) {
+                        ambiguousMovementNames[replacementInfo.ambiguousMovement] = "INVALID";
+                    } else {
+                        ambiguousMovementNames[replacementInfo.ambiguousMovement] = replacementInfo.concreteDirection;
+                    }
+                }
+                for (const auto& [ambiguousMovement, concreteMovement] : ambiguousMovementNames) {
+                    if (concreteMovement == "INVALID") {
+                        continue;
+                    }
+                    for (auto& rhsRow : currentRule.rhs) {
+                        for (auto& cell : rhsRow) {
+                            concretizeMovingInCellByAmbiguousMovementName(cell, ambiguousMovement, concreteMovement);
+                        }
+                    }
+                }
+
+                std::string rhsAmbiguousMovementRemains;
+                for (const auto& rhsRow : currentRule.rhs) {
+                    for (const auto& cell : rhsRow) {
+                        const auto movings = getMovingsParsed(cell);
+                        if (!movings.empty()) {
+                            rhsAmbiguousMovementRemains = movings[0].second;
+                            break;
+                        }
+                    }
+                    if (!rhsAmbiguousMovementRemains.empty()) {
+                        break;
+                    }
+                }
+                if (!rhsAmbiguousMovementRemains.empty()) {
+                    throw std::runtime_error(
+                        "Rule at line " + std::to_string(entry.lineNumber)
+                        + " has an ambiguous movement on the right-hand side, \"" + rhsAmbiguousMovementRemains
+                        + "\", that can't be inferred from the left-hand side.");
+                }
+
+                out.push_back({std::move(currentRule.lhs), std::move(currentRule.rhs)});
             }
             return out;
         };
@@ -1557,12 +1583,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             }
         }
 
-        auto axisAggExpanded = expandOrthogonalHorizontalVerticalRows(std::move(variantLhsRows), std::move(variantRhsRows));
-        for (auto& orthoPair : axisAggExpanded) {
-            absolutizeRows(orthoPair.first, concreteRuleDirection);
-            absolutizeRows(orthoPair.second, concreteRuleDirection);
-            const auto movingVariants = enumerateMovingVariants(orthoPair.first, orthoPair.second);
-            for (const auto& movingVariant : movingVariants) {
+        const auto movingVariants = expandConcretizeMovingRows(std::move(variantLhsRows), std::move(variantRhsRows));
+        for (const auto& movingVariant : movingVariants) {
             const auto propertyConcreteChunks =
                 expandConcretizePropertyRows(movingVariant.first, movingVariant.second);
             for (const auto& propChunk : propertyConcreteChunks) {
@@ -1685,7 +1707,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         auto movementsClear = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
                         auto movementsSet = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
                         auto movementsLayerMask = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
-                        auto randomEntityMask = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
+                        auto randomEntityMask = std::vector<int32_t>(static_cast<size_t>(game->wordCount), 0);
                         auto randomDirMask = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
                         std::vector<int32_t> layersUsedR(game->layerCount, 0);
                         std::vector<int32_t> rhsObjectLayersMovement(static_cast<size_t>(game->movementWordCount), 0);
@@ -1715,6 +1737,10 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         if (!rhsWritesObjects) {
                             for (const auto& rhsItem : rhsCell.items) {
                                 if (rhsItem.dir == "random") {
+                                    rhsWritesObjects = true;
+                                    break;
+                                }
+                                if (rhsItem.dir == "random") {
                                     continue;
                                 }
                                 if (rhsItem.dir == "no") {
@@ -1730,6 +1756,11 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
                         for (const auto& item : rhsCell.items) {
                             if (item.dir == "random") {
+                                std::set<std::string> visiting;
+                                const auto mask = resolveMask(resolveMask, item.name, visiting);
+                                for (size_t w = 0; w < randomEntityMask.size() && w < mask.size(); ++w) {
+                                    randomEntityMask[static_cast<size_t>(w)] |= mask[static_cast<size_t>(w)];
+                                }
                                 continue;
                             }
                             // JS `dirMasks.randomdir` === parseInt('00101', 2) === 5; OR'd into randomDirMask_r
@@ -1884,6 +1915,20 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                             }
                         }
 
+                        auto randomEntityTouchesLayer = [&](int32_t layer) {
+                            if (layer < 0 || layer >= game->layerCount) {
+                                return false;
+                            }
+                            const auto off = game->layerMaskOffsets[static_cast<size_t>(layer)];
+                            for (uint32_t w = 0; w < game->wordCount; ++w) {
+                                const int32_t layerWord = static_cast<int32_t>(game->maskArena[static_cast<size_t>(off + w)]);
+                                if ((randomEntityMask[static_cast<size_t>(w)] & layerWord) != 0) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        };
+
                         // If we set a concrete object on a layer, JS does not
                         // clear that layer's movement bits implicitly.
                         if (rhsWritesObjects) {
@@ -1901,10 +1946,10 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                                     const int32_t moveSetBits = getShiftedMask5(movementsSet, 5 * layer);
                                     const int32_t moveClearBits = getShiftedMask5(movementsClear, 5 * layer);
                                     const int32_t randomDirBits = getShiftedMask5(randomDirMask, 5 * layer);
-                                    const int32_t randomEntBits = getShiftedMask5(randomEntityMask, 5 * layer);
+                                    const bool randomEntOnLayer = randomEntityTouchesLayer(layer);
                                     // Only suppress implicit layer-mask clearing when there is no explicit
                                     // movement directive on the layer (including randomDir / random entity).
-                                    if (moveSetBits == 0 && moveClearBits == 0 && randomDirBits == 0 && randomEntBits == 0) {
+                                    if (moveSetBits == 0 && moveClearBits == 0 && randomDirBits == 0 && !randomEntOnLayer) {
                                         setShiftedMask5(movementsLayerMask, 5 * layer, 0);
                                     }
                                 }
@@ -1926,7 +1971,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         repl.movementsLayerMask = storeMaskWords(*game, movementsLayerMask);
                         if (anyNonZero(randomEntityMask)) {
                             repl.randomEntityMask = storeMaskWords(*game, randomEntityMask);
-                            repl.randomEntityMaskWidth = game->movementWordCount;
+                            repl.randomEntityMaskWidth = game->wordCount;
                         }
                         if (anyNonZero(randomDirMask)) {
                             repl.randomDirMask = storeMaskWords(*game, randomDirMask);
@@ -2014,7 +2059,6 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         }
         }
         }
-        }
     }
 
     // Rigid bookkeeping tables used by runtime conflict resolution.
@@ -2064,6 +2108,39 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         }
     }
 
+    auto calculateLoopPoints = [](const std::vector<std::pair<int32_t, int32_t>>& loopRanges,
+                                  const std::vector<std::vector<puzzlescript::Rule>>& ruleGroups) {
+        std::map<int32_t, int32_t> loopPoint;
+        for (const auto& [loopStartLine, loopEndLine] : loopRanges) {
+            int32_t initGroupIndex = -1;
+            for (int32_t groupIndex = 0; groupIndex < static_cast<int32_t>(ruleGroups.size()); ++groupIndex) {
+                const auto& ruleGroup = ruleGroups[static_cast<size_t>(groupIndex)];
+                if (ruleGroup.empty()) {
+                    continue;
+                }
+
+                const int32_t firstRuleLine = ruleGroup.front().lineNumber;
+                if (loopEndLine < firstRuleLine) {
+                    break;
+                }
+
+                const bool ruleInLoop = loopStartLine <= firstRuleLine && firstRuleLine <= loopEndLine;
+                if (!ruleInLoop) {
+                    continue;
+                }
+
+                if (initGroupIndex == -1) {
+                    initGroupIndex = groupIndex;
+                }
+                const auto prev = loopPoint.find(groupIndex - 1);
+                if (groupIndex > 0 && prev != loopPoint.end() && prev->second == initGroupIndex) {
+                    loopPoint.erase(prev);
+                }
+                loopPoint[groupIndex] = initGroupIndex;
+            }
+        }
+        return loopPoint;
+    };
     auto buildLoopPointTable = [](const std::map<int32_t, int32_t>& points) {
         puzzlescript::LoopPointTable table;
         if (points.empty()) {
@@ -2078,6 +2155,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         }
         return table;
     };
+    const auto earlyLoopPointMap = calculateLoopPoints(earlyLoopRanges, game->rules);
+    const auto lateLoopPointMap = calculateLoopPoints(lateLoopRanges, game->lateRules);
     game->loopPoint = buildLoopPointTable(earlyLoopPointMap);
     game->lateLoopPoint = buildLoopPointTable(lateLoopPointMap);
 
