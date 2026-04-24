@@ -217,6 +217,7 @@ function main() {
 
   const repoRoot = path.resolve(__dirname, '..', '..');
   const testdata = loadTestdataByArrayLiteral(opts.testdataPath);
+  const testCaseCount = testdata.length;
   const cases = uniqueSourceCases(testdata);
   const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'puzzlescript-rule-plan-parity-'));
   const srcDir = path.join(tmpRoot, 'src');
@@ -316,13 +317,13 @@ function main() {
 
       compared++;
       if (opts.progressEvery > 0 && compared > 0 && (compared % opts.progressEvery) === 0) {
-        process.stderr.write(`progress compared=${compared}/${cases.length} skipped_ir_failures=${skippedIrFailures}\n`);
+        process.stderr.write(`progress compared_unique_sources=${compared}/${cases.length} test_cases=${testCaseCount} skipped_ir_failures=${skippedIrFailures}\n`);
       }
     }
 
     const elapsedMs = Date.now() - startedAt;
     process.stdout.write(
-      `rule_plan_parity passed compared=${compared} unique_sources=${cases.length} ` +
+      `rule_plan_parity passed compared_unique_sources=${compared} unique_sources=${cases.length} test_cases=${testCaseCount} ` +
       `skipped_ir_failures=${skippedIrFailures} elapsed_ms=${elapsedMs}\n`
     );
   } finally {
