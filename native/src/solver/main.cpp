@@ -57,17 +57,14 @@ enum class SearchMode {
 };
 
 struct ScopedTimer {
-    explicit ScopedTimer(int64_t& target, bool enabled)
-        : target(target), enabled(enabled), start(enabled ? Clock::now() : TimePoint{}) {}
+    explicit ScopedTimer(int64_t& target)
+        : target(target), start(Clock::now()) {}
 
     ~ScopedTimer() {
-        if (enabled) {
-            target += std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - start).count();
-        }
+        target += std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - start).count();
     }
 
     int64_t& target;
-    bool enabled = false;
     TimePoint start;
 };
 
@@ -78,7 +75,7 @@ struct Options {
     size_t progressEvery = 25;
     size_t jobs = 0;
     Strategy strategy = Strategy::Portfolio;
-    TimingMode timingMode = TimingMode::None;
+    TimingMode timingMode = TimingMode::Summary;
     std::optional<std::string> gameFilter;
     std::optional<int32_t> levelFilter;
     bool writeSolutions = true;
@@ -481,8 +478,8 @@ Options parseArgs(int argc, char** argv) {
     return options;
 }
 
-StateKey sessionKey(const Session& session, Timing& timing, bool timingEnabled) {
-    ScopedTimer timer(timing.hashUs, timingEnabled);
+StateKey sessionKey(const Session& session, Timing& timing) {
+    ScopedTimer timer(timing.hashUs);
     const ps_hash128 hash = puzzlescript::hashSession128(session);
     return StateKey{hash.lo, hash.hi};
 }
@@ -506,8 +503,8 @@ std::shared_ptr<const Game> compileGame(
     }
 }
 
-std::vector<std::string> reconstructSolution(const std::vector<Node>& nodes, uint32_t nodeIndex, ps_input finalInput, Timing& timing, bool timingEnabled) {
-    ScopedTimer timer(timing.reconstructUs, timingEnabled);
+std::vector<std::string> reconstructSolution(const std::vector<Node>& nodes, uint32_t nodeIndex, ps_input finalInput, Timing& timing) {
+    ScopedTimer timer(timing.reconstructUs);
     std::vector<std::string> reversed;
     reversed.push_back(inputName(finalInput));
     int32_t cursor = static_cast<int32_t>(nodeIndex);
@@ -709,11 +706,9 @@ Result runSearch(
     int64_t compileUs,
     SearchMode mode,
     TimePoint deadline,
-    uint32_t workerId,
-    TimingMode timingMode
+    uint32_t workerId
 ) {
     Result result;
-    const bool timingEnabled = timingMode != TimingMode::None;
     result.game = gameName;
     result.level = levelIndex;
     result.status = "exhausted";
@@ -725,7 +720,7 @@ Result runSearch(
 
     std::unique_ptr<Session> initial;
     {
-        ScopedTimer timer(result.timing.loadUs, timingEnabled);
+        ScopedTimer timer(result.timing.loadUs);
         initial = createLoadedSession(game, gameName, levelIndex, result);
     }
     if (!initial) {
@@ -741,7 +736,7 @@ Result runSearch(
 
     std::unordered_map<StateKey, uint32_t, StateKeyHash> bestDepth;
     bestDepth.reserve(16384);
-    bestDepth.emplace(sessionKey(*initial, result.timing, timingEnabled), 0);
+    bestDepth.emplace(sessionKey(*initial, result.timing), 0);
     result.uniqueStates = 1;
 
     const int32_t initialHeuristic = mode == SearchMode::Bfs ? 0 : heuristicScore(*initial);
@@ -774,13 +769,13 @@ Result runSearch(
 
             std::unique_ptr<Session> child;
             {
-                ScopedTimer timer(result.timing.cloneUs, timingEnabled);
+                ScopedTimer timer(result.timing.cloneUs);
                 child = std::make_unique<Session>(parentSession);
             }
 
             ps_step_result stepResult{};
             {
-                ScopedTimer timer(result.timing.stepUs, timingEnabled);
+                ScopedTimer timer(result.timing.stepUs);
                 constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
                     .playableUndo = false,
                     .emitAudio = false,
@@ -792,14 +787,14 @@ Result runSearch(
 
             if (solvedByStep(stepResult, *child, levelIndex)) {
                 result.status = "solved";
-                result.solution = reconstructSolution(nodes, entry.nodeIndex, input, result.timing, timingEnabled);
+                result.solution = reconstructSolution(nodes, entry.nodeIndex, input, result.timing);
                 return result;
             }
             if (!stepResult.changed) {
                 continue;
             }
 
-            const StateKey key = sessionKey(*child, result.timing, timingEnabled);
+            const StateKey key = sessionKey(*child, result.timing);
             const uint32_t childDepth = parentDepth + 1;
             const auto found = bestDepth.find(key);
             if (found != bestDepth.end() && found->second <= childDepth) {
@@ -841,8 +836,7 @@ Result solveLevel(
     int64_t timeoutMs,
     int64_t compileUs,
     Strategy strategy,
-    uint32_t workerId,
-    TimingMode timingMode
+    uint32_t workerId
 ) {
     const TimePoint searchStart = Clock::now();
     const TimePoint deadline = searchStart + std::chrono::milliseconds(timeoutMs);
@@ -854,13 +848,13 @@ Result solveLevel(
     };
 
     if (strategy == Strategy::Bfs) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Bfs, deadline, workerId, timingMode));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Bfs, deadline, workerId));
     }
     if (strategy == Strategy::WeightedAStar) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::WeightedAStar, deadline, workerId, timingMode));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::WeightedAStar, deadline, workerId));
     }
     if (strategy == Strategy::Greedy) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Greedy, deadline, workerId, timingMode));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Greedy, deadline, workerId));
     }
 
     Result combined;
@@ -874,7 +868,7 @@ Result solveLevel(
     combined.timing.compileUs = compileUs;
 
     const TimePoint weightedDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs * 60 / 100));
-    Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::WeightedAStar, std::min(weightedDeadline, deadline), workerId, timingMode);
+    Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::WeightedAStar, std::min(weightedDeadline, deadline), workerId);
     mergeStats(combined, weighted);
     if (weighted.status == "solved" || weighted.status == "skipped_message" || weighted.status == "level_error") {
         weighted.strategy = weighted.status == "solved" ? "weighted-astar" : "portfolio";
@@ -883,7 +877,7 @@ Result solveLevel(
 
     if (Clock::now() < deadline) {
         const TimePoint greedyDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs * 85 / 100));
-        Result greedy = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Greedy, std::min(greedyDeadline, deadline), workerId, timingMode);
+        Result greedy = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Greedy, std::min(greedyDeadline, deadline), workerId);
         mergeStats(combined, greedy);
         if (greedy.status == "solved" || greedy.status == "level_error") {
             greedy.strategy = greedy.status == "solved" ? "greedy" : "portfolio";
@@ -892,7 +886,7 @@ Result solveLevel(
     }
 
     if (Clock::now() < deadline) {
-        Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Bfs, deadline, workerId, timingMode);
+        Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Bfs, deadline, workerId);
         mergeStats(combined, bfs);
         if (bfs.status == "solved" || bfs.status == "level_error") {
             bfs.strategy = bfs.status == "solved" ? "bfs" : "portfolio";
@@ -1256,7 +1250,7 @@ std::vector<Result> runCorpus(const Options& options) {
 
         std::string compileError;
         {
-            ScopedTimer timer(compiled.compileUs, options.timingMode != TimingMode::None);
+            ScopedTimer timer(compiled.compileUs);
             compiled.game = compileGame(compiled.source, compileError);
         }
         if (!compiled.game) {
@@ -1323,8 +1317,7 @@ std::vector<Result> runCorpus(const Options& options) {
                     options.timeoutMs,
                     compiled.compileUs,
                     options.strategy,
-                    workerId,
-                    options.timingMode
+                    workerId
                 );
                 results[item.resultIndex] = std::move(result);
                 const size_t done = completed.fetch_add(1) + 1;
