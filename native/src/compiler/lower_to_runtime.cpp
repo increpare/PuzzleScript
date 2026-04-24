@@ -688,6 +688,17 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         const int32_t tileCount = level.width * level.height;
         level.objects.assign(static_cast<size_t>(tileCount * game->strideObject), 0);
 
+        const auto glyphAt = [](const std::vector<std::string>& glyphs, int32_t x) -> std::string {
+            if (glyphs.empty()) {
+                return {};
+            }
+            if (x < static_cast<int32_t>(glyphs.size())) {
+                return glyphs[static_cast<size_t>(x)];
+            }
+            // JS levelFromString repeats the row's last character for ragged rows.
+            return glyphs.back();
+        };
+
         // Per-level default background: if the level explicitly uses a concrete
         // background-layer glyph (e.g. WoodenFloor), JS effectively treats that
         // as the fill under obstacles/walls in cells without background glyphs.
@@ -697,7 +708,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             for (int32_t y = 0; y < level.height && !foundLevelBackground; ++y) {
                 const auto glyphs = splitUtf8Codepoints(srcLevel.rows[static_cast<size_t>(y)]);
                 for (int32_t x = 0; x < level.width; ++x) {
-                    const std::string glyph = x < static_cast<int32_t>(glyphs.size()) ? glyphs[static_cast<size_t>(x)] : std::string{};
+                    const std::string glyph = glyphAt(glyphs, x);
                     if (glyph.empty()) {
                         continue;
                     }
@@ -725,7 +736,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         for (int32_t y = 0; y < level.height; ++y) {
             const auto glyphs = splitUtf8Codepoints(srcLevel.rows[static_cast<size_t>(y)]);
             for (int32_t x = 0; x < level.width; ++x) {
-                const std::string glyph = x < static_cast<int32_t>(glyphs.size()) ? glyphs[static_cast<size_t>(x)] : std::string{};
+                const std::string glyph = glyphAt(glyphs, x);
                 std::vector<int32_t> cellMask = makeEmptyMask(game->wordCount);
                 if (!glyph.empty()) {
                     try {
