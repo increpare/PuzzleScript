@@ -79,6 +79,11 @@ add_library(puzzlescript_native STATIC
 )
 
 option(PS_ENABLE_DEV_SERIALIZERS "Enable dev-only compiler serializers and commands" ON)
+set(PS_MASK_WORD_BITS "32" CACHE STRING "PuzzleScript runtime mask word width: 32 or 64")
+set_property(CACHE PS_MASK_WORD_BITS PROPERTY STRINGS 32 64)
+if(NOT PS_MASK_WORD_BITS STREQUAL "32" AND NOT PS_MASK_WORD_BITS STREQUAL "64")
+  message(FATAL_ERROR "PS_MASK_WORD_BITS must be 32 or 64")
+endif()
 
 add_library(puzzlescript_compiler STATIC
   ${PUZZLESCRIPT_COMPILER_PUBLIC_HEADERS}
@@ -96,6 +101,7 @@ target_include_directories(puzzlescript_compiler
 target_compile_definitions(puzzlescript_compiler
   PRIVATE
     UTF8PROC_STATIC
+    PS_MASK_WORD_BITS=${PS_MASK_WORD_BITS}
     $<$<BOOL:${PS_ENABLE_DEV_SERIALIZERS}>:PS_ENABLE_DEV_SERIALIZERS=1>
 )
 
@@ -121,6 +127,11 @@ set_source_files_properties(
 target_link_libraries(puzzlescript_native
   PUBLIC
     Threads::Threads
+)
+
+target_compile_definitions(puzzlescript_native
+  PUBLIC
+    PS_MASK_WORD_BITS=${PS_MASK_WORD_BITS}
 )
 
 add_executable(puzzlescript_cpp

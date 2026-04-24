@@ -37,9 +37,35 @@ struct CompileResult;
 // consecutive MaskWords inside Game::maskArena. Structs that owned a BitVector
 // now store a uint32_t offset into the arena.
 //
-// MaskWord is kept as int32_t in Phase 1 to match the existing IR layout; the
-// Phase 2 plan switches it to uint64_t after the arena is in place.
+#ifndef PS_MASK_WORD_BITS
+#define PS_MASK_WORD_BITS 32
+#endif
+
+#if PS_MASK_WORD_BITS == 32
 using MaskWord = int32_t;
+using MaskWordUnsigned = uint32_t;
+#elif PS_MASK_WORD_BITS == 64
+using MaskWord = int64_t;
+using MaskWordUnsigned = uint64_t;
+#else
+#error "PS_MASK_WORD_BITS must be 32 or 64"
+#endif
+
+inline constexpr uint32_t kMaskWordBits = PS_MASK_WORD_BITS;
+inline constexpr uint32_t kMaskWordShift = PS_MASK_WORD_BITS == 64 ? 6U : 5U;
+inline constexpr uint32_t kMaskWordBitMask = PS_MASK_WORD_BITS - 1U;
+
+inline constexpr uint32_t maskWordIndex(uint32_t bitIndex) {
+    return bitIndex >> kMaskWordShift;
+}
+
+inline constexpr uint32_t maskBitIndex(uint32_t bitIndex) {
+    return bitIndex & kMaskWordBitMask;
+}
+
+inline constexpr MaskWord maskBit(uint32_t bitIndex) {
+    return static_cast<MaskWord>(MaskWordUnsigned{1} << maskBitIndex(bitIndex));
+}
 
 struct MaskRef { const MaskWord* data; };
 struct MaskMut { MaskWord* data; };
