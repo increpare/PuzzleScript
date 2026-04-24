@@ -2042,13 +2042,12 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                             }
                         }
 
-                        // Layers where LHS named something on a layer but RHS did not.
-                        if (rhsWritesObjects) {
-                            for (int32_t layer = 0; layer < game->layerCount; ++layer) {
-                                if (layersUsedL[static_cast<size_t>(layer)] != 0
-                                    && layersUsedR[static_cast<size_t>(layer)] == 0) {
-                                    markLayerClear(layer);
-                                }
+                        // JS rulesToMask always clears layers mentioned on the LHS
+                        // when the corresponding RHS cell omits that layer.
+                        for (int32_t layer = 0; layer < game->layerCount; ++layer) {
+                            if (layersUsedL[static_cast<size_t>(layer)] != 0
+                                && layersUsedR[static_cast<size_t>(layer)] == 0) {
+                                markLayerClear(layer);
                             }
                         }
 
