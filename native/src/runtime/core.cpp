@@ -20,6 +20,7 @@ void runRulesOnLevelStart(Session& session);
 namespace {
 
 void rebuildMasks(Session& session);
+void rebuildObjectCellIndex(Session& session);
 void markAllMasksDirty(Session& session);
 void markAllMovementMasksDirty(Session& session);
 std::string toString(const json::Value& value);
@@ -48,6 +49,8 @@ struct RuleApplyOutcome {
     bool matched = false;
     bool changed = false;
 };
+
+bool rowStillMatchesAt(const Session& session, const std::vector<Pattern>& row, int32_t startIndex, int32_t delta);
 
 struct MovementResolveOutcome {
     bool moved = false;
@@ -1133,6 +1136,38 @@ const int32_t* getCellObjectsPtr(const Session& session, int32_t tileIndex) {
     return session.liveLevel.objects.data() + base;
 }
 
+size_t objectCellWordCount(const Session& session) {
+    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    return static_cast<size_t>((tileCount + 63) / 64);
+}
+
+void setObjectCellIndexBit(Session& session, int32_t objectId, int32_t tileIndex, bool present) {
+    const size_t cellWordCount = objectCellWordCount(session);
+    if (objectId < 0 || objectId >= session.game->objectCount || tileIndex < 0 || cellWordCount == 0) {
+        return;
+    }
+    const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
+    const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
+    if (objectBase + bitWord >= session.objectCellBits.size()
+        || static_cast<size_t>(objectId) >= session.objectCellCounts.size()) {
+        session.objectCellIndexDirty = true;
+        return;
+    }
+    const uint64_t bit = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
+    const bool wasPresent = (session.objectCellBits[objectBase + bitWord] & bit) != 0;
+    if (present) {
+        session.objectCellBits[objectBase + bitWord] |= bit;
+        if (!wasPresent) {
+            ++session.objectCellCounts[static_cast<size_t>(objectId)];
+        }
+    } else {
+        session.objectCellBits[objectBase + bitWord] &= ~bit;
+        if (wasPresent && session.objectCellCounts[static_cast<size_t>(objectId)] > 0) {
+            --session.objectCellCounts[static_cast<size_t>(objectId)];
+        }
+    }
+}
+
 void setCellObjects(Session& session, int32_t tileIndex, const std::vector<int32_t>& objects) {
     const int32_t stride = session.game->strideObject;
     const size_t base = static_cast<size_t>(tileIndex * stride);
@@ -1144,6 +1179,13 @@ void setCellObjects(Session& session, int32_t tileIndex, const std::vector<int32
     for (int32_t word = 0; word < stride; ++word) {
         const int32_t oldValue = session.liveLevel.objects[base + static_cast<size_t>(word)];
         const int32_t value = objects[static_cast<size_t>(word)];
+        uint32_t changedBits = static_cast<uint32_t>(oldValue ^ value);
+        while (changedBits != 0) {
+            const int32_t bit = __builtin_ctz(changedBits);
+            const int32_t objectId = word * 32 + bit;
+            setObjectCellIndexBit(session, objectId, tileIndex, (static_cast<uint32_t>(value) & (uint32_t{1} << bit)) != 0);
+            changedBits &= changedBits - 1;
+        }
         clearedAny |= (oldValue & ~value);
         session.liveLevel.objects[base + static_cast<size_t>(word)] = value;
         session.columnMasks[columnBase + static_cast<size_t>(word)] |= value;
@@ -1981,6 +2023,139 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     return true;
 }
 
+struct RowAnchor {
+    int32_t patternIndex = -1;
+    int32_t objectId = -1;
+    uint64_t cellCount = 0;
+};
+
+uint64_t objectPresenceCount(const Session& session, int32_t objectId) {
+    if (objectId < 0
+        || objectId >= session.game->objectCount
+        || static_cast<size_t>(objectId) >= session.objectCellCounts.size()) {
+        return 0;
+    }
+    return session.objectCellCounts[static_cast<size_t>(objectId)];
+}
+
+std::optional<RowAnchor> chooseRowAnchor(const Session& session, const std::vector<Pattern>& row) {
+    if (session.objectCellIndexDirty || session.objectCellBits.empty()) {
+        return std::nullopt;
+    }
+    const Game& game = *session.game;
+    std::optional<RowAnchor> best;
+    for (int32_t patternIndex = 0; patternIndex < static_cast<int32_t>(row.size()); ++patternIndex) {
+        const Pattern& pattern = row[static_cast<size_t>(patternIndex)];
+        if (pattern.kind != Pattern::Kind::CellPattern || !pattern.hasObjectsPresent) {
+            continue;
+        }
+        const int32_t* mask = maskPtr(game, pattern.objectsPresent);
+        if (mask == nullptr) {
+            continue;
+        }
+        for (uint32_t word = 0; word < game.wordCount; ++word) {
+            uint32_t bits = static_cast<uint32_t>(mask[word]);
+            while (bits != 0) {
+                const int32_t bit = __builtin_ctz(bits);
+                const int32_t objectId = static_cast<int32_t>(word) * 32 + bit;
+                if (objectId < game.objectCount) {
+                    const uint64_t count = objectPresenceCount(session, objectId);
+                    if (count > 0 && (!best.has_value() || count < best->cellCount)) {
+                        best = RowAnchor{patternIndex, objectId, count};
+                    }
+                }
+                bits &= bits - 1;
+            }
+        }
+    }
+    return best;
+}
+
+bool collectAnchoredRowMatchesInto(
+    const Session& session,
+    const std::vector<Pattern>& row,
+    int32_t direction,
+    const int32_t* rowObjectMask,
+    uint32_t rowObjectMaskWords,
+    const int32_t* rowMovementMask,
+    uint32_t rowMovementMaskWords,
+    int32_t xmin,
+    int32_t xmax,
+    int32_t ymin,
+    int32_t ymax,
+    int32_t delta,
+    std::vector<int32_t>& matches
+) {
+    const auto anchor = chooseRowAnchor(session, row);
+    if (!anchor.has_value()) {
+        return false;
+    }
+
+    const bool horizontal = direction > 2;
+    const int32_t validStartCount = std::max(0, xmax - xmin) * std::max(0, ymax - ymin);
+    if (validStartCount <= 0 || anchor->cellCount >= static_cast<uint64_t>(std::max(8, validStartCount / 2))) {
+        return false;
+    }
+
+    const auto [dx, dy] = directionMaskToDelta(direction);
+    const size_t cellWordCount = objectCellWordCount(session);
+    const size_t objectBase = static_cast<size_t>(anchor->objectId) * cellWordCount;
+    if (objectBase + cellWordCount > session.objectCellBits.size()) {
+        return false;
+    }
+
+    const int32_t height = session.liveLevel.height;
+    const int32_t width = session.liveLevel.width;
+    const int32_t tileCount = width * height;
+    for (size_t wordIndex = 0; wordIndex < cellWordCount; ++wordIndex) {
+        uint64_t bits = session.objectCellBits[objectBase + wordIndex];
+        while (bits != 0) {
+            const int32_t bit = __builtin_ctzll(bits);
+            const int32_t anchorTile = static_cast<int32_t>(wordIndex * 64 + static_cast<size_t>(bit));
+            bits &= bits - 1;
+            if (anchorTile >= tileCount) {
+                continue;
+            }
+
+            const int32_t anchorX = anchorTile / height;
+            const int32_t anchorY = anchorTile % height;
+            const int32_t startX = anchorX - anchor->patternIndex * dx;
+            const int32_t startY = anchorY - anchor->patternIndex * dy;
+            if (startX < xmin || startX >= xmax || startY < ymin || startY >= ymax) {
+                continue;
+            }
+
+            const int32_t* lineObjects = horizontal
+                ? session.rowMasks.data() + static_cast<size_t>(startY * session.game->strideObject)
+                : session.columnMasks.data() + static_cast<size_t>(startX * session.game->strideObject);
+            const int32_t* lineMovements = horizontal
+                ? session.rowMovementMasks.data() + static_cast<size_t>(startY * session.game->strideMovement)
+                : session.columnMovementMasks.data() + static_cast<size_t>(startX * session.game->strideMovement);
+            if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, lineObjects, static_cast<size_t>(session.game->strideObject))
+                || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, lineMovements, static_cast<size_t>(session.game->strideMovement))) {
+                continue;
+            }
+
+            addCounter(gRuntimeCounters.candidateCellsTested);
+            const int32_t startIndex = startX * height + startY;
+            if (rowStillMatchesAt(session, row, startIndex, delta)) {
+                matches.push_back(startIndex);
+            }
+        }
+    }
+
+    if (horizontal && matches.size() > 1) {
+        std::sort(matches.begin(), matches.end(), [height, width](int32_t lhs, int32_t rhs) {
+            const int32_t lhsX = lhs / height;
+            const int32_t lhsY = lhs % height;
+            const int32_t rhsX = rhs / height;
+            const int32_t rhsY = rhs % height;
+            return lhsY == rhsY ? lhsX < rhsX : lhsY < rhsY;
+        });
+    }
+    return true;
+}
+
 void collectRowMatchesInto(
     const Session& session,
     const std::vector<Pattern>& row,
@@ -2027,6 +2202,14 @@ void collectRowMatchesInto(
 
     if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, session.boardMask.data(), session.boardMask.size())
         || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, session.boardMovementMask.data(), session.boardMovementMask.size())) {
+        return;
+    }
+
+    if (collectAnchoredRowMatchesInto(session, row, direction,
+                                      rowObjectMask, rowObjectMaskWords,
+                                      rowMovementMask, rowMovementMaskWords,
+                                      xmin, xmax, ymin, ymax, delta,
+                                      matches)) {
         return;
     }
 
@@ -2150,6 +2333,21 @@ std::vector<RowMatch> collectEllipsisRowMatches(
         return matches;
     }
     const bool horizontal = direction > 2;
+    const int32_t lineCount = horizontal ? session.liveLevel.height : session.liveLevel.width;
+    std::vector<uint8_t> linePossible(static_cast<size_t>(std::max(lineCount, 0)), 0);
+    for (int32_t line = 0; line < lineCount; ++line) {
+        const int32_t* lineObjects = horizontal
+            ? session.rowMasks.data() + static_cast<size_t>(line * session.game->strideObject)
+            : session.columnMasks.data() + static_cast<size_t>(line * session.game->strideObject);
+        const int32_t* lineMovements = horizontal
+            ? session.rowMovementMasks.data() + static_cast<size_t>(line * session.game->strideMovement)
+            : session.columnMovementMasks.data() + static_cast<size_t>(line * session.game->strideMovement);
+        linePossible[static_cast<size_t>(line)] =
+            bitsSetInArray(rowObjectMask, rowObjectMaskWords,
+                           lineObjects, static_cast<size_t>(session.game->strideObject))
+            && bitsSetInArray(rowMovementMask, rowMovementMaskWords,
+                              lineMovements, static_cast<size_t>(session.game->strideMovement));
+    }
 
     auto availableAlongDirection = [&](int32_t startIndex) {
         const int32_t x = startIndex / session.liveLevel.height;
@@ -2173,16 +2371,8 @@ std::vector<RowMatch> collectEllipsisRowMatches(
         addCounter(gRuntimeCounters.ellipsisScans);
         const int32_t x = tileIndex / session.liveLevel.height;
         const int32_t y = tileIndex % session.liveLevel.height;
-        const int32_t* lineObjects = horizontal
-            ? session.rowMasks.data() + static_cast<size_t>(y * session.game->strideObject)
-            : session.columnMasks.data() + static_cast<size_t>(x * session.game->strideObject);
-        const int32_t* lineMovements = horizontal
-            ? session.rowMovementMasks.data() + static_cast<size_t>(y * session.game->strideMovement)
-            : session.columnMovementMasks.data() + static_cast<size_t>(x * session.game->strideMovement);
-        if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords,
-                            lineObjects, static_cast<size_t>(session.game->strideObject))
-            || !bitsSetInArray(rowMovementMask, rowMovementMaskWords,
-                               lineMovements, static_cast<size_t>(session.game->strideMovement))) {
+        const int32_t line = horizontal ? y : x;
+        if (line < 0 || line >= lineCount || !linePossible[static_cast<size_t>(line)]) {
             continue;
         }
         const int32_t available = availableAlongDirection(tileIndex);
@@ -2894,6 +3084,39 @@ size_t countNonZeroWords(const std::vector<int32_t>& values) {
     return std::count_if(values.begin(), values.end(), [](int32_t value) { return value != 0; });
 }
 
+void rebuildObjectCellIndex(Session& session) {
+    const int32_t objectCount = session.game->objectCount;
+    const int32_t stride = session.game->strideObject;
+    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    session.objectCellBitTileCount = tileCount;
+    session.objectCellBits.assign(static_cast<size_t>(objectCount) * cellWordCount, 0);
+    session.objectCellCounts.assign(static_cast<size_t>(std::max(objectCount, 0)), 0);
+    if (objectCount <= 0 || stride <= 0 || tileCount <= 0 || cellWordCount == 0) {
+        session.objectCellIndexDirty = false;
+        return;
+    }
+
+    for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
+        const size_t cellBase = static_cast<size_t>(tileIndex * stride);
+        const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
+        const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
+        for (int32_t word = 0; word < stride; ++word) {
+            uint32_t bits = static_cast<uint32_t>(session.liveLevel.objects[cellBase + static_cast<size_t>(word)]);
+            while (bits != 0) {
+                const int32_t bit = __builtin_ctz(bits);
+                const int32_t objectId = word * 32 + bit;
+                if (objectId < objectCount) {
+                    session.objectCellBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;
+                    ++session.objectCellCounts[static_cast<size_t>(objectId)];
+                }
+                bits &= bits - 1;
+            }
+        }
+    }
+    session.objectCellIndexDirty = false;
+}
+
 // Incremental rebuildMasks: setCellObjects/setCellMovements already OR new
 // bits into the row/col/board masks on the write path, so the only case a
 // rebuild is needed is when bits were *cleared*. The set-paths mark those
@@ -2948,7 +3171,15 @@ void rebuildMasks(Session& session) {
         std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 1);
         session.dirtyObjectBoard = true;
         session.dirtyMovementBoard = true;
+        session.objectCellIndexDirty = true;
         session.anyMasksDirty = true;
+    }
+
+    if (session.objectCellIndexDirty
+        || session.objectCellBitTileCount != width * height
+        || session.objectCellBits.size() != static_cast<size_t>(session.game->objectCount) * objectCellWordCount(session)
+        || session.objectCellCounts.size() != static_cast<size_t>(session.game->objectCount)) {
+        rebuildObjectCellIndex(session);
     }
 
     if (!session.anyMasksDirty) {
@@ -3096,6 +3327,7 @@ void markAllMasksDirty(Session& session) {
     std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 1);
     session.dirtyObjectBoard = true;
     session.dirtyMovementBoard = true;
+    session.objectCellIndexDirty = true;
     session.anyMasksDirty = true;
 }
 

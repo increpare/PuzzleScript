@@ -289,6 +289,12 @@ struct Session {
     std::vector<int32_t> rowMovementMasks;
     std::vector<int32_t> columnMovementMasks;
     std::vector<int32_t> boardMovementMask;
+    // Per-object cell presence bitsets for anchored rule scans. Layout is
+    // object-major: objectCellBits[objectId * cellWordCount + word].
+    std::vector<uint64_t> objectCellBits;
+    std::vector<uint32_t> objectCellCounts;
+    int32_t objectCellBitTileCount = 0;
+    bool objectCellIndexDirty = true;
     // Incremental rebuildMasks tracking: `setCellObjects`/`setCellMovements`
     // OR new bits into the row/column/board masks directly. When bits are
     // *cleared* (old & ~new != 0) we cannot undo the OR without re-scanning
