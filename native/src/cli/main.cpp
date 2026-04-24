@@ -2100,6 +2100,14 @@ SimulationTimingTotals sumSimulationTimings(
     return totals;
 }
 
+int64_t medianMicros(std::vector<int64_t> values) {
+    if (values.empty()) {
+        return 0;
+    }
+    std::sort(values.begin(), values.end());
+    return values[values.size() / 2];
+}
+
 int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     std::vector<std::string> exporterArgs;
     std::vector<std::string> traceArgs;
@@ -2338,6 +2346,20 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
 
     const int64_t wallUs = elapsedMicrosSince(wallStartedAt);
     const SimulationTimingTotals timings = sumSimulationTimings(results, testdataParseUs);
+    std::vector<int64_t> replayUsByRepeat;
+    std::vector<int64_t> sourceCompileUsByRepeat;
+    if (options.repeat > 0 && !cases.empty()) {
+        replayUsByRepeat.assign(options.repeat, 0);
+        sourceCompileUsByRepeat.assign(options.repeat, 0);
+        for (size_t checkIndex = 0; checkIndex < totalChecks; ++checkIndex) {
+            const size_t repeatIndex = checkIndex / cases.size();
+            if (repeatIndex >= options.repeat) {
+                continue;
+            }
+            replayUsByRepeat[repeatIndex] += results[checkIndex].timing.replayUs;
+            sourceCompileUsByRepeat[repeatIndex] += results[checkIndex].timing.sourceCompileUs;
+        }
+    }
     std::cout << "cpp_simulation_tests_direct passed=" << passed << " failed=" << failed
               << " total=" << totalChecks << " cases=" << cases.size()
               << " repeats=" << options.repeat << " jobs=" << options.jobs
@@ -2354,7 +2376,11 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                   << " session_create_ms=" << usToMs(timings.sessionCreateUs)
                   << " level_load_ms=" << usToMs(timings.levelLoadUs)
                   << " replay_ms=" << usToMs(timings.replayUs)
+                  << " replay_avg_ms=" << usToMs(timings.replayUs / static_cast<int64_t>(std::max<size_t>(options.repeat, 1)))
+                  << " replay_median_ms=" << usToMs(medianMicros(replayUsByRepeat))
                   << " serialize_ms=" << usToMs(timings.serializeUs)
+                  << " source_compile_avg_ms=" << usToMs(timings.sourceCompileUs / static_cast<int64_t>(std::max<size_t>(options.repeat, 1)))
+                  << " source_compile_median_ms=" << usToMs(medianMicros(sourceCompileUsByRepeat))
                   << " rules_visited=" << counters.rules_visited
                   << " rules_skipped_by_mask=" << counters.rules_skipped_by_mask
                   << " candidate_cells_tested=" << counters.candidate_cells_tested
