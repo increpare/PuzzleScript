@@ -2147,6 +2147,26 @@ std::vector<RowMatch> collectEllipsisRowMatches(
     if (parallelDelta == 0) {
         return matches;
     }
+    const bool horizontal = direction > 2;
+    std::vector<int32_t> rowObjectMask(static_cast<size_t>(session.game->wordCount), 0);
+    std::vector<int32_t> rowMovementMask(static_cast<size_t>(session.game->movementWordCount), 0);
+    for (const auto& pattern : row) {
+        if (pattern.kind != Pattern::Kind::CellPattern) {
+            continue;
+        }
+        if (pattern.hasObjectsPresent) {
+            const int32_t* mask = maskPtr(*session.game, pattern.objectsPresent);
+            for (uint32_t word = 0; word < session.game->wordCount; ++word) {
+                rowObjectMask[static_cast<size_t>(word)] |= mask[static_cast<size_t>(word)];
+            }
+        }
+        if (pattern.hasMovementsPresent) {
+            const int32_t* mask = maskPtr(*session.game, pattern.movementsPresent);
+            for (uint32_t word = 0; word < session.game->movementWordCount; ++word) {
+                rowMovementMask[static_cast<size_t>(word)] |= mask[static_cast<size_t>(word)];
+            }
+        }
+    }
 
     auto availableAlongDirection = [&](int32_t startIndex) {
         const int32_t x = startIndex / session.liveLevel.height;
@@ -2168,6 +2188,20 @@ std::vector<RowMatch> collectEllipsisRowMatches(
 
     for (int32_t tileIndex = 0; tileIndex < session.liveLevel.width * session.liveLevel.height; ++tileIndex) {
         addCounter(gRuntimeCounters.ellipsisScans);
+        const int32_t x = tileIndex / session.liveLevel.height;
+        const int32_t y = tileIndex % session.liveLevel.height;
+        const int32_t* lineObjects = horizontal
+            ? session.rowMasks.data() + static_cast<size_t>(y * session.game->strideObject)
+            : session.columnMasks.data() + static_cast<size_t>(x * session.game->strideObject);
+        const int32_t* lineMovements = horizontal
+            ? session.rowMovementMasks.data() + static_cast<size_t>(y * session.game->strideMovement)
+            : session.columnMovementMasks.data() + static_cast<size_t>(x * session.game->strideMovement);
+        if (!bitsSetInArray(rowObjectMask.data(), rowObjectMask.size(),
+                            lineObjects, static_cast<size_t>(session.game->strideObject))
+            || !bitsSetInArray(rowMovementMask.data(), rowMovementMask.size(),
+                               lineMovements, static_cast<size_t>(session.game->strideMovement))) {
+            continue;
+        }
         const int32_t available = availableAlongDirection(tileIndex);
         if (available < concreteCount) {
             continue;
