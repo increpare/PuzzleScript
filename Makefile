@@ -18,7 +18,7 @@
 .PHONY: help build build_32 build_solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
-	solver_tests_cpp solver_tests_js solver_tests \
+	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
@@ -33,9 +33,18 @@ PUZZLESCRIPT_CPP := $(BUILD_DIR)/native/puzzlescript_cpp
 PUZZLESCRIPT_CPP_32 := $(BUILD_DIR_32)/native/puzzlescript_cpp
 PUZZLESCRIPT_SOLVER := $(BUILD_DIR)/native/puzzlescript_solver
 SOLVER_TIMEOUT_MS ?= 250
+SOLVER_JOBS ?= 1
+SOLVER_STRATEGY ?= portfolio
 SOLVER_PROGRESS_EVERY ?= game
 SOLVER_OUTPUT_ARGS ?= --summary-only
 SOLVER_SOLUTIONS_DIR ?= $(BUILD_DIR)/solver-solutions
+SOLVER_BENCH_RUNS ?= 5
+SOLVER_BENCH_TIMEOUT_MS ?= 250
+SOLVER_BENCH_CORPUS ?= src/tests/solver_tests
+SOLVER_BENCH_OUT ?= $(BUILD_DIR)/native/solver_benchmark.json
+SOLVER_PERF_BASELINE ?= solver_perf_baseline.json
+SOLVER_BENCH_JOBS ?= 1
+SOLVER_BENCH_STRATEGY ?= portfolio
 JS_PARITY_DATA_DIR := $(BUILD_DIR)/js-parity-data
 JS_PARITY_MANIFEST := $(JS_PARITY_DATA_DIR)/fixtures.json
 ERRORMESSAGE_PARSER_BUNDLE := $(BUILD_DIR)/parser_corpus_errormessage.bundle.ndjson
@@ -94,6 +103,12 @@ help:
 	@echo "  make solver_tests_js               Run JavaScript comparison solver corpus"
 	@echo "  make solver_tests SOLVER_TIMEOUT_MS=5000"
 	@echo "                                     Run solver corpus with a deeper timeout"
+	@echo "  make solver_tests SOLVER_JOBS=1"
+	@echo "                                     Run native solver corpus serially"
+	@echo "  make solver_tests SOLVER_JOBS=auto"
+	@echo "                                     Run native solver corpus in parallel for faster iteration"
+	@echo "  make solver_tests SOLVER_STRATEGY=bfs"
+	@echo "                                     Run native solver with one strategy"
 	@echo "  make solver_tests SOLVER_PROGRESS_EVERY=1"
 	@echo "                                     Show solver progress for every level"
 	@echo "  make solver_tests SOLVER_OUTPUT_ARGS="
@@ -103,7 +118,7 @@ help:
 	@echo ""
 	@echo "Direct executable after build:"
 	@echo "  build/native/puzzlescript_cpp --help"
-	@echo "  build/native/puzzlescript_solver src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)"
+	@echo "  build/native/puzzlescript_solver src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --jobs $(SOLVER_JOBS) --strategy $(SOLVER_STRATEGY) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)"
 
 $(CMAKE_CACHE): CMakeLists.txt native/CMakeLists.txt
 	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
@@ -154,13 +169,25 @@ else
 SOLVER_PROGRESS_ARGS := --progress-every $(SOLVER_PROGRESS_EVERY)
 endif
 
+solver_smoke_tests: $(PUZZLESCRIPT_SOLVER)
+	$(NODE) src/tests/run_solver_smoke_assert.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests --timeout-ms 1000
+
+solver_determinism_tests: $(PUZZLESCRIPT_SOLVER)
+	$(NODE) src/tests/run_solver_determinism.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests --runs 5 --timeout-ms 1000
+
+solver_parity_smoke: $(PUZZLESCRIPT_SOLVER)
+	$(NODE) src/tests/run_solver_parity_smoke.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests
+
 solver_tests_cpp: $(PUZZLESCRIPT_SOLVER)
-	$(PUZZLESCRIPT_SOLVER) src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)
+	$(PUZZLESCRIPT_SOLVER) src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --jobs $(SOLVER_JOBS) --strategy $(SOLVER_STRATEGY) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)
 
 solver_tests_js:
 	$(NODE) src/tests/run_solver_tests_js.js src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/js $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)
 
-solver_tests: solver_tests_cpp solver_tests_js
+solver_tests: solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_tests_cpp solver_tests_js
+
+solver_benchmark: $(PUZZLESCRIPT_SOLVER)
+	$(NODE) src/tests/run_solver_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_BENCH_CORPUS) --runs $(SOLVER_BENCH_RUNS) --timeout-ms $(SOLVER_BENCH_TIMEOUT_MS) --jobs $(SOLVER_BENCH_JOBS) --strategy $(SOLVER_BENCH_STRATEGY) --out $(SOLVER_BENCH_OUT) --baseline $(SOLVER_PERF_BASELINE)
 
 $(JS_PARITY_MANIFEST): $(JS_PARITY_INPUTS)
 	$(NODE) src/tests/js_oracle/export_native_fixtures.js $(JS_PARITY_DATA_DIR)

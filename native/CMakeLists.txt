@@ -277,9 +277,24 @@ set_tests_properties(puzzlescript_cpp_step_smoke PROPERTIES PASS_REGULAR_EXPRESS
 
 add_test(
   NAME puzzlescript_solver_smoke
-  COMMAND puzzlescript_solver ${PUZZLESCRIPT_REPO_ROOT}/src/tests/solver_smoke_tests --timeout-ms 1000 --no-solutions --json
+  COMMAND ${NODE_EXECUTABLE}
+          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/run_solver_smoke_assert.js
+          $<TARGET_FILE:puzzlescript_solver>
+          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/solver_smoke_tests
+          --timeout-ms 1000
 )
-set_tests_properties(puzzlescript_solver_smoke PROPERTIES PASS_REGULAR_EXPRESSION "\"solved\"")
+set_tests_properties(puzzlescript_solver_smoke PROPERTIES TIMEOUT 30)
+
+add_test(
+  NAME puzzlescript_solver_determinism_smoke
+  COMMAND ${NODE_EXECUTABLE}
+          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/run_solver_determinism.js
+          $<TARGET_FILE:puzzlescript_solver>
+          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/solver_smoke_tests
+          --runs 5
+          --timeout-ms 1000
+)
+set_tests_properties(puzzlescript_solver_determinism_smoke PROPERTIES TIMEOUT 60)
 
 add_test(
   NAME puzzlescript_solver_js_parity_smoke

@@ -39,8 +39,8 @@ function resultKey(result) {
     return `${result.game}#${result.level}`;
 }
 
-const native = runJson(solverPath, [fixtureDir, '--timeout-ms', '1000', '--no-solutions', '--json'], 'native solver');
-const js = runJson(process.execPath, [jsSolverPath, fixtureDir, '--timeout-ms', '1000', '--no-solutions', '--json'], 'JS solver');
+const native = runJson(solverPath, [fixtureDir, '--timeout-ms', '1000', '--jobs', '1', '--strategy', 'bfs', '--no-solutions', '--quiet', '--json'], 'native solver');
+const js = runJson(process.execPath, [jsSolverPath, fixtureDir, '--timeout-ms', '1000', '--no-solutions', '--quiet', '--json'], 'JS solver');
 
 const nativeByKey = new Map(native.results.map((result) => [resultKey(result), result]));
 const jsByKey = new Map(js.results.map((result) => [resultKey(result), result]));
@@ -51,6 +51,7 @@ const expected = new Map([
     ['multi_level.txt#0', { status: 'solved', solution: ['right'] }],
     ['multi_level.txt#1', { status: 'solved', solution: ['left'] }],
     ['one_move.txt#0', { status: 'solved', solution: ['right'] }],
+    ['push_goal.txt#0', { status: 'solved', solution: ['right', 'right'] }],
 ]);
 
 for (const [key, expectation] of expected) {

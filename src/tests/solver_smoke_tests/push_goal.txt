@@ -1,0 +1,57 @@
+title Solver Push Goal
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+blue
+
+Crate
+orange
+
+Target
+green
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Background
+C = Crate and Background
+T = Target and Background
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player
+Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+=============
+WINCONDITIONS
+=============
+
+all Crate on Target
+
+======
+LEVELS
+======
+
+P.CT
