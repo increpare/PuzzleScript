@@ -1123,6 +1123,56 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 }
             }
         };
+        auto rephraseSynonymsRows = [&](std::vector<ParsedRow>& lhs, std::vector<ParsedRow>& rhs) {
+            auto processRows = [&](std::vector<ParsedRow>& rows) {
+                for (auto& row : rows) {
+                    for (auto& cell : row) {
+                        if (cell.isEllipsis) {
+                            continue;
+                        }
+                        for (auto& item : cell.items) {
+                            if (const auto it = synonymOf.find(item.name); it != synonymOf.end()) {
+                                item.name = it->second;
+                            }
+                        }
+                    }
+                }
+            };
+            processRows(lhs);
+            processRows(rhs);
+        };
+        auto atomizeAggregatesRows = [&](std::vector<ParsedRow>& lhs, std::vector<ParsedRow>& rhs) {
+            auto processRows = [&](std::vector<ParsedRow>& rows) {
+                for (auto& row : rows) {
+                    for (auto& cell : row) {
+                        if (cell.isEllipsis) {
+                            continue;
+                        }
+                        for (size_t i = 0; i < cell.items.size(); ++i) {
+                            const auto aggregateIt = aggregateOf.find(cell.items[i].name);
+                            if (aggregateIt == aggregateOf.end()) {
+                                continue;
+                            }
+                            if (cell.items[i].dir == "no") {
+                                throw std::runtime_error(
+                                    "Rule at line " + std::to_string(entry.lineNumber)
+                                    + " excludes aggregate " + cell.items[i].name + " with 'no', which JS forbids.");
+                            }
+                            const auto& equivalents = aggregateIt->second;
+                            if (equivalents.empty()) {
+                                continue;
+                            }
+                            cell.items[i].name = equivalents.front();
+                            for (size_t j = 1; j < equivalents.size(); ++j) {
+                                cell.items.push_back({cell.items[i].dir, equivalents[j]});
+                            }
+                        }
+                    }
+                }
+            };
+            processRows(lhs);
+            processRows(rhs);
+        };
         auto containsEllipsis = [](const std::vector<ParsedRow>& rows) {
             for (const auto& row : rows) {
                 for (const auto& cell : row) {
@@ -1683,6 +1733,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 for (auto& row : variantRhsRows) std::reverse(row.begin(), row.end());
             }
         }
+        atomizeAggregatesRows(variantLhsRows, variantRhsRows);
+        rephraseSynonymsRows(variantLhsRows, variantRhsRows);
 
         const auto movingVariants = expandConcretizeMovingRows(std::move(variantLhsRows), std::move(variantRhsRows));
         for (const auto& movingVariant : movingVariants) {
