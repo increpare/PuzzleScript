@@ -692,7 +692,7 @@ bool solvedByStep(const ps_step_result& stepResult, const Session& session, int3
 int32_t priorityFor(SearchMode mode, uint32_t depth, int32_t heuristic) {
     switch (mode) {
         case SearchMode::Bfs: return static_cast<int32_t>(depth);
-        case SearchMode::WeightedAStar: return static_cast<int32_t>(depth) + heuristic * 4;
+        case SearchMode::WeightedAStar: return static_cast<int32_t>(depth) + heuristic * 2;
         case SearchMode::Greedy: return heuristic;
     }
     return static_cast<int32_t>(depth);
