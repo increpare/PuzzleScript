@@ -2394,7 +2394,7 @@ bool collectAnchoredRowMatchesInto(
 
     const bool horizontal = direction > 2;
     const int32_t validStartCount = std::max(0, xmax - xmin) * std::max(0, ymax - ymin);
-    if (validStartCount <= 0 || anchor->cellCount >= static_cast<uint64_t>(std::max(8, validStartCount / 2))) {
+    if (validStartCount <= 0 || anchor->cellCount >= static_cast<uint64_t>(std::max(8, validStartCount))) {
         return false;
     }
     if (anchor->objectIds == nullptr || anchor->objectIds->empty()) {
