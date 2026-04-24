@@ -703,10 +703,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     // --- Rules / winconditions / sounds / loop points ---
     game->rules.clear();
     game->lateRules.clear();
-    std::vector<int32_t> earlyLoopStartStack;
-    std::vector<int32_t> lateLoopStartStack;
-    std::vector<std::pair<int32_t, int32_t>> earlyLoopRanges;
-    std::vector<std::pair<int32_t, int32_t>> lateLoopRanges;
+    std::vector<int32_t> loopStartStack;
+    std::vector<std::pair<int32_t, int32_t>> loopRanges;
 
     // Precompute (best-effort) single-layer info for legend names: if a mask's
     // set bits all live on the same collision layer, we can treat it as
@@ -732,6 +730,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         return layer;
     };
 
+    std::vector<std::vector<std::string>> earlyRuleSignatures;
+    std::vector<std::vector<std::string>> lateRuleSignatures;
+
     // Rule lowering: a subset of JS rulesToMask (enough to start converging).
     for (const auto& entry : state.rules) {
         const auto tokens = tokenizeRuleLine(entry.rule);
@@ -739,18 +740,14 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             continue;
         }
         // Handle loop markers.
-        const bool markerLate = (!tokens.empty() && tokens.front() == "late");
-        const std::string marker = markerLate && tokens.size() >= 2 ? tokens[1] : tokens.front();
+        const std::string marker = tokens.front();
         if (marker == "startloop" || marker == "endloop") {
-            auto& groups = markerLate ? game->lateRules : game->rules;
-            auto& loopStack = markerLate ? lateLoopStartStack : earlyLoopStartStack;
             if (marker == "startloop") {
-                loopStack.push_back(entry.lineNumber);
+                loopStartStack.push_back(entry.lineNumber);
             } else {
-                if (!loopStack.empty()) {
-                    const int32_t startLine = loopStack.back();
-                    loopStack.pop_back();
-                    auto& loopRanges = markerLate ? lateLoopRanges : earlyLoopRanges;
+                if (!loopStartStack.empty()) {
+                    const int32_t startLine = loopStartStack.back();
+                    loopStartStack.pop_back();
                     loopRanges.emplace_back(startLine, entry.lineNumber);
                 }
             }
@@ -808,10 +805,13 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
         // JS grouping: each rule line starts a new group unless prefixed by "+".
         std::vector<std::vector<puzzlescript::Rule>>& groups = lateRule ? game->lateRules : game->rules;
+        std::vector<std::vector<std::string>>& groupSignatures = lateRule ? lateRuleSignatures : earlyRuleSignatures;
         if (groups.empty() || !sameGroup) {
             groups.emplace_back();
+            groupSignatures.emplace_back();
         }
         std::vector<puzzlescript::Rule>* outputGroup = &groups.back();
+        std::vector<std::string>* outputSignatures = &groupSignatures.back();
 
         struct ParsedItem {
             std::string dir;
@@ -1127,9 +1127,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 modified = false;
                 for (size_t i = 0; i < result.size(); ++i) {
                     bool shouldRemove = false;
-                    for (size_t j = 0; j < result[i].lhs.size() && !shouldRemove; ++j) {
+                    for (size_t j = 0; j < result[i].lhs.size(); ++j) {
                         auto& currentRuleRow = result[i].lhs[j];
-                        for (size_t k = 0; k < currentRuleRow.size() && !shouldRemove; ++k) {
+                        for (size_t k = 0; k < currentRuleRow.size(); ++k) {
                             const auto movings = getMovingsParsed(currentRuleRow[k]);
                             if (movings.empty()) {
                                 continue;
@@ -1509,63 +1509,70 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             }
         };
 
-        // JS compiler may emit fewer variants than the naive 4-direction expansion
-        // when different scan directions collapse to identical rule patterns after
-        // canonicalization (e.g. symmetric patterns, or UP/LLEFT normalized).
-        // Dedupe is per scan-direction iteration only: `concreteRuleDirection` is often
-        // normalized to down/right, so signatures must not cross-merge raw directions.
-        auto ruleVariantSignature = [&](const std::string& forward, const std::vector<ParsedRow>& lhs, const std::vector<ParsedRow>& rhs) {
+        auto appendParsedRowsToSignature = [](std::string& sig, const std::vector<ParsedRow>& rows) {
+            for (const auto& row : rows) {
+                sig.push_back('[');
+                for (const auto& cell : row) {
+                    sig.push_back('{');
+                    if (cell.isEllipsis) {
+                        sig.append("...");
+                    } else {
+                        for (const auto& item : cell.items) {
+                            if (!item.dir.empty()) {
+                                sig.append(item.dir);
+                                sig.push_back(' ');
+                            }
+                            sig.append(item.name);
+                            sig.push_back(',');
+                        }
+                    }
+                    sig.push_back('}');
+                }
+                sig.push_back(']');
+            }
+        };
+        auto ruleVariantSignature = [&](int32_t lineNumber,
+                                       const std::string& forward,
+                                       bool rigid,
+                                       bool random,
+                                       bool late,
+                                       const std::vector<ParsedRow>& lhs,
+                                       const std::vector<ParsedRow>& rhs,
+                                       const std::vector<puzzlescript::RuleCommand>& commands) {
             std::string sig;
             sig.reserve(256);
-            bool axisRelevant = false;
+            sig.append(std::to_string(lineNumber));
+            sig.push_back('|');
+            bool directed = false;
             for (const auto& row : lhs) {
                 if (row.size() > 1) {
-                    axisRelevant = true;
+                    directed = true;
                     break;
                 }
             }
-            if (!axisRelevant) {
-                for (const auto& row : rhs) {
-                    if (row.size() > 1) {
-                        axisRelevant = true;
-                        break;
-                    }
-                }
-            }
-            if (axisRelevant) {
+            if (rigid) sig.append("RIGID|");
+            if (random) sig.append("RANDOM|");
+            if (late) sig.append("LATE|");
+            if (directed) {
                 sig.append(forward);
                 sig.push_back('|');
             }
-            auto appendRows = [&](const std::vector<ParsedRow>& rows) {
-                for (const auto& row : rows) {
-                    sig.push_back('[');
-                    for (const auto& cell : row) {
-                        sig.push_back('{');
-                        if (cell.isEllipsis) {
-                            sig.append("...");
-                        } else {
-                            for (const auto& item : cell.items) {
-                                if (!item.dir.empty()) {
-                                    sig.append(item.dir);
-                                    sig.push_back(' ');
-                                }
-                                sig.append(item.name);
-                                sig.push_back(',');
-                            }
-                        }
-                        sig.push_back('}');
-                    }
-                    sig.push_back(']');
-                }
-            };
-            appendRows(lhs);
+            appendParsedRowsToSignature(sig, lhs);
             sig.push_back('|');
-            appendRows(rhs);
+            appendParsedRowsToSignature(sig, rhs);
+            sig.push_back('|');
+            for (const auto& command : commands) {
+                sig.append(command.name);
+                sig.push_back(':');
+                if (command.argument.has_value()) {
+                    sig.append(*command.argument);
+                }
+                sig.push_back('|');
+            }
             return sig;
         };
 
         for (const auto& rawRuleDirection : ruleDirections) {
-        std::set<std::string> seenRuleVariants;
         auto variantLhsRows = lhsRows;
         auto variantRhsRows = rhsRows;
         std::string concreteRuleDirection = rawRuleDirection;
@@ -1589,17 +1596,10 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 expandConcretizePropertyRows(movingVariant.first, movingVariant.second);
             for (const auto& propChunk : propertyConcreteChunks) {
                 std::vector<ParsedRow> variantLhsRowsExpanded = propChunk.first;
-                std::vector<ParsedRow> variantRhsRowsExpanded = propChunk.second;
-                if (!lateRule) {
-                    makeSpawnedObjectsStationaryRows(variantLhsRowsExpanded, variantRhsRowsExpanded);
-                }
-        {
-            const std::string sig = ruleVariantSignature(concreteRuleDirection, variantLhsRowsExpanded, variantRhsRowsExpanded);
-            if (seenRuleVariants.find(sig) != seenRuleVariants.end()) {
-                continue;
+            std::vector<ParsedRow> variantRhsRowsExpanded = propChunk.second;
+            if (!lateRule) {
+                makeSpawnedObjectsStationaryRows(variantLhsRowsExpanded, variantRhsRowsExpanded);
             }
-            seenRuleVariants.insert(sig);
-        }
 
         puzzlescript::Rule rule;
         rule.direction = dirMaskFromToken(concreteRuleDirection);
@@ -2055,11 +2055,56 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         rule.cellRowMasksMovementsCount =
             static_cast<uint32_t>(game->cellRowMaskMovementsOffsets.size()) - rowMoveMasksFirst;
 
+        const std::string signature = ruleVariantSignature(
+            entry.lineNumber,
+            concreteRuleDirection,
+            rigidRule,
+            randomRule,
+            lateRule,
+            variantLhsRowsExpanded,
+            variantRhsRowsExpanded,
+            parsedCommands
+        );
         outputGroup->push_back(std::move(rule));
+        outputSignatures->push_back(signature);
         }
         }
         }
     }
+
+    auto dedupeRuleGroups = [](std::vector<std::vector<puzzlescript::Rule>>& groups,
+                               std::vector<std::vector<std::string>>& signatures) {
+        for (size_t groupIndex = 0; groupIndex < groups.size() && groupIndex < signatures.size(); ++groupIndex) {
+            auto& group = groups[groupIndex];
+            auto& groupSigs = signatures[groupIndex];
+            if (group.size() != groupSigs.size() || group.empty()) {
+                continue;
+            }
+            std::set<std::string> seen;
+            std::vector<uint8_t> keep(group.size(), 0);
+            for (size_t i = group.size(); i-- > 0;) {
+                const auto [_, inserted] = seen.insert(groupSigs[i]);
+                if (inserted) {
+                    keep[i] = 1;
+                }
+            }
+            std::vector<puzzlescript::Rule> filteredGroup;
+            std::vector<std::string> filteredSigs;
+            filteredGroup.reserve(group.size());
+            filteredSigs.reserve(groupSigs.size());
+            for (size_t i = 0; i < group.size(); ++i) {
+                if (keep[i] == 0) {
+                    continue;
+                }
+                filteredGroup.push_back(std::move(group[i]));
+                filteredSigs.push_back(std::move(groupSigs[i]));
+            }
+            group = std::move(filteredGroup);
+            groupSigs = std::move(filteredSigs);
+        }
+    };
+    dedupeRuleGroups(game->rules, earlyRuleSignatures);
+    dedupeRuleGroups(game->lateRules, lateRuleSignatures);
 
     // Rigid bookkeeping tables used by runtime conflict resolution.
     game->rigid = false;
@@ -2155,8 +2200,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         }
         return table;
     };
-    const auto earlyLoopPointMap = calculateLoopPoints(earlyLoopRanges, game->rules);
-    const auto lateLoopPointMap = calculateLoopPoints(lateLoopRanges, game->lateRules);
+    const auto earlyLoopPointMap = calculateLoopPoints(loopRanges, game->rules);
+    const auto lateLoopPointMap = calculateLoopPoints(loopRanges, game->lateRules);
     game->loopPoint = buildLoopPointTable(earlyLoopPointMap);
     game->lateLoopPoint = buildLoopPointTable(lateLoopPointMap);
 

@@ -2176,6 +2176,21 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
         }
     }
     out << "],\n";
+    auto appendLoopPointTable = [&](const puzzlescript::LoopPointTable& table) {
+        out << "{";
+        bool first = true;
+        for (size_t index = 0; index < table.entries.size(); ++index) {
+            if (!table.entries[index].has_value()) {
+                continue;
+            }
+            if (!first) {
+                out << ",";
+            }
+            first = false;
+            out << jsonStringLiteral(std::to_string(index)) << ":" << *table.entries[index];
+        }
+        out << "}";
+    };
     auto appendRules = [&](const std::vector<std::vector<puzzlescript::Rule>>& groups) {
         out << "[";
         for (size_t groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
@@ -2262,7 +2277,9 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
         out << "]";
     };
     out << "    \"rules\": "; appendRules(game.rules); out << ",\n";
-    out << "    \"late_rules\": "; appendRules(game.lateRules); out << "\n";
+    out << "    \"late_rules\": "; appendRules(game.lateRules); out << ",\n";
+    out << "    \"loop_point\": "; appendLoopPointTable(game.loopPoint); out << ",\n";
+    out << "    \"late_loop_point\": "; appendLoopPointTable(game.lateLoopPoint); out << "\n";
     out << "  }";
 
     // prepared_session is optional, but emitting it makes native-vs-js diffs much easier.
