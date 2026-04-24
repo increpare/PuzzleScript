@@ -15,7 +15,7 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build build_32 run ctest tests js_parity_tests tests_js simulation_tests_js compilation_tests_js \
+.PHONY: help build build_32 run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
@@ -73,6 +73,7 @@ help:
 	@echo ""
 	@echo "Single-side test commands for timing:"
 	@echo "  make simulation_tests_js           Run JS simulation tests only"
+	@echo "  make simulation_tests_js_profile   Run JS simulation tests 5 times and report avg/median"
 	@echo "  make simulation_tests_cpp          Run C++ simulation corpus directly (64-bit masks)"
 	@echo "  make simulation_tests_cpp_32       Run C++ simulation corpus with JS-style 32-bit masks"
 	@echo "  make compilation_tests_js          Run JS compiler tests only"
@@ -110,6 +111,9 @@ tests_js:
 
 simulation_tests_js:
 	$(NODE) src/tests/run_tests_node.js --sim-only
+
+simulation_tests_js_profile:
+	$(NODE) src/tests/run_tests_node.js --profile --profile-runs 5 --sim-only
 
 compilation_tests_js:
 	$(NODE) src/tests/run_tests_node.js --compilation-only

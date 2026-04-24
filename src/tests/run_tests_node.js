@@ -8,11 +8,43 @@ const { spawnSync } = require('child_process');
 
 const srcDir = path.join(__dirname, '..');
 
-// ---- Profile: run this script 6 times in separate processes (cold) and average ----
+function readNumericOption(args, name, fallback) {
+    const prefix = `${name}=`;
+    const inline = args.find(a => a.startsWith(prefix));
+    if (inline) {
+        const parsed = Number(inline.slice(prefix.length));
+        return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
+    }
+    const index = args.indexOf(name);
+    if (index >= 0 && index + 1 < args.length) {
+        const parsed = Number(args[index + 1]);
+        return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
+    }
+    return fallback;
+}
+
+function withoutOption(args, name) {
+    const prefix = `${name}=`;
+    const result = [];
+    for (let i = 0; i < args.length; i++) {
+        if (args[i] === name) {
+            i++;
+            continue;
+        }
+        if (args[i].startsWith(prefix)) {
+            continue;
+        }
+        result.push(args[i]);
+    }
+    return result;
+}
+
+// ---- Profile: run this script multiple times in separate processes (cold) ----
 if (process.argv.includes('--profile')) {
-    const childArgs = process.argv.slice(2).filter(a => a !== '--profile');
+    const rawArgs = process.argv.slice(2);
+    const runs = readNumericOption(rawArgs, '--profile-runs', 5);
+    const childArgs = withoutOption(rawArgs.filter(a => a !== '--profile'), '--profile-runs');
     const scriptPath = path.join(__dirname, 'run_tests_node.js');
-    const runs = 6;
     const times = [];
     let anyFailed = false;
     for (let i = 0; i < runs; i++) {
@@ -26,9 +58,14 @@ if (process.argv.includes('--profile')) {
         if (result.status !== 0) anyFailed = true;
     }
     if (times.length > 0) {
+        const sorted = [...times].sort((a, b) => a - b);
         const avgMs = times.reduce((a, b) => a + b, 0) / times.length;
+        const medianMs = sorted[Math.floor(sorted.length / 2)];
         console.log(`\n--- Profile (cold, ${runs} separate processes) ---`);
-        console.log(`Average: ${(avgMs / 1000).toFixed(2)}s over ${runs} runs`);
+        console.log(`Runs: ${times.map(ms => (ms / 1000).toFixed(2)).join('s, ')}s`);
+        console.log(`Average: ${(avgMs / 1000).toFixed(2)}s`);
+        console.log(`Median:  ${(medianMs / 1000).toFixed(2)}s`);
+        console.log(`Min/Max: ${(sorted[0] / 1000).toFixed(2)}s / ${(sorted[sorted.length - 1] / 1000).toFixed(2)}s`);
     }
     process.exit(anyFailed ? 1 : 0);
 }
