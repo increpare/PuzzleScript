@@ -995,6 +995,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         inlineCommandSink->push_back(std::move(cmd));
                         continue;
                     }
+                    if (!cellNameRefersToLegendOrObject(nameNorm)) {
+                        continue;
+                    }
                     cell.items.push_back({std::move(dirNorm), std::move(nameNorm)});
                 }
                 // Always push the last cell, even if empty. This is required for
