@@ -49,6 +49,13 @@ const source = [
     const result = runtime.compile(source);
     const ruleLine = lineNumber(source, '[ > Player | Crate ] -> [ > Player | > Crate ]');
     assert(result.ruleLines.includes(ruleLine), 'compiled rule line should be a breakpoint target');
+    assert.strictEqual(result.current.width, 3);
+    assert.strictEqual(result.current.height, 1);
+    assert(result.current.objectInfos.some(object => object.name === 'player'));
+    assert(result.current.objectInfos.some(object => object.name === 'crate'));
+    assert(result.current.objectInfos.every(object => Array.isArray(object.spriteMatrix)));
+    assert(result.current.objectInfos.some(object => object.name === 'player' && object.spriteMatrix.length === 5));
+    assert(result.current.objects.length > 0);
 
     const validations = runtime.validateBreakpoints([
         ruleLine,
@@ -71,8 +78,46 @@ const source = [
         'right input should pause-capable snapshot on the pushing rule line'
     );
     const ruleSnapshot = snapshots.find(snapshot => snapshot.sourceLine === ruleLine);
-    assert(/Rule line/.test(ruleSnapshot.label));
+    assert(/Rule group|Rule line/.test(ruleSnapshot.label));
     assert.strictEqual(ruleSnapshot.input, 'right');
+}
+
+{
+    const runtime = new PuzzleScriptDebugRuntime({ repoRoot });
+    const ruleLine = lineNumber(source, '[ > Player | Crate ] -> [ > Player | > Crate ]');
+    runtime.compile(source);
+    const paused = runtime.runInput('right', { breakpoints: [ruleLine] });
+    assert.strictEqual(paused.paused, true, 'debug input should stop as soon as the rule breakpoint is hit');
+    assert.strictEqual(paused.snapshot.sourceLine, ruleLine);
+    assert.strictEqual(paused.snapshot.kind, 'rule-group');
+    assert(/^Rule group/.test(paused.snapshot.label));
+    assert.strictEqual(runtime.current.sourceLine, ruleLine);
+
+    const completed = runtime.resume({ breakpoints: [ruleLine] });
+    assert.strictEqual(completed.paused, false, 'resume should finish the current input after the already-hit breakpoint');
+    assert(/player/i.test(completed.snapshot.serializedLevel));
+}
+
+{
+    const runtime = new PuzzleScriptDebugRuntime({ repoRoot });
+    const ruleLine = lineNumber(source, '[ > Player | Crate ] -> [ > Player | > Crate ]');
+    runtime.compile(source);
+    const paused = runtime.runInput('right', { breakpoints: [ruleLine] });
+    const stepped = runtime.resume({ step: true });
+    assert.strictEqual(stepped.paused, false, 'step from a breakpoint should finish if there is no later rule snapshot');
+    assert(stepped.snapshot.index > paused.snapshot.index);
+}
+
+{
+    const runtime = new PuzzleScriptDebugRuntime({ repoRoot });
+    runtime.compile(source);
+    const paused = runtime.runInput('right', { step: true });
+    assert.strictEqual(paused.paused, true, 'step mode should stop at the first rule-group boundary');
+    assert.strictEqual(paused.snapshot.sourceLine, lineNumber(source, '[ > Player | Crate ] -> [ > Player | > Crate ]'));
+    assert.strictEqual(paused.snapshot.kind, 'rule-group');
+    const stepped = runtime.resume({ step: true });
+    assert.strictEqual(stepped.paused, false, 'step resume should finish if there is no later rule-group boundary');
+    assert.notStrictEqual(stepped.snapshot.index, paused.snapshot.index);
 }
 
 console.log('debugger tests passed');

@@ -21,6 +21,15 @@ const DOCUMENT_SELECTOR = [
 ];
 
 const semanticLegend = new vscode.SemanticTokensLegend(TOKEN_TYPES, TOKEN_MODIFIERS);
+const SECTION_NAMES = new Set([
+    'objects',
+    'legend',
+    'sounds',
+    'collisionlayers',
+    'rules',
+    'winconditions',
+    'levels',
+]);
 
 function resolveRepoRoot(context) {
     const config = vscode.workspace.getConfiguration('puzzlescript');
@@ -93,6 +102,65 @@ function diagnosticSeverity(value) {
         : vscode.DiagnosticSeverity.Error;
 }
 
+function stripLineComment(line) {
+    const index = String(line).indexOf('(');
+    return index >= 0 ? String(line).slice(0, index) : String(line);
+}
+
+function levelRows(source) {
+    const rows = [];
+    const lines = String(source || '').split('\n');
+    let section = '';
+    let levelIndex = -1;
+    let currentLevelIndex = null;
+    let currentLevelHasRows = false;
+
+    for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+        const rawLine = lines[lineIndex];
+        const uncommented = stripLineComment(rawLine);
+        const trimmed = uncommented.trim();
+        const sectionName = trimmed.toLowerCase();
+
+        if (/^=+$/.test(trimmed)) {
+            continue;
+        }
+        if (SECTION_NAMES.has(sectionName)) {
+            section = sectionName;
+            currentLevelIndex = null;
+            currentLevelHasRows = false;
+            continue;
+        }
+        if (section !== 'levels') {
+            continue;
+        }
+        if (!trimmed) {
+            if (currentLevelHasRows) {
+                currentLevelIndex = null;
+                currentLevelHasRows = false;
+            }
+            continue;
+        }
+        if (/^message\b/i.test(trimmed)) {
+            levelIndex += 1;
+            currentLevelIndex = null;
+            currentLevelHasRows = false;
+            continue;
+        }
+        if (currentLevelIndex == null) {
+            levelIndex += 1;
+            currentLevelIndex = levelIndex;
+        }
+        currentLevelHasRows = true;
+        rows.push({
+            line: lineIndex,
+            start: rawLine.search(/\S|$/),
+            end: rawLine.length,
+            level: currentLevelIndex,
+        });
+    }
+    return rows;
+}
+
 class PuzzleScriptSemanticTokenProvider {
     constructor(intelligence) {
         this.intelligence = intelligence;
@@ -146,6 +214,30 @@ class PuzzleScriptCompletionProvider {
                 item.documentation = new vscode.MarkdownString(`PuzzleScript ${entry.tag}`);
             }
             return item;
+        });
+    }
+}
+
+class PuzzleScriptLevelLinkProvider {
+    constructor(intelligence) {
+        this.intelligence = intelligence;
+    }
+
+    provideDocumentLinks(document) {
+        if (!shouldHandleDocument(document, this.intelligence)) {
+            return [];
+        }
+        return levelRows(document.getText()).map(row => {
+            const args = encodeURIComponent(JSON.stringify([row.level]));
+            const link = new vscode.DocumentLink(
+                new vscode.Range(
+                    new vscode.Position(row.line, row.start),
+                    new vscode.Position(row.line, row.end)
+                ),
+                vscode.Uri.parse(`command:puzzlescript.runCurrentGameLevel?${args}`)
+            );
+            link.tooltip = `Run PuzzleScript level ${row.level}`;
+            return link;
         });
     }
 }
@@ -223,12 +315,47 @@ function activate(context) {
     const decorations = new PuzzleScriptDecorations(intelligence);
     const debugPreview = new PuzzleScriptDebugPreview(context);
     let activeDebugAdapter = null;
+    const setCurrentDocumentLanguage = async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            vscode.window.showWarningMessage('Open a PuzzleScript file first.');
+            return null;
+        }
+        if (editor.document.languageId === 'puzzlescript') {
+            return editor.document;
+        }
+        return vscode.languages.setTextDocumentLanguage(editor.document, 'puzzlescript');
+    };
     const sendDebugInput = token => {
         if (!activeDebugAdapter) {
             vscode.window.showWarningMessage('Start a PuzzleScript debug session before sending debug inputs.');
             return;
         }
         activeDebugAdapter.acceptInput(token);
+    };
+    const startDebugCurrentGame = async level => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor || !shouldHandleDocument(editor.document, intelligence) || editor.document.uri.scheme !== 'file') {
+            vscode.window.showWarningMessage('Open a PuzzleScript file before starting the PuzzleScript debugger.');
+            return;
+        }
+        const document = editor.document.languageId === 'puzzlescript'
+            ? editor.document
+            : await vscode.languages.setTextDocumentLanguage(editor.document, 'puzzlescript');
+        const numericLevel = Number(level);
+        const folder = vscode.workspace.getWorkspaceFolder(document.uri);
+        const config = {
+            type: 'puzzlescript',
+            request: 'launch',
+            name: Number.isInteger(numericLevel) ? `Debug PuzzleScript Level ${numericLevel}` : 'Debug PuzzleScript',
+            program: document.uri.fsPath,
+            source: document.getText(),
+            stopOnEntry: false,
+        };
+        if (Number.isInteger(numericLevel)) {
+            config.level = numericLevel;
+        }
+        await vscode.debug.startDebugging(folder, config);
     };
 
     const refreshDocument = document => {
@@ -259,6 +386,10 @@ function activate(context) {
             '-',
             ','
         ),
+        vscode.languages.registerDocumentLinkProvider(
+            DOCUMENT_SELECTOR,
+            new PuzzleScriptLevelLinkProvider(intelligence)
+        ),
         vscode.workspace.onDidOpenTextDocument(refreshDocument),
         vscode.workspace.onDidChangeTextDocument(event => refreshDocument(event.document)),
         vscode.debug.onDidTerminateDebugSession(() => {
@@ -284,22 +415,10 @@ function activate(context) {
                 return new vscode.DebugAdapterInlineImplementation(activeDebugAdapter);
             }
         }),
-        vscode.commands.registerCommand('puzzlescript.debugCurrentGame', async () => {
-            const editor = vscode.window.activeTextEditor;
-            if (!editor || !shouldHandleDocument(editor.document, intelligence) || editor.document.uri.scheme !== 'file') {
-                vscode.window.showWarningMessage('Open a PuzzleScript file before starting the PuzzleScript debugger.');
-                return;
-            }
-            const folder = vscode.workspace.getWorkspaceFolder(editor.document.uri);
-            await vscode.debug.startDebugging(folder, {
-                type: 'puzzlescript',
-                request: 'launch',
-                name: 'Debug PuzzleScript',
-                program: editor.document.uri.fsPath,
-                source: editor.document.getText(),
-                stopOnEntry: false,
-            });
-        }),
+        vscode.commands.registerCommand('puzzlescript.runCurrentGame', startDebugCurrentGame),
+        vscode.commands.registerCommand('puzzlescript.debugCurrentGame', startDebugCurrentGame),
+        vscode.commands.registerCommand('puzzlescript.runCurrentGameLevel', level => startDebugCurrentGame(level)),
+        vscode.commands.registerCommand('puzzlescript.setLanguageMode', setCurrentDocumentLanguage),
         vscode.commands.registerCommand('puzzlescript.debugInputUp', () => sendDebugInput('up')),
         vscode.commands.registerCommand('puzzlescript.debugInputDown', () => sendDebugInput('down')),
         vscode.commands.registerCommand('puzzlescript.debugInputLeft', () => sendDebugInput('left')),
@@ -323,4 +442,5 @@ function deactivate() {}
 module.exports = {
     activate,
     deactivate,
+    levelRows,
 };

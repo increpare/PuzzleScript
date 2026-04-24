@@ -93,9 +93,19 @@ The extension intentionally does not use Tree-sitter or the C++ compiler in v1; 
 
 ## Debugging Games
 
-Open a `.puzzlescript` or `.ps` file, set breakpoints on rule lines, then run `PuzzleScript: Debug Current Game` from the command palette. VS Code will start a `puzzlescript` debug session and verify breakpoints that correspond to compiled rule source lines.
+Open a `.puzzlescript` or `.ps` file, then run `PuzzleScript: Run Current Game` from the command palette, the editor title button, or the editor context menu. This starts a `puzzlescript` debug session for the current file.
 
-Send inputs with the command palette commands `PuzzleScript Debug: Input Up`, `PuzzleScript Debug: Input Down`, `PuzzleScript Debug: Input Left`, `PuzzleScript Debug: Input Right`, `PuzzleScript Debug: Input Action`, `PuzzleScript Debug: Tick`, `PuzzleScript Debug: Undo`, and `PuzzleScript Debug: Restart`. The debugger pauses when an input applies a rule whose line has a verified breakpoint. `Step Over` advances one captured PuzzleScript rule/runtime snapshot, and `Continue` advances to the next matching breakpoint in the current input transaction.
+In the `LEVELS` section, ctrl-click or cmd-click a level row to start the debugger directly on that level.
+
+Set breakpoints by clicking in the editor gutter beside PuzzleScript rule lines. VS Code will verify breakpoints that correspond to compiled rule source lines and reject breakpoints on non-rule lines.
+
+Breakpoints require VS Code's language mode to be `PuzzleScript`. `.puzzlescript` and `.ps` files use that automatically; for `.txt` files, run `PuzzleScript: Set Current File as PuzzleScript` or use VS Code's `Change Language Mode` command.
+
+Send inputs from the `PuzzleScript Debug Canvas` buttons, with arrow keys/space, or with the command palette commands `PuzzleScript Debug: Input Up`, `PuzzleScript Debug: Input Down`, `PuzzleScript Debug: Input Left`, `PuzzleScript Debug: Input Right`, `PuzzleScript Debug: Input Action`, `PuzzleScript Debug: Tick`, `PuzzleScript Debug: Undo`, and `PuzzleScript Debug: Restart`. The debugger pauses when an input applies a rule whose line has a verified breakpoint. `Step Over` advances one captured PuzzleScript rule/runtime snapshot, and `Continue` advances to the next matching breakpoint in the current input transaction.
+
+The debug canvas renders the paused board as a grid. Hover a cell to inspect the objects and layers currently present there.
+
+Breakpoints are handled by a PuzzleScript-specific runtime hook. When a player input applies a rule whose compiled source line has a verified breakpoint, the debug runtime pauses immediately at that rule snapshot. Continue resumes the current input transaction and runs until the next matching rule breakpoint or input completion; Step Over advances to the next captured PuzzleScript rule/runtime snapshot.
 
 You can also add a launch configuration:
 

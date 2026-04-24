@@ -30,6 +30,21 @@
     },
     "commands": [
       {
+        "command": "puzzlescript.runCurrentGame",
+        "title": "Run Current Game",
+        "category": "PuzzleScript"
+      },
+      {
+        "command": "puzzlescript.runCurrentGameLevel",
+        "title": "Run Current Level",
+        "category": "PuzzleScript"
+      },
+      {
+        "command": "puzzlescript.setLanguageMode",
+        "title": "Set Current File as PuzzleScript",
+        "category": "PuzzleScript"
+      },
+      {
         "command": "puzzlescript.debugCurrentGame",
         "title": "Debug Current Game",
         "category": "PuzzleScript"
@@ -73,6 +88,32 @@
         "command": "puzzlescript.debugRestart",
         "title": "Debug: Restart",
         "category": "PuzzleScript"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "puzzlescript.runCurrentGame",
+          "when": "resourceLangId == puzzlescript",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "puzzlescript.runCurrentGame",
+          "when": "resourceLangId == puzzlescript",
+          "group": "navigation"
+        },
+        {
+          "command": "puzzlescript.debugCurrentGame",
+          "when": "resourceLangId == puzzlescript",
+          "group": "navigation"
+        }
+      ]
+    },
+    "breakpoints": [
+      {
+        "language": "puzzlescript"
       }
     ],
     "debuggers": [
@@ -169,7 +210,7 @@
     ]
   },
   "scripts": {
-    "test": "node ./test/editor-intelligence.test.js && node ./test/syntax-highlighting.test.js && node ./test/debugger.test.js",
+    "test": "node ./test/editor-intelligence.test.js && node ./test/syntax-highlighting.test.js && node ./test/debugger.test.js && node ./test/level-links.test.js",
     "test:syntax": "node ./test/syntax-highlighting.test.js",
     "preview:syntax": "node ./scripts/render-highlight-preview.js"
   },
