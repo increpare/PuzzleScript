@@ -1,6 +1,9 @@
 {
   "scopeName": "source.puzzlescript",
   "name": "PuzzleScript",
+  "fileTypes": [
+    "puzzlescript"
+  ],
   "patterns": [
     {
       "name": "comment.block.puzzlescript",
@@ -8,8 +11,16 @@
       "end": "\\)"
     },
     {
+      "name": "punctuation.separator.section.puzzlescript",
+      "match": "^\\s*=+\\s*$"
+    },
+    {
       "name": "keyword.control.section.puzzlescript",
       "match": "(?i)^\\s*(objects|legend|sounds|collisionlayers|rules|winconditions|levels)\\b"
+    },
+    {
+      "name": "support.type.property-name.metadata.puzzlescript",
+      "match": "(?i)^\\s*(again_interval|author|background_color|color_palette|debug|flickscreen|homepage|key_repeat_interval|noaction|norepeat_action|norestart|noundo|realtime_interval|require_player_movement|run_rules_on_level_start|scanline|text_color|throttle_movement|title|verbose_logging|youtube|zoomscreen)\\b"
     },
     {
       "name": "keyword.operator.arrow.puzzlescript",
@@ -28,8 +39,24 @@
       "match": "(?i)\\b(cancel|checkpoint|restart|win|message|again|sfx[0-9]+)\\b"
     },
     {
+      "name": "support.function.sound-event.puzzlescript",
+      "match": "(?i)\\b(undo|restart|titlescreen|startgame|cancel|endgame|startlevel|endlevel|showmessage|closemessage|sfx[0-9]+)\\b"
+    },
+    {
+      "name": "support.function.sound-verb.puzzlescript",
+      "match": "(?i)\\b(move|action|create|destroy|cantmove)\\b"
+    },
+    {
       "name": "constant.other.color.puzzlescript",
       "match": "(?i)#(?:[0-9a-f]{3}){1,2}\\b|\\b(black|white|gr[ae]y|darkgr[ae]y|lightgr[ae]y|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent)\\b"
+    },
+    {
+      "name": "constant.numeric.sound-seed.puzzlescript",
+      "match": "\\b\\d+\\b"
+    },
+    {
+      "name": "variable.other.object.puzzlescript",
+      "match": "\\b[\\p{L}\\p{N}_]+\\b"
     }
   ]
 }

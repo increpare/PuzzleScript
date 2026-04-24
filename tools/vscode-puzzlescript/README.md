@@ -18,6 +18,24 @@ By default, the extension expects to live at `tools/vscode-puzzlescript` inside 
 npm test
 ```
 
+## Testing Highlighting
+
+Run the automated syntax highlighting checks:
+
+```sh
+npm run test:syntax
+```
+
+These tests use the same shared parser adapter as the extension and assert that representative PuzzleScript samples produce the expected semantic token classes and dynamic color decorations.
+
+You can also render a small HTML preview of the highlighter output:
+
+```sh
+npm run preview:syntax -- ../linguist/samples/simple-block-pushing.puzzlescript /tmp/puzzlescript-highlight.html
+```
+
+Open the generated HTML file in a browser to inspect the token colors. This preview is not VS Code itself, but it is a useful smoke test for the shared highlighter layer that feeds VS Code semantic tokens and color decorations.
+
 ## Running In VS Code
 
 ### Option 1: Extension Development Host

@@ -76,7 +76,9 @@
     ]
   },
   "scripts": {
-    "test": "node ./test/editor-intelligence.test.js"
+    "test": "node ./test/editor-intelligence.test.js && node ./test/syntax-highlighting.test.js",
+    "test:syntax": "node ./test/syntax-highlighting.test.js",
+    "preview:syntax": "node ./scripts/render-highlight-preview.js"
   },
   "devDependencies": {}
 }

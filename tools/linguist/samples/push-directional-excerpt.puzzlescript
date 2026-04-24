@@ -1,0 +1,158 @@
+title PUSH Directional Excerpt
+author lonebot - demake by rmmh
+homepage http://lonebot.net/games/push/
+
+again_interval 0.1
+noaction
+
+========
+OBJECTS
+========
+
+Background .
+#756C5E
+
+Wall #
+#635854
+
+StrongPlayer P
+#E8D2AC #67453D Black #282D3C Red
+11111
+02020
+40004
+43334
+33.33
+
+Rock *
+#202020 #706249 #A6957B
+.000.
+02220
+02210
+01110
+.000.
+
+Pit _
+Black #5A5349
+.1.1.
+1000.
+.000.
+.0001
+..11.
+
+GunUSingle U
+Black Grey Yellow
+..0..
+12021
+11011
+11111
+.111.
+
+GunDSingle D
+Black Grey Yellow
+.111.
+11111
+11011
+12021
+..0..
+
+GunRSingle R
+Black Grey Yellow
+.111.
+1112.
+11000
+1112.
+.111.
+
+GunLSingle L
+Black Grey Yellow
+.111.
+.2111
+00011
+.2111
+.111.
+
+ArrowU
+Brown
+..0..
+.000.
+..0..
+.....
+.....
+
+ArrowR
+Brown
+.....
+...0.
+..000
+...0.
+.....
+
+ArrowL
+Brown
+.....
+.0...
+000..
+.0...
+.....
+
+ArrowD
+Brown DarkBrown
+.....
+.....
+..0..
+.000.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = StrongPlayer
+* = Rock
+_ = Pit
+Gun = GunUSingle or GunDSingle or GunRSingle or GunLSingle
+Arrow = ArrowU or ArrowD or ArrowL or ArrowR
+
+=======
+SOUNDS
+=======
+
+Rock move 36772507
+sfx0 22352405
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Pit
+Arrow
+StrongPlayer, Rock, Wall, Gun
+
+======
+RULES
+======
+
+[ > StrongPlayer | Rock ] -> [ > StrongPlayer | > Rock ]
+up [ GunUSingle ] -> [ ArrowU GunUSingle ]
+down [ GunDSingle ] -> [ ArrowD GunDSingle ]
+left [ GunLSingle ] -> [ ArrowL GunLSingle ]
+right [ GunRSingle ] -> [ ArrowR GunRSingle ]
+
+==============
+WINCONDITIONS
+==============
+
+no Rock
+
+=======
+LEVELS
+=======
+
+#######
+#P.*U_#
+#..R..#
+#..L..#
+#######
