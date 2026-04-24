@@ -181,6 +181,8 @@ std::vector<std::string> loadInputTokensFromJsonFile(const std::filesystem::path
     return loadInputTokensFromJsonText(readFile(path));
 }
 
+std::optional<ps_input> parseInputToken(const std::string& token);
+
 bool replayInputTokens(ps_session* session, const std::vector<std::string>& tokens, std::vector<std::string>* outSounds) {
     if (!session) {
         return false;
@@ -197,20 +199,17 @@ bool replayInputTokens(ps_session* session, const std::vector<std::string>& toke
             (void)ps_session_restart(session);
             continue;
         }
-        int32_t inputValue = 0;
-        try {
-            inputValue = std::stoi(token);
-        } catch (...) {
-            inputValue = 0;
+        const auto input = parseInputToken(token);
+        if (!input.has_value()) {
+            std::cerr << "Unsupported replay input token: " << token << "\n";
+            return false;
         }
 
         ps_step_result stepResult{};
-        if (inputValue == static_cast<int32_t>(PS_INPUT_TICK)) {
+        if (*input == PS_INPUT_TICK) {
             stepResult = ps_session_tick(session);
         } else {
-            if (inputValue < 0) inputValue = 0;
-            if (inputValue > static_cast<int32_t>(PS_INPUT_TICK)) inputValue = static_cast<int32_t>(PS_INPUT_TICK);
-            stepResult = ps_session_step(session, static_cast<ps_input>(inputValue));
+            stepResult = ps_session_step(session, *input);
         }
 
         if (outSounds && stepResult.audio_event_count > 0 && stepResult.audio_events) {
@@ -673,6 +672,22 @@ std::optional<ps_input> parseInputToken(const std::string& token) {
     }
     if (token == "tick") {
         return PS_INPUT_TICK;
+    }
+    try {
+        size_t consumed = 0;
+        int32_t inputValue = std::stoi(token, &consumed);
+        if (consumed != token.size()) {
+            return std::nullopt;
+        }
+        if (inputValue < 0) {
+            inputValue = 0;
+        }
+        if (inputValue > static_cast<int32_t>(PS_INPUT_TICK)) {
+            inputValue = static_cast<int32_t>(PS_INPUT_TICK);
+        }
+        return static_cast<ps_input>(inputValue);
+    } catch (...) {
+        return std::nullopt;
     }
     return std::nullopt;
 }
