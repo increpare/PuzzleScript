@@ -13,6 +13,7 @@ function usage() {
     'Usage: run_rule_plan_parity.js <src/tests/resources/testdata.js> [--cli path] [--artifacts-dir path]',
     '',
     'Compares JS and native game.rule_plan_v1 from emitted IR JSON for unique sources.',
+    'Cases with JS compile failures are skipped; warning-bearing playable games are still compared.',
   ].join('\n');
 }
 
@@ -245,12 +246,12 @@ function main() {
       }
 
       const jsIr = readJson(jsIrPath);
+      const jsDiagnostics = jsIr.document && Array.isArray(jsIr.document.errors) ? jsIr.document.errors : [];
       if (jsIr.document && jsIr.document.error_count > 0) {
         skippedCompileFailures++;
-        process.stderr.write(`skip_js_diagnostic_failure index=${caseInfo.index} name=${JSON.stringify(caseInfo.name)} error_count=${jsIr.document.error_count}\n`);
+        process.stderr.write(`skip_js_error_count index=${caseInfo.index} name=${JSON.stringify(caseInfo.name)} error_count=${jsIr.document.error_count || 0} diagnostic_count=${jsDiagnostics.length}\n`);
         continue;
       }
-
       const nativeRes = compileNativeIr(opts.cliPath, sourcePath);
       if (nativeRes.error) throw new Error(`Native CLI failed to run for case ${caseInfo.index} (${caseInfo.name}): ${nativeRes.error.message}`);
       if (nativeRes.status !== 0) {

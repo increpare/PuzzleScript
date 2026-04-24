@@ -4,7 +4,7 @@
 #   make ctest             Run fast C++ smoke/unit tests registered with CMake.
 #   make js_parity_tests   Run C++ against the original JS test corpus.
 #   make rule_plan_parity_tests
-#                           Compare JS/native game.rule_plan_v1 emitted IR.
+#                           Compare JS/native game.rule_plan_v1 for simulation-corpus games.
 #   make simulation_tests  Run JS simulation tests and direct C++ simulation tests.
 #   make compilation_tests Run JS compiler tests and direct C++ compiler tests.
 #   make profile_simulation_tests
@@ -63,7 +63,7 @@ help:
 	@echo "  make run path/to/game.txt          Build and play a PuzzleScript game"
 	@echo "  make ctest                         Run fast C++ smoke/unit tests"
 	@echo "  make js_parity_tests               Run 32-bit C++ against the original JS test corpus"
-	@echo "  make rule_plan_parity_tests        Compare JS/native game.rule_plan_v1 emitted IR"
+	@echo "  make rule_plan_parity_tests        Compare JS/native game.rule_plan_v1 for simulation games"
 	@echo "  make simulation_tests              Run JS sim tests, then mirrored C++ sim parity"
 	@echo "  make compilation_tests             Run JS compiler tests, then mirrored C++ diagnostics"
 	@echo "  make profile_simulation_tests      Profile C++ simulation replay hot functions"
@@ -161,7 +161,7 @@ compilation_tests_cpp_direct: build
 js_parity_tests: simulation_tests_cpp_js_parity compilation_tests_cpp_32
 
 rule_plan_parity_tests: build
-	$(NODE) src/tests/run_rule_plan_parity.js src/tests/resources/testdata.js --cli $(PUZZLESCRIPT_CPP)
+	$(NODE) src/tests/run_rule_plan_parity.js src/tests/resources/testdata.js --cli $(PUZZLESCRIPT_CPP) --artifacts-dir $(BUILD_DIR)/native/rule_plan_parity_testdata
 
 simulation_tests: simulation_tests_js simulation_tests_cpp
 
