@@ -78,11 +78,11 @@ struct RuntimeCounterStorage {
     std::atomic<uint64_t> maskRebuildColumns{0};
 };
 
-std::atomic<bool> gRuntimeCountersEnabled{false};
+bool gRuntimeCountersEnabled = false;
 RuntimeCounterStorage gRuntimeCounters;
 
 inline void addCounter(std::atomic<uint64_t>& counter, uint64_t amount = 1) {
-    if (gRuntimeCountersEnabled.load(std::memory_order_relaxed)) {
+    if (gRuntimeCountersEnabled) {
         counter.fetch_add(amount, std::memory_order_relaxed);
     }
 }
@@ -3926,7 +3926,7 @@ std::unique_ptr<Error> benchmarkCloneHash(const Session& session, uint32_t itera
 }
 
 void setRuntimeCountersEnabled(bool enabled) {
-    gRuntimeCountersEnabled.store(enabled, std::memory_order_relaxed);
+    gRuntimeCountersEnabled = enabled;
 }
 
 void resetRuntimeCounters() {
