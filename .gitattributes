@@ -1,0 +1,20 @@
+# GitHub Linguist hygiene for this repository.
+#
+# PuzzleScript is not yet a built-in Linguist language. The .puzzlescript
+# mapping below is future-ready for the upstream Linguist contribution; until
+# then, GitHub will only honor language names it already knows.
+
+*.puzzlescript linguist-language=PuzzleScript
+
+# Generated bundles/templates.
+src/standalone_inlined.txt linguist-generated
+bin/** linguist-generated
+build/** linguist-generated
+
+# Vendored dependencies.
+native/third_party/** linguist-vendored
+node_modules/** linguist-vendored
+
+# Local Linguist preparation samples should remain visible and countable once
+# PuzzleScript is accepted upstream.
+tools/linguist/samples/*.puzzlescript linguist-detectable

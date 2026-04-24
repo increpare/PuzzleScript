@@ -6,7 +6,9 @@
     "native:export-trace": "node src/tests/js_oracle/export_execution_trace.js",
     "native:configure": "cmake -S . -B build",
     "native:build": "cmake --build build --target puzzlescript_cpp",
-    "native:test": "ctest --test-dir build --output-on-failure"
+    "native:test": "ctest --test-dir build --output-on-failure",
+    "test:syntax": "npm --prefix tools/vscode-puzzlescript run test:syntax",
+    "preview:syntax": "npm --prefix tools/vscode-puzzlescript run preview:syntax --"
   },
   "dependencies": {
     "compress-images": "^2.0.5",

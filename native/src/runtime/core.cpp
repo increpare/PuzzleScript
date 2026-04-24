@@ -836,17 +836,6 @@ MaskOffset storeMaskWords(Game& game, const MaskVector& words) {
     return offset;
 }
 
-#if PS_MASK_WORD_BITS == 64
-MaskOffset storeMaskWords(Game& game, const std::vector<int32_t>& words) {
-    MaskOffset offset = static_cast<MaskOffset>(game.maskArena.size());
-    game.maskArena.reserve(game.maskArena.size() + words.size());
-    for (int32_t word : words) {
-        game.maskArena.push_back(static_cast<MaskWord>(word));
-    }
-    return offset;
-}
-#endif
-
 // Append `game.wordCount` zero words and return the offset. Used for fields
 // that are absent in the IR and need an all-zero mask at the arena's width.
 [[maybe_unused]] MaskOffset storeZeroMask(Game& game) {
@@ -1339,9 +1328,7 @@ void setCellObjects(Session& session, int32_t tileIndex, const MaskVector& objec
         const MaskWord value = objects[static_cast<size_t>(word)];
         MaskWordUnsigned changedBits = static_cast<MaskWordUnsigned>(oldValue ^ value);
         while (changedBits != 0) {
-            const int32_t bit = PS_MASK_WORD_BITS == 64
-                ? __builtin_ctzll(changedBits)
-                : __builtin_ctz(static_cast<uint32_t>(changedBits));
+            const int32_t bit = maskWordCountTrailingZeros(changedBits);
             const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + bit;
             setObjectCellIndexBit(session, objectId, tileIndex, (static_cast<MaskWordUnsigned>(value) & (MaskWordUnsigned{1} << bit)) != 0);
             changedBits &= changedBits - 1;
@@ -1666,11 +1653,10 @@ bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer,
             }
             const MaskWord* entryDirectionMask = maskPtr(game, entry.directionMask);
             if (entryDirectionMask == nullptr) continue;
-            const int32_t shift = 5 * layer;
-            const int32_t wIdx = shift / static_cast<int32_t>(kMaskWordBits);
-            const int32_t bIdx = shift & static_cast<int32_t>(kMaskWordBitMask);
-            const int32_t dirBits = (static_cast<size_t>(wIdx) < entry.directionMaskWidth)
-                ? ((entryDirectionMask[static_cast<size_t>(wIdx)] >> bIdx) & 0x1F) : 0;
+            const uint32_t wIdx = movementWordIndexForLayer(static_cast<uint32_t>(layer));
+            const uint32_t bIdx = movementBitShiftForLayer(static_cast<uint32_t>(layer));
+            const int32_t dirBits = (wIdx < entry.directionMaskWidth)
+                ? static_cast<int32_t>((entryDirectionMask[wIdx] >> bIdx) & 0x1F) : 0;
             if ((dirBits & directionMask) == 0) {
                 continue;
             }
@@ -2082,11 +2068,10 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
                         objectsClear[idx] |= layerMask[idx];
                     }
                     clearShiftedMask5(movementsClear, 5 * layer);
-                    const int32_t shift = 5 * layer;
-                    const int32_t moveWord = shift / static_cast<int32_t>(kMaskWordBits);
-                    const int32_t moveBit = shift & static_cast<int32_t>(kMaskWordBitMask);
-                    if (static_cast<size_t>(moveWord) < movementsClear.size()) {
-                        movementsClear[static_cast<size_t>(moveWord)] |= static_cast<MaskWord>(MaskWordUnsigned{0x1F} << moveBit);
+                    const uint32_t moveWord = movementWordIndexForLayer(static_cast<uint32_t>(layer));
+                    const uint32_t moveBit = movementBitShiftForLayer(static_cast<uint32_t>(layer));
+                    if (moveWord < movementsClear.size()) {
+                        movementsClear[moveWord] |= static_cast<MaskWord>(MaskWordUnsigned{0x1F} << moveBit);
                     }
                 }
             }
@@ -2096,10 +2081,10 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     if (replacement.hasRandomDirMask) {
         for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
             const int32_t shift = 5 * layer;
-            const int32_t wordIdx = shift / static_cast<int32_t>(kMaskWordBits);
-            const int32_t bitIdx = shift & static_cast<int32_t>(kMaskWordBitMask);
-            const int32_t dirBits = (static_cast<size_t>(wordIdx) < randomDirMaskWidth)
-                ? ((randomDirMask[static_cast<size_t>(wordIdx)] >> bitIdx) & 0x1F) : 0;
+            const uint32_t wordIdx = movementWordIndexForLayer(static_cast<uint32_t>(layer));
+            const uint32_t bitIdx = movementBitShiftForLayer(static_cast<uint32_t>(layer));
+            const int32_t dirBits = (wordIdx < randomDirMaskWidth)
+                ? static_cast<int32_t>((randomDirMask[wordIdx] >> bitIdx) & 0x1F) : 0;
             if (dirBits != 0) {
                 const double randomValue = randomUniform(session.randomState);
                 const int32_t randomDir = static_cast<int32_t>(std::floor(randomValue * 4.0));
@@ -2147,13 +2132,12 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
             session.replacementRigidMaskScratch.assign(static_cast<size_t>(session.game->strideMovement), 0);
             MaskVector& rigidMask = session.replacementRigidMaskScratch;
             for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
-                const int32_t shift = 5 * layer;
-                const int32_t wIdx = shift / static_cast<int32_t>(kMaskWordBits);
-                const int32_t bIdx = shift & static_cast<int32_t>(kMaskWordBitMask);
-                const int32_t layerBits = (static_cast<size_t>(wIdx) < movementWordCount)
-                    ? ((movementsLayerMask[static_cast<size_t>(wIdx)] >> bIdx) & 0x1F) : 0;
+                const uint32_t wIdx = movementWordIndexForLayer(static_cast<uint32_t>(layer));
+                const uint32_t bIdx = movementBitShiftForLayer(static_cast<uint32_t>(layer));
+                const int32_t layerBits = (wIdx < movementWordCount)
+                    ? static_cast<int32_t>((movementsLayerMask[wIdx] >> bIdx) & 0x1F) : 0;
                 if (layerBits != 0) {
-                    setShiftedMask5(rigidMask, shift, rigidGroupIndex);
+                    setShiftedMask5(rigidMask, 5 * layer, rigidGroupIndex);
                 }
             }
 
@@ -2231,9 +2215,7 @@ std::optional<RowAnchor> chooseRowAnchor(const Session& session, const std::vect
         for (uint32_t word = 0; word < game.wordCount; ++word) {
             MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(mask[word]);
             while (bits != 0) {
-                const int32_t bit = PS_MASK_WORD_BITS == 64
-                    ? __builtin_ctzll(bits)
-                    : __builtin_ctz(static_cast<uint32_t>(bits));
+                const int32_t bit = maskWordCountTrailingZeros(bits);
                 const int32_t objectId = static_cast<int32_t>(word) * static_cast<int32_t>(kMaskWordBits) + bit;
                 if (objectId < game.objectCount) {
                     const uint64_t count = objectPresenceCount(session, objectId);
@@ -3293,9 +3275,7 @@ void rebuildObjectCellIndex(Session& session) {
         for (int32_t word = 0; word < stride; ++word) {
             MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(session.liveLevel.objects[cellBase + static_cast<size_t>(word)]);
             while (bits != 0) {
-                const int32_t bit = PS_MASK_WORD_BITS == 64
-                    ? __builtin_ctzll(bits)
-                    : __builtin_ctz(static_cast<uint32_t>(bits));
+                const int32_t bit = maskWordCountTrailingZeros(bits);
                 const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + bit;
                 if (objectId < objectCount) {
                     session.objectCellBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;

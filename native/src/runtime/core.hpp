@@ -83,6 +83,14 @@ inline constexpr uint32_t movementBitShiftForLayer(uint32_t layerIndex) {
     return (layerIndex * 5U) & kMaskWordBitMask;
 }
 
+inline int32_t maskWordCountTrailingZeros(MaskWordUnsigned bits) {
+#if PS_MASK_WORD_BITS == 64
+    return __builtin_ctzll(bits);
+#else
+    return __builtin_ctz(bits);
+#endif
+}
+
 struct MaskRef { const MaskWord* data; };
 struct MaskMut { MaskWord* data; };
 
