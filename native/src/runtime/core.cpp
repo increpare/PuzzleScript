@@ -3458,6 +3458,15 @@ void rebuildMasks(Session& session) {
     const int32_t movementStride = session.game->strideMovement;
     const int32_t width = session.liveLevel.width;
     const int32_t height = session.liveLevel.height;
+    const int32_t tileCount = width * height;
+    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    if (!session.anyMasksDirty
+        && !session.objectCellIndexDirty
+        && session.objectCellBitTileCount == tileCount
+        && session.objectCellBits.size() == static_cast<size_t>(session.game->objectCount) * cellWordCount
+        && session.objectCellCounts.size() == static_cast<size_t>(session.game->objectCount)) {
+        return;
+    }
 
     // Reshape storage on first call / level-dimension change. We compare
     // against the expected sizes and (re)allocate uniformly if anything is
