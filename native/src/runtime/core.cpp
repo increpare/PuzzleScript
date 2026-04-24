@@ -2103,8 +2103,12 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         }
         if (objectsChanged) {
             setCellObjectsFromWords(session, tileIndex, newObjects.data());
-            accumulateMaskWords(session.pendingCreateMask, created.data(), created.size());
-            accumulateMaskWords(session.pendingDestroyMask, destroyed.data(), destroyed.size());
+            if (!session.pendingCreateMask.empty()) {
+                accumulateMaskWords(session.pendingCreateMask, created.data(), created.size());
+            }
+            if (!session.pendingDestroyMask.empty()) {
+                accumulateMaskWords(session.pendingDestroyMask, destroyed.data(), destroyed.size());
+            }
         }
         if (movementsChanged) {
             setCellMovementsFromWords(session, tileIndex, newMovements.data());
@@ -2321,8 +2325,12 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     }
     setCellObjects(session, tileIndex, objects);
     setCellMovements(session, tileIndex, movements);
-    accumulateMask(session.pendingCreateMask, created);
-    accumulateMask(session.pendingDestroyMask, destroyed);
+    if (!session.pendingCreateMask.empty()) {
+        accumulateMask(session.pendingCreateMask, created);
+    }
+    if (!session.pendingDestroyMask.empty()) {
+        accumulateMask(session.pendingDestroyMask, destroyed);
+    }
     if (rigidChange) {
         setCellRigidGroupIndexMask(session, tileIndex, rigidGroupIndexMask);
         setCellRigidMovementAppliedMask(session, tileIndex, rigidMovementAppliedMask);
@@ -4373,8 +4381,16 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     ps_step_result result{};
     session.lastAudioEvents.clear();
     session.lastUiAudioEvents.clear();
-    session.pendingCreateMask.assign(static_cast<size_t>(session.game->strideObject), 0);
-    session.pendingDestroyMask.assign(static_cast<size_t>(session.game->strideObject), 0);
+    if (options.emitAudio && !session.game->sfxCreationMasks.empty()) {
+        session.pendingCreateMask.assign(static_cast<size_t>(session.game->strideObject), 0);
+    } else {
+        session.pendingCreateMask.clear();
+    }
+    if (options.emitAudio && !session.game->sfxDestructionMasks.empty()) {
+        session.pendingDestroyMask.assign(static_cast<size_t>(session.game->strideObject), 0);
+    } else {
+        session.pendingDestroyMask.clear();
+    }
 
     std::optional<Session::UndoSnapshot> localTurnStart;
     const Session::UndoSnapshot* turnStartPtr = nullptr;
