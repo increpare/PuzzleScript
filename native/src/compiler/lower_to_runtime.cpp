@@ -1985,6 +1985,13 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
                 puzzlescript::Pattern pat;
                 pat.kind = puzzlescript::Pattern::Kind::CellPattern;
+                auto maskHasAnyBit = [](const std::vector<int32_t>& words) {
+                    return std::any_of(words.begin(), words.end(), [](int32_t word) { return word != 0; });
+                };
+                pat.hasObjectsPresent = maskHasAnyBit(objectsPresent);
+                pat.hasObjectsMissing = maskHasAnyBit(objectsMissing);
+                pat.hasMovementsPresent = maskHasAnyBit(movementsPresent);
+                pat.hasMovementsMissing = maskHasAnyBit(movementsMissing);
                 pat.objectsPresent = storeMaskWords(*game, objectsPresent);
                 pat.objectsMissing = storeMaskWords(*game, objectsMissing);
                 pat.movementsPresent = storeMaskWords(*game, movementsPresent);

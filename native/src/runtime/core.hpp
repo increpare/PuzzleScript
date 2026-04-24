@@ -127,6 +127,10 @@ struct Pattern {
     MaskOffset objectsMissing   = kNullMaskOffset;
     MaskOffset movementsPresent = kNullMaskOffset;
     MaskOffset movementsMissing = kNullMaskOffset;
+    bool hasObjectsPresent = false;
+    bool hasObjectsMissing = false;
+    bool hasMovementsPresent = false;
+    bool hasMovementsMissing = false;
 
     // anyObjectsPresent is a variable-length list of masks of width
     // Game::wordCount. Each mask's offset is stored in

@@ -943,10 +943,18 @@ Pattern parsePattern(Game& game, const json::Value& value) {
         return pattern;
     }
 
-    pattern.objectsPresent   = storeMaskWords(game, parseIntVector(requireField(object, "objects_present")));
-    pattern.objectsMissing   = storeMaskWords(game, parseIntVector(requireField(object, "objects_missing")));
-    pattern.movementsPresent = storeMaskWords(game, parseIntVector(requireField(object, "movements_present")));
-    pattern.movementsMissing = storeMaskWords(game, parseIntVector(requireField(object, "movements_missing")));
+    const auto objectsPresent = parseIntVector(requireField(object, "objects_present"));
+    const auto objectsMissing = parseIntVector(requireField(object, "objects_missing"));
+    const auto movementsPresent = parseIntVector(requireField(object, "movements_present"));
+    const auto movementsMissing = parseIntVector(requireField(object, "movements_missing"));
+    pattern.hasObjectsPresent = anyBitsSet(objectsPresent);
+    pattern.hasObjectsMissing = anyBitsSet(objectsMissing);
+    pattern.hasMovementsPresent = anyBitsSet(movementsPresent);
+    pattern.hasMovementsMissing = anyBitsSet(movementsMissing);
+    pattern.objectsPresent   = storeMaskWords(game, objectsPresent);
+    pattern.objectsMissing   = storeMaskWords(game, objectsMissing);
+    pattern.movementsPresent = storeMaskWords(game, movementsPresent);
+    pattern.movementsMissing = storeMaskWords(game, movementsMissing);
 
     pattern.anyObjectsFirst = static_cast<uint32_t>(game.anyObjectOffsets.size());
     for (const auto& anyMask : requireField(object, "any_objects_present").asArray()) {
@@ -1674,16 +1682,20 @@ bool matchesPatternAt(const Session& session, const Pattern& pattern, int32_t ti
     const int32_t* movements = getCellMovementsPtr(session, tileIndex);
     const MaskWord* arena    = game.maskArena.data();
 
-    const MaskWord* objectsPresent = arena + pattern.objectsPresent;
-    for (uint32_t w = 0; w < objectWordCount; ++w) {
-        if ((objects[w] & objectsPresent[w]) != objectsPresent[w]) {
-            return false;
+    if (pattern.hasObjectsPresent) {
+        const MaskWord* objectsPresent = arena + pattern.objectsPresent;
+        for (uint32_t w = 0; w < objectWordCount; ++w) {
+            if ((objects[w] & objectsPresent[w]) != objectsPresent[w]) {
+                return false;
+            }
         }
     }
-    const MaskWord* objectsMissing = arena + pattern.objectsMissing;
-    for (uint32_t w = 0; w < objectWordCount; ++w) {
-        if ((objects[w] & objectsMissing[w]) != 0) {
-            return false;
+    if (pattern.hasObjectsMissing) {
+        const MaskWord* objectsMissing = arena + pattern.objectsMissing;
+        for (uint32_t w = 0; w < objectWordCount; ++w) {
+            if ((objects[w] & objectsMissing[w]) != 0) {
+                return false;
+            }
         }
     }
     for (uint32_t i = 0; i < pattern.anyObjectsCount; ++i) {
@@ -1700,16 +1712,20 @@ bool matchesPatternAt(const Session& session, const Pattern& pattern, int32_t ti
             return false;
         }
     }
-    const MaskWord* movementsPresent = arena + pattern.movementsPresent;
-    for (uint32_t w = 0; w < movementWordCount; ++w) {
-        if ((movements[w] & movementsPresent[w]) != movementsPresent[w]) {
-            return false;
+    if (pattern.hasMovementsPresent) {
+        const MaskWord* movementsPresent = arena + pattern.movementsPresent;
+        for (uint32_t w = 0; w < movementWordCount; ++w) {
+            if ((movements[w] & movementsPresent[w]) != movementsPresent[w]) {
+                return false;
+            }
         }
     }
-    const MaskWord* movementsMissing = arena + pattern.movementsMissing;
-    for (uint32_t w = 0; w < movementWordCount; ++w) {
-        if ((movements[w] & movementsMissing[w]) != 0) {
-            return false;
+    if (pattern.hasMovementsMissing) {
+        const MaskWord* movementsMissing = arena + pattern.movementsMissing;
+        for (uint32_t w = 0; w < movementWordCount; ++w) {
+            if ((movements[w] & movementsMissing[w]) != 0) {
+                return false;
+            }
         }
     }
     addCounter(gRuntimeCounters.patternMatches);
