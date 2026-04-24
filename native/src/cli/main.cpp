@@ -273,6 +273,17 @@ bool replayInputTokens(ps_session* session, const std::vector<std::string>& toke
         }
         if (token == "restart") {
             (void)ps_session_restart(session);
+            for (int againPass = 0; againPass < 500 && ps_session_pending_again(session); ++againPass) {
+                const ps_step_result stepResult = ps_session_tick(session);
+                if (outSounds && stepResult.audio_event_count > 0 && stepResult.audio_events) {
+                    for (size_t i = 0; i < stepResult.audio_event_count; ++i) {
+                        const ps_audio_event& event = stepResult.audio_events[i];
+                        if (event.kind && event.kind[0] != '\0') {
+                            outSounds->push_back(event.kind);
+                        }
+                    }
+                }
+            }
             continue;
         }
         const auto input = parseInputToken(token);
@@ -911,7 +922,8 @@ bool compareSnapshot(const TraceSnapshot& expected, ps_session* session, const p
             ok = false;
         }
     }
-    if (stepResult) {
+    const bool skipTraceAudio = std::getenv("PS_TRACE_IGNORE_AUDIO") != nullptr;
+    if (!skipTraceAudio && stepResult) {
         if (stepResult->audio_event_count != expected.newSounds.size()) {
             stream << "snapshot[" << snapshotIndex << "] audio event count mismatch: actual="
                    << stepResult->audio_event_count << " expected=" << expected.newSounds.size() << "\n";
@@ -941,7 +953,7 @@ bool compareSnapshot(const TraceSnapshot& expected, ps_session* session, const p
                 }
             }
         }
-    } else if (!expected.newSounds.empty()) {
+    } else if (!skipTraceAudio && !expected.newSounds.empty()) {
         stream << "snapshot[" << snapshotIndex << "] expected audio events but no step result was provided\n";
         ok = false;
     }
@@ -953,7 +965,8 @@ int diffTraceAgainstSnapshots(
     const std::vector<TraceSnapshot>& snapshots,
     std::ostream& errorStream,
     bool printSuccessSummary,
-    const std::optional<std::string>& loadedLevelSeed = std::nullopt
+    const std::optional<std::string>& loadedLevelSeed = std::nullopt,
+    const std::optional<int32_t>& levelToLoad = std::nullopt
 ) {
     ps_session* session = nullptr;
     ps_error* error = nullptr;
@@ -963,6 +976,15 @@ int diffTraceAgainstSnapshots(
         return 1;
     }
     std::unique_ptr<ps_session, decltype(&ps_session_destroy)> sessionHolder(session, ps_session_destroy);
+    ps_session_set_unit_testing(session, true);
+
+    if (levelToLoad.has_value()) {
+        if (!ps_session_load_level(session, *levelToLoad, &error)) {
+            errorStream << ps_error_message(error) << "\n";
+            ps_free_error(error);
+            return 1;
+        }
+    }
 
     if (snapshots.empty()) {
         errorStream << "Trace has no snapshots\n";
@@ -1039,6 +1061,7 @@ int checkTraceAgainstSnapshots(ps_game* game, const TraceFile& traceFile, std::o
         return 1;
     }
     std::unique_ptr<ps_session, decltype(&ps_session_destroy)> sessionHolder(session, ps_session_destroy);
+    ps_session_set_unit_testing(session, true);
 
     const auto& snapshots = traceFile.snapshots;
     if (snapshots.empty()) {
@@ -1536,6 +1559,7 @@ int profileSimulationsCommand(const std::string& manifestPath, int argc, char** 
                     break;
                 }
                 std::unique_ptr<ps_session, decltype(&ps_session_destroy)> sessionHolder(session, ps_session_destroy);
+                ps_session_set_unit_testing(session, true);
                 if (profileTimers) {
                     profileSessionCreateUs += std::chrono::duration_cast<std::chrono::microseconds>(
                                                   std::chrono::steady_clock::now() - sessionStart)
@@ -2121,6 +2145,7 @@ SimulationCaseResult runSimulationCorpusCase(const SimulationCorpusCase& testCas
     }
     result.timing.sessionCreateUs = elapsedMicrosSince(phaseStart);
     std::unique_ptr<ps_session, decltype(&ps_session_destroy)> session(rawSession, ps_session_destroy);
+    ps_session_set_unit_testing(session.get(), true);
 
     phaseStart = std::chrono::steady_clock::now();
     if (!ps_session_load_level(session.get(), testCase.targetLevel, &error)) {
@@ -2267,12 +2292,14 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
         result = runCommandForGame(game);
     } else if (!finalOnly) {
         const std::optional<std::string> sessionSeed = nativeCompile ? cliLoadedLevelSeed : std::nullopt;
+        const std::optional<int32_t> traceLevel = nativeCompile ? requestedLevel : std::optional<int32_t>{};
         result = diffTraceAgainstSnapshots(
             game,
             loadTraceSnapshotsFromJsonText(runTraceExporterAndCaptureJson(sourcePath, traceArgs)),
             std::cerr,
             true,
-            sessionSeed
+            sessionSeed,
+            traceLevel
         );
     } else {
         ps_session* session = nullptr;
@@ -3121,12 +3148,19 @@ int diffTraceSourceCommand(const std::string& sourcePath, int argc, char** argv)
         }
     }
     const std::optional<std::string> sessionSeed = nativeCompile ? findArgValue(traceArgs, "--seed") : std::nullopt;
+    std::optional<int32_t> levelToLoad;
+    if (nativeCompile) {
+        if (const std::optional<std::string> level = findArgValue(traceArgs, "--level"); level.has_value()) {
+            levelToLoad = static_cast<int32_t>(std::stoi(*level));
+        }
+    }
     const int result = diffTraceAgainstSnapshots(
         game,
         loadTraceSnapshotsFromJsonText(runTraceExporterAndCaptureJson(sourcePath, traceArgs)),
         std::cerr,
         true,
-        sessionSeed
+        sessionSeed,
+        levelToLoad
     );
     ps_free_game(game);
     return result;

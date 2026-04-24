@@ -382,9 +382,12 @@ void tryPlaySimpleSound(Session& session, std::string_view soundName) {
     appendUiAudioEvent(session, it->second, "ui");
 }
 
-void processOutputCommands(Session& session, const CommandState& commands) {
+void processOutputCommands(Session& session, const CommandState& commands, bool suppressMessages = false) {
     for (const auto& command : commands.queue) {
         if (command == "message") {
+            if (suppressMessages || session.suppressRuleMessages) {
+                continue;
+            }
             session.preparedSession.messageText = commands.messageText;
             session.preparedSession.textMode = true;
             session.preparedSession.titleScreen = false;
@@ -3999,7 +4002,6 @@ bool restart(Session& session) {
     pushUndoSnapshot(session);
     restoreRestartTarget(session);
     runRulesOnLevelStart(session);
-    settlePendingAgain(session);
     return true;
 }
 
@@ -4313,7 +4315,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
 
     tryPlayMaskSounds(session, session.game->sfxCreationMasks, session.pendingCreateMask, "create");
     tryPlayMaskSounds(session, session.game->sfxDestructionMasks, session.pendingDestroyMask, "destroy");
-    processOutputCommands(session, commands);
+    processOutputCommands(session, commands, commandQueueContains(commands, "restart"));
 
     if (commandQueueContains(commands, "restart") && !options.ignoreRestartCommand) {
         if (!options.pushUndo) {
@@ -4321,7 +4323,6 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         }
         restoreRestartTarget(session);
         runRulesOnLevelStart(session);
-        settlePendingAgain(session);
         tryPlaySimpleSound(session, "restart");
     }
 

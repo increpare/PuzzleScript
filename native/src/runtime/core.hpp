@@ -391,6 +391,7 @@ struct Session {
     std::vector<ps_audio_event> lastUiAudioEvents;
     bool canUndo = false;
     bool pendingAgain = false;
+    bool suppressRuleMessages = false;
     RandomState randomState;
     SimdBackend backend = SimdBackend::Scalar;
 };

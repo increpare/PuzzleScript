@@ -182,6 +182,13 @@ void ps_session_destroy(ps_session* session) {
     delete session;
 }
 
+void ps_session_set_unit_testing(ps_session* session, bool enabled) {
+    if (session == nullptr || !session->impl) {
+        return;
+    }
+    session->impl->suppressRuleMessages = enabled;
+}
+
 bool ps_session_load_level(ps_session* session, int32_t level_index, ps_error** out_error) {
     if (out_error) {
         *out_error = nullptr;

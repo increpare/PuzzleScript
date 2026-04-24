@@ -114,6 +114,7 @@ bool ps_session_create_with_loaded_level_seed(
     ps_error** out_error);
 bool ps_session_clone(const ps_session* session, ps_session** out_session, ps_error** out_error);
 void ps_session_destroy(ps_session* session);
+void ps_session_set_unit_testing(ps_session* session, bool enabled);
 bool ps_session_load_level(ps_session* session, int32_t level_index, ps_error** out_error);
 ps_step_result ps_session_step(ps_session* session, ps_input input);
 ps_step_result ps_session_tick(ps_session* session);
