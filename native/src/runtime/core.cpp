@@ -1954,18 +1954,19 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     return true;
 }
 
-std::vector<int32_t> collectRowMatches(
+void collectRowMatchesInto(
     const Session& session,
     const std::vector<Pattern>& row,
     int32_t direction,
     const int32_t* rowObjectMask,
     uint32_t rowObjectMaskWords,
     const int32_t* rowMovementMask,
-    uint32_t rowMovementMaskWords
+    uint32_t rowMovementMaskWords,
+    std::vector<int32_t>& matches
 ) {
-    std::vector<int32_t> matches;
+    matches.clear();
     if (row.empty()) {
-        return matches;
+        return;
     }
 
     const int32_t len = static_cast<int32_t>(row.size());
@@ -1987,19 +1988,19 @@ std::vector<int32_t> collectRowMatches(
             xmax -= (len - 1);
             break;
         default:
-            return matches;
+            return;
     }
 
     const bool horizontal = direction > 2;
     const auto [dx, dy] = directionMaskToDelta(direction);
     const int32_t delta = dx * session.liveLevel.height + dy;
     if (delta == 0) {
-        return matches;
+        return;
     }
 
     if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, session.boardMask.data(), session.boardMask.size())
         || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, session.boardMovementMask.data(), session.boardMovementMask.size())) {
-        return matches;
+        return;
     }
 
     if (horizontal) {
@@ -2051,7 +2052,28 @@ std::vector<int32_t> collectRowMatches(
             }
         }
     }
+}
 
+std::vector<int32_t> collectRowMatches(
+    const Session& session,
+    const std::vector<Pattern>& row,
+    int32_t direction,
+    const int32_t* rowObjectMask,
+    uint32_t rowObjectMaskWords,
+    const int32_t* rowMovementMask,
+    uint32_t rowMovementMaskWords
+) {
+    std::vector<int32_t> matches;
+    collectRowMatchesInto(
+        session,
+        row,
+        direction,
+        rowObjectMask,
+        rowObjectMaskWords,
+        rowMovementMask,
+        rowMovementMaskWords,
+        matches
+    );
     return matches;
 }
 
@@ -2286,9 +2308,11 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                 : kNullMaskOffset;
             const int32_t* rowMovementMask = maskPtr(game, rowMovementOffset);
             const uint32_t rowMovementMaskWords = rowMovementMask != nullptr ? game.movementWordCount : 0;
-            auto matches = collectRowMatches(session, row, rule.direction,
-                                             rowObjectMask, game.wordCount,
-                                             rowMovementMask, rowMovementMaskWords);
+            std::vector<int32_t>& matches = session.singleRowMatchScratch;
+            collectRowMatchesInto(session, row, rule.direction,
+                                  rowObjectMask, game.wordCount,
+                                  rowMovementMask, rowMovementMaskWords,
+                                  matches);
             if (matches.empty()) {
                 if (ruleDebugLineFilterMatches(rule.lineNumber)) {
                     const std::vector<int32_t> rowObjectMaskCopy = arenaCopy(game, rowObjectOffset, game.wordCount);

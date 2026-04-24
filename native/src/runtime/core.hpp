@@ -314,6 +314,7 @@ struct Session {
     std::vector<int32_t> replacementCreatedScratch;
     std::vector<int32_t> replacementDestroyedScratch;
     std::vector<int32_t> replacementRigidMaskScratch;
+    std::vector<int32_t> singleRowMatchScratch;
     std::vector<UndoSnapshot> undoStack;
     std::vector<ps_audio_event> lastAudioEvents;
     bool canUndo = false;
