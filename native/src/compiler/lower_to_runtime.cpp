@@ -2273,11 +2273,21 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                             repl.randomEntityMask = storeMaskWords(*game, randomEntityMask);
                             repl.randomEntityMaskWidth = game->wordCount;
                             repl.hasRandomEntityMask = true;
+                            for (int32_t objectId = 0; objectId < game->objectCount; ++objectId) {
+                                if (maskHasBit(randomEntityMask, objectId)) {
+                                    repl.randomEntityChoices.push_back(objectId);
+                                }
+                            }
                         }
                         if (anyNonZero(randomDirMask)) {
                             repl.randomDirMask = storeMaskWords(*game, randomDirMask);
                             repl.randomDirMaskWidth = game->movementWordCount;
                             repl.hasRandomDirMask = true;
+                            for (int32_t layer = 0; layer < game->layerCount; ++layer) {
+                                if (getShiftedMask5(randomDirMask, 5 * layer) != 0) {
+                                    repl.randomDirLayers.push_back(layer);
+                                }
+                            }
                         }
                         if (anyNonZero(objectsClear) || anyNonZero(objectsSet) || anyNonZero(movementsClear)
                             || anyNonZero(movementsSet) || anyNonZero(movementsLayerMask)

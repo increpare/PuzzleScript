@@ -1079,12 +1079,33 @@ Replacement parseReplacement(Game& game, const json::Value& value) {
         auto words = parseMaskVector(requireField(object, "random_entity_mask"));
         replacement.randomEntityMaskWidth = static_cast<uint32_t>(words.size());
         replacement.hasRandomEntityMask = anyBitsSet(words);
+        if (replacement.hasRandomEntityMask) {
+            for (int32_t objectId = 0; objectId < game.objectCount; ++objectId) {
+                const uint32_t word = maskWordIndex(static_cast<uint32_t>(objectId));
+                if (word < replacement.randomEntityMaskWidth
+                    && (words[static_cast<size_t>(word)] & maskBit(static_cast<uint32_t>(objectId))) != 0) {
+                    replacement.randomEntityChoices.push_back(objectId);
+                }
+            }
+        }
         replacement.randomEntityMask = storeMaskWords(game, words);
     }
     {
         auto words = parseMaskVector(requireField(object, "random_dir_mask"));
         replacement.randomDirMaskWidth = static_cast<uint32_t>(words.size());
         replacement.hasRandomDirMask = anyBitsSet(words);
+        if (replacement.hasRandomDirMask) {
+            for (int32_t layer = 0; layer < game.layerCount; ++layer) {
+                const uint32_t word = movementWordIndexForLayer(static_cast<uint32_t>(layer));
+                const uint32_t bit = movementBitShiftForLayer(static_cast<uint32_t>(layer));
+                const int32_t dirBits = word < replacement.randomDirMaskWidth
+                    ? static_cast<int32_t>((words[static_cast<size_t>(word)] >> bit) & 0x1F)
+                    : 0;
+                if (dirBits != 0) {
+                    replacement.randomDirLayers.push_back(layer);
+                }
+            }
+        }
         replacement.randomDirMask = storeMaskWords(game, words);
     }
     return replacement;
@@ -2019,14 +2040,7 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     }
 
     if (replacement.hasRandomEntityMask) {
-        std::vector<int32_t> choices;
-        for (int32_t objectId = 0; objectId < session.game->objectCount; ++objectId) {
-            const uint32_t word = maskWordIndex(static_cast<uint32_t>(objectId));
-            if (word < static_cast<int32_t>(randomEntityMaskWidth)
-                && (randomEntityMask[static_cast<size_t>(word)] & maskBit(static_cast<uint32_t>(objectId))) != 0) {
-                choices.push_back(objectId);
-            }
-        }
+        const std::vector<int32_t>& choices = replacement.randomEntityChoices;
         if (!choices.empty()) {
             const double randomValue = randomUniform(session.randomState);
             const size_t chosen = std::min(
@@ -2079,7 +2093,7 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     }
 
     if (replacement.hasRandomDirMask) {
-        for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
+        for (const int32_t layer : replacement.randomDirLayers) {
             const int32_t shift = 5 * layer;
             const uint32_t wordIdx = movementWordIndexForLayer(static_cast<uint32_t>(layer));
             const uint32_t bitIdx = movementBitShiftForLayer(static_cast<uint32_t>(layer));

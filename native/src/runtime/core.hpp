@@ -164,6 +164,8 @@ struct Replacement {
     bool hasMovementsLayerMask = false;
     bool hasRandomEntityMask   = false;
     bool hasRandomDirMask      = false;
+    std::vector<int32_t> randomEntityChoices;
+    std::vector<int32_t> randomDirLayers;
 };
 
 struct Pattern {
