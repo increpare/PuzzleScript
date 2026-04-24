@@ -1947,6 +1947,15 @@ struct SimulationCaseResult {
     SimulationCaseTiming timing;
 };
 
+struct SimulationCompileCache {
+    std::vector<std::shared_ptr<ps_game>> games;
+    std::vector<std::string> errors;
+    std::vector<int64_t> compileUs;
+    int64_t totalCompileUs = 0;
+    size_t gamesLoaded = 0;
+    size_t gamesReused = 0;
+};
+
 struct SimulationTimingTotals {
     int64_t testdataParseUs = 0;
     int64_t sourceCompileUs = 0;
@@ -2023,23 +2032,88 @@ std::vector<SimulationCorpusCase> parseSimulationCorpusCases(const puzzlescript:
     return cases;
 }
 
-SimulationCaseResult runSimulationCorpusCase(const SimulationCorpusCase& testCase) {
-    SimulationCaseResult result;
+SimulationCompileCache compileSimulationCorpusGames(const std::vector<SimulationCorpusCase>& cases, size_t jobs) {
+    SimulationCompileCache cache;
+    cache.games.resize(cases.size());
+    cache.errors.resize(cases.size());
+    cache.compileUs.resize(cases.size(), 0);
+    std::unordered_map<std::string, size_t> sourceToUniqueIndex;
+    sourceToUniqueIndex.reserve(cases.size());
+    std::vector<size_t> caseToUniqueIndex(cases.size(), 0);
+    std::vector<std::string> uniqueSources;
+    std::vector<std::string> uniqueNames;
+    uniqueSources.reserve(cases.size());
+    uniqueNames.reserve(cases.size());
+    for (size_t caseIndex = 0; caseIndex < cases.size(); ++caseIndex) {
+        const SimulationCorpusCase& testCase = cases[caseIndex];
+        const auto [it, inserted] = sourceToUniqueIndex.emplace(testCase.source, uniqueSources.size());
+        caseToUniqueIndex[caseIndex] = it->second;
+        if (inserted) {
+            uniqueSources.push_back(testCase.source);
+            uniqueNames.push_back(testCase.name);
+        }
+    }
 
-    ps_game* rawGame = nullptr;
-    auto phaseStart = std::chrono::steady_clock::now();
-    if (!loadGameFromSourceText(testCase.source, &rawGame)) {
-        result.timing.sourceCompileUs = elapsedMicrosSince(phaseStart);
+    std::vector<std::shared_ptr<ps_game>> uniqueGames(uniqueSources.size());
+    std::vector<std::string> uniqueErrors(uniqueSources.size());
+    std::vector<int64_t> uniqueCompileUs(uniqueSources.size(), 0);
+    std::atomic<size_t> nextUnique{0};
+    const size_t compileJobs = std::max<size_t>(1, std::min(jobs, std::max<size_t>(uniqueSources.size(), 1)));
+    std::vector<std::future<void>> workers;
+    workers.reserve(compileJobs);
+    for (size_t workerIndex = 0; workerIndex < compileJobs; ++workerIndex) {
+        workers.push_back(std::async(std::launch::async, [&]() {
+            while (true) {
+                const size_t uniqueIndex = nextUnique.fetch_add(1, std::memory_order_relaxed);
+                if (uniqueIndex >= uniqueSources.size()) {
+                    break;
+                }
+
+                const auto phaseStart = std::chrono::steady_clock::now();
+                ps_game* rawGame = nullptr;
+                if (!loadGameFromSourceText(uniqueSources[uniqueIndex], &rawGame)) {
+                    uniqueCompileUs[uniqueIndex] = elapsedMicrosSince(phaseStart);
+                    uniqueErrors[uniqueIndex] = uniqueNames[uniqueIndex] + ": failed to compile source";
+                    continue;
+                }
+                uniqueCompileUs[uniqueIndex] = elapsedMicrosSince(phaseStart);
+                uniqueGames[uniqueIndex] = std::shared_ptr<ps_game>(rawGame, ps_free_game);
+            }
+        }));
+    }
+    for (auto& worker : workers) {
+        worker.get();
+    }
+
+    for (size_t uniqueIndex = 0; uniqueIndex < uniqueSources.size(); ++uniqueIndex) {
+        cache.totalCompileUs += uniqueCompileUs[uniqueIndex];
+        if (uniqueGames[uniqueIndex]) {
+            ++cache.gamesLoaded;
+        }
+    }
+    cache.gamesReused = cases.size() - uniqueSources.size();
+    for (size_t caseIndex = 0; caseIndex < cases.size(); ++caseIndex) {
+        const size_t uniqueIndex = caseToUniqueIndex[caseIndex];
+        cache.games[caseIndex] = uniqueGames[uniqueIndex];
+        cache.errors[caseIndex] = uniqueErrors[uniqueIndex].empty()
+            ? std::string{}
+            : cases[caseIndex].name + ": failed to compile source";
+        cache.compileUs[caseIndex] = uniqueCompileUs[uniqueIndex];
+    }
+    return cache;
+}
+
+SimulationCaseResult runSimulationCorpusCase(const SimulationCorpusCase& testCase, ps_game* game) {
+    SimulationCaseResult result;
+    if (game == nullptr) {
         result.error = testCase.name + ": failed to compile source";
         return result;
     }
-    result.timing.sourceCompileUs = elapsedMicrosSince(phaseStart);
-    std::unique_ptr<ps_game, decltype(&ps_free_game)> game(rawGame, ps_free_game);
 
     ps_session* rawSession = nullptr;
     ps_error* error = nullptr;
-    phaseStart = std::chrono::steady_clock::now();
-    if (!sessionCreateForGame(game.get(), testCase.seed, &rawSession, &error)) {
+    auto phaseStart = std::chrono::steady_clock::now();
+    if (!sessionCreateForGame(game, testCase.seed, &rawSession, &error)) {
         result.timing.sessionCreateUs = elapsedMicrosSince(phaseStart);
         result.error = testCase.name + ": " + ps_error_message(error);
         ps_free_error(error);
@@ -2274,6 +2348,7 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
     const auto root = loadJsDataArrayAsJson(testdataPath);
     const std::vector<SimulationCorpusCase> cases = parseSimulationCorpusCases(root);
     const int64_t testdataParseUs = elapsedMicrosSince(parseStartedAt);
+    const SimulationCompileCache compileCache = compileSimulationCorpusGames(cases, options.jobs);
     const size_t totalChecks = cases.size() * options.repeat;
     std::vector<SimulationCaseResult> results(totalChecks);
     size_t passed = 0;
@@ -2286,8 +2361,13 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
 
     if (options.jobs <= 1 || totalChecks <= 1) {
         for (size_t checkIndex = 0; checkIndex < totalChecks; ++checkIndex) {
-            const SimulationCorpusCase& testCase = cases[checkIndex % cases.size()];
-            results[checkIndex] = runSimulationCorpusCase(testCase);
+            const size_t caseIndex = checkIndex % cases.size();
+            const SimulationCorpusCase& testCase = cases[caseIndex];
+            if (!compileCache.errors[caseIndex].empty()) {
+                results[checkIndex].error = compileCache.errors[caseIndex];
+            } else {
+                results[checkIndex] = runSimulationCorpusCase(testCase, compileCache.games[caseIndex].get());
+            }
             if (results[checkIndex].passed) {
                 ++passed;
             } else {
@@ -2315,8 +2395,13 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                     if (checkIndex >= totalChecks) {
                         break;
                     }
-                    const SimulationCorpusCase& testCase = cases[checkIndex % cases.size()];
-                    results[checkIndex] = runSimulationCorpusCase(testCase);
+                    const size_t caseIndex = checkIndex % cases.size();
+                    const SimulationCorpusCase& testCase = cases[caseIndex];
+                    if (!compileCache.errors[caseIndex].empty()) {
+                        results[checkIndex].error = compileCache.errors[caseIndex];
+                    } else {
+                        results[checkIndex] = runSimulationCorpusCase(testCase, compileCache.games[caseIndex].get());
+                    }
                 }
             }));
         }
@@ -2346,18 +2431,22 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
 
     const int64_t wallUs = elapsedMicrosSince(wallStartedAt);
     const SimulationTimingTotals timings = sumSimulationTimings(results, testdataParseUs);
+    SimulationTimingTotals reportedTimings = timings;
+    reportedTimings.sourceCompileUs += compileCache.totalCompileUs;
     std::vector<int64_t> replayUsByRepeat;
     std::vector<int64_t> sourceCompileUsByRepeat;
     if (options.repeat > 0 && !cases.empty()) {
         replayUsByRepeat.assign(options.repeat, 0);
         sourceCompileUsByRepeat.assign(options.repeat, 0);
+        const int64_t amortizedSourceCompileUs = compileCache.totalCompileUs
+            / static_cast<int64_t>(std::max<size_t>(options.repeat, 1));
+        std::fill(sourceCompileUsByRepeat.begin(), sourceCompileUsByRepeat.end(), amortizedSourceCompileUs);
         for (size_t checkIndex = 0; checkIndex < totalChecks; ++checkIndex) {
             const size_t repeatIndex = checkIndex / cases.size();
             if (repeatIndex >= options.repeat) {
                 continue;
             }
             replayUsByRepeat[repeatIndex] += results[checkIndex].timing.replayUs;
-            sourceCompileUsByRepeat[repeatIndex] += results[checkIndex].timing.sourceCompileUs;
         }
     }
     std::cout << "cpp_simulation_tests_direct passed=" << passed << " failed=" << failed
@@ -2371,15 +2460,17 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                   << " checks=" << totalChecks
                   << " jobs=" << options.jobs
                   << " wall_ms=" << usToMs(wallUs)
-                  << " testdata_parse_ms=" << usToMs(timings.testdataParseUs)
-                  << " source_compile_ms=" << usToMs(timings.sourceCompileUs)
-                  << " session_create_ms=" << usToMs(timings.sessionCreateUs)
-                  << " level_load_ms=" << usToMs(timings.levelLoadUs)
-                  << " replay_ms=" << usToMs(timings.replayUs)
-                  << " replay_avg_ms=" << usToMs(timings.replayUs / static_cast<int64_t>(std::max<size_t>(options.repeat, 1)))
+                  << " games_loaded=" << compileCache.gamesLoaded
+                  << " games_reused=" << compileCache.gamesReused
+                  << " testdata_parse_ms=" << usToMs(reportedTimings.testdataParseUs)
+                  << " source_compile_ms=" << usToMs(reportedTimings.sourceCompileUs)
+                  << " session_create_ms=" << usToMs(reportedTimings.sessionCreateUs)
+                  << " level_load_ms=" << usToMs(reportedTimings.levelLoadUs)
+                  << " replay_ms=" << usToMs(reportedTimings.replayUs)
+                  << " replay_avg_ms=" << usToMs(reportedTimings.replayUs / static_cast<int64_t>(std::max<size_t>(options.repeat, 1)))
                   << " replay_median_ms=" << usToMs(medianMicros(replayUsByRepeat))
-                  << " serialize_ms=" << usToMs(timings.serializeUs)
-                  << " source_compile_avg_ms=" << usToMs(timings.sourceCompileUs / static_cast<int64_t>(std::max<size_t>(options.repeat, 1)))
+                  << " serialize_ms=" << usToMs(reportedTimings.serializeUs)
+                  << " source_compile_avg_ms=" << usToMs(reportedTimings.sourceCompileUs / static_cast<int64_t>(std::max<size_t>(options.repeat, 1)))
                   << " source_compile_median_ms=" << usToMs(medianMicros(sourceCompileUsByRepeat))
                   << " rules_visited=" << counters.rules_visited
                   << " rules_skipped_by_mask=" << counters.rules_skipped_by_mask
