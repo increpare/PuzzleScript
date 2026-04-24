@@ -103,7 +103,7 @@ $(JS_PARITY_MANIFEST): $(JS_PARITY_INPUTS)
 js-parity-data: $(JS_PARITY_MANIFEST)
 
 simulation_tests_cpp: build
-	$(PUZZLESCRIPT_CPP) test simulation-corpus src/tests/resources/testdata.js --progress-every 25
+	$(PUZZLESCRIPT_CPP) test simulation-corpus src/tests/resources/testdata.js --jobs auto --progress-every 0
 
 simulation_tests_cpp_js_parity: build $(JS_PARITY_MANIFEST)
 	$(NODE) src/tests/run_native_trace_suite.js $(JS_PARITY_MANIFEST) --cli $(PUZZLESCRIPT_CPP) --progress-every 1 --timeout-ms 45000
