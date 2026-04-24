@@ -1,0 +1,82 @@
+{
+  "name": "puzzlescript-vscode",
+  "displayName": "PuzzleScript",
+  "description": "PuzzleScript editor support powered by the existing PuzzleScript JavaScript editor logic.",
+  "version": "0.1.0",
+  "publisher": "puzzlescript",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:puzzlescript",
+    "onStartupFinished"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "PuzzleScript",
+      "properties": {
+        "puzzlescript.repoRoot": {
+          "type": "string",
+          "default": "",
+          "description": "Path to a PuzzleScript repository checkout. Empty uses the repository root when developing this extension from the PuzzleScript tree."
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "puzzlescript",
+        "aliases": [
+          "PuzzleScript",
+          "puzzlescript"
+        ],
+        "extensions": [
+          ".puzzlescript",
+          ".ps"
+        ],
+        "configuration": "./language-configuration/language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "puzzlescript",
+        "scopeName": "source.puzzlescript",
+        "path": "./syntaxes/puzzlescript.tmLanguage.json"
+      }
+    ],
+    "semanticTokenTypes": [
+      { "id": "psHeader", "superType": "keyword", "description": "PuzzleScript section header or separator" },
+      { "id": "psName", "superType": "variable", "description": "PuzzleScript object or legend name" },
+      { "id": "psColor", "superType": "number", "description": "PuzzleScript color literal or sprite color index" },
+      { "id": "psAssignment", "superType": "operator", "description": "PuzzleScript legend assignment" },
+      { "id": "psLogic", "superType": "keyword", "description": "PuzzleScript logic word" },
+      { "id": "psSound", "superType": "event", "description": "PuzzleScript sound token" },
+      { "id": "psDirection", "superType": "enumMember", "description": "PuzzleScript direction token" },
+      { "id": "psArrow", "superType": "operator", "description": "PuzzleScript rule arrow" },
+      { "id": "psBracket", "superType": "operator", "description": "PuzzleScript rule bracket or separator" },
+      { "id": "psCommand", "superType": "keyword", "description": "PuzzleScript rule command" },
+      { "id": "psMessage", "superType": "string", "description": "PuzzleScript message text" },
+      { "id": "psMetadata", "superType": "property", "description": "PuzzleScript metadata" },
+      { "id": "psLevel", "superType": "string", "description": "PuzzleScript level glyph" },
+      { "id": "psComment", "superType": "comment", "description": "PuzzleScript comment" },
+      { "id": "psError", "superType": "regexp", "description": "PuzzleScript parser error token" }
+    ],
+    "semanticTokenModifiers": [
+      { "id": "spriteColor", "description": "Token carries a concrete PuzzleScript palette color" },
+      { "id": "boldColor", "description": "Token should be emphasized as a sprite color index" },
+      { "id": "fadeColor", "description": "Token is a transparent or faded sprite cell" },
+      { "id": "metadataText", "description": "Token is metadata value text" },
+      { "id": "soundEvent", "description": "Token is a sound event" },
+      { "id": "soundVerb", "description": "Token is a sound verb" },
+      { "id": "messageVerb", "description": "Token is a message command" }
+    ]
+  },
+  "scripts": {
+    "test": "node ./test/editor-intelligence.test.js"
+  },
+  "devDependencies": {}
+}

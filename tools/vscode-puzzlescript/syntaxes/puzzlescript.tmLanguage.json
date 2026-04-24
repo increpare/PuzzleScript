@@ -1,0 +1,35 @@
+{
+  "scopeName": "source.puzzlescript",
+  "name": "PuzzleScript",
+  "patterns": [
+    {
+      "name": "comment.block.puzzlescript",
+      "begin": "\\(",
+      "end": "\\)"
+    },
+    {
+      "name": "keyword.control.section.puzzlescript",
+      "match": "(?i)^\\s*(objects|legend|sounds|collisionlayers|rules|winconditions|levels)\\b"
+    },
+    {
+      "name": "keyword.operator.arrow.puzzlescript",
+      "match": "->"
+    },
+    {
+      "name": "keyword.operator.bracket.puzzlescript",
+      "match": "\\[|\\]|\\||\\+|="
+    },
+    {
+      "name": "keyword.other.direction.puzzlescript",
+      "match": "(?i)\\b(up|down|left|right|horizontal|vertical|orthogonal|moving|stationary|parallel|perpendicular|randomdir|random|action|late|rigid|no)\\b|[\\^v<>]"
+    },
+    {
+      "name": "keyword.other.command.puzzlescript",
+      "match": "(?i)\\b(cancel|checkpoint|restart|win|message|again|sfx[0-9]+)\\b"
+    },
+    {
+      "name": "constant.other.color.puzzlescript",
+      "match": "(?i)#(?:[0-9a-f]{3}){1,2}\\b|\\b(black|white|gr[ae]y|darkgr[ae]y|lightgr[ae]y|red|darkred|lightred|brown|darkbrown|lightbrown|orange|yellow|green|darkgreen|lightgreen|blue|lightblue|darkblue|purple|pink|transparent)\\b"
+    }
+  ]
+}
