@@ -4391,8 +4391,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         : std::vector<int32_t>{};
 
     session.pendingAgain = false;
-    clearMovementState(session);
-    const bool seeded = directionMask != 0 && seedPlayerMovements(session, directionMask);
+    bool seeded = false;
     bool ruleChanged = false;
     bool moved = false;
     bool lateRuleChanged = false;
@@ -4404,7 +4403,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         restoreSnapshot(session, turnStart, false);
         clearMovementState(session);
         if (directionMask != 0) {
-            (void)seedPlayerMovements(session, directionMask);
+            seeded = seedPlayerMovements(session, directionMask);
         }
         rebuildMasks(session);
         const bool ruleChangedThisPass = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands, &bannedGroups);
