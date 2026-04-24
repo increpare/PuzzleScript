@@ -2467,7 +2467,7 @@ using RowMatch = std::vector<int32_t>;
 using RuleMatch = std::vector<RowMatch>;
 
 std::vector<RowMatch> collectEllipsisRowMatches(
-    const Session& session,
+    Session& session,
     const std::vector<Pattern>& row,
     int32_t direction,
     const MaskWord* rowObjectMask,
@@ -2493,7 +2493,8 @@ std::vector<RowMatch> collectEllipsisRowMatches(
     }
     const bool horizontal = direction > 2;
     const int32_t lineCount = horizontal ? session.liveLevel.height : session.liveLevel.width;
-    std::vector<uint8_t> linePossible(static_cast<size_t>(std::max(lineCount, 0)), 0);
+    std::vector<uint8_t>& linePossible = session.ellipsisLinePossibleScratch;
+    linePossible.assign(static_cast<size_t>(std::max(lineCount, 0)), 0);
     for (int32_t line = 0; line < lineCount; ++line) {
         const MaskWord* lineObjects = horizontal
             ? session.rowMasks.data() + static_cast<size_t>(line * session.game->strideObject)
@@ -2520,13 +2521,15 @@ std::vector<RowMatch> collectEllipsisRowMatches(
         }
     };
 
-    std::vector<int32_t> minConcreteSuffix(row.size() + 1, 0);
+    std::vector<int32_t>& minConcreteSuffix = session.ellipsisMinConcreteSuffixScratch;
+    minConcreteSuffix.assign(row.size() + 1, 0);
     for (int32_t rowIndex = static_cast<int32_t>(row.size()) - 1; rowIndex >= 0; --rowIndex) {
         minConcreteSuffix[static_cast<size_t>(rowIndex)] = minConcreteSuffix[static_cast<size_t>(rowIndex + 1)]
             + (row[static_cast<size_t>(rowIndex)].kind == Pattern::Kind::Ellipsis ? 0 : 1);
     }
 
-    RowMatch positions;
+    RowMatch& positions = session.ellipsisPositionsScratch;
+    positions.clear();
     positions.reserve(static_cast<size_t>(concreteCount));
     for (int32_t tileIndex = 0; tileIndex < session.liveLevel.width * session.liveLevel.height; ++tileIndex) {
         addCounter(gRuntimeCounters.ellipsisScans);
@@ -2948,7 +2951,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
     return RuleApplyOutcome{changed, changed};
 }
 
-bool collectRandomRuleMatches(const Session& session, const Rule& rule, std::vector<RuleMatch>& outMatches) {
+bool collectRandomRuleMatches(Session& session, const Rule& rule, std::vector<RuleMatch>& outMatches) {
     // In JS, a "random rule group" runs random selection across *all* rules in the group,
     // regardless of whether individual rules are marked random.
     if (rule.patterns.empty()) {

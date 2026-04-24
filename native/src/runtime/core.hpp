@@ -380,6 +380,9 @@ struct Session {
     MaskVector replacementDestroyedScratch;
     MaskVector replacementRigidMaskScratch;
     std::vector<int32_t> singleRowMatchScratch;
+    std::vector<uint8_t> ellipsisLinePossibleScratch;
+    std::vector<int32_t> ellipsisMinConcreteSuffixScratch;
+    std::vector<int32_t> ellipsisPositionsScratch;
     std::vector<UndoSnapshot> undoStack;
     std::vector<ps_audio_event> lastAudioEvents;
     bool canUndo = false;
