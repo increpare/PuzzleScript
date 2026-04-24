@@ -373,6 +373,100 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         for (const auto& item : entry.items) items.push_back(toLowerAsciiCopy(item));
         propertyOf[toLowerAsciiCopy(entry.name)] = std::move(items);
     }
+    {
+        bool modified = true;
+        while (modified) {
+            modified = false;
+
+            std::vector<std::string> synonymKeys;
+            synonymKeys.reserve(synonymOf.size());
+            for (const auto& [name, _] : synonymOf) {
+                synonymKeys.push_back(name);
+            }
+            for (const auto& name : synonymKeys) {
+                auto it = synonymOf.find(name);
+                if (it == synonymOf.end()) {
+                    continue;
+                }
+                const std::string value = it->second;
+                if (const auto propIt = propertyOf.find(value); propIt != propertyOf.end()) {
+                    propertyOf[name] = propIt->second;
+                    synonymOf.erase(it);
+                    modified = true;
+                } else if (const auto aggIt = aggregateOf.find(value); aggIt != aggregateOf.end()) {
+                    aggregateOf[name] = aggIt->second;
+                    synonymOf.erase(it);
+                    modified = true;
+                } else if (const auto synIt = synonymOf.find(value); synIt != synonymOf.end()) {
+                    it->second = synIt->second;
+                }
+            }
+
+            std::vector<std::string> propertyKeys;
+            propertyKeys.reserve(propertyOf.size());
+            for (const auto& [name, _] : propertyOf) {
+                propertyKeys.push_back(name);
+            }
+            for (const auto& name : propertyKeys) {
+                auto it = propertyOf.find(name);
+                if (it == propertyOf.end()) {
+                    continue;
+                }
+                auto& values = it->second;
+                for (size_t i = 0; i < values.size(); ++i) {
+                    const std::string value = values[i];
+                    if (const auto synIt = synonymOf.find(value); synIt != synonymOf.end()) {
+                        values[i] = synIt->second;
+                        modified = true;
+                        continue;
+                    }
+                    const auto propIt = propertyOf.find(value);
+                    if (propIt != propertyOf.end()) {
+                        values.erase(values.begin() + static_cast<std::ptrdiff_t>(i));
+                        for (const auto& expanded : propIt->second) {
+                            if (std::find(values.begin(), values.end(), expanded) == values.end()) {
+                                values.push_back(expanded);
+                            }
+                        }
+                        modified = true;
+                        --i;
+                    }
+                }
+            }
+
+            std::vector<std::string> aggregateKeys;
+            aggregateKeys.reserve(aggregateOf.size());
+            for (const auto& [name, _] : aggregateOf) {
+                aggregateKeys.push_back(name);
+            }
+            for (const auto& name : aggregateKeys) {
+                auto it = aggregateOf.find(name);
+                if (it == aggregateOf.end()) {
+                    continue;
+                }
+                auto& values = it->second;
+                for (size_t i = 0; i < values.size(); ++i) {
+                    const std::string value = values[i];
+                    if (const auto synIt = synonymOf.find(value); synIt != synonymOf.end()) {
+                        values[i] = synIt->second;
+                        modified = true;
+                        continue;
+                    }
+                    const auto aggIt = aggregateOf.find(value);
+                    if (aggIt != aggregateOf.end()) {
+                        values.erase(values.begin() + static_cast<std::ptrdiff_t>(i));
+                        for (const auto& expanded : aggIt->second) {
+                            if (std::find(values.begin(), values.end(), expanded) == values.end()) {
+                                values.push_back(expanded);
+                            }
+                        }
+                        modified = true;
+                        --i;
+                    }
+                }
+            }
+        }
+    }
 
     // Mirrors compiler.js `propertiesSingleLayer`: OR-properties whose members all
     // share one collision layer (used to skip `concretizePropertyRule` explosion).
