@@ -56,6 +56,7 @@ set(PUZZLESCRIPT_COMPILER_PUBLIC_HEADERS
 )
 
 set(PUZZLESCRIPT_COMPILER_SOURCES
+  src/compiler/compile_diagnostics.cpp
   src/compiler/c_api.cpp
   src/compiler/diagnostic.cpp
   src/compiler/lower_to_runtime.cpp

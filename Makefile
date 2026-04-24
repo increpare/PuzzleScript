@@ -3,8 +3,8 @@
 #   make run game.txt      Build and play a PuzzleScript source file.
 #   make ctest             Run fast C++ smoke/unit tests registered with CMake.
 #   make js_parity_tests   Run C++ against the original JS test corpus.
-#   make simulation_tests  Run JS simulation tests and C++ mirrored simulation tests.
-#   make compilation_tests Run JS compiler tests and C++ mirrored compiler tests.
+#   make simulation_tests  Run JS simulation tests and direct C++ simulation tests.
+#   make compilation_tests Run JS compiler tests and direct C++ compiler tests.
 #   make profile_simulation_tests
 #                           Profile the C++ simulation replay workload.
 #   make tests             Run the full native correctness suite.
@@ -62,9 +62,9 @@ help:
 	@echo ""
 	@echo "Single-side test commands for timing:"
 	@echo "  make simulation_tests_js           Run JS simulation tests only"
-	@echo "  make simulation_tests_cpp          Run saved gameplay replay parity cases"
+	@echo "  make simulation_tests_cpp          Run C++ simulation corpus directly"
 	@echo "  make compilation_tests_js          Run JS compiler tests only"
-	@echo "  make compilation_tests_cpp         Run compiler diagnostics parity cases"
+	@echo "  make compilation_tests_cpp         Run C++ diagnostics corpus directly"
 	@echo "  make tests_js                      Run the original JavaScript test suite"
 	@echo ""
 	@echo "Direct executable after build:"
@@ -103,7 +103,7 @@ $(JS_PARITY_MANIFEST): $(JS_PARITY_INPUTS)
 js-parity-data: $(JS_PARITY_MANIFEST)
 
 simulation_tests_cpp: build
-	$(NODE) src/tests/run_simulation_tests_cpp_direct.js src/tests/resources/testdata.js --cli $(PUZZLESCRIPT_CPP) --progress-every 25
+	$(PUZZLESCRIPT_CPP) test simulation-corpus src/tests/resources/testdata.js --progress-every 25
 
 simulation_tests_cpp_js_parity: build $(JS_PARITY_MANIFEST)
 	$(NODE) src/tests/run_native_trace_suite.js $(JS_PARITY_MANIFEST) --cli $(PUZZLESCRIPT_CPP) --progress-every 1 --timeout-ms 45000
@@ -120,11 +120,11 @@ parser_corpus_errormessage_bundle: $(ERRORMESSAGE_PARSER_BUNDLE)
 
 parser_corpus_testdata_bundle: $(TESTDATA_PARSER_BUNDLE)
 
-compilation_tests_cpp: build $(ERRORMESSAGE_PARSER_BUNDLE)
-	$(PUZZLESCRIPT_CPP) diagnostics-parity "$(ERRORMESSAGE_PARSER_BUNDLE)"
+compilation_tests_cpp: build
+	$(PUZZLESCRIPT_CPP) test diagnostics-corpus src/tests/resources/errormessage_testdata.js --progress-every 50
 
 compilation_tests_cpp_direct: build
-	$(NODE) src/tests/run_compilation_tests_cpp_direct.js src/tests/resources/errormessage_testdata.js --cli $(PUZZLESCRIPT_CPP) --progress-every 50
+	$(PUZZLESCRIPT_CPP) test diagnostics-corpus src/tests/resources/errormessage_testdata.js --progress-every 50
 
 js_parity_tests: simulation_tests_cpp_js_parity compilation_tests_cpp
 

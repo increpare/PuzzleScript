@@ -1,5 +1,7 @@
 #include <array>
+#include <algorithm>
 #include <chrono>
+#include <cctype>
 #include <cstdint>
 #include <cstdlib>
 #include <filesystem>
@@ -63,6 +65,58 @@ std::string readFile(const std::filesystem::path& path) {
     std::ostringstream buffer;
     buffer << stream.rdbuf();
     return buffer.str();
+}
+
+std::string stripTrailingJsonCommas(std::string_view input) {
+    std::string out;
+    out.reserve(input.size());
+    bool inString = false;
+    bool escaped = false;
+    for (size_t index = 0; index < input.size(); ++index) {
+        const char ch = input[index];
+        if (inString) {
+            out.push_back(ch);
+            if (escaped) {
+                escaped = false;
+            } else if (ch == '\\') {
+                escaped = true;
+            } else if (ch == '"') {
+                inString = false;
+            }
+            continue;
+        }
+        if (ch == '"') {
+            inString = true;
+            out.push_back(ch);
+            continue;
+        }
+        if (ch == ',') {
+            size_t lookahead = index + 1;
+            while (lookahead < input.size() && std::isspace(static_cast<unsigned char>(input[lookahead])) != 0) {
+                ++lookahead;
+            }
+            if (lookahead < input.size() && (input[lookahead] == ']' || input[lookahead] == '}')) {
+                continue;
+            }
+        }
+        out.push_back(ch);
+    }
+    return out;
+}
+
+puzzlescript::json::Value loadJsDataArrayAsJson(const std::filesystem::path& path) {
+    const std::string text = readFile(path);
+    const size_t begin = text.find('[');
+    const size_t end = text.rfind(']');
+    if (begin == std::string::npos || end == std::string::npos || end < begin) {
+        throw std::runtime_error("Could not find JSON array in: " + path.string());
+    }
+    const std::string jsonish = stripTrailingJsonCommas(std::string_view(text).substr(begin, end - begin + 1));
+    puzzlescript::json::Value root = puzzlescript::json::parse(jsonish);
+    if (!root.isArray()) {
+        throw std::runtime_error("Expected top-level test data array in: " + path.string());
+    }
+    return root;
 }
 
 const puzzlescript::json::Value& requireField(const puzzlescript::json::Value::Object& object, std::string_view key) {
@@ -164,6 +218,25 @@ std::vector<std::string> loadInputTokensFromJsonText(const std::string& jsonText
         throw std::runtime_error("inputs-json must be a JSON array");
     }
     const auto& array = root.asArray();
+    tokens.reserve(array.size());
+    for (const auto& value : array) {
+        if (value.isString()) {
+            tokens.push_back(value.asString());
+        } else if (value.isInteger() || value.isDouble()) {
+            tokens.push_back(std::to_string(looseAsInt(value)));
+        } else {
+            tokens.push_back("0");
+        }
+    }
+    return tokens;
+}
+
+std::vector<std::string> inputTokensFromJsonArray(const puzzlescript::json::Value& root) {
+    if (!root.isArray()) {
+        throw std::runtime_error("input trace must be a JSON array");
+    }
+    const auto& array = root.asArray();
+    std::vector<std::string> tokens;
     tokens.reserve(array.size());
     for (const auto& value : array) {
         if (value.isString()) {
@@ -1803,6 +1876,33 @@ void ensureDefaultSourceLoad(std::vector<std::string>& args, bool addSettleAgain
 
 std::string jsonStringLiteral(std::string_view utf8);
 
+std::string removeAsciiWhitespace(std::string_view value) {
+    std::string out;
+    out.reserve(value.size());
+    for (unsigned char ch : value) {
+        if (std::isspace(ch) == 0) {
+            out.push_back(static_cast<char>(ch));
+        }
+    }
+    return out;
+}
+
+bool expectedDiagnosticsSubsequenceMatch(
+    const std::vector<std::string>& expected,
+    const std::vector<std::string>& actual
+) {
+    size_t expectedIndex = 0;
+    for (const auto& message : actual) {
+        if (expectedIndex >= expected.size()) {
+            break;
+        }
+        if (removeAsciiWhitespace(message) == removeAsciiWhitespace(expected[expectedIndex])) {
+            ++expectedIndex;
+        }
+    }
+    return expectedIndex == expected.size();
+}
+
 int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     std::vector<std::string> exporterArgs;
     std::vector<std::string> traceArgs;
@@ -1960,6 +2060,230 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     }
     ps_free_game(game);
     return result;
+}
+
+int simulationTestdataCommand(const std::filesystem::path& testdataPath, int argc, char** argv) {
+    size_t progressEvery = 25;
+    for (int index = 0; index < argc; ++index) {
+        const std::string arg = argv[index];
+        if (arg == "--progress-every" && index + 1 < argc) {
+            progressEvery = static_cast<size_t>(std::stoull(argv[++index]));
+        } else {
+            throw std::runtime_error("Unsupported simulation-testdata argument: " + arg);
+        }
+    }
+
+    const auto startedAt = std::chrono::steady_clock::now();
+    const auto root = loadJsDataArrayAsJson(testdataPath);
+    const auto& cases = root.asArray();
+    size_t passed = 0;
+    size_t failed = 0;
+
+    for (size_t caseIndex = 0; caseIndex < cases.size(); ++caseIndex) {
+        const auto& entryValue = cases[caseIndex];
+        if (!entryValue.isArray() || entryValue.asArray().size() < 2) {
+            std::cerr << "case[" << caseIndex << "]: malformed testdata entry\n";
+            ++failed;
+            continue;
+        }
+        const auto& entry = entryValue.asArray();
+        const std::string name = entry[0].isString() ? entry[0].asString() : ("case[" + std::to_string(caseIndex) + "]");
+        if (!entry[1].isArray()) {
+            std::cerr << name << ": malformed payload\n";
+            ++failed;
+            continue;
+        }
+        const auto& payload = entry[1].asArray();
+        if (payload.size() < 3 || !payload[0].isString() || !payload[2].isString()) {
+            std::cerr << name << ": malformed simulation payload\n";
+            ++failed;
+            continue;
+        }
+
+        std::string source = payload[0].asString();
+        if (source.empty() || source.back() != '\n') {
+            source.push_back('\n');
+        }
+        const std::vector<std::string> inputs = payload.size() > 1 ? inputTokensFromJsonArray(payload[1]) : std::vector<std::string>{};
+        const std::string expectedSerialized = payload[2].asString();
+        const int32_t targetLevel = payload.size() >= 4 && !payload[3].isNull() ? looseAsInt(payload[3]) : 0;
+        std::optional<std::string> seed;
+        if (payload.size() >= 5 && !payload[4].isNull()) {
+            if (payload[4].isString()) {
+                seed = payload[4].asString();
+            } else if (payload[4].isInteger() || payload[4].isDouble()) {
+                seed = std::to_string(payload[4].isInteger() ? payload[4].asInteger() : payload[4].asDouble());
+            }
+        }
+
+        ps_game* rawGame = nullptr;
+        if (!loadGameFromSourceText(source, &rawGame)) {
+            std::cerr << name << ": failed to compile source\n";
+            ++failed;
+            continue;
+        }
+        std::unique_ptr<ps_game, decltype(&ps_free_game)> game(rawGame, ps_free_game);
+
+        ps_session* rawSession = nullptr;
+        ps_error* error = nullptr;
+        if (!sessionCreateForGame(game.get(), seed, &rawSession, &error)) {
+            std::cerr << name << ": " << ps_error_message(error) << "\n";
+            ps_free_error(error);
+            ++failed;
+            continue;
+        }
+        std::unique_ptr<ps_session, decltype(&ps_session_destroy)> session(rawSession, ps_session_destroy);
+
+        if (!ps_session_load_level(session.get(), targetLevel, &error)) {
+            std::cerr << name << ": " << ps_error_message(error) << "\n";
+            ps_free_error(error);
+            ++failed;
+            continue;
+        }
+
+        if (!replayInputTokens(session.get(), inputs, nullptr)) {
+            std::cerr << name << ": failed to replay inputs\n";
+            ++failed;
+            continue;
+        }
+
+        char* serializedRaw = ps_session_serialize_test_string(session.get());
+        const std::string actualSerialized = serializedRaw ? serializedRaw : "";
+        ps_string_free(serializedRaw);
+
+        if (actualSerialized != expectedSerialized) {
+            std::cerr << name << ": final serialized level mismatch\n";
+            std::cerr << "expected:\n" << expectedSerialized << "\n";
+            std::cerr << "actual:\n" << actualSerialized << "\n";
+            ++failed;
+            continue;
+        }
+
+        ++passed;
+        if (progressEvery > 0 && ((caseIndex + 1) % progressEvery) == 0) {
+            std::cerr << "progress cases=" << (caseIndex + 1) << "/" << cases.size()
+                      << " passed=" << passed << " failed=" << failed << "\n";
+        }
+    }
+
+    const auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::steady_clock::now() - startedAt).count();
+    std::cout << "cpp_simulation_tests_direct passed=" << passed << " failed=" << failed
+              << " total=" << cases.size() << " elapsed_ms=" << elapsedMs << "\n";
+    return failed == 0 ? 0 : 1;
+}
+
+int compilationTestdataCommand(const std::filesystem::path& testdataPath, int argc, char** argv) {
+    size_t progressEvery = 50;
+    for (int index = 0; index < argc; ++index) {
+        const std::string arg = argv[index];
+        if (arg == "--progress-every" && index + 1 < argc) {
+            progressEvery = static_cast<size_t>(std::stoull(argv[++index]));
+        } else {
+            throw std::runtime_error("Unsupported compilation-testdata argument: " + arg);
+        }
+    }
+
+    const auto startedAt = std::chrono::steady_clock::now();
+    const auto root = loadJsDataArrayAsJson(testdataPath);
+    const auto& cases = root.asArray();
+    size_t passed = 0;
+    size_t failed = 0;
+
+    for (size_t caseIndex = 0; caseIndex < cases.size(); ++caseIndex) {
+        const auto& entryValue = cases[caseIndex];
+        if (!entryValue.isArray() || entryValue.asArray().size() < 2) {
+            std::cerr << "case[" << caseIndex << "]: malformed errormessage entry\n";
+            ++failed;
+            continue;
+        }
+        const auto& entry = entryValue.asArray();
+        const std::string name = entry[0].isString() ? entry[0].asString() : ("case[" + std::to_string(caseIndex) + "]");
+        if (!entry[1].isArray()) {
+            std::cerr << name << ": malformed payload\n";
+            ++failed;
+            continue;
+        }
+        const auto& payload = entry[1].asArray();
+        if (payload.size() < 2 || !payload[0].isString() || !payload[1].isArray()) {
+            std::cerr << name << ": malformed diagnostics payload\n";
+            ++failed;
+            continue;
+        }
+
+        std::string source = payload[0].asString();
+        if (source.empty() || source.back() != '\n') {
+            source.push_back('\n');
+        }
+        std::vector<std::string> expected;
+        for (const auto& item : payload[1].asArray()) {
+            if (!item.isString()) {
+                throw std::runtime_error("diagnostics payload contains non-string expected message: " + name);
+            }
+            expected.push_back(item.asString());
+        }
+        const size_t expectedCount = payload.size() >= 3 && (payload[2].isInteger() || payload[2].isDouble())
+            ? static_cast<size_t>(looseAsInt(payload[2]))
+            : expected.size();
+
+        std::unique_ptr<ps_compiler_result, decltype(&ps_compiler_result_free)> result(
+            ps_compiler_compile_source_diagnostics(source.data(), source.size()),
+            ps_compiler_result_free
+        );
+        if (!result) {
+            std::cerr << name << ": failed to parse source\n";
+            ++failed;
+            continue;
+        }
+
+        std::vector<std::string> actual;
+        size_t actualErrorCount = 0;
+        const size_t diagnosticCount = ps_compiler_result_diagnostic_count(result.get());
+        actual.reserve(diagnosticCount);
+        for (size_t diagnosticIndex = 0; diagnosticIndex < diagnosticCount; ++diagnosticIndex) {
+            const ps_diagnostic* diagnostic = ps_compiler_result_diagnostic(result.get(), diagnosticIndex);
+            if (diagnostic != nullptr && diagnostic->message != nullptr) {
+                if (diagnostic->severity == PS_DIAG_ERROR) {
+                    ++actualErrorCount;
+                }
+                actual.emplace_back(diagnostic->message);
+            }
+        }
+
+        const bool countOk = actualErrorCount == expectedCount;
+        const bool messagesOk = expectedDiagnosticsSubsequenceMatch(expected, actual);
+        if (!countOk || !messagesOk) {
+            std::cerr << name << ": diagnostics mismatch\n";
+            std::cerr << "expected_count=" << expectedCount << " actual_count=" << actualErrorCount << "\n";
+            if (!messagesOk) {
+                std::cerr << "expected_messages=[";
+                for (size_t index = 0; index < expected.size(); ++index) {
+                    if (index > 0) std::cerr << ",";
+                    std::cerr << jsonStringLiteral(expected[index]);
+                }
+                std::cerr << "]\nactual_messages=[";
+                for (size_t index = 0; index < actual.size(); ++index) {
+                    if (index > 0) std::cerr << ",";
+                    std::cerr << jsonStringLiteral(actual[index]);
+                }
+                std::cerr << "]\n";
+            }
+            ++failed;
+            continue;
+        }
+
+        ++passed;
+        if (progressEvery > 0 && ((caseIndex + 1) % progressEvery) == 0) {
+            std::cerr << "progress cases=" << (caseIndex + 1) << "/" << cases.size()
+                      << " passed=" << passed << " failed=" << failed << "\n";
+        }
+    }
+
+    const auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::steady_clock::now() - startedAt).count();
+    std::cout << "cpp_compilation_tests_direct passed=" << passed << " failed=" << failed
+              << " total=" << cases.size() << " elapsed_ms=" << elapsedMs << "\n";
+    return failed == 0 ? 0 : 1;
 }
 
 int benchSourceCommand(const std::string& sourcePath, int argc, char** argv) {
@@ -2355,7 +2679,9 @@ int compileSourceCommand(const std::string& sourcePath, int argc, char** argv) {
 
     const std::string source = readFile(sourcePath) + "\n";
     std::unique_ptr<ps_compiler_result, decltype(&ps_compiler_result_free)> result(
-        ps_compiler_parse_source(source.data(), source.size()),
+        (emitDiagnostics
+            ? ps_compiler_compile_source_diagnostics(source.data(), source.size())
+            : ps_compiler_parse_source(source.data(), source.size())),
         ps_compiler_result_free
     );
     if (!result) {
@@ -2684,6 +3010,10 @@ void printMainHelp() {
         << "      Emit the native lowered runtime game JSON used for JS-vs-C++ compiler diffs.\n"
         << "  puzzlescript_cpp test js-parity <generated-js-parity-data.json>\n"
         << "      Check saved replay cases generated from the original JavaScript test suite.\n"
+        << "  puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js\n"
+        << "      Run the C++ compiler/runtime directly against the simulation corpus.\n"
+        << "  puzzlescript_cpp test diagnostics-corpus src/tests/resources/errormessage_testdata.js\n"
+        << "      Run the C++ compiler directly against the diagnostics corpus.\n"
         << "  puzzlescript_cpp bench game.txt --iterations 10000 --threads 4\n"
         << "      Benchmark clone/hash/session operations for a source game.\n\n"
         << "  puzzlescript_cpp profile-simulations generated-js-parity-data.json --repeat 3\n"
@@ -2748,10 +3078,13 @@ void printCompileHelp() {
 void printTestHelp() {
     std::cout
         << "Usage: puzzlescript_cpp test js-parity generated-js-parity-data.json [options]\n"
+        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N]\n"
+        << "       puzzlescript_cpp test diagnostics-corpus src/tests/resources/errormessage_testdata.js [--progress-every N]\n"
         << "       puzzlescript_cpp test diagnostics parser-corpus.bundle.ndjson\n\n"
-        << "JS parity corpus means saved replay and diagnostic cases generated from the\n"
-        << "original JavaScript test suite: testdata.js and errormessage_testdata.js.\n"
-        << "Simulation tests compare gameplay traces. Compiler tests compare diagnostics.\n\n"
+        << "simulation-corpus and diagnostics-corpus read the original testdata.js and\n"
+        << "errormessage_testdata.js directly as JSON-ish arrays and do not invoke Node or\n"
+        << "the JavaScript PuzzleScript engine. js-parity uses saved replay data generated\n"
+        << "from the original JavaScript implementation for deeper runtime trace checks.\n\n"
         << "Usually use the Makefile wrappers:\n"
         << "  make js_parity_tests\n"
         << "  make simulation_tests\n"
@@ -2899,12 +3232,24 @@ int main(int argc, char** argv) {
         if (command == "test-js-parity-data") {
             return testFixturesCommand(path, argc - 3, argv + 3);
         }
+        if (command == "simulation-testdata") {
+            return simulationTestdataCommand(std::filesystem::path(path), argc - 3, argv + 3);
+        }
+        if (command == "compilation-testdata") {
+            return compilationTestdataCommand(std::filesystem::path(path), argc - 3, argv + 3);
+        }
         if (command == "diagnostics-parity") {
             return diagnosticsParityMain(std::filesystem::path(path));
         }
         if (command == "test") {
             if (path == "js-parity" && argc >= 4) {
                 return checkTraceSweepCommand(argv[3], argc - 4, argv + 4);
+            }
+            if (path == "simulation-corpus" && argc >= 4) {
+                return simulationTestdataCommand(std::filesystem::path(argv[3]), argc - 4, argv + 4);
+            }
+            if (path == "diagnostics-corpus" && argc >= 4) {
+                return compilationTestdataCommand(std::filesystem::path(argv[3]), argc - 4, argv + 4);
             }
             if (path == "diagnostics" && argc >= 4) {
                 return diagnosticsParityMain(std::filesystem::path(argv[3]));

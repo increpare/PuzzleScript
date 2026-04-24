@@ -1,3 +1,4 @@
+#include "compiler/compile_diagnostics.hpp"
 #include "compiler/parser.hpp"
 #include "puzzlescript/compiler.h"
 
@@ -28,14 +29,21 @@ ps_diagnostic_severity toCSeverity(puzzlescript::compiler::Severity severity) {
 
 } // namespace
 
-ps_compiler_result* ps_compiler_parse_source(const char* source_utf8, size_t source_size) {
+ps_compiler_result* makeCompilerResult(const char* source_utf8, size_t source_size, bool fullDiagnostics) {
     auto* result = new ps_compiler_result();
     puzzlescript::compiler::DiagnosticSink sink;
+    const std::string_view sourceView = source_utf8 == nullptr ? std::string_view{} : std::string_view(source_utf8, source_size);
     result->parserState = puzzlescript::compiler::parseSource(
-        source_utf8 == nullptr ? std::string_view{} : std::string_view(source_utf8, source_size),
+        sourceView,
         sink
     );
-    result->diagnostics = sink.diagnostics();
+    if (fullDiagnostics) {
+        puzzlescript::compiler::DiagnosticSink fullSink;
+        puzzlescript::compiler::runCompileDiagnostics(result->parserState, sourceView, sink.diagnostics(), fullSink);
+        result->diagnostics = fullSink.diagnostics();
+    } else {
+        result->diagnostics = sink.diagnostics();
+    }
     result->parserStateJson = puzzlescript::compiler::serializeParserStateJson(result->parserState);
     result->exportedMessages.reserve(result->diagnostics.size());
     result->exportedDiagnostics.reserve(result->diagnostics.size());
@@ -49,6 +57,14 @@ ps_compiler_result* ps_compiler_parse_source(const char* source_utf8, size_t sou
         });
     }
     return result;
+}
+
+ps_compiler_result* ps_compiler_parse_source(const char* source_utf8, size_t source_size) {
+    return makeCompilerResult(source_utf8, source_size, false);
+}
+
+ps_compiler_result* ps_compiler_compile_source_diagnostics(const char* source_utf8, size_t source_size) {
+    return makeCompilerResult(source_utf8, source_size, true);
 }
 
 size_t ps_compiler_result_diagnostic_count(const ps_compiler_result* result) {

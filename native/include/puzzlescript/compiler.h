@@ -25,6 +25,7 @@ typedef struct ps_diagnostic {
 } ps_diagnostic;
 
 ps_compiler_result* ps_compiler_parse_source(const char* source_utf8, size_t source_size);
+ps_compiler_result* ps_compiler_compile_source_diagnostics(const char* source_utf8, size_t source_size);
 size_t ps_compiler_result_diagnostic_count(const ps_compiler_result* result);
 const ps_diagnostic* ps_compiler_result_diagnostic(const ps_compiler_result* result, size_t index);
 size_t ps_compiler_result_parser_state_json(
