@@ -2129,7 +2129,11 @@ using RuleMatch = std::vector<RowMatch>;
 std::vector<RowMatch> collectEllipsisRowMatches(
     const Session& session,
     const std::vector<Pattern>& row,
-    int32_t direction
+    int32_t direction,
+    const int32_t* rowObjectMask,
+    uint32_t rowObjectMaskWords,
+    const int32_t* rowMovementMask,
+    uint32_t rowMovementMaskWords
 ) {
     std::vector<RowMatch> matches;
     int32_t concreteCount = 0;
@@ -2148,25 +2152,6 @@ std::vector<RowMatch> collectEllipsisRowMatches(
         return matches;
     }
     const bool horizontal = direction > 2;
-    std::vector<int32_t> rowObjectMask(static_cast<size_t>(session.game->wordCount), 0);
-    std::vector<int32_t> rowMovementMask(static_cast<size_t>(session.game->movementWordCount), 0);
-    for (const auto& pattern : row) {
-        if (pattern.kind != Pattern::Kind::CellPattern) {
-            continue;
-        }
-        if (pattern.hasObjectsPresent) {
-            const int32_t* mask = maskPtr(*session.game, pattern.objectsPresent);
-            for (uint32_t word = 0; word < session.game->wordCount; ++word) {
-                rowObjectMask[static_cast<size_t>(word)] |= mask[static_cast<size_t>(word)];
-            }
-        }
-        if (pattern.hasMovementsPresent) {
-            const int32_t* mask = maskPtr(*session.game, pattern.movementsPresent);
-            for (uint32_t word = 0; word < session.game->movementWordCount; ++word) {
-                rowMovementMask[static_cast<size_t>(word)] |= mask[static_cast<size_t>(word)];
-            }
-        }
-    }
 
     auto availableAlongDirection = [&](int32_t startIndex) {
         const int32_t x = startIndex / session.liveLevel.height;
@@ -2196,9 +2181,9 @@ std::vector<RowMatch> collectEllipsisRowMatches(
         const int32_t* lineMovements = horizontal
             ? session.rowMovementMasks.data() + static_cast<size_t>(y * session.game->strideMovement)
             : session.columnMovementMasks.data() + static_cast<size_t>(x * session.game->strideMovement);
-        if (!bitsSetInArray(rowObjectMask.data(), rowObjectMask.size(),
+        if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords,
                             lineObjects, static_cast<size_t>(session.game->strideObject))
-            || !bitsSetInArray(rowMovementMask.data(), rowMovementMask.size(),
+            || !bitsSetInArray(rowMovementMask, rowMovementMaskWords,
                                lineMovements, static_cast<size_t>(session.game->strideMovement))) {
             continue;
         }
@@ -2416,7 +2401,19 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                 changed = applyRowAt(session, rule, row, startIndex, delta) || changed;
             }
         } else {
-            auto matches = collectEllipsisRowMatches(session, row, rule.direction);
+            const Game& game = *session.game;
+            const MaskOffset rowObjectOffset = rule.cellRowMasksCount > 0
+                ? game.cellRowMaskOffsets[rule.cellRowMasksFirst]
+                : rule.ruleMask;
+            const int32_t* rowObjectMask = maskPtr(game, rowObjectOffset);
+            const MaskOffset rowMovementOffset = rule.cellRowMasksMovementsCount > 0
+                ? game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst]
+                : kNullMaskOffset;
+            const int32_t* rowMovementMask = maskPtr(game, rowMovementOffset);
+            const uint32_t rowMovementMaskWords = rowMovementMask != nullptr ? game.movementWordCount : 0;
+            auto matches = collectEllipsisRowMatches(session, row, rule.direction,
+                                                     rowObjectMask, game.wordCount,
+                                                     rowMovementMask, rowMovementMaskWords);
             if (matches.empty()) {
                 if (ruleDebugLineFilterMatches(rule.lineNumber)) {
                     std::ostringstream stream;
@@ -2514,7 +2511,19 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
             }
             rowMatches.push_back(std::move(wrappedMatches));
         } else {
-            auto matches = collectEllipsisRowMatches(session, row, rule.direction);
+            const Game& game = *session.game;
+            const MaskOffset rowObjectOffset = rowIndex < rule.cellRowMasksCount
+                ? game.cellRowMaskOffsets[rule.cellRowMasksFirst + rowIndex]
+                : rule.ruleMask;
+            const int32_t* rowObjectMask = maskPtr(game, rowObjectOffset);
+            const MaskOffset rowMovementOffset = rowIndex < rule.cellRowMasksMovementsCount
+                ? game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst + rowIndex]
+                : kNullMaskOffset;
+            const int32_t* rowMovementMask = maskPtr(game, rowMovementOffset);
+            const uint32_t rowMovementMaskWords = rowMovementMask != nullptr ? game.movementWordCount : 0;
+            auto matches = collectEllipsisRowMatches(session, row, rule.direction,
+                                                     rowObjectMask, game.wordCount,
+                                                     rowMovementMask, rowMovementMaskWords);
             if (matches.empty()) {
                 if (ruleDebugLineFilterMatches(rule.lineNumber)) {
                     std::ostringstream stream;
@@ -2648,7 +2657,19 @@ bool collectRandomRuleMatches(const Session& session, const Rule& rule, std::vec
             }
             rowMatches.push_back(std::move(wrappedMatches));
         } else {
-            auto matches = collectEllipsisRowMatches(session, row, rule.direction);
+            const Game& game = *session.game;
+            const MaskOffset rowObjectOffset = rowIndex < rule.cellRowMasksCount
+                ? game.cellRowMaskOffsets[rule.cellRowMasksFirst + rowIndex]
+                : rule.ruleMask;
+            const int32_t* rowObjectMask = maskPtr(game, rowObjectOffset);
+            const MaskOffset rowMovementOffset = rowIndex < rule.cellRowMasksMovementsCount
+                ? game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst + rowIndex]
+                : kNullMaskOffset;
+            const int32_t* rowMovementMask = maskPtr(game, rowMovementOffset);
+            const uint32_t rowMovementMaskWords = rowMovementMask != nullptr ? game.movementWordCount : 0;
+            auto matches = collectEllipsisRowMatches(session, row, rule.direction,
+                                                     rowObjectMask, game.wordCount,
+                                                     rowMovementMask, rowMovementMaskWords);
             if (matches.empty()) {
                 outMatches.clear();
                 return true;
