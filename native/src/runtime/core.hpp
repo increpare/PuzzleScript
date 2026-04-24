@@ -342,5 +342,8 @@ ps_step_result step(Session& session, ps_input input);
 ps_step_result tick(Session& session);
 void settlePendingAgain(Session& session);
 std::unique_ptr<Error> benchmarkCloneHash(const Session& session, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult);
+void setRuntimeCountersEnabled(bool enabled);
+void resetRuntimeCounters();
+ps_runtime_counters snapshotRuntimeCounters();
 
 } // namespace puzzlescript

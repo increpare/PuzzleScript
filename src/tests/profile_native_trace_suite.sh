@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 # Profile the C++ simulation replay workload.
 #
-# This is intentionally not a parity-test runner. It reuses the generated replay
-# corpus as workload input, then runs `puzzlescript_cpp profile-simulations` so
-# profiler output is dominated by C++ runtime IR loading/session/replay work
-# rather than the JS harness. It does not measure PuzzleScript source
-# parse/compile time; that should be a separate compiler profiling path.
+# This is intentionally not a parity-test runner. It runs the direct C++
+# simulation corpus from testdata.js so profiler output is dominated by the
+# native source compile/load/session/replay path rather than the JS harness.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -13,7 +11,7 @@ cd "$ROOT"
 
 OUT="${PROFILE_STATS_OUT:-$ROOT/profile_stats.txt}"
 PUZZLESCRIPT_CPP="${PUZZLESCRIPT_CPP:-$ROOT/build/native/puzzlescript_cpp}"
-MANIFEST="${PROFILE_MANIFEST:-$ROOT/build/js-parity-data/fixtures.json}"
+TESTDATA="${PROFILE_TESTDATA:-$ROOT/src/tests/resources/testdata.js}"
 ART="$ROOT/build/native/profile_last"
 PROFILE_MODE="${PROFILE_MODE:-auto}"
 REPLAY_REPEATS="${PROFILE_REPLAY_REPEATS:-3}"
@@ -28,14 +26,13 @@ if [[ ! -x "$PUZZLESCRIPT_CPP" ]]; then
   exit 1
 fi
 
-if [[ ! -f "$MANIFEST" ]]; then
-  echo "Missing replay corpus manifest: $MANIFEST" >&2
-  echo "Try: make js-parity-data" >&2
+if [[ ! -f "$TESTDATA" ]]; then
+  echo "Missing simulation corpus: $TESTDATA" >&2
   exit 1
 fi
 
 read -r -a EXTRA_ARGS <<<"$EXTRA_CLI_ARGS"
-SIM_PROFILE_ARGS=(profile-simulations "$MANIFEST" --profile-timers --repeat "$REPLAY_REPEATS")
+SIM_PROFILE_ARGS=(test simulation-corpus "$TESTDATA" --profile-timers --repeat "$REPLAY_REPEATS" --progress-every 0 --jobs "${PROFILE_JOBS:-1}")
 if [[ ${#EXTRA_ARGS[@]} -gt 0 ]]; then
   SIM_PROFILE_ARGS+=("${EXTRA_ARGS[@]}")
 fi
@@ -71,8 +68,9 @@ time_command() {
   ls -la "$PUZZLESCRIPT_CPP"
   echo
   echo "===== Workload ====="
-  echo "replay_corpus=$MANIFEST"
+  echo "simulation_corpus=$TESTDATA"
   echo "replay_repeats=$REPLAY_REPEATS"
+  echo "profile_jobs=${PROFILE_JOBS:-1}"
   echo "profile_mode=$PROFILE_MODE"
   echo "command: $PUZZLESCRIPT_CPP ${SIM_PROFILE_ARGS[*]}"
   echo
@@ -87,8 +85,10 @@ PASS1_STATUS=$?
 set -e
 
 append_section "Pass 1 stdout" <(cat "$PASS1_STDOUT")
-append_section "Pass 1 stderr (native_simulation_profile + resource usage)" \
-  <({ grep -E '^native_simulation_profile' "$PASS1_STDERR" || true; echo '--- stderr tail ---'; tail -30 "$PASS1_STDERR"; })
+append_section "Pass 1 stderr (resource usage)" \
+  <({ echo '--- stderr tail ---'; tail -30 "$PASS1_STDERR"; })
+append_section "Pass 1 profile summary" \
+  <({ grep -E '^cpp_simulation_profile|^cpp_simulation_tests_direct' "$PASS1_STDOUT" || true; })
 echo "pass1_exit_status=$PASS1_STATUS" | tee -a "$OUT"
 
 if [[ "$PROFILE_MODE" == "auto" ]]; then
@@ -123,8 +123,10 @@ if [[ "$PROFILE_MODE" == "sample" ]]; then
   set -e
 
   append_section "Pass 2 stdout" <(cat "$PASS2_STDOUT")
-  append_section "Pass 2 stderr (native_simulation_profile + tail)" \
-    <({ grep -E '^native_simulation_profile' "$PASS2_STDERR" || true; echo '--- stderr tail ---'; tail -20 "$PASS2_STDERR"; })
+  append_section "Pass 2 stderr tail" \
+    <({ echo '--- stderr tail ---'; tail -20 "$PASS2_STDERR"; })
+  append_section "Pass 2 profile summary" \
+    <({ grep -E '^cpp_simulation_profile|^cpp_simulation_tests_direct' "$PASS2_STDOUT" || true; })
 
   {
     echo "pass2_exit_status=$PASS2_STATUS"
@@ -160,8 +162,10 @@ elif [[ "$PROFILE_MODE" == "perf" ]]; then
   set -e
 
   append_section "Pass 2 stdout" <(cat "$PASS2_STDOUT")
-  append_section "Pass 2 stderr (native_simulation_profile + perf output)" \
-    <({ grep -E '^native_simulation_profile' "$PASS2_STDERR" || true; echo '--- stderr tail ---'; tail -30 "$PASS2_STDERR"; })
+  append_section "Pass 2 stderr (perf output)" \
+    <({ echo '--- stderr tail ---'; tail -30 "$PASS2_STDERR"; })
+  append_section "Pass 2 profile summary" \
+    <({ grep -E '^cpp_simulation_profile|^cpp_simulation_tests_direct' "$PASS2_STDOUT" || true; })
 
   {
     echo "pass2_exit_status=$PASS2_STATUS"

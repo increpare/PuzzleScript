@@ -132,7 +132,7 @@ simulation_tests: simulation_tests_js simulation_tests_cpp
 
 compilation_tests: compilation_tests_js compilation_tests_cpp
 
-profile_simulation_tests: build $(JS_PARITY_MANIFEST)
+profile_simulation_tests: build
 	src/tests/profile_native_trace_suite.sh
 
 tests: ctest js_parity_tests

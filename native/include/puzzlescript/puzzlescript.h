@@ -73,6 +73,22 @@ typedef struct ps_benchmark_result {
     uint64_t hash_accumulator;
 } ps_benchmark_result;
 
+typedef struct ps_runtime_counters {
+    uint64_t rules_visited;
+    uint64_t rules_skipped_by_mask;
+    uint64_t candidate_cells_tested;
+    uint64_t pattern_tests;
+    uint64_t pattern_matches;
+    uint64_t replacements_attempted;
+    uint64_t replacements_applied;
+    uint64_t row_scans;
+    uint64_t ellipsis_scans;
+    uint64_t mask_rebuild_calls;
+    uint64_t mask_rebuild_dirty_calls;
+    uint64_t mask_rebuild_rows;
+    uint64_t mask_rebuild_columns;
+} ps_runtime_counters;
+
 bool ps_load_ir_json(const char* json_utf8, size_t json_size, ps_game** out_game, ps_error** out_error);
 bool ps_compile_source(const char* source_utf8, size_t source_size, ps_compile_result** out_result);
 const ps_game* ps_compile_result_game(const ps_compile_result* result);
@@ -100,6 +116,9 @@ char* ps_session_serialize_test_string(const ps_session* session);
 char* ps_session_export_snapshot(const ps_session* session);
 size_t ps_session_list_inputs(const ps_session* session, ps_input* output, size_t capacity);
 bool ps_benchmark_clone_hash(const ps_session* session, uint32_t iterations, uint32_t thread_count, ps_benchmark_result* out_result, ps_error** out_error);
+void ps_runtime_counters_set_enabled(bool enabled);
+void ps_runtime_counters_reset(void);
+void ps_runtime_counters_snapshot(ps_runtime_counters* out_counters);
 
 const char* ps_error_message(const ps_error* error);
 void ps_free_error(ps_error* error);

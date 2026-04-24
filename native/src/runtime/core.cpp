@@ -1,6 +1,7 @@
 #include "runtime/core.hpp"
 
 #include <algorithm>
+#include <atomic>
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
@@ -61,6 +62,94 @@ struct ExecuteTurnOptions {
     bool* observedModification = nullptr;
 };
 
+struct RuntimeCounterStorage {
+    std::atomic<uint64_t> rulesVisited{0};
+    std::atomic<uint64_t> rulesSkippedByMask{0};
+    std::atomic<uint64_t> candidateCellsTested{0};
+    std::atomic<uint64_t> patternTests{0};
+    std::atomic<uint64_t> patternMatches{0};
+    std::atomic<uint64_t> replacementsAttempted{0};
+    std::atomic<uint64_t> replacementsApplied{0};
+    std::atomic<uint64_t> rowScans{0};
+    std::atomic<uint64_t> ellipsisScans{0};
+    std::atomic<uint64_t> maskRebuildCalls{0};
+    std::atomic<uint64_t> maskRebuildDirtyCalls{0};
+    std::atomic<uint64_t> maskRebuildRows{0};
+    std::atomic<uint64_t> maskRebuildColumns{0};
+};
+
+std::atomic<bool> gRuntimeCountersEnabled{false};
+RuntimeCounterStorage gRuntimeCounters;
+
+inline void addCounter(std::atomic<uint64_t>& counter, uint64_t amount = 1) {
+    if (gRuntimeCountersEnabled.load(std::memory_order_relaxed)) {
+        counter.fetch_add(amount, std::memory_order_relaxed);
+    }
+}
+
+bool debugEnvFlag(const char* name) {
+    const char* value = std::getenv(name);
+    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+}
+
+std::optional<uint64_t> debugEnvUint64(const char* name) {
+    const char* value = std::getenv(name);
+    if (value == nullptr || value[0] == '\0') {
+        return std::nullopt;
+    }
+    char* end = nullptr;
+    const unsigned long long parsed = std::strtoull(value, &end, 10);
+    if (end == value) {
+        return std::nullopt;
+    }
+    return static_cast<uint64_t>(parsed);
+}
+
+struct DebugConfig {
+    bool rigid = debugEnvFlag("PS_DEBUG_RIGID");
+    bool again = debugEnvFlag("PS_DEBUG_AGAIN");
+    bool random = debugEnvFlag("PS_DEBUG_RANDOM");
+    bool rules = debugEnvFlag("PS_DEBUG_RULES");
+    bool moves = debugEnvFlag("PS_DEBUG_MOVES");
+    bool audio = debugEnvFlag("PS_DEBUG_AUDIO");
+    std::optional<uint64_t> randomBoardHash = debugEnvUint64("PS_DEBUG_RANDOM_BOARD_HASH");
+    std::optional<uint64_t> randomSessionHash = debugEnvUint64("PS_DEBUG_RANDOM_SESSION_HASH");
+    std::string randomSubstring = [] {
+        const char* value = std::getenv("PS_DEBUG_RANDOM_SUBSTRING");
+        return value == nullptr ? std::string{} : std::string(value);
+    }();
+    bool ruleLinesUnrestricted = true;
+    std::vector<int32_t> ruleLines = [] {
+        std::vector<int32_t> lines;
+        const char* value = std::getenv("PS_DEBUG_RULE_LINES");
+        if (value == nullptr || value[0] == '\0') {
+            return lines;
+        }
+        std::stringstream stream(value);
+        std::string token;
+        while (std::getline(stream, token, ',')) {
+            if (token.empty()) {
+                continue;
+            }
+            try {
+                lines.push_back(std::stoi(token));
+            } catch (const std::exception&) {
+                continue;
+            }
+        }
+        return lines;
+    }();
+
+    DebugConfig() {
+        ruleLinesUnrestricted = ruleLines.empty();
+    }
+};
+
+const DebugConfig& debugConfig() {
+    static const DebugConfig config;
+    return config;
+}
+
 const json::Value& requireField(const json::Value::Object& object, std::string_view key) {
     const auto it = object.find(std::string(key));
     if (it == object.end()) {
@@ -108,8 +197,7 @@ bool commandQueueContains(const CommandState& state, std::string_view command) {
 }
 
 bool rigidDebugEnabled() {
-    const char* value = std::getenv("PS_DEBUG_RIGID");
-    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+    return debugConfig().rigid;
 }
 
 void rigidDebugLog(const std::string& message) {
@@ -119,8 +207,7 @@ void rigidDebugLog(const std::string& message) {
 }
 
 bool againDebugEnabled() {
-    const char* value = std::getenv("PS_DEBUG_AGAIN");
-    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+    return debugConfig().again;
 }
 
 void againDebugLog(const std::string& message) {
@@ -130,8 +217,7 @@ void againDebugLog(const std::string& message) {
 }
 
 bool randomDebugEnabled() {
-    const char* value = std::getenv("PS_DEBUG_RANDOM");
-    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+    return debugConfig().random;
 }
 
 void randomDebugLog(const std::string& message) {
@@ -141,43 +227,18 @@ void randomDebugLog(const std::string& message) {
 }
 
 bool ruleDebugEnabled() {
-    const char* value = std::getenv("PS_DEBUG_RULES");
-    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+    return debugConfig().rules;
 }
 
 bool ruleDebugLineFilterMatches(int32_t lineNumber) {
     if (!ruleDebugEnabled()) {
         return false;
     }
-    struct Filter {
-        bool unrestricted = true;
-        std::vector<int32_t> lines;
-    };
-    static const Filter filter = [] {
-        Filter result;
-        const char* value = std::getenv("PS_DEBUG_RULE_LINES");
-        if (value == nullptr || value[0] == '\0') {
-            return result;
-        }
-        result.unrestricted = false;
-        std::stringstream stream(value);
-        std::string token;
-        while (std::getline(stream, token, ',')) {
-            if (token.empty()) {
-                continue;
-            }
-            try {
-                result.lines.push_back(std::stoi(token));
-            } catch (const std::exception&) {
-                continue;
-            }
-        }
-        return result;
-    }();
-    if (filter.unrestricted) {
+    const DebugConfig& config = debugConfig();
+    if (config.ruleLinesUnrestricted) {
         return true;
     }
-    return std::find(filter.lines.begin(), filter.lines.end(), lineNumber) != filter.lines.end();
+    return std::find(config.ruleLines.begin(), config.ruleLines.end(), lineNumber) != config.ruleLines.end();
 }
 
 void ruleDebugLog(const std::string& message) {
@@ -187,8 +248,7 @@ void ruleDebugLog(const std::string& message) {
 }
 
 bool movementDebugEnabled() {
-    const char* value = std::getenv("PS_DEBUG_MOVES");
-    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+    return debugConfig().moves;
 }
 
 void movementDebugLog(const std::string& message) {
@@ -198,8 +258,7 @@ void movementDebugLog(const std::string& message) {
 }
 
 bool audioDebugEnabled() {
-    const char* value = std::getenv("PS_DEBUG_AUDIO");
-    return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+    return debugConfig().audio;
 }
 
 void audioDebugLog(const std::string& message) {
@@ -209,36 +268,15 @@ void audioDebugLog(const std::string& message) {
 }
 
 std::optional<uint64_t> randomDebugBoardHashFilter() {
-    const char* value = std::getenv("PS_DEBUG_RANDOM_BOARD_HASH");
-    if (value == nullptr || value[0] == '\0') {
-        return std::nullopt;
-    }
-    char* end = nullptr;
-    const unsigned long long parsed = std::strtoull(value, &end, 10);
-    if (end == value) {
-        return std::nullopt;
-    }
-    return static_cast<uint64_t>(parsed);
+    return debugConfig().randomBoardHash;
 }
 
 std::optional<uint64_t> randomDebugSessionHashFilter() {
-    const char* value = std::getenv("PS_DEBUG_RANDOM_SESSION_HASH");
-    if (value == nullptr || value[0] == '\0') {
-        return std::nullopt;
-    }
-    char* end = nullptr;
-    const unsigned long long parsed = std::strtoull(value, &end, 10);
-    if (end == value) {
-        return std::nullopt;
-    }
-    return static_cast<uint64_t>(parsed);
+    return debugConfig().randomSessionHash;
 }
 
 std::string_view randomDebugSubstringFilter() {
-    static std::string filter;
-    const char* value = std::getenv("PS_DEBUG_RANDOM_SUBSTRING");
-    filter = value == nullptr ? std::string{} : std::string(value);
-    return filter;
+    return debugConfig().randomSubstring;
 }
 
 void appendAudioEvent(Session& session, int32_t seed, const char* kind) {
@@ -1625,6 +1663,7 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
 }
 
 bool matchesPatternAt(const Session& session, const Pattern& pattern, int32_t tileIndex) {
+    addCounter(gRuntimeCounters.patternTests);
     if (pattern.kind != Pattern::Kind::CellPattern) {
         return false;
     }
@@ -1673,10 +1712,12 @@ bool matchesPatternAt(const Session& session, const Pattern& pattern, int32_t ti
             return false;
         }
     }
+    addCounter(gRuntimeCounters.patternMatches);
     return true;
 }
 
 bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& pattern, int32_t tileIndex) {
+    addCounter(gRuntimeCounters.replacementsAttempted);
     if (!pattern.replacement.has_value()) {
         return false;
     }
@@ -1909,6 +1950,7 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         setCellRigidGroupIndexMask(session, tileIndex, rigidGroupIndexMask);
         setCellRigidMovementAppliedMask(session, tileIndex, rigidMovementAppliedMask);
     }
+    addCounter(gRuntimeCounters.replacementsApplied);
     return true;
 }
 
@@ -1962,6 +2004,7 @@ std::vector<int32_t> collectRowMatches(
 
     if (horizontal) {
         for (int32_t y = ymin; y < ymax; ++y) {
+            addCounter(gRuntimeCounters.rowScans);
             const int32_t* rowObjects = session.rowMasks.data() + static_cast<size_t>(y * session.game->strideObject);
             const int32_t* rowMovements = session.rowMovementMasks.data() + static_cast<size_t>(y * session.game->strideMovement);
             if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, rowObjects, static_cast<size_t>(session.game->strideObject))
@@ -1969,6 +2012,7 @@ std::vector<int32_t> collectRowMatches(
                 continue;
             }
             for (int32_t x = xmin; x < xmax; ++x) {
+                addCounter(gRuntimeCounters.candidateCellsTested);
                 const int32_t startIndex = x * session.liveLevel.height + y;
                 bool matched = true;
                 for (int32_t cellIndex = 0; cellIndex < len; ++cellIndex) {
@@ -1984,6 +2028,7 @@ std::vector<int32_t> collectRowMatches(
         }
     } else {
         for (int32_t x = xmin; x < xmax; ++x) {
+            addCounter(gRuntimeCounters.rowScans);
             const int32_t* columnObjects = session.columnMasks.data() + static_cast<size_t>(x * session.game->strideObject);
             const int32_t* columnMovements = session.columnMovementMasks.data() + static_cast<size_t>(x * session.game->strideMovement);
             if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, columnObjects, static_cast<size_t>(session.game->strideObject))
@@ -1991,6 +2036,7 @@ std::vector<int32_t> collectRowMatches(
                 continue;
             }
             for (int32_t y = ymin; y < ymax; ++y) {
+                addCounter(gRuntimeCounters.candidateCellsTested);
                 const int32_t startIndex = x * session.liveLevel.height + y;
                 bool matched = true;
                 for (int32_t cellIndex = 0; cellIndex < len; ++cellIndex) {
@@ -2070,6 +2116,7 @@ std::vector<RowMatch> collectEllipsisRowMatches(
     }
 
     for (int32_t tileIndex = 0; tileIndex < session.liveLevel.width * session.liveLevel.height; ++tileIndex) {
+        addCounter(gRuntimeCounters.ellipsisScans);
         const int32_t available = availableAlongDirection(tileIndex);
         if (available < concreteCount) {
             continue;
@@ -2177,6 +2224,7 @@ bool ruleCanPossiblyMatch(const Session& session, const Rule& rule) {
 }
 
 RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandState& commands) {
+    addCounter(gRuntimeCounters.rulesVisited);
     if (ruleDebugLineFilterMatches(rule.lineNumber)) {
         std::ostringstream stream;
         stream << "line=" << rule.lineNumber
@@ -2195,6 +2243,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
         return {};
     }
     if (!ruleCanPossiblyMatch(session, rule)) {
+        addCounter(gRuntimeCounters.rulesSkippedByMask);
         if (ruleDebugLineFilterMatches(rule.lineNumber)) {
             std::ostringstream stream;
             stream << "line=" << rule.lineNumber
@@ -2638,6 +2687,7 @@ size_t countNonZeroWords(const std::vector<int32_t>& values) {
 // scratch and leaves the rest untouched. On a clean session (anyMasksDirty
 // == false) this is a branch and return.
 void rebuildMasks(Session& session) {
+    addCounter(gRuntimeCounters.maskRebuildCalls);
     const int32_t objectStride = session.game->strideObject;
     const int32_t movementStride = session.game->strideMovement;
     const int32_t width = session.liveLevel.width;
@@ -2690,11 +2740,13 @@ void rebuildMasks(Session& session) {
     if (!session.anyMasksDirty) {
         return;
     }
+    addCounter(gRuntimeCounters.maskRebuildDirtyCalls);
 
     // ---- Object masks ---------------------------------------------------
     // Rebuild each dirty row: zero its slice, then OR every tile in that row.
     for (int32_t y = 0; y < height; ++y) {
         if (!session.dirtyObjectRows[static_cast<size_t>(y)]) continue;
+        addCounter(gRuntimeCounters.maskRebuildRows);
         int32_t* rowStart = session.rowMasks.data() + static_cast<size_t>(y * objectStride);
         std::fill(rowStart, rowStart + objectStride, 0);
         for (int32_t x = 0; x < width; ++x) {
@@ -2708,6 +2760,7 @@ void rebuildMasks(Session& session) {
     }
     for (int32_t x = 0; x < width; ++x) {
         if (!session.dirtyObjectColumns[static_cast<size_t>(x)]) continue;
+        addCounter(gRuntimeCounters.maskRebuildColumns);
         int32_t* colStart = session.columnMasks.data() + static_cast<size_t>(x * objectStride);
         std::fill(colStart, colStart + objectStride, 0);
         for (int32_t y = 0; y < height; ++y) {
@@ -2734,6 +2787,7 @@ void rebuildMasks(Session& session) {
     // ---- Movement masks -------------------------------------------------
     for (int32_t y = 0; y < height; ++y) {
         if (!session.dirtyMovementRows[static_cast<size_t>(y)]) continue;
+        addCounter(gRuntimeCounters.maskRebuildRows);
         int32_t* rowStart = session.rowMovementMasks.data() + static_cast<size_t>(y * movementStride);
         std::fill(rowStart, rowStart + movementStride, 0);
         for (int32_t x = 0; x < width; ++x) {
@@ -2747,6 +2801,7 @@ void rebuildMasks(Session& session) {
     }
     for (int32_t x = 0; x < width; ++x) {
         if (!session.dirtyMovementColumns[static_cast<size_t>(x)]) continue;
+        addCounter(gRuntimeCounters.maskRebuildColumns);
         int32_t* colStart = session.columnMovementMasks.data() + static_cast<size_t>(x * movementStride);
         std::fill(colStart, colStart + movementStride, 0);
         for (int32_t y = 0; y < height; ++y) {
@@ -3745,6 +3800,44 @@ std::unique_ptr<Error> benchmarkCloneHash(const Session& session, uint32_t itera
     outResult.iterations_per_second = elapsed.count() > 0.0 ? static_cast<double>(iterations) / elapsed.count() : 0.0;
     outResult.hash_accumulator = combinedHash;
     return nullptr;
+}
+
+void setRuntimeCountersEnabled(bool enabled) {
+    gRuntimeCountersEnabled.store(enabled, std::memory_order_relaxed);
+}
+
+void resetRuntimeCounters() {
+    gRuntimeCounters.rulesVisited.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.rulesSkippedByMask.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.candidateCellsTested.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.patternTests.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.patternMatches.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.replacementsAttempted.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.replacementsApplied.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.rowScans.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.ellipsisScans.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.maskRebuildCalls.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.maskRebuildDirtyCalls.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.maskRebuildRows.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.maskRebuildColumns.store(0, std::memory_order_relaxed);
+}
+
+ps_runtime_counters snapshotRuntimeCounters() {
+    ps_runtime_counters counters{};
+    counters.rules_visited = gRuntimeCounters.rulesVisited.load(std::memory_order_relaxed);
+    counters.rules_skipped_by_mask = gRuntimeCounters.rulesSkippedByMask.load(std::memory_order_relaxed);
+    counters.candidate_cells_tested = gRuntimeCounters.candidateCellsTested.load(std::memory_order_relaxed);
+    counters.pattern_tests = gRuntimeCounters.patternTests.load(std::memory_order_relaxed);
+    counters.pattern_matches = gRuntimeCounters.patternMatches.load(std::memory_order_relaxed);
+    counters.replacements_attempted = gRuntimeCounters.replacementsAttempted.load(std::memory_order_relaxed);
+    counters.replacements_applied = gRuntimeCounters.replacementsApplied.load(std::memory_order_relaxed);
+    counters.row_scans = gRuntimeCounters.rowScans.load(std::memory_order_relaxed);
+    counters.ellipsis_scans = gRuntimeCounters.ellipsisScans.load(std::memory_order_relaxed);
+    counters.mask_rebuild_calls = gRuntimeCounters.maskRebuildCalls.load(std::memory_order_relaxed);
+    counters.mask_rebuild_dirty_calls = gRuntimeCounters.maskRebuildDirtyCalls.load(std::memory_order_relaxed);
+    counters.mask_rebuild_rows = gRuntimeCounters.maskRebuildRows.load(std::memory_order_relaxed);
+    counters.mask_rebuild_columns = gRuntimeCounters.maskRebuildColumns.load(std::memory_order_relaxed);
+    return counters;
 }
 
 } // namespace puzzlescript

@@ -294,6 +294,20 @@ bool ps_benchmark_clone_hash(const ps_session* session, uint32_t iterations, uin
     return true;
 }
 
+void ps_runtime_counters_set_enabled(bool enabled) {
+    puzzlescript::setRuntimeCountersEnabled(enabled);
+}
+
+void ps_runtime_counters_reset(void) {
+    puzzlescript::resetRuntimeCounters();
+}
+
+void ps_runtime_counters_snapshot(ps_runtime_counters* out_counters) {
+    if (out_counters) {
+        *out_counters = puzzlescript::snapshotRuntimeCounters();
+    }
+}
+
 const char* ps_error_message(const ps_error* error) {
     return error && error->impl ? error->impl->message.c_str() : "";
 }

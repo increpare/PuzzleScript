@@ -1,17 +1,20 @@
 #include <array>
 #include <algorithm>
+#include <atomic>
 #include <chrono>
 #include <cctype>
 #include <cstdint>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
+#include <future>
 #include <iostream>
 #include <memory>
 #include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <thread>
 #include <unordered_map>
 #include <vector>
 
@@ -1903,6 +1906,200 @@ bool expectedDiagnosticsSubsequenceMatch(
     return expectedIndex == expected.size();
 }
 
+int64_t elapsedMicrosSince(std::chrono::steady_clock::time_point start) {
+    return std::chrono::duration_cast<std::chrono::microseconds>(
+        std::chrono::steady_clock::now() - start).count();
+}
+
+int64_t usToMs(int64_t microseconds) {
+    return microseconds / 1000;
+}
+
+struct SimulationCorpusOptions {
+    size_t progressEvery = 25;
+    size_t repeat = 1;
+    size_t jobs = 1;
+    bool profileTimers = false;
+    bool quiet = false;
+};
+
+struct SimulationCorpusCase {
+    size_t index = 0;
+    std::string name;
+    std::string source;
+    std::vector<std::string> inputs;
+    std::string expectedSerialized;
+    int32_t targetLevel = 0;
+    std::optional<std::string> seed;
+};
+
+struct SimulationCaseTiming {
+    int64_t sourceCompileUs = 0;
+    int64_t sessionCreateUs = 0;
+    int64_t levelLoadUs = 0;
+    int64_t replayUs = 0;
+    int64_t serializeUs = 0;
+};
+
+struct SimulationCaseResult {
+    bool passed = false;
+    std::string error;
+    SimulationCaseTiming timing;
+};
+
+struct SimulationTimingTotals {
+    int64_t testdataParseUs = 0;
+    int64_t sourceCompileUs = 0;
+    int64_t sessionCreateUs = 0;
+    int64_t levelLoadUs = 0;
+    int64_t replayUs = 0;
+    int64_t serializeUs = 0;
+};
+
+SimulationCorpusOptions parseSimulationCorpusOptions(int argc, char** argv) {
+    SimulationCorpusOptions options;
+    for (int index = 0; index < argc; ++index) {
+        const std::string arg = argv[index];
+        if (arg == "--progress-every" && index + 1 < argc) {
+            options.progressEvery = static_cast<size_t>(std::stoull(argv[++index]));
+        } else if (arg == "--repeat" && index + 1 < argc) {
+            options.repeat = std::max<size_t>(1, static_cast<size_t>(std::stoull(argv[++index])));
+        } else if (arg == "--jobs" && index + 1 < argc) {
+            const std::string value = argv[++index];
+            if (value == "auto") {
+                options.jobs = std::max<size_t>(1, std::thread::hardware_concurrency());
+            } else {
+                options.jobs = std::max<size_t>(1, static_cast<size_t>(std::stoull(value)));
+            }
+        } else if (arg == "--profile-timers") {
+            options.profileTimers = true;
+        } else if (arg == "--quiet") {
+            options.quiet = true;
+            options.progressEvery = 0;
+        } else {
+            throw std::runtime_error("Unsupported simulation-testdata argument: " + arg);
+        }
+    }
+    return options;
+}
+
+std::vector<SimulationCorpusCase> parseSimulationCorpusCases(const puzzlescript::json::Value& root) {
+    const auto& rawCases = root.asArray();
+    std::vector<SimulationCorpusCase> cases;
+    cases.reserve(rawCases.size());
+    for (size_t caseIndex = 0; caseIndex < rawCases.size(); ++caseIndex) {
+        const auto& entryValue = rawCases[caseIndex];
+        if (!entryValue.isArray() || entryValue.asArray().size() < 2) {
+            throw std::runtime_error("case[" + std::to_string(caseIndex) + "]: malformed testdata entry");
+        }
+        const auto& entry = entryValue.asArray();
+        if (!entry[1].isArray()) {
+            throw std::runtime_error("case[" + std::to_string(caseIndex) + "]: malformed payload");
+        }
+        const auto& payload = entry[1].asArray();
+        if (payload.size() < 3 || !payload[0].isString() || !payload[2].isString()) {
+            throw std::runtime_error("case[" + std::to_string(caseIndex) + "]: malformed simulation payload");
+        }
+
+        SimulationCorpusCase parsed;
+        parsed.index = caseIndex;
+        parsed.name = entry[0].isString() ? entry[0].asString() : ("case[" + std::to_string(caseIndex) + "]");
+        parsed.source = payload[0].asString();
+        if (parsed.source.empty() || parsed.source.back() != '\n') {
+            parsed.source.push_back('\n');
+        }
+        parsed.inputs = payload.size() > 1 ? inputTokensFromJsonArray(payload[1]) : std::vector<std::string>{};
+        parsed.expectedSerialized = payload[2].asString();
+        parsed.targetLevel = payload.size() >= 4 && !payload[3].isNull() ? looseAsInt(payload[3]) : 0;
+        if (payload.size() >= 5 && !payload[4].isNull()) {
+            if (payload[4].isString()) {
+                parsed.seed = payload[4].asString();
+            } else if (payload[4].isInteger() || payload[4].isDouble()) {
+                parsed.seed = std::to_string(payload[4].isInteger() ? payload[4].asInteger() : payload[4].asDouble());
+            }
+        }
+        cases.push_back(std::move(parsed));
+    }
+    return cases;
+}
+
+SimulationCaseResult runSimulationCorpusCase(const SimulationCorpusCase& testCase) {
+    SimulationCaseResult result;
+
+    ps_game* rawGame = nullptr;
+    auto phaseStart = std::chrono::steady_clock::now();
+    if (!loadGameFromSourceText(testCase.source, &rawGame)) {
+        result.timing.sourceCompileUs = elapsedMicrosSince(phaseStart);
+        result.error = testCase.name + ": failed to compile source";
+        return result;
+    }
+    result.timing.sourceCompileUs = elapsedMicrosSince(phaseStart);
+    std::unique_ptr<ps_game, decltype(&ps_free_game)> game(rawGame, ps_free_game);
+
+    ps_session* rawSession = nullptr;
+    ps_error* error = nullptr;
+    phaseStart = std::chrono::steady_clock::now();
+    if (!sessionCreateForGame(game.get(), testCase.seed, &rawSession, &error)) {
+        result.timing.sessionCreateUs = elapsedMicrosSince(phaseStart);
+        result.error = testCase.name + ": " + ps_error_message(error);
+        ps_free_error(error);
+        return result;
+    }
+    result.timing.sessionCreateUs = elapsedMicrosSince(phaseStart);
+    std::unique_ptr<ps_session, decltype(&ps_session_destroy)> session(rawSession, ps_session_destroy);
+
+    phaseStart = std::chrono::steady_clock::now();
+    if (!ps_session_load_level(session.get(), testCase.targetLevel, &error)) {
+        result.timing.levelLoadUs = elapsedMicrosSince(phaseStart);
+        result.error = testCase.name + ": " + ps_error_message(error);
+        ps_free_error(error);
+        return result;
+    }
+    result.timing.levelLoadUs = elapsedMicrosSince(phaseStart);
+
+    phaseStart = std::chrono::steady_clock::now();
+    if (!replayInputTokens(session.get(), testCase.inputs, nullptr)) {
+        result.timing.replayUs = elapsedMicrosSince(phaseStart);
+        result.error = testCase.name + ": failed to replay inputs";
+        return result;
+    }
+    result.timing.replayUs = elapsedMicrosSince(phaseStart);
+
+    phaseStart = std::chrono::steady_clock::now();
+    char* serializedRaw = ps_session_serialize_test_string(session.get());
+    const std::string actualSerialized = serializedRaw ? serializedRaw : "";
+    ps_string_free(serializedRaw);
+    result.timing.serializeUs = elapsedMicrosSince(phaseStart);
+
+    if (actualSerialized != testCase.expectedSerialized) {
+        std::ostringstream stream;
+        stream << testCase.name << ": final serialized level mismatch\n"
+               << "expected:\n" << testCase.expectedSerialized << "\n"
+               << "actual:\n" << actualSerialized << "\n";
+        result.error = stream.str();
+        return result;
+    }
+
+    result.passed = true;
+    return result;
+}
+
+SimulationTimingTotals sumSimulationTimings(
+    const std::vector<SimulationCaseResult>& results,
+    int64_t testdataParseUs
+) {
+    SimulationTimingTotals totals;
+    totals.testdataParseUs = testdataParseUs;
+    for (const auto& result : results) {
+        totals.sourceCompileUs += result.timing.sourceCompileUs;
+        totals.sessionCreateUs += result.timing.sessionCreateUs;
+        totals.levelLoadUs += result.timing.levelLoadUs;
+        totals.replayUs += result.timing.replayUs;
+        totals.serializeUs += result.timing.serializeUs;
+    }
+    return totals;
+}
+
 int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     std::vector<std::string> exporterArgs;
     std::vector<std::string> traceArgs;
@@ -2063,113 +2260,116 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
 }
 
 int simulationTestdataCommand(const std::filesystem::path& testdataPath, int argc, char** argv) {
-    size_t progressEvery = 25;
-    for (int index = 0; index < argc; ++index) {
-        const std::string arg = argv[index];
-        if (arg == "--progress-every" && index + 1 < argc) {
-            progressEvery = static_cast<size_t>(std::stoull(argv[++index]));
-        } else {
-            throw std::runtime_error("Unsupported simulation-testdata argument: " + arg);
-        }
-    }
-
-    const auto startedAt = std::chrono::steady_clock::now();
+    const SimulationCorpusOptions options = parseSimulationCorpusOptions(argc, argv);
+    const auto wallStartedAt = std::chrono::steady_clock::now();
+    const auto parseStartedAt = std::chrono::steady_clock::now();
     const auto root = loadJsDataArrayAsJson(testdataPath);
-    const auto& cases = root.asArray();
+    const std::vector<SimulationCorpusCase> cases = parseSimulationCorpusCases(root);
+    const int64_t testdataParseUs = elapsedMicrosSince(parseStartedAt);
+    const size_t totalChecks = cases.size() * options.repeat;
+    std::vector<SimulationCaseResult> results(totalChecks);
     size_t passed = 0;
     size_t failed = 0;
 
-    for (size_t caseIndex = 0; caseIndex < cases.size(); ++caseIndex) {
-        const auto& entryValue = cases[caseIndex];
-        if (!entryValue.isArray() || entryValue.asArray().size() < 2) {
-            std::cerr << "case[" << caseIndex << "]: malformed testdata entry\n";
-            ++failed;
-            continue;
-        }
-        const auto& entry = entryValue.asArray();
-        const std::string name = entry[0].isString() ? entry[0].asString() : ("case[" + std::to_string(caseIndex) + "]");
-        if (!entry[1].isArray()) {
-            std::cerr << name << ": malformed payload\n";
-            ++failed;
-            continue;
-        }
-        const auto& payload = entry[1].asArray();
-        if (payload.size() < 3 || !payload[0].isString() || !payload[2].isString()) {
-            std::cerr << name << ": malformed simulation payload\n";
-            ++failed;
-            continue;
-        }
+    if (options.profileTimers) {
+        ps_runtime_counters_reset();
+        ps_runtime_counters_set_enabled(true);
+    }
 
-        std::string source = payload[0].asString();
-        if (source.empty() || source.back() != '\n') {
-            source.push_back('\n');
-        }
-        const std::vector<std::string> inputs = payload.size() > 1 ? inputTokensFromJsonArray(payload[1]) : std::vector<std::string>{};
-        const std::string expectedSerialized = payload[2].asString();
-        const int32_t targetLevel = payload.size() >= 4 && !payload[3].isNull() ? looseAsInt(payload[3]) : 0;
-        std::optional<std::string> seed;
-        if (payload.size() >= 5 && !payload[4].isNull()) {
-            if (payload[4].isString()) {
-                seed = payload[4].asString();
-            } else if (payload[4].isInteger() || payload[4].isDouble()) {
-                seed = std::to_string(payload[4].isInteger() ? payload[4].asInteger() : payload[4].asDouble());
+    if (options.jobs <= 1 || totalChecks <= 1) {
+        for (size_t checkIndex = 0; checkIndex < totalChecks; ++checkIndex) {
+            const SimulationCorpusCase& testCase = cases[checkIndex % cases.size()];
+            results[checkIndex] = runSimulationCorpusCase(testCase);
+            if (results[checkIndex].passed) {
+                ++passed;
+            } else {
+                ++failed;
+                if (!results[checkIndex].error.empty()) {
+                    std::cerr << results[checkIndex].error;
+                    if (results[checkIndex].error.back() != '\n') {
+                        std::cerr << "\n";
+                    }
+                }
+            }
+            if (!options.quiet && options.progressEvery > 0 && ((checkIndex + 1) % options.progressEvery) == 0) {
+                std::cerr << "progress checks=" << (checkIndex + 1) << "/" << totalChecks
+                          << " passed=" << passed << " failed=" << failed << "\n";
             }
         }
-
-        ps_game* rawGame = nullptr;
-        if (!loadGameFromSourceText(source, &rawGame)) {
-            std::cerr << name << ": failed to compile source\n";
-            ++failed;
-            continue;
+    } else {
+        std::atomic<size_t> nextCheck{0};
+        std::vector<std::future<void>> workers;
+        workers.reserve(options.jobs);
+        for (size_t workerIndex = 0; workerIndex < options.jobs; ++workerIndex) {
+            workers.push_back(std::async(std::launch::async, [&]() {
+                while (true) {
+                    const size_t checkIndex = nextCheck.fetch_add(1, std::memory_order_relaxed);
+                    if (checkIndex >= totalChecks) {
+                        break;
+                    }
+                    const SimulationCorpusCase& testCase = cases[checkIndex % cases.size()];
+                    results[checkIndex] = runSimulationCorpusCase(testCase);
+                }
+            }));
         }
-        std::unique_ptr<ps_game, decltype(&ps_free_game)> game(rawGame, ps_free_game);
-
-        ps_session* rawSession = nullptr;
-        ps_error* error = nullptr;
-        if (!sessionCreateForGame(game.get(), seed, &rawSession, &error)) {
-            std::cerr << name << ": " << ps_error_message(error) << "\n";
-            ps_free_error(error);
-            ++failed;
-            continue;
+        for (auto& worker : workers) {
+            worker.get();
         }
-        std::unique_ptr<ps_session, decltype(&ps_session_destroy)> session(rawSession, ps_session_destroy);
-
-        if (!ps_session_load_level(session.get(), targetLevel, &error)) {
-            std::cerr << name << ": " << ps_error_message(error) << "\n";
-            ps_free_error(error);
-            ++failed;
-            continue;
-        }
-
-        if (!replayInputTokens(session.get(), inputs, nullptr)) {
-            std::cerr << name << ": failed to replay inputs\n";
-            ++failed;
-            continue;
-        }
-
-        char* serializedRaw = ps_session_serialize_test_string(session.get());
-        const std::string actualSerialized = serializedRaw ? serializedRaw : "";
-        ps_string_free(serializedRaw);
-
-        if (actualSerialized != expectedSerialized) {
-            std::cerr << name << ": final serialized level mismatch\n";
-            std::cerr << "expected:\n" << expectedSerialized << "\n";
-            std::cerr << "actual:\n" << actualSerialized << "\n";
-            ++failed;
-            continue;
-        }
-
-        ++passed;
-        if (progressEvery > 0 && ((caseIndex + 1) % progressEvery) == 0) {
-            std::cerr << "progress cases=" << (caseIndex + 1) << "/" << cases.size()
-                      << " passed=" << passed << " failed=" << failed << "\n";
+        for (size_t checkIndex = 0; checkIndex < totalChecks; ++checkIndex) {
+            if (results[checkIndex].passed) {
+                ++passed;
+            } else {
+                ++failed;
+                if (!results[checkIndex].error.empty()) {
+                    std::cerr << results[checkIndex].error;
+                    if (results[checkIndex].error.back() != '\n') {
+                        std::cerr << "\n";
+                    }
+                }
+            }
         }
     }
 
-    const auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::steady_clock::now() - startedAt).count();
+    ps_runtime_counters counters{};
+    if (options.profileTimers) {
+        ps_runtime_counters_snapshot(&counters);
+        ps_runtime_counters_set_enabled(false);
+    }
+
+    const int64_t wallUs = elapsedMicrosSince(wallStartedAt);
+    const SimulationTimingTotals timings = sumSimulationTimings(results, testdataParseUs);
     std::cout << "cpp_simulation_tests_direct passed=" << passed << " failed=" << failed
-              << " total=" << cases.size() << " elapsed_ms=" << elapsedMs << "\n";
+              << " total=" << totalChecks << " cases=" << cases.size()
+              << " repeats=" << options.repeat << " jobs=" << options.jobs
+              << " elapsed_ms=" << usToMs(wallUs) << "\n";
+    if (options.profileTimers) {
+        std::cout << "cpp_simulation_profile"
+                  << " cases=" << cases.size()
+                  << " repeats=" << options.repeat
+                  << " checks=" << totalChecks
+                  << " jobs=" << options.jobs
+                  << " wall_ms=" << usToMs(wallUs)
+                  << " testdata_parse_ms=" << usToMs(timings.testdataParseUs)
+                  << " source_compile_ms=" << usToMs(timings.sourceCompileUs)
+                  << " session_create_ms=" << usToMs(timings.sessionCreateUs)
+                  << " level_load_ms=" << usToMs(timings.levelLoadUs)
+                  << " replay_ms=" << usToMs(timings.replayUs)
+                  << " serialize_ms=" << usToMs(timings.serializeUs)
+                  << " rules_visited=" << counters.rules_visited
+                  << " rules_skipped_by_mask=" << counters.rules_skipped_by_mask
+                  << " candidate_cells_tested=" << counters.candidate_cells_tested
+                  << " pattern_tests=" << counters.pattern_tests
+                  << " pattern_matches=" << counters.pattern_matches
+                  << " replacements_attempted=" << counters.replacements_attempted
+                  << " replacements_applied=" << counters.replacements_applied
+                  << " row_scans=" << counters.row_scans
+                  << " ellipsis_scans=" << counters.ellipsis_scans
+                  << " mask_rebuild_calls=" << counters.mask_rebuild_calls
+                  << " mask_rebuild_dirty_calls=" << counters.mask_rebuild_dirty_calls
+                  << " mask_rebuild_rows=" << counters.mask_rebuild_rows
+                  << " mask_rebuild_columns=" << counters.mask_rebuild_columns
+                  << "\n";
+    }
     return failed == 0 ? 0 : 1;
 }
 
@@ -3078,13 +3278,15 @@ void printCompileHelp() {
 void printTestHelp() {
     std::cout
         << "Usage: puzzlescript_cpp test js-parity generated-js-parity-data.json [options]\n"
-        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N]\n"
+        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--repeat N] [--jobs N|auto] [--quiet]\n"
         << "       puzzlescript_cpp test diagnostics-corpus src/tests/resources/errormessage_testdata.js [--progress-every N]\n"
         << "       puzzlescript_cpp test diagnostics parser-corpus.bundle.ndjson\n\n"
         << "simulation-corpus and diagnostics-corpus read the original testdata.js and\n"
         << "errormessage_testdata.js directly as JSON-ish arrays and do not invoke Node or\n"
         << "the JavaScript PuzzleScript engine. js-parity uses saved replay data generated\n"
         << "from the original JavaScript implementation for deeper runtime trace checks.\n\n"
+        << "simulation-corpus profiling reports source compile/load/replay/serialize timings\n"
+        << "plus runtime counters for rule scans, pattern tests, replacements, and mask rebuilds.\n\n"
         << "Usually use the Makefile wrappers:\n"
         << "  make js_parity_tests\n"
         << "  make simulation_tests\n"
@@ -3096,12 +3298,13 @@ void printTestHelp() {
 
 void printProfileHelp() {
     std::cout
-        << "Usage: puzzlescript_cpp profile-simulations generated-js-parity-data.json [--repeat N] [--profile-timers] [--quiet]\n\n"
-        << "Runs the C++ runtime over the saved simulation replay corpus without invoking\n"
-        << "the JavaScript engine or doing JS-vs-C++ parity comparison. This measures the\n"
-        << "compiled runtime representation loaded from corpus IR, not native source\n"
-        << "parse/compile time. Use --repeat to amplify engine stepping time for sampling\n"
-        << "profilers.\n\n"
+        << "Usage: puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --profile-timers [--repeat N] [--jobs N|auto] [--quiet]\n"
+        << "       puzzlescript_cpp profile-simulations generated-js-parity-data.json [--repeat N] [--profile-timers] [--quiet]\n\n"
+        << "The direct simulation-corpus profiler is the current performance north star: it\n"
+        << "parses testdata.js directly, compiles games natively, replays inputs, and splits\n"
+        << "time into source compile, session creation, replay, serialization, and runtime\n"
+        << "rule counters. profile-simulations remains available for generated JS parity\n"
+        << "replay data when debugging trace-level behavior.\n\n"
         << "Usually use:\n"
         << "  make profile_simulation_tests\n";
 }
