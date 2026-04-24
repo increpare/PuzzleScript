@@ -195,6 +195,10 @@ struct Pattern {
     uint32_t anyObjectsFirst = 0;
     uint32_t anyObjectsCount = 0;
 
+    // Object ids from objectsPresent, precomputed once so anchored scans do
+    // not repeatedly walk object-mask words to find possible anchors.
+    std::vector<int32_t> objectAnchorIds;
+
     std::optional<Replacement> replacement;
 };
 

@@ -60,6 +60,22 @@ bool maskHasBit(const puzzlescript::MaskVector& words, int32_t bitIndex) {
         && (words[word] & puzzlescript::maskBit(static_cast<uint32_t>(bitIndex))) != 0;
 }
 
+std::vector<int32_t> objectIdsFromMask(const puzzlescript::MaskVector& words, int32_t objectCount) {
+    std::vector<int32_t> ids;
+    for (uint32_t word = 0; word < words.size(); ++word) {
+        puzzlescript::MaskWordUnsigned bits = static_cast<puzzlescript::MaskWordUnsigned>(words[static_cast<size_t>(word)]);
+        while (bits != 0) {
+            const int32_t bit = puzzlescript::maskWordCountTrailingZeros(bits);
+            const int32_t objectId = static_cast<int32_t>(word) * static_cast<int32_t>(puzzlescript::kMaskWordBits) + bit;
+            if (objectId < objectCount) {
+                ids.push_back(objectId);
+            }
+            bits &= bits - 1;
+        }
+    }
+    return ids;
+}
+
 std::vector<std::vector<int32_t>> parseSpriteMatrix(const std::vector<std::string>& rows) {
     // PuzzleScript sprites are typically 5x5; treat '.' as transparent (-1) and digits as palette indices.
     std::vector<std::vector<int32_t>> result;
@@ -1998,6 +2014,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 pat.objectsMissing = storeMaskWords(*game, objectsMissing);
                 pat.movementsPresent = storeMaskWords(*game, movementsPresent);
                 pat.movementsMissing = storeMaskWords(*game, movementsMissing);
+                pat.objectAnchorIds = objectIdsFromMask(objectsPresent, game->objectCount);
                 pat.anyObjectsFirst = static_cast<uint32_t>(game->anyObjectOffsets.size() - anyOffsets.size());
                 pat.anyObjectsCount = static_cast<uint32_t>(anyOffsets.size());
 

@@ -851,6 +851,22 @@ MaskVector parseMaskVector(const json::Value& value) {
     return result;
 }
 
+std::vector<int32_t> objectIdsFromMask(const MaskVector& words, int32_t objectCount) {
+    std::vector<int32_t> ids;
+    for (uint32_t word = 0; word < words.size(); ++word) {
+        MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(words[static_cast<size_t>(word)]);
+        while (bits != 0) {
+            const int32_t bit = maskWordCountTrailingZeros(bits);
+            const int32_t objectId = static_cast<int32_t>(word) * static_cast<int32_t>(kMaskWordBits) + bit;
+            if (objectId < objectCount) {
+                ids.push_back(objectId);
+            }
+            bits &= bits - 1;
+        }
+    }
+    return ids;
+}
+
 // ---- Game mask-arena helpers ----------------------------------------------
 // These append mask words into `game.maskArena` and return the offset (in
 // words) of the first element. Used during IR parsing to replace the old
@@ -1158,6 +1174,7 @@ Pattern parsePattern(Game& game, const json::Value& value) {
     pattern.objectsMissing   = storeMaskWords(game, objectsMissing);
     pattern.movementsPresent = storeMaskWords(game, movementsPresent);
     pattern.movementsMissing = storeMaskWords(game, movementsMissing);
+    pattern.objectAnchorIds = objectIdsFromMask(objectsPresent, game.objectCount);
 
     pattern.anyObjectsFirst = static_cast<uint32_t>(game.anyObjectOffsets.size());
     for (const auto& anyMask : requireField(object, "any_objects_present").asArray()) {
@@ -2328,25 +2345,15 @@ std::optional<RowAnchor> chooseRowAnchor(const Session& session, const std::vect
     std::optional<RowAnchor> best;
     for (int32_t patternIndex = 0; patternIndex < static_cast<int32_t>(row.size()); ++patternIndex) {
         const Pattern& pattern = row[static_cast<size_t>(patternIndex)];
-        if (pattern.kind != Pattern::Kind::CellPattern || !pattern.hasObjectsPresent) {
+        if (pattern.kind != Pattern::Kind::CellPattern || pattern.objectAnchorIds.empty()) {
             continue;
         }
-        const MaskWord* mask = maskPtr(game, pattern.objectsPresent);
-        if (mask == nullptr) {
-            continue;
-        }
-        for (uint32_t word = 0; word < game.wordCount; ++word) {
-            MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(mask[word]);
-            while (bits != 0) {
-                const int32_t bit = maskWordCountTrailingZeros(bits);
-                const int32_t objectId = static_cast<int32_t>(word) * static_cast<int32_t>(kMaskWordBits) + bit;
-                if (objectId < game.objectCount) {
-                    const uint64_t count = objectPresenceCount(session, objectId);
-                    if (count > 0 && (!best.has_value() || count < best->cellCount)) {
-                        best = RowAnchor{patternIndex, objectId, count};
-                    }
+        for (const int32_t objectId : pattern.objectAnchorIds) {
+            if (objectId < game.objectCount) {
+                const uint64_t count = objectPresenceCount(session, objectId);
+                if (count > 0 && (!best.has_value() || count < best->cellCount)) {
+                    best = RowAnchor{patternIndex, objectId, count};
                 }
-                bits &= bits - 1;
             }
         }
     }
