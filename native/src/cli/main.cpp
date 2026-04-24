@@ -1944,6 +1944,7 @@ struct SimulationCorpusOptions {
     size_t progressEvery = 25;
     size_t repeat = 1;
     size_t jobs = 1;
+    size_t topSlowCases = 0;
     bool profileTimers = false;
     bool quiet = false;
 };
@@ -2007,6 +2008,8 @@ SimulationCorpusOptions parseSimulationCorpusOptions(int argc, char** argv) {
             }
         } else if (arg == "--profile-timers") {
             options.profileTimers = true;
+        } else if (arg == "--top-slow-cases" && index + 1 < argc) {
+            options.topSlowCases = static_cast<size_t>(std::stoull(argv[++index]));
         } else if (arg == "--quiet") {
             options.quiet = true;
             options.progressEvery = 0;
@@ -2514,6 +2517,55 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                   << " mask_rebuild_rows=" << counters.mask_rebuild_rows
                   << " mask_rebuild_columns=" << counters.mask_rebuild_columns
                   << "\n";
+    }
+    if (options.topSlowCases > 0 && !cases.empty()) {
+        struct SlowCase {
+            size_t caseIndex = 0;
+            int64_t totalUs = 0;
+            int64_t sourceCompileUs = 0;
+            int64_t replayUs = 0;
+            int64_t sessionCreateUs = 0;
+            int64_t levelLoadUs = 0;
+            int64_t serializeUs = 0;
+        };
+        std::vector<SlowCase> slowCases(cases.size());
+        for (size_t caseIndex = 0; caseIndex < cases.size(); ++caseIndex) {
+            slowCases[caseIndex].caseIndex = caseIndex;
+            slowCases[caseIndex].sourceCompileUs = compileCache.compileUs[caseIndex];
+            slowCases[caseIndex].totalUs += compileCache.compileUs[caseIndex];
+        }
+        for (size_t checkIndex = 0; checkIndex < results.size(); ++checkIndex) {
+            const size_t caseIndex = checkIndex % cases.size();
+            const auto& timing = results[checkIndex].timing;
+            auto& slow = slowCases[caseIndex];
+            slow.sessionCreateUs += timing.sessionCreateUs;
+            slow.levelLoadUs += timing.levelLoadUs;
+            slow.replayUs += timing.replayUs;
+            slow.serializeUs += timing.serializeUs;
+            slow.totalUs += timing.sessionCreateUs + timing.levelLoadUs + timing.replayUs + timing.serializeUs;
+        }
+        std::sort(slowCases.begin(), slowCases.end(), [](const SlowCase& lhs, const SlowCase& rhs) {
+            if (lhs.totalUs != rhs.totalUs) {
+                return lhs.totalUs > rhs.totalUs;
+            }
+            return lhs.caseIndex < rhs.caseIndex;
+        });
+        const size_t emitCount = std::min(options.topSlowCases, slowCases.size());
+        for (size_t rank = 0; rank < emitCount; ++rank) {
+            const auto& slow = slowCases[rank];
+            const auto& testCase = cases[slow.caseIndex];
+            std::cout << "cpp_simulation_slow_case"
+                      << " rank=" << (rank + 1)
+                      << " index=" << (testCase.index + 1)
+                      << " name=" << jsonStringLiteral(testCase.name)
+                      << " total_ms=" << usToMs(slow.totalUs)
+                      << " source_compile_ms=" << usToMs(slow.sourceCompileUs)
+                      << " replay_ms=" << usToMs(slow.replayUs)
+                      << " session_create_ms=" << usToMs(slow.sessionCreateUs)
+                      << " level_load_ms=" << usToMs(slow.levelLoadUs)
+                      << " serialize_ms=" << usToMs(slow.serializeUs)
+                      << "\n";
+        }
     }
     return failed == 0 ? 0 : 1;
 }
