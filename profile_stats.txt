@@ -1,14 +1,14 @@
 ===== PuzzleScript C++ simulation profiling =====
-Fri, 24 Apr 2026 05:19:14 +0200
+Fri, 24 Apr 2026 15:14:15 +0200
 Darwin Stephens-MacBook-Pro.fritz.box 25.3.0 Darwin Kernel Version 25.3.0: Wed Jan 28 20:53:15 PST 2026; root:xnu-12377.81.4~5/RELEASE_ARM64_T6000 arm64
 ProductName:		macOS
 ProductVersion:		26.3
 BuildVersion:		25D125
-dad0c3fb699cbc52c675fa08809f3d01b78b75bf
+91d25d9fdf1bdeb0ede82d4ef5ef2ff4c9a39d01
 
 ===== Binary =====
 /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/puzzlescript_cpp: Mach-O 64-bit executable arm64
--rwxr-xr-x@ 1 stephenlavelle  staff  1294960 Apr 24 05:18 /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/puzzlescript_cpp
+-rwxr-xr-x@ 1 stephenlavelle  staff  1354416 Apr 24 15:14 /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/puzzlescript_cpp
 
 ===== Workload =====
 simulation_corpus=/Users/stephenlavelle/Documents/GitHub/PuzzleScript/src/tests/resources/testdata.js
@@ -21,24 +21,44 @@ command: /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/puzzle
 
 ===== Pass 1 stdout =====
 
-cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=10015
-cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=10015 testdata_parse_ms=29 source_compile_ms=3390 session_create_ms=3 level_load_ms=93 replay_ms=6386 replay_avg_ms=2128 replay_median_ms=2126 serialize_ms=66 source_compile_avg_ms=1130 source_compile_median_ms=1128 rules_visited=31649067 rules_skipped_by_mask=28578369 candidate_cells_tested=181881162 pattern_tests=255490557 pattern_matches=84095619 replacements_attempted=28242144 replacements_applied=10750293 row_scans=7921662 ellipsis_scans=41808723 mask_rebuild_calls=4762830 mask_rebuild_dirty_calls=549327 mask_rebuild_rows=5813763 mask_rebuild_columns=7953228
+cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=6266
+cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=6266 games_loaded=452 games_reused=17 testdata_parse_ms=31 source_compile_ms=982 session_create_ms=3 level_load_ms=74 replay_ms=5085 replay_avg_ms=1695 replay_median_ms=1692 serialize_ms=68 source_compile_avg_ms=327 source_compile_median_ms=327 rules_visited=31649067 rules_skipped_by_mask=27032319 candidate_cells_tested=182574540 pattern_tests=256250274 pattern_matches=84210207 replacements_attempted=28242144 replacements_applied=10750293 row_scans=7989846 ellipsis_scans=50314593 mask_rebuild_calls=4762830 mask_rebuild_dirty_calls=456951 mask_rebuild_rows=3774093 mask_rebuild_columns=4979238
 
 ===== Pass 1 stderr (resource usage) =====
 
 --- stderr tail ---
+real 6.53
+user 6.11
+sys 0.10
+           393003008  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               25375  page reclaims
+                   9  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                3465  involuntary context switches
+         92788770361  instructions retired
+         19405402904  cycles elapsed
+           290260928  peak memory footprint
 
 ===== Pass 1 profile summary =====
 
-cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=10015
-cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=10015 testdata_parse_ms=29 source_compile_ms=3390 session_create_ms=3 level_load_ms=93 replay_ms=6386 replay_avg_ms=2128 replay_median_ms=2126 serialize_ms=66 source_compile_avg_ms=1130 source_compile_median_ms=1128 rules_visited=31649067 rules_skipped_by_mask=28578369 candidate_cells_tested=181881162 pattern_tests=255490557 pattern_matches=84095619 replacements_attempted=28242144 replacements_applied=10750293 row_scans=7921662 ellipsis_scans=41808723 mask_rebuild_calls=4762830 mask_rebuild_dirty_calls=549327 mask_rebuild_rows=5813763 mask_rebuild_columns=7953228
+cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=6266
+cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=6266 games_loaded=452 games_reused=17 testdata_parse_ms=31 source_compile_ms=982 session_create_ms=3 level_load_ms=74 replay_ms=5085 replay_avg_ms=1695 replay_median_ms=1692 serialize_ms=68 source_compile_avg_ms=327 source_compile_median_ms=327 rules_visited=31649067 rules_skipped_by_mask=27032319 candidate_cells_tested=182574540 pattern_tests=256250274 pattern_matches=84210207 replacements_attempted=28242144 replacements_applied=10750293 row_scans=7989846 ellipsis_scans=50314593 mask_rebuild_calls=4762830 mask_rebuild_dirty_calls=456951 mask_rebuild_rows=3774093 mask_rebuild_columns=4979238
 pass1_exit_status=0
 ----- Pass 2: macOS sample(1) CPU stacks -----
 
 ===== Pass 2 stdout =====
 
-cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=9995
-cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=9995 testdata_parse_ms=30 source_compile_ms=3402 session_create_ms=3 level_load_ms=93 replay_ms=6355 replay_avg_ms=2118 replay_median_ms=2116 serialize_ms=66 source_compile_avg_ms=1134 source_compile_median_ms=1132 rules_visited=31649067 rules_skipped_by_mask=28578369 candidate_cells_tested=181881162 pattern_tests=255490557 pattern_matches=84095619 replacements_attempted=28242144 replacements_applied=10750293 row_scans=7921662 ellipsis_scans=41808723 mask_rebuild_calls=4762830 mask_rebuild_dirty_calls=549327 mask_rebuild_rows=5813763 mask_rebuild_columns=7953228
+cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=7033
+cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=7033 games_loaded=452 games_reused=17 testdata_parse_ms=30 source_compile_ms=1122 session_create_ms=3 level_load_ms=82 replay_ms=5693 replay_avg_ms=1897 replay_median_ms=1897 serialize_ms=78 source_compile_avg_ms=374 source_compile_median_ms=374 rules_visited=31649067 rules_skipped_by_mask=27032319 candidate_cells_tested=182574540 pattern_tests=256250274 pattern_matches=84210207 replacements_attempted=28242144 replacements_applied=10750293 row_scans=7989846 ellipsis_scans=50314593 mask_rebuild_calls=4762830 mask_rebuild_dirty_calls=456951 mask_rebuild_rows=3774093 mask_rebuild_columns=4979238
 
 ===== Pass 2 stderr tail =====
 
@@ -46,19 +66,273 @@ cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=9995 testd
 
 ===== Pass 2 profile summary =====
 
-cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=9995
-cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=9995 testdata_parse_ms=30 source_compile_ms=3402 session_create_ms=3 level_load_ms=93 replay_ms=6355 replay_avg_ms=2118 replay_median_ms=2116 serialize_ms=66 source_compile_avg_ms=1134 source_compile_median_ms=1132 rules_visited=31649067 rules_skipped_by_mask=28578369 candidate_cells_tested=181881162 pattern_tests=255490557 pattern_matches=84095619 replacements_attempted=28242144 replacements_applied=10750293 row_scans=7921662 ellipsis_scans=41808723 mask_rebuild_calls=4762830 mask_rebuild_dirty_calls=549327 mask_rebuild_rows=5813763 mask_rebuild_columns=7953228
+cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=7033
+cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=7033 games_loaded=452 games_reused=17 testdata_parse_ms=30 source_compile_ms=1122 session_create_ms=3 level_load_ms=82 replay_ms=5693 replay_avg_ms=1897 replay_median_ms=1897 serialize_ms=78 source_compile_avg_ms=374 source_compile_median_ms=374 rules_visited=31649067 rules_skipped_by_mask=27032319 candidate_cells_tested=182574540 pattern_tests=256250274 pattern_matches=84210207 replacements_attempted=28242144 replacements_applied=10750293 row_scans=7989846 ellipsis_scans=50314593 mask_rebuild_calls=4762830 mask_rebuild_dirty_calls=456951 mask_rebuild_rows=3774093 mask_rebuild_columns=4979238
 pass2_exit_status=0
-sample_exit_status=255
+sample_exit_status=0
 
-sample(1) did not produce a stack file. On recent macOS versions this can
-require elevated permissions; try the Instruments command printed below.
+===== Hot stacks: sample(1), sorted by top of stack =====
+
+Sort by top of stack, same collapsed (when >= 5):
+        puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp)        773
+        puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp)        662
+        _platform_memmove  (in libsystem_platform.dylib)        525
+        puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp)        501
+        __psynch_cvwait  (in libsystem_kernel.dylib)        476
+        puzzlescript::(anonymous namespace)::rebuildMasks(puzzlescript::Session&)  (in puzzlescript_cpp)        307
+        puzzlescript::executeTurn(puzzlescript::Session&, int, puzzlescript::(anonymous namespace)::ExecuteTurnOptions)  (in puzzlescript_cpp)        283
+        _xzm_free  (in libsystem_malloc.dylib)        266
+        _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib)        223
+        puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp)        141
+        puzzlescript::(anonymous namespace)::applyRuleGroup(puzzlescript::Session&, std::vector<puzzlescript::Rule> const&, puzzlescript::(anonymous namespace)::CommandState&)  (in puzzlescript_cpp)        140
+        puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::Session&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int)  (in puzzlescript_cpp)        119
+        _platform_memset  (in libsystem_platform.dylib)        118
+        _platform_memcmp  (in libsystem_platform.dylib)        102
+        _free  (in libsystem_malloc.dylib)        97
+        DYLD-STUB$$memcpy  (in puzzlescript_cpp)        93
+        puzzlescript::(anonymous namespace)::setCellObjects(puzzlescript::Session&, int, std::vector<long long> const&)  (in puzzlescript_cpp)        81
+        <deduplicated_symbol>  (in libsystem_malloc.dylib)        74
+        _xzm_xzone_malloc  (in libsystem_malloc.dylib)        65
+        malloc_type_malloc  (in libsystem_malloc.dylib)        62
+        puzzlescript::(anonymous namespace)::seedPlayerMovements(puzzlescript::Session&, int)  (in puzzlescript_cpp)        56
+        puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)  (in puzzlescript_cpp)        47
+        __bzero  (in libsystem_platform.dylib)        46
+        puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::$_28::operator()(std::vector<puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::ParsedCell> const&, std::vector<puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::ParsedCell> const*) const  (in puzzlescript_cpp)        41
+        puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in puzzlescript_cpp)        39
+        puzzlescript::serializeTestString(puzzlescript::Session const&)  (in puzzlescript_cpp)        36
+        std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp)        34
+        operator new(unsigned long)  (in libc++abi.dylib)        33
+        DYLD-STUB$$memcmp  (in puzzlescript_cpp)        25
+        DYLD-STUB$$free  (in libc++abi.dylib)        24
+        puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::Session&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in puzzlescript_cpp)        23
+        puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::$_19::operator()(puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::ParsedCell const&) const  (in puzzlescript_cpp)        20
+        mach_absolute_time  (in libsystem_kernel.dylib)        19
+        DYLD-STUB$$operator delete(void*)  (in puzzlescript_cpp)        18
+        DYLD-STUB$$operator new(unsigned long)  (in puzzlescript_cpp)        15
+        mach_vm_reclaim_update_kernel_accounting_trap  (in libsystem_kernel.dylib)        15
+        puzzlescript::compiler::(anonymous namespace)::toLowerCopy(std::basic_string_view<char>)  (in puzzlescript_cpp)        13
+        _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp)        12
+        DYLD-STUB$$malloc_type_malloc  (in libc++abi.dylib)        10
+        _xzm_xzone_malloc_freelist_outlined  (in libsystem_malloc.dylib)        10
+        _ZZN12puzzlescript8compiler18lowerToRuntimeGameERKNS0_11ParserStateERNSt3__110shared_ptrIKNS_4GameEEEENK3$_2clIRSA_EENS4_6vectorIxNS4_9allocatorIxEEEEOT_RKNS4_12basic_stringIcNS4_11char_traitsIcEENSE_IcEEEERNS4_3setISN_NS4_4lessISN_EENSE_ISN_EEEE  (in puzzlescript_cpp)        8
+        _xzm_xzone_malloc_small_freelist  (in libsystem_malloc.dylib)        8
+        puzzlescript::(anonymous namespace)::rowMatchStillMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in puzzlescript_cpp)        8
+        std::basic_string<char>::push_back(char)  (in libc++.1.dylib)        8
+        puzzlescript::compiler::parseSource(std::basic_string_view<char>, puzzlescript::compiler::DiagnosticSink&)  (in puzzlescript_cpp)        7
+        DYLD-STUB$$_platform_bzero  (in libsystem_malloc.dylib)        6
+        __tolower  (in libsystem_c.dylib)        6
+        puzzlescript::(anonymous namespace)::clearMovementState(puzzlescript::Session&)  (in puzzlescript_cpp)        6
+        puzzlescript::(anonymous namespace)::findLayersInMask(puzzlescript::Session const&, std::vector<long long> const&)  (in puzzlescript_cpp)        6
+        std::basic_string<char>::append(char const*, unsigned long)  (in libc++.1.dylib)        6
+        DYLD-STUB$$bzero  (in puzzlescript_cpp)        5
+        _platform_memchr  (in libsystem_platform.dylib)        5
+        mach_msg2_trap  (in libsystem_kernel.dylib)        5
+        puzzlescript::(anonymous namespace)::randomUniform(puzzlescript::Session::RandomState&)  (in puzzlescript_cpp)        5
+        std::basic_regex<char, std::regex_traits<char>>::__match_at_start_ecma<std::allocator<std::sub_match<char const*>>>(char const*, char const*, std::match_results<char const*>&, std::regex_constants::match_flag_type, bool) const  (in puzzlescript_cpp)        5
+        std::vector<long long>::__insert_with_size[abi:nqe210106]<std::__wrap_iter<long long const*>, std::__wrap_iter<long long const*>>(std::__wrap_iter<long long const*>, std::__wrap_iter<long long const*>, std::__wrap_iter<long long const*>, long)  (in puzzlescript_cpp)        5
+        utf8proc_iterate  (in puzzlescript_cpp)        5
+
+Binary Images:
+       0x104ff4000 -        0x10510eacf +puzzlescript_cpp (0) <615DA1A8-B687-3477-8891-B08A58FEA6F5> /Users/*/Documents/*/puzzlescript_cpp
+       0x105404000 -        0x105513fe7 +libSDL2-2.0.0.dylib (0) <028E981B-F9E9-394B-BAA1-136A3669A7AF> /opt/homebrew/*/libSDL2-2.0.0.dylib
+       0x1936bc000 -        0x19370f4bb  libobjc.A.dylib (951.1) <9E66CFF2-3EBD-3242-8166-D5D0C204755B> /usr/lib/libobjc.A.dylib
+       0x193710000 -        0x193740bcb  libdyld.dylib (1340) <D0CBB392-9301-3174-8904-D869F1D973CF> /usr/lib/system/libdyld.dylib
+       0x193741000 -        0x1937e0713  dyld (1.0.0 - 1340) <BC4DB5F4-1C64-3706-8006-73B78C3E1F1A> /usr/lib/dyld
+       0x1937e1000 -        0x1937e41d0  libsystem_blocks.dylib (96) <F1D9FC62-B5CE-3FB6-B264-B1933396C05F> /usr/lib/system/libsystem_blocks.dylib
+       0x1937e5000 -        0x19383a07f  libxpc.dylib (3089.80.10) <3B264F68-2825-3790-8796-4B49581D6425> /usr/lib/system/libxpc.dylib
+       0x19383b000 -        0x19385b95f  libsystem_trace.dylib (1815.80.2) <2CE5667A-97C5-35F3-8124-BB48185D0D3D> /usr/lib/system/libsystem_trace.dylib
+       0x19385c000 -        0x193908ccf  libcorecrypto.dylib (1922.80.7) <A6FB5220-05F1-36A3-93CA-E45F15C98D3A> /usr/lib/system/libcorecrypto.dylib
+       0x193909000 -        0x193954c67  libsystem_malloc.dylib (792.80.2) <221D1476-49F1-3370-A1DE-82991ACDB932> /usr/lib/system/libsystem_malloc.dylib
+       0x193955000 -        0x19399be5f  libdispatch.dylib (1542.0.4) <4C58AB31-F363-3E75-A8F8-302105812DBF> /usr/lib/system/libdispatch.dylib
+       0x19399c000 -        0x19399efeb  libsystem_featureflags.dylib (101) <36BE75BA-0B53-3ACA-ABAF-C639D711C90B> /usr/lib/system/libsystem_featureflags.dylib
+       0x19399f000 -        0x193a21047  libsystem_c.dylib (1725.40.4) <EB569350-0696-3397-838E-0344948107C0> /usr/lib/system/libsystem_c.dylib
+       0x193a22000 -        0x193ab4ea3  libc++.1.dylib (2000.67) <2DCB82A8-F83C-3656-B99E-B22415EA2AAA> /usr/lib/libc++.1.dylib
+       0x193ab5000 -        0x193acf92f  libc++abi.dylib (2000.67) <581F1CC9-CE04-30EF-AB06-1638E36161A7> /usr/lib/libc++abi.dylib
+       0x193ad0000 -        0x193b0c49f  libsystem_kernel.dylib (12377.81.4) <B809799C-0EC9-3EE1-B730-342BDBF14E03> /usr/lib/system/libsystem_kernel.dylib
+       0x193b0d000 -        0x193b19acb  libsystem_pthread.dylib (539.80.3) <0596A7B6-BCE2-3F06-A2E8-3EAAB5371ED8> /usr/lib/system/libsystem_pthread.dylib
+       0x193b1a000 -        0x193b224af  libsystem_platform.dylib (359.80.2) <62C9CD37-272D-3D2D-9A1C-6F4EF24F7EC7> /usr/lib/system/libsystem_platform.dylib
+       0x193b23000 -        0x193b52e23  libsystem_info.dylib (600) <05CCB208-0B54-38D8-B736-6C7043F446AA> /usr/lib/system/libsystem_info.dylib
+       0x193b53000 -        0x19409c2bf  com.apple.CoreFoundation (6.9 - 4302) <02762698-9950-3C66-8116-A3A565972A49> /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation
+       0x19409d000 -        0x1943b87bf  com.apple.LaunchServices (1141.1 - 1141.1) <9AFF1770-4AA1-3B52-9E33-6F91E1849A9E> /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/LaunchServices
+       0x1943b9000 -        0x19459cd3f  com.apple.gpusw.MetalTools (1.0 - 1) <15A3C78C-DDC1-3B6B-82C6-A2066EEEBEDD> /System/Library/PrivateFrameworks/MetalTools.framework/Versions/A/MetalTools
+       0x19459d000 -        0x194d7be3f  libBLAS.dylib (1545.81.3) <75601A35-48DB-331C-AB2D-DCCE9C566E58> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+       0x194d7c000 -        0x194e90adf  com.apple.Lexicon-framework (1.0 - 195.1.5) <CD64AA90-FB18-3168-9411-1EC538469F5F> /System/Library/PrivateFrameworks/Lexicon.framework/Versions/A/Lexicon
+       0x194e91000 -        0x195003237  libSparse.dylib (184.80.2) <C4E980E2-6D72-33CC-94BF-B081E4B2FDA0> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libSparse.dylib
+       0x195004000 -        0x1950976fb  com.apple.SystemConfiguration (1.21 - 1.21) <03D1F2EA-F649-3B3B-8BA0-69FFFE117405> /System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration
+       0x195098000 -        0x1950ccfbb  libCRFSuite.dylib (55) <B9E5C113-D809-3E9B-ADED-BF338771D129> /usr/lib/libCRFSuite.dylib
+       0x1953a5000 -        0x196348c1f  com.apple.Foundation (6.9 - 4302) <D17BA2E6-FAB3-33AD-9F98-D4E65847EA65> /System/Library/Frameworks/Foundation.framework/Versions/C/Foundation
+       0x196507000 -        0x19662aedf  com.apple.CoreDisplay (291.3 - 291.3) <5C3B9FF1-311E-3EAA-B2BD-D50C6ABC0A1F> /System/Library/Frameworks/CoreDisplay.framework/Versions/A/CoreDisplay
+       0x19662b000 -        0x1969f54ff  com.apple.audio.AudioToolboxCore (1.0 - 1556.418.1) <D4E4A8CB-FE8D-3FE5-99AE-86D6DFF8A97B> /System/Library/PrivateFrameworks/AudioToolboxCore.framework/Versions/A/AudioToolboxCore
+       0x1969f6000 -        0x196c228bf  com.apple.CoreText (877.3.0.1 - 877.3.0.1) <AC182540-5079-3B25-B6E2-0874087BB107> /System/Library/Frameworks/CoreText.framework/Versions/A/CoreText
+       0x196c23000 -        0x1973d439f  com.apple.audio.CoreAudio (5.0 - 5.0) <C0E6C187-F861-3F18-B4D8-25E77FC161A4> /System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio
+       0x1973d5000 -        0x1977f983f  com.apple.security (7.0 - 61901.80.25) <1461EF55-E8A2-35BF-94FB-9686ED1DA702> /System/Library/Frameworks/Security.framework/Versions/A/Security
+       0x1977fa000 -        0x197acb56b  libicucore.A.dylib (76142.3.1.1) <9B3BCF84-8E73-3421-A808-D3017ACD1294> /usr/lib/libicucore.A.dylib
+       0x197acc000 -        0x197ad6397  libsystem_darwin.dylib (1725.40.4) <EAC9A3D8-2048-3E6A-BA11-77D1C25C0EF3> /usr/lib/system/libsystem_darwin.dylib
+       0x197ad7000 -        0x197dd039f  com.apple.CoreServices.CarbonCore (1333 - 1333) <F5924C0D-5C7C-3587-9A43-C7048C2865AC> /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/CarbonCore
+       0x197dd1000 -        0x197e114cb  com.apple.CoreServicesInternal (505 - 505) <BBD8DD43-3E71-3344-99FF-D3C698DD0305> /System/Library/PrivateFrameworks/CoreServicesInternal.framework/Versions/A/CoreServicesInternal
+       0x197e12000 -        0x197e51bbf  com.apple.CSStore (1141.1 - 1141.1) <31ABD7AC-0E11-3DC4-B501-B064A1249992> /System/Library/PrivateFrameworks/CoreServicesStore.framework/Versions/A/CoreServicesStore
+       0x197e52000 -        0x197f3c63f  com.apple.framework.IOKit (2.0.2 - 100222.80.4) <62C53EB4-19E1-3B94-B34D-5CE54CFBA1E4> /System/Library/Frameworks/IOKit.framework/Versions/A/IOKit
+       0x197f3d000 -        0x197f4eff3  libsystem_notify.dylib (344.0.1) <73D7BFA7-9433-3ECD-929F-06220C37F214> /usr/lib/system/libsystem_notify.dylib
+       0x197fab000 -        0x1996d6bdf  com.apple.AppKit (6.9 - 2685.40.108) <07DCC67F-25B2-3F2C-B92E-6FC579455989> /System/Library/Frameworks/AppKit.framework/Versions/C/AppKit
+       0x1996d7000 -        0x19989139f  com.apple.UIFoundation (1.0 - 1017) <BF544EFF-72D0-37EE-8664-2B55120814E3> /System/Library/PrivateFrameworks/UIFoundation.framework/Versions/A/UIFoundation
+       0x199892000 -        0x1998a81df  com.apple.UniformTypeIdentifiers (709 - 709) <1F1AF96D-2297-38D4-8E50-40A0BFBE547F> /System/Library/Frameworks/UniformTypeIdentifiers.framework/Versions/A/UniformTypeIdentifiers
+       0x199d87000 -        0x199e5be5f  libboringssl.dylib (532.80.2) <166556D2-BD49-3C6C-BAE1-A7A6CB9106B9> /usr/lib/libboringssl.dylib
+       0x199e5c000 -        0x19a217a3f  com.apple.CFNetwork (1.0 - 3860.400.51) <708EB37B-5A66-3845-8BC8-29F429A3BC4E> /System/Library/Frameworks/CFNetwork.framework/Versions/A/CFNetwork
+       0x19a218000 -        0x19a232fdb  libsystem_networkextension.dylib (2205.81.1) <645A9697-79B5-3E35-A642-5FFDD53CB6A7> /usr/lib/system/libsystem_networkextension.dylib
+       0x19a233000 -        0x19a234067  libenergytrace.dylib (23) <6983B383-07F2-39CE-A1B3-BCB8B2AEF1B4> /usr/lib/libenergytrace.dylib
+       0x19a235000 -        0x19a2b54bf  libMobileGestalt.dylib (1462.80.9) <1DAD89C7-19E3-379C-A054-023CB6D7CD3F> /usr/lib/libMobileGestalt.dylib
+       0x19a2b6000 -        0x19a2cdff3  libsystem_asl.dylib (406) <2A30FE38-5014-334B-941B-579054EA8C1E> /usr/lib/system/libsystem_asl.dylib
+       0x19a2ce000 -        0x19a2f2c77  com.apple.TCC (1.0 - 1) <2BE6A2E2-A205-35D1-A802-FFAA38E1A91A> /System/Library/PrivateFrameworks/TCC.framework/Versions/A/TCC
+
+===== sample(1) call graph preview =====
+
+Analysis of sampling puzzlescript_cpp (pid 59150) every 1 millisecond
+Process:         puzzlescript_cpp [59150]
+Path:            /Users/USER/Documents/*/puzzlescript_cpp
+Load Address:    0x104ff4000
+Identifier:      puzzlescript_cpp
+Version:         0
+Code Type:       ARM64
+Platform:        macOS
+Parent Process:  bash [59028]
+Target Type:     live task
+
+Date/Time:       2026-04-24 15:14:22.213 +0200
+Launch Time:     2026-04-24 15:14:22.134 +0200
+OS Version:      macOS 26.3 (25D125)
+Report Version:  7
+Analysis Tool:   /usr/bin/sample
+----
+
+Call graph:
+    5373 Thread_26354049   DispatchQueue_1: com.apple.main-thread  (serial)
+    + 5372 start  (in dyld) + 7184  [0x193749d54]
+    + ! 5372 main  (in puzzlescript_cpp) + 11136  [0x104ff7e20]
+    + !   4885 (anonymous namespace)::simulationTestdataCommand(std::__fs::filesystem::path const&, int, char**)  (in puzzlescript_cpp) + 9664  [0x105008afc]
+    + !   : 4726 (anonymous namespace)::runSimulationCorpusCase((anonymous namespace)::SimulationCorpusCase const&, ps_game*)  (in puzzlescript_cpp) + 432  [0x10500ceac]
+    + !   : | 3280 (anonymous namespace)::replayInputTokens(ps_session*, std::vector<std::basic_string<char>> const&, std::vector<std::basic_string<char>>*)  (in puzzlescript_cpp) + 828  [0x104ffbb80]
+    + !   : | + 1421 puzzlescript::executeTurn(puzzlescript::Session&, int, puzzlescript::(anonymous namespace)::ExecuteTurnOptions)  (in puzzlescript_cpp) + 1428  [0x105040f20]
+    + !   : | + ! 1215 puzzlescript::(anonymous namespace)::applyRuleGroup(puzzlescript::Session&, std::vector<puzzlescript::Rule> const&, puzzlescript::(anonymous namespace)::CommandState&)  (in puzzlescript_cpp) + 5580  [0x10504a4cc]
+    + !   : | + ! : 351 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 6744  [0x105051884]
+    + !   : | + ! : | 152 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2012,1948,...  [0x10504e018,0x10504dfd8,...]
+    + !   : | + ! : | 126 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2032  [0x10504e02c]
+    + !   : | + ! : | + 126 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 32,4,...  [0x105052828,0x10505280c,...]
+    + !   : | + ! : | 40 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 1404  [0x10504ddb8]
+    + !   : | + ! : | + 40 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 32,4,...  [0x105052828,0x10505280c,...]
+    + !   : | + ! : | 33 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2888  [0x10504e384]
+    + !   : | + ! : |   33 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4,32,...  [0x10505280c,0x105052828,...]
+    + !   : | + ! : 256 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 7236  [0x105051a70]
+    + !   : | + ! : | 125 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 5372,52,...  [0x105053eac,0x1050529e4,...]
+    + !   : | + ! : | 33 puzzlescript::(anonymous namespace)::setCellObjects(puzzlescript::Session&, int, std::vector<long long> const&)  (in puzzlescript_cpp) + 260,272,...  [0x105048824,0x105048830,...]
+    + !   : | + ! : | 20 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 920  [0x105052d48]
+    + !   : | + ! : | + 10 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4,0  [0x1050aabb0,0x1050aabac]
+    + !   : | + ! : | + 10 _platform_memmove  (in libsystem_platform.dylib) + 428,0,...  [0x193b1d52c,0x193b1d380,...]
+    + !   : | + ! : | 15 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 432  [0x105052b60]
+    + !   : | + ! : | + 14 _platform_memmove  (in libsystem_platform.dylib) + 428,0,...  [0x193b1d52c,0x193b1d380,...]
+    + !   : | + ! : | + 1 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
+    + !   : | + ! : | 11 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 448  [0x105052b70]
+    + !   : | + ! : | + 9 _platform_memmove  (in libsystem_platform.dylib) + 428,204,...  [0x193b1d52c,0x193b1d44c,...]
+    + !   : | + ! : | + 2 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
+    + !   : | + ! : | 9 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 796  [0x105052ccc]
+    + !   : | + ! : | + 5 _platform_memmove  (in libsystem_platform.dylib) + 0,12,...  [0x193b1d380,0x193b1d38c,...]
+    + !   : | + ! : | + 4 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
+    + !   : | + ! : | 8 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 544  [0x105052bd0]
+    + !   : | + ! : | + 6 _platform_memmove  (in libsystem_platform.dylib) + 436,0,...  [0x193b1d534,0x193b1d380,...]
+    + !   : | + ! : | + 2 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
+    + !   : | + ! : | 6 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4492  [0x105053b3c]
+    + !   : | + ! : | + 4 _platform_memcmp  (in libsystem_platform.dylib) + 8,56,...  [0x193b1aef8,0x193b1af28,...]
+    + !   : | + ! : | + 2 DYLD-STUB$$memcmp  (in puzzlescript_cpp) + 4  [0x1050aaba4]
+    + !   : | + ! : | 5 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 272  [0x105052ac0]
+    + !   : | + ! : | + 5 _platform_memmove  (in libsystem_platform.dylib) + 460,0,...  [0x193b1d54c,0x193b1d380,...]
+    + !   : | + ! : | 5 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 668  [0x105052c4c]
+    + !   : | + ! : | + 5 _platform_memmove  (in libsystem_platform.dylib) + 428,460  [0x193b1d52c,0x193b1d54c]
+    + !   : | + ! : | 5 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 1192  [0x105052e58]
+    + !   : | + ! : | + 5 puzzlescript::(anonymous namespace)::randomUniform(puzzlescript::Session::RandomState&)  (in puzzlescript_cpp) + 148,176,...  [0x10504f558,0x10504f574,...]
+    + !   : | + ! : | 4 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 256  [0x105052ab0]
+    + !   : | + ! : | + 3 _platform_memmove  (in libsystem_platform.dylib) + 428,16  [0x193b1d52c,0x193b1d390]
+    + !   : | + ! : | + 1 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
+    + !   : | + ! : | 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4532  [0x105053b64]
+    + !   : | + ! : | + 2 _platform_memcmp  (in libsystem_platform.dylib) + 104,164  [0x193b1af58,0x193b1af94]
+    + !   : | + ! : | + 1 DYLD-STUB$$memcmp  (in puzzlescript_cpp) + 4  [0x1050aaba4]
+    + !   : | + ! : | 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4556  [0x105053b7c]
+    + !   : | + ! : | + 3 puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in puzzlescript_cpp) + 40,32  [0x10504fd20,0x10504fd18]
+    + !   : | + ! : | 2 puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in puzzlescript_cpp) + 144  [0x10504fd88]
+    + !   : | + ! : | 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 7044  [0x105054534]
+    + !   : | + ! : | + 1 _free  (in libsystem_malloc.dylib) + 96  [0x193940a8c]
+    + !   : | + ! : | 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 7056  [0x105054540]
+    + !   : | + ! : |   1 _xzm_free  (in libsystem_malloc.dylib) + 600  [0x19393399c]
+    + !   : | + ! : 136 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 5536  [0x1050513cc]
+    + !   : | + ! : | 125 puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::Session&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in puzzlescript_cpp) + 252  [0x10504fbfc]
+    + !   : | + ! : | + 82 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 732,1080,...  [0x105052c8c,0x105052de8,...]
+    + !   : | + ! : | + 7 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 432  [0x105052b60]
+    + !   : | + ! : | + ! 6 _platform_memmove  (in libsystem_platform.dylib) + 0,428,...  [0x193b1d380,0x193b1d52c,...]
+    + !   : | + ! : | + ! 1 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
+    + !   : | + ! : | + 6 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 920  [0x105052d48]
+    + !   : | + ! : | + ! 4 _platform_memmove  (in libsystem_platform.dylib) + 428,460  [0x193b1d52c,0x193b1d54c]
+    + !   : | + ! : | + ! 2 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
+    + !   : | + ! : | + 6 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4492  [0x105053b3c]
+    + !   : | + ! : | + ! 4 DYLD-STUB$$memcmp  (in puzzlescript_cpp) + 4  [0x1050aaba4]
+    + !   : | + ! : | + ! 2 _platform_memcmp  (in libsystem_platform.dylib) + 96  [0x193b1af50]
+    + !   : | + ! : | + 4 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 272  [0x105052ac0]
+    + !   : | + ! : | + ! 3 _platform_memmove  (in libsystem_platform.dylib) + 0,428,...  [0x193b1d380,0x193b1d52c,...]
+    + !   : | + ! : | + ! 1 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 8  [0x1050aabb4]
+    + !   : | + ! : | + 4 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 796  [0x105052ccc]
+    + !   : | + ! : | + ! 4 _platform_memmove  (in libsystem_platform.dylib) + 180,428  [0x193b1d434,0x193b1d52c]
+    + !   : | + ! : | + 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 256  [0x105052ab0]
+    + !   : | + ! : | + ! 3 _platform_memmove  (in libsystem_platform.dylib) + 16,428,...  [0x193b1d390,0x193b1d52c,...]
+    + !   : | + ! : | + 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 448  [0x105052b70]
+    + !   : | + ! : | + ! 2 _platform_memmove  (in libsystem_platform.dylib) + 0,12  [0x193b1d380,0x193b1d38c]
+    + !   : | + ! : | + ! 1 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
+    + !   : | + ! : | + 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 668  [0x105052c4c]
+    + !   : | + ! : | + ! 2 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
+    + !   : | + ! : | + ! 1 _platform_memmove  (in libsystem_platform.dylib) + 460  [0x193b1d54c]
+    + !   : | + ! : | + 2 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 544  [0x105052bd0]
+    + !   : | + ! : | + ! 2 _platform_memmove  (in libsystem_platform.dylib) + 428,460  [0x193b1d52c,0x193b1d54c]
+    + !   : | + ! : | + 2 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4532  [0x105053b64]
+    + !   : | + ! : | + ! 2 _platform_memcmp  (in libsystem_platform.dylib) + 0,56  [0x193b1aef0,0x193b1af28]
+    + !   : | + ! : | + 2 puzzlescript::(anonymous namespace)::setCellObjects(puzzlescript::Session&, int, std::vector<long long> const&)  (in puzzlescript_cpp) + 188,384  [0x1050487dc,0x1050488a0]
+    + !   : | + ! : | + 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4556  [0x105053b7c]
+    + !   : | + ! : | +   1 puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in puzzlescript_cpp) + 32  [0x10504fd18]
+    + !   : | + ! : | 10 puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::Session&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in puzzlescript_cpp) + 16,228,...  [0x10504fb10,0x10504fbe4,...]
+    + !   : | + ! : | 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 7088  [0x105054560]
+    + !   : | + ! : 93 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 2284  [0x105050718]
+    + !   : | + ! : | 34 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2032  [0x10504e02c]
+    + !   : | + ! : | + 34 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 236,32,...  [0x1050528f4,0x105052828,...]
+    + !   : | + ! : | 31 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 1360,1988,...  [0x10504dd8c,0x10504e000,...]
+    + !   : | + ! : | 17 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 1404  [0x10504ddb8]
+    + !   : | + ! : | + 17 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 32,408,...  [0x105052828,0x1050529a0,...]
+    + !   : | + ! : | 7 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2888  [0x10504e384]
+    + !   : | + ! : | + 7 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 112,4,...  [0x105052878,0x10505280c,...]
+    + !   : | + ! : | 3 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 3072  [0x10504e43c]
+    + !   : | + ! : | + 2 _xzm_free  (in libsystem_malloc.dylib) + 128,952  [0x1939337c4,0x193933afc]
+    + !   : | + ! : | + 1 _xzm_free  (in libsystem_malloc.dylib) + 348  [0x1939338a0]
+    + !   : | + ! : | +   1 __bzero  (in libsystem_platform.dylib) + 24  [0x193b1d068]
+    + !   : | + ! : | 1 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 3052  [0x10504e428]
+    + !   : | + ! : |   1 _platform_memmove  (in libsystem_platform.dylib) + 436  [0x193b1d534]
+    + !   : | + ! : 62 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 5572,7172,...  [0x1050513f0,0x105051a30,...]
+    + !   : | + ! : 59 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 5904  [0x10505153c]
+    + !   : | + ! : | 43 puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::Session&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int)  (in puzzlescript_cpp) + 1156,1124,...  [0x10504e8d0,0x10504e8b0,...]
+    + !   : | + ! : | 16 puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::Session&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int)  (in puzzlescript_cpp) + 1344  [0x10504e98c]
+    + !   : | + ! : |   10 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 136  [0x105056b48]
+    + !   : | + ! : |   ! 10 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 32,4,...  [0x105052828,0x10505280c,...]
+    + !   : | + ! : |   4 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 116,32,...  [0x105056b34,0x105056ae0,...]
+    + !   : | + ! : |   2 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 756  [0x105056db4]
+    + !   : | + ! : |     1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 440  [0x105056c78]
+    + !   : | + ! : |     : 1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 136  [0x105056b48]
+    + !   : | + ! : |     :   1 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 76  [0x105052854]
+    + !   : | + ! : |     1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 756  [0x105056db4]
+    + !   : | + ! : |       1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 440  [0x105056c78]
+    + !   : | + ! : |         1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 36  [0x105056ae4]
+    + !   : | + ! : 27 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 7472  [0x105051b5c]
+    + !   : | + ! : | 19 _xzm_free  (in libsystem_malloc.dylib) + 952,48,...  [0x193933afc,0x193933774,...]
+    + !   : | + ! : | 6 _free  (in libsystem_malloc.dylib) + 24,0,...  [0x193940a44,0x193940a2c,...]
 
 ===== Artifacts =====
   /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/pass1.stdout
   /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/pass1.stderr
   /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/pass2.stdout
   /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/pass2.stderr
+  /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/sample_puzzlescript_cpp.txt
 
 For Instruments UI on macOS:
   xcrun xctrace record --template 'Time Profiler' --quiet --launch --output /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/time_profiler.trace -- \
