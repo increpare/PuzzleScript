@@ -198,6 +198,7 @@ struct Pattern {
     // Object ids from objectsPresent, precomputed once so anchored scans do
     // not repeatedly walk object-mask words to find possible anchors.
     std::vector<int32_t> objectAnchorIds;
+    std::vector<std::vector<int32_t>> anyObjectAnchorIds;
 
     std::optional<Replacement> replacement;
 };

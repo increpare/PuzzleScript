@@ -1178,7 +1178,9 @@ Pattern parsePattern(Game& game, const json::Value& value) {
 
     pattern.anyObjectsFirst = static_cast<uint32_t>(game.anyObjectOffsets.size());
     for (const auto& anyMask : requireField(object, "any_objects_present").asArray()) {
-        const MaskOffset offset = storeMaskWords(game, parseMaskVector(anyMask));
+        const MaskVector words = parseMaskVector(anyMask);
+        pattern.anyObjectAnchorIds.push_back(objectIdsFromMask(words, game.objectCount));
+        const MaskOffset offset = storeMaskWords(game, words);
         game.anyObjectOffsets.push_back(offset);
     }
     pattern.anyObjectsCount = static_cast<uint32_t>(game.anyObjectOffsets.size()) - pattern.anyObjectsFirst;
@@ -2324,7 +2326,7 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
 
 struct RowAnchor {
     int32_t patternIndex = -1;
-    int32_t objectId = -1;
+    const std::vector<int32_t>* objectIds = nullptr;
     uint64_t cellCount = 0;
 };
 
@@ -2343,18 +2345,28 @@ std::optional<RowAnchor> chooseRowAnchor(const Session& session, const std::vect
     }
     const Game& game = *session.game;
     std::optional<RowAnchor> best;
+    auto consider = [&](int32_t patternIndex, const std::vector<int32_t>& objectIds) {
+        if (objectIds.empty()) {
+            return;
+        }
+        uint64_t count = 0;
+        for (const int32_t objectId : objectIds) {
+            if (objectId < game.objectCount) {
+                count += objectPresenceCount(session, objectId);
+            }
+        }
+        if (count > 0 && (!best.has_value() || count < best->cellCount)) {
+            best = RowAnchor{patternIndex, &objectIds, count};
+        }
+    };
     for (int32_t patternIndex = 0; patternIndex < static_cast<int32_t>(row.size()); ++patternIndex) {
         const Pattern& pattern = row[static_cast<size_t>(patternIndex)];
-        if (pattern.kind != Pattern::Kind::CellPattern || pattern.objectAnchorIds.empty()) {
+        if (pattern.kind != Pattern::Kind::CellPattern) {
             continue;
         }
-        for (const int32_t objectId : pattern.objectAnchorIds) {
-            if (objectId < game.objectCount) {
-                const uint64_t count = objectPresenceCount(session, objectId);
-                if (count > 0 && (!best.has_value() || count < best->cellCount)) {
-                    best = RowAnchor{patternIndex, objectId, count};
-                }
-            }
+        consider(patternIndex, pattern.objectAnchorIds);
+        for (const auto& anyIds : pattern.anyObjectAnchorIds) {
+            consider(patternIndex, anyIds);
         }
     }
     return best;
@@ -2385,62 +2397,74 @@ bool collectAnchoredRowMatchesInto(
     if (validStartCount <= 0 || anchor->cellCount >= static_cast<uint64_t>(std::max(8, validStartCount / 2))) {
         return false;
     }
+    if (anchor->objectIds == nullptr || anchor->objectIds->empty()) {
+        return false;
+    }
 
     const auto [dx, dy] = directionMaskToDelta(direction);
     const size_t cellWordCount = objectCellWordCount(session);
-    const size_t objectBase = static_cast<size_t>(anchor->objectId) * cellWordCount;
-    if (objectBase + cellWordCount > session.objectCellBits.size()) {
-        return false;
-    }
 
     const int32_t height = session.liveLevel.height;
     const int32_t width = session.liveLevel.width;
     const int32_t tileCount = width * height;
-    for (size_t wordIndex = 0; wordIndex < cellWordCount; ++wordIndex) {
-        uint64_t bits = session.objectCellBits[objectBase + wordIndex];
-        while (bits != 0) {
-            const int32_t bit = __builtin_ctzll(bits);
-            const int32_t anchorTile = static_cast<int32_t>(wordIndex * 64 + static_cast<size_t>(bit));
-            bits &= bits - 1;
-            if (anchorTile >= tileCount) {
-                continue;
-            }
+    for (const int32_t objectId : *anchor->objectIds) {
+        if (objectId < 0 || objectId >= session.game->objectCount) {
+            continue;
+        }
+        const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
+        if (objectBase + cellWordCount > session.objectCellBits.size()) {
+            continue;
+        }
+        for (size_t wordIndex = 0; wordIndex < cellWordCount; ++wordIndex) {
+            uint64_t bits = session.objectCellBits[objectBase + wordIndex];
+            while (bits != 0) {
+                const int32_t bit = __builtin_ctzll(bits);
+                const int32_t anchorTile = static_cast<int32_t>(wordIndex * 64 + static_cast<size_t>(bit));
+                bits &= bits - 1;
+                if (anchorTile >= tileCount) {
+                    continue;
+                }
 
-            const int32_t anchorX = anchorTile / height;
-            const int32_t anchorY = anchorTile % height;
-            const int32_t startX = anchorX - anchor->patternIndex * dx;
-            const int32_t startY = anchorY - anchor->patternIndex * dy;
-            if (startX < xmin || startX >= xmax || startY < ymin || startY >= ymax) {
-                continue;
-            }
+                const int32_t anchorX = anchorTile / height;
+                const int32_t anchorY = anchorTile % height;
+                const int32_t startX = anchorX - anchor->patternIndex * dx;
+                const int32_t startY = anchorY - anchor->patternIndex * dy;
+                if (startX < xmin || startX >= xmax || startY < ymin || startY >= ymax) {
+                    continue;
+                }
 
-            const MaskWord* lineObjects = horizontal
-                ? session.rowMasks.data() + static_cast<size_t>(startY * session.game->strideObject)
-                : session.columnMasks.data() + static_cast<size_t>(startX * session.game->strideObject);
-            const MaskWord* lineMovements = horizontal
-                ? session.rowMovementMasks.data() + static_cast<size_t>(startY * session.game->strideMovement)
-                : session.columnMovementMasks.data() + static_cast<size_t>(startX * session.game->strideMovement);
-            if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, lineObjects, static_cast<size_t>(session.game->strideObject))
-                || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, lineMovements, static_cast<size_t>(session.game->strideMovement))) {
-                continue;
-            }
+                const MaskWord* lineObjects = horizontal
+                    ? session.rowMasks.data() + static_cast<size_t>(startY * session.game->strideObject)
+                    : session.columnMasks.data() + static_cast<size_t>(startX * session.game->strideObject);
+                const MaskWord* lineMovements = horizontal
+                    ? session.rowMovementMasks.data() + static_cast<size_t>(startY * session.game->strideMovement)
+                    : session.columnMovementMasks.data() + static_cast<size_t>(startX * session.game->strideMovement);
+                if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, lineObjects, static_cast<size_t>(session.game->strideObject))
+                    || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, lineMovements, static_cast<size_t>(session.game->strideMovement))) {
+                    continue;
+                }
 
-            addCounter(gRuntimeCounters.candidateCellsTested);
-            const int32_t startIndex = startX * height + startY;
-            if (rowStillMatchesAt(session, row, startIndex, delta)) {
-                matches.push_back(startIndex);
+                addCounter(gRuntimeCounters.candidateCellsTested);
+                const int32_t startIndex = startX * height + startY;
+                if (rowStillMatchesAt(session, row, startIndex, delta)) {
+                    matches.push_back(startIndex);
+                }
             }
         }
     }
 
-    if (horizontal && matches.size() > 1) {
-        std::sort(matches.begin(), matches.end(), [height, width](int32_t lhs, int32_t rhs) {
+    if (matches.size() > 1) {
+        std::sort(matches.begin(), matches.end(), [horizontal, height](int32_t lhs, int32_t rhs) {
+            if (!horizontal) {
+                return lhs < rhs;
+            }
             const int32_t lhsX = lhs / height;
             const int32_t lhsY = lhs % height;
             const int32_t rhsX = rhs / height;
             const int32_t rhsY = rhs % height;
             return lhsY == rhsY ? lhsX < rhsX : lhsY < rhsY;
         });
+        matches.erase(std::unique(matches.begin(), matches.end()), matches.end());
     }
     return true;
 }

@@ -1945,6 +1945,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 auto movementsPresent = puzzlescript::MaskVector(static_cast<size_t>(game->movementWordCount), 0);
                 auto movementsMissing = puzzlescript::MaskVector(static_cast<size_t>(game->movementWordCount), 0);
                 std::vector<puzzlescript::MaskOffset> anyOffsets;
+                std::vector<std::vector<int32_t>> anyAnchorIds;
 
                 // Per-layer occupancy names (JS `layersUsed_l`): any LHS token with a
                 // resolved single layer, including properties.
@@ -1973,6 +1974,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         const auto off = storeMaskWords(*game, mask);
                         game->anyObjectOffsets.push_back(off);
                         anyOffsets.push_back(off);
+                        anyAnchorIds.push_back(objectIdsFromMask(mask, game->objectCount));
                         if (singleLayer.has_value()) {
                             layersUsedL[static_cast<size_t>(*singleLayer)] = 1;
                         }
@@ -1986,6 +1988,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         const auto off = storeMaskWords(*game, mask);
                         game->anyObjectOffsets.push_back(off);
                         anyOffsets.push_back(off);
+                        anyAnchorIds.push_back(objectIdsFromMask(mask, game->objectCount));
                     }
 
                     if (singleLayer.has_value()) {
@@ -2017,6 +2020,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 pat.objectAnchorIds = objectIdsFromMask(objectsPresent, game->objectCount);
                 pat.anyObjectsFirst = static_cast<uint32_t>(game->anyObjectOffsets.size() - anyOffsets.size());
                 pat.anyObjectsCount = static_cast<uint32_t>(anyOffsets.size());
+                pat.anyObjectAnchorIds = std::move(anyAnchorIds);
 
                 if (rhsRow && cellIndex < rhsRow->size()) {
                     const ParsedCell& rhsCell = (*rhsRow)[cellIndex];
