@@ -15,9 +15,10 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build build_32 run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
+.PHONY: help build build_32 build_solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
+	solver_tests_cpp solver_tests_js solver_tests \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
@@ -30,6 +31,7 @@ BUILD_DIR ?= build
 BUILD_DIR_32 ?= build-32
 PUZZLESCRIPT_CPP := $(BUILD_DIR)/native/puzzlescript_cpp
 PUZZLESCRIPT_CPP_32 := $(BUILD_DIR_32)/native/puzzlescript_cpp
+PUZZLESCRIPT_SOLVER := $(BUILD_DIR)/native/puzzlescript_solver
 JS_PARITY_DATA_DIR := $(BUILD_DIR)/js-parity-data
 JS_PARITY_MANIFEST := $(JS_PARITY_DATA_DIR)/fixtures.json
 ERRORMESSAGE_PARSER_BUNDLE := $(BUILD_DIR)/parser_corpus_errormessage.bundle.ndjson
@@ -59,6 +61,7 @@ help:
 	@echo ""
 	@echo "Common commands:"
 	@echo "  make build                         Build build/native/puzzlescript_cpp (64-bit masks)"
+	@echo "  make build_solver                  Build build/native/puzzlescript_solver"
 	@echo "  make build_32                      Build JS-style 32-bit-mask executable into build-32"
 	@echo "  make run path/to/game.txt          Build and play a PuzzleScript game"
 	@echo "  make ctest                         Run fast C++ smoke/unit tests"
@@ -69,6 +72,7 @@ help:
 	@echo "  make profile_simulation_tests      Profile C++ simulation replay hot functions"
 	@echo "  make profile_simulation_tests_32   Profile the 32-bit-mask C++ simulation path"
 	@echo "  make tests                         Run the full native correctness suite"
+	@echo "  make solver_tests                  Run native solver and JS comparison solver"
 	@echo "  make clean                         Remove native build outputs and JS parity data"
 	@echo ""
 	@echo "Single-side test commands for timing:"
@@ -82,9 +86,12 @@ help:
 	@echo "  make compilation_tests_cpp         Run C++ diagnostics corpus directly (64-bit masks)"
 	@echo "  make compilation_tests_cpp_32      Run C++ diagnostics corpus with JS-style 32-bit masks"
 	@echo "  make tests_js                      Run the original JavaScript test suite"
+	@echo "  make solver_tests_cpp              Run standalone native solver corpus"
+	@echo "  make solver_tests_js               Run JavaScript comparison solver corpus"
 	@echo ""
 	@echo "Direct executable after build:"
 	@echo "  build/native/puzzlescript_cpp --help"
+	@echo "  build/native/puzzlescript_solver src/tests/solver_tests --timeout-ms 5000"
 
 $(CMAKE_CACHE): CMakeLists.txt native/CMakeLists.txt
 	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
@@ -93,9 +100,15 @@ $(PUZZLESCRIPT_CPP): $(CMAKE_CACHE) native/CMakeLists.txt
 	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
 	$(CMAKE) --build $(BUILD_DIR) --target puzzlescript_cpp
 
+$(PUZZLESCRIPT_SOLVER): $(CMAKE_CACHE) native/CMakeLists.txt native/src/solver/main.cpp
+	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
+	$(CMAKE) --build $(BUILD_DIR) --target puzzlescript_solver
+
 build: $(CMAKE_CACHE)
 	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
 	$(CMAKE) --build $(BUILD_DIR) --target puzzlescript_cpp
+
+build_solver: $(PUZZLESCRIPT_SOLVER)
 
 build_32:
 	$(CMAKE) -S . -B $(BUILD_DIR_32) -DPS_MASK_WORD_BITS=32
@@ -105,7 +118,7 @@ configure-native: $(CMAKE_CACHE)
 
 build-native: build
 
-ctest: build
+ctest: build build_solver
 	ctest --test-dir $(BUILD_DIR) --output-on-failure
 
 tests_js:
@@ -122,6 +135,14 @@ simulation_tests_js_profile_breakdown:
 
 compilation_tests_js:
 	$(NODE) src/tests/run_tests_node.js --compilation-only
+
+solver_tests_cpp: $(PUZZLESCRIPT_SOLVER)
+	$(PUZZLESCRIPT_SOLVER) src/tests/solver_tests --timeout-ms 5000
+
+solver_tests_js:
+	$(NODE) src/tests/run_solver_tests_js.js src/tests/solver_tests --timeout-ms 5000
+
+solver_tests: solver_tests_cpp solver_tests_js
 
 $(JS_PARITY_MANIFEST): $(JS_PARITY_INPUTS)
 	$(NODE) src/tests/js_oracle/export_native_fixtures.js $(JS_PARITY_DATA_DIR)

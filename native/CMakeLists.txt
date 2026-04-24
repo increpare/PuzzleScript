@@ -139,6 +139,21 @@ add_executable(puzzlescript_cpp
   src/cli/diagnostics_parity.cpp
 )
 
+add_executable(puzzlescript_solver
+  src/solver/main.cpp
+)
+
+target_link_libraries(puzzlescript_solver
+  PRIVATE
+    puzzlescript_native
+    puzzlescript_compiler
+)
+
+target_include_directories(puzzlescript_solver
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
 target_link_libraries(puzzlescript_cpp
   PRIVATE
     puzzlescript_native
@@ -259,6 +274,21 @@ add_test(
   COMMAND puzzlescript_cpp step ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt right --level 0 --seed native-step-smoke --settle-again
 )
 set_tests_properties(puzzlescript_cpp_step_smoke PROPERTIES PASS_REGULAR_EXPRESSION "step\\[0\\] token=right changed=1")
+
+add_test(
+  NAME puzzlescript_solver_smoke
+  COMMAND puzzlescript_solver ${PUZZLESCRIPT_REPO_ROOT}/src/tests/solver_smoke_tests --timeout-ms 1000 --json
+)
+set_tests_properties(puzzlescript_solver_smoke PROPERTIES PASS_REGULAR_EXPRESSION "\"solved\"")
+
+add_test(
+  NAME puzzlescript_solver_js_parity_smoke
+  COMMAND ${NODE_EXECUTABLE}
+          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/run_solver_parity_smoke.js
+          $<TARGET_FILE:puzzlescript_solver>
+          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/solver_smoke_tests
+)
+set_tests_properties(puzzlescript_solver_js_parity_smoke PROPERTIES TIMEOUT 30)
 
 add_test(
   NAME puzzlescript_cpp_parser_state_smoke

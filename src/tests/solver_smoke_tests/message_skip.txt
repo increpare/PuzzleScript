@@ -1,0 +1,52 @@
+title Solver Message Skip
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+blue
+
+Target
+green
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Background
+T = Target and Background
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player
+
+======
+RULES
+======
+
+=============
+WINCONDITIONS
+=============
+
+all Player on Target
+
+======
+LEVELS
+======
+
+message Hello
+
+PT

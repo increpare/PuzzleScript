@@ -1,0 +1,54 @@
+title Solver Impossible
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+blue
+
+Target
+green
+
+Wall
+gray
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player and Background
+T = Target and Background
+# = Wall and Background
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall
+
+======
+RULES
+======
+
+=============
+WINCONDITIONS
+=============
+
+all Player on Target
+
+======
+LEVELS
+======
+
+P#T
