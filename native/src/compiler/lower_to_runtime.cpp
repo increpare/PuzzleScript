@@ -133,6 +133,18 @@ std::vector<std::string> tokenizeRuleLine(std::string line) {
     return tokens;
 }
 
+std::string takeRulePrefixBeforeComment(std::string_view line) {
+    std::string prefix;
+    prefix.reserve(line.size());
+    for (const char ch : line) {
+        if (ch == '(') {
+            break;
+        }
+        prefix.push_back(ch);
+    }
+    return prefix;
+}
+
 int32_t dirMaskFromToken(std::string_view token) {
     if (token == "^") return 1;
     if (token == "up") return 1;
@@ -843,6 +855,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     // Rule lowering: a subset of JS rulesToMask (enough to start converging).
     for (const auto& entry : state.rules) {
         const auto tokens = tokenizeRuleLine(entry.rule);
+        const auto mixedCaseTokens = tokenizeRuleLine(takeRulePrefixBeforeComment(entry.mixedCase));
         if (tokens.empty()) {
             continue;
         }
@@ -941,9 +954,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 || propertyOf.find(name) != propertyOf.end();
         };
         auto isJsBracketPostfixCommand = [](const std::string& name) -> bool {
-            static constexpr std::array<const char*, 16> kWords = {
+            static constexpr std::array<const char*, 17> kWords = {
                 "sfx0", "sfx1", "sfx2", "sfx3", "sfx4", "sfx5", "sfx6", "sfx7", "sfx8", "sfx9", "sfx10",
-                "cancel", "checkpoint", "restart", "win", "again",
+                "cancel", "checkpoint", "restart", "win", "message", "again",
             };
             for (const char* w : kWords) {
                 if (name == w) {
@@ -1025,29 +1038,132 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         };
 
         const size_t arrowPos = static_cast<size_t>(std::distance(tokens.begin(), arrowIt));
-        size_t rhsEnd = tokens.size();
-        {
-            int32_t bracketDepth = 0;
-            for (size_t i = arrowPos + 1; i < tokens.size(); ++i) {
-                if (tokens[i] == "[") {
-                    ++bracketDepth;
-                    continue;
-                }
-                if (tokens[i] == "]") {
-                    if (bracketDepth > 0) {
-                        --bracketDepth;
-                    }
-                    continue;
-                }
-                if (bracketDepth == 0) {
-                    rhsEnd = i;
-                    break;
+        const size_t rhsEnd = tokens.size();
+        std::vector<puzzlescript::RuleCommand> parsedCommands;
+        auto lhsRows = parseSide(cursor, arrowPos, nullptr);
+        auto rhsRows = parseSide(arrowPos + 1, rhsEnd, &parsedCommands);
+
+        auto maskTouchesLayer = [&](const std::vector<int32_t>& mask, int32_t layer) -> bool {
+            if (layer < 0 || layer >= game->layerCount) {
+                return false;
+            }
+            const auto off = game->layerMaskOffsets[static_cast<size_t>(layer)];
+            for (uint32_t w = 0; w < game->wordCount; ++w) {
+                const int32_t layerWord = static_cast<int32_t>(game->maskArena[static_cast<size_t>(off + w)]);
+                if ((mask[static_cast<size_t>(w)] & layerWord) != 0) {
+                    return true;
                 }
             }
-        }
-        std::vector<puzzlescript::RuleCommand> parsedCommands;
-        const auto lhsRows = parseSide(cursor, arrowPos, nullptr);
-        const auto rhsRows = parseSide(arrowPos + 1, rhsEnd, &parsedCommands);
+            return false;
+        };
+        auto trimSuperfluousLhsNegations = [&]() {
+            for (auto& row : lhsRows) {
+                for (auto& cell : row) {
+                    if (cell.isEllipsis) {
+                        continue;
+                    }
+                    auto requiredObjects = makeEmptyMask(game->wordCount);
+                    std::vector<int32_t> requiredLayers(static_cast<size_t>(game->layerCount), 0);
+                    for (const auto& item : cell.items) {
+                        if (item.dir == "no") {
+                            continue;
+                        }
+                        auto addRequiredObject = [&](const std::string& objectName) {
+                            const auto objectIt = objectIdByName.find(objectName);
+                            if (objectIt == objectIdByName.end()) {
+                                return;
+                            }
+                            setMaskBit(requiredObjects, objectIt->second);
+                            const auto& object = game->objectsById[static_cast<size_t>(objectIt->second)];
+                            if (object.layer >= 0 && object.layer < game->layerCount) {
+                                requiredLayers[static_cast<size_t>(object.layer)] = 1;
+                            }
+                        };
+                        if (objectIdByName.find(item.name) != objectIdByName.end()) {
+                            addRequiredObject(item.name);
+                        } else if (const auto aggregateIt = aggregateOf.find(item.name); aggregateIt != aggregateOf.end()) {
+                            for (const auto& objectName : aggregateIt->second) {
+                                addRequiredObject(objectName);
+                            }
+                        } else if (const auto propertyLayerIt = propertiesSingleLayer.find(item.name);
+                                   propertyLayerIt != propertiesSingleLayer.end()) {
+                            requiredLayers[static_cast<size_t>(propertyLayerIt->second)] = 1;
+                            if (const auto propertyIt = propertyOf.find(item.name); propertyIt != propertyOf.end()) {
+                                for (const auto& objectName : propertyIt->second) {
+                                    const auto objectIt = objectIdByName.find(objectName);
+                                    if (objectIt != objectIdByName.end()) {
+                                        setMaskBit(requiredObjects, objectIt->second);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    std::vector<ParsedItem> trimmed;
+                    trimmed.reserve(cell.items.size());
+                    for (const auto& item : cell.items) {
+                        if (item.dir != "no") {
+                            trimmed.push_back(item);
+                            continue;
+                        }
+                        std::set<std::string> visiting;
+                        const auto noMask = resolveMask(resolveMask, item.name, visiting);
+                        bool disjointObjects = true;
+                        for (uint32_t w = 0; w < game->wordCount; ++w) {
+                            if ((noMask[static_cast<size_t>(w)] & requiredObjects[static_cast<size_t>(w)]) != 0) {
+                                disjointObjects = false;
+                                break;
+                            }
+                        }
+                        bool layersCovered = true;
+                        for (int32_t layer = 0; layer < game->layerCount; ++layer) {
+                            if (maskTouchesLayer(noMask, layer)
+                                && requiredLayers[static_cast<size_t>(layer)] == 0) {
+                                layersCovered = false;
+                                break;
+                            }
+                        }
+                        if (disjointObjects && layersCovered) {
+                            continue;
+                        }
+                        trimmed.push_back(item);
+                    }
+                    cell.items = std::move(trimmed);
+                }
+            }
+        };
+        auto removeRedundantRhsNegations = [&]() {
+            const size_t rowCount = std::min(lhsRows.size(), rhsRows.size());
+            for (size_t rowIndex = 0; rowIndex < rowCount; ++rowIndex) {
+                const size_t cellCount = std::min(lhsRows[rowIndex].size(), rhsRows[rowIndex].size());
+                for (size_t cellIndex = 0; cellIndex < cellCount; ++cellIndex) {
+                    const auto& lhsCell = lhsRows[rowIndex][cellIndex];
+                    auto& rhsCell = rhsRows[rowIndex][cellIndex];
+                    if (lhsCell.isEllipsis || rhsCell.isEllipsis) {
+                        continue;
+                    }
+                    std::vector<ParsedItem> trimmed;
+                    trimmed.reserve(rhsCell.items.size());
+                    for (const auto& rhsItem : rhsCell.items) {
+                        bool redundant = false;
+                        if (rhsItem.dir == "no") {
+                            for (const auto& lhsItem : lhsCell.items) {
+                                if (lhsItem.dir == "no" && lhsItem.name == rhsItem.name) {
+                                    redundant = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!redundant) {
+                            trimmed.push_back(rhsItem);
+                        }
+                    }
+                    rhsCell.items = std::move(trimmed);
+                }
+            }
+        };
+        removeRedundantRhsNegations();
+        trimSuperfluousLhsNegations();
 
         // JS `processRuleString`: if `directionalRule(rule_line) === false` and
         // `rule_line.directions.length > 1`, only the first direction is kept.
@@ -1077,8 +1193,22 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             ruleDirections.erase(ruleDirections.begin() + 1, ruleDirections.end());
         }
 
-        if (rhsEnd < tokens.size()) {
-            for (size_t i = rhsEnd; i < tokens.size(); ++i) {
+        {
+            int32_t bracketDepth = 0;
+            for (size_t i = arrowPos + 1; i < tokens.size(); ++i) {
+                if (tokens[i] == "[") {
+                    ++bracketDepth;
+                    continue;
+                }
+                if (tokens[i] == "]") {
+                    if (bracketDepth > 0) {
+                        --bracketDepth;
+                    }
+                    continue;
+                }
+                if (bracketDepth != 0 || !isJsBracketPostfixCommand(tokens[i])) {
+                    continue;
+                }
                 puzzlescript::RuleCommand command;
                 command.name = tokens[i];
                 if (command.name == "message") {
@@ -1087,7 +1217,11 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         if (!message.empty()) {
                             message.push_back(' ');
                         }
-                        message.append(tokens[j]);
+                        if (mixedCaseTokens.size() == tokens.size()) {
+                            message.append(mixedCaseTokens[j]);
+                        } else {
+                            message.append(tokens[j]);
+                        }
                     }
                     command.argument = message;
                     parsedCommands.push_back(std::move(command));
