@@ -3641,6 +3641,48 @@ std::vector<uint8_t> buildSessionHashBytes(const Session& session) {
     return bytes;
 }
 
+void appendHashBytes(uint64_t& hash, const void* data, size_t size) {
+    const auto* bytes = static_cast<const uint8_t*>(data);
+    for (size_t index = 0; index < size; ++index) {
+        hash ^= bytes[index];
+        hash *= 1099511628211ull;
+    }
+}
+
+template <typename T>
+void appendHashValue(uint64_t& hash, const T& value) {
+    appendHashBytes(hash, &value, sizeof(value));
+}
+
+uint64_t hashSession64NoAlloc(const Session& session, uint64_t seed) {
+    uint64_t hash = seed;
+
+    appendHashValue(hash, session.preparedSession.currentLevelIndex);
+    appendHashValue(hash, session.preparedSession.titleScreen);
+    appendHashValue(hash, session.preparedSession.textMode);
+    appendHashValue(hash, session.preparedSession.winning);
+    appendHashValue(hash, session.pendingAgain);
+    appendHashValue(hash, session.randomState.i);
+    appendHashValue(hash, session.randomState.j);
+    appendHashValue(hash, session.randomState.valid);
+    appendHashBytes(hash, session.randomState.s.data(), session.randomState.s.size() * sizeof(uint8_t));
+
+    const auto& objects = session.liveLevel.objects;
+    appendHashBytes(hash, objects.data(), objects.size() * sizeof(MaskWord));
+    const auto& movements = session.liveMovements;
+    appendHashBytes(hash, movements.data(), movements.size() * sizeof(MaskWord));
+    appendHashBytes(hash, session.preparedSession.loadedLevelSeed.data(), session.preparedSession.loadedLevelSeed.size());
+
+    return hash;
+}
+
+ps_hash128 hashSession128NoAlloc(const Session& session) {
+    ps_hash128 result{};
+    result.lo = hashSession64NoAlloc(session, 1469598103934665603ull);
+    result.hi = hashSession64NoAlloc(session, 7809847782465536322ull);
+    return result;
+}
+
 std::string escapeJson(std::string_view input) {
     std::string out;
     out.reserve(input.size() + 16);
@@ -4158,12 +4200,11 @@ bool undo(Session& session) {
 }
 
 uint64_t hashSession64(const Session& session) {
-    const auto bytes = buildSessionHashBytes(session);
-    return fnv1a64(bytes.data(), bytes.size());
+    return hashSession64NoAlloc(session, 1469598103934665603ull);
 }
 
 ps_hash128 hashSession128(const Session& session) {
-    return dualHash128(buildSessionHashBytes(session));
+    return hashSession128NoAlloc(session);
 }
 
 std::string serializeTestString(const Session& session) {
