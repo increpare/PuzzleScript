@@ -4386,7 +4386,8 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         turnStartPtr = &*localTurnStart;
     }
     const Session::UndoSnapshot& turnStart = *turnStartPtr;
-    const std::vector<int32_t> startPlayerPositions = directionMask != 0
+    const bool requiresPlayerMovement = session.game->metadataMap.find("require_player_movement") != session.game->metadataMap.end();
+    const std::vector<int32_t> startPlayerPositions = directionMask != 0 && requiresPlayerMovement
         ? collectPlayerPositions(session)
         : std::vector<int32_t>{};
 
@@ -4449,7 +4450,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         *options.observedModification = modified;
     }
 
-    if (!startPlayerPositions.empty() && session.game->metadataMap.find("require_player_movement") != session.game->metadataMap.end()) {
+    if (!startPlayerPositions.empty()) {
         bool someMoved = false;
         for (const int32_t tileIndex : startPlayerPositions) {
             if (!cellContainsPlayer(session, tileIndex)) {
