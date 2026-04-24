@@ -202,6 +202,7 @@ function serializeRulePlanReplacement(rule, rowIndex, cellIndex, pattern, state)
         bitVecHasBits(replacement.randomDirMask);
     const touchesRandom = bitVecHasBits(replacement.randomEntityMask) ||
         bitVecHasBits(replacement.randomDirMask);
+    const touchesRigid = Boolean(rule.rigid && touchesMovements);
 
     return {
         row_index: rowIndex,
@@ -212,7 +213,8 @@ function serializeRulePlanReplacement(rule, rowIndex, cellIndex, pattern, state)
         touches_random: touchesRandom,
         touches_random_entity: bitVecHasBits(replacement.randomEntityMask),
         touches_random_dir: bitVecHasBits(replacement.randomDirMask),
-        touches_rigid: Boolean(rule.rigid && touchesMovements),
+        touches_rigid: touchesRigid,
+        simple_direct_mask: !touchesRandom && !touchesRigid,
         objects_clear_ids: bitVecSetIndices(replacement.objectsClear, state.objectCount),
         objects_set_ids: bitVecSetIndices(replacement.objectsSet, state.objectCount),
         movements_clear_bits: movementBitPairs(replacement.movementsClear, layerCount),
@@ -263,6 +265,17 @@ function serializeRulePlanRow(rule, rowIndex, state) {
 
 function serializeRulePlan(rule, groupIndex, ruleIndex, late, state) {
     const replacements = [];
+    const commandNames = Array.isArray(rule.commands)
+        ? rule.commands.map(command => String(Array.isArray(command) ? command[0] : command))
+        : [];
+    const hasEllipsis = Array.isArray(rule.ellipsisCount)
+        ? rule.ellipsisCount.some(count => count > 0)
+        : false;
+    const simpleDeterministicRowRule = !rule.isRandom &&
+        !rule.rigid &&
+        !hasEllipsis &&
+        rule.patterns.length === 1 &&
+        commandNames.length === 0;
     for (let rowIndex = 0; rowIndex < rule.patterns.length; rowIndex++) {
         const cellRow = rule.patterns[rowIndex] || [];
         for (let cellIndex = 0; cellIndex < cellRow.length; cellIndex++) {
@@ -283,6 +296,11 @@ function serializeRulePlan(rule, groupIndex, ruleIndex, late, state) {
         rigid: Boolean(rule.rigid),
         is_random: Boolean(rule.isRandom),
         has_replacements: Boolean(rule.hasReplacements),
+        has_ellipsis: hasEllipsis,
+        row_count: rule.patterns.length,
+        has_commands: commandNames.length > 0,
+        command_names: commandNames,
+        simple_deterministic_row_rule: simpleDeterministicRowRule,
         delta_hint: directionDeltaHint(rule.direction),
         rule_object_ids: bitVecSetIndices(rule.ruleMask, state.objectCount),
         rule_movement_bits: movementBitPairs(

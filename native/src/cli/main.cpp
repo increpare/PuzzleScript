@@ -3063,6 +3063,24 @@ void appendMovementLayersFromMask(std::ostream& out, const puzzlescript::Game& g
 void appendRulePlanJson(std::ostream& out, const puzzlescript::Game& game) {
     auto appendRuleEntry = [&](const puzzlescript::Rule& rule, size_t groupIndex, size_t ruleIndex, bool late) {
         const auto [dx, dy] = ruleDirectionDelta(rule.direction);
+        bool hasEllipsis = false;
+        for (const auto count : rule.ellipsisCount) {
+            if (count > 0) {
+                hasEllipsis = true;
+                break;
+            }
+        }
+        std::vector<std::string> commandNames;
+        commandNames.reserve(rule.commands.size());
+        for (const auto& command : rule.commands) {
+            commandNames.push_back(command.name);
+        }
+        const bool simpleDeterministicRowRule =
+            !rule.isRandom
+            && !rule.rigid
+            && !hasEllipsis
+            && rule.patterns.size() == 1
+            && commandNames.empty();
         out << "{";
         out << "\"rule_index\":" << ruleIndex
             << ",\"group_index\":" << groupIndex
@@ -3073,6 +3091,12 @@ void appendRulePlanJson(std::ostream& out, const puzzlescript::Game& game) {
             << ",\"rigid\":" << (rule.rigid ? "true" : "false")
             << ",\"is_random\":" << (rule.isRandom ? "true" : "false")
             << ",\"has_replacements\":" << (rule.hasReplacements ? "true" : "false")
+            << ",\"has_ellipsis\":" << (hasEllipsis ? "true" : "false")
+            << ",\"row_count\":" << rule.patterns.size()
+            << ",\"has_commands\":" << (!commandNames.empty() ? "true" : "false")
+            << ",\"command_names\":";
+        appendJsonStringArray(out, commandNames);
+        out << ",\"simple_deterministic_row_rule\":" << (simpleDeterministicRowRule ? "true" : "false")
             << ",\"delta_hint\":{\"dx\":" << dx << ",\"dy\":" << dy << "}"
             << ",\"rule_object_ids\":";
         appendObjectIdsFromMask(out, game, rule.ruleMask);
@@ -3176,6 +3200,7 @@ void appendRulePlanJson(std::ostream& out, const puzzlescript::Game& game) {
                     || repl.hasMovementsLayerMask
                     || repl.hasRandomDirMask;
                 const bool touchesRandom = repl.hasRandomEntityMask || repl.hasRandomDirMask;
+                const bool touchesRigid = rule.rigid && touchesMovements;
                 out << "{\"row_index\":" << rowIndex
                     << ",\"cell_index\":" << cellIndex
                     << ",\"touches_objects\":" << (touchesObjects ? "true" : "false")
@@ -3184,7 +3209,8 @@ void appendRulePlanJson(std::ostream& out, const puzzlescript::Game& game) {
                     << ",\"touches_random\":" << (touchesRandom ? "true" : "false")
                     << ",\"touches_random_entity\":" << (repl.hasRandomEntityMask ? "true" : "false")
                     << ",\"touches_random_dir\":" << (repl.hasRandomDirMask ? "true" : "false")
-                    << ",\"touches_rigid\":" << ((rule.rigid && touchesMovements) ? "true" : "false")
+                    << ",\"touches_rigid\":" << (touchesRigid ? "true" : "false")
+                    << ",\"simple_direct_mask\":" << ((!touchesRandom && !touchesRigid) ? "true" : "false")
                     << ",\"objects_clear_ids\":";
                 appendObjectIdsFromMask(out, game, repl.objectsClear);
                 out << ",\"objects_set_ids\":";
