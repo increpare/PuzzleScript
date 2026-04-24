@@ -18,16 +18,36 @@ const ACTIONS = [
 function parseArgs(argv) {
     const options = {
         corpusPath: null,
+        solutionsDir: path.resolve('build/solver-solutions/js'),
         timeoutMs: 5000,
+        progressEvery: 25,
+        writeSolutions: true,
+        progressPerGame: false,
         json: false,
+        quiet: false,
+        summaryOnly: false,
     };
     const args = argv.slice(2);
     for (let index = 0; index < args.length; index++) {
         const arg = args[index];
         if (arg === '--timeout-ms') {
             options.timeoutMs = Math.max(1, Number.parseInt(args[++index], 10));
+        } else if (arg === '--solutions-dir') {
+            options.solutionsDir = path.resolve(args[++index]);
+            options.writeSolutions = true;
+        } else if (arg === '--no-solutions') {
+            options.writeSolutions = false;
         } else if (arg === '--json') {
             options.json = true;
+        } else if (arg === '--summary-only') {
+            options.summaryOnly = true;
+        } else if (arg === '--quiet') {
+            options.quiet = true;
+            options.progressEvery = 0;
+        } else if (arg === '--progress-every') {
+            options.progressEvery = Math.max(0, Number.parseInt(args[++index], 10));
+        } else if (arg === '--progress-per-game') {
+            options.progressPerGame = true;
         } else if (arg === '--help' || arg === '-h') {
             usage(0);
         } else if (options.corpusPath === null) {
@@ -43,7 +63,7 @@ function parseArgs(argv) {
 }
 
 function usage(exitCode) {
-    const message = 'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N] [--json]\n';
+    const message = 'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json]\n';
     (exitCode === 0 ? process.stdout : process.stderr).write(message);
     process.exit(exitCode);
 }
@@ -118,11 +138,11 @@ function restoreRandomState(snapshot) {
     const rng = new RNG(snapshot.seed);
     rng._normal = snapshot.normal;
     if (snapshot.state) {
-        rng._state = {
-            i: snapshot.state.i,
-            j: snapshot.state.j,
-            s: snapshot.state.s.slice(),
-        };
+        const state = new RC4();
+        state.i = snapshot.state.i;
+        state.j = snapshot.state.j;
+        state.s = snapshot.state.s.slice();
+        rng._state = state;
     } else {
         rng._state = null;
     }
@@ -404,6 +424,31 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs) {
     return result;
 }
 
+function levelErrorResult(game, levelIndex, timeoutMs, compileMs, error) {
+    return {
+        game,
+        level: levelIndex,
+        status: 'level_error',
+        error: error && error.stack ? error.stack : String(error),
+        solution: [],
+        solution_length: 0,
+        elapsed_ms: 0,
+        expanded: 0,
+        generated: 0,
+        unique_states: 0,
+        duplicates: 0,
+        max_frontier: 0,
+        timeout_ms: timeoutMs,
+        compile_ms: compileMs,
+        load_ms: 0,
+        clone_ms: 0,
+        step_ms: 0,
+        hash_ms: 0,
+        queue_ms: 0,
+        reconstruct_ms: 0,
+    };
+}
+
 function runGame(root, file) {
     const game = gameName(root, file);
     let source = fs.readFileSync(file, 'utf8');
@@ -440,23 +485,216 @@ function runGame(root, file) {
             reconstruct_ms: 0,
         }];
     }
-    return { game, compileMs };
+    return { game, compileMs, source };
+}
+
+function trimLine(line) {
+    return line.trim();
+}
+
+function isDividerLine(line) {
+    const stripped = trimLine(line);
+    return stripped.length > 0 && /^=+$/.test(stripped);
+}
+
+function isCommentLine(line) {
+    const stripped = trimLine(line);
+    return stripped.length > 0 && stripped.startsWith('(');
+}
+
+function splitLines(source) {
+    const normalized = source.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    if (normalized.endsWith('\n')) {
+        return normalized.slice(0, -1).split('\n');
+    }
+    return normalized.length > 0 ? normalized.split('\n') : [''];
+}
+
+function findSourceLevels(lines) {
+    const levels = [];
+    let index = lines.findIndex((line) => trimLine(line).toLowerCase() === 'levels');
+    if (index < 0) {
+        return levels;
+    }
+    index++;
+    let levelIndex = 0;
+    while (index < lines.length) {
+        const stripped = trimLine(lines[index]);
+        const lower = stripped.toLowerCase();
+        if (stripped.length === 0 || isDividerLine(lines[index]) || isCommentLine(lines[index])) {
+            index++;
+            continue;
+        }
+        if (lower === 'message' || lower.startsWith('message ')) {
+            levels.push({ level: levelIndex++, insertBeforeLine: index, message: true });
+            index++;
+            continue;
+        }
+
+        levels.push({ level: levelIndex++, insertBeforeLine: index, message: false });
+        index++;
+        while (index < lines.length && trimLine(lines[index]).length > 0) {
+            index++;
+        }
+    }
+    return levels;
+}
+
+function solutionLetter(input) {
+    if (input === 'up') return 'U';
+    if (input === 'down') return 'D';
+    if (input === 'left') return 'L';
+    if (input === 'right') return 'R';
+    if (input === 'action') return 'A';
+    return '?';
+}
+
+function compactSolution(solution) {
+    let out = '';
+    for (let index = 0; index < solution.length; index++) {
+        if (index > 0 && index % 4 === 0) {
+            out += ' ';
+        }
+        out += solutionLetter(solution[index]);
+    }
+    return out;
+}
+
+function writeAnnotatedSolutions(options, game, source, results) {
+    if (!options.writeSolutions) {
+        return false;
+    }
+    const solved = new Map();
+    for (const result of results) {
+        if (result.status === 'solved' && result.solution.length > 0) {
+            solved.set(result.level, compactSolution(result.solution));
+        }
+    }
+    if (solved.size === 0) {
+        return false;
+    }
+
+    const lines = splitLines(source);
+    const commentsByLine = new Map();
+    for (const level of findSourceLevels(lines)) {
+        if (level.message || !solved.has(level.level)) {
+            continue;
+        }
+        const comments = commentsByLine.get(level.insertBeforeLine) || [];
+        comments.push(`(${solved.get(level.level)})`);
+        commentsByLine.set(level.insertBeforeLine, comments);
+    }
+    if (commentsByLine.size === 0) {
+        return false;
+    }
+
+    const annotated = [];
+    for (let index = 0; index < lines.length; index++) {
+        for (const comment of commentsByLine.get(index) || []) {
+            annotated.push(comment);
+        }
+        annotated.push(lines[index]);
+    }
+
+    const outputPath = path.join(options.solutionsDir, game);
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, `${annotated.join('\n')}\n`);
+    return true;
+}
+
+function summarizeHuman(results) {
+    const summary = {
+        solved: 0,
+        timeout: 0,
+        exhausted: 0,
+        skipped_message: 0,
+        errors: 0,
+        expanded: 0,
+        generated: 0,
+    };
+    for (const result of results) {
+        summary.solved += result.status === 'solved' ? 1 : 0;
+        summary.timeout += result.status === 'timeout' ? 1 : 0;
+        summary.exhausted += result.status === 'exhausted' ? 1 : 0;
+        summary.skipped_message += result.status === 'skipped_message' ? 1 : 0;
+        summary.errors += ['compile_error', 'level_error'].includes(result.status) ? 1 : 0;
+        summary.expanded += result.expanded;
+        summary.generated += result.generated;
+    }
+    summary.playable_levels = summary.solved + summary.timeout + summary.exhausted + summary.errors;
+    return summary;
+}
+
+function secondsString(elapsedMs) {
+    return (elapsedMs / 1000).toFixed(2);
+}
+
+function printHumanBlock(stream, label, summary, elapsedMs) {
+    stream.write('===\n');
+    stream.write(`${label} (${secondsString(elapsedMs)} sec)\n`);
+    stream.write(`Levels Solved: ${summary.solved}/${summary.playable_levels}\n`);
+    stream.write(`Timeout: ${summary.timeout}\n`);
+    if (summary.exhausted > 0) {
+        stream.write(`Unsolvable: ${summary.exhausted}\n`);
+    }
+    if (summary.errors > 0) {
+        stream.write(`Errors: ${summary.errors}\n`);
+    }
 }
 
 function runCorpus(options) {
     loadPuzzleScript();
     const results = [];
+    let attemptedLevels = 0;
     for (const file of discoverGames(options.corpusPath)) {
         if (!fs.existsSync(file)) {
             continue;
         }
+        const name = gameName(options.corpusPath, file);
+        const gameResultBegin = results.length;
+        const gameStarted = Date.now();
+        if (!options.quiet && !options.progressPerGame) {
+            process.stderr.write(`solver_progress game=${name} phase=compile\n`);
+        }
         const compiled = runGame(options.corpusPath, file);
         if (Array.isArray(compiled)) {
             results.push(...compiled);
+            if (!options.quiet && options.progressPerGame) {
+                printHumanBlock(process.stderr, `Game: ${name}`, summarizeHuman(results.slice(gameResultBegin)), Date.now() - gameStarted);
+            } else if (!options.quiet) {
+                process.stderr.write(`solver_progress game=${name} level=-1 status=compile_error completed=${results.length}\n`);
+            }
             continue;
         }
+        if (!options.quiet && !options.progressPerGame) {
+            process.stderr.write(`solver_progress game=${compiled.game} phase=levels count=${state.levels.length}\n`);
+        }
         for (let levelIndex = 0; levelIndex < state.levels.length; levelIndex++) {
-            results.push(solveLevel(compiled.game, levelIndex, options.timeoutMs, compiled.compileMs));
+            if (!options.quiet && !options.progressPerGame) {
+                process.stderr.write(`solver_progress game=${compiled.game} level=${levelIndex} phase=start\n`);
+            }
+            let result;
+            try {
+                if (typeof resetParserErrorState === 'function') {
+                    resetParserErrorState();
+                }
+                result = solveLevel(compiled.game, levelIndex, options.timeoutMs, compiled.compileMs);
+            } catch (error) {
+                if (typeof resetParserErrorState === 'function') {
+                    resetParserErrorState();
+                }
+                result = levelErrorResult(compiled.game, levelIndex, options.timeoutMs, compiled.compileMs, error);
+            }
+            results.push(result);
+            attemptedLevels++;
+            if (!options.quiet && !options.progressPerGame && options.progressEvery > 0 && attemptedLevels % options.progressEvery === 0) {
+                process.stderr.write(`solver_progress game=${compiled.game} level=${levelIndex} status=${result.status} solution_length=${result.solution.length} elapsed_ms=${result.elapsed_ms} expanded=${result.expanded} generated=${result.generated} completed=${attemptedLevels}\n`);
+            }
+        }
+        const slice = results.slice(gameResultBegin);
+        writeAnnotatedSolutions(options, compiled.game, compiled.source, slice);
+        if (!options.quiet && options.progressPerGame) {
+            printHumanBlock(process.stderr, `Game: ${compiled.game}`, summarizeHuman(slice), Date.now() - gameStarted);
         }
     }
     return results;
@@ -509,13 +747,22 @@ function printHuman(results) {
     process.stdout.write(`solver_totals levels=${t.levels} solved=${t.solved} timeout=${t.timeout} exhausted=${t.exhausted} skipped_message=${t.skipped_message} errors=${t.errors}\n`);
 }
 
+function printSolutionsLocation(options) {
+    process.stdout.write(`Solutions: ${options.writeSolutions ? options.solutionsDir : 'disabled'}\n`);
+}
+
 function main() {
     const options = parseArgs(process.argv);
     const results = runCorpus(options);
     if (options.json) {
         process.stdout.write(`${JSON.stringify({ results, totals: totals(results) }, null, 2)}\n`);
+    } else if (options.summaryOnly) {
+        const elapsedMs = results.reduce((sum, result) => sum + result.elapsed_ms, 0);
+        printHumanBlock(process.stdout, 'Totals', summarizeHuman(results), elapsedMs);
+        printSolutionsLocation(options);
     } else {
         printHuman(results);
+        printSolutionsLocation(options);
     }
 }
 

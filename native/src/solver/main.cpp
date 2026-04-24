@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <memory>
 #include <optional>
@@ -11,6 +12,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <vector>
 
@@ -35,8 +37,14 @@ struct ScopedTimer {
 
 struct Options {
     std::filesystem::path corpusPath;
+    std::filesystem::path solutionsDir = "build/solver-solutions/native";
     int64_t timeoutMs = 5000;
+    size_t progressEvery = 25;
+    bool writeSolutions = true;
+    bool progressPerGame = false;
     bool json = false;
+    bool quiet = false;
+    bool summaryOnly = false;
 };
 
 struct StateKey {
@@ -103,6 +111,26 @@ struct Result {
     Timing timing;
 };
 
+struct HumanSummary {
+    uint64_t solved = 0;
+    uint64_t timeout = 0;
+    uint64_t exhausted = 0;
+    uint64_t skipped = 0;
+    uint64_t errors = 0;
+    uint64_t expanded = 0;
+    uint64_t generated = 0;
+
+    uint64_t playableLevels() const {
+        return solved + timeout + exhausted + errors;
+    }
+};
+
+struct SourceLevel {
+    int32_t level = -1;
+    size_t insertBeforeLine = 0;
+    bool message = false;
+};
+
 std::string readFile(const std::filesystem::path& path) {
     std::ifstream stream(path, std::ios::binary);
     if (!stream) {
@@ -111,6 +139,15 @@ std::string readFile(const std::filesystem::path& path) {
     std::ostringstream buffer;
     buffer << stream.rdbuf();
     return buffer.str();
+}
+
+void writeFile(const std::filesystem::path& path, const std::string& text) {
+    std::filesystem::create_directories(path.parent_path());
+    std::ofstream stream(path, std::ios::binary);
+    if (!stream) {
+        throw std::runtime_error("Failed to write file: " + path.string());
+    }
+    stream << text;
 }
 
 std::string jsonString(std::string_view value) {
@@ -139,8 +176,49 @@ std::string jsonString(std::string_view value) {
     return out.str();
 }
 
+std::string trim(std::string_view value) {
+    size_t begin = 0;
+    while (begin < value.size() && std::isspace(static_cast<unsigned char>(value[begin]))) {
+        ++begin;
+    }
+    size_t end = value.size();
+    while (end > begin && std::isspace(static_cast<unsigned char>(value[end - 1]))) {
+        --end;
+    }
+    return std::string(value.substr(begin, end - begin));
+}
+
+std::string lowercase(std::string value) {
+    std::transform(value.begin(), value.end(), value.begin(), [](unsigned char ch) {
+        return static_cast<char>(std::tolower(ch));
+    });
+    return value;
+}
+
+bool startsWith(std::string_view value, std::string_view prefix) {
+    return value.size() >= prefix.size() && value.substr(0, prefix.size()) == prefix;
+}
+
+bool isDividerLine(const std::string& line) {
+    const std::string stripped = trim(line);
+    return !stripped.empty() && std::all_of(stripped.begin(), stripped.end(), [](char ch) {
+        return ch == '=';
+    });
+}
+
+bool isCommentLine(const std::string& line) {
+    const std::string stripped = trim(line);
+    return !stripped.empty() && stripped.front() == '(';
+}
+
 double ms(int64_t us) {
     return static_cast<double>(us) / 1000.0;
+}
+
+std::string secondsString(int64_t elapsedMs) {
+    std::ostringstream out;
+    out << std::fixed << std::setprecision(2) << (static_cast<double>(elapsedMs) / 1000.0);
+    return out.str();
 }
 
 std::string inputName(ps_input input) {
@@ -204,19 +282,45 @@ std::vector<std::filesystem::path> discoverGames(const std::filesystem::path& ro
 Options parseArgs(int argc, char** argv) {
     Options options;
     if (argc < 2) {
-        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--json]");
+        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json]");
     }
     for (int index = 1; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--help" || arg == "-h") {
-            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--json]");
+            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json]");
         }
         if (arg == "--timeout-ms" && index + 1 < argc) {
             options.timeoutMs = std::max<int64_t>(1, std::stoll(argv[++index]));
             continue;
         }
+        if (arg == "--solutions-dir" && index + 1 < argc) {
+            options.solutionsDir = argv[++index];
+            options.writeSolutions = true;
+            continue;
+        }
+        if (arg == "--no-solutions") {
+            options.writeSolutions = false;
+            continue;
+        }
         if (arg == "--json") {
             options.json = true;
+            continue;
+        }
+        if (arg == "--summary-only") {
+            options.summaryOnly = true;
+            continue;
+        }
+        if (arg == "--quiet") {
+            options.quiet = true;
+            options.progressEvery = 0;
+            continue;
+        }
+        if (arg == "--progress-every" && index + 1 < argc) {
+            options.progressEvery = static_cast<size_t>(std::stoull(argv[++index]));
+            continue;
+        }
+        if (arg == "--progress-per-game") {
+            options.progressPerGame = true;
             continue;
         }
         if (options.corpusPath.empty()) {
@@ -451,6 +555,145 @@ std::string relativeGameName(const std::filesystem::path& root, const std::files
     return gamePath.filename().generic_string();
 }
 
+std::vector<std::string> splitLines(const std::string& source) {
+    std::vector<std::string> lines;
+    std::istringstream stream(source);
+    std::string line;
+    while (std::getline(stream, line)) {
+        if (!line.empty() && line.back() == '\r') {
+            line.pop_back();
+        }
+        lines.push_back(line);
+    }
+    if (!source.empty() && source.back() == '\n') {
+        return lines;
+    }
+    if (source.empty()) {
+        lines.emplace_back();
+    }
+    return lines;
+}
+
+std::vector<SourceLevel> findSourceLevels(const std::vector<std::string>& lines) {
+    std::vector<SourceLevel> levels;
+    size_t index = 0;
+    for (; index < lines.size(); ++index) {
+        if (lowercase(trim(lines[index])) == "levels") {
+            ++index;
+            break;
+        }
+    }
+    if (index >= lines.size()) {
+        return levels;
+    }
+
+    int32_t levelIndex = 0;
+    while (index < lines.size()) {
+        const std::string stripped = trim(lines[index]);
+        const std::string lower = lowercase(stripped);
+        if (stripped.empty() || isDividerLine(lines[index]) || isCommentLine(lines[index])) {
+            ++index;
+            continue;
+        }
+        if (lower == "message" || startsWith(lower, "message ")) {
+            levels.push_back(SourceLevel{levelIndex++, index, true});
+            ++index;
+            continue;
+        }
+
+        levels.push_back(SourceLevel{levelIndex++, index, false});
+        ++index;
+        while (index < lines.size() && !trim(lines[index]).empty()) {
+            ++index;
+        }
+    }
+    return levels;
+}
+
+char solutionLetter(const std::string& input) {
+    if (input == "up") {
+        return 'U';
+    }
+    if (input == "down") {
+        return 'D';
+    }
+    if (input == "left") {
+        return 'L';
+    }
+    if (input == "right") {
+        return 'R';
+    }
+    if (input == "action") {
+        return 'A';
+    }
+    return '?';
+}
+
+std::string compactSolution(const std::vector<std::string>& solution) {
+    std::string out;
+    for (size_t index = 0; index < solution.size(); ++index) {
+        if (index > 0 && (index % 4) == 0) {
+            out.push_back(' ');
+        }
+        out.push_back(solutionLetter(solution[index]));
+    }
+    return out;
+}
+
+bool writeAnnotatedSolutions(
+    const Options& options,
+    const std::string& gameName,
+    const std::string& source,
+    const std::vector<Result>& results,
+    size_t begin,
+    size_t end
+) {
+    if (!options.writeSolutions) {
+        return false;
+    }
+
+    std::unordered_map<int32_t, std::string> solved;
+    for (size_t index = begin; index < end; ++index) {
+        const Result& result = results[index];
+        if (result.status == "solved" && !result.solution.empty()) {
+            solved[result.level] = compactSolution(result.solution);
+        }
+    }
+    if (solved.empty()) {
+        return false;
+    }
+
+    const std::vector<std::string> lines = splitLines(source);
+    const std::vector<SourceLevel> sourceLevels = findSourceLevels(lines);
+    std::unordered_map<size_t, std::vector<std::string>> commentsByLine;
+    for (const SourceLevel& level : sourceLevels) {
+        if (level.message) {
+            continue;
+        }
+        const auto found = solved.find(level.level);
+        if (found != solved.end()) {
+            commentsByLine[level.insertBeforeLine].push_back("(" + found->second + ")");
+        }
+    }
+    if (commentsByLine.empty()) {
+        return false;
+    }
+
+    std::ostringstream annotated;
+    for (size_t lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
+        const auto comments = commentsByLine.find(lineIndex);
+        if (comments != commentsByLine.end()) {
+            for (const std::string& comment : comments->second) {
+                annotated << comment << "\n";
+            }
+        }
+        annotated << lines[lineIndex] << "\n";
+    }
+
+    writeFile(options.solutionsDir / gameName, annotated.str());
+    return true;
+}
+
 void printJsonResult(const Result& result, std::ostream& out) {
     out << "{";
     out << "\"game\":" << jsonString(result.game);
@@ -536,7 +779,47 @@ void printJson(const std::vector<Result>& results) {
     std::cout << "}\n}\n";
 }
 
-void printHuman(const std::vector<Result>& results) {
+HumanSummary summarizeHuman(const std::vector<Result>& results, size_t begin, size_t end) {
+    HumanSummary summary;
+    for (size_t index = begin; index < end; ++index) {
+        const Result& result = results[index];
+        summary.solved += result.status == "solved";
+        summary.timeout += result.status == "timeout";
+        summary.exhausted += result.status == "exhausted";
+        summary.skipped += result.status == "skipped_message";
+        summary.errors += result.status == "compile_error" || result.status == "level_error";
+        summary.expanded += result.expanded;
+        summary.generated += result.generated;
+    }
+    return summary;
+}
+
+HumanSummary summarizeHuman(const std::vector<Result>& results) {
+    return summarizeHuman(results, 0, results.size());
+}
+
+void printHumanBlock(std::ostream& out, std::string_view label, const HumanSummary& summary, int64_t elapsedMs) {
+    out << "===\n";
+    out << label << " (" << secondsString(elapsedMs) << " sec)\n";
+    out << "Levels Solved: " << summary.solved << "/" << summary.playableLevels() << "\n";
+    out << "Timeout: " << summary.timeout << "\n";
+    if (summary.exhausted > 0) {
+        out << "Unsolvable: " << summary.exhausted << "\n";
+    }
+    if (summary.errors > 0) {
+        out << "Errors: " << summary.errors << "\n";
+    }
+}
+
+void printSolutionsLocation(std::ostream& out, const Options& options) {
+    if (options.writeSolutions) {
+        out << "Solutions: " << options.solutionsDir.generic_string() << "\n";
+    } else {
+        out << "Solutions: disabled\n";
+    }
+}
+
+void printHuman(const std::vector<Result>& results, const Options& options) {
     uint64_t solved = 0;
     uint64_t timeout = 0;
     uint64_t exhausted = 0;
@@ -575,13 +858,29 @@ void printHuman(const std::vector<Result>& results) {
               << " exhausted=" << exhausted
               << " skipped_message=" << skipped
               << " errors=" << errors << "\n";
+    printSolutionsLocation(std::cout, options);
+}
+
+void printHumanSummary(const std::vector<Result>& results, const Options& options) {
+    int64_t elapsedMs = 0;
+    for (const auto& result : results) {
+        elapsedMs += result.elapsedMs;
+    }
+    printHumanBlock(std::cout, "Totals", summarizeHuman(results), elapsedMs);
+    printSolutionsLocation(std::cout, options);
 }
 
 std::vector<Result> runCorpus(const Options& options) {
     std::vector<Result> results;
     const auto games = discoverGames(options.corpusPath);
+    size_t attemptedLevels = 0;
     for (const auto& gamePath : games) {
         const std::string gameName = relativeGameName(options.corpusPath, gamePath);
+        const size_t gameResultBegin = results.size();
+        const auto gameStartedAt = Clock::now();
+        if (!options.quiet && !options.progressPerGame) {
+            std::cerr << "solver_progress game=" << gameName << " phase=compile\n";
+        }
         std::string source = readFile(gamePath);
         if (source.empty() || source.back() != '\n') {
             source.push_back('\n');
@@ -603,12 +902,43 @@ std::vector<Result> runCorpus(const Options& options) {
             result.timeoutMs = options.timeoutMs;
             result.timing.compileUs = compileUs;
             results.push_back(std::move(result));
+            if (!options.quiet && options.progressPerGame) {
+                const int64_t elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - gameStartedAt).count();
+                printHumanBlock(std::cerr, "Game: " + gameName, summarizeHuman(results, gameResultBegin, results.size()), elapsedMs);
+            } else if (!options.quiet) {
+                std::cerr << "solver_progress game=" << gameName << " level=-1 status=compile_error completed="
+                          << results.size() << "\n";
+            }
             continue;
         }
 
         const int32_t levelCount = ps_game_level_count(game.get());
+        if (!options.quiet && !options.progressPerGame) {
+            std::cerr << "solver_progress game=" << gameName << " phase=levels count=" << levelCount << "\n";
+        }
         for (int32_t levelIndex = 0; levelIndex < levelCount; ++levelIndex) {
+            if (!options.quiet && !options.progressPerGame) {
+                std::cerr << "solver_progress game=" << gameName << " level=" << levelIndex << " phase=start\n";
+            }
             results.push_back(solveLevel(game.get(), gameName, levelIndex, options.timeoutMs, compileUs));
+            ++attemptedLevels;
+            const Result& last = results.back();
+            if (!options.quiet && !options.progressPerGame && options.progressEvery > 0 && (attemptedLevels % options.progressEvery) == 0) {
+                std::cerr << "solver_progress game=" << gameName
+                          << " level=" << levelIndex
+                          << " status=" << last.status
+                          << " solution_length=" << last.solution.size()
+                          << " elapsed_ms=" << last.elapsedMs
+                          << " expanded=" << last.expanded
+                          << " generated=" << last.generated
+                          << " completed=" << attemptedLevels
+                          << "\n";
+            }
+        }
+        writeAnnotatedSolutions(options, gameName, source, results, gameResultBegin, results.size());
+        if (!options.quiet && options.progressPerGame) {
+            const int64_t elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - gameStartedAt).count();
+            printHumanBlock(std::cerr, "Game: " + gameName, summarizeHuman(results, gameResultBegin, results.size()), elapsedMs);
         }
     }
     return results;
@@ -622,8 +952,10 @@ int main(int argc, char** argv) {
         const auto results = runCorpus(options);
         if (options.json) {
             printJson(results);
+        } else if (options.summaryOnly) {
+            printHumanSummary(results, options);
         } else {
-            printHuman(results);
+            printHuman(results, options);
         }
         return 0;
     } catch (const std::exception& error) {

@@ -39,8 +39,8 @@ function resultKey(result) {
     return `${result.game}#${result.level}`;
 }
 
-const native = runJson(solverPath, [fixtureDir, '--timeout-ms', '1000', '--json'], 'native solver');
-const js = runJson(process.execPath, [jsSolverPath, fixtureDir, '--timeout-ms', '1000', '--json'], 'JS solver');
+const native = runJson(solverPath, [fixtureDir, '--timeout-ms', '1000', '--no-solutions', '--json'], 'native solver');
+const js = runJson(process.execPath, [jsSolverPath, fixtureDir, '--timeout-ms', '1000', '--no-solutions', '--json'], 'JS solver');
 
 const nativeByKey = new Map(native.results.map((result) => [resultKey(result), result]));
 const jsByKey = new Map(js.results.map((result) => [resultKey(result), result]));

@@ -277,7 +277,7 @@ set_tests_properties(puzzlescript_cpp_step_smoke PROPERTIES PASS_REGULAR_EXPRESS
 
 add_test(
   NAME puzzlescript_solver_smoke
-  COMMAND puzzlescript_solver ${PUZZLESCRIPT_REPO_ROOT}/src/tests/solver_smoke_tests --timeout-ms 1000 --json
+  COMMAND puzzlescript_solver ${PUZZLESCRIPT_REPO_ROOT}/src/tests/solver_smoke_tests --timeout-ms 1000 --no-solutions --json
 )
 set_tests_properties(puzzlescript_solver_smoke PROPERTIES PASS_REGULAR_EXPRESSION "\"solved\"")
 

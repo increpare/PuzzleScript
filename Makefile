@@ -32,6 +32,10 @@ BUILD_DIR_32 ?= build-32
 PUZZLESCRIPT_CPP := $(BUILD_DIR)/native/puzzlescript_cpp
 PUZZLESCRIPT_CPP_32 := $(BUILD_DIR_32)/native/puzzlescript_cpp
 PUZZLESCRIPT_SOLVER := $(BUILD_DIR)/native/puzzlescript_solver
+SOLVER_TIMEOUT_MS ?= 250
+SOLVER_PROGRESS_EVERY ?= game
+SOLVER_OUTPUT_ARGS ?= --summary-only
+SOLVER_SOLUTIONS_DIR ?= $(BUILD_DIR)/solver-solutions
 JS_PARITY_DATA_DIR := $(BUILD_DIR)/js-parity-data
 JS_PARITY_MANIFEST := $(JS_PARITY_DATA_DIR)/fixtures.json
 ERRORMESSAGE_PARSER_BUNDLE := $(BUILD_DIR)/parser_corpus_errormessage.bundle.ndjson
@@ -88,10 +92,18 @@ help:
 	@echo "  make tests_js                      Run the original JavaScript test suite"
 	@echo "  make solver_tests_cpp              Run standalone native solver corpus"
 	@echo "  make solver_tests_js               Run JavaScript comparison solver corpus"
+	@echo "  make solver_tests SOLVER_TIMEOUT_MS=5000"
+	@echo "                                     Run solver corpus with a deeper timeout"
+	@echo "  make solver_tests SOLVER_PROGRESS_EVERY=1"
+	@echo "                                     Show solver progress for every level"
+	@echo "  make solver_tests SOLVER_OUTPUT_ARGS="
+	@echo "                                     Print per-level solver results after the run"
+	@echo "  make solver_tests SOLVER_SOLUTIONS_DIR=/tmp/solver-solutions"
+	@echo "                                     Write annotated solved-level sources elsewhere"
 	@echo ""
 	@echo "Direct executable after build:"
 	@echo "  build/native/puzzlescript_cpp --help"
-	@echo "  build/native/puzzlescript_solver src/tests/solver_tests --timeout-ms 5000"
+	@echo "  build/native/puzzlescript_solver src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)"
 
 $(CMAKE_CACHE): CMakeLists.txt native/CMakeLists.txt
 	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
@@ -136,11 +148,17 @@ simulation_tests_js_profile_breakdown:
 compilation_tests_js:
 	$(NODE) src/tests/run_tests_node.js --compilation-only
 
+ifeq ($(SOLVER_PROGRESS_EVERY),game)
+SOLVER_PROGRESS_ARGS := --progress-per-game
+else
+SOLVER_PROGRESS_ARGS := --progress-every $(SOLVER_PROGRESS_EVERY)
+endif
+
 solver_tests_cpp: $(PUZZLESCRIPT_SOLVER)
-	$(PUZZLESCRIPT_SOLVER) src/tests/solver_tests --timeout-ms 5000
+	$(PUZZLESCRIPT_SOLVER) src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)
 
 solver_tests_js:
-	$(NODE) src/tests/run_solver_tests_js.js src/tests/solver_tests --timeout-ms 5000
+	$(NODE) src/tests/run_solver_tests_js.js src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/js $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)
 
 solver_tests: solver_tests_cpp solver_tests_js
 
