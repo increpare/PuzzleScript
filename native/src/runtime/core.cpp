@@ -1725,19 +1725,25 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     const Game& game = *session.game;
     const uint32_t objectWordCount = game.wordCount;
     const uint32_t movementWordCount = game.movementWordCount;
-    auto copyIntoScratch = [](std::vector<int32_t>& scratch, const int32_t* src, size_t n) {
-        scratch.resize(n);
-        if (n > 0) std::memcpy(scratch.data(), src, n * sizeof(int32_t));
+    auto copyIntoScratchPair = [](std::vector<int32_t>& current,
+                                  std::vector<int32_t>& old,
+                                  const int32_t* src,
+                                  size_t n) {
+        current.resize(n);
+        old.resize(n);
+        if (n > 0) {
+            std::memcpy(current.data(), src, n * sizeof(int32_t));
+            std::memcpy(old.data(), src, n * sizeof(int32_t));
+        }
     };
-    copyIntoScratch(session.replacementObjectsScratch,
-                    getCellObjectsPtr(session, tileIndex),
-                    static_cast<size_t>(game.strideObject));
-    copyIntoScratch(session.replacementMovementsScratch,
-                    getCellMovementsPtr(session, tileIndex),
-                    static_cast<size_t>(game.strideMovement));
-    // Capture the pre-replacement state for diffing.
-    session.replacementOldObjectsScratch   = session.replacementObjectsScratch;
-    session.replacementOldMovementsScratch = session.replacementMovementsScratch;
+    copyIntoScratchPair(session.replacementObjectsScratch,
+                        session.replacementOldObjectsScratch,
+                        getCellObjectsPtr(session, tileIndex),
+                        static_cast<size_t>(game.strideObject));
+    copyIntoScratchPair(session.replacementMovementsScratch,
+                        session.replacementOldMovementsScratch,
+                        getCellMovementsPtr(session, tileIndex),
+                        static_cast<size_t>(game.strideMovement));
     std::vector<int32_t>& objects      = session.replacementObjectsScratch;
     std::vector<int32_t>& movements    = session.replacementMovementsScratch;
     const std::vector<int32_t>& oldObjects   = session.replacementOldObjectsScratch;
@@ -1885,8 +1891,8 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         movements[word] = (movements[word] & ~movementsClear[word]) | movementsSet[word];
     }
 
-    session.replacementCreatedScratch.assign(objects.size(), 0);
-    session.replacementDestroyedScratch.assign(objects.size(), 0);
+    session.replacementCreatedScratch.resize(objects.size());
+    session.replacementDestroyedScratch.resize(objects.size());
     std::vector<int32_t>& created   = session.replacementCreatedScratch;
     std::vector<int32_t>& destroyed = session.replacementDestroyedScratch;
     for (size_t word = 0; word < objects.size(); ++word) {
