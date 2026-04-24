@@ -30,26 +30,34 @@ uint32_t ceilDivU32(uint32_t a, uint32_t b) {
     return (a + b - 1) / b;
 }
 
-puzzlescript::MaskOffset storeMaskWords(puzzlescript::Game& game, const std::vector<int32_t>& words) {
+puzzlescript::MaskOffset storeMaskWords(puzzlescript::Game& game, const puzzlescript::MaskVector& words) {
     const auto offset = static_cast<puzzlescript::MaskOffset>(game.maskArena.size());
     game.maskArena.insert(game.maskArena.end(), words.begin(), words.end());
     return offset;
 }
 
-std::vector<int32_t> makeEmptyMask(uint32_t wordCount) {
-    return std::vector<int32_t>(static_cast<size_t>(wordCount), 0);
+puzzlescript::MaskVector makeEmptyMask(uint32_t wordCount) {
+    return puzzlescript::MaskVector(static_cast<size_t>(wordCount), 0);
 }
 
-void setMaskBit(std::vector<int32_t>& words, int32_t bitIndex) {
+void setMaskBit(puzzlescript::MaskVector& words, int32_t bitIndex) {
     if (bitIndex < 0) {
         return;
     }
-    const uint32_t word = static_cast<uint32_t>(bitIndex) / 32U;
-    const uint32_t bit = static_cast<uint32_t>(bitIndex) % 32U;
+    const uint32_t word = puzzlescript::maskWordIndex(static_cast<uint32_t>(bitIndex));
     if (word >= words.size()) {
         return;
     }
-    words[word] |= (1U << bit);
+    words[word] |= puzzlescript::maskBit(static_cast<uint32_t>(bitIndex));
+}
+
+bool maskHasBit(const puzzlescript::MaskVector& words, int32_t bitIndex) {
+    if (bitIndex < 0) {
+        return false;
+    }
+    const uint32_t word = puzzlescript::maskWordIndex(static_cast<uint32_t>(bitIndex));
+    return word < words.size()
+        && (words[word] & puzzlescript::maskBit(static_cast<uint32_t>(bitIndex))) != 0;
 }
 
 std::vector<std::vector<int32_t>> parseSpriteMatrix(const std::vector<std::string>& rows) {
@@ -166,69 +174,69 @@ int32_t dirMaskFromToken(std::string_view token) {
     return 0;
 }
 
-void setShiftedMask5(std::vector<int32_t>& words, int32_t shift, int32_t value5) {
+void setShiftedMask5(puzzlescript::MaskVector& words, int32_t shift, int32_t value5) {
     // shift is bit offset (multiple of 5).
-    const int32_t wordIndex = shift / 32;
-    const int32_t bitIndex = shift % 32;
+    const int32_t wordIndex = shift / static_cast<int32_t>(puzzlescript::kMaskWordBits);
+    const int32_t bitIndex = shift % static_cast<int32_t>(puzzlescript::kMaskWordBits);
     if (wordIndex < 0 || static_cast<size_t>(wordIndex) >= words.size()) {
         return;
     }
-    const uint32_t mask = 0x1fU;
-    uint32_t v = static_cast<uint32_t>(value5) & mask;
-    uint32_t w0 = static_cast<uint32_t>(words[static_cast<size_t>(wordIndex)]);
+    const puzzlescript::MaskWordUnsigned mask = 0x1fU;
+    puzzlescript::MaskWordUnsigned v = static_cast<puzzlescript::MaskWordUnsigned>(value5) & mask;
+    puzzlescript::MaskWordUnsigned w0 = static_cast<puzzlescript::MaskWordUnsigned>(words[static_cast<size_t>(wordIndex)]);
     w0 &= ~(mask << bitIndex);
     w0 |= (v << bitIndex);
-    words[static_cast<size_t>(wordIndex)] = static_cast<int32_t>(w0);
-    if (bitIndex > 27) {
+    words[static_cast<size_t>(wordIndex)] = static_cast<puzzlescript::MaskWord>(w0);
+    if (bitIndex > static_cast<int32_t>(puzzlescript::kMaskWordBits - 5U)) {
         // Straddles boundary.
         const int32_t next = wordIndex + 1;
         if (static_cast<size_t>(next) >= words.size()) {
             return;
         }
-        const int32_t spill = bitIndex + 5 - 32;
-        uint32_t w1 = static_cast<uint32_t>(words[static_cast<size_t>(next)]);
+        const int32_t spill = bitIndex + 5 - static_cast<int32_t>(puzzlescript::kMaskWordBits);
+        puzzlescript::MaskWordUnsigned w1 = static_cast<puzzlescript::MaskWordUnsigned>(words[static_cast<size_t>(next)]);
         w1 &= ~(mask >> (5 - spill));
         w1 |= (v >> (5 - spill));
-        words[static_cast<size_t>(next)] = static_cast<int32_t>(w1);
+        words[static_cast<size_t>(next)] = static_cast<puzzlescript::MaskWord>(w1);
     }
 }
 
-void orShiftedMask5(std::vector<int32_t>& words, int32_t shift, int32_t value5) {
-    const int32_t wordIndex = shift / 32;
-    const int32_t bitIndex = shift % 32;
+void orShiftedMask5(puzzlescript::MaskVector& words, int32_t shift, int32_t value5) {
+    const int32_t wordIndex = shift / static_cast<int32_t>(puzzlescript::kMaskWordBits);
+    const int32_t bitIndex = shift % static_cast<int32_t>(puzzlescript::kMaskWordBits);
     if (wordIndex < 0 || static_cast<size_t>(wordIndex) >= words.size()) {
         return;
     }
-    const uint32_t mask = 0x1fU;
-    uint32_t v = static_cast<uint32_t>(value5) & mask;
-    uint32_t w0 = static_cast<uint32_t>(words[static_cast<size_t>(wordIndex)]);
+    const puzzlescript::MaskWordUnsigned mask = 0x1fU;
+    puzzlescript::MaskWordUnsigned v = static_cast<puzzlescript::MaskWordUnsigned>(value5) & mask;
+    puzzlescript::MaskWordUnsigned w0 = static_cast<puzzlescript::MaskWordUnsigned>(words[static_cast<size_t>(wordIndex)]);
     w0 |= (v << bitIndex);
-    words[static_cast<size_t>(wordIndex)] = static_cast<int32_t>(w0);
-    if (bitIndex > 27) {
+    words[static_cast<size_t>(wordIndex)] = static_cast<puzzlescript::MaskWord>(w0);
+    if (bitIndex > static_cast<int32_t>(puzzlescript::kMaskWordBits - 5U)) {
         const int32_t next = wordIndex + 1;
         if (static_cast<size_t>(next) >= words.size()) {
             return;
         }
-        const int32_t spill = bitIndex + 5 - 32;
-        uint32_t w1 = static_cast<uint32_t>(words[static_cast<size_t>(next)]);
+        const int32_t spill = bitIndex + 5 - static_cast<int32_t>(puzzlescript::kMaskWordBits);
+        puzzlescript::MaskWordUnsigned w1 = static_cast<puzzlescript::MaskWordUnsigned>(words[static_cast<size_t>(next)]);
         w1 |= (v >> (5 - spill));
-        words[static_cast<size_t>(next)] = static_cast<int32_t>(w1);
+        words[static_cast<size_t>(next)] = static_cast<puzzlescript::MaskWord>(w1);
     }
 }
 
-int32_t getShiftedMask5(const std::vector<int32_t>& words, int32_t shift) {
-    const int32_t wordIndex = shift / 32;
-    const int32_t bitIndex = shift % 32;
+int32_t getShiftedMask5(const puzzlescript::MaskVector& words, int32_t shift) {
+    const int32_t wordIndex = shift / static_cast<int32_t>(puzzlescript::kMaskWordBits);
+    const int32_t bitIndex = shift % static_cast<int32_t>(puzzlescript::kMaskWordBits);
     if (wordIndex < 0 || static_cast<size_t>(wordIndex) >= words.size()) {
         return 0;
     }
-    const uint32_t mask = 0x1fU;
-    uint32_t value = (static_cast<uint32_t>(words[static_cast<size_t>(wordIndex)]) >> bitIndex) & mask;
-    if (bitIndex > 27) {
+    const puzzlescript::MaskWordUnsigned mask = 0x1fU;
+    puzzlescript::MaskWordUnsigned value = (static_cast<puzzlescript::MaskWordUnsigned>(words[static_cast<size_t>(wordIndex)]) >> bitIndex) & mask;
+    if (bitIndex > static_cast<int32_t>(puzzlescript::kMaskWordBits - 5U)) {
         const int32_t next = wordIndex + 1;
         if (static_cast<size_t>(next) < words.size()) {
-            const int32_t spill = bitIndex + 5 - 32;
-            const uint32_t nextBits = static_cast<uint32_t>(words[static_cast<size_t>(next)]) & ((1U << spill) - 1U);
+            const int32_t spill = bitIndex + 5 - static_cast<int32_t>(puzzlescript::kMaskWordBits);
+            const puzzlescript::MaskWordUnsigned nextBits = static_cast<puzzlescript::MaskWordUnsigned>(words[static_cast<size_t>(next)]) & ((puzzlescript::MaskWordUnsigned{1} << spill) - 1U);
             value |= (nextBits << (5 - spill));
         }
     }
@@ -289,9 +297,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     }
     game->objectCount = idCount;
 
-    game->strideObject = static_cast<int32_t>(ceilDivU32(static_cast<uint32_t>(game->objectCount), 32U));
+    game->strideObject = static_cast<int32_t>(ceilDivU32(static_cast<uint32_t>(game->objectCount), puzzlescript::kMaskWordBits));
     game->wordCount = static_cast<uint32_t>(game->strideObject);
-    game->strideMovement = static_cast<int32_t>(ceilDivU32(static_cast<uint32_t>(game->layerCount), 5U));
+    game->strideMovement = static_cast<int32_t>(puzzlescript::movementStrideWordCount(static_cast<uint32_t>(game->layerCount)));
     game->movementWordCount = static_cast<uint32_t>(game->strideMovement);
 
     game->objectsById.resize(static_cast<size_t>(game->objectCount));
@@ -363,7 +371,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     // --- Background / player masks ---
 
     // --- Legend resolution (name -> object mask) ---
-    std::map<std::string, std::vector<int32_t>> resolvedMasks;
+    std::map<std::string, puzzlescript::MaskVector> resolvedMasks;
     std::map<std::string, std::string> synonymOf;
     std::map<std::string, std::vector<std::string>> aggregateOf;
     std::map<std::string, std::vector<std::string>> propertyOf;
@@ -575,7 +583,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         // properties (OR) intentionally skipped for glyphDict (ambiguous in maps)
     }
 
-    auto resolveMask = [&](auto&& self, const std::string& name, std::set<std::string>& visiting) -> std::vector<int32_t> {
+    auto resolveMask = [&](auto&& self, const std::string& name, std::set<std::string>& visiting) -> puzzlescript::MaskVector {
         if (auto it = resolvedMasks.find(name); it != resolvedMasks.end()) {
             return it->second;
         }
@@ -583,7 +591,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             throw std::runtime_error("Legend cycle detected at '" + name + "'");
         }
 
-        std::vector<int32_t> mask = makeEmptyMask(game->wordCount);
+        puzzlescript::MaskVector mask = makeEmptyMask(game->wordCount);
 
         if (auto it = objectIdByName.find(name); it != objectIdByName.end()) {
             setMaskBit(mask, it->second);
@@ -633,7 +641,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     }
 
     // Resolve background object/property.
-    std::vector<int32_t> backgroundMaskWords = makeEmptyMask(game->wordCount);
+    puzzlescript::MaskVector backgroundMaskWords = makeEmptyMask(game->wordCount);
     int32_t backgroundLayer = -1;
     {
         // Prefer a concrete object named "background" (matches JS).
@@ -649,9 +657,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 backgroundMaskWords = resolveMask(resolveMask, "background", visiting);
                 // Infer background layer from first set bit.
                 for (int32_t id = 0; id < game->objectCount; ++id) {
-                    const uint32_t word = static_cast<uint32_t>(id) / 32U;
-                    const uint32_t bit = static_cast<uint32_t>(id) % 32U;
-                    if (word < backgroundMaskWords.size() && (backgroundMaskWords[word] & (1U << bit)) != 0) {
+                    if (maskHasBit(backgroundMaskWords, id)) {
                         backgroundLayer = game->objectsById[static_cast<size_t>(id)].layer;
                         game->backgroundId = id;
                         game->backgroundLayer = backgroundLayer;
@@ -749,7 +755,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             const auto glyphs = splitUtf8Codepoints(srcLevel.rows[static_cast<size_t>(y)]);
             for (int32_t x = 0; x < level.width; ++x) {
                 const std::string glyph = glyphAt(glyphs, x);
-                std::vector<int32_t> cellMask = makeEmptyMask(game->wordCount);
+                puzzlescript::MaskVector cellMask = makeEmptyMask(game->wordCount);
                 if (!glyph.empty()) {
                     try {
                         const auto it = glyphDict.find(glyph);
@@ -828,15 +834,10 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     // Precompute (best-effort) single-layer info for legend names: if a mask's
     // set bits all live on the same collision layer, we can treat it as
     // single-layer for rule movement masks.
-    auto maskSingleLayer = [&](const std::vector<int32_t>& mask) -> std::optional<int32_t> {
+    auto maskSingleLayer = [&](const puzzlescript::MaskVector& mask) -> std::optional<int32_t> {
         std::optional<int32_t> layer;
         for (int32_t id = 0; id < game->objectCount; ++id) {
-            const uint32_t word = static_cast<uint32_t>(id) / 32U;
-            const uint32_t bit = static_cast<uint32_t>(id) % 32U;
-            if (word >= mask.size()) {
-                continue;
-            }
-            if ((mask[word] & (1U << bit)) == 0) {
+            if (!maskHasBit(mask, id)) {
                 continue;
             }
             const int32_t objLayer = game->objectsById[static_cast<size_t>(id)].layer;
@@ -1043,13 +1044,13 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         auto lhsRows = parseSide(cursor, arrowPos, nullptr);
         auto rhsRows = parseSide(arrowPos + 1, rhsEnd, &parsedCommands);
 
-        auto maskTouchesLayer = [&](const std::vector<int32_t>& mask, int32_t layer) -> bool {
+        auto maskTouchesLayer = [&](const puzzlescript::MaskVector& mask, int32_t layer) -> bool {
             if (layer < 0 || layer >= game->layerCount) {
                 return false;
             }
             const auto off = game->layerMaskOffsets[static_cast<size_t>(layer)];
             for (uint32_t w = 0; w < game->wordCount; ++w) {
-                const int32_t layerWord = static_cast<int32_t>(game->maskArena[static_cast<size_t>(off + w)]);
+                const puzzlescript::MaskWord layerWord = game->maskArena[static_cast<size_t>(off + w)];
                 if ((mask[static_cast<size_t>(w)] & layerWord) != 0) {
                     return true;
                 }
@@ -1924,15 +1925,15 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
                 auto objectsPresent = makeEmptyMask(game->wordCount);
                 auto objectsMissing = makeEmptyMask(game->wordCount);
-                auto movementsPresent = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
-                auto movementsMissing = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
+                auto movementsPresent = puzzlescript::MaskVector(static_cast<size_t>(game->movementWordCount), 0);
+                auto movementsMissing = puzzlescript::MaskVector(static_cast<size_t>(game->movementWordCount), 0);
                 std::vector<puzzlescript::MaskOffset> anyOffsets;
 
                 // Per-layer occupancy names (JS `layersUsed_l`): any LHS token with a
                 // resolved single layer, including properties.
                 std::vector<int32_t> layersUsedL(game->layerCount, 0);
                 // Movement-bitvec lanes where LHS had a *concrete* object (JS `objectlayers_l`).
-                std::vector<int32_t> lhsObjectLayersMovement(static_cast<size_t>(game->movementWordCount), 0);
+                puzzlescript::MaskVector lhsObjectLayersMovement(static_cast<size_t>(game->movementWordCount), 0);
                 for (const auto& item : cell.items) {
                     if (item.dir == "random") {
                         continue; // handled on RHS replacement
@@ -1985,8 +1986,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
                 puzzlescript::Pattern pat;
                 pat.kind = puzzlescript::Pattern::Kind::CellPattern;
-                auto maskHasAnyBit = [](const std::vector<int32_t>& words) {
-                    return std::any_of(words.begin(), words.end(), [](int32_t word) { return word != 0; });
+                auto maskHasAnyBit = [](const puzzlescript::MaskVector& words) {
+                    return std::any_of(words.begin(), words.end(), [](puzzlescript::MaskWord word) { return word != 0; });
                 };
                 pat.hasObjectsPresent = maskHasAnyBit(objectsPresent);
                 pat.hasObjectsMissing = maskHasAnyBit(objectsMissing);
@@ -2007,19 +2008,19 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         // or rhs cell single-layer masks, then set rhs objects.
                         auto objectsClear = makeEmptyMask(game->wordCount);
                         auto objectsSet = makeEmptyMask(game->wordCount);
-                        auto movementsClear = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
-                        auto movementsSet = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
-                        auto movementsLayerMask = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
-                        auto randomEntityMask = std::vector<int32_t>(static_cast<size_t>(game->wordCount), 0);
-                        auto randomDirMask = std::vector<int32_t>(static_cast<size_t>(game->movementWordCount), 0);
+                        auto movementsClear = puzzlescript::MaskVector(static_cast<size_t>(game->movementWordCount), 0);
+                        auto movementsSet = puzzlescript::MaskVector(static_cast<size_t>(game->movementWordCount), 0);
+                        auto movementsLayerMask = puzzlescript::MaskVector(static_cast<size_t>(game->movementWordCount), 0);
+                        auto randomEntityMask = puzzlescript::MaskVector(static_cast<size_t>(game->wordCount), 0);
+                        auto randomDirMask = puzzlescript::MaskVector(static_cast<size_t>(game->movementWordCount), 0);
                         std::vector<int32_t> layersUsedR(game->layerCount, 0);
-                        std::vector<int32_t> rhsObjectLayersMovement(static_cast<size_t>(game->movementWordCount), 0);
+                        puzzlescript::MaskVector rhsObjectLayersMovement(static_cast<size_t>(game->movementWordCount), 0);
 
                         auto markLayerClear = [&](int32_t layer) {
                             if (layer < 0 || layer >= game->layerCount) return;
                             const auto off = game->layerMaskOffsets[static_cast<size_t>(layer)];
                             for (uint32_t w = 0; w < game->wordCount; ++w) {
-                                objectsClear[static_cast<size_t>(w)] |= static_cast<int32_t>(game->maskArena[static_cast<size_t>(off + w)]);
+                                objectsClear[static_cast<size_t>(w)] |= game->maskArena[static_cast<size_t>(off + w)];
                             }
                             // JS semantics: mark movement layers that should be reset.
                             orShiftedMask5(movementsLayerMask, 5 * layer, 0x1f);
@@ -2029,7 +2030,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                             if (layer < 0 || layer >= game->layerCount) return;
                             const auto off = game->layerMaskOffsets[static_cast<size_t>(layer)];
                             for (uint32_t w = 0; w < game->wordCount; ++w) {
-                                objectsClear[static_cast<size_t>(w)] |= static_cast<int32_t>(game->maskArena[static_cast<size_t>(off + w)]);
+                                objectsClear[static_cast<size_t>(w)] |= game->maskArena[static_cast<size_t>(off + w)];
                             }
                         };
 
@@ -2081,9 +2082,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                                     std::set<std::string> rhsVisiting;
                                     const auto resolved = resolveMask(resolveMask, item.name, rhsVisiting);
                                     for (int32_t id = 0; id < game->objectCount; ++id) {
-                                        const uint32_t word = static_cast<uint32_t>(id) / 32U;
-                                        const uint32_t bit = static_cast<uint32_t>(id) % 32U;
-                                        if (word < resolved.size() && (resolved[word] & (1U << bit)) != 0) {
+                                        if (maskHasBit(resolved, id)) {
                                             setMaskBit(oneMask, id);
                                             break;
                                         }
@@ -2128,9 +2127,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                                 std::set<std::string> rhsVisiting;
                                 const auto resolved = resolveMask(resolveMask, item.name, rhsVisiting);
                                 for (int32_t id = 0; id < game->objectCount; ++id) {
-                                    const uint32_t word = static_cast<uint32_t>(id) / 32U;
-                                    const uint32_t bit = static_cast<uint32_t>(id) % 32U;
-                                    if (word < resolved.size() && (resolved[word] & (1U << bit)) != 0) {
+                                    if (maskHasBit(resolved, id)) {
                                         setMaskBit(oneMask, id);
                                         break;
                                     }
@@ -2166,8 +2163,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         {
                             bool lhsCovered = true;
                             for (uint32_t w = 0; w < game->wordCount; ++w) {
-                                const int32_t pres = objectsPresent[static_cast<size_t>(w)];
-                                const int32_t setv = objectsSet[static_cast<size_t>(w)];
+                                const puzzlescript::MaskWord pres = objectsPresent[static_cast<size_t>(w)];
+                                const puzzlescript::MaskWord setv = objectsSet[static_cast<size_t>(w)];
                                 if ((pres & setv) != pres) {
                                     lhsCovered = false;
                                     break;
@@ -2183,8 +2180,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         {
                             bool movCovered = true;
                             for (uint32_t w = 0; w < game->movementWordCount; ++w) {
-                                const int32_t pres = movementsPresent[static_cast<size_t>(w)];
-                                const int32_t setv = movementsSet[static_cast<size_t>(w)];
+                                const puzzlescript::MaskWord pres = movementsPresent[static_cast<size_t>(w)];
+                                const puzzlescript::MaskWord setv = movementsSet[static_cast<size_t>(w)];
                                 if ((pres & setv) != pres) {
                                     movCovered = false;
                                     break;
@@ -2208,7 +2205,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
                         // JS: postMovementsLayerMask |= (objectlayers_l & ~objectlayers_r)
                         {
-                            std::vector<int32_t> residual = lhsObjectLayersMovement;
+                            puzzlescript::MaskVector residual = lhsObjectLayersMovement;
                             for (size_t w = 0; w < residual.size(); ++w) {
                                 residual[static_cast<size_t>(w)] &= ~rhsObjectLayersMovement[static_cast<size_t>(w)];
                             }
@@ -2223,7 +2220,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                             }
                             const auto off = game->layerMaskOffsets[static_cast<size_t>(layer)];
                             for (uint32_t w = 0; w < game->wordCount; ++w) {
-                                const int32_t layerWord = static_cast<int32_t>(game->maskArena[static_cast<size_t>(off + w)]);
+                                const puzzlescript::MaskWord layerWord = game->maskArena[static_cast<size_t>(off + w)];
                                 if ((randomEntityMask[static_cast<size_t>(w)] & layerWord) != 0) {
                                     return true;
                                 }
@@ -2238,7 +2235,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                                 const auto off = game->layerMaskOffsets[static_cast<size_t>(layer)];
                                 bool overlaps = false;
                                 for (uint32_t w = 0; w < game->wordCount; ++w) {
-                                    const int32_t layerWord = static_cast<int32_t>(game->maskArena[static_cast<size_t>(off + w)]);
+                                    const puzzlescript::MaskWord layerWord = game->maskArena[static_cast<size_t>(off + w)];
                                     if ((objectsSet[static_cast<size_t>(w)] & layerWord) != 0) {
                                         overlaps = true;
                                         break;
@@ -2258,8 +2255,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                             }
                         }
 
-                        auto anyNonZero = [](const std::vector<int32_t>& words) {
-                            for (const int32_t w : words) {
+                        auto anyNonZero = [](const puzzlescript::MaskVector& words) {
+                            for (const puzzlescript::MaskWord w : words) {
                                 if (w != 0) return true;
                             }
                             return false;
@@ -2325,7 +2322,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                     continue;
                 }
                 for (uint32_t w = 0; w < game->wordCount; ++w) {
-                    const int32_t word = game->maskArena[static_cast<size_t>(off + w)];
+                    const puzzlescript::MaskWord word = game->maskArena[static_cast<size_t>(off + w)];
                     rowMaskWords[static_cast<size_t>(w)] |= word;
                     ruleMaskWords[static_cast<size_t>(w)] |= word;
                 }
@@ -2351,7 +2348,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                     continue;
                 }
                 for (uint32_t w = 0; w < game->movementWordCount; ++w) {
-                    const int32_t word = game->maskArena[static_cast<size_t>(off + w)];
+                    const puzzlescript::MaskWord word = game->maskArena[static_cast<size_t>(off + w)];
                     rowMoveMaskWords[static_cast<size_t>(w)] |= word;
                     ruleMovementMaskWords[static_cast<size_t>(w)] |= word;
                 }

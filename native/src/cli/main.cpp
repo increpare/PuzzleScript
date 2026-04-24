@@ -2734,6 +2734,17 @@ void appendJsonIntArray(std::ostream& out, const std::vector<int32_t>& values) {
     out << "]";
 }
 
+#if PS_MASK_WORD_BITS == 64
+void appendJsonIntArray(std::ostream& out, const puzzlescript::MaskVector& values) {
+    out << "[";
+    for (size_t index = 0; index < values.size(); ++index) {
+        if (index != 0) out << ",";
+        out << values[index];
+    }
+    out << "]";
+}
+#endif
+
 void appendJsonMask(std::ostream& out, const puzzlescript::Game& game, puzzlescript::MaskOffset offset, uint32_t width) {
     out << "[";
     for (uint32_t index = 0; index < width; ++index) {

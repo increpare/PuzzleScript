@@ -51,6 +51,8 @@ using MaskWordUnsigned = uint64_t;
 #error "PS_MASK_WORD_BITS must be 32 or 64"
 #endif
 
+using MaskVector = std::vector<MaskWord>;
+
 inline constexpr uint32_t kMaskWordBits = PS_MASK_WORD_BITS;
 inline constexpr uint32_t kMaskWordShift = PS_MASK_WORD_BITS == 64 ? 6U : 5U;
 inline constexpr uint32_t kMaskWordBitMask = PS_MASK_WORD_BITS - 1U;
@@ -65,6 +67,20 @@ inline constexpr uint32_t maskBitIndex(uint32_t bitIndex) {
 
 inline constexpr MaskWord maskBit(uint32_t bitIndex) {
     return static_cast<MaskWord>(MaskWordUnsigned{1} << maskBitIndex(bitIndex));
+}
+
+inline constexpr uint32_t kMovementLayersPerMaskWord = PS_MASK_WORD_BITS == 64 ? 10U : 5U;
+
+inline constexpr uint32_t movementStrideWordCount(uint32_t layerCount) {
+    return (layerCount + kMovementLayersPerMaskWord - 1U) / kMovementLayersPerMaskWord;
+}
+
+inline constexpr uint32_t movementWordIndexForLayer(uint32_t layerIndex) {
+    return (layerIndex * 5U) >> kMaskWordShift;
+}
+
+inline constexpr uint32_t movementBitShiftForLayer(uint32_t layerIndex) {
+    return (layerIndex * 5U) & kMaskWordBitMask;
 }
 
 struct MaskRef { const MaskWord* data; };
@@ -90,13 +106,13 @@ struct LevelTemplate {
     int32_t width = 0;
     int32_t height = 0;
     int32_t layerCount = 0;
-    std::vector<int32_t> objects;
+    MaskVector objects;
 };
 
 struct RestartSnapshot {
     int32_t width = 0;
     int32_t height = 0;
-    std::vector<int32_t> objects;
+    MaskVector objects;
     std::vector<int32_t> oldFlickscreenDat;
 };
 
@@ -299,22 +315,22 @@ struct Session {
     struct UndoSnapshot {
         PreparedSession preparedSession;
         LevelTemplate liveLevel;
-        std::vector<int32_t> liveMovements;
-        std::vector<int32_t> rigidGroupIndexMasks;
-        std::vector<int32_t> rigidMovementAppliedMasks;
+        MaskVector liveMovements;
+        MaskVector rigidGroupIndexMasks;
+        MaskVector rigidMovementAppliedMasks;
         RandomState randomState;
     };
 
     std::shared_ptr<const Game> game;
     PreparedSession preparedSession;
     LevelTemplate liveLevel;
-    std::vector<int32_t> liveMovements;
-    std::vector<int32_t> rowMasks;
-    std::vector<int32_t> columnMasks;
-    std::vector<int32_t> boardMask;
-    std::vector<int32_t> rowMovementMasks;
-    std::vector<int32_t> columnMovementMasks;
-    std::vector<int32_t> boardMovementMask;
+    MaskVector liveMovements;
+    MaskVector rowMasks;
+    MaskVector columnMasks;
+    MaskVector boardMask;
+    MaskVector rowMovementMasks;
+    MaskVector columnMovementMasks;
+    MaskVector boardMovementMask;
     // Per-object cell presence bitsets for anchored rule scans. Layout is
     // object-major: objectCellBits[objectId * cellWordCount + word].
     std::vector<uint64_t> objectCellBits;
@@ -338,23 +354,23 @@ struct Session {
     // `rebuildMasks` must do work. Set whenever we mark something dirty,
     // cleared by `rebuildMasks` at the end of a clean rebuild.
     bool anyMasksDirty = true;
-    std::vector<int32_t> rigidGroupIndexMasks;
-    std::vector<int32_t> rigidMovementAppliedMasks;
-    std::vector<int32_t> pendingCreateMask;
-    std::vector<int32_t> pendingDestroyMask;
+    MaskVector rigidGroupIndexMasks;
+    MaskVector rigidMovementAppliedMasks;
+    MaskVector pendingCreateMask;
+    MaskVector pendingDestroyMask;
     // Scratch buffers reused across applyReplacementAt invocations to avoid
     // per-call heap allocation. Contents are overwritten on every call.
-    std::vector<int32_t> replacementObjectsClearScratch;
-    std::vector<int32_t> replacementObjectsSetScratch;
-    std::vector<int32_t> replacementMovementsClearScratch;
-    std::vector<int32_t> replacementMovementsSetScratch;
-    std::vector<int32_t> replacementObjectsScratch;
-    std::vector<int32_t> replacementMovementsScratch;
-    std::vector<int32_t> replacementOldObjectsScratch;
-    std::vector<int32_t> replacementOldMovementsScratch;
-    std::vector<int32_t> replacementCreatedScratch;
-    std::vector<int32_t> replacementDestroyedScratch;
-    std::vector<int32_t> replacementRigidMaskScratch;
+    MaskVector replacementObjectsClearScratch;
+    MaskVector replacementObjectsSetScratch;
+    MaskVector replacementMovementsClearScratch;
+    MaskVector replacementMovementsSetScratch;
+    MaskVector replacementObjectsScratch;
+    MaskVector replacementMovementsScratch;
+    MaskVector replacementOldObjectsScratch;
+    MaskVector replacementOldMovementsScratch;
+    MaskVector replacementCreatedScratch;
+    MaskVector replacementDestroyedScratch;
+    MaskVector replacementRigidMaskScratch;
     std::vector<int32_t> singleRowMatchScratch;
     std::vector<UndoSnapshot> undoStack;
     std::vector<ps_audio_event> lastAudioEvents;
