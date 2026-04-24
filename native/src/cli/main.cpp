@@ -1945,6 +1945,8 @@ struct SimulationCorpusOptions {
     size_t repeat = 1;
     size_t jobs = 1;
     size_t topSlowCases = 0;
+    std::optional<size_t> caseIndex;
+    std::optional<std::string> caseNameFilter;
     bool profileTimers = false;
     bool quiet = false;
 };
@@ -2010,6 +2012,10 @@ SimulationCorpusOptions parseSimulationCorpusOptions(int argc, char** argv) {
             options.profileTimers = true;
         } else if (arg == "--top-slow-cases" && index + 1 < argc) {
             options.topSlowCases = static_cast<size_t>(std::stoull(argv[++index]));
+        } else if (arg == "--case-index" && index + 1 < argc) {
+            options.caseIndex = static_cast<size_t>(std::stoull(argv[++index]));
+        } else if (arg == "--case-name" && index + 1 < argc) {
+            options.caseNameFilter = argv[++index];
         } else if (arg == "--quiet") {
             options.quiet = true;
             options.progressEvery = 0;
@@ -2018,6 +2024,36 @@ SimulationCorpusOptions parseSimulationCorpusOptions(int argc, char** argv) {
         }
     }
     return options;
+}
+
+std::vector<SimulationCorpusCase> filterSimulationCorpusCases(
+    const std::vector<SimulationCorpusCase>& cases,
+    const SimulationCorpusOptions& options
+) {
+    if (!options.caseIndex.has_value() && !options.caseNameFilter.has_value()) {
+        return cases;
+    }
+
+    std::vector<SimulationCorpusCase> filtered;
+    if (options.caseIndex.has_value()) {
+        const size_t oneBasedIndex = *options.caseIndex;
+        if (oneBasedIndex == 0 || oneBasedIndex > cases.size()) {
+            throw std::runtime_error("--case-index is out of range");
+        }
+        filtered.push_back(cases[oneBasedIndex - 1]);
+    }
+    if (options.caseNameFilter.has_value()) {
+        const std::string& needle = *options.caseNameFilter;
+        for (const auto& testCase : cases) {
+            if (testCase.name.find(needle) != std::string::npos) {
+                filtered.push_back(testCase);
+            }
+        }
+    }
+    if (filtered.empty()) {
+        throw std::runtime_error("No simulation corpus cases matched the requested filter");
+    }
+    return filtered;
 }
 
 std::vector<SimulationCorpusCase> parseSimulationCorpusCases(const puzzlescript::json::Value& root) {
@@ -2377,7 +2413,8 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
     const auto wallStartedAt = std::chrono::steady_clock::now();
     const auto parseStartedAt = std::chrono::steady_clock::now();
     const auto root = loadJsDataArrayAsJson(testdataPath);
-    const std::vector<SimulationCorpusCase> cases = parseSimulationCorpusCases(root);
+    const std::vector<SimulationCorpusCase> allCases = parseSimulationCorpusCases(root);
+    const std::vector<SimulationCorpusCase> cases = filterSimulationCorpusCases(allCases, options);
     const int64_t testdataParseUs = elapsedMicrosSince(parseStartedAt);
     const SimulationCompileCache compileCache = compileSimulationCorpusGames(cases, options.jobs);
     const size_t totalChecks = cases.size() * options.repeat;
