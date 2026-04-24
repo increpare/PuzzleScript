@@ -2436,6 +2436,8 @@ std::vector<RowMatch> collectEllipsisRowMatches(
             + (row[static_cast<size_t>(rowIndex)].kind == Pattern::Kind::Ellipsis ? 0 : 1);
     }
 
+    RowMatch positions;
+    positions.reserve(static_cast<size_t>(concreteCount));
     for (int32_t tileIndex = 0; tileIndex < session.liveLevel.width * session.liveLevel.height; ++tileIndex) {
         addCounter(gRuntimeCounters.ellipsisScans);
         const int32_t x = tileIndex / session.liveLevel.height;
@@ -2449,8 +2451,7 @@ std::vector<RowMatch> collectEllipsisRowMatches(
             continue;
         }
 
-        RowMatch positions;
-        positions.reserve(static_cast<size_t>(concreteCount));
+        positions.clear();
         auto search = [&](auto&& self, int32_t rowIndex, int32_t offset) -> void {
             if (rowIndex >= static_cast<int32_t>(row.size())) {
                 matches.push_back(positions);
