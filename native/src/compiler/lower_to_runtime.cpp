@@ -2335,6 +2335,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
         // Movement row masks: JS IR includes these; build them similarly to
         // cell_row_masks but over movement masks.
+        auto ruleMovementMaskWords = makeEmptyMask(game->movementWordCount);
         const uint32_t rowMoveMasksFirst = static_cast<uint32_t>(game->cellRowMaskMovementsOffsets.size());
         for (const auto& row : rule.patterns) {
             auto rowMoveMaskWords = makeEmptyMask(game->movementWordCount);
@@ -2349,6 +2350,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                 for (uint32_t w = 0; w < game->movementWordCount; ++w) {
                     const int32_t word = game->maskArena[static_cast<size_t>(off + w)];
                     rowMoveMaskWords[static_cast<size_t>(w)] |= word;
+                    ruleMovementMaskWords[static_cast<size_t>(w)] |= word;
                 }
             }
             game->cellRowMaskMovementsOffsets.push_back(storeMaskWords(*game, rowMoveMaskWords));
@@ -2356,6 +2358,11 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         rule.cellRowMasksMovementsFirst = rowMoveMasksFirst;
         rule.cellRowMasksMovementsCount =
             static_cast<uint32_t>(game->cellRowMaskMovementsOffsets.size()) - rowMoveMasksFirst;
+        rule.hasRuleMovementMask = std::any_of(
+            ruleMovementMaskWords.begin(),
+            ruleMovementMaskWords.end(),
+            [](int32_t word) { return word != 0; });
+        rule.ruleMovementMask = storeMaskWords(*game, ruleMovementMaskWords);
 
         const std::string signature = ruleVariantSignature(
             entry.lineNumber,

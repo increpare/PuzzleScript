@@ -165,6 +165,8 @@ struct Rule {
     uint32_t cellRowMasksMovementsCount = 0;
 
     MaskOffset ruleMask = kNullMaskOffset;
+    MaskOffset ruleMovementMask = kNullMaskOffset;
+    bool hasRuleMovementMask = false;
 
     std::vector<std::vector<Pattern>> patterns;
 };

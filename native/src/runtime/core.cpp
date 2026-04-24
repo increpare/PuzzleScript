@@ -987,10 +987,17 @@ Rule parseRule(Game& game, const json::Value& value) {
     rule.cellRowMasksCount = static_cast<uint32_t>(game.cellRowMaskOffsets.size()) - rule.cellRowMasksFirst;
 
     rule.cellRowMasksMovementsFirst = static_cast<uint32_t>(game.cellRowMaskMovementsOffsets.size());
+    std::vector<int32_t> ruleMovementMaskWords(static_cast<size_t>(game.movementWordCount), 0);
     for (const auto& rowMask : requireField(object, "cell_row_masks_movements").asArray()) {
-        game.cellRowMaskMovementsOffsets.push_back(storeMaskWords(game, parseIntVector(rowMask)));
+        const auto words = parseIntVector(rowMask);
+        for (uint32_t word = 0; word < game.movementWordCount && word < words.size(); ++word) {
+            ruleMovementMaskWords[static_cast<size_t>(word)] |= words[static_cast<size_t>(word)];
+        }
+        game.cellRowMaskMovementsOffsets.push_back(storeMaskWords(game, words));
     }
     rule.cellRowMasksMovementsCount = static_cast<uint32_t>(game.cellRowMaskMovementsOffsets.size()) - rule.cellRowMasksMovementsFirst;
+    rule.hasRuleMovementMask = anyBitsSet(ruleMovementMaskWords);
+    rule.ruleMovementMask = storeMaskWords(game, ruleMovementMaskWords);
 
     rule.ruleMask = storeMaskWords(game, parseIntVector(requireField(object, "rule_mask")));
     for (const auto& patternRowValue : requireField(object, "patterns").asArray()) {
@@ -2263,8 +2270,17 @@ bool rowMatchStillMatches(
 bool ruleCanPossiblyMatch(const Session& session, const Rule& rule) {
     const Game& game = *session.game;
     const int32_t* required = game.maskArena.data() + rule.ruleMask;
-    return bitsSetInArray(required, game.wordCount,
-                          session.boardMask.data(), session.boardMask.size());
+    if (!bitsSetInArray(required, game.wordCount, session.boardMask.data(), session.boardMask.size())) {
+        return false;
+    }
+    if (rule.hasRuleMovementMask) {
+        const int32_t* requiredMovements = game.maskArena.data() + rule.ruleMovementMask;
+        if (!bitsSetInArray(requiredMovements, game.movementWordCount,
+                            session.boardMovementMask.data(), session.boardMovementMask.size())) {
+            return false;
+        }
+    }
+    return true;
 }
 
 RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandState& commands) {
