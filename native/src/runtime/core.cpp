@@ -2265,6 +2265,105 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
         return {};
     }
 
+    if (rule.patterns.size() == 1) {
+        const size_t rowIndex = 0;
+        if (rule.ellipsisCount.empty() || rule.patterns[rowIndex].empty()) {
+            return {};
+        }
+        const auto& row = rule.patterns[rowIndex];
+        const int32_t ellipsisCount = rule.ellipsisCount[rowIndex];
+        bool matched = false;
+        bool changed = false;
+
+        if (ellipsisCount == 0) {
+            const Game& game = *session.game;
+            const MaskOffset rowObjectOffset = rule.cellRowMasksCount > 0
+                ? game.cellRowMaskOffsets[rule.cellRowMasksFirst]
+                : rule.ruleMask;
+            const int32_t* rowObjectMask = maskPtr(game, rowObjectOffset);
+            const MaskOffset rowMovementOffset = rule.cellRowMasksMovementsCount > 0
+                ? game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst]
+                : kNullMaskOffset;
+            const int32_t* rowMovementMask = maskPtr(game, rowMovementOffset);
+            const uint32_t rowMovementMaskWords = rowMovementMask != nullptr ? game.movementWordCount : 0;
+            auto matches = collectRowMatches(session, row, rule.direction,
+                                             rowObjectMask, game.wordCount,
+                                             rowMovementMask, rowMovementMaskWords);
+            if (matches.empty()) {
+                if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                    const std::vector<int32_t> rowObjectMaskCopy = arenaCopy(game, rowObjectOffset, game.wordCount);
+                    const std::vector<int32_t> rowMovementMaskCopy = rowMovementMask != nullptr
+                        ? arenaCopy(game, rowMovementOffset, game.movementWordCount)
+                        : std::vector<int32_t>{};
+                    std::ostringstream stream;
+                    stream << "line=" << rule.lineNumber
+                           << " row=0 matches=0"
+                           << " object_mask=" << describeObjects(session, rowObjectMaskCopy)
+                           << " movement_mask=" << describeMovements(session, rowMovementMaskCopy);
+                    ruleDebugLog(stream.str());
+                }
+                return {};
+            }
+            matched = true;
+            if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                std::ostringstream stream;
+                stream << "line=" << rule.lineNumber
+                       << " row=0 matches=" << matches.size()
+                       << " starts=" << formatMatchList(matches, session.liveLevel.height);
+                ruleDebugLog(stream.str());
+            }
+            for (size_t matchIndex = 0; matchIndex < matches.size(); ++matchIndex) {
+                const int32_t startIndex = matches[matchIndex];
+                if (matchIndex > 0 && !rowStillMatchesAt(session, row, startIndex, delta)) {
+                    continue;
+                }
+                changed = applyRowAt(session, rule, row, startIndex, delta) || changed;
+            }
+        } else {
+            auto matches = collectEllipsisRowMatches(session, row, rule.direction);
+            if (matches.empty()) {
+                if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                    std::ostringstream stream;
+                    stream << "line=" << rule.lineNumber
+                           << " row=0 matches=0 ellipsis=" << ellipsisCount;
+                    ruleDebugLog(stream.str());
+                }
+                return {};
+            }
+            matched = true;
+            if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                std::ostringstream stream;
+                stream << "line=" << rule.lineNumber
+                       << " row=0 matches=" << matches.size()
+                       << " ellipsis=" << ellipsisCount;
+                ruleDebugLog(stream.str());
+            }
+            for (size_t matchIndex = 0; matchIndex < matches.size(); ++matchIndex) {
+                const RowMatch& match = matches[matchIndex];
+                if (matchIndex > 0 && !rowMatchStillMatches(session, row, ellipsisCount, match, delta)) {
+                    continue;
+                }
+                changed = applyEllipsisRowAt(session, rule, row, match) || changed;
+            }
+        }
+
+        if (matched) {
+            queueRuleCommands(rule, commands);
+        }
+        if (changed) {
+            std::ostringstream stream;
+            stream << "line=" << rule.lineNumber
+                   << " matched=1 changed=1 row_count=1";
+            ruleDebugLog(stream.str());
+        } else if (ruleDebugEnabled()) {
+            std::ostringstream stream;
+            stream << "line=" << rule.lineNumber
+                   << " matched=1 changed=0 row_count=1";
+            ruleDebugLog(stream.str());
+        }
+        return RuleApplyOutcome{changed, changed};
+    }
+
     std::vector<std::vector<RowMatch>> rowMatches;
     rowMatches.reserve(rule.patterns.size());
     for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
