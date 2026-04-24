@@ -478,10 +478,69 @@ Options parseArgs(int argc, char** argv) {
     return options;
 }
 
-StateKey sessionKey(const Session& session, Timing& timing) {
+bool gameUsesRandomnessInRules(const std::vector<std::vector<puzzlescript::Rule>>& groups) {
+    for (const auto& group : groups) {
+        for (const auto& rule : group) {
+            if (rule.isRandom) {
+                return true;
+            }
+            for (const auto& patternRow : rule.patterns) {
+                for (const auto& pattern : patternRow) {
+                    if (!pattern.replacement) {
+                        continue;
+                    }
+                    if (pattern.replacement->hasRandomEntityMask || pattern.replacement->hasRandomDirMask) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool gameUsesRandomness(const Game& game) {
+    return gameUsesRandomnessInRules(game.rules) || gameUsesRandomnessInRules(game.lateRules);
+}
+
+StateKey solverStateKey(const Session& session, bool includeRandomState, Timing& timing) {
     ScopedTimer timer(timing.hashUs);
-    const ps_hash128 hash = puzzlescript::hashSession128(session);
-    return StateKey{hash.lo, hash.hi};
+
+    StateKey key{
+        1469598103934665603ull,
+        7809847782465536322ull,
+    };
+
+    auto appendBytes = [&key](const void* data, size_t size) {
+        const auto* bytes = static_cast<const uint8_t*>(data);
+        for (size_t index = 0; index < size; ++index) {
+            key.lo ^= bytes[index];
+            key.lo *= 1099511628211ull;
+            key.hi ^= bytes[index];
+            key.hi *= 1099511628211ull;
+        }
+    };
+    auto appendValue = [&appendBytes](const auto& value) {
+        appendBytes(&value, sizeof(value));
+    };
+
+    appendValue(session.preparedSession.currentLevelIndex);
+    appendValue(session.preparedSession.titleScreen);
+    appendValue(session.preparedSession.textMode);
+    appendValue(session.preparedSession.winning);
+    appendValue(session.pendingAgain);
+
+    if (includeRandomState) {
+        appendValue(session.randomState.i);
+        appendValue(session.randomState.j);
+        appendValue(session.randomState.valid);
+        appendBytes(session.randomState.s.data(), session.randomState.s.size() * sizeof(uint8_t));
+    }
+
+    const auto& objects = session.liveLevel.objects;
+    appendBytes(objects.data(), objects.size() * sizeof(MaskWord));
+
+    return key;
 }
 
 std::shared_ptr<const Game> compileGame(
@@ -730,9 +789,10 @@ Result runSearch(
     std::vector<Node> nodes;
     nodes.reserve(8192);
 
+    const bool includeRandomStateInKey = gameUsesRandomness(*game);
     std::unordered_map<StateKey, uint32_t, StateKeyHash> bestDepth;
     bestDepth.reserve(16384);
-    bestDepth.emplace(sessionKey(*initial, result.timing), 0);
+    bestDepth.emplace(solverStateKey(*initial, includeRandomStateInKey, result.timing), 0);
     result.uniqueStates = 1;
 
     const int32_t initialHeuristic = mode == SearchMode::Bfs ? 0 : heuristicScore(*initial);
@@ -790,7 +850,7 @@ Result runSearch(
                 continue;
             }
 
-            const StateKey key = sessionKey(*child, result.timing);
+            const StateKey key = solverStateKey(*child, includeRandomStateInKey, result.timing);
             const uint32_t childDepth = parentDepth + 1;
             const auto found = bestDepth.find(key);
             if (found != bestDepth.end() && found->second <= childDepth) {
