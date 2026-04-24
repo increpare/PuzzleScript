@@ -23,6 +23,7 @@ void rebuildMasks(Session& session);
 void rebuildObjectCellIndex(Session& session);
 void markAllMasksDirty(Session& session);
 void markAllMovementMasksDirty(Session& session);
+void clearMovementState(Session& session);
 std::string toString(const json::Value& value);
 std::vector<int32_t> parseIntVector(const json::Value& value);
 std::vector<RuleCommand> parseRuleCommands(const json::Value& value);
@@ -1351,6 +1352,24 @@ void clearRigidState(Session& session) {
     std::fill(session.rigidMovementAppliedMasks.begin(), session.rigidMovementAppliedMasks.end(), 0);
 }
 
+void clearMovementState(Session& session) {
+    std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
+    std::fill(session.rowMovementMasks.begin(), session.rowMovementMasks.end(), 0);
+    std::fill(session.columnMovementMasks.begin(), session.columnMovementMasks.end(), 0);
+    std::fill(session.boardMovementMask.begin(), session.boardMovementMask.end(), 0);
+    std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 0);
+    std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 0);
+    session.dirtyMovementBoard = false;
+    clearRigidState(session);
+
+    const bool objectDirty = session.dirtyObjectBoard
+        || std::any_of(session.dirtyObjectRows.begin(), session.dirtyObjectRows.end(), [](uint8_t value) { return value != 0; })
+        || std::any_of(session.dirtyObjectColumns.begin(), session.dirtyObjectColumns.end(), [](uint8_t value) { return value != 0; });
+    if (!objectDirty) {
+        session.anyMasksDirty = false;
+    }
+}
+
 void setShiftedMask5(std::vector<int32_t>& value, int32_t shift, int32_t bits) {
     const int32_t word = shift >> 5;
     const int32_t bit = shift & 31;
@@ -1763,9 +1782,7 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
         }
     }
 
-    std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
-    markAllMovementMasksDirty(session);
-    clearRigidState(session);
+    clearMovementState(session);
     return outcome;
 }
 
@@ -4021,9 +4038,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     }
 
     session.pendingAgain = false;
-    std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
-    markAllMovementMasksDirty(session);
-    clearRigidState(session);
+    clearMovementState(session);
     const bool seeded = directionMask != 0 && seedPlayerMovements(session, directionMask);
     bool ruleChanged = false;
     bool moved = false;
@@ -4034,9 +4049,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     while (true) {
         commands = CommandState{};
         restoreSnapshot(session, turnStart, false);
-        std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
-        markAllMovementMasksDirty(session);
-        clearRigidState(session);
+        clearMovementState(session);
         if (directionMask != 0) {
             (void)seedPlayerMovements(session, directionMask);
         }
