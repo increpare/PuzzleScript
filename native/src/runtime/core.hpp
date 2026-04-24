@@ -111,6 +111,9 @@ struct Replacement {
     MaskOffset randomDirMask      = kNullMaskOffset;
     uint32_t randomEntityMaskWidth = 0;
     uint32_t randomDirMaskWidth    = 0;
+    bool hasMovementsLayerMask = false;
+    bool hasRandomEntityMask   = false;
+    bool hasRandomDirMask      = false;
 };
 
 struct Pattern {

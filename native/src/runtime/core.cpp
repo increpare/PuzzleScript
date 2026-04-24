@@ -916,19 +916,25 @@ std::vector<std::vector<int32_t>> parseSprite(const json::Value& value) {
 Replacement parseReplacement(Game& game, const json::Value& value) {
     const auto& object = value.asObject();
     Replacement replacement;
-    replacement.objectsClear       = storeMaskWords(game, parseIntVector(requireField(object, "objects_clear")));
-    replacement.objectsSet         = storeMaskWords(game, parseIntVector(requireField(object, "objects_set")));
-    replacement.movementsClear     = storeMaskWords(game, parseIntVector(requireField(object, "movements_clear")));
-    replacement.movementsSet       = storeMaskWords(game, parseIntVector(requireField(object, "movements_set")));
-    replacement.movementsLayerMask = storeMaskWords(game, parseIntVector(requireField(object, "movements_layer_mask")));
+    replacement.objectsClear   = storeMaskWords(game, parseIntVector(requireField(object, "objects_clear")));
+    replacement.objectsSet     = storeMaskWords(game, parseIntVector(requireField(object, "objects_set")));
+    replacement.movementsClear = storeMaskWords(game, parseIntVector(requireField(object, "movements_clear")));
+    replacement.movementsSet   = storeMaskWords(game, parseIntVector(requireField(object, "movements_set")));
+    {
+        auto words = parseIntVector(requireField(object, "movements_layer_mask"));
+        replacement.hasMovementsLayerMask = anyBitsSet(words);
+        replacement.movementsLayerMask = storeMaskWords(game, words);
+    }
     {
         auto words = parseIntVector(requireField(object, "random_entity_mask"));
         replacement.randomEntityMaskWidth = static_cast<uint32_t>(words.size());
+        replacement.hasRandomEntityMask = anyBitsSet(words);
         replacement.randomEntityMask = storeMaskWords(game, words);
     }
     {
         auto words = parseIntVector(requireField(object, "random_dir_mask"));
         replacement.randomDirMaskWidth = static_cast<uint32_t>(words.size());
+        replacement.hasRandomDirMask = anyBitsSet(words);
         replacement.randomDirMask = storeMaskWords(game, words);
     }
     return replacement;
@@ -1795,10 +1801,10 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
     std::vector<int32_t>& movementsClear = session.replacementMovementsClearScratch;
     std::vector<int32_t>& movementsSet   = session.replacementMovementsSetScratch;
 
-    const int32_t* movementsLayerMask = maskPtr(game, replacement.movementsLayerMask);
-    const int32_t* randomEntityMask   = maskPtr(game, replacement.randomEntityMask);
+    const int32_t* movementsLayerMask = replacement.hasMovementsLayerMask ? maskPtr(game, replacement.movementsLayerMask) : nullptr;
+    const int32_t* randomEntityMask   = replacement.hasRandomEntityMask ? maskPtr(game, replacement.randomEntityMask) : nullptr;
     const uint32_t randomEntityMaskWidth = replacement.randomEntityMaskWidth;
-    const int32_t* randomDirMask      = maskPtr(game, replacement.randomDirMask);
+    const int32_t* randomDirMask      = replacement.hasRandomDirMask ? maskPtr(game, replacement.randomDirMask) : nullptr;
     const uint32_t randomDirMaskWidth    = replacement.randomDirMaskWidth;
 
     if (movementsLayerMask != nullptr) {
@@ -1807,15 +1813,7 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         }
     }
 
-    auto maskHasAnyBitSet = [](const int32_t* mask, uint32_t count) {
-        if (mask == nullptr) return false;
-        for (uint32_t i = 0; i < count; ++i) {
-            if (mask[i] != 0) return true;
-        }
-        return false;
-    };
-
-    if (maskHasAnyBitSet(randomEntityMask, randomEntityMaskWidth)) {
+    if (replacement.hasRandomEntityMask) {
         std::vector<int32_t> choices;
         for (int32_t objectId = 0; objectId < session.game->objectCount; ++objectId) {
             const int32_t word = objectId >> 5;
@@ -1878,7 +1876,7 @@ bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& patte
         }
     }
 
-    if (maskHasAnyBitSet(randomDirMask, randomDirMaskWidth)) {
+    if (replacement.hasRandomDirMask) {
         for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
             const int32_t shift = 5 * layer;
             const int32_t wordIdx = shift >> 5;
