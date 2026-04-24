@@ -297,9 +297,47 @@ struct Player {
     bool hasSave = false;
     int savedLevel = 0;
     int titleSelection = 0;
+    bool hasLastViewport = false;
+    int lastMinX = 0;
+    int lastMinY = 0;
+    int lastMaxX = 0;
+    int lastMaxY = 0;
     Font font;
     Audio audio;
 };
+
+struct Viewport {
+    int minX = 0;
+    int minY = 0;
+    int maxX = 0;
+    int maxY = 0;
+};
+
+std::optional<std::pair<int, int>> parseScreenSize(const char* value) {
+    if (value == nullptr || value[0] == '\0') {
+        return std::nullopt;
+    }
+    std::vector<int> numbers;
+    const std::string text = value;
+    for (size_t index = 0; index < text.size();) {
+        while (index < text.size() && std::isdigit(static_cast<unsigned char>(text[index])) == 0) {
+            ++index;
+        }
+        if (index >= text.size()) {
+            break;
+        }
+        size_t end = index;
+        while (end < text.size() && std::isdigit(static_cast<unsigned char>(text[end])) != 0) {
+            ++end;
+        }
+        numbers.push_back(std::stoi(text.substr(index, end - index)));
+        index = end;
+    }
+    if (numbers.size() < 2 || numbers[0] <= 0 || numbers[1] <= 0) {
+        return std::nullopt;
+    }
+    return std::make_pair(numbers[0], numbers[1]);
+}
 
 std::string canonicalSaveKey(const std::string& key) {
     try {
@@ -531,6 +569,53 @@ void drawTextRows(SDL_Renderer* renderer, const Player& player, const std::vecto
     }
 }
 
+Viewport computeViewport(Player& player, const ps_session_status_info& status) {
+    Viewport viewport{0, 0, status.width, status.height};
+    const auto flickscreen = parseScreenSize(ps_game_metadata_value(player.game, "flickscreen"));
+    const auto zoomscreen = parseScreenSize(ps_game_metadata_value(player.game, "zoomscreen"));
+    const auto screen = flickscreen.has_value() ? flickscreen : zoomscreen;
+    if (!screen.has_value()) {
+        player.hasLastViewport = false;
+        return viewport;
+    }
+
+    const int screenW = std::min(screen->first, status.width);
+    const int screenH = std::min(screen->second, status.height);
+    int playerX = 0;
+    int playerY = 0;
+    if (ps_session_first_player_position(player.session, &playerX, &playerY)) {
+        if (flickscreen.has_value()) {
+            const int screenX = playerX / screenW;
+            const int screenY = playerY / screenH;
+            viewport.minX = screenX * screenW;
+            viewport.minY = screenY * screenH;
+        } else {
+            viewport.minX = std::max(std::min(playerX - (screenW / 2), status.width - screenW), 0);
+            viewport.minY = std::max(std::min(playerY - (screenH / 2), status.height - screenH), 0);
+        }
+        viewport.maxX = std::min(viewport.minX + screenW, status.width);
+        viewport.maxY = std::min(viewport.minY + screenH, status.height);
+        player.hasLastViewport = true;
+        player.lastMinX = viewport.minX;
+        player.lastMinY = viewport.minY;
+        player.lastMaxX = viewport.maxX;
+        player.lastMaxY = viewport.maxY;
+        return viewport;
+    }
+
+    if (player.hasLastViewport) {
+        viewport.minX = std::clamp(player.lastMinX, 0, status.width);
+        viewport.minY = std::clamp(player.lastMinY, 0, status.height);
+        viewport.maxX = std::clamp(player.lastMaxX, viewport.minX, status.width);
+        viewport.maxY = std::clamp(player.lastMaxY, viewport.minY, status.height);
+        return viewport;
+    }
+
+    viewport.maxX = screenW;
+    viewport.maxY = screenH;
+    return viewport;
+}
+
 void drawLevel(SDL_Renderer* renderer, Player& player, Color bg, int winW, int winH) {
     ps_session_status_info status{};
     ps_session_status(player.session, &status);
@@ -539,12 +624,15 @@ void drawLevel(SDL_Renderer* renderer, Player& player, Color bg, int winW, int w
     if (status.width <= 0 || status.height <= 0) {
         return;
     }
-    const int tile = std::max(1, std::min(winW / status.width, winH / status.height));
-    const int x0 = (winW - status.width * tile) / 2;
-    const int y0 = (winH - status.height * tile) / 2;
+    const Viewport viewport = computeViewport(player, status);
+    const int viewW = std::max(1, viewport.maxX - viewport.minX);
+    const int viewH = std::max(1, viewport.maxY - viewport.minY);
+    const int tile = std::max(1, std::min(winW / viewW, winH / viewH));
+    const int x0 = (winW - viewW * tile) / 2;
+    const int y0 = (winH - viewH * tile) / 2;
     const int objectCount = ps_game_object_count(player.game);
-    for (int x = 0; x < status.width; ++x) {
-        for (int y = 0; y < status.height; ++y) {
+    for (int x = viewport.minX; x < viewport.maxX; ++x) {
+        for (int y = viewport.minY; y < viewport.maxY; ++y) {
             for (int objectId = 0; objectId < objectCount; ++objectId) {
                 if (!ps_session_cell_has_object(player.session, x, y, objectId)) {
                     continue;
@@ -568,7 +656,7 @@ void drawLevel(SDL_Renderer* renderer, Player& player, Color bg, int winW, int w
                         const int right = ((sx + 1) * tile) / info.sprite_width;
                         const int top = (sy * tile) / info.sprite_height;
                         const int bottom = ((sy + 1) * tile) / info.sprite_height;
-                        SDL_Rect rect{x0 + x * tile + left, y0 + y * tile + top, std::max(1, right - left), std::max(1, bottom - top)};
+                        SDL_Rect rect{x0 + (x - viewport.minX) * tile + left, y0 + (y - viewport.minY) * tile + top, std::max(1, right - left), std::max(1, bottom - top)};
                         SDL_RenderFillRect(renderer, &rect);
                     }
                 }

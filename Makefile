@@ -7,26 +7,26 @@
 #   make compilation_tests Run JS compiler tests and direct C++ compiler tests.
 #   make profile_simulation_tests
 #                           Profile the C++ simulation replay workload.
-#   make profile_simulation_tests_mask64
-#                           Profile the same workload with 64-bit mask words.
+#   make simulation_tests_cpp_32
+#                           Run direct C++ simulation tests with JS-style 32-bit mask words.
 #   make tests             Run the full native correctness suite.
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build build_mask64 run ctest tests js_parity_tests tests_js simulation_tests_js compilation_tests_js \
+.PHONY: help build build_32 run ctest tests js_parity_tests tests_js simulation_tests_js compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
-	simulation_tests_cpp_mask64 compilation_tests_cpp_mask64 \
+	simulation_tests_cpp_32 compilation_tests_cpp_32 \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
-	profile_simulation_tests profile_simulation_tests_mask64 basic_test_suite_cpp basic_test_suite_js \
+	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
 	parser_corpus_errormessage_bundle parser_corpus_testdata_bundle clean clean-native \
-	clean-js-parity-data configure-native build-native js-parity-data
+	clean-native-32 clean-js-parity-data configure-native build-native js-parity-data
 
 NODE ?= node
 CMAKE ?= cmake
 BUILD_DIR ?= build
-BUILD_DIR_MASK64 ?= build-mask64
+BUILD_DIR_32 ?= build-32
 PUZZLESCRIPT_CPP := $(BUILD_DIR)/native/puzzlescript_cpp
-PUZZLESCRIPT_CPP_MASK64 := $(BUILD_DIR_MASK64)/native/puzzlescript_cpp
+PUZZLESCRIPT_CPP_32 := $(BUILD_DIR_32)/native/puzzlescript_cpp
 JS_PARITY_DATA_DIR := $(BUILD_DIR)/js-parity-data
 JS_PARITY_MANIFEST := $(JS_PARITY_DATA_DIR)/fixtures.json
 ERRORMESSAGE_PARSER_BUNDLE := $(BUILD_DIR)/parser_corpus_errormessage.bundle.ndjson
@@ -55,45 +55,44 @@ help:
 	@echo "PuzzleScript C++ workflow"
 	@echo ""
 	@echo "Common commands:"
-	@echo "  make build                         Build build/native/puzzlescript_cpp"
-	@echo "  make build_mask64                  Build with PS_MASK_WORD_BITS=64 into build-mask64"
+	@echo "  make build                         Build build/native/puzzlescript_cpp (64-bit masks)"
+	@echo "  make build_32                      Build JS-style 32-bit-mask executable into build-32"
 	@echo "  make run path/to/game.txt          Build and play a PuzzleScript game"
 	@echo "  make ctest                         Run fast C++ smoke/unit tests"
-	@echo "  make js_parity_tests               Run C++ against the original JS test corpus"
+	@echo "  make js_parity_tests               Run 32-bit C++ against the original JS test corpus"
 	@echo "  make simulation_tests              Run JS sim tests, then mirrored C++ sim parity"
 	@echo "  make compilation_tests             Run JS compiler tests, then mirrored C++ diagnostics"
 	@echo "  make profile_simulation_tests      Profile C++ simulation replay hot functions"
-	@echo "  make profile_simulation_tests_mask64"
-	@echo "                                    Profile C++ simulation with 64-bit mask words"
+	@echo "  make profile_simulation_tests_32   Profile the 32-bit-mask C++ simulation path"
 	@echo "  make tests                         Run the full native correctness suite"
 	@echo "  make clean                         Remove native build outputs and JS parity data"
 	@echo ""
 	@echo "Single-side test commands for timing:"
 	@echo "  make simulation_tests_js           Run JS simulation tests only"
-	@echo "  make simulation_tests_cpp          Run C++ simulation corpus directly"
-	@echo "  make simulation_tests_cpp_mask64   Run C++ simulation corpus with 64-bit mask words"
+	@echo "  make simulation_tests_cpp          Run C++ simulation corpus directly (64-bit masks)"
+	@echo "  make simulation_tests_cpp_32       Run C++ simulation corpus with JS-style 32-bit masks"
 	@echo "  make compilation_tests_js          Run JS compiler tests only"
-	@echo "  make compilation_tests_cpp         Run C++ diagnostics corpus directly"
-	@echo "  make compilation_tests_cpp_mask64  Run C++ diagnostics corpus with 64-bit mask words"
+	@echo "  make compilation_tests_cpp         Run C++ diagnostics corpus directly (64-bit masks)"
+	@echo "  make compilation_tests_cpp_32      Run C++ diagnostics corpus with JS-style 32-bit masks"
 	@echo "  make tests_js                      Run the original JavaScript test suite"
 	@echo ""
 	@echo "Direct executable after build:"
 	@echo "  build/native/puzzlescript_cpp --help"
 
 $(CMAKE_CACHE): CMakeLists.txt native/CMakeLists.txt
-	$(CMAKE) -S . -B $(BUILD_DIR)
+	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
 
 $(PUZZLESCRIPT_CPP): $(CMAKE_CACHE) native/CMakeLists.txt
-	$(CMAKE) -S . -B $(BUILD_DIR)
+	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
 	$(CMAKE) --build $(BUILD_DIR) --target puzzlescript_cpp
 
 build: $(CMAKE_CACHE)
-	$(CMAKE) -S . -B $(BUILD_DIR)
+	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
 	$(CMAKE) --build $(BUILD_DIR) --target puzzlescript_cpp
 
-build_mask64:
-	$(CMAKE) -S . -B $(BUILD_DIR_MASK64) -DPS_MASK_WORD_BITS=64
-	$(CMAKE) --build $(BUILD_DIR_MASK64) --target puzzlescript_cpp
+build_32:
+	$(CMAKE) -S . -B $(BUILD_DIR_32) -DPS_MASK_WORD_BITS=32
+	$(CMAKE) --build $(BUILD_DIR_32) --target puzzlescript_cpp
 
 configure-native: $(CMAKE_CACHE)
 
@@ -119,11 +118,11 @@ js-parity-data: $(JS_PARITY_MANIFEST)
 simulation_tests_cpp: build
 	$(PUZZLESCRIPT_CPP) test simulation-corpus src/tests/resources/testdata.js --jobs auto --progress-every 0
 
-simulation_tests_cpp_mask64: build_mask64
-	$(PUZZLESCRIPT_CPP_MASK64) test simulation-corpus src/tests/resources/testdata.js --jobs auto --progress-every 0
+simulation_tests_cpp_32: build_32
+	$(PUZZLESCRIPT_CPP_32) test simulation-corpus src/tests/resources/testdata.js --jobs auto --progress-every 0
 
-simulation_tests_cpp_js_parity: build $(JS_PARITY_MANIFEST)
-	$(NODE) src/tests/run_native_trace_suite.js $(JS_PARITY_MANIFEST) --cli $(PUZZLESCRIPT_CPP) --progress-every 1 --timeout-ms 45000
+simulation_tests_cpp_js_parity: build_32 $(JS_PARITY_MANIFEST)
+	$(NODE) src/tests/run_native_trace_suite.js $(JS_PARITY_MANIFEST) --cli $(PUZZLESCRIPT_CPP_32) --progress-every 1 --timeout-ms 45000
 
 $(ERRORMESSAGE_PARSER_BUNDLE): $(PARSER_CORPUS_BUNDLE_INPUTS) $(JS_PARITY_INPUTS)
 	mkdir -p "$(BUILD_DIR)"
@@ -140,13 +139,13 @@ parser_corpus_testdata_bundle: $(TESTDATA_PARSER_BUNDLE)
 compilation_tests_cpp: build
 	$(PUZZLESCRIPT_CPP) test diagnostics-corpus src/tests/resources/errormessage_testdata.js --progress-every 50
 
-compilation_tests_cpp_mask64: build_mask64
-	$(PUZZLESCRIPT_CPP_MASK64) test diagnostics-corpus src/tests/resources/errormessage_testdata.js --progress-every 50
+compilation_tests_cpp_32: build_32
+	$(PUZZLESCRIPT_CPP_32) test diagnostics-corpus src/tests/resources/errormessage_testdata.js --progress-every 50
 
 compilation_tests_cpp_direct: build
 	$(PUZZLESCRIPT_CPP) test diagnostics-corpus src/tests/resources/errormessage_testdata.js --progress-every 50
 
-js_parity_tests: simulation_tests_cpp_js_parity compilation_tests_cpp
+js_parity_tests: simulation_tests_cpp_js_parity compilation_tests_cpp_32
 
 simulation_tests: simulation_tests_js simulation_tests_cpp
 
@@ -155,9 +154,9 @@ compilation_tests: compilation_tests_js compilation_tests_cpp
 profile_simulation_tests: build
 	src/tests/profile_native_trace_suite.sh
 
-profile_simulation_tests_mask64: build_mask64
-	PUZZLESCRIPT_CPP="$(abspath $(PUZZLESCRIPT_CPP_MASK64))" \
-	PROFILE_STATS_OUT="$(abspath $(BUILD_DIR_MASK64))/profile_stats.txt" \
+profile_simulation_tests_32: build_32
+	PUZZLESCRIPT_CPP="$(abspath $(PUZZLESCRIPT_CPP_32))" \
+	PROFILE_STATS_OUT="$(abspath $(BUILD_DIR_32))/profile_stats.txt" \
 	src/tests/profile_native_trace_suite.sh
 
 tests: ctest js_parity_tests
@@ -185,6 +184,10 @@ clean: clean-native clean-js-parity-data
 
 clean-native:
 	rm -rf "$(BUILD_DIR)"
+	rm -rf "$(BUILD_DIR_32)"
+
+clean-native-32:
+	rm -rf "$(BUILD_DIR_32)"
 
 clean-js-parity-data:
 	rm -rf "$(JS_PARITY_DATA_DIR)"

@@ -79,7 +79,7 @@ add_library(puzzlescript_native STATIC
 )
 
 option(PS_ENABLE_DEV_SERIALIZERS "Enable dev-only compiler serializers and commands" ON)
-set(PS_MASK_WORD_BITS "32" CACHE STRING "PuzzleScript runtime mask word width: 32 or 64")
+set(PS_MASK_WORD_BITS "64" CACHE STRING "PuzzleScript runtime mask word width: 64 by default, or 32 for JS-oracle compatibility")
 set_property(CACHE PS_MASK_WORD_BITS PROPERTY STRINGS 32 64)
 if(NOT PS_MASK_WORD_BITS STREQUAL "32" AND NOT PS_MASK_WORD_BITS STREQUAL "64")
   message(FATAL_ERROR "PS_MASK_WORD_BITS must be 32 or 64")
@@ -296,26 +296,28 @@ add_test(
   COMMAND puzzlescript_cpp diff-trace ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt --level 0 --seed native-trace-push --inputs-file ${CMAKE_CURRENT_SOURCE_DIR}/tests/push_trace_inputs.json
 )
 
-add_test(
-  NAME puzzlescript_cpp_js_parity_data_manifest
-  COMMAND ${NODE_EXECUTABLE}
-          ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_fixture_check.js
-          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/js_oracle/export_native_fixtures.js
-          $<TARGET_FILE:puzzlescript_cpp>
-          ${CMAKE_CURRENT_BINARY_DIR}/generated-fixtures
-)
+if(PS_MASK_WORD_BITS STREQUAL "32")
+  add_test(
+    NAME puzzlescript_cpp_js_parity_data_manifest
+    COMMAND ${NODE_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_fixture_check.js
+            ${PUZZLESCRIPT_REPO_ROOT}/src/tests/js_oracle/export_native_fixtures.js
+            $<TARGET_FILE:puzzlescript_cpp>
+            ${CMAKE_CURRENT_BINARY_DIR}/generated-fixtures
+  )
 
-set_tests_properties(puzzlescript_cpp_js_parity_data_manifest PROPERTIES TIMEOUT 180)
+  set_tests_properties(puzzlescript_cpp_js_parity_data_manifest PROPERTIES TIMEOUT 180)
 
-add_test(
-  NAME puzzlescript_cpp_js_parity_data_trace_sample
-  COMMAND ${NODE_EXECUTABLE}
-          ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_fixture_check.js
-          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/js_oracle/export_native_fixtures.js
-          $<TARGET_FILE:puzzlescript_cpp>
-          ${CMAKE_CURRENT_BINARY_DIR}/generated-fixtures-trace-sample
-          --trace-limit 10
-          --trace-allow-failures
-)
+  add_test(
+    NAME puzzlescript_cpp_js_parity_data_trace_sample
+    COMMAND ${NODE_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_fixture_check.js
+            ${PUZZLESCRIPT_REPO_ROOT}/src/tests/js_oracle/export_native_fixtures.js
+            $<TARGET_FILE:puzzlescript_cpp>
+            ${CMAKE_CURRENT_BINARY_DIR}/generated-fixtures-trace-sample
+            --trace-limit 10
+            --trace-allow-failures
+  )
 
-set_tests_properties(puzzlescript_cpp_js_parity_data_trace_sample PROPERTIES TIMEOUT 180)
+  set_tests_properties(puzzlescript_cpp_js_parity_data_trace_sample PROPERTIES TIMEOUT 180)
+endif()

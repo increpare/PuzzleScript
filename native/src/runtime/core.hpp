@@ -38,7 +38,7 @@ struct CompileResult;
 // now store a uint32_t offset into the arena.
 //
 #ifndef PS_MASK_WORD_BITS
-#define PS_MASK_WORD_BITS 32
+#define PS_MASK_WORD_BITS 64
 #endif
 
 #if PS_MASK_WORD_BITS == 32

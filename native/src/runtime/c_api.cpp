@@ -305,6 +305,55 @@ bool ps_session_cell_has_object(const ps_session* session, int32_t x, int32_t y,
     return (impl.liveLevel.objects[offset] & puzzlescript::maskBit(static_cast<uint32_t>(object_id))) != 0;
 }
 
+bool ps_session_first_player_position(const ps_session* session, int32_t* out_x, int32_t* out_y) {
+    if (out_x) {
+        *out_x = 0;
+    }
+    if (out_y) {
+        *out_y = 0;
+    }
+    if (!session || !session->impl) {
+        return false;
+    }
+    const Session& impl = *session->impl;
+    if (impl.game->playerMask == puzzlescript::kNullMaskOffset || impl.liveLevel.width <= 0 || impl.liveLevel.height <= 0) {
+        return false;
+    }
+    const puzzlescript::MaskWord* playerMask = impl.game->maskArena.data() + impl.game->playerMask;
+    const int32_t tileCount = impl.liveLevel.width * impl.liveLevel.height;
+    for (int32_t tile_index = 0; tile_index < tileCount; ++tile_index) {
+        const size_t cellBase = static_cast<size_t>(tile_index) * impl.game->wordCount;
+        bool containsPlayer = impl.game->playerMaskAggregate;
+        if (impl.game->playerMaskAggregate) {
+            for (uint32_t word = 0; word < impl.game->wordCount; ++word) {
+                if ((impl.liveLevel.objects[cellBase + word] & playerMask[word]) != playerMask[word]) {
+                    containsPlayer = false;
+                    break;
+                }
+            }
+        } else {
+            containsPlayer = false;
+            for (uint32_t word = 0; word < impl.game->wordCount; ++word) {
+                if ((impl.liveLevel.objects[cellBase + word] & playerMask[word]) != 0) {
+                    containsPlayer = true;
+                    break;
+                }
+            }
+        }
+        if (!containsPlayer) {
+            continue;
+        }
+        if (out_x) {
+            *out_x = tile_index / impl.liveLevel.height;
+        }
+        if (out_y) {
+            *out_y = tile_index % impl.liveLevel.height;
+        }
+        return true;
+    }
+    return false;
+}
+
 uint64_t ps_session_hash64(const ps_session* session) {
     return session ? puzzlescript::hashSession64(*session->impl) : 0;
 }

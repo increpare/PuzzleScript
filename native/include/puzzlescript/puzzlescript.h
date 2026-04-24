@@ -124,6 +124,7 @@ bool ps_session_advance_level(ps_session* session, ps_error** out_error);
 void ps_session_status(const ps_session* session, ps_session_status_info* out_status);
 const char* ps_session_message_text(const ps_session* session);
 bool ps_session_cell_has_object(const ps_session* session, int32_t x, int32_t y, int32_t object_id);
+bool ps_session_first_player_position(const ps_session* session, int32_t* out_x, int32_t* out_y);
 uint64_t ps_session_hash64(const ps_session* session);
 ps_hash128 ps_session_hash128(const ps_session* session);
 char* ps_session_serialize_test_string(const ps_session* session);
