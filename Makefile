@@ -18,7 +18,7 @@
 .PHONY: help build build_32 build_solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
-	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark \
+	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark solver_mine_pippable solver_benchmark_targets \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
@@ -34,7 +34,7 @@ PUZZLESCRIPT_CPP_32 := $(BUILD_DIR_32)/native/puzzlescript_cpp
 PUZZLESCRIPT_SOLVER := $(BUILD_DIR)/native/puzzlescript_solver
 SOLVER_TIMEOUT_MS ?= 250
 SOLVER_JOBS ?= 1
-SOLVER_STRATEGY ?= portfolio
+SOLVER_STRATEGY ?= weighted-astar
 SOLVER_PROGRESS_EVERY ?= game
 SOLVER_OUTPUT_ARGS ?= --summary-only
 SOLVER_SOLUTIONS_DIR ?= $(BUILD_DIR)/solver-solutions
@@ -44,7 +44,19 @@ SOLVER_BENCH_CORPUS ?= src/tests/solver_tests
 SOLVER_BENCH_OUT ?= $(BUILD_DIR)/native/solver_benchmark.json
 SOLVER_PERF_BASELINE ?= solver_perf_baseline.json
 SOLVER_BENCH_JOBS ?= 1
-SOLVER_BENCH_STRATEGY ?= portfolio
+SOLVER_BENCH_STRATEGY ?= weighted-astar
+SOLVER_MINE_CORPUS ?= src/tests/solver_tests
+SOLVER_MINE_TIMEOUTS_MS ?= 50,100,250,500
+SOLVER_MINE_STRATEGY ?= weighted-astar
+SOLVER_MINE_NEAR_RATIO ?= 0.5
+SOLVER_MINE_MAX_TARGETS ?=
+SOLVER_PIPPABLE_MANIFEST ?= $(BUILD_DIR)/native/solver_pippable_targets.json
+SOLVER_TARGET_BENCH_RUNS ?= 5
+SOLVER_TARGET_BENCH_CORPUS ?= $(SOLVER_MINE_CORPUS)
+SOLVER_TARGET_BENCH_MANIFEST ?= $(SOLVER_PIPPABLE_MANIFEST)
+SOLVER_TARGET_BENCH_OUT ?= $(BUILD_DIR)/native/solver_target_benchmark.json
+SOLVER_TARGET_BENCH_TIMEOUT_MS ?=
+SOLVER_TARGET_BENCH_STRATEGY ?= $(SOLVER_MINE_STRATEGY)
 JS_PARITY_DATA_DIR := $(BUILD_DIR)/js-parity-data
 JS_PARITY_MANIFEST := $(JS_PARITY_DATA_DIR)/fixtures.json
 ERRORMESSAGE_PARSER_BUNDLE := $(BUILD_DIR)/parser_corpus_errormessage.bundle.ndjson
@@ -68,6 +80,15 @@ JS_PARITY_INPUTS := \
 	$(wildcard src/js/*/*/*.js)
 
 CMAKE_CACHE := $(BUILD_DIR)/CMakeCache.txt
+PUZZLESCRIPT_SOLVER_REBUILD_INPUTS := \
+	$(wildcard native/src/solver/*.cpp) \
+	$(wildcard native/src/runtime/*.cpp) \
+	$(wildcard native/src/runtime/*.hpp) \
+	$(wildcard native/src/compiler/*.cpp) \
+	$(wildcard native/src/compiler/*.hpp) \
+	$(wildcard native/include/puzzlescript/*.h)
+SOLVER_MINE_MAX_TARGETS_ARG := $(if $(SOLVER_MINE_MAX_TARGETS),--max-targets $(SOLVER_MINE_MAX_TARGETS),)
+SOLVER_TARGET_BENCH_TIMEOUT_ARG := $(if $(SOLVER_TARGET_BENCH_TIMEOUT_MS),--timeout-ms $(SOLVER_TARGET_BENCH_TIMEOUT_MS),)
 
 help:
 	@echo "PuzzleScript C++ workflow"
@@ -86,6 +107,8 @@ help:
 	@echo "  make profile_simulation_tests_32   Profile the 32-bit-mask C++ simulation path"
 	@echo "  make tests                         Run the full native correctness suite"
 	@echo "  make solver_tests                  Run native solver and JS comparison solver"
+	@echo "  make solver_mine_pippable          Mine near-threshold native solver targets"
+	@echo "  make solver_benchmark_targets      Benchmark mined solver targets repeatedly"
 	@echo "  make clean                         Remove native build outputs and JS parity data"
 	@echo ""
 	@echo "Single-side test commands for timing:"
@@ -115,6 +138,10 @@ help:
 	@echo "                                     Print per-level solver results after the run"
 	@echo "  make solver_tests SOLVER_SOLUTIONS_DIR=/tmp/solver-solutions"
 	@echo "                                     Write annotated solved-level sources elsewhere"
+	@echo "  make solver_mine_pippable SOLVER_MINE_TIMEOUTS_MS=50,100,250,500"
+	@echo "                                     Write $(SOLVER_PIPPABLE_MANIFEST)"
+	@echo "  make solver_benchmark_targets SOLVER_TARGET_BENCH_RUNS=10"
+	@echo "                                     Write $(SOLVER_TARGET_BENCH_OUT)"
 	@echo ""
 	@echo "Direct executable after build:"
 	@echo "  build/native/puzzlescript_cpp --help"
@@ -127,7 +154,7 @@ $(PUZZLESCRIPT_CPP): $(CMAKE_CACHE) native/CMakeLists.txt
 	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
 	$(CMAKE) --build $(BUILD_DIR) --target puzzlescript_cpp
 
-$(PUZZLESCRIPT_SOLVER): $(CMAKE_CACHE) native/CMakeLists.txt native/src/solver/main.cpp
+$(PUZZLESCRIPT_SOLVER): $(CMAKE_CACHE) native/CMakeLists.txt $(PUZZLESCRIPT_SOLVER_REBUILD_INPUTS)
 	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
 	$(CMAKE) --build $(BUILD_DIR) --target puzzlescript_solver
 
@@ -188,6 +215,12 @@ solver_tests: solver_smoke_tests solver_determinism_tests solver_parity_smoke so
 
 solver_benchmark: $(PUZZLESCRIPT_SOLVER)
 	$(NODE) src/tests/run_solver_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_BENCH_CORPUS) --runs $(SOLVER_BENCH_RUNS) --timeout-ms $(SOLVER_BENCH_TIMEOUT_MS) --jobs $(SOLVER_BENCH_JOBS) --strategy $(SOLVER_BENCH_STRATEGY) --out $(SOLVER_BENCH_OUT) --baseline $(SOLVER_PERF_BASELINE)
+
+solver_mine_pippable: $(PUZZLESCRIPT_SOLVER)
+	$(NODE) src/tests/mine_solver_near_threshold.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_MINE_CORPUS) --timeouts-ms $(SOLVER_MINE_TIMEOUTS_MS) --strategy $(SOLVER_MINE_STRATEGY) --near-ratio $(SOLVER_MINE_NEAR_RATIO) --out $(SOLVER_PIPPABLE_MANIFEST) $(SOLVER_MINE_MAX_TARGETS_ARG)
+
+solver_benchmark_targets: $(PUZZLESCRIPT_SOLVER)
+	$(NODE) src/tests/run_solver_level_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_TARGET_BENCH_CORPUS) $(SOLVER_TARGET_BENCH_MANIFEST) --runs $(SOLVER_TARGET_BENCH_RUNS) --strategy $(SOLVER_TARGET_BENCH_STRATEGY) --out $(SOLVER_TARGET_BENCH_OUT) $(SOLVER_TARGET_BENCH_TIMEOUT_ARG)
 
 $(JS_PARITY_MANIFEST): $(JS_PARITY_INPUTS)
 	$(NODE) src/tests/js_oracle/export_native_fixtures.js $(JS_PARITY_DATA_DIR)

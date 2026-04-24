@@ -22,7 +22,7 @@ let timeoutMs = 250;
 let outPath = path.resolve('build/native/solver_benchmark.json');
 let baselinePath = path.resolve('solver_perf_baseline.json');
 let jobs = '1';
-let strategy = 'portfolio';
+let strategy = 'weighted-astar';
 
 for (let index = 2; index < args.length; index++) {
     const arg = args[index];
