@@ -1,0 +1,434 @@
+title By Your Side
+author Alan Hazelden
+homepage www.draknek.org
+
+require_player_movement
+key_repeat_interval 0.12
+
+(
+
+A port of alan hazelden's game, By Your Side, in 6 lines of code, made with the permission of the author -
+
+the original is here
+http://www.draknek.org/games/by-your-side/
+
+)
+
+========
+OBJECTS
+========
+
+(Objects in all scenes)
+
+Grass .
+darkgreen green
+00000
+01000
+00000
+00010
+00000
+
+Player_Casual P
+black pink gray
+..0..
+..1..
+.222.
+..2..
+.2.2.
+
+TargetMain T
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+(Initial Scenes)
+
+GirlFriend G
+pink red
+..0..
+.010.
+..1..
+.111.
+.0.0.
+
+Tree #
+darkbrown lightgreen
+.111.
+11111
+.111.
+..0..
+..0..
+
+(Wedding Scene)
+
+Player_Formal Q
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+WoodenFloor ,
+brown
+00000
+00000
+00000
+00000
+00000
+
+ChurchWall H
+darkbrown brown
+11101
+00000
+10111
+00000
+11101
+
+Chair C
+darkbrown brown
+11111
+11101
+11101
+00001
+01101
+
+Altar A
+gray
+.....
+00000
+.000.
+.000.
+.000.
+
+Spectator1 B
+black pink white
+..0..
+..1..
+.020.
+..0..
+.0.0.
+
+Spectator2 D
+purple pink white
+..0..
+..1..
+10001
+.000.
+00000
+
+Wife_Wedding W
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(Post Wedding Scene)
+
+house @
+black grey red
+..0..
+.000.
+00000
+.111.
+.121.
+
+pavement `
+darkblue
+
+Road '
+gray white
+00000
+00000
+01110
+00000
+00000
+
+Wife_Repulsed X
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+(grave scene)
+
+gravedirt ~
+green brown
+01001
+10000
+00100
+00001
+01000
+
+grave R
+lightgray darkgray grey
+.111.
+10201
+12221
+10201
+10001
+
+coffin F
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+(final scene)
+
+Wife_Dying Y
+white pink
+..1..
+.000.
+.101.
+.000.
+00000
+
+Wife_Coffin
+darkbrown brown black
+.000.
+01210
+02220
+01210
+02220
+
+ColdFeet I
+black
+
+=======
+LEGEND
+=======
+
+Target = TargetMain or Road
+Player = Player_Casual or Player_Formal
+Background = Grass or WoodenFloor or Pavement or GraveDirt
+Spectator = Spectator1 or Spectator2
+Obstacle = House or Spectator or Chair or Tree or Altar or Grave or Coffin or Wife_Coffin or ChurchWall
+Wife_Attracted = Girlfriend or Wife_Wedding or Wife_Dying
+Wife = Wife_Attracted or Wife_Repulsed or Wife_Coffin
+Person = Player or Wife
+GrassyTarget = Grass and TargetMain
+E = GrassyTarget
+
+=========
+SOUNDS
+=========
+
+Player cantmove 82269707
+endlevel 54461500
+startgame 10582309
+endgame 66004102
+Wife_Repulsed move 44043907
+sfx0 16417502
+
+================
+COLLISIONLAYERS
+================
+
+ColdFeet
+Background
+Target
+Obstacle, Person
+
+======
+RULES
+======
+
+(game logic)
+
+[ > Player ] [ Wife_Attracted ] -> [ > Player ] [ > Wife_Attracted ] 
+[ > Player ] [ Wife_Repulsed ] -> [ > Player ] [ < Wife_Repulsed ] 
+
+late [ Wife_Dying ] -> [ Wife_Coffin ] 
+late [ Player | Wife_Coffin ] -> [ Player | Wife_Dying ] 
+
+(level-specific events)
+late [ ColdFeet Player ] -> [ Player ] message ...
+late [ Wife Road ] -> sfx0
+
+==============
+WINCONDITIONS
+==============
+
+all person on target
+
+=======
+LEVELS
+=======
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##.P.....#
+#....####.T##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#...#...#..######
+#...#...#..##..T...T#
+#....####.P##G.######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+....#################
+...###...#....#######
+..##.........##.....#
+.##...#######.......#
+##....#....###......#
+#...###.............#
+#...#T..#...#..######
+#...#T..#..##..P...G#
+#....####..##..######
+##......#...#.......#
+###..##..#...#...##.#
+#.##..#..##..#...#..#
+#..#..#....###...#..#
+#..##........#......#
+#...##...##...##....#
+#.......##.....######
+.##############......
+
+HHHHHHHHHHHHHHHHHHHHH
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+A,B,,D,B,D,,B,D,,,B,C
+A,T,,I,,,I,,,,I,Q,,,C
+A,T,,,,,,,,,,,,,W,,,C
+,CCCCCCCCCCCCCCCCCCCC
+,CCCCCCCCCCCCCCCCCCCC
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+HHHHHHHHHHHHHHHHHHHHH
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````W@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@PX@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@T@`````````
+``@```````T@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@@@@@@@@@@@@@@@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+`````````@@@@````````
+`````````@TT@````````
+``@@@@@@`@`@@````````
+``@````@`@`@@@@``````
+``@`@@`@`@````@``````
+``@`@@`@`@`@@@@``````
+``@`@@`@@@P@`````````
+``@```````X@@@@@@````
+``@`@@@@@@``````@````
+``@`@````@`@@@@`@````
+``@`@````@`@``@`@````
+@@@`@@@@@@`@@@@`@@@@@
+'''''''''''''''''''''
+@@@@@@@@@@@@@@@@@@@@@
+`````````````````````
+
+RRRRRRR~RRRRRR~RRRRR
+R~~~~~R~R~~~~R~R~~~~
+R~~~~~~~R~~~~R~R~~~~
+R~~~~~R~R~~~~R~R~~~~
+RRRRRRR~RR~~RR~RRRRR
+R~~~~BDBDBDBDBD~~~~R
+RQ~~~~~i~i~~i~~~~EFR
+RRRRRRRRRRRRRRRRRRRR
+R~~R~~~~~~~~~~~R~~~~
+R~~R~~~~~~~~~~~R~~~~
+R~~RRR~~~RRRR~~R~~~~
+R~~~~~~~~R~~~~~R~~~R
+R~~R~~~~~R~~R~~~~~~R
+R~~R~~~~~R~~R~~~~~~R
+RRRRRRRRRR~~RRRRRRRR
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~QY~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~R~~R~RRR~
+RRRRRRRRR~~R~~~~~~R~
+~~R~~~~~R~~R~RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRTTR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+RRRRRR~~~~~~~~~~~~~~
+R~~~~R~~~~~RRRRRR~~~
+R~~~~R~~~~~R~~~~R~~~
+R~~~~R~~RRRRR~R~R~~~
+R~~~~RRRR~~R~~R~R~~~
+R~~~~~~~~~~RT~R~RRR~
+RRRRRRRRR~~RT~~~~~R~
+~~R~~~~~R~~R@RRR~~R~
+~~R~~R~~R~~RRR~R~~R~
+~~R~~R~~~~~~~~~~~~R~
+~~R~~R~~RR~~~~~RRRR~
+~~R~~R~~~RRRRRYQR~~~
+~~R~~R~~~R~~~~~~R~~~
+~~R~~R~~~~~RRR~~R~~~
+~~RRRRRRRRRR~RRRR~~~
+
+message Commiserations
+
+message It is over

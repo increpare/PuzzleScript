@@ -1,0 +1,379 @@
+title Bouncers
+author Tyler Glaiel
+homepage twitter.com/tylerglaiel
+
+========
+OBJECTS
+========
+
+Bg
+#111111 #222222
+00010
+11111
+01000
+01000
+11111
+
+Selection
+white gray
+..1..
+..1..
+11011
+..1..
+..1..
+
+Wall
+DarkBlue DarkGreen #333333
+20002
+22022
+22122
+21112
+11111
+
+Hole
+DarkGray Gray Black
+.111.
+12221
+10001
+10001
+.111.
+
+
+Arrow
+Red Red
+..1..
+..11.
+11111
+..11.
+..1..
+
+
+HudDivider
+white black
+00000
+11111
+11111
+11111
+11111
+
+IconGO
+green white
+10111
+10011
+10001
+10011
+10111
+
+Going
+green white
+10111
+10011
+10001
+10011
+10111
+
+LeftBouncer
+White White Blue
+.221.
+2.1.2
+21..2
+2.1.2
+.221.
+
+RightBouncer
+White White Blue
+.122.
+2.1.2
+2..12
+2.1.2
+.122.
+
+UpBouncer
+White White Blue
+.222.
+2.1.2
+21.12
+1...1
+.222.
+
+DownBouncer
+White White Blue
+.222.
+1...1
+21.12
+2.1.2
+.222.
+
+HudBG
+black
+
+Empty
+black
+
+PlayEmpty
+black
+.....
+.....
+.....
+.....
+.....
+
+
+Ball
+#003300 Green
+.000.
+01110
+01110
+01110
+.000.
+
+WinBall
+LightBlue LightGreen
+.000.
+01110
+01110
+01110
+.000.
+
+
+
+BallUp
+#003300 Green Black
+.000.
+01210
+01110
+01110
+.000.
+
+BallDown
+#003300 Green Black
+.000.
+01110
+01110
+01210
+.000.
+
+BallLeft
+#003300 Green Black
+.000.
+01110
+02110
+01110
+.000.
+
+BallRight
+#003300 Green Black
+.000.
+01110
+01120
+01110
+.000.
+
+
+
+
+=======
+LEGEND
+=======
+Background = Bg or HudBG
+. = bg and PlayEmpty
+S = Selection and PlayEmpty
+- = HudDivider and Wall
+H = HudBG and PlayEmpty
+A = Arrow and HudBG
+G = IconGO
+W = Wall
+O = Hole
+
+L = LeftBouncer and HudBG
+R = RightBouncer and HudBG
+U = UpBouncer and HudBG
+D = DownBouncer and HudBG
+
+B = BallLeft
+N = BallRight
+M = BallUp
+K = BallDown
+
+Player = Selection
+
+
+PlacedLeftbouncer = LeftBouncer and Selection
+PlacedRightbouncer = RightBouncer and Selection
+PlacedUpbouncer = UpBouncer and Selection
+PlacedDownbouncer = DownBouncer and Selection
+
+Bouncer = LeftBouncer or RightBouncer or UpBouncer or DownBouncer
+
+emptyPlayer = Selection and PlayEmpty
+
+
+ballSwitchLeft = Ball and LeftBouncer
+ballSwitchRight = Ball and RightBouncer
+ballSwitchUp = Ball and UpBouncer
+ballSwitchDown = Ball and DownBouncer
+
+ballSwitchedLeft = BallLeft and LeftBouncer
+ballSwitchedRight = BallRight and RightBouncer
+ballSwitchedUp = BallUp and UpBouncer
+ballSwitchedDown = BallDown and DownBouncer
+
+gameGo = Selection and IconGO
+gameGoing =  Going
+
+
+
+WinL = BallLeft and Hole
+WinR = BallRight and Hole
+WinU = BallUp and Hole
+WinD = BallDown and Hole
+
+Win = WinBall
+
+MovingBall = Ball or BallLeft or BallRight or BallUp or BallDown
+
+=======
+SOUNDS
+=======
+SFX0 41242705 (place bouncer)
+SFX1 73889302 (press go)
+MovingBall Move 68254307 (ball move)
+SFX2 68257500 (pocket ball)
+SFX3 82752503 (ball switch direction)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+
+Arrow, Empty, LeftBouncer, RightBouncer, UpBouncer, DownBouncer, PlayEmpty, IconGO, Going, Hole
+WinBall
+Wall, Ball, BallUp, BallDown, BallLeft, BallRight
+Selection, HudDivider
+
+
+======
+RULES
+======
+
+(action button: take icon to the right of the arrow, place under selector)
+[action selection PlayEmpty][Arrow|LeftBouncer] -> [PlacedLeftbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|RightBouncer] -> [PlacedRightbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|UpBouncer] -> [PlacedUpbouncer][Arrow|Empty] SFX0
+[action selection PlayEmpty][Arrow|DownBouncer] -> [PlacedDownbouncer][Arrow|Empty] SFX0
+
+(win conditions)
+[WinL] -> [Win] again SFX2
+[WinR] -> [Win] again SFX2
+[WinU] -> [Win] again SFX2
+[WinD] -> [Win] again SFX2
+
+(slide unused icons over to the left if there's space between them and the arrow)
+right [Empty | Bouncer] -> [Bouncer | Empty]
+
+(selector on top of go button -> signals game to run)
+[action selection iconGO] -> [gameGoing] again SFX1
+
+(make genericball match the direction of the bouncer)
+[ballSwitchLeft]->[ballSwitchedLeft] again
+[ballSwitchRight]->[ballSwitchedRight] again
+[ballSwitchUp]->[ballSwitchedUp] again
+[ballSwitchDown]->[ballSwitchedDown] again
+
+(if ball is going to move on top of a bouncer, switch it to generic ball first)
+right [Going][Bouncer | BallLeft] -> [Going][Bouncer | Left Ball] again SFX3
+left  [Going][Bouncer | BallRight] -> [Going][Bouncer | Right Ball] again SFX3
+up    [Going][Bouncer | BallDown] -> [Going][Bouncer | Down Ball] again SFX3
+down  [Going][Bouncer | BallUp] -> [Going][Bouncer | Up Ball] again SFX3
+
+
+
+(move the ball if Going)
+[Going][BallLeft] -> [Going][LEFT BallLeft] again
+[Going][BallRight] -> [Going][RIGHT BallRight] again
+[Going][BallUp] -> [Going][UP BallUp] again
+[Going][BallDown] -> [Going][DOWN BallDown] again
+
+
+
+[Going] -> [Going] again
+
+==============
+WINCONDITIONS
+==============
+
+no MovingBall
+
+=======
+LEVELS
+=======
+
+message place bouncers, hit play
+
+......w.....
+..o...w.....
+......w.....
+......w.....
+......w..b..
+......s.....
+............
+g-----------
+-hhadluhhhhh
+
+message Level 2
+
+............
+......o.....
+..s.........
+......w.....
+...o.....b..
+......m.....
+............
+g-----------
+-hhalurhhhhh
+
+message Level 3
+
+............
+............
+..o.wwww....
+..s.n..b....
+....wwww.o..
+............
+............
+g-----------
+-hhaudrlhhhh
+
+message Level 4
+
+............
+............
+..o......o..
+............
+............
+.s..bbbb....
+............
+............
+..o......o..
+............
+g-----------
+-hhalrudu...
+
+message Level 5
+
+.....n......w...
+..wwww.k....o.w.
+......b..m......
+...o............
+.......w........
+.....b.w........
+......wwo.......
+w.ww.www........
+.o..............
+....s...........
+..........wwwo..
+g---------------
+-hhaddddddrrr...
+
+message I didn't feel like making more levels
