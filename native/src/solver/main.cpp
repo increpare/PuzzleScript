@@ -578,28 +578,16 @@ int32_t manhattan(const Session& session, int32_t a, int32_t b) {
     return std::abs(tileX(session, a) - tileX(session, b)) + std::abs(tileY(session, a) - tileY(session, b));
 }
 
-std::vector<int32_t> matchingTiles(const Session& session, const MaskWord* filter, bool aggregate) {
-    std::vector<int32_t> out;
+int32_t nearestMatchingDistance(const Session& session, int32_t tile, const MaskWord* filter, bool aggregate) {
     if (filter == nullptr) {
-        return out;
-    }
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
-    out.reserve(static_cast<size_t>(tileCount));
-    for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-        if (matchesFilter(filter, session.game->wordCount, aggregate, cellObjects(session, tileIndex))) {
-            out.push_back(tileIndex);
-        }
-    }
-    return out;
-}
-
-int32_t nearestDistance(const Session& session, int32_t tile, const std::vector<int32_t>& targets) {
-    if (targets.empty()) {
         return 64;
     }
     int32_t best = std::numeric_limits<int32_t>::max();
-    for (const int32_t target : targets) {
-        best = std::min(best, manhattan(session, tile, target));
+    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    for (int32_t target = 0; target < tileCount; ++target) {
+        if (matchesFilter(filter, session.game->wordCount, aggregate, cellObjects(session, target))) {
+            best = std::min(best, manhattan(session, tile, target));
+        }
     }
     return best == std::numeric_limits<int32_t>::max() ? 64 : best;
 }
@@ -617,33 +605,35 @@ int32_t heuristicScore(const Session& session) {
         if (filter1 == nullptr || filter2 == nullptr) {
             continue;
         }
-        const auto first = matchingTiles(session, filter1, condition.aggr1);
-        const auto second = matchingTiles(session, filter2, condition.aggr2);
+        const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
         if (condition.quantifier == 1) {
-            for (const int32_t tile : first) {
+            for (int32_t tile = 0; tile < tileCount; ++tile) {
+                if (!matchesFilter(filter1, game.wordCount, condition.aggr1, cellObjects(session, tile))) {
+                    continue;
+                }
                 if (matchesFilter(filter2, game.wordCount, condition.aggr2, cellObjects(session, tile))) {
                     continue;
                 }
-                score += 10 + nearestDistance(session, tile, second);
+                score += 10 + nearestMatchingDistance(session, tile, filter2, condition.aggr2);
             }
         } else if (condition.quantifier == 0) {
             bool passed = false;
-            for (const int32_t tile : first) {
+            int32_t best = 64;
+            for (int32_t tile = 0; tile < tileCount; ++tile) {
+                if (!matchesFilter(filter1, game.wordCount, condition.aggr1, cellObjects(session, tile))) {
+                    continue;
+                }
                 if (matchesFilter(filter2, game.wordCount, condition.aggr2, cellObjects(session, tile))) {
                     passed = true;
                     break;
                 }
+                best = std::min(best, nearestMatchingDistance(session, tile, filter2, condition.aggr2));
             }
-            if (!passed) {
-                int32_t best = 64;
-                for (const int32_t tile : first) {
-                    best = std::min(best, nearestDistance(session, tile, second));
-                }
-                score += best;
-            }
+            score += passed ? 0 : best;
         } else if (condition.quantifier == -1) {
-            for (const int32_t tile : first) {
-                if (matchesFilter(filter2, game.wordCount, condition.aggr2, cellObjects(session, tile))) {
+            for (int32_t tile = 0; tile < tileCount; ++tile) {
+                if (matchesFilter(filter1, game.wordCount, condition.aggr1, cellObjects(session, tile))
+                    && matchesFilter(filter2, game.wordCount, condition.aggr2, cellObjects(session, tile))) {
                     score += 10;
                 }
             }
@@ -652,16 +642,22 @@ int32_t heuristicScore(const Session& session) {
 
     if (game.playerMask != puzzlescript::kNullMaskOffset && score > 0) {
         const MaskWord* playerMask = maskPtr(game, game.playerMask);
-        const auto players = matchingTiles(session, playerMask, game.playerMaskAggregate);
-        if (!players.empty()) {
-            int32_t best = 64;
+        bool hasPlayer = false;
+        int32_t best = 64;
+        const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+        for (int32_t player = 0; player < tileCount; ++player) {
+            if (!matchesFilter(playerMask, game.wordCount, game.playerMaskAggregate, cellObjects(session, player))) {
+                continue;
+            }
+            hasPlayer = true;
             for (const auto& condition : game.winConditions) {
                 const MaskWord* filter1 = maskPtr(game, condition.filter1);
-                const auto relevant = matchingTiles(session, filter1, condition.aggr1);
-                for (const int32_t player : players) {
-                    best = std::min(best, nearestDistance(session, player, relevant));
+                if (filter1 != nullptr) {
+                    best = std::min(best, nearestMatchingDistance(session, player, filter1, condition.aggr1));
                 }
             }
+        }
+        if (hasPlayer) {
             score += std::min(best, 16);
         }
     }
