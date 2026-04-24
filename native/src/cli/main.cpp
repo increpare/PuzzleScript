@@ -27,7 +27,7 @@
 
 #ifdef PS_HAVE_SDL2
 int puzzlescript_cpp_run_player_for_ir(const std::string& irPath);
-int puzzlescript_cpp_run_player_for_game(ps_game* game);
+int puzzlescript_cpp_run_player_for_game(ps_game* game, const std::string& saveKey);
 #endif
 
 namespace {
@@ -2640,30 +2640,22 @@ int benchSourceCommand(const std::string& sourcePath, int argc, char** argv) {
 }
 
 int playSourceCommand(const std::string& sourcePath, int argc, char** argv) {
-    std::vector<std::string> exporterArgs;
-    bool nativeCompile = false;
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--native-compile") {
-            nativeCompile = true;
+            // Kept temporarily as a no-op for old shell history; source play is
+            // native by default now.
             continue;
         }
-        exporterArgs.emplace_back(arg);
+        throw std::runtime_error("Unsupported play argument: " + arg + "\nTry: puzzlescript_cpp help play");
     }
-    ensureDefaultSourceLoad(exporterArgs);
 
     ps_game* game = nullptr;
-    if (!nativeCompile) {
-        if (!loadGameFromJsonText(runIrExporterAndCaptureJson(sourcePath, exporterArgs), &game)) {
-            return 1;
-        }
-    } else {
-        if (!loadGameFromSourceFile(sourcePath, &game)) {
-            return 1;
-        }
+    if (!loadGameFromSourceFile(sourcePath, &game)) {
+        return 1;
     }
 #ifdef PS_HAVE_SDL2
-    const int result = puzzlescript_cpp_run_player_for_game(game);
+    const int result = puzzlescript_cpp_run_player_for_game(game, sourcePath);
     ps_free_game(game);
     return result;
 #else
@@ -3373,10 +3365,9 @@ void printMainHelp() {
 
 void printPlayHelp() {
     std::cout
-        << "Usage: puzzlescript_cpp play game.txt [--level N] [--seed seed] [--settle-again] [--native-compile]\n\n"
-        << "Opens the SDL player for a PuzzleScript source file. The runtime currently loads\n"
-        << "through generated JS parity data while the native compiler is being connected to\n"
-        << "full Game lowering.\n\n"
+        << "Usage: puzzlescript_cpp play game.txt\n\n"
+        << "Compiles a PuzzleScript source file with the native C++ compiler and opens it\n"
+        << "in the SDL player. Use play-ir only for explicit IR/dev debugging.\n\n"
         << "Example:\n"
         << "  puzzlescript_cpp play src/demo/sokoban_basic.txt\n";
 }

@@ -336,6 +336,10 @@ void appendAudioEvent(Session& session, int32_t seed, const char* kind) {
     session.lastAudioEvents.push_back(ps_audio_event{seed, kind});
 }
 
+void appendUiAudioEvent(Session& session, int32_t seed, const char* kind) {
+    session.lastUiAudioEvents.push_back(ps_audio_event{seed, kind});
+}
+
 int audioEventPriority(const ps_audio_event& event) {
     const std::string_view kind = event.kind == nullptr ? std::string_view{} : std::string_view(event.kind);
     if (kind == "cantmove") {
@@ -375,11 +379,21 @@ void tryPlaySimpleSound(Session& session, std::string_view soundName) {
     // In the JS engine, these UI-ish "simple sounds" call playSound(seed, true),
     // which explicitly does NOT record the seed in the sound history (used by tests).
     // The native trace suite expects the same behavior: do not emit these as test audio events.
+    appendUiAudioEvent(session, it->second, "ui");
 }
 
 void processOutputCommands(Session& session, const CommandState& commands) {
-    (void)session;
-    (void)commands;
+    for (const auto& command : commands.queue) {
+        if (command == "message") {
+            session.preparedSession.messageText = commands.messageText;
+            session.preparedSession.textMode = true;
+            session.preparedSession.titleScreen = false;
+            session.preparedSession.messageSelected = false;
+            tryPlaySimpleSound(session, "showmessage");
+        } else if (command.size() >= 3 && command[0] == 's' && command[1] == 'f' && command[2] == 'x') {
+            tryPlaySimpleSound(session, command);
+        }
+    }
 }
 
 void accumulateMask(std::vector<int32_t>& target, const std::vector<int32_t>& source) {
@@ -1225,6 +1239,15 @@ LevelTemplate parseLevelTemplate(const json::Value& value) {
         level.message = requireField(object, "message").asString();
         return level;
     }
+    if (object.find("width") == object.end() || object.find("height") == object.end()) {
+        // JS export_ir_json can serialize the prepared text-mode placeholder
+        // as {"objects":[]} for games that start on a message screen. The
+        // containing prepared_session has current_level_index; after parsing
+        // the game we replace this shell with the real level template.
+        if (const auto objects = object.find("objects"); objects != object.end() && objects->second.isArray() && objects->second.asArray().empty()) {
+            return level;
+        }
+    }
     if (const auto* lineNumber = value.find("line_number"); lineNumber != nullptr && !lineNumber->isNull()) {
         level.lineNumber = toInt(*lineNumber);
     }
@@ -1253,6 +1276,9 @@ PreparedSession parsePreparedSession(const json::Value& value) {
     prepared.titleSelected = toBool(requireField(object, "title_selected"));
     prepared.messageSelected = toBool(requireField(object, "message_selected"));
     prepared.winning = toBool(requireField(object, "winning"));
+    if (const auto* messageText = value.find("message_text"); messageText && !messageText->isNull()) {
+        prepared.messageText = toString(*messageText);
+    }
     if (const auto* seed = value.find("loaded_level_seed"); seed && !seed->isNull()) {
         prepared.loadedLevelSeed = toString(*seed);
     }
@@ -3654,12 +3680,13 @@ bool advanceToNextLevel(Session& session) {
         session.preparedSession.level = session.game->levels[static_cast<size_t>(session.preparedSession.currentLevelIndex)];
         session.preparedSession.textMode = session.preparedSession.level.isMessage;
         if (!session.preparedSession.textMode) {
-            session.preparedSession.titleMode = 0;
-            session.preparedSession.titleSelection = showContinueOptionOnTitleScreen(session.preparedSession) ? 1 : 0;
-        }
-        session.preparedSession.titleSelected = false;
-        session.preparedSession.messageSelected = false;
-        session.preparedSession.winning = false;
+        session.preparedSession.titleMode = 0;
+        session.preparedSession.titleSelection = showContinueOptionOnTitleScreen(session.preparedSession) ? 1 : 0;
+    }
+    session.preparedSession.titleSelected = false;
+    session.preparedSession.messageSelected = false;
+    session.preparedSession.messageText.clear();
+    session.preparedSession.winning = false;
         if (session.preparedSession.textMode) {
             session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
             session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
@@ -3690,6 +3717,7 @@ bool advanceToNextLevel(Session& session) {
     session.preparedSession.titleSelection = showContinueOptionOnTitleScreen(session.preparedSession) ? 1 : 0;
     session.preparedSession.titleSelected = false;
     session.preparedSession.messageSelected = false;
+    session.preparedSession.messageText.clear();
     session.preparedSession.winning = false;
     session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
     session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
@@ -3886,6 +3914,13 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
         if (const auto prepared = rootObject.find("prepared_session"); prepared != rootObject.end()) {
             try {
                 game->preparedSession = parsePreparedSession(prepared->second);
+                if (game->preparedSession.level.width == 0
+                    && game->preparedSession.level.height == 0
+                    && game->preparedSession.level.objects.empty()
+                    && game->preparedSession.currentLevelIndex >= 0
+                    && static_cast<size_t>(game->preparedSession.currentLevelIndex) < game->levels.size()) {
+                    game->preparedSession.level = game->levels[static_cast<size_t>(game->preparedSession.currentLevelIndex)];
+                }
             } catch (const std::exception& error) {
                 throw json::ParseError("Failed parsing prepared_session: " + std::string(error.what()));
             }
@@ -3937,6 +3972,7 @@ std::unique_ptr<Error> loadLevel(Session& session, int32_t levelIndex) {
     session.preparedSession.titleSelection = showContinueOptionOnTitleScreen(session.preparedSession) ? 1 : 0;
     session.preparedSession.titleSelected = false;
     session.preparedSession.messageSelected = false;
+    session.preparedSession.messageText.clear();
     session.preparedSession.winning = false;
     session.preparedSession.restart.width = session.preparedSession.level.width;
     session.preparedSession.restart.height = session.preparedSession.level.height;
@@ -3945,6 +3981,14 @@ std::unique_ptr<Error> loadLevel(Session& session, int32_t levelIndex) {
     resetToPrepared(session);
     runRulesOnLevelStart(session);
     settlePendingAgain(session);
+    return nullptr;
+}
+
+std::unique_ptr<Error> advanceLevel(Session& session) {
+    if (session.game->levels.empty()) {
+        return std::make_unique<Error>("No levels available");
+    }
+    (void)advanceToNextLevel(session);
     return nullptr;
 }
 
@@ -4136,6 +4180,7 @@ bool wouldAgainChange(Session& session, bool* outWouldModify) {
 ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnOptions options) {
     ps_step_result result{};
     session.lastAudioEvents.clear();
+    session.lastUiAudioEvents.clear();
     session.pendingCreateMask.assign(static_cast<size_t>(session.game->strideObject), 0);
     session.pendingDestroyMask.assign(static_cast<size_t>(session.game->strideObject), 0);
 
@@ -4248,6 +4293,8 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         sortAudioEvents(session);
         result.audio_event_count = session.lastAudioEvents.size();
         result.audio_events = session.lastAudioEvents.empty() ? nullptr : session.lastAudioEvents.data();
+        result.ui_audio_event_count = session.lastUiAudioEvents.size();
+        result.ui_audio_events = session.lastUiAudioEvents.empty() ? nullptr : session.lastUiAudioEvents.data();
         rebuildMasks(session);
         return result;
     }
@@ -4339,6 +4386,8 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     sortAudioEvents(session);
     result.audio_event_count = session.lastAudioEvents.size();
     result.audio_events = session.lastAudioEvents.empty() ? nullptr : session.lastAudioEvents.data();
+    result.ui_audio_event_count = session.lastUiAudioEvents.size();
+    result.ui_audio_events = session.lastUiAudioEvents.empty() ? nullptr : session.lastUiAudioEvents.data();
     rebuildMasks(session);
     return result;
 }
@@ -4363,12 +4412,31 @@ size_t listInputs(ps_input* output, size_t capacity) {
 ps_step_result step(Session& session, ps_input input) {
     ps_step_result result{};
     session.lastAudioEvents.clear();
+    session.lastUiAudioEvents.clear();
+    if (session.preparedSession.textMode && !session.preparedSession.titleScreen && input == PS_INPUT_ACTION) {
+        if (session.preparedSession.level.isMessage) {
+            result.transitioned = advanceToNextLevel(session);
+        } else {
+            session.preparedSession.textMode = false;
+            session.preparedSession.messageText.clear();
+            session.preparedSession.messageSelected = false;
+            result.transitioned = true;
+            rebuildMasks(session);
+        }
+        tryPlaySimpleSound(session, "closemessage");
+        result.changed = true;
+        result.ui_audio_event_count = session.lastUiAudioEvents.size();
+        result.ui_audio_events = session.lastUiAudioEvents.empty() ? nullptr : session.lastUiAudioEvents.data();
+        return result;
+    }
     if (session.preparedSession.titleScreen && input == PS_INPUT_ACTION) {
         session.preparedSession.titleScreen = false;
         result.changed = true;
         result.transitioned = true;
         result.audio_event_count = 0;
         result.audio_events = nullptr;
+        result.ui_audio_event_count = 0;
+        result.ui_audio_events = nullptr;
         rebuildMasks(session);
         return result;
     }

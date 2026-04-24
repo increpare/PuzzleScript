@@ -134,6 +134,7 @@ struct PreparedSession {
     bool titleSelected = false;
     bool messageSelected = false;
     bool winning = false;
+    std::string messageText;
     std::string loadedLevelSeed;
     bool hasRandomState = false;
     bool randomStateValid = false;
@@ -387,6 +388,7 @@ struct Session {
     std::vector<int32_t> ellipsisPositionsScratch;
     std::vector<UndoSnapshot> undoStack;
     std::vector<ps_audio_event> lastAudioEvents;
+    std::vector<ps_audio_event> lastUiAudioEvents;
     bool canUndo = false;
     bool pendingAgain = false;
     RandomState randomState;
@@ -402,6 +404,7 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
 std::unique_ptr<Session> createSession(std::shared_ptr<const Game> game);
 std::unique_ptr<Session> createSessionWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed);
 std::unique_ptr<Error> loadLevel(Session& session, int32_t levelIndex);
+std::unique_ptr<Error> advanceLevel(Session& session);
 bool restart(Session& session);
 bool undo(Session& session);
 uint64_t hashSession64(const Session& session);

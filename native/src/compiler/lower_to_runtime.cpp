@@ -811,6 +811,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     game->preparedSession.titleSelection = 0;
     game->preparedSession.titleSelected = false;
     game->preparedSession.messageSelected = false;
+    game->preparedSession.messageText.clear();
     game->preparedSession.winning = false;
     game->preparedSession.loadedLevelSeed = "native";
     game->preparedSession.hasRandomState = false;

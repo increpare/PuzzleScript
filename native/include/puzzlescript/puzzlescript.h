@@ -25,6 +25,15 @@ typedef struct ps_audio_event {
     const char* kind;
 } ps_audio_event;
 
+typedef struct ps_object_info {
+    const char* name;
+    int32_t id;
+    int32_t layer;
+    size_t color_count;
+    int32_t sprite_width;
+    int32_t sprite_height;
+} ps_object_info;
+
 typedef enum ps_input {
     PS_INPUT_UP = 0,
     PS_INPUT_LEFT = 1,
@@ -63,6 +72,8 @@ typedef struct ps_step_result {
     bool transitioned;
     size_t audio_event_count;
     const ps_audio_event* audio_events;
+    size_t ui_audio_event_count;
+    const ps_audio_event* ui_audio_events;
 } ps_step_result;
 
 typedef struct ps_benchmark_result {
@@ -109,7 +120,10 @@ ps_step_result ps_session_tick(ps_session* session);
 bool ps_session_pending_again(const ps_session* session);
 bool ps_session_undo(ps_session* session);
 bool ps_session_restart(ps_session* session);
+bool ps_session_advance_level(ps_session* session, ps_error** out_error);
 void ps_session_status(const ps_session* session, ps_session_status_info* out_status);
+const char* ps_session_message_text(const ps_session* session);
+bool ps_session_cell_has_object(const ps_session* session, int32_t x, int32_t y, int32_t object_id);
 uint64_t ps_session_hash64(const ps_session* session);
 ps_hash128 ps_session_hash128(const ps_session* session);
 char* ps_session_serialize_test_string(const ps_session* session);
@@ -119,6 +133,18 @@ bool ps_benchmark_clone_hash(const ps_session* session, uint32_t iterations, uin
 void ps_runtime_counters_set_enabled(bool enabled);
 void ps_runtime_counters_reset(void);
 void ps_runtime_counters_snapshot(ps_runtime_counters* out_counters);
+
+int32_t ps_game_level_count(const ps_game* game);
+int32_t ps_game_object_count(const ps_game* game);
+uint32_t ps_game_word_count(const ps_game* game);
+const char* ps_game_foreground_color(const ps_game* game);
+const char* ps_game_background_color(const ps_game* game);
+bool ps_game_has_metadata(const ps_game* game, const char* key_utf8);
+const char* ps_game_metadata_value(const ps_game* game, const char* key_utf8);
+bool ps_game_sound_seed(const ps_game* game, const char* sound_name_utf8, int32_t* out_seed);
+bool ps_game_object_info(const ps_game* game, int32_t object_id, ps_object_info* out_info);
+const char* ps_game_object_color(const ps_game* game, int32_t object_id, size_t color_index);
+int32_t ps_game_object_sprite_value(const ps_game* game, int32_t object_id, int32_t x, int32_t y);
 
 const char* ps_error_message(const ps_error* error);
 void ps_free_error(ps_error* error);

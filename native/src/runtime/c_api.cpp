@@ -227,6 +227,25 @@ bool ps_session_restart(ps_session* session) {
     return session ? puzzlescript::restart(*session->impl) : false;
 }
 
+bool ps_session_advance_level(ps_session* session, ps_error** out_error) {
+    if (out_error) {
+        *out_error = nullptr;
+    }
+    if (!session) {
+        if (out_error) {
+            *out_error = makeError(std::make_unique<Error>("ps_session_advance_level received null session"));
+        }
+        return false;
+    }
+    if (auto error = puzzlescript::advanceLevel(*session->impl)) {
+        if (out_error) {
+            *out_error = makeError(std::move(error));
+        }
+        return false;
+    }
+    return true;
+}
+
 void ps_session_status(const ps_session* session, ps_session_status_info* out_status) {
     if (!session || !out_status) {
         return;
@@ -247,6 +266,43 @@ void ps_session_status(const ps_session* session, ps_session_status_info* out_st
     out_status->text_mode = session->impl->preparedSession.textMode;
     out_status->title_selected = session->impl->preparedSession.titleSelected;
     out_status->message_selected = session->impl->preparedSession.messageSelected;
+}
+
+const char* ps_session_message_text(const ps_session* session) {
+    if (!session || !session->impl) {
+        return "";
+    }
+    const auto& prepared = session->impl->preparedSession;
+    if (!prepared.messageText.empty()) {
+        return prepared.messageText.c_str();
+    }
+    if (prepared.textMode && prepared.level.isMessage) {
+        return prepared.level.message.c_str();
+    }
+    return "";
+}
+
+bool ps_session_cell_has_object(const ps_session* session, int32_t x, int32_t y, int32_t object_id) {
+    if (!session || !session->impl || object_id < 0) {
+        return false;
+    }
+    const Session& impl = *session->impl;
+    if (x < 0 || y < 0 || x >= impl.liveLevel.width || y >= impl.liveLevel.height) {
+        return false;
+    }
+    if (object_id >= impl.game->objectCount) {
+        return false;
+    }
+    const uint32_t word = puzzlescript::maskWordIndex(static_cast<uint32_t>(object_id));
+    if (word >= impl.game->wordCount) {
+        return false;
+    }
+    const int32_t tile_index = x * impl.liveLevel.height + y;
+    const size_t offset = static_cast<size_t>(tile_index) * impl.game->wordCount + word;
+    if (offset >= impl.liveLevel.objects.size()) {
+        return false;
+    }
+    return (impl.liveLevel.objects[offset] & puzzlescript::maskBit(static_cast<uint32_t>(object_id))) != 0;
 }
 
 uint64_t ps_session_hash64(const ps_session* session) {
@@ -306,6 +362,91 @@ void ps_runtime_counters_snapshot(ps_runtime_counters* out_counters) {
     if (out_counters) {
         *out_counters = puzzlescript::snapshotRuntimeCounters();
     }
+}
+
+int32_t ps_game_level_count(const ps_game* game) {
+    return game && game->impl ? static_cast<int32_t>(game->impl->levels.size()) : 0;
+}
+
+int32_t ps_game_object_count(const ps_game* game) {
+    return game && game->impl ? game->impl->objectCount : 0;
+}
+
+uint32_t ps_game_word_count(const ps_game* game) {
+    return game && game->impl ? game->impl->wordCount : 0;
+}
+
+const char* ps_game_foreground_color(const ps_game* game) {
+    return game && game->impl ? game->impl->foregroundColor.c_str() : "";
+}
+
+const char* ps_game_background_color(const ps_game* game) {
+    return game && game->impl ? game->impl->backgroundColor.c_str() : "";
+}
+
+bool ps_game_has_metadata(const ps_game* game, const char* key_utf8) {
+    if (!game || !game->impl || !key_utf8) {
+        return false;
+    }
+    return game->impl->metadataMap.find(key_utf8) != game->impl->metadataMap.end();
+}
+
+const char* ps_game_metadata_value(const ps_game* game, const char* key_utf8) {
+    if (!game || !game->impl || !key_utf8) {
+        return "";
+    }
+    const auto it = game->impl->metadataMap.find(key_utf8);
+    return it == game->impl->metadataMap.end() ? "" : it->second.c_str();
+}
+
+bool ps_game_sound_seed(const ps_game* game, const char* sound_name_utf8, int32_t* out_seed) {
+    if (out_seed) {
+        *out_seed = 0;
+    }
+    if (!game || !game->impl || !sound_name_utf8) {
+        return false;
+    }
+    const auto it = game->impl->sfxEvents.find(sound_name_utf8);
+    if (it == game->impl->sfxEvents.end()) {
+        return false;
+    }
+    if (out_seed) {
+        *out_seed = it->second;
+    }
+    return true;
+}
+
+bool ps_game_object_info(const ps_game* game, int32_t object_id, ps_object_info* out_info) {
+    if (!game || !game->impl || !out_info || object_id < 0 || object_id >= game->impl->objectCount) {
+        return false;
+    }
+    const auto& object = game->impl->objectsById[static_cast<size_t>(object_id)];
+    out_info->name = object.name.c_str();
+    out_info->id = object.id;
+    out_info->layer = object.layer;
+    out_info->color_count = object.colors.size();
+    out_info->sprite_height = static_cast<int32_t>(object.sprite.size());
+    out_info->sprite_width = object.sprite.empty() ? 0 : static_cast<int32_t>(object.sprite.front().size());
+    return true;
+}
+
+const char* ps_game_object_color(const ps_game* game, int32_t object_id, size_t color_index) {
+    if (!game || !game->impl || object_id < 0 || object_id >= game->impl->objectCount) {
+        return "";
+    }
+    const auto& colors = game->impl->objectsById[static_cast<size_t>(object_id)].colors;
+    return color_index < colors.size() ? colors[color_index].c_str() : "";
+}
+
+int32_t ps_game_object_sprite_value(const ps_game* game, int32_t object_id, int32_t x, int32_t y) {
+    if (!game || !game->impl || object_id < 0 || object_id >= game->impl->objectCount || x < 0 || y < 0) {
+        return -1;
+    }
+    const auto& sprite = game->impl->objectsById[static_cast<size_t>(object_id)].sprite;
+    if (static_cast<size_t>(y) >= sprite.size() || static_cast<size_t>(x) >= sprite[static_cast<size_t>(y)].size()) {
+        return -1;
+    }
+    return sprite[static_cast<size_t>(y)][static_cast<size_t>(x)];
 }
 
 const char* ps_error_message(const ps_error* error) {

@@ -155,6 +155,7 @@ target_compile_definitions(puzzlescript_cpp
     PS_NODE_EXECUTABLE="${NODE_EXECUTABLE}"
     PS_EXPORT_IR_SCRIPT="${PUZZLESCRIPT_REPO_ROOT}/src/tests/js_oracle/export_ir_json.js"
     PS_EXPORT_TRACE_SCRIPT="${PUZZLESCRIPT_REPO_ROOT}/src/tests/js_oracle/export_execution_trace.js"
+    PS_FONT_JS_PATH="${PUZZLESCRIPT_REPO_ROOT}/src/js/font.js"
 )
 
 if(TARGET PkgConfig::SDL2)
@@ -218,6 +219,40 @@ add_test(
   NAME puzzlescript_cpp_run_smoke
   COMMAND puzzlescript_cpp run ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt --level 0 --seed native-source-smoke --settle-again
 )
+
+add_executable(puzzlescript_cpp_player_api_tests
+  tests/player_api_tests.cpp
+)
+
+target_link_libraries(puzzlescript_cpp_player_api_tests
+  PRIVATE
+    puzzlescript_native
+    puzzlescript_compiler
+)
+
+target_include_directories(puzzlescript_cpp_player_api_tests
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+add_dependencies(puzzlescript_cpp puzzlescript_cpp_player_api_tests)
+
+add_test(
+  NAME puzzlescript_cpp_player_api_tests
+  COMMAND puzzlescript_cpp_player_api_tests
+)
+
+if(TARGET PkgConfig::SDL2)
+  add_test(
+    NAME puzzlescript_cpp_player_sdl_dummy_smoke
+    COMMAND puzzlescript_cpp play ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt
+  )
+  set_tests_properties(puzzlescript_cpp_player_sdl_dummy_smoke
+    PROPERTIES
+      ENVIRONMENT "SDL_VIDEODRIVER=dummy;SDL_AUDIODRIVER=dummy;PS_PLAYER_FRAME_LIMIT=2"
+      TIMEOUT 15
+  )
+endif()
 
 add_test(
   NAME puzzlescript_cpp_step_smoke
