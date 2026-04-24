@@ -13,7 +13,7 @@ function usage() {
     'Usage: run_rule_plan_parity.js <src/tests/resources/testdata.js> [--cli path] [--artifacts-dir path]',
     '',
     'Compares JS and native game.rule_plan_v1 from emitted IR JSON for unique sources.',
-    'Cases with JS compile failures are skipped; warning-bearing playable games are still compared.',
+    'Cases are skipped only if the JS exporter cannot emit IR or native IR compilation fails.',
   ].join('\n');
 }
 
@@ -226,7 +226,7 @@ function main() {
   ensureDir(opts.artifactsDir);
 
   let compared = 0;
-  let skippedCompileFailures = 0;
+  let skippedIrFailures = 0;
   let preserveTmp = false;
 
   try {
@@ -240,18 +240,12 @@ function main() {
       const jsRes = compileJsIr(caseInfo, sourcePath, jsIrPath, repoRoot);
       if (jsRes.error) throw new Error(`JS exporter failed to run for case ${caseInfo.index} (${caseInfo.name}): ${jsRes.error.message}`);
       if (jsRes.status !== 0) {
-        skippedCompileFailures++;
+        skippedIrFailures++;
         process.stderr.write(`skip_js_compile_failure index=${caseInfo.index} name=${JSON.stringify(caseInfo.name)} status=${jsRes.status}\n`);
         continue;
       }
 
       const jsIr = readJson(jsIrPath);
-      const jsDiagnostics = jsIr.document && Array.isArray(jsIr.document.errors) ? jsIr.document.errors : [];
-      if (jsIr.document && jsIr.document.error_count > 0) {
-        skippedCompileFailures++;
-        process.stderr.write(`skip_js_error_count index=${caseInfo.index} name=${JSON.stringify(caseInfo.name)} error_count=${jsIr.document.error_count || 0} diagnostic_count=${jsDiagnostics.length}\n`);
-        continue;
-      }
       const nativeRes = compileNativeIr(opts.cliPath, sourcePath);
       if (nativeRes.error) throw new Error(`Native CLI failed to run for case ${caseInfo.index} (${caseInfo.name}): ${nativeRes.error.message}`);
       if (nativeRes.status !== 0) {
@@ -264,7 +258,7 @@ function main() {
             `Expected command surface: ${commandText(opts.cliPath, nativeRes.args)}\n\nstderr:\n${stderr}\nstdout:\n${nativeRes.stdout}`
           );
         }
-        skippedCompileFailures++;
+        skippedIrFailures++;
         process.stderr.write(`skip_native_compile_failure index=${caseInfo.index} name=${JSON.stringify(caseInfo.name)} status=${nativeRes.status}\n`);
         continue;
       }
@@ -322,14 +316,14 @@ function main() {
 
       compared++;
       if (opts.progressEvery > 0 && compared > 0 && (compared % opts.progressEvery) === 0) {
-        process.stderr.write(`progress compared=${compared}/${cases.length} skipped_compile_failures=${skippedCompileFailures}\n`);
+        process.stderr.write(`progress compared=${compared}/${cases.length} skipped_ir_failures=${skippedIrFailures}\n`);
       }
     }
 
     const elapsedMs = Date.now() - startedAt;
     process.stdout.write(
       `rule_plan_parity passed compared=${compared} unique_sources=${cases.length} ` +
-      `skipped_compile_failures=${skippedCompileFailures} elapsed_ms=${elapsedMs}\n`
+      `skipped_ir_failures=${skippedIrFailures} elapsed_ms=${elapsedMs}\n`
     );
   } finally {
     if (!opts.keepTemps && !preserveTmp) {
