@@ -692,8 +692,9 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         // background-layer glyph (e.g. WoodenFloor), JS effectively treats that
         // as the fill under obstacles/walls in cells without background glyphs.
         int32_t levelBackgroundId = game->backgroundId;
+        bool foundLevelBackground = false;
         if (backgroundLayer >= 0) {
-            for (int32_t y = 0; y < level.height && levelBackgroundId == game->backgroundId; ++y) {
+            for (int32_t y = 0; y < level.height && !foundLevelBackground; ++y) {
                 const auto glyphs = splitUtf8Codepoints(srcLevel.rows[static_cast<size_t>(y)]);
                 for (int32_t x = 0; x < level.width; ++x) {
                     const std::string glyph = x < static_cast<int32_t>(glyphs.size()) ? glyphs[static_cast<size_t>(x)] : std::string{};
@@ -709,6 +710,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
                         const int32_t id = perLayer[static_cast<size_t>(backgroundLayer)];
                         if (id >= 0) {
                             levelBackgroundId = id;
+                            foundLevelBackground = true;
                             break;
                         }
                     }
