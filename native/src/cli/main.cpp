@@ -16,6 +16,7 @@
 #include <string>
 #include <thread>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "cli/diagnostics_parity.hpp"
@@ -2777,6 +2778,380 @@ void appendJsonMask(std::ostream& out, const puzzlescript::Game& game, puzzlescr
     out << "]";
 }
 
+bool maskHasAnyBit(const puzzlescript::Game& game, puzzlescript::MaskOffset offset, uint32_t width) {
+    if (offset == puzzlescript::kNullMaskOffset) {
+        return false;
+    }
+    for (uint32_t index = 0; index < width; ++index) {
+        if (static_cast<size_t>(offset + index) < game.maskArena.size()
+            && game.maskArena[static_cast<size_t>(offset + index)] != 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool maskBitIsSet(const puzzlescript::Game& game, puzzlescript::MaskOffset offset, uint32_t logicalBitIndex) {
+    if (offset == puzzlescript::kNullMaskOffset) {
+        return false;
+    }
+    const uint32_t wordIndex = logicalBitIndex / puzzlescript::kMaskWordBits;
+    const uint32_t bitIndex = logicalBitIndex % puzzlescript::kMaskWordBits;
+    const size_t arenaIndex = static_cast<size_t>(offset + wordIndex);
+    if (arenaIndex >= game.maskArena.size()) {
+        return false;
+    }
+    const auto word = static_cast<puzzlescript::MaskWordUnsigned>(game.maskArena[arenaIndex]);
+    return (word & (puzzlescript::MaskWordUnsigned{1} << bitIndex)) != 0;
+}
+
+bool maskSubsetOf(
+    const puzzlescript::Game& game,
+    puzzlescript::MaskOffset left,
+    puzzlescript::MaskOffset right,
+    uint32_t width
+) {
+    for (uint32_t index = 0; index < width; ++index) {
+        const auto leftWord = (left == puzzlescript::kNullMaskOffset || static_cast<size_t>(left + index) >= game.maskArena.size())
+            ? puzzlescript::MaskWord{0}
+            : game.maskArena[static_cast<size_t>(left + index)];
+        const auto rightWord = (right == puzzlescript::kNullMaskOffset || static_cast<size_t>(right + index) >= game.maskArena.size())
+            ? puzzlescript::MaskWord{0}
+            : game.maskArena[static_cast<size_t>(right + index)];
+        if ((leftWord & ~rightWord) != 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool masksOverlap(
+    const puzzlescript::Game& game,
+    puzzlescript::MaskOffset left,
+    puzzlescript::MaskOffset right,
+    uint32_t width
+) {
+    for (uint32_t index = 0; index < width; ++index) {
+        const auto leftWord = (left == puzzlescript::kNullMaskOffset || static_cast<size_t>(left + index) >= game.maskArena.size())
+            ? puzzlescript::MaskWord{0}
+            : game.maskArena[static_cast<size_t>(left + index)];
+        const auto rightWord = (right == puzzlescript::kNullMaskOffset || static_cast<size_t>(right + index) >= game.maskArena.size())
+            ? puzzlescript::MaskWord{0}
+            : game.maskArena[static_cast<size_t>(right + index)];
+        if ((leftWord & rightWord) != 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool patternImpossible(const puzzlescript::Game& game, const puzzlescript::Pattern& pattern) {
+    if (pattern.kind == puzzlescript::Pattern::Kind::Ellipsis) {
+        return false;
+    }
+    if (masksOverlap(game, pattern.objectsPresent, pattern.objectsMissing, game.wordCount)
+        || masksOverlap(game, pattern.movementsPresent, pattern.movementsMissing, game.movementWordCount)) {
+        return true;
+    }
+    std::vector<uint8_t> requiredLayers(static_cast<size_t>(game.layerCount), 0);
+    for (uint32_t objectId = 0; objectId < game.objectCount; ++objectId) {
+        if (!maskBitIsSet(game, pattern.objectsPresent, objectId)) {
+            continue;
+        }
+        const int32_t layer = game.objectsById[static_cast<size_t>(objectId)].layer;
+        if (layer < 0 || layer >= game.layerCount) {
+            continue;
+        }
+        auto& seen = requiredLayers[static_cast<size_t>(layer)];
+        if (seen != 0) {
+            return true;
+        }
+        seen = 1;
+    }
+    return false;
+}
+
+bool ruleImpossible(const puzzlescript::Game& game, const puzzlescript::Rule& rule) {
+    for (const auto& row : rule.patterns) {
+        for (const auto& pattern : row) {
+            if (patternImpossible(game, pattern)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool replacementGuaranteedNoop(
+    const puzzlescript::Game& game,
+    const puzzlescript::Replacement& repl,
+    const puzzlescript::Pattern& pattern
+) {
+    if (maskHasAnyBit(game, repl.objectsSet, game.wordCount)
+        || maskHasAnyBit(game, repl.movementsSet, game.movementWordCount)
+        || repl.hasMovementsLayerMask
+        || repl.hasRandomEntityMask
+        || repl.hasRandomDirMask) {
+        return false;
+    }
+    return maskSubsetOf(game, repl.objectsClear, pattern.objectsMissing, game.wordCount)
+        && maskSubsetOf(game, repl.movementsClear, pattern.movementsMissing, game.movementWordCount);
+}
+
+std::pair<int32_t, int32_t> ruleDirectionDelta(int32_t directionMask) {
+    switch (directionMask) {
+        case 1: return {0, -1};
+        case 2: return {0, 1};
+        case 4: return {-1, 0};
+        case 8: return {1, 0};
+        default: return {0, 0};
+    }
+}
+
+void appendJsonIntArrayUnique(std::ostream& out, std::vector<int32_t> values) {
+    std::sort(values.begin(), values.end());
+    values.erase(std::unique(values.begin(), values.end()), values.end());
+    appendJsonIntArray(out, values);
+}
+
+void appendObjectIdsFromMask(std::ostream& out, const puzzlescript::Game& game, puzzlescript::MaskOffset offset) {
+    out << "[";
+    bool first = true;
+    for (uint32_t objectId = 0; objectId < game.objectCount; ++objectId) {
+        if (!maskBitIsSet(game, offset, objectId)) {
+            continue;
+        }
+        if (!first) {
+            out << ",";
+        }
+        first = false;
+        out << objectId;
+    }
+    out << "]";
+}
+
+void appendMovementBitPairs(std::ostream& out, const puzzlescript::Game& game, puzzlescript::MaskOffset offset) {
+    out << "[";
+    bool first = true;
+    for (uint32_t layerIndex = 0; layerIndex < game.layerCount; ++layerIndex) {
+        for (uint32_t movementBit = 0; movementBit < 5; ++movementBit) {
+            if (!maskBitIsSet(game, offset, layerIndex * 5U + movementBit)) {
+                continue;
+            }
+            if (!first) {
+                out << ",";
+            }
+            first = false;
+            out << "[" << layerIndex << "," << movementBit << "]";
+        }
+    }
+    out << "]";
+}
+
+void appendMovementLayersFromMask(std::ostream& out, const puzzlescript::Game& game, puzzlescript::MaskOffset offset) {
+    out << "[";
+    bool first = true;
+    for (uint32_t layerIndex = 0; layerIndex < game.layerCount; ++layerIndex) {
+        bool hasLayerBit = false;
+        for (uint32_t movementBit = 0; movementBit < 5; ++movementBit) {
+            if (maskBitIsSet(game, offset, layerIndex * 5U + movementBit)) {
+                hasLayerBit = true;
+                break;
+            }
+        }
+        if (!hasLayerBit) {
+            continue;
+        }
+        if (!first) {
+            out << ",";
+        }
+        first = false;
+        out << layerIndex;
+    }
+    out << "]";
+}
+
+void appendRulePlanJson(std::ostream& out, const puzzlescript::Game& game) {
+    auto appendRuleEntry = [&](const puzzlescript::Rule& rule, size_t groupIndex, size_t ruleIndex, bool late) {
+        const auto [dx, dy] = ruleDirectionDelta(rule.direction);
+        out << "{";
+        out << "\"rule_index\":" << ruleIndex
+            << ",\"group_index\":" << groupIndex
+            << ",\"late\":" << (late ? "true" : "false")
+            << ",\"direction\":" << rule.direction
+            << ",\"line_number\":" << rule.lineNumber
+            << ",\"group_number\":" << rule.groupNumber
+            << ",\"rigid\":" << (rule.rigid ? "true" : "false")
+            << ",\"is_random\":" << (rule.isRandom ? "true" : "false")
+            << ",\"has_replacements\":" << (rule.hasReplacements ? "true" : "false")
+            << ",\"delta_hint\":{\"dx\":" << dx << ",\"dy\":" << dy << "}"
+            << ",\"rule_object_ids\":";
+        appendObjectIdsFromMask(out, game, rule.ruleMask);
+        out << ",\"rule_movement_bits\":";
+        appendMovementBitPairs(out, game, rule.ruleMovementMask);
+        out << ",\"rows\":[";
+        for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+            if (rowIndex != 0) {
+                out << ",";
+            }
+            const auto& row = rule.patterns[rowIndex];
+            const int32_t ellipsisCount = rowIndex < rule.ellipsisCount.size() ? rule.ellipsisCount[rowIndex] : 0;
+            const puzzlescript::MaskOffset rowObjectOffset = rowIndex < rule.cellRowMasksCount
+                ? game.cellRowMaskOffsets[static_cast<size_t>(rule.cellRowMasksFirst + rowIndex)]
+                : puzzlescript::kNullMaskOffset;
+            const puzzlescript::MaskOffset rowMovementOffset = rowIndex < rule.cellRowMasksMovementsCount
+                ? game.cellRowMaskMovementsOffsets[static_cast<size_t>(rule.cellRowMasksMovementsFirst + rowIndex)]
+                : puzzlescript::kNullMaskOffset;
+
+            int32_t concreteCellCount = 0;
+            int32_t finalEllipsisIndex = -1;
+            for (size_t cellIndex = 0; cellIndex < row.size(); ++cellIndex) {
+                const bool concrete = row[cellIndex].kind != puzzlescript::Pattern::Kind::Ellipsis;
+                if (concrete) {
+                    ++concreteCellCount;
+                } else {
+                    finalEllipsisIndex = static_cast<int32_t>(cellIndex);
+                }
+            }
+            int32_t minConcreteSuffix = concreteCellCount;
+            if (finalEllipsisIndex >= 0) {
+                minConcreteSuffix = 0;
+                for (size_t cellIndex = static_cast<size_t>(finalEllipsisIndex + 1); cellIndex < row.size(); ++cellIndex) {
+                    if (row[cellIndex].kind != puzzlescript::Pattern::Kind::Ellipsis) {
+                        ++minConcreteSuffix;
+                    }
+                }
+            }
+
+            std::vector<int32_t> concreteAnchorObjectIds;
+            std::vector<std::vector<int32_t>> anyAnchorObjectIds;
+            for (const auto& pattern : row) {
+                if (pattern.kind == puzzlescript::Pattern::Kind::Ellipsis) {
+                    continue;
+                }
+                concreteAnchorObjectIds.insert(
+                    concreteAnchorObjectIds.end(),
+                    pattern.objectAnchorIds.begin(),
+                    pattern.objectAnchorIds.end()
+                );
+                anyAnchorObjectIds.insert(
+                    anyAnchorObjectIds.end(),
+                    pattern.anyObjectAnchorIds.begin(),
+                    pattern.anyObjectAnchorIds.end()
+                );
+            }
+
+            out << "{\"row_index\":" << rowIndex
+                << ",\"ellipsis_count\":" << ellipsisCount
+                << ",\"object_ids\":";
+            appendObjectIdsFromMask(out, game, rowObjectOffset);
+            out << ",\"movement_bits\":";
+            appendMovementBitPairs(out, game, rowMovementOffset);
+            out << ",\"concrete_anchor_object_ids\":";
+            appendJsonIntArrayUnique(out, std::move(concreteAnchorObjectIds));
+            out << ",\"any_anchor_object_ids\":[";
+            for (size_t anyIndex = 0; anyIndex < anyAnchorObjectIds.size(); ++anyIndex) {
+                if (anyIndex != 0) {
+                    out << ",";
+                }
+                appendJsonIntArrayUnique(out, std::move(anyAnchorObjectIds[anyIndex]));
+            }
+            out << "],\"concrete_cell_count\":" << concreteCellCount
+                << ",\"min_concrete_suffix\":" << minConcreteSuffix
+                << ",\"scan_order\":\"x_major\"}";
+        }
+        out << "],\"replacements\":[";
+        bool firstReplacement = true;
+        for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+            const auto& row = rule.patterns[rowIndex];
+            for (size_t cellIndex = 0; cellIndex < row.size(); ++cellIndex) {
+                const auto& pattern = row[cellIndex];
+                if (!pattern.replacement.has_value()) {
+                    continue;
+                }
+                if (replacementGuaranteedNoop(game, *pattern.replacement, pattern)) {
+                    continue;
+                }
+                if (!firstReplacement) {
+                    out << ",";
+                }
+                firstReplacement = false;
+                const auto& repl = *pattern.replacement;
+                const bool touchesObjects =
+                    maskHasAnyBit(game, repl.objectsClear, game.wordCount)
+                    || maskHasAnyBit(game, repl.objectsSet, game.wordCount)
+                    || repl.hasRandomEntityMask;
+                const bool touchesMovements =
+                    maskHasAnyBit(game, repl.movementsClear, game.movementWordCount)
+                    || maskHasAnyBit(game, repl.movementsSet, game.movementWordCount)
+                    || repl.hasMovementsLayerMask
+                    || repl.hasRandomDirMask;
+                const bool touchesRandom = repl.hasRandomEntityMask || repl.hasRandomDirMask;
+                out << "{\"row_index\":" << rowIndex
+                    << ",\"cell_index\":" << cellIndex
+                    << ",\"touches_objects\":" << (touchesObjects ? "true" : "false")
+                    << ",\"touches_movements\":" << (touchesMovements ? "true" : "false")
+                    << ",\"touches_movements_layer\":" << (repl.hasMovementsLayerMask ? "true" : "false")
+                    << ",\"touches_random\":" << (touchesRandom ? "true" : "false")
+                    << ",\"touches_random_entity\":" << (repl.hasRandomEntityMask ? "true" : "false")
+                    << ",\"touches_random_dir\":" << (repl.hasRandomDirMask ? "true" : "false")
+                    << ",\"touches_rigid\":" << ((rule.rigid && touchesMovements) ? "true" : "false")
+                    << ",\"objects_clear_ids\":";
+                appendObjectIdsFromMask(out, game, repl.objectsClear);
+                out << ",\"objects_set_ids\":";
+                appendObjectIdsFromMask(out, game, repl.objectsSet);
+                out << ",\"movements_clear_bits\":";
+                appendMovementBitPairs(out, game, repl.movementsClear);
+                out << ",\"movements_set_bits\":";
+                appendMovementBitPairs(out, game, repl.movementsSet);
+                out << ",\"movements_layer_bits\":";
+                appendMovementBitPairs(out, game, repl.movementsLayerMask);
+                out << ",\"random_dir_bits\":";
+                appendMovementBitPairs(out, game, repl.randomDirMask);
+                out << ",\"random_entity_object_ids\":";
+                appendObjectIdsFromMask(out, game, repl.randomEntityMask);
+                out << ",\"random_entity_choices\":";
+                appendJsonIntArray(out, repl.randomEntityChoices);
+                out << ",\"random_dir_layers\":";
+                appendJsonIntArray(out, repl.randomDirLayers);
+                out << ",\"movement_layers\":";
+                appendMovementLayersFromMask(out, game, repl.movementsLayerMask);
+                out << "}";
+            }
+        }
+        out << "]}";
+    };
+
+    auto appendGroups = [&](const std::vector<std::vector<puzzlescript::Rule>>& groups, bool late) {
+        out << "[";
+        for (size_t groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
+            if (groupIndex != 0) {
+                out << ",";
+            }
+            out << "[";
+            size_t emittedRuleIndex = 0;
+            for (size_t ruleIndex = 0; ruleIndex < groups[groupIndex].size(); ++ruleIndex) {
+                const auto& rule = groups[groupIndex][ruleIndex];
+                if (ruleImpossible(game, rule)) {
+                    continue;
+                }
+                if (emittedRuleIndex != 0) {
+                    out << ",";
+                }
+                appendRuleEntry(rule, groupIndex, emittedRuleIndex, late);
+                ++emittedRuleIndex;
+            }
+            out << "]";
+        }
+        out << "]";
+    };
+    out << "{\"schema_version\":1,\"rules\":";
+    appendGroups(game.rules, false);
+    out << ",\"late_rules\":";
+    appendGroups(game.lateRules, true);
+    out << "}";
+}
+
 std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
     std::ostringstream out;
     // Emit JSON that is loadable by puzzlescript::loadGameFromJson.
@@ -2964,6 +3339,7 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
     };
     out << "    \"rules\": "; appendRules(game.rules); out << ",\n";
     out << "    \"late_rules\": "; appendRules(game.lateRules); out << ",\n";
+    out << "    \"rule_plan_v1\": "; appendRulePlanJson(out, game); out << ",\n";
     out << "    \"loop_point\": "; appendLoopPointTable(game.loopPoint); out << ",\n";
     out << "    \"late_loop_point\": "; appendLoopPointTable(game.lateLoopPoint); out << "\n";
     out << "  }";

@@ -891,8 +891,24 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             }
             continue;
         }
-        auto arrowIt = std::find(tokens.begin(), tokens.end(), "->");
-        if (arrowIt == tokens.end()) {
+        const bool hasAnyArrowToken = std::find(tokens.begin(), tokens.end(), "->") != tokens.end();
+        auto arrowIt = tokens.end();
+        int32_t arrowSearchBracketDepth = 0;
+        for (auto it = tokens.begin(); it != tokens.end(); ++it) {
+            if (*it == "[") {
+                ++arrowSearchBracketDepth;
+                continue;
+            }
+            if (*it == "]") {
+                --arrowSearchBracketDepth;
+                continue;
+            }
+            if (*it == "->" && arrowSearchBracketDepth == 0) {
+                arrowIt = it;
+                break;
+            }
+        }
+        if (arrowIt == tokens.end() && !hasAnyArrowToken) {
             continue;
         }
 
@@ -1055,11 +1071,15 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             return rows;
         };
 
-        const size_t arrowPos = static_cast<size_t>(std::distance(tokens.begin(), arrowIt));
+        const size_t arrowPos = arrowIt == tokens.end()
+            ? tokens.size()
+            : static_cast<size_t>(std::distance(tokens.begin(), arrowIt));
         const size_t rhsEnd = tokens.size();
         std::vector<puzzlescript::RuleCommand> parsedCommands;
         auto lhsRows = parseSide(cursor, arrowPos, nullptr);
-        auto rhsRows = parseSide(arrowPos + 1, rhsEnd, &parsedCommands);
+        auto rhsRows = arrowPos < tokens.size()
+            ? parseSide(arrowPos + 1, rhsEnd, &parsedCommands)
+            : std::vector<ParsedRow>{};
 
         auto maskTouchesLayer = [&](const puzzlescript::MaskVector& mask, int32_t layer) -> bool {
             if (layer < 0 || layer >= game->layerCount) {

@@ -7,6 +7,174 @@ function bitVecToArray(vec) {
     return Array.from(vec.data);
 }
 
+function bitVecHasBits(vec) {
+    if (!vec || !vec.data) {
+        return false;
+    }
+    return vec.data.some(word => word !== 0);
+}
+
+function bitVecSetIndices(vec, maxIndex) {
+    if (!vec || !vec.data) {
+        return [];
+    }
+    const indices = [];
+    const limit = typeof maxIndex === 'number' ? maxIndex : vec.data.length * 32;
+    for (let wordIndex = 0; wordIndex < vec.data.length; wordIndex++) {
+        let word = vec.data[wordIndex] >>> 0;
+        while (word !== 0) {
+            const bit = Math.clz32(word & -word) ^ 31;
+            const index = wordIndex * 32 + bit;
+            if (index < limit) {
+                indices.push(index);
+            }
+            word &= word - 1;
+        }
+    }
+    return indices;
+}
+
+function bitVecSetLayers(vec, layerCount) {
+    if (!vec || !vec.data) {
+        return [];
+    }
+    return Array.from(new Set(
+        bitVecSetIndices(vec)
+            .map(index => Math.floor(index / 5))
+            .filter(layerIndex => typeof layerCount !== 'number' || layerIndex < layerCount)
+    )).sort((a, b) => a - b);
+}
+
+function bitVecHasIndex(vec, index) {
+    if (!vec || !vec.data || index < 0) {
+        return false;
+    }
+    const wordIndex = index >> 5;
+    const bitIndex = index & 31;
+    if (wordIndex >= vec.data.length) {
+        return false;
+    }
+    return ((vec.data[wordIndex] >>> 0) & (1 << bitIndex)) !== 0;
+}
+
+function bitVecSubsetOf(left, right) {
+    const leftData = left && left.data ? left.data : [];
+    const rightData = right && right.data ? right.data : [];
+    const length = Math.max(leftData.length, rightData.length);
+    for (let index = 0; index < length; index++) {
+        const leftWord = (leftData[index] || 0) >>> 0;
+        const rightWord = (rightData[index] || 0) >>> 0;
+        if ((leftWord & ~rightWord) !== 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function bitVecIntersects(left, right) {
+    const leftData = left && left.data ? left.data : [];
+    const rightData = right && right.data ? right.data : [];
+    const length = Math.max(leftData.length, rightData.length);
+    for (let index = 0; index < length; index++) {
+        if ((((leftData[index] || 0) >>> 0) & ((rightData[index] || 0) >>> 0)) !== 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function objectLayerById(state) {
+    const layers = [];
+    for (const objectEntry of Object.values(state.objects || {})) {
+        layers[objectEntry.id] = objectEntry.layer;
+    }
+    return layers;
+}
+
+function patternImpossible(pattern, state, objectLayers) {
+    if (!pattern || pattern === ellipsisPattern) {
+        return false;
+    }
+    if (bitVecIntersects(pattern.objectsPresent, pattern.objectsMissing) ||
+        bitVecIntersects(pattern.movementsPresent, pattern.movementsMissing)) {
+        return true;
+    }
+    const layersSeen = new Set();
+    for (const objectId of bitVecSetIndices(pattern.objectsPresent, state.objectCount)) {
+        const layer = objectLayers[objectId];
+        if (layer === undefined || layer < 0) {
+            continue;
+        }
+        if (layersSeen.has(layer)) {
+            return true;
+        }
+        layersSeen.add(layer);
+    }
+    return false;
+}
+
+function ruleImpossible(rule, state, objectLayers) {
+    return rule.patterns.some(cellRow =>
+        cellRow.some(pattern => patternImpossible(pattern, state, objectLayers))
+    );
+}
+
+function replacementGuaranteedNoop(replacement, pattern) {
+    if (!replacement || !pattern || pattern === ellipsisPattern) {
+        return false;
+    }
+    if (bitVecHasBits(replacement.objectsSet) ||
+        bitVecHasBits(replacement.movementsSet) ||
+        bitVecHasBits(replacement.movementsLayerMask) ||
+        bitVecHasBits(replacement.randomEntityMask) ||
+        bitVecHasBits(replacement.randomDirMask)) {
+        return false;
+    }
+    return bitVecSubsetOf(replacement.objectsClear, pattern.objectsMissing) &&
+        bitVecSubsetOf(replacement.movementsClear, pattern.movementsMissing);
+}
+
+function movementBitPairs(vec, layerCount) {
+    const pairs = [];
+    const layers = typeof layerCount === 'number' ? layerCount : 0;
+    for (let layerIndex = 0; layerIndex < layers; layerIndex++) {
+        for (let movementBit = 0; movementBit < 5; movementBit++) {
+            if (bitVecHasIndex(vec, layerIndex * 5 + movementBit)) {
+                pairs.push([layerIndex, movementBit]);
+            }
+        }
+    }
+    return pairs;
+}
+
+function orBitVecArrays(vecs) {
+    const result = [];
+    for (const vec of vecs || []) {
+        if (!vec || !vec.data) {
+            continue;
+        }
+        for (let index = 0; index < vec.data.length; index++) {
+            result[index] = (result[index] || 0) | vec.data[index];
+        }
+    }
+    return result;
+}
+
+function directionDeltaHint(direction) {
+    switch (direction) {
+        case 1:
+            return { dx: 0, dy: -1 };
+        case 2:
+            return { dx: 0, dy: 1 };
+        case 4:
+            return { dx: -1, dy: 0 };
+        case 8:
+            return { dx: 1, dy: 0 };
+        default:
+            return { dx: 0, dy: 0 };
+    }
+}
+
 function serializeReplacement(replacement) {
     if (!replacement) {
         return null;
@@ -20,6 +188,121 @@ function serializeReplacement(replacement) {
         random_entity_mask: bitVecToArray(replacement.randomEntityMask),
         random_dir_mask: bitVecToArray(replacement.randomDirMask),
     };
+}
+
+function serializeRulePlanReplacement(rule, rowIndex, cellIndex, pattern, state) {
+    const replacement = pattern.replacement;
+    const layerCount = state.LAYER_COUNT || state.collisionLayers.length;
+    const touchesObjects = bitVecHasBits(replacement.objectsClear) ||
+        bitVecHasBits(replacement.objectsSet) ||
+        bitVecHasBits(replacement.randomEntityMask);
+    const touchesMovements = bitVecHasBits(replacement.movementsClear) ||
+        bitVecHasBits(replacement.movementsSet) ||
+        bitVecHasBits(replacement.movementsLayerMask) ||
+        bitVecHasBits(replacement.randomDirMask);
+    const touchesRandom = bitVecHasBits(replacement.randomEntityMask) ||
+        bitVecHasBits(replacement.randomDirMask);
+
+    return {
+        row_index: rowIndex,
+        cell_index: cellIndex,
+        touches_objects: touchesObjects,
+        touches_movements: touchesMovements,
+        touches_movements_layer: bitVecHasBits(replacement.movementsLayerMask),
+        touches_random: touchesRandom,
+        touches_random_entity: bitVecHasBits(replacement.randomEntityMask),
+        touches_random_dir: bitVecHasBits(replacement.randomDirMask),
+        touches_rigid: Boolean(rule.rigid && touchesMovements),
+        objects_clear_ids: bitVecSetIndices(replacement.objectsClear, state.objectCount),
+        objects_set_ids: bitVecSetIndices(replacement.objectsSet, state.objectCount),
+        movements_clear_bits: movementBitPairs(replacement.movementsClear, layerCount),
+        movements_set_bits: movementBitPairs(replacement.movementsSet, layerCount),
+        movements_layer_bits: movementBitPairs(replacement.movementsLayerMask, layerCount),
+        random_dir_bits: movementBitPairs(replacement.randomDirMask, layerCount),
+        random_entity_object_ids: bitVecSetIndices(replacement.randomEntityMask, state.objectCount),
+        random_entity_choices: bitVecSetIndices(replacement.randomEntityMask, state.objectCount),
+        random_dir_layers: bitVecSetLayers(replacement.randomDirMask, layerCount),
+        movement_layers: bitVecSetLayers(replacement.movementsLayerMask, layerCount),
+    };
+}
+
+function serializeRulePlanRow(rule, rowIndex, state) {
+    const cellRow = rule.patterns[rowIndex] || [];
+    const concreteObjectIds = [];
+    const anyAnchorObjectIds = [];
+    let concreteCellCount = 0;
+    let lastEllipsisIndex = -1;
+
+    for (let cellIndex = 0; cellIndex < cellRow.length; cellIndex++) {
+        const pattern = cellRow[cellIndex];
+        if (pattern === ellipsisPattern) {
+            lastEllipsisIndex = cellIndex;
+            continue;
+        }
+        concreteCellCount++;
+        concreteObjectIds.push(...bitVecSetIndices(pattern.objectsPresent, state.objectCount));
+        for (const anyMask of pattern.anyObjectsPresent || []) {
+            anyAnchorObjectIds.push(bitVecSetIndices(anyMask, state.objectCount));
+        }
+    }
+
+    return {
+        row_index: rowIndex,
+        ellipsis_count: rule.ellipsisCount[rowIndex] || 0,
+        object_ids: bitVecSetIndices(rule.cellRowMasks[rowIndex], state.objectCount),
+        movement_bits: movementBitPairs(rule.cellRowMasks_Movements[rowIndex], state.LAYER_COUNT || state.collisionLayers.length),
+        concrete_anchor_object_ids: Array.from(new Set(concreteObjectIds)).sort((a, b) => a - b),
+        any_anchor_object_ids: anyAnchorObjectIds,
+        concrete_cell_count: concreteCellCount,
+        min_concrete_suffix: lastEllipsisIndex < 0
+            ? concreteCellCount
+            : cellRow.slice(lastEllipsisIndex + 1).filter(pattern => pattern !== ellipsisPattern).length,
+        scan_order: 'x_major',
+    };
+}
+
+function serializeRulePlan(rule, groupIndex, ruleIndex, late, state) {
+    const replacements = [];
+    for (let rowIndex = 0; rowIndex < rule.patterns.length; rowIndex++) {
+        const cellRow = rule.patterns[rowIndex] || [];
+        for (let cellIndex = 0; cellIndex < cellRow.length; cellIndex++) {
+            const pattern = cellRow[cellIndex];
+            if (pattern !== ellipsisPattern && pattern.replacement && !replacementGuaranteedNoop(pattern.replacement, pattern)) {
+                replacements.push(serializeRulePlanReplacement(rule, rowIndex, cellIndex, pattern, state));
+            }
+        }
+    }
+
+    return {
+        rule_index: ruleIndex,
+        group_index: groupIndex,
+        late: Boolean(late),
+        direction: rule.direction,
+        line_number: rule.lineNumber,
+        group_number: rule.groupNumber,
+        rigid: Boolean(rule.rigid),
+        is_random: Boolean(rule.isRandom),
+        has_replacements: Boolean(rule.hasReplacements),
+        delta_hint: directionDeltaHint(rule.direction),
+        rule_object_ids: bitVecSetIndices(rule.ruleMask, state.objectCount),
+        rule_movement_bits: movementBitPairs(
+            rule.ruleMovementMask
+                ? rule.ruleMovementMask
+                : { data: orBitVecArrays(rule.cellRowMasks_Movements) },
+            state.LAYER_COUNT || state.collisionLayers.length
+        ),
+        rows: rule.patterns.map((_, rowIndex) => serializeRulePlanRow(rule, rowIndex, state)),
+        replacements,
+    };
+}
+
+function serializeRulePlanGroups(ruleGroups, late, state) {
+    const objectLayers = objectLayerById(state);
+    return ruleGroups.map((ruleGroup, groupIndex) =>
+        ruleGroup
+            .filter(rule => !ruleImpossible(rule, state, objectLayers))
+            .map((rule, ruleIndex) => serializeRulePlan(rule, groupIndex, ruleIndex, late, state))
+    );
 }
 
 function serializePattern(pattern) {
@@ -188,6 +471,11 @@ function serializeGameState(state) {
         group_number_to_rigid_group_index: state.groupNumber_to_RigidGroupIndex.slice(),
         rules: state.rules.map(ruleGroup => ruleGroup.map(serializeRule)),
         late_rules: state.lateRules.map(ruleGroup => ruleGroup.map(serializeRule)),
+        rule_plan_v1: {
+            schema_version: 1,
+            rules: serializeRulePlanGroups(state.rules, false, state),
+            late_rules: serializeRulePlanGroups(state.lateRules, true, state),
+        },
         loop_point: serializeNumericLookup(state.loopPoint),
         late_loop_point: serializeNumericLookup(state.lateLoopPoint),
         winconditions: state.winconditions.map(condition => ({
