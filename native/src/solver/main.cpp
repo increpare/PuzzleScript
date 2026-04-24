@@ -295,10 +295,10 @@ std::string inputName(ps_input input) {
 
 std::vector<ps_input> solverInputs() {
     return {
-        PS_INPUT_UP,
-        PS_INPUT_LEFT,
-        PS_INPUT_DOWN,
         PS_INPUT_RIGHT,
+        PS_INPUT_UP,
+        PS_INPUT_DOWN,
+        PS_INPUT_LEFT,
         PS_INPUT_ACTION,
     };
 }
