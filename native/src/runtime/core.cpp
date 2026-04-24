@@ -2663,9 +2663,7 @@ std::vector<RowMatch> collectEllipsisRowMatches(
                               lineMovements, static_cast<size_t>(session.game->strideMovement));
     }
 
-    auto availableAlongDirection = [&](int32_t startIndex) {
-        const int32_t x = startIndex / session.liveLevel.height;
-        const int32_t y = startIndex % session.liveLevel.height;
+    auto availableAlongDirection = [&](int32_t x, int32_t y) {
         switch (direction) {
             case 1: return y + 1;
             case 2: return session.liveLevel.height - y;
@@ -2685,47 +2683,50 @@ std::vector<RowMatch> collectEllipsisRowMatches(
     RowMatch& positions = session.ellipsisPositionsScratch;
     positions.clear();
     positions.reserve(static_cast<size_t>(concreteCount));
-    for (int32_t tileIndex = 0; tileIndex < session.liveLevel.width * session.liveLevel.height; ++tileIndex) {
-        addCounter(gRuntimeCounters.ellipsisScans);
-        const int32_t x = tileIndex / session.liveLevel.height;
-        const int32_t y = tileIndex % session.liveLevel.height;
-        const int32_t line = horizontal ? y : x;
-        if (line < 0 || line >= lineCount || !linePossible[static_cast<size_t>(line)]) {
+    for (int32_t x = 0; x < session.liveLevel.width; ++x) {
+        if (!horizontal && (x < 0 || x >= lineCount || !linePossible[static_cast<size_t>(x)])) {
             continue;
         }
-        const int32_t available = availableAlongDirection(tileIndex);
-        if (available < concreteCount) {
-            continue;
-        }
-
-        positions.clear();
-        auto search = [&](auto&& self, int32_t rowIndex, int32_t offset) -> void {
-            if (rowIndex >= static_cast<int32_t>(row.size())) {
-                matches.push_back(positions);
-                return;
+        for (int32_t y = 0; y < session.liveLevel.height; ++y) {
+            if (horizontal && (y < 0 || y >= lineCount || !linePossible[static_cast<size_t>(y)])) {
+                continue;
             }
+            addCounter(gRuntimeCounters.ellipsisScans);
+            const int32_t available = availableAlongDirection(x, y);
+            if (available < concreteCount) {
+                continue;
+            }
+            const int32_t tileIndex = x * session.liveLevel.height + y;
 
-            const Pattern& pattern = row[static_cast<size_t>(rowIndex)];
-            if (pattern.kind == Pattern::Kind::Ellipsis) {
-                const int32_t maxSkip = available - offset - minConcreteSuffix[static_cast<size_t>(rowIndex + 1)];
-                for (int32_t skip = 0; skip <= maxSkip; ++skip) {
-                    self(self, rowIndex + 1, offset + skip);
+            positions.clear();
+            auto search = [&](auto&& self, int32_t rowIndex, int32_t offset) -> void {
+                if (rowIndex >= static_cast<int32_t>(row.size())) {
+                    matches.push_back(positions);
+                    return;
                 }
-                return;
-            }
 
-            if (offset >= available) {
-                return;
-            }
-            const int32_t matchIndex = tileIndex + offset * parallelDelta;
-            if (!matchesPatternAt(session, pattern, matchIndex)) {
-                return;
-            }
-            positions.push_back(matchIndex);
-            self(self, rowIndex + 1, offset + 1);
-            positions.pop_back();
-        };
-        search(search, 0, 0);
+                const Pattern& pattern = row[static_cast<size_t>(rowIndex)];
+                if (pattern.kind == Pattern::Kind::Ellipsis) {
+                    const int32_t maxSkip = available - offset - minConcreteSuffix[static_cast<size_t>(rowIndex + 1)];
+                    for (int32_t skip = 0; skip <= maxSkip; ++skip) {
+                        self(self, rowIndex + 1, offset + skip);
+                    }
+                    return;
+                }
+
+                if (offset >= available) {
+                    return;
+                }
+                const int32_t matchIndex = tileIndex + offset * parallelDelta;
+                if (!matchesPatternAt(session, pattern, matchIndex)) {
+                    return;
+                }
+                positions.push_back(matchIndex);
+                self(self, rowIndex + 1, offset + 1);
+                positions.pop_back();
+            };
+            search(search, 0, 0);
+        }
     }
 
     return matches;
