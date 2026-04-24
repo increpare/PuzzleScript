@@ -932,32 +932,22 @@ Result solveLevel(
     combined.workerId = workerId;
     combined.timing.compileUs = compileUs;
 
-    const TimePoint weightedDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs * 60 / 100));
-    Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::WeightedAStar, std::min(weightedDeadline, deadline), workerId);
-    mergeStats(combined, weighted);
-    if (weighted.status == "solved" || weighted.status == "skipped_message" || weighted.status == "level_error") {
-        weighted.strategy = weighted.status == "solved" ? "weighted-astar" : "portfolio";
-        return finish(weighted);
+    const TimePoint bfsDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 8));
+    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId);
+    mergeStats(combined, bfs);
+    if (bfs.status == "solved" || bfs.status == "skipped_message" || bfs.status == "level_error") {
+        bfs.strategy = bfs.status == "solved" ? "bfs" : "portfolio";
+        return finish(bfs);
     }
 
     if (Clock::now() < deadline) {
-        const TimePoint greedyDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs * 85 / 100));
-        Result greedy = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Greedy, std::min(greedyDeadline, deadline), workerId);
-        mergeStats(combined, greedy);
-        if (greedy.status == "solved" || greedy.status == "level_error") {
-            greedy.strategy = greedy.status == "solved" ? "greedy" : "portfolio";
-            return finish(greedy);
+        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::WeightedAStar, deadline, workerId);
+        mergeStats(combined, weighted);
+        if (weighted.status == "solved" || weighted.status == "level_error") {
+            weighted.strategy = weighted.status == "solved" ? "weighted-astar" : "portfolio";
+            return finish(weighted);
         }
-    }
-
-    if (Clock::now() < deadline) {
-        Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Bfs, deadline, workerId);
-        mergeStats(combined, bfs);
-        if (bfs.status == "solved" || bfs.status == "level_error") {
-            bfs.strategy = bfs.status == "solved" ? "bfs" : "portfolio";
-            return finish(bfs);
-        }
-        combined.status = bfs.status == "exhausted" ? "exhausted" : "timeout";
+        combined.status = weighted.status == "exhausted" ? "exhausted" : "timeout";
     }
 
     return finish(combined);
