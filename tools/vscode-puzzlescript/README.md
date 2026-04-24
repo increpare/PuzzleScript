@@ -9,6 +9,7 @@ This extension reuses PuzzleScript's existing JavaScript editor logic for VS Cod
 - Rule rotation/mirroring completions from `src/js/codemirror/rule-transform.js`.
 - Dynamic decorations for PuzzleScript color tokens, including sprite matrix color indices.
 - Parser diagnostics from the shared JavaScript parser error state.
+- A PuzzleScript debug type for rule-line breakpoints driven by the existing JavaScript runtime.
 
 ## Development
 
@@ -89,3 +90,23 @@ If the extension was packaged from this repository, it should find the shared Pu
 `.puzzlescript` and `.ps` files are registered as PuzzleScript automatically. `.txt` files are handled only when they look like PuzzleScript source, but VS Code may still show them as plain text; use `Change Language Mode` and choose `PuzzleScript` if needed.
 
 The extension intentionally does not use Tree-sitter or the C++ compiler in v1; the browser editor's JavaScript parser and autocomplete code are the source of truth.
+
+## Debugging Games
+
+Open a `.puzzlescript` or `.ps` file, set breakpoints on rule lines, then run `PuzzleScript: Debug Current Game` from the command palette. VS Code will start a `puzzlescript` debug session and verify breakpoints that correspond to compiled rule source lines.
+
+Send inputs with the command palette commands `PuzzleScript Debug: Input Up`, `PuzzleScript Debug: Input Down`, `PuzzleScript Debug: Input Left`, `PuzzleScript Debug: Input Right`, `PuzzleScript Debug: Input Action`, `PuzzleScript Debug: Tick`, `PuzzleScript Debug: Undo`, and `PuzzleScript Debug: Restart`. The debugger pauses when an input applies a rule whose line has a verified breakpoint. `Step Over` advances one captured PuzzleScript rule/runtime snapshot, and `Continue` advances to the next matching breakpoint in the current input transaction.
+
+You can also add a launch configuration:
+
+```json
+{
+  "type": "puzzlescript",
+  "request": "launch",
+  "name": "Debug PuzzleScript",
+  "program": "${file}",
+  "stopOnEntry": false
+}
+```
+
+The debug session uses the existing JavaScript engine and debug timeline machinery. Native C++ debugging is not required for this first breakpoint debugger.

@@ -65,7 +65,12 @@ function installBrowserShims(messageSink) {
     global.forceRegenImages = function() {};
     global.consolePrintFromRule = function() {};
     global.consoleCacheDump = function() {};
-    global.addToDebugTimeline = function() {};
+    global.addToDebugTimeline = function(level, lineNumber) {
+        if (typeof global.__puzzlescriptDebugTimelineSink === 'function') {
+            return global.__puzzlescriptDebugTimelineSink(level, lineNumber);
+        }
+        return '';
+    };
     global.killAudioButton = function() {};
     global.showAudioButton = function() {};
     global.regenSpriteImages = function() {};
@@ -110,6 +115,7 @@ function loadPuzzleScript(options = {}) {
     const srcDir = path.join(__dirname, '..', '..', '..');
     const includeTests = Boolean(options.includeTests);
     const messageSink = installBrowserShims(options.messageSink);
+    global.__puzzlescriptDebugTimelineSink = options.debugTimelineSink || null;
 
     let allCode = 'var exports=undefined; var module=undefined;\n';
     for (const file of SOURCE_FILES) {

@@ -13,6 +13,7 @@
   ],
   "activationEvents": [
     "onLanguage:puzzlescript",
+    "onDebug:puzzlescript",
     "onStartupFinished"
   ],
   "main": "./src/extension.js",
@@ -27,6 +28,98 @@
         }
       }
     },
+    "commands": [
+      {
+        "command": "puzzlescript.debugCurrentGame",
+        "title": "Debug Current Game",
+        "category": "PuzzleScript"
+      },
+      {
+        "command": "puzzlescript.debugInputUp",
+        "title": "Debug: Input Up",
+        "category": "PuzzleScript"
+      },
+      {
+        "command": "puzzlescript.debugInputDown",
+        "title": "Debug: Input Down",
+        "category": "PuzzleScript"
+      },
+      {
+        "command": "puzzlescript.debugInputLeft",
+        "title": "Debug: Input Left",
+        "category": "PuzzleScript"
+      },
+      {
+        "command": "puzzlescript.debugInputRight",
+        "title": "Debug: Input Right",
+        "category": "PuzzleScript"
+      },
+      {
+        "command": "puzzlescript.debugInputAction",
+        "title": "Debug: Input Action",
+        "category": "PuzzleScript"
+      },
+      {
+        "command": "puzzlescript.debugTick",
+        "title": "Debug: Tick",
+        "category": "PuzzleScript"
+      },
+      {
+        "command": "puzzlescript.debugUndo",
+        "title": "Debug: Undo",
+        "category": "PuzzleScript"
+      },
+      {
+        "command": "puzzlescript.debugRestart",
+        "title": "Debug: Restart",
+        "category": "PuzzleScript"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "puzzlescript",
+        "label": "PuzzleScript",
+        "languages": [
+          "puzzlescript"
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "program"
+            ],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Absolute path to the PuzzleScript source file.",
+                "default": "${file}"
+              },
+              "level": {
+                "type": "number",
+                "description": "Optional zero-based level index to load before debugging."
+              },
+              "seed": {
+                "type": "string",
+                "description": "Optional random seed for the debug session."
+              },
+              "stopOnEntry": {
+                "type": "boolean",
+                "description": "Pause immediately after compiling the game.",
+                "default": false
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "puzzlescript",
+            "request": "launch",
+            "name": "Debug PuzzleScript",
+            "program": "${file}",
+            "stopOnEntry": false
+          }
+        ]
+      }
+    ],
     "languages": [
       {
         "id": "puzzlescript",
@@ -76,7 +169,7 @@
     ]
   },
   "scripts": {
-    "test": "node ./test/editor-intelligence.test.js && node ./test/syntax-highlighting.test.js",
+    "test": "node ./test/editor-intelligence.test.js && node ./test/syntax-highlighting.test.js && node ./test/debugger.test.js",
     "test:syntax": "node ./test/syntax-highlighting.test.js",
     "preview:syntax": "node ./scripts/render-highlight-preview.js"
   },

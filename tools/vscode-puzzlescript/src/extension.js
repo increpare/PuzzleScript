@@ -7,6 +7,11 @@ const {
     TOKEN_TYPES,
     TOKEN_MODIFIERS,
 } = require('./puzzlescriptEditorIntelligence');
+const {
+    PuzzleScriptDebugAdapter,
+    PuzzleScriptDebugConfigurationProvider,
+    PuzzleScriptDebugPreview,
+} = require('./puzzlescriptDebugAdapter');
 
 const DOCUMENT_SELECTOR = [
     { language: 'puzzlescript' },
@@ -17,12 +22,16 @@ const DOCUMENT_SELECTOR = [
 
 const semanticLegend = new vscode.SemanticTokensLegend(TOKEN_TYPES, TOKEN_MODIFIERS);
 
-function createIntelligence(context) {
+function resolveRepoRoot(context) {
     const config = vscode.workspace.getConfiguration('puzzlescript');
     const configuredRoot = config.get('repoRoot');
-    const repoRoot = configuredRoot && String(configuredRoot).trim()
+    return configuredRoot && String(configuredRoot).trim()
         ? String(configuredRoot)
         : path.resolve(context.extensionPath, '..', '..');
+}
+
+function createIntelligence(context) {
+    const repoRoot = resolveRepoRoot(context);
     return new PuzzleScriptEditorIntelligence({ repoRoot });
 }
 
@@ -212,6 +221,15 @@ function activate(context) {
     const intelligence = createIntelligence(context);
     const diagnostics = vscode.languages.createDiagnosticCollection('puzzlescript');
     const decorations = new PuzzleScriptDecorations(intelligence);
+    const debugPreview = new PuzzleScriptDebugPreview(context);
+    let activeDebugAdapter = null;
+    const sendDebugInput = token => {
+        if (!activeDebugAdapter) {
+            vscode.window.showWarningMessage('Start a PuzzleScript debug session before sending debug inputs.');
+            return;
+        }
+        activeDebugAdapter.acceptInput(token);
+    };
 
     const refreshDocument = document => {
         refreshDiagnostics(document, intelligence, diagnostics);
@@ -243,11 +261,53 @@ function activate(context) {
         ),
         vscode.workspace.onDidOpenTextDocument(refreshDocument),
         vscode.workspace.onDidChangeTextDocument(event => refreshDocument(event.document)),
+        vscode.debug.onDidTerminateDebugSession(() => {
+            activeDebugAdapter = null;
+        }),
         vscode.window.onDidChangeVisibleTextEditors(editors => {
             for (const editor of editors) {
                 decorations.update(editor);
             }
-        })
+        }),
+        debugPreview,
+        vscode.debug.registerDebugConfigurationProvider(
+            'puzzlescript',
+            new PuzzleScriptDebugConfigurationProvider()
+        ),
+        vscode.debug.registerDebugAdapterDescriptorFactory('puzzlescript', {
+            createDebugAdapterDescriptor() {
+                activeDebugAdapter = new PuzzleScriptDebugAdapter({
+                    context,
+                    repoRoot: resolveRepoRoot(context),
+                    preview: debugPreview,
+                });
+                return new vscode.DebugAdapterInlineImplementation(activeDebugAdapter);
+            }
+        }),
+        vscode.commands.registerCommand('puzzlescript.debugCurrentGame', async () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor || !shouldHandleDocument(editor.document, intelligence) || editor.document.uri.scheme !== 'file') {
+                vscode.window.showWarningMessage('Open a PuzzleScript file before starting the PuzzleScript debugger.');
+                return;
+            }
+            const folder = vscode.workspace.getWorkspaceFolder(editor.document.uri);
+            await vscode.debug.startDebugging(folder, {
+                type: 'puzzlescript',
+                request: 'launch',
+                name: 'Debug PuzzleScript',
+                program: editor.document.uri.fsPath,
+                source: editor.document.getText(),
+                stopOnEntry: false,
+            });
+        }),
+        vscode.commands.registerCommand('puzzlescript.debugInputUp', () => sendDebugInput('up')),
+        vscode.commands.registerCommand('puzzlescript.debugInputDown', () => sendDebugInput('down')),
+        vscode.commands.registerCommand('puzzlescript.debugInputLeft', () => sendDebugInput('left')),
+        vscode.commands.registerCommand('puzzlescript.debugInputRight', () => sendDebugInput('right')),
+        vscode.commands.registerCommand('puzzlescript.debugInputAction', () => sendDebugInput('action')),
+        vscode.commands.registerCommand('puzzlescript.debugTick', () => sendDebugInput('tick')),
+        vscode.commands.registerCommand('puzzlescript.debugUndo', () => sendDebugInput('undo')),
+        vscode.commands.registerCommand('puzzlescript.debugRestart', () => sendDebugInput('restart'))
     );
 
     for (const document of vscode.workspace.textDocuments) {
