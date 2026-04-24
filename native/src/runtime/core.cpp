@@ -2453,7 +2453,10 @@ bool collectAnchoredRowMatchesInto(
         }
     }
 
-    if (matches.size() > 1) {
+    const bool needsSortAndUnique = horizontal
+        || anchor->objectIds == nullptr
+        || anchor->objectIds->size() > 1;
+    if (needsSortAndUnique && matches.size() > 1) {
         std::sort(matches.begin(), matches.end(), [horizontal, height](int32_t lhs, int32_t rhs) {
             if (!horizontal) {
                 return lhs < rhs;
