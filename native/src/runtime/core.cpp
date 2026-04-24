@@ -2561,7 +2561,8 @@ bool ruleCanPossiblyMatch(const Session& session, const Rule& rule) {
 
 RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandState& commands) {
     addCounter(gRuntimeCounters.rulesVisited);
-    if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+    const bool logRule = ruleDebugLineFilterMatches(rule.lineNumber);
+    if (logRule) {
         std::ostringstream stream;
         stream << "line=" << rule.lineNumber
                << " begin direction=" << rule.direction
@@ -2570,7 +2571,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
         ruleDebugLog(stream.str());
     }
     if (rule.isRandom || rule.patterns.empty()) {
-        if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+        if (logRule) {
             std::ostringstream stream;
             stream << "line=" << rule.lineNumber << " skip reason="
                    << (rule.isRandom ? "random" : "empty-patterns");
@@ -2580,7 +2581,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
     }
     if (!ruleCanPossiblyMatch(session, rule)) {
         addCounter(gRuntimeCounters.rulesSkippedByMask);
-        if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+        if (logRule) {
             std::ostringstream stream;
             stream << "line=" << rule.lineNumber
                    << " skip reason=rule-mask"
@@ -2593,7 +2594,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
     const auto [dx, dy] = directionMaskToDelta(rule.direction);
     const int32_t delta = dx * session.liveLevel.height + dy;
     if (delta == 0) {
-        if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+        if (logRule) {
             std::ostringstream stream;
             stream << "line=" << rule.lineNumber << " skip reason=delta-zero";
             ruleDebugLog(stream.str());
@@ -2628,7 +2629,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                                   rowMovementMask, rowMovementMaskWords,
                                   matches);
             if (matches.empty()) {
-                if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                if (logRule) {
                     const std::vector<int32_t> rowObjectMaskCopy = arenaCopy(game, rowObjectOffset, game.wordCount);
                     const std::vector<int32_t> rowMovementMaskCopy = rowMovementMask != nullptr
                         ? arenaCopy(game, rowMovementOffset, game.movementWordCount)
@@ -2643,7 +2644,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                 return {};
             }
             matched = true;
-            if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+            if (logRule) {
                 std::ostringstream stream;
                 stream << "line=" << rule.lineNumber
                        << " row=0 matches=" << matches.size()
@@ -2672,7 +2673,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                                                      rowObjectMask, game.wordCount,
                                                      rowMovementMask, rowMovementMaskWords);
             if (matches.empty()) {
-                if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                if (logRule) {
                     std::ostringstream stream;
                     stream << "line=" << rule.lineNumber
                            << " row=0 matches=0 ellipsis=" << ellipsisCount;
@@ -2681,7 +2682,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                 return {};
             }
             matched = true;
-            if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+            if (logRule) {
                 std::ostringstream stream;
                 stream << "line=" << rule.lineNumber
                        << " row=0 matches=" << matches.size()
@@ -2700,15 +2701,11 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
         if (matched) {
             queueRuleCommands(rule, commands);
         }
-        if (changed) {
+        if (ruleDebugEnabled()) {
             std::ostringstream stream;
             stream << "line=" << rule.lineNumber
-                   << " matched=1 changed=1 row_count=1";
-            ruleDebugLog(stream.str());
-        } else if (ruleDebugEnabled()) {
-            std::ostringstream stream;
-            stream << "line=" << rule.lineNumber
-                   << " matched=1 changed=0 row_count=1";
+                   << " matched=1 changed=" << (changed ? 1 : 0)
+                   << " row_count=1";
             ruleDebugLog(stream.str());
         }
         return RuleApplyOutcome{changed, changed};
@@ -2738,7 +2735,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                                              rowObjectMask, rowObjectMaskWords,
                                              rowMovementMask, rowMovementMaskWords);
             if (matches.empty()) {
-                if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                if (logRule) {
                     const std::vector<int32_t> rowObjectMaskCopy = arenaCopy(game, rowObjectOffset, game.wordCount);
                     const std::vector<int32_t> rowMovementMaskCopy = rowMovementMask != nullptr
                         ? arenaCopy(game, rowMovementOffset, game.movementWordCount)
@@ -2753,7 +2750,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                 }
                 return {};
             }
-            if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+            if (logRule) {
                 std::ostringstream stream;
                 stream << "line=" << rule.lineNumber
                        << " row=" << rowIndex
@@ -2782,7 +2779,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                                                      rowObjectMask, game.wordCount,
                                                      rowMovementMask, rowMovementMaskWords);
             if (matches.empty()) {
-                if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+                if (logRule) {
                     std::ostringstream stream;
                     stream << "line=" << rule.lineNumber
                            << " row=" << rowIndex
@@ -2791,7 +2788,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
                 }
                 return {};
             }
-            if (ruleDebugLineFilterMatches(rule.lineNumber)) {
+            if (logRule) {
                 std::ostringstream stream;
                 stream << "line=" << rule.lineNumber
                        << " row=" << rowIndex
@@ -2850,15 +2847,11 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
     // but still when the row matched (matches.length > 0 there).
     queueRuleCommands(rule, commands);
 
-    if (changed) {
+    if (ruleDebugEnabled()) {
         std::ostringstream stream;
         stream << "line=" << rule.lineNumber
-               << " matched=1 changed=1 row_count=" << rule.patterns.size();
-        ruleDebugLog(stream.str());
-    } else if (ruleDebugEnabled()) {
-        std::ostringstream stream;
-        stream << "line=" << rule.lineNumber
-               << " matched=1 changed=0 row_count=" << rule.patterns.size();
+               << " matched=1 changed=" << (changed ? 1 : 0)
+               << " row_count=" << rule.patterns.size();
         ruleDebugLog(stream.str());
     }
     // JS returns whether any replacement ran; `matched` is used only for logging here.
