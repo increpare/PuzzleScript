@@ -3908,7 +3908,7 @@ void printCompileHelp() {
 void printTestHelp() {
     std::cout
         << "Usage: puzzlescript_cpp test js-parity generated-js-parity-data.json [options]\n"
-        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--repeat N] [--jobs N|auto] [--quiet]\n"
+        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--quiet]\n"
         << "       puzzlescript_cpp test diagnostics-corpus src/tests/resources/errormessage_testdata.js [--progress-every N]\n"
         << "       puzzlescript_cpp test diagnostics parser-corpus.bundle.ndjson\n\n"
         << "simulation-corpus and diagnostics-corpus read the original testdata.js and\n"
@@ -3917,6 +3917,8 @@ void printTestHelp() {
         << "from the original JavaScript implementation for deeper runtime trace checks.\n\n"
         << "simulation-corpus profiling reports source compile/load/replay/serialize timings\n"
         << "plus runtime counters for rule scans, pattern tests, replacements, and mask rebuilds.\n\n"
+        << "For optimization work, --top-slow-cases lists the slowest games by phase, and\n"
+        << "--case-index/--case-name reruns one slow case with counters and repeats.\n\n"
         << "Usually use the Makefile wrappers:\n"
         << "  make js_parity_tests\n"
         << "  make simulation_tests\n"
@@ -3928,13 +3930,16 @@ void printTestHelp() {
 
 void printProfileHelp() {
     std::cout
-        << "Usage: puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --profile-timers [--repeat N] [--jobs N|auto] [--quiet]\n"
+        << "Usage: puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --profile-timers [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--quiet]\n"
         << "       puzzlescript_cpp profile-simulations generated-js-parity-data.json [--repeat N] [--profile-timers] [--quiet]\n\n"
         << "The direct simulation-corpus profiler is the current performance north star: it\n"
         << "parses testdata.js directly, compiles games natively, replays inputs, and splits\n"
         << "time into source compile, session creation, replay, serialization, and runtime\n"
         << "rule counters. profile-simulations remains available for generated JS parity\n"
         << "replay data when debugging trace-level behavior.\n\n"
+        << "Examples:\n"
+        << "  puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --jobs 1 --top-slow-cases 10\n"
+        << "  puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --case-index 155 --repeat 5 --profile-timers\n\n"
         << "Usually use:\n"
         << "  make profile_simulation_tests\n";
 }
