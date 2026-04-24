@@ -17,6 +17,7 @@
 
 namespace puzzlescript {
 void runRulesOnLevelStart(Session& session);
+void runRulesOnLevelStart(Session& session, RuntimeStepOptions options);
 namespace {
 
 void rebuildMasks(Session& session);
@@ -61,6 +62,8 @@ struct MovementResolveOutcome {
 
 struct ExecuteTurnOptions {
     bool pushUndo = true;
+    bool recordRestartUndo = true;
+    bool emitAudio = true;
     bool ignoreRestartCommand = false;
     bool ignoreWin = false;
     bool dontModify = false;
@@ -382,7 +385,7 @@ void tryPlaySimpleSound(Session& session, std::string_view soundName) {
     appendUiAudioEvent(session, it->second, "ui");
 }
 
-void processOutputCommands(Session& session, const CommandState& commands, bool suppressMessages = false) {
+void processOutputCommands(Session& session, const CommandState& commands, bool suppressMessages = false, bool emitAudio = true) {
     for (const auto& command : commands.queue) {
         if (command == "message") {
             if (suppressMessages || session.suppressRuleMessages) {
@@ -392,9 +395,13 @@ void processOutputCommands(Session& session, const CommandState& commands, bool 
             session.preparedSession.textMode = true;
             session.preparedSession.titleScreen = false;
             session.preparedSession.messageSelected = false;
-            tryPlaySimpleSound(session, "showmessage");
+            if (emitAudio) {
+                tryPlaySimpleSound(session, "showmessage");
+            }
         } else if (command.size() >= 3 && command[0] == 's' && command[1] == 'f' && command[2] == 'x') {
-            tryPlaySimpleSound(session, command);
+            if (emitAudio) {
+                tryPlaySimpleSound(session, command);
+            }
         }
     }
 }
@@ -1701,7 +1708,7 @@ std::vector<int32_t> collectPlayerPositions(const Session& session) {
     return positions;
 }
 
-bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer, int32_t directionMask) {
+bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer, int32_t directionMask, bool emitAudio) {
     const auto [dx, dy] = directionMaskToDelta(directionMask);
     const int32_t x = tileIndex / session.liveLevel.height;
     const int32_t y = tileIndex % session.liveLevel.height;
@@ -1729,7 +1736,7 @@ bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer,
         targetMask[word] |= movingEntities[word];
     }
 
-    if (static_cast<size_t>(layer) < game.sfxMovementMasks.size()) {
+    if (emitAudio && static_cast<size_t>(layer) < game.sfxMovementMasks.size()) {
         for (const auto& entry : game.sfxMovementMasks[static_cast<size_t>(layer)]) {
             const MaskWord* entryObjectMask = maskPtr(game, entry.objectMask);
             if (entryObjectMask == nullptr) continue;
@@ -1765,7 +1772,7 @@ bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer,
     return true;
 }
 
-MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* bannedGroups) {
+MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* bannedGroups, bool emitAudio) {
     MovementResolveOutcome outcome;
     bool moved = true;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
@@ -1889,7 +1896,7 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
                         continue;
                     }
                 }
-                if (resolveOneLayerMovement(session, tileIndex, layer, layerMovement)) {
+                if (resolveOneLayerMovement(session, tileIndex, layer, layerMovement, emitAudio)) {
                     clearShiftedMask5(movementMask, 5 * layer);
                     moved = true;
                     outcome.moved = true;
@@ -1948,7 +1955,7 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
             }
         }
 
-        if (!session.game->sfxMovementFailureMasks.empty()) {
+        if (emitAudio && !session.game->sfxMovementFailureMasks.empty()) {
             const Game& game = *session.game;
             const MaskVector cellMask = getCellObjects(session, tileIndex);
             for (const auto& entry : game.sfxMovementFailureMasks) {
@@ -3931,7 +3938,8 @@ void resetToPrepared(Session& session) {
 } // namespace
 
 void runRulesOnLevelStart(Session& session);
-bool wouldAgainChange(Session& session, bool* outWouldModify = nullptr);
+void runRulesOnLevelStart(Session& session, RuntimeStepOptions options);
+bool wouldAgainChange(Session& session, bool* outWouldModify = nullptr, bool emitAudio = true);
 void settlePendingAgain(Session& session);
 
 std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_ptr<const Game>& outGame) {
@@ -4165,14 +4173,20 @@ std::unique_ptr<Error> advanceLevel(Session& session) {
     return nullptr;
 }
 
-bool restart(Session& session) {
+bool restart(Session& session, RuntimeStepOptions options) {
     if (session.game->metadataMap.find("norestart") != session.game->metadataMap.end()) {
         return true;
     }
-    pushUndoSnapshot(session);
+    if (options.playableUndo) {
+        pushUndoSnapshot(session);
+    }
     restoreRestartTarget(session);
-    runRulesOnLevelStart(session);
+    runRulesOnLevelStart(session, options);
     return true;
+}
+
+bool restart(Session& session) {
+    return restart(session, RuntimeStepOptions{});
 }
 
 bool undo(Session& session) {
@@ -4308,6 +4322,10 @@ void discardTopUndoSnapshot(Session& session) {
 ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnOptions options);
 
 void runRulesOnLevelStart(Session& session) {
+    runRulesOnLevelStart(session, RuntimeStepOptions{});
+}
+
+void runRulesOnLevelStart(Session& session, RuntimeStepOptions options) {
     if (session.game->metadataMap.find("run_rules_on_level_start") == session.game->metadataMap.end()) {
         return;
     }
@@ -4315,17 +4333,20 @@ void runRulesOnLevelStart(Session& session) {
     session.pendingAgain = false;
     (void)executeTurn(session, 0, ExecuteTurnOptions{
         .pushUndo = false,
+        .recordRestartUndo = options.playableUndo,
+        .emitAudio = options.emitAudio,
         .ignoreRestartCommand = true,
         .ignoreWin = true,
     });
 }
 
-bool wouldAgainChange(Session& session, bool* outWouldModify) {
+bool wouldAgainChange(Session& session, bool* outWouldModify, bool emitAudio) {
     const uint64_t beforeHash = hashSession64(session);
     session.pendingAgain = false;
     bool wouldModify = false;
     const ps_step_result result = executeTurn(session, 0, ExecuteTurnOptions{
         .pushUndo = false,
+        .emitAudio = emitAudio,
         .ignoreWin = true,
         .dontModify = true,
         .observedModification = &wouldModify,
@@ -4388,7 +4409,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         rebuildMasks(session);
         const bool ruleChangedThisPass = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands, &bannedGroups);
         dumpActiveMovements(session, "pre-resolve");
-        const MovementResolveOutcome movementOutcome = resolveMovements(session, &bannedGroups);
+        const MovementResolveOutcome movementOutcome = resolveMovements(session, &bannedGroups, options.emitAudio);
         rebuildMasks(session);
         if (rigidDebugEnabled()) {
             std::ostringstream stream;
@@ -4453,13 +4474,15 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
             discardTopUndoSnapshot(session);
         }
         session.lastAudioEvents.clear();
-        if (!options.dontModify) {
+        if (!options.dontModify && options.emitAudio) {
             tryPlaySimpleSound(session, "cancel");
         }
         result.changed = options.dontModify
             ? commands.queue.size() > 1
             : (modified || !commands.queue.empty());
-        sortAudioEvents(session);
+        if (options.emitAudio) {
+            sortAudioEvents(session);
+        }
         result.audio_event_count = session.lastAudioEvents.size();
         result.audio_events = session.lastAudioEvents.empty() ? nullptr : session.lastAudioEvents.data();
         result.ui_audio_event_count = session.lastUiAudioEvents.size();
@@ -4480,17 +4503,24 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         return result;
     }
 
-    tryPlayMaskSounds(session, session.game->sfxCreationMasks, session.pendingCreateMask, "create");
-    tryPlayMaskSounds(session, session.game->sfxDestructionMasks, session.pendingDestroyMask, "destroy");
-    processOutputCommands(session, commands, commandQueueContains(commands, "restart"));
+    if (options.emitAudio) {
+        tryPlayMaskSounds(session, session.game->sfxCreationMasks, session.pendingCreateMask, "create");
+        tryPlayMaskSounds(session, session.game->sfxDestructionMasks, session.pendingDestroyMask, "destroy");
+    }
+    processOutputCommands(session, commands, commandQueueContains(commands, "restart"), options.emitAudio);
 
     if (commandQueueContains(commands, "restart") && !options.ignoreRestartCommand) {
-        if (!options.pushUndo) {
+        if (!options.pushUndo && options.recordRestartUndo) {
             pushUndoSnapshot(session);
         }
         restoreRestartTarget(session);
-        runRulesOnLevelStart(session);
-        tryPlaySimpleSound(session, "restart");
+        runRulesOnLevelStart(session, RuntimeStepOptions{
+            .playableUndo = options.recordRestartUndo,
+            .emitAudio = options.emitAudio,
+        });
+        if (options.emitAudio) {
+            tryPlaySimpleSound(session, "restart");
+        }
     }
 
     const bool won = !options.ignoreWin && (commandQueueContains(commands, "win") || evaluateWinConditions(session));
@@ -4510,8 +4540,10 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     bool againWouldModify = false;
     if (!won && hasAgain && modified) {
         const auto audioBeforeAgainProbe = session.lastAudioEvents;
-        againWouldChange = wouldAgainChange(session, &againWouldModify);
-        session.lastAudioEvents = audioBeforeAgainProbe;
+        againWouldChange = wouldAgainChange(session, &againWouldModify, options.emitAudio);
+        if (options.emitAudio) {
+            session.lastAudioEvents = audioBeforeAgainProbe;
+        }
     }
     if (ruleDebugEnabled()) {
         std::ostringstream stream;
@@ -4551,7 +4583,9 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     result.changed = seeded || ruleChanged || moved || lateRuleChanged || modified || transitioned || !commands.queue.empty();
     result.transitioned = transitioned;
     result.won = won;
-    sortAudioEvents(session);
+    if (options.emitAudio) {
+        sortAudioEvents(session);
+    }
     result.audio_event_count = session.lastAudioEvents.size();
     result.audio_events = session.lastAudioEvents.empty() ? nullptr : session.lastAudioEvents.data();
     result.ui_audio_event_count = session.lastUiAudioEvents.size();
@@ -4577,7 +4611,7 @@ size_t listInputs(ps_input* output, size_t capacity) {
     return total;
 }
 
-ps_step_result step(Session& session, ps_input input) {
+ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options) {
     ps_step_result result{};
     session.lastAudioEvents.clear();
     session.lastUiAudioEvents.clear();
@@ -4591,7 +4625,9 @@ ps_step_result step(Session& session, ps_input input) {
             result.transitioned = true;
             rebuildMasks(session);
         }
-        tryPlaySimpleSound(session, "closemessage");
+        if (options.emitAudio) {
+            tryPlaySimpleSound(session, "closemessage");
+        }
         result.changed = true;
         result.ui_audio_event_count = session.lastUiAudioEvents.size();
         result.ui_audio_events = session.lastUiAudioEvents.empty() ? nullptr : session.lastUiAudioEvents.data();
@@ -4610,21 +4646,41 @@ ps_step_result step(Session& session, ps_input input) {
     }
 
     if (input == PS_INPUT_TICK) {
-        return tick(session);
+        return tick(session, options);
     }
 
-    return executeTurn(session, inputToDirectionMask(input), ExecuteTurnOptions{});
+    return executeTurn(session, inputToDirectionMask(input), ExecuteTurnOptions{
+        .pushUndo = options.playableUndo,
+        .recordRestartUndo = options.playableUndo,
+        .emitAudio = options.emitAudio,
+    });
+}
+
+ps_step_result step(Session& session, ps_input input) {
+    return step(session, input, RuntimeStepOptions{});
+}
+
+ps_step_result tick(Session& session, RuntimeStepOptions options) {
+    return executeTurn(session, 0, ExecuteTurnOptions{
+        .pushUndo = false,
+        .recordRestartUndo = options.playableUndo,
+        .emitAudio = options.emitAudio,
+    });
 }
 
 ps_step_result tick(Session& session) {
-    return executeTurn(session, 0, ExecuteTurnOptions{.pushUndo = false});
+    return tick(session, RuntimeStepOptions{});
+}
+
+void settlePendingAgain(Session& session, RuntimeStepOptions options) {
+    constexpr int kMaxAgainIterations = 500;
+    for (int iteration = 0; iteration < kMaxAgainIterations && session.pendingAgain; ++iteration) {
+        (void)tick(session, options);
+    }
 }
 
 void settlePendingAgain(Session& session) {
-    constexpr int kMaxAgainIterations = 500;
-    for (int iteration = 0; iteration < kMaxAgainIterations && session.pendingAgain; ++iteration) {
-        (void)tick(session);
-    }
+    settlePendingAgain(session, RuntimeStepOptions{});
 }
 
 std::unique_ptr<Error> benchmarkCloneHash(const Session& session, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult) {

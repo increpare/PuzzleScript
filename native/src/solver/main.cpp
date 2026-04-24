@@ -776,8 +776,12 @@ Result runSearch(
             ps_step_result stepResult{};
             {
                 ScopedTimer timer(result.timing.stepUs);
-                stepResult = puzzlescript::step(*child, input);
-                puzzlescript::settlePendingAgain(*child);
+                constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
+                    .playableUndo = false,
+                    .emitAudio = false,
+                };
+                stepResult = puzzlescript::step(*child, input, solverStepOptions);
+                puzzlescript::settlePendingAgain(*child, solverStepOptions);
             }
             ++result.generated;
 
