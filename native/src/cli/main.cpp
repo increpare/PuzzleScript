@@ -4408,6 +4408,14 @@ void appendCompiledTickSourceJsonFields(std::ostream& out) {
         << ",\"step_entry\":true"
         << ",\"tick_entry\":true"
         << ",\"fully_generated\":false"
+        << ",\"features\":{"
+        << "\"rule_loops\":\"interpreter\""
+        << ",\"commands\":\"interpreter\""
+        << ",\"movement\":\"interpreter\""
+        << ",\"win_conditions\":\"interpreter\""
+        << ",\"level_transitions\":\"interpreter\""
+        << ",\"state_layout\":\"session\""
+        << "}"
         << ",\"misses\":{\"interpreter_delegation\":1}"
         << "}";
 }
