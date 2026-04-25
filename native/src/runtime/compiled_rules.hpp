@@ -24,6 +24,21 @@ struct CompiledRulesBackend {
     uint32_t compiledGroupCount = 0;
 };
 
+struct CompiledTickApplyOutcome {
+    bool handled = false;
+    ps_step_result result{};
+};
+
+using CompiledTickStepFn = CompiledTickApplyOutcome (*)(Session& session, ps_input input, RuntimeStepOptions options);
+using CompiledTickFn = CompiledTickApplyOutcome (*)(Session& session, RuntimeStepOptions options);
+
+struct CompiledTickBackend {
+    uint64_t sourceHash = 0;
+    const char* name = nullptr;
+    CompiledTickStepFn step = nullptr;
+    CompiledTickFn tick = nullptr;
+};
+
 uint64_t compiledRulesHashSource(std::string_view source);
 void attachLinkedCompiledRules(Game& game, std::string_view source);
 

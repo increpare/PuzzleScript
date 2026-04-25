@@ -4850,7 +4850,11 @@ size_t listInputs(ps_input* output, size_t capacity) {
     return total;
 }
 
-ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options) {
+bool compiledTickDispatchEnabled() {
+    return !ruleDebugEnabled() && !randomDebugEnabled() && !rigidDebugEnabled();
+}
+
+ps_step_result genericStep(Session& session, ps_input input, RuntimeStepOptions options) {
     ps_step_result result{};
     session.lastAudioEvents.clear();
     session.lastUiAudioEvents.clear();
@@ -4885,7 +4889,7 @@ ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options
     }
 
     if (input == PS_INPUT_TICK) {
-        return tick(session, options);
+        return genericTick(session, options);
     }
 
     return executeTurn(session, inputToDirectionMask(input), ExecuteTurnOptions{
@@ -4895,16 +4899,43 @@ ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options
     });
 }
 
-ps_step_result step(Session& session, ps_input input) {
-    return step(session, input, RuntimeStepOptions{});
-}
-
-ps_step_result tick(Session& session, RuntimeStepOptions options) {
+ps_step_result genericTick(Session& session, RuntimeStepOptions options) {
     return executeTurn(session, 0, ExecuteTurnOptions{
         .pushUndo = false,
         .recordRestartUndo = options.playableUndo,
         .emitAudio = options.emitAudio,
     });
+}
+
+ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options) {
+    if (session.game->compiledTick != nullptr
+        && session.game->compiledTick->step != nullptr
+        && compiledTickDispatchEnabled()) {
+        const CompiledTickApplyOutcome outcome = session.game->compiledTick->step(session, input, options);
+        if (outcome.handled) {
+            return outcome.result;
+        }
+    }
+    if (input == PS_INPUT_TICK) {
+        return tick(session, options);
+    }
+    return genericStep(session, input, options);
+}
+
+ps_step_result step(Session& session, ps_input input) {
+    return step(session, input, RuntimeStepOptions{});
+}
+
+ps_step_result tick(Session& session, RuntimeStepOptions options) {
+    if (session.game->compiledTick != nullptr
+        && session.game->compiledTick->tick != nullptr
+        && compiledTickDispatchEnabled()) {
+        const CompiledTickApplyOutcome outcome = session.game->compiledTick->tick(session, options);
+        if (outcome.handled) {
+            return outcome.result;
+        }
+    }
+    return genericTick(session, options);
 }
 
 ps_step_result tick(Session& session) {
