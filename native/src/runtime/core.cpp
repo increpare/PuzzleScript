@@ -4859,7 +4859,7 @@ bool compiledTickDispatchEnabled() {
         && !audioDebugEnabled();
 }
 
-ps_step_result genericStep(Session& session, ps_input input, RuntimeStepOptions options) {
+ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options) {
     ps_step_result result{};
     session.lastAudioEvents.clear();
     session.lastUiAudioEvents.clear();
@@ -4894,7 +4894,7 @@ ps_step_result genericStep(Session& session, ps_input input, RuntimeStepOptions 
     }
 
     if (input == PS_INPUT_TICK) {
-        return genericTick(session, options);
+        return interpreterTick(session, options);
     }
 
     return executeTurn(session, inputToDirectionMask(input), ExecuteTurnOptions{
@@ -4904,7 +4904,7 @@ ps_step_result genericStep(Session& session, ps_input input, RuntimeStepOptions 
     });
 }
 
-ps_step_result genericTick(Session& session, RuntimeStepOptions options) {
+ps_step_result interpreterTick(Session& session, RuntimeStepOptions options) {
     return executeTurn(session, 0, ExecuteTurnOptions{
         .pushUndo = false,
         .recordRestartUndo = options.playableUndo,
@@ -4924,7 +4924,7 @@ ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options
     if (input == PS_INPUT_TICK) {
         return tick(session, options);
     }
-    return genericStep(session, input, options);
+    return interpreterStep(session, input, options);
 }
 
 ps_step_result step(Session& session, ps_input input) {
@@ -4940,7 +4940,7 @@ ps_step_result tick(Session& session, RuntimeStepOptions options) {
             return outcome.result;
         }
     }
-    return genericTick(session, options);
+    return interpreterTick(session, options);
 }
 
 ps_step_result tick(Session& session) {

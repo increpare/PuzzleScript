@@ -4499,7 +4499,8 @@ std::string generateCompiledRulesCpp(
     std::string_view symbol,
     const CompiledRulesOptions& options,
     bool emitGlobalFinder = true,
-    std::string_view backendAccessorSymbol = {}
+    std::string_view backendAccessorSymbol = {},
+    std::string_view tickBackendAccessorSymbol = {}
 ) {
     std::ostringstream out;
     const std::string safeSymbol = safeCppIdentifier(symbol);
@@ -4630,6 +4631,19 @@ std::string generateCompiledRulesCpp(
             << "    " << sourceCompiledRules << "U,\n"
             << "    " << sourceCompiledGroups << "U,\n"
             << "};\n\n";
+
+        out << "CompiledTickApplyOutcome tick_step_source_" << sourceIndex << "(Session& session, ps_input input, RuntimeStepOptions options) {\n"
+            << "    return {true, puzzlescript::interpreterStep(session, input, options)};\n"
+            << "}\n\n"
+            << "CompiledTickApplyOutcome tick_source_" << sourceIndex << "(Session& session, RuntimeStepOptions options) {\n"
+            << "    return {true, puzzlescript::interpreterTick(session, options)};\n"
+            << "}\n\n"
+            << "const CompiledTickBackend tick_backend_" << sourceIndex << " = {\n"
+            << "    " << source.hash << "ULL,\n"
+            << "    " << cppStringLiteral(source.path.string()) << ",\n"
+            << "    tick_step_source_" << sourceIndex << ",\n"
+            << "    tick_source_" << sourceIndex << ",\n"
+            << "};\n\n";
     }
 
     out << "} // namespace\n\n";
@@ -4639,6 +4653,15 @@ std::string generateCompiledRulesCpp(
             << "    switch (sourceHash) {\n";
         for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
             out << "        case " << sources[sourceIndex].hash << "ULL: return &backend_" << sourceIndex << ";\n";
+        }
+        out << "        default: return nullptr;\n"
+            << "    }\n"
+            << "}\n\n";
+        out << "extern \"C\" const puzzlescript::CompiledTickBackend* "
+            << "ps_compiled_tick_find_backend(uint64_t sourceHash) {\n"
+            << "    switch (sourceHash) {\n";
+        for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
+            out << "        case " << sources[sourceIndex].hash << "ULL: return &tick_backend_" << sourceIndex << ";\n";
         }
         out << "        default: return nullptr;\n"
             << "    }\n"
@@ -4656,6 +4679,15 @@ std::string generateCompiledRulesCpp(
             << safeBackendAccessor << "() {\n"
             << "    return &backend_0;\n"
             << "}\n\n";
+        const std::string safeTickBackendAccessor = safeCppIdentifier(
+            tickBackendAccessorSymbol.empty()
+                ? std::string(safeSymbol + "_tick_backend")
+                : std::string(tickBackendAccessorSymbol)
+        );
+        out << "extern \"C\" const puzzlescript::CompiledTickBackend* "
+            << safeTickBackendAccessor << "() {\n"
+            << "    return &tick_backend_0;\n"
+            << "}\n\n";
     }
     out << "extern \"C\" const uint32_t " << safeSymbol << "_compiled_rule_count = " << totalCompiledRules << "U;\n"
         << "extern \"C\" const uint32_t " << safeSymbol << "_compiled_group_count = " << totalCompiledGroups << "U;\n";
@@ -4666,6 +4698,7 @@ std::string generateCompiledRulesRegistryCpp(
     const std::vector<CodegenSource>& sources,
     std::string_view symbol,
     const std::vector<std::string>& backendAccessorSymbols,
+    const std::vector<std::string>& tickBackendAccessorSymbols,
     const CompiledRulesCoverage& coverage
 ) {
     std::ostringstream out;
@@ -4677,12 +4710,26 @@ std::string generateCompiledRulesRegistryCpp(
         out << "extern \"C\" const puzzlescript::CompiledRulesBackend* "
             << safeCppIdentifier(backendSymbol) << "();\n";
     }
+    for (const auto& backendSymbol : tickBackendAccessorSymbols) {
+        out << "extern \"C\" const puzzlescript::CompiledTickBackend* "
+            << safeCppIdentifier(backendSymbol) << "();\n";
+    }
     out << "\nextern \"C\" const puzzlescript::CompiledRulesBackend* "
         << "ps_compiled_rules_find_backend(uint64_t sourceHash) {\n"
         << "    switch (sourceHash) {\n";
     for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
         out << "        case " << sources[sourceIndex].hash << "ULL: return "
             << safeCppIdentifier(backendAccessorSymbols[sourceIndex]) << "();\n";
+    }
+    out << "        default: return nullptr;\n"
+        << "    }\n"
+        << "}\n\n";
+    out << "extern \"C\" const puzzlescript::CompiledTickBackend* "
+        << "ps_compiled_tick_find_backend(uint64_t sourceHash) {\n"
+        << "    switch (sourceHash) {\n";
+    for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
+        out << "        case " << sources[sourceIndex].hash << "ULL: return "
+            << safeCppIdentifier(tickBackendAccessorSymbols[sourceIndex]) << "();\n";
     }
     out << "        default: return nullptr;\n"
         << "    }\n"
@@ -4703,9 +4750,11 @@ uint32_t writeCompiledRulesCppDirectory(
     const std::string safeSymbol = safeCppIdentifier(symbol);
     std::vector<std::filesystem::path> generatedPaths;
     std::vector<std::string> backendAccessorSymbols;
+    std::vector<std::string> tickBackendAccessorSymbols;
     uint32_t wroteCount = 0;
     generatedPaths.reserve(sources.size() + 1);
     backendAccessorSymbols.reserve(sources.size());
+    tickBackendAccessorSymbols.reserve(sources.size());
 
     for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
         std::ostringstream hashHex;
@@ -4714,13 +4763,16 @@ uint32_t writeCompiledRulesCppDirectory(
         const std::filesystem::path cppPath = emitCppDir / ("source_" + hashSuffix + ".cpp");
         const std::string sourceSymbol = safeSymbol + "_source_" + hashSuffix;
         const std::string backendSymbol = safeSymbol + "_backend_" + hashSuffix;
+        const std::string tickBackendSymbol = safeSymbol + "_tick_backend_" + hashSuffix;
         backendAccessorSymbols.push_back(backendSymbol);
+        tickBackendAccessorSymbols.push_back(tickBackendSymbol);
         const std::string generated = generateCompiledRulesCpp(
             std::vector<CodegenSource>{sources[sourceIndex]},
             sourceSymbol,
             options,
             false,
-            backendSymbol
+            backendSymbol,
+            tickBackendSymbol
         );
         if (writeFileIfChanged(cppPath, generated)) {
             ++wroteCount;
@@ -4731,7 +4783,7 @@ uint32_t writeCompiledRulesCppDirectory(
     const std::filesystem::path registryPath = emitCppDir / "registry.cpp";
     if (writeFileIfChanged(
         registryPath,
-        generateCompiledRulesRegistryCpp(sources, symbol, backendAccessorSymbols, coverage)
+        generateCompiledRulesRegistryCpp(sources, symbol, backendAccessorSymbols, tickBackendAccessorSymbols, coverage)
     )) {
         ++wroteCount;
     }

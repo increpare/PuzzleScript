@@ -439,8 +439,8 @@ struct RuntimeStepOptions {
 
 std::unique_ptr<Error> loadLevelTemplate(Session& session, const LevelTemplate& levelTemplate, int32_t levelIndex, RuntimeStepOptions options);
 bool restart(Session& session, RuntimeStepOptions options);
-ps_step_result genericStep(Session& session, ps_input input, RuntimeStepOptions options);
-ps_step_result genericTick(Session& session, RuntimeStepOptions options);
+ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options);
+ps_step_result interpreterTick(Session& session, RuntimeStepOptions options);
 ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options);
 ps_step_result tick(Session& session, RuntimeStepOptions options);
 void settlePendingAgain(Session& session, RuntimeStepOptions options);
