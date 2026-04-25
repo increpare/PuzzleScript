@@ -3615,9 +3615,6 @@ std::string compiledRuleMissReason(
     if (rule.isRandom && !allowRandomRule) {
         return "random_rule";
     }
-    if (rule.rigid) {
-        return "rigid";
-    }
     if (rule.patterns.empty()) {
         return "empty_row";
     }
@@ -3693,7 +3690,7 @@ bool ruleHasRandomReplacement(const puzzlescript::Rule& rule) {
 }
 
 bool ruleUsesRuntimeRowHelpers(const puzzlescript::Rule& rule) {
-    return ruleHasEllipsis(rule) || ruleHasRandomReplacement(rule);
+    return rule.rigid || ruleHasEllipsis(rule) || ruleHasRandomReplacement(rule);
 }
 
 void emitMaskBitsSetCheck(
