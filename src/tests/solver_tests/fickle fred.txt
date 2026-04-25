@@ -63,6 +63,9 @@ orange
 0...0
 00000
 
+Token
+transparent
+
 =======
 LEGEND
 =======
@@ -91,14 +94,15 @@ COLLISIONLAYERS
 Background
 Target
 Player, Wall, Crate
+Token
 
 ======
 RULES
 ======
 
-
-random [ > PlayerPush | Crate ] -> [ > PlayerPull | > Crate ] 
-+ [ < PlayerPull | crate ] -> [ < PlayerPush | < Crate ]
+[ > PlayerPush | Crate ] -> [ > PlayerPull token | > Crate ] 
+[ < PlayerPull no token | crate ] -> [ < PlayerPush | < Crate ]
+[ Token ] -> []
 
 ==============
 WINCONDITIONS
