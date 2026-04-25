@@ -17,6 +17,7 @@
 
 #include <SDL.h>
 
+#include "player/sfxr.hpp"
 #include "puzzlescript/puzzlescript.h"
 
 #ifndef PS_FONT_JS_PATH
@@ -27,7 +28,9 @@ namespace {
 
 constexpr int kTerminalWidth = 34;
 constexpr int kTerminalHeight = 13;
-constexpr double kPi = 3.14159265358979323846;
+constexpr int kSfxrSampleRate = 22050;
+constexpr int kTextCellPixelWidth = 6;
+constexpr int kTextCellPixelHeight = 13;
 constexpr const char* kBlankRow = "..................................";
 
 const char* kIntroTemplate[kTerminalHeight] = {
@@ -244,7 +247,7 @@ struct Audio {
 
     bool init() {
         SDL_AudioSpec want{};
-        want.freq = 44100;
+        want.freq = kSfxrSampleRate;
         want.format = AUDIO_F32SYS;
         want.channels = 1;
         want.samples = 1024;
@@ -263,19 +266,7 @@ struct Audio {
         }
         auto [it, inserted] = cache.emplace(seed, std::vector<float>{});
         if (inserted) {
-            const int length = std::max(1, spec.freq / 6);
-            it->second.resize(static_cast<size_t>(length));
-            const double base = 160.0 + static_cast<double>(std::abs(seed) % 1200);
-            const double wave = (seed % 3 == 0) ? 0.5 : 1.0;
-            for (int i = 0; i < length; ++i) {
-                const double t = static_cast<double>(i) / static_cast<double>(spec.freq);
-                const double env = std::sin((static_cast<double>(i) / length) * kPi);
-                double sample = std::sin(2.0 * kPi * base * t);
-                if (wave == 0.5) {
-                    sample = sample >= 0.0 ? 1.0 : -1.0;
-                }
-                it->second[static_cast<size_t>(i)] = static_cast<float>(sample * env * 0.18);
-            }
+            it->second = puzzlescript::player::generateSfxrFromSeed(seed, spec.freq);
         }
         SDL_QueueAudio(device, it->second.data(), static_cast<Uint32>(it->second.size() * sizeof(float)));
     }
@@ -522,18 +513,18 @@ std::vector<std::string> generateTitleRows(Player& player, Uint32 now) {
     if (!titleMode) {
         rows.push_back(kBlankRow);
         selectionRow = static_cast<int>(rows.size());
-        rows.push_back("..........#.start game.#..........");
+        rows.push_back(player.titleSelected ? "-----------.start game.-----------" : "..........#.start game.#..........");
         rows.push_back(kBlankRow);
     } else if (player.titleSelection == 0) {
         selectionRow = static_cast<int>(rows.size());
-        rows.push_back("...........#.new game.#...........");
+        rows.push_back(player.titleSelected ? "------------.new game.------------" : "...........#.new game.#...........");
         rows.push_back(kBlankRow);
         rows.push_back(".............continue.............");
     } else {
         rows.push_back(".............new game.............");
         rows.push_back(kBlankRow);
         selectionRow = static_cast<int>(rows.size());
-        rows.push_back("...........#.continue.#...........");
+        rows.push_back(player.titleSelected ? "------------.continue.------------" : "...........#.continue.#...........");
     }
     rows.push_back(kBlankRow);
     rows.insert(rows.end(), controls.begin(), controls.end());
@@ -584,9 +575,9 @@ std::vector<std::string> generateMessageRows(Player& player) {
 void drawTextRows(SDL_Renderer* renderer, const Player& player, const std::vector<std::string>& rows, Color fg, Color bg, int winW, int winH) {
     setDrawColor(renderer, bg);
     SDL_RenderClear(renderer);
-    const int scale = std::max(1, std::min(winW / (kTerminalWidth * 6), winH / (kTerminalHeight * 12)));
-    const int cellW = 6 * scale;
-    const int cellH = 12 * scale;
+    const int scale = std::max(1, std::min(winW / (kTerminalWidth * kTextCellPixelWidth), winH / (kTerminalHeight * kTextCellPixelHeight)));
+    const int cellW = kTextCellPixelWidth * scale;
+    const int cellH = kTextCellPixelHeight * scale;
     const int x0 = (winW - kTerminalWidth * cellW) / 2;
     const int y0 = (winH - kTerminalHeight * cellH) / 2;
     setDrawColor(renderer, fg);

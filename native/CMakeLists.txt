@@ -190,7 +190,7 @@ target_compile_definitions(puzzlescript_cpp
 )
 
 if(TARGET PkgConfig::SDL2)
-  target_sources(puzzlescript_cpp PRIVATE src/player/sdl_player.cpp)
+  target_sources(puzzlescript_cpp PRIVATE src/player/sdl_player.cpp src/player/sfxr.cpp)
   target_link_libraries(puzzlescript_cpp PRIVATE PkgConfig::SDL2)
   target_compile_definitions(puzzlescript_cpp PRIVATE PS_HAVE_SDL2=1)
 endif()
