@@ -94,6 +94,16 @@ function countersMedian(summary, key) {
     return values[Math.floor(values.length / 2)];
 }
 
+function sampleBoolean(summary, key) {
+    const values = (summary.samples || [])
+        .map((sample) => sample[key])
+        .filter((value) => value !== null && value !== undefined);
+    if (values.length === 0) {
+        return null;
+    }
+    return values.some(Boolean);
+}
+
 function targetRows() {
     const compiledByKey = new Map((compiled.targets || []).map((target) => [targetKey(target), target]));
     return (interpreted.targets || []).map((target) => {
@@ -104,6 +114,8 @@ function targetRows() {
         }
         const compiledRuleHits = countersMedian(compiledTarget, 'compiled_rule_group_hits');
         const compiledTickHits = countersMedian(compiledTarget, 'compiled_tick_hits');
+        const compiledRulesAttached = sampleBoolean(compiledTarget, 'compiled_rules_attached');
+        const compiledTickAttached = sampleBoolean(compiledTarget, 'compiled_tick_attached');
         return {
             key,
             interpreted: target,
@@ -114,6 +126,9 @@ function targetRows() {
             compiledRuleHits,
             compiledTickHits,
             bucket: compiledUsageBucket(compiledTickHits, compiledRuleHits),
+            reason: compiledUsageReason(compiledTickHits, compiledRuleHits, compiledRulesAttached, compiledTickAttached),
+            compiledRulesAttached,
+            compiledTickAttached,
             candidateCells: countersMedian(compiledTarget, 'candidate_cells_tested'),
             rowScans: countersMedian(compiledTarget, 'row_scans'),
             patternTests: countersMedian(compiledTarget, 'pattern_tests'),
@@ -138,16 +153,41 @@ function compiledUsageBucket(compiledTickHits, compiledRuleHits) {
     return 'unknown';
 }
 
+function compiledUsageReason(compiledTickHits, compiledRuleHits, compiledRulesAttached, compiledTickAttached) {
+    if (compiledTickHits === null || compiledRuleHits === null) {
+        return 'runtime_counters_missing';
+    }
+    if (!compiledTickAttached) {
+        return 'compiled_tick_backend_not_attached';
+    }
+    if (!compiledRulesAttached) {
+        return 'compiled_rules_backend_not_attached';
+    }
+    if (compiledTickHits === 0) {
+        return 'compiled_tick_not_called';
+    }
+    if (compiledRuleHits === 0) {
+        return 'compiled_tick_entered_no_rule_group_hits';
+    }
+    return 'compiled_rule_groups_hit';
+}
+
 function printCompiledUsageSummary(rows) {
     const counts = new Map();
+    const reasons = new Map();
     for (const row of rows) {
         counts.set(row.bucket, (counts.get(row.bucket) || 0) + 1);
+        reasons.set(row.reason, (reasons.get(row.reason) || 0) + 1);
     }
     const labels = ['compiled_rules', 'tick_no_rules', 'no_tick_no_rules', 'no_counters', 'unknown'];
     const parts = labels
         .filter((label) => counts.has(label))
         .map((label) => `${label}=${counts.get(label)}`);
     process.stdout.write(`  compiled_usage: ${parts.length === 0 ? 'n/a' : parts.join(' ')}\n`);
+    const reasonParts = Array.from(reasons.entries())
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([reason, count]) => `${reason}=${count}`);
+    process.stdout.write(`  compiled_usage_reasons: ${reasonParts.length === 0 ? 'n/a' : reasonParts.join(' ')}\n`);
 }
 
 function printTargetTable(label, rows) {
@@ -158,6 +198,7 @@ function printTargetTable(label, rows) {
             ` wall=${formatNumber(row.wallRatio, 3)}x` +
             ` generated=${formatNumber(row.generatedRatio, 3)}x` +
             ` bucket=${row.bucket}` +
+            ` reason=${row.reason}` +
             ` ${row.key}` +
             ` hits=${row.compiledRuleHits === null ? 'n/a' : row.compiledRuleHits}` +
             ` tick=${row.compiledTickHits === null ? 'n/a' : row.compiledTickHits}` +

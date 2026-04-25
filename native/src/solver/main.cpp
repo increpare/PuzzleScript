@@ -134,6 +134,8 @@ struct Result {
     uint64_t maxFrontier = 0;
     int64_t timeoutMs = 0;
     uint32_t workerId = 0;
+    bool compiledRulesAttached = false;
+    bool compiledTickAttached = false;
     Timing timing;
 };
 
@@ -597,6 +599,8 @@ Result runSearch(
     result.heuristic = mode == SearchMode::Bfs ? "zero" : "winconditions";
     result.timeoutMs = timeoutMs;
     result.workerId = workerId;
+    result.compiledRulesAttached = game && game->compiledRules != nullptr;
+    result.compiledTickAttached = game && game->compiledTick != nullptr;
     result.timing.compileUs = compileUs;
 
     std::unique_ptr<Session> initial;
@@ -755,6 +759,8 @@ Result solveLevel(
     combined.heuristic = "winconditions";
     combined.timeoutMs = timeoutMs;
     combined.workerId = workerId;
+    combined.compiledRulesAttached = game && game->compiledRules != nullptr;
+    combined.compiledTickAttached = game && game->compiledTick != nullptr;
     combined.timing.compileUs = compileUs;
 
     const TimePoint bfsDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 6));
@@ -951,6 +957,8 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"duplicates\":" << result.duplicates;
     out << ",\"max_frontier\":" << result.maxFrontier;
     out << ",\"timeout_ms\":" << result.timeoutMs;
+    out << ",\"compiled_rules_attached\":" << (result.compiledRulesAttached ? "true" : "false");
+    out << ",\"compiled_tick_attached\":" << (result.compiledTickAttached ? "true" : "false");
     out << ",\"compile_ms\":" << ms(result.timing.compileUs);
     out << ",\"load_ms\":" << ms(result.timing.loadUs);
     out << ",\"clone_ms\":" << ms(result.timing.cloneUs);

@@ -154,6 +154,8 @@ function runTarget(target, runIndex, strategy, timeoutMs) {
         max_frontier: solverResult.max_frontier,
         solution_length: solverResult.solution_length,
         timeout_ms: solverResult.timeout_ms,
+        compiled_rules_attached: Boolean(solverResult.compiled_rules_attached),
+        compiled_tick_attached: Boolean(solverResult.compiled_tick_attached),
         runtime_counters: profileRuntimeCounters ? parseRuntimeCounters(result.stderr) : null,
     };
 }

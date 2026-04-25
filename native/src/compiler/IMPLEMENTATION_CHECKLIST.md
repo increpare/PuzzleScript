@@ -490,14 +490,21 @@ lab bench, not the full corpus.
   make solver_focus_perf_report SOLVER_FOCUS_RUNS=1
   ```
 
-- [ ] Explain zero compiled-rule hits per target.
+- [x] Explain zero compiled-rule hits per target.
 
-  Acceptance criteria:
+  Done means:
 
   - For every zero-hit focus target, the report can say whether the source was
     skipped by compile budget, unsupported by generated tick routing, or simply
     did not execute compiled groups on that solve path.
   - The explanation is machine-readable enough to sort by reason.
+
+  Current report fields:
+
+  - `compiled_rules_attached`
+  - `compiled_tick_attached`
+  - `compiled_usage_reasons`
+  - per-target `reason=...` in the detail table
 
 - [ ] Fix generated tick routes that call the wrapper but no rule kernels.
 
