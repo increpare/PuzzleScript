@@ -14,6 +14,7 @@
 #include <thread>
 
 #include "simdjson.h" // vendored; will replace puzzlescript::json in Task 4
+#include "runtime/compiled_rules.hpp"
 
 namespace puzzlescript {
 void runRulesOnLevelStart(Session& session);
@@ -42,11 +43,6 @@ int32_t getShiftedMask5(const MaskVector& value, int32_t shift);
 
 inline const MaskWord* maskPtr(const Game& game, MaskOffset offset);
 inline MaskVector arenaCopy(const Game& game, MaskOffset offset, uint32_t wordCount);
-
-struct CommandState {
-    std::vector<std::string> queue;
-    std::string messageText;
-};
 
 struct RuleApplyOutcome {
     bool matched = false;
@@ -84,6 +80,9 @@ struct RuntimeCounterStorage {
     std::atomic<uint64_t> maskRebuildDirtyCalls{0};
     std::atomic<uint64_t> maskRebuildRows{0};
     std::atomic<uint64_t> maskRebuildColumns{0};
+    std::atomic<uint64_t> compiledRuleGroupAttempts{0};
+    std::atomic<uint64_t> compiledRuleGroupHits{0};
+    std::atomic<uint64_t> compiledRuleGroupFallbacks{0};
 };
 
 bool gRuntimeCountersEnabled = false;
@@ -3333,9 +3332,22 @@ bool applyRandomRuleGroup(Session& session, const std::vector<Rule>& group, Comm
     return changed;
 }
 
-bool applyRuleGroup(Session& session, const std::vector<Rule>& group, CommandState& commands) {
+bool applyRuleGroup(Session& session, const std::vector<Rule>& group, CommandState& commands, int32_t groupIndex, bool late) {
     if (group.empty()) {
         return false;
+    }
+    if (session.game->compiledRules != nullptr
+        && session.game->compiledRules->applyGroup != nullptr
+        && !ruleDebugEnabled()
+        && !randomDebugEnabled()
+        && !rigidDebugEnabled()) {
+        addCounter(gRuntimeCounters.compiledRuleGroupAttempts);
+        const CompiledRuleApplyOutcome outcome = session.game->compiledRules->applyGroup(session, groupIndex, late, commands);
+        if (outcome.handled) {
+            addCounter(gRuntimeCounters.compiledRuleGroupHits);
+            return outcome.changed;
+        }
+        addCounter(gRuntimeCounters.compiledRuleGroupFallbacks);
     }
     if (group[0].isRandom) {
         const bool changed = applyRandomRuleGroup(session, group, commands);
@@ -3387,7 +3399,8 @@ bool applyRuleGroups(
     const std::vector<std::vector<Rule>>& groups,
     const LoopPointTable& loopPoint,
     CommandState& commands,
-    const std::vector<bool>* bannedGroups
+    const std::vector<bool>* bannedGroups,
+    bool late
 ) {
     bool loopPropagated = false;
     bool hasChanges = false;
@@ -3399,7 +3412,13 @@ bool applyRuleGroups(
         if (bannedGroups == nullptr
             || static_cast<size_t>(groupIndex) >= bannedGroups->size()
             || !(*bannedGroups)[static_cast<size_t>(groupIndex)]) {
-            groupChanged = applyRuleGroup(session, groups[static_cast<size_t>(groupIndex)], commands);
+            groupChanged = applyRuleGroup(
+                session,
+                groups[static_cast<size_t>(groupIndex)],
+                commands,
+                groupIndex,
+                late
+            );
         }
         loopPropagated = groupChanged || loopPropagated;
         hasChanges = groupChanged || hasChanges;
@@ -3965,6 +3984,54 @@ void resetToPrepared(Session& session) {
 
 } // namespace
 
+const MaskWord* compiledRuleMaskPtr(const Game& game, MaskOffset offset) {
+    return maskPtr(game, offset);
+}
+
+const MaskWord* compiledRuleCellObjects(const Session& session, int32_t tileIndex) {
+    return getCellObjectsPtr(session, tileIndex);
+}
+
+const MaskWord* compiledRuleCellMovements(const Session& session, int32_t tileIndex) {
+    return getCellMovementsPtr(session, tileIndex);
+}
+
+bool compiledRuleBitsSet(const MaskWord* required, size_t requiredCount, const MaskWord* actual, size_t actualCount) {
+    return bitsSetInArray(required, requiredCount, actual, actualCount);
+}
+
+bool compiledRuleAnyBits(const MaskWord* lhs, size_t lhsCount, const MaskWord* rhs, size_t rhsCount) {
+    return anyBitsInCommon(lhs, lhsCount, rhs, rhsCount);
+}
+
+void compiledRuleSetCellObjectsFromWords(
+    Session& session,
+    int32_t tileIndex,
+    const MaskWord* objects,
+    const MaskWord* created,
+    const MaskWord* destroyed
+) {
+    setCellObjectsFromWords(session, tileIndex, objects);
+    if (created != nullptr && !session.pendingCreateMask.empty()) {
+        accumulateMaskWords(session.pendingCreateMask, created, session.pendingCreateMask.size());
+    }
+    if (destroyed != nullptr && !session.pendingDestroyMask.empty()) {
+        accumulateMaskWords(session.pendingDestroyMask, destroyed, session.pendingDestroyMask.size());
+    }
+}
+
+void compiledRuleSetCellMovementsFromWords(Session& session, int32_t tileIndex, const MaskWord* movements) {
+    setCellMovementsFromWords(session, tileIndex, movements);
+}
+
+void compiledRuleRebuildMasks(Session& session) {
+    rebuildMasks(session);
+}
+
+void compiledRuleQueueCommands(const Rule& rule, CommandState& commands) {
+    queueRuleCommands(rule, commands);
+}
+
 void runRulesOnLevelStart(Session& session);
 void runRulesOnLevelStart(Session& session, RuntimeStepOptions options);
 bool wouldAgainChange(Session& session, bool* outWouldModify = nullptr, bool emitAudio = true);
@@ -4483,7 +4550,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
             seeded = seedPlayerMovements(session, directionMask);
         }
         rebuildMasks(session);
-        const bool ruleChangedThisPass = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands, &bannedGroups);
+        const bool ruleChangedThisPass = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands, &bannedGroups, false);
         dumpActiveMovements(session, "pre-resolve");
         const MovementResolveOutcome movementOutcome = resolveMovements(session, &bannedGroups, options.emitAudio);
         rebuildMasks(session);
@@ -4518,7 +4585,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         }
         ruleChanged = ruleChangedThisPass;
         moved = movementOutcome.moved;
-        lateRuleChanged = applyRuleGroups(session, session.game->lateRules, session.game->lateLoopPoint, commands, nullptr);
+        lateRuleChanged = applyRuleGroups(session, session.game->lateRules, session.game->lateLoopPoint, commands, nullptr, true);
         break;
     }
     const bool modified = session.liveLevel.objects != turnStart.liveLevel.objects;
@@ -4817,6 +4884,9 @@ void resetRuntimeCounters() {
     gRuntimeCounters.maskRebuildDirtyCalls.store(0, std::memory_order_relaxed);
     gRuntimeCounters.maskRebuildRows.store(0, std::memory_order_relaxed);
     gRuntimeCounters.maskRebuildColumns.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compiledRuleGroupAttempts.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compiledRuleGroupHits.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compiledRuleGroupFallbacks.store(0, std::memory_order_relaxed);
 }
 
 ps_runtime_counters snapshotRuntimeCounters() {
@@ -4834,6 +4904,9 @@ ps_runtime_counters snapshotRuntimeCounters() {
     counters.mask_rebuild_dirty_calls = gRuntimeCounters.maskRebuildDirtyCalls.load(std::memory_order_relaxed);
     counters.mask_rebuild_rows = gRuntimeCounters.maskRebuildRows.load(std::memory_order_relaxed);
     counters.mask_rebuild_columns = gRuntimeCounters.maskRebuildColumns.load(std::memory_order_relaxed);
+    counters.compiled_rule_group_attempts = gRuntimeCounters.compiledRuleGroupAttempts.load(std::memory_order_relaxed);
+    counters.compiled_rule_group_hits = gRuntimeCounters.compiledRuleGroupHits.load(std::memory_order_relaxed);
+    counters.compiled_rule_group_fallbacks = gRuntimeCounters.compiledRuleGroupFallbacks.load(std::memory_order_relaxed);
     return counters;
 }
 

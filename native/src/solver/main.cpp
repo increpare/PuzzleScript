@@ -25,6 +25,7 @@
 #include "compiler/lower_to_runtime.hpp"
 #include "compiler/parser.hpp"
 #include "puzzlescript/puzzlescript.h"
+#include "runtime/compiled_rules.hpp"
 #include "runtime/core.hpp"
 #include "search/search_common.hpp"
 
@@ -503,6 +504,9 @@ std::shared_ptr<const Game> compileGame(
         if (auto error = puzzlescript::compiler::lowerToRuntimeGame(state, game)) {
             errorMessage = error->message;
             return nullptr;
+        }
+        if (game) {
+            puzzlescript::attachLinkedCompiledRules(*std::const_pointer_cast<Game>(game), source);
         }
         return game;
     } catch (const std::exception& error) {

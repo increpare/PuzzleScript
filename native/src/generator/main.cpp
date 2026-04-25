@@ -34,6 +34,7 @@
 #include "compiler/lower_to_runtime.hpp"
 #include "compiler/parser.hpp"
 #include "compiler/rule_text.hpp"
+#include "runtime/compiled_rules.hpp"
 #include "runtime/core.hpp"
 #include "search/search_common.hpp"
 
@@ -558,6 +559,9 @@ std::shared_ptr<const Game> compileGame(const std::string& source, puzzlescript:
     std::shared_ptr<const Game> game;
     if (auto error = puzzlescript::compiler::lowerToRuntimeGame(state, game)) {
         throw std::runtime_error(error->message);
+    }
+    if (game) {
+        puzzlescript::attachLinkedCompiledRules(*std::const_pointer_cast<Game>(game), source);
     }
     if (outState != nullptr) {
         *outState = std::move(state);

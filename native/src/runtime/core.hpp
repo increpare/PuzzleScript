@@ -246,6 +246,13 @@ struct LoopPointTable {
     std::vector<std::optional<int32_t>> entries;
 };
 
+struct CommandState {
+    std::vector<std::string> queue;
+    std::string messageText;
+};
+
+struct CompiledRulesBackend;
+
 struct SoundMaskEntry {
     // object-width mask of width Game::wordCount
     MaskOffset objectMask = kNullMaskOffset;
@@ -318,6 +325,7 @@ struct Game {
     std::vector<std::vector<SoundMaskEntry>> sfxMovementMasks;
     std::vector<SoundMaskEntry> sfxMovementFailureMasks;
     PreparedSession preparedSession;
+    const CompiledRulesBackend* compiledRules = nullptr;
 };
 
 struct Session {

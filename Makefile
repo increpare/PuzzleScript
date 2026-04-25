@@ -38,6 +38,7 @@ GENERATOR_GAME := $(word 1,$(GENERATOR_MAKE_ARGS))
 GENERATOR_SPEC := $(word 2,$(GENERATOR_MAKE_ARGS))
 GENERATOR_ARGS ?=
 SOLVER_TIMEOUT_MS ?= 250
+SOLVER_TESTS_CORPUS ?= src/tests/solver_tests
 SOLVER_JOBS ?= 1
 SOLVER_STRATEGY ?= portfolio
 SOLVER_PROGRESS_EVERY ?= game
@@ -72,6 +73,10 @@ GENERATOR_BENCH_SOLVER_TIMEOUT_MS ?= 50
 GENERATOR_BENCH_SOLVER_STRATEGY ?= portfolio
 GENERATOR_BENCH_TOP_K ?= 10
 GENERATOR_BENCH_OUT ?= $(BUILD_DIR)/native/generator_benchmark.json
+SPECIALIZE ?= false
+COMPILED_RULES_BUILD_ROOT ?= $(BUILD_DIR)/compiled-rules-builds
+COMPILED_RULES_ARTIFACT_ROOT ?= $(BUILD_DIR)/compiled-rules
+COMPILED_RULES_MAX_ROWS ?= 1
 JS_PARITY_DATA_DIR := $(BUILD_DIR)/js-parity-data
 JS_PARITY_MANIFEST := $(JS_PARITY_DATA_DIR)/fixtures.json
 ERRORMESSAGE_PARSER_BUNDLE := $(BUILD_DIR)/parser_corpus_errormessage.bundle.ndjson
@@ -105,6 +110,13 @@ PUZZLESCRIPT_SOLVER_REBUILD_INPUTS := \
 	$(wildcard native/include/puzzlescript/*.h)
 SOLVER_MINE_MAX_TARGETS_ARG := $(if $(SOLVER_MINE_MAX_TARGETS),--max-targets $(SOLVER_MINE_MAX_TARGETS),)
 SOLVER_TARGET_BENCH_TIMEOUT_ARG := $(if $(SOLVER_TARGET_BENCH_TIMEOUT_MS),--timeout-ms $(SOLVER_TARGET_BENCH_TIMEOUT_MS),)
+ifeq ($(SPECIALIZE),true)
+SOLVER_TARGET_PREREQ :=
+GENERATOR_TARGET_PREREQ :=
+else
+SOLVER_TARGET_PREREQ := $(PUZZLESCRIPT_SOLVER)
+GENERATOR_TARGET_PREREQ := $(PUZZLESCRIPT_GENERATOR)
+endif
 
 help:
 	@echo "PuzzleScript C++ workflow"
@@ -114,6 +126,9 @@ help:
 	@echo "  make build_solver                  Build build/native/puzzlescript_solver"
 	@echo "  make build_generator               Build build/native/puzzlescript_generator"
 	@echo "  make generator game.txt spec.gen   Run generator on a PuzzleScript game/spec pair"
+	@echo "  make generator game.txt spec.gen SPECIALIZE=true"
+	@echo "                                     Run generator with linked compiled-rule kernels"
+	@echo "                                     Set COMPILED_RULES_MAX_ROWS=N for experimental multi-row kernels"
 	@echo "  make build_32                      Build JS-style 32-bit-mask executable into build-32"
 	@echo "  make run path/to/game.txt          Build and play a PuzzleScript game"
 	@echo "  make ctest                         Run fast C++ smoke/unit tests"
@@ -143,6 +158,8 @@ help:
 	@echo "  make compilation_tests_cpp_32      Run C++ diagnostics corpus with JS-style 32-bit masks"
 	@echo "  make tests_js                      Run the original JavaScript test suite"
 	@echo "  make solver_tests_cpp              Run standalone native solver corpus"
+	@echo "  make solver_tests_cpp SPECIALIZE=true"
+	@echo "                                     Run standalone native solver corpus with compiled rules"
 	@echo "  make solver_tests_js               Run JavaScript comparison solver corpus"
 	@echo "  make solver_tests SOLVER_TIMEOUT_MS=5000"
 	@echo "                                     Run solver corpus with a deeper timeout"
@@ -164,6 +181,8 @@ help:
 	@echo "                                     Write $(SOLVER_PIPPABLE_MANIFEST)"
 	@echo "  make solver_benchmark_targets SOLVER_TARGET_BENCH_RUNS=10"
 	@echo "                                     Write $(SOLVER_TARGET_BENCH_OUT)"
+	@echo "  make solver_benchmark SPECIALIZE=true"
+	@echo "                                     Benchmark solver with compiled rules for the corpus"
 	@echo ""
 	@echo "Direct executable after build:"
 	@echo "  build/native/puzzlescript_cpp --help"
@@ -200,8 +219,21 @@ generator:
 		echo "       make generator path/to/game.txt path/to/spec.gen GENERATOR_ARGS='--time-ms 5000 --jobs auto --json-out build/generated/results.json'"; \
 		exit 2; \
 	fi
-	@$(MAKE) build_generator
-	$(PUZZLESCRIPT_GENERATOR) $(GENERATOR_GAME) $(GENERATOR_SPEC) $(GENERATOR_ARGS)
+	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		$(MAKE) build; \
+		hash=$$(shasum -a 256 "$(GENERATOR_GAME)" | awk '{print $$1}'); \
+		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/generator-$$hash"; \
+		build_dir="$(COMPILED_RULES_BUILD_ROOT)/generator-$$hash"; \
+		out_cpp="$$out_dir/compiled_rules.cpp"; \
+		mkdir -p "$$out_dir"; \
+		$(PUZZLESCRIPT_CPP) compile-rules "$(GENERATOR_GAME)" --emit-cpp "$$out_cpp" --symbol generator_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		$(CMAKE) -S . -B "$$build_dir" -DPS_MASK_WORD_BITS=64 -DPS_COMPILED_RULES_SOURCE="$$PWD/$$out_cpp"; \
+		$(CMAKE) --build "$$build_dir" --target puzzlescript_generator; \
+		"$$build_dir/native/puzzlescript_generator" $(GENERATOR_GAME) $(GENERATOR_SPEC) $(GENERATOR_ARGS); \
+	else \
+		$(MAKE) build_generator; \
+		$(PUZZLESCRIPT_GENERATOR) $(GENERATOR_GAME) $(GENERATOR_SPEC) $(GENERATOR_ARGS); \
+	fi
 
 
 ifeq ($(firstword $(MAKECMDGOALS)),generator)
@@ -243,31 +275,100 @@ else
 SOLVER_PROGRESS_ARGS := --progress-every $(SOLVER_PROGRESS_EVERY)
 endif
 
-solver_smoke_tests: $(PUZZLESCRIPT_SOLVER)
-	$(NODE) src/tests/run_solver_smoke_assert.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests --timeout-ms 1000
+solver_smoke_tests: $(SOLVER_TARGET_PREREQ)
+	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		$(MAKE) build; \
+		hash=$$(find src/tests/solver_smoke_tests -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
+		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-smoke-$$hash"; \
+		build_dir="$(COMPILED_RULES_BUILD_ROOT)/solver-smoke-$$hash"; \
+		out_cpp="$$out_dir/compiled_rules.cpp"; \
+		mkdir -p "$$out_dir"; \
+		$(PUZZLESCRIPT_CPP) compile-rules src/tests/solver_smoke_tests --emit-cpp "$$out_cpp" --symbol solver_smoke_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		$(CMAKE) -S . -B "$$build_dir" -DPS_MASK_WORD_BITS=64 -DPS_COMPILED_RULES_SOURCE="$$PWD/$$out_cpp"; \
+		$(CMAKE) --build "$$build_dir" --target puzzlescript_solver; \
+		$(NODE) src/tests/run_solver_smoke_assert.js "$$build_dir/native/puzzlescript_solver" src/tests/solver_smoke_tests --timeout-ms 1000; \
+	else \
+		$(NODE) src/tests/run_solver_smoke_assert.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests --timeout-ms 1000; \
+	fi
 
-solver_determinism_tests: $(PUZZLESCRIPT_SOLVER)
-	$(NODE) src/tests/run_solver_determinism.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests --runs 5 --timeout-ms 1000
+solver_determinism_tests: $(SOLVER_TARGET_PREREQ)
+	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		$(MAKE) build; \
+		hash=$$(find src/tests/solver_smoke_tests -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
+		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-smoke-$$hash"; \
+		build_dir="$(COMPILED_RULES_BUILD_ROOT)/solver-smoke-$$hash"; \
+		out_cpp="$$out_dir/compiled_rules.cpp"; \
+		mkdir -p "$$out_dir"; \
+		$(PUZZLESCRIPT_CPP) compile-rules src/tests/solver_smoke_tests --emit-cpp "$$out_cpp" --symbol solver_smoke_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		$(CMAKE) -S . -B "$$build_dir" -DPS_MASK_WORD_BITS=64 -DPS_COMPILED_RULES_SOURCE="$$PWD/$$out_cpp"; \
+		$(CMAKE) --build "$$build_dir" --target puzzlescript_solver; \
+		$(NODE) src/tests/run_solver_determinism.js "$$build_dir/native/puzzlescript_solver" src/tests/solver_smoke_tests --runs 5 --timeout-ms 1000; \
+	else \
+		$(NODE) src/tests/run_solver_determinism.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests --runs 5 --timeout-ms 1000; \
+	fi
 
-solver_parity_smoke: $(PUZZLESCRIPT_SOLVER)
-	$(NODE) src/tests/run_solver_parity_smoke.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests
+solver_parity_smoke: $(SOLVER_TARGET_PREREQ)
+	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		$(MAKE) build; \
+		hash=$$(find src/tests/solver_smoke_tests -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
+		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-smoke-$$hash"; \
+		build_dir="$(COMPILED_RULES_BUILD_ROOT)/solver-smoke-$$hash"; \
+		out_cpp="$$out_dir/compiled_rules.cpp"; \
+		mkdir -p "$$out_dir"; \
+		$(PUZZLESCRIPT_CPP) compile-rules src/tests/solver_smoke_tests --emit-cpp "$$out_cpp" --symbol solver_smoke_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		$(CMAKE) -S . -B "$$build_dir" -DPS_MASK_WORD_BITS=64 -DPS_COMPILED_RULES_SOURCE="$$PWD/$$out_cpp"; \
+		$(CMAKE) --build "$$build_dir" --target puzzlescript_solver; \
+		$(NODE) src/tests/run_solver_parity_smoke.js "$$build_dir/native/puzzlescript_solver" src/tests/solver_smoke_tests; \
+	else \
+		$(NODE) src/tests/run_solver_parity_smoke.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests; \
+	fi
 
-generator_smoke_tests: $(PUZZLESCRIPT_GENERATOR)
-	$(NODE) src/tests/run_generator_smoke.js $(PUZZLESCRIPT_GENERATOR) src/demo/sokoban_basic.txt
+generator_smoke_tests: $(GENERATOR_TARGET_PREREQ)
+	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		$(MAKE) generator src/demo/sokoban_basic.txt src/tests/generator_presets/sokoban_room_scatter.gen SPECIALIZE=true GENERATOR_ARGS="--time-ms 100 --quiet"; \
+	else \
+		$(NODE) src/tests/run_generator_smoke.js $(PUZZLESCRIPT_GENERATOR) src/demo/sokoban_basic.txt; \
+	fi
 
 generator_benchmark: $(PUZZLESCRIPT_GENERATOR)
 	$(NODE) src/tests/run_generator_benchmark.js $(PUZZLESCRIPT_GENERATOR) $(GENERATOR_BENCH_GAME) --presets-dir $(GENERATOR_BENCH_PRESETS_DIR) --samples $(GENERATOR_BENCH_SAMPLES) --runs $(GENERATOR_BENCH_RUNS) --jobs $(GENERATOR_BENCH_JOBS) --seed $(GENERATOR_BENCH_SEED) --solver-timeout-ms $(GENERATOR_BENCH_SOLVER_TIMEOUT_MS) --solver-strategy $(GENERATOR_BENCH_SOLVER_STRATEGY) --top-k $(GENERATOR_BENCH_TOP_K) --out $(GENERATOR_BENCH_OUT)
 
-solver_tests_cpp: $(PUZZLESCRIPT_SOLVER)
-	$(PUZZLESCRIPT_SOLVER) src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --jobs $(SOLVER_JOBS) --strategy $(SOLVER_STRATEGY) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)
+solver_tests_cpp: $(SOLVER_TARGET_PREREQ)
+	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		$(MAKE) build; \
+		hash=$$(find "$(SOLVER_TESTS_CORPUS)" -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
+		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-corpus-$$hash"; \
+		build_dir="$(COMPILED_RULES_BUILD_ROOT)/solver-corpus-$$hash"; \
+		out_cpp="$$out_dir/compiled_rules.cpp"; \
+		mkdir -p "$$out_dir"; \
+		$(PUZZLESCRIPT_CPP) compile-rules "$(SOLVER_TESTS_CORPUS)" --emit-cpp "$$out_cpp" --symbol solver_corpus_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		$(CMAKE) -S . -B "$$build_dir" -DPS_MASK_WORD_BITS=64 -DPS_COMPILED_RULES_SOURCE="$$PWD/$$out_cpp"; \
+		$(CMAKE) --build "$$build_dir" --target puzzlescript_solver; \
+		"$$build_dir/native/puzzlescript_solver" $(SOLVER_TESTS_CORPUS) --timeout-ms $(SOLVER_TIMEOUT_MS) --jobs $(SOLVER_JOBS) --strategy $(SOLVER_STRATEGY) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS); \
+	else \
+		$(PUZZLESCRIPT_SOLVER) $(SOLVER_TESTS_CORPUS) --timeout-ms $(SOLVER_TIMEOUT_MS) --jobs $(SOLVER_JOBS) --strategy $(SOLVER_STRATEGY) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS); \
+	fi
 
 solver_tests_js:
 	$(NODE) src/tests/run_solver_tests_js.js src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/js $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)
 
 solver_tests: solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_tests_cpp solver_tests_js
 
-solver_benchmark: $(PUZZLESCRIPT_SOLVER)
-	$(NODE) src/tests/run_solver_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_BENCH_CORPUS) --runs $(SOLVER_BENCH_RUNS) --timeout-ms $(SOLVER_BENCH_TIMEOUT_MS) --jobs $(SOLVER_BENCH_JOBS) --strategy $(SOLVER_BENCH_STRATEGY) --out $(SOLVER_BENCH_OUT) --baseline $(SOLVER_PERF_BASELINE)
+solver_benchmark: $(SOLVER_TARGET_PREREQ)
+	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		$(MAKE) build; \
+		hash=$$(find "$(SOLVER_BENCH_CORPUS)" -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
+		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-bench-$$hash"; \
+		build_dir="$(COMPILED_RULES_BUILD_ROOT)/solver-bench-$$hash"; \
+		out_cpp="$$out_dir/compiled_rules.cpp"; \
+		mkdir -p "$$out_dir"; \
+		$(PUZZLESCRIPT_CPP) compile-rules "$(SOLVER_BENCH_CORPUS)" --emit-cpp "$$out_cpp" --symbol solver_bench_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		$(CMAKE) -S . -B "$$build_dir" -DPS_MASK_WORD_BITS=64 -DPS_COMPILED_RULES_SOURCE="$$PWD/$$out_cpp"; \
+		$(CMAKE) --build "$$build_dir" --target puzzlescript_solver; \
+		$(NODE) src/tests/run_solver_benchmark.js "$$build_dir/native/puzzlescript_solver" $(SOLVER_BENCH_CORPUS) --runs $(SOLVER_BENCH_RUNS) --timeout-ms $(SOLVER_BENCH_TIMEOUT_MS) --jobs $(SOLVER_BENCH_JOBS) --strategy $(SOLVER_BENCH_STRATEGY) --out $(SOLVER_BENCH_OUT) --baseline $(SOLVER_PERF_BASELINE); \
+	else \
+		$(NODE) src/tests/run_solver_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_BENCH_CORPUS) --runs $(SOLVER_BENCH_RUNS) --timeout-ms $(SOLVER_BENCH_TIMEOUT_MS) --jobs $(SOLVER_BENCH_JOBS) --strategy $(SOLVER_BENCH_STRATEGY) --out $(SOLVER_BENCH_OUT) --baseline $(SOLVER_PERF_BASELINE); \
+	fi
 
 solver_mine_pippable: $(PUZZLESCRIPT_SOLVER)
 	$(NODE) src/tests/mine_solver_near_threshold.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_MINE_CORPUS) --timeouts-ms $(SOLVER_MINE_TIMEOUTS_MS) --strategy $(SOLVER_MINE_STRATEGY) --near-ratio $(SOLVER_MINE_NEAR_RATIO) --out $(SOLVER_PIPPABLE_MANIFEST) $(SOLVER_MINE_MAX_TARGETS_ARG)

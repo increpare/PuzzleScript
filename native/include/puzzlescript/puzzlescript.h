@@ -98,6 +98,9 @@ typedef struct ps_runtime_counters {
     uint64_t mask_rebuild_dirty_calls;
     uint64_t mask_rebuild_rows;
     uint64_t mask_rebuild_columns;
+    uint64_t compiled_rule_group_attempts;
+    uint64_t compiled_rule_group_hits;
+    uint64_t compiled_rule_group_fallbacks;
 } ps_runtime_counters;
 
 bool ps_load_ir_json(const char* json_utf8, size_t json_size, ps_game** out_game, ps_error** out_error);

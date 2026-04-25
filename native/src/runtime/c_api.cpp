@@ -1,4 +1,5 @@
 #include "runtime/core.hpp"
+#include "runtime/compiled_rules.hpp"
 
 #include <cstring>
 
@@ -89,6 +90,12 @@ bool ps_compile_source(const char* source_utf8, size_t source_size, ps_compile_r
             wrapper->impl->error = std::move(error);
             *out_result = wrapper;
             return false;
+        }
+        if (game) {
+            puzzlescript::attachLinkedCompiledRules(
+                *std::const_pointer_cast<Game>(game),
+                source_utf8 == nullptr ? std::string_view{} : std::string_view(source_utf8, source_size)
+            );
         }
         wrapper->impl->game = std::move(game);
         *out_result = wrapper;

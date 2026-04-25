@@ -11,9 +11,11 @@
 #include <iostream>
 #include <memory>
 #include <optional>
+#include <set>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <thread>
 #include <unordered_map>
 #include <utility>
@@ -23,6 +25,7 @@
 #include "compiler/parser.hpp"
 #include "compiler/lower_to_runtime.hpp"
 #include "runtime/json.hpp"
+#include "runtime/compiled_rules.hpp"
 #include "puzzlescript/compiler.h"
 #include "puzzlescript/puzzlescript.h"
 
@@ -69,6 +72,23 @@ std::string readFile(const std::filesystem::path& path) {
     std::ostringstream buffer;
     buffer << stream.rdbuf();
     return buffer.str();
+}
+
+bool writeFileIfChanged(const std::filesystem::path& path, const std::string& text) {
+    if (std::filesystem::exists(path)) {
+        if (readFile(path) == text) {
+            return false;
+        }
+    }
+    if (!path.parent_path().empty()) {
+        std::filesystem::create_directories(path.parent_path());
+    }
+    std::ofstream stream(path, std::ios::binary);
+    if (!stream) {
+        throw std::runtime_error("Failed to write file: " + path.string());
+    }
+    stream << text;
+    return true;
 }
 
 std::string stripTrailingJsonCommas(std::string_view input) {
@@ -2553,6 +2573,9 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                   << " mask_rebuild_dirty_calls=" << counters.mask_rebuild_dirty_calls
                   << " mask_rebuild_rows=" << counters.mask_rebuild_rows
                   << " mask_rebuild_columns=" << counters.mask_rebuild_columns
+                  << " compiled_rule_group_attempts=" << counters.compiled_rule_group_attempts
+                  << " compiled_rule_group_hits=" << counters.compiled_rule_group_hits
+                  << " compiled_rule_group_fallbacks=" << counters.compiled_rule_group_fallbacks
                   << "\n";
     }
     if (options.topSlowCases > 0 && !cases.empty()) {
@@ -3536,6 +3559,893 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
     return out.str();
 }
 
+std::string cppStringLiteral(std::string_view value) {
+    std::ostringstream out;
+    out << '"';
+    for (unsigned char ch : value) {
+        switch (ch) {
+            case '\\': out << "\\\\"; break;
+            case '"': out << "\\\""; break;
+            case '\n': out << "\\n"; break;
+            case '\r': out << "\\r"; break;
+            case '\t': out << "\\t"; break;
+            default:
+                if (ch < 0x20) {
+                    static constexpr char kHex[] = "0123456789abcdef";
+                    out << "\\x" << kHex[ch >> 4] << kHex[ch & 0x0f];
+                } else {
+                    out << static_cast<char>(ch);
+                }
+                break;
+        }
+    }
+    out << '"';
+    return out.str();
+}
+
+std::string safeCppIdentifier(std::string_view value) {
+    std::string out;
+    out.reserve(value.size() + 1);
+    for (const unsigned char ch : value) {
+        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')) {
+            out.push_back(static_cast<char>(ch));
+        } else {
+            out.push_back('_');
+        }
+    }
+    if (out.empty() || (out[0] >= '0' && out[0] <= '9')) {
+        out.insert(out.begin(), '_');
+    }
+    return out;
+}
+
+bool isCompilableReplacement(const puzzlescript::Replacement& replacement) {
+    return !replacement.hasRandomEntityMask && !replacement.hasRandomDirMask;
+}
+
+struct CompiledRulesOptions {
+    size_t maxRows = 1;
+};
+
+std::string compiledRuleMissReason(const puzzlescript::Rule& rule, const CompiledRulesOptions& options) {
+    if (rule.isRandom) {
+        return "random_rule";
+    }
+    if (rule.rigid) {
+        return "rigid";
+    }
+    if (rule.patterns.empty()) {
+        return "empty_row";
+    }
+    if (rule.patterns.size() > options.maxRows) {
+        return "row_limit";
+    }
+    if (rule.ellipsisCount.size() < rule.patterns.size()) {
+        return "ellipsis";
+    }
+    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+        if (rule.ellipsisCount[rowIndex] != 0) {
+            return "ellipsis";
+        }
+        if (rule.patterns[rowIndex].empty()) {
+            return "empty_row";
+        }
+        for (const auto& pattern : rule.patterns[rowIndex]) {
+            if (pattern.kind != puzzlescript::Pattern::Kind::CellPattern) {
+                return "non_cell_pattern";
+            }
+            if (pattern.replacement.has_value() && !isCompilableReplacement(*pattern.replacement)) {
+                return "random_replacement";
+            }
+        }
+    }
+    return {};
+}
+
+bool isCompilableRule(const puzzlescript::Rule& rule, const CompiledRulesOptions& options) {
+    return compiledRuleMissReason(rule, options).empty();
+}
+
+std::string compiledGroupMissReason(const std::vector<puzzlescript::Rule>& group, const CompiledRulesOptions& options) {
+    if (group.empty()) {
+        return "empty_group";
+    }
+    if (group[0].isRandom) {
+        return "random_group";
+    }
+    for (const auto& rule : group) {
+        const std::string reason = compiledRuleMissReason(rule, options);
+        if (!reason.empty()) {
+            return reason;
+        }
+    }
+    return {};
+}
+
+bool isCompilableGroup(const std::vector<puzzlescript::Rule>& group, const CompiledRulesOptions& options) {
+    return compiledGroupMissReason(group, options).empty();
+}
+
+void emitMaskBitsSetCheck(
+    std::ostream& out,
+    const std::string& maskName,
+    puzzlescript::MaskOffset offset,
+    uint32_t wordCount,
+    const std::string& actualExpr,
+    const std::string& actualCountExpr
+) {
+    if (offset == puzzlescript::kNullMaskOffset || wordCount == 0) {
+        return;
+    }
+    out << "    const MaskWord* " << maskName << " = compiledRuleMaskPtr(game, "
+        << offset << "U);\n"
+        << "    if (!compiledRuleBitsSet(" << maskName << ", " << wordCount
+        << "U, " << actualExpr << ", " << actualCountExpr << ")) return false;\n";
+}
+
+void emitMaskAnyBitsReject(
+    std::ostream& out,
+    const std::string& maskName,
+    puzzlescript::MaskOffset offset,
+    uint32_t wordCount,
+    const std::string& actualExpr,
+    const std::string& actualCountExpr
+) {
+    if (offset == puzzlescript::kNullMaskOffset || wordCount == 0) {
+        return;
+    }
+    out << "    const MaskWord* " << maskName << " = compiledRuleMaskPtr(game, "
+        << offset << "U);\n"
+        << "    if (compiledRuleAnyBits(" << maskName << ", " << wordCount
+        << "U, " << actualExpr << ", " << actualCountExpr << ")) return false;\n";
+}
+
+void emitPatternPredicate(
+    std::ostream& out,
+    const puzzlescript::Game& game,
+    const puzzlescript::Pattern& pattern,
+    const std::string& suffix,
+    const std::string& tileExpr
+) {
+    out << "    const MaskWord* objects" << suffix << " = compiledRuleCellObjects(session, " << tileExpr << ");\n"
+        << "    const MaskWord* movements" << suffix << " = compiledRuleCellMovements(session, " << tileExpr << ");\n";
+    if (pattern.hasObjectsPresent) {
+        emitMaskBitsSetCheck(out, "objectsPresent" + suffix, pattern.objectsPresent, game.wordCount, "objects" + suffix, std::to_string(game.wordCount) + "U");
+    }
+    if (pattern.hasObjectsMissing) {
+        emitMaskAnyBitsReject(out, "objectsMissing" + suffix, pattern.objectsMissing, game.wordCount, "objects" + suffix, std::to_string(game.wordCount) + "U");
+    }
+    for (uint32_t index = 0; index < pattern.anyObjectsCount; ++index) {
+        const auto offsetIndex = static_cast<size_t>(pattern.anyObjectsFirst + index);
+        if (offsetIndex >= game.anyObjectOffsets.size()) {
+            continue;
+        }
+        out << "    {\n"
+            << "        const MaskWord* anyMask" << suffix << "_" << index
+            << " = compiledRuleMaskPtr(game, " << game.anyObjectOffsets[offsetIndex] << "U);\n"
+            << "        if (!compiledRuleAnyBits(anyMask" << suffix << "_" << index
+            << ", " << game.wordCount << "U, objects" << suffix << ", " << game.wordCount << "U)) return false;\n"
+            << "    }\n";
+    }
+    if (pattern.hasMovementsPresent) {
+        emitMaskBitsSetCheck(out, "movementsPresent" + suffix, pattern.movementsPresent, game.movementWordCount, "movements" + suffix, std::to_string(game.movementWordCount) + "U");
+    }
+    if (pattern.hasMovementsMissing) {
+        emitMaskAnyBitsReject(out, "movementsMissing" + suffix, pattern.movementsMissing, game.movementWordCount, "movements" + suffix, std::to_string(game.movementWordCount) + "U");
+    }
+}
+
+void emitReplacementApply(
+    std::ostream& out,
+    const puzzlescript::Game& game,
+    const puzzlescript::Replacement& replacement,
+    const std::string& suffix,
+    const std::string& tileExpr
+) {
+    out << "    {\n"
+        << "        const MaskWord* oldObjects = compiledRuleCellObjects(session, " << tileExpr << ");\n"
+        << "        const MaskWord* oldMovements = compiledRuleCellMovements(session, " << tileExpr << ");\n"
+        << "        std::array<MaskWord, " << game.wordCount << "> newObjects{};\n"
+        << "        std::array<MaskWord, " << game.wordCount << "> created{};\n"
+        << "        std::array<MaskWord, " << game.wordCount << "> destroyed{};\n"
+        << "        std::array<MaskWord, " << game.movementWordCount << "> newMovements{};\n"
+        << "        const MaskWord* objectsClear = compiledRuleMaskPtr(game, " << replacement.objectsClear << "U);\n"
+        << "        const MaskWord* objectsSet = compiledRuleMaskPtr(game, " << replacement.objectsSet << "U);\n"
+        << "        const MaskWord* movementsClear = compiledRuleMaskPtr(game, " << replacement.movementsClear << "U);\n"
+        << "        const MaskWord* movementsSet = compiledRuleMaskPtr(game, " << replacement.movementsSet << "U);\n";
+    if (replacement.hasMovementsLayerMask) {
+        out << "        const MaskWord* movementsLayerMask = compiledRuleMaskPtr(game, " << replacement.movementsLayerMask << "U);\n";
+    } else {
+        out << "        const MaskWord* movementsLayerMask = nullptr;\n";
+    }
+    out << "        bool objectsChanged = false;\n"
+        << "        bool movementsChanged = false;\n"
+        << "        for (uint32_t word = 0; word < " << game.wordCount << "U; ++word) {\n"
+        << "            const MaskWord clearWord = objectsClear != nullptr ? objectsClear[word] : 0;\n"
+        << "            const MaskWord setWord = objectsSet != nullptr ? objectsSet[word] : 0;\n"
+        << "            const MaskWord before = oldObjects[word];\n"
+        << "            const MaskWord after = (before & ~clearWord) | setWord;\n"
+        << "            newObjects[word] = after;\n"
+        << "            created[word] = after & ~before;\n"
+        << "            destroyed[word] = before & ~after;\n"
+        << "            objectsChanged = objectsChanged || after != before;\n"
+        << "        }\n"
+        << "        for (uint32_t word = 0; word < " << game.movementWordCount << "U; ++word) {\n"
+        << "            MaskWord clearWord = movementsClear != nullptr ? movementsClear[word] : 0;\n"
+        << "            if (movementsLayerMask != nullptr) clearWord |= movementsLayerMask[word];\n"
+        << "            const MaskWord setWord = movementsSet != nullptr ? movementsSet[word] : 0;\n"
+        << "            const MaskWord before = oldMovements[word];\n"
+        << "            const MaskWord after = (before & ~clearWord) | setWord;\n"
+        << "            newMovements[word] = after;\n"
+        << "            movementsChanged = movementsChanged || after != before;\n"
+        << "        }\n"
+        << "        if (objectsChanged) compiledRuleSetCellObjectsFromWords(session, " << tileExpr << ", newObjects.data(), created.data(), destroyed.data());\n"
+        << "        if (movementsChanged) compiledRuleSetCellMovementsFromWords(session, " << tileExpr << ", newMovements.data());\n"
+        << "        changed = changed || objectsChanged || movementsChanged;\n"
+        << "    }\n";
+    (void)suffix;
+}
+
+void emitRuleRowFunctions(
+    std::ostream& out,
+    const puzzlescript::Game& game,
+    const puzzlescript::Rule& rule,
+    const std::string& prefix,
+    size_t rowIndex
+) {
+    const auto& row = rule.patterns[rowIndex];
+    int32_t dx = 0;
+    int32_t dy = 0;
+    switch (rule.direction) {
+        case 1: dy = -1; break;
+        case 2: dy = 1; break;
+        case 4: dx = -1; break;
+        case 8: dx = 1; break;
+        default: break;
+    }
+
+    out << "bool match_" << prefix << "_row" << rowIndex << "(Session& session, int32_t startIndex) {\n"
+        << "    const Game& game = *session.game;\n"
+        << "    const int32_t delta = (" << dx << ") * session.liveLevel.height + (" << dy << ");\n";
+    for (size_t cellIndex = 0; cellIndex < row.size(); ++cellIndex) {
+        emitPatternPredicate(
+            out,
+            game,
+            row[cellIndex],
+            "_" + std::to_string(cellIndex),
+            "startIndex + " + std::to_string(cellIndex) + " * delta"
+        );
+    }
+    out << "    return true;\n"
+        << "}\n\n";
+
+    out << "bool apply_replacements_" << prefix << "_row" << rowIndex << "(Session& session, int32_t startIndex) {\n"
+        << "    const Game& game = *session.game;\n"
+        << "    const int32_t delta = (" << dx << ") * session.liveLevel.height + (" << dy << ");\n"
+        << "    bool changed = false;\n";
+    for (size_t cellIndex = 0; cellIndex < row.size(); ++cellIndex) {
+        if (!row[cellIndex].replacement.has_value()) {
+            continue;
+        }
+        emitReplacementApply(
+            out,
+            game,
+            *row[cellIndex].replacement,
+            "_" + std::to_string(cellIndex),
+            "startIndex + " + std::to_string(cellIndex) + " * delta"
+        );
+    }
+    out << "    return changed;\n"
+        << "}\n\n";
+}
+
+void emitCollectRowMatches(
+    std::ostream& out,
+    const puzzlescript::Game& game,
+    const puzzlescript::Rule& rule,
+    const std::string& prefix,
+    size_t rowIndex,
+    const std::string& matchesName,
+    bool useSessionScratch
+) {
+    const auto& row = rule.patterns[rowIndex];
+    const int32_t len = static_cast<int32_t>(row.size());
+    const bool horizontal = rule.direction > 2;
+    int32_t dx = 0;
+    int32_t dy = 0;
+    switch (rule.direction) {
+        case 1: dy = -1; break;
+        case 2: dy = 1; break;
+        case 4: dx = -1; break;
+        case 8: dx = 1; break;
+        default: break;
+    }
+    const puzzlescript::MaskOffset rowObjectOffset = rowIndex < rule.cellRowMasksCount
+        ? game.cellRowMaskOffsets[rule.cellRowMasksFirst + rowIndex]
+        : rule.ruleMask;
+    const puzzlescript::MaskOffset rowMovementOffset = rowIndex < rule.cellRowMasksMovementsCount
+        ? game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst + rowIndex]
+        : puzzlescript::kNullMaskOffset;
+
+    out << "    if (!compiledRuleBitsSet(compiledRuleMaskPtr(game, " << rowObjectOffset << "U), "
+        << game.wordCount << "U, session.boardMask.data(), session.boardMask.size())) return false;\n";
+    if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
+        out << "    if (!compiledRuleBitsSet(compiledRuleMaskPtr(game, " << rowMovementOffset << "U), "
+            << game.movementWordCount << "U, session.boardMovementMask.data(), session.boardMovementMask.size())) return false;\n";
+    }
+    if (useSessionScratch) {
+        out << "    std::vector<int32_t>& " << matchesName << " = session.singleRowMatchScratch;\n"
+            << "    " << matchesName << ".clear();\n";
+    } else {
+        out << "    std::vector<int32_t> " << matchesName << ";\n";
+    }
+    out << "    int32_t xmin_" << rowIndex << " = 0;\n"
+        << "    int32_t xmax_" << rowIndex << " = session.liveLevel.width;\n"
+        << "    int32_t ymin_" << rowIndex << " = 0;\n"
+        << "    int32_t ymax_" << rowIndex << " = session.liveLevel.height;\n";
+    switch (rule.direction) {
+        case 1:
+            out << "    ymin_" << rowIndex << " += " << (len - 1) << ";\n";
+            break;
+        case 2:
+            out << "    ymax_" << rowIndex << " -= " << (len - 1) << ";\n";
+            break;
+        case 4:
+            out << "    xmin_" << rowIndex << " += " << (len - 1) << ";\n";
+            break;
+        case 8:
+            out << "    xmax_" << rowIndex << " -= " << (len - 1) << ";\n";
+            break;
+        default:
+            out << "    return false;\n";
+            break;
+    }
+    out << "    const MaskWord* rowObjectMask_" << rowIndex << " = compiledRuleMaskPtr(game, " << rowObjectOffset << "U);\n";
+    if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
+        out << "    const MaskWord* rowMovementMask_" << rowIndex << " = compiledRuleMaskPtr(game, " << rowMovementOffset << "U);\n";
+    } else {
+        out << "    const MaskWord* rowMovementMask_" << rowIndex << " = nullptr;\n";
+    }
+
+    struct AnchorCandidate {
+        size_t patternIndex = 0;
+        const std::vector<int32_t>* objectIds = nullptr;
+    };
+    std::vector<AnchorCandidate> anchorCandidates;
+    for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
+        const auto& pattern = row[patternIndex];
+        if (!pattern.objectAnchorIds.empty()) {
+            anchorCandidates.push_back(AnchorCandidate{patternIndex, &pattern.objectAnchorIds});
+        }
+        for (const auto& anyIds : pattern.anyObjectAnchorIds) {
+            if (!anyIds.empty()) {
+                anchorCandidates.push_back(AnchorCandidate{patternIndex, &anyIds});
+            }
+        }
+    }
+    if (!anchorCandidates.empty()) {
+        out << "    const int32_t validStartCount_" << rowIndex
+            << " = std::max(0, xmax_" << rowIndex << " - xmin_" << rowIndex
+            << ") * std::max(0, ymax_" << rowIndex << " - ymin_" << rowIndex << ");\n"
+            << "    int32_t bestAnchor_" << rowIndex << " = -1;\n"
+            << "    uint64_t bestAnchorCount_" << rowIndex << " = 0;\n"
+            << "    auto considerAnchor_" << rowIndex << " = [&](int32_t candidateIndex, const int32_t* objectIds, size_t objectIdCount) {\n"
+            << "        uint64_t count = 0;\n"
+            << "        for (size_t objectIdIndex = 0; objectIdIndex < objectIdCount; ++objectIdIndex) {\n"
+            << "            const int32_t objectId = objectIds[objectIdIndex];\n"
+            << "            if (objectId >= 0 && objectId < game.objectCount && static_cast<size_t>(objectId) < session.objectCellCounts.size()) {\n"
+            << "                count += session.objectCellCounts[static_cast<size_t>(objectId)];\n"
+            << "            }\n"
+            << "        }\n"
+            << "        if (count > 0 && (bestAnchor_" << rowIndex << " < 0 || count < bestAnchorCount_" << rowIndex << ")) {\n"
+            << "            bestAnchor_" << rowIndex << " = candidateIndex;\n"
+            << "            bestAnchorCount_" << rowIndex << " = count;\n"
+            << "        }\n"
+            << "    };\n";
+        for (size_t candidateIndex = 0; candidateIndex < anchorCandidates.size(); ++candidateIndex) {
+            const auto& candidate = anchorCandidates[candidateIndex];
+            out << "    static constexpr std::array<int32_t, " << candidate.objectIds->size() << "> anchorIds_"
+                << rowIndex << "_" << candidateIndex << " = {";
+            for (size_t objectIndex = 0; objectIndex < candidate.objectIds->size(); ++objectIndex) {
+                if (objectIndex > 0) {
+                    out << ", ";
+                }
+                out << (*candidate.objectIds)[objectIndex];
+            }
+            out << "};\n";
+        }
+        out << "    if (!session.objectCellIndexDirty && !session.objectCellBits.empty() && validStartCount_" << rowIndex << " > 0) {\n";
+        for (size_t candidateIndex = 0; candidateIndex < anchorCandidates.size(); ++candidateIndex) {
+            out
+                << "        considerAnchor_" << rowIndex << "(" << candidateIndex << ", anchorIds_"
+                << rowIndex << "_" << candidateIndex << ".data(), anchorIds_" << rowIndex << "_" << candidateIndex << ".size());\n";
+        }
+        out << "    }\n"
+            << "    if (bestAnchor_" << rowIndex << " >= 0 && bestAnchorCount_" << rowIndex
+            << " < static_cast<uint64_t>(std::max(8, validStartCount_" << rowIndex << "))) {\n"
+            << "        const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;\n"
+            << "        const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);\n"
+            << "        auto scanAnchor_" << rowIndex << " = [&](int32_t patternIndex, const int32_t* objectIds, size_t objectIdCount) {\n"
+            << "            for (size_t objectIdIndex = 0; objectIdIndex < objectIdCount; ++objectIdIndex) {\n"
+            << "                const int32_t objectId = objectIds[objectIdIndex];\n"
+            << "                if (objectId < 0 || objectId >= game.objectCount) continue;\n"
+            << "                const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;\n"
+            << "                if (objectBase + cellWordCount > session.objectCellBits.size()) continue;\n"
+            << "                for (size_t wordIndex = 0; wordIndex < cellWordCount; ++wordIndex) {\n"
+            << "                    uint64_t bits = session.objectCellBits[objectBase + wordIndex];\n"
+            << "                    while (bits != 0) {\n"
+            << "                        const int32_t bit = __builtin_ctzll(bits);\n"
+            << "                        const int32_t anchorTile = static_cast<int32_t>(wordIndex * 64 + static_cast<size_t>(bit));\n"
+            << "                        bits &= bits - 1;\n"
+            << "                        if (anchorTile >= tileCount) continue;\n"
+            << "                        const int32_t anchorX = anchorTile / session.liveLevel.height;\n"
+            << "                        const int32_t anchorY = anchorTile % session.liveLevel.height;\n"
+            << "                        const int32_t startX = anchorX - patternIndex * (" << dx << ");\n"
+            << "                        const int32_t startY = anchorY - patternIndex * (" << dy << ");\n"
+            << "                        if (startX < xmin_" << rowIndex << " || startX >= xmax_" << rowIndex
+            << " || startY < ymin_" << rowIndex << " || startY >= ymax_" << rowIndex << ") continue;\n";
+        if (horizontal) {
+            out << "                        const MaskWord* lineObjects = session.rowMasks.data() + static_cast<size_t>(startY * session.game->strideObject);\n";
+            if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
+                out << "                        const MaskWord* lineMovements = session.rowMovementMasks.data() + static_cast<size_t>(startY * session.game->strideMovement);\n";
+            }
+        } else {
+            out << "                        const MaskWord* lineObjects = session.columnMasks.data() + static_cast<size_t>(startX * session.game->strideObject);\n";
+            if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
+                out << "                        const MaskWord* lineMovements = session.columnMovementMasks.data() + static_cast<size_t>(startX * session.game->strideMovement);\n";
+            }
+        }
+        out << "                        if (!compiledRuleBitsSet(rowObjectMask_" << rowIndex << ", " << game.wordCount
+            << "U, lineObjects, session.game->strideObject)) continue;\n";
+        if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
+            out << "                        if (!compiledRuleBitsSet(rowMovementMask_" << rowIndex << ", " << game.movementWordCount
+                << "U, lineMovements, session.game->strideMovement)) continue;\n";
+        }
+        out << "                        const int32_t startIndex = startX * session.liveLevel.height + startY;\n"
+            << "                        if (match_" << prefix << "_row" << rowIndex << "(session, startIndex)) "
+            << matchesName << ".push_back(startIndex);\n"
+            << "                    }\n"
+            << "                }\n"
+            << "            }\n";
+        if (horizontal) {
+            out << "            if (" << matchesName << ".size() > 1) {\n"
+                << "                std::sort(" << matchesName << ".begin(), " << matchesName << ".end(), [&](int32_t lhs, int32_t rhs) {\n"
+                << "                    const int32_t lhsX = lhs / session.liveLevel.height;\n"
+                << "                    const int32_t lhsY = lhs % session.liveLevel.height;\n"
+                << "                    const int32_t rhsX = rhs / session.liveLevel.height;\n"
+                << "                    const int32_t rhsY = rhs % session.liveLevel.height;\n"
+                << "                    return lhsY == rhsY ? lhsX < rhsX : lhsY < rhsY;\n"
+                << "                });\n"
+                << "                " << matchesName << ".erase(std::unique(" << matchesName << ".begin(), " << matchesName << ".end()), " << matchesName << ".end());\n"
+                << "            }\n";
+        } else {
+            out << "            if (" << matchesName << ".size() > 1) {\n"
+                << "                std::sort(" << matchesName << ".begin(), " << matchesName << ".end());\n"
+                << "                " << matchesName << ".erase(std::unique(" << matchesName << ".begin(), " << matchesName << ".end()), " << matchesName << ".end());\n"
+                << "            }\n";
+        }
+        out << "        };\n"
+            << "        switch (bestAnchor_" << rowIndex << ") {\n";
+        for (size_t candidateIndex = 0; candidateIndex < anchorCandidates.size(); ++candidateIndex) {
+            const auto& candidate = anchorCandidates[candidateIndex];
+            out << "            case " << candidateIndex << ": scanAnchor_" << rowIndex << "("
+                << candidate.patternIndex << ", anchorIds_" << rowIndex << "_" << candidateIndex
+                << ".data(), anchorIds_" << rowIndex << "_" << candidateIndex << ".size()); break;\n";
+        }
+        out << "            default: break;\n"
+            << "        }\n"
+            << "        if (!" << matchesName << ".empty()) goto row_matches_done_" << rowIndex << ";\n"
+            << "    }\n";
+    }
+    if (horizontal) {
+        out << "    for (int32_t y = ymin_" << rowIndex << "; y < ymax_" << rowIndex << "; ++y) {\n"
+            << "        const MaskWord* lineObjects = session.rowMasks.data() + static_cast<size_t>(y * session.game->strideObject);\n"
+            << "        if (!compiledRuleBitsSet(rowObjectMask_" << rowIndex << ", " << game.wordCount << "U, lineObjects, session.game->strideObject)) continue;\n";
+        if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
+            out << "        const MaskWord* lineMovements = session.rowMovementMasks.data() + static_cast<size_t>(y * session.game->strideMovement);\n"
+                << "        if (!compiledRuleBitsSet(rowMovementMask_" << rowIndex << ", " << game.movementWordCount << "U, lineMovements, session.game->strideMovement)) continue;\n";
+        }
+        out << "        for (int32_t x = xmin_" << rowIndex << "; x < xmax_" << rowIndex << "; ++x) {\n"
+            << "            const int32_t startIndex = x * session.liveLevel.height + y;\n"
+            << "            if (match_" << prefix << "_row" << rowIndex << "(session, startIndex)) " << matchesName << ".push_back(startIndex);\n"
+            << "        }\n"
+            << "    }\n";
+    } else {
+        out << "    for (int32_t x = xmin_" << rowIndex << "; x < xmax_" << rowIndex << "; ++x) {\n"
+            << "        const MaskWord* lineObjects = session.columnMasks.data() + static_cast<size_t>(x * session.game->strideObject);\n"
+            << "        if (!compiledRuleBitsSet(rowObjectMask_" << rowIndex << ", " << game.wordCount << "U, lineObjects, session.game->strideObject)) continue;\n";
+        if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
+            out << "        const MaskWord* lineMovements = session.columnMovementMasks.data() + static_cast<size_t>(x * session.game->strideMovement);\n"
+                << "        if (!compiledRuleBitsSet(rowMovementMask_" << rowIndex << ", " << game.movementWordCount << "U, lineMovements, session.game->strideMovement)) continue;\n";
+        }
+        out << "        for (int32_t y = ymin_" << rowIndex << "; y < ymax_" << rowIndex << "; ++y) {\n"
+            << "            const int32_t startIndex = x * session.liveLevel.height + y;\n"
+            << "            if (match_" << prefix << "_row" << rowIndex << "(session, startIndex)) " << matchesName << ".push_back(startIndex);\n"
+            << "        }\n"
+            << "    }\n";
+    }
+    out << "row_matches_done_" << rowIndex << ":\n"
+        << "    if (" << matchesName << ".empty()) return false;\n";
+}
+
+void emitRuleFunctions(
+    std::ostream& out,
+    const puzzlescript::Game& game,
+    const puzzlescript::Rule& rule,
+    size_t sourceIndex,
+    size_t groupIndex,
+    size_t ruleIndex
+) {
+    const std::string prefix = "s" + std::to_string(sourceIndex)
+        + "_g" + std::to_string(groupIndex)
+        + "_r" + std::to_string(ruleIndex);
+    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+        emitRuleRowFunctions(out, game, rule, prefix, rowIndex);
+    }
+
+    out << "bool apply_rule_" << prefix << "(Session& session, CommandState& commands) {\n"
+        << "    const Game& game = *session.game;\n"
+        << "    bool changed = false;\n";
+    const bool oneRow = rule.patterns.size() == 1;
+    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+        emitCollectRowMatches(out, game, rule, prefix, rowIndex, "matches_" + std::to_string(rowIndex), oneRow);
+    }
+    if (oneRow) {
+        out << "    for (size_t matchIndex = 0; matchIndex < matches_0.size(); ++matchIndex) {\n"
+            << "        const int32_t startIndex = matches_0[matchIndex];\n"
+            << "        if (matchIndex > 0 && !match_" << prefix << "_row0(session, startIndex)) continue;\n"
+            << "        changed = apply_replacements_" << prefix << "_row0(session, startIndex) || changed;\n"
+            << "    }\n";
+    } else {
+        out << "    std::array<const std::vector<int32_t>*, " << rule.patterns.size() << "> allMatches = {";
+        for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+            if (rowIndex > 0) {
+                out << ", ";
+            }
+            out << "&matches_" << rowIndex;
+        }
+        out << "};\n"
+            << "    std::array<size_t, " << rule.patterns.size() << "> matchIndices{};\n"
+            << "    bool firstTuple = true;\n"
+            << "    bool done = false;\n"
+            << "    while (!done) {\n"
+            << "        bool stillMatches = true;\n"
+            << "        if (!firstTuple) {\n";
+        for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+            out << "            stillMatches = stillMatches && match_" << prefix << "_row" << rowIndex
+                << "(session, (*allMatches[" << rowIndex << "])[matchIndices[" << rowIndex << "]]);\n";
+        }
+        out << "        }\n"
+            << "        if (stillMatches) {\n";
+        for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+            out << "            changed = apply_replacements_" << prefix << "_row" << rowIndex
+                << "(session, (*allMatches[" << rowIndex << "])[matchIndices[" << rowIndex << "]]) || changed;\n";
+        }
+        out << "        }\n"
+            << "        firstTuple = false;\n"
+            << "        for (size_t carry = 0; carry < matchIndices.size(); ++carry) {\n"
+            << "            ++matchIndices[carry];\n"
+            << "            if (matchIndices[carry] < allMatches[carry]->size()) break;\n"
+            << "            matchIndices[carry] = 0;\n"
+            << "            if (carry + 1 == matchIndices.size()) done = true;\n"
+            << "        }\n"
+            << "    }\n";
+    }
+    out << "    compiledRuleQueueCommands(game.rules[" << groupIndex << "][" << ruleIndex << "], commands);\n"
+        << "    return changed;\n"
+        << "}\n\n";
+}
+
+struct CodegenSource {
+    std::filesystem::path path;
+    std::string source;
+    std::shared_ptr<const puzzlescript::Game> game;
+    uint64_t hash = 0;
+};
+
+struct CompiledRulesCoverage {
+    uint64_t sources = 0;
+    uint64_t earlyGroups = 0;
+    uint64_t earlyRules = 0;
+    uint64_t lateGroups = 0;
+    uint64_t lateRules = 0;
+    uint64_t compiledGroups = 0;
+    uint64_t compiledRules = 0;
+    std::unordered_map<std::string, uint64_t> missedGroupsByReason;
+};
+
+CompiledRulesCoverage measureCompiledRulesCoverage(
+    const std::vector<CodegenSource>& sources,
+    const CompiledRulesOptions& options
+) {
+    CompiledRulesCoverage coverage;
+    coverage.sources = sources.size();
+    for (const auto& source : sources) {
+        const auto& game = *source.game;
+        for (const auto& group : game.rules) {
+            ++coverage.earlyGroups;
+            coverage.earlyRules += group.size();
+            const std::string reason = compiledGroupMissReason(group, options);
+            if (reason.empty()) {
+                ++coverage.compiledGroups;
+                coverage.compiledRules += group.size();
+            } else {
+                ++coverage.missedGroupsByReason[reason];
+            }
+        }
+        for (const auto& group : game.lateRules) {
+            ++coverage.lateGroups;
+            coverage.lateRules += group.size();
+        }
+    }
+    return coverage;
+}
+
+void printCompiledRulesCoverage(const CompiledRulesCoverage& coverage) {
+    std::cerr << "compiled-rules-coverage:"
+              << " sources=" << coverage.sources
+              << " early_groups=" << coverage.earlyGroups
+              << " early_rules=" << coverage.earlyRules
+              << " compiled_groups=" << coverage.compiledGroups
+              << " compiled_rules=" << coverage.compiledRules
+              << " late_groups=" << coverage.lateGroups
+              << " late_rules=" << coverage.lateRules
+              << "\n";
+
+    static const std::array<std::string_view, 9> kReasonOrder = {
+        "random_group",
+        "random_rule",
+        "rigid",
+        "row_limit",
+        "ellipsis",
+        "empty_row",
+        "non_cell_pattern",
+        "random_replacement",
+        "empty_group",
+    };
+    std::cerr << "compiled-rules-misses:";
+    bool printedAny = false;
+    for (const std::string_view reason : kReasonOrder) {
+        const auto it = coverage.missedGroupsByReason.find(std::string(reason));
+        if (it == coverage.missedGroupsByReason.end() || it->second == 0) {
+            continue;
+        }
+        std::cerr << " " << reason << "=" << it->second;
+        printedAny = true;
+    }
+    if (!printedAny) {
+        std::cerr << " none=0";
+    }
+    std::cerr << "\n";
+}
+
+CodegenSource compileCodegenSource(const std::filesystem::path& path) {
+    CodegenSource result;
+    result.path = path;
+    result.source = readFile(path);
+    result.hash = puzzlescript::compiledRulesHashSource(result.source);
+    puzzlescript::compiler::DiagnosticSink diagnostics;
+    const auto parserState = puzzlescript::compiler::parseSource(result.source, diagnostics);
+    if (auto error = puzzlescript::compiler::lowerToRuntimeGame(parserState, result.game)) {
+        throw std::runtime_error(path.string() + ": " + error->message);
+    }
+    if (!result.game) {
+        throw std::runtime_error(path.string() + ": lowering produced no runtime game");
+    }
+    return result;
+}
+
+CodegenSource compileCodegenSourceText(std::string label, std::string source) {
+    CodegenSource result;
+    result.path = std::move(label);
+    result.source = std::move(source);
+    result.hash = puzzlescript::compiledRulesHashSource(result.source);
+    puzzlescript::compiler::DiagnosticSink diagnostics;
+    const auto parserState = puzzlescript::compiler::parseSource(result.source, diagnostics);
+    if (auto error = puzzlescript::compiler::lowerToRuntimeGame(parserState, result.game)) {
+        throw std::runtime_error(result.path.string() + ": " + error->message);
+    }
+    if (!result.game) {
+        throw std::runtime_error(result.path.string() + ": lowering produced no runtime game");
+    }
+    return result;
+}
+
+std::vector<std::filesystem::path> collectCompiledRuleSourcePaths(const std::filesystem::path& path) {
+    std::vector<std::filesystem::path> paths;
+    if (std::filesystem::is_directory(path)) {
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(path)) {
+            if (!entry.is_regular_file() || entry.path().extension() != ".txt") {
+                continue;
+            }
+            paths.push_back(entry.path());
+        }
+        std::sort(paths.begin(), paths.end());
+    } else {
+        paths.push_back(path);
+    }
+    return paths;
+}
+
+std::vector<CodegenSource> collectCompiledRuleSources(const std::filesystem::path& path) {
+    std::vector<CodegenSource> sources;
+    std::set<uint64_t> seenHashes;
+    auto addSource = [&](CodegenSource source) {
+        if (seenHashes.insert(source.hash).second) {
+            sources.push_back(std::move(source));
+        }
+    };
+
+    if (path.extension() == ".js") {
+        const auto cases = parseSimulationCorpusCases(loadJsDataArrayAsJson(path));
+        for (const auto& testCase : cases) {
+            addSource(compileCodegenSourceText(
+                path.string() + "#" + std::to_string(testCase.index + 1) + ":" + testCase.name,
+                testCase.source
+            ));
+        }
+        return sources;
+    }
+
+    for (const auto& sourcePath : collectCompiledRuleSourcePaths(path)) {
+        addSource(compileCodegenSource(sourcePath));
+    }
+    return sources;
+}
+
+std::string generateCompiledRulesCpp(
+    const std::vector<CodegenSource>& sources,
+    std::string_view symbol,
+    const CompiledRulesOptions& options
+) {
+    std::ostringstream out;
+    const std::string safeSymbol = safeCppIdentifier(symbol);
+    out << "// Generated by puzzlescript_cpp compile-rules. Do not edit by hand.\n"
+        << "#include <algorithm>\n"
+        << "#include <array>\n"
+        << "#include <cstddef>\n"
+        << "#include <cstdint>\n"
+        << "#include <vector>\n"
+        << "#include \"runtime/compiled_rules.hpp\"\n\n"
+        << "namespace {\n"
+        << "using namespace puzzlescript;\n\n";
+
+    uint32_t totalCompiledRules = 0;
+    uint32_t totalCompiledGroups = 0;
+    for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
+        const auto& source = sources[sourceIndex];
+        const auto& game = *source.game;
+        uint32_t sourceCompiledRules = 0;
+        uint32_t sourceCompiledGroups = 0;
+        for (size_t groupIndex = 0; groupIndex < game.rules.size(); ++groupIndex) {
+            const auto& group = game.rules[groupIndex];
+            if (!isCompilableGroup(group, options)) {
+                continue;
+            }
+            ++sourceCompiledGroups;
+            sourceCompiledRules += static_cast<uint32_t>(group.size());
+            for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
+                emitRuleFunctions(out, game, group[ruleIndex], sourceIndex, groupIndex, ruleIndex);
+            }
+        }
+        totalCompiledRules += sourceCompiledRules;
+        totalCompiledGroups += sourceCompiledGroups;
+
+        out << "CompiledRuleApplyOutcome apply_source_" << sourceIndex << "(Session& session, int32_t groupIndex, bool late, CommandState& commands) {\n"
+            << "    if (late) return {false, false};\n"
+            << "    switch (groupIndex) {\n";
+        for (size_t groupIndex = 0; groupIndex < game.rules.size(); ++groupIndex) {
+            const auto& group = game.rules[groupIndex];
+            if (!isCompilableGroup(group, options)) {
+                continue;
+            }
+            out << "        case " << groupIndex << ": {\n"
+                << "            bool hasChanges = false;\n"
+                << "            bool madeChange = true;\n"
+                << "            int loopCount = 0;\n"
+                << "            compiledRuleRebuildMasks(session);\n"
+                << "            while (madeChange && loopCount++ < 200) {\n"
+                << "                madeChange = false;\n";
+            for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
+                out << "                if (apply_rule_s" << sourceIndex << "_g" << groupIndex << "_r" << ruleIndex << "(session, commands)) {\n"
+                    << "                    madeChange = true;\n"
+                    << "                    compiledRuleRebuildMasks(session);\n"
+                    << "                }\n";
+            }
+            out << "                hasChanges = hasChanges || madeChange;\n"
+                << "            }\n"
+                << "            return {true, hasChanges};\n"
+                << "        }\n";
+        }
+        out << "        default: return {false, false};\n"
+            << "    }\n"
+            << "}\n\n";
+
+        out << "const CompiledRulesBackend backend_" << sourceIndex << " = {\n"
+            << "    " << source.hash << "ULL,\n"
+            << "    " << cppStringLiteral(source.path.string()) << ",\n"
+            << "    apply_source_" << sourceIndex << ",\n"
+            << "    " << sourceCompiledRules << "U,\n"
+            << "    " << sourceCompiledGroups << "U,\n"
+            << "};\n\n";
+    }
+
+    out << "} // namespace\n\n"
+        << "extern \"C\" const puzzlescript::CompiledRulesBackend* "
+        << "ps_compiled_rules_find_backend(uint64_t sourceHash) {\n"
+        << "    switch (sourceHash) {\n";
+    for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
+        out << "        case " << sources[sourceIndex].hash << "ULL: return &backend_" << sourceIndex << ";\n";
+    }
+    out << "        default: return nullptr;\n"
+        << "    }\n"
+        << "}\n\n"
+        << "extern \"C\" const uint32_t " << safeSymbol << "_compiled_rule_count = " << totalCompiledRules << "U;\n"
+        << "extern \"C\" const uint32_t " << safeSymbol << "_compiled_group_count = " << totalCompiledGroups << "U;\n";
+    return out.str();
+}
+
+int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
+    std::optional<std::filesystem::path> emitCpp;
+    std::string symbol = "puzzlescript_compiled_rules";
+    CompiledRulesOptions options;
+    bool statsOnly = false;
+    for (int index = 0; index < argc; ++index) {
+        const std::string arg = argv[index];
+        if (arg == "--emit-cpp") {
+            if (++index >= argc) {
+                throw std::runtime_error("--emit-cpp requires a path");
+            }
+            emitCpp = std::filesystem::path(argv[index]);
+        } else if (arg == "--symbol") {
+            if (++index >= argc) {
+                throw std::runtime_error("--symbol requires a name");
+            }
+            symbol = argv[index];
+        } else if (arg == "--stats-only") {
+            statsOnly = true;
+        } else if (arg == "--max-rows") {
+            if (++index >= argc) {
+                throw std::runtime_error("--max-rows requires a positive integer");
+            }
+            const int parsed = std::stoi(argv[index]);
+            if (parsed < 1) {
+                throw std::runtime_error("--max-rows requires a positive integer");
+            }
+            options.maxRows = static_cast<size_t>(parsed);
+        } else {
+            throw std::runtime_error("Unsupported compile-rules argument: " + arg + "\nTry: puzzlescript_cpp help compile-rules");
+        }
+    }
+    if (!statsOnly && !emitCpp.has_value()) {
+        throw std::runtime_error("compile-rules requires --emit-cpp out.cpp");
+    }
+
+    std::vector<CodegenSource> sources = collectCompiledRuleSources(std::filesystem::path(sourcePath));
+    const CompiledRulesCoverage coverage = measureCompiledRulesCoverage(sources, options);
+    if (statsOnly) {
+        std::cerr << "compiled-rules: sources=" << sources.size()
+                  << " max_rows=" << options.maxRows
+                  << " output=<stats-only>"
+                  << " wrote=0"
+                  << "\n";
+        printCompiledRulesCoverage(coverage);
+        return 0;
+    }
+
+    const std::string generated = generateCompiledRulesCpp(sources, symbol, options);
+    const bool wrote = writeFileIfChanged(*emitCpp, generated);
+    std::cerr << "compiled-rules: sources=" << sources.size()
+              << " max_rows=" << options.maxRows
+              << " groups=" << coverage.compiledGroups
+              << " rules=" << coverage.compiledRules
+              << " output=" << emitCpp->string()
+              << (wrote ? " wrote=1" : " wrote=0")
+              << "\n";
+    printCompiledRulesCoverage(coverage);
+    return 0;
+}
+
 int compileSourceCommand(const std::string& sourcePath, int argc, char** argv) {
     bool emitParserState = false;
     bool emitDiagnostics = false;
@@ -3602,6 +4512,7 @@ int compileSourceCommand(const std::string& sourcePath, int argc, char** argv) {
             std::cerr << "Lowering produced no runtime game.\n";
             return 1;
         }
+        puzzlescript::attachLinkedCompiledRules(*std::const_pointer_cast<puzzlescript::Game>(game), source);
         std::cout << serializeRuntimeGameDebugJson(*game);
     }
 
@@ -3897,6 +4808,8 @@ void printMainHelp() {
         << "      Emit the canonical parser-state JSON used by parity tests.\n"
         << "  puzzlescript_cpp compile game.txt --emit-ir-json\n"
         << "      Emit the native lowered runtime game JSON used for JS-vs-C++ compiler diffs.\n"
+        << "  puzzlescript_cpp compile-rules game.txt --emit-cpp build/compiled-rules/game.cpp\n"
+        << "      Emit C++ compiled-rule kernels for build-time solver/generator specialization.\n"
         << "  puzzlescript_cpp test js-parity <generated-js-parity-data.json>\n"
         << "      Check saved replay cases generated from the original JavaScript test suite.\n"
         << "  puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js\n"
@@ -3927,6 +4840,7 @@ void printMainHelp() {
         << "  puzzlescript_cpp help play\n"
         << "  puzzlescript_cpp help run\n"
         << "  puzzlescript_cpp help compile\n"
+        << "  puzzlescript_cpp help compile-rules\n"
         << "  puzzlescript_cpp help test\n"
         << "  puzzlescript_cpp help profile\n"
         << "  puzzlescript_cpp help bench\n";
@@ -3961,6 +4875,22 @@ void printCompileHelp() {
         << "  puzzlescript_cpp compile game.txt --diagnostics\n"
         << "  puzzlescript_cpp compile game.txt --emit-parser-state\n"
         << "  puzzlescript_cpp compile game.txt --emit-ir-json\n";
+}
+
+void printCompileRulesHelp() {
+    std::cout
+        << "Usage: puzzlescript_cpp compile-rules game.txt --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
+        << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
+        << "       puzzlescript_cpp compile-rules path/to/corpus --stats-only [--max-rows N]\n\n"
+        << "Emits C++ compiled-rule kernels for conservative deterministic rule groups.\n"
+        << "The generated file is meant to be linked into solver/generator builds through\n"
+        << "the Makefile SPECIALIZE=true workflow. Use --stats-only to print coverage and\n"
+        << "miss buckets without writing a generated source file. --max-rows defaults to 1;\n"
+        << "higher values enable experimental deterministic multi-row kernels.\n\n"
+        << "Examples:\n"
+        << "  puzzlescript_cpp compile-rules src/demo/sokoban_basic.txt --emit-cpp build/compiled-rules/sokoban.cpp --symbol sokoban\n"
+        << "  puzzlescript_cpp compile-rules src/tests/resources/testdata.js --stats-only --max-rows 8\n"
+        << "  make generator src/demo/sokoban_basic.txt src/tests/generator_presets/sokoban_room_scatter.gen SPECIALIZE=true\n";
 }
 
 void printTestHelp() {
@@ -4018,6 +4948,8 @@ void printHelpTopic(const std::string& topic) {
         printRunHelp();
     } else if (topic == "compile") {
         printCompileHelp();
+    } else if (topic == "compile-rules") {
+        printCompileRulesHelp();
     } else if (topic == "test") {
         printTestHelp();
     } else if (topic == "profile" || topic == "profile-simulations") {
@@ -4066,6 +4998,9 @@ int main(int argc, char** argv) {
         }
         if (command == "compile") {
             return compileSourceCommand(path, argc - 3, argv + 3);
+        }
+        if (command == "compile-rules") {
+            return compileRulesCommand(path, argc - 3, argv + 3);
         }
         if (command == "play") {
 #ifdef PS_HAVE_SDL2

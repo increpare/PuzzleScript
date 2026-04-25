@@ -66,6 +66,7 @@ set(PUZZLESCRIPT_COMPILER_SOURCES
 )
 
 set(PUZZLESCRIPT_NATIVE_SOURCES
+  src/runtime/compiled_rules.cpp
   src/runtime/c_api.cpp
   src/runtime/core.cpp
   src/runtime/hash.cpp
@@ -147,6 +148,18 @@ add_executable(puzzlescript_solver
 add_executable(puzzlescript_generator
   src/generator/main.cpp
 )
+
+set(PS_COMPILED_RULES_SOURCE "" CACHE FILEPATH "Optional generated compiled-rules C++ source to link into solver/generator")
+if(PS_COMPILED_RULES_SOURCE)
+  get_filename_component(PS_COMPILED_RULES_SOURCE_ABS "${PS_COMPILED_RULES_SOURCE}" ABSOLUTE)
+  if(NOT EXISTS "${PS_COMPILED_RULES_SOURCE_ABS}")
+    message(FATAL_ERROR "PS_COMPILED_RULES_SOURCE does not exist: ${PS_COMPILED_RULES_SOURCE_ABS}")
+  endif()
+  message(STATUS "Linking compiled-rules source: ${PS_COMPILED_RULES_SOURCE_ABS}")
+  target_sources(puzzlescript_cpp PRIVATE "${PS_COMPILED_RULES_SOURCE_ABS}")
+  target_sources(puzzlescript_solver PRIVATE "${PS_COMPILED_RULES_SOURCE_ABS}")
+  target_sources(puzzlescript_generator PRIVATE "${PS_COMPILED_RULES_SOURCE_ABS}")
+endif()
 
 target_link_libraries(puzzlescript_solver
   PRIVATE
