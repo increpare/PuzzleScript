@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/mine_solver_focus_group.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--min-elapsed-ms N] [--max-targets N] [--out PATH] [--strategy NAME] [--jobs N]');
+    console.error('Usage: node src/tests/mine_solver_focus_group.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--min-elapsed-ms N] [--max-targets N] [--out PATH] [--strategy NAME] [--jobs N] [--exclude-game NAME] [--exclude-games CSV]');
     process.exit(1);
 }
 
@@ -23,6 +23,7 @@ let maxTargets = 50;
 let outPath = path.resolve('build/native/solver_focus_group.json');
 let strategy = 'portfolio';
 let jobs = '1';
+const excludedGames = new Set();
 
 function parsePositiveInt(value, label) {
     const parsed = Number.parseInt(value, 10);
@@ -54,6 +55,18 @@ for (let index = 2; index < args.length; index++) {
         strategy = args[++index];
     } else if (arg === '--jobs' && index + 1 < args.length) {
         jobs = args[++index];
+    } else if (arg === '--exclude-game' && index + 1 < args.length) {
+        const game = args[++index].trim();
+        if (game.length > 0) {
+            excludedGames.add(game);
+        }
+    } else if (arg === '--exclude-games' && index + 1 < args.length) {
+        for (const game of args[++index].split(',')) {
+            const trimmed = game.trim();
+            if (trimmed.length > 0) {
+                excludedGames.add(trimmed);
+            }
+        }
     } else {
         throw new Error(`Unsupported argument: ${arg}`);
     }
@@ -93,6 +106,7 @@ if (json.totals.errors !== 0) {
 
 const candidates = json.results
     .filter((entry) => entry.status === 'solved')
+    .filter((entry) => !excludedGames.has(entry.game))
     .filter((entry) => entry.elapsed_ms >= minElapsedMs && entry.elapsed_ms <= timeoutMs)
     .sort((a, b) => {
         if (a.elapsed_ms !== b.elapsed_ms) return a.elapsed_ms - b.elapsed_ms;
@@ -133,6 +147,7 @@ const manifest = {
     timeout_ms: timeoutMs,
     min_elapsed_ms: minElapsedMs,
     max_targets: maxTargets,
+    excluded_games: Array.from(excludedGames).sort(),
     target_count: selectedTargets.length,
     candidate_count: candidates.length,
     totals: json.totals,

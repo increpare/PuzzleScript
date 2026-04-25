@@ -74,6 +74,8 @@ SOLVER_FOCUS_MAX_TARGETS ?= 50
 SOLVER_FOCUS_STRATEGY ?= $(SOLVER_STRATEGY)
 SOLVER_FOCUS_JOBS ?= 1
 SOLVER_FOCUS_RUNS ?= 1
+SOLVER_FOCUS_EXCLUDE_GAMES ?= easyenigma.txt,karamell.txt,paint everything everywhere.txt
+SOLVER_FOCUS_EXCLUDE_GAMES_ARG = $(if $(SOLVER_FOCUS_EXCLUDE_GAMES),--exclude-games "$(SOLVER_FOCUS_EXCLUDE_GAMES)",)
 SOLVER_FOCUS_PROFILE_COUNTERS ?= false
 SOLVER_FOCUS_PROFILE_COUNTERS_ARG = $(if $(filter true,$(SOLVER_FOCUS_PROFILE_COUNTERS)),--profile-runtime-counters,)
 COMPILED_RULES_PERF ?= false
@@ -579,7 +581,7 @@ solver_mine_pippable: $(PUZZLESCRIPT_SOLVER)
 	$(NODE) src/tests/mine_solver_near_threshold.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_MINE_CORPUS) --timeouts-ms $(SOLVER_MINE_TIMEOUTS_MS) --strategy $(SOLVER_MINE_STRATEGY) --near-ratio $(SOLVER_MINE_NEAR_RATIO) --out $(SOLVER_PIPPABLE_MANIFEST) $(SOLVER_MINE_MAX_TARGETS_ARG)
 
 solver_focus_mine: $(PUZZLESCRIPT_SOLVER)
-	$(NODE) src/tests/mine_solver_focus_group.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_CORPUS) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --min-elapsed-ms $(SOLVER_FOCUS_MIN_ELAPSED_MS) --max-targets $(SOLVER_FOCUS_MAX_TARGETS) --strategy $(SOLVER_FOCUS_STRATEGY) --jobs $(SOLVER_FOCUS_JOBS) --out $(SOLVER_FOCUS_MANIFEST)
+	$(NODE) src/tests/mine_solver_focus_group.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_CORPUS) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --min-elapsed-ms $(SOLVER_FOCUS_MIN_ELAPSED_MS) --max-targets $(SOLVER_FOCUS_MAX_TARGETS) --strategy $(SOLVER_FOCUS_STRATEGY) --jobs $(SOLVER_FOCUS_JOBS) $(SOLVER_FOCUS_EXCLUDE_GAMES_ARG) --out $(SOLVER_FOCUS_MANIFEST)
 
 solver_focus_benchmark: $(PUZZLESCRIPT_SOLVER)
 	@if [ "$(SPECIALIZE)" = "true" ]; then \
