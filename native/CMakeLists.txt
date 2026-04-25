@@ -12,26 +12,36 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Defaulting CMAKE_BUILD_TYPE to Release (native perf build).")
 endif()
 
-# Release-build flags: -O3, LTO, native codegen, NDEBUG. Tuned for the
+# Release-build flags: -O3, optional LTO, native codegen, NDEBUG. Tuned for the
 # performance target in docs/superpowers/specs/2026-04-22-native-perf-crush-design.md.
 # Note: -fno-exceptions / -fno-rtti omitted because core.cpp and cli_main.cpp
 # use throw / try / catch (e.g. json::ParseError) pervasively for parse-error
 # reporting; enabling those flags would require a large rewrite outside the
 # scope of this perf phase.
+option(PS_ENABLE_LTO "Enable Release-build link-time optimization" ON)
+option(PS_ENABLE_LINK_DEDUP "Enable Darwin ld64 duplicate-code folding in Release builds" ON)
+option(PS_ENABLE_EXPORTED_SYMBOLS "Enable exported symbols from Release main executables on Darwin" ON)
 add_compile_options(
     $<$<CONFIG:Release>:-O3>
     $<$<CONFIG:Release>:-DNDEBUG>
     $<$<CONFIG:Release>:-march=native>
-    $<$<CONFIG:Release>:-flto>
 )
+if(PS_ENABLE_LTO)
+  add_compile_options($<$<CONFIG:Release>:-flto>)
+  add_link_options($<$<CONFIG:Release>:-flto>)
+endif()
+if(NOT PS_ENABLE_LINK_DEDUP AND APPLE)
+  add_link_options($<$<CONFIG:Release>:-Wl,-no_deduplicate>)
+endif()
+if(NOT PS_ENABLE_EXPORTED_SYMBOLS AND APPLE)
+  add_link_options($<$<CONFIG:Release>:-Wl,-no_exported_symbols>)
+endif()
 
 # libc++ safe-mode instrumentation (seen as __annotate_contiguous_container in
 # baseline profiles) is a large tax; turn it off on Release only.
 add_compile_definitions(
     $<$<CONFIG:Release>:_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_NONE>
 )
-
-add_link_options($<$<CONFIG:Release>:-flto>)
 
 find_package(Threads REQUIRED)
 find_package(PkgConfig QUIET)
@@ -150,15 +160,56 @@ add_executable(puzzlescript_generator
 )
 
 set(PS_COMPILED_RULES_SOURCE "" CACHE FILEPATH "Optional generated compiled-rules C++ source to link into solver/generator")
+set(PS_COMPILED_RULES_SOURCES_FILE "" CACHE FILEPATH "Optional newline-delimited list of generated compiled-rules C++ sources")
+set(PS_COMPILED_RULES_OPT_LEVEL "" CACHE STRING "Optional Release optimization level for generated compiled-rules source: 0, 1, 2, 3, s, or z")
+if(PS_COMPILED_RULES_SOURCE AND PS_COMPILED_RULES_SOURCES_FILE)
+  message(FATAL_ERROR "Set only one of PS_COMPILED_RULES_SOURCE or PS_COMPILED_RULES_SOURCES_FILE")
+endif()
+
+set(PS_COMPILED_RULES_SOURCES)
 if(PS_COMPILED_RULES_SOURCE)
-  get_filename_component(PS_COMPILED_RULES_SOURCE_ABS "${PS_COMPILED_RULES_SOURCE}" ABSOLUTE)
-  if(NOT EXISTS "${PS_COMPILED_RULES_SOURCE_ABS}")
-    message(FATAL_ERROR "PS_COMPILED_RULES_SOURCE does not exist: ${PS_COMPILED_RULES_SOURCE_ABS}")
+  list(APPEND PS_COMPILED_RULES_SOURCES "${PS_COMPILED_RULES_SOURCE}")
+endif()
+if(PS_COMPILED_RULES_SOURCES_FILE)
+  get_filename_component(PS_COMPILED_RULES_SOURCES_FILE_ABS "${PS_COMPILED_RULES_SOURCES_FILE}" ABSOLUTE)
+  if(NOT EXISTS "${PS_COMPILED_RULES_SOURCES_FILE_ABS}")
+    message(FATAL_ERROR "PS_COMPILED_RULES_SOURCES_FILE does not exist: ${PS_COMPILED_RULES_SOURCES_FILE_ABS}")
   endif()
-  message(STATUS "Linking compiled-rules source: ${PS_COMPILED_RULES_SOURCE_ABS}")
-  target_sources(puzzlescript_cpp PRIVATE "${PS_COMPILED_RULES_SOURCE_ABS}")
-  target_sources(puzzlescript_solver PRIVATE "${PS_COMPILED_RULES_SOURCE_ABS}")
-  target_sources(puzzlescript_generator PRIVATE "${PS_COMPILED_RULES_SOURCE_ABS}")
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${PS_COMPILED_RULES_SOURCES_FILE_ABS}")
+  file(STRINGS "${PS_COMPILED_RULES_SOURCES_FILE_ABS}" PS_COMPILED_RULES_LISTED_SOURCES)
+  list(APPEND PS_COMPILED_RULES_SOURCES ${PS_COMPILED_RULES_LISTED_SOURCES})
+endif()
+
+if(PS_COMPILED_RULES_SOURCES)
+  set(PS_COMPILED_RULES_SOURCE_ABS_LIST)
+  foreach(PS_COMPILED_RULES_SOURCE_ENTRY IN LISTS PS_COMPILED_RULES_SOURCES)
+    get_filename_component(PS_COMPILED_RULES_SOURCE_ABS "${PS_COMPILED_RULES_SOURCE_ENTRY}" ABSOLUTE)
+    if(NOT EXISTS "${PS_COMPILED_RULES_SOURCE_ABS}")
+      message(FATAL_ERROR "Compiled-rules source does not exist: ${PS_COMPILED_RULES_SOURCE_ABS}")
+    endif()
+    list(APPEND PS_COMPILED_RULES_SOURCE_ABS_LIST "${PS_COMPILED_RULES_SOURCE_ABS}")
+  endforeach()
+  list(LENGTH PS_COMPILED_RULES_SOURCE_ABS_LIST PS_COMPILED_RULES_SOURCE_COUNT)
+  if(PS_COMPILED_RULES_SOURCE_COUNT EQUAL 1)
+    list(GET PS_COMPILED_RULES_SOURCE_ABS_LIST 0 PS_COMPILED_RULES_ONLY_SOURCE)
+    message(STATUS "Linking compiled-rules source: ${PS_COMPILED_RULES_ONLY_SOURCE}")
+  else()
+    message(STATUS "Linking compiled-rules sources: ${PS_COMPILED_RULES_SOURCE_COUNT}")
+  endif()
+  if(NOT PS_COMPILED_RULES_OPT_LEVEL STREQUAL "")
+    if(NOT PS_COMPILED_RULES_OPT_LEVEL MATCHES "^(0|1|2|3|s|z)$")
+      message(FATAL_ERROR "PS_COMPILED_RULES_OPT_LEVEL must be one of: 0, 1, 2, 3, s, z")
+    endif()
+    message(STATUS "Compiled-rules source Release opt level: -O${PS_COMPILED_RULES_OPT_LEVEL}")
+    foreach(PS_COMPILED_RULES_SOURCE_ABS IN LISTS PS_COMPILED_RULES_SOURCE_ABS_LIST)
+      set_source_files_properties(
+        "${PS_COMPILED_RULES_SOURCE_ABS}"
+        PROPERTIES COMPILE_OPTIONS "$<$<CONFIG:Release>:-O${PS_COMPILED_RULES_OPT_LEVEL}>")
+    endforeach()
+  endif()
+  target_sources(puzzlescript_cpp PRIVATE ${PS_COMPILED_RULES_SOURCE_ABS_LIST})
+  target_sources(puzzlescript_solver PRIVATE ${PS_COMPILED_RULES_SOURCE_ABS_LIST})
+  target_sources(puzzlescript_generator PRIVATE ${PS_COMPILED_RULES_SOURCE_ABS_LIST})
 endif()
 
 target_link_libraries(puzzlescript_solver
