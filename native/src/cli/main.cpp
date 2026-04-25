@@ -4000,7 +4000,11 @@ void emitReplacementApply(
                 << "            objectsChanged = objectsChanged || after != before;\n"
                 << "        }\n";
         }
-        out << "        if (objectsChanged) compiledRuleSetCellObjectsFromWords(session, tile, newObjects, created, destroyed);\n";
+        if (game.wordCount == 1) {
+            out << "        if (objectsChanged) compiledRuleSetCellObjectsWord1(session, tile, newObjects[0], created[0], destroyed[0]);\n";
+        } else {
+            out << "        if (objectsChanged) compiledRuleSetCellObjectsFromWords(session, tile, newObjects, created, destroyed);\n";
+        }
     }
     if (hasMovementEffect) {
         out << "        const size_t movementBase = static_cast<size_t>(tile) * " << game.movementWordCount << "U;\n"
@@ -4019,7 +4023,11 @@ void emitReplacementApply(
                 << "            movementsChanged = movementsChanged || after != before;\n"
                 << "        }\n";
         }
-        out << "        if (movementsChanged) compiledRuleSetCellMovementsFromWords(session, tile, newMovements);\n";
+        if (game.movementWordCount == 1) {
+            out << "        if (movementsChanged) compiledRuleSetCellMovementsWord1(session, tile, newMovements[0]);\n";
+        } else {
+            out << "        if (movementsChanged) compiledRuleSetCellMovementsFromWords(session, tile, newMovements);\n";
+        }
     }
     out << "        changed = changed || objectsChanged || movementsChanged;\n"
         << "    }\n";
@@ -4265,7 +4273,7 @@ void emitCollectRowMatches(
         }
         out << "            default: break;\n"
             << "        }\n"
-            << "        if (!" << matchesName << ".empty()) goto row_matches_done_" << rowIndex << ";\n"
+            << "        goto row_matches_done_" << rowIndex << ";\n"
             << "    }\n";
     }
     if (horizontal) {

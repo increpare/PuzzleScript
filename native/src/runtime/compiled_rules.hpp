@@ -76,6 +76,14 @@ void compiledRuleSetCellObjectsFromWords(
     const MaskWord* destroyed
 );
 void compiledRuleSetCellMovementsFromWords(Session& session, int32_t tileIndex, const MaskWord* movements);
+void compiledRuleSetCellObjectsWord1(
+    Session& session,
+    int32_t tileIndex,
+    MaskWord objects,
+    MaskWord created,
+    MaskWord destroyed
+);
+void compiledRuleSetCellMovementsWord1(Session& session, int32_t tileIndex, MaskWord movements);
 void compiledRuleRebuildMasks(Session& session);
 void compiledRuleQueueCommands(const Rule& rule, CommandState& commands);
 bool compiledRulePrepareCommandQueue(CommandState& commands, bool currentRuleCancel, bool currentRuleRestart);

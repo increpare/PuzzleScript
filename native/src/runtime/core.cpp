@@ -4069,6 +4069,74 @@ void compiledRuleSetCellMovementsFromWords(Session& session, int32_t tileIndex, 
     setCellMovementsFromWords(session, tileIndex, movements);
 }
 
+void compiledRuleSetCellObjectsWord1(
+    Session& session,
+    int32_t tileIndex,
+    MaskWord objects,
+    MaskWord created,
+    MaskWord destroyed
+) {
+    const int32_t stride = session.game->strideObject;
+    const size_t base = static_cast<size_t>(tileIndex * stride);
+    const int32_t columnIndex = tileIndex / session.liveLevel.height;
+    const int32_t rowIndex = tileIndex % session.liveLevel.height;
+    const MaskWord oldValue = session.liveLevel.objects[base];
+
+    MaskWordUnsigned changedBits = static_cast<MaskWordUnsigned>(oldValue ^ objects);
+    while (changedBits != 0) {
+        const int32_t bit = maskWordCountTrailingZeros(changedBits);
+        setObjectCellIndexBit(
+            session,
+            bit,
+            tileIndex,
+            (static_cast<MaskWordUnsigned>(objects) & (MaskWordUnsigned{1} << bit)) != 0
+        );
+        changedBits &= changedBits - 1;
+    }
+
+    session.liveLevel.objects[base] = objects;
+    session.columnMasks[static_cast<size_t>(columnIndex * stride)] |= objects;
+    session.rowMasks[static_cast<size_t>(rowIndex * stride)] |= objects;
+    session.boardMask[0] |= objects;
+
+    if ((oldValue & ~objects) != 0) {
+        if (static_cast<size_t>(rowIndex) < session.dirtyObjectRows.size())
+            session.dirtyObjectRows[static_cast<size_t>(rowIndex)] = 1;
+        if (static_cast<size_t>(columnIndex) < session.dirtyObjectColumns.size())
+            session.dirtyObjectColumns[static_cast<size_t>(columnIndex)] = 1;
+        session.dirtyObjectBoard = true;
+        session.anyMasksDirty = true;
+    }
+    if (!session.pendingCreateMask.empty()) {
+        session.pendingCreateMask[0] |= created;
+    }
+    if (!session.pendingDestroyMask.empty()) {
+        session.pendingDestroyMask[0] |= destroyed;
+    }
+}
+
+void compiledRuleSetCellMovementsWord1(Session& session, int32_t tileIndex, MaskWord movements) {
+    const int32_t stride = session.game->strideMovement;
+    const size_t base = static_cast<size_t>(tileIndex * stride);
+    const int32_t columnIndex = tileIndex / session.liveLevel.height;
+    const int32_t rowIndex = tileIndex % session.liveLevel.height;
+    const MaskWord oldValue = session.liveMovements[base];
+
+    session.liveMovements[base] = movements;
+    session.columnMovementMasks[static_cast<size_t>(columnIndex * stride)] |= movements;
+    session.rowMovementMasks[static_cast<size_t>(rowIndex * stride)] |= movements;
+    session.boardMovementMask[0] |= movements;
+
+    if ((oldValue & ~movements) != 0) {
+        if (static_cast<size_t>(rowIndex) < session.dirtyMovementRows.size())
+            session.dirtyMovementRows[static_cast<size_t>(rowIndex)] = 1;
+        if (static_cast<size_t>(columnIndex) < session.dirtyMovementColumns.size())
+            session.dirtyMovementColumns[static_cast<size_t>(columnIndex)] = 1;
+        session.dirtyMovementBoard = true;
+        session.anyMasksDirty = true;
+    }
+}
+
 void compiledRuleRebuildMasks(Session& session) {
     rebuildMasks(session);
 }

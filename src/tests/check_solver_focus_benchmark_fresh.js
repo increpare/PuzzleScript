@@ -90,6 +90,7 @@ const benchmark = JSON.parse(fs.readFileSync(benchmarkPath, 'utf8'));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const manifestTargets = manifest.targets || [];
 const benchmarkTargets = benchmark.targets || [];
+const corpusRoot = expectedCorpus;
 
 if (benchmark.runs_per_target !== expectedRuns) {
     stale(`runs_per_target=${benchmark.runs_per_target}, expected ${expectedRuns}`);
@@ -113,6 +114,14 @@ if (benchmark.target_count !== manifestTargets.length || benchmarkTargets.length
 for (let index = 0; index < manifestTargets.length; index++) {
     if (key(manifestTargets[index]) !== key(benchmarkTargets[index])) {
         stale(`target[${index}]=${key(benchmarkTargets[index])}, expected ${key(manifestTargets[index])}`);
+    }
+    const gamePath = path.resolve(corpusRoot, manifestTargets[index].game);
+    if (!fs.existsSync(gamePath)) {
+        stale(`missing target game ${gamePath}`);
+    }
+    const gameStat = fs.statSync(gamePath);
+    if (benchmarkStat.mtimeMs < gameStat.mtimeMs) {
+        stale(`older than target game ${gamePath}`);
     }
 }
 

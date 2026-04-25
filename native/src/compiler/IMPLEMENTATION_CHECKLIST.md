@@ -618,7 +618,7 @@ lab bench, not the full corpus.
   make simulation_tests_cpp
   ```
 
-- [ ] Generate specialized setter paths for common one-word object updates.
+- [x] Generate specialized setter paths for common one-word object updates.
 
   Intent: `compiledRuleSetCellObjectsFromWords` still pays generic per-word and
   object-index maintenance costs.
@@ -632,7 +632,14 @@ lab bench, not the full corpus.
   - Runtime counters or disassembly show the helper call is gone for hot
     one-word replacements.
 
-- [ ] Generate specialized setter paths for common movement updates.
+  Current progress:
+
+  - Added `compiledRuleSetCellObjectsWord1` so generated one-word object
+    replacements avoid the generic pointer/stride helper.
+  - The helper preserves live object words, row/column/board masks,
+    object-cell bitsets, create/destroy masks, and dirty mask behavior.
+
+- [x] Generate specialized setter paths for common movement updates.
 
   Acceptance criteria:
 
@@ -640,6 +647,11 @@ lab bench, not the full corpus.
     masks without generic helper traffic.
   - Dirty row/column/board behavior remains identical.
   - `emitAudio=false` paths avoid sound-related work.
+
+  Current progress:
+
+  - Added `compiledRuleSetCellMovementsWord1` and emit it for one-word movement
+    replacements.
 
 - [ ] Reduce mask rebuild pressure.
 
@@ -658,6 +670,19 @@ lab bench, not the full corpus.
   - Avoid rebuild calls after generated groups that provably did not change
     state.
   - Preserve interpreter fallback expectations.
+
+- [x] Avoid redundant full scans after generated anchor scans.
+
+  Intent: when a generated row uses an object-cell anchor, an exhaustive anchor
+  scan that finds no matches has already ruled out the row. Falling through to
+  the generic full line scan repeats work on the common no-match path.
+
+  Current progress:
+
+  - Generated anchored scans now jump to the shared empty-match exit even when
+    they find no matches.
+  - Generic full scans remain the fallback when no trustworthy anchor is
+    selected.
 
 - [ ] Add a mask correctness verifier for generated paths.
 
