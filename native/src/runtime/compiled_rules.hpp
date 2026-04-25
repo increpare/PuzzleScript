@@ -29,6 +29,11 @@ struct CompiledTickApplyOutcome {
     ps_step_result result{};
 };
 
+struct CompiledTickRuleGroupsOutcome {
+    bool handled = false;
+    bool changed = false;
+};
+
 using CompiledTickStepFn = CompiledTickApplyOutcome (*)(Session& session, ps_input input, RuntimeStepOptions options);
 using CompiledTickFn = CompiledTickApplyOutcome (*)(Session& session, RuntimeStepOptions options);
 

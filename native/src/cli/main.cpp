@@ -3665,6 +3665,12 @@ bool isCompilableGroup(const std::vector<puzzlescript::Rule>& group, const Compi
     return compiledGroupMissReason(group, options).empty();
 }
 
+bool areAllGroupsCompilable(const std::vector<std::vector<puzzlescript::Rule>>& groups, const CompiledRulesOptions& options) {
+    return std::all_of(groups.begin(), groups.end(), [&](const std::vector<puzzlescript::Rule>& group) {
+        return isCompilableGroup(group, options);
+    });
+}
+
 bool ruleHasEllipsis(const puzzlescript::Rule& rule) {
     for (const int32_t count : rule.ellipsisCount) {
         if (count != 0) {
@@ -4390,10 +4396,11 @@ void appendCompiledRulesCoverageJsonFields(std::ostream& out, const CompiledRule
     out << "}";
 }
 
-void appendCompiledTickAggregateJsonFields(std::ostream& out, size_t sourceCount) {
+void appendCompiledTickAggregateJsonFields(std::ostream& out, size_t sourceCount, size_t earlyRuleLoopsGenerated) {
     out << "\"compiled_tick\":{"
         << "\"sources\":" << sourceCount
         << ",\"backend_codegen_available\":" << sourceCount
+        << ",\"early_rule_loops_generated\":" << earlyRuleLoopsGenerated
         << ",\"fully_generated\":0"
         << ",\"misses\":{";
     if (sourceCount > 0) {
@@ -4402,14 +4409,14 @@ void appendCompiledTickAggregateJsonFields(std::ostream& out, size_t sourceCount
     out << "}}";
 }
 
-void appendCompiledTickSourceJsonFields(std::ostream& out) {
+void appendCompiledTickSourceJsonFields(std::ostream& out, bool earlyRuleLoopsGenerated) {
     out << "\"compiled_tick\":{"
         << "\"backend_codegen_available\":true"
         << ",\"step_entry\":true"
         << ",\"tick_entry\":true"
         << ",\"fully_generated\":false"
         << ",\"features\":{"
-        << "\"rule_loops\":\"interpreter\""
+        << "\"rule_loops\":" << jsonStringLiteral(earlyRuleLoopsGenerated ? "early_generated_late_interpreter" : "interpreter")
         << ",\"commands\":\"interpreter\""
         << ",\"movement\":\"interpreter\""
         << ",\"win_conditions\":\"interpreter\""
@@ -4426,12 +4433,18 @@ std::string generateCompiledRulesCoverageJson(
     const CompiledRulesCoverage& aggregateCoverage
 ) {
     std::ostringstream out;
+    size_t earlyRuleLoopsGenerated = 0;
+    for (const CodegenSource& source : sources) {
+        if (source.game && areAllGroupsCompilable(source.game->rules, options)) {
+            ++earlyRuleLoopsGenerated;
+        }
+    }
     out << "{\n"
         << "  \"max_rows\":" << options.maxRows << ",\n"
         << "  \"aggregate\":{";
     appendCompiledRulesCoverageJsonFields(out, aggregateCoverage);
     out << ",";
-    appendCompiledTickAggregateJsonFields(out, sources.size());
+    appendCompiledTickAggregateJsonFields(out, sources.size(), earlyRuleLoopsGenerated);
     out << "},\n"
         << "  \"sources\":[\n";
     for (size_t index = 0; index < sources.size(); ++index) {
@@ -4445,7 +4458,10 @@ std::string generateCompiledRulesCoverageJson(
             << ",";
         appendCompiledRulesCoverageJsonFields(out, sourceCoverage);
         out << ",";
-        appendCompiledTickSourceJsonFields(out);
+        appendCompiledTickSourceJsonFields(
+            out,
+            sources[index].game && areAllGroupsCompilable(sources[index].game->rules, options)
+        );
         out << "}";
         if (index + 1 < sources.size()) {
             out << ",";
@@ -4661,6 +4677,57 @@ std::string generateCompiledRulesCpp(
             << "    }\n"
             << "}\n\n";
 
+        out << "CompiledTickRuleGroupsOutcome apply_early_groups_source_" << sourceIndex << "(Session& session, CommandState& commands, std::vector<bool>* bannedGroups) {\n";
+        if (!areAllGroupsCompilable(game.rules, options)) {
+            out << "    (void)session;\n"
+                << "    (void)commands;\n"
+                << "    (void)bannedGroups;\n"
+                << "    return {false, false};\n"
+                << "}\n\n";
+        } else {
+            out << "    bool loopPropagated = false;\n"
+                << "    bool hasChanges = false;\n"
+                << "    int32_t loopCount = 0;\n"
+                << "    int32_t groupIndex = 0;\n"
+                << "    constexpr int32_t groupCount = " << game.rules.size() << ";\n"
+                << "    while (groupIndex < groupCount) {\n"
+                << "        bool groupChanged = false;\n"
+                << "        if (bannedGroups == nullptr\n"
+                << "            || static_cast<size_t>(groupIndex) >= bannedGroups->size()\n"
+                << "            || !(*bannedGroups)[static_cast<size_t>(groupIndex)]) {\n"
+                << "            const CompiledRuleApplyOutcome outcome = apply_source_" << sourceIndex << "(session, groupIndex, false, commands);\n"
+                << "            if (!outcome.handled) {\n"
+                << "                return {false, false};\n"
+                << "            }\n"
+                << "            groupChanged = outcome.changed;\n"
+                << "        }\n"
+                << "        loopPropagated = groupChanged || loopPropagated;\n"
+                << "        hasChanges = groupChanged || hasChanges;\n"
+                << "        if (loopPropagated) {\n"
+                << "            switch (groupIndex) {\n";
+            for (size_t loopIndex = 0; loopIndex < game.loopPoint.entries.size(); ++loopIndex) {
+                const auto& target = game.loopPoint.entries[loopIndex];
+                if (!target.has_value()) {
+                    continue;
+                }
+                out << "                case " << loopIndex << ": {\n"
+                    << "                    groupIndex = " << *target << ";\n"
+                    << "                    loopPropagated = false;\n"
+                    << "                    if (++loopCount > 200) {\n"
+                    << "                        return {true, hasChanges};\n"
+                    << "                    }\n"
+                    << "                    continue;\n"
+                    << "                }\n";
+            }
+            out << "                default: break;\n"
+                << "            }\n"
+                << "        }\n"
+                << "        ++groupIndex;\n"
+                << "    }\n"
+                << "    return {true, hasChanges};\n"
+                << "}\n\n";
+        }
+
         out << "const CompiledRulesBackend backend_" << sourceIndex << " = {\n"
             << "    " << source.hash << "ULL,\n"
             << "    " << cppStringLiteral(source.path.string()) << ",\n"
@@ -4670,10 +4737,10 @@ std::string generateCompiledRulesCpp(
             << "};\n\n";
 
         out << "CompiledTickApplyOutcome tick_step_source_" << sourceIndex << "(Session& session, ps_input input, RuntimeStepOptions options) {\n"
-            << "    return {true, puzzlescript::interpreterStep(session, input, options)};\n"
+            << "    return {true, puzzlescript::interpreterStepWithCompiledEarlyRules(session, input, options, apply_early_groups_source_" << sourceIndex << ")};\n"
             << "}\n\n"
             << "CompiledTickApplyOutcome tick_source_" << sourceIndex << "(Session& session, RuntimeStepOptions options) {\n"
-            << "    return {true, puzzlescript::interpreterTick(session, options)};\n"
+            << "    return {true, puzzlescript::interpreterTickWithCompiledEarlyRules(session, options, apply_early_groups_source_" << sourceIndex << ")};\n"
             << "}\n\n"
             << "const CompiledTickBackend tick_backend_" << sourceIndex << " = {\n"
             << "    " << source.hash << "ULL,\n"

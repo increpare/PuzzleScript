@@ -175,7 +175,7 @@ Status markers:
 
 ## Generated Tick Owns Rule-Group Dispatch
 
-- [ ] Move early rule-group loop selection into generated tick code.
+- [x] Move early rule-group loop selection into generated tick code.
 
   Intent: generated tick should iterate the game-specific early rule groups and
   call compiled group kernels directly, instead of entering the generic
@@ -222,7 +222,7 @@ Status markers:
   make solver_parity_smoke SPECIALIZE=true
   ```
 
-- [ ] Generate fixed loop-point tables.
+- [x] Generate fixed loop-point tables.
 
   Intent: avoid dynamic loop-point lookup for generated rule traversal.
 
@@ -232,7 +232,7 @@ Status markers:
   - Behavior matches `lookupLoopPoint`.
   - Infinite-loop guard behavior remains capped at the interpreter limit.
 
-- [ ] Generate direct group coverage predicates.
+- [x] Generate direct group coverage predicates.
 
   Intent: a generated tick function should know at compile time whether every
   group it needs is compiled.
@@ -243,7 +243,7 @@ Status markers:
   - The generated backend declines handling if any required group is missing.
   - Coverage JSON and generated-code eligibility agree.
 
-- [ ] Remove redundant rule backend lookup inside generated tick.
+- [x] Remove redundant rule backend lookup inside generated tick.
 
   Intent: once generated tick owns rule traversal, it should call local generated
   functions directly rather than re-finding the same backend.

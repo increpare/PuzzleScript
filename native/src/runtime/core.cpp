@@ -64,6 +64,7 @@ struct ExecuteTurnOptions {
     bool ignoreWin = false;
     bool dontModify = false;
     bool* observedModification = nullptr;
+    CompiledTickEarlyRuleGroupsFn applyEarlyRules = nullptr;
 };
 
 struct RuntimeCounterStorage {
@@ -4663,7 +4664,17 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
             seeded = seedPlayerMovements(session, directionMask);
         }
         rebuildMasks(session);
-        const bool ruleChangedThisPass = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands, &bannedGroups, false);
+        bool ruleChangedThisPass = false;
+        if (options.applyEarlyRules != nullptr) {
+            const CompiledTickRuleGroupsOutcome outcome = options.applyEarlyRules(session, commands, &bannedGroups);
+            if (outcome.handled) {
+                ruleChangedThisPass = outcome.changed;
+            } else {
+                ruleChangedThisPass = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands, &bannedGroups, false);
+            }
+        } else {
+            ruleChangedThisPass = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands, &bannedGroups, false);
+        }
         dumpActiveMovements(session, "pre-resolve");
         const MovementResolveOutcome movementOutcome = resolveMovements(session, &bannedGroups, options.emitAudio);
         rebuildMasks(session);
@@ -4876,7 +4887,12 @@ bool compiledTickDispatchEnabled() {
         && !audioDebugEnabled();
 }
 
-ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options) {
+ps_step_result interpreterStepWithCompiledEarlyRules(
+    Session& session,
+    ps_input input,
+    RuntimeStepOptions options,
+    CompiledTickEarlyRuleGroupsFn applyEarlyRules
+) {
     ps_step_result result{};
     session.lastAudioEvents.clear();
     session.lastUiAudioEvents.clear();
@@ -4911,22 +4927,36 @@ ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOpti
     }
 
     if (input == PS_INPUT_TICK) {
-        return interpreterTick(session, options);
+        return interpreterTickWithCompiledEarlyRules(session, options, applyEarlyRules);
     }
 
     return executeTurn(session, inputToDirectionMask(input), ExecuteTurnOptions{
         .pushUndo = options.playableUndo,
         .recordRestartUndo = options.playableUndo,
         .emitAudio = options.emitAudio,
+        .applyEarlyRules = applyEarlyRules,
     });
 }
 
-ps_step_result interpreterTick(Session& session, RuntimeStepOptions options) {
+ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options) {
+    return interpreterStepWithCompiledEarlyRules(session, input, options, nullptr);
+}
+
+ps_step_result interpreterTickWithCompiledEarlyRules(
+    Session& session,
+    RuntimeStepOptions options,
+    CompiledTickEarlyRuleGroupsFn applyEarlyRules
+) {
     return executeTurn(session, 0, ExecuteTurnOptions{
         .pushUndo = false,
         .recordRestartUndo = options.playableUndo,
         .emitAudio = options.emitAudio,
+        .applyEarlyRules = applyEarlyRules,
     });
+}
+
+ps_step_result interpreterTick(Session& session, RuntimeStepOptions options) {
+    return interpreterTickWithCompiledEarlyRules(session, options, nullptr);
 }
 
 ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options) {
