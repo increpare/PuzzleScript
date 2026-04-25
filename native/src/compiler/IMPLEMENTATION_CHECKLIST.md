@@ -86,6 +86,32 @@ same targets, same generated count, no worse solved/timeout status
 The working focus group is intentionally small and curated. It is a performance
 lab bench, not the full corpus.
 
+### Current Inputs
+
+- [x] Treat `src/tests/solver_tests` as a mining pool, not the default
+  moment-to-moment benchmark.
+
+  Current checkpoint:
+
+  - Solver corpus size: 184 `.txt` game files.
+  - Focus manifest size: 44 targets.
+  - Focus candidate count when mined: 85.
+  - Distinct games in focus: 35.
+  - Excluded clang-heavy games: `easyenigma.txt`, `karamell.txt`,
+    `paint everything everywhere.txt`.
+
+- [x] Make the solver focus group the near-term performance north star.
+
+  Current official goal:
+
+  ```text
+  make solver_focus_perf_report SOLVER_FOCUS_RUNS=3
+  median_elapsed_ms compiled/interpreted <= 0.500x
+  ```
+
+  The full solver suite remains a regression and discovery tool. It should not
+  be the default loop for every generated-kernel edit.
+
 ### Current Status
 
 - [x] Add human-readable focus comparison output.
@@ -271,6 +297,8 @@ lab bench, not the full corpus.
   - `make solver_focus_mine` honors the default exclusion list.
   - The manifest records `excluded_games`.
   - Target count and candidate count are visible in the command output.
+  - If the solver directory grew substantially, the focus group is refreshed or
+    deliberately left pinned with a note explaining why.
 
   Validation:
 
@@ -716,6 +744,13 @@ lab bench, not the full corpus.
 
 - [x] Decide whether to add a small checked-in benchmark notes file, or keep
   measurement notes in commit messages and PR descriptions only.
+
+- [x] Record the current filtered solver focus baseline.
+
+  Current note lives in `native/src/compiler/BASELINE_MEASUREMENTS.md`.
+
+  Done means: target count, excluded games, median interpreted elapsed, median
+  compiled elapsed, and generated counts are recorded.
 
 ## Generated Tick Observability
 
@@ -1402,20 +1437,29 @@ lab bench, not the full corpus.
   state to `Session`, or should unsupported cases be rejected before entering
   compact-state execution?
 
-- [?] Which benchmark should be the "north-star" solver benchmark for this
+- [x] Which benchmark should be the "north-star" solver benchmark for this
   project?
 
-## First Recommended Implementation Slice
+  Current answer: the near-term compiler performance north star is
+  `make solver_focus_perf_report SOLVER_FOCUS_RUNS=3`, scored by
+  `median_elapsed_ms compiled/interpreted` on the mined focus manifest. The full
+  solver directory remains a regression suite and source of future focus
+  targets.
 
-This is the next practical sequence after this checklist exists:
+## Current Recommended Implementation Slice
 
-1. Add compiled tick counters.
-2. Add a dispatch smoke test proving generated tick is called.
-3. Add compiled tick eligibility reporting to coverage JSON.
-4. Generate early rule-loop ownership for the simplest fully covered games.
-5. Run simulation, solver smoke, solver parity smoke, and generator smoke.
-6. Record the first real compiled-tick throughput comparison.
+This is the next practical sequence from the current focus-group checkpoint:
 
-This slice is deliberately narrow. It makes generated tick observable before it
-tries to be clever, then moves one hot behavior into generated code with the
-interpreter still close enough to catch us.
+1. Classify every focus target by compiled tick/rule hit bucket.
+2. Explain zero compiled-rule hits per target.
+3. Fix generated tick routes that enter the wrapper but do not reach rule
+   kernels.
+4. Add a mask correctness verifier for generated paths.
+5. Reduce mask rebuild pressure on the slowest focus outliers.
+6. Inspect generated assembly for one fast target and one slow target.
+7. Commit each proven improvement with the before/after focus ratio in the
+   commit title.
+
+This slice assumes the observability groundwork already exists. The task now is
+to use those counters to remove real hot-path work while keeping the interpreter
+close enough to catch us.

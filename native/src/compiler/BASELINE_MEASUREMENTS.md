@@ -27,6 +27,39 @@ Commands were run from the repository root with `/usr/bin/time -p`.
 `COMPILED_RULES_MAX_ROWS=1` is the fast default for iteration. The high-row run
 is the current proving setting for simulation-suite rule coverage.
 
+For solver focus builds, the default is different on purpose:
+`SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS=99`. Focus runs are trying to measure the
+compiler path on a curated solver slice, not minimize generated rule coverage.
+
+## Solver Focus Baseline
+
+The solver tests directory is now a large, actively changing corpus. At this
+checkpoint it contains 184 `.txt` game files. The optimization loop mines a
+smaller focus group from that corpus instead of benchmarking every solver test
+on every edit.
+
+Current local focus manifest:
+
+- Targets: 44
+- Candidate count when mined: 85
+- Distinct games in focus: 35
+- Excluded clang-heavy games: `easyenigma.txt`, `karamell.txt`,
+  `paint everything everywhere.txt`
+
+Recent one-run filtered focus comparison:
+
+| Path | Targets | Status | Median wall | Median elapsed | Median generated |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Interpreted | 44 | solved=44 | 323.3ms | 307.0ms | 27000 |
+| Compiled, focused rows-99 budgeted | 44 | solved=44 | 331.0ms | 311.0ms | 27000 |
+
+Result: compiled/interpreted median elapsed `1.013x` for that one-run check.
+This is an iteration landmark, not the official gate. The official 2x gate uses:
+
+```sh
+make solver_focus_perf_report SOLVER_FOCUS_RUNS=3
+```
+
 ## Compiled Tick Status
 
 Coverage JSON now reports compiled tick separately from compiled rules. At this

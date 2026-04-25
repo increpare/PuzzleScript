@@ -33,6 +33,21 @@ make solver_smoke_tests SPECIALIZE=true
 make generator_smoke_tests SPECIALIZE=true
 ```
 
+The solver corpus is now large and intentionally active. It is useful as a
+source of candidate levels, but it is too bulky for every optimization loop. The
+current solver/generator performance work therefore uses a mined focus group:
+
+```sh
+make solver_focus_mine
+make solver_focus_compare
+make solver_focus_perf_report
+```
+
+At the current checkpoint, the local focus manifest has 44 targets from 35
+games, after excluding clang-heavy generated-source outliers. Focus
+specialization defaults to `SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS=99`, while the
+global compiled-rules default remains conservative.
+
 Generated sources also export a compiled tick backend today. That backend is
 only a dispatch/linkage proof: it delegates to `interpreterStep` and
 `interpreterTick`, so it does not yet optimize whole-turn execution.
@@ -126,6 +141,10 @@ Keep build iteration fast. `COMPILED_RULES_MAX_ROWS`, generated-source reuse,
 Ninja builds, and one-game specialization are practical tools, not incidental
 details. A speedup that makes linking painful should be treated skeptically
 until it proves useful in the solver/generator workflow.
+
+Use the solver focus group for tight performance iteration. The full solver
+directory is a mining pool and broad regression suite, not the default benchmark
+surface for every codegen edit.
 
 Use corpus-wide specialization to answer coverage questions, then optimize the
 one-game path that real users and tools will run.
