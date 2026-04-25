@@ -10,6 +10,7 @@ This extension reuses PuzzleScript's existing JavaScript editor logic for VS Cod
 - Dynamic decorations for PuzzleScript color tokens, including sprite matrix color indices.
 - Parser diagnostics from the shared JavaScript parser error state.
 - A PuzzleScript debug type for rule-line breakpoints driven by the existing JavaScript runtime.
+- A native-generator webview for iterating on `.gen` recipes and adopting generated levels.
 
 ## Development
 
@@ -120,3 +121,15 @@ You can also add a launch configuration:
 ```
 
 The debug session uses the existing JavaScript engine and debug timeline machinery. Native C++ debugging is not required for this first breakpoint debugger.
+
+## Generating Levels
+
+Open a `.puzzlescript` or `.ps` file, place the cursor inside a playable level, then run `PuzzleScript: Generate Levels`. The generator panel uses the current level as the default `(INIT LEVEL)`, stores recipes beside the source as `<game>.gen`, and runs the native `puzzlescript_generator`.
+
+Build the native generator first:
+
+```sh
+make build_generator
+```
+
+If the extension cannot find it under `<puzzlescript.repoRoot>/build/native/puzzlescript_generator`, set `puzzlescript.generatorPath` to the executable path. Candidate adoption uses normal VS Code workspace edits, so Undo works as expected.

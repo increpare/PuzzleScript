@@ -12,6 +12,7 @@ const {
     PuzzleScriptDebugConfigurationProvider,
     PuzzleScriptDebugPreview,
 } = require('./puzzlescriptDebugAdapter');
+const { openGeneratorPanel } = require('./puzzlescriptGeneratorPanel');
 
 const DOCUMENT_SELECTOR = [
     { language: 'puzzlescript' },
@@ -357,6 +358,11 @@ function activate(context) {
         }
         await vscode.debug.startDebugging(folder, config);
     };
+    const startGenerator = async () => openGeneratorPanel({
+        context,
+        repoRoot: resolveRepoRoot(context),
+        intelligence,
+    });
 
     const refreshDocument = document => {
         refreshDiagnostics(document, intelligence, diagnostics);
@@ -417,6 +423,7 @@ function activate(context) {
         }),
         vscode.commands.registerCommand('puzzlescript.runCurrentGame', startDebugCurrentGame),
         vscode.commands.registerCommand('puzzlescript.debugCurrentGame', startDebugCurrentGame),
+        vscode.commands.registerCommand('puzzlescript.generateLevels', startGenerator),
         vscode.commands.registerCommand('puzzlescript.runCurrentGameLevel', level => startDebugCurrentGame(level)),
         vscode.commands.registerCommand('puzzlescript.setLanguageMode', setCurrentDocumentLanguage),
         vscode.commands.registerCommand('puzzlescript.debugInputUp', () => sendDebugInput('up')),

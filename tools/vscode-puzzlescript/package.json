@@ -25,6 +25,11 @@
           "type": "string",
           "default": "",
           "description": "Path to a PuzzleScript repository checkout. Empty uses the repository root when developing this extension from the PuzzleScript tree."
+        },
+        "puzzlescript.generatorPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the native puzzlescript_generator executable. Empty uses <puzzlescript.repoRoot>/build/native/puzzlescript_generator."
         }
       }
     },
@@ -47,6 +52,11 @@
       {
         "command": "puzzlescript.debugCurrentGame",
         "title": "Debug Current Game",
+        "category": "PuzzleScript"
+      },
+      {
+        "command": "puzzlescript.generateLevels",
+        "title": "Generate Levels",
         "category": "PuzzleScript"
       },
       {
@@ -96,6 +106,11 @@
           "command": "puzzlescript.runCurrentGame",
           "when": "resourceLangId == puzzlescript",
           "group": "navigation"
+        },
+        {
+          "command": "puzzlescript.generateLevels",
+          "when": "resourceLangId == puzzlescript",
+          "group": "navigation"
         }
       ],
       "editor/context": [
@@ -106,6 +121,11 @@
         },
         {
           "command": "puzzlescript.debugCurrentGame",
+          "when": "resourceLangId == puzzlescript",
+          "group": "navigation"
+        },
+        {
+          "command": "puzzlescript.generateLevels",
           "when": "resourceLangId == puzzlescript",
           "group": "navigation"
         }
@@ -210,7 +230,7 @@
     ]
   },
   "scripts": {
-    "test": "node ./test/editor-intelligence.test.js && node ./test/syntax-highlighting.test.js && node ./test/debugger.test.js && node ./test/level-links.test.js",
+    "test": "node ./test/editor-intelligence.test.js && node ./test/syntax-highlighting.test.js && node ./test/debugger.test.js && node ./test/level-links.test.js && node ./test/generator-core.test.js && node ./test/generator-runner.test.js",
     "test:syntax": "node ./test/syntax-highlighting.test.js",
     "preview:syntax": "node ./scripts/render-highlight-preview.js"
   },
