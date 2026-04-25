@@ -211,4 +211,12 @@ const output = {
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
 fs.writeFileSync(outPath, `${JSON.stringify(output, null, 2)}\n`);
+process.stdout.write(
+    `solver_target_benchmark summary targets=${summaries.length}` +
+    ` runs=${runs}` +
+    ` median_wall_ms=${output.median.wall_ms}` +
+    ` median_elapsed_ms=${output.median.elapsed_ms}` +
+    ` median_expanded=${output.median.expanded}` +
+    ` median_generated=${output.median.generated}\n`
+);
 process.stdout.write(`solver_target_benchmark wrote ${outPath} targets=${summaries.length} samples=${allSamples.length}\n`);
