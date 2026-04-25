@@ -91,6 +91,7 @@ COMPILED_RULES_OPT_LEVEL ?= 1
 COMPILED_RULES_BUILD_JOBS ?= auto
 COMPILED_RULES_SHARED_SINGLE_BUILD ?= true
 COMPILED_RULES_REUSE_SINGLE_CPP ?= true
+COMPILED_RULES_REUSE_SHARDED_CPP ?= true
 COMPILED_RULES_COMPILER_LAUNCHER ?=
 COMPILED_RULES_CMAKE_GENERATOR_ARG = $(if $(COMPILED_RULES_CMAKE_GENERATOR),-G "$(COMPILED_RULES_CMAKE_GENERATOR)",)
 COMPILED_RULES_COMPILER_LAUNCHER_ARGS = $(if $(COMPILED_RULES_COMPILER_LAUNCHER),-DCMAKE_C_COMPILER_LAUNCHER=$(COMPILED_RULES_COMPILER_LAUNCHER) -DCMAKE_CXX_COMPILER_LAUNCHER=$(COMPILED_RULES_COMPILER_LAUNCHER),)
@@ -123,6 +124,16 @@ elif find native/src/cli native/src/compiler native/src/runtime native/src/playe
 fi; \
 if [ "$$needs_bootstrap_build" -eq 1 ]; then \
 	$(CMAKE) --build $(BUILD_DIR) --target puzzlescript_cpp; \
+fi
+endef
+define COMPILED_RULES_EMIT_SHARDED
+out_stamp="$(1)/sources.stamp"; \
+out_stamp_text="max_rows=$(COMPILED_RULES_MAX_ROWS)"; \
+if [ "$(COMPILED_RULES_REUSE_SHARDED_CPP)" = "true" ] && [ -f "$$sources_file" ] && [ -f "$$out_stamp" ] && [ "$$(cat "$$out_stamp")" = "$$out_stamp_text" ] && [ ! "$(PUZZLESCRIPT_CPP)" -nt "$$sources_file" ]; then \
+	echo "compiled-rules: reuse output=$$out_cpp_dir"; \
+else \
+	$(PUZZLESCRIPT_CPP) compile-rules "$(2)" --emit-cpp-dir "$$out_cpp_dir" --emit-sources-list "$$sources_file" --symbol $(3) --max-rows $(COMPILED_RULES_MAX_ROWS); \
+	printf '%s\n' "$$out_stamp_text" > "$$out_stamp"; \
 fi
 endef
 JS_PARITY_DATA_DIR := $(BUILD_DIR)/js-parity-data
@@ -197,6 +208,7 @@ help:
 	@echo "                                     Set COMPILED_RULES_BUILD_JOBS=N to tune specialized build parallelism"
 	@echo "                                     Set COMPILED_RULES_SHARED_SINGLE_BUILD=false for per-game build dirs"
 	@echo "                                     Set COMPILED_RULES_REUSE_SINGLE_CPP=false to force one-game regeneration"
+	@echo "                                     Set COMPILED_RULES_REUSE_SHARDED_CPP=false to force corpus regeneration"
 	@echo "                                     Uses Ninja automatically when installed; override COMPILED_RULES_CMAKE_GENERATOR="
 	@echo "                                     Set COMPILED_RULES_COMPILER_LAUNCHER=ccache after installing ccache"
 	@echo "  make build_32                      Build JS-style 32-bit-mask executable into build-32"
@@ -406,7 +418,7 @@ solver_smoke_tests: $(SOLVER_TARGET_PREREQ)
 		out_cpp_dir="$$out_dir/sources"; \
 		sources_file="$$out_dir/sources.txt"; \
 		mkdir -p "$$out_dir"; \
-		$(PUZZLESCRIPT_CPP) compile-rules src/tests/solver_smoke_tests --emit-cpp-dir "$$out_cpp_dir" --emit-sources-list "$$sources_file" --symbol solver_smoke_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,src/tests/solver_smoke_tests,solver_smoke_$$hash); \
 		$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 		$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
 		$(NODE) src/tests/run_solver_smoke_assert.js "$$build_dir/native/puzzlescript_solver" src/tests/solver_smoke_tests --timeout-ms 1000; \
@@ -423,7 +435,7 @@ solver_determinism_tests: $(SOLVER_TARGET_PREREQ)
 		out_cpp_dir="$$out_dir/sources"; \
 		sources_file="$$out_dir/sources.txt"; \
 		mkdir -p "$$out_dir"; \
-		$(PUZZLESCRIPT_CPP) compile-rules src/tests/solver_smoke_tests --emit-cpp-dir "$$out_cpp_dir" --emit-sources-list "$$sources_file" --symbol solver_smoke_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,src/tests/solver_smoke_tests,solver_smoke_$$hash); \
 		$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 		$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
 		$(NODE) src/tests/run_solver_determinism.js "$$build_dir/native/puzzlescript_solver" src/tests/solver_smoke_tests --runs 5 --timeout-ms 1000; \
@@ -440,7 +452,7 @@ solver_parity_smoke: $(SOLVER_TARGET_PREREQ)
 		out_cpp_dir="$$out_dir/sources"; \
 		sources_file="$$out_dir/sources.txt"; \
 		mkdir -p "$$out_dir"; \
-		$(PUZZLESCRIPT_CPP) compile-rules src/tests/solver_smoke_tests --emit-cpp-dir "$$out_cpp_dir" --emit-sources-list "$$sources_file" --symbol solver_smoke_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,src/tests/solver_smoke_tests,solver_smoke_$$hash); \
 		$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 		$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
 		$(NODE) src/tests/run_solver_parity_smoke.js "$$build_dir/native/puzzlescript_solver" src/tests/solver_smoke_tests; \
@@ -467,7 +479,7 @@ solver_tests_cpp: $(SOLVER_TARGET_PREREQ)
 		out_cpp_dir="$$out_dir/sources"; \
 		sources_file="$$out_dir/sources.txt"; \
 		mkdir -p "$$out_dir"; \
-		$(PUZZLESCRIPT_CPP) compile-rules "$(SOLVER_TESTS_CORPUS)" --emit-cpp-dir "$$out_cpp_dir" --emit-sources-list "$$sources_file" --symbol solver_corpus_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,$(SOLVER_TESTS_CORPUS),solver_corpus_$$hash); \
 		$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 		$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
 		"$$build_dir/native/puzzlescript_solver" $(SOLVER_TESTS_CORPUS) --timeout-ms $(SOLVER_TIMEOUT_MS) --jobs $(SOLVER_JOBS) --strategy $(SOLVER_STRATEGY) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS); \
@@ -489,7 +501,7 @@ solver_benchmark: $(SOLVER_TARGET_PREREQ)
 		out_cpp_dir="$$out_dir/sources"; \
 		sources_file="$$out_dir/sources.txt"; \
 		mkdir -p "$$out_dir"; \
-		$(PUZZLESCRIPT_CPP) compile-rules "$(SOLVER_BENCH_CORPUS)" --emit-cpp-dir "$$out_cpp_dir" --emit-sources-list "$$sources_file" --symbol solver_bench_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,$(SOLVER_BENCH_CORPUS),solver_bench_$$hash); \
 		$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 		$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
 		$(NODE) src/tests/run_solver_benchmark.js "$$build_dir/native/puzzlescript_solver" $(SOLVER_BENCH_CORPUS) --runs $(SOLVER_BENCH_RUNS) --timeout-ms $(SOLVER_BENCH_TIMEOUT_MS) --jobs $(SOLVER_BENCH_JOBS) --strategy $(SOLVER_BENCH_STRATEGY) --out $(SOLVER_BENCH_OUT) --baseline $(SOLVER_PERF_BASELINE); \
