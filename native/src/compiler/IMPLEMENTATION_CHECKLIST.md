@@ -137,6 +137,19 @@ lab bench, not the full corpus.
   compiled rule hits, pattern tests, candidate cells, row scans, and mask rebuild
   counters.
 
+- [x] Add solver timing breakdown to focus benchmark outputs.
+
+  Done means: focus benchmark JSON preserves solver-reported `step_ms`,
+  `clone_ms`, `hash_ms`, and related timing fields, and the compare report
+  prints median step/clone/hash ratios. This separates generated turn speed
+  from end-to-end solver overhead.
+
+- [x] Report per-target work mismatches in focus comparison.
+
+  Done means: `--detail` reports when interpreted and compiled runs expanded or
+  generated different numbers of states, so a portfolio-search speedup is not
+  mistaken for a pure per-state kernel speedup.
+
 - [x] Surface mask rebuild outliers in the focus detail report.
 
   Done means: `--detail` prints a `top_mask_rebuilds` table with target,

@@ -63,6 +63,11 @@ function formatDelta(newValue, oldValue, digits = 1) {
     return `${formatNumber(valueRatio, 3)}x (${sign}${formatNumber(percent, digits)}%)`;
 }
 
+function metricMedian(summary, key) {
+    const value = summary && summary.median && summary.median[key];
+    return Number.isFinite(value) ? value : null;
+}
+
 const interpreted = readJson(process.argv[2]);
 const compiled = readJson(process.argv[3]);
 const interpretedKeys = (interpreted.targets || []).map(targetKey);
@@ -123,6 +128,10 @@ function targetRows() {
             wallRatio: ratio(compiledTarget.median.wall_ms, target.median.wall_ms),
             elapsedRatio: ratio(compiledTarget.median.elapsed_ms, target.median.elapsed_ms),
             generatedRatio: ratio(compiledTarget.median.generated, target.median.generated),
+            expandedRatio: ratio(compiledTarget.median.expanded, target.median.expanded),
+            stepRatio: ratio(metricMedian(compiledTarget, 'step_ms'), metricMedian(target, 'step_ms')),
+            cloneRatio: ratio(metricMedian(compiledTarget, 'clone_ms'), metricMedian(target, 'clone_ms')),
+            hashRatio: ratio(metricMedian(compiledTarget, 'hash_ms'), metricMedian(target, 'hash_ms')),
             compiledRuleHits,
             compiledTickHits,
             bucket: compiledUsageBucket(compiledTickHits, compiledRuleHits),
@@ -200,6 +209,10 @@ function printTargetTable(label, rows) {
             `    ${formatNumber(row.elapsedRatio, 3)}x elapsed` +
             ` wall=${formatNumber(row.wallRatio, 3)}x` +
             ` generated=${formatNumber(row.generatedRatio, 3)}x` +
+            ` expanded=${formatNumber(row.expandedRatio, 3)}x` +
+            ` step=${formatNumber(row.stepRatio, 3)}x` +
+            ` clone=${formatNumber(row.cloneRatio, 3)}x` +
+            ` hash=${formatNumber(row.hashRatio, 3)}x` +
             ` bucket=${row.bucket}` +
             ` reason=${row.reason}` +
             ` ${row.key}` +
@@ -212,6 +225,46 @@ function printTargetTable(label, rows) {
             ` dirty=${row.maskRebuildDirtyCalls === null ? 'n/a' : row.maskRebuildDirtyCalls}` +
             `\n`
         );
+    }
+}
+
+function printMedianMetric(label, key, digits = 1) {
+    const interpretedValue = metricMedian(interpreted, key);
+    const compiledValue = metricMedian(compiled, key);
+    if (interpretedValue === null && compiledValue === null) {
+        return;
+    }
+    process.stdout.write(
+        `  median_${label}: interpreted=${formatNumber(interpretedValue, digits)}` +
+        ` compiled=${formatNumber(compiledValue, digits)}` +
+        ` compiled/interpreted=${formatDelta(compiledValue, interpretedValue)}\n`
+    );
+}
+
+function printWorkMismatchSummary(rows) {
+    const generatedMismatches = rows.filter((row) => row.generatedRatio !== null && row.generatedRatio !== 1);
+    const expandedMismatches = rows.filter((row) => row.expandedRatio !== null && row.expandedRatio !== 1);
+    process.stdout.write(
+        `  work_mismatches: generated=${generatedMismatches.length}` +
+        ` expanded=${expandedMismatches.length}\n`
+    );
+    if (generatedMismatches.length === 0 && expandedMismatches.length === 0) {
+        return;
+    }
+    const examples = generatedMismatches
+        .slice()
+        .sort((a, b) => Math.abs((a.generatedRatio || 1) - 1) > Math.abs((b.generatedRatio || 1) - 1) ? -1 : 1)
+        .slice(0, 5);
+    if (examples.length > 0) {
+        process.stdout.write('  generated_mismatch_examples:\n');
+        for (const row of examples) {
+            process.stdout.write(
+                `    ${formatNumber(row.generatedRatio, 3)}x generated` +
+                ` interpreted=${formatNumber(row.interpreted.median.generated, 0)}` +
+                ` compiled=${formatNumber(row.compiled.median.generated, 0)}` +
+                ` ${row.key}\n`
+            );
+        }
     }
 }
 
@@ -266,6 +319,9 @@ process.stdout.write(
     ` compiled=${formatNumber(compiled.median.generated, 0)}` +
     ` compiled/interpreted=${formatDelta(compiled.median.generated, interpreted.median.generated)}\n`
 );
+printMedianMetric('step_ms', 'step_ms');
+printMedianMetric('clone_ms', 'clone_ms');
+printMedianMetric('hash_ms', 'hash_ms');
 if (options.goalRatio !== null) {
     const elapsedRatio = ratio(compiled.median.elapsed_ms, interpreted.median.elapsed_ms);
     process.stdout.write(
@@ -277,6 +333,7 @@ if (options.goalRatio !== null) {
 
 if (options.detail) {
     const rows = targetRows();
+    printWorkMismatchSummary(rows);
     printCompiledUsageSummary(rows);
     const bySlowest = rows.slice().sort((a, b) => (b.elapsedRatio || 0) - (a.elapsedRatio || 0));
     const byFastest = rows.slice().sort((a, b) => (a.elapsedRatio || Infinity) - (b.elapsedRatio || Infinity));
