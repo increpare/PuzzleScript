@@ -34,6 +34,7 @@
 #include "compiler/parser.hpp"
 #include "compiler/rule_text.hpp"
 #include "runtime/core.hpp"
+#include "search/search_common.hpp"
 
 namespace {
 
@@ -45,15 +46,16 @@ using puzzlescript::MaskVector;
 using puzzlescript::MaskWord;
 using puzzlescript::MaskWordUnsigned;
 using puzzlescript::Session;
+using StateKey = puzzlescript::search::StateKey;
+using StateKeyHash = puzzlescript::search::StateKeyHash;
+using SearchMode = puzzlescript::search::SearchMode;
+using puzzlescript::search::anyBits;
+using puzzlescript::search::bitsSet;
+using puzzlescript::search::maskPtr;
+using puzzlescript::search::priorityFor;
 
 enum class Strategy {
     Portfolio,
-    Bfs,
-    WeightedAStar,
-    Greedy,
-};
-
-enum class SearchMode {
     Bfs,
     WeightedAStar,
     Greedy,
@@ -156,22 +158,6 @@ struct CounterSnapshot {
     uint64_t solved = 0;
     uint64_t timeout = 0;
     uint64_t unsolved = 0;
-};
-
-struct StateKey {
-    uint64_t lo = 0;
-    uint64_t hi = 0;
-
-    bool operator==(const StateKey& other) const {
-        return lo == other.lo && hi == other.hi;
-    }
-};
-
-struct StateKeyHash {
-    size_t operator()(const StateKey& key) const {
-        const uint64_t mixed = key.lo ^ (key.hi + 0x9e3779b97f4a7c15ULL + (key.lo << 6) + (key.lo >> 2));
-        return static_cast<size_t>(mixed ^ (mixed >> 32));
-    }
 };
 
 struct StateHashProjection {
@@ -392,13 +378,6 @@ bool betterCandidate(const Candidate& a, const Candidate& b) {
     return a.sampleId < b.sampleId;
 }
 
-const MaskWord* maskPtr(const Game& game, puzzlescript::MaskOffset offset) {
-    if (offset == puzzlescript::kNullMaskOffset || offset >= game.maskArena.size()) {
-        return nullptr;
-    }
-    return game.maskArena.data() + offset;
-}
-
 MaskVector emptyMask(const Game& game) {
     return MaskVector(static_cast<size_t>(game.wordCount), 0);
 }
@@ -414,22 +393,6 @@ bool maskHasBit(const MaskVector& words, int32_t bitIndex) {
     if (bitIndex < 0) return false;
     const uint32_t word = puzzlescript::maskWordIndex(static_cast<uint32_t>(bitIndex));
     return word < words.size() && (words[word] & puzzlescript::maskBit(static_cast<uint32_t>(bitIndex))) != 0;
-}
-
-bool anyBits(const MaskWord* lhs, uint32_t lhsCount, const MaskWord* rhs, uint32_t rhsCount) {
-    const uint32_t count = std::min(lhsCount, rhsCount);
-    for (uint32_t index = 0; index < count; ++index) {
-        if ((lhs[index] & rhs[index]) != 0) return true;
-    }
-    return false;
-}
-
-bool bitsSet(const MaskWord* required, uint32_t requiredCount, const MaskWord* actual, uint32_t actualCount) {
-    for (uint32_t index = 0; index < requiredCount; ++index) {
-        const MaskWord actualWord = index < actualCount ? actual[index] : 0;
-        if ((required[index] & actualWord) != required[index]) return false;
-    }
-    return true;
 }
 
 void orMask(MaskVector& target, const MaskVector& source) {
@@ -1097,116 +1060,17 @@ StateHashProjection buildStateHashProjection(const Game& game) {
 }
 
 StateKey solverStateKey(const Session& session, bool includeRandomState, const StateHashProjection& projection) {
-    StateKey key{1469598103934665603ull, 7809847782465536322ull};
-    auto mix64 = [](uint64_t value) {
-        value ^= value >> 30;
-        value *= 0xbf58476d1ce4e5b9ULL;
-        value ^= value >> 27;
-        value *= 0x94d049bb133111ebULL;
-        value ^= value >> 31;
-        return value;
-    };
-    auto append = [&key, mix64](uint64_t value) {
-        const uint64_t mixed = mix64(value + 0x9e3779b97f4a7c15ULL + key.lo);
-        key.lo ^= mixed;
-        key.lo *= 0x100000001b3ULL;
-        key.hi ^= mix64(mixed + key.hi);
-        key.hi *= 0x9e3779b185ebca87ULL;
-    };
-    append(static_cast<uint64_t>(static_cast<uint32_t>(session.preparedSession.currentLevelIndex)));
-    append(session.preparedSession.titleScreen ? 1 : 0);
-    append(session.preparedSession.textMode ? 1 : 0);
-    append(session.preparedSession.winning ? 1 : 0);
-    append(session.pendingAgain ? 1 : 0);
-    if (includeRandomState) {
-        append(static_cast<uint64_t>(session.randomState.i));
-        append(static_cast<uint64_t>(session.randomState.j));
-        append(session.randomState.valid ? 1 : 0);
-        uint64_t packed = 0;
-        uint32_t shift = 0;
-        for (const uint8_t byte : session.randomState.s) {
-            packed |= static_cast<uint64_t>(byte) << shift;
-            shift += 8;
-            if (shift == 64) {
-                append(packed);
-                packed = 0;
-                shift = 0;
-            }
-        }
-        if (shift != 0) append(packed);
-    }
-    const auto& objects = session.liveLevel.objects;
     const uint32_t stride = session.game->strideObject;
-    for (size_t index = 0; index < objects.size(); ++index) {
-        MaskWord word = objects[index];
+    return puzzlescript::search::sessionStateKey(session, includeRandomState, [&](size_t index, MaskWord word) {
         if (projection.enabled && stride > 0) {
             word &= projection.objectMask[index % stride];
         }
-        append(static_cast<uint64_t>(static_cast<MaskWordUnsigned>(word)));
-    }
-    return key;
-}
-
-int32_t tileX(const Session& session, int32_t tileIndex) {
-    return tileIndex / session.liveLevel.height;
-}
-
-int32_t tileY(const Session& session, int32_t tileIndex) {
-    return tileIndex % session.liveLevel.height;
-}
-
-int32_t manhattan(const Session& session, int32_t a, int32_t b) {
-    return std::abs(tileX(session, a) - tileX(session, b)) + std::abs(tileY(session, a) - tileY(session, b));
-}
-
-bool matchesFilter(const MaskWord* filter, uint32_t wordCount, bool aggregate, const MaskWord* cell) {
-    if (filter == nullptr) return false;
-    return aggregate ? bitsSet(filter, wordCount, cell, wordCount) : anyBits(filter, wordCount, cell, wordCount);
-}
-
-int32_t nearestMatchingDistance(const Session& session, int32_t tile, const MaskWord* filter, bool aggregate) {
-    if (filter == nullptr) return 64;
-    int32_t best = std::numeric_limits<int32_t>::max();
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
-    for (int32_t target = 0; target < tileCount; ++target) {
-        if (matchesFilter(filter, session.game->wordCount, aggregate, cellPtr(session.liveLevel, *session.game, target))) {
-            best = std::min(best, manhattan(session, tile, target));
-        }
-    }
-    return best == std::numeric_limits<int32_t>::max() ? 64 : best;
+        return word;
+    });
 }
 
 int32_t heuristicScore(const Session& session) {
-    const Game& game = *session.game;
-    int32_t score = 0;
-    for (const auto& condition : game.winConditions) {
-        const MaskWord* filter1 = maskPtr(game, condition.filter1);
-        const MaskWord* filter2 = maskPtr(game, condition.filter2);
-        if (filter1 == nullptr || filter2 == nullptr) continue;
-        const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
-        if (condition.quantifier == 1) {
-            for (int32_t tile = 0; tile < tileCount; ++tile) {
-                const MaskWord* cell = cellPtr(session.liveLevel, game, tile);
-                if (!matchesFilter(filter1, game.wordCount, condition.aggr1, cell)) continue;
-                if (matchesFilter(filter2, game.wordCount, condition.aggr2, cell)) continue;
-                score += 10 + nearestMatchingDistance(session, tile, filter2, condition.aggr2);
-            }
-        } else if (condition.quantifier == 0) {
-            bool passed = false;
-            int32_t best = 64;
-            for (int32_t tile = 0; tile < tileCount; ++tile) {
-                const MaskWord* cell = cellPtr(session.liveLevel, game, tile);
-                if (!matchesFilter(filter1, game.wordCount, condition.aggr1, cell)) continue;
-                if (matchesFilter(filter2, game.wordCount, condition.aggr2, cell)) {
-                    passed = true;
-                    break;
-                }
-                best = std::min(best, nearestMatchingDistance(session, tile, filter2, condition.aggr2));
-            }
-            score += passed ? 0 : best;
-        }
-    }
-    return score;
+    return puzzlescript::search::winConditionHeuristicScore(session);
 }
 
 std::vector<std::string> reconstructSolution(const std::vector<Node>& nodes, uint32_t nodeIndex, ps_input finalInput) {
@@ -1220,15 +1084,6 @@ std::vector<std::string> reconstructSolution(const std::vector<Node>& nodes, uin
     }
     std::reverse(reversed.begin(), reversed.end());
     return reversed;
-}
-
-int32_t priorityFor(SearchMode mode, uint32_t depth, int32_t heuristic) {
-    switch (mode) {
-        case SearchMode::Bfs: return static_cast<int32_t>(depth);
-        case SearchMode::WeightedAStar: return static_cast<int32_t>(depth) + heuristic * 2;
-        case SearchMode::Greedy: return heuristic;
-    }
-    return static_cast<int32_t>(depth);
 }
 
 bool solvedByStep(const ps_step_result& stepResult, const Session& session, int32_t levelIndex) {
