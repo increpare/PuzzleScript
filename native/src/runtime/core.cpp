@@ -4120,6 +4120,14 @@ bool compiledRuleApplyRowMatch(
     return delta != 0 && applyRowMatchAt(session, rule, rule.patterns[rowIndex], ellipsisCount, match, delta);
 }
 
+bool compiledRuleApplyRandomGroup(Session& session, const std::vector<Rule>& group, CommandState& commands) {
+    const bool changed = applyRandomRuleGroup(session, group, commands);
+    if (changed) {
+        rebuildMasks(session);
+    }
+    return changed;
+}
+
 void runRulesOnLevelStart(Session& session);
 void runRulesOnLevelStart(Session& session, RuntimeStepOptions options);
 bool wouldAgainChange(Session& session, bool* outWouldModify = nullptr, bool emitAudio = true);

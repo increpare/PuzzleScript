@@ -3607,8 +3607,12 @@ struct CompiledRulesOptions {
     size_t maxRows = 1;
 };
 
-std::string compiledRuleMissReason(const puzzlescript::Rule& rule, const CompiledRulesOptions& options) {
-    if (rule.isRandom) {
+std::string compiledRuleMissReason(
+    const puzzlescript::Rule& rule,
+    const CompiledRulesOptions& options,
+    bool allowRandomRule = false
+) {
+    if (rule.isRandom && !allowRandomRule) {
         return "random_rule";
     }
     if (rule.rigid) {
@@ -3647,11 +3651,9 @@ std::string compiledGroupMissReason(const std::vector<puzzlescript::Rule>& group
     if (group.empty()) {
         return "empty_group";
     }
-    if (group[0].isRandom) {
-        return "random_group";
-    }
+    const bool randomGroup = group[0].isRandom;
     for (const auto& rule : group) {
-        const std::string reason = compiledRuleMissReason(rule, options);
+        const std::string reason = compiledRuleMissReason(rule, options, randomGroup);
         if (!reason.empty()) {
             return reason;
         }
@@ -4435,8 +4437,10 @@ std::string generateCompiledRulesCpp(
             }
             ++sourceCompiledGroups;
             sourceCompiledRules += static_cast<uint32_t>(group.size());
-            for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-                emitRuleFunctions(out, game, group[ruleIndex], sourceIndex, false, groupIndex, ruleIndex);
+            if (!group[0].isRandom) {
+                for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
+                    emitRuleFunctions(out, game, group[ruleIndex], sourceIndex, false, groupIndex, ruleIndex);
+                }
             }
         }
         for (size_t groupIndex = 0; groupIndex < game.lateRules.size(); ++groupIndex) {
@@ -4446,14 +4450,17 @@ std::string generateCompiledRulesCpp(
             }
             ++sourceCompiledGroups;
             sourceCompiledRules += static_cast<uint32_t>(group.size());
-            for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-                emitRuleFunctions(out, game, group[ruleIndex], sourceIndex, true, groupIndex, ruleIndex);
+            if (!group[0].isRandom) {
+                for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
+                    emitRuleFunctions(out, game, group[ruleIndex], sourceIndex, true, groupIndex, ruleIndex);
+                }
             }
         }
         totalCompiledRules += sourceCompiledRules;
         totalCompiledGroups += sourceCompiledGroups;
 
         out << "CompiledRuleApplyOutcome apply_source_" << sourceIndex << "(Session& session, int32_t groupIndex, bool late, CommandState& commands) {\n"
+            << "    const Game& game = *session.game;\n"
             << "    if (late) {\n"
             << "    switch (groupIndex) {\n";
         for (size_t groupIndex = 0; groupIndex < game.lateRules.size(); ++groupIndex) {
@@ -4462,6 +4469,14 @@ std::string generateCompiledRulesCpp(
                 continue;
             }
             out << "        case " << groupIndex << ": {\n"
+                << (group[0].isRandom
+                    ? "            return {true, compiledRuleApplyRandomGroup(session, game.lateRules[groupIndex], commands)};\n"
+                    : "")
+                << (group[0].isRandom ? "        }\n" : "");
+            if (group[0].isRandom) {
+                continue;
+            }
+            out
                 << "            bool hasChanges = false;\n"
                 << "            bool madeChange = true;\n"
                 << "            int loopCount = 0;\n"
@@ -4489,6 +4504,14 @@ std::string generateCompiledRulesCpp(
                 continue;
             }
             out << "        case " << groupIndex << ": {\n"
+                << (group[0].isRandom
+                    ? "            return {true, compiledRuleApplyRandomGroup(session, game.rules[groupIndex], commands)};\n"
+                    : "")
+                << (group[0].isRandom ? "        }\n" : "");
+            if (group[0].isRandom) {
+                continue;
+            }
+            out
                 << "            bool hasChanges = false;\n"
                 << "            bool madeChange = true;\n"
                 << "            int loopCount = 0;\n"
