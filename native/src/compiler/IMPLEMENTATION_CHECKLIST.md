@@ -518,6 +518,13 @@ lab bench, not the full corpus.
   `compiled_tick_bypassed_generic_rule_counter` means the generated tick backend
   ran but the old rule-group counter is not the right measurement point.
 
+- [x] Fix source-hash mismatches caused by missing trailing newlines.
+
+  Done means: `compile-rules` normalizes generated sources the same way the
+  solver does before compiling a game, by appending one trailing newline when
+  the file lacks one. Without this, generated backends existed for some focus
+  games but were registered under a hash the runtime never asked for.
+
 - [ ] Fix generated tick routes that call the wrapper but no rule kernels.
 
   Acceptance criteria:

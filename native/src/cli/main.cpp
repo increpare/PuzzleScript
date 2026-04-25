@@ -4810,6 +4810,9 @@ CodegenSource compileCodegenSource(const std::filesystem::path& path) {
     CodegenSource result;
     result.path = path;
     result.source = readFile(path);
+    if (result.source.empty() || result.source.back() != '\n') {
+        result.source.push_back('\n');
+    }
     result.hash = puzzlescript::compiledRulesHashSource(result.source);
     puzzlescript::compiler::DiagnosticSink diagnostics;
     const auto parserState = puzzlescript::compiler::parseSource(result.source, diagnostics);
@@ -4826,6 +4829,9 @@ CodegenSource compileCodegenSourceText(std::string label, std::string source) {
     CodegenSource result;
     result.path = std::move(label);
     result.source = std::move(source);
+    if (result.source.empty() || result.source.back() != '\n') {
+        result.source.push_back('\n');
+    }
     result.hash = puzzlescript::compiledRulesHashSource(result.source);
     puzzlescript::compiler::DiagnosticSink diagnostics;
     const auto parserState = puzzlescript::compiler::parseSource(result.source, diagnostics);
