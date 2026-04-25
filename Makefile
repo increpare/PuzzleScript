@@ -581,7 +581,13 @@ solver_focus_benchmark: $(PUZZLESCRIPT_SOLVER)
 		$(NODE) src/tests/run_solver_level_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_CORPUS) $(SOLVER_FOCUS_MANIFEST) --runs $(SOLVER_FOCUS_RUNS) --strategy $(SOLVER_FOCUS_STRATEGY) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --out $(SOLVER_FOCUS_OUT); \
 	fi
 
-solver_focus_compare:
+$(SOLVER_FOCUS_INTERPRETED_OUT): $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
+	$(MAKE) solver_focus_benchmark SOLVER_FOCUS_OUT="$@"
+
+$(SOLVER_FOCUS_COMPILED_OUT): $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
+	$(MAKE) solver_focus_benchmark SPECIALIZE=true SOLVER_FOCUS_OUT="$@"
+
+solver_focus_compare: $(SOLVER_FOCUS_INTERPRETED_OUT) $(SOLVER_FOCUS_COMPILED_OUT)
 	$(NODE) src/tests/compare_solver_focus_benchmarks.js $(SOLVER_FOCUS_INTERPRETED_OUT) $(SOLVER_FOCUS_COMPILED_OUT)
 
 solver_benchmark_targets: $(PUZZLESCRIPT_SOLVER)
