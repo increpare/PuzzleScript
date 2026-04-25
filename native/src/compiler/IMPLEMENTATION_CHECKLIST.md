@@ -73,6 +73,600 @@ Status markers:
 - [x] Generated sources export a compiled tick backend that currently delegates
   to `interpreterStep` / `interpreterTick`.
 
+## Current Push: Solver Focus 2x Performance
+
+This section is the active near-term work queue. The immediate goal is:
+
+```text
+make solver_focus_compare
+median_elapsed_ms compiled/interpreted <= 0.500x
+same targets, same generated count, no worse solved/timeout status
+```
+
+The working focus group is intentionally small and curated. It is a performance
+lab bench, not the full corpus.
+
+### Current Status
+
+- [x] Add human-readable focus comparison output.
+
+  Current command:
+
+  ```sh
+  make solver_focus_compare
+  ```
+
+  Done means: the target rebuilds stale benchmark JSONs, compares interpreted
+  vs compiled runs, and prints median wall/elapsed/generated ratios.
+
+- [x] Add detailed focus performance reporting with runtime counters.
+
+  Current command:
+
+  ```sh
+  make solver_focus_perf_report
+  ```
+
+  Done means: the report can show slowest/fastest targets, compiled tick hits,
+  compiled rule hits, pattern tests, candidate cells, row scans, and mask rebuild
+  counters.
+
+- [x] Make focus compiled benchmark use `SPECIALIZE=true`.
+
+  Done means: the same focus benchmark runner can produce interpreted and
+  compiled JSON outputs using the existing Makefile convention.
+
+- [x] Include generated-code and runtime freshness in focus benchmark reuse.
+
+  Done means: changes to compiler/runtime/solver files invalidate compiled
+  focus benchmark outputs instead of reusing stale JSON.
+
+- [x] Inline fixed mask checks in generated match predicates.
+
+  Done means: generated fixed-width match functions use direct pointer
+  arithmetic and literal `&` tests instead of helper calls such as
+  `compiledRuleMaskPtr`, `compiledRuleBitsSet`, and
+  `compiledRuleCellObjects`.
+
+- [x] Inline literal masks in generated replacement code.
+
+  Done means: replacement code uses direct `session.liveLevel.objects` /
+  `session.liveMovements` pointers, stack arrays, and literal mask words instead
+  of helper mask loads and `std::array` temporaries.
+
+- [x] Use high row coverage for focus specialization.
+
+  Done means: focus builds default to
+  `SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS=99`, while the global
+  `COMPILED_RULES_MAX_ROWS=1` iteration default remains unchanged.
+
+  Current evidence: focus row-limit misses moved from `237` to `0` for included
+  focus sources, but median elapsed was still roughly flat.
+
+- [x] Exclude clang-heavy games from the default focus group.
+
+  Done means: `solver_focus_mine` supports `SOLVER_FOCUS_EXCLUDE_GAMES`, and
+  the default excludes:
+
+  - `easyenigma.txt`
+  - `karamell.txt`
+  - `paint everything everywhere.txt`
+
+  Current evidence: the focus manifest was filtered from 50 to 44 targets after
+  these games caused very large generated sources and compiler termination in an
+  unbudgeted rows-99 build.
+
+- [x] Commit progress with metrics in commit titles.
+
+  Recent checkpoints:
+
+  - `Focus compiled rules 1.043x to 1.010x median elapsed`
+  - `Focus rows99 coverage misses 237 to 0, median 1.003x`
+  - `Focus excludes clang-heavy games, 50 to 44 targets`
+
+### Measurement Discipline
+
+- [ ] Define the official focus score line.
+
+  Acceptance criteria:
+
+  - The official score is `median_elapsed_ms compiled/interpreted`.
+  - The report also prints `median_wall_ms` and `median_generated`, but they do
+    not replace the elapsed score.
+  - The report clearly fails or labels the run when target identities differ.
+
+  Validation:
+
+  ```sh
+  make solver_focus_compare SOLVER_FOCUS_RUNS=1
+  ```
+
+- [ ] Define the official 2x gate.
+
+  Acceptance criteria:
+
+  - Official runs use `SOLVER_FOCUS_RUNS=3`.
+  - `compiled/interpreted elapsed <= 0.500`.
+  - All targets remain solved.
+  - Target identities match.
+  - `median_generated` and expanded/generated per-target medians match unless a
+    solver algorithm change deliberately explains the difference.
+
+  Validation:
+
+  ```sh
+  make solver_focus_perf_report SOLVER_FOCUS_RUNS=3
+  node src/tests/compare_solver_focus_benchmarks.js \
+    build/native/solver_focus_perf_interpreted.json \
+    build/native/solver_focus_perf_compiled.json \
+    --detail --goal-ratio 0.5
+  ```
+
+- [ ] Add a focus report summary suitable for commit messages.
+
+  Acceptance criteria:
+
+  - One command prints a compact before/after block that can be pasted into a
+    commit message or PR.
+  - It includes target count, solve/timeout status, elapsed ratio, wall ratio,
+    generated ratio, and top three slowest targets.
+  - It mentions rows, budget, opt level, and whether perf mode was enabled.
+
+  Suggested command shape:
+
+  ```sh
+  make solver_focus_perf_report SOLVER_FOCUS_RUNS=1
+  ```
+
+- [ ] Keep interpreted and compiled focus outputs fresh by construction.
+
+  Acceptance criteria:
+
+  - Interpreted output is stale when manifest, corpus, strategy, run count, or
+    profiling mode changes.
+  - Compiled output is also stale when generated-code inputs or specialization
+    knobs change.
+  - The freshness check explains the reason in one line.
+
+  Validation:
+
+  ```sh
+  touch native/src/cli/main.cpp
+  make solver_focus_compare SOLVER_FOCUS_RUNS=1
+  ```
+
+- [ ] Add a checked-in focus measurement note after each meaningful speed
+  change.
+
+  Acceptance criteria:
+
+  - Either `BASELINE_MEASUREMENTS.md` or the relevant commit message records
+    the exact command, date, target count, ratio, and notable outliers.
+  - Build time and solver elapsed time are recorded separately when compile time
+    is part of the trade.
+
+- [ ] Promote runtime counters to regression signals.
+
+  Acceptance criteria:
+
+  - The perf report flags or fails when `compiled_tick_hits` unexpectedly drops.
+  - It flags rising `compiled_tick_fallbacks` or
+    `compiled_rule_group_fallbacks`.
+  - It can compare `mask_rebuild_calls`, `row_scans`, `candidate_cells_tested`,
+    and `pattern_tests` against a previous compiled focus output.
+  - Counter regression checks are opt-in until noise is understood.
+
+  Validation:
+
+  ```sh
+  make solver_focus_perf_report SOLVER_FOCUS_RUNS=3
+  ```
+
+### Focus Group Hygiene
+
+- [ ] Regenerate the focus manifest intentionally after solver corpus changes.
+
+  Acceptance criteria:
+
+  - `make solver_focus_mine` honors the default exclusion list.
+  - The manifest records `excluded_games`.
+  - Target count and candidate count are visible in the command output.
+
+  Validation:
+
+  ```sh
+  make solver_focus_mine
+  node -e 'const j=require("./build/native/solver_focus_group.json"); console.log(j.target_count, j.excluded_games)'
+  ```
+
+- [ ] Add a manifest pruning tool for one-off focus surgery.
+
+  Intent: make "drop this game from focus" explicit instead of using ad hoc
+  Node snippets.
+
+  Acceptance criteria:
+
+  - Command can remove one or more games from an existing focus manifest.
+  - It updates `target_count` and `excluded_games`.
+  - It prints before/after target counts.
+
+  Suggested command shape:
+
+  ```sh
+  node src/tests/filter_solver_focus_group.js \
+    build/native/solver_focus_group.json \
+    --exclude-game "some game.txt"
+  ```
+
+- [ ] Track clang-heavy excluded games separately from runtime-slow games.
+
+  Acceptance criteria:
+
+  - Exclusions distinguish "compiler pathological" from "runtime outlier".
+  - Runtime-slow games stay in focus unless they make iteration painful.
+  - Reintroducing an excluded game is an explicit measurement task.
+
+- [ ] Add a focus compile-tail report.
+
+  Acceptance criteria:
+
+  - For a specialized focus build, report the slowest generated `.cpp` compile
+    units or at least the largest generated sources.
+  - The report maps generated source hashes back to game names.
+  - It identifies when a source should be excluded, split, or optimized.
+
+### Compile-Time Controls
+
+- [ ] Keep daily focus builds bounded.
+
+  Acceptance criteria:
+
+  - Default focus builds use `SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS=99`.
+  - Default focus builds retain a finite
+    `SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE`.
+  - Removing the per-source budget is opt-in, not the normal loop.
+
+  Validation:
+
+  ```sh
+  /usr/bin/time -p make solver_focus_benchmark \
+    SPECIALIZE=true \
+    SOLVER_FOCUS_RUNS=1 \
+    SOLVER_FOCUS_OUT=/tmp/focus_compiled.json
+  ```
+
+- [ ] Make unbudgeted focus builds safer.
+
+  Acceptance criteria:
+
+  - A command can try unbudgeted rows-99 generation without taking down normal
+    iteration.
+  - It prints generated source sizes before compiling or fails fast above a
+    configured size limit.
+  - It recommends exclusions or sharding for pathological files.
+
+- [ ] Split or cap pathological generated sources.
+
+  Acceptance criteria:
+
+  - Large games no longer produce single translation units that clang spends
+    minutes compiling or kills.
+  - Splitting preserves source-hash registry behavior.
+  - Link time and compile time are compared before/after.
+
+  Candidate games from the current focus investigation:
+
+  - `easyenigma.txt`
+  - `karamell.txt`
+  - `paint everything everywhere.txt`
+
+- [ ] Keep Ninja as the default specialized build generator when available.
+
+  Acceptance criteria:
+
+  - The Makefile continues to pick Ninja for compiled-rules builds when
+    installed.
+  - The build output makes the generator choice obvious.
+
+### Runtime Coverage And Routing
+
+- [ ] Classify focus targets by actual compiled-rule usage.
+
+  Acceptance criteria:
+
+  - The detailed report separates:
+    - `compiled_tick_hits == 0 && compiled_rule_group_hits == 0`
+    - `compiled_tick_hits > 0 && compiled_rule_group_hits == 0`
+    - `compiled_rule_group_hits > 0`
+  - The summary prints counts for each bucket.
+  - The slowest table includes the bucket label.
+
+  Validation:
+
+  ```sh
+  make solver_focus_perf_report SOLVER_FOCUS_RUNS=1
+  ```
+
+- [ ] Explain zero compiled-rule hits per target.
+
+  Acceptance criteria:
+
+  - For every zero-hit focus target, the report can say whether the source was
+    skipped by compile budget, unsupported by generated tick routing, or simply
+    did not execute compiled groups on that solve path.
+  - The explanation is machine-readable enough to sort by reason.
+
+- [ ] Fix generated tick routes that call the wrapper but no rule kernels.
+
+  Acceptance criteria:
+
+  - Targets with `compiled_tick_hits > 0` and `compiled_rule_group_hits == 0`
+    either gain rule hits or explain why no compiled groups are reachable.
+  - Solver generated counts remain identical.
+  - No target regresses from solved to timeout.
+
+- [ ] Remove `interpreter_delegation` from supported focus turns.
+
+  Acceptance criteria:
+
+  - For the supported focus slice, generated tick performs the turn phases it
+    claims instead of immediately delegating to `interpreterStep` /
+    `interpreterTick`.
+  - `compiled_tick_hits > 0`.
+  - `compiled_tick_fallbacks == 0` for supported targets.
+  - Coverage no longer reports `interpreter_delegation` for those sources.
+
+  Validation:
+
+  ```sh
+  make compiled_tick_dispatch_smoke
+  make solver_focus_perf_report SOLVER_FOCUS_RUNS=3
+  ```
+
+- [ ] Dispatch once per loaded game, not once per solver step.
+
+  Acceptance criteria:
+
+  - Solver/generator load paths cache compiled tick/backend support decisions
+    after the game is loaded.
+  - Per-state expansion does not repeat source hashing, backend lookup, or
+    support scans.
+  - Counters still prove generated dispatch use.
+
+  Validation:
+
+  ```sh
+  make solver_smoke_tests SPECIALIZE=true
+  make solver_focus_perf_report SOLVER_FOCUS_RUNS=3
+  ```
+
+- [ ] Decide whether compile-budget-skipped focus sources belong in the default
+  focus group.
+
+  Acceptance criteria:
+
+  - If a game is useful for runtime performance but too costly to compile, add a
+    source-splitting task instead of silently interpreting it.
+  - If a game is mostly noise for the current compiler work, exclude it from the
+    default focus manifest.
+
+### Kernel Micro-Optimization Queue
+
+- [ ] Remove no-op generated replacement stores.
+
+  Acceptance criteria:
+
+  - Replacement code does not allocate or fill `newObjects`, `created`,
+    `destroyed`, or `newMovements` words whose clear/set masks are both zero and
+    whose word cannot change.
+  - Generated code still passes replacement parity for multi-word games.
+
+  Validation:
+
+  ```sh
+  make solver_smoke_tests SPECIALIZE=true
+  make simulation_tests_cpp
+  ```
+
+- [ ] Generate specialized setter paths for common one-word object updates.
+
+  Intent: `compiledRuleSetCellObjectsFromWords` still pays generic per-word and
+  object-index maintenance costs.
+
+  Acceptance criteria:
+
+  - One-word object replacement can update live objects, row/column/board masks,
+    object-cell bitsets, create/destroy masks, and dirty flags without a generic
+    helper call.
+  - Generic helper remains fallback for uncommon/multi-word cases.
+  - Runtime counters or disassembly show the helper call is gone for hot
+    one-word replacements.
+
+- [ ] Generate specialized setter paths for common movement updates.
+
+  Acceptance criteria:
+
+  - One- or two-word movement replacement can update live movements and movement
+    masks without generic helper traffic.
+  - Dirty row/column/board behavior remains identical.
+  - `emitAudio=false` paths avoid sound-related work.
+
+- [ ] Reduce mask rebuild pressure.
+
+  Current clue: focus counters show very high `mask_rebuild_calls` on several
+  targets, including fast and slow compiled runs.
+
+  Acceptance criteria:
+
+  - Distinguish unavoidable rebuild calls from calls that find no dirty masks.
+  - Avoid rebuild calls after generated groups that provably did not change
+    state.
+  - Preserve interpreter fallback expectations.
+
+- [ ] Add a mask correctness verifier for generated paths.
+
+  Acceptance criteria:
+
+  - Debug/non-release validation can full-rebuild row, column, board, movement,
+    and object-cell masks after generated turns.
+  - The verifier compares full rebuilds against incremental masks.
+  - The verifier can be enabled for simulation and solver parity runs without
+    changing release benchmark behavior.
+
+  Validation:
+
+  ```sh
+  make simulation_tests_cpp
+  make solver_parity_smoke SPECIALIZE=true
+  ```
+
+- [ ] Add per-generated-group counters for attempts, matches, changes, and
+  fallback.
+
+  Acceptance criteria:
+
+  - Counters can identify which generated groups dominate a slow target.
+  - Counter overhead is opt-in and absent from normal benchmark runs.
+
+- [ ] Inspect generated assembly for one fast and one slow focus game.
+
+  Suggested games:
+
+  - Fast: `pipe puffer.txt` or `gem soketeer.txt`
+  - Slow: `gobble_rush.txt`
+
+  Acceptance criteria:
+
+  - Object files and disassembly are written under
+    `build/compiled-rules-inspect/`.
+  - Hot match/replacement functions mostly contain loads, bit operations,
+    branches, and stores.
+  - Any remaining avoidable helper call is turned into a checklist item.
+
+### Algorithmic Optimization Queue
+
+- [ ] Fuse compatible rule scans within a group.
+
+  Acceptance criteria:
+
+  - Rules sharing direction, row length, and scan bounds scan candidate starts
+    once.
+  - Rule order and simultaneous-per-rule replacement semantics remain exact.
+  - At least one focus target shows fewer candidate tests or lower elapsed time.
+
+- [ ] Generate candidate bitsets for row patterns.
+
+  Acceptance criteria:
+
+  - Required object masks are shifted/intersected to produce candidate cells.
+  - Missing-object constraints use complements safely inside board bounds.
+  - Candidate iteration preserves PuzzleScript order.
+
+- [ ] Specialize anchor scans to avoid sort/unique when uniqueness is known.
+
+  Acceptance criteria:
+
+  - Generated anchor scans can prove deterministic unique candidate order or
+    retain sort/unique.
+  - Any removed sort/unique is covered by parity tests.
+
+- [ ] Add per-group precheck masks before entering compiled loops.
+
+  Acceptance criteria:
+
+  - Generated code skips impossible groups with one or a few board-mask checks.
+  - Prechecks do not change random, rigid, or command semantics.
+
+### Whole-Tick Work That Directly Affects Solver Speed
+
+- [ ] Move more early/late rule traversal out of generic runtime fallback.
+
+  Acceptance criteria:
+
+  - A focus target with real compiled rule hits spends fewer steps in generic
+    `applyRuleGroup`.
+  - `compiled_rule_group_fallbacks` decreases or is explained.
+
+- [ ] Generate the supported turn skeleton instead of delegating.
+
+  Acceptance criteria:
+
+  - Generated `step` / `tick` performs clear movement, movement seeding, early
+    rules, movement resolution hook, late rules, result assembly, and final mask
+    state for a narrow supported slice.
+  - Unsupported title-screen, message, debug, or metadata cases fall back
+    cleanly.
+  - Final serialized state matches the interpreter.
+
+  Validation:
+
+  ```sh
+  make simulation_tests_cpp
+  make solver_smoke_tests SPECIALIZE=true
+  make solver_parity_smoke SPECIALIZE=true
+  ```
+
+- [ ] Specialize the no-input solver tick path.
+
+  Acceptance criteria:
+
+  - Solver no-input expansions can call generated tick without interpreter turn
+    setup for supported games.
+  - Final state and generated counts match the interpreter.
+
+- [ ] Specialize directional movement seeding for supported solver games.
+
+  Acceptance criteria:
+
+  - Direction/action input setup uses generated constants for player masks and
+    movement words.
+  - Unsupported metadata or aggregate cases fall back cleanly.
+
+- [ ] Prototype compact solver clone state for one focus game.
+
+  Acceptance criteria:
+
+  - State clone/hash cost is measured against the current `Session` clone path.
+  - Solver parity stays green.
+  - The prototype is isolated behind capability checks.
+
+### Correctness And Commit Gates For This Push
+
+- [ ] Before every performance commit, run the smallest relevant smoke.
+
+  Typical commands:
+
+  ```sh
+  make build
+  make solver_smoke_tests SPECIALIZE=true
+  git diff --check
+  ```
+
+- [ ] Before claiming a solver focus speedup, run a fresh comparison.
+
+  Command:
+
+  ```sh
+  make solver_focus_compare SOLVER_FOCUS_RUNS=1
+  ```
+
+  Acceptance criteria:
+
+  - Same targets.
+  - No worse solved/timeout status.
+  - Same `median_generated`.
+  - Commit title includes the before/after elapsed ratio.
+
+- [ ] Before merging a broad codegen/runtime change, run parity smokes.
+
+  Commands:
+
+  ```sh
+  make simulation_tests_cpp
+  make solver_parity_smoke SPECIALIZE=true
+  make generator_smoke_tests SPECIALIZE=true
+  ```
+
 ## Baseline Measurements
 
 - [x] Record a clean no-specialization baseline for solver smoke.
