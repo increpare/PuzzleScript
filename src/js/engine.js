@@ -2335,12 +2335,23 @@ Rule.prototype.tryApply = function (level) {
 
 	let result = false;
 	if (this.hasReplacements) {
-		let tuples = generateTuples(matches);
-		for (let tupleIndex = 0; tupleIndex < tuples.length; tupleIndex++) {
-			let tuple = tuples[tupleIndex];
-			let shouldCheck = tupleIndex > 0;
-			let success = this.applyAt(level, tuple, shouldCheck, delta);
-			result = success || result;
+		if (this.rulePlanMetadata.row_count === 1) {
+			let tuple = [null];
+			let rowMatches = matches[0];
+			for (let tupleIndex = 0; tupleIndex < rowMatches.length; tupleIndex++) {
+				tuple[0] = rowMatches[tupleIndex];
+				let shouldCheck = tupleIndex > 0;
+				let success = this.applyAt(level, tuple, shouldCheck, delta);
+				result = success || result;
+			}
+		} else {
+			let tuples = generateTuples(matches);
+			for (let tupleIndex = 0; tupleIndex < tuples.length; tupleIndex++) {
+				let tuple = tuples[tupleIndex];
+				let shouldCheck = tupleIndex > 0;
+				let success = this.applyAt(level, tuple, shouldCheck, delta);
+				result = success || result;
+			}
 		}
 	}
 
