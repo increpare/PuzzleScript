@@ -80,6 +80,8 @@ struct Options {
     bool json = false;
     bool quiet = false;
     bool summaryOnly = false;
+    bool profileRuntimeCounters = false;
+    bool requireCompiledTick = false;
 };
 
 struct Node {
@@ -389,12 +391,12 @@ Options parseArgs(int argc, char** argv) {
     Options options;
     options.jobs = 1;
     if (argc < 2) {
-        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json]");
+        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick]");
     }
     for (int index = 1; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--help" || arg == "-h") {
-            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json]");
+            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick]");
         }
         if (arg == "--timeout-ms" && index + 1 < argc) {
             options.timeoutMs = std::max<int64_t>(1, std::stoll(argv[++index]));
@@ -436,6 +438,15 @@ Options parseArgs(int argc, char** argv) {
         }
         if (arg == "--summary-only") {
             options.summaryOnly = true;
+            continue;
+        }
+        if (arg == "--profile-runtime-counters") {
+            options.profileRuntimeCounters = true;
+            continue;
+        }
+        if (arg == "--require-compiled-tick") {
+            options.requireCompiledTick = true;
+            options.profileRuntimeCounters = true;
             continue;
         }
         if (arg == "--quiet") {
@@ -1228,7 +1239,28 @@ std::vector<Result> runCorpus(const Options& options) {
 int main(int argc, char** argv) {
     try {
         const Options options = parseArgs(argc, argv);
+        if (options.profileRuntimeCounters) {
+            ps_runtime_counters_reset();
+            ps_runtime_counters_set_enabled(true);
+        }
         const auto results = runCorpus(options);
+        ps_runtime_counters runtimeCounters{};
+        if (options.profileRuntimeCounters) {
+            ps_runtime_counters_snapshot(&runtimeCounters);
+            ps_runtime_counters_set_enabled(false);
+            std::cerr << "solver_runtime_counters"
+                      << " compiled_rule_group_attempts=" << runtimeCounters.compiled_rule_group_attempts
+                      << " compiled_rule_group_hits=" << runtimeCounters.compiled_rule_group_hits
+                      << " compiled_rule_group_fallbacks=" << runtimeCounters.compiled_rule_group_fallbacks
+                      << " compiled_tick_attempts=" << runtimeCounters.compiled_tick_attempts
+                      << " compiled_tick_hits=" << runtimeCounters.compiled_tick_hits
+                      << " compiled_tick_fallbacks=" << runtimeCounters.compiled_tick_fallbacks
+                      << "\n";
+        }
+        if (options.requireCompiledTick && runtimeCounters.compiled_tick_hits == 0) {
+            std::cerr << "compiled tick dispatch was required but no generated tick backend handled a step\n";
+            return 1;
+        }
         if (options.json) {
             printJson(results);
         } else if (options.summaryOnly) {

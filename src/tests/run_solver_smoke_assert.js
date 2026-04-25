@@ -5,7 +5,7 @@ const { spawnSync } = require('child_process');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/run_solver_smoke_assert.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N]');
+    console.error('Usage: node src/tests/run_solver_smoke_assert.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--require-compiled-tick]');
     process.exit(1);
 }
 
@@ -17,9 +17,12 @@ if (args.length < 2) {
 const solverPath = path.resolve(args[0]);
 const fixtureDir = path.resolve(args[1]);
 let timeoutMs = 1000;
+const extraSolverArgs = [];
 for (let index = 2; index < args.length; index++) {
     if (args[index] === '--timeout-ms' && index + 1 < args.length) {
         timeoutMs = Number.parseInt(args[++index], 10);
+    } else if (args[index] === '--require-compiled-tick') {
+        extraSolverArgs.push('--require-compiled-tick');
     } else {
         throw new Error(`Unsupported argument: ${args[index]}`);
     }
@@ -34,6 +37,7 @@ function runSolver(extraArgs = []) {
         '--no-solutions',
         '--quiet',
         '--json',
+        ...extraSolverArgs,
         ...extraArgs,
     ], {
         encoding: 'utf8',

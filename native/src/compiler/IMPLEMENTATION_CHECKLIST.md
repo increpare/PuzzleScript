@@ -145,7 +145,7 @@ Status markers:
   make solver_smoke_tests SPECIALIZE=true
   ```
 
-- [ ] Add a focused generated-tick dispatch smoke test.
+- [x] Add a focused generated-tick dispatch smoke test.
 
   Intent: prove the generated tick backend is found by source hash and called,
   even while it still delegates to the interpreter.
