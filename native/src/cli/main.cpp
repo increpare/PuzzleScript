@@ -3634,9 +3634,6 @@ std::string compiledRuleMissReason(const puzzlescript::Rule& rule, const Compile
             if (pattern.kind != puzzlescript::Pattern::Kind::CellPattern) {
                 return "non_cell_pattern";
             }
-            if (pattern.replacement.has_value() && !isCompilableReplacement(*pattern.replacement)) {
-                return "random_replacement";
-            }
         }
     }
     return {};
@@ -3680,6 +3677,21 @@ bool ruleHasEllipsis(const puzzlescript::Rule& rule) {
         }
     }
     return false;
+}
+
+bool ruleHasRandomReplacement(const puzzlescript::Rule& rule) {
+    for (const auto& row : rule.patterns) {
+        for (const auto& pattern : row) {
+            if (pattern.replacement.has_value() && !isCompilableReplacement(*pattern.replacement)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool ruleUsesRuntimeRowHelpers(const puzzlescript::Rule& rule) {
+    return ruleHasEllipsis(rule) || ruleHasRandomReplacement(rule);
 }
 
 void emitMaskBitsSetCheck(
@@ -4097,7 +4109,7 @@ void emitRuleFunctions(
         + (late ? "_l" : "_e")
         + "_g" + std::to_string(groupIndex)
         + "_r" + std::to_string(ruleIndex);
-    if (ruleHasEllipsis(rule)) {
+    if (ruleUsesRuntimeRowHelpers(rule)) {
         out << "bool apply_rule_" << prefix << "(Session& session, CommandState& commands) {\n"
             << "    const Game& game = *session.game;\n"
             << "    const Rule& rule = game." << (late ? "lateRules" : "rules")
