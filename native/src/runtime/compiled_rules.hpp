@@ -29,6 +29,11 @@ struct CompiledTickApplyOutcome {
     ps_step_result result{};
 };
 
+struct CompiledTickSupportInfo {
+    bool wholeTurnSupported = false;
+    const char* wholeTurnFallbackReason = nullptr;
+};
+
 struct CompiledTickRuleGroupsOutcome {
     bool handled = false;
     bool changed = false;
@@ -42,6 +47,7 @@ struct CompiledTickBackend {
     const char* name = nullptr;
     CompiledTickStepFn step = nullptr;
     CompiledTickFn tick = nullptr;
+    CompiledTickSupportInfo support{};
 };
 
 enum class CompiledRuleCommandKind {

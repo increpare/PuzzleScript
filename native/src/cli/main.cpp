@@ -3736,6 +3736,39 @@ bool canGenerateCompiledRuleCommandQueue(const puzzlescript::Rule& rule) {
     });
 }
 
+struct CompiledTickSupport {
+    bool earlyRuleLoopsGenerated = false;
+    bool lateRuleLoopsGenerated = false;
+    std::string commandStatus = "unknown_interpreter";
+    bool wholeTurnSupported = false;
+    std::string wholeTurnFallbackReason = "interpreter_delegation";
+};
+
+CompiledTickSupport compiledTickSupportForGame(
+    const puzzlescript::Game& game,
+    const CompiledRulesOptions& options
+) {
+    CompiledTickSupport support;
+    support.earlyRuleLoopsGenerated = areAllGroupsCompilable(game.rules, options);
+    support.lateRuleLoopsGenerated = areAllGroupsCompilable(game.lateRules, options);
+    support.commandStatus = compiledTickCommandStatus(game);
+
+    if (!support.earlyRuleLoopsGenerated) {
+        support.wholeTurnFallbackReason = "early_rule_loops_interpreter";
+    } else if (!support.lateRuleLoopsGenerated) {
+        support.wholeTurnFallbackReason = "late_rule_loops_interpreter";
+    } else if (support.commandStatus == "unknown_interpreter") {
+        support.wholeTurnFallbackReason = "unsupported_command";
+    } else {
+        support.wholeTurnFallbackReason = "movement_interpreter";
+    }
+    return support;
+}
+
+CompiledTickSupport compiledTickSupportForMissingGame() {
+    return CompiledTickSupport{};
+}
+
 bool ruleHasEllipsis(const puzzlescript::Rule& rule) {
     for (const int32_t count : rule.ellipsisCount) {
         if (count != 0) {
@@ -4499,6 +4532,40 @@ void appendCompiledRulesCoverageJsonFields(std::ostream& out, const CompiledRule
     out << "}";
 }
 
+void appendJsonCountObject(
+    std::ostream& out,
+    const std::unordered_map<std::string, size_t>& counts,
+    const std::vector<std::string_view>& preferredOrder
+) {
+    out << "{";
+    bool first = true;
+    for (const std::string_view key : preferredOrder) {
+        const auto it = counts.find(std::string(key));
+        if (it == counts.end() || it->second == 0) {
+            continue;
+        }
+        if (!first) {
+            out << ",";
+        }
+        first = false;
+        out << jsonStringLiteral(key) << ":" << it->second;
+    }
+    for (const auto& [key, count] : counts) {
+        if (count == 0) {
+            continue;
+        }
+        if (std::find(preferredOrder.begin(), preferredOrder.end(), std::string_view(key)) != preferredOrder.end()) {
+            continue;
+        }
+        if (!first) {
+            out << ",";
+        }
+        first = false;
+        out << jsonStringLiteral(key) << ":" << count;
+    }
+    out << "}";
+}
+
 void appendCompiledTickAggregateJsonFields(
     std::ostream& out,
     size_t sourceCount,
@@ -4506,44 +4573,53 @@ void appendCompiledTickAggregateJsonFields(
     size_t lateRuleLoopsGenerated,
     size_t commandNone,
     size_t commandGeneratedQueue,
-    size_t commandUnknown
+    size_t commandUnknown,
+    size_t wholeTurnSupported,
+    const std::unordered_map<std::string, size_t>& wholeTurnFallbackReasons
 ) {
     out << "\"compiled_tick\":{"
         << "\"sources\":" << sourceCount
         << ",\"backend_codegen_available\":" << sourceCount
         << ",\"early_rule_loops_generated\":" << earlyRuleLoopsGenerated
         << ",\"late_rule_loops_generated\":" << lateRuleLoopsGenerated
-        << ",\"fully_generated\":0"
+        << ",\"fully_generated\":" << wholeTurnSupported
+        << ",\"whole_turn_supported\":" << wholeTurnSupported
         << ",\"command_status_counts\":{"
         << "\"none\":" << commandNone
         << ",\"generated_queue_interpreter_tail\":" << commandGeneratedQueue
         << ",\"unknown_interpreter\":" << commandUnknown
         << "}"
-        << ",\"misses\":{";
-    if (sourceCount > 0) {
-        out << "\"interpreter_delegation\":" << sourceCount;
+        << ",\"whole_turn_fallback_reason_counts\":";
+    appendJsonCountObject(
+        out,
+        wholeTurnFallbackReasons,
+        {"early_rule_loops_interpreter", "late_rule_loops_interpreter", "unsupported_command", "movement_interpreter", "interpreter_delegation"}
+    );
+    out << ",\"misses\":{";
+    if (sourceCount > wholeTurnSupported) {
+        out << "\"interpreter_delegation\":" << (sourceCount - wholeTurnSupported);
     }
     out << "}}";
 }
 
 void appendCompiledTickSourceJsonFields(
     std::ostream& out,
-    bool earlyRuleLoopsGenerated,
-    bool lateRuleLoopsGenerated,
-    std::string_view commandStatus
+    const CompiledTickSupport& support
 ) {
     out << "\"compiled_tick\":{"
         << "\"backend_codegen_available\":true"
         << ",\"step_entry\":true"
         << ",\"tick_entry\":true"
-        << ",\"fully_generated\":false"
+        << ",\"fully_generated\":" << (support.wholeTurnSupported ? "true" : "false")
+        << ",\"whole_turn_supported\":" << (support.wholeTurnSupported ? "true" : "false")
+        << ",\"whole_turn_fallback_reason\":" << jsonStringLiteral(support.wholeTurnFallbackReason)
         << ",\"features\":{"
         << "\"rule_loops\":" << jsonStringLiteral(
-            earlyRuleLoopsGenerated && lateRuleLoopsGenerated
+            support.earlyRuleLoopsGenerated && support.lateRuleLoopsGenerated
                 ? "early_late_generated"
-                : (earlyRuleLoopsGenerated ? "early_generated_late_interpreter" : "interpreter")
+                : (support.earlyRuleLoopsGenerated ? "early_generated_late_interpreter" : "interpreter")
         )
-        << ",\"commands\":" << jsonStringLiteral(commandStatus)
+        << ",\"commands\":" << jsonStringLiteral(support.commandStatus)
         << ",\"movement\":\"interpreter\""
         << ",\"win_conditions\":\"interpreter\""
         << ",\"level_transitions\":\"interpreter\""
@@ -4564,22 +4640,29 @@ std::string generateCompiledRulesCoverageJson(
     size_t commandNone = 0;
     size_t commandGeneratedQueue = 0;
     size_t commandUnknown = 0;
+    size_t wholeTurnSupported = 0;
+    std::unordered_map<std::string, size_t> wholeTurnFallbackReasons;
     for (const CodegenSource& source : sources) {
-        if (source.game && areAllGroupsCompilable(source.game->rules, options)) {
+        const CompiledTickSupport support = source.game
+            ? compiledTickSupportForGame(*source.game, options)
+            : compiledTickSupportForMissingGame();
+        if (support.earlyRuleLoopsGenerated) {
             ++earlyRuleLoopsGenerated;
         }
-        if (source.game && areAllGroupsCompilable(source.game->lateRules, options)) {
+        if (support.lateRuleLoopsGenerated) {
             ++lateRuleLoopsGenerated;
         }
-        const std::string commandStatus = source.game
-            ? compiledTickCommandStatus(*source.game)
-            : "unknown_interpreter";
-        if (commandStatus == "none") {
+        if (support.commandStatus == "none") {
             ++commandNone;
-        } else if (commandStatus == "generated_queue_interpreter_tail") {
+        } else if (support.commandStatus == "generated_queue_interpreter_tail") {
             ++commandGeneratedQueue;
         } else {
             ++commandUnknown;
+        }
+        if (support.wholeTurnSupported) {
+            ++wholeTurnSupported;
+        } else {
+            ++wholeTurnFallbackReasons[support.wholeTurnFallbackReason];
         }
     }
     out << "{\n"
@@ -4594,7 +4677,9 @@ std::string generateCompiledRulesCoverageJson(
         lateRuleLoopsGenerated,
         commandNone,
         commandGeneratedQueue,
-        commandUnknown
+        commandUnknown,
+        wholeTurnSupported,
+        wholeTurnFallbackReasons
     );
     out << "},\n"
         << "  \"sources\":[\n";
@@ -4611,9 +4696,9 @@ std::string generateCompiledRulesCoverageJson(
         out << ",";
         appendCompiledTickSourceJsonFields(
             out,
-            sources[index].game && areAllGroupsCompilable(sources[index].game->rules, options),
-            sources[index].game && areAllGroupsCompilable(sources[index].game->lateRules, options),
-            sources[index].game ? compiledTickCommandStatus(*sources[index].game) : "unknown_interpreter"
+            sources[index].game
+                ? compiledTickSupportForGame(*sources[index].game, options)
+                : compiledTickSupportForMissingGame()
         );
         out << "}";
         if (index + 1 < sources.size()) {
@@ -4725,6 +4810,7 @@ std::string generateCompiledRulesCpp(
     for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
         const auto& source = sources[sourceIndex];
         const auto& game = *source.game;
+        const CompiledTickSupport tickSupport = compiledTickSupportForGame(game, options);
         uint32_t sourceCompiledRules = 0;
         uint32_t sourceCompiledGroups = 0;
         for (size_t groupIndex = 0; groupIndex < game.rules.size(); ++groupIndex) {
@@ -4951,6 +5037,8 @@ std::string generateCompiledRulesCpp(
             << "    " << cppStringLiteral(source.path.string()) << ",\n"
             << "    tick_step_source_" << sourceIndex << ",\n"
             << "    tick_source_" << sourceIndex << ",\n"
+            << "    {" << (tickSupport.wholeTurnSupported ? "true" : "false")
+            << ", " << cppStringLiteral(tickSupport.wholeTurnFallbackReason) << "},\n"
             << "};\n\n";
     }
 

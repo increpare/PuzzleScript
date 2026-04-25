@@ -285,7 +285,7 @@ Status markers:
   - Fill `ps_step_result`.
   - Rebuild masks before returning.
 
-- [ ] Generate a supported-game predicate for the turn skeleton.
+- [x] Generate a supported-game predicate for the turn skeleton.
 
   Intent: generated tick should handle only games whose required skeleton pieces
   have been implemented.
