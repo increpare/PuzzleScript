@@ -300,6 +300,32 @@ function printMaskRebuildTable(rows) {
     }
 }
 
+function printStepTimeTable(label, rows) {
+    const visibleRows = rows
+        .filter((row) => Number.isFinite(row.stepRatio))
+        .slice(0, 10);
+    if (visibleRows.length === 0) {
+        process.stdout.write(`  ${label} n/a\n`);
+        return;
+    }
+    process.stdout.write(`  ${label}\n`);
+    for (const row of visibleRows) {
+        process.stdout.write(
+            `    ${formatNumber(row.stepRatio, 3)}x step` +
+            ` elapsed=${formatNumber(row.elapsedRatio, 3)}x` +
+            ` wall=${formatNumber(row.wallRatio, 3)}x` +
+            ` generated=${formatNumber(row.generatedRatio, 3)}x` +
+            ` expanded=${formatNumber(row.expandedRatio, 3)}x` +
+            ` interpreted_step=${formatNumber(metricMedian(row.interpreted, 'step_ms'), 1)}ms` +
+            ` compiled_step=${formatNumber(metricMedian(row.compiled, 'step_ms'), 1)}ms` +
+            ` bucket=${row.bucket}` +
+            ` reason=${row.reason}` +
+            ` ${row.key}` +
+            `\n`
+        );
+    }
+}
+
 process.stdout.write('solver_focus_compare\n');
 process.stdout.write(`  targets: interpreted=${interpreted.target_count} compiled=${compiled.target_count} same=${sameTargets ? 'yes' : 'no'}\n`);
 process.stdout.write(`  runs_per_target: interpreted=${interpreted.runs_per_target} compiled=${compiled.runs_per_target}\n`);
@@ -337,8 +363,12 @@ if (options.detail) {
     printCompiledUsageSummary(rows);
     const bySlowest = rows.slice().sort((a, b) => (b.elapsedRatio || 0) - (a.elapsedRatio || 0));
     const byFastest = rows.slice().sort((a, b) => (a.elapsedRatio || Infinity) - (b.elapsedRatio || Infinity));
+    const byStepSlowest = rows.slice().sort((a, b) => (b.stepRatio || 0) - (a.stepRatio || 0));
+    const byStepFastest = rows.slice().sort((a, b) => (a.stepRatio || Infinity) - (b.stepRatio || Infinity));
     printTargetTable('slowest_targets:', bySlowest.slice(0, 10));
     printTargetTable('fastest_targets:', byFastest.slice(0, 10));
+    printStepTimeTable('slowest_step_targets:', byStepSlowest);
+    printStepTimeTable('fastest_step_targets:', byStepFastest);
     printMaskRebuildTable(rows);
 }
 

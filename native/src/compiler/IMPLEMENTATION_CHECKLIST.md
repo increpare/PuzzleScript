@@ -144,6 +144,12 @@ lab bench, not the full corpus.
   prints median step/clone/hash ratios. This separates generated turn speed
   from end-to-end solver overhead.
 
+- [x] Add step-time outlier tables to focus detail output.
+
+  Done means: `--detail` prints the slowest and fastest targets by `step_ms`
+  ratio directly, so generated-kernel regressions are visible even when
+  end-to-end solver elapsed is dominated by other costs.
+
 - [x] Report per-target work mismatches in focus comparison.
 
   Done means: `--detail` reports when interpreted and compiled runs expanded or
