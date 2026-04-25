@@ -4073,10 +4073,12 @@ void emitRuleFunctions(
     const puzzlescript::Game& game,
     const puzzlescript::Rule& rule,
     size_t sourceIndex,
+    bool late,
     size_t groupIndex,
     size_t ruleIndex
 ) {
     const std::string prefix = "s" + std::to_string(sourceIndex)
+        + (late ? "_l" : "_e")
         + "_g" + std::to_string(groupIndex)
         + "_r" + std::to_string(ruleIndex);
     for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
@@ -4131,7 +4133,9 @@ void emitRuleFunctions(
             << "        }\n"
             << "    }\n";
     }
-    out << "    compiledRuleQueueCommands(game.rules[" << groupIndex << "][" << ruleIndex << "], commands);\n"
+    out << "    compiledRuleQueueCommands(game."
+        << (late ? "lateRules" : "rules")
+        << "[" << groupIndex << "][" << ruleIndex << "], commands);\n"
         << "    return changed;\n"
         << "}\n\n";
 }
@@ -4151,6 +4155,10 @@ struct CompiledRulesCoverage {
     uint64_t lateRules = 0;
     uint64_t compiledGroups = 0;
     uint64_t compiledRules = 0;
+    uint64_t compiledEarlyGroups = 0;
+    uint64_t compiledEarlyRules = 0;
+    uint64_t compiledLateGroups = 0;
+    uint64_t compiledLateRules = 0;
     std::unordered_map<std::string, uint64_t> missedGroupsByReason;
 };
 
@@ -4169,6 +4177,8 @@ CompiledRulesCoverage measureCompiledRulesCoverage(
             if (reason.empty()) {
                 ++coverage.compiledGroups;
                 coverage.compiledRules += group.size();
+                ++coverage.compiledEarlyGroups;
+                coverage.compiledEarlyRules += group.size();
             } else {
                 ++coverage.missedGroupsByReason[reason];
             }
@@ -4176,6 +4186,15 @@ CompiledRulesCoverage measureCompiledRulesCoverage(
         for (const auto& group : game.lateRules) {
             ++coverage.lateGroups;
             coverage.lateRules += group.size();
+            const std::string reason = compiledGroupMissReason(group, options);
+            if (reason.empty()) {
+                ++coverage.compiledGroups;
+                coverage.compiledRules += group.size();
+                ++coverage.compiledLateGroups;
+                coverage.compiledLateRules += group.size();
+            } else {
+                ++coverage.missedGroupsByReason[reason];
+            }
         }
     }
     return coverage;
@@ -4186,10 +4205,14 @@ void printCompiledRulesCoverage(const CompiledRulesCoverage& coverage) {
               << " sources=" << coverage.sources
               << " early_groups=" << coverage.earlyGroups
               << " early_rules=" << coverage.earlyRules
+              << " compiled_early_groups=" << coverage.compiledEarlyGroups
+              << " compiled_early_rules=" << coverage.compiledEarlyRules
               << " compiled_groups=" << coverage.compiledGroups
               << " compiled_rules=" << coverage.compiledRules
               << " late_groups=" << coverage.lateGroups
               << " late_rules=" << coverage.lateRules
+              << " compiled_late_groups=" << coverage.compiledLateGroups
+              << " compiled_late_rules=" << coverage.compiledLateRules
               << "\n";
 
     static const std::array<std::string_view, 9> kReasonOrder = {
@@ -4327,14 +4350,52 @@ std::string generateCompiledRulesCpp(
             ++sourceCompiledGroups;
             sourceCompiledRules += static_cast<uint32_t>(group.size());
             for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-                emitRuleFunctions(out, game, group[ruleIndex], sourceIndex, groupIndex, ruleIndex);
+                emitRuleFunctions(out, game, group[ruleIndex], sourceIndex, false, groupIndex, ruleIndex);
+            }
+        }
+        for (size_t groupIndex = 0; groupIndex < game.lateRules.size(); ++groupIndex) {
+            const auto& group = game.lateRules[groupIndex];
+            if (!isCompilableGroup(group, options)) {
+                continue;
+            }
+            ++sourceCompiledGroups;
+            sourceCompiledRules += static_cast<uint32_t>(group.size());
+            for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
+                emitRuleFunctions(out, game, group[ruleIndex], sourceIndex, true, groupIndex, ruleIndex);
             }
         }
         totalCompiledRules += sourceCompiledRules;
         totalCompiledGroups += sourceCompiledGroups;
 
         out << "CompiledRuleApplyOutcome apply_source_" << sourceIndex << "(Session& session, int32_t groupIndex, bool late, CommandState& commands) {\n"
-            << "    if (late) return {false, false};\n"
+            << "    if (late) {\n"
+            << "    switch (groupIndex) {\n";
+        for (size_t groupIndex = 0; groupIndex < game.lateRules.size(); ++groupIndex) {
+            const auto& group = game.lateRules[groupIndex];
+            if (!isCompilableGroup(group, options)) {
+                continue;
+            }
+            out << "        case " << groupIndex << ": {\n"
+                << "            bool hasChanges = false;\n"
+                << "            bool madeChange = true;\n"
+                << "            int loopCount = 0;\n"
+                << "            compiledRuleRebuildMasks(session);\n"
+                << "            while (madeChange && loopCount++ < 200) {\n"
+                << "                madeChange = false;\n";
+            for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
+                out << "                if (apply_rule_s" << sourceIndex << "_l_g" << groupIndex << "_r" << ruleIndex << "(session, commands)) {\n"
+                    << "                    madeChange = true;\n"
+                    << "                    compiledRuleRebuildMasks(session);\n"
+                    << "                }\n";
+            }
+            out << "                hasChanges = hasChanges || madeChange;\n"
+                << "            }\n"
+                << "            return {true, hasChanges};\n"
+                << "        }\n";
+        }
+        out << "        default: return {false, false};\n"
+            << "    }\n"
+            << "    }\n"
             << "    switch (groupIndex) {\n";
         for (size_t groupIndex = 0; groupIndex < game.rules.size(); ++groupIndex) {
             const auto& group = game.rules[groupIndex];
@@ -4349,7 +4410,7 @@ std::string generateCompiledRulesCpp(
                 << "            while (madeChange && loopCount++ < 200) {\n"
                 << "                madeChange = false;\n";
             for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-                out << "                if (apply_rule_s" << sourceIndex << "_g" << groupIndex << "_r" << ruleIndex << "(session, commands)) {\n"
+                out << "                if (apply_rule_s" << sourceIndex << "_e_g" << groupIndex << "_r" << ruleIndex << "(session, commands)) {\n"
                     << "                    madeChange = true;\n"
                     << "                    compiledRuleRebuildMasks(session);\n"
                     << "                }\n";
