@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <csignal>
 #include <cstdint>
+#include <deque>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
@@ -54,11 +55,11 @@ using puzzlescript::search::bitsSet;
 using puzzlescript::search::maskPtr;
 using puzzlescript::search::priorityFor;
 
-enum class Strategy {
-    Portfolio,
-    Bfs,
-    WeightedAStar,
-    Greedy,
+enum class SolveStatus {
+    Exhausted,
+    Solved,
+    Timeout,
+    LevelError,
 };
 
 struct Options {
@@ -70,7 +71,7 @@ struct Options {
     size_t jobs = 0;
     uint64_t seed = 1;
     int64_t solverTimeoutMs = 250;
-    Strategy solverStrategy = Strategy::Portfolio;
+    std::optional<SearchMode> solverMode;
     size_t topK = 50;
     size_t dedupeMax = 1000000;
     bool quiet = false;
@@ -148,21 +149,28 @@ struct SharedState {
     std::vector<Candidate> top;
     std::array<std::mutex, 64> dedupeMutexes;
     std::array<std::unordered_set<uint64_t>, 64> dedupe;
+    std::array<std::deque<uint64_t>, 64> dedupeOrder;
 };
 
-struct CounterSnapshot {
-    uint64_t attempted = 0;
-    uint64_t valid = 0;
-    uint64_t invalid = 0;
-    uint64_t duplicate = 0;
+struct CounterValues {
+    uint64_t samplesAttempted = 0;
+    uint64_t validGenerated = 0;
+    uint64_t rejected = 0;
+    uint64_t deduped = 0;
     uint64_t solved = 0;
-    uint64_t timeout = 0;
-    uint64_t unsolved = 0;
+    uint64_t timeouts = 0;
+    uint64_t exhausted = 0;
 };
 
 struct StateHashProjection {
     MaskVector objectMask;
     bool enabled = false;
+};
+
+struct SolverMetadata {
+    std::vector<ps_input> inputs;
+    bool includeRandomState = false;
+    StateHashProjection projection;
 };
 
 struct Node {
@@ -171,7 +179,6 @@ struct Node {
     int32_t parent = -1;
     ps_input input = PS_INPUT_UP;
     uint32_t depth = 0;
-    int32_t heuristic = 0;
 };
 
 struct QueueEntry {
@@ -190,7 +197,7 @@ struct QueueEntryGreater {
 };
 
 struct SolveResult {
-    std::string status = "exhausted";
+    SolveStatus status = SolveStatus::Exhausted;
     std::vector<std::string> solution;
     uint64_t expanded = 0;
     uint64_t generated = 0;
@@ -298,11 +305,11 @@ size_t autoJobCount() {
     return std::max<size_t>(1, count == 0 ? 1 : count);
 }
 
-Strategy parseStrategy(const std::string& value) {
-    if (value == "portfolio") return Strategy::Portfolio;
-    if (value == "bfs") return Strategy::Bfs;
-    if (value == "weighted-astar") return Strategy::WeightedAStar;
-    if (value == "greedy") return Strategy::Greedy;
+std::optional<SearchMode> parseSolverMode(const std::string& value) {
+    if (value == "portfolio") return std::nullopt;
+    if (value == "bfs") return SearchMode::Bfs;
+    if (value == "weighted-astar") return SearchMode::WeightedAStar;
+    if (value == "greedy") return SearchMode::Greedy;
     throw std::runtime_error("Unsupported solver strategy: " + value);
 }
 
@@ -328,7 +335,7 @@ Options parseArgs(int argc, char** argv) {
         } else if (arg == "--solver-timeout-ms" && index + 1 < argc) {
             options.solverTimeoutMs = std::max<int64_t>(1, std::stoll(argv[++index]));
         } else if (arg == "--solver-strategy" && index + 1 < argc) {
-            options.solverStrategy = parseStrategy(argv[++index]);
+            options.solverMode = parseSolverMode(argv[++index]);
         } else if (arg == "--top-k" && index + 1 < argc) {
             options.topK = std::max<size_t>(1, std::stoull(argv[++index]));
         } else if (arg == "--dedupe-max" && index + 1 < argc) {
@@ -1093,8 +1100,8 @@ bool solvedByStep(const ps_step_result& stepResult, const Session& session, int3
 SolveResult runSearch(
     const std::shared_ptr<const Game>& game,
     const LevelTemplate& generatedLevel,
+    const SolverMetadata& metadata,
     uint64_t sampleId,
-    int64_t timeoutMs,
     SearchMode mode,
     TimePoint deadline
 ) {
@@ -1103,30 +1110,27 @@ SolveResult runSearch(
     initial->suppressRuleMessages = true;
     constexpr puzzlescript::RuntimeStepOptions solverStepOptions{false, false};
     if (auto error = puzzlescript::loadLevelTemplate(*initial, generatedLevel, 0, solverStepOptions)) {
-        result.status = "level_error";
+        result.status = SolveStatus::LevelError;
         return result;
     }
 
     std::vector<Node> nodes;
     nodes.reserve(8192);
-    const bool includeRandomState = gameUsesRandomness(*game);
-    const StateHashProjection projection = buildStateHashProjection(*game);
     std::unordered_map<StateKey, uint32_t, StateKeyHash> bestDepth;
     bestDepth.reserve(16384);
-    const StateKey initialKey = solverStateKey(*initial, includeRandomState, projection);
+    const StateKey initialKey = solverStateKey(*initial, metadata.includeRandomState, metadata.projection);
     bestDepth.emplace(initialKey, 0);
     result.uniqueStates = 1;
     const int32_t initialHeuristic = mode == SearchMode::Bfs ? 0 : heuristicScore(*initial);
-    nodes.push_back(Node{std::move(initial), initialKey, -1, PS_INPUT_UP, 0, initialHeuristic});
+    nodes.push_back(Node{std::move(initial), initialKey, -1, PS_INPUT_UP, 0});
 
     std::priority_queue<QueueEntry, std::vector<QueueEntry>, QueueEntryGreater> frontier;
     frontier.push(QueueEntry{priorityFor(mode, 0, initialHeuristic), 0, 0});
     uint64_t nextTie = 1;
-    const auto inputs = solverInputsForGame(*game);
 
     while (!frontier.empty()) {
         if (Clock::now() >= deadline) {
-            result.status = "timeout";
+            result.status = SolveStatus::Timeout;
             break;
         }
         const QueueEntry entry = frontier.top();
@@ -1138,23 +1142,28 @@ SolveResult runSearch(
             ++result.duplicates;
             continue;
         }
+        Session* parentSession = nodes[entry.nodeIndex].session.get();
+        if (parentSession == nullptr) {
+            ++result.duplicates;
+            continue;
+        }
         ++result.expanded;
-        for (const ps_input input : inputs) {
+        for (const ps_input input : metadata.inputs) {
             if (Clock::now() >= deadline) {
-                result.status = "timeout";
+                result.status = SolveStatus::Timeout;
                 break;
             }
-            auto child = std::make_unique<Session>(*nodes[entry.nodeIndex].session);
+            auto child = std::make_unique<Session>(*parentSession);
             ps_step_result stepResult = puzzlescript::step(*child, input, solverStepOptions);
             puzzlescript::settlePendingAgain(*child, solverStepOptions);
             ++result.generated;
             if (solvedByStep(stepResult, *child, 0)) {
-                result.status = "solved";
+                result.status = SolveStatus::Solved;
                 result.solution = reconstructSolution(nodes, entry.nodeIndex, input);
                 return result;
             }
             if (!stepResult.changed) continue;
-            const StateKey key = solverStateKey(*child, includeRandomState, projection);
+            const StateKey key = solverStateKey(*child, metadata.includeRandomState, metadata.projection);
             const uint32_t childDepth = parentDepth + 1;
             const auto found = bestDepth.find(key);
             if (found != bestDepth.end() && found->second <= childDepth) {
@@ -1165,8 +1174,12 @@ SolveResult runSearch(
             result.uniqueStates = bestDepth.size();
             const int32_t childHeuristic = mode == SearchMode::Bfs ? 0 : heuristicScore(*child);
             const uint32_t childIndex = static_cast<uint32_t>(nodes.size());
-            nodes.push_back(Node{std::move(child), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+            nodes.push_back(Node{std::move(child), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth});
             frontier.push(QueueEntry{priorityFor(mode, childDepth, childHeuristic), nextTie++, childIndex});
+        }
+        nodes[entry.nodeIndex].session.reset();
+        if (result.status == SolveStatus::Timeout) {
+            break;
         }
     }
     return result;
@@ -1182,27 +1195,26 @@ void mergeStats(SolveResult& target, const SolveResult& source) {
 SolveResult solveGeneratedLevel(
     const std::shared_ptr<const Game>& game,
     const LevelTemplate& generatedLevel,
+    const SolverMetadata& metadata,
     uint64_t sampleId,
     int64_t timeoutMs,
-    Strategy strategy
+    std::optional<SearchMode> mode
 ) {
     const TimePoint start = Clock::now();
     const TimePoint deadline = start + std::chrono::milliseconds(timeoutMs);
-    if (strategy == Strategy::Bfs) return runSearch(game, generatedLevel, sampleId, timeoutMs, SearchMode::Bfs, deadline);
-    if (strategy == Strategy::WeightedAStar) return runSearch(game, generatedLevel, sampleId, timeoutMs, SearchMode::WeightedAStar, deadline);
-    if (strategy == Strategy::Greedy) return runSearch(game, generatedLevel, sampleId, timeoutMs, SearchMode::Greedy, deadline);
+    if (mode) return runSearch(game, generatedLevel, metadata, sampleId, *mode, deadline);
 
     SolveResult combined;
-    combined.status = "timeout";
+    combined.status = SolveStatus::Timeout;
     const TimePoint bfsDeadline = start + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 6));
-    SolveResult bfs = runSearch(game, generatedLevel, sampleId, timeoutMs, SearchMode::Bfs, std::min(bfsDeadline, deadline));
+    SolveResult bfs = runSearch(game, generatedLevel, metadata, sampleId, SearchMode::Bfs, std::min(bfsDeadline, deadline));
     mergeStats(combined, bfs);
-    if (bfs.status == "solved" || bfs.status == "level_error") return bfs;
+    if (bfs.status == SolveStatus::Solved || bfs.status == SolveStatus::LevelError) return bfs;
     if (Clock::now() < deadline) {
-        SolveResult weighted = runSearch(game, generatedLevel, sampleId, timeoutMs, SearchMode::WeightedAStar, deadline);
+        SolveResult weighted = runSearch(game, generatedLevel, metadata, sampleId, SearchMode::WeightedAStar, deadline);
         mergeStats(combined, weighted);
-        if (weighted.status == "solved" || weighted.status == "level_error") return weighted;
-        combined.status = weighted.status == "exhausted" ? "exhausted" : "timeout";
+        if (weighted.status == SolveStatus::Solved || weighted.status == SolveStatus::LevelError) return weighted;
+        combined.status = weighted.status == SolveStatus::Exhausted ? SolveStatus::Exhausted : SolveStatus::Timeout;
     }
     return combined;
 }
@@ -1211,25 +1223,48 @@ bool insertDedupe(SharedState& shared, uint64_t hash, size_t maxEntries) {
     const size_t shard = static_cast<size_t>(hash % shared.dedupe.size());
     std::lock_guard<std::mutex> lock(shared.dedupeMutexes[shard]);
     const size_t shardCap = std::max<size_t>(1, maxEntries / shared.dedupe.size());
-    if (shared.dedupe[shard].size() >= shardCap) {
-        shared.dedupe[shard].erase(shared.dedupe[shard].begin());
+    if (shared.dedupe[shard].find(hash) != shared.dedupe[shard].end()) {
+        return false;
     }
-    auto [_, inserted] = shared.dedupe[shard].insert(hash);
-    return inserted;
+    if (shared.dedupe[shard].size() >= shardCap) {
+        const uint64_t evicted = shared.dedupeOrder[shard].front();
+        shared.dedupeOrder[shard].pop_front();
+        shared.dedupe[shard].erase(evicted);
+    }
+    shared.dedupe[shard].insert(hash);
+    shared.dedupeOrder[shard].push_back(hash);
+    return true;
 }
 
 void maybeInsertTop(SharedState& shared, Candidate candidate, size_t topK) {
     std::lock_guard<std::mutex> lock(shared.topMutex);
-    shared.top.push_back(std::move(candidate));
-    std::sort(shared.top.begin(), shared.top.end(), betterCandidate);
-    if (shared.top.size() > topK) {
-        shared.top.resize(topK);
+    if (shared.top.size() < topK) {
+        shared.top.push_back(std::move(candidate));
+        return;
     }
+    auto worst = shared.top.begin();
+    for (auto it = shared.top.begin() + 1; it != shared.top.end(); ++it) {
+        if (betterCandidate(*worst, *it)) {
+            worst = it;
+        }
+    }
+    if (betterCandidate(candidate, *worst)) {
+        *worst = std::move(candidate);
+    }
+}
+
+SolverMetadata buildSolverMetadata(const Game& game) {
+    SolverMetadata metadata;
+    metadata.inputs = solverInputsForGame(game);
+    metadata.includeRandomState = gameUsesRandomness(game);
+    metadata.projection = buildStateHashProjection(game);
+    return metadata;
 }
 
 void workerMain(
     const Options& options,
     const std::shared_ptr<const Game>& game,
+    const SolverMetadata& solverMetadata,
     const GenerationProgram& program,
     const LevelTemplate& initLevel,
     SharedState& shared,
@@ -1259,8 +1294,8 @@ void workerMain(
             shared.counters.deduped.fetch_add(1, std::memory_order_relaxed);
             continue;
         }
-        SolveResult solved = solveGeneratedLevel(game, candidateLevel, sampleId, options.solverTimeoutMs, options.solverStrategy);
-        if (solved.status == "solved") {
+        SolveResult solved = solveGeneratedLevel(game, candidateLevel, solverMetadata, sampleId, options.solverTimeoutMs, options.solverMode);
+        if (solved.status == SolveStatus::Solved) {
             shared.counters.solved.fetch_add(1, std::memory_order_relaxed);
             Candidate candidate;
             candidate.score = solved.uniqueStates;
@@ -1273,7 +1308,7 @@ void workerMain(
             candidate.solution = std::move(solved.solution);
             candidate.level = std::move(candidateLevel);
             maybeInsertTop(shared, std::move(candidate), options.topK);
-        } else if (solved.status == "timeout") {
+        } else if (solved.status == SolveStatus::Timeout) {
             shared.counters.timeouts.fetch_add(1, std::memory_order_relaxed);
         } else {
             shared.counters.exhausted.fetch_add(1, std::memory_order_relaxed);
@@ -1283,29 +1318,31 @@ void workerMain(
 
 std::vector<Candidate> snapshotTop(SharedState& shared) {
     std::lock_guard<std::mutex> lock(shared.topMutex);
-    return shared.top;
+    auto top = shared.top;
+    std::sort(top.begin(), top.end(), betterCandidate);
+    return top;
 }
 
-CounterSnapshot snapshotCounters(const SharedState& shared) {
-    CounterSnapshot counters;
-    counters.attempted = shared.counters.samplesAttempted.load(std::memory_order_relaxed);
-    counters.valid = shared.counters.validGenerated.load(std::memory_order_relaxed);
-    counters.invalid = shared.counters.rejected.load(std::memory_order_relaxed);
-    counters.duplicate = shared.counters.deduped.load(std::memory_order_relaxed);
+CounterValues snapshotCounters(const SharedState& shared) {
+    CounterValues counters;
+    counters.samplesAttempted = shared.counters.samplesAttempted.load(std::memory_order_relaxed);
+    counters.validGenerated = shared.counters.validGenerated.load(std::memory_order_relaxed);
+    counters.rejected = shared.counters.rejected.load(std::memory_order_relaxed);
+    counters.deduped = shared.counters.deduped.load(std::memory_order_relaxed);
     counters.solved = shared.counters.solved.load(std::memory_order_relaxed);
-    counters.timeout = shared.counters.timeouts.load(std::memory_order_relaxed);
-    counters.unsolved = shared.counters.exhausted.load(std::memory_order_relaxed);
+    counters.timeouts = shared.counters.timeouts.load(std::memory_order_relaxed);
+    counters.exhausted = shared.counters.exhausted.load(std::memory_order_relaxed);
     return counters;
 }
 
-void appendCounterLabels(std::ostream& out, const CounterSnapshot& counters) {
-    out << " samples=" << counters.attempted
-        << " valid=" << counters.valid
+void appendCounterLabels(std::ostream& out, const CounterValues& counters) {
+    out << " samples=" << counters.samplesAttempted
+        << " valid=" << counters.validGenerated
         << " solved=" << counters.solved
-        << " invalid_generation=" << counters.invalid
-        << " duplicate=" << counters.duplicate
-        << " unsolved=" << counters.unsolved
-        << " timeout=" << counters.timeout;
+        << " invalid_generation=" << counters.rejected
+        << " duplicate=" << counters.deduped
+        << " unsolved=" << counters.exhausted
+        << " timeout=" << counters.timeouts;
 }
 
 std::string compactSolution(const std::vector<std::string>& solution) {
@@ -1324,8 +1361,8 @@ std::string compactSolution(const std::vector<std::string>& solution) {
 void renderDashboard(const Options& options, SharedState& shared, TimePoint start, bool final) {
     const auto now = Clock::now();
     const double elapsed = std::chrono::duration<double>(now - start).count();
-    const CounterSnapshot counters = snapshotCounters(shared);
-    const double rate = elapsed > 0.0 ? static_cast<double>(counters.attempted) / elapsed : 0.0;
+    const CounterValues counters = snapshotCounters(shared);
+    const double rate = elapsed > 0.0 ? static_cast<double>(counters.samplesAttempted) / elapsed : 0.0;
     const auto top = snapshotTop(shared);
     std::ostringstream out;
     out << "\x1b[H\x1b[J";
@@ -1356,7 +1393,7 @@ void renderDashboard(const Options& options, SharedState& shared, TimePoint star
 
 void printSparseProgress(const Options& options, SharedState& shared, TimePoint start) {
     const double elapsed = std::chrono::duration<double>(Clock::now() - start).count();
-    const CounterSnapshot counters = snapshotCounters(shared);
+    const CounterValues counters = snapshotCounters(shared);
     std::cerr << "generator_progress elapsed_s=" << std::fixed << std::setprecision(1) << elapsed
               << " jobs=" << options.jobs
               << " top=" << snapshotTop(shared).size();
@@ -1385,21 +1422,21 @@ std::string objectNamesForCell(const Game& game, const LevelTemplate& level, int
 
 std::string finalJson(const Options& options, const Game& game, SharedState& shared) {
     const auto top = snapshotTop(shared);
-    const CounterSnapshot counters = snapshotCounters(shared);
+    const CounterValues counters = snapshotCounters(shared);
     std::ostringstream out;
     out << "{\n";
     out << "  \"totals\":{";
-    out << "\"samples_attempted\":" << counters.attempted;
-    out << ",\"valid_generated\":" << counters.valid;
+    out << "\"samples_attempted\":" << counters.samplesAttempted;
+    out << ",\"valid_generated\":" << counters.validGenerated;
     out << ",\"solved\":" << counters.solved;
-    out << ",\"rejected\":" << counters.invalid;
-    out << ",\"deduped\":" << counters.duplicate;
-    out << ",\"timeouts\":" << counters.timeout;
-    out << ",\"exhausted\":" << counters.unsolved;
-    out << ",\"invalid_generation\":" << counters.invalid;
-    out << ",\"duplicate_levels\":" << counters.duplicate;
-    out << ",\"unsolved\":" << counters.unsolved;
-    out << ",\"solver_timeouts\":" << counters.timeout;
+    out << ",\"rejected\":" << counters.rejected;
+    out << ",\"deduped\":" << counters.deduped;
+    out << ",\"timeouts\":" << counters.timeouts;
+    out << ",\"exhausted\":" << counters.exhausted;
+    out << ",\"invalid_generation\":" << counters.rejected;
+    out << ",\"duplicate_levels\":" << counters.deduped;
+    out << ",\"unsolved\":" << counters.exhausted;
+    out << ",\"solver_timeouts\":" << counters.timeouts;
     out << "},\n";
     out << "  \"top\":[\n";
     for (size_t i = 0; i < top.size(); ++i) {
@@ -1454,6 +1491,7 @@ int main(int argc, char** argv) {
         }
         NameResolver resolver(*game, parserState);
         const GenerationProgram program = compileGenerationProgram(spec, *game, resolver);
+        const SolverMetadata solverMetadata = buildSolverMetadata(*game);
 
         SharedState shared;
         gCancelFlag = &shared.cancel;
@@ -1465,7 +1503,7 @@ int main(int argc, char** argv) {
         std::vector<std::thread> workers;
         workers.reserve(options.jobs);
         for (size_t i = 0; i < options.jobs; ++i) {
-            workers.emplace_back(workerMain, std::cref(options), game, std::cref(program), std::cref(game->levels.front()), std::ref(shared), deadline);
+            workers.emplace_back(workerMain, std::cref(options), game, std::cref(solverMetadata), std::cref(program), std::cref(game->levels.front()), std::ref(shared), deadline);
         }
 
         const bool dashboard = !options.quiet && isatty(STDOUT_FILENO);
