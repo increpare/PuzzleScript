@@ -4415,9 +4415,14 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     CommandState commands;
     std::vector<bool> bannedGroups;
     int rigidLoopCount = 0;
+    bool firstPass = true;
     while (true) {
         commands = CommandState{};
-        restoreSnapshot(session, turnStart, false);
+        if (firstPass) {
+            firstPass = false;
+        } else {
+            restoreSnapshot(session, turnStart, false);
+        }
         clearMovementState(session);
         if (directionMask != 0) {
             seeded = seedPlayerMovements(session, directionMask);
