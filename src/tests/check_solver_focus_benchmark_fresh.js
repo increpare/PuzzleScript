@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/check_solver_focus_benchmark_fresh.js <benchmark.json> <manifest.json> --runs N --corpus PATH --strategy NAME');
+    console.error('Usage: node src/tests/check_solver_focus_benchmark_fresh.js <benchmark.json> <manifest.json> --runs N --corpus PATH --strategy NAME [--profile-runtime-counters true|false] [--newer-than PATH ...]');
     process.exit(2);
 }
 
@@ -19,6 +19,8 @@ const manifestPath = path.resolve(args[1]);
 let expectedRuns = null;
 let expectedCorpus = null;
 let expectedStrategy = null;
+let expectedProfileRuntimeCounters = null;
+const newerThanPaths = [];
 
 function parsePositiveInt(value, label) {
     const parsed = Number.parseInt(value, 10);
@@ -36,6 +38,14 @@ for (let index = 2; index < args.length; index++) {
         expectedCorpus = path.resolve(args[++index]);
     } else if (arg === '--strategy' && index + 1 < args.length) {
         expectedStrategy = args[++index];
+    } else if (arg === '--profile-runtime-counters' && index + 1 < args.length) {
+        const value = args[++index];
+        if (value !== 'true' && value !== 'false') {
+            throw new Error(`--profile-runtime-counters must be true or false: ${value}`);
+        }
+        expectedProfileRuntimeCounters = value === 'true';
+    } else if (arg === '--newer-than' && index + 1 < args.length) {
+        newerThanPaths.push(path.resolve(args[++index]));
     } else {
         usage();
     }
@@ -66,6 +76,15 @@ const manifestStat = fs.statSync(manifestPath);
 if (benchmarkStat.mtimeMs < manifestStat.mtimeMs) {
     stale('older than focus manifest');
 }
+for (const inputPath of newerThanPaths) {
+    if (!fs.existsSync(inputPath)) {
+        stale(`missing freshness input ${inputPath}`);
+    }
+    const inputStat = fs.statSync(inputPath);
+    if (benchmarkStat.mtimeMs < inputStat.mtimeMs) {
+        stale(`older than ${inputPath}`);
+    }
+}
 
 const benchmark = JSON.parse(fs.readFileSync(benchmarkPath, 'utf8'));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
@@ -83,6 +102,9 @@ if (path.resolve(benchmark.manifest || '') !== manifestPath) {
 }
 if (benchmark.strategy !== expectedStrategy) {
     stale(`strategy=${benchmark.strategy}, expected ${expectedStrategy}`);
+}
+if (expectedProfileRuntimeCounters !== null && Boolean(benchmark.profile_runtime_counters) !== expectedProfileRuntimeCounters) {
+    stale(`profile_runtime_counters=${Boolean(benchmark.profile_runtime_counters)}, expected ${expectedProfileRuntimeCounters}`);
 }
 if (benchmark.target_count !== manifestTargets.length || benchmarkTargets.length !== manifestTargets.length) {
     stale(`target_count=${benchmark.target_count}, expected ${manifestTargets.length}`);

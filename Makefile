@@ -18,7 +18,7 @@
 .PHONY: help build build_32 build_solver build_generator generator solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
-	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_benchmark_targets generator_smoke_tests generator_benchmark \
+	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	compiled_rules_simulation_suite_coverage compiled_tick_dispatch_smoke \
 	rule_plan_parity_tests \
@@ -65,14 +65,19 @@ SOLVER_FOCUS_CORPUS ?= $(SOLVER_TESTS_CORPUS)
 SOLVER_FOCUS_MANIFEST ?= $(BUILD_DIR)/native/solver_focus_group.json
 SOLVER_FOCUS_OUT ?= $(BUILD_DIR)/native/solver_focus_benchmark.json
 SOLVER_FOCUS_INTERPRETED_OUT ?= $(BUILD_DIR)/native/solver_focus_benchmark_interpreted.json
-SOLVER_FOCUS_COMPILED_OUT ?= $(BUILD_DIR)/native/solver_focus_benchmark_compiled.json
+SOLVER_FOCUS_COMPILED_OUT ?= $(BUILD_DIR)/native/solver_focus_benchmark_compiled$(if $(filter true,$(COMPILED_RULES_PERF)),_perf,).json
+SOLVER_FOCUS_PERF_INTERPRETED_OUT ?= $(BUILD_DIR)/native/solver_focus_perf_interpreted.json
+SOLVER_FOCUS_PERF_COMPILED_OUT ?= $(BUILD_DIR)/native/solver_focus_perf_compiled.json
 SOLVER_FOCUS_TIMEOUT_MS ?= 500
 SOLVER_FOCUS_MIN_ELAPSED_MS ?= 250
 SOLVER_FOCUS_MAX_TARGETS ?= 50
 SOLVER_FOCUS_STRATEGY ?= $(SOLVER_STRATEGY)
 SOLVER_FOCUS_JOBS ?= 1
 SOLVER_FOCUS_RUNS ?= 1
-SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE ?= 500
+SOLVER_FOCUS_PROFILE_COUNTERS ?= false
+SOLVER_FOCUS_PROFILE_COUNTERS_ARG = $(if $(filter true,$(SOLVER_FOCUS_PROFILE_COUNTERS)),--profile-runtime-counters,)
+COMPILED_RULES_PERF ?= false
+SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE ?= $(if $(filter true,$(COMPILED_RULES_PERF)),,500)
 SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE_ARG = $(if $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),--max-compiled-rules-per-source $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),)
 SOLVER_TARGET_BENCH_RUNS ?= 5
 SOLVER_TARGET_BENCH_CORPUS ?= $(SOLVER_MINE_CORPUS)
@@ -102,12 +107,22 @@ COMPILED_RULES_MAX_ROWS ?= 1
 COMPILED_RULES_LTO ?= false
 COMPILED_RULES_LINK_DEDUP ?= false
 COMPILED_RULES_EXPORT_SYMBOLS ?= false
-COMPILED_RULES_OPT_LEVEL ?= 1
+COMPILED_RULES_OPT_LEVEL ?= $(if $(filter true,$(COMPILED_RULES_PERF)),3,1)
 COMPILED_RULES_BUILD_JOBS ?= auto
 COMPILED_RULES_SHARED_SINGLE_BUILD ?= true
 COMPILED_RULES_REUSE_SINGLE_CPP ?= true
 COMPILED_RULES_REUSE_SHARDED_CPP ?= true
 COMPILED_RULES_COMPILER_LAUNCHER ?=
+COMPILED_RULES_FINGERPRINT_INPUTS := \
+	CMakeLists.txt \
+	native/CMakeLists.txt \
+	native/src/cli/main.cpp \
+	native/src/runtime/compiled_rules.cpp \
+	native/src/runtime/compiled_rules.hpp \
+	native/src/runtime/core.cpp \
+	native/src/runtime/core.hpp \
+	native/src/solver/main.cpp
+COMPILED_RULES_FRESH_ARGS = $(foreach file,$(COMPILED_RULES_FINGERPRINT_INPUTS),--newer-than "$(file)")
 COMPILED_RULES_CMAKE_GENERATOR_ARG = $(if $(COMPILED_RULES_CMAKE_GENERATOR),-G "$(COMPILED_RULES_CMAKE_GENERATOR)",)
 COMPILED_RULES_COMPILER_LAUNCHER_ARGS = $(if $(COMPILED_RULES_COMPILER_LAUNCHER),-DCMAKE_C_COMPILER_LAUNCHER=$(COMPILED_RULES_COMPILER_LAUNCHER) -DCMAKE_CXX_COMPILER_LAUNCHER=$(COMPILED_RULES_COMPILER_LAUNCHER),)
 COMPILED_RULES_CMAKE_ARGS = $(COMPILED_RULES_CMAKE_GENERATOR_ARG) -DPS_MASK_WORD_BITS=64 -DPS_ENABLE_LTO=$(COMPILED_RULES_LTO) -DPS_ENABLE_LINK_DEDUP=$(COMPILED_RULES_LINK_DEDUP) -DPS_ENABLE_EXPORTED_SYMBOLS=$(COMPILED_RULES_EXPORT_SYMBOLS) -DPS_COMPILED_RULES_OPT_LEVEL=$(COMPILED_RULES_OPT_LEVEL) $(COMPILED_RULES_COMPILER_LAUNCHER_ARGS)
@@ -243,6 +258,7 @@ help:
 	@echo "  make solver_focus_mine             Mine a small solver optimization focus group"
 	@echo "  make solver_focus_benchmark        Benchmark the current solver focus group"
 	@echo "  make solver_focus_compare          Compare interpreted vs compiled focus outputs"
+	@echo "  make solver_focus_perf_report      Compare focus outputs with runtime counters and the 2x goal"
 	@echo "  make solver_benchmark_targets      Benchmark mined solver targets repeatedly"
 	@echo "  make clean                         Remove native build outputs and JS parity data"
 	@echo ""
@@ -572,7 +588,7 @@ solver_focus_benchmark: $(PUZZLESCRIPT_SOLVER)
 		manifest_hash=$$(shasum -a 256 "$(SOLVER_FOCUS_MANIFEST)" | awk '{print $$1}'); \
 		focus_corpus_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-focus-corpus-$$manifest_hash"; \
 		$(NODE) src/tests/extract_solver_focus_corpus.js "$(SOLVER_FOCUS_MANIFEST)" "$(SOLVER_FOCUS_CORPUS)" "$$focus_corpus_dir"; \
-		hash=$$({ find "$$focus_corpus_dir" -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256; shasum -a 256 "$(SOLVER_FOCUS_MANIFEST)"; printf '%s\n' "max_compiled_rules_per_source=$(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE)"; } | shasum -a 256 | awk '{print $$1}'); \
+		hash=$$({ find "$$focus_corpus_dir" -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256; shasum -a 256 "$(SOLVER_FOCUS_MANIFEST)" $(COMPILED_RULES_FINGERPRINT_INPUTS); printf '%s\n' "max_rows=$(COMPILED_RULES_MAX_ROWS)"; printf '%s\n' "max_compiled_rules_per_source=$(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE)"; printf '%s\n' "opt_level=$(COMPILED_RULES_OPT_LEVEL)"; printf '%s\n' "perf=$(COMPILED_RULES_PERF)"; } | shasum -a 256 | awk '{print $$1}'); \
 		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-focus-$$hash"; \
 		build_dir="$(COMPILED_RULES_BUILD_ROOT)/solver-focus-$$hash"; \
 		out_cpp_dir="$$out_dir/sources"; \
@@ -581,9 +597,9 @@ solver_focus_benchmark: $(PUZZLESCRIPT_SOLVER)
 		$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,$$focus_corpus_dir,solver_focus_$$hash,$(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE_ARG)); \
 		$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 		$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
-		$(NODE) src/tests/run_solver_level_benchmark.js "$$build_dir/native/puzzlescript_solver" $(SOLVER_FOCUS_CORPUS) $(SOLVER_FOCUS_MANIFEST) --runs $(SOLVER_FOCUS_RUNS) --strategy $(SOLVER_FOCUS_STRATEGY) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --out $(SOLVER_FOCUS_OUT); \
+		$(NODE) src/tests/run_solver_level_benchmark.js "$$build_dir/native/puzzlescript_solver" $(SOLVER_FOCUS_CORPUS) $(SOLVER_FOCUS_MANIFEST) --runs $(SOLVER_FOCUS_RUNS) --strategy $(SOLVER_FOCUS_STRATEGY) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --out $(SOLVER_FOCUS_OUT) $(SOLVER_FOCUS_PROFILE_COUNTERS_ARG); \
 	else \
-		$(NODE) src/tests/run_solver_level_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_CORPUS) $(SOLVER_FOCUS_MANIFEST) --runs $(SOLVER_FOCUS_RUNS) --strategy $(SOLVER_FOCUS_STRATEGY) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --out $(SOLVER_FOCUS_OUT); \
+		$(NODE) src/tests/run_solver_level_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_CORPUS) $(SOLVER_FOCUS_MANIFEST) --runs $(SOLVER_FOCUS_RUNS) --strategy $(SOLVER_FOCUS_STRATEGY) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --out $(SOLVER_FOCUS_OUT) $(SOLVER_FOCUS_PROFILE_COUNTERS_ARG); \
 	fi
 
 $(SOLVER_FOCUS_INTERPRETED_OUT): $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
@@ -594,13 +610,19 @@ $(SOLVER_FOCUS_COMPILED_OUT): $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
 
 solver_focus_compare: $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
 	@set -e; \
-	if ! $(NODE) src/tests/check_solver_focus_benchmark_fresh.js "$(SOLVER_FOCUS_INTERPRETED_OUT)" "$(SOLVER_FOCUS_MANIFEST)" --runs $(SOLVER_FOCUS_RUNS) --corpus "$(SOLVER_FOCUS_CORPUS)" --strategy "$(SOLVER_FOCUS_STRATEGY)"; then \
+	if ! $(NODE) src/tests/check_solver_focus_benchmark_fresh.js "$(SOLVER_FOCUS_INTERPRETED_OUT)" "$(SOLVER_FOCUS_MANIFEST)" --runs $(SOLVER_FOCUS_RUNS) --corpus "$(SOLVER_FOCUS_CORPUS)" --strategy "$(SOLVER_FOCUS_STRATEGY)" --profile-runtime-counters "$(SOLVER_FOCUS_PROFILE_COUNTERS)"; then \
 		$(MAKE) solver_focus_benchmark SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_INTERPRETED_OUT)"; \
 	fi; \
-	if ! $(NODE) src/tests/check_solver_focus_benchmark_fresh.js "$(SOLVER_FOCUS_COMPILED_OUT)" "$(SOLVER_FOCUS_MANIFEST)" --runs $(SOLVER_FOCUS_RUNS) --corpus "$(SOLVER_FOCUS_CORPUS)" --strategy "$(SOLVER_FOCUS_STRATEGY)"; then \
+	if ! $(NODE) src/tests/check_solver_focus_benchmark_fresh.js "$(SOLVER_FOCUS_COMPILED_OUT)" "$(SOLVER_FOCUS_MANIFEST)" --runs $(SOLVER_FOCUS_RUNS) --corpus "$(SOLVER_FOCUS_CORPUS)" --strategy "$(SOLVER_FOCUS_STRATEGY)" --profile-runtime-counters "$(SOLVER_FOCUS_PROFILE_COUNTERS)" $(COMPILED_RULES_FRESH_ARGS); then \
 		$(MAKE) solver_focus_benchmark SPECIALIZE=true SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_COMPILED_OUT)"; \
 	fi; \
 	$(NODE) src/tests/compare_solver_focus_benchmarks.js "$(SOLVER_FOCUS_INTERPRETED_OUT)" "$(SOLVER_FOCUS_COMPILED_OUT)"
+
+solver_focus_perf_report: $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
+	@set -e; \
+	$(MAKE) solver_focus_benchmark SOLVER_FOCUS_RUNS=$(SOLVER_FOCUS_RUNS) SOLVER_FOCUS_PROFILE_COUNTERS=true SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_PERF_INTERPRETED_OUT)"; \
+	$(MAKE) solver_focus_benchmark SPECIALIZE=true COMPILED_RULES_PERF=true SOLVER_FOCUS_RUNS=$(SOLVER_FOCUS_RUNS) SOLVER_FOCUS_PROFILE_COUNTERS=true SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_PERF_COMPILED_OUT)"; \
+	$(NODE) src/tests/compare_solver_focus_benchmarks.js "$(SOLVER_FOCUS_PERF_INTERPRETED_OUT)" "$(SOLVER_FOCUS_PERF_COMPILED_OUT)" --detail --goal-ratio 0.5
 
 solver_benchmark_targets: $(PUZZLESCRIPT_SOLVER)
 	$(NODE) src/tests/run_solver_level_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_TARGET_BENCH_CORPUS) $(SOLVER_TARGET_BENCH_MANIFEST) --runs $(SOLVER_TARGET_BENCH_RUNS) --strategy $(SOLVER_TARGET_BENCH_STRATEGY) --out $(SOLVER_TARGET_BENCH_OUT) $(SOLVER_TARGET_BENCH_TIMEOUT_ARG)

@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/run_solver_level_benchmark.js <puzzlescript_solver> <solver_tests_dir> <manifest> [--runs N] [--out PATH] [--timeout-ms N] [--strategy NAME] [--game NAME] [--level N]');
+    console.error('Usage: node src/tests/run_solver_level_benchmark.js <puzzlescript_solver> <solver_tests_dir> <manifest> [--runs N] [--out PATH] [--timeout-ms N] [--strategy NAME] [--game NAME] [--level N] [--profile-runtime-counters]');
     process.exit(1);
 }
 
@@ -24,6 +24,7 @@ let timeoutOverrideMs = null;
 let strategyOverride = null;
 let gameFilter = null;
 let levelFilter = null;
+let profileRuntimeCounters = false;
 
 function parsePositiveInt(value, label) {
     const parsed = Number.parseInt(value, 10);
@@ -55,6 +56,8 @@ for (let index = 3; index < args.length; index++) {
         gameFilter = args[++index];
     } else if (arg === '--level' && index + 1 < args.length) {
         levelFilter = parseNonNegativeInt(args[++index], '--level');
+    } else if (arg === '--profile-runtime-counters') {
+        profileRuntimeCounters = true;
     } else {
         throw new Error(`Unsupported argument: ${arg}`);
     }
@@ -84,9 +87,25 @@ function targetKey(target) {
     return `${target.game}#${target.level}`;
 }
 
+function parseRuntimeCounters(stderr) {
+    const match = stderr.match(/solver_runtime_counters ([^\n]+)/);
+    if (!match) {
+        return null;
+    }
+    const counters = {};
+    for (const part of match[1].trim().split(/\s+/)) {
+        const [key, value] = part.split('=');
+        if (!key || value === undefined) {
+            continue;
+        }
+        const parsed = Number.parseInt(value, 10);
+        counters[key] = Number.isFinite(parsed) ? parsed : value;
+    }
+    return counters;
+}
+
 function runTarget(target, runIndex, strategy, timeoutMs) {
-    const started = process.hrtime.bigint();
-    const result = spawnSync(solverPath, [
+    const solverArgs = [
         corpusPath,
         '--timeout-ms', String(timeoutMs),
         '--jobs', '1',
@@ -96,7 +115,12 @@ function runTarget(target, runIndex, strategy, timeoutMs) {
         '--no-solutions',
         '--quiet',
         '--json',
-    ], {
+    ];
+    if (profileRuntimeCounters) {
+        solverArgs.push('--profile-runtime-counters');
+    }
+    const started = process.hrtime.bigint();
+    const result = spawnSync(solverPath, solverArgs, {
         encoding: 'utf8',
         maxBuffer: 512 * 1024 * 1024,
     });
@@ -130,6 +154,7 @@ function runTarget(target, runIndex, strategy, timeoutMs) {
         max_frontier: solverResult.max_frontier,
         solution_length: solverResult.solution_length,
         timeout_ms: solverResult.timeout_ms,
+        runtime_counters: profileRuntimeCounters ? parseRuntimeCounters(result.stderr) : null,
     };
 }
 
@@ -194,6 +219,7 @@ const output = {
     strategy,
     jobs: '1',
     runs_per_target: runs,
+    profile_runtime_counters: profileRuntimeCounters,
     target_count: summaries.length,
     filters: {
         game: gameFilter,

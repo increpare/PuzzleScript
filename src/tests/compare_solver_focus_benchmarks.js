@@ -5,12 +5,30 @@ const fs = require('fs');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/compare_solver_focus_benchmarks.js <interpreted.json> <compiled.json>');
+    console.error('Usage: node src/tests/compare_solver_focus_benchmarks.js <interpreted.json> <compiled.json> [--detail] [--goal-ratio N]');
     process.exit(1);
 }
 
 if (process.argv.length < 4) {
     usage();
+}
+
+const options = {
+    detail: false,
+    goalRatio: null,
+};
+for (let index = 4; index < process.argv.length; index++) {
+    const arg = process.argv[index];
+    if (arg === '--detail') {
+        options.detail = true;
+    } else if (arg === '--goal-ratio' && index + 1 < process.argv.length) {
+        options.goalRatio = Number.parseFloat(process.argv[++index]);
+        if (!Number.isFinite(options.goalRatio) || options.goalRatio <= 0) {
+            throw new Error(`--goal-ratio must be positive: ${process.argv[index]}`);
+        }
+    } else {
+        usage();
+    }
 }
 
 function readJson(filePath) {
@@ -65,6 +83,61 @@ for (const target of compiled.targets || []) {
     }
 }
 
+function countersMedian(summary, key) {
+    const values = (summary.samples || [])
+        .map((sample) => sample.runtime_counters && sample.runtime_counters[key])
+        .filter((value) => Number.isFinite(value));
+    if (values.length === 0) {
+        return null;
+    }
+    values.sort((a, b) => a - b);
+    return values[Math.floor(values.length / 2)];
+}
+
+function targetRows() {
+    const compiledByKey = new Map((compiled.targets || []).map((target) => [targetKey(target), target]));
+    return (interpreted.targets || []).map((target) => {
+        const key = targetKey(target);
+        const compiledTarget = compiledByKey.get(key);
+        if (!compiledTarget) {
+            return null;
+        }
+        return {
+            key,
+            interpreted: target,
+            compiled: compiledTarget,
+            wallRatio: ratio(compiledTarget.median.wall_ms, target.median.wall_ms),
+            elapsedRatio: ratio(compiledTarget.median.elapsed_ms, target.median.elapsed_ms),
+            generatedRatio: ratio(compiledTarget.median.generated, target.median.generated),
+            compiledRuleHits: countersMedian(compiledTarget, 'compiled_rule_group_hits'),
+            compiledTickHits: countersMedian(compiledTarget, 'compiled_tick_hits'),
+            candidateCells: countersMedian(compiledTarget, 'candidate_cells_tested'),
+            rowScans: countersMedian(compiledTarget, 'row_scans'),
+            patternTests: countersMedian(compiledTarget, 'pattern_tests'),
+            maskRebuilds: countersMedian(compiledTarget, 'mask_rebuild_calls'),
+        };
+    }).filter(Boolean);
+}
+
+function printTargetTable(label, rows) {
+    process.stdout.write(`  ${label}\n`);
+    for (const row of rows) {
+        process.stdout.write(
+            `    ${formatNumber(row.elapsedRatio, 3)}x elapsed` +
+            ` wall=${formatNumber(row.wallRatio, 3)}x` +
+            ` generated=${formatNumber(row.generatedRatio, 3)}x` +
+            ` ${row.key}` +
+            ` hits=${row.compiledRuleHits === null ? 'n/a' : row.compiledRuleHits}` +
+            ` tick=${row.compiledTickHits === null ? 'n/a' : row.compiledTickHits}` +
+            ` rows=${row.rowScans === null ? 'n/a' : row.rowScans}` +
+            ` cells=${row.candidateCells === null ? 'n/a' : row.candidateCells}` +
+            ` pattern_tests=${row.patternTests === null ? 'n/a' : row.patternTests}` +
+            ` mask_rebuilds=${row.maskRebuilds === null ? 'n/a' : row.maskRebuilds}` +
+            `\n`
+        );
+    }
+}
+
 process.stdout.write('solver_focus_compare\n');
 process.stdout.write(`  targets: interpreted=${interpreted.target_count} compiled=${compiled.target_count} same=${sameTargets ? 'yes' : 'no'}\n`);
 process.stdout.write(`  runs_per_target: interpreted=${interpreted.runs_per_target} compiled=${compiled.runs_per_target}\n`);
@@ -84,7 +157,29 @@ process.stdout.write(
     ` compiled=${formatNumber(compiled.median.generated, 0)}` +
     ` compiled/interpreted=${formatDelta(compiled.median.generated, interpreted.median.generated)}\n`
 );
+if (options.goalRatio !== null) {
+    const elapsedRatio = ratio(compiled.median.elapsed_ms, interpreted.median.elapsed_ms);
+    process.stdout.write(
+        `  goal_elapsed_ratio: target<=${formatNumber(options.goalRatio, 3)}` +
+        ` actual=${elapsedRatio === null ? 'n/a' : formatNumber(elapsedRatio, 3)}` +
+        ` pass=${elapsedRatio !== null && elapsedRatio <= options.goalRatio ? 'yes' : 'no'}\n`
+    );
+}
+
+if (options.detail) {
+    const rows = targetRows();
+    const bySlowest = rows.slice().sort((a, b) => (b.elapsedRatio || 0) - (a.elapsedRatio || 0));
+    const byFastest = rows.slice().sort((a, b) => (a.elapsedRatio || Infinity) - (b.elapsedRatio || Infinity));
+    printTargetTable('slowest_targets:', bySlowest.slice(0, 10));
+    printTargetTable('fastest_targets:', byFastest.slice(0, 10));
+}
 
 if (!sameTargets) {
     process.exitCode = 1;
+}
+if (options.goalRatio !== null) {
+    const elapsedRatio = ratio(compiled.median.elapsed_ms, interpreted.median.elapsed_ms);
+    if (elapsedRatio === null || elapsedRatio > options.goalRatio) {
+        process.exitCode = 2;
+    }
 }

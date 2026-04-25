@@ -1249,6 +1249,19 @@ int main(int argc, char** argv) {
             ps_runtime_counters_snapshot(&runtimeCounters);
             ps_runtime_counters_set_enabled(false);
             std::cerr << "solver_runtime_counters"
+                      << " rules_visited=" << runtimeCounters.rules_visited
+                      << " rules_skipped_by_mask=" << runtimeCounters.rules_skipped_by_mask
+                      << " candidate_cells_tested=" << runtimeCounters.candidate_cells_tested
+                      << " pattern_tests=" << runtimeCounters.pattern_tests
+                      << " pattern_matches=" << runtimeCounters.pattern_matches
+                      << " replacements_attempted=" << runtimeCounters.replacements_attempted
+                      << " replacements_applied=" << runtimeCounters.replacements_applied
+                      << " row_scans=" << runtimeCounters.row_scans
+                      << " ellipsis_scans=" << runtimeCounters.ellipsis_scans
+                      << " mask_rebuild_calls=" << runtimeCounters.mask_rebuild_calls
+                      << " mask_rebuild_dirty_calls=" << runtimeCounters.mask_rebuild_dirty_calls
+                      << " mask_rebuild_rows=" << runtimeCounters.mask_rebuild_rows
+                      << " mask_rebuild_columns=" << runtimeCounters.mask_rebuild_columns
                       << " compiled_rule_group_attempts=" << runtimeCounters.compiled_rule_group_attempts
                       << " compiled_rule_group_hits=" << runtimeCounters.compiled_rule_group_hits
                       << " compiled_rule_group_fallbacks=" << runtimeCounters.compiled_rule_group_fallbacks

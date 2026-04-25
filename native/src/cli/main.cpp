@@ -3800,8 +3800,88 @@ bool ruleUsesRuntimeRowHelpers(const puzzlescript::Rule& rule) {
     return rule.rigid || ruleHasEllipsis(rule) || ruleHasRandomReplacement(rule);
 }
 
+std::string compiledMaskWordLiteral(puzzlescript::MaskWord word) {
+    std::ostringstream out;
+    out << "static_cast<MaskWord>(static_cast<MaskWordUnsigned>("
+        << static_cast<puzzlescript::MaskWordUnsigned>(word)
+        << "ULL))";
+    return out.str();
+}
+
+std::vector<puzzlescript::MaskWord> compiledMaskWords(
+    const puzzlescript::Game& game,
+    puzzlescript::MaskOffset offset,
+    uint32_t wordCount
+) {
+    std::vector<puzzlescript::MaskWord> words(static_cast<size_t>(wordCount), 0);
+    if (offset == puzzlescript::kNullMaskOffset || wordCount == 0) {
+        return words;
+    }
+    const size_t begin = static_cast<size_t>(offset);
+    for (uint32_t word = 0; word < wordCount; ++word) {
+        const size_t index = begin + static_cast<size_t>(word);
+        if (index < game.maskArena.size()) {
+            words[static_cast<size_t>(word)] = game.maskArena[index];
+        }
+    }
+    return words;
+}
+
+void emitInlineMaskBitsSetCheck(
+    std::ostream& out,
+    const puzzlescript::Game& game,
+    puzzlescript::MaskOffset offset,
+    uint32_t wordCount,
+    const std::string& actualExpr,
+    const std::string& indent = "    ",
+    const std::string& failStatement = "return false"
+) {
+    if (offset == puzzlescript::kNullMaskOffset || wordCount == 0) {
+        return;
+    }
+    const auto words = compiledMaskWords(game, offset, wordCount);
+    bool anyRequired = false;
+    for (uint32_t word = 0; word < wordCount; ++word) {
+        const auto mask = words[static_cast<size_t>(word)];
+        if (mask == 0) {
+            continue;
+        }
+        anyRequired = true;
+        out << indent << "if (((" << actualExpr << ")[" << word << "] & "
+            << compiledMaskWordLiteral(mask) << ") != "
+            << compiledMaskWordLiteral(mask) << ") " << failStatement << ";\n";
+    }
+    if (!anyRequired) {
+        out << indent << "(void)" << actualExpr << ";\n";
+    }
+}
+
+void emitInlineMaskAnyBitsReject(
+    std::ostream& out,
+    const puzzlescript::Game& game,
+    puzzlescript::MaskOffset offset,
+    uint32_t wordCount,
+    const std::string& actualExpr,
+    const std::string& indent = "    ",
+    const std::string& failStatement = "return false"
+) {
+    if (offset == puzzlescript::kNullMaskOffset || wordCount == 0) {
+        return;
+    }
+    const auto words = compiledMaskWords(game, offset, wordCount);
+    for (uint32_t word = 0; word < wordCount; ++word) {
+        const auto mask = words[static_cast<size_t>(word)];
+        if (mask == 0) {
+            continue;
+        }
+        out << indent << "if ((((" << actualExpr << ")[" << word << "] & "
+            << compiledMaskWordLiteral(mask) << ") != 0)) " << failStatement << ";\n";
+    }
+}
+
 void emitMaskBitsSetCheck(
     std::ostream& out,
+    const puzzlescript::Game& game,
     const std::string& maskName,
     puzzlescript::MaskOffset offset,
     uint32_t wordCount,
@@ -3811,14 +3891,14 @@ void emitMaskBitsSetCheck(
     if (offset == puzzlescript::kNullMaskOffset || wordCount == 0) {
         return;
     }
-    out << "    const MaskWord* " << maskName << " = compiledRuleMaskPtr(game, "
-        << offset << "U);\n"
-        << "    if (!compiledRuleBitsSet(" << maskName << ", " << wordCount
-        << "U, " << actualExpr << ", " << actualCountExpr << ")) return false;\n";
+    emitInlineMaskBitsSetCheck(out, game, offset, wordCount, actualExpr);
+    (void)maskName;
+    (void)actualCountExpr;
 }
 
 void emitMaskAnyBitsReject(
     std::ostream& out,
+    const puzzlescript::Game& game,
     const std::string& maskName,
     puzzlescript::MaskOffset offset,
     uint32_t wordCount,
@@ -3828,10 +3908,9 @@ void emitMaskAnyBitsReject(
     if (offset == puzzlescript::kNullMaskOffset || wordCount == 0) {
         return;
     }
-    out << "    const MaskWord* " << maskName << " = compiledRuleMaskPtr(game, "
-        << offset << "U);\n"
-        << "    if (compiledRuleAnyBits(" << maskName << ", " << wordCount
-        << "U, " << actualExpr << ", " << actualCountExpr << ")) return false;\n";
+    emitInlineMaskAnyBitsReject(out, game, offset, wordCount, actualExpr);
+    (void)maskName;
+    (void)actualCountExpr;
 }
 
 void emitPatternPredicate(
@@ -3841,31 +3920,41 @@ void emitPatternPredicate(
     const std::string& suffix,
     const std::string& tileExpr
 ) {
-    out << "    const MaskWord* objects" << suffix << " = compiledRuleCellObjects(session, " << tileExpr << ");\n"
-        << "    const MaskWord* movements" << suffix << " = compiledRuleCellMovements(session, " << tileExpr << ");\n";
+    out << "    const size_t tile" << suffix << " = static_cast<size_t>(" << tileExpr << ");\n"
+        << "    const MaskWord* objects" << suffix << " = session.liveLevel.objects.data() + tile" << suffix << " * " << game.wordCount << "U;\n"
+        << "    const MaskWord* movements" << suffix << " = session.liveMovements.data() + tile" << suffix << " * " << game.movementWordCount << "U;\n";
     if (pattern.hasObjectsPresent) {
-        emitMaskBitsSetCheck(out, "objectsPresent" + suffix, pattern.objectsPresent, game.wordCount, "objects" + suffix, std::to_string(game.wordCount) + "U");
+        emitMaskBitsSetCheck(out, game, "objectsPresent" + suffix, pattern.objectsPresent, game.wordCount, "objects" + suffix, std::to_string(game.wordCount) + "U");
     }
     if (pattern.hasObjectsMissing) {
-        emitMaskAnyBitsReject(out, "objectsMissing" + suffix, pattern.objectsMissing, game.wordCount, "objects" + suffix, std::to_string(game.wordCount) + "U");
+        emitMaskAnyBitsReject(out, game, "objectsMissing" + suffix, pattern.objectsMissing, game.wordCount, "objects" + suffix, std::to_string(game.wordCount) + "U");
     }
     for (uint32_t index = 0; index < pattern.anyObjectsCount; ++index) {
         const auto offsetIndex = static_cast<size_t>(pattern.anyObjectsFirst + index);
         if (offsetIndex >= game.anyObjectOffsets.size()) {
             continue;
         }
-        out << "    {\n"
-            << "        const MaskWord* anyMask" << suffix << "_" << index
-            << " = compiledRuleMaskPtr(game, " << game.anyObjectOffsets[offsetIndex] << "U);\n"
-            << "        if (!compiledRuleAnyBits(anyMask" << suffix << "_" << index
-            << ", " << game.wordCount << "U, objects" << suffix << ", " << game.wordCount << "U)) return false;\n"
-            << "    }\n";
+        const auto anyWords = compiledMaskWords(game, game.anyObjectOffsets[offsetIndex], game.wordCount);
+        out << "    if (!(";
+        bool emitted = false;
+        for (uint32_t word = 0; word < game.wordCount; ++word) {
+            const auto mask = anyWords[static_cast<size_t>(word)];
+            if (mask == 0) {
+                continue;
+            }
+            if (emitted) {
+                out << " || ";
+            }
+            out << "((objects" << suffix << "[" << word << "] & " << compiledMaskWordLiteral(mask) << ") != 0)";
+            emitted = true;
+        }
+        out << (emitted ? ")) return false;\n" : "false)) return false;\n");
     }
     if (pattern.hasMovementsPresent) {
-        emitMaskBitsSetCheck(out, "movementsPresent" + suffix, pattern.movementsPresent, game.movementWordCount, "movements" + suffix, std::to_string(game.movementWordCount) + "U");
+        emitMaskBitsSetCheck(out, game, "movementsPresent" + suffix, pattern.movementsPresent, game.movementWordCount, "movements" + suffix, std::to_string(game.movementWordCount) + "U");
     }
     if (pattern.hasMovementsMissing) {
-        emitMaskAnyBitsReject(out, "movementsMissing" + suffix, pattern.movementsMissing, game.movementWordCount, "movements" + suffix, std::to_string(game.movementWordCount) + "U");
+        emitMaskAnyBitsReject(out, game, "movementsMissing" + suffix, pattern.movementsMissing, game.movementWordCount, "movements" + suffix, std::to_string(game.movementWordCount) + "U");
     }
 }
 
@@ -3876,46 +3965,63 @@ void emitReplacementApply(
     const std::string& suffix,
     const std::string& tileExpr
 ) {
+    const auto objectsClear = compiledMaskWords(game, replacement.objectsClear, game.wordCount);
+    const auto objectsSet = compiledMaskWords(game, replacement.objectsSet, game.wordCount);
+    const auto movementsClear = compiledMaskWords(game, replacement.movementsClear, game.movementWordCount);
+    const auto movementsSet = compiledMaskWords(game, replacement.movementsSet, game.movementWordCount);
+    const auto movementsLayerMask = replacement.hasMovementsLayerMask
+        ? compiledMaskWords(game, replacement.movementsLayerMask, game.movementWordCount)
+        : std::vector<puzzlescript::MaskWord>(static_cast<size_t>(game.movementWordCount), 0);
+    const auto anyNonZero = [](const std::vector<puzzlescript::MaskWord>& words) {
+        return std::any_of(words.begin(), words.end(), [](puzzlescript::MaskWord word) {
+            return word != 0;
+        });
+    };
+    const bool hasObjectEffect = anyNonZero(objectsClear) || anyNonZero(objectsSet);
+    const bool hasMovementEffect = anyNonZero(movementsClear) || anyNonZero(movementsSet) || anyNonZero(movementsLayerMask);
     out << "    {\n"
-        << "        const MaskWord* oldObjects = compiledRuleCellObjects(session, " << tileExpr << ");\n"
-        << "        const MaskWord* oldMovements = compiledRuleCellMovements(session, " << tileExpr << ");\n"
-        << "        std::array<MaskWord, " << game.wordCount << "> newObjects{};\n"
-        << "        std::array<MaskWord, " << game.wordCount << "> created{};\n"
-        << "        std::array<MaskWord, " << game.wordCount << "> destroyed{};\n"
-        << "        std::array<MaskWord, " << game.movementWordCount << "> newMovements{};\n"
-        << "        const MaskWord* objectsClear = compiledRuleMaskPtr(game, " << replacement.objectsClear << "U);\n"
-        << "        const MaskWord* objectsSet = compiledRuleMaskPtr(game, " << replacement.objectsSet << "U);\n"
-        << "        const MaskWord* movementsClear = compiledRuleMaskPtr(game, " << replacement.movementsClear << "U);\n"
-        << "        const MaskWord* movementsSet = compiledRuleMaskPtr(game, " << replacement.movementsSet << "U);\n";
-    if (replacement.hasMovementsLayerMask) {
-        out << "        const MaskWord* movementsLayerMask = compiledRuleMaskPtr(game, " << replacement.movementsLayerMask << "U);\n";
-    } else {
-        out << "        const MaskWord* movementsLayerMask = nullptr;\n";
+        << "        const int32_t tile = " << tileExpr << ";\n"
+        << "        bool objectsChanged = false;\n"
+        << "        bool movementsChanged = false;\n";
+    if (hasObjectEffect) {
+        out << "        const size_t objectBase = static_cast<size_t>(tile) * " << game.wordCount << "U;\n"
+            << "        const MaskWord* oldObjects = session.liveLevel.objects.data() + objectBase;\n"
+            << "        MaskWord newObjects[" << game.wordCount << "];\n"
+            << "        MaskWord created[" << game.wordCount << "];\n"
+            << "        MaskWord destroyed[" << game.wordCount << "];\n";
+        for (uint32_t word = 0; word < game.wordCount; ++word) {
+            out << "        {\n"
+                << "            const MaskWord before = oldObjects[" << word << "];\n"
+                << "            const MaskWord after = (before & ~" << compiledMaskWordLiteral(objectsClear[static_cast<size_t>(word)])
+                << ") | " << compiledMaskWordLiteral(objectsSet[static_cast<size_t>(word)]) << ";\n"
+                << "            newObjects[" << word << "] = after;\n"
+                << "            created[" << word << "] = after & ~before;\n"
+                << "            destroyed[" << word << "] = before & ~after;\n"
+                << "            objectsChanged = objectsChanged || after != before;\n"
+                << "        }\n";
+        }
+        out << "        if (objectsChanged) compiledRuleSetCellObjectsFromWords(session, tile, newObjects, created, destroyed);\n";
     }
-    out << "        bool objectsChanged = false;\n"
-        << "        bool movementsChanged = false;\n"
-        << "        for (uint32_t word = 0; word < " << game.wordCount << "U; ++word) {\n"
-        << "            const MaskWord clearWord = objectsClear != nullptr ? objectsClear[word] : 0;\n"
-        << "            const MaskWord setWord = objectsSet != nullptr ? objectsSet[word] : 0;\n"
-        << "            const MaskWord before = oldObjects[word];\n"
-        << "            const MaskWord after = (before & ~clearWord) | setWord;\n"
-        << "            newObjects[word] = after;\n"
-        << "            created[word] = after & ~before;\n"
-        << "            destroyed[word] = before & ~after;\n"
-        << "            objectsChanged = objectsChanged || after != before;\n"
-        << "        }\n"
-        << "        for (uint32_t word = 0; word < " << game.movementWordCount << "U; ++word) {\n"
-        << "            MaskWord clearWord = movementsClear != nullptr ? movementsClear[word] : 0;\n"
-        << "            if (movementsLayerMask != nullptr) clearWord |= movementsLayerMask[word];\n"
-        << "            const MaskWord setWord = movementsSet != nullptr ? movementsSet[word] : 0;\n"
-        << "            const MaskWord before = oldMovements[word];\n"
-        << "            const MaskWord after = (before & ~clearWord) | setWord;\n"
-        << "            newMovements[word] = after;\n"
-        << "            movementsChanged = movementsChanged || after != before;\n"
-        << "        }\n"
-        << "        if (objectsChanged) compiledRuleSetCellObjectsFromWords(session, " << tileExpr << ", newObjects.data(), created.data(), destroyed.data());\n"
-        << "        if (movementsChanged) compiledRuleSetCellMovementsFromWords(session, " << tileExpr << ", newMovements.data());\n"
-        << "        changed = changed || objectsChanged || movementsChanged;\n"
+    if (hasMovementEffect) {
+        out << "        const size_t movementBase = static_cast<size_t>(tile) * " << game.movementWordCount << "U;\n"
+            << "        const MaskWord* oldMovements = session.liveMovements.data() + movementBase;\n"
+            << "        MaskWord newMovements[" << game.movementWordCount << "];\n";
+        for (uint32_t word = 0; word < game.movementWordCount; ++word) {
+            const auto clearWord = static_cast<puzzlescript::MaskWord>(
+                static_cast<puzzlescript::MaskWordUnsigned>(movementsClear[static_cast<size_t>(word)])
+                | static_cast<puzzlescript::MaskWordUnsigned>(movementsLayerMask[static_cast<size_t>(word)])
+            );
+            out << "        {\n"
+                << "            const MaskWord before = oldMovements[" << word << "];\n"
+                << "            const MaskWord after = (before & ~" << compiledMaskWordLiteral(clearWord)
+                << ") | " << compiledMaskWordLiteral(movementsSet[static_cast<size_t>(word)]) << ";\n"
+                << "            newMovements[" << word << "] = after;\n"
+                << "            movementsChanged = movementsChanged || after != before;\n"
+                << "        }\n";
+        }
+        out << "        if (movementsChanged) compiledRuleSetCellMovementsFromWords(session, tile, newMovements);\n";
+    }
+    out << "        changed = changed || objectsChanged || movementsChanged;\n"
         << "    }\n";
     (void)suffix;
 }
@@ -4001,11 +4107,9 @@ void emitCollectRowMatches(
         ? game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst + rowIndex]
         : puzzlescript::kNullMaskOffset;
 
-    out << "    if (!compiledRuleBitsSet(compiledRuleMaskPtr(game, " << rowObjectOffset << "U), "
-        << game.wordCount << "U, session.boardMask.data(), session.boardMask.size())) return false;\n";
+    emitInlineMaskBitsSetCheck(out, game, rowObjectOffset, game.wordCount, "session.boardMask.data()");
     if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
-        out << "    if (!compiledRuleBitsSet(compiledRuleMaskPtr(game, " << rowMovementOffset << "U), "
-            << game.movementWordCount << "U, session.boardMovementMask.data(), session.boardMovementMask.size())) return false;\n";
+        emitInlineMaskBitsSetCheck(out, game, rowMovementOffset, game.movementWordCount, "session.boardMovementMask.data()");
     }
     if (useSessionScratch) {
         out << "    std::vector<int32_t>& " << matchesName << " = session.singleRowMatchScratch;\n"
@@ -4034,13 +4138,6 @@ void emitCollectRowMatches(
             out << "    return false;\n";
             break;
     }
-    out << "    const MaskWord* rowObjectMask_" << rowIndex << " = compiledRuleMaskPtr(game, " << rowObjectOffset << "U);\n";
-    if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
-        out << "    const MaskWord* rowMovementMask_" << rowIndex << " = compiledRuleMaskPtr(game, " << rowMovementOffset << "U);\n";
-    } else {
-        out << "    const MaskWord* rowMovementMask_" << rowIndex << " = nullptr;\n";
-    }
-
     struct AnchorCandidate {
         size_t patternIndex = 0;
         const std::vector<int32_t>* objectIds = nullptr;
@@ -4119,21 +4216,19 @@ void emitCollectRowMatches(
             << "                        if (startX < xmin_" << rowIndex << " || startX >= xmax_" << rowIndex
             << " || startY < ymin_" << rowIndex << " || startY >= ymax_" << rowIndex << ") continue;\n";
         if (horizontal) {
-            out << "                        const MaskWord* lineObjects = session.rowMasks.data() + static_cast<size_t>(startY * session.game->strideObject);\n";
+            out << "                        const MaskWord* lineObjects = session.rowMasks.data() + static_cast<size_t>(startY * " << game.wordCount << "U);\n";
             if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
-                out << "                        const MaskWord* lineMovements = session.rowMovementMasks.data() + static_cast<size_t>(startY * session.game->strideMovement);\n";
+                out << "                        const MaskWord* lineMovements = session.rowMovementMasks.data() + static_cast<size_t>(startY * " << game.movementWordCount << "U);\n";
             }
         } else {
-            out << "                        const MaskWord* lineObjects = session.columnMasks.data() + static_cast<size_t>(startX * session.game->strideObject);\n";
+            out << "                        const MaskWord* lineObjects = session.columnMasks.data() + static_cast<size_t>(startX * " << game.wordCount << "U);\n";
             if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
-                out << "                        const MaskWord* lineMovements = session.columnMovementMasks.data() + static_cast<size_t>(startX * session.game->strideMovement);\n";
+                out << "                        const MaskWord* lineMovements = session.columnMovementMasks.data() + static_cast<size_t>(startX * " << game.movementWordCount << "U);\n";
             }
         }
-        out << "                        if (!compiledRuleBitsSet(rowObjectMask_" << rowIndex << ", " << game.wordCount
-            << "U, lineObjects, session.game->strideObject)) continue;\n";
+        emitInlineMaskBitsSetCheck(out, game, rowObjectOffset, game.wordCount, "lineObjects", "                        ", "continue");
         if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
-            out << "                        if (!compiledRuleBitsSet(rowMovementMask_" << rowIndex << ", " << game.movementWordCount
-                << "U, lineMovements, session.game->strideMovement)) continue;\n";
+            emitInlineMaskBitsSetCheck(out, game, rowMovementOffset, game.movementWordCount, "lineMovements", "                        ", "continue");
         }
         out << "                        const int32_t startIndex = startX * session.liveLevel.height + startY;\n"
             << "                        if (match_" << prefix << "_row" << rowIndex << "(session, startIndex)) "
@@ -4173,11 +4268,11 @@ void emitCollectRowMatches(
     }
     if (horizontal) {
         out << "    for (int32_t y = ymin_" << rowIndex << "; y < ymax_" << rowIndex << "; ++y) {\n"
-            << "        const MaskWord* lineObjects = session.rowMasks.data() + static_cast<size_t>(y * session.game->strideObject);\n"
-            << "        if (!compiledRuleBitsSet(rowObjectMask_" << rowIndex << ", " << game.wordCount << "U, lineObjects, session.game->strideObject)) continue;\n";
+            << "        const MaskWord* lineObjects = session.rowMasks.data() + static_cast<size_t>(y * " << game.wordCount << "U);\n";
+        emitInlineMaskBitsSetCheck(out, game, rowObjectOffset, game.wordCount, "lineObjects", "        ", "continue");
         if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
-            out << "        const MaskWord* lineMovements = session.rowMovementMasks.data() + static_cast<size_t>(y * session.game->strideMovement);\n"
-                << "        if (!compiledRuleBitsSet(rowMovementMask_" << rowIndex << ", " << game.movementWordCount << "U, lineMovements, session.game->strideMovement)) continue;\n";
+            out << "        const MaskWord* lineMovements = session.rowMovementMasks.data() + static_cast<size_t>(y * " << game.movementWordCount << "U);\n";
+            emitInlineMaskBitsSetCheck(out, game, rowMovementOffset, game.movementWordCount, "lineMovements", "        ", "continue");
         }
         out << "        for (int32_t x = xmin_" << rowIndex << "; x < xmax_" << rowIndex << "; ++x) {\n"
             << "            const int32_t startIndex = x * session.liveLevel.height + y;\n"
@@ -4186,11 +4281,11 @@ void emitCollectRowMatches(
             << "    }\n";
     } else {
         out << "    for (int32_t x = xmin_" << rowIndex << "; x < xmax_" << rowIndex << "; ++x) {\n"
-            << "        const MaskWord* lineObjects = session.columnMasks.data() + static_cast<size_t>(x * session.game->strideObject);\n"
-            << "        if (!compiledRuleBitsSet(rowObjectMask_" << rowIndex << ", " << game.wordCount << "U, lineObjects, session.game->strideObject)) continue;\n";
+            << "        const MaskWord* lineObjects = session.columnMasks.data() + static_cast<size_t>(x * " << game.wordCount << "U);\n";
+        emitInlineMaskBitsSetCheck(out, game, rowObjectOffset, game.wordCount, "lineObjects", "        ", "continue");
         if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
-            out << "        const MaskWord* lineMovements = session.columnMovementMasks.data() + static_cast<size_t>(x * session.game->strideMovement);\n"
-                << "        if (!compiledRuleBitsSet(rowMovementMask_" << rowIndex << ", " << game.movementWordCount << "U, lineMovements, session.game->strideMovement)) continue;\n";
+            out << "        const MaskWord* lineMovements = session.columnMovementMasks.data() + static_cast<size_t>(x * " << game.movementWordCount << "U);\n";
+            emitInlineMaskBitsSetCheck(out, game, rowMovementOffset, game.movementWordCount, "lineMovements", "        ", "continue");
         }
         out << "        for (int32_t y = ymin_" << rowIndex << "; y < ymax_" << rowIndex << "; ++y) {\n"
             << "            const int32_t startIndex = x * session.liveLevel.height + y;\n"
