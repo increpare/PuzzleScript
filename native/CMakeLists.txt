@@ -331,6 +331,17 @@ add_test(
 set_tests_properties(puzzlescript_generator_smoke PROPERTIES TIMEOUT 30)
 
 add_test(
+  NAME puzzlescript_rule_plan_parity
+  COMMAND ${NODE_EXECUTABLE}
+          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/run_rule_plan_parity.js
+          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/resources/testdata.js
+          --cli $<TARGET_FILE:puzzlescript_cpp>
+          --artifacts-dir ${CMAKE_CURRENT_BINARY_DIR}/rule_plan_parity_testdata
+          --progress-every 0
+)
+set_tests_properties(puzzlescript_rule_plan_parity PROPERTIES TIMEOUT 180)
+
+add_test(
   NAME puzzlescript_cpp_parser_state_smoke
   COMMAND puzzlescript_cpp compile ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt --emit-parser-state
 )

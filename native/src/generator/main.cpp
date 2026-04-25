@@ -136,9 +136,15 @@ struct Counters {
     std::atomic<uint64_t> validGenerated{0};
     std::atomic<uint64_t> rejected{0};
     std::atomic<uint64_t> deduped{0};
+    std::atomic<uint64_t> solverSearches{0};
+    std::atomic<uint64_t> solverExpanded{0};
+    std::atomic<uint64_t> solverGenerated{0};
+    std::atomic<uint64_t> solverUniqueStates{0};
+    std::atomic<uint64_t> solverDuplicates{0};
     std::atomic<uint64_t> solved{0};
     std::atomic<uint64_t> timeouts{0};
     std::atomic<uint64_t> exhausted{0};
+    std::atomic<uint64_t> levelErrors{0};
 };
 
 struct SharedState {
@@ -157,9 +163,15 @@ struct CounterValues {
     uint64_t validGenerated = 0;
     uint64_t rejected = 0;
     uint64_t deduped = 0;
+    uint64_t solverSearches = 0;
+    uint64_t solverExpanded = 0;
+    uint64_t solverGenerated = 0;
+    uint64_t solverUniqueStates = 0;
+    uint64_t solverDuplicates = 0;
     uint64_t solved = 0;
     uint64_t timeouts = 0;
     uint64_t exhausted = 0;
+    uint64_t levelErrors = 0;
 };
 
 struct StateHashProjection {
@@ -1295,6 +1307,11 @@ void workerMain(
             continue;
         }
         SolveResult solved = solveGeneratedLevel(game, candidateLevel, solverMetadata, sampleId, options.solverTimeoutMs, options.solverMode);
+        shared.counters.solverSearches.fetch_add(1, std::memory_order_relaxed);
+        shared.counters.solverExpanded.fetch_add(solved.expanded, std::memory_order_relaxed);
+        shared.counters.solverGenerated.fetch_add(solved.generated, std::memory_order_relaxed);
+        shared.counters.solverUniqueStates.fetch_add(solved.uniqueStates, std::memory_order_relaxed);
+        shared.counters.solverDuplicates.fetch_add(solved.duplicates, std::memory_order_relaxed);
         if (solved.status == SolveStatus::Solved) {
             shared.counters.solved.fetch_add(1, std::memory_order_relaxed);
             Candidate candidate;
@@ -1310,6 +1327,9 @@ void workerMain(
             maybeInsertTop(shared, std::move(candidate), options.topK);
         } else if (solved.status == SolveStatus::Timeout) {
             shared.counters.timeouts.fetch_add(1, std::memory_order_relaxed);
+        } else if (solved.status == SolveStatus::LevelError) {
+            shared.counters.levelErrors.fetch_add(1, std::memory_order_relaxed);
+            shared.counters.exhausted.fetch_add(1, std::memory_order_relaxed);
         } else {
             shared.counters.exhausted.fetch_add(1, std::memory_order_relaxed);
         }
@@ -1329,9 +1349,15 @@ CounterValues snapshotCounters(const SharedState& shared) {
     counters.validGenerated = shared.counters.validGenerated.load(std::memory_order_relaxed);
     counters.rejected = shared.counters.rejected.load(std::memory_order_relaxed);
     counters.deduped = shared.counters.deduped.load(std::memory_order_relaxed);
+    counters.solverSearches = shared.counters.solverSearches.load(std::memory_order_relaxed);
+    counters.solverExpanded = shared.counters.solverExpanded.load(std::memory_order_relaxed);
+    counters.solverGenerated = shared.counters.solverGenerated.load(std::memory_order_relaxed);
+    counters.solverUniqueStates = shared.counters.solverUniqueStates.load(std::memory_order_relaxed);
+    counters.solverDuplicates = shared.counters.solverDuplicates.load(std::memory_order_relaxed);
     counters.solved = shared.counters.solved.load(std::memory_order_relaxed);
     counters.timeouts = shared.counters.timeouts.load(std::memory_order_relaxed);
     counters.exhausted = shared.counters.exhausted.load(std::memory_order_relaxed);
+    counters.levelErrors = shared.counters.levelErrors.load(std::memory_order_relaxed);
     return counters;
 }
 
@@ -1437,6 +1463,16 @@ std::string finalJson(const Options& options, const Game& game, SharedState& sha
     out << ",\"duplicate_levels\":" << counters.deduped;
     out << ",\"unsolved\":" << counters.exhausted;
     out << ",\"solver_timeouts\":" << counters.timeouts;
+    out << "},\n";
+    out << "  \"solver_totals\":{";
+    out << "\"searches\":" << counters.solverSearches;
+    out << ",\"expanded\":" << counters.solverExpanded;
+    out << ",\"generated\":" << counters.solverGenerated;
+    out << ",\"unique_states\":" << counters.solverUniqueStates;
+    out << ",\"duplicates\":" << counters.solverDuplicates;
+    out << ",\"timeouts\":" << counters.timeouts;
+    out << ",\"exhausted\":" << counters.exhausted;
+    out << ",\"level_errors\":" << counters.levelErrors;
     out << "},\n";
     out << "  \"top\":[\n";
     for (size_t i = 0; i < top.size(); ++i) {

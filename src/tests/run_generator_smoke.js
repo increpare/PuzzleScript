@@ -68,11 +68,14 @@ test('fixed sample output is deterministic across job counts', () => {
   run([...common, '--jobs', '1', '--json-out', out1], 'jobs=1');
   run([...common, '--jobs', '2', '--json-out', out2], 'jobs=2');
 
-  const json1 = fs.readFileSync(out1, 'utf8');
-  const json2 = fs.readFileSync(out2, 'utf8');
-  assert.strictEqual(json1, json2, 'fixed-sample output should be deterministic across job counts');
+  const parsed = JSON.parse(fs.readFileSync(out1, 'utf8'));
+  const parsedJobs2 = JSON.parse(fs.readFileSync(out2, 'utf8'));
+  const stableParsed = JSON.parse(JSON.stringify(parsed));
+  const stableParsedJobs2 = JSON.parse(JSON.stringify(parsedJobs2));
+  delete stableParsed.solver_totals;
+  delete stableParsedJobs2.solver_totals;
+  assert.deepStrictEqual(stableParsed, stableParsedJobs2, 'fixed-sample candidate output should be deterministic across job counts');
 
-  const parsed = JSON.parse(json1);
   assert.strictEqual(parsed.totals.samples_attempted, 20);
   assert.strictEqual(parsed.totals.valid_generated, 20);
   assert.ok(parsed.totals.solved > 0, 'smoke fixture should produce at least one solved level');
@@ -81,6 +84,10 @@ test('fixed sample output is deterministic across job counts', () => {
   assert.strictEqual(parsed.totals.duplicate_levels, parsed.totals.deduped);
   assert.strictEqual(parsed.totals.unsolved, parsed.totals.exhausted);
   assert.strictEqual(parsed.totals.solver_timeouts, parsed.totals.timeouts);
+  assert.strictEqual(parsed.solver_totals.searches, parsed.totals.valid_generated - parsed.totals.deduped);
+  assert.strictEqual(parsedJobs2.solver_totals.searches, parsedJobs2.totals.valid_generated - parsedJobs2.totals.deduped);
+  assert.ok(parsed.solver_totals.expanded >= parsed.totals.solved, 'solver expanded count should aggregate solved searches');
+  assert.ok(parsed.solver_totals.generated >= parsed.totals.solved, 'solver generated count should aggregate solved searches');
 });
 
 function runAcceptedSpec(name, ruleLines) {
@@ -139,6 +146,11 @@ test('generator preset fixtures run', () => {
       const presetJson = JSON.parse(result.stdout);
       assert.strictEqual(presetJson.totals.samples_attempted, 8, `${file} should run the requested samples`);
       assert.strictEqual(presetJson.totals.invalid_generation, presetJson.totals.rejected);
+      assert.strictEqual(
+        presetJson.solver_totals.searches,
+        presetJson.totals.valid_generated - presetJson.totals.deduped,
+        `${file} should report aggregate solver searches`
+      );
     }
   }
 });

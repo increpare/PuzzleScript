@@ -18,7 +18,7 @@
 .PHONY: help build build_32 build_solver build_generator generator run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
-	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark solver_mine_pippable solver_benchmark_targets generator_smoke_tests \
+	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark solver_mine_pippable solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
@@ -62,6 +62,16 @@ SOLVER_TARGET_BENCH_MANIFEST ?= $(SOLVER_PIPPABLE_MANIFEST)
 SOLVER_TARGET_BENCH_OUT ?= $(BUILD_DIR)/native/solver_target_benchmark.json
 SOLVER_TARGET_BENCH_TIMEOUT_MS ?=
 SOLVER_TARGET_BENCH_STRATEGY ?= $(SOLVER_MINE_STRATEGY)
+GENERATOR_BENCH_GAME ?= src/demo/sokoban_basic.txt
+GENERATOR_BENCH_PRESETS_DIR ?= src/tests/generator_presets
+GENERATOR_BENCH_SAMPLES ?= 200
+GENERATOR_BENCH_RUNS ?= 3
+GENERATOR_BENCH_JOBS ?= 1
+GENERATOR_BENCH_SEED ?= 11
+GENERATOR_BENCH_SOLVER_TIMEOUT_MS ?= 50
+GENERATOR_BENCH_SOLVER_STRATEGY ?= portfolio
+GENERATOR_BENCH_TOP_K ?= 10
+GENERATOR_BENCH_OUT ?= $(BUILD_DIR)/native/generator_benchmark.json
 JS_PARITY_DATA_DIR := $(BUILD_DIR)/js-parity-data
 JS_PARITY_MANIFEST := $(JS_PARITY_DATA_DIR)/fixtures.json
 ERRORMESSAGE_PARSER_BUNDLE := $(BUILD_DIR)/parser_corpus_errormessage.bundle.ndjson
@@ -116,6 +126,7 @@ help:
 	@echo "  make tests                         Run the full native correctness suite"
 	@echo "  make solver_tests                  Run native solver and JS comparison solver"
 	@echo "  make generator_smoke_tests         Run native generator smoke tests"
+	@echo "  make generator_benchmark           Run fixed-seed generator preset benchmark"
 	@echo "  make solver_mine_pippable          Mine near-threshold native solver targets"
 	@echo "  make solver_benchmark_targets      Benchmark mined solver targets repeatedly"
 	@echo "  make clean                         Remove native build outputs and JS parity data"
@@ -147,6 +158,8 @@ help:
 	@echo "                                     Print per-level solver results after the run"
 	@echo "  make solver_tests SOLVER_SOLUTIONS_DIR=/tmp/solver-solutions"
 	@echo "                                     Write annotated solved-level sources elsewhere"
+	@echo "  make generator_benchmark GENERATOR_BENCH_SAMPLES=200 GENERATOR_BENCH_RUNS=3"
+	@echo "                                     Run fixed-seed generator preset benchmark"
 	@echo "  make solver_mine_pippable SOLVER_MINE_TIMEOUTS_MS=50,100,250,500"
 	@echo "                                     Write $(SOLVER_PIPPABLE_MANIFEST)"
 	@echo "  make solver_benchmark_targets SOLVER_TARGET_BENCH_RUNS=10"
@@ -241,6 +254,9 @@ solver_parity_smoke: $(PUZZLESCRIPT_SOLVER)
 
 generator_smoke_tests: $(PUZZLESCRIPT_GENERATOR)
 	$(NODE) src/tests/run_generator_smoke.js $(PUZZLESCRIPT_GENERATOR) src/demo/sokoban_basic.txt
+
+generator_benchmark: $(PUZZLESCRIPT_GENERATOR)
+	$(NODE) src/tests/run_generator_benchmark.js $(PUZZLESCRIPT_GENERATOR) $(GENERATOR_BENCH_GAME) --presets-dir $(GENERATOR_BENCH_PRESETS_DIR) --samples $(GENERATOR_BENCH_SAMPLES) --runs $(GENERATOR_BENCH_RUNS) --jobs $(GENERATOR_BENCH_JOBS) --seed $(GENERATOR_BENCH_SEED) --solver-timeout-ms $(GENERATOR_BENCH_SOLVER_TIMEOUT_MS) --solver-strategy $(GENERATOR_BENCH_SOLVER_STRATEGY) --top-k $(GENERATOR_BENCH_TOP_K) --out $(GENERATOR_BENCH_OUT)
 
 solver_tests_cpp: $(PUZZLESCRIPT_SOLVER)
 	$(PUZZLESCRIPT_SOLVER) src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --jobs $(SOLVER_JOBS) --strategy $(SOLVER_STRATEGY) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)
