@@ -44,7 +44,7 @@ SOUNDS
 ======
 
 startgame 111111
-Player MOVE 222222
+sfx0 222222
 
 ================
 COLLISIONLAYERS
@@ -57,6 +57,7 @@ Player
 RULES
 ======
 
+[ > Player | Background ] -> [ Background | Player ] sfx0
 [ Action Player ] -> [ Player ] message Hello native player
 
 =======

@@ -220,7 +220,12 @@ Font loadFont() {
             }
             std::vector<std::string> rows;
             while (std::getline(input, line)) {
-                if (line.find('`') != std::string::npos) {
+                const size_t endQuote = line.find('`');
+                if (endQuote != std::string::npos) {
+                    line = trim(line.substr(0, endQuote));
+                    if (!line.empty()) {
+                        rows.push_back(line);
+                    }
                     break;
                 }
                 line = trim(line);
@@ -921,7 +926,9 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
                 }
                 const auto input = keyToInput(key);
                 if (input.has_value()) {
-                    if (*input == PS_INPUT_ACTION && ps_game_has_metadata(player.game, "noaction")) {
+                    ps_session_status_info status{};
+                    ps_session_status(player.session, &status);
+                    if (*input == PS_INPUT_ACTION && status.mode == PS_SESSION_MODE_LEVEL && ps_game_has_metadata(player.game, "noaction")) {
                         continue;
                     }
                     const ps_step_result result = ps_session_step(player.session, *input);

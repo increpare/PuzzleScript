@@ -385,6 +385,14 @@ void tryPlaySimpleSound(Session& session, std::string_view soundName) {
     appendUiAudioEvent(session, it->second, "ui");
 }
 
+void tryPlayCommandSound(Session& session, std::string_view soundName) {
+    const auto it = session.game->sfxEvents.find(std::string(soundName));
+    if (it == session.game->sfxEvents.end()) {
+        return;
+    }
+    appendAudioEvent(session, it->second, "sfx");
+}
+
 void processOutputCommands(Session& session, const CommandState& commands, bool suppressMessages = false, bool emitAudio = true) {
     for (const auto& command : commands.queue) {
         if (command == "message") {
@@ -400,7 +408,7 @@ void processOutputCommands(Session& session, const CommandState& commands, bool 
             }
         } else if (command.size() >= 3 && command[0] == 's' && command[1] == 'f' && command[2] == 'x') {
             if (emitAudio) {
-                tryPlaySimpleSound(session, command);
+                tryPlayCommandSound(session, command);
             }
         }
     }
