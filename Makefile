@@ -20,6 +20,7 @@
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
 	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark solver_mine_pippable solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
+	compiled_rules_simulation_suite_coverage \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
 	parser_corpus_errormessage_bundle parser_corpus_testdata_bundle clean clean-native \
@@ -83,6 +84,7 @@ COMPILED_RULES_CMAKE_GENERATOR ?= $(if $(shell command -v ninja 2>/dev/null),Nin
 COMPILED_RULES_BUILD_GENERATOR_SUFFIX = $(if $(COMPILED_RULES_CMAKE_GENERATOR),-$(subst $(space),_,$(COMPILED_RULES_CMAKE_GENERATOR)),)
 COMPILED_RULES_BUILD_ROOT ?= $(BUILD_DIR)/compiled-rules-builds$(COMPILED_RULES_BUILD_GENERATOR_SUFFIX)
 COMPILED_RULES_ARTIFACT_ROOT ?= $(BUILD_DIR)/compiled-rules
+COMPILED_RULES_SIMULATION_SUITE_COVERAGE_JSON ?= $(COMPILED_RULES_ARTIFACT_ROOT)/simulation-suite-coverage.json
 COMPILED_RULES_MAX_ROWS ?= 1
 COMPILED_RULES_LTO ?= false
 COMPILED_RULES_LINK_DEDUP ?= false
@@ -265,6 +267,8 @@ help:
 	@echo "                                     Write $(SOLVER_TARGET_BENCH_OUT)"
 	@echo "  make solver_benchmark SPECIALIZE=true"
 	@echo "                                     Benchmark solver with compiled rules for the corpus"
+	@echo "  make compiled_rules_simulation_suite_coverage"
+	@echo "                                     Write $(COMPILED_RULES_SIMULATION_SUITE_COVERAGE_JSON)"
 	@echo ""
 	@echo "Direct executable after build:"
 	@echo "  build/native/puzzlescript_cpp --help"
@@ -537,6 +541,12 @@ simulation_tests_cpp: build
 
 simulation_tests_cpp_32: build_32
 	$(PUZZLESCRIPT_CPP_32) test simulation-corpus src/tests/resources/testdata.js --jobs auto --progress-every 0
+
+compiled_rules_simulation_suite_coverage:
+	@set -e; \
+	$(COMPILED_RULES_BOOTSTRAP_CPP); \
+	mkdir -p "$$(dirname "$(COMPILED_RULES_SIMULATION_SUITE_COVERAGE_JSON)")"; \
+	$(PUZZLESCRIPT_CPP) compile-rules src/tests/resources/testdata.js --stats-only --max-rows $(COMPILED_RULES_MAX_ROWS) --coverage-json "$(COMPILED_RULES_SIMULATION_SUITE_COVERAGE_JSON)"
 
 simulation_tests_cpp_js_parity: build_32 $(JS_PARITY_MANIFEST)
 	$(NODE) src/tests/run_native_trace_suite.js $(JS_PARITY_MANIFEST) --cli $(PUZZLESCRIPT_CPP_32) --progress-every 1 --timeout-ms 45000
