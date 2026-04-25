@@ -82,7 +82,7 @@ struct Options {
     bool summaryOnly = false;
     bool profileRuntimeCounters = false;
     bool requireCompiledTick = false;
-    bool exactStateKeys = false;
+    bool exactStateKeys = true;
 };
 
 struct Node {
@@ -430,12 +430,12 @@ Options parseArgs(int argc, char** argv) {
     Options options;
     options.jobs = 1;
     if (argc < 2) {
-        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--exact-state-keys]");
+        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys]");
     }
     for (int index = 1; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--help" || arg == "-h") {
-            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--exact-state-keys]");
+            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys]");
         }
         if (arg == "--timeout-ms" && index + 1 < argc) {
             options.timeoutMs = std::max<int64_t>(1, std::stoll(argv[++index]));
@@ -488,8 +488,8 @@ Options parseArgs(int argc, char** argv) {
             options.profileRuntimeCounters = true;
             continue;
         }
-        if (arg == "--exact-state-keys") {
-            options.exactStateKeys = true;
+        if (arg == "--hash-state-keys") {
+            options.exactStateKeys = false;
             continue;
         }
         if (arg == "--quiet") {

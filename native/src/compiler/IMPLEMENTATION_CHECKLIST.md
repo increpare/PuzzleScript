@@ -447,10 +447,10 @@ attribute graph cost -> no-allocation hash -> flat visited table
   It stores the full `StateKey` plus best depth, uses linear probing with
   explicit growth, preserves stale-pop `<` and child-duplicate `<=` semantics,
   and reports probe/growth counters in solver JSON and focus benchmark JSON.
-  The normal fast path still treats the 128-bit `StateKey` as solver identity.
-  `--exact-state-keys` enables a paranoia/correctness mode where `StateKey` is
-  only the probe accelerator and matching entries must also compare equal under
-  the solver-semantic `Session` fields.
+  The normal path now treats `StateKey` as a probe accelerator only. Matching
+  entries must also compare equal under the solver-semantic `Session` fields.
+  `--hash-state-keys` is available only as an explicit performance experiment
+  that treats the 128-bit key as identity.
 
   Current one-run focus reading after this checkpoint:
 
@@ -500,14 +500,40 @@ attribute graph cost -> no-allocation hash -> flat visited table
     - restart/checkpoint state needed for correctness
     - random state only for games that need it
   - It explicitly does not own UI/debug/audio/undo data on solver hot paths.
+  - It may omit proven-inert content such as static background/wall cells, but
+    only with a conservative proof that those bytes cannot affect future turns.
   - Conversion from `Session` to compact state is defined.
   - Conversion from compact state back to `Session` is defined for fallback,
     parity checks, serialization, and debugging.
   - Unsupported games or unsupported runtime features decline the compact path
     cleanly.
-  - The compact visited table uses the compact-state bytes as exact equality.
-    Hashes may choose buckets and speed lookup, but a hash match alone must not
-    merge two states.
+  - The compact visited table uses canonical compact-state bytes as exact
+    equality. Hashes may choose buckets and speed lookup, but a hash match
+    alone must not merge two states.
+  - Zobrist hashing is a good candidate for incremental bucket selection over
+    mutable object/movement occupancy, especially once generated ticks can
+    report changed cells. It is not a replacement for exact equality.
+
+- [ ] Add canonical compact-state equality and memory accounting.
+
+  Intent: make state identity perfect before relying on specialized compact
+  search. The solver may hash for speed, including Zobrist-style incremental
+  hashes, but equality must be canonical bytes or an equivalent exact compare.
+
+  Acceptance criteria:
+
+  - Define which object/layer/cell facts are mutable and therefore encoded.
+  - Conservatively detect static/inert layers or cells only when no rule,
+    command, win condition, movement, random replacement, or checkpoint/restart
+    behavior can alter or observe the omitted facts differently.
+  - Store compact state once in node storage; visited entries store hash/key,
+    depth, and node index, not a duplicate state copy.
+  - Report compact state bytes per node, visited entry bytes, and estimated
+    total solver memory.
+  - Any hash collision or hash-equivalent but byte-different state is handled by
+    probing onward and counted.
+  - A validation mode compares compact byte equality against materialized
+    interpreter `Session` equality on smoke/focus states.
 
 - [ ] Prototype compact solver state for one simple focus game.
 
