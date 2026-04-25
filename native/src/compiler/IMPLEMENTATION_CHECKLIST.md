@@ -506,6 +506,11 @@ lab bench, not the full corpus.
   - `compiled_usage_reasons`
   - per-target `reason=...` in the detail table
 
+  Note: `compiled_rule_group_hits` counts the generic compiled-rule dispatch
+  path. Generated tick rule loops bypass that generic counter, so
+  `compiled_tick_bypassed_generic_rule_counter` means the generated tick backend
+  ran but the old rule-group counter is not the right measurement point.
+
 - [ ] Fix generated tick routes that call the wrapper but no rule kernels.
 
   Acceptance criteria:

@@ -167,7 +167,7 @@ function compiledUsageReason(compiledTickHits, compiledRuleHits, compiledRulesAt
         return 'compiled_tick_not_called';
     }
     if (compiledRuleHits === 0) {
-        return 'compiled_tick_entered_no_rule_group_hits';
+        return 'compiled_tick_bypassed_generic_rule_counter';
     }
     return 'compiled_rule_groups_hit';
 }
