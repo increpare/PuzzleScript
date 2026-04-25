@@ -72,6 +72,8 @@ SOLVER_FOCUS_MAX_TARGETS ?= 50
 SOLVER_FOCUS_STRATEGY ?= $(SOLVER_STRATEGY)
 SOLVER_FOCUS_JOBS ?= 1
 SOLVER_FOCUS_RUNS ?= 1
+SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE ?= 500
+SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE_ARG = $(if $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),--max-compiled-rules-per-source $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),)
 SOLVER_TARGET_BENCH_RUNS ?= 5
 SOLVER_TARGET_BENCH_CORPUS ?= $(SOLVER_MINE_CORPUS)
 SOLVER_TARGET_BENCH_MANIFEST ?= $(SOLVER_PIPPABLE_MANIFEST)
@@ -141,11 +143,11 @@ fi
 endef
 define COMPILED_RULES_EMIT_SHARDED
 out_stamp="$(1)/sources.stamp"; \
-out_stamp_text="max_rows=$(COMPILED_RULES_MAX_ROWS)"; \
+out_stamp_text="max_rows=$(COMPILED_RULES_MAX_ROWS) extra_args=$(4)"; \
 if [ "$(COMPILED_RULES_REUSE_SHARDED_CPP)" = "true" ] && [ -f "$$sources_file" ] && [ -f "$$out_stamp" ] && [ "$$(cat "$$out_stamp")" = "$$out_stamp_text" ] && [ ! "$(PUZZLESCRIPT_CPP)" -nt "$$out_stamp" ]; then \
 	echo "compiled-rules: reuse output=$$out_cpp_dir"; \
 else \
-	$(PUZZLESCRIPT_CPP) compile-rules "$(2)" --emit-cpp-dir "$$out_cpp_dir" --emit-sources-list "$$sources_file" --symbol $(3) --max-rows $(COMPILED_RULES_MAX_ROWS); \
+	$(PUZZLESCRIPT_CPP) compile-rules "$(2)" --emit-cpp-dir "$$out_cpp_dir" --emit-sources-list "$$sources_file" --symbol $(3) --max-rows $(COMPILED_RULES_MAX_ROWS) $(4); \
 	printf '%s\n' "$$out_stamp_text" > "$$out_stamp"; \
 fi
 endef
@@ -567,13 +569,16 @@ solver_focus_benchmark: $(PUZZLESCRIPT_SOLVER)
 		if [ ! -e "$(SOLVER_FOCUS_CORPUS)" ]; then echo "Missing solver focus corpus: $(SOLVER_FOCUS_CORPUS)"; exit 2; fi; \
 		if [ ! -e "$(SOLVER_FOCUS_MANIFEST)" ]; then echo "Missing solver focus manifest: $(SOLVER_FOCUS_MANIFEST)"; exit 2; fi; \
 		$(COMPILED_RULES_BOOTSTRAP_CPP); \
-		hash=$$({ find "$(SOLVER_FOCUS_CORPUS)" -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256; shasum -a 256 "$(SOLVER_FOCUS_MANIFEST)"; } | shasum -a 256 | awk '{print $$1}'); \
+		manifest_hash=$$(shasum -a 256 "$(SOLVER_FOCUS_MANIFEST)" | awk '{print $$1}'); \
+		focus_corpus_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-focus-corpus-$$manifest_hash"; \
+		$(NODE) src/tests/extract_solver_focus_corpus.js "$(SOLVER_FOCUS_MANIFEST)" "$(SOLVER_FOCUS_CORPUS)" "$$focus_corpus_dir"; \
+		hash=$$({ find "$$focus_corpus_dir" -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256; shasum -a 256 "$(SOLVER_FOCUS_MANIFEST)"; printf '%s\n' "max_compiled_rules_per_source=$(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE)"; } | shasum -a 256 | awk '{print $$1}'); \
 		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-focus-$$hash"; \
 		build_dir="$(COMPILED_RULES_BUILD_ROOT)/solver-focus-$$hash"; \
 		out_cpp_dir="$$out_dir/sources"; \
 		sources_file="$$out_dir/sources.txt"; \
 		mkdir -p "$$out_dir"; \
-		$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,$(SOLVER_FOCUS_CORPUS),solver_focus_$$hash); \
+		$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,$$focus_corpus_dir,solver_focus_$$hash,$(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE_ARG)); \
 		$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 		$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
 		$(NODE) src/tests/run_solver_level_benchmark.js "$$build_dir/native/puzzlescript_solver" $(SOLVER_FOCUS_CORPUS) $(SOLVER_FOCUS_MANIFEST) --runs $(SOLVER_FOCUS_RUNS) --strategy $(SOLVER_FOCUS_STRATEGY) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --out $(SOLVER_FOCUS_OUT); \
@@ -587,8 +592,15 @@ $(SOLVER_FOCUS_INTERPRETED_OUT): $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
 $(SOLVER_FOCUS_COMPILED_OUT): $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
 	$(MAKE) solver_focus_benchmark SPECIALIZE=true SOLVER_FOCUS_OUT="$@"
 
-solver_focus_compare: $(SOLVER_FOCUS_INTERPRETED_OUT) $(SOLVER_FOCUS_COMPILED_OUT)
-	$(NODE) src/tests/compare_solver_focus_benchmarks.js $(SOLVER_FOCUS_INTERPRETED_OUT) $(SOLVER_FOCUS_COMPILED_OUT)
+solver_focus_compare: $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
+	@set -e; \
+	if ! $(NODE) src/tests/check_solver_focus_benchmark_fresh.js "$(SOLVER_FOCUS_INTERPRETED_OUT)" "$(SOLVER_FOCUS_MANIFEST)" --runs $(SOLVER_FOCUS_RUNS) --corpus "$(SOLVER_FOCUS_CORPUS)" --strategy "$(SOLVER_FOCUS_STRATEGY)"; then \
+		$(MAKE) solver_focus_benchmark SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_INTERPRETED_OUT)"; \
+	fi; \
+	if ! $(NODE) src/tests/check_solver_focus_benchmark_fresh.js "$(SOLVER_FOCUS_COMPILED_OUT)" "$(SOLVER_FOCUS_MANIFEST)" --runs $(SOLVER_FOCUS_RUNS) --corpus "$(SOLVER_FOCUS_CORPUS)" --strategy "$(SOLVER_FOCUS_STRATEGY)"; then \
+		$(MAKE) solver_focus_benchmark SPECIALIZE=true SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_COMPILED_OUT)"; \
+	fi; \
+	$(NODE) src/tests/compare_solver_focus_benchmarks.js "$(SOLVER_FOCUS_INTERPRETED_OUT)" "$(SOLVER_FOCUS_COMPILED_OUT)"
 
 solver_benchmark_targets: $(PUZZLESCRIPT_SOLVER)
 	$(NODE) src/tests/run_solver_level_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_TARGET_BENCH_CORPUS) $(SOLVER_TARGET_BENCH_MANIFEST) --runs $(SOLVER_TARGET_BENCH_RUNS) --strategy $(SOLVER_TARGET_BENCH_STRATEGY) --out $(SOLVER_TARGET_BENCH_OUT) $(SOLVER_TARGET_BENCH_TIMEOUT_ARG)

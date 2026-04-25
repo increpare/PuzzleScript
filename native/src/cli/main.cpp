@@ -5195,11 +5195,42 @@ uint32_t writeCompiledRulesCppDirectory(
     return wroteCount;
 }
 
+std::vector<CodegenSource> selectCompiledRuleSourcesForEmission(
+    const std::vector<CodegenSource>& sources,
+    const CompiledRulesOptions& options,
+    std::optional<uint64_t> maxCompiledRulesPerSource,
+    uint64_t& skippedSources,
+    uint64_t& skippedCompiledRules
+) {
+    skippedSources = 0;
+    skippedCompiledRules = 0;
+    if (!maxCompiledRulesPerSource.has_value()) {
+        return sources;
+    }
+
+    std::vector<CodegenSource> selected;
+    selected.reserve(sources.size());
+    for (const auto& source : sources) {
+        const CompiledRulesCoverage sourceCoverage = measureCompiledRulesCoverage(
+            std::vector<CodegenSource>{source},
+            options
+        );
+        if (sourceCoverage.compiledRules > *maxCompiledRulesPerSource) {
+            ++skippedSources;
+            skippedCompiledRules += sourceCoverage.compiledRules;
+            continue;
+        }
+        selected.push_back(source);
+    }
+    return selected;
+}
+
 int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
     std::optional<std::filesystem::path> emitCpp;
     std::optional<std::filesystem::path> emitCppDir;
     std::optional<std::filesystem::path> emitSourcesList;
     std::optional<std::filesystem::path> coverageJson;
+    std::optional<uint64_t> maxCompiledRulesPerSource;
     std::string symbol = "puzzlescript_compiled_rules";
     CompiledRulesOptions options;
     bool statsOnly = false;
@@ -5241,6 +5272,16 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
                 throw std::runtime_error("--max-rows requires a positive integer");
             }
             options.maxRows = static_cast<size_t>(parsed);
+        } else if (arg == "--max-compiled-rules-per-source") {
+            if (++index >= argc) {
+                throw std::runtime_error("--max-compiled-rules-per-source requires a non-negative integer");
+            }
+            const uint64_t parsed = static_cast<uint64_t>(std::stoull(argv[index]));
+            if (parsed == 0) {
+                maxCompiledRulesPerSource.reset();
+            } else {
+                maxCompiledRulesPerSource = parsed;
+            }
         } else {
             throw std::runtime_error("Unsupported compile-rules argument: " + arg + "\nTry: puzzlescript_cpp help compile-rules");
         }
@@ -5254,7 +5295,16 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
         }
     }
 
-    std::vector<CodegenSource> sources = collectCompiledRuleSources(std::filesystem::path(sourcePath));
+    const std::vector<CodegenSource> inputSources = collectCompiledRuleSources(std::filesystem::path(sourcePath));
+    uint64_t skippedSources = 0;
+    uint64_t skippedCompiledRules = 0;
+    std::vector<CodegenSource> sources = selectCompiledRuleSourcesForEmission(
+        inputSources,
+        options,
+        maxCompiledRulesPerSource,
+        skippedSources,
+        skippedCompiledRules
+    );
     const CompiledRulesCoverage coverage = measureCompiledRulesCoverage(sources, options);
     if (coverageJson.has_value()) {
         writeFileIfChanged(
@@ -5268,6 +5318,13 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
                   << " output=<stats-only>"
                   << " wrote=0"
                   << "\n";
+        if (skippedSources > 0) {
+            std::cerr << "compiled-rules-skips:"
+                      << " max_compiled_rules_per_source=" << *maxCompiledRulesPerSource
+                      << " skipped_sources=" << skippedSources
+                      << " skipped_compiled_rules=" << skippedCompiledRules
+                      << "\n";
+        }
         printCompiledRulesCoverage(coverage);
         return 0;
     }
@@ -5290,12 +5347,20 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
         outputPath = emitCppDir->string();
     }
     std::cerr << "compiled-rules: sources=" << sources.size()
+              << " input_sources=" << inputSources.size()
               << " max_rows=" << options.maxRows
               << " groups=" << coverage.compiledGroups
               << " rules=" << coverage.compiledRules
               << " output=" << outputPath
               << " wrote=" << wroteCount
               << "\n";
+    if (skippedSources > 0) {
+        std::cerr << "compiled-rules-skips:"
+                  << " max_compiled_rules_per_source=" << *maxCompiledRulesPerSource
+                  << " skipped_sources=" << skippedSources
+                  << " skipped_compiled_rules=" << skippedCompiledRules
+                  << "\n";
+    }
     printCompiledRulesCoverage(coverage);
     return 0;
 }
@@ -5735,13 +5800,13 @@ void printCompileRulesHelp() {
     std::cout
         << "Usage: puzzlescript_cpp compile-rules game.txt --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
         << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
-        << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp-dir out-dir --emit-sources-list out.txt [--symbol name] [--max-rows N]\n"
+        << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp-dir out-dir --emit-sources-list out.txt [--symbol name] [--max-rows N] [--max-compiled-rules-per-source N]\n"
         << "       puzzlescript_cpp compile-rules path/to/corpus --stats-only [--max-rows N] [--coverage-json out.json]\n\n"
         << "Emits C++ compiled-rule kernels for conservative deterministic rule groups.\n"
         << "The generated file, or sharded source directory, is meant to be linked into\n"
         << "solver/generator builds through the Makefile SPECIALIZE=true workflow. Use\n"
         << "--stats-only to print coverage and miss buckets without writing generated code. --coverage-json writes per-source coverage. --max-rows defaults to 1;\n"
-        << "higher values enable experimental deterministic multi-row kernels.\n\n"
+        << "higher values enable experimental deterministic multi-row kernels. --max-compiled-rules-per-source skips oversized sharded sources so the runtime can fall back for those games.\n\n"
         << "Examples:\n"
         << "  puzzlescript_cpp compile-rules src/demo/sokoban_basic.txt --emit-cpp build/compiled-rules/sokoban.cpp --symbol sokoban\n"
         << "  puzzlescript_cpp compile-rules src/tests/solver_tests --emit-cpp-dir build/compiled-rules/solver-tests --emit-sources-list build/compiled-rules/solver-tests.txt\n"
