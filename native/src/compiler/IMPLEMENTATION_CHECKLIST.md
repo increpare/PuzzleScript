@@ -707,6 +707,14 @@ lab bench, not the full corpus.
     retain sort/unique.
   - Any removed sort/unique is covered by parity tests.
 
+  Current progress:
+
+  - Vertical object-bitset anchor scans with one anchor object now skip
+    `sort/unique`; the bitset iteration already yields unique start indices in
+    PuzzleScript order.
+  - Horizontal one-object anchor scans still sort to preserve row-major order,
+    but skip `unique`.
+
 - [ ] Add per-group precheck masks before entering compiled loops.
 
   Acceptance criteria:

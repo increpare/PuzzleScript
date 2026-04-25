@@ -4245,10 +4245,12 @@ void emitCollectRowMatches(
                 << "                    const int32_t rhsY = rhs % session.liveLevel.height;\n"
                 << "                    return lhsY == rhsY ? lhsX < rhsX : lhsY < rhsY;\n"
                 << "                });\n"
-                << "                " << matchesName << ".erase(std::unique(" << matchesName << ".begin(), " << matchesName << ".end()), " << matchesName << ".end());\n"
+                << "                if (objectIdCount > 1) {\n"
+                << "                    " << matchesName << ".erase(std::unique(" << matchesName << ".begin(), " << matchesName << ".end()), " << matchesName << ".end());\n"
+                << "                }\n"
                 << "            }\n";
         } else {
-            out << "            if (" << matchesName << ".size() > 1) {\n"
+            out << "            if (objectIdCount > 1 && " << matchesName << ".size() > 1) {\n"
                 << "                std::sort(" << matchesName << ".begin(), " << matchesName << ".end());\n"
                 << "                " << matchesName << ".erase(std::unique(" << matchesName << ".begin(), " << matchesName << ".end()), " << matchesName << ".end());\n"
                 << "            }\n";
