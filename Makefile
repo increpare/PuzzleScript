@@ -77,6 +77,7 @@ SOLVER_FOCUS_RUNS ?= 1
 SOLVER_FOCUS_PROFILE_COUNTERS ?= false
 SOLVER_FOCUS_PROFILE_COUNTERS_ARG = $(if $(filter true,$(SOLVER_FOCUS_PROFILE_COUNTERS)),--profile-runtime-counters,)
 COMPILED_RULES_PERF ?= false
+SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS ?= 99
 SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE ?= $(if $(filter true,$(COMPILED_RULES_PERF)),,500)
 SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE_ARG = $(if $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),--max-compiled-rules-per-source $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),)
 SOLVER_TARGET_BENCH_RUNS ?= 5
@@ -158,11 +159,12 @@ fi
 endef
 define COMPILED_RULES_EMIT_SHARDED
 out_stamp="$(1)/sources.stamp"; \
-out_stamp_text="max_rows=$(COMPILED_RULES_MAX_ROWS) extra_args=$(4)"; \
+emit_max_rows="$(if $(5),$(5),$(COMPILED_RULES_MAX_ROWS))"; \
+out_stamp_text="max_rows=$$emit_max_rows extra_args=$(4)"; \
 if [ "$(COMPILED_RULES_REUSE_SHARDED_CPP)" = "true" ] && [ -f "$$sources_file" ] && [ -f "$$out_stamp" ] && [ "$$(cat "$$out_stamp")" = "$$out_stamp_text" ] && [ ! "$(PUZZLESCRIPT_CPP)" -nt "$$out_stamp" ]; then \
 	echo "compiled-rules: reuse output=$$out_cpp_dir"; \
 else \
-	$(PUZZLESCRIPT_CPP) compile-rules "$(2)" --emit-cpp-dir "$$out_cpp_dir" --emit-sources-list "$$sources_file" --symbol $(3) --max-rows $(COMPILED_RULES_MAX_ROWS) $(4); \
+	$(PUZZLESCRIPT_CPP) compile-rules "$(2)" --emit-cpp-dir "$$out_cpp_dir" --emit-sources-list "$$sources_file" --symbol $(3) --max-rows "$$emit_max_rows" $(4); \
 	printf '%s\n' "$$out_stamp_text" > "$$out_stamp"; \
 fi
 endef
@@ -588,13 +590,13 @@ solver_focus_benchmark: $(PUZZLESCRIPT_SOLVER)
 		manifest_hash=$$(shasum -a 256 "$(SOLVER_FOCUS_MANIFEST)" | awk '{print $$1}'); \
 		focus_corpus_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-focus-corpus-$$manifest_hash"; \
 		$(NODE) src/tests/extract_solver_focus_corpus.js "$(SOLVER_FOCUS_MANIFEST)" "$(SOLVER_FOCUS_CORPUS)" "$$focus_corpus_dir"; \
-		hash=$$({ find "$$focus_corpus_dir" -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256; shasum -a 256 "$(SOLVER_FOCUS_MANIFEST)" $(COMPILED_RULES_FINGERPRINT_INPUTS); printf '%s\n' "max_rows=$(COMPILED_RULES_MAX_ROWS)"; printf '%s\n' "max_compiled_rules_per_source=$(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE)"; printf '%s\n' "opt_level=$(COMPILED_RULES_OPT_LEVEL)"; printf '%s\n' "perf=$(COMPILED_RULES_PERF)"; } | shasum -a 256 | awk '{print $$1}'); \
+		hash=$$({ find "$$focus_corpus_dir" -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256; shasum -a 256 "$(SOLVER_FOCUS_MANIFEST)" $(COMPILED_RULES_FINGERPRINT_INPUTS); printf '%s\n' "max_rows=$(SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS)"; printf '%s\n' "max_compiled_rules_per_source=$(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE)"; printf '%s\n' "opt_level=$(COMPILED_RULES_OPT_LEVEL)"; printf '%s\n' "perf=$(COMPILED_RULES_PERF)"; } | shasum -a 256 | awk '{print $$1}'); \
 		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-focus-$$hash"; \
 		build_dir="$(COMPILED_RULES_BUILD_ROOT)/solver-focus-$$hash"; \
 		out_cpp_dir="$$out_dir/sources"; \
 		sources_file="$$out_dir/sources.txt"; \
 		mkdir -p "$$out_dir"; \
-		$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,$$focus_corpus_dir,solver_focus_$$hash,$(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE_ARG)); \
+		$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,$$focus_corpus_dir,solver_focus_$$hash,$(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE_ARG),$(SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS)); \
 		$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 		$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
 		$(NODE) src/tests/run_solver_level_benchmark.js "$$build_dir/native/puzzlescript_solver" $(SOLVER_FOCUS_CORPUS) $(SOLVER_FOCUS_MANIFEST) --runs $(SOLVER_FOCUS_RUNS) --strategy $(SOLVER_FOCUS_STRATEGY) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --out $(SOLVER_FOCUS_OUT) $(SOLVER_FOCUS_PROFILE_COUNTERS_ARG); \
