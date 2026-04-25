@@ -4327,6 +4327,99 @@ void printCompiledRulesCoverage(const CompiledRulesCoverage& coverage) {
     std::cerr << "\n";
 }
 
+std::vector<std::string> orderedCompiledRuleMissReasons(const CompiledRulesCoverage& coverage) {
+    static const std::array<std::string_view, 10> kReasonOrder = {
+        "random_group",
+        "random_rule",
+        "rigid",
+        "row_limit",
+        "ellipsis",
+        "missing_ellipsis_metadata",
+        "empty_row",
+        "non_cell_pattern",
+        "random_replacement",
+        "empty_group",
+    };
+    std::vector<std::string> reasons;
+    std::set<std::string> seen;
+    for (const std::string_view reason : kReasonOrder) {
+        const std::string key(reason);
+        const auto it = coverage.missedGroupsByReason.find(key);
+        if (it != coverage.missedGroupsByReason.end() && it->second != 0) {
+            reasons.push_back(key);
+            seen.insert(key);
+        }
+    }
+    for (const auto& [reason, count] : coverage.missedGroupsByReason) {
+        if (count != 0 && seen.insert(reason).second) {
+            reasons.push_back(reason);
+        }
+    }
+    return reasons;
+}
+
+void appendCompiledRulesCoverageJsonFields(std::ostream& out, const CompiledRulesCoverage& coverage) {
+    out << "\"sources\":" << coverage.sources
+        << ",\"early_groups\":" << coverage.earlyGroups
+        << ",\"early_rules\":" << coverage.earlyRules
+        << ",\"compiled_early_groups\":" << coverage.compiledEarlyGroups
+        << ",\"compiled_early_rules\":" << coverage.compiledEarlyRules
+        << ",\"late_groups\":" << coverage.lateGroups
+        << ",\"late_rules\":" << coverage.lateRules
+        << ",\"compiled_late_groups\":" << coverage.compiledLateGroups
+        << ",\"compiled_late_rules\":" << coverage.compiledLateRules
+        << ",\"compiled_groups\":" << coverage.compiledGroups
+        << ",\"compiled_rules\":" << coverage.compiledRules
+        << ",\"fully_compiled\":" << (coverage.missedGroupsByReason.empty() ? "true" : "false")
+        << ",\"misses\":{";
+    bool first = true;
+    for (const std::string& reason : orderedCompiledRuleMissReasons(coverage)) {
+        const auto it = coverage.missedGroupsByReason.find(reason);
+        if (it == coverage.missedGroupsByReason.end() || it->second == 0) {
+            continue;
+        }
+        if (!first) {
+            out << ",";
+        }
+        first = false;
+        out << jsonStringLiteral(reason) << ":" << it->second;
+    }
+    out << "}";
+}
+
+std::string generateCompiledRulesCoverageJson(
+    const std::vector<CodegenSource>& sources,
+    const CompiledRulesOptions& options,
+    const CompiledRulesCoverage& aggregateCoverage
+) {
+    std::ostringstream out;
+    out << "{\n"
+        << "  \"max_rows\":" << options.maxRows << ",\n"
+        << "  \"aggregate\":{";
+    appendCompiledRulesCoverageJsonFields(out, aggregateCoverage);
+    out << "},\n"
+        << "  \"sources\":[\n";
+    for (size_t index = 0; index < sources.size(); ++index) {
+        const CompiledRulesCoverage sourceCoverage = measureCompiledRulesCoverage(
+            std::vector<CodegenSource>{sources[index]},
+            options
+        );
+        out << "    {\"index\":" << index
+            << ",\"path\":" << jsonStringLiteral(sources[index].path.string())
+            << ",\"source_hash\":" << sources[index].hash
+            << ",";
+        appendCompiledRulesCoverageJsonFields(out, sourceCoverage);
+        out << "}";
+        if (index + 1 < sources.size()) {
+            out << ",";
+        }
+        out << "\n";
+    }
+    out << "  ]\n"
+        << "}\n";
+    return out.str();
+}
+
 CodegenSource compileCodegenSource(const std::filesystem::path& path) {
     CodegenSource result;
     result.path = path;
@@ -4658,6 +4751,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
     std::optional<std::filesystem::path> emitCpp;
     std::optional<std::filesystem::path> emitCppDir;
     std::optional<std::filesystem::path> emitSourcesList;
+    std::optional<std::filesystem::path> coverageJson;
     std::string symbol = "puzzlescript_compiled_rules";
     CompiledRulesOptions options;
     bool statsOnly = false;
@@ -4678,6 +4772,11 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
                 throw std::runtime_error("--emit-sources-list requires a path");
             }
             emitSourcesList = std::filesystem::path(argv[index]);
+        } else if (arg == "--coverage-json") {
+            if (++index >= argc) {
+                throw std::runtime_error("--coverage-json requires a path");
+            }
+            coverageJson = std::filesystem::path(argv[index]);
         } else if (arg == "--symbol") {
             if (++index >= argc) {
                 throw std::runtime_error("--symbol requires a name");
@@ -4709,6 +4808,12 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
 
     std::vector<CodegenSource> sources = collectCompiledRuleSources(std::filesystem::path(sourcePath));
     const CompiledRulesCoverage coverage = measureCompiledRulesCoverage(sources, options);
+    if (coverageJson.has_value()) {
+        writeFileIfChanged(
+            *coverageJson,
+            generateCompiledRulesCoverageJson(sources, options, coverage)
+        );
+    }
     if (statsOnly) {
         std::cerr << "compiled-rules: sources=" << sources.size()
                   << " max_rows=" << options.maxRows
@@ -5183,16 +5288,16 @@ void printCompileRulesHelp() {
         << "Usage: puzzlescript_cpp compile-rules game.txt --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
         << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
         << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp-dir out-dir --emit-sources-list out.txt [--symbol name] [--max-rows N]\n"
-        << "       puzzlescript_cpp compile-rules path/to/corpus --stats-only [--max-rows N]\n\n"
+        << "       puzzlescript_cpp compile-rules path/to/corpus --stats-only [--max-rows N] [--coverage-json out.json]\n\n"
         << "Emits C++ compiled-rule kernels for conservative deterministic rule groups.\n"
         << "The generated file, or sharded source directory, is meant to be linked into\n"
         << "solver/generator builds through the Makefile SPECIALIZE=true workflow. Use\n"
-        << "--stats-only to print coverage and miss buckets without writing generated code. --max-rows defaults to 1;\n"
+        << "--stats-only to print coverage and miss buckets without writing generated code. --coverage-json writes per-source coverage. --max-rows defaults to 1;\n"
         << "higher values enable experimental deterministic multi-row kernels.\n\n"
         << "Examples:\n"
         << "  puzzlescript_cpp compile-rules src/demo/sokoban_basic.txt --emit-cpp build/compiled-rules/sokoban.cpp --symbol sokoban\n"
         << "  puzzlescript_cpp compile-rules src/tests/solver_tests --emit-cpp-dir build/compiled-rules/solver-tests --emit-sources-list build/compiled-rules/solver-tests.txt\n"
-        << "  puzzlescript_cpp compile-rules src/tests/resources/testdata.js --stats-only --max-rows 8\n"
+        << "  puzzlescript_cpp compile-rules src/tests/resources/testdata.js --stats-only --max-rows 8 --coverage-json build/compiled-rules/coverage.json\n"
         << "  make generator src/demo/sokoban_basic.txt src/tests/generator_presets/sokoban_room_scatter.gen SPECIALIZE=true\n";
 }
 
