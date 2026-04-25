@@ -313,25 +313,28 @@ lab bench, not the full corpus.
   node -e 'const j=require("./build/native/solver_focus_group.json"); console.log(j.target_count, j.excluded_games)'
   ```
 
-- [ ] Add compile-time quarantine during focus mining.
+- [x] Add compile-time quarantine during focus mining.
 
   Intent: exclude games that make specialized focus builds painfully slow, but
   recompute that decision whenever `make solver_focus_mine` is run.
 
-  Acceptance criteria:
+  Done means:
 
-  - `SOLVER_FOCUS_MAX_COMPILE_SECONDS ?= 60` controls the threshold.
+  - `SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS ?= 60` controls the threshold.
   - A value of `0` disables compile-time quarantine.
   - `make solver_focus_mine` resets/recomputes compile timings by default.
   - The manifest records `compile_excluded_games` with game name, measured
     compile seconds, threshold, row limit, and reason.
   - Compile exclusions are separate from manual `excluded_games`.
-  - Compile timing probes are limited to candidate games, not the entire corpus.
+  - Compile timing probes run before solving, so levels from slow-to-compile
+    games are not considered for the focus group.
+  - The eligible temporary corpus is recorded as `mined_corpus`; the original
+    corpus remains recorded as `corpus`.
 
   Validation:
 
   ```sh
-  make solver_focus_mine SOLVER_FOCUS_MAX_COMPILE_SECONDS=60
+  make solver_focus_mine SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS=60
   node -e 'const j=require("./build/native/solver_focus_group.json"); console.log(j.compile_excluded_games || [])'
   ```
 

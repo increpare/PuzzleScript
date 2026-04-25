@@ -80,10 +80,13 @@ SOLVER_FOCUS_PROFILE_COUNTERS ?= false
 SOLVER_FOCUS_PROFILE_COUNTERS_ARG = $(if $(filter true,$(SOLVER_FOCUS_PROFILE_COUNTERS)),--profile-runtime-counters,)
 SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS ?= 60
 SOLVER_FOCUS_COMPILE_TIMEOUT_PREFIX = $(if $(filter-out 0,$(SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS)),$(NODE) src/tests/run_with_timeout.js $(SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS) --,)
+SOLVER_FOCUS_COMPILE_PROBE_ROOT ?= $(BUILD_DIR)/native/solver_focus_compile_probes
 COMPILED_RULES_PERF ?= false
 SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS ?= 99
 SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE ?= $(if $(filter true,$(COMPILED_RULES_PERF)),,500)
 SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE_ARG = $(if $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),--max-compiled-rules-per-source $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),)
+SOLVER_FOCUS_MINE_MAX_COMPILED_RULES_PER_SOURCE_ARG = $(if $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),--compile-max-compiled-rules-per-source $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),)
+SOLVER_FOCUS_MINE_CMAKE_GENERATOR_ARG = $(if $(COMPILED_RULES_CMAKE_GENERATOR),--cmake-generator "$(COMPILED_RULES_CMAKE_GENERATOR)",)
 SOLVER_TARGET_BENCH_RUNS ?= 5
 SOLVER_TARGET_BENCH_CORPUS ?= $(SOLVER_MINE_CORPUS)
 SOLVER_TARGET_BENCH_MANIFEST ?= $(SOLVER_PIPPABLE_MANIFEST)
@@ -301,6 +304,8 @@ help:
 	@echo "                                     Run fixed-seed generator preset benchmark"
 	@echo "  make solver_mine_pippable SOLVER_MINE_TIMEOUTS_MS=50,100,250,500"
 	@echo "                                     Write $(SOLVER_PIPPABLE_MANIFEST)"
+	@echo "  make solver_focus_mine SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS=60"
+	@echo "                                     Recompute focus group after compile-time quarantine"
 	@echo "  make solver_benchmark_targets SOLVER_TARGET_BENCH_RUNS=10"
 	@echo "                                     Write $(SOLVER_TARGET_BENCH_OUT)"
 	@echo "  make solver_benchmark SPECIALIZE=true"
@@ -583,7 +588,9 @@ solver_mine_pippable: $(PUZZLESCRIPT_SOLVER)
 	$(NODE) src/tests/mine_solver_near_threshold.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_MINE_CORPUS) --timeouts-ms $(SOLVER_MINE_TIMEOUTS_MS) --strategy $(SOLVER_MINE_STRATEGY) --near-ratio $(SOLVER_MINE_NEAR_RATIO) --out $(SOLVER_PIPPABLE_MANIFEST) $(SOLVER_MINE_MAX_TARGETS_ARG)
 
 solver_focus_mine: $(PUZZLESCRIPT_SOLVER)
-	$(NODE) src/tests/mine_solver_focus_group.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_CORPUS) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --min-elapsed-ms $(SOLVER_FOCUS_MIN_ELAPSED_MS) --max-targets $(SOLVER_FOCUS_MAX_TARGETS) --strategy $(SOLVER_FOCUS_STRATEGY) --jobs $(SOLVER_FOCUS_JOBS) $(SOLVER_FOCUS_EXCLUDE_GAMES_ARG) --out $(SOLVER_FOCUS_MANIFEST)
+	@set -e; \
+	$(COMPILED_RULES_BOOTSTRAP_CPP); \
+	$(NODE) src/tests/mine_solver_focus_group.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_CORPUS) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --min-elapsed-ms $(SOLVER_FOCUS_MIN_ELAPSED_MS) --max-targets $(SOLVER_FOCUS_MAX_TARGETS) --strategy $(SOLVER_FOCUS_STRATEGY) --jobs $(SOLVER_FOCUS_JOBS) $(SOLVER_FOCUS_EXCLUDE_GAMES_ARG) --out $(SOLVER_FOCUS_MANIFEST) --repo-root "$$PWD" --puzzlescript-cpp $(PUZZLESCRIPT_CPP) --compile-probe-root $(SOLVER_FOCUS_COMPILE_PROBE_ROOT) --compile-timeout-seconds $(SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS) --compile-max-rows $(SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS) $(SOLVER_FOCUS_MINE_MAX_COMPILED_RULES_PER_SOURCE_ARG) --cmake $(CMAKE) $(SOLVER_FOCUS_MINE_CMAKE_GENERATOR_ARG) --compile-opt-level $(COMPILED_RULES_OPT_LEVEL) --compile-build-jobs $(COMPILED_RULES_BUILD_JOBS)
 
 solver_focus_benchmark: $(PUZZLESCRIPT_SOLVER)
 	@if [ "$(SPECIALIZE)" = "true" ]; then \
