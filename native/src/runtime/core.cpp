@@ -4185,6 +4185,39 @@ std::unique_ptr<Error> loadLevel(Session& session, int32_t levelIndex) {
     return nullptr;
 }
 
+std::unique_ptr<Error> loadLevelTemplate(Session& session, const LevelTemplate& levelTemplate, int32_t levelIndex, RuntimeStepOptions options) {
+    if (levelTemplate.isMessage) {
+        return std::make_unique<Error>("Generated level cannot be a message level");
+    }
+    if (levelTemplate.width <= 0 || levelTemplate.height <= 0) {
+        return std::make_unique<Error>("Generated level has invalid dimensions");
+    }
+    const size_t expectedWords = static_cast<size_t>(levelTemplate.width * levelTemplate.height * session.game->strideObject);
+    if (levelTemplate.objects.size() != expectedWords) {
+        return std::make_unique<Error>("Generated level object buffer has invalid size");
+    }
+
+    session.preparedSession.currentLevelIndex = levelIndex;
+    session.preparedSession.currentLevelTarget.reset();
+    session.preparedSession.titleScreen = false;
+    session.preparedSession.level = levelTemplate;
+    session.preparedSession.textMode = false;
+    session.preparedSession.titleMode = 0;
+    session.preparedSession.titleSelection = showContinueOptionOnTitleScreen(session.preparedSession) ? 1 : 0;
+    session.preparedSession.titleSelected = false;
+    session.preparedSession.messageSelected = false;
+    session.preparedSession.messageText.clear();
+    session.preparedSession.winning = false;
+    session.preparedSession.restart.width = session.preparedSession.level.width;
+    session.preparedSession.restart.height = session.preparedSession.level.height;
+    session.preparedSession.restart.objects = session.preparedSession.level.objects;
+    session.preparedSession.restart.oldFlickscreenDat = session.preparedSession.oldFlickscreenDat;
+    resetToPrepared(session);
+    runRulesOnLevelStart(session, options);
+    settlePendingAgain(session, options);
+    return nullptr;
+}
+
 std::unique_ptr<Error> advanceLevel(Session& session) {
     if (session.game->levels.empty()) {
         return std::make_unique<Error>("No levels available");

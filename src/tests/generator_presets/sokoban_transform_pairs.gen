@@ -1,0 +1,13 @@
+(INIT LEVEL)
+#########
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#########
+
+(GENERATION RULES)
+choose 1 [ no wall ] -> [ player ]
+choose 2 [ no wall no player no crate no target ] [ no wall no player no crate no target ] -> [ crate ] [ target ]
+choose 6 [ no wall no player no crate no target ] -> [ wall ] or [ no wall no player no crate no target ] -> [ target ]

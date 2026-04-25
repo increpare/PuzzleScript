@@ -13,6 +13,8 @@
 
 #include <utf8proc.h>
 
+#include "compiler/rule_text.hpp"
+
 namespace puzzlescript::compiler {
 
 namespace {
@@ -115,46 +117,6 @@ std::vector<std::string> splitUtf8Codepoints(std::string_view text) {
         cursor += advance;
     }
     return out;
-}
-
-std::vector<std::string> tokenizeRuleLine(std::string line) {
-    auto replaceAll = [&](const std::string& from, const std::string& to) {
-        size_t pos = 0;
-        while ((pos = line.find(from, pos)) != std::string::npos) {
-            line.replace(pos, from.size(), to);
-            pos += to.size();
-        }
-    };
-    replaceAll("[", " [ ");
-    replaceAll("]", " ] ");
-    replaceAll("|", " | ");
-    replaceAll("->", " -> ");
-    // Trim.
-    while (!line.empty() && std::isspace(static_cast<unsigned char>(line.front()))) {
-        line.erase(line.begin());
-    }
-    while (!line.empty() && std::isspace(static_cast<unsigned char>(line.back()))) {
-        line.pop_back();
-    }
-    if (!line.empty() && line.front() == '+') {
-        line.insert(1, " ");
-    }
-    std::vector<std::string> tokens;
-    std::string cur;
-    for (char ch : line) {
-        if (std::isspace(static_cast<unsigned char>(ch))) {
-            if (!cur.empty()) {
-                tokens.push_back(cur);
-                cur.clear();
-            }
-        } else {
-            cur.push_back(ch);
-        }
-    }
-    if (!cur.empty()) {
-        tokens.push_back(cur);
-    }
-    return tokens;
 }
 
 std::string takeRulePrefixBeforeComment(std::string_view line) {
@@ -872,8 +834,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
 
     // Rule lowering: a subset of JS rulesToMask (enough to start converging).
     for (const auto& entry : state.rules) {
-        const auto tokens = tokenizeRuleLine(entry.rule);
-        const auto mixedCaseTokens = tokenizeRuleLine(takeRulePrefixBeforeComment(entry.mixedCase));
+        const auto tokens = ruletext::tokenizeRuleLine(entry.rule);
+        const auto mixedCaseTokens = ruletext::tokenizeRuleLine(takeRulePrefixBeforeComment(entry.mixedCase));
         if (tokens.empty()) {
             continue;
         }

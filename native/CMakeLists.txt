@@ -61,6 +61,7 @@ set(PUZZLESCRIPT_COMPILER_SOURCES
   src/compiler/diagnostic.cpp
   src/compiler/lower_to_runtime.cpp
   src/compiler/parser.cpp
+  src/compiler/rule_text.cpp
   third_party/utf8proc/utf8proc.c
 )
 
@@ -143,13 +144,28 @@ add_executable(puzzlescript_solver
   src/solver/main.cpp
 )
 
+add_executable(puzzlescript_generator
+  src/generator/main.cpp
+)
+
 target_link_libraries(puzzlescript_solver
   PRIVATE
     puzzlescript_native
     puzzlescript_compiler
 )
 
+target_link_libraries(puzzlescript_generator
+  PRIVATE
+    puzzlescript_native
+    puzzlescript_compiler
+)
+
 target_include_directories(puzzlescript_solver
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+target_include_directories(puzzlescript_generator
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
@@ -304,6 +320,15 @@ add_test(
           ${PUZZLESCRIPT_REPO_ROOT}/src/tests/solver_smoke_tests
 )
 set_tests_properties(puzzlescript_solver_js_parity_smoke PROPERTIES TIMEOUT 30)
+
+add_test(
+  NAME puzzlescript_generator_smoke
+  COMMAND ${NODE_EXECUTABLE}
+          ${PUZZLESCRIPT_REPO_ROOT}/src/tests/run_generator_smoke.js
+          $<TARGET_FILE:puzzlescript_generator>
+          ${PUZZLESCRIPT_REPO_ROOT}/src/demo/sokoban_basic.txt
+)
+set_tests_properties(puzzlescript_generator_smoke PROPERTIES TIMEOUT 30)
 
 add_test(
   NAME puzzlescript_cpp_parser_state_smoke

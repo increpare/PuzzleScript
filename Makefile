@@ -15,10 +15,10 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build build_32 build_solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
+.PHONY: help build build_32 build_solver build_generator generator run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
-	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark solver_mine_pippable solver_benchmark_targets \
+	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark solver_mine_pippable solver_benchmark_targets generator_smoke_tests \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
@@ -32,6 +32,11 @@ BUILD_DIR_32 ?= build-32
 PUZZLESCRIPT_CPP := $(BUILD_DIR)/native/puzzlescript_cpp
 PUZZLESCRIPT_CPP_32 := $(BUILD_DIR_32)/native/puzzlescript_cpp
 PUZZLESCRIPT_SOLVER := $(BUILD_DIR)/native/puzzlescript_solver
+PUZZLESCRIPT_GENERATOR := $(BUILD_DIR)/native/puzzlescript_generator
+GENERATOR_MAKE_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+GENERATOR_GAME := $(word 1,$(GENERATOR_MAKE_ARGS))
+GENERATOR_SPEC := $(word 2,$(GENERATOR_MAKE_ARGS))
+GENERATOR_ARGS ?=
 SOLVER_TIMEOUT_MS ?= 250
 SOLVER_JOBS ?= 1
 SOLVER_STRATEGY ?= portfolio
@@ -82,6 +87,7 @@ JS_PARITY_INPUTS := \
 CMAKE_CACHE := $(BUILD_DIR)/CMakeCache.txt
 PUZZLESCRIPT_SOLVER_REBUILD_INPUTS := \
 	$(wildcard native/src/solver/*.cpp) \
+	$(wildcard native/src/generator/*.cpp) \
 	$(wildcard native/src/runtime/*.cpp) \
 	$(wildcard native/src/runtime/*.hpp) \
 	$(wildcard native/src/compiler/*.cpp) \
@@ -96,6 +102,8 @@ help:
 	@echo "Common commands:"
 	@echo "  make build                         Build build/native/puzzlescript_cpp (64-bit masks)"
 	@echo "  make build_solver                  Build build/native/puzzlescript_solver"
+	@echo "  make build_generator               Build build/native/puzzlescript_generator"
+	@echo "  make generator game.txt spec.gen   Run generator on a PuzzleScript game/spec pair"
 	@echo "  make build_32                      Build JS-style 32-bit-mask executable into build-32"
 	@echo "  make run path/to/game.txt          Build and play a PuzzleScript game"
 	@echo "  make ctest                         Run fast C++ smoke/unit tests"
@@ -107,6 +115,7 @@ help:
 	@echo "  make profile_simulation_tests_32   Profile the 32-bit-mask C++ simulation path"
 	@echo "  make tests                         Run the full native correctness suite"
 	@echo "  make solver_tests                  Run native solver and JS comparison solver"
+	@echo "  make generator_smoke_tests         Run native generator smoke tests"
 	@echo "  make solver_mine_pippable          Mine near-threshold native solver targets"
 	@echo "  make solver_benchmark_targets      Benchmark mined solver targets repeatedly"
 	@echo "  make clean                         Remove native build outputs and JS parity data"
@@ -146,6 +155,8 @@ help:
 	@echo "Direct executable after build:"
 	@echo "  build/native/puzzlescript_cpp --help"
 	@echo "  build/native/puzzlescript_solver src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --jobs $(SOLVER_JOBS) --strategy $(SOLVER_STRATEGY) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)"
+	@echo "  make generator src/demo/sokoban_basic.txt src/tests/generator_presets/sokoban_room_scatter.gen"
+	@echo "  make generator src/demo/sokoban_basic.txt src/tests/generator_presets/sokoban_room_scatter.gen GENERATOR_ARGS='--time-ms 5000 --jobs auto --json-out build/generated/results.json'"
 
 $(CMAKE_CACHE): CMakeLists.txt native/CMakeLists.txt
 	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
@@ -158,11 +169,34 @@ $(PUZZLESCRIPT_SOLVER): $(CMAKE_CACHE) native/CMakeLists.txt $(PUZZLESCRIPT_SOLV
 	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
 	$(CMAKE) --build $(BUILD_DIR) --target puzzlescript_solver
 
+$(PUZZLESCRIPT_GENERATOR): $(CMAKE_CACHE) native/CMakeLists.txt $(PUZZLESCRIPT_SOLVER_REBUILD_INPUTS)
+	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
+	$(CMAKE) --build $(BUILD_DIR) --target puzzlescript_generator
+
 build: $(CMAKE_CACHE)
 	$(CMAKE) -S . -B $(BUILD_DIR) -DPS_MASK_WORD_BITS=64
 	$(CMAKE) --build $(BUILD_DIR) --target puzzlescript_cpp
 
 build_solver: $(PUZZLESCRIPT_SOLVER)
+
+build_generator: $(PUZZLESCRIPT_GENERATOR)
+
+generator:
+	@if [ -z "$(GENERATOR_GAME)" ] || [ -z "$(GENERATOR_SPEC)" ]; then \
+		echo "Usage: make generator path/to/game.txt path/to/spec.gen"; \
+		echo "       make generator path/to/game.txt path/to/spec.gen GENERATOR_ARGS='--time-ms 5000 --jobs auto --json-out build/generated/results.json'"; \
+		exit 2; \
+	fi
+	@$(MAKE) build_generator
+	$(PUZZLESCRIPT_GENERATOR) $(GENERATOR_GAME) $(GENERATOR_SPEC) $(GENERATOR_ARGS)
+
+
+ifeq ($(firstword $(MAKECMDGOALS)),generator)
+ifneq ($(strip $(GENERATOR_MAKE_ARGS)),)
+.PHONY: $(GENERATOR_MAKE_ARGS)
+$(eval $(GENERATOR_MAKE_ARGS):;@:)
+endif
+endif
 
 build_32:
 	$(CMAKE) -S . -B $(BUILD_DIR_32) -DPS_MASK_WORD_BITS=32
@@ -204,6 +238,9 @@ solver_determinism_tests: $(PUZZLESCRIPT_SOLVER)
 
 solver_parity_smoke: $(PUZZLESCRIPT_SOLVER)
 	$(NODE) src/tests/run_solver_parity_smoke.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests
+
+generator_smoke_tests: $(PUZZLESCRIPT_GENERATOR)
+	$(NODE) src/tests/run_generator_smoke.js $(PUZZLESCRIPT_GENERATOR) src/demo/sokoban_basic.txt
 
 solver_tests_cpp: $(PUZZLESCRIPT_SOLVER)
 	$(PUZZLESCRIPT_SOLVER) src/tests/solver_tests --timeout-ms $(SOLVER_TIMEOUT_MS) --jobs $(SOLVER_JOBS) --strategy $(SOLVER_STRATEGY) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS)

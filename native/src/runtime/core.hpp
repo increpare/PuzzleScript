@@ -427,6 +427,7 @@ struct RuntimeStepOptions {
     bool emitAudio = true;
 };
 
+std::unique_ptr<Error> loadLevelTemplate(Session& session, const LevelTemplate& levelTemplate, int32_t levelIndex, RuntimeStepOptions options);
 bool restart(Session& session, RuntimeStepOptions options);
 ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options);
 ps_step_result tick(Session& session, RuntimeStepOptions options);
