@@ -19,7 +19,6 @@
 #include <string>
 #include <string_view>
 #include <thread>
-#include <unordered_map>
 #include <vector>
 
 #include "compiler/diagnostic.hpp"
@@ -125,6 +124,11 @@ struct Timing {
     int64_t solvedCheckNs = 0;
     int64_t timeoutCheckNs = 0;
     int64_t reconstructNs = 0;
+    uint64_t visitedLookupProbes = 0;
+    uint64_t visitedInsertProbes = 0;
+    uint64_t visitedGrows = 0;
+    uint64_t visitedCapacity = 0;
+    uint64_t visitedMaxProbe = 0;
 };
 
 struct Result {
@@ -612,6 +616,124 @@ bool solvedByStep(const ps_step_result& stepResult, const Session& session, int3
     return stepResult.won || session.preparedSession.currentLevelIndex != levelIndex;
 }
 
+class FlatBestDepth {
+public:
+    explicit FlatBestDepth(Timing& timing)
+        : timing(timing) {}
+
+    void reserve(size_t expected) {
+        rehash(capacityForExpected(expected));
+    }
+
+    std::optional<uint32_t> find(const StateKey& key) {
+        if (entries.empty()) {
+            return std::nullopt;
+        }
+        size_t probes = 0;
+        const size_t slot = findSlot(key, probes);
+        recordLookup(probes);
+        if (!entries[slot].occupied) {
+            return std::nullopt;
+        }
+        return entries[slot].depth;
+    }
+
+    bool insertOrAssignIfBetter(const StateKey& key, uint32_t depth) {
+        ensureCapacityForInsert();
+        size_t probes = 0;
+        const size_t slot = findSlot(key, probes);
+        recordInsert(probes);
+        Entry& entry = entries[slot];
+        if (entry.occupied) {
+            if (entry.depth <= depth) {
+                return false;
+            }
+            entry.depth = depth;
+            return true;
+        }
+        entry.key = key;
+        entry.depth = depth;
+        entry.occupied = true;
+        ++entryCount;
+        return true;
+    }
+
+    size_t size() const {
+        return entryCount;
+    }
+
+private:
+    struct Entry {
+        StateKey key;
+        uint32_t depth = 0;
+        bool occupied = false;
+    };
+
+    static size_t capacityForExpected(size_t expected) {
+        size_t capacity = 16;
+        const size_t minimum = std::max<size_t>(16, (expected * 10 + 6) / 7);
+        while (capacity < minimum) {
+            capacity *= 2;
+        }
+        return capacity;
+    }
+
+    void ensureCapacityForInsert() {
+        if (entries.empty()) {
+            rehash(16);
+            return;
+        }
+        if ((entryCount + 1) * 10 >= entries.size() * 7) {
+            rehash(entries.size() * 2);
+            ++timing.visitedGrows;
+        }
+    }
+
+    void rehash(size_t newCapacity) {
+        std::vector<Entry> oldEntries = std::move(entries);
+        entries.clear();
+        entries.resize(newCapacity);
+        entryCount = 0;
+        timing.visitedCapacity = std::max<uint64_t>(timing.visitedCapacity, entries.size());
+        for (const Entry& entry : oldEntries) {
+            if (!entry.occupied) {
+                continue;
+            }
+            size_t probes = 0;
+            const size_t slot = findSlot(entry.key, probes);
+            entries[slot] = entry;
+            ++entryCount;
+        }
+    }
+
+    size_t findSlot(const StateKey& key, size_t& probes) const {
+        const size_t mask = entries.size() - 1;
+        size_t slot = StateKeyHash{}(key) & mask;
+        while (true) {
+            ++probes;
+            const Entry& entry = entries[slot];
+            if (!entry.occupied || entry.key == key) {
+                return slot;
+            }
+            slot = (slot + 1) & mask;
+        }
+    }
+
+    void recordLookup(size_t probes) {
+        timing.visitedLookupProbes += probes;
+        timing.visitedMaxProbe = std::max<uint64_t>(timing.visitedMaxProbe, probes);
+    }
+
+    void recordInsert(size_t probes) {
+        timing.visitedInsertProbes += probes;
+        timing.visitedMaxProbe = std::max<uint64_t>(timing.visitedMaxProbe, probes);
+    }
+
+    Timing& timing;
+    std::vector<Entry> entries;
+    size_t entryCount = 0;
+};
+
 Result runSearch(
     const std::shared_ptr<const Game>& game,
     const std::string& gameName,
@@ -651,12 +773,12 @@ Result runSearch(
     nodes.reserve(8192);
 
     const bool includeRandomStateInKey = gameUsesRandomness(*game);
-    std::unordered_map<StateKey, uint32_t, StateKeyHash> bestDepth;
+    FlatBestDepth bestDepth(result.timing);
     bestDepth.reserve(16384);
     const StateKey initialKey = solverStateKey(*initial, includeRandomStateInKey, result.timing);
     {
         ScopedTimer timer(result.timing.visitedInsertNs);
-        bestDepth.emplace(initialKey, 0);
+        bestDepth.insertOrAssignIfBetter(initialKey, 0);
     }
     result.uniqueStates = 1;
 
@@ -698,12 +820,12 @@ Result runSearch(
         }
 
         const Node& parentNode = nodes[entry.nodeIndex];
-        std::unordered_map<StateKey, uint32_t, StateKeyHash>::const_iterator best;
+        std::optional<uint32_t> best;
         {
             ScopedTimer timer(result.timing.visitedLookupNs);
             best = bestDepth.find(parentNode.key);
         }
-        if (best != bestDepth.end() && best->second < parentNode.depth) {
+        if (best && *best < parentNode.depth) {
             ++result.duplicates;
             continue;
         }
@@ -757,23 +879,15 @@ Result runSearch(
 
             const StateKey key = solverStateKey(*child, includeRandomStateInKey, result.timing);
             const uint32_t childDepth = parentDepth + 1;
-            std::unordered_map<StateKey, uint32_t, StateKeyHash>::iterator found;
-            {
-                ScopedTimer timer(result.timing.visitedLookupNs);
-                found = bestDepth.find(key);
-            }
-            if (found != bestDepth.end() && found->second <= childDepth) {
-                ++result.duplicates;
-                continue;
-            }
+            bool shouldStore = false;
             {
                 ScopedTimer timer(result.timing.visitedInsertNs);
-                if (found != bestDepth.end()) {
-                    found->second = childDepth;
-                } else {
-                    bestDepth.emplace(key, childDepth);
-                }
+                shouldStore = bestDepth.insertOrAssignIfBetter(key, childDepth);
                 result.uniqueStates = bestDepth.size();
+            }
+            if (!shouldStore) {
+                ++result.duplicates;
+                continue;
             }
 
             int32_t childHeuristic = 0;
@@ -817,6 +931,11 @@ void mergeStats(Result& target, const Result& source) {
     target.timing.solvedCheckNs += source.timing.solvedCheckNs;
     target.timing.timeoutCheckNs += source.timing.timeoutCheckNs;
     target.timing.reconstructNs += source.timing.reconstructNs;
+    target.timing.visitedLookupProbes += source.timing.visitedLookupProbes;
+    target.timing.visitedInsertProbes += source.timing.visitedInsertProbes;
+    target.timing.visitedGrows += source.timing.visitedGrows;
+    target.timing.visitedCapacity = std::max(target.timing.visitedCapacity, source.timing.visitedCapacity);
+    target.timing.visitedMaxProbe = std::max(target.timing.visitedMaxProbe, source.timing.visitedMaxProbe);
 }
 
 Result solveLevel(
@@ -1069,6 +1188,11 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"frontier_push_ms\":" << ms(result.timing.frontierPushNs);
     out << ",\"visited_lookup_ms\":" << ms(result.timing.visitedLookupNs);
     out << ",\"visited_insert_ms\":" << ms(result.timing.visitedInsertNs);
+    out << ",\"visited_lookup_probes\":" << result.timing.visitedLookupProbes;
+    out << ",\"visited_insert_probes\":" << result.timing.visitedInsertProbes;
+    out << ",\"visited_grows\":" << result.timing.visitedGrows;
+    out << ",\"visited_capacity\":" << result.timing.visitedCapacity;
+    out << ",\"visited_max_probe\":" << result.timing.visitedMaxProbe;
     out << ",\"node_store_ms\":" << ms(result.timing.nodeStoreNs);
     out << ",\"heuristic_ms\":" << ms(result.timing.heuristicNs);
     out << ",\"solved_check_ms\":" << ms(result.timing.solvedCheckNs);
@@ -1105,6 +1229,11 @@ void printJson(const std::vector<Result>& results) {
         timing.frontierPushNs += result.timing.frontierPushNs;
         timing.visitedLookupNs += result.timing.visitedLookupNs;
         timing.visitedInsertNs += result.timing.visitedInsertNs;
+        timing.visitedLookupProbes += result.timing.visitedLookupProbes;
+        timing.visitedInsertProbes += result.timing.visitedInsertProbes;
+        timing.visitedGrows += result.timing.visitedGrows;
+        timing.visitedCapacity = std::max(timing.visitedCapacity, result.timing.visitedCapacity);
+        timing.visitedMaxProbe = std::max(timing.visitedMaxProbe, result.timing.visitedMaxProbe);
         timing.nodeStoreNs += result.timing.nodeStoreNs;
         timing.heuristicNs += result.timing.heuristicNs;
         timing.solvedCheckNs += result.timing.solvedCheckNs;
@@ -1137,6 +1266,11 @@ void printJson(const std::vector<Result>& results) {
     std::cout << ",\"frontier_push_ms\":" << ms(timing.frontierPushNs);
     std::cout << ",\"visited_lookup_ms\":" << ms(timing.visitedLookupNs);
     std::cout << ",\"visited_insert_ms\":" << ms(timing.visitedInsertNs);
+    std::cout << ",\"visited_lookup_probes\":" << timing.visitedLookupProbes;
+    std::cout << ",\"visited_insert_probes\":" << timing.visitedInsertProbes;
+    std::cout << ",\"visited_grows\":" << timing.visitedGrows;
+    std::cout << ",\"visited_capacity\":" << timing.visitedCapacity;
+    std::cout << ",\"visited_max_probe\":" << timing.visitedMaxProbe;
     std::cout << ",\"node_store_ms\":" << ms(timing.nodeStoreNs);
     std::cout << ",\"heuristic_ms\":" << ms(timing.heuristicNs);
     std::cout << ",\"solved_check_ms\":" << ms(timing.solvedCheckNs);

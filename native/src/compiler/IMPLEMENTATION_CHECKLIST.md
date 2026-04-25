@@ -406,7 +406,14 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - It makes clear when the generated rules are faster but end-to-end elapsed
     is capped by graph/state overhead.
 
-- [ ] Add no-allocation or streaming solver state hashing.
+- [?] Add no-allocation or streaming solver state hashing.
+
+  Status: investigated before implementation. The current
+  `sessionStateKey(...)` path is already streaming and allocation-free: it
+  walks existing `Session` fields and object words into a 128-bit `StateKey`.
+  The surrounding costs are the full `Session` clone, node storage, and visited
+  table operations. Keep this item open for semantic expansion of the solver
+  key, but do not expect a big win from removing a hash temporary.
 
   Intent: the current solver state key path builds a `StateKey` from a full
   `Session`. The first low-risk replacement should preserve semantics while
@@ -434,7 +441,22 @@ attribute graph cost -> no-allocation hash -> flat visited table
   make solver_focus_compare SOLVER_FOCUS_RUNS=1
   ```
 
-- [ ] Replace solver visited storage with a flat open-addressed table.
+- [x] Replace solver visited storage with a flat open-addressed table.
+
+  Status: implemented as `FlatBestDepth` in `native/src/solver/main.cpp`.
+  It stores the full `StateKey` plus best depth, uses linear probing with
+  explicit growth, preserves stale-pop `<` and child-duplicate `<=` semantics,
+  and reports probe/growth counters in solver JSON and focus benchmark JSON.
+
+  Current one-run focus reading after this checkpoint:
+
+  ```text
+  status: interpreted={"solved":50} compiled={"solved":50}
+  median_elapsed_ms compiled/interpreted=0.922x (-7.8%)
+  median_visited_ms compiled/interpreted=0.772x (-22.8%)
+  median_graph_overhead_ms compiled/interpreted=0.927x (-7.3%)
+  flat compiled graph bucket: 55.2ms, down from the prior 57.4ms reading
+  ```
 
   Intent: `std::unordered_map<StateKey, depth>` is convenient but can be a poor
   fit for hundreds of thousands of small, fixed-shape solver keys.
