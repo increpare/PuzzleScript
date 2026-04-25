@@ -293,14 +293,17 @@ std::string inputName(ps_input input) {
     return "unknown";
 }
 
-std::vector<ps_input> solverInputs() {
-    return {
+std::vector<ps_input> solverInputsForGame(const Game& game) {
+    std::vector<ps_input> inputs{
         PS_INPUT_RIGHT,
         PS_INPUT_UP,
         PS_INPUT_DOWN,
         PS_INPUT_LEFT,
-        PS_INPUT_ACTION,
     };
+    if (game.metadataMap.find("noaction") == game.metadataMap.end()) {
+        inputs.push_back(PS_INPUT_ACTION);
+    }
+    return inputs;
 }
 
 std::string strategyName(Strategy strategy) {
@@ -822,7 +825,7 @@ Result runSearch(
     result.maxFrontier = 1;
 
     uint64_t nextTie = 1;
-    const auto inputs = solverInputs();
+    const auto inputs = solverInputsForGame(*game);
 
     while (!frontier.empty()) {
         if (Clock::now() >= deadline) {
