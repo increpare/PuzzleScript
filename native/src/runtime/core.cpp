@@ -4851,7 +4851,12 @@ size_t listInputs(ps_input* output, size_t capacity) {
 }
 
 bool compiledTickDispatchEnabled() {
-    return !ruleDebugEnabled() && !randomDebugEnabled() && !rigidDebugEnabled();
+    return !ruleDebugEnabled()
+        && !randomDebugEnabled()
+        && !rigidDebugEnabled()
+        && !againDebugEnabled()
+        && !movementDebugEnabled()
+        && !audioDebugEnabled();
 }
 
 ps_step_result genericStep(Session& session, ps_input input, RuntimeStepOptions options) {
