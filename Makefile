@@ -129,7 +129,7 @@ endef
 define COMPILED_RULES_EMIT_SHARDED
 out_stamp="$(1)/sources.stamp"; \
 out_stamp_text="max_rows=$(COMPILED_RULES_MAX_ROWS)"; \
-if [ "$(COMPILED_RULES_REUSE_SHARDED_CPP)" = "true" ] && [ -f "$$sources_file" ] && [ -f "$$out_stamp" ] && [ "$$(cat "$$out_stamp")" = "$$out_stamp_text" ] && [ ! "$(PUZZLESCRIPT_CPP)" -nt "$$sources_file" ]; then \
+if [ "$(COMPILED_RULES_REUSE_SHARDED_CPP)" = "true" ] && [ -f "$$sources_file" ] && [ -f "$$out_stamp" ] && [ "$$(cat "$$out_stamp")" = "$$out_stamp_text" ] && [ ! "$(PUZZLESCRIPT_CPP)" -nt "$$out_stamp" ]; then \
 	echo "compiled-rules: reuse output=$$out_cpp_dir"; \
 else \
 	$(PUZZLESCRIPT_CPP) compile-rules "$(2)" --emit-cpp-dir "$$out_cpp_dir" --emit-sources-list "$$sources_file" --symbol $(3) --max-rows $(COMPILED_RULES_MAX_ROWS); \
@@ -302,6 +302,9 @@ generator:
 		exit 2; \
 	fi
 	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		set -e; \
+		if [ ! -f "$(GENERATOR_GAME)" ]; then echo "Missing generator game: $(GENERATOR_GAME)"; exit 2; fi; \
+		if [ ! -f "$(GENERATOR_SPEC)" ]; then echo "Missing generator spec: $(GENERATOR_SPEC)"; exit 2; fi; \
 		$(COMPILED_RULES_BOOTSTRAP_CPP); \
 		hash=$$(shasum -a 256 "$(GENERATOR_GAME)" | awk '{print $$1}'); \
 		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/generator-$$hash"; \
@@ -314,7 +317,7 @@ generator:
 		out_stamp="$$out_dir/compiled_rules.stamp"; \
 		out_stamp_text="max_rows=$(COMPILED_RULES_MAX_ROWS)"; \
 		mkdir -p "$$out_dir"; \
-		if [ "$(COMPILED_RULES_REUSE_SINGLE_CPP)" = "true" ] && [ -f "$$out_cpp" ] && [ -f "$$out_stamp" ] && [ "$$(cat "$$out_stamp")" = "$$out_stamp_text" ] && [ ! "$(GENERATOR_GAME)" -nt "$$out_cpp" ] && [ ! "$(PUZZLESCRIPT_CPP)" -nt "$$out_cpp" ]; then \
+		if [ "$(COMPILED_RULES_REUSE_SINGLE_CPP)" = "true" ] && [ -f "$$out_cpp" ] && [ -f "$$out_stamp" ] && [ "$$(cat "$$out_stamp")" = "$$out_stamp_text" ] && [ ! "$(PUZZLESCRIPT_CPP)" -nt "$$out_stamp" ]; then \
 			echo "compiled-rules: reuse output=$$out_cpp"; \
 		else \
 			$(PUZZLESCRIPT_CPP) compile-rules "$(GENERATOR_GAME)" --emit-cpp "$$out_cpp" --symbol generator_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
@@ -343,6 +346,8 @@ solver:
 		exit 2; \
 	fi
 	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		set -e; \
+		if [ ! -f "$(SOLVER_GAME)" ]; then echo "Missing solver game: $(SOLVER_GAME)"; exit 2; fi; \
 		$(COMPILED_RULES_BOOTSTRAP_CPP); \
 		hash=$$(shasum -a 256 "$(SOLVER_GAME)" | awk '{print $$1}'); \
 		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-$$hash"; \
@@ -355,7 +360,7 @@ solver:
 		out_stamp="$$out_dir/compiled_rules.stamp"; \
 		out_stamp_text="max_rows=$(COMPILED_RULES_MAX_ROWS)"; \
 		mkdir -p "$$out_dir"; \
-		if [ "$(COMPILED_RULES_REUSE_SINGLE_CPP)" = "true" ] && [ -f "$$out_cpp" ] && [ -f "$$out_stamp" ] && [ "$$(cat "$$out_stamp")" = "$$out_stamp_text" ] && [ ! "$(SOLVER_GAME)" -nt "$$out_cpp" ] && [ ! "$(PUZZLESCRIPT_CPP)" -nt "$$out_cpp" ]; then \
+		if [ "$(COMPILED_RULES_REUSE_SINGLE_CPP)" = "true" ] && [ -f "$$out_cpp" ] && [ -f "$$out_stamp" ] && [ "$$(cat "$$out_stamp")" = "$$out_stamp_text" ] && [ ! "$(PUZZLESCRIPT_CPP)" -nt "$$out_stamp" ]; then \
 			echo "compiled-rules: reuse output=$$out_cpp"; \
 		else \
 			$(PUZZLESCRIPT_CPP) compile-rules "$(SOLVER_GAME)" --emit-cpp "$$out_cpp" --symbol solver_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
@@ -411,6 +416,7 @@ endif
 
 solver_smoke_tests: $(SOLVER_TARGET_PREREQ)
 	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		set -e; \
 		$(COMPILED_RULES_BOOTSTRAP_CPP); \
 		hash=$$(find src/tests/solver_smoke_tests -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
 		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-smoke-$$hash"; \
@@ -428,6 +434,7 @@ solver_smoke_tests: $(SOLVER_TARGET_PREREQ)
 
 solver_determinism_tests: $(SOLVER_TARGET_PREREQ)
 	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		set -e; \
 		$(COMPILED_RULES_BOOTSTRAP_CPP); \
 		hash=$$(find src/tests/solver_smoke_tests -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
 		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-smoke-$$hash"; \
@@ -445,6 +452,7 @@ solver_determinism_tests: $(SOLVER_TARGET_PREREQ)
 
 solver_parity_smoke: $(SOLVER_TARGET_PREREQ)
 	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		set -e; \
 		$(COMPILED_RULES_BOOTSTRAP_CPP); \
 		hash=$$(find src/tests/solver_smoke_tests -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
 		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-smoke-$$hash"; \
@@ -472,6 +480,8 @@ generator_benchmark: $(PUZZLESCRIPT_GENERATOR)
 
 solver_tests_cpp: $(SOLVER_TARGET_PREREQ)
 	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		set -e; \
+		if [ ! -e "$(SOLVER_TESTS_CORPUS)" ]; then echo "Missing solver corpus: $(SOLVER_TESTS_CORPUS)"; exit 2; fi; \
 		$(COMPILED_RULES_BOOTSTRAP_CPP); \
 		hash=$$(find "$(SOLVER_TESTS_CORPUS)" -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
 		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-corpus-$$hash"; \
@@ -494,6 +504,8 @@ solver_tests: solver_smoke_tests solver_determinism_tests solver_parity_smoke so
 
 solver_benchmark: $(SOLVER_TARGET_PREREQ)
 	@if [ "$(SPECIALIZE)" = "true" ]; then \
+		set -e; \
+		if [ ! -e "$(SOLVER_BENCH_CORPUS)" ]; then echo "Missing solver benchmark corpus: $(SOLVER_BENCH_CORPUS)"; exit 2; fi; \
 		$(COMPILED_RULES_BOOTSTRAP_CPP); \
 		hash=$$(find "$(SOLVER_BENCH_CORPUS)" -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
 		out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/solver-bench-$$hash"; \
