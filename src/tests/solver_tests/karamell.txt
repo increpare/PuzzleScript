@@ -1,0 +1,933 @@
+title Karamell
+author Stephen Lavelle
+homepage www.increpare.com
+run_rules_on_level_start
+
+verbose_logging
+
+require_player_movement
+
+background_color #9c5445
+
+========
+OBJECTS
+========
+
+nostril 
+#231617 transparent
+10001
+00000
+00000
+00000
+10001
+
+Background
+#3d2d2e
+
+Target
+#231617
+
+targetp_tl
+#3d2d2e
+0....
+.....
+.....
+.....
+.....
+
+targetp_tr
+#3d2d2e
+....0
+.....
+.....
+.....
+.....
+
+targetp_bl
+#3d2d2e
+.....
+.....
+.....
+.....
+0....
+
+targetp_br
+#3d2d2e
+.....
+.....
+.....
+.....
+....0
+
+
+border_l
+#78403e
+0....
+0....
+0....
+0....
+0....
+
+
+
+border_r
+#78403e
+....0
+....0
+....0
+....0
+....0
+
+
+
+border_u
+#78403e
+00000
+.....
+.....
+.....
+.....
+
+
+
+border_d
+#78403e
+.....
+.....
+.....
+.....
+00000
+
+Uvula_c
+#2a1c1d #231617
+00000
+10001
+10001
+10001
+10001
+
+Uvula
+#2a1c1d #231617
+10001
+00000
+00000
+00000
+10001
+
+toffee
+#bb6a25 #d07d36 #e4944f
+.111.
+11111
+11111
+11111
+.111.
+
+
+toffee_tl
+#bb6a25 #d07d36 #e4944f
+.1111
+01212
+01212
+01212
+01212
+
+
+toffee_tr
+#bb6a25 #d07d36 #e4944f
+1111.
+12121
+12121
+12121
+12121
+
+
+toffee_bl
+#bb6a25 #d07d36 #e4944f
+01212
+01212
+01212
+01212
+.1111
+
+
+toffee_br
+#bb6a25 #d07d36 #e4944f
+12121
+12121
+12121
+12121
+1111.
+
+toffee_full
+#bb6a25 #d07d36 #e4944f #ffffff
+.333.
+13331
+11111
+11111
+11111
+
+toffee_fulldec
+#ffffff
+.000.
+.000.
+.....
+.....
+.....
+
+toffee_fulldec_b
+#ffffff
+.....
+.....
+.....
+..0..
+.000.
+
+tongue 
+darkred
+
+lips 
+darkred
+
+
+Wall
+#9c5445
+
+Gum
+#ce474b
+.....
+00000
+00000
+00000
+00.00
+
+Gum_Full
+#ce474b #ffffff
+.....
+00000
+00000
+00000
+00100
+
+
+
+zahn_d_t
+#ffffff
+.....
+.0.0.
+.0.0.
+.000.
+.000.
+
+zahn_d_b
+#ffffff
+.000.
+.000.
+.000.
+.000.
+.....
+
+con_u
+yellow
+..0..
+.....
+.....
+.....
+.....
+
+con_d
+yellow
+.....
+.....
+.....
+.....
+..0..
+
+con_l
+yellow
+.....
+.....
+0....
+.....
+.....
+
+con_r
+yellow
+.....
+.....
+....0
+.....
+.....
+
+maketooth
+transparent
+
+marker
+red
+.....
+.....
+..0..
+.....
+.....
+
+againing 
+transparent
+
+againing2
+transparent
+
+supported
+green
+.....
+.....
+..0..
+.....
+.....
+
+todrop
+transparent
+
+shadow
+black
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+m_l
+transparent
+
+m_r
+transparent
+
+m_t
+transparent
+
+m_b
+transparent
+
+=======
+LEGEND
+=======
+
+toffee_any = toffee or toffee_full
+
+zahn = zahn_d_t or zahn_d_b
+player = gum or gum_full
+gum_any = player
+
+motile = player or toffee or zahn or toffee_any
+droppable_tile = toffee or zahn or toffee_any
+motile_nonsticking = player or toffee or zahn_d_b or toffee_any
+
+wall_like = wall or lips or tongue
+
+connection = con_u or con_d or con_l or con_r
+solid = zahn or player or wall_like or toffee
+
+
+uvula_part = uvula or uvula_c
+
+toffee_bottom = toffee_bl or toffee_br
+
+toffeepart = toffee_tl or toffee_tr or toffee_bl or toffee_br
+toffeedec = toffee_fulldec or toffee_fulldec_b
+
+target_pixels = targetp_tl or targetp_tr or targetp_bl or targetp_br
+
+decoration = toffeedec 
+
+target_part = uvula or uvula_c or target
+wall_toborder = wall or tongue
+. = Background
+u = uvula
+w = uvula_c
+L = lips
+# = Wall
+P = Player
+G = gum_full
+i = gum
+D = zahn_d_b
+T = Toffee
+H = Target
+n = nostril and wall
+o = tongue
+
+=======
+SOUNDS
+=======
+sfx0 65988703 (pull)
+sfx1 70735502 (swallow)
+sfx2 23125707 (bite)
+
+================
+COLLISIONLAYERS
+================
+
+
+con_r
+con_l
+con_u
+con_d
+marker
+
+
+supported
+Background
+uvula, uvula_c
+Target
+targetp_tl
+targetp_tr
+targetp_bl
+targetp_br
+Wall, zahn_d_t, zahn_d_b, player, lips, tongue
+toffee, toffee_full
+
+border_u
+border_d
+border_l
+border_r
+toffee_tl 
+toffee_tr 
+toffee_bl 
+toffee_br
+toffee_fulldec
+TOFFEE_FULLDEC_B
+maketooth
+againing
+againing2
+todrop
+shadow
+nostril
+m_l
+m_r
+m_t
+m_b
+
+
+
+======
+RULES
+======
+
+[shadow] -> [ ]
+[againing2] [ player ] ->[againing] [ action player ]
+[againing2]->[]
+[motile todrop] [ player ]->[shadow no connection no decoration no toffeepart] [ player againing2 ]  again
+
+[marker]->[]
+right [ player | player ] -> [ player con_r | player con_l ]
+down [ gum_full | zahn_d_b ] -> [ gum_full con_d | zahn_d_b con_u ]
+
+right [ stationary player no againing no againing2 ] [ no toffee | toffee | toffee ] -> [ player ] [ | toffee m_l | toffee m_r ]
+down [ stationary player no againing no againing2 ] [ no toffee | toffee | toffee ] -> [ player ] [ | toffee m_t | toffee m_b ]
+
+[ m_t m_l ] -> [toffee_tl]
+[ m_b m_l ] -> [toffee_bl]
+[ m_t m_r ] -> [toffee_tr]
+[ m_b m_r ] -> [toffee_br]
+
+right [ stationary player no againing no againing2 ] [ toffee | toffee ]  -> [ player ] [ toffee con_r | toffee con_l ]
+down  [ stationary player no againing no againing2 ] [ toffee | toffee ]  -> [ player ] [ toffee con_d | toffee con_u ]
+
+right [stationary player no againing no againing2 ] [ target | no target no uvula_part] -> [player] [ targetp_tr targetp_br target  | ]
+right [stationary player no againing no againing2 ] [ no target no uvula_part| target ] -> [player] [ | targetp_tl targetp_bl target ]
+
+down  [stationary player] [ target | targetp_tr ] -> [player] [ target | ]
+down  [stationary player] [ target | targetp_tl ] -> [player] [ target | ]
+up  [stationary player] [ target | targetp_br ] -> [player] [ target | ]
+up  [stationary player] [ target | targetp_bl ] -> [player] [ target | ]
+
+
+(propagate movements)
+
+up [ moving motile con_u | motile ] -> [ moving motile con_u | moving motile ] 
++ down [ moving motile con_d | motile ] -> [ moving motile con_d | moving motile ] 
++ left [ moving motile con_l | motile ] -> [ moving motile con_l | moving motile ] 
++ right [ moving motile con_r | motile ] -> [ moving motile con_r | moving motile ]  
++ [ > motile | motile ] -> [ > motile | > motile ]
+
+
+(back-propagate blockages)
+
+	(toffee can't walk into walls)
+[ > motile | wall_like ] -> [ motile | wall_like ]
+
++ [ > zahn | stationary zahn ] -> [ zahn | zahn ]
+
++ horizontal [ > toffee | stationary zahn ] -> [ stationary toffee | zahn]
++ [ > toffee_any | stationary toffee_any ] -> [ stationary toffee_any | toffee_any]
+	(restick tooth in gums)
++ down [ down gum | stationary zahn_d_t con_d ] -> [ down gum_full con_d | ] sfx2
+	
+    (back-propagate non-movement in toffees)
++ up [ stationary toffee_any con_u | motile ] -> [ stationary toffee_any con_u | stationary motile ] 
++ down [ stationary toffee_any con_d | motile ] -> [ stationary toffee_any con_d | stationary motile ] 
++ left [ stationary toffee_any con_l | motile ] -> [ stationary toffee_any con_l | stationary motile ] 
++ right [ stationary toffee_any con_r | motile ] -> [ stationary toffee_any con_r | stationary motile ]  
+
++ down [ stationary zahn_d_t con_d | motile ] -> [ stationary zahn_d_t con_d | stationary motile ] 
++ down [ stationary zahn_d_t con_d | stationary motile ] -> [  zahn_d_t con_d | stationary motile ] 
+
+    (back-propagate non-movement in gums)
++ up [ stationary gum_any con_u | motile ] -> [ stationary gum_any con_u | stationary motile ] 
++ down [ stationary gum_any con_d | motile ] -> [ stationary gum_any con_d | stationary motile ] 
++ left [ stationary gum_any con_l | motile ] -> [ stationary gum_any con_l | stationary motile ] 
++ right [ stationary gum_any con_r | motile ] -> [ stationary gum_any con_r | stationary motile ]
+
++ up [ stationary zahn_d_b con_u | motile ] -> [ stationary zahn_d_b con_u | stationary motile ] 
+
+
+
++ [ > gum_any | stationary motile_nonsticking ] -> [ gum_any | motile_nonsticking ] 
+
++ [ > toffee | stationary toffee ] -> [ toffee | toffee ] 
+
+
+	(tooth unstick)
++ down [ up gum_full con_d | stationary toffee_full con_u ] -> [ up gum_full maketooth | toffee_full ]
+
+
+[stationary motile]->[marker motile]
+[ > motile connection ] -> [ > motile > connection ]
+[ > toffee_any toffeepart ] -> [ > toffee_any > toffeepart ]
+
+late down [ gum_full | toffee zahn_d_b ] -> [ gum_full | toffee_full ] sfx2
+
+late down [ gum_full | maketooth | toffee_full ] -> [ gum | zahn_d_t con_d | toffee_full con_u ] sfx0
+
+late down [ toffee | toffee_full ] -> [ toffee con_d | toffee_full con_u ]
+(decoration steps)
+
+late [ decoration ] -> [ ]
+
+late [toffee_full ] -> [ toffee_full toffee_fulldec ]
+late [toffee_bottom con_d ] -> [ toffee_bottom con_d toffee_fulldec_b ]
+
+(check if things are supported)
+
+late [supported]->[]
+late [ gum_any ] -> [ gum_any supported ]
+late [ motile no target_part ] -> [ motile supported ]
+
+late up [ supported con_u | ] -> [ supported con_u | supported ]
++ late down [ supported con_d | ] -> [ supported con_d | supported ]
++ late left [ supported con_l | ] -> [ supported con_l | supported ]
++ late right [ supported con_r | ] -> [ supported con_r | supported ]
+
+
+late [againing]->[]
+
+late [droppable_tile no supported] [player ]->[droppable_tile todrop] [player againing] sfx1 again
+
+late right [ wall_toborder | no wall_like ] -> [ wall_toborder border_r |  ]
+late left [ wall_toborder | no wall_like ] -> [ wall_toborder border_l |  ]
+late up [ wall_toborder | no wall_like ] -> [ wall_toborder border_u | ]
+late down [ wall_toborder | no wall_like ] -> [ wall_toborder border_d |  ]
+late [ player ] [ againing2] ->[ player againing2] [againing2]
+==============
+WINCONDITIONS
+==============
+
+no toffee
+no shadow
+
+=======
+LEVELS
+=======
+
+message Level 1 von 3 - Karamell, den liebe ich!
+
+######n#n######
+###############
+##lllllllllll##
+#l...........l#
+#.....ggg.....#
+#.....ddd.....#
+#.....hwh.....#
+#...#.huh.....#
+#.....hhh.....#
+#.............#
+#......tt.....#
+#......tt.....#
+#l...........l#
+##lllllllllll##
+
+message Level 2 von 3 - Ich bin ein Nimmersat des Karamellen
+
+########n#n########
+###################
+##lllllllllllllll##
+#l...............l#
+#.....gggg........#
+#.....dddd........#
+#.................#
+#.......#.........#
+#.................#
+#.................#
+#....tt...tt......#
+#....tt...tt......#
+#..............####
+#....#######...hwh#
+#..............huh#
+#lllllllllll...hhh#
+###########l...hhh#
+###########l...hhh#
+###########lllllll#
+
+message Level 3 von 3 - Meine Zaehne werden nicht ausfallen, wenn ich die schlucke!
+
+###########n#n#############
+###########################
+#lllllllllllllllllllllll###
+#.......................###
+#.......................###
+#..hhwhh........gggg....###
+#..hhuhh....#...dddd....###
+#..hhhhh................###
+#..hhhhh................###
+#..hhhhh................###
+#..hhhhh....tt....tt....###
+#..hhhhh....tt....tt....###
+#.......................###
+#.......................###
+#..........#....###########
+#..........#...############
+#..........#...############
+#..........#..##..........#
+#..........#..##..........#
+#..........#..##....tt....#
+#..........#tt##....tt....#
+#...........tt............#
+#.........................#
+#..........lllllllllllllll#
+#..........l###############
+#lllllllllll###############
+
+
+Message Ich glaube an ... Karamell!
+
+hhhhhhhhhhhhhhhhhhhhhhhhh
+hhhhhhlllllllllllllhhhhhh
+hhhhhlllllllllllllllhhhhh
+hhhhhlllllllllllllllhhhhh
+hhhhhll###########llhhhhh
+hhhhhl###d#####d###lhhhhh
+hhh#h###############h#hhh
+hhh###################hhh
+hhh#h###############h#hhh
+hhhhh######n#n######hhhhh
+hhhhh###############hhhhh
+hhhhh##lllllllllll##hhhhh
+hhhhh##...hhwhh...##hhhhh
+hhhhh##lllllllllll##hhhhh
+hhhhh###############hhhhh
+hhhhh###############hhhhh
+hhhhhhhhhh#####hhhhhhhhhh
+hhhhhhhhhh#####hhhhhhhhhh
+
+(
+###########################
+#.......................###
+#.......................###
+#..hhwhh........gggg....###
+#..hhuhh....#...dddd....###
+#..hhhhh................###
+#..hhhhh................###
+#..hhhhh................###
+#..hhhhh....tt....tt....###
+#..hhhhh....tt....tt....###
+#.......................###
+#.......................###
+#..........#....###########
+#..........#...############
+#..........#...############
+#..........#..##..........#
+#..........#..##..........#
+#..........#..##....tt....#
+#..........#tt##....tt....#
+#...........tt............#
+#.........................#
+#..........################
+#..........################
+###########################
+)
+
+(
+(ooops this doesn't work)
+####################
+#..................#
+#..................#
+#..................#
+#...gggg...........#
+#...gggd....#......#
+#...ggd............#
+#...gd.............#
+#...d.tt...........#
+#.....tt.#.........#
+#.....####...##....#
+#........#.........#
+#........#.........#
+#........#.........#
+####################
+
+
+####################
+#..................#
+#..................#
+#..................#
+#.....gggg...tt....#
+#.....dddd...tt....#
+#..................#
+#......#.....tt....#
+#............tt....#
+#..................#
+#..................#
+#..................#
+#..................#
+#..................#
+#..................#
+#..................#
+#..................#
+#..................#
+#..................#
+####################
+
+
+######################
+#....................#
+#....................#
+#....................#
+#..............tt....#
+#..............tt....#
+#....................#
+#....................#
+#..gggg...#....tt....#
+#..dddd........tt....#
+#....................#
+#....................#
+#....................#
+#....................#
+#....................#
+#.......#..#.........#
+#.......#..#.........#
+#.......#..#.........#
+#.......#..#.........#
+#.......#..#.........#
+#.......#..#.........#
+#....####..####......#
+#....................#
+#....................#
+#....##########......#
+#....................#
+#....................#
+#....................#
+#....................#
+######################
+
+###############################
+#.........................#...#
+#.hhwhh...................#...#
+#.hhuhh...................#...#
+#.hhhhh.......#.....tt....#...#
+#.hhhhh.............tt....#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh.gggg........tt....#...#
+#.hhhhh.dddd........tt....#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh...####..###########...#
+#.hhhhh...####..###########...#
+#.hhhhh...####..###########...#
+#.hhhhh...####..####..........#
+#.hhhhh...####..####..........#
+#.hhhhh...####..####....tt....#
+#.hhhhh...####tt####....tt....#
+#.hhhhh.......tt..............#
+#.............................#
+#.........##########..........#
+#.........##########..........#
+#.........##########..........#
+#.........##########..........#
+###############################
+
+###############################
+#.........................#...#
+#.hhwhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh.......#.....tt....#...#
+#.hhhhh.............tt....#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh.gggg........tt....#...#
+#.hhhhh.dddd........tt....#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh...####..###########...#
+#.hhhhh...####..###########...#
+#.hhhhh...####..###########...#
+#.hhhhh...####..####..........#
+#.hhhhh...####..####..........#
+#.hhhhh...####..####....tt....#
+#.hhhhh...####tt####....tt....#
+#.hhhhh.......tt..............#
+#.............................#
+####################....tt....#
+####################....tt....#
+####################..........#
+####################..........#
+###############################
+
+
+
+###############################
+#.........................#...#
+#.hhwhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh.......#.....tt....#...#
+#.hhhhh.............tt....#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh.gggg........tt....#...#
+#.hhhhh.dddd........tt....#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh...####..###########...#
+#.hhhhh...####..###########...#
+#.hhhhh...####..###########...#
+#.hhhhh...####..####..........#
+#.hhhhh...####..####..........#
+#.hhhhh...####..####....tt....#
+#.hhhhh...####tt####....tt....#
+#.hhhhh.......tt..............#
+#.............................#
+####################....tt....#
+####################....tt....#
+####################..........#
+####################..........#
+###############################
+
+######################
+#....................#
+#....................#
+#....................#
+#..............tt....#
+#..............tt....#
+#....................#
+#....................#
+#..gggg...#....tt....#
+#..dddd........tt....#
+#....................#
+#....................#
+#....................#
+#....................#
+#....................#
+#....####..####......#
+#....####..####......#
+#....####..####......#
+#....####..####......#
+#....####..####......#
+#....####..####......#
+#....####tt####......#
+#........tt..........#
+#....................#
+#....##########......#
+#....................#
+#....................#
+#....................#
+#....................#
+######################
+
+###############################
+#.........................#...#
+#.hhwhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh.......#.....tt....#...#
+#.hhhhh.............tt....#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.hhhhh.gggg........tt....#...#
+#.hhhhh.dddd........tt....#...#
+#.hhhhh...................#...#
+#.hhhhh...................#...#
+#.........................#...#
+#.........................#...#
+#.........................#...#
+#...........#....##########...#
+#...........##..###########...#
+#...........##..###########...#
+#...........##..####..........#
+#...........##..####..........#
+#...........##..####....tt....#
+#...........##tt####....tt....#
+#.............tt..............#
+#.............................#
+####################....tt....#
+####################....tt....#
+####################..........#
+####################..........#
+###############################
+
+
+
+###############################
+#.........................#####
+#.hhwhh...................#####
+#.hhhhh...................#####
+#.hhhhh.......#.....tt....#####
+#.hhhhh.............tt....#####
+#.hhhhh...................#####
+#.hhhhh...................#####
+#.hhhhh.gggg........tt....#####
+#.hhhhh.dddd........tt....#####
+#.hhhhh...................#####
+#.hhhhh...................#####
+#.........................#####
+#.........................#####
+#.........................#####
+#............#....#############
+#............#...##############
+#............#...##############
+#............#..####..........#
+#............#..####..........#
+#............#..####....tt....#
+#............#tt####....tt....#
+#.............tt..............#
+#.............................#
+#............##################
+#............##################
+###############################
+
+###########################
+#.......................###
+#.hhwhh.........gggg....###
+#.hhuhh.....#...dddd....###
+#.hhhhh.................###
+#.hhhhh.................###
+#.hhhhh.....tt....tt....###
+#.hhhhh.....tt....tt....###
+#.......................###
+#.......................###
+#..........#....###########
+#..........#...############
+#..........#...############
+#..........#..##..........#
+#..........#..##..........#
+#..........#..##....tt....#
+#..........#tt##....tt....#
+#...........tt............#
+#.........................#
+#..........################
+#..........################
+###########################
+)

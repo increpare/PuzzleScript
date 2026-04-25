@@ -1,0 +1,661 @@
+title I SURE LOOK TASTY!
+author Stephen Lavelle
+homepage www.increpare.com
+
+
+run_rules_on_level_start
+
+verbose_logging
+========
+OBJECTS
+========
+
+Background
+GREEN
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+p1
+gray 
+.....
+.....
+..0..
+.....
+.....
+
+p2
+gray 
+.....
+.....
+..0..
+.....
+.....
+
+p3
+gray 
+.....
+.....
+..0..
+.....
+.....
+
+p4
+gray 
+.....
+.....
+..0..
+.....
+.....
+
+p5
+gray 
+.....
+.....
+..0..
+.....
+.....
+
+
+(
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.)
+
+pixel_eye
+orange white blue
+00000
+01110
+01210
+01210
+00000
+
+
+pixel_orange 
+orange
+
+pixel_white 
+white
+
+pixel_blue 
+blue
+
+pixel_mouth
+orange red white darkred black
+01110
+12221
+34443
+12221
+01110
+
+
+wall_black 
+black
+
+wall_orange 
+orange
+
+wall_white 
+white
+
+wall_blue 
+blue
+
+wall_red
+red
+
+wall_darkred
+darkred
+
+row_1 a
+TRANSPARENT
+
+row_2 s
+TRANSPARENT
+
+row_3 d
+TRANSPARENT
+
+row_4 f
+TRANSPARENT
+
+row_5 g
+TRANSPARENT
+
+vr_1
+TRANSPARENT
+0....
+.....
+.....
+.....
+.....
+
+vr_2
+TRANSPARENT
+.0...
+.....
+.....
+.....
+.....
+
+vr_3
+TRANSPARENT
+..0..
+.....
+.....
+.....
+.....
+
+vr_4
+TRANSPARENT
+...0.
+.....
+.....
+.....
+.....
+
+vr_5
+TRANSPARENT
+....0
+.....
+.....
+.....
+.....
+
+dead
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+goal
+gray
+.....
+.....
+..0..
+.....
+.....
+
+quasigrenze
+TRANSPARENT
+
+mund
+TRANSPARENT
+
+=======
+LEGEND
+=======
+
+. = Background
+1 = p1
+2 = p2
+3 = p3
+4 = p4
+5 = p5
+
+O = Target
+
+b = goal 
+n = goal and row_1
+
+pixel = pixel_eye or pixel_white or pixel_orange or pixel_blue or pixel_mouth
+
+player = p1 or p2 or p3 or p4 or p5
+
+q = pixel_eye and p1
+w = pixel_orange and p2
+e = pixel_white and p3
+r = pixel_blue and p4
+t = pixel_blue and p5
+y = pixel_mouth and p2
+u = pixel_orange and p1
+
+row = row_1 or row_2 or row_3 or row_4 or row_5
+wall = wall_black or wall_orange or wall_white or wall_blue or wall_red or wall_darkred
+obstacle = wall
+
+vr = vr_1 or vr_2 or vr_3 or vr_4 or vr_5
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+vr
+Target
+Wall
+pixel
+Player
+row
+goal
+dead
+quasigrenze
+mund
+
+======
+RULES
+======
+
+
+[dead]->cancel
+
+[ > player pixel ] -> [ > player > pixel ]
+
+(
+[ moving player ] -> [ player ]
+
+[ player | player | player | player | player > pixel ] -> [ > player | > player | > player | > player | > player > pixel ]
+
+[ orthogonal player | stationary player ] -> [ orthogonal player | orthogonal player ]
+)
+
+
+down [ row_1 | row_1 | row_1 | row_1 | row_1 ] -> [ row_1 vr_1 | row_1 vr_2 | row_1 vr_3 | row_1 vr_4 | row_1 vr_5 ]
+down [ row_2 | row_2 | row_2 | row_2 | row_2 ] -> [ row_2 vr_1 | row_2 vr_2 | row_2 vr_3 | row_2 vr_4 | row_2 vr_5 ]
+down [ row_3 | row_3 | row_3 | row_3 | row_3 ] -> [ row_3 vr_1 | row_3 vr_2 | row_3 vr_3 | row_3 vr_4 | row_3 vr_5 ]
+down [ row_4 | row_4 | row_4 | row_4 | row_4 ] -> [ row_4 vr_1 | row_4 vr_2 | row_4 vr_3 | row_4 vr_4 | row_4 vr_5 ]
+down [ row_5 | row_5 | row_5 | row_5 | row_5 ] -> [ row_5 vr_1 | row_5 vr_2 | row_5 vr_3 | row_5 vr_4 | row_5 vr_5 ]
+
+[ ^ player wall | ^ player wall | ^ player wall | ^ player wall | ^ player wall ] -> [ quasigrenze ^ player wall | quasigrenze ^ player wall | quasigrenze ^ player wall | quasigrenze ^ player wall | quasigrenze ^ player wall ]
+
+[ > pixel | > pixel | > pixel | > pixel | > pixel | obstacle ] [ moving player ] -> [ > pixel | > pixel | > pixel | > pixel | > pixel | obstacle ] [  player ] 
+
+[ > pixel | quasigrenze ] [ moving player ] -> [ > pixel | quasigrenze ] [  player ] 
+[quasigrenze]->[]
+
+[ > pixel | wall ] -> [ stationary pixel | wall ]
+[ > pixel | stationary pixel ] -> [ stationary pixel | pixel ]
+
+late [wall]->[]
+late [mund]->[]
+late [ pixel no player ] -> cancel
+
+
+
+late right [ pixel_orange 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ pixel_orange 1 | 1 | 1 | 1 | 1 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_1 ]
+late right [ pixel_white 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ pixel_white 1 | 1 | 1 | 1 | 1 ] [ wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | | | | | | row_1 ]
+late right [ pixel_blue 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ pixel_blue 1 | 1 | 1 | 1 | 1 ] [ wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | | | | | | row_1 ]
+late right [ 1 | pixel_orange 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | pixel_orange 1 | 1 | 1 | 1 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_1 ]
+late right [ 1 | pixel_white 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | pixel_white 1 | 1 | 1 | 1 ] [ | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | row_1 ]
+late right [ 1 | pixel_blue 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | pixel_blue 1 | 1 | 1 | 1 ] [ | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | row_1 ]
+late right [ 1 | 1 | pixel_orange 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | pixel_orange 1 | 1 | 1 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_1 ]
+late right [ 1 | 1 | pixel_white 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | pixel_white 1 | 1 | 1 ] [ | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | row_1 ]
+late right [ 1 | 1 | pixel_blue 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | pixel_blue 1 | 1 | 1 ] [ | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | row_1 ]
+late right [ 1 | 1 | 1 | pixel_orange 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | pixel_orange 1 | 1 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_1 ]
+late right [ 1 | 1 | 1 | pixel_white 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | pixel_white 1 | 1 ] [ | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | row_1 ]
+late right [ 1 | 1 | 1 | pixel_blue 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | pixel_blue 1 | 1 ] [ | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | row_1 ]
+late right [ 1 | 1 | 1 | 1 | pixel_orange 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | 1 | pixel_orange 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_1 ]
+late right [ 1 | 1 | 1 | 1 | pixel_white 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | 1 | pixel_white 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white row_1 ]
+late right [ 1 | 1 | 1 | 1 | pixel_blue 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | 1 | pixel_blue 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue row_1 ]
+late right [ pixel_orange 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ pixel_orange 2 | 2 | 2 | 2 | 2 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_2 ]
+late right [ pixel_white 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ pixel_white 2 | 2 | 2 | 2 | 2 ] [ wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | | | | | | row_2 ]
+late right [ pixel_blue 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ pixel_blue 2 | 2 | 2 | 2 | 2 ] [ wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | | | | | | row_2 ]
+late right [ 2 | pixel_orange 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | pixel_orange 2 | 2 | 2 | 2 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_2 ]
+late right [ 2 | pixel_white 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | pixel_white 2 | 2 | 2 | 2 ] [ | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | row_2 ]
+late right [ 2 | pixel_blue 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | pixel_blue 2 | 2 | 2 | 2 ] [ | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | row_2 ]
+late right [ 2 | 2 | pixel_orange 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | pixel_orange 2 | 2 | 2 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_2 ]
+late right [ 2 | 2 | pixel_white 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | pixel_white 2 | 2 | 2 ] [ | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | row_2 ]
+late right [ 2 | 2 | pixel_blue 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | pixel_blue 2 | 2 | 2 ] [ | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | row_2 ]
+late right [ 2 | 2 | 2 | pixel_orange 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | pixel_orange 2 | 2 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_2 ]
+late right [ 2 | 2 | 2 | pixel_white 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | pixel_white 2 | 2 ] [ | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | row_2 ]
+late right [ 2 | 2 | 2 | pixel_blue 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | pixel_blue 2 | 2 ] [ | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | row_2 ]
+late right [ 2 | 2 | 2 | 2 | pixel_orange 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | 2 | pixel_orange 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_2 ]
+late right [ 2 | 2 | 2 | 2 | pixel_white 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | 2 | pixel_white 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white row_2 ]
+late right [ 2 | 2 | 2 | 2 | pixel_blue 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | 2 | pixel_blue 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue row_2 ]
+late right [ pixel_orange 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ pixel_orange 3 | 3 | 3 | 3 | 3 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_3 ]
+late right [ pixel_white 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ pixel_white 3 | 3 | 3 | 3 | 3 ] [ wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | | | | | | row_3 ]
+late right [ pixel_blue 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ pixel_blue 3 | 3 | 3 | 3 | 3 ] [ wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | | | | | | row_3 ]
+late right [ 3 | pixel_orange 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | pixel_orange 3 | 3 | 3 | 3 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_3 ]
+late right [ 3 | pixel_white 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | pixel_white 3 | 3 | 3 | 3 ] [ | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | row_3 ]
+late right [ 3 | pixel_blue 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | pixel_blue 3 | 3 | 3 | 3 ] [ | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | row_3 ]
+late right [ 3 | 3 | pixel_orange 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | pixel_orange 3 | 3 | 3 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_3 ]
+late right [ 3 | 3 | pixel_white 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | pixel_white 3 | 3 | 3 ] [ | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | row_3 ]
+late right [ 3 | 3 | pixel_blue 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | pixel_blue 3 | 3 | 3 ] [ | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | row_3 ]
+late right [ 3 | 3 | 3 | pixel_orange 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | pixel_orange 3 | 3 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_3 ]
+late right [ 3 | 3 | 3 | pixel_white 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | pixel_white 3 | 3 ] [ | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | row_3 ]
+late right [ 3 | 3 | 3 | pixel_blue 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | pixel_blue 3 | 3 ] [ | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | row_3 ]
+late right [ 3 | 3 | 3 | 3 | pixel_orange 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | 3 | pixel_orange 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_3 ]
+late right [ 3 | 3 | 3 | 3 | pixel_white 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | 3 | pixel_white 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white row_3 ]
+late right [ 3 | 3 | 3 | 3 | pixel_blue 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | 3 | pixel_blue 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue row_3 ]
+late right [ pixel_orange 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ pixel_orange 4 | 4 | 4 | 4 | 4 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_4 ]
+late right [ pixel_white 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ pixel_white 4 | 4 | 4 | 4 | 4 ] [ wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | | | | | | row_4 ]
+late right [ pixel_blue 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ pixel_blue 4 | 4 | 4 | 4 | 4 ] [ wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | | | | | | row_4 ]
+late right [ 4 | pixel_orange 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | pixel_orange 4 | 4 | 4 | 4 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_4 ]
+late right [ 4 | pixel_white 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | pixel_white 4 | 4 | 4 | 4 ] [ | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | row_4 ]
+late right [ 4 | pixel_blue 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | pixel_blue 4 | 4 | 4 | 4 ] [ | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | row_4 ]
+late right [ 4 | 4 | pixel_orange 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | pixel_orange 4 | 4 | 4 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_4 ]
+late right [ 4 | 4 | pixel_white 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | pixel_white 4 | 4 | 4 ] [ | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | row_4 ]
+late right [ 4 | 4 | pixel_blue 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | pixel_blue 4 | 4 | 4 ] [ | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | row_4 ]
+late right [ 4 | 4 | 4 | pixel_orange 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | pixel_orange 4 | 4 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_4 ]
+late right [ 4 | 4 | 4 | pixel_white 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | pixel_white 4 | 4 ] [ | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | row_4 ]
+late right [ 4 | 4 | 4 | pixel_blue 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | pixel_blue 4 | 4 ] [ | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | row_4 ]
+late right [ 4 | 4 | 4 | 4 | pixel_orange 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | 4 | pixel_orange 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_4 ]
+late right [ 4 | 4 | 4 | 4 | pixel_white 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | 4 | pixel_white 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white row_4 ]
+late right [ 4 | 4 | 4 | 4 | pixel_blue 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | 4 | pixel_blue 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue row_4 ]
+late right [ pixel_orange 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ pixel_orange 5 | 5 | 5 | 5 | 5 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_5 ]
+late right [ pixel_white 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ pixel_white 5 | 5 | 5 | 5 | 5 ] [ wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | | | | | | row_5 ]
+late right [ pixel_blue 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ pixel_blue 5 | 5 | 5 | 5 | 5 ] [ wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | | | | | | row_5 ]
+late right [ 5 | pixel_orange 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | pixel_orange 5 | 5 | 5 | 5 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_5 ]
+late right [ 5 | pixel_white 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | pixel_white 5 | 5 | 5 | 5 ] [ | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | row_5 ]
+late right [ 5 | pixel_blue 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | pixel_blue 5 | 5 | 5 | 5 ] [ | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | row_5 ]
+late right [ 5 | 5 | pixel_orange 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | pixel_orange 5 | 5 | 5 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_5 ]
+late right [ 5 | 5 | pixel_white 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | pixel_white 5 | 5 | 5 ] [ | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | row_5 ]
+late right [ 5 | 5 | pixel_blue 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | pixel_blue 5 | 5 | 5 ] [ | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | row_5 ]
+late right [ 5 | 5 | 5 | pixel_orange 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | pixel_orange 5 | 5 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_5 ]
+late right [ 5 | 5 | 5 | pixel_white 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | pixel_white 5 | 5 ] [ | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | row_5 ]
+late right [ 5 | 5 | 5 | pixel_blue 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | pixel_blue 5 | 5 ] [ | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | row_5 ]
+late right [ 5 | 5 | 5 | 5 | pixel_orange 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | 5 | pixel_orange 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_5 ]
+late right [ 5 | 5 | 5 | 5 | pixel_white 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | 5 | pixel_white 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white row_5 ]
+late right [ 5 | 5 | 5 | 5 | pixel_blue 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | 5 | pixel_blue 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue row_5 ]
+late right [ pixel_eye 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_1 ] -> [ pixel_eye 1 | 1 | 1 | 1 | 1 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_1 vr_1 ]
+late right [ 1 | pixel_eye 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_1 ] -> [ 1 | pixel_eye 1 | 1 | 1 | 1 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_1 vr_1 ]
+late right [ 1 | 1 | pixel_eye 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_1 ] -> [ 1 | 1 | pixel_eye 1 | 1 | 1 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_1 vr_1 ]
+late right [ 1 | 1 | 1 | pixel_eye 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_1 ] -> [ 1 | 1 | 1 | pixel_eye 1 | 1 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_1 vr_1 ]
+late right [ 1 | 1 | 1 | 1 | pixel_eye 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_1 ] -> [ 1 | 1 | 1 | 1 | pixel_eye 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_1 vr_1 ]
+late right [ pixel_eye 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_1 ] -> [ pixel_eye 2 | 2 | 2 | 2 | 2 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_2 vr_1 ]
+late right [ 2 | pixel_eye 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_1 ] -> [ 2 | pixel_eye 2 | 2 | 2 | 2 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_2 vr_1 ]
+late right [ 2 | 2 | pixel_eye 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_1 ] -> [ 2 | 2 | pixel_eye 2 | 2 | 2 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_2 vr_1 ]
+late right [ 2 | 2 | 2 | pixel_eye 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_1 ] -> [ 2 | 2 | 2 | pixel_eye 2 | 2 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_2 vr_1 ]
+late right [ 2 | 2 | 2 | 2 | pixel_eye 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_1 ] -> [ 2 | 2 | 2 | 2 | pixel_eye 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_2 vr_1 ]
+late right [ pixel_eye 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_1 ] -> [ pixel_eye 3 | 3 | 3 | 3 | 3 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_3 vr_1 ]
+late right [ 3 | pixel_eye 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_1 ] -> [ 3 | pixel_eye 3 | 3 | 3 | 3 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_3 vr_1 ]
+late right [ 3 | 3 | pixel_eye 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_1 ] -> [ 3 | 3 | pixel_eye 3 | 3 | 3 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_3 vr_1 ]
+late right [ 3 | 3 | 3 | pixel_eye 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_1 ] -> [ 3 | 3 | 3 | pixel_eye 3 | 3 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_3 vr_1 ]
+late right [ 3 | 3 | 3 | 3 | pixel_eye 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_1 ] -> [ 3 | 3 | 3 | 3 | pixel_eye 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_3 vr_1 ]
+late right [ pixel_eye 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_1 ] -> [ pixel_eye 4 | 4 | 4 | 4 | 4 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_4 vr_1 ]
+late right [ 4 | pixel_eye 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_1 ] -> [ 4 | pixel_eye 4 | 4 | 4 | 4 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_4 vr_1 ]
+late right [ 4 | 4 | pixel_eye 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_1 ] -> [ 4 | 4 | pixel_eye 4 | 4 | 4 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_4 vr_1 ]
+late right [ 4 | 4 | 4 | pixel_eye 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_1 ] -> [ 4 | 4 | 4 | pixel_eye 4 | 4 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_4 vr_1 ]
+late right [ 4 | 4 | 4 | 4 | pixel_eye 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_1 ] -> [ 4 | 4 | 4 | 4 | pixel_eye 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_4 vr_1 ]
+late right [ pixel_eye 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_1 ] -> [ pixel_eye 5 | 5 | 5 | 5 | 5 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_5 vr_1 ]
+late right [ 5 | pixel_eye 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_1 ] -> [ 5 | pixel_eye 5 | 5 | 5 | 5 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_5 vr_1 ]
+late right [ 5 | 5 | pixel_eye 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_1 ] -> [ 5 | 5 | pixel_eye 5 | 5 | 5 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_5 vr_1 ]
+late right [ 5 | 5 | 5 | pixel_eye 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_1 ] -> [ 5 | 5 | 5 | pixel_eye 5 | 5 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_5 vr_1 ]
+late right [ 5 | 5 | 5 | 5 | pixel_eye 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_1 ] -> [ 5 | 5 | 5 | 5 | pixel_eye 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_5 vr_1 ]
+late right [ pixel_eye 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_2 ] -> [ pixel_eye 1 | 1 | 1 | 1 | 1 ] [ wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_1 vr_2 ]
+late right [ 1 | pixel_eye 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_2 ] -> [ 1 | pixel_eye 1 | 1 | 1 | 1 ] [ | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | | | | | | row_1 vr_2 ]
+late right [ 1 | 1 | pixel_eye 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_2 ] -> [ 1 | 1 | pixel_eye 1 | 1 | 1 ] [ | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | row_1 vr_2 ]
+late right [ 1 | 1 | 1 | pixel_eye 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_2 ] -> [ 1 | 1 | 1 | pixel_eye 1 | 1 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | row_1 vr_2 ]
+late right [ 1 | 1 | 1 | 1 | pixel_eye 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_2 ] -> [ 1 | 1 | 1 | 1 | pixel_eye 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange row_1 vr_2 ]
+late right [ pixel_eye 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_2 ] -> [ pixel_eye 2 | 2 | 2 | 2 | 2 ] [ wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_2 vr_2 ]
+late right [ 2 | pixel_eye 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_2 ] -> [ 2 | pixel_eye 2 | 2 | 2 | 2 ] [ | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | | | | | | row_2 vr_2 ]
+late right [ 2 | 2 | pixel_eye 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_2 ] -> [ 2 | 2 | pixel_eye 2 | 2 | 2 ] [ | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | row_2 vr_2 ]
+late right [ 2 | 2 | 2 | pixel_eye 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_2 ] -> [ 2 | 2 | 2 | pixel_eye 2 | 2 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | row_2 vr_2 ]
+late right [ 2 | 2 | 2 | 2 | pixel_eye 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_2 ] -> [ 2 | 2 | 2 | 2 | pixel_eye 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange row_2 vr_2 ]
+late right [ pixel_eye 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_2 ] -> [ pixel_eye 3 | 3 | 3 | 3 | 3 ] [ wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_3 vr_2 ]
+late right [ 3 | pixel_eye 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_2 ] -> [ 3 | pixel_eye 3 | 3 | 3 | 3 ] [ | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | | | | | | row_3 vr_2 ]
+late right [ 3 | 3 | pixel_eye 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_2 ] -> [ 3 | 3 | pixel_eye 3 | 3 | 3 ] [ | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | row_3 vr_2 ]
+late right [ 3 | 3 | 3 | pixel_eye 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_2 ] -> [ 3 | 3 | 3 | pixel_eye 3 | 3 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | row_3 vr_2 ]
+late right [ 3 | 3 | 3 | 3 | pixel_eye 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_2 ] -> [ 3 | 3 | 3 | 3 | pixel_eye 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange row_3 vr_2 ]
+late right [ pixel_eye 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_2 ] -> [ pixel_eye 4 | 4 | 4 | 4 | 4 ] [ wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_4 vr_2 ]
+late right [ 4 | pixel_eye 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_2 ] -> [ 4 | pixel_eye 4 | 4 | 4 | 4 ] [ | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | | | | | | row_4 vr_2 ]
+late right [ 4 | 4 | pixel_eye 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_2 ] -> [ 4 | 4 | pixel_eye 4 | 4 | 4 ] [ | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | row_4 vr_2 ]
+late right [ 4 | 4 | 4 | pixel_eye 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_2 ] -> [ 4 | 4 | 4 | pixel_eye 4 | 4 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | row_4 vr_2 ]
+late right [ 4 | 4 | 4 | 4 | pixel_eye 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_2 ] -> [ 4 | 4 | 4 | 4 | pixel_eye 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange row_4 vr_2 ]
+late right [ pixel_eye 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_2 ] -> [ pixel_eye 5 | 5 | 5 | 5 | 5 ] [ wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_5 vr_2 ]
+late right [ 5 | pixel_eye 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_2 ] -> [ 5 | pixel_eye 5 | 5 | 5 | 5 ] [ | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | | | | | | row_5 vr_2 ]
+late right [ 5 | 5 | pixel_eye 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_2 ] -> [ 5 | 5 | pixel_eye 5 | 5 | 5 ] [ | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | | | | | | row_5 vr_2 ]
+late right [ 5 | 5 | 5 | pixel_eye 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_2 ] -> [ 5 | 5 | 5 | pixel_eye 5 | 5 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange | | | | | row_5 vr_2 ]
+late right [ 5 | 5 | 5 | 5 | pixel_eye 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_2 ] -> [ 5 | 5 | 5 | 5 | pixel_eye 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_white | wall_white | wall_orange row_5 vr_2 ]
+late right [ pixel_eye 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_3 ] -> [ pixel_eye 1 | 1 | 1 | 1 | 1 ] [ wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_1 vr_3 ]
+late right [ 1 | pixel_eye 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_3 ] -> [ 1 | pixel_eye 1 | 1 | 1 | 1 ] [ | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | row_1 vr_3 ]
+late right [ 1 | 1 | pixel_eye 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_3 ] -> [ 1 | 1 | pixel_eye 1 | 1 | 1 ] [ | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | row_1 vr_3 ]
+late right [ 1 | 1 | 1 | pixel_eye 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_3 ] -> [ 1 | 1 | 1 | pixel_eye 1 | 1 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | row_1 vr_3 ]
+late right [ 1 | 1 | 1 | 1 | pixel_eye 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_3 ] -> [ 1 | 1 | 1 | 1 | pixel_eye 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange row_1 vr_3 ]
+late right [ pixel_eye 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_3 ] -> [ pixel_eye 2 | 2 | 2 | 2 | 2 ] [ wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_2 vr_3 ]
+late right [ 2 | pixel_eye 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_3 ] -> [ 2 | pixel_eye 2 | 2 | 2 | 2 ] [ | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | row_2 vr_3 ]
+late right [ 2 | 2 | pixel_eye 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_3 ] -> [ 2 | 2 | pixel_eye 2 | 2 | 2 ] [ | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | row_2 vr_3 ]
+late right [ 2 | 2 | 2 | pixel_eye 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_3 ] -> [ 2 | 2 | 2 | pixel_eye 2 | 2 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | row_2 vr_3 ]
+late right [ 2 | 2 | 2 | 2 | pixel_eye 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_3 ] -> [ 2 | 2 | 2 | 2 | pixel_eye 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange row_2 vr_3 ]
+late right [ pixel_eye 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_3 ] -> [ pixel_eye 3 | 3 | 3 | 3 | 3 ] [ wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_3 vr_3 ]
+late right [ 3 | pixel_eye 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_3 ] -> [ 3 | pixel_eye 3 | 3 | 3 | 3 ] [ | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | row_3 vr_3 ]
+late right [ 3 | 3 | pixel_eye 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_3 ] -> [ 3 | 3 | pixel_eye 3 | 3 | 3 ] [ | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | row_3 vr_3 ]
+late right [ 3 | 3 | 3 | pixel_eye 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_3 ] -> [ 3 | 3 | 3 | pixel_eye 3 | 3 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | row_3 vr_3 ]
+late right [ 3 | 3 | 3 | 3 | pixel_eye 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_3 ] -> [ 3 | 3 | 3 | 3 | pixel_eye 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange row_3 vr_3 ]
+late right [ pixel_eye 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_3 ] -> [ pixel_eye 4 | 4 | 4 | 4 | 4 ] [ wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_4 vr_3 ]
+late right [ 4 | pixel_eye 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_3 ] -> [ 4 | pixel_eye 4 | 4 | 4 | 4 ] [ | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | row_4 vr_3 ]
+late right [ 4 | 4 | pixel_eye 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_3 ] -> [ 4 | 4 | pixel_eye 4 | 4 | 4 ] [ | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | row_4 vr_3 ]
+late right [ 4 | 4 | 4 | pixel_eye 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_3 ] -> [ 4 | 4 | 4 | pixel_eye 4 | 4 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | row_4 vr_3 ]
+late right [ 4 | 4 | 4 | 4 | pixel_eye 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_3 ] -> [ 4 | 4 | 4 | 4 | pixel_eye 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange row_4 vr_3 ]
+late right [ pixel_eye 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_3 ] -> [ pixel_eye 5 | 5 | 5 | 5 | 5 ] [ wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_5 vr_3 ]
+late right [ 5 | pixel_eye 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_3 ] -> [ 5 | pixel_eye 5 | 5 | 5 | 5 ] [ | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | row_5 vr_3 ]
+late right [ 5 | 5 | pixel_eye 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_3 ] -> [ 5 | 5 | pixel_eye 5 | 5 | 5 ] [ | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | row_5 vr_3 ]
+late right [ 5 | 5 | 5 | pixel_eye 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_3 ] -> [ 5 | 5 | 5 | pixel_eye 5 | 5 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | row_5 vr_3 ]
+late right [ 5 | 5 | 5 | 5 | pixel_eye 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_3 ] -> [ 5 | 5 | 5 | 5 | pixel_eye 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange row_5 vr_3 ]
+late right [ pixel_eye 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_4 ] -> [ pixel_eye 1 | 1 | 1 | 1 | 1 ] [ wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_1 vr_4 ]
+late right [ 1 | pixel_eye 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_4 ] -> [ 1 | pixel_eye 1 | 1 | 1 | 1 ] [ | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | row_1 vr_4 ]
+late right [ 1 | 1 | pixel_eye 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_4 ] -> [ 1 | 1 | pixel_eye 1 | 1 | 1 ] [ | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | row_1 vr_4 ]
+late right [ 1 | 1 | 1 | pixel_eye 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_4 ] -> [ 1 | 1 | 1 | pixel_eye 1 | 1 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | row_1 vr_4 ]
+late right [ 1 | 1 | 1 | 1 | pixel_eye 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_4 ] -> [ 1 | 1 | 1 | 1 | pixel_eye 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange row_1 vr_4 ]
+late right [ pixel_eye 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_4 ] -> [ pixel_eye 2 | 2 | 2 | 2 | 2 ] [ wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_2 vr_4 ]
+late right [ 2 | pixel_eye 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_4 ] -> [ 2 | pixel_eye 2 | 2 | 2 | 2 ] [ | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | row_2 vr_4 ]
+late right [ 2 | 2 | pixel_eye 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_4 ] -> [ 2 | 2 | pixel_eye 2 | 2 | 2 ] [ | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | row_2 vr_4 ]
+late right [ 2 | 2 | 2 | pixel_eye 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_4 ] -> [ 2 | 2 | 2 | pixel_eye 2 | 2 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | row_2 vr_4 ]
+late right [ 2 | 2 | 2 | 2 | pixel_eye 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_4 ] -> [ 2 | 2 | 2 | 2 | pixel_eye 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange row_2 vr_4 ]
+late right [ pixel_eye 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_4 ] -> [ pixel_eye 3 | 3 | 3 | 3 | 3 ] [ wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_3 vr_4 ]
+late right [ 3 | pixel_eye 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_4 ] -> [ 3 | pixel_eye 3 | 3 | 3 | 3 ] [ | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | row_3 vr_4 ]
+late right [ 3 | 3 | pixel_eye 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_4 ] -> [ 3 | 3 | pixel_eye 3 | 3 | 3 ] [ | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | row_3 vr_4 ]
+late right [ 3 | 3 | 3 | pixel_eye 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_4 ] -> [ 3 | 3 | 3 | pixel_eye 3 | 3 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | row_3 vr_4 ]
+late right [ 3 | 3 | 3 | 3 | pixel_eye 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_4 ] -> [ 3 | 3 | 3 | 3 | pixel_eye 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange row_3 vr_4 ]
+late right [ pixel_eye 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_4 ] -> [ pixel_eye 4 | 4 | 4 | 4 | 4 ] [ wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_4 vr_4 ]
+late right [ 4 | pixel_eye 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_4 ] -> [ 4 | pixel_eye 4 | 4 | 4 | 4 ] [ | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | row_4 vr_4 ]
+late right [ 4 | 4 | pixel_eye 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_4 ] -> [ 4 | 4 | pixel_eye 4 | 4 | 4 ] [ | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | row_4 vr_4 ]
+late right [ 4 | 4 | 4 | pixel_eye 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_4 ] -> [ 4 | 4 | 4 | pixel_eye 4 | 4 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | row_4 vr_4 ]
+late right [ 4 | 4 | 4 | 4 | pixel_eye 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_4 ] -> [ 4 | 4 | 4 | 4 | pixel_eye 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange row_4 vr_4 ]
+late right [ pixel_eye 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_4 ] -> [ pixel_eye 5 | 5 | 5 | 5 | 5 ] [ wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | | | | | | row_5 vr_4 ]
+late right [ 5 | pixel_eye 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_4 ] -> [ 5 | pixel_eye 5 | 5 | 5 | 5 ] [ | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | | | | | | row_5 vr_4 ]
+late right [ 5 | 5 | pixel_eye 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_4 ] -> [ 5 | 5 | pixel_eye 5 | 5 | 5 ] [ | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | | | | | | row_5 vr_4 ]
+late right [ 5 | 5 | 5 | pixel_eye 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_4 ] -> [ 5 | 5 | 5 | pixel_eye 5 | 5 ] [ | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange | | | | | row_5 vr_4 ]
+late right [ 5 | 5 | 5 | 5 | pixel_eye 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_4 ] -> [ 5 | 5 | 5 | 5 | pixel_eye 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_white | wall_blue | wall_white | wall_orange row_5 vr_4 ]
+late right [ pixel_eye 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_5 ] -> [ pixel_eye 1 | 1 | 1 | 1 | 1 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_1 vr_5 ]
+late right [ 1 | pixel_eye 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_5 ] -> [ 1 | pixel_eye 1 | 1 | 1 | 1 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_1 vr_5 ]
+late right [ 1 | 1 | pixel_eye 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_5 ] -> [ 1 | 1 | pixel_eye 1 | 1 | 1 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_1 vr_5 ]
+late right [ 1 | 1 | 1 | pixel_eye 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_5 ] -> [ 1 | 1 | 1 | pixel_eye 1 | 1 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_1 vr_5 ]
+late right [ 1 | 1 | 1 | 1 | pixel_eye 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_5 ] -> [ 1 | 1 | 1 | 1 | pixel_eye 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_1 vr_5 ]
+late right [ pixel_eye 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_5 ] -> [ pixel_eye 2 | 2 | 2 | 2 | 2 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_2 vr_5 ]
+late right [ 2 | pixel_eye 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_5 ] -> [ 2 | pixel_eye 2 | 2 | 2 | 2 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_2 vr_5 ]
+late right [ 2 | 2 | pixel_eye 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_5 ] -> [ 2 | 2 | pixel_eye 2 | 2 | 2 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_2 vr_5 ]
+late right [ 2 | 2 | 2 | pixel_eye 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_5 ] -> [ 2 | 2 | 2 | pixel_eye 2 | 2 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_2 vr_5 ]
+late right [ 2 | 2 | 2 | 2 | pixel_eye 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_5 ] -> [ 2 | 2 | 2 | 2 | pixel_eye 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_2 vr_5 ]
+late right [ pixel_eye 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_5 ] -> [ pixel_eye 3 | 3 | 3 | 3 | 3 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_3 vr_5 ]
+late right [ 3 | pixel_eye 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_5 ] -> [ 3 | pixel_eye 3 | 3 | 3 | 3 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_3 vr_5 ]
+late right [ 3 | 3 | pixel_eye 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_5 ] -> [ 3 | 3 | pixel_eye 3 | 3 | 3 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_3 vr_5 ]
+late right [ 3 | 3 | 3 | pixel_eye 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_5 ] -> [ 3 | 3 | 3 | pixel_eye 3 | 3 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_3 vr_5 ]
+late right [ 3 | 3 | 3 | 3 | pixel_eye 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_5 ] -> [ 3 | 3 | 3 | 3 | pixel_eye 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_3 vr_5 ]
+late right [ pixel_eye 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_5 ] -> [ pixel_eye 4 | 4 | 4 | 4 | 4 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_4 vr_5 ]
+late right [ 4 | pixel_eye 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_5 ] -> [ 4 | pixel_eye 4 | 4 | 4 | 4 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_4 vr_5 ]
+late right [ 4 | 4 | pixel_eye 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_5 ] -> [ 4 | 4 | pixel_eye 4 | 4 | 4 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_4 vr_5 ]
+late right [ 4 | 4 | 4 | pixel_eye 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_5 ] -> [ 4 | 4 | 4 | pixel_eye 4 | 4 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_4 vr_5 ]
+late right [ 4 | 4 | 4 | 4 | pixel_eye 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_5 ] -> [ 4 | 4 | 4 | 4 | pixel_eye 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_4 vr_5 ]
+late right [ pixel_eye 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_5 ] -> [ pixel_eye 5 | 5 | 5 | 5 | 5 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_5 vr_5 ]
+late right [ 5 | pixel_eye 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_5 ] -> [ 5 | pixel_eye 5 | 5 | 5 | 5 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_5 vr_5 ]
+late right [ 5 | 5 | pixel_eye 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_5 ] -> [ 5 | 5 | pixel_eye 5 | 5 | 5 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_5 vr_5 ]
+late right [ 5 | 5 | 5 | pixel_eye 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_5 ] -> [ 5 | 5 | 5 | pixel_eye 5 | 5 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_5 vr_5 ]
+late right [ 5 | 5 | 5 | 5 | pixel_eye 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_5 ] -> [ 5 | 5 | 5 | 5 | pixel_eye 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_5 vr_5 ]
+late right [ pixel_mouth 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_1 ] -> [ pixel_mouth 1 | 1 | 1 | 1 | 1 ] [ wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_1 vr_1 ]
+late right [ 1 | pixel_mouth 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_1 ] -> [ 1 | pixel_mouth 1 | 1 | 1 | 1 ] [ | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | row_1 vr_1 ]
+late right [ 1 | 1 | pixel_mouth 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_1 ] -> [ 1 | 1 | pixel_mouth 1 | 1 | 1 ] [ | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | row_1 vr_1 ]
+late right [ 1 | 1 | 1 | pixel_mouth 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_1 ] -> [ 1 | 1 | 1 | pixel_mouth 1 | 1 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | row_1 vr_1 ]
+late right [ 1 | 1 | 1 | 1 | pixel_mouth 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_1 ] -> [ 1 | 1 | 1 | 1 | pixel_mouth 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund row_1 vr_1 ]
+late right [ pixel_mouth 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_1 ] -> [ pixel_mouth 2 | 2 | 2 | 2 | 2 ] [ wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_2 vr_1 ]
+late right [ 2 | pixel_mouth 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_1 ] -> [ 2 | pixel_mouth 2 | 2 | 2 | 2 ] [ | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | row_2 vr_1 ]
+late right [ 2 | 2 | pixel_mouth 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_1 ] -> [ 2 | 2 | pixel_mouth 2 | 2 | 2 ] [ | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | row_2 vr_1 ]
+late right [ 2 | 2 | 2 | pixel_mouth 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_1 ] -> [ 2 | 2 | 2 | pixel_mouth 2 | 2 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | row_2 vr_1 ]
+late right [ 2 | 2 | 2 | 2 | pixel_mouth 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_1 ] -> [ 2 | 2 | 2 | 2 | pixel_mouth 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund row_2 vr_1 ]
+late right [ pixel_mouth 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_1 ] -> [ pixel_mouth 3 | 3 | 3 | 3 | 3 ] [ wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_3 vr_1 ]
+late right [ 3 | pixel_mouth 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_1 ] -> [ 3 | pixel_mouth 3 | 3 | 3 | 3 ] [ | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | row_3 vr_1 ]
+late right [ 3 | 3 | pixel_mouth 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_1 ] -> [ 3 | 3 | pixel_mouth 3 | 3 | 3 ] [ | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | row_3 vr_1 ]
+late right [ 3 | 3 | 3 | pixel_mouth 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_1 ] -> [ 3 | 3 | 3 | pixel_mouth 3 | 3 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | row_3 vr_1 ]
+late right [ 3 | 3 | 3 | 3 | pixel_mouth 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_1 ] -> [ 3 | 3 | 3 | 3 | pixel_mouth 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund row_3 vr_1 ]
+late right [ pixel_mouth 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_1 ] -> [ pixel_mouth 4 | 4 | 4 | 4 | 4 ] [ wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_4 vr_1 ]
+late right [ 4 | pixel_mouth 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_1 ] -> [ 4 | pixel_mouth 4 | 4 | 4 | 4 ] [ | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | row_4 vr_1 ]
+late right [ 4 | 4 | pixel_mouth 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_1 ] -> [ 4 | 4 | pixel_mouth 4 | 4 | 4 ] [ | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | row_4 vr_1 ]
+late right [ 4 | 4 | 4 | pixel_mouth 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_1 ] -> [ 4 | 4 | 4 | pixel_mouth 4 | 4 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | row_4 vr_1 ]
+late right [ 4 | 4 | 4 | 4 | pixel_mouth 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_1 ] -> [ 4 | 4 | 4 | 4 | pixel_mouth 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund row_4 vr_1 ]
+late right [ pixel_mouth 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_1 ] -> [ pixel_mouth 5 | 5 | 5 | 5 | 5 ] [ wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_5 vr_1 ]
+late right [ 5 | pixel_mouth 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_1 ] -> [ 5 | pixel_mouth 5 | 5 | 5 | 5 ] [ | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | row_5 vr_1 ]
+late right [ 5 | 5 | pixel_mouth 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_1 ] -> [ 5 | 5 | pixel_mouth 5 | 5 | 5 ] [ | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | row_5 vr_1 ]
+late right [ 5 | 5 | 5 | pixel_mouth 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_1 ] -> [ 5 | 5 | 5 | pixel_mouth 5 | 5 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | row_5 vr_1 ]
+late right [ 5 | 5 | 5 | 5 | pixel_mouth 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_1 ] -> [ 5 | 5 | 5 | 5 | pixel_mouth 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund row_5 vr_1 ]
+late right [ pixel_mouth 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_2 ] -> [ pixel_mouth 1 | 1 | 1 | 1 | 1 ] [ wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_1 vr_2 ]
+late right [ 1 | pixel_mouth 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_2 ] -> [ 1 | pixel_mouth 1 | 1 | 1 | 1 ] [ | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | row_1 vr_2 ]
+late right [ 1 | 1 | pixel_mouth 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_2 ] -> [ 1 | 1 | pixel_mouth 1 | 1 | 1 ] [ | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | row_1 vr_2 ]
+late right [ 1 | 1 | 1 | pixel_mouth 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_2 ] -> [ 1 | 1 | 1 | pixel_mouth 1 | 1 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | row_1 vr_2 ]
+late right [ 1 | 1 | 1 | 1 | pixel_mouth 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_2 ] -> [ 1 | 1 | 1 | 1 | pixel_mouth 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund row_1 vr_2 ]
+late right [ pixel_mouth 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_2 ] -> [ pixel_mouth 2 | 2 | 2 | 2 | 2 ] [ wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_2 vr_2 ]
+late right [ 2 | pixel_mouth 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_2 ] -> [ 2 | pixel_mouth 2 | 2 | 2 | 2 ] [ | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | row_2 vr_2 ]
+late right [ 2 | 2 | pixel_mouth 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_2 ] -> [ 2 | 2 | pixel_mouth 2 | 2 | 2 ] [ | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | row_2 vr_2 ]
+late right [ 2 | 2 | 2 | pixel_mouth 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_2 ] -> [ 2 | 2 | 2 | pixel_mouth 2 | 2 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | row_2 vr_2 ]
+late right [ 2 | 2 | 2 | 2 | pixel_mouth 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_2 ] -> [ 2 | 2 | 2 | 2 | pixel_mouth 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund row_2 vr_2 ]
+late right [ pixel_mouth 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_2 ] -> [ pixel_mouth 3 | 3 | 3 | 3 | 3 ] [ wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_3 vr_2 ]
+late right [ 3 | pixel_mouth 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_2 ] -> [ 3 | pixel_mouth 3 | 3 | 3 | 3 ] [ | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | row_3 vr_2 ]
+late right [ 3 | 3 | pixel_mouth 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_2 ] -> [ 3 | 3 | pixel_mouth 3 | 3 | 3 ] [ | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | row_3 vr_2 ]
+late right [ 3 | 3 | 3 | pixel_mouth 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_2 ] -> [ 3 | 3 | 3 | pixel_mouth 3 | 3 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | row_3 vr_2 ]
+late right [ 3 | 3 | 3 | 3 | pixel_mouth 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_2 ] -> [ 3 | 3 | 3 | 3 | pixel_mouth 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund row_3 vr_2 ]
+late right [ pixel_mouth 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_2 ] -> [ pixel_mouth 4 | 4 | 4 | 4 | 4 ] [ wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_4 vr_2 ]
+late right [ 4 | pixel_mouth 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_2 ] -> [ 4 | pixel_mouth 4 | 4 | 4 | 4 ] [ | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | row_4 vr_2 ]
+late right [ 4 | 4 | pixel_mouth 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_2 ] -> [ 4 | 4 | pixel_mouth 4 | 4 | 4 ] [ | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | row_4 vr_2 ]
+late right [ 4 | 4 | 4 | pixel_mouth 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_2 ] -> [ 4 | 4 | 4 | pixel_mouth 4 | 4 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | row_4 vr_2 ]
+late right [ 4 | 4 | 4 | 4 | pixel_mouth 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_2 ] -> [ 4 | 4 | 4 | 4 | pixel_mouth 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund row_4 vr_2 ]
+late right [ pixel_mouth 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_2 ] -> [ pixel_mouth 5 | 5 | 5 | 5 | 5 ] [ wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_5 vr_2 ]
+late right [ 5 | pixel_mouth 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_2 ] -> [ 5 | pixel_mouth 5 | 5 | 5 | 5 ] [ | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | row_5 vr_2 ]
+late right [ 5 | 5 | pixel_mouth 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_2 ] -> [ 5 | 5 | pixel_mouth 5 | 5 | 5 ] [ | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | row_5 vr_2 ]
+late right [ 5 | 5 | 5 | pixel_mouth 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_2 ] -> [ 5 | 5 | 5 | pixel_mouth 5 | 5 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | row_5 vr_2 ]
+late right [ 5 | 5 | 5 | 5 | pixel_mouth 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_2 ] -> [ 5 | 5 | 5 | 5 | pixel_mouth 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund row_5 vr_2 ]
+late right [ pixel_mouth 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_3 ] -> [ pixel_mouth 1 | 1 | 1 | 1 | 1 ] [ wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | | | | | | | | | | | row_1 vr_3 ]
+late right [ 1 | pixel_mouth 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_3 ] -> [ 1 | pixel_mouth 1 | 1 | 1 | 1 ] [ | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | | | | | | row_1 vr_3 ]
+late right [ 1 | 1 | pixel_mouth 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_3 ] -> [ 1 | 1 | pixel_mouth 1 | 1 | 1 ] [ | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | row_1 vr_3 ]
+late right [ 1 | 1 | 1 | pixel_mouth 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_3 ] -> [ 1 | 1 | 1 | pixel_mouth 1 | 1 ] [ | | | | | | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | row_1 vr_3 ]
+late right [ 1 | 1 | 1 | 1 | pixel_mouth 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_3 ] -> [ 1 | 1 | 1 | 1 | pixel_mouth 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund row_1 vr_3 ]
+late right [ pixel_mouth 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_3 ] -> [ pixel_mouth 2 | 2 | 2 | 2 | 2 ] [ wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | | | | | | | | | | | row_2 vr_3 ]
+late right [ 2 | pixel_mouth 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_3 ] -> [ 2 | pixel_mouth 2 | 2 | 2 | 2 ] [ | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | | | | | | row_2 vr_3 ]
+late right [ 2 | 2 | pixel_mouth 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_3 ] -> [ 2 | 2 | pixel_mouth 2 | 2 | 2 ] [ | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | row_2 vr_3 ]
+late right [ 2 | 2 | 2 | pixel_mouth 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_3 ] -> [ 2 | 2 | 2 | pixel_mouth 2 | 2 ] [ | | | | | | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | row_2 vr_3 ]
+late right [ 2 | 2 | 2 | 2 | pixel_mouth 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_3 ] -> [ 2 | 2 | 2 | 2 | pixel_mouth 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund row_2 vr_3 ]
+late right [ pixel_mouth 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_3 ] -> [ pixel_mouth 3 | 3 | 3 | 3 | 3 ] [ wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | | | | | | | | | | | row_3 vr_3 ]
+late right [ 3 | pixel_mouth 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_3 ] -> [ 3 | pixel_mouth 3 | 3 | 3 | 3 ] [ | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | | | | | | row_3 vr_3 ]
+late right [ 3 | 3 | pixel_mouth 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_3 ] -> [ 3 | 3 | pixel_mouth 3 | 3 | 3 ] [ | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | row_3 vr_3 ]
+late right [ 3 | 3 | 3 | pixel_mouth 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_3 ] -> [ 3 | 3 | 3 | pixel_mouth 3 | 3 ] [ | | | | | | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | row_3 vr_3 ]
+late right [ 3 | 3 | 3 | 3 | pixel_mouth 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_3 ] -> [ 3 | 3 | 3 | 3 | pixel_mouth 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund row_3 vr_3 ]
+late right [ pixel_mouth 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_3 ] -> [ pixel_mouth 4 | 4 | 4 | 4 | 4 ] [ wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | | | | | | | | | | | row_4 vr_3 ]
+late right [ 4 | pixel_mouth 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_3 ] -> [ 4 | pixel_mouth 4 | 4 | 4 | 4 ] [ | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | | | | | | row_4 vr_3 ]
+late right [ 4 | 4 | pixel_mouth 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_3 ] -> [ 4 | 4 | pixel_mouth 4 | 4 | 4 ] [ | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | row_4 vr_3 ]
+late right [ 4 | 4 | 4 | pixel_mouth 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_3 ] -> [ 4 | 4 | 4 | pixel_mouth 4 | 4 ] [ | | | | | | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | row_4 vr_3 ]
+late right [ 4 | 4 | 4 | 4 | pixel_mouth 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_3 ] -> [ 4 | 4 | 4 | 4 | pixel_mouth 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund row_4 vr_3 ]
+late right [ pixel_mouth 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_3 ] -> [ pixel_mouth 5 | 5 | 5 | 5 | 5 ] [ wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | | | | | | | | | | | row_5 vr_3 ]
+late right [ 5 | pixel_mouth 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_3 ] -> [ 5 | pixel_mouth 5 | 5 | 5 | 5 ] [ | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | | | | | | row_5 vr_3 ]
+late right [ 5 | 5 | pixel_mouth 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_3 ] -> [ 5 | 5 | pixel_mouth 5 | 5 | 5 ] [ | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | | | | | | row_5 vr_3 ]
+late right [ 5 | 5 | 5 | pixel_mouth 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_3 ] -> [ 5 | 5 | 5 | pixel_mouth 5 | 5 ] [ | | | | | | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund | | | | | row_5 vr_3 ]
+late right [ 5 | 5 | 5 | 5 | pixel_mouth 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_3 ] -> [ 5 | 5 | 5 | 5 | pixel_mouth 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_darkred mund | wall_black mund | wall_black mund | wall_black mund | wall_darkred mund row_5 vr_3 ]
+late right [ pixel_mouth 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_4 ] -> [ pixel_mouth 1 | 1 | 1 | 1 | 1 ] [ wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_1 vr_4 ]
+late right [ 1 | pixel_mouth 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_4 ] -> [ 1 | pixel_mouth 1 | 1 | 1 | 1 ] [ | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | row_1 vr_4 ]
+late right [ 1 | 1 | pixel_mouth 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_4 ] -> [ 1 | 1 | pixel_mouth 1 | 1 | 1 ] [ | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | row_1 vr_4 ]
+late right [ 1 | 1 | 1 | pixel_mouth 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_4 ] -> [ 1 | 1 | 1 | pixel_mouth 1 | 1 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | row_1 vr_4 ]
+late right [ 1 | 1 | 1 | 1 | pixel_mouth 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_4 ] -> [ 1 | 1 | 1 | 1 | pixel_mouth 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund row_1 vr_4 ]
+late right [ pixel_mouth 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_4 ] -> [ pixel_mouth 2 | 2 | 2 | 2 | 2 ] [ wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_2 vr_4 ]
+late right [ 2 | pixel_mouth 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_4 ] -> [ 2 | pixel_mouth 2 | 2 | 2 | 2 ] [ | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | row_2 vr_4 ]
+late right [ 2 | 2 | pixel_mouth 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_4 ] -> [ 2 | 2 | pixel_mouth 2 | 2 | 2 ] [ | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | row_2 vr_4 ]
+late right [ 2 | 2 | 2 | pixel_mouth 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_4 ] -> [ 2 | 2 | 2 | pixel_mouth 2 | 2 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | row_2 vr_4 ]
+late right [ 2 | 2 | 2 | 2 | pixel_mouth 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_4 ] -> [ 2 | 2 | 2 | 2 | pixel_mouth 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund row_2 vr_4 ]
+late right [ pixel_mouth 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_4 ] -> [ pixel_mouth 3 | 3 | 3 | 3 | 3 ] [ wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_3 vr_4 ]
+late right [ 3 | pixel_mouth 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_4 ] -> [ 3 | pixel_mouth 3 | 3 | 3 | 3 ] [ | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | row_3 vr_4 ]
+late right [ 3 | 3 | pixel_mouth 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_4 ] -> [ 3 | 3 | pixel_mouth 3 | 3 | 3 ] [ | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | row_3 vr_4 ]
+late right [ 3 | 3 | 3 | pixel_mouth 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_4 ] -> [ 3 | 3 | 3 | pixel_mouth 3 | 3 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | row_3 vr_4 ]
+late right [ 3 | 3 | 3 | 3 | pixel_mouth 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_4 ] -> [ 3 | 3 | 3 | 3 | pixel_mouth 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund row_3 vr_4 ]
+late right [ pixel_mouth 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_4 ] -> [ pixel_mouth 4 | 4 | 4 | 4 | 4 ] [ wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_4 vr_4 ]
+late right [ 4 | pixel_mouth 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_4 ] -> [ 4 | pixel_mouth 4 | 4 | 4 | 4 ] [ | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | row_4 vr_4 ]
+late right [ 4 | 4 | pixel_mouth 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_4 ] -> [ 4 | 4 | pixel_mouth 4 | 4 | 4 ] [ | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | row_4 vr_4 ]
+late right [ 4 | 4 | 4 | pixel_mouth 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_4 ] -> [ 4 | 4 | 4 | pixel_mouth 4 | 4 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | row_4 vr_4 ]
+late right [ 4 | 4 | 4 | 4 | pixel_mouth 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_4 ] -> [ 4 | 4 | 4 | 4 | pixel_mouth 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund row_4 vr_4 ]
+late right [ pixel_mouth 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_4 ] -> [ pixel_mouth 5 | 5 | 5 | 5 | 5 ] [ wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_5 vr_4 ]
+late right [ 5 | pixel_mouth 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_4 ] -> [ 5 | pixel_mouth 5 | 5 | 5 | 5 ] [ | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | | | | | | row_5 vr_4 ]
+late right [ 5 | 5 | pixel_mouth 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_4 ] -> [ 5 | 5 | pixel_mouth 5 | 5 | 5 ] [ | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | | | | | | row_5 vr_4 ]
+late right [ 5 | 5 | 5 | pixel_mouth 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_4 ] -> [ 5 | 5 | 5 | pixel_mouth 5 | 5 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund | | | | | row_5 vr_4 ]
+late right [ 5 | 5 | 5 | 5 | pixel_mouth 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_4 ] -> [ 5 | 5 | 5 | 5 | pixel_mouth 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_white mund | wall_white mund | wall_white mund | wall_red mund row_5 vr_4 ]
+late right [ pixel_mouth 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_5 ] -> [ pixel_mouth 1 | 1 | 1 | 1 | 1 ] [ wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_1 vr_5 ]
+late right [ 1 | pixel_mouth 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_5 ] -> [ 1 | pixel_mouth 1 | 1 | 1 | 1 ] [ | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | row_1 vr_5 ]
+late right [ 1 | 1 | pixel_mouth 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_5 ] -> [ 1 | 1 | pixel_mouth 1 | 1 | 1 ] [ | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | row_1 vr_5 ]
+late right [ 1 | 1 | 1 | pixel_mouth 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_5 ] -> [ 1 | 1 | 1 | pixel_mouth 1 | 1 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | row_1 vr_5 ]
+late right [ 1 | 1 | 1 | 1 | pixel_mouth 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 vr_5 ] -> [ 1 | 1 | 1 | 1 | pixel_mouth 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund row_1 vr_5 ]
+late right [ pixel_mouth 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_5 ] -> [ pixel_mouth 2 | 2 | 2 | 2 | 2 ] [ wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_2 vr_5 ]
+late right [ 2 | pixel_mouth 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_5 ] -> [ 2 | pixel_mouth 2 | 2 | 2 | 2 ] [ | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | row_2 vr_5 ]
+late right [ 2 | 2 | pixel_mouth 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_5 ] -> [ 2 | 2 | pixel_mouth 2 | 2 | 2 ] [ | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | row_2 vr_5 ]
+late right [ 2 | 2 | 2 | pixel_mouth 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_5 ] -> [ 2 | 2 | 2 | pixel_mouth 2 | 2 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | row_2 vr_5 ]
+late right [ 2 | 2 | 2 | 2 | pixel_mouth 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 vr_5 ] -> [ 2 | 2 | 2 | 2 | pixel_mouth 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund row_2 vr_5 ]
+late right [ pixel_mouth 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_5 ] -> [ pixel_mouth 3 | 3 | 3 | 3 | 3 ] [ wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_3 vr_5 ]
+late right [ 3 | pixel_mouth 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_5 ] -> [ 3 | pixel_mouth 3 | 3 | 3 | 3 ] [ | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | row_3 vr_5 ]
+late right [ 3 | 3 | pixel_mouth 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_5 ] -> [ 3 | 3 | pixel_mouth 3 | 3 | 3 ] [ | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | row_3 vr_5 ]
+late right [ 3 | 3 | 3 | pixel_mouth 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_5 ] -> [ 3 | 3 | 3 | pixel_mouth 3 | 3 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | row_3 vr_5 ]
+late right [ 3 | 3 | 3 | 3 | pixel_mouth 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 vr_5 ] -> [ 3 | 3 | 3 | 3 | pixel_mouth 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund row_3 vr_5 ]
+late right [ pixel_mouth 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_5 ] -> [ pixel_mouth 4 | 4 | 4 | 4 | 4 ] [ wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_4 vr_5 ]
+late right [ 4 | pixel_mouth 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_5 ] -> [ 4 | pixel_mouth 4 | 4 | 4 | 4 ] [ | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | row_4 vr_5 ]
+late right [ 4 | 4 | pixel_mouth 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_5 ] -> [ 4 | 4 | pixel_mouth 4 | 4 | 4 ] [ | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | row_4 vr_5 ]
+late right [ 4 | 4 | 4 | pixel_mouth 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_5 ] -> [ 4 | 4 | 4 | pixel_mouth 4 | 4 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | row_4 vr_5 ]
+late right [ 4 | 4 | 4 | 4 | pixel_mouth 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 vr_5 ] -> [ 4 | 4 | 4 | 4 | pixel_mouth 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund row_4 vr_5 ]
+late right [ pixel_mouth 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_5 ] -> [ pixel_mouth 5 | 5 | 5 | 5 | 5 ] [ wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | | | | | | row_5 vr_5 ]
+late right [ 5 | pixel_mouth 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_5 ] -> [ 5 | pixel_mouth 5 | 5 | 5 | 5 ] [ | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | | | | | | row_5 vr_5 ]
+late right [ 5 | 5 | pixel_mouth 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_5 ] -> [ 5 | 5 | pixel_mouth 5 | 5 | 5 ] [ | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | | | | | | row_5 vr_5 ]
+late right [ 5 | 5 | 5 | pixel_mouth 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_5 ] -> [ 5 | 5 | 5 | pixel_mouth 5 | 5 ] [ | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund | | | | | row_5 vr_5 ]
+late right [ 5 | 5 | 5 | 5 | pixel_mouth 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 vr_5 ] -> [ 5 | 5 | 5 | 5 | pixel_mouth 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_red mund | wall_red mund | wall_red mund | wall_red mund | wall_red mund row_5 vr_5 ]
+
+
+late [pixel mund ] -> [ mund ] 
+late [pixel wall]->[pixel wall dead]
+
+==============
+WINCONDITIONS
+==============
+
+no pixel
+
+=======
+LEVELS
+=======
+
+message Level 1 of 1
+
+(11112222233333444445555)
+........................a
+........................a
+........................a
+........................a
+........................a
+........................s
+........................s
+........................s
+........................s
+........................s
+........................d
+........................d
+........................d
+........................d
+........................d
+........................f
+........................f
+........................f
+........................f
+........................f
+1quq1...................g
+2wyw2...................g
+eeeee...................g
+4rrr4...................g
+5t5t5...................g
+(11112222233333444445555)
+
+message OM NOM NOM

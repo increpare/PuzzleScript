@@ -1,0 +1,348 @@
+title Car Crash
+author Stephen Lavelle
+homepage www.increpare.com
+
+noaction
+run_rules_on_level_start
+========
+OBJECTS
+========
+
+Background
+black
+
+bg_light
+darkgreen
+
+bg_dark
+darkblue
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+black 
+
+Player_down
+lightred darkgreen
+.....
+.000.
+00000
+00000
+00000
+
+
+Player_up
+lightred darkgreen
+00000
+00000
+00000
+.000.
+.....
+
+player_right
+lightred darkgreen
+..000
+.0000
+.0000
+.0000
+..000
+
+
+player_left
+lightred darkgreen
+000..
+0000.
+0000.
+0000.
+000..
+
+player_crushed
+darkgreen darkgray
+..1..
+.101.
+10001
+.101.
+..1..
+
+enemy_crushed
+darkred darkgray
+..1..
+.101.
+10001
+.101.
+..1..
+
+enemy_down
+red
+..0..
+.000.
+00000
+00000
+00000
+
+
+enemy_up
+red
+00000
+00000
+00000
+.000.
+..0..
+
+enemy_right
+red
+..000
+.0000
+00000
+.0000
+..000
+
+
+enemy_left
+red
+000..
+0000.
+00000
+0000.
+000..
+
+
+goal
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+
+wint
+black
+
+temp
+TRANSPARENT
+
+t2
+TRANSPARENT
+
+finaltext
+yellow
+
+black 
+black
+
+=======
+LEGEND
+=======
+
+
+player_noup = player_down or player_left or player_right
+player_nodown = player_up or player_left or player_right
+player_noleft = player_up or player_down or player_right
+player_noright = player_up or player_down or player_left
+
+player_dir = player_up or player_down or player_left or player_right
+player = player_dir or player_crushed
+
+enemy = enemy_up or enemy_down or enemy_left or enemy_right
+
+. = Background
+# = Wall
+O = Target
+
+1 = player_down and player_right
+2 = player_down and player_left
+3 = player_up and player_down and player_right
+4 = player_up and player_down and player_left
+5 = player_up and player_right
+6 = player_up and player_left
+
+
+
+
+q = enemy_down and enemy_right
+w = enemy_down and enemy_left
+e = enemy_up and enemy_down and enemy_right
+r = enemy_up and enemy_down and enemy_left
+t = enemy_up and enemy_right
+y = enemy_up and enemy_left
+
+u = enemy_left and enemy_down and enemy_right
+i = enemy_left and enemy_up and enemy_right
+
+g = goal
+a = wint
+
+s = enemy_right
+d = enemy_right and enemy_left
+f = enemy_left
+
+z = finaltext and black
+
+=======
+SOUNDS
+=======
+
+sfx0 7375900
+sfx1 12966304
+
+================
+COLLISIONLAYERS
+================
+
+Background
+bg_light, bg_dark
+
+wint
+
+Target
+
+enemy_up
+enemy_down
+enemy_left
+enemy_right
+enemy_crushed
+
+player_up
+player_down
+player_left
+player_right
+player_crushed
+
+wall
+goal
+
+temp
+t2
+finaltext
+black
+
+======
+RULES
+======
+
+(
+[ > player_crushed | enemy ] -> [ > player_crushed | > enemy ]
+up [ moving enemy_up | enemy ] -> [ moving enemy_up | moving enemy ]
++ down [ moving enemy_down | enemy ] -> [ moving enemy_down | moving enemy ]
++ left [ moving enemy_left | enemy ] -> [ moving enemy_left | moving enemy ]
++ right [ moving enemy_right | enemy ] -> [ moving enemy_right | moving enemy ]
+)
+
+random [ ] -> [ bg_light]
+
+[bg_light | no bg_dark ] -> [ bg_light | bg_dark]
++[bg_dark | no bg_light ] -> [ bg_dark | bg_light]
+
+[ > player | wall ] -> cancel 
+[ > enemy | wall ] -> cancel
+
+late [ player_dir enemy ] -> [ player_dir player_crushed enemy ] sfx1
+
+
+late [ enemy_up player_crushed] -> [ player_up player_crushed ]
+late [ enemy_down player_crushed] -> [ player_down player_crushed ]
+late [ enemy_left player_crushed] -> [ player_left player_crushed ]
+late [ enemy_right player_crushed] -> [ player_right player_crushed ]
+
+late up [ player_up | enemy_down ] -> [ player_up | Player_down ]
++ late down [ player_down | enemy_up ] -> [ player_down | Player_up ]
++ late left [ player_left | enemy_right ] -> [ player_left | Player_right ]
++ late right [ player_right | enemy_left ] -> [ player_right | Player_left ]
++ late [ player_noup enemy_up] -> [ player_noup player_up ]
++ late [ player_nodown enemy_down] -> [ player_nodown player_down ]
++ late [ player_noleft enemy_left] -> [ player_noleft player_left ]
++ late [ player_noright enemy_right] -> [ player_noright player_right ]
+
+
+(push an enemy into another enemy -_- )
+
+late [ goal no player_crushed ] -> [ temp goal ]
+late [ temp goal | no temp goal ] -> [ temp goal | temp goal ]
+late [ player_crushed no goal ] [ goal ] -> [ player_crushed ] [ goal temp ]
+late [ goal player_crushed no temp ] -> [ goal player_crushed t2 ] 
+
+late [t2] [ player_dir ] -> [t2] []
+
+late down [t2] [ player_crushed | player_crushed ] -> [t2] [ player_crushed player_down | player_crushed player_up ]
+
+late right [t2] [ player_crushed | player_crushed ] -> [t2] [ player_crushed player_right | player_crushed player_left ]
+
+late [ t2] [ player_crushed goal ] -> [t2] [ player_crushed wint ] sfx0
+
+late [ temp ] -> []
+
+late [ t2 ] -> []
+
+[stationary finaltext]->[> finaltext]
+[moving finaltext | no finaltext ] -> [ moving finaltext | finaltext] again
+[moving finaltext ]-> [ finaltext]
+
+[finaltext] [ no finaltext ] -> [ finaltext t2 ] [ ]
+
+[finaltext no t2 ] -> win
+
+[t2]->[]
+
+==============
+WINCONDITIONS
+==============
+
+no goal
+
+no finaltext
+
+=======
+LEVELS
+=======
+
+message level 1 of 1
+
+#########################################
+#.......................................#
+#...................12..................#
+#...................34..................#
+#...................56..................#
+#.......................................#
+#..................sdf..................#
+#....qw.....qw.............qw.....qw....#
+#....er.....er.....sdf.....er.....er....#
+#....ty.....ty.............ty.....ty....#
+#.......................................#
+#............g...ggg.g.g.aaa............#
+#............g...g.g.g.g.a..............#
+#............g...g.g.g.g.aaa............#
+#............g...g.g.g.g.a..............#
+#............ggg.ggg.ggg.aaa............#
+#.......................................#
+#....qw.....qw.....qw......qw.....qw....#
+#....er.....er.....er......er.....er....#
+#....ty.....ty.....ty......ty.....ty....#
+#.......................................#
+#.......................................#
+#.......................................#
+#.......................................#
+#.......................................#
+#.......................................#
+#########################################
+
+
+...............................
+...............................
+...............................
+........z...zzz.z.z.zzz........
+........z...z.z.z.z.z..........
+........z...z.z.z.z.zzz........
+........z...z.z.z.z.z..........
+........zzz.zzz.zzz.zzz........
+...............................
+...............................
+...............................
+
+message Love!

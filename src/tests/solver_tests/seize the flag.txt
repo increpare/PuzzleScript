@@ -1,0 +1,1303 @@
+title Seize the flag!
+author Stephen Lavelle
+homepage www.increpare.com
+
+
+norepeat_action
+again_interval 0.3
+
+
+background_color darkblue
+
+text_color gray
+
+
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+black ,
+black
+
+Background
+DARKGREEN
+
+lighttile
+darkblue
+
+darktile
+darkgreen
+
+door 
+gray darkbrown
+.111.
+10001
+10001
+10001
+11111
+
+key k
+yellow
+00000
+0...0
+00000
+..0..
+..000
+
+person б
+red darkred 
+.000.
+01010
+.000.
+00000
+.0.0.
+
+tile_all
+white white white white
+.000.
+2.0.3
+22.33
+2.1.3
+.111.
+
+tile_ur 
+white black black white
+.000.
+2.0.3
+22.33
+2.1.3
+.111.
+
+tile_dr 
+black white black white
+.000.
+2.0.3
+22.33
+2.1.3
+.111.
+
+tile_ul 
+white black white black
+.000.
+2.0.3
+22.33
+2.1.3
+.111.
+
+tile_dl 
+black white  white black
+.000.
+2.0.3
+22.33
+2.1.3
+.111.
+
+flag г
+yellow white
+10000
+10000
+10000
+1....
+1....
+
+Wall
+darkgreen darkblue
+
+wall_tl
+DARKGREEN DARKBLUE 
+00000
+01111
+01000
+01011
+01010
+
+wall_tr
+darkgreen DARKBLUE
+00000
+11110
+00010
+11010
+01010
+
+wall_bl
+DARKGREEN DARKBLUE 
+00000
+01110
+01010
+01110
+00000
+
+wall_br
+darkblue darkgreen 
+00100
+00100
+11111
+00100
+00100
+
+wall_h
+darkgreen DARKBLUE
+00000
+11111
+00000
+11111
+00000
+
+wall_v
+darkgreen DARKBLUE
+01010
+01010
+01010
+01010
+01010
+
+wall_t
+DARKGREEN DARKBLUE
+01010
+11011
+00000
+11111
+00000
+
+
+Player
+TRANSPARENT
+0.0.0
+.000.
+00000
+.000.
+0.0.0
+
+
+
+hand
+TRANSPARENT
+..000
+..000
+0.000
+.0000
+...00
+
+hand_turn
+TRANSPARENT
+000..
+.000.
+..000
+0.000
+.0000
+
+
+body_1_1
+red red
+....1
+...11
+..1.1
+.1..1
+11111
+
+body_1_2
+red red
+11100
+11100
+11100
+11100
+11100
+
+body_1_3
+red red
+0....
+00...
+000..
+0000.
+00000
+
+body_1_4
+red
+
+body_1_5
+red red
+11100
+11100
+11100
+11000
+11000
+
+body_1_6
+red
+
+body_1_7
+red red
+11111
+.1111
+..111
+...11
+....1
+
+body_1_8
+red red
+11000
+11000
+11000
+11000
+11000
+
+body_1_9
+red
+00000
+0..0.
+0.0..
+00...
+0....
+
+
+
+
+
+body_2_1
+red red
+....0
+...00
+..100
+.1110
+11111
+
+body_2_2
+red 
+
+body_2_3
+red red
+0....
+00...
+000..
+0000.
+00000
+
+body_2_4
+red red
+00000
+1.000
+1..00
+1.110
+11111
+
+body_2_5
+red red
+00000
+10000
+11100
+11110
+11111
+
+body_2_6
+red red
+00000
+100.0
+11..0
+111.0
+11111
+
+body_2_7
+red red
+11111
+.1111
+..111
+...11
+....1
+
+body_2_8
+red red
+11000
+11000
+11000
+11000
+11000
+
+body_2_9
+red red
+10000
+1100.
+111..
+11...
+1....
+
+
+
+
+body_3_1
+red red
+....1
+...11
+..111
+.1111
+11111
+
+body_3_2
+red red
+11100
+11100
+11100
+11100
+11100
+
+body_3_3
+red red
+0....
+00...
+0.0..
+0..0.
+00000
+
+body_3_4
+red red
+00000
+00000
+00111
+11111
+11111
+
+body_3_5
+red red
+00000
+00000
+11111
+11111
+11111
+
+body_3_6
+red red
+00000
+00000
+11111
+11111
+11111
+
+body_3_7
+red red
+11111
+.1..1
+..1.1
+...11
+....1
+
+body_3_8
+red red
+11000
+11000
+11000
+11000
+11000
+
+body_3_9
+red
+00000
+0000.
+000..
+00...
+0....
+
+
+
+
+
+body_4_1
+red red
+....0
+...00
+..100
+.1110
+11111
+
+body_4_2
+red red
+00000
+1...0
+11.00
+11110
+11111 
+
+body_4_3
+red red
+0....
+00...
+001..
+0111.
+11111
+
+body_4_4
+red
+
+body_4_5
+red red
+00000
+00001
+00111
+01111
+11111
+
+body_4_6
+red
+
+body_4_7
+red red
+00001
+.0011
+..111
+...11
+....1
+
+body_4_8
+red red
+11000
+11000
+11.00
+1...0
+11000
+
+body_4_9
+red red
+10000
+1100.
+111..
+11...
+1....
+
+
+body_5_1
+red red
+....1
+...11
+..1.1
+.1..1
+11111
+
+body_5_2
+red red
+11100
+11100
+11100
+11100
+11100
+
+body_5_3
+red red
+0....
+00...
+000..
+0000.
+00000
+
+body_5_4
+red
+
+body_5_5
+red red
+11100
+11100
+11100
+11000
+11000
+
+body_5_6
+red
+
+body_5_7
+red red
+11111
+.1111
+..111
+...11
+....1
+
+body_5_8
+red red
+11000
+11000
+11000
+11000
+11000
+
+body_5_9
+red
+00000
+0..0.
+0.0..
+00...
+0....
+
+
+
+
+
+body_6_1
+red red
+....0
+...00
+..100
+.1110
+11111
+
+body_6_2
+red 
+
+body_6_3
+red red
+0....
+00...
+000..
+0000.
+00000
+
+body_6_4
+red red
+00000
+1.000
+1..00
+1.110
+11111
+
+body_6_5
+red red
+00000
+10000
+11100
+11110
+11111
+
+body_6_6
+red red
+00000
+100.0
+11..0
+111.0
+11111
+
+body_6_7
+red red
+11111
+.1111
+..111
+...11
+....1
+
+body_6_8
+red red
+11000
+11000
+11000
+11000
+11000
+
+body_6_9
+red red
+10000
+1100.
+111..
+11...
+1....
+
+
+
+
+
+
+body_7_1
+red red
+....1
+...11
+..111
+.1111
+11111
+
+body_7_2
+red red
+11100
+11100
+11100
+11100
+11100
+
+body_7_3
+red red
+0....
+00...
+0.0..
+0..0.
+00000
+
+body_7_4
+red red
+00000
+00000
+00111
+11111
+11111
+
+body_7_5
+red red
+00000
+00000
+11111
+11111
+11111
+
+body_7_6
+red red
+00000
+00000
+11111
+11111
+11111
+
+body_7_7
+red red
+11111
+.1..1
+..1.1
+...11
+....1
+
+body_7_8
+red red
+11000
+11000
+11000
+11000
+11000
+
+body_7_9
+red
+00000
+0000.
+000..
+00...
+0....
+
+
+
+
+
+
+body_8_1
+red red
+....0
+...00
+..100
+.1110
+11111
+
+body_8_2
+red red
+00000
+1...0
+11.00
+11110
+11111 
+
+body_8_3
+red red
+0....
+00...
+001..
+0111.
+11111
+
+body_8_4
+red
+
+body_8_5
+red red
+00000
+00001
+00111
+01111
+11111
+
+body_8_6
+red
+
+body_8_7
+red red
+00001
+.0011
+..111
+...11
+....1
+
+body_8_8
+red red
+11000
+11000
+11.00
+1...0
+11000
+
+body_8_9
+red red
+10000
+1100.
+111..
+11...
+1....
+
+
+
+
+
+ball_wwww
+white white
+.000.
+00000
+00111
+11111
+.111.
+
+ball_bbbb
+black black
+.000.
+00000
+00111
+11111
+.111.
+
+ball_bbww
+black white
+.000.
+00000
+00111
+11111
+.111.
+
+ball_wwbb
+white black
+.000.
+00000
+00111
+11111
+.111.
+
+ball_bwbw
+black white 
+.001.
+00011
+00111
+00111
+.011.
+
+ball_wbwb
+white black  
+.001.
+00011
+00111
+00111
+.011.
+
+t
+TRANSPARENT
+
+
+
+
+
+
+darkred >
+darkred
+
+darkblue ?
+darkblue
+
+stars ~
+white
+.....
+.....
+.0...
+.....
+.....
+
+
+move_ul
+transparent
+
+move_ur
+transparent
+
+move_dl 
+transparent
+
+move_dr
+transparent
+
+move_action
+transparent
+
+moved
+transparent
+
+person_target
+transparent
+
+
+
+
+sprt_0_0 !
+yellow
+.....
+.....
+.....
+.....
+....0
+
+sprt_1_0 @
+yellow
+.....
+.....
+.0...
+000..
+00000
+
+sprt_2_0 £
+yellow white
+.....
+.....
+.....
+01...
+01...
+
+
+sprt_0_1 $
+yellow  
+....0
+....0
+....0
+....0
+.....
+
+sprt_1_1 %
+yellow
+00000
+00000
+0.000
+...00
+.....
+
+sprt_2_1 ^
+yellow white
+01...
+01...
+01...
+.1...
+.1...
+
+
+sprt_0_2 &
+red darkred
+.....
+..000
+..010
+..000
+..001
+
+sprt_1_2 *
+red darkred
+.....
+0....
+1...0
+0..00
+1..0.
+
+sprt_2_2 -
+white red
+.0...
+111..
+111..
+.0...
+.0...
+
+
+sprt_0_3 \
+red
+..000
+...00
+..000
+.0000
+00.00
+
+sprt_1_3 "
+red
+0.00.
+000..
+0....
+0....
+0....
+
+sprt_2_3 
+white
+.0...
+.0...
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+d = door and wall
+ball = ball_wwww or ball_bbbb or ball_bbww or ball_wwbb or ball_bwbw or ball_wbwb
+
+tile = lighttile or darktile
+
+body = body_1_1 or body_1_2 or body_1_3 or body_1_4 or body_1_5 or body_1_6 or body_1_7 or body_1_8 or body_1_9 or body_2_1 or body_2_2 or body_2_3 or body_2_4 or body_2_5 or body_2_6 or body_2_7 or body_2_8 or body_2_9 or body_3_1 or body_3_2 or body_3_3 or body_3_4 or body_3_5 or body_3_6 or body_3_7 or body_3_8 or body_3_9 or body_4_1 or body_4_2 or body_4_3 or body_4_4 or body_4_5 or body_4_6 or body_4_7 or body_4_8 or body_4_9 or body_5_1 or body_5_2 or body_5_3 or body_5_4 or body_5_5 or body_5_6 or body_5_7 or body_5_8 or body_5_9 or body_6_1 or body_6_2 or body_6_3 or body_6_4 or body_6_5 or body_6_6 or body_6_7 or body_6_8 or body_6_9 or body_7_1 or body_7_2 or body_7_3 or body_7_4 or body_7_5 or body_7_6 or body_7_7 or body_7_8 or body_7_9 or body_8_1 or body_8_2 or body_8_3 or body_8_4 or body_8_5 or body_8_6 or body_8_7 or body_8_8 or body_8_9
+
+hands = hand or hand_turn
+
+apparatus = hands or body or ball
+. = Background
+# = Wall
+P = Player
+
+1 = body_1_1
+2 = body_1_2 and ball_bbbb
+3 = body_1_3
+4 = body_1_4 and ball_bbbb
+5 = body_1_5 and hand and Player
+6 = body_1_6 and ball_bbbb
+7 = body_1_7
+8 = body_1_8 and ball_bbbb
+9 = body_1_9
+
+(
+q = wall and body_3_1 
+w = wall and body_3_2 and ball_wwww
+e = wall and body_3_3 
+r = wall and body_3_4 and ball_wwbb
+g = wall and body_3_5 
+y = wall and body_3_6 and ball_wwbb
+u = wall and body_3_7 
+i = wall and body_3_8 and ball_bbbb
+o = wall and body_3_9 
+)
+
+q = wall 
+w = wall and ball_wwww
+e = wall 
+r = wall and ball_wwbb
+g = wall 
+y = wall and ball_wwbb
+u = wall 
+i = wall and ball_bbbb
+o = wall 
+
+
+z = wall_tl and wall
+x = wall_tr and wall
+c = wall_bl and wall
+f = wall_br and wall
+b = wall_h and wall
+n = wall_v and wall
+m = wall_t and wall
+
+
+move = move_ul or move_ur or move_dl or move_dr or move_action or moved
+
+move_active = move_ul or move_ur or move_dl or move_dr
+
+є = tile_ul and Wall
+ґ = tile_ur and Wall
+ж = tile_dl and Wall
+д = tile_dr and Wall
+Ю = tile_all and Wall
+| = sprt_2_3 and Player
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+black
+tile
+wall
+wall_tl, wall_tr, wall_bl, wall_br, wall_h, wall_v, wall_t
+door, key
+flag
+Player
+body
+ball
+hands
+t
+
+tile_ul, tile_ur, tile_dl, tile_dr, tile_all
+
+sprt_0_0, sprt_0_1, sprt_0_2, sprt_0_3, sprt_1_0, sprt_1_1, sprt_1_2, sprt_1_3, sprt_2_0, sprt_2_1, sprt_2_2, sprt_2_3, darkred, darkblue, stars
+
+person
+person_Target
+move
+
+======
+RULES
+======
+
+right [flag | wall ] -> [flag wall | wall ]
+[person no tile ] -> [ person darktile]
+
+[darktile | no tile no wall ] -> [darktile | lighttile ]
++[lighttile | no tile no wall ] -> [ lighttile | darktile ]
+(ball translations)
+ [ ball | perpendicular player | ball ] -> [ perpendicular ball | perpendicular player | perpendicular ball ]
+
+(ball rotations)
+
+right [ ball | action player | ball ] -> [ down ball | action player | up ball ]
+down [ ball | action player | ball ] -> [ left ball | action player | right ball ]
+
+
+[ up ball_wwww ] -> [ ball_wwbb ]
+[ down ball_wwww ] -> [ ball_bbww ]
+[ right ball_wwww ] -> [ ball_bwbw ]
+[ left ball_wwww ] -> [ ball_wbwb ]
+
+[ up ball_bbbb ] -> [ ball_bbww ]
+[ down ball_bbbb ] -> [ ball_wwbb ]
+[ right ball_bbbb ] -> [ ball_wbwb ]
+[ left ball_bbbb ] -> [ ball_bwbw ]
+
+[ up ball_bbww ] -> [ ball_wwww ]
+[ down ball_bbww ] -> [ ball_bbbb ]
+[ right ball_bbww ] -> [ ball_bbww ]
+[ left ball_bbww ] -> [ ball_bbww ]
+
+[ up ball_wwbb ] -> [ ball_bbbb ]
+[ down ball_wwbb ] -> [ ball_wwww ]
+[ right ball_wwbb ] -> [ ball_wwbb ]
+[ left ball_wwbb ] -> [ ball_wwbb ]
+
+[ up ball_bwbw ] -> [ ball_bwbw ]
+[ down ball_bwbw ] -> [ ball_bwbw ]
+[ right ball_bwbw ] -> [ ball_bbbb ]
+[ left ball_bwbw ] -> [ ball_wwww ]
+
+[ up ball_wbwb ] -> [ ball_wbwb ]
+[ down ball_wbwb ] -> [ ball_wbwb ]
+[ right ball_wbwb ] -> [ ball_wwww ]
+[ left ball_wbwb ] -> [ ball_bbbb ]
+
+
+
+
+(second part of movemet - rotate)
+down [ | hand_turn ] -> [ t | hand_turn ]
+right [ hand_turn ] [ ball | t no wall  | ball ] -> [ hand_turn ] [ down ball | t | left ball]
+right [ hand_turn ] [ ball | no wall no t | ball ] -> [ hand_turn ] [ right ball | no t | up ball]
+[t]->[]
+
+
+[ moving ball_wwww ] -> [ ball_wwww ]
+[ moving ball_bbbb ] -> [ ball_bbbb ]
+[ moving ball_bbww ] -> [ ball_bwbw ]
+[ moving ball_wwbb ] -> [ ball_wbwb ]
+[ moving ball_bwbw ] -> [ ball_wwbb ]
+[ moving ball_wbwb ] -> [ ball_bbww ]
+
+
+
+[ action player ] [ body_1_1 no wall ] -> [ action player ] [ body_2_1 ]
+[ action player ] [ body_1_2 no wall ] -> [ action player ] [ body_2_2 ]
+[ action player ] [ body_1_3 no wall ] -> [ action player ] [ body_2_3 ]
+[ action player ] [ body_1_4 no wall ] -> [ action player ] [ body_2_4 ]
+[ action player ] [ body_1_5 no wall ] -> [ action player ] [ body_2_5 ]
+[ action player ] [ body_1_6 no wall ] -> [ action player ] [ body_2_6 ]
+[ action player ] [ body_1_7 no wall ] -> [ action player ] [ body_2_7 ]
+[ action player ] [ body_1_8 no wall ] -> [ action player ] [ body_2_8 ]
+[ action player ] [ body_1_9 no wall ] -> [ action player ] [ body_2_9 ]
+
+[ action player ] [ body_3_1 no wall ] -> [ action player ] [ body_4_1 ]
+[ action player ] [ body_3_2 no wall ] -> [ action player ] [ body_4_2 ]
+[ action player ] [ body_3_3 no wall ] -> [ action player ] [ body_4_3 ]
+[ action player ] [ body_3_4 no wall ] -> [ action player ] [ body_4_4 ]
+[ action player ] [ body_3_5 no wall ] -> [ action player ] [ body_4_5 ]
+[ action player ] [ body_3_6 no wall ] -> [ action player ] [ body_4_6 ]
+[ action player ] [ body_3_7 no wall ] -> [ action player ] [ body_4_7 ]
+[ action player ] [ body_3_8 no wall ] -> [ action player ] [ body_4_8 ]
+[ action player ] [ body_3_9 no wall ] -> [ action player ] [ body_4_9 ]
+
+[ action player ] [ body_5_1 no wall ] -> [ action player ] [ body_6_1 ]
+[ action player ] [ body_5_2 no wall ] -> [ action player ] [ body_6_2 ]
+[ action player ] [ body_5_3 no wall ] -> [ action player ] [ body_6_3 ]
+[ action player ] [ body_5_4 no wall ] -> [ action player ] [ body_6_4 ]
+[ action player ] [ body_5_5 no wall ] -> [ action player ] [ body_6_5 ]
+[ action player ] [ body_5_6 no wall ] -> [ action player ] [ body_6_6 ]
+[ action player ] [ body_5_7 no wall ] -> [ action player ] [ body_6_7 ]
+[ action player ] [ body_5_8 no wall ] -> [ action player ] [ body_6_8 ]
+[ action player ] [ body_5_9 no wall ] -> [ action player ] [ body_6_9 ]
+
+[ action player ] [ body_7_1 no wall ] -> [ action player ] [ body_8_1 ]
+[ action player ] [ body_7_2 no wall ] -> [ action player ] [ body_8_2 ]
+[ action player ] [ body_7_3 no wall ] -> [ action player ] [ body_8_3 ]
+[ action player ] [ body_7_4 no wall ] -> [ action player ] [ body_8_4 ]
+[ action player ] [ body_7_5 no wall ] -> [ action player ] [ body_8_5 ]
+[ action player ] [ body_7_6 no wall ] -> [ action player ] [ body_8_6 ]
+[ action player ] [ body_7_7 no wall ] -> [ action player ] [ body_8_7 ]
+[ action player ] [ body_7_8 no wall ] -> [ action player ] [ body_8_8 ]
+[ action player ] [ body_7_9 no wall ] -> [ action player ] [ body_8_9 ]
+
+
+[ hand_turn ] [ body_2_1 no wall ] -> [ hand_turn ] [ body_3_1 ]
+[ hand_turn ] [ body_2_2 no wall ] -> [ hand_turn ] [ body_3_2 ]
+[ hand_turn ] [ body_2_3 no wall ] -> [ hand_turn ] [ body_3_3 ]
+[ hand_turn ] [ body_2_4 no wall ] -> [ hand_turn ] [ body_3_4 ]
+[ hand_turn ] [ body_2_5 no wall ] -> [ hand_turn ] [ body_3_5 ]
+[ hand_turn ] [ body_2_6 no wall ] -> [ hand_turn ] [ body_3_6 ]
+[ hand_turn ] [ body_2_7 no wall ] -> [ hand_turn ] [ body_3_7 ]
+[ hand_turn ] [ body_2_8 no wall ] -> [ hand_turn ] [ body_3_8 ]
+[ hand_turn ] [ body_2_9 no wall ] -> [ hand_turn ] [ body_3_9 ]
+
+[ hand_turn ] [ body_4_1 no wall ] -> [ hand_turn ] [ body_5_1 ]
+[ hand_turn ] [ body_4_2 no wall ] -> [ hand_turn ] [ body_5_2 ]
+[ hand_turn ] [ body_4_3 no wall ] -> [ hand_turn ] [ body_5_3 ]
+[ hand_turn ] [ body_4_4 no wall ] -> [ hand_turn ] [ body_5_4 ]
+[ hand_turn ] [ body_4_5 no wall ] -> [ hand_turn ] [ body_5_5 ]
+[ hand_turn ] [ body_4_6 no wall ] -> [ hand_turn ] [ body_5_6 ]
+[ hand_turn ] [ body_4_7 no wall ] -> [ hand_turn ] [ body_5_7 ]
+[ hand_turn ] [ body_4_8 no wall ] -> [ hand_turn ] [ body_5_8 ]
+[ hand_turn ] [ body_4_9 no wall ] -> [ hand_turn ] [ body_5_9 ]
+
+[ hand_turn ] [ body_6_1 no wall ] -> [ hand_turn ] [ body_7_1 ]
+[ hand_turn ] [ body_6_2 no wall ] -> [ hand_turn ] [ body_7_2 ]
+[ hand_turn ] [ body_6_3 no wall ] -> [ hand_turn ] [ body_7_3 ]
+[ hand_turn ] [ body_6_4 no wall ] -> [ hand_turn ] [ body_7_4 ]
+[ hand_turn ] [ body_6_5 no wall ] -> [ hand_turn ] [ body_7_5 ]
+[ hand_turn ] [ body_6_6 no wall ] -> [ hand_turn ] [ body_7_6 ]
+[ hand_turn ] [ body_6_7 no wall ] -> [ hand_turn ] [ body_7_7 ]
+[ hand_turn ] [ body_6_8 no wall ] -> [ hand_turn ] [ body_7_8 ]
+[ hand_turn ] [ body_6_9 no wall ] -> [ hand_turn ] [ body_7_9 ]
+
+[ hand_turn ] [ body_8_1 no wall ] -> [ hand_turn ] [ body_1_1 ]
+[ hand_turn ] [ body_8_2 no wall ] -> [ hand_turn ] [ body_1_2 ]
+[ hand_turn ] [ body_8_3 no wall ] -> [ hand_turn ] [ body_1_3 ]
+[ hand_turn ] [ body_8_4 no wall ] -> [ hand_turn ] [ body_1_4 ]
+[ hand_turn ] [ body_8_5 no wall ] -> [ hand_turn ] [ body_1_5 ]
+[ hand_turn ] [ body_8_6 no wall ] -> [ hand_turn ] [ body_1_6 ]
+[ hand_turn ] [ body_8_7 no wall ] -> [ hand_turn ] [ body_1_7 ]
+[ hand_turn ] [ body_8_8 no wall ] -> [ hand_turn ] [ body_1_8 ]
+[ hand_turn ] [ body_8_9 no wall ] -> [ hand_turn ] [ body_1_9 ]
+
+
+
+
+
+
+
+
+
+(need to do body rotations as well here!)
+
+(move object)
+[moving player ] [ stationary apparatus] -> [ moving player ] [ moving apparatus]
+
+
+right [ ball | action player | ball ] -> [ down ball | action player | up ball ]
+down [ ball | action player | ball ] -> [ left ball | action player | right ball ]
+
+
+down [ | hand_turn ] -> [ t | hand_turn ]
+right [ hand_turn ] [ ball | t | ball ] -> [ hand_turn ] [ down ball | t | left ball]
+right [ hand_turn ] [ ball | no t | ball ] -> [ hand_turn ] [ right ball | no t | up ball]
+
+
+
+[ hand_turn ] -> [ hand]
+[ action player ] [ hand ] -> [ action player ] [ hand_turn ] again 
+
+[t]->[]
+
+[ body wall ] -> [ stationary body wall ] 
+[ ball wall ] -> [ stationary ball wall ]
+
+[ > body | wall ] -> cancel
+
+
+random up [move_ul] [person | ] -> [ move_ul] [ person |  person_target]
+random up [move_ur] [person | ] -> [ move_ur] [ person |  person_target]
+random down [move_dl] [person | ] -> [ move_dl] [ person |  person_target]
+random down [move_dr] [person | ] -> [ move_dr] [ person |  person_target]
+
+random left [move_ul] [person_target | ] -> [ moved] [ | person_target ]
+random right [move_ur] [person_target | ] -> [ moved] [ | person_target ]
+random left [move_dl] [person_target | ] -> [ moved] [ | person_target ]
+random right [move_dr] [person_target | ] -> [ moved] [ | person_target ]
+[person_target wall ] -> [ wall] 
+
+[person_target ] [ person ] -> [ person ] [ ]
+
+[move_active]->[]
+
+late down [ ball_wwww | player no moved | ball_bbbb  ] -> [ ball_wwww  | player t | ball_bbbb  ]
+late right [ ball_wwww | player t| ball_bbbb  ] -> [  ball_wwww | player move_ul | ball_bbbb ] again
+late [t] -> [ ]
+
+
+late down [ ball_wwww | player  no moved | ball_bbbb  ] -> [ ball_wwww  | player t | ball_bbbb  ]
+late right [ ball_bbbb | player t| ball_wwww  ] -> [  ball_bbbb | player move_ur | ball_wwww ] again
+late [t] -> [ ]
+
+
+late down [ ball_bbbb | player no moved  | ball_wwww  ] -> [ ball_bbbb  | player t | ball_wwww  ]
+late right [ ball_wwww | player t| ball_bbbb  ] -> [  ball_wwww | player move_dl | ball_bbbb ] again
+late [t] -> [ ]
+
+
+late down [ ball_bbbb | player  no moved | ball_wwww  ] -> [ ball_bbbb  | player t | ball_wwww  ]
+late right [ ball_bbbb | player t| ball_wwww  ] -> [  ball_bbbb | player move_dr | ball_wwww ] again
+late [t] -> [ ]
+
+
+late down [ ball_wwww | player  no moved | ball_wwww  ] -> [ ball_wwww  | player t | ball_wwww  ]
+late right [ ball_wwww | player t | ball_wwww  ] [person flag] ->  win
+late [t] -> [ ]
+
+late [moved]->[]
+
+[action player  sprt_2_3] -> win
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+message Level 1 of 1
+
+fffffffffffffffffffffffff
+ffffю.гffffcbbbbbbbbbbbcf
+fffffffffffn...........nf
+fєbbbbbbbґfn...........nf
+fn.......nfn...........nf
+fn.......nfn...cbbbc...nf
+fn..123..nfn...n...n...nf
+fn..456..nfn...n.г.n...nf
+fn..789..nfn...n...c...nf
+fn.......nfn.б.n.......nf
+fn.......nfn...n.......nf
+fжbbbbbbbдfcbbbcbbbbbbbcf
+fffffffffffffffffffffffff
+
+message victory!
+
+!@£
+$%^
+&*-
+\"|
+
+

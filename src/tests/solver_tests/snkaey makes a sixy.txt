@@ -1,0 +1,376 @@
+title Snakey Snakey Makes A Sixy
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+require_player_movement
+
+color_palette 5
+
+========
+OBJECTS
+========
+
+Background
+black black
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+
+prev1 a
+darkgreen
+.000.
+0...0
+0...0
+0...0
+.000.
+
+prev2 b
+darkgreen
+.000.
+0...0
+0...0
+0...0
+.000.
+
+Player
+green
+.000.
+0...0
+0...0
+0...0
+.000.
+
+
+
+1
+purple
+.....
+.....
+..0..
+.....
+.....
+
+
+
+2
+red
+.....
+.0...
+.....
+...0.
+.....
+
+
+3
+pink
+.....
+.0...
+..0..
+...0.
+.....
+
+
+4
+yellow
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+
+5
+lightgreen
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+
+6
+green
+.....
+.000.
+.....
+.000.
+.....
+
+
+c_up
+black
+..0..
+.....
+.....
+.....
+.....
+
+c_down
+black
+.....
+.....
+.....
+.....
+..0..
+
+c_left
+black
+.....
+.....
+0....
+.....
+.....
+
+c_right
+black
+.....
+.....
+....0
+.....
+.....
+
+sprt_0_0 l
+#69ff05 black
+.....
+.....
+..1.0
+....0
+....0
+
+sprt_1_0 k
+#69ff05
+.....
+.0000
+00000
+.000.
+00000
+
+sprt_2_0 j 
+#69ff05 black
+.....
+.....
+0.1..
+0....
+0....
+
+sprt_3_0 h
+#000000
+.....
+.....
+..0..
+.....
+.....
+
+sprt_0_1 g
+#ff1463 black
+.....
+....0
+..10.
+.....
+.....
+
+sprt_1_1 f
+#69ff05 #ff1463 #22630a black
+01000
+10002
+1.322
+1....
+.....
+
+sprt_2_1 d
+#22630a
+0....
+000..
+000..
+00000
+..000
+
+sprt_3_1 s
+#22630a black
+.....
+.....
+..1..
+.....
+0....
+
+sprt_0_2 z
+white black
+.....
+.....
+..1..
+.....
+.....
+
+sprt_1_2 x
+white black
+.....
+0.0.0
+..1..
+0.0.0
+.....
+
+sprt_2_2 0
+#22630a black
+....0
+....0
+..1..
+.....
+.....
+
+sprt_3_2 v
+#22630a black
+0....
+0....
+001..
+000..
+000..
+
+sprt_0_3 9
+#22630a black
+..00.
+...00
+..1.0
+.....
+.....
+
+sprt_1_3 n
+#22630a
+.....
+0....
+00000
+.0000
+.....
+
+sprt_2_3 m
+#22630a
+....0
+..000
+00000
+000..
+.....
+
+sprt_3_3 8
+#22630a black
+00...
+0....
+..1..
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Target
+
+prev = prev1 or prev2
+
+
+num = 1 or 2 or 3 or 4 or 5 or 6
+
+c = c_up or c_down or c_left or c_right
+
+body = player or prev
+
+=======
+SOUNDS
+=======
+ 
+
+sfx1 55932906
+sfx2 4305306
+sfx3 6823106
+sfx4 83937501
+sfx5 65854702
+
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+1,2,3,4,5,6
+Player, Wall, prev1, prev2
+c_up
+c_down
+c_left
+c_right
+sprt_0_0, sprt_1_0, sprt_2_0, sprt_3_0, sprt_0_1, sprt_1_1, sprt_2_1, sprt_3_1, sprt_0_2, sprt_1_2, sprt_2_2, sprt_3_2, sprt_0_3, sprt_1_3, sprt_2_3, sprt_3_3
+
+======
+RULES
+======
+
+
+[no num]->[1]
+
+[> player | prev ] -> cancel
+
+[ prev1 | player ] -> [ > prev1 | player ]
+[ prev2 | prev1 ] -> [ > prev2 | prev1 ]
+
+late [ player 1 ] [ prev1 1 ] [ prev2 1] -> [ player 2 ] [ prev1 ] [ prev2 ] sfx1 again
+late [ player 2 ] [ prev1 2 ] [ prev2 2] -> [ player 3 ] [ prev1 ] [ prev2 ] sfx2 again
+late [ player 3 ] [ prev1 3 ] [ prev2 3] -> [ player 4 ] [ prev1 ] [ prev2 ] sfx3 again
+late [ player 4 ] [ prev1 4 ] [ prev2 4] -> [ player 5 ] [ prev1 ] [ prev2 ] sfx4 again
+late [ player 5 ] [ prev1 5 ] [ prev2 5] -> sfx5 win
+
+
+
+late [ c ] -> []
+
+late right [ body | body ] -> [ body c_right | body c_left ]
+late down [ body | body ] -> [ body c_down | body c_up ]
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+.........
+.........
+.........
+.........
+....p....
+....a....
+....b....
+.........
+.........
+
+message You did it, snakey snakey!  You made a sixy!
+
+lkjh
+gfds
+zx0v
+9nm8

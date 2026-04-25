@@ -1,0 +1,363 @@
+title DICE GOBLIN
+author Stephen Lavelle
+homepage www.increpare.com
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+d1 1
+white darkgray black
+22222
+20002
+20102
+20002
+22222
+
+d2a 2
+white darkgray black
+22222
+21002
+20002
+20012
+22222
+
+
+d2b 3
+white darkgray black
+22222
+20012
+20002
+21002
+22222
+
+d3a 4
+white darkgray black
+22222
+21002
+20102
+20012
+22222
+
+
+d3b 5
+white darkgray black
+22222
+20012
+20102
+21002
+22222
+
+
+d4 6
+white darkgray black
+22222
+21012
+20002
+21012
+22222
+
+
+d5 7
+white darkgray black
+22222
+21012
+20102
+21012
+22222
+
+
+d6a 8
+white darkgray black
+22222
+21112
+20002
+21112
+22222
+
+
+d6b 9
+white darkgray black
+22222
+21012
+21012
+21012
+22222
+
+
+Background
+lightgray
+
+ob
+gray
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+black
+
+Player
+green lightgreen brown
+00.00
+.222.
+.101.
+00000
+.0.0.
+
+Crate
+black
+.....
+..0..
+.000.
+..0..
+.....
+
+tl
+red
+
+x11
+transparent
+
+x21
+transparent
+
+x31
+transparent
+
+
+x12
+transparent
+
+x22
+transparent
+
+x32
+transparent
+
+
+x13
+transparent
+
+x23
+transparent
+
+x33
+transparent
+
+visited
+transparent
+
+found 
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+passes
+blue
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player and ob
+* = Crate 
+~ = Crate and ob
+m = crate and ob and tl
+n = crate and tl
+O = Target
+, = ob
+
+d2 = d2a or d2b
+d3 = d3a or d3b
+d6 = d6a or d6b
+
+coord = x11 or x12 or x13 or x21 or x22 or x23 or x31 or x32 or x33
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 51877303
+================
+COLLISIONLAYERS
+================
+
+tl
+Background
+ob
+Target
+Player, Wall, Crate
+d1, d2a,d2b,d3a,d3b,d4,d5,d6a,d6b
+found
+coord
+visited
+passes
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[> crate|crate]->[> crate | >  crate ]
+
+
+
+
+[found]->[]
+
+startloop
+
+random  down [tl no visited ||]->[tl visited x11|x12|x13]
+
+
+
+
+
+
+late right [x11 no Crate | no crate | no crate ] -> [ x11  passes | | ]
+late right [x12 no Crate | crate | no crate ] -> [ x12  passes | crate | ]
+late right [x13 no Crate | no crate | no crate ] -> [ x13  passes 	  | | ]
+
+late down [x11 passes | passes | passes ] [ d1 ] -> [||] [d1 found] 
+
+late [ passes ] -> []
+
+
+
+late right [x11 Crate | no crate | no crate ] -> [ x11  passes crate | | ]
+late right [x12 no Crate | no crate | no crate ] -> [ x12  passes | | ]
+late right [x13 no Crate | no crate | crate ] -> [ x13  passes 	  | | crate ]
+
+late down [x11 passes | passes | passes ] [ d2a ] -> [||] [d2a found] 
+
+late [ passes ] -> []
+
+
+
+late right [x11 no Crate | no crate | crate ] -> [ x11  passes | | crate]
+late right [x12 no Crate | no crate | no crate ] -> [ x12  passes | | ]
+late right [x13 Crate | no crate | no crate ] -> [ x13  passes 	crate  | | ]
+
+late down [x11 passes | passes | passes ] [ d2b ] -> [||] [d2b found] 
+
+late [ passes ] -> []
+
+
+
+late right [x11 Crate | no crate | no crate ] -> [ x11 crate passes | | ]
+late right [x12 no Crate | crate | no crate ] -> [ x12  passes | crate |]
+late right [x13 no Crate | no crate | crate ] -> [ x13  passes | | crate]
+
+late down [ passes | passes | passes ] [ d3a ] -> [||] [d3a found] 
+
+late [ passes ] -> []
+
+
+late right [x11 no Crate | no crate |  crate ] -> [ x11  passes | | crate]
+late right [x12 no Crate |  crate | no crate ] -> [ x12  passes | crate| ]
+late right [x13 Crate | no crate | no crate ] -> [ x13  passes 	 crate | | ]
+
+late down [x11 passes | passes | passes ] [ d3b ] -> [||] [d3b found] 
+
+late [ passes ] -> []
+
+
+
+
+
+
+late right [x11  Crate | no crate |  crate ] -> [ x11  passes crate| | crate]
+late right [x12 no Crate | no crate | no crate ] -> [ x12  passes | | ]
+late right [x13  Crate | no crate |  crate ] -> [ x13  passes 	crate  | | crate]
+
+late down [x11 passes | passes | passes ] [ d4 ] -> [||] [d4 found] 
+
+late [ passes ] -> []
+
+
+
+late right [x11  Crate | no crate |  crate ] -> [ x11  passes crate| | crate]
+late right [x12 no Crate |  crate | no crate ] -> [ x12  passes |crate | ]
+late right [x13  Crate | no crate |  crate ] -> [ x13  passes 	crate  | | crate]
+
+late down [x11 passes | passes | passes ] [ d5 ] -> [||] [d5 found] 
+
+late [ passes ] -> []
+
+
+
+late right [x11  Crate |  crate |  crate ] -> [ x11  passes crate| crate| crate]
+late right [x12 no Crate | no crate | no crate ] -> [ x12  passes | | ]
+late right [x13  Crate |  crate |  crate ] -> [ x13  passes 	crate  | crate| crate]
+
+late down [x11 passes | passes | passes ] [ d6a ] -> [||] [d6a found] 
+
+late [ passes ] -> []
+
+
+
+late right [x11  Crate | no crate |  crate ] -> [ x11  passes crate| |crate ]
+late right [x12  Crate | no crate |  crate ] -> [ x12  passes crate| |crate ]
+late right [x13  Crate | no crate |  crate ] -> [ x13  passes crate	  | |crate ]
+
+late down [x11 passes | passes | passes ] [ d6b ] -> [||] [d6b found] 
+
+late [ passes ] -> []
+
+
+
+late [coord]->[]
+
+endLoop
+
+
+late [visited]->[]
+
+==============
+WINCONDITIONS
+==============
+
+some found on d1
+some found on d2
+some found on d3
+some found on d4
+some found on d5
+some found on d6
+
+=======
+LEVELS
+=======
+
+message level 1 of 1
+
+message Oh no, there was an accident at the dice printing factory.  
+
+message Save us, dice goblin! 
+
+
+#1#######n.*###
+23#######...###
+45#######*.*###
+#6#m,,n..m,~n..
+#7#,~,.*.,,,.*.
+98#p,~..*~,~..*
+#########n.*###
+#########...###
+#########*.*###
+
+message Now we can sell our dice to the very best casinos in the universe.  God themself will play with our dice!  Thank you, dice goblin!

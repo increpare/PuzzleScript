@@ -1,0 +1,167 @@
+title pushit
+author increpare
+homepage www.increpare.net
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+Poo
+orange brown
+.0...
+..1..
+.000.
+.1111
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
++ = player and target
+
+obstacle = wall or player or crate or poo
+pushable = crate or poo
+=======
+SOUNDS
+=======
+
+poo create 9134102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, Poo
+
+======
+RULES
+======
+
+[ >  Player | pushable | no obstacle ] -> [ poo | Player | pushable  ]
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Level 1 of 4
+
+#########
+#.......#
+#...*...#
+#...*...#
+#...*.p.#
+#...o...#
+#...o...#
+#...o...#
+#.......#
+#########
+
+
+message Level 2 of 4
+
+##############
+#............#
+#............#
+#....***.....#
+#............#
+#............#
+#....ooo..*..#
+#..p.ooo..*..#
+#....ooo..*..#
+#............#
+#............#
+#....***.....#
+#............#
+#............#
+##############
+
+message Level 3 of 4
+
+
+#########
+#.......#
+#..O*O..#
+#..*P*..#
+#..O*O..#
+#.......#
+#########
+
+message Level 4 of 4
+
+
+######
+#O..O#
+#P**.#
+#....#
+#....#
+#.**.#
+#O..O#
+######
+
+message Congrats!  You can pushit!
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,461 @@
+title Sokogoban
+author Stephen Lavelle
+homepage www.increpare.com
+
+run_rules_on_level_start
+
+background_color DARKGREEN
+text_color yellow
+
+========
+OBJECTS
+========
+
+Background
+lightbrown DARKBROWN
+00000
+00000
+00100
+00000
+00000
+
+bg_up
+DARKBROWN
+..0..
+..0..
+.....
+.....
+.....
+bg_down
+DARKBROWN
+.....
+.....
+.....
+..0..
+..0..
+
+bg_left
+DARKBROWN
+.....
+.....
+00...
+.....
+.....
+
+bg_right
+DARKBROWN
+.....
+.....
+...00
+.....
+.....
+
+
+owall
+brown lightbrown
+00000
+00000
+00000
+00000
+00000
+
+awall
+lightbrown
+
+
+
+Player
+Black yellow lightgreen green blue
+.004.
+.111.
+12221
+13331
+.222.
+
+white
+white TRANSPARENT TRANSPARENT
+.....
+.000.
+00000
+10001
+.121.
+
+black
+black TRANSPARENT TRANSPARENT
+.....
+.000.
+00000
+10001
+.121.
+
+lid_white_0 
+darkbrown black
+.....
+.000.
+00000
+.000.
+.....
+
+lid_white_1 
+darkbrown black
+.....
+.000.
+01000
+.000.
+.....
+
+lid_white_2
+darkbrown black
+.....
+.000.
+01010
+.000.
+.....
+
+lid_white_3
+darkbrown black
+.....
+.000.
+01110
+.000.
+.....
+
+
+lid_white_4
+darkbrown black
+.....
+.010.
+01110
+.000.
+.....
+
+
+lid_black_0
+darkbrown white
+.....
+.000.
+00000
+.000.
+.....
+
+
+lid_black_1
+darkbrown white
+.....
+.000.
+01000
+.000.
+.....
+
+
+lid_black_2
+darkbrown white
+.....
+.000.
+01010
+.000.
+.....
+
+
+lid_black_3
+darkbrown white
+.....
+.000.
+01110
+.000.
+.....
+
+
+lid_black_4
+darkbrown white
+.....
+.010.
+01110
+.000.
+.....
+
+bowl_white 
+darkbrown white
+.....
+.000.
+01110
+00000
+.000.
+
+bowl_black 
+darkbrown black
+.....
+.000.
+01110
+00000
+.000.
+
+fill_whitesave
+TRANSPARENT
+
+fill_blacksave
+TRANSPARENT
+
+
+b_4
+black
+...0.
+..00.
+.0.0.
+00000
+...0.
+
+
+b_3
+black
+.000.
+...0.
+.000.
+...0.
+.000.
+
+
+
+b_2
+black
+.000.
+...0.
+.000.
+.0...
+.000.
+
+
+b_1
+black
+..0..
+.00..
+..0..
+..0..
+.000.
+
+
+b_0
+black
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+
+w_4
+black
+...0.
+..00.
+.0.0.
+00000
+...0.
+
+
+w_3
+black
+.000.
+...0.
+.000.
+...0.
+.000.
+
+
+
+w_2
+black
+.000.
+...0.
+.000.
+.0...
+.000.
+
+
+w_1
+black
+..0..
+.00..
+..0..
+..0..
+.000.
+
+
+w_0
+black
+.000.
+.0.0.
+.0.0.
+.0.0.
+.000.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = aWall
+P = Player
+* = white
+@ = black
+, = owall
+
+v = bowl_white and owall
+b = bowl_black and owall
+
+n = lid_white_0 and owall
+m = lid_black_0 and owall
+
+
+j = lid_white_1 and owall
+k = lid_black_1 and owall
+
+
+u = lid_white_2 and owall
+i = lid_black_2 and owall
+
+
+7 = lid_white_3 and owall
+8 = lid_black_3 and owall
+
+
+
+9 = lid_white_4 and owall
+0 = lid_black_4 and owall
+
+bgs = bg_up or bg_down or bg_left or bg_right
+wall = awall or owall
+stone = white or black
+
+fill = fill_whitesave or fill_blacksave
+
+lid_white = lid_white_0 or lid_white_1 or lid_white_2 or lid_white_3 or lid_white_4 
+lid_black = lid_black_0 or lid_black_1 or lid_black_2 or lid_black_3 or lid_black_4
+
+w_nums = w_0 or w_1 or w_2 or w_3 or w_4
+b_nums = b_0 or b_1 or b_2 or b_3 or b_4
+
+nums = b_nums or w_nums
+
+=======
+SOUNDS
+=======
+
+stone MOVE 36772507
+black destroy 87391700
+white destroy 59027500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+bg_up
+bg_down
+bg_left
+bg_right
+Player, Wall, stone
+bowl_white,bowl_black, lid_white,lid_black
+fill_whitesave
+fill_blacksave
+nums
+
+======
+RULES
+======
+
+[bgs]->[]
+
+down [ no wall | no wall ] -> [ bg_down | bg_up ]
+right [ no wall | no wall ] -> [ bg_right | bg_left ]
+
+[ >  Player | stone ] -> [  >  Player | > stone  ]
+
+late [ no stone no wall ] -> [ fill_whitesave fill_blacksave ]
+
+late [ fill_whitesave | no black  no wall ] -> [ fill_whitesave | fill_whitesave ]
+
+late [ fill_blacksave | no white  no wall ] -> [ fill_blacksave | fill_blacksave ]
+
+late [ black no fill_blacksave ] [ lid_white_3 ] -> [ ] [ lid_white_4 ] win
+
+late [ black no fill_blacksave ] [ lid_white_2 ] -> [ ] [ lid_white_3 ] 
++ late [ black no fill_blacksave ] [ lid_white_1 ] -> [ ] [ lid_white_2 ]
++ late [ black no fill_blacksave ] [ lid_white_0 ] -> [ ] [ lid_white_1 ]
+
+late [ black no fill_blacksave ] -> [ ]
+
+
+late [ white no fill_whitesave ] [ lid_black_3 ] -> [ ] [ lid_black_4 ] 
+late [ white no fill_whitesave ] [ lid_black_2 ] -> [ ] [ lid_black_3 ] 
++ late [ white no fill_whitesave ] [ lid_black_1 ] -> [ ] [ lid_black_2 ]
++ late [ white no fill_whitesave ] [ lid_black_0 ] -> [ ] [ lid_black_1 ]
+
+late [ white no fill_whitesave ] -> [ ]
+
+
+late [ fill ] -> []
+
+
+late [ lid_black_4 ] [ lid_white_4 ] [ player ] -> [ lid_black_4 ] [ lid_white_4 ] [ ] message  It's a draw!
+late [ lid_black_4 ] [ player ] -> [ lid_black_3 ] [ ] message Oh no you lost :(
+
+late [nums] -> []
+late up [lid_white_0|] -> [lid_white_0|w_4]
+late up [lid_white_1|] -> [lid_white_1|w_3]
+late up [lid_white_2|] -> [lid_white_2|w_2]
+late up [lid_white_3|] -> [lid_white_3|w_1]
+late up [lid_white_4|] -> [lid_white_4|w_0]
+
+(
+late down [lid_black_0|] -> [lid_black_0|b_4]
+late down [lid_black_1|] -> [lid_black_1|b_3]
+late down [lid_black_2|] -> [lid_black_2|b_2]
+late down [lid_black_3|] -> [lid_black_3|b_1]
+late down [lid_black_4|] -> [lid_black_4|b_0]
+)
+==============
+WINCONDITIONS
+==============
+
+no black
+
+=======
+LEVELS
+=======
+
+message Surround enemy stones with yours to capture them.  
+
+message Level 1 of 3 : Capture one final black tile to win!
+
+b,,,,,
+i....,
+,.,p.,
+,.@*.,
+,..*.,
+,....7
+,,,,,v
+
+message Level 2 of 3 : Capture three black tiles to win!
+
+b,,,,,,,,
+k,.....,,
+,@.@@@.@,
+,@.....@,
+,@.***.@,
+,@..p..@j
+,,,,,,,,v
+
+message Level 3 of 3 : Capture four black tiles
+
+b,,,,,,,,
+m.......,
+,.......,
+,..*@@.*,
+,.*@*...,
+,..@....,
+,.....p.,
+,.......n
+,,,,,,,,v
+
+
+message You are a true Sokogoban master!

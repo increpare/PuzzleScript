@@ -1,0 +1,374 @@
+title KONSUM
+author increpare
+homepage www.increpare.com
+run_rules_on_level_start
+norepeat_action
+text_color lightgray
+background_color darkblue
+(thanks to eli cauley for helping test)
+color_palette 13
+
+========
+OBJECTS
+========
+
+
+Background 
+darkblue  
+ 
+
+
+
+wall_t #
+gray darkblue
+.....
+00000
+.....
+00000
+11111
+
+
+wall_b 2 
+gray darkblue
+11111
+00000
+.....
+00000
+.....
+
+wall_l 3 
+gray darkblue
+.0.01
+.0.01
+.0.01
+.0.01
+.0.01
+
+
+wall_r 4
+gray darkblue
+10.0.
+10.0.
+10.0.
+10.0.
+10.0.
+
+Wall_tl 5
+gray darkblue
+.....
+..000
+.00..
+.0.00
+.0.01
+
+Wall_tr 6
+gray darkblue
+.....
+000..
+..00.
+00.0.
+10.0.
+
+Wall_bl 7
+gray darkblue
+.0.01
+.0.00
+.00..
+..000
+.....
+
+Wall_br 8
+gray darkblue
+10.0.
+00.0.
+..00.
+000..
+.....
+
+blacktile
+gray
+
+whitetile
+darkgreen
+
+explore
+yellow
+.....
+..0..
+.000.
+..0..
+.....
+
+place
+yellow
+00.00
+0...0
+.....
+0...0
+00.00
+
+
+exploremode
+lightblue
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+temp
+red
+
+nosuck
+lightred
+.....
+..0..
+.000.
+..0..
+.....
+
+canplace
+purple
+
+badborder
+lightblue
+.....
+.....
+..0..
+.....
+.....
+
+y_up
+yellow
+00000
+.....
+.....
+.....
+.....
+
+
+y_down
+yellow
+.....
+.....
+.....
+.....
+00000
+
+
+y_left
+yellow
+0....
+0....
+0....
+0....
+0....
+
+
+y_right
+yellow
+....0
+....0
+....0
+....0
+....0
+
+
+r_up
+#ff0000
+00000
+.....
+.....
+.....
+.....
+
+
+r_down
+#ff0000
+.....
+.....
+.....
+.....
+00000
+
+
+r_left
+#ff0000
+0....
+0....
+0....
+0....
+0....
+
+
+r_right
+#ff0000
+....0
+....0
+....0
+....0
+....0
+
+
+b_up
+darkbrown
+00000
+.....
+.....
+.....
+.....
+
+
+b_down
+darkbrown
+.....
+.....
+.....
+.....
+00000
+
+
+b_left
+darkbrown
+0....
+0....
+0....
+0....
+0....
+
+
+b_right
+darkbrown
+....0
+....0
+....0
+....0
+....0
+
+=======
+LEGEND
+=======
+
+. = Background
+P = explore and blacktile
+0 = whitetile
+1 = blacktile 
+
+player = explore or place
+
+y_lines  = y_up or y_down or y_left or y_right
+r_lines  = r_up or r_down or r_left or r_right
+b_lines  = b_up or b_down or b_left or b_right
+lines = y_lines or r_lines or b_lines
+wall = Wall_t or wall_b or wall_l or wall_r or wall_tl or wall_tr or wall_bl or wall_br 
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+place
+blacktile, whitetile
+Wall
+explore
+exploremode
+temp
+canplace
+nosuck
+badborder
+y_up
+y_down
+y_left
+y_right
+r_up
+r_down
+r_left
+r_right
+b_up
+b_down
+b_left
+b_right
+
+
+======
+RULES
+======
+
+[lines]->[]
+
+[nosuck]->[]
+
+[ > player | wall ] -> cancel
+
+[action explore blacktile] -> [ place blacktile]
+[stationary place | blacktile ] -> [ place | blacktile place]
+
+
+(to place)
+
+(1 must have at least one piece on black)
+random  [ place blacktile] -> [ place blacktile canplace ]
+
+[ canplace ] [ blacktile place | blacktile no place ] -> [ ] [ blacktile place | blacktile ]
+
+[canplace] [ action place ] ->[canplace] [ action place blacktile ]
+
+[canplace]->[]
+
+random [ action place ] -> [ explore ]
+
+[place ] [ explore ] -> [] [ explore ]
+
+late [ explore no blacktile ] -> [ explore nosuck]
+
+
+late up [ place | no place ] -> [ place y_up | ]
+late down [ place | no place ] -> [ place y_down | ]
+late left [ place | no place ] -> [ place y_left | ]
+late right [ place | no place ] -> [ place y_right | ]
+
+random late [ place blacktile ] -> [ place temp blacktile ]
+late [temp]  [ place ] -> [ temp ] [ place temp ]
+
+late [y_up no temp ] -> [ b_up ]
+late [y_down no temp ] -> [ b_down ]
+late [y_left no temp ] -> [ b_left ]
+late [y_right no temp ] -> [ b_right ]
+
+
+late [ temp] -> []
+
+late up [ y_up blacktile | blacktile ] -> [ r_up blacktile | blacktile ]
+late down [ y_down blacktile | blacktile ] -> [ r_down blacktile | blacktile ]
+late left [ y_left blacktile | blacktile ] -> [ r_left blacktile | blacktile ]
+late right [ y_right blacktile | blacktile ] -> [ r_right blacktile | blacktile ]
+
+==============
+WINCONDITIONS
+==============
+
+no whitetile
+
+
+=======
+LEVELS
+=======
+
+message LEVEL 1 / 1
+
+5########6
+3010000114
+300p000004
+3000001004
+3000010014
+3000000004
+3001000004
+3001000004
+3000000004
+7########8
+
+message CONSUMPTION SUCCESSFUL / ERFOLGEREICHER VERBRAUCH

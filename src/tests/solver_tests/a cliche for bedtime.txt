@@ -1,0 +1,102 @@
+title A cliche for bedtime
+author Stephen Lavelle
+homepage www.increpare.com
+
+background_color darkblue
+
+========
+OBJECTS
+========
+
+Background
+black
+
+
+Target
+pink
+.....
+.....
+..0..
+.....
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+gray
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+Crate
+#ff00ff
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Level 1 of 1
+
+.................
+.@.*.o@o.@*@.@@@.
+.@.*.@.@.o*o.@...
+.@**.@*@.o*o.@@@.
+.@.*.@.@.o*o.@...
+.@o@.@o@..@..@@@.
+p................
+
+
+
+

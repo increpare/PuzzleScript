@@ -1,0 +1,597 @@
+title Match two two by twos
+author Stephen Lavelle
+homepage www.puzzlescript.net
+
+debug
+verbose_logging
+norepeat_Action
+
+========
+OBJECTS
+========
+
+Background
+black black
+11111
+01111
+11101
+11111
+10111
+
+
+Wall
+gray black
+00010
+11111
+01000
+11111
+00010
+
+Player
+white 
+00.00
+0...0
+.....
+0...0
+00.00
+
+Red R
+Red 
+00000
+00.00
+0...0
+00.00
+00000
+
+Green G
+Green
+00000
+0.0.0
+00000
+0.0.0
+00000
+
+Blue B
+Blue 
+00000
+0.000
+00.00
+000.0
+00000
+
+Yellow Y
+yellow
+00000
+0...0
+00000
+0...0
+00000
+
+funnel F
+gray black
+00010
+11111
+01000
+11111
+00010
+
+todestroy
+transparent white transparent transparent 
+20002
+02.20
+0.1.0
+02.20
+20002
+
+MTL
+transparent
+
+MTR
+transparent
+
+MBL
+transparent
+
+MBR
+transparent
+
+MT
+transparent
+
+MT2
+transparent
+
+
+MTa
+transparent
+
+MT2a
+transparent
+
+
+MTb
+transparent
+
+MT2b
+transparent
+
+Mb
+transparent
+
+ML
+transparent
+
+MR
+transparent
+
+match m
+transparent
+
+todelete D
+transparent
+
+gobble
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+midgobble
+transparent
+.....
+.....
+..0..
+.....
+.....
+
+moved
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+
+1 = gobble and blue
+2 = gobble and green
+3 = gobble and red
+4 = gobble and yellow
+5 = midgobble and blue
+6 = midgobble and green
+7 = midgobble and red
+8 = midgobble and yellow
+
+Color = red or green or blue or yellow
+
+anymatch = mtl or mtr or mbl or mbr or mt or mb or match or ml or mr or mt2 or mt or mta or mtb or mt2a or mt2b
+
+pushable = color or player
+
+=======
+SOUNDS
+=======
+
+sfx0 30674702 (placement)
+sfx1 37302105 (remove)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+color
+Wall,player, Funnel
+mtl
+mtr
+mbl
+mbr
+mt
+mt2
+mta
+mt2a
+mtb
+mt2b
+mb
+ml
+mr
+m
+todelete
+todestroy
+gobble
+midgobble
+moved
+
+======
+RULES
+======
+
+
+
+[todestroy]->[]
+
+(need to repeat this for down direction)
+right [ red 	| | red ] 		-> [ ml red 	| | mr red ]
+right [ green 	| | green ] 	-> [ ml green 	| | mr green ]
+right [ blue	| | blue ] 		-> [ ml blue  	| | mr blue ]
+right [ yellow 	| | yellow ] 	-> [ ml yellow 	| | mr yellow ]
+
+right [ ml | ml | mr | mr ] -> [ ml mta | ml mtb | mr mta | mr mtb ]
+
+[ml]->[]
+[mr]->[]
+
+
+down [ red 	| | red ] 		-> [ ml red 	| | mr red ]
+down [ green 	| | green ] 	-> [ ml green 	| | mr green ]
+down [ blue	| | blue ] 		-> [ ml blue  	| | mr blue ]
+down [ yellow 	| | yellow ] 	-> [ ml yellow 	| | mr yellow ]
+
+down [ ml | ml | mr | mr ] -> [ ml mt2a | ml mt2b | mr mt2a | mr mt2b ]
+
+
+down [ mta | mta ] -> [ mta no color todestroy | mta no color todestroy] sfx1 again
+down [ mtb | mtb ] -> [ mtb no color todestroy | mtb no color todestroy ] sfx1 again
+right [ mt2a | mt2a ] -> [ mt2a no color todestroy | mt2a no color todestroy ] sfx1 again
+right [ mt2b | mt2b ] -> [ mt2b no color todestroy | mt2b no color todestroy ] sfx1 again
+
+[anymatch]->[]
+
+
+right [ midgobble | ... | color | no color ] -> [ midgobble | ... | | color ]
+right [ midgobble color | no color ] -> [ midgobble | color ]
+
+up [ gobble | ... | color | no color ] -> [ gobble | ... | | color ]
+up [ gobble color | no color ] -> [ gobble | color ]
+
+
+
+[action player color ] [gobble ] -> [ player moved] [ gobble color] again
+
+
+down [ color | gobble no color ] -> [  | gobble color ]
+down [ color | no color | ... | gobble ] -> [ | color | ... | gobble ]
+
+
+left [ color | midgobble no color ] -> [  | midgobble color ]
+left [ color | no color | ... | midgobble ] -> [ | color | ... | midgobble ]
+
+[action player no color ] [gobble color] -> [ action player color] [ gobble] sfx0 again
+
+down [ color | gobble no color ] -> [  | gobble color ]
+down [ color | no color | ... | gobble ] -> [ | color | ... | gobble ]
+
+
+left [ color | midgobble no color ] -> [  | midgobble color ]
+left [ color | no color | ... | midgobble ] -> [ | color | ... | midgobble ]
+
+==============
+WINCONDITIONS
+==============
+
+no color
+
+=======
+LEVELS
+=======
+message Level 1 of 3
+
+message create two identical 2x2 sections side by side to make them vanish
+
+#########
+#8yy.....
+#y#######
+#b#.....#
+#b#.....#
+#b#..p..#
+#1#.....#
+#F#######
+
+message Level 2 of 3
+
+#########
+#6bbbyyy.
+#g#######
+#g#.....#
+#r#.....#
+#r#.p...#
+#3#.....#
+#########
+
+
+message Level 3 of 3
+
+#########
+#7ryyyyyy
+#r#######
+#r#.....#
+#r#.....#
+#r#.p...#
+#3#.....#
+#########
+
+message my congratulations
+
+(
+
+
+#########
+#7yyyyyyy
+#r#######
+#r#.....#
+#r#.....#
+#r#.p...#
+#3#.....#
+#########
+
+
+#########
+#6ggbbbyy
+#g#######
+#r#.....#
+#r#.....#
+#r#.p...#
+#3#.....#
+#########
+
+
+##############
+#............#
+#............#
+#............#
+#...RR.......#
+#p.R.R.......#
+#...RR.......#
+#...RR.......#
+#............#
+#............#
+#............#
+#............#
+##############
+
+
+#########
+#6gbbbyy#
+#g#######
+#r#.....#
+#r#.....#
+#r#.p...#
+#3#.....#
+#########
+
+#########
+#6bbbyyy#
+#g#######
+#g#.....#
+#r#.....#
+#r#.p...#
+#3#.....#
+#########
+
+
+###############
+#y#...........#
+#y#...........#
+#y#...........#
+#y#...........#
+#g#...........#
+#g#...........#
+#g#.....p.....#
+#g#...........#
+#r#...........#
+#r#...........#
+#b#...........#
+#b#...........#
+#1#...........#
+###############
+
+
+#############
+#8y.........#
+#y###########
+#b#.........#
+#b#.........#
+#b#.........#
+#g#.........#
+#g#....p....#
+#g#.........#
+#r#.........#
+#r#.........#
+#3#.........#
+#############
+
+#############
+#.#.........#
+#y#.........#
+#y#.........#
+#y#.........#
+#y#....p....#
+#b#.........#
+#b#.........#
+#b#.........#
+#1#.........#
+#############
+
+###############
+#.#...........#
+#y#...........#
+#y#...........#
+#y#...........#
+#g#...........#
+#g#...........#
+#g#.....p.....#
+#r#...........#
+#r#...........#
+#r#...........#
+#b#...........#
+#b#...........#
+#1#...........#
+###############
+
+
+#############
+#.#.........#
+#y#.........#
+#y#.........#
+#y#.........#
+#y#....p....#
+#b#.........#
+#b#.........#
+#b#.........#
+#1#.........#
+#############
+
+###########
+#.........#
+#.r.g.b.y.#
+#.r.g.b.y.#
+#.r.g.b.y.#
+#.........#
+#....p....#
+#.........#
+###########
+###########
+#.........#
+#.r.g.b.y.#
+#.r.g.b.y.#
+#.r.g.b.y.#
+#.......y.#
+#....p....#
+#.........#
+###########
+
+
+###########
+#.........#
+#.r.g.b.y.#
+#.r.g.b.y.#
+#.r.g.b.y.#
+#.........#
+#....p....#
+#.........#
+###########
+
+
+##########
+#........#
+#...yb...#
+#..rgrg..#
+#p.byby..#
+#...gr...#
+#........#
+##########
+
+##########
+#........#
+#...gg...#
+#.p.gg...#
+#...gg...#
+#...gg...#
+#........#
+##########
+
+
+##########
+#........#
+#...yb...#
+#..rgrg..#
+#.byby...#
+#p..gr...#
+#........#
+##########
+
+
+
+##########
+#........#
+#........#
+#..rbbr..#
+#..gyyg..#
+#.p......#
+#........#
+##########
+
+########
+#......#
+#...p..#
+###....#
+#rgbr..#
+#bygy..#
+###....#
+########
+
+
+#############
+#...........#
+#...........#
+#...rrrrr...#
+#..r.rrr.r..#
+#...........#
+#.....p.....#
+#...........#
+#############
+
+
+###########
+#.........#
+#.........#
+#..rr.gg..#
+#..rr.gg..#
+#..rr.gg..#
+#.........#
+#....p....#
+#.........#
+###########
+
+
+
+
+##############
+#............#
+#.....P......#
+#.....R......#
+#...RR.RR....#
+#...RRRRR....#
+#.....RR.....#
+#.....RR.....#
+#............#
+#............#
+#............#
+#............#
+##############
+
+
+
+##############
+#............#
+#............#
+#............#
+#...RR.......#
+#p.R.R.......#
+#...RR.......#
+#...RR.......#
+#............#
+#............#
+#............#
+#............#
+##############
+
+##############
+#............#
+#............#
+#............#
+#...RRGG.....#
+#p.R.RGG.....#
+#............#
+#............#
+#............#
+#............#
+#............#
+#............#
+##############
+
+)

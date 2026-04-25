@@ -1,0 +1,303 @@
+title Gabelstapler
+author Stephen Lavelle
+homepage www.increpare.com
+
+run_rules_on_level_start
+norepeat_action
+require_player_movement
+verbose_logging
+
+color_palette 6
+
+
+
+========
+OBJECTS
+========
+
+Background
+#999999 #888888
+00010
+11111
+00010
+00010
+00010
+
+
+Wall
+#333333 #333333
+00000
+01010
+00000
+01010
+00000
+
+forklift
+#222222 #ffff00 #FFA500 #444444 black blue #ffcccc
+.00.3
+.0603
+10513
+11213
+.4.4.
+
+rod 
+#444444
+....0
+....0
+....0
+....0
+....0
+
+toprod
+#444444
+.....
+.....
+.....
+.....
+.....
+
+
+Fork
+#ffff00
+.....
+.....
+.....
+0....
+00000
+
+end1 
+darkblue lightblue brown #333333
+00000
+01110
+00000
+33333
+33333
+
+end2 
+darkred lightred brown #333333
+11011
+10101
+11011
+33333
+33333
+
+end3 
+darkgreen lightgreen brown #333333
+10001
+10101
+10001
+33333
+33333
+
+
+Crate1
+darkblue blue brown
+00000
+01110
+00000
+22222
+.2.2.
+
+
+Crate2
+darkred red brown
+11011
+10101
+11011
+22222
+.2.2.
+
+
+Crate3
+darkgreen green brown
+01110
+01010
+01110
+22222
+.2.2.
+
+oldfork
+transparent
+
+correct
+transparent
+
+=======
+LEGEND
+=======
+player = forklift or fork
+crate = crate1 or crate2 or crate3
+obstacle = wall or crate or forklift
+motile = crate or forklift or fork
+hasrod = forklift or rod or toprod
+isrod = rod or toprod
+. = Background
+# = Wall
+P = forklift
+1 = Crate1
+2 = Crate2
+3 = Crate3
+f = fork
+r = rod
+t = toprod
+q = end1 and wall
+w = end2 and wall
+e = end3 and wall
+
+=======
+SOUNDS
+=======
+
+forklift MOVE left 39169107
+forklift move right 81963107
+crate move down 98604707
+endlevel 64983103
+
+================
+COLLISIONLAYERS
+================
+
+Background
+fork, rod, toprod
+forklift, Wall, Crate
+end1, end2, end3
+oldfork
+correct
+
+======
+RULES
+======
+
+
+
+
+[ > fork | wall ] -> cancel
+down [ down fork | obstacle] -> cancel
+
+[ vertical forklift ] -> [ forklift ]
+
+
+
+up [ moving player | crate ] -> [ moving player | moving crate ]
+down [ stationary forklift | no obstacle ] [fork | no obstacle] -> [ down forklift | ] [down fork|]
+
+up [horizontal forklift | ... | hasrod ] -> [ horizontal forklift | ... | horizontal hasrod]
+
+right [ right rod | obstacle ] -> cancel
+right [ obstacle | left rod ] -> cancel
+
+right [ >  forklift | Crate fork ] -> [  >  forklift | > Crate > fork]
+
+
+right [ > forklift | crate no fork ] -> cancel 
+
+(fork move objects)
+[moving fork crate ] -> [ moving fork moving crate ]
+down [ left fork left crate | obstacle ] -> [ left fork stationary crate | obstacle ]
+
+
+up [ moving crate | crate ] -> [ moving crate | moving crate ]
+
+horizontal [ > crate fork | stationary crate ] -> cancel
+horizontal [ > obstacle | stationary obstacle ] -> [ obstacle | obstacle ]
+
+right[ stationary obstacle no forklift | left fork ] -> cancel
+
+
+
+(cancel movements upwards)
+horizontal [ > crate | stationary obstacle no player ] -> [ stationary crate | obstacle ]
+
+
+up [stationary crate | moving crate no fork ] -> [ stationary crate | stationary crate ]
+
+[up fork crate]->[up fork oldfork crate]
+
+
+[ stationary crate no fork ] -> [ down crate ]
+
+[]->[] again
+
+
+late [ rod ] -> []
+late [ toprod ] -> []
+late right [ no forklift | fork ] -> [ toprod | fork ]
+late down [ isrod | no hasrod ] -> [ isrod | rod ]
+late [ rod wall ] -> cancel
+late [forklift fork]->cancel
+
+late [oldfork crate ] -> cancel
+late [oldfork]->[]
+
+
+(win condition)
+late [forklift]->[forklift correct]
+
+late up [ end1 | crate1 ] -> [ end1 | crate1 correct ]
+late up [ end2 | crate2 ] -> [ end2 | crate2 correct ]
+late up [ end3 | crate3 ] -> [ end3 | crate3 correct ]
+late up [ correct crate1 | crate1 ] -> [ correct crate1 | correct crate1 ]
+late up [ correct crate2 | crate2 ] -> [ correct crate2 | correct crate2 ]
+late up [ correct crate3 | crate3 ] -> [ correct crate3 | correct crate3 ]
+
+late [crate no correct] [ forklift correct ] -> [ crate ] [ forklift no correct] 
+late [forklift correct] [ fork no crate ] -> win
+late [correct]  ->[]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+message Level 1 von 3
+
+##########
+###.......
+..........
+..........
+.pf.2.1...
+#######qw#
+
+
+message Level 2 von 3
+
+################
+########.......#
+#..............#
+#..............#
+#..............#
+#........pf321.#
+###qwe##########
+
+
+message Level 3 von 3
+
+..........
+..........
+..........
+..........
+..........
+..........
+..#.......
+..........
+....233...
+.pf.111...
+#######qwe
+
+message Du bist aber gewandt!
+
+(
+########.....
+########.....
+.............
+.............
+.pf.1.3......
+########.##e#
+########q####)
+
+
+
+

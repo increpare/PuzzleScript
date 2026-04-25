@@ -1,0 +1,511 @@
+title Oh no I accidentally swallowed myself!
+author Stephen Lavelle
+homepage www.increpare.com
+
+run_rules_on_level_start
+
+verbose_logging
+
+background_color brown 
+
+========
+OBJECTS
+========
+
+u
+black
+
+p
+orange
+
+o
+white
+
+i
+blue
+
+y 
+darkred
+
+t 
+lightblue
+
+Background
+brown
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+p1
+gray 
+.....
+.....
+..0..
+.....
+.....
+
+p2
+gray 
+.....
+.....
+..0..
+.....
+.....
+
+p3
+gray 
+.....
+.....
+..0..
+.....
+.....
+
+p4
+gray 
+.....
+.....
+..0..
+.....
+.....
+
+p5
+gray 
+.....
+.....
+..0..
+.....
+.....
+
+
+(
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.)
+
+pixel_black 
+black
+
+pixel_orange 
+orange
+
+pixel_white 
+white
+
+pixel_blue 
+blue
+
+
+wall_black 
+DARKRED
+
+wall_orange 
+DARKRED
+
+wall_white 
+DARKRED
+
+wall_blue 
+DARKRED
+
+row_1 a
+TRANSPARENT
+
+row_2 s
+TRANSPARENT
+
+row_3 d
+TRANSPARENT
+
+row_4 f
+TRANSPARENT
+
+row_5 g
+TRANSPARENT
+
+dead
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+goal
+TRANSPARENT
+
+goal_u
+gray
+00000
+.....
+.....
+.....
+.....
+
+goal_d
+gray
+.....
+.....
+.....
+.....
+00000
+
+goal_l
+gray
+0....
+0....
+0....
+0....
+0....
+
+
+goal_r
+gray
+....0
+....0
+....0
+....0
+....0
+
+
+quasigrenze
+TRANSPARENT
+
+oldplayer
+transparent
+
+newplayer
+transparent
+
+domove
+TRANSPARENT
+
+dontmove
+TRANSPARENT
+
+temp
+TRANSPARENT
+
+m_up
+TRANSPARENT
+
+m_down
+TRANSPARENT
+
+m_left
+TRANSPARENT
+
+m_right
+TRANSPARENT
+
+=======
+LEGEND
+=======
+
+. = Background
+1 = p1
+2 = p2
+3 = p3
+4 = p4
+5 = p5
+
+, = Target
+
+b = goal 
+n = goal and row_1
+
+pixel = pixel_black or pixel_white or pixel_orange or pixel_blue
+
+player = p1 or p2 or p3 or p4 or p5
+
+q = pixel_black and p1
+w = pixel_orange and p2
+e = pixel_white and p3
+r = pixel_blue and p4
+; = pixel_blue and p5
+
+row = row_1 or row_2 or row_3 or row_4 or row_5
+wall = wall_black or wall_orange or wall_white or wall_blue
+obstacle = wall
+
+m = m_up or m_down or m_left or m_right
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall
+pixel
+Player
+row
+goal
+dead
+quasigrenze
+oldplayer
+newplayer
+domove
+dontmove
+temp
+m
+goal_u
+goal_d
+goal_l
+goal_r
+p, o, i, u, y, t
+
+======
+RULES
+======
+
+
+up [ goal | no goal ] -> [ goal goal_u | ]
+down [ goal | no goal ] -> [ goal goal_d | ]
+left [ goal | no goal ] -> [ goal goal_l | ]
+right [ goal | no goal ] -> [ goal goal_r | ]
+
+[dead]->cancel
+
+[ > player pixel ] -> [ > player > pixel ]
+
+[ > player | > player | > player | > player | > player ] -> [ oldplayer > player | > player | > player | > player | > player ] 
+
+[ > player | > player | > player | > player | > player | ] -> [  > player | > player | > player | > player | > player | newplayer] 
+
+[ moving player ] -> [ player ]
+
+[ > pixel | no wall ] -> [ stationary pixel |  ]
+[ > pixel | stationary pixel ] -> [ stationary pixel | pixel ]
+
+
+
+
+late [ oldplayer pixel ] [ newplayer pixel ] -> cancel
+
+
+late [ oldplayer pixel ] [ newplayer ]-> [ oldplayer pixel ] [ ]
+
+
+late [ player | newplayer no player ] -> [ | player newplayer]
+late [ player | no player | ... | newplayer ] -> [ | player | ... | newplayer ]
+
+late [ oldplayer ] -> [ ]
+late [ newplayer ] -> [ ]
+
+late [ temp ] -> [ ]
+late [ domove ] -> [ ]
+late [wall]->[]
+
+late right [ pixel_black 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ pixel_black 1 | 1 | 1 | 1 | 1 ] [ wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | | | | | | | | | | | row_1 ]
+late right [ pixel_orange 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ pixel_orange 1 | 1 | 1 | 1 | 1 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_1 ]
+late right [ pixel_white 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ pixel_white 1 | 1 | 1 | 1 | 1 ] [ wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | | | | | | row_1 ]
+late right [ pixel_blue 1 | 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ pixel_blue 1 | 1 | 1 | 1 | 1 ] [ wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | | | | | | row_1 ]
+late right [ 1 | pixel_black 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | pixel_black 1 | 1 | 1 | 1 ] [ | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | | | | | | row_1 ]
+late right [ 1 | pixel_orange 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | pixel_orange 1 | 1 | 1 | 1 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_1 ]
+late right [ 1 | pixel_white 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | pixel_white 1 | 1 | 1 | 1 ] [ | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | row_1 ]
+late right [ 1 | pixel_blue 1 | 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | pixel_blue 1 | 1 | 1 | 1 ] [ | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | row_1 ]
+late right [ 1 | 1 | pixel_black 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | pixel_black 1 | 1 | 1 ] [ | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | row_1 ]
+late right [ 1 | 1 | pixel_orange 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | pixel_orange 1 | 1 | 1 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_1 ]
+late right [ 1 | 1 | pixel_white 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | pixel_white 1 | 1 | 1 ] [ | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | row_1 ]
+late right [ 1 | 1 | pixel_blue 1 | 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | pixel_blue 1 | 1 | 1 ] [ | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | row_1 ]
+late right [ 1 | 1 | 1 | pixel_black 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | pixel_black 1 | 1 ] [ | | | | | | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | row_1 ]
+late right [ 1 | 1 | 1 | pixel_orange 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | pixel_orange 1 | 1 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_1 ]
+late right [ 1 | 1 | 1 | pixel_white 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | pixel_white 1 | 1 ] [ | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | row_1 ]
+late right [ 1 | 1 | 1 | pixel_blue 1 | 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | pixel_blue 1 | 1 ] [ | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | row_1 ]
+late right [ 1 | 1 | 1 | 1 | pixel_black 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | 1 | pixel_black 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black row_1 ]
+late right [ 1 | 1 | 1 | 1 | pixel_orange 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | 1 | pixel_orange 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_1 ]
+late right [ 1 | 1 | 1 | 1 | pixel_white 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | 1 | pixel_white 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white row_1 ]
+late right [ 1 | 1 | 1 | 1 | pixel_blue 1 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_1 ] -> [ 1 | 1 | 1 | 1 | pixel_blue 1 ] [ | | | | | | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue row_1 ]
+late right [ pixel_black 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ pixel_black 2 | 2 | 2 | 2 | 2 ] [ wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | | | | | | | | | | | row_2 ]
+late right [ pixel_orange 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ pixel_orange 2 | 2 | 2 | 2 | 2 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_2 ]
+late right [ pixel_white 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ pixel_white 2 | 2 | 2 | 2 | 2 ] [ wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | | | | | | row_2 ]
+late right [ pixel_blue 2 | 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ pixel_blue 2 | 2 | 2 | 2 | 2 ] [ wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | | | | | | row_2 ]
+late right [ 2 | pixel_black 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | pixel_black 2 | 2 | 2 | 2 ] [ | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | | | | | | row_2 ]
+late right [ 2 | pixel_orange 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | pixel_orange 2 | 2 | 2 | 2 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_2 ]
+late right [ 2 | pixel_white 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | pixel_white 2 | 2 | 2 | 2 ] [ | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | row_2 ]
+late right [ 2 | pixel_blue 2 | 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | pixel_blue 2 | 2 | 2 | 2 ] [ | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | row_2 ]
+late right [ 2 | 2 | pixel_black 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | pixel_black 2 | 2 | 2 ] [ | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | row_2 ]
+late right [ 2 | 2 | pixel_orange 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | pixel_orange 2 | 2 | 2 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_2 ]
+late right [ 2 | 2 | pixel_white 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | pixel_white 2 | 2 | 2 ] [ | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | row_2 ]
+late right [ 2 | 2 | pixel_blue 2 | 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | pixel_blue 2 | 2 | 2 ] [ | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | row_2 ]
+late right [ 2 | 2 | 2 | pixel_black 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | pixel_black 2 | 2 ] [ | | | | | | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | row_2 ]
+late right [ 2 | 2 | 2 | pixel_orange 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | pixel_orange 2 | 2 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_2 ]
+late right [ 2 | 2 | 2 | pixel_white 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | pixel_white 2 | 2 ] [ | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | row_2 ]
+late right [ 2 | 2 | 2 | pixel_blue 2 | 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | pixel_blue 2 | 2 ] [ | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | row_2 ]
+late right [ 2 | 2 | 2 | 2 | pixel_black 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | 2 | pixel_black 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black row_2 ]
+late right [ 2 | 2 | 2 | 2 | pixel_orange 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | 2 | pixel_orange 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_2 ]
+late right [ 2 | 2 | 2 | 2 | pixel_white 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | 2 | pixel_white 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white row_2 ]
+late right [ 2 | 2 | 2 | 2 | pixel_blue 2 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_2 ] -> [ 2 | 2 | 2 | 2 | pixel_blue 2 ] [ | | | | | | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue row_2 ]
+late right [ pixel_black 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ pixel_black 3 | 3 | 3 | 3 | 3 ] [ wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | | | | | | | | | | | row_3 ]
+late right [ pixel_orange 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ pixel_orange 3 | 3 | 3 | 3 | 3 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_3 ]
+late right [ pixel_white 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ pixel_white 3 | 3 | 3 | 3 | 3 ] [ wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | | | | | | row_3 ]
+late right [ pixel_blue 3 | 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ pixel_blue 3 | 3 | 3 | 3 | 3 ] [ wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | | | | | | row_3 ]
+late right [ 3 | pixel_black 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | pixel_black 3 | 3 | 3 | 3 ] [ | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | | | | | | row_3 ]
+late right [ 3 | pixel_orange 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | pixel_orange 3 | 3 | 3 | 3 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_3 ]
+late right [ 3 | pixel_white 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | pixel_white 3 | 3 | 3 | 3 ] [ | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | row_3 ]
+late right [ 3 | pixel_blue 3 | 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | pixel_blue 3 | 3 | 3 | 3 ] [ | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | row_3 ]
+late right [ 3 | 3 | pixel_black 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | pixel_black 3 | 3 | 3 ] [ | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | row_3 ]
+late right [ 3 | 3 | pixel_orange 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | pixel_orange 3 | 3 | 3 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_3 ]
+late right [ 3 | 3 | pixel_white 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | pixel_white 3 | 3 | 3 ] [ | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | row_3 ]
+late right [ 3 | 3 | pixel_blue 3 | 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | pixel_blue 3 | 3 | 3 ] [ | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | row_3 ]
+late right [ 3 | 3 | 3 | pixel_black 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | pixel_black 3 | 3 ] [ | | | | | | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | row_3 ]
+late right [ 3 | 3 | 3 | pixel_orange 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | pixel_orange 3 | 3 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_3 ]
+late right [ 3 | 3 | 3 | pixel_white 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | pixel_white 3 | 3 ] [ | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | row_3 ]
+late right [ 3 | 3 | 3 | pixel_blue 3 | 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | pixel_blue 3 | 3 ] [ | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | row_3 ]
+late right [ 3 | 3 | 3 | 3 | pixel_black 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | 3 | pixel_black 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black row_3 ]
+late right [ 3 | 3 | 3 | 3 | pixel_orange 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | 3 | pixel_orange 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_3 ]
+late right [ 3 | 3 | 3 | 3 | pixel_white 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | 3 | pixel_white 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white row_3 ]
+late right [ 3 | 3 | 3 | 3 | pixel_blue 3 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_3 ] -> [ 3 | 3 | 3 | 3 | pixel_blue 3 ] [ | | | | | | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue row_3 ]
+late right [ pixel_black 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ pixel_black 4 | 4 | 4 | 4 | 4 ] [ wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | | | | | | | | | | | row_4 ]
+late right [ pixel_orange 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ pixel_orange 4 | 4 | 4 | 4 | 4 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_4 ]
+late right [ pixel_white 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ pixel_white 4 | 4 | 4 | 4 | 4 ] [ wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | | | | | | row_4 ]
+late right [ pixel_blue 4 | 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ pixel_blue 4 | 4 | 4 | 4 | 4 ] [ wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | | | | | | row_4 ]
+late right [ 4 | pixel_black 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | pixel_black 4 | 4 | 4 | 4 ] [ | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | | | | | | row_4 ]
+late right [ 4 | pixel_orange 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | pixel_orange 4 | 4 | 4 | 4 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_4 ]
+late right [ 4 | pixel_white 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | pixel_white 4 | 4 | 4 | 4 ] [ | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | row_4 ]
+late right [ 4 | pixel_blue 4 | 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | pixel_blue 4 | 4 | 4 | 4 ] [ | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | row_4 ]
+late right [ 4 | 4 | pixel_black 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | pixel_black 4 | 4 | 4 ] [ | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | row_4 ]
+late right [ 4 | 4 | pixel_orange 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | pixel_orange 4 | 4 | 4 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_4 ]
+late right [ 4 | 4 | pixel_white 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | pixel_white 4 | 4 | 4 ] [ | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | row_4 ]
+late right [ 4 | 4 | pixel_blue 4 | 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | pixel_blue 4 | 4 | 4 ] [ | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | row_4 ]
+late right [ 4 | 4 | 4 | pixel_black 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | pixel_black 4 | 4 ] [ | | | | | | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | row_4 ]
+late right [ 4 | 4 | 4 | pixel_orange 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | pixel_orange 4 | 4 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_4 ]
+late right [ 4 | 4 | 4 | pixel_white 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | pixel_white 4 | 4 ] [ | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | row_4 ]
+late right [ 4 | 4 | 4 | pixel_blue 4 | 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | pixel_blue 4 | 4 ] [ | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | row_4 ]
+late right [ 4 | 4 | 4 | 4 | pixel_black 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | 4 | pixel_black 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black row_4 ]
+late right [ 4 | 4 | 4 | 4 | pixel_orange 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | 4 | pixel_orange 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_4 ]
+late right [ 4 | 4 | 4 | 4 | pixel_white 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | 4 | pixel_white 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white row_4 ]
+late right [ 4 | 4 | 4 | 4 | pixel_blue 4 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_4 ] -> [ 4 | 4 | 4 | 4 | pixel_blue 4 ] [ | | | | | | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue row_4 ]
+late right [ pixel_black 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ pixel_black 5 | 5 | 5 | 5 | 5 ] [ wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | | | | | | | | | | | row_5 ]
+late right [ pixel_orange 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ pixel_orange 5 | 5 | 5 | 5 | 5 ] [ wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | | | | | | row_5 ]
+late right [ pixel_white 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ pixel_white 5 | 5 | 5 | 5 | 5 ] [ wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | | | | | | row_5 ]
+late right [ pixel_blue 5 | 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ pixel_blue 5 | 5 | 5 | 5 | 5 ] [ wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | | | | | | row_5 ]
+late right [ 5 | pixel_black 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | pixel_black 5 | 5 | 5 | 5 ] [ | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | | | | | | row_5 ]
+late right [ 5 | pixel_orange 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | pixel_orange 5 | 5 | 5 | 5 ] [ | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | | | | | | row_5 ]
+late right [ 5 | pixel_white 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | pixel_white 5 | 5 | 5 | 5 ] [ | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | | | | | | row_5 ]
+late right [ 5 | pixel_blue 5 | 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | pixel_blue 5 | 5 | 5 | 5 ] [ | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | | | | | | row_5 ]
+late right [ 5 | 5 | pixel_black 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | pixel_black 5 | 5 | 5 ] [ | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | | | | | | row_5 ]
+late right [ 5 | 5 | pixel_orange 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | pixel_orange 5 | 5 | 5 ] [ | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | | | | | | row_5 ]
+late right [ 5 | 5 | pixel_white 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | pixel_white 5 | 5 | 5 ] [ | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | | | | | | row_5 ]
+late right [ 5 | 5 | pixel_blue 5 | 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | pixel_blue 5 | 5 | 5 ] [ | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | | | | | | row_5 ]
+late right [ 5 | 5 | 5 | pixel_black 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | pixel_black 5 | 5 ] [ | | | | | | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black | | | | | row_5 ]
+late right [ 5 | 5 | 5 | pixel_orange 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | pixel_orange 5 | 5 ] [ | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange | | | | | row_5 ]
+late right [ 5 | 5 | 5 | pixel_white 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | pixel_white 5 | 5 ] [ | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white | | | | | row_5 ]
+late right [ 5 | 5 | 5 | pixel_blue 5 | 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | pixel_blue 5 | 5 ] [ | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue | | | | | row_5 ]
+late right [ 5 | 5 | 5 | 5 | pixel_black 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | 5 | pixel_black 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_black | wall_black | wall_black | wall_black | wall_black row_5 ]
+late right [ 5 | 5 | 5 | 5 | pixel_orange 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | 5 | pixel_orange 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_orange | wall_orange | wall_orange | wall_orange | wall_orange row_5 ]
+late right [ 5 | 5 | 5 | 5 | pixel_white 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | 5 | pixel_white 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_white | wall_white | wall_white | wall_white | wall_white row_5 ]
+late right [ 5 | 5 | 5 | 5 | pixel_blue 5 ] [ | | | | | | | | | | | | | | | | | | | | | | | | row_5 ] -> [ 5 | 5 | 5 | 5 | pixel_blue 5 ] [ | | | | | | | | | | | | | | | | | | | | wall_blue | wall_blue | wall_blue | wall_blue | wall_blue row_5 ]
+
+
+late [pixel no wall]->[pixel dead]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+all pixel on goal
+
+=======
+LEVELS
+=======
+
+
+Message Level 1 of 1
+
+(11112222233333444445555)
+........................a
+........................a
+........................a
+........................a
+........................a
+..........1qqq1.........s
+..........2www2.........s
+..........eeeee.........s
+..........4rrr4.........s
+..........5;5;5.........s
+........................d
+........................d
+........................d
+........................d
+........................d
+........................f
+..........bbbb..........f
+..........bbbb..........f
+..........bbbb..........f
+..........bbbb..........f
+........................g
+........................g
+........................g
+........................g
+........................g
+(11112222233333444445555)
+
+
+tttttttt
+tttttttt
+tttttttt
+tttttttt
+ttuuuttt
+ttpppttt
+
+
+ttttttttttttt
+ttttttttttttt
+tttttttuuuttt
+tttttttpppttt
+ttttttooooott
+tttttttiipttt
+tttttttitittt
+tiiiiippppptt
+tiiiiippppptt
+tiiiiippppptt
+tiiiiippppptt
+tiiiiippppptt
+
+tttttttttttttttttttttttttti
+ttttttttttttttttttttttttttp
+tttttttttttoooootuuuttttttp
+tttttttttttoooootpppttttttp
+tttttttttttooooooooootttttp
+tttttttttttoooootiipttttttp
+tttttttttttoooootitittttttp
+tuuuuupppppooooopppppiiiiip
+tuuuuupppppooooopppppiiiiip
+tuuuuupppppooooopppppiiiiip
+tuuuuupppppooooopppppiiiiip
+tuuuuupppppooooopppppiiiiip
+tuuuuupppppoooooiiiiitttttp
+tuuuuupppppoooooiiiiitttttp
+tuuuuupppppoooooiiiiitttttp
+tuuuuupppppoooooiiiiitttttp
+tuuuuupppppoooooiiiiitttttp
+tuuuuupppppoooooiiiiiiiiiip
+tuuuuupppppoooooiiiiiiiiiip
+tuuuuupppppoooooiiiiiiiiiip
+tuuuuupppppoooooiiiiiiiiiip
+tuuuuupppppoooooiiiiiiiiiip
+tttttttttttooooottttttttttp
+tttttttttttooooottttttttttp
+tttttttttttooooottttttttttp
+tttttttttttooooottttttttttp
+tttttttttttooooottttttttttp
+ooooooooooooooooooooooooooo
+
+

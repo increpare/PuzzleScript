@@ -1,0 +1,196 @@
+title newton 
+author increpare
+homepage www.increpare.com
+noaction
+
+color_palette 8
+
+========
+OBJECTS
+========
+
+Background
+lightgray lightgray 
+11111
+01111
+11101
+11111
+10111
+
+hole
+black
+
+target
+orange black
+00000
+0...0
+0...0
+0...0
+00000
+
+Wall
+darkred black 
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ball
+lightblue white
+.000.
+0...0
+0...0
+01..0
+.000.
+
+AU 
+transparent
+
+AD
+transparent
+
+AL
+transparent
+
+AR
+transparent
+
+T
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = ball
+@ = ball and target
+O = target
+Arrow = AU or AD or AL or AR
+Obstacle = ball or Wall
+block = T or wall
+h = hole
+$ = ball and hole
+f = target and hole
+
+=======
+SOUNDS
+=======
+
+sfx0 36772507 (ballmove)
+sfx1 20806902 (action)
+sfx2 44778100 (clink)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+hole
+target
+Player, Wall, ball
+Arrow
+T
+
+======
+RULES
+======
+
+
+[ > player | hole ] -> cancel
+
+[ arrow ] [ player ] -> [arrow] [ action player ]
+[ AU ball ] -> [  up ball ]
+[ AD ball ] -> [  down ball ]
+[ AL ball ] -> [  left ball ]
+[ AR ball ] -> [  right ball ]
+
+[ > ball | stationary ball ] -> [ stationary ball | > ball ] 
+
+[ > ball | wall ] -> [ T ball | wall ]
+[ > ball | T ] -> [ T ball |  ]
+[t]->[]
+
+[ stationary ball | > ball ] -> sfx2
+
+[ > Player | ball ] -> [ > Player | > ball ] sfx0 
+[ > ball | ball ] -> [ > ball | > ball ]
+
+up 		[ > ball | no obstacle ] -> [ | ball AU ] again
+down    [ > ball | no obstacle ] -> [ | ball AD ] again
+left 	[ > ball | no obstacle ] -> [ | ball AL ] again
+right 	[ > ball | no obstacle ] -> [ | ball AR ] again
+
+==============
+WINCONDITIONS
+==============
+
+all ball on target
+
+=======
+LEVELS
+=======
+
+message level 1 of 3
+
+###############
+#hhhhhhfhhhhhh#
+#hhhhhhfhhhhhh#
+#hhhhhhfhhhhhh#
+#hhh.......hhh#
+#hhh..ccc..hhh#
+#ffh..ccc..hff#
+#hhh..ccc..hhh#
+#hhh.......hhh#
+#hhh...p...hhh#
+#hhh.......hhh#
+#hhhhhhhhhhhhh#
+#hhhhhhhhhhhhh#
+#hhhhhfhfhhhhh#
+###############
+
+message level 2 of 3
+
+###############
+#hhhhfffffhhhh#
+#hhhhhhhhhhhhh#
+#hhhhhhhhhhhhh#
+#hhh.......hhh#
+#hhh.c.c.c.hhh#
+#hhh.......hhh#
+#fhh.c.c.c.hhf#
+#hhh...p...hhh#
+#fhh.c.c.c.hhf#
+#hhh.......hhh#
+#hhhhhhhhhhhhh#
+#hhhhhhhhhhhhh#
+#hhhhhhhhhhhhh#
+###############
+
+message level 3 of 3
+
+#############
+#hhhfffffhhh#
+#hhhhhfhhhhh#
+#hhhhhhhhhhh#
+#hh.......hh#
+#hh.ccccc.hh#
+#fh.c...c.hf#
+#fh.c...c.hf#
+#fh.ccccc.hf#
+#fh.ccccc.hf#
+#hh...p...hh#
+#hhhhhhhhhhh#
+#hhhfffffhhh#
+#############

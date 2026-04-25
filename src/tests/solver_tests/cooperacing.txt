@@ -1,0 +1,480 @@
+title Cooperacing
+author Stephen Lavelle
+homepage www.increpare.com
+
+run_rules_on_level_start 
+
+color_palette amstrad              
+
+youtube ZdvPF9KQfXk
+norepeat_action
+
+========
+OBJECTS
+========
+
+Background
+grey lightgrey
+01000
+00000
+00001
+00100
+00000
+
+
+Wall
+green darkgreen
+11010
+01111
+10101
+11100
+01011
+
+WallV |
+darkblue darkgreen green 
+20202
+20202
+20202
+20202
+20202
+
+WallH -
+darkblue darkgreen green
+22222
+00000
+22222
+00000
+22222
+
+RedCar
+red 
+
+BlueCar 
+blue
+
+ActiveSeat
+darkgrey yellow
+.....
+.101.
+.000.
+.101.
+.....
+
+InactiveSeat
+darkgrey
+.....
+.000.
+.000.
+.000.
+.....
+
+NoWinRed
+DarkRed
+.....
+.000.
+.000.
+.000.
+.....
+
+WinRed
+Brown Red
+1111.
+1111.
+1111.
+0....
+0....
+
+
+NoWinBlue
+DarkBlue
+.....
+.000.
+.000.
+.000.
+.....
+
+WinBlue
+Brown Blue
+1111.
+1111.
+1111.
+0....
+0....
+
+Crate 0
+black
+.000.
+00000
+00.00
+00000
+.000.
+
+Flag
+Black White
+10101
+01010
+10101
+01010
+10101
+
+
+(decorative stuff BEGIN)
+
+
+
+RedCarFrontUp
+grey red black
+..1..
+.111.
+21112
+21112
+.111.
+
+RedCarFrontDown
+grey red black
+.111.
+21112
+21112
+.111.
+..1..
+
+RedCarFrontLeft
+grey red black
+..22.
+.1111
+11111
+.1111
+..22.
+
+RedCarFrontRight
+grey red black
+.22..
+1111.
+11111
+1111.
+.22..
+
+
+RedCarBackUp
+grey red black
+.111.
+11111
+21112
+21112
+11111
+
+RedCarBackDown
+grey red black
+11111
+21112
+21112
+11111
+.111.
+
+RedCarBackLeft
+grey red black
+.1221
+11111
+11111
+11111
+.1221
+
+RedCarBackRight
+grey red black
+.1221
+11111
+11111
+11111
+.1221
+
+
+
+
+BlueCarFrontUp
+grey blue black
+..1..
+.111.
+21112
+21112
+.111.
+
+BlueCarFrontDown
+grey blue black
+.111.
+21112
+21112
+.111.
+..1..
+
+BlueCarFrontLeft
+grey blue black
+..22.
+.1111
+11111
+.1111
+..22.
+
+BlueCarFrontRight
+grey blue black
+.22..
+1111.
+11111
+1111.
+.22..
+
+
+BlueCarBackUp
+grey blue black
+.111.
+11111
+21112
+21112
+11111
+
+BlueCarBackDown
+grey blue black
+11111
+21112
+21112
+11111
+.111.
+
+BlueCarBackLeft
+grey blue black
+.1221
+11111
+11111
+11111
+.1221
+
+BlueCarBackRight
+grey blue black
+.1221
+11111
+11111
+11111
+.1221
+
+HStreaks
+darkgrey
+.....
+.000.
+.....
+.000.
+.....
+
+VStreaks
+darkgrey
+.....
+.0.0.
+.0.0.
+.0.0.
+.....
+
+
+
+=======
+LEGEND
+=======
+
+RedCarDecorationFront = RedCarFrontUp or RedCarFrontDown or RedCarFrontLeft or RedCarFrontRight
+RedCarDecorationBack = RedCarBackUp or RedCarBackDown or RedCarBackLeft or RedCarBackRight
+RedCarDecoration = RedCarDecorationFront  or RedCarDecorationBack
+
+
+BlueCarDecorationFront = BlueCarFrontUp or BlueCarFrontDown or BlueCarFrontLeft or BlueCarFrontRight
+BlueCarDecorationBack = BlueCarBackUp or BlueCarBackDown or BlueCarBackLeft or BlueCarBackRight
+BlueCarDecoration = BlueCarDecorationFront  or BlueCarDecorationBack
+
+
+Decoration = RedCarDecoration or BlueCarDecoration 
+
+VFX = HStreaks or VStreaks
+
+Car = RedCar or BlueCar
+Seat = ActiveSeat or InactiveSeat
+Pushable = Car or Crate
+AnyWall = Wall or WallH or WallV
+Obstacle = Wall or Car or Crate or WallH or WallV
+GUI = WinRed or WinBlue or NoWinRed or NoWinBlue
+
+Player = ActiveSeat 
+
+# = Wall
+. = Background
+a = RedCar and ActiveSeat
+1 = RedCar
+b = BlueCar and InactiveSeat
+2 = BlueCar
+x = NoWinRed and Wall
+y = NoWinBlue and Wall
+
+f = Flag
+
+=======
+SOUNDS
+=======
+
+SFX0 1367907 
+activeseat move 76769307 (regular move)
+SFX2  47151508 (switchcar)
+SFX3 5892308 (touch flag)
+SFX4 36923307 (turn car)
+endlevel 84491108
+endgame 57925708
+
+================
+COLLISIONLAYERS
+================
+
+Background
+VFX
+Flag
+Wall, Car, Crate, Decoration, WallH, WallV
+Seat
+GUI
+
+======
+RULES
+======
+
+[ RedCarDecoration ] -> [ RedCar ]
+[ BlueCarDecoration ] -> [ BlueCar ]
+
+[ Action ActiveSeat ] [ InactiveSeat ] -> [ InactiveSeat ] [ ActiveSeat ]
+
+(no reversing)
+[ < ActiveSeat RedCar | RedCar ] -> cancel
+[ < ActiveSeat BlueCar | BlueCar ] -> cancel
+
+(no turning towards foreign objects)
+[ > ActiveSeat BlueCar | RedCar ] -> cancel
+[ > ActiveSeat RedCar | BlueCar ] -> cancel
+[ > ActiveSeat BlueCar | Crate ] -> cancel
+[ > ActiveSeat RedCar | Crate ] -> cancel
+
+
+(turning)
+
+
+[ > ActiveSeat BlueCar | no Obstacle ] [ no ActiveSeat BlueCar ] -> [ ActiveSeat BlueCar | BlueCar ] [ ] sfx4
+
+
+[ > ActiveSeat RedCar | no Obstacle ] [ no ActiveSeat RedCar ] -> [ ActiveSeat RedCar | RedCar ] [ ] sfx4
+
+[ > ActiveSeat Car ] -> [ > ActiveSeat > Car ]
+
+startLoop
+
+[ > Pushable | Pushable ] -> [ > Pushable | > Pushable ]
+
+[ moving RedCar | RedCar ] -> [ moving RedCar | moving RedCar ]
+[ moving BlueCar | BlueCar ] -> [ moving BlueCar | moving BlueCar ]
+
+endLoop
+
+[ moving Car Seat ] -> [ moving Car moving Seat ]
+
+[ > Pushable | AnyWall ] -> cancel
+
+horizontal [ ^ RedCar | ^ RedCar ] -> [ VStreaks ^ RedCar | VStreaks ^ RedCar ] sfx0
+vertical [ ^ RedCar | ^ RedCar ] -> [ HStreaks ^ RedCar | HStreaks ^ RedCar ] sfx0
+
+horizontal [ ^ BlueCar | ^ BlueCar ] -> [ VStreaks ^ BlueCar | VStreaks ^ BlueCar ] sfx0
+vertical [ ^ BlueCar | ^ BlueCar ] -> [ HStreaks ^ BlueCar | HStreaks ^ BlueCar ] sfx0
+
+
+late [ BlueCar Flag ] [ NoWinBlue ] -> [ BlueCar Flag ] [ WinBlue ] sfx3
+late [ RedCar Flag ] [ NoWinRed ] -> [ RedCar Flag ] [ WinRed ] sfx3
+
+late up [ RedCar Seat | RedCar ] -> [ RedCarBackUp Seat | RedCarFrontUp ]
+late down [ RedCar Seat | RedCar ] -> [ RedCarBackDown Seat | RedCarFrontDown ]
+late left [ RedCar Seat | RedCar ] -> [ RedCarBackLeft Seat | RedCarFrontLeft ]
+late right [ RedCar Seat | RedCar ] -> [ RedCarBackRight Seat | RedCarFrontRight ]
+
+late up [ BlueCar Seat | BlueCar ] -> [ BlueCarBackUp Seat | BlueCarFrontUp ]
+late down [ BlueCar Seat | BlueCar ] -> [ BlueCarBackDown Seat | BlueCarFrontDown ]
+late left [ BlueCar Seat | BlueCar ] -> [ BlueCarBackLeft Seat | BlueCarFrontLeft ]
+late right [ BlueCar Seat | BlueCar ] -> [ BlueCarBackRight Seat | BlueCarFrontRight ]
+
+==============
+WINCONDITIONS
+==============
+
+no NoWinRed
+no NoWinBlue
+
+=======
+LEVELS
+=======
+
+message RED appears to be in the lead, but what REALLY is important is everyone finishing the race
+
+message X to switch car, ARROWS to do turn or move forward. NO REVERSE
+
+message WARM UP LAP
+
+#############
+##---------##
+#|.........|#
+#|.....a1..|#
+#|..b2.....|#
+#|.........|#
+#|...#-#...|#
+#|...|#|...|#
+#|...|#|...|#
+#|...#-#...|#
+#|....f....|#
+#|....f....|#
+#|....f....|#
+#|....f....|#
+##---------##
+##xy#########
+
+message LAP 1
+
+###########
+##-------##
+#|.......|#
+#|.......|#
+###.----.|#
+##|..b2..|#
+##|..a1..|#
+###.----.|#
+#|...f...|#
+#|...f...|#
+##-------##
+###xy######
+
+message LAP 2
+
+message Watch out, tires on the track!
+
+###########
+#.....a1..#
+#...b2....#
+#...###...#
+#000###000#
+#...###...#
+#000###000#
+#....f....#
+#....f....#
+###xy######
+
+message Final Lap!
+
+##############
+##############
+#.......###.##
+#..a1.......##
+#..b2...###.##
+#.......###.##
+#####.#####.##
+#####...f....#
+###########.##
+#xy###########
+
+message RACE OVER
+message Race Results: 
+message Teamwork is Victorious!
+message thanks for playing

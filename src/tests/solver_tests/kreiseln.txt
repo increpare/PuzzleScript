@@ -1,0 +1,437 @@
+title Kreiseln
+author Stephen Lavelle
+homepage www.increpare.com
+
+again_interval 0.1
+verbose_logging
+
+
+========
+OBJECTS
+========
+
+Background
+darkgreen darkblue
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+pink
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+brown yellow white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Yellow yellow orange
+.111.
+10001
+10001
+21002
+.222.
+
+
+hinge H
+orange brown darkbrown
+10101
+01210
+12221
+01210
+10101
+
+door_l L
+orange brown
+.....
+0000.
+11110
+0000.
+.....
+
+
+door_r R
+orange brown
+.....
+.0000
+01111
+.0000
+.....
+
+
+
+door_u U
+orange brown
+.010.
+.010.
+.010.
+.010.
+..0..
+
+door_d D
+orange brown
+..0..
+.010.
+.010.
+.010.
+.010.
+
+
+door_dl 
+orange brown
+.....
+..00.
+.010.
+010..
+10...
+
+
+door_dr 
+orange brown
+.....
+.00..
+.010.
+..010
+...01
+
+
+door_ul 
+orange brown
+10...
+010..
+.010.
+..00.
+.....
+
+door_ur 
+orange brown
+...01
+..010
+.010.
+.00..
+.....
+
+ul
+orange
+0....
+.....
+.....
+.....
+.....
+
+ur
+orange
+....0
+.....
+.....
+.....
+.....
+
+
+dl
+orange
+.....
+.....
+.....
+.....
+0....
+
+
+dr
+orange
+.....
+.....
+.....
+.....
+....0
+
+
+cw
+transparent
+
+ccw 
+transparent
+
+knock
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+ortho = door_u or door_d or door_l or door_r
+diagonal = door_ul or door_ur or door_dl or door_dr
+Door = ortho or diagonal
+doorpart = door or hinge
+obstacle = wall or player or hinge or crate
+w = cw or ccw
+
+
+pushable = player or crate or ortho
+
+pushing = player or crate
+
+pixel = ul or ur or dl or dr
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, hinge
+door
+cw, ccw
+ul
+ur
+dl
+dr
+knock
+
+======
+RULES
+======
+
+[pixel]->[]
+
+
+down  [ cw  door_dl | pushable | pushable ] -> [ cw  door_dl | down pushable  | left pushable ]
+left  [ ccw door_dl | pushable | pushable ] -> [ ccw door_dl | left pushable  | down pushable ]
+
+down  [ ccw door_dr | pushable | pushable ] -> [ ccw door_dr | down  pushable | right pushable ]
+right [ cw  door_dr | pushable | pushable ] -> [ cw  door_dr | right pushable | down  pushable ]
+
+up    [ ccw door_ul | pushable | pushable ] -> [ ccw door_ul | up   pushable  | left pushable ]
+left  [ cw  door_ul | pushable | pushable ] -> [ cw  door_ul | left pushable  | up   pushable ]
+
+up    [ cw  door_ur | pushable | pushable ] -> [ cw  door_ur | up    pushable | right pushable ]
+right [ ccw door_ur | pushable | pushable ] -> [ ccw door_ur | right pushable | up    pushable ]
+
+[ > pushable | player ] -> [ > pushable | > player ]
+
+down  [ cw  door_dl | pushable ] -> [ cw  door_dl | down pushable  ]
+left  [ ccw door_dl | pushable ] -> [ ccw door_dl | left pushable  ]
+
+down  [ ccw door_dr | pushable ] -> [ ccw door_dr | down  pushable ]
+right [ cw  door_dr | pushable ] -> [ cw  door_dr | right pushable ]
+
+up    [ ccw door_ul | pushable ] -> [ ccw door_ul | up   pushable  ]
+left  [ cw  door_ul | pushable ] -> [ cw  door_ul | left pushable  ]
+
+up    [ cw  door_ur | pushable ] -> [ cw  door_ur | up    pushable ]
+right [ ccw door_ur | pushable ] -> [ ccw door_ur | right pushable ]
+
+
+down  [ cw  door_dl | ] -> [ | door_l ]
+left  [ ccw door_dl | ] -> [ | door_d ]
+
+down  [ ccw  door_dr | ] -> [ | door_r ]
+right [ cw door_dr | ] -> [ | door_d ]
+
+up    [ ccw  door_ul | ] -> [ | door_l ]
+left  [ cw  door_ul | ] -> [ | door_u ]
+
+up    [ cw  door_ur | ] -> [ | door_r ]
+right [ ccw door_ur | ] -> [ | door_u ]
+
+
+
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > player | crate | crate ] -> cancel
+([ > crate | stationary crate ] -> [ > crate | > crate ])
+
+[ > player | door ] -> [ > player knock | > door ]
+[> pushing | knock] -> [ pushing knock | knock ]
+
+[knock]->[]
+
+right [ down door_r | hinge ] -> [ down door_r | hinge ccw  ] 
+right [ up   door_r | hinge ] -> [ up   door_r | hinge cw ] 
+
+left  [ up   door_l | hinge ] -> [ up   door_l | hinge ccw  ] 
+left  [ down door_l | hinge ] -> [ down door_l | hinge cw ] 
+
+up   [ left  door_u | hinge ] -> [ left  door_u | hinge cw  ] 
+up   [ right door_u | hinge ] -> [ right door_u | hinge ccw ] 
+
+down [ right door_d | hinge ] -> [ right door_d | hinge cw  ] 
+down [ left  door_d | hinge ] -> [ left  door_d | hinge ccw ] 
+
+
+[ door_u ] -> [ up door_u ]
+[ door_d ] -> [ down door_d ]
+[ door_l ] -> [ left door_l ]
+[ door_r ] -> [ right door_r ]
+
+[ > door | hinge cw  ] -> [ ^ door cw  | hinge cw  ]
+[ > door | hinge ccw ] -> [ ^ door ccw | hinge ccw ]
+[ > door | no hinge  ] -> [   door | ]
+
+
+down  [ ccw door_r | wall ] -> cancel
+up    [ cw  door_r | wall ] -> cancel
+down  [ cw  door_l | wall ] -> cancel
+up    [ ccw door_l | wall ] -> cancel
+right [ ccw door_u | wall ] -> cancel
+left  [ cw  door_u | wall ] -> cancel
+right [ cw  door_d | wall ] -> cancel
+left  [ ccw door_d | wall ] -> cancel
+
+down  [ ccw door_r | pushable ] -> [ ccw door_r | right pushable ccw ]
+up    [ cw  door_r | pushable ] -> [ cw  door_r | right pushable cw  ]
+down  [ cw  door_l | pushable ] -> [ cw  door_l | left  pushable cw  ]
+up    [ ccw door_l | pushable ] -> [ ccw door_l | left  pushable ccw ]
+right [ ccw door_u | pushable ] -> [ ccw door_u | up    pushable ccw ]
+left  [ cw  door_u | pushable ] -> [ cw  door_u | up    pushable cw  ]
+right [ cw  door_d | pushable ] -> [ cw  door_d | down  pushable cw  ]
+left  [ ccw door_d | pushable ] -> [ ccw door_d | down  pushable ccw ]
+
+[ > crate | stationary crate ] -> [ > crate | > crate ]
+[ > crate | > crate | > crate | ... | > crate ] -> [ > crate | > crate | > crate | ... | stationary crate ]
+
+[ cw > crate | > crate | > crate ] -> [ cw > crate | > crate | v crate ]
+[ ccw > crate | > crate | > crate ] -> [ cw > crate | > crate | ^ crate ]
+[ w crate ] -> [ crate ]
+
+[ > crate | no obstacle ] -> [ | crate ] 
++ [ > player | no obstacle ] -> [ | player ] 
+
+[ moving door ] -> [ door ] 
+
++ down [ ccw door_r | ] -> [ | ccw door_ur ]
++ up   [ cw  door_r | ] -> [ | cw  door_dr ]
++ down [ cw  door_l | ] -> [ | cw  door_ul ]
++ up   [ ccw door_l | ] -> [ | ccw door_dl ]
+
++ right   [ ccw door_u | ] -> [ | ccw door_ul ]
++ left    [ cw  door_u | ] -> [ | cw  door_ur ]
++ right   [ cw  door_d | ] -> [ | cw  door_dl ]
++ left    [ ccw door_d | ] -> [ | ccw door_dr ]
+
+[ diagonal ] -> again
+
+[ w hinge ] -> [ hinge ]
+[ w ortho ] -> [ ortho ]
+
+late [ crate door ] -> cancel
+late [ player door ] -> cancel
+
+
+late up   [ door_ul | ] -> [ door_ul | dl ]
+late left [ door_ul | ] -> [ door_ul | ur ]
+
+late down [ door_dl | ] -> [ door_dl | ul ]
+late left [ door_dl | ] -> [ door_dl | dr ]
+
+late up    [ door_ur | ] -> [ door_ur | dr ]
+late right [ door_ur | ] -> [ door_ur | ul ]
+
+late down  [ door_dr | ] -> [ door_dr | ur ]
+late right [ door_dr | ] -> [ door_dr | dl ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+no diagonal
+
+=======
+LEVELS
+=======
+
+message Level 1 von 5
+
+#######
+#.....#
+#..o..#
+#.....#
+#.d...#
+#.hl..#
+#.u.d.#
+#..rh.#
+#..*u.#
+#.....#
+#..p..#
+#.....#
+#######
+
+message Level 2 von 5
+
+
+#################
+#...*...*.odo...#
+#.p.*...*.oho...#
+#...*...*.ouo...#
+#################
+
+message Level 3 von 5
+
+
+#########
+#.......#
+#..rhl..#
+#.do*od.#
+#.h*.*h.#
+#.uo*ou.#
+#..rhl..#
+#.p.....#
+#########
+
+message Level 4 von 5
+
+#########
+#...o...#
+#..rhl..#
+#.d*.*d.#
+#.ho.oh.#
+#.u*o*u.#
+#..rhl..#
+#.p.....#
+#########
+
+message Level 5 von 5
+
+#########
+#...o...#
+#.hl.rh.#
+#.u*d*u.#
+#o.rhl.o#
+#.d*u*d.#
+#phl.rh.#
+#...o...#
+#########
+
+message Sie sind aber talentiert!
+

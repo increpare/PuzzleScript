@@ -1,0 +1,458 @@
+title match three billiards 
+author increpare
+homepage www.increpare.com
+
+
+run_rules_on_level_start
+
+color_palette 7
+
+norepeat_action
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+hole
+black
+
+target
+lightgreen black
+00000
+01110
+01110
+01110
+00000
+
+
+wallul E
+brown
+00000
+0000.
+000..
+00...
+0....
+
+wallur R
+brown
+00000
+.0000
+..000
+...00
+....0
+
+walldl D
+transparent brown brown
+20000
+12000
+11200
+11120
+11112
+
+walldr F
+transparent brown brown
+00002
+00021
+00211
+02111
+21111
+
+Wall
+brown
+
+
+player p
+white lightblue lightgray lightgray Blue
+.111.
+.000.
+22222
+.222.
+.1.1.
+
+Body
+darkbrown
+.000.
+.000.
+.000.
+.000.
+.000.
+
+ball
+darkred darkred darkred
+.000.
+02220
+02220
+02220
+.000.
+
+AU 
+red red red
+.000.
+02220
+02220
+02220
+.000.
+
+AD
+red red red
+.000.
+02220
+02220
+02220
+.000.
+
+
+AL
+red red red
+.000.
+02220
+02220
+02220
+.000.
+
+
+AR
+red red red
+.000.
+02220
+02220
+02220
+.000.
+
+
+good
+yellow yellow yellow
+.000.
+02220
+02220
+02220
+.000.
+
+
+
+
+T
+transparent
+
+=======
+LEGEND
+=======
+
+walls = wall or wallul or wallur or walldl or walldr
+. = Background
+# = Wall
+C = ball
+@ = ball and target
+O = target
+Arrow = AU or AD or AL or AR 
+Obstacle = ball or Wall
+block = T or wall
+h = hole
+$ = ball and hole
+g = target and hole
+k = ball and hole and target
+anyball = ball or arrow
+anyballorgood = anyball or good
+
+=======
+SOUNDS
+=======
+
+sfx0 36772507 (ballmove)
+sfx1 20806902 (action)
+sfx2 44778100 (clink)
+sfx3 17355302 (win)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+hole
+target
+Wall, walls, ball, player
+body
+arrow
+T
+Good
+
+======
+RULES
+======
+
+up [ > player | ball ] -> [ player | AU ] sfx0
+down [ > player | ball ] -> [ player | AD ] sfx0
+left [ > player | ball ] -> [ player | AL ] sfx0
+right [ > player | ball ] -> [ player | AR ] sfx0
+ 
+
+up [ AU | Ball ] -> [ Ball | AU ] sfx2
++ down [ AD | Ball ] -> [ Ball | AD ] sfx2
++ left [ AL | Ball ] -> [ Ball | AL ] sfx2
++ right [ AR | Ball ] -> [ Ball | AR ] sfx2
+ 
+
+up [ no T AU | WALLUL ] -> [ T AR | WALLUL ] again
+up [ no T AU | WALLUR ] -> [ T AL | WALLUR ] again
+
+down [ no T AD | WALLDL ] -> [ T AR | WALLDL ] again
+down [ no T AD | WALLDR ] -> [ T AL | WALLDR ] again
+
+left [ no T AL | WALLUL ] -> [ T AD | WALLUL ] again
+left [ no T AL | WALLDL ] -> [ T AU | WALLDL  ] again
+
+right [ no T AR | WALLUR ] -> [ T AD | WALLUR  ] again
+right [ no T AR | WALLDR ] -> [ T AU | WALLDR  ] again
+
+right [ no T AR | wall ] -> [ T AL | wall ] again
+left [ no T AL | wall ] -> [ T AR | wall ] again
+up [ no T AU | wall ] -> [ T AD | wall ] again
+down [ no T AD | wall ] -> [ T AU | wall ] again
+
+[T]->[]
+
+
+up [ AU | player ] -> [ ball | player ] 
+down [ AD | player ] -> [ ball | player ] 
+left [ AL | player ] -> [ ball | player ] 
+right [ AR | player ] -> [ ball | player ] 
+
+up [ no T AU | no obstacle ] -> [ | T AU ] again
+down [ no T AD | no obstacle ] -> [ | T AD ] again
+left [ no T AL | no obstacle ] -> [ | T AL ] again
+right [ no T AR | no obstacle ] -> [ | T AR ] again
+
+[T]->[]
+
+(
+right [ no T AR | wall ] -> [ T AL | wall ] again
+left [ no T AL | wall ] -> [ T AR | wall ] again
+up [ no T AU | wall ] -> [ T AD | wall ] again
+down [ no T AD | wall ] -> [ T AU | wall ] again
+[t]->[]
+
+right [ no T AR | no obstacle ] -> [ | T AR ] again
+left [ no T AL | no obstacle ] -> [ | T AL ] again
+up [ no T AU | no obstacle ] -> [ | T AU ] again
+down [ no T AD | no obstacle ] -> [ | T AD ] again
+[T]->[]
+)
+
+[good] -> []
+
+[anyballorgood | anyballorgood | anyballorgood ] -> [ good | good | good ] again sfx3
+
+==============
+WINCONDITIONS
+==============
+no anyball
+no good
+
+=======
+LEVELS
+=======
+
+message level 1 of 3
+
+##########er####
+..p..c......r###
+########e....r##
+#######e......r#
+######e........r
+#####e.........f
+#####d.....c..f#
+######d......f##
+#######d...cf###
+########d..f####
+#########df#####
+
+message level 2 of 3
+
+####er####
+###e..r###
+##e....r##
+#e.c..c.r#
+e........r
+d........f
+#d.p..c.f#
+##d....f##
+###d..f###
+####df####
+
+message level 3 of 3
+
+####er####
+###e..r###
+##e....r##
+#e.c.c..r#
+e........r
+d..c.c...f
+#d....p.f#
+##d....f##
+###d..f###
+####df####
+
+(
+
+message optional final level
+
+#####er####
+####e..r###
+###e....r##
+##e.c.c..r#
+#e........r
+e...c.c...f
+d........f#
+#d...p..f##
+##d....f###
+###d..f####
+####df#####
+
+######er#######
+#####e..r######
+####e....r#####
+###e......r####
+##e........r###
+#e...c..p...r##
+e............r#
+d..........c..r
+#d............f
+##d..........f#
+###d........f##
+####d..c...f###
+#####d....f####
+######d..f#####
+#######df######
+
+
+#####er####
+####e..r###
+###e....r##
+##e.c.c..r#
+#e........r
+e...c.c...f
+d........f#
+#d...p..f##
+##d....f###
+###d..f####
+####df####.
+
+
+##########er####
+..p..c......r###
+########e....r##
+#######e......r#
+######e........r
+#####e.....c...f
+#####d........f#
+######d....c.f##
+#######d....f###
+########d..f####
+#########df#####
+
+####er####
+###e..r###
+##e....r##
+#e......r#
+e........r
+d..p.....f
+#d......f#
+##d....f##
+###d..f###
+####df####
+
+####er####
+###e..r###
+##e....r##
+#e.c.c..r#
+e........r
+d..p.c...f
+#d......f#
+##d....f##
+###d..f###
+####df####
+
+#####er#####
+####e..r####
+###e....r###
+##e......r##
+#e..c.c...r#
+e..........r
+d....c.c...f
+#d........f#
+##d...p..f##
+###d....f###
+####d..f####
+#####df#####
+
+####er####
+###e..r###
+##e....r##
+#e.c.c..r#
+e........r
+d..p.c...f
+#d......f#
+##d....f##
+###d..f###
+####df####
+
+######er#######
+#####e..r######
+####e....r#####
+###e......r####
+##e........r###
+#e...c..p...r##
+e............r#
+d..........c..r
+#d............f
+##d..........f#
+###d........f##
+####d..c...f###
+#####d....f####
+######d..f#####
+#######df######
+
+######er#######
+#####e..r######
+####e....r#####
+###e......r####
+##e........r###
+#e...c......r##
+e.......#....r#
+d....c.....c..r
+#d...p........f
+##d..........f#
+###d........f##
+####d..c...f###
+#####d....f####
+######d..f#####
+#######df######
+
+##########er####
+....pc......r###
+########e....r##
+#######e......r#
+######e........r
+#####e.........f
+#####d........f#
+######d......f##
+#######d....f###
+########d..f####
+#########df#####
+
+##########er####
+..p..c......r###
+########e....r##
+#######e......r#
+######e........r
+#####e.....c...f
+#####d........f#
+######d....c.f##
+#######d....f###
+########d..f####
+#########df#####
+
+)

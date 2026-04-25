@@ -1,0 +1,678 @@
+title Die schoene Steinmetzin
+author Stephen Lavelle
+homepage www.increpare.com
+
+run_rules_on_level_start
+noaction
+
+background_color blue
+text_color white
+
+color_palette 14
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN
+
+hole
+black
+
+Wall
+BROWN 
+
+Player
+red
+.....
+.000.
+.000.
+.000.
+.....
+
+con_u
+red
+.000.
+.....
+.....
+.....
+.....
+
+con_d
+red
+.....
+.....
+.....
+.....
+.000.
+
+con_l
+red
+.....
+0....
+0....
+0....
+.....
+
+con_r
+red
+.....
+....0
+....0
+....0
+.....
+
+
+tr
+red
+....0
+.....
+.....
+.....
+.....
+
+
+tl
+red
+0....
+.....
+.....
+.....
+.....
+
+
+br
+red
+.....
+.....
+.....
+.....
+....0
+
+
+bl
+red
+.....
+.....
+.....
+.....
+0....
+
+knife_l
+gray
+0....
+0....
+0....
+0....
+0....
+
+
+knife_r
+gray
+....0
+....0
+....0
+....0
+....0
+
+
+
+knife_t
+gray
+00000
+.....
+.....
+.....
+.....
+
+
+knife_b
+gray
+.....
+.....
+.....
+.....
+00000
+
+cut_t
+transparent
+
+cut_b
+transparent
+
+cut_l
+transparent
+
+cut_r
+transparent
+
+target
+orange
+
+supported
+transparent
+
+=======
+LEGEND
+=======
+
+o = hole
+. = Background
+# = Wall
+P = Player
+connection = con_u or con_d or con_l or con_r
+h = knife_r
+b = knife_b
+t = target
+cut = cut_t or cut_b or cut_l or cut_r
+pixel = tr or tl or br or bl
+
+=======
+SOUNDS
+=======
+sfx0 29435104 (fall)
+sfx1 56782707 (cut)
+endlevel 53471503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+hole
+target 
+Player, Wall
+con_u
+con_d
+con_l
+con_r
+knife_t
+knife_b
+knife_l
+knife_r
+cut_t
+cut_b
+cut_l
+cut_r
+tr
+tl
+br
+bl
+supported
+
+======
+RULES
+======
+
+[pixel]->[]
+
+right [stationary player | player ] -> [ player con_r | player con_l ]
+down [stationary player | player ] -> [ player con_d | player con_u ]
+
+
+right [knife_r | ] -> [ knife_r | knife_l]
+down [knife_b | ] -> [ knife_b | knife_t]
+
+
+[ > player | wall ] -> [ player | wall ]
++ [ right player knife_r ] -> [ stationary player knife_r]
++ [ left player knife_l ] -> [ stationary player knife_l]
++ [ up player knife_t ] -> [ stationary player knife_t]
++ [ down player knife_b ] -> [ stationary player knife_b]
+
++ up [ stationary player con_u | player ] -> [ stationary player con_u | stationary player ]
++ down [ stationary player con_d | player ] -> [ stationary player con_d | stationary player ]
++ left [ stationary player con_l | player ] -> [ stationary player con_l | stationary player ]
++ right [ stationary player con_r | player ] -> [ stationary player con_r | stationary player ]
+
++ [ > player | stationary player ] -> [ player | player ]
+
+
+[ > player connection ] -> [ > player > connection ]
+
+
+
+[ stationary player connection ] -> [ player stationary connection ]
+
+
+late [ knife_r con_r ] -> [ knife_r cut_r ] sfx1
+late [ knife_l con_l ] -> [ knife_l cut_l ] sfx1
+
+late [ knife_t con_u ] -> [ knife_t cut_t ] sfx1
+late [ knife_b con_d ] -> [ knife_b cut_b ] sfx1
+
+
+late down [ con_r | con_u cut_r ] -> [ cut_r | con_u cut_r ]
+late down [ con_l | con_u cut_l ] -> [ cut_l | con_u cut_l ]
+
+late up [ con_r | con_d cut_r ] -> [ cut_r | con_d cut_r ]
+late up [ con_l | con_d cut_l ] -> [ cut_l | con_d cut_l ]
+
+late right [ con_u | con_l cut_t ] -> [ cut_t | con_l cut_t ]
+late right [ con_d | con_l cut_b ] -> [ cut_b | con_l cut_b ]
+
+late left [ con_u | con_r cut_t ] -> [ cut_t | con_r cut_t ]
+late left [ con_d | con_r cut_b ] -> [ cut_b | con_r cut_b ]
+
+late [ cut ]->[]
+
+late [ player no hole ] -> [ player supported ]
+
+late up [ supported con_u | ] -> [ supported con_u | supported ]
++ late down [ supported con_d | ] -> [ supported con_d | supported ]
++ late left [ supported con_l | ] -> [ supported con_l | supported ]
++ late right [ supported con_r | ] -> [ supported con_r | supported ]
+
+late [ player no supported ] -> [ no connection ] sfx0
+
+late [ supported ] -> []
+
+
+
+late right [ con_r con_d ] -> [ con_r con_d br ]
+late right [ con_r con_u ] -> [ con_r con_u tr ]
+late right [ con_l con_d ] -> [ con_l con_d bl ]
+late right [ con_l con_u ] -> [ con_l con_u tl ]
+
+
+==============
+WINCONDITIONS
+==============
+
+all target on player
+
+=======
+LEVELS
+=======
+
+
+(OK LEVELS)
+
+message Level 1 von 5
+
+###############
+#.............#
+#.............#
+#....ppp..t.t.#
+##...ppp..ttt.#
+#....ppp..ttt.#
+#..........t..#
+#.............#
+#..h..........#
+###############
+
+message Level 2a von 5
+
+##################
+#................#
+#................#
+#....ppp..#...t..#
+#b...ppp..#..ttt.#
+#....ppp..#..ttt.#
+#.........#..t.t.#
+#................#
+#..h.............#
+##################
+
+message Level 2b von 5
+
+##################
+#................#
+#.....p..........#
+#....ppp..#......#
+#b...ppp..#..ttt.#
+#....p.p..#..ttt.#
+#.........#..ttt.#
+#................#
+#..h.............#
+##################
+
+
+
+message Level 3a von 5
+
+#################
+#........o......#
+#.........o.....#
+#...pp...o..ttt.#
+#b..ppp...o.t.t.#
+#...ppp..o..ttt.#
+#.........o.....#
+#........o......#
+#....h....o.....#
+#################
+
+
+message Level 3b von 5
+
+(this is ok!)
+#################
+#....h...o......#
+#.........o.....#
+#...ppp..o..tt..#
+#b..p.p...o.ttt.#
+#...ppp..o..ttt.#
+#.........o.....#
+#........o......#
+#....h....o.....#
+#################
+
+
+message Level 4a von 5
+
+#####################
+#....h.....o.......##
+#.........o.........#
+#...ppp...#.ttt.ttt.#
+#...p.p...#.t.t.t.t.#
+#b..ppp..b#...ttt...#
+#...p.p...#.........#
+#...ppp...#.........#
+#.........#.........#
+#.........o.........#
+#....h.....o.......##
+#####################
+
+
+message Level 4b von 5
+
+#####################
+#....h.....o.......##
+#.........o.........#
+#.........#...ttt...#
+#.ppp.ppp.#...t.t...#
+#bp.p.p.pb#...ttt...#
+#...ppp...#...t.t...#
+#.........#...ttt...#
+#.........#.........#
+#.........o.........#
+#....h.....o.......##
+#####################
+
+
+message level 5 von 5
+
+#####################
+#....h.....o.......##
+#.........o.........#
+#...ppp...#...ttt...#
+#...p.....#...t.....#
+#b..ppp..b#...ttt...#
+#.....p...#.....t...#
+#...ppp...#...ttt...#
+#.........#.........#
+#.........o.........#
+#....h.....o.......##
+#####################
+
+##...ot...###...ot...
+o#.oootttooo#.ooottto
+##...###to###...###to
+ottt.#tttooottt.#ttto
+ot...###...ot...###..
+otttooo#.oootttooo#.o
+###to###...###to###..
+#tttooottt.#tttooottt
+###...ot...###...ot..
+oo#.oootttooo#.ooottt
+###...###to###...###t
+oottt.#tttooottt.#ttt
+.ot...###...ot...###.
+ootttooo#.oootttooo#.
+.###to###...###to###.
+.#tttooottt.#tttooott
+.###...ot...###...ot.
+ooo#.oootttooo#.ooott
+
+(
+(noT SURE LEVELS)
+
+(dunno!)
+##################
+#........#..######
+#........#.......#
+#...ppp..#...ttt.#
+#b..pp.......t.t.#
+#...ppp......ttt.#
+#........#.......#
+#........#..######
+#....h...#..######
+##################
+
+
+
+
+(lots of work)
+##################
+#............#...#
+#..........#.#...#
+#...pppp...#.tttt#
+#b..pppp...#.tttt#
+#...pppp...#.tttt#
+#...pppp...#.tttt#
+#..........#.#...#
+#..h.........#...#
+##################
+
+
+
+
+(nicht so gut:)
+##################
+#.........o.o#...#
+#..........o.#...#
+#...pppp..#..tttt#
+#b..pppp..#..tttt#
+#...pppp..#..tttt#
+#...pppp..#..tttt#
+#..........o.#...#
+#..h......o.o#...#
+##################
+
+
+#################
+#........o......#
+#.........o.....#
+#...ppp..o..tt..#
+#b..p.p...o.ttt.#
+#...ppp..o..ttt.#
+#.........o.....#
+#........o......#
+#....h....o.....#
+#################
+
+
+#################
+#........o......#
+#.........o.....#
+#...ppp..o..ttt.#
+#b..pp....o.t.t.#
+#...ppp..o..ttt.#
+#.........o.....#
+#........o......#
+#....h....o.....#
+#################
+
+
+#################
+#........o......#
+#.........o.....#
+#...ppp..o..ttt.#
+#b..pp....o.t.t.#
+#...ppp..o..ttt.#
+#.........o.....#
+#........o......#
+#....h....o.....#
+#################
+
+
+(dupe of earlier)
+#################
+#..........######
+#...............#
+#...ppp.....ttt.#
+#b..pp......t.t.#
+#...ppp.....ttt.#
+#...............#
+#..........######
+#...h......######
+#################
+
+
+##################
+#.........o.o#...#
+#..........o.#...#
+#....ppp..#..ttt.#
+#b...ppp..#..ttt.#
+#....ppp..#..ttt.#
+#.........#......#
+#..........o.#...#
+#..h......o.o#...#
+##################
+
+#################
+#........o......#
+#.........o.....#
+#....ppp.o..ttt.#
+#b...pp...o.t.t.#
+#....ppp.o..ttt.#
+#.........o.....#
+#........o......#
+#..h......o.....#
+#################
+
+###############
+#.............#
+#.............#
+#....ppp..ttt.#
+#.#..pp..ttt..#
+#....ppp..ttt.#
+#b............#
+#.............#
+#.............#
+###############
+
+
+##################
+#.........o......#
+#..........o.....#
+#....ppp..#...t..#
+#b...ppp..#..ttt.#
+#....ppp..#..ttt.#
+#.........#..t.t.#
+#..........o.....#
+#..h......o......#
+##################
+
+
+##################
+#oo.......o......#
+#oo......o.......#
+#....ppp..o...t..#
+#b...ppp.o...ttt.#
+#....ppp..o..ttt.#
+#........o...t.t.#
+#.........o......#
+#..h.....o.......#
+##################
+
+
+###############
+#.............#
+#.............#
+#....ppp...t..#
+#b...ppp..ttt.#
+#....ppp..ttt.#
+#.........t.t.#
+#.............#
+#..h..........#
+###############
+
+#################
+#....h...o......#
+#.........o.....#
+#...ppp..o......#
+#...p.p...o.....#
+#...ppp..o..tt..#
+#b..p.p...o.ttt.#
+#...ppp..o..ttt.#
+#.........o.....#
+#........o......#
+#....h....o.....#
+#################
+
+#################
+#....h.....o....#
+#.........o.....#
+#...ppp...#.....#
+#...p.p...#.....#
+#b..ppp..b#.tt..#
+#...p.p...#.ttt.#
+#...ppp...#.ttt.#
+#.........#.....#
+#.........o.....#
+#....h.....o....#
+#################
+
+
+#####################
+#....h.....o.......##
+#.........o.........#
+#...ppp...#.ttt.ttt.#
+#...p.p...#.t.t.t.t.#
+#b..ppp..b#.........#
+#...p.p...#.........#
+#...ppp...#...ttt...#
+#.........#.........#
+#.........o.........#
+#....h.....o.......##
+#####################
+
+
+
+#####################
+#....h.....o.......##
+#.........o.........#
+#...ppp...#...ttt...#
+#...p.....#...t.....#
+#b..ppp..b#...ttt...#
+#...p.p...#.....t...#
+#...ppp...#...ttt...#
+#.........#.........#
+#.........o.........#
+#....h.....o.......##
+#####################
+
+(OK)
+#####################
+#....h.....o.......##
+#.........o.........#
+#...ppp...#...ttt...#
+#.....p...#...t.....#
+#b..ppp..b#...ttt...#
+#...p.....#.....t...#
+#...ppp...#...ttt...#
+#.........#.........#
+#.........o.........#
+#....h.....o.......##
+#####################
+
+
+
+
+#####################
+#....h.....o.......##
+#.........o.........#
+#...ppp...#...ttt...#
+#...p.....#.....t...#
+#b..ppp..b#...ttt...#
+#.....p...#...t.....#
+#...ppp...#...ttt...#
+#.........#.........#
+#.........o.........#
+#....h.....o.......##
+#####################
+
+(also ok)
+)

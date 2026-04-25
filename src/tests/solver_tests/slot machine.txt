@@ -1,0 +1,276 @@
+title Slot Machine
+author Stephen Lavelle
+homepage www.increpare.com
+
+background_color lightred
+
+run_rules_on_level_Start
+
+
+========
+OBJECTS
+========
+
+Background
+lightred
+
+
+VTarget
+black transparent
+11011
+11011
+11011
+11011
+11011
+
+HTarget
+black transparent
+11111
+11111
+11111
+11111
+00000
+
+Wall
+purple 
+
+Player
+darkblue darkbrown green darkgreen
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+
+Player_fall
+darkred darkbrown green darkgreen
+.....
+.....
+.000.
+21112
+.222.
+
+Coin_Flat
+yellow orange 
+.....
+.000.
+00000
+10001
+.111.
+
+coin_on_flatshadow
+#b14762
+.....
+.....
+.....
+.....
+0....
+
+Coin_H
+yellow orange
+.000.
+00000
+00000
+00000
+.000.
+
+Coin_V
+yellow orange
+..0..
+..0..
+..0..
+..0..
+..0..
+
+halfin_h
+yellow orange
+.....
+.....
+.....
+.000.
+00000
+
+halfin_v
+yellow orange
+.....
+..0..
+..0..
+..0..
+.....
+
+shadow_player
+#b14762
+.0.0.
+0.0..
+000..
+000..
+0....
+
+shadow_wall
+#b14762
+
+shadow_coin_flat
+#b14762
+0000.
+.....
+.....
+.....
+.....
+
+shadow_coin_h
+#b14762
+.000.
+.000.
+000..
+000..
+00...
+
+shadow_coin_v
+#b14762
+..0..
+.0...
+.0...
+0....
+0....
+
+wallshadow_1
+#b14762
+.....
+....0
+....0
+...00
+...00
+
+wallshadow_1b
+#b14762
+...00
+...00
+...00
+...00
+...00
+
+
+wallshadow_2
+transparent #b14762
+11111
+11110
+11110
+11100
+11100
+
+
+=======
+LEGEND
+=======
+
+coin = coin_h or coin_v or coin_flat
+obstacle = coin or wall or player
+
+anycoin = coin or halfin_h or halfin_v
+
+. = Background
+# = Wall
+P = Player
+a = coin_flat
+b = coin_h
+c = coin_v
+1 = htarget
+2 = vtarget
+shadow = shadow_player or shadow_wall or shadow_coin_flat or shadow_coin_h or shadow_coin_v or coin_on_flatshadow or wallshadow_1 or wallshadow_1b or wallshadow_2
+wallshadow_v = wallshadow_1 or wallshadow_1b
+
+=======
+SOUNDS
+=======
+sfx0 4400100
+sfx1 56724504
+
+================
+COLLISIONLAYERS
+================
+
+Background
+shadow_player
+shadow_wall
+shadow_coin_flat
+shadow_coin_h
+shadow_coin_v
+wallshadow_1
+wallshadow_1b
+wallshadow_2
+coin_on_flatshadow
+htarget, vtarget
+Player, Wall, anycoin, player_Fall
+
+======
+RULES
+======
+
+
+[ htarget player_fall ] -> [  htarget ]
+
+([ htarget player ] -> [ htarget player_fall ] sfx1)
+
+[ htarget halfin_h ] -> [  htarget ]
+[ vtarget halfin_v ] -> [  vtarget ]
+
+[ coin_h htarget ] -> [ htarget halfin_h ] sfx0
+[ coin_v vtarget ] -> [ vtarget halfin_v ] sfx0
+
+
+horizontal [ > player  | coin_flat | no obstacle ] -> [ > player  | | coin_v ]
+horizontal [ > player  | coin_v | no obstacle ] -> [ > player  | | coin_flat ]
+horizontal [ > player  | coin_h | no obstacle ] -> [ > player  | | coin_h ]
+
+
+
+vertical [ > player  | coin_flat | no obstacle ] -> [ > player  | | coin_h ]
+vertical [ > player  | coin_h | no obstacle ] -> [ > player  | | coin_flat ]
+vertical [ > player  | coin_v | no obstacle ] -> [ > player  | | coin_v ]
+
+late [ shadow ] -> []
+
+late down [ player | ] -> [ player | shadow_player ]
+late down [ wall | ] -> [ wall | shadow_wall ] 
+
+late down [ coin_flat | ] -> [ coin_flat | shadow_coin_flat ]
+late down [ coin_h | ] -> [ coin_h | shadow_coin_h ]
+late down [ coin_v | ] -> [ coin_v | shadow_coin_v ]
+late [ coin_flat ] -> [ coin_flat coin_on_flatshadow ]
+[]->again
+
+
+==============
+WINCONDITIONS
+==============
+
+no anycoin
+
+=======
+LEVELS
+=======
+
+message Level 1 von 2
+
+#########
+#.......#
+#.......#
+#.p.a.1.#
+#.......#
+#.......#
+#########
+.........
+
+message Level 2 von 2
+
+#########
+#.......#
+#....a..#
+#.p.aa1.#
+#....a..#
+#.......#
+#########
+.........
+
+message The End

@@ -1,0 +1,199 @@
+title Slide Pull
+author Stephen Lavelle
+homepage www.puzzlescript.net
+
+require_player_movement
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+pink Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+crate2
+lightblue 
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+crates = crate or crate2
+
+. = Background
+# = Wall
+P = Player
+* = Crate2
+j = crate
+@ = Crate2 and Target
+O = Target
+
+obstacle = crates or wall or player 
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, crate2
+
+======
+RULES
+======
+
+
+[ >  Player | Crate2 ] -> [  >  Player | > Crate2  ]
+
+[ > crate2 | no obstacle ] -> [ | > crate2 ]
+[> crate2 | obstacle ] -> [ crate | obstacle ]
+
+[ <  Player | Crate ] -> [  <  Player | < Crate2  ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crates
+
+=======
+LEVELS
+=======
+
+message level 1 of 7
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+
+message level 2 of 7
+
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+
+message level 3 of 7
+
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+
+
+
+message level 4 of 7
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+
+message level 5 of 7
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+
+message level 6 of 7
+
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+
+message level 7 of 7
+
+
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.j.j.j.#
+#.#.#.#.###
+#.......#..
+#########..
+
+
+
+
+message congrats :)

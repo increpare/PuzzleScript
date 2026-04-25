@@ -1,0 +1,158 @@
+title Bring the ice cube to the goal without exposing it to heat.
+
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+
+noaction
+
+========
+OBJECTS
+========
+
+hot 
+darkred
+
+cold
+darkblue
+
+HotSource 1
+red darkred white yellow
+11311
+10201
+10201
+10001
+11111
+
+icecube i
+lightblue blue 
+.111.
+10001
+10001
+10001
+.111.
+
+
+Background
+darkblue darkblue
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+darkgreen
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+darkblue darkgreen
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+brown darkbrown
+00000
+00110
+01010
+01100
+00000
+
+puddle u
+blue
+.....
+.000.
+00000
+.000.
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+insulation = wall or crate
+
+pushable = crate or hotsource or icecube
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+sfx0 87367102 (melt)
+endlevel 87961509 
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Hot,Cold
+Target
+puddle
+Player, Wall, Crate, HotSource, icecube
+
+======
+RULES
+======
+
+[ icecube hot ] -> [ puddle ]
+
+
+[ >  Player | pushable ] -> [  >  Player | > pushable  ]
+
+late [hot]->[]
+late [cold]->[]
+late [ no insulation ] -> [ cold ]
+
+late [HotSource] -> [HotSource hot]
+
+late [ hot | no insulation ] -> [ hot | hot ]
+
+[] -> again
+
+==============
+WINCONDITIONS
+==============
+all icecube on target
+no puddle
+
+=======
+LEVELS
+=======
+
+message Level 1 of 1
+
+###################
+#.....#.....#.....#
+#.....#.1...#.....#
+#..o..*.....*..i..#
+#.....#...p.#.....#
+#.....#.....#.....#
+###################
+
+message very good

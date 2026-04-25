@@ -1,0 +1,295 @@
+title Expand, avoid the flames [also it's not always solvable]
+author Stephen Lavelle
+homepage www.increpare.com
+run_rules_on_level_start
+color_palette 14
+background_color black
+text_color orange
+
+========
+OBJECTS
+========
+
+Background
+black
+
+wall #
+darkgreen
+..0..
+..0..
+..0..
+..0..
+..0..
+
+totenkopf k
+gray
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+spawntile s
+darkred
+
+fire f
+red yellow
+10101
+01010
+10101
+01010
+10101
+
+Player
+white
+0...0
+.....
+.....
+.....
+0...0
+
+
+u
+lightred 
+.....
+..0..
+.0.0.
+.....
+.....
+
+0
+white
+.....
+.000.
+.000.
+.000.
+.....
+
+d
+yellow
+.....
+.....
+.0.0.
+..0..
+.....
+
+
+
+l
+lightgreen
+.....
+..0..
+.0...
+..0..
+.....
+
+
+
+r
+lightblue
+.....
+..0..
+...0.
+..0..
+.....
+
+tu
+red
+
+td
+red
+
+tl
+red
+
+tr
+red
+
+mu
+yellow
+
+md
+yellow
+
+ml
+yellow
+
+mr
+yellow
+
+temp
+blue
+
+direkt 
+transparent
+
+t2 
+transparent
+
+t3
+transparent
+
+success
+transparent
+
+empty
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+P = player
+arrow = u or r or d or l
+t = tu or td or tl or tr
+2 = fire and t2
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+spawntile
+fire
+u,d,l,r
+Player,0, wall
+tu
+td
+tl
+tr
+mu
+md
+ml
+mr
+temp
+direkt
+t2
+t3
+totenkopf
+success
+empty
+
+======
+RULES
+======
+
+[> player|fire]->cancel
+
+[spawntile no arrow ] -> [ spawntile random arrow ]  again
+
+random [t2]->[up t3]
+random [stationary t3]->[t2]
+
+
+( down [ arrow | no arrow ] -> [> arrow| ] again
++ down [ arrow | > arrow  ] -> [ > arrow | > arrow ] again
+)
+up [ u | u | u ] -> [ tu u | tu u | tu u ]
+up [tu u | u no tu ] -> [ tu u | tu u ]
+
+up [ d | d | d ] -> [ tu d | tu d | tu d ]
+up [tu d | d no tu ] -> [ tu d | tu d ]
+
+up [ l | l | l ] -> [ tu l | tu l | tu l ]
+up [tu l | l no tu ] -> [ tu l | tu l ]
+
+up [ r | r | r ] -> [ tu r | tu r | tu r ]
+up [tu r | r no tu ] -> [ tu r | tu r ]
+
+
+down [ u | u | u ] -> [ td u | td u | td u ]
+down [td u | u no td ] -> [ td u | td u ]
+
+down [ d | d | d ] -> [ td d | td d | td d ]
+down [td d | d no td ] -> [ td d | td d ]
+
+down [ l | l | l ] -> [ td l | td l | td l ]
+down [td l | l no td ] -> [ td l | td l ]
+
+down [ r | r | r ] -> [ td r | td r | td r ]
+down [td r | r no td ] -> [ td r | td r ]
+
+
+left [ u | u | u ] -> [ tl u | tl u | tl u ]
+left [tl u | u no tl ] -> [ tl u | tl u ]
+
+left [ d | d | d ] -> [ tl d | tl d | tl d ]
+left [tl d | d no tl ] -> [ tl d | tl d ]
+
+left [ l | l | l ] -> [ tl l | tl l | tl l ]
+left [tl l | l no tl ] -> [ tl l | tl l ]
+
+left [ r | r | r ] -> [ tl r | tl r | tl r ]
+left [tl r | r no tl ] -> [ tl r | tl r ]
+
+
+
+
+right [ u | u | u ] -> [ tr u | tr u | tr u ]
+right [tr u | u no tr ] -> [ tr u | tr u ]
+
+right [ d | d | d ] -> [ tr d | tr d | tr d ]
+right [tr d | d no tr ] -> [ tr d | tr d ]
+
+right [ l | l | l ] -> [ tr l | tr l | tr l ]
+right [tr l | l no tr ] -> [ tr l | tr l ]
+
+right [ r | r | r ] -> [ tr r | tr r | tr r ]
+right [tr r | r no tr ] -> [ tr r | tr r ]
+
+up [direkt player] [ t u ] [ spawntile no temp | no spawntile ] -> [ direkt player] [ t u ] [ spawntile | spawntile temp ]
+down [direkt player] [ t d ] [ spawntile no temp | no spawntile ] -> [ direkt player] [ t d ] [ spawntile | spawntile temp ]
+left [direkt player] [ t l ] [ spawntile no temp | no spawntile ] -> [ direkt player] [ t l ] [ spawntile | spawntile temp ]
+right [direkt player] [ t r ] [ spawntile no temp | no spawntile ] -> [ direkt player] [ t r ] [ spawntile | spawntile temp ]
+
+[direkt] [player] [ t] -> [ direkt  ] [player success ] [ t ]
+
+[direkt] [ player no success ] -> [ direkt ] [ player totenkopf no arrow ] again
+
+[direkt]->[]
+[success]->[]
+
+[t]->[ no arrow] again
+[temp]->[]
+
+up [action player u | arrow ] -> [  arrow | u player direkt ] again
+down [action player d | arrow ] -> [  arrow | d player direkt ] again
+left [action player l | arrow ] -> [  arrow | l player direkt ] again
+right [action player r | arrow ] -> [  arrow | r player direkt ] again
+
+random [spawntile fire] [no fire no totenkopf] -> [ spawntile fire ] [ totenkopf no arrow no spawntile] again
+random [totenkopf ] [no fire no totenkopf] -> [ totenkopf ] [ totenkopf  no arrow no spawntile] again
+random [totenkopf ] [fire spawntile] -> [ totenkopf ] [ no arrow no fire] again
+
+[empty] -> []
+[ no fire no spawntile ] -> [ empty]
+
+==============
+WINCONDITIONS
+==============
+no empty
+
+=======
+LEVELS
+=======
+
+message Level 1/1
+
+2ffffffffff
+f.........f
+f.........f
+f..sssss..f
+f..sssss..f
+f..sssss..f
+f..sssss..f
+f..sssss..f
+f.......p.f
+f.........f
+fffffffffff
+
+message congrats

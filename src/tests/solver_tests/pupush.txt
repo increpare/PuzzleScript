@@ -1,0 +1,264 @@
+title Pupush
+author increpare
+homepage www.increpare.com
+noaction
+text_color lightgray
+
+========
+OBJECTS
+========
+
+Background
+green GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue darkgreen
+.....
+.000.
+.0.0.
+.000.
+.....
+
+ziel z
+DarkBlue
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+aktiviertesziel 
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+Target_aktiviert
+yellow yellow
+11111
+10001
+10.01
+10001
+11111
+
+
+vWall1
+darkbrown darkbrown brown
+0.0.0
+.1.1.
+0.0.0
+.1.1.
+2.2.2
+
+vWall2
+darkbrown darkbrown brown
+.0.1.
+1.1.1
+.1.0.
+1.1.1
+.2.2.
+
+Wall1
+darkbrown darkbrown
+0.0.0
+.1.1.
+0.0.0
+.1.1.
+0.0.0
+
+Wall2
+darkbrown darkbrown
+.0.1.
+1.1.1
+.1.0.
+1.1.1
+.0.1.
+
+Player1
+Black lightbrown lightred darkblue
+..0..
+.1.1.
+2.2.2
+.3.3.
+.....
+
+Player2
+Black lightbrown blue darkblue
+.0.0.
+..1..
+.2.2.
+..3..
+.3.3.
+
+
+Crate1
+Orange Yellow
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+
+Crate2
+Orange Yellow
+.0.0.
+0...0
+.....
+0...0
+.0.0.
+
+Tuer1
+Black brown
+..0..
+.1.1.
+0.1.0
+.1.1.
+0.0.0
+
+Tuer2
+Black brown
+.0.0.
+0.1.0
+.1.1.
+0.1.0
+.0.0.
+
+Tuer_Offen
+lightgreen transparent
+.000.
+01110
+01110
+01110
+00000
+
+blackbg
+black
+
+treppe r
+gray darkgray
+11111
+00000
+11111
+00000
+11111
+
+treppe2 y
+darkgray gray 
+11111
+00000
+11111
+00000
+11111
+
+=======
+LEGEND
+=======
+
+Player = Player1 or player2
+Crate = Crate1 or Crate2
+Wall = wall1 or wall2
+tuer = tuer1 or tuer2
+
+. = Background
+# = Wall1 and wall2
+$ = vwall1 and vwall2
+
+P = Player1 and player2
+
+* = Crate1 and Crate2
+@ = Crate1 and crate2 and Target
+O = Target
+
+q = crate1
+w = crate2
+
+t = tuer1 and tuer2 and Tuer_Offen
+
+b = blackbg
+
+gewicht1 = player1 or Crate1 
+gewicht2 = player2 or Crate2
+gewicht = player or crate
+
+treppen = treppe or treppe2
+=======
+SOUNDS
+=======
+
+Crate1 MOVE 36772507
+Crate2 MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ziel
+aktiviertesziel
+Target
+Target_aktiviert
+treppe, treppe2
+tuer_offen
+player1, crate1, wall1, tuer1, vwall1
+player2, crate2, wall2, tuer2, vwall2
+blackbg
+
+======
+RULES
+======
+
+[ >  Player1 | Crate1 ] -> [  >  Player1 | > Crate1  ]
+[ >  Player2 | Crate2 ] -> [  >  Player2 | > Crate2  ]
+[ > crate1 | crate1 ] -> [ > crate1 | > crate1 ]
+[ > crate2 | crate2 ] -> [ > crate2 | > crate2 ]
+
+
+late [ Target_aktiviert ]  -> [ ]
+late [ target gewicht ] -> [ target gewicht Target_aktiviert ]
+
+late [tuer_offen no gewicht ] -> [ Tuer_Offen tuer1 tuer2]
+
+late right [ gewicht target | | | | gewicht target ] [ Tuer1 tuer2 ] -> [ gewicht target | | | | gewicht target ] [ ] 
+
+late [aktiviertesziel]->[]
+late [ ziel crate ] -> [ aktiviertesziel ziel crate ]
+
+==============
+WINCONDITIONS
+==============
+all ziel on crate
+
+=======
+LEVELS
+=======
+
+message Level 1 von 1
+
+#$$$$$$$#
+#.......#
+#.z.w.z.#
+#.......#
+#$$$.$$$#
+#...t...#
+#....p..#
+#.oq..o.#
+#.......#
+#########
+
+message Herzlichen Glueckwunsch / Congratulations bzw.
+
+(
+
+auszuprobieren
+	teilweises Aufmachen
+    2 klötze
+)

@@ -1,0 +1,698 @@
+
+(
+	Steps: 
+    	- correctly draw selected hand
+    	- move selected hand and 
+        - move hand and create correct snake behind it
+    	- propagate power along arms at the start of each turn (as a late evaluation?)
+		- action to select hand
+)
+
+title Hungry Kraken
+author Stephen Lavelle
+homepage www.increpare.com
+
+run_rules_on_level_start
+norepeat_action
+
+verbose_logging
+
+========
+OBJECTS
+========
+
+darkbrown 1
+darkbrown
+
+brown 2
+brown
+
+white 3
+white
+
+red 4
+red
+
+gray 5
+gray
+
+darkgray 6
+darkgray
+
+blue 7
+blue
+
+black 8
+black
+
+Background 
+darkblue  black
+00000
+00000
+00000
+00000
+00000
+
+blackwall +
+black
+
+topbrownWall =
+darkbrown brown
+11111
+01000
+00000
+00010
+00000
+
+
+brownWall 
+darkBROWN brown
+00000
+01000
+00000
+00010
+00000
+
+Selected
+red
+
+Activate
+purple
+
+Nutrient E
+green
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Plant P
+gray darkgray
+.000.
+01010
+01010
+.000.
+.111.
+
+Fish *
+gray blue
+.....
+..0.0
+.010.
+..0.0
+.....
+
+Mouth M
+red grey
+.....
+.....
+..0..
+.000.
+.000.
+
+Body 
+gray white red red gray
+02120
+02120
+04440
+01310
+00000
+
+SHandU
+white yellow  black
+.111.
+10001
+10101
+10101
+10101
+
+SHandD
+white yellow black
+10101
+10101
+10101
+10001
+.111.
+
+SHandL
+white yellow black
+.1111
+10000
+10111
+10000
+.1111
+
+SHandR
+white yellow black
+1111.
+00001
+11101
+00001
+1111.
+
+
+
+HandU
+white gray  black
+.111.
+10001
+10101
+10101
+10101
+
+HandD
+white gray black
+10101
+10101
+10101
+10001
+.111.
+
+HandL
+white gray black
+.1111
+10000
+10111
+10000
+.1111
+
+HandR
+white gray black
+1111.
+00001
+11101
+00001
+1111.
+
+
+
+IHandU
+transparent yellow  black
+.111.
+10001
+10101
+10101
+22222
+
+IHandD
+transparent yellow black
+22222
+10101
+10101
+10001
+.111.
+
+IHandL
+transparent yellow black
+.1112
+10002
+10112
+10002
+.1112
+
+IHandR
+transparent yellow black
+2111.
+20001
+21101
+20001
+2111.
+
+
+
+ArmH 
+gray white
+.....
+00000
+11111
+00000
+.....
+
+ArmV 
+gray white
+.010.
+.010.
+.010.
+.010.
+.010.
+
+ArmDR
+gray white
+.....
+...00
+..011
+.0100
+.010.
+
+ArmDL
+gray white
+.....
+00...
+110..
+0010.
+.010.
+
+ArmUR
+gray white
+.010.
+.0100
+..011
+...00
+.....
+
+ArmUL
+gray white
+.010.
+0010.
+110..
+00...
+.....
+
+
+
+
+IArmH 
+black transparent
+.....
+00000
+11111
+00000
+.....
+
+IArmV 
+black transparent
+.010.
+.010.
+.010.
+.010.
+.010.
+
+IArmDR
+black transparent
+.....
+.0000
+.0111
+.0100
+.010.
+
+IArmDL
+black transparent
+.....
+0000.
+1110.
+0010.
+.010.
+
+IArmUR
+black transparent
+.010.
+.0100
+.0111
+.0000
+.....
+
+IArmUL
+black transparent
+.010.
+0010.
+1110.
+0000.
+.....
+
+T1
+red
+
+T_Slurp
+blue
+
+T_Grow
+yellow
+
+T_HandExtendToken
+gray
+
+T_Nutrient
+purple
+
+MARKER
+yellow yellow
+11111
+1...1
+1...1
+1...1
+11111
+
+=======
+LEGEND
+=======
+
+Food = Fish or Plant 
+SelectedHand = SHandU or SHandD or SHandL or SHandR
+ActiveHand = HandU or HandD or HandL or HandR
+InactiveHand = IHandU or IHandD or IHandL or IHandR
+
+OtherHand = ActiveHand
+
+Hand = ActiveHand or InactiveHand or SelectedHand
+
+ActiveArm = ArmH or ArmV or ArmDR or ArmDL or ArmUR or ArmUL or ArmDR or ArmDL
+InactiveArm = IArmH or IArmV or IArmDR or IArmDL or IArmUR or IArmUL or IArmDR or IArmDL
+Arm = ActiveArm or InactiveArm
+
+
+NBArmOpening_U = ArmV or ArmUR or ArmUL
+NBArmOpening_D = ArmV or ArmDR or ArmDL
+NBArmOpening_R = ArmH or ArmDR or ArmUR 
+NBArmOpening_L = ArmH or ArmDL or ArmUL 
+
+ArmOpening_U = ArmV or ArmUR or ArmUL
+ArmOpening_D = ArmV or ArmDR or ArmDL
+ArmOpening_R = ArmH or ArmDR or ArmUR or Body
+ArmOpening_L = ArmH or ArmDL or ArmUL or Body
+
+Opening_D = HandD or ArmV or ArmDR or ArmDL
+Opening_U = HandU or ArmV or ArmUR or ArmUL
+Opening_L = HandR or ArmH or ArmDL or ArmUL or BODY
+Opening_R = HandL or ArmH or ArmDR or ArmUR or Body
+
+Limb = Hand or Arm or Body
+
+. = Background
+# = brownWall
+
+B = Body
+U = HandU
+D = HandD
+L = HandL
+R = HandR
+
+| = ArmV
+- = ArmH
+┌ = ArmDR 
+┐ = ArmDL
+└ = ArmUR
+┘ = ArmUL
+
+_ = IArmH
+
+S = SHandL
+
+wall = brownwall or blackwall or topbrownwall
+
+Player = SHandU or SHandD or SHandL or SHandR 
+
+Pushable = Hand or Arm or Food or Plant or Nutrient
+
+Obstacle = Body or Wall
+
+OtherhandAction = T_Slurp or T_Grow
+
+Fallable = Plant
+
+thing = limb or wall or plant or fish or Nutrient
+
+=======
+SOUNDS
+=======
+
+sfx1 63819707
+sfx2 63819707
+sfx3 68238307
+cancel 20601507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Selected
+Activate 
+M
+Wall, blackwall, Limb, Food, Plant
+Nutrient
+T1
+T_Slurp
+T_Grow
+T_HandExtendToken
+T_Nutrient
+Marker
+1,2,3,4,5,6,7,8
+
+======
+RULES     
+======     
+
+down [ no wall | wall ] -> [ | topbrownwall ] 
+(nutrient gobbling with selected hand)
+
+Up [ > SHandU | Nutrient ] -> [ ArmV | SHandU ]
+Up [ > SHandR | Nutrient ] -> [ ArmUL | SHandU ]
+Up [ > SHandL | Nutrient ] -> [ ArmUR | SHandU ]
+
+Down [ > SHandD | Nutrient ] -> [ ArmV | SHandD ]
+Down [ > SHandR | Nutrient ] -> [ ArmDL | SHandD ]
+Down [ > SHandL | Nutrient ] -> [ ArmDR | SHandD ]
+
+Right [ > SHandR | Nutrient ] -> [ ArmH | SHandR ]
+Right [ > SHandU | Nutrient ] -> [ ArmDR | SHandR ]
+Right [ > SHandD | Nutrient ] -> [ ArmUR | SHandR ]
+
+Left [ > SHandL | Nutrient ] -> [ ArmH | SHandL ]
+Left [ > SHandU | Nutrient ] -> [ ArmDL | SHandL ]
+Left [ > SHandD | Nutrient ] -> [ ArmUL | SHandL ]
+
+
+up [ food mouth ] [ HandU | thing ] -> [ mouth ] [ HandU | > thing ]
+down [ food mouth ] [ HandD | thing ] -> [ mouth ] [ HandD | > thing  ]
+left [ food mouth ] [ HandL | thing ] -> [ mouth ] [ HandL | > thing  ]
+right [ food mouth ] [ HandR | thing ] -> [ mouth ] [ HandR | > thing ]
+
+up [ food mouth ] [ HandU | no thing ] -> [ mouth ] [ ArmV | HandU ] sfx2
+down [ food mouth ] [ HandD | no thing ] -> [ mouth ] [ ArmV | HandD ] sfx2
+left [ food mouth ] [ HandL | no thing ] -> [ mouth ] [ ArmH | HandL ] sfx2
+right [ food mouth ] [ HandR | no thing ] -> [ mouth ] [ ArmH | HandR ] sfx2
+
+
+(tell other hand whether to slurp or grow)
+
+[ moving SHandU ] [ stationary Hand ] -> [ moving SHandU ] [ T_Slurp Hand ]
+(override above)
+[ down SHandU ] [ Stationary Hand ] -> [ down SHandU ] [ T_Grow no T_Slurp Hand ]
+
+[ moving SHandD ] [ stationary Hand ] -> [ moving SHandD ] [ T_Slurp Hand ]
+(override above)
+[ up SHandD ] [ Stationary Hand ] -> [ up SHandD ] [ T_Grow no T_Slurp Hand ]
+
+[ moving SHandL ] [ stationary Hand ] -> [ moving SHandL ] [ T_Slurp Hand ]
+(override above)
+  [ right SHandL ] [ Stationary Hand ] -> [ right SHandL ] [ T_Grow no T_Slurp Hand ]
+
+[ moving SHandR ] [ stationary Hand ] -> [ moving SHandR ] [ T_Slurp Hand ]
+(override above)
+[ left SHandR ] [ Stationary Hand ] -> [ left SHandR ] [ T_Grow no T_Slurp Hand ]
+
+[ T_Slurp ] [ SelectedHand ] -> [ T_Slurp ] [ SelectedHand T_HandExtendToken ]
+[ > SelectedHand T_HandExtendToken ] -> [ > SelectedHand > T_HandExtendToken ]
+
+(nutrient gobbling with off-hand)
+
+Up [T_Grow] [ HandU | Nutrient ] [moving player] -> [] [ ArmV | HandU ] [player]
+
+Down [T_Grow] [ HandD | Nutrient ] [moving player]  -> [] [ ArmV | HandD ] [player]
+
+Right [T_Grow] [ HandR | Nutrient ] [moving player] -> [] [ ArmH | HandR ] [player]
+
+Left [T_Grow] [ HandL | Nutrient ] [moving player]  -> [] [ ArmH | HandL ] [player]
+
+(mark hand action with direction hand moved from here)
+[ moving OtherHand  OtherHandAction ] -> [ moving OtherHand moving OtherHandAction ]
+
+(swap hands)
+[ action SHandU ] [ stationary Hand ] -> [ HandU ] [ T1 Hand] 
+[ action SHandD ] [ stationary Hand ] -> [ HandD ] [ T1 Hand] 
+[ action SHandL ] [ stationary Hand ] -> [ HandL ] [ T1 Hand] 
+[ action SHandR ] [ stationary Hand ] -> [ HandR ] [ T1 Hand] 
+
+[T1 HandU] -> [ SHandU]
+[T1 HandD] -> [ SHandD]
+[T1 HandL] -> [ SHandL]
+[T1 HandR] -> [ SHandR]
+
+
+[T_Slurp] [ up SelectedHand ]  -> [T_Slurp] [ up SHandU ]
+[T_Slurp] [ down SelectedHand ] -> [T_Slurp] [ down SHandD ]
+[T_Slurp] [ left SelectedHand ] -> [T_Slurp] [ left SHandL ]
+[T_Slurp] [ right SelectedHand ] -> [T_Slurp] [ right SHandR ]
+
+
+(you can't retract into your body)
+up [T_Grow] [ up SelectedHand | Body ] -> cancel
+down [T_Grow] [ down SelectedHand | Body ] -> cancel
+left [T_Grow] [ left SelectedHand | Body ] -> cancel
+right [T_Grow] [ right SelectedHand | Body ] -> cancel
+
+(you can't grow if the other hand is beside the body)
+right [ T_Slurp HandL | Body ] -> cancel
+left [ T_Slurp HandR | Body ] -> cancel
+
+(retracting the active hand)
+
+up [T_Grow] [ up SelectedHand | Opening_L ] -> [T_Grow] [ | SHandR]
+up [T_Grow] [ up SelectedHand | Opening_U ] -> [T_Grow] [ | SHandD]
+up [T_Grow] [ up SelectedHand | Opening_R ] -> [T_Grow] [ | SHandL]
+
+down [T_Grow] [ down SelectedHand | Opening_L ] -> [T_Grow] [ | SHandR]
+down [T_Grow] [ down SelectedHand | Opening_R ] -> [T_Grow] [ | SHandL]
+down [T_Grow] [ down SelectedHand | Opening_D ] -> [T_Grow] [ | SHandU]
+
+left [T_Grow] [ left SelectedHand | Opening_L ] -> [T_Grow] [ | SHandR]
+left [T_Grow] [ left SelectedHand | Opening_U ] -> [T_Grow] [ | SHandD]
+left [T_Grow] [ left SelectedHand | Opening_D ] -> [T_Grow] [ | SHandU]
+
+right [T_Grow] [ right SelectedHand | Opening_U ] -> [T_Grow] [ | SHandD]
+right [T_Grow] [ right SelectedHand | Opening_R ] -> [T_Grow] [ | SHandL]
+right [T_Grow] [ right SelectedHand | Opening_D ] -> [T_Grow] [ | SHandU]
+
+up [ T_Grow HandU ] -> [ T_Grow up HandU ]
+up [ T_Grow HandD ] -> [ T_Grow down HandD ]
+up [ T_Grow HandL ] -> [ T_Grow left HandL ]
+up [ T_Grow HandR ] -> [ T_Grow right HandR ]
+
+(slurp other hand)
+
+down [T_Slurp HandU | ] -> [ | up T_Slurp ]
+up [T_Slurp HandD | ] -> [ | down T_Slurp ]
+left [T_Slurp HandR | ] -> [ | right T_Slurp ]
+right [T_Slurp HandL | ] -> [ | left T_Slurp ]
+
+down [ up T_slurp | ArmOpening_U ] -> [ HandU | ArmOpening_U ]
+left [ up T_Slurp | ArmOpening_R ] -> [ HandR | ArmOpening_R ]
+right [ up T_Slurp | ArmOpening_L ] -> [ HandL | ArmOpening_L ]
+
+up [ down T_slurp | ArmOpening_D ] -> [ HandD | ArmOpening_D ]
+left [ down T_Slurp | ArmOpening_R ] -> [ HandR | ArmOpening_R ]
+right [ down T_Slurp | ArmOpening_L ] -> [ HandL | ArmOpening_L ]
+
+left [ right T_slurp | ArmOpening_r ] -> [ HandR | ArmOpening_R ]
+up [ right T_slurp | ArmOpening_D ] -> [ HandD | ArmOpening_D ]
+down [ right T_slurp | ArmOpening_U ] -> [ HandU | ArmOpening_U ]
+
+
+right [ left T_slurp | ArmOpening_l ] -> [ HandL | ArmOpening_L ]
+up [ left T_slurp | ArmOpening_D ] -> [ HandD | ArmOpening_D ]
+down [ left T_slurp | ArmOpening_U ] -> [ HandU | ArmOpening_U ]
+
+(propagate movements)
+
+
+[ > Pushable | Pushable ] -> [ > Pushable | > Pushable ]
+
+[ > Pushable | Limb ] -> cancel
+
+[ > Pushable | Obstacle ] -> cancel
+
+[ > fish ] -> [ > fish] sfx3
+[ > plant ] -> [ > plant] sfx3
+
+[ no T_Grow > Pushable | no Pushable ] -> [ | Pushable ]
++ right [ T_Grow right Pushable | no Pushable ] -> [ ArmH | Pushable ]
++ left [ T_Grow left Pushable | no Pushable ] -> [ ArmH | Pushable ]
++ up [ T_Grow up Pushable | no Pushable ] -> [ ArmV | Pushable ]
++ down [ T_Grow down Pushable | no Pushable ] -> [ ArmV | Pushable ]
+
+
+(growing the selected hand, getting arm to match up)
+
+right [ up T_HandExtendToken | ArmOpening_L ] -> [ ArmUR | ArmOpening_L ]
+left [ up T_HandExtendToken | ArmOpening_R ] -> [ ArmUL | ArmOpening_R ]
+down [ up T_HandExtendToken | ArmOpening_U ] -> [ ArmV | ArmOpening_U ]
+
+right [ down T_HandExtendToken | ArmOpening_L ] -> [ ArmDR | ArmOpening_L ]
+left [ down T_HandExtendToken | ArmOpening_R ] -> [ ArmDL | ArmOpening_R ]
+up [ down T_HandExtendToken | ArmOpening_D ] -> [ ArmV | ArmOpening_D ]
+
+right [ left T_HandExtendToken | ArmOpening_L ] -> [ ArmH | ArmOpening_L ]
+up [ left T_HandExtendToken | ArmOpening_D ] -> [ ArmUL | ArmOpening_D ]
+down [ left T_HandExtendToken | ArmOpening_U ] -> [ ArmDL | ArmOpening_U ]
+
+up [ right T_HandExtendToken | ArmOpening_D ] -> [ ArmUR | ArmOpening_D ]
+left [ right T_HandExtendToken | ArmOpening_R ] -> [ ArmH | ArmOpening_R ]
+down [ right T_HandExtendToken | ArmOpening_U ] -> [ ArmDR | ArmOpening_U ]
+
+
+random down [ Fallable | no thing ] -> [ | Fallable ] sfx1 again
+
+
+[ moving Pushable ] -> [ Pushable ]
+[T_Slurp]->[]
+[T_Grow]->[]
+[T_HandExtendToken]->[]
+[ Food Mouth ] -> again
+
+==============
+WINCONDITIONS
+==============
+
+no Food 
+some body
+
+=======     
+LEVELS
+=======
+
+Message press X to switch tentacles
+
+++++++++++++++++++++++++
++.........P............+
++.........P............+
++.........P............+
++.........P............+
++.........P............+
++.........P............+
++.........P............+
++.........#............+
++......................+
++...P..................+
++...#.......*..........+
++...#..P....#..........+
++...##.#.*.M#..........+
++.......S--B--R........+
++..........*...........+
++......................+
++.........#*#..........+
++......................+
++....................*.+
++......................+
++................P.....+
++................#.....+
++................#.....+
++######################+
+
+Message NOM NOM NOM
+
+...........................
+.....55..555...............
+....555.55555..............
+...5....55555........555...
+...5.....555...6...555.55..
+..5......666.6666.55....55.
+..5..........676..55.....5.
+..5...........66.........5.
+..5........44............5.
+..5........444..........55.
+..5.........44..........5..
+...5........44..........5..
+...55.....54445.......55...
+....55...5544455....555....
+.....5...55444555..55......
+......5555555555555........
+.........55355355..........
+.........55555555.....1111.
+111........5555.......11111
+111111.........1.1111111111
+1111111111...11111111111111
+111888181818811881881188111
+111181188818111811818181811
+111181181818811881818188111
+111111111111111111111111111

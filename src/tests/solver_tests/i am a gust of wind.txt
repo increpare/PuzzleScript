@@ -1,0 +1,132 @@
+title I am a gust of wind
+author Stephen Lavelle
+homepage www.increpare.com
+
+require_player_movement
+background_color lightgreen
+text_color black
+run_rules_on_level_start
+
+debug
+
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+
+Target
+yellow
+
+Wall
+lightgreen 
+
+Player
+white
+.0000
+0....
+0.00.
+0...0
+.000.
+
+Crate
+Orange Yellow brown
+..0..
+.000.
+00000
+00000
+..0..
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 59718707
+startgame 30764907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ ^  Player | Crate ] -> [  ^  Player | ^ Crate  ]
+[ v  Player | Crate ] -> [  v  Player | v Crate  ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+Message Level 1 of 4
+
+.........
+.........
+....o.p..
+.........
+...*.....
+.....*...
+...o.....
+.........
+.........
+
+
+Message Level 2 of 4
+
+.........
+.........
+....**...
+.....*...
+...ooo.p.
+.........
+.........
+
+
+Message Level 3 of 4
+
+.......
+.......
+..O*O..
+..*O*..
+..O*O..
+..*O*..
+...P...
+.......
+
+Message Level 4 of 4
+
+o.o...
+o.o##.
+*.*##.
+*.*##.
+......
+.p....
+......
+
+Message What a most gentle wind I am!

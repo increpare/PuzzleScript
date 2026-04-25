@@ -1,0 +1,134 @@
+title Make way!
+author Stephen Lavelle
+homepage www.increpare.com
+
+require_player_movement
+noaction
+
+========
+OBJECTS
+========
+
+Background
+GREEN lightgreen 
+11111
+01111
+11101
+11111
+10111
+
+
+pit
+black
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+black
+
+Player
+Black brown White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+crate
+blue 
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+
+. = Background
+# = Wall
+P = Player
+c = crate
+@ = crate and Target
+O = Target
+
+obstacle = crate or wall or player 
+=======
+SOUNDS
+=======
+
+sfx0 67594107
+
+================
+COLLISIONLAYERS
+================
+
+Background
+pit
+Target
+Player, Wall, crate
+
+======
+RULES
+======
+
+[> player | pit ] -> cancel
+
+[ moving player ] -> [ moving player pit ]
+[ >  Player | crate ] -> [  >  Player | > crate  ] 
+
+[ > crate | no obstacle ] -> [ | > crate no pit ]
+[> crate | obstacle ] -> [ crate | obstacle ] sfx0
+
+
+==============
+WINCONDITIONS
+==============
+all crate on target
+
+
+=======
+LEVELS
+=======
+
+message level 1 of 2
+
+#######
+#.....#
+#..c..#
+#..c..#
+#..c..#
+#.....#
+#.....#
+#..p..#
+#o.o.o#
+#######
+
+
+
+message level 2 of 2
+
+#######
+#.....#
+#.c.c.#
+#.....#
+#.c.c.#
+#.....#
+#oopoo#
+#######
+
+
+message congrats :)
+
+
+
+

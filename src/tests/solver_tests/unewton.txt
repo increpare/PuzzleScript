@@ -1,0 +1,547 @@
+title unewton 
+author increpare
+homepage www.increpare.com
+
+
+color_palette 7
+
+========
+OBJECTS
+========
+
+Background
+green lightgreen
+11111
+01111
+11101
+11111
+10111
+
+hole
+black
+
+target
+orange black
+00000
+0...0
+0...0
+0...0
+00000
+
+
+Wall
+darkred black 
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+ball
+darkblue white blue
+.000.
+02220
+02220
+02220
+.000.
+
+AU 
+blue white lightblue
+.000.
+02220
+02220
+02220
+.000.
+
+AD
+blue white lightblue
+.000.
+02220
+02220
+02220
+.000.
+
+
+AL
+blue white lightblue
+.000.
+02220
+02220
+02220
+.000.
+
+
+AR
+blue white lightblue
+.000.
+02220
+02220
+02220
+.000.
+
+
+T
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+C = ball
+@ = ball and target
+O = target
+Arrow = AU or AD or AL or AR
+Obstacle = ball or Wall
+block = T or wall
+h = hole
+$ = ball and hole
+f = target and hole
+k = ball and hole and target
+
+=======
+SOUNDS
+=======
+
+sfx0 36772507 (ballmove)
+sfx1 20806902 (action)
+sfx2 44778100 (clink)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+hole
+target
+Player, Wall, ball
+Arrow
+T
+
+======
+RULES
+======
+
+
+[ > player | hole ] -> cancel
+
+[ arrow ] [ player ] -> [arrow] [ action player ]
+[ AU ball ] -> [ AU up ball ]
+[ AD ball ] -> [ AD down ball ]
+[ AL ball ] -> [ AL left ball ]
+[ AR ball ] -> [ AR right ball ]
+
+[ > ball | ball ] -> [ > ball | > ball ] 
+
+[moving ball arrow] [ moving ball no arrow ] -> [ stationary ball ] [ moving ball no arrow ]
+
+[arrow]->[]
+
+[ > ball | wall ] -> [ T ball | wall ]
+[ > ball | T ] -> [ T ball |  ]
+[t]->[]
+
+[ stationary ball | > ball ] -> sfx2
+
+[ action Player | ball ] -> [ action Player | > ball ] sfx0 
+
+[ > Player | ball ] -> [ > Player | > ball ] sfx0 
+[ > ball | ball ] -> [ > ball | > ball ]
+
+up 		[ action player ] [ > ball | no obstacle ] -> [ action player ] [ | ball AU ] again
+down    [ action player ] [ > ball | no obstacle ] -> [ action player ] [ | ball AD ] again
+left 	[ action player ] [ > ball | no obstacle ] -> [ action player ] [ | ball AL ] again
+right 	[ action player ] [ > ball | no obstacle ] -> [ action player ] [ | ball AR ] again
+
+==============
+WINCONDITIONS
+==============
+
+all ball on target
+no arrow
+
+=======
+LEVELS
+=======
+
+message you can press X to kick balls!
+
+message level 1 of 4
+
+#########################
+#.......hhhhhhhhhhhhhhhh#
+#.c.c.c.hhhhhhhhhhhhhhhh#
+#.......hfhh$fhh$fhh$fff#
+#.c.c.c.hffh$hfh$hfh$hff#
+#....p..hfff$hhf$hhf$hhf#
+#.c.c.c.hhhhhhhhhhhhhhhh#
+#.......hhhhhhhhhhhhhhhh#
+#########################
+
+message level 2 of 4
+
+############
+#......fhhf#
+#.c.c..fh$f#
+#......fhhf#
+#.p.c..hhhh#
+#..........#
+#.c.c......#
+#..........#
+############
+
+message level 3 of 4
+
+
+#####################
+#.........o.........#
+#...................#
+#.#....hhhhhhh....#.#
+#.#.cc.hfhkhfh.c..#.#
+#.#....hhhhhhh....#.#
+#....p..............#
+#...................#
+#####################
+
+
+message level 4 of 4
+
+###############
+#.............#
+#......#......#
+#.............#
+#......$..o...#
+#.............#
+#.....hfh.....#
+#.#.$.f$f.$.#.#
+#.....hfh.....#
+#.............#
+#...p..$......#
+#.............#
+#......#......#
+#.............#
+###############
+
+(
+
+message level 4 of 5
+
+
+###########
+#hhhfhhhhh#
+#hhhfhh...#
+#fh$hfh.c.#
+#hhh$hh.c.#
+#.......c.#
+#hhh$hh...#
+#fh$hhh.p.#
+#hhhfhh...#
+#hhhfhhhhh#
+###########
+
+################
+#hhhhfffhhhhhhh#
+#hhhhfffhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhccccchhhff#
+#hhhhccccchhhff#
+#ffhhccpcchhhff#
+#ffhhccccchhhhh#
+#ffhhccccchhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhfffhhhhh#
+#hhhhhhfffhhhhh#
+################
+
+################
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhccccchhhhh#
+#hhhhccccchhhhh#
+#hhhhccpcchhhhh#
+#hhhhccccchhhhh#
+#hhhhccccchhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+################
+
+################
+#hhhhhhfhhhhhhh#
+#hhhhhhfhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhh.....hhhhh#
+#hhhh..c..hhhhh#
+#hhhh..p..hhhhh#
+#hhhh..c..hhhhh#
+#hhhh.....hhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+################
+
+
+################
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhh.....hhhhh#
+#hhhh.....hhhhh#
+#hhhh..p..hhhhh#
+#hhhh.....hhhhh#
+#hhhh.....hhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+#hhhhhhhhhhhhhh#
+################
+
+#################
+#...............#
+#.....c.c.c.....#
+#..cccccccc.....#
+#...hhhhhhhhh...#
+#..phhhhhhhhhc..#
+#...hhhhhhhhhcc.#
+#.cchhhhhhhhhcc.#
+#.cchhhh$hhhhcc.#
+#..chhhhhhhhhcc.#
+#...hhhhhhhhhc..#
+#...hhhhhhhhh...#
+#...hhhhhhhhh...#
+#....cccccc.....#
+#....ccccc......#
+#...............#
+#################
+
+
+#####################
+#...................#
+#........###........#
+#...................#
+#.......c.c.c.......#
+#....cccccccc.......#
+#.....hhhhhhhhh.....#
+#.....hhhhhhhhhc....#
+#...c.hhhhhhhhhcc...#
+#.#.cchhhhhhhhhcc.#.#
+#.#.pchhhh$hhhhcc.#.#
+#.#..chhhhhhhhhcc.#.#
+#.....hhhhhhhhhc....#
+#.....hhhhhhhhh.....#
+#.....hhhhhhhhh.....#
+#......cccccc.......#
+#......ccccc........#
+#...................#
+#........###........#
+#...................#
+#####################
+
+#####################
+#...................#
+#........###........#
+#...................#
+#.......c.c.c.......#
+#....cccccccc.......#
+#.....hhhhhhhhh.....#
+#.....hhhhhhhhhc....#
+#...c.hhhhfhhhhcc...#
+#.#.cchhhhhhhhhcc.#.#
+#.#.pchhfh$hfhhcc.#.#
+#.#..chhhhhhhhhcc.#.#
+#.....hhhhfhhhhc....#
+#.....hhhhhhhhh.....#
+#.....hhhhhhhhh.....#
+#......cccccc.......#
+#......ccccc........#
+#...................#
+#........###........#
+#...................#
+#####################
+
+#####################
+#...................#
+#........###........#
+#...................#
+#.......c.c.c.......#
+#....cccccccc.......#
+#...................#
+#...................#
+#...................#
+#.#....hhhhhhh....#.#
+#.#.pc.hfh$hfh.c..#.#
+#.#....hhhhhhh....#.#
+#...................#
+#...................#
+#...................#
+#...................#
+#...................#
+#...................#
+#........###........#
+#...................#
+#####################
+
+#####################
+#...................#
+#...................#
+#.#....hhhhhhh....#.#
+#.#.pc.hfhkhfh.c..#.#
+#.#....hhhhhhh....#.#
+#...................#
+#...................#
+#####################
+
+
+#####################
+#...................#
+#...................#
+#.#....hhhhhhh....#.#
+#.#.cc.hfhkhfh.c..#.#
+#.#....hhhhhhh....#.#
+#....p..............#
+#...................#
+#####################
+
+#####################
+#.........o.........#
+#...................#
+#.#....hhhhhhh....#.#
+#.#.cc.hfhkhfh.c..#.#
+#.#....hhhhhhh....#.#
+#....p..............#
+#...................#
+#####################
+
+hhhhhhhhhhhh
+hhhhhhhhhhhh
+hhhhhhhh....
+h#fh$hfh.c..
+hhhhhhhh..c.
+h.......p...
+hhhhhhhh..c.
+h#hh$hhh.c..
+hhhhhhhh....
+
+############
+#hhhfhhhhhh#
+#hhhfhh....#
+#fh$hfh.c..#
+#hhh$hh....#
+#.......c.p#
+#hhh$hh....#
+#fh$hhh.c..#
+#hhhfhh....#
+#hhhfhhhhhh#
+############
+
+..........
+..........
+....$.....
+..........
+..........
+.$..$..$..
+....p.....
+..........
+....$.....
+..........
+..........
+
+##############
+#............#
+#............#
+#............#
+#.....$......#
+#............#
+#............#
+#..$..$..$...#
+#.....p......#
+#............#
+#.....$......#
+#............#
+#............#
+#............#
+##############
+
+###############
+#.............#
+#......#......#
+#.............#
+#......$......#
+#.............#
+#.............#
+#.#.$..$..$.#.#
+#......p......#
+#.............#
+#......$......#
+#.............#
+#......#......#
+#.............#
+###############
+
+
+###############
+#.............#
+#......#......#
+#.............#
+#......$......#
+#.............#
+#......h......#
+#.#.$.h$h.$.#.#
+#.p....h......#
+#.............#
+#......$......#
+#.............#
+#......#......#
+#.............#
+###############
+
+###############
+#.............#
+#......#......#
+#.............#
+#......$......#
+#.............#
+#.....hfh.....#
+#.#.$.f@f.$.#.#
+#.p...hfh.....#
+#.............#
+#......$......#
+#.............#
+#......#......#
+#.............#
+###############
+
+###############
+#.............#
+#......#......#
+#.............#
+#......$......#
+#.............#
+#.....hfh.....#
+#.#.$.fkf.$.#.#
+#.p...hfh.....#
+#.............#
+#......$......#
+#.............#
+#......#......#
+#.............#
+###############
+)

@@ -1,0 +1,126 @@
+title You Complete Me
+author Stephen Lavelle
+homepage www.increpare.com
+run_rules_on_level_start
+
+verbose_logging
+noaction 
+
+========
+OBJECTS
+========
+
+Background 
+GREEN  
+
+Target 
+DarkBlue    
+
+Wall 
+BROWN
+
+Player 
+red   
+.....
+.000.
+.000.
+.000.
+.....
+
+Crate 
+Orange 
+
+SUP 
+transparent
+
+SDOWN
+transparent
+
+SLEFT
+transparent
+
+SRIGHT
+transparent
+
+ice 
+lightblue
+
+freshice
+blue
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+i = ice
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+marker = SUP or SDOWN or SLEFT or SRIGHT
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ice, freshice
+Target
+Player, Wall, Crate
+SUP, SDOWN, SLEFT, SRIGHT
+
+======
+RULES     
+======     
+
+[> player | wall] -> cancel
+late up [SUP] [|player] -> [SUP] [ice|player]
+late down [SDOWN] [|player] -> [SDOWN] [ice|player]
+late left [SLEFT] [|player] -> [SLEFT] [ice|player]
+late right [SRIGHT] [|player] -> [SRIGHT] [ice|player]
+
+up [SUP]  [Player ice | no wall ] -> [SUP] [ > Player ice |  ] again
+down [SDOWN]  [Player ice | no wall ] -> [SDOWN] [ > Player ice |  ] again
+left [SLEFT]  [Player ice | no wall ] -> [SLEFT] [ > Player ice | ] again
+right [SRIGHT]  [Player ice | no wall ] -> [SRIGHT] [ > Player ice |  ] again
+
+
+[marker]->[]
+
+
+[ > player ] -> [ > player ] again
+up [ > player ] -> [ > player sup ]
+down [ > player ] -> [ > player sdown ]
+left [ > player ] -> [ > player sleft ]
+right [ > player ] -> [ > player sright ]
+
+[ stationary player ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+
+=======     
+LEVELS
+=======
+
+###############
+##.#.#.#.#.#.##
+#.............#
+##.#.#.#.#.#.##
+#.............#
+##.#.#.#.#.#.##
+#.............#
+##.#.#.#.#.#.##
+#.............#
+##.#.#.#.#.#.##
+#......p......#
+##.#.#.#.#.#.##
+###############

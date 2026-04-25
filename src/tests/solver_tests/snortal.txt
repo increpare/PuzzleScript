@@ -1,0 +1,311 @@
+title Snortal
+author Stephen Lavelle
+homepage www.increpare.com
+
+norepeat_action
+
+verbose_logging
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background 
+brown
+
+counter ,
+grey black
+11111
+10101
+11111
+10101
+11111
+
+portalmade
+red blue black
+20212
+20012
+20212
+20112
+20212
+
+
+floor .
+brown
+
+wall #
+grey
+
+SnakeBod *
+green
+.000.
+00000
+00000
+00000
+.000.
+
+SnakeUp U
+green 
+.000.
+0.0.0
+00000
+00000
+.000.
+
+SnakeDown D
+green 
+.000.
+00000
+00000
+0.0.0
+.000.
+
+SnakeLeft L
+green 
+.000.
+0.000
+00000
+0.000
+.000.
+
+
+SnakeRight R
+green 
+.000.
+000.0
+00000
+000.0
+.000.
+
+
+
+PortalUpR
+red 
+.000.
+.....
+.....
+.....
+.....
+
+PortalDownR
+red 
+.....
+.....
+.....
+.....
+.000.
+
+PortalLeftR
+red 
+.....
+0....
+0....
+0....
+.....
+
+PortalRightR
+red 
+.....
+....0
+....0
+....0
+.....
+
+PortalUpB
+blue 
+.000.
+.....
+.....
+.....
+.....
+
+PortalDownB
+blue 
+.....
+.....
+.....
+.....
+.000.
+
+PortalLeftB
+blue 
+.....
+0....
+0....
+0....
+.....
+
+PortalRightB
+blue 
+.....
+....0
+....0
+....0
+.....
+
+Red
+red
+.000.
+00000
+00000
+00000
+.000.
+
+Blue
+blue
+.000.
+00000
+00000
+00000
+.000.
+
+
+old
+black
+
+exit
+orange
+
+enter
+yellow
+
+portaltarget
+pink
+
+temp 
+black
+
+=======
+LEGEND
+=======
+
+
+Player = SnakeUp or SnakeDown or SnakeLeft or SnakeRight
+Obstacle = SnakeBod or Wall
+Color = red or blue
+snaketotality = player or snakebod
+
+PortalUp = PortalUpR or PortalUpB
+PortalDown = PortalDownR or PortalDownB
+PortalLeft = PortalLeftR or PortalLeftB
+PortalRight = PortalRightR or PortalRightB
+
+PortalR = PortalUpR or PortalDownR or PortalLeftR or PortalRightR
+PortalB = PortalUpB or PortalDownB or PortalLeftB or PortalRightB
+
+Portal = PortalUp or PortalDown or PortalLeft or PortalRight
+
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Counter
+Portalmade
+Floor
+Wall 
+Color
+Player, SnakeBod
+Portal
+Old
+Exit, Enter
+portaltarget
+temp
+
+======
+RULES
+======
+
+[ player no color ] -> [player red]
+
+
+[portal ] -> [old portal]
+
+
+[portalleft]->[left portalleft]
+[portalright]->[right portalright]
+[portalup]->[up portalup]
+[portaldown]->[down portaldown]
+
+[player ] -> [ player temp]
+up [ action snakeup temp | ... | obstacle ] -> [ action snakeup | ... | obstacle portaltarget ] 
+down [ action snakedown temp | ... | obstacle ] -> [ action snakedown | ... | obstacle portaltarget ] 
+left [ action snakeleft temp | ... | obstacle ] -> [ action snakeleft | ... | obstacle portaltarget ] 
+right [ action snakeright temp | ... | obstacle ] -> [ action snakeright | ... | obstacle portaltarget ] 
+[temp]->[]
+[portaltarget portal ] -> cancel
+
+[ > player | < portal ] -> [ > player | < portal enter ]
+
+[ > portal no enter | no obstacle no player ] [enter] [player] [counter] -> [ > portal | exit ] [ enter ] [ snakebod ] [portalmade] 
+
+
+[ up portal | exit ] -> [ up portal | snakeup ]
+[ down portal | exit ] -> [ down portal | snakedown ]
+[ left portal | exit ] -> [ left portal | snakeleft ]
+[ right portal | exit ] -> [ right portal | snakeright ]
+[color no player ] [ player ] -> [] [color player]
+
+[ up player exit ] -> [ snakeup ]
+[ down player exit ] -> [ snakedown ]
+[ left player exit ] -> [ snakeleft ]
+[ right player exit ] -> [ snakeright ]
+
+[ > snakebod ] -> [snakebod]
+
+[ > portal ] -> [ portal ]
+
+[ > Player | Obstacle ] -> [ Player | Obstacle ]
+up [ up Player Color | No Obstacle ] -> [ SnakeBod | SnakeUp Color ] 
+down [ down Player Color | No Obstacle ] -> [ SnakeBod | SnakeDown Color ] 
+left [ left Player Color | No Obstacle ] -> [ SnakeBod | SnakeLeft Color ] 
+right [ right Player Color | No Obstacle ] -> [ SnakeBod | SnakeRight Color ] 
+
+right [ action snakeright Red | ... | Obstacle No Portal ] -> [snakeright Blue | ... | Obstacle PortalLeftR ]
+right [ action snakeright Blue | ... | Obstacle No Portal ] -> [snakeright Red | ... | Obstacle PortalLeftB ]
+
+left [ action snakeleft Red | ... | Obstacle No Portal ] -> [snakeleft Blue | ... | Obstacle PortalRightR ]
+left [ action snakeleft Blue | ... | Obstacle No Portal ] -> [snakeleft Red | ... | Obstacle PortalRightB ]
+
+up [ action snakeup Red | ... | Obstacle No Portal ] -> [snakeup Blue | ... | Obstacle PortalDownR ]
+up [ action snakeup Blue | ... | Obstacle No Portal ] -> [snakeup Red | ... | Obstacle PortalDownB ]
+
+down [ action snakedown Red | ... | Obstacle No Portal ] -> [snakedown Blue | ... | Obstacle PortalupR ]
+down [ action snakedown Blue | ... | Obstacle No Portal ] -> [snakedown Red | ... | Obstacle PortalupB ]
+
+
+
+[old portalB] [no old portalB] -> [] [portalB]
+[old portalR] [no old portalR] -> [] [portalR]
+[old] -> []
+
+[enter] -> []
+[exit] -> []
+
+[portaltarget]->[]
+
+==============
+WINCONDITIONS
+==============
+no counter
+
+=======
+LEVELS
+=======
+
+
+,,,,,,,
+#######
+#.....#
+#.....#
+#..U..#
+#.....#
+#.....#
+#######

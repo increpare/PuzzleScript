@@ -1,0 +1,254 @@
+title AUTOHURDLER
+author increpare
+homepage www.increpare.com
+
+background_color gray
+
+run_rules_on_level_start
+noaction
+
+
+color_palette 13
+
+========
+OBJECTS
+========
+
+Background
+lightgray gray
+11111
+11111
+11011
+11111
+11111
+
+
+Target
+yellow  transparent transparent
+11111
+11211
+12021
+11211
+11111
+
+Wall
+darkgray gray
+00000
+00000
+00100
+00000
+00000
+
+Player
+black black black black
+.000.
+.111.
+22.22
+.333.
+.3.3.
+
+Crate
+darkblue Yellow
+.000.
+0...0
+0...0
+0...0
+.000.
+
+oncrate
+lightblue  
+.000.
+0...0
+0...0
+0...0
+.000.
+
+teleport_up
+darkred transparent
+11011
+10001
+00000
+11011
+11011
+
+
+teleport_down
+darkred transparent
+11011
+11011
+00000
+10001
+11011
+
+
+teleport_left
+darkred transparent
+11011
+10011
+00000
+10011
+11011
+
+
+teleport_right
+darkred transparent
+11011
+11001
+00000
+11001
+11011
+
+
+
+teleport_bad
+darkred transparent 
+11111
+10101
+11011
+10101
+11111
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+obstacle = wall  or crate
++ = player and target
+
+teleport = teleport_up or teleport_down or teleport_left or teleport_right
+anytele = teleport or teleport_bad
+
+=======
+SOUNDS
+=======
+
+sfx1 19243905
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+teleport_up
+teleport_down
+teleport_left
+teleport_right
+teleport_bad
+Target
+Player, Wall, Crate
+oncrate
+
+======
+RULES
+======
+
+[ > player | crate ] -> [ > player | > crate ]
+[ > crate | crate ] -> [ > crate | > crate ]
+
+
+[ > crate | stationary obstacle ] -> [ crate | stationary obstacle ]
+[ > player | stationary obstacle ] -> cancel
+
+([ > player | obstacle | obstacle ] -> cancel)
+[ > player | wall ] -> cancel 
+
+late [ anytele ] -> []
+late up [ crate | no obstacle ] -> [ crate | teleport_down ]
+late down [ crate | no obstacle ] -> [ crate | teleport_up ]
+late left [ crate | no obstacle ] -> [ crate | teleport_right ]
+late right [ crate | no obstacle ] -> [ crate | teleport_left ]
+
+late [ teleport_up teleport_down ] -> [ teleport_bad ]
+late [ teleport_up teleport_left ] -> [ teleport_bad ]
+late [ teleport_up teleport_right ] -> [ teleport_bad ]
+late [ teleport_down teleport_left ] -> [ teleport_bad ]
+late [ teleport_down teleport_right ] -> [ teleport_bad ]
+late [ teleport_left teleport_right ] -> [ teleport_bad ]
+
+late [ teleport_bad teleport_up ] -> [ teleport_bad ]
+late [ teleport_bad teleport_down ] -> [ teleport_bad ]
+late [ teleport_bad teleport_left ] -> [ teleport_bad ]
+late [ teleport_bad teleport_right ] -> [ teleport_bad ]
+
+late up [ teleport_up | crate | obstacle ] -> [teleport_bad|Crate|obstacle]
+late down [ teleport_down | crate | obstacle ] -> [teleport_bad|Crate|obstacle]
+late left [ teleport_left | crate | obstacle ] -> [teleport_bad|Crate|obstacle]
+late right [ teleport_right | crate | obstacle ] -> [teleport_bad|Crate|obstacle]
+
+random late up [ teleport_up player | crate | no obstacle ] -> [ teleport_up | crate | Player ] sfx1
++ late down [ teleport_down player | crate | no obstacle ] -> [ teleport_down | crate | Player ] sfx1
++ late left [ teleport_left player | crate | no obstacle ] -> [ teleport_left | crate | Player ] sfx1
++ late right [ teleport_right player | crate | no obstacle ] -> [ teleport_right | crate | Player ] sfx1
+
+late [oncrate]->[]
+late [ crate target] -> [crate target oncrate]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message level 1 of 4
+
+#########
+#.......#
+#.......#
+#..*o*..#
+#..o.o..#
+#..*o*..#
+#.......#
+#...p...#
+#########
+
+message level 2 of 4
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 3 of 4
+
+
+##########
+#........#
+#........#
+#..o**...#
+#..oo*...#
+#.p......#
+#........#
+##########
+
+
+message level 4 of 4
+
+#########
+#...#.p.#
+#..*o*..#
+#..o*o..#
+#..o*o..#
+#..*o*..#
+#...#...#
+#########
+
+message .CONGRATULATIONS. .AUTOHURDLER. .WE. .ARE. .SO. .PROUD. .OF. .YOU.
