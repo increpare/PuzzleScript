@@ -512,34 +512,52 @@ StateKey solverStateKey(const Session& session, bool includeRandomState, Timing&
         7809847782465536322ull,
     };
 
-    auto appendBytes = [&key](const void* data, size_t size) {
-        const auto* bytes = static_cast<const uint8_t*>(data);
-        for (size_t index = 0; index < size; ++index) {
-            key.lo ^= bytes[index];
-            key.lo *= 1099511628211ull;
-            key.hi ^= bytes[index];
-            key.hi *= 1099511628211ull;
-        }
+    auto mix64 = [](uint64_t value) {
+        value ^= value >> 30;
+        value *= 0xbf58476d1ce4e5b9ULL;
+        value ^= value >> 27;
+        value *= 0x94d049bb133111ebULL;
+        value ^= value >> 31;
+        return value;
     };
-    auto appendValue = [&appendBytes](const auto& value) {
-        appendBytes(&value, sizeof(value));
+    auto appendValue = [&key, mix64](uint64_t value) {
+        const uint64_t mixed = mix64(value + 0x9e3779b97f4a7c15ULL + key.lo);
+        key.lo ^= mixed;
+        key.lo *= 0x100000001b3ULL;
+        key.hi ^= mix64(mixed + key.hi);
+        key.hi *= 0x9e3779b185ebca87ULL;
     };
 
-    appendValue(session.preparedSession.currentLevelIndex);
-    appendValue(session.preparedSession.titleScreen);
-    appendValue(session.preparedSession.textMode);
-    appendValue(session.preparedSession.winning);
-    appendValue(session.pendingAgain);
+    appendValue(static_cast<uint64_t>(static_cast<uint32_t>(session.preparedSession.currentLevelIndex)));
+    appendValue(session.preparedSession.titleScreen ? 1 : 0);
+    appendValue(session.preparedSession.textMode ? 1 : 0);
+    appendValue(session.preparedSession.winning ? 1 : 0);
+    appendValue(session.pendingAgain ? 1 : 0);
 
     if (includeRandomState) {
-        appendValue(session.randomState.i);
-        appendValue(session.randomState.j);
-        appendValue(session.randomState.valid);
-        appendBytes(session.randomState.s.data(), session.randomState.s.size() * sizeof(uint8_t));
+        appendValue(static_cast<uint64_t>(static_cast<uint32_t>(session.randomState.i)));
+        appendValue(static_cast<uint64_t>(static_cast<uint32_t>(session.randomState.j)));
+        appendValue(session.randomState.valid ? 1 : 0);
+        uint64_t packed = 0;
+        uint32_t shift = 0;
+        for (const uint8_t byte : session.randomState.s) {
+            packed |= static_cast<uint64_t>(byte) << shift;
+            shift += 8;
+            if (shift == 64) {
+                appendValue(packed);
+                packed = 0;
+                shift = 0;
+            }
+        }
+        if (shift != 0) {
+            appendValue(packed);
+        }
     }
 
     const auto& objects = session.liveLevel.objects;
-    appendBytes(objects.data(), objects.size() * sizeof(MaskWord));
+    for (const MaskWord word : objects) {
+        appendValue(static_cast<uint64_t>(static_cast<MaskWordUnsigned>(word)));
+    }
 
     return key;
 }
