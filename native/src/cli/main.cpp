@@ -4390,6 +4390,28 @@ void appendCompiledRulesCoverageJsonFields(std::ostream& out, const CompiledRule
     out << "}";
 }
 
+void appendCompiledTickAggregateJsonFields(std::ostream& out, size_t sourceCount) {
+    out << "\"compiled_tick\":{"
+        << "\"sources\":" << sourceCount
+        << ",\"backend_codegen_available\":" << sourceCount
+        << ",\"fully_generated\":0"
+        << ",\"misses\":{";
+    if (sourceCount > 0) {
+        out << "\"interpreter_delegation\":" << sourceCount;
+    }
+    out << "}}";
+}
+
+void appendCompiledTickSourceJsonFields(std::ostream& out) {
+    out << "\"compiled_tick\":{"
+        << "\"backend_codegen_available\":true"
+        << ",\"step_entry\":true"
+        << ",\"tick_entry\":true"
+        << ",\"fully_generated\":false"
+        << ",\"misses\":{\"interpreter_delegation\":1}"
+        << "}";
+}
+
 std::string generateCompiledRulesCoverageJson(
     const std::vector<CodegenSource>& sources,
     const CompiledRulesOptions& options,
@@ -4400,6 +4422,8 @@ std::string generateCompiledRulesCoverageJson(
         << "  \"max_rows\":" << options.maxRows << ",\n"
         << "  \"aggregate\":{";
     appendCompiledRulesCoverageJsonFields(out, aggregateCoverage);
+    out << ",";
+    appendCompiledTickAggregateJsonFields(out, sources.size());
     out << "},\n"
         << "  \"sources\":[\n";
     for (size_t index = 0; index < sources.size(); ++index) {
@@ -4412,6 +4436,8 @@ std::string generateCompiledRulesCoverageJson(
             << ",\"source_hash\":" << sources[index].hash
             << ",";
         appendCompiledRulesCoverageJsonFields(out, sourceCoverage);
+        out << ",";
+        appendCompiledTickSourceJsonFields(out);
         out << "}";
         if (index + 1 < sources.size()) {
             out << ",";

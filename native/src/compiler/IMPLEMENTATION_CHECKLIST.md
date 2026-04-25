@@ -654,7 +654,7 @@ Status markers:
 
 ## Coverage And Eligibility Reporting
 
-- [ ] Extend coverage JSON from compiled rules to compiled tick eligibility.
+- [x] Extend coverage JSON from compiled rules to compiled tick eligibility.
 
   Acceptance criteria:
 
@@ -662,7 +662,7 @@ Status markers:
     level transitions, and state layout are generated or fallback-only.
   - Aggregate counts are easy to read from a one-line Node or jq command.
 
-- [ ] Add human-readable miss reasons for compiled tick.
+- [x] Add human-readable miss reasons for compiled tick.
 
   Acceptance criteria:
 
@@ -670,7 +670,7 @@ Status markers:
   - Examples: `unsupported_command`, `movement_rigid`, `message_level`,
     `debug_trace`, `state_layout`.
 
-- [ ] Track "fully generated tick" count separately from "compiled rules"
+- [x] Track "fully generated tick" count separately from "compiled rules"
   coverage.
 
   Acceptance criteria:
