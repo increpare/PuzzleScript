@@ -39,6 +39,13 @@ LEGEND
 . = Background
 P = Player
 
+======
+SOUNDS
+======
+
+startgame 111111
+Player MOVE 222222
+
 ================
 COLLISIONLAYERS
 ================
@@ -56,7 +63,7 @@ RULES
 LEVELS
 =======
 
-P
+P.
 )";
 
 struct CompileHandle {
@@ -87,6 +94,9 @@ int main() {
     assert(std::string(ps_game_metadata_value(game, "author")) == "Tests");
     assert(std::string(ps_game_foreground_color(game)) == "#ffffff");
     assert(std::string(ps_game_background_color(game)) == "#000000");
+    int32_t seed = 0;
+    assert(ps_game_sound_seed(game, "startgame", &seed));
+    assert(seed == 111111);
 
     ps_object_info playerInfo{};
     assert(ps_game_object_info(game, 1, &playerInfo));
@@ -113,6 +123,11 @@ int main() {
     ps_session_status(session.session, &status);
     assert(status.mode == PS_SESSION_MODE_LEVEL);
     assert(std::string(ps_session_message_text(session.session)).empty());
+
+    const ps_step_result moveResult = ps_session_step(session.session, PS_INPUT_RIGHT);
+    assert(moveResult.changed);
+    assert(moveResult.audio_event_count == 1);
+    assert(moveResult.audio_events[0].seed == 222222);
 
     ps_free_game(const_cast<ps_game*>(game));
     return 0;

@@ -3467,6 +3467,38 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
     out << "    \"rules\": "; appendRules(game.rules); out << ",\n";
     out << "    \"late_rules\": "; appendRules(game.lateRules); out << ",\n";
     out << "    \"rule_plan_v1\": "; appendRulePlanJson(out, game); out << ",\n";
+    out << "    \"sfx_events\": {";
+    {
+        bool first = true;
+        for (const auto& [name, seed] : game.sfxEvents) {
+            if (!first) out << ",";
+            first = false;
+            out << jsonStringLiteral(name) << ":" << seed;
+        }
+    }
+    out << "},\n";
+    auto appendSoundMaskEntries = [&](const std::vector<puzzlescript::SoundMaskEntry>& entries) {
+        out << "[";
+        for (size_t index = 0; index < entries.size(); ++index) {
+            if (index != 0) out << ",";
+            const auto& entry = entries[index];
+            out << "{\"objectMask\":";
+            appendJsonMask(out, game, entry.objectMask, game.wordCount);
+            out << ",\"directionMask\":";
+            appendJsonMask(out, game, entry.directionMask, entry.directionMaskWidth);
+            out << ",\"seed\":" << entry.seed << "}";
+        }
+        out << "]";
+    };
+    out << "    \"sfx_creation_masks\": "; appendSoundMaskEntries(game.sfxCreationMasks); out << ",\n";
+    out << "    \"sfx_destruction_masks\": "; appendSoundMaskEntries(game.sfxDestructionMasks); out << ",\n";
+    out << "    \"sfx_movement_masks\": [";
+    for (size_t layer = 0; layer < game.sfxMovementMasks.size(); ++layer) {
+        if (layer != 0) out << ",";
+        appendSoundMaskEntries(game.sfxMovementMasks[layer]);
+    }
+    out << "],\n";
+    out << "    \"sfx_movement_failure_masks\": "; appendSoundMaskEntries(game.sfxMovementFailureMasks); out << ",\n";
     out << "    \"loop_point\": "; appendLoopPointTable(game.loopPoint); out << ",\n";
     out << "    \"late_loop_point\": "; appendLoopPointTable(game.lateLoopPoint); out << "\n";
     out << "  }";

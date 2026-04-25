@@ -2609,7 +2609,145 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         condition.aggr2 = aggr2;
         game->winConditions.push_back(std::move(condition));
     }
+    auto soundDirectionMask = [](const std::string& direction) -> int32_t {
+        if (direction == "up") return 1;
+        if (direction == "down") return 2;
+        if (direction == "left") return 4;
+        if (direction == "right") return 8;
+        if (direction == "horizontal") return 12;
+        if (direction == "vertical") return 3;
+        if (direction == "orthogonal") return 15;
+        if (direction == "___action____") return 16;
+        return 0;
+    };
+
+    auto parseSeed = [](const std::string& text) -> int32_t {
+        try {
+            return static_cast<int32_t>(std::stol(text));
+        } catch (const std::exception&) {
+            return 0;
+        }
+    };
+
+    auto expandSoundTargets = [&](auto&& self, const std::string& name, std::set<std::string>& visiting) -> std::vector<std::string> {
+        if (!visiting.insert(name).second) {
+            return {};
+        }
+        std::vector<std::string> targets;
+        if (objectIdByName.find(name) != objectIdByName.end()) {
+            targets.push_back(name);
+        } else if (auto synonym = synonymOf.find(name); synonym != synonymOf.end()) {
+            targets = self(self, synonym->second, visiting);
+        } else if (auto property = propertyOf.find(name); property != propertyOf.end()) {
+            for (const auto& item : property->second) {
+                auto expanded = self(self, item, visiting);
+                targets.insert(targets.end(), expanded.begin(), expanded.end());
+            }
+        }
+        visiting.erase(name);
+        return targets;
+    };
+
     game->sfxEvents.clear();
+    game->sfxCreationMasks.clear();
+    game->sfxDestructionMasks.clear();
+    game->sfxMovementMasks.assign(static_cast<size_t>(game->layerCount), {});
+    game->sfxMovementFailureMasks.clear();
+    for (const auto& entry : state.sounds) {
+        if (entry.tokens.size() < 2) {
+            continue;
+        }
+        const auto& seedToken = entry.tokens.back();
+        if (seedToken.kind != "SOUND") {
+            continue;
+        }
+        const int32_t seed = parseSeed(seedToken.text);
+        const auto& first = entry.tokens.front();
+        if (first.kind == "SOUNDEVENT") {
+            game->sfxEvents[first.text] = seed;
+            continue;
+        }
+        if (entry.tokens.size() < 3) {
+            continue;
+        }
+
+        const std::string target = first.text;
+        std::string verb = entry.tokens[1].text;
+        std::vector<std::string> directions;
+        for (size_t tokenIndex = 2; tokenIndex + 1 < entry.tokens.size(); ++tokenIndex) {
+            if (entry.tokens[tokenIndex].kind == "DIRECTION") {
+                directions.push_back(entry.tokens[tokenIndex].text);
+            }
+        }
+        if (verb == "action") {
+            verb = "move";
+            directions = {"___action____"};
+        }
+        if (directions.empty()) {
+            directions = {"orthogonal"};
+        }
+
+        int32_t directionMaskBits = 0;
+        for (const auto& direction : directions) {
+            directionMaskBits |= soundDirectionMask(direction);
+        }
+
+        puzzlescript::MaskVector objectMask = makeEmptyMask(game->wordCount);
+        try {
+            std::set<std::string> visiting;
+            objectMask = resolveMask(resolveMask, target, visiting);
+        } catch (const std::exception&) {
+            objectMask = makeEmptyMask(game->wordCount);
+        }
+
+        if (verb == "move" || verb == "cantmove") {
+            std::set<std::string> visiting;
+            const auto targets = expandSoundTargets(expandSoundTargets, target, visiting);
+            for (const auto& targetName : targets) {
+                const auto objectIt = objectIdByName.find(targetName);
+                if (objectIt == objectIdByName.end()) {
+                    continue;
+                }
+                const int32_t objectId = objectIt->second;
+                if (objectId < 0 || objectId >= static_cast<int32_t>(game->objectsById.size())) {
+                    continue;
+                }
+                const int32_t layer = game->objectsById[static_cast<size_t>(objectId)].layer;
+                if (layer < 0 || layer >= game->layerCount) {
+                    continue;
+                }
+                puzzlescript::MaskVector concreteObjectMask = makeEmptyMask(game->wordCount);
+                setMaskBit(concreteObjectMask, objectId);
+                puzzlescript::MaskVector directionMaskWords = makeEmptyMask(game->movementWordCount);
+                orShiftedMask5(directionMaskWords, 5 * layer, directionMaskBits);
+
+                puzzlescript::SoundMaskEntry lowered;
+                lowered.objectMask = storeMaskWords(*game, concreteObjectMask);
+                lowered.directionMask = storeMaskWords(*game, directionMaskWords);
+                lowered.directionMaskWidth = game->movementWordCount;
+                lowered.seed = seed;
+                if (verb == "move") {
+                    game->sfxMovementMasks[static_cast<size_t>(layer)].push_back(lowered);
+                } else {
+                    game->sfxMovementFailureMasks.push_back(lowered);
+                }
+            }
+            continue;
+        }
+
+        if (verb == "create" || verb == "destroy") {
+            puzzlescript::SoundMaskEntry lowered;
+            lowered.objectMask = storeMaskWords(*game, objectMask);
+            lowered.directionMask = puzzlescript::kNullMaskOffset;
+            lowered.directionMaskWidth = 0;
+            lowered.seed = seed;
+            if (verb == "create") {
+                game->sfxCreationMasks.push_back(lowered);
+            } else {
+                game->sfxDestructionMasks.push_back(lowered);
+            }
+        }
+    }
 
     outGame = std::move(game);
     return nullptr;

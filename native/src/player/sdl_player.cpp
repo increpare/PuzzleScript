@@ -297,6 +297,11 @@ struct Player {
     bool hasSave = false;
     int savedLevel = 0;
     int titleSelection = 0;
+    bool titleSelected = false;
+    bool titleContinue = false;
+    Uint32 titleSelectedAt = 0;
+    Uint32 lastAgainTick = 0;
+    Uint32 lastRealtimeTick = 0;
     bool hasLastViewport = false;
     int lastMinX = 0;
     int lastMinY = 0;
@@ -337,6 +342,18 @@ std::optional<std::pair<int, int>> parseScreenSize(const char* value) {
         return std::nullopt;
     }
     return std::make_pair(numbers[0], numbers[1]);
+}
+
+Uint32 parseIntervalMs(const char* value, Uint32 fallback) {
+    if (value == nullptr || value[0] == '\0') {
+        return fallback;
+    }
+    char* end = nullptr;
+    const double seconds = std::strtod(value, &end);
+    if (end == value || seconds < 0.0 || !std::isfinite(seconds)) {
+        return fallback;
+    }
+    return static_cast<Uint32>(std::max(0.0, seconds * 1000.0));
 }
 
 std::string canonicalSaveKey(const std::string& key) {
@@ -405,7 +422,28 @@ void playEvents(Player& player, const ps_step_result& result) {
     }
 }
 
-std::vector<std::string> generateTitleRows(Player& player) {
+std::string animateSelectedTitleRow(const std::string& row, Uint32 elapsedMs) {
+    int frame = static_cast<int>(std::floor((static_cast<double>(elapsedMs) / 300.0) * 10.0)) + 2;
+    const bool loadingText = frame > 12;
+    std::string animated = loadingText ? "------------ loading  ------------" : row;
+    frame %= 23;
+    if (frame > 11) {
+        frame = 11 - (frame % 12);
+    }
+    const int left = 11 - frame;
+    const int right = 22 + frame;
+    if (left >= 0 && right < static_cast<int>(animated.size())) {
+        if (!loadingText) {
+            animated = std::string(static_cast<size_t>(left), '.') + "#" + animated.substr(static_cast<size_t>(left + 1), static_cast<size_t>(right - left - 1)) + "#" + std::string(static_cast<size_t>(left), '.');
+        } else {
+            animated[static_cast<size_t>(left)] = '#';
+            animated[static_cast<size_t>(right)] = '#';
+        }
+    }
+    return animated;
+}
+
+std::vector<std::string> generateTitleRows(Player& player, Uint32 now) {
     if (ps_game_level_count(player.game) == 0) {
         std::vector<std::string> rows;
         for (const char* row : kIntroTemplate) {
@@ -480,17 +518,21 @@ std::vector<std::string> generateTitleRows(Player& player) {
     rows.insert(rows.end(), authorLines.begin(), authorLines.end());
     for (int i = 0; i < bottom; ++i) rows.push_back(kBlankRow);
 
+    int selectionRow = -1;
     if (!titleMode) {
         rows.push_back(kBlankRow);
+        selectionRow = static_cast<int>(rows.size());
         rows.push_back("..........#.start game.#..........");
         rows.push_back(kBlankRow);
     } else if (player.titleSelection == 0) {
+        selectionRow = static_cast<int>(rows.size());
         rows.push_back("...........#.new game.#...........");
         rows.push_back(kBlankRow);
         rows.push_back(".............continue.............");
     } else {
         rows.push_back(".............new game.............");
         rows.push_back(kBlankRow);
+        selectionRow = static_cast<int>(rows.size());
         rows.push_back("...........#.continue.#...........");
     }
     rows.push_back(kBlankRow);
@@ -500,6 +542,9 @@ std::vector<std::string> generateTitleRows(Player& player) {
         rows.push_back(kBlankRow);
     }
     rows.resize(kTerminalHeight);
+    if (player.titleSelected && selectionRow >= 0 && selectionRow < static_cast<int>(rows.size())) {
+        rows[static_cast<size_t>(selectionRow)] = animateSelectedTitleRow(rows[static_cast<size_t>(selectionRow)], now - player.titleSelectedAt);
+    }
     for (auto& row : rows) {
         row = replaceDots(row);
     }
@@ -682,14 +727,21 @@ bool loadLevel(Player& player, int levelIndex) {
     return true;
 }
 
-void startGame(Player& player, bool continued) {
+void resetTimers(Player& player) {
+    const Uint32 now = SDL_GetTicks();
+    player.lastAgainTick = now;
+    player.lastRealtimeTick = now;
+}
+
+void finishStartGame(Player& player, bool continued) {
     if (!continued) {
         clearSave(player);
     }
     const int level = continued ? player.savedLevel : 0;
     if (loadLevel(player, level)) {
         player.title = false;
-        playNamed(player, "startgame");
+        player.titleSelected = false;
+        resetTimers(player);
     }
 }
 
@@ -712,6 +764,17 @@ void afterStep(Player& player, const ps_step_result& result) {
             playNamed(player, "startlevel");
         }
     }
+    resetTimers(player);
+}
+
+void beginTitleStart(Player& player, bool continued) {
+    if (player.titleSelected) {
+        return;
+    }
+    player.titleSelected = true;
+    player.titleContinue = continued;
+    player.titleSelectedAt = SDL_GetTicks();
+    playNamed(player, "startgame");
 }
 
 std::optional<ps_input> keyToInput(SDL_Keycode key) {
@@ -732,9 +795,44 @@ std::optional<ps_input> keyToInput(SDL_Keycode key) {
         case SDLK_c:
         case SDLK_SPACE:
         case SDLK_RETURN:
+        case SDLK_KP_ENTER:
             return PS_INPUT_ACTION;
         default:
             return std::nullopt;
+    }
+}
+
+bool isActionKey(SDL_Keycode key) {
+    const auto input = keyToInput(key);
+    return input.has_value() && *input == PS_INPUT_ACTION;
+}
+
+void processAutomaticTicks(Player& player, Uint32 againIntervalMs, Uint32 realtimeIntervalMs) {
+    if (player.title) {
+        if (player.titleSelected && SDL_GetTicks() - player.titleSelectedAt > 300) {
+            finishStartGame(player, player.titleContinue);
+        }
+        return;
+    }
+
+    ps_session_status_info status{};
+    ps_session_status(player.session, &status);
+    if (status.mode != PS_SESSION_MODE_LEVEL) {
+        return;
+    }
+
+    const Uint32 now = SDL_GetTicks();
+    if (ps_session_pending_again(player.session)) {
+        if (now - player.lastAgainTick >= againIntervalMs) {
+            const ps_step_result result = ps_session_tick(player.session);
+            afterStep(player, result);
+        }
+        return;
+    }
+
+    if (realtimeIntervalMs > 0 && now - player.lastRealtimeTick >= realtimeIntervalMs) {
+        const ps_step_result result = ps_session_tick(player.session);
+        afterStep(player, result);
     }
 }
 
@@ -761,6 +859,7 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
     player.font = loadFont();
     refreshSave(player);
     (void)player.audio.init();
+    resetTimers(player);
 
     SDL_Window* window = SDL_CreateWindow("PuzzleScript Native Player", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_RESIZABLE);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -778,6 +877,8 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
     }
 
     playNamed(player, "titlescreen");
+    const Uint32 againIntervalMs = parseIntervalMs(ps_game_metadata_value(player.game, "again_interval"), 150);
+    const Uint32 realtimeIntervalMs = parseIntervalMs(ps_game_metadata_value(player.game, "realtime_interval"), 0);
     int frameLimit = 0;
     if (const char* value = std::getenv("PS_PLAYER_FRAME_LIMIT")) {
         frameLimit = std::max(0, std::atoi(value));
@@ -796,18 +897,22 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
                         running = false;
                     } else {
                         player.title = true;
+                        player.titleSelected = false;
                         refreshSave(player);
                         playNamed(player, "titlescreen");
                     }
                     continue;
                 }
                 if (player.title) {
+                    if (player.titleSelected) {
+                        continue;
+                    }
                     if (player.hasSave && (key == SDLK_UP || key == SDLK_w)) {
                         player.titleSelection = 0;
                     } else if (player.hasSave && (key == SDLK_DOWN || key == SDLK_s)) {
                         player.titleSelection = 1;
-                    } else if (key == SDLK_x || key == SDLK_c || key == SDLK_SPACE || key == SDLK_RETURN) {
-                        startGame(player, player.hasSave && player.titleSelection == 1);
+                    } else if (isActionKey(key)) {
+                        beginTitleStart(player, player.hasSave && player.titleSelection == 1);
                     }
                     continue;
                 }
@@ -834,6 +939,8 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
             }
         }
 
+        processAutomaticTicks(player, againIntervalMs, realtimeIntervalMs);
+
         int winW = 0;
         int winH = 0;
         SDL_GetWindowSize(window, &winW, &winH);
@@ -842,7 +949,7 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
         ps_session_status_info status{};
         ps_session_status(player.session, &status);
         if (player.title) {
-            drawTextRows(renderer, player, generateTitleRows(player), fg, bg, winW, winH);
+            drawTextRows(renderer, player, generateTitleRows(player, SDL_GetTicks()), fg, bg, winW, winH);
         } else if (status.mode == PS_SESSION_MODE_MESSAGE) {
             drawTextRows(renderer, player, generateMessageRows(player), fg, bg, winW, winH);
         } else {
