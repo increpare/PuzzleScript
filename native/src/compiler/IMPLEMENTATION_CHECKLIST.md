@@ -510,15 +510,14 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - The compact visited table uses canonical compact-state bytes as exact
     equality. Hashes may choose buckets and speed lookup, but a hash match
     alone must not merge two states.
-  - Zobrist hashing is a good candidate for incremental bucket selection over
-    mutable object/movement occupancy, especially once generated ticks can
-    report changed cells. It is not a replacement for exact equality.
+  - Hashes are recomputed from canonical compact bytes until profiling proves
+    that hash recomputation, rather than cloning or stepping, is the bottleneck.
 
 - [ ] Add canonical compact-state equality and memory accounting.
 
   Intent: make state identity perfect before relying on specialized compact
-  search. The solver may hash for speed, including Zobrist-style incremental
-  hashes, but equality must be canonical bytes or an equivalent exact compare.
+  search. The solver may hash for speed, but equality must be canonical bytes
+  or an equivalent exact compare.
 
   Acceptance criteria:
 
@@ -528,6 +527,9 @@ attribute graph cost -> no-allocation hash -> flat visited table
     behavior can alter or observe the omitted facts differently.
   - Store compact state once in node storage; visited entries store hash/key,
     depth, and node index, not a duplicate state copy.
+  - Compute the visited-table hash from the same canonical bytes used for
+    equality; do not maintain an incremental hash through rule application in
+    this milestone.
   - Report compact state bytes per node, visited entry bytes, and estimated
     total solver memory.
   - Any hash collision or hash-equivalent but byte-different state is handled by
