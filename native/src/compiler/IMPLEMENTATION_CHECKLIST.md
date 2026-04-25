@@ -333,7 +333,14 @@ attribute graph cost -> no-allocation hash -> flat visited table
 -> compact solver state prototype -> generated tick over compact state
 ```
 
-- [ ] Add explicit graph-overhead timing buckets to the solver.
+- [x] Add explicit graph-overhead timing buckets to the solver.
+
+  Status: implemented in `native/src/solver/main.cpp` and propagated through
+  `run_solver_level_benchmark.js` / `compare_solver_focus_benchmarks.js`.
+  Timers now use nanosecond accumulation internally and continue to report
+  milliseconds in JSON. Portfolio results merge both phases, so timing and
+  generated/expanded counts now describe the whole solve attempt rather than
+  only the winning phase.
 
   Acceptance criteria:
 
@@ -365,7 +372,25 @@ attribute graph cost -> no-allocation hash -> flat visited table
     --detail
   ```
 
-- [ ] Add a graph-overhead summary suitable for decision making.
+- [x] Add a graph-overhead summary suitable for decision making.
+
+  Status: `solver_focus_compare` prints median ratios for step, clone, hash,
+  visited, frontier, node-store, heuristic, solved-check, timeout-check,
+  unattributed, and total graph overhead. `--detail` also prints the slowest
+  graph-overhead targets and the largest compiled graph-overhead targets.
+
+  Current one-run focus reading after this checkpoint:
+
+  ```text
+  median_elapsed_ms compiled/interpreted=0.917x (-8.3%)
+  median_step_ms compiled/interpreted=0.859x (-14.1%)
+  median_clone_ms compiled/interpreted=0.999x (-0.1%)
+  median_hash_ms compiled/interpreted=0.993x (-0.7%)
+  median_graph_overhead_ms compiled/interpreted=0.977x (-2.3%)
+  ```
+
+  Interpretation: generated stepping is faster, but clone/hash/heuristic and
+  remaining unattributed state-management cost now visibly cap end-to-end wins.
 
   Acceptance criteria:
 

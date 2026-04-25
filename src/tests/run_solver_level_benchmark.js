@@ -79,6 +79,35 @@ function statusCounts(samples) {
     return counts;
 }
 
+const timingFields = [
+    'compile_ms',
+    'load_ms',
+    'clone_ms',
+    'step_ms',
+    'hash_ms',
+    'queue_ms',
+    'frontier_pop_ms',
+    'frontier_push_ms',
+    'visited_lookup_ms',
+    'visited_insert_ms',
+    'node_store_ms',
+    'heuristic_ms',
+    'solved_check_ms',
+    'timeout_check_ms',
+    'reconstruct_ms',
+    'unattributed_ms',
+];
+
+function copyTimingFields(target, source) {
+    for (const field of timingFields) {
+        target[field] = source[field];
+    }
+}
+
+function medianTiming(samples, field) {
+    return median(samples.map((sample) => sample[field]).filter(Number.isFinite));
+}
+
 function resultKey(result) {
     return `${result.game}#${result.level}`;
 }
@@ -142,7 +171,7 @@ function runTarget(target, runIndex, strategy, timeoutMs) {
     if (solverResult.game !== target.game || solverResult.level !== target.level) {
         throw new Error(`solver returned ${resultKey(solverResult)} for requested ${targetKey(target)}`);
     }
-    return {
+    const sample = {
         run: runIndex + 1,
         status: solverResult.status,
         wall_ms: wallMs,
@@ -165,6 +194,8 @@ function runTarget(target, runIndex, strategy, timeoutMs) {
         reconstruct_ms: solverResult.reconstruct_ms,
         runtime_counters: profileRuntimeCounters ? parseRuntimeCounters(result.stderr) : null,
     };
+    copyTimingFields(sample, solverResult);
+    return sample;
 }
 
 if (!fs.existsSync(manifestPath)) {
@@ -196,6 +227,20 @@ for (const target of targets) {
         process.stderr.write(`solver_target_benchmark target=${targetKey(target)} run=${index + 1}/${runs} status=${sample.status} wall_ms=${sample.wall_ms.toFixed(1)} elapsed_ms=${sample.elapsed_ms}\n`);
     }
 
+    const targetMedian = {
+        wall_ms: median(samples.map((sample) => sample.wall_ms)),
+        elapsed_ms: median(samples.map((sample) => sample.elapsed_ms)),
+        expanded: median(samples.map((sample) => sample.expanded)),
+        generated: median(samples.map((sample) => sample.generated)),
+        unique_states: median(samples.map((sample) => sample.unique_states)),
+        duplicates: median(samples.map((sample) => sample.duplicates)),
+        max_frontier: median(samples.map((sample) => sample.max_frontier)),
+        solution_length: median(samples.map((sample) => sample.solution_length)),
+    };
+    for (const field of timingFields) {
+        targetMedian[field] = medianTiming(samples, field);
+    }
+
     summaries.push({
         game: target.game,
         level: target.level,
@@ -203,29 +248,23 @@ for (const target of targets) {
         strategy,
         runs,
         status_counts: statusCounts(samples),
-        median: {
-            wall_ms: median(samples.map((sample) => sample.wall_ms)),
-            elapsed_ms: median(samples.map((sample) => sample.elapsed_ms)),
-            expanded: median(samples.map((sample) => sample.expanded)),
-            generated: median(samples.map((sample) => sample.generated)),
-            unique_states: median(samples.map((sample) => sample.unique_states)),
-            duplicates: median(samples.map((sample) => sample.duplicates)),
-            max_frontier: median(samples.map((sample) => sample.max_frontier)),
-            solution_length: median(samples.map((sample) => sample.solution_length)),
-            compile_ms: median(samples.map((sample) => sample.compile_ms).filter(Number.isFinite)),
-            load_ms: median(samples.map((sample) => sample.load_ms).filter(Number.isFinite)),
-            clone_ms: median(samples.map((sample) => sample.clone_ms).filter(Number.isFinite)),
-            step_ms: median(samples.map((sample) => sample.step_ms).filter(Number.isFinite)),
-            hash_ms: median(samples.map((sample) => sample.hash_ms).filter(Number.isFinite)),
-            queue_ms: median(samples.map((sample) => sample.queue_ms).filter(Number.isFinite)),
-            reconstruct_ms: median(samples.map((sample) => sample.reconstruct_ms).filter(Number.isFinite)),
-        },
+        median: targetMedian,
         mined_target: target,
         samples,
     });
 }
 
 const allSamples = summaries.flatMap((summary) => summary.samples);
+const outputMedian = {
+    wall_ms: median(allSamples.map((sample) => sample.wall_ms)),
+    elapsed_ms: median(allSamples.map((sample) => sample.elapsed_ms)),
+    expanded: median(allSamples.map((sample) => sample.expanded)),
+    generated: median(allSamples.map((sample) => sample.generated)),
+};
+for (const field of timingFields) {
+    outputMedian[field] = medianTiming(allSamples, field);
+}
+
 const output = {
     schema_version: 1,
     generated_at: new Date().toISOString(),
@@ -242,19 +281,7 @@ const output = {
         level: levelFilter,
     },
     timeout_override_ms: timeoutOverrideMs,
-    median: {
-        wall_ms: median(allSamples.map((sample) => sample.wall_ms)),
-        elapsed_ms: median(allSamples.map((sample) => sample.elapsed_ms)),
-        expanded: median(allSamples.map((sample) => sample.expanded)),
-        generated: median(allSamples.map((sample) => sample.generated)),
-        compile_ms: median(allSamples.map((sample) => sample.compile_ms).filter(Number.isFinite)),
-        load_ms: median(allSamples.map((sample) => sample.load_ms).filter(Number.isFinite)),
-        clone_ms: median(allSamples.map((sample) => sample.clone_ms).filter(Number.isFinite)),
-        step_ms: median(allSamples.map((sample) => sample.step_ms).filter(Number.isFinite)),
-        hash_ms: median(allSamples.map((sample) => sample.hash_ms).filter(Number.isFinite)),
-        queue_ms: median(allSamples.map((sample) => sample.queue_ms).filter(Number.isFinite)),
-        reconstruct_ms: median(allSamples.map((sample) => sample.reconstruct_ms).filter(Number.isFinite)),
-    },
+    median: outputMedian,
     targets: summaries,
 };
 

@@ -68,6 +68,19 @@ function metricMedian(summary, key) {
     return Number.isFinite(value) ? value : null;
 }
 
+function metricSum(summary, keys) {
+    let total = 0;
+    let seen = false;
+    for (const key of keys) {
+        const value = metricMedian(summary, key);
+        if (value !== null) {
+            total += value;
+            seen = true;
+        }
+    }
+    return seen ? total : null;
+}
+
 const interpreted = readJson(process.argv[2]);
 const compiled = readJson(process.argv[3]);
 const interpretedKeys = (interpreted.targets || []).map(targetKey);
@@ -121,6 +134,23 @@ function targetRows() {
         const compiledTickHits = countersMedian(compiledTarget, 'compiled_tick_hits');
         const compiledRulesAttached = sampleBoolean(compiledTarget, 'compiled_rules_attached');
         const compiledTickAttached = sampleBoolean(compiledTarget, 'compiled_tick_attached');
+        const interpretedFrontier = metricSum(target, ['frontier_pop_ms', 'frontier_push_ms']);
+        const compiledFrontier = metricSum(compiledTarget, ['frontier_pop_ms', 'frontier_push_ms']);
+        const interpretedVisited = metricSum(target, ['visited_lookup_ms', 'visited_insert_ms']);
+        const compiledVisited = metricSum(compiledTarget, ['visited_lookup_ms', 'visited_insert_ms']);
+        const graphKeys = [
+            'frontier_pop_ms',
+            'frontier_push_ms',
+            'visited_lookup_ms',
+            'visited_insert_ms',
+            'node_store_ms',
+            'heuristic_ms',
+            'solved_check_ms',
+            'timeout_check_ms',
+            'unattributed_ms',
+        ];
+        const interpretedGraph = metricSum(target, graphKeys);
+        const compiledGraph = metricSum(compiledTarget, graphKeys);
         return {
             key,
             interpreted: target,
@@ -132,6 +162,18 @@ function targetRows() {
             stepRatio: ratio(metricMedian(compiledTarget, 'step_ms'), metricMedian(target, 'step_ms')),
             cloneRatio: ratio(metricMedian(compiledTarget, 'clone_ms'), metricMedian(target, 'clone_ms')),
             hashRatio: ratio(metricMedian(compiledTarget, 'hash_ms'), metricMedian(target, 'hash_ms')),
+            frontierRatio: ratio(compiledFrontier, interpretedFrontier),
+            visitedRatio: ratio(compiledVisited, interpretedVisited),
+            nodeStoreRatio: ratio(metricMedian(compiledTarget, 'node_store_ms'), metricMedian(target, 'node_store_ms')),
+            heuristicRatio: ratio(metricMedian(compiledTarget, 'heuristic_ms'), metricMedian(target, 'heuristic_ms')),
+            unattributedRatio: ratio(metricMedian(compiledTarget, 'unattributed_ms'), metricMedian(target, 'unattributed_ms')),
+            graphOverheadRatio: ratio(compiledGraph, interpretedGraph),
+            interpretedFrontier,
+            compiledFrontier,
+            interpretedVisited,
+            compiledVisited,
+            interpretedGraph,
+            compiledGraph,
             compiledRuleHits,
             compiledTickHits,
             bucket: compiledUsageBucket(compiledTickHits, compiledRuleHits),
@@ -213,6 +255,9 @@ function printTargetTable(label, rows) {
             ` step=${formatNumber(row.stepRatio, 3)}x` +
             ` clone=${formatNumber(row.cloneRatio, 3)}x` +
             ` hash=${formatNumber(row.hashRatio, 3)}x` +
+            ` graph=${formatNumber(row.graphOverheadRatio, 3)}x` +
+            ` visited=${formatNumber(row.visitedRatio, 3)}x` +
+            ` frontier=${formatNumber(row.frontierRatio, 3)}x` +
             ` bucket=${row.bucket}` +
             ` reason=${row.reason}` +
             ` ${row.key}` +
@@ -239,6 +284,46 @@ function printMedianMetric(label, key, digits = 1) {
         ` compiled=${formatNumber(compiledValue, digits)}` +
         ` compiled/interpreted=${formatDelta(compiledValue, interpretedValue)}\n`
     );
+}
+
+function printMedianMetricSum(label, keys, digits = 1) {
+    const interpretedValue = metricSum(interpreted, keys);
+    const compiledValue = metricSum(compiled, keys);
+    if (interpretedValue === null && compiledValue === null) {
+        return;
+    }
+    process.stdout.write(
+        `  median_${label}: interpreted=${formatNumber(interpretedValue, digits)}` +
+        ` compiled=${formatNumber(compiledValue, digits)}` +
+        ` compiled/interpreted=${formatDelta(compiledValue, interpretedValue)}\n`
+    );
+}
+
+function printGraphSplit() {
+    const split = [
+        ['step', ['step_ms']],
+        ['clone', ['clone_ms']],
+        ['hash', ['hash_ms']],
+        ['visited', ['visited_lookup_ms', 'visited_insert_ms']],
+        ['frontier', ['frontier_pop_ms', 'frontier_push_ms']],
+        ['node_store', ['node_store_ms']],
+        ['heuristic', ['heuristic_ms']],
+        ['solved_check', ['solved_check_ms']],
+        ['timeout_check', ['timeout_check_ms']],
+        ['unattributed', ['unattributed_ms']],
+    ];
+    const parts = [];
+    for (const [label, keys] of split) {
+        const interpretedValue = metricSum(interpreted, keys);
+        const compiledValue = metricSum(compiled, keys);
+        if (interpretedValue === null && compiledValue === null) {
+            continue;
+        }
+        parts.push(`${label}=${formatNumber(interpretedValue, 1)}->${formatNumber(compiledValue, 1)}ms(${formatDelta(compiledValue, interpretedValue, 0)})`);
+    }
+    if (parts.length > 0) {
+        process.stdout.write(`  median_graph_split: ${parts.join(' ')}\n`);
+    }
 }
 
 function printWorkMismatchSummary(rows) {
@@ -326,6 +411,32 @@ function printStepTimeTable(label, rows) {
     }
 }
 
+function printGraphOverheadTable(label, rows) {
+    const visibleRows = rows
+        .filter((row) => Number.isFinite(row.graphOverheadRatio))
+        .slice(0, 10);
+    if (visibleRows.length === 0) {
+        process.stdout.write(`  ${label} n/a\n`);
+        return;
+    }
+    process.stdout.write(`  ${label}\n`);
+    for (const row of visibleRows) {
+        process.stdout.write(
+            `    ${formatNumber(row.graphOverheadRatio, 3)}x graph` +
+            ` elapsed=${formatNumber(row.elapsedRatio, 3)}x` +
+            ` step=${formatNumber(row.stepRatio, 3)}x` +
+            ` graph_ms=${formatNumber(row.interpretedGraph, 1)}->${formatNumber(row.compiledGraph, 1)}` +
+            ` visited=${formatNumber(row.visitedRatio, 3)}x` +
+            ` frontier=${formatNumber(row.frontierRatio, 3)}x` +
+            ` node_store=${formatNumber(row.nodeStoreRatio, 3)}x` +
+            ` heuristic=${formatNumber(row.heuristicRatio, 3)}x` +
+            ` unattributed=${formatNumber(row.unattributedRatio, 3)}x` +
+            ` ${row.key}` +
+            `\n`
+        );
+    }
+}
+
 process.stdout.write('solver_focus_compare\n');
 process.stdout.write(`  targets: interpreted=${interpreted.target_count} compiled=${compiled.target_count} same=${sameTargets ? 'yes' : 'no'}\n`);
 process.stdout.write(`  runs_per_target: interpreted=${interpreted.runs_per_target} compiled=${compiled.runs_per_target}\n`);
@@ -348,6 +459,25 @@ process.stdout.write(
 printMedianMetric('step_ms', 'step_ms');
 printMedianMetric('clone_ms', 'clone_ms');
 printMedianMetric('hash_ms', 'hash_ms');
+printMedianMetricSum('visited_ms', ['visited_lookup_ms', 'visited_insert_ms']);
+printMedianMetricSum('frontier_ms', ['frontier_pop_ms', 'frontier_push_ms']);
+printMedianMetric('node_store_ms', 'node_store_ms');
+printMedianMetric('heuristic_ms', 'heuristic_ms');
+printMedianMetric('solved_check_ms', 'solved_check_ms');
+printMedianMetric('timeout_check_ms', 'timeout_check_ms');
+printMedianMetric('unattributed_ms', 'unattributed_ms');
+printMedianMetricSum('graph_overhead_ms', [
+    'frontier_pop_ms',
+    'frontier_push_ms',
+    'visited_lookup_ms',
+    'visited_insert_ms',
+    'node_store_ms',
+    'heuristic_ms',
+    'solved_check_ms',
+    'timeout_check_ms',
+    'unattributed_ms',
+]);
+printGraphSplit();
 if (options.goalRatio !== null) {
     const elapsedRatio = ratio(compiled.median.elapsed_ms, interpreted.median.elapsed_ms);
     process.stdout.write(
@@ -365,10 +495,14 @@ if (options.detail) {
     const byFastest = rows.slice().sort((a, b) => (a.elapsedRatio || Infinity) - (b.elapsedRatio || Infinity));
     const byStepSlowest = rows.slice().sort((a, b) => (b.stepRatio || 0) - (a.stepRatio || 0));
     const byStepFastest = rows.slice().sort((a, b) => (a.stepRatio || Infinity) - (b.stepRatio || Infinity));
+    const byGraphSlowest = rows.slice().sort((a, b) => (b.graphOverheadRatio || 0) - (a.graphOverheadRatio || 0));
+    const byGraphLargest = rows.slice().sort((a, b) => (b.compiledGraph || 0) - (a.compiledGraph || 0));
     printTargetTable('slowest_targets:', bySlowest.slice(0, 10));
     printTargetTable('fastest_targets:', byFastest.slice(0, 10));
     printStepTimeTable('slowest_step_targets:', byStepSlowest);
     printStepTimeTable('fastest_step_targets:', byStepFastest);
+    printGraphOverheadTable('slowest_graph_overhead_targets:', byGraphSlowest);
+    printGraphOverheadTable('largest_compiled_graph_overhead_targets:', byGraphLargest);
     printMaskRebuildTable(rows);
 }
 

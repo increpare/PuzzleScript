@@ -11,6 +11,7 @@
 #include <limits>
 #include <memory>
 #include <mutex>
+#include <numeric>
 #include <optional>
 #include <queue>
 #include <sstream>
@@ -58,7 +59,7 @@ struct ScopedTimer {
         : target(target), start(Clock::now()) {}
 
     ~ScopedTimer() {
-        target += std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - start).count();
+        target += std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - start).count();
     }
 
     int64_t& target;
@@ -109,13 +110,21 @@ struct QueueEntryGreater {
 };
 
 struct Timing {
-    int64_t compileUs = 0;
-    int64_t loadUs = 0;
-    int64_t cloneUs = 0;
-    int64_t stepUs = 0;
-    int64_t hashUs = 0;
-    int64_t queueUs = 0;
-    int64_t reconstructUs = 0;
+    int64_t compileNs = 0;
+    int64_t loadNs = 0;
+    int64_t cloneNs = 0;
+    int64_t stepNs = 0;
+    int64_t hashNs = 0;
+    int64_t queueNs = 0;
+    int64_t frontierPopNs = 0;
+    int64_t frontierPushNs = 0;
+    int64_t visitedLookupNs = 0;
+    int64_t visitedInsertNs = 0;
+    int64_t nodeStoreNs = 0;
+    int64_t heuristicNs = 0;
+    int64_t solvedCheckNs = 0;
+    int64_t timeoutCheckNs = 0;
+    int64_t reconstructNs = 0;
 };
 
 struct Result {
@@ -164,7 +173,7 @@ struct CompiledGame {
     std::string name;
     std::string source;
     std::shared_ptr<const Game> game;
-    int64_t compileUs = 0;
+    int64_t compileNs = 0;
     std::optional<Result> compileError;
     size_t resultBegin = 0;
     size_t resultEnd = 0;
@@ -256,8 +265,30 @@ bool isCommentLine(const std::string& line) {
     return !stripped.empty() && stripped.front() == '(';
 }
 
-double ms(int64_t us) {
-    return static_cast<double>(us) / 1000.0;
+double ms(int64_t ns) {
+    return static_cast<double>(ns) / 1000000.0;
+}
+
+int64_t measuredSearchNs(const Timing& timing) {
+    return timing.loadNs
+        + timing.cloneNs
+        + timing.stepNs
+        + timing.hashNs
+        + timing.queueNs
+        + timing.frontierPopNs
+        + timing.frontierPushNs
+        + timing.visitedLookupNs
+        + timing.visitedInsertNs
+        + timing.nodeStoreNs
+        + timing.heuristicNs
+        + timing.solvedCheckNs
+        + timing.timeoutCheckNs
+        + timing.reconstructNs;
+}
+
+double unattributedMs(const Result& result) {
+    const int64_t elapsedNs = result.elapsedMs * 1000000;
+    return ms(std::max<int64_t>(0, elapsedNs - measuredSearchNs(result.timing)));
 }
 
 std::string secondsString(int64_t elapsedMs) {
@@ -502,7 +533,7 @@ bool gameUsesRandomness(const Game& game) {
 }
 
 StateKey solverStateKey(const Session& session, bool includeRandomState, Timing& timing) {
-    ScopedTimer timer(timing.hashUs);
+    ScopedTimer timer(timing.hashNs);
     return puzzlescript::search::sessionStateKey(session, includeRandomState);
 }
 
@@ -529,7 +560,7 @@ std::shared_ptr<const Game> compileGame(
 }
 
 std::vector<std::string> reconstructSolution(const std::vector<Node>& nodes, uint32_t nodeIndex, ps_input finalInput, Timing& timing) {
-    ScopedTimer timer(timing.reconstructUs);
+    ScopedTimer timer(timing.reconstructNs);
     std::vector<std::string> reversed;
     reversed.push_back(inputName(finalInput));
     int32_t cursor = static_cast<int32_t>(nodeIndex);
@@ -586,7 +617,7 @@ Result runSearch(
     const std::string& gameName,
     int32_t levelIndex,
     int64_t timeoutMs,
-    int64_t compileUs,
+    int64_t compileNs,
     SearchMode mode,
     TimePoint deadline,
     uint32_t workerId
@@ -601,11 +632,11 @@ Result runSearch(
     result.workerId = workerId;
     result.compiledRulesAttached = game && game->compiledRules != nullptr;
     result.compiledTickAttached = game && game->compiledTick != nullptr;
-    result.timing.compileUs = compileUs;
+    result.timing.compileNs = compileNs;
 
     std::unique_ptr<Session> initial;
     {
-        ScopedTimer timer(result.timing.loadUs);
+        ScopedTimer timer(result.timing.loadNs);
         initial = createLoadedSession(game, gameName, levelIndex, result);
     }
     if (!initial) {
@@ -623,29 +654,55 @@ Result runSearch(
     std::unordered_map<StateKey, uint32_t, StateKeyHash> bestDepth;
     bestDepth.reserve(16384);
     const StateKey initialKey = solverStateKey(*initial, includeRandomStateInKey, result.timing);
-    bestDepth.emplace(initialKey, 0);
+    {
+        ScopedTimer timer(result.timing.visitedInsertNs);
+        bestDepth.emplace(initialKey, 0);
+    }
     result.uniqueStates = 1;
 
-    const int32_t initialHeuristic = mode == SearchMode::Bfs ? 0 : heuristicScore(*initial);
-    nodes.push_back(Node{std::move(initial), initialKey, -1, PS_INPUT_UP, 0, initialHeuristic});
+    int32_t initialHeuristic = 0;
+    if (mode != SearchMode::Bfs) {
+        ScopedTimer timer(result.timing.heuristicNs);
+        initialHeuristic = heuristicScore(*initial);
+    }
+    {
+        ScopedTimer timer(result.timing.nodeStoreNs);
+        nodes.push_back(Node{std::move(initial), initialKey, -1, PS_INPUT_UP, 0, initialHeuristic});
+    }
     std::priority_queue<QueueEntry, std::vector<QueueEntry>, QueueEntryGreater> frontier;
-    frontier.push(QueueEntry{priorityFor(mode, 0, initialHeuristic), 0, 0});
+    {
+        ScopedTimer timer(result.timing.frontierPushNs);
+        frontier.push(QueueEntry{priorityFor(mode, 0, initialHeuristic), 0, 0});
+    }
     result.maxFrontier = 1;
 
     uint64_t nextTie = 1;
     const auto inputs = solverInputsForGame(*game);
 
     while (!frontier.empty()) {
-        if (Clock::now() >= deadline) {
+        bool timedOut = false;
+        {
+            ScopedTimer timer(result.timing.timeoutCheckNs);
+            timedOut = Clock::now() >= deadline;
+        }
+        if (timedOut) {
             result.status = "timeout";
             break;
         }
 
-        const QueueEntry entry = frontier.top();
-        frontier.pop();
+        QueueEntry entry;
+        {
+            ScopedTimer timer(result.timing.frontierPopNs);
+            entry = frontier.top();
+            frontier.pop();
+        }
 
         const Node& parentNode = nodes[entry.nodeIndex];
-        const auto best = bestDepth.find(parentNode.key);
+        std::unordered_map<StateKey, uint32_t, StateKeyHash>::const_iterator best;
+        {
+            ScopedTimer timer(result.timing.visitedLookupNs);
+            best = bestDepth.find(parentNode.key);
+        }
         if (best != bestDepth.end() && best->second < parentNode.depth) {
             ++result.duplicates;
             continue;
@@ -656,20 +713,25 @@ Result runSearch(
         ++result.expanded;
 
         for (const ps_input input : inputs) {
-            if (Clock::now() >= deadline) {
+            timedOut = false;
+            {
+                ScopedTimer timer(result.timing.timeoutCheckNs);
+                timedOut = Clock::now() >= deadline;
+            }
+            if (timedOut) {
                 result.status = "timeout";
                 break;
             }
 
             std::unique_ptr<Session> child;
             {
-                ScopedTimer timer(result.timing.cloneUs);
+                ScopedTimer timer(result.timing.cloneNs);
                 child = std::make_unique<Session>(parentSession);
             }
 
             ps_step_result stepResult{};
             {
-                ScopedTimer timer(result.timing.stepUs);
+                ScopedTimer timer(result.timing.stepNs);
                 constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
                     .playableUndo = false,
                     .emitAudio = false,
@@ -679,7 +741,12 @@ Result runSearch(
             }
             ++result.generated;
 
-            if (solvedByStep(stepResult, *child, levelIndex)) {
+            bool solved = false;
+            {
+                ScopedTimer timer(result.timing.solvedCheckNs);
+                solved = solvedByStep(stepResult, *child, levelIndex);
+            }
+            if (solved) {
                 result.status = "solved";
                 result.solution = reconstructSolution(nodes, entry.nodeIndex, input, result.timing);
                 return result;
@@ -690,18 +757,39 @@ Result runSearch(
 
             const StateKey key = solverStateKey(*child, includeRandomStateInKey, result.timing);
             const uint32_t childDepth = parentDepth + 1;
-            const auto found = bestDepth.find(key);
+            std::unordered_map<StateKey, uint32_t, StateKeyHash>::iterator found;
+            {
+                ScopedTimer timer(result.timing.visitedLookupNs);
+                found = bestDepth.find(key);
+            }
             if (found != bestDepth.end() && found->second <= childDepth) {
                 ++result.duplicates;
                 continue;
             }
-            bestDepth[key] = childDepth;
-            result.uniqueStates = bestDepth.size();
+            {
+                ScopedTimer timer(result.timing.visitedInsertNs);
+                if (found != bestDepth.end()) {
+                    found->second = childDepth;
+                } else {
+                    bestDepth.emplace(key, childDepth);
+                }
+                result.uniqueStates = bestDepth.size();
+            }
 
-            const int32_t childHeuristic = mode == SearchMode::Bfs ? 0 : heuristicScore(*child);
+            int32_t childHeuristic = 0;
+            if (mode != SearchMode::Bfs) {
+                ScopedTimer timer(result.timing.heuristicNs);
+                childHeuristic = heuristicScore(*child);
+            }
             const uint32_t childIndex = static_cast<uint32_t>(nodes.size());
-            nodes.push_back(Node{std::move(child), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
-            frontier.push(QueueEntry{priorityFor(mode, childDepth, childHeuristic), nextTie++, childIndex});
+            {
+                ScopedTimer timer(result.timing.nodeStoreNs);
+                nodes.push_back(Node{std::move(child), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+            }
+            {
+                ScopedTimer timer(result.timing.frontierPushNs);
+                frontier.push(QueueEntry{priorityFor(mode, childDepth, childHeuristic), nextTie++, childIndex});
+            }
             result.maxFrontier = std::max<uint64_t>(result.maxFrontier, frontier.size());
         }
     }
@@ -715,12 +803,20 @@ void mergeStats(Result& target, const Result& source) {
     target.uniqueStates += source.uniqueStates;
     target.duplicates += source.duplicates;
     target.maxFrontier = std::max(target.maxFrontier, source.maxFrontier);
-    target.timing.loadUs += source.timing.loadUs;
-    target.timing.cloneUs += source.timing.cloneUs;
-    target.timing.stepUs += source.timing.stepUs;
-    target.timing.hashUs += source.timing.hashUs;
-    target.timing.queueUs += source.timing.queueUs;
-    target.timing.reconstructUs += source.timing.reconstructUs;
+    target.timing.loadNs += source.timing.loadNs;
+    target.timing.cloneNs += source.timing.cloneNs;
+    target.timing.stepNs += source.timing.stepNs;
+    target.timing.hashNs += source.timing.hashNs;
+    target.timing.queueNs += source.timing.queueNs;
+    target.timing.frontierPopNs += source.timing.frontierPopNs;
+    target.timing.frontierPushNs += source.timing.frontierPushNs;
+    target.timing.visitedLookupNs += source.timing.visitedLookupNs;
+    target.timing.visitedInsertNs += source.timing.visitedInsertNs;
+    target.timing.nodeStoreNs += source.timing.nodeStoreNs;
+    target.timing.heuristicNs += source.timing.heuristicNs;
+    target.timing.solvedCheckNs += source.timing.solvedCheckNs;
+    target.timing.timeoutCheckNs += source.timing.timeoutCheckNs;
+    target.timing.reconstructNs += source.timing.reconstructNs;
 }
 
 Result solveLevel(
@@ -728,7 +824,7 @@ Result solveLevel(
     const std::string& gameName,
     int32_t levelIndex,
     int64_t timeoutMs,
-    int64_t compileUs,
+    int64_t compileNs,
     Strategy strategy,
     uint32_t workerId
 ) {
@@ -742,13 +838,13 @@ Result solveLevel(
     };
 
     if (strategy == Strategy::Bfs) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Bfs, deadline, workerId));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId));
     }
     if (strategy == Strategy::WeightedAStar) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::WeightedAStar, deadline, workerId));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId));
     }
     if (strategy == Strategy::Greedy) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Greedy, deadline, workerId));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId));
     }
 
     Result combined;
@@ -761,10 +857,10 @@ Result solveLevel(
     combined.workerId = workerId;
     combined.compiledRulesAttached = game && game->compiledRules != nullptr;
     combined.compiledTickAttached = game && game->compiledTick != nullptr;
-    combined.timing.compileUs = compileUs;
+    combined.timing.compileNs = compileNs;
 
     const TimePoint bfsDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 6));
-    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId);
+    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId);
     mergeStats(combined, bfs);
     if (bfs.status == "solved" || bfs.status == "skipped_message" || bfs.status == "level_error") {
         bfs.strategy = bfs.status == "solved" ? "bfs" : "portfolio";
@@ -772,11 +868,15 @@ Result solveLevel(
     }
 
     if (Clock::now() < deadline) {
-        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::WeightedAStar, deadline, workerId);
+        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId);
         mergeStats(combined, weighted);
         if (weighted.status == "solved" || weighted.status == "level_error") {
-            weighted.strategy = weighted.status == "solved" ? "weighted-astar" : "portfolio";
-            return finish(weighted);
+            combined.status = weighted.status;
+            combined.error = weighted.error;
+            combined.strategy = weighted.status == "solved" ? "weighted-astar" : "portfolio";
+            combined.heuristic = weighted.heuristic;
+            combined.solution = std::move(weighted.solution);
+            return finish(combined);
         }
         combined.status = weighted.status == "exhausted" ? "exhausted" : "timeout";
     }
@@ -959,13 +1059,22 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"timeout_ms\":" << result.timeoutMs;
     out << ",\"compiled_rules_attached\":" << (result.compiledRulesAttached ? "true" : "false");
     out << ",\"compiled_tick_attached\":" << (result.compiledTickAttached ? "true" : "false");
-    out << ",\"compile_ms\":" << ms(result.timing.compileUs);
-    out << ",\"load_ms\":" << ms(result.timing.loadUs);
-    out << ",\"clone_ms\":" << ms(result.timing.cloneUs);
-    out << ",\"step_ms\":" << ms(result.timing.stepUs);
-    out << ",\"hash_ms\":" << ms(result.timing.hashUs);
-    out << ",\"queue_ms\":" << ms(result.timing.queueUs);
-    out << ",\"reconstruct_ms\":" << ms(result.timing.reconstructUs);
+    out << ",\"compile_ms\":" << ms(result.timing.compileNs);
+    out << ",\"load_ms\":" << ms(result.timing.loadNs);
+    out << ",\"clone_ms\":" << ms(result.timing.cloneNs);
+    out << ",\"step_ms\":" << ms(result.timing.stepNs);
+    out << ",\"hash_ms\":" << ms(result.timing.hashNs);
+    out << ",\"queue_ms\":" << ms(result.timing.queueNs);
+    out << ",\"frontier_pop_ms\":" << ms(result.timing.frontierPopNs);
+    out << ",\"frontier_push_ms\":" << ms(result.timing.frontierPushNs);
+    out << ",\"visited_lookup_ms\":" << ms(result.timing.visitedLookupNs);
+    out << ",\"visited_insert_ms\":" << ms(result.timing.visitedInsertNs);
+    out << ",\"node_store_ms\":" << ms(result.timing.nodeStoreNs);
+    out << ",\"heuristic_ms\":" << ms(result.timing.heuristicNs);
+    out << ",\"solved_check_ms\":" << ms(result.timing.solvedCheckNs);
+    out << ",\"timeout_check_ms\":" << ms(result.timing.timeoutCheckNs);
+    out << ",\"reconstruct_ms\":" << ms(result.timing.reconstructNs);
+    out << ",\"unattributed_ms\":" << unattributedMs(result);
     out << "}";
 }
 
@@ -986,13 +1095,21 @@ void printJson(const std::vector<Result>& results) {
         errors += result.status == "compile_error" || result.status == "level_error";
         expanded += result.expanded;
         generated += result.generated;
-        timing.compileUs += result.timing.compileUs;
-        timing.loadUs += result.timing.loadUs;
-        timing.cloneUs += result.timing.cloneUs;
-        timing.stepUs += result.timing.stepUs;
-        timing.hashUs += result.timing.hashUs;
-        timing.queueUs += result.timing.queueUs;
-        timing.reconstructUs += result.timing.reconstructUs;
+        timing.compileNs += result.timing.compileNs;
+        timing.loadNs += result.timing.loadNs;
+        timing.cloneNs += result.timing.cloneNs;
+        timing.stepNs += result.timing.stepNs;
+        timing.hashNs += result.timing.hashNs;
+        timing.queueNs += result.timing.queueNs;
+        timing.frontierPopNs += result.timing.frontierPopNs;
+        timing.frontierPushNs += result.timing.frontierPushNs;
+        timing.visitedLookupNs += result.timing.visitedLookupNs;
+        timing.visitedInsertNs += result.timing.visitedInsertNs;
+        timing.nodeStoreNs += result.timing.nodeStoreNs;
+        timing.heuristicNs += result.timing.heuristicNs;
+        timing.solvedCheckNs += result.timing.solvedCheckNs;
+        timing.timeoutCheckNs += result.timing.timeoutCheckNs;
+        timing.reconstructNs += result.timing.reconstructNs;
     }
 
     std::cout << "{\n  \"results\":[\n";
@@ -1010,13 +1127,25 @@ void printJson(const std::vector<Result>& results) {
     std::cout << ",\"errors\":" << errors;
     std::cout << ",\"expanded\":" << expanded;
     std::cout << ",\"generated\":" << generated;
-    std::cout << ",\"compile_ms\":" << ms(timing.compileUs);
-    std::cout << ",\"load_ms\":" << ms(timing.loadUs);
-    std::cout << ",\"clone_ms\":" << ms(timing.cloneUs);
-    std::cout << ",\"step_ms\":" << ms(timing.stepUs);
-    std::cout << ",\"hash_ms\":" << ms(timing.hashUs);
-    std::cout << ",\"queue_ms\":" << ms(timing.queueUs);
-    std::cout << ",\"reconstruct_ms\":" << ms(timing.reconstructUs);
+    std::cout << ",\"compile_ms\":" << ms(timing.compileNs);
+    std::cout << ",\"load_ms\":" << ms(timing.loadNs);
+    std::cout << ",\"clone_ms\":" << ms(timing.cloneNs);
+    std::cout << ",\"step_ms\":" << ms(timing.stepNs);
+    std::cout << ",\"hash_ms\":" << ms(timing.hashNs);
+    std::cout << ",\"queue_ms\":" << ms(timing.queueNs);
+    std::cout << ",\"frontier_pop_ms\":" << ms(timing.frontierPopNs);
+    std::cout << ",\"frontier_push_ms\":" << ms(timing.frontierPushNs);
+    std::cout << ",\"visited_lookup_ms\":" << ms(timing.visitedLookupNs);
+    std::cout << ",\"visited_insert_ms\":" << ms(timing.visitedInsertNs);
+    std::cout << ",\"node_store_ms\":" << ms(timing.nodeStoreNs);
+    std::cout << ",\"heuristic_ms\":" << ms(timing.heuristicNs);
+    std::cout << ",\"solved_check_ms\":" << ms(timing.solvedCheckNs);
+    std::cout << ",\"timeout_check_ms\":" << ms(timing.timeoutCheckNs);
+    std::cout << ",\"reconstruct_ms\":" << ms(timing.reconstructNs);
+    const int64_t totalElapsedNs = std::accumulate(results.begin(), results.end(), int64_t{0}, [](int64_t total, const Result& result) {
+        return total + result.elapsedMs * 1000000;
+    });
+    std::cout << ",\"unattributed_ms\":" << ms(std::max<int64_t>(0, totalElapsedNs - measuredSearchNs(timing)));
     std::cout << "}\n}\n";
 }
 
@@ -1138,7 +1267,7 @@ std::vector<Result> runCorpus(const Options& options) {
 
         std::string compileError;
         {
-            ScopedTimer timer(compiled.compileUs);
+            ScopedTimer timer(compiled.compileNs);
             compiled.game = compileGame(compiled.source, compileError);
         }
         if (!compiled.game) {
@@ -1149,7 +1278,7 @@ std::vector<Result> runCorpus(const Options& options) {
             result.error = compileError;
             result.strategy = strategyName(options.strategy);
             result.timeoutMs = options.timeoutMs;
-            result.timing.compileUs = compiled.compileUs;
+            result.timing.compileNs = compiled.compileNs;
             results.push_back(std::move(result));
             compiled.resultEnd = results.size();
             if (!options.quiet && !options.progressPerGame) {
@@ -1178,7 +1307,7 @@ std::vector<Result> runCorpus(const Options& options) {
             placeholder.status = "pending";
             placeholder.strategy = strategyName(options.strategy);
             placeholder.timeoutMs = options.timeoutMs;
-            placeholder.timing.compileUs = compiled.compileUs;
+            placeholder.timing.compileNs = compiled.compileNs;
             results.push_back(std::move(placeholder));
             workItems.push_back(WorkItem{compiledGames.size(), levelIndex, resultIndex});
         }
@@ -1203,7 +1332,7 @@ std::vector<Result> runCorpus(const Options& options) {
                     compiled.name,
                     item.levelIndex,
                     options.timeoutMs,
-                    compiled.compileUs,
+                    compiled.compileNs,
                     options.strategy,
                     workerId
                 );
