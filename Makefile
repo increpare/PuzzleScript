@@ -18,7 +18,7 @@
 .PHONY: help build build_32 build_solver build_generator generator solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
-	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark solver_mine_pippable solver_benchmark_targets generator_smoke_tests generator_benchmark \
+	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	compiled_rules_simulation_suite_coverage compiled_tick_dispatch_smoke \
 	rule_plan_parity_tests \
@@ -61,6 +61,15 @@ SOLVER_MINE_STRATEGY ?= portfolio
 SOLVER_MINE_NEAR_RATIO ?= 0.5
 SOLVER_MINE_MAX_TARGETS ?=
 SOLVER_PIPPABLE_MANIFEST ?= $(BUILD_DIR)/native/solver_pippable_targets.json
+SOLVER_FOCUS_CORPUS ?= $(SOLVER_TESTS_CORPUS)
+SOLVER_FOCUS_MANIFEST ?= $(BUILD_DIR)/native/solver_focus_group.json
+SOLVER_FOCUS_OUT ?= $(BUILD_DIR)/native/solver_focus_benchmark.json
+SOLVER_FOCUS_TIMEOUT_MS ?= 500
+SOLVER_FOCUS_MIN_ELAPSED_MS ?= 250
+SOLVER_FOCUS_MAX_TARGETS ?= 50
+SOLVER_FOCUS_STRATEGY ?= $(SOLVER_STRATEGY)
+SOLVER_FOCUS_JOBS ?= 1
+SOLVER_FOCUS_RUNS ?= 3
 SOLVER_TARGET_BENCH_RUNS ?= 5
 SOLVER_TARGET_BENCH_CORPUS ?= $(SOLVER_MINE_CORPUS)
 SOLVER_TARGET_BENCH_MANIFEST ?= $(SOLVER_PIPPABLE_MANIFEST)
@@ -227,6 +236,8 @@ help:
 	@echo "  make generator_smoke_tests         Run native generator smoke tests"
 	@echo "  make generator_benchmark           Run fixed-seed generator preset benchmark"
 	@echo "  make solver_mine_pippable          Mine near-threshold native solver targets"
+	@echo "  make solver_focus_mine             Mine a small solver optimization focus group"
+	@echo "  make solver_focus_benchmark        Benchmark the current solver focus group"
 	@echo "  make solver_benchmark_targets      Benchmark mined solver targets repeatedly"
 	@echo "  make clean                         Remove native build outputs and JS parity data"
 	@echo ""
@@ -543,6 +554,12 @@ solver_benchmark: $(SOLVER_TARGET_PREREQ)
 
 solver_mine_pippable: $(PUZZLESCRIPT_SOLVER)
 	$(NODE) src/tests/mine_solver_near_threshold.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_MINE_CORPUS) --timeouts-ms $(SOLVER_MINE_TIMEOUTS_MS) --strategy $(SOLVER_MINE_STRATEGY) --near-ratio $(SOLVER_MINE_NEAR_RATIO) --out $(SOLVER_PIPPABLE_MANIFEST) $(SOLVER_MINE_MAX_TARGETS_ARG)
+
+solver_focus_mine: $(PUZZLESCRIPT_SOLVER)
+	$(NODE) src/tests/mine_solver_focus_group.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_CORPUS) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --min-elapsed-ms $(SOLVER_FOCUS_MIN_ELAPSED_MS) --max-targets $(SOLVER_FOCUS_MAX_TARGETS) --strategy $(SOLVER_FOCUS_STRATEGY) --jobs $(SOLVER_FOCUS_JOBS) --out $(SOLVER_FOCUS_MANIFEST)
+
+solver_focus_benchmark: $(PUZZLESCRIPT_SOLVER)
+	$(NODE) src/tests/run_solver_level_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_CORPUS) $(SOLVER_FOCUS_MANIFEST) --runs $(SOLVER_FOCUS_RUNS) --strategy $(SOLVER_FOCUS_STRATEGY) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --out $(SOLVER_FOCUS_OUT)
 
 solver_benchmark_targets: $(PUZZLESCRIPT_SOLVER)
 	$(NODE) src/tests/run_solver_level_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_TARGET_BENCH_CORPUS) $(SOLVER_TARGET_BENCH_MANIFEST) --runs $(SOLVER_TARGET_BENCH_RUNS) --strategy $(SOLVER_TARGET_BENCH_STRATEGY) --out $(SOLVER_TARGET_BENCH_OUT) $(SOLVER_TARGET_BENCH_TIMEOUT_ARG)
