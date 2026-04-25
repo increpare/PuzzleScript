@@ -83,6 +83,9 @@ struct RuntimeCounterStorage {
     std::atomic<uint64_t> compiledRuleGroupAttempts{0};
     std::atomic<uint64_t> compiledRuleGroupHits{0};
     std::atomic<uint64_t> compiledRuleGroupFallbacks{0};
+    std::atomic<uint64_t> compiledTickAttempts{0};
+    std::atomic<uint64_t> compiledTickHits{0};
+    std::atomic<uint64_t> compiledTickFallbacks{0};
 };
 
 bool gRuntimeCountersEnabled = false;
@@ -4916,10 +4919,13 @@ ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options
     if (session.game->compiledTick != nullptr
         && session.game->compiledTick->step != nullptr
         && compiledTickDispatchEnabled()) {
+        addCounter(gRuntimeCounters.compiledTickAttempts);
         const CompiledTickApplyOutcome outcome = session.game->compiledTick->step(session, input, options);
         if (outcome.handled) {
+            addCounter(gRuntimeCounters.compiledTickHits);
             return outcome.result;
         }
+        addCounter(gRuntimeCounters.compiledTickFallbacks);
     }
     if (input == PS_INPUT_TICK) {
         return tick(session, options);
@@ -4935,10 +4941,13 @@ ps_step_result tick(Session& session, RuntimeStepOptions options) {
     if (session.game->compiledTick != nullptr
         && session.game->compiledTick->tick != nullptr
         && compiledTickDispatchEnabled()) {
+        addCounter(gRuntimeCounters.compiledTickAttempts);
         const CompiledTickApplyOutcome outcome = session.game->compiledTick->tick(session, options);
         if (outcome.handled) {
+            addCounter(gRuntimeCounters.compiledTickHits);
             return outcome.result;
         }
+        addCounter(gRuntimeCounters.compiledTickFallbacks);
     }
     return interpreterTick(session, options);
 }
@@ -5019,6 +5028,9 @@ void resetRuntimeCounters() {
     gRuntimeCounters.compiledRuleGroupAttempts.store(0, std::memory_order_relaxed);
     gRuntimeCounters.compiledRuleGroupHits.store(0, std::memory_order_relaxed);
     gRuntimeCounters.compiledRuleGroupFallbacks.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compiledTickAttempts.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compiledTickHits.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compiledTickFallbacks.store(0, std::memory_order_relaxed);
 }
 
 ps_runtime_counters snapshotRuntimeCounters() {
@@ -5039,6 +5051,9 @@ ps_runtime_counters snapshotRuntimeCounters() {
     counters.compiled_rule_group_attempts = gRuntimeCounters.compiledRuleGroupAttempts.load(std::memory_order_relaxed);
     counters.compiled_rule_group_hits = gRuntimeCounters.compiledRuleGroupHits.load(std::memory_order_relaxed);
     counters.compiled_rule_group_fallbacks = gRuntimeCounters.compiledRuleGroupFallbacks.load(std::memory_order_relaxed);
+    counters.compiled_tick_attempts = gRuntimeCounters.compiledTickAttempts.load(std::memory_order_relaxed);
+    counters.compiled_tick_hits = gRuntimeCounters.compiledTickHits.load(std::memory_order_relaxed);
+    counters.compiled_tick_fallbacks = gRuntimeCounters.compiledTickFallbacks.load(std::memory_order_relaxed);
     return counters;
 }
 

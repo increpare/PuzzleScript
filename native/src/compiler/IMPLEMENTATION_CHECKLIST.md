@@ -125,7 +125,7 @@ Status markers:
 
 ## Generated Tick Observability
 
-- [ ] Add runtime counters for compiled tick attempts, hits, and fallbacks.
+- [x] Add runtime counters for compiled tick attempts, hits, and fallbacks.
 
   Intent: make it obvious whether a solver/generator run is actually entering
   generated tick dispatch.
@@ -141,7 +141,7 @@ Status markers:
 
   ```sh
   make build
-  build/native/puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --case-index 0 --repeat 3 --profile-timers --jobs 1
+  build/native/puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --case-index 1 --repeat 3 --profile-timers --jobs 1
   make solver_smoke_tests SPECIALIZE=true
   ```
 

@@ -101,6 +101,9 @@ typedef struct ps_runtime_counters {
     uint64_t compiled_rule_group_attempts;
     uint64_t compiled_rule_group_hits;
     uint64_t compiled_rule_group_fallbacks;
+    uint64_t compiled_tick_attempts;
+    uint64_t compiled_tick_hits;
+    uint64_t compiled_tick_fallbacks;
 } ps_runtime_counters;
 
 bool ps_load_ir_json(const char* json_utf8, size_t json_size, ps_game** out_game, ps_error** out_error);

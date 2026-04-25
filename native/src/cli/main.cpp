@@ -2576,6 +2576,9 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                   << " compiled_rule_group_attempts=" << counters.compiled_rule_group_attempts
                   << " compiled_rule_group_hits=" << counters.compiled_rule_group_hits
                   << " compiled_rule_group_fallbacks=" << counters.compiled_rule_group_fallbacks
+                  << " compiled_tick_attempts=" << counters.compiled_tick_attempts
+                  << " compiled_tick_hits=" << counters.compiled_tick_hits
+                  << " compiled_tick_fallbacks=" << counters.compiled_tick_fallbacks
                   << "\n";
     }
     if (options.topSlowCases > 0 && !cases.empty()) {
