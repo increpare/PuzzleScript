@@ -690,6 +690,31 @@ attribute graph cost -> no-allocation hash -> flat visited table
   node -e 'const j=require("./build/native/solver_focus_group.json"); console.log(j.compile_excluded_games || [])'
   ```
 
+- [x] Parallelize focus compile probes.
+
+  Intent: `make solver_focus_mine` should exploit the machine while it
+  discovers which games are eligible for the focus set, without letting each
+  individual CMake probe also consume every core.
+
+  Current behavior:
+
+  - `SOLVER_FOCUS_COMPILE_PROBE_JOBS ?= auto` controls how many per-game
+    compile probes run concurrently.
+  - `auto` resolves to roughly half the machine parallelism.
+  - `SOLVER_FOCUS_COMPILE_BUILD_JOBS ?= 1` controls the inner CMake build for
+    each probe, keeping outer parallelism predictable.
+  - The manifest records both requested and resolved probe job counts under
+    `compile_probe`.
+  - Compile probe result ordering stays deterministic in the manifest even
+    though logging appears as probes complete.
+
+  Validation:
+
+  ```sh
+  make -n solver_focus_mine
+  node src/tests/mine_solver_focus_group.js ... --compile-probe-jobs 2
+  ```
+
 - [x] Exclude random-rule games from focus mining.
 
   Intent: keep the focus group deterministic while compact solver-state

@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 'use strict';
 
-const { spawnSync } = require('child_process');
+const { execFile, spawnSync } = require('child_process');
 const crypto = require('crypto');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 function usage() {
@@ -15,7 +16,8 @@ function usage() {
         '  [--compile-timeout-seconds N] [--compile-max-rows N]',
         '  [--compile-max-compiled-rules-per-source N]',
         '  [--compile-max-generated-lines-per-source N] [--cmake PATH]',
-        '  [--cmake-generator NAME] [--compile-opt-level N] [--compile-build-jobs N|auto]',
+        '  [--cmake-generator NAME] [--compile-opt-level N]',
+        '  [--compile-probe-jobs N|auto] [--compile-build-jobs N|auto]',
     ].join('\n'));
     process.exit(1);
 }
@@ -43,6 +45,7 @@ let compileMaxGeneratedLinesPerSource = null;
 let cmakePath = 'cmake';
 let cmakeGenerator = '';
 let compileOptLevel = '1';
+let compileProbeJobs = '1';
 let compileBuildJobs = 'auto';
 const excludedGames = new Set();
 
@@ -116,11 +119,27 @@ for (let index = 2; index < args.length; index++) {
         cmakeGenerator = args[++index];
     } else if (arg === '--compile-opt-level' && index + 1 < args.length) {
         compileOptLevel = args[++index];
+    } else if (arg === '--compile-probe-jobs' && index + 1 < args.length) {
+        compileProbeJobs = args[++index];
     } else if (arg === '--compile-build-jobs' && index + 1 < args.length) {
         compileBuildJobs = args[++index];
     } else {
         throw new Error(`Unsupported argument: ${arg}`);
     }
+}
+
+function availableParallelism() {
+    if (typeof os.availableParallelism === 'function') {
+        return os.availableParallelism();
+    }
+    return os.cpus().length || 1;
+}
+
+function parseJobCount(value, label, { autoDivisor = 1 } = {}) {
+    if (value === 'auto') {
+        return Math.max(1, Math.floor(availableParallelism() / autoDivisor));
+    }
+    return parsePositiveInt(value, label);
 }
 
 function resultKey(result) {
@@ -161,24 +180,30 @@ function safeSnippet(text) {
 
 function runCommand(command, commandArgs, options = {}) {
     const started = process.hrtime.bigint();
-    const result = spawnSync(command, commandArgs, {
-        cwd: options.cwd || repoRoot,
-        encoding: 'utf8',
-        maxBuffer: 64 * 1024 * 1024,
-        timeout: options.timeoutMs,
+    const timeoutMs = options.timeoutMs;
+    return new Promise((resolve) => {
+        execFile(command, commandArgs, {
+            cwd: options.cwd || repoRoot,
+            encoding: 'utf8',
+            maxBuffer: 64 * 1024 * 1024,
+            timeout: timeoutMs,
+            killSignal: 'SIGTERM',
+        }, (error, stdout, stderr) => {
+            const wallMs = Number(process.hrtime.bigint() - started) / 1e6;
+            const timedOut = Boolean(error && error.killed && timeoutMs !== undefined);
+            resolve({
+                command,
+                args: commandArgs,
+                status: error ? (typeof error.code === 'number' ? error.code : null) : 0,
+                signal: error ? error.signal : null,
+                error: error ? error.message : null,
+                error_code: timedOut ? 'ETIMEDOUT' : (error && typeof error.code === 'string' ? error.code : null),
+                stdout: stdout || '',
+                stderr: stderr || '',
+                wall_ms: wallMs,
+            });
+        });
     });
-    const wallMs = Number(process.hrtime.bigint() - started) / 1e6;
-    return {
-        command,
-        args: commandArgs,
-        status: result.status,
-        signal: result.signal,
-        error: result.error ? result.error.message : null,
-        error_code: result.error ? result.error.code : null,
-        stdout: result.stdout || '',
-        stderr: result.stderr || '',
-        wall_ms: wallMs,
-    };
 }
 
 function copyGameToEligibleCorpus(gameFile, eligibleCorpus) {
@@ -233,7 +258,7 @@ function randomRuleHits(gameFile) {
     return hits;
 }
 
-function probeGameCompilation(gameFile, gameName, probeRoot) {
+async function probeGameCompilation(gameFile, gameName, probeRoot) {
     const content = fs.readFileSync(gameFile);
     const hash = sha256Parts([
         `${gameName}\nrows=${compileMaxRows}\ncap=${compileMaxCompiledRulesPerSource ?? ''}\nopt=${compileOptLevel}\ngenerator=${cmakeGenerator}\n`,
@@ -272,7 +297,7 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
         return Math.max(1, Math.ceil(compileTimeoutSeconds * 1000 - elapsedMs));
     };
 
-    const emitResult = runCommand(puzzlescriptCpp, compileRulesArgs, { timeoutMs: remainingTimeoutMs() });
+    const emitResult = await runCommand(puzzlescriptCpp, compileRulesArgs, { timeoutMs: remainingTimeoutMs() });
     if (emitResult.error_code === 'ETIMEDOUT') {
         return {
             game: gameName,
@@ -330,7 +355,7 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
         '-DPS_COMPILED_RULES_SOURCES_FILE='
     );
 
-    const configureResult = runCommand(cmakePath, configureArgs, { timeoutMs: remainingTimeoutMs() });
+    const configureResult = await runCommand(cmakePath, configureArgs, { timeoutMs: remainingTimeoutMs() });
     if (configureResult.error_code === 'ETIMEDOUT') {
         return {
             game: gameName,
@@ -373,7 +398,7 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
     }
     buildArgs.push('--target', 'puzzlescript_solver');
 
-    const buildResult = runCommand(process.execPath, buildArgs);
+    const buildResult = await runCommand(process.execPath, buildArgs);
     const compileSeconds = Number(process.hrtime.bigint() - started) / 1e9;
     if (buildResult.status === 124) {
         return {
@@ -413,7 +438,20 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
     };
 }
 
-function prepareEligibleCorpus() {
+async function runLimited(items, jobCount, worker) {
+    const results = new Array(items.length);
+    let nextIndex = 0;
+    const workers = Array.from({ length: Math.min(jobCount, items.length) }, async () => {
+        while (nextIndex < items.length) {
+            const index = nextIndex++;
+            results[index] = await worker(items[index], index);
+        }
+    });
+    await Promise.all(workers);
+    return results;
+}
+
+async function prepareEligibleCorpus() {
     const gameFiles = listGameFiles(corpusPath);
     const probeRoot = compileProbeRoot;
     const eligibleCorpus = path.join(probeRoot, 'eligible-corpus');
@@ -423,6 +461,7 @@ function prepareEligibleCorpus() {
     const compileProbeResults = [];
     const compileExcludedGames = [];
     const randomExcludedGames = [];
+    const compileCandidates = [];
     let eligibleCount = 0;
 
     if (compileTimeoutSeconds === 0) {
@@ -449,6 +488,7 @@ function prepareEligibleCorpus() {
             corpus: eligibleCorpus,
             game_count: gameFiles.length,
             eligible_game_count: eligibleCount,
+            compile_probe_jobs: 0,
             compile_probe_results: [],
             compile_excluded_games: [],
             random_excluded_games: randomExcludedGames,
@@ -459,7 +499,8 @@ function prepareEligibleCorpus() {
         throw new Error('--puzzlescript-cpp is required when --compile-timeout-seconds is non-zero');
     }
 
-    process.stdout.write(`solver_focus_mine compile probe games=${gameFiles.length} timeout_seconds=${compileTimeoutSeconds} max_rows=${compileMaxRows}\n`);
+    const compileProbeJobCount = parseJobCount(compileProbeJobs, '--compile-probe-jobs', { autoDivisor: 2 });
+    process.stdout.write(`solver_focus_mine compile probe games=${gameFiles.length} timeout_seconds=${compileTimeoutSeconds} max_rows=${compileMaxRows} probe_jobs=${compileProbeJobCount} build_jobs=${compileBuildJobs}\n`);
     for (const gameFile of gameFiles) {
         const gameName = normalizeGamePath(gameFile);
         if (excludedGames.has(gameName)) {
@@ -479,15 +520,26 @@ function prepareEligibleCorpus() {
             continue;
         }
 
-        const result = probeGameCompilation(gameFile, gameName, probeRoot);
+        compileCandidates.push({ gameFile, gameName });
+    }
+
+    const candidateResults = await runLimited(compileCandidates, compileProbeJobCount, async (entry) => {
+        const result = await probeGameCompilation(entry.gameFile, entry.gameName, probeRoot);
+        if (result.status === 'compiled') {
+            process.stdout.write(`  ok ${entry.gameName} compile_seconds=${result.compile_seconds.toFixed(2)}\n`);
+        } else {
+            process.stdout.write(`  exclude ${entry.gameName} status=${result.status} compile_seconds=${result.compile_seconds.toFixed(2)}\n`);
+        }
+        return { entry, result };
+    });
+
+    for (const { entry, result } of candidateResults) {
         compileProbeResults.push(result);
         if (result.status === 'compiled') {
-            copyGameToEligibleCorpus(gameFile, eligibleCorpus);
+            copyGameToEligibleCorpus(entry.gameFile, eligibleCorpus);
             eligibleCount++;
-            process.stdout.write(`  ok ${gameName} compile_seconds=${result.compile_seconds.toFixed(2)}\n`);
         } else {
             compileExcludedGames.push(result);
-            process.stdout.write(`  exclude ${gameName} status=${result.status} compile_seconds=${result.compile_seconds.toFixed(2)}\n`);
         }
     }
 
@@ -496,112 +548,122 @@ function prepareEligibleCorpus() {
         corpus: eligibleCorpus,
         game_count: gameFiles.length,
         eligible_game_count: eligibleCount,
+        compile_probe_jobs: compileProbeJobCount,
         compile_probe_results: compileProbeResults,
         compile_excluded_games: compileExcludedGames,
         random_excluded_games: randomExcludedGames,
     };
 }
 
-const preparedCorpus = prepareEligibleCorpus();
-const solverCorpusPath = preparedCorpus.corpus;
-const commandArgs = [
-    solverCorpusPath,
-    '--timeout-ms', String(timeoutMs),
-    '--jobs', jobs,
-    '--strategy', strategy,
-    '--no-solutions',
-    '--quiet',
-    '--json',
-];
+async function main() {
+    const preparedCorpus = await prepareEligibleCorpus();
+    const solverCorpusPath = preparedCorpus.corpus;
+    const commandArgs = [
+        solverCorpusPath,
+        '--timeout-ms', String(timeoutMs),
+        '--jobs', jobs,
+        '--strategy', strategy,
+        '--no-solutions',
+        '--quiet',
+        '--json',
+    ];
 
-const started = process.hrtime.bigint();
-const result = spawnSync(solverPath, commandArgs, {
-    encoding: 'utf8',
-    maxBuffer: 512 * 1024 * 1024,
-});
-const wallMs = Number(process.hrtime.bigint() - started) / 1e6;
-if (result.error) {
-    throw result.error;
-}
-if (result.status !== 0) {
-    throw new Error(`solver exited ${result.status}\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`);
-}
-
-const json = JSON.parse(result.stdout);
-if (json.totals.errors !== 0) {
-    throw new Error(`solver reported errors=${json.totals.errors}`);
-}
-
-const candidates = json.results
-    .filter((entry) => entry.status === 'solved')
-    .filter((entry) => !excludedGames.has(entry.game))
-    .filter((entry) => entry.elapsed_ms >= minElapsedMs && entry.elapsed_ms <= timeoutMs)
-    .sort((a, b) => {
-        if (a.elapsed_ms !== b.elapsed_ms) return a.elapsed_ms - b.elapsed_ms;
-        return resultKey(a).localeCompare(resultKey(b));
+    const started = process.hrtime.bigint();
+    const result = spawnSync(solverPath, commandArgs, {
+        encoding: 'utf8',
+        maxBuffer: 512 * 1024 * 1024,
     });
+    const wallMs = Number(process.hrtime.bigint() - started) / 1e6;
+    if (result.error) {
+        throw result.error;
+    }
+    if (result.status !== 0) {
+        throw new Error(`solver exited ${result.status}\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`);
+    }
 
-const selectedTargets = candidates.slice(0, maxTargets).map((entry) => ({
-    game: entry.game,
-    level: entry.level,
-    first_solved_timeout_ms: timeoutMs,
-    previous_timeout_ms: minElapsedMs,
-    previous_status: 'above_focus_min_elapsed',
-    solved_elapsed_ms: entry.elapsed_ms,
-    solved_elapsed_ratio: timeoutMs > 0 ? entry.elapsed_ms / timeoutMs : 0,
-    solved_expanded: entry.expanded,
-    solved_generated: entry.generated,
-    observations: [{
+    const json = JSON.parse(result.stdout);
+    if (json.totals.errors !== 0) {
+        throw new Error(`solver reported errors=${json.totals.errors}`);
+    }
+
+    const candidates = json.results
+        .filter((entry) => entry.status === 'solved')
+        .filter((entry) => !excludedGames.has(entry.game))
+        .filter((entry) => entry.elapsed_ms >= minElapsedMs && entry.elapsed_ms <= timeoutMs)
+        .sort((a, b) => {
+            if (a.elapsed_ms !== b.elapsed_ms) return a.elapsed_ms - b.elapsed_ms;
+            return resultKey(a).localeCompare(resultKey(b));
+        });
+
+    const selectedTargets = candidates.slice(0, maxTargets).map((entry) => ({
+        game: entry.game,
+        level: entry.level,
+        first_solved_timeout_ms: timeoutMs,
+        previous_timeout_ms: minElapsedMs,
+        previous_status: 'above_focus_min_elapsed',
+        solved_elapsed_ms: entry.elapsed_ms,
+        solved_elapsed_ratio: timeoutMs > 0 ? entry.elapsed_ms / timeoutMs : 0,
+        solved_expanded: entry.expanded,
+        solved_generated: entry.generated,
+        observations: [{
+            timeout_ms: timeoutMs,
+            status: entry.status,
+            elapsed_ms: entry.elapsed_ms,
+            expanded: entry.expanded,
+            generated: entry.generated,
+            unique_states: entry.unique_states,
+            duplicates: entry.duplicates,
+            max_frontier: entry.max_frontier,
+            solution_length: entry.solution_length,
+        }],
+    }));
+
+    const manifest = {
+        schema_version: 1,
+        kind: 'solver_focus_group',
+        generated_at: new Date().toISOString(),
+        solver: solverPath,
+        corpus: corpusPath,
+        mined_corpus: solverCorpusPath,
+        strategy,
+        jobs,
         timeout_ms: timeoutMs,
-        status: entry.status,
-        elapsed_ms: entry.elapsed_ms,
-        expanded: entry.expanded,
-        generated: entry.generated,
-        unique_states: entry.unique_states,
-        duplicates: entry.duplicates,
-        max_frontier: entry.max_frontier,
-        solution_length: entry.solution_length,
-    }],
-}));
+        min_elapsed_ms: minElapsedMs,
+        max_targets: maxTargets,
+        excluded_games: Array.from(excludedGames).sort(),
+        compile_probe: {
+            enabled: preparedCorpus.enabled,
+            timeout_seconds: compileTimeoutSeconds,
+            max_rows: compileMaxRows,
+            max_compiled_rules_per_source: compileMaxCompiledRulesPerSource,
+            max_generated_lines_per_source: compileMaxGeneratedLinesPerSource,
+            opt_level: compileOptLevel,
+            probe_jobs: compileProbeJobs,
+            resolved_probe_jobs: preparedCorpus.compile_probe_jobs,
+            build_jobs: compileBuildJobs,
+            cmake_generator: cmakeGenerator,
+            root: compileProbeRoot,
+            game_count: preparedCorpus.game_count,
+            eligible_game_count: preparedCorpus.eligible_game_count,
+            excluded_game_count: preparedCorpus.compile_excluded_games.length,
+            random_excluded_game_count: preparedCorpus.random_excluded_games.length,
+        },
+        compile_excluded_games: preparedCorpus.compile_excluded_games,
+        random_excluded_games: preparedCorpus.random_excluded_games,
+        compile_probe_results: preparedCorpus.compile_probe_results,
+        target_count: selectedTargets.length,
+        candidate_count: candidates.length,
+        totals: json.totals,
+        wall_ms: wallMs,
+        targets: selectedTargets,
+    };
 
-const manifest = {
-    schema_version: 1,
-    kind: 'solver_focus_group',
-    generated_at: new Date().toISOString(),
-    solver: solverPath,
-    corpus: corpusPath,
-    mined_corpus: solverCorpusPath,
-    strategy,
-    jobs,
-    timeout_ms: timeoutMs,
-    min_elapsed_ms: minElapsedMs,
-    max_targets: maxTargets,
-    excluded_games: Array.from(excludedGames).sort(),
-    compile_probe: {
-        enabled: preparedCorpus.enabled,
-        timeout_seconds: compileTimeoutSeconds,
-        max_rows: compileMaxRows,
-        max_compiled_rules_per_source: compileMaxCompiledRulesPerSource,
-        max_generated_lines_per_source: compileMaxGeneratedLinesPerSource,
-        opt_level: compileOptLevel,
-        build_jobs: compileBuildJobs,
-        cmake_generator: cmakeGenerator,
-        root: compileProbeRoot,
-        game_count: preparedCorpus.game_count,
-        eligible_game_count: preparedCorpus.eligible_game_count,
-        excluded_game_count: preparedCorpus.compile_excluded_games.length,
-        random_excluded_game_count: preparedCorpus.random_excluded_games.length,
-    },
-    compile_excluded_games: preparedCorpus.compile_excluded_games,
-    random_excluded_games: preparedCorpus.random_excluded_games,
-    compile_probe_results: preparedCorpus.compile_probe_results,
-    target_count: selectedTargets.length,
-    candidate_count: candidates.length,
-    totals: json.totals,
-    wall_ms: wallMs,
-    targets: selectedTargets,
-};
+    fs.mkdirSync(path.dirname(outPath), { recursive: true });
+    fs.writeFileSync(outPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    process.stdout.write(`solver_focus_mine wrote ${outPath} targets=${selectedTargets.length} candidates=${candidates.length} eligible_games=${preparedCorpus.eligible_game_count}/${preparedCorpus.game_count} random_excluded=${preparedCorpus.random_excluded_games.length} compile_excluded=${preparedCorpus.compile_excluded_games.length} wall_ms=${wallMs.toFixed(1)}\n`);
+}
 
-fs.mkdirSync(path.dirname(outPath), { recursive: true });
-fs.writeFileSync(outPath, `${JSON.stringify(manifest, null, 2)}\n`);
-process.stdout.write(`solver_focus_mine wrote ${outPath} targets=${selectedTargets.length} candidates=${candidates.length} eligible_games=${preparedCorpus.eligible_game_count}/${preparedCorpus.game_count} random_excluded=${preparedCorpus.random_excluded_games.length} compile_excluded=${preparedCorpus.compile_excluded_games.length} wall_ms=${wallMs.toFixed(1)}\n`);
+main().catch((error) => {
+    console.error(error && error.stack ? error.stack : String(error));
+    process.exit(1);
+});
