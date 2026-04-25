@@ -4157,29 +4157,46 @@ std::unique_ptr<Session> createSessionWithLoadedLevelSeed(std::shared_ptr<const 
     return session;
 }
 
+namespace {
+
+void prepareLoadedLevel(Session& session, LevelTemplate level, int32_t levelIndex) {
+    PreparedSession& prepared = session.preparedSession;
+    const int32_t restartWidth = level.width;
+    const int32_t restartHeight = level.height;
+    MaskVector restartObjects = level.objects;
+
+    prepared.currentLevelIndex = levelIndex;
+    prepared.currentLevelTarget.reset();
+    prepared.titleScreen = false;
+    prepared.level = std::move(level);
+    prepared.textMode = prepared.level.isMessage;
+    prepared.titleMode = prepared.textMode
+        ? (showContinueOptionOnTitleScreen(prepared) ? 1 : 0)
+        : 0;
+    prepared.titleSelection = showContinueOptionOnTitleScreen(prepared) ? 1 : 0;
+    prepared.titleSelected = false;
+    prepared.messageSelected = false;
+    prepared.messageText.clear();
+    prepared.winning = false;
+    prepared.restart.width = restartWidth;
+    prepared.restart.height = restartHeight;
+    prepared.restart.objects = std::move(restartObjects);
+    prepared.restart.oldFlickscreenDat = prepared.oldFlickscreenDat;
+    resetToPrepared(session);
+}
+
+} // namespace
+
 std::unique_ptr<Error> loadLevel(Session& session, int32_t levelIndex) {
     if (levelIndex < 0 || static_cast<size_t>(levelIndex) >= session.game->levels.size()) {
         return std::make_unique<Error>("Level index out of range");
     }
 
-    session.preparedSession.currentLevelIndex = levelIndex;
-    session.preparedSession.currentLevelTarget.reset();
-    session.preparedSession.titleScreen = false;
-    session.preparedSession.level = session.game->levels[static_cast<size_t>(levelIndex)];
-    session.preparedSession.textMode = session.preparedSession.level.isMessage;
-    session.preparedSession.titleMode = session.preparedSession.textMode
-        ? (showContinueOptionOnTitleScreen(session.preparedSession) ? 1 : 0)
-        : 0;
-    session.preparedSession.titleSelection = showContinueOptionOnTitleScreen(session.preparedSession) ? 1 : 0;
-    session.preparedSession.titleSelected = false;
-    session.preparedSession.messageSelected = false;
-    session.preparedSession.messageText.clear();
-    session.preparedSession.winning = false;
-    session.preparedSession.restart.width = session.preparedSession.level.width;
-    session.preparedSession.restart.height = session.preparedSession.level.height;
-    session.preparedSession.restart.objects = session.preparedSession.level.objects;
-    session.preparedSession.restart.oldFlickscreenDat = session.preparedSession.oldFlickscreenDat;
-    resetToPrepared(session);
+    prepareLoadedLevel(
+        session,
+        session.game->levels[static_cast<size_t>(levelIndex)],
+        levelIndex
+    );
     runRulesOnLevelStart(session);
     settlePendingAgain(session);
     return nullptr;
@@ -4197,22 +4214,7 @@ std::unique_ptr<Error> loadLevelTemplate(Session& session, const LevelTemplate& 
         return std::make_unique<Error>("Generated level object buffer has invalid size");
     }
 
-    session.preparedSession.currentLevelIndex = levelIndex;
-    session.preparedSession.currentLevelTarget.reset();
-    session.preparedSession.titleScreen = false;
-    session.preparedSession.level = levelTemplate;
-    session.preparedSession.textMode = false;
-    session.preparedSession.titleMode = 0;
-    session.preparedSession.titleSelection = showContinueOptionOnTitleScreen(session.preparedSession) ? 1 : 0;
-    session.preparedSession.titleSelected = false;
-    session.preparedSession.messageSelected = false;
-    session.preparedSession.messageText.clear();
-    session.preparedSession.winning = false;
-    session.preparedSession.restart.width = session.preparedSession.level.width;
-    session.preparedSession.restart.height = session.preparedSession.level.height;
-    session.preparedSession.restart.objects = session.preparedSession.level.objects;
-    session.preparedSession.restart.oldFlickscreenDat = session.preparedSession.oldFlickscreenDat;
-    resetToPrepared(session);
+    prepareLoadedLevel(session, levelTemplate, levelIndex);
     runRulesOnLevelStart(session, options);
     settlePendingAgain(session, options);
     return nullptr;
