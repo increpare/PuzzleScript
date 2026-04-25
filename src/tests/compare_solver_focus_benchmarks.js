@@ -463,6 +463,7 @@ printMedianMetricSum('visited_ms', ['visited_lookup_ms', 'visited_insert_ms']);
 printMedianMetric('visited_lookup_probes', 'visited_lookup_probes');
 printMedianMetric('visited_insert_probes', 'visited_insert_probes');
 printMedianMetric('visited_max_probe', 'visited_max_probe');
+printMedianMetric('visited_key_collisions', 'visited_key_collisions');
 printMedianMetricSum('frontier_ms', ['frontier_pop_ms', 'frontier_push_ms']);
 printMedianMetric('node_store_ms', 'node_store_ms');
 printMedianMetric('heuristic_ms', 'heuristic_ms');

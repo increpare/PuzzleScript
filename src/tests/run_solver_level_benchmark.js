@@ -95,6 +95,7 @@ const timingFields = [
     'visited_grows',
     'visited_capacity',
     'visited_max_probe',
+    'visited_key_collisions',
     'node_store_ms',
     'heuristic_ms',
     'solved_check_ms',

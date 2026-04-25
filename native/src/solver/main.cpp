@@ -82,6 +82,7 @@ struct Options {
     bool summaryOnly = false;
     bool profileRuntimeCounters = false;
     bool requireCompiledTick = false;
+    bool exactStateKeys = false;
 };
 
 struct Node {
@@ -129,6 +130,7 @@ struct Timing {
     uint64_t visitedGrows = 0;
     uint64_t visitedCapacity = 0;
     uint64_t visitedMaxProbe = 0;
+    uint64_t visitedKeyCollisions = 0;
 };
 
 struct Result {
@@ -428,12 +430,12 @@ Options parseArgs(int argc, char** argv) {
     Options options;
     options.jobs = 1;
     if (argc < 2) {
-        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick]");
+        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--exact-state-keys]");
     }
     for (int index = 1; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--help" || arg == "-h") {
-            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick]");
+            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--exact-state-keys]");
         }
         if (arg == "--timeout-ms" && index + 1 < argc) {
             options.timeoutMs = std::max<int64_t>(1, std::stoll(argv[++index]));
@@ -484,6 +486,10 @@ Options parseArgs(int argc, char** argv) {
         if (arg == "--require-compiled-tick") {
             options.requireCompiledTick = true;
             options.profileRuntimeCounters = true;
+            continue;
+        }
+        if (arg == "--exact-state-keys") {
+            options.exactStateKeys = true;
             continue;
         }
         if (arg == "--quiet") {
@@ -616,21 +622,52 @@ bool solvedByStep(const ps_step_result& stepResult, const Session& session, int3
     return stepResult.won || session.preparedSession.currentLevelIndex != levelIndex;
 }
 
+bool solverStatesEqual(const Session& lhs, const Session& rhs, bool includeRandomState) {
+    if (lhs.preparedSession.currentLevelIndex != rhs.preparedSession.currentLevelIndex
+        || lhs.preparedSession.titleScreen != rhs.preparedSession.titleScreen
+        || lhs.preparedSession.textMode != rhs.preparedSession.textMode
+        || lhs.preparedSession.winning != rhs.preparedSession.winning
+        || lhs.pendingAgain != rhs.pendingAgain
+        || lhs.liveLevel.width != rhs.liveLevel.width
+        || lhs.liveLevel.height != rhs.liveLevel.height
+        || lhs.liveLevel.objects != rhs.liveLevel.objects
+        || lhs.liveMovements != rhs.liveMovements
+        || lhs.preparedSession.oldFlickscreenDat != rhs.preparedSession.oldFlickscreenDat
+        || lhs.preparedSession.restart.width != rhs.preparedSession.restart.width
+        || lhs.preparedSession.restart.height != rhs.preparedSession.restart.height
+        || lhs.preparedSession.restart.objects != rhs.preparedSession.restart.objects
+        || lhs.preparedSession.restart.oldFlickscreenDat != rhs.preparedSession.restart.oldFlickscreenDat) {
+        return false;
+    }
+    if (!includeRandomState) {
+        return true;
+    }
+    return lhs.randomState.i == rhs.randomState.i
+        && lhs.randomState.j == rhs.randomState.j
+        && lhs.randomState.valid == rhs.randomState.valid
+        && lhs.randomState.s == rhs.randomState.s;
+}
+
 class FlatBestDepth {
 public:
-    explicit FlatBestDepth(Timing& timing)
-        : timing(timing) {}
+    FlatBestDepth(Timing& timing, bool exactStateKeys)
+        : timing(timing), exactStateKeys(exactStateKeys) {}
 
     void reserve(size_t expected) {
         rehash(capacityForExpected(expected));
     }
 
-    std::optional<uint32_t> find(const StateKey& key) {
+    std::optional<uint32_t> find(
+        const StateKey& key,
+        const Session& session,
+        const std::vector<Node>& nodes,
+        bool includeRandomState
+    ) {
         if (entries.empty()) {
             return std::nullopt;
         }
         size_t probes = 0;
-        const size_t slot = findSlot(key, probes);
+        const size_t slot = findSlot(key, session, nodes, includeRandomState, probes);
         recordLookup(probes);
         if (!entries[slot].occupied) {
             return std::nullopt;
@@ -638,10 +675,17 @@ public:
         return entries[slot].depth;
     }
 
-    bool insertOrAssignIfBetter(const StateKey& key, uint32_t depth) {
+    bool insertOrAssignIfBetter(
+        const StateKey& key,
+        const Session& session,
+        uint32_t depth,
+        uint32_t nodeIndex,
+        const std::vector<Node>& nodes,
+        bool includeRandomState
+    ) {
         ensureCapacityForInsert();
         size_t probes = 0;
-        const size_t slot = findSlot(key, probes);
+        const size_t slot = findSlot(key, session, nodes, includeRandomState, probes);
         recordInsert(probes);
         Entry& entry = entries[slot];
         if (entry.occupied) {
@@ -649,10 +693,12 @@ public:
                 return false;
             }
             entry.depth = depth;
+            entry.nodeIndex = nodeIndex;
             return true;
         }
         entry.key = key;
         entry.depth = depth;
+        entry.nodeIndex = nodeIndex;
         entry.occupied = true;
         ++entryCount;
         return true;
@@ -666,6 +712,7 @@ private:
     struct Entry {
         StateKey key;
         uint32_t depth = 0;
+        uint32_t nodeIndex = 0;
         bool occupied = false;
     };
 
@@ -699,24 +746,48 @@ private:
             if (!entry.occupied) {
                 continue;
             }
-            size_t probes = 0;
-            const size_t slot = findSlot(entry.key, probes);
+            const size_t slot = findEmptySlot(entry.key);
             entries[slot] = entry;
             ++entryCount;
         }
     }
 
-    size_t findSlot(const StateKey& key, size_t& probes) const {
+    size_t findSlot(
+        const StateKey& key,
+        const Session& session,
+        const std::vector<Node>& nodes,
+        bool includeRandomState,
+        size_t& probes
+    ) {
         const size_t mask = entries.size() - 1;
         size_t slot = StateKeyHash{}(key) & mask;
         while (true) {
             ++probes;
             const Entry& entry = entries[slot];
-            if (!entry.occupied || entry.key == key) {
+            if (!entry.occupied) {
                 return slot;
+            }
+            if (entry.key == key) {
+                if (!exactStateKeys) {
+                    return slot;
+                }
+                const Session& existing = *nodes[entry.nodeIndex].session;
+                if (solverStatesEqual(existing, session, includeRandomState)) {
+                    return slot;
+                }
+                ++timing.visitedKeyCollisions;
             }
             slot = (slot + 1) & mask;
         }
+    }
+
+    size_t findEmptySlot(const StateKey& key) const {
+        const size_t mask = entries.size() - 1;
+        size_t slot = StateKeyHash{}(key) & mask;
+        while (entries[slot].occupied) {
+            slot = (slot + 1) & mask;
+        }
+        return slot;
     }
 
     void recordLookup(size_t probes) {
@@ -730,6 +801,7 @@ private:
     }
 
     Timing& timing;
+    bool exactStateKeys = false;
     std::vector<Entry> entries;
     size_t entryCount = 0;
 };
@@ -742,7 +814,8 @@ Result runSearch(
     int64_t compileNs,
     SearchMode mode,
     TimePoint deadline,
-    uint32_t workerId
+    uint32_t workerId,
+    bool exactStateKeys
 ) {
     Result result;
     result.game = gameName;
@@ -773,13 +846,8 @@ Result runSearch(
     nodes.reserve(8192);
 
     const bool includeRandomStateInKey = gameUsesRandomness(*game);
-    FlatBestDepth bestDepth(result.timing);
+    FlatBestDepth bestDepth(result.timing, exactStateKeys);
     bestDepth.reserve(16384);
-    const StateKey initialKey = solverStateKey(*initial, includeRandomStateInKey, result.timing);
-    {
-        ScopedTimer timer(result.timing.visitedInsertNs);
-        bestDepth.insertOrAssignIfBetter(initialKey, 0);
-    }
     result.uniqueStates = 1;
 
     int32_t initialHeuristic = 0;
@@ -787,9 +855,15 @@ Result runSearch(
         ScopedTimer timer(result.timing.heuristicNs);
         initialHeuristic = heuristicScore(*initial);
     }
+    const StateKey initialKey = solverStateKey(*initial, includeRandomStateInKey, result.timing);
     {
         ScopedTimer timer(result.timing.nodeStoreNs);
         nodes.push_back(Node{std::move(initial), initialKey, -1, PS_INPUT_UP, 0, initialHeuristic});
+    }
+    {
+        ScopedTimer timer(result.timing.visitedInsertNs);
+        const Session& initialSession = *nodes[0].session;
+        bestDepth.insertOrAssignIfBetter(initialKey, initialSession, 0, 0, nodes, includeRandomStateInKey);
     }
     std::priority_queue<QueueEntry, std::vector<QueueEntry>, QueueEntryGreater> frontier;
     {
@@ -823,7 +897,7 @@ Result runSearch(
         std::optional<uint32_t> best;
         {
             ScopedTimer timer(result.timing.visitedLookupNs);
-            best = bestDepth.find(parentNode.key);
+            best = bestDepth.find(parentNode.key, *parentNode.session, nodes, includeRandomStateInKey);
         }
         if (best && *best < parentNode.depth) {
             ++result.duplicates;
@@ -879,26 +953,53 @@ Result runSearch(
 
             const StateKey key = solverStateKey(*child, includeRandomStateInKey, result.timing);
             const uint32_t childDepth = parentDepth + 1;
-            bool shouldStore = false;
-            {
-                ScopedTimer timer(result.timing.visitedInsertNs);
-                shouldStore = bestDepth.insertOrAssignIfBetter(key, childDepth);
-                result.uniqueStates = bestDepth.size();
-            }
-            if (!shouldStore) {
-                ++result.duplicates;
-                continue;
-            }
-
+            uint32_t childIndex = static_cast<uint32_t>(nodes.size());
             int32_t childHeuristic = 0;
-            if (mode != SearchMode::Bfs) {
-                ScopedTimer timer(result.timing.heuristicNs);
-                childHeuristic = heuristicScore(*child);
-            }
-            const uint32_t childIndex = static_cast<uint32_t>(nodes.size());
-            {
-                ScopedTimer timer(result.timing.nodeStoreNs);
-                nodes.push_back(Node{std::move(child), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+            if (exactStateKeys) {
+                {
+                    ScopedTimer timer(result.timing.nodeStoreNs);
+                    nodes.push_back(Node{std::move(child), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, 0});
+                }
+                bool shouldStore = false;
+                {
+                    ScopedTimer timer(result.timing.visitedInsertNs);
+                    const Session& childSession = *nodes[childIndex].session;
+                    shouldStore = bestDepth.insertOrAssignIfBetter(key, childSession, childDepth, childIndex, nodes, includeRandomStateInKey);
+                    result.uniqueStates = bestDepth.size();
+                }
+                if (!shouldStore) {
+                    {
+                        ScopedTimer timer(result.timing.nodeStoreNs);
+                        nodes.pop_back();
+                    }
+                    ++result.duplicates;
+                    continue;
+                }
+                if (mode != SearchMode::Bfs) {
+                    ScopedTimer timer(result.timing.heuristicNs);
+                    childHeuristic = heuristicScore(*nodes[childIndex].session);
+                    nodes[childIndex].heuristic = childHeuristic;
+                }
+            } else {
+                bool shouldStore = false;
+                {
+                    ScopedTimer timer(result.timing.visitedInsertNs);
+                    shouldStore = bestDepth.insertOrAssignIfBetter(key, *child, childDepth, 0, nodes, includeRandomStateInKey);
+                    result.uniqueStates = bestDepth.size();
+                }
+                if (!shouldStore) {
+                    ++result.duplicates;
+                    continue;
+                }
+                if (mode != SearchMode::Bfs) {
+                    ScopedTimer timer(result.timing.heuristicNs);
+                    childHeuristic = heuristicScore(*child);
+                }
+                childIndex = static_cast<uint32_t>(nodes.size());
+                {
+                    ScopedTimer timer(result.timing.nodeStoreNs);
+                    nodes.push_back(Node{std::move(child), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                }
             }
             {
                 ScopedTimer timer(result.timing.frontierPushNs);
@@ -936,6 +1037,7 @@ void mergeStats(Result& target, const Result& source) {
     target.timing.visitedGrows += source.timing.visitedGrows;
     target.timing.visitedCapacity = std::max(target.timing.visitedCapacity, source.timing.visitedCapacity);
     target.timing.visitedMaxProbe = std::max(target.timing.visitedMaxProbe, source.timing.visitedMaxProbe);
+    target.timing.visitedKeyCollisions += source.timing.visitedKeyCollisions;
 }
 
 Result solveLevel(
@@ -945,7 +1047,8 @@ Result solveLevel(
     int64_t timeoutMs,
     int64_t compileNs,
     Strategy strategy,
-    uint32_t workerId
+    uint32_t workerId,
+    bool exactStateKeys
 ) {
     const TimePoint searchStart = Clock::now();
     const TimePoint deadline = searchStart + std::chrono::milliseconds(timeoutMs);
@@ -957,13 +1060,13 @@ Result solveLevel(
     };
 
     if (strategy == Strategy::Bfs) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId, exactStateKeys));
     }
     if (strategy == Strategy::WeightedAStar) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys));
     }
     if (strategy == Strategy::Greedy) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId, exactStateKeys));
     }
 
     Result combined;
@@ -979,7 +1082,7 @@ Result solveLevel(
     combined.timing.compileNs = compileNs;
 
     const TimePoint bfsDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 6));
-    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId);
+    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId, exactStateKeys);
     mergeStats(combined, bfs);
     if (bfs.status == "solved" || bfs.status == "skipped_message" || bfs.status == "level_error") {
         bfs.strategy = bfs.status == "solved" ? "bfs" : "portfolio";
@@ -987,7 +1090,7 @@ Result solveLevel(
     }
 
     if (Clock::now() < deadline) {
-        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId);
+        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys);
         mergeStats(combined, weighted);
         if (weighted.status == "solved" || weighted.status == "level_error") {
             combined.status = weighted.status;
@@ -1193,6 +1296,7 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"visited_grows\":" << result.timing.visitedGrows;
     out << ",\"visited_capacity\":" << result.timing.visitedCapacity;
     out << ",\"visited_max_probe\":" << result.timing.visitedMaxProbe;
+    out << ",\"visited_key_collisions\":" << result.timing.visitedKeyCollisions;
     out << ",\"node_store_ms\":" << ms(result.timing.nodeStoreNs);
     out << ",\"heuristic_ms\":" << ms(result.timing.heuristicNs);
     out << ",\"solved_check_ms\":" << ms(result.timing.solvedCheckNs);
@@ -1234,6 +1338,7 @@ void printJson(const std::vector<Result>& results) {
         timing.visitedGrows += result.timing.visitedGrows;
         timing.visitedCapacity = std::max(timing.visitedCapacity, result.timing.visitedCapacity);
         timing.visitedMaxProbe = std::max(timing.visitedMaxProbe, result.timing.visitedMaxProbe);
+        timing.visitedKeyCollisions += result.timing.visitedKeyCollisions;
         timing.nodeStoreNs += result.timing.nodeStoreNs;
         timing.heuristicNs += result.timing.heuristicNs;
         timing.solvedCheckNs += result.timing.solvedCheckNs;
@@ -1271,6 +1376,7 @@ void printJson(const std::vector<Result>& results) {
     std::cout << ",\"visited_grows\":" << timing.visitedGrows;
     std::cout << ",\"visited_capacity\":" << timing.visitedCapacity;
     std::cout << ",\"visited_max_probe\":" << timing.visitedMaxProbe;
+    std::cout << ",\"visited_key_collisions\":" << timing.visitedKeyCollisions;
     std::cout << ",\"node_store_ms\":" << ms(timing.nodeStoreNs);
     std::cout << ",\"heuristic_ms\":" << ms(timing.heuristicNs);
     std::cout << ",\"solved_check_ms\":" << ms(timing.solvedCheckNs);
@@ -1468,7 +1574,8 @@ std::vector<Result> runCorpus(const Options& options) {
                     options.timeoutMs,
                     compiled.compileNs,
                     options.strategy,
-                    workerId
+                    workerId,
+                    options.exactStateKeys
                 );
                 results[item.resultIndex] = std::move(result);
                 const size_t done = completed.fetch_add(1) + 1;

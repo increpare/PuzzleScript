@@ -447,6 +447,10 @@ attribute graph cost -> no-allocation hash -> flat visited table
   It stores the full `StateKey` plus best depth, uses linear probing with
   explicit growth, preserves stale-pop `<` and child-duplicate `<=` semantics,
   and reports probe/growth counters in solver JSON and focus benchmark JSON.
+  The normal fast path still treats the 128-bit `StateKey` as solver identity.
+  `--exact-state-keys` enables a paranoia/correctness mode where `StateKey` is
+  only the probe accelerator and matching entries must also compare equal under
+  the solver-semantic `Session` fields.
 
   Current one-run focus reading after this checkpoint:
 
@@ -501,6 +505,9 @@ attribute graph cost -> no-allocation hash -> flat visited table
     parity checks, serialization, and debugging.
   - Unsupported games or unsupported runtime features decline the compact path
     cleanly.
+  - The compact visited table uses the compact-state bytes as exact equality.
+    Hashes may choose buckets and speed lookup, but a hash match alone must not
+    merge two states.
 
 - [ ] Prototype compact solver state for one simple focus game.
 
