@@ -438,14 +438,25 @@ struct RuntimeStepOptions {
 };
 
 struct CompiledTickRuleGroupsOutcome;
-using CompiledTickEarlyRuleGroupsFn = CompiledTickRuleGroupsOutcome (*)(Session& session, CommandState& commands, std::vector<bool>* bannedGroups);
+using CompiledTickRuleGroupsFn = CompiledTickRuleGroupsOutcome (*)(Session& session, CommandState& commands, std::vector<bool>* bannedGroups);
 
 std::unique_ptr<Error> loadLevelTemplate(Session& session, const LevelTemplate& levelTemplate, int32_t levelIndex, RuntimeStepOptions options);
 bool restart(Session& session, RuntimeStepOptions options);
 ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options);
 ps_step_result interpreterTick(Session& session, RuntimeStepOptions options);
-ps_step_result interpreterStepWithCompiledEarlyRules(Session& session, ps_input input, RuntimeStepOptions options, CompiledTickEarlyRuleGroupsFn applyEarlyRules);
-ps_step_result interpreterTickWithCompiledEarlyRules(Session& session, RuntimeStepOptions options, CompiledTickEarlyRuleGroupsFn applyEarlyRules);
+ps_step_result interpreterStepWithCompiledRuleLoops(
+    Session& session,
+    ps_input input,
+    RuntimeStepOptions options,
+    CompiledTickRuleGroupsFn applyEarlyRules,
+    CompiledTickRuleGroupsFn applyLateRules
+);
+ps_step_result interpreterTickWithCompiledRuleLoops(
+    Session& session,
+    RuntimeStepOptions options,
+    CompiledTickRuleGroupsFn applyEarlyRules,
+    CompiledTickRuleGroupsFn applyLateRules
+);
 ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options);
 ps_step_result tick(Session& session, RuntimeStepOptions options);
 void settlePendingAgain(Session& session, RuntimeStepOptions options);

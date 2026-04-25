@@ -64,7 +64,8 @@ struct ExecuteTurnOptions {
     bool ignoreWin = false;
     bool dontModify = false;
     bool* observedModification = nullptr;
-    CompiledTickEarlyRuleGroupsFn applyEarlyRules = nullptr;
+    CompiledTickRuleGroupsFn applyEarlyRules = nullptr;
+    CompiledTickRuleGroupsFn applyLateRules = nullptr;
 };
 
 struct RuntimeCounterStorage {
@@ -4709,7 +4710,16 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         }
         ruleChanged = ruleChangedThisPass;
         moved = movementOutcome.moved;
-        lateRuleChanged = applyRuleGroups(session, session.game->lateRules, session.game->lateLoopPoint, commands, nullptr, true);
+        if (options.applyLateRules != nullptr) {
+            const CompiledTickRuleGroupsOutcome outcome = options.applyLateRules(session, commands, nullptr);
+            if (outcome.handled) {
+                lateRuleChanged = outcome.changed;
+            } else {
+                lateRuleChanged = applyRuleGroups(session, session.game->lateRules, session.game->lateLoopPoint, commands, nullptr, true);
+            }
+        } else {
+            lateRuleChanged = applyRuleGroups(session, session.game->lateRules, session.game->lateLoopPoint, commands, nullptr, true);
+        }
         break;
     }
     const bool modified = session.liveLevel.objects != turnStart.liveLevel.objects;
@@ -4887,11 +4897,12 @@ bool compiledTickDispatchEnabled() {
         && !audioDebugEnabled();
 }
 
-ps_step_result interpreterStepWithCompiledEarlyRules(
+ps_step_result interpreterStepWithCompiledRuleLoops(
     Session& session,
     ps_input input,
     RuntimeStepOptions options,
-    CompiledTickEarlyRuleGroupsFn applyEarlyRules
+    CompiledTickRuleGroupsFn applyEarlyRules,
+    CompiledTickRuleGroupsFn applyLateRules
 ) {
     ps_step_result result{};
     session.lastAudioEvents.clear();
@@ -4927,7 +4938,7 @@ ps_step_result interpreterStepWithCompiledEarlyRules(
     }
 
     if (input == PS_INPUT_TICK) {
-        return interpreterTickWithCompiledEarlyRules(session, options, applyEarlyRules);
+        return interpreterTickWithCompiledRuleLoops(session, options, applyEarlyRules, applyLateRules);
     }
 
     return executeTurn(session, inputToDirectionMask(input), ExecuteTurnOptions{
@@ -4935,28 +4946,31 @@ ps_step_result interpreterStepWithCompiledEarlyRules(
         .recordRestartUndo = options.playableUndo,
         .emitAudio = options.emitAudio,
         .applyEarlyRules = applyEarlyRules,
+        .applyLateRules = applyLateRules,
     });
 }
 
 ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options) {
-    return interpreterStepWithCompiledEarlyRules(session, input, options, nullptr);
+    return interpreterStepWithCompiledRuleLoops(session, input, options, nullptr, nullptr);
 }
 
-ps_step_result interpreterTickWithCompiledEarlyRules(
+ps_step_result interpreterTickWithCompiledRuleLoops(
     Session& session,
     RuntimeStepOptions options,
-    CompiledTickEarlyRuleGroupsFn applyEarlyRules
+    CompiledTickRuleGroupsFn applyEarlyRules,
+    CompiledTickRuleGroupsFn applyLateRules
 ) {
     return executeTurn(session, 0, ExecuteTurnOptions{
         .pushUndo = false,
         .recordRestartUndo = options.playableUndo,
         .emitAudio = options.emitAudio,
         .applyEarlyRules = applyEarlyRules,
+        .applyLateRules = applyLateRules,
     });
 }
 
 ps_step_result interpreterTick(Session& session, RuntimeStepOptions options) {
-    return interpreterTickWithCompiledEarlyRules(session, options, nullptr);
+    return interpreterTickWithCompiledRuleLoops(session, options, nullptr, nullptr);
 }
 
 ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options) {

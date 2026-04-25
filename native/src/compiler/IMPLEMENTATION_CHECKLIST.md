@@ -204,7 +204,7 @@ Status markers:
   make solver_smoke_tests SPECIALIZE=true
   ```
 
-- [ ] Move late rule-group loop selection into generated tick code.
+- [x] Move late rule-group loop selection into generated tick code.
 
   Intent: generated tick owns both early and late rule traversal for supported
   games.
