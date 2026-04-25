@@ -484,7 +484,12 @@ attribute graph cost -> no-allocation hash -> flat visited table
   make solver_focus_compare SOLVER_FOCUS_RUNS=1
   ```
 
-- [ ] Define the solver compact-state boundary.
+- [?] Define the solver compact-state boundary.
+
+  Status: first solver-side boundary is implemented. Solver nodes now carry a
+  canonical compact state made from object-major occupancy bitsets plus
+  optional random state. The interpreter `Session` is still retained for tick
+  execution, fallback, and solution reconstruction.
 
   Recommended default: introduce a compact state only for solver/generator hot
   paths first, leaving player/API paths on `Session`.
@@ -517,7 +522,14 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Hashes are recomputed from canonical compact bytes until profiling proves
     that hash recomputation, rather than cloning or stepping, is the bottleneck.
 
-- [ ] Add canonical compact-state equality and memory accounting.
+- [?] Add canonical compact-state equality and memory accounting.
+
+  Status: visited identity now hashes the canonical compact state and exact
+  equality compares the compact state stored on solver nodes. Solver JSON
+  reports `compact_state_bytes` and `compact_max_state_bytes`; for
+  `pushit.txt#5` the compact state is 48 bytes per node, about 2.1 MB total
+  for roughly 43k stored unique states in a 500 ms run. Static/inert omission
+  analysis is not implemented yet.
 
   Intent: make state identity perfect before relying on specialized compact
   search. The solver may hash for speed, but equality must be canonical bytes

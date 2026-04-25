@@ -70,6 +70,7 @@ typedef struct ps_step_result {
     bool changed;
     bool won;
     bool transitioned;
+    bool restarted;
     size_t audio_event_count;
     const ps_audio_event* audio_events;
     size_t ui_audio_event_count;

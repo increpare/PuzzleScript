@@ -4939,9 +4939,10 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         tryPlayMaskSounds(session, session.game->sfxCreationMasks, session.pendingCreateMask, "create");
         tryPlayMaskSounds(session, session.game->sfxDestructionMasks, session.pendingDestroyMask, "destroy");
     }
-    processOutputCommands(session, commands, commandQueueContains(commands, "restart"), options.emitAudio);
+    const bool hasRestart = commandQueueContains(commands, "restart");
+    processOutputCommands(session, commands, hasRestart, options.emitAudio);
 
-    if (commandQueueContains(commands, "restart") && !options.ignoreRestartCommand) {
+    if (hasRestart && !options.ignoreRestartCommand) {
         if (!options.pushUndo && options.recordRestartUndo) {
             pushUndoSnapshot(session);
         }
@@ -5015,6 +5016,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
     result.changed = seeded || ruleChanged || moved || lateRuleChanged || modified || transitioned || !commands.queue.empty();
     result.transitioned = transitioned;
     result.won = won;
+    result.restarted = hasRestart && !options.ignoreRestartCommand;
     if (options.emitAudio) {
         sortAudioEvents(session);
     }

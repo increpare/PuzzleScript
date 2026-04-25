@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <chrono>
 #include <cctype>
@@ -34,7 +35,9 @@ namespace {
 using Clock = std::chrono::steady_clock;
 using TimePoint = Clock::time_point;
 using puzzlescript::Game;
+using puzzlescript::MaskWordUnsigned;
 using puzzlescript::Session;
+using puzzlescript::kMaskWordBits;
 using StateKey = puzzlescript::search::StateKey;
 using StateKeyHash = puzzlescript::search::StateKeyHash;
 using SearchMode = puzzlescript::search::SearchMode;
@@ -85,8 +88,36 @@ struct Options {
     bool exactStateKeys = true;
 };
 
+struct CompactSolverState {
+    std::vector<uint64_t> objectBits;
+    std::array<uint8_t, 256> randomS{};
+    uint8_t randomI = 0;
+    uint8_t randomJ = 0;
+    bool randomValid = false;
+    bool hasRandom = false;
+
+    bool operator==(const CompactSolverState& other) const {
+        return objectBits == other.objectBits
+            && hasRandom == other.hasRandom
+            && (!hasRandom
+                || (randomI == other.randomI
+                    && randomJ == other.randomJ
+                    && randomValid == other.randomValid
+                    && randomS == other.randomS));
+    }
+
+    size_t byteSize() const {
+        size_t size = objectBits.size() * sizeof(uint64_t);
+        if (hasRandom) {
+            size += sizeof(randomI) + sizeof(randomJ) + sizeof(randomValid) + randomS.size() * sizeof(uint8_t);
+        }
+        return size;
+    }
+};
+
 struct Node {
     std::unique_ptr<Session> session;
+    CompactSolverState compact;
     StateKey key;
     int32_t parent = -1;
     ps_input input = PS_INPUT_UP;
@@ -131,6 +162,8 @@ struct Timing {
     uint64_t visitedCapacity = 0;
     uint64_t visitedMaxProbe = 0;
     uint64_t visitedKeyCollisions = 0;
+    uint64_t compactStateBytes = 0;
+    uint64_t compactMaxStateBytes = 0;
 };
 
 struct Result {
@@ -542,9 +575,87 @@ bool gameUsesRandomness(const Game& game) {
     return gameUsesRandomnessInRules(game.rules) || gameUsesRandomnessInRules(game.lateRules);
 }
 
-StateKey solverStateKey(const Session& session, bool includeRandomState, Timing& timing) {
+uint32_t compactWordTrailingZeros(MaskWordUnsigned value) {
+    if constexpr (sizeof(MaskWordUnsigned) <= sizeof(unsigned int)) {
+        return static_cast<uint32_t>(__builtin_ctz(static_cast<unsigned int>(value)));
+    } else {
+        return static_cast<uint32_t>(__builtin_ctzll(static_cast<unsigned long long>(value)));
+    }
+}
+
+CompactSolverState compactStateFromSession(const Session& session, bool includeRandomState) {
+    CompactSolverState state;
+    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const int32_t objectCount = session.game ? session.game->objectCount : 0;
+    state.objectBits.assign(static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount, 0);
+    if (objectCount > 0 && tileCount > 0 && cellWordCount > 0) {
+        const int32_t stride = session.game->strideObject;
+        for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
+            const size_t sourceBase = static_cast<size_t>(tileIndex * stride);
+            const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
+            const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
+            for (int32_t word = 0; word < stride; ++word) {
+                MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(session.liveLevel.objects[sourceBase + static_cast<size_t>(word)]);
+                while (bits != 0) {
+                    const uint32_t bit = compactWordTrailingZeros(bits);
+                    const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + static_cast<int32_t>(bit);
+                    if (objectId < objectCount) {
+                        state.objectBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;
+                    }
+                    bits &= bits - 1;
+                }
+            }
+        }
+    }
+    state.hasRandom = includeRandomState;
+    if (includeRandomState) {
+        state.randomI = session.randomState.i;
+        state.randomJ = session.randomState.j;
+        state.randomValid = session.randomState.valid;
+        state.randomS = session.randomState.s;
+    }
+    return state;
+}
+
+StateKey compactStateKey(const CompactSolverState& state, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
-    return puzzlescript::search::sessionStateKey(session, includeRandomState);
+    StateKey key{1469598103934665603ull, 7809847782465536322ull};
+    for (uint64_t word : state.objectBits) {
+        puzzlescript::search::appendStateKeyValue(key, word);
+    }
+    puzzlescript::search::appendStateKeyValue(key, state.hasRandom ? 1 : 0);
+    if (state.hasRandom) {
+        puzzlescript::search::appendStateKeyValue(key, state.randomI);
+        puzzlescript::search::appendStateKeyValue(key, state.randomJ);
+        puzzlescript::search::appendStateKeyValue(key, state.randomValid ? 1 : 0);
+        uint64_t packed = 0;
+        uint32_t shift = 0;
+        for (uint8_t byte : state.randomS) {
+            packed |= static_cast<uint64_t>(byte) << shift;
+            shift += 8;
+            if (shift == 64) {
+                puzzlescript::search::appendStateKeyValue(key, packed);
+                packed = 0;
+                shift = 0;
+            }
+        }
+        if (shift != 0) {
+            puzzlescript::search::appendStateKeyValue(key, packed);
+        }
+    }
+    return key;
+}
+
+CompactSolverState compactStateWithTiming(const Session& session, bool includeRandomState, Timing& timing) {
+    ScopedTimer timer(timing.hashNs);
+    return compactStateFromSession(session, includeRandomState);
+}
+
+void recordCompactStateStorage(Timing& timing, const CompactSolverState& state) {
+    const uint64_t bytes = static_cast<uint64_t>(state.byteSize());
+    timing.compactStateBytes += bytes;
+    timing.compactMaxStateBytes = std::max(timing.compactMaxStateBytes, bytes);
 }
 
 std::shared_ptr<const Game> compileGame(
@@ -622,32 +733,6 @@ bool solvedByStep(const ps_step_result& stepResult, const Session& session, int3
     return stepResult.won || session.preparedSession.currentLevelIndex != levelIndex;
 }
 
-bool solverStatesEqual(const Session& lhs, const Session& rhs, bool includeRandomState) {
-    if (lhs.preparedSession.currentLevelIndex != rhs.preparedSession.currentLevelIndex
-        || lhs.preparedSession.titleScreen != rhs.preparedSession.titleScreen
-        || lhs.preparedSession.textMode != rhs.preparedSession.textMode
-        || lhs.preparedSession.winning != rhs.preparedSession.winning
-        || lhs.pendingAgain != rhs.pendingAgain
-        || lhs.liveLevel.width != rhs.liveLevel.width
-        || lhs.liveLevel.height != rhs.liveLevel.height
-        || lhs.liveLevel.objects != rhs.liveLevel.objects
-        || lhs.liveMovements != rhs.liveMovements
-        || lhs.preparedSession.oldFlickscreenDat != rhs.preparedSession.oldFlickscreenDat
-        || lhs.preparedSession.restart.width != rhs.preparedSession.restart.width
-        || lhs.preparedSession.restart.height != rhs.preparedSession.restart.height
-        || lhs.preparedSession.restart.objects != rhs.preparedSession.restart.objects
-        || lhs.preparedSession.restart.oldFlickscreenDat != rhs.preparedSession.restart.oldFlickscreenDat) {
-        return false;
-    }
-    if (!includeRandomState) {
-        return true;
-    }
-    return lhs.randomState.i == rhs.randomState.i
-        && lhs.randomState.j == rhs.randomState.j
-        && lhs.randomState.valid == rhs.randomState.valid
-        && lhs.randomState.s == rhs.randomState.s;
-}
-
 class FlatBestDepth {
 public:
     FlatBestDepth(Timing& timing, bool exactStateKeys)
@@ -659,15 +744,14 @@ public:
 
     std::optional<uint32_t> find(
         const StateKey& key,
-        const Session& session,
-        const std::vector<Node>& nodes,
-        bool includeRandomState
+        const CompactSolverState& compact,
+        const std::vector<Node>& nodes
     ) {
         if (entries.empty()) {
             return std::nullopt;
         }
         size_t probes = 0;
-        const size_t slot = findSlot(key, session, nodes, includeRandomState, probes);
+        const size_t slot = findSlot(key, compact, nodes, probes);
         recordLookup(probes);
         if (!entries[slot].occupied) {
             return std::nullopt;
@@ -677,15 +761,14 @@ public:
 
     bool insertOrAssignIfBetter(
         const StateKey& key,
-        const Session& session,
+        const CompactSolverState& compact,
         uint32_t depth,
         uint32_t nodeIndex,
-        const std::vector<Node>& nodes,
-        bool includeRandomState
+        const std::vector<Node>& nodes
     ) {
         ensureCapacityForInsert();
         size_t probes = 0;
-        const size_t slot = findSlot(key, session, nodes, includeRandomState, probes);
+        const size_t slot = findSlot(key, compact, nodes, probes);
         recordInsert(probes);
         Entry& entry = entries[slot];
         if (entry.occupied) {
@@ -754,9 +837,8 @@ private:
 
     size_t findSlot(
         const StateKey& key,
-        const Session& session,
+        const CompactSolverState& compact,
         const std::vector<Node>& nodes,
-        bool includeRandomState,
         size_t& probes
     ) {
         const size_t mask = entries.size() - 1;
@@ -771,8 +853,7 @@ private:
                 if (!exactStateKeys) {
                     return slot;
                 }
-                const Session& existing = *nodes[entry.nodeIndex].session;
-                if (solverStatesEqual(existing, session, includeRandomState)) {
+                if (nodes[entry.nodeIndex].compact == compact) {
                     return slot;
                 }
                 ++timing.visitedKeyCollisions;
@@ -855,15 +936,16 @@ Result runSearch(
         ScopedTimer timer(result.timing.heuristicNs);
         initialHeuristic = heuristicScore(*initial);
     }
-    const StateKey initialKey = solverStateKey(*initial, includeRandomStateInKey, result.timing);
+    CompactSolverState initialCompact = compactStateWithTiming(*initial, includeRandomStateInKey, result.timing);
+    const StateKey initialKey = compactStateKey(initialCompact, result.timing);
     {
         ScopedTimer timer(result.timing.nodeStoreNs);
-        nodes.push_back(Node{std::move(initial), initialKey, -1, PS_INPUT_UP, 0, initialHeuristic});
+        nodes.push_back(Node{std::move(initial), std::move(initialCompact), initialKey, -1, PS_INPUT_UP, 0, initialHeuristic});
+        recordCompactStateStorage(result.timing, nodes.back().compact);
     }
     {
         ScopedTimer timer(result.timing.visitedInsertNs);
-        const Session& initialSession = *nodes[0].session;
-        bestDepth.insertOrAssignIfBetter(initialKey, initialSession, 0, 0, nodes, includeRandomStateInKey);
+        bestDepth.insertOrAssignIfBetter(initialKey, nodes[0].compact, 0, 0, nodes);
     }
     std::priority_queue<QueueEntry, std::vector<QueueEntry>, QueueEntryGreater> frontier;
     {
@@ -897,7 +979,7 @@ Result runSearch(
         std::optional<uint32_t> best;
         {
             ScopedTimer timer(result.timing.visitedLookupNs);
-            best = bestDepth.find(parentNode.key, *parentNode.session, nodes, includeRandomStateInKey);
+            best = bestDepth.find(parentNode.key, parentNode.compact, nodes);
         }
         if (best && *best < parentNode.depth) {
             ++result.duplicates;
@@ -937,6 +1019,10 @@ Result runSearch(
             }
             ++result.generated;
 
+            if (stepResult.restarted) {
+                continue;
+            }
+
             bool solved = false;
             {
                 ScopedTimer timer(result.timing.solvedCheckNs);
@@ -951,20 +1037,20 @@ Result runSearch(
                 continue;
             }
 
-            const StateKey key = solverStateKey(*child, includeRandomStateInKey, result.timing);
+            CompactSolverState compact = compactStateWithTiming(*child, includeRandomStateInKey, result.timing);
+            const StateKey key = compactStateKey(compact, result.timing);
             const uint32_t childDepth = parentDepth + 1;
             uint32_t childIndex = static_cast<uint32_t>(nodes.size());
             int32_t childHeuristic = 0;
             if (exactStateKeys) {
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{std::move(child), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, 0});
+                    nodes.push_back(Node{std::move(child), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, 0});
                 }
                 bool shouldStore = false;
                 {
                     ScopedTimer timer(result.timing.visitedInsertNs);
-                    const Session& childSession = *nodes[childIndex].session;
-                    shouldStore = bestDepth.insertOrAssignIfBetter(key, childSession, childDepth, childIndex, nodes, includeRandomStateInKey);
+                    shouldStore = bestDepth.insertOrAssignIfBetter(key, nodes[childIndex].compact, childDepth, childIndex, nodes);
                     result.uniqueStates = bestDepth.size();
                 }
                 if (!shouldStore) {
@@ -975,6 +1061,7 @@ Result runSearch(
                     ++result.duplicates;
                     continue;
                 }
+                recordCompactStateStorage(result.timing, nodes[childIndex].compact);
                 if (mode != SearchMode::Bfs) {
                     ScopedTimer timer(result.timing.heuristicNs);
                     childHeuristic = heuristicScore(*nodes[childIndex].session);
@@ -984,7 +1071,7 @@ Result runSearch(
                 bool shouldStore = false;
                 {
                     ScopedTimer timer(result.timing.visitedInsertNs);
-                    shouldStore = bestDepth.insertOrAssignIfBetter(key, *child, childDepth, 0, nodes, includeRandomStateInKey);
+                    shouldStore = bestDepth.insertOrAssignIfBetter(key, compact, childDepth, 0, nodes);
                     result.uniqueStates = bestDepth.size();
                 }
                 if (!shouldStore) {
@@ -998,7 +1085,8 @@ Result runSearch(
                 childIndex = static_cast<uint32_t>(nodes.size());
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{std::move(child), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    nodes.push_back(Node{std::move(child), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    recordCompactStateStorage(result.timing, nodes.back().compact);
                 }
             }
             {
@@ -1038,6 +1126,8 @@ void mergeStats(Result& target, const Result& source) {
     target.timing.visitedCapacity = std::max(target.timing.visitedCapacity, source.timing.visitedCapacity);
     target.timing.visitedMaxProbe = std::max(target.timing.visitedMaxProbe, source.timing.visitedMaxProbe);
     target.timing.visitedKeyCollisions += source.timing.visitedKeyCollisions;
+    target.timing.compactStateBytes += source.timing.compactStateBytes;
+    target.timing.compactMaxStateBytes = std::max(target.timing.compactMaxStateBytes, source.timing.compactMaxStateBytes);
 }
 
 Result solveLevel(
@@ -1297,6 +1387,8 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"visited_capacity\":" << result.timing.visitedCapacity;
     out << ",\"visited_max_probe\":" << result.timing.visitedMaxProbe;
     out << ",\"visited_key_collisions\":" << result.timing.visitedKeyCollisions;
+    out << ",\"compact_state_bytes\":" << result.timing.compactStateBytes;
+    out << ",\"compact_max_state_bytes\":" << result.timing.compactMaxStateBytes;
     out << ",\"node_store_ms\":" << ms(result.timing.nodeStoreNs);
     out << ",\"heuristic_ms\":" << ms(result.timing.heuristicNs);
     out << ",\"solved_check_ms\":" << ms(result.timing.solvedCheckNs);
@@ -1339,6 +1431,8 @@ void printJson(const std::vector<Result>& results) {
         timing.visitedCapacity = std::max(timing.visitedCapacity, result.timing.visitedCapacity);
         timing.visitedMaxProbe = std::max(timing.visitedMaxProbe, result.timing.visitedMaxProbe);
         timing.visitedKeyCollisions += result.timing.visitedKeyCollisions;
+        timing.compactStateBytes += result.timing.compactStateBytes;
+        timing.compactMaxStateBytes = std::max(timing.compactMaxStateBytes, result.timing.compactMaxStateBytes);
         timing.nodeStoreNs += result.timing.nodeStoreNs;
         timing.heuristicNs += result.timing.heuristicNs;
         timing.solvedCheckNs += result.timing.solvedCheckNs;
@@ -1377,6 +1471,8 @@ void printJson(const std::vector<Result>& results) {
     std::cout << ",\"visited_capacity\":" << timing.visitedCapacity;
     std::cout << ",\"visited_max_probe\":" << timing.visitedMaxProbe;
     std::cout << ",\"visited_key_collisions\":" << timing.visitedKeyCollisions;
+    std::cout << ",\"compact_state_bytes\":" << timing.compactStateBytes;
+    std::cout << ",\"compact_max_state_bytes\":" << timing.compactMaxStateBytes;
     std::cout << ",\"node_store_ms\":" << ms(timing.nodeStoreNs);
     std::cout << ",\"heuristic_ms\":" << ms(timing.heuristicNs);
     std::cout << ",\"solved_check_ms\":" << ms(timing.solvedCheckNs);

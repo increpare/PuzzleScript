@@ -464,6 +464,8 @@ printMedianMetric('visited_lookup_probes', 'visited_lookup_probes');
 printMedianMetric('visited_insert_probes', 'visited_insert_probes');
 printMedianMetric('visited_max_probe', 'visited_max_probe');
 printMedianMetric('visited_key_collisions', 'visited_key_collisions');
+printMedianMetric('compact_state_bytes', 'compact_state_bytes');
+printMedianMetric('compact_max_state_bytes', 'compact_max_state_bytes');
 printMedianMetricSum('frontier_ms', ['frontier_pop_ms', 'frontier_push_ms']);
 printMedianMetric('node_store_ms', 'node_store_ms');
 printMedianMetric('heuristic_ms', 'heuristic_ms');
