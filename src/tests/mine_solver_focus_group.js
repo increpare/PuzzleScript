@@ -511,6 +511,7 @@ const manifest = {
         timeout_seconds: compileTimeoutSeconds,
         max_rows: compileMaxRows,
         max_compiled_rules_per_source: compileMaxCompiledRulesPerSource,
+        max_generated_lines_per_source: compileMaxGeneratedLinesPerSource,
         opt_level: compileOptLevel,
         build_jobs: compileBuildJobs,
         cmake_generator: cmakeGenerator,

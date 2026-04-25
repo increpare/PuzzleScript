@@ -332,6 +332,8 @@ lab bench, not the full corpus.
   - `make solver_focus_mine` resets/recomputes compile timings by default.
   - The manifest records `compile_excluded_games` with game name, measured
     compile seconds, threshold, row limit, and reason.
+  - The manifest top-level `compile_probe` block records all active compile
+    budget knobs, including generated line cap.
   - Compile exclusions are separate from manual `excluded_games`.
   - Compile timing probes run before solving, so levels from slow-to-compile
     games are not considered for the focus group.
