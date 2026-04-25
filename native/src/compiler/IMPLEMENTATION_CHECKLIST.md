@@ -169,18 +169,23 @@ lab bench, not the full corpus.
   Current evidence: focus row-limit misses moved from `237` to `0` for included
   focus sources, but median elapsed was still roughly flat.
 
-- [x] Exclude clang-heavy games from the default focus group.
+- [x] Remove stale hard-coded focus exclusions from the Makefile.
 
-  Done means: `solver_focus_mine` supports `SOLVER_FOCUS_EXCLUDE_GAMES`, and
-  the default excludes:
+  Done means: `solver_focus_mine` still supports explicit
+  `SOLVER_FOCUS_EXCLUDE_GAMES`, but the Makefile default is empty. A fresh
+  mining run should sample the current corpus and should not silently preserve
+  yesterday's slow-compile blacklist.
+
+  These games were temporarily excluded in one prior local focus manifest:
 
   - `easyenigma.txt`
   - `karamell.txt`
   - `paint everything everywhere.txt`
 
-  Current evidence: the focus manifest was filtered from 50 to 44 targets after
-  these games caused very large generated sources and compiler termination in an
-  unbudgeted rows-99 build.
+  Current evidence: they caused very large generated sources and compiler
+  termination in an unbudgeted rows-99 build. Future exclusion should be driven
+  by an explicit compile-time budget recorded in the freshly mined manifest, not
+  a Makefile default.
 
 - [x] Commit progress with metrics in commit titles.
 
@@ -294,7 +299,8 @@ lab bench, not the full corpus.
 
   Acceptance criteria:
 
-  - `make solver_focus_mine` honors the default exclusion list.
+  - `make solver_focus_mine` does not apply stale hard-coded exclusions.
+  - Explicit one-off exclusions still work through `SOLVER_FOCUS_EXCLUDE_GAMES`.
   - The manifest records `excluded_games`.
   - Target count and candidate count are visible in the command output.
   - If the solver directory grew substantially, the focus group is refreshed or
@@ -305,6 +311,47 @@ lab bench, not the full corpus.
   ```sh
   make solver_focus_mine
   node -e 'const j=require("./build/native/solver_focus_group.json"); console.log(j.target_count, j.excluded_games)'
+  ```
+
+- [ ] Add compile-time quarantine during focus mining.
+
+  Intent: exclude games that make specialized focus builds painfully slow, but
+  recompute that decision whenever `make solver_focus_mine` is run.
+
+  Acceptance criteria:
+
+  - `SOLVER_FOCUS_MAX_COMPILE_SECONDS ?= 60` controls the threshold.
+  - A value of `0` disables compile-time quarantine.
+  - `make solver_focus_mine` resets/recomputes compile timings by default.
+  - The manifest records `compile_excluded_games` with game name, measured
+    compile seconds, threshold, row limit, and reason.
+  - Compile exclusions are separate from manual `excluded_games`.
+  - Compile timing probes are limited to candidate games, not the entire corpus.
+
+  Validation:
+
+  ```sh
+  make solver_focus_mine SOLVER_FOCUS_MAX_COMPILE_SECONDS=60
+  node -e 'const j=require("./build/native/solver_focus_group.json"); console.log(j.compile_excluded_games || [])'
+  ```
+
+- [x] Abort specialized focus compilation when it exceeds the iteration budget.
+
+  Done means: `make solver_focus_compare` and specialized
+  `make solver_focus_benchmark SPECIALIZE=true` wrap the focus CMake build in a
+  timeout.
+
+  Current behavior:
+
+  - `SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS ?= 60`
+  - `SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS=0` disables the timeout.
+  - Timeout exits with code `124` after terminating the build process group.
+
+  Validation:
+
+  ```sh
+  make -n solver_focus_benchmark SPECIALIZE=true
+  node src/tests/run_with_timeout.js 1 -- node -e 'setTimeout(()=>{}, 5000)'
   ```
 
 - [ ] Add a manifest pruning tool for one-off focus surgery.
