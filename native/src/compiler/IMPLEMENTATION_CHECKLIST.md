@@ -421,9 +421,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - A new solver hash path can hash live level objects, relevant movements,
-    current level, pending-again state, restart/checkpoint state, and random
-    state when required.
+  - A new solver hash path can hash canonical solver-node state:
+    quiescent object occupancy plus random state when required.
   - A parity test compares the new hash/key path against the existing
     `sessionStateKey` path for solver smoke states and replay-derived states.
   - Search behavior is unchanged: same solution status, same solution where the
@@ -493,13 +492,18 @@ attribute graph cost -> no-allocation hash -> flat visited table
   Acceptance criteria:
 
   - The compact state explicitly owns:
-    - live object words
-    - live movement words when needed
-    - current level index
-    - pending-again flag
-    - restart/checkpoint state needed for correctness
+    - canonical object occupancy for one fixed level
     - random state only for games that need it
-  - It explicitly does not own UI/debug/audio/undo data on solver hot paths.
+  - It explicitly does not own live movements at solver-node boundaries:
+    movement state must be settled and zero before a state enters the graph.
+  - It explicitly does not own current level index: the level is a fixed search
+    parameter, and level transition is a solved signal.
+  - It explicitly does not own pending-again: `again` chains are internal to the
+    transition function and must be exhausted before a graph node is stored.
+  - It explicitly does not own checkpoint/restart data: checkpoint is ignored
+    by the solver, and restart is a game-over/dead-edge transition result.
+  - It explicitly does not own flickscreen/zoomscreen/UI/debug/audio/undo data
+    on solver hot paths.
   - It may omit proven-inert content such as static background/wall cells, but
     only with a conservative proof that those bytes cannot affect future turns.
   - Conversion from `Session` to compact state is defined.
@@ -523,8 +527,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   - Define which object/layer/cell facts are mutable and therefore encoded.
   - Conservatively detect static/inert layers or cells only when no rule,
-    command, win condition, movement, random replacement, or checkpoint/restart
-    behavior can alter or observe the omitted facts differently.
+    command, win condition, movement, or random replacement can alter or
+    observe the omitted facts differently.
   - Store compact state once in node storage; visited entries store hash/key,
     depth, and node index, not a duplicate state copy.
   - Compute the visited-table hash from the same canonical bytes used for
@@ -601,7 +605,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - One supported game has a generated C++ compact tick entrypoint.
   - The entrypoint reads/writes compact state directly for the supported turn
     slice.
-  - The compact tick result reports changed, won, pending again, restart, and
+  - The compact tick result reports changed, won, game-over/restart, and
     unsupported/fallback status without heap allocation.
   - Interpreter parity compares compact tick output against
     `interpreterStep`/`interpreterTick` materialized through `Session`.
@@ -1625,8 +1629,10 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - The chosen state owns live objects, live movements, random state, pending
-    again, current level, and restart/checkpoint data explicitly.
+  - The chosen state owns canonical object occupancy plus optional random state.
+  - Solver-node invariants state that movements are zero, pending-again is
+    exhausted, current level is a search parameter, checkpoint is ignored, and
+    restart is a game-over/dead-edge result.
   - Conversion to/from `Session` is defined for fallback and testing.
 
 - [ ] Prototype compact solver/generator state for one simple game.
