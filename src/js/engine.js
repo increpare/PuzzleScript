@@ -1429,6 +1429,18 @@ function Rule(rule) {
 	this.isRandom = rule[8];
 	this.cellRowMasks = rule[9];
 	this.cellRowMasks_Movements = rule[10];
+	this.rulePlanMetadata = rule[11] || {
+		schema_version: 1,
+		has_ellipsis: this.ellipsisCount.some(count => count > 0),
+		row_count: this.patterns.length,
+		has_commands: this.commands.length > 0,
+		command_names: this.commands.map(command => String(command[0])),
+		simple_deterministic_row_rule: !this.isRandom &&
+			!this.rigid &&
+			!this.ellipsisCount.some(count => count > 0) &&
+			this.patterns.length === 1 &&
+			this.commands.length === 0,
+	};
 	this.ruleMask = new BitVec(STRIDE_OBJ);
 	this.applyAt = this.generateApplyAt(this.patterns, this.ellipsisCount, STRIDE_OBJ, STRIDE_MOV);
 	for (const m of this.cellRowMasks) {

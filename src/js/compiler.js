@@ -2035,6 +2035,29 @@ function cellRowMasksGeneric(rule, stride, propertyName) {
     return ruleMasks;
 }
 
+function commandNamesForRulePlan(commands) {
+    return commands.map(command => String(command[0]));
+}
+
+function buildLiveRulePlanMetadata(rule) {
+    const ellipsisCount = rule[4];
+    const commands = rule[7];
+    const hasEllipsis = ellipsisCount.some(count => count > 0);
+    const commandNames = commandNamesForRulePlan(commands);
+    return {
+        schema_version: 1,
+        has_ellipsis: hasEllipsis,
+        row_count: rule[1].length,
+        has_commands: commandNames.length > 0,
+        command_names: commandNames,
+        simple_deterministic_row_rule: !rule[8] &&
+            !rule[6] &&
+            !hasEllipsis &&
+            rule[1].length === 1 &&
+            commandNames.length === 0,
+    };
+}
+
 function collapseRules(groups) {
     for (let gn = 0; gn < groups.length; gn++) {
         const rules = groups[gn];
@@ -2070,6 +2093,7 @@ function collapseRules(groups) {
             newrule.push(oldrule.randomRule);
             newrule.push(cellRowMasksGeneric(newrule, STRIDE_OBJ, 'objectsPresent'));
             newrule.push(cellRowMasksGeneric(newrule, STRIDE_MOV, 'movementsPresent'));
+            newrule.push(buildLiveRulePlanMetadata(newrule));
             rules[i] = new Rule(newrule);
         }
     }
@@ -3214,5 +3238,4 @@ function qualifyURL(url) {
     a.href = url;
     return a.href;
 }
-
 
