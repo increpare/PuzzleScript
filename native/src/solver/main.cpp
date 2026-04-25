@@ -932,7 +932,7 @@ Result solveLevel(
     combined.workerId = workerId;
     combined.timing.compileUs = compileUs;
 
-    const TimePoint bfsDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 8));
+    const TimePoint bfsDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 6));
     Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileUs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId);
     mergeStats(combined, bfs);
     if (bfs.status == "solved" || bfs.status == "skipped_message" || bfs.status == "level_error") {
