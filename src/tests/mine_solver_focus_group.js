@@ -13,7 +13,8 @@ function usage() {
         '  [--strategy NAME] [--jobs N] [--exclude-game NAME] [--exclude-games CSV]',
         '  [--repo-root PATH] [--puzzlescript-cpp PATH] [--compile-probe-root PATH]',
         '  [--compile-timeout-seconds N] [--compile-max-rows N]',
-        '  [--compile-max-compiled-rules-per-source N] [--cmake PATH]',
+        '  [--compile-max-compiled-rules-per-source N]',
+        '  [--compile-max-generated-lines-per-source N] [--cmake PATH]',
         '  [--cmake-generator NAME] [--compile-opt-level N] [--compile-build-jobs N|auto]',
     ].join('\n'));
     process.exit(1);
@@ -38,6 +39,7 @@ let compileProbeRoot = path.resolve('build/native/solver_focus_compile_probes');
 let compileTimeoutSeconds = 60;
 let compileMaxRows = 99;
 let compileMaxCompiledRulesPerSource = null;
+let compileMaxGeneratedLinesPerSource = null;
 let cmakePath = 'cmake';
 let cmakeGenerator = '';
 let compileOptLevel = '1';
@@ -106,6 +108,8 @@ for (let index = 2; index < args.length; index++) {
         compileMaxRows = parsePositiveInt(args[++index], '--compile-max-rows');
     } else if (arg === '--compile-max-compiled-rules-per-source' && index + 1 < args.length) {
         compileMaxCompiledRulesPerSource = parseNonNegativeInt(args[++index], '--compile-max-compiled-rules-per-source');
+    } else if (arg === '--compile-max-generated-lines-per-source' && index + 1 < args.length) {
+        compileMaxGeneratedLinesPerSource = parseNonNegativeInt(args[++index], '--compile-max-generated-lines-per-source');
     } else if (arg === '--cmake' && index + 1 < args.length) {
         cmakePath = args[++index];
     } else if (arg === '--cmake-generator' && index + 1 < args.length) {
@@ -188,6 +192,7 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
     const content = fs.readFileSync(gameFile);
     const hash = sha256Parts([
         `${gameName}\nrows=${compileMaxRows}\ncap=${compileMaxCompiledRulesPerSource ?? ''}\nopt=${compileOptLevel}\ngenerator=${cmakeGenerator}\n`,
+        `line_cap=${compileMaxGeneratedLinesPerSource ?? ''}\n`,
         content,
     ]);
     const shortHash = hash.slice(0, 16);
@@ -209,6 +214,9 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
     if (compileMaxCompiledRulesPerSource !== null) {
         compileRulesArgs.push('--max-compiled-rules-per-source', String(compileMaxCompiledRulesPerSource));
     }
+    if (compileMaxGeneratedLinesPerSource !== null) {
+        compileRulesArgs.push('--max-generated-lines-per-source', String(compileMaxGeneratedLinesPerSource));
+    }
 
     const started = process.hrtime.bigint();
     const remainingTimeoutMs = () => {
@@ -228,6 +236,7 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
             threshold_seconds: compileTimeoutSeconds,
             max_rows: compileMaxRows,
             max_compiled_rules_per_source: compileMaxCompiledRulesPerSource,
+            max_generated_lines_per_source: compileMaxGeneratedLinesPerSource,
             reason: 'compile-rules generation exceeded focus compile budget',
             detail: safeSnippet(`${emitResult.stderr}\n${emitResult.stdout}`),
         };
@@ -240,8 +249,22 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
             threshold_seconds: compileTimeoutSeconds,
             max_rows: compileMaxRows,
             max_compiled_rules_per_source: compileMaxCompiledRulesPerSource,
+            max_generated_lines_per_source: compileMaxGeneratedLinesPerSource,
             reason: 'compile-rules failed',
             detail: safeSnippet(`${emitResult.stderr}\n${emitResult.stdout}`),
+        };
+    }
+    if (/compiled-rules(?:-line)?-skips:/.test(emitResult.stderr)) {
+        return {
+            game: gameName,
+            status: 'compile_budget_excluded',
+            compile_seconds: Number(process.hrtime.bigint() - started) / 1e9,
+            threshold_seconds: compileTimeoutSeconds,
+            max_rows: compileMaxRows,
+            max_compiled_rules_per_source: compileMaxCompiledRulesPerSource,
+            max_generated_lines_per_source: compileMaxGeneratedLinesPerSource,
+            reason: 'compiled-rules generation exceeded focus source budget',
+            detail: safeSnippet(emitResult.stderr),
         };
     }
 
@@ -271,6 +294,7 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
             threshold_seconds: compileTimeoutSeconds,
             max_rows: compileMaxRows,
             max_compiled_rules_per_source: compileMaxCompiledRulesPerSource,
+            max_generated_lines_per_source: compileMaxGeneratedLinesPerSource,
             reason: 'cmake configure exceeded focus compile budget',
             detail: safeSnippet(`${configureResult.stderr}\n${configureResult.stdout}`),
         };
@@ -283,6 +307,7 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
             threshold_seconds: compileTimeoutSeconds,
             max_rows: compileMaxRows,
             max_compiled_rules_per_source: compileMaxCompiledRulesPerSource,
+            max_generated_lines_per_source: compileMaxGeneratedLinesPerSource,
             reason: 'cmake configure failed',
             detail: safeSnippet(`${configureResult.stderr}\n${configureResult.stdout}`),
         };
@@ -313,6 +338,7 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
             threshold_seconds: compileTimeoutSeconds,
             max_rows: compileMaxRows,
             max_compiled_rules_per_source: compileMaxCompiledRulesPerSource,
+            max_generated_lines_per_source: compileMaxGeneratedLinesPerSource,
             reason: 'compiled-rules build exceeded focus compile budget',
             detail: safeSnippet(`${buildResult.stderr}\n${buildResult.stdout}`),
         };
@@ -325,6 +351,7 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
             threshold_seconds: compileTimeoutSeconds,
             max_rows: compileMaxRows,
             max_compiled_rules_per_source: compileMaxCompiledRulesPerSource,
+            max_generated_lines_per_source: compileMaxGeneratedLinesPerSource,
             reason: 'compiled-rules build failed',
             detail: safeSnippet(`${buildResult.stderr}\n${buildResult.stdout}`),
         };
@@ -337,6 +364,7 @@ function probeGameCompilation(gameFile, gameName, probeRoot) {
         threshold_seconds: compileTimeoutSeconds,
         max_rows: compileMaxRows,
         max_compiled_rules_per_source: compileMaxCompiledRulesPerSource,
+        max_generated_lines_per_source: compileMaxGeneratedLinesPerSource,
     };
 }
 

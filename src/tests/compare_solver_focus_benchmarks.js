@@ -102,6 +102,8 @@ function targetRows() {
         if (!compiledTarget) {
             return null;
         }
+        const compiledRuleHits = countersMedian(compiledTarget, 'compiled_rule_group_hits');
+        const compiledTickHits = countersMedian(compiledTarget, 'compiled_tick_hits');
         return {
             key,
             interpreted: target,
@@ -109,14 +111,43 @@ function targetRows() {
             wallRatio: ratio(compiledTarget.median.wall_ms, target.median.wall_ms),
             elapsedRatio: ratio(compiledTarget.median.elapsed_ms, target.median.elapsed_ms),
             generatedRatio: ratio(compiledTarget.median.generated, target.median.generated),
-            compiledRuleHits: countersMedian(compiledTarget, 'compiled_rule_group_hits'),
-            compiledTickHits: countersMedian(compiledTarget, 'compiled_tick_hits'),
+            compiledRuleHits,
+            compiledTickHits,
+            bucket: compiledUsageBucket(compiledTickHits, compiledRuleHits),
             candidateCells: countersMedian(compiledTarget, 'candidate_cells_tested'),
             rowScans: countersMedian(compiledTarget, 'row_scans'),
             patternTests: countersMedian(compiledTarget, 'pattern_tests'),
             maskRebuilds: countersMedian(compiledTarget, 'mask_rebuild_calls'),
         };
     }).filter(Boolean);
+}
+
+function compiledUsageBucket(compiledTickHits, compiledRuleHits) {
+    if (compiledTickHits === null || compiledRuleHits === null) {
+        return 'no_counters';
+    }
+    if (compiledTickHits === 0 && compiledRuleHits === 0) {
+        return 'no_tick_no_rules';
+    }
+    if (compiledTickHits > 0 && compiledRuleHits === 0) {
+        return 'tick_no_rules';
+    }
+    if (compiledRuleHits > 0) {
+        return 'compiled_rules';
+    }
+    return 'unknown';
+}
+
+function printCompiledUsageSummary(rows) {
+    const counts = new Map();
+    for (const row of rows) {
+        counts.set(row.bucket, (counts.get(row.bucket) || 0) + 1);
+    }
+    const labels = ['compiled_rules', 'tick_no_rules', 'no_tick_no_rules', 'no_counters', 'unknown'];
+    const parts = labels
+        .filter((label) => counts.has(label))
+        .map((label) => `${label}=${counts.get(label)}`);
+    process.stdout.write(`  compiled_usage: ${parts.length === 0 ? 'n/a' : parts.join(' ')}\n`);
 }
 
 function printTargetTable(label, rows) {
@@ -126,6 +157,7 @@ function printTargetTable(label, rows) {
             `    ${formatNumber(row.elapsedRatio, 3)}x elapsed` +
             ` wall=${formatNumber(row.wallRatio, 3)}x` +
             ` generated=${formatNumber(row.generatedRatio, 3)}x` +
+            ` bucket=${row.bucket}` +
             ` ${row.key}` +
             ` hits=${row.compiledRuleHits === null ? 'n/a' : row.compiledRuleHits}` +
             ` tick=${row.compiledTickHits === null ? 'n/a' : row.compiledTickHits}` +
@@ -168,6 +200,7 @@ if (options.goalRatio !== null) {
 
 if (options.detail) {
     const rows = targetRows();
+    printCompiledUsageSummary(rows);
     const bySlowest = rows.slice().sort((a, b) => (b.elapsedRatio || 0) - (a.elapsedRatio || 0));
     const byFastest = rows.slice().sort((a, b) => (a.elapsedRatio || Infinity) - (b.elapsedRatio || Infinity));
     printTargetTable('slowest_targets:', bySlowest.slice(0, 10));

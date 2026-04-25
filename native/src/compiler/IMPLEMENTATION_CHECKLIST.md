@@ -357,6 +357,23 @@ lab bench, not the full corpus.
   node src/tests/run_with_timeout.js 1 -- node -e 'setTimeout(()=>{}, 5000)'
   ```
 
+- [x] Skip pathological generated source files in focus builds.
+
+  Done means: focus compilation has a generated-line budget in addition to the
+  compiled-rule-count budget, and the miner treats a line-budget skip as a
+  compile exclusion rather than an eligible fallback game.
+
+  Current behavior:
+
+  - `SOLVER_FOCUS_MAX_GENERATED_LINES_PER_SOURCE ?= 20000`
+  - A value of `0` disables the line budget.
+  - `compile-rules` accepts `--max-generated-lines-per-source`.
+  - Generated sharded C++ files include source path and source hash comments.
+
+  Current evidence: the freshly mined 50-target focus manifest built under the
+  60s guard with 30 compiled sources after skipping 4 generated-line outliers
+  and 2 rule-count outliers; one-run median elapsed was `0.993x`.
+
 - [ ] Add a manifest pruning tool for one-off focus surgery.
 
   Intent: make "drop this game from focus" explicit instead of using ad hoc
@@ -448,9 +465,9 @@ lab bench, not the full corpus.
 
 ### Runtime Coverage And Routing
 
-- [ ] Classify focus targets by actual compiled-rule usage.
+- [x] Classify focus targets by actual compiled-rule usage.
 
-  Acceptance criteria:
+  Done means:
 
   - The detailed report separates:
     - `compiled_tick_hits == 0 && compiled_rule_group_hits == 0`
@@ -458,6 +475,14 @@ lab bench, not the full corpus.
     - `compiled_rule_group_hits > 0`
   - The summary prints counts for each bucket.
   - The slowest table includes the bucket label.
+
+  Current bucket labels:
+
+  - `no_tick_no_rules`
+  - `tick_no_rules`
+  - `compiled_rules`
+  - `no_counters`
+  - `unknown`
 
   Validation:
 
