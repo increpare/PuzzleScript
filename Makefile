@@ -90,6 +90,7 @@ COMPILED_RULES_EXPORT_SYMBOLS ?= false
 COMPILED_RULES_OPT_LEVEL ?= 1
 COMPILED_RULES_BUILD_JOBS ?= auto
 COMPILED_RULES_SHARED_SINGLE_BUILD ?= true
+COMPILED_RULES_REUSE_SINGLE_CPP ?= true
 COMPILED_RULES_COMPILER_LAUNCHER ?=
 COMPILED_RULES_CMAKE_GENERATOR_ARG = $(if $(COMPILED_RULES_CMAKE_GENERATOR),-G "$(COMPILED_RULES_CMAKE_GENERATOR)",)
 COMPILED_RULES_COMPILER_LAUNCHER_ARGS = $(if $(COMPILED_RULES_COMPILER_LAUNCHER),-DCMAKE_C_COMPILER_LAUNCHER=$(COMPILED_RULES_COMPILER_LAUNCHER) -DCMAKE_CXX_COMPILER_LAUNCHER=$(COMPILED_RULES_COMPILER_LAUNCHER),)
@@ -195,6 +196,7 @@ help:
 	@echo "                                     Set COMPILED_RULES_OPT_LEVEL=2/3 to spend more compile time on generated rules"
 	@echo "                                     Set COMPILED_RULES_BUILD_JOBS=N to tune specialized build parallelism"
 	@echo "                                     Set COMPILED_RULES_SHARED_SINGLE_BUILD=false for per-game build dirs"
+	@echo "                                     Set COMPILED_RULES_REUSE_SINGLE_CPP=false to force one-game regeneration"
 	@echo "                                     Uses Ninja automatically when installed; override COMPILED_RULES_CMAKE_GENERATOR="
 	@echo "                                     Set COMPILED_RULES_COMPILER_LAUNCHER=ccache after installing ccache"
 	@echo "  make build_32                      Build JS-style 32-bit-mask executable into build-32"
@@ -297,8 +299,15 @@ generator:
 			build_dir="$(COMPILED_RULES_BUILD_ROOT)/generator-$$hash"; \
 		fi; \
 		out_cpp="$$out_dir/compiled_rules.cpp"; \
+		out_stamp="$$out_dir/compiled_rules.stamp"; \
+		out_stamp_text="max_rows=$(COMPILED_RULES_MAX_ROWS)"; \
 		mkdir -p "$$out_dir"; \
-		$(PUZZLESCRIPT_CPP) compile-rules "$(GENERATOR_GAME)" --emit-cpp "$$out_cpp" --symbol generator_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		if [ "$(COMPILED_RULES_REUSE_SINGLE_CPP)" = "true" ] && [ -f "$$out_cpp" ] && [ -f "$$out_stamp" ] && [ "$$(cat "$$out_stamp")" = "$$out_stamp_text" ] && [ ! "$(GENERATOR_GAME)" -nt "$$out_cpp" ] && [ ! "$(PUZZLESCRIPT_CPP)" -nt "$$out_cpp" ]; then \
+			echo "compiled-rules: reuse output=$$out_cpp"; \
+		else \
+			$(PUZZLESCRIPT_CPP) compile-rules "$(GENERATOR_GAME)" --emit-cpp "$$out_cpp" --symbol generator_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+			printf '%s\n' "$$out_stamp_text" > "$$out_stamp"; \
+		fi; \
 		$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE="$$PWD/$$out_cpp" -DPS_COMPILED_RULES_SOURCES_FILE=); \
 		$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_generator; \
 		"$$build_dir/native/puzzlescript_generator" $(GENERATOR_GAME) $(GENERATOR_SPEC) $(GENERATOR_ARGS); \
@@ -331,8 +340,15 @@ solver:
 			build_dir="$(COMPILED_RULES_BUILD_ROOT)/solver-$$hash"; \
 		fi; \
 		out_cpp="$$out_dir/compiled_rules.cpp"; \
+		out_stamp="$$out_dir/compiled_rules.stamp"; \
+		out_stamp_text="max_rows=$(COMPILED_RULES_MAX_ROWS)"; \
 		mkdir -p "$$out_dir"; \
-		$(PUZZLESCRIPT_CPP) compile-rules "$(SOLVER_GAME)" --emit-cpp "$$out_cpp" --symbol solver_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+		if [ "$(COMPILED_RULES_REUSE_SINGLE_CPP)" = "true" ] && [ -f "$$out_cpp" ] && [ -f "$$out_stamp" ] && [ "$$(cat "$$out_stamp")" = "$$out_stamp_text" ] && [ ! "$(SOLVER_GAME)" -nt "$$out_cpp" ] && [ ! "$(PUZZLESCRIPT_CPP)" -nt "$$out_cpp" ]; then \
+			echo "compiled-rules: reuse output=$$out_cpp"; \
+		else \
+			$(PUZZLESCRIPT_CPP) compile-rules "$(SOLVER_GAME)" --emit-cpp "$$out_cpp" --symbol solver_$$hash --max-rows $(COMPILED_RULES_MAX_ROWS); \
+			printf '%s\n' "$$out_stamp_text" > "$$out_stamp"; \
+		fi; \
 		$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE="$$PWD/$$out_cpp" -DPS_COMPILED_RULES_SOURCES_FILE=); \
 		$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
 		"$$build_dir/native/puzzlescript_solver" $(SOLVER_GAME) --timeout-ms $(SOLVER_TIMEOUT_MS) --jobs $(SOLVER_JOBS) --strategy $(SOLVER_STRATEGY) --solutions-dir $(SOLVER_SOLUTIONS_DIR)/native $(SOLVER_PROGRESS_ARGS) $(SOLVER_OUTPUT_ARGS) $(SOLVER_ARGS); \
