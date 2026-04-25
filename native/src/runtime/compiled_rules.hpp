@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <string_view>
+#include <vector>
 
 #include "runtime/core.hpp"
 
@@ -41,5 +42,9 @@ void compiledRuleSetCellObjectsFromWords(
 void compiledRuleSetCellMovementsFromWords(Session& session, int32_t tileIndex, const MaskWord* movements);
 void compiledRuleRebuildMasks(Session& session);
 void compiledRuleQueueCommands(const Rule& rule, CommandState& commands);
+using CompiledRuleRowMatch = std::vector<int32_t>;
+void compiledRuleCollectRowMatches(Session& session, const Rule& rule, size_t rowIndex, std::vector<CompiledRuleRowMatch>& outMatches);
+bool compiledRuleRowMatchStillMatches(const Session& session, const Rule& rule, size_t rowIndex, const CompiledRuleRowMatch& match);
+bool compiledRuleApplyRowMatch(Session& session, const Rule& rule, size_t rowIndex, const CompiledRuleRowMatch& match);
 
 } // namespace puzzlescript

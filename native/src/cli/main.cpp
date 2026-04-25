@@ -3621,16 +3621,16 @@ std::string compiledRuleMissReason(const puzzlescript::Rule& rule, const Compile
         return "row_limit";
     }
     if (rule.ellipsisCount.size() < rule.patterns.size()) {
-        return "ellipsis";
+        return "missing_ellipsis_metadata";
     }
     for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-        if (rule.ellipsisCount[rowIndex] != 0) {
-            return "ellipsis";
-        }
         if (rule.patterns[rowIndex].empty()) {
             return "empty_row";
         }
         for (const auto& pattern : rule.patterns[rowIndex]) {
+            if (pattern.kind == puzzlescript::Pattern::Kind::Ellipsis) {
+                continue;
+            }
             if (pattern.kind != puzzlescript::Pattern::Kind::CellPattern) {
                 return "non_cell_pattern";
             }
@@ -3664,6 +3664,22 @@ std::string compiledGroupMissReason(const std::vector<puzzlescript::Rule>& group
 
 bool isCompilableGroup(const std::vector<puzzlescript::Rule>& group, const CompiledRulesOptions& options) {
     return compiledGroupMissReason(group, options).empty();
+}
+
+bool ruleHasEllipsis(const puzzlescript::Rule& rule) {
+    for (const int32_t count : rule.ellipsisCount) {
+        if (count != 0) {
+            return true;
+        }
+    }
+    for (const auto& row : rule.patterns) {
+        for (const auto& pattern : row) {
+            if (pattern.kind == puzzlescript::Pattern::Kind::Ellipsis) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 void emitMaskBitsSetCheck(
@@ -4081,6 +4097,63 @@ void emitRuleFunctions(
         + (late ? "_l" : "_e")
         + "_g" + std::to_string(groupIndex)
         + "_r" + std::to_string(ruleIndex);
+    if (ruleHasEllipsis(rule)) {
+        out << "bool apply_rule_" << prefix << "(Session& session, CommandState& commands) {\n"
+            << "    const Game& game = *session.game;\n"
+            << "    const Rule& rule = game." << (late ? "lateRules" : "rules")
+            << "[" << groupIndex << "][" << ruleIndex << "];\n"
+            << "    bool changed = false;\n";
+        for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+            out << "    std::vector<CompiledRuleRowMatch> matches_" << rowIndex << ";\n"
+                << "    compiledRuleCollectRowMatches(session, rule, " << rowIndex << "U, matches_" << rowIndex << ");\n"
+                << "    if (matches_" << rowIndex << ".empty()) return false;\n";
+        }
+        if (rule.patterns.size() == 1) {
+            out << "    for (size_t matchIndex = 0; matchIndex < matches_0.size(); ++matchIndex) {\n"
+                << "        const CompiledRuleRowMatch& match = matches_0[matchIndex];\n"
+                << "        if (matchIndex > 0 && !compiledRuleRowMatchStillMatches(session, rule, 0U, match)) continue;\n"
+                << "        changed = compiledRuleApplyRowMatch(session, rule, 0U, match) || changed;\n"
+                << "    }\n";
+        } else {
+            out << "    std::array<const std::vector<CompiledRuleRowMatch>*, " << rule.patterns.size() << "> allMatches = {";
+            for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+                if (rowIndex > 0) {
+                    out << ", ";
+                }
+                out << "&matches_" << rowIndex;
+            }
+            out << "};\n"
+                << "    std::array<size_t, " << rule.patterns.size() << "> matchIndices{};\n"
+                << "    bool firstTuple = true;\n"
+                << "    bool done = false;\n"
+                << "    while (!done) {\n"
+                << "        bool stillMatches = true;\n"
+                << "        if (!firstTuple) {\n";
+            for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+                out << "            stillMatches = stillMatches && compiledRuleRowMatchStillMatches(session, rule, "
+                    << rowIndex << "U, (*allMatches[" << rowIndex << "])[matchIndices[" << rowIndex << "]]);\n";
+            }
+            out << "        }\n"
+                << "        if (stillMatches) {\n";
+            for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+                out << "            changed = compiledRuleApplyRowMatch(session, rule, " << rowIndex
+                    << "U, (*allMatches[" << rowIndex << "])[matchIndices[" << rowIndex << "]]) || changed;\n";
+            }
+            out << "        }\n"
+                << "        firstTuple = false;\n"
+                << "        for (size_t carry = 0; carry < matchIndices.size(); ++carry) {\n"
+                << "            ++matchIndices[carry];\n"
+                << "            if (matchIndices[carry] < allMatches[carry]->size()) break;\n"
+                << "            matchIndices[carry] = 0;\n"
+                << "            if (carry + 1 == matchIndices.size()) done = true;\n"
+                << "        }\n"
+                << "    }\n";
+        }
+        out << "    compiledRuleQueueCommands(rule, commands);\n"
+            << "    return changed;\n"
+            << "}\n\n";
+        return;
+    }
     for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
         emitRuleRowFunctions(out, game, rule, prefix, rowIndex);
     }
@@ -4215,12 +4288,13 @@ void printCompiledRulesCoverage(const CompiledRulesCoverage& coverage) {
               << " compiled_late_rules=" << coverage.compiledLateRules
               << "\n";
 
-    static const std::array<std::string_view, 9> kReasonOrder = {
+    static const std::array<std::string_view, 10> kReasonOrder = {
         "random_group",
         "random_rule",
         "rigid",
         "row_limit",
         "ellipsis",
+        "missing_ellipsis_metadata",
         "empty_row",
         "non_cell_pattern",
         "random_replacement",

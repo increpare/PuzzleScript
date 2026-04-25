@@ -4032,6 +4032,94 @@ void compiledRuleQueueCommands(const Rule& rule, CommandState& commands) {
     queueRuleCommands(rule, commands);
 }
 
+void compiledRuleCollectRowMatches(
+    Session& session,
+    const Rule& rule,
+    size_t rowIndex,
+    std::vector<CompiledRuleRowMatch>& outMatches
+) {
+    outMatches.clear();
+    if (rowIndex >= rule.patterns.size()
+        || rowIndex >= rule.ellipsisCount.size()
+        || rule.patterns[rowIndex].empty()) {
+        return;
+    }
+
+    const Game& game = *session.game;
+    const auto& row = rule.patterns[rowIndex];
+    const int32_t ellipsisCount = rule.ellipsisCount[rowIndex];
+    const MaskOffset rowObjectOffset = rowIndex < rule.cellRowMasksCount
+        ? game.cellRowMaskOffsets[rule.cellRowMasksFirst + rowIndex]
+        : rule.ruleMask;
+    const MaskWord* rowObjectMask = maskPtr(game, rowObjectOffset);
+    const MaskOffset rowMovementOffset = rowIndex < rule.cellRowMasksMovementsCount
+        ? game.cellRowMaskMovementsOffsets[rule.cellRowMasksMovementsFirst + rowIndex]
+        : kNullMaskOffset;
+    const MaskWord* rowMovementMask = maskPtr(game, rowMovementOffset);
+    const uint32_t rowMovementMaskWords = rowMovementMask != nullptr ? game.movementWordCount : 0;
+
+    if (ellipsisCount == 0) {
+        std::vector<int32_t> starts = collectRowMatches(
+            session,
+            row,
+            rule.direction,
+            rowObjectMask,
+            game.wordCount,
+            rowMovementMask,
+            rowMovementMaskWords
+        );
+        outMatches.reserve(starts.size());
+        for (const int32_t start : starts) {
+            outMatches.push_back(CompiledRuleRowMatch{start});
+        }
+        return;
+    }
+
+    outMatches = collectEllipsisRowMatches(
+        session,
+        row,
+        rule.direction,
+        rowObjectMask,
+        game.wordCount,
+        rowMovementMask,
+        rowMovementMaskWords
+    );
+}
+
+bool compiledRuleRowMatchStillMatches(
+    const Session& session,
+    const Rule& rule,
+    size_t rowIndex,
+    const CompiledRuleRowMatch& match
+) {
+    if (rowIndex >= rule.patterns.size()) {
+        return false;
+    }
+    const int32_t ellipsisCount = rowIndex < rule.ellipsisCount.size()
+        ? rule.ellipsisCount[rowIndex]
+        : 0;
+    const auto [dx, dy] = directionMaskToDelta(rule.direction);
+    const int32_t delta = dx * session.liveLevel.height + dy;
+    return delta != 0 && rowMatchStillMatches(session, rule.patterns[rowIndex], ellipsisCount, match, delta);
+}
+
+bool compiledRuleApplyRowMatch(
+    Session& session,
+    const Rule& rule,
+    size_t rowIndex,
+    const CompiledRuleRowMatch& match
+) {
+    if (rowIndex >= rule.patterns.size()) {
+        return false;
+    }
+    const int32_t ellipsisCount = rowIndex < rule.ellipsisCount.size()
+        ? rule.ellipsisCount[rowIndex]
+        : 0;
+    const auto [dx, dy] = directionMaskToDelta(rule.direction);
+    const int32_t delta = dx * session.liveLevel.height + dy;
+    return delta != 0 && applyRowMatchAt(session, rule, rule.patterns[rowIndex], ellipsisCount, match, delta);
+}
+
 void runRulesOnLevelStart(Session& session);
 void runRulesOnLevelStart(Session& session, RuntimeStepOptions options);
 bool wouldAgainChange(Session& session, bool* outWouldModify = nullptr, bool emitAudio = true);
