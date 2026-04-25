@@ -188,6 +188,51 @@ function copyGameToEligibleCorpus(gameFile, eligibleCorpus) {
     fs.copyFileSync(gameFile, destination);
 }
 
+function normalizedSectionName(line) {
+    return line.replace(/=/g, '').trim().toUpperCase();
+}
+
+function isRulesSectionName(name) {
+    return name === 'RULES';
+}
+
+function isKnownSectionName(name) {
+    return [
+        'OBJECTS',
+        'LEGEND',
+        'SOUNDS',
+        'COLLISIONLAYERS',
+        'RULES',
+        'WINCONDITIONS',
+        'LEVELS',
+    ].includes(name);
+}
+
+function randomRuleHits(gameFile) {
+    const lines = fs.readFileSync(gameFile, 'utf8').split(/\r?\n/);
+    const hits = [];
+    let inRules = false;
+    for (let index = 0; index < lines.length; index++) {
+        const line = lines[index];
+        const trimmed = line.trim();
+        const section = normalizedSectionName(line);
+        if (isKnownSectionName(section)) {
+            inRules = isRulesSectionName(section);
+            continue;
+        }
+        if (!inRules || trimmed.length === 0 || trimmed.startsWith('(')) {
+            continue;
+        }
+        if (/\brandom(?:dir)?\b/i.test(line)) {
+            hits.push({
+                line: index + 1,
+                text: trimmed,
+            });
+        }
+    }
+    return hits;
+}
+
 function probeGameCompilation(gameFile, gameName, probeRoot) {
     const content = fs.readFileSync(gameFile);
     const hash = sha256Parts([
@@ -377,6 +422,7 @@ function prepareEligibleCorpus() {
 
     const compileProbeResults = [];
     const compileExcludedGames = [];
+    const randomExcludedGames = [];
     let eligibleCount = 0;
 
     if (compileTimeoutSeconds === 0) {
@@ -385,16 +431,27 @@ function prepareEligibleCorpus() {
             if (excludedGames.has(gameName)) {
                 continue;
             }
+            const randomHits = randomRuleHits(gameFile);
+            if (randomHits.length > 0) {
+                randomExcludedGames.push({
+                    game: gameName,
+                    status: 'random_rules_excluded',
+                    reason: 'focus mining excludes random/randomDir rules',
+                    hits: randomHits,
+                });
+                continue;
+            }
             copyGameToEligibleCorpus(gameFile, eligibleCorpus);
             eligibleCount++;
         }
         return {
             enabled: false,
-            corpus: corpusPath,
+            corpus: eligibleCorpus,
             game_count: gameFiles.length,
             eligible_game_count: eligibleCount,
             compile_probe_results: [],
             compile_excluded_games: [],
+            random_excluded_games: randomExcludedGames,
         };
     }
 
@@ -406,6 +463,19 @@ function prepareEligibleCorpus() {
     for (const gameFile of gameFiles) {
         const gameName = normalizeGamePath(gameFile);
         if (excludedGames.has(gameName)) {
+            continue;
+        }
+
+        const randomHits = randomRuleHits(gameFile);
+        if (randomHits.length > 0) {
+            const result = {
+                game: gameName,
+                status: 'random_rules_excluded',
+                reason: 'focus mining excludes random/randomDir rules',
+                hits: randomHits,
+            };
+            randomExcludedGames.push(result);
+            process.stdout.write(`  exclude ${gameName} status=${result.status} hits=${randomHits.length}\n`);
             continue;
         }
 
@@ -428,6 +498,7 @@ function prepareEligibleCorpus() {
         eligible_game_count: eligibleCount,
         compile_probe_results: compileProbeResults,
         compile_excluded_games: compileExcludedGames,
+        random_excluded_games: randomExcludedGames,
     };
 }
 
@@ -519,8 +590,10 @@ const manifest = {
         game_count: preparedCorpus.game_count,
         eligible_game_count: preparedCorpus.eligible_game_count,
         excluded_game_count: preparedCorpus.compile_excluded_games.length,
+        random_excluded_game_count: preparedCorpus.random_excluded_games.length,
     },
     compile_excluded_games: preparedCorpus.compile_excluded_games,
+    random_excluded_games: preparedCorpus.random_excluded_games,
     compile_probe_results: preparedCorpus.compile_probe_results,
     target_count: selectedTargets.length,
     candidate_count: candidates.length,
@@ -531,4 +604,4 @@ const manifest = {
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
 fs.writeFileSync(outPath, `${JSON.stringify(manifest, null, 2)}\n`);
-process.stdout.write(`solver_focus_mine wrote ${outPath} targets=${selectedTargets.length} candidates=${candidates.length} eligible_games=${preparedCorpus.eligible_game_count}/${preparedCorpus.game_count} compile_excluded=${preparedCorpus.compile_excluded_games.length} wall_ms=${wallMs.toFixed(1)}\n`);
+process.stdout.write(`solver_focus_mine wrote ${outPath} targets=${selectedTargets.length} candidates=${candidates.length} eligible_games=${preparedCorpus.eligible_game_count}/${preparedCorpus.game_count} random_excluded=${preparedCorpus.random_excluded_games.length} compile_excluded=${preparedCorpus.compile_excluded_games.length} wall_ms=${wallMs.toFixed(1)}\n`);

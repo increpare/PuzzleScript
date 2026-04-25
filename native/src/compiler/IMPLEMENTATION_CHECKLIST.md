@@ -690,6 +690,29 @@ attribute graph cost -> no-allocation hash -> flat visited table
   node -e 'const j=require("./build/native/solver_focus_group.json"); console.log(j.compile_excluded_games || [])'
   ```
 
+- [x] Exclude random-rule games from focus mining.
+
+  Intent: keep the focus group deterministic while compact solver-state
+  equality and generated-rule performance are being optimized. PuzzleScript
+  `random` rule groups and `random`/`randomDir` replacements have semantics
+  that can make visually identical boards distinct through RNG state, so they
+  should not define the default iteration target.
+
+  Done means:
+
+  - The focus miner scans the `RULES` section for `random` and `randomDir`
+    tokens.
+  - Comment-only mentions and identifiers such as `randommoved` do not trigger
+    the exclusion.
+  - Random-rule exclusions happen before compile probing and before level
+    solving.
+  - The manifest records `random_excluded_games` with source lines and text.
+  - The command summary prints `random_excluded=N`.
+
+  Current evidence: the current focus manifest had one remaining random-rule
+  target, `gobble_rush.txt` level 19, after `fickle fred.txt` was edited to no
+  longer use `random`.
+
 - [x] Abort specialized focus compilation when it exceeds the iteration budget.
 
   Done means: `make solver_focus_compare` and specialized
