@@ -75,7 +75,7 @@ Status markers:
 
 ## Baseline Measurements
 
-- [ ] Record a clean no-specialization baseline for solver smoke.
+- [x] Record a clean no-specialization baseline for solver smoke.
 
   Command:
 
@@ -86,7 +86,7 @@ Status markers:
   Done means: elapsed time and pass count are noted in the relevant commit or
   PR description.
 
-- [ ] Record a clean specialization baseline for solver smoke.
+- [x] Record a clean specialization baseline for solver smoke.
 
   Command:
 
@@ -97,7 +97,7 @@ Status markers:
   Done means: elapsed time, generated source reuse behavior, and pass count are
   noted.
 
-- [ ] Record a generator smoke baseline.
+- [x] Record a generator smoke baseline.
 
   Command:
 
@@ -107,7 +107,7 @@ Status markers:
 
   Done means: elapsed time and pass/fail behavior are noted.
 
-- [ ] Record compiled-rule simulation coverage at both the fast default and the
+- [x] Record compiled-rule simulation coverage at both the fast default and the
   high-row proving setting.
 
   Commands:
@@ -120,7 +120,7 @@ Status markers:
   Done means: coverage counts are noted, including remaining miss reasons at
   `COMPILED_RULES_MAX_ROWS=1`.
 
-- [?] Decide whether to add a small checked-in benchmark notes file, or keep
+- [x] Decide whether to add a small checked-in benchmark notes file, or keep
   measurement notes in commit messages and PR descriptions only.
 
 ## Generated Tick Observability
