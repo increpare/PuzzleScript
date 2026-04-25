@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <array>
 #include <atomic>
 #include <chrono>
 #include <cctype>
@@ -90,28 +89,13 @@ struct Options {
 
 struct CompactSolverState {
     std::vector<uint64_t> objectBits;
-    std::array<uint8_t, 256> randomS{};
-    uint8_t randomI = 0;
-    uint8_t randomJ = 0;
-    bool randomValid = false;
-    bool hasRandom = false;
 
     bool operator==(const CompactSolverState& other) const {
-        return objectBits == other.objectBits
-            && hasRandom == other.hasRandom
-            && (!hasRandom
-                || (randomI == other.randomI
-                    && randomJ == other.randomJ
-                    && randomValid == other.randomValid
-                    && randomS == other.randomS));
+        return objectBits == other.objectBits;
     }
 
     size_t byteSize() const {
-        size_t size = objectBits.size() * sizeof(uint64_t);
-        if (hasRandom) {
-            size += sizeof(randomI) + sizeof(randomJ) + sizeof(randomValid) + randomS.size() * sizeof(uint8_t);
-        }
-        return size;
+        return objectBits.size() * sizeof(uint64_t);
     }
 };
 
@@ -550,31 +534,6 @@ Options parseArgs(int argc, char** argv) {
     return options;
 }
 
-bool gameUsesRandomnessInRules(const std::vector<std::vector<puzzlescript::Rule>>& groups) {
-    for (const auto& group : groups) {
-        for (const auto& rule : group) {
-            if (rule.isRandom) {
-                return true;
-            }
-            for (const auto& patternRow : rule.patterns) {
-                for (const auto& pattern : patternRow) {
-                    if (!pattern.replacement) {
-                        continue;
-                    }
-                    if (pattern.replacement->hasRandomEntityMask || pattern.replacement->hasRandomDirMask) {
-                        return true;
-                    }
-                }
-            }
-        }
-    }
-    return false;
-}
-
-bool gameUsesRandomness(const Game& game) {
-    return gameUsesRandomnessInRules(game.rules) || gameUsesRandomnessInRules(game.lateRules);
-}
-
 uint32_t compactWordTrailingZeros(MaskWordUnsigned value) {
     if constexpr (sizeof(MaskWordUnsigned) <= sizeof(unsigned int)) {
         return static_cast<uint32_t>(__builtin_ctz(static_cast<unsigned int>(value)));
@@ -583,7 +542,7 @@ uint32_t compactWordTrailingZeros(MaskWordUnsigned value) {
     }
 }
 
-CompactSolverState compactStateFromSession(const Session& session, bool includeRandomState) {
+CompactSolverState compactStateFromSession(const Session& session) {
     CompactSolverState state;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
@@ -608,13 +567,6 @@ CompactSolverState compactStateFromSession(const Session& session, bool includeR
             }
         }
     }
-    state.hasRandom = includeRandomState;
-    if (includeRandomState) {
-        state.randomI = session.randomState.i;
-        state.randomJ = session.randomState.j;
-        state.randomValid = session.randomState.valid;
-        state.randomS = session.randomState.s;
-    }
     return state;
 }
 
@@ -624,32 +576,12 @@ StateKey compactStateKey(const CompactSolverState& state, Timing& timing) {
     for (uint64_t word : state.objectBits) {
         puzzlescript::search::appendStateKeyValue(key, word);
     }
-    puzzlescript::search::appendStateKeyValue(key, state.hasRandom ? 1 : 0);
-    if (state.hasRandom) {
-        puzzlescript::search::appendStateKeyValue(key, state.randomI);
-        puzzlescript::search::appendStateKeyValue(key, state.randomJ);
-        puzzlescript::search::appendStateKeyValue(key, state.randomValid ? 1 : 0);
-        uint64_t packed = 0;
-        uint32_t shift = 0;
-        for (uint8_t byte : state.randomS) {
-            packed |= static_cast<uint64_t>(byte) << shift;
-            shift += 8;
-            if (shift == 64) {
-                puzzlescript::search::appendStateKeyValue(key, packed);
-                packed = 0;
-                shift = 0;
-            }
-        }
-        if (shift != 0) {
-            puzzlescript::search::appendStateKeyValue(key, packed);
-        }
-    }
     return key;
 }
 
-CompactSolverState compactStateWithTiming(const Session& session, bool includeRandomState, Timing& timing) {
+CompactSolverState compactStateWithTiming(const Session& session, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
-    return compactStateFromSession(session, includeRandomState);
+    return compactStateFromSession(session);
 }
 
 void recordCompactStateStorage(Timing& timing, const CompactSolverState& state) {
@@ -926,7 +858,6 @@ Result runSearch(
     std::vector<Node> nodes;
     nodes.reserve(8192);
 
-    const bool includeRandomStateInKey = gameUsesRandomness(*game);
     FlatBestDepth bestDepth(result.timing, exactStateKeys);
     bestDepth.reserve(16384);
     result.uniqueStates = 1;
@@ -936,7 +867,7 @@ Result runSearch(
         ScopedTimer timer(result.timing.heuristicNs);
         initialHeuristic = heuristicScore(*initial);
     }
-    CompactSolverState initialCompact = compactStateWithTiming(*initial, includeRandomStateInKey, result.timing);
+    CompactSolverState initialCompact = compactStateWithTiming(*initial, result.timing);
     const StateKey initialKey = compactStateKey(initialCompact, result.timing);
     {
         ScopedTimer timer(result.timing.nodeStoreNs);
@@ -1037,7 +968,7 @@ Result runSearch(
                 continue;
             }
 
-            CompactSolverState compact = compactStateWithTiming(*child, includeRandomStateInKey, result.timing);
+            CompactSolverState compact = compactStateWithTiming(*child, result.timing);
             const StateKey key = compactStateKey(compact, result.timing);
             const uint32_t childDepth = parentDepth + 1;
             uint32_t childIndex = static_cast<uint32_t>(nodes.size());

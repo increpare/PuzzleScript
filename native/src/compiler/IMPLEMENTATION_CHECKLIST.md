@@ -422,7 +422,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
   Acceptance criteria:
 
   - A new solver hash path can hash canonical solver-node state:
-    quiescent object occupancy plus random state when required.
+    quiescent object occupancy for deterministic focus games.
   - A parity test compares the new hash/key path against the existing
     `sessionStateKey` path for solver smoke states and replay-derived states.
   - Search behavior is unchanged: same solution status, same solution where the
@@ -487,9 +487,10 @@ attribute graph cost -> no-allocation hash -> flat visited table
 - [?] Define the solver compact-state boundary.
 
   Status: first solver-side boundary is implemented. Solver nodes now carry a
-  canonical compact state made from object-major occupancy bitsets plus
-  optional random state. The interpreter `Session` is still retained for tick
-  execution, fallback, and solution reconstruction.
+  canonical compact state made from object-major occupancy bitsets. Random-rule
+  games are excluded from focus mining for now, so RNG state is deliberately
+  outside this compact solver identity. The interpreter `Session` is still
+  retained for tick execution, fallback, and solution reconstruction.
 
   Recommended default: introduce a compact state only for solver/generator hot
   paths first, leaving player/API paths on `Session`.
@@ -498,7 +499,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   - The compact state explicitly owns:
     - canonical object occupancy for one fixed level
-    - random state only for games that need it
+  - It explicitly does not own RNG state in the current focus pipeline:
+    games with `random` or `randomDir` rules are excluded before focus mining.
   - It explicitly does not own live movements at solver-node boundaries:
     movement state must be settled and zero before a state enters the graph.
   - It explicitly does not own current level index: the level is a fixed search
@@ -1689,7 +1691,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - The chosen state owns canonical object occupancy plus optional random state.
+  - The chosen state owns canonical object occupancy for deterministic solver
+    focus games.
   - Solver-node invariants state that movements are zero, pending-again is
     exhausted, current level is a search parameter, checkpoint is ignored, and
     restart is a game-over/dead-edge result.
