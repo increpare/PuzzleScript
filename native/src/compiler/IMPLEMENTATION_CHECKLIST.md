@@ -319,6 +319,232 @@ lab bench, not the full corpus.
   make solver_focus_perf_report SOLVER_FOCUS_RUNS=3
   ```
 
+### Solver State And Graph Overhead Track
+
+Intent: compiled rules have made the turn-step path faster, but focus runs now
+show a large amount of elapsed time outside generated rule evaluation. This
+track makes solver graph overhead visible first, then attacks it in low-risk
+layers before introducing a compact state ABI.
+
+The preferred order is:
+
+```text
+attribute graph cost -> no-allocation hash -> flat visited table
+-> compact solver state prototype -> generated tick over compact state
+```
+
+- [ ] Add explicit graph-overhead timing buckets to the solver.
+
+  Acceptance criteria:
+
+  - Solver JSON reports these additional timing fields:
+    - `frontier_pop_ms`
+    - `frontier_push_ms`
+    - `visited_lookup_ms`
+    - `visited_insert_ms`
+    - `node_store_ms`
+    - `heuristic_ms`
+    - `solved_check_ms`
+    - `timeout_check_ms` if measurable without distorting the loop
+    - `unattributed_ms`
+  - `unattributed_ms` is computed from elapsed time minus known measured
+    buckets, not guessed.
+  - Focus comparison prints median ratios for the new major buckets.
+  - Per-target detail can list targets where graph overhead is larger than
+    `step_ms`.
+  - Timing remains cheap enough for normal focus runs, or is guarded behind an
+    opt-in profiling flag if needed.
+
+  Validation:
+
+  ```sh
+  make solver_focus_compare SOLVER_FOCUS_RUNS=1
+  node src/tests/compare_solver_focus_benchmarks.js \
+    build/native/solver_focus_benchmark_interpreted.json \
+    build/native/solver_focus_benchmark_compiled.json \
+    --detail
+  ```
+
+- [ ] Add a graph-overhead summary suitable for decision making.
+
+  Acceptance criteria:
+
+  - The focus report prints a compact split like:
+
+    ```text
+    step=... clone=... hash=... visited=... frontier=... node_store=... unattributed=...
+    ```
+
+  - It identifies whether the next biggest bucket after `step_ms` is clone,
+    hash, visited, frontier, heuristic, or unattributed.
+  - It reports both absolute medians and compiled/interpreted ratios.
+  - It makes clear when the generated rules are faster but end-to-end elapsed
+    is capped by graph/state overhead.
+
+- [ ] Add no-allocation or streaming solver state hashing.
+
+  Intent: the current solver state key path builds a `StateKey` from a full
+  `Session`. The first low-risk replacement should preserve semantics while
+  avoiding avoidable temporary allocation and runtime traversal work.
+
+  Acceptance criteria:
+
+  - A new solver hash path can hash live level objects, relevant movements,
+    current level, pending-again state, restart/checkpoint state, and random
+    state when required.
+  - A parity test compares the new hash/key path against the existing
+    `sessionStateKey` path for solver smoke states and replay-derived states.
+  - Search behavior is unchanged: same solution status, same solution where the
+    strategy is deterministic, and same generated/expanded counts on smoke
+    targets.
+  - `hash_ms` or total elapsed improves on at least one focus or target
+    benchmark before committing.
+
+  Validation:
+
+  ```sh
+  make build
+  make solver_smoke_tests
+  make solver_parity_smoke
+  make solver_focus_compare SOLVER_FOCUS_RUNS=1
+  ```
+
+- [ ] Replace solver visited storage with a flat open-addressed table.
+
+  Intent: `std::unordered_map<StateKey, depth>` is convenient but can be a poor
+  fit for hundreds of thousands of small, fixed-shape solver keys.
+
+  Acceptance criteria:
+
+  - The solver uses a flat visited table for the hot search path, guarded behind
+    an internal switch until parity is proven.
+  - The table stores key plus best depth, preserves stale-pop behavior, and can
+    distinguish hash collision from key equality.
+  - Table growth is explicit and measured.
+  - `visited_lookup_ms`, `visited_insert_ms`, or elapsed time improves on the
+    focus group without solved-count regression.
+  - Memory use does not grow unexpectedly versus `unordered_map`.
+
+  Validation:
+
+  ```sh
+  make solver_smoke_tests
+  make solver_determinism_tests
+  make solver_parity_smoke
+  make solver_focus_compare SOLVER_FOCUS_RUNS=1
+  ```
+
+- [ ] Define the solver compact-state boundary.
+
+  Recommended default: introduce a compact state only for solver/generator hot
+  paths first, leaving player/API paths on `Session`.
+
+  Acceptance criteria:
+
+  - The compact state explicitly owns:
+    - live object words
+    - live movement words when needed
+    - current level index
+    - pending-again flag
+    - restart/checkpoint state needed for correctness
+    - random state only for games that need it
+  - It explicitly does not own UI/debug/audio/undo data on solver hot paths.
+  - Conversion from `Session` to compact state is defined.
+  - Conversion from compact state back to `Session` is defined for fallback,
+    parity checks, serialization, and debugging.
+  - Unsupported games or unsupported runtime features decline the compact path
+    cleanly.
+
+- [ ] Prototype compact solver state for one simple focus game.
+
+  Suggested first candidates:
+
+  - `pushit.txt`
+  - `15 push pull levels.txt`
+  - a tiny `sokoban_basic`-style fixture if the focus games are too noisy
+
+  Acceptance criteria:
+
+  - The prototype is isolated behind a capability check or internal flag.
+  - Compact clone is a direct copy of fixed-size or tightly packed state data,
+    not a full `Session` copy.
+  - Compact hash avoids materializing a full `Session`.
+  - The solver can still materialize a scratch `Session` for the existing
+    interpreter or compiled-rule path when the tick implementation requires it.
+  - The prototype reports compact clone/hash timings separately from current
+    `clone_ms` and `hash_ms`.
+  - Solver parity remains green for the supported game.
+
+  Validation:
+
+  ```sh
+  make build
+  make solver_smoke_tests
+  make solver_parity_smoke
+  build/native/puzzlescript_solver src/tests/solver_tests \
+    --game "pushit.txt" --level 5 --timeout-ms 2000 \
+    --strategy portfolio --json --quiet
+  ```
+
+- [ ] Store solver nodes as compact states for supported games.
+
+  Acceptance criteria:
+
+  - Supported-game nodes retain compact state bytes plus parent/input metadata,
+    not `std::unique_ptr<Session>`.
+  - A per-search scratch `Session` is reused for materialization when required.
+  - `node_store_ms`, clone time, memory use, and generated/sec improve on at
+    least one focus target.
+  - Unsupported games continue to use the existing `Session` node path.
+  - Solution reconstruction still uses parent/input links and does not require
+    retained full sessions.
+
+  Validation:
+
+  ```sh
+  make solver_smoke_tests
+  make solver_determinism_tests
+  make solver_parity_smoke
+  make solver_focus_compare SOLVER_FOCUS_RUNS=1
+  ```
+
+- [ ] Add a generated compact tick prototype.
+
+  Intent: once compact state exists, whole-game compilation should target it
+  directly: `tick(compact_state, input) -> compact_state`, with `Session`
+  retained as oracle and fallback rather than as the hot state container.
+
+  Acceptance criteria:
+
+  - One supported game has a generated C++ compact tick entrypoint.
+  - The entrypoint reads/writes compact state directly for the supported turn
+    slice.
+  - The compact tick result reports changed, won, pending again, restart, and
+    unsupported/fallback status without heap allocation.
+  - Interpreter parity compares compact tick output against
+    `interpreterStep`/`interpreterTick` materialized through `Session`.
+  - Solver can choose compact tick for supported states and fall back cleanly
+    before mutating state when unsupported behavior is encountered.
+
+  Validation:
+
+  ```sh
+  make simulation_tests_cpp
+  make solver_smoke_tests SPECIALIZE=true
+  make solver_parity_smoke SPECIALIZE=true
+  make solver_focus_compare SPECIALIZE=true SOLVER_FOCUS_RUNS=1
+  ```
+
+- [ ] Retire duplicated compact-state checklist items once this track owns
+  them.
+
+  Acceptance criteria:
+
+  - The later `Specialized State Layout` and `Smaller Tick-Game ABI` sections
+    either point back here or contain only non-duplicated architecture notes.
+  - No compact-state task exists in two places with conflicting acceptance
+    criteria.
+
 ### Focus Group Hygiene
 
 - [ ] Regenerate the focus manifest intentionally after solver corpus changes.
