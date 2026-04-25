@@ -334,7 +334,7 @@ Status markers:
   - Aggregate counts are emitted alongside per-source feature status.
   - Classification uses stable strings that can be tracked over time.
 
-- [ ] Generate command queue shape for supported games.
+- [x] Generate command queue shape for supported games.
 
   Intent: avoid dynamic string command handling where the command set is known.
 

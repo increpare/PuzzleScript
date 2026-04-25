@@ -3715,6 +3715,27 @@ std::string compiledTickCommandStatus(const puzzlescript::Game& game) {
     return "none";
 }
 
+std::optional<std::string_view> compiledRuleCommandKindExpression(std::string_view commandName) {
+    if (commandName == "again") return "CompiledRuleCommandKind::Again";
+    if (commandName == "cancel") return "CompiledRuleCommandKind::Cancel";
+    if (commandName == "checkpoint") return "CompiledRuleCommandKind::Checkpoint";
+    if (commandName == "message") return "CompiledRuleCommandKind::Message";
+    if (commandName == "restart") return "CompiledRuleCommandKind::Restart";
+    if (commandName == "win") return "CompiledRuleCommandKind::Win";
+    if (isKnownCompiledTickCommandName(commandName)
+        && commandName.size() > 3
+        && commandName.substr(0, 3) == "sfx") {
+        return "CompiledRuleCommandKind::Output";
+    }
+    return std::nullopt;
+}
+
+bool canGenerateCompiledRuleCommandQueue(const puzzlescript::Rule& rule) {
+    return std::all_of(rule.commands.begin(), rule.commands.end(), [](const puzzlescript::RuleCommand& command) {
+        return compiledRuleCommandKindExpression(command.name).has_value();
+    });
+}
+
 bool ruleHasEllipsis(const puzzlescript::Rule& rule) {
     for (const int32_t count : rule.ellipsisCount) {
         if (count != 0) {
@@ -4148,6 +4169,40 @@ void emitCollectRowMatches(
         << "    if (" << matchesName << ".empty()) return false;\n";
 }
 
+void emitCompiledRuleCommandQueue(
+    std::ostream& out,
+    const puzzlescript::Rule& rule,
+    std::string_view ruleExpression
+) {
+    if (rule.commands.empty()) {
+        return;
+    }
+    if (!canGenerateCompiledRuleCommandQueue(rule)) {
+        out << "    compiledRuleQueueCommands(" << ruleExpression << ", commands);\n";
+        return;
+    }
+    const bool currentRuleCancel = std::any_of(rule.commands.begin(), rule.commands.end(), [](const puzzlescript::RuleCommand& command) {
+        return command.name == "cancel";
+    });
+    const bool currentRuleRestart = std::any_of(rule.commands.begin(), rule.commands.end(), [](const puzzlescript::RuleCommand& command) {
+        return command.name == "restart";
+    });
+    out << "    if (compiledRulePrepareCommandQueue(commands, "
+        << (currentRuleCancel ? "true" : "false") << ", "
+        << (currentRuleRestart ? "true" : "false") << ")) {\n";
+    for (const auto& command : rule.commands) {
+        const auto kind = compiledRuleCommandKindExpression(command.name);
+        if (!kind.has_value()) {
+            continue;
+        }
+        out << "        compiledRuleQueueKnownCommand(commands, "
+            << *kind << ", "
+            << cppStringLiteral(command.name) << ", "
+            << cppStringLiteral(command.argument.value_or("")) << ");\n";
+    }
+    out << "    }\n";
+}
+
 void emitRuleFunctions(
     std::ostream& out,
     const puzzlescript::Game& game,
@@ -4213,8 +4268,8 @@ void emitRuleFunctions(
                 << "        }\n"
                 << "    }\n";
         }
-        out << "    compiledRuleQueueCommands(rule, commands);\n"
-            << "    return changed;\n"
+        emitCompiledRuleCommandQueue(out, rule, "rule");
+        out << "    return changed;\n"
             << "}\n\n";
         return;
     }
@@ -4270,10 +4325,14 @@ void emitRuleFunctions(
             << "        }\n"
             << "    }\n";
     }
-    out << "    compiledRuleQueueCommands(game."
-        << (late ? "lateRules" : "rules")
-        << "[" << groupIndex << "][" << ruleIndex << "], commands);\n"
-        << "    return changed;\n"
+    emitCompiledRuleCommandQueue(
+        out,
+        rule,
+        std::string("game.")
+            + (late ? "lateRules" : "rules")
+            + "[" + std::to_string(groupIndex) + "][" + std::to_string(ruleIndex) + "]"
+    );
+    out << "    return changed;\n"
         << "}\n\n";
 }
 

@@ -239,7 +239,50 @@ inline bool anyBitsSet(const MaskWord* value, size_t count) {
 #endif
 
 bool commandQueueContains(const CommandState& state, std::string_view command) {
-    return std::find(state.queue.begin(), state.queue.end(), std::string(command)) != state.queue.end();
+    if (command == "again") return state.hasAgain;
+    if (command == "cancel") return state.hasCancel;
+    if (command == "checkpoint") return state.hasCheckpoint;
+    if (command == "message") return state.hasMessage;
+    if (command == "restart") return state.hasRestart;
+    if (command == "win") return state.hasWin;
+    return std::any_of(state.queue.begin(), state.queue.end(), [command](const std::string& queued) {
+        return queued == command;
+    });
+}
+
+void clearCommandQueue(CommandState& state) {
+    state.queue.clear();
+    state.messageText.clear();
+    state.hasAgain = false;
+    state.hasCancel = false;
+    state.hasCheckpoint = false;
+    state.hasMessage = false;
+    state.hasRestart = false;
+    state.hasWin = false;
+}
+
+void markCommandQueued(CommandState& state, std::string_view command) {
+    if (command == "again") {
+        state.hasAgain = true;
+    } else if (command == "cancel") {
+        state.hasCancel = true;
+    } else if (command == "checkpoint") {
+        state.hasCheckpoint = true;
+    } else if (command == "message") {
+        state.hasMessage = true;
+    } else if (command == "restart") {
+        state.hasRestart = true;
+    } else if (command == "win") {
+        state.hasWin = true;
+    }
+}
+
+void appendCommandIfMissing(CommandState& state, std::string_view command) {
+    if (commandQueueContains(state, command)) {
+        return;
+    }
+    state.queue.emplace_back(command);
+    markCommandQueued(state, command);
 }
 
 bool rigidDebugEnabled() {
@@ -574,15 +617,12 @@ void queueRuleCommands(const Rule& rule, CommandState& state) {
         return;
     }
     if (currentRuleCancel || currentRuleRestart) {
-        state.queue.clear();
-        state.messageText.clear();
+        clearCommandQueue(state);
     }
 
     for (const auto& command : rule.commands) {
         const std::string& commandName = command.name;
-        if (!commandQueueContains(state, commandName)) {
-            state.queue.push_back(commandName);
-        }
+        appendCommandIfMissing(state, commandName);
         if (commandName == "message" && command.argument.has_value()) {
             state.messageText = *command.argument;
         }
@@ -4035,6 +4075,53 @@ void compiledRuleRebuildMasks(Session& session) {
 
 void compiledRuleQueueCommands(const Rule& rule, CommandState& commands) {
     queueRuleCommands(rule, commands);
+}
+
+bool compiledRulePrepareCommandQueue(CommandState& commands, bool currentRuleCancel, bool currentRuleRestart) {
+    const bool preexistingCancel = commandQueueContains(commands, "cancel");
+    const bool preexistingRestart = commandQueueContains(commands, "restart");
+    if (preexistingCancel) {
+        return false;
+    }
+    if (preexistingRestart && !currentRuleCancel) {
+        return false;
+    }
+    if (currentRuleCancel || currentRuleRestart) {
+        clearCommandQueue(commands);
+    }
+    return true;
+}
+
+void compiledRuleQueueKnownCommand(
+    CommandState& commands,
+    CompiledRuleCommandKind kind,
+    std::string_view name,
+    std::string_view argument
+) {
+    switch (kind) {
+        case CompiledRuleCommandKind::Again:
+            appendCommandIfMissing(commands, "again");
+            break;
+        case CompiledRuleCommandKind::Cancel:
+            appendCommandIfMissing(commands, "cancel");
+            break;
+        case CompiledRuleCommandKind::Checkpoint:
+            appendCommandIfMissing(commands, "checkpoint");
+            break;
+        case CompiledRuleCommandKind::Message:
+            appendCommandIfMissing(commands, "message");
+            commands.messageText = std::string(argument);
+            break;
+        case CompiledRuleCommandKind::Restart:
+            appendCommandIfMissing(commands, "restart");
+            break;
+        case CompiledRuleCommandKind::Win:
+            appendCommandIfMissing(commands, "win");
+            break;
+        case CompiledRuleCommandKind::Output:
+            appendCommandIfMissing(commands, name);
+            break;
+    }
 }
 
 void compiledRuleCollectRowMatches(

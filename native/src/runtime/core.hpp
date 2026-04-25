@@ -249,6 +249,12 @@ struct LoopPointTable {
 struct CommandState {
     std::vector<std::string> queue;
     std::string messageText;
+    bool hasAgain = false;
+    bool hasCancel = false;
+    bool hasCheckpoint = false;
+    bool hasMessage = false;
+    bool hasRestart = false;
+    bool hasWin = false;
 };
 
 struct CompiledRulesBackend;

@@ -44,6 +44,16 @@ struct CompiledTickBackend {
     CompiledTickFn tick = nullptr;
 };
 
+enum class CompiledRuleCommandKind {
+    Again,
+    Cancel,
+    Checkpoint,
+    Message,
+    Restart,
+    Win,
+    Output,
+};
+
 uint64_t compiledRulesHashSource(std::string_view source);
 void attachLinkedCompiledRules(Game& game, std::string_view source);
 
@@ -62,6 +72,13 @@ void compiledRuleSetCellObjectsFromWords(
 void compiledRuleSetCellMovementsFromWords(Session& session, int32_t tileIndex, const MaskWord* movements);
 void compiledRuleRebuildMasks(Session& session);
 void compiledRuleQueueCommands(const Rule& rule, CommandState& commands);
+bool compiledRulePrepareCommandQueue(CommandState& commands, bool currentRuleCancel, bool currentRuleRestart);
+void compiledRuleQueueKnownCommand(
+    CommandState& commands,
+    CompiledRuleCommandKind kind,
+    std::string_view name,
+    std::string_view argument = {}
+);
 using CompiledRuleRowMatch = std::vector<int32_t>;
 void compiledRuleCollectRowMatches(Session& session, const Rule& rule, size_t rowIndex, std::vector<CompiledRuleRowMatch>& outMatches);
 bool compiledRuleRowMatchStillMatches(const Session& session, const Rule& rule, size_t rowIndex, const CompiledRuleRowMatch& match);
