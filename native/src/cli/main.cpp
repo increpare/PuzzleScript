@@ -3700,7 +3700,7 @@ std::string compiledTickCommandStatusForGroups(const std::vector<std::vector<puz
             }
         }
     }
-    return sawCommand ? "known_interpreter" : "none";
+    return sawCommand ? "generated_queue_interpreter_tail" : "none";
 }
 
 std::string compiledTickCommandStatus(const puzzlescript::Game& game) {
@@ -3709,8 +3709,8 @@ std::string compiledTickCommandStatus(const puzzlescript::Game& game) {
     if (earlyStatus == "unknown_interpreter" || lateStatus == "unknown_interpreter") {
         return "unknown_interpreter";
     }
-    if (earlyStatus == "known_interpreter" || lateStatus == "known_interpreter") {
-        return "known_interpreter";
+    if (earlyStatus == "generated_queue_interpreter_tail" || lateStatus == "generated_queue_interpreter_tail") {
+        return "generated_queue_interpreter_tail";
     }
     return "none";
 }
@@ -4505,7 +4505,7 @@ void appendCompiledTickAggregateJsonFields(
     size_t earlyRuleLoopsGenerated,
     size_t lateRuleLoopsGenerated,
     size_t commandNone,
-    size_t commandKnown,
+    size_t commandGeneratedQueue,
     size_t commandUnknown
 ) {
     out << "\"compiled_tick\":{"
@@ -4516,7 +4516,7 @@ void appendCompiledTickAggregateJsonFields(
         << ",\"fully_generated\":0"
         << ",\"command_status_counts\":{"
         << "\"none\":" << commandNone
-        << ",\"known_interpreter\":" << commandKnown
+        << ",\"generated_queue_interpreter_tail\":" << commandGeneratedQueue
         << ",\"unknown_interpreter\":" << commandUnknown
         << "}"
         << ",\"misses\":{";
@@ -4562,7 +4562,7 @@ std::string generateCompiledRulesCoverageJson(
     size_t earlyRuleLoopsGenerated = 0;
     size_t lateRuleLoopsGenerated = 0;
     size_t commandNone = 0;
-    size_t commandKnown = 0;
+    size_t commandGeneratedQueue = 0;
     size_t commandUnknown = 0;
     for (const CodegenSource& source : sources) {
         if (source.game && areAllGroupsCompilable(source.game->rules, options)) {
@@ -4576,8 +4576,8 @@ std::string generateCompiledRulesCoverageJson(
             : "unknown_interpreter";
         if (commandStatus == "none") {
             ++commandNone;
-        } else if (commandStatus == "known_interpreter") {
-            ++commandKnown;
+        } else if (commandStatus == "generated_queue_interpreter_tail") {
+            ++commandGeneratedQueue;
         } else {
             ++commandUnknown;
         }
@@ -4593,7 +4593,7 @@ std::string generateCompiledRulesCoverageJson(
         earlyRuleLoopsGenerated,
         lateRuleLoopsGenerated,
         commandNone,
-        commandKnown,
+        commandGeneratedQueue,
         commandUnknown
     );
     out << "},\n"

@@ -329,8 +329,8 @@ Status markers:
 
   Acceptance criteria:
 
-  - Coverage distinguishes games with no rule commands, known interpreted
-    command shapes, and unknown command shapes.
+  - Coverage distinguishes games with no rule commands, generated command
+    queues with interpreter tails, and unknown command shapes.
   - Aggregate counts are emitted alongside per-source feature status.
   - Classification uses stable strings that can be tracked over time.
 
