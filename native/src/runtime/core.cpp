@@ -4598,6 +4598,20 @@ bool wouldAgainChange(Session& session, bool* outWouldModify, bool emitAudio) {
     return changed;
 }
 
+// Keep this phase order explicit: generated whole-tick code is expected to
+// mirror these stages and then replace them one by one with per-game code.
+//
+// 1. Clear last-turn audio and prepare optional create/destroy sound masks.
+// 2. Capture the turn-start snapshot for undo, cancel, dontModify, and rigid retry.
+// 3. Record starting player positions for require_player_movement.
+// 4. Clear movement state, seed player movement, rebuild masks, and apply early rules.
+// 5. Resolve movement; on rigid failure restore the turn-start snapshot and retry.
+// 6. Apply late rules once movement is settled.
+// 7. Compare against the turn-start snapshot to compute modification status.
+// 8. Handle require_player_movement, cancel, and dontModify exits.
+// 9. Play create/destroy sounds and process output commands.
+// 10. Process restart, win/level transition, checkpoint, and again scheduling.
+// 11. Fill ps_step_result, sort audio, rebuild masks, and return.
 ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnOptions options) {
     ps_step_result result{};
     session.lastAudioEvents.clear();

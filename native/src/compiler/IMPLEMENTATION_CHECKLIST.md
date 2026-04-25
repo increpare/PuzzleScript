@@ -256,7 +256,7 @@ Status markers:
 
 ## Turn Skeleton Specialization
 
-- [ ] Extract an interpreter-readable turn skeleton.
+- [x] Extract an interpreter-readable turn skeleton.
 
   Intent: identify the exact ordered phases currently inside `executeTurn` so
   the generated implementation can mirror them without copying mystery.
