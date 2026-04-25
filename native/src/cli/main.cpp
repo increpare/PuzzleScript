@@ -4962,13 +4962,17 @@ std::string generateCompiledRulesCpp(
                 << "            bool hasChanges = false;\n"
                 << "            bool madeChange = true;\n"
                 << "            int loopCount = 0;\n"
-                << "            compiledRuleRebuildMasks(session);\n"
+                << "            if (session.anyMasksDirty || session.objectCellIndexDirty) {\n"
+                << "                compiledRuleRebuildMasks(session);\n"
+                << "            }\n"
                 << "            while (madeChange && loopCount++ < 200) {\n"
                 << "                madeChange = false;\n";
             for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
                 out << "                if (apply_rule_s" << sourceIndex << "_l_g" << groupIndex << "_r" << ruleIndex << "(session, commands)) {\n"
                     << "                    madeChange = true;\n"
-                    << "                    compiledRuleRebuildMasks(session);\n"
+                    << "                    if (session.anyMasksDirty || session.objectCellIndexDirty) {\n"
+                    << "                        compiledRuleRebuildMasks(session);\n"
+                    << "                    }\n"
                     << "                }\n";
             }
             out << "                hasChanges = hasChanges || madeChange;\n"
@@ -4997,13 +5001,17 @@ std::string generateCompiledRulesCpp(
                 << "            bool hasChanges = false;\n"
                 << "            bool madeChange = true;\n"
                 << "            int loopCount = 0;\n"
-                << "            compiledRuleRebuildMasks(session);\n"
+                << "            if (session.anyMasksDirty || session.objectCellIndexDirty) {\n"
+                << "                compiledRuleRebuildMasks(session);\n"
+                << "            }\n"
                 << "            while (madeChange && loopCount++ < 200) {\n"
                 << "                madeChange = false;\n";
             for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
                 out << "                if (apply_rule_s" << sourceIndex << "_e_g" << groupIndex << "_r" << ruleIndex << "(session, commands)) {\n"
                     << "                    madeChange = true;\n"
-                    << "                    compiledRuleRebuildMasks(session);\n"
+                    << "                    if (session.anyMasksDirty || session.objectCellIndexDirty) {\n"
+                    << "                        compiledRuleRebuildMasks(session);\n"
+                    << "                    }\n"
                     << "                }\n";
             }
             out << "                hasChanges = hasChanges || madeChange;\n"

@@ -137,6 +137,13 @@ lab bench, not the full corpus.
   compiled rule hits, pattern tests, candidate cells, row scans, and mask rebuild
   counters.
 
+- [x] Surface mask rebuild outliers in the focus detail report.
+
+  Done means: `--detail` prints a `top_mask_rebuilds` table with target,
+  elapsed ratio, compiled routing bucket, usage reason, tick/rule hits, dirty
+  rebuild calls, rebuilt rows/columns, row scans, candidate cells, pattern
+  tests, and mask rebuild calls.
+
 - [x] Make focus compiled benchmark use `SPECIALIZE=true`.
 
   Done means: the same focus benchmark runner can produce interpreted and
@@ -610,6 +617,12 @@ lab bench, not the full corpus.
 
   Current clue: focus counters show very high `mask_rebuild_calls` on several
   targets, including fast and slow compiled runs.
+
+  Current progress:
+
+  - Generated rule-group loops now guard `compiledRuleRebuildMasks(session)`
+    with `session.anyMasksDirty || session.objectCellIndexDirty`, avoiding
+    clean helper calls in the generated path while preserving dirty rebuilds.
 
   Acceptance criteria:
 

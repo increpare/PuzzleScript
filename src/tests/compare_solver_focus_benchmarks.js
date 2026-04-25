@@ -133,6 +133,9 @@ function targetRows() {
             rowScans: countersMedian(compiledTarget, 'row_scans'),
             patternTests: countersMedian(compiledTarget, 'pattern_tests'),
             maskRebuilds: countersMedian(compiledTarget, 'mask_rebuild_calls'),
+            maskRebuildDirtyCalls: countersMedian(compiledTarget, 'mask_rebuild_dirty_calls'),
+            maskRebuildRows: countersMedian(compiledTarget, 'mask_rebuild_rows'),
+            maskRebuildColumns: countersMedian(compiledTarget, 'mask_rebuild_columns'),
         };
     }).filter(Boolean);
 }
@@ -206,6 +209,39 @@ function printTargetTable(label, rows) {
             ` cells=${row.candidateCells === null ? 'n/a' : row.candidateCells}` +
             ` pattern_tests=${row.patternTests === null ? 'n/a' : row.patternTests}` +
             ` mask_rebuilds=${row.maskRebuilds === null ? 'n/a' : row.maskRebuilds}` +
+            ` dirty=${row.maskRebuildDirtyCalls === null ? 'n/a' : row.maskRebuildDirtyCalls}` +
+            `\n`
+        );
+    }
+}
+
+function printMaskRebuildTable(rows) {
+    const hotRows = rows
+        .filter((row) => Number.isFinite(row.maskRebuilds) && row.maskRebuilds > 0)
+        .sort((a, b) => b.maskRebuilds - a.maskRebuilds)
+        .slice(0, 10);
+    if (hotRows.length === 0) {
+        process.stdout.write('  top_mask_rebuilds: n/a\n');
+        return;
+    }
+    process.stdout.write('  top_mask_rebuilds:\n');
+    for (const row of hotRows) {
+        process.stdout.write(
+            `    mask_rebuilds=${row.maskRebuilds}` +
+            ` elapsed=${formatNumber(row.compiled.median.elapsed_ms, 1)}ms` +
+            ` interpreted=${formatNumber(row.interpreted.median.elapsed_ms, 1)}ms` +
+            ` ratio=${formatNumber(row.elapsedRatio, 3)}x` +
+            ` bucket=${row.bucket}` +
+            ` reason=${row.reason}` +
+            ` tick=${row.compiledTickHits === null ? 'n/a' : row.compiledTickHits}` +
+            ` hits=${row.compiledRuleHits === null ? 'n/a' : row.compiledRuleHits}` +
+            ` dirty=${row.maskRebuildDirtyCalls === null ? 'n/a' : row.maskRebuildDirtyCalls}` +
+            ` rebuild_rows=${row.maskRebuildRows === null ? 'n/a' : row.maskRebuildRows}` +
+            ` rebuild_columns=${row.maskRebuildColumns === null ? 'n/a' : row.maskRebuildColumns}` +
+            ` rows=${row.rowScans === null ? 'n/a' : row.rowScans}` +
+            ` cells=${row.candidateCells === null ? 'n/a' : row.candidateCells}` +
+            ` pattern_tests=${row.patternTests === null ? 'n/a' : row.patternTests}` +
+            ` ${row.key}` +
             `\n`
         );
     }
@@ -246,6 +282,7 @@ if (options.detail) {
     const byFastest = rows.slice().sort((a, b) => (a.elapsedRatio || Infinity) - (b.elapsedRatio || Infinity));
     printTargetTable('slowest_targets:', bySlowest.slice(0, 10));
     printTargetTable('fastest_targets:', byFastest.slice(0, 10));
+    printMaskRebuildTable(rows);
 }
 
 if (!sameTargets) {
