@@ -3743,9 +3743,21 @@ void markAllMovementMasksDirty(Session& session) {
 void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot, bool restoreRandomState) {
     session.preparedSession = snapshot.preparedSession;
     session.liveLevel = snapshot.liveLevel;
-    session.liveMovements = snapshot.liveMovements;
-    session.rigidGroupIndexMasks = snapshot.rigidGroupIndexMasks;
-    session.rigidMovementAppliedMasks = snapshot.rigidMovementAppliedMasks;
+    if (snapshot.liveMovements.empty()) {
+        session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
+    } else {
+        session.liveMovements = snapshot.liveMovements;
+    }
+    if (snapshot.rigidGroupIndexMasks.empty()) {
+        session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
+    } else {
+        session.rigidGroupIndexMasks = snapshot.rigidGroupIndexMasks;
+    }
+    if (snapshot.rigidMovementAppliedMasks.empty()) {
+        session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
+    } else {
+        session.rigidMovementAppliedMasks = snapshot.rigidMovementAppliedMasks;
+    }
     if (restoreRandomState) {
         session.randomState = snapshot.randomState;
     }
@@ -3758,9 +3770,9 @@ Session::UndoSnapshot makeUndoSnapshot(const Session& session) {
     return Session::UndoSnapshot{
         session.preparedSession,
         session.liveLevel,
-        session.liveMovements,
-        session.rigidGroupIndexMasks,
-        session.rigidMovementAppliedMasks,
+        {},
+        {},
+        {},
         session.randomState,
     };
 }
